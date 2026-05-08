@@ -50,7 +50,7 @@
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
     <link rel="stylesheet" type="text/css" href="../../_static/custom.7953df0a.css?v=314ed3b2" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/treemap.087aecf0.css?v=7131b20f" />
-    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.99faa59c.css?v=b44e0256" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.d7808461.css?v=1ba63a31" />
   
   <!-- So that users can add custom icons -->
   <script defer src="../../_static/scripts/fontawesome.js?digest=55c26ed414f5f8a31ebb"></script>
@@ -239,8 +239,8 @@
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../user_guide.html">
-    User Guide
+  <a class="nav-link nav-internal" href="../../quickstart.html">
+    Quick Start
   </a>
 </li>
 
@@ -260,18 +260,42 @@
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../api.html">
-    Docs
+  <a class="nav-link nav-internal" href="../../concepts/index.html">
+    Concepts
   </a>
 </li>
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-external" href="https://eeg2025.github.io/">
+  <a class="nav-link nav-internal" href="../api.html">
+    Docs
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../references.html">
+    References
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-external" href="https://eeg2025.github.io/">
     EEG2025
   </a>
 </li>
 
+                </ul>
+            </li>
+            
   </ul>
 </nav></div>
       
@@ -386,8 +410,8 @@
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../user_guide.html">
-    User Guide
+  <a class="nav-link nav-internal" href="../../quickstart.html">
+    Quick Start
   </a>
 </li>
 
@@ -407,8 +431,22 @@
 
 
 <li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../concepts/index.html">
+    Concepts
+  </a>
+</li>
+
+
+<li class="nav-item ">
   <a class="nav-link nav-internal" href="../api.html">
     Docs
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../references.html">
+    References
   </a>
 </li>
 
@@ -553,13 +591,13 @@
 recordings on the filesystem and returning EEGDash v2 records.</p>
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.local_bids.</span></span><span class="sig-name descname"><span class="pre">discover_local_bids_records</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset_root</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/local_bids.py#L60-L284"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">eegdash.local_bids.</span></span><span class="sig-name descname"><span class="pre">discover_local_bids_records</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset_root</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><span class="pre">Path</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">filters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><span class="pre">dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><span class="pre">dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/local_bids.py#L60-L284"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Discover local BIDS recordings and build EEGDash v2 records.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>dataset_root</strong> (<em>str</em><em> | </em><em>Path</em>) – Local dataset directory (e.g., <code class="docutils literal notranslate"><span class="pre">/path/to/ds005509</span></code>).</p></li>
-<li><p><strong>filters</strong> (<em>dict</em>) – Filters dict. Must include <code class="docutils literal notranslate"><span class="pre">'dataset'</span></code> and may include BIDS entities
+<li><p><strong>dataset_root</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> | </em><em>Path</em>) – Local dataset directory (e.g., <code class="docutils literal notranslate"><span class="pre">/path/to/ds005509</span></code>).</p></li>
+<li><p><strong>filters</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a>) – Filters dict. Must include <code class="docutils literal notranslate"><span class="pre">'dataset'</span></code> and may include BIDS entities
 like <code class="docutils literal notranslate"><span class="pre">'subject'</span></code>, <code class="docutils literal notranslate"><span class="pre">'session'</span></code>, <code class="docutils literal notranslate"><span class="pre">'task'</span></code>, <code class="docutils literal notranslate"><span class="pre">'run'</span></code>, plus
 <code class="docutils literal notranslate"><span class="pre">'modality'</span></code> (default: <code class="docutils literal notranslate"><span class="pre">'eeg'</span></code>).</p></li>
 </ul>
@@ -568,7 +606,7 @@ like <code class="docutils literal notranslate"><span class="pre">'subject'</spa
 <dd class="field-even"><p>A list of v2 records, one for each matched recording file.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list[dict[str, Any]]</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)">dict</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a>, Any]]</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>

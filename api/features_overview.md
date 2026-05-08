@@ -9,7 +9,7 @@ high-level orchestration helpers that only live in the package `__init__`.
 
 ## High-level discovery helpers
 
-### eegdash.features.get_all_features() → list[tuple[str, Callable]]
+### eegdash.features.get_all_features() → [list](https://docs.python.org/3/library/stdtypes.html#list)[[tuple](https://docs.python.org/3/library/stdtypes.html#tuple)[[str](https://docs.python.org/3/library/stdtypes.html#str), [Callable](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)]]
 
 Get a list of all available feature functions.
 
@@ -19,11 +19,11 @@ that have been decorated with a feature_kind.
 * **Returns:**
   A list of (name, function) tuples for all discovered feature functions.
 * **Return type:**
-  list of tuple
+  [list](https://docs.python.org/3/library/stdtypes.html#list) of [tuple](https://docs.python.org/3/library/stdtypes.html#tuple)
 
 <!-- !! processed by numpydoc !! -->
 
-### eegdash.features.get_feature_kind(feature: Callable) → eegdash.features.extractors.MultivariateFeature
+### eegdash.features.get_feature_kind(feature: [Callable](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)) → eegdash.features.extractors.MultivariateFeature
 
 Get the ‘kind’ of a feature function.
 
@@ -39,7 +39,7 @@ using decorators.
 
 <!-- !! processed by numpydoc !! -->
 
-### eegdash.features.get_feature_predecessors(feature_or_extractor: Callable | None) → list
+### eegdash.features.get_feature_predecessors(feature_or_extractor: [Callable](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable) | [None](https://docs.python.org/3/library/constants.html#None)) → [list](https://docs.python.org/3/library/stdtypes.html#list)
 
 Get the dependency hierarchy for a feature or feature extractor.
 
@@ -56,7 +56,7 @@ of a feature or extractor to build a list representing its dependency lineage.
   base signal input. For multiple dependencies, it contains tuples
   of sub-dependencies.
 * **Return type:**
-  list
+  [list](https://docs.python.org/3/library/stdtypes.html#list)
 
 ### Notes
 
@@ -76,7 +76,7 @@ typically represents the raw signal.
 
 <!-- !! processed by numpydoc !! -->
 
-### eegdash.features.get_all_feature_kinds() → list[tuple[str, type[TypeAliasForwardRef('eegdash.features.extractors.MultivariateFeature')]]]
+### eegdash.features.get_all_feature_kinds() → [list](https://docs.python.org/3/library/stdtypes.html#list)[[tuple](https://docs.python.org/3/library/stdtypes.html#tuple)[[str](https://docs.python.org/3/library/stdtypes.html#str), [type](https://docs.python.org/3/library/functions.html#type)[TypeAliasForwardRef('eegdash.features.extractors.MultivariateFeature')]]]
 
 Get a list of all available feature ‘kind’ classes.
 
@@ -86,11 +86,11 @@ that subclass `MultivariateFeature`.
 * **Returns:**
   A list of (name, class) tuples for all discovered feature kinds.
 * **Return type:**
-  list of tuple
+  [list](https://docs.python.org/3/library/stdtypes.html#list) of [tuple](https://docs.python.org/3/library/stdtypes.html#tuple)
 
 <!-- !! processed by numpydoc !! -->
 
-### eegdash.features.get_all_preprocessor_output_types() → list[tuple[str, type[BasePreprocessorOutputType]]]
+### eegdash.features.get_all_preprocessor_output_types() → [list](https://docs.python.org/3/library/stdtypes.html#list)[[tuple](https://docs.python.org/3/library/stdtypes.html#tuple)[[str](https://docs.python.org/3/library/stdtypes.html#str), [type](https://docs.python.org/3/library/functions.html#type)[BasePreprocessorOutputType]]]
 
 Get a list of all available preprocessor output type classes.
 
@@ -100,13 +100,13 @@ that subclass `BasePreprocessorOutputType`.
 * **Returns:**
   A list of (name, class) tuples for all discovered preprocessor output types.
 * **Return type:**
-  list of tuple
+  [list](https://docs.python.org/3/library/stdtypes.html#list) of [tuple](https://docs.python.org/3/library/stdtypes.html#tuple)
 
 <!-- !! processed by numpydoc !! -->
 
 ## Dataset and extraction utilities
 
-### eegdash.features.extract_features(concat_dataset: BaseConcatDataset, features: FeatureExtractor | Dict[Any, Callable] | List[Callable], , batch_size: int = 512, n_jobs: int = 1) → FeaturesConcatDataset
+### eegdash.features.extract_features(concat_dataset: [BaseConcatDataset](https://braindecode.org/stable/generated/braindecode.datasets.BaseConcatDataset.html#braindecode.datasets.BaseConcatDataset), features: FeatureExtractor | [Dict](https://docs.python.org/3/library/typing.html#typing.Dict)[[Any](https://docs.python.org/3/library/typing.html#typing.Any), [Callable](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)] | [List](https://docs.python.org/3/library/typing.html#typing.List)[[Callable](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)], , batch_size: [int](https://docs.python.org/3/library/functions.html#int) = 512, n_jobs: [int](https://docs.python.org/3/library/functions.html#int) = 1) → FeaturesConcatDataset
 
 Extract features from a collection of windowed recordings.
 
@@ -116,12 +116,12 @@ individual recording in a `BaseConcatDataset`.
 * **Parameters:**
   * **concat_dataset** (*BaseConcatDataset*) – A concatenated dataset of `WindowsDataset` or
     `EEGWindowsDataset` instances.
-  * **features** (*FeatureExtractor* *or* *dict* *or* *list*) – The feature extractor(s) to apply. Can be a
+  * **features** (*FeatureExtractor* *or* [*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *or* [*list*](https://docs.python.org/3/library/stdtypes.html#list)) – The feature extractor(s) to apply. Can be a
     `FeatureExtractor` instance,
     a dictionary of named feature functions, or a list of feature
     functions.
-  * **batch_size** (*int* *,* *default 512*) – The size of batches used for feature extraction within each recording.
-  * **n_jobs** (*int* *,* *default 1*) – The number of parallel jobs to use for processing different
+  * **batch_size** ([*int*](https://docs.python.org/3/library/functions.html#int) *,* *default 512*) – The size of batches used for feature extraction within each recording.
+  * **n_jobs** ([*int*](https://docs.python.org/3/library/functions.html#int) *,* *default 1*) – The number of parallel jobs to use for processing different
     recordings simultaneously.
 * **Returns:**
   A unified collection of feature datasets corresponding to the
@@ -131,7 +131,7 @@ individual recording in a `BaseConcatDataset`.
 
 <!-- !! processed by numpydoc !! -->
 
-### eegdash.features.fit_feature_extractors(concat_dataset: BaseConcatDataset, features: FeatureExtractor | Dict[Any, Callable] | List[Callable], batch_size: int = 8192) → FeatureExtractor
+### eegdash.features.fit_feature_extractors(concat_dataset: [BaseConcatDataset](https://braindecode.org/stable/generated/braindecode.datasets.BaseConcatDataset.html#braindecode.datasets.BaseConcatDataset), features: FeatureExtractor | [Dict](https://docs.python.org/3/library/typing.html#typing.Dict)[[Any](https://docs.python.org/3/library/typing.html#typing.Any), [Callable](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)] | [List](https://docs.python.org/3/library/typing.html#typing.List)[[Callable](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)], batch_size: [int](https://docs.python.org/3/library/functions.html#int) = 8192) → FeatureExtractor
 
 Fit trainable feature extractors on a concatenated dataset.
 
@@ -142,8 +142,8 @@ perform partial fitting before finalization.
 
 * **Parameters:**
   * **concat_dataset** (*BaseConcatDataset*) – The dataset used to train the feature extractors.
-  * **features** (*FeatureExtractor* *or* *dict* *or* *list*) – The feature extractor pipeline(s) to fit.
-  * **batch_size** (*int* *,* *default 8192*) – The batch size to use when streaming data through the
+  * **features** (*FeatureExtractor* *or* [*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *or* [*list*](https://docs.python.org/3/library/stdtypes.html#list)) – The feature extractor pipeline(s) to fit.
+  * **batch_size** ([*int*](https://docs.python.org/3/library/functions.html#int) *,* *default 8192*) – The batch size to use when streaming data through the
     `partial_fit()` phase.
 * **Returns:**
   The fitted feature extractor instance, ready for feature extraction.
@@ -157,7 +157,7 @@ the original input without modification.
 
 <!-- !! processed by numpydoc !! -->
 
-### eegdash.features.load_features_concat_dataset(path: str | Path, ids_to_load: list[int] | None = None, n_jobs: int = 1) → eegdash.features.datasets.FeaturesConcatDataset
+### eegdash.features.load_features_concat_dataset(path: [str](https://docs.python.org/3/library/stdtypes.html#str) | [Path](https://docs.python.org/3/library/pathlib.html#pathlib.Path), ids_to_load: [list](https://docs.python.org/3/library/stdtypes.html#list)[[int](https://docs.python.org/3/library/functions.html#int)] | [None](https://docs.python.org/3/library/constants.html#None) = None, n_jobs: [int](https://docs.python.org/3/library/functions.html#int) = 1) → eegdash.features.datasets.FeaturesConcatDataset
 
 Load a stored `FeaturesConcatDataset` from a directory.
 
@@ -165,12 +165,12 @@ This function reconstructs a concatenated dataset by loading individual
 `FeaturesDataset` instances from numbered subdirectories.
 
 * **Parameters:**
-  * **path** (*str* *or* *pathlib.Path*) – The root directory where the dataset was previously saved. This
+  * **path** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *or* [*pathlib.Path*](https://docs.python.org/3/library/pathlib.html#pathlib.Path)) – The root directory where the dataset was previously saved. This
     directory should contain numbered subdirectories.
-  * **ids_to_load** (*list* *of* *int* *,* *optional*) – A list of specific recording IDs (subdirectory names) to load.
+  * **ids_to_load** ([*list*](https://docs.python.org/3/library/stdtypes.html#list) *of* [*int*](https://docs.python.org/3/library/functions.html#int) *,* *optional*) – A list of specific recording IDs (subdirectory names) to load.
     If **None**, all numbered subdirectories found in the path are
     loaded in ascending numerical order.
-  * **n_jobs** (*int* *,* *default=1*) – The number of CPU cores to use for parallel loading. Set to -1 to
+  * **n_jobs** ([*int*](https://docs.python.org/3/library/functions.html#int) *,* *default=1*) – The number of CPU cores to use for parallel loading. Set to -1 to
     use all available processors.
 * **Returns:**
   A unified concatenated dataset containing the loaded recordings.
@@ -178,7 +178,7 @@ This function reconstructs a concatenated dataset by loading individual
   FeaturesConcatDataset
 
 #### SEE ALSO
-`braindecode.datautil.load_concat_dataset`
+[`braindecode.datautil.load_concat_dataset`](https://braindecode.org/stable/generated/braindecode.datautil.load_concat_dataset.html#braindecode.datautil.load_concat_dataset)
 
 ### Notes
 

@@ -32,18 +32,18 @@ features corresponding to the leading dimensions (e.g., subjects, channels).
 | `spectral_hjorth_mobility`(f, p, /)                    | Calculate Hjorth Mobility in the frequency domain.                |
 | `spectral_hjorth_complexity`(f, p, /)                  | Calculate Hjorth Complexity in the frequency domain.              |
 
-### eegdash.features.feature_bank.spectral.spectral_preprocessor(x, , , \_metadata, f_min: float | None = None, f_max: float | None = None, fs: int | None = None, window_size_in_sec: float | None = 4, overlap_in_sec: float | None = None, \*\*kwargs)
+### eegdash.features.feature_bank.spectral.spectral_preprocessor(x, , , \_metadata, f_min: [float](https://docs.python.org/3/library/functions.html#float) | [None](https://docs.python.org/3/library/constants.html#None) = None, f_max: [float](https://docs.python.org/3/library/functions.html#float) | [None](https://docs.python.org/3/library/constants.html#None) = None, fs: [int](https://docs.python.org/3/library/functions.html#int) | [None](https://docs.python.org/3/library/constants.html#None) = None, window_size_in_sec: [float](https://docs.python.org/3/library/functions.html#float) | [None](https://docs.python.org/3/library/constants.html#None) = 4, overlap_in_sec: [float](https://docs.python.org/3/library/functions.html#float) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
 
 Compute the Power Spectral Density (PSD) using Welch’s method.
 
 * **Parameters:**
   * **x** (*ndarray*) – The input signal (shape: …, n_times).
-  * **\*\*kwargs** (*dict*) – Supports any scipy.signal.welch arguments like ‘nperseg’ and ‘noverlap’.
-  * **fs** (*int* *|* *None*) – Sampling frequency. Defaults to sfreq in MNE’s info. Do not use unless you know what you are doing.
-  * **f_min** (*float* *|* *None*) – The minimum frequency. Use None for half the window length. Defaults to the highpass frequency used to MNE’s:meth:~mne.io.Raw.filter.
-  * **f_max** (*float* *|* *None*) – The maximum frequency. Use None for Nyquist. Defaults to the lowpass frequency used to MNE’s `filter()`.
-  * **window_size_in_sec** (*float* *|* *None*) – Window size in seconds, replacing nperseg. Only used if nperseg is not provided. Defaults to 4 seconds.
-  * **overlap_in_sec** (*float* *|* *None*) – Window overlap in seconds, replacing noverlap. Only used if nperseg and noverlap are not provided.defaults to half of window_size_in_sec.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Supports any scipy.signal.welch arguments like ‘nperseg’ and ‘noverlap’.
+  * **fs** ([*int*](https://docs.python.org/3/library/functions.html#int) *|* *None*) – Sampling frequency. Defaults to sfreq in MNE’s info. Do not use unless you know what you are doing.
+  * **f_min** ([*float*](https://docs.python.org/3/library/functions.html#float) *|* *None*) – The minimum frequency. Use None for half the window length. Defaults to the highpass frequency used to MNE’s:meth:~mne.io.Raw.filter.
+  * **f_max** ([*float*](https://docs.python.org/3/library/functions.html#float) *|* *None*) – The maximum frequency. Use None for Nyquist. Defaults to the lowpass frequency used to MNE’s [`filter()`](https://mne.tools/stable/generated/mne.io.Raw.html#mne.io.Raw.filter).
+  * **window_size_in_sec** ([*float*](https://docs.python.org/3/library/functions.html#float) *|* *None*) – Window size in seconds, replacing nperseg. Only used if nperseg is not provided. Defaults to 4 seconds.
+  * **overlap_in_sec** ([*float*](https://docs.python.org/3/library/functions.html#float) *|* *None*) – Window overlap in seconds, replacing noverlap. Only used if nperseg and noverlap are not provided.defaults to half of window_size_in_sec.
 * **Returns:**
   * **f** (*ndarray*) – Frequency vector.
   * **p** (*ndarray*) – Power Spectral Density.
@@ -80,7 +80,7 @@ $$
 * **Parameters:**
   * **f** (*ndarray*) – Frequency vector.
   * **p** (*ndarray*) – Power Spectral Density.
-  * **eps** (*float* *,* *optional*) – A small constant to prevent log of zero (default: 1e-15).
+  * **eps** ([*float*](https://docs.python.org/3/library/functions.html#float) *,* *optional*) – A small constant to prevent log of zero (default: 1e-15).
 * **Returns:**
   * **f** (*ndarray*) – Frequency vector (unchanged).
   * *ndarray* – Power Spectral Density in decibels. Shape is `p.shape`.
@@ -153,7 +153,7 @@ the total power is contained.
 * **Parameters:**
   * **f** (*ndarray*) – Frequency vector.
   * **p** (*ndarray*) – Normalized Power Spectral Density (treated as a PDF).
-  * **edge** (*float* *,* *optional*) – The fraction of total power (default is 0.9 for SEF90).
+  * **edge** ([*float*](https://docs.python.org/3/library/functions.html#float) *,* *optional*) – The fraction of total power (default is 0.9 for SEF90).
 * **Returns:**
   The spectral edge frequency. Shape is `p.shape[:-1]`.
 * **Return type:**
@@ -179,7 +179,7 @@ This measures the slope and intercept of the PSD in log-log space.
   - `'exp'`: The slope/exponent (scaling).
   - `'int'`: The y-intercept (offset).
 * **Return type:**
-  dict
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
 
 <!-- !! processed by numpydoc !! -->
 
@@ -190,11 +190,11 @@ Calculate total power within specified frequency bands.
 * **Parameters:**
   * **f** (*ndarray*) – Frequency vector.
   * **p** (*ndarray*) – Power Spectral Density (PSD).
-  * **bands** (*dict* *,* *optional*) – Mapping of band names to (min, max) frequency tuples.
+  * **bands** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *,* *optional*) – Mapping of band names to (min, max) frequency tuples.
 * **Returns:**
   The summed power for each band.
 * **Return type:**
-  dict
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
 
 <!-- !! processed by numpydoc !! -->
 

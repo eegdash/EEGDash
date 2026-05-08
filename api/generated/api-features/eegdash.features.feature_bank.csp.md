@@ -87,7 +87,7 @@ Incrementally update class-wise mean and covariance statistics.
   * **x** (*ndarray*) – Input array of shape (n_epochs, n_channels, n_times).
   * **y** (*ndarray*) – Class labels for each epoch (must contain exactly two classes).
 * **Raises:**
-  **AssertionError** – If more than two unique labels are detected across all
+  [**AssertionError**](https://docs.python.org/3/library/exceptions.html#AssertionError) – If more than two unique labels are detected across all
   partial fits.
 
 <!-- !! processed by numpydoc !! -->

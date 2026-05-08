@@ -25,7 +25,7 @@ features corresponding to the leading dimensions (e.g., subjects, channels).
 | `connectivity_imaginary_coherence`(f, c, /[, ...])     | Calculate Imaginary Coherence (iCOH).                     |
 | `connectivity_lagged_coherence`(f, c, /[, bands])      | Calculate Lagged Coherence.                               |
 
-### eegdash.features.feature_bank.connectivity.connectivity_coherency_preprocessor(x, , , \_metadata, f_min: float | None = None, f_max: float | None = None, fs: int | None = None, window_size_in_sec: float | None = 4, overlap_in_sec: float | None = None, pairs: Iterable[Tuple[str, str]] | None = None, \*\*kwargs)
+### eegdash.features.feature_bank.connectivity.connectivity_coherency_preprocessor(x, , , \_metadata, f_min: [float](https://docs.python.org/3/library/functions.html#float) | [None](https://docs.python.org/3/library/constants.html#None) = None, f_max: [float](https://docs.python.org/3/library/functions.html#float) | [None](https://docs.python.org/3/library/constants.html#None) = None, fs: [int](https://docs.python.org/3/library/functions.html#int) | [None](https://docs.python.org/3/library/constants.html#None) = None, window_size_in_sec: [float](https://docs.python.org/3/library/functions.html#float) | [None](https://docs.python.org/3/library/constants.html#None) = 4, overlap_in_sec: [float](https://docs.python.org/3/library/functions.html#float) | [None](https://docs.python.org/3/library/constants.html#None) = None, pairs: [Iterable](https://docs.python.org/3/library/typing.html#typing.Iterable)[[Tuple](https://docs.python.org/3/library/typing.html#typing.Tuple)[[str](https://docs.python.org/3/library/stdtypes.html#str), [str](https://docs.python.org/3/library/stdtypes.html#str)]] | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
 
 Compute Complex Coherency for all unique channel pairs.
 
@@ -35,14 +35,14 @@ auto-spectral densities.
 
 * **Parameters:**
   * **x** (*ndarray*) – The input signal of shape (n_trials, n_channels, n_times).
-  * **\*\*kwargs** (*dict*) – Supports any `scipy.signal.csd()` arguments like ‘nperseg’
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Supports any [`scipy.signal.csd()`](https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.csd.html#scipy.signal.csd) arguments like ‘nperseg’
     and ‘noverlap’.
-  * **fs** (*int* *|* *None*) – Sampling frequency. Defaults to sfreq in MNE’s info. Do not use unless you know what you are doing.
-  * **f_min** (*float* *|* *None*) – The minimum frequency. Use None for half the window length. Defaults to the highpass frequency used to MNE’s:meth:~mne.io.Raw.filter.
-  * **f_max** (*float* *|* *None*) – The maximum frequency. Use None for Nyquist. Defaults to the lowpass frequency used to MNE’s `filter()`.
-  * **window_size_in_sec** (*float* *|* *None*) – Window size in seconds, replacing nperseg. Only used if nperseg is not provided. Defaults to 4 seconds.
-  * **overlap_in_sec** (*float* *|* *None*) – Window overlap in seconds, replacing noverlap. Only used if nperseg and noverlap are not provided.defaults to half of window_size_in_sec.
-  * **pairs** (*Optional* *[**Iterable* *[**Tuple* *[**str* *,* *str* *]* *]* *]*) – A list of channel pairs to pick.
+  * **fs** ([*int*](https://docs.python.org/3/library/functions.html#int) *|* *None*) – Sampling frequency. Defaults to sfreq in MNE’s info. Do not use unless you know what you are doing.
+  * **f_min** ([*float*](https://docs.python.org/3/library/functions.html#float) *|* *None*) – The minimum frequency. Use None for half the window length. Defaults to the highpass frequency used to MNE’s:meth:~mne.io.Raw.filter.
+  * **f_max** ([*float*](https://docs.python.org/3/library/functions.html#float) *|* *None*) – The maximum frequency. Use None for Nyquist. Defaults to the lowpass frequency used to MNE’s [`filter()`](https://mne.tools/stable/generated/mne.io.Raw.html#mne.io.Raw.filter).
+  * **window_size_in_sec** ([*float*](https://docs.python.org/3/library/functions.html#float) *|* *None*) – Window size in seconds, replacing nperseg. Only used if nperseg is not provided. Defaults to 4 seconds.
+  * **overlap_in_sec** ([*float*](https://docs.python.org/3/library/functions.html#float) *|* *None*) – Window overlap in seconds, replacing noverlap. Only used if nperseg and noverlap are not provided.defaults to half of window_size_in_sec.
+  * **pairs** ([*Optional*](https://docs.python.org/3/library/typing.html#typing.Optional) *[*[*Iterable*](https://docs.python.org/3/library/typing.html#typing.Iterable) *[*[*Tuple*](https://docs.python.org/3/library/typing.html#typing.Tuple) *[*[*str*](https://docs.python.org/3/library/stdtypes.html#str) *,* [*str*](https://docs.python.org/3/library/stdtypes.html#str) *]* *]* *]*) – A list of channel pairs to pick.
 * **Returns:**
   * **f** (*ndarray*) – Frequency vector of shape (n_frequencies,).
   * **c** (*ndarray*) – Complex coherency array of shape (n_trials, n_pairs, n_frequencies).
@@ -63,11 +63,11 @@ $|c|^2$, where $c$ is the complex coherency.
 * **Parameters:**
   * **f** (*ndarray*) – Frequency vector.
   * **c** (*ndarray*) – Complex coherency array.
-  * **bands** (*dict* *,* *optional*) – Frequency bands to aggregate (defaults to DEFAULT_FREQ_BANDS).
+  * **bands** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *,* *optional*) – Frequency bands to aggregate (defaults to DEFAULT_FREQ_BANDS).
 * **Returns:**
   Mean MSC for each frequency band.
 * **Return type:**
-  dict
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
 
 ### References
 
@@ -86,11 +86,11 @@ where $c$ is the complex coherency.
 * **Parameters:**
   * **f** (*ndarray*) – Frequency vector.
   * **c** (*ndarray*) – Complex coherency array.
-  * **bands** (*dict* *,* *optional*) – Frequency bands to aggregate.
+  * **bands** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *,* *optional*) – Frequency bands to aggregate.
 * **Returns:**
   Mean Imaginary Coherence for each frequency band.
 * **Return type:**
-  dict
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
 
 ### References
 
@@ -111,11 +111,11 @@ where $c$ is the complex coherency.
 * **Parameters:**
   * **f** (*ndarray*) – Frequency vector.
   * **c** (*ndarray*) – Complex coherency array.
-  * **bands** (*dict* *,* *optional*) – Frequency bands to aggregate.
+  * **bands** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *,* *optional*) – Frequency bands to aggregate.
 * **Returns:**
   Mean Lagged Coherence for each frequency band.
 * **Return type:**
-  dict
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
 
 ### References
 

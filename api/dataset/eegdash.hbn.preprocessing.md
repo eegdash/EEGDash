@@ -10,7 +10,7 @@ paradigms and other HBN-specific preprocessing steps.
 
 ### *class* eegdash.hbn.preprocessing.hbn_ec_ec_reannotation
 
-Bases: `Preprocessor`
+Bases: [`Preprocessor`](https://braindecode.org/stable/generated/braindecode.preprocessing.Preprocessor.html#braindecode.preprocessing.Preprocessor)
 
 Preprocessor to reannotate HBN data for eyes-open/eyes-closed events.
 
@@ -24,12 +24,12 @@ precise event markers.
 
 ### Notes
 
-This class inherits from `braindecode.preprocessing.Preprocessor`
+This class inherits from [`braindecode.preprocessing.Preprocessor`](https://braindecode.org/stable/generated/braindecode.preprocessing.Preprocessor.html#braindecode.preprocessing.Preprocessor)
 and is intended to be used within a braindecode preprocessing pipeline.
 
 <!-- !! processed by numpydoc !! -->
 
-#### transform(raw: Raw) → Raw
+#### transform(raw: [Raw](https://mne.tools/stable/generated/mne.io.Raw.html#mne.io.Raw)) → [Raw](https://mne.tools/stable/generated/mne.io.Raw.html#mne.io.Raw)
 
 Create new annotations for eyes-open and eyes-closed periods.
 
@@ -43,10 +43,10 @@ The original annotations in the mne.io.Raw object are replaced by
 this new set of annotations.
 
 * **Parameters:**
-  **raw** (*mne.io.Raw*) – The raw MNE object containing the HBN data and original annotations.
+  **raw** ([*mne.io.Raw*](https://mne.tools/stable/generated/mne.io.Raw.html#mne.io.Raw)) – The raw MNE object containing the HBN data and original annotations.
 * **Returns:**
   The raw MNE object with the modified annotations.
 * **Return type:**
-  mne.io.Raw
+  [mne.io.Raw](https://mne.tools/stable/generated/mne.io.Raw.html#mne.io.Raw)
 
 <!-- !! processed by numpydoc !! -->

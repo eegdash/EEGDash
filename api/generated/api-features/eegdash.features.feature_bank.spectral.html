@@ -50,7 +50,7 @@
     <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
     <link rel="stylesheet" type="text/css" href="../../../_static/custom.7953df0a.css?v=314ed3b2" />
     <link rel="stylesheet" type="text/css" href="../../../_static/css/treemap.087aecf0.css?v=7131b20f" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.99faa59c.css?v=b44e0256" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.d7808461.css?v=1ba63a31" />
   
   <!-- So that users can add custom icons -->
   <script defer src="../../../_static/scripts/fontawesome.js?digest=55c26ed414f5f8a31ebb"></script>
@@ -242,8 +242,8 @@
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../user_guide.html">
-    User Guide
+  <a class="nav-link nav-internal" href="../../../quickstart.html">
+    Quick Start
   </a>
 </li>
 
@@ -262,19 +262,43 @@
 </li>
 
 
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../concepts/index.html">
+    Concepts
+  </a>
+</li>
+
+
 <li class="nav-item current active">
   <a class="nav-link nav-internal" href="../../api.html">
     Docs
   </a>
 </li>
 
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../references.html">
+    References
+  </a>
+</li>
 
-<li class="nav-item ">
-  <a class="nav-link nav-external" href="https://eeg2025.github.io/">
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-external" href="https://eeg2025.github.io/">
     EEG2025
   </a>
 </li>
 
+                </ul>
+            </li>
+            
   </ul>
 </nav></div>
       
@@ -393,8 +417,8 @@
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../user_guide.html">
-    User Guide
+  <a class="nav-link nav-internal" href="../../../quickstart.html">
+    Quick Start
   </a>
 </li>
 
@@ -413,9 +437,23 @@
 </li>
 
 
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../concepts/index.html">
+    Concepts
+  </a>
+</li>
+
+
 <li class="nav-item current active">
   <a class="nav-link nav-internal" href="../../api.html">
     Docs
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../references.html">
+    References
   </a>
 </li>
 
@@ -646,18 +684,18 @@ features corresponding to the leading dimensions (e.g., subjects, channels).</p>
 </section>
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.spectral.</span></span><span class="sig-name descname"><span class="pre">spectral_preprocessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">_metadata</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_min</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_max</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window_size_in_sec</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overlap_in_sec</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/spectral.py#L40-L63"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.spectral.</span></span><span class="sig-name descname"><span class="pre">spectral_preprocessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">_metadata</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_min</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_max</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window_size_in_sec</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overlap_in_sec</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/spectral.py#L40-L63"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Compute the Power Spectral Density (PSD) using Welch’s method.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>x</strong> (<em>ndarray</em>) – The input signal (shape: …, n_times).</p></li>
-<li><p><strong>**kwargs</strong> (<em>dict</em>) – Supports any <cite>scipy.signal.welch</cite> arguments like ‘nperseg’ and ‘noverlap’.</p></li>
-<li><p><strong>fs</strong> (<em>int</em><em> | </em><em>None</em>) – Sampling frequency. Defaults to <cite>sfreq</cite> in MNE’s info. Do not use unless you know what you are doing.</p></li>
-<li><p><strong>f_min</strong> (<em>float</em><em> | </em><em>None</em>) – The minimum frequency. Use <cite>None</cite> for half the window length. Defaults to the highpass frequency used to MNE’s:meth:<cite>~mne.io.Raw.filter</cite>.</p></li>
-<li><p><strong>f_max</strong> (<em>float</em><em> | </em><em>None</em>) – The maximum frequency. Use <cite>None</cite> for Nyquist. Defaults to the lowpass frequency used to MNE’s <code class="xref py py-meth docutils literal notranslate"><span class="pre">filter()</span></code>.</p></li>
-<li><p><strong>window_size_in_sec</strong> (<em>float</em><em> | </em><em>None</em>) – Window size in seconds, replacing <cite>nperseg</cite>. Only used if <cite>nperseg</cite> is not provided. Defaults to 4 seconds.</p></li>
-<li><p><strong>overlap_in_sec</strong> (<em>float</em><em> | </em><em>None</em>) – Window overlap in seconds, replacing <cite>noverlap</cite>. Only used if <cite>nperseg</cite> and <cite>noverlap</cite> are not provided.defaults to half of <cite>window_size_in_sec</cite>.</p></li>
+<li><p><strong>**kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a>) – Supports any <cite>scipy.signal.welch</cite> arguments like ‘nperseg’ and ‘noverlap’.</p></li>
+<li><p><strong>fs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em> | </em><em>None</em>) – Sampling frequency. Defaults to <cite>sfreq</cite> in MNE’s info. Do not use unless you know what you are doing.</p></li>
+<li><p><strong>f_min</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em> | </em><em>None</em>) – The minimum frequency. Use <cite>None</cite> for half the window length. Defaults to the highpass frequency used to MNE’s:meth:<cite>~mne.io.Raw.filter</cite>.</p></li>
+<li><p><strong>f_max</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em> | </em><em>None</em>) – The maximum frequency. Use <cite>None</cite> for Nyquist. Defaults to the lowpass frequency used to MNE’s <a class="reference external" href="https://mne.tools/stable/generated/mne.io.Raw.html#mne.io.Raw.filter" title="(in MNE v1.12)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">filter()</span></code></a>.</p></li>
+<li><p><strong>window_size_in_sec</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em> | </em><em>None</em>) – Window size in seconds, replacing <cite>nperseg</cite>. Only used if <cite>nperseg</cite> is not provided. Defaults to 4 seconds.</p></li>
+<li><p><strong>overlap_in_sec</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em> | </em><em>None</em>) – Window overlap in seconds, replacing <cite>noverlap</cite>. Only used if <cite>nperseg</cite> and <cite>noverlap</cite> are not provided.defaults to half of <cite>window_size_in_sec</cite>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -705,7 +743,7 @@ Function (PDF), which is required for Spectral Entropy.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>f</strong> (<em>ndarray</em>) – Frequency vector.</p></li>
 <li><p><strong>p</strong> (<em>ndarray</em>) – Power Spectral Density.</p></li>
-<li><p><strong>eps</strong> (<em>float</em><em>, </em><em>optional</em>) – A small constant to prevent log of zero (default: 1e-15).</p></li>
+<li><p><strong>eps</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – A small constant to prevent log of zero (default: 1e-15).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -797,7 +835,7 @@ the total power is contained.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>f</strong> (<em>ndarray</em>) – Frequency vector.</p></li>
 <li><p><strong>p</strong> (<em>ndarray</em>) – Normalized Power Spectral Density (treated as a PDF).</p></li>
-<li><p><strong>edge</strong> (<em>float</em><em>, </em><em>optional</em>) – The fraction of total power (default is 0.9 for SEF90).</p></li>
+<li><p><strong>edge</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – The fraction of total power (default is 0.9 for SEF90).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -832,7 +870,7 @@ the total power is contained.</p>
 </p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>dict</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -846,14 +884,14 @@ the total power is contained.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>f</strong> (<em>ndarray</em>) – Frequency vector.</p></li>
 <li><p><strong>p</strong> (<em>ndarray</em>) – Power Spectral Density (PSD).</p></li>
-<li><p><strong>bands</strong> (<em>dict</em><em>, </em><em>optional</em>) – Mapping of band names to (min, max) frequency tuples.</p></li>
+<li><p><strong>bands</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a><em>, </em><em>optional</em>) – Mapping of band names to (min, max) frequency tuples.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The summed power for each band.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>dict</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>

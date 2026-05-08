@@ -50,7 +50,7 @@
     <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
     <link rel="stylesheet" type="text/css" href="../../../_static/custom.7953df0a.css?v=314ed3b2" />
     <link rel="stylesheet" type="text/css" href="../../../_static/css/treemap.087aecf0.css?v=7131b20f" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.99faa59c.css?v=b44e0256" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.d7808461.css?v=1ba63a31" />
   
   <!-- So that users can add custom icons -->
   <script defer src="../../../_static/scripts/fontawesome.js?digest=55c26ed414f5f8a31ebb"></script>
@@ -74,8 +74,8 @@
     <link rel="icon" href="../../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="Age Prediction from EEG" href="../tutorials/noplot_tutorial_age_prediction.html" />
-    <link rel="prev" title="Minimal Tutorial" href="../core/tutorial_minimal.html" />
+    <link rel="next" title="Concepts" href="../../../concepts/index.html" />
+    <link rel="prev" title="Dev scripts for EEGDash" href="index.html" />
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="0.7" />
 
@@ -241,8 +241,8 @@
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../user_guide.html">
-    User Guide
+  <a class="nav-link nav-internal" href="../../../quickstart.html">
+    Quick Start
   </a>
 </li>
 
@@ -262,18 +262,42 @@
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../api/api.html">
-    Docs
+  <a class="nav-link nav-internal" href="../../../concepts/index.html">
+    Concepts
   </a>
 </li>
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-external" href="https://eeg2025.github.io/">
+  <a class="nav-link nav-internal" href="../../../api/api.html">
+    Docs
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../references.html">
+    References
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-external" href="https://eeg2025.github.io/">
     EEG2025
   </a>
 </li>
 
+                </ul>
+            </li>
+            
   </ul>
 </nav></div>
       
@@ -388,8 +412,8 @@
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../user_guide.html">
-    User Guide
+  <a class="nav-link nav-internal" href="../../../quickstart.html">
+    Quick Start
   </a>
 </li>
 
@@ -409,8 +433,22 @@
 
 
 <li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../concepts/index.html">
+    Concepts
+  </a>
+</li>
+
+
+<li class="nav-item ">
   <a class="nav-link nav-internal" href="../../../api/api.html">
     Docs
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../references.html">
+    References
   </a>
 </li>
 
@@ -516,7 +554,10 @@
       </a>
     </li>
     
-    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Tutorials!</a></li>
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Examples gallery</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">Dev scripts for EEGDash</a></li>
     
     <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Exploring Braindecode’s BIDSDataset</span></li>
   </ul>
@@ -543,20 +584,20 @@ to download the full example code or to run this example in your browser via Bin
 <section class="sphx-glr-example-title" id="exploring-braindecode-s-bidsdataset">
 <span id="pybids-bidsdataset-demo"></span><span id="sphx-glr-generated-auto-examples-dev-scripts-debug-pybids-braindecode-py"></span><h1>Exploring Braindecode’s BIDSDataset<a class="headerlink" href="#exploring-braindecode-s-bidsdataset" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">2 minutes</span></div>
 <p>Tests showing BIDSDataset not able to handle example EEGLAB dataset and slower than pybids</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <a href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="pathlib.Path" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">Path</span></a>
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 
-<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;NUMBA_DISABLE_JIT&quot;</span><span class="p">,</span> <span class="s2">&quot;1&quot;</span><span class="p">)</span>
-<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;_MNE_FAKE_HOME_DIR&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()))</span>
-<span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;_MNE_FAKE_HOME_DIR&quot;</span><span class="p">])</span> <span class="o">/</span> <span class="s2">&quot;.mne&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<a href="https://docs.python.org/3/library/os.html#os.environ" title="os.environ" class="sphx-glr-backref-module-os sphx-glr-backref-type-py-data"><span class="n">os</span><span class="o">.</span><span class="n">environ</span></a><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;NUMBA_DISABLE_JIT&quot;</span><span class="p">,</span> <span class="s2">&quot;1&quot;</span><span class="p">)</span>
+<a href="https://docs.python.org/3/library/os.html#os.environ" title="os.environ" class="sphx-glr-backref-module-os sphx-glr-backref-type-py-data"><span class="n">os</span><span class="o">.</span><span class="n">environ</span></a><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;_MNE_FAKE_HOME_DIR&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><a href="https://docs.python.org/3/library/pathlib.html#pathlib.Path.cwd" title="pathlib.Path.cwd" class="sphx-glr-backref-module-pathlib-Path sphx-glr-backref-type-py-method"><span class="n">Path</span><span class="o">.</span><span class="n">cwd</span></a><span class="p">()))</span>
+<span class="p">(</span><a href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="pathlib.Path" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">Path</span></a><span class="p">(</span><a href="https://docs.python.org/3/library/os.html#os.environ" title="os.environ" class="sphx-glr-backref-module-os sphx-glr-backref-type-py-data"><span class="n">os</span><span class="o">.</span><span class="n">environ</span></a><span class="p">[</span><span class="s2">&quot;_MNE_FAKE_HOME_DIR&quot;</span><span class="p">])</span> <span class="o">/</span> <span class="s2">&quot;.mne&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">bids</span><span class="w"> </span><span class="kn">import</span> <span class="n">BIDSLayout</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">braindecode.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">BIDSDataset</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">eegdash</span><span class="w"> </span><span class="kn">import</span> <span class="n">EEGDash</span><span class="p">,</span> <a href="../../../api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset" title="eegdash.EEGDashDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">EEGDashDataset</span></a>
 
-<span class="n">CACHE_DIR</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;EEGDASH_CACHE_DIR&quot;</span><span class="p">,</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span> <span class="o">/</span> <span class="s2">&quot;eegdash_cache&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+<span class="n">CACHE_DIR</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="pathlib.Path" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">Path</span></a><span class="p">(</span><a href="https://docs.python.org/3/library/os.html#os.getenv" title="os.getenv" class="sphx-glr-backref-module-os sphx-glr-backref-type-py-function"><span class="n">os</span><span class="o">.</span><span class="n">getenv</span></a><span class="p">(</span><span class="s2">&quot;EEGDASH_CACHE_DIR&quot;</span><span class="p">,</span> <a href="https://docs.python.org/3/library/pathlib.html#pathlib.Path.cwd" title="pathlib.Path.cwd" class="sphx-glr-backref-module-pathlib-Path sphx-glr-backref-type-py-method"><span class="n">Path</span><span class="o">.</span><span class="n">cwd</span></a><span class="p">()</span> <span class="o">/</span> <span class="s2">&quot;eegdash_cache&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
 <span class="n">CACHE_DIR</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">DATASET_ID</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;EEGDASH_DATASET_ID&quot;</span><span class="p">,</span> <span class="s2">&quot;ds002718&quot;</span><span class="p">)</span>
+<span class="n">DATASET_ID</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/os.html#os.getenv" title="os.getenv" class="sphx-glr-backref-module-os sphx-glr-backref-type-py-function"><span class="n">os</span><span class="o">.</span><span class="n">getenv</span></a><span class="p">(</span><span class="s2">&quot;EEGDASH_DATASET_ID&quot;</span><span class="p">,</span> <span class="s2">&quot;ds002718&quot;</span><span class="p">)</span>
 
 <span class="n">eegdash</span> <span class="o">=</span> <span class="n">EEGDash</span><span class="p">()</span>
 <span class="n">records</span> <span class="o">=</span> <span class="n">eegdash</span><span class="o">.</span><span class="n">find</span><span class="p">({</span><span class="s2">&quot;dataset&quot;</span><span class="p">:</span> <span class="n">DATASET_ID</span><span class="p">},</span> <span class="n">limit</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
@@ -614,7 +655,7 @@ to download the full example code or to run this example in your browser via Bin
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pprint</span>
 
 <span class="c1"># get general info of a recording</span>
-<span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="n">bidsfile</span><span class="o">.</span><span class="n">get_entities</span><span class="p">(</span><span class="n">metadata</span><span class="o">=</span><span class="s2">&quot;all&quot;</span><span class="p">))</span>
+<a href="https://docs.python.org/3/library/pprint.html#pprint.pprint" title="pprint.pprint" class="sphx-glr-backref-module-pprint sphx-glr-backref-type-py-function"><span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span></a><span class="p">(</span><span class="n">bidsfile</span><span class="o">.</span><span class="n">get_entities</span><span class="p">(</span><span class="n">metadata</span><span class="o">=</span><span class="s2">&quot;all&quot;</span><span class="p">))</span>
 </pre></div>
 </div>
 <p>get associations doesn’t give us all desired bids dependencies</p>
@@ -664,7 +705,6 @@ to download the full example code or to run this example in your browser via Bin
 <p><a class="reference download internal" download="" href="../../../_downloads/550a741d97ed0357afeba771431ec6dd/debug_pybids_braindecode.zip"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">zipped:</span> <span class="pre">debug_pybids_braindecode.zip</span></code></a></p>
 </div>
 </div>
-<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
 </section>
 
 
@@ -678,20 +718,20 @@ to download the full example code or to run this example in your browser via Bin
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="../core/tutorial_minimal.html"
+       href="index.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Minimal Tutorial</p>
+        <p class="prev-next-title">Dev scripts for EEGDash</p>
       </div>
     </a>
     <a class="right-next"
-       href="../tutorials/noplot_tutorial_age_prediction.html"
+       href="../../../concepts/index.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Age Prediction from EEG</p>
+        <p class="prev-next-title">Concepts</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

@@ -1,0 +1,1423 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../../" data-theme="light">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta property="og:title" content="How do classical EEG markers compose on top of one Welch PSD?" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://eegdash.org/generated/auto_examples/tutorials/40_features/plot_41_feature_trees.html" />
+<meta property="og:site_name" content="EEG Dash" />
+<meta property="og:description" content="Welch’s method[ Welch, 1967] returns one power spectrum per window; band power, spectral entropy, peak frequency, and the 1/f slope (Demanuele et al…" />
+<meta property="og:image" content="https://eegdash.org/_static/eegdash_social_card.png" />
+<meta property="og:image:alt" content="EEG Dash — data-sharing interface for M/EEG datasets" />
+<meta name="description" content="Welch’s method[ Welch, 1967] returns one power spectrum per window; band power, spectral entropy, peak frequency, and the 1/f slope (Demanuele et al…" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@eegdash" />
+
+    <title>How do classical EEG markers compose on top of one Welch PSD? &#8212; EEG Dash</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "light";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../_static/styles/theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+<link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sg_gallery.css?v=fd6457a4" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/custom.7953df0a.css?v=314ed3b2" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/css/treemap.087aecf0.css?v=7131b20f" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.d7808461.css?v=1ba63a31" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../../../_static/scripts/fontawesome.js?digest=55c26ed414f5f8a31ebb"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb" />
+<link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb" />
+
+    <script src="../../../../_static/documentation_options.js?v=6dfdf7c3"></script>
+    <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../../_static/sg-tags.js?v=d80f6fa4"></script>
+    <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../../_static/copybutton.js?v=8c005784"></script>
+    <script src="../../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'generated/auto_examples/tutorials/40_features/plot_41_feature_trees';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <script defer="defer" src="../../../../_static/js/tag-palette.7346f567.js?v=6f5eac9a"></script>
+    <script defer="defer" src="../../../../_static/js/search-as-you-type.e09b639d.js?v=8e93d0f7"></script>
+    <script defer="defer" src="../../../../_static/js/lazy-embed.1f1f83d2.js?v=118c4c47"></script>
+    <link rel="canonical" href="https://eegdash.org/generated/auto_examples/tutorials/40_features/plot_41_feature_trees.html" />
+    <link rel="icon" href="../../../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="How do I push EEGDash features through a scikit-learn Pipeline?" href="plot_42_features_to_sklearn.html" />
+    <link rel="prev" title="How do I turn EEG windows into a band-power feature matrix?" href="plot_40_first_features.html" />
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.7" />
+
+  
+  <meta name="google-site-verification" content="REPLACE_WITH_GSC_TOKEN">
+  <meta name="msvalidate.01" content="REPLACE_WITH_BING_TOKEN">
+
+  
+  <link rel="preconnect" href="https://cdn.datatables.net" crossorigin>
+  <link rel="preconnect" href="https://code.jquery.com" crossorigin>
+
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    rel="preload"
+    as="style"
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Source+Sans+3:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap"
+    onload="this.onload=null;this.rel='stylesheet'">
+  <noscript>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Source+Sans+3:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap">
+  </noscript>
+
+  
+
+  
+  <link rel="alternate" type="text/markdown" href="/llms.txt" title="EEGDash — LLM-friendly index">
+  <link rel="llms" href="/llms.txt" title="EEGDash — llms.txt index">
+  <link rel="llms-txt" href="/llms.txt">
+  <link rel="llms-full" type="text/markdown" href="/llms-full.txt" title="EEGDash — full markdown corpus">
+  <link rel="alternate" type="application/json" href="/.well-known/agent-skills/index.json" title="EEGDash — Agent Skills">
+  <link rel="alternate" type="application/linkset+json" href="/.well-known/api-catalog" title="EEGDash — API catalog">
+  <meta name="llms-txt" content="/llms.txt">
+  <meta name="llms" content="/llms.txt">
+  <meta name="ai-content-index" content="/llms.txt">
+  <meta name="ai.content_index" content="/llms.txt">
+
+  
+
+  <!-- Google Tag Manager — deferred to DOMContentLoaded so the GTM
+       bootstrap no longer blocks first-paint or the Sphinx search-index
+       load. Functionally equivalent to the inline snippet below but
+       saves ~60 ms of Total Blocking Time per PageSpeed Insights. -->
+  <script>
+    (function(){
+      function loadGTM(){
+        if (window.__gtmLoaded) return;
+        window.__gtmLoaded = true;
+        (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','GTM-MXC3DGL6');
+      }
+      // Defer GTM off the critical path. requestIdleCallback wants an
+      // IdleRequestOptions object as its second argument while
+      // setTimeout wants a plain number — using the same `1` for both
+      // raised a TypeError in Lighthouse's console that dragged the SEO
+      // score down. Branch on availability so each API gets the shape
+      // it expects.
+      function scheduleGTM() {
+        if (typeof window.requestIdleCallback === 'function') {
+          window.requestIdleCallback(loadGTM, { timeout: 2000 });
+        } else {
+          setTimeout(loadGTM, 1);
+        }
+      }
+      if (document.readyState === 'complete' || document.readyState === 'interactive') {
+        scheduleGTM();
+      } else {
+        document.addEventListener('DOMContentLoaded', scheduleGTM);
+      }
+    })();
+  </script>
+  <!-- End Google Tag Manager -->
+
+  </head>
+  <body data-default-mode="light">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+    
+    <img src="../../../../_static/eegdash_long.svg" class="logo__image only-light" alt="EEG Dash Logo"/>
+    <img src="../../../../_static/eegdash_long.svg" class="logo__image only-dark pst-js-only" alt="EEG Dash Logo"/>
+  
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../dataset_summary.html">
+    Datasets
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../quickstart.html">
+    Quick Start
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../install/install.html">
+    Install
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../../index.html">
+    Examples
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../concepts/index.html">
+    Concepts
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../api/api.html">
+    Docs
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../references.html">
+    References
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-external" href="https://eeg2025.github.io/">
+    EEG2025
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="External Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/eegdash/EEGDash" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../../../../_static/icons/github.svg" class="icon-link-image" alt="GitHub"/></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/eegdash/" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../../../../_static/icons/pypi.svg" class="icon-link-image" alt="PyPI"/></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://discord.gg/8jd7nVKwsc" title="Discord" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../../../../_static/icons/discord.svg" class="icon-link-image" alt="Discord"/></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../dataset_summary.html">
+    Datasets
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../quickstart.html">
+    Quick Start
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../install/install.html">
+    Install
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../../index.html">
+    Examples
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../concepts/index.html">
+    Concepts
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../api/api.html">
+    Docs
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../references.html">
+    References
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://eeg2025.github.io/">
+    EEG2025
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="External Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/eegdash/EEGDash" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../../../../_static/icons/github.svg" class="icon-link-image" alt="GitHub"/></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/eegdash/" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../../../../_static/icons/pypi.svg" class="icon-link-image" alt="PyPI"/></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://discord.gg/8jd7nVKwsc" title="Discord" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../../../../_static/icons/discord.svg" class="icon-link-image" alt="Discord"/></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../../index.html" class="nav-link">Examples gallery</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">Feature Engineering</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">How do classical EEG markers compose on top of one Welch PSD?</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p><a class="reference internal" href="#sphx-glr-download-generated-auto-examples-tutorials-40-features-plot-41-feature-trees-py"><span class="std std-ref">Go to the end</span></a>
+to download the full example code or to run this example in your browser via Binder.</p>
+</div>
+<section class="sphx-glr-example-title" id="how-do-classical-eeg-markers-compose-on-top-of-one-welch-psd">
+<span id="sphx-glr-generated-auto-examples-tutorials-40-features-plot-41-feature-trees-py"></span><h1>How do classical EEG markers compose on top of one Welch PSD?<a class="headerlink" href="#how-do-classical-eeg-markers-compose-on-top-of-one-welch-psd" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">10 minutes</span></div>
+<p>Welch’s method <span class="bibtex-citation" id="id1">[<a class="reference internal" href="../../../../references.html#id17" title="P. Welch. The use of fast fourier transform for the estimation of power spectra: a method based on time averaging over short, modified periodograms. IEEE Transactions on Audio and Electroacoustics, 15(2):70-73, 1967. doi:10.1109/TAU.1967.1161901.">Welch, 1967</a>]</span> returns one power spectrum per window; band
+power, spectral entropy, peak frequency, and the 1/f slope (Demanuele
+et al. 2007; Donoghue et al. 2020) are four scalars <em>derived</em> from that
+same spectrum. If a feature dictionary asks for four band powers as
+four independent features, the FFT runs four times per window. The
+<code class="xref py py-class docutils literal notranslate"><span class="pre">FeatureExtractor</span></code> dependency tree shares one
+<code class="docutils literal notranslate"><span class="pre">spectral_preprocessor</span></code> across every spectral feature so the FFT runs
+once. The deliverable for this tutorial is one feature table with the
+four derived columns, plus a three-panel figure that names the
+hierarchy, shows each feature’s distribution, and prints the 4x4
+Pearson correlation between them.</p>
+<p>Live data come from the same 1-40 Hz FIR-filtered windows used in
+<span class="xref std std-doc">/auto_examples/tutorials/40_features/plot_40_first_features</span> to
+keep the tutorial self-contained and offline-runnable, with the same
+HBN resting-state ds005514 recipe served through <a class="reference external" href="https://nemar.org">NEMAR</a> <span class="bibtex-citation" id="id2">[<a class="reference internal" href="../../../../references.html#id6" title="Arnaud Delorme, Dung Truong, Choonhan Youn, Subhashini Sivagnanam, Claire Stirm, Kenneth Yoshimoto, Russell A Poldrack, Amitava Majumdar, and Scott Makeig. Nemar: an open access data, tools and compute resource operating on neuroelectromagnetic data. Database, 2022. doi:10.1093/database/baac096.">Delorme <em>et al.</em>, 2022</a>]</span> and the BIDS conventions
+of Pernet et al. (2019); for clinical EEG good-practice on band
+selection see Cisotto and Chicco (2024).</p>
+<p>So if alpha-, beta-, theta-, and delta-band powers each call Welch
+separately, how many PSDs run per batch, and what does sharing one
+<code class="docutils literal notranslate"><span class="pre">spectral_preprocessor</span></code> change?</p>
+<section id="learning-objectives">
+<h2>Learning objectives<a class="headerlink" href="#learning-objectives" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Identify when independent feature definitions cause repeated PSD work.</p></li>
+<li><p>Build a shared <code class="docutils literal notranslate"><span class="pre">spectral_preprocessor</span></code> and hang four derived features off it (band power, spectral entropy, peak frequency, 1/f slope).</p></li>
+<li><p>Read the dependency tree printed by <code class="xref py py-class docutils literal notranslate"><span class="pre">FeatureExtractor</span></code>.</p></li>
+<li><p>Compute the wall-time speedup from sharing one PSD versus N.</p></li>
+<li><p>Implement a custom decorated feature on the same shared PSD.</p></li>
+</ul>
+</section>
+<section id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>About 5 s on CPU. No GPU. No network.</p></li>
+<li><p>Prerequisites:
+<span class="xref std std-doc">/auto_examples/tutorials/10_core_workflow/plot_10_preprocess_and_window</span>,
+<span class="xref std std-doc">/auto_examples/tutorials/40_features/plot_40_first_features</span>.</p></li>
+<li><p>Concept: <a class="reference internal" href="../../../../concepts/features_vs_deep_learning.html"><span class="doc">Features vs. deep learning</span></a>.</p></li>
+</ul>
+<p>Setup. <code class="docutils literal notranslate"><span class="pre">np.random.seed</span></code> makes the synthetic recordings reproducible
+(E3.21). One global Welch counter lets us prove the shared-PSD claim
+at runtime; the counter is reset to the original Welch in a try/finally
+so subsequent tutorials in the same sphinx-gallery process see a clean
+<code class="docutils literal notranslate"><span class="pre">_spec.welch</span></code> <span class="bibtex-citation" id="id3">[<a class="reference internal" href="../../../../references.html#id25" title="Alexandre Gramfort, Martin Luessi, Eric Larson, Denis A. Engemann, Daniel Strohmeier, Christian Brodbeck, Roman Goj, Mainak Jas, Teon Brooks, Lauri Parkkonen, and Matti Hämäläinen. Meg and eeg data analysis with mne-python. Frontiers in Neuroscience, 2013. doi:10.3389/fnins.2013.00267.">Gramfort <em>et al.</em>, 2013</a>]</span>.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <a href="https://docs.python.org/3/library/functools.html#functools.partial" title="functools.partial" class="sphx-glr-backref-module-functools sphx-glr-backref-type-py-function"><span class="n">partial</span></a>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">mne</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">braindecode.datasets</span><span class="w"> </span><span class="kn">import</span> <a href="https://braindecode.org/stable/generated/braindecode.datasets.BaseConcatDataset.html#braindecode.datasets.BaseConcatDataset" title="braindecode.datasets.BaseConcatDataset" class="sphx-glr-backref-module-braindecode-datasets sphx-glr-backref-type-py-class"><span class="n">BaseConcatDataset</span></a><span class="p">,</span> <a href="https://braindecode.org/stable/generated/braindecode.datasets.RawDataset.html#braindecode.datasets.RawDataset" title="braindecode.datasets.RawDataset" class="sphx-glr-backref-module-braindecode-datasets sphx-glr-backref-type-py-class"><span class="n">RawDataset</span></a>
+<span class="kn">from</span><span class="w"> </span><span class="nn">braindecode.preprocessing</span><span class="w"> </span><span class="kn">import</span> <a href="https://braindecode.org/stable/generated/braindecode.preprocessing.create_fixed_length_windows.html#braindecode.preprocessing.create_fixed_length_windows" title="braindecode.preprocessing.create_fixed_length_windows" class="sphx-glr-backref-module-braindecode-preprocessing sphx-glr-backref-type-py-function"><span class="n">create_fixed_length_windows</span></a>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">eegdash</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">eegdash.features</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <a href="https://docs.python.org/3/library/abc.html#abc.ABC" title="abc.ABC" class="sphx-glr-backref-module-abc sphx-glr-backref-type-py-class"><span class="n">FeatureExtractor</span></a><span class="p">,</span>
+    <a href="../../../../api/features_overview.html#eegdash.features.extract_features" title="eegdash.features.extract_features" class="sphx-glr-backref-module-eegdash-features sphx-glr-backref-type-py-function"><span class="n">extract_features</span></a><span class="p">,</span>
+    <span class="n">feature_predecessor</span><span class="p">,</span>
+    <span class="n">spectral_bands_power</span><span class="p">,</span>
+    <span class="n">spectral_db_preprocessor</span><span class="p">,</span>
+    <span class="n">spectral_entropy</span><span class="p">,</span>
+    <span class="n">spectral_normalized_preprocessor</span><span class="p">,</span>
+    <span class="n">spectral_preprocessor</span><span class="p">,</span>
+    <span class="n">spectral_slope</span><span class="p">,</span>
+    <a href="https://docs.python.org/3/library/functools.html#functools.partial" title="functools.partial" class="sphx-glr-backref-module-functools sphx-glr-backref-type-py-function"><span class="n">univariate_feature</span></a><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">eegdash.features.feature_bank</span><span class="w"> </span><span class="kn">import</span> <span class="n">spectral</span> <span class="k">as</span> <span class="n">_spec</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">eegdash.viz</span><span class="w"> </span><span class="kn">import</span> <span class="n">use_eegdash_style</span>
+
+<span class="n">use_eegdash_style</span><span class="p">()</span>
+<a href="https://numpy.org/doc/stable/reference/random/generated/numpy.random.seed.html#numpy.random.seed" title="numpy.random.seed" class="sphx-glr-backref-module-numpy-random sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span></a><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;eegdash </span><span class="si">{</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">eegdash</span><span class="o">.</span><span class="n">__version__</span></a><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">PSD_CALLS</span></a><span class="p">,</span> <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">_TAG</span></a><span class="p">,</span> <span class="n">_orig_welch</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;flat&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;tree&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">},</span> <span class="p">{</span><span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;tree&quot;</span><span class="p">},</span> <span class="n">_spec</span><span class="o">.</span><span class="n">welch</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_counting_welch</span><span class="p">(</span><span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">k</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Wrap :func:`scipy.signal.welch` to count invocations per run.&quot;&quot;&quot;</span>
+    <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">PSD_CALLS</span></a><span class="p">[</span><a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">_TAG</span></a><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">]]</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">PSD_CALLS</span></a><span class="p">[</span><a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">_TAG</span></a><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">]]</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">_orig_welch</span><span class="p">(</span><span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">k</span><span class="p">)</span>
+
+
+<span class="n">_spec</span><span class="o">.</span><span class="n">welch</span> <span class="o">=</span> <span class="n">_counting_welch</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>eegdash 0.7.2
+</pre></div>
+</div>
+</section>
+<section id="mental-model-psd-is-the-parent-of-every-classical-eeg-marker">
+<h2>Mental model: PSD is the parent of every classical EEG marker<a class="headerlink" href="#mental-model-psd-is-the-parent-of-every-classical-eeg-marker" title="Link to this heading">#</a></h2>
+<p>Welch’s PSD takes one window of shape <code class="docutils literal notranslate"><span class="pre">(n_channels,</span> <span class="pre">n_times)</span></code> and
+returns a power spectrum of shape <code class="docutils literal notranslate"><span class="pre">(n_channels,</span> <span class="pre">n_freqs)</span></code>. Every
+classical resting-state marker is one or two lines of NumPy applied
+to that spectrum:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>raw window  -&gt;  Welch PSD  -&gt;  band power
+                              spectral entropy
+                              peak frequency
+                              1/f slope
+</pre></div>
+</div>
+<p>Two consequences land immediately. First, if four features each
+rebuild the same PSD, the FFT runs four times instead of once.
+Second, the four features read different views of the spectrum (raw
+power for band integrals, normalised power for entropy, log power
+for the 1/f fit). A shared <code class="docutils literal notranslate"><span class="pre">spectral_preprocessor</span></code> plus
+<code class="xref py py-func docutils literal notranslate"><span class="pre">feature_predecessor()</span></code>-tagged consumers solve
+both at once.</p>
+</section>
+<section id="step-1-build-a-small-windowed-dataset">
+<h2>Step 1: Build a small windowed dataset<a class="headerlink" href="#step-1-build-a-small-windowed-dataset" title="Link to this heading">#</a></h2>
+<p>Two 16 s recordings at 128 Hz on a 4-channel parieto-occipital
+montage. Eyes-closed gets a 10 Hz alpha sine on top of the noise
+floor; eyes-open does not. The non-causal 1-40 Hz FIR band-pass
+writes <code class="docutils literal notranslate"><span class="pre">info[&quot;highpass&quot;]</span></code> and <code class="docutils literal notranslate"><span class="pre">info[&quot;lowpass&quot;]</span></code> so that the
+downstream <code class="docutils literal notranslate"><span class="pre">spectral_preprocessor</span></code> can read them when picking the
+integration window. Synthetic data keep the tutorial offline; the
+same code path runs on real <code class="docutils literal notranslate"><span class="pre">ds005514</span></code> windows from
+<span class="xref std std-doc">/auto_examples/tutorials/10_core_workflow/plot_10_preprocess_and_window</span>.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">SFREQ</span></a><span class="p">,</span> <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">CH_NAMES</span></a><span class="p">,</span> <a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">WIN</span></a> <span class="o">=</span> <span class="mi">128</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;O1&quot;</span><span class="p">,</span> <span class="s2">&quot;Oz&quot;</span><span class="p">,</span> <span class="s2">&quot;O2&quot;</span><span class="p">,</span> <span class="s2">&quot;Cz&quot;</span><span class="p">],</span> <span class="nb">int</span><span class="p">(</span><span class="mf">2.0</span> <span class="o">*</span> <span class="mi">128</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_make_raw</span><span class="p">(</span><span class="n">eyes_open</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <a href="https://mne.tools/stable/generated/mne.io.Raw.html#mne.io.Raw" title="mne.io.Raw" class="sphx-glr-backref-module-mne-io sphx-glr-backref-type-py-class"><span class="n">mne</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">Raw</span></a><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Build a synthetic 16 s ``Raw`` with optional 10 Hz alpha sine.&quot;&quot;&quot;</span>
+    <span class="n">n</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">SFREQ</span></a> <span class="o">*</span> <span class="mi">16</span>
+    <span class="n">data</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/random/generator.html#numpy.random.default_rng" title="numpy.random.default_rng" class="sphx-glr-backref-module-numpy-random sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span></a><span class="p">(</span><span class="n">seed</span><span class="p">)</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">CH_NAMES</span></a><span class="p">),</span> <span class="n">n</span><span class="p">))</span> <span class="o">*</span> <span class="mf">1e-6</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">eyes_open</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">+=</span> <span class="mf">4e-6</span> <span class="o">*</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ufunc.html#numpy.ufunc" title="numpy.ufunc" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">np</span><span class="o">.</span><span class="n">sin</span></a><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">np</span><span class="o">.</span><span class="n">pi</span></a> <span class="o">*</span> <span class="mf">10.0</span> <span class="o">*</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.arange.html#numpy.arange" title="numpy.arange" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">arange</span></a><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">/</span> <a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">SFREQ</span></a><span class="p">)</span>
+    <span class="n">raw</span> <span class="o">=</span> <a href="https://mne.tools/stable/generated/mne.io.RawArray.html#mne.io.RawArray" title="mne.io.RawArray" class="sphx-glr-backref-module-mne-io sphx-glr-backref-type-py-class"><span class="n">mne</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">RawArray</span></a><span class="p">(</span>
+        <span class="n">data</span><span class="p">,</span> <a href="https://mne.tools/stable/generated/mne.create_info.html#mne.create_info" title="mne.create_info" class="sphx-glr-backref-module-mne sphx-glr-backref-type-py-function"><span class="n">mne</span><span class="o">.</span><span class="n">create_info</span></a><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">CH_NAMES</span></a><span class="p">,</span> <a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">SFREQ</span></a><span class="p">,</span> <span class="n">ch_types</span><span class="o">=</span><span class="s2">&quot;eeg&quot;</span><span class="p">),</span> <span class="n">verbose</span><span class="o">=</span><span class="s2">&quot;ERROR&quot;</span>
+    <span class="p">)</span>
+    <span class="n">raw</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">l_freq</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">h_freq</span><span class="o">=</span><span class="mf">40.0</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="s2">&quot;ERROR&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">raw</span>
+
+
+<a href="https://braindecode.org/stable/generated/braindecode.datasets.BaseConcatDataset.html#braindecode.datasets.BaseConcatDataset" title="braindecode.datasets.BaseConcatDataset" class="sphx-glr-backref-module-braindecode-datasets sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">datasets</span></a> <span class="o">=</span> <a href="https://braindecode.org/stable/generated/braindecode.datasets.BaseConcatDataset.html#braindecode.datasets.BaseConcatDataset" title="braindecode.datasets.BaseConcatDataset" class="sphx-glr-backref-module-braindecode-datasets sphx-glr-backref-type-py-class"><span class="n">BaseConcatDataset</span></a><span class="p">(</span>
+    <span class="p">[</span>
+        <a href="https://braindecode.org/stable/generated/braindecode.datasets.RawDataset.html#braindecode.datasets.RawDataset" title="braindecode.datasets.RawDataset" class="sphx-glr-backref-module-braindecode-datasets sphx-glr-backref-type-py-class"><span class="n">RawDataset</span></a><span class="p">(</span>
+            <span class="n">_make_raw</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="mi">42</span><span class="p">),</span>
+            <span class="n">target_name</span><span class="o">=</span><span class="s2">&quot;target&quot;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;subject&quot;</span><span class="p">:</span> <span class="s2">&quot;s1&quot;</span><span class="p">,</span> <span class="s2">&quot;condition&quot;</span><span class="p">:</span> <span class="s2">&quot;eyes_open&quot;</span><span class="p">,</span> <span class="s2">&quot;target&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">},</span>
+        <span class="p">),</span>
+        <a href="https://braindecode.org/stable/generated/braindecode.datasets.RawDataset.html#braindecode.datasets.RawDataset" title="braindecode.datasets.RawDataset" class="sphx-glr-backref-module-braindecode-datasets sphx-glr-backref-type-py-class"><span class="n">RawDataset</span></a><span class="p">(</span>
+            <span class="n">_make_raw</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="mi">7</span><span class="p">),</span>
+            <span class="n">target_name</span><span class="o">=</span><span class="s2">&quot;target&quot;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;subject&quot;</span><span class="p">:</span> <span class="s2">&quot;s2&quot;</span><span class="p">,</span> <span class="s2">&quot;condition&quot;</span><span class="p">:</span> <span class="s2">&quot;eyes_closed&quot;</span><span class="p">,</span> <span class="s2">&quot;target&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
+        <span class="p">),</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+<a href="https://braindecode.org/stable/generated/braindecode.datasets.BaseConcatDataset.html#braindecode.datasets.BaseConcatDataset" title="braindecode.datasets.BaseConcatDataset" class="sphx-glr-backref-module-braindecode-datasets sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">windows</span></a> <span class="o">=</span> <a href="https://braindecode.org/stable/generated/braindecode.preprocessing.create_fixed_length_windows.html#braindecode.preprocessing.create_fixed_length_windows" title="braindecode.preprocessing.create_fixed_length_windows" class="sphx-glr-backref-module-braindecode-preprocessing sphx-glr-backref-type-py-function"><span class="n">create_fixed_length_windows</span></a><span class="p">(</span>
+    <a href="https://braindecode.org/stable/generated/braindecode.datasets.BaseConcatDataset.html#braindecode.datasets.BaseConcatDataset" title="braindecode.datasets.BaseConcatDataset" class="sphx-glr-backref-module-braindecode-datasets sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">datasets</span></a><span class="p">,</span>
+    <span class="n">start_offset_samples</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">stop_offset_samples</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">window_size_samples</span><span class="o">=</span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">WIN</span></a><span class="p">,</span>
+    <span class="n">window_stride_samples</span><span class="o">=</span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">WIN</span></a><span class="p">,</span>
+    <span class="n">drop_last_window</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">preload</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+<a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">n_windows</span></a> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">windows</span><span class="o">.</span><span class="n">datasets</span></a><span class="p">)</span>
+<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.html#pandas.Series" title="pandas.Series" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class"><span class="n">pd</span><span class="o">.</span><span class="n">Series</span></a><span class="p">(</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;n_recordings&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="s2">&quot;n_windows&quot;</span><span class="p">:</span> <a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">n_windows</span></a><span class="p">,</span>
+        <span class="s2">&quot;n_channels&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">CH_NAMES</span></a><span class="p">),</span>
+        <span class="s2">&quot;sfreq (Hz)&quot;</span><span class="p">:</span> <a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">SFREQ</span></a><span class="p">,</span>
+        <span class="s2">&quot;window_samples&quot;</span><span class="p">:</span> <a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">WIN</span></a><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">,</span>
+<span class="p">)</span><span class="o">.</span><span class="n">to_frame</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>n_recordings</th>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>n_windows</th>
+      <td>16</td>
+    </tr>
+    <tr>
+      <th>n_channels</th>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>sfreq (Hz)</th>
+      <td>128</td>
+    </tr>
+    <tr>
+      <th>window_samples</th>
+      <td>256</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<br />
+<br /></section>
+<section id="step-2-predict-primm">
+<h2>Step 2: Predict (PRIMM)<a class="headerlink" href="#step-2-predict-primm" title="Link to this heading">#</a></h2>
+<p><strong>Predict.</strong> Four band-power features built as four independent
+extractors each call Welch separately, so the FFT runs four times per
+batch. With one shared <code class="docutils literal notranslate"><span class="pre">spectral_preprocessor</span></code> the count should
+drop to one per batch. Predict the speedup before running.</p>
+</section>
+<section id="step-3-run-1-without-the-tree">
+<h2>Step 3: Run #1, without the tree<a class="headerlink" href="#step-3-run-1-without-the-tree" title="Link to this heading">#</a></h2>
+<p><strong>Run.</strong> Each band gets its own top-level
+<code class="xref py py-class docutils literal notranslate"><span class="pre">FeatureExtractor</span></code> with its own
+<code class="docutils literal notranslate"><span class="pre">spectral_preprocessor</span></code>. The FFT runs once per band per batch; the
+Welch counter records the redundant calls.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">BANDS</span></a> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;delta&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">4.5</span><span class="p">),</span> <span class="s2">&quot;theta&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mf">4.5</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span> <span class="s2">&quot;alpha&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">12</span><span class="p">),</span> <span class="s2">&quot;beta&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">30</span><span class="p">)}</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_band_pow</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">lim</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a ``spectral_bands_power`` partial for one named band.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <a href="https://docs.python.org/3/library/functools.html#functools.partial" title="functools.partial" class="sphx-glr-backref-module-functools sphx-glr-backref-type-py-function"><span class="n">partial</span></a><span class="p">(</span><span class="n">spectral_bands_power</span><span class="p">,</span> <span class="n">bands</span><span class="o">=</span><span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="n">lim</span><span class="p">})</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_psd_pre</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a ``spectral_preprocessor`` partial with a 2 s segment.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <a href="https://docs.python.org/3/library/functools.html#functools.partial" title="functools.partial" class="sphx-glr-backref-module-functools sphx-glr-backref-type-py-function"><span class="n">partial</span></a><span class="p">(</span>
+        <span class="n">spectral_preprocessor</span><span class="p">,</span>
+        <span class="n">fs</span><span class="o">=</span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">SFREQ</span></a><span class="p">,</span>
+        <span class="n">nperseg</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="mf">2.0</span> <span class="o">*</span> <a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">SFREQ</span></a><span class="p">),</span>
+        <span class="n">f_min</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+        <span class="n">f_max</span><span class="o">=</span><span class="mf">40.5</span><span class="p">,</span>
+    <span class="p">)</span>
+
+
+<a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">flat_features</span></a> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">n</span><span class="p">:</span> <a href="https://docs.python.org/3/library/abc.html#abc.ABC" title="abc.ABC" class="sphx-glr-backref-module-abc sphx-glr-backref-type-py-class"><span class="n">FeatureExtractor</span></a><span class="p">({</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2">_pow&quot;</span><span class="p">:</span> <span class="n">_band_pow</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">lim</span><span class="p">)},</span> <span class="n">preprocessor</span><span class="o">=</span><span class="n">_psd_pre</span><span class="p">())</span>
+    <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">lim</span> <span class="ow">in</span> <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">BANDS</span></a><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+<span class="p">}</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">PSD_CALLS</span></a><span class="p">[</span><span class="s2">&quot;flat&quot;</span><span class="p">],</span> <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">_TAG</span></a><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;flat&quot;</span>
+<a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">t0</span></a> <span class="o">=</span> <a href="https://docs.python.org/3/library/time.html#time.perf_counter" title="time.perf_counter" class="sphx-glr-backref-module-time sphx-glr-backref-type-py-function"><span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span></a><span class="p">()</span>
+<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">flat_table</span></a> <span class="o">=</span> <a href="../../../../api/features_overview.html#eegdash.features.extract_features" title="eegdash.features.extract_features" class="sphx-glr-backref-module-eegdash-features sphx-glr-backref-type-py-function"><span class="n">extract_features</span></a><span class="p">(</span>
+    <a href="https://braindecode.org/stable/generated/braindecode.datasets.BaseConcatDataset.html#braindecode.datasets.BaseConcatDataset" title="braindecode.datasets.BaseConcatDataset" class="sphx-glr-backref-module-braindecode-datasets sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">windows</span></a><span class="p">,</span> <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">flat_features</span></a><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span>
+<span class="p">)</span><span class="o">.</span><span class="n">to_dataframe</span><span class="p">(</span><span class="n">include_target</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">runtime_flat</span></a> <span class="o">=</span> <a href="https://docs.python.org/3/library/time.html#time.perf_counter" title="time.perf_counter" class="sphx-glr-backref-module-time sphx-glr-backref-type-py-function"><span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span></a><span class="p">()</span> <span class="o">-</span> <a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">t0</span></a>
+<a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">psds_flat</span></a> <span class="o">=</span> <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">PSD_CALLS</span></a><span class="p">[</span><span class="s2">&quot;flat&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Extracting features:   0%|          | 0/2 [00:00&lt;?, ?it/s]
+Extracting features: 100%|██████████| 2/2 [00:00&lt;00:00, 260.77it/s]
+</pre></div>
+</div>
+</section>
+<section id="step-4-investigate-the-flat-run">
+<h2>Step 4: Investigate the flat run<a class="headerlink" href="#step-4-investigate-the-flat-run" title="Link to this heading">#</a></h2>
+<p><strong>Investigate.</strong> Every band rebuilt the PSD. The total Welch count
+equals <code class="docutils literal notranslate"><span class="pre">n_bands</span> <span class="pre">*</span> <span class="pre">n_batches</span></code>.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;flat: shape=</span><span class="si">{</span><a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.shape.html#pandas.DataFrame.shape" title="pandas.DataFrame.shape" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-property"><span class="n">flat_table</span><span class="o">.</span><span class="n">shape</span></a><span class="si">}</span><span class="s2"> | runtime=</span><span class="si">{</span><a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">runtime_flat</span></a><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> s | PSDs=</span><span class="si">{</span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">psds_flat</span></a><span class="si">}</span><span class="s2">&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>flat: shape=(16, 17) | runtime=0.0097 s | PSDs=8
+</pre></div>
+</div>
+</section>
+<section id="step-5-run-2-with-the-tree-shared-psd">
+<h2>Step 5: Run #2, with the tree (shared PSD)<a class="headerlink" href="#step-5-run-2-with-the-tree-shared-psd" title="Link to this heading">#</a></h2>
+<p><strong>Run.</strong> One <code class="docutils literal notranslate"><span class="pre">spectral_preprocessor</span></code> at the top, four band features
+below. Printing the extractor renders the dependency tree exactly as
+<a class="reference internal" href="../../../../api/features_overview.html#eegdash.features.get_feature_predecessors" title="eegdash.features.get_feature_predecessors"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_feature_predecessors()</span></code></a> would describe it.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">tree_extractor</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/abc.html#abc.ABC" title="abc.ABC" class="sphx-glr-backref-module-abc sphx-glr-backref-type-py-class"><span class="n">FeatureExtractor</span></a><span class="p">(</span>
+    <span class="p">{</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2">_pow&quot;</span><span class="p">:</span> <span class="n">_band_pow</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">lim</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">lim</span> <span class="ow">in</span> <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">BANDS</span></a><span class="o">.</span><span class="n">items</span><span class="p">()},</span> <span class="n">preprocessor</span><span class="o">=</span><span class="n">_psd_pre</span><span class="p">()</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">tree_extractor</span><span class="p">)</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">PSD_CALLS</span></a><span class="p">[</span><span class="s2">&quot;tree&quot;</span><span class="p">],</span> <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">_TAG</span></a><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;tree&quot;</span>
+<a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">t0</span></a> <span class="o">=</span> <a href="https://docs.python.org/3/library/time.html#time.perf_counter" title="time.perf_counter" class="sphx-glr-backref-module-time sphx-glr-backref-type-py-function"><span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span></a><span class="p">()</span>
+<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">tree_table</span></a> <span class="o">=</span> <a href="../../../../api/features_overview.html#eegdash.features.extract_features" title="eegdash.features.extract_features" class="sphx-glr-backref-module-eegdash-features sphx-glr-backref-type-py-function"><span class="n">extract_features</span></a><span class="p">(</span>
+    <a href="https://braindecode.org/stable/generated/braindecode.datasets.BaseConcatDataset.html#braindecode.datasets.BaseConcatDataset" title="braindecode.datasets.BaseConcatDataset" class="sphx-glr-backref-module-braindecode-datasets sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">windows</span></a><span class="p">,</span> <span class="n">tree_extractor</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span>
+<span class="p">)</span><span class="o">.</span><span class="n">to_dataframe</span><span class="p">(</span><span class="n">include_target</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">runtime_tree</span></a> <span class="o">=</span> <a href="https://docs.python.org/3/library/time.html#time.perf_counter" title="time.perf_counter" class="sphx-glr-backref-module-time sphx-glr-backref-type-py-function"><span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span></a><span class="p">()</span> <span class="o">-</span> <a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">t0</span></a>
+<a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">psds_tree</span></a> <span class="o">=</span> <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">PSD_CALLS</span></a><span class="p">[</span><span class="s2">&quot;tree&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>spectral_preprocessor
+╠═ delta_pow: spectral_bands_power
+╠═ theta_pow: spectral_bands_power
+╠═ alpha_pow: spectral_bands_power
+╚═ beta_pow: spectral_bands_power
+
+Extracting features:   0%|          | 0/2 [00:00&lt;?, ?it/s]
+Extracting features: 100%|██████████| 2/2 [00:00&lt;00:00, 448.01it/s]
+</pre></div>
+</div>
+</section>
+<section id="step-6-investigate-the-speedup">
+<h2>Step 6: Investigate the speedup<a class="headerlink" href="#step-6-investigate-the-speedup" title="Link to this heading">#</a></h2>
+<p><strong>Investigate.</strong> Same row count, identical band columns, but the PSD
+counter dropped 4x. After Run #1 and Run #2 we restore
+<code class="docutils literal notranslate"><span class="pre">_spec.welch</span></code> in a <code class="docutils literal notranslate"><span class="pre">try</span></code>/<code class="docutils literal notranslate"><span class="pre">finally</span></code> so any subsequent tutorial in
+the same sphinx-gallery process sees the original Welch.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">try</span><span class="p">:</span>
+    <a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">speedup</span></a> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">runtime_flat</span></a> <span class="o">/</span> <span class="nb">max</span><span class="p">(</span><a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">runtime_tree</span></a><span class="p">,</span> <span class="mf">1e-6</span><span class="p">),</span> <span class="mf">1.0</span><span class="p">)</span>
+    <span class="k">assert</span> <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.shape.html#pandas.DataFrame.shape" title="pandas.DataFrame.shape" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-property"><span class="n">tree_table</span><span class="o">.</span><span class="n">shape</span></a><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.shape.html#pandas.DataFrame.shape" title="pandas.DataFrame.shape" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-property"><span class="n">flat_table</span><span class="o">.</span><span class="n">shape</span></a><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">assert</span> <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.shape.html#pandas.DataFrame.shape" title="pandas.DataFrame.shape" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-property"><span class="n">tree_table</span><span class="o">.</span><span class="n">shape</span></a><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;=</span> <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.shape.html#pandas.DataFrame.shape" title="pandas.DataFrame.shape" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-property"><span class="n">flat_table</span><span class="o">.</span><span class="n">shape</span></a><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">assert</span> <a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">psds_tree</span></a> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">BANDS</span></a><span class="p">)</span> <span class="o">==</span> <a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">psds_flat</span></a>
+    <span class="nb">print</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;tree: shape=</span><span class="si">{</span><a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.shape.html#pandas.DataFrame.shape" title="pandas.DataFrame.shape" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-property"><span class="n">tree_table</span><span class="o">.</span><span class="n">shape</span></a><span class="si">}</span><span class="s2"> | runtime=</span><span class="si">{</span><a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">runtime_tree</span></a><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> s | &quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;PSDs=</span><span class="si">{</span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">psds_tree</span></a><span class="si">}</span><span class="s2"> | speedup=</span><span class="si">{</span><a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">speedup</span></a><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">x&quot;</span>
+    <span class="p">)</span>
+<span class="k">finally</span><span class="p">:</span>
+    <span class="n">_spec</span><span class="o">.</span><span class="n">welch</span> <span class="o">=</span> <span class="n">_orig_welch</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;welch restored&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>tree: shape=(16, 17) | runtime=0.0063 s | PSDs=2 | speedup=1.53x
+welch restored
+</pre></div>
+</div>
+</section>
+<section id="step-7-four-derived-markers-on-one-shared-psd">
+<h2>Step 7: Four derived markers on one shared PSD<a class="headerlink" href="#step-7-four-derived-markers-on-one-shared-psd" title="Link to this heading">#</a></h2>
+<p>Band power is one of four standard derivations from the PSD. The other
+three live in <code class="xref py py-mod docutils literal notranslate"><span class="pre">eegdash.features.feature_bank.spectral</span></code>:
+<code class="xref py py-func docutils literal notranslate"><span class="pre">spectral_entropy()</span></code> (normalised PSD, minus sum of
+<code class="docutils literal notranslate"><span class="pre">p</span> <span class="pre">*</span> <span class="pre">log(p)</span></code>); peak frequency (argmax inside a band, the individual
+alpha frequency anchor; Demanuele et al. 2007); and
+<code class="xref py py-func docutils literal notranslate"><span class="pre">spectral_slope()</span></code> (least-squares fit of
+<code class="docutils literal notranslate"><span class="pre">log</span> <span class="pre">P(f)</span> <span class="pre">=</span> <span class="pre">a</span> <span class="pre">*</span> <span class="pre">log(f)</span> <span class="pre">+</span> <span class="pre">b</span></code> on the decibel spectrum, with FOOOF as
+the periodic / aperiodic split; Donoghue et al. 2020). Each consumer
+is decorated with the matching
+<code class="xref py py-func docutils literal notranslate"><span class="pre">feature_predecessor()</span></code>, so the tree wires the
+normalised, raw, and decibel views of the same Welch output to the
+four leaves without recomputing the FFT.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="nd">@feature_predecessor</span><span class="p">(</span><span class="n">spectral_preprocessor</span><span class="p">)</span>
+<span class="nd">@univariate_feature</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">alpha_band_power</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="o">/</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Total power in the 8-12 Hz band, channel-wise.&quot;&quot;&quot;</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">f</span> <span class="o">&gt;=</span> <span class="mf">8.0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">f</span> <span class="o">&lt;=</span> <span class="mf">12.0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">p</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">mask</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+
+
+<span class="nd">@feature_predecessor</span><span class="p">(</span><span class="n">spectral_preprocessor</span><span class="p">)</span>
+<span class="nd">@univariate_feature</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">alpha_peak_frequency</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="o">/</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Argmax frequency inside the 8-12 Hz alpha band, channel-wise.&quot;&quot;&quot;</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">f</span> <span class="o">&gt;=</span> <span class="mf">8.0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">f</span> <span class="o">&lt;=</span> <span class="mf">12.0</span><span class="p">)</span>
+    <span class="n">f_band</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+    <span class="n">p_band</span> <span class="o">=</span> <span class="n">p</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">mask</span><span class="p">]</span>
+    <span class="n">idx</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.argmax.html#numpy.argmax" title="numpy.argmax" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">argmax</span></a><span class="p">(</span><span class="n">p_band</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">f_band</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+
+
+<span class="n">markers</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/abc.html#abc.ABC" title="abc.ABC" class="sphx-glr-backref-module-abc sphx-glr-backref-type-py-class"><span class="n">FeatureExtractor</span></a><span class="p">(</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;alpha_pow&quot;</span><span class="p">:</span> <span class="n">alpha_band_power</span><span class="p">,</span>
+        <span class="s2">&quot;alpha_peak&quot;</span><span class="p">:</span> <span class="n">alpha_peak_frequency</span><span class="p">,</span>
+        <span class="s2">&quot;norm&quot;</span><span class="p">:</span> <a href="https://docs.python.org/3/library/abc.html#abc.ABC" title="abc.ABC" class="sphx-glr-backref-module-abc sphx-glr-backref-type-py-class"><span class="n">FeatureExtractor</span></a><span class="p">(</span>
+            <span class="p">{</span><span class="s2">&quot;spec_ent&quot;</span><span class="p">:</span> <span class="n">spectral_entropy</span><span class="p">},</span>
+            <span class="n">preprocessor</span><span class="o">=</span><span class="n">spectral_normalized_preprocessor</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="s2">&quot;db&quot;</span><span class="p">:</span> <a href="https://docs.python.org/3/library/abc.html#abc.ABC" title="abc.ABC" class="sphx-glr-backref-module-abc sphx-glr-backref-type-py-class"><span class="n">FeatureExtractor</span></a><span class="p">(</span>
+            <span class="p">{</span><span class="s2">&quot;slope_1f&quot;</span><span class="p">:</span> <span class="n">spectral_slope</span><span class="p">},</span>
+            <span class="n">preprocessor</span><span class="o">=</span><span class="n">spectral_db_preprocessor</span><span class="p">,</span>
+        <span class="p">),</span>
+    <span class="p">},</span>
+    <span class="n">preprocessor</span><span class="o">=</span><span class="n">_psd_pre</span><span class="p">(),</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Spectral entropy needs the <em>normalised</em> PSD; the 1/f slope needs
+the PSD in decibels. Two inner extractors hang those derived
+preprocessors off the parent <code class="docutils literal notranslate"><span class="pre">spectral_preprocessor</span></code>, so the FFT
+still runs once per window. <code class="xref py py-func docutils literal notranslate"><span class="pre">spectral_slope()</span></code>
+returns <code class="docutils literal notranslate"><span class="pre">{'exp':</span> <span class="pre">...,</span> <span class="pre">'int':</span> <span class="pre">...}</span></code>; the extractor expands it into
+one column per key (<code class="docutils literal notranslate"><span class="pre">db_slope_1f_exp_&lt;channel&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">..._int_...</span></code>).</p>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">markers_table</span></a> <span class="o">=</span> <a href="../../../../api/features_overview.html#eegdash.features.extract_features" title="eegdash.features.extract_features" class="sphx-glr-backref-module-eegdash-features sphx-glr-backref-type-py-function"><span class="n">extract_features</span></a><span class="p">(</span>
+    <a href="https://braindecode.org/stable/generated/braindecode.datasets.BaseConcatDataset.html#braindecode.datasets.BaseConcatDataset" title="braindecode.datasets.BaseConcatDataset" class="sphx-glr-backref-module-braindecode-datasets sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">windows</span></a><span class="p">,</span> <span class="n">markers</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span>
+<span class="p">)</span><span class="o">.</span><span class="n">to_dataframe</span><span class="p">(</span><span class="n">include_target</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span>
+    <span class="s2">&quot;marker columns (first 10):&quot;</span><span class="p">,</span>
+    <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Index.html#pandas.Index" title="pandas.Index" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">markers_table</span><span class="o">.</span><span class="n">columns</span></a><span class="p">[:</span><span class="mi">10</span><span class="p">]],</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;markers table shape: </span><span class="si">{</span><a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.shape.html#pandas.DataFrame.shape" title="pandas.DataFrame.shape" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-property"><span class="n">markers_table</span><span class="o">.</span><span class="n">shape</span></a><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Extracting features:   0%|          | 0/2 [00:00&lt;?, ?it/s]
+Extracting features: 100%|██████████| 2/2 [00:00&lt;00:00, 397.96it/s]
+marker columns (first 10): [&#39;alpha_pow_O1&#39;, &#39;alpha_pow_Oz&#39;, &#39;alpha_pow_O2&#39;, &#39;alpha_pow_Cz&#39;, &#39;alpha_peak_O1&#39;, &#39;alpha_peak_Oz&#39;, &#39;alpha_peak_O2&#39;, &#39;alpha_peak_Cz&#39;, &#39;norm_spec_ent_O1&#39;, &#39;norm_spec_ent_Oz&#39;]
+markers table shape: (16, 21)
+</pre></div>
+</div>
+</section>
+<section id="step-8-reduce-the-per-channel-markers-to-four-scalars-per-window">
+<h2>Step 8: Reduce the per-channel markers to four scalars per window<a class="headerlink" href="#step-8-reduce-the-per-channel-markers-to-four-scalars-per-window" title="Link to this heading">#</a></h2>
+<p>Each marker comes back as one scalar per channel; the figure wants one
+scalar per window per marker. We average over the four
+parieto-occipital channels per row. On a real recording the right
+reduction is task-specific (Cisotto and Chicco 2024 Tip 5).</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">_mean_over_channels</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class"><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span></a><span class="p">,</span> <span class="n">prefix</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class"><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span></a><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Average ``&lt;prefix&gt;_&lt;channel&gt;`` columns into one scalar per row.&quot;&quot;&quot;</span>
+    <span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">c</span> <span class="o">==</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">ch</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">CH_NAMES</span></a><span class="p">)]</span>
+    <span class="k">return</span> <span class="n">df</span><span class="p">[</span><span class="n">cols</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+<a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">feature_names</span></a> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;band power&quot;</span><span class="p">,</span> <span class="s2">&quot;spectral entropy&quot;</span><span class="p">,</span> <span class="s2">&quot;peak frequency&quot;</span><span class="p">,</span> <span class="s2">&quot;1/f slope&quot;</span><span class="p">]</span>
+<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">band_pow</span></a> <span class="o">=</span> <span class="n">_mean_over_channels</span><span class="p">(</span><a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">markers_table</span></a><span class="p">,</span> <span class="s2">&quot;alpha_pow&quot;</span><span class="p">)</span>
+<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">spec_ent</span></a> <span class="o">=</span> <span class="n">_mean_over_channels</span><span class="p">(</span><a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">markers_table</span></a><span class="p">,</span> <span class="s2">&quot;norm_spec_ent&quot;</span><span class="p">)</span>
+<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">peak_f</span></a> <span class="o">=</span> <span class="n">_mean_over_channels</span><span class="p">(</span><a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">markers_table</span></a><span class="p">,</span> <span class="s2">&quot;alpha_peak&quot;</span><span class="p">)</span>
+<span class="c1"># spectral_slope returns {&#39;exp&#39;, &#39;int&#39;}; we want the slope (&#39;exp&#39;).</span>
+<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">slope</span></a> <span class="o">=</span> <span class="n">_mean_over_channels</span><span class="p">(</span><a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">markers_table</span></a><span class="p">,</span> <span class="s2">&quot;db_slope_1f_exp&quot;</span><span class="p">)</span>
+<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">derived</span></a> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.stack.html#numpy.stack" title="numpy.stack" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">stack</span></a><span class="p">([</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">band_pow</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">spec_ent</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">peak_f</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">slope</span></a><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;derived feature matrix shape: </span><span class="si">{</span><a href="https://docs.python.org/3/library/stdtypes.html#tuple" title="builtins.tuple" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">derived</span><span class="o">.</span><span class="n">shape</span></a><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="c1"># Band power lives at the picovolt^2/Hz scale (~1e-12), so we report the</span>
+<span class="c1"># summary in scientific notation rather than rounded floats.</span>
+<span class="nb">print</span><span class="p">(</span>
+    <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class"><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span></a><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">derived</span></a><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">feature_names</span></a><span class="p">)</span>
+    <span class="o">.</span><span class="n">agg</span><span class="p">([</span><span class="s2">&quot;mean&quot;</span><span class="p">,</span> <span class="s2">&quot;std&quot;</span><span class="p">])</span>
+    <span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">v</span><span class="si">:</span><span class="s2">.3g</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">to_string</span><span class="p">()</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>derived feature matrix shape: (16, 4)
+     band power spectral entropy peak frequency 1/f slope
+mean   8.26e-12             2.66           10.2     -0.45
+std    8.38e-12             1.38          0.403     0.553
+</pre></div>
+</div>
+</section>
+<section id="step-9-compute-the-per-window-welch-psd-for-the-figure">
+<h2>Step 9: Compute the per-window Welch PSD for the figure<a class="headerlink" href="#step-9-compute-the-per-window-welch-psd-for-the-figure" title="Link to this heading">#</a></h2>
+<p>The leaf thumbnails in Panel 1 show what each derived feature reads
+off the spectrum. The PSD is computed once from the windowed dataset
+using <code class="docutils literal notranslate"><span class="pre">nperseg</span> <span class="pre">=</span> <span class="pre">sfreq</span></code> (1 s segments) to match
+<code class="docutils literal notranslate"><span class="pre">spectral_preprocessor</span></code>.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">scipy.signal</span><span class="w"> </span><span class="kn">import</span> <span class="n">welch</span> <span class="k">as</span> <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.welch.html#scipy.signal.welch" title="scipy.signal.welch" class="sphx-glr-backref-module-scipy-signal sphx-glr-backref-type-py-function"><span class="n">_welch_clean</span></a>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_stack_window_array</span><span class="p">(</span><span class="n">windows_obj</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Concatenate windows into ``(n_windows, n_channels, n_times)``.&quot;&quot;&quot;</span>
+    <span class="n">arrays</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">sub</span> <span class="ow">in</span> <span class="n">windows_obj</span><span class="o">.</span><a href="https://braindecode.org/stable/generated/braindecode.datasets.BaseConcatDataset.html#braindecode.datasets.BaseConcatDataset" title="braindecode.datasets.BaseConcatDataset" class="sphx-glr-backref-module-braindecode-datasets sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">datasets</span></a><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sub</span><span class="p">)):</span>
+            <span class="n">arrays</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.asarray.html#numpy.asarray" title="numpy.asarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">asarray</span></a><span class="p">(</span><span class="n">sub</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]))</span>
+    <span class="k">return</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.stack.html#numpy.stack" title="numpy.stack" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">stack</span></a><span class="p">(</span><span class="n">arrays</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+
+<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X_windows</span></a> <span class="o">=</span> <span class="n">_stack_window_array</span><span class="p">(</span><a href="https://braindecode.org/stable/generated/braindecode.datasets.BaseConcatDataset.html#braindecode.datasets.BaseConcatDataset" title="braindecode.datasets.BaseConcatDataset" class="sphx-glr-backref-module-braindecode-datasets sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">windows</span></a><span class="p">)</span>
+<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">freqs</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">psd_array</span></a> <span class="o">=</span> <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.welch.html#scipy.signal.welch" title="scipy.signal.welch" class="sphx-glr-backref-module-scipy-signal sphx-glr-backref-type-py-function"><span class="n">_welch_clean</span></a><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X_windows</span></a><span class="p">,</span> <span class="n">fs</span><span class="o">=</span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">SFREQ</span></a><span class="p">,</span> <span class="n">nperseg</span><span class="o">=</span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">SFREQ</span></a><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">psd_array</span></a> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">psd_array</span></a><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">freqs</span></a> <span class="o">&gt;=</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">freqs</span></a> <span class="o">&lt;=</span> <span class="mf">40.0</span><span class="p">)]</span>
+<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">freqs</span></a> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">freqs</span></a><span class="p">[(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">freqs</span></a> <span class="o">&gt;=</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">freqs</span></a> <span class="o">&lt;=</span> <span class="mf">40.0</span><span class="p">)]</span>
+<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.html#pandas.Series" title="pandas.Series" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class"><span class="n">pd</span><span class="o">.</span><span class="n">Series</span></a><span class="p">(</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;X.shape&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#tuple" title="builtins.tuple" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X_windows</span><span class="o">.</span><span class="n">shape</span></a><span class="p">),</span>
+        <span class="s2">&quot;psd_array.shape&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#tuple" title="builtins.tuple" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">psd_array</span><span class="o">.</span><span class="n">shape</span></a><span class="p">),</span>
+        <span class="s2">&quot;freqs.shape&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#tuple" title="builtins.tuple" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">freqs</span><span class="o">.</span><span class="n">shape</span></a><span class="p">),</span>
+        <span class="s2">&quot;f_min (Hz)&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">freqs</span></a><span class="o">.</span><span class="n">min</span><span class="p">()),</span>
+        <span class="s2">&quot;f_max (Hz)&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">freqs</span></a><span class="o">.</span><span class="n">max</span><span class="p">()),</span>
+    <span class="p">},</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">,</span>
+<span class="p">)</span><span class="o">.</span><span class="n">to_frame</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>X.shape</th>
+      <td>(16, 4, 256)</td>
+    </tr>
+    <tr>
+      <th>psd_array.shape</th>
+      <td>(16, 4, 40)</td>
+    </tr>
+    <tr>
+      <th>freqs.shape</th>
+      <td>(40,)</td>
+    </tr>
+    <tr>
+      <th>f_min (Hz)</th>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>f_max (Hz)</th>
+      <td>40.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<br />
+<br /></section>
+<section id="step-10-plot-the-feature-tree-distributions-and-correlations">
+<h2>Step 10: Plot the feature tree, distributions, and correlations<a class="headerlink" href="#step-10-plot-the-feature-tree-distributions-and-correlations" title="Link to this heading">#</a></h2>
+<p>Panel 1 redraws the dependency tree with a tiny PSD thumbnail inside
+each leaf. Panel 2 shows the per-window distribution of each derived
+scalar. Panel 3 reports the 4x4 Pearson correlation between the four
+columns; band power and 1/f slope typically anti-correlate on
+alpha-rich windows. The drawing helpers live in a sibling
+<code class="docutils literal notranslate"><span class="pre">_feature_tree_figure</span></code> module so the rendering plumbing stays out
+of this tutorial.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">_feature_tree_figure</span><span class="w"> </span><span class="kn">import</span> <span class="n">draw_feature_tree_figure</span>
+
+<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="matplotlib.figure.Figure" class="sphx-glr-backref-module-matplotlib-figure sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">fig</span></a> <span class="o">=</span> <span class="n">draw_feature_tree_figure</span><span class="p">(</span>
+    <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">psd_array</span></a><span class="o">=</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">psd_array</span></a><span class="p">,</span>
+    <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">freqs</span></a><span class="o">=</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">freqs</span></a><span class="p">,</span>
+    <span class="n">derived_features</span><span class="o">=</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">derived</span></a><span class="p">,</span>
+    <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">feature_names</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">feature_names</span></a><span class="p">,</span>
+    <span class="n">plot_id</span><span class="o">=</span><span class="s2">&quot;plot_41&quot;</span><span class="p">,</span>
+    <span class="n">sfreq</span><span class="o">=</span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">SFREQ</span></a><span class="p">,</span>
+    <a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">n_windows</span></a><span class="o">=</span><span class="nb">int</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#tuple" title="builtins.tuple" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">derived</span><span class="o">.</span><span class="n">shape</span></a><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+    <span class="n">citation</span><span class="o">=</span><span class="s2">&quot;Demanuele et al. 2007 / Donoghue et al. 2020&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
+</pre></div>
+</div>
+<img src="../../../../_images/sphx_glr_plot_41_feature_trees_001.png" srcset="../../../../_images/sphx_glr_plot_41_feature_trees_001.png" alt="plot 41 feature trees" class = "sphx-glr-single-img"/><p><strong>Investigate.</strong> Panel 2 shows that the four markers are not
+redundant: band power and peak frequency span different ranges, and
+the 1/f slope sits well below zero across every window. Panel 3
+names which pairs co-vary; on a real cohort, those off-diagonals are
+the columns a clinician reads first when comparing wake states.</p>
+</section>
+<section id="a-common-mistake-and-how-to-recover">
+<h2>A common mistake, and how to recover<a class="headerlink" href="#a-common-mistake-and-how-to-recover" title="Link to this heading">#</a></h2>
+<p><strong>Run.</strong> A common slip is reversing a band tuple so the lower bound
+exceeds the upper bound. <code class="docutils literal notranslate"><span class="pre">spectral_bands_power</span></code> then sees an empty
+mask and the column comes back all NaN. We trigger it on purpose with
+a <code class="docutils literal notranslate"><span class="pre">try</span></code>/<code class="docutils literal notranslate"><span class="pre">except</span></code> so the failure mode is visible (Nederbragt et
+al. 2020).</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">try</span><span class="p">:</span>
+    <a href="https://docs.python.org/3/library/stdtypes.html#tuple" title="builtins.tuple" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">bad_band</span></a> <span class="o">=</span> <span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>  <span class="c1"># reversed (lo &gt; hi)</span>
+    <a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">lo</span></a><span class="p">,</span> <a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">hi</span></a> <span class="o">=</span> <a href="https://docs.python.org/3/library/stdtypes.html#tuple" title="builtins.tuple" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">bad_band</span></a>
+    <span class="k">if</span> <a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">lo</span></a> <span class="o">&gt;=</span> <a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">hi</span></a><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;band tuple (</span><span class="si">{</span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">lo</span></a><span class="si">}</span><span class="s2">, </span><span class="si">{</span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">hi</span></a><span class="si">}</span><span class="s2">) reversed: lo must be &lt; hi&quot;</span><span class="p">)</span>
+<span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">RuntimeError</span><span class="p">)</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Caught </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">exc</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Recovery: use </span><span class="si">{</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#tuple" title="builtins.tuple" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">bad_band</span></a><span class="p">),</span><span class="w"> </span><span class="nb">max</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#tuple" title="builtins.tuple" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">bad_band</span></a><span class="p">))</span><span class="si">}</span><span class="s2"> so lo &lt; hi.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Caught ValueError: band tuple (12, 8) reversed: lo must be &lt; hi
+Recovery: use (8, 12) so lo &lt; hi.
+</pre></div>
+</div>
+</section>
+<section id="modify-add-a-fifth-band-gamma">
+<h2>Modify: add a fifth band (gamma)<a class="headerlink" href="#modify-add-a-fifth-band-gamma" title="Link to this heading">#</a></h2>
+<p><strong>Your turn.</strong> Add <code class="docutils literal notranslate"><span class="pre">gamma</span></code> (30-40 Hz) to <code class="docutils literal notranslate"><span class="pre">BANDS</span></code> and rerun the
+tree. Runtime barely budges; the flat version would pay a fifth PSD.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">EXTENDED</span></a> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">BANDS</span></a><span class="p">,</span> <span class="s2">&quot;gamma&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">)}</span>
+<span class="n">ext_tree</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/abc.html#abc.ABC" title="abc.ABC" class="sphx-glr-backref-module-abc sphx-glr-backref-type-py-class"><span class="n">FeatureExtractor</span></a><span class="p">(</span>
+    <span class="p">{</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2">_pow&quot;</span><span class="p">:</span> <span class="n">_band_pow</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">lim</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">lim</span> <span class="ow">in</span> <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">EXTENDED</span></a><span class="o">.</span><span class="n">items</span><span class="p">()},</span>
+    <span class="n">preprocessor</span><span class="o">=</span><span class="n">_psd_pre</span><span class="p">(),</span>
+<span class="p">)</span>
+<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ext_table</span></a> <span class="o">=</span> <a href="../../../../api/features_overview.html#eegdash.features.extract_features" title="eegdash.features.extract_features" class="sphx-glr-backref-module-eegdash-features sphx-glr-backref-type-py-function"><span class="n">extract_features</span></a><span class="p">(</span><a href="https://braindecode.org/stable/generated/braindecode.datasets.BaseConcatDataset.html#braindecode.datasets.BaseConcatDataset" title="braindecode.datasets.BaseConcatDataset" class="sphx-glr-backref-module-braindecode-datasets sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">windows</span></a><span class="p">,</span> <span class="n">ext_tree</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">to_dataframe</span><span class="p">(</span>
+    <span class="n">include_target</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;extended (with gamma): n_cols=</span><span class="si">{</span><a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.shape.html#pandas.DataFrame.shape" title="pandas.DataFrame.shape" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-property"><span class="n">ext_table</span><span class="o">.</span><span class="n">shape</span></a><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Extracting features:   0%|          | 0/2 [00:00&lt;?, ?it/s]
+Extracting features: 100%|██████████| 2/2 [00:00&lt;00:00, 339.14it/s]
+extended (with gamma): n_cols=21
+</pre></div>
+</div>
+</section>
+<section id="make-a-custom-feature-on-the-same-shared-psd">
+<h2>Make: a custom feature on the same shared PSD<a class="headerlink" href="#make-a-custom-feature-on-the-same-shared-psd" title="Link to this heading">#</a></h2>
+<p><strong>Mini-project.</strong>
+<code class="xref py py-func docutils literal notranslate"><span class="pre">feature_predecessor()</span></code> pins the predecessor;
+<code class="xref py py-func docutils literal notranslate"><span class="pre">univariate_feature()</span></code> names columns per
+channel. Relative alpha is a classical drowsiness marker (Cisotto
+and Chicco 2024 Tip 5).</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="nd">@feature_predecessor</span><span class="p">(</span><span class="n">spectral_preprocessor</span><span class="p">)</span>
+<span class="nd">@univariate_feature</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">relative_alpha</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="o">/</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Alpha power divided by total in-band power.&quot;&quot;&quot;</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">f</span> <span class="o">&gt;=</span> <span class="mf">8.0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">f</span> <span class="o">&lt;=</span> <span class="mf">12.0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">p</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">mask</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="mf">1e-30</span><span class="p">)</span>
+
+
+<span class="n">custom_tree</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/abc.html#abc.ABC" title="abc.ABC" class="sphx-glr-backref-module-abc sphx-glr-backref-type-py-class"><span class="n">FeatureExtractor</span></a><span class="p">(</span>
+    <span class="p">{</span>
+        <span class="o">**</span><span class="p">{</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2">_pow&quot;</span><span class="p">:</span> <span class="n">_band_pow</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">lim</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">lim</span> <span class="ow">in</span> <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">BANDS</span></a><span class="o">.</span><span class="n">items</span><span class="p">()},</span>
+        <span class="s2">&quot;rel_alpha&quot;</span><span class="p">:</span> <span class="n">relative_alpha</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="n">preprocessor</span><span class="o">=</span><span class="n">_psd_pre</span><span class="p">(),</span>
+<span class="p">)</span>
+<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">custom_table</span></a> <span class="o">=</span> <a href="../../../../api/features_overview.html#eegdash.features.extract_features" title="eegdash.features.extract_features" class="sphx-glr-backref-module-eegdash-features sphx-glr-backref-type-py-function"><span class="n">extract_features</span></a><span class="p">(</span>
+    <a href="https://braindecode.org/stable/generated/braindecode.datasets.BaseConcatDataset.html#braindecode.datasets.BaseConcatDataset" title="braindecode.datasets.BaseConcatDataset" class="sphx-glr-backref-module-braindecode-datasets sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">windows</span></a><span class="p">,</span> <span class="n">custom_tree</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span>
+<span class="p">)</span><span class="o">.</span><span class="n">to_dataframe</span><span class="p">(</span><span class="n">include_target</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span>
+    <span class="s2">&quot;custom rel_alpha columns:&quot;</span><span class="p">,</span>
+    <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Index.html#pandas.Index" title="pandas.Index" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">custom_table</span><span class="o">.</span><span class="n">columns</span></a> <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;rel_alpha&quot;</span><span class="p">)],</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Extracting features:   0%|          | 0/2 [00:00&lt;?, ?it/s]
+Extracting features: 100%|██████████| 2/2 [00:00&lt;00:00, 420.82it/s]
+custom rel_alpha columns: [&#39;rel_alpha_O1&#39;, &#39;rel_alpha_Oz&#39;, &#39;rel_alpha_O2&#39;, &#39;rel_alpha_Cz&#39;]
+</pre></div>
+</div>
+</section>
+<section id="result">
+<h2>Result<a class="headerlink" href="#result" title="Link to this heading">#</a></h2>
+<p>We turned one windowed dataset into a tidy table with the four
+canonical scalars per window plus the alpha relative-power add-on,
+all built on top of one Welch PSD per window. The shared-PSD tree
+divides the FFT work by the number of spectral features. A clean
+table only confirms plumbing; signal quality and task design are
+still open questions <span class="bibtex-citation" id="id4">[<a class="reference internal" href="../../../../references.html#id19" title="Giulia Cisotto and Davide Chicco. Ten quick tips for clinical electroencephalographic (eeg) data acquisition and signal processing. PeerJ Computer Science, 10:e2256, 2024. doi:10.7717/peerj-cs.2256.">Cisotto and Chicco, 2024</a>]</span>.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">result</span></a> <span class="o">=</span> <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class"><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span></a><span class="p">(</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;n_features&quot;</span><span class="p">:</span> <span class="p">[</span><a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.shape.html#pandas.DataFrame.shape" title="pandas.DataFrame.shape" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-property"><span class="n">flat_table</span><span class="o">.</span><span class="n">shape</span></a><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.shape.html#pandas.DataFrame.shape" title="pandas.DataFrame.shape" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-property"><span class="n">tree_table</span><span class="o">.</span><span class="n">shape</span></a><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span>
+        <span class="s2">&quot;runtime_s&quot;</span><span class="p">:</span> <span class="p">[</span><a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">runtime_flat</span></a><span class="p">,</span> <a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">runtime_tree</span></a><span class="p">],</span>
+        <span class="s2">&quot;psds_computed&quot;</span><span class="p">:</span> <span class="p">[</span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">psds_flat</span></a><span class="p">,</span> <a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">psds_tree</span></a><span class="p">],</span>
+        <span class="s2">&quot;speedup_vs_flat&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">speedup</span></a><span class="p">],</span>
+    <span class="p">},</span>
+    <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;flat (no tree)&quot;</span><span class="p">,</span> <span class="s2">&quot;tree (shared PSD)&quot;</span><span class="p">],</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.round.html#pandas.DataFrame.round" title="pandas.DataFrame.round" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-method"><span class="n">result</span><span class="o">.</span><span class="n">round</span></a><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">to_string</span><span class="p">())</span>
+<span class="k">assert</span> <a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">speedup</span></a> <span class="o">&gt;=</span> <span class="mf">1.0</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>                   n_features  runtime_s  psds_computed  speedup_vs_flat
+flat (no tree)             16     0.0097              8           1.0000
+tree (shared PSD)          16     0.0063              2           1.5349
+</pre></div>
+</div>
+</section>
+<section id="try-it-yourself">
+<h2>Try it yourself<a class="headerlink" href="#try-it-yourself" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Add a fifth leaf for spectral edge frequency
+(<code class="xref py py-func docutils literal notranslate"><span class="pre">spectral_edge()</span></code>) on the same tree.</p></li>
+<li><p>Save <code class="docutils literal notranslate"><span class="pre">markers_table</span></code> to parquet and continue in
+<span class="xref std std-doc">/auto_examples/tutorials/40_features/plot_42_features_to_sklearn</span>.</p></li>
+<li><p>Compare runtimes on a longer recording (~5 minutes); the speedup
+widens with FFT size.</p></li>
+</ul>
+</section>
+<section id="wrap-up">
+<h2>Wrap-up<a class="headerlink" href="#wrap-up" title="Link to this heading">#</a></h2>
+<p>We named four canonical PSD-derived markers, declared them on one
+shared <code class="docutils literal notranslate"><span class="pre">spectral_preprocessor</span></code>, plotted the dependency tree, and
+checked that the columns are not redundant. Next:
+<span class="xref std std-doc">/auto_examples/tutorials/40_features/plot_42_features_to_sklearn</span>
+turns this table into a scikit-learn estimator. Concept:
+<a class="reference internal" href="../../../../concepts/features_vs_deep_learning.html"><span class="doc">Features vs. deep learning</span></a>.</p>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<p>See <a class="reference internal" href="../../../../references.html"><span class="doc">References</span></a> for the centralised bibliography of papers
+cited above. Add or amend an entry once in
+<code class="file docutils literal notranslate"><span class="pre">docs/source/refs.bib</span></code>; every tutorial inherits the update.</p>
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-auto-examples-tutorials-40-features-plot-41-feature-trees-py">
+<div class="binder-badge docutils container">
+<a class="reference external image-reference" href="https://mybinder.org/v2/gh/eegdash/EEGDash/main?urlpath=lab/tree/notebooks/generated/auto_examples/tutorials/40_features/plot_41_feature_trees.ipynb"><img alt="Launch binder" src="../../../../_images/binder_badge_logo9.svg" style="width: 150px;" />
+</a>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../../../../_downloads/f9f6570b4e1fd718642a9b0d0ffc1829/plot_41_feature_trees.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_41_feature_trees.ipynb</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../../../../_downloads/16e36efb4be7f116145ce120218df0f1/plot_41_feature_trees.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_41_feature_trees.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-zip docutils container">
+<p><a class="reference download internal" download="" href="../../../../_downloads/52133241ac6b56c971f3104be5070ccf/plot_41_feature_trees.zip"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">zipped:</span> <span class="pre">plot_41_feature_trees.zip</span></code></a></p>
+</div>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="plot_40_first_features.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">How do I turn EEG windows into a band-power feature matrix?</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="plot_42_features_to_sklearn.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">How do I push EEGDash features through a scikit-learn Pipeline?</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">Learning objectives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#requirements">Requirements</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mental-model-psd-is-the-parent-of-every-classical-eeg-marker">Mental model: PSD is the parent of every classical EEG marker</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-build-a-small-windowed-dataset">Step 1: Build a small windowed dataset</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-predict-primm">Step 2: Predict (PRIMM)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-run-1-without-the-tree">Step 3: Run #1, without the tree</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-4-investigate-the-flat-run">Step 4: Investigate the flat run</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-5-run-2-with-the-tree-shared-psd">Step 5: Run #2, with the tree (shared PSD)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-6-investigate-the-speedup">Step 6: Investigate the speedup</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-7-four-derived-markers-on-one-shared-psd">Step 7: Four derived markers on one shared PSD</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-8-reduce-the-per-channel-markers-to-four-scalars-per-window">Step 8: Reduce the per-channel markers to four scalars per window</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-9-compute-the-per-window-welch-psd-for-the-figure">Step 9: Compute the per-window Welch PSD for the figure</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-10-plot-the-feature-tree-distributions-and-correlations">Step 10: Plot the feature tree, distributions, and correlations</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-common-mistake-and-how-to-recover">A common mistake, and how to recover</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#modify-add-a-fifth-band-gamma">Modify: add a fifth band (gamma)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#make-a-custom-feature-on-the-same-shared-psd">Make: a custom feature on the same shared PSD</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#result">Result</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#try-it-yourself">Try it yourself</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#wrap-up">Wrap-up</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb"></script>
+<script defer src="../../../../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025-2026, EEG Dash Developers.
+      <br/>
+    
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.17.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

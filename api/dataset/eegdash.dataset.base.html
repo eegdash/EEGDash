@@ -50,7 +50,7 @@
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
     <link rel="stylesheet" type="text/css" href="../../_static/custom.7953df0a.css?v=314ed3b2" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/treemap.087aecf0.css?v=7131b20f" />
-    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.99faa59c.css?v=b44e0256" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.d7808461.css?v=1ba63a31" />
   
   <!-- So that users can add custom icons -->
   <script defer src="../../_static/scripts/fontawesome.js?digest=55c26ed414f5f8a31ebb"></script>
@@ -240,8 +240,8 @@
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../user_guide.html">
-    User Guide
+  <a class="nav-link nav-internal" href="../../quickstart.html">
+    Quick Start
   </a>
 </li>
 
@@ -261,18 +261,42 @@
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../api.html">
-    Docs
+  <a class="nav-link nav-internal" href="../../concepts/index.html">
+    Concepts
   </a>
 </li>
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-external" href="https://eeg2025.github.io/">
+  <a class="nav-link nav-internal" href="../api.html">
+    Docs
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../references.html">
+    References
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-external" href="https://eeg2025.github.io/">
     EEG2025
   </a>
 </li>
 
+                </ul>
+            </li>
+            
   </ul>
 </nav></div>
       
@@ -387,8 +411,8 @@
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../user_guide.html">
-    User Guide
+  <a class="nav-link nav-internal" href="../../quickstart.html">
+    Quick Start
   </a>
 </li>
 
@@ -408,8 +432,22 @@
 
 
 <li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../concepts/index.html">
+    Concepts
+  </a>
+</li>
+
+
+<li class="nav-item ">
   <a class="nav-link nav-internal" href="../api.html">
     Docs
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../references.html">
+    References
   </a>
 </li>
 
@@ -563,8 +601,8 @@ including classes for individual recordings and collections of datasets. It inte
 braindecode for machine learning workflows and handles data loading from both local and remote sources.</p>
 <dl class="py class">
 <dt class="sig sig-object py">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">eegdash.dataset.base.</span></span><span class="sig-name descname"><span class="pre">EEGDashRaw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/dataset/base.py#L444-L2062"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">RawDataset</span></code></p>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">eegdash.dataset.base.</span></span><span class="sig-name descname"><span class="pre">EEGDashRaw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><span class="pre">dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/dataset/base.py#L444-L2062"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://braindecode.org/stable/generated/braindecode.datasets.RawDataset.html#braindecode.datasets.RawDataset" title="(in Braindecode v1.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">RawDataset</span></code></a></p>
 <p>A single EEG recording dataset.</p>
 <p>Represents a single EEG recording, typically hosted on a remote server (like AWS S3)
 and cached locally upon first access. This class is a subclass of
@@ -573,10 +611,10 @@ preprocessing and training pipelines.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>record</strong> (<em>dict</em>) – A v2 record containing all metadata and storage information.
+<li><p><strong>record</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a>) – A v2 record containing all metadata and storage information.
 Must have schema_version=2 and include storage.base (no default bucket).</p></li>
-<li><p><strong>cache_dir</strong> (<em>str</em>) – The local directory where the data will be cached.</p></li>
-<li><p><strong>on_error</strong> (<em>str</em><em>, </em><em>default &quot;raise&quot;</em>) – <p>How to handle <code class="xref py py-class docutils literal notranslate"><span class="pre">DataIntegrityError</span></code> when accessing <code class="docutils literal notranslate"><span class="pre">.raw</span></code>:</p>
+<li><p><strong>cache_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The local directory where the data will be cached.</p></li>
+<li><p><strong>on_error</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>default &quot;raise&quot;</em>) – <p>How to handle <code class="xref py py-class docutils literal notranslate"><span class="pre">DataIntegrityError</span></code> when accessing <code class="docutils literal notranslate"><span class="pre">.raw</span></code>:</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">&quot;raise&quot;</span></code> (default): propagate the exception.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">&quot;warn&quot;</span></code>: log the error as a warning and set <code class="docutils literal notranslate"><span class="pre">.raw</span></code> to <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
@@ -588,12 +626,12 @@ Must have schema_version=2 and include storage.base (no default bucket).</p></li
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>ValueError</strong> – If the record is not a valid v2 record or is missing required fields.</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – If the record is not a valid v2 record or is missing required fields.</p>
 </dd>
 </dl>
 <dl class="py property">
 <dt class="sig sig-object py">
-<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">raw</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">BaseRaw</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></dt>
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">raw</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://mne.tools/stable/generated/mne.io.BaseRaw.html#mne.io.BaseRaw" title="(in MNE v1.12)"><span class="pre">BaseRaw</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></dt>
 <dd><p>The MNE Raw object for this recording.</p>
 <p>Accessing this property triggers the download and caching of the data
 if it has not been accessed before.</p>
@@ -605,7 +643,7 @@ the record could not be loaded due to a
 <dd class="field-odd"><p>The loaded MNE Raw object, or <code class="docutils literal notranslate"><span class="pre">None</span></code> for skipped records.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>mne.io.BaseRaw | None</p>
+<dd class="field-even"><p><a class="reference external" href="https://mne.tools/stable/generated/mne.io.BaseRaw.html#mne.io.BaseRaw" title="(in MNE v1.12)">mne.io.BaseRaw</a> | None</p>
 </dd>
 </dl>
 </dd></dl>

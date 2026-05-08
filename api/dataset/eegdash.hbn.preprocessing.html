@@ -50,7 +50,7 @@
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
     <link rel="stylesheet" type="text/css" href="../../_static/custom.7953df0a.css?v=314ed3b2" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/treemap.087aecf0.css?v=7131b20f" />
-    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.99faa59c.css?v=b44e0256" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.d7808461.css?v=1ba63a31" />
   
   <!-- So that users can add custom icons -->
   <script defer src="../../_static/scripts/fontawesome.js?digest=55c26ed414f5f8a31ebb"></script>
@@ -239,8 +239,8 @@
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../user_guide.html">
-    User Guide
+  <a class="nav-link nav-internal" href="../../quickstart.html">
+    Quick Start
   </a>
 </li>
 
@@ -260,18 +260,42 @@
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../api.html">
-    Docs
+  <a class="nav-link nav-internal" href="../../concepts/index.html">
+    Concepts
   </a>
 </li>
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-external" href="https://eeg2025.github.io/">
+  <a class="nav-link nav-internal" href="../api.html">
+    Docs
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../references.html">
+    References
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-external" href="https://eeg2025.github.io/">
     EEG2025
   </a>
 </li>
 
+                </ul>
+            </li>
+            
   </ul>
 </nav></div>
       
@@ -386,8 +410,8 @@
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../user_guide.html">
-    User Guide
+  <a class="nav-link nav-internal" href="../../quickstart.html">
+    Quick Start
   </a>
 </li>
 
@@ -407,8 +431,22 @@
 
 
 <li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../concepts/index.html">
+    Concepts
+  </a>
+</li>
+
+
+<li class="nav-item ">
   <a class="nav-link nav-internal" href="../api.html">
     Docs
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../references.html">
+    References
   </a>
 </li>
 
@@ -559,7 +597,7 @@ paradigms and other HBN-specific preprocessing steps.</p>
 <dl class="py class">
 <dt class="sig sig-object py">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">eegdash.hbn.preprocessing.</span></span><span class="sig-name descname"><span class="pre">hbn_ec_ec_reannotation</span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/hbn/preprocessing.py#L20-L105"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Preprocessor</span></code></p>
+<dd><p>Bases: <a class="reference external" href="https://braindecode.org/stable/generated/braindecode.preprocessing.Preprocessor.html#braindecode.preprocessing.Preprocessor" title="(in Braindecode v1.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Preprocessor</span></code></a></p>
 <p>Preprocessor to reannotate HBN data for eyes-open/eyes-closed events.</p>
 <p>This preprocessor is specifically designed for Healthy Brain Network (HBN)
 datasets. It identifies existing annotations for “instructed_toCloseEyes”
@@ -568,11 +606,11 @@ for “eyes_closed” and “eyes_open” segments, respectively.</p>
 <p>This is useful for creating windowed datasets based on these new, more
 precise event markers.</p>
 <p class="rubric">Notes</p>
-<p>This class inherits from <code class="xref py py-class docutils literal notranslate"><span class="pre">braindecode.preprocessing.Preprocessor</span></code>
+<p>This class inherits from <a class="reference external" href="https://braindecode.org/stable/generated/braindecode.preprocessing.Preprocessor.html#braindecode.preprocessing.Preprocessor" title="(in Braindecode v1.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">braindecode.preprocessing.Preprocessor</span></code></a>
 and is intended to be used within a braindecode preprocessing pipeline.</p>
 <dl class="py method">
 <dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Raw</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Raw</span></span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/hbn/preprocessing.py#L41-L105"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-name descname"><span class="pre">transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://mne.tools/stable/generated/mne.io.Raw.html#mne.io.Raw" title="(in MNE v1.12)"><span class="pre">Raw</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://mne.tools/stable/generated/mne.io.Raw.html#mne.io.Raw" title="(in MNE v1.12)"><span class="pre">Raw</span></a></span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/hbn/preprocessing.py#L41-L105"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Create new annotations for eyes-open and eyes-closed periods.</p>
 <p>This function finds the original “instructed_to…” annotations and
 generates new annotations every 2 seconds within specific time ranges
@@ -583,13 +621,13 @@ relative to the original markers:
 this new set of annotations.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>raw</strong> (<em>mne.io.Raw</em>) – The raw MNE object containing the HBN data and original annotations.</p>
+<dd class="field-odd"><p><strong>raw</strong> (<a class="reference external" href="https://mne.tools/stable/generated/mne.io.Raw.html#mne.io.Raw" title="(in MNE v1.12)"><em>mne.io.Raw</em></a>) – The raw MNE object containing the HBN data and original annotations.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The raw MNE object with the modified annotations.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>mne.io.Raw</p>
+<dd class="field-odd"><p><a class="reference external" href="https://mne.tools/stable/generated/mne.io.Raw.html#mne.io.Raw" title="(in MNE v1.12)">mne.io.Raw</a></p>
 </dd>
 </dl>
 </dd></dl>

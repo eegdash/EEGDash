@@ -1,0 +1,910 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" data-theme="light">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta property="og:title" content="Leakage and evaluation" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://eegdash.org/concepts/leakage_and_evaluation.html" />
+<meta property="og:site_name" content="EEG Dash" />
+<meta property="og:description" content="Subject-level data leakage is the single most common reason that an EEG decoder claims a high cross-validated accuracy and then collapses on a new…" />
+<meta property="og:image" content="https://eegdash.org/_static/eegdash_social_card.png" />
+<meta property="og:image:alt" content="EEG Dash — data-sharing interface for M/EEG datasets" />
+<meta name="description" content="Subject-level data leakage is the single most common reason that an EEG decoder claims a high cross-validated accuracy and then collapses on a new…" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@eegdash" />
+
+    <title>Leakage and evaluation &#8212; EEG Dash</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "light";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=fd6457a4" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.7953df0a.css?v=314ed3b2" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/treemap.087aecf0.css?v=7131b20f" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.d7808461.css?v=1ba63a31" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../_static/scripts/fontawesome.js?digest=55c26ed414f5f8a31ebb"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb" />
+
+    <script src="../_static/documentation_options.js?v=6dfdf7c3"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/sg-tags.js?v=d80f6fa4"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=8c005784"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'concepts/leakage_and_evaluation';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <script defer="defer" src="../_static/js/tag-palette.7346f567.js?v=6f5eac9a"></script>
+    <script defer="defer" src="../_static/js/search-as-you-type.e09b639d.js?v=8e93d0f7"></script>
+    <script defer="defer" src="../_static/js/lazy-embed.1f1f83d2.js?v=118c4c47"></script>
+    <link rel="canonical" href="https://eegdash.org/concepts/leakage_and_evaluation.html" />
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Preprocessing decisions" href="preprocessing_decisions.html" />
+    <link rel="prev" title="Metadata and BIDS entities" href="metadata_and_bids.html" />
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.7" />
+
+  
+  <meta name="google-site-verification" content="REPLACE_WITH_GSC_TOKEN">
+  <meta name="msvalidate.01" content="REPLACE_WITH_BING_TOKEN">
+
+  
+  <link rel="preconnect" href="https://cdn.datatables.net" crossorigin>
+  <link rel="preconnect" href="https://code.jquery.com" crossorigin>
+
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    rel="preload"
+    as="style"
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Source+Sans+3:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap"
+    onload="this.onload=null;this.rel='stylesheet'">
+  <noscript>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Source+Sans+3:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap">
+  </noscript>
+
+  
+
+  
+  <link rel="alternate" type="text/markdown" href="/llms.txt" title="EEGDash — LLM-friendly index">
+  <link rel="llms" href="/llms.txt" title="EEGDash — llms.txt index">
+  <link rel="llms-txt" href="/llms.txt">
+  <link rel="llms-full" type="text/markdown" href="/llms-full.txt" title="EEGDash — full markdown corpus">
+  <link rel="alternate" type="application/json" href="/.well-known/agent-skills/index.json" title="EEGDash — Agent Skills">
+  <link rel="alternate" type="application/linkset+json" href="/.well-known/api-catalog" title="EEGDash — API catalog">
+  <meta name="llms-txt" content="/llms.txt">
+  <meta name="llms" content="/llms.txt">
+  <meta name="ai-content-index" content="/llms.txt">
+  <meta name="ai.content_index" content="/llms.txt">
+
+  
+
+  <!-- Google Tag Manager — deferred to DOMContentLoaded so the GTM
+       bootstrap no longer blocks first-paint or the Sphinx search-index
+       load. Functionally equivalent to the inline snippet below but
+       saves ~60 ms of Total Blocking Time per PageSpeed Insights. -->
+  <script>
+    (function(){
+      function loadGTM(){
+        if (window.__gtmLoaded) return;
+        window.__gtmLoaded = true;
+        (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','GTM-MXC3DGL6');
+      }
+      // Defer GTM off the critical path. requestIdleCallback wants an
+      // IdleRequestOptions object as its second argument while
+      // setTimeout wants a plain number — using the same `1` for both
+      // raised a TypeError in Lighthouse's console that dragged the SEO
+      // score down. Branch on availability so each API gets the shape
+      // it expects.
+      function scheduleGTM() {
+        if (typeof window.requestIdleCallback === 'function') {
+          window.requestIdleCallback(loadGTM, { timeout: 2000 });
+        } else {
+          setTimeout(loadGTM, 1);
+        }
+      }
+      if (document.readyState === 'complete' || document.readyState === 'interactive') {
+        scheduleGTM();
+      } else {
+        document.addEventListener('DOMContentLoaded', scheduleGTM);
+      }
+    })();
+  </script>
+  <!-- End Google Tag Manager -->
+
+  </head>
+  <body data-default-mode="light">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+    
+    <img src="../_static/eegdash_long.svg" class="logo__image only-light" alt="EEG Dash Logo"/>
+    <img src="../_static/eegdash_long.svg" class="logo__image only-dark pst-js-only" alt="EEG Dash Logo"/>
+  
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../dataset_summary.html">
+    Datasets
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../quickstart.html">
+    Quick Start
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../install/install.html">
+    Install
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../generated/auto_examples/index.html">
+    Examples
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    Concepts
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../api/api.html">
+    Docs
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../references.html">
+    References
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-external" href="https://eeg2025.github.io/">
+    EEG2025
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="External Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/eegdash/EEGDash" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../_static/icons/github.svg" class="icon-link-image" alt="GitHub"/></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/eegdash/" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../_static/icons/pypi.svg" class="icon-link-image" alt="PyPI"/></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://discord.gg/8jd7nVKwsc" title="Discord" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../_static/icons/discord.svg" class="icon-link-image" alt="Discord"/></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../dataset_summary.html">
+    Datasets
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../quickstart.html">
+    Quick Start
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../install/install.html">
+    Install
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../generated/auto_examples/index.html">
+    Examples
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    Concepts
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../api/api.html">
+    Docs
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../references.html">
+    References
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://eeg2025.github.io/">
+    EEG2025
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="External Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/eegdash/EEGDash" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../_static/icons/github.svg" class="icon-link-image" alt="GitHub"/></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/eegdash/" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../_static/icons/pypi.svg" class="icon-link-image" alt="PyPI"/></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://discord.gg/8jd7nVKwsc" title="Discord" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../_static/icons/discord.svg" class="icon-link-image" alt="Discord"/></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item pst-sidebar-collapse"><button id="pst-collapse-sidebar-button" aria-expanded="true" aria-controls="pst-primary-sidebar"><svg class="pst-icon svg-inline--fa" role="img" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentColor" d="M3 15.5C2.36232 15.5 1.74874 15.2564 1.28478 14.8189C0.820828 14.3815 0.541576 13.7832 0.504167 13.1467L0.5 13L0.5 3C0.499965 2.36232 0.743605 1.74874 1.18107 1.28478C1.61854 0.820828 2.21676 0.541576 2.85333 0.504167L3 0.5L13 0.5C13.6377 0.499965 14.2513 0.743605 14.7152 1.18107C15.1792 1.61854 15.4584 2.21676 15.4958 2.85333L15.5 3L15.5 13C15.5 13.6377 15.2564 14.2513 14.8189 14.7152C14.3815 15.1792 13.7832 15.4584 13.1467 15.4958L13 15.5L3 15.5ZM3 13.8333L10.5 13.8333L10.5 2.16667L3 2.16667C2.79589 2.16669 2.59889 2.24163 2.44636 2.37726C2.29383 2.5129 2.19638 2.69979 2.1725 2.9025L2.16667 3L2.16667 13C2.16669 13.2041 2.24163 13.4011 2.37726 13.5536C2.5129 13.7062 2.69979 13.8036 2.9025 13.8275L3 13.8333ZM6.65583 10.325L6.5775 10.2558L4.91083 8.58917C4.76735 8.44567 4.68116 8.25476 4.66843 8.05223C4.65569 7.84971 4.71729 7.6495 4.84167 7.48917L4.91083 7.41083L6.5775 5.74417C6.72747 5.59471 6.9287 5.50794 7.14032 5.50148C7.35194 5.49502 7.55809 5.56935 7.7169 5.70937C7.8757 5.8494 7.97525 6.04463 7.99533 6.25539C8.01541 6.46616 7.95451 6.67667 7.825 6.84417L7.75583 6.9225L6.67917 8L7.75583 9.0775C7.89931 9.22099 7.98551 9.41191 7.99824 9.61443C8.01097 9.81695 7.94938 10.0172 7.825 10.1775L7.75583 10.2558C7.61234 10.3993 7.42142 10.4855 7.2189 10.4982C7.01638 10.511 6.81617 10.4494 6.65583 10.325Z"/>
+  </svg>
+  <span class="pst-collapse-sidebar-label">Collapse Sidebar</span>
+  <span class="pst-expand-sidebar-label">Expand Sidebar</span>
+</button></div>
+        <div class="sidebar-primary-item">
+
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="eegdash_objects.html">EEGDash objects: <code class="docutils literal notranslate"><span class="pre">EEGDash</span></code>, <code class="docutils literal notranslate"><span class="pre">EEGDashDataset</span></code>, <code class="docutils literal notranslate"><span class="pre">EEGChallengeDataset</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="metadata_and_bids.html">Metadata and BIDS entities</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Leakage and evaluation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="preprocessing_decisions.html">Preprocessing decisions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="features_vs_deep_learning.html">Features vs. deep learning</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">Concepts</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Leakage and evaluation</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="leakage-and-evaluation">
+<span id="concepts-leakage-and-evaluation"></span><h1>Leakage and evaluation<a class="headerlink" href="#leakage-and-evaluation" title="Link to this heading">#</a></h1>
+<p>Subject-level data leakage is the single most common reason that an EEG
+decoder claims a high cross-validated accuracy and then collapses on a new
+participant. It is also the reason a tutorial that scores 0.95 on a random
+window split can score 0.55 on a subject-disjoint split using the <em>same</em>
+data and the <em>same</em> model. This page explains the failure mode, why it is
+specific to physiological signals, and how the within-subject /
+cross-session / cross-subject distinction maps onto the splitters EEGDash
+provides.</p>
+<p>The advice below is consistent with Tip 9 of Cisotto &amp; Chicco (2024) <a class="footnote-reference brackets" href="#id2" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>,
+which explicitly identifies subject-aware cross-validation as the only
+defensible default for clinical EEG. Tutorials that demonstrate the
+problem live in
+<a class="reference internal" href="../generated/auto_examples/tutorials/10_core_workflow/plot_11_leakage_safe_split.html"><span class="doc">How do I split EEG data without subject leakage?</span></a>,
+<a class="reference internal" href="../generated/auto_examples/tutorials/50_evaluation/plot_50_within_subject_evaluation.html"><span class="doc">When is within-subject decoding the right scientific question?</span></a>,
+<a class="reference internal" href="../generated/auto_examples/tutorials/50_evaluation/plot_51_cross_subject_evaluation.html"><span class="doc">How well does an EEG decoder generalise to a never-seen subject?</span></a>,
+and
+<a class="reference internal" href="../generated/auto_examples/tutorials/50_evaluation/plot_52_cross_session_evaluation.html"><span class="doc">How much does a within-session decoder drift across sessions of the same subject?</span></a>.</p>
+<section id="why-subject-leakage-destroys-generalization-claims">
+<h2>Why subject leakage destroys generalization claims<a class="headerlink" href="#why-subject-leakage-destroys-generalization-claims" title="Link to this heading">#</a></h2>
+<p>EEG signals carry strong, idiosyncratic, <em>subject-specific</em> statistics:
+skull thickness, hair impedance, electrode placement, baseline alpha
+power, blink habits, posture. A neural network with a few thousand free
+parameters easily latches onto those identity features because they
+generalise perfectly within a subject — every window from subject A
+“smells like” subject A.</p>
+<p>Now imagine a binary decoder for “eyes open vs. eyes closed”. You shuffle
+all windows across all subjects and split 80/20 randomly. The classifier
+quickly discovers that a few windows from each subject are in the test
+set, and its best strategy is to memorise the spectral fingerprint of
+subject A and reuse it for the held-out windows from subject A. It then
+reports an apparent accuracy of, say, 0.94. Unfortunately, this number
+is a lower-bounded <em>identification</em> accuracy plus the actual condition
+classification — and on a fresh participant the model may do no better
+than chance.</p>
+<p>The cleanest demonstration of this is to train the same architecture on
+two splits of the same dataset: a leaky random window split and a
+subject-disjoint split. The accuracy gap is the leakage tax, and it is
+typically 0.20–0.40 in absolute accuracy on real EEG decoding problems.</p>
+</section>
+<section id="why-random-window-splits-are-unsafe">
+<h2>Why random window splits are unsafe<a class="headerlink" href="#why-random-window-splits-are-unsafe" title="Link to this heading">#</a></h2>
+<p>A <em>window</em> is a short, overlapping slice of a recording. If you make
+2-second windows with 50% overlap, neighbouring windows share a full
+second of samples; their feature vectors differ only by smoothing. When
+you assign one to “train” and the other to “test”, the test score is
+almost a noise estimate, not a generalisation estimate.</p>
+<p>This problem exists on top of the subject leakage problem: even within a
+single subject, randomising windows leaks information across the train/
+test boundary because the windows overlap in time. The mitigation is
+twofold:</p>
+<ol class="arabic simple">
+<li><p>Split at the <strong>recording or session level</strong>, not the window level.</p></li>
+<li><p>If a single recording must be split, choose a splitter that respects
+temporal contiguity (e.g., the first 80% by time for train, the last
+20% for test).</p></li>
+</ol>
+<p>EEGDash defers the actual splitting to braindecode and MOABB, but the
+conceptual rule is the same regardless of library: a window must inherit
+the train/test label of its parent recording, never get assigned
+independently.</p>
+</section>
+<section id="within-subject-vs-cross-session-vs-cross-subject">
+<h2>Within-subject vs. cross-session vs. cross-subject<a class="headerlink" href="#within-subject-vs-cross-session-vs-cross-subject" title="Link to this heading">#</a></h2>
+<p>These three terms describe what kind of generalisation you are claiming
+to measure. They differ in which axis the held-out fold spans:</p>
+<ul class="simple">
+<li><p><strong>Within-subject</strong> evaluation holds out <em>time</em> within a single
+participant. Train on the first portion of recording, test on the
+last portion. Answer: <em>can the model decode this person’s signal
+later in the same session?</em> This is the easiest setting and the one
+most clinical BCI demos report.</p></li>
+<li><p><strong>Cross-session</strong> evaluation holds out a <em>different session</em> of the
+same participant. Train on session 1, test on session 2 (typically
+collected on a different day, with re-applied electrodes). Answer:
+<em>does the model survive electrode re-application and day-to-day
+drift?</em> This is the relevant setting for repeated-use BCIs and for
+any real-world deployment where calibration is rare.</p></li>
+<li><p><strong>Cross-subject</strong> evaluation holds out <em>different participants</em>.
+Train on subjects A–T, test on subjects U–Z. Answer: <em>does the model
+generalise to a person it has never seen?</em> This is the standard for
+any “subject-invariant” or “foundation-model” claim.</p></li>
+</ul>
+<p>Each setting answers a different scientific question, so neither one is
+universally correct. The mistake is to <em>report</em> one and <em>implicitly
+claim</em> another. A paper that splits randomly and then advertises a
+“general-purpose decoder” is overstating the evaluation; a paper that
+holds out a session and accurately calls it cross-session is doing
+honest work even if the number is lower.</p>
+</section>
+<section id="practical-guidance">
+<h2>Practical guidance<a class="headerlink" href="#practical-guidance" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p>Always inspect <code class="docutils literal notranslate"><span class="pre">ds.description[&quot;subject&quot;]</span></code> and
+<code class="docutils literal notranslate"><span class="pre">ds.description[&quot;session&quot;]</span></code> before choosing a splitter. If any
+subject appears in more than one fold, the split is leaky by
+construction.</p></li>
+<li><p>Treat the split function as part of the experiment, not a utility.
+Print, log, and version-control the participants in each fold.
+Tutorials such as
+<a class="reference internal" href="../generated/auto_examples/tutorials/10_core_workflow/plot_11_leakage_safe_split.html"><span class="doc">How do I split EEG data without subject leakage?</span></a>
+include an audit step that verifies disjointness.</p></li>
+<li><p>Pick a splitter that matches your scientific question — within-subject,
+cross-session, or cross-subject. If you cannot decide, default to
+cross-subject; it is the strictest of the three and rarely
+misleading.</p></li>
+<li><p>Always include a chance-level baseline and, where possible, a
+simple feature baseline (see <a class="reference internal" href="features_vs_deep_learning.html"><span class="doc">Features vs. deep learning</span></a>).
+A neural network that beats random by 3 points but loses to a
+logistic regression on band power has not learned the task.</p></li>
+<li><p>Report variance across folds, not just the mean. Subject-level
+variance dominates EEG; a mean accuracy with no error bars is not
+a measurement.</p></li>
+</ol>
+</section>
+<section id="what-metric-leakage-looks-like-in-practice">
+<h2>What “metric leakage” looks like in practice<a class="headerlink" href="#what-metric-leakage-looks-like-in-practice" title="Link to this heading">#</a></h2>
+<p>A few diagnostic patterns you should watch for:</p>
+<ul class="simple">
+<li><p><strong>Suspiciously high accuracy on hard problems.</strong> A decoder for
+emotional state from 30 seconds of resting EEG that scores 0.92 is
+almost certainly leaking subject identity.</p></li>
+<li><p><strong>Accuracy drops on new subjects.</strong> A 25-point drop between
+cross-validated and held-out cohorts is a leakage signal, not an
+overfitting signal.</p></li>
+<li><p><strong>Random labels still score above chance.</strong> If you shuffle the labels
+per recording but keep them constant within a recording, a leaky
+pipeline still scores well above chance because it is fitting
+recording identity.</p></li>
+</ul>
+<p>When you see one of those, re-read this page and re-check the splitter.</p>
+</section>
+<section id="related-tutorials">
+<h2>Related tutorials<a class="headerlink" href="#related-tutorials" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="../generated/auto_examples/tutorials/10_core_workflow/plot_11_leakage_safe_split.html"><span class="doc">How do I split EEG data without subject leakage?</span></a>
+is the canonical demonstration of leaky vs. safe splits on EEGDash data.</p></li>
+<li><p><a class="reference internal" href="../generated/auto_examples/tutorials/50_evaluation/plot_50_within_subject_evaluation.html"><span class="doc">When is within-subject decoding the right scientific question?</span></a>,
+<a class="reference internal" href="../generated/auto_examples/tutorials/50_evaluation/plot_51_cross_subject_evaluation.html"><span class="doc">How well does an EEG decoder generalise to a never-seen subject?</span></a>,
+and
+<a class="reference internal" href="../generated/auto_examples/tutorials/50_evaluation/plot_52_cross_session_evaluation.html"><span class="doc">How much does a within-session decoder drift across sessions of the same subject?</span></a>
+show the same dataset evaluated under each protocol.</p></li>
+<li><p><a class="reference internal" href="../generated/auto_examples/tutorials/50_evaluation/plot_53_learning_curves.html"><span class="doc">How does decoding accuracy scale with training-set size, and where does the curve plateau?</span></a>
+illustrates how leakage interacts with sample-size effects.</p></li>
+<li><p><a class="reference internal" href="../generated/auto_examples/tutorials/50_evaluation/plot_54_compare_two_pipelines.html"><span class="doc">Is Pipeline A really better than Pipeline B, or did it luck out on one subject?</span></a>
+shows how to compare pipelines once a defensible split is in place.</p></li>
+</ul>
+</section>
+<section id="further-reading">
+<h2>Further reading<a class="headerlink" href="#further-reading" title="Link to this heading">#</a></h2>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id2" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p>Cisotto, G., &amp; Chicco, D. (2024). Ten quick tips for clinical
+electroencephalographic (EEG) data acquisition and signal processing.
+<em>PeerJ Computer Science</em>, 10, e2256.
+<a class="reference external" href="https://doi.org/10.7717/peerj-cs.2256">https://doi.org/10.7717/peerj-cs.2256</a></p>
+</aside>
+</aside>
+<ul class="simple">
+<li><p>Saeb, S., Lonini, L., Jayaraman, A., Mohr, D. C., &amp; Kording, K. P.
+(2017). The need to approximate the use-case in clinical machine
+learning. <em>GigaScience</em>, 6(5), 1–9.
+<a class="reference external" href="https://doi.org/10.1093/gigascience/gix019">https://doi.org/10.1093/gigascience/gix019</a></p></li>
+<li><p>Roy, Y., Banville, H., Albuquerque, I., Gramfort, A., Falk, T. H., &amp;
+Faubert, J. (2019). Deep learning-based electroencephalography analysis:
+a systematic review. <em>Journal of Neural Engineering</em>, 16(5), 051001.
+<a class="reference external" href="https://doi.org/10.1088/1741-2552/ab260c">https://doi.org/10.1088/1741-2552/ab260c</a></p></li>
+<li><p>Pernet, C. R., et al. (2019). EEG-BIDS, an extension to the brain
+imaging data structure for electroencephalography. <em>Scientific Data</em>,
+6(1), 103. <a class="reference external" href="https://doi.org/10.1038/s41597-019-0104-8">https://doi.org/10.1038/s41597-019-0104-8</a></p></li>
+</ul>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="metadata_and_bids.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Metadata and BIDS entities</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="preprocessing_decisions.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Preprocessing decisions</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-subject-leakage-destroys-generalization-claims">Why subject leakage destroys generalization claims</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-random-window-splits-are-unsafe">Why random window splits are unsafe</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#within-subject-vs-cross-session-vs-cross-subject">Within-subject vs. cross-session vs. cross-subject</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#practical-guidance">Practical guidance</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-metric-leakage-looks-like-in-practice">What “metric leakage” looks like in practice</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#related-tutorials">Related tutorials</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#further-reading">Further reading</a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+
+  
+  <div class="tocsection editthispage">
+    <a href="https://github.com/eegdash/EEGDash/edit/develop/docs/source/concepts/leakage_and_evaluation.rst">
+      <i class="fa-solid fa-pencil"></i>
+      
+      
+        
+          Edit on GitHub
+        
+      
+    </a>
+  </div>
+</div>
+
+  <div class="sidebar-secondary-item">
+
+  <div class="tocsection sourcelink">
+    <a href="../_sources/concepts/leakage_and_evaluation.rst.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025-2026, EEG Dash Developers.
+      <br/>
+    
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.17.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

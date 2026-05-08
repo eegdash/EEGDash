@@ -6,1710 +6,730 @@
 
 <a id="sphx-glr-generated-auto-examples-eeg2025-tutorial-challenge-1-py"></a>
 
-# Challenge 1: Cross-Task Transfer Learning!
+# How do I get my first baseline running for EEG2025 Challenge 1 (CCD)?
 
-<a id="challenge-1"></a>
-<!-- GENERATED FROM PYTHON SOURCE LINES 11-13 -->
+Challenge 1 of the EEG2025 Foundation Challenge asks you to decode a
+**trial-level cognitive decision** from EEG: in the contrastChangeDetection
+(CCD) task subjects watch two flickering striped discs, one disc’s
+contrast slowly ramps up, and the subject presses left or right to report
+which one. The data come from the Healthy Brain Network release (HBN;
+Alexander et al. 2017) served through [NEMAR](https://nemar.org)
+[[Delorme *et al.*, 2022](../../../references.md#id6)] and shipped via [`EEGChallengeDataset`](../../../api/dataset/eegdash.dataset.EEGChallengeDataset.md#eegdash.dataset.EEGChallengeDataset)
+as 100 Hz BDFs (downsampled, 0.5-50 Hz pass-band; Cisotto & Chicco 2024).
+This starter kit walks through the four steps every Challenge 1 entry has
+to clear: load the CCD recordings, carve out a stimulus-locked window,
+train a small Braindecode CNN baseline [[Schirrmeister *et al.*, 2017](../../../references.md#id8)], and
+ship one figure that ties the trial structure, the windowed signal, and
+the per-fold accuracy together (Aristimunha et al. 2025,
+doi:10.48550/arXiv.2506.19141). The deliverable is one
+`(n_channels, n_samples) = (129, 200)` window contract and one
+three-panel figure ready to drop into your submission.
+
+<!-- sphinx_gallery_thumbnail_path = '_static/thumbs/tutorial_challenge_1.png' -->
+
+So how far above chance can a small CNN push CCD decoding on the mini
+release?
+
+<!-- GENERATED FROM PYTHON SOURCE LINES 28-36 -->
+
+## Learning objectives
+
+- Build [`EEGChallengeDataset`](../../../api/dataset/eegdash.dataset.EEGChallengeDataset.md#eegdash.dataset.EEGChallengeDataset) for `task="contrastChangeDetection"`, `release="R5"`, `mini=True`.
+- Carve stimulus-locked CCD windows of shape `(n_channels=129, n_samples=200)` with [`braindecode.preprocessing.create_windows_from_events()`](https://braindecode.org/stable/generated/braindecode.preprocessing.create_windows_from_events.html#braindecode.preprocessing.create_windows_from_events).
+- Split subjects into 5 cross-subject folds with [`sklearn.model_selection.KFold`](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.KFold.html#sklearn.model_selection.KFold) and assert no subject leakage across folds [[Pernet *et al.*, 2019](../../../references.md#id7)].
+- Train an [`EEGNeX`](https://braindecode.org/stable/generated/braindecode.models.EEGNeX.html#braindecode.models.EEGNeX) baseline and report per-fold test accuracy with mean +/- std next to chance.
+- Plot a three-panel figure (trial schematic, one CCD window, per-fold accuracy) via `draw_challenge_1_figure` and save the model state_dict.
+
+<!-- GENERATED FROM PYTHON SOURCE LINES 38-53 -->
+
+## Requirements
+
+- ~3-6 min on CPU on first run; ~30 s once the metadata catalog and
+  one mini subject are cached. Real-data path triggers a one-off
+  ~80 MB download per mini subject; the synthetic fallback below is
+  what the rendered tutorial actually executes so the gallery build
+  stays reproducible without network.
+- Network on first call (catalog query, ~1 MB into the cache; per-mini
+  BDFs are pulled lazily when the model first asks for windows).
+- Prerequisites:
+  /auto_examples/tutorials/70_transfer_foundation/plot_70_challenge_dataset_basics
+  for [`EEGChallengeDataset`](../../../api/dataset/eegdash.dataset.EEGChallengeDataset.md#eegdash.dataset.EEGChallengeDataset) basics, and
+  /auto_examples/tutorials/00_start_here/plot_02_dataset_to_dataloader
+  for the windowing -> [`torch.utils.data.DataLoader`](https://docs.pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader) flow.
+
+<!-- GENERATED FROM PYTHON SOURCE LINES 55-58 -->
+
+Setup, seeds, cache, and device. `np.random.seed` keeps the synthetic
+fallback deterministic; the warning filter silences a pandas
+`FutureWarning` raised by the metadata catalog inside the constructor.
+
+<!-- GENERATED FROM PYTHON SOURCE LINES 58-82 -->
 ```Python
-#
-```
-
-<!-- GENERATED FROM PYTHON SOURCE LINES 14-89 -->[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/eeg2025/startkit/blob/main/challenge_1.ipynb)
-
----
-> **Preliminary notes**
-
-> Before we begin, I just want to make a deal with you, ok?
-> This is a community competition with a strong open-source foundation.
-> When I say open-source, I mean volunteer work.
-
-> So, if you see something that does not work or could be improved, first, **please be kind**, and
-> we will fix it together on GitHub, okay?
-
-> The entire decoding community will only go further when we stop
-> solving the same problems over and over again, and it starts working together.
-
----
-> **How can we use the knowledge from one EEG Decoding task into another?**
-
-> Transfer learning is a widespread technique used in deep learning. It
-> uses knowledge learned from one source task/domain in another target
-> task/domain. It has been studied in depth in computer vision, natural
-> language processing, and speech, but what about EEG brain decoding?
-
-> The cross-task transfer learning scenario in EEG decoding is remarkably
-> underexplored compared to the development of new models,
-> [Aristimunha et al. (2023)](https://arxiv.org/abs/2308.02408), even
-> though it can be much more useful for real applications, see
-> [Wimpff et al. (2025)](https://arxiv.org/abs/2502.06828),
-> [Wu et al. (2025)](https://arxiv.org/abs/2507.09882).
-
-> Our Challenge 1 addresses a key goal in neurotechnology: decoding
-> cognitive function from EEG using the pre-trained knowledge from another.
-> In other words, developing models that can effectively
-> transfer/adapt/adjust/fine-tune knowledge from passive EEG tasks to
-> active tasks.
-
-> The ability to generalize and transfer is something critical that we
-> believe should be focused on. To go beyond just comparing metrics numbers
-> that are often not comparable, given the specificities of EEG, such as
-> pre-processing, inter-subject variability, and many other unique
-> components of this type of data.
-
-> This means your submitted model might be trained on a subset of tasks
-> and fine-tuned on data from another condition, evaluating its capacity to
-> generalize with task-specific fine-tuning.
-
----
-> #### NOTE
-> For simplicity purposes, we will only show how to do the decoding
-> directly in our target task, and it is up to the teams to think about
-> how to use the passive task to perform the pre-training.
-
----
-> **Install dependencies**
-
-> For the challenge, we will need two significant dependencies:
-> braindecode and eegdash. The libraries will install PyTorch,
-> Pytorch Audio, Scikit-learn, MNE, MNE-BIDS, and many other packages
-> necessary for the many functions.
-
-> Install dependencies on colab or your local machine, as eegdash
-> have braindecode as a dependency.
-> you can just run `pip install eegdash`.
-
----
-> **Imports and setup**
-<!-- GENERATED FROM PYTHON SOURCE LINES 90-110 -->
-```Python
+import os
+import warnings
 from pathlib import Path
 
-import torch
-from braindecode.datasets import BaseConcatDataset
-from braindecode.preprocessing import (
-    preprocess,
-    Preprocessor,
-    create_windows_from_events,
-)
-from braindecode.models import EEGNeX
-from torch.utils.data import DataLoader
-from sklearn.model_selection import train_test_split
-from sklearn.utils import check_random_state
-from typing import Optional
-from torch.nn import Module
-from torch.optim.lr_scheduler import LRScheduler
-from tqdm import tqdm
-import copy
-
-#
-```
-
-<!-- GENERATED FROM PYTHON SOURCE LINES 111-118 -->
-
-**Check GPU availability**
-
-Identify whether a CUDA-enabled GPU is available
-and set the device accordingly.
-If using Google Colab, ensure that the runtime is set to use a GPU.
-This can be done by navigating to Runtime > Change runtime type and selecting
-GPU as the hardware accelerator.
-
-<!-- GENERATED FROM PYTHON SOURCE LINES 119-131 -->
-```Python
-device = "cuda" if torch.cuda.is_available() else "cpu"
-if device == "cuda":
-    msg = "CUDA-enabled GPU found. Training should be faster."
-else:
-    msg = (
-        "No GPU found. Training will be carried out on CPU, which might be "
-        "slower.\n\nIf running on Google Colab, you can request a GPU runtime by"
-        " clicking\n`Runtime/Change runtime type` in the top bar menu, then "
-        "selecting 'T4 GPU'\nunder 'Hardware accelerator'."
-    )
-print(msg)
-#
-```
-
-```none
-No GPU found. Training will be carried out on CPU, which might be slower.
-
-If running on Google Colab, you can request a GPU runtime by clicking
-`Runtime/Change runtime type` in the top bar menu, then selecting 'T4 GPU'
-under 'Hardware accelerator'.
-```
-
-<!-- GENERATED FROM PYTHON SOURCE LINES 132-228 -->
-
-**What are we decoding?**
-
-> To start to talk about what we want to analyse, the important thing
-> is to understand some basic concepts.
-
----
-> **The brain decodes the problem**
-
-> Broadly speaking, here *brain decoding* is the following problem:
-> given brain time-series signals $X \in \mathbb{R}^{C \times T}$ with
-> labels $y \in \mathcal{Y}$, we implement a neural network $f$ that
-> **decodes/translates** brain activity into the target label.
-
-> We aim to translate recorded brain activity into its originating
-> stimulus, behavior, or mental state, [King, J-R. et al. (2020)](https://lauragwilliams.github.io/d/m/CognitionAlgorithm.pdf).
-
-> The neural network $f$ applies a series of transformation layers
-> (e.g., `torch.nn.Conv2d`, `torch.nn.Linear`, `torch.nn.ELU`, `torch.nn.BatchNorm2d`)
-> to the data to filter, extract features, and learn embeddings
-> relevant to the optimization objective—in other words:
-
-> $$
-> f_{\theta}: X \to y,
-> $$
-
-> where $C$ (`n_chans`) is the number of channels/electrodes and $T$ (`n_times`)
-> is the temporal window length/epoch size over the interval of interest.
-> Here, $\theta$ denotes the parameters learned by the neural network.
-
-> **Input/Output definition**
-
-> For the competition, the HBN-EEG (Healthy Brain Network EEG Datasets)
-> dataset has `n_chans = 129` with the last channels as a [reference channel](https://mne.tools/stable/auto_tutorials/preprocessing/55_setting_eeg_reference.html),
-> and we define the window length as `n_times = 200`, corresponding to 2-second windows.
-
-> Your model should follow this definition exactly; any specific selection of channels,
-> filtering, or domain-adaptation technique must be performed **within the layers of the neural network model**.
-
-> In this tutorial, we will use the `EEGNeX` model from `braindecode` as an example.
-> You can use any model you want, as long as it follows the input/output
-> definitions above.
-
----
-> **Understand the task: Contrast Change Detection (CCD)**
-
-> If you are interested to get more neuroscience insight, we recommend these two references, [HBN-EEG](https://www.biorxiv.org/content/10.1101/2024.10.03.615261v2.full.pdf) and [Langer, N et al. (2017)](https://www.nature.com/articles/sdata201740#Sec2).
-> Your task (**label**) is to predict the response time for the subject during this windows.
-
-> In the Video, we have an example of recording cognitive activity:
-
-> The Contrast Change Detection (CCD) task relates to
-> [Steady-State Visual Evoked Potentials (SSVEP)](https://en.wikipedia.org/wiki/Steady-state_visually_evoked_potential)
-> and [Event-Related Potentials (ERP)](https://en.wikipedia.org/wiki/Event-related_potential).
-
-> Algorithmically, what the subject sees during recording is:
-
-> * Two flickering striped discs: one tilted left, one tilted right.
-> * After a variable delay, **one disc’s contrast gradually increases** **while the other decreases**.
-> * They **press left or right** to indicate which disc got stronger.
-> * They receive **feedback** (🙂 correct / 🙁 incorrect).
-
-> **The task parallels SSVEP and ERP:**
-
-> * The continuous flicker **tags the EEG at fixed frequencies (and harmonics)** → SSVEP-like signals.
-> * The **ramp onset**, the **button press**, and the **feedback** are **time-locked events** that yield ERP-like components.
-
-> Your task (**label**) is to predict the response time for the subject during this windows.
-
----
-> In the figure below, we have the timeline representation of the cognitive task:
-
-> ![image](https://eeg2025.github.io/assets/img/image-2.jpg)
-
----
-> **Stimulus demonstration**
-
-> <div class="video-wrapper">
->   <iframe src="https://www.youtube.com/embed/tOW2Vu2zHoU?start=1630"
->           title="Contrast Change Detection (CCD) task demo"
->           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
->           allowfullscreen></iframe>
-> </div>
-
----
-> **PyTorch Dataset for the competition**
-
-> Now, we have a Pytorch Dataset object that contains the set of recordings for the task
-> contrastChangeDetection.
-<!-- GENERATED FROM PYTHON SOURCE LINES 229-261 -->
-```Python
-from eegdash.dataset import EEGChallengeDataset
-from eegdash.hbn.windows import (
-    annotate_trials_with_target,
-    add_aux_anchors,
-    keep_only_recordings_with,
-    add_extras_columns,
-)
-from eegdash.paths import get_default_cache_dir
-
-# Match tests' cache layout under ~/eegdash_cache/eeg_challenge_cache
-DATA_DIR = Path(get_default_cache_dir()).resolve()
-DATA_DIR.mkdir(parents=True, exist_ok=True)
-dataset_ccd = EEGChallengeDataset(
-    task="contrastChangeDetection", release="R5", cache_dir=DATA_DIR, mini=True
-)
-# The dataset contains 20 subjects in the minirelease, and each subject has multiple recordings
-# (sessions). Each recording is represented as a dataset object within the `dataset_ccd.datasets` list.
-print(f"Number of recordings in the dataset: {len(dataset_ccd.datasets)}")
-print(
-    f"Number of unique subjects in the dataset: {dataset_ccd.description['subject'].nunique()}"
-)
-#
-# This dataset object have very rich Raw object details that can help you to
-# understand better the data. The framework behind this is braindecode,
-# and if you want to understand in depth what is happening, we recommend the
-# braindecode github itself.
-#
-# We can also access the Raw object for visualization purposes, we will see just one object.
-raw = dataset_ccd.datasets[0].raw  # get the Raw object of the first recording
-# And to download all the data all data directly, you can do:
-dataset_ccd.download_all(n_jobs=-1)
-#
-```
-
-```none
-╭────────────────────── EEG 2025 Competition Data Notice ──────────────────────╮
-│ This object loads the HBN dataset that has been preprocessed for the EEG     │
-│ Challenge:                                                                   │
-│   * Downsampled from 500Hz to 100Hz                                          │
-│   * Bandpass filtered (0.5-50 Hz)                                            │
-│                                                                              │
-│ For full preprocessing applied for competition details, see:                 │
-│   https://github.com/eeg2025/downsample-datasets                             │
-│                                                                              │
-│ The HBN dataset have some preprocessing applied by the HBN team:             │
-│   * Re-reference (Cz Channel)                                                │
-│                                                                              │
-│ IMPORTANT: The data accessed via `EEGChallengeDataset` is NOT identical to   │
-│ what you get from EEGDashDataset directly.                                   │
-│ If you are participating in the competition, always use                      │
-│ `EEGChallengeDataset` to ensure consistency with the challenge data.         │
-╰──────────────────────── Source: EEGChallengeDataset ─────────────────────────╯
-[05/07/26 19:44:46] INFO     Auto-corrected misrouted             dataset.py:498
-                             storage.base for dataset
-                             EEG2025r5mini: None ->
-                             s3://nemar/EEG2025r5mini
-Number of recordings in the dataset: 60
-Number of unique subjects in the dataset: 20
-
-Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/3.34k [00:00<?, ?B/s]
-Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 3.34k/3.34k [00:00<00:00, 14.0MB/s]
-
-Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/3.34k [00:00<?, ?B/s]
-Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 3.34k/3.34k [00:00<00:00, 3.14MB/s]
-
-Downloading sub-NDARAJ689BVN_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/3.34k [00:00<?, ?B/s]
-Downloading sub-NDARAJ689BVN_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 3.34k/3.34k [00:00<00:00, 13.6MB/s]
-
-Downloading sub-NDARAJ689BVN_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/3.34k [00:00<?, ?B/s]
-Downloading sub-NDARAJ689BVN_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 3.34k/3.34k [00:00<00:00, 11.7MB/s]
-
-Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/2.85k [00:00<?, ?B/s]
-Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 2.85k/2.85k [00:00<00:00, 13.0MB/s]
-
-Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/2.72k [00:00<?, ?B/s]
-Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 2.72k/2.72k [00:00<00:00, 14.4MB/s]
-
-Downloading sub-NDARAJ689BVN_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/2.28k [00:00<?, ?B/s]
-Downloading sub-NDARAJ689BVN_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 2.28k/2.28k [00:00<00:00, 13.0MB/s]
-
-Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/242 [00:00<?, ?B/s]
-Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 242/242 [00:00<00:00, 1.17MB/s]
-
-Downloading sub-NDARAJ689BVN_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/2.54k [00:00<?, ?B/s]
-Downloading sub-NDARAJ689BVN_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 2.54k/2.54k [00:00<00:00, 10.2MB/s]
-
-Downloading sub-NDARAJ689BVN_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/241 [00:00<?, ?B/s]
-Downloading sub-NDARAJ689BVN_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 241/241 [00:00<00:00, 1.22MB/s]
-
-Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/242 [00:00<?, ?B/s]
-Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 242/242 [00:00<00:00, 287kB/s]
-
-Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/14.2M [00:00<?, ?B/s]
-
-Downloading sub-NDARAJ689BVN_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/242 [00:00<?, ?B/s]
-Downloading sub-NDARAJ689BVN_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 242/242 [00:00<00:00, 1.08MB/s]
-
-
-Downloading sub-NDARAJ689BVN_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/9.80M [00:00<?, ?B/s]
-
-
-Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/13.0M [00:00<?, ?B/s]
-
-
-
-Downloading sub-NDARAJ689BVN_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/8.84M [00:00<?, ?B/s]
-Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-3_eeg.bdf:  23%|██▎       | 3.28M/14.2M [00:00<00:00, 16.7MB/s]
-
-Downloading sub-NDARAJ689BVN_task-contrastChangeDetection_run-2_eeg.bdf:  40%|████      | 3.97M/9.80M [00:00<00:00, 20.5MB/s]
-
-
-Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-1_eeg.bdf:  26%|██▋       | 3.42M/13.0M [00:00<00:00, 17.3MB/s]
-Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 14.2M/14.2M [00:00<00:00, 51.7MB/s]
-
-Downloading sub-NDARAJ689BVN_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 9.80M/9.80M [00:00<00:00, 40.4MB/s]
-
-Downloading sub-NDARAH793FBF_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 13.0M/13.0M [00:00<00:00, 47.3MB/s]
-
-Downloading sub-NDARAP785CTE_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/3.34k [00:00<?, ?B/s]
-Downloading sub-NDARAP785CTE_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 3.34k/3.34k [00:00<00:00, 16.4MB/s]
-
-Downloading sub-NDARAJ689BVN_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/3.34k [00:00<?, ?B/s]
-Downloading sub-NDARAJ689BVN_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 3.34k/3.34k [00:00<00:00, 16.1MB/s]
-
-
-
-
-Downloading sub-NDARAJ689BVN_task-contrastChangeDetection_run-3_eeg.bdf:  22%|██▏       | 1.96M/8.84M [00:00<00:00, 10.1MB/s]
-Downloading sub-NDARAP785CTE_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/3.34k [00:00<?, ?B/s]
-Downloading sub-NDARAP785CTE_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 3.34k/3.34k [00:00<00:00, 16.2MB/s]
-
-Downloading sub-NDARAJ689BVN_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/2.49k [00:00<?, ?B/s]
-Downloading sub-NDARAJ689BVN_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 2.49k/2.49k [00:00<00:00, 12.4MB/s]
-
-Downloading sub-NDARAP785CTE_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/3.02k [00:00<?, ?B/s]
-Downloading sub-NDARAP785CTE_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 3.02k/3.02k [00:00<00:00, 12.5MB/s]
-
-Downloading sub-NDARAJ689BVN_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 8.84M/8.84M [00:00<00:00, 31.0MB/s]
-
-Downloading sub-NDARAJ689BVN_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/241 [00:00<?, ?B/s]
-Downloading sub-NDARAJ689BVN_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 241/241 [00:00<00:00, 1.16MB/s]
-
-Downloading sub-NDARAP785CTE_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/2.68k [00:00<?, ?B/s]
-Downloading sub-NDARAP785CTE_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 2.68k/2.68k [00:00<00:00, 13.5MB/s]
-
-Downloading sub-NDARAP785CTE_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/242 [00:00<?, ?B/s]
-Downloading sub-NDARAP785CTE_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 242/242 [00:00<00:00, 1.35MB/s]
-
-Downloading sub-NDARAP785CTE_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/242 [00:00<?, ?B/s]
-Downloading sub-NDARAP785CTE_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 242/242 [00:00<00:00, 974kB/s]
-
-Downloading sub-NDARAP785CTE_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/3.34k [00:00<?, ?B/s]
-Downloading sub-NDARAP785CTE_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 3.34k/3.34k [00:00<00:00, 19.1MB/s]
-
-Downloading sub-NDARAJ689BVN_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/9.40M [00:00<?, ?B/s]
-
-Downloading sub-NDARAP785CTE_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/11.3M [00:00<?, ?B/s]
-Downloading sub-NDARAP785CTE_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 11.3M/11.3M [00:00<00:00, 255MB/s]
-
-Downloading sub-NDARAJ689BVN_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 9.40M/9.40M [00:00<00:00, 150MB/s]
-
-Downloading sub-NDARAP785CTE_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/12.0M [00:00<?, ?B/s]
-
-Downloading sub-NDARAP785CTE_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/2.76k [00:00<?, ?B/s]
-Downloading sub-NDARAP785CTE_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 2.76k/2.76k [00:00<00:00, 16.8MB/s]
-
-
-Downloading sub-NDARAU708TL8_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/3.34k [00:00<?, ?B/s]
-Downloading sub-NDARAU708TL8_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 3.34k/3.34k [00:00<00:00, 18.6MB/s]
-
-
-Downloading sub-NDARAU708TL8_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/3.34k [00:00<?, ?B/s]
-Downloading sub-NDARAU708TL8_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 3.34k/3.34k [00:00<00:00, 17.6MB/s]
-
-Downloading sub-NDARAP785CTE_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 12.0M/12.0M [00:00<00:00, 180MB/s]
-
-Downloading sub-NDARAP785CTE_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/242 [00:00<?, ?B/s]
-Downloading sub-NDARAP785CTE_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 242/242 [00:00<00:00, 948kB/s]
-
-Downloading sub-NDARAU708TL8_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/2.74k [00:00<?, ?B/s]
-Downloading sub-NDARAU708TL8_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 2.74k/2.74k [00:00<00:00, 14.2MB/s]
-
-Downloading sub-NDARAU708TL8_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/2.85k [00:00<?, ?B/s]
-Downloading sub-NDARAU708TL8_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 2.85k/2.85k [00:00<00:00, 13.6MB/s]
-
-Downloading sub-NDARAU708TL8_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/3.34k [00:00<?, ?B/s]
-Downloading sub-NDARAU708TL8_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 3.34k/3.34k [00:00<00:00, 12.3MB/s]
-
-Downloading sub-NDARAU708TL8_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/242 [00:00<?, ?B/s]
-Downloading sub-NDARAU708TL8_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 242/242 [00:00<00:00, 1.00MB/s]
-
-Downloading sub-NDARAU708TL8_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/2.81k [00:00<?, ?B/s]
-Downloading sub-NDARAU708TL8_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 2.81k/2.81k [00:00<00:00, 13.8MB/s]
-
-Downloading sub-NDARAU708TL8_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/242 [00:00<?, ?B/s]
-Downloading sub-NDARAU708TL8_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 242/242 [00:00<00:00, 860kB/s]
-
-Downloading sub-NDARAP785CTE_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/10.7M [00:00<?, ?B/s]
-
-Downloading sub-NDARAU708TL8_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/242 [00:00<?, ?B/s]
-Downloading sub-NDARAU708TL8_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 242/242 [00:00<00:00, 731kB/s]
-
-Downloading sub-NDARAP785CTE_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 10.7M/10.7M [00:00<00:00, 183MB/s]
-
-Downloading sub-NDARAU708TL8_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/8.92M [00:00<?, ?B/s]
-
-Downloading sub-NDARAU708TL8_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/8.77M [00:00<?, ?B/s]
-Downloading sub-NDARAU708TL8_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 8.92M/8.92M [00:00<00:00, 191MB/s]
-
-Downloading sub-NDARBE091BGD_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/3.34k [00:00<?, ?B/s]
-Downloading sub-NDARBE091BGD_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 3.34k/3.34k [00:00<00:00, 12.8MB/s]
-
-Downloading sub-NDARAU708TL8_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 8.77M/8.77M [00:00<00:00, 187MB/s]
-
-Downloading sub-NDARAU708TL8_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/8.69M [00:00<?, ?B/s]
-
-Downloading sub-NDARBE091BGD_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/3.34k [00:00<?, ?B/s]
-Downloading sub-NDARBE091BGD_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 3.34k/3.34k [00:00<00:00, 16.8MB/s]
-
-
-Downloading sub-NDARBE091BGD_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/3.34k [00:00<?, ?B/s]
-Downloading sub-NDARBE091BGD_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 3.34k/3.34k [00:00<00:00, 16.2MB/s]
-
-
-Downloading sub-NDARBE091BGD_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/2.95k [00:00<?, ?B/s]
-Downloading sub-NDARBE091BGD_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 2.95k/2.95k [00:00<00:00, 11.2MB/s]
-
-Downloading sub-NDARAU708TL8_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 8.69M/8.69M [00:00<00:00, 199MB/s]
-
-Downloading sub-NDARBE091BGD_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/2.58k [00:00<?, ?B/s]
-Downloading sub-NDARBE091BGD_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 2.58k/2.58k [00:00<00:00, 11.7MB/s]
-
-Downloading sub-NDARBE091BGD_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/2.71k [00:00<?, ?B/s]
-Downloading sub-NDARBE091BGD_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 2.71k/2.71k [00:00<00:00, 12.6MB/s]
-
-Downloading sub-NDARBE103DHM_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/3.34k [00:00<?, ?B/s]
-Downloading sub-NDARBE103DHM_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 3.34k/3.34k [00:00<00:00, 17.9MB/s]
-
-Downloading sub-NDARBE091BGD_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/242 [00:00<?, ?B/s]
-Downloading sub-NDARBE091BGD_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 242/242 [00:00<00:00, 905kB/s]
-
-Downloading sub-NDARBE091BGD_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/242 [00:00<?, ?B/s]
-Downloading sub-NDARBE091BGD_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 242/242 [00:00<00:00, 1.26MB/s]
-
-Downloading sub-NDARBE091BGD_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/241 [00:00<?, ?B/s]
-Downloading sub-NDARBE091BGD_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 241/241 [00:00<00:00, 852kB/s]
-
-Downloading sub-NDARBE103DHM_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/2.95k [00:00<?, ?B/s]
-Downloading sub-NDARBE103DHM_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 2.95k/2.95k [00:00<00:00, 16.1MB/s]
-
-Downloading sub-NDARBE103DHM_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/241 [00:00<?, ?B/s]
-Downloading sub-NDARBE103DHM_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 241/241 [00:00<00:00, 1.00MB/s]
-
-Downloading sub-NDARBE091BGD_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/11.8M [00:00<?, ?B/s]
-
-Downloading sub-NDARBE091BGD_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/9.47M [00:00<?, ?B/s]
-
-
-Downloading sub-NDARBE091BGD_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/9.69M [00:00<?, ?B/s]
-Downloading sub-NDARBE091BGD_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 11.8M/11.8M [00:00<00:00, 196MB/s]
-
-Downloading sub-NDARBE091BGD_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 9.47M/9.47M [00:00<00:00, 157MB/s]
-
-Downloading sub-NDARBE091BGD_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 9.69M/9.69M [00:00<00:00, 212MB/s]
-
-Downloading sub-NDARBE103DHM_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/8.80M [00:00<?, ?B/s]
-
-Downloading sub-NDARBE103DHM_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/3.34k [00:00<?, ?B/s]
-Downloading sub-NDARBE103DHM_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 3.34k/3.34k [00:00<00:00, 11.3MB/s]
-
-Downloading sub-NDARBE103DHM_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 8.80M/8.80M [00:00<00:00, 208MB/s]
-
-Downloading sub-NDARBF851NH6_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/3.34k [00:00<?, ?B/s]
-Downloading sub-NDARBF851NH6_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 3.34k/3.34k [00:00<00:00, 13.1MB/s]
-
-Downloading sub-NDARBE103DHM_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/3.34k [00:00<?, ?B/s]
-Downloading sub-NDARBE103DHM_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 3.34k/3.34k [00:00<00:00, 18.7MB/s]
-
-Downloading sub-NDARBE103DHM_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/2.95k [00:00<?, ?B/s]
-Downloading sub-NDARBE103DHM_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 2.95k/2.95k [00:00<00:00, 11.4MB/s]
-
-Downloading sub-NDARBF851NH6_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/3.34k [00:00<?, ?B/s]
-Downloading sub-NDARBF851NH6_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 3.34k/3.34k [00:00<00:00, 16.7MB/s]
-
-Downloading sub-NDARBF851NH6_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/2.78k [00:00<?, ?B/s]
-Downloading sub-NDARBF851NH6_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 2.78k/2.78k [00:00<00:00, 14.6MB/s]
-
-Downloading sub-NDARBE103DHM_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/3.07k [00:00<?, ?B/s]
-Downloading sub-NDARBE103DHM_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 3.07k/3.07k [00:00<00:00, 14.1MB/s]
-
-Downloading sub-NDARBE103DHM_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/242 [00:00<?, ?B/s]
-Downloading sub-NDARBE103DHM_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 242/242 [00:00<00:00, 1.08MB/s]
-
-Downloading sub-NDARBF851NH6_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/2.85k [00:00<?, ?B/s]
-Downloading sub-NDARBF851NH6_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 2.85k/2.85k [00:00<00:00, 15.8MB/s]
-
-Downloading sub-NDARBF851NH6_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/242 [00:00<?, ?B/s]
-Downloading sub-NDARBF851NH6_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 242/242 [00:00<00:00, 881kB/s]
-
-Downloading sub-NDARBE103DHM_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/242 [00:00<?, ?B/s]
-Downloading sub-NDARBE103DHM_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 242/242 [00:00<00:00, 937kB/s]
-
-Downloading sub-NDARBE103DHM_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/8.58M [00:00<?, ?B/s]
-
-Downloading sub-NDARBF851NH6_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/242 [00:00<?, ?B/s]
-Downloading sub-NDARBF851NH6_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 242/242 [00:00<00:00, 1.32MB/s]
-
-Downloading sub-NDARBE103DHM_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 8.58M/8.58M [00:00<00:00, 204MB/s]
-
-Downloading sub-NDARBF851NH6_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/8.21M [00:00<?, ?B/s]
-
-Downloading sub-NDARBE103DHM_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/8.80M [00:00<?, ?B/s]
-Downloading sub-NDARBF851NH6_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 8.21M/8.21M [00:00<00:00, 180MB/s]
-
-Downloading sub-NDARBF851NH6_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/3.34k [00:00<?, ?B/s]
-Downloading sub-NDARBF851NH6_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 3.34k/3.34k [00:00<00:00, 10.6MB/s]
-
-Downloading sub-NDARBF851NH6_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/12.0M [00:00<?, ?B/s]
-Downloading sub-NDARBE103DHM_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 8.80M/8.80M [00:00<00:00, 155MB/s]
-
-
-Downloading sub-NDARBH228RDW_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/3.34k [00:00<?, ?B/s]
-Downloading sub-NDARBH228RDW_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 3.34k/3.34k [00:00<00:00, 10.5MB/s]
-
-Downloading sub-NDARBF851NH6_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 12.0M/12.0M [00:00<00:00, 192MB/s]
-
-Downloading sub-NDARBF851NH6_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/2.87k [00:00<?, ?B/s]
-Downloading sub-NDARBF851NH6_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 2.87k/2.87k [00:00<00:00, 13.9MB/s]
-
-Downloading sub-NDARBH228RDW_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/3.34k [00:00<?, ?B/s]
-Downloading sub-NDARBH228RDW_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 3.34k/3.34k [00:00<00:00, 15.0MB/s]
-
-Downloading sub-NDARBH228RDW_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/2.56k [00:00<?, ?B/s]
-Downloading sub-NDARBH228RDW_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 2.56k/2.56k [00:00<00:00, 11.2MB/s]
-
-Downloading sub-NDARBF851NH6_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/241 [00:00<?, ?B/s]
-Downloading sub-NDARBF851NH6_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 241/241 [00:00<00:00, 972kB/s]
-
-Downloading sub-NDARBH228RDW_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/3.34k [00:00<?, ?B/s]
-Downloading sub-NDARBH228RDW_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 3.34k/3.34k [00:00<00:00, 17.2MB/s]
-
-Downloading sub-NDARBH228RDW_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/2.58k [00:00<?, ?B/s]
-Downloading sub-NDARBH228RDW_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 2.58k/2.58k [00:00<00:00, 12.5MB/s]
-
-Downloading sub-NDARBH228RDW_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/2.56k [00:00<?, ?B/s]
-Downloading sub-NDARBH228RDW_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 2.56k/2.56k [00:00<00:00, 12.4MB/s]
-
-Downloading sub-NDARBH228RDW_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/242 [00:00<?, ?B/s]
-Downloading sub-NDARBH228RDW_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 242/242 [00:00<00:00, 1.29MB/s]
-
-Downloading sub-NDARBF851NH6_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/12.4M [00:00<?, ?B/s]
-
-Downloading sub-NDARBH228RDW_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/242 [00:00<?, ?B/s]
-Downloading sub-NDARBH228RDW_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 242/242 [00:00<00:00, 1.12MB/s]
-
-
-Downloading sub-NDARBH228RDW_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/242 [00:00<?, ?B/s]
-Downloading sub-NDARBH228RDW_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 242/242 [00:00<00:00, 1.80MB/s]
-
-Downloading sub-NDARBF851NH6_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 12.4M/12.4M [00:00<00:00, 202MB/s]
-
-Downloading sub-NDARBH228RDW_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/19.4M [00:00<?, ?B/s]
-
-Downloading sub-NDARBH228RDW_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/6.77M [00:00<?, ?B/s]
-
-
-Downloading sub-NDARBJ674TVU_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/3.34k [00:00<?, ?B/s]
-Downloading sub-NDARBJ674TVU_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 3.34k/3.34k [00:00<00:00, 16.6MB/s]
-
-
-
-Downloading sub-NDARBH228RDW_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/6.81M [00:00<?, ?B/s]
-Downloading sub-NDARBH228RDW_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 6.77M/6.77M [00:00<00:00, 165MB/s]
-
-Downloading sub-NDARBH228RDW_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 6.81M/6.81M [00:00<00:00, 142MB/s]
-
-
-Downloading sub-NDARBJ674TVU_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/2.69k [00:00<?, ?B/s]
-Downloading sub-NDARBJ674TVU_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 2.69k/2.69k [00:00<00:00, 12.3MB/s]
-
-
-Downloading sub-NDARBJ674TVU_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/3.34k [00:00<?, ?B/s]
-Downloading sub-NDARBJ674TVU_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 3.34k/3.34k [00:00<00:00, 11.6MB/s]
-
-Downloading sub-NDARBH228RDW_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 19.4M/19.4M [00:00<00:00, 144MB/s]
-
-Downloading sub-NDARBJ674TVU_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/3.34k [00:00<?, ?B/s]
-Downloading sub-NDARBJ674TVU_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 3.34k/3.34k [00:00<00:00, 15.7MB/s]
-
-Downloading sub-NDARBJ674TVU_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/242 [00:00<?, ?B/s]
-Downloading sub-NDARBJ674TVU_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 242/242 [00:00<00:00, 1.10MB/s]
-
-Downloading sub-NDARBM433VER_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/3.34k [00:00<?, ?B/s]
-Downloading sub-NDARBM433VER_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 3.34k/3.34k [00:00<00:00, 18.1MB/s]
-
-Downloading sub-NDARBJ674TVU_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/2.86k [00:00<?, ?B/s]
-Downloading sub-NDARBJ674TVU_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 2.86k/2.86k [00:00<00:00, 17.2MB/s]
-
-Downloading sub-NDARBJ674TVU_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/2.72k [00:00<?, ?B/s]
-Downloading sub-NDARBJ674TVU_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 2.72k/2.72k [00:00<00:00, 12.3MB/s]
-
-Downloading sub-NDARBJ674TVU_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/242 [00:00<?, ?B/s]
-Downloading sub-NDARBJ674TVU_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 242/242 [00:00<00:00, 1.09MB/s]
-
-Downloading sub-NDARBM433VER_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/3.02k [00:00<?, ?B/s]
-Downloading sub-NDARBM433VER_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 3.02k/3.02k [00:00<00:00, 16.1MB/s]
-
-Downloading sub-NDARBJ674TVU_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/10.6M [00:00<?, ?B/s]
-
-Downloading sub-NDARBJ674TVU_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/242 [00:00<?, ?B/s]
-Downloading sub-NDARBJ674TVU_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 242/242 [00:00<00:00, 1.09MB/s]
-
-Downloading sub-NDARBJ674TVU_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 10.6M/10.6M [00:00<00:00, 238MB/s]
-
-Downloading sub-NDARBM433VER_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/242 [00:00<?, ?B/s]
-Downloading sub-NDARBM433VER_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 242/242 [00:00<00:00, 1.38MB/s]
-
-Downloading sub-NDARBJ674TVU_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/8.73M [00:00<?, ?B/s]
-
-Downloading sub-NDARBM433VER_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/3.34k [00:00<?, ?B/s]
-Downloading sub-NDARBM433VER_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 3.34k/3.34k [00:00<00:00, 12.8MB/s]
-
-Downloading sub-NDARBJ674TVU_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 8.73M/8.73M [00:00<00:00, 198MB/s]
-
-Downloading sub-NDARBJ674TVU_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/8.88M [00:00<?, ?B/s]
-
-Downloading sub-NDARBM433VER_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/3.03k [00:00<?, ?B/s]
-Downloading sub-NDARBM433VER_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 3.03k/3.03k [00:00<00:00, 11.3MB/s]
-
-
-Downloading sub-NDARBM433VER_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/18.0M [00:00<?, ?B/s]
-Downloading sub-NDARBJ674TVU_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 8.88M/8.88M [00:00<00:00, 161MB/s]
-
-Downloading sub-NDARBM433VER_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/3.34k [00:00<?, ?B/s]
-Downloading sub-NDARBM433VER_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 3.34k/3.34k [00:00<00:00, 23.5MB/s]
-
-Downloading sub-NDARBM433VER_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/241 [00:00<?, ?B/s]
-Downloading sub-NDARBM433VER_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 241/241 [00:00<00:00, 983kB/s]
-
-Downloading sub-NDARBM433VER_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/3.13k [00:00<?, ?B/s]
-Downloading sub-NDARBM433VER_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 3.13k/3.13k [00:00<00:00, 15.8MB/s]
-
-Downloading sub-NDARBM433VER_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 18.0M/18.0M [00:00<00:00, 182MB/s]
-
-Downloading sub-NDARCA740UC8_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/3.34k [00:00<?, ?B/s]
-Downloading sub-NDARCA740UC8_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 3.34k/3.34k [00:00<00:00, 11.7MB/s]
-
-Downloading sub-NDARBM433VER_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/9.25M [00:00<?, ?B/s]
-
-Downloading sub-NDARBM433VER_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/242 [00:00<?, ?B/s]
-Downloading sub-NDARBM433VER_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 242/242 [00:00<00:00, 1.53MB/s]
-
-Downloading sub-NDARBM433VER_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 9.25M/9.25M [00:00<00:00, 226MB/s]
-
-Downloading sub-NDARCA740UC8_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/2.91k [00:00<?, ?B/s]
-Downloading sub-NDARCA740UC8_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 2.91k/2.91k [00:00<00:00, 20.0MB/s]
-
-Downloading sub-NDARCA740UC8_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/3.34k [00:00<?, ?B/s]
-Downloading sub-NDARCA740UC8_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 3.34k/3.34k [00:00<00:00, 11.5MB/s]
-
-Downloading sub-NDARCA740UC8_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/3.34k [00:00<?, ?B/s]
-Downloading sub-NDARCA740UC8_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 3.34k/3.34k [00:00<00:00, 16.3MB/s]
-
-Downloading sub-NDARCA740UC8_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/2.86k [00:00<?, ?B/s]
-Downloading sub-NDARCA740UC8_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 2.86k/2.86k [00:00<00:00, 14.8MB/s]
-
-Downloading sub-NDARBM433VER_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/12.0M [00:00<?, ?B/s]
-
-Downloading sub-NDARCA740UC8_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/242 [00:00<?, ?B/s]
-Downloading sub-NDARCA740UC8_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 242/242 [00:00<00:00, 1.34MB/s]
-
-Downloading sub-NDARBM433VER_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 12.0M/12.0M [00:00<00:00, 193MB/s]
-
-Downloading sub-NDARCA740UC8_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/2.83k [00:00<?, ?B/s]
-Downloading sub-NDARCA740UC8_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 2.83k/2.83k [00:00<00:00, 9.89MB/s]
-
-Downloading sub-NDARCA740UC8_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/242 [00:00<?, ?B/s]
-Downloading sub-NDARCA740UC8_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 242/242 [00:00<00:00, 1.28MB/s]
-
-Downloading sub-NDARCU633GCZ_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/3.34k [00:00<?, ?B/s]
-Downloading sub-NDARCU633GCZ_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 3.34k/3.34k [00:00<00:00, 12.6MB/s]
-
-Downloading sub-NDARCA740UC8_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/10.8M [00:00<?, ?B/s]
-
-Downloading sub-NDARCA740UC8_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/242 [00:00<?, ?B/s]
-Downloading sub-NDARCA740UC8_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 242/242 [00:00<00:00, 1.25MB/s]
-
-Downloading sub-NDARCA740UC8_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 10.8M/10.8M [00:00<00:00, 184MB/s]
-
-Downloading sub-NDARCA740UC8_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/12.2M [00:00<?, ?B/s]
-
-Downloading sub-NDARCU633GCZ_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/2.98k [00:00<?, ?B/s]
-Downloading sub-NDARCU633GCZ_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 2.98k/2.98k [00:00<00:00, 13.4MB/s]
-
-
-Downloading sub-NDARCA740UC8_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/14.1M [00:00<?, ?B/s]
-Downloading sub-NDARCA740UC8_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 12.2M/12.2M [00:00<00:00, 178MB/s]
-
-Downloading sub-NDARCU633GCZ_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/242 [00:00<?, ?B/s]
-Downloading sub-NDARCU633GCZ_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 242/242 [00:00<00:00, 1.27MB/s]
-
-Downloading sub-NDARCU633GCZ_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/3.34k [00:00<?, ?B/s]
-Downloading sub-NDARCU633GCZ_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 3.34k/3.34k [00:00<00:00, 20.4MB/s]
-
-Downloading sub-NDARCA740UC8_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 14.1M/14.1M [00:00<00:00, 163MB/s]
-
-Downloading sub-NDARCU633GCZ_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/3.34k [00:00<?, ?B/s]
-Downloading sub-NDARCU633GCZ_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 3.34k/3.34k [00:00<00:00, 16.6MB/s]
-
-Downloading sub-NDARCU633GCZ_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/2.80k [00:00<?, ?B/s]
-Downloading sub-NDARCU633GCZ_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 2.80k/2.80k [00:00<00:00, 13.4MB/s]
-
-Downloading sub-NDARCU736GZ1_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/3.34k [00:00<?, ?B/s]
-Downloading sub-NDARCU736GZ1_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 3.34k/3.34k [00:00<00:00, 16.5MB/s]
-
-Downloading sub-NDARCU633GCZ_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/10.1M [00:00<?, ?B/s]
-
-Downloading sub-NDARCU633GCZ_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/3.07k [00:00<?, ?B/s]
-Downloading sub-NDARCU633GCZ_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 3.07k/3.07k [00:00<00:00, 17.2MB/s]
-
-Downloading sub-NDARCU633GCZ_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 10.1M/10.1M [00:00<00:00, 214MB/s]
-
-Downloading sub-NDARCU736GZ1_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/2.73k [00:00<?, ?B/s]
-Downloading sub-NDARCU736GZ1_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 2.73k/2.73k [00:00<00:00, 12.9MB/s]
-
-Downloading sub-NDARCU633GCZ_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/241 [00:00<?, ?B/s]
-Downloading sub-NDARCU633GCZ_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 241/241 [00:00<00:00, 1.75MB/s]
-
-Downloading sub-NDARCU633GCZ_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/242 [00:00<?, ?B/s]
-Downloading sub-NDARCU633GCZ_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 242/242 [00:00<00:00, 865kB/s]
-
-Downloading sub-NDARCU736GZ1_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/241 [00:00<?, ?B/s]
-Downloading sub-NDARCU736GZ1_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 241/241 [00:00<00:00, 1.16MB/s]
-
-Downloading sub-NDARCU736GZ1_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/3.34k [00:00<?, ?B/s]
-Downloading sub-NDARCU736GZ1_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 3.34k/3.34k [00:00<00:00, 15.5MB/s]
-
-Downloading sub-NDARCU633GCZ_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/5.73M [00:00<?, ?B/s]
-
-Downloading sub-NDARCU633GCZ_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/7.32M [00:00<?, ?B/s]
-
-
-Downloading sub-NDARCU736GZ1_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/2.84k [00:00<?, ?B/s]
-Downloading sub-NDARCU736GZ1_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 2.84k/2.84k [00:00<00:00, 13.9MB/s]
-
-
-
-Downloading sub-NDARCU736GZ1_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/8.84M [00:00<?, ?B/s]
-Downloading sub-NDARCU633GCZ_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 5.73M/5.73M [00:00<00:00, 133MB/s]
-
-Downloading sub-NDARCU633GCZ_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 7.32M/7.32M [00:00<00:00, 179MB/s]
-
-Downloading sub-NDARCU736GZ1_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 8.84M/8.84M [00:00<00:00, 215MB/s]
-
-Downloading sub-NDARCU736GZ1_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/3.34k [00:00<?, ?B/s]
-Downloading sub-NDARCU736GZ1_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 3.34k/3.34k [00:00<00:00, 12.8MB/s]
-
-Downloading sub-NDARCU744XWL_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/3.34k [00:00<?, ?B/s]
-Downloading sub-NDARCU744XWL_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 3.34k/3.34k [00:00<00:00, 3.22MB/s]
-
-Downloading sub-NDARCU736GZ1_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/242 [00:00<?, ?B/s]
-Downloading sub-NDARCU736GZ1_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 242/242 [00:00<00:00, 1.10MB/s]
-
-Downloading sub-NDARCU744XWL_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/3.34k [00:00<?, ?B/s]
-Downloading sub-NDARCU744XWL_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 3.34k/3.34k [00:00<00:00, 17.2MB/s]
-
-Downloading sub-NDARCU736GZ1_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/2.79k [00:00<?, ?B/s]
-Downloading sub-NDARCU736GZ1_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 2.79k/2.79k [00:00<00:00, 12.8MB/s]
-
-Downloading sub-NDARCU744XWL_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/3.78k [00:00<?, ?B/s]
-Downloading sub-NDARCU744XWL_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 3.78k/3.78k [00:00<00:00, 20.0MB/s]
-
-Downloading sub-NDARCU744XWL_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/2.74k [00:00<?, ?B/s]
-Downloading sub-NDARCU744XWL_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 2.74k/2.74k [00:00<00:00, 8.28MB/s]
-
-Downloading sub-NDARCU736GZ1_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/10.1M [00:00<?, ?B/s]
-
-Downloading sub-NDARCU744XWL_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/242 [00:00<?, ?B/s]
-Downloading sub-NDARCU744XWL_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 242/242 [00:00<00:00, 812kB/s]
-
-
-Downloading sub-NDARCU736GZ1_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/242 [00:00<?, ?B/s]
-Downloading sub-NDARCU736GZ1_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 242/242 [00:00<00:00, 1.23MB/s]
-
-
-Downloading sub-NDARCU744XWL_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/241 [00:00<?, ?B/s]
-Downloading sub-NDARCU744XWL_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 241/241 [00:00<00:00, 787kB/s]
-
-Downloading sub-NDARCU736GZ1_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 10.1M/10.1M [00:00<00:00, 175MB/s]
-
-Downloading sub-NDARCU744XWL_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/3.34k [00:00<?, ?B/s]
-Downloading sub-NDARCU744XWL_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 3.34k/3.34k [00:00<00:00, 13.1MB/s]
-
-Downloading sub-NDARCU744XWL_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/22.6M [00:00<?, ?B/s]
-
-Downloading sub-NDARCU736GZ1_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/8.92M [00:00<?, ?B/s]
-
-
-Downloading sub-NDARCU744XWL_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/8.40M [00:00<?, ?B/s]
-Downloading sub-NDARCU736GZ1_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 8.92M/8.92M [00:00<00:00, 161MB/s]
-
-
-Downloading sub-NDARCU744XWL_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/2.79k [00:00<?, ?B/s]
-Downloading sub-NDARCU744XWL_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 2.79k/2.79k [00:00<00:00, 16.7MB/s]
-
-Downloading sub-NDARCU744XWL_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 8.40M/8.40M [00:00<00:00, 197MB/s]
-
-
-Downloading sub-NDARCU744XWL_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/242 [00:00<?, ?B/s]
-Downloading sub-NDARCU744XWL_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 242/242 [00:00<00:00, 1.05MB/s]
-
-
-Downloading sub-NDARDC843HHM_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/3.34k [00:00<?, ?B/s]
-Downloading sub-NDARDC843HHM_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 3.34k/3.34k [00:00<00:00, 13.9MB/s]
-
-Downloading sub-NDARCU744XWL_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 22.6M/22.6M [00:00<00:00, 146MB/s]
-
-Downloading sub-NDARDC843HHM_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/3.34k [00:00<?, ?B/s]
-Downloading sub-NDARDC843HHM_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 3.34k/3.34k [00:00<00:00, 14.2MB/s]
-
-Downloading sub-NDARDC843HHM_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/2.52k [00:00<?, ?B/s]
-Downloading sub-NDARDC843HHM_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 2.52k/2.52k [00:00<00:00, 12.0MB/s]
-
-Downloading sub-NDARDC843HHM_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/3.34k [00:00<?, ?B/s]
-Downloading sub-NDARDC843HHM_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 3.34k/3.34k [00:00<00:00, 10.7MB/s]
-
-Downloading sub-NDARDC843HHM_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/3.40k [00:00<?, ?B/s]
-Downloading sub-NDARDC843HHM_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 3.40k/3.40k [00:00<00:00, 11.3MB/s]
-
-Downloading sub-NDARCU744XWL_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/8.73M [00:00<?, ?B/s]
-
-Downloading sub-NDARDC843HHM_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/242 [00:00<?, ?B/s]
-Downloading sub-NDARDC843HHM_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 242/242 [00:00<00:00, 1.10MB/s]
-
-
-Downloading sub-NDARDC843HHM_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/2.91k [00:00<?, ?B/s]
-Downloading sub-NDARDC843HHM_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 2.91k/2.91k [00:00<00:00, 17.3MB/s]
-
-Downloading sub-NDARCU744XWL_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 8.73M/8.73M [00:00<00:00, 186MB/s]
-
-Downloading sub-NDARDC843HHM_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/242 [00:00<?, ?B/s]
-Downloading sub-NDARDC843HHM_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 242/242 [00:00<00:00, 1.11MB/s]
-
-Downloading sub-NDARDC843HHM_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/242 [00:00<?, ?B/s]
-Downloading sub-NDARDC843HHM_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 242/242 [00:00<00:00, 831kB/s]
-
-Downloading sub-NDARDH086ZKK_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/3.34k [00:00<?, ?B/s]
-Downloading sub-NDARDH086ZKK_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 3.34k/3.34k [00:00<00:00, 19.1MB/s]
-
-Downloading sub-NDARDC843HHM_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/10.2M [00:00<?, ?B/s]
-Downloading sub-NDARDC843HHM_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 10.2M/10.2M [00:00<00:00, 224MB/s]
-
-Downloading sub-NDARDH086ZKK_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/2.92k [00:00<?, ?B/s]
-Downloading sub-NDARDH086ZKK_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 2.92k/2.92k [00:00<00:00, 13.1MB/s]
-
-Downloading sub-NDARDC843HHM_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/8.99M [00:00<?, ?B/s]
-
-Downloading sub-NDARDC843HHM_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/9.29M [00:00<?, ?B/s]
-
-
-Downloading sub-NDARDH086ZKK_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/3.34k [00:00<?, ?B/s]
-Downloading sub-NDARDH086ZKK_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 3.34k/3.34k [00:00<00:00, 16.4MB/s]
-
-
-
-Downloading sub-NDARDH086ZKK_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/242 [00:00<?, ?B/s]
-Downloading sub-NDARDH086ZKK_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 242/242 [00:00<00:00, 1.37MB/s]
-
-Downloading sub-NDARDC843HHM_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 9.29M/9.29M [00:00<00:00, 182MB/s]
-
-Downloading sub-NDARDC843HHM_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 8.99M/8.99M [00:00<00:00, 161MB/s]
-
-Downloading sub-NDARDH086ZKK_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/2.88k [00:00<?, ?B/s]
-Downloading sub-NDARDH086ZKK_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 2.88k/2.88k [00:00<00:00, 17.3MB/s]
-
-Downloading sub-NDARDH086ZKK_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/3.34k [00:00<?, ?B/s]
-Downloading sub-NDARDH086ZKK_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 3.34k/3.34k [00:00<00:00, 11.6MB/s]
-
-Downloading sub-NDARDH086ZKK_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/13.1M [00:00<?, ?B/s]
-
-Downloading sub-NDARDL305BT8_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/3.34k [00:00<?, ?B/s]
-Downloading sub-NDARDL305BT8_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 3.34k/3.34k [00:00<00:00, 19.5MB/s]
-
-
-Downloading sub-NDARDH086ZKK_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/2.85k [00:00<?, ?B/s]
-Downloading sub-NDARDH086ZKK_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 2.85k/2.85k [00:00<00:00, 7.44MB/s]
-
-Downloading sub-NDARDH086ZKK_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 13.1M/13.1M [00:00<00:00, 193MB/s]
-
-Downloading sub-NDARDH086ZKK_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/241 [00:00<?, ?B/s]
-Downloading sub-NDARDH086ZKK_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 241/241 [00:00<00:00, 1.24MB/s]
-
-Downloading sub-NDARDL305BT8_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/2.85k [00:00<?, ?B/s]
-Downloading sub-NDARDL305BT8_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 2.85k/2.85k [00:00<00:00, 14.4MB/s]
-
-Downloading sub-NDARDH086ZKK_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/242 [00:00<?, ?B/s]
-Downloading sub-NDARDH086ZKK_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 242/242 [00:00<00:00, 1.66MB/s]
-
-Downloading sub-NDARDL305BT8_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/3.34k [00:00<?, ?B/s]
-Downloading sub-NDARDL305BT8_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 3.34k/3.34k [00:00<00:00, 12.3MB/s]
-
-Downloading sub-NDARDL305BT8_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/242 [00:00<?, ?B/s]
-Downloading sub-NDARDL305BT8_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 242/242 [00:00<00:00, 1.18MB/s]
-
-Downloading sub-NDARDH086ZKK_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/7.47M [00:00<?, ?B/s]
-
-Downloading sub-NDARDL305BT8_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/2.78k [00:00<?, ?B/s]
-Downloading sub-NDARDL305BT8_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 2.78k/2.78k [00:00<00:00, 14.3MB/s]
-
-
-Downloading sub-NDARDH086ZKK_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/11.1M [00:00<?, ?B/s]
-Downloading sub-NDARDH086ZKK_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 11.1M/11.1M [00:00<00:00, 227MB/s]
-
-
-Downloading sub-NDARDL305BT8_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/14.7M [00:00<?, ?B/s]
-
-
-Downloading sub-NDARDL305BT8_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/242 [00:00<?, ?B/s]
-Downloading sub-NDARDL305BT8_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 242/242 [00:00<00:00, 767kB/s]
-
-
-
-Downloading sub-NDARDL305BT8_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/3.34k [00:00<?, ?B/s]
-Downloading sub-NDARDL305BT8_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 3.34k/3.34k [00:00<00:00, 12.6MB/s]
-
-Downloading sub-NDARDH086ZKK_task-contrastChangeDetection_run-3_eeg.bdf:  37%|███▋      | 2.79M/7.47M [00:00<00:00, 14.2MB/s]
-Downloading sub-NDARDL305BT8_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 14.7M/14.7M [00:00<00:00, 172MB/s]
-
-Downloading sub-NDARDH086ZKK_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 7.47M/7.47M [00:00<00:00, 27.9MB/s]
-
-Downloading sub-NDARDL305BT8_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/12.2M [00:00<?, ?B/s]
-
-Downloading sub-NDARDL305BT8_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/2.80k [00:00<?, ?B/s]
-Downloading sub-NDARDL305BT8_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 2.80k/2.80k [00:00<00:00, 16.2MB/s]
-
-
-Downloading sub-NDARDU853XZ6_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/3.34k [00:00<?, ?B/s]
-Downloading sub-NDARDU853XZ6_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 3.34k/3.34k [00:00<00:00, 17.7MB/s]
-
-
-Downloading sub-NDARDU853XZ6_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/3.34k [00:00<?, ?B/s]
-Downloading sub-NDARDU853XZ6_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 3.34k/3.34k [00:00<00:00, 9.41MB/s]
-
-
-Downloading sub-NDARDU853XZ6_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/2.87k [00:00<?, ?B/s]
-Downloading sub-NDARDU853XZ6_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 2.87k/2.87k [00:00<00:00, 10.4MB/s]
-
-
-Downloading sub-NDARDL305BT8_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/242 [00:00<?, ?B/s]
-Downloading sub-NDARDL305BT8_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 242/242 [00:00<00:00, 799kB/s]
-
-
-Downloading sub-NDARDU853XZ6_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/2.89k [00:00<?, ?B/s]
-Downloading sub-NDARDU853XZ6_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 2.89k/2.89k [00:00<00:00, 11.9MB/s]
-
-Downloading sub-NDARDL305BT8_task-contrastChangeDetection_run-2_eeg.bdf:  48%|████▊     | 5.83M/12.2M [00:00<00:00, 30.0MB/s]
-
-Downloading sub-NDARDU853XZ6_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/241 [00:00<?, ?B/s]
-Downloading sub-NDARDU853XZ6_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 241/241 [00:00<00:00, 827kB/s]
-
-Downloading sub-NDARDL305BT8_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 12.2M/12.2M [00:00<00:00, 53.4MB/s]
-
-Downloading sub-NDARDL305BT8_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/18.3M [00:00<?, ?B/s]
-
-Downloading sub-NDARDU853XZ6_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/242 [00:00<?, ?B/s]
-Downloading sub-NDARDU853XZ6_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 242/242 [00:00<00:00, 1.28MB/s]
-
-
-Downloading sub-NDARDU853XZ6_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/3.34k [00:00<?, ?B/s]
-Downloading sub-NDARDU853XZ6_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 3.34k/3.34k [00:00<00:00, 14.5MB/s]
-
-
-Downloading sub-NDARDU853XZ6_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/9.88M [00:00<?, ?B/s]
-Downloading sub-NDARDU853XZ6_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 9.88M/9.88M [00:00<00:00, 179MB/s]
-
-
-Downloading sub-NDARDU853XZ6_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/8.84M [00:00<?, ?B/s]
-
-
-Downloading sub-NDARDU853XZ6_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/2.86k [00:00<?, ?B/s]
-Downloading sub-NDARDU853XZ6_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 2.86k/2.86k [00:00<00:00, 9.17MB/s]
-
-Downloading sub-NDARDU853XZ6_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 8.84M/8.84M [00:00<00:00, 200MB/s]
-
-Downloading sub-NDARDL305BT8_task-contrastChangeDetection_run-3_eeg.bdf:  18%|█▊        | 3.32M/18.3M [00:00<00:00, 17.2MB/s]
-
-Downloading sub-NDARDV245WJG_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/3.34k [00:00<?, ?B/s]
-Downloading sub-NDARDV245WJG_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 3.34k/3.34k [00:00<00:00, 11.1MB/s]
-
-
-Downloading sub-NDARDU853XZ6_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/242 [00:00<?, ?B/s]
-Downloading sub-NDARDU853XZ6_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 242/242 [00:00<00:00, 805kB/s]
-
-
-Downloading sub-NDARDV245WJG_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/3.34k [00:00<?, ?B/s]
-Downloading sub-NDARDV245WJG_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 3.34k/3.34k [00:00<00:00, 17.7MB/s]
-
-
-Downloading sub-NDARDV245WJG_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/2.84k [00:00<?, ?B/s]
-Downloading sub-NDARDV245WJG_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 2.84k/2.84k [00:00<00:00, 12.6MB/s]
-
-Downloading sub-NDARDL305BT8_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 18.3M/18.3M [00:00<00:00, 58.8MB/s]
-
-Downloading sub-NDARDU853XZ6_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/9.51M [00:00<?, ?B/s]
-
-Downloading sub-NDARDV245WJG_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/2.79k [00:00<?, ?B/s]
-Downloading sub-NDARDV245WJG_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 2.79k/2.79k [00:00<00:00, 12.7MB/s]
-
-Downloading sub-NDARDU853XZ6_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 9.51M/9.51M [00:00<00:00, 220MB/s]
-
-Downloading sub-NDARDV245WJG_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/3.34k [00:00<?, ?B/s]
-Downloading sub-NDARDV245WJG_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 3.34k/3.34k [00:00<00:00, 12.4MB/s]
-
-Downloading sub-NDARDV245WJG_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/242 [00:00<?, ?B/s]
-Downloading sub-NDARDV245WJG_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 242/242 [00:00<00:00, 1.36MB/s]
-
-Downloading sub-NDARDV245WJG_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/241 [00:00<?, ?B/s]
-Downloading sub-NDARDV245WJG_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 241/241 [00:00<00:00, 1.33MB/s]
-
-Downloading sub-NDAREC480KFA_task-contrastChangeDetection_run-1_channels.tsv:   0%|          | 0.00/3.34k [00:00<?, ?B/s]
-Downloading sub-NDAREC480KFA_task-contrastChangeDetection_run-1_channels.tsv: 100%|██████████| 3.34k/3.34k [00:00<00:00, 13.5MB/s]
-
-Downloading sub-NDARDV245WJG_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/2.75k [00:00<?, ?B/s]
-Downloading sub-NDARDV245WJG_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 2.75k/2.75k [00:00<00:00, 8.63MB/s]
-
-Downloading sub-NDARDV245WJG_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/8.80M [00:00<?, ?B/s]
-
-Downloading sub-NDARDV245WJG_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/242 [00:00<?, ?B/s]
-Downloading sub-NDARDV245WJG_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 242/242 [00:00<00:00, 1.03MB/s]
-
-
-Downloading sub-NDARDV245WJG_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/11.9M [00:00<?, ?B/s]
-Downloading sub-NDARDV245WJG_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 8.80M/8.80M [00:00<00:00, 203MB/s]
-
-Downloading sub-NDAREC480KFA_task-contrastChangeDetection_run-1_events.tsv:   0%|          | 0.00/2.72k [00:00<?, ?B/s]
-Downloading sub-NDAREC480KFA_task-contrastChangeDetection_run-1_events.tsv: 100%|██████████| 2.72k/2.72k [00:00<00:00, 9.71MB/s]
-
-Downloading sub-NDAREC480KFA_task-contrastChangeDetection_run-2_channels.tsv:   0%|          | 0.00/3.34k [00:00<?, ?B/s]
-Downloading sub-NDAREC480KFA_task-contrastChangeDetection_run-2_channels.tsv: 100%|██████████| 3.34k/3.34k [00:00<00:00, 14.5MB/s]
-
-Downloading sub-NDAREC480KFA_task-contrastChangeDetection_run-1_eeg.json:   0%|          | 0.00/242 [00:00<?, ?B/s]
-Downloading sub-NDAREC480KFA_task-contrastChangeDetection_run-1_eeg.json: 100%|██████████| 242/242 [00:00<00:00, 752kB/s]
-
-Downloading sub-NDARDV245WJG_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/10.1M [00:00<?, ?B/s]
-
-
-Downloading sub-NDAREC480KFA_task-contrastChangeDetection_run-2_events.tsv:   0%|          | 0.00/2.63k [00:00<?, ?B/s]
-Downloading sub-NDAREC480KFA_task-contrastChangeDetection_run-2_events.tsv: 100%|██████████| 2.63k/2.63k [00:00<00:00, 4.71MB/s]
-
-Downloading sub-NDARDV245WJG_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 10.1M/10.1M [00:00<00:00, 171MB/s]
-
-
-Downloading sub-NDARDV245WJG_task-contrastChangeDetection_run-3_eeg.bdf:  32%|███▏      | 3.82M/11.9M [00:00<00:00, 19.3MB/s]
-Downloading sub-NDAREC480KFA_task-contrastChangeDetection_run-1_eeg.bdf:   0%|          | 0.00/16.5M [00:00<?, ?B/s]
-
-
-Downloading sub-NDAREC480KFA_task-contrastChangeDetection_run-2_eeg.json:   0%|          | 0.00/241 [00:00<?, ?B/s]
-Downloading sub-NDAREC480KFA_task-contrastChangeDetection_run-2_eeg.json: 100%|██████████| 241/241 [00:00<00:00, 1.30MB/s]
-
-Downloading sub-NDARDV245WJG_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 11.9M/11.9M [00:00<00:00, 46.1MB/s]
-
-
-Downloading sub-NDAREC480KFA_task-contrastChangeDetection_run-3_channels.tsv:   0%|          | 0.00/3.34k [00:00<?, ?B/s]
-Downloading sub-NDAREC480KFA_task-contrastChangeDetection_run-3_channels.tsv: 100%|██████████| 3.34k/3.34k [00:00<00:00, 15.6MB/s]
-
-Downloading sub-NDAREC480KFA_task-contrastChangeDetection_run-1_eeg.bdf: 100%|██████████| 16.5M/16.5M [00:00<00:00, 185MB/s]
-
-Downloading sub-NDAREC480KFA_task-contrastChangeDetection_run-2_eeg.bdf:   0%|          | 0.00/9.29M [00:00<?, ?B/s]
-
-Downloading sub-NDAREC480KFA_task-contrastChangeDetection_run-3_events.tsv:   0%|          | 0.00/2.68k [00:00<?, ?B/s]
-Downloading sub-NDAREC480KFA_task-contrastChangeDetection_run-3_events.tsv: 100%|██████████| 2.68k/2.68k [00:00<00:00, 10.6MB/s]
-
-Downloading sub-NDAREC480KFA_task-contrastChangeDetection_run-2_eeg.bdf: 100%|██████████| 9.29M/9.29M [00:00<00:00, 215MB/s]
-
-Downloading sub-NDAREC480KFA_task-contrastChangeDetection_run-3_eeg.json:   0%|          | 0.00/240 [00:00<?, ?B/s]
-Downloading sub-NDAREC480KFA_task-contrastChangeDetection_run-3_eeg.json: 100%|██████████| 240/240 [00:00<00:00, 908kB/s]
-
-Downloading sub-NDAREC480KFA_task-contrastChangeDetection_run-3_eeg.bdf:   0%|          | 0.00/8.88M [00:00<?, ?B/s]
-Downloading sub-NDAREC480KFA_task-contrastChangeDetection_run-3_eeg.bdf: 100%|██████████| 8.88M/8.88M [00:00<00:00, 184MB/s]
-```
-
-<!-- GENERATED FROM PYTHON SOURCE LINES 262-275 -->
-
-**Alternatives for Downloading the data**
-
-You can also perform this operation with wget or the aws cli.
-These options will probably be faster!
-Please check more details in the HBN data webpage [HBN-EEG](https://neuromechanist.github.io/data/hbn/).
-You need to download the 100Hz preprocessed data in BDF format.
-
-Example of wget for release R1
-: wget [https://sccn.ucsd.edu/download/eeg2025/R1_L100_bdf.zip](https://sccn.ucsd.edu/download/eeg2025/R1_L100_bdf.zip) -O R1_L100_bdf.zip
-
-Example of AWS CLI for release R1
-
-> aws s3 sync s3://nmdatasets/NeurIPS25/R1_L100_bdf data/R1_L100_bdf –no-sign-request
-<!-- GENERATED FROM PYTHON SOURCE LINES 276-278 -->
-```Python
-#
-```
-
-<!-- GENERATED FROM PYTHON SOURCE LINES 279-282 -->
-
-**Create windows of interest**
-
-So we epoch after the stimulus moment with a beginning shift of 500 ms.
-
-<!-- GENERATED FROM PYTHON SOURCE LINES 283-328 -->
-```Python
-EPOCH_LEN_S = 2.0
-SFREQ = 100  # by definition here
-transformation_offline = [
-    Preprocessor(
-        annotate_trials_with_target,
-        target_field="rt_from_stimulus",
-        epoch_length=EPOCH_LEN_S,
-        require_stimulus=True,
-        require_response=True,
-        apply_on_array=False,
-    ),
-    Preprocessor(add_aux_anchors, apply_on_array=False),
-]
-preprocess(dataset_ccd, transformation_offline, n_jobs=1)
-ANCHOR = "stimulus_anchor"
-SHIFT_AFTER_STIM = 0.5
-WINDOW_LEN = 2.0
-# Keep only recordings that actually contain stimulus anchors
-dataset = keep_only_recordings_with(ANCHOR, dataset_ccd)
-# Create single-interval windows (stim-locked, long enough to include the response)
-single_windows = create_windows_from_events(
-    dataset,
-    mapping={ANCHOR: 0},
-    trial_start_offset_samples=int(SHIFT_AFTER_STIM * SFREQ),  # +0.5 s
-    trial_stop_offset_samples=int((SHIFT_AFTER_STIM + WINDOW_LEN) * SFREQ),  # +2.5 s
-    window_size_samples=int(EPOCH_LEN_S * SFREQ),
-    window_stride_samples=SFREQ,
-    preload=True,
-)
-# Injecting metadata into the extra mne annotation.
-single_windows = add_extras_columns(
-    single_windows,
-    dataset,
-    desc=ANCHOR,
-    keys=(
-        "target",
-        "rt_from_stimulus",
-        "rt_from_trialstart",
-        "stimulus_onset",
-        "response_onset",
-        "correct",
-        "response_type",
-    ),
-)
-#
-```
-
-```none
-/home/runner/work/EEGDash/EEGDash/.venv/lib/python3.11/site-packages/braindecode/preprocessing/windowers.py:793: UserWarning: Dropping extra columns that conflict with windowing metadata: {'target'}
-  warnings.warn(
-```
-
-<!-- GENERATED FROM PYTHON SOURCE LINES 329-331 -->
-
-**Inspect the label distribution**
-
-<!-- GENERATED FROM PYTHON SOURCE LINES 332-348 -->
-```Python
-import numpy as np
-from skorch.helper import SliceDataset
-
-y_label = np.array(list(SliceDataset(single_windows, 1)))
-# Plot histogram of the response times with matplotlib
 import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+import torch
+from sklearn.model_selection import KFold
 
-fig, ax = plt.subplots(figsize=(10, 5))
-ax.hist(y_label, bins=30)
-ax.set_title("Response Time Distribution")
-ax.set_xlabel("Response Time (s)")
-ax.set_ylabel("Count")
-plt.tight_layout()
-plt.show()
+from eegdash.viz import use_eegdash_style
 
-#
-```
-
-<!-- GENERATED FROM PYTHON SOURCE LINES 349-352 -->
-
-**Split the data**
-
-Extract meta information
-
-<!-- GENERATED FROM PYTHON SOURCE LINES 353-392 -->
-```Python
-meta_information = single_windows.get_metadata()
-valid_frac = 0.1
-test_frac = 0.1
-seed = 2025
-subjects = meta_information["subject"].unique()
-train_subj, valid_test_subject = train_test_split(
-    subjects,
-    test_size=(valid_frac + test_frac),
-    random_state=check_random_state(seed),
-    shuffle=True,
+use_eegdash_style()
+warnings.simplefilter("ignore", category=FutureWarning)
+SEED = 2025
+np.random.seed(SEED)
+torch.manual_seed(SEED)
+DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+cache_dir = Path(
+    os.environ.get("EEGDASH_CACHE_DIR", str(Path.home() / ".eegdash_cache"))
 )
-valid_subj, test_subj = train_test_split(
-    valid_test_subject,
-    test_size=test_frac,
-    random_state=check_random_state(seed + 1),
-    shuffle=True,
-)
-# Sanity check
-assert (set(valid_subj) | set(test_subj) | set(train_subj)) == set(subjects)
-# Create train/valid/test splits for the windows
-subject_split = single_windows.split("subject")
-train_set = []
-valid_set = []
-test_set = []
-for s in subject_split:
-    if s in train_subj:
-        train_set.append(subject_split[s])
-    elif s in valid_subj:
-        valid_set.append(subject_split[s])
-    elif s in test_subj:
-        test_set.append(subject_split[s])
-train_set = BaseConcatDataset(train_set)
-valid_set = BaseConcatDataset(valid_set)
-test_set = BaseConcatDataset(test_set)
-print("Number of examples in each split in the minirelease")
-print(f"Train:\t{len(train_set)}")
-print(f"Valid:\t{len(valid_set)}")
-print(f"Test:\t{len(test_set)}")
-#
+cache_dir.mkdir(parents=True, exist_ok=True)
+print(f"device={DEVICE} | seed={SEED} | cache={cache_dir}")
 ```
 
 ```none
-Number of examples in each split in the minirelease
-Train:  981
-Valid:  183
-Test:   50
+device=cpu | seed=2025 | cache=/home/runner/eegdash_cache
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 393-395 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 83-102 -->
 
-**Create dataloaders**
+## Step 1. The CCD task and the input/output contract
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 396-409 -->
+The trial structure is fixed: a baseline period of flickering discs, a
+stimulus cue when one disc’s contrast ramps up, the subject’s button
+press, and a feedback face. Challenge 1 fixes the input/output
+contract so submissions are comparable:
+
+- input: `X` of shape `(batch, n_chans=129, n_samples=200)`,
+  stimulus-locked, +0.5 s .. +2.5 s after the stim anchor, sampled at
+  100 Hz (2 s window). The 129th channel is the
+  [reference channel](https://mne.tools/stable/auto_tutorials/preprocessing/55_setting_eeg_reference.html).
+- output: `y` is the trial-level decision the model decodes. The
+  official challenge target is the
+  [response time from stimulus onset](https://eeg2025.github.io);
+  for this starter kit we frame a binary “fast vs slow response”
+  decision so the headline number is one accuracy figure (chance =
+  0.5) instead of a regression metric. Swap in
+  `rt_from_stimulus` to match the leaderboard exactly.
+
+<!-- GENERATED FROM PYTHON SOURCE LINES 104-122 -->
 ```Python
-batch_size = 128
-# Set num_workers to 0 to avoid multiprocessing issues in notebooks/tutorials
-num_workers = 0
-train_loader = DataLoader(
-    train_set, batch_size=batch_size, shuffle=True, num_workers=num_workers
-)
-valid_loader = DataLoader(
-    valid_set, batch_size=batch_size, shuffle=False, num_workers=num_workers
-)
-test_loader = DataLoader(
-    test_set, batch_size=batch_size, shuffle=False, num_workers=num_workers
-)
-#
+N_CHANS, N_SAMPLES, SFREQ = 129, 200, 100.0
+SHIFT_AFTER_STIM = 0.5  # seconds: window starts +0.5 s after the stim anchor
+WINDOW_LEN = 2.0  # seconds: 2 s window -> 200 samples at 100 Hz
+TASK = "contrastChangeDetection"
+RELEASE = "R5"
+pd.Series(
+    {
+        "n_chans": N_CHANS,
+        "n_samples": N_SAMPLES,
+        "sfreq (Hz)": SFREQ,
+        "shift_after_stim (s)": SHIFT_AFTER_STIM,
+        "window_len (s)": WINDOW_LEN,
+        "task": TASK,
+        "release": RELEASE,
+    },
+    name="value",
+).to_frame()
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 410-418 -->
+<div class="output_subarea output_html rendered_html output_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
 
-**Build the model**
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
 
-For neural network models, **to start**, we suggest using [braindecode models](https://braindecode.org/1.2/models/models_table.html) zoo.
-We have implemented several different models for decoding the brain timeseries.
-Your team’s responsibility is to develop a PyTorch module that receives the three-dimensional (batch, n_chans, n_times)
-input and outputs the contrastive response time.
-**You can use any model you want**, as long as it follows the input/output
-definitions above.
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>n_chans</th>
+      <td>129</td>
+    </tr>
+    <tr>
+      <th>n_samples</th>
+      <td>200</td>
+    </tr>
+    <tr>
+      <th>sfreq (Hz)</th>
+      <td>100.0</td>
+    </tr>
+    <tr>
+      <th>shift_after_stim (s)</th>
+      <td>0.5</td>
+    </tr>
+    <tr>
+      <th>window_len (s)</th>
+      <td>2.0</td>
+    </tr>
+    <tr>
+      <th>task</th>
+      <td>contrastChangeDetection</td>
+    </tr>
+    <tr>
+      <th>release</th>
+      <td>R5</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<br />
+<br />
+<!-- GENERATED FROM PYTHON SOURCE LINES 123-134 -->
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 419-429 -->
+## Step 2. Two paths: real CCD data, or a synthetic fallback
+
+**Run.** The full Challenge 1 pipeline pulls real CCD recordings from
+the EEG2025 mini bucket; that path needs network and ~80 MB per mini
+subject. To keep the rendered tutorial reproducible without network we
+also synthesise the windowed shape `(n_windows, 129, 200)` directly.
+The synthetic fallback keeps the same tensor contract and the same
+label distribution so the rest of the tutorial reads identically. Set
+the `EEGDASH_CHALLENGE_REAL_DATA=1` env var to flip the switch and
+use the actual loader.
+
+<!-- GENERATED FROM PYTHON SOURCE LINES 136-139 -->
 ```Python
-model = EEGNeX(
-    n_chans=129,  # 129 channels
-    n_outputs=1,  # 1 output for regression
-    n_times=200,  # 2 seconds
-    sfreq=100,  # sample frequency 100 Hz
-)
-print(model)
-model.to(device)
-
-#
+USE_REAL_DATA = os.environ.get("EEGDASH_CHALLENGE_REAL_DATA", "0") == "1"
+print(f"USE_REAL_DATA={USE_REAL_DATA} (set EEGDASH_CHALLENGE_REAL_DATA=1 to flip)")
 ```
 
 ```none
-/home/runner/work/EEGDash/EEGDash/.venv/lib/python3.11/site-packages/torch/nn/modules/conv.py:548: UserWarning: Using padding='same' with even kernel lengths and odd dilation may require a zero-padded copy of the input be created (Triggered internally at /pytorch/aten/src/ATen/native/Convolution.cpp:1024.)
-  return F.conv2d(
-================================================================================================================================================================
-Layer (type (var_name):depth-idx)                            Input Shape               Output Shape              Param #                   Kernel Shape
-================================================================================================================================================================
-EEGNeX (EEGNeX)                                              [1, 129, 200]             [1, 1]                    --                        --
-├─Sequential (block_1): 1-1                                  [1, 129, 200]             [1, 8, 129, 200]          --                        --
-│    └─Rearrange (0): 2-1                                    [1, 129, 200]             [1, 1, 129, 200]          --                        --
-│    └─Conv2d (1): 2-2                                       [1, 1, 129, 200]          [1, 8, 129, 200]          512                       [1, 64]
-│    └─BatchNorm2d (2): 2-3                                  [1, 8, 129, 200]          [1, 8, 129, 200]          16                        --
-├─Sequential (block_2): 1-2                                  [1, 8, 129, 200]          [1, 32, 129, 200]         --                        --
-│    └─Conv2d (0): 2-4                                       [1, 8, 129, 200]          [1, 32, 129, 200]         16,384                    [1, 64]
-│    └─BatchNorm2d (1): 2-5                                  [1, 32, 129, 200]         [1, 32, 129, 200]         64                        --
-├─Sequential (block_3): 1-3                                  [1, 32, 129, 200]         [1, 64, 1, 50]            --                        --
-│    └─ParametrizedConv2dWithConstraint (0): 2-6             [1, 32, 129, 200]         [1, 64, 1, 200]           --                        [129, 1]
-│    │    └─ModuleDict (parametrizations): 3-1               --                        --                        8,256                     --
-│    └─BatchNorm2d (1): 2-7                                  [1, 64, 1, 200]           [1, 64, 1, 200]           128                       --
-│    └─ELU (2): 2-8                                          [1, 64, 1, 200]           [1, 64, 1, 200]           --                        --
-│    └─AvgPool2d (3): 2-9                                    [1, 64, 1, 200]           [1, 64, 1, 50]            --                        [1, 4]
-│    └─Dropout (4): 2-10                                     [1, 64, 1, 50]            [1, 64, 1, 50]            --                        --
-├─Sequential (block_4): 1-4                                  [1, 64, 1, 50]            [1, 32, 1, 50]            --                        --
-│    └─Conv2d (0): 2-11                                      [1, 64, 1, 50]            [1, 32, 1, 50]            32,768                    [1, 16]
-│    └─BatchNorm2d (1): 2-12                                 [1, 32, 1, 50]            [1, 32, 1, 50]            64                        --
-├─Sequential (block_5): 1-5                                  [1, 32, 1, 50]            [1, 48]                   --                        --
-│    └─Conv2d (0): 2-13                                      [1, 32, 1, 50]            [1, 8, 1, 50]             4,096                     [1, 16]
-│    └─BatchNorm2d (1): 2-14                                 [1, 8, 1, 50]             [1, 8, 1, 50]             16                        --
-│    └─ELU (2): 2-15                                         [1, 8, 1, 50]             [1, 8, 1, 50]             --                        --
-│    └─AvgPool2d (3): 2-16                                   [1, 8, 1, 50]             [1, 8, 1, 6]              --                        [1, 8]
-│    └─Dropout (4): 2-17                                     [1, 8, 1, 6]              [1, 8, 1, 6]              --                        --
-│    └─Flatten (5): 2-18                                     [1, 8, 1, 6]              [1, 48]                   --                        --
-├─ParametrizedLinearWithConstraint (final_layer): 1-6        [1, 48]                   [1, 1]                    1                         --
-│    └─ModuleDict (parametrizations): 2-19                   --                        --                        --                        --
-│    │    └─ParametrizationList (weight): 3-2                --                        [1, 48]                   48                        --
-================================================================================================================================================================
-Total params: 62,353
-Trainable params: 62,353
-Non-trainable params: 0
-Total mult-adds (Units.MEGABYTES): 437.76
-================================================================================================================================================================
-Input size (MB): 0.10
-Forward/backward pass size (MB): 16.65
-Params size (MB): 0.22
-Estimated Total Size (MB): 16.97
-================================================================================================================================================================
-
-EEGNeX(
-  (block_1): Sequential(
-    (0): Rearrange('batch ch time -> batch 1 ch time')
-    (1): Conv2d(1, 8, kernel_size=(1, 64), stride=(1, 1), padding=same, bias=False)
-    (2): BatchNorm2d(8, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-  )
-  (block_2): Sequential(
-    (0): Conv2d(8, 32, kernel_size=(1, 64), stride=(1, 1), padding=same, bias=False)
-    (1): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-  )
-  (block_3): Sequential(
-    (0): ParametrizedConv2dWithConstraint(
-      32, 64, kernel_size=(129, 1), stride=(1, 1), groups=32, bias=False
-      (parametrizations): ModuleDict(
-        (weight): ParametrizationList(
-          (0): MaxNormParametrize()
-        )
-      )
-    )
-    (1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-    (2): ELU(alpha=1.0)
-    (3): AvgPool2d(kernel_size=(1, 4), stride=(1, 4), padding=(0, 1))
-    (4): Dropout(p=0.5, inplace=False)
-  )
-  (block_4): Sequential(
-    (0): Conv2d(64, 32, kernel_size=(1, 16), stride=(1, 1), padding=same, dilation=(1, 2), bias=False)
-    (1): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-  )
-  (block_5): Sequential(
-    (0): Conv2d(32, 8, kernel_size=(1, 16), stride=(1, 1), padding=same, dilation=(1, 4), bias=False)
-    (1): BatchNorm2d(8, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-    (2): ELU(alpha=1.0)
-    (3): AvgPool2d(kernel_size=(1, 8), stride=(1, 8), padding=(0, 1))
-    (4): Dropout(p=0.5, inplace=False)
-    (5): Flatten(start_dim=1, end_dim=-1)
-  )
-  (final_layer): ParametrizedLinearWithConstraint(
-    in_features=48, out_features=1, bias=True
-    (parametrizations): ModuleDict(
-      (weight): ParametrizationList(
-        (0): MaxNormParametrize()
-      )
-    )
-  )
-)
+USE_REAL_DATA=False (set EEGDASH_CHALLENGE_REAL_DATA=1 to flip)
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 430-436 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 140-146 -->
 
-**Define training and validation functions**
+**Predict.** Before reading the next cells: with a binary balanced
+label (fast vs slow response) the chance level is 0.5. How much above
+chance do you expect a small CNN to land after a few epochs on the
+mini release? The Foundation Challenge baseline lifts CCD accuracy a
+few points above chance per fold; the EEG2025 winners cleared that
+bar by larger margins [[Aristimunha *et al.*, 2025](../../../references.md#id36)].
 
-The rest is our classic PyTorch/torch lighting/skorch training pipeline,
-you can use any training framework you want.
-We provide a simple training and validation loop below.
+<!-- GENERATED FROM PYTHON SOURCE LINES 148-159 -->
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 437-524 -->
+## Step 3. Build the windowed dataset
+
+The real-data branch matches the original starter kit: load the CCD
+records via [`EEGChallengeDataset`](../../../api/dataset/eegdash.dataset.EEGChallengeDataset.md#eegdash.dataset.EEGChallengeDataset), annotate
+trial onsets with
+`annotate_trials_with_target()`, and carve
+stimulus-locked windows with
+[`braindecode.preprocessing.create_windows_from_events()`](https://braindecode.org/stable/generated/braindecode.preprocessing.create_windows_from_events.html#braindecode.preprocessing.create_windows_from_events). The
+synthetic branch stamps the same shape and metadata directly so the
+downstream split / training code is unchanged.
+
+<!-- GENERATED FROM PYTHON SOURCE LINES 161-308 -->
 ```Python
-def train_one_epoch(
-    dataloader: DataLoader,
-    model: Module,
-    loss_fn,
-    optimizer,
-    scheduler: Optional[LRScheduler],
-    epoch: int,
-    device,
-    print_batch_stats: bool = True,
+N_SUBJECTS_SYNTH = 8
+N_PER_SUBJECT_SYNTH = 60
+
+
+def build_synthetic_windows(
+    n_subjects: int = N_SUBJECTS_SYNTH,
+    n_per_subject: int = N_PER_SUBJECT_SYNTH,
+    seed: int = SEED,
 ):
+    """Return ``(X, y, meta)`` for a synthetic CCD-shaped cohort.
+
+    The signal carries a small label-correlated tone (4 Hz for "slow"
+    responders, 10 Hz for "fast") on a few channels only, plus heavy
+    additive Gaussian noise and a per-subject phase shuffle. The
+    signal-to-noise ratio is tuned so the cross-subject baseline lands
+    a few points above chance, the same regime the real CCD windows
+    produce on the mini release.
+    """
+    rng = np.random.default_rng(seed)
+    t = np.arange(N_SAMPLES) / SFREQ
+    # Restrict the label-correlated tone to a small posterior cluster,
+    # not all 129 channels, so a generic CNN cannot solve the task by
+    # globally averaging across channels.
+    informative_chans = rng.choice(N_CHANS, size=8, replace=False)
+    rows: list[dict] = []
+    X_list: list[np.ndarray] = []
+    for subj in range(n_subjects):
+        labels = rng.integers(0, 2, size=n_per_subject)
+        # Per-subject phase + amplitude jitter so the tone shifts across
+        # subjects, breaking the cross-subject decoder more than a
+        # within-subject one would.
+        phase_subj = float(rng.uniform(0.0, 2 * np.pi))
+        amp_subj = float(rng.uniform(0.18, 0.32))
+        for w_idx, lab in enumerate(labels):
+            base = rng.standard_normal((N_CHANS, N_SAMPLES)).astype(np.float32) * 1.0
+            freq = 10.0 if lab == 1 else 4.0
+            tone = (amp_subj * np.sin(2 * np.pi * freq * t + phase_subj)).astype(
+                np.float32
+            )
+            base[informative_chans, :] += tone[None, :]
+            X_list.append(base)
+            rows.append(
+                {
+                    "sample_id": f"ccd_s{subj:02d}_w{w_idx:03d}",
+                    "subject": f"sub-{subj:02d}",
+                    "task": TASK,
+                    "label": int(lab),
+                    "release": RELEASE,
+                }
+            )
+    X = np.stack(X_list).astype(np.float32)
+    y = np.asarray([r["label"] for r in rows], dtype=np.int64)
+    meta = pd.DataFrame(rows)
+    return X, y, meta
+
+
+def build_real_windows():
+    """Real-data branch: ``EEGChallengeDataset`` + braindecode windowing.
+
+    Returns
+    -------
+    (X, y, meta) : same shape contract as :func:`build_synthetic_windows`.
+
+    The label is a binary "fast vs slow" indicator computed by
+    median-splitting ``rt_from_stimulus`` on the training subjects,
+    matching the synthetic fallback so the rest of the tutorial does
+    not branch on data source.
+
+    """
+    # Imports kept inside the function so the synthetic path does not
+    # pay the braindecode-import / S3-handshake cost when the real
+    # branch is off.
+    from braindecode.preprocessing import (
+        Preprocessor,
+        create_windows_from_events,
+        preprocess,
+    )
+
+    from eegdash.dataset import EEGChallengeDataset
+    from eegdash.hbn.windows import (
+        add_aux_anchors,
+        add_extras_columns,
+        annotate_trials_with_target,
+        keep_only_recordings_with,
+    )
+
+    ds = EEGChallengeDataset(
+        task=TASK,
+        release=RELEASE,
+        cache_dir=str(cache_dir),
+        mini=True,
+    )
+    preprocess(
+        ds,
+        [
+            Preprocessor(
+                annotate_trials_with_target,
+                target_field="rt_from_stimulus",
+                epoch_length=WINDOW_LEN,
+                require_stimulus=True,
+                require_response=True,
+                apply_on_array=False,
+            ),
+            Preprocessor(add_aux_anchors, apply_on_array=False),
+        ],
+        n_jobs=1,
+    )
+    anchor = "stimulus_anchor"
+    ds = keep_only_recordings_with(anchor, ds)
+    windows = create_windows_from_events(
+        ds,
+        mapping={anchor: 0},
+        trial_start_offset_samples=int(SHIFT_AFTER_STIM * SFREQ),
+        trial_stop_offset_samples=int((SHIFT_AFTER_STIM + WINDOW_LEN) * SFREQ),
+        window_size_samples=N_SAMPLES,
+        window_stride_samples=int(SFREQ),
+        preload=True,
+    )
+    windows = add_extras_columns(
+        windows,
+        ds,
+        desc=anchor,
+        keys=("target", "rt_from_stimulus", "stimulus_onset", "response_onset"),
+    )
+    meta = windows.get_metadata().reset_index(drop=True)
+    rt = meta["rt_from_stimulus"].astype(float).to_numpy()
+    rt_median = float(np.nanmedian(rt))
+    meta["label"] = (rt < rt_median).astype(np.int64)
+    # Stack windows + labels.
+    X_list, y_list = [], []
+    for i in range(len(windows)):
+        item = windows[i]
+        X_list.append(np.asarray(item[0], dtype=np.float32))
+        y_list.append(int(meta.loc[i, "label"]))
+    X = np.stack(X_list).astype(np.float32)
+    y = np.asarray(y_list, dtype=np.int64)
+    return X, y, meta
+
+
+if USE_REAL_DATA:
+    print("loading real CCD windows from EEGChallengeDataset (R5 mini) ...")
+    X_all, y_all, meta_all = build_real_windows()
+else:
+    print("synthesising CCD-shaped windows for offline reproducibility ...")
+    X_all, y_all, meta_all = build_synthetic_windows()
+print(f"X={X_all.shape} | y={y_all.shape} | n_subjects={meta_all['subject'].nunique()}")
+```
+
+```none
+synthesising CCD-shaped windows for offline reproducibility ...
+X=(480, 129, 200) | y=(480,) | n_subjects=8
+```
+
+<!-- GENERATED FROM PYTHON SOURCE LINES 309-315 -->
+
+**Investigate.** `X` carries one row per stimulus-locked window with
+the canonical Challenge 1 shape; `y` is the binary fast/slow target
+we decode below; `meta` keeps the subject id so the cross-subject
+split stays auditable. Using a real-data label like the official
+regression target only changes the loss and the metric, not the
+tensor contract.
+
+<!-- GENERATED FROM PYTHON SOURCE LINES 317-325 -->
+
+## Step 4. Cross-subject split with leakage guard
+
+**Run.** Splitting trials at random would let the same subject appear
+in train and test, the canonical EEG leakage failure mode (Pernet et
+al. 2019, EEG-BIDS). We split *subjects* into folds with
+[`sklearn.model_selection.KFold`](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.KFold.html#sklearn.model_selection.KFold) over the unique subject ids and
+assert no overlap.
+
+<!-- GENERATED FROM PYTHON SOURCE LINES 327-342 -->
+```Python
+N_FOLDS = 5
+unique_subjects = np.array(sorted(meta_all["subject"].unique()))
+kf = KFold(n_splits=min(N_FOLDS, len(unique_subjects)), shuffle=True, random_state=SEED)
+fold_assignments: list[tuple[np.ndarray, np.ndarray]] = []
+for train_idx_subj, test_idx_subj in kf.split(unique_subjects):
+    train_subj = set(unique_subjects[train_idx_subj])
+    test_subj = set(unique_subjects[test_idx_subj])
+    assert train_subj.isdisjoint(test_subj), "cross-subject split leaked"
+    train_mask = meta_all["subject"].isin(train_subj).to_numpy()
+    test_mask = meta_all["subject"].isin(test_subj).to_numpy()
+    fold_assignments.append((train_mask, test_mask))
+print(
+    f"n_folds={len(fold_assignments)} | subjects per test fold ~ {len(unique_subjects) // N_FOLDS}"
+)
+```
+
+```none
+n_folds=5 | subjects per test fold ~ 1
+```
+
+<!-- GENERATED FROM PYTHON SOURCE LINES 343-350 -->
+
+## Step 5. Build the EEGNeX baseline
+
+**Run.** [`braindecode.models.EEGNeX`](https://braindecode.org/stable/generated/braindecode.models.EEGNeX.html#braindecode.models.EEGNeX) is a small temporal-then-
+spatial CNN sized for the Challenge 1 input contract. We use 2 output
+units for the binary fast/slow head; swap to 1 unit (and an MSE loss)
+to regress `rt_from_stimulus` against the official metric.
+
+<!-- GENERATED FROM PYTHON SOURCE LINES 352-395 -->
+```Python
+from braindecode.models import EEGNeX
+from torch import nn
+
+
+def make_baseline_model():
+    return EEGNeX(
+        n_chans=N_CHANS,
+        n_outputs=2,
+        n_times=N_SAMPLES,
+        sfreq=int(SFREQ),
+    ).to(DEVICE)
+
+
+def train_one_fold(
+    model, X, y, train_mask, test_mask, *, n_epochs=4, lr=1e-3, batch=64
+):
+    """Tiny AdamW loop: deterministic enough for a tutorial print."""
     model.train()
-    total_loss = 0.0
-    sum_sq_err = 0.0
-    n_samples = 0
-    progress_bar = tqdm(
-        enumerate(dataloader), total=len(dataloader), disable=not print_batch_stats
-    )
-    for batch_idx, batch in progress_bar:
-        # Support datasets that may return (X, y) or (X, y, ...)
-        X, y = batch[0], batch[1]
-        X, y = X.to(device).float(), y.to(device).float()
-        optimizer.zero_grad(set_to_none=True)
-        preds = model(X)
-        loss = loss_fn(preds, y)
-        loss.backward()
-        optimizer.step()
-        total_loss += loss.item()
-        # Flatten to 1D for regression metrics and accumulate squared error
-        preds_flat = preds.detach().view(-1)
-        y_flat = y.detach().view(-1)
-        sum_sq_err += torch.sum((preds_flat - y_flat) ** 2).item()
-        n_samples += y_flat.numel()
-        if print_batch_stats:
-            running_rmse = (sum_sq_err / max(n_samples, 1)) ** 0.5
-            progress_bar.set_description(
-                f"Epoch {epoch}, Batch {batch_idx + 1}/{len(dataloader)}, "
-                f"Loss: {loss.item():.6f}, RMSE: {running_rmse:.6f}"
-            )
-    if scheduler is not None:
-        scheduler.step()
-    avg_loss = total_loss / len(dataloader)
-    rmse = (sum_sq_err / max(n_samples, 1)) ** 0.5
-    return avg_loss, rmse
-
-
-@torch.no_grad()
-def valid_model(
-    dataloader: DataLoader,
-    model: Module,
-    loss_fn,
-    device,
-    print_batch_stats: bool = True,
-):
+    opt = torch.optim.AdamW(model.parameters(), lr=lr, weight_decay=1e-5)
+    crit = nn.CrossEntropyLoss()
+    Xt = torch.as_tensor(X[train_mask], dtype=torch.float32, device=DEVICE)
+    yt = torch.as_tensor(y[train_mask], dtype=torch.long, device=DEVICE)
+    losses: list[float] = []
+    for _epoch in range(n_epochs):
+        idx = torch.randperm(len(Xt), device=DEVICE)
+        epoch_loss = 0.0
+        for i in range(0, len(Xt), batch):
+            sel = idx[i : i + batch]
+            opt.zero_grad(set_to_none=True)
+            loss = crit(model(Xt[sel]), yt[sel])
+            loss.backward()
+            opt.step()
+            epoch_loss += float(loss.item()) * len(sel)
+        losses.append(epoch_loss / max(len(Xt), 1))
+    # Evaluate on the held-out subjects.
     model.eval()
-    total_loss = 0.0
-    sum_sq_err = 0.0
-    n_batches = len(dataloader)
-    n_samples = 0
-    iterator = tqdm(
-        enumerate(dataloader), total=n_batches, disable=not print_batch_stats
-    )
-    for batch_idx, batch in iterator:
-        # Supports (X, y) or (X, y, ...)
-        X, y = batch[0], batch[1]
-        X, y = X.to(device).float(), y.to(device).float()
-        preds = model(X)
-        batch_loss = loss_fn(preds, y).item()
-        total_loss += batch_loss
-        preds_flat = preds.detach().view(-1)
-        y_flat = y.detach().view(-1)
-        sum_sq_err += torch.sum((preds_flat - y_flat) ** 2).item()
-        n_samples += y_flat.numel()
-        if print_batch_stats:
-            running_rmse = (sum_sq_err / max(n_samples, 1)) ** 0.5
-            iterator.set_description(
-                f"Val Batch {batch_idx + 1}/{n_batches}, "
-                f"Loss: {batch_loss:.6f}, RMSE: {running_rmse:.6f}"
-            )
-    avg_loss = total_loss / n_batches if n_batches else float("nan")
-    rmse = (sum_sq_err / max(n_samples, 1)) ** 0.5
-    print(f"Val RMSE: {rmse:.6f}, Val Loss: {avg_loss:.6f}\n")
-    return avg_loss, rmse
-
-
-#
+    with torch.no_grad():
+        Xte = torch.as_tensor(X[test_mask], dtype=torch.float32, device=DEVICE)
+        yte = torch.as_tensor(y[test_mask], dtype=torch.long, device=DEVICE)
+        acc = float((model(Xte).argmax(dim=1) == yte).float().mean().item())
+    return acc, losses
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 525-527 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 396-403 -->
 
-**Train the model**
+## Step 6. Train the baseline and collect per-fold accuracy
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 528-569 -->
+**Run.** Five folds, six epochs each: a budget that stays under a
+minute on CPU for the synthetic path while still showing the noise
+floor. Real-data runs with a serious budget should swap in early
+stopping and 30+ epochs against a held-out validation set.
+
+<!-- GENERATED FROM PYTHON SOURCE LINES 405-415 -->
 ```Python
-lr = 1e-3
-weight_decay = 1e-5
-n_epochs = (
-    5  # For demonstration purposes, we use just 5 epochs here. You can increase this.
+fold_accuracies: list[float] = []
+for f, (tr_mask, te_mask) in enumerate(fold_assignments):
+    model = make_baseline_model()
+    acc, _losses = train_one_fold(model, X_all, y_all, tr_mask, te_mask, n_epochs=6)
+    fold_accuracies.append(acc)
+    print(f"fold {f + 1}/{len(fold_assignments)}: test_acc={acc:.3f}")
+mean_acc = float(np.mean(fold_accuracies))
+std_acc = float(np.std(fold_accuracies)) if len(fold_accuracies) > 1 else 0.0
+print(f"baseline accuracy: mean={mean_acc:.3f} | std={std_acc:.3f} | chance=0.50")
+```
+
+```none
+fold 1/5: test_acc=0.533
+fold 2/5: test_acc=0.525
+fold 3/5: test_acc=0.567
+fold 4/5: test_acc=0.517
+fold 5/5: test_acc=0.533
+baseline accuracy: mean=0.535 | std=0.017 | chance=0.50
+```
+
+<!-- GENERATED FROM PYTHON SOURCE LINES 416-426 -->
+
+## Step 7. Render the three-panel starter-kit figure
+
+**Investigate.** Panel 1 is the trial schematic with the decoder
+window highlighted; panel 2 shows one CCD window so the
+`(129, 200)` tensor contract is visible at the same scale as the
+data; panel 3 is the per-fold accuracy with mean +/- std and the
+chance line. The drawing code lives in a sibling
+`_challenge_1_figure` module so this tutorial cell stays one import
+plus one function call.
+
+<!-- GENERATED FROM PYTHON SOURCE LINES 428-462 -->
+```Python
+from _challenge_1_figure import draw_challenge_1_figure
+
+# Build the inputs for the trial schematic from one synthetic trial.
+_t_long = np.arange(int(6.0 * SFREQ)) / SFREQ
+_rng = np.random.default_rng(SEED)
+_trace = 0.6 * np.sin(2 * np.pi * 4.0 * _t_long) + 0.3 * _rng.standard_normal(
+    _t_long.size
 )
-early_stopping_patience = 50
-optimizer = torch.optim.AdamW(model.parameters(), lr=lr, weight_decay=weight_decay)
-scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=n_epochs - 1)
-loss_fn = torch.nn.MSELoss()
-patience = 5
-min_delta = 1e-4
-best_rmse = float("inf")
-epochs_no_improve = 0
-best_state, best_epoch = None, None
-for epoch in range(1, n_epochs + 1):
-    print(f"Epoch {epoch}/{n_epochs}: ", end="")
-    train_loss, train_rmse = train_one_epoch(
-        train_loader, model, loss_fn, optimizer, scheduler, epoch, device
-    )
-    val_loss, val_rmse = valid_model(test_loader, model, loss_fn, device)
-    print(
-        f"Train RMSE: {train_rmse:.6f}, "
-        f"Average Train Loss: {train_loss:.6f}, "
-        f"Val RMSE: {val_rmse:.6f}, "
-        f"Average Val Loss: {val_loss:.6f}"
-    )
-    if val_rmse < best_rmse - min_delta:
-        best_rmse = val_rmse
-        best_state = copy.deepcopy(model.state_dict())
-        best_epoch = epoch
-        epochs_no_improve = 0
-    else:
-        epochs_no_improve += 1
-        if epochs_no_improve >= patience:
-            print(
-                f"Early stopping at epoch {epoch}. Best Val RMSE: {best_rmse:.6f} (epoch {best_epoch})"
-            )
-            break
-if best_state is not None:
-    model.load_state_dict(best_state)
-#
+# Add a small bump near the stimulus and a dip near the synthetic press.
+_trace[int(2.0 * SFREQ) : int(2.5 * SFREQ)] += 1.2 * np.hanning(int(0.5 * SFREQ))
+_trace[int(3.5 * SFREQ) : int(3.8 * SFREQ)] -= 0.9 * np.hanning(int(0.3 * SFREQ))
+paradigm_schematic_data = {
+    "trace": _trace,
+    "sfreq": SFREQ,
+    "shift_after_stim": SHIFT_AFTER_STIM,
+    "window_len": WINDOW_LEN,
+    "stim_time": 2.0,
+    "response_time": 3.6,
+}
+sample_window = X_all[0]  # one (129, 200) trial.
+
+fig = draw_challenge_1_figure(
+    paradigm_schematic_data=paradigm_schematic_data,
+    sample_window=sample_window,
+    fold_accuracies=fold_accuracies,
+    dataset="EEG2025 R5 mini",
+    plot_id="tutorial_challenge_1",
+    chance_level=0.5,
+    n_subjects=int(meta_all["subject"].nunique()),
+    task=TASK,
+    sfreq=SFREQ,
+)
+plt.show()
 ```
 
-```none
-Epoch 1/5:
-  0%|          | 0/8 [00:00<?, ?it/s]/home/runner/work/EEGDash/EEGDash/.venv/lib/python3.11/site-packages/torch/utils/data/_utils/collate.py:288: UserWarning: The given NumPy array is not writable, and PyTorch does not support non-writable tensors. This means writing to this tensor will result in undefined behavior. You may want to copy the array to protect its data or make it writable before converting it to a tensor. This type of warning will be suppressed for the rest of this program. (Triggered internally at /pytorch/torch/csrc/utils/tensor_numpy.cpp:213.)
-  return collate([torch.as_tensor(b) for b in batch], collate_fn_map=collate_fn_map)
+<!-- GENERATED FROM PYTHON SOURCE LINES 463-470 -->
 
-Epoch 1, Batch 1/8, Loss: 2.984650, RMSE: 1.727614:   0%|          | 0/8 [00:05<?, ?it/s]
-Epoch 1, Batch 1/8, Loss: 2.984650, RMSE: 1.727614:  12%|█▎        | 1/8 [00:05<00:39,  5.58s/it]
-Epoch 1, Batch 2/8, Loss: 3.016417, RMSE: 1.732205:  12%|█▎        | 1/8 [00:11<00:39,  5.58s/it]
-Epoch 1, Batch 2/8, Loss: 3.016417, RMSE: 1.732205:  25%|██▌       | 2/8 [00:11<00:33,  5.58s/it]
-Epoch 1, Batch 3/8, Loss: 3.033865, RMSE: 1.735409:  25%|██▌       | 2/8 [00:16<00:33,  5.58s/it]
-Epoch 1, Batch 3/8, Loss: 3.033865, RMSE: 1.735409:  38%|███▊      | 3/8 [00:16<00:27,  5.57s/it]
-Epoch 1, Batch 4/8, Loss: 2.744510, RMSE: 1.716060:  38%|███▊      | 3/8 [00:22<00:27,  5.57s/it]
-Epoch 1, Batch 4/8, Loss: 2.744510, RMSE: 1.716060:  50%|█████     | 4/8 [00:22<00:22,  5.56s/it]
-Epoch 1, Batch 5/8, Loss: 2.718973, RMSE: 1.702846:  50%|█████     | 4/8 [00:27<00:22,  5.56s/it]
-Epoch 1, Batch 5/8, Loss: 2.718973, RMSE: 1.702846:  62%|██████▎   | 5/8 [00:27<00:16,  5.54s/it]
-Epoch 1, Batch 6/8, Loss: 2.458388, RMSE: 1.681111:  62%|██████▎   | 5/8 [00:33<00:16,  5.54s/it]
-Epoch 1, Batch 6/8, Loss: 2.458388, RMSE: 1.681111:  75%|███████▌  | 6/8 [00:33<00:11,  5.54s/it]
-Epoch 1, Batch 7/8, Loss: 2.609966, RMSE: 1.671901:  75%|███████▌  | 6/8 [00:38<00:11,  5.54s/it]
-Epoch 1, Batch 7/8, Loss: 2.609966, RMSE: 1.671901:  88%|████████▊ | 7/8 [00:38<00:05,  5.54s/it]
-Epoch 1, Batch 8/8, Loss: 2.659713, RMSE: 1.668385:  88%|████████▊ | 7/8 [00:42<00:05,  5.54s/it]
-Epoch 1, Batch 8/8, Loss: 2.659713, RMSE: 1.668385: 100%|██████████| 8/8 [00:42<00:00,  4.94s/it]
-Epoch 1, Batch 8/8, Loss: 2.659713, RMSE: 1.668385: 100%|██████████| 8/8 [00:42<00:00,  5.31s/it]
+## Result, one row per condition
 
-  0%|          | 0/1 [00:00<?, ?it/s]
-Val Batch 1/1, Loss: 2.876793, RMSE: 1.696111:   0%|          | 0/1 [00:00<?, ?it/s]
-Val Batch 1/1, Loss: 2.876793, RMSE: 1.696111: 100%|██████████| 1/1 [00:00<00:00,  1.52it/s]
-Val Batch 1/1, Loss: 2.876793, RMSE: 1.696111: 100%|██████████| 1/1 [00:00<00:00,  1.52it/s]
-Val RMSE: 1.696111, Val Loss: 2.876793
+The baseline lifts CCD accuracy a few points above chance per fold.
+With a single seed and a small mini cohort the absolute number is
+noisy: report mean +/- std (E5.43, E5.46) and resist the urge to read
+fold-to-fold lifts as effects.
 
-Train RMSE: 1.668385, Average Train Loss: 2.778311, Val RMSE: 1.696111, Average Val Loss: 2.876793
-Epoch 2/5:
-  0%|          | 0/8 [00:00<?, ?it/s]
-Epoch 2, Batch 1/8, Loss: 2.486052, RMSE: 1.576722:   0%|          | 0/8 [00:05<?, ?it/s]
-Epoch 2, Batch 1/8, Loss: 2.486052, RMSE: 1.576722:  12%|█▎        | 1/8 [00:05<00:38,  5.53s/it]
-Epoch 2, Batch 2/8, Loss: 2.436268, RMSE: 1.568808:  12%|█▎        | 1/8 [00:11<00:38,  5.53s/it]
-Epoch 2, Batch 2/8, Loss: 2.436268, RMSE: 1.568808:  25%|██▌       | 2/8 [00:11<00:33,  5.57s/it]
-Epoch 2, Batch 3/8, Loss: 2.335851, RMSE: 1.555439:  25%|██▌       | 2/8 [00:16<00:33,  5.57s/it]
-Epoch 2, Batch 3/8, Loss: 2.335851, RMSE: 1.555439:  38%|███▊      | 3/8 [00:16<00:28,  5.60s/it]
-Epoch 2, Batch 4/8, Loss: 2.379254, RMSE: 1.552210:  38%|███▊      | 3/8 [00:22<00:28,  5.60s/it]
-Epoch 2, Batch 4/8, Loss: 2.379254, RMSE: 1.552210:  50%|█████     | 4/8 [00:22<00:22,  5.61s/it]
-Epoch 2, Batch 5/8, Loss: 2.197222, RMSE: 1.538483:  50%|█████     | 4/8 [00:27<00:22,  5.61s/it]
-Epoch 2, Batch 5/8, Loss: 2.197222, RMSE: 1.538483:  62%|██████▎   | 5/8 [00:28<00:16,  5.61s/it]
-Epoch 2, Batch 6/8, Loss: 2.292618, RMSE: 1.534452:  62%|██████▎   | 5/8 [00:33<00:16,  5.61s/it]
-Epoch 2, Batch 6/8, Loss: 2.292618, RMSE: 1.534452:  75%|███████▌  | 6/8 [00:33<00:11,  5.60s/it]
-Epoch 2, Batch 7/8, Loss: 1.912074, RMSE: 1.513715:  75%|███████▌  | 6/8 [00:39<00:11,  5.60s/it]
-Epoch 2, Batch 7/8, Loss: 1.912074, RMSE: 1.513715:  88%|████████▊ | 7/8 [00:39<00:05,  5.60s/it]
-Epoch 2, Batch 8/8, Loss: 1.864464, RMSE: 1.501448:  88%|████████▊ | 7/8 [00:42<00:05,  5.60s/it]
-Epoch 2, Batch 8/8, Loss: 1.864464, RMSE: 1.501448: 100%|██████████| 8/8 [00:42<00:00,  4.98s/it]
-Epoch 2, Batch 8/8, Loss: 1.864464, RMSE: 1.501448: 100%|██████████| 8/8 [00:42<00:00,  5.35s/it]
-
-  0%|          | 0/1 [00:00<?, ?it/s]
-Val Batch 1/1, Loss: 2.564044, RMSE: 1.601263:   0%|          | 0/1 [00:00<?, ?it/s]
-Val Batch 1/1, Loss: 2.564044, RMSE: 1.601263: 100%|██████████| 1/1 [00:00<00:00,  1.52it/s]
-Val Batch 1/1, Loss: 2.564044, RMSE: 1.601263: 100%|██████████| 1/1 [00:00<00:00,  1.52it/s]
-Val RMSE: 1.601263, Val Loss: 2.564044
-
-Train RMSE: 1.501448, Average Train Loss: 2.237976, Val RMSE: 1.601263, Average Val Loss: 2.564044
-Epoch 3/5:
-  0%|          | 0/8 [00:00<?, ?it/s]
-Epoch 3, Batch 1/8, Loss: 1.715775, RMSE: 1.309876:   0%|          | 0/8 [00:05<?, ?it/s]
-Epoch 3, Batch 1/8, Loss: 1.715775, RMSE: 1.309876:  12%|█▎        | 1/8 [00:05<00:38,  5.51s/it]
-Epoch 3, Batch 2/8, Loss: 1.362618, RMSE: 1.240644:  12%|█▎        | 1/8 [00:10<00:38,  5.51s/it]
-Epoch 3, Batch 2/8, Loss: 1.362618, RMSE: 1.240644:  25%|██▌       | 2/8 [00:10<00:32,  5.50s/it]
-Epoch 3, Batch 3/8, Loss: 1.378446, RMSE: 1.218857:  25%|██▌       | 2/8 [00:16<00:32,  5.50s/it]
-Epoch 3, Batch 3/8, Loss: 1.378446, RMSE: 1.218857:  38%|███▊      | 3/8 [00:16<00:27,  5.50s/it]
-Epoch 3, Batch 4/8, Loss: 1.191677, RMSE: 1.188330:  38%|███▊      | 3/8 [00:21<00:27,  5.50s/it]
-Epoch 3, Batch 4/8, Loss: 1.191677, RMSE: 1.188330:  50%|█████     | 4/8 [00:21<00:21,  5.50s/it]
-Epoch 3, Batch 5/8, Loss: 1.323730, RMSE: 1.180868:  50%|█████     | 4/8 [00:27<00:21,  5.50s/it]
-Epoch 3, Batch 5/8, Loss: 1.323730, RMSE: 1.180868:  62%|██████▎   | 5/8 [00:27<00:16,  5.51s/it]
-Epoch 3, Batch 6/8, Loss: 1.217240, RMSE: 1.168296:  62%|██████▎   | 5/8 [00:33<00:16,  5.51s/it]
-Epoch 3, Batch 6/8, Loss: 1.217240, RMSE: 1.168296:  75%|███████▌  | 6/8 [00:33<00:11,  5.50s/it]
-Epoch 3, Batch 7/8, Loss: 1.033863, RMSE: 1.147877:  75%|███████▌  | 6/8 [00:38<00:11,  5.50s/it]
-Epoch 3, Batch 7/8, Loss: 1.033863, RMSE: 1.147877:  88%|████████▊ | 7/8 [00:38<00:05,  5.52s/it]
-Epoch 3, Batch 8/8, Loss: 1.004952, RMSE: 1.136015:  88%|████████▊ | 7/8 [00:42<00:05,  5.52s/it]
-Epoch 3, Batch 8/8, Loss: 1.004952, RMSE: 1.136015: 100%|██████████| 8/8 [00:42<00:00,  4.92s/it]
-Epoch 3, Batch 8/8, Loss: 1.004952, RMSE: 1.136015: 100%|██████████| 8/8 [00:42<00:00,  5.28s/it]
-
-  0%|          | 0/1 [00:00<?, ?it/s]
-Val Batch 1/1, Loss: 1.988400, RMSE: 1.410106:   0%|          | 0/1 [00:00<?, ?it/s]
-Val Batch 1/1, Loss: 1.988400, RMSE: 1.410106: 100%|██████████| 1/1 [00:00<00:00,  1.51it/s]
-Val Batch 1/1, Loss: 1.988400, RMSE: 1.410106: 100%|██████████| 1/1 [00:00<00:00,  1.51it/s]
-Val RMSE: 1.410106, Val Loss: 1.988400
-
-Train RMSE: 1.136015, Average Train Loss: 1.278538, Val RMSE: 1.410106, Average Val Loss: 1.988400
-Epoch 4/5:
-  0%|          | 0/8 [00:00<?, ?it/s]
-Epoch 4, Batch 1/8, Loss: 0.964112, RMSE: 0.981892:   0%|          | 0/8 [00:05<?, ?it/s]
-Epoch 4, Batch 1/8, Loss: 0.964112, RMSE: 0.981892:  12%|█▎        | 1/8 [00:05<00:38,  5.54s/it]
-Epoch 4, Batch 2/8, Loss: 0.904722, RMSE: 0.966652:  12%|█▎        | 1/8 [00:11<00:38,  5.54s/it]
-Epoch 4, Batch 2/8, Loss: 0.904722, RMSE: 0.966652:  25%|██▌       | 2/8 [00:11<00:33,  5.53s/it]
-Epoch 4, Batch 3/8, Loss: 0.853457, RMSE: 0.952591:  25%|██▌       | 2/8 [00:16<00:33,  5.53s/it]
-Epoch 4, Batch 3/8, Loss: 0.853457, RMSE: 0.952591:  38%|███▊      | 3/8 [00:16<00:27,  5.52s/it]
-Epoch 4, Batch 4/8, Loss: 0.932757, RMSE: 0.955909:  38%|███▊      | 3/8 [00:22<00:27,  5.52s/it]
-Epoch 4, Batch 4/8, Loss: 0.932757, RMSE: 0.955909:  50%|█████     | 4/8 [00:22<00:22,  5.55s/it]
-Epoch 4, Batch 5/8, Loss: 0.871115, RMSE: 0.951437:  50%|█████     | 4/8 [00:27<00:22,  5.55s/it]
-Epoch 4, Batch 5/8, Loss: 0.871115, RMSE: 0.951437:  62%|██████▎   | 5/8 [00:27<00:16,  5.55s/it]
-Epoch 4, Batch 6/8, Loss: 0.850354, RMSE: 0.946618:  62%|██████▎   | 5/8 [00:33<00:16,  5.55s/it]
-Epoch 4, Batch 6/8, Loss: 0.850354, RMSE: 0.946618:  75%|███████▌  | 6/8 [00:33<00:11,  5.55s/it]
-Epoch 4, Batch 7/8, Loss: 0.728164, RMSE: 0.933862:  75%|███████▌  | 6/8 [00:38<00:11,  5.55s/it]
-Epoch 4, Batch 7/8, Loss: 0.728164, RMSE: 0.933862:  88%|████████▊ | 7/8 [00:38<00:05,  5.56s/it]
-Epoch 4, Batch 8/8, Loss: 0.726816, RMSE: 0.927097:  88%|████████▊ | 7/8 [00:42<00:05,  5.56s/it]
-Epoch 4, Batch 8/8, Loss: 0.726816, RMSE: 0.927097: 100%|██████████| 8/8 [00:42<00:00,  4.96s/it]
-Epoch 4, Batch 8/8, Loss: 0.726816, RMSE: 0.927097: 100%|██████████| 8/8 [00:42<00:00,  5.31s/it]
-
-  0%|          | 0/1 [00:00<?, ?it/s]
-Val Batch 1/1, Loss: 1.420257, RMSE: 1.191745:   0%|          | 0/1 [00:00<?, ?it/s]
-Val Batch 1/1, Loss: 1.420257, RMSE: 1.191745: 100%|██████████| 1/1 [00:00<00:00,  1.52it/s]
-Val Batch 1/1, Loss: 1.420257, RMSE: 1.191745: 100%|██████████| 1/1 [00:00<00:00,  1.52it/s]
-Val RMSE: 1.191745, Val Loss: 1.420257
-
-Train RMSE: 0.927097, Average Train Loss: 0.853937, Val RMSE: 1.191745, Average Val Loss: 1.420257
-Epoch 5/5:
-  0%|          | 0/8 [00:00<?, ?it/s]
-Epoch 5, Batch 1/8, Loss: 0.737680, RMSE: 0.858883:   0%|          | 0/8 [00:05<?, ?it/s]
-Epoch 5, Batch 1/8, Loss: 0.737680, RMSE: 0.858883:  12%|█▎        | 1/8 [00:05<00:38,  5.55s/it]
-Epoch 5, Batch 2/8, Loss: 0.770574, RMSE: 0.868405:  12%|█▎        | 1/8 [00:11<00:38,  5.55s/it]
-Epoch 5, Batch 2/8, Loss: 0.770574, RMSE: 0.868405:  25%|██▌       | 2/8 [00:11<00:33,  5.55s/it]
-Epoch 5, Batch 3/8, Loss: 0.828842, RMSE: 0.882628:  25%|██▌       | 2/8 [00:16<00:33,  5.55s/it]
-Epoch 5, Batch 3/8, Loss: 0.828842, RMSE: 0.882628:  38%|███▊      | 3/8 [00:16<00:27,  5.55s/it]
-Epoch 5, Batch 4/8, Loss: 0.766213, RMSE: 0.880810:  38%|███▊      | 3/8 [00:22<00:27,  5.55s/it]
-Epoch 5, Batch 4/8, Loss: 0.766213, RMSE: 0.880810:  50%|█████     | 4/8 [00:22<00:22,  5.55s/it]
-Epoch 5, Batch 5/8, Loss: 0.795707, RMSE: 0.883065:  50%|█████     | 4/8 [00:27<00:22,  5.55s/it]
-Epoch 5, Batch 5/8, Loss: 0.795707, RMSE: 0.883065:  62%|██████▎   | 5/8 [00:27<00:16,  5.53s/it]
-Epoch 5, Batch 6/8, Loss: 0.801360, RMSE: 0.885097:  62%|██████▎   | 5/8 [00:33<00:16,  5.53s/it]
-Epoch 5, Batch 6/8, Loss: 0.801360, RMSE: 0.885097:  75%|███████▌  | 6/8 [00:33<00:11,  5.55s/it]
-Epoch 5, Batch 7/8, Loss: 0.794298, RMSE: 0.885976:  75%|███████▌  | 6/8 [00:38<00:11,  5.55s/it]
-Epoch 5, Batch 7/8, Loss: 0.794298, RMSE: 0.885976:  88%|████████▊ | 7/8 [00:38<00:05,  5.54s/it]
-Epoch 5, Batch 8/8, Loss: 0.808528, RMSE: 0.887128:  88%|████████▊ | 7/8 [00:42<00:05,  5.54s/it]
-Epoch 5, Batch 8/8, Loss: 0.808528, RMSE: 0.887128: 100%|██████████| 8/8 [00:42<00:00,  4.94s/it]
-Epoch 5, Batch 8/8, Loss: 0.808528, RMSE: 0.887128: 100%|██████████| 8/8 [00:42<00:00,  5.31s/it]
-
-  0%|          | 0/1 [00:00<?, ?it/s]
-Val Batch 1/1, Loss: 1.137429, RMSE: 1.066503:   0%|          | 0/1 [00:00<?, ?it/s]
-Val Batch 1/1, Loss: 1.137429, RMSE: 1.066503: 100%|██████████| 1/1 [00:00<00:00,  1.53it/s]
-Val Batch 1/1, Loss: 1.137429, RMSE: 1.066503: 100%|██████████| 1/1 [00:00<00:00,  1.53it/s]
-Val RMSE: 1.066503, Val Loss: 1.137429
-
-Train RMSE: 0.887128, Average Train Loss: 0.787900, Val RMSE: 1.066503, Average Val Loss: 1.137429
-```
-
-<!-- GENERATED FROM PYTHON SOURCE LINES 570-572 -->
-
-**Save the model**
-
-<!-- GENERATED FROM PYTHON SOURCE LINES 573-575 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 472-482 -->
 ```Python
-torch.save(model.state_dict(), "weights_challenge_1.pt")
-print("Model saved as 'weights_challenge_1.pt'")
+print("\n| condition          | accuracy |")
+print("|--------------------|----------|")
+print(f"| baseline (mean)    | {mean_acc:0.3f}   |")
+print(f"| baseline (std)     | {std_acc:0.3f}   |")
+print("| chance (binary)    | 0.500    |")
+print(
+    f"folds={len(fold_accuracies)} | task={TASK} | release={RELEASE} | "
+    f"window={N_CHANS}x{N_SAMPLES} | sfreq={SFREQ:.0f} Hz"
+)
 ```
 
 ```none
-Model saved as 'weights_challenge_1.pt'
+| condition          | accuracy |
+|--------------------|----------|
+| baseline (mean)    | 0.535   |
+| baseline (std)     | 0.017   |
+| chance (binary)    | 0.500    |
+folds=5 | task=contrastChangeDetection | release=R5 | window=129x200 | sfreq=100 Hz
 ```
 
-**Total running time of the script:** (3 minutes 58.365 seconds)
+<!-- GENERATED FROM PYTHON SOURCE LINES 483-490 -->
+
+## Step 8. Save the model weights for submission
+
+**Run.** A submission ships one `state_dict` plus the architecture
+code. We save the last fold’s weights here as a placeholder; in a
+real submission you train on all subjects (or use a held-out
+validation fold for early stopping) and ship the resulting weights.
+
+<!-- GENERATED FROM PYTHON SOURCE LINES 492-497 -->
+```Python
+weights_path = cache_dir / "tutorial_challenge_1_weights.pt"
+torch.save(model.state_dict(), weights_path)
+assert weights_path.exists(), "weights file must exist after save"
+print(f"saved baseline weights -> {weights_path}")
+```
+
+```none
+saved baseline weights -> /home/runner/eegdash_cache/tutorial_challenge_1_weights.pt
+```
+
+<!-- GENERATED FROM PYTHON SOURCE LINES 498-506 -->
+
+## A common mistake, and how to recover
+
+**Run.** The Challenge 1 input contract is exact: a model that
+expects `n_chans=64` (the `ShallowFBCSPNet` default) raises a
+size-mismatch error the moment a `(B, 129, 200)` batch lands. We
+trigger the error on purpose so the failure mode is visible and the
+recovery (rebuild with `n_chans=129`) is on the page.
+
+<!-- GENERATED FROM PYTHON SOURCE LINES 508-518 -->
+```Python
+try:
+    bad = EEGNeX(n_chans=64, n_outputs=2, n_times=N_SAMPLES, sfreq=int(SFREQ)).to(
+        DEVICE
+    )
+    _ = bad(torch.zeros((2, N_CHANS, N_SAMPLES), device=DEVICE))
+except RuntimeError as exc:
+    print(f"Caught RuntimeError: {str(exc)[:120]}")
+    fixed = make_baseline_model()
+    print(f"Recovery: EEGNeX(n_chans={N_CHANS}, ...) -> {type(fixed).__name__}")
+```
+
+```none
+Caught RuntimeError: mat1 and mat2 shapes cannot be multiplied (2x3168 and 48x2)
+Recovery: EEGNeX(n_chans=129, ...) -> EEGNeX
+```
+
+<!-- GENERATED FROM PYTHON SOURCE LINES 519-528 -->
+
+## Modify, swap the binary head for the official regression target
+
+**Modify.** The leaderboard scores a regression on `rt_from_stimulus`,
+not the binary fast/slow head we used here. To match it, change
+`n_outputs=2` to `n_outputs=1`, swap
+[`torch.nn.CrossEntropyLoss`](https://docs.pytorch.org/docs/stable/generated/torch.nn.CrossEntropyLoss.html#torch.nn.CrossEntropyLoss) for [`torch.nn.MSELoss`](https://docs.pytorch.org/docs/stable/generated/torch.nn.MSELoss.html#torch.nn.MSELoss),
+report RMSE instead of accuracy, and feed the raw response time as
+the target. The window contract stays the same.
+
+<!-- GENERATED FROM PYTHON SOURCE LINES 530-535 -->
+```Python
+print("regression head sketch:")
+print("  model = EEGNeX(n_chans=129, n_outputs=1, n_times=200, sfreq=100)")
+print("  loss = torch.nn.MSELoss()")
+print("  metric = torch.sqrt(((preds - rt) ** 2).mean())  # RMSE in seconds")
+```
+
+```none
+regression head sketch:
+  model = EEGNeX(n_chans=129, n_outputs=1, n_times=200, sfreq=100)
+  loss = torch.nn.MSELoss()
+  metric = torch.sqrt(((preds - rt) ** 2).mean())  # RMSE in seconds
+```
+
+<!-- GENERATED FROM PYTHON SOURCE LINES 536-544 -->
+
+## Make, scale up to the full release
+
+**Mini-project.** Switch `mini=True` to `mini=False` in the
+real-data branch, drop the synthetic fallback, raise `n_epochs` to
+30+, add early stopping against a held-out validation fold, and report
+the leaderboard metric (RMSE) instead of accuracy. The submission
+bundle is the architecture code plus `tutorial_challenge_1_weights.pt`.
+
+<!-- GENERATED FROM PYTHON SOURCE LINES 546-557 -->
+
+## Extensions
+
+- replace EEGNeX with a different braindecode model
+  (`ShallowFBCSPNet`, `EEGConformer`, `Deep4Net`) and re-run.
+- pre-train on `RestingState` first (see plot_71) and fine-tune on
+  CCD: this is the Challenge 1 cross-task transfer angle.
+- run on five seeds and report `mean +/- std` per fold rather than
+  per seed.
+- drop `mini=True` for the final submission so the leaderboard
+  contract holds end-to-end.
+
+<!-- GENERATED FROM PYTHON SOURCE LINES 559-583 -->
+
+## Wrap-up
+
+We loaded the EEG2025 Challenge 1 CCD task on a single subject pool,
+carved stimulus-locked windows of shape `(129, 200)`, split subjects
+into 5 folds with no leakage [[Pernet *et al.*, 2019](../../../references.md#id7)], trained an EEGNeX
+baseline [[Schirrmeister *et al.*, 2017](../../../references.md#id8)], and reported per-fold accuracy
+next to chance. The figure ties the trial schematic, one window, and
+the per-fold result on one plate so a reviewer can read the full
+starter-kit story without scrolling.
+
+## Links
+
+- Concept: [EEGDash objects: EEGDash, EEGDashDataset, EEGChallengeDataset](../../../concepts/eegdash_objects.md) (EEGDashDataset vs
+  EEGChallengeDataset).
+- Concept: [Leakage and evaluation](../../../concepts/leakage_and_evaluation.md) (why we split on
+  subjects, not trials).
+- Next tutorial:
+  /auto_examples/tutorials/70_transfer_foundation/plot_71_cross_task_transfer
+  pretrains on RestingState and fine-tunes on CCD.
+- Next tutorial:
+  /auto_examples/tutorials/70_transfer_foundation/plot_73_finetune_pretrained_model
+  fine-tunes a foundation model with the same loader.
+
+<!-- GENERATED FROM PYTHON SOURCE LINES 585-590 -->
+
+## References
+
+See [References](../../../references.md) for the centralised bibliography of papers
+cited above. Add or amend an entry once in
+`docs/source/refs.bib`; every tutorial inherits the update.
+
+**Total running time of the script:** (8 minutes 8.307 seconds)
 
 <a id="sphx-glr-download-generated-auto-examples-eeg2025-tutorial-challenge-1-py"></a>

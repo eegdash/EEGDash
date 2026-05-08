@@ -10,11 +10,16 @@ releases and OpenNeuro dataset identifiers, as well as validation rules for data
 
 ### Module Attributes
 
-| `ALLOWED_QUERY_FIELDS`             | A set of field names that are permitted in database queries constructed via `find()` with keyword arguments.                                          |
-|------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `RELEASE_TO_OPENNEURO_DATASET_MAP` | A mapping from Healthy Brain Network (HBN) release identifiers (e.g., "R11") to their corresponding OpenNeuro dataset identifiers (e.g., "ds005516"). |
-| `SUBJECT_MINI_RELEASE_MAP`         | A mapping from HBN release identifiers to a list of subject IDs.                                                                                      |
-| `config`                           | A global configuration dictionary for the EEGDash package.                                                                                            |
+| `ALLOWED_QUERY_FIELDS`             | A set of field names that are permitted in database queries constructed via `find()` with keyword arguments.                                                       |
+|------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `DEFAULT_DESCRIPTION_FIELDS`       | BIDS-entity fields surfaced on every per-record description by `EEGDashDataset` when the constructor is called without an explicit `description_fields=` argument. |
+| `DATASET_SUMMARY_COLUMNS`          | Column layout for the DataFrame returned by `search_datasets()`.                                                                                                   |
+| `DATASET_FIELD_ALIASES`            | Per-canonical-column ordered alias paths fed to `records_to_dataframe()`.                                                                                          |
+| `DATASET_QUERY_ALLOWED`            | Caller-friendly keyword filters accepted by `search_datasets()`.                                                                                                   |
+| `DATASET_QUERY_FIELD_SPEC`         | `field_spec` consumed by `build_query_from_kwargs()` for the `search_datasets()` keyword filters.                                                                  |
+| `RELEASE_TO_OPENNEURO_DATASET_MAP` | A mapping from Healthy Brain Network (HBN) release identifiers (e.g., "R11") to their corresponding OpenNeuro dataset identifiers (e.g., "ds005516").              |
+| `SUBJECT_MINI_RELEASE_MAP`         | A mapping from HBN release identifiers to a list of subject IDs.                                                                                                   |
+| `config`                           | A global configuration dictionary for the EEGDash package.                                                                                                         |
 
 ### eegdash.const.config *= {'accepted_query_fields': ['data_name', 'dataset'], 'attributes': {'bidspath': 'str', 'data_name': 'str', 'dataset': 'str', 'modality': 'str', 'nchans': 'int', 'ntimes': 'int', 'run': 'str', 'sampling_frequency': 'float', 'session': 'str', 'subject': 'str', 'task': 'str'}, 'bids_dependencies_files': ['dataset_description.json', 'participants.tsv', 'events.tsv', 'events.json', 'eeg.json', 'electrodes.tsv', 'channels.tsv', 'coordsystem.json'], 'description_fields': ['subject', 'session', 'run', 'task', 'age', 'gender', 'sex'], 'required_fields': ['data_name']}*
 
@@ -28,7 +33,64 @@ A set of field names that are permitted in database queries constructed
 via `find()` with keyword arguments.
 
 * **Type:**
-  set
+  [set](https://docs.python.org/3/library/stdtypes.html#set)
+
+<!-- !! processed by numpydoc !! -->
+
+### eegdash.const.DEFAULT_DESCRIPTION_FIELDS *= ['subject', 'session', 'run', 'task', 'age', 'gender', 'sex']*
+
+BIDS-entity fields surfaced on every per-record description by
+`EEGDashDataset` when the constructor is called without
+an explicit `description_fields=` argument.
+
+* **Type:**
+  [list](https://docs.python.org/3/library/stdtypes.html#list)
+
+<!-- !! processed by numpydoc !! -->
+
+### eegdash.const.DATASET_SUMMARY_COLUMNS *= ('dataset_id', 'name', 'modality', 'task', 'n_subjects', 'source', 'license', 'dataset_doi')*
+
+Column layout for the DataFrame returned by
+`search_datasets()`. One row per matching dataset.
+
+* **Type:**
+  [tuple](https://docs.python.org/3/library/stdtypes.html#tuple)
+
+<!-- !! processed by numpydoc !! -->
+
+### eegdash.const.DATASET_FIELD_ALIASES *= {'dataset_id': ('dataset_id', 'dataset', '_id'), 'source': ('source', 'provider')}*
+
+Per-canonical-column ordered alias paths fed to
+`records_to_dataframe()`. Lets one summary
+column draw from several legacy/nested record fields, so the helper
+survives v1/v2 schema drift without per-endpoint glue.
+
+* **Type:**
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
+
+<!-- !! processed by numpydoc !! -->
+
+### eegdash.const.DATASET_QUERY_ALLOWED *= frozenset({'clinical_group', 'license', 'modality', 'n_subjects_min', 'source', 'task'})*
+
+Caller-friendly keyword filters accepted by
+`search_datasets()`. Distinct from
+`ALLOWED_QUERY_FIELDS` because the dataset-level documents have a
+different schema than per-recording records.
+
+* **Type:**
+  [frozenset](https://docs.python.org/3/library/stdtypes.html#frozenset)
+
+<!-- !! processed by numpydoc !! -->
+
+### eegdash.const.DATASET_QUERY_FIELD_SPEC *= {'clinical_group': {'paths': ('clinical.group', 'clinical_group')}, 'modality': {'value_aliases': <function <lambda>>}, 'n_subjects_min': {'operator': '$gte', 'paths': ('n_subjects',), 'value_aliases': <function <lambda>>}, 'source': {'paths': ('source', 'provider')}}*
+
+`field_spec` consumed by
+`build_query_from_kwargs()` for the
+`search_datasets()` keyword filters. Encodes
+every legacy alias and range operator that endpoint needs.
+
+* **Type:**
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
 
 <!-- !! processed by numpydoc !! -->
 
@@ -38,7 +100,7 @@ A mapping from Healthy Brain Network (HBN) release identifiers (e.g., “R11”)
 to their corresponding OpenNeuro dataset identifiers (e.g., “ds005516”).
 
 * **Type:**
-  dict
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
 
 <!-- !! processed by numpydoc !! -->
 
@@ -49,6 +111,6 @@ This is used to select a small, representative subset of subjects for creating
 “mini” datasets for testing and demonstration purposes.
 
 * **Type:**
-  dict
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
 
 <!-- !! processed by numpydoc !! -->

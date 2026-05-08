@@ -1,0 +1,1862 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../../" data-theme="light">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta property="og:title" content="How do I turn one EEG recording into a PyTorch DataLoader?" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://eegdash.org/generated/auto_examples/tutorials/00_start_here/plot_02_dataset_to_dataloader.html" />
+<meta property="og:site_name" content="EEG Dash" />
+<meta property="og:description" content="A model trains on tensor batches, not on continuous voltage traces. This tutorial closes the gap on one BIDS recording from OpenNeuro ds002718[ Wakeman…" />
+<meta property="og:image" content="https://eegdash.org/_static/eegdash_social_card.png" />
+<meta property="og:image:alt" content="EEG Dash — data-sharing interface for M/EEG datasets" />
+<meta name="description" content="A model trains on tensor batches, not on continuous voltage traces. This tutorial closes the gap on one BIDS recording from OpenNeuro ds002718[ Wakeman…" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@eegdash" />
+
+    <title>How do I turn one EEG recording into a PyTorch DataLoader? &#8212; EEG Dash</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "light";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../_static/styles/theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+<link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sg_gallery.css?v=fd6457a4" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/custom.7953df0a.css?v=314ed3b2" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/css/treemap.087aecf0.css?v=7131b20f" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.d7808461.css?v=1ba63a31" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../../../_static/scripts/fontawesome.js?digest=55c26ed414f5f8a31ebb"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb" />
+<link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb" />
+
+    <script src="../../../../_static/documentation_options.js?v=6dfdf7c3"></script>
+    <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../../_static/sg-tags.js?v=d80f6fa4"></script>
+    <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../../_static/copybutton.js?v=8c005784"></script>
+    <script src="../../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'generated/auto_examples/tutorials/00_start_here/plot_02_dataset_to_dataloader';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <script defer="defer" src="../../../../_static/js/tag-palette.7346f567.js?v=6f5eac9a"></script>
+    <script defer="defer" src="../../../../_static/js/search-as-you-type.e09b639d.js?v=8e93d0f7"></script>
+    <script defer="defer" src="../../../../_static/js/lazy-embed.1f1f83d2.js?v=118c4c47"></script>
+    <link rel="canonical" href="https://eegdash.org/generated/auto_examples/tutorials/00_start_here/plot_02_dataset_to_dataloader.html" />
+    <link rel="icon" href="../../../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="Core Decoding Workflow" href="../10_core_workflow/index.html" />
+    <link rel="prev" title="How do I load one EEG recording from EEGDash?" href="plot_01_first_recording.html" />
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.7" />
+
+  
+  <meta name="google-site-verification" content="REPLACE_WITH_GSC_TOKEN">
+  <meta name="msvalidate.01" content="REPLACE_WITH_BING_TOKEN">
+
+  
+  <link rel="preconnect" href="https://cdn.datatables.net" crossorigin>
+  <link rel="preconnect" href="https://code.jquery.com" crossorigin>
+
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    rel="preload"
+    as="style"
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Source+Sans+3:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap"
+    onload="this.onload=null;this.rel='stylesheet'">
+  <noscript>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Source+Sans+3:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap">
+  </noscript>
+
+  
+
+  
+  <link rel="alternate" type="text/markdown" href="/llms.txt" title="EEGDash — LLM-friendly index">
+  <link rel="llms" href="/llms.txt" title="EEGDash — llms.txt index">
+  <link rel="llms-txt" href="/llms.txt">
+  <link rel="llms-full" type="text/markdown" href="/llms-full.txt" title="EEGDash — full markdown corpus">
+  <link rel="alternate" type="application/json" href="/.well-known/agent-skills/index.json" title="EEGDash — Agent Skills">
+  <link rel="alternate" type="application/linkset+json" href="/.well-known/api-catalog" title="EEGDash — API catalog">
+  <meta name="llms-txt" content="/llms.txt">
+  <meta name="llms" content="/llms.txt">
+  <meta name="ai-content-index" content="/llms.txt">
+  <meta name="ai.content_index" content="/llms.txt">
+
+  
+
+  <!-- Google Tag Manager — deferred to DOMContentLoaded so the GTM
+       bootstrap no longer blocks first-paint or the Sphinx search-index
+       load. Functionally equivalent to the inline snippet below but
+       saves ~60 ms of Total Blocking Time per PageSpeed Insights. -->
+  <script>
+    (function(){
+      function loadGTM(){
+        if (window.__gtmLoaded) return;
+        window.__gtmLoaded = true;
+        (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','GTM-MXC3DGL6');
+      }
+      // Defer GTM off the critical path. requestIdleCallback wants an
+      // IdleRequestOptions object as its second argument while
+      // setTimeout wants a plain number — using the same `1` for both
+      // raised a TypeError in Lighthouse's console that dragged the SEO
+      // score down. Branch on availability so each API gets the shape
+      // it expects.
+      function scheduleGTM() {
+        if (typeof window.requestIdleCallback === 'function') {
+          window.requestIdleCallback(loadGTM, { timeout: 2000 });
+        } else {
+          setTimeout(loadGTM, 1);
+        }
+      }
+      if (document.readyState === 'complete' || document.readyState === 'interactive') {
+        scheduleGTM();
+      } else {
+        document.addEventListener('DOMContentLoaded', scheduleGTM);
+      }
+    })();
+  </script>
+  <!-- End Google Tag Manager -->
+
+  </head>
+  <body data-default-mode="light">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+    
+    <img src="../../../../_static/eegdash_long.svg" class="logo__image only-light" alt="EEG Dash Logo"/>
+    <img src="../../../../_static/eegdash_long.svg" class="logo__image only-dark pst-js-only" alt="EEG Dash Logo"/>
+  
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../dataset_summary.html">
+    Datasets
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../quickstart.html">
+    Quick Start
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../install/install.html">
+    Install
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../../index.html">
+    Examples
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../concepts/index.html">
+    Concepts
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../api/api.html">
+    Docs
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../references.html">
+    References
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-external" href="https://eeg2025.github.io/">
+    EEG2025
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="External Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/eegdash/EEGDash" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../../../../_static/icons/github.svg" class="icon-link-image" alt="GitHub"/></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/eegdash/" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../../../../_static/icons/pypi.svg" class="icon-link-image" alt="PyPI"/></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://discord.gg/8jd7nVKwsc" title="Discord" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../../../../_static/icons/discord.svg" class="icon-link-image" alt="Discord"/></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../dataset_summary.html">
+    Datasets
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../quickstart.html">
+    Quick Start
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../install/install.html">
+    Install
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../../index.html">
+    Examples
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../concepts/index.html">
+    Concepts
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../api/api.html">
+    Docs
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../references.html">
+    References
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://eeg2025.github.io/">
+    EEG2025
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="External Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/eegdash/EEGDash" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../../../../_static/icons/github.svg" class="icon-link-image" alt="GitHub"/></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/eegdash/" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../../../../_static/icons/pypi.svg" class="icon-link-image" alt="PyPI"/></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://discord.gg/8jd7nVKwsc" title="Discord" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../../../../_static/icons/discord.svg" class="icon-link-image" alt="Discord"/></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../../index.html" class="nav-link">Examples gallery</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">Start Here</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">How do I turn one EEG recording into a PyTorch DataLoader?</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p><a class="reference internal" href="#sphx-glr-download-generated-auto-examples-tutorials-00-start-here-plot-02-dataset-to-dataloader-py"><span class="std std-ref">Go to the end</span></a>
+to download the full example code or to run this example in your browser via Binder.</p>
+</div>
+<section class="sphx-glr-example-title" id="how-do-i-turn-one-eeg-recording-into-a-pytorch-dataloader">
+<span id="sphx-glr-generated-auto-examples-tutorials-00-start-here-plot-02-dataset-to-dataloader-py"></span><h1>How do I turn one EEG recording into a PyTorch DataLoader?<a class="headerlink" href="#how-do-i-turn-one-eeg-recording-into-a-pytorch-dataloader" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">19 minutes</span></div>
+<p>A model trains on tensor batches, not on continuous voltage traces. This
+tutorial closes the gap on one BIDS recording from <a class="reference external" href="https://openneuro.org">OpenNeuro</a> <code class="docutils literal notranslate"><span class="pre">ds002718</span></code> <span class="bibtex-citation" id="id1">[<a class="reference internal" href="../../../../references.html#id14" title="Daniel G Wakeman and Richard N Henson. A multi-subject, multi-modal human neuroimaging dataset. Scientific Data, 2015. doi:10.1038/sdata.2015.1.">Wakeman and Henson, 2015</a>]</span>, reachable
+through <a class="reference external" href="https://nemar.org">NEMAR</a> <span class="bibtex-citation" id="id2">[<a class="reference internal" href="../../../../references.html#id6" title="Arnaud Delorme, Dung Truong, Choonhan Youn, Subhashini Sivagnanam, Claire Stirm, Kenneth Yoshimoto, Russell A Poldrack, Amitava Majumdar, and Scott Makeig. Nemar: an open access data, tools and compute resource operating on neuroelectromagnetic data. Database, 2022. doi:10.1093/database/baac096.">Delorme <em>et al.</em>, 2022</a>]</span>: two safe
+preprocessors, a fixed-length window step, a <a class="reference external" href="https://docs.pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader" title="(in PyTorch v2.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataLoader</span></code></a> <span class="bibtex-citation" id="id3">[<a class="reference internal" href="../../../../references.html#id34" title="Adam Paszke, Sam Gross, Francisco Massa, Adam Lerer, James Bradbury, Gregory Chanan, Trevor Killeen, Zeming Lin, Natalia Gimelshein, Luca Antiga, Alban Desmaison, Andreas Köpf, Edward Yang, Zachary DeVito, Martin Raison, Alykhan Tejani, Sasank Chilamkurthy, Benoit Steiner, Lu Fang, Junjie Bai, and Soumith Chintala. PyTorch: an imperative style, high-performance deep learning library. In Advances in Neural Information Processing Systems 32, 8024–8035. 2019. doi:10.48550/arXiv.1912.01703.">Paszke <em>et al.</em>, 2019</a>]</span>, and an optional
+Zarr cache that turns batch reads into a few milliseconds of random
+access. We do not train a model. The deliverable is one batch’s
+<code class="docutils literal notranslate"><span class="pre">shape</span></code> and <code class="docutils literal notranslate"><span class="pre">dtype</span></code>.</p>
+<section id="learning-objectives">
+<h2>Learning objectives<a class="headerlink" href="#learning-objectives" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Chain <code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code>,
+<a class="reference external" href="https://braindecode.org/stable/generated/braindecode.preprocessing.preprocess.html#braindecode.preprocessing.preprocess" title="(in Braindecode v1.5)"><code class="xref py py-func docutils literal notranslate"><span class="pre">braindecode.preprocessing.preprocess()</span></code></a>, and
+<a class="reference external" href="https://braindecode.org/stable/generated/braindecode.preprocessing.create_fixed_length_windows.html#braindecode.preprocessing.create_fixed_length_windows" title="(in Braindecode v1.5)"><code class="xref py py-func docutils literal notranslate"><span class="pre">create_fixed_length_windows()</span></code></a> on one
+subject.</p></li>
+<li><p>Predict the shape of one window from
+<code class="docutils literal notranslate"><span class="pre">(n_channels,</span> <span class="pre">window_seconds</span> <span class="pre">*</span> <span class="pre">sfreq)</span></code> and verify it.</p></li>
+<li><p>Read one batch from <a class="reference external" href="https://docs.pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader" title="(in PyTorch v2.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.utils.data.DataLoader</span></code></a> and explain
+each axis.</p></li>
+<li><p>Convert the windowed dataset to a Zarr store and re-read it for
+random-access speed.</p></li>
+<li><p>Pick safe values for <code class="docutils literal notranslate"><span class="pre">batch_size</span></code>, <code class="docutils literal notranslate"><span class="pre">num_workers</span></code>, <code class="docutils literal notranslate"><span class="pre">pin_memory</span></code>,
+and <code class="docutils literal notranslate"><span class="pre">shuffle</span></code> for an EEG workload.</p></li>
+</ul>
+</section>
+<section id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>About 2 min on CPU on first run; under 20 s once cached.</p></li>
+<li><p>Network on first call (~30-60 MB into <code class="docutils literal notranslate"><span class="pre">cache_dir</span></code>); offline thereafter.</p></li>
+<li><p>Prerequisites: <a class="reference internal" href="plot_00_first_search.html"><span class="doc">How do I find datasets in EEGDash?</span></a> (catalogue), <a class="reference internal" href="plot_01_first_recording.html"><span class="doc">How do I load one EEG recording from EEGDash?</span></a> (one <code class="docutils literal notranslate"><span class="pre">Raw</span></code>).</p></li>
+<li><p>Concept: <a class="reference internal" href="../../../../concepts/eegdash_objects.html"><span class="doc">EEGDash objects: EEGDash, EEGDashDataset, EEGChallengeDataset</span></a>.</p></li>
+</ul>
+<p>Setup. <code class="docutils literal notranslate"><span class="pre">np.random.seed</span></code> and <code class="docutils literal notranslate"><span class="pre">torch.manual_seed</span></code> make <code class="docutils literal notranslate"><span class="pre">shuffle=True</span></code>
+and any model init reproducible across runs (E3.21).</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <a href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="pathlib.Path" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-class"><span class="n">Path</span></a>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torch.utils.data</span><span class="w"> </span><span class="kn">import</span> <a href="https://docs.pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader" title="torch.utils.data.DataLoader" class="sphx-glr-backref-module-torch-utils-data sphx-glr-backref-type-py-class"><span class="n">DataLoader</span></a>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">braindecode</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">eegdash</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">braindecode.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <a href="https://braindecode.org/stable/generated/braindecode.preprocessing.Preprocessor.html#braindecode.preprocessing.Preprocessor" title="braindecode.preprocessing.Preprocessor" class="sphx-glr-backref-module-braindecode-preprocessing sphx-glr-backref-type-py-class"><span class="n">Preprocessor</span></a><span class="p">,</span>
+    <a href="https://braindecode.org/stable/generated/braindecode.preprocessing.create_fixed_length_windows.html#braindecode.preprocessing.create_fixed_length_windows" title="braindecode.preprocessing.create_fixed_length_windows" class="sphx-glr-backref-module-braindecode-preprocessing sphx-glr-backref-type-py-function"><span class="n">create_fixed_length_windows</span></a><span class="p">,</span>
+    <a href="https://braindecode.org/stable/generated/braindecode.preprocessing.preprocess.html#braindecode.preprocessing.preprocess" title="braindecode.preprocessing.preprocess" class="sphx-glr-backref-module-braindecode-preprocessing sphx-glr-backref-type-py-function"><span class="n">preprocess</span></a><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">eegdash</span><span class="w"> </span><span class="kn">import</span> <a href="../../../../api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset" title="eegdash.EEGDashDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class"><span class="n">EEGDashDataset</span></a>
+<span class="kn">from</span><span class="w"> </span><span class="nn">eegdash.viz</span><span class="w"> </span><span class="kn">import</span> <span class="n">use_eegdash_style</span>
+
+<span class="n">use_eegdash_style</span><span class="p">()</span>
+<a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">SEED</span></a> <span class="o">=</span> <span class="mi">42</span>
+<a href="https://numpy.org/doc/stable/reference/random/generated/numpy.random.seed.html#numpy.random.seed" title="numpy.random.seed" class="sphx-glr-backref-module-numpy-random sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span></a><span class="p">(</span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">SEED</span></a><span class="p">)</span>
+<a href="https://docs.pytorch.org/docs/stable/generated/torch.manual_seed.html#torch.manual_seed" title="torch.manual_seed" class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function"><span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span></a><span class="p">(</span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">SEED</span></a><span class="p">)</span>
+
+<a href="https://docs.python.org/3/library/pathlib.html#pathlib.PosixPath" title="pathlib.PosixPath" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">CACHE_DIR</span></a> <span class="o">=</span> <a href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="pathlib.Path" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-class"><span class="n">Path</span></a><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;EEGDASH_CACHE_DIR&quot;</span><span class="p">,</span> <a href="https://docs.python.org/3/library/pathlib.html#pathlib.Path.home" title="pathlib.Path.home" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-method"><span class="n">Path</span><span class="o">.</span><span class="n">home</span></a><span class="p">()</span> <span class="o">/</span> <span class="s2">&quot;.eegdash_cache&quot;</span><span class="p">))</span>
+<a href="https://docs.python.org/3/library/pathlib.html#pathlib.Path.mkdir" title="pathlib.Path.mkdir" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-method"><span class="n">CACHE_DIR</span><span class="o">.</span><span class="n">mkdir</span></a><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;eegdash </span><span class="si">{</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">eegdash</span><span class="o">.</span><span class="n">__version__</span></a><span class="si">}</span><span class="s2">; braindecode </span><span class="si">{</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">braindecode</span><span class="o">.</span><span class="n">__version__</span></a><span class="si">}</span><span class="s2">; &quot;</span>
+    <span class="sa">f</span><span class="s2">&quot;torch </span><span class="si">{</span><span class="n">torch</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;cache_dir=</span><span class="si">{</span><a href="https://docs.python.org/3/library/pathlib.html#pathlib.PosixPath" title="pathlib.PosixPath" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">CACHE_DIR</span></a><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>eegdash 0.7.2; braindecode 1.5.0; torch 2.11.0+cu130
+cache_dir=/home/runner/eegdash_cache
+</pre></div>
+</div>
+</section>
+<section id="dataset-vs-dataloader-the-mental-model">
+<h2>Dataset vs DataLoader: the mental model<a class="headerlink" href="#dataset-vs-dataloader-the-mental-model" title="Link to this heading">#</a></h2>
+<p>PyTorch’s official tutorial draws the line clearly: a
+<a class="reference external" href="https://docs.pytorch.org/docs/stable/data.html#torch.utils.data.Dataset" title="(in PyTorch v2.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dataset</span></code></a> <em>owns sample storage and retrieval</em>
+(<code class="docutils literal notranslate"><span class="pre">__len__</span></code> and <code class="docutils literal notranslate"><span class="pre">__getitem__</span></code>); a
+<a class="reference external" href="https://docs.pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader" title="(in PyTorch v2.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataLoader</span></code></a> <em>consumes</em> the dataset and adds
+batching, shuffling, and worker orchestration. The DataLoader is not a
+data store. It is an iterable that calls <code class="docutils literal notranslate"><span class="pre">__getitem__</span></code> on the
+dataset behind it and stacks the results.</p>
+<p>On EEG, the picture has three shapes you can keep in your head:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>EEGDashDataset                  WindowsDataset                DataLoader
+(records + BIDS meta)           (cut samples for the model)   (consumer)
+┌────────────────────┐          ┌───────────────────┐         ┌────────────┐
+│ record 0 (Raw) ──┐ │ preproc  │ window 0 (X, y)   │ batch + │ batch 0    │
+│ record 1 (Raw) ──┼─┼─────────▶│ window 1 (X, y)   │ shuffle │ batch 1    │
+│ record 2 (Raw) ──┘ │ + cut    │ ...               │────────▶│ ...        │
+│ ...                │ windows  │ window N (X, y)   │         │ batch K    │
+└────────────────────┘          └───────────────────┘         └────────────┘
+  __len__  = n_records           __len__  = n_windows           iter() yields
+  __getitem__ -&gt; (raw, ...)       __getitem__ -&gt; (X, y, idx)      stacked tensors
+</pre></div>
+</div>
+<p>Once the pipeline runs, we re-draw this diagram further down with the
+<em>live</em> shapes that came out of the runtime.</p>
+</section>
+<section id="five-corollaries">
+<h2>Five corollaries<a class="headerlink" href="#five-corollaries" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>A sample is a window, not a recording.</strong> Continuous EEG is one
+long array per session. Models train on fixed-length frames, so the
+pipeline cuts each <code class="docutils literal notranslate"><span class="pre">Raw</span></code> into <code class="docutils literal notranslate"><span class="pre">(n_channels,</span> <span class="pre">window_samples)</span></code>
+tensors before any batching happens.</p></li>
+<li><p><strong>Pipeline composition.</strong> <code class="docutils literal notranslate"><span class="pre">EEGDashDataset</span></code> (records and BIDS
+metadata) feeds <a class="reference external" href="https://braindecode.org/stable/generated/braindecode.preprocessing.preprocess.html#braindecode.preprocessing.preprocess" title="(in Braindecode v1.5)"><code class="xref py py-func docutils literal notranslate"><span class="pre">preprocess()</span></code></a>
+(in-place edits on each <a class="reference external" href="https://mne.tools/stable/generated/mne.io.Raw.html#mne.io.Raw" title="(in MNE v1.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">mne.io.Raw</span></code></a>) which feeds
+<a class="reference external" href="https://braindecode.org/stable/generated/braindecode.preprocessing.create_fixed_length_windows.html#braindecode.preprocessing.create_fixed_length_windows" title="(in Braindecode v1.5)"><code class="xref py py-func docutils literal notranslate"><span class="pre">create_fixed_length_windows()</span></code></a>
+(continuous, then windowed) which feeds
+<a class="reference external" href="https://docs.pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader" title="(in PyTorch v2.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataLoader</span></code></a> (windowed, then batched). Each
+stage carries the BIDS metadata forward, which keeps later splits
+subject-aware (see <span class="xref std std-doc">/auto_examples/tutorials/10_core_workflow/plot_11_leakage_safe_split</span>).</p></li>
+<li><p><strong>Two windowing surfaces.</strong>
+<a class="reference external" href="https://braindecode.org/stable/generated/braindecode.preprocessing.create_fixed_length_windows.html#braindecode.preprocessing.create_fixed_length_windows" title="(in Braindecode v1.5)"><code class="xref py py-func docutils literal notranslate"><span class="pre">create_fixed_length_windows()</span></code></a>
+strides across the continuous signal, ignoring events; useful for
+self-supervised pretraining and sleep staging.
+<a class="reference external" href="https://braindecode.org/stable/generated/braindecode.preprocessing.create_windows_from_events.html#braindecode.preprocessing.create_windows_from_events" title="(in Braindecode v1.5)"><code class="xref py py-func docutils literal notranslate"><span class="pre">create_windows_from_events()</span></code></a> cuts
+around BIDS event onsets with explicit offsets; this is the right
+choice for ERP and event-related tasks (face/scrambled, oddball,
+motor imagery). Both return a
+<a class="reference external" href="https://braindecode.org/stable/generated/braindecode.datasets.BaseConcatDataset.html#braindecode.datasets.BaseConcatDataset" title="(in Braindecode v1.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseConcatDataset</span></code></a> of
+<a class="reference external" href="https://braindecode.org/stable/generated/braindecode.datasets.WindowsDataset.html#braindecode.datasets.WindowsDataset" title="(in Braindecode v1.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">WindowsDataset</span></code></a> and slot into the same
+DataLoader without any code change.</p></li>
+<li><p><strong>Random access vs sequential storage.</strong> Training shuffles windows;
+the underlying signal store has to support cheap <code class="docutils literal notranslate"><span class="pre">X[i]</span></code> lookups.
+<code class="docutils literal notranslate"><span class="pre">.fif</span></code> is fine for one recording but its random-access cost grows
+linearly with file size; Zarr stores fixed-size chunks and reads
+any window in tens of milliseconds (see Step 5).</p></li>
+<li><p><strong>Lazy by default.</strong> Building the dataset queries the metadata
+index. The MNE <code class="docutils literal notranslate"><span class="pre">Raw</span></code> is materialised on demand
+(<code class="docutils literal notranslate"><span class="pre">record.raw</span></code>). <code class="docutils literal notranslate"><span class="pre">preload=True</span></code> on the windowing helpers forces
+the cut signal into RAM, which is the right trade-off when the
+recording fits in memory.</p></li>
+<li><p><strong>Connections back and forward.</strong> <code class="docutils literal notranslate"><span class="pre">plot_01</span></code> opened the same
+record and inspected the spectrum. <code class="docutils literal notranslate"><span class="pre">plot_10</span></code> covers the full
+preprocessing recipe (montage, reference, band-pass) we keep
+minimal here. <code class="docutils literal notranslate"><span class="pre">plot_11</span></code> splits without leakage. <code class="docutils literal notranslate"><span class="pre">plot_13</span></code> saves
+and reloads the prepared windows so subsequent sessions skip the
+cut.</p></li>
+</ul>
+</section>
+<section id="what-can-a-windowed-dataset-do">
+<h2>What can a windowed dataset do?<a class="headerlink" href="#what-can-a-windowed-dataset-do" title="Link to this heading">#</a></h2>
+<p>Before building one, list the methods
+<a class="reference external" href="https://braindecode.org/stable/generated/braindecode.datasets.WindowsDataset.html#braindecode.datasets.WindowsDataset" title="(in Braindecode v1.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">braindecode.datasets.WindowsDataset</span></code></a> exposes; most of them are
+the verbs a DataLoader implicitly relies on (<code class="docutils literal notranslate"><span class="pre">__len__</span></code>,
+<code class="docutils literal notranslate"><span class="pre">__getitem__</span></code>, <code class="docutils literal notranslate"><span class="pre">set_description</span></code>, <code class="docutils literal notranslate"><span class="pre">transform</span></code>).</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">braindecode.datasets</span><span class="w"> </span><span class="kn">import</span> <a href="https://braindecode.org/stable/generated/braindecode.datasets.WindowsDataset.html#braindecode.datasets.WindowsDataset" title="braindecode.datasets.WindowsDataset" class="sphx-glr-backref-module-braindecode-datasets sphx-glr-backref-type-py-class"><span class="n">WindowsDataset</span></a>
+
+<a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">windows_methods</span></a> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+    <span class="n">name</span>
+    <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><a href="https://braindecode.org/stable/generated/braindecode.datasets.WindowsDataset.html#braindecode.datasets.WindowsDataset" title="braindecode.datasets.WindowsDataset" class="sphx-glr-backref-module-braindecode-datasets sphx-glr-backref-type-py-class"><span class="n">WindowsDataset</span></a><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">callable</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><a href="https://braindecode.org/stable/generated/braindecode.datasets.WindowsDataset.html#braindecode.datasets.WindowsDataset" title="braindecode.datasets.WindowsDataset" class="sphx-glr-backref-module-braindecode-datasets sphx-glr-backref-type-py-class"><span class="n">WindowsDataset</span></a><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+<span class="p">)</span>
+<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class"><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span></a><span class="p">({</span><span class="s2">&quot;method&quot;</span><span class="p">:</span> <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">windows_methods</span></a><span class="p">})</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>method</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>set_description</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<br />
+<br /></section>
+<section id="step-1-build-the-dataset-lazy">
+<h2>Step 1: Build the dataset (lazy)<a class="headerlink" href="#step-1-build-the-dataset-lazy" title="Link to this heading">#</a></h2>
+<p>Same idiom as <code class="docutils literal notranslate"><span class="pre">plot_01</span></code>. One subject keeps the run inside the
+tutorial budget; the BIDS query language carries through unchanged
+<span class="bibtex-citation" id="id4">[<a class="reference internal" href="../../../../references.html#id7" title="Cyril R. Pernet, Stefan Appelhoff, Krzysztof J. Gorgolewski, Guillaume Flandin, Christophe Phillips, Arnaud Delorme, and Robert Oostenveld. Eeg-bids, an extension to the brain imaging data structure for electroencephalography. Scientific Data, 2019. doi:10.1038/s41597-019-0104-8.">Pernet <em>et al.</em>, 2019</a>]</span>.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">DATASET</span></a> <span class="o">=</span> <span class="s2">&quot;ds002718&quot;</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">SUBJECT</span></a> <span class="o">=</span> <span class="s2">&quot;002&quot;</span>  <span class="c1"># E3.23 data minimality: one subject, one task</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">TASK</span></a> <span class="o">=</span> <span class="s2">&quot;FaceRecognition&quot;</span>
+<a href="../../../../api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset" title="eegdash.EEGDashDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">dataset</span></a> <span class="o">=</span> <a href="../../../../api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset" title="eegdash.EEGDashDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class"><span class="n">EEGDashDataset</span></a><span class="p">(</span>
+    <span class="n">cache_dir</span><span class="o">=</span><a href="https://docs.python.org/3/library/pathlib.html#pathlib.PosixPath" title="pathlib.PosixPath" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">CACHE_DIR</span></a><span class="p">,</span> <a href="../../../../api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset" title="eegdash.EEGDashDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">dataset</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">DATASET</span></a><span class="p">,</span> <span class="n">subject</span><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">SUBJECT</span></a><span class="p">,</span> <span class="n">task</span><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">TASK</span></a>
+<span class="p">)</span>
+<span class="n">record</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">dataset</span><span class="o">.</span><span class="n">datasets</span></a><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">raw</span> <span class="o">=</span> <span class="n">record</span><span class="o">.</span><span class="n">raw</span>
+<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.html#pandas.Series" title="pandas.Series" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class"><span class="n">pd</span><span class="o">.</span><span class="n">Series</span></a><span class="p">(</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;n_recordings&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">dataset</span><span class="o">.</span><span class="n">datasets</span></a><span class="p">),</span>
+        <span class="s2">&quot;n_channels&quot;</span><span class="p">:</span> <a href="https://mne.tools/stable/generated/mne.Info.html#mne.Info" title="mne._fiff.meas_info.Info" class="sphx-glr-backref-module-mne-_fiff-meas_info sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">raw</span><span class="o">.</span><span class="n">info</span></a><span class="p">[</span><span class="s2">&quot;nchan&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;sfreq (Hz)&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><a href="https://mne.tools/stable/generated/mne.Info.html#mne.Info" title="mne._fiff.meas_info.Info" class="sphx-glr-backref-module-mne-_fiff-meas_info sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">raw</span><span class="o">.</span><span class="n">info</span></a><span class="p">[</span><span class="s2">&quot;sfreq&quot;</span><span class="p">]),</span>
+        <span class="s2">&quot;duration (s)&quot;</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">raw</span><span class="o">.</span><span class="n">times</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="p">},</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">,</span>
+<span class="p">)</span><span class="o">.</span><span class="n">to_frame</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Downloading sub-002_task-FaceRecognition_channels.tsv:   0%|          | 0.00/1.31k [00:00&lt;?, ?B/s]
+Downloading sub-002_task-FaceRecognition_channels.tsv: 100%|██████████| 1.31k/1.31k [00:00&lt;00:00, 5.58MB/s]
+
+Downloading sub-002_task-FaceRecognition_events.tsv:   0%|          | 0.00/105k [00:00&lt;?, ?B/s]
+Downloading sub-002_task-FaceRecognition_events.tsv: 100%|██████████| 105k/105k [00:00&lt;00:00, 117MB/s]
+
+Downloading sub-002_task-FaceRecognition_electrodes.tsv:   0%|          | 0.00/1.68k [00:00&lt;?, ?B/s]
+Downloading sub-002_task-FaceRecognition_electrodes.tsv: 100%|██████████| 1.68k/1.68k [00:00&lt;00:00, 6.88MB/s]
+
+Downloading sub-002_task-FaceRecognition_eeg.json:   0%|          | 0.00/1.28k [00:00&lt;?, ?B/s]
+Downloading sub-002_task-FaceRecognition_eeg.json: 100%|██████████| 1.28k/1.28k [00:00&lt;00:00, 4.99MB/s]
+
+Downloading sub-002_task-FaceRecognition_coordsystem.json:   0%|          | 0.00/283 [00:00&lt;?, ?B/s]
+Downloading sub-002_task-FaceRecognition_coordsystem.json: 100%|██████████| 283/283 [00:00&lt;00:00, 1.09MB/s]
+[05/08/26 18:41:34] WARNING  File not found on S3, skipping:   downloader.py:163
+                             s3://openneuro.org/ds002718/sub-0
+                             02/eeg/sub-002_task-FaceRecogniti
+                             on_eeg.fdt
+
+Downloading sub-002_task-FaceRecognition_eeg.set:   0%|          | 0.00/224M [00:00&lt;?, ?B/s]
+Downloading sub-002_task-FaceRecognition_eeg.set:  22%|██▏       | 50.0M/224M [00:01&lt;00:05, 31.7MB/s]
+Downloading sub-002_task-FaceRecognition_eeg.set: 100%|██████████| 224M/224M [00:01&lt;00:00, 138MB/s]
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>n_recordings</th>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>n_channels</th>
+      <td>74.0</td>
+    </tr>
+    <tr>
+      <th>sfreq (Hz)</th>
+      <td>250.0</td>
+    </tr>
+    <tr>
+      <th>duration (s)</th>
+      <td>2991.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<br />
+<br /></section>
+<section id="step-2-two-safe-preprocessors">
+<h2>Step 2: Two safe preprocessors<a class="headerlink" href="#step-2-two-safe-preprocessors" title="Link to this heading">#</a></h2>
+<p><strong>Predict.</strong> What does <code class="docutils literal notranslate"><span class="pre">raw.info['sfreq']</span></code> look like after a
+100 Hz resample? And <code class="docutils literal notranslate"><span class="pre">len(raw.ch_names)</span></code> after dropping non-EEG
+channels?</p>
+<p><strong>Run.</strong> <code class="docutils literal notranslate"><span class="pre">pick_types(eeg=True)</span></code> keeps only EEG, <code class="docutils literal notranslate"><span class="pre">resample(sfreq=100)</span></code>
+downsamples. Filter and reference live in <code class="docutils literal notranslate"><span class="pre">plot_10</span></code>; here we keep
+the recipe to two named steps so the focus stays on the
+<code class="docutils literal notranslate"><span class="pre">Raw</span> <span class="pre">-&gt;</span> <span class="pre">windows</span> <span class="pre">-&gt;</span> <span class="pre">DataLoader</span></code> plumbing.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">TARGET_SFREQ</span></a> <span class="o">=</span> <span class="mi">100</span>  <span class="c1"># Hz</span>
+<a href="https://braindecode.org/stable/generated/braindecode.preprocessing.preprocess.html#braindecode.preprocessing.preprocess" title="braindecode.preprocessing.preprocess" class="sphx-glr-backref-module-braindecode-preprocessing sphx-glr-backref-type-py-function"><span class="n">preprocess</span></a><span class="p">(</span>
+    <a href="../../../../api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset" title="eegdash.EEGDashDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">dataset</span></a><span class="p">,</span>
+    <span class="p">[</span>
+        <a href="https://braindecode.org/stable/generated/braindecode.preprocessing.Preprocessor.html#braindecode.preprocessing.Preprocessor" title="braindecode.preprocessing.Preprocessor" class="sphx-glr-backref-module-braindecode-preprocessing sphx-glr-backref-type-py-class"><span class="n">Preprocessor</span></a><span class="p">(</span><span class="s2">&quot;pick_types&quot;</span><span class="p">,</span> <span class="n">eeg</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">eog</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">misc</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+        <a href="https://braindecode.org/stable/generated/braindecode.preprocessing.Preprocessor.html#braindecode.preprocessing.Preprocessor" title="braindecode.preprocessing.Preprocessor" class="sphx-glr-backref-module-braindecode-preprocessing sphx-glr-backref-type-py-class"><span class="n">Preprocessor</span></a><span class="p">(</span><span class="s2">&quot;resample&quot;</span><span class="p">,</span> <a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sfreq</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">TARGET_SFREQ</span></a><span class="p">),</span>
+    <span class="p">],</span>
+<span class="p">)</span>
+<span class="n">raw_pp</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">dataset</span><span class="o">.</span><span class="n">datasets</span></a><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">raw</span>
+<a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">n_channels</span></a> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">raw_pp</span><span class="o">.</span><span class="n">ch_names</span><span class="p">)</span>
+<a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sfreq</span></a> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><a href="https://mne.tools/stable/generated/mne.Info.html#mne.Info" title="mne._fiff.meas_info.Info" class="sphx-glr-backref-module-mne-_fiff-meas_info sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">raw_pp</span><span class="o">.</span><span class="n">info</span></a><span class="p">[</span><span class="s2">&quot;sfreq&quot;</span><span class="p">])</span>
+<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.html#pandas.Series" title="pandas.Series" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class"><span class="n">pd</span><span class="o">.</span><span class="n">Series</span></a><span class="p">(</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;n_channels&quot;</span><span class="p">:</span> <a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">n_channels</span></a><span class="p">,</span>
+        <span class="s2">&quot;sfreq (Hz)&quot;</span><span class="p">:</span> <a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sfreq</span></a><span class="p">,</span>
+        <span class="s2">&quot;dtype&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">raw_pp</span><span class="o">.</span><span class="n">get_data</span><span class="p">()</span><span class="o">.</span><span class="n">dtype</span><span class="p">),</span>
+    <span class="p">},</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">,</span>
+<span class="p">)</span><span class="o">.</span><span class="n">to_frame</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/runner/work/EEGDash/EEGDash/.venv/lib/python3.12/site-packages/braindecode/preprocessing/preprocess.py:78: UserWarning: apply_on_array can only be True if fn is a callable function. Automatically correcting to apply_on_array=False.
+  warn(
+NOTE: pick_types() is a legacy function. New code should use inst.pick(...).
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>n_channels</th>
+      <td>70</td>
+    </tr>
+    <tr>
+      <th>sfreq (Hz)</th>
+      <td>100.0</td>
+    </tr>
+    <tr>
+      <th>dtype</th>
+      <td>float64</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<br />
+<br /></section>
+<section id="step-3-cut-into-fixed-length-windows">
+<h2>Step 3: Cut into fixed-length windows<a class="headerlink" href="#step-3-cut-into-fixed-length-windows" title="Link to this heading">#</a></h2>
+<p>Two parameters drive every shape from here on: window size and stride.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">window_size_samples</span> <span class="pre">=</span> <span class="pre">window_seconds</span> <span class="pre">*</span> <span class="pre">sfreq</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">window_stride_samples</span> <span class="pre">=</span> <span class="pre">window_size_samples</span></code> gives 0 % overlap;
+each input sample lands in exactly one window.</p></li>
+<li><p>Halving the stride doubles the window count and introduces
+correlated frames inside one recording, which usually hurts
+evaluation unless the splits below stay subject-aware
+(cross-subject in <code class="docutils literal notranslate"><span class="pre">plot_11</span></code>).</p></li>
+</ul>
+<p><strong>Predict.</strong> <code class="docutils literal notranslate"><span class="pre">len(windows)</span></code> for a 1-second recording at 100 Hz with
+2-second windows? (Answer: zero, after <code class="docutils literal notranslate"><span class="pre">drop_last_window=True</span></code>.)</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">WINDOW_SECONDS</span></a> <span class="o">=</span> <span class="mf">2.0</span>
+<a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">window_size_samples</span></a> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">WINDOW_SECONDS</span></a> <span class="o">*</span> <a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">TARGET_SFREQ</span></a><span class="p">)</span>
+<a href="https://braindecode.org/stable/generated/braindecode.datasets.BaseConcatDataset.html#braindecode.datasets.BaseConcatDataset" title="braindecode.datasets.BaseConcatDataset" class="sphx-glr-backref-module-braindecode-datasets sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">windows</span></a> <span class="o">=</span> <a href="https://braindecode.org/stable/generated/braindecode.preprocessing.create_fixed_length_windows.html#braindecode.preprocessing.create_fixed_length_windows" title="braindecode.preprocessing.create_fixed_length_windows" class="sphx-glr-backref-module-braindecode-preprocessing sphx-glr-backref-type-py-function"><span class="n">create_fixed_length_windows</span></a><span class="p">(</span>
+    <a href="../../../../api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset" title="eegdash.EEGDashDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">dataset</span></a><span class="p">,</span>
+    <a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">window_size_samples</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">window_size_samples</span></a><span class="p">,</span>
+    <span class="n">window_stride_samples</span><span class="o">=</span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">window_size_samples</span></a><span class="p">,</span>  <span class="c1"># 0 % overlap</span>
+    <span class="n">drop_last_window</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">preload</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X_one</span></a><span class="p">,</span> <a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">y_one</span></a><span class="p">,</span> <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">_idx</span></a> <span class="o">=</span> <a href="https://braindecode.org/stable/generated/braindecode.datasets.BaseConcatDataset.html#braindecode.datasets.BaseConcatDataset" title="braindecode.datasets.BaseConcatDataset" class="sphx-glr-backref-module-braindecode-datasets sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">windows</span></a><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.html#pandas.Series" title="pandas.Series" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class"><span class="n">pd</span><span class="o">.</span><span class="n">Series</span></a><span class="p">(</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;n_windows&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><a href="https://braindecode.org/stable/generated/braindecode.datasets.BaseConcatDataset.html#braindecode.datasets.BaseConcatDataset" title="braindecode.datasets.BaseConcatDataset" class="sphx-glr-backref-module-braindecode-datasets sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">windows</span></a><span class="p">),</span>
+        <span class="s2">&quot;windows[0][0].shape&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#tuple" title="builtins.tuple" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X_one</span><span class="o">.</span><span class="n">shape</span></a><span class="p">)),</span>
+        <span class="s2">&quot;X.dtype&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/routines.dtypes.html#numpy.dtypes.Float32DType" title="numpy.dtypes.Float32DType" class="sphx-glr-backref-module-numpy-dtypes sphx-glr-backref-type-py-attribute"><span class="n">X_one</span><span class="o">.</span><span class="n">dtype</span></a><span class="p">),</span>
+        <span class="s2">&quot;window_samples&quot;</span><span class="p">:</span> <a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">window_size_samples</span></a><span class="p">,</span>
+        <span class="s2">&quot;window_seconds&quot;</span><span class="p">:</span> <a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">WINDOW_SECONDS</span></a><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">,</span>
+<span class="p">)</span><span class="o">.</span><span class="n">to_frame</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>n_windows</th>
+      <td>1495</td>
+    </tr>
+    <tr>
+      <th>windows[0][0].shape</th>
+      <td>(70, 200)</td>
+    </tr>
+    <tr>
+      <th>X.dtype</th>
+      <td>float32</td>
+    </tr>
+    <tr>
+      <th>window_samples</th>
+      <td>200</td>
+    </tr>
+    <tr>
+      <th>window_seconds</th>
+      <td>2.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<br />
+<br /></section>
+<section id="step-4-wrap-in-a-dataloader">
+<h2>Step 4: Wrap in a DataLoader<a class="headerlink" href="#step-4-wrap-in-a-dataloader" title="Link to this heading">#</a></h2>
+<p>Four knobs matter on EEG; every other <code class="docutils literal notranslate"><span class="pre">DataLoader</span></code> argument can stay
+at default until the model trains.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">batch_size</span></code>. 8-32 is a comfortable starting range for a CPU
+debug run; final-training values are dictated by GPU memory.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">shuffle</span></code>. <code class="docutils literal notranslate"><span class="pre">True</span></code> for training, <code class="docutils literal notranslate"><span class="pre">False</span></code> for evaluation.
+<code class="docutils literal notranslate"><span class="pre">True</span></code> requires a seeded <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.Generator.html#torch.Generator" title="(in PyTorch v2.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.Generator</span></code></a> if the first
+batch must match across runs.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">num_workers</span></code>. <code class="docutils literal notranslate"><span class="pre">0</span></code> (synchronous) is the right default with
+<code class="docutils literal notranslate"><span class="pre">preload=True</span></code> because windows already live in RAM. <code class="docutils literal notranslate"><span class="pre">&gt;0</span></code> helps
+only when the dataset reads from disk per <code class="docutils literal notranslate"><span class="pre">__getitem__</span></code> (the Zarr
+path below).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pin_memory</span></code>. Set to <code class="docutils literal notranslate"><span class="pre">True</span></code> if a CUDA device is present and you
+plan to send batches with <code class="docutils literal notranslate"><span class="pre">.to(device,</span> <span class="pre">non_blocking=True)</span></code>.</p></li>
+</ul>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">BATCH_SIZE</span></a> <span class="o">=</span> <span class="mi">8</span>
+<a href="https://docs.pytorch.org/docs/stable/generated/torch.Generator.html#torch.Generator" title="torch.Generator" class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">gen</span></a> <span class="o">=</span> <a href="https://docs.pytorch.org/docs/stable/generated/torch.Generator.html#torch.Generator" title="torch.Generator" class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-class"><span class="n">torch</span><span class="o">.</span><span class="n">Generator</span></a><span class="p">()</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">SEED</span></a><span class="p">)</span>
+<a href="https://docs.pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader" title="torch.utils.data.DataLoader" class="sphx-glr-backref-module-torch-utils-data sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">loader</span></a> <span class="o">=</span> <a href="https://docs.pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader" title="torch.utils.data.DataLoader" class="sphx-glr-backref-module-torch-utils-data sphx-glr-backref-type-py-class"><span class="n">DataLoader</span></a><span class="p">(</span>
+    <a href="https://braindecode.org/stable/generated/braindecode.datasets.BaseConcatDataset.html#braindecode.datasets.BaseConcatDataset" title="braindecode.datasets.BaseConcatDataset" class="sphx-glr-backref-module-braindecode-datasets sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">windows</span></a><span class="p">,</span>
+    <span class="n">batch_size</span><span class="o">=</span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">BATCH_SIZE</span></a><span class="p">,</span>
+    <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">num_workers</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">pin_memory</span><span class="o">=</span><a href="https://docs.pytorch.org/docs/stable/generated/torch.cuda.is_available.html#torch.cuda.is_available" title="torch.cuda.is_available" class="sphx-glr-backref-module-torch-cuda sphx-glr-backref-type-py-function"><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span></a><span class="p">(),</span>
+    <span class="n">generator</span><span class="o">=</span><a href="https://docs.pytorch.org/docs/stable/generated/torch.Generator.html#torch.Generator" title="torch.Generator" class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">gen</span></a><span class="p">,</span>
+<span class="p">)</span>
+<a href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="torch.Tensor" class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X_batch</span></a><span class="p">,</span> <a href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="torch.Tensor" class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">y_batch</span></a><span class="p">,</span> <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">_idx_batch</span></a> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><a href="https://docs.pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader" title="torch.utils.data.DataLoader" class="sphx-glr-backref-module-torch-utils-data sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">loader</span></a><span class="p">))</span>
+<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.html#pandas.Series" title="pandas.Series" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class"><span class="n">pd</span><span class="o">.</span><span class="n">Series</span></a><span class="p">(</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;X.shape&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><a href="https://docs.pytorch.org/docs/stable/size.html#torch.Size" title="torch.Size" class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X_batch</span><span class="o">.</span><span class="n">shape</span></a><span class="p">)),</span>
+        <span class="s2">&quot;X.dtype&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><a href="https://docs.pytorch.org/docs/stable/tensor_attributes.html#torch.dtype" title="torch.dtype" class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X_batch</span><span class="o">.</span><span class="n">dtype</span></a><span class="p">),</span>
+        <span class="s2">&quot;y.shape&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><a href="https://docs.pytorch.org/docs/stable/size.html#torch.Size" title="torch.Size" class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">y_batch</span><span class="o">.</span><span class="n">shape</span></a><span class="p">)),</span>
+        <span class="s2">&quot;y unique&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><a href="https://docs.pytorch.org/docs/stable/generated/torch.unique.html#torch.unique" title="torch.unique" class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function"><span class="n">torch</span><span class="o">.</span><span class="n">unique</span></a><span class="p">(</span><a href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="torch.Tensor" class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">y_batch</span></a><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()),</span>
+        <span class="s2">&quot;pin_memory&quot;</span><span class="p">:</span> <a href="https://docs.python.org/3/library/functions.html#bool" title="builtins.bool" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">loader</span><span class="o">.</span><span class="n">pin_memory</span></a><span class="p">,</span>
+        <span class="s2">&quot;num_workers&quot;</span><span class="p">:</span> <a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">loader</span><span class="o">.</span><span class="n">num_workers</span></a><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">,</span>
+<span class="p">)</span><span class="o">.</span><span class="n">to_frame</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>X.shape</th>
+      <td>(8, 70, 200)</td>
+    </tr>
+    <tr>
+      <th>X.dtype</th>
+      <td>torch.float32</td>
+    </tr>
+    <tr>
+      <th>y.shape</th>
+      <td>(8,)</td>
+    </tr>
+    <tr>
+      <th>y unique</th>
+      <td>[-1]</td>
+    </tr>
+    <tr>
+      <th>pin_memory</th>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>num_workers</th>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<br />
+<br /><p><strong>Investigate.</strong> The batch tensor is shaped
+<code class="docutils literal notranslate"><span class="pre">(batch_size,</span> <span class="pre">n_channels,</span> <span class="pre">window_size_samples)</span></code> with floating-point
+dtype. That is exactly what Braindecode models such as
+<a class="reference external" href="https://braindecode.org/stable/generated/braindecode.models.ShallowFBCSPNet.html#braindecode.models.ShallowFBCSPNet" title="(in Braindecode v1.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ShallowFBCSPNet</span></code></a> and
+<code class="xref py py-class docutils literal notranslate"><span class="pre">EEGNetv4</span></code> consume.</p>
+</section>
+<section id="pipeline-at-a-glance-the-live-shapes">
+<h2>Pipeline at a glance: the live shapes<a class="headerlink" href="#pipeline-at-a-glance-the-live-shapes" title="Link to this heading">#</a></h2>
+<p>Now that every stage has run, we can re-draw the mental-model diagram
+from the top with the <em>actual</em> numbers the runtime produced. The
+drawing helpers live in a sibling _pipeline_diagram module so the
+rendering plumbing stays out of this tutorial; the call below is the
+only line that matters.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">_pipeline_diagram</span><span class="w"> </span><span class="kn">import</span> <span class="n">draw_pipeline</span>
+
+<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="matplotlib.figure.Figure" class="sphx-glr-backref-module-matplotlib-figure sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">fig_pipe</span></a> <span class="o">=</span> <span class="n">draw_pipeline</span><span class="p">(</span>
+    <span class="n">record_signal</span><span class="o">=</span><span class="n">raw_pp</span><span class="o">.</span><span class="n">get_data</span><span class="p">(</span><span class="n">picks</span><span class="o">=</span><span class="s2">&quot;eeg&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
+    <span class="n">window_xy</span><span class="o">=</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.asarray.html#numpy.asarray" title="numpy.asarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">asarray</span></a><span class="p">(</span><a href="https://braindecode.org/stable/generated/braindecode.datasets.BaseConcatDataset.html#braindecode.datasets.BaseConcatDataset" title="braindecode.datasets.BaseConcatDataset" class="sphx-glr-backref-module-braindecode-datasets sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">windows</span></a><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
+    <span class="n">batch_xy</span><span class="o">=</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.asarray.html#numpy.asarray" title="numpy.asarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">asarray</span></a><span class="p">(</span><a href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="torch.Tensor" class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X_batch</span></a><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
+    <span class="n">n_records</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">windows</span><span class="o">.</span><span class="n">datasets</span></a><span class="p">),</span>
+    <a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">n_channels</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">n_channels</span></a><span class="p">,</span>
+    <a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sfreq</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sfreq</span></a><span class="p">,</span>
+    <a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">window_size_samples</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">window_size_samples</span></a><span class="p">,</span>
+    <span class="n">batch_size</span><span class="o">=</span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">BATCH_SIZE</span></a><span class="p">,</span>
+    <span class="n">n_windows</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><a href="https://braindecode.org/stable/generated/braindecode.datasets.BaseConcatDataset.html#braindecode.datasets.BaseConcatDataset" title="braindecode.datasets.BaseConcatDataset" class="sphx-glr-backref-module-braindecode-datasets sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">windows</span></a><span class="p">),</span>
+    <span class="n">subject</span><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">SUBJECT</span></a><span class="p">,</span>
+    <span class="n">n_channels_full</span><span class="o">=</span><a href="https://mne.tools/stable/generated/mne.Info.html#mne.Info" title="mne._fiff.meas_info.Info" class="sphx-glr-backref-module-mne-_fiff-meas_info sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">raw_pp</span><span class="o">.</span><span class="n">info</span></a><span class="p">[</span><span class="s2">&quot;nchan&quot;</span><span class="p">],</span>
+<span class="p">)</span>
+<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
+</pre></div>
+</div>
+<img src="../../../../_images/sphx_glr_plot_02_dataset_to_dataloader_001.png" srcset="../../../../_images/sphx_glr_plot_02_dataset_to_dataloader_001.png" alt="plot 02 dataset to dataloader" class = "sphx-glr-single-img"/></section>
+<section id="reproducibility-which-random-source-draws-which-window">
+<h2>Reproducibility: which random source draws which window?<a class="headerlink" href="#reproducibility-which-random-source-draws-which-window" title="Link to this heading">#</a></h2>
+<p>Two seeds and one <code class="docutils literal notranslate"><span class="pre">Generator</span></code> cover the failure modes that bite EEG
+pipelines.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">np.random.seed</span></code> and <code class="docutils literal notranslate"><span class="pre">torch.manual_seed</span></code> make the <em>main</em> process
+deterministic: model init, baseline <code class="docutils literal notranslate"><span class="pre">shuffle=True</span></code> ordering when
+<code class="docutils literal notranslate"><span class="pre">num_workers=0</span></code>, and any NumPy use inside the dataset’s
+<code class="docutils literal notranslate"><span class="pre">__getitem__</span></code>.</p></li>
+<li><p>A <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.Generator.html#torch.Generator" title="(in PyTorch v2.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.Generator</span></code></a> passed to the DataLoader fixes the
+<em>sampling order</em>. Without it, two <code class="docutils literal notranslate"><span class="pre">shuffle=True</span></code> runs see
+different windows in the first batch. <code class="docutils literal notranslate"><span class="pre">torch.manual_seed</span></code> alone
+is not enough because PyTorch advances the global generator from
+any other operation that touches it.</p></li>
+<li><p>With <code class="docutils literal notranslate"><span class="pre">num_workers</span> <span class="pre">&gt;</span> <span class="pre">0</span></code>, each worker forks the parent state. NumPy
+does not re-seed automatically (PyTorch does, with a deterministic
+per-worker seed). The canonical fix is the
+<code class="docutils literal notranslate"><span class="pre">seed_worker(worker_id)</span></code> template below; this is what PyTorch’s
+own reproducibility guide recommends.</p></li>
+</ul>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">seed_worker</span><span class="p">(</span><span class="n">worker_id</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Re-seed numpy and stdlib random in each DataLoader worker.&quot;&quot;&quot;</span>
+    <span class="n">worker_seed</span> <span class="o">=</span> <a href="https://docs.pytorch.org/docs/stable/generated/torch.initial_seed.html#torch.initial_seed" title="torch.initial_seed" class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function"><span class="n">torch</span><span class="o">.</span><span class="n">initial_seed</span></a><span class="p">()</span> <span class="o">%</span> <span class="mi">2</span><span class="o">**</span><span class="mi">32</span>
+    <a href="https://numpy.org/doc/stable/reference/random/generated/numpy.random.seed.html#numpy.random.seed" title="numpy.random.seed" class="sphx-glr-backref-module-numpy-random sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span></a><span class="p">(</span><span class="n">worker_seed</span><span class="p">)</span>
+    <a href="https://docs.python.org/3/library/random.html#random.seed" title="random.seed" class="sphx-glr-backref-module-random sphx-glr-backref-type-py-function"><span class="n">random</span><span class="o">.</span><span class="n">seed</span></a><span class="p">(</span><span class="n">worker_seed</span><span class="p">)</span>
+
+
+<a href="https://docs.pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader" title="torch.utils.data.DataLoader" class="sphx-glr-backref-module-torch-utils-data sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">loader_repro</span></a> <span class="o">=</span> <a href="https://docs.pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader" title="torch.utils.data.DataLoader" class="sphx-glr-backref-module-torch-utils-data sphx-glr-backref-type-py-class"><span class="n">DataLoader</span></a><span class="p">(</span>
+    <a href="https://braindecode.org/stable/generated/braindecode.datasets.BaseConcatDataset.html#braindecode.datasets.BaseConcatDataset" title="braindecode.datasets.BaseConcatDataset" class="sphx-glr-backref-module-braindecode-datasets sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">windows</span></a><span class="p">,</span>
+    <span class="n">batch_size</span><span class="o">=</span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">BATCH_SIZE</span></a><span class="p">,</span>
+    <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">num_workers</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>  <span class="c1"># set &gt;0 once the dataset reads from disk per __getitem__</span>
+    <span class="n">pin_memory</span><span class="o">=</span><a href="https://docs.pytorch.org/docs/stable/generated/torch.cuda.is_available.html#torch.cuda.is_available" title="torch.cuda.is_available" class="sphx-glr-backref-module-torch-cuda sphx-glr-backref-type-py-function"><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span></a><span class="p">(),</span>
+    <span class="n">worker_init_fn</span><span class="o">=</span><span class="n">seed_worker</span><span class="p">,</span>
+    <span class="n">generator</span><span class="o">=</span><a href="https://docs.pytorch.org/docs/stable/generated/torch.Generator.html#torch.Generator" title="torch.Generator" class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-class"><span class="n">torch</span><span class="o">.</span><span class="n">Generator</span></a><span class="p">()</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">SEED</span></a><span class="p">),</span>
+<span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_first_batch_indices</span><span class="p">(</span><a href="https://docs.pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader" title="torch.utils.data.DataLoader" class="sphx-glr-backref-module-torch-utils-data sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">loader</span></a><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the per-window i_start indices of the first batch as a list.&quot;&quot;&quot;</span>
+    <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">_</span></a><span class="p">,</span> <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">_</span></a><span class="p">,</span> <span class="n">idx_batch</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><a href="https://docs.pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader" title="torch.utils.data.DataLoader" class="sphx-glr-backref-module-torch-utils-data sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">loader</span></a><span class="p">))</span>
+    <span class="n">arr</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.asarray.html#numpy.asarray" title="numpy.asarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">asarray</span></a><span class="p">(</span><span class="n">idx_batch</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">arr</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">arr</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>  <span class="c1"># i_start_in_trial column</span>
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span>
+
+
+<a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">first_idx_a</span></a> <span class="o">=</span> <span class="n">_first_batch_indices</span><span class="p">(</span><a href="https://docs.pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader" title="torch.utils.data.DataLoader" class="sphx-glr-backref-module-torch-utils-data sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">loader_repro</span></a><span class="p">)</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">first_idx_b</span></a> <span class="o">=</span> <span class="n">_first_batch_indices</span><span class="p">(</span>
+    <a href="https://docs.pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader" title="torch.utils.data.DataLoader" class="sphx-glr-backref-module-torch-utils-data sphx-glr-backref-type-py-class"><span class="n">DataLoader</span></a><span class="p">(</span>
+        <a href="https://braindecode.org/stable/generated/braindecode.datasets.BaseConcatDataset.html#braindecode.datasets.BaseConcatDataset" title="braindecode.datasets.BaseConcatDataset" class="sphx-glr-backref-module-braindecode-datasets sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">windows</span></a><span class="p">,</span>
+        <span class="n">batch_size</span><span class="o">=</span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">BATCH_SIZE</span></a><span class="p">,</span>
+        <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">num_workers</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">worker_init_fn</span><span class="o">=</span><span class="n">seed_worker</span><span class="p">,</span>
+        <span class="n">generator</span><span class="o">=</span><a href="https://docs.pytorch.org/docs/stable/generated/torch.Generator.html#torch.Generator" title="torch.Generator" class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-class"><span class="n">torch</span><span class="o">.</span><span class="n">Generator</span></a><span class="p">()</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">SEED</span></a><span class="p">),</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.html#pandas.Series" title="pandas.Series" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class"><span class="n">pd</span><span class="o">.</span><span class="n">Series</span></a><span class="p">(</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;first batch indices (run A)&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">first_idx_a</span></a><span class="p">),</span>
+        <span class="s2">&quot;first batch indices (run B)&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">first_idx_b</span></a><span class="p">),</span>
+        <span class="s2">&quot;match?&quot;</span><span class="p">:</span> <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">first_idx_a</span></a> <span class="o">==</span> <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">first_idx_b</span></a><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">,</span>
+<span class="p">)</span><span class="o">.</span><span class="n">to_frame</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>first batch indices (run A)</th>
+      <td>[455, 91000, 91200]</td>
+    </tr>
+    <tr>
+      <th>first batch indices (run B)</th>
+      <td>[455, 91000, 91200]</td>
+    </tr>
+    <tr>
+      <th>match?</th>
+      <td>True</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<br />
+<br /></section>
+<section id="step-5-unlock-random-access-speed-with-zarr">
+<h2>Step 5: Unlock random-access speed with Zarr<a class="headerlink" href="#step-5-unlock-random-access-speed-with-zarr" title="Link to this heading">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">preload=True</span></code> keeps windows in RAM, which is the right answer for
+a tutorial. For real training the dataset rarely fits in memory, and
+<code class="docutils literal notranslate"><span class="pre">.fif</span></code> files become the bottleneck (sequential format, one recording
+per file, no chunked random access). Braindecode’s solution is a
+Zarr store: fixed-size chunks, Blosc compression, and an
+<code class="docutils literal notranslate"><span class="pre">__getitem__</span></code> that reads one window in tens of milliseconds even
+when the full dataset is hundreds of GB.</p>
+<p>The conversion is the same code path that
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">push_to_hub()</span></code> runs
+locally before the Hub upload; we use it offline here. Run this
+section once per project: subsequent loads pay the chunk-decode cost
+only, not the recompute cost. The reload returns the same
+<code class="docutils literal notranslate"><span class="pre">BaseConcatDataset</span></code> API so the DataLoader code above is unchanged.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Zarr is an optional Braindecode extra. Install it once into the
+same environment:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>braindecode<span class="o">[</span>hub<span class="o">]</span>
+</pre></div>
+</div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Convert windows to a Zarr-backed cache (one-time, ~seconds for</span>
+<span class="c1"># one recording, scales linearly with dataset size):</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">braindecode.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseConcatDataset</span>
+
+<span class="n">zarr_dir</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/pathlib.html#pathlib.PosixPath" title="pathlib.PosixPath" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">CACHE_DIR</span></a> <span class="o">/</span> <span class="s2">&quot;ds002718_windows.zarr&quot;</span>
+<a href="https://braindecode.org/stable/generated/braindecode.datasets.BaseConcatDataset.html#braindecode.datasets.BaseConcatDataset" title="braindecode.datasets.BaseConcatDataset" class="sphx-glr-backref-module-braindecode-datasets sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">windows</span></a><span class="o">.</span><span class="n">push_to_hub</span><span class="p">(</span>
+    <span class="n">repo_id</span><span class="o">=</span><span class="s2">&quot;local-only/ds002718-windows&quot;</span><span class="p">,</span>
+    <span class="n">local_cache_dir</span><span class="o">=</span><span class="n">zarr_dir</span><span class="p">,</span>
+    <span class="n">compression</span><span class="o">=</span><span class="s2">&quot;blosc&quot;</span><span class="p">,</span>   <span class="c1"># blosc &gt; zstd &gt; gzip for random reads</span>
+    <span class="n">compression_level</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>    <span class="c1"># 5 is the documented sweet spot</span>
+    <span class="n">chunk_size</span><span class="o">=</span><span class="mi">5_000_000</span><span class="p">,</span>   <span class="c1"># samples per chunk; one chunk = one read</span>
+    <span class="n">token</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># Reload as a BaseConcatDataset; the DataLoader API is unchanged.</span>
+<span class="n">windows_zarr</span> <span class="o">=</span> <span class="n">BaseConcatDataset</span><span class="o">.</span><span class="n">pull_from_hub</span><span class="p">(</span>
+    <span class="n">repo_id</span><span class="o">=</span><span class="s2">&quot;local-only/ds002718-windows&quot;</span><span class="p">,</span>
+    <span class="n">cache_dir</span><span class="o">=</span><span class="n">zarr_dir</span><span class="p">,</span>
+    <span class="n">preload</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>            <span class="c1"># lazy reads from chunks</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Trade-offs. Blosc beats Zstd and Gzip on random-read latency at the
+cost of larger files. <code class="docutils literal notranslate"><span class="pre">chunk_size</span></code> tunes the read amplification: a
+small chunk reads quickly but pays per-chunk metadata overhead; a
+large chunk amortises that cost but reads more bytes than the model
+asked for. The default of 5 M samples is conservative for one-second
+windows at 100 Hz. With Zarr in place,
+<code class="docutils literal notranslate"><span class="pre">DataLoader(num_workers=4,</span> <span class="pre">pin_memory=True)</span></code> becomes the right
+default rather than an over-eager guess.</p>
+</section>
+<section id="a-common-mistake-and-how-to-recover">
+<h2>A common mistake, and how to recover<a class="headerlink" href="#a-common-mistake-and-how-to-recover" title="Link to this heading">#</a></h2>
+<p><strong>Run.</strong> Asking for windows larger than the recording silently returns
+zero. We trigger it on purpose so the failure mode is visible
+<span class="bibtex-citation" id="id5">[<a class="reference internal" href="../../../../references.html#id31" title="Alexander Nederbragt, Rayna Michelle Harris, Alison Presmanes Hill, and Greg Wilson. Ten quick tips for teaching with participatory live coding. PLOS Computational Biology, 2020. doi:10.1371/journal.pcbi.1008090.">Nederbragt <em>et al.</em>, 2020</a>]</span>: a <code class="docutils literal notranslate"><span class="pre">DataLoader(empty)</span></code> quietly yields
+nothing, which masks the bug.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">huge</span></a> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">raw_pp</span><span class="o">.</span><span class="n">times</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">TARGET_SFREQ</span></a> <span class="o">*</span> <span class="mi">10</span><span class="p">)</span>  <span class="c1"># 10x recording length</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">bad</span> <span class="o">=</span> <a href="https://braindecode.org/stable/generated/braindecode.preprocessing.create_fixed_length_windows.html#braindecode.preprocessing.create_fixed_length_windows" title="braindecode.preprocessing.create_fixed_length_windows" class="sphx-glr-backref-module-braindecode-preprocessing sphx-glr-backref-type-py-function"><span class="n">create_fixed_length_windows</span></a><span class="p">(</span>
+        <a href="../../../../api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset" title="eegdash.EEGDashDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">dataset</span></a><span class="p">,</span>
+        <a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">window_size_samples</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">huge</span></a><span class="p">,</span>
+        <span class="n">window_stride_samples</span><span class="o">=</span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">huge</span></a><span class="p">,</span>
+        <span class="n">drop_last_window</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">preload</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Oversize window produced len=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">bad</span><span class="p">)</span><span class="si">}</span><span class="s2"> (expected 0).&quot;</span><span class="p">)</span>
+<span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">RuntimeError</span><span class="p">)</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Caught </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">exc</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">exc</span><span class="p">)[:</span><span class="mi">120</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Recovery: keep window_size_samples=</span><span class="si">{</span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">window_size_samples</span></a><span class="si">}</span><span class="s2"> (&lt;&lt; recording).&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Caught ValueError: Window size 2990990 exceeds trial duration 299100.
+Recovery: keep window_size_samples=200 (&lt;&lt; recording).
+</pre></div>
+</div>
+</section>
+<section id="modify">
+<h2>Modify<a class="headerlink" href="#modify" title="Link to this heading">#</a></h2>
+<p><strong>Your turn.</strong> Set <code class="docutils literal notranslate"><span class="pre">WINDOW_SECONDS</span> <span class="pre">=</span> <span class="pre">4.0</span></code> and rerun Step 3 + Step 4.
+Predict before running: how should <code class="docutils literal notranslate"><span class="pre">windows[0][0].shape[1]</span></code> change?
+How should <code class="docutils literal notranslate"><span class="pre">len(windows)</span></code> change?</p>
+</section>
+<section id="make">
+<h2>Make<a class="headerlink" href="#make" title="Link to this heading">#</a></h2>
+<p><strong>Mini-project.</strong> Write a custom <code class="docutils literal notranslate"><span class="pre">collate_fn</span></code> that returns a <em>dict</em>
+instead of the default tuple. Dict batches stay readable when the
+pipeline grows beyond <code class="docutils literal notranslate"><span class="pre">(X,</span> <span class="pre">y,</span> <span class="pre">idx)</span></code>: HuggingFace <code class="docutils literal notranslate"><span class="pre">Trainer</span></code>,
+Lightning <code class="docutils literal notranslate"><span class="pre">LightningDataModule</span></code>, and any code that calls
+<code class="docutils literal notranslate"><span class="pre">model(**batch)</span></code> expects keyword inputs, and dict keys document the
+tensor’s role at the call site rather than relying on positional
+convention.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">dict_collate</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">batch</span></a><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Stack a list of ``(X, y, idx)`` items into a keyed batch dict.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;signal&quot;</span><span class="p">:</span> <a href="https://docs.pytorch.org/docs/stable/generated/torch.stack.html#torch.stack" title="torch.stack" class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function"><span class="n">torch</span><span class="o">.</span><span class="n">stack</span></a><span class="p">(</span>
+            <span class="p">[</span><a href="https://docs.pytorch.org/docs/stable/generated/torch.as_tensor.html#torch.as_tensor" title="torch.as_tensor" class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function"><span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span></a><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><a href="https://docs.pytorch.org/docs/stable/tensor_attributes.html#torch.dtype" title="torch.dtype" class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">torch</span><span class="o">.</span><span class="n">float32</span></a><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">batch</span></a><span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span>
+        <span class="p">),</span>
+        <span class="s2">&quot;target&quot;</span><span class="p">:</span> <a href="https://docs.pytorch.org/docs/stable/generated/torch.as_tensor.html#torch.as_tensor" title="torch.as_tensor" class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function"><span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span></a><span class="p">([</span><span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">batch</span></a><span class="p">]),</span>
+        <span class="s2">&quot;index&quot;</span><span class="p">:</span> <a href="https://docs.pytorch.org/docs/stable/generated/torch.as_tensor.html#torch.as_tensor" title="torch.as_tensor" class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function"><span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span></a><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="nb">int</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class"><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span></a><span class="p">))</span>
+                <span class="k">else</span> <span class="nb">int</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+                <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">batch</span></a>
+            <span class="p">]</span>
+        <span class="p">),</span>
+    <span class="p">}</span>
+
+
+<a href="https://docs.pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader" title="torch.utils.data.DataLoader" class="sphx-glr-backref-module-torch-utils-data sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">loader_dict</span></a> <span class="o">=</span> <a href="https://docs.pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader" title="torch.utils.data.DataLoader" class="sphx-glr-backref-module-torch-utils-data sphx-glr-backref-type-py-class"><span class="n">DataLoader</span></a><span class="p">(</span>
+    <a href="https://braindecode.org/stable/generated/braindecode.datasets.BaseConcatDataset.html#braindecode.datasets.BaseConcatDataset" title="braindecode.datasets.BaseConcatDataset" class="sphx-glr-backref-module-braindecode-datasets sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">windows</span></a><span class="p">,</span>
+    <span class="n">batch_size</span><span class="o">=</span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">BATCH_SIZE</span></a><span class="p">,</span>
+    <span class="n">shuffle</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">num_workers</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">collate_fn</span><span class="o">=</span><span class="n">dict_collate</span><span class="p">,</span>
+<span class="p">)</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">batch</span></a> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><a href="https://docs.pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader" title="torch.utils.data.DataLoader" class="sphx-glr-backref-module-torch-utils-data sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">loader_dict</span></a><span class="p">))</span>
+<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.html#pandas.Series" title="pandas.Series" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class"><span class="n">pd</span><span class="o">.</span><span class="n">Series</span></a><span class="p">(</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;type(batch)&quot;</span><span class="p">:</span> <span class="nb">type</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">batch</span></a><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+        <span class="s2">&quot;keys&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">batch</span></a><span class="o">.</span><span class="n">keys</span><span class="p">())),</span>
+        <span class="s2">&quot;signal.shape&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">batch</span></a><span class="p">[</span><span class="s2">&quot;signal&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">)),</span>
+        <span class="s2">&quot;signal.dtype&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">batch</span></a><span class="p">[</span><span class="s2">&quot;signal&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">dtype</span><span class="p">),</span>
+        <span class="s2">&quot;target.shape&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">batch</span></a><span class="p">[</span><span class="s2">&quot;target&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">)),</span>
+        <span class="s2">&quot;index.shape&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">batch</span></a><span class="p">[</span><span class="s2">&quot;index&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">)),</span>
+    <span class="p">},</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">,</span>
+<span class="p">)</span><span class="o">.</span><span class="n">to_frame</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>type(batch)</th>
+      <td>dict</td>
+    </tr>
+    <tr>
+      <th>keys</th>
+      <td>['index', 'signal', 'target']</td>
+    </tr>
+    <tr>
+      <th>signal.shape</th>
+      <td>(8, 70, 200)</td>
+    </tr>
+    <tr>
+      <th>signal.dtype</th>
+      <td>torch.float32</td>
+    </tr>
+    <tr>
+      <th>target.shape</th>
+      <td>(8,)</td>
+    </tr>
+    <tr>
+      <th>index.shape</th>
+      <td>(8,)</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<br />
+<br /><p><strong>Investigate.</strong> <code class="docutils literal notranslate"><span class="pre">model(**batch)</span></code> now passes <code class="docutils literal notranslate"><span class="pre">signal=...</span></code>,
+<code class="docutils literal notranslate"><span class="pre">target=...</span></code>, <code class="docutils literal notranslate"><span class="pre">index=...</span></code> as keyword arguments. That matches the
+convention used by HuggingFace <code class="docutils literal notranslate"><span class="pre">Trainer</span></code> and PyTorch Lightning data
+modules without any glue code.</p>
+</section>
+<section id="continuous-windows-vs-event-based-epochs">
+<h2>Continuous windows vs event-based epochs<a class="headerlink" href="#continuous-windows-vs-event-based-epochs" title="Link to this heading">#</a></h2>
+<p>Underneath every <a class="reference external" href="https://braindecode.org/stable/generated/braindecode.datasets.WindowsDataset.html#braindecode.datasets.WindowsDataset" title="(in Braindecode v1.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">WindowsDataset</span></code></a> sits
+an <a class="reference external" href="https://mne.tools/stable/generated/mne.Epochs.html#mne.Epochs" title="(in MNE v1.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">mne.Epochs</span></code></a> (or <a class="reference external" href="https://mne.tools/stable/generated/mne.EpochsArray.html#mne.EpochsArray" title="(in MNE v1.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">mne.EpochsArray</span></code></a>) object: a 3-D
+array shaped <code class="docutils literal notranslate"><span class="pre">(n_epochs,</span> <span class="pre">n_channels,</span> <span class="pre">n_times)</span></code> plus an <code class="docutils literal notranslate"><span class="pre">event_id</span></code>
+dict that maps condition strings to integer codes (<code class="docutils literal notranslate"><span class="pre">{'face':</span> <span class="pre">1,</span>
+<span class="pre">'scrambled':</span> <span class="pre">2}</span></code>) and an optional <code class="docutils literal notranslate"><span class="pre">metadata</span></code> <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v3.0.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a>
+that lets you write trial-level filters such as
+<code class="docutils literal notranslate"><span class="pre">epochs[epochs.metadata.task</span> <span class="pre">==</span> <span class="pre">'face']</span></code>. <code class="docutils literal notranslate"><span class="pre">Raw</span></code> is one continuous
+array; <code class="docutils literal notranslate"><span class="pre">Epochs</span></code> is <em>already cut</em>, with its own <code class="docutils literal notranslate"><span class="pre">event_id</span></code> /
+<code class="docutils literal notranslate"><span class="pre">metadata</span></code> / <code class="docutils literal notranslate"><span class="pre">drop_bad</span></code> machinery <span class="bibtex-citation" id="id6">[<a class="reference internal" href="../../../../references.html#id25" title="Alexandre Gramfort, Martin Luessi, Eric Larson, Denis A. Engemann, Daniel Strohmeier, Christian Brodbeck, Roman Goj, Mainak Jas, Teon Brooks, Lauri Parkkonen, and Matti Hämäläinen. Meg and eeg data analysis with mne-python. Frontiers in Neuroscience, 2013. doi:10.3389/fnins.2013.00267.">Gramfort <em>et al.</em>, 2013</a>]</span>.</p>
+<p>Two functions take you from <code class="docutils literal notranslate"><span class="pre">Raw</span></code> to that shape; the DataLoader
+does not care which one ran.</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://braindecode.org/stable/generated/braindecode.preprocessing.create_fixed_length_windows.html#braindecode.preprocessing.create_fixed_length_windows" title="(in Braindecode v1.5)"><code class="xref py py-func docutils literal notranslate"><span class="pre">create_fixed_length_windows()</span></code></a>
+strides over the continuous signal and labels every window with
+the same description-derived target. Right call for self-supervised
+pretraining (no event labels needed), sleep staging (one stage per
+30 s window), and monitoring tasks where the recording is labelled
+at the session level.</p></li>
+<li><p><a class="reference external" href="https://braindecode.org/stable/generated/braindecode.preprocessing.create_windows_from_events.html#braindecode.preprocessing.create_windows_from_events" title="(in Braindecode v1.5)"><code class="xref py py-func docutils literal notranslate"><span class="pre">create_windows_from_events()</span></code></a> reads
+<a class="reference external" href="https://mne.tools/stable/generated/mne.io.Raw.html#mne.io.Raw.annotations" title="(in MNE v1.12)"><code class="xref py py-attr docutils literal notranslate"><span class="pre">mne.io.Raw.annotations</span></code></a> (BIDS <code class="docutils literal notranslate"><span class="pre">events.tsv</span></code> is loaded
+automatically by EEGDash), pulls a window of fixed length around
+each event onset using
+<code class="docutils literal notranslate"><span class="pre">trial_start_offset_samples</span></code> / <code class="docutils literal notranslate"><span class="pre">trial_stop_offset_samples</span></code>,
+and uses the event code as the target. Right call for ERP and
+event-related decoding (face vs scrambled in <code class="docutils literal notranslate"><span class="pre">ds002718</span></code>, P300
+oddball, motor imagery cues). Pass <code class="docutils literal notranslate"><span class="pre">mapping={'face':</span> <span class="pre">0,</span>
+<span class="pre">'scrambled':</span> <span class="pre">1}</span></code> to relabel at construction time without touching
+the underlying epochs object.</p></li>
+</ul>
+<p>The DataLoader code from Step 4 is byte-identical in both cases.
+Switching is one line in the windowing call.</p>
+</section>
+<section id="changing-the-label-without-rebuilding-the-windows">
+<h2>Changing the label without rebuilding the windows<a class="headerlink" href="#changing-the-label-without-rebuilding-the-windows" title="Link to this heading">#</a></h2>
+<p>The most-missed edit: the <em>target</em> in
+<a class="reference external" href="https://braindecode.org/stable/generated/braindecode.datasets.WindowsDataset.html#braindecode.datasets.WindowsDataset" title="(in Braindecode v1.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">WindowsDataset</span></code></a> is a column called
+<code class="docutils literal notranslate"><span class="pre">&quot;target&quot;</span></code> on a per-record <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v3.0.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a> (the
+<a class="reference external" href="https://mne.tools/stable/generated/mne.Epochs.html#mne.Epochs" title="(in MNE v1.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">mne.Epochs</span></code></a> metadata). <code class="docutils literal notranslate"><span class="pre">__getitem__</span></code> reads
+<code class="docutils literal notranslate"><span class="pre">self.y[index]</span></code>, which was populated from that column at
+construction. Three patterns cover the practical cases.</p>
+<p><strong>Pattern 0: use a BIDS field as the target.</strong> EEGDash pushes BIDS
+entities (<code class="docutils literal notranslate"><span class="pre">subject</span></code>, <code class="docutils literal notranslate"><span class="pre">task</span></code>, <code class="docutils literal notranslate"><span class="pre">session</span></code>, <code class="docutils literal notranslate"><span class="pre">run</span></code>, <code class="docutils literal notranslate"><span class="pre">age</span></code>,
+<code class="docutils literal notranslate"><span class="pre">gender</span></code>, <code class="docutils literal notranslate"><span class="pre">sex</span></code>, plus any <code class="docutils literal notranslate"><span class="pre">participants.tsv</span></code> extras) onto each
+record’s <code class="xref py py-attr docutils literal notranslate"><span class="pre">description</span></code> at
+dataset construction. The braindecode windowing step then folds those
+values into <a class="reference external" href="https://braindecode.org/stable/generated/braindecode.datasets.BaseConcatDataset.html#braindecode.datasets.BaseConcatDataset.get_metadata" title="(in Braindecode v1.5)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">braindecode.datasets.BaseConcatDataset.get_metadata()</span></code></a>
+(one row per window), so picking a column out of that DataFrame is the
+whole adapter — <code class="docutils literal notranslate"><span class="pre">y</span> <span class="pre">=</span> <span class="pre">metadata[col].to_numpy()</span></code> is what feeds MOABB
+stratified splitters.</p>
+<p><strong>Pattern 1: relabel in place.</strong> Mutate the metadata column and the
+parallel <code class="docutils literal notranslate"><span class="pre">y</span></code> list on every per-record subdataset. Lasts for the
+Python session; no preprocessing rerun. Right call when the target
+is computed from the windows themselves (a sliding-window stage label
+the BIDS sidecar does not carry).</p>
+<p><strong>Pattern 2: map at construction time</strong> (event-based windows). Pass
+<code class="docutils literal notranslate"><span class="pre">mapping={'face':</span> <span class="pre">0,</span> <span class="pre">'scrambled':</span> <span class="pre">1}</span></code> to
+<a class="reference external" href="https://braindecode.org/stable/generated/braindecode.preprocessing.create_windows_from_events.html#braindecode.preprocessing.create_windows_from_events" title="(in Braindecode v1.5)"><code class="xref py py-func docutils literal notranslate"><span class="pre">create_windows_from_events()</span></code></a>. The
+integer codes land in <code class="docutils literal notranslate"><span class="pre">metadata['target']</span></code> directly.</p>
+<p>Pattern 0: read BIDS fields as a target without any mutation.
+<code class="docutils literal notranslate"><span class="pre">windows.get_metadata()</span></code> is the braindecode adapter: one row per
+window, with the per-record <code class="docutils literal notranslate"><span class="pre">description</span></code> columns merged in. Picking
+a column gives the per-window target.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">metadata</span></a> <span class="o">=</span> <a href="https://braindecode.org/stable/generated/braindecode.datasets.BaseConcatDataset.html#braindecode.datasets.BaseConcatDataset.get_metadata" title="braindecode.datasets.BaseConcatDataset.get_metadata" class="sphx-glr-backref-module-braindecode-datasets sphx-glr-backref-type-py-method"><span class="n">windows</span><span class="o">.</span><span class="n">get_metadata</span></a><span class="p">()</span>
+<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">y_subject</span></a> <span class="o">=</span> <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">metadata</span></a><span class="p">[</span><span class="s2">&quot;subject&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.html#pandas.Series" title="pandas.Series" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class"><span class="n">pd</span><span class="o">.</span><span class="n">Series</span></a><span class="p">(</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;rows in metadata&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">metadata</span></a><span class="p">),</span>
+        <span class="s2">&quot;task unique&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">metadata</span></a><span class="p">[</span><span class="s2">&quot;task&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">()),</span>
+        <span class="s2">&quot;subject unique&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">metadata</span></a><span class="p">[</span><span class="s2">&quot;subject&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">()),</span>
+        <span class="s2">&quot;y_subject dtype&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/routines.dtypes.html#numpy.dtypes.ObjectDType" title="numpy.dtypes.ObjectDType" class="sphx-glr-backref-module-numpy-dtypes sphx-glr-backref-type-py-attribute"><span class="n">y_subject</span><span class="o">.</span><span class="n">dtype</span></a><span class="p">),</span>
+        <span class="s2">&quot;windows.datasets[0].description[&#39;task&#39;]&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span>
+            <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">windows</span><span class="o">.</span><span class="n">datasets</span></a><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">description</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;task&quot;</span><span class="p">)</span>
+        <span class="p">),</span>
+    <span class="p">},</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">,</span>
+<span class="p">)</span><span class="o">.</span><span class="n">to_frame</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>rows in metadata</th>
+      <td>1495</td>
+    </tr>
+    <tr>
+      <th>task unique</th>
+      <td>['FaceRecognition']</td>
+    </tr>
+    <tr>
+      <th>subject unique</th>
+      <td>['002']</td>
+    </tr>
+    <tr>
+      <th>y_subject dtype</th>
+      <td>object</td>
+    </tr>
+    <tr>
+      <th>windows.datasets[0].description['task']</th>
+      <td>FaceRecognition</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<br />
+<br /><p><strong>Investigate.</strong> Every window inherited the recording’s
+<code class="docutils literal notranslate"><span class="pre">task</span></code> / <code class="docutils literal notranslate"><span class="pre">subject</span></code> from the BIDS-merged description without
+touching <code class="docutils literal notranslate"><span class="pre">windows.datasets[i].metadata['target']</span></code>. The same call
+with <code class="docutils literal notranslate"><span class="pre">target=&quot;age&quot;</span></code> would expose the participants.tsv age column;
+with <code class="docutils literal notranslate"><span class="pre">target=&quot;group&quot;</span></code> (when present) it would expose the clinical
+group label. This is what
+<span class="xref std std-doc">/auto_examples/tutorials/10_core_workflow/plot_11_leakage_safe_split</span>
+leans on for subject-aware MOABB splits.</p>
+</section>
+<section id="pattern-1-relabel-in-place">
+<h2>Pattern 1: relabel in place<a class="headerlink" href="#pattern-1-relabel-in-place" title="Link to this heading">#</a></h2>
+<p>Right call when the label cannot come from a BIDS field on the
+description: a self-supervised pretext label, a sliding-window stage
+tag, or a teacher-model output.</p>
+<p>Pattern 1: relabel one recording in place. First half gets label 0,
+second half label 1. The DataLoader picks up the new targets without
+any rebuild, and <code class="docutils literal notranslate"><span class="pre">windows.get_metadata()['target']</span></code> would now
+return these mutated values.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">sub_ds</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">windows</span><span class="o">.</span><span class="n">datasets</span></a><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">n</span></a> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sub_ds</span><span class="p">)</span>
+<a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">half</span></a> <span class="o">=</span> <a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">n</span></a> <span class="o">//</span> <span class="mi">2</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">new_targets</span></a> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">half</span></a> <span class="o">+</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">n</span></a> <span class="o">-</span> <a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">half</span></a><span class="p">)</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sub_ds</span><span class="o">.</span><span class="n">y</span></a> <span class="o">=</span> <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">new_targets</span></a>
+<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.loc.html#pandas.DataFrame.loc" title="pandas.DataFrame.loc" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-property"><span class="n">sub_ds</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">loc</span></a><span class="p">[:,</span> <span class="s2">&quot;target&quot;</span><span class="p">]</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">new_targets</span></a>
+
+<a href="https://docs.pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader" title="torch.utils.data.DataLoader" class="sphx-glr-backref-module-torch-utils-data sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">loader_relabelled</span></a> <span class="o">=</span> <a href="https://docs.pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader" title="torch.utils.data.DataLoader" class="sphx-glr-backref-module-torch-utils-data sphx-glr-backref-type-py-class"><span class="n">DataLoader</span></a><span class="p">(</span>
+    <a href="https://braindecode.org/stable/generated/braindecode.datasets.BaseConcatDataset.html#braindecode.datasets.BaseConcatDataset" title="braindecode.datasets.BaseConcatDataset" class="sphx-glr-backref-module-braindecode-datasets sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">windows</span></a><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">BATCH_SIZE</span></a><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="mi">0</span>
+<span class="p">)</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">_</span></a><span class="p">,</span> <a href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="torch.Tensor" class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">y_relabelled</span></a><span class="p">,</span> <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">_</span></a> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><a href="https://docs.pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader" title="torch.utils.data.DataLoader" class="sphx-glr-backref-module-torch-utils-data sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">loader_relabelled</span></a><span class="p">))</span>
+<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.html#pandas.Series" title="pandas.Series" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class"><span class="n">pd</span><span class="o">.</span><span class="n">Series</span></a><span class="p">(</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;before (orig)&quot;</span><span class="p">:</span> <span class="s2">&quot;all windows shared the recording-level target&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;after y&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><a href="https://docs.pytorch.org/docs/stable/generated/torch.unique.html#torch.unique" title="torch.unique" class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function"><span class="n">torch</span><span class="o">.</span><span class="n">unique</span></a><span class="p">(</span><a href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="torch.Tensor" class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">y_relabelled</span></a><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()),</span>
+        <span class="s2">&quot;first 8 windows&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">new_targets</span></a><span class="p">[:</span><span class="mi">8</span><span class="p">]),</span>
+    <span class="p">},</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">,</span>
+<span class="p">)</span><span class="o">.</span><span class="n">to_frame</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>before (orig)</th>
+      <td>all windows shared the recording-level target</td>
+    </tr>
+    <tr>
+      <th>after y</th>
+      <td>[0]</td>
+    </tr>
+    <tr>
+      <th>first 8 windows</th>
+      <td>[0, 0, 0, 0, 0, 0, 0, 0]</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<br />
+<br /><p><strong>Investigate.</strong> <code class="docutils literal notranslate"><span class="pre">y.unique()</span></code> flipped from a single value to <code class="docutils literal notranslate"><span class="pre">[0,</span>
+<span class="pre">1]</span></code>. The metadata mutation is what carried the change forward; the
+in-RAM <code class="docutils literal notranslate"><span class="pre">Raw</span></code> array is untouched and the cache file on disk is
+untouched.</p>
+<p>A common pitfall. Mutating <code class="xref py py-attr docutils literal notranslate"><span class="pre">y</span></code>
+without updating <code class="docutils literal notranslate"><span class="pre">metadata['target']</span></code> works for read-only iteration but
+breaks any downstream code (leakage-aware splits, Hub upload) that
+consults the metadata frame instead of the list. Change both together.</p>
+</section>
+<section id="result">
+<h2>Result<a class="headerlink" href="#result" title="Link to this heading">#</a></h2>
+<p>We turned one subject of <code class="docutils literal notranslate"><span class="pre">ds002718</span></code> into a reproducible PyTorch
+<code class="docutils literal notranslate"><span class="pre">DataLoader</span></code>: BIDS query, two safe preprocessors, fixed-length
+windowing, batched read. The first batch is shaped
+<code class="docutils literal notranslate"><span class="pre">(batch_size,</span> <span class="pre">n_channels,</span> <span class="pre">window_samples)</span></code> with floating-point
+dtype. A clean batch shape only confirms plumbing; signal quality and
+task design are still open questions <span class="bibtex-citation" id="id7">[<a class="reference internal" href="../../../../references.html#id19" title="Giulia Cisotto and Davide Chicco. Ten quick tips for clinical electroencephalographic (eeg) data acquisition and signal processing. PeerJ Computer Science, 10:e2256, 2024. doi:10.7717/peerj-cs.2256.">Cisotto and Chicco, 2024</a>]</span>.</p>
+</section>
+<section id="wrap-up">
+<h2>Wrap-up<a class="headerlink" href="#wrap-up" title="Link to this heading">#</a></h2>
+<p>We went from a single-record <code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code> to a
+DataLoader, named the four knobs that matter, and pointed at the
+Zarr path that unlocks random-access speed once the project outgrows
+one recording in RAM. Next:
+<span class="xref std std-doc">/auto_examples/tutorials/10_core_workflow/plot_10_preprocess_and_window</span>
+replaces the two safe preprocessors with the full montage / reference
+/ filter / resample recipe;
+<span class="xref std std-doc">/auto_examples/tutorials/10_core_workflow/plot_11_leakage_safe_split</span>
+splits the windows without leakage;
+<span class="xref std std-doc">/auto_examples/tutorials/10_core_workflow/plot_13_save_and_reuse_prepared_data</span>
+saves and reloads the windows so subsequent sessions skip the cut.</p>
+</section>
+<section id="try-it-yourself">
+<h2>Try it yourself<a class="headerlink" href="#try-it-yourself" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Re-run with <code class="docutils literal notranslate"><span class="pre">shuffle=True</span></code> and <code class="docutils literal notranslate"><span class="pre">generator=None</span></code>: the first batch
+becomes non-deterministic across runs. Add the seeded
+<a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.Generator.html#torch.Generator" title="(in PyTorch v2.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.Generator</span></code></a> back and re-verify.</p></li>
+<li><p>Set <code class="docutils literal notranslate"><span class="pre">num_workers=2</span></code> and confirm the batch shape is identical
+while wall-time changes; explain why on a 1-2-core CPU.</p></li>
+<li><p>Replace <code class="docutils literal notranslate"><span class="pre">window_stride_samples</span> <span class="pre">=</span> <span class="pre">window_size_samples</span></code> with a 50 %
+overlap (<code class="docutils literal notranslate"><span class="pre">window_size_samples</span> <span class="pre">//</span> <span class="pre">2</span></code>) and predict the new
+<code class="docutils literal notranslate"><span class="pre">len(windows)</span></code>. Then verify your prediction.</p></li>
+<li><p>Run the Zarr conversion code block on a local path
+(<code class="docutils literal notranslate"><span class="pre">repo_id=&quot;local-only/&lt;name&gt;&quot;</span></code>); compare random-read latency
+against the in-RAM <code class="docutils literal notranslate"><span class="pre">DataLoader</span></code>.</p></li>
+</ul>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<p>See <a class="reference internal" href="../../../../references.html"><span class="doc">References</span></a> for the centralised bibliography of papers
+cited above. Add or amend an entry once in
+<code class="file docutils literal notranslate"><span class="pre">docs/source/refs.bib</span></code>; every tutorial inherits the update.</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 9.836 seconds)</p>
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-auto-examples-tutorials-00-start-here-plot-02-dataset-to-dataloader-py">
+<div class="binder-badge docutils container">
+<a class="reference external image-reference" href="https://mybinder.org/v2/gh/eegdash/EEGDash/main?urlpath=lab/tree/notebooks/generated/auto_examples/tutorials/00_start_here/plot_02_dataset_to_dataloader.ipynb"><img alt="Launch binder" src="../../../../_images/binder_badge_logo5.svg" style="width: 150px;" />
+</a>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../../../../_downloads/94658674849ead727c135e0ac0e5a23d/plot_02_dataset_to_dataloader.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_02_dataset_to_dataloader.ipynb</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../../../../_downloads/b51421957d3269247c81088e58c5f406/plot_02_dataset_to_dataloader.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_02_dataset_to_dataloader.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-zip docutils container">
+<p><a class="reference download internal" download="" href="../../../../_downloads/b7d863c40caacf3e6af51e13106c2f3d/plot_02_dataset_to_dataloader.zip"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">zipped:</span> <span class="pre">plot_02_dataset_to_dataloader.zip</span></code></a></p>
+</div>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="plot_01_first_recording.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">How do I load one EEG recording from EEGDash?</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../10_core_workflow/index.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Core Decoding Workflow</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">Learning objectives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#requirements">Requirements</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dataset-vs-dataloader-the-mental-model">Dataset vs DataLoader: the mental model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#five-corollaries">Five corollaries</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-can-a-windowed-dataset-do">What can a windowed dataset do?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-build-the-dataset-lazy">Step 1: Build the dataset (lazy)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-two-safe-preprocessors">Step 2: Two safe preprocessors</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-cut-into-fixed-length-windows">Step 3: Cut into fixed-length windows</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-4-wrap-in-a-dataloader">Step 4: Wrap in a DataLoader</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pipeline-at-a-glance-the-live-shapes">Pipeline at a glance: the live shapes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reproducibility-which-random-source-draws-which-window">Reproducibility: which random source draws which window?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-5-unlock-random-access-speed-with-zarr">Step 5: Unlock random-access speed with Zarr</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-common-mistake-and-how-to-recover">A common mistake, and how to recover</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#modify">Modify</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#make">Make</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#continuous-windows-vs-event-based-epochs">Continuous windows vs event-based epochs</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#changing-the-label-without-rebuilding-the-windows">Changing the label without rebuilding the windows</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pattern-1-relabel-in-place">Pattern 1: relabel in place</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#result">Result</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#wrap-up">Wrap-up</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#try-it-yourself">Try it yourself</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb"></script>
+<script defer src="../../../../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025-2026, EEG Dash Developers.
+      <br/>
+    
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.17.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

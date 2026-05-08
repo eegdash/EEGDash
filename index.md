@@ -50,7 +50,7 @@ print(f"Found {len(records)} records.")
 
 Works with Python 3.10+. BIDS-first. Runs locally.
 
-[Run your first search](user_guide.md)
+[Run your first search](quickstart.md)
 
 [Read the Docs](api/api.md)
 

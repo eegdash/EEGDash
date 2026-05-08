@@ -19,7 +19,7 @@ The module provides the classes:
 | `BasePreprocessorOutputType`(preprocessor) | An abstract class representing a type of preprocessor output.                              |
 | `SignalOutputType`(preprocessor)           | A class for preprocessors where the output type is raw-signal-like.                        |
 
-### *class* eegdash.features.output_types.AsInputOutputType(preprocessor: Callable)
+### *class* eegdash.features.output_types.AsInputOutputType(preprocessor: [Callable](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable))
 
 Bases: `BasePreprocessorOutputType`
 
@@ -34,9 +34,9 @@ other predecessors.
 
 <!-- !! processed by numpydoc !! -->
 
-### *class* eegdash.features.output_types.BasePreprocessorOutputType(preprocessor: Callable)
+### *class* eegdash.features.output_types.BasePreprocessorOutputType(preprocessor: [Callable](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable))
 
-Bases: `ABC`, `Callable`
+Bases: [`ABC`](https://docs.python.org/3/library/abc.html#abc.ABC), [`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)
 
 An abstract class representing a type of preprocessor output.
 
@@ -45,7 +45,7 @@ An abstract class representing a type of preprocessor output.
 
 <!-- !! processed by numpydoc !! -->
 
-### *class* eegdash.features.output_types.SignalOutputType(preprocessor: Callable)
+### *class* eegdash.features.output_types.SignalOutputType(preprocessor: [Callable](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable))
 
 Bases: `BasePreprocessorOutputType`
 

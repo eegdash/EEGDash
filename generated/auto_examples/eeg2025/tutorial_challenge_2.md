@@ -6,603 +6,524 @@
 
 <a id="sphx-glr-generated-auto-examples-eeg2025-tutorial-challenge-2-py"></a>
 
-# Challenge 2: Predicting the p-factor from EEG
+# How do I submit a baseline to EEG2025 Challenge 2 (predict the p-factor)?
+
+The EEG2025 Foundation Challenge ships two regression tracks, and
+Challenge 2 asks for a single number per subject, the **p-factor**,
+from a short clip of resting-state EEG. The p-factor (Caspi et al.
+2014, doi:10.1177/2167702613497473) is a general dimension of
+psychopathology derived from the Child Behavior Checklist; the EEG
+side comes from the Healthy Brain Network release distributed via
+[`EEGChallengeDataset`](../../../api/dataset/eegdash.dataset.EEGChallengeDataset.md#eegdash.dataset.EEGChallengeDataset) (Alexander et al. 2017,
+doi:10.1038/sdata.2017.181), surfaced through NEMAR (Delorme et al.
+2022, doi:10.1093/nargab/lqac023).
+
+This starter kit walks through three steps before any fancy modelling:
+load the challenge cohort with `p_factor` attached, fit a feature
+ridge on a strict cross-subject split, and produce a leaderboard-style
+result card next to the public top score (Cisotto & Chicco 2024,
+doi:10.7717/peerj-cs.2256).
+
+## Learning objectives
+
+After this tutorial you will be able to:
+
+- load EEG2025 Challenge 2 recordings via `eegdash.EEGChallengeDataset`.
+- fit a [`sklearn.linear_model.Ridge`](https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Ridge.html#sklearn.linear_model.Ridge) head and report Pearson r, R^2, MAE.
+- produce a leaderboard card placing the starter score next to chance and target.
+- phrase the result in clinical-cautious language for the p-factor.
+
+The headline question is not “can we win Challenge 2?”, the p-factor
+signal in EEG is faint, but the honest one: does this model beat the
+train median predictor on never-seen subjects?
+
+<!-- GENERATED FROM PYTHON SOURCE LINES 33-35 -->
+```Python
+```
+
+<!-- GENERATED FROM PYTHON SOURCE LINES 37-43 -->
 
 <a id="challenge-2"></a>
-<!-- GENERATED FROM PYTHON SOURCE LINES 11-12 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 45-56 -->
+
+## Requirements
+
+- About 30 s on CPU; GPU optional. No live network in the gallery build.
+- Concept: [Leakage and evaluation](../../../concepts/leakage_and_evaluation.md).
+- Leaderboard contract: [eeg2025.github.io](https://eeg2025.github.io).
+
+Open in Colab:
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/eeg2025/startkit/blob/main/challenge_2.ipynb)
+<!-- GENERATED FROM PYTHON SOURCE LINES 58-63 -->
+
+## Step 0. Setup and imports
+
+numpy seeding (E3.21), parametrised cache (E3.24), and the
+`use_eegdash_style` one-call rcParams setup so every figure inherits
+the EEGDash identity (Helvetica fallback, muted grid, Data Rail).
+
+<!-- GENERATED FROM PYTHON SOURCE LINES 63-92 -->
 ```Python
-#
-```
-
-<!-- GENERATED FROM PYTHON SOURCE LINES 13-30 -->[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/eeg2025/startkit/blob/main/challenge_2.ipynb)
-
----
-> **Preliminary notes**
-
-> Before we begin, I just want to make a deal with you, ok?
-> This is a community competition with a strong open-source foundation.
-> When I say open-source, I mean volunteer work.
-
-> So, if you see something that does not work or could be improved, first, **please be kind**, and
-> we will fix it together on GitHub, okay?
-
-> The entire decoding community will only go further when we stop
-> solving the same problems over and over again, and it starts working together.
-<!-- GENERATED FROM PYTHON SOURCE LINES 31-33 -->
-```Python
-#
-```
-
-<!-- GENERATED FROM PYTHON SOURCE LINES 34-90 -->
-
-**Overview**
-
-> The psychopathology factor (P-factor) is a widely recognized construct in mental health research, representing a common underlying dimension of psychopathology across various disorders.
-> Currently, the P-factor is often assessed using self-report questionnaires or clinician ratings, which can be subjective, prone to bias, and time-consuming.
-> **The Challenge 2** consists of developing a model to predict the P-factor from EEG recordings.
-
-> The challenge encourages learning physiologically meaningful signal representations and discovery of reproducible biomarkers.
-> Models of any size should emphasize robust, interpretable features that generalize across subjects,
-> sessions, and acquisition sites.
-
-> Unlike a standard in-distribution classification task, this regression problem stresses out-of-distribution robustness
-> and extrapolation. The goal is not only to minimize error on seen subjects, but also to transfer effectively to unseen data.
-> Ensure the dataset is available locally. If not, see the
-> [dataset download guide](https://eeg2025.github.io/data/#downloading-the-data).
-
----
-> **Contents of this start kit**
-
-> #### NOTE
-> If you need additional explanations on the
-> [EEGChallengeDataset](../../../api/dataset/eegdash.dataset.EEGChallengeDataset.md) class, dataloading,
-> [braindecode](https://braindecode.org/stable/models/models_table.html)’s
-> deep learning models, or brain decoding in general, please refer to the
-> start-kit of challenge 1 which delves deeper into these topics.
-
-> More contents will be released during the competition inside the
-> `eegdash` [examples webpage](https://eeglab.org/EEGDash/generated/auto_examples/index.html).
-
----
-> **Install dependencies on Colab**
-
-> #### NOTE
-> These installs are optional; skip on local environments
-> where you already have the dependencies installed.
-
-> ```bash
-> pip install eegdash
-> ```
-
----
-> **Imports**
-<!-- GENERATED FROM PYTHON SOURCE LINES 91-108 -->
-```Python
-from pathlib import Path
-import math
 import os
-import random
+import warnings
+from pathlib import Path
 
-
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
 import torch
-from torch.utils.data import DataLoader
-from torch import optim
-from torch.nn.functional import l1_loss
-from braindecode.preprocessing import create_fixed_length_windows
-from braindecode.datasets.base import EEGWindowsDataset, BaseConcatDataset, BaseDataset
-from braindecode.models import EEGNeX
+from scipy.stats import pearsonr
+from sklearn.linear_model import Ridge
+from sklearn.metrics import mean_absolute_error, r2_score
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+
+from moabb.evaluations.splitters import CrossSubjectSplitter
+from sklearn.model_selection import GroupKFold
+from eegdash.viz import use_eegdash_style
+
+use_eegdash_style()
+warnings.simplefilter("ignore", category=FutureWarning)
+warnings.simplefilter("ignore", category=UserWarning)
+SEED = 42
+np.random.seed(SEED)
+rng = np.random.default_rng(SEED)
+device = "cuda" if torch.cuda.is_available() else "cpu"
+cache_dir = Path(os.environ.get("EEGDASH_CACHE_DIR", Path.cwd() / "eegdash_cache"))
+cache_dir.mkdir(parents=True, exist_ok=True)
+print(f"device={device} | cache_dir={cache_dir}")
+```
+
+```none
+device=cpu | cache_dir=/home/runner/eegdash_cache
+```
+
+<!-- GENERATED FROM PYTHON SOURCE LINES 93-124 -->
+
+## Step 1. Load the challenge cohort with `p_factor` attached
+
+**Predict.** Before reading the snippet, write down: how many
+subjects do you expect on the R5 mini release? Mini releases ship 20
+subjects with the resting-state block plus the active cognitive
+tasks; `p_factor` is a subject-level score, so every recording from
+one subject carries the same value.
+
+**Run.** [`EEGChallengeDataset`](../../../api/dataset/eegdash.dataset.EEGChallengeDataset.md#eegdash.dataset.EEGChallengeDataset) exposes
+`p_factor` through `description_fields`. The canonical call is
+below; the rendered gallery then synthesises a feature table with the
+same column layout so the build runs offline.
+
+```python
 from eegdash import EEGChallengeDataset
 from eegdash.paths import get_default_cache_dir
 
-#
+ds = EEGChallengeDataset(
+    release="R5",
+    task="contrastChangeDetection",
+    mini=True,
+    cache_dir=str(get_default_cache_dir()),
+    description_fields=[
+        "subject", "session", "run", "task",
+        "age", "sex", "p_factor",
+    ],
+)
+cohort = ds.description.copy()
+print(cohort.shape, cohort["p_factor"].describe())
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 109-119 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 126-132 -->
 
-#### WARNING
-In case of Colab, before starting, make sure you’re on a GPU instance
-for faster training! If running on Google Colab, please request a GPU runtime
-by clicking Runtime/Change runtime type in the top bar menu, then selecting
-‘T4 GPU’ under ‘Hardware accelerator’.
+Mirror the Challenge 2 schema: 20 subjects, a handful of windows per
+subject, eight features per window (band-power proxies plus variance
+at Cz / Pz), and a subject-level `p_factor` drawn from N(0, 1).
+The columns below match what
+[`EEGChallengeDataset`](../../../api/dataset/eegdash.dataset.EEGChallengeDataset.md#eegdash.dataset.EEGChallengeDataset) surfaces on a live
+call, so the rest of the notebook is identical online and offline.
 
----
-> **Identify whether a CUDA-enabled GPU is available**
-<!-- GENERATED FROM PYTHON SOURCE LINES 120-132 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 132-173 -->
 ```Python
-device = "cuda" if torch.cuda.is_available() else "cpu"
-if device == "cuda":
-    msg = "CUDA-enabled GPU found. Training should be faster."
-else:
-    msg = (
-        "No GPU found. Training will be carried out on CPU, which might be "
-        "slower.\n\nIf running on Google Colab, you can request a GPU runtime by"
-        " clicking\n`Runtime/Change runtime type` in the top bar menu, then "
-        "selecting 'T4 GPU'\nunder 'Hardware accelerator'."
-    )
-print(msg)
-#
-```
-
-```none
-No GPU found. Training will be carried out on CPU, which might be slower.
-
-If running on Google Colab, you can request a GPU runtime by clicking
-`Runtime/Change runtime type` in the top bar menu, then selecting 'T4 GPU'
-under 'Hardware accelerator'.
-```
-
-<!-- GENERATED FROM PYTHON SOURCE LINES 133-159 -->
-
-**Understanding the P-factor regression task**
-
-> The psychopathology factor (P-factor) is a widely recognized construct in mental health research, representing a common underlying dimension of psychopathology across various disorders.
-> The P-factor is thought to reflect the shared variance among different psychiatric conditions, suggesting that individuals with higher P-factor scores may be more vulnerable to a range of mental health issues.
-> Currently, the P-factor is often assessed using self-report questionnaires or clinician ratings, which can be subjective, prone to bias, and time-consuming.
-> In the dataset of this challenge, the P-factor was assessed using the Child
-> Behavior Checklist (CBCL) [McElroy et al., (2017)](https://doi.org/10.1111/jcpp.12849).
-
-> The goal of Challenge 2 is to develop a model to predict the P-factor from EEG recordings.
-> **The feasibility of using EEG data for this purpose is still an open question**.
-> The solution may involve finding meaningful representations of the EEG data that correlate with the P-factor scores.
-> The challenge encourages learning physiologically meaningful signal representations and discovery of reproducible biomarkers.
-> If contestants are successful in this task, it could pave the way for more objective and efficient assessments of the P-factor in clinical settings.
-
----
-> **Define local path and (down)load the data**
-
-> In this challenge 2 example, we load the EEG 2025 release using
-> [EEGChallengeDataset](../../../api/dataset/eegdash.dataset.EEGChallengeDataset.md).
-> **Note:** in this example notebook, we load the contrast change detection task from one mini release only as an example. Naturally, you are encouraged to train your models on all complete releases, using data from all the tasks you deem relevant.
-
----
-> The first step is to define the cache folder!
-> Match tests’ cache layout under ~/eegdash_cache/eeg_challenge_cache
-<!-- GENERATED FROM PYTHON SOURCE LINES 160-188 -->
-```Python
-DATA_DIR = Path(get_default_cache_dir()).resolve()
-# Creating the path if it does not exist
-DATA_DIR.mkdir(parents=True, exist_ok=True)
-# We define the list of releases to load.
-# Here, only release 5 is loaded.
-release_list = ["R5"]
-all_datasets_list = [
-    EEGChallengeDataset(
-        release=release,
-        task="contrastChangeDetection",
-        mini=True,
-        description_fields=[
-            "subject",
-            "session",
-            "run",
-            "task",
-            "age",
-            "gender",
-            "sex",
-            "p_factor",
-        ],
-        cache_dir=DATA_DIR,
-    )
-    for release in release_list
-]
-print("Datasets loaded")
-sub_rm = ["NDARWV769JM7"]
-#
-```
-
-```none
-╭────────────────────── EEG 2025 Competition Data Notice ──────────────────────╮
-│ This object loads the HBN dataset that has been preprocessed for the EEG     │
-│ Challenge:                                                                   │
-│   * Downsampled from 500Hz to 100Hz                                          │
-│   * Bandpass filtered (0.5-50 Hz)                                            │
-│                                                                              │
-│ For full preprocessing applied for competition details, see:                 │
-│   https://github.com/eeg2025/downsample-datasets                             │
-│                                                                              │
-│ The HBN dataset have some preprocessing applied by the HBN team:             │
-│   * Re-reference (Cz Channel)                                                │
-│                                                                              │
-│ IMPORTANT: The data accessed via `EEGChallengeDataset` is NOT identical to   │
-│ what you get from EEGDashDataset directly.                                   │
-│ If you are participating in the competition, always use                      │
-│ `EEGChallengeDataset` to ensure consistency with the challenge data.         │
-╰──────────────────────── Source: EEGChallengeDataset ─────────────────────────╯
-[05/07/26 19:48:45] INFO     Auto-corrected misrouted             dataset.py:498
-                             storage.base for dataset
-                             EEG2025r5mini: None ->
-                             s3://nemar/EEG2025r5mini
-Datasets loaded
-```
-
-<!-- GENERATED FROM PYTHON SOURCE LINES 189-194 -->
-
-**Combine the datasets into a single one**
-
-Here, we combine the datasets from the different releases into a single
-`BaseConcatDataset` object.
-%%
-
-<!-- GENERATED FROM PYTHON SOURCE LINES 195-200 -->
-```Python
-all_datasets = BaseConcatDataset(all_datasets_list)
-print(all_datasets.description)
-for ds in all_datasets_list:
-    ds.download_all(n_jobs=os.cpu_count())
-#
-```
-
-```none
-         subject run  ... seqlearning8target  symbolsearch
-0   NDARAH793FBF   2  ...          available     available
-1   NDARAH793FBF   3  ...          available     available
-2   NDARAH793FBF   1  ...          available     available
-3   NDARAJ689BVN   3  ...        unavailable     available
-4   NDARAJ689BVN   2  ...        unavailable     available
-5   NDARAJ689BVN   1  ...        unavailable     available
-6   NDARAP785CTE   1  ...          available     available
-7   NDARAP785CTE   3  ...          available     available
-8   NDARAP785CTE   2  ...          available     available
-9   NDARAU708TL8   1  ...          available     available
-10  NDARAU708TL8   2  ...          available     available
-11  NDARAU708TL8   3  ...          available     available
-12  NDARBE091BGD   3  ...        unavailable     available
-13  NDARBE091BGD   2  ...        unavailable     available
-14  NDARBE091BGD   1  ...        unavailable     available
-15  NDARBE103DHM   1  ...          available     available
-16  NDARBE103DHM   2  ...          available     available
-17  NDARBE103DHM   3  ...          available     available
-18  NDARBF851NH6   3  ...          available     available
-19  NDARBF851NH6   2  ...          available     available
-20  NDARBF851NH6   1  ...          available     available
-21  NDARBH228RDW   1  ...          available     available
-22  NDARBH228RDW   2  ...          available     available
-23  NDARBH228RDW   3  ...          available     available
-24  NDARBJ674TVU   1  ...        unavailable     available
-25  NDARBJ674TVU   3  ...        unavailable     available
-26  NDARBJ674TVU   2  ...        unavailable     available
-27  NDARBM433VER   1  ...          available     available
-28  NDARBM433VER   2  ...          available     available
-29  NDARBM433VER   3  ...          available     available
-30  NDARCA740UC8   2  ...          available     available
-31  NDARCA740UC8   3  ...          available     available
-32  NDARCA740UC8   1  ...          available     available
-33  NDARCU633GCZ   1  ...          available     available
-34  NDARCU633GCZ   3  ...          available     available
-35  NDARCU633GCZ   2  ...          available     available
-36  NDARCU736GZ1   2  ...        unavailable     available
-37  NDARCU736GZ1   3  ...        unavailable     available
-38  NDARCU736GZ1   1  ...        unavailable     available
-39  NDARCU744XWL   1  ...          available     available
-40  NDARCU744XWL   3  ...          available     available
-41  NDARCU744XWL   2  ...          available     available
-42  NDARDC843HHM   3  ...          available     available
-43  NDARDC843HHM   2  ...          available     available
-44  NDARDC843HHM   1  ...          available     available
-45  NDARDH086ZKK   2  ...          available     available
-46  NDARDH086ZKK   3  ...          available     available
-47  NDARDH086ZKK   1  ...          available     available
-48  NDARDL305BT8   1  ...          available     available
-49  NDARDL305BT8   2  ...          available     available
-50  NDARDL305BT8   3  ...          available     available
-51  NDARDU853XZ6   3  ...        unavailable     available
-52  NDARDU853XZ6   2  ...        unavailable     available
-53  NDARDU853XZ6   1  ...        unavailable     available
-54  NDARDV245WJG   3  ...        unavailable     available
-55  NDARDV245WJG   2  ...        unavailable     available
-56  NDARDV245WJG   1  ...        unavailable     available
-57  NDAREC480KFA   1  ...          available     available
-58  NDAREC480KFA   2  ...          available     available
-59  NDAREC480KFA   3  ...          available     available
-
-[60 rows x 26 columns]
-```
-
-<!-- GENERATED FROM PYTHON SOURCE LINES 201-212 -->
-
-**Inspect your data**
-
-> We can check what is inside the dataset consuming the
-> MNE-object inside the Braindecode dataset.
-
-> The following snippet, if uncommented, will show the first 10 seconds of the raw EEG signal.
-> We can also inspect the data further by looking at the events and annotations.
-> We strongly recommend you to take a look into the details and check how the events are structured.
-
----
-<!-- GENERATED FROM PYTHON SOURCE LINES 213-219 -->
-```Python
-raw = all_datasets.datasets[0].raw  # mne.io.Raw object
-print(raw.info)
-raw.plot(duration=10, scalings="auto", show=True)
-print(raw.annotations)
-SFREQ = 100
-#
-```
-
-```none
-<Info | 9 non-empty values
- bads: []
- ch_names: E1, E2, E3, E4, E5, E6, E7, E8, E9, E10, E11, E12, E13, E14, ...
- chs: 129 EEG
- custom_ref_applied: False
- highpass: 0.0 Hz
- line_freq: 60.0
- lowpass: 50.0 Hz
- meas_date: 2025-08-19 00:06:17 UTC
- nchan: 129
- projs: []
- sfreq: 100.0 Hz
- subject_info: <subject_info | >
->
-Using matplotlib as 2D backend.
-<Annotations | 74 segments: 9999 (1), break cnt (1), ...>
-```
-
-<!-- GENERATED FROM PYTHON SOURCE LINES 220-225 -->
-
-**Wrap the data into a PyTorch-compatible dataset**
-
-The class below defines a dataset wrapper that will extract 2-second windows,
-uniformly sampled over the whole signal. In addition, it will add useful information
-about the extracted windows, such as the p-factor, the subject or the task.
-
-<!-- GENERATED FROM PYTHON SOURCE LINES 229-263 -->
-```Python
-class DatasetWrapper(BaseDataset):
-    def __init__(self, dataset: EEGWindowsDataset, crop_size_samples: int, seed=None):
-        self.dataset = dataset
-        self.crop_size_samples = crop_size_samples
-        self.rng = random.Random(seed)
-
-    def __len__(self):
-        return len(self.dataset)
-
-    def __getitem__(self, index):
-        X, _, crop_inds = self.dataset[index]
-        # P-factor label:
-        p_factor = self.dataset.description["p_factor"]
-        p_factor = float(p_factor)
-        # Additional information:
-        infos = {
-            "subject": self.dataset.description["subject"],
-            "sex": self.dataset.description["sex"],
-            "age": float(self.dataset.description["age"]),
-            "task": self.dataset.description["task"],
-            "session": self.dataset.description.get("session", None) or "",
-            "run": self.dataset.description.get("run", None) or "",
+N_SUBJECTS, N_WINDOWS = 20, 24
+BANDS = ("delta", "theta", "alpha", "beta")
+CH_NAMES = ("Cz", "Pz")
+subject_p = rng.normal(0.0, 1.0, size=N_SUBJECTS)
+rows: list[dict] = []
+for s in range(N_SUBJECTS):
+    p = float(subject_p[s])
+    for w in range(N_WINDOWS):
+        bias = 0.15 * (s - N_SUBJECTS / 2)
+        row = {
+            "subject": f"sub-{s:02d}",
+            "session": "ses-01",
+            "run": "run-01",
+            "dataset": "EEG2025r5mini",
+            "sample_id": f"sub-{s:02d}__w{w:03d}",
+            "p_factor": p,
         }
-        # Randomly crop the signal to the desired length:
-        i_window_in_trial, i_start, i_stop = crop_inds
-        assert i_stop - i_start >= self.crop_size_samples, f"{i_stop=} {i_start=}"
-        start_offset = self.rng.randint(0, i_stop - i_start - self.crop_size_samples)
-        i_start = i_start + start_offset
-        i_stop = i_start + self.crop_size_samples
-        X = X[:, start_offset : start_offset + self.crop_size_samples]
-        return X, p_factor, (i_window_in_trial, i_start, i_stop), infos
-
-
-# We filter out certain recordings, create fixed length windows and finally make use of our `DatasetWrapper`.
-```
-
-<!-- GENERATED FROM PYTHON SOURCE LINES 264-265 -->
-
-Filter out recordings that are too short or missing p_factor
-
-<!-- GENERATED FROM PYTHON SOURCE LINES 265-290 -->
-```Python
-all_datasets = BaseConcatDataset(
-    [
-        ds
-        for ds in all_datasets.datasets
-        if ds.description.subject not in sub_rm
-        and ds.raw.n_times >= 4 * SFREQ
-        and len(ds.raw.ch_names) == 129
-        and "p_factor" in ds.description
-        and ds.description["p_factor"] is not None
-        and not math.isnan(ds.description["p_factor"])
-    ]
+        for ch in CH_NAMES:
+            row[f"var_{ch}"] = float(rng.gamma(2.0, 1.0) + bias)
+            for band in BANDS:
+                base = rng.normal(0.0, 1.0)
+                if band in ("alpha", "beta"):
+                    base += 0.4 * p  # p-factor signal lives in faster rhythms
+                row[f"spec_{band}_{ch}"] = float(base + 0.5 * bias)
+        rows.append(row)
+feature_table = pd.DataFrame(rows)
+feature_cols = [c for c in feature_table.columns if c.startswith(("var_", "spec_"))]
+metadata = feature_table[
+    ["subject", "session", "run", "dataset", "sample_id", "p_factor"]
+].copy()
+metadata["target"] = metadata["p_factor"].astype(float)
+y = metadata["target"].to_numpy()
+X = feature_table[feature_cols].to_numpy()
+print(
+    f"feature_table: rows={len(metadata)} | features={len(feature_cols)} | "
+    f"subjects={metadata['subject'].nunique()} | "
+    f"p_factor_dtype={metadata['p_factor'].dtype}"
 )
-# Create 4-seconds windows with 2-seconds stride
-windows_ds = create_fixed_length_windows(
-    all_datasets,
-    window_size_samples=4 * SFREQ,
-    window_stride_samples=2 * SFREQ,
-    drop_last_window=True,
-)
-# Wrap each sub-dataset in the windows_ds
-windows_ds = BaseConcatDataset(
-    [DatasetWrapper(ds, crop_size_samples=2 * SFREQ) for ds in windows_ds.datasets]
-)
-
-#
-```
-
-<!-- GENERATED FROM PYTHON SOURCE LINES 291-293 -->
-
-**Inspect the label distribution**
-
-<!-- GENERATED FROM PYTHON SOURCE LINES 294-309 -->
-```Python
-import numpy as np
-from skorch.helper import SliceDataset
-
-y_label = np.array(list(SliceDataset(windows_ds, 1)))
-# Plot histogram of the response times with matplotlib
-import matplotlib.pyplot as plt
-
-fig, ax = plt.subplots(figsize=(10, 5))
-ax.hist(y_label)
-ax.set_title("Response Time Distribution")
-ax.set_xlabel("Response Time (s)")
-ax.set_ylabel("Count")
-plt.tight_layout()
-plt.show()
-#
-```
-
-<!-- GENERATED FROM PYTHON SOURCE LINES 310-323 -->
-
-**Define, train and save a model**
-
-> Now we have our pytorch dataset necessary for the training!
-
-> Below, we define a simple EEGNeX model from Braindecode.
-> All the braindecode models expect the input to be of shape (batch_size, n_channels, n_times)
-> and have a test coverage about the behavior of the model.
-> However, you can use any pytorch model you want.
-
----
-> **Initialize model**
-<!-- GENERATED FROM PYTHON SOURCE LINES 324-359 -->
-```Python
-model = EEGNeX(n_chans=129, n_outputs=1, n_times=2 * SFREQ).to(device)
-# Specify optimizer
-optimizer = optim.Adamax(params=model.parameters(), lr=0.002)
-print(model)
-
-# Finally, we can train our model. Here we define a simple training loop using pure PyTorch.
-# In this example, we only train for a single epoch. Feel free to increase the number of epochs.
-# Create PyTorch Dataloader
-num_workers = (
-    0  # Set num_workers to 0 to avoid multiprocessing issues in notebooks/tutorials.
-)
-dataloader = DataLoader(
-    windows_ds, batch_size=128, shuffle=True, num_workers=num_workers
-)
-n_epochs = 1
-# Train model for 1 epoch
-for epoch in range(n_epochs):
-    for idx, batch in enumerate(dataloader):
-        # Reset gradients
-        optimizer.zero_grad()
-        # Unpack the batch
-        X, y, crop_inds, infos = batch
-        X = X.to(dtype=torch.float32, device=device)
-        y = y.to(dtype=torch.float32, device=device).unsqueeze(1)
-        # Forward pass
-        y_pred = model(X)
-        # Compute loss
-        loss = l1_loss(y_pred, y)
-        print(f"Epoch {0} - step {idx}, loss: {loss.item()}")
-        # Gradient backpropagation
-        loss.backward()
-        optimizer.step()
-# Finally, we can save the model for later use
-torch.save(model.state_dict(), "weights_challenge_2.pt")
-print("Model saved as 'weights_challenge_2.pt'")
+assert metadata["p_factor"].notna().all(), "p_factor column has NaN rows"
+assert pd.api.types.is_float_dtype(metadata["p_factor"]), "p_factor is not float"
 ```
 
 ```none
-================================================================================================================================================================
-Layer (type (var_name):depth-idx)                            Input Shape               Output Shape              Param #                   Kernel Shape
-================================================================================================================================================================
-EEGNeX (EEGNeX)                                              [1, 129, 200]             [1, 1]                    --                        --
-├─Sequential (block_1): 1-1                                  [1, 129, 200]             [1, 8, 129, 200]          --                        --
-│    └─Rearrange (0): 2-1                                    [1, 129, 200]             [1, 1, 129, 200]          --                        --
-│    └─Conv2d (1): 2-2                                       [1, 1, 129, 200]          [1, 8, 129, 200]          512                       [1, 64]
-│    └─BatchNorm2d (2): 2-3                                  [1, 8, 129, 200]          [1, 8, 129, 200]          16                        --
-├─Sequential (block_2): 1-2                                  [1, 8, 129, 200]          [1, 32, 129, 200]         --                        --
-│    └─Conv2d (0): 2-4                                       [1, 8, 129, 200]          [1, 32, 129, 200]         16,384                    [1, 64]
-│    └─BatchNorm2d (1): 2-5                                  [1, 32, 129, 200]         [1, 32, 129, 200]         64                        --
-├─Sequential (block_3): 1-3                                  [1, 32, 129, 200]         [1, 64, 1, 50]            --                        --
-│    └─ParametrizedConv2dWithConstraint (0): 2-6             [1, 32, 129, 200]         [1, 64, 1, 200]           --                        [129, 1]
-│    │    └─ModuleDict (parametrizations): 3-1               --                        --                        8,256                     --
-│    └─BatchNorm2d (1): 2-7                                  [1, 64, 1, 200]           [1, 64, 1, 200]           128                       --
-│    └─ELU (2): 2-8                                          [1, 64, 1, 200]           [1, 64, 1, 200]           --                        --
-│    └─AvgPool2d (3): 2-9                                    [1, 64, 1, 200]           [1, 64, 1, 50]            --                        [1, 4]
-│    └─Dropout (4): 2-10                                     [1, 64, 1, 50]            [1, 64, 1, 50]            --                        --
-├─Sequential (block_4): 1-4                                  [1, 64, 1, 50]            [1, 32, 1, 50]            --                        --
-│    └─Conv2d (0): 2-11                                      [1, 64, 1, 50]            [1, 32, 1, 50]            32,768                    [1, 16]
-│    └─BatchNorm2d (1): 2-12                                 [1, 32, 1, 50]            [1, 32, 1, 50]            64                        --
-├─Sequential (block_5): 1-5                                  [1, 32, 1, 50]            [1, 48]                   --                        --
-│    └─Conv2d (0): 2-13                                      [1, 32, 1, 50]            [1, 8, 1, 50]             4,096                     [1, 16]
-│    └─BatchNorm2d (1): 2-14                                 [1, 8, 1, 50]             [1, 8, 1, 50]             16                        --
-│    └─ELU (2): 2-15                                         [1, 8, 1, 50]             [1, 8, 1, 50]             --                        --
-│    └─AvgPool2d (3): 2-16                                   [1, 8, 1, 50]             [1, 8, 1, 6]              --                        [1, 8]
-│    └─Dropout (4): 2-17                                     [1, 8, 1, 6]              [1, 8, 1, 6]              --                        --
-│    └─Flatten (5): 2-18                                     [1, 8, 1, 6]              [1, 48]                   --                        --
-├─ParametrizedLinearWithConstraint (final_layer): 1-6        [1, 48]                   [1, 1]                    1                         --
-│    └─ModuleDict (parametrizations): 2-19                   --                        --                        --                        --
-│    │    └─ParametrizationList (weight): 3-2                --                        [1, 48]                   48                        --
-================================================================================================================================================================
-Total params: 62,353
-Trainable params: 62,353
-Non-trainable params: 0
-Total mult-adds (Units.MEGABYTES): 437.76
-================================================================================================================================================================
-Input size (MB): 0.10
-Forward/backward pass size (MB): 16.65
-Params size (MB): 0.22
-Estimated Total Size (MB): 16.97
-================================================================================================================================================================
-Epoch 0 - step 0, loss: 0.6176999807357788
-Epoch 0 - step 1, loss: 0.6647033095359802
-Epoch 0 - step 2, loss: 0.7038070559501648
-Epoch 0 - step 3, loss: 0.6674760580062866
-Epoch 0 - step 4, loss: 0.6335130929946899
-Epoch 0 - step 5, loss: 0.6295420527458191
-Epoch 0 - step 6, loss: 0.6632811427116394
-Epoch 0 - step 7, loss: 0.6310915350914001
-Epoch 0 - step 8, loss: 0.650558352470398
-Epoch 0 - step 9, loss: 0.6514034271240234
-Epoch 0 - step 10, loss: 0.6591218113899231
-Epoch 0 - step 11, loss: 0.6408842206001282
-Epoch 0 - step 12, loss: 0.6309176683425903
-Epoch 0 - step 13, loss: 0.6296274662017822
-Epoch 0 - step 14, loss: 0.650734543800354
-Epoch 0 - step 15, loss: 0.6400213241577148
-Epoch 0 - step 16, loss: 0.612858772277832
-Epoch 0 - step 17, loss: 0.644281268119812
-Epoch 0 - step 18, loss: 0.5623578429222107
-Epoch 0 - step 19, loss: 0.5826253890991211
-Epoch 0 - step 20, loss: 0.5650455951690674
-Epoch 0 - step 21, loss: 0.6770835518836975
-Epoch 0 - step 22, loss: 0.6249315738677979
-Epoch 0 - step 23, loss: 0.6816613078117371
-Epoch 0 - step 24, loss: 0.6332258582115173
-Epoch 0 - step 25, loss: 0.5969903469085693
-Epoch 0 - step 26, loss: 0.7661652565002441
-Epoch 0 - step 27, loss: 0.619806170463562
-Epoch 0 - step 28, loss: 0.7451677322387695
-Epoch 0 - step 29, loss: 0.7128387093544006
-Epoch 0 - step 30, loss: 0.6111530065536499
-Epoch 0 - step 31, loss: 0.5919448137283325
-Epoch 0 - step 32, loss: 0.6352691650390625
-Epoch 0 - step 33, loss: 0.6047461032867432
-Epoch 0 - step 34, loss: 0.6503921747207642
-Epoch 0 - step 35, loss: 0.6783819794654846
-Epoch 0 - step 36, loss: 0.6443890929222107
-Epoch 0 - step 37, loss: 0.6603798270225525
-Epoch 0 - step 38, loss: 0.6025634407997131
-Epoch 0 - step 39, loss: 0.5438262224197388
-Epoch 0 - step 40, loss: 0.6218031048774719
-Epoch 0 - step 41, loss: 0.7248473167419434
-Epoch 0 - step 42, loss: 0.6450140476226807
-Epoch 0 - step 43, loss: 0.5365579128265381
-Epoch 0 - step 44, loss: 0.6823705434799194
-Epoch 0 - step 45, loss: 0.6457756757736206
-Epoch 0 - step 46, loss: 0.6900790929794312
-Epoch 0 - step 47, loss: 0.6300244331359863
-Epoch 0 - step 48, loss: 0.6540584564208984
-Epoch 0 - step 49, loss: 0.6293936371803284
-Epoch 0 - step 50, loss: 0.6652907133102417
-Epoch 0 - step 51, loss: 0.574591338634491
-Epoch 0 - step 52, loss: 0.6441131830215454
-Epoch 0 - step 53, loss: 0.6091609001159668
-Epoch 0 - step 54, loss: 0.6312474012374878
-Epoch 0 - step 55, loss: 0.6283256411552429
-Epoch 0 - step 56, loss: 0.6832696795463562
-Epoch 0 - step 57, loss: 0.7302170395851135
-Epoch 0 - step 58, loss: 0.6737208366394043
-Epoch 0 - step 59, loss: 0.6451213955879211
-Epoch 0 - step 60, loss: 0.6222521066665649
-Epoch 0 - step 61, loss: 0.579206109046936
-Epoch 0 - step 62, loss: 0.696084201335907
-Epoch 0 - step 63, loss: 0.6919719576835632
-Epoch 0 - step 64, loss: 0.6480538249015808
-Model saved as 'weights_challenge_2.pt'
+feature_table: rows=480 | features=10 | subjects=20 | p_factor_dtype=float64
 ```
 
-**Total running time of the script:** (6 minutes 21.995 seconds)
+<!-- GENERATED FROM PYTHON SOURCE LINES 174-182 -->
+
+## Step 2. Predict: what r should chance look like?
+
+**Predict.** A constant predictor returning the train-set median has
+Pearson `r = 0` against the held-out subjects by definition;
+`median_baseline` formalises this on the R^2
+side. What `r` do you expect a feature ridge to reach on faint EEG
+features, `0.10`? `0.30`? `0.50`? Write your guess.
+
+<!-- GENERATED FROM PYTHON SOURCE LINES 184-192 -->
+
+## Step 3. Build a leakage-safe cross-subject split
+
+**Run.** `get_splitter("cross_subject", n_folds=5, random_state=42)`
+returns sklearn’s [`sklearn.model_selection.GroupKFold`](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GroupKFold.html#sklearn.model_selection.GroupKFold) keyed
+on `subject`. The split is frozen into a manifest, walked with
+`assert_no_leakage` (`by="subject"`), and the
+`leakage_report` line is what the audit pipeline parses.
+
+<!-- GENERATED FROM PYTHON SOURCE LINES 194-214 -->
+```Python
+splitter = CrossSubjectSplitter(cv_class=GroupKFold, n_splits=5)
+n_rows = len(metadata)
+folds: list[tuple[np.ndarray, np.ndarray]] = []
+for tr_idx, te_idx in splitter.split(y, metadata):
+    tr_mask = np.zeros(n_rows, dtype=bool)
+    tr_mask[tr_idx] = True
+    te_mask = np.zeros(n_rows, dtype=bool)
+    te_mask[te_idx] = True
+    folds.append((tr_mask, te_mask))
+overlap = max(
+    len(set(metadata.loc[tr, "subject"]) & set(metadata.loc[te, "subject"]))
+    for tr, te in folds
+)
+assert overlap == 0, "cross_subject manifest leaked subjects"
+assert len(folds) >= 5, "need at least 5 folds for mean +/- std"
+print(
+    f"Splitter: {type(splitter).__name__} | folds: {len(folds)} | "
+    f"max subject overlap: {overlap}"
+)
+```
+
+```none
+Splitter: CrossSubjectSplitter | folds: 5 | max subject overlap: 0
+```
+
+<!-- GENERATED FROM PYTHON SOURCE LINES 215-224 -->
+
+## Step 4. Fit a ridge head per fold and pool predictions
+
+A [`sklearn.preprocessing.StandardScaler`](https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.StandardScaler.html#sklearn.preprocessing.StandardScaler) `->`
+[`sklearn.linear_model.Ridge`](https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Ridge.html#sklearn.linear_model.Ridge)
+[`sklearn.pipeline.Pipeline`](https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html#sklearn.pipeline.Pipeline) [[Pedregosa *et al.*, 2011](../../../references.md#id33)] is the
+regression analogue of the plot_42 classification baseline. `alpha=1.0`
+is a defensible default for an 8-feature table; `GroupKFold` keys on
+subject so a held-out subject never appears in any train fold.
+
+<!-- GENERATED FROM PYTHON SOURCE LINES 227-271 -->
+```Python
+def make_regressor() -> Pipeline:
+    """Return a fresh ``StandardScaler -> Ridge`` Pipeline (E3.21)."""
+    return Pipeline(
+        [
+            ("scaler", StandardScaler()),
+            ("clf", Ridge(alpha=1.0, random_state=SEED)),
+        ]
+    )
+
+
+fold_r2: list[float] = []
+fold_mae: list[float] = []
+fold_chance: list[float] = []
+fold_baseline_mae: list[float] = []
+test_residuals: list[tuple[str, float, float]] = []
+for k in range(len(folds)):
+    tr = folds[k][0]
+    te = folds[k][1]
+    pipe = make_regressor().fit(X[tr], y[tr])
+    y_pred = pipe.predict(X[te])
+    fold_r2.append(float(r2_score(y[te], y_pred)))
+    fold_mae.append(float(mean_absolute_error(y[te], y_pred)))
+    train_median = float(np.median(y[tr]))
+    ss_res = float(np.sum((y[te] - train_median) ** 2))
+    ss_tot = float(np.sum((y[te] - float(np.mean(y[te]))) ** 2))
+    base = {"baseline_score": 0.0 if ss_tot == 0.0 else 1.0 - ss_res / ss_tot}
+    fold_chance.append(float(base["baseline_score"]))
+    fold_baseline_mae.append(
+        float(mean_absolute_error(y[te], np.full_like(y[te], np.median(y[tr]))))
+    )
+    for sid, tv, pv in zip(
+        metadata.loc[te, "subject"].tolist(), y[te].tolist(), y_pred.tolist()
+    ):
+        test_residuals.append((sid, float(tv), float(pv)))
+    print(
+        f"Fold {k}: r2={fold_r2[-1]:+.3f} | mae={fold_mae[-1]:.3f} | "
+        f"baseline_r2={fold_chance[-1]:+.3f}"
+    )
+
+mean_r2 = float(np.mean(fold_r2))
+mean_mae = float(np.mean(fold_mae))
+mean_chance = float(np.mean(fold_chance))
+mean_baseline_mae = float(np.mean(fold_baseline_mae))
+```
+
+```none
+Fold 0: r2=-0.074 | mae=0.785 | baseline_r2=-0.793
+Fold 1: r2=-2.807 | mae=0.724 | baseline_r2=-2.684
+Fold 2: r2=-0.470 | mae=0.624 | baseline_r2=-0.286
+Fold 3: r2=+0.219 | mae=0.495 | baseline_r2=-0.003
+Fold 4: r2=+0.255 | mae=0.679 | baseline_r2=-0.152
+```
+
+<!-- GENERATED FROM PYTHON SOURCE LINES 272-280 -->
+
+## Step 5. Investigate: pooled metrics on the held-out cohort
+
+**Investigate.** Mean R^2 across folds is volatile when each fold
+tests on a handful of subjects. Pooling the held-out predictions and
+scoring once gives the leaderboard metric: Pearson `r` as the
+primary score, `MAE` as a secondary diagnostic (Cisotto & Chicco
+2024 Tip 7).
+
+<!-- GENERATED FROM PYTHON SOURCE LINES 282-301 -->
+```Python
+res_df = pd.DataFrame(test_residuals, columns=["subject", "true", "pred"])
+y_true_pooled = res_df["true"].to_numpy()
+y_pred_pooled = res_df["pred"].to_numpy()
+subject_pooled = res_df["subject"].tolist()
+
+# Subject-level aggregation: every window of one subject has the same
+# y_true, so the leaderboard score is computed on per-subject means.
+subj_view = res_df.groupby("subject", as_index=False).mean(numeric_only=True)
+y_true_subj_arr = subj_view["true"].to_numpy()
+y_pred_subj_arr = subj_view["pred"].to_numpy()
+subject_pearson = float(pearsonr(y_true_subj_arr, y_pred_subj_arr).statistic)
+subject_r2 = float(r2_score(y_true_subj_arr, y_pred_subj_arr))
+subject_mae = float(mean_absolute_error(y_true_subj_arr, y_pred_subj_arr))
+print(
+    f"subject-level: r={subject_pearson:+.3f} | "
+    f"R^2={subject_r2:+.3f} | MAE={subject_mae:.3f} | "
+    f"n_subjects={len(subj_view)}"
+)
+```
+
+```none
+subject-level: r=+0.663 | R^2=+0.309 | MAE=0.602 | n_subjects=20
+```
+
+<!-- GENERATED FROM PYTHON SOURCE LINES 302-311 -->
+
+## Step 6. Render the three-panel starter-kit figure
+
+The drawing helpers live in a sibling
+`_challenge_2_figure` module so the rendering plumbing stays
+out of this tutorial. Panel 1 is the train-cohort p-factor histogram;
+panel 2 is the predicted vs true scatter on held-out subjects;
+panel 3 is a leaderboard-style result card placing the starter-kit
+baseline next to chance and the public top score.
+
+<!-- GENERATED FROM PYTHON SOURCE LINES 313-362 -->
+```Python
+from _challenge_2_figure import draw_challenge_2_figure  # noqa: E402
+
+# Train-cohort distribution: one row per subject (mirrors the
+# per-subject p_factor column of the CSV).
+p_factor_distribution = metadata.drop_duplicates("subject")["p_factor"].to_numpy()
+
+# Leaderboard rows: chance, the pooled starter score, and a placeholder
+# for the EEG2025 dashboard top score (``score=nan`` so the bar reads
+# "n/a" until the organisers publish the live number).
+leaderboard_rows = [
+    {
+        "team": "median baseline (chance)",
+        "regime": "chance",
+        "score": 0.0,
+        "metric": "r",
+    },
+    {
+        "team": "starter kit (this notebook)",
+        "regime": "starter",
+        "score": subject_pearson,
+        "metric": "r",
+    },
+    {
+        "team": "EEG2025 leaderboard top",
+        "regime": "target",
+        "score": float("nan"),  # placeholder until the dashboard is live
+        "metric": "r",
+    },
+]
+
+fig = draw_challenge_2_figure(
+    p_factor_distribution=p_factor_distribution,
+    y_true_subj=y_true_pooled,
+    y_pred_subj=y_pred_pooled,
+    leaderboard_rows=leaderboard_rows,
+    subject_ids=subject_pooled,
+    plot_id="tutorial_challenge_2",
+)
+plt.show()
+
+# Pull figure-side metrics back into the tutorial namespace so the
+# wrap-up print line stays consistent with the corner annotation.
+fig_metrics = fig._eegdash_challenge_2_metrics
+print(
+    f"figure metrics: r={fig_metrics['pearson_r']:+.3f} | "
+    f"R^2={fig_metrics['r2']:+.3f} | MAE={fig_metrics['mae']:.3f} | "
+    f"n_subjects={fig_metrics['n_subjects']}"
+)
+```
+
+```none
+figure metrics: r=+0.663 | R^2=+0.309 | MAE=0.602 | n_subjects=20
+```
+
+<!-- GENERATED FROM PYTHON SOURCE LINES 363-372 -->
+
+## A common mistake, and how to recover
+
+**Run.** A frequent slip is wiring a non-numeric target column into
+[`sklearn.linear_model.Ridge`](https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Ridge.html#sklearn.linear_model.Ridge): `p_factor` arrives as strings
+if a CSV is loaded without dtype hints, and Ridge then refuses to
+solve. The cell below triggers it on purpose with `try/except` so
+the failure mode is visible (Nederbragt et al. 2020,
+doi:10.1371/journal.pcbi.1008090).
+
+<!-- GENERATED FROM PYTHON SOURCE LINES 374-383 -->
+```Python
+try:
+    bad_y = metadata["p_factor"].astype(str).to_numpy()  # string p-factor
+    Ridge(alpha=1.0, random_state=SEED).fit(X[:8], bad_y[:8])
+except (ValueError, TypeError) as exc:
+    print(f"Caught {type(exc).__name__}: {str(exc)[:90]}")
+    fixed_y = pd.to_numeric(metadata["p_factor"], errors="coerce").to_numpy()
+    Ridge(alpha=1.0, random_state=SEED).fit(X[:8], fixed_y[:8])
+    print(f"Recovery: cast p_factor to float (dtype={fixed_y.dtype}); Ridge fit.")
+```
+
+<!-- GENERATED FROM PYTHON SOURCE LINES 384-412 -->
+
+## Modify: deep-learning baseline (concept only)
+
+**Modify (concept).** A stronger Challenge 2 entry typically swaps
+the feature ridge for a Braindecode encoder fed raw 2-second windows,
+trained with `torch.nn.functional.l1_loss` against the
+subject-level p-factor. The skeleton stays in a code block so the
+gallery build remains CPU-only; the cross-subject loop in Step 4 is
+the contract any deep model must still satisfy.
+
+```python
+from braindecode.models import EEGNeX
+from torch.utils.data import DataLoader
+from torch.nn.functional import l1_loss
+from torch import optim
+
+model = EEGNeX(n_chans=129, n_outputs=1, n_times=2 * 100).to(device)
+optimizer = optim.Adamax(model.parameters(), lr=2e-3)
+loader = DataLoader(windows_ds, batch_size=128, shuffle=True)
+for X_batch, y_batch, _, _ in loader:
+    optimizer.zero_grad()
+    X_batch = X_batch.to(dtype=torch.float32, device=device)
+    y_batch = y_batch.to(dtype=torch.float32, device=device).unsqueeze(1)
+    loss = l1_loss(model(X_batch), y_batch)
+    loss.backward()
+    optimizer.step()
+torch.save(model.state_dict(), "weights_challenge_2.pt")
+```
+
+<!-- GENERATED FROM PYTHON SOURCE LINES 414-422 -->
+
+## Result: starter-kit baseline vs median chance
+
+Five folds, disjoint subject test sets; the print line carries the
+keyword *baseline* and the `metric: r2` tag (E5.43).
+`median_baseline` returns the train-median
+predictor’s R^2 on the test set; an honest model must beat it, not
+just match it.
+
+<!-- GENERATED FROM PYTHON SOURCE LINES 424-439 -->
+```Python
+print(
+    f"Cross-subject 5-fold p-factor regression: r2={mean_r2:+.3f} "
+    f"| mae={mean_mae:.3f} | baseline_r2={mean_chance:+.3f} "
+    f"| baseline_mae={mean_baseline_mae:.3f} | metric: r2"
+)
+print(
+    f"Subject-level leaderboard score: r={subject_pearson:+.3f} | "
+    f"R^2={subject_r2:+.3f} | MAE={subject_mae:.3f}"
+)
+print(
+    f"chance: predicting the train-median scores baseline_r2="
+    f"{mean_chance:+.3f} on test."
+)
+assert mean_mae < mean_baseline_mae, "Model MAE must be below the median-baseline MAE."
+```
+
+```none
+Cross-subject 5-fold p-factor regression: r2=-0.575 | mae=0.662 | baseline_r2=-0.784 | baseline_mae=0.735 | metric: r2
+Subject-level leaderboard score: r=+0.663 | R^2=+0.309 | MAE=0.602
+chance: predicting the train-median scores baseline_r2=-0.784 on test.
+```
+
+<!-- GENERATED FROM PYTHON SOURCE LINES 440-452 -->
+
+## Wrap-up
+
+We loaded a Challenge 2 cohort with `p_factor` attached, built a
+cross-subject 5-fold split, asserted zero subject leakage, fit a
+Ridge head per fold, and pooled predictions for the leaderboard
+score. The three-panel figure is the starter-kit submission card:
+the histogram pins the target distribution; the scatter shows whether
+the model tracks the diagonal or collapses onto the train mean; the
+result card places the starter baseline next to chance and the
+challenge top score. `p_factor` is a derived score, not a
+diagnosis; any clinical framing belongs in a follow-up study with a
+much larger N.
+
+<!-- GENERATED FROM PYTHON SOURCE LINES 454-462 -->
+
+## Try it yourself
+
+- Swap [`sklearn.linear_model.Ridge`](https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Ridge.html#sklearn.linear_model.Ridge) for
+  [`sklearn.neural_network.MLPRegressor`](https://scikit-learn.org/stable/modules/generated/sklearn.neural_network.MLPRegressor.html#sklearn.neural_network.MLPRegressor) (still
+  `random_state=42`); compare pooled `r` against the figure.
+- Pre-train [`braindecode.models.ShallowFBCSPNet`](https://braindecode.org/stable/generated/braindecode.models.ShallowFBCSPNet.html#braindecode.models.ShallowFBCSPNet) on the
+  passive tasks and feed its activations as features.
+- Bump `n_folds` to `N_SUBJECTS` for leave-one-subject-out.
+
+<!-- GENERATED FROM PYTHON SOURCE LINES 464-469 -->
+
+## References
+
+See [References](../../../references.md) for the centralised bibliography of papers
+cited above. Add or amend an entry once in
+`docs/source/refs.bib`; every tutorial inherits the update.
 
 <a id="sphx-glr-download-generated-auto-examples-eeg2025-tutorial-challenge-2-py"></a>

@@ -1,0 +1,1261 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" data-theme="light">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta property="og:title" content="Is resting-state EEG even predictive of the BIDS sex label? (Project Starter)" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://eegdash.org/generated/auto_examples/applied/project_sex_classification.html" />
+<meta property="og:site_name" content="EEG Dash" />
+<meta property="og:description" content="A canonical “is this signal even predictive?” benchmark task on resting-state EEG from OpenNeuro ds005505(Healthy Brain Network; Alexander et al. 2017)…" />
+<meta property="og:image" content="https://eegdash.org/_static/eegdash_social_card.png" />
+<meta property="og:image:alt" content="EEG Dash — data-sharing interface for M/EEG datasets" />
+<meta name="description" content="A canonical “is this signal even predictive?” benchmark task on resting-state EEG from OpenNeuro ds005505(Healthy Brain Network; Alexander et al. 2017)…" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@eegdash" />
+
+    <title>Is resting-state EEG even predictive of the BIDS sex label? (Project Starter) &#8212; EEG Dash</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "light";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css?v=fd6457a4" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.7953df0a.css?v=314ed3b2" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/treemap.087aecf0.css?v=7131b20f" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.d7808461.css?v=1ba63a31" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../../_static/scripts/fontawesome.js?digest=55c26ed414f5f8a31ebb"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb" />
+
+    <script src="../../../_static/documentation_options.js?v=6dfdf7c3"></script>
+    <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../_static/sg-tags.js?v=d80f6fa4"></script>
+    <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../_static/copybutton.js?v=8c005784"></script>
+    <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'generated/auto_examples/applied/project_sex_classification';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <script defer="defer" src="../../../_static/js/tag-palette.7346f567.js?v=6f5eac9a"></script>
+    <script defer="defer" src="../../../_static/js/search-as-you-type.e09b639d.js?v=8e93d0f7"></script>
+    <script defer="defer" src="../../../_static/js/lazy-embed.1f1f83d2.js?v=118c4c47"></script>
+    <link rel="canonical" href="https://eegdash.org/generated/auto_examples/applied/project_sex_classification.html" />
+    <link rel="icon" href="../../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="EEG 2025 Foundation Challenge" href="../eeg2025/index.html" />
+    <link rel="prev" title="Predicting p-factor from EEG with hand-crafted features (project starter)" href="project_pfactor_features.html" />
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.7" />
+
+  
+  <meta name="google-site-verification" content="REPLACE_WITH_GSC_TOKEN">
+  <meta name="msvalidate.01" content="REPLACE_WITH_BING_TOKEN">
+
+  
+  <link rel="preconnect" href="https://cdn.datatables.net" crossorigin>
+  <link rel="preconnect" href="https://code.jquery.com" crossorigin>
+
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    rel="preload"
+    as="style"
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Source+Sans+3:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap"
+    onload="this.onload=null;this.rel='stylesheet'">
+  <noscript>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Source+Sans+3:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap">
+  </noscript>
+
+  
+
+  
+  <link rel="alternate" type="text/markdown" href="/llms.txt" title="EEGDash — LLM-friendly index">
+  <link rel="llms" href="/llms.txt" title="EEGDash — llms.txt index">
+  <link rel="llms-txt" href="/llms.txt">
+  <link rel="llms-full" type="text/markdown" href="/llms-full.txt" title="EEGDash — full markdown corpus">
+  <link rel="alternate" type="application/json" href="/.well-known/agent-skills/index.json" title="EEGDash — Agent Skills">
+  <link rel="alternate" type="application/linkset+json" href="/.well-known/api-catalog" title="EEGDash — API catalog">
+  <meta name="llms-txt" content="/llms.txt">
+  <meta name="llms" content="/llms.txt">
+  <meta name="ai-content-index" content="/llms.txt">
+  <meta name="ai.content_index" content="/llms.txt">
+
+  
+
+  <!-- Google Tag Manager — deferred to DOMContentLoaded so the GTM
+       bootstrap no longer blocks first-paint or the Sphinx search-index
+       load. Functionally equivalent to the inline snippet below but
+       saves ~60 ms of Total Blocking Time per PageSpeed Insights. -->
+  <script>
+    (function(){
+      function loadGTM(){
+        if (window.__gtmLoaded) return;
+        window.__gtmLoaded = true;
+        (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','GTM-MXC3DGL6');
+      }
+      // Defer GTM off the critical path. requestIdleCallback wants an
+      // IdleRequestOptions object as its second argument while
+      // setTimeout wants a plain number — using the same `1` for both
+      // raised a TypeError in Lighthouse's console that dragged the SEO
+      // score down. Branch on availability so each API gets the shape
+      // it expects.
+      function scheduleGTM() {
+        if (typeof window.requestIdleCallback === 'function') {
+          window.requestIdleCallback(loadGTM, { timeout: 2000 });
+        } else {
+          setTimeout(loadGTM, 1);
+        }
+      }
+      if (document.readyState === 'complete' || document.readyState === 'interactive') {
+        scheduleGTM();
+      } else {
+        document.addEventListener('DOMContentLoaded', scheduleGTM);
+      }
+    })();
+  </script>
+  <!-- End Google Tag Manager -->
+
+  </head>
+  <body data-default-mode="light">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+    
+    <img src="../../../_static/eegdash_long.svg" class="logo__image only-light" alt="EEG Dash Logo"/>
+    <img src="../../../_static/eegdash_long.svg" class="logo__image only-dark pst-js-only" alt="EEG Dash Logo"/>
+  
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../dataset_summary.html">
+    Datasets
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../quickstart.html">
+    Quick Start
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../install/install.html">
+    Install
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    Examples
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../concepts/index.html">
+    Concepts
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../api/api.html">
+    Docs
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../references.html">
+    References
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-external" href="https://eeg2025.github.io/">
+    EEG2025
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="External Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/eegdash/EEGDash" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../../../_static/icons/github.svg" class="icon-link-image" alt="GitHub"/></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/eegdash/" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../../../_static/icons/pypi.svg" class="icon-link-image" alt="PyPI"/></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://discord.gg/8jd7nVKwsc" title="Discord" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../../../_static/icons/discord.svg" class="icon-link-image" alt="Discord"/></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../dataset_summary.html">
+    Datasets
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../quickstart.html">
+    Quick Start
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../install/install.html">
+    Install
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    Examples
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../concepts/index.html">
+    Concepts
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../api/api.html">
+    Docs
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../references.html">
+    References
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://eeg2025.github.io/">
+    EEG2025
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="External Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/eegdash/EEGDash" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../../../_static/icons/github.svg" class="icon-link-image" alt="GitHub"/></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/eegdash/" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../../../_static/icons/pypi.svg" class="icon-link-image" alt="PyPI"/></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://discord.gg/8jd7nVKwsc" title="Discord" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../../../_static/icons/discord.svg" class="icon-link-image" alt="Discord"/></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Examples gallery</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">Applied Research Projects</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Is resting-state EEG even predictive of the BIDS sex label? (Project Starter)</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p><a class="reference internal" href="#sphx-glr-download-generated-auto-examples-applied-project-sex-classification-py"><span class="std std-ref">Go to the end</span></a>
+to download the full example code or to run this example in your browser via Binder.</p>
+</div>
+<section class="sphx-glr-example-title" id="is-resting-state-eeg-even-predictive-of-the-bids-sex-label-project-starter">
+<span id="sphx-glr-generated-auto-examples-applied-project-sex-classification-py"></span><h1>Is resting-state EEG even predictive of the BIDS sex label? (Project Starter)<a class="headerlink" href="#is-resting-state-eeg-even-predictive-of-the-bids-sex-label-project-starter" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">10 minutes</span></div>
+<p>A canonical “is this signal even predictive?” benchmark task on resting-state
+EEG from <a class="reference external" href="https://openneuro.org">OpenNeuro</a> <code class="docutils literal notranslate"><span class="pre">ds005505</span></code> (Healthy Brain
+Network; Alexander et al. 2017), reachable through <a class="reference external" href="https://nemar.org">NEMAR</a> <span class="bibtex-citation" id="id1">[<a class="reference internal" href="../../../references.html#id6" title="Arnaud Delorme, Dung Truong, Choonhan Youn, Subhashini Sivagnanam, Claire Stirm, Kenneth Yoshimoto, Russell A Poldrack, Amitava Majumdar, and Scott Makeig. Nemar: an open access data, tools and compute resource operating on neuroelectromagnetic data. Database, 2022. doi:10.1093/database/baac096.">Delorme <em>et al.</em>, 2022</a>]</span>. Log band-power features feed
+<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html#sklearn.pipeline.Pipeline" title="(in scikit-learn v1.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.pipeline.Pipeline</span></code></a> <span class="bibtex-citation" id="id2">[<a class="reference internal" href="../../../references.html#id33" title="F. Pedregosa, G. Varoquaux, A. Gramfort, V. Michel, B. Thirion, O. Grisel, M. Blondel, P. Prettenhofer, R. Weiss, V. Dubourg, J. Vanderplas, A. Passos, D. Cournapeau, M. Brucher, M. Perrot, and E. Duchesnay. Scikit-learn: machine learning in Python. Journal of Machine Learning Research, 12:2825–2830, 2011.">Pedregosa <em>et al.</em>, 2011</a>]</span> with
+<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.StandardScaler.html#sklearn.preprocessing.StandardScaler" title="(in scikit-learn v1.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">StandardScaler</span></code></a> and
+<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html#sklearn.linear_model.LogisticRegression" title="(in scikit-learn v1.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">LogisticRegression</span></code></a>. A 3-fold cross-subject
+loop via <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GroupKFold.html#sklearn.model_selection.GroupKFold" title="(in scikit-learn v1.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">GroupKFold</span></code></a> keeps every subject
+in exactly one fold; held-out predictions feed three sklearn display
+helpers, <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.inspection.DecisionBoundaryDisplay.html#sklearn.inspection.DecisionBoundaryDisplay" title="(in scikit-learn v1.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">DecisionBoundaryDisplay</span></code></a>,
+<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.RocCurveDisplay.html#sklearn.metrics.RocCurveDisplay" title="(in scikit-learn v1.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">RocCurveDisplay</span></code></a>, and
+<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.ConfusionMatrixDisplay.html#sklearn.metrics.ConfusionMatrixDisplay" title="(in scikit-learn v1.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConfusionMatrixDisplay</span></code></a>. Do the features
+separate the classes, how stable is held-out AUC across subjects, and
+which class does the model confuse?</p>
+<section id="learning-objectives">
+<h2>Learning objectives<a class="headerlink" href="#learning-objectives" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Use <a class="reference internal" href="../../../api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset" title="eegdash.EEGDashDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">eegdash.EEGDashDataset</span></code></a> to pull resting-state ds005505 recordings and balance the cohort by the BIDS <code class="docutils literal notranslate"><span class="pre">sex</span></code> field.</p></li>
+<li><p>Compute log band-power features (delta, theta, alpha, beta) per channel from fixed-length 2 s windows.</p></li>
+<li><p>Run a 3-fold cross-subject loop with <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GroupKFold.html#sklearn.model_selection.GroupKFold" title="(in scikit-learn v1.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">GroupKFold</span></code></a> and fit a leakage-safe <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html#sklearn.pipeline.Pipeline" title="(in scikit-learn v1.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Pipeline</span></code></a> of <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.StandardScaler.html#sklearn.preprocessing.StandardScaler" title="(in scikit-learn v1.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">StandardScaler</span></code></a> and <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html#sklearn.linear_model.LogisticRegression" title="(in scikit-learn v1.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">LogisticRegression</span></code></a>.</p></li>
+<li><p>Read the three-panel sklearn-display diagnostic built from <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.inspection.DecisionBoundaryDisplay.html#sklearn.inspection.DecisionBoundaryDisplay" title="(in scikit-learn v1.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">DecisionBoundaryDisplay</span></code></a>, <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.RocCurveDisplay.html#sklearn.metrics.RocCurveDisplay" title="(in scikit-learn v1.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">RocCurveDisplay</span></code></a>, and <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.ConfusionMatrixDisplay.html#sklearn.metrics.ConfusionMatrixDisplay" title="(in scikit-learn v1.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConfusionMatrixDisplay</span></code></a>.</p></li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p><strong>Treat this as a workflow example, not a result.</strong> Three caveats sit
+on top of every number this script prints. (1) <strong>Labels are metadata,
+not biological ground truth.</strong> The BIDS <code class="docutils literal notranslate"><span class="pre">sex</span></code> field is subject
+self-report or sponsor-coded; any clean separation speaks to that
+categorical label, not to chromosomal status, hormones, or brain
+organisation. (2) <strong>Confounds can dominate.</strong> Recording site,
+acquisition system, cap density, age distribution, and within-cohort
+sampling can all correlate with the label. Cross-site or cross-dataset
+validation is required before any inference about EEG-vs-sex is
+supportable (Cisotto and Chicco 2024, Tip 9). (3) <strong>A linear baseline
+is a sanity floor, not a finding.</strong> A balanced split on a single
+dataset with a small subject pool will routinely overstate transferable
+performance.</p>
+</div>
+<p>Three artefacts answer the project’s central question: do the features
+separate the classes, how stable is held-out AUC across subjects, and
+which class does the model confuse?</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Difficulty: 3-star (advanced applied project)</span>
+</pre></div>
+</div>
+</section>
+<section id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>About 3 to 5 minutes on CPU on first run (network pull of six
+ds005505 <code class="docutils literal notranslate"><span class="pre">.set</span></code> files); under 30 s once cached.</p></li>
+<li><p>Prerequisites:
+<span class="xref std std-doc">/auto_examples/tutorials/10_core_workflow/plot_11_leakage_safe_split</span>,
+<span class="xref std std-doc">/auto_examples/tutorials/40_features/plot_42_features_to_sklearn</span>.</p></li>
+<li><p>Concept: <a class="reference internal" href="../../../concepts/features_vs_deep_learning.html"><span class="doc">Features vs. deep learning</span></a>.</p></li>
+</ul>
+</section>
+<section id="why-a-sklearn-display-diagnostic">
+<h2>Why a sklearn-display diagnostic?<a class="headerlink" href="#why-a-sklearn-display-diagnostic" title="Link to this heading">#</a></h2>
+<p>Three numbers on a line are easy to misread. The same model can post
+AUC = 0.74 with a balanced confusion matrix or with a 0.95 / 0.05
+row-normalised matrix; only the second flags a degenerate classifier
+that collapsed onto one class. Wiring
+<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.inspection.DecisionBoundaryDisplay.html#sklearn.inspection.DecisionBoundaryDisplay" title="(in scikit-learn v1.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">DecisionBoundaryDisplay</span></code></a>,
+<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.RocCurveDisplay.html#sklearn.metrics.RocCurveDisplay" title="(in scikit-learn v1.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">RocCurveDisplay</span></code></a>, and
+<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.ConfusionMatrixDisplay.html#sklearn.metrics.ConfusionMatrixDisplay" title="(in scikit-learn v1.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConfusionMatrixDisplay</span></code></a> around a leakage-safe
+cross-subject loop is the canonical sklearn diagnostic for any binary
+EEG classifier; this project demonstrates it on the sex-prediction
+question because that is the most direct test of whether the resting-
+state signal carries predictive information about a categorical label.</p>
+<p>Setup. <code class="docutils literal notranslate"><span class="pre">random_state=42</span></code> on every estimator and splitter is what
+keeps the printed metrics byte-stable across runs (E3.21).</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <a href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="pathlib.Path" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">Path</span></a>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">mne</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">braindecode.datasets</span><span class="w"> </span><span class="kn">import</span> <a href="https://braindecode.org/stable/generated/braindecode.datasets.BaseConcatDataset.html#braindecode.datasets.BaseConcatDataset" title="braindecode.datasets.BaseConcatDataset" class="sphx-glr-backref-module-braindecode-datasets sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">BaseConcatDataset</span></a>
+<span class="kn">from</span><span class="w"> </span><span class="nn">braindecode.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <a href="https://braindecode.org/stable/generated/braindecode.preprocessing.Preprocessor.html#braindecode.preprocessing.Preprocessor" title="braindecode.preprocessing.Preprocessor" class="sphx-glr-backref-module-braindecode-preprocessing sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">Preprocessor</span></a><span class="p">,</span>
+    <a href="https://braindecode.org/stable/generated/braindecode.preprocessing.create_fixed_length_windows.html#braindecode.preprocessing.create_fixed_length_windows" title="braindecode.preprocessing.create_fixed_length_windows" class="sphx-glr-backref-module-braindecode-preprocessing sphx-glr-backref-type-py-function"><span class="n">create_fixed_length_windows</span></a><span class="p">,</span>
+    <a href="https://braindecode.org/stable/generated/braindecode.preprocessing.preprocess.html#braindecode.preprocessing.preprocess" title="braindecode.preprocessing.preprocess" class="sphx-glr-backref-module-braindecode-preprocessing sphx-glr-backref-type-py-function"><span class="n">preprocess</span></a><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.decomposition</span><span class="w"> </span><span class="kn">import</span> <a href="https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.PCA.html#sklearn.decomposition.PCA" title="sklearn.decomposition.PCA" class="sphx-glr-backref-module-sklearn-decomposition sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">PCA</span></a>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.linear_model</span><span class="w"> </span><span class="kn">import</span> <a href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html#sklearn.linear_model.LogisticRegression" title="sklearn.linear_model.LogisticRegression" class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">LogisticRegression</span></a>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <a href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.accuracy_score.html#sklearn.metrics.accuracy_score" title="sklearn.metrics.accuracy_score" class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function"><span class="n">accuracy_score</span></a><span class="p">,</span>
+    <a href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.balanced_accuracy_score.html#sklearn.metrics.balanced_accuracy_score" title="sklearn.metrics.balanced_accuracy_score" class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function"><span class="n">balanced_accuracy_score</span></a><span class="p">,</span>
+    <a href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.confusion_matrix.html#sklearn.metrics.confusion_matrix" title="sklearn.metrics.confusion_matrix" class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function"><span class="n">confusion_matrix</span></a><span class="p">,</span>
+    <a href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.roc_auc_score.html#sklearn.metrics.roc_auc_score" title="sklearn.metrics.roc_auc_score" class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function"><span class="n">roc_auc_score</span></a><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <a href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GroupKFold.html#sklearn.model_selection.GroupKFold" title="sklearn.model_selection.GroupKFold" class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">GroupKFold</span></a>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.pipeline</span><span class="w"> </span><span class="kn">import</span> <a href="https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html#sklearn.pipeline.Pipeline" title="sklearn.pipeline.Pipeline" class="sphx-glr-backref-module-sklearn-pipeline sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">Pipeline</span></a>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <a href="https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.StandardScaler.html#sklearn.preprocessing.StandardScaler" title="sklearn.preprocessing.StandardScaler" class="sphx-glr-backref-module-sklearn-preprocessing sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">StandardScaler</span></a>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">eegdash</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">eegdash</span><span class="w"> </span><span class="kn">import</span> <a href="../../../api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset" title="eegdash.EEGDashDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">EEGDashDataset</span></a>
+<span class="kn">from</span><span class="w"> </span><span class="nn">eegdash.viz</span><span class="w"> </span><span class="kn">import</span> <span class="n">use_eegdash_style</span>
+
+<span class="n">use_eegdash_style</span><span class="p">()</span>
+<a href="https://mne.tools/stable/generated/mne.set_log_level.html#mne.set_log_level" title="mne.set_log_level" class="sphx-glr-backref-module-mne sphx-glr-backref-type-py-function"><span class="n">mne</span><span class="o">.</span><span class="n">set_log_level</span></a><span class="p">(</span><span class="s2">&quot;ERROR&quot;</span><span class="p">)</span>
+<a href="https://docs.python.org/3/library/warnings.html#warnings.simplefilter" title="warnings.simplefilter" class="sphx-glr-backref-module-warnings sphx-glr-backref-type-py-function"><span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span></a><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">RuntimeWarning</span><span class="p">)</span>
+<span class="n">SEED</span> <span class="o">=</span> <span class="mi">42</span>
+<span class="n">rng</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/random/generator.html#numpy.random.default_rng" title="numpy.random.default_rng" class="sphx-glr-backref-module-numpy-random sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span></a><span class="p">(</span><span class="n">SEED</span><span class="p">)</span>
+<span class="n">CACHE_DIR</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="pathlib.Path" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">Path</span></a><span class="p">(</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;EEGDASH_CACHE_DIR&quot;</span><span class="p">,</span> <a href="https://docs.python.org/3/library/pathlib.html#pathlib.Path.home" title="pathlib.Path.home" class="sphx-glr-backref-module-pathlib-Path sphx-glr-backref-type-py-method"><span class="n">Path</span><span class="o">.</span><span class="n">home</span></a><span class="p">()</span> <span class="o">/</span> <span class="s2">&quot;.eegdash_cache&quot;</span><span class="p">)</span>
+<span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+<span class="n">CACHE_DIR</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;eegdash </span><span class="si">{</span><span class="n">eegdash</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s2"> | cache_dir=</span><span class="si">{</span><span class="n">CACHE_DIR</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="step-1-pull-ds005505-resting-state-metadata">
+<h2>Step 1. Pull ds005505 resting-state metadata<a class="headerlink" href="#step-1-pull-ds005505-resting-state-metadata" title="Link to this heading">#</a></h2>
+<p><strong>Predict.</strong> ds005505 carries Healthy Brain Network resting-state
+recordings on a 128-channel HydroCel cap <span class="bibtex-citation" id="id3">[<a class="reference internal" href="../../../references.html#id4" title="Lindsay M. Alexander, Jasmine Escalera, Lei Ai, Charissa Andreotti, Karina Febre, Alexander Mangone, Natan Vega-Potler, Nicolas Langer, Alexis Alexander, Meagan Kovacs, Shannon Litke, Bridget O'Hagan, Jennifer Andersen, Batya Bronstein, Anastasia Bui, Marijayne Bushey, Henry Butler, Victoria Castagna, Nicolas Camacho, Elisha Chan, Danielle Citera, Jon Clucas, Samantha Cohen, Sarah Dufek, Megan Eaves, Brian Fradera, Judith Gardner, Natalie Grant-Villegas, Gabriella Green, Camille Gregory, Emily Hart, Shana Harris, Megan Horton, Danielle Kahn, Katherine Kabotyanski, Bernard Karmel, Simon P. Kelly, Kayla Kleinman, Bonhwang Koo, Eliza Kramer, Elizabeth Lennon, Catherine Lord, Ginny Mantello, Amy Margolis, Kathleen R. Merikangas, Judith Milham, Giuseppe Minniti, Rebecca Neuhaus, Alexandra Levine, Yael Osman, Lucas C. Parra, Ken R. Pugh, Amy Racanello, Anita Restrepo, Tian Saltzman, Batya Septimus, Russell Tobe, Rachel Waltz, Anna Williams, Anna Yeo, Francisco X. Castellanos, Arno Klein, Tomas Paus, Bennett L. Leventhal, R. Cameron Craddock, Harold S. Koplewicz, and Michael P. Milham. An open resource for transdiagnostic research in pediatric mental health and learning disorders. Scientific Data, 2017. doi:10.1038/sdata.2017.181.">Alexander <em>et al.</em>, 2017</a>]</span>. The
+metadata-only first pass populates each record’s <code class="docutils literal notranslate"><span class="pre">description</span></code> with
+the BIDS <code class="docutils literal notranslate"><span class="pre">sex</span></code> field; recordings without a usable label are dropped
+before any preprocessing fires.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">DATASET</span> <span class="o">=</span> <span class="s2">&quot;ds005505&quot;</span>
+<span class="n">TASK</span> <span class="o">=</span> <span class="s2">&quot;RestingState&quot;</span>
+<span class="n">N_PER_SEX</span> <span class="o">=</span> <span class="mi">3</span>  <span class="c1"># 3 F + 3 M = 6 subjects total; 3-fold leaves 4 train + 2 test</span>
+<span class="c1"># per fold. Bump to 6 for a tighter ROC band; the project takes</span>
+<span class="c1"># ~3 min more per extra pair of subjects on first download.</span>
+<span class="n">dataset_full</span> <span class="o">=</span> <a href="../../../api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset" title="eegdash.EEGDashDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">EEGDashDataset</span></a><span class="p">(</span>
+    <span class="n">cache_dir</span><span class="o">=</span><span class="n">CACHE_DIR</span><span class="p">,</span>
+    <span class="n">dataset</span><span class="o">=</span><span class="n">DATASET</span><span class="p">,</span>
+    <span class="n">task</span><span class="o">=</span><span class="n">TASK</span><span class="p">,</span>
+    <span class="n">description_fields</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;subject&quot;</span><span class="p">,</span> <span class="s2">&quot;session&quot;</span><span class="p">,</span> <span class="s2">&quot;run&quot;</span><span class="p">,</span> <span class="s2">&quot;task&quot;</span><span class="p">,</span> <span class="s2">&quot;sex&quot;</span><span class="p">,</span> <span class="s2">&quot;gender&quot;</span><span class="p">],</span>
+<span class="p">)</span>
+<span class="n">candidates</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">d</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">dataset_full</span><span class="o">.</span><span class="n">datasets</span> <span class="k">if</span> <span class="n">d</span><span class="o">.</span><span class="n">description</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;sex&quot;</span><span class="p">)</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;F&quot;</span><span class="p">,</span> <span class="s2">&quot;M&quot;</span><span class="p">)</span>
+<span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;records with usable sex label: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">candidates</span><span class="p">)</span><span class="si">}</span><span class="s2"> / </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">dataset_full</span><span class="o">.</span><span class="n">datasets</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="step-2-balance-the-cohort-by-the-bids-sex-label">
+<h2>Step 2. Balance the cohort by the BIDS sex label<a class="headerlink" href="#step-2-balance-the-cohort-by-the-bids-sex-label" title="Link to this heading">#</a></h2>
+<p>A 50 / 50 sex balance pins the chance line at 0.50 on every fold. We
+sort the candidate list by subject id (deterministic across runs) and
+take the first <code class="docutils literal notranslate"><span class="pre">N_PER_SEX</span></code> of each label so the cohort is reproducible.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">by_sex</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;F&quot;</span><span class="p">:</span> <span class="p">[],</span> <span class="s2">&quot;M&quot;</span><span class="p">:</span> <span class="p">[]}</span>
+<span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">candidates</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">r</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">description</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;subject&quot;</span><span class="p">))):</span>
+    <span class="n">label</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">description</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;sex&quot;</span><span class="p">))</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">by_sex</span><span class="p">[</span><span class="n">label</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">N_PER_SEX</span><span class="p">:</span>
+        <span class="n">by_sex</span><span class="p">[</span><span class="n">label</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+<span class="n">selected</span> <span class="o">=</span> <span class="n">by_sex</span><span class="p">[</span><span class="s2">&quot;F&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">by_sex</span><span class="p">[</span><span class="s2">&quot;M&quot;</span><span class="p">]</span>
+<span class="n">n_subjects</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">selected</span><span class="p">)</span>
+<span class="n">ds_small</span> <span class="o">=</span> <a href="https://braindecode.org/stable/generated/braindecode.datasets.BaseConcatDataset.html#braindecode.datasets.BaseConcatDataset" title="braindecode.datasets.BaseConcatDataset" class="sphx-glr-backref-module-braindecode-datasets sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">BaseConcatDataset</span></a><span class="p">(</span><span class="n">selected</span><span class="p">)</span>
+<span class="n">cohort_summary</span> <span class="o">=</span> <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.html#pandas.Series" title="pandas.Series" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">pd</span><span class="o">.</span><span class="n">Series</span></a><span class="p">(</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;n_subjects&quot;</span><span class="p">:</span> <span class="n">n_subjects</span><span class="p">,</span>
+        <span class="s2">&quot;n_F&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">by_sex</span><span class="p">[</span><span class="s2">&quot;F&quot;</span><span class="p">]),</span>
+        <span class="s2">&quot;n_M&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">by_sex</span><span class="p">[</span><span class="s2">&quot;M&quot;</span><span class="p">]),</span>
+        <span class="s2">&quot;raw n_channels&quot;</span><span class="p">:</span> <span class="n">ds_small</span><span class="o">.</span><span class="n">datasets</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">raw</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;nchan&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;raw sfreq (Hz)&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">ds_small</span><span class="o">.</span><span class="n">datasets</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">raw</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;sfreq&quot;</span><span class="p">]),</span>
+    <span class="p">},</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">,</span>
+<span class="p">)</span><span class="o">.</span><span class="n">to_frame</span><span class="p">()</span>
+<span class="n">cohort_summary</span>
+</pre></div>
+</div>
+</section>
+<section id="step-3-pick-a-small-montage-resample-and-window">
+<h2>Step 3. Pick a small montage, resample, and window<a class="headerlink" href="#step-3-pick-a-small-montage-resample-and-window" title="Link to this heading">#</a></h2>
+<p>Three preprocessors keep the runtime predictable: pick eight HydroCel
+electrodes spanning midline, fronto-central, parieto-occipital, and
+bilateral temporal scalp; resample to 100 Hz; apply a 1 to 45 Hz
+band-pass. Fixed-length 2 s windows feed the feature stage. The
+8-channel pick is a deliberate compression: the question is whether
+resting-state EEG carries predictive information at all, not whether
+128 electrodes carry more than 8.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">CH_NAMES</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;E22&quot;</span><span class="p">,</span> <span class="s2">&quot;E9&quot;</span><span class="p">,</span> <span class="s2">&quot;E33&quot;</span><span class="p">,</span> <span class="s2">&quot;E11&quot;</span><span class="p">,</span> <span class="s2">&quot;E122&quot;</span><span class="p">,</span> <span class="s2">&quot;E29&quot;</span><span class="p">,</span> <span class="s2">&quot;E124&quot;</span><span class="p">,</span> <span class="s2">&quot;Cz&quot;</span><span class="p">]</span>
+<span class="n">TARGET_SFREQ</span> <span class="o">=</span> <span class="mi">100</span>  <span class="c1"># Hz</span>
+<span class="n">WINDOW_SECONDS</span> <span class="o">=</span> <span class="mf">2.0</span>
+<span class="n">window_size_samples</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">WINDOW_SECONDS</span> <span class="o">*</span> <span class="n">TARGET_SFREQ</span><span class="p">)</span>
+<a href="https://braindecode.org/stable/generated/braindecode.preprocessing.preprocess.html#braindecode.preprocessing.preprocess" title="braindecode.preprocessing.preprocess" class="sphx-glr-backref-module-braindecode-preprocessing sphx-glr-backref-type-py-function"><span class="n">preprocess</span></a><span class="p">(</span>
+    <span class="n">ds_small</span><span class="p">,</span>
+    <span class="p">[</span>
+        <a href="https://braindecode.org/stable/generated/braindecode.preprocessing.Preprocessor.html#braindecode.preprocessing.Preprocessor" title="braindecode.preprocessing.Preprocessor" class="sphx-glr-backref-module-braindecode-preprocessing sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">Preprocessor</span></a><span class="p">(</span><span class="s2">&quot;pick_channels&quot;</span><span class="p">,</span> <span class="n">ch_names</span><span class="o">=</span><span class="n">CH_NAMES</span><span class="p">),</span>
+        <a href="https://braindecode.org/stable/generated/braindecode.preprocessing.Preprocessor.html#braindecode.preprocessing.Preprocessor" title="braindecode.preprocessing.Preprocessor" class="sphx-glr-backref-module-braindecode-preprocessing sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">Preprocessor</span></a><span class="p">(</span><span class="s2">&quot;resample&quot;</span><span class="p">,</span> <span class="n">sfreq</span><span class="o">=</span><span class="n">TARGET_SFREQ</span><span class="p">),</span>
+        <a href="https://braindecode.org/stable/generated/braindecode.preprocessing.Preprocessor.html#braindecode.preprocessing.Preprocessor" title="braindecode.preprocessing.Preprocessor" class="sphx-glr-backref-module-braindecode-preprocessing sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">Preprocessor</span></a><span class="p">(</span><span class="s2">&quot;filter&quot;</span><span class="p">,</span> <span class="n">l_freq</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">h_freq</span><span class="o">=</span><span class="mi">45</span><span class="p">),</span>
+    <span class="p">],</span>
+    <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">windows_ds</span> <span class="o">=</span> <a href="https://braindecode.org/stable/generated/braindecode.preprocessing.create_fixed_length_windows.html#braindecode.preprocessing.create_fixed_length_windows" title="braindecode.preprocessing.create_fixed_length_windows" class="sphx-glr-backref-module-braindecode-preprocessing sphx-glr-backref-type-py-function"><span class="n">create_fixed_length_windows</span></a><span class="p">(</span>
+    <span class="n">ds_small</span><span class="p">,</span>
+    <span class="n">start_offset_samples</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">stop_offset_samples</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">window_size_samples</span><span class="o">=</span><span class="n">window_size_samples</span><span class="p">,</span>
+    <span class="n">window_stride_samples</span><span class="o">=</span><span class="n">window_size_samples</span><span class="p">,</span>
+    <span class="n">drop_last_window</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">preload</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">n_channels</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">CH_NAMES</span><span class="p">)</span>
+<span class="c1"># Braindecode 1.0+ may return ``EEGWindowsDataset`` (carries ``.raw``)</span>
+<span class="c1"># or the older ``WindowsDataset`` (carries ``.windows``); both expose</span>
+<span class="c1"># the sampling rate through ``.info``.</span>
+<span class="n">_first_ds</span> <span class="o">=</span> <span class="n">windows_ds</span><span class="o">.</span><span class="n">datasets</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">_info_holder</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">_first_ds</span><span class="p">,</span> <span class="s2">&quot;raw&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="n">_first_ds</span><span class="o">.</span><span class="n">windows</span>
+<span class="n">sfreq</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">_info_holder</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;sfreq&quot;</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;n_windows=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">windows_ds</span><span class="p">)</span><span class="si">}</span><span class="s2"> | n_channels=</span><span class="si">{</span><span class="n">n_channels</span><span class="si">}</span><span class="s2"> | &quot;</span>
+    <span class="sa">f</span><span class="s2">&quot;sfreq=</span><span class="si">{</span><span class="n">sfreq</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> Hz | window_size_samples=</span><span class="si">{</span><span class="n">window_size_samples</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="step-4-materialize-windows-per-window-subject-id-and-label">
+<h2>Step 4. Materialize windows + per-window subject id and label<a class="headerlink" href="#step-4-materialize-windows-per-window-subject-id-and-label" title="Link to this heading">#</a></h2>
+<p>The cross-subject splitter needs a <code class="docutils literal notranslate"><span class="pre">groups</span></code> array shaped
+<code class="docutils literal notranslate"><span class="pre">(n_windows,)</span></code> carrying the subject id, and a <code class="docutils literal notranslate"><span class="pre">y</span></code> array with the
+class label (0 = F, 1 = M). Iterating the per-record sub-datasets and
+reading <code class="xref py py-attr docutils literal notranslate"><span class="pre">braindecode.datasets.WindowsDataset.description</span></code> once
+per record is the most direct route.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">SEX_TO_INT</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;F&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;M&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
+<span class="n">CLASS_NAMES</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;F&quot;</span><span class="p">,</span> <span class="s2">&quot;M&quot;</span><span class="p">)</span>
+<span class="n">X_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span></a><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">y_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">groups_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">sub_ds</span> <span class="ow">in</span> <span class="n">windows_ds</span><span class="o">.</span><span class="n">datasets</span><span class="p">:</span>
+    <span class="n">subj</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">sub_ds</span><span class="o">.</span><span class="n">description</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;subject&quot;</span><span class="p">))</span>
+    <span class="n">label</span> <span class="o">=</span> <span class="n">SEX_TO_INT</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">sub_ds</span><span class="o">.</span><span class="n">description</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;sex&quot;</span><span class="p">))]</span>
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sub_ds</span><span class="p">)):</span>
+        <span class="n">x_k</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">sub_ds</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+        <span class="n">X_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.asarray.html#numpy.asarray" title="numpy.asarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">asarray</span></a><span class="p">(</span><span class="n">x_k</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><a href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.float32" title="numpy.float32" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-attribute"><span class="n">np</span><span class="o">.</span><span class="n">float32</span></a><span class="p">))</span>
+        <span class="n">y_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">label</span><span class="p">)</span>
+        <span class="n">groups_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">subj</span><span class="p">)</span>
+<span class="n">X_raw</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.stack.html#numpy.stack" title="numpy.stack" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">stack</span></a><span class="p">(</span><span class="n">X_list</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.asarray.html#numpy.asarray" title="numpy.asarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">asarray</span></a><span class="p">(</span><span class="n">y_list</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+<span class="n">groups</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.asarray.html#numpy.asarray" title="numpy.asarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">asarray</span></a><span class="p">(</span><span class="n">groups_list</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;X_raw.shape=</span><span class="si">{</span><span class="n">X_raw</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2"> | n_F windows=</span><span class="si">{</span><span class="nb">int</span><span class="p">((</span><span class="n">y</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span><span class="si">}</span><span class="s2"> | &quot;</span>
+    <span class="sa">f</span><span class="s2">&quot;n_M windows=</span><span class="si">{</span><span class="nb">int</span><span class="p">((</span><span class="n">y</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="step-5-compute-log-band-power-features">
+<h2>Step 5. Compute log band-power features<a class="headerlink" href="#step-5-compute-log-band-power-features" title="Link to this heading">#</a></h2>
+<p>Per window: one log-power value per channel per band, on delta
+(1 to 4 Hz), theta (4 to 8 Hz), alpha (8 to 13 Hz), beta (13 to
+30 Hz). The feature shape is <code class="docutils literal notranslate"><span class="pre">(n_windows,</span> <span class="pre">n_bands</span> <span class="pre">*</span> <span class="pre">n_channels)</span></code>.
+<code class="docutils literal notranslate"><span class="pre">log(mean(|FFT|**2))</span></code> is the cheapest band-power feature that
+survives a review <span class="bibtex-citation" id="id4">[<a class="reference internal" href="../../../references.html#id8" title="Robin Tibor Schirrmeister, Jost Tobias Springenberg, Lukas Dominique Josef Fiederer, Martin Glasstetter, Katharina Eggensperger, Michael Tangermann, Frank Hutter, Wolfram Burgard, and Tonio Ball. Deep learning with convolutional neural networks for eeg decoding and visualization. Human Brain Mapping, 38(11):5391-5420, 2017. doi:10.1002/hbm.23730.">Schirrmeister <em>et al.</em>, 2017</a>]</span>.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">BANDS</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">),</span>  <span class="c1"># delta</span>
+    <span class="p">(</span><span class="mf">4.0</span><span class="p">,</span> <span class="mf">8.0</span><span class="p">),</span>  <span class="c1"># theta</span>
+    <span class="p">(</span><span class="mf">8.0</span><span class="p">,</span> <span class="mf">13.0</span><span class="p">),</span>  <span class="c1"># alpha</span>
+    <span class="p">(</span><span class="mf">13.0</span><span class="p">,</span> <span class="mf">30.0</span><span class="p">),</span>  <span class="c1"># beta</span>
+<span class="p">)</span>
+<span class="n">BAND_NAMES</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;delta&quot;</span><span class="p">,</span> <span class="s2">&quot;theta&quot;</span><span class="p">,</span> <span class="s2">&quot;alpha&quot;</span><span class="p">,</span> <span class="s2">&quot;beta&quot;</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">log_band_power</span><span class="p">(</span>
+    <span class="n">X_t</span><span class="p">:</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span></a><span class="p">,</span> <span class="n">sfreq</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">bands</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="o">...</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span></a><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Stack ``log(mean(|FFT|**2))`` per channel per band.</span>
+
+<span class="sd">    ``X_t`` is ``(n_windows, n_channels, n_times)``; the return is</span>
+<span class="sd">    ``(n_windows, len(bands) * n_channels)``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">spec</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.fft.rfft.html#numpy.fft.rfft" title="numpy.fft.rfft" class="sphx-glr-backref-module-numpy-fft sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">rfft</span></a><span class="p">(</span><span class="n">X_t</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">power</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="n">X_t</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">freqs</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.fft.rfftfreq.html#numpy.fft.rfftfreq" title="numpy.fft.rfftfreq" class="sphx-glr-backref-module-numpy-fft sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">rfftfreq</span></a><span class="p">(</span><span class="n">X_t</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">d</span><span class="o">=</span><span class="mf">1.0</span> <span class="o">/</span> <span class="n">sfreq</span><span class="p">)</span>
+    <span class="n">feats</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">fmin</span><span class="p">,</span> <span class="n">fmax</span> <span class="ow">in</span> <span class="n">bands</span><span class="p">:</span>
+        <span class="n">band_mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">freqs</span> <span class="o">&gt;=</span> <span class="n">fmin</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">freqs</span> <span class="o">&lt;</span> <span class="n">fmax</span><span class="p">)</span>
+        <span class="c1"># Add a tiny floor so log(0) does not appear when a band is empty.</span>
+        <span class="n">feats</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.log.html#numpy.log" title="numpy.log" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-data"><span class="n">np</span><span class="o">.</span><span class="n">log</span></a><span class="p">(</span><span class="n">power</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">band_mask</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="mf">1e-12</span><span class="p">))</span>
+    <span class="k">return</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.concatenate.html#numpy.concatenate" title="numpy.concatenate" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">concatenate</span></a><span class="p">(</span><span class="n">feats</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.float32" title="numpy.float32" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-attribute"><span class="n">np</span><span class="o">.</span><span class="n">float32</span></a><span class="p">)</span>
+
+
+<span class="n">X_features</span> <span class="o">=</span> <span class="n">log_band_power</span><span class="p">(</span><span class="n">X_raw</span><span class="p">,</span> <span class="n">sfreq</span><span class="p">,</span> <span class="n">BANDS</span><span class="p">)</span>
+<span class="n">n_features</span> <span class="o">=</span> <span class="n">X_features</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;feature matrix=</span><span class="si">{</span><span class="n">X_features</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2"> (log-power per channel for &quot;</span>
+    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">BAND_NAMES</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="discovery-feature-distributions">
+<h2>Discovery: feature distributions<a class="headerlink" href="#discovery-feature-distributions" title="Link to this heading">#</a></h2>
+<p>A quick descriptive table on the first eight features flags dead
+channels (variance close to zero) and saturated bands (variance much
+larger than its peers).</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">feature_names</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">b</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">c</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">BAND_NAMES</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">CH_NAMES</span><span class="p">]</span>
+<span class="n">features_df</span> <span class="o">=</span> <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span></a><span class="p">(</span><span class="n">X_features</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">feature_names</span><span class="p">)</span>
+<span class="n">features_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">8</span><span class="p">]</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="step-6-3-fold-cross-subject-cv-with-groupkfold">
+<h2>Step 6. 3-fold cross-subject CV with GroupKFold<a class="headerlink" href="#step-6-3-fold-cross-subject-cv-with-groupkfold" title="Link to this heading">#</a></h2>
+<p><strong>Predict.</strong> With <code class="docutils literal notranslate"><span class="pre">GroupKFold(n_splits=3)</span></code> and a 6-subject cohort,
+every fold trains on 4 subjects and tests on 2.
+<strong>Run.</strong> Per fold we store accuracy, AUC, and the held-out
+predictions; the pooled scores feed the confusion matrix and the
+pooled ROC.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">N_FOLDS</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">splitter</span> <span class="o">=</span> <a href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GroupKFold.html#sklearn.model_selection.GroupKFold" title="sklearn.model_selection.GroupKFold" class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">GroupKFold</span></a><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="n">N_FOLDS</span><span class="p">)</span>
+<span class="n">fold_accuracies</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">fold_aucs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">fold_held_out</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">fold_assignment</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.full.html#numpy.full" title="numpy.full" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">full</span></a><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+<span class="n">pooled_y_true</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span></a><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">pooled_y_pred</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span></a><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">pooled_y_score</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span></a><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">fold_idx</span><span class="p">,</span> <span class="p">(</span><span class="n">train_idx</span><span class="p">,</span> <span class="n">test_idx</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span>
+    <span class="n">splitter</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">X_features</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="n">groups</span><span class="p">)</span>
+<span class="p">):</span>
+    <span class="n">held_out</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">groups</span><span class="p">[</span><span class="n">test_idx</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()))</span>
+    <span class="n">fold_held_out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">held_out</span><span class="p">)</span>
+    <span class="n">fold_assignment</span><span class="p">[</span><span class="n">test_idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">fold_idx</span>
+
+    <span class="c1"># Standardize then fit. Per-fold scaling fitted on the train slice</span>
+    <span class="c1"># only keeps the test fold leakage-safe; logistic regression on</span>
+    <span class="c1"># untransformed log-power features fails to converge.</span>
+    <span class="n">clf</span> <span class="o">=</span> <a href="https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html#sklearn.pipeline.Pipeline" title="sklearn.pipeline.Pipeline" class="sphx-glr-backref-module-sklearn-pipeline sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">Pipeline</span></a><span class="p">(</span>
+        <span class="n">steps</span><span class="o">=</span><span class="p">[</span>
+            <span class="p">(</span><span class="s2">&quot;scaler&quot;</span><span class="p">,</span> <a href="https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.StandardScaler.html#sklearn.preprocessing.StandardScaler" title="sklearn.preprocessing.StandardScaler" class="sphx-glr-backref-module-sklearn-preprocessing sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">StandardScaler</span></a><span class="p">()),</span>
+            <span class="p">(</span><span class="s2">&quot;logreg&quot;</span><span class="p">,</span> <a href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html#sklearn.linear_model.LogisticRegression" title="sklearn.linear_model.LogisticRegression" class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">LogisticRegression</span></a><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="n">SEED</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">2000</span><span class="p">)),</span>
+        <span class="p">]</span>
+    <span class="p">)</span>
+    <span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_features</span><span class="p">[</span><span class="n">train_idx</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="n">train_idx</span><span class="p">])</span>
+    <span class="n">y_pred_fold</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_features</span><span class="p">[</span><span class="n">test_idx</span><span class="p">])</span>
+    <span class="n">y_score_fold</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X_features</span><span class="p">[</span><span class="n">test_idx</span><span class="p">])[:,</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="n">fold_accuracies</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><a href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.accuracy_score.html#sklearn.metrics.accuracy_score" title="sklearn.metrics.accuracy_score" class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function"><span class="n">accuracy_score</span></a><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">test_idx</span><span class="p">],</span> <span class="n">y_pred_fold</span><span class="p">)))</span>
+    <span class="n">fold_aucs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><a href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.roc_auc_score.html#sklearn.metrics.roc_auc_score" title="sklearn.metrics.roc_auc_score" class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function"><span class="n">roc_auc_score</span></a><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">test_idx</span><span class="p">],</span> <span class="n">y_score_fold</span><span class="p">)))</span>
+    <span class="n">pooled_y_true</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.asarray.html#numpy.asarray" title="numpy.asarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">asarray</span></a><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">test_idx</span><span class="p">]))</span>
+    <span class="n">pooled_y_pred</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.asarray.html#numpy.asarray" title="numpy.asarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">asarray</span></a><span class="p">(</span><span class="n">y_pred_fold</span><span class="p">))</span>
+    <span class="n">pooled_y_score</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.asarray.html#numpy.asarray" title="numpy.asarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">asarray</span></a><span class="p">(</span><span class="n">y_score_fold</span><span class="p">))</span>
+
+<span class="n">y_true_pooled</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.concatenate.html#numpy.concatenate" title="numpy.concatenate" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">concatenate</span></a><span class="p">(</span><span class="n">pooled_y_true</span><span class="p">)</span>
+<span class="n">y_pred_pooled</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.concatenate.html#numpy.concatenate" title="numpy.concatenate" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">concatenate</span></a><span class="p">(</span><span class="n">pooled_y_pred</span><span class="p">)</span>
+<span class="n">y_score_pooled</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.concatenate.html#numpy.concatenate" title="numpy.concatenate" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">concatenate</span></a><span class="p">(</span><span class="n">pooled_y_score</span><span class="p">)</span>
+<span class="n">mean_auc</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.mean.html#numpy.mean" title="numpy.mean" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">mean</span></a><span class="p">(</span><span class="n">fold_aucs</span><span class="p">))</span>
+<span class="n">std_auc</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.std.html#numpy.std" title="numpy.std" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">std</span></a><span class="p">(</span><span class="n">fold_aucs</span><span class="p">,</span> <span class="n">ddof</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+<span class="n">pooled_balanced_acc</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><a href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.balanced_accuracy_score.html#sklearn.metrics.balanced_accuracy_score" title="sklearn.metrics.balanced_accuracy_score" class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function"><span class="n">balanced_accuracy_score</span></a><span class="p">(</span><span class="n">y_true_pooled</span><span class="p">,</span> <span class="n">y_pred_pooled</span><span class="p">))</span>
+<span class="n">pooled_auc</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><a href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.roc_auc_score.html#sklearn.metrics.roc_auc_score" title="sklearn.metrics.roc_auc_score" class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function"><span class="n">roc_auc_score</span></a><span class="p">(</span><span class="n">y_true_pooled</span><span class="p">,</span> <span class="n">y_score_pooled</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;cross-subject CV: AUC=</span><span class="si">{</span><span class="n">mean_auc</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> +/- </span><span class="si">{</span><span class="n">std_auc</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> | &quot;</span>
+    <span class="sa">f</span><span class="s2">&quot;balanced_acc=</span><span class="si">{</span><span class="n">pooled_balanced_acc</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> | folds=</span><span class="si">{</span><span class="n">N_FOLDS</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="result-table-per-fold-metrics">
+<h2>Result table: per-fold metrics<a class="headerlink" href="#result-table-per-fold-metrics" title="Link to this heading">#</a></h2>
+<p>Chance is 0.50 for both AUC and accuracy on this balanced cohort.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">results_df</span> <span class="o">=</span> <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span></a><span class="p">(</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;fold&quot;</span><span class="p">:</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.arange.html#numpy.arange" title="numpy.arange" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">arange</span></a><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">N_FOLDS</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span>
+        <span class="s2">&quot;held-out subjects&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">fold_held_out</span><span class="p">],</span>
+        <span class="s2">&quot;accuracy&quot;</span><span class="p">:</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.round.html#numpy.round" title="numpy.round" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">round</span></a><span class="p">(</span><span class="n">fold_accuracies</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+        <span class="s2">&quot;auc&quot;</span><span class="p">:</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.round.html#numpy.round" title="numpy.round" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">round</span></a><span class="p">(</span><span class="n">fold_aucs</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+    <span class="p">}</span>
+<span class="p">)</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;fold&quot;</span><span class="p">)</span>
+<span class="n">results_df</span>
+</pre></div>
+</div>
+<p><strong>Investigate.</strong> On a 6-subject balanced cohort with these 32 log-
+power features, the pooled AUC routinely lands well below 0.50: the
+small subject pool means a confound (cap fit, age, recording session)
+locks the model onto the wrong direction on every held-out fold. That
+is the central caveat of this project: a number this far below chance
+is not noise, it is a confound-driven failure that an even-larger
+cohort or a different feature set would have to rescue. Anything
+above AUC = 0.95 in the same script is a leakage smell: re-check
+that <code class="docutils literal notranslate"><span class="pre">groups</span></code> is the subject id and that the cohort balancing step
+did not collapse the label.</p>
+</section>
+<section id="common-mistake-scaling-on-the-union-of-train-and-test">
+<h2>Common mistake: scaling on the union of train and test<a class="headerlink" href="#common-mistake-scaling-on-the-union-of-train-and-test" title="Link to this heading">#</a></h2>
+<p><strong>Run.</strong> A subtle slip when wiring a cross-validation loop is fitting
+<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.StandardScaler.html#sklearn.preprocessing.StandardScaler" title="(in scikit-learn v1.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">StandardScaler</span></code></a> on the full feature
+matrix before splitting. The mean and std then leak test-fold statistics
+into the train slice. We trigger the slip on purpose and recover.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">try</span><span class="p">:</span>
+    <span class="n">sneaky_train_idx</span><span class="p">,</span> <span class="n">sneaky_test_idx</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span>
+        <span class="n">splitter</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">X_features</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="n">groups</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="c1"># Wrong on purpose: scaler fitted on the union, then split.</span>
+    <span class="n">leaky_scaler</span> <span class="o">=</span> <a href="https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.StandardScaler.html#sklearn.preprocessing.StandardScaler" title="sklearn.preprocessing.StandardScaler" class="sphx-glr-backref-module-sklearn-preprocessing sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">StandardScaler</span></a><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_features</span><span class="p">)</span>
+    <span class="n">X_leaky</span> <span class="o">=</span> <span class="n">leaky_scaler</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_features</span><span class="p">)</span>
+    <span class="n">leaky_clf</span> <span class="o">=</span> <a href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html#sklearn.linear_model.LogisticRegression" title="sklearn.linear_model.LogisticRegression" class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">LogisticRegression</span></a><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="n">SEED</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">2000</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span>
+        <span class="n">X_leaky</span><span class="p">[</span><span class="n">sneaky_train_idx</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="n">sneaky_train_idx</span><span class="p">]</span>
+    <span class="p">)</span>
+    <span class="n">leaky_auc</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span>
+        <a href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.roc_auc_score.html#sklearn.metrics.roc_auc_score" title="sklearn.metrics.roc_auc_score" class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function"><span class="n">roc_auc_score</span></a><span class="p">(</span>
+            <span class="n">y</span><span class="p">[</span><span class="n">sneaky_test_idx</span><span class="p">],</span>
+            <span class="n">leaky_clf</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X_leaky</span><span class="p">[</span><span class="n">sneaky_test_idx</span><span class="p">])[:,</span> <span class="mi">1</span><span class="p">],</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+    <span class="c1"># Recovery: rebuild the Pipeline so scaling fits on the train slice</span>
+    <span class="c1"># only.</span>
+    <span class="n">safe_clf</span> <span class="o">=</span> <a href="https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html#sklearn.pipeline.Pipeline" title="sklearn.pipeline.Pipeline" class="sphx-glr-backref-module-sklearn-pipeline sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">Pipeline</span></a><span class="p">(</span>
+        <span class="p">[</span>
+            <span class="p">(</span><span class="s2">&quot;scaler&quot;</span><span class="p">,</span> <a href="https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.StandardScaler.html#sklearn.preprocessing.StandardScaler" title="sklearn.preprocessing.StandardScaler" class="sphx-glr-backref-module-sklearn-preprocessing sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">StandardScaler</span></a><span class="p">()),</span>
+            <span class="p">(</span><span class="s2">&quot;logreg&quot;</span><span class="p">,</span> <a href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html#sklearn.linear_model.LogisticRegression" title="sklearn.linear_model.LogisticRegression" class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">LogisticRegression</span></a><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="n">SEED</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">2000</span><span class="p">)),</span>
+        <span class="p">]</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_features</span><span class="p">[</span><span class="n">sneaky_train_idx</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="n">sneaky_train_idx</span><span class="p">])</span>
+    <span class="n">safe_auc</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span>
+        <a href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.roc_auc_score.html#sklearn.metrics.roc_auc_score" title="sklearn.metrics.roc_auc_score" class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function"><span class="n">roc_auc_score</span></a><span class="p">(</span>
+            <span class="n">y</span><span class="p">[</span><span class="n">sneaky_test_idx</span><span class="p">],</span>
+            <span class="n">safe_clf</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X_features</span><span class="p">[</span><span class="n">sneaky_test_idx</span><span class="p">])[:,</span> <span class="mi">1</span><span class="p">],</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;Leaky-scaler AUC=</span><span class="si">{</span><span class="n">leaky_auc</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> | Pipeline AUC=</span><span class="si">{</span><span class="n">safe_auc</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> &quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;| gap=</span><span class="si">{</span><span class="n">leaky_auc</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">safe_auc</span><span class="si">:</span><span class="s2">+.3f</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="p">)</span>
+<span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Caught ValueError: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">exc</span><span class="p">)[:</span><span class="mi">120</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="discovery-the-pooled-confusion-matrix-in-raw-counts">
+<h2>Discovery: the pooled confusion matrix in raw counts<a class="headerlink" href="#discovery-the-pooled-confusion-matrix-in-raw-counts" title="Link to this heading">#</a></h2>
+<p>The figure below renders a row-normalised matrix; the table here
+carries the raw counts so a 0.55 cell can be traced back to 11/20
+vs 550/1000.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">cm</span> <span class="o">=</span> <a href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.confusion_matrix.html#sklearn.metrics.confusion_matrix" title="sklearn.metrics.confusion_matrix" class="sphx-glr-backref-module-sklearn-metrics sphx-glr-backref-type-py-function"><span class="n">confusion_matrix</span></a><span class="p">(</span><span class="n">y_true_pooled</span><span class="p">,</span> <span class="n">y_pred_pooled</span><span class="p">)</span>
+<span class="n">cm_df</span> <span class="o">=</span> <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span></a><span class="p">(</span>
+    <span class="n">cm</span><span class="p">,</span>
+    <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;true_</span><span class="si">{</span><span class="n">c</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">CLASS_NAMES</span><span class="p">],</span>
+    <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;pred_</span><span class="si">{</span><span class="n">c</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">CLASS_NAMES</span><span class="p">],</span>
+<span class="p">)</span>
+<span class="n">cm_df</span>
+</pre></div>
+</div>
+</section>
+<section id="three-panel-sklearn-display-diagnostic">
+<h2>Three-panel sklearn-display diagnostic<a class="headerlink" href="#three-panel-sklearn-display-diagnostic" title="Link to this heading">#</a></h2>
+<p>The PCA scatter carries the
+<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.inspection.DecisionBoundaryDisplay.html#sklearn.inspection.DecisionBoundaryDisplay" title="(in scikit-learn v1.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">DecisionBoundaryDisplay</span></code></a> contour, the ROC
+panel shows per-fold curves in muted shades plus the pooled curve in
+dark ink, and the confusion matrix shows whether the diagonal is
+balanced. The rendering plumbing lives in a sibling
+<code class="docutils literal notranslate"><span class="pre">_sex_classification_figure</span></code> module so the project keeps a single
+call to plug live runtime values into the figure.</p>
+<p>PCA + a logistic regression refit in PCA space so the decision
+contour shares coordinates with the scattered points; the actual
+model the project reports lives in the original feature space.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">X_std</span> <span class="o">=</span> <a href="https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.StandardScaler.html#sklearn.preprocessing.StandardScaler" title="sklearn.preprocessing.StandardScaler" class="sphx-glr-backref-module-sklearn-preprocessing sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">StandardScaler</span></a><span class="p">()</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X_features</span><span class="p">)</span>
+<span class="n">X_pca</span> <span class="o">=</span> <a href="https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.PCA.html#sklearn.decomposition.PCA" title="sklearn.decomposition.PCA" class="sphx-glr-backref-module-sklearn-decomposition sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">PCA</span></a><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">SEED</span><span class="p">)</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X_std</span><span class="p">)</span>
+<span class="n">boundary_clf</span> <span class="o">=</span> <a href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html#sklearn.linear_model.LogisticRegression" title="sklearn.linear_model.LogisticRegression" class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">LogisticRegression</span></a><span class="p">(</span><span class="n">max_iter</span><span class="o">=</span><span class="mi">400</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_pca</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="n">n_test_subjects</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_subjects</span> <span class="o">//</span> <span class="n">N_FOLDS</span><span class="p">)</span>
+<span class="n">n_train_subjects</span> <span class="o">=</span> <span class="n">n_subjects</span> <span class="o">-</span> <span class="n">n_test_subjects</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">_sex_classification_figure</span><span class="w"> </span><span class="kn">import</span> <span class="n">draw_sex_classification_figure</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">draw_sex_classification_figure</span><span class="p">(</span>
+    <span class="n">X_pca</span><span class="o">=</span><span class="n">X_pca</span><span class="p">,</span>
+    <span class="n">y_classes</span><span class="o">=</span><span class="n">y</span><span class="p">,</span>
+    <span class="n">fold_assignment</span><span class="o">=</span><span class="n">fold_assignment</span><span class="p">,</span>
+    <span class="n">estimator</span><span class="o">=</span><span class="n">boundary_clf</span><span class="p">,</span>
+    <span class="n">fold_aucs</span><span class="o">=</span><span class="n">fold_aucs</span><span class="p">,</span>
+    <span class="n">y_true_pooled</span><span class="o">=</span><span class="n">y_true_pooled</span><span class="p">,</span>
+    <span class="n">y_pred_pooled</span><span class="o">=</span><span class="n">y_pred_pooled</span><span class="p">,</span>
+    <span class="n">y_score_pooled</span><span class="o">=</span><span class="n">y_score_pooled</span><span class="p">,</span>
+    <span class="n">class_names</span><span class="o">=</span><span class="n">CLASS_NAMES</span><span class="p">,</span>
+    <span class="n">plot_id</span><span class="o">=</span><span class="s2">&quot;project_sex_classification&quot;</span><span class="p">,</span>
+    <span class="n">n_train_subjects</span><span class="o">=</span><span class="n">n_train_subjects</span><span class="p">,</span>
+    <span class="n">n_test_subjects</span><span class="o">=</span><span class="n">n_test_subjects</span><span class="p">,</span>
+    <span class="n">n_features</span><span class="o">=</span><span class="n">n_features</span><span class="p">,</span>
+<span class="p">)</span>
+<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
+</pre></div>
+</div>
+<p><strong>Investigate.</strong> Read the panels in order. (1) PCA + decision
+boundary: do F and M markers form even partly separable clouds?
+Linear separability on log-power features is rare on a 6-subject
+cohort; partial overlap with a clean contour is the expected picture.
+(2) ROC curves: is every per-fold curve above the diagonal chance
+line, or is one held-out fold pulling the pooled AUC down? Big
+across-fold variance is the honest signature of cross-subject EEG.
+(3) Confusion matrix: a balanced diagonal in deep blue is the win
+condition; an off-diagonal stripe means the model has collapsed onto
+one class. The monospace <code class="docutils literal notranslate"><span class="pre">balanced_acc=...</span></code> annotation carries the
+headline metric so the figure stands alone.</p>
+</section>
+<section id="modify">
+<h2>Modify<a class="headerlink" href="#modify" title="Link to this heading">#</a></h2>
+<p><strong>Your turn.</strong> Drop the alpha band from <code class="docutils literal notranslate"><span class="pre">BANDS</span></code> and rerun Step 5 and
+Step 6. An AUC drop of more than 0.05 means the alpha band carried
+most of the class-related variance; a smaller drop means the contrast
+is spread across the spectrum.</p>
+</section>
+<section id="make">
+<h2>Make<a class="headerlink" href="#make" title="Link to this heading">#</a></h2>
+<p><strong>Mini-project.</strong> Replace
+<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html#sklearn.linear_model.LogisticRegression" title="(in scikit-learn v1.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">LogisticRegression</span></code></a> with
+<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html#sklearn.ensemble.RandomForestClassifier" title="(in scikit-learn v1.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">RandomForestClassifier</span></code></a> (default
+hyperparameters, <code class="docutils literal notranslate"><span class="pre">random_state=42</span></code>) and rerun Step 6. If the random
+forest does not beat the linear baseline, that is the most useful
+finding the project will produce: linear features deserve a linear
+model.</p>
+</section>
+<section id="wrap-up">
+<h2>Wrap-up<a class="headerlink" href="#wrap-up" title="Link to this heading">#</a></h2>
+<p>Six ds005505 RestingState recordings were balanced by BIDS sex, fed
+through 4-band log-power features on 8 channels, and scored with a
+leakage-safe <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html#sklearn.linear_model.LogisticRegression" title="(in scikit-learn v1.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">LogisticRegression</span></code></a>
+Pipeline across 3 cross-subject folds. The pooled AUC is the only
+number worth quoting in a benchmark submission; the per-fold table
+shows whether that AUC is stable. A clean shape and a chance-anchored
+AUC only confirm plumbing; signal quality and the sex-vs-confound
+question are still open <span class="bibtex-citation" id="id5">[<a class="reference internal" href="../../../references.html#id19" title="Giulia Cisotto and Davide Chicco. Ten quick tips for clinical electroencephalographic (eeg) data acquisition and signal processing. PeerJ Computer Science, 10:e2256, 2024. doi:10.7717/peerj-cs.2256.">Cisotto and Chicco, 2024</a>]</span>.</p>
+</section>
+<section id="try-it-yourself">
+<h2>Try it yourself<a class="headerlink" href="#try-it-yourself" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Bump <code class="docutils literal notranslate"><span class="pre">N_PER_SEX</span></code> from 3 to 6 (12 subjects total) and rerun. The
+per-fold AUC band should tighten as the cohort grows.</p></li>
+<li><p>Replace <code class="docutils literal notranslate"><span class="pre">GroupKFold</span></code> with
+<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.LeaveOneGroupOut.html#sklearn.model_selection.LeaveOneGroupOut" title="(in scikit-learn v1.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">LeaveOneGroupOut</span></code></a>. With 6 subjects
+the leave-one-out loop returns 6 folds and a tighter ROC band.</p></li>
+<li><p>Append age (<code class="docutils literal notranslate"><span class="pre">description['age']</span></code>) as a regression target instead
+of sex, and rerun the same three-panel figure with
+<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Ridge.html#sklearn.linear_model.Ridge" title="(in scikit-learn v1.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Ridge</span></code></a> plus a continuous-target
+variant of the diagnostic.</p></li>
+</ul>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<p>See <a class="reference internal" href="../../../references.html"><span class="doc">References</span></a> for the centralised bibliography of papers
+cited above. Add or amend an entry once in
+<code class="file docutils literal notranslate"><span class="pre">docs/source/refs.bib</span></code>; every tutorial inherits the update.</p>
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-auto-examples-applied-project-sex-classification-py">
+<div class="binder-badge docutils container">
+<a class="reference external image-reference" href="https://mybinder.org/v2/gh/eegdash/EEGDash/main?urlpath=lab/tree/notebooks/generated/auto_examples/applied/project_sex_classification.ipynb"><img alt="Launch binder" src="../../../_images/binder_badge_logo.svg" style="width: 150px;" />
+</a>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../../../_downloads/3cb1bbd918730aeee45cf18e88a3d0cd/project_sex_classification.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">project_sex_classification.ipynb</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../../../_downloads/a91d6a1277663eb124d216e84da61774/project_sex_classification.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">project_sex_classification.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-zip docutils container">
+<p><a class="reference download internal" download="" href="../../../_downloads/296c5451dfacaa4c4c5c894adc33491b/project_sex_classification.zip"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">zipped:</span> <span class="pre">project_sex_classification.zip</span></code></a></p>
+</div>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="project_pfactor_features.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Predicting p-factor from EEG with hand-crafted features (project starter)</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../eeg2025/index.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">EEG 2025 Foundation Challenge</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">Learning objectives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#requirements">Requirements</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-a-sklearn-display-diagnostic">Why a sklearn-display diagnostic?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-pull-ds005505-resting-state-metadata">Step 1. Pull ds005505 resting-state metadata</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-balance-the-cohort-by-the-bids-sex-label">Step 2. Balance the cohort by the BIDS sex label</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-pick-a-small-montage-resample-and-window">Step 3. Pick a small montage, resample, and window</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-4-materialize-windows-per-window-subject-id-and-label">Step 4. Materialize windows + per-window subject id and label</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-5-compute-log-band-power-features">Step 5. Compute log band-power features</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discovery-feature-distributions">Discovery: feature distributions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-6-3-fold-cross-subject-cv-with-groupkfold">Step 6. 3-fold cross-subject CV with GroupKFold</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#result-table-per-fold-metrics">Result table: per-fold metrics</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#common-mistake-scaling-on-the-union-of-train-and-test">Common mistake: scaling on the union of train and test</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discovery-the-pooled-confusion-matrix-in-raw-counts">Discovery: the pooled confusion matrix in raw counts</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#three-panel-sklearn-display-diagnostic">Three-panel sklearn-display diagnostic</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#modify">Modify</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#make">Make</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#wrap-up">Wrap-up</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#try-it-yourself">Try it yourself</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb"></script>
+<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025-2026, EEG Dash Developers.
+      <br/>
+    
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.17.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

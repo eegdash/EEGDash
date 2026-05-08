@@ -100,7 +100,7 @@ This work was supported by a 1.3.5 project for disciplines of excellence from We
 
 | Dataset ID     | `DS006465`                                                                                                                                                                        |
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Title          | 3M-CPSEED：An EEG-based Dataset for Chinese Pinyin Production in Overt, Silent-intended, and Imagined Speech                                                                       |
+| Title          | 3M-CPSEED：An EEG-based Dataset for Chinese Pinyin Production in Overt, Silent-intended, and Imagined Speech                                                                      |
 | Author (year)  | `Ma2025`                                                                                                                                                                          |
 | Canonical      | —                                                                                                                                                                                 |
 | Importable as  | `DS006465`, `Ma2025`                                                                                                                                                              |
@@ -164,7 +164,7 @@ This work was supported by a 1.3.5 project for disciplines of excellence from We
 
 Use the `DS006465` class to access this dataset programmatically.
 
-### *class* eegdash.dataset.DS006465(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
+### *class* eegdash.dataset.DS006465(cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), query: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, s3_bucket: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
 
 Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 
@@ -183,11 +183,11 @@ Modality: `eeg`; Experiment type: `Motor`; Subject type: `Healthy`.
 Subjects: 20; recordings: 80; tasks: 1.
 
 * **Parameters:**
-  * **cache_dir** (*str* *|* *Path*) – Directory where data are cached locally.
-  * **query** (*dict* *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+  * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *Path*) – Directory where data are cached locally.
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
     Must not contain the key `dataset`.
-  * **s3_bucket** (*str* *|* *None*) – Base S3 bucket used to locate the data.
-  * **\*\*kwargs** (*dict*) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+  * **s3_bucket** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
 
 #### data_dir
 
@@ -201,14 +201,14 @@ Local dataset cache directory (`cache_dir / dataset_id`).
 Merged query with the dataset filter applied.
 
 * **Type:**
-  dict
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
 
 #### records
 
 Metadata records used to build the dataset, if pre-fetched.
 
 * **Type:**
-  list[dict] | None
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[dict](https://docs.python.org/3/library/stdtypes.html#dict)] | None
 
 ### Notes
 
@@ -233,19 +233,43 @@ DOI: [https://doi.org/10.18112/openneuro.ds006465.v2.0.0](https://doi.org/10.181
 
 <!-- !! processed by numpydoc !! -->
 
-#### \_\_init_\_(cache_dir: str, query: dict | None = None, s3_bucket: str | None = None, \*\*kwargs)
+#### \_\_init_\_(cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), query: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, s3_bucket: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
 
 <!-- !! processed by numpydoc !! -->
 
-#### save(path, overwrite=False)
+#### save(path: [str](https://docs.python.org/3/library/stdtypes.html#str), overwrite: [bool](https://docs.python.org/3/library/functions.html#bool) = False, offset: [int](https://docs.python.org/3/library/functions.html#int) = 0)
 
-Save the dataset to disk.
+Save datasets to files by creating one subdirectory for each dataset:
+
+```default
+path/
+    0/
+        0-raw.fif | 0-epo.fif
+        description.json
+        raw_preproc_kwargs.json (if raws were preprocessed)
+        window_kwargs.json (if this is a windowed dataset)
+        window_preproc_kwargs.json  (if windows were preprocessed)
+        target_name.json (if target_name is not None and dataset is raw)
+    1/
+        1-raw.fif | 1-epo.fif
+        description.json
+        raw_preproc_kwargs.json (if raws were preprocessed)
+        window_kwargs.json (if this is a windowed dataset)
+        window_preproc_kwargs.json  (if windows were preprocessed)
+        target_name.json (if target_name is not None and dataset is raw)
+```
 
 * **Parameters:**
-  * **path** (*str* *or* *Path*) – Destination file path.
-  * **overwrite** (*bool* *,* *default False*) – If True, overwrite existing file.
-* **Return type:**
-  None
+  * **path** ([*str*](https://docs.python.org/3/library/stdtypes.html#str)) – 
+
+    Directory in which subdirectories are created to store
+    : -raw.fif | -epo.fif and .json files to.
+  * **overwrite** ([*bool*](https://docs.python.org/3/library/functions.html#bool)) – Whether to delete old subdirectories that will be saved to in this
+    call.
+  * **offset** ([*int*](https://docs.python.org/3/library/functions.html#int)) – If provided, the integer is added to the id of the dataset in the
+    concat. This is useful in the setting of very large datasets, where
+    one dataset has to be processed and saved at a time to account for
+    its original position.
 
 <!-- !! processed by numpydoc !! -->
 

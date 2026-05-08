@@ -19,7 +19,7 @@ associated metadata.
 | `load_feature_extractor_from_yaml`(path)    | Reads a feature extractor from a yaml file.             |
 | `load_features_concat_dataset`(path[, ...]) | Load a stored `FeaturesConcatDataset` from a directory. |
 
-### eegdash.features.serialization.feature_extractor_from_dict(fe_dict: dict) → eegdash.features.extractors.FeatureExtractor
+### eegdash.features.serialization.feature_extractor_from_dict(fe_dict: [dict](https://docs.python.org/3/library/stdtypes.html#dict)) → eegdash.features.extractors.FeatureExtractor
 
 Get a feature extractor from a dictionary.
 
@@ -27,7 +27,7 @@ Get a feature extractor object from a dictionary saved by
 `FeatureExtractor.to_dict()`.
 
 * **Parameters:**
-  **fe_dict** (*dict*) – A dictionary representing the feature extractor, with
+  **fe_dict** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – A dictionary representing the feature extractor, with
   `"feature_extractors"` and `"preprocessor"` fields (if applicable).
 * **Returns:**
   A feature extractor
@@ -45,12 +45,12 @@ Get a feature extractor object from a dictionary saved by
 
 <!-- !! processed by numpydoc !! -->
 
-### eegdash.features.serialization.load_feature_extractor_from_hocon(path: str | Path) → eegdash.features.extractors.FeatureExtractor
+### eegdash.features.serialization.load_feature_extractor_from_hocon(path: [str](https://docs.python.org/3/library/stdtypes.html#str) | [Path](https://docs.python.org/3/library/pathlib.html#pathlib.Path)) → eegdash.features.extractors.FeatureExtractor
 
 Reads a feature extractor from a HOCON’s conf file.
 
 * **Parameters:**
-  **path** (*str* *|* *pathlib.Path*) – The path to the conf file.
+  **path** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* [*pathlib.Path*](https://docs.python.org/3/library/pathlib.html#pathlib.Path)) – The path to the conf file.
 
 #### SEE ALSO
 `FeatureExtractor.to_hocon`, `feature_extractor_from_dict`
@@ -65,12 +65,12 @@ Reads a feature extractor from a HOCON’s conf file.
 
 <!-- !! processed by numpydoc !! -->
 
-### eegdash.features.serialization.load_feature_extractor_from_json(path: str | Path) → eegdash.features.extractors.FeatureExtractor
+### eegdash.features.serialization.load_feature_extractor_from_json(path: [str](https://docs.python.org/3/library/stdtypes.html#str) | [Path](https://docs.python.org/3/library/pathlib.html#pathlib.Path)) → eegdash.features.extractors.FeatureExtractor
 
 Reads a feature extractor from a json file.
 
 * **Parameters:**
-  **path** (*str* *|* *pathlib.Path*) – The path to the json file.
+  **path** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* [*pathlib.Path*](https://docs.python.org/3/library/pathlib.html#pathlib.Path)) – The path to the json file.
 
 #### SEE ALSO
 `FeatureExtractor.to_json`, `feature_extractor_from_dict`
@@ -84,12 +84,12 @@ Reads a feature extractor from a json file.
 
 <!-- !! processed by numpydoc !! -->
 
-### eegdash.features.serialization.load_feature_extractor_from_yaml(path: str | Path) → eegdash.features.extractors.FeatureExtractor
+### eegdash.features.serialization.load_feature_extractor_from_yaml(path: [str](https://docs.python.org/3/library/stdtypes.html#str) | [Path](https://docs.python.org/3/library/pathlib.html#pathlib.Path)) → eegdash.features.extractors.FeatureExtractor
 
 Reads a feature extractor from a yaml file.
 
 * **Parameters:**
-  **path** (*str* *|* *pathlib.Path*) – The path to the yaml file.
+  **path** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* [*pathlib.Path*](https://docs.python.org/3/library/pathlib.html#pathlib.Path)) – The path to the yaml file.
 
 ### Notes
 
@@ -104,7 +104,7 @@ Reads a feature extractor from a yaml file.
 
 <!-- !! processed by numpydoc !! -->
 
-### eegdash.features.serialization.load_features_concat_dataset(path: str | Path, ids_to_load: list[int] | None = None, n_jobs: int = 1) → eegdash.features.datasets.FeaturesConcatDataset
+### eegdash.features.serialization.load_features_concat_dataset(path: [str](https://docs.python.org/3/library/stdtypes.html#str) | [Path](https://docs.python.org/3/library/pathlib.html#pathlib.Path), ids_to_load: [list](https://docs.python.org/3/library/stdtypes.html#list)[[int](https://docs.python.org/3/library/functions.html#int)] | [None](https://docs.python.org/3/library/constants.html#None) = None, n_jobs: [int](https://docs.python.org/3/library/functions.html#int) = 1) → eegdash.features.datasets.FeaturesConcatDataset
 
 Load a stored `FeaturesConcatDataset` from a directory.
 
@@ -112,12 +112,12 @@ This function reconstructs a concatenated dataset by loading individual
 `FeaturesDataset` instances from numbered subdirectories.
 
 * **Parameters:**
-  * **path** (*str* *or* *pathlib.Path*) – The root directory where the dataset was previously saved. This
+  * **path** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *or* [*pathlib.Path*](https://docs.python.org/3/library/pathlib.html#pathlib.Path)) – The root directory where the dataset was previously saved. This
     directory should contain numbered subdirectories.
-  * **ids_to_load** (*list* *of* *int* *,* *optional*) – A list of specific recording IDs (subdirectory names) to load.
+  * **ids_to_load** ([*list*](https://docs.python.org/3/library/stdtypes.html#list) *of* [*int*](https://docs.python.org/3/library/functions.html#int) *,* *optional*) – A list of specific recording IDs (subdirectory names) to load.
     If **None**, all numbered subdirectories found in the path are
     loaded in ascending numerical order.
-  * **n_jobs** (*int* *,* *default=1*) – The number of CPU cores to use for parallel loading. Set to -1 to
+  * **n_jobs** ([*int*](https://docs.python.org/3/library/functions.html#int) *,* *default=1*) – The number of CPU cores to use for parallel loading. Set to -1 to
     use all available processors.
 * **Returns:**
   A unified concatenated dataset containing the loaded recordings.
@@ -125,7 +125,7 @@ This function reconstructs a concatenated dataset by loading individual
   FeaturesConcatDataset
 
 #### SEE ALSO
-`braindecode.datautil.load_concat_dataset`
+[`braindecode.datautil.load_concat_dataset`](https://braindecode.org/stable/generated/braindecode.datautil.load_concat_dataset.html#braindecode.datautil.load_concat_dataset)
 
 ### Notes
 

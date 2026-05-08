@@ -29,7 +29,7 @@ The module provides the following utilities:
 | `get_feature_kind`(feature)                      | Get the 'kind' of a feature function.                            |
 | `get_feature_predecessors`(feature_or_extractor) | Get the dependency hierarchy for a feature or feature extractor. |
 
-### eegdash.features.inspect.get_all_feature_preprocessors() → list[tuple[str, Callable]]
+### eegdash.features.inspect.get_all_feature_preprocessors() → [list](https://docs.python.org/3/library/stdtypes.html#list)[[tuple](https://docs.python.org/3/library/stdtypes.html#tuple)[[str](https://docs.python.org/3/library/stdtypes.html#str), [Callable](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)]]
 
 Get a list of all available preprocessor functions.
 
@@ -41,11 +41,11 @@ features (e.g., lack a feature_kind).
   A list of (name, function) tuples for all discovered feature
   preprocessors.
 * **Return type:**
-  list of tuple
+  [list](https://docs.python.org/3/library/stdtypes.html#list) of [tuple](https://docs.python.org/3/library/stdtypes.html#tuple)
 
 <!-- !! processed by numpydoc !! -->
 
-### eegdash.features.inspect.get_all_feature_kinds() → list[tuple[str, type[TypeAliasForwardRef('eegdash.features.extractors.MultivariateFeature')]]]
+### eegdash.features.inspect.get_all_feature_kinds() → [list](https://docs.python.org/3/library/stdtypes.html#list)[[tuple](https://docs.python.org/3/library/stdtypes.html#tuple)[[str](https://docs.python.org/3/library/stdtypes.html#str), [type](https://docs.python.org/3/library/functions.html#type)[TypeAliasForwardRef('eegdash.features.extractors.MultivariateFeature')]]]
 
 Get a list of all available feature ‘kind’ classes.
 
@@ -55,11 +55,11 @@ that subclass `MultivariateFeature`.
 * **Returns:**
   A list of (name, class) tuples for all discovered feature kinds.
 * **Return type:**
-  list of tuple
+  [list](https://docs.python.org/3/library/stdtypes.html#list) of [tuple](https://docs.python.org/3/library/stdtypes.html#tuple)
 
 <!-- !! processed by numpydoc !! -->
 
-### eegdash.features.inspect.get_all_features() → list[tuple[str, Callable]]
+### eegdash.features.inspect.get_all_features() → [list](https://docs.python.org/3/library/stdtypes.html#list)[[tuple](https://docs.python.org/3/library/stdtypes.html#tuple)[[str](https://docs.python.org/3/library/stdtypes.html#str), [Callable](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)]]
 
 Get a list of all available feature functions.
 
@@ -69,11 +69,11 @@ that have been decorated with a feature_kind.
 * **Returns:**
   A list of (name, function) tuples for all discovered feature functions.
 * **Return type:**
-  list of tuple
+  [list](https://docs.python.org/3/library/stdtypes.html#list) of [tuple](https://docs.python.org/3/library/stdtypes.html#tuple)
 
 <!-- !! processed by numpydoc !! -->
 
-### eegdash.features.inspect.get_all_preprocessor_output_types() → list[tuple[str, type[BasePreprocessorOutputType]]]
+### eegdash.features.inspect.get_all_preprocessor_output_types() → [list](https://docs.python.org/3/library/stdtypes.html#list)[[tuple](https://docs.python.org/3/library/stdtypes.html#tuple)[[str](https://docs.python.org/3/library/stdtypes.html#str), [type](https://docs.python.org/3/library/functions.html#type)[BasePreprocessorOutputType]]]
 
 Get a list of all available preprocessor output type classes.
 
@@ -83,11 +83,11 @@ that subclass `BasePreprocessorOutputType`.
 * **Returns:**
   A list of (name, class) tuples for all discovered preprocessor output types.
 * **Return type:**
-  list of tuple
+  [list](https://docs.python.org/3/library/stdtypes.html#list) of [tuple](https://docs.python.org/3/library/stdtypes.html#tuple)
 
 <!-- !! processed by numpydoc !! -->
 
-### eegdash.features.inspect.get_feature_kind(feature: Callable) → eegdash.features.extractors.MultivariateFeature
+### eegdash.features.inspect.get_feature_kind(feature: [Callable](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)) → eegdash.features.extractors.MultivariateFeature
 
 Get the ‘kind’ of a feature function.
 
@@ -103,7 +103,7 @@ using decorators.
 
 <!-- !! processed by numpydoc !! -->
 
-### eegdash.features.inspect.get_feature_predecessors(feature_or_extractor: Callable | None) → list
+### eegdash.features.inspect.get_feature_predecessors(feature_or_extractor: [Callable](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable) | [None](https://docs.python.org/3/library/constants.html#None)) → [list](https://docs.python.org/3/library/stdtypes.html#list)
 
 Get the dependency hierarchy for a feature or feature extractor.
 
@@ -120,7 +120,7 @@ of a feature or extractor to build a list representing its dependency lineage.
   base signal input. For multiple dependencies, it contains tuples
   of sub-dependencies.
 * **Return type:**
-  list
+  [list](https://docs.python.org/3/library/stdtypes.html#list)
 
 ### Notes
 

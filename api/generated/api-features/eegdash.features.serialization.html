@@ -50,7 +50,7 @@
     <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
     <link rel="stylesheet" type="text/css" href="../../../_static/custom.7953df0a.css?v=314ed3b2" />
     <link rel="stylesheet" type="text/css" href="../../../_static/css/treemap.087aecf0.css?v=7131b20f" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.99faa59c.css?v=b44e0256" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.d7808461.css?v=1ba63a31" />
   
   <!-- So that users can add custom icons -->
   <script defer src="../../../_static/scripts/fontawesome.js?digest=55c26ed414f5f8a31ebb"></script>
@@ -241,8 +241,8 @@
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../user_guide.html">
-    User Guide
+  <a class="nav-link nav-internal" href="../../../quickstart.html">
+    Quick Start
   </a>
 </li>
 
@@ -261,19 +261,43 @@
 </li>
 
 
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../concepts/index.html">
+    Concepts
+  </a>
+</li>
+
+
 <li class="nav-item current active">
   <a class="nav-link nav-internal" href="../../api.html">
     Docs
   </a>
 </li>
 
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../references.html">
+    References
+  </a>
+</li>
 
-<li class="nav-item ">
-  <a class="nav-link nav-external" href="https://eeg2025.github.io/">
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-external" href="https://eeg2025.github.io/">
     EEG2025
   </a>
 </li>
 
+                </ul>
+            </li>
+            
   </ul>
 </nav></div>
       
@@ -388,8 +412,8 @@
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../user_guide.html">
-    User Guide
+  <a class="nav-link nav-internal" href="../../../quickstart.html">
+    Quick Start
   </a>
 </li>
 
@@ -408,9 +432,23 @@
 </li>
 
 
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../concepts/index.html">
+    Concepts
+  </a>
+</li>
+
+
 <li class="nav-item current active">
   <a class="nav-link nav-internal" href="../../api.html">
     Docs
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../references.html">
+    References
   </a>
 </li>
 
@@ -612,13 +650,13 @@ associated metadata.</p>
 </div>
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.serialization.</span></span><span class="sig-name descname"><span class="pre">feature_extractor_from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fe_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">eegdash.features.extractors.FeatureExtractor</span></span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/serialization.py#L212-L260"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.serialization.</span></span><span class="sig-name descname"><span class="pre">feature_extractor_from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fe_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><span class="pre">dict</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">eegdash.features.extractors.FeatureExtractor</span></span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/serialization.py#L212-L260"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Get a feature extractor from a dictionary.</p>
 <p>Get a feature extractor object from a dictionary saved by
 <code class="xref py py-meth docutils literal notranslate"><span class="pre">FeatureExtractor.to_dict()</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>fe_dict</strong> (<em>dict</em>) – A dictionary representing the feature extractor, with
+<dd class="field-odd"><p><strong>fe_dict</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a>) – A dictionary representing the feature extractor, with
 <code class="docutils literal notranslate"><span class="pre">&quot;feature_extractors&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;preprocessor&quot;</span></code> fields (if applicable).</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -645,11 +683,11 @@ associated metadata.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.serialization.</span></span><span class="sig-name descname"><span class="pre">load_feature_extractor_from_hocon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">eegdash.features.extractors.FeatureExtractor</span></span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/serialization.py#L326-L354"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.serialization.</span></span><span class="sig-name descname"><span class="pre">load_feature_extractor_from_hocon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><span class="pre">Path</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">eegdash.features.extractors.FeatureExtractor</span></span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/serialization.py#L326-L354"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Reads a feature extractor from a HOCON’s conf file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>path</strong> (<em>str</em><em> | </em><em>pathlib.Path</em>) – The path to the conf file.</p>
+<dd class="field-odd"><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><em>pathlib.Path</em></a>) – The path to the conf file.</p>
 </dd>
 </dl>
 <div class="admonition seealso">
@@ -674,11 +712,11 @@ associated metadata.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.serialization.</span></span><span class="sig-name descname"><span class="pre">load_feature_extractor_from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">eegdash.features.extractors.FeatureExtractor</span></span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/serialization.py#L263-L291"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.serialization.</span></span><span class="sig-name descname"><span class="pre">load_feature_extractor_from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><span class="pre">Path</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">eegdash.features.extractors.FeatureExtractor</span></span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/serialization.py#L263-L291"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Reads a feature extractor from a json file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>path</strong> (<em>str</em><em> | </em><em>pathlib.Path</em>) – The path to the json file.</p>
+<dd class="field-odd"><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><em>pathlib.Path</em></a>) – The path to the json file.</p>
 </dd>
 </dl>
 <div class="admonition seealso">
@@ -702,11 +740,11 @@ associated metadata.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.serialization.</span></span><span class="sig-name descname"><span class="pre">load_feature_extractor_from_yaml</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">eegdash.features.extractors.FeatureExtractor</span></span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/serialization.py#L294-L323"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.serialization.</span></span><span class="sig-name descname"><span class="pre">load_feature_extractor_from_yaml</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><span class="pre">Path</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">eegdash.features.extractors.FeatureExtractor</span></span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/serialization.py#L294-L323"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Reads a feature extractor from a yaml file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>path</strong> (<em>str</em><em> | </em><em>pathlib.Path</em>) – The path to the yaml file.</p>
+<dd class="field-odd"><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><em>pathlib.Path</em></a>) – The path to the yaml file.</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
@@ -731,19 +769,19 @@ associated metadata.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.serialization.</span></span><span class="sig-name descname"><span class="pre">load_features_concat_dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ids_to_load</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">eegdash.features.datasets.FeaturesConcatDataset</span></span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/serialization.py#L36-L84"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.serialization.</span></span><span class="sig-name descname"><span class="pre">load_features_concat_dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><span class="pre">Path</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">ids_to_load</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">eegdash.features.datasets.FeaturesConcatDataset</span></span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/serialization.py#L36-L84"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Load a stored <code class="xref py py-class docutils literal notranslate"><span class="pre">FeaturesConcatDataset</span></code> from a directory.</p>
 <p>This function reconstructs a concatenated dataset by loading individual
 <code class="xref py py-class docutils literal notranslate"><span class="pre">FeaturesDataset</span></code> instances from numbered subdirectories.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>path</strong> (<em>str</em><em> or </em><em>pathlib.Path</em>) – The root directory where the dataset was previously saved. This
+<li><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><em>pathlib.Path</em></a>) – The root directory where the dataset was previously saved. This
 directory should contain numbered subdirectories.</p></li>
-<li><p><strong>ids_to_load</strong> (<em>list</em><em> of </em><em>int</em><em>, </em><em>optional</em>) – A list of specific recording IDs (subdirectory names) to load.
+<li><p><strong>ids_to_load</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – A list of specific recording IDs (subdirectory names) to load.
 If <strong>None</strong>, all numbered subdirectories found in the path are
 loaded in ascending numerical order.</p></li>
-<li><p><strong>n_jobs</strong> (<em>int</em><em>, </em><em>default=1</em>) – The number of CPU cores to use for parallel loading. Set to -1 to
+<li><p><strong>n_jobs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>default=1</em>) – The number of CPU cores to use for parallel loading. Set to -1 to
 use all available processors.</p></li>
 </ul>
 </dd>
@@ -756,7 +794,7 @@ use all available processors.</p></li>
 </dl>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
-<p><code class="xref py py-obj docutils literal notranslate"><span class="pre">braindecode.datautil.load_concat_dataset</span></code></p>
+<p><a class="reference external" href="https://braindecode.org/stable/generated/braindecode.datautil.load_concat_dataset.html#braindecode.datautil.load_concat_dataset" title="(in Braindecode v1.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">braindecode.datautil.load_concat_dataset</span></code></a></p>
 </div>
 <p class="rubric">Notes</p>
 <p>The function expects the directory structure generated by

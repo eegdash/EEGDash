@@ -35,7 +35,7 @@ dataset metadata. The focus is interoperability, extensibility, and ease of use.
       Search metadata, modalities, tasks, and cohorts with unified filters.
 
    .. grid-item-card:: Reproducible preprocessing
-      :link: ../user_guide
+      :link: ../quickstart
       :link-type: doc
       :text-align: left
       :class-card: feature-card hf-reveal hf-delay-2
@@ -55,7 +55,7 @@ dataset metadata. The focus is interoperability, extensibility, and ease of use.
       Export model-ready features and compare baselines across datasets.
 
    .. grid-item-card:: BIDS-first interoperability
-      :link: ../user_guide
+      :link: ../quickstart
       :link-type: doc
       :text-align: left
       :class-card: feature-card hf-reveal hf-delay-3

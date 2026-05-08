@@ -1,0 +1,2070 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../../" data-theme="light">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta property="og:title" content="How do I preprocess EEG and create model-ready windows?" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://eegdash.org/generated/auto_examples/tutorials/10_core_workflow/plot_10_preprocess_and_window.html" />
+<meta property="og:site_name" content="EEG Dash" />
+<meta property="og:description" content="Raw EEG is rarely model-ready: wrong sampling rate, drift and line noise, no fixed reference, sporadic large-amplitude bursts, a continuous timeline…" />
+<meta property="og:image" content="https://eegdash.org/_static/eegdash_social_card.png" />
+<meta property="og:image:alt" content="EEG Dash — data-sharing interface for M/EEG datasets" />
+<meta name="description" content="Raw EEG is rarely model-ready: wrong sampling rate, drift and line noise, no fixed reference, sporadic large-amplitude bursts, a continuous timeline…" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@eegdash" />
+
+    <title>How do I preprocess EEG and create model-ready windows? &#8212; EEG Dash</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "light";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../_static/styles/theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+<link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sg_gallery.css?v=fd6457a4" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/custom.7953df0a.css?v=314ed3b2" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/css/treemap.087aecf0.css?v=7131b20f" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.d7808461.css?v=1ba63a31" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../../../_static/scripts/fontawesome.js?digest=55c26ed414f5f8a31ebb"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb" />
+<link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb" />
+
+    <script src="../../../../_static/documentation_options.js?v=6dfdf7c3"></script>
+    <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../../_static/sg-tags.js?v=d80f6fa4"></script>
+    <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../../_static/copybutton.js?v=8c005784"></script>
+    <script src="../../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'generated/auto_examples/tutorials/10_core_workflow/plot_10_preprocess_and_window';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <script defer="defer" src="../../../../_static/js/tag-palette.7346f567.js?v=6f5eac9a"></script>
+    <script defer="defer" src="../../../../_static/js/search-as-you-type.e09b639d.js?v=8e93d0f7"></script>
+    <script defer="defer" src="../../../../_static/js/lazy-embed.1f1f83d2.js?v=118c4c47"></script>
+    <link rel="canonical" href="https://eegdash.org/generated/auto_examples/tutorials/10_core_workflow/plot_10_preprocess_and_window.html" />
+    <link rel="icon" href="../../../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="How do I split EEG data without subject leakage?" href="plot_11_leakage_safe_split.html" />
+    <link rel="prev" title="Core Decoding Workflow" href="index.html" />
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.7" />
+
+  
+  <meta name="google-site-verification" content="REPLACE_WITH_GSC_TOKEN">
+  <meta name="msvalidate.01" content="REPLACE_WITH_BING_TOKEN">
+
+  
+  <link rel="preconnect" href="https://cdn.datatables.net" crossorigin>
+  <link rel="preconnect" href="https://code.jquery.com" crossorigin>
+
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    rel="preload"
+    as="style"
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Source+Sans+3:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap"
+    onload="this.onload=null;this.rel='stylesheet'">
+  <noscript>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Source+Sans+3:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap">
+  </noscript>
+
+  
+
+  
+  <link rel="alternate" type="text/markdown" href="/llms.txt" title="EEGDash — LLM-friendly index">
+  <link rel="llms" href="/llms.txt" title="EEGDash — llms.txt index">
+  <link rel="llms-txt" href="/llms.txt">
+  <link rel="llms-full" type="text/markdown" href="/llms-full.txt" title="EEGDash — full markdown corpus">
+  <link rel="alternate" type="application/json" href="/.well-known/agent-skills/index.json" title="EEGDash — Agent Skills">
+  <link rel="alternate" type="application/linkset+json" href="/.well-known/api-catalog" title="EEGDash — API catalog">
+  <meta name="llms-txt" content="/llms.txt">
+  <meta name="llms" content="/llms.txt">
+  <meta name="ai-content-index" content="/llms.txt">
+  <meta name="ai.content_index" content="/llms.txt">
+
+  
+
+  <!-- Google Tag Manager — deferred to DOMContentLoaded so the GTM
+       bootstrap no longer blocks first-paint or the Sphinx search-index
+       load. Functionally equivalent to the inline snippet below but
+       saves ~60 ms of Total Blocking Time per PageSpeed Insights. -->
+  <script>
+    (function(){
+      function loadGTM(){
+        if (window.__gtmLoaded) return;
+        window.__gtmLoaded = true;
+        (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','GTM-MXC3DGL6');
+      }
+      // Defer GTM off the critical path. requestIdleCallback wants an
+      // IdleRequestOptions object as its second argument while
+      // setTimeout wants a plain number — using the same `1` for both
+      // raised a TypeError in Lighthouse's console that dragged the SEO
+      // score down. Branch on availability so each API gets the shape
+      // it expects.
+      function scheduleGTM() {
+        if (typeof window.requestIdleCallback === 'function') {
+          window.requestIdleCallback(loadGTM, { timeout: 2000 });
+        } else {
+          setTimeout(loadGTM, 1);
+        }
+      }
+      if (document.readyState === 'complete' || document.readyState === 'interactive') {
+        scheduleGTM();
+      } else {
+        document.addEventListener('DOMContentLoaded', scheduleGTM);
+      }
+    })();
+  </script>
+  <!-- End Google Tag Manager -->
+
+  </head>
+  <body data-default-mode="light">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+    
+    <img src="../../../../_static/eegdash_long.svg" class="logo__image only-light" alt="EEG Dash Logo"/>
+    <img src="../../../../_static/eegdash_long.svg" class="logo__image only-dark pst-js-only" alt="EEG Dash Logo"/>
+  
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../dataset_summary.html">
+    Datasets
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../quickstart.html">
+    Quick Start
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../install/install.html">
+    Install
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../../index.html">
+    Examples
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../concepts/index.html">
+    Concepts
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../api/api.html">
+    Docs
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../references.html">
+    References
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-external" href="https://eeg2025.github.io/">
+    EEG2025
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="External Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/eegdash/EEGDash" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../../../../_static/icons/github.svg" class="icon-link-image" alt="GitHub"/></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/eegdash/" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../../../../_static/icons/pypi.svg" class="icon-link-image" alt="PyPI"/></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://discord.gg/8jd7nVKwsc" title="Discord" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../../../../_static/icons/discord.svg" class="icon-link-image" alt="Discord"/></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../dataset_summary.html">
+    Datasets
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../quickstart.html">
+    Quick Start
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../install/install.html">
+    Install
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../../index.html">
+    Examples
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../concepts/index.html">
+    Concepts
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../api/api.html">
+    Docs
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../references.html">
+    References
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://eeg2025.github.io/">
+    EEG2025
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="External Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/eegdash/EEGDash" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../../../../_static/icons/github.svg" class="icon-link-image" alt="GitHub"/></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/eegdash/" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../../../../_static/icons/pypi.svg" class="icon-link-image" alt="PyPI"/></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://discord.gg/8jd7nVKwsc" title="Discord" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../../../../_static/icons/discord.svg" class="icon-link-image" alt="Discord"/></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../../index.html" class="nav-link">Examples gallery</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">Core Decoding Workflow</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">How do I preprocess EEG and create model-ready windows?</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p><a class="reference internal" href="#sphx-glr-download-generated-auto-examples-tutorials-10-core-workflow-plot-10-preprocess-and-window-py"><span class="std std-ref">Go to the end</span></a>
+to download the full example code or to run this example in your browser via Binder.</p>
+</div>
+<section class="sphx-glr-example-title" id="how-do-i-preprocess-eeg-and-create-model-ready-windows">
+<span id="sphx-glr-generated-auto-examples-tutorials-10-core-workflow-plot-10-preprocess-and-window-py"></span><h1>How do I preprocess EEG and create model-ready windows?<a class="headerlink" href="#how-do-i-preprocess-eeg-and-create-model-ready-windows" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">24 minutes</span></div>
+<p>Raw EEG is rarely model-ready: wrong sampling rate, drift and line noise,
+no fixed reference, sporadic large-amplitude bursts, a continuous
+timeline instead of fixed epochs. This tutorial walks the canonical
+EEGDash preprocessing recipe on one recording from
+<a class="reference external" href="https://openneuro.org">OpenNeuro</a> <code class="docutils literal notranslate"><span class="pre">ds002718</span></code> (Wakeman &amp; Henson
+2015), reachable through <a class="reference external" href="https://nemar.org">NEMAR</a> (Delorme et al.
+2022). Every choice is named (Cisotto &amp; Chicco 2024 Tips 4-5), inspected
+on the array, and the recipe ends with a windowed dataset the next four
+core-workflow tutorials reuse. The closing diagnostic figure compares
+the recording before and after a one-call
+<a class="reference external" href="https://braindecode.org/stable/generated/braindecode.preprocessing.EEGPrep.html#braindecode.preprocessing.EEGPrep" title="(in Braindecode v1.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">braindecode.preprocessing.EEGPrep</span></code></a> pass that wraps ASR (Mullen
+et al. 2015), bad-channel detection, high-pass, and CAR.</p>
+<section id="learning-objectives">
+<h2>Learning objectives<a class="headerlink" href="#learning-objectives" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Describe the preprocessing pipeline as a sequence of array transforms with one purpose per step.</p></li>
+<li><p>Identify the methods <a class="reference external" href="https://mne.tools/stable/generated/mne.io.Raw.html#mne.io.Raw" title="(in MNE v1.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">mne.io.Raw</span></code></a> exposes and the helpers in <a class="reference external" href="https://mne.tools/stable/api/preprocessing.html#module-mne.preprocessing" title="(in MNE v1.12)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mne.preprocessing</span></code></a>.</p></li>
+<li><p>Set montage, reference, filter, and resample with named, reportable parameters using <a class="reference external" href="https://braindecode.org/stable/generated/braindecode.preprocessing.Preprocessor.html#braindecode.preprocessing.Preprocessor" title="(in Braindecode v1.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">braindecode.preprocessing.Preprocessor</span></code></a>.</p></li>
+<li><p>Convert continuous data into fixed-length windows of shape <code class="docutils literal notranslate"><span class="pre">(n_channels,</span> <span class="pre">window_samples)</span></code> with <a class="reference external" href="https://braindecode.org/stable/generated/braindecode.preprocessing.create_fixed_length_windows.html#braindecode.preprocessing.create_fixed_length_windows" title="(in Braindecode v1.5)"><code class="xref py py-func docutils literal notranslate"><span class="pre">braindecode.preprocessing.create_fixed_length_windows()</span></code></a>.</p></li>
+<li><p>Apply <a class="reference external" href="https://braindecode.org/stable/generated/braindecode.preprocessing.EEGPrep.html#braindecode.preprocessing.EEGPrep" title="(in Braindecode v1.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">braindecode.preprocessing.EEGPrep</span></code></a> (an ASR-based one-call pipeline, Mullen et al. 2015) and inspect what it changed on a 4-panel diagnostic figure.</p></li>
+</ul>
+</section>
+<section id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>About 3 min on CPU on first run; under 60 s once cached.</p></li>
+<li><p>Network on first call (~80 MB into <code class="docutils literal notranslate"><span class="pre">cache_dir</span></code>); offline thereafter.</p></li>
+<li><p>Prerequisite: <code class="docutils literal notranslate"><span class="pre">plot_01_first_recording</span></code>.</p></li>
+<li><p>Concept: <a class="reference internal" href="../../../../concepts/preprocessing_decisions.html"><span class="doc">Preprocessing decisions</span></a>.</p></li>
+</ul>
+<p>Setup. Preprocessing is deterministic given the parameters, so no seed.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">mne</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">eegdash</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">braindecode.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <a href="https://braindecode.org/stable/generated/braindecode.preprocessing.EEGPrep.html#braindecode.preprocessing.EEGPrep" title="braindecode.preprocessing.EEGPrep" class="sphx-glr-backref-module-braindecode-preprocessing sphx-glr-backref-type-py-class"><span class="n">EEGPrep</span></a><span class="p">,</span>
+    <a href="https://braindecode.org/stable/generated/braindecode.preprocessing.Preprocessor.html#braindecode.preprocessing.Preprocessor" title="braindecode.preprocessing.Preprocessor" class="sphx-glr-backref-module-braindecode-preprocessing sphx-glr-backref-type-py-class"><span class="n">Preprocessor</span></a><span class="p">,</span>
+    <a href="https://braindecode.org/stable/generated/braindecode.preprocessing.create_fixed_length_windows.html#braindecode.preprocessing.create_fixed_length_windows" title="braindecode.preprocessing.create_fixed_length_windows" class="sphx-glr-backref-module-braindecode-preprocessing sphx-glr-backref-type-py-function"><span class="n">create_fixed_length_windows</span></a><span class="p">,</span>
+    <a href="https://braindecode.org/stable/generated/braindecode.preprocessing.preprocess.html#braindecode.preprocessing.preprocess" title="braindecode.preprocessing.preprocess" class="sphx-glr-backref-module-braindecode-preprocessing sphx-glr-backref-type-py-function"><span class="n">preprocess</span></a><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">eegdash</span><span class="w"> </span><span class="kn">import</span> <a href="../../../../api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset" title="eegdash.EEGDashDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class"><span class="n">EEGDashDataset</span></a>
+<span class="kn">from</span><span class="w"> </span><span class="nn">eegdash.paths</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_default_cache_dir</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">eegdash.viz</span><span class="w"> </span><span class="kn">import</span> <span class="n">style_figure</span><span class="p">,</span> <span class="n">use_eegdash_style</span>
+
+<a href="https://mne.tools/stable/generated/mne.viz.set_browser_backend.html#mne.viz.set_browser_backend" title="mne.viz.set_browser_backend" class="sphx-glr-backref-module-mne-viz sphx-glr-backref-type-py-function"><span class="n">mne</span><span class="o">.</span><span class="n">viz</span><span class="o">.</span><span class="n">set_browser_backend</span></a><span class="p">(</span><span class="s2">&quot;matplotlib&quot;</span><span class="p">)</span>
+<a href="https://mne.tools/stable/generated/mne.set_log_level.html#mne.set_log_level" title="mne.set_log_level" class="sphx-glr-backref-module-mne sphx-glr-backref-type-py-function"><span class="n">mne</span><span class="o">.</span><span class="n">set_log_level</span></a><span class="p">(</span><span class="s2">&quot;WARNING&quot;</span><span class="p">)</span>
+<span class="n">use_eegdash_style</span><span class="p">()</span>
+
+<a href="https://docs.python.org/3/library/pathlib.html#pathlib.PosixPath" title="pathlib.PosixPath" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">CACHE_DIR</span></a> <span class="o">=</span> <span class="n">get_default_cache_dir</span><span class="p">()</span>
+<a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">TARGET_SFREQ</span></a> <span class="o">=</span> <span class="mf">200.0</span>  <span class="c1"># Hz, see Step 5 (200 Hz keeps ASR&#39;s preferred rate)</span>
+<a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">WINDOW_SIZE_S</span></a> <span class="o">=</span> <span class="mf">2.0</span>  <span class="c1"># seconds, see Step 6</span>
+<a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">L_FREQ</span></a><span class="p">,</span> <a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">H_FREQ</span></a> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">40.0</span>  <span class="c1"># band-pass edges in Hz</span>
+<a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">EEGPREP_SLICE_S</span></a> <span class="o">=</span> <span class="mf">30.0</span>  <span class="c1"># 30 s slice rendered in the diagnostic panel</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;eegdash </span><span class="si">{</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">eegdash</span><span class="o">.</span><span class="n">__version__</span></a><span class="si">}</span><span class="s2">; cache_dir=</span><span class="si">{</span><a href="https://docs.python.org/3/library/pathlib.html#pathlib.PosixPath" title="pathlib.PosixPath" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">CACHE_DIR</span></a><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>eegdash 0.7.2; cache_dir=/home/runner/eegdash_cache
+</pre></div>
+</div>
+</section>
+<section id="concepts-behind-preprocessing">
+<h2>Concepts behind preprocessing<a class="headerlink" href="#concepts-behind-preprocessing" title="Link to this heading">#</a></h2>
+<p>Three ideas are worth keeping in mind before any code runs:</p>
+<ol class="arabic simple">
+<li><p><strong>Order is not commutative.</strong> A montage assigns 3D positions to
+channels; an average reference is computed across those channels,
+so the montage has to be in place first. Filtering changes
+amplitudes channel-by-channel, so it commutes with the reference
+but should run before resampling (otherwise the new Nyquist could
+clip pass-band edges). Windowing comes last; once the data is cut
+into fixed-length frames the continuous timeline is gone.</p></li>
+<li><p><strong>Named choices.</strong> Cisotto &amp; Chicco (2024) Tip 4 asks for the
+filter type, pass-band, phase, and design in the methods section.
+Tip 5 asks for the reference. Each
+<a class="reference external" href="https://braindecode.org/stable/generated/braindecode.preprocessing.Preprocessor.html#braindecode.preprocessing.Preprocessor" title="(in Braindecode v1.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Preprocessor</span></code></a> below carries
+those parameters explicitly, so a reader can reproduce the recipe
+from this script alone.</p></li>
+<li><p><strong>Two surfaces.</strong> <a class="reference external" href="https://mne.tools/stable/generated/mne.io.Raw.html#mne.io.Raw" title="(in MNE v1.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">mne.io.Raw</span></code></a> mutates one recording in
+place; <a class="reference external" href="https://braindecode.org/stable/generated/braindecode.preprocessing.preprocess.html#braindecode.preprocessing.preprocess" title="(in Braindecode v1.5)"><code class="xref py py-func docutils literal notranslate"><span class="pre">preprocess()</span></code></a> runs the same
+list across every recording in an
+<code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code> so the metadata stays
+attached. We use both: <code class="docutils literal notranslate"><span class="pre">raw</span></code> for inspection, <code class="docutils literal notranslate"><span class="pre">preprocess</span></code> for
+the pipeline.</p></li>
+</ol>
+</section>
+<section id="evidence-on-what-helps-and-what-hurts">
+<h2>Evidence on what helps and what hurts<a class="headerlink" href="#evidence-on-what-helps-and-what-hurts" title="Link to this heading">#</a></h2>
+<p>Before stacking five more correction stages on the recipe below, look
+at two papers that ran the controlled experiment first.</p>
+<p>Kessler et al. (2025), <em>Communications Biology</em>, varied filtering,
+referencing, baseline, detrending, and four artefact-correction
+stages across seven ERP CORE experiments (40 participants) and
+decoded with EEGNet and time-resolved logistic regression. Every
+artefact-correction step reduced decoding performance across both
+models; higher high-pass cutoffs consistently raised it. Baseline
+correction helped EEGNet; lower low-pass cutoffs and linear
+detrending helped time-resolved decoders. The authors caution that
+uncorrected artefacts can lift accuracy at the cost of
+interpretability: the model may learn structured noise instead of
+the neural signal.</p>
+<p>Delorme (2023), <em>Scientific Reports</em>, measured the share of
+significant channels in a 100 ms post-stimulus window across three
+public collections and compared optimised pipelines from EEGLAB,
+FieldTrip, MNE, and Brainstorm. Only one configuration beat plain
+high-pass filtering. Referencing and advanced baseline removal were
+significantly detrimental; rejecting bad segments did not recover
+the lost statistical power; automated ICA rejection of eye and
+muscle components failed to reliably help.</p>
+<p>Practical reading. Keep the recipe short. Tune the high-pass cutoff
+rather than stacking automatic artefact-correction stages. Reach for
+ICA or ASR (Mullen et al. 2015; Kothe &amp; Makeig 2013) only after a
+measurement protocol can show they help on <em>your</em> downstream task.
+The five steps below are the floor, not the ceiling.</p>
+</section>
+<section id="what-can-a-raw-object-do">
+<h2>What can a Raw object do?<a class="headerlink" href="#what-can-a-raw-object-do" title="Link to this heading">#</a></h2>
+<p>Before applying anything, list the methods <a class="reference external" href="https://mne.tools/stable/generated/mne.io.Raw.html#mne.io.Raw" title="(in MNE v1.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">mne.io.Raw</span></code></a>
+exposes so the recipe stops feeling magical. Most of the verbs here
+are reused below.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">raw_methods</span></a> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+    <span class="n">name</span>
+    <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><a href="https://mne.tools/stable/generated/mne.io.BaseRaw.html#mne.io.BaseRaw" title="mne.io.BaseRaw" class="sphx-glr-backref-module-mne-io sphx-glr-backref-type-py-class"><span class="n">mne</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">BaseRaw</span></a><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">callable</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><a href="https://mne.tools/stable/generated/mne.io.BaseRaw.html#mne.io.BaseRaw" title="mne.io.BaseRaw" class="sphx-glr-backref-module-mne-io sphx-glr-backref-type-py-class"><span class="n">mne</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">BaseRaw</span></a><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+<span class="p">)</span>
+<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class"><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span></a><span class="p">({</span><span class="s2">&quot;method&quot;</span><span class="p">:</span> <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">raw_methods</span></a><span class="p">})</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">25</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>method</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>add_channels</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>add_events</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>add_proj</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>add_reference_channels</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>anonymize</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>append</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>apply_function</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>apply_gradient_compensation</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>apply_hilbert</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>apply_proj</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>close</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>compute_psd</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>compute_tfr</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>copy</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>crop</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>crop_by_annotations</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>del_proj</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>describe</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>drop_channels</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>export</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>filter</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>get_channel_types</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>get_data</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>get_montage</td>
+    </tr>
+    <tr>
+      <th>24</th>
+      <td>interpolate_bads</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<br />
+<br /></section>
+<section id="what-s-in-mne-preprocessing">
+<h2>What’s in <a class="reference external" href="https://mne.tools/stable/api/preprocessing.html#module-mne.preprocessing" title="(in MNE v1.12)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">mne.preprocessing</span></code></a>?<a class="headerlink" href="#what-s-in-mne-preprocessing" title="Link to this heading">#</a></h2>
+<p>Beyond the in-place <code class="docutils literal notranslate"><span class="pre">raw.*</span></code> methods, MNE exposes a richer toolbox
+for artefact handling: <a class="reference external" href="https://mne.tools/stable/generated/mne.preprocessing.ICA.html#mne.preprocessing.ICA" title="(in MNE v1.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ICA</span></code></a> for
+blind-source separation, <a class="reference external" href="https://mne.tools/stable/generated/mne.preprocessing.EOGRegression.html#mne.preprocessing.EOGRegression" title="(in MNE v1.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">EOGRegression</span></code></a>
+for eye-blink regression, peak finders for EOG/ECG, projector
+helpers, and so on. The <a class="reference external" href="https://braindecode.org/stable/generated/braindecode.preprocessing.EEGPrep.html#braindecode.preprocessing.EEGPrep" title="(in Braindecode v1.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">braindecode.preprocessing.EEGPrep</span></code></a>
+pass at the end of this tutorial sits next to these as a one-call
+alternative when ASR-style cleanup is needed.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">prep_attrs</span></a> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+    <span class="n">name</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><a href="https://mne.tools/stable/api/preprocessing.html#module-mne.preprocessing" title="mne.preprocessing" class="sphx-glr-backref-module-mne sphx-glr-backref-type-py-module"><span class="n">mne</span><span class="o">.</span><span class="n">preprocessing</span></a><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)</span>
+<span class="p">)[:</span><span class="mi">25</span><span class="p">]</span>
+<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class"><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span></a><span class="p">({</span><span class="s2">&quot;mne.preprocessing&quot;</span><span class="p">:</span> <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">prep_attrs</span></a><span class="p">})</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>mne.preprocessing</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>EOGRegression</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>ICA</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Xdawn</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>annotate_amplitude</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>annotate_break</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>annotate_movement</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>annotate_muscle_zscore</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>annotate_nan</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>apply_pca_obs</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>compute_average_dev_head_t</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>compute_bridged_electrodes</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>compute_current_source_density</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>compute_fine_calibration</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>compute_maxwell_basis</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>compute_proj_ecg</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>compute_proj_eog</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>compute_proj_hfc</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>corrmap</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>cortical_signal_suppression</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>create_ecg_epochs</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>create_eog_epochs</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>equalize_bads</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>eyetracking</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>find_bad_channels_lof</td>
+    </tr>
+    <tr>
+      <th>24</th>
+      <td>find_bad_channels_maxwell</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<br />
+<br /></section>
+<section id="step-1-load-one-recording-lazy">
+<h2>Step 1: Load one recording (lazy)<a class="headerlink" href="#step-1-load-one-recording-lazy" title="Link to this heading">#</a></h2>
+<p>Same idiom as <code class="docutils literal notranslate"><span class="pre">plot_01</span></code>: build the dataset, index in,
+<code class="docutils literal notranslate"><span class="pre">record.raw</span></code> triggers the download and opens the file with MNE.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">DATASET</span></a> <span class="o">=</span> <span class="s2">&quot;ds002718&quot;</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">SUBJECT</span></a> <span class="o">=</span> <span class="s2">&quot;002&quot;</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">TASK</span></a> <span class="o">=</span> <span class="s2">&quot;FaceRecognition&quot;</span>
+<a href="../../../../api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset" title="eegdash.EEGDashDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">dataset</span></a> <span class="o">=</span> <a href="../../../../api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset" title="eegdash.EEGDashDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class"><span class="n">EEGDashDataset</span></a><span class="p">(</span>
+    <span class="n">cache_dir</span><span class="o">=</span><a href="https://docs.python.org/3/library/pathlib.html#pathlib.PosixPath" title="pathlib.PosixPath" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">CACHE_DIR</span></a><span class="p">,</span> <a href="../../../../api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset" title="eegdash.EEGDashDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">dataset</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">DATASET</span></a><span class="p">,</span> <span class="n">subject</span><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">SUBJECT</span></a><span class="p">,</span> <span class="n">task</span><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">TASK</span></a>
+<span class="p">)</span>
+<span class="n">record</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">dataset</span><span class="o">.</span><span class="n">datasets</span></a><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">raw</span> <span class="o">=</span> <span class="n">record</span><span class="o">.</span><span class="n">raw</span><span class="o">.</span><span class="n">load_data</span><span class="p">()</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">raw</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[05/08/26 18:41:44] WARNING  File not found on S3, skipping:   downloader.py:163
+                             s3://openneuro.org/ds002718/sub-0
+                             02/eeg/sub-002_task-FaceRecogniti
+                             on_eeg.fdt
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<script type="text/javascript">
+    // must be `var` (not `const`) because this can get embedded multiple times on a page
+var toggleVisibility = (className) => {
+
+    const elements = document.querySelectorAll(`.${className}`);
+
+    elements.forEach(element => {
+        if (element.classList.contains("mne-repr-section-header")) {
+            return  // Don't collapse the section header row
+        }
+        element.classList.toggle("mne-repr-collapsed");
+    });
+
+    // trigger caret to rotate
+    var sel = `.mne-repr-section-header.${className} > th.mne-repr-section-toggle > button`;
+    const button = document.querySelector(sel);
+    button.classList.toggle("collapsed");
+
+    // adjust tooltip
+    sel = `tr.mne-repr-section-header.${className}`;
+    const secHeadRow = document.querySelector(sel);
+    secHeadRow.classList.toggle("collapsed");
+    secHeadRow.title = secHeadRow.title === "Hide section" ? "Show section" : "Hide section";
+}
+</script>
+
+<style type="text/css">
+    /*
+Styles in this section apply both to the sphinx-built website docs and to notebooks
+rendered in an IDE or in Jupyter. In our web docs, styles here are complemented by
+doc/_static/styles.css and other CSS files (e.g. from the sphinx theme, sphinx-gallery,
+or bootstrap). In IDEs/Jupyter, those style files are unavailable, so only the rules in
+this file apply (plus whatever default styling the IDE applies).
+*/
+.mne-repr-table {
+    display: inline;  /* prevent using full container width */
+}
+.mne-repr-table tr.mne-repr-section-header > th {
+    padding-top: 1rem;
+    text-align: left;
+    vertical-align: middle;
+}
+.mne-repr-section-toggle > button {
+    all: unset;
+    display: block;
+    height: 1rem;
+    width: 1rem;
+}
+.mne-repr-section-toggle > button > svg {
+    height: 60%;
+}
+
+/* transition (rotation) effects on the collapser button */
+.mne-repr-section-toggle > button.collapsed > svg {
+    transition: 0.1s ease-out;
+    transform: rotate(-90deg);
+}
+.mne-repr-section-toggle > button:not(.collapsed) > svg {
+    transition: 0.1s ease-out;
+    transform: rotate(0deg);
+}
+
+/* hide collapsed table rows */
+.mne-repr-collapsed {
+    display: none;
+}
+
+
+@layer {
+    /*
+    Selectors in a `@layer` will always be lower-precedence than selectors outside the
+    layer. So even though e.g. `div.output_html` is present in the sphinx-rendered
+    website docs, the styles here won't take effect there as long as some other rule
+    somewhere in the page's CSS targets the same element.
+
+    In IDEs or Jupyter notebooks, though, the CSS files from the sphinx theme,
+    sphinx-gallery, and bootstrap are unavailable, so these styles will apply.
+
+    Notes:
+
+    - the selector `.accordion-body` is for MNE Reports
+    - the selector `.output_html` is for VSCode's notebook interface
+    - the selector `.jp-RenderedHTML` is for Jupyter notebook
+    - variables starting with `--theme-` are VSCode-specific.
+    - variables starting with `--jp-` are Jupyter styles, *some of which* are also
+      available in VSCode. Here we try the `--theme-` variable first, then fall back to
+      the `--jp-` ones.
+    */
+    .mne-repr-table {
+        --mne-toggle-color: var(--theme-foreground, var(--jp-ui-font-color1));
+        --mne-button-bg-color: var(--theme-button-background, var(--jp-info-color0, var(--jp-content-link-color)));
+        --mne-button-fg-color: var(--theme-button-foreground, var(--jp-ui-inverse-font-color0, var(--jp-editor-background)));
+        --mne-button-hover-bg-color: var(--theme-button-hover-background, var(--jp-info-color1));
+        --mne-button-radius: var(--jp-border-radius, 0.25rem);
+    }
+    /* chevron position/alignment; in VSCode it looks ok without adjusting */
+    .accordion-body .mne-repr-section-toggle > button,
+    .jp-RenderedHTML .mne-repr-section-toggle > button {
+        padding: 0 0 45% 25% !important;
+    }
+    /* chevron color; MNE Report doesn't have light/dark mode */
+    div.output_html .mne-repr-section-toggle > button > svg > path,
+    .jp-RenderedHTML .mne-repr-section-toggle > button > svg > path {
+        fill: var(--mne-toggle-color);
+    }
+    .accordion-body .mne-ch-names-btn,
+    div.output_html .mne-ch-names-btn,
+    .jp-RenderedHTML .mne-ch-names-btn {
+        -webkit-border-radius: var(--mne-button-radius);
+        -moz-border-radius: var(--mne-button-radius);
+        border-radius: var(--mne-button-radius);
+        border: none;
+        background-image: none;
+        background-color: var(--mne-button-bg-color);
+        color: var(--mne-button-fg-color);
+        font-size: inherit;
+        min-width: 1.5rem;
+        padding: 0.25rem;
+        text-align: center;
+        text-decoration: none;
+    }
+    .accordion-body .mne-ch-names-btn:hover,
+    div.output_html .mne.ch-names-btn:hover,
+    .jp-RenderedHTML .mne-ch-names-btn:hover {
+        background-color: var(--mne-button-hover-bg-color);
+        text-decoration: underline;
+    }
+    .accordion-body .mne-ch-names-btn:focus-visible,
+    div.output_html .mne-ch-names-btn:focus-visible,
+    .jp-RenderedHTML .mne-ch-names-btn:focus-visible {
+        outline: 0.1875rem solid var(--mne-button-bg-color) !important;
+        outline-offset: 0.1875rem !important;
+    }
+}
+</style>
+
+
+
+<table class="table mne-repr-table">
+
+
+
+
+
+
+
+
+<tr class="mne-repr-section-header general-3c820d7f-4372-4804-ac20-ca5fdacc687e"
+     title="Hide section"
+    onclick="toggleVisibility('general-3c820d7f-4372-4804-ac20-ca5fdacc687e')">
+    <th class="mne-repr-section-toggle">
+        <button >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
+        </button>
+    </th>
+    <th colspan="2">
+        <strong>General</strong>
+    </th>
+</tr>
+
+
+<tr class="repr-element general-3c820d7f-4372-4804-ac20-ca5fdacc687e ">
+    <td class="mne-repr-section-toggle"></td>
+    <td>Filename(s)</td>
+    <td>
+
+        sub-002_task-FaceRecognition_eeg.set
+
+
+    </td>
+</tr>
+
+<tr class="repr-element general-3c820d7f-4372-4804-ac20-ca5fdacc687e ">
+    <td class="mne-repr-section-toggle"></td>
+    <td>MNE object type</td>
+    <td>RawEEGLAB</td>
+</tr>
+<tr class="repr-element general-3c820d7f-4372-4804-ac20-ca5fdacc687e ">
+    <td class="mne-repr-section-toggle"></td>
+    <td>Measurement date</td>
+
+    <td>Unknown</td>
+
+</tr>
+<tr class="repr-element general-3c820d7f-4372-4804-ac20-ca5fdacc687e ">
+    <td class="mne-repr-section-toggle"></td>
+    <td>Participant</td>
+
+
+
+</tr>
+<tr class="repr-element general-3c820d7f-4372-4804-ac20-ca5fdacc687e ">
+    <td class="mne-repr-section-toggle"></td>
+    <td>Experimenter</td>
+
+    <td>Unknown</td>
+
+</tr>
+
+
+
+
+
+
+
+
+<tr class="mne-repr-section-header acquisition-f5e697d9-7ffe-4775-874b-6df6df9f475f"
+     title="Hide section"
+    onclick="toggleVisibility('acquisition-f5e697d9-7ffe-4775-874b-6df6df9f475f')">
+    <th class="mne-repr-section-toggle">
+        <button >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
+        </button>
+    </th>
+    <th colspan="2">
+        <strong>Acquisition</strong>
+    </th>
+</tr>
+
+
+<tr class="repr-element acquisition-f5e697d9-7ffe-4775-874b-6df6df9f475f ">
+    <td class="mne-repr-section-toggle"></td>
+    <td>Duration</td>
+    <td>00:49:51 (HH:MM:SS)</td>
+</tr>
+
+
+
+
+
+
+
+
+<tr class="repr-element acquisition-f5e697d9-7ffe-4775-874b-6df6df9f475f ">
+    <td class="mne-repr-section-toggle"></td>
+    <td>Sampling frequency</td>
+    <td>250.00 Hz</td>
+</tr>
+
+
+<tr class="repr-element acquisition-f5e697d9-7ffe-4775-874b-6df6df9f475f ">
+    <td class="mne-repr-section-toggle"></td>
+    <td>Time points</td>
+    <td>747,750</td>
+</tr>
+
+
+
+
+
+
+
+
+
+
+<tr class="mne-repr-section-header channels-ad629f5e-142d-4f73-958d-95c0c8f6a2cf"
+     title="Hide section"
+    onclick="toggleVisibility('channels-ad629f5e-142d-4f73-958d-95c0c8f6a2cf')">
+    <th class="mne-repr-section-toggle">
+        <button >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
+        </button>
+    </th>
+    <th colspan="2">
+        <strong>Channels</strong>
+    </th>
+</tr>
+
+
+
+<tr class="repr-element channels-ad629f5e-142d-4f73-958d-95c0c8f6a2cf ">
+    <td class="mne-repr-section-toggle"></td>
+    <td>EEG</td>
+    <td>
+        <button class="mne-ch-names-btn sd-sphinx-override sd-btn sd-btn-info sd-text-wrap sd-shadow-sm" onclick="alert('Good EEG:\n\nEEG001, EEG002, EEG003, EEG004, EEG005, EEG006, EEG007, EEG008, EEG009, EEG010, EEG011, EEG012, EEG013, EEG014, EEG015, EEG016, EEG017, EEG018, EEG019, EEG020, EEG021, EEG022, EEG023, EEG024, EEG025, EEG026, EEG027, EEG028, EEG029, EEG030, EEG031, EEG032, EEG033, EEG034, EEG035, EEG036, EEG037, EEG038, EEG039, EEG040, EEG041, EEG042, EEG043, EEG044, EEG045, EEG046, EEG047, EEG048, EEG049, EEG050, EEG051, EEG052, EEG053, EEG054, EEG055, EEG056, EEG057, EEG058, EEG059, EEG060, EEG065, EEG066, EEG067, EEG068, EEG069, EEG070, EEG071, EEG072, EEG073, EEG074')" title="(Click to open in popup)&#13;&#13;EEG001, EEG002, EEG003, EEG004, EEG005, EEG006, EEG007, EEG008, EEG009, EEG010, EEG011, EEG012, EEG013, EEG014, EEG015, EEG016, EEG017, EEG018, EEG019, EEG020, EEG021, EEG022, EEG023, EEG024, EEG025, EEG026, EEG027, EEG028, EEG029, EEG030, EEG031, EEG032, EEG033, EEG034, EEG035, EEG036, EEG037, EEG038, EEG039, EEG040, EEG041, EEG042, EEG043, EEG044, EEG045, EEG046, EEG047, EEG048, EEG049, EEG050, EEG051, EEG052, EEG053, EEG054, EEG055, EEG056, EEG057, EEG058, EEG059, EEG060, EEG065, EEG066, EEG067, EEG068, EEG069, EEG070, EEG071, EEG072, EEG073, EEG074">
+            70
+        </button>
+
+
+    </td>
+</tr>
+
+
+<tr class="repr-element channels-ad629f5e-142d-4f73-958d-95c0c8f6a2cf ">
+    <td class="mne-repr-section-toggle"></td>
+    <td>EOG</td>
+    <td>
+        <button class="mne-ch-names-btn sd-sphinx-override sd-btn sd-btn-info sd-text-wrap sd-shadow-sm" onclick="alert('Good EOG:\n\nEEG061, EEG062')" title="(Click to open in popup)&#13;&#13;EEG061, EEG062">
+            2
+        </button>
+
+
+    </td>
+</tr>
+
+
+<tr class="repr-element channels-ad629f5e-142d-4f73-958d-95c0c8f6a2cf ">
+    <td class="mne-repr-section-toggle"></td>
+    <td>misc</td>
+    <td>
+        <button class="mne-ch-names-btn sd-sphinx-override sd-btn sd-btn-info sd-text-wrap sd-shadow-sm" onclick="alert('Good misc:\n\nEEG063, EEG064')" title="(Click to open in popup)&#13;&#13;EEG063, EEG064">
+            2
+        </button>
+
+
+    </td>
+</tr>
+
+
+<tr class="repr-element channels-ad629f5e-142d-4f73-958d-95c0c8f6a2cf ">
+    <td class="mne-repr-section-toggle"></td>
+    <td>Head & sensor digitization</td>
+
+    <td>Not available</td>
+
+</tr>
+
+
+
+
+
+
+
+
+<tr class="mne-repr-section-header filters-b1825856-fe28-4654-b1d2-29615b004f03"
+     title="Hide section"
+    onclick="toggleVisibility('filters-b1825856-fe28-4654-b1d2-29615b004f03')">
+    <th class="mne-repr-section-toggle">
+        <button >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
+        </button>
+    </th>
+    <th colspan="2">
+        <strong>Filters</strong>
+    </th>
+</tr>
+
+
+<tr class="repr-element filters-b1825856-fe28-4654-b1d2-29615b004f03 ">
+    <td class="mne-repr-section-toggle"></td>
+    <td>Highpass</td>
+    <td>0.00 Hz</td>
+</tr>
+
+
+<tr class="repr-element filters-b1825856-fe28-4654-b1d2-29615b004f03 ">
+    <td class="mne-repr-section-toggle"></td>
+    <td>Lowpass</td>
+    <td>125.00 Hz</td>
+</tr>
+
+
+</table>
+</div>
+<br />
+<br /><p><strong>Predict.</strong> What is the shape of <code class="docutils literal notranslate"><span class="pre">raw.get_data()</span></code> for this
+recording? Channels-by-samples, with samples = <code class="docutils literal notranslate"><span class="pre">sfreq</span> <span class="pre">*</span> <span class="pre">duration</span></code>.
+Write a guess down before peeking.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_in</span></a> <span class="o">=</span> <span class="n">raw</span><span class="o">.</span><span class="n">get_data</span><span class="p">()</span>
+<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class"><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span></a><span class="p">(</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><a href="https://docs.python.org/3/library/stdtypes.html#tuple" title="builtins.tuple" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_in</span><span class="o">.</span><span class="n">shape</span></a><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="nb">str</span><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/routines.dtypes.html#numpy.dtypes.Float64DType" title="numpy.dtypes.Float64DType" class="sphx-glr-backref-module-numpy-dtypes sphx-glr-backref-type-py-attribute"><span class="n">data_in</span><span class="o">.</span><span class="n">dtype</span></a><span class="p">),</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><a href="https://mne.tools/stable/generated/mne.Info.html#mne.Info" title="mne._fiff.meas_info.Info" class="sphx-glr-backref-module-mne-_fiff-meas_info sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">raw</span><span class="o">.</span><span class="n">info</span></a><span class="p">[</span><span class="s1">&#39;sfreq&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><a href="https://mne.tools/stable/generated/mne.Info.html#mne.Info" title="mne._fiff.meas_info.Info" class="sphx-glr-backref-module-mne-_fiff-meas_info sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">raw</span><span class="o">.</span><span class="n">info</span></a><span class="p">[</span><span class="s1">&#39;nchan&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">raw</span><span class="o">.</span><span class="n">times</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="p">]</span>
+    <span class="p">},</span>
+    <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;raw.get_data().shape&quot;</span><span class="p">,</span> <span class="s2">&quot;dtype&quot;</span><span class="p">,</span> <span class="s2">&quot;sfreq (Hz)&quot;</span><span class="p">,</span> <span class="s2">&quot;n_channels&quot;</span><span class="p">,</span> <span class="s2">&quot;duration (s)&quot;</span><span class="p">],</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>raw.get_data().shape</th>
+      <td>(74, 747750)</td>
+    </tr>
+    <tr>
+      <th>dtype</th>
+      <td>float64</td>
+    </tr>
+    <tr>
+      <th>sfreq (Hz)</th>
+      <td>250.0</td>
+    </tr>
+    <tr>
+      <th>n_channels</th>
+      <td>74</td>
+    </tr>
+    <tr>
+      <th>duration (s)</th>
+      <td>2991.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<br />
+<br /></section>
+<section id="step-2-set-the-montage">
+<h2>Step 2: Set the montage<a class="headerlink" href="#step-2-set-the-montage" title="Link to this heading">#</a></h2>
+<p>A montage tells MNE where each electrode sits in 3D. We attach the
+10-20 standard positions; <code class="docutils literal notranslate"><span class="pre">on_missing=&quot;ignore&quot;</span></code> leaves non-EEG
+sensors (EOG, ref) untouched.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">raw</span><span class="o">.</span><span class="n">set_montage</span><span class="p">(</span><span class="s2">&quot;standard_1020&quot;</span><span class="p">,</span> <span class="n">on_missing</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+<a href="https://mne.tools/stable/generated/mne.channels.DigMontage.html#mne.channels.DigMontage" title="mne.channels.DigMontage" class="sphx-glr-backref-module-mne-channels sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">montage</span></a> <span class="o">=</span> <span class="n">raw</span><span class="o">.</span><span class="n">get_montage</span><span class="p">()</span>
+<a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">n_pos</span></a> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">montage</span><span class="o">.</span><span class="n">ch_names</span></a><span class="p">)</span> <span class="k">if</span> <a href="https://mne.tools/stable/generated/mne.channels.DigMontage.html#mne.channels.DigMontage" title="mne.channels.DigMontage" class="sphx-glr-backref-module-mne-channels sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">montage</span></a> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="mi">0</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;montage attached: standard_1020 (</span><span class="si">{</span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">n_pos</span></a><span class="si">}</span><span class="s2"> channel positions)&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>montage attached: standard_1020 (70 channel positions)
+</pre></div>
+</div>
+</section>
+<section id="step-3-set-an-average-reference">
+<h2>Step 3: Set an average reference<a class="headerlink" href="#step-3-set-an-average-reference" title="Link to this heading">#</a></h2>
+<p>Every voltage in EEG is a <em>difference</em>; the choice of reference
+shifts every sample. The common-average reference subtracts the
+per-sample mean across channels, a defensible default for
+whole-head montages (Cisotto &amp; Chicco 2024 Tip 5).
+<code class="docutils literal notranslate"><span class="pre">projection=False</span></code> applies it immediately rather than as a lazy
+projector.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">raw</span><span class="o">.</span><span class="n">set_eeg_reference</span><span class="p">(</span><span class="s2">&quot;average&quot;</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;custom_ref_applied=</span><span class="si">{</span><a href="https://mne.tools/stable/generated/mne.Info.html#mne.Info" title="mne._fiff.meas_info.Info" class="sphx-glr-backref-module-mne-_fiff-meas_info sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">raw</span><span class="o">.</span><span class="n">info</span></a><span class="p">[</span><span class="s1">&#39;custom_ref_applied&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>custom_ref_applied=1 (FIFFV_MNE_CUSTOM_REF_ON)
+</pre></div>
+</div>
+</section>
+<section id="step-4-band-pass-filter-1-40-hz-fir-zero-phase">
+<h2>Step 4: Band-pass filter (1-40 Hz, FIR, zero-phase)<a class="headerlink" href="#step-4-band-pass-filter-1-40-hz-fir-zero-phase" title="Link to this heading">#</a></h2>
+<p><strong>Run.</strong> A non-causal FIR filter with the Hamming-windowed
+<code class="docutils literal notranslate"><span class="pre">firwin</span></code> design is MNE’s reproducible default. Pass-band 1-40 Hz
+removes drift below 1 Hz and attenuates line noise above 40 Hz; the
+stop-band edges are derived from the transition bandwidth.</p>
+<p>The 1 Hz high-pass is not arbitrary. Both Kessler et al. (2025) and
+Delorme (2023) report that raising the high-pass cutoff is the
+single preprocessing choice with the most consistent positive effect
+on downstream task performance. If you have headroom in your time
+domain, try <code class="docutils literal notranslate"><span class="pre">L_FREQ=0.5</span></code> and <code class="docutils literal notranslate"><span class="pre">L_FREQ=1.5</span></code> and compare.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">raw</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
+    <span class="n">l_freq</span><span class="o">=</span><a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">L_FREQ</span></a><span class="p">,</span>
+    <span class="n">h_freq</span><span class="o">=</span><a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">H_FREQ</span></a><span class="p">,</span>
+    <span class="n">method</span><span class="o">=</span><span class="s2">&quot;fir&quot;</span><span class="p">,</span>
+    <span class="n">fir_design</span><span class="o">=</span><span class="s2">&quot;firwin&quot;</span><span class="p">,</span>
+    <span class="n">phase</span><span class="o">=</span><span class="s2">&quot;zero&quot;</span><span class="p">,</span>
+    <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;highpass=</span><span class="si">{</span><a href="https://mne.tools/stable/generated/mne.Info.html#mne.Info" title="mne._fiff.meas_info.Info" class="sphx-glr-backref-module-mne-_fiff-meas_info sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">raw</span><span class="o">.</span><span class="n">info</span></a><span class="p">[</span><span class="s1">&#39;highpass&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> Hz, lowpass=</span><span class="si">{</span><a href="https://mne.tools/stable/generated/mne.Info.html#mne.Info" title="mne._fiff.meas_info.Info" class="sphx-glr-backref-module-mne-_fiff-meas_info sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">raw</span><span class="o">.</span><span class="n">info</span></a><span class="p">[</span><span class="s1">&#39;lowpass&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> Hz&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>highpass=1.00 Hz, lowpass=40.00 Hz
+</pre></div>
+</div>
+<p><strong>Investigate.</strong> Plot the PSD: drift below 1 Hz and the
+high-frequency tail are gone; the alpha bump near 10 Hz survives.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://mne.tools/stable/generated/mne.time_frequency.Spectrum.html#mne.time_frequency.Spectrum" title="mne.time_frequency.Spectrum" class="sphx-glr-backref-module-mne-time_frequency sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">psd</span></a> <span class="o">=</span> <span class="n">raw</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span><span class="o">.</span><span class="n">pick</span><span class="p">(</span><span class="s2">&quot;eeg&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">compute_psd</span><span class="p">(</span><span class="n">fmax</span><span class="o">=</span><span class="mf">80.0</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">fig_psd</span> <span class="o">=</span> <a href="https://mne.tools/stable/generated/mne.time_frequency.Spectrum.html#mne.time_frequency.Spectrum.plot" title="mne.time_frequency.Spectrum.plot" class="sphx-glr-backref-module-mne-time_frequency sphx-glr-backref-type-py-method"><span class="n">psd</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span><span class="n">picks</span><span class="o">=</span><span class="s2">&quot;eeg&quot;</span><span class="p">,</span> <span class="n">average</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">style_figure</span><span class="p">(</span>
+    <span class="n">fig_psd</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;PSD after 1-40 Hz band-pass&quot;</span><span class="p">,</span>
+    <span class="n">subtitle</span><span class="o">=</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">DATASET</span></a><span class="si">}</span><span class="s2"> sub-</span><span class="si">{</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">SUBJECT</span></a><span class="si">}</span><span class="s2"> | </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">raw</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span><span class="o">.</span><span class="n">pick</span><span class="p">(</span><span class="s1">&#39;eeg&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">ch_names</span><span class="p">)</span><span class="si">}</span><span class="s2"> EEG channels&quot;</span>
+    <span class="p">),</span>
+    <span class="n">source</span><span class="o">=</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;EEGDash plot_10 | OpenNeuro </span><span class="si">{</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">DATASET</span></a><span class="si">}</span><span class="s2"> (doi:10.18112/openneuro.ds002718)&quot;</span><span class="p">),</span>
+<span class="p">)</span>
+<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
+</pre></div>
+</div>
+<img src="../../../../_images/sphx_glr_plot_10_preprocess_and_window_001.png" srcset="../../../../_images/sphx_glr_plot_10_preprocess_and_window_001.png" alt="plot 10 preprocess and window" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/runner/work/EEGDash/EEGDash/eegdash/viz/identity.py:178: UserWarning: This figure was using a layout engine that is incompatible with subplots_adjust and/or tight_layout; not calling subplots_adjust.
+  fig.subplots_adjust(top=0.84, bottom=0.18, left=0.12, right=0.95)
+</pre></div>
+</div>
+</section>
+<section id="step-5-resample-to-200-hz">
+<h2>Step 5: Resample to 200 Hz<a class="headerlink" href="#step-5-resample-to-200-hz" title="Link to this heading">#</a></h2>
+<p>The original sampling rate is far above what 1-40 Hz content needs.
+200 Hz keeps comfortable headroom above Nyquist (100 Hz), shrinks
+memory by a factor of <code class="docutils literal notranslate"><span class="pre">original_sfreq</span> <span class="pre">/</span> <span class="pre">200</span></code>, and stays inside
+the set of rates ASR is calibrated for (100, 128, 200, 250, 256,
+300, 500, 512 Hz). We reuse this rate in the EEGPrep pass below.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sfreq_before</span></a> <span class="o">=</span> <a href="https://mne.tools/stable/generated/mne.Info.html#mne.Info" title="mne._fiff.meas_info.Info" class="sphx-glr-backref-module-mne-_fiff-meas_info sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">raw</span><span class="o">.</span><span class="n">info</span></a><span class="p">[</span><span class="s2">&quot;sfreq&quot;</span><span class="p">]</span>
+<span class="n">raw</span><span class="o">.</span><span class="n">resample</span><span class="p">(</span><a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">TARGET_SFREQ</span></a><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;sfreq: </span><span class="si">{</span><a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sfreq_before</span></a><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> Hz -&gt; </span><span class="si">{</span><a href="https://mne.tools/stable/generated/mne.Info.html#mne.Info" title="mne._fiff.meas_info.Info" class="sphx-glr-backref-module-mne-_fiff-meas_info sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">raw</span><span class="o">.</span><span class="n">info</span></a><span class="p">[</span><span class="s1">&#39;sfreq&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> Hz&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;raw.get_data().shape -&gt; </span><span class="si">{</span><span class="n">raw</span><span class="o">.</span><span class="n">get_data</span><span class="p">()</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>sfreq: 250.0 Hz -&gt; 200.0 Hz
+raw.get_data().shape -&gt; (74, 598200)
+</pre></div>
+</div>
+</section>
+<section id="step-6-apply-the-same-recipe-to-the-dataset-and-create-windows">
+<h2>Step 6: Apply the same recipe to the dataset (and create windows)<a class="headerlink" href="#step-6-apply-the-same-recipe-to-the-dataset-and-create-windows" title="Link to this heading">#</a></h2>
+<p><strong>Run.</strong> The four <a class="reference external" href="https://braindecode.org/stable/generated/braindecode.preprocessing.Preprocessor.html#braindecode.preprocessing.Preprocessor" title="(in Braindecode v1.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Preprocessor</span></code></a>
+steps replay against the dataset (so braindecode’s wrapper carries
+metadata across recordings). Then
+<a class="reference external" href="https://braindecode.org/stable/generated/braindecode.preprocessing.create_fixed_length_windows.html#braindecode.preprocessing.create_fixed_length_windows" title="(in Braindecode v1.5)"><code class="xref py py-func docutils literal notranslate"><span class="pre">create_fixed_length_windows()</span></code></a> cuts
+400-sample windows (<code class="docutils literal notranslate"><span class="pre">WINDOW_SIZE_S</span> <span class="pre">*</span> <span class="pre">TARGET_SFREQ</span></code>) with stride
+equal to the window size for 0% overlap.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">WINDOW_SAMPLES</span></a> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">WINDOW_SIZE_S</span></a> <span class="o">*</span> <a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">TARGET_SFREQ</span></a><span class="p">)</span>
+<a href="https://braindecode.org/stable/generated/braindecode.preprocessing.preprocess.html#braindecode.preprocessing.preprocess" title="braindecode.preprocessing.preprocess" class="sphx-glr-backref-module-braindecode-preprocessing sphx-glr-backref-type-py-function"><span class="n">preprocess</span></a><span class="p">(</span>
+    <a href="../../../../api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset" title="eegdash.EEGDashDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">dataset</span></a><span class="p">,</span>
+    <span class="p">[</span>
+        <a href="https://braindecode.org/stable/generated/braindecode.preprocessing.Preprocessor.html#braindecode.preprocessing.Preprocessor" title="braindecode.preprocessing.Preprocessor" class="sphx-glr-backref-module-braindecode-preprocessing sphx-glr-backref-type-py-class"><span class="n">Preprocessor</span></a><span class="p">(</span><span class="s2">&quot;set_montage&quot;</span><span class="p">,</span> <a href="https://mne.tools/stable/generated/mne.channels.DigMontage.html#mne.channels.DigMontage" title="mne.channels.DigMontage" class="sphx-glr-backref-module-mne-channels sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">montage</span></a><span class="o">=</span><span class="s2">&quot;standard_1020&quot;</span><span class="p">,</span> <span class="n">on_missing</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">),</span>
+        <a href="https://braindecode.org/stable/generated/braindecode.preprocessing.Preprocessor.html#braindecode.preprocessing.Preprocessor" title="braindecode.preprocessing.Preprocessor" class="sphx-glr-backref-module-braindecode-preprocessing sphx-glr-backref-type-py-class"><span class="n">Preprocessor</span></a><span class="p">(</span><span class="s2">&quot;set_eeg_reference&quot;</span><span class="p">,</span> <span class="n">ref_channels</span><span class="o">=</span><span class="s2">&quot;average&quot;</span><span class="p">),</span>
+        <a href="https://braindecode.org/stable/generated/braindecode.preprocessing.Preprocessor.html#braindecode.preprocessing.Preprocessor" title="braindecode.preprocessing.Preprocessor" class="sphx-glr-backref-module-braindecode-preprocessing sphx-glr-backref-type-py-class"><span class="n">Preprocessor</span></a><span class="p">(</span>
+            <span class="s2">&quot;filter&quot;</span><span class="p">,</span>
+            <span class="n">l_freq</span><span class="o">=</span><a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">L_FREQ</span></a><span class="p">,</span>
+            <span class="n">h_freq</span><span class="o">=</span><a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">H_FREQ</span></a><span class="p">,</span>
+            <span class="n">method</span><span class="o">=</span><span class="s2">&quot;fir&quot;</span><span class="p">,</span>
+            <span class="n">fir_design</span><span class="o">=</span><span class="s2">&quot;firwin&quot;</span><span class="p">,</span>
+        <span class="p">),</span>
+        <a href="https://braindecode.org/stable/generated/braindecode.preprocessing.Preprocessor.html#braindecode.preprocessing.Preprocessor" title="braindecode.preprocessing.Preprocessor" class="sphx-glr-backref-module-braindecode-preprocessing sphx-glr-backref-type-py-class"><span class="n">Preprocessor</span></a><span class="p">(</span><span class="s2">&quot;resample&quot;</span><span class="p">,</span> <span class="n">sfreq</span><span class="o">=</span><a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">TARGET_SFREQ</span></a><span class="p">),</span>
+    <span class="p">],</span>
+<span class="p">)</span>
+<a href="https://braindecode.org/stable/generated/braindecode.datasets.BaseConcatDataset.html#braindecode.datasets.BaseConcatDataset" title="braindecode.datasets.BaseConcatDataset" class="sphx-glr-backref-module-braindecode-datasets sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">windows</span></a> <span class="o">=</span> <a href="https://braindecode.org/stable/generated/braindecode.preprocessing.create_fixed_length_windows.html#braindecode.preprocessing.create_fixed_length_windows" title="braindecode.preprocessing.create_fixed_length_windows" class="sphx-glr-backref-module-braindecode-preprocessing sphx-glr-backref-type-py-function"><span class="n">create_fixed_length_windows</span></a><span class="p">(</span>
+    <a href="../../../../api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset" title="eegdash.EEGDashDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">dataset</span></a><span class="p">,</span>
+    <span class="n">window_size_samples</span><span class="o">=</span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">WINDOW_SAMPLES</span></a><span class="p">,</span>
+    <span class="n">window_stride_samples</span><span class="o">=</span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">WINDOW_SAMPLES</span></a><span class="p">,</span>
+    <span class="n">drop_last_window</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">x0</span></a><span class="p">,</span> <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">_</span></a><span class="p">,</span> <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">_</span></a> <span class="o">=</span> <a href="https://braindecode.org/stable/generated/braindecode.datasets.BaseConcatDataset.html#braindecode.datasets.BaseConcatDataset" title="braindecode.datasets.BaseConcatDataset" class="sphx-glr-backref-module-braindecode-datasets sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">windows</span></a><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class"><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span></a><span class="p">(</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="nb">len</span><span class="p">(</span><a href="https://braindecode.org/stable/generated/braindecode.datasets.BaseConcatDataset.html#braindecode.datasets.BaseConcatDataset" title="braindecode.datasets.BaseConcatDataset" class="sphx-glr-backref-module-braindecode-datasets sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">windows</span></a><span class="p">),</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><a href="https://docs.python.org/3/library/stdtypes.html#tuple" title="builtins.tuple" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">x0</span><span class="o">.</span><span class="n">shape</span></a><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="nb">str</span><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/routines.dtypes.html#numpy.dtypes.Float32DType" title="numpy.dtypes.Float32DType" class="sphx-glr-backref-module-numpy-dtypes sphx-glr-backref-type-py-attribute"><span class="n">x0</span><span class="o">.</span><span class="n">dtype</span></a><span class="p">),</span>
+            <span class="nb">int</span><span class="p">(</span><a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">TARGET_SFREQ</span></a><span class="p">),</span>
+            <a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">WINDOW_SAMPLES</span></a><span class="p">,</span>
+        <span class="p">]</span>
+    <span class="p">},</span>
+    <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;n_windows&quot;</span><span class="p">,</span> <span class="s2">&quot;windows[0][0].shape&quot;</span><span class="p">,</span> <span class="s2">&quot;dtype&quot;</span><span class="p">,</span> <span class="s2">&quot;sfreq (Hz)&quot;</span><span class="p">,</span> <span class="s2">&quot;window_samples&quot;</span><span class="p">],</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/runner/work/EEGDash/EEGDash/.venv/lib/python3.12/site-packages/braindecode/preprocessing/preprocess.py:78: UserWarning: apply_on_array can only be True if fn is a callable function. Automatically correcting to apply_on_array=False.
+  warn(
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>n_windows</th>
+      <td>1495</td>
+    </tr>
+    <tr>
+      <th>windows[0][0].shape</th>
+      <td>(74, 400)</td>
+    </tr>
+    <tr>
+      <th>dtype</th>
+      <td>float32</td>
+    </tr>
+    <tr>
+      <th>sfreq (Hz)</th>
+      <td>200</td>
+    </tr>
+    <tr>
+      <th>window_samples</th>
+      <td>400</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<br />
+<br /><p><strong>Investigate.</strong> <code class="docutils literal notranslate"><span class="pre">windows[0][0]</span></code> is a
+<code class="docutils literal notranslate"><span class="pre">(n_channels,</span> <span class="pre">window_samples)</span></code> <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>; each window
+also carries metadata columns (<code class="docutils literal notranslate"><span class="pre">i_start_in_trial</span></code>, <code class="docutils literal notranslate"><span class="pre">target</span></code>,
+…) the next tutorial uses for subject-aware splits.</p>
+</section>
+<section id="step-7-one-call-cleanup-with-eegprep">
+<h2>Step 7: One-call cleanup with <a class="reference external" href="https://braindecode.org/stable/generated/braindecode.preprocessing.EEGPrep.html#braindecode.preprocessing.EEGPrep" title="(in Braindecode v1.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">EEGPrep</span></code></a><a class="headerlink" href="#step-7-one-call-cleanup-with-eegprep" title="Link to this heading">#</a></h2>
+<p>When the recipe grows past one named pass (line-noise removal,
+channel rejection, artefact subspace reconstruction, ICA),
+braindecode ships a single <a class="reference external" href="https://braindecode.org/stable/generated/braindecode.preprocessing.Preprocessor.html#braindecode.preprocessing.Preprocessor" title="(in Braindecode v1.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Preprocessor</span></code></a>
+that wraps the EEGLAB <code class="docutils literal notranslate"><span class="pre">clean_rawdata</span></code> pipeline:
+<a class="reference external" href="https://braindecode.org/stable/generated/braindecode.preprocessing.EEGPrep.html#braindecode.preprocessing.EEGPrep" title="(in Braindecode v1.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">EEGPrep</span></code></a>. The class chains DC
+offset removal, optional resampling, flatline-channel rejection, a
+high-pass with a configurable transition band, correlation-based bad
+channel detection, ASR burst removal (Mullen et al. 2015; Kothe &amp;
+Makeig 2013), bad-window rejection, optional reinterpolation, and
+optional CAR.</p>
+<p><strong>Run.</strong> Reload one recording, cap it at 30 s for tutorial runtime,
+and apply <a class="reference external" href="https://braindecode.org/stable/generated/braindecode.preprocessing.EEGPrep.html#braindecode.preprocessing.EEGPrep" title="(in Braindecode v1.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">EEGPrep</span></code></a> with the
+defaults that match the recommendations in the class docstring (ASR
+cutoff 10, correlation threshold 0.8, transition band 0.25-0.75 Hz).
+The same call works as a <a class="reference external" href="https://braindecode.org/stable/generated/braindecode.preprocessing.Preprocessor.html#braindecode.preprocessing.Preprocessor" title="(in Braindecode v1.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Preprocessor</span></code></a>
+inside <a class="reference external" href="https://braindecode.org/stable/generated/braindecode.preprocessing.preprocess.html#braindecode.preprocessing.preprocess" title="(in Braindecode v1.5)"><code class="xref py py-func docutils literal notranslate"><span class="pre">preprocess()</span></code></a>; we keep it
+direct here so the before/after diagnostic has a clean <code class="docutils literal notranslate"><span class="pre">Raw</span></code> to
+show.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">record_pp</span> <span class="o">=</span> <a href="../../../../api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset" title="eegdash.EEGDashDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class"><span class="n">EEGDashDataset</span></a><span class="p">(</span>
+    <span class="n">cache_dir</span><span class="o">=</span><a href="https://docs.python.org/3/library/pathlib.html#pathlib.PosixPath" title="pathlib.PosixPath" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">CACHE_DIR</span></a><span class="p">,</span> <a href="../../../../api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset" title="eegdash.EEGDashDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">dataset</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">DATASET</span></a><span class="p">,</span> <span class="n">subject</span><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">SUBJECT</span></a><span class="p">,</span> <span class="n">task</span><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">TASK</span></a>
+<span class="p">)</span><span class="o">.</span><span class="n">datasets</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">raw_full</span> <span class="o">=</span> <span class="n">record_pp</span><span class="o">.</span><span class="n">raw</span><span class="o">.</span><span class="n">load_data</span><span class="p">()</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">raw_full</span><span class="o">.</span><span class="n">set_montage</span><span class="p">(</span><span class="s2">&quot;standard_1020&quot;</span><span class="p">,</span> <span class="n">on_missing</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+<span class="n">raw_pp</span> <span class="o">=</span> <span class="n">raw_full</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span><span class="o">.</span><span class="n">crop</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">EEGPREP_SLICE_S</span></a><span class="p">,</span> <span class="n">raw_full</span><span class="o">.</span><span class="n">times</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+<span class="n">raw_before</span> <span class="o">=</span> <span class="n">raw_pp</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span><span class="o">.</span><span class="n">pick</span><span class="p">(</span><span class="s2">&quot;eeg&quot;</span><span class="p">)</span>
+
+<a href="https://braindecode.org/stable/generated/braindecode.preprocessing.EEGPrep.html#braindecode.preprocessing.EEGPrep" title="braindecode.preprocessing.EEGPrep" class="sphx-glr-backref-module-braindecode-preprocessing sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">eegprep</span></a> <span class="o">=</span> <a href="https://braindecode.org/stable/generated/braindecode.preprocessing.EEGPrep.html#braindecode.preprocessing.EEGPrep" title="braindecode.preprocessing.EEGPrep" class="sphx-glr-backref-module-braindecode-preprocessing sphx-glr-backref-type-py-class"><span class="n">EEGPrep</span></a><span class="p">(</span>
+    <span class="n">resample_to</span><span class="o">=</span><a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">TARGET_SFREQ</span></a><span class="p">,</span>
+    <span class="n">highpass_frequencies</span><span class="o">=</span><span class="p">(</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">),</span>
+    <span class="n">bad_channel_corr_threshold</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
+    <span class="n">burst_removal_cutoff</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span>
+    <span class="n">bad_window_max_bad_channels</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span>
+    <span class="n">bad_channel_reinterpolate</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">common_avg_ref</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+<a href="https://braindecode.org/stable/generated/braindecode.preprocessing.EEGPrep.html#braindecode.preprocessing.EEGPrep" title="braindecode.preprocessing.EEGPrep" class="sphx-glr-backref-module-braindecode-preprocessing sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">eegprep</span></a><span class="o">.</span><span class="n">fn</span><span class="p">(</span><span class="n">raw_pp</span><span class="p">)</span>  <span class="c1"># in-place; mutates raw_pp</span>
+<span class="n">raw_after</span> <span class="o">=</span> <span class="n">raw_pp</span>
+
+<a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">n_dropped</span></a> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">raw_before</span><span class="o">.</span><span class="n">ch_names</span><span class="p">)</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">raw_after</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span><span class="o">.</span><span class="n">pick</span><span class="p">(</span><span class="s2">&quot;eeg&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">ch_names</span><span class="p">)</span>
+<a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">n_bad_annot</span></a> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">raw_after</span><span class="o">.</span><span class="n">annotations</span> <span class="k">if</span> <span class="s2">&quot;BAD&quot;</span> <span class="ow">in</span> <span class="n">a</span><span class="p">[</span><span class="s2">&quot;description&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">())</span>
+<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class"><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span></a><span class="p">(</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="nb">len</span><span class="p">(</span><span class="n">raw_before</span><span class="o">.</span><span class="n">ch_names</span><span class="p">),</span>
+            <span class="nb">len</span><span class="p">(</span><span class="n">raw_after</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span><span class="o">.</span><span class="n">pick</span><span class="p">(</span><span class="s2">&quot;eeg&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">ch_names</span><span class="p">),</span>
+            <a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">n_dropped</span></a><span class="p">,</span>
+            <a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">n_bad_annot</span></a><span class="p">,</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><a href="https://mne.tools/stable/generated/mne.Info.html#mne.Info" title="mne._fiff.meas_info.Info" class="sphx-glr-backref-module-mne-_fiff-meas_info sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">raw_after</span><span class="o">.</span><span class="n">info</span></a><span class="p">[</span><span class="s1">&#39;sfreq&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="p">]</span>
+    <span class="p">},</span>
+    <span class="n">index</span><span class="o">=</span><span class="p">[</span>
+        <span class="s2">&quot;n_channels (before)&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;n_channels (after)&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;n_channels dropped&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;n bad-window annotations&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;sfreq (Hz, after)&quot;</span><span class="p">,</span>
+    <span class="p">],</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[05/08/26 18:42:01] WARNING  File not found on S3, skipping:   downloader.py:163
+                             s3://openneuro.org/ds002718/sub-0
+                             02/eeg/sub-002_task-FaceRecogniti
+                             on_eeg.fdt
+/tmp/tmpp46w_cj3.set
+Field &#39;subject&#39; is missing from the EEG dictionnary, adding it.
+Field &#39;group&#39; is missing from the EEG dictionnary, adding it.
+Field &#39;condition&#39; is missing from the EEG dictionnary, adding it.
+Field &#39;session&#39; is missing from the EEG dictionnary, adding it.
+Field &#39;comments&#39; is missing from the EEG dictionnary, adding it.
+Field &#39;times&#39; is missing from the EEG dictionnary, adding it.
+Field &#39;icaact&#39; is missing from the EEG dictionnary, adding it.
+Field &#39;icachansind&#39; is missing from the EEG dictionnary, adding it.
+Field &#39;urchanlocs&#39; is missing from the EEG dictionnary, adding it.
+Field &#39;urevent&#39; is missing from the EEG dictionnary, adding it.
+Field &#39;eventdescription&#39; is missing from the EEG dictionnary, adding it.
+Field &#39;epoch&#39; is missing from the EEG dictionnary, adding it.
+Field &#39;epochdescription&#39; is missing from the EEG dictionnary, adding it.
+Field &#39;stats&#39; is missing from the EEG dictionnary, adding it.
+Field &#39;specdata&#39; is missing from the EEG dictionnary, adding it.
+Field &#39;specicaact&#39; is missing from the EEG dictionnary, adding it.
+Field &#39;splinefile&#39; is missing from the EEG dictionnary, adding it.
+Field &#39;icasplinefile&#39; is missing from the EEG dictionnary, adding it.
+Field &#39;dipfit&#39; is missing from the EEG dictionnary, adding it.
+Field &#39;history&#39; is missing from the EEG dictionnary, adding it.
+Field &#39;saved&#39; is missing from the EEG dictionnary, adding it.
+Field &#39;etc&#39; is missing from the EEG dictionnary, adding it.
+Field &#39;datfile&#39; is missing from the EEG dictionnary, adding it.
+Field &#39;run&#39; is missing from the EEG dictionnary, adding it.
+Field &#39;roi&#39; is missing from the EEG dictionnary, adding it.
+[05/08/26 18:42:02] INFO     Detecting flat line          clean_artifacts.py:182
+                             channels...
+                    INFO     Applying high‑pass filter... clean_artifacts.py:191
+[05/08/26 18:42:03] INFO     Scanning for bad channels...   clean_channels.py:79
+                    WARNING  clean_channels failed (To    clean_artifacts.py:216
+                             use this function most of
+                             your channels should have
+                             X,Y,Z location
+                             measurements.); falling back
+                             to clean_channels_nolocs.
+                    INFO     Applying ASR burst repair... clean_artifacts.py:232
+                    INFO     Finding a clean section of the     clean_asr.py:102
+                             data for calibration...
+                    INFO     Determining time window        clean_windows.py:115
+                             rejection thresholds...
+[05/08/26 18:42:05] INFO     done.                          clean_windows.py:147
+                    INFO     Keeping 36.9% (11 seconds) of  clean_windows.py:179
+                             the data.
+                    ERROR    Could not select time windows  clean_windows.py:204
+                             using EEGLAB&#39;s pop_select();
+                             details: Error setting single
+                             item of array.
+                    INFO     Falling back to a basic        clean_windows.py:207
+                             substitute and dropping signal
+                             meta-data.
+                    INFO     Estimating ASR calibration         clean_asr.py:138
+                             statistics...
+                    INFO     Calculating blockwise covariances...     asr.py:167
+                    INFO     Calculating robust geometric median      asr.py:207
+                             covariance...
+                    INFO     Determining per-component thresholds...  asr.py:227
+[05/08/26 18:42:07] INFO     Thresholds calculation complete.         asr.py:289
+                    INFO     Applying ASR processing...         clean_asr.py:177
+                    INFO     Cleaning data in 32 blocks               asr.py:427
+                    INFO     Finished cleaning.                       asr.py:546
+                    INFO     ASR cleaning finished.             clean_asr.py:195
+                    INFO     Final post‑processing –      clean_artifacts.py:296
+                             removing irrecoverable
+                             windows...
+                    INFO     Determining time window        clean_windows.py:115
+                             rejection thresholds...
+[05/08/26 18:42:10] INFO     done.                          clean_windows.py:147
+                    INFO     Keeping 100.0% (30 seconds) of clean_windows.py:179
+                             the data.
+                    ERROR    Could not select time windows  clean_windows.py:204
+                             using EEGLAB&#39;s pop_select();
+                             details: Error setting single
+                             item of array.
+                    INFO     Falling back to a basic        clean_windows.py:207
+                             substitute and dropping signal
+                             meta-data.
+                    INFO     Use vis_artifacts to compare clean_artifacts.py:303
+                             the cleaned data to the
+                             original.
+                    ERROR    Could not add back        eegprep_preprocess.py:231
+                             non-EEG channels (EEG061,
+                             EEG062, EEG063, EEG064)
+                             after EEGPrep processing;
+                             these will be omitted
+                             from the processed data.
+                             If you want to retain
+                             these channels, you will
+                             have to disable resample
+                             and bad time window
+                             removal in the EEGPrep
+                             Preprocessor; you may
+                             perform that step using
+                             other methods before and
+                             after EEGPrep,
+                             respectively.
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>n_channels (before)</th>
+      <td>70</td>
+    </tr>
+    <tr>
+      <th>n_channels (after)</th>
+      <td>70</td>
+    </tr>
+    <tr>
+      <th>n_channels dropped</th>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>n bad-window annotations</th>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>sfreq (Hz, after)</th>
+      <td>200.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<br />
+<br /></section>
+<section id="step-7b-a-four-panel-before-after-diagnostic">
+<h2>Step 7b: A four-panel before/after diagnostic<a class="headerlink" href="#step-7b-a-four-panel-before-after-diagnostic" title="Link to this heading">#</a></h2>
+<p><strong>Investigate.</strong> The drawing helpers live in a sibling
+<code class="docutils literal notranslate"><span class="pre">_eegprep_diagnostic</span></code> module so the tutorial cell stays at one
+import + one call. The figure shows a 30 s slice of the recording
+before EEGPrep (top-left) next to the same slice afterwards
+(top-right) at identical color limits, the PSD overlay on the
+bottom-left, and a stage-status bar diagram on the bottom-right.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">_eegprep_diagnostic</span><span class="w"> </span><span class="kn">import</span> <span class="n">draw_eegprep_diagnostic</span>  <span class="c1"># noqa: E402</span>
+
+<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="matplotlib.figure.Figure" class="sphx-glr-backref-module-matplotlib-figure sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">fig_diag</span></a> <span class="o">=</span> <span class="n">draw_eegprep_diagnostic</span><span class="p">(</span>
+    <span class="n">raw_before</span><span class="o">=</span><span class="n">raw_before</span><span class="p">,</span>
+    <span class="n">raw_after</span><span class="o">=</span><span class="n">raw_after</span><span class="p">,</span>
+    <span class="n">sfreq</span><span class="o">=</span><a href="https://mne.tools/stable/generated/mne.Info.html#mne.Info" title="mne._fiff.meas_info.Info" class="sphx-glr-backref-module-mne-_fiff-meas_info sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">raw_full</span><span class="o">.</span><span class="n">info</span></a><span class="p">[</span><span class="s2">&quot;sfreq&quot;</span><span class="p">],</span>
+    <span class="n">subject</span><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">SUBJECT</span></a><span class="p">,</span>
+    <a href="../../../../api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset" title="eegdash.EEGDashDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">dataset</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">DATASET</span></a><span class="p">,</span>
+    <span class="n">plot_id</span><span class="o">=</span><span class="s2">&quot;plot_10&quot;</span><span class="p">,</span>
+    <span class="n">slice_seconds</span><span class="o">=</span><a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">EEGPREP_SLICE_S</span></a><span class="p">,</span>
+    <span class="n">slice_start</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+<span class="p">)</span>
+<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
+</pre></div>
+</div>
+<img src="../../../../_images/sphx_glr_plot_10_preprocess_and_window_002.png" srcset="../../../../_images/sphx_glr_plot_10_preprocess_and_window_002.png" alt="before EEGPrep, after EEGPrep, PSD before vs after | 1-40 Hz target band" class = "sphx-glr-single-img"/><p>Caveat from the evidence above. Kessler et al. (2025) and Delorme
+(2023) both report that automated artefact-correction stages
+frequently degrade downstream metrics. EEGPrep is convenient <em>and</em>
+opinionated; if you adopt it, measure decoding or ERP significance
+against a no-correction baseline on a held-out subset before locking
+the configuration in. The class docstring also flags a within-session
+leakage caveat: ASR calibration uses statistics from the whole
+recording, so cross-session protocols are the safer fit.</p>
+</section>
+<section id="a-common-mistake-and-how-to-recover">
+<h2>A common mistake, and how to recover<a class="headerlink" href="#a-common-mistake-and-how-to-recover" title="Link to this heading">#</a></h2>
+<p><strong>Run.</strong> Asking for a low-pass cutoff above the Nyquist frequency is
+a frequent slip when porting a recipe across recordings with
+different sampling rates. MNE catches it with a <code class="docutils literal notranslate"><span class="pre">ValueError</span></code>; we
+trigger it on purpose so the failure mode is visible.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">try</span><span class="p">:</span>
+    <span class="n">raw</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">l_freq</span><span class="o">=</span><a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">L_FREQ</span></a><span class="p">,</span> <span class="n">h_freq</span><span class="o">=</span><a href="https://mne.tools/stable/generated/mne.Info.html#mne.Info" title="mne._fiff.meas_info.Info" class="sphx-glr-backref-module-mne-_fiff-meas_info sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">raw</span><span class="o">.</span><span class="n">info</span></a><span class="p">[</span><span class="s2">&quot;sfreq&quot;</span><span class="p">],</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">RuntimeError</span><span class="p">)</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Caught </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">exc</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">exc</span><span class="p">)[:</span><span class="mi">120</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">nyq</span></a> <span class="o">=</span> <a href="https://mne.tools/stable/generated/mne.Info.html#mne.Info" title="mne._fiff.meas_info.Info" class="sphx-glr-backref-module-mne-_fiff-meas_info sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">raw</span><span class="o">.</span><span class="n">info</span></a><span class="p">[</span><span class="s2">&quot;sfreq&quot;</span><span class="p">]</span> <span class="o">/</span> <span class="mf">2.0</span>
+    <span class="nb">print</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;Recovery: keep h_freq &lt; Nyquist (</span><span class="si">{</span><a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">nyq</span></a><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> Hz at sfreq=</span><span class="si">{</span><a href="https://mne.tools/stable/generated/mne.Info.html#mne.Info" title="mne._fiff.meas_info.Info" class="sphx-glr-backref-module-mne-_fiff-meas_info sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">raw</span><span class="o">.</span><span class="n">info</span></a><span class="p">[</span><span class="s1">&#39;sfreq&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> Hz).&quot;</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Caught ValueError: h_freq ([200.]) must be less than the Nyquist frequency 100.0
+Recovery: keep h_freq &lt; Nyquist (100.0 Hz at sfreq=200 Hz).
+</pre></div>
+</div>
+</section>
+<section id="modify">
+<h2>Modify<a class="headerlink" href="#modify" title="Link to this heading">#</a></h2>
+<p><strong>Modify.</strong> Re-run Step 4 with <code class="docutils literal notranslate"><span class="pre">L_FREQ,</span> <span class="pre">H_FREQ</span> <span class="pre">=</span> <span class="pre">1.0,</span> <span class="pre">8.0</span></code> to
+isolate the delta-theta band. The alpha bump in the PSD should
+disappear; explain why in one sentence. Then rerun Step 7 with
+<code class="docutils literal notranslate"><span class="pre">burst_removal_cutoff=20.0</span></code> and watch the bad-window annotations
+shrink as ASR turns more conservative.</p>
+</section>
+<section id="mini-project">
+<h2>Mini-project<a class="headerlink" href="#mini-project" title="Link to this heading">#</a></h2>
+<p><strong>Mini-project.</strong> Apply the same seven steps to <code class="docutils literal notranslate"><span class="pre">subject=&quot;013&quot;</span></code>
+and confirm the window shape matches. Then swap Step 7 for a
+<a class="reference external" href="https://braindecode.org/stable/generated/braindecode.preprocessing.Preprocessor.html#braindecode.preprocessing.Preprocessor" title="(in Braindecode v1.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Preprocessor</span></code></a>-wrapped EEGPrep
+inside <a class="reference external" href="https://braindecode.org/stable/generated/braindecode.preprocessing.preprocess.html#braindecode.preprocessing.preprocess" title="(in Braindecode v1.5)"><code class="xref py py-func docutils literal notranslate"><span class="pre">preprocess()</span></code></a>, so the
+whole-cohort pass replays the same configuration across every
+recording in the dataset.</p>
+</section>
+<section id="try-it-yourself">
+<h2>Try it yourself<a class="headerlink" href="#try-it-yourself" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Set <code class="docutils literal notranslate"><span class="pre">window_stride_samples</span> <span class="pre">=</span> <span class="pre">WINDOW_SAMPLES</span> <span class="pre">//</span> <span class="pre">2</span></code> for 50%
+overlap and note the window count double.</p></li>
+<li><p>Add <a class="reference external" href="https://mne.tools/stable/generated/mne.preprocessing.ICA.html#mne.preprocessing.ICA" title="(in MNE v1.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">mne.preprocessing.ICA</span></code></a> after the filter (15
+components, <code class="docutils literal notranslate"><span class="pre">picard</span></code>) and inspect <code class="docutils literal notranslate"><span class="pre">ica.exclude</span></code>.</p></li>
+<li><p>Save the windows with
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">braindecode.datasets.WindowsDataset.save()</span></code> and reload next
+session without re-running preprocessing (covered in
+<span class="xref std std-doc">/auto_examples/tutorials/10_core_workflow/plot_13_save_and_reuse_prepared_data</span>).</p></li>
+</ul>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<p>See <a class="reference internal" href="../../../../references.html"><span class="doc">References</span></a> for the centralised bibliography of papers
+cited above. Add or amend an entry once in
+<code class="file docutils literal notranslate"><span class="pre">docs/source/refs.bib</span></code>; every tutorial inherits the update.</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 27.225 seconds)</p>
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-auto-examples-tutorials-10-core-workflow-plot-10-preprocess-and-window-py">
+<div class="binder-badge docutils container">
+<a class="reference external image-reference" href="https://mybinder.org/v2/gh/eegdash/EEGDash/main?urlpath=lab/tree/notebooks/generated/auto_examples/tutorials/10_core_workflow/plot_10_preprocess_and_window.ipynb"><img alt="Launch binder" src="../../../../_images/binder_badge_logo6.svg" style="width: 150px;" />
+</a>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../../../../_downloads/0422b4a0d8087f20c7505bbe983cc159/plot_10_preprocess_and_window.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_10_preprocess_and_window.ipynb</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../../../../_downloads/8f61e0e200dcefca145168d06f8457d7/plot_10_preprocess_and_window.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_10_preprocess_and_window.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-zip docutils container">
+<p><a class="reference download internal" download="" href="../../../../_downloads/181a0c05935b31ef8f9ded12b424161a/plot_10_preprocess_and_window.zip"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">zipped:</span> <span class="pre">plot_10_preprocess_and_window.zip</span></code></a></p>
+</div>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="index.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Core Decoding Workflow</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="plot_11_leakage_safe_split.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">How do I split EEG data without subject leakage?</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">Learning objectives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#requirements">Requirements</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#concepts-behind-preprocessing">Concepts behind preprocessing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#evidence-on-what-helps-and-what-hurts">Evidence on what helps and what hurts</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-can-a-raw-object-do">What can a Raw object do?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-s-in-mne-preprocessing">What’s in <code class="xref py py-mod docutils literal notranslate"><span class="pre">mne.preprocessing</span></code>?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-load-one-recording-lazy">Step 1: Load one recording (lazy)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-set-the-montage">Step 2: Set the montage</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-set-an-average-reference">Step 3: Set an average reference</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-4-band-pass-filter-1-40-hz-fir-zero-phase">Step 4: Band-pass filter (1-40 Hz, FIR, zero-phase)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-5-resample-to-200-hz">Step 5: Resample to 200 Hz</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-6-apply-the-same-recipe-to-the-dataset-and-create-windows">Step 6: Apply the same recipe to the dataset (and create windows)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-7-one-call-cleanup-with-eegprep">Step 7: One-call cleanup with <code class="xref py py-class docutils literal notranslate"><span class="pre">EEGPrep</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-7b-a-four-panel-before-after-diagnostic">Step 7b: A four-panel before/after diagnostic</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-common-mistake-and-how-to-recover">A common mistake, and how to recover</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#modify">Modify</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mini-project">Mini-project</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#try-it-yourself">Try it yourself</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb"></script>
+<script defer src="../../../../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025-2026, EEG Dash Developers.
+      <br/>
+    
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.17.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

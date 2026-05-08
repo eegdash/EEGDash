@@ -88,7 +88,7 @@ rec = create_record(
 | `RepositoryStats`                                    | Statistics for git-based repositories (e.g. GIN). |
 | `Timestamps`                                         | Processing and lifecycle timestamps.              |
 
-### *class* eegdash.schemas.DatasetModel(, dataset_id: Annotated[str, MinLen(min_length=1)], source: Annotated[str, MinLen(min_length=1)], recording_modality: Annotated[list[str], MinLen(min_length=1)], ingestion_fingerprint: str | None = None, senior_author: str | None = None, contact_info: list[str] | None = None, timestamps: dict[str, Any] | None = None, storage: StorageModel | None = None, \*\*extra_data: Any)
+### *class* eegdash.schemas.DatasetModel(, dataset_id: [Annotated](https://docs.python.org/3/library/typing.html#typing.Annotated)[[str](https://docs.python.org/3/library/stdtypes.html#str), MinLen(min_length=1)], source: [Annotated](https://docs.python.org/3/library/typing.html#typing.Annotated)[[str](https://docs.python.org/3/library/stdtypes.html#str), MinLen(min_length=1)], recording_modality: [Annotated](https://docs.python.org/3/library/typing.html#typing.Annotated)[[list](https://docs.python.org/3/library/stdtypes.html#list)[[str](https://docs.python.org/3/library/stdtypes.html#str)], MinLen(min_length=1)], ingestion_fingerprint: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, senior_author: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, contact_info: [list](https://docs.python.org/3/library/stdtypes.html#list)[[str](https://docs.python.org/3/library/stdtypes.html#str)] | [None](https://docs.python.org/3/library/constants.html#None) = None, timestamps: [dict](https://docs.python.org/3/library/stdtypes.html#dict)[[str](https://docs.python.org/3/library/stdtypes.html#str), [Any](https://docs.python.org/3/library/typing.html#typing.Any)] | [None](https://docs.python.org/3/library/constants.html#None) = None, storage: StorageModel | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*extra_data: [Any](https://docs.python.org/3/library/typing.html#typing.Any))
 
 Bases: `BaseModel`
 
@@ -111,23 +111,23 @@ Configuration for the model, should be a dictionary conforming to [ConfigDict][p
 
 <!-- !! processed by numpydoc !! -->
 
-#### dataset_id *: str*
+#### dataset_id *: [str](https://docs.python.org/3/library/stdtypes.html#str)*
 
-#### source *: str*
+#### source *: [str](https://docs.python.org/3/library/stdtypes.html#str)*
 
-#### recording_modality *: list[str]*
+#### recording_modality *: [list](https://docs.python.org/3/library/stdtypes.html#list)[[str](https://docs.python.org/3/library/stdtypes.html#str)]*
 
-#### ingestion_fingerprint *: str | None*
+#### ingestion_fingerprint *: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None)*
 
-#### senior_author *: str | None*
+#### senior_author *: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None)*
 
-#### contact_info *: list[str] | None*
+#### contact_info *: [list](https://docs.python.org/3/library/stdtypes.html#list)[[str](https://docs.python.org/3/library/stdtypes.html#str)] | [None](https://docs.python.org/3/library/constants.html#None)*
 
-#### timestamps *: dict[str, Any] | None*
+#### timestamps *: [dict](https://docs.python.org/3/library/stdtypes.html#dict)[[str](https://docs.python.org/3/library/stdtypes.html#str), Any] | [None](https://docs.python.org/3/library/constants.html#None)*
 
-#### storage *: StorageModel | None*
+#### storage *: StorageModel | [None](https://docs.python.org/3/library/constants.html#None)*
 
-### *class* eegdash.schemas.RecordModel(, dataset: Annotated[str, MinLen(min_length=1)], bids_relpath: Annotated[str, MinLen(min_length=1)], storage: StorageModel, recording_modality: Annotated[list[str], MinLen(min_length=1)], datatype: str | None = None, suffix: str | None = None, extension: str | None = None, entities: EntitiesModel | dict[str, Any] | None = None, \*\*extra_data: Any)
+### *class* eegdash.schemas.RecordModel(, dataset: [Annotated](https://docs.python.org/3/library/typing.html#typing.Annotated)[[str](https://docs.python.org/3/library/stdtypes.html#str), MinLen(min_length=1)], bids_relpath: [Annotated](https://docs.python.org/3/library/typing.html#typing.Annotated)[[str](https://docs.python.org/3/library/stdtypes.html#str), MinLen(min_length=1)], storage: StorageModel, recording_modality: [Annotated](https://docs.python.org/3/library/typing.html#typing.Annotated)[[list](https://docs.python.org/3/library/stdtypes.html#list)[[str](https://docs.python.org/3/library/stdtypes.html#str)], MinLen(min_length=1)], datatype: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, suffix: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, extension: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, entities: EntitiesModel | [dict](https://docs.python.org/3/library/stdtypes.html#dict)[[str](https://docs.python.org/3/library/stdtypes.html#str), [Any](https://docs.python.org/3/library/typing.html#typing.Any)] | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*extra_data: [Any](https://docs.python.org/3/library/typing.html#typing.Any))
 
 Bases: `BaseModel`
 
@@ -150,21 +150,21 @@ Configuration for the model, should be a dictionary conforming to [ConfigDict][p
 
 <!-- !! processed by numpydoc !! -->
 
-#### dataset *: str*
+#### dataset *: [str](https://docs.python.org/3/library/stdtypes.html#str)*
 
-#### bids_relpath *: str*
+#### bids_relpath *: [str](https://docs.python.org/3/library/stdtypes.html#str)*
 
 #### storage *: StorageModel*
 
-#### recording_modality *: list[str]*
+#### recording_modality *: [list](https://docs.python.org/3/library/stdtypes.html#list)[[str](https://docs.python.org/3/library/stdtypes.html#str)]*
 
-#### datatype *: str | None*
+#### datatype *: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None)*
 
-#### suffix *: str | None*
+#### suffix *: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None)*
 
-#### extension *: str | None*
+#### extension *: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None)*
 
-#### entities *: EntitiesModel | dict[str, Any] | None*
+#### entities *: EntitiesModel | [dict](https://docs.python.org/3/library/stdtypes.html#dict)[[str](https://docs.python.org/3/library/stdtypes.html#str), Any] | [None](https://docs.python.org/3/library/constants.html#None)*
 
 ### *class* eegdash.schemas.StorageModel(\*, backend: ~typing.Annotated[str, ~annotated_types.MinLen(min_length=1)], base: ~typing.Annotated[str, ~annotated_types.MinLen(min_length=1)], raw_key: ~typing.Annotated[str, ~annotated_types.MinLen(min_length=1)], dep_keys: list[str] = <factory>, annex_keys: dict[str, str] | None = None, sidecar_inline: dict[str, str] | None = None, \*\*extra_data: ~typing.Any)
 
@@ -189,19 +189,19 @@ Configuration for the model, should be a dictionary conforming to [ConfigDict][p
 
 <!-- !! processed by numpydoc !! -->
 
-#### backend *: str*
+#### backend *: [str](https://docs.python.org/3/library/stdtypes.html#str)*
 
-#### base *: str*
+#### base *: [str](https://docs.python.org/3/library/stdtypes.html#str)*
 
-#### raw_key *: str*
+#### raw_key *: [str](https://docs.python.org/3/library/stdtypes.html#str)*
 
-#### dep_keys *: list[str]*
+#### dep_keys *: [list](https://docs.python.org/3/library/stdtypes.html#list)[[str](https://docs.python.org/3/library/stdtypes.html#str)]*
 
-#### annex_keys *: dict[str, str] | None*
+#### annex_keys *: [dict](https://docs.python.org/3/library/stdtypes.html#dict)[[str](https://docs.python.org/3/library/stdtypes.html#str), [str](https://docs.python.org/3/library/stdtypes.html#str)] | [None](https://docs.python.org/3/library/constants.html#None)*
 
-#### sidecar_inline *: dict[str, str] | None*
+#### sidecar_inline *: [dict](https://docs.python.org/3/library/stdtypes.html#dict)[[str](https://docs.python.org/3/library/stdtypes.html#str), [str](https://docs.python.org/3/library/stdtypes.html#str)] | [None](https://docs.python.org/3/library/constants.html#None)*
 
-### *class* eegdash.schemas.EntitiesModel(, subject: str | None = None, session: str | None = None, task: str | None = None, run: str | None = None, acquisition: str | None = None, \*\*extra_data: Any)
+### *class* eegdash.schemas.EntitiesModel(, subject: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, session: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, task: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, run: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, acquisition: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*extra_data: [Any](https://docs.python.org/3/library/typing.html#typing.Any))
 
 Bases: `BaseModel`
 
@@ -224,17 +224,17 @@ Configuration for the model, should be a dictionary conforming to [ConfigDict][p
 
 <!-- !! processed by numpydoc !! -->
 
-#### subject *: str | None*
+#### subject *: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None)*
 
-#### session *: str | None*
+#### session *: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None)*
 
-#### task *: str | None*
+#### task *: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None)*
 
-#### run *: str | None*
+#### run *: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None)*
 
-#### acquisition *: str | None*
+#### acquisition *: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None)*
 
-### *class* eegdash.schemas.ManifestModel(, source: str | None = None, files: list[str | ManifestFileModel], \*\*extra_data: Any)
+### *class* eegdash.schemas.ManifestModel(, source: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, files: [list](https://docs.python.org/3/library/stdtypes.html#list)[[str](https://docs.python.org/3/library/stdtypes.html#str) | ManifestFileModel], \*\*extra_data: [Any](https://docs.python.org/3/library/typing.html#typing.Any))
 
 Bases: `BaseModel`
 
@@ -257,11 +257,11 @@ Configuration for the model, should be a dictionary conforming to [ConfigDict][p
 
 <!-- !! processed by numpydoc !! -->
 
-#### source *: str | None*
+#### source *: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None)*
 
-#### files *: list[str | ManifestFileModel]*
+#### files *: [list](https://docs.python.org/3/library/stdtypes.html#list)[[str](https://docs.python.org/3/library/stdtypes.html#str) | ManifestFileModel]*
 
-### *class* eegdash.schemas.ManifestFileModel(, path: str | None = None, name: str | None = None, \*\*extra_data: Any)
+### *class* eegdash.schemas.ManifestFileModel(, path: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, name: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*extra_data: [Any](https://docs.python.org/3/library/typing.html#typing.Any))
 
 Bases: `BaseModel`
 
@@ -284,11 +284,11 @@ Configuration for the model, should be a dictionary conforming to [ConfigDict][p
 
 <!-- !! processed by numpydoc !! -->
 
-#### path *: str | None*
+#### path *: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None)*
 
-#### name *: str | None*
+#### name *: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None)*
 
-#### path_or_name() → str
+#### path_or_name() → [str](https://docs.python.org/3/library/stdtypes.html#str)
 
 Return the path or name of the file.
 
@@ -296,7 +296,7 @@ Return the path or name of the file.
 
 ### *class* eegdash.schemas.Dataset
 
-Bases: `TypedDict`
+Bases: [`TypedDict`](https://docs.python.org/3/library/typing.html#typing.TypedDict)
 
 TypedDict schema for a full Dataset document.
 
@@ -307,14 +307,14 @@ This Dictionary represents all metadata available for a study/dataset.
 Unique identifier (e.g., “ds001785”).
 
 * **Type:**
-  str
+  [str](https://docs.python.org/3/library/stdtypes.html#str)
 
 #### name
 
 Descriptive title of the dataset.
 
 * **Type:**
-  str
+  [str](https://docs.python.org/3/library/stdtypes.html#str)
 
 #### canonical_name
 
@@ -325,147 +325,147 @@ the `DS…`-style ID. Empty list or `None` means no alias is
 registered.
 
 * **Type:**
-  list[str] | None
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[str](https://docs.python.org/3/library/stdtypes.html#str)] | None
 
 #### source
 
 Origin source (e.g., “openneuro”, “nemar”).
 
 * **Type:**
-  str
+  [str](https://docs.python.org/3/library/stdtypes.html#str)
 
 #### readme
 
 Content of the dataset’s README file.
 
 * **Type:**
-  str | None
+  [str](https://docs.python.org/3/library/stdtypes.html#str) | None
 
 #### recording_modality
 
 List of recording modalities (e.g., [“eeg”, “meg”]).
 
 * **Type:**
-  list[str]
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[str](https://docs.python.org/3/library/stdtypes.html#str)]
 
 #### datatypes
 
 BIDS datatypes present (e.g., [“eeg”, “anat”]).
 
 * **Type:**
-  list[str]
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[str](https://docs.python.org/3/library/stdtypes.html#str)]
 
 #### experimental_modalities
 
 Stimulus types used (e.g., [“visual”, “auditory”]).
 
 * **Type:**
-  list[str] | None
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[str](https://docs.python.org/3/library/stdtypes.html#str)] | None
 
 #### bids_version
 
 Version of the BIDS standard used.
 
 * **Type:**
-  str | None
+  [str](https://docs.python.org/3/library/stdtypes.html#str) | None
 
 #### license
 
 License string (e.g., “CC0”).
 
 * **Type:**
-  str | None
+  [str](https://docs.python.org/3/library/stdtypes.html#str) | None
 
 #### authors
 
 List of author names.
 
 * **Type:**
-  list[str]
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[str](https://docs.python.org/3/library/stdtypes.html#str)]
 
 #### funding
 
 List of funding sources.
 
 * **Type:**
-  list[str]
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[str](https://docs.python.org/3/library/stdtypes.html#str)]
 
 #### dataset_doi
 
 Digital Object Identifier for the dataset.
 
 * **Type:**
-  str | None
+  [str](https://docs.python.org/3/library/stdtypes.html#str) | None
 
 #### associated_paper_doi
 
 DOI of the paper associated with the dataset.
 
 * **Type:**
-  str | None
+  [str](https://docs.python.org/3/library/stdtypes.html#str) | None
 
 #### tasks
 
 List of task names found in the dataset.
 
 * **Type:**
-  list[str]
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[str](https://docs.python.org/3/library/stdtypes.html#str)]
 
 #### sessions
 
 List of session names.
 
 * **Type:**
-  list[str]
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[str](https://docs.python.org/3/library/stdtypes.html#str)]
 
 #### total_files
 
 Total file count.
 
 * **Type:**
-  int | None
+  [int](https://docs.python.org/3/library/functions.html#int) | None
 
 #### size_bytes
 
 Total dataset size in bytes.
 
 * **Type:**
-  int | None
+  [int](https://docs.python.org/3/library/functions.html#int) | None
 
 #### data_processed
 
 Indicates if the data has been pre-processed.
 
 * **Type:**
-  bool | None
+  [bool](https://docs.python.org/3/library/functions.html#bool) | None
 
 #### study_domain
 
 General domain of the study.
 
 * **Type:**
-  str | None
+  [str](https://docs.python.org/3/library/stdtypes.html#str) | None
 
 #### study_design
 
 Description of the study design.
 
 * **Type:**
-  str | None
+  [str](https://docs.python.org/3/library/stdtypes.html#str) | None
 
 #### contributing_labs
 
 List of labs contributing to the dataset.
 
 * **Type:**
-  list[str] | None
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[str](https://docs.python.org/3/library/stdtypes.html#str)] | None
 
 #### n_contributing_labs
 
 Count of contributing labs.
 
 * **Type:**
-  int | None
+  [int](https://docs.python.org/3/library/functions.html#int) | None
 
 #### demographics
 
@@ -507,14 +507,14 @@ Stats for the source repository (if applicable).
 Name of the senior author.
 
 * **Type:**
-  str | None
+  [str](https://docs.python.org/3/library/stdtypes.html#str) | None
 
 #### contact_info
 
 Contact emails or names.
 
 * **Type:**
-  list[str] | None
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[str](https://docs.python.org/3/library/stdtypes.html#str)] | None
 
 #### timestamps
 
@@ -528,57 +528,57 @@ Timestamps for data processing and creation.
 Number of papers citing this dataset (from NEMAR citations repository).
 
 * **Type:**
-  int | None
+  [int](https://docs.python.org/3/library/functions.html#int) | None
 
 <!-- !! processed by numpydoc !! -->
 
-#### dataset_id *: str*
+#### dataset_id *: [str](https://docs.python.org/3/library/stdtypes.html#str)*
 
-#### name *: str*
+#### name *: [str](https://docs.python.org/3/library/stdtypes.html#str)*
 
-#### canonical_name *: list[str] | None*
+#### canonical_name *: [list](https://docs.python.org/3/library/stdtypes.html#list)[[str](https://docs.python.org/3/library/stdtypes.html#str)] | [None](https://docs.python.org/3/library/constants.html#None)*
 
-#### source *: str*
+#### source *: [str](https://docs.python.org/3/library/stdtypes.html#str)*
 
-#### readme *: str | None*
+#### readme *: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None)*
 
-#### ingestion_fingerprint *: str | None*
+#### ingestion_fingerprint *: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None)*
 
-#### recording_modality *: list[str]*
+#### recording_modality *: [list](https://docs.python.org/3/library/stdtypes.html#list)[[str](https://docs.python.org/3/library/stdtypes.html#str)]*
 
-#### datatypes *: list[str]*
+#### datatypes *: [list](https://docs.python.org/3/library/stdtypes.html#list)[[str](https://docs.python.org/3/library/stdtypes.html#str)]*
 
-#### experimental_modalities *: list[str] | None*
+#### experimental_modalities *: [list](https://docs.python.org/3/library/stdtypes.html#list)[[str](https://docs.python.org/3/library/stdtypes.html#str)] | [None](https://docs.python.org/3/library/constants.html#None)*
 
-#### bids_version *: str | None*
+#### bids_version *: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None)*
 
-#### license *: str | None*
+#### license *: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None)*
 
-#### authors *: list[str]*
+#### authors *: [list](https://docs.python.org/3/library/stdtypes.html#list)[[str](https://docs.python.org/3/library/stdtypes.html#str)]*
 
-#### funding *: list[str]*
+#### funding *: [list](https://docs.python.org/3/library/stdtypes.html#list)[[str](https://docs.python.org/3/library/stdtypes.html#str)]*
 
-#### dataset_doi *: str | None*
+#### dataset_doi *: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None)*
 
-#### associated_paper_doi *: str | None*
+#### associated_paper_doi *: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None)*
 
-#### tasks *: list[str]*
+#### tasks *: [list](https://docs.python.org/3/library/stdtypes.html#list)[[str](https://docs.python.org/3/library/stdtypes.html#str)]*
 
-#### sessions *: list[str]*
+#### sessions *: [list](https://docs.python.org/3/library/stdtypes.html#list)[[str](https://docs.python.org/3/library/stdtypes.html#str)]*
 
-#### total_files *: int | None*
+#### total_files *: [int](https://docs.python.org/3/library/functions.html#int) | [None](https://docs.python.org/3/library/constants.html#None)*
 
-#### size_bytes *: int | None*
+#### size_bytes *: [int](https://docs.python.org/3/library/functions.html#int) | [None](https://docs.python.org/3/library/constants.html#None)*
 
-#### data_processed *: bool | None*
+#### data_processed *: [bool](https://docs.python.org/3/library/functions.html#bool) | [None](https://docs.python.org/3/library/constants.html#None)*
 
-#### study_domain *: str | None*
+#### study_domain *: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None)*
 
-#### study_design *: str | None*
+#### study_design *: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None)*
 
-#### contributing_labs *: list[str] | None*
+#### contributing_labs *: [list](https://docs.python.org/3/library/stdtypes.html#list)[[str](https://docs.python.org/3/library/stdtypes.html#str)] | [None](https://docs.python.org/3/library/constants.html#None)*
 
-#### n_contributing_labs *: int | None*
+#### n_contributing_labs *: [int](https://docs.python.org/3/library/functions.html#int) | [None](https://docs.python.org/3/library/constants.html#None)*
 
 #### demographics *: Demographics*
 
@@ -588,21 +588,21 @@ Number of papers citing this dataset (from NEMAR citations repository).
 
 #### external_links *: ExternalLinks*
 
-#### repository_stats *: RepositoryStats | None*
+#### repository_stats *: RepositoryStats | [None](https://docs.python.org/3/library/constants.html#None)*
 
-#### senior_author *: str | None*
+#### senior_author *: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None)*
 
-#### contact_info *: list[str] | None*
+#### contact_info *: [list](https://docs.python.org/3/library/stdtypes.html#list)[[str](https://docs.python.org/3/library/stdtypes.html#str)] | [None](https://docs.python.org/3/library/constants.html#None)*
 
 #### timestamps *: Timestamps*
 
-#### storage *: Storage | None*
+#### storage *: Storage | [None](https://docs.python.org/3/library/constants.html#None)*
 
-#### nemar_citation_count *: int | None*
+#### nemar_citation_count *: [int](https://docs.python.org/3/library/functions.html#int) | [None](https://docs.python.org/3/library/constants.html#None)*
 
 ### *class* eegdash.schemas.Record
 
-Bases: `TypedDict`
+Bases: [`TypedDict`](https://docs.python.org/3/library/typing.html#typing.TypedDict)
 
 TypedDict schema for a Record document.
 
@@ -614,56 +614,56 @@ and minimal to ensure fast loading times when querying millions of records.
 Foreign key matching `Dataset.dataset_id`.
 
 * **Type:**
-  str
+  [str](https://docs.python.org/3/library/stdtypes.html#str)
 
 #### data_name
 
 Unique name for the data item (e.g., “ds001_sub-01_task-rest”).
 
 * **Type:**
-  str
+  [str](https://docs.python.org/3/library/stdtypes.html#str)
 
 #### bidspath
 
 Legacy path identifier (e.g., “ds001/sub-01/eeg/…”).
 
 * **Type:**
-  str
+  [str](https://docs.python.org/3/library/stdtypes.html#str)
 
 #### bids_relpath
 
 Standard BIDS relative path (e.g., “sub-01/eeg/…”).
 
 * **Type:**
-  str
+  [str](https://docs.python.org/3/library/stdtypes.html#str)
 
 #### datatype
 
 BIDS datatype (e.g., “eeg”).
 
 * **Type:**
-  str
+  [str](https://docs.python.org/3/library/stdtypes.html#str)
 
 #### suffix
 
 Filename suffix (e.g., “eeg”).
 
 * **Type:**
-  str
+  [str](https://docs.python.org/3/library/stdtypes.html#str)
 
 #### extension
 
 File extension (e.g., “.vhdr”).
 
 * **Type:**
-  str
+  [str](https://docs.python.org/3/library/stdtypes.html#str)
 
 #### recording_modality
 
 Modality of the recording.
 
 * **Type:**
-  list[str] | None
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[str](https://docs.python.org/3/library/stdtypes.html#str)] | None
 
 #### entities
 
@@ -691,35 +691,35 @@ Storage location details.
 List of channel names.
 
 * **Type:**
-  list[str] | None
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[str](https://docs.python.org/3/library/stdtypes.html#str)] | None
 
 #### sampling_frequency
 
 Sampling rate in Hz.
 
 * **Type:**
-  float | None
+  [float](https://docs.python.org/3/library/functions.html#float) | None
 
 #### nchans
 
 Channel count.
 
 * **Type:**
-  int | None
+  [int](https://docs.python.org/3/library/functions.html#int) | None
 
 #### ntimes
 
 Number of time points.
 
 * **Type:**
-  int | None
+  [int](https://docs.python.org/3/library/functions.html#int) | None
 
 #### digested_at
 
 Timestamp of when this record was processed.
 
 * **Type:**
-  str
+  [str](https://docs.python.org/3/library/stdtypes.html#str)
 
 #### montage_hash
 
@@ -729,25 +729,25 @@ when the dataset publishes no scalp electrode positions (e.g.
 iEEG depth-electrode datasets or MEG-only recordings).
 
 * **Type:**
-  str | None
+  [str](https://docs.python.org/3/library/stdtypes.html#str) | None
 
 <!-- !! processed by numpydoc !! -->
 
-#### dataset *: str*
+#### dataset *: [str](https://docs.python.org/3/library/stdtypes.html#str)*
 
-#### data_name *: str*
+#### data_name *: [str](https://docs.python.org/3/library/stdtypes.html#str)*
 
-#### bidspath *: str*
+#### bidspath *: [str](https://docs.python.org/3/library/stdtypes.html#str)*
 
-#### bids_relpath *: str*
+#### bids_relpath *: [str](https://docs.python.org/3/library/stdtypes.html#str)*
 
-#### datatype *: str*
+#### datatype *: [str](https://docs.python.org/3/library/stdtypes.html#str)*
 
-#### suffix *: str*
+#### suffix *: [str](https://docs.python.org/3/library/stdtypes.html#str)*
 
-#### extension *: str*
+#### extension *: [str](https://docs.python.org/3/library/stdtypes.html#str)*
 
-#### recording_modality *: list[str] | None*
+#### recording_modality *: [list](https://docs.python.org/3/library/stdtypes.html#list)[[str](https://docs.python.org/3/library/stdtypes.html#str)] | [None](https://docs.python.org/3/library/constants.html#None)*
 
 #### entities *: Entities*
 
@@ -755,21 +755,21 @@ iEEG depth-electrode datasets or MEG-only recordings).
 
 #### storage *: Storage*
 
-#### ch_names *: list[str] | None*
+#### ch_names *: [list](https://docs.python.org/3/library/stdtypes.html#list)[[str](https://docs.python.org/3/library/stdtypes.html#str)] | [None](https://docs.python.org/3/library/constants.html#None)*
 
-#### sampling_frequency *: float | None*
+#### sampling_frequency *: [float](https://docs.python.org/3/library/functions.html#float) | [None](https://docs.python.org/3/library/constants.html#None)*
 
-#### nchans *: int | None*
+#### nchans *: [int](https://docs.python.org/3/library/functions.html#int) | [None](https://docs.python.org/3/library/constants.html#None)*
 
-#### ntimes *: int | None*
+#### ntimes *: [int](https://docs.python.org/3/library/functions.html#int) | [None](https://docs.python.org/3/library/constants.html#None)*
 
-#### digested_at *: str*
+#### digested_at *: [str](https://docs.python.org/3/library/stdtypes.html#str)*
 
-#### montage_hash *: str | None*
+#### montage_hash *: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None)*
 
 ### *class* eegdash.schemas.Storage
 
-Bases: `TypedDict`
+Bases: [`TypedDict`](https://docs.python.org/3/library/typing.html#typing.TypedDict)
 
 Remote storage location details.
 
@@ -787,21 +787,21 @@ out-of-band access paths (git-annex / nemar CLI / NEMAR API).
 Base URI (e.g., “s3://openneuro.org/ds000001”).
 
 * **Type:**
-  str
+  [str](https://docs.python.org/3/library/stdtypes.html#str)
 
 #### raw_key
 
 Path relative to base to reach the file.
 
 * **Type:**
-  str
+  [str](https://docs.python.org/3/library/stdtypes.html#str)
 
 #### dep_keys
 
 Paths relative to base for sidecar files (e.g., .json, .vhdr).
 
 * **Type:**
-  list[str]
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[str](https://docs.python.org/3/library/stdtypes.html#str)]
 
 #### annex_keys
 
@@ -811,7 +811,7 @@ directly without a GitHub-pointer round-trip. Mutually exclusive
 with `sidecar_inline` for any given relpath.
 
 * **Type:**
-  dict[str, str], optional
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)[[str](https://docs.python.org/3/library/stdtypes.html#str), [str](https://docs.python.org/3/library/stdtypes.html#str)], optional
 
 #### sidecar_inline
 
@@ -821,25 +821,25 @@ runtime can write them directly to disk without a GitHub fetch.
 Mutually exclusive with `annex_keys` for any given relpath.
 
 * **Type:**
-  dict[str, str], optional
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)[[str](https://docs.python.org/3/library/stdtypes.html#str), [str](https://docs.python.org/3/library/stdtypes.html#str)], optional
 
 <!-- !! processed by numpydoc !! -->
 
-#### backend *: Literal['s3', 'https', 'local', 'nemar']*
+#### backend *: [Literal](https://docs.python.org/3/library/typing.html#typing.Literal)['s3', 'https', 'local', 'nemar']*
 
-#### base *: str*
+#### base *: [str](https://docs.python.org/3/library/stdtypes.html#str)*
 
-#### raw_key *: str*
+#### raw_key *: [str](https://docs.python.org/3/library/stdtypes.html#str)*
 
-#### dep_keys *: list[str]*
+#### dep_keys *: [list](https://docs.python.org/3/library/stdtypes.html#list)[[str](https://docs.python.org/3/library/stdtypes.html#str)]*
 
-#### annex_keys *: NotRequired[dict[str, str]]*
+#### annex_keys *: [NotRequired](https://docs.python.org/3/library/typing.html#typing.NotRequired)[[dict](https://docs.python.org/3/library/stdtypes.html#dict)[[str](https://docs.python.org/3/library/stdtypes.html#str), [str](https://docs.python.org/3/library/stdtypes.html#str)]]*
 
-#### sidecar_inline *: NotRequired[dict[str, str]]*
+#### sidecar_inline *: [NotRequired](https://docs.python.org/3/library/typing.html#typing.NotRequired)[[dict](https://docs.python.org/3/library/stdtypes.html#dict)[[str](https://docs.python.org/3/library/stdtypes.html#str), [str](https://docs.python.org/3/library/stdtypes.html#str)]]*
 
 ### *class* eegdash.schemas.Entities
 
-Bases: `TypedDict`
+Bases: [`TypedDict`](https://docs.python.org/3/library/typing.html#typing.TypedDict)
 
 BIDS entities parsed from the file path.
 
@@ -848,51 +848,51 @@ BIDS entities parsed from the file path.
 Subject label (e.g., “01”).
 
 * **Type:**
-  str | None
+  [str](https://docs.python.org/3/library/stdtypes.html#str) | None
 
 #### session
 
 Session label (e.g., “pre”).
 
 * **Type:**
-  str | None
+  [str](https://docs.python.org/3/library/stdtypes.html#str) | None
 
 #### task
 
 Task label (e.g., “rest”).
 
 * **Type:**
-  str | None
+  [str](https://docs.python.org/3/library/stdtypes.html#str) | None
 
 #### run
 
 Run label (e.g., “1” or “01”).
 
 * **Type:**
-  str | None
+  [str](https://docs.python.org/3/library/stdtypes.html#str) | None
 
 #### acquisition
 
 Acquisition label (e.g., “bipolar”, “PSG”).
 
 * **Type:**
-  str | None
+  [str](https://docs.python.org/3/library/stdtypes.html#str) | None
 
 <!-- !! processed by numpydoc !! -->
 
-#### subject *: str | None*
+#### subject *: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None)*
 
-#### session *: str | None*
+#### session *: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None)*
 
-#### task *: str | None*
+#### task *: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None)*
 
-#### run *: str | None*
+#### run *: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None)*
 
-#### acquisition *: str | None*
+#### acquisition *: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None)*
 
 ### *class* eegdash.schemas.Demographics
 
-Bases: `TypedDict`
+Bases: [`TypedDict`](https://docs.python.org/3/library/typing.html#typing.TypedDict)
 
 Subject demographics summary for a dataset.
 
@@ -901,78 +901,78 @@ Subject demographics summary for a dataset.
 Total number of subjects.
 
 * **Type:**
-  int
+  [int](https://docs.python.org/3/library/functions.html#int)
 
 #### ages
 
 List of all subject ages (if available).
 
 * **Type:**
-  list[int]
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[int](https://docs.python.org/3/library/functions.html#int)]
 
 #### age_min
 
 Minimum age in the cohort.
 
 * **Type:**
-  int | None
+  [int](https://docs.python.org/3/library/functions.html#int) | None
 
 #### age_max
 
 Maximum age in the cohort.
 
 * **Type:**
-  int | None
+  [int](https://docs.python.org/3/library/functions.html#int) | None
 
 #### age_mean
 
 Mean age of subjects.
 
 * **Type:**
-  float | None
+  [float](https://docs.python.org/3/library/functions.html#float) | None
 
 #### species
 
 Species of subjects (e.g., “Human”, “Mouse”).
 
 * **Type:**
-  str | None
+  [str](https://docs.python.org/3/library/stdtypes.html#str) | None
 
 #### sex_distribution
 
 Count of subjects by sex (e.g., {“m”: 50, “f”: 45}).
 
 * **Type:**
-  dict[str, int] | None
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)[[str](https://docs.python.org/3/library/stdtypes.html#str), [int](https://docs.python.org/3/library/functions.html#int)] | None
 
 #### handedness_distribution
 
 Count of subjects by handedness (e.g., {“r”: 80, “l”: 15}).
 
 * **Type:**
-  dict[str, int] | None
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)[[str](https://docs.python.org/3/library/stdtypes.html#str), [int](https://docs.python.org/3/library/functions.html#int)] | None
 
 <!-- !! processed by numpydoc !! -->
 
-#### subjects_count *: int*
+#### subjects_count *: [int](https://docs.python.org/3/library/functions.html#int)*
 
-#### ages *: list[int]*
+#### ages *: [list](https://docs.python.org/3/library/stdtypes.html#list)[[int](https://docs.python.org/3/library/functions.html#int)]*
 
-#### age_min *: int | None*
+#### age_min *: [int](https://docs.python.org/3/library/functions.html#int) | [None](https://docs.python.org/3/library/constants.html#None)*
 
-#### age_max *: int | None*
+#### age_max *: [int](https://docs.python.org/3/library/functions.html#int) | [None](https://docs.python.org/3/library/constants.html#None)*
 
-#### age_mean *: float | None*
+#### age_mean *: [float](https://docs.python.org/3/library/functions.html#float) | [None](https://docs.python.org/3/library/constants.html#None)*
 
-#### species *: str | None*
+#### species *: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None)*
 
-#### sex_distribution *: dict[str, int] | None*
+#### sex_distribution *: [dict](https://docs.python.org/3/library/stdtypes.html#dict)[[str](https://docs.python.org/3/library/stdtypes.html#str), [int](https://docs.python.org/3/library/functions.html#int)] | [None](https://docs.python.org/3/library/constants.html#None)*
 
-#### handedness_distribution *: dict[str, int] | None*
+#### handedness_distribution *: [dict](https://docs.python.org/3/library/stdtypes.html#dict)[[str](https://docs.python.org/3/library/stdtypes.html#str), [int](https://docs.python.org/3/library/functions.html#int)] | [None](https://docs.python.org/3/library/constants.html#None)*
 
 ### *class* eegdash.schemas.Clinical
 
-Bases: `TypedDict`
+Bases: [`TypedDict`](https://docs.python.org/3/library/typing.html#typing.TypedDict)
 
 Clinical classification metadata (dataset-level).
 
@@ -984,24 +984,24 @@ Deprecated since version Use: the `tags` field with `pathology` key instead.
 True if the dataset contains clinical population data.
 
 * **Type:**
-  bool
+  [bool](https://docs.python.org/3/library/functions.html#bool)
 
 #### purpose
 
 The clinical condition or purpose (e.g., “epilepsy”, “depression”).
 
 * **Type:**
-  str | None
+  [str](https://docs.python.org/3/library/stdtypes.html#str) | None
 
 <!-- !! processed by numpydoc !! -->
 
-#### is_clinical *: bool*
+#### is_clinical *: [bool](https://docs.python.org/3/library/functions.html#bool)*
 
-#### purpose *: str | None*
+#### purpose *: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None)*
 
 ### *class* eegdash.schemas.ExternalLinks
 
-Bases: `TypedDict`
+Bases: [`TypedDict`](https://docs.python.org/3/library/typing.html#typing.TypedDict)
 
 Relevant external hyperlinks for the dataset.
 
@@ -1010,42 +1010,42 @@ Relevant external hyperlinks for the dataset.
 URL to the primary data source (e.g. OpenNeuro page).
 
 * **Type:**
-  str | None
+  [str](https://docs.python.org/3/library/stdtypes.html#str) | None
 
 #### osf_url
 
 URL to the Open Science Framework project.
 
 * **Type:**
-  str | None
+  [str](https://docs.python.org/3/library/stdtypes.html#str) | None
 
 #### github_url
 
 URL to the associated GitHub repository.
 
 * **Type:**
-  str | None
+  [str](https://docs.python.org/3/library/stdtypes.html#str) | None
 
 #### paper_url
 
 URL to the primary publication.
 
 * **Type:**
-  str | None
+  [str](https://docs.python.org/3/library/stdtypes.html#str) | None
 
 <!-- !! processed by numpydoc !! -->
 
-#### source_url *: str | None*
+#### source_url *: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None)*
 
-#### osf_url *: str | None*
+#### osf_url *: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None)*
 
-#### github_url *: str | None*
+#### github_url *: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None)*
 
-#### paper_url *: str | None*
+#### paper_url *: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None)*
 
 ### *class* eegdash.schemas.RepositoryStats
 
-Bases: `TypedDict`
+Bases: [`TypedDict`](https://docs.python.org/3/library/typing.html#typing.TypedDict)
 
 Statistics for git-based repositories (e.g. GIN).
 
@@ -1054,33 +1054,33 @@ Statistics for git-based repositories (e.g. GIN).
 Number of stars.
 
 * **Type:**
-  int
+  [int](https://docs.python.org/3/library/functions.html#int)
 
 #### forks
 
 Number of forks.
 
 * **Type:**
-  int
+  [int](https://docs.python.org/3/library/functions.html#int)
 
 #### watchers
 
 Number of watchers.
 
 * **Type:**
-  int
+  [int](https://docs.python.org/3/library/functions.html#int)
 
 <!-- !! processed by numpydoc !! -->
 
-#### stars *: int*
+#### stars *: [int](https://docs.python.org/3/library/functions.html#int)*
 
-#### forks *: int*
+#### forks *: [int](https://docs.python.org/3/library/functions.html#int)*
 
-#### watchers *: int*
+#### watchers *: [int](https://docs.python.org/3/library/functions.html#int)*
 
 ### *class* eegdash.schemas.Timestamps
 
-Bases: `TypedDict`
+Bases: [`TypedDict`](https://docs.python.org/3/library/typing.html#typing.TypedDict)
 
 Processing and lifecycle timestamps.
 
@@ -1089,31 +1089,31 @@ Processing and lifecycle timestamps.
 ISO 8601 timestamp of when the data was processed by EEGDash.
 
 * **Type:**
-  str
+  [str](https://docs.python.org/3/library/stdtypes.html#str)
 
 #### dataset_created_at
 
 ISO 8601 timestamp of when the dataset was originally created.
 
 * **Type:**
-  str | None
+  [str](https://docs.python.org/3/library/stdtypes.html#str) | None
 
 #### dataset_modified_at
 
 ISO 8601 timestamp of when the dataset was last updated.
 
 * **Type:**
-  str | None
+  [str](https://docs.python.org/3/library/stdtypes.html#str) | None
 
 <!-- !! processed by numpydoc !! -->
 
-#### digested_at *: str*
+#### digested_at *: [str](https://docs.python.org/3/library/stdtypes.html#str)*
 
-#### dataset_created_at *: str | None*
+#### dataset_created_at *: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None)*
 
-#### dataset_modified_at *: str | None*
+#### dataset_modified_at *: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None)*
 
-### eegdash.schemas.create_dataset(, dataset_id: str, name: str | None = None, canonical_name: list[str] | None = None, source: str = 'openneuro', readme: str | None = None, recording_modality: list[str] | None = None, datatypes: list[str] | None = None, modalities: list[str] | None = None, experimental_modalities: list[str] | None = None, bids_version: str | None = None, license: str | None = None, authors: list[str] | None = None, funding: list[str] | None = None, dataset_doi: str | None = None, associated_paper_doi: str | None = None, tasks: list[str] | None = None, sessions: list[str] | None = None, total_files: int | None = None, size_bytes: int | None = None, data_processed: bool | None = None, study_domain: str | None = None, study_design: str | None = None, subjects_count: int | None = None, ages: list[int] | None = None, age_mean: float | None = None, species: str | None = None, sex_distribution: dict[str, int] | None = None, handedness_distribution: dict[str, int] | None = None, contributing_labs: list[str] | None = None, tags_pathology: list[str] | None = None, tags_modality: list[str] | None = None, tags_type: list[str] | None = None, is_clinical: bool | None = None, clinical_purpose: str | None = None, source_url: str | None = None, osf_url: str | None = None, github_url: str | None = None, paper_url: str | None = None, stars: int | None = None, forks: int | None = None, watchers: int | None = None, senior_author: str | None = None, contact_info: list[str] | None = None, digested_at: str | None = None, dataset_created_at: str | None = None, dataset_modified_at: str | None = None, storage: Storage | None = None) → Dataset
+### eegdash.schemas.create_dataset(, dataset_id: [str](https://docs.python.org/3/library/stdtypes.html#str), name: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, canonical_name: [list](https://docs.python.org/3/library/stdtypes.html#list)[[str](https://docs.python.org/3/library/stdtypes.html#str)] | [None](https://docs.python.org/3/library/constants.html#None) = None, source: [str](https://docs.python.org/3/library/stdtypes.html#str) = 'openneuro', readme: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, recording_modality: [list](https://docs.python.org/3/library/stdtypes.html#list)[[str](https://docs.python.org/3/library/stdtypes.html#str)] | [None](https://docs.python.org/3/library/constants.html#None) = None, datatypes: [list](https://docs.python.org/3/library/stdtypes.html#list)[[str](https://docs.python.org/3/library/stdtypes.html#str)] | [None](https://docs.python.org/3/library/constants.html#None) = None, modalities: [list](https://docs.python.org/3/library/stdtypes.html#list)[[str](https://docs.python.org/3/library/stdtypes.html#str)] | [None](https://docs.python.org/3/library/constants.html#None) = None, experimental_modalities: [list](https://docs.python.org/3/library/stdtypes.html#list)[[str](https://docs.python.org/3/library/stdtypes.html#str)] | [None](https://docs.python.org/3/library/constants.html#None) = None, bids_version: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, license: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, authors: [list](https://docs.python.org/3/library/stdtypes.html#list)[[str](https://docs.python.org/3/library/stdtypes.html#str)] | [None](https://docs.python.org/3/library/constants.html#None) = None, funding: [list](https://docs.python.org/3/library/stdtypes.html#list)[[str](https://docs.python.org/3/library/stdtypes.html#str)] | [None](https://docs.python.org/3/library/constants.html#None) = None, dataset_doi: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, associated_paper_doi: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, tasks: [list](https://docs.python.org/3/library/stdtypes.html#list)[[str](https://docs.python.org/3/library/stdtypes.html#str)] | [None](https://docs.python.org/3/library/constants.html#None) = None, sessions: [list](https://docs.python.org/3/library/stdtypes.html#list)[[str](https://docs.python.org/3/library/stdtypes.html#str)] | [None](https://docs.python.org/3/library/constants.html#None) = None, total_files: [int](https://docs.python.org/3/library/functions.html#int) | [None](https://docs.python.org/3/library/constants.html#None) = None, size_bytes: [int](https://docs.python.org/3/library/functions.html#int) | [None](https://docs.python.org/3/library/constants.html#None) = None, data_processed: [bool](https://docs.python.org/3/library/functions.html#bool) | [None](https://docs.python.org/3/library/constants.html#None) = None, study_domain: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, study_design: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, subjects_count: [int](https://docs.python.org/3/library/functions.html#int) | [None](https://docs.python.org/3/library/constants.html#None) = None, ages: [list](https://docs.python.org/3/library/stdtypes.html#list)[[int](https://docs.python.org/3/library/functions.html#int)] | [None](https://docs.python.org/3/library/constants.html#None) = None, age_mean: [float](https://docs.python.org/3/library/functions.html#float) | [None](https://docs.python.org/3/library/constants.html#None) = None, species: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, sex_distribution: [dict](https://docs.python.org/3/library/stdtypes.html#dict)[[str](https://docs.python.org/3/library/stdtypes.html#str), [int](https://docs.python.org/3/library/functions.html#int)] | [None](https://docs.python.org/3/library/constants.html#None) = None, handedness_distribution: [dict](https://docs.python.org/3/library/stdtypes.html#dict)[[str](https://docs.python.org/3/library/stdtypes.html#str), [int](https://docs.python.org/3/library/functions.html#int)] | [None](https://docs.python.org/3/library/constants.html#None) = None, contributing_labs: [list](https://docs.python.org/3/library/stdtypes.html#list)[[str](https://docs.python.org/3/library/stdtypes.html#str)] | [None](https://docs.python.org/3/library/constants.html#None) = None, tags_pathology: [list](https://docs.python.org/3/library/stdtypes.html#list)[[str](https://docs.python.org/3/library/stdtypes.html#str)] | [None](https://docs.python.org/3/library/constants.html#None) = None, tags_modality: [list](https://docs.python.org/3/library/stdtypes.html#list)[[str](https://docs.python.org/3/library/stdtypes.html#str)] | [None](https://docs.python.org/3/library/constants.html#None) = None, tags_type: [list](https://docs.python.org/3/library/stdtypes.html#list)[[str](https://docs.python.org/3/library/stdtypes.html#str)] | [None](https://docs.python.org/3/library/constants.html#None) = None, is_clinical: [bool](https://docs.python.org/3/library/functions.html#bool) | [None](https://docs.python.org/3/library/constants.html#None) = None, clinical_purpose: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, source_url: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, osf_url: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, github_url: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, paper_url: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, stars: [int](https://docs.python.org/3/library/functions.html#int) | [None](https://docs.python.org/3/library/constants.html#None) = None, forks: [int](https://docs.python.org/3/library/functions.html#int) | [None](https://docs.python.org/3/library/constants.html#None) = None, watchers: [int](https://docs.python.org/3/library/functions.html#int) | [None](https://docs.python.org/3/library/constants.html#None) = None, senior_author: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, contact_info: [list](https://docs.python.org/3/library/stdtypes.html#list)[[str](https://docs.python.org/3/library/stdtypes.html#str)] | [None](https://docs.python.org/3/library/constants.html#None) = None, digested_at: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, dataset_created_at: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, dataset_modified_at: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, storage: Storage | [None](https://docs.python.org/3/library/constants.html#None) = None) → Dataset
 
 Create a Dataset document.
 
@@ -1122,50 +1122,50 @@ and logic to handle nested structures like demographics, clinical info, and
 external links.
 
 * **Parameters:**
-  * **dataset_id** (*str*) – Dataset identifier (e.g., “ds001785”).
-  * **name** (*str* *,* *optional*) – Dataset title/name.
-  * **canonical_name** (*list* *[**str* *]* *,* *optional*) – Canonical / community-recognised name(s) for the dataset (each a valid
+  * **dataset_id** ([*str*](https://docs.python.org/3/library/stdtypes.html#str)) – Dataset identifier (e.g., “ds001785”).
+  * **name** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *,* *optional*) – Dataset title/name.
+  * **canonical_name** ([*list*](https://docs.python.org/3/library/stdtypes.html#list) *[*[*str*](https://docs.python.org/3/library/stdtypes.html#str) *]* *,* *optional*) – Canonical / community-recognised name(s) for the dataset (each a valid
     Python identifier, e.g. `["BrainTreeBank"]` or `["SleepEDF",
     "SleepEDFPlus"]`). Used by the dataset class registry to expose
     importable aliases. Empty list or `None` registers no aliases.
-  * **source** (*str* *,* *default "openneuro"*) – Data source (“openneuro”, “nemar”, “gin”).
-  * **recording_modality** (*list* *[**str* *]* *,* *optional*) – Recording types (e.g., [“eeg”, “meg”, “ieeg”]).
-  * **datatypes** (*list* *[**str* *]* *,* *optional*) – BIDS datatypes present in the dataset (e.g., [“eeg”, “anat”, “beh”]).
-  * **experimental_modalities** (*list* *[**str* *]* *,* *optional*) – Stimulus/experimental modalities (e.g., [“visual”, “auditory”, “tactile”]).
-  * **bids_version** (*str* *,* *optional*) – BIDS version of the dataset.
-  * **license** (*str* *,* *optional*) – Dataset license (e.g., “CC0”, “CC-BY-4.0”).
-  * **authors** (*list* *[**str* *]* *,* *optional*) – Dataset authors.
-  * **funding** (*list* *[**str* *]* *,* *optional*) – Funding sources.
-  * **dataset_doi** (*str* *,* *optional*) – Dataset DOI.
-  * **associated_paper_doi** (*str* *,* *optional*) – DOI of associated publication.
-  * **tasks** (*list* *[**str* *]* *,* *optional*) – Tasks in the dataset.
-  * **sessions** (*list* *[**str* *]* *,* *optional*) – Sessions in the dataset.
-  * **total_files** (*int* *,* *optional*) – Total number of files.
-  * **size_bytes** (*int* *,* *optional*) – Total size in bytes.
-  * **data_processed** (*bool* *,* *optional*) – Whether data is processed.
-  * **study_domain** (*str* *,* *optional*) – Study domain/topic.
-  * **study_design** (*str* *,* *optional*) – Study design description.
-  * **subjects_count** (*int* *,* *optional*) – Number of subjects.
-  * **ages** (*list* *[**int* *]* *,* *optional*) – Subject ages.
-  * **age_mean** (*float* *,* *optional*) – Mean age of subjects.
-  * **species** (*str* *,* *optional*) – Species (e.g., “Human”).
-  * **sex_distribution** (*dict* *[**str* *,* *int* *]* *,* *optional*) – Sex distribution (e.g., {“m”: 50, “f”: 45}).
-  * **handedness_distribution** (*dict* *[**str* *,* *int* *]* *,* *optional*) – Handedness distribution (e.g., {“r”: 80, “l”: 15}).
-  * **contributing_labs** (*list* *[**str* *]* *,* *optional*) – Labs that contributed data (for multi-site studies).
-  * **is_clinical** (*bool* *,* *optional*) – Whether this is clinical data.
-  * **clinical_purpose** (*str* *,* *optional*) – Clinical purpose (e.g., “epilepsy”, “depression”).
-  * **paradigm_modality** (*str* *,* *optional*) – Experimental modality (e.g., “visual”, “auditory”, “text”, “multisensory”, “resting_state”).
-  * **cognitive_domain** (*str* *,* *optional*) – Cognitive domain (e.g., “attention”, “memory”, “motor”).
-  * **is_10_20_system** (*bool* *,* *optional*) – Whether electrodes follow the 10-20 system.
-  * **source_url** (*str* *,* *optional*) – Primary URL to the dataset source.
-  * **osf_url** (*str* *,* *optional*) – Open Science Framework URL.
-  * **github_url** (*str* *,* *optional*) – GitHub repository URL.
-  * **paper_url** (*str* *,* *optional*) – URL to associated paper.
-  * **stars** (*int* *,* *optional*) – Repository stars count (for git-based sources).
-  * **forks** (*int* *,* *optional*) – Repository forks count.
-  * **watchers** (*int* *,* *optional*) – Repository watchers count.
-  * **digested_at** (*str* *,* *optional*) – ISO 8601 timestamp. If not provided, no timestamp is set (for deterministic output).
-  * **dataset_modified_at** (*str* *,* *optional*) – Last modification timestamp.
+  * **source** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *,* *default "openneuro"*) – Data source (“openneuro”, “nemar”, “gin”).
+  * **recording_modality** ([*list*](https://docs.python.org/3/library/stdtypes.html#list) *[*[*str*](https://docs.python.org/3/library/stdtypes.html#str) *]* *,* *optional*) – Recording types (e.g., [“eeg”, “meg”, “ieeg”]).
+  * **datatypes** ([*list*](https://docs.python.org/3/library/stdtypes.html#list) *[*[*str*](https://docs.python.org/3/library/stdtypes.html#str) *]* *,* *optional*) – BIDS datatypes present in the dataset (e.g., [“eeg”, “anat”, “beh”]).
+  * **experimental_modalities** ([*list*](https://docs.python.org/3/library/stdtypes.html#list) *[*[*str*](https://docs.python.org/3/library/stdtypes.html#str) *]* *,* *optional*) – Stimulus/experimental modalities (e.g., [“visual”, “auditory”, “tactile”]).
+  * **bids_version** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *,* *optional*) – BIDS version of the dataset.
+  * **license** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *,* *optional*) – Dataset license (e.g., “CC0”, “CC-BY-4.0”).
+  * **authors** ([*list*](https://docs.python.org/3/library/stdtypes.html#list) *[*[*str*](https://docs.python.org/3/library/stdtypes.html#str) *]* *,* *optional*) – Dataset authors.
+  * **funding** ([*list*](https://docs.python.org/3/library/stdtypes.html#list) *[*[*str*](https://docs.python.org/3/library/stdtypes.html#str) *]* *,* *optional*) – Funding sources.
+  * **dataset_doi** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *,* *optional*) – Dataset DOI.
+  * **associated_paper_doi** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *,* *optional*) – DOI of associated publication.
+  * **tasks** ([*list*](https://docs.python.org/3/library/stdtypes.html#list) *[*[*str*](https://docs.python.org/3/library/stdtypes.html#str) *]* *,* *optional*) – Tasks in the dataset.
+  * **sessions** ([*list*](https://docs.python.org/3/library/stdtypes.html#list) *[*[*str*](https://docs.python.org/3/library/stdtypes.html#str) *]* *,* *optional*) – Sessions in the dataset.
+  * **total_files** ([*int*](https://docs.python.org/3/library/functions.html#int) *,* *optional*) – Total number of files.
+  * **size_bytes** ([*int*](https://docs.python.org/3/library/functions.html#int) *,* *optional*) – Total size in bytes.
+  * **data_processed** ([*bool*](https://docs.python.org/3/library/functions.html#bool) *,* *optional*) – Whether data is processed.
+  * **study_domain** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *,* *optional*) – Study domain/topic.
+  * **study_design** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *,* *optional*) – Study design description.
+  * **subjects_count** ([*int*](https://docs.python.org/3/library/functions.html#int) *,* *optional*) – Number of subjects.
+  * **ages** ([*list*](https://docs.python.org/3/library/stdtypes.html#list) *[*[*int*](https://docs.python.org/3/library/functions.html#int) *]* *,* *optional*) – Subject ages.
+  * **age_mean** ([*float*](https://docs.python.org/3/library/functions.html#float) *,* *optional*) – Mean age of subjects.
+  * **species** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *,* *optional*) – Species (e.g., “Human”).
+  * **sex_distribution** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *[*[*str*](https://docs.python.org/3/library/stdtypes.html#str) *,* [*int*](https://docs.python.org/3/library/functions.html#int) *]* *,* *optional*) – Sex distribution (e.g., {“m”: 50, “f”: 45}).
+  * **handedness_distribution** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *[*[*str*](https://docs.python.org/3/library/stdtypes.html#str) *,* [*int*](https://docs.python.org/3/library/functions.html#int) *]* *,* *optional*) – Handedness distribution (e.g., {“r”: 80, “l”: 15}).
+  * **contributing_labs** ([*list*](https://docs.python.org/3/library/stdtypes.html#list) *[*[*str*](https://docs.python.org/3/library/stdtypes.html#str) *]* *,* *optional*) – Labs that contributed data (for multi-site studies).
+  * **is_clinical** ([*bool*](https://docs.python.org/3/library/functions.html#bool) *,* *optional*) – Whether this is clinical data.
+  * **clinical_purpose** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *,* *optional*) – Clinical purpose (e.g., “epilepsy”, “depression”).
+  * **paradigm_modality** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *,* *optional*) – Experimental modality (e.g., “visual”, “auditory”, “text”, “multisensory”, “resting_state”).
+  * **cognitive_domain** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *,* *optional*) – Cognitive domain (e.g., “attention”, “memory”, “motor”).
+  * **is_10_20_system** ([*bool*](https://docs.python.org/3/library/functions.html#bool) *,* *optional*) – Whether electrodes follow the 10-20 system.
+  * **source_url** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *,* *optional*) – Primary URL to the dataset source.
+  * **osf_url** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *,* *optional*) – Open Science Framework URL.
+  * **github_url** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *,* *optional*) – GitHub repository URL.
+  * **paper_url** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *,* *optional*) – URL to associated paper.
+  * **stars** ([*int*](https://docs.python.org/3/library/functions.html#int) *,* *optional*) – Repository stars count (for git-based sources).
+  * **forks** ([*int*](https://docs.python.org/3/library/functions.html#int) *,* *optional*) – Repository forks count.
+  * **watchers** ([*int*](https://docs.python.org/3/library/functions.html#int) *,* *optional*) – Repository watchers count.
+  * **digested_at** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *,* *optional*) – ISO 8601 timestamp. If not provided, no timestamp is set (for deterministic output).
+  * **dataset_modified_at** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *,* *optional*) – Last modification timestamp.
 * **Returns:**
   A fully populated Dataset document.
 * **Return type:**
@@ -1173,27 +1173,27 @@ external links.
 
 <!-- !! processed by numpydoc !! -->
 
-### eegdash.schemas.create_record(, dataset: str, storage_base: str, bids_relpath: str, subject: str | None = None, session: str | None = None, task: str | None = None, run: str | None = None, acquisition: str | None = None, dep_keys: list[str] | None = None, datatype: str = 'eeg', suffix: str = 'eeg', storage_backend: Literal['s3', 'https', 'local', 'nemar'] = 's3', recording_modality: list[str] | None = None, ch_names: list[str] | None = None, sampling_frequency: float | None = None, nchans: int | None = None, ntimes: int | None = None, digested_at: str | None = None, annex_keys: dict[str, str] | None = None, sidecar_inline: dict[str, str] | None = None) → Record
+### eegdash.schemas.create_record(, dataset: [str](https://docs.python.org/3/library/stdtypes.html#str), storage_base: [str](https://docs.python.org/3/library/stdtypes.html#str), bids_relpath: [str](https://docs.python.org/3/library/stdtypes.html#str), subject: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, session: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, task: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, run: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, acquisition: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, dep_keys: [list](https://docs.python.org/3/library/stdtypes.html#list)[[str](https://docs.python.org/3/library/stdtypes.html#str)] | [None](https://docs.python.org/3/library/constants.html#None) = None, datatype: [str](https://docs.python.org/3/library/stdtypes.html#str) = 'eeg', suffix: [str](https://docs.python.org/3/library/stdtypes.html#str) = 'eeg', storage_backend: [Literal](https://docs.python.org/3/library/typing.html#typing.Literal)['s3', 'https', 'local', 'nemar'] = 's3', recording_modality: [list](https://docs.python.org/3/library/stdtypes.html#list)[[str](https://docs.python.org/3/library/stdtypes.html#str)] | [None](https://docs.python.org/3/library/constants.html#None) = None, ch_names: [list](https://docs.python.org/3/library/stdtypes.html#list)[[str](https://docs.python.org/3/library/stdtypes.html#str)] | [None](https://docs.python.org/3/library/constants.html#None) = None, sampling_frequency: [float](https://docs.python.org/3/library/functions.html#float) | [None](https://docs.python.org/3/library/constants.html#None) = None, nchans: [int](https://docs.python.org/3/library/functions.html#int) | [None](https://docs.python.org/3/library/constants.html#None) = None, ntimes: [int](https://docs.python.org/3/library/functions.html#int) | [None](https://docs.python.org/3/library/constants.html#None) = None, digested_at: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, annex_keys: [dict](https://docs.python.org/3/library/stdtypes.html#dict)[[str](https://docs.python.org/3/library/stdtypes.html#str), [str](https://docs.python.org/3/library/stdtypes.html#str)] | [None](https://docs.python.org/3/library/constants.html#None) = None, sidecar_inline: [dict](https://docs.python.org/3/library/stdtypes.html#dict)[[str](https://docs.python.org/3/library/stdtypes.html#str), [str](https://docs.python.org/3/library/stdtypes.html#str)] | [None](https://docs.python.org/3/library/constants.html#None) = None) → Record
 
 Create an EEGDash record.
 
 Helper to construct a valid `Record` TypedDict.
 
 * **Parameters:**
-  * **dataset** (*str*) – Dataset identifier (e.g., “ds000001”).
-  * **storage_base** (*str*) – Remote storage base URI (e.g., “s3://openneuro.org/ds000001”).
-  * **bids_relpath** (*str*) – BIDS-relative path to the raw file (e.g., “sub-01/eeg/sub-01_task-rest_eeg.vhdr”).
-  * **subject** (*str* *,* *optional*) – BIDS entities.
-  * **session** (*str* *,* *optional*) – BIDS entities.
-  * **task** (*str* *,* *optional*) – BIDS entities.
-  * **run** (*str* *,* *optional*) – BIDS entities.
-  * **acquisition** (*str* *,* *optional*) – BIDS entities.
-  * **dep_keys** (*list* *[**str* *]* *,* *optional*) – Dependency paths relative to storage_base.
-  * **datatype** (*str* *,* *default "eeg"*) – BIDS datatype.
-  * **suffix** (*str* *,* *default "eeg"*) – BIDS suffix.
+  * **dataset** ([*str*](https://docs.python.org/3/library/stdtypes.html#str)) – Dataset identifier (e.g., “ds000001”).
+  * **storage_base** ([*str*](https://docs.python.org/3/library/stdtypes.html#str)) – Remote storage base URI (e.g., “s3://openneuro.org/ds000001”).
+  * **bids_relpath** ([*str*](https://docs.python.org/3/library/stdtypes.html#str)) – BIDS-relative path to the raw file (e.g., “sub-01/eeg/sub-01_task-rest_eeg.vhdr”).
+  * **subject** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *,* *optional*) – BIDS entities.
+  * **session** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *,* *optional*) – BIDS entities.
+  * **task** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *,* *optional*) – BIDS entities.
+  * **run** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *,* *optional*) – BIDS entities.
+  * **acquisition** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *,* *optional*) – BIDS entities.
+  * **dep_keys** ([*list*](https://docs.python.org/3/library/stdtypes.html#list) *[*[*str*](https://docs.python.org/3/library/stdtypes.html#str) *]* *,* *optional*) – Dependency paths relative to storage_base.
+  * **datatype** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *,* *default "eeg"*) – BIDS datatype.
+  * **suffix** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *,* *default "eeg"*) – BIDS suffix.
   * **storage_backend** ( *{"s3"* *,*  *"https"* *,*  *"local"}* *,* *default "s3"*) – Storage backend type.
-  * **recording_modality** (*list* *[**str* *]* *,* *optional*) – Recording modalities (e.g., [“eeg”, “meg”, “ieeg”]).
-  * **digested_at** (*str* *,* *optional*) – ISO 8601 timestamp. Defaults to current time.
+  * **recording_modality** ([*list*](https://docs.python.org/3/library/stdtypes.html#list) *[*[*str*](https://docs.python.org/3/library/stdtypes.html#str) *]* *,* *optional*) – Recording modalities (e.g., [“eeg”, “meg”, “ieeg”]).
+  * **digested_at** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *,* *optional*) – ISO 8601 timestamp. Defaults to current time.
 * **Returns:**
   A slim EEGDash record optimized for loading.
 * **Return type:**
@@ -1217,13 +1217,13 @@ Clinical and paradigm info is stored at the Dataset level, not per-file.
 
 <!-- !! processed by numpydoc !! -->
 
-### eegdash.schemas.validate_dataset(dataset: dict[str, Any]) → list[str]
+### eegdash.schemas.validate_dataset(dataset: [dict](https://docs.python.org/3/library/stdtypes.html#dict)[[str](https://docs.python.org/3/library/stdtypes.html#str), [Any](https://docs.python.org/3/library/typing.html#typing.Any)]) → [list](https://docs.python.org/3/library/stdtypes.html#list)[[str](https://docs.python.org/3/library/stdtypes.html#str)]
 
 Validate a dataset has required fields. Returns list of errors.
 
 <!-- !! processed by numpydoc !! -->
 
-### eegdash.schemas.validate_record(record: dict[str, Any]) → list[str]
+### eegdash.schemas.validate_record(record: [dict](https://docs.python.org/3/library/stdtypes.html#dict)[[str](https://docs.python.org/3/library/stdtypes.html#str), [Any](https://docs.python.org/3/library/typing.html#typing.Any)]) → [list](https://docs.python.org/3/library/stdtypes.html#list)[[str](https://docs.python.org/3/library/stdtypes.html#str)]
 
 Validate a record has required fields. Returns list of errors.
 

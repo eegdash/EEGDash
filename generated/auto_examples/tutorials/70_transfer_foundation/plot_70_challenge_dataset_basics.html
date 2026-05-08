@@ -1,0 +1,2029 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../../" data-theme="light">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta property="og:title" content="How do I get started with the EEG 2025 Foundation Challenge dataset?" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://eegdash.org/generated/auto_examples/tutorials/70_transfer_foundation/plot_70_challenge_dataset_basics.html" />
+<meta property="og:site_name" content="EEG Dash" />
+<meta property="og:description" content="The EEG 2025 Foundation Challenge ships its own loader, EEGChallengeDataset, on top of the same eegdash infrastructure that powers EEGDashDataset. The…" />
+<meta property="og:image" content="https://eegdash.org/_static/eegdash_social_card.png" />
+<meta property="og:image:alt" content="EEG Dash — data-sharing interface for M/EEG datasets" />
+<meta name="description" content="The EEG 2025 Foundation Challenge ships its own loader, EEGChallengeDataset, on top of the same eegdash infrastructure that powers EEGDashDataset. The…" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@eegdash" />
+
+    <title>How do I get started with the EEG 2025 Foundation Challenge dataset? &#8212; EEG Dash</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "light";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../_static/styles/theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+<link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sg_gallery.css?v=fd6457a4" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/custom.7953df0a.css?v=314ed3b2" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/css/treemap.087aecf0.css?v=7131b20f" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.d7808461.css?v=1ba63a31" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../../../_static/scripts/fontawesome.js?digest=55c26ed414f5f8a31ebb"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb" />
+<link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb" />
+
+    <script src="../../../../_static/documentation_options.js?v=6dfdf7c3"></script>
+    <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../../_static/sg-tags.js?v=d80f6fa4"></script>
+    <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../../_static/copybutton.js?v=8c005784"></script>
+    <script src="../../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'generated/auto_examples/tutorials/70_transfer_foundation/plot_70_challenge_dataset_basics';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <script defer="defer" src="../../../../_static/js/tag-palette.7346f567.js?v=6f5eac9a"></script>
+    <script defer="defer" src="../../../../_static/js/search-as-you-type.e09b639d.js?v=8e93d0f7"></script>
+    <script defer="defer" src="../../../../_static/js/lazy-embed.1f1f83d2.js?v=118c4c47"></script>
+    <link rel="canonical" href="https://eegdash.org/generated/auto_examples/tutorials/70_transfer_foundation/plot_70_challenge_dataset_basics.html" />
+    <link rel="icon" href="../../../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="Pretrain on resting-state, fine-tune on contrast-change detection" href="plot_71_cross_task_transfer.html" />
+    <link rel="prev" title="Transfer, Foundation Models, and EEG2025" href="index.html" />
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.7" />
+
+  
+  <meta name="google-site-verification" content="REPLACE_WITH_GSC_TOKEN">
+  <meta name="msvalidate.01" content="REPLACE_WITH_BING_TOKEN">
+
+  
+  <link rel="preconnect" href="https://cdn.datatables.net" crossorigin>
+  <link rel="preconnect" href="https://code.jquery.com" crossorigin>
+
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    rel="preload"
+    as="style"
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Source+Sans+3:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap"
+    onload="this.onload=null;this.rel='stylesheet'">
+  <noscript>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Source+Sans+3:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap">
+  </noscript>
+
+  
+
+  
+  <link rel="alternate" type="text/markdown" href="/llms.txt" title="EEGDash — LLM-friendly index">
+  <link rel="llms" href="/llms.txt" title="EEGDash — llms.txt index">
+  <link rel="llms-txt" href="/llms.txt">
+  <link rel="llms-full" type="text/markdown" href="/llms-full.txt" title="EEGDash — full markdown corpus">
+  <link rel="alternate" type="application/json" href="/.well-known/agent-skills/index.json" title="EEGDash — Agent Skills">
+  <link rel="alternate" type="application/linkset+json" href="/.well-known/api-catalog" title="EEGDash — API catalog">
+  <meta name="llms-txt" content="/llms.txt">
+  <meta name="llms" content="/llms.txt">
+  <meta name="ai-content-index" content="/llms.txt">
+  <meta name="ai.content_index" content="/llms.txt">
+
+  
+
+  <!-- Google Tag Manager — deferred to DOMContentLoaded so the GTM
+       bootstrap no longer blocks first-paint or the Sphinx search-index
+       load. Functionally equivalent to the inline snippet below but
+       saves ~60 ms of Total Blocking Time per PageSpeed Insights. -->
+  <script>
+    (function(){
+      function loadGTM(){
+        if (window.__gtmLoaded) return;
+        window.__gtmLoaded = true;
+        (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','GTM-MXC3DGL6');
+      }
+      // Defer GTM off the critical path. requestIdleCallback wants an
+      // IdleRequestOptions object as its second argument while
+      // setTimeout wants a plain number — using the same `1` for both
+      // raised a TypeError in Lighthouse's console that dragged the SEO
+      // score down. Branch on availability so each API gets the shape
+      // it expects.
+      function scheduleGTM() {
+        if (typeof window.requestIdleCallback === 'function') {
+          window.requestIdleCallback(loadGTM, { timeout: 2000 });
+        } else {
+          setTimeout(loadGTM, 1);
+        }
+      }
+      if (document.readyState === 'complete' || document.readyState === 'interactive') {
+        scheduleGTM();
+      } else {
+        document.addEventListener('DOMContentLoaded', scheduleGTM);
+      }
+    })();
+  </script>
+  <!-- End Google Tag Manager -->
+
+  </head>
+  <body data-default-mode="light">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+    
+    <img src="../../../../_static/eegdash_long.svg" class="logo__image only-light" alt="EEG Dash Logo"/>
+    <img src="../../../../_static/eegdash_long.svg" class="logo__image only-dark pst-js-only" alt="EEG Dash Logo"/>
+  
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../dataset_summary.html">
+    Datasets
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../quickstart.html">
+    Quick Start
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../install/install.html">
+    Install
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../../index.html">
+    Examples
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../concepts/index.html">
+    Concepts
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../api/api.html">
+    Docs
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../references.html">
+    References
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-external" href="https://eeg2025.github.io/">
+    EEG2025
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="External Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/eegdash/EEGDash" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../../../../_static/icons/github.svg" class="icon-link-image" alt="GitHub"/></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/eegdash/" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../../../../_static/icons/pypi.svg" class="icon-link-image" alt="PyPI"/></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://discord.gg/8jd7nVKwsc" title="Discord" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../../../../_static/icons/discord.svg" class="icon-link-image" alt="Discord"/></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../dataset_summary.html">
+    Datasets
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../quickstart.html">
+    Quick Start
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../install/install.html">
+    Install
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../../index.html">
+    Examples
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../concepts/index.html">
+    Concepts
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../api/api.html">
+    Docs
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../references.html">
+    References
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://eeg2025.github.io/">
+    EEG2025
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="External Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/eegdash/EEGDash" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../../../../_static/icons/github.svg" class="icon-link-image" alt="GitHub"/></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/eegdash/" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../../../../_static/icons/pypi.svg" class="icon-link-image" alt="PyPI"/></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://discord.gg/8jd7nVKwsc" title="Discord" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../../../../_static/icons/discord.svg" class="icon-link-image" alt="Discord"/></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../../index.html" class="nav-link">Examples gallery</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">Transfer, Foundation Models, and EEG2025</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">How do I get started with the EEG 2025 Foundation Challenge dataset?</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p><a class="reference internal" href="#sphx-glr-download-generated-auto-examples-tutorials-70-transfer-foundation-plot-70-challenge-dataset-basics-py"><span class="std std-ref">Go to the end</span></a>
+to download the full example code or to run this example in your browser via Binder.</p>
+</div>
+<section class="sphx-glr-example-title" id="how-do-i-get-started-with-the-eeg-2025-foundation-challenge-dataset">
+<span id="sphx-glr-generated-auto-examples-tutorials-70-transfer-foundation-plot-70-challenge-dataset-basics-py"></span><h1>How do I get started with the EEG 2025 Foundation Challenge dataset?<a class="headerlink" href="#how-do-i-get-started-with-the-eeg-2025-foundation-challenge-dataset" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">18 minutes</span></div>
+<p>The EEG 2025 Foundation Challenge ships its own loader,
+<a class="reference internal" href="../../../../api/dataset/eegdash.dataset.EEGChallengeDataset.html#eegdash.dataset.EEGChallengeDataset" title="eegdash.dataset.EEGChallengeDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">EEGChallengeDataset</span></code></a>, on top of the same
+<code class="docutils literal notranslate"><span class="pre">eegdash</span></code> infrastructure that powers
+<code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code>. The data pool is the
+Healthy Brain Network release (HBN; Alexander et al. 2017), reachable
+through <a class="reference external" href="https://nemar.org">NEMAR</a> <span class="bibtex-citation" id="id1">[<a class="reference internal" href="../../../../references.html#id6" title="Arnaud Delorme, Dung Truong, Choonhan Youn, Subhashini Sivagnanam, Claire Stirm, Kenneth Yoshimoto, Russell A Poldrack, Amitava Majumdar, and Scott Makeig. Nemar: an open access data, tools and compute resource operating on neuroelectromagnetic data. Database, 2022. doi:10.1093/database/baac096.">Delorme <em>et al.</em>, 2022</a>]</span>: every
+recording is downsampled from 500 Hz to 100 Hz, band-pass filtered
+0.5-50 Hz, and shipped via a fixed S3 bucket so the leaderboard contract
+stays reproducible <span class="bibtex-citation" id="id2">[<a class="reference internal" href="../../../../references.html#id19" title="Giulia Cisotto and Davide Chicco. Ten quick tips for clinical electroencephalographic (eeg) data acquisition and signal processing. PeerJ Computer Science, 10:e2256, 2024. doi:10.7717/peerj-cs.2256.">Cisotto and Chicco, 2024</a>]</span>. This tutorial walks through
+the loader, surfaces the task taxonomy, the participant-level metadata,
+and the official catalog row a single recording carries. The deliverable
+is one <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v3.0.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a> with records-per-task counts and one
+three-panel figure rendered from the live metadata.</p>
+<section id="learning-objectives">
+<h2>Learning objectives<a class="headerlink" href="#learning-objectives" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Build <a class="reference internal" href="../../../../api/dataset/eegdash.dataset.EEGChallengeDataset.html#eegdash.dataset.EEGChallengeDataset" title="eegdash.dataset.EEGChallengeDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">EEGChallengeDataset</span></code></a> for a given release
+(R1-R11) with <code class="docutils literal notranslate"><span class="pre">mini=True</span></code> and read the <code class="docutils literal notranslate"><span class="pre">release</span></code> / <code class="docutils literal notranslate"><span class="pre">mini</span></code>
+attributes back.</p></li>
+<li><p>Enumerate the HBN task taxonomy (resting, passive video, active
+cognitive, sequence learning) from <code class="docutils literal notranslate"><span class="pre">ds.description['task']</span></code> without
+downloading the recordings.</p></li>
+<li><p>Inspect the per-recording metadata catalog row: BIDS entities,
+sampling frequency, channel count, and the participants.tsv extras.</p></li>
+<li><p>Verify the strict-subset invariant <code class="docutils literal notranslate"><span class="pre">set(mini_subjects).issubset(full_subjects)</span></code>
+and contrast the loader against
+<code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code> for the same subjects.</p></li>
+<li><p>Read the leaderboard contract: see <a class="reference internal" href="../../../../concepts/eegdash_objects.html"><span class="doc">EEGDash objects: EEGDash, EEGDashDataset, EEGChallengeDataset</span></a>
+and the EEG 2025 challenge site for evaluation rules.</p></li>
+</ul>
+</section>
+<section id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>About 1 min on CPU on first run; under 10 s once the metadata catalog
+is cached.</p></li>
+<li><p>Network on first call (~1 MB into <code class="docutils literal notranslate"><span class="pre">cache_dir</span></code> for the catalog
+query). The challenge BDF files are not eagerly downloaded; that
+happens lazily when <code class="docutils literal notranslate"><span class="pre">record.raw</span></code> is accessed or a Braindecode
+pipeline pulls it.</p></li>
+<li><p>Prerequisites: <span class="xref std std-doc">/auto_examples/tutorials/00_start_here/plot_00_first_search</span>,
+<span class="xref std std-doc">/auto_examples/tutorials/00_start_here/plot_01_first_recording</span>.</p></li>
+<li><p>Concept: <a class="reference internal" href="../../../../concepts/eegdash_objects.html"><span class="doc">EEGDash objects: EEGDash, EEGDashDataset, EEGChallengeDataset</span></a>.</p></li>
+</ul>
+<p>Setup. <code class="docutils literal notranslate"><span class="pre">np.random.seed</span></code> keeps any later sampling reproducible; the
+warning filter silences a pandas <code class="docutils literal notranslate"><span class="pre">FutureWarning</span></code> raised by the
+metadata catalog inside the constructor.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <a href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="pathlib.Path" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-class"><span class="n">Path</span></a>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">eegdash</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">eegdash</span><span class="w"> </span><span class="kn">import</span> <a href="../../../../api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset" title="eegdash.EEGDashDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class"><span class="n">EEGChallengeDataset</span></a><span class="p">,</span> <a href="../../../../api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset" title="eegdash.EEGDashDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class"><span class="n">EEGDashDataset</span></a>
+<span class="kn">from</span><span class="w"> </span><span class="nn">eegdash.const</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">RELEASE_TO_OPENNEURO_DATASET_MAP</span></a><span class="p">,</span>
+    <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">SUBJECT_MINI_RELEASE_MAP</span></a><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">eegdash.viz</span><span class="w"> </span><span class="kn">import</span> <span class="n">use_eegdash_style</span>
+
+<span class="n">use_eegdash_style</span><span class="p">()</span>
+<a href="https://docs.python.org/3/library/warnings.html#warnings.simplefilter" title="warnings.simplefilter" class="sphx-glr-backref-module-warnings sphx-glr-backref-type-py-function"><span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span></a><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">FutureWarning</span><span class="p">)</span>
+<a href="https://numpy.org/doc/stable/reference/random/generated/numpy.random.seed.html#numpy.random.seed" title="numpy.random.seed" class="sphx-glr-backref-module-numpy-random sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span></a><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+
+<a href="https://docs.python.org/3/library/pathlib.html#pathlib.PosixPath" title="pathlib.PosixPath" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">cache_dir</span></a> <span class="o">=</span> <a href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="pathlib.Path" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-class"><span class="n">Path</span></a><span class="p">(</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;EEGDASH_CACHE_DIR&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><a href="https://docs.python.org/3/library/pathlib.html#pathlib.Path.home" title="pathlib.Path.home" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-method"><span class="n">Path</span><span class="o">.</span><span class="n">home</span></a><span class="p">()</span> <span class="o">/</span> <span class="s2">&quot;.eegdash_cache&quot;</span><span class="p">))</span>
+<span class="p">)</span>
+<a href="https://docs.python.org/3/library/pathlib.html#pathlib.Path.mkdir" title="pathlib.Path.mkdir" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-method"><span class="n">cache_dir</span><span class="o">.</span><span class="n">mkdir</span></a><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;eegdash version: </span><span class="si">{</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">eegdash</span><span class="o">.</span><span class="n">__version__</span></a><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;cache directory: </span><span class="si">{</span><a href="https://docs.python.org/3/library/pathlib.html#pathlib.PosixPath" title="pathlib.PosixPath" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">cache_dir</span></a><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>eegdash version: 0.7.2
+cache directory: /home/runner/eegdash_cache
+</pre></div>
+</div>
+</section>
+<section id="two-loaders-one-catalog-the-mental-model">
+<h2>Two loaders, one catalog: the mental model<a class="headerlink" href="#two-loaders-one-catalog-the-mental-model" title="Link to this heading">#</a></h2>
+<p><code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code> is a thin query layer over the
+eegdash metadata catalog: pass any combination of BIDS entities and it
+returns every match. <a class="reference internal" href="../../../../api/dataset/eegdash.dataset.EEGChallengeDataset.html#eegdash.dataset.EEGChallengeDataset" title="eegdash.dataset.EEGChallengeDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">EEGChallengeDataset</span></code></a> is a
+pre-baked recipe on top of that:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>EEGDashDataset                   EEGChallengeDataset
+(any BIDS query on the           (release-pinned recipe on top of
+ metadata catalog)                EEGDashDataset)
++-----------------------+        +------------------------------+
+| dataset=&#39;ds005509&#39;,   |        | release=&#39;R5&#39;, mini=True      |
+| subject=&#39;NDARAH...&#39;   |        |   - dataset = &#39;EEG2025r5mini&#39;|
+| task=&#39;symbolSearch&#39;   | -----&gt; |   - subject = curated 20     |
+| -&gt; records, BIDS meta |        |   - s3 bucket = challenge    |
++-----------------------+        |   - cache id  = isolated     |
+                                 | -&gt; records, BIDS meta        |
+                                 +------------------------------+
+  raw OpenNeuro files (500 Hz)     preprocessed BDFs (100 Hz,
+                                     0.5-50 Hz pass-band)
+</pre></div>
+</div>
+<p>Why two classes? The challenge fixes a frozen subject pool per release
+(R1 to R11; HBN), preprocesses each recording (Cz reference, downsample,
+band-pass), and exposes a “mini” subset of 20 subjects per release for
+fast iteration. Mixing those preprocessed cubes with raw OpenNeuro pulls
+would silently break the leaderboard contract, so the two classes stay
+separate even though they share the same lazy-loading machinery.</p>
+</section>
+<section id="what-does-eegchallengedataset-expose">
+<h2>What does <code class="docutils literal notranslate"><span class="pre">EEGChallengeDataset</span></code> expose?<a class="headerlink" href="#what-does-eegchallengedataset-expose" title="Link to this heading">#</a></h2>
+<p>Before instantiating one, list the public methods and properties on the
+class. The <code class="docutils literal notranslate"><span class="pre">release</span></code>, <code class="docutils literal notranslate"><span class="pre">mini</span></code>, <code class="docutils literal notranslate"><span class="pre">description</span></code>, <code class="docutils literal notranslate"><span class="pre">records</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">datasets</span></code> names are the ones the rest of the tutorial leans on.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">challenge_attrs</span></a> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+    <span class="n">name</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><a href="../../../../api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset" title="eegdash.EEGDashDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class"><span class="n">EEGChallengeDataset</span></a><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)</span>
+<span class="p">)</span>
+<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class"><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span></a><span class="p">({</span><span class="s2">&quot;attribute&quot;</span><span class="p">:</span> <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">challenge_attrs</span></a><span class="p">})</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>attribute</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>cummulative_sizes</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>cumsum</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>cumulative_sizes</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>description</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>download_all</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>get_metadata</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>pull_from_hub</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>push_to_hub</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>save</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>set_description</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>set_target</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>split</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>target_transform</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>to_epochs_dataset</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>transform</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<br />
+<br /></section>
+<section id="step-1-build-eegchallengedataset-release-r5-mini-true">
+<h2>Step 1: Build <code class="docutils literal notranslate"><span class="pre">EEGChallengeDataset(release='R5',</span> <span class="pre">mini=True)</span></code><a class="headerlink" href="#step-1-build-eegchallengedataset-release-r5-mini-true" title="Link to this heading">#</a></h2>
+<p><strong>Run.</strong> Pick release <code class="docutils literal notranslate"><span class="pre">R5</span></code> because it ships the full HBN task
+protocol and 20 mini subjects (every release does). <code class="docutils literal notranslate"><span class="pre">download</span></code>
+defaults to <code class="docutils literal notranslate"><span class="pre">True</span></code> for the constructor itself, but no S3 traffic
+happens until a call asks for <code class="docutils literal notranslate"><span class="pre">record.raw</span></code>, the metadata catalog
+query alone is enough to enumerate the task taxonomy.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">RELEASE</span></a> <span class="o">=</span> <span class="s2">&quot;R5&quot;</span>
+<span class="n">ds_mini</span> <span class="o">=</span> <a href="../../../../api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset" title="eegdash.EEGDashDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class"><span class="n">EEGChallengeDataset</span></a><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">release</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">RELEASE</span></a><span class="p">,</span> <a href="https://docs.python.org/3/library/pathlib.html#pathlib.PosixPath" title="pathlib.PosixPath" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">cache_dir</span></a><span class="o">=</span><span class="nb">str</span><span class="p">(</span><a href="https://docs.python.org/3/library/pathlib.html#pathlib.PosixPath" title="pathlib.PosixPath" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">cache_dir</span></a><span class="p">),</span> <span class="n">mini</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">n_mini_records</span></a> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ds_mini</span><span class="o">.</span><span class="n">records</span></a><span class="p">)</span>
+<a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">n_mini_subjects</span></a> <span class="o">=</span> <a href="../../../../api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset.description" title="eegdash.EEGDashDataset.description" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-property"><span class="n">ds_mini</span><span class="o">.</span><span class="n">description</span></a><span class="p">[</span><span class="s2">&quot;subject&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">nunique</span><span class="p">()</span>
+<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.html#pandas.Series" title="pandas.Series" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class"><span class="n">pd</span><span class="o">.</span><span class="n">Series</span></a><span class="p">(</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;release&quot;</span><span class="p">:</span> <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ds_mini</span><span class="o">.</span><span class="n">release</span></a><span class="p">,</span>
+        <span class="s2">&quot;mini&quot;</span><span class="p">:</span> <a href="https://docs.python.org/3/library/functions.html#bool" title="builtins.bool" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ds_mini</span><span class="o">.</span><span class="n">mini</span></a><span class="p">,</span>
+        <span class="s2">&quot;n_records&quot;</span><span class="p">:</span> <a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">n_mini_records</span></a><span class="p">,</span>
+        <span class="s2">&quot;n_subjects&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">n_mini_subjects</span></a><span class="p">),</span>
+        <span class="s2">&quot;s3_bucket&quot;</span><span class="p">:</span> <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ds_mini</span><span class="o">.</span><span class="n">s3_bucket</span></a><span class="p">,</span>
+        <span class="s2">&quot;OpenNeuro id&quot;</span><span class="p">:</span> <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">RELEASE_TO_OPENNEURO_DATASET_MAP</span></a><span class="p">[</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">RELEASE</span></a><span class="p">],</span>
+    <span class="p">},</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">,</span>
+<span class="p">)</span><span class="o">.</span><span class="n">to_frame</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>╭────────────────────── EEG 2025 Competition Data Notice ──────────────────────╮
+│ This object loads the HBN dataset that has been preprocessed for the EEG     │
+│ Challenge:                                                                   │
+│   * Downsampled from 500Hz to 100Hz                                          │
+│   * Bandpass filtered (0.5-50 Hz)                                            │
+│                                                                              │
+│ For full preprocessing applied for competition details, see:                 │
+│   https://github.com/eeg2025/downsample-datasets                             │
+│                                                                              │
+│ The HBN dataset have some preprocessing applied by the HBN team:             │
+│   * Re-reference (Cz Channel)                                                │
+│                                                                              │
+│ IMPORTANT: The data accessed via `EEGChallengeDataset` is NOT identical to   │
+│ what you get from EEGDashDataset directly.                                   │
+│ If you are participating in the competition, always use                      │
+│ `EEGChallengeDataset` to ensure consistency with the challenge data.         │
+╰──────────────────────── Source: EEGChallengeDataset ─────────────────────────╯
+[05/08/26 18:43:51] INFO     Auto-corrected misrouted             dataset.py:402
+                             storage.base for dataset
+                             EEG2025r5mini: None -&gt;
+                             s3://nemar/EEG2025r5mini
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>release</th>
+      <td>R5</td>
+    </tr>
+    <tr>
+      <th>mini</th>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>n_records</th>
+      <td>240</td>
+    </tr>
+    <tr>
+      <th>n_subjects</th>
+      <td>20</td>
+    </tr>
+    <tr>
+      <th>s3_bucket</th>
+      <td>s3://nmdatasets/NeurIPS25/R5_mini_L100_bdf</td>
+    </tr>
+    <tr>
+      <th>OpenNeuro id</th>
+      <td>ds005509</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<br />
+<br /></section>
+<section id="step-2-the-hbn-task-taxonomy">
+<h2>Step 2: The HBN task taxonomy<a class="headerlink" href="#step-2-the-hbn-task-taxonomy" title="Link to this heading">#</a></h2>
+<p><strong>Predict.</strong> Before running the next cell, write down: how many
+distinct tasks do you expect on the R5 mini release? Recall the HBN
+protocol covers a resting-state run, four passive video clips,
+three active cognitive tasks (contrast change detection, surround
+suppression, symbol search), and two sequence-learning variants
+(Alexander et al. 2017, sec. 4.4).</p>
+<p><strong>Run.</strong> <code class="docutils literal notranslate"><span class="pre">ds.description</span></code> is a <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v3.0.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a> with one
+row per recording. The <code class="docutils literal notranslate"><span class="pre">task</span></code> column carries the BIDS task entity,
+untouched by the preprocessing pipeline.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">task_counts</span></a> <span class="o">=</span> <a href="../../../../api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset.description" title="eegdash.EEGDashDataset.description" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-property"><span class="n">ds_mini</span><span class="o">.</span><span class="n">description</span></a><span class="p">[</span><span class="s2">&quot;task&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+<a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">n_tasks</span></a> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">task_counts</span></a><span class="p">)</span>
+<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.html#pandas.Series" title="pandas.Series" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class"><span class="n">pd</span><span class="o">.</span><span class="n">Series</span></a><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">task_counts</span></a><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;records&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">rename_axis</span><span class="p">(</span><span class="s2">&quot;task&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">to_frame</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>records</th>
+    </tr>
+    <tr>
+      <th>task</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>contrastChangeDetection</th>
+      <td>60</td>
+    </tr>
+    <tr>
+      <th>surroundSupp</th>
+      <td>40</td>
+    </tr>
+    <tr>
+      <th>symbolSearch</th>
+      <td>20</td>
+    </tr>
+    <tr>
+      <th>RestingState</th>
+      <td>20</td>
+    </tr>
+    <tr>
+      <th>FunwithFractals</th>
+      <td>20</td>
+    </tr>
+    <tr>
+      <th>DespicableMe</th>
+      <td>20</td>
+    </tr>
+    <tr>
+      <th>DiaryOfAWimpyKid</th>
+      <td>20</td>
+    </tr>
+    <tr>
+      <th>ThePresent</th>
+      <td>20</td>
+    </tr>
+    <tr>
+      <th>seqLearning8target</th>
+      <td>14</td>
+    </tr>
+    <tr>
+      <th>seqLearning6target</th>
+      <td>6</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<br />
+<br /><p><strong>Investigate.</strong> A few observations from the count above. The active
+cognitive tasks (<code class="docutils literal notranslate"><span class="pre">contrastChangeDetection</span></code>, <code class="docutils literal notranslate"><span class="pre">surroundSupp</span></code>) appear
+multiple times per subject because HBN records them across two or
+three runs. The passive videos (<code class="docutils literal notranslate"><span class="pre">DespicableMe</span></code>, <code class="docutils literal notranslate"><span class="pre">ThePresent</span></code>,
+<code class="docutils literal notranslate"><span class="pre">DiaryOfAWimpyKid</span></code>, <code class="docutils literal notranslate"><span class="pre">FunwithFractals</span></code>) are one run per subject.
+<code class="docutils literal notranslate"><span class="pre">seqLearning6target</span></code> and <code class="docutils literal notranslate"><span class="pre">seqLearning8target</span></code> are present for a
+subset of the cohort because the sequence-learning protocol was added
+mid-study.</p>
+</section>
+<section id="step-3-the-participant-level-metadata">
+<h2>Step 3: The participant-level metadata<a class="headerlink" href="#step-3-the-participant-level-metadata" title="Link to this heading">#</a></h2>
+<p><strong>Run.</strong> <code class="docutils literal notranslate"><span class="pre">ds.description</span></code> carries every BIDS entity <em>plus</em> the
+columns from <code class="docutils literal notranslate"><span class="pre">participants.tsv</span></code>: age, sex, the four CBCL summary
+scores (<code class="docutils literal notranslate"><span class="pre">p_factor</span></code>, <code class="docutils literal notranslate"><span class="pre">attention</span></code>, <code class="docutils literal notranslate"><span class="pre">internalizing</span></code>,
+<code class="docutils literal notranslate"><span class="pre">externalizing</span></code>), the EHQ handedness total, and a per-task
+availability flag (<code class="docutils literal notranslate"><span class="pre">available</span></code> / <code class="docutils literal notranslate"><span class="pre">not</span> <span class="pre">available</span></code>) for the ten HBN
+tasks. The next cell surfaces the columns at a glance.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">metadata_columns</span></a> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><a href="../../../../api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset.description" title="eegdash.EEGDashDataset.description" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-property"><span class="n">ds_mini</span><span class="o">.</span><span class="n">description</span><span class="o">.</span><span class="n">columns</span></a><span class="p">)</span>
+<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class"><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span></a><span class="p">({</span><span class="s2">&quot;column&quot;</span><span class="p">:</span> <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">metadata_columns</span></a><span class="p">})</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>column</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>subject</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>task</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>age</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>sex</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>release_number</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>ehq_total</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>commercial_use</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>full_pheno</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>p_factor</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>attention</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>internalizing</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>externalizing</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>restingstate</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>despicableme</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>funwithfractals</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>thepresent</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>diaryofawimpykid</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>contrastchangedetection_1</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>contrastchangedetection_2</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>contrastchangedetection_3</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>surroundsupp_1</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>surroundsupp_2</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>seqlearning6target</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>seqlearning8target</td>
+    </tr>
+    <tr>
+      <th>24</th>
+      <td>symbolsearch</td>
+    </tr>
+    <tr>
+      <th>25</th>
+      <td>run</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<br />
+<br /></section>
+<section id="step-4-build-an-age-x-task-availability-matrix">
+<h2>Step 4: Build an age x task availability matrix<a class="headerlink" href="#step-4-build-an-age-x-task-availability-matrix" title="Link to this heading">#</a></h2>
+<p>HBN spans children to young adults, so task coverage shifts with age:
+the resting-state and passive-video runs are present at every age,
+whereas sequence learning was added later in the protocol. Bin the
+ages into four buckets and pivot.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.IntervalIndex.html#pandas.IntervalIndex" title="pandas.IntervalIndex" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">age_bins</span></a> <span class="o">=</span> <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.IntervalIndex.from_tuples.html#pandas.IntervalIndex.from_tuples" title="pandas.IntervalIndex.from_tuples" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-method"><span class="n">pd</span><span class="o">.</span><span class="n">IntervalIndex</span><span class="o">.</span><span class="n">from_tuples</span></a><span class="p">(</span>
+    <span class="p">[(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">12</span><span class="p">),</span> <span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">16</span><span class="p">),</span> <span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">19</span><span class="p">)],</span> <span class="n">closed</span><span class="o">=</span><span class="s2">&quot;left&quot;</span>
+<span class="p">)</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">age_labels</span></a> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;5-8&quot;</span><span class="p">,</span> <span class="s2">&quot;8-12&quot;</span><span class="p">,</span> <span class="s2">&quot;12-16&quot;</span><span class="p">,</span> <span class="s2">&quot;16-19&quot;</span><span class="p">]</span>
+<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">desc</span></a> <span class="o">=</span> <a href="../../../../api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset.description" title="eegdash.EEGDashDataset.description" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-property"><span class="n">ds_mini</span><span class="o">.</span><span class="n">description</span><span class="o">.</span><span class="n">copy</span></a><span class="p">()</span>
+<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">desc</span></a><span class="p">[</span><span class="s2">&quot;age_bin&quot;</span><span class="p">]</span> <span class="o">=</span> <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.cut.html#pandas.cut" title="pandas.cut" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-function"><span class="n">pd</span><span class="o">.</span><span class="n">cut</span></a><span class="p">(</span>
+    <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">desc</span></a><span class="p">[</span><span class="s2">&quot;age&quot;</span><span class="p">],</span> <span class="n">bins</span><span class="o">=</span><span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">19</span><span class="p">],</span> <span class="n">right</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">age_labels</span></a>
+<span class="p">)</span>
+<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">age_task_matrix</span></a> <span class="o">=</span> <span class="p">(</span>
+    <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.groupby.html#pandas.DataFrame.groupby" title="pandas.DataFrame.groupby" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-method"><span class="n">desc</span><span class="o">.</span><span class="n">groupby</span></a><span class="p">([</span><span class="s2">&quot;age_bin&quot;</span><span class="p">],</span> <span class="n">observed</span><span class="o">=</span><span class="kc">False</span><span class="p">)[</span><span class="s2">&quot;task&quot;</span><span class="p">]</span>
+    <span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+    <span class="o">.</span><span class="n">unstack</span><span class="p">(</span><span class="n">fill_value</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">task_counts</span></a><span class="o">.</span><span class="n">keys</span><span class="p">()),</span> <span class="n">fill_value</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="p">)</span>
+<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">age_task_matrix</span></a>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>task</th>
+      <th>contrastChangeDetection</th>
+      <th>surroundSupp</th>
+      <th>symbolSearch</th>
+      <th>RestingState</th>
+      <th>FunwithFractals</th>
+      <th>DespicableMe</th>
+      <th>DiaryOfAWimpyKid</th>
+      <th>ThePresent</th>
+      <th>seqLearning8target</th>
+      <th>seqLearning6target</th>
+    </tr>
+    <tr>
+      <th>age_bin</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>5-8</th>
+      <td>9</td>
+      <td>6</td>
+      <td>3</td>
+      <td>3</td>
+      <td>3</td>
+      <td>3</td>
+      <td>3</td>
+      <td>3</td>
+      <td>0</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>8-12</th>
+      <td>33</td>
+      <td>22</td>
+      <td>11</td>
+      <td>11</td>
+      <td>11</td>
+      <td>11</td>
+      <td>11</td>
+      <td>11</td>
+      <td>8</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>12-16</th>
+      <td>9</td>
+      <td>6</td>
+      <td>3</td>
+      <td>3</td>
+      <td>3</td>
+      <td>3</td>
+      <td>3</td>
+      <td>3</td>
+      <td>3</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>16-19</th>
+      <td>9</td>
+      <td>6</td>
+      <td>3</td>
+      <td>3</td>
+      <td>3</td>
+      <td>3</td>
+      <td>3</td>
+      <td>3</td>
+      <td>3</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<br />
+<br /></section>
+<section id="step-5-one-catalog-row-fully-expanded">
+<h2>Step 5: One catalog row, fully expanded<a class="headerlink" href="#step-5-one-catalog-row-fully-expanded" title="Link to this heading">#</a></h2>
+<p>Every BDF file in the challenge bucket has a row in the metadata
+catalog with the BIDS entities, the storage descriptor, and the
+participants.tsv extras. <code class="docutils literal notranslate"><span class="pre">ds.records[0]</span></code> is exactly that row,
+returned as a Python <code class="docutils literal notranslate"><span class="pre">dict</span></code>. The next cell renders it as a
+<a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v3.0.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a> so the long fields stay readable.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sample_record</span></a> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ds_mini</span><span class="o">.</span><span class="n">records</span></a><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">record_view</span></a> <span class="o">=</span> <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.html#pandas.Series" title="pandas.Series" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class"><span class="n">pd</span><span class="o">.</span><span class="n">Series</span></a><span class="p">(</span>
+    <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sample_record</span></a><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span> <span class="o">!=</span> <span class="s2">&quot;_id&quot;</span><span class="p">},</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">,</span>
+<span class="p">)</span><span class="o">.</span><span class="n">to_frame</span><span class="p">()</span>
+<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.head.html#pandas.DataFrame.head" title="pandas.DataFrame.head" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-method"><span class="n">record_view</span><span class="o">.</span><span class="n">head</span></a><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>dataset</th>
+      <td>EEG2025r5mini</td>
+    </tr>
+    <tr>
+      <th>data_name</th>
+      <td>EEG2025r5mini_sub-NDARAH793FBF_task-symbolSear...</td>
+    </tr>
+    <tr>
+      <th>bidspath</th>
+      <td>EEG2025r5mini/sub-NDARAH793FBF/eeg/sub-NDARAH7...</td>
+    </tr>
+    <tr>
+      <th>bids_relpath</th>
+      <td>sub-NDARAH793FBF/eeg/sub-NDARAH793FBF_task-sym...</td>
+    </tr>
+    <tr>
+      <th>datatype</th>
+      <td>eeg</td>
+    </tr>
+    <tr>
+      <th>suffix</th>
+      <td>eeg</td>
+    </tr>
+    <tr>
+      <th>extension</th>
+      <td>.bdf</td>
+    </tr>
+    <tr>
+      <th>recording_modality</th>
+      <td>[eeg]</td>
+    </tr>
+    <tr>
+      <th>entities_mne</th>
+      <td>{'subject': 'NDARAH793FBF', 'session': None, '...</td>
+    </tr>
+    <tr>
+      <th>storage</th>
+      <td>{'backend': 's3', 'base': 's3://nmdatasets/Neu...</td>
+    </tr>
+    <tr>
+      <th>ch_names</th>
+      <td>[E1, E2, E3, E4, E5, E6, E7, E8, E9, E10, E11,...</td>
+    </tr>
+    <tr>
+      <th>sampling_frequency</th>
+      <td>100.0</td>
+    </tr>
+    <tr>
+      <th>nchans</th>
+      <td>129</td>
+    </tr>
+    <tr>
+      <th>ntimes</th>
+      <td>None</td>
+    </tr>
+    <tr>
+      <th>digested_at</th>
+      <td>2026-01-03T15:29:00.388927+00:00</td>
+    </tr>
+    <tr>
+      <th>participant_tsv</th>
+      <td>{'release_number': 'R5', 'sex': 'M', 'age': 9....</td>
+    </tr>
+    <tr>
+      <th>subject</th>
+      <td>NDARAH793FBF</td>
+    </tr>
+    <tr>
+      <th>task</th>
+      <td>symbolSearch</td>
+    </tr>
+    <tr>
+      <th>session</th>
+      <td>None</td>
+    </tr>
+    <tr>
+      <th>run</th>
+      <td>None</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<br />
+<br /><p><strong>Investigate.</strong> A handful of fields are load-bearing for downstream
+code:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">data_name</span></code> is the unique BDF filename inside the challenge bucket;
+the lazy <code class="docutils literal notranslate"><span class="pre">record.raw</span></code> loader keys on it.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dataset</span></code> is <code class="docutils literal notranslate"><span class="pre">&quot;EEG2025r5mini&quot;</span></code>, <em>not</em> the OpenNeuro id; the
+dataset id pins the cache folder so preprocessed and raw pulls do
+not collide.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sampling_frequency</span></code> is <code class="docutils literal notranslate"><span class="pre">100.0</span></code> (downsampled from the original
+500 Hz), and <code class="docutils literal notranslate"><span class="pre">nchans</span></code> is the post-Cz-reference channel count.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">storage</span></code> carries the S3 backend descriptor (<code class="docutils literal notranslate"><span class="pre">s3://nmdatasets/NeurIPS25/...</span></code>).</p></li>
+</ul>
+</section>
+<section id="step-6-render-the-live-numbers-as-a-3-panel-figure">
+<h2>Step 6: Render the live numbers as a 3-panel figure<a class="headerlink" href="#step-6-render-the-live-numbers-as-a-3-panel-figure" title="Link to this heading">#</a></h2>
+<p>The drawing helpers live in a sibling <code class="docutils literal notranslate"><span class="pre">_challenge_basics_figure</span></code>
+module so the rendering plumbing stays out of this tutorial. Panel 1
+is the records-per-task bar chart from Step 2; panel 2 is the age x
+task matrix from Step 4; panel 3 is the catalog row from Step 5.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">_challenge_basics_figure</span><span class="w"> </span><span class="kn">import</span> <span class="n">draw_challenge_basics_figure</span>
+
+<span class="c1"># Augment the catalog row with the live subject count so the figure</span>
+<span class="c1"># subtitle can carry it without an extra parameter.</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sample_for_figure</span></a> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sample_record</span></a><span class="p">)</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sample_for_figure</span></a><span class="p">[</span><span class="s2">&quot;__n_subjects&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">n_mini_subjects</span></a><span class="p">)</span>
+
+<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="matplotlib.figure.Figure" class="sphx-glr-backref-module-matplotlib-figure sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">fig</span></a> <span class="o">=</span> <span class="n">draw_challenge_basics_figure</span><span class="p">(</span>
+    <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">task_counts</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">task_counts</span></a><span class="p">,</span>
+    <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">age_task_matrix</span></a><span class="o">=</span><a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">age_task_matrix</span></a><span class="p">,</span>
+    <span class="n">sample_metadata_row</span><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sample_for_figure</span></a><span class="p">,</span>
+    <span class="n">plot_id</span><span class="o">=</span><span class="s2">&quot;plot_70&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
+</pre></div>
+</div>
+<img src="../../../../_images/sphx_glr_plot_70_challenge_dataset_basics_001.png" srcset="../../../../_images/sphx_glr_plot_70_challenge_dataset_basics_001.png" alt="records per task, age bin x task availability" class = "sphx-glr-single-img"/></section>
+<section id="step-7-verify-the-strict-subset-invariant">
+<h2>Step 7: Verify the strict-subset invariant<a class="headerlink" href="#step-7-verify-the-strict-subset-invariant" title="Link to this heading">#</a></h2>
+<p><strong>Run.</strong> <code class="docutils literal notranslate"><span class="pre">mini=True</span></code> substitutes a curated subject list (20 per
+release, frozen in <code class="xref py py-data docutils literal notranslate"><span class="pre">SUBJECT_MINI_RELEASE_MAP</span></code>)
+and renames the dataset id to <code class="docutils literal notranslate"><span class="pre">EEG2025r5mini</span></code> for cache isolation.
+Build the full release the same way and check the strict-subset
+claim.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">ds_full</span> <span class="o">=</span> <a href="../../../../api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset" title="eegdash.EEGDashDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class"><span class="n">EEGChallengeDataset</span></a><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">release</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">RELEASE</span></a><span class="p">,</span> <a href="https://docs.python.org/3/library/pathlib.html#pathlib.PosixPath" title="pathlib.PosixPath" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">cache_dir</span></a><span class="o">=</span><span class="nb">str</span><span class="p">(</span><a href="https://docs.python.org/3/library/pathlib.html#pathlib.PosixPath" title="pathlib.PosixPath" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">cache_dir</span></a><span class="p">),</span> <span class="n">mini</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">mini_subjects</span></a> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><a href="../../../../api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset.description" title="eegdash.EEGDashDataset.description" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-property"><span class="n">ds_mini</span><span class="o">.</span><span class="n">description</span></a><span class="p">[</span><span class="s2">&quot;subject&quot;</span><span class="p">]))</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">full_subjects</span></a> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><a href="../../../../api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset.description" title="eegdash.EEGDashDataset.description" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-property"><span class="n">ds_full</span><span class="o">.</span><span class="n">description</span></a><span class="p">[</span><span class="s2">&quot;subject&quot;</span><span class="p">]))</span>
+<span class="k">assert</span> <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ds_mini</span><span class="o">.</span><span class="n">release</span></a> <span class="o">==</span> <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">RELEASE</span></a><span class="p">,</span> <span class="s2">&quot;release attribute must match the request&quot;</span>
+<span class="k">assert</span> <a href="https://docs.python.org/3/library/functions.html#bool" title="builtins.bool" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ds_mini</span><span class="o">.</span><span class="n">mini</span></a> <span class="ow">is</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;mini=True must be honoured&quot;</span>
+<span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">mini_subjects</span></a><span class="p">)</span> <span class="o">==</span> <span class="mi">20</span><span class="p">,</span> <span class="s2">&quot;every challenge release lists 20 mini subjects&quot;</span>
+<span class="k">assert</span> <span class="nb">set</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">mini_subjects</span></a><span class="p">)</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">full_subjects</span></a><span class="p">)),</span> <span class="p">(</span>
+    <span class="s2">&quot;mini subjects must all appear in the full release&quot;</span>
+<span class="p">)</span>
+<span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">mini_subjects</span></a><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">full_subjects</span></a><span class="p">),</span> <span class="p">(</span>
+    <span class="s2">&quot;mini must be a strict subset, not equal&quot;</span>
+<span class="p">)</span>
+<a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ratio</span></a> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">mini_subjects</span></a><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">full_subjects</span></a><span class="p">)</span>
+<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.html#pandas.Series" title="pandas.Series" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class"><span class="n">pd</span><span class="o">.</span><span class="n">Series</span></a><span class="p">(</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;|mini|&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">mini_subjects</span></a><span class="p">),</span>
+        <span class="s2">&quot;|full|&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">full_subjects</span></a><span class="p">),</span>
+        <span class="s2">&quot;|mini| / |full|&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ratio</span></a><span class="si">:</span><span class="s2">.2%</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;n_records mini&quot;</span><span class="p">:</span> <a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">n_mini_records</span></a><span class="p">,</span>
+        <span class="s2">&quot;n_records full&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ds_full</span><span class="o">.</span><span class="n">records</span></a><span class="p">),</span>
+    <span class="p">},</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">,</span>
+<span class="p">)</span><span class="o">.</span><span class="n">to_frame</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>╭────────────────────── EEG 2025 Competition Data Notice ──────────────────────╮
+│ This object loads the HBN dataset that has been preprocessed for the EEG     │
+│ Challenge:                                                                   │
+│   * Downsampled from 500Hz to 100Hz                                          │
+│   * Bandpass filtered (0.5-50 Hz)                                            │
+│                                                                              │
+│ For full preprocessing applied for competition details, see:                 │
+│   https://github.com/eeg2025/downsample-datasets                             │
+│                                                                              │
+│ The HBN dataset have some preprocessing applied by the HBN team:             │
+│   * Re-reference (Cz Channel)                                                │
+│                                                                              │
+│ IMPORTANT: The data accessed via `EEGChallengeDataset` is NOT identical to   │
+│ what you get from EEGDashDataset directly.                                   │
+│ If you are participating in the competition, always use                      │
+│ `EEGChallengeDataset` to ensure consistency with the challenge data.         │
+╰──────────────────────── Source: EEGChallengeDataset ─────────────────────────╯
+[05/08/26 18:43:53] INFO     Auto-corrected misrouted             dataset.py:402
+                             storage.base for dataset EEG2025r5:
+                             None -&gt; s3://nemar/EEG2025r5
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>|mini|</th>
+      <td>20</td>
+    </tr>
+    <tr>
+      <th>|full|</th>
+      <td>330</td>
+    </tr>
+    <tr>
+      <th>|mini| / |full|</th>
+      <td>6.06%</td>
+    </tr>
+    <tr>
+      <th>n_records mini</th>
+      <td>240</td>
+    </tr>
+    <tr>
+      <th>n_records full</th>
+      <td>3326</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<br />
+<br /></section>
+<section id="step-8-same-subjects-two-views-via-eegdashdataset">
+<h2>Step 8: Same subjects, two views via <code class="docutils literal notranslate"><span class="pre">EEGDashDataset</span></code><a class="headerlink" href="#step-8-same-subjects-two-views-via-eegdashdataset" title="Link to this heading">#</a></h2>
+<p><strong>Run.</strong> Pulling the same subject through
+<code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code> returns the <em>raw</em> OpenNeuro
+recording (500 Hz, no challenge band-pass). The leaderboard contract
+explicitly forbids mixing the two views in a submission.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="../../../../api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset" title="eegdash.EEGDashDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ds_eegdash</span></a> <span class="o">=</span> <a href="../../../../api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset" title="eegdash.EEGDashDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class"><span class="n">EEGDashDataset</span></a><span class="p">(</span>
+    <a href="https://docs.python.org/3/library/pathlib.html#pathlib.PosixPath" title="pathlib.PosixPath" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">cache_dir</span></a><span class="o">=</span><span class="nb">str</span><span class="p">(</span><a href="https://docs.python.org/3/library/pathlib.html#pathlib.PosixPath" title="pathlib.PosixPath" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">cache_dir</span></a><span class="p">),</span>
+    <span class="n">dataset</span><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">RELEASE_TO_OPENNEURO_DATASET_MAP</span></a><span class="p">[</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">RELEASE</span></a><span class="p">],</span>
+    <span class="n">subject</span><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">mini_subjects</span></a><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+<span class="p">)</span>
+<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.html#pandas.Series" title="pandas.Series" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class"><span class="n">pd</span><span class="o">.</span><span class="n">Series</span></a><span class="p">(</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;EEGDashDataset records (raw 500 Hz)&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ds_eegdash</span><span class="o">.</span><span class="n">records</span></a><span class="p">),</span>
+        <span class="s2">&quot;EEGChallengeDataset records (mini, 100 Hz)&quot;</span><span class="p">:</span> <a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">n_mini_records</span></a><span class="p">,</span>
+        <span class="s2">&quot;Same metadata catalog?&quot;</span><span class="p">:</span> <span class="s2">&quot;yes&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Same preprocessing?&quot;</span><span class="p">:</span> <span class="s2">&quot;no - challenge ships preprocessed BDFs&quot;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">,</span>
+<span class="p">)</span><span class="o">.</span><span class="n">to_frame</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>╭────────────────────── EEG 2025 Competition Data Notice ──────────────────────╮
+│ This notice is only for users who are participating in the EEG 2025          │
+│ Competition.                                                                 │
+│                                                                              │
+│ EEG 2025 Competition Data Notice!                                            │
+│ You are loading one of the datasets that is used in competition, but via     │
+│ `EEGDashDataset`.                                                            │
+│                                                                              │
+│ IMPORTANT:                                                                   │
+│ If you download data from `EEGDashDataset`, it is NOT identical to the       │
+│ official                                                                     │
+│ competition data, which is accessed via `EEGChallengeDataset`. The           │
+│ competition data has been downsampled and filtered.                          │
+│                                                                              │
+│ If you are participating in the competition,                                 │
+│ you must use the `EEGChallengeDataset` object to ensure consistency.         │
+│                                                                              │
+│ If you are not participating in the competition, you can ignore this         │
+│ message.                                                                     │
+╰─────────────────────────── Source: EEGDashDataset ───────────────────────────╯
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>EEGDashDataset records (raw 500 Hz)</th>
+      <td>12</td>
+    </tr>
+    <tr>
+      <th>EEGChallengeDataset records (mini, 100 Hz)</th>
+      <td>240</td>
+    </tr>
+    <tr>
+      <th>Same metadata catalog?</th>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <th>Same preprocessing?</th>
+      <td>no - challenge ships preprocessed BDFs</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<br />
+<br /></section>
+<section id="a-common-mistake-and-how-to-recover">
+<h2>A common mistake, and how to recover<a class="headerlink" href="#a-common-mistake-and-how-to-recover" title="Link to this heading">#</a></h2>
+<p><strong>Run.</strong> Typing the release identifier wrong (<code class="docutils literal notranslate"><span class="pre">&quot;r5&quot;</span></code> instead of
+<code class="docutils literal notranslate"><span class="pre">&quot;R5&quot;</span></code>, or <code class="docutils literal notranslate"><span class="pre">&quot;R12&quot;</span></code>) raises <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ValueError</span></code></a> at construction time
+, before any S3 traffic happens. We trigger the error on purpose so
+the failure mode is visible.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">try</span><span class="p">:</span>
+    <span class="n">_bogus</span> <span class="o">=</span> <a href="../../../../api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset" title="eegdash.EEGDashDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class"><span class="n">EEGChallengeDataset</span></a><span class="p">(</span>
+        <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">release</span></a><span class="o">=</span><span class="s2">&quot;R12&quot;</span><span class="p">,</span>  <span class="c1"># there is no R12; the map only goes up to R11</span>
+        <a href="https://docs.python.org/3/library/pathlib.html#pathlib.PosixPath" title="pathlib.PosixPath" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">cache_dir</span></a><span class="o">=</span><span class="nb">str</span><span class="p">(</span><a href="https://docs.python.org/3/library/pathlib.html#pathlib.PosixPath" title="pathlib.PosixPath" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">cache_dir</span></a><span class="p">),</span>
+        <span class="n">mini</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+<span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Caught </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">exc</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">exc</span><span class="p">)[:</span><span class="mi">120</span><span class="p">]</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
+    <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">available</span></a> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+        <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">RELEASE_TO_OPENNEURO_DATASET_MAP</span></a><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">s</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+    <span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Recovery: use one of </span><span class="si">{</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">available</span></a><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Caught ValueError: Unknown release: R12, expected one of [&#39;R11&#39;, &#39;R10&#39;, &#39;R9&#39;, &#39;R8&#39;, &#39;R7&#39;, &#39;R6&#39;, &#39;R4&#39;, &#39;R5&#39;, &#39;R3&#39;, &#39;R2&#39;, &#39;R1&#39;]...
+Recovery: use one of [&#39;R1&#39;, &#39;R2&#39;, &#39;R3&#39;, &#39;R4&#39;, &#39;R5&#39;, &#39;R6&#39;, &#39;R7&#39;, &#39;R8&#39;, &#39;R9&#39;, &#39;R10&#39;, &#39;R11&#39;]
+</pre></div>
+</div>
+</section>
+<section id="modify-pick-a-different-release">
+<h2>Modify: pick a different release<a class="headerlink" href="#modify-pick-a-different-release" title="Link to this heading">#</a></h2>
+<p><strong>Your turn.</strong> Switch <code class="docutils literal notranslate"><span class="pre">RELEASE</span></code> to <code class="docutils literal notranslate"><span class="pre">&quot;R2&quot;</span></code> (a smaller release) and
+re-check the strict-subset invariant. The 20 mini subjects per release
+are different by design, but the relationship <code class="docutils literal notranslate"><span class="pre">mini</span></code> is a subset of
+<code class="docutils literal notranslate"><span class="pre">full</span></code> holds for every release in the map.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">ds_alt</span> <span class="o">=</span> <a href="../../../../api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset" title="eegdash.EEGDashDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class"><span class="n">EEGChallengeDataset</span></a><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">release</span></a><span class="o">=</span><span class="s2">&quot;R2&quot;</span><span class="p">,</span> <a href="https://docs.python.org/3/library/pathlib.html#pathlib.PosixPath" title="pathlib.PosixPath" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">cache_dir</span></a><span class="o">=</span><span class="nb">str</span><span class="p">(</span><a href="https://docs.python.org/3/library/pathlib.html#pathlib.PosixPath" title="pathlib.PosixPath" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">cache_dir</span></a><span class="p">),</span> <span class="n">mini</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#set" title="builtins.set" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">alt_subjects</span></a> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><a href="../../../../api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset.description" title="eegdash.EEGDashDataset.description" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-property"><span class="n">ds_alt</span><span class="o">.</span><span class="n">description</span></a><span class="p">[</span><span class="s2">&quot;subject&quot;</span><span class="p">])</span>
+<span class="k">assert</span> <a href="https://docs.python.org/3/library/stdtypes.html#set" title="builtins.set" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">alt_subjects</span></a> <span class="o">==</span> <span class="nb">set</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">SUBJECT_MINI_RELEASE_MAP</span></a><span class="p">[</span><span class="s2">&quot;R2&quot;</span><span class="p">]),</span> <span class="p">(</span>
+    <span class="s2">&quot;mini subjects must equal SUBJECT_MINI_RELEASE_MAP[release]&quot;</span>
+<span class="p">)</span>
+<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.html#pandas.Series" title="pandas.Series" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class"><span class="n">pd</span><span class="o">.</span><span class="n">Series</span></a><span class="p">(</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;release&quot;</span><span class="p">:</span> <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ds_alt</span><span class="o">.</span><span class="n">release</span></a><span class="p">,</span>
+        <span class="s2">&quot;n_subjects&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#set" title="builtins.set" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">alt_subjects</span></a><span class="p">),</span>
+        <span class="s2">&quot;first record dataset id&quot;</span><span class="p">:</span> <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ds_alt</span><span class="o">.</span><span class="n">records</span></a><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;dataset&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;first record task&quot;</span><span class="p">:</span> <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ds_alt</span><span class="o">.</span><span class="n">records</span></a><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;task&quot;</span><span class="p">],</span>
+    <span class="p">},</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">,</span>
+<span class="p">)</span><span class="o">.</span><span class="n">to_frame</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>╭────────────────────── EEG 2025 Competition Data Notice ──────────────────────╮
+│ This object loads the HBN dataset that has been preprocessed for the EEG     │
+│ Challenge:                                                                   │
+│   * Downsampled from 500Hz to 100Hz                                          │
+│   * Bandpass filtered (0.5-50 Hz)                                            │
+│                                                                              │
+│ For full preprocessing applied for competition details, see:                 │
+│   https://github.com/eeg2025/downsample-datasets                             │
+│                                                                              │
+│ The HBN dataset have some preprocessing applied by the HBN team:             │
+│   * Re-reference (Cz Channel)                                                │
+│                                                                              │
+│ IMPORTANT: The data accessed via `EEGChallengeDataset` is NOT identical to   │
+│ what you get from EEGDashDataset directly.                                   │
+│ If you are participating in the competition, always use                      │
+│ `EEGChallengeDataset` to ensure consistency with the challenge data.         │
+╰──────────────────────── Source: EEGChallengeDataset ─────────────────────────╯
+[05/08/26 18:44:00] INFO     Auto-corrected misrouted             dataset.py:402
+                             storage.base for dataset
+                             EEG2025r2mini: None -&gt;
+                             s3://nemar/EEG2025r2mini
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>release</th>
+      <td>R2</td>
+    </tr>
+    <tr>
+      <th>n_subjects</th>
+      <td>20</td>
+    </tr>
+    <tr>
+      <th>first record dataset id</th>
+      <td>EEG2025r2mini</td>
+    </tr>
+    <tr>
+      <th>first record task</th>
+      <td>contrastChangeDetection</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<br />
+<br /></section>
+<section id="make-a-release-by-release-tabulation">
+<h2>Make: a release-by-release tabulation<a class="headerlink" href="#make-a-release-by-release-tabulation" title="Link to this heading">#</a></h2>
+<p><strong>Mini-project.</strong> Tabulate <code class="docutils literal notranslate"><span class="pre">|mini|</span></code> versus <code class="docutils literal notranslate"><span class="pre">|full|</span></code> for every
+release in <code class="xref py py-data docutils literal notranslate"><span class="pre">RELEASE_TO_OPENNEURO_DATASET_MAP</span></code>.
+The cell below does the loop on the mini side without touching the
+full pool (so it stays fast); the <code class="docutils literal notranslate"><span class="pre">|full|</span></code> column is read straight
+from the participants.tsv via the metadata catalog.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">release_table_rows</span></a> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">release</span></a> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span>
+    <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">RELEASE_TO_OPENNEURO_DATASET_MAP</span></a><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">s</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+<span class="p">):</span>
+    <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">release_table_rows</span></a><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;release&quot;</span><span class="p">:</span> <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">release</span></a><span class="p">,</span>
+            <span class="s2">&quot;OpenNeuro id&quot;</span><span class="p">:</span> <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">RELEASE_TO_OPENNEURO_DATASET_MAP</span></a><span class="p">[</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">release</span></a><span class="p">],</span>
+            <span class="s2">&quot;|mini|&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">SUBJECT_MINI_RELEASE_MAP</span></a><span class="p">[</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">release</span></a><span class="p">]),</span>
+        <span class="p">}</span>
+    <span class="p">)</span>
+<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class"><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span></a><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">release_table_rows</span></a><span class="p">)</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>release</th>
+      <th>OpenNeuro id</th>
+      <th>|mini|</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>R1</td>
+      <td>ds005505</td>
+      <td>20</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>R2</td>
+      <td>ds005506</td>
+      <td>20</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>R3</td>
+      <td>ds005507</td>
+      <td>20</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>R4</td>
+      <td>ds005508</td>
+      <td>20</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>R5</td>
+      <td>ds005509</td>
+      <td>20</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>R6</td>
+      <td>ds005510</td>
+      <td>20</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>R7</td>
+      <td>ds005511</td>
+      <td>20</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>R8</td>
+      <td>ds005512</td>
+      <td>20</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>R9</td>
+      <td>ds005514</td>
+      <td>20</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>R10</td>
+      <td>ds005515</td>
+      <td>20</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>R11</td>
+      <td>ds005516</td>
+      <td>20</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<br />
+<br /></section>
+<section id="result">
+<h2>Result<a class="headerlink" href="#result" title="Link to this heading">#</a></h2>
+<p>We loaded the R5 mini release, surfaced the HBN task taxonomy
+(10 tasks across four families), built an age x task availability
+matrix, and rendered the catalog row for one recording. Reproducing
+this without the loader would take a custom S3 listing, a custom
+cache key, and a custom subject filter; the loader rolls all three
+into one constructor call (Cisotto &amp; Chicco 2024 would say: do not
+rebuild what the dataset class already enforces).</p>
+</section>
+<section id="wrap-up">
+<h2>Wrap-up<a class="headerlink" href="#wrap-up" title="Link to this heading">#</a></h2>
+<p><a class="reference internal" href="../../../../api/dataset/eegdash.dataset.EEGChallengeDataset.html#eegdash.dataset.EEGChallengeDataset" title="eegdash.dataset.EEGChallengeDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">EEGChallengeDataset</span></code></a> is
+<code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code> with three rails attached: a
+release-to-OpenNeuro map, a frozen mini subject list per release, and
+a fixed challenge S3 bucket. Use <code class="docutils literal notranslate"><span class="pre">mini=True</span></code> while iterating; switch
+to <code class="docutils literal notranslate"><span class="pre">mini=False</span></code> for a final submission; never mix challenge data
+with raw <code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code> pulls because the
+0.5-50 Hz pass-band and 100 Hz downsample make the two views
+incompatible. Next:
+<span class="xref std std-doc">/auto_examples/tutorials/70_transfer_foundation/plot_71_cross_task_transfer</span>
+trains a transfer baseline across the task taxonomy you just
+enumerated;
+<span class="xref std std-doc">/auto_examples/tutorials/70_transfer_foundation/plot_73_finetune_pretrained_model</span>
+fine-tunes a foundation model with the same loader.</p>
+</section>
+<section id="try-it-yourself-extensions">
+<h2>Try it yourself (Extensions)<a class="headerlink" href="#try-it-yourself-extensions" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Print <code class="docutils literal notranslate"><span class="pre">SUBJECT_MINI_RELEASE_MAP[RELEASE]</span></code> and confirm the list
+matches <code class="docutils literal notranslate"><span class="pre">mini_subjects</span></code> element-by-element.</p></li>
+<li><p>Re-run Step 4 with the <code class="docutils literal notranslate"><span class="pre">sex</span></code> column instead of <code class="docutils literal notranslate"><span class="pre">age_bin</span></code> and
+compare the M/F coverage across the four task families.</p></li>
+<li><p>Run with <code class="docutils literal notranslate"><span class="pre">download=True</span></code>, access <code class="docutils literal notranslate"><span class="pre">ds_mini.datasets[0].raw</span></code>, and
+confirm <code class="docutils literal notranslate"><span class="pre">raw.info[&quot;sfreq&quot;]</span> <span class="pre">==</span> <span class="pre">100.0</span></code> (the challenge downsample step).</p></li>
+</ul>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<p>See <a class="reference internal" href="../../../../references.html"><span class="doc">References</span></a> for the centralised bibliography of papers
+cited above. Add or amend an entry once in
+<code class="file docutils literal notranslate"><span class="pre">docs/source/refs.bib</span></code>; every tutorial inherits the update.</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 10.245 seconds)</p>
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-auto-examples-tutorials-70-transfer-foundation-plot-70-challenge-dataset-basics-py">
+<div class="binder-badge docutils container">
+<a class="reference external image-reference" href="https://mybinder.org/v2/gh/eegdash/EEGDash/main?urlpath=lab/tree/notebooks/generated/auto_examples/tutorials/70_transfer_foundation/plot_70_challenge_dataset_basics.ipynb"><img alt="Launch binder" src="../../../../_images/binder_badge_logo11.svg" style="width: 150px;" />
+</a>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../../../../_downloads/989b3a9706c1d030cf51a9a33509313b/plot_70_challenge_dataset_basics.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_70_challenge_dataset_basics.ipynb</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../../../../_downloads/8a0b837de2ac8c01ba736328cc7fbaa9/plot_70_challenge_dataset_basics.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_70_challenge_dataset_basics.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-zip docutils container">
+<p><a class="reference download internal" download="" href="../../../../_downloads/035a663e68338014c815ebf26cf513a9/plot_70_challenge_dataset_basics.zip"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">zipped:</span> <span class="pre">plot_70_challenge_dataset_basics.zip</span></code></a></p>
+</div>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="index.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Transfer, Foundation Models, and EEG2025</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="plot_71_cross_task_transfer.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Pretrain on resting-state, fine-tune on contrast-change detection</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">Learning objectives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#requirements">Requirements</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#two-loaders-one-catalog-the-mental-model">Two loaders, one catalog: the mental model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-does-eegchallengedataset-expose">What does <code class="docutils literal notranslate"><span class="pre">EEGChallengeDataset</span></code> expose?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-build-eegchallengedataset-release-r5-mini-true">Step 1: Build <code class="docutils literal notranslate"><span class="pre">EEGChallengeDataset(release='R5',</span> <span class="pre">mini=True)</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-the-hbn-task-taxonomy">Step 2: The HBN task taxonomy</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-the-participant-level-metadata">Step 3: The participant-level metadata</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-4-build-an-age-x-task-availability-matrix">Step 4: Build an age x task availability matrix</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-5-one-catalog-row-fully-expanded">Step 5: One catalog row, fully expanded</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-6-render-the-live-numbers-as-a-3-panel-figure">Step 6: Render the live numbers as a 3-panel figure</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-7-verify-the-strict-subset-invariant">Step 7: Verify the strict-subset invariant</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-8-same-subjects-two-views-via-eegdashdataset">Step 8: Same subjects, two views via <code class="docutils literal notranslate"><span class="pre">EEGDashDataset</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-common-mistake-and-how-to-recover">A common mistake, and how to recover</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#modify-pick-a-different-release">Modify: pick a different release</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#make-a-release-by-release-tabulation">Make: a release-by-release tabulation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#result">Result</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#wrap-up">Wrap-up</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#try-it-yourself-extensions">Try it yourself (Extensions)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb"></script>
+<script defer src="../../../../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025-2026, EEG Dash Developers.
+      <br/>
+    
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.17.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

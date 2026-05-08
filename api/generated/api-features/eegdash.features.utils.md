@@ -20,7 +20,7 @@ The module provides the following functions:
 |----------------------------------------------------|--------------------------------------------------------------|
 | `fit_feature_extractors`(concat_dataset, features) | Fit trainable feature extractors on a concatenated dataset.  |
 
-### eegdash.features.utils.extract_features(concat_dataset: BaseConcatDataset, features: FeatureExtractor | Dict[Any, Callable] | List[Callable], , batch_size: int = 512, n_jobs: int = 1) → FeaturesConcatDataset
+### eegdash.features.utils.extract_features(concat_dataset: [BaseConcatDataset](https://braindecode.org/stable/generated/braindecode.datasets.BaseConcatDataset.html#braindecode.datasets.BaseConcatDataset), features: FeatureExtractor | [Dict](https://docs.python.org/3/library/typing.html#typing.Dict)[[Any](https://docs.python.org/3/library/typing.html#typing.Any), [Callable](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)] | [List](https://docs.python.org/3/library/typing.html#typing.List)[[Callable](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)], , batch_size: [int](https://docs.python.org/3/library/functions.html#int) = 512, n_jobs: [int](https://docs.python.org/3/library/functions.html#int) = 1) → FeaturesConcatDataset
 
 Extract features from a collection of windowed recordings.
 
@@ -30,12 +30,12 @@ individual recording in a `BaseConcatDataset`.
 * **Parameters:**
   * **concat_dataset** (*BaseConcatDataset*) – A concatenated dataset of `WindowsDataset` or
     `EEGWindowsDataset` instances.
-  * **features** (*FeatureExtractor* *or* *dict* *or* *list*) – The feature extractor(s) to apply. Can be a
+  * **features** (*FeatureExtractor* *or* [*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *or* [*list*](https://docs.python.org/3/library/stdtypes.html#list)) – The feature extractor(s) to apply. Can be a
     `FeatureExtractor` instance,
     a dictionary of named feature functions, or a list of feature
     functions.
-  * **batch_size** (*int* *,* *default 512*) – The size of batches used for feature extraction within each recording.
-  * **n_jobs** (*int* *,* *default 1*) – The number of parallel jobs to use for processing different
+  * **batch_size** ([*int*](https://docs.python.org/3/library/functions.html#int) *,* *default 512*) – The size of batches used for feature extraction within each recording.
+  * **n_jobs** ([*int*](https://docs.python.org/3/library/functions.html#int) *,* *default 1*) – The number of parallel jobs to use for processing different
     recordings simultaneously.
 * **Returns:**
   A unified collection of feature datasets corresponding to the
@@ -45,7 +45,7 @@ individual recording in a `BaseConcatDataset`.
 
 <!-- !! processed by numpydoc !! -->
 
-### eegdash.features.utils.fit_feature_extractors(concat_dataset: BaseConcatDataset, features: FeatureExtractor | Dict[Any, Callable] | List[Callable], batch_size: int = 8192) → FeatureExtractor
+### eegdash.features.utils.fit_feature_extractors(concat_dataset: [BaseConcatDataset](https://braindecode.org/stable/generated/braindecode.datasets.BaseConcatDataset.html#braindecode.datasets.BaseConcatDataset), features: FeatureExtractor | [Dict](https://docs.python.org/3/library/typing.html#typing.Dict)[[Any](https://docs.python.org/3/library/typing.html#typing.Any), [Callable](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)] | [List](https://docs.python.org/3/library/typing.html#typing.List)[[Callable](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)], batch_size: [int](https://docs.python.org/3/library/functions.html#int) = 8192) → FeatureExtractor
 
 Fit trainable feature extractors on a concatenated dataset.
 
@@ -56,8 +56,8 @@ perform partial fitting before finalization.
 
 * **Parameters:**
   * **concat_dataset** (*BaseConcatDataset*) – The dataset used to train the feature extractors.
-  * **features** (*FeatureExtractor* *or* *dict* *or* *list*) – The feature extractor pipeline(s) to fit.
-  * **batch_size** (*int* *,* *default 8192*) – The batch size to use when streaming data through the
+  * **features** (*FeatureExtractor* *or* [*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *or* [*list*](https://docs.python.org/3/library/stdtypes.html#list)) – The feature extractor pipeline(s) to fit.
+  * **batch_size** ([*int*](https://docs.python.org/3/library/functions.html#int) *,* *default 8192*) – The batch size to use when streaming data through the
     `partial_fit()` phase.
 * **Returns:**
   The fitted feature extractor instance, ready for feature extraction.

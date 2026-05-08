@@ -61,9 +61,9 @@ Linear-phase FIR band-pass filter.
 
 * **Parameters:**
   * **x** (*ndarray*) – Input signal
-  * **f_min** (*float*) – Low cutoff frequency (Hz)
-  * **f_max** (*float*) – High cutoff frequency (Hz)
-  * **num_taps** (*int*) – Number of filter taps (must be odd for exact linear phase)
+  * **f_min** ([*float*](https://docs.python.org/3/library/functions.html#float)) – Low cutoff frequency (Hz)
+  * **f_max** ([*float*](https://docs.python.org/3/library/functions.html#float)) – High cutoff frequency (Hz)
+  * **num_taps** ([*int*](https://docs.python.org/3/library/functions.html#int)) – Number of filter taps (must be odd for exact linear phase)
 * **Returns:**
   The band-pass filtered signal, with the same shape as the input.
 * **Return type:**
@@ -202,7 +202,7 @@ Compute the temporal kurtosis of the signal.
 
 * **Parameters:**
   * **x** (*ndarray*) – The input signal.
-  * **\*\*kwargs** (*dict*) – Additional keyword arguments passed to `scipy.stats.kurtosis()`.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments passed to [`scipy.stats.kurtosis()`](https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.kurtosis.html#scipy.stats.kurtosis).
 * **Returns:**
   The kurtosis of the signal along the temporal axis.
   Shape is `x.shape[:-1]`
@@ -245,7 +245,7 @@ Calculate the peak-to-peak (maximum range) of the signal.
 
 * **Parameters:**
   * **x** (*ndarray*) – The input signal.
-  * **\*\*kwargs** (*dict*) – Additional keyword arguments passed to `numpy.ptp()`.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments passed to [`numpy.ptp()`](https://numpy.org/doc/stable/reference/generated/numpy.ptp.html#numpy.ptp).
 * **Returns:**
   The peak-to-peak amplitude.
   Shape is `x.shape[:-1]`.
@@ -254,7 +254,7 @@ Calculate the peak-to-peak (maximum range) of the signal.
 
 ### Notes
 
-This function wraps `numpy.ptp()`; see the NumPy documentation for
+This function wraps [`numpy.ptp()`](https://numpy.org/doc/stable/reference/generated/numpy.ptp.html#numpy.ptp); see the NumPy documentation for
 details on additional keyword arguments.
 
 For a theoretical overview of Peak-To-Peak amplitude in signal analysis,
@@ -262,14 +262,14 @@ see the [Wikipedia entry](https://en.wikipedia.org/wiki/Peak-to-peak).
 
 <!-- !! processed by numpydoc !! -->
 
-### eegdash.features.feature_bank.signal.signal_quantile(x, , q: Number = 0.5, \*\*kwargs)
+### eegdash.features.feature_bank.signal.signal_quantile(x, , q: [Number](https://docs.python.org/3/library/numbers.html#numbers.Number) = 0.5, \*\*kwargs)
 
 Compute the q-th quantile of the signal.
 
 * **Parameters:**
   * **x** (*ndarray*) – The input signal.
-  * **q** (*float* *or* *array_like* *,* *optional*) – The quantile to compute. 0.5 (default) is the median.
-  * **\*\*kwargs** (*dict*) – Additional keyword arguments passed to `numpy.quantile()`.
+  * **q** ([*float*](https://docs.python.org/3/library/functions.html#float) *or* *array_like* *,* *optional*) – The quantile to compute. 0.5 (default) is the median.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments passed to [`numpy.quantile()`](https://numpy.org/doc/stable/reference/generated/numpy.quantile.html#numpy.quantile).
 * **Returns:**
   The quantile values.
   Shape is `x.shape[:-1]`.
@@ -278,7 +278,7 @@ Compute the q-th quantile of the signal.
 
 ### Notes
 
-This function wraps `numpy.quantile()`; see the NumPy documentation for
+This function wraps [`numpy.quantile()`](https://numpy.org/doc/stable/reference/generated/numpy.quantile.html#numpy.quantile); see the NumPy documentation for
 details on additional keyword arguments.
 
 <!-- !! processed by numpydoc !! -->
@@ -308,7 +308,7 @@ Compute the temporal skewness of the signal.
 
 * **Parameters:**
   * **x** (*ndarray*) – The input signal.
-  * **\*\*kwargs** (*dict*) – Additional keyword arguments passed to `scipy.stats.skew()`.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments passed to [`scipy.stats.skew()`](https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.skew.html#scipy.stats.skew).
 * **Returns:**
   The skewness of the signal along the temporal axis.
   Shape is `x.shape[:-1]`.
@@ -323,7 +323,7 @@ Compute the temporal standard deviation of the signal.
 
 * **Parameters:**
   * **x** (*ndarray*) – The input signal.
-  * **\*\*kwargs** (*dict*) – Additional keyword arguments passed to `np.std()`.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments passed to `np.std()`.
 * **Returns:**
   The standard deviation of the signal along the temporal axis.
   Shape is `x.shape[:-1]`.
@@ -338,7 +338,7 @@ Compute the temporal variance of the signal.
 
 * **Parameters:**
   * **x** (*ndarray*) – The input signal.
-  * **\*\*kwargs** (*dict*) – Additional keyword arguments passed to `np.var()`.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments passed to `np.var()`.
 * **Returns:**
   The variance of the signal along the temporal axis.
   Shape is `x.shape[:-1]`.
@@ -356,7 +356,7 @@ enters/leaves a defined noise floor (threshold).
 
 * **Parameters:**
   * **x** (*ndarray*) – The input signal.
-  * **threshold** (*float* *,* *optional*) – A small epsilon value to treat values near zero as exactly zero,
+  * **threshold** ([*float*](https://docs.python.org/3/library/functions.html#float) *,* *optional*) – A small epsilon value to treat values near zero as exactly zero,
     preventing false counts due to floating-point noise.
 * **Returns:**
   The count of zero crossings.

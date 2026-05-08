@@ -17,25 +17,25 @@ This module defines basic utilities for feature extraction.
 | `BivariateIterator`(pairs[, directed])   | Pairs iterator for iterating pairs of channels.   |
 |------------------------------------------|---------------------------------------------------|
 
-### *class* eegdash.features.base_utils.BivariateIterator(pairs: Iterable[Tuple[int, int]] | int, directed=False)
+### *class* eegdash.features.base_utils.BivariateIterator(pairs: [Iterable](https://docs.python.org/3/library/typing.html#typing.Iterable)[[Tuple](https://docs.python.org/3/library/typing.html#typing.Tuple)[[int](https://docs.python.org/3/library/functions.html#int), [int](https://docs.python.org/3/library/functions.html#int)]] | [int](https://docs.python.org/3/library/functions.html#int), directed=False)
 
-Bases: `object`
+Bases: [`object`](https://docs.python.org/3/library/functions.html#object)
 
 Pairs iterator for iterating pairs of channels.
 
 * **Parameters:**
-  * **pairs** (*Iterable* *[**tuple* *[**int* *,* *int* *]* *]*  *|* *int*) – If an iterable of tuples is given, it represents the channel index
+  * **pairs** (*Iterable* *[*[*tuple*](https://docs.python.org/3/library/stdtypes.html#tuple) *[*[*int*](https://docs.python.org/3/library/functions.html#int) *,* [*int*](https://docs.python.org/3/library/functions.html#int) *]* *]*  *|* [*int*](https://docs.python.org/3/library/functions.html#int)) – If an iterable of tuples is given, it represents the channel index
     pairs to iterate
     If an integer `n` is given, iterate through all unique pairs
     out of `n` channels.
-  * **directed** (*bool*) – If an integer was given in `pairs`, this parameter controls whether
+  * **directed** ([*bool*](https://docs.python.org/3/library/functions.html#bool)) – If an integer was given in `pairs`, this parameter controls whether
     all directed pairs should be iterated.
     Otherwise this parameter is ignored.
     Default is False.
 
 <!-- !! processed by numpydoc !! -->
 
-#### get_pair_iterators() → tuple[ndarray, ndarray]
+#### get_pair_iterators() → [tuple](https://docs.python.org/3/library/stdtypes.html#tuple)[[ndarray](https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray), [ndarray](https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray)]
 
 Get indices for pairs of channels.
 
@@ -45,27 +45,27 @@ excluding the diagonal.
 * **Returns:**
   The row and column indices for the unique pairs.
 * **Return type:**
-  tuple of ndarray
+  [tuple](https://docs.python.org/3/library/stdtypes.html#tuple) of ndarray
 
 <!-- !! processed by numpydoc !! -->
 
-### eegdash.features.base_utils.channel_names_to_indices(channels: List[str], ch_names: List[str]) → List[int]
+### eegdash.features.base_utils.channel_names_to_indices(channels: [List](https://docs.python.org/3/library/typing.html#typing.List)[[str](https://docs.python.org/3/library/stdtypes.html#str)], ch_names: [List](https://docs.python.org/3/library/typing.html#typing.List)[[str](https://docs.python.org/3/library/stdtypes.html#str)]) → [List](https://docs.python.org/3/library/typing.html#typing.List)[[int](https://docs.python.org/3/library/functions.html#int)]
 
 Converts a list of channel names to channel indices in another list.
 
 * **Parameters:**
-  * **channels** (*List* *[**str* *]*) – A list of channel names.
-  * **ch_names** (*List* *[**str* *]*) – A list of existing channel names to take indices from.
+  * **channels** (*List* *[*[*str*](https://docs.python.org/3/library/stdtypes.html#str) *]*) – A list of channel names.
+  * **ch_names** (*List* *[*[*str*](https://docs.python.org/3/library/stdtypes.html#str) *]*) – A list of existing channel names to take indices from.
 * **Returns:**
   A list of channel indices.
 * **Return type:**
-  List[int]
+  List[[int](https://docs.python.org/3/library/functions.html#int)]
 * **Raises:**
-  **ValueError** – If the channel name was not found in the existing channels list.
+  [**ValueError**](https://docs.python.org/3/library/exceptions.html#ValueError) – If the channel name was not found in the existing channels list.
 
 <!-- !! processed by numpydoc !! -->
 
-### eegdash.features.base_utils.get_underlying_func(func: Callable) → Callable
+### eegdash.features.base_utils.get_underlying_func(func: [Callable](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)) → [Callable](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)
 
 Retrieve the original Python function from a potential wrapper.
 

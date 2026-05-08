@@ -45,7 +45,7 @@ The module provides the following decorators:
 | `preprocessor_output_type`(output_type)           | Decorator to specify the expected output type of a preprocessor.    |
 | `univariate_feature`(func, \*, kind)              | Apply the `feature_kind()` decorator to a function.                 |
 
-### eegdash.features.decorators.bivariate_feature(func: Callable, \*, kind: MultivariateFeature = <eegdash.features.kinds.BivariateFeature object>) → Callable
+### eegdash.features.decorators.bivariate_feature(func: [Callable](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable), \*, kind: MultivariateFeature = <eegdash.features.kinds.BivariateFeature object>) → [Callable](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)
 
 Decorator to mark a feature as bivariate.
 
@@ -55,7 +55,7 @@ original channel name pairs.
 
 <!-- !! processed by numpydoc !! -->
 
-### eegdash.features.decorators.channel_pairer(directed: bool = False) → Callable
+### eegdash.features.decorators.channel_pairer(directed: [bool](https://docs.python.org/3/library/functions.html#bool) = False) → [Callable](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)
 
 Decorator to set a feature preprocessor as a channel pairer.
 
@@ -65,12 +65,12 @@ containing a `BivariateIterator`
 accordingly before calling the underlying preprocessor.
 
 * **Parameters:**
-  **directed** (*bool*) – Whether the preprocessor assumes *directed* or *undirected* bivariate
+  **directed** ([*bool*](https://docs.python.org/3/library/functions.html#bool)) – Whether the preprocessor assumes *directed* or *undirected* bivariate
   iteration.
 
 <!-- !! processed by numpydoc !! -->
 
-### eegdash.features.decorators.channel_pairer_directed(func: Callable, , directed: bool = True) → Callable
+### eegdash.features.decorators.channel_pairer_directed(func: [Callable](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable), , directed: [bool](https://docs.python.org/3/library/functions.html#bool) = True) → [Callable](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)
 
 Decorator to mark a feature preprocessor as an undirected channel pairer.
 
@@ -79,7 +79,7 @@ channels.
 
 <!-- !! processed by numpydoc !! -->
 
-### eegdash.features.decorators.channel_pairer_undirected(func: Callable, , directed: bool = False) → Callable
+### eegdash.features.decorators.channel_pairer_undirected(func: [Callable](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable), , directed: [bool](https://docs.python.org/3/library/functions.html#bool) = False) → [Callable](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)
 
 Decorator to mark a feature preprocessor as an undirected channel pairer.
 
@@ -88,7 +88,7 @@ channels.
 
 <!-- !! processed by numpydoc !! -->
 
-### eegdash.features.decorators.feature_kind(kind: MultivariateFeature) → Callable
+### eegdash.features.decorators.feature_kind(kind: MultivariateFeature) → [Callable](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)
 
 Decorator to specify the operational dimensionality of a feature.
 
@@ -103,7 +103,7 @@ should map the resulting numerical arrays to channel names.
 
 <!-- !! processed by numpydoc !! -->
 
-### eegdash.features.decorators.feature_predecessor(\*parent_extractor_type: List[Callable | Type]) → Callable
+### eegdash.features.decorators.feature_predecessor(\*parent_extractor_type: [List](https://docs.python.org/3/library/typing.html#typing.List)[[Callable](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable) | [Type](https://docs.python.org/3/library/typing.html#typing.Type)]) → [Callable](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)
 
 Decorator to specify parent extractors for a feature function.
 
@@ -113,7 +113,7 @@ a feature extraction function. This metadata is used by the
 execution tree.
 
 * **Parameters:**
-  **\*parent_extractor_type** (*list* *of* *callable* *or* *type*) – A list of preprocessing functions that this feature immediately
+  **\*parent_extractor_type** ([*list*](https://docs.python.org/3/library/stdtypes.html#list) *of* *callable* *or* [*type*](https://docs.python.org/3/library/functions.html#type)) – A list of preprocessing functions that this feature immediately
   depends on.
   Default is [`SignalOutputType`].
 
@@ -123,7 +123,7 @@ A feature can have multiple potential predecessors.
 
 <!-- !! processed by numpydoc !! -->
 
-### eegdash.features.decorators.metadata_preprocessor(func: Callable) → Callable
+### eegdash.features.decorators.metadata_preprocessor(func: [Callable](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)) → [Callable](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)
 
 Decorator to set a feature preprocessor as a metadata preprocessor.
 
@@ -139,7 +139,7 @@ and return a copy of it as its last output argument.
 
 <!-- !! processed by numpydoc !! -->
 
-### eegdash.features.decorators.multivariate_feature(func: Callable, \*, kind: MultivariateFeature = <eegdash.features.kinds.MultivariateFeature object>) → Callable
+### eegdash.features.decorators.multivariate_feature(func: [Callable](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable), \*, kind: MultivariateFeature = <eegdash.features.kinds.MultivariateFeature object>) → [Callable](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)
 
 Decorator to mark a feature as multivariate.
 
@@ -149,7 +149,7 @@ rather than channel labels.
 
 <!-- !! processed by numpydoc !! -->
 
-### eegdash.features.decorators.preprocessor_output_type(output_type: Type) → Callable
+### eegdash.features.decorators.preprocessor_output_type(output_type: [Type](https://docs.python.org/3/library/typing.html#typing.Type)) → [Callable](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)
 
 Decorator to specify the expected output type of a preprocessor.
 
@@ -157,12 +157,12 @@ Decorator to specify the expected output type of a preprocessor.
   **output_type** (*Type*) – The expected output type for the preprocessor. Must be a
   `BasePreprocessorOutputType`.
 * **Raises:**
-  **ValueError** – If the provided output_type does not inherit from
+  [**ValueError**](https://docs.python.org/3/library/exceptions.html#ValueError) – If the provided output_type does not inherit from
   `BasePreprocessorOutputType`.
 
 <!-- !! processed by numpydoc !! -->
 
-### eegdash.features.decorators.univariate_feature(func: Callable, \*, kind: MultivariateFeature = <eegdash.features.kinds.UnivariateFeature object>) → Callable
+### eegdash.features.decorators.univariate_feature(func: [Callable](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable), \*, kind: MultivariateFeature = <eegdash.features.kinds.UnivariateFeature object>) → [Callable](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)
 
 Decorator to mark a feature as univariate.
 

@@ -18,7 +18,7 @@ The module provides the base class:
 
 ### *class* eegdash.features.trainable.TrainableFeature
 
-Bases: `ABC`
+Bases: [`ABC`](https://docs.python.org/3/library/abc.html#abc.ABC)
 
 Abstract base class for features requiring a training phase.
 
@@ -31,7 +31,7 @@ Internal flag indicating whether the feature has completed
 its training phase.
 
 * **Type:**
-  bool
+  [bool](https://docs.python.org/3/library/functions.html#bool)
 
 <!-- !! processed by numpydoc !! -->
 
@@ -52,7 +52,7 @@ This method allows for incremental learning, making it possible to
 train on datasets that are too large to fit into memory at once.
 
 * **Parameters:**
-  * **\*x** (*tuple* *of* *ndarray*) – The input data batch.
+  * **\*x** ([*tuple*](https://docs.python.org/3/library/stdtypes.html#tuple) *of* *ndarray*) – The input data batch.
   * **y** (*ndarray* *,* *optional*) – Target labels associated with the batch, required for supervised
     feature extraction methods.
 

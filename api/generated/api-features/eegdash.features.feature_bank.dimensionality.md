@@ -36,8 +36,8 @@ highly robust for non-stationary signals.
 
 * **Parameters:**
   * **x** (*ndarray*) – The input signal.
-  * **k_max** (*int* *,* *optional*) – Maximum time interval (delay) used for calculating curve lengths.
-  * **eps** (*float* *,* *optional*) – A small constant to avoid log of zero during regression.
+  * **k_max** ([*int*](https://docs.python.org/3/library/functions.html#int) *,* *optional*) – Maximum time interval (delay) used for calculating curve lengths.
+  * **eps** ([*float*](https://docs.python.org/3/library/functions.html#float) *,* *optional*) – A small constant to avoid log of zero during regression.
 * **Returns:**
   The Higuchi’s Fractal Dimension values.
   Shape is `x.shape[:-1]`.

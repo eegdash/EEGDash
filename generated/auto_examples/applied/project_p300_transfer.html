@@ -1,0 +1,1287 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" data-theme="light">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta property="og:title" content="Cross-cohort P3 transfer with AS-MMD: train on one oddball, deploy on another" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://eegdash.org/generated/auto_examples/applied/project_p300_transfer.html" />
+<meta property="og:site_name" content="EEG Dash" />
+<meta property="og:description" content="Two laboratories run a visual oddball task on different participants, different head-caps, different software stacks. Both pipelines produce EEG epochs…" />
+<meta property="og:image" content="https://eegdash.org/_static/eegdash_social_card.png" />
+<meta property="og:image:alt" content="EEG Dash — data-sharing interface for M/EEG datasets" />
+<meta name="description" content="Two laboratories run a visual oddball task on different participants, different head-caps, different software stacks. Both pipelines produce EEG epochs…" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@eegdash" />
+
+    <title>Cross-cohort P3 transfer with AS-MMD: train on one oddball, deploy on another &#8212; EEG Dash</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "light";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css?v=fd6457a4" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.7953df0a.css?v=314ed3b2" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/treemap.087aecf0.css?v=7131b20f" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.d7808461.css?v=1ba63a31" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../../_static/scripts/fontawesome.js?digest=55c26ed414f5f8a31ebb"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb" />
+
+    <script src="../../../_static/documentation_options.js?v=6dfdf7c3"></script>
+    <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../_static/sg-tags.js?v=d80f6fa4"></script>
+    <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../_static/copybutton.js?v=8c005784"></script>
+    <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'generated/auto_examples/applied/project_p300_transfer';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <script defer="defer" src="../../../_static/js/tag-palette.7346f567.js?v=6f5eac9a"></script>
+    <script defer="defer" src="../../../_static/js/search-as-you-type.e09b639d.js?v=8e93d0f7"></script>
+    <script defer="defer" src="../../../_static/js/lazy-embed.1f1f83d2.js?v=118c4c47"></script>
+    <link rel="canonical" href="https://eegdash.org/generated/auto_examples/applied/project_p300_transfer.html" />
+    <link rel="icon" href="../../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Predict p-factor from EEG with a Braindecode model (deep-learning regime)" href="project_pfactor_deep.html" />
+    <link rel="prev" title="How do I survey a clinical EEG dataset before training a model?" href="project_clinical_dataset_summary.html" />
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.7" />
+
+  
+  <meta name="google-site-verification" content="REPLACE_WITH_GSC_TOKEN">
+  <meta name="msvalidate.01" content="REPLACE_WITH_BING_TOKEN">
+
+  
+  <link rel="preconnect" href="https://cdn.datatables.net" crossorigin>
+  <link rel="preconnect" href="https://code.jquery.com" crossorigin>
+
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    rel="preload"
+    as="style"
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Source+Sans+3:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap"
+    onload="this.onload=null;this.rel='stylesheet'">
+  <noscript>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Source+Sans+3:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap">
+  </noscript>
+
+  
+
+  
+  <link rel="alternate" type="text/markdown" href="/llms.txt" title="EEGDash — LLM-friendly index">
+  <link rel="llms" href="/llms.txt" title="EEGDash — llms.txt index">
+  <link rel="llms-txt" href="/llms.txt">
+  <link rel="llms-full" type="text/markdown" href="/llms-full.txt" title="EEGDash — full markdown corpus">
+  <link rel="alternate" type="application/json" href="/.well-known/agent-skills/index.json" title="EEGDash — Agent Skills">
+  <link rel="alternate" type="application/linkset+json" href="/.well-known/api-catalog" title="EEGDash — API catalog">
+  <meta name="llms-txt" content="/llms.txt">
+  <meta name="llms" content="/llms.txt">
+  <meta name="ai-content-index" content="/llms.txt">
+  <meta name="ai.content_index" content="/llms.txt">
+
+  
+
+  <!-- Google Tag Manager — deferred to DOMContentLoaded so the GTM
+       bootstrap no longer blocks first-paint or the Sphinx search-index
+       load. Functionally equivalent to the inline snippet below but
+       saves ~60 ms of Total Blocking Time per PageSpeed Insights. -->
+  <script>
+    (function(){
+      function loadGTM(){
+        if (window.__gtmLoaded) return;
+        window.__gtmLoaded = true;
+        (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','GTM-MXC3DGL6');
+      }
+      // Defer GTM off the critical path. requestIdleCallback wants an
+      // IdleRequestOptions object as its second argument while
+      // setTimeout wants a plain number — using the same `1` for both
+      // raised a TypeError in Lighthouse's console that dragged the SEO
+      // score down. Branch on availability so each API gets the shape
+      // it expects.
+      function scheduleGTM() {
+        if (typeof window.requestIdleCallback === 'function') {
+          window.requestIdleCallback(loadGTM, { timeout: 2000 });
+        } else {
+          setTimeout(loadGTM, 1);
+        }
+      }
+      if (document.readyState === 'complete' || document.readyState === 'interactive') {
+        scheduleGTM();
+      } else {
+        document.addEventListener('DOMContentLoaded', scheduleGTM);
+      }
+    })();
+  </script>
+  <!-- End Google Tag Manager -->
+
+  </head>
+  <body data-default-mode="light">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+    
+    <img src="../../../_static/eegdash_long.svg" class="logo__image only-light" alt="EEG Dash Logo"/>
+    <img src="../../../_static/eegdash_long.svg" class="logo__image only-dark pst-js-only" alt="EEG Dash Logo"/>
+  
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../dataset_summary.html">
+    Datasets
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../quickstart.html">
+    Quick Start
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../install/install.html">
+    Install
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    Examples
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../concepts/index.html">
+    Concepts
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../api/api.html">
+    Docs
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../references.html">
+    References
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-external" href="https://eeg2025.github.io/">
+    EEG2025
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="External Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/eegdash/EEGDash" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../../../_static/icons/github.svg" class="icon-link-image" alt="GitHub"/></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/eegdash/" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../../../_static/icons/pypi.svg" class="icon-link-image" alt="PyPI"/></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://discord.gg/8jd7nVKwsc" title="Discord" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../../../_static/icons/discord.svg" class="icon-link-image" alt="Discord"/></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../dataset_summary.html">
+    Datasets
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../quickstart.html">
+    Quick Start
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../install/install.html">
+    Install
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    Examples
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../concepts/index.html">
+    Concepts
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../api/api.html">
+    Docs
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../references.html">
+    References
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://eeg2025.github.io/">
+    EEG2025
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="External Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/eegdash/EEGDash" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../../../_static/icons/github.svg" class="icon-link-image" alt="GitHub"/></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/eegdash/" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../../../_static/icons/pypi.svg" class="icon-link-image" alt="PyPI"/></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://discord.gg/8jd7nVKwsc" title="Discord" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../../../_static/icons/discord.svg" class="icon-link-image" alt="Discord"/></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Examples gallery</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">Applied Research Projects</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Cross-cohort P3 transfer with AS-MMD: train on one oddball, deploy on another</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p><a class="reference internal" href="#sphx-glr-download-generated-auto-examples-applied-project-p300-transfer-py"><span class="std std-ref">Go to the end</span></a>
+to download the full example code or to run this example in your browser via Binder.</p>
+</div>
+<section class="sphx-glr-example-title" id="cross-cohort-p3-transfer-with-as-mmd-train-on-one-oddball-deploy-on-another">
+<span id="sphx-glr-generated-auto-examples-applied-project-p300-transfer-py"></span><h1>Cross-cohort P3 transfer with AS-MMD: train on one oddball, deploy on another<a class="headerlink" href="#cross-cohort-p3-transfer-with-as-mmd-train-on-one-oddball-deploy-on-another" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">8 minutes</span></div>
+<p>Two laboratories run a visual oddball task on different participants,
+different head-caps, different software stacks. Both pipelines produce
+EEG epochs locked to a rare <em>target</em> and a frequent <em>standard</em>; both
+target the centro-parietal P3 component (Polich 2007,
+doi:10.1016/j.clinph.2007.04.019). Yet a P3 decoder trained on cohort
+A and evaluated on cohort B systematically loses several accuracy
+points relative to a target-trained ceiling (Cisotto &amp; Chicco 2024,
+Tip 8, doi:10.7717/peerj-cs.2256). This case study wires
+<strong>adversarial-style maximum mean discrepancy</strong> (AS-MMD; Long et al.
+2015, <a class="reference external" href="https://arxiv.org/abs/1502.02791">https://arxiv.org/abs/1502.02791</a>) between source and target,
+trains a small encoder, and asks the same applied question that
+cross-task pretraining (Banville et al. 2021,
+doi:10.1109/TNSRE.2020.3040290; Defossez et al. 2023,
+doi:10.1038/s42256-023-00714-5) and the EEG2025 cross-task transfer
+benchmark (Aristimunha et al. 2025, doi:10.48550/arXiv.2506.19141)
+ask through <code class="docutils literal notranslate"><span class="pre">EEGChallengeDataset</span></code> on the NEMAR archive (Delorme et
+al. 2022, doi:10.1093/database/baac096): by how much does AS-MMD close
+the naive-to-oracle gap, and does the alignment preserve the
+underlying P3 component?</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<section id="learning-objectives">
+<h2>Learning objectives<a class="headerlink" href="#learning-objectives" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>load source + target oddball cohorts as window tensors via env-overridable accessions.</p></li>
+<li><p>train three encoders on shared architecture + budget: naive, AS-MMD aligned, oracle.</p></li>
+<li><p>compare target accuracy for all three on the same figure with chance drawn on the same axes.</p></li>
+<li><p>verify the alignment preserves the P3 component via an ERP overlay at Pz.</p></li>
+</ul>
+</section>
+<section id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>prereqs: plot_12 (baseline) and plot_71 (cross-task transfer).</p></li>
+<li><p>CUDA optional; the CPU-only smoke run finishes in roughly 2 min.</p></li>
+<li><p>Concept page: <a class="reference internal" href="../../../concepts/features_vs_deep_learning.html"><span class="doc">Features vs. deep learning</span></a>.</p></li>
+</ul>
+</section>
+<section id="step-1-setup-seeds-cache-and-device">
+<h2>Step 1. Setup, seeds, cache, and device<a class="headerlink" href="#step-1-setup-seeds-cache-and-device" title="Link to this heading">#</a></h2>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <a href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="pathlib.Path" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">Path</span></a>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <a href="https://docs.python.org/3/library/collections.html#collections.Counter" title="collections.Counter" class="sphx-glr-backref-module-collections sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">Counter</span></a>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">braindecode.models</span><span class="w"> </span><span class="kn">import</span> <a href="https://braindecode.org/stable/generated/braindecode.models.ShallowFBCSPNet.html#braindecode.models.ShallowFBCSPNet" title="braindecode.models.ShallowFBCSPNet" class="sphx-glr-backref-module-braindecode-models sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ShallowFBCSPNet</span></a>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torch</span><span class="w"> </span><span class="kn">import</span> <span class="n">nn</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">_p300_transfer_figure</span><span class="w"> </span><span class="kn">import</span> <span class="n">draw_p300_transfer_figure</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">eegdash.viz</span><span class="w"> </span><span class="kn">import</span> <span class="n">use_eegdash_style</span>
+
+<span class="n">use_eegdash_style</span><span class="p">()</span>
+<a href="https://docs.python.org/3/library/warnings.html#warnings.simplefilter" title="warnings.simplefilter" class="sphx-glr-backref-module-warnings sphx-glr-backref-type-py-function"><span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span></a><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">FutureWarning</span><span class="p">)</span>
+<span class="n">SEED</span> <span class="o">=</span> <span class="mi">42</span>
+<a href="https://numpy.org/doc/stable/reference/random/generated/numpy.random.seed.html#numpy.random.seed" title="numpy.random.seed" class="sphx-glr-backref-module-numpy-random sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span></a><span class="p">(</span><span class="n">SEED</span><span class="p">)</span>
+<a href="https://docs.pytorch.org/docs/stable/generated/torch.manual_seed.html#torch.manual_seed" title="torch.manual_seed" class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function"><span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span></a><span class="p">(</span><span class="n">SEED</span><span class="p">)</span>
+<span class="n">DEVICE</span> <span class="o">=</span> <a href="https://docs.pytorch.org/docs/stable/tensor_attributes.html#torch.device" title="torch.device" class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">torch</span><span class="o">.</span><span class="n">device</span></a><span class="p">(</span><span class="s2">&quot;cuda&quot;</span> <span class="k">if</span> <a href="https://docs.pytorch.org/docs/stable/generated/torch.cuda.is_available.html#torch.cuda.is_available" title="torch.cuda.is_available" class="sphx-glr-backref-module-torch-cuda sphx-glr-backref-type-py-function"><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span></a><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
+<span class="n">cache_dir</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="pathlib.Path" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">Path</span></a><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;EEGDASH_CACHE_DIR&quot;</span><span class="p">,</span> <span class="s2">&quot;./eegdash_cache&quot;</span><span class="p">))</span>
+<span class="n">cache_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;device=</span><span class="si">{</span><span class="n">DEVICE</span><span class="si">}</span><span class="s2">, seed=</span><span class="si">{</span><span class="n">SEED</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="step-2-configure-source-and-target-cohorts">
+<h2>Step 2. Configure source and target cohorts<a class="headerlink" href="#step-2-configure-source-and-target-cohorts" title="Link to this heading">#</a></h2>
+<p>In a full run we would build two <code class="docutils literal notranslate"><span class="pre">EEGDashDataset</span></code> queries and run
+the standard P3 windowing recipe from <code class="docutils literal notranslate"><span class="pre">plot_20</span></code>. To keep the case
+study reproducible without paying a multi-GB download, we synthesise
+source + target tensors with a shared P3-like component and
+dataset-specific noise + drift; the defaults wire <code class="docutils literal notranslate"><span class="pre">ds005863</span></code>
+(visualoddball, NEMAR; Delorme et al. 2022) to a placeholder target
+id, both overridable via environment variables.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">SOURCE_ID</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;EEGDASH_SOURCE_DATASET&quot;</span><span class="p">,</span> <span class="s2">&quot;ds005863&quot;</span><span class="p">)</span>
+<span class="n">TARGET_ID</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;EEGDASH_TARGET_DATASET&quot;</span><span class="p">,</span> <span class="s2">&quot;ds003061&quot;</span><span class="p">)</span>
+<span class="n">N_SUBJECTS_PER_DOMAIN</span> <span class="o">=</span> <span class="mi">6</span>
+<span class="n">N_WINDOWS_PER_SUBJECT</span> <span class="o">=</span> <span class="mi">60</span>
+<span class="n">N_CHANS</span><span class="p">,</span> <span class="n">N_TIMES</span><span class="p">,</span> <span class="n">SFREQ</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">154</span><span class="p">,</span> <span class="mf">128.0</span>
+<span class="n">TARGET_FRACTION</span> <span class="o">=</span> <span class="mf">0.25</span>  <span class="c1"># ~4:1 standard:target imbalance, classic oddball</span>
+<span class="n">CHANNEL_NAMES</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Fz&quot;</span><span class="p">,</span> <span class="s2">&quot;Cz&quot;</span><span class="p">,</span> <span class="s2">&quot;Pz&quot;</span><span class="p">,</span> <span class="s2">&quot;P3&quot;</span><span class="p">,</span> <span class="s2">&quot;P4&quot;</span><span class="p">]</span>
+<span class="n">PZ_INDEX</span> <span class="o">=</span> <span class="n">CHANNEL_NAMES</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s2">&quot;Pz&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="step-3-synthesise-oddball-windows-with-a-shared-p3-domain-shift">
+<h2>Step 3. Synthesise oddball windows with a shared P3 + domain shift<a class="headerlink" href="#step-3-synthesise-oddball-windows-with-a-shared-p3-domain-shift" title="Link to this heading">#</a></h2>
+<p>Each window is a 1.2 s epoch at 128 Hz. <em>Target</em> class carries a
+centro-parietal positive bump at 380 ms; <em>standard</em> class does not.
+Domains differ in three ways: target-side noise floor is higher,
+target carries low-frequency drift, target Pz amplitude is
+attenuated 35 % relative to source. The three knobs together produce
+a non-trivial AS-MMD problem that mirrors cross-equipment EEG
+transfer symptoms (Cisotto &amp; Chicco 2024, Tip 8).</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">_p3_template</span><span class="p">(</span><span class="n">times_s</span><span class="p">:</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span></a><span class="p">,</span> <span class="n">peak_uv</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">3.0</span><span class="p">)</span> <span class="o">-&gt;</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span></a><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;One-channel P3-like Gaussian bump at ~380 ms.&quot;&quot;&quot;</span>
+    <span class="n">centre</span><span class="p">,</span> <span class="n">width</span> <span class="o">=</span> <span class="mf">0.380</span><span class="p">,</span> <span class="mf">0.080</span>
+    <span class="k">return</span> <span class="n">peak_uv</span> <span class="o">*</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.exp.html#numpy.exp" title="numpy.exp" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-data"><span class="n">np</span><span class="o">.</span><span class="n">exp</span></a><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span> <span class="o">*</span> <span class="p">((</span><span class="n">times_s</span> <span class="o">-</span> <span class="n">centre</span><span class="p">)</span> <span class="o">/</span> <span class="n">width</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+
+
+<span class="n">DOMAIN_PROFILES</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;noise&quot;</span><span class="p">:</span> <span class="mf">1.4</span><span class="p">,</span> <span class="s2">&quot;drift&quot;</span><span class="p">:</span> <span class="mf">0.20</span><span class="p">,</span> <span class="s2">&quot;pz_scale&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">},</span>
+    <span class="s2">&quot;target&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;noise&quot;</span><span class="p">:</span> <span class="mf">2.6</span><span class="p">,</span> <span class="s2">&quot;drift&quot;</span><span class="p">:</span> <span class="mf">0.60</span><span class="p">,</span> <span class="s2">&quot;pz_scale&quot;</span><span class="p">:</span> <span class="mf">0.65</span><span class="p">},</span>
+<span class="p">}</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">make_oddball_windows</span><span class="p">(</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">domain</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">n_subjects</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">n_per_subject</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">target_fraction</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">rng</span><span class="p">:</span> <a href="https://numpy.org/doc/stable/reference/random/generator.html#numpy.random.Generator" title="numpy.random.Generator" class="sphx-glr-backref-module-numpy-random sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">Generator</span></a><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span></a><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Synthesise ``(X, y, subject_ids)`` for one domain.</span>
+
+<span class="sd">    The shared P3 template lives at index ``PZ_INDEX`` with a domain-</span>
+<span class="sd">    specific scaling so source and target carry the same physiological</span>
+<span class="sd">    component but different amplitudes; that is the regime where MMD</span>
+<span class="sd">    alignment can help.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">DOMAIN_PROFILES</span><span class="p">[</span><span class="n">domain</span><span class="p">]</span>
+    <span class="n">times_s</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.arange.html#numpy.arange" title="numpy.arange" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">arange</span></a><span class="p">(</span><span class="n">N_TIMES</span><span class="p">)</span> <span class="o">/</span> <span class="n">SFREQ</span> <span class="o">-</span> <span class="mf">0.1</span>  <span class="c1"># epoch -100..1100 ms</span>
+    <span class="n">p3</span> <span class="o">=</span> <span class="n">_p3_template</span><span class="p">(</span><span class="n">times_s</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.float32" title="numpy.float32" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-attribute"><span class="n">np</span><span class="o">.</span><span class="n">float32</span></a><span class="p">)</span>
+    <span class="n">drift_axis</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.linspace.html#numpy.linspace" title="numpy.linspace" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">linspace</span></a><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">N_TIMES</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><a href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.float32" title="numpy.float32" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-attribute"><span class="n">np</span><span class="o">.</span><span class="n">float32</span></a><span class="p">)</span>
+    <span class="n">X_list</span><span class="p">,</span> <span class="n">y_list</span><span class="p">,</span> <span class="n">subj_list</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">subj</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_subjects</span><span class="p">):</span>
+        <span class="n">n_t</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">n_per_subject</span> <span class="o">*</span> <span class="n">target_fraction</span><span class="p">)))</span>
+        <span class="n">labels</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.concatenate.html#numpy.concatenate" title="numpy.concatenate" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">concatenate</span></a><span class="p">([</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.zeros.html#numpy.zeros" title="numpy.zeros" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">zeros</span></a><span class="p">(</span><span class="n">n_per_subject</span> <span class="o">-</span> <span class="n">n_t</span><span class="p">),</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ones.html#numpy.ones" title="numpy.ones" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">ones</span></a><span class="p">(</span><span class="n">n_t</span><span class="p">)])</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span>
+            <span class="nb">int</span>
+        <span class="p">)</span>
+        <span class="n">rng</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">labels</span><span class="p">:</span>
+            <span class="n">w</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">((</span><span class="n">N_CHANS</span><span class="p">,</span> <span class="n">N_TIMES</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.float32" title="numpy.float32" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-attribute"><span class="n">np</span><span class="o">.</span><span class="n">float32</span></a><span class="p">)</span> <span class="o">*</span> <span class="n">p</span><span class="p">[</span><span class="s2">&quot;noise&quot;</span><span class="p">]</span>
+            <span class="n">w</span> <span class="o">+=</span> <span class="p">(</span><span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.float32" title="numpy.float32" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-attribute"><span class="n">np</span><span class="o">.</span><span class="n">float32</span></a><span class="p">)</span> <span class="o">*</span> <span class="n">p</span><span class="p">[</span><span class="s2">&quot;drift&quot;</span><span class="p">])</span> <span class="o">*</span> <span class="n">drift_axis</span>
+            <span class="k">if</span> <span class="n">label</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="c1"># P3 at Pz with channel spread 0.5x at Cz, P3, P4.</span>
+                <span class="n">w</span><span class="p">[</span><span class="n">PZ_INDEX</span><span class="p">]</span> <span class="o">+=</span> <span class="n">p</span><span class="p">[</span><span class="s2">&quot;pz_scale&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">p3</span>
+                <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">):</span>
+                    <span class="n">w</span><span class="p">[</span><span class="n">ch</span><span class="p">]</span> <span class="o">+=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">p</span><span class="p">[</span><span class="s2">&quot;pz_scale&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">p3</span>
+            <span class="n">X_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+            <span class="n">y_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">label</span><span class="p">)</span>
+            <span class="n">subj_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">domain</span><span class="si">}</span><span class="s2">-sub-</span><span class="si">{</span><span class="n">subj</span><span class="si">:</span><span class="s2">02d</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.stack.html#numpy.stack" title="numpy.stack" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">stack</span></a><span class="p">(</span><span class="n">X_list</span><span class="p">),</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.asarray.html#numpy.asarray" title="numpy.asarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">asarray</span></a><span class="p">(</span><span class="n">y_list</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><a href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.int64" title="numpy.int64" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-attribute"><span class="n">np</span><span class="o">.</span><span class="n">int64</span></a><span class="p">),</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.asarray.html#numpy.asarray" title="numpy.asarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">asarray</span></a><span class="p">(</span><span class="n">subj_list</span><span class="p">)</span>
+
+
+<span class="n">_kw</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+    <span class="n">n_subjects</span><span class="o">=</span><span class="n">N_SUBJECTS_PER_DOMAIN</span><span class="p">,</span>
+    <span class="n">n_per_subject</span><span class="o">=</span><span class="n">N_WINDOWS_PER_SUBJECT</span><span class="p">,</span>
+    <span class="n">target_fraction</span><span class="o">=</span><span class="n">TARGET_FRACTION</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">X_src</span><span class="p">,</span> <span class="n">y_src</span><span class="p">,</span> <span class="n">subj_src</span> <span class="o">=</span> <span class="n">make_oddball_windows</span><span class="p">(</span>
+    <span class="n">domain</span><span class="o">=</span><span class="s2">&quot;source&quot;</span><span class="p">,</span> <span class="n">rng</span><span class="o">=</span><a href="https://numpy.org/doc/stable/reference/random/generator.html#numpy.random.default_rng" title="numpy.random.default_rng" class="sphx-glr-backref-module-numpy-random sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span></a><span class="p">(</span><span class="n">SEED</span><span class="p">),</span> <span class="o">**</span><span class="n">_kw</span>
+<span class="p">)</span>
+<span class="n">X_tgt</span><span class="p">,</span> <span class="n">y_tgt</span><span class="p">,</span> <span class="n">subj_tgt</span> <span class="o">=</span> <span class="n">make_oddball_windows</span><span class="p">(</span>
+    <span class="n">domain</span><span class="o">=</span><span class="s2">&quot;target&quot;</span><span class="p">,</span> <span class="n">rng</span><span class="o">=</span><a href="https://numpy.org/doc/stable/reference/random/generator.html#numpy.random.default_rng" title="numpy.random.default_rng" class="sphx-glr-backref-module-numpy-random sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span></a><span class="p">(</span><span class="n">SEED</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="o">**</span><span class="n">_kw</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;source: X=</span><span class="si">{</span><span class="n">X_src</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">, n_target=</span><span class="si">{</span><span class="nb">int</span><span class="p">((</span><span class="n">y_src</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span><span class="si">}</span><span class="s2">, &quot;</span>
+    <span class="sa">f</span><span class="s2">&quot;n_standard=</span><span class="si">{</span><span class="nb">int</span><span class="p">((</span><span class="n">y_src</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;target: X=</span><span class="si">{</span><span class="n">X_tgt</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">, n_target=</span><span class="si">{</span><span class="nb">int</span><span class="p">((</span><span class="n">y_tgt</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span><span class="si">}</span><span class="s2">, &quot;</span>
+    <span class="sa">f</span><span class="s2">&quot;n_standard=</span><span class="si">{</span><span class="nb">int</span><span class="p">((</span><span class="n">y_tgt</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="step-4-predict">
+<h2>Step 4. Predict<a class="headerlink" href="#step-4-predict" title="Link to this heading">#</a></h2>
+<p><strong>Predict.</strong> Pen-and-paper guess before running anything. With a
+binary 1:3 imbalance the majority-class chance is 0.75 in plain
+accuracy; on the <em>target</em> domain a cross-domain encoder typically
+falls 5-10 points below the oracle. By how much do you expect AS-MMD
+alignment to close that gap, in absolute accuracy on target?</p>
+</section>
+<section id="step-5-subject-aware-split-for-both-cohorts">
+<h2>Step 5. Subject-aware split for both cohorts<a class="headerlink" href="#step-5-subject-aware-split-for-both-cohorts" title="Link to this heading">#</a></h2>
+<p>Every model is evaluated on held-out subjects (Cisotto &amp; Chicco
+2024, Tip 9). The same subject is never split across train and test,
+so the leakage failure mode that plagues many published EEG decoders
+is structurally avoided.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">TEST_FRACTION</span> <span class="o">=</span> <span class="mf">0.5</span>  <span class="c1"># held-out target subjects for evaluation</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">subject_split</span><span class="p">(</span>
+    <span class="n">subjects</span><span class="p">:</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span></a><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test_fraction</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">rng</span><span class="p">:</span> <a href="https://numpy.org/doc/stable/reference/random/generator.html#numpy.random.Generator" title="numpy.random.Generator" class="sphx-glr-backref-module-numpy-random sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">Generator</span></a>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span></a><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Disjoint subject masks for train and test.&quot;&quot;&quot;</span>
+    <span class="n">unique</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.array.html#numpy.array" title="numpy.array" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">array</span></a><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">subjects</span><span class="o">.</span><span class="n">tolist</span><span class="p">())))</span>
+    <span class="n">rng</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">unique</span><span class="p">)</span>
+    <span class="n">n_test</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">unique</span><span class="p">)</span> <span class="o">*</span> <span class="n">test_fraction</span><span class="p">)))</span>
+    <span class="n">test_subjects</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">unique</span><span class="p">[:</span><span class="n">n_test</span><span class="p">])</span>
+    <span class="n">train_mask</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.asarray.html#numpy.asarray" title="numpy.asarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">asarray</span></a><span class="p">([</span><span class="n">s</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">test_subjects</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">subjects</span><span class="p">])</span>
+    <span class="n">test_mask</span> <span class="o">=</span> <span class="o">~</span><span class="n">train_mask</span>
+    <span class="k">return</span> <span class="n">train_mask</span><span class="p">,</span> <span class="n">test_mask</span>
+
+
+<span class="n">rng_split</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/random/generator.html#numpy.random.default_rng" title="numpy.random.default_rng" class="sphx-glr-backref-module-numpy-random sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span></a><span class="p">(</span><span class="n">SEED</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">src_train</span><span class="p">,</span> <span class="n">src_test</span> <span class="o">=</span> <span class="n">subject_split</span><span class="p">(</span>
+    <span class="n">subj_src</span><span class="p">,</span> <span class="n">test_fraction</span><span class="o">=</span><span class="n">TEST_FRACTION</span><span class="p">,</span> <span class="n">rng</span><span class="o">=</span><span class="n">rng_split</span>
+<span class="p">)</span>
+<span class="n">tgt_train</span><span class="p">,</span> <span class="n">tgt_test</span> <span class="o">=</span> <span class="n">subject_split</span><span class="p">(</span>
+    <span class="n">subj_tgt</span><span class="p">,</span> <span class="n">test_fraction</span><span class="o">=</span><span class="n">TEST_FRACTION</span><span class="p">,</span> <span class="n">rng</span><span class="o">=</span><span class="n">rng_split</span>
+<span class="p">)</span>
+<span class="k">assert</span> <span class="ow">not</span> <span class="nb">set</span><span class="p">(</span><span class="n">subj_src</span><span class="p">[</span><span class="n">src_train</span><span class="p">])</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">subj_src</span><span class="p">[</span><span class="n">src_test</span><span class="p">]),</span> <span class="s2">&quot;source leak&quot;</span>
+<span class="k">assert</span> <span class="ow">not</span> <span class="nb">set</span><span class="p">(</span><span class="n">subj_tgt</span><span class="p">[</span><span class="n">tgt_train</span><span class="p">])</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">subj_tgt</span><span class="p">[</span><span class="n">tgt_test</span><span class="p">]),</span> <span class="s2">&quot;target leak&quot;</span>
+<span class="n">n_src_tr</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">subj_src</span><span class="p">[</span><span class="n">src_train</span><span class="p">]))</span>
+<span class="n">n_src_te</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">subj_src</span><span class="p">[</span><span class="n">src_test</span><span class="p">]))</span>
+<span class="n">n_tgt_tr</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">subj_tgt</span><span class="p">[</span><span class="n">tgt_train</span><span class="p">]))</span>
+<span class="n">n_tgt_te</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">subj_tgt</span><span class="p">[</span><span class="n">tgt_test</span><span class="p">]))</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;source: n_train_subj=</span><span class="si">{</span><span class="n">n_src_tr</span><span class="si">}</span><span class="s2">, n_test_subj=</span><span class="si">{</span><span class="n">n_src_te</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;target: n_train_subj=</span><span class="si">{</span><span class="n">n_tgt_tr</span><span class="si">}</span><span class="s2">, n_test_subj=</span><span class="si">{</span><span class="n">n_tgt_te</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="step-6-encoder-mmd-primitive-and-training-loop">
+<h2>Step 6. Encoder, MMD primitive, and training loop<a class="headerlink" href="#step-6-encoder-mmd-primitive-and-training-loop" title="Link to this heading">#</a></h2>
+<p><strong>Run.</strong> <code class="docutils literal notranslate"><span class="pre">ShallowFBCSPNet</span></code> (Schirrmeister et al. 2017,
+doi:10.1002/hbm.23730) is the same small temporal-then-spatial CNN
+used in plot_71. The MMD term is an RBF-kernel distribution-distance
+estimator on penultimate-layer activations (Long et al. 2015,
+https://arxiv.org/abs/1502.02791); the <em>adversarial-style</em> twist
+gates the MMD weight by an inverse-temperature schedule so the
+encoder cannot trivially collapse all features to one point early.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">N_EPOCHS</span> <span class="o">=</span> <span class="mi">8</span>
+<span class="n">BATCH</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="n">LR</span> <span class="o">=</span> <span class="mf">1e-3</span>
+<span class="n">MMD_LAMBDA_MAX</span> <span class="o">=</span> <span class="mf">0.4</span>  <span class="c1"># cap on AS-MMD weight after warmup</span>
+<span class="n">WARMUP_FRACTION</span> <span class="o">=</span> <span class="mf">0.5</span>  <span class="c1"># fraction of epochs spent ramping MMD weight in</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">make_model</span><span class="p">()</span> <span class="o">-&gt;</span> <a href="https://docs.pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module" title="torch.nn.Module" class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">nn</span><span class="o">.</span><span class="n">Module</span></a><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a fresh ShallowFBCSPNet sized for the windows above.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <a href="https://braindecode.org/stable/generated/braindecode.models.ShallowFBCSPNet.html#braindecode.models.ShallowFBCSPNet" title="braindecode.models.ShallowFBCSPNet" class="sphx-glr-backref-module-braindecode-models sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ShallowFBCSPNet</span></a><span class="p">(</span>
+        <span class="n">n_chans</span><span class="o">=</span><span class="n">N_CHANS</span><span class="p">,</span> <span class="n">n_outputs</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">n_times</span><span class="o">=</span><span class="n">N_TIMES</span><span class="p">,</span> <span class="n">sfreq</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">SFREQ</span><span class="p">)</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">rbf_mmd2</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <a href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="torch.Tensor" class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span></a><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <a href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="torch.Tensor" class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span></a><span class="p">,</span> <span class="n">eps</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-8</span><span class="p">)</span> <span class="o">-&gt;</span> <a href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="torch.Tensor" class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span></a><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Squared RBF-kernel MMD with median-heuristic bandwidth.&quot;&quot;&quot;</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">dim</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">2</span> <span class="k">else</span> <span class="n">x</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="n">y</span><span class="o">.</span><span class="n">dim</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">2</span> <span class="k">else</span> <span class="n">y</span>
+    <span class="n">m</span><span class="p">,</span> <span class="n">n</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">y</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">m</span> <span class="o">&lt;=</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">n</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <a href="https://docs.pytorch.org/docs/stable/generated/torch.zeros.html#torch.zeros" title="torch.zeros" class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function"><span class="n">torch</span><span class="o">.</span><span class="n">zeros</span></a><span class="p">((),</span> <span class="n">device</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+    <span class="n">sigma</span> <span class="o">=</span> <a href="https://docs.pytorch.org/docs/stable/generated/torch.clamp.html#torch.clamp" title="torch.clamp" class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function"><span class="n">torch</span><span class="o">.</span><span class="n">clamp</span></a><span class="p">(</span>
+        <a href="https://docs.pytorch.org/docs/stable/generated/torch.median.html#torch.median" title="torch.median" class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function"><span class="n">torch</span><span class="o">.</span><span class="n">median</span></a><span class="p">(</span><a href="https://docs.pytorch.org/docs/stable/generated/torch.cdist.html#torch.cdist" title="torch.cdist" class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function"><span class="n">torch</span><span class="o">.</span><span class="n">cdist</span></a><span class="p">(</span><a href="https://docs.pytorch.org/docs/stable/generated/torch.cat.html#torch.cat" title="torch.cat" class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function"><span class="n">torch</span><span class="o">.</span><span class="n">cat</span></a><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">]),</span> <a href="https://docs.pytorch.org/docs/stable/generated/torch.cat.html#torch.cat" title="torch.cat" class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function"><span class="n">torch</span><span class="o">.</span><span class="n">cat</span></a><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">]))),</span> <span class="nb">min</span><span class="o">=</span><span class="n">eps</span>
+    <span class="p">)</span>
+    <span class="n">gamma</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">sigma</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">eps</span><span class="p">)</span>
+    <span class="n">k_xx</span> <span class="o">=</span> <a href="https://docs.pytorch.org/docs/stable/generated/torch.exp.html#torch.exp" title="torch.exp" class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function"><span class="n">torch</span><span class="o">.</span><span class="n">exp</span></a><span class="p">(</span><span class="o">-</span><span class="n">gamma</span> <span class="o">*</span> <a href="https://docs.pytorch.org/docs/stable/generated/torch.cdist.html#torch.cdist" title="torch.cdist" class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function"><span class="n">torch</span><span class="o">.</span><span class="n">cdist</span></a><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">k_yy</span> <span class="o">=</span> <a href="https://docs.pytorch.org/docs/stable/generated/torch.exp.html#torch.exp" title="torch.exp" class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function"><span class="n">torch</span><span class="o">.</span><span class="n">exp</span></a><span class="p">(</span><span class="o">-</span><span class="n">gamma</span> <span class="o">*</span> <a href="https://docs.pytorch.org/docs/stable/generated/torch.cdist.html#torch.cdist" title="torch.cdist" class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function"><span class="n">torch</span><span class="o">.</span><span class="n">cdist</span></a><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">k_xy</span> <span class="o">=</span> <a href="https://docs.pytorch.org/docs/stable/generated/torch.exp.html#torch.exp" title="torch.exp" class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function"><span class="n">torch</span><span class="o">.</span><span class="n">exp</span></a><span class="p">(</span><span class="o">-</span><span class="n">gamma</span> <span class="o">*</span> <a href="https://docs.pytorch.org/docs/stable/generated/torch.cdist.html#torch.cdist" title="torch.cdist" class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function"><span class="n">torch</span><span class="o">.</span><span class="n">cdist</span></a><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="p">(</span><span class="n">k_xx</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">-</span> <a href="https://docs.pytorch.org/docs/stable/generated/torch.trace.html#torch.trace" title="torch.trace" class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function"><span class="n">torch</span><span class="o">.</span><span class="n">trace</span></a><span class="p">(</span><span class="n">k_xx</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="n">m</span> <span class="o">*</span> <span class="p">(</span><span class="n">m</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">eps</span><span class="p">)</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">out</span> <span class="o">+</span> <span class="p">(</span><span class="n">k_yy</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">-</span> <a href="https://docs.pytorch.org/docs/stable/generated/torch.trace.html#torch.trace" title="torch.trace" class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function"><span class="n">torch</span><span class="o">.</span><span class="n">trace</span></a><span class="p">(</span><span class="n">k_yy</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="n">n</span> <span class="o">*</span> <span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">eps</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">out</span> <span class="o">-</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">k_xy</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">train_encoder</span><span class="p">(</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">X_source</span><span class="p">:</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span></a><span class="p">,</span>
+    <span class="n">y_source</span><span class="p">:</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span></a><span class="p">,</span>
+    <span class="n">X_target</span><span class="p">:</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span></a> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">n_epochs</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">use_mmd</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+    <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">SEED</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <a href="https://docs.pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module" title="torch.nn.Module" class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">nn</span><span class="o">.</span><span class="n">Module</span></a><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Train one encoder; ``use_mmd`` toggles AS-MMD alignment.</span>
+
+<span class="sd">    Without ``use_mmd`` the loss is plain cross-entropy on source.</span>
+<span class="sd">    With ``use_mmd`` an MMD term on logit-space activations is added,</span>
+<span class="sd">    weighted by a warmup-then-cap schedule.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <a href="https://docs.pytorch.org/docs/stable/generated/torch.manual_seed.html#torch.manual_seed" title="torch.manual_seed" class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function"><span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span></a><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+    <a href="https://numpy.org/doc/stable/reference/random/generated/numpy.random.seed.html#numpy.random.seed" title="numpy.random.seed" class="sphx-glr-backref-module-numpy-random sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span></a><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">make_model</span><span class="p">()</span>
+    <span class="n">opt</span> <span class="o">=</span> <a href="https://docs.pytorch.org/docs/stable/generated/torch.optim.AdamW.html#torch.optim.AdamW" title="torch.optim.AdamW" class="sphx-glr-backref-module-torch-optim sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">AdamW</span></a><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="n">LR</span><span class="p">,</span> <span class="n">weight_decay</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">)</span>
+    <span class="n">crit</span> <span class="o">=</span> <a href="https://docs.pytorch.org/docs/stable/generated/torch.nn.CrossEntropyLoss.html#torch.nn.CrossEntropyLoss" title="torch.nn.CrossEntropyLoss" class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">nn</span><span class="o">.</span><span class="n">CrossEntropyLoss</span></a><span class="p">()</span>
+    <span class="n">Xs</span> <span class="o">=</span> <a href="https://docs.pytorch.org/docs/stable/generated/torch.as_tensor.html#torch.as_tensor" title="torch.as_tensor" class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function"><span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span></a><span class="p">(</span><span class="n">X_source</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">DEVICE</span><span class="p">)</span>
+    <span class="n">ys</span> <span class="o">=</span> <a href="https://docs.pytorch.org/docs/stable/generated/torch.as_tensor.html#torch.as_tensor" title="torch.as_tensor" class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function"><span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span></a><span class="p">(</span><span class="n">y_source</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">long</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">DEVICE</span><span class="p">)</span>
+    <span class="n">Xt</span> <span class="o">=</span> <span class="p">(</span>
+        <a href="https://docs.pytorch.org/docs/stable/generated/torch.as_tensor.html#torch.as_tensor" title="torch.as_tensor" class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function"><span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span></a><span class="p">(</span><span class="n">X_target</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">DEVICE</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">X_target</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="k">else</span> <span class="kc">None</span>
+    <span class="p">)</span>
+    <span class="n">warmup</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">n_epochs</span> <span class="o">*</span> <span class="n">WARMUP_FRACTION</span><span class="p">)))</span>
+    <span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_epochs</span><span class="p">):</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
+        <span class="n">idx</span> <span class="o">=</span> <a href="https://docs.pytorch.org/docs/stable/generated/torch.randperm.html#torch.randperm" title="torch.randperm" class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function"><span class="n">torch</span><span class="o">.</span><span class="n">randperm</span></a><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">Xs</span><span class="p">),</span> <span class="n">device</span><span class="o">=</span><span class="n">DEVICE</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">start</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">Xs</span><span class="p">),</span> <span class="n">BATCH</span><span class="p">):</span>
+            <span class="n">sel</span> <span class="o">=</span> <span class="n">idx</span><span class="p">[</span><span class="n">start</span> <span class="p">:</span> <span class="n">start</span> <span class="o">+</span> <span class="n">BATCH</span><span class="p">]</span>
+            <span class="n">opt</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">(</span><span class="n">set_to_none</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">logits_s</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">Xs</span><span class="p">[</span><span class="n">sel</span><span class="p">])</span>
+            <span class="n">loss</span> <span class="o">=</span> <span class="n">crit</span><span class="p">(</span><span class="n">logits_s</span><span class="p">,</span> <span class="n">ys</span><span class="p">[</span><span class="n">sel</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">use_mmd</span> <span class="ow">and</span> <span class="n">Xt</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">Xt</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">tgt_sel</span> <span class="o">=</span> <a href="https://docs.pytorch.org/docs/stable/generated/torch.randint.html#torch.randint" title="torch.randint" class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function"><span class="n">torch</span><span class="o">.</span><span class="n">randint</span></a><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">Xt</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="n">sel</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),),</span> <span class="n">device</span><span class="o">=</span><span class="n">DEVICE</span><span class="p">)</span>
+                <span class="n">logits_t</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">Xt</span><span class="p">[</span><span class="n">tgt_sel</span><span class="p">])</span>
+                <span class="n">lam</span> <span class="o">=</span> <span class="n">MMD_LAMBDA_MAX</span> <span class="o">*</span> <span class="nb">min</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="p">(</span><span class="n">epoch</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">warmup</span><span class="p">)</span>
+                <span class="n">loss</span> <span class="o">=</span> <span class="n">loss</span> <span class="o">+</span> <span class="n">lam</span> <span class="o">*</span> <span class="n">rbf_mmd2</span><span class="p">(</span><span class="n">logits_s</span><span class="p">,</span> <span class="n">logits_t</span><span class="p">)</span>
+            <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+            <a href="https://docs.pytorch.org/docs/stable/generated/torch.nn.utils.clip_grad_norm_.html#torch.nn.utils.clip_grad_norm_" title="torch.nn.utils.clip_grad_norm_" class="sphx-glr-backref-module-torch-nn-utils sphx-glr-backref-type-py-function"><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">clip_grad_norm_</span></a><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">max_norm</span><span class="o">=</span><span class="mf">5.0</span><span class="p">)</span>
+            <span class="n">opt</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">model</span>
+
+
+<span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">eval_acc</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <a href="https://docs.pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module" title="torch.nn.Module" class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">nn</span><span class="o">.</span><span class="n">Module</span></a><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span></a><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span></a><span class="p">,</span> <span class="n">mask</span><span class="p">:</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Plain accuracy on the masked portion of (X, y).&quot;&quot;&quot;</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+    <span class="n">Xt</span> <span class="o">=</span> <a href="https://docs.pytorch.org/docs/stable/generated/torch.as_tensor.html#torch.as_tensor" title="torch.as_tensor" class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function"><span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span></a><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">DEVICE</span><span class="p">)</span>
+    <span class="n">yt</span> <span class="o">=</span> <a href="https://docs.pytorch.org/docs/stable/generated/torch.as_tensor.html#torch.as_tensor" title="torch.as_tensor" class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function"><span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span></a><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">long</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">DEVICE</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">float</span><span class="p">((</span><span class="n">model</span><span class="p">(</span><span class="n">Xt</span><span class="p">)</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="n">yt</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+
+
+<span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">encoder_features</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <a href="https://docs.pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module" title="torch.nn.Module" class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">nn</span><span class="o">.</span><span class="n">Module</span></a><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span></a><span class="p">,</span> <span class="n">mask</span><span class="p">:</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span></a><span class="p">)</span> <span class="o">-&gt;</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span></a><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Penultimate-layer activations via a forward hook on ``drop``.</span>
+
+<span class="sd">    Same hook pattern as plot_71: the shallow CNN exposes its temporal</span>
+<span class="sd">    + spatial + pool stack right before ``final_layer`` and a hook on</span>
+<span class="sd">    ``drop`` captures ``(B, F, T&#39;, 1)`` tensors that flatten into</span>
+<span class="sd">    per-window feature vectors for the PCA panel.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">bag</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">hook</span><span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">__</span><span class="p">,</span> <span class="n">output</span><span class="p">):</span>
+        <span class="n">bag</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">output</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">())</span>
+
+    <span class="n">handle</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">drop</span><span class="o">.</span><span class="n">register_forward_hook</span><span class="p">(</span><span class="n">hook</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+        <span class="n">Xt</span> <span class="o">=</span> <a href="https://docs.pytorch.org/docs/stable/generated/torch.as_tensor.html#torch.as_tensor" title="torch.as_tensor" class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function"><span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span></a><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">DEVICE</span><span class="p">)</span>
+        <span class="n">_</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">Xt</span><span class="p">)</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="n">handle</span><span class="o">.</span><span class="n">remove</span><span class="p">()</span>
+    <span class="n">feats</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.concatenate.html#numpy.concatenate" title="numpy.concatenate" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">concatenate</span></a><span class="p">(</span><span class="n">bag</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">feats</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">feats</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="step-7-train-the-three-encoders-and-read-out-target-accuracy">
+<h2>Step 7. Train the three encoders and read out target accuracy<a class="headerlink" href="#step-7-train-the-three-encoders-and-read-out-target-accuracy" title="Link to this heading">#</a></h2>
+<p>Same architecture, same epoch budget, same optimiser everywhere. The
+only differences are the training data and the AS-MMD switch:
+<em>naive</em> trains on labelled source only, <em>AS-MMD</em> adds the unlabelled
+target via the MMD term, <em>oracle</em> trains on labelled target only.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">encoder_naive</span> <span class="o">=</span> <span class="n">train_encoder</span><span class="p">(</span>
+    <span class="n">X_source</span><span class="o">=</span><span class="n">X_src</span><span class="p">[</span><span class="n">src_train</span><span class="p">],</span>
+    <span class="n">y_source</span><span class="o">=</span><span class="n">y_src</span><span class="p">[</span><span class="n">src_train</span><span class="p">],</span>
+    <span class="n">X_target</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">n_epochs</span><span class="o">=</span><span class="n">N_EPOCHS</span><span class="p">,</span>
+    <span class="n">use_mmd</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">encoder_mmd</span> <span class="o">=</span> <span class="n">train_encoder</span><span class="p">(</span>
+    <span class="n">X_source</span><span class="o">=</span><span class="n">X_src</span><span class="p">[</span><span class="n">src_train</span><span class="p">],</span>
+    <span class="n">y_source</span><span class="o">=</span><span class="n">y_src</span><span class="p">[</span><span class="n">src_train</span><span class="p">],</span>
+    <span class="n">X_target</span><span class="o">=</span><span class="n">X_tgt</span><span class="p">[</span><span class="n">tgt_train</span><span class="p">],</span>
+    <span class="n">n_epochs</span><span class="o">=</span><span class="n">N_EPOCHS</span><span class="p">,</span>
+    <span class="n">use_mmd</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">encoder_oracle</span> <span class="o">=</span> <span class="n">train_encoder</span><span class="p">(</span>
+    <span class="n">X_source</span><span class="o">=</span><span class="n">X_tgt</span><span class="p">[</span><span class="n">tgt_train</span><span class="p">],</span>
+    <span class="n">y_source</span><span class="o">=</span><span class="n">y_tgt</span><span class="p">[</span><span class="n">tgt_train</span><span class="p">],</span>
+    <span class="n">X_target</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">n_epochs</span><span class="o">=</span><span class="n">N_EPOCHS</span><span class="p">,</span>
+    <span class="n">use_mmd</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">acc_naive</span> <span class="o">=</span> <span class="n">eval_acc</span><span class="p">(</span><span class="n">encoder_naive</span><span class="p">,</span> <span class="n">X_tgt</span><span class="p">,</span> <span class="n">y_tgt</span><span class="p">,</span> <span class="n">tgt_test</span><span class="p">)</span>
+<span class="n">acc_mmd</span> <span class="o">=</span> <span class="n">eval_acc</span><span class="p">(</span><span class="n">encoder_mmd</span><span class="p">,</span> <span class="n">X_tgt</span><span class="p">,</span> <span class="n">y_tgt</span><span class="p">,</span> <span class="n">tgt_test</span><span class="p">)</span>
+<span class="n">acc_oracle</span> <span class="o">=</span> <span class="n">eval_acc</span><span class="p">(</span><span class="n">encoder_oracle</span><span class="p">,</span> <span class="n">X_tgt</span><span class="p">,</span> <span class="n">y_tgt</span><span class="p">,</span> <span class="n">tgt_test</span><span class="p">)</span>
+<span class="n">test_counts</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/collections.html#collections.Counter" title="collections.Counter" class="sphx-glr-backref-module-collections sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">Counter</span></a><span class="p">(</span><span class="n">y_tgt</span><span class="p">[</span><span class="n">tgt_test</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+<span class="n">chance</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">test_counts</span><span class="o">.</span><span class="n">values</span><span class="p">())</span> <span class="o">/</span> <span class="nb">max</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">y_tgt</span><span class="p">[</span><span class="n">tgt_test</span><span class="p">]),</span> <span class="mi">1</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;naive=</span><span class="si">{</span><span class="n">acc_naive</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> | mmd=</span><span class="si">{</span><span class="n">acc_mmd</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> | oracle=</span><span class="si">{</span><span class="n">acc_oracle</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> | &quot;</span>
+    <span class="sa">f</span><span class="s2">&quot;chance=</span><span class="si">{</span><span class="n">chance</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> | metric=accuracy&quot;</span>
+<span class="p">)</span>
+<span class="c1"># AS-MMD invariant: alignment should not be actively harmful (&gt;2 pts).</span>
+<span class="k">assert</span> <span class="n">acc_mmd</span> <span class="o">&gt;</span> <span class="n">acc_naive</span> <span class="o">-</span> <span class="mf">0.02</span><span class="p">,</span> <span class="s2">&quot;AS-MMD was actively harmful (&gt;2 pts)&quot;</span>
+</pre></div>
+</div>
+<p><strong>Investigate.</strong> <code class="docutils literal notranslate"><span class="pre">acc_naive</span></code> is the cross-domain floor (encoder
+never saw the target distribution); <code class="docutils literal notranslate"><span class="pre">acc_mmd</span></code> is AS-MMD on the
+same source labels plus unlabelled target windows; <code class="docutils literal notranslate"><span class="pre">acc_oracle</span></code> is
+the within-domain ceiling. Gap <code class="docutils literal notranslate"><span class="pre">oracle</span> <span class="pre">-</span> <span class="pre">naive</span></code> is the transfer
+headroom; gap <code class="docutils literal notranslate"><span class="pre">mmd</span> <span class="pre">-</span> <span class="pre">naive</span></code> is the AS-MMD gain. Reporting all four
+numbers (including chance) on the same line is the falsifiable form
+of the claim (Cisotto &amp; Chicco 2024, Tip 9).</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;oracle - naive = </span><span class="si">{</span><span class="n">acc_oracle</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">acc_naive</span><span class="si">:</span><span class="s2">+.03f</span><span class="si">}</span><span class="s2"> (transfer headroom)&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;oracle - mmd   = </span><span class="si">{</span><span class="n">acc_oracle</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">acc_mmd</span><span class="si">:</span><span class="s2">+.03f</span><span class="si">}</span><span class="s2"> (residual after AS-MMD)&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;mmd - naive    = </span><span class="si">{</span><span class="n">acc_mmd</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">acc_naive</span><span class="si">:</span><span class="s2">+.03f</span><span class="si">}</span><span class="s2"> (AS-MMD gain)&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="step-9-penultimate-layer-features-for-the-pca-panel">
+<h2>Step 9. Penultimate-layer features for the PCA panel<a class="headerlink" href="#step-9-penultimate-layer-features-for-the-pca-panel" title="Link to this heading">#</a></h2>
+<p>We feed the same source + target test windows through both encoders
+and capture the activations right before the classification head.
+PCA down to 2D shows whether AS-MMD pulled the two distributions
+into a shared subspace.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">emb_src_before</span> <span class="o">=</span> <span class="n">encoder_features</span><span class="p">(</span><span class="n">encoder_naive</span><span class="p">,</span> <span class="n">X_src</span><span class="p">,</span> <span class="n">src_test</span><span class="p">)</span>
+<span class="n">emb_tgt_before</span> <span class="o">=</span> <span class="n">encoder_features</span><span class="p">(</span><span class="n">encoder_naive</span><span class="p">,</span> <span class="n">X_tgt</span><span class="p">,</span> <span class="n">tgt_test</span><span class="p">)</span>
+<span class="n">emb_src_after</span> <span class="o">=</span> <span class="n">encoder_features</span><span class="p">(</span><span class="n">encoder_mmd</span><span class="p">,</span> <span class="n">X_src</span><span class="p">,</span> <span class="n">src_test</span><span class="p">)</span>
+<span class="n">emb_tgt_after</span> <span class="o">=</span> <span class="n">encoder_features</span><span class="p">(</span><span class="n">encoder_mmd</span><span class="p">,</span> <span class="n">X_tgt</span><span class="p">,</span> <span class="n">tgt_test</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;emb shapes: src_before=</span><span class="si">{</span><span class="n">emb_src_before</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">, tgt_before=</span><span class="si">{</span><span class="n">emb_tgt_before</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="step-10-erp-overlay-did-as-mmd-destroy-the-p3">
+<h2>Step 10. ERP overlay: did AS-MMD destroy the P3?<a class="headerlink" href="#step-10-erp-overlay-did-as-mmd-destroy-the-p3" title="Link to this heading">#</a></h2>
+<p>Distribution-matching losses can in principle flatten the underlying
+signal onto a shared mean-zero subspace. We compare
+target-minus-standard waveforms at Pz on the held-out windows for
+both domains; both bumps should still be visible.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">diff_and_se</span><span class="p">(</span>
+    <span class="n">X</span><span class="p">:</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span></a><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span></a><span class="p">,</span> <span class="n">mask</span><span class="p">:</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span></a>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span></a><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Target-minus-standard mean and pooled SE at Pz, in microvolts.&quot;&quot;&quot;</span>
+    <span class="n">Xm</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="n">PZ_INDEX</span><span class="p">,</span> <span class="p">:]</span>
+    <span class="n">yt</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">yt</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">2</span> <span class="ow">or</span> <span class="p">(</span><span class="n">yt</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">return</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.zeros.html#numpy.zeros" title="numpy.zeros" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">zeros</span></a><span class="p">(</span><span class="n">Xm</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.zeros.html#numpy.zeros" title="numpy.zeros" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">zeros</span></a><span class="p">(</span><span class="n">Xm</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">diff</span> <span class="o">=</span> <span class="p">(</span><span class="n">Xm</span><span class="p">[</span><span class="n">yt</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">-</span> <span class="n">Xm</span><span class="p">[</span><span class="n">yt</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">se_t</span> <span class="o">=</span> <span class="n">Xm</span><span class="p">[</span><span class="n">yt</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ddof</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.sqrt.html#numpy.sqrt" title="numpy.sqrt" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-data"><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span></a><span class="p">(</span><span class="nb">int</span><span class="p">((</span><span class="n">yt</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()))</span>
+    <span class="n">se_s</span> <span class="o">=</span> <span class="n">Xm</span><span class="p">[</span><span class="n">yt</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ddof</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.sqrt.html#numpy.sqrt" title="numpy.sqrt" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-data"><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span></a><span class="p">(</span><span class="nb">int</span><span class="p">((</span><span class="n">yt</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()))</span>
+    <span class="k">return</span> <span class="n">diff</span><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.sqrt.html#numpy.sqrt" title="numpy.sqrt" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-data"><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span></a><span class="p">(</span><span class="n">se_t</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">se_s</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+
+
+<span class="n">src_diff</span><span class="p">,</span> <span class="n">src_se</span> <span class="o">=</span> <span class="n">diff_and_se</span><span class="p">(</span><span class="n">X_src</span><span class="p">,</span> <span class="n">y_src</span><span class="p">,</span> <span class="n">src_test</span><span class="p">)</span>
+<span class="n">tgt_diff</span><span class="p">,</span> <span class="n">tgt_se</span> <span class="o">=</span> <span class="n">diff_and_se</span><span class="p">(</span><span class="n">X_tgt</span><span class="p">,</span> <span class="n">y_tgt</span><span class="p">,</span> <span class="n">tgt_test</span><span class="p">)</span>
+<span class="n">erp_dict</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;times_ms&quot;</span><span class="p">:</span> <span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.arange.html#numpy.arange" title="numpy.arange" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">arange</span></a><span class="p">(</span><span class="n">N_TIMES</span><span class="p">)</span> <span class="o">/</span> <span class="n">SFREQ</span> <span class="o">-</span> <span class="mf">0.1</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1000.0</span><span class="p">,</span>
+    <span class="s2">&quot;source_before&quot;</span><span class="p">:</span> <span class="n">src_diff</span><span class="p">,</span>
+    <span class="s2">&quot;target_before&quot;</span><span class="p">:</span> <span class="n">tgt_diff</span><span class="p">,</span>
+    <span class="s2">&quot;source_after&quot;</span><span class="p">:</span> <span class="n">src_diff</span><span class="p">,</span>
+    <span class="s2">&quot;target_after&quot;</span><span class="p">:</span> <span class="n">tgt_diff</span><span class="p">,</span>
+    <span class="s2">&quot;source_se&quot;</span><span class="p">:</span> <span class="n">src_se</span><span class="p">,</span>
+    <span class="s2">&quot;target_se&quot;</span><span class="p">:</span> <span class="n">tgt_se</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="nb">print</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;P3 peak (target dataset): </span><span class="si">{</span><span class="n">tgt_diff</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="si">:</span><span class="s2">+.2f</span><span class="si">}</span><span class="s2"> uV &quot;</span>
+    <span class="sa">f</span><span class="s2">&quot;@ </span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">erp_dict</span><span class="p">[</span><span class="s1">&#39;times_ms&#39;</span><span class="p">][</span><span class="n">tgt_diff</span><span class="o">.</span><span class="n">argmax</span><span class="p">()])</span><span class="si">}</span><span class="s2"> ms&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="step-11-render-the-three-panel-transfer-figure">
+<h2>Step 11. Render the three-panel transfer figure<a class="headerlink" href="#step-11-render-the-three-panel-transfer-figure" title="Link to this heading">#</a></h2>
+<p><strong>Investigate (#2).</strong> Panel 1 is the bar chart with the AS-MMD gain
+annotated. Panel 2 is the side-by-side PCA of penultimate-layer
+activations before and after alignment, source in blue and target in
+orange. Panel 3 is the ERP overlay at Pz.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">draw_p300_transfer_figure</span><span class="p">(</span>
+    <span class="n">accuracies_dict</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;naive&quot;</span><span class="p">:</span> <span class="n">acc_naive</span><span class="p">,</span> <span class="s2">&quot;mmd&quot;</span><span class="p">:</span> <span class="n">acc_mmd</span><span class="p">,</span> <span class="s2">&quot;oracle&quot;</span><span class="p">:</span> <span class="n">acc_oracle</span><span class="p">},</span>
+    <span class="n">embeddings_dict</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;source_before&quot;</span><span class="p">:</span> <span class="n">emb_src_before</span><span class="p">,</span>
+        <span class="s2">&quot;target_before&quot;</span><span class="p">:</span> <span class="n">emb_tgt_before</span><span class="p">,</span>
+        <span class="s2">&quot;source_after&quot;</span><span class="p">:</span> <span class="n">emb_src_after</span><span class="p">,</span>
+        <span class="s2">&quot;target_after&quot;</span><span class="p">:</span> <span class="n">emb_tgt_after</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="n">erp_dict</span><span class="o">=</span><span class="n">erp_dict</span><span class="p">,</span>
+    <span class="n">chance_level</span><span class="o">=</span><span class="n">chance</span><span class="p">,</span>
+    <span class="n">channel_label</span><span class="o">=</span><span class="s2">&quot;Pz&quot;</span><span class="p">,</span>
+    <span class="n">source_id</span><span class="o">=</span><span class="n">SOURCE_ID</span><span class="p">,</span>
+    <span class="n">target_id</span><span class="o">=</span><span class="n">TARGET_ID</span><span class="p">,</span>
+    <span class="n">plot_id</span><span class="o">=</span><span class="s2">&quot;project_p300_transfer&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="result-one-row-per-condition">
+<h2>Result, one row per condition<a class="headerlink" href="#result-one-row-per-condition" title="Link to this heading">#</a></h2>
+<p>AS-MMD lifts target accuracy above the naive cross-domain floor and
+stays below the within-domain oracle ceiling. The single-seed gap
+must be hedged: a real comparison demands repeats and subject-grouped
+CV across both cohorts.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">| condition           | accuracy |&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;|---------------------|----------|&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;| naive transfer      | </span><span class="si">{</span><span class="n">acc_naive</span><span class="si">:</span><span class="s2">0.3f</span><span class="si">}</span><span class="s2">    |&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;| AS-MMD aligned      | </span><span class="si">{</span><span class="n">acc_mmd</span><span class="si">:</span><span class="s2">0.3f</span><span class="si">}</span><span class="s2">    |&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;| oracle (target)     | </span><span class="si">{</span><span class="n">acc_oracle</span><span class="si">:</span><span class="s2">0.3f</span><span class="si">}</span><span class="s2">    |&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;| chance (majority)   | </span><span class="si">{</span><span class="n">chance</span><span class="si">:</span><span class="s2">0.3f</span><span class="si">}</span><span class="s2">    |&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span>
+    <a href="https://docs.python.org/3/library/json.html#json.dumps" title="json.dumps" class="sphx-glr-backref-module-json sphx-glr-backref-type-py-function"><span class="n">json</span><span class="o">.</span><span class="n">dumps</span></a><span class="p">(</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;source_id&quot;</span><span class="p">:</span> <span class="n">SOURCE_ID</span><span class="p">,</span>
+            <span class="s2">&quot;target_id&quot;</span><span class="p">:</span> <span class="n">TARGET_ID</span><span class="p">,</span>
+            <span class="s2">&quot;n_source_train&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">src_train</span><span class="o">.</span><span class="n">sum</span><span class="p">()),</span>
+            <span class="s2">&quot;n_target_train&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">tgt_train</span><span class="o">.</span><span class="n">sum</span><span class="p">()),</span>
+            <span class="s2">&quot;n_target_test&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">tgt_test</span><span class="o">.</span><span class="n">sum</span><span class="p">()),</span>
+            <span class="s2">&quot;asmmd_gain&quot;</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">acc_mmd</span> <span class="o">-</span> <span class="n">acc_naive</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>
+            <span class="s2">&quot;transfer_headroom&quot;</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">acc_oracle</span> <span class="o">-</span> <span class="n">acc_naive</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>
+        <span class="p">}</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="a-common-mistake-and-how-to-recover">
+<h2>A common mistake, and how to recover<a class="headerlink" href="#a-common-mistake-and-how-to-recover" title="Link to this heading">#</a></h2>
+<p>Loading the wrong number of channels into <code class="docutils literal notranslate"><span class="pre">ShallowFBCSPNet</span></code> raises
+a <code class="docutils literal notranslate"><span class="pre">RuntimeError</span></code> on the first forward pass (size mismatch on the
+spatial conv). We trigger it with <code class="docutils literal notranslate"><span class="pre">try/except</span></code> and recover by
+rebuilding with the right shape.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">try</span><span class="p">:</span>
+    <span class="n">wrong</span> <span class="o">=</span> <a href="https://braindecode.org/stable/generated/braindecode.models.ShallowFBCSPNet.html#braindecode.models.ShallowFBCSPNet" title="braindecode.models.ShallowFBCSPNet" class="sphx-glr-backref-module-braindecode-models sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ShallowFBCSPNet</span></a><span class="p">(</span>
+        <span class="n">n_chans</span><span class="o">=</span><span class="n">N_CHANS</span> <span class="o">+</span> <span class="mi">3</span><span class="p">,</span> <span class="n">n_outputs</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">n_times</span><span class="o">=</span><span class="n">N_TIMES</span><span class="p">,</span> <span class="n">sfreq</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">SFREQ</span><span class="p">)</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span>
+    <span class="n">_</span> <span class="o">=</span> <span class="n">wrong</span><span class="p">(</span><a href="https://docs.pytorch.org/docs/stable/generated/torch.zeros.html#torch.zeros" title="torch.zeros" class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function"><span class="n">torch</span><span class="o">.</span><span class="n">zeros</span></a><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">N_CHANS</span><span class="p">,</span> <span class="n">N_TIMES</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">DEVICE</span><span class="p">))</span>
+<span class="k">except</span> <span class="ne">RuntimeError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Caught RuntimeError: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">exc</span><span class="p">)[:</span><span class="mi">90</span><span class="p">]</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
+    <span class="n">fixed</span> <span class="o">=</span> <span class="n">make_model</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Recovery: ShallowFBCSPNet(n_chans=</span><span class="si">{</span><span class="n">N_CHANS</span><span class="si">}</span><span class="s2">) -&gt; </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">fixed</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="extensions">
+<h2>Extensions<a class="headerlink" href="#extensions" title="Link to this heading">#</a></h2>
+<p><strong>Modify.</strong> <code class="docutils literal notranslate"><span class="pre">MMD_LAMBDA_MAX</span></code> controls how hard AS-MMD pushes the
+encoder toward distribution overlap. Too small and the encoder
+behaves like the naive baseline; too large and the encoder collapses
+all features to a domain-invariant point that throws the P3 signal
+away. Rerun at <code class="docutils literal notranslate"><span class="pre">0.05</span></code>, <code class="docutils literal notranslate"><span class="pre">0.2</span></code>, <code class="docutils literal notranslate"><span class="pre">0.4</span></code>, <code class="docutils literal notranslate"><span class="pre">1.0</span></code> and plot
+<code class="docutils literal notranslate"><span class="pre">acc_mmd</span></code> against the chosen weight.</p>
+<p><strong>Mini-project.</strong> Replace the synthesised tensors with real cohorts
+via <a class="reference internal" href="../../../api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset" title="eegdash.EEGDashDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">eegdash.EEGDashDataset</span></code></a>. Set <code class="docutils literal notranslate"><span class="pre">EEGDASH_SOURCE_DATASET</span></code>
+and <code class="docutils literal notranslate"><span class="pre">EEGDASH_TARGET_DATASET</span></code> to two oddball accessions on NEMAR
+(Delorme et al. 2022; e.g. <code class="docutils literal notranslate"><span class="pre">ds005863</span></code> and <code class="docutils literal notranslate"><span class="pre">ds003061</span></code>), apply the
+plot_20 windowing recipe to both, then rerun this script.</p>
+<ul class="simple">
+<li><p>rerun with five seeds and report <code class="docutils literal notranslate"><span class="pre">mean</span> <span class="pre">+/-</span> <span class="pre">std</span></code> for all three encoders.</p></li>
+<li><p>swap MMD for CORAL or domain-adversarial training as a baseline ablation.</p></li>
+<li><p>extend the head to multi-class (P3a vs P3b vs standard) and check per-class gains.</p></li>
+<li><p>replace <code class="docutils literal notranslate"><span class="pre">ShallowFBCSPNet</span></code> with EEGConformer (re-anchor the encoder hook).</p></li>
+</ul>
+</section>
+<section id="wrap-up">
+<h2>Wrap-up<a class="headerlink" href="#wrap-up" title="Link to this heading">#</a></h2>
+<p>We assembled the smallest credible AS-MMD recipe (Long et al. 2015;
+Banville et al. 2021; Defossez et al. 2023): one shared encoder, an
+RBF-kernel MMD on logit-space activations, a warmup schedule on the
+alignment weight, and a strict subject-aware split on both cohorts.
+The figure pins the four numbers a transfer claim must report side
+by side: naive, AS-MMD, oracle, and chance. The single-seed gain is
+anecdotal until the recipe is run across seeds and subjects, and the
+preserved P3 in the ERP panel is the falsifier the alignment did not
+wipe out the underlying physiology. Concept page:
+<a class="reference internal" href="../../../concepts/features_vs_deep_learning.html"><span class="doc">Features vs. deep learning</span></a>. API anchors:
+<a class="reference internal" href="../../../api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset" title="eegdash.EEGDashDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">eegdash.EEGDashDataset</span></code></a>,
+<code class="xref py py-func docutils literal notranslate"><span class="pre">eegdash.viz.style_figure()</span></code>.</p>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<p>See <a class="reference internal" href="../../../references.html"><span class="doc">References</span></a> for the centralised bibliography of papers
+cited above. Add or amend an entry once in
+<code class="file docutils literal notranslate"><span class="pre">docs/source/refs.bib</span></code>; every tutorial inherits the update.</p>
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-auto-examples-applied-project-p300-transfer-py">
+<div class="binder-badge docutils container">
+<a class="reference external image-reference" href="https://mybinder.org/v2/gh/eegdash/EEGDash/main?urlpath=lab/tree/notebooks/generated/auto_examples/applied/project_p300_transfer.ipynb"><img alt="Launch binder" src="../../../_images/binder_badge_logo.svg" style="width: 150px;" />
+</a>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../../../_downloads/06aeaec9ec59b18c7cd4af9d58e71928/project_p300_transfer.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">project_p300_transfer.ipynb</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../../../_downloads/6ca4100d24bbf8601727c697c67360bb/project_p300_transfer.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">project_p300_transfer.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-zip docutils container">
+<p><a class="reference download internal" download="" href="../../../_downloads/0ef1f351c22d42d56dbd75cab3269a2f/project_p300_transfer.zip"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">zipped:</span> <span class="pre">project_p300_transfer.zip</span></code></a></p>
+</div>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="project_clinical_dataset_summary.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">How do I survey a clinical EEG dataset before training a model?</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="project_pfactor_deep.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Predict p-factor from EEG with a Braindecode model (deep-learning regime)</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">Learning objectives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#requirements">Requirements</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-setup-seeds-cache-and-device">Step 1. Setup, seeds, cache, and device</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-configure-source-and-target-cohorts">Step 2. Configure source and target cohorts</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-synthesise-oddball-windows-with-a-shared-p3-domain-shift">Step 3. Synthesise oddball windows with a shared P3 + domain shift</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-4-predict">Step 4. Predict</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-5-subject-aware-split-for-both-cohorts">Step 5. Subject-aware split for both cohorts</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-6-encoder-mmd-primitive-and-training-loop">Step 6. Encoder, MMD primitive, and training loop</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-7-train-the-three-encoders-and-read-out-target-accuracy">Step 7. Train the three encoders and read out target accuracy</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-9-penultimate-layer-features-for-the-pca-panel">Step 9. Penultimate-layer features for the PCA panel</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-10-erp-overlay-did-as-mmd-destroy-the-p3">Step 10. ERP overlay: did AS-MMD destroy the P3?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-11-render-the-three-panel-transfer-figure">Step 11. Render the three-panel transfer figure</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#result-one-row-per-condition">Result, one row per condition</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-common-mistake-and-how-to-recover">A common mistake, and how to recover</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#extensions">Extensions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#wrap-up">Wrap-up</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb"></script>
+<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025-2026, EEG Dash Developers.
+      <br/>
+    
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.17.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

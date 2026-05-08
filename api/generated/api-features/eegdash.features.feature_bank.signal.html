@@ -50,7 +50,7 @@
     <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
     <link rel="stylesheet" type="text/css" href="../../../_static/custom.7953df0a.css?v=314ed3b2" />
     <link rel="stylesheet" type="text/css" href="../../../_static/css/treemap.087aecf0.css?v=7131b20f" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.99faa59c.css?v=b44e0256" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.d7808461.css?v=1ba63a31" />
   
   <!-- So that users can add custom icons -->
   <script defer src="../../../_static/scripts/fontawesome.js?digest=55c26ed414f5f8a31ebb"></script>
@@ -242,8 +242,8 @@
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../user_guide.html">
-    User Guide
+  <a class="nav-link nav-internal" href="../../../quickstart.html">
+    Quick Start
   </a>
 </li>
 
@@ -262,19 +262,43 @@
 </li>
 
 
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../concepts/index.html">
+    Concepts
+  </a>
+</li>
+
+
 <li class="nav-item current active">
   <a class="nav-link nav-internal" href="../../api.html">
     Docs
   </a>
 </li>
 
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../references.html">
+    References
+  </a>
+</li>
 
-<li class="nav-item ">
-  <a class="nav-link nav-external" href="https://eeg2025.github.io/">
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-external" href="https://eeg2025.github.io/">
     EEG2025
   </a>
 </li>
 
+                </ul>
+            </li>
+            
   </ul>
 </nav></div>
       
@@ -393,8 +417,8 @@
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../user_guide.html">
-    User Guide
+  <a class="nav-link nav-internal" href="../../../quickstart.html">
+    Quick Start
   </a>
 </li>
 
@@ -413,9 +437,23 @@
 </li>
 
 
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../concepts/index.html">
+    Concepts
+  </a>
+</li>
+
+
 <li class="nav-item current active">
   <a class="nav-link nav-internal" href="../../api.html">
     Docs
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../references.html">
+    References
   </a>
 </li>
 
@@ -691,9 +729,9 @@ features corresponding to the leading dimensions (e.g., subjects, channels).</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>x</strong> (<em>ndarray</em>) – Input signal</p></li>
-<li><p><strong>f_min</strong> (<em>float</em>) – Low cutoff frequency (Hz)</p></li>
-<li><p><strong>f_max</strong> (<em>float</em>) – High cutoff frequency (Hz)</p></li>
-<li><p><strong>num_taps</strong> (<em>int</em>) – Number of filter taps (must be odd for exact linear phase)</p></li>
+<li><p><strong>f_min</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Low cutoff frequency (Hz)</p></li>
+<li><p><strong>f_max</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – High cutoff frequency (Hz)</p></li>
+<li><p><strong>num_taps</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Number of filter taps (must be odd for exact linear phase)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -832,7 +870,7 @@ Electroencephalography and Clinical Neurophysiology, 29(3), 306-310.</p></li>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>x</strong> (<em>ndarray</em>) – The input signal.</p></li>
-<li><p><strong>**kwargs</strong> (<em>dict</em>) – Additional keyword arguments passed to <code class="xref py py-func docutils literal notranslate"><span class="pre">scipy.stats.kurtosis()</span></code>.</p></li>
+<li><p><strong>**kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a>) – Additional keyword arguments passed to <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.kurtosis.html#scipy.stats.kurtosis" title="(in SciPy v1.17.0)"><code class="xref py py-func docutils literal notranslate"><span class="pre">scipy.stats.kurtosis()</span></code></a>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -889,7 +927,7 @@ Shape is <code class="docutils literal notranslate"><span class="pre">x.shape[:-
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>x</strong> (<em>ndarray</em>) – The input signal.</p></li>
-<li><p><strong>**kwargs</strong> (<em>dict</em>) – Additional keyword arguments passed to <code class="xref py py-func docutils literal notranslate"><span class="pre">numpy.ptp()</span></code>.</p></li>
+<li><p><strong>**kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a>) – Additional keyword arguments passed to <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ptp.html#numpy.ptp" title="(in NumPy v2.4)"><code class="xref py py-func docutils literal notranslate"><span class="pre">numpy.ptp()</span></code></a>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -901,7 +939,7 @@ Shape is <code class="docutils literal notranslate"><span class="pre">x.shape[:-
 </dd>
 </dl>
 <p class="rubric">Notes</p>
-<p>This function wraps <code class="xref py py-func docutils literal notranslate"><span class="pre">numpy.ptp()</span></code>; see the NumPy documentation for
+<p>This function wraps <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ptp.html#numpy.ptp" title="(in NumPy v2.4)"><code class="xref py py-func docutils literal notranslate"><span class="pre">numpy.ptp()</span></code></a>; see the NumPy documentation for
 details on additional keyword arguments.</p>
 <p>For a theoretical overview of Peak-To-Peak amplitude in signal analysis,
 see the <a class="reference external" href="https://en.wikipedia.org/wiki/Peak-to-peak">Wikipedia entry</a>.</p>
@@ -909,14 +947,14 @@ see the <a class="reference external" href="https://en.wikipedia.org/wiki/Peak-t
 
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.signal.</span></span><span class="sig-name descname"><span class="pre">signal_quantile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">q</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Number</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/signal.py#L272-L298"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.signal.</span></span><span class="sig-name descname"><span class="pre">signal_quantile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">q</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/numbers.html#numbers.Number" title="(in Python v3.14)"><span class="pre">Number</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/signal.py#L272-L298"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Compute the q-th quantile of the signal.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>x</strong> (<em>ndarray</em>) – The input signal.</p></li>
-<li><p><strong>q</strong> (<em>float</em><em> or </em><em>array_like</em><em>, </em><em>optional</em>) – The quantile to compute. 0.5 (default) is the median.</p></li>
-<li><p><strong>**kwargs</strong> (<em>dict</em>) – Additional keyword arguments passed to <code class="xref py py-func docutils literal notranslate"><span class="pre">numpy.quantile()</span></code>.</p></li>
+<li><p><strong>q</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em> or </em><em>array_like</em><em>, </em><em>optional</em>) – The quantile to compute. 0.5 (default) is the median.</p></li>
+<li><p><strong>**kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a>) – Additional keyword arguments passed to <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.quantile.html#numpy.quantile" title="(in NumPy v2.4)"><code class="xref py py-func docutils literal notranslate"><span class="pre">numpy.quantile()</span></code></a>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -928,7 +966,7 @@ Shape is <code class="docutils literal notranslate"><span class="pre">x.shape[:-
 </dd>
 </dl>
 <p class="rubric">Notes</p>
-<p>This function wraps <code class="xref py py-func docutils literal notranslate"><span class="pre">numpy.quantile()</span></code>; see the NumPy documentation for
+<p>This function wraps <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.quantile.html#numpy.quantile" title="(in NumPy v2.4)"><code class="xref py py-func docutils literal notranslate"><span class="pre">numpy.quantile()</span></code></a>; see the NumPy documentation for
 details on additional keyword arguments.</p>
 </dd></dl>
 
@@ -961,7 +999,7 @@ Shape is <code class="docutils literal notranslate"><span class="pre">x.shape[:-
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>x</strong> (<em>ndarray</em>) – The input signal.</p></li>
-<li><p><strong>**kwargs</strong> (<em>dict</em>) – Additional keyword arguments passed to <code class="xref py py-func docutils literal notranslate"><span class="pre">scipy.stats.skew()</span></code>.</p></li>
+<li><p><strong>**kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a>) – Additional keyword arguments passed to <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.skew.html#scipy.stats.skew" title="(in SciPy v1.17.0)"><code class="xref py py-func docutils literal notranslate"><span class="pre">scipy.stats.skew()</span></code></a>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -982,7 +1020,7 @@ Shape is <code class="docutils literal notranslate"><span class="pre">x.shape[:-
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>x</strong> (<em>ndarray</em>) – The input signal.</p></li>
-<li><p><strong>**kwargs</strong> (<em>dict</em>) – Additional keyword arguments passed to <code class="xref py py-func docutils literal notranslate"><span class="pre">np.std()</span></code>.</p></li>
+<li><p><strong>**kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a>) – Additional keyword arguments passed to <code class="xref py py-func docutils literal notranslate"><span class="pre">np.std()</span></code>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -1003,7 +1041,7 @@ Shape is <code class="docutils literal notranslate"><span class="pre">x.shape[:-
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>x</strong> (<em>ndarray</em>) – The input signal.</p></li>
-<li><p><strong>**kwargs</strong> (<em>dict</em>) – Additional keyword arguments passed to <code class="xref py py-func docutils literal notranslate"><span class="pre">np.var()</span></code>.</p></li>
+<li><p><strong>**kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a>) – Additional keyword arguments passed to <code class="xref py py-func docutils literal notranslate"><span class="pre">np.var()</span></code>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -1026,7 +1064,7 @@ enters/leaves a defined noise floor (threshold).</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>x</strong> (<em>ndarray</em>) – The input signal.</p></li>
-<li><p><strong>threshold</strong> (<em>float</em><em>, </em><em>optional</em>) – A small epsilon value to treat values near zero as exactly zero,
+<li><p><strong>threshold</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – A small epsilon value to treat values near zero as exactly zero,
 preventing false counts due to floating-point noise.</p></li>
 </ul>
 </dd>

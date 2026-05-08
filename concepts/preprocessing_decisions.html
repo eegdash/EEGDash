@@ -1,0 +1,924 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" data-theme="light">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta property="og:title" content="Preprocessing decisions" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://eegdash.org/concepts/preprocessing_decisions.html" />
+<meta property="og:site_name" content="EEG Dash" />
+<meta property="og:description" content="Preprocessing is where most EEG decoding results are silently won or lost. The defaults you accept — high-pass cutoff, line-noise notch, montage…" />
+<meta property="og:image" content="https://eegdash.org/_static/eegdash_social_card.png" />
+<meta property="og:image:alt" content="EEG Dash — data-sharing interface for M/EEG datasets" />
+<meta name="description" content="Preprocessing is where most EEG decoding results are silently won or lost. The defaults you accept — high-pass cutoff, line-noise notch, montage…" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@eegdash" />
+
+    <title>Preprocessing decisions &#8212; EEG Dash</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "light";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=fd6457a4" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.7953df0a.css?v=314ed3b2" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/treemap.087aecf0.css?v=7131b20f" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.d7808461.css?v=1ba63a31" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../_static/scripts/fontawesome.js?digest=55c26ed414f5f8a31ebb"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb" />
+
+    <script src="../_static/documentation_options.js?v=6dfdf7c3"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/sg-tags.js?v=d80f6fa4"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=8c005784"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'concepts/preprocessing_decisions';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <script defer="defer" src="../_static/js/tag-palette.7346f567.js?v=6f5eac9a"></script>
+    <script defer="defer" src="../_static/js/search-as-you-type.e09b639d.js?v=8e93d0f7"></script>
+    <script defer="defer" src="../_static/js/lazy-embed.1f1f83d2.js?v=118c4c47"></script>
+    <link rel="canonical" href="https://eegdash.org/concepts/preprocessing_decisions.html" />
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Features vs. deep learning" href="features_vs_deep_learning.html" />
+    <link rel="prev" title="Leakage and evaluation" href="leakage_and_evaluation.html" />
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.7" />
+
+  
+  <meta name="google-site-verification" content="REPLACE_WITH_GSC_TOKEN">
+  <meta name="msvalidate.01" content="REPLACE_WITH_BING_TOKEN">
+
+  
+  <link rel="preconnect" href="https://cdn.datatables.net" crossorigin>
+  <link rel="preconnect" href="https://code.jquery.com" crossorigin>
+
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    rel="preload"
+    as="style"
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Source+Sans+3:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap"
+    onload="this.onload=null;this.rel='stylesheet'">
+  <noscript>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Source+Sans+3:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap">
+  </noscript>
+
+  
+
+  
+  <link rel="alternate" type="text/markdown" href="/llms.txt" title="EEGDash — LLM-friendly index">
+  <link rel="llms" href="/llms.txt" title="EEGDash — llms.txt index">
+  <link rel="llms-txt" href="/llms.txt">
+  <link rel="llms-full" type="text/markdown" href="/llms-full.txt" title="EEGDash — full markdown corpus">
+  <link rel="alternate" type="application/json" href="/.well-known/agent-skills/index.json" title="EEGDash — Agent Skills">
+  <link rel="alternate" type="application/linkset+json" href="/.well-known/api-catalog" title="EEGDash — API catalog">
+  <meta name="llms-txt" content="/llms.txt">
+  <meta name="llms" content="/llms.txt">
+  <meta name="ai-content-index" content="/llms.txt">
+  <meta name="ai.content_index" content="/llms.txt">
+
+  
+
+  <!-- Google Tag Manager — deferred to DOMContentLoaded so the GTM
+       bootstrap no longer blocks first-paint or the Sphinx search-index
+       load. Functionally equivalent to the inline snippet below but
+       saves ~60 ms of Total Blocking Time per PageSpeed Insights. -->
+  <script>
+    (function(){
+      function loadGTM(){
+        if (window.__gtmLoaded) return;
+        window.__gtmLoaded = true;
+        (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','GTM-MXC3DGL6');
+      }
+      // Defer GTM off the critical path. requestIdleCallback wants an
+      // IdleRequestOptions object as its second argument while
+      // setTimeout wants a plain number — using the same `1` for both
+      // raised a TypeError in Lighthouse's console that dragged the SEO
+      // score down. Branch on availability so each API gets the shape
+      // it expects.
+      function scheduleGTM() {
+        if (typeof window.requestIdleCallback === 'function') {
+          window.requestIdleCallback(loadGTM, { timeout: 2000 });
+        } else {
+          setTimeout(loadGTM, 1);
+        }
+      }
+      if (document.readyState === 'complete' || document.readyState === 'interactive') {
+        scheduleGTM();
+      } else {
+        document.addEventListener('DOMContentLoaded', scheduleGTM);
+      }
+    })();
+  </script>
+  <!-- End Google Tag Manager -->
+
+  </head>
+  <body data-default-mode="light">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+    
+    <img src="../_static/eegdash_long.svg" class="logo__image only-light" alt="EEG Dash Logo"/>
+    <img src="../_static/eegdash_long.svg" class="logo__image only-dark pst-js-only" alt="EEG Dash Logo"/>
+  
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../dataset_summary.html">
+    Datasets
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../quickstart.html">
+    Quick Start
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../install/install.html">
+    Install
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../generated/auto_examples/index.html">
+    Examples
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    Concepts
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../api/api.html">
+    Docs
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../references.html">
+    References
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-external" href="https://eeg2025.github.io/">
+    EEG2025
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="External Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/eegdash/EEGDash" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../_static/icons/github.svg" class="icon-link-image" alt="GitHub"/></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/eegdash/" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../_static/icons/pypi.svg" class="icon-link-image" alt="PyPI"/></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://discord.gg/8jd7nVKwsc" title="Discord" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../_static/icons/discord.svg" class="icon-link-image" alt="Discord"/></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../dataset_summary.html">
+    Datasets
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../quickstart.html">
+    Quick Start
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../install/install.html">
+    Install
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../generated/auto_examples/index.html">
+    Examples
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    Concepts
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../api/api.html">
+    Docs
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../references.html">
+    References
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://eeg2025.github.io/">
+    EEG2025
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="External Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/eegdash/EEGDash" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../_static/icons/github.svg" class="icon-link-image" alt="GitHub"/></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/eegdash/" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../_static/icons/pypi.svg" class="icon-link-image" alt="PyPI"/></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://discord.gg/8jd7nVKwsc" title="Discord" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../_static/icons/discord.svg" class="icon-link-image" alt="Discord"/></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item pst-sidebar-collapse"><button id="pst-collapse-sidebar-button" aria-expanded="true" aria-controls="pst-primary-sidebar"><svg class="pst-icon svg-inline--fa" role="img" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentColor" d="M3 15.5C2.36232 15.5 1.74874 15.2564 1.28478 14.8189C0.820828 14.3815 0.541576 13.7832 0.504167 13.1467L0.5 13L0.5 3C0.499965 2.36232 0.743605 1.74874 1.18107 1.28478C1.61854 0.820828 2.21676 0.541576 2.85333 0.504167L3 0.5L13 0.5C13.6377 0.499965 14.2513 0.743605 14.7152 1.18107C15.1792 1.61854 15.4584 2.21676 15.4958 2.85333L15.5 3L15.5 13C15.5 13.6377 15.2564 14.2513 14.8189 14.7152C14.3815 15.1792 13.7832 15.4584 13.1467 15.4958L13 15.5L3 15.5ZM3 13.8333L10.5 13.8333L10.5 2.16667L3 2.16667C2.79589 2.16669 2.59889 2.24163 2.44636 2.37726C2.29383 2.5129 2.19638 2.69979 2.1725 2.9025L2.16667 3L2.16667 13C2.16669 13.2041 2.24163 13.4011 2.37726 13.5536C2.5129 13.7062 2.69979 13.8036 2.9025 13.8275L3 13.8333ZM6.65583 10.325L6.5775 10.2558L4.91083 8.58917C4.76735 8.44567 4.68116 8.25476 4.66843 8.05223C4.65569 7.84971 4.71729 7.6495 4.84167 7.48917L4.91083 7.41083L6.5775 5.74417C6.72747 5.59471 6.9287 5.50794 7.14032 5.50148C7.35194 5.49502 7.55809 5.56935 7.7169 5.70937C7.8757 5.8494 7.97525 6.04463 7.99533 6.25539C8.01541 6.46616 7.95451 6.67667 7.825 6.84417L7.75583 6.9225L6.67917 8L7.75583 9.0775C7.89931 9.22099 7.98551 9.41191 7.99824 9.61443C8.01097 9.81695 7.94938 10.0172 7.825 10.1775L7.75583 10.2558C7.61234 10.3993 7.42142 10.4855 7.2189 10.4982C7.01638 10.511 6.81617 10.4494 6.65583 10.325Z"/>
+  </svg>
+  <span class="pst-collapse-sidebar-label">Collapse Sidebar</span>
+  <span class="pst-expand-sidebar-label">Expand Sidebar</span>
+</button></div>
+        <div class="sidebar-primary-item">
+
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="eegdash_objects.html">EEGDash objects: <code class="docutils literal notranslate"><span class="pre">EEGDash</span></code>, <code class="docutils literal notranslate"><span class="pre">EEGDashDataset</span></code>, <code class="docutils literal notranslate"><span class="pre">EEGChallengeDataset</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="metadata_and_bids.html">Metadata and BIDS entities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="leakage_and_evaluation.html">Leakage and evaluation</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Preprocessing decisions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="features_vs_deep_learning.html">Features vs. deep learning</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">Concepts</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Preprocessing decisions</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="preprocessing-decisions">
+<span id="concepts-preprocessing-decisions"></span><h1>Preprocessing decisions<a class="headerlink" href="#preprocessing-decisions" title="Link to this heading">#</a></h1>
+<p>Preprocessing is where most EEG decoding results are silently won or lost.
+The defaults you accept — high-pass cutoff, line-noise notch, montage,
+reference, channel set, artifact policy — encode strong assumptions about
+the signal you intend to study. They also interact: a 0.5 Hz high-pass
+plus an average reference plus ICA-based blink removal is a different
+pipeline from a 1 Hz high-pass plus a mastoid reference plus no ICA, and
+the two can disagree about a class boundary.</p>
+<p>This page does not prescribe a recipe. EEGDash is preprocessing-agnostic
+and forwards your data to MNE-Python <span class="bibtex-citation" id="id1">[<a class="reference internal" href="../references.html#id25" title="Alexandre Gramfort, Martin Luessi, Eric Larson, Denis A. Engemann, Daniel Strohmeier, Christian Brodbeck, Roman Goj, Mainak Jas, Teon Brooks, Lauri Parkkonen, and Matti Hämäläinen. Meg and eeg data analysis with mne-python. Frontiers in Neuroscience, 2013. doi:10.3389/fnins.2013.00267.">Gramfort <em>et al.</em>, 2013</a>]</span> <a class="footnote-reference brackets" href="#id5" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> and
+braindecode for transformation. What this page does is name the choices
+that matter, describe what flips when you change them, and point at the
+tutorial where each one is exercised. The framing follows Tips 4–7 of
+Cisotto &amp; Chicco (2024) <a class="footnote-reference brackets" href="#id6" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>, which give the same advice in a clinical
+setting.</p>
+<section id="a-short-audit-before-you-start">
+<h2>A short audit before you start<a class="headerlink" href="#a-short-audit-before-you-start" title="Link to this heading">#</a></h2>
+<p>Before you run a single <code class="docutils literal notranslate"><span class="pre">filter()</span></code> call, write down the answers to four
+questions. They constrain the rest of the pipeline.</p>
+<ol class="arabic simple">
+<li><p><strong>What frequency band carries the signal you care about?</strong> ERPs live
+below 30 Hz; sensorimotor rhythms peak at 8–30 Hz; high-gamma
+coupling lives above 60 Hz. There is no universal default.</p></li>
+<li><p><strong>What is the dominant noise?</strong> 50/60 Hz mains, slow drift,
+sweat-driven 0.1 Hz baseline, EMG bursts, blink saccades. Each one
+has its own remedy.</p></li>
+<li><p><strong>What is the unit of analysis?</strong> Single trial, averaged ERP, time-
+frequency map, spectral feature. Different analyses tolerate different
+amounts of damage from filtering.</p></li>
+<li><p><strong>What is the comparison set?</strong> If you are reporting numbers next to
+another paper, your filter, reference, and montage should be either
+identical or explicitly justified as a deliberate change.</p></li>
+</ol>
+</section>
+<section id="filtering-high-pass-and-low-pass">
+<h2>Filtering: high-pass and low-pass<a class="headerlink" href="#filtering-high-pass-and-low-pass" title="Link to this heading">#</a></h2>
+<p>Filtering is necessary and lossy. High-pass filters remove slow drift but
+also distort late, slow ERP components if the cutoff is too high. Low-pass
+filters remove muscle and noise but also smear sharp transients.</p>
+<p>A few rules of thumb:</p>
+<ul class="simple">
+<li><p>For ERP work, a high-pass between 0.1 Hz and 0.5 Hz with a slow,
+zero-phase FIR is the safest default. Pushing to 1 Hz or above
+introduces measurable distortion in late slow components.</p></li>
+<li><p>For oscillation work, a high-pass at 1 Hz is often acceptable and
+sometimes desirable; the exact value should be reported.</p></li>
+<li><p>A notch filter at the line frequency (50 Hz in the EU, 60 Hz in
+the US) is almost always called for. Verify that the notch is <em>not</em>
+inside your analysis band.</p></li>
+<li><p>A low-pass at 40–45 Hz is a sensible default for ERP and slow
+oscillation analyses; a low-pass at 100 Hz is appropriate for
+high-gamma work and is what HBN-style data are typically delivered at.</p></li>
+</ul>
+<p>Tutorial
+<a class="reference internal" href="../generated/auto_examples/tutorials/10_core_workflow/plot_10_preprocess_and_window.html"><span class="doc">How do I preprocess EEG and create model-ready windows?</span></a>
+walks through this on a real recording, including the choice of filter
+order and zero-phase vs. causal filtering.</p>
+</section>
+<section id="resampling">
+<h2>Resampling<a class="headerlink" href="#resampling" title="Link to this heading">#</a></h2>
+<p>If your downstream model only consumes data up to, say, 40 Hz, there is
+no benefit to feeding it 1024 Hz samples. Downsampling to 256 Hz or
+even 128 Hz reduces memory and compute by a large factor. Always
+low-pass <em>before</em> downsampling to avoid aliasing; MNE’s <code class="docutils literal notranslate"><span class="pre">raw.resample</span></code>
+does this for you.</p>
+<p>The flip side: never upsample EEG to mimic a higher rate. You are not
+adding information.</p>
+</section>
+<section id="re-referencing">
+<h2>Re-referencing<a class="headerlink" href="#re-referencing" title="Link to this heading">#</a></h2>
+<p>EEG is fundamentally relative. The reference electrode is part of the
+signal, and changing it can flip the polarity of certain components and
+re-distribute power across channels. Common choices:</p>
+<ul class="simple">
+<li><p><strong>Common average reference (CAR).</strong> Re-references each channel to
+the average of all channels. Sensible when you have a dense montage
+and care about spatial topographies. Sensitive to outlier channels;
+always run after bad-channel detection.</p></li>
+<li><p><strong>Mastoid or linked-mastoid reference.</strong> Common in ERP work because
+a stable, near-zero reference at the mastoid emphasises peri-vertex
+signals. Disqualifies CAR-based pipeline comparisons.</p></li>
+<li><p><strong>REST reference.</strong> A cortical-source-based virtual reference that
+attempts to approximate an infinity reference. Useful when comparing
+across labs that used different physical references.</p></li>
+</ul>
+<p>The choice is part of your pipeline, not a preprocessing afterthought.
+Pernet et al. (2019) <a class="footnote-reference brackets" href="#id7" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a> require the reference to be declared in the
+BIDS sidecar; respect that.</p>
+</section>
+<section id="montage-and-channel-selection">
+<h2>Montage and channel selection<a class="headerlink" href="#montage-and-channel-selection" title="Link to this heading">#</a></h2>
+<p>A montage tells MNE the 3D position of every electrode. Without one,
+topographic plots, source localisation, and certain spatial filters
+(CSP, Laplacian) cannot run. EEGDash datasets ship a montage when the
+underlying BIDS sidecar provides one; otherwise you must set it
+manually with <code class="docutils literal notranslate"><span class="pre">raw.set_montage(&quot;standard_1020&quot;)</span></code> or a vendor-specific
+file.</p>
+<p>Channel selection is the other side of the same coin. Dropping a flaky
+channel is fine; dropping half the array because “it makes the model
+faster” is not — your reference, montage, and any spatial filter will
+silently change. If you must reduce channels, do it once, document it,
+and apply it identically to train and test.</p>
+</section>
+<section id="artifact-policy">
+<h2>Artifact policy<a class="headerlink" href="#artifact-policy" title="Link to this heading">#</a></h2>
+<p>Eye blinks, saccades, jaw EMG, and movement spikes are present in every
+real EEG recording. Three families of mitigations exist, in roughly
+decreasing severity:</p>
+<ol class="arabic simple">
+<li><p><strong>ICA decomposition.</strong> Decompose into independent components and
+remove the eye-blink and EMG components. Most expensive, most
+transparent.</p></li>
+<li><p><strong>Threshold-based rejection.</strong> Drop windows whose amplitude exceeds
+a threshold. Cheap; loses data.</p></li>
+<li><p><strong>Robust models.</strong> Train models that tolerate residual artifacts
+(e.g., temporal augmentation, dropout). Cheapest, weakest signal.</p></li>
+</ol>
+<p>A well-known pattern is to combine (1) for blinks with (2) for residual
+muscle bursts. This is the default in many MNE-based pipelines and is
+what the EEGDash tutorial gallery demonstrates. The choice matters
+because aggressive rejection can remove the signal you wanted to study
+— for instance, motor-imagery training data with high muscle artifact.</p>
+</section>
+<section id="default-parameters-are-not-neutral">
+<h2>Default parameters are not neutral<a class="headerlink" href="#default-parameters-are-not-neutral" title="Link to this heading">#</a></h2>
+<p>Every default in this list is a <em>position</em>, not the absence of one. A
+half-sentence in the methods that says “standard preprocessing was
+applied” is unverifiable; a sentence that says “0.5–40 Hz FIR filter,
+common average reference, ICA-based blink removal, 2-second windows
+with 50% overlap” is reproducible.</p>
+<p>When you write your tutorial, paper, or report, list these decisions
+explicitly. When you read someone else’s, look for them. If a result is
+sensitive to those defaults — and many EEG decoding results are — the
+list is the most important paragraph in the paper.</p>
+</section>
+<section id="related-tutorials">
+<h2>Related tutorials<a class="headerlink" href="#related-tutorials" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="../generated/auto_examples/tutorials/10_core_workflow/plot_10_preprocess_and_window.html"><span class="doc">How do I preprocess EEG and create model-ready windows?</span></a>
+is the runnable companion to this page. It applies a defensible
+default pipeline to an EEGDash recording and explains each step.</p></li>
+<li><p><a class="reference internal" href="../generated/auto_examples/tutorials/30_resting_state/plot_30_eyes_open_closed.html"><span class="doc">Decode eyes-open vs. eyes-closed from resting-state EEG</span></a>
+shows how preprocessing interacts with a class-boundary (eyes open
+vs. closed) where alpha-band content is the main feature.</p></li>
+<li><p><a class="reference internal" href="../generated/auto_examples/tutorials/20_event_related/plot_20_visual_p300_oddball.html"><span class="doc">How does the brain answer a rare visual target?</span></a>
+uses ERP-style preprocessing (low high-pass, ICA blink removal).</p></li>
+</ul>
+</section>
+<section id="further-reading">
+<h2>Further reading<a class="headerlink" href="#further-reading" title="Link to this heading">#</a></h2>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id5" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">1</a><span class="fn-bracket">]</span></span>
+<p>Gramfort, A., Luessi, M., Larson, E., Engemann, D. A., Strohmeier,
+D., Brodbeck, C., Goj, R., Jas, M., Brooks, T., Parkkonen, L., &amp;
+Hämäläinen, M. S. (2013). MEG and EEG data analysis with MNE-Python.
+<em>Frontiers in Neuroscience</em>, 7, 267.
+<a class="reference external" href="https://doi.org/10.3389/fnins.2013.00267">https://doi.org/10.3389/fnins.2013.00267</a></p>
+</aside>
+<aside class="footnote brackets" id="id6" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">2</a><span class="fn-bracket">]</span></span>
+<p>Cisotto, G., &amp; Chicco, D. (2024). Ten quick tips for clinical
+electroencephalographic (EEG) data acquisition and signal processing.
+<em>PeerJ Computer Science</em>, 10, e2256.
+<a class="reference external" href="https://doi.org/10.7717/peerj-cs.2256">https://doi.org/10.7717/peerj-cs.2256</a></p>
+</aside>
+<aside class="footnote brackets" id="id7" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">3</a><span class="fn-bracket">]</span></span>
+<p>Pernet, C. R., et al. (2019). EEG-BIDS, an extension to the brain
+imaging data structure for electroencephalography. <em>Scientific Data</em>,
+6(1), 103. <a class="reference external" href="https://doi.org/10.1038/s41597-019-0104-8">https://doi.org/10.1038/s41597-019-0104-8</a></p>
+</aside>
+</aside>
+<ul class="simple">
+<li><p>Widmann, A., &amp; Schröger, E. (2012). Filter effects and filter
+artifacts in the analysis of electroencephalographic signals.
+<em>Frontiers in Psychology</em>, 3, 233.
+<a class="reference external" href="https://doi.org/10.3389/fpsyg.2012.00233">https://doi.org/10.3389/fpsyg.2012.00233</a></p></li>
+<li><p>Tanner, D., Morgan-Short, K., &amp; Luck, S. J. (2015). How inappropriate
+high-pass filters can produce artifactual effects and incorrect
+conclusions in ERP studies of language and cognition.
+<em>Psychophysiology</em>, 52(8), 997–1009.
+<a class="reference external" href="https://doi.org/10.1111/psyp.12437">https://doi.org/10.1111/psyp.12437</a></p></li>
+</ul>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="leakage_and_evaluation.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Leakage and evaluation</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="features_vs_deep_learning.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Features vs. deep learning</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-short-audit-before-you-start">A short audit before you start</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#filtering-high-pass-and-low-pass">Filtering: high-pass and low-pass</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#resampling">Resampling</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#re-referencing">Re-referencing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#montage-and-channel-selection">Montage and channel selection</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#artifact-policy">Artifact policy</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#default-parameters-are-not-neutral">Default parameters are not neutral</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#related-tutorials">Related tutorials</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#further-reading">Further reading</a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+
+  
+  <div class="tocsection editthispage">
+    <a href="https://github.com/eegdash/EEGDash/edit/develop/docs/source/concepts/preprocessing_decisions.rst">
+      <i class="fa-solid fa-pencil"></i>
+      
+      
+        
+          Edit on GitHub
+        
+      
+    </a>
+  </div>
+</div>
+
+  <div class="sidebar-secondary-item">
+
+  <div class="tocsection sourcelink">
+    <a href="../_sources/concepts/preprocessing_decisions.rst.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025-2026, EEG Dash Developers.
+      <br/>
+    
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.17.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

@@ -1,0 +1,1749 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../../" data-theme="light">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta property="og:title" content="How do I plug EEGDash into the Meta NeuroAI ecosystem?" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://eegdash.org/generated/auto_examples/tutorials/70_transfer_foundation/plot_74_neuroai_interop.html" />
+<meta property="og:site_name" content="EEG Dash" />
+<meta property="og:description" content="Meta Research ships four projects under the NeuroAI umbrella ( https://facebookresearch.github.io/neuroai/): NeuralFetch for unified dataset discovery…" />
+<meta property="og:image" content="https://eegdash.org/_static/eegdash_social_card.png" />
+<meta property="og:image:alt" content="EEG Dash — data-sharing interface for M/EEG datasets" />
+<meta name="description" content="Meta Research ships four projects under the NeuroAI umbrella ( https://facebookresearch.github.io/neuroai/): NeuralFetch for unified dataset discovery…" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@eegdash" />
+
+    <title>How do I plug EEGDash into the Meta NeuroAI ecosystem? &#8212; EEG Dash</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "light";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../_static/styles/theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+<link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sg_gallery.css?v=fd6457a4" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/custom.7953df0a.css?v=314ed3b2" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/css/treemap.087aecf0.css?v=7131b20f" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.d7808461.css?v=1ba63a31" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../../../_static/scripts/fontawesome.js?digest=55c26ed414f5f8a31ebb"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb" />
+<link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb" />
+
+    <script src="../../../../_static/documentation_options.js?v=6dfdf7c3"></script>
+    <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../../_static/sg-tags.js?v=d80f6fa4"></script>
+    <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../../_static/copybutton.js?v=8c005784"></script>
+    <script src="../../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'generated/auto_examples/tutorials/70_transfer_foundation/plot_74_neuroai_interop';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <script defer="defer" src="../../../../_static/js/tag-palette.7346f567.js?v=6f5eac9a"></script>
+    <script defer="defer" src="../../../../_static/js/search-as-you-type.e09b639d.js?v=8e93d0f7"></script>
+    <script defer="defer" src="../../../../_static/js/lazy-embed.1f1f83d2.js?v=118c4c47"></script>
+    <link rel="canonical" href="https://eegdash.org/generated/auto_examples/tutorials/70_transfer_foundation/plot_74_neuroai_interop.html" />
+    <link rel="icon" href="../../../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="How-To Guides" href="../../how_to/index.html" />
+    <link rel="prev" title="How do I adapt a pretrained EEG model to a new task?" href="plot_73_finetune_pretrained_model.html" />
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.7" />
+
+  
+  <meta name="google-site-verification" content="REPLACE_WITH_GSC_TOKEN">
+  <meta name="msvalidate.01" content="REPLACE_WITH_BING_TOKEN">
+
+  
+  <link rel="preconnect" href="https://cdn.datatables.net" crossorigin>
+  <link rel="preconnect" href="https://code.jquery.com" crossorigin>
+
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    rel="preload"
+    as="style"
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Source+Sans+3:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap"
+    onload="this.onload=null;this.rel='stylesheet'">
+  <noscript>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Source+Sans+3:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap">
+  </noscript>
+
+  
+
+  
+  <link rel="alternate" type="text/markdown" href="/llms.txt" title="EEGDash — LLM-friendly index">
+  <link rel="llms" href="/llms.txt" title="EEGDash — llms.txt index">
+  <link rel="llms-txt" href="/llms.txt">
+  <link rel="llms-full" type="text/markdown" href="/llms-full.txt" title="EEGDash — full markdown corpus">
+  <link rel="alternate" type="application/json" href="/.well-known/agent-skills/index.json" title="EEGDash — Agent Skills">
+  <link rel="alternate" type="application/linkset+json" href="/.well-known/api-catalog" title="EEGDash — API catalog">
+  <meta name="llms-txt" content="/llms.txt">
+  <meta name="llms" content="/llms.txt">
+  <meta name="ai-content-index" content="/llms.txt">
+  <meta name="ai.content_index" content="/llms.txt">
+
+  
+
+  <!-- Google Tag Manager — deferred to DOMContentLoaded so the GTM
+       bootstrap no longer blocks first-paint or the Sphinx search-index
+       load. Functionally equivalent to the inline snippet below but
+       saves ~60 ms of Total Blocking Time per PageSpeed Insights. -->
+  <script>
+    (function(){
+      function loadGTM(){
+        if (window.__gtmLoaded) return;
+        window.__gtmLoaded = true;
+        (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','GTM-MXC3DGL6');
+      }
+      // Defer GTM off the critical path. requestIdleCallback wants an
+      // IdleRequestOptions object as its second argument while
+      // setTimeout wants a plain number — using the same `1` for both
+      // raised a TypeError in Lighthouse's console that dragged the SEO
+      // score down. Branch on availability so each API gets the shape
+      // it expects.
+      function scheduleGTM() {
+        if (typeof window.requestIdleCallback === 'function') {
+          window.requestIdleCallback(loadGTM, { timeout: 2000 });
+        } else {
+          setTimeout(loadGTM, 1);
+        }
+      }
+      if (document.readyState === 'complete' || document.readyState === 'interactive') {
+        scheduleGTM();
+      } else {
+        document.addEventListener('DOMContentLoaded', scheduleGTM);
+      }
+    })();
+  </script>
+  <!-- End Google Tag Manager -->
+
+  </head>
+  <body data-default-mode="light">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+    
+    <img src="../../../../_static/eegdash_long.svg" class="logo__image only-light" alt="EEG Dash Logo"/>
+    <img src="../../../../_static/eegdash_long.svg" class="logo__image only-dark pst-js-only" alt="EEG Dash Logo"/>
+  
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../dataset_summary.html">
+    Datasets
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../quickstart.html">
+    Quick Start
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../install/install.html">
+    Install
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../../index.html">
+    Examples
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../concepts/index.html">
+    Concepts
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../api/api.html">
+    Docs
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../references.html">
+    References
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-external" href="https://eeg2025.github.io/">
+    EEG2025
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="External Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/eegdash/EEGDash" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../../../../_static/icons/github.svg" class="icon-link-image" alt="GitHub"/></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/eegdash/" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../../../../_static/icons/pypi.svg" class="icon-link-image" alt="PyPI"/></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://discord.gg/8jd7nVKwsc" title="Discord" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../../../../_static/icons/discord.svg" class="icon-link-image" alt="Discord"/></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../dataset_summary.html">
+    Datasets
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../quickstart.html">
+    Quick Start
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../install/install.html">
+    Install
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../../index.html">
+    Examples
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../concepts/index.html">
+    Concepts
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../api/api.html">
+    Docs
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../references.html">
+    References
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://eeg2025.github.io/">
+    EEG2025
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="External Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/eegdash/EEGDash" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../../../../_static/icons/github.svg" class="icon-link-image" alt="GitHub"/></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/eegdash/" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../../../../_static/icons/pypi.svg" class="icon-link-image" alt="PyPI"/></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://discord.gg/8jd7nVKwsc" title="Discord" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../../../../_static/icons/discord.svg" class="icon-link-image" alt="Discord"/></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../../index.html" class="nav-link">Examples gallery</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">Transfer, Foundation Models, and EEG2025</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">How do I plug EEGDash into the Meta NeuroAI ecosystem?</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p><a class="reference internal" href="#sphx-glr-download-generated-auto-examples-tutorials-70-transfer-foundation-plot-74-neuroai-interop-py"><span class="std std-ref">Go to the end</span></a>
+to download the full example code or to run this example in your browser via Binder.</p>
+</div>
+<section class="sphx-glr-example-title" id="how-do-i-plug-eegdash-into-the-meta-neuroai-ecosystem">
+<span id="sphx-glr-generated-auto-examples-tutorials-70-transfer-foundation-plot-74-neuroai-interop-py"></span><h1>How do I plug EEGDash into the Meta NeuroAI ecosystem?<a class="headerlink" href="#how-do-i-plug-eegdash-into-the-meta-neuroai-ecosystem" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">16 minutes</span></div>
+<p>Meta Research ships four projects under the NeuroAI umbrella
+(<a class="reference external" href="https://facebookresearch.github.io/neuroai/">https://facebookresearch.github.io/neuroai/</a>): <strong>NeuralFetch</strong> for
+unified dataset discovery across 12 catalogues, <strong>NeuralSet</strong> for
+turning neural and stimulus data into AI-ready tensors, <strong>NeuralTrain</strong>
+for deep-learning training on the resulting PyTorch dataset, and
+<strong>NeuralBench</strong> for a unified benchmark across brain foundation models.
+EEGDash is one of NeuralFetch’s 12 supported backends, alongside
+OpenNeuro (BIDS), DANDI (NWB), HuggingFace, Zenodo, Figshare,
+PhysioNet, Dryad, Donders, DataLad, Synapse, and OSF. This tutorial
+walks the four-stage path
+<code class="docutils literal notranslate"><span class="pre">EEGDashDataset</span> <span class="pre">-&gt;</span> <span class="pre">NeuralFetch.Study</span> <span class="pre">-&gt;</span> <span class="pre">NeuralSet.Segmenter</span> <span class="pre">-&gt;</span>
+<span class="pre">torch.utils.data.DataLoader</span></code> so a recording cataloged on <a class="reference external" href="https://nemar.org">NEMAR</a> <span class="bibtex-citation" id="id1">[<a class="reference internal" href="../../../../references.html#id6" title="Arnaud Delorme, Dung Truong, Choonhan Youn, Subhashini Sivagnanam, Claire Stirm, Kenneth Yoshimoto, Russell A Poldrack, Amitava Majumdar, and Scott Makeig. Nemar: an open access data, tools and compute resource operating on neuroelectromagnetic data. Database, 2022. doi:10.1093/database/baac096.">Delorme <em>et al.</em>, 2022</a>]</span> flows through the rest of
+the NeuroAI stack with the bytes intact <span class="bibtex-citation" id="id2">[<a class="reference internal" href="../../../../references.html#id19" title="Giulia Cisotto and Davide Chicco. Ten quick tips for clinical electroencephalographic (eeg) data acquisition and signal processing. PeerJ Computer Science, 10:e2256, 2024. doi:10.7717/peerj-cs.2256.">Cisotto and Chicco, 2024</a>]</span>. The
+recipe composes with self-supervised pretraining on EEG (Banville et
+al. 2021) and cross-task brain decoding <span class="bibtex-citation" id="id3">[<a class="reference internal" href="../../../../references.html#id22" title="Alexandre Défossez, Charlotte Caucheteux, Jérémy Rapin, Ori Kabeli, and Jean-Rémi King. Decoding speech perception from non-invasive brain recordings. Nature Machine Intelligence, 5(10):1097-1107, 2023. doi:10.1038/s42256-023-00714-5.">Défossez <em>et al.</em>, 2023</a>]</span>. The
+deliverable is a 3-panel figure: stage diagram, per-stage shape sanity
+check, integration matrix. So which projects already share the events
+DataFrame, and which ones live downstream of it?</p>
+<section id="learning-objectives">
+<h2>Learning objectives<a class="headerlink" href="#learning-objectives" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Name the four NeuroAI projects (NeuralFetch, NeuralSet, NeuralTrain,
+NeuralBench) and state where EEGDash plugs into the chain.</p></li>
+<li><p>Convert a per-event metadata frame from
+<code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code> into the
+<code class="docutils literal notranslate"><span class="pre">(start,</span> <span class="pre">duration,</span> <span class="pre">type,</span> <span class="pre">timeline)</span></code> events DataFrame that
+<code class="docutils literal notranslate"><span class="pre">neuralfetch.Study.run()</span></code> returns.</p></li>
+<li><p>Configure <code class="xref py py-class docutils literal notranslate"><span class="pre">neuralset.Segmenter</span></code> with a <code class="docutils literal notranslate"><span class="pre">trigger_query</span></code> and
+an <code class="docutils literal notranslate"><span class="pre">EegExtractor</span></code>, then read one batch from
+<a class="reference external" href="https://docs.pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader" title="(in PyTorch v2.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.utils.data.DataLoader</span></code></a>.</p></li>
+<li><p>Read the 3-panel figure and pick the right downstream tutorial for
+each NeuroAI module.</p></li>
+</ul>
+</section>
+<section id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>About 1 min on CPU.</p></li>
+<li><p>Network on first call (~30 MB into <code class="docutils literal notranslate"><span class="pre">cache_dir</span></code> for the EEGDash query).</p></li>
+<li><p>Prerequisites: <span class="xref std std-doc">/auto_examples/tutorials/00_start_here/plot_02_dataset_to_dataloader</span>
+(DataLoader basics), <a class="reference internal" href="plot_70_challenge_dataset_basics.html"><span class="doc">How do I get started with the EEG 2025 Foundation Challenge dataset?</span></a>
+(challenge loader).</p></li>
+<li><p>Concept: <a class="reference internal" href="../../../../concepts/eegdash_objects.html"><span class="doc">EEGDash objects: EEGDash, EEGDashDataset, EEGChallengeDataset</span></a>.</p></li>
+</ul>
+<p>Setup. Seeding <code class="docutils literal notranslate"><span class="pre">numpy</span></code> keeps any sampling reproducible across runs.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <a href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="pathlib.Path" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-class"><span class="n">Path</span></a>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">eegdash</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">eegdash</span><span class="w"> </span><span class="kn">import</span> <a href="../../../../api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset" title="eegdash.EEGDashDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class"><span class="n">EEGDashDataset</span></a>
+<span class="kn">from</span><span class="w"> </span><span class="nn">eegdash.viz</span><span class="w"> </span><span class="kn">import</span> <span class="n">use_eegdash_style</span>
+
+<span class="n">use_eegdash_style</span><span class="p">()</span>
+<a href="https://docs.python.org/3/library/warnings.html#warnings.simplefilter" title="warnings.simplefilter" class="sphx-glr-backref-module-warnings sphx-glr-backref-type-py-function"><span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span></a><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">FutureWarning</span><span class="p">)</span>
+<a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">SEED</span></a> <span class="o">=</span> <span class="mi">42</span>
+<a href="https://numpy.org/doc/stable/reference/random/generated/numpy.random.seed.html#numpy.random.seed" title="numpy.random.seed" class="sphx-glr-backref-module-numpy-random sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span></a><span class="p">(</span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">SEED</span></a><span class="p">)</span>
+
+<a href="https://docs.python.org/3/library/pathlib.html#pathlib.PosixPath" title="pathlib.PosixPath" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">CACHE_DIR</span></a> <span class="o">=</span> <a href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="pathlib.Path" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-class"><span class="n">Path</span></a><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;EEGDASH_CACHE_DIR&quot;</span><span class="p">,</span> <a href="https://docs.python.org/3/library/pathlib.html#pathlib.Path.home" title="pathlib.Path.home" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-method"><span class="n">Path</span><span class="o">.</span><span class="n">home</span></a><span class="p">()</span> <span class="o">/</span> <span class="s2">&quot;.eegdash_cache&quot;</span><span class="p">))</span>
+<a href="https://docs.python.org/3/library/pathlib.html#pathlib.Path.mkdir" title="pathlib.Path.mkdir" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-method"><span class="n">CACHE_DIR</span><span class="o">.</span><span class="n">mkdir</span></a><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;eegdash version: </span><span class="si">{</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">eegdash</span><span class="o">.</span><span class="n">__version__</span></a><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;cache directory: </span><span class="si">{</span><a href="https://docs.python.org/3/library/pathlib.html#pathlib.PosixPath" title="pathlib.PosixPath" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">CACHE_DIR</span></a><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">neuralfetch</span>  <span class="c1"># noqa: F401  imported for the version-print only</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">neuralset</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ns</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">neuralfetch.download</span><span class="w"> </span><span class="kn">import</span> <span class="n">Eegdash</span> <span class="k">as</span> <span class="n">NeuralFetchEegdash</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">neuralset.dataloader</span><span class="w"> </span><span class="kn">import</span> <span class="n">Segmenter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">neuralset.events</span><span class="w"> </span><span class="kn">import</span> <span class="n">standardize_events</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">neuralset.extractors</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pulse</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>eegdash version: 0.7.2
+cache directory: /home/runner/eegdash_cache
+</pre></div>
+</div>
+</section>
+<section id="four-projects-one-chain-the-mental-model">
+<h2>Four projects, one chain: the mental model<a class="headerlink" href="#four-projects-one-chain-the-mental-model" title="Link to this heading">#</a></h2>
+<p>The Meta NeuroAI page positions the four projects as a single
+left-to-right pipeline, not four independent libraries. Each one owns
+one verb and forwards a clean handoff to the next:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>EEGDashDataset    NeuralFetch.Study    NeuralSet.Segmenter   PyTorch
+(BIDS query +     (12 catalogues +     (events DataFrame      DataLoader
+ lazy Raw)         standardiser)        + extractors -&gt; X)    (consumer)
++-------------+   +--------------+     +------------------+   +--------+
+| record 0  --|--&gt;| events row 0 |     | segment 0 (X, t) |   |batch 0 |
+| record 1  --|--&gt;| events row 1 |----&gt;| segment 1 (X, t) |--&gt;|batch 1 |
+| ...         |   | ...          |     | ...              |   |...     |
++-------------+   +--------------+     +------------------+   +--------+
+  BIDS meta        unified event log     trigger_query +
+  per record       per dataset           extractors
+</pre></div>
+</div>
+<p>Three corollaries follow:</p>
+<ul class="simple">
+<li><p><strong>Discovery vs tensorisation are different jobs.</strong>
+<code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code> and <code class="docutils literal notranslate"><span class="pre">neuralfetch.Study</span></code>
+discover and standardise; <code class="xref py py-class docutils literal notranslate"><span class="pre">neuralset.Segmenter</span></code> and the
+PyTorch <a class="reference external" href="https://docs.pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader" title="(in PyTorch v2.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataLoader</span></code></a> cut and batch. The
+contracts are different on purpose: a discovery layer hides
+catalogue-specific quirks; a tensor layer hides MNE / NWB quirks.</p></li>
+<li><p><strong>EEGDash is the EEG specialist</strong> for the catalogue mesh.
+<code class="docutils literal notranslate"><span class="pre">neuralfetch.download.Eegdash</span></code> calls into <code class="docutils literal notranslate"><span class="pre">eegdash</span></code> for record
+discovery and reuses the S3 downloader for transfer; the same
+discovery API the rest of this gallery exercises also feeds the
+NeuroAI stack.</p></li>
+<li><p><strong>The events DataFrame is the bus.</strong> NeuralFetch’s
+<code class="docutils literal notranslate"><span class="pre">Study.run()</span></code> returns a flat <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v3.0.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a> with at
+least <code class="docutils literal notranslate"><span class="pre">start</span></code>, <code class="docutils literal notranslate"><span class="pre">duration</span></code>, <code class="docutils literal notranslate"><span class="pre">type</span></code>, and <code class="docutils literal notranslate"><span class="pre">timeline</span></code> columns;
+NeuralSet’s <code class="docutils literal notranslate"><span class="pre">Segmenter</span></code> consumes that frame. Knowing the schema
+lets you swap any dataset on the discovery side without touching
+the tensor pipeline.</p></li>
+</ul>
+</section>
+<section id="what-does-the-neuralset-pipeline-expose">
+<h2>What does the NeuralSet pipeline expose?<a class="headerlink" href="#what-does-the-neuralset-pipeline-expose" title="Link to this heading">#</a></h2>
+<p>Before building anything, list the public symbols on the
+<code class="xref py py-mod docutils literal notranslate"><span class="pre">neuralset</span></code> module. The names <code class="docutils literal notranslate"><span class="pre">Study</span></code>, <code class="docutils literal notranslate"><span class="pre">Event</span></code>,
+<code class="docutils literal notranslate"><span class="pre">Segmenter</span></code>, <code class="docutils literal notranslate"><span class="pre">Chain</span></code>, <code class="docutils literal notranslate"><span class="pre">SegmentDataset</span></code>, and the <code class="docutils literal notranslate"><span class="pre">extractors</span></code>
+subpackage are the surface this tutorial exercises.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ns_public</span></a> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+    <span class="n">name</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="n">ns</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;base&quot;</span>
+<span class="p">)</span>
+<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">surface_df</span></a> <span class="o">=</span> <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class"><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span></a><span class="p">({</span><span class="s2">&quot;symbol&quot;</span><span class="p">:</span> <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ns_public</span></a><span class="p">})</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">surface_df</span></a>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>symbol</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>BaseExtractor</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>BaseModel</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>CACHE_FOLDER</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Chain</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Event</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>EventsTransform</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>Segment</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>SegmentDataset</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>Segmenter</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>Step</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>Study</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>dataloader</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>events</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>extractors</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>segments</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>utils</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<br />
+<br /></section>
+<section id="step-1-load-one-eegdash-recording">
+<h2>Step 1. Load one EEGDash recording<a class="headerlink" href="#step-1-load-one-eegdash-recording" title="Link to this heading">#</a></h2>
+<p>Same idiom as
+<span class="xref std std-doc">/auto_examples/tutorials/00_start_here/plot_01_first_recording</span>.
+One subject, one task; the records-level metadata carries BIDS
+entities forward to every later stage <span class="bibtex-citation" id="id4">[<a class="reference internal" href="../../../../references.html#id7" title="Cyril R. Pernet, Stefan Appelhoff, Krzysztof J. Gorgolewski, Guillaume Flandin, Christophe Phillips, Arnaud Delorme, and Robert Oostenveld. Eeg-bids, an extension to the brain imaging data structure for electroencephalography. Scientific Data, 2019. doi:10.1038/s41597-019-0104-8.">Pernet <em>et al.</em>, 2019</a>]</span>.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">DATASET</span></a> <span class="o">=</span> <span class="s2">&quot;ds002718&quot;</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">SUBJECT</span></a> <span class="o">=</span> <span class="s2">&quot;002&quot;</span>  <span class="c1"># E3.23 data minimality: one subject keeps the run small</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">TASK</span></a> <span class="o">=</span> <span class="s2">&quot;FaceRecognition&quot;</span>
+
+<a href="../../../../api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset" title="eegdash.EEGDashDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">dataset</span></a> <span class="o">=</span> <a href="../../../../api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset" title="eegdash.EEGDashDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class"><span class="n">EEGDashDataset</span></a><span class="p">(</span>
+    <span class="n">cache_dir</span><span class="o">=</span><a href="https://docs.python.org/3/library/pathlib.html#pathlib.PosixPath" title="pathlib.PosixPath" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">CACHE_DIR</span></a><span class="p">,</span> <a href="../../../../api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset" title="eegdash.EEGDashDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">dataset</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">DATASET</span></a><span class="p">,</span> <span class="n">subject</span><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">SUBJECT</span></a><span class="p">,</span> <span class="n">task</span><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">TASK</span></a>
+<span class="p">)</span>
+<span class="n">record</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">dataset</span><span class="o">.</span><span class="n">datasets</span></a><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">raw</span> <span class="o">=</span> <span class="n">record</span><span class="o">.</span><span class="n">raw</span>
+<a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">n_channels</span></a> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><a href="https://mne.tools/stable/generated/mne.Info.html#mne.Info" title="mne._fiff.meas_info.Info" class="sphx-glr-backref-module-mne-_fiff-meas_info sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">raw</span><span class="o">.</span><span class="n">info</span></a><span class="p">[</span><span class="s2">&quot;nchan&quot;</span><span class="p">])</span>
+<a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sfreq</span></a> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><a href="https://mne.tools/stable/generated/mne.Info.html#mne.Info" title="mne._fiff.meas_info.Info" class="sphx-glr-backref-module-mne-_fiff-meas_info sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">raw</span><span class="o">.</span><span class="n">info</span></a><span class="p">[</span><span class="s2">&quot;sfreq&quot;</span><span class="p">])</span>
+<a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">duration_s</span></a> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">raw</span><span class="o">.</span><span class="n">times</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.html#pandas.Series" title="pandas.Series" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class"><span class="n">pd</span><span class="o">.</span><span class="n">Series</span></a><span class="p">(</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;n_records&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">dataset</span><span class="o">.</span><span class="n">datasets</span></a><span class="p">),</span>
+        <span class="s2">&quot;subject&quot;</span><span class="p">:</span> <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">SUBJECT</span></a><span class="p">,</span>
+        <span class="s2">&quot;task&quot;</span><span class="p">:</span> <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">TASK</span></a><span class="p">,</span>
+        <span class="s2">&quot;n_channels&quot;</span><span class="p">:</span> <a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">n_channels</span></a><span class="p">,</span>
+        <span class="s2">&quot;sfreq (Hz)&quot;</span><span class="p">:</span> <a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sfreq</span></a><span class="p">,</span>
+        <span class="s2">&quot;duration (s)&quot;</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">duration_s</span></a><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="p">},</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">,</span>
+<span class="p">)</span><span class="o">.</span><span class="n">to_frame</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[05/08/26 18:44:10] WARNING  File not found on S3, skipping:   downloader.py:163
+                             s3://openneuro.org/ds002718/sub-0
+                             02/eeg/sub-002_task-FaceRecogniti
+                             on_eeg.fdt
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>n_records</th>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>subject</th>
+      <td>002</td>
+    </tr>
+    <tr>
+      <th>task</th>
+      <td>FaceRecognition</td>
+    </tr>
+    <tr>
+      <th>n_channels</th>
+      <td>74</td>
+    </tr>
+    <tr>
+      <th>sfreq (Hz)</th>
+      <td>250.0</td>
+    </tr>
+    <tr>
+      <th>duration (s)</th>
+      <td>2991.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<br />
+<br /><p><strong>Investigate.</strong> <code class="docutils literal notranslate"><span class="pre">raw.annotations</span></code> carries the BIDS event list
+attached to this recording. Every event has an onset (seconds), a
+duration (seconds), and a description string. The next step turns
+that into the events-DataFrame layout that NeuralFetch’s
+<code class="docutils literal notranslate"><span class="pre">Study.run()</span></code> returns.</p>
+</section>
+<section id="step-2-build-the-events-dataframe-the-neuroai-bus">
+<h2>Step 2. Build the events DataFrame (the NeuroAI bus)<a class="headerlink" href="#step-2-build-the-events-dataframe-the-neuroai-bus" title="Link to this heading">#</a></h2>
+<p><strong>Predict.</strong> Before running the next cell, write down which columns
+NeuralFetch normalises onto. The required four are <code class="docutils literal notranslate"><span class="pre">start</span></code>,
+<code class="docutils literal notranslate"><span class="pre">duration</span></code>, <code class="docutils literal notranslate"><span class="pre">type</span></code>, and <code class="docutils literal notranslate"><span class="pre">timeline</span></code>.</p>
+<p><strong>Run.</strong> Walk the BIDS annotations and emit one row per event. Two
+subtleties matter here. First, NeuralSet’s extractors validate the
+<code class="docutils literal notranslate"><span class="pre">type</span></code> column against a small canonical taxonomy
+(<code class="docutils literal notranslate"><span class="pre">Stimulus</span></code>, <code class="docutils literal notranslate"><span class="pre">Image</span></code>, <code class="docutils literal notranslate"><span class="pre">Audio</span></code>, <code class="docutils literal notranslate"><span class="pre">Eeg</span></code>, <code class="docutils literal notranslate"><span class="pre">Action</span></code>,
+<code class="docutils literal notranslate"><span class="pre">Artifact</span></code>, …); the raw BIDS description goes into <code class="docutils literal notranslate"><span class="pre">extra</span></code> so
+nothing is lost. Second, the <code class="docutils literal notranslate"><span class="pre">timeline</span></code> column is the per-recording
+identifier (subject + task + run); a downstream
+<code class="xref py py-class docutils literal notranslate"><span class="pre">neuralset.Segmenter</span></code> groups segments inside a single
+timeline, so a leakage-aware split lives at this granularity.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">annotations_to_events</span><span class="p">(</span>
+    <span class="n">raw</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">timeline</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">recording_duration</span><span class="p">:</span> <span class="nb">float</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class"><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span></a><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert :attr:`mne.io.Raw.annotations` to the NeuroAI event schema.</span>
+
+<span class="sd">    The four required columns are ``start`` (seconds, float),</span>
+<span class="sd">    ``duration`` (seconds, float, &gt;= 0), ``type`` (str, one of the</span>
+<span class="sd">    canonical NeuralSet event names), and ``timeline`` (str). The raw</span>
+<span class="sd">    BIDS description lands on ``extra[&#39;bids_description&#39;]`` so callers</span>
+<span class="sd">    can still recover the per-event task label. A single</span>
+<span class="sd">    ``Background`` event spanning the recording is added so a</span>
+<span class="sd">    stride-based :class:`neuralset.Segmenter` has a parent block to</span>
+<span class="sd">    walk; this matches NeuralFetch&#39;s own convention for studies</span>
+<span class="sd">    without explicit run-level boundary markers.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">rows</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;start&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+            <span class="s2">&quot;duration&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">recording_duration</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)),</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Background&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;timeline&quot;</span><span class="p">:</span> <span class="n">timeline</span><span class="p">,</span>
+            <span class="s2">&quot;extra&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;bids_description&quot;</span><span class="p">:</span> <span class="s2">&quot;recording-span&quot;</span><span class="p">},</span>
+        <span class="p">}</span>
+    <span class="p">]</span>
+    <span class="k">if</span> <span class="n">raw</span><span class="o">.</span><span class="n">annotations</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">raw</span><span class="o">.</span><span class="n">annotations</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class"><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span></a><span class="p">(</span><span class="n">rows</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">ann</span> <span class="ow">in</span> <span class="n">raw</span><span class="o">.</span><span class="n">annotations</span><span class="p">:</span>
+        <span class="n">desc</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">ann</span><span class="p">[</span><span class="s2">&quot;description&quot;</span><span class="p">])</span>
+        <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;start&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">ann</span><span class="p">[</span><span class="s2">&quot;onset&quot;</span><span class="p">]),</span>
+                <span class="s2">&quot;duration&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">ann</span><span class="p">[</span><span class="s2">&quot;duration&quot;</span><span class="p">],</span> <span class="mf">0.0</span><span class="p">)),</span>
+                <span class="c1"># ``Stimulus`` is the canonical NeuralSet event name for</span>
+                <span class="c1"># task-locked stimulus onsets; ``boundary`` becomes a</span>
+                <span class="c1"># generic ``Event`` so the Segmenter does not stumble.</span>
+                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Stimulus&quot;</span> <span class="k">if</span> <span class="n">desc</span> <span class="o">!=</span> <span class="s2">&quot;boundary&quot;</span> <span class="k">else</span> <span class="s2">&quot;Event&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;timeline&quot;</span><span class="p">:</span> <span class="n">timeline</span><span class="p">,</span>
+                <span class="s2">&quot;extra&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;bids_description&quot;</span><span class="p">:</span> <span class="n">desc</span><span class="p">},</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class"><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span></a><span class="p">(</span><span class="n">rows</span><span class="p">)</span>
+
+
+<a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">timeline_id</span></a> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;sub-</span><span class="si">{</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">SUBJECT</span></a><span class="si">}</span><span class="s2">_task-</span><span class="si">{</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">TASK</span></a><span class="si">}</span><span class="s2">&quot;</span>
+<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">events_df</span></a> <span class="o">=</span> <span class="n">annotations_to_events</span><span class="p">(</span>
+    <span class="n">raw</span><span class="p">,</span> <span class="n">timeline</span><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">timeline_id</span></a><span class="p">,</span> <span class="n">recording_duration</span><span class="o">=</span><a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">duration_s</span></a>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;events: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">events_df</span></a><span class="p">)</span><span class="si">}</span><span class="s2"> rows; types: </span><span class="si">{</span><a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">events_df</span></a><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">nunique</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.head.html#pandas.DataFrame.head" title="pandas.DataFrame.head" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-method"><span class="n">events_df</span><span class="o">.</span><span class="n">head</span></a><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>events: 1480 rows; types: 3
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>start</th>
+      <th>duration</th>
+      <th>type</th>
+      <th>timeline</th>
+      <th>extra</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.000000</td>
+      <td>2990.996</td>
+      <td>Background</td>
+      <td>sub-002_task-FaceRecognition</td>
+      <td>{'bids_description': 'recording-span'}</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>24.205818</td>
+      <td>0.000</td>
+      <td>Stimulus</td>
+      <td>sub-002_task-FaceRecognition</td>
+      <td>{'bids_description': 'unfamiliar_new'}</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>25.154000</td>
+      <td>0.000</td>
+      <td>Stimulus</td>
+      <td>sub-002_task-FaceRecognition</td>
+      <td>{'bids_description': 'left_nonsym'}</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>27.245818</td>
+      <td>0.000</td>
+      <td>Stimulus</td>
+      <td>sub-002_task-FaceRecognition</td>
+      <td>{'bids_description': 'unfamiliar_second_early'}</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>27.893091</td>
+      <td>0.000</td>
+      <td>Stimulus</td>
+      <td>sub-002_task-FaceRecognition</td>
+      <td>{'bids_description': 'left_nonsym'}</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>30.353091</td>
+      <td>0.000</td>
+      <td>Stimulus</td>
+      <td>sub-002_task-FaceRecognition</td>
+      <td>{'bids_description': 'unfamiliar_new'}</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>33.360364</td>
+      <td>0.000</td>
+      <td>Stimulus</td>
+      <td>sub-002_task-FaceRecognition</td>
+      <td>{'bids_description': 'unfamiliar_new'}</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>36.552182</td>
+      <td>0.000</td>
+      <td>Stimulus</td>
+      <td>sub-002_task-FaceRecognition</td>
+      <td>{'bids_description': 'famous_new'}</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>37.312182</td>
+      <td>0.000</td>
+      <td>Stimulus</td>
+      <td>sub-002_task-FaceRecognition</td>
+      <td>{'bids_description': 'right_sym'}</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>39.574909</td>
+      <td>0.000</td>
+      <td>Stimulus</td>
+      <td>sub-002_task-FaceRecognition</td>
+      <td>{'bids_description': 'unfamiliar_new'}</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<br />
+<br /><p><strong>Investigate.</strong> The first few rows look like a flat event log: one
+row per BIDS annotation, with the timeline column threading the rows
+back to the originating recording. This is the schema NeuralFetch’s
+studies land on regardless of the source catalogue (OpenNeuro,
+DANDI, HuggingFace, …). Keeping the schema thin is what lets the
+NeuralSet side stay catalogue-agnostic.</p>
+</section>
+<section id="step-3-show-the-neuralfetch-handoff">
+<h2>Step 3. Show the NeuralFetch handoff<a class="headerlink" href="#step-3-show-the-neuralfetch-handoff" title="Link to this heading">#</a></h2>
+<p><strong>Run.</strong> When <code class="docutils literal notranslate"><span class="pre">neuralfetch</span></code> is installed, the EEGDash backend is
+importable as <code class="xref py py-class docutils literal notranslate"><span class="pre">neuralfetch.download.Eegdash</span></code>. Its constructor
+names the OpenNeuro accession via <code class="docutils literal notranslate"><span class="pre">study=</span></code>; the rest of NeuralFetch
+wraps that into a per-study <code class="xref py py-class docutils literal notranslate"><span class="pre">neuralfetch.studies.Study</span></code> (one
+per dataset) whose <code class="docutils literal notranslate"><span class="pre">.run()</span></code> returns the events DataFrame above.
+The tutorial does not call <code class="docutils literal notranslate"><span class="pre">.run()</span></code> here because it would download
+the full study; the construction surface is enough to confirm the
+handoff.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">neuralfetch_card</span></a> <span class="o">=</span> <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.html#pandas.Series" title="pandas.Series" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class"><span class="n">pd</span><span class="o">.</span><span class="n">Series</span></a><span class="p">(</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;backend class&quot;</span><span class="p">:</span> <span class="s2">&quot;neuralfetch.download.Eegdash&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;constructor&quot;</span><span class="p">:</span> <span class="s2">&quot;Eegdash(study=&#39;ds002718&#39;, dset_dir=CACHE_DIR)&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;discovery&quot;</span><span class="p">:</span> <span class="s2">&quot;uses eegdash.EEGDashDataset internally&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;transfer&quot;</span><span class="p">:</span> <span class="s2">&quot;neuralfetch.download.S3 (chunked)&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;events output&quot;</span><span class="p">:</span> <span class="s2">&quot;.run() -&gt; pandas.DataFrame[start, duration, type, timeline]&quot;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">,</span>
+<span class="p">)</span><span class="o">.</span><span class="n">to_frame</span><span class="p">()</span>
+
+<span class="c1"># Construct the descriptor without calling ``.run()`` so the</span>
+<span class="c1"># tutorial budget stays small. NeuralFetch validates the</span>
+<span class="c1"># constructor arguments via pydantic; a successful instantiation</span>
+<span class="c1"># confirms the EEGDash backend is wired up.</span>
+<span class="n">nf_backend</span> <span class="o">=</span> <span class="n">NeuralFetchEegdash</span><span class="p">(</span>
+    <span class="n">study</span><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">DATASET</span></a><span class="p">,</span>
+    <span class="n">dset_dir</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><a href="https://docs.python.org/3/library/pathlib.html#pathlib.PosixPath" title="pathlib.PosixPath" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">CACHE_DIR</span></a> <span class="o">/</span> <span class="s2">&quot;neuralfetch&quot;</span><span class="p">),</span>
+<span class="p">)</span>
+<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.loc.html#pandas.DataFrame.loc" title="pandas.DataFrame.loc" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-property"><span class="n">neuralfetch_card</span><span class="o">.</span><span class="n">loc</span></a><span class="p">[</span><span class="s2">&quot;instance dset_dir&quot;</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">nf_backend</span><span class="o">.</span><span class="n">dset_dir</span></a><span class="p">)</span>
+<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.loc.html#pandas.DataFrame.loc" title="pandas.DataFrame.loc" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-property"><span class="n">neuralfetch_card</span><span class="o">.</span><span class="n">loc</span></a><span class="p">[</span><span class="s2">&quot;instance study&quot;</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">]</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">nf_backend</span><span class="o">.</span><span class="n">study</span></a>
+<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">neuralfetch_card</span></a>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>backend class</th>
+      <td>neuralfetch.download.Eegdash</td>
+    </tr>
+    <tr>
+      <th>constructor</th>
+      <td>Eegdash(study='ds002718', dset_dir=CACHE_DIR)</td>
+    </tr>
+    <tr>
+      <th>discovery</th>
+      <td>uses eegdash.EEGDashDataset internally</td>
+    </tr>
+    <tr>
+      <th>transfer</th>
+      <td>neuralfetch.download.S3 (chunked)</td>
+    </tr>
+    <tr>
+      <th>events output</th>
+      <td>.run() -&gt; pandas.DataFrame[start, duration, ty...</td>
+    </tr>
+    <tr>
+      <th>instance dset_dir</th>
+      <td>/home/runner/eegdash_cache/neuralfetch</td>
+    </tr>
+    <tr>
+      <th>instance study</th>
+      <td>ds002718</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<br />
+<br /></section>
+<section id="step-4-cut-into-segments-with-neuralset">
+<h2>Step 4. Cut into segments with NeuralSet<a class="headerlink" href="#step-4-cut-into-segments-with-neuralset" title="Link to this heading">#</a></h2>
+<p><strong>Predict.</strong> Given the events DataFrame above, what does
+<code class="docutils literal notranslate"><span class="pre">Segmenter(stride=2.0,</span> <span class="pre">duration=2.0)</span></code> return? Hint: it walks every
+2-second non-overlapping window inside each timeline, regardless of
+event content.</p>
+<p><strong>Run.</strong> <code class="xref py py-class docutils literal notranslate"><span class="pre">neuralset.Segmenter</span></code> is the tensor-pipeline entry
+point. The two parameters that matter at first read are <code class="docutils literal notranslate"><span class="pre">duration</span></code>
+(segment length, seconds) and either <code class="docutils literal notranslate"><span class="pre">trigger_query</span></code> (cut around
+specific events) or <code class="docutils literal notranslate"><span class="pre">stride</span></code> (sliding window). The
+<code class="docutils literal notranslate"><span class="pre">extractors</span></code> dict names the per-segment outputs.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">WINDOW_SECONDS</span></a> <span class="o">=</span> <span class="mf">2.0</span>
+<a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">window_samples</span></a> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">WINDOW_SECONDS</span></a> <span class="o">*</span> <a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sfreq</span></a><span class="p">)</span>
+
+
+<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sample_window</span></a> <span class="o">=</span> <span class="n">raw</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span><span class="o">.</span><span class="n">pick_types</span><span class="p">(</span><span class="n">eeg</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">get_data</span><span class="p">()[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:</span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">window_samples</span></a><span class="p">]</span>
+
+<span class="c1"># Run the Segmenter against the live events DataFrame. The Pulse</span>
+<span class="c1"># extractor returns a binary mask of triggers per segment; it is</span>
+<span class="c1"># the lightest extractor, so the cell stays inside the runtime</span>
+<span class="c1"># budget. The full pipeline would chain ``Pulse`` with</span>
+<span class="c1"># ``EegExtractor`` to bring the voltage signal in.</span>
+<span class="n">segmenter</span> <span class="o">=</span> <span class="n">Segmenter</span><span class="p">(</span>
+    <span class="n">start</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">duration</span><span class="o">=</span><a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">WINDOW_SECONDS</span></a><span class="p">,</span>
+    <span class="n">stride</span><span class="o">=</span><a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">WINDOW_SECONDS</span></a><span class="p">,</span>
+    <span class="n">stride_drop_incomplete</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">trigger_query</span><span class="o">=</span><span class="s1">&#39;type == &quot;Background&quot;&#39;</span><span class="p">,</span>
+    <span class="n">drop_incomplete</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">extractors</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;pulse&quot;</span><span class="p">:</span> <span class="n">Pulse</span><span class="p">(</span><span class="n">event_types</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Stimulus&quot;</span><span class="p">,),</span> <span class="n">aggregation</span><span class="o">=</span><span class="s2">&quot;sum&quot;</span><span class="p">)},</span>
+<span class="p">)</span>
+<span class="c1"># ``standardize_events`` sorts, fills the BIDS columns, and round-trips</span>
+<span class="c1"># every row through the canonical pydantic Event model. Without it,</span>
+<span class="c1"># ``Segmenter.apply`` raises with a clear message about the missing</span>
+<span class="c1"># standardisation step.</span>
+<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">events_std</span></a> <span class="o">=</span> <span class="n">standardize_events</span><span class="p">(</span><a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">events_df</span></a><span class="p">,</span> <span class="n">auto_fill</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">seg_dataset</span> <span class="o">=</span> <span class="n">segmenter</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">events_std</span></a><span class="p">)</span>
+<a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">n_segments</span></a> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">seg_dataset</span><span class="p">)</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">first_keys</span></a> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">seg_dataset</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="k">if</span> <a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">n_segments</span></a> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="p">[]</span>
+<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">seg_card</span></a> <span class="o">=</span> <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.html#pandas.Series" title="pandas.Series" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class"><span class="n">pd</span><span class="o">.</span><span class="n">Series</span></a><span class="p">(</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;Segmenter.duration&quot;</span><span class="p">:</span> <a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">WINDOW_SECONDS</span></a><span class="p">,</span>
+        <span class="s2">&quot;Segmenter.stride&quot;</span><span class="p">:</span> <a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">WINDOW_SECONDS</span></a><span class="p">,</span>
+        <span class="s2">&quot;n_segments&quot;</span><span class="p">:</span> <a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">n_segments</span></a><span class="p">,</span>
+        <span class="s2">&quot;extractor keys&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">first_keys</span></a><span class="p">),</span>
+        <span class="s2">&quot;events kept&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.shape.html#pandas.DataFrame.shape" title="pandas.DataFrame.shape" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-property"><span class="n">events_std</span><span class="o">.</span><span class="n">shape</span></a><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+    <span class="p">},</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">,</span>
+<span class="p">)</span><span class="o">.</span><span class="n">to_frame</span><span class="p">()</span>
+<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">seg_card</span></a>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2026-05-08 18:44:12 - WARNING - neuralset.segments:665 - 403 segments out of 1495 did not contain valid events for event type &lt;class &#39;neuralset.events.etypes.Stimulus&#39;&gt;
+[05/08/26 18:44:12] WARNING  403 segments out of 1495 did not    segments.py:665
+                             contain valid events for event type
+                             &lt;class
+                             &#39;neuralset.events.etypes.Stimulus&#39;&gt;
+2026-05-08 18:44:12 - INFO - neuralset.dataloader:618 - 403 segments are missing events of type Stimulus. They will be populated with default missing values through prepare.
+                    INFO     403 segments are missing events   dataloader.py:618
+                             of type Stimulus. They will be
+                             populated with default missing
+                             values through prepare.
+2026-05-08 18:44:12 - INFO - neuralset.dataloader:625 - Removing 403 segments out of 1495
+                    INFO     Removing 403 segments out of 1495 dataloader.py:625
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Segmenter.duration</th>
+      <td>2.0</td>
+    </tr>
+    <tr>
+      <th>Segmenter.stride</th>
+      <td>2.0</td>
+    </tr>
+    <tr>
+      <th>n_segments</th>
+      <td>1092</td>
+    </tr>
+    <tr>
+      <th>extractor keys</th>
+      <td>['pulse']</td>
+    </tr>
+    <tr>
+      <th>events kept</th>
+      <td>1480</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<br />
+<br /><p><strong>Investigate.</strong> When the live run completes, <code class="docutils literal notranslate"><span class="pre">n_segments</span></code> lines up
+with <code class="docutils literal notranslate"><span class="pre">floor(timeline_duration</span> <span class="pre">/</span> <span class="pre">WINDOW_SECONDS)</span></code>. The first segment
+carries one entry per extractor under <code class="docutils literal notranslate"><span class="pre">segment.data</span></code>; with the
+<code class="docutils literal notranslate"><span class="pre">EegExtractor</span></code> instead of <code class="docutils literal notranslate"><span class="pre">Pulse</span></code>, that entry would be a tensor
+of shape <code class="docutils literal notranslate"><span class="pre">(1,</span> <span class="pre">n_channels,</span> <span class="pre">window_samples)</span></code> (the leading 1 is the
+batch axis NeuralSet always prepends).</p>
+</section>
+<section id="step-5-wrap-the-segments-in-a-pytorch-dataloader">
+<h2>Step 5. Wrap the segments in a PyTorch DataLoader<a class="headerlink" href="#step-5-wrap-the-segments-in-a-pytorch-dataloader" title="Link to this heading">#</a></h2>
+<p>The segment dataset exposes <code class="docutils literal notranslate"><span class="pre">__len__</span></code> and <code class="docutils literal notranslate"><span class="pre">__getitem__</span></code> plus a
+<code class="docutils literal notranslate"><span class="pre">collate_fn</span></code> that knows how to stack the dict-of-tensors layout
+Segmenter emits. The <a class="reference external" href="https://docs.pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader" title="(in PyTorch v2.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataLoader</span></code></a> call
+below is byte-identical to the one in
+<span class="xref std std-doc">/auto_examples/tutorials/00_start_here/plot_02_dataset_to_dataloader</span>
+except for the <code class="docutils literal notranslate"><span class="pre">collate_fn</span></code> argument, which is the only line that
+changes when you move from braindecode windows to NeuralSet
+segments.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">torch.utils.data</span><span class="w"> </span><span class="kn">import</span> <a href="https://docs.pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader" title="torch.utils.data.DataLoader" class="sphx-glr-backref-module-torch-utils-data sphx-glr-backref-type-py-class"><span class="n">DataLoader</span></a>
+
+<a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">BATCH_SIZE</span></a> <span class="o">=</span> <span class="mi">8</span>
+<a href="https://docs.pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader" title="torch.utils.data.DataLoader" class="sphx-glr-backref-module-torch-utils-data sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">loader</span></a> <span class="o">=</span> <a href="https://docs.pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader" title="torch.utils.data.DataLoader" class="sphx-glr-backref-module-torch-utils-data sphx-glr-backref-type-py-class"><span class="n">DataLoader</span></a><span class="p">(</span>
+    <span class="n">seg_dataset</span><span class="p">,</span>
+    <span class="n">batch_size</span><span class="o">=</span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">BATCH_SIZE</span></a><span class="p">,</span>
+    <span class="n">shuffle</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">num_workers</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">collate_fn</span><span class="o">=</span><span class="n">seg_dataset</span><span class="o">.</span><span class="n">collate_fn</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">first_batch</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><a href="https://docs.pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader" title="torch.utils.data.DataLoader" class="sphx-glr-backref-module-torch-utils-data sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">loader</span></a><span class="p">))</span>
+<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">loader_card</span></a> <span class="o">=</span> <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.html#pandas.Series" title="pandas.Series" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class"><span class="n">pd</span><span class="o">.</span><span class="n">Series</span></a><span class="p">(</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;DataLoader.batch_size&quot;</span><span class="p">:</span> <a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">BATCH_SIZE</span></a><span class="p">,</span>
+        <span class="s2">&quot;n_batches&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><a href="https://docs.pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader" title="torch.utils.data.DataLoader" class="sphx-glr-backref-module-torch-utils-data sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">loader</span></a><span class="p">),</span>
+        <span class="s2">&quot;batch type&quot;</span><span class="p">:</span> <span class="nb">type</span><span class="p">(</span><span class="n">first_batch</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+        <span class="s2">&quot;batch keys&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span>
+            <span class="nb">sorted</span><span class="p">(</span><span class="n">first_batch</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">first_batch</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="p">[]</span>
+        <span class="p">),</span>
+    <span class="p">},</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">,</span>
+<span class="p">)</span><span class="o">.</span><span class="n">to_frame</span><span class="p">()</span>
+<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">loader_card</span></a>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>DataLoader.batch_size</th>
+      <td>8</td>
+    </tr>
+    <tr>
+      <th>n_batches</th>
+      <td>137</td>
+    </tr>
+    <tr>
+      <th>batch type</th>
+      <td>Batch</td>
+    </tr>
+    <tr>
+      <th>batch keys</th>
+      <td>['pulse']</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<br />
+<br /><p><strong>Investigate.</strong> The DataLoader call above does not change when you
+swap the source catalogue: the same line works for an OpenNeuro
+pull, a DANDI NWB pull, or a HuggingFace dataset, because the events
+DataFrame is the bus.</p>
+</section>
+<section id="where-does-each-neuroai-module-fit">
+<h2>Where does each NeuroAI module fit?<a class="headerlink" href="#where-does-each-neuroai-module-fit" title="Link to this heading">#</a></h2>
+<p>The four projects compose into one chain. The integration matrix in
+panel 3 of the figure below pins each project to its EEGDash
+integration status and the gallery tutorial that demonstrates it.
+Use the matrix as a navigation map when you read the rest of the
+70_transfer_foundation track.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">integration_matrix</span></a> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;project&quot;</span><span class="p">:</span> <span class="s2">&quot;NeuralFetch&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;discover + standardise across 12 catalogues&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;shipped (EEGDash backend)&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;status_kind&quot;</span><span class="p">:</span> <span class="s2">&quot;shipped&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;tutorial&quot;</span><span class="p">:</span> <span class="s2">&quot;plot_74 (this one)&quot;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;project&quot;</span><span class="p">:</span> <span class="s2">&quot;NeuralSet&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;events DataFrame -&gt; tensors&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;compatible (Segmenter accepts the schema)&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;status_kind&quot;</span><span class="p">:</span> <span class="s2">&quot;compatible&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;tutorial&quot;</span><span class="p">:</span> <span class="s2">&quot;plot_74 (this one)&quot;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;project&quot;</span><span class="p">:</span> <span class="s2">&quot;NeuralTrain&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;deep-learning training loop&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;downstream (PyTorch Dataset is the handoff)&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;status_kind&quot;</span><span class="p">:</span> <span class="s2">&quot;downstream&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;tutorial&quot;</span><span class="p">:</span> <span class="s2">&quot;plot_71_cross_task_transfer&quot;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;project&quot;</span><span class="p">:</span> <span class="s2">&quot;NeuralBench&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;benchmark across foundation models&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;downstream (challenge dataset shares the bus)&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;status_kind&quot;</span><span class="p">:</span> <span class="s2">&quot;downstream&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;tutorial&quot;</span><span class="p">:</span> <span class="s2">&quot;plot_70_challenge_dataset_basics&quot;</span><span class="p">,</span>
+    <span class="p">},</span>
+<span class="p">]</span>
+<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class"><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span></a><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">integration_matrix</span></a><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>project</th>
+      <th>role</th>
+      <th>status</th>
+      <th>status_kind</th>
+      <th>tutorial</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>NeuralFetch</td>
+      <td>discover + standardise across 12 catalogues</td>
+      <td>shipped (EEGDash backend)</td>
+      <td>shipped</td>
+      <td>plot_74 (this one)</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>NeuralSet</td>
+      <td>events DataFrame -&gt; tensors</td>
+      <td>compatible (Segmenter accepts the schema)</td>
+      <td>compatible</td>
+      <td>plot_74 (this one)</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>NeuralTrain</td>
+      <td>deep-learning training loop</td>
+      <td>downstream (PyTorch Dataset is the handoff)</td>
+      <td>downstream</td>
+      <td>plot_71_cross_task_transfer</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>NeuralBench</td>
+      <td>benchmark across foundation models</td>
+      <td>downstream (challenge dataset shares the bus)</td>
+      <td>downstream</td>
+      <td>plot_70_challenge_dataset_basics</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<br />
+<br /></section>
+<section id="pipeline-at-a-glance-live-shapes">
+<h2>Pipeline at a glance: live shapes<a class="headerlink" href="#pipeline-at-a-glance-live-shapes" title="Link to this heading">#</a></h2>
+<p>Now that every stage has run, the headline figure draws the four
+stage boxes with the live shape annotated under each, plus the
+identity-check sparkline and the integration matrix as a visual
+index. The drawing helper lives in a sibling
+<code class="docutils literal notranslate"><span class="pre">_neuroai_interop_figure</span></code> module so the rendering plumbing stays
+out of this tutorial; the call below is the only line that matters.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">_neuroai_interop_figure</span><span class="w"> </span><span class="kn">import</span> <span class="n">draw_neuroai_interop_figure</span>
+
+<a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">dataset_meta</span></a> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;dataset&quot;</span><span class="p">:</span> <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">DATASET</span></a><span class="p">,</span>
+    <span class="s2">&quot;n_records&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">dataset</span><span class="o">.</span><span class="n">datasets</span></a><span class="p">),</span>
+    <span class="s2">&quot;n_channels&quot;</span><span class="p">:</span> <a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">n_channels</span></a><span class="p">,</span>
+    <span class="s2">&quot;sfreq&quot;</span><span class="p">:</span> <a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sfreq</span></a><span class="p">,</span>
+    <span class="s2">&quot;window_samples&quot;</span><span class="p">:</span> <a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">window_samples</span></a><span class="p">,</span>
+    <span class="s2">&quot;batch_size&quot;</span><span class="p">:</span> <a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">BATCH_SIZE</span></a><span class="p">,</span>
+    <span class="s2">&quot;citation&quot;</span><span class="p">:</span> <span class="s2">&quot;Wakeman &amp; Henson 2015&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="matplotlib.figure.Figure" class="sphx-glr-backref-module-matplotlib-figure sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">fig</span></a> <span class="o">=</span> <span class="n">draw_neuroai_interop_figure</span><span class="p">(</span>
+    <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">dataset_meta</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">dataset_meta</span></a><span class="p">,</span>
+    <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sample_window</span></a><span class="o">=</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sample_window</span></a><span class="p">,</span>
+    <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">integration_matrix</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">integration_matrix</span></a><span class="p">,</span>
+    <span class="n">plot_id</span><span class="o">=</span><span class="s2">&quot;plot_74&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
+</pre></div>
+</div>
+<img src="../../../../_images/sphx_glr_plot_74_neuroai_interop_001.png" srcset="../../../../_images/sphx_glr_plot_74_neuroai_interop_001.png" alt="plot 74 neuroai interop" class = "sphx-glr-single-img"/></section>
+<section id="a-common-mistake-and-how-to-recover">
+<h2>A common mistake, and how to recover<a class="headerlink" href="#a-common-mistake-and-how-to-recover" title="Link to this heading">#</a></h2>
+<p><strong>Run.</strong> Calling <code class="docutils literal notranslate"><span class="pre">Segmenter</span></code> with a <code class="docutils literal notranslate"><span class="pre">trigger_query</span></code> that matches
+zero events raises a <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">RuntimeError</span></code></a> with a clear message
+<span class="bibtex-citation" id="id5">[<a class="reference internal" href="../../../../references.html#id31" title="Alexander Nederbragt, Rayna Michelle Harris, Alison Presmanes Hill, and Greg Wilson. Ten quick tips for teaching with participatory live coding. PLOS Computational Biology, 2020. doi:10.1371/journal.pcbi.1008090.">Nederbragt <em>et al.</em>, 2020</a>]</span>. The recovery is to widen the query or
+fall back to a stride-based segmenter.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">bad_segmenter</span> <span class="o">=</span> <span class="n">Segmenter</span><span class="p">(</span>
+    <span class="n">start</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">duration</span><span class="o">=</span><a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">WINDOW_SECONDS</span></a><span class="p">,</span>
+    <span class="n">trigger_query</span><span class="o">=</span><span class="s2">&quot;type == &#39;this-event-type-does-not-exist&#39;&quot;</span><span class="p">,</span>
+    <span class="n">extractors</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;pulse&quot;</span><span class="p">:</span> <span class="n">Pulse</span><span class="p">(</span><span class="n">event_types</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Stimulus&quot;</span><span class="p">,),</span> <span class="n">aggregation</span><span class="o">=</span><span class="s2">&quot;sum&quot;</span><span class="p">)},</span>
+<span class="p">)</span>
+<span class="k">try</span><span class="p">:</span>
+    <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">events_for_bad</span></a> <span class="o">=</span> <span class="n">standardize_events</span><span class="p">(</span><a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">events_df</span></a><span class="p">,</span> <span class="n">auto_fill</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">bad_segmenter</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">events_for_bad</span></a><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;unexpected: empty trigger query did not raise&quot;</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">RuntimeError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+    <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">msg</span></a> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">exc</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Caught RuntimeError: </span><span class="si">{</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">msg</span></a><span class="p">[:</span><span class="mi">120</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Recovery: drop the trigger_query and pass `stride=WINDOW_SECONDS` instead.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Caught RuntimeError: the trigger query: type == &#39;this-event-type-does-not-exist&#39; led to an empty set.
+Recovery: drop the trigger_query and pass `stride=WINDOW_SECONDS` instead.
+</pre></div>
+</div>
+</section>
+<section id="modify">
+<h2>Modify<a class="headerlink" href="#modify" title="Link to this heading">#</a></h2>
+<p><strong>Your turn.</strong> Swap the <code class="docutils literal notranslate"><span class="pre">Pulse</span></code> extractor for <code class="docutils literal notranslate"><span class="pre">EegExtractor</span></code> and
+point its <code class="docutils literal notranslate"><span class="pre">picks=(&quot;eeg&quot;,)</span></code> at the live <a class="reference external" href="https://mne.tools/stable/generated/mne.io.Raw.html#mne.io.Raw" title="(in MNE v1.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">mne.io.Raw</span></code></a>. Predict
+the segment shape before running:
+<code class="docutils literal notranslate"><span class="pre">(1,</span> <span class="pre">n_channels,</span> <span class="pre">window_samples)</span></code>. Verify on
+<code class="docutils literal notranslate"><span class="pre">seg_dataset[0].data['eeg'].shape</span></code>.</p>
+</section>
+<section id="mini-project">
+<h2>Mini-project<a class="headerlink" href="#mini-project" title="Link to this heading">#</a></h2>
+<p><strong>Mini-project.</strong> Write a tiny adapter that turns an
+<code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code> of <cite>N</cite> records into one
+concatenated events DataFrame (one <code class="docutils literal notranslate"><span class="pre">timeline</span></code> per record). The
+adapter is the bridge that lets a multi-recording EEGDash query
+feed straight into NeuralSet without going through any per-record
+loop. Hint: <code class="docutils literal notranslate"><span class="pre">pd.concat([annotations_to_events(rec.raw,</span> <span class="pre">timeline=...)</span>
+<span class="pre">for</span> <span class="pre">rec</span> <span class="pre">in</span> <span class="pre">dataset.datasets])</span></code>.</p>
+</section>
+<section id="result">
+<h2>Result<a class="headerlink" href="#result" title="Link to this heading">#</a></h2>
+<p>The four-stage chain ran on one BIDS recording: BIDS query, events
+DataFrame, segmented dataset, batched read. The figure shows the
+stages, sanity-checks that the per-window byte payload survives the
+pipeline, and pins each NeuroAI module to its integration status. A
+clean handoff only confirms plumbing; signal quality and task
+design are still open questions <span class="bibtex-citation" id="id6">[<a class="reference internal" href="../../../../references.html#id19" title="Giulia Cisotto and Davide Chicco. Ten quick tips for clinical electroencephalographic (eeg) data acquisition and signal processing. PeerJ Computer Science, 10:e2256, 2024. doi:10.7717/peerj-cs.2256.">Cisotto and Chicco, 2024</a>]</span>.</p>
+</section>
+<section id="wrap-up">
+<h2>Wrap-up<a class="headerlink" href="#wrap-up" title="Link to this heading">#</a></h2>
+<p>We took one record of <code class="docutils literal notranslate"><span class="pre">ds002718</span></code>, fit it into the NeuroAI events
+schema, and ran NeuralSet’s Segmenter to recover a PyTorch dataset
+the rest of the stack consumes. Next:
+<span class="xref std std-doc">/auto_examples/tutorials/70_transfer_foundation/plot_70_challenge_dataset_basics</span>
+loads the EEG2025 challenge cohort that NeuralBench evaluates on
+<span class="bibtex-citation" id="id7">[<a class="reference internal" href="../../../../references.html#id36" title="Bruno Aristimunha, Dung Truong, Pierre Guetschel, Seyed Yahya Shirazi, Isabelle Guyon, Alexandre R. Franco, Michael P. Milham, Aviv Dotan, Scott Makeig, Alexandre Gramfort, Jean-Remi King, Marie-Constance Corsi, Pedro A. Valdés-Sosa, Amit Majumdar, Alan Evans, Terrence J. Sejnowski, Oren Shriki, Sylvain Chevallier, and Arnaud Delorme. EEG foundation challenge: from cross-task to cross-subject EEG decoding. 2025. arXiv preprint, NeurIPS 2025 Competition track. doi:10.48550/arXiv.2506.19141.">Aristimunha <em>et al.</em>, 2025</a>]</span>;
+<span class="xref std std-doc">/auto_examples/tutorials/70_transfer_foundation/plot_71_cross_task_transfer</span>
+trains a small encoder across tasks (the territory NeuralTrain
+automates);
+<span class="xref std std-doc">/auto_examples/tutorials/70_transfer_foundation/plot_73_finetune_pretrained_model</span>
+runs the fine-tune regimes on top of that encoder.</p>
+</section>
+<section id="try-it-yourself">
+<h2>Try it yourself<a class="headerlink" href="#try-it-yourself" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Replace the EEGDash BIDS query with a different OpenNeuro
+accession (<code class="docutils literal notranslate"><span class="pre">ds003061</span></code> for an oddball; <code class="docutils literal notranslate"><span class="pre">ds004504</span></code> for clinical
+EEG) and re-run. The events schema is unchanged.</p></li>
+<li><p>Swap <code class="docutils literal notranslate"><span class="pre">stride=WINDOW_SECONDS</span></code> for a 50%% overlap
+(<code class="docutils literal notranslate"><span class="pre">stride=WINDOW_SECONDS</span> <span class="pre">/</span> <span class="pre">2</span></code>) and predict the new
+<code class="docutils literal notranslate"><span class="pre">n_segments</span></code>. Verify with the live run.</p></li>
+<li><p>Add <code class="docutils literal notranslate"><span class="pre">EegExtractor(filter=(0.5,</span> <span class="pre">50.0),</span> <span class="pre">notch_filter=50.0)</span></code> to the
+<code class="docutils literal notranslate"><span class="pre">extractors</span></code> dict and confirm the per-segment shape becomes
+<code class="docutils literal notranslate"><span class="pre">(1,</span> <span class="pre">n_channels,</span> <span class="pre">window_samples)</span></code>.</p></li>
+</ul>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<p>See <a class="reference internal" href="../../../../references.html"><span class="doc">References</span></a> for the centralised bibliography of papers
+cited above. Add or amend an entry once in
+<code class="file docutils literal notranslate"><span class="pre">docs/source/refs.bib</span></code>; every tutorial inherits the update.</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 3.396 seconds)</p>
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-auto-examples-tutorials-70-transfer-foundation-plot-74-neuroai-interop-py">
+<div class="binder-badge docutils container">
+<a class="reference external image-reference" href="https://mybinder.org/v2/gh/eegdash/EEGDash/main?urlpath=lab/tree/notebooks/generated/auto_examples/tutorials/70_transfer_foundation/plot_74_neuroai_interop.ipynb"><img alt="Launch binder" src="../../../../_images/binder_badge_logo11.svg" style="width: 150px;" />
+</a>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../../../../_downloads/a771bf28d7144ff6d67dbb2095918037/plot_74_neuroai_interop.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_74_neuroai_interop.ipynb</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../../../../_downloads/9d32233cc4a0b5581a2b77083272a7d7/plot_74_neuroai_interop.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_74_neuroai_interop.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-zip docutils container">
+<p><a class="reference download internal" download="" href="../../../../_downloads/9d4f3e63f694994b872db7c6486c2a2d/plot_74_neuroai_interop.zip"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">zipped:</span> <span class="pre">plot_74_neuroai_interop.zip</span></code></a></p>
+</div>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="plot_73_finetune_pretrained_model.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">How do I adapt a pretrained EEG model to a new task?</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../../how_to/index.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">How-To Guides</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">Learning objectives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#requirements">Requirements</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#four-projects-one-chain-the-mental-model">Four projects, one chain: the mental model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-does-the-neuralset-pipeline-expose">What does the NeuralSet pipeline expose?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-load-one-eegdash-recording">Step 1. Load one EEGDash recording</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-build-the-events-dataframe-the-neuroai-bus">Step 2. Build the events DataFrame (the NeuroAI bus)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-show-the-neuralfetch-handoff">Step 3. Show the NeuralFetch handoff</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-4-cut-into-segments-with-neuralset">Step 4. Cut into segments with NeuralSet</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-5-wrap-the-segments-in-a-pytorch-dataloader">Step 5. Wrap the segments in a PyTorch DataLoader</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#where-does-each-neuroai-module-fit">Where does each NeuroAI module fit?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pipeline-at-a-glance-live-shapes">Pipeline at a glance: live shapes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-common-mistake-and-how-to-recover">A common mistake, and how to recover</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#modify">Modify</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mini-project">Mini-project</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#result">Result</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#wrap-up">Wrap-up</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#try-it-yourself">Try it yourself</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb"></script>
+<script defer src="../../../../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025-2026, EEG Dash Developers.
+      <br/>
+    
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.17.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

@@ -19,51 +19,51 @@ Provides the base classes:
 |------------------------------------------------|------------------------------------------------------------------------|
 | `FeaturesConcatDataset`([list_of_ds, ...])     | A concatenated dataset composed of multiple `FeaturesDataset` objects. |
 
-### *class* eegdash.features.datasets.FeaturesDataset(features: DataFrame, metadata: DataFrame | None = None, description: dict | Series | None = None, transform: Callable | None = None, raw_info: Dict | None = None, raw_preproc_kwargs: Dict | None = None, window_kwargs: Dict | None = None, window_preproc_kwargs: Dict | None = None, features_kwargs: Dict | None = None)
+### *class* eegdash.features.datasets.FeaturesDataset(features: [DataFrame](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame), metadata: [DataFrame](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame) | [None](https://docs.python.org/3/library/constants.html#None) = None, description: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [Series](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.html#pandas.Series) | [None](https://docs.python.org/3/library/constants.html#None) = None, transform: [Callable](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable) | [None](https://docs.python.org/3/library/constants.html#None) = None, raw_info: [Dict](https://docs.python.org/3/library/typing.html#typing.Dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, raw_preproc_kwargs: [Dict](https://docs.python.org/3/library/typing.html#typing.Dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, window_kwargs: [Dict](https://docs.python.org/3/library/typing.html#typing.Dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, window_preproc_kwargs: [Dict](https://docs.python.org/3/library/typing.html#typing.Dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, features_kwargs: [Dict](https://docs.python.org/3/library/typing.html#typing.Dict) | [None](https://docs.python.org/3/library/constants.html#None) = None)
 
-Bases: `RecordDataset`
+Bases: [`RecordDataset`](https://braindecode.org/stable/generated/braindecode.datasets.RecordDataset.html#braindecode.datasets.RecordDataset)
 
 A dataset of features extracted from a single recording.
 
-This class holds features in a `pandas.DataFrame` and provides an interface
+This class holds features in a [`pandas.DataFrame`](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame) and provides an interface
 compatible with braindecode’s dataset structure. A single object corresponds
 to one recording.
 
 * **Parameters:**
-  * **features** (*pandas.DataFrame*) – A DataFrame where each row is a sample (e.g, EEG window)
+  * **features** ([*pandas.DataFrame*](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame)) – A DataFrame where each row is a sample (e.g, EEG window)
     and each column is a feature.
-  * **metadata** (*pandas.DataFrame* *,* *optional*) – A DataFrame containing metadata for each sample, indexed consistently
+  * **metadata** ([*pandas.DataFrame*](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame) *,* *optional*) – A DataFrame containing metadata for each sample, indexed consistently
     with features. Must include columns ‘i_window_in_trial’,
     ‘i_start_in_trial’, ‘i_stop_in_trial’, and ‘target’.
-  * **description** (*dict* *or* *pandas.Series* *,* *optional*) – Additional high-level information about the dataset.
+  * **description** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *or* [*pandas.Series*](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.html#pandas.Series) *,* *optional*) – Additional high-level information about the dataset.
   * **transform** (*callable* *,* *optional*) – A function or transform to apply to the feature data.
-  * **raw_info** (*dict* *,* *optional*) – Information about the original raw recording (e.g., sampling rate,
+  * **raw_info** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *,* *optional*) – Information about the original raw recording (e.g., sampling rate,
     montage, channel names).
-  * **raw_preproc_kwargs** (*dict* *,* *optional*) – Keyword arguments used for preprocessing the raw data.
-  * **window_kwargs** (*dict* *,* *optional*) – Keyword arguments used for windowing the data.
-  * **window_preproc_kwargs** (*dict* *,* *optional*) – Keyword arguments used for preprocessing the windowed data.
-  * **features_kwargs** (*dict* *,* *optional*) – Keyword arguments used for feature extraction.
+  * **raw_preproc_kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *,* *optional*) – Keyword arguments used for preprocessing the raw data.
+  * **window_kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *,* *optional*) – Keyword arguments used for windowing the data.
+  * **window_preproc_kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *,* *optional*) – Keyword arguments used for preprocessing the windowed data.
+  * **features_kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *,* *optional*) – Keyword arguments used for feature extraction.
 
 #### features
 
 Table of extracted features.
 
 * **Type:**
-  pandas.DataFrame
+  [pandas.DataFrame](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame)
 
 #### n_features
 
 Number of feature columns in the dataset.
 
 * **Type:**
-  int
+  [int](https://docs.python.org/3/library/functions.html#int)
 
 #### metadata
 
 Metadata describing each window.
 
 * **Type:**
-  pandas.DataFrame
+  [pandas.DataFrame](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame)
 
 #### transform
 
@@ -77,35 +77,35 @@ The transform applied to each sample.
 Information about the raw recording.
 
 * **Type:**
-  dict or None
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict) or None
 
 #### raw_preproc_kwargs
 
 Parameters used during raw data preprocessing.
 
 * **Type:**
-  dict or None
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict) or None
 
 #### window_kwargs
 
 Parameters used during window segmentation.
 
 * **Type:**
-  dict or None
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict) or None
 
 #### window_preproc_kwargs
 
 Parameters used during window-level preprocessing.
 
 * **Type:**
-  dict or None
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict) or None
 
 #### features_kwargs
 
 Parameters used during feature extraction.
 
 * **Type:**
-  dict or None
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict) or None
 
 #### crop_inds
 
@@ -113,20 +113,20 @@ Indices specifying window position within each trial:
 (i_window_in_trial, i_start_in_trial, i_stop_in_trial).
 
 * **Type:**
-  numpy.ndarray of shape (n_samples, 3)
+  [numpy.ndarray](https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray) of shape (n_samples, 3)
 
 #### y
 
 Target labels corresponding to each window.
 
 * **Type:**
-  list of int
+  [list](https://docs.python.org/3/library/stdtypes.html#list) of [int](https://docs.python.org/3/library/functions.html#int)
 
 <!-- !! processed by numpydoc !! -->
 
-### *class* eegdash.features.datasets.FeaturesConcatDataset(list_of_ds: list[TypeAliasForwardRef('eegdash.features.datasets.FeaturesDataset')] | None = None, target_transform: Callable | None = None)
+### *class* eegdash.features.datasets.FeaturesConcatDataset(list_of_ds: [list](https://docs.python.org/3/library/stdtypes.html#list)[TypeAliasForwardRef('eegdash.features.datasets.FeaturesDataset')] | [None](https://docs.python.org/3/library/constants.html#None) = None, target_transform: [Callable](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable) | [None](https://docs.python.org/3/library/constants.html#None) = None)
 
-Bases: `BaseConcatDataset`
+Bases: [`BaseConcatDataset`](https://braindecode.org/stable/generated/braindecode.datasets.BaseConcatDataset.html#braindecode.datasets.BaseConcatDataset)
 
 A concatenated dataset composed of multiple `FeaturesDataset` objects.
 
@@ -136,7 +136,7 @@ Supports concatenation, splitting, saving, and performing DataFrame-like
 operations across all contained datasets.
 
 * **Parameters:**
-  * **list_of_ds** (*list* *of* *FeaturesDataset* *or* *None* *,* *optional*) – A list of `FeaturesDataset` objects to concatenate.
+  * **list_of_ds** ([*list*](https://docs.python.org/3/library/stdtypes.html#list) *of* *FeaturesDataset* *or* *None* *,* *optional*) – A list of `FeaturesDataset` objects to concatenate.
     If a list of `FeaturesConcatDataset` objects is provided,
     all contained datasets are automatically flattened into a single list.
   * **target_transform** (*callable* *or* *None* *,* *optional*) – A function to apply to target values before they are returned.
@@ -146,7 +146,7 @@ operations across all contained datasets.
 The list of individual datasets contained in this object.
 
 * **Type:**
-  list of FeaturesDataset
+  [list](https://docs.python.org/3/library/stdtypes.html#list) of FeaturesDataset
 
 #### target_transform
 
@@ -157,7 +157,7 @@ Optional transform applied to target labels.
 
 <!-- !! processed by numpydoc !! -->
 
-#### split(by: str | list[int] | list[list[int]] | dict[str, list[int]]) → dict[str, TypeAliasForwardRef('eegdash.features.datasets.FeaturesConcatDataset')]
+#### split(by: [str](https://docs.python.org/3/library/stdtypes.html#str) | [list](https://docs.python.org/3/library/stdtypes.html#list)[[int](https://docs.python.org/3/library/functions.html#int)] | [list](https://docs.python.org/3/library/stdtypes.html#list)[[list](https://docs.python.org/3/library/stdtypes.html#list)[[int](https://docs.python.org/3/library/functions.html#int)]] | [dict](https://docs.python.org/3/library/stdtypes.html#dict)[[str](https://docs.python.org/3/library/stdtypes.html#str), [list](https://docs.python.org/3/library/stdtypes.html#list)[[int](https://docs.python.org/3/library/functions.html#int)]]) → [dict](https://docs.python.org/3/library/stdtypes.html#dict)[[str](https://docs.python.org/3/library/stdtypes.html#str), TypeAliasForwardRef('eegdash.features.datasets.FeaturesConcatDataset')]
 
 Split the concatenated dataset into multiple subsets.
 
@@ -166,7 +166,7 @@ several `FeaturesConcatDataset` objects based on a metadata field,
 explicit indices, or custom grouping definitions.
 
 * **Parameters:**
-  **by** (*str* *or* *list* *of* *int* *or* *list* *of* *list* *of* *int* *or* *dict* *of*  *{str: list* *of* *int}*) – 
+  **by** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *or* [*list*](https://docs.python.org/3/library/stdtypes.html#list) *of* [*int*](https://docs.python.org/3/library/functions.html#int) *or* [*list*](https://docs.python.org/3/library/stdtypes.html#list) *of* [*list*](https://docs.python.org/3/library/stdtypes.html#list) *of* [*int*](https://docs.python.org/3/library/functions.html#int) *or* [*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *of*  *{str: list* *of* *int}*) – 
 
   Defines how the dataset is split:
   * **str** — Name of a column in the dataset description.
@@ -181,7 +181,7 @@ explicit indices, or custom grouping definitions.
   and each value is a `FeaturesConcatDataset` containing
   the corresponding subset of datasets.
 * **Return type:**
-  dict[str, FeaturesConcatDataset]
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)[[str](https://docs.python.org/3/library/stdtypes.html#str), FeaturesConcatDataset]
 
 ### Examples
 
@@ -223,7 +223,7 @@ the specified column.
 
 <!-- !! processed by numpydoc !! -->
 
-#### get_metadata() → DataFrame
+#### get_metadata() → [DataFrame](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame)
 
 Return a concatenated metadata DataFrame from all contained datasets.
 
@@ -241,14 +241,14 @@ additional columns in the resulting DataFrame.
   and dataset-level description fields (e.g., `subject_id`,
   `session`, etc.).
 * **Return type:**
-  pandas.DataFrame
+  [pandas.DataFrame](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame)
 * **Raises:**
-  **TypeError** – If one or more contained datasets are not instances
+  [**TypeError**](https://docs.python.org/3/library/exceptions.html#TypeError) – If one or more contained datasets are not instances
   of `FeaturesDataset`.
 
 <!-- !! processed by numpydoc !! -->
 
-#### save(path: str, overwrite: bool = False, offset: int = 0) → None
+#### save(path: [str](https://docs.python.org/3/library/stdtypes.html#str), overwrite: [bool](https://docs.python.org/3/library/functions.html#bool) = False, offset: [int](https://docs.python.org/3/library/functions.html#int) = 0) → [None](https://docs.python.org/3/library/constants.html#None)
 
 Save the concatenated dataset to a directory.
 
@@ -272,15 +272,15 @@ path/
 ```
 
 * **Parameters:**
-  * **path** (*str*) – Path to the parent directory where the dataset should be saved.
+  * **path** ([*str*](https://docs.python.org/3/library/stdtypes.html#str)) – Path to the parent directory where the dataset should be saved.
     The directory will be created if it does not exist.
-  * **overwrite** (*bool* *,* *default=False*) – If True, existing subdirectories that conflict with the new ones
+  * **overwrite** ([*bool*](https://docs.python.org/3/library/functions.html#bool) *,* *default=False*) – If True, existing subdirectories that conflict with the new ones
     are removed before saving.
-  * **offset** (*int* *,* *default=0*) – Integer offset added to subdirectory names. Useful when saving
+  * **offset** ([*int*](https://docs.python.org/3/library/functions.html#int) *,* *default=0*) – Integer offset added to subdirectory names. Useful when saving
     datasets in chunks or continuing a previous save session.
 * **Raises:**
-  * **ValueError** – If the concatenated dataset is empty.
-  * **FileExistsError** – If a subdirectory already exists and `overwrite` is False.
+  * [**ValueError**](https://docs.python.org/3/library/exceptions.html#ValueError) – If the concatenated dataset is empty.
+  * [**FileExistsError**](https://docs.python.org/3/library/exceptions.html#FileExistsError) – If a subdirectory already exists and `overwrite` is False.
 * **Warns:**
   **UserWarning** – If the number of saved subdirectories does not match the number
   of existing ones, or if unrelated files remain in the directory.
@@ -297,7 +297,7 @@ Each subdirectory contains:
 
 <!-- !! processed by numpydoc !! -->
 
-#### to_dataframe(include_metadata: bool | str | List[str] = False, include_target: bool = False, include_crop_inds: bool = False) → DataFrame
+#### to_dataframe(include_metadata: [bool](https://docs.python.org/3/library/functions.html#bool) | [str](https://docs.python.org/3/library/stdtypes.html#str) | [List](https://docs.python.org/3/library/typing.html#typing.List)[[str](https://docs.python.org/3/library/stdtypes.html#str)] = False, include_target: [bool](https://docs.python.org/3/library/functions.html#bool) = False, include_crop_inds: [bool](https://docs.python.org/3/library/functions.html#bool) = False) → [DataFrame](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame)
 
 Convert the concatenated dataset into a single unified pandas DataFrame.
 
@@ -306,7 +306,7 @@ one table, allowing for the selective inclusion of metadata, target
 labels, and window-cropping indices alongside features.
 
 * **Parameters:**
-  * **include_metadata** (*bool* *,* *str* *, or* *list* *of* *str* *,* *default=False*) – 
+  * **include_metadata** ([*bool*](https://docs.python.org/3/library/functions.html#bool) *,* [*str*](https://docs.python.org/3/library/stdtypes.html#str) *, or* [*list*](https://docs.python.org/3/library/stdtypes.html#list) *of* [*str*](https://docs.python.org/3/library/stdtypes.html#str) *,* *default=False*) – 
 
     Controls the inclusion of window-level metadata:
     - If **True** — includes all metadata columns available in the
@@ -315,9 +315,9 @@ labels, and window-cropping indices alongside features.
       : metadata column(s).
     - If **False** — excludes metadata (unless overridden by other
       : flags).
-  * **include_target** (*bool* *,* *default=False*) – If True, ensures the ‘target’ column is included in the resulting
+  * **include_target** ([*bool*](https://docs.python.org/3/library/functions.html#bool) *,* *default=False*) – If True, ensures the ‘target’ column is included in the resulting
     DataFrame.
-  * **include_crop_inds** (*bool* *,* *default=False*) – If True, includes the internal windowing indices: ‘i_dataset’,
+  * **include_crop_inds** ([*bool*](https://docs.python.org/3/library/functions.html#bool) *,* *default=False*) – If True, includes the internal windowing indices: ‘i_dataset’,
     ‘i_window_in_trial’, ‘i_start_in_trial’, and ‘i_stop_in_trial’.
 * **Returns:**
   A concatenated DataFrame where each row represents a sample (window)
@@ -348,14 +348,14 @@ collisions.
 
 <!-- !! processed by numpydoc !! -->
 
-#### count(numeric_only: bool = False, n_jobs: int = 1) → Series
+#### count(numeric_only: [bool](https://docs.python.org/3/library/functions.html#bool) = False, n_jobs: [int](https://docs.python.org/3/library/functions.html#int) = 1) → [Series](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.html#pandas.Series)
 
 Count non-NA cells for each feature column across all datasets.
 
 * **Parameters:**
-  * **numeric_only** (*bool* *,* *default=False*) – If True, only includes columns with float, int, or boolean data
+  * **numeric_only** ([*bool*](https://docs.python.org/3/library/functions.html#bool) *,* *default=False*) – If True, only includes columns with float, int, or boolean data
     types.
-  * **n_jobs** (*int* *,* *default=1*) – The number of CPU cores to use for parallel processing of
+  * **n_jobs** ([*int*](https://docs.python.org/3/library/functions.html#int) *,* *default=1*) – The number of CPU cores to use for parallel processing of
     individual datasets.
 * **Returns:**
   A Series containing the total count of non-missing values for
@@ -365,7 +365,7 @@ Count non-NA cells for each feature column across all datasets.
 
 <!-- !! processed by numpydoc !! -->
 
-#### mean(numeric_only: bool = False, n_jobs: int = 1) → Series
+#### mean(numeric_only: [bool](https://docs.python.org/3/library/functions.html#bool) = False, n_jobs: [int](https://docs.python.org/3/library/functions.html#int) = 1) → [Series](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.html#pandas.Series)
 
 Compute the mean for each feature column across all datasets.
 
@@ -374,9 +374,9 @@ individual means of each dataset, weighted by their respective
 sample counts.
 
 * **Parameters:**
-  * **numeric_only** (*bool* *,* *default=False*) – If True, only includes columns with float, int, or boolean data
+  * **numeric_only** ([*bool*](https://docs.python.org/3/library/functions.html#bool) *,* *default=False*) – If True, only includes columns with float, int, or boolean data
     types.
-  * **n_jobs** (*int* *,* *default=1*) – The number of CPU cores to use for parallel processing of
+  * **n_jobs** ([*int*](https://docs.python.org/3/library/functions.html#int) *,* *default=1*) – The number of CPU cores to use for parallel processing of
     individual datasets.
 * **Returns:**
   A Series containing the weighted mean of each feature column,
@@ -386,7 +386,7 @@ sample counts.
 
 <!-- !! processed by numpydoc !! -->
 
-#### var(ddof: int = 1, numeric_only: bool = False, n_jobs: int = 1) → Series
+#### var(ddof: [int](https://docs.python.org/3/library/functions.html#int) = 1, numeric_only: [bool](https://docs.python.org/3/library/functions.html#bool) = False, n_jobs: [int](https://docs.python.org/3/library/functions.html#int) = 1) → [Series](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.html#pandas.Series)
 
 Compute the variance for each feature column across all datasets.
 
@@ -394,10 +394,10 @@ This method calculates the total variance by combining within-dataset
 variability and between-dataset mean differences.
 
 * **Parameters:**
-  * **ddof** (*int* *,* *default=1*) – Delta Degrees of Freedom.
-  * **numeric_only** (*bool* *,* *default=False*) – If True, only includes columns with float, int, or boolean data
+  * **ddof** ([*int*](https://docs.python.org/3/library/functions.html#int) *,* *default=1*) – Delta Degrees of Freedom.
+  * **numeric_only** ([*bool*](https://docs.python.org/3/library/functions.html#bool) *,* *default=False*) – If True, only includes columns with float, int, or boolean data
     types.
-  * **n_jobs** (*int* *,* *default=1*) – The number of CPU cores to use for parallel processing of
+  * **n_jobs** ([*int*](https://docs.python.org/3/library/functions.html#int) *,* *default=1*) – The number of CPU cores to use for parallel processing of
     individual datasets.
 * **Returns:**
   A Series containing the pooled variance of each feature column,
@@ -407,15 +407,15 @@ variability and between-dataset mean differences.
 
 <!-- !! processed by numpydoc !! -->
 
-#### std(ddof: int = 1, numeric_only: bool = False, eps: float = 0, n_jobs: int = 1) → Series
+#### std(ddof: [int](https://docs.python.org/3/library/functions.html#int) = 1, numeric_only: [bool](https://docs.python.org/3/library/functions.html#bool) = False, eps: [float](https://docs.python.org/3/library/functions.html#float) = 0, n_jobs: [int](https://docs.python.org/3/library/functions.html#int) = 1) → [Series](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.html#pandas.Series)
 
 Compute the standard deviation for each feature column across all datasets.
 
 * **Parameters:**
-  * **ddof** (*int* *,* *default=1*) – Delta Degrees of Freedom for the variance calculation.
-  * **numeric_only** (*bool* *,* *default=False*) – If True, only includes numeric data types.
-  * **eps** (*float* *,* *default=0*) – Small constant added to variance for numerical stability.
-  * **n_jobs** (*int* *,* *default=1*) – Number of CPU cores for parallel processing.
+  * **ddof** ([*int*](https://docs.python.org/3/library/functions.html#int) *,* *default=1*) – Delta Degrees of Freedom for the variance calculation.
+  * **numeric_only** ([*bool*](https://docs.python.org/3/library/functions.html#bool) *,* *default=False*) – If True, only includes numeric data types.
+  * **eps** ([*float*](https://docs.python.org/3/library/functions.html#float) *,* *default=0*) – Small constant added to variance for numerical stability.
+  * **n_jobs** ([*int*](https://docs.python.org/3/library/functions.html#int) *,* *default=1*) – Number of CPU cores for parallel processing.
 * **Returns:**
   Standard deviation of each feature column. Indexed by feature names.
 * **Return type:**
@@ -423,7 +423,7 @@ Compute the standard deviation for each feature column across all datasets.
 
 <!-- !! processed by numpydoc !! -->
 
-#### zscore(ddof: int = 1, numeric_only: bool = False, eps: float = 0, n_jobs: int = 1) → None
+#### zscore(ddof: [int](https://docs.python.org/3/library/functions.html#int) = 1, numeric_only: [bool](https://docs.python.org/3/library/functions.html#bool) = False, eps: [float](https://docs.python.org/3/library/functions.html#float) = 0, n_jobs: [int](https://docs.python.org/3/library/functions.html#int) = 1) → [None](https://docs.python.org/3/library/constants.html#None)
 
 Apply z-score normalization to numeric columns in-place.
 
@@ -431,86 +431,86 @@ This method scales features to a mean of 0 and a standard deviation
 of 1 based on statistics pooled across all contained datasets.
 
 * **Parameters:**
-  * **ddof** (*int* *,* *default=1*) – Delta Degrees of Freedom for the pooled variance.
-  * **numeric_only** (*bool* *,* *default=False*) – If True, only includes numeric data types.
-  * **eps** (*float* *,* *default=0*) – Small constant added to variance for numerical stability.
-  * **n_jobs** (*int* *,* *default=1*) – Number of CPU cores for parallel statistics computation.
+  * **ddof** ([*int*](https://docs.python.org/3/library/functions.html#int) *,* *default=1*) – Delta Degrees of Freedom for the pooled variance.
+  * **numeric_only** ([*bool*](https://docs.python.org/3/library/functions.html#bool) *,* *default=False*) – If True, only includes numeric data types.
+  * **eps** ([*float*](https://docs.python.org/3/library/functions.html#float) *,* *default=0*) – Small constant added to variance for numerical stability.
+  * **n_jobs** ([*int*](https://docs.python.org/3/library/functions.html#int) *,* *default=1*) – Number of CPU cores for parallel statistics computation.
 
 <!-- !! processed by numpydoc !! -->
 
-#### fillna(\*args, \*\*kwargs) → None
+#### fillna(\*args, \*\*kwargs) → [None](https://docs.python.org/3/library/constants.html#None)
 
 Fill NA/NaN values in-place across all datasets.
 
 * **Parameters:**
-  * **\*args** – Arguments passed to `pandas.DataFrame.fillna()`.
-  * **\*\*kwargs** – Arguments passed to `pandas.DataFrame.fillna()`.
+  * **\*args** – Arguments passed to [`pandas.DataFrame.fillna()`](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.fillna.html#pandas.DataFrame.fillna).
+  * **\*\*kwargs** – Arguments passed to [`pandas.DataFrame.fillna()`](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.fillna.html#pandas.DataFrame.fillna).
 
 ### Notes
 
 `inplace` is enforced as True.
 
 #### SEE ALSO
-`pandas.DataFrame.fillna`
+[`pandas.DataFrame.fillna`](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.fillna.html#pandas.DataFrame.fillna)
 : The underlying pandas method.
 
 <!-- !! processed by numpydoc !! -->
 
-#### replace(\*args, \*\*kwargs) → None
+#### replace(\*args, \*\*kwargs) → [None](https://docs.python.org/3/library/constants.html#None)
 
 Replace values in-place across all datasets.
 
 * **Parameters:**
-  * **\*args** – Arguments passed to `pandas.DataFrame.replace()`.
-  * **\*\*kwargs** – Arguments passed to `pandas.DataFrame.replace()`.
+  * **\*args** – Arguments passed to [`pandas.DataFrame.replace()`](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.replace.html#pandas.DataFrame.replace).
+  * **\*\*kwargs** – Arguments passed to [`pandas.DataFrame.replace()`](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.replace.html#pandas.DataFrame.replace).
 
 ### Notes
 
 `inplace` is enforced as True.
 
 #### SEE ALSO
-`pandas.DataFrame.replace`
+[`pandas.DataFrame.replace`](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.replace.html#pandas.DataFrame.replace)
 : The underlying pandas method.
 
 <!-- !! processed by numpydoc !! -->
 
-#### interpolate(\*args, \*\*kwargs) → None
+#### interpolate(\*args, \*\*kwargs) → [None](https://docs.python.org/3/library/constants.html#None)
 
 Interpolate values in-place across all datasets.
 
 * **Parameters:**
-  * **\*args** – Arguments passed to `pandas.DataFrame.interpolate()`.
-  * **\*\*kwargs** – Arguments passed to `pandas.DataFrame.interpolate()`.
+  * **\*args** – Arguments passed to [`pandas.DataFrame.interpolate()`](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.interpolate.html#pandas.DataFrame.interpolate).
+  * **\*\*kwargs** – Arguments passed to [`pandas.DataFrame.interpolate()`](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.interpolate.html#pandas.DataFrame.interpolate).
 
 ### Notes
 
 `inplace` is enforced as True.
 
 #### SEE ALSO
-`pandas.DataFrame.interpolate`
+[`pandas.DataFrame.interpolate`](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.interpolate.html#pandas.DataFrame.interpolate)
 : The underlying pandas method.
 
 <!-- !! processed by numpydoc !! -->
 
-#### dropna(\*args, \*\*kwargs) → None
+#### dropna(\*args, \*\*kwargs) → [None](https://docs.python.org/3/library/constants.html#None)
 
 Remove missing values in-place across all datasets.
 
 * **Parameters:**
-  * **\*args** – Arguments passed to `pandas.DataFrame.dropna()`.
-  * **\*\*kwargs** – Arguments passed to `pandas.DataFrame.dropna()`.
+  * **\*args** – Arguments passed to [`pandas.DataFrame.dropna()`](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.dropna.html#pandas.DataFrame.dropna).
+  * **\*\*kwargs** – Arguments passed to [`pandas.DataFrame.dropna()`](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.dropna.html#pandas.DataFrame.dropna).
 
 ### Notes
 
 `inplace` is enforced as True.
 
 #### SEE ALSO
-`pandas.DataFrame.dropna`
+[`pandas.DataFrame.dropna`](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.dropna.html#pandas.DataFrame.dropna)
 : The underlying pandas method.
 
 <!-- !! processed by numpydoc !! -->
 
-#### drop(\*args, \*\*kwargs) → None
+#### drop(\*args, \*\*kwargs) → [None](https://docs.python.org/3/library/constants.html#None)
 
 Drop specified labels from rows or columns in-place across all datasets.
 
@@ -518,15 +518,15 @@ This method removes features (columns) or samples (rows) from every
 underlying dataset in the collection.
 
 * **Parameters:**
-  * **\*args** – Arguments passed to `pandas.DataFrame.drop()`.
-  * **\*\*kwargs** – Arguments passed to `pandas.DataFrame.drop()`.
+  * **\*args** – Arguments passed to [`pandas.DataFrame.drop()`](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.drop.html#pandas.DataFrame.drop).
+  * **\*\*kwargs** – Arguments passed to [`pandas.DataFrame.drop()`](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.drop.html#pandas.DataFrame.drop).
 
 ### Notes
 
 `inplace` is enforced as True.
 
 #### SEE ALSO
-`pandas.DataFrame.drop`
+[`pandas.DataFrame.drop`](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.drop.html#pandas.DataFrame.drop)
 : The underlying pandas method.
 
 ### Examples
@@ -543,7 +543,7 @@ underlying dataset in the collection.
 
 <!-- !! processed by numpydoc !! -->
 
-#### join(concat_dataset: eegdash.features.datasets.FeaturesConcatDataset, \*\*kwargs) → None
+#### join(concat_dataset: eegdash.features.datasets.FeaturesConcatDataset, \*\*kwargs) → [None](https://docs.python.org/3/library/constants.html#None)
 
 Join columns with another FeaturesConcatDataset in-place.
 
@@ -554,9 +554,9 @@ lengths.
 
 * **Parameters:**
   * **concat_dataset** (*FeaturesConcatDataset*) – The dataset containing the new columns to be joined.
-  * **\*\*kwargs** – Keyword arguments passed to `pandas.DataFrame.join()`.
+  * **\*\*kwargs** – Keyword arguments passed to [`pandas.DataFrame.join()`](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.join.html#pandas.DataFrame.join).
 * **Raises:**
-  **AssertionError** – If the number of datasets or the lengths of corresponding
+  [**AssertionError**](https://docs.python.org/3/library/exceptions.html#AssertionError) – If the number of datasets or the lengths of corresponding
   datasets do not match.
 
 ### Notes

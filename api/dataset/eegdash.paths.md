@@ -8,7 +8,7 @@ configuration system.
 
 <!-- !! processed by numpydoc !! -->
 
-### eegdash.paths.get_default_cache_dir() → Path
+### eegdash.paths.get_default_cache_dir() → [Path](https://docs.python.org/3/library/pathlib.html#pathlib.Path)
 
 Resolve the default cache directory for EEGDash data.
 
@@ -23,6 +23,6 @@ priority order:
 * **Returns:**
   The resolved, absolute path to the default cache directory.
 * **Return type:**
-  pathlib.Path
+  [pathlib.Path](https://docs.python.org/3/library/pathlib.html#pathlib.Path)
 
 <!-- !! processed by numpydoc !! -->

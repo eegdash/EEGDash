@@ -8,9 +8,9 @@ braindecode for machine learning workflows and handles data loading from both lo
 
 <!-- !! processed by numpydoc !! -->
 
-### *class* eegdash.dataset.base.EEGDashRaw(record: dict[str, Any], cache_dir: str, \*\*kwargs)
+### *class* eegdash.dataset.base.EEGDashRaw(record: [dict](https://docs.python.org/3/library/stdtypes.html#dict)[[str](https://docs.python.org/3/library/stdtypes.html#str), [Any](https://docs.python.org/3/library/typing.html#typing.Any)], cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), \*\*kwargs)
 
-Bases: `RawDataset`
+Bases: [`RawDataset`](https://braindecode.org/stable/generated/braindecode.datasets.RawDataset.html#braindecode.datasets.RawDataset)
 
 A single EEG recording dataset.
 
@@ -20,10 +20,10 @@ and cached locally upon first access. This class is a subclass of
 preprocessing and training pipelines.
 
 * **Parameters:**
-  * **record** (*dict*) – A v2 record containing all metadata and storage information.
+  * **record** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – A v2 record containing all metadata and storage information.
     Must have schema_version=2 and include storage.base (no default bucket).
-  * **cache_dir** (*str*) – The local directory where the data will be cached.
-  * **on_error** (*str* *,* *default "raise"*) – 
+  * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str)) – The local directory where the data will be cached.
+  * **on_error** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *,* *default "raise"*) – 
 
     How to handle `DataIntegrityError` when accessing `.raw`:
     - `"raise"` (default): propagate the exception.
@@ -32,11 +32,11 @@ preprocessing and training pipelines.
   * **\*\*kwargs** – Additional keyword arguments passed to the
     `braindecode.datasets.BaseDataset` constructor.
 * **Raises:**
-  **ValueError** – If the record is not a valid v2 record or is missing required fields.
+  [**ValueError**](https://docs.python.org/3/library/exceptions.html#ValueError) – If the record is not a valid v2 record or is missing required fields.
 
 <!-- !! processed by numpydoc !! -->
 
-#### *property* raw *: BaseRaw | None*
+#### *property* raw *: [BaseRaw](https://mne.tools/stable/generated/mne.io.BaseRaw.html#mne.io.BaseRaw) | [None](https://docs.python.org/3/library/constants.html#None)*
 
 The MNE Raw object for this recording.
 
@@ -50,6 +50,6 @@ the record could not be loaded due to a
 * **Returns:**
   The loaded MNE Raw object, or `None` for skipped records.
 * **Return type:**
-  mne.io.BaseRaw | None
+  [mne.io.BaseRaw](https://mne.tools/stable/generated/mne.io.BaseRaw.html#mne.io.BaseRaw) | None
 
 <!-- !! processed by numpydoc !! -->

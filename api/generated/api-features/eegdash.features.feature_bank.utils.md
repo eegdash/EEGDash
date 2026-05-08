@@ -24,17 +24,17 @@ This module provides the following helper functions:
 Validate and return frequency boundaries based on Nyquist and resolution.
 
 * **Parameters:**
-  * **fs** (*float*) – The sampling frequency in Hz.
-  * **n** (*int*) – The number of points in the signal/window.
-  * **f_min** (*float* *,* *optional*) – Requested minimum frequency. Defaults to 2 \* resolution (f0).
-  * **f_max** (*float* *,* *optional*) – Requested maximum frequency. Defaults to Nyquist frequency.
+  * **fs** ([*float*](https://docs.python.org/3/library/functions.html#float)) – The sampling frequency in Hz.
+  * **n** ([*int*](https://docs.python.org/3/library/functions.html#int)) – The number of points in the signal/window.
+  * **f_min** ([*float*](https://docs.python.org/3/library/functions.html#float) *,* *optional*) – Requested minimum frequency. Defaults to 2 \* resolution (f0).
+  * **f_max** ([*float*](https://docs.python.org/3/library/functions.html#float) *,* *optional*) – Requested maximum frequency. Defaults to Nyquist frequency.
 * **Returns:**
   **f_min, f_max** – The validated frequency boundaries.
 * **Return type:**
-  float
+  [float](https://docs.python.org/3/library/functions.html#float)
 * **Raises:**
-  * **AssertionError** – If f_min is below the minimum resolvable frequency.
-  * **AssertionError** – If f_max is above the Nyquist frequency.
+  * [**AssertionError**](https://docs.python.org/3/library/exceptions.html#AssertionError) – If f_min is below the minimum resolvable frequency.
+  * [**AssertionError**](https://docs.python.org/3/library/exceptions.html#AssertionError) – If f_max is above the Nyquist frequency.
 
 ### Examples
 
@@ -55,11 +55,11 @@ Use if the preprocessor is a feature by itself, and it should also be treated as
 feature.
 
 * **Parameters:**
-  **\*x** (*tuple*) – Any preprocessor output.
+  **\*x** ([*tuple*](https://docs.python.org/3/library/stdtypes.html#tuple)) – Any preprocessor output.
 * **Returns:**
   **\*x** – The input (as is).
 * **Return type:**
-  tuple
+  [tuple](https://docs.python.org/3/library/stdtypes.html#tuple)
 
 <!-- !! processed by numpydoc !! -->
 
@@ -75,16 +75,16 @@ the frequency axis.
   * **f** (*ndarray*) – Frequency vector.
   * **x** (*ndarray*) – Spectral data. Can be multi-dimensional.
     The last dimension must match the length of f.
-  * **bands** (*dict*) – Mapping of band names to (min, max) frequency tuples.
+  * **bands** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Mapping of band names to (min, max) frequency tuples.
   * **reduce_func** (*callable* *,* *optional*) – Function to aggregate the values. Default is np.sum.
 * **Returns:**
   **x_bands** – Dictionary where keys are the band names from bands and values
   are the reduced arrays. The last dimension of the input x
   is removed.
 * **Return type:**
-  dict
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
 * **Raises:**
-  **AssertionError** – If a band name is not a string.
+  [**AssertionError**](https://docs.python.org/3/library/exceptions.html#AssertionError) – If a band name is not a string.
   If a band limit tuple does not contain exactly two values or
   if min > max.
   If the requested band limits fall outside the range of the
@@ -120,8 +120,8 @@ Sets default parameters for spectral preprocecssors.
 - Set the axis to -1
 
 * **Parameters:**
-  * **kwargs** (*dict*) – A dictionary of keyword arguments.
-  * **metadata** (*dict*) – A dictionary of record and batch metadata.
+  * **kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – A dictionary of keyword arguments.
+  * **metadata** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – A dictionary of record and batch metadata.
 * **Returns:**
   * **f_min** (*float*) – Minimum frequency.
   * **f_max** (*float*) – Maximum frequency.
@@ -137,8 +137,8 @@ Slice frequency vector and associated data arrays to a specific range.
   * **f** (*ndarray*) – The frequency vector.
   * **\*x** (*ndarray*) – One or more data arrays to be sliced along the frequency axis.
     The last dimension of each array must match the length of f.
-  * **f_min** (*float* *,* *optional*) – Lower frequency bound.
-  * **f_max** (*float* *,* *optional*) – Upper frequency bound.
+  * **f_min** ([*float*](https://docs.python.org/3/library/functions.html#float) *,* *optional*) – Lower frequency bound.
+  * **f_max** ([*float*](https://docs.python.org/3/library/functions.html#float) *,* *optional*) – Upper frequency bound.
 * **Returns:**
   * **f** (*ndarray*) – The cropped frequency vector.
   * **\*xl** (*ndarray*) – The cropped data arrays.
@@ -171,7 +171,7 @@ array([[30, 40, 50],
 
 <!-- !! processed by numpydoc !! -->
 
-### eegdash.features.feature_bank.utils.spectral_kwargs(func: Callable)
+### eegdash.features.feature_bank.utils.spectral_kwargs(func: [Callable](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable))
 
 A decorator for functions receiving spectral-like parameters.
 

@@ -20,7 +20,7 @@ The module provides the classes:
 | `MultivariateFeature`()                             | Logic wrapper for features that operate on one or more EEG channels. |
 | `UnivariateFeature`()                               | Feature kind for operations applied to each channel independently.   |
 
-### *class* eegdash.features.kinds.BivariateFeature(\*args, channel_pair_format: str | None = None)
+### *class* eegdash.features.kinds.BivariateFeature(\*args, channel_pair_format: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None)
 
 Bases: `MultivariateFeature`
 
@@ -29,28 +29,28 @@ Feature kind for operations on pairs of channels.
 Designed for undirected relationship measures between two signals.
 
 * **Parameters:**
-  **channel_pair_format** (*str*) – A format string used to create feature names from pairs of
+  **channel_pair_format** ([*str*](https://docs.python.org/3/library/stdtypes.html#str)) – A format string used to create feature names from pairs of
   channel names. Default is “{}<>{}” for undirected bivariate features
   or “{}->{}” for directed bivariate features.
 
 <!-- !! processed by numpydoc !! -->
 
-#### feature_channel_names(\_metadata: dict) → list[str]
+#### feature_channel_names(\_metadata: [dict](https://docs.python.org/3/library/stdtypes.html#dict)) → [list](https://docs.python.org/3/library/stdtypes.html#list)[[str](https://docs.python.org/3/library/stdtypes.html#str)]
 
 Generate feature names for each unique pair of channels.
 
 * **Parameters:**
-  **\_metadata** (*dict*) – A dictionary of record and batch metadata.
+  **\_metadata** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – A dictionary of record and batch metadata.
 * **Returns:**
   Formatted strings representing channel pairs (e.g., ‘F3<>F4’).
 * **Return type:**
-  list of str
+  [list](https://docs.python.org/3/library/stdtypes.html#list) of [str](https://docs.python.org/3/library/stdtypes.html#str)
 
 <!-- !! processed by numpydoc !! -->
 
 ### *class* eegdash.features.kinds.MultivariateFeature
 
-Bases: `object`
+Bases: [`object`](https://docs.python.org/3/library/functions.html#object)
 
 Logic wrapper for features that operate on one or more EEG channels.
 
@@ -66,17 +66,17 @@ specific naming conventions for the extracted features.
 
 <!-- !! processed by numpydoc !! -->
 
-#### feature_channel_names(\_metadata: dict) → list[str]
+#### feature_channel_names(\_metadata: [dict](https://docs.python.org/3/library/stdtypes.html#dict)) → [list](https://docs.python.org/3/library/stdtypes.html#list)[[str](https://docs.python.org/3/library/stdtypes.html#str)]
 
 Generate feature-specific names based on input channels.
 
 * **Parameters:**
-  **\_metadata** (*dict*) – A dictionary of record and batch metadata.
+  **\_metadata** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – A dictionary of record and batch metadata.
 * **Returns:**
   A list of strings defining the naming for each output feature.
   Returns an empty list in the base implementation.
 * **Return type:**
-  list of str
+  [list](https://docs.python.org/3/library/stdtypes.html#list) of [str](https://docs.python.org/3/library/stdtypes.html#str)
 
 <!-- !! processed by numpydoc !! -->
 
@@ -90,15 +90,15 @@ Used when a single feature value is produced per channel.
 
 <!-- !! processed by numpydoc !! -->
 
-#### feature_channel_names(\_metadata: dict) → list[str]
+#### feature_channel_names(\_metadata: [dict](https://docs.python.org/3/library/stdtypes.html#dict)) → [list](https://docs.python.org/3/library/stdtypes.html#list)[[str](https://docs.python.org/3/library/stdtypes.html#str)]
 
 Return the channel names themselves as feature names.
 
 * **Parameters:**
-  **\_metadata** (*dict*) – A dictionary of record and batch metadata.
+  **\_metadata** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – A dictionary of record and batch metadata.
 * **Returns:**
   A list of channel names.
 * **Return type:**
-  list of str
+  [list](https://docs.python.org/3/library/stdtypes.html#list) of [str](https://docs.python.org/3/library/stdtypes.html#str)
 
 <!-- !! processed by numpydoc !! -->

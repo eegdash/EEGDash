@@ -36,10 +36,10 @@ It computes counts for both dimension ‘m’ and ‘m+1’.
 
 * **Parameters:**
   * **x** (*ndarray*) – The input signal of shape (…, n_times).
-  * **m** (*int* *,* *optional*) – Embedding dimension (length of compared sequences).
-  * **r** (*float* *,* *optional*) – Tolerance threshold, expressed as a fraction of the signal
+  * **m** ([*int*](https://docs.python.org/3/library/functions.html#int) *,* *optional*) – Embedding dimension (length of compared sequences).
+  * **r** ([*float*](https://docs.python.org/3/library/functions.html#float) *,* *optional*) – Tolerance threshold, expressed as a fraction of the signal
     standard deviation.
-  * **l** (*int* *,* *optional*) – The lag or delay between successive embedding vectors.
+  * **l** ([*int*](https://docs.python.org/3/library/functions.html#int) *,* *optional*) – The lag or delay between successive embedding vectors.
 * **Returns:**
   * **counts_m** (*ndarray*) – Neighbor counts for embedding dimension m.
   * **counts_mp1** (*ndarray*) – Neighbor counts for embedding dimension m + 1.
@@ -74,10 +74,10 @@ of timescale.
 
 * **Parameters:**
   * **x** (*ndarray*) – The input signal of shape (…, n_times).
-  * **m** (*int* *,* *optional*) – Embedding dimension (length of compared sequences).
-  * **r** (*float* *,* *optional*) – Tolerance threshold, expressed as a fraction of the signal
+  * **m** ([*int*](https://docs.python.org/3/library/functions.html#int) *,* *optional*) – Embedding dimension (length of compared sequences).
+  * **r** ([*float*](https://docs.python.org/3/library/functions.html#float) *,* *optional*) – Tolerance threshold, expressed as a fraction of the signal
     standard deviation.
-  * **l_max** (*int* *,* *optional*) – The maximal lag or delay between successive embedding vectors.
+  * **l_max** ([*int*](https://docs.python.org/3/library/functions.html#int) *,* *optional*) – The maximal lag or delay between successive embedding vectors.
 * **Returns:**
   MSE values. Shape is `x.shape[:-1]`.
 * **Return type:**
@@ -113,8 +113,8 @@ reconstruct the signal. Higher values suggest a more complex signal.
 
 * **Parameters:**
   * **x** (*ndarray*) – The input signal.
-  * **m** (*int* *,* *optional*) – The embedding dimension.
-  * **tau** (*int* *,* *optional*) – The time delay for embedding.
+  * **m** ([*int*](https://docs.python.org/3/library/functions.html#int) *,* *optional*) – The embedding dimension.
+  * **tau** ([*int*](https://docs.python.org/3/library/functions.html#int) *,* *optional*) – The time delay for embedding.
 * **Returns:**
   SVD Entropy values. Shape is `x.shape[:-1]`.
 * **Return type:**
@@ -131,8 +131,8 @@ of distinct patterns it contains.
 
 * **Parameters:**
   * **x** (*ndarray*) – The input signal.
-  * **threshold** (*float* *,* *optional*) – Value used to binarize the signal. If None, the median is used.
-  * **normalize** (*bool* *,* *optional*) – If True, normalizes the result by:
+  * **threshold** ([*float*](https://docs.python.org/3/library/functions.html#float) *,* *optional*) – Value used to binarize the signal. If None, the median is used.
+  * **normalize** ([*bool*](https://docs.python.org/3/library/functions.html#bool) *,* *optional*) – If True, normalizes the result by:
 * **Returns:**
   LZC values. Shape is `x.shape[:-1]`.
 * **Return type:**

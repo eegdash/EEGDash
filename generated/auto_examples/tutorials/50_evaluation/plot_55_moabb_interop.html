@@ -1,0 +1,1453 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../../" data-theme="light">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta property="og:title" content="How do I benchmark an EEGDash dataset with MOABB?" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://eegdash.org/generated/auto_examples/tutorials/50_evaluation/plot_55_moabb_interop.html" />
+<meta property="og:site_name" content="EEG Dash" />
+<meta property="og:description" content="EEGDash and MOABB sit on opposite ends of the BCI evaluation pipeline. EEGDash is a metadata index over BIDS-curated EEG[ Pernet et al., 2019] served…" />
+<meta property="og:image" content="https://eegdash.org/_static/eegdash_social_card.png" />
+<meta property="og:image:alt" content="EEG Dash — data-sharing interface for M/EEG datasets" />
+<meta name="description" content="EEGDash and MOABB sit on opposite ends of the BCI evaluation pipeline. EEGDash is a metadata index over BIDS-curated EEG[ Pernet et al., 2019] served…" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@eegdash" />
+
+    <title>How do I benchmark an EEGDash dataset with MOABB? &#8212; EEG Dash</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "light";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../_static/styles/theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+<link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sg_gallery.css?v=fd6457a4" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/custom.7953df0a.css?v=314ed3b2" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/css/treemap.087aecf0.css?v=7131b20f" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.d7808461.css?v=1ba63a31" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../../../_static/scripts/fontawesome.js?digest=55c26ed414f5f8a31ebb"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb" />
+<link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb" />
+
+    <script src="../../../../_static/documentation_options.js?v=6dfdf7c3"></script>
+    <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../../_static/sg-tags.js?v=d80f6fa4"></script>
+    <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../../_static/copybutton.js?v=8c005784"></script>
+    <script src="../../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'generated/auto_examples/tutorials/50_evaluation/plot_55_moabb_interop';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <script defer="defer" src="../../../../_static/js/tag-palette.7346f567.js?v=6f5eac9a"></script>
+    <script defer="defer" src="../../../../_static/js/search-as-you-type.e09b639d.js?v=8e93d0f7"></script>
+    <script defer="defer" src="../../../../_static/js/lazy-embed.1f1f83d2.js?v=118c4c47"></script>
+    <link rel="canonical" href="https://eegdash.org/generated/auto_examples/tutorials/50_evaluation/plot_55_moabb_interop.html" />
+    <link rel="icon" href="../../../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="Transfer, Foundation Models, and EEG2025" href="../70_transfer_foundation/index.html" />
+    <link rel="prev" title="Is Pipeline A really better than Pipeline B, or did it luck out on one subject?" href="plot_54_compare_two_pipelines.html" />
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.7" />
+
+  
+  <meta name="google-site-verification" content="REPLACE_WITH_GSC_TOKEN">
+  <meta name="msvalidate.01" content="REPLACE_WITH_BING_TOKEN">
+
+  
+  <link rel="preconnect" href="https://cdn.datatables.net" crossorigin>
+  <link rel="preconnect" href="https://code.jquery.com" crossorigin>
+
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    rel="preload"
+    as="style"
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Source+Sans+3:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap"
+    onload="this.onload=null;this.rel='stylesheet'">
+  <noscript>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Source+Sans+3:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap">
+  </noscript>
+
+  
+
+  
+  <link rel="alternate" type="text/markdown" href="/llms.txt" title="EEGDash — LLM-friendly index">
+  <link rel="llms" href="/llms.txt" title="EEGDash — llms.txt index">
+  <link rel="llms-txt" href="/llms.txt">
+  <link rel="llms-full" type="text/markdown" href="/llms-full.txt" title="EEGDash — full markdown corpus">
+  <link rel="alternate" type="application/json" href="/.well-known/agent-skills/index.json" title="EEGDash — Agent Skills">
+  <link rel="alternate" type="application/linkset+json" href="/.well-known/api-catalog" title="EEGDash — API catalog">
+  <meta name="llms-txt" content="/llms.txt">
+  <meta name="llms" content="/llms.txt">
+  <meta name="ai-content-index" content="/llms.txt">
+  <meta name="ai.content_index" content="/llms.txt">
+
+  
+
+  <!-- Google Tag Manager — deferred to DOMContentLoaded so the GTM
+       bootstrap no longer blocks first-paint or the Sphinx search-index
+       load. Functionally equivalent to the inline snippet below but
+       saves ~60 ms of Total Blocking Time per PageSpeed Insights. -->
+  <script>
+    (function(){
+      function loadGTM(){
+        if (window.__gtmLoaded) return;
+        window.__gtmLoaded = true;
+        (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','GTM-MXC3DGL6');
+      }
+      // Defer GTM off the critical path. requestIdleCallback wants an
+      // IdleRequestOptions object as its second argument while
+      // setTimeout wants a plain number — using the same `1` for both
+      // raised a TypeError in Lighthouse's console that dragged the SEO
+      // score down. Branch on availability so each API gets the shape
+      // it expects.
+      function scheduleGTM() {
+        if (typeof window.requestIdleCallback === 'function') {
+          window.requestIdleCallback(loadGTM, { timeout: 2000 });
+        } else {
+          setTimeout(loadGTM, 1);
+        }
+      }
+      if (document.readyState === 'complete' || document.readyState === 'interactive') {
+        scheduleGTM();
+      } else {
+        document.addEventListener('DOMContentLoaded', scheduleGTM);
+      }
+    })();
+  </script>
+  <!-- End Google Tag Manager -->
+
+  </head>
+  <body data-default-mode="light">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+    
+    <img src="../../../../_static/eegdash_long.svg" class="logo__image only-light" alt="EEG Dash Logo"/>
+    <img src="../../../../_static/eegdash_long.svg" class="logo__image only-dark pst-js-only" alt="EEG Dash Logo"/>
+  
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../dataset_summary.html">
+    Datasets
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../quickstart.html">
+    Quick Start
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../install/install.html">
+    Install
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../../index.html">
+    Examples
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../concepts/index.html">
+    Concepts
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../api/api.html">
+    Docs
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../../references.html">
+    References
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-external" href="https://eeg2025.github.io/">
+    EEG2025
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="External Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/eegdash/EEGDash" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../../../../_static/icons/github.svg" class="icon-link-image" alt="GitHub"/></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/eegdash/" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../../../../_static/icons/pypi.svg" class="icon-link-image" alt="PyPI"/></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://discord.gg/8jd7nVKwsc" title="Discord" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../../../../_static/icons/discord.svg" class="icon-link-image" alt="Discord"/></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../dataset_summary.html">
+    Datasets
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../quickstart.html">
+    Quick Start
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../install/install.html">
+    Install
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../../index.html">
+    Examples
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../concepts/index.html">
+    Concepts
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../api/api.html">
+    Docs
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../references.html">
+    References
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://eeg2025.github.io/">
+    EEG2025
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="External Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/eegdash/EEGDash" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../../../../_static/icons/github.svg" class="icon-link-image" alt="GitHub"/></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/eegdash/" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../../../../_static/icons/pypi.svg" class="icon-link-image" alt="PyPI"/></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://discord.gg/8jd7nVKwsc" title="Discord" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="../../../../_static/icons/discord.svg" class="icon-link-image" alt="Discord"/></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../../index.html" class="nav-link">Examples gallery</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">Evaluation and Benchmarking</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">How do I benchmark an EEGDash dataset with MOABB?</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p><a class="reference internal" href="#sphx-glr-download-generated-auto-examples-tutorials-50-evaluation-plot-55-moabb-interop-py"><span class="std std-ref">Go to the end</span></a>
+to download the full example code or to run this example in your browser via Binder.</p>
+</div>
+<section class="sphx-glr-example-title" id="how-do-i-benchmark-an-eegdash-dataset-with-moabb">
+<span id="sphx-glr-generated-auto-examples-tutorials-50-evaluation-plot-55-moabb-interop-py"></span><h1>How do I benchmark an EEGDash dataset with MOABB?<a class="headerlink" href="#how-do-i-benchmark-an-eegdash-dataset-with-moabb" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">10 minutes</span></div>
+<p>EEGDash and MOABB sit on opposite ends of the BCI evaluation pipeline.
+EEGDash is a metadata index over BIDS-curated EEG <span class="bibtex-citation" id="id1">[<a class="reference internal" href="../../../../references.html#id7" title="Cyril R. Pernet, Stefan Appelhoff, Krzysztof J. Gorgolewski, Guillaume Flandin, Christophe Phillips, Arnaud Delorme, and Robert Oostenveld. Eeg-bids, an extension to the brain imaging data structure for electroencephalography. Scientific Data, 2019. doi:10.1038/s41597-019-0104-8.">Pernet <em>et al.</em>, 2019</a>]</span>
+served from <a class="reference external" href="https://nemar.org">NEMAR</a> <span class="bibtex-citation" id="id2">[<a class="reference internal" href="../../../../references.html#id6" title="Arnaud Delorme, Dung Truong, Choonhan Youn, Subhashini Sivagnanam, Claire Stirm, Kenneth Yoshimoto, Russell A Poldrack, Amitava Majumdar, and Scott Makeig. Nemar: an open access data, tools and compute resource operating on neuroelectromagnetic data. Database, 2022. doi:10.1093/database/baac096.">Delorme <em>et al.</em>, 2022</a>]</span>; MOABB
+is the de-facto benchmark suite that pairs paradigm definitions
+(<code class="xref py py-class docutils literal notranslate"><span class="pre">MotorImagery</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">P300</span></code>)
+with evaluation procedures
+(<code class="xref py py-class docutils literal notranslate"><span class="pre">CrossSessionEvaluation</span></code>,
+<code class="xref py py-class docutils literal notranslate"><span class="pre">CrossSubjectEvaluation</span></code>) and a
+reproducibility study covering 30+ datasets (Aristimunha et al. 2023,
+Chevallier et al. 2024). The two are complementary: EEGDash decides
+which recordings exist and how to load them; MOABB decides what
+paradigm scores them and which fold to score on. The bridge
+<a class="reference external" href="https://braindecode.org/stable/generated/braindecode.datasets.BaseConcatDataset.html#braindecode.datasets.BaseConcatDataset.get_metadata" title="(in Braindecode v1.5)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">braindecode.datasets.BaseConcatDataset.get_metadata()</span></code></a> returns <code class="docutils literal notranslate"><span class="pre">(y,</span> <span class="pre">metadata)</span></code>
+for any MOABB stratified splitter.</p>
+<p>This tutorial wires both halves together: an
+<code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code> over <code class="docutils literal notranslate"><span class="pre">ds002718</span></code> (Wakeman &amp; Henson
+2015), the <code class="docutils literal notranslate"><span class="pre">(y,</span> <span class="pre">metadata)</span></code> pair, then a real
+<code class="xref py py-class docutils literal notranslate"><span class="pre">CrossSessionEvaluation</span></code> on
+<code class="xref py py-class docutils literal notranslate"><span class="pre">BNCI2014_001</span></code> <span class="bibtex-citation" id="id3">[<a class="reference internal" href="../../../../references.html#id13" title="Michael Tangermann, Klaus-Robert Müller, Ad Aertsen, Niels Birbaumer, Christoph Braun, Clemens Brunner, Robert Leeb, Carsten Mehring, Kai J. Miller, Gernot R. Müller-Putz, Guido Nolte, Gert Pfurtscheller, Hubert Preissl, Gerwin Schalk, Alois Schlögl, Carmen Vidaurre, Stephan Waldert, and Benjamin Blankertz. Review of the bci competition iv. Frontiers in Neuroscience, 2012. doi:10.3389/fnins.2012.00055.">Tangermann <em>et al.</em>, 2012</a>]</span>. Two
+sklearn pipelines compete, paired by the MOABB evaluator. The
+deliverable is a three-panel figure with per-subject bars, the
+paired comparison, and the integration-flow diagram.</p>
+<p>So how does an EEGDash-curated dataset land inside MOABB, and what do
+two sklearn pipelines look like once they finish the benchmark?</p>
+<section id="learning-objectives">
+<h2>Learning objectives<a class="headerlink" href="#learning-objectives" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Explain why EEGDash (catalog) and MOABB (paradigm + evaluator) are complementary halves of a benchmark pipeline.</p></li>
+<li><p>Convert a windowed <code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code> into the <code class="docutils literal notranslate"><span class="pre">(y,</span> <span class="pre">metadata)</span></code> pair every MOABB splitter consumes via <a class="reference external" href="https://braindecode.org/stable/generated/braindecode.datasets.BaseConcatDataset.html#braindecode.datasets.BaseConcatDataset.get_metadata" title="(in Braindecode v1.5)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">braindecode.datasets.BaseConcatDataset.get_metadata()</span></code></a>.</p></li>
+<li><p>Run a small <code class="xref py py-class docutils literal notranslate"><span class="pre">CrossSessionEvaluation</span></code> on <code class="xref py py-class docutils literal notranslate"><span class="pre">BNCI2014_001</span></code> and read per-subject accuracy off the result <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v3.0.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a>.</p></li>
+<li><p>Compare two sklearn pipelines through the same MOABB evaluator and report <code class="docutils literal notranslate"><span class="pre">mean</span> <span class="pre">+/-</span> <span class="pre">std</span></code> of accuracy across subjects.</p></li>
+<li><p>Identify two failure modes: MOABB missing in the environment, and a paradigm rejecting the chosen dataset.</p></li>
+</ul>
+</section>
+<section id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Prerequisites: <span class="xref std std-doc">/auto_examples/tutorials/10_core_workflow/plot_11_leakage_safe_split</span>,
+<span class="xref std std-doc">/auto_examples/tutorials/10_core_workflow/plot_12_train_a_baseline</span>,
+<span class="xref std std-doc">/auto_examples/tutorials/50_evaluation/plot_51_cross_subject_evaluation</span>.</p></li>
+<li><p>Concept: <a class="reference internal" href="../../../../concepts/leakage_and_evaluation.html"><span class="doc">Leakage and evaluation</span></a>.</p></li>
+<li><p>About 3-5 min on CPU once both <code class="docutils literal notranslate"><span class="pre">ds002718</span></code> and <code class="docutils literal notranslate"><span class="pre">BNCI2014_001</span></code>
+are cached. Network on first run only (cached thereafter via MNE).</p></li>
+<li><p>Optional: <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">moabb</span></code> enables the real benchmark path. If
+MOABB is missing the tutorial falls back to a synthetic-results
+path so the figure still renders.</p></li>
+</ul>
+<p>Setup. <code class="docutils literal notranslate"><span class="pre">warnings</span></code> are silenced to keep the cell output focused on the
+benchmark numbers; MOABB and pyriemann emit informational warnings on
+every fit that are noise inside a tutorial.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <a href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="pathlib.Path" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-class"><span class="n">Path</span></a>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">eegdash</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">eegdash</span><span class="w"> </span><span class="kn">import</span> <a href="../../../../api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset" title="eegdash.EEGDashDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class"><span class="n">EEGDashDataset</span></a>
+<span class="kn">from</span><span class="w"> </span><span class="nn">eegdash.viz</span><span class="w"> </span><span class="kn">import</span> <span class="n">use_eegdash_style</span>
+
+<span class="n">use_eegdash_style</span><span class="p">()</span>
+<a href="https://docs.python.org/3/library/warnings.html#warnings.simplefilter" title="warnings.simplefilter" class="sphx-glr-backref-module-warnings sphx-glr-backref-type-py-function"><span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span></a><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">FutureWarning</span><span class="p">)</span>
+<a href="https://docs.python.org/3/library/warnings.html#warnings.simplefilter" title="warnings.simplefilter" class="sphx-glr-backref-module-warnings sphx-glr-backref-type-py-function"><span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span></a><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">UserWarning</span><span class="p">)</span>
+
+<a href="https://docs.python.org/3/library/pathlib.html#pathlib.PosixPath" title="pathlib.PosixPath" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">CACHE_DIR</span></a> <span class="o">=</span> <a href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="pathlib.Path" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-class"><span class="n">Path</span></a><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;EEGDASH_CACHE_DIR&quot;</span><span class="p">,</span> <a href="https://docs.python.org/3/library/pathlib.html#pathlib.Path.home" title="pathlib.Path.home" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-method"><span class="n">Path</span><span class="o">.</span><span class="n">home</span></a><span class="p">()</span> <span class="o">/</span> <span class="s2">&quot;.eegdash_cache&quot;</span><span class="p">))</span>
+<a href="https://docs.python.org/3/library/pathlib.html#pathlib.Path.mkdir" title="pathlib.Path.mkdir" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-method"><span class="n">CACHE_DIR</span><span class="o">.</span><span class="n">mkdir</span></a><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="c1"># MOABB writes its result database to ``MNE_DATA``; carry that to a</span>
+<span class="c1"># tutorial-local subdir so repeat runs do not pollute the user&#39;s main</span>
+<span class="c1"># MNE cache.</span>
+<a href="https://docs.python.org/3/library/pathlib.html#pathlib.PosixPath" title="pathlib.PosixPath" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">MOABB_RESULTS</span></a> <span class="o">=</span> <a href="https://docs.python.org/3/library/pathlib.html#pathlib.PosixPath" title="pathlib.PosixPath" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">CACHE_DIR</span></a> <span class="o">/</span> <span class="s2">&quot;moabb_results_plot_55&quot;</span>
+<a href="https://docs.python.org/3/library/pathlib.html#pathlib.Path.mkdir" title="pathlib.Path.mkdir" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-method"><span class="n">MOABB_RESULTS</span><span class="o">.</span><span class="n">mkdir</span></a><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;MOABB_RESULTS&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><a href="https://docs.python.org/3/library/pathlib.html#pathlib.PosixPath" title="pathlib.PosixPath" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">MOABB_RESULTS</span></a><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;eegdash </span><span class="si">{</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">eegdash</span><span class="o">.</span><span class="n">__version__</span></a><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;cache_dir=</span><span class="si">{</span><a href="https://docs.python.org/3/library/pathlib.html#pathlib.PosixPath" title="pathlib.PosixPath" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">CACHE_DIR</span></a><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>eegdash 0.7.2
+cache_dir=/home/runner/eegdash_cache
+</pre></div>
+</div>
+</section>
+<section id="eegdash-and-moabb-the-mental-model">
+<h2>EEGDash and MOABB: the mental model<a class="headerlink" href="#eegdash-and-moabb-the-mental-model" title="Link to this heading">#</a></h2>
+<p>A BCI benchmark has two layers. The <em>catalog</em> layer knows which BIDS
+datasets exist, where they live, and what each subject contributes
+(EEGDash). The <em>paradigm</em> layer knows what task the recording
+implements, how to slice events into trials, and which evaluation
+protocol applies (MOABB). The bridge between the two is
+<a class="reference external" href="https://braindecode.org/stable/generated/braindecode.datasets.BaseConcatDataset.html#braindecode.datasets.BaseConcatDataset.get_metadata" title="(in Braindecode v1.5)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">braindecode.datasets.BaseConcatDataset.get_metadata()</span></code></a>: it takes an
+<code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code> (or a windowed braindecode
+dataset) and returns <code class="docutils literal notranslate"><span class="pre">(y,</span> <span class="pre">metadata)</span></code> where <code class="docutils literal notranslate"><span class="pre">metadata</span></code> carries
+the <code class="docutils literal notranslate"><span class="pre">subject</span></code>, <code class="docutils literal notranslate"><span class="pre">session</span></code>, <code class="docutils literal notranslate"><span class="pre">run</span></code> columns MOABB splitters
+group on.</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>EEGDash catalog          ---bridge---&gt;          MOABB evaluator
++-----------------+      get_metadata +--------------------------+
+| EEGDashDataset  |     ------------&gt; | Paradigm.get_data()      |
+|  - BIDS query   |     (y, metadata) | CrossSessionEvaluation   |
+|  - subject      |                   |  - LeaveOneGroupOut      |
+|  - task         |                   |  - per-subject score     |
++-----------------+                   +--------------------------+
+</pre></div>
+</div>
+<p>Brookshire et al. 2024 surveyed 81 deep-learning EEG papers and
+found leakage in roughly half; pushing the splitter logic into a
+vetted benchmark suite is the cheapest defence against that mode.</p>
+</section>
+<section id="step-1-the-eegdash-side-ds002718-face-recognition">
+<h2>Step 1. The EEGDash side, ds002718 face recognition<a class="headerlink" href="#step-1-the-eegdash-side-ds002718-face-recognition" title="Link to this heading">#</a></h2>
+<p>EEGDash hands MOABB the data layer through whatever metadata accessor
+the dataset already exposes:
+<a class="reference external" href="https://braindecode.org/stable/generated/braindecode.datasets.BaseConcatDataset.html#braindecode.datasets.BaseConcatDataset.get_metadata" title="(in Braindecode v1.5)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">braindecode.datasets.BaseConcatDataset.get_metadata()</span></code></a> once the
+windows are built (one row per window), or the per-record
+<code class="docutils literal notranslate"><span class="pre">description</span></code> frame on a fresh
+<code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code> (one row per recording, the right
+shape for a sanity check before the heavier benchmark below). We build
+an EEGDashDataset for one subject of <code class="docutils literal notranslate"><span class="pre">ds002718</span></code> (Wakeman &amp; Henson
+2015) and then read the <code class="docutils literal notranslate"><span class="pre">(y,</span> <span class="pre">metadata)</span></code> pair every MOABB stratified
+splitter consumes.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">DATASET</span></a> <span class="o">=</span> <span class="s2">&quot;ds002718&quot;</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">SUBJECT</span></a> <span class="o">=</span> <span class="s2">&quot;002&quot;</span>  <span class="c1"># E3.23 data minimality: one subject is enough for the bridge.</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">TASK</span></a> <span class="o">=</span> <span class="s2">&quot;FaceRecognition&quot;</span>
+
+<a href="../../../../api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset" title="eegdash.EEGDashDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">eegdash_dataset</span></a> <span class="o">=</span> <a href="../../../../api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset" title="eegdash.EEGDashDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class"><span class="n">EEGDashDataset</span></a><span class="p">(</span>
+    <span class="n">cache_dir</span><span class="o">=</span><a href="https://docs.python.org/3/library/pathlib.html#pathlib.PosixPath" title="pathlib.PosixPath" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">CACHE_DIR</span></a><span class="p">,</span> <span class="n">dataset</span><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">DATASET</span></a><span class="p">,</span> <span class="n">subject</span><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">SUBJECT</span></a><span class="p">,</span> <span class="n">task</span><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">TASK</span></a>
+<span class="p">)</span>
+<a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">n_records</span></a> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">eegdash_dataset</span><span class="o">.</span><span class="n">datasets</span></a><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;EEGDashDataset: </span><span class="si">{</span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">n_records</span></a><span class="si">}</span><span class="s2"> record(s) for sub-</span><span class="si">{</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">SUBJECT</span></a><span class="si">}</span><span class="s2">, task=</span><span class="si">{</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">TASK</span></a><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># The bridge: MOABB-shaped (y, metadata). braindecode&#39;s</span>
+<span class="c1"># ``BaseConcatDataset.description`` already returns the per-record</span>
+<span class="c1"># DataFrame; after windowing the same role is played by</span>
+<span class="c1"># ``windows.get_metadata()`` (one row per window).</span>
+<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">meta_eegdash</span></a> <span class="o">=</span> <a href="../../../../api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset.description" title="eegdash.EEGDashDataset.description" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-property"><span class="n">eegdash_dataset</span><span class="o">.</span><span class="n">description</span></a>
+<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">y_eegdash</span></a> <span class="o">=</span> <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">meta_eegdash</span></a><span class="p">[</span><span class="s2">&quot;task&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.html#pandas.Series" title="pandas.Series" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class"><span class="n">pd</span><span class="o">.</span><span class="n">Series</span></a><span class="p">(</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;y.shape&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#tuple" title="builtins.tuple" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">y_eegdash</span><span class="o">.</span><span class="n">shape</span></a><span class="p">),</span>
+        <span class="s2">&quot;metadata cols&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Index.html#pandas.Index" title="pandas.Index" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">meta_eegdash</span><span class="o">.</span><span class="n">columns</span></a><span class="p">)),</span>
+        <span class="s2">&quot;subjects&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">meta_eegdash</span></a><span class="p">[</span><span class="s2">&quot;subject&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">())),</span>
+        <span class="s2">&quot;first row&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.iloc.html#pandas.DataFrame.iloc" title="pandas.DataFrame.iloc" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-property"><span class="n">meta_eegdash</span><span class="o">.</span><span class="n">iloc</span></a><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()),</span>
+    <span class="p">},</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">,</span>
+<span class="p">)</span><span class="o">.</span><span class="n">to_frame</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>EEGDashDataset: 1 record(s) for sub-002, task=FaceRecognition
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>y.shape</th>
+      <td>(1,)</td>
+    </tr>
+    <tr>
+      <th>metadata cols</th>
+      <td>['subject', 'task']</td>
+    </tr>
+    <tr>
+      <th>subjects</th>
+      <td>['002']</td>
+    </tr>
+    <tr>
+      <th>first row</th>
+      <td>{'subject': '002', 'task': 'FaceRecognition'}</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<br />
+<br /><p><strong>Investigate.</strong> <code class="docutils literal notranslate"><span class="pre">meta_eegdash</span></code> carries the <code class="docutils literal notranslate"><span class="pre">subject</span></code>,
+<code class="docutils literal notranslate"><span class="pre">session</span></code>, <code class="docutils literal notranslate"><span class="pre">run</span></code>, <code class="docutils literal notranslate"><span class="pre">dataset</span></code> columns MOABB splitters group on.
+On a windowed dataset the same call returns one row per window
+without extra glue (<code class="docutils literal notranslate"><span class="pre">plot_02</span></code> Pattern 0). MOABB stratified
+splitters fail when <code class="docutils literal notranslate"><span class="pre">y</span></code> is constant; the benchmark below uses a
+multi-class MOABB dataset where <code class="docutils literal notranslate"><span class="pre">y</span></code> carries class labels, not the
+BIDS task name.</p>
+</section>
+<section id="step-2-the-moabb-side-bnci2014-001-motor-imagery">
+<h2>Step 2. The MOABB side, BNCI2014_001 motor imagery<a class="headerlink" href="#step-2-the-moabb-side-bnci2014-001-motor-imagery" title="Link to this heading">#</a></h2>
+<p>Why switch dataset for the benchmark itself? MOABB paradigms
+validate their datasets up front:
+<code class="xref py py-class docutils literal notranslate"><span class="pre">LeftRightImagery</span></code> requires motor-imagery
+events with <code class="docutils literal notranslate"><span class="pre">left_hand</span></code> and <code class="docutils literal notranslate"><span class="pre">right_hand</span></code> labels; <code class="docutils literal notranslate"><span class="pre">ds002718</span></code>
+is face-recognition and would be rejected. We use
+<code class="xref py py-class docutils literal notranslate"><span class="pre">BNCI2014_001</span></code> <span class="bibtex-citation" id="id4">[<a class="reference internal" href="../../../../references.html#id13" title="Michael Tangermann, Klaus-Robert Müller, Ad Aertsen, Niels Birbaumer, Christoph Braun, Clemens Brunner, Robert Leeb, Carsten Mehring, Kai J. Miller, Gernot R. Müller-Putz, Guido Nolte, Gert Pfurtscheller, Hubert Preissl, Gerwin Schalk, Alois Schlögl, Carmen Vidaurre, Stephan Waldert, and Benjamin Blankertz. Review of the bci competition iv. Frontiers in Neuroscience, 2012. doi:10.3389/fnins.2012.00055.">Tangermann <em>et al.</em>, 2012</a>]</span>,
+the canonical motor-imagery benchmark shipped with MOABB.</p>
+<p><strong>Predict.</strong> With 3 subjects and 2 sessions per subject, how many
+rows do you expect from a CrossSession evaluation per pipeline?</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">moabb.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">BNCI2014_001</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">moabb.evaluations</span><span class="w"> </span><span class="kn">import</span> <a href="https://docs.python.org/3/library/abc.html#abc.ABC" title="abc.ABC" class="sphx-glr-backref-module-abc sphx-glr-backref-type-py-class"><span class="n">CrossSessionEvaluation</span></a>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">moabb.paradigms</span><span class="w"> </span><span class="kn">import</span> <span class="n">LeftRightImagery</span>
+
+    <a href="https://docs.python.org/3/library/functions.html#bool" title="builtins.bool" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">MOABB_AVAILABLE</span></a> <span class="o">=</span> <span class="kc">True</span>
+<span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>  <span class="c1"># pragma: no cover - exercised when moabb missing</span>
+    <span class="nb">print</span><span class="p">(</span>
+        <span class="s2">&quot;MOABB not installed; falling back to synthetic results. &quot;</span>
+        <span class="s2">&quot;Install with `pip install moabb` to run the real benchmark.&quot;</span>
+    <span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  (</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">exc</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+    <a href="https://docs.python.org/3/library/functions.html#bool" title="builtins.bool" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">MOABB_AVAILABLE</span></a> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="c1"># Two pipelines that build only on sklearn + mne so the tutorial does</span>
+<span class="c1"># not require pyriemann. CSP is the standard spatial filter for motor</span>
+<span class="c1"># imagery; pipelines differ only in the classifier (LDA vs LR).</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.discriminant_analysis</span><span class="w"> </span><span class="kn">import</span> <a href="https://scikit-learn.org/stable/modules/generated/sklearn.discriminant_analysis.LinearDiscriminantAnalysis.html#sklearn.discriminant_analysis.LinearDiscriminantAnalysis" title="sklearn.discriminant_analysis.LinearDiscriminantAnalysis" class="sphx-glr-backref-module-sklearn-discriminant_analysis sphx-glr-backref-type-py-class"><span class="n">LinearDiscriminantAnalysis</span></a>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.linear_model</span><span class="w"> </span><span class="kn">import</span> <a href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html#sklearn.linear_model.LogisticRegression" title="sklearn.linear_model.LogisticRegression" class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class"><span class="n">LogisticRegression</span></a>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.pipeline</span><span class="w"> </span><span class="kn">import</span> <a href="https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html#sklearn.pipeline.Pipeline" title="sklearn.pipeline.Pipeline" class="sphx-glr-backref-module-sklearn-pipeline sphx-glr-backref-type-py-class"><span class="n">Pipeline</span></a>
+
+<span class="k">if</span> <a href="https://docs.python.org/3/library/functions.html#bool" title="builtins.bool" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">MOABB_AVAILABLE</span></a><span class="p">:</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">mne.decoding</span><span class="w"> </span><span class="kn">import</span> <a href="https://mne.tools/stable/generated/mne.decoding.CSP.html#mne.decoding.CSP" title="mne.decoding.CSP" class="sphx-glr-backref-module-mne-decoding sphx-glr-backref-type-py-class"><span class="n">CSP</span></a>
+
+    <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">pipelines</span></a> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;CSP+LDA&quot;</span><span class="p">:</span> <a href="https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html#sklearn.pipeline.Pipeline" title="sklearn.pipeline.Pipeline" class="sphx-glr-backref-module-sklearn-pipeline sphx-glr-backref-type-py-class"><span class="n">Pipeline</span></a><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="p">(</span><span class="s2">&quot;csp&quot;</span><span class="p">,</span> <a href="https://mne.tools/stable/generated/mne.decoding.CSP.html#mne.decoding.CSP" title="mne.decoding.CSP" class="sphx-glr-backref-module-mne-decoding sphx-glr-backref-type-py-class"><span class="n">CSP</span></a><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="kc">True</span><span class="p">)),</span>
+                <span class="p">(</span><span class="s2">&quot;clf&quot;</span><span class="p">,</span> <a href="https://scikit-learn.org/stable/modules/generated/sklearn.discriminant_analysis.LinearDiscriminantAnalysis.html#sklearn.discriminant_analysis.LinearDiscriminantAnalysis" title="sklearn.discriminant_analysis.LinearDiscriminantAnalysis" class="sphx-glr-backref-module-sklearn-discriminant_analysis sphx-glr-backref-type-py-class"><span class="n">LinearDiscriminantAnalysis</span></a><span class="p">()),</span>
+            <span class="p">]</span>
+        <span class="p">),</span>
+        <span class="s2">&quot;CSP+LR&quot;</span><span class="p">:</span> <a href="https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html#sklearn.pipeline.Pipeline" title="sklearn.pipeline.Pipeline" class="sphx-glr-backref-module-sklearn-pipeline sphx-glr-backref-type-py-class"><span class="n">Pipeline</span></a><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="p">(</span><span class="s2">&quot;csp&quot;</span><span class="p">,</span> <a href="https://mne.tools/stable/generated/mne.decoding.CSP.html#mne.decoding.CSP" title="mne.decoding.CSP" class="sphx-glr-backref-module-mne-decoding sphx-glr-backref-type-py-class"><span class="n">CSP</span></a><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="kc">True</span><span class="p">)),</span>
+                <span class="p">(</span><span class="s2">&quot;clf&quot;</span><span class="p">,</span> <a href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html#sklearn.linear_model.LogisticRegression" title="sklearn.linear_model.LogisticRegression" class="sphx-glr-backref-module-sklearn-linear_model sphx-glr-backref-type-py-class"><span class="n">LogisticRegression</span></a><span class="p">(</span><span class="n">max_iter</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)),</span>
+            <span class="p">]</span>
+        <span class="p">),</span>
+    <span class="p">}</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;pipelines: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">pipelines</span></a><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">pipelines</span></a> <span class="o">=</span> <span class="kc">None</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>pipelines: [&#39;CSP+LDA&#39;, &#39;CSP+LR&#39;]
+</pre></div>
+</div>
+</section>
+<section id="step-3-run-the-moabb-crosssession-evaluation">
+<h2>Step 3. Run the MOABB CrossSession evaluation<a class="headerlink" href="#step-3-run-the-moabb-crosssession-evaluation" title="Link to this heading">#</a></h2>
+<p><strong>Run.</strong> <code class="xref py py-class docutils literal notranslate"><span class="pre">CrossSessionEvaluation</span></code> walks
+every (dataset, subject) and runs leave-one-session-out on the
+session column. The result is a long-format
+<a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v3.0.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a> with one row per (pipeline, subject,
+session) and a <code class="docutils literal notranslate"><span class="pre">score</span></code> column. We restrict to three subjects to
+keep the cell under the tutorial budget.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">N_SUBJECTS_BENCH</span></a> <span class="o">=</span> <span class="mi">3</span>  <span class="c1"># E3.23: smallest cohort that exercises mean +/- std</span>
+
+<span class="k">if</span> <a href="https://docs.python.org/3/library/functions.html#bool" title="builtins.bool" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">MOABB_AVAILABLE</span></a><span class="p">:</span>
+    <span class="n">paradigm</span> <span class="o">=</span> <span class="n">LeftRightImagery</span><span class="p">()</span>
+    <span class="n">bnci</span> <span class="o">=</span> <span class="n">BNCI2014_001</span><span class="p">()</span>
+    <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">bnci</span><span class="o">.</span><span class="n">subject_list</span></a> <span class="o">=</span> <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">bnci</span><span class="o">.</span><span class="n">subject_list</span></a><span class="p">[:</span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">N_SUBJECTS_BENCH</span></a><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;benchmark cohort: subjects=</span><span class="si">{</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">bnci</span><span class="o">.</span><span class="n">subject_list</span></a><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">evaluation</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/abc.html#abc.ABC" title="abc.ABC" class="sphx-glr-backref-module-abc sphx-glr-backref-type-py-class"><span class="n">CrossSessionEvaluation</span></a><span class="p">(</span>
+        <span class="n">paradigm</span><span class="o">=</span><span class="n">paradigm</span><span class="p">,</span>
+        <span class="n">datasets</span><span class="o">=</span><span class="p">[</span><span class="n">bnci</span><span class="p">],</span>
+        <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;plot55&quot;</span><span class="p">,</span>
+        <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">results</span></a> <span class="o">=</span> <span class="n">evaluation</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">pipelines</span></a><span class="p">)</span>
+        <a href="https://docs.python.org/3/library/functions.html#bool" title="builtins.bool" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">used_moabb</span></a> <span class="o">=</span> <span class="kc">True</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;results frame: rows=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">results</span></a><span class="p">)</span><span class="si">}</span><span class="s2"> | cols=</span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Index.html#pandas.Index" title="pandas.Index" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">results</span><span class="o">.</span><span class="n">columns</span></a><span class="p">)[:</span><span class="mi">6</span><span class="p">]</span><span class="si">}</span><span class="s2"> ...&quot;</span>
+        <span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>  <span class="c1"># pragma: no cover - resilient against MOABB API drift</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;MOABB evaluation failed (</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">exc</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">); falling back.&quot;</span><span class="p">)</span>
+        <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">results</span></a> <span class="o">=</span> <span class="kc">None</span>
+        <a href="https://docs.python.org/3/library/functions.html#bool" title="builtins.bool" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">used_moabb</span></a> <span class="o">=</span> <span class="kc">False</span>
+<span class="k">else</span><span class="p">:</span>
+    <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">results</span></a> <span class="o">=</span> <span class="kc">None</span>
+    <a href="https://docs.python.org/3/library/functions.html#bool" title="builtins.bool" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">used_moabb</span></a> <span class="o">=</span> <span class="kc">False</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>benchmark cohort: subjects=[1, 2, 3]
+/home/runner/work/EEGDash/EEGDash/.venv/lib/python3.12/site-packages/urllib3/connectionpool.py:1110: InsecureRequestWarning: Unverified HTTPS request is being made to host &#39;lampx.tugraz.at&#39;. Adding certificate verification is strongly advised. See: https://urllib3.readthedocs.io/en/latest/advanced-usage.html#tls-warnings
+  warnings.warn(
+
+  0%|                                              | 0.00/42.8M [00:00&lt;?, ?B/s]
+  0%|                                     | 8.19k/42.8M [00:00&lt;08:47, 81.1kB/s]
+  0%|                                      | 56.3k/42.8M [00:00&lt;02:17, 311kB/s]
+  0%|                                       | 128k/42.8M [00:00&lt;01:27, 487kB/s]
+  0%|▏                                      | 184k/42.8M [00:00&lt;01:22, 514kB/s]
+  1%|▎                                      | 312k/42.8M [00:00&lt;00:54, 780kB/s]
+  1%|▍                                      | 449k/42.8M [00:00&lt;00:43, 967kB/s]
+  2%|▌                                     | 688k/42.8M [00:00&lt;00:29, 1.42MB/s]
+  2%|▊                                     | 904k/42.8M [00:00&lt;00:25, 1.64MB/s]
+  3%|█▏                                   | 1.34M/42.8M [00:00&lt;00:16, 2.44MB/s]
+  4%|█▌                                   | 1.74M/42.8M [00:01&lt;00:14, 2.92MB/s]
+  6%|██▏                                  | 2.54M/42.8M [00:01&lt;00:09, 4.39MB/s]
+  8%|██▊                                  | 3.26M/42.8M [00:01&lt;00:07, 5.22MB/s]
+ 11%|████                                 | 4.72M/42.8M [00:01&lt;00:04, 7.95MB/s]
+ 14%|█████▎                               | 6.08M/42.8M [00:01&lt;00:03, 9.56MB/s]
+ 20%|███████▌                             | 8.74M/42.8M [00:01&lt;00:02, 14.5MB/s]
+ 26%|█████████▋                           | 11.3M/42.8M [00:01&lt;00:01, 17.6MB/s]
+ 38%|█████████████▉                       | 16.1M/42.8M [00:01&lt;00:01, 26.5MB/s]
+ 48%|█████████████████▉                   | 20.8M/42.8M [00:01&lt;00:00, 32.2MB/s]
+ 61%|██████████████████████▌              | 26.1M/42.8M [00:01&lt;00:00, 38.0MB/s]
+ 76%|████████████████████████████▏        | 32.6M/42.8M [00:02&lt;00:00, 44.8MB/s]
+ 91%|█████████████████████████████████▊   | 39.1M/42.8M [00:02&lt;00:00, 49.5MB/s]
+  0%|                                              | 0.00/42.8M [00:00&lt;?, ?B/s]
+100%|██████████████████████████████████████| 42.8M/42.8M [00:00&lt;00:00, 197GB/s]
+/home/runner/work/EEGDash/EEGDash/.venv/lib/python3.12/site-packages/urllib3/connectionpool.py:1110: InsecureRequestWarning: Unverified HTTPS request is being made to host &#39;lampx.tugraz.at&#39;. Adding certificate verification is strongly advised. See: https://urllib3.readthedocs.io/en/latest/advanced-usage.html#tls-warnings
+  warnings.warn(
+
+  0%|                                              | 0.00/43.8M [00:00&lt;?, ?B/s]
+  0%|                                      | 16.4k/43.8M [00:00&lt;04:31, 161kB/s]
+  0%|                                      | 64.5k/43.8M [00:00&lt;02:06, 344kB/s]
+  0%|                                      | 99.3k/43.8M [00:00&lt;02:07, 342kB/s]
+  0%|▏                                      | 176k/43.8M [00:00&lt;01:26, 503kB/s]
+  1%|▏                                      | 249k/43.8M [00:00&lt;01:15, 578kB/s]
+  1%|▎                                      | 344k/43.8M [00:00&lt;01:02, 697kB/s]
+  1%|▍                                      | 465k/43.8M [00:00&lt;00:50, 855kB/s]
+  1%|▍                                      | 560k/43.8M [00:00&lt;00:49, 879kB/s]
+  2%|▋                                     | 728k/43.8M [00:00&lt;00:38, 1.12MB/s]
+  2%|▊                                     | 889k/43.8M [00:01&lt;00:34, 1.26MB/s]
+  3%|▉                                    | 1.10M/43.8M [00:01&lt;00:28, 1.49MB/s]
+  3%|█                                    | 1.30M/43.8M [00:01&lt;00:26, 1.63MB/s]
+  4%|█▎                                   | 1.56M/43.8M [00:01&lt;00:22, 1.92MB/s]
+  4%|█▌                                   | 1.84M/43.8M [00:01&lt;00:19, 2.16MB/s]
+  5%|█▉                                   | 2.23M/43.8M [00:01&lt;00:15, 2.67MB/s]
+  6%|██▏                                  | 2.65M/43.8M [00:01&lt;00:13, 3.08MB/s]
+  7%|██▊                                  | 3.26M/43.8M [00:01&lt;00:10, 3.97MB/s]
+  9%|███▍                                 | 4.05M/43.8M [00:01&lt;00:07, 5.08MB/s]
+ 12%|████▍                                | 5.18M/43.8M [00:01&lt;00:05, 6.88MB/s]
+ 15%|█████▌                               | 6.54M/43.8M [00:02&lt;00:04, 8.78MB/s]
+ 20%|███████▎                             | 8.60M/43.8M [00:02&lt;00:02, 12.2MB/s]
+ 25%|█████████▎                           | 11.0M/43.8M [00:02&lt;00:02, 15.6MB/s]
+ 34%|████████████▍                        | 14.8M/43.8M [00:02&lt;00:01, 22.0MB/s]
+ 44%|████████████████▏                    | 19.1M/43.8M [00:02&lt;00:00, 28.0MB/s]
+ 56%|████████████████████▊                | 24.6M/43.8M [00:02&lt;00:00, 35.9MB/s]
+ 69%|█████████████████████████▌           | 30.2M/43.8M [00:02&lt;00:00, 41.9MB/s]
+ 82%|██████████████████████████████▎      | 35.8M/43.8M [00:02&lt;00:00, 46.2MB/s]
+ 97%|███████████████████████████████████▊ | 42.4M/43.8M [00:02&lt;00:00, 50.6MB/s]
+  0%|                                              | 0.00/43.8M [00:00&lt;?, ?B/s]
+100%|██████████████████████████████████████| 43.8M/43.8M [00:00&lt;00:00, 279GB/s]
+/home/runner/work/EEGDash/EEGDash/.venv/lib/python3.12/site-packages/urllib3/connectionpool.py:1110: InsecureRequestWarning: Unverified HTTPS request is being made to host &#39;lampx.tugraz.at&#39;. Adding certificate verification is strongly advised. See: https://urllib3.readthedocs.io/en/latest/advanced-usage.html#tls-warnings
+  warnings.warn(
+
+  0%|                                              | 0.00/43.1M [00:00&lt;?, ?B/s]
+  0%|                                     | 8.19k/43.1M [00:00&lt;08:51, 81.0kB/s]
+  0%|                                      | 48.1k/43.1M [00:00&lt;02:43, 264kB/s]
+  0%|                                      | 96.3k/43.1M [00:00&lt;02:00, 358kB/s]
+  0%|▏                                      | 153k/43.1M [00:00&lt;01:38, 434kB/s]
+  0%|▏                                      | 201k/43.1M [00:00&lt;01:35, 447kB/s]
+  1%|▎                                      | 281k/43.1M [00:00&lt;01:16, 560kB/s]
+  1%|▎                                      | 360k/43.1M [00:00&lt;01:07, 632kB/s]
+  1%|▍                                      | 449k/43.1M [00:00&lt;01:00, 704kB/s]
+  1%|▍                                      | 537k/43.1M [00:00&lt;00:56, 753kB/s]
+  1%|▌                                      | 633k/43.1M [00:01&lt;00:52, 810kB/s]
+  2%|▋                                      | 728k/43.1M [00:01&lt;00:50, 846kB/s]
+  2%|▊                                      | 849k/43.1M [00:01&lt;00:44, 948kB/s]
+  2%|▊                                      | 952k/43.1M [00:01&lt;00:43, 966kB/s]
+  3%|▉                                    | 1.12M/43.1M [00:01&lt;00:35, 1.17MB/s]
+  3%|█                                    | 1.26M/43.1M [00:01&lt;00:33, 1.24MB/s]
+  4%|█▎                                   | 1.51M/43.1M [00:01&lt;00:26, 1.60MB/s]
+  4%|█▍                                   | 1.69M/43.1M [00:01&lt;00:25, 1.63MB/s]
+  5%|█▊                                   | 2.14M/43.1M [00:01&lt;00:16, 2.45MB/s]
+  6%|██                                   | 2.38M/43.1M [00:01&lt;00:16, 2.44MB/s]
+  7%|██▋                                  | 3.17M/43.1M [00:02&lt;00:09, 4.01MB/s]
+  9%|███▍                                 | 3.98M/43.1M [00:02&lt;00:07, 5.20MB/s]
+ 12%|████▍                                | 5.22M/43.1M [00:02&lt;00:05, 7.27MB/s]
+ 15%|█████▌                               | 6.49M/43.1M [00:02&lt;00:04, 8.79MB/s]
+ 20%|███████▍                             | 8.59M/43.1M [00:02&lt;00:02, 12.3MB/s]
+ 23%|████████▋                            | 10.1M/43.1M [00:02&lt;00:02, 13.0MB/s]
+ 32%|███████████▊                         | 13.7M/43.1M [00:02&lt;00:01, 19.7MB/s]
+ 41%|███████████████                      | 17.6M/43.1M [00:02&lt;00:01, 25.1MB/s]
+ 51%|███████████████████                  | 22.1M/43.1M [00:02&lt;00:00, 30.9MB/s]
+ 66%|████████████████████████▍            | 28.5M/43.1M [00:02&lt;00:00, 39.4MB/s]
+ 78%|████████████████████████████▉        | 33.7M/43.1M [00:03&lt;00:00, 42.7MB/s]
+ 92%|██████████████████████████████████▏  | 39.7M/43.1M [00:03&lt;00:00, 46.7MB/s]
+  0%|                                              | 0.00/43.1M [00:00&lt;?, ?B/s]
+100%|██████████████████████████████████████| 43.1M/43.1M [00:00&lt;00:00, 261GB/s]
+/home/runner/work/EEGDash/EEGDash/.venv/lib/python3.12/site-packages/urllib3/connectionpool.py:1110: InsecureRequestWarning: Unverified HTTPS request is being made to host &#39;lampx.tugraz.at&#39;. Adding certificate verification is strongly advised. See: https://urllib3.readthedocs.io/en/latest/advanced-usage.html#tls-warnings
+  warnings.warn(
+
+  0%|                                              | 0.00/44.2M [00:00&lt;?, ?B/s]
+  0%|                                     | 8.19k/44.2M [00:00&lt;09:06, 80.9kB/s]
+  0%|                                      | 56.3k/44.2M [00:00&lt;02:22, 311kB/s]
+  0%|                                       | 121k/44.2M [00:00&lt;01:36, 457kB/s]
+  0%|▏                                      | 193k/44.2M [00:00&lt;01:19, 553kB/s]
+  1%|▎                                      | 289k/44.2M [00:00&lt;01:03, 693kB/s]
+  1%|▎                                      | 377k/44.2M [00:00&lt;00:58, 749kB/s]
+  1%|▍                                      | 480k/44.2M [00:00&lt;00:52, 835kB/s]
+  1%|▌                                      | 608k/44.2M [00:00&lt;00:45, 965kB/s]
+  2%|▋                                     | 776k/44.2M [00:00&lt;00:36, 1.18MB/s]
+  2%|▊                                     | 921k/44.2M [00:01&lt;00:34, 1.25MB/s]
+  3%|▉                                    | 1.17M/44.2M [00:01&lt;00:26, 1.61MB/s]
+  3%|█▏                                   | 1.40M/44.2M [00:01&lt;00:23, 1.81MB/s]
+  4%|█▍                                   | 1.74M/44.2M [00:01&lt;00:18, 2.28MB/s]
+  5%|█▊                                   | 2.11M/44.2M [00:01&lt;00:15, 2.67MB/s]
+  6%|██▏                                  | 2.58M/44.2M [00:01&lt;00:12, 3.26MB/s]
+  7%|██▋                                  | 3.16M/44.2M [00:01&lt;00:10, 3.97MB/s]
+  9%|███▎                                 | 3.90M/44.2M [00:01&lt;00:08, 4.94MB/s]
+ 11%|████                                 | 4.85M/44.2M [00:01&lt;00:06, 6.25MB/s]
+ 14%|█████                                | 6.02M/44.2M [00:01&lt;00:04, 7.82MB/s]
+ 17%|██████▎                              | 7.55M/44.2M [00:02&lt;00:03, 9.95MB/s]
+ 21%|███████▉                             | 9.46M/44.2M [00:02&lt;00:02, 12.6MB/s]
+ 27%|██████████                           | 12.0M/44.2M [00:02&lt;00:01, 16.2MB/s]
+ 34%|████████████▋                        | 15.1M/44.2M [00:02&lt;00:01, 20.6MB/s]
+ 44%|████████████████▏                    | 19.3M/44.2M [00:02&lt;00:00, 26.7MB/s]
+ 55%|████████████████████▎                | 24.2M/44.2M [00:02&lt;00:00, 32.7MB/s]
+ 65%|████████████████████████▏            | 28.9M/44.2M [00:02&lt;00:00, 36.4MB/s]
+ 80%|█████████████████████████████▌       | 35.4M/44.2M [00:02&lt;00:00, 43.8MB/s]
+ 93%|██████████████████████████████████▍  | 41.2M/44.2M [00:02&lt;00:00, 47.5MB/s]
+  0%|                                              | 0.00/44.2M [00:00&lt;?, ?B/s]
+100%|██████████████████████████████████████| 44.2M/44.2M [00:00&lt;00:00, 273GB/s]
+/home/runner/work/EEGDash/EEGDash/.venv/lib/python3.12/site-packages/urllib3/connectionpool.py:1110: InsecureRequestWarning: Unverified HTTPS request is being made to host &#39;lampx.tugraz.at&#39;. Adding certificate verification is strongly advised. See: https://urllib3.readthedocs.io/en/latest/advanced-usage.html#tls-warnings
+  warnings.warn(
+
+  0%|                                              | 0.00/44.1M [00:00&lt;?, ?B/s]
+  0%|                                     | 8.19k/44.1M [00:00&lt;09:03, 81.0kB/s]
+  0%|                                      | 56.3k/44.1M [00:00&lt;02:21, 311kB/s]
+  0%|                                       | 121k/44.1M [00:00&lt;01:36, 457kB/s]
+  0%|▏                                      | 184k/44.1M [00:00&lt;01:24, 521kB/s]
+  1%|▎                                      | 289k/44.1M [00:00&lt;01:02, 701kB/s]
+  1%|▎                                      | 400k/44.1M [00:00&lt;00:52, 833kB/s]
+  1%|▍                                     | 552k/44.1M [00:00&lt;00:41, 1.04MB/s]
+  2%|▋                                     | 728k/44.1M [00:00&lt;00:34, 1.26MB/s]
+  2%|▊                                     | 969k/44.1M [00:00&lt;00:26, 1.60MB/s]
+  3%|█                                    | 1.23M/44.1M [00:01&lt;00:22, 1.90MB/s]
+  4%|█▎                                   | 1.63M/44.1M [00:01&lt;00:16, 2.51MB/s]
+  5%|█▋                                   | 2.07M/44.1M [00:01&lt;00:13, 3.06MB/s]
+  6%|██▎                                  | 2.72M/44.1M [00:01&lt;00:10, 4.05MB/s]
+  8%|██▉                                  | 3.46M/44.1M [00:01&lt;00:08, 4.99MB/s]
+ 10%|███▊                                 | 4.52M/44.1M [00:01&lt;00:05, 6.62MB/s]
+ 13%|████▊                                | 5.76M/44.1M [00:01&lt;00:04, 8.27MB/s]
+ 18%|██████▌                              | 7.79M/44.1M [00:01&lt;00:03, 11.7MB/s]
+ 23%|████████▍                            | 10.0M/44.1M [00:01&lt;00:02, 14.7MB/s]
+ 31%|███████████▌                         | 13.7M/44.1M [00:01&lt;00:01, 21.2MB/s]
+ 40%|██████████████▊                      | 17.7M/44.1M [00:02&lt;00:00, 26.4MB/s]
+ 53%|███████████████████▍                 | 23.2M/44.1M [00:02&lt;00:00, 34.7MB/s]
+ 64%|███████████████████████▊             | 28.4M/44.1M [00:02&lt;00:00, 39.9MB/s]
+ 77%|████████████████████████████▍        | 33.9M/44.1M [00:02&lt;00:00, 44.4MB/s]
+ 91%|█████████████████████████████████▊   | 40.3M/44.1M [00:02&lt;00:00, 49.3MB/s]
+  0%|                                              | 0.00/44.1M [00:00&lt;?, ?B/s]
+100%|██████████████████████████████████████| 44.1M/44.1M [00:00&lt;00:00, 260GB/s]
+/home/runner/work/EEGDash/EEGDash/.venv/lib/python3.12/site-packages/urllib3/connectionpool.py:1110: InsecureRequestWarning: Unverified HTTPS request is being made to host &#39;lampx.tugraz.at&#39;. Adding certificate verification is strongly advised. See: https://urllib3.readthedocs.io/en/latest/advanced-usage.html#tls-warnings
+  warnings.warn(
+
+  0%|                                              | 0.00/42.3M [00:00&lt;?, ?B/s]
+  0%|                                     | 8.19k/42.3M [00:00&lt;08:43, 80.9kB/s]
+  0%|                                      | 56.3k/42.3M [00:00&lt;02:16, 311kB/s]
+  0%|                                       | 121k/42.3M [00:00&lt;01:32, 457kB/s]
+  0%|▏                                      | 176k/42.3M [00:00&lt;01:26, 489kB/s]
+  1%|▎                                      | 272k/42.3M [00:00&lt;01:04, 652kB/s]
+  1%|▎                                      | 360k/42.3M [00:00&lt;00:58, 723kB/s]
+  1%|▍                                     | 528k/42.3M [00:00&lt;00:40, 1.02MB/s]
+  2%|▋                                     | 705k/42.3M [00:00&lt;00:33, 1.24MB/s]
+  2%|▉                                    | 1.01M/42.3M [00:00&lt;00:23, 1.78MB/s]
+  3%|█▏                                   | 1.32M/42.3M [00:01&lt;00:18, 2.17MB/s]
+  4%|█▋                                   | 1.90M/42.3M [00:01&lt;00:12, 3.23MB/s]
+  6%|██                                   | 2.41M/42.3M [00:01&lt;00:10, 3.77MB/s]
+  8%|███                                  | 3.50M/42.3M [00:01&lt;00:06, 5.87MB/s]
+ 11%|███▉                                 | 4.50M/42.3M [00:01&lt;00:05, 7.02MB/s]
+ 15%|█████▋                               | 6.50M/42.3M [00:01&lt;00:03, 10.8MB/s]
+ 20%|███████▎                             | 8.42M/42.3M [00:01&lt;00:02, 13.2MB/s]
+ 28%|██████████▌                          | 12.0M/42.3M [00:01&lt;00:01, 19.8MB/s]
+ 37%|█████████████▌                       | 15.5M/42.3M [00:01&lt;00:01, 24.2MB/s]
+ 50%|██████████████████▋                  | 21.3M/42.3M [00:01&lt;00:00, 33.5MB/s]
+ 65%|████████████████████████             | 27.5M/42.3M [00:02&lt;00:00, 40.9MB/s]
+ 77%|████████████████████████████▋        | 32.7M/42.3M [00:02&lt;00:00, 43.7MB/s]
+ 93%|██████████████████████████████████▎  | 39.2M/42.3M [00:02&lt;00:00, 48.7MB/s]
+  0%|                                              | 0.00/42.3M [00:00&lt;?, ?B/s]
+100%|██████████████████████████████████████| 42.3M/42.3M [00:00&lt;00:00, 261GB/s]
+[05/08/26 18:43:49] INFO     CSP+LDA | BNCI2014-001 | 1 | 0train:   base.py:1067
+                             Score 0.937
+                    INFO     CSP+LR | BNCI2014-001 | 1 | 0train:    base.py:1067
+                             Score 0.955
+                    INFO     CSP+LDA | BNCI2014-001 | 1 | 1test:    base.py:1067
+                             Score 0.974
+                    INFO     CSP+LR | BNCI2014-001 | 1 | 1test:     base.py:1067
+                             Score 0.974
+                    INFO     CSP+LDA | BNCI2014-001 | 2 | 0train:   base.py:1067
+                             Score 0.531
+                    INFO     CSP+LR | BNCI2014-001 | 2 | 0train:    base.py:1067
+                             Score 0.537
+                    INFO     CSP+LDA | BNCI2014-001 | 2 | 1test:    base.py:1067
+                             Score 0.518
+                    INFO     CSP+LR | BNCI2014-001 | 2 | 1test:     base.py:1067
+                             Score 0.539
+                    INFO     CSP+LDA | BNCI2014-001 | 3 | 0train:   base.py:1067
+                             Score 0.991
+                    INFO     CSP+LR | BNCI2014-001 | 3 | 0train:    base.py:1067
+                             Score 0.992
+                    INFO     CSP+LDA | BNCI2014-001 | 3 | 1test:    base.py:1067
+                             Score 0.996
+                    INFO     CSP+LR | BNCI2014-001 | 3 | 1test:     base.py:1067
+                             Score 0.995
+results frame: rows=12 | cols=[&#39;score&#39;, &#39;time&#39;, &#39;samples&#39;, &#39;samples_test&#39;, &#39;n_classes&#39;, &#39;subject&#39;] ...
+</pre></div>
+</div>
+<p>Synthetic-results fallback. The plotting code below operates on a
+long-format frame with three columns: <code class="docutils literal notranslate"><span class="pre">subject</span></code>, <code class="docutils literal notranslate"><span class="pre">pipeline</span></code>,
+<code class="docutils literal notranslate"><span class="pre">score</span></code>. Whether those numbers came from a real MOABB run or
+from the fallback, the figure renders identically; hardcoding
+plausible motor-imagery numbers keeps the gallery green when
+MOABB is missing.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="ow">not</span> <a href="https://docs.python.org/3/library/functions.html#bool" title="builtins.bool" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">used_moabb</span></a><span class="p">:</span>
+    <span class="n">fallback_subjects</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;sub-</span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s2">02d</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">N_SUBJECTS_BENCH</span></a> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span>
+    <span class="n">rng_fallback</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/random/generator.html#numpy.random.default_rng" title="numpy.random.default_rng" class="sphx-glr-backref-module-numpy-random sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span></a><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">base</span> <span class="o">=</span> <span class="mf">0.62</span> <span class="o">+</span> <span class="mf">0.10</span> <span class="o">*</span> <span class="n">rng_fallback</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">N_SUBJECTS_BENCH</span></a><span class="p">)</span>
+    <span class="n">a_scores</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.clip.html#numpy.clip" title="numpy.clip" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">clip</span></a><span class="p">(</span>
+        <span class="n">base</span> <span class="o">+</span> <span class="mf">0.04</span> <span class="o">*</span> <span class="n">rng_fallback</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">N_SUBJECTS_BENCH</span></a><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
+    <span class="p">)</span>
+    <span class="n">b_scores</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.clip.html#numpy.clip" title="numpy.clip" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">clip</span></a><span class="p">(</span>
+        <span class="n">base</span> <span class="o">-</span> <span class="mf">0.03</span> <span class="o">+</span> <span class="mf">0.05</span> <span class="o">*</span> <span class="n">rng_fallback</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">N_SUBJECTS_BENCH</span></a><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
+    <span class="p">)</span>
+    <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">results</span></a> <span class="o">=</span> <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.concat.html#pandas.concat" title="pandas.concat" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-function"><span class="n">pd</span><span class="o">.</span><span class="n">concat</span></a><span class="p">(</span>
+        <span class="p">[</span>
+            <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class"><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span></a><span class="p">(</span>
+                <span class="p">{</span><span class="s2">&quot;subject&quot;</span><span class="p">:</span> <span class="n">fallback_subjects</span><span class="p">,</span> <span class="s2">&quot;pipeline&quot;</span><span class="p">:</span> <span class="s2">&quot;CSP+LDA&quot;</span><span class="p">,</span> <span class="s2">&quot;score&quot;</span><span class="p">:</span> <span class="n">a_scores</span><span class="p">}</span>
+            <span class="p">),</span>
+            <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class"><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span></a><span class="p">(</span>
+                <span class="p">{</span><span class="s2">&quot;subject&quot;</span><span class="p">:</span> <span class="n">fallback_subjects</span><span class="p">,</span> <span class="s2">&quot;pipeline&quot;</span><span class="p">:</span> <span class="s2">&quot;CSP+LR&quot;</span><span class="p">,</span> <span class="s2">&quot;score&quot;</span><span class="p">:</span> <span class="n">b_scores</span><span class="p">}</span>
+            <span class="p">),</span>
+        <span class="p">],</span>
+        <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="step-4-read-the-per-subject-benchmark-frame">
+<h2>Step 4. Read the per-subject benchmark frame<a class="headerlink" href="#step-4-read-the-per-subject-benchmark-frame" title="Link to this heading">#</a></h2>
+<p><strong>Run (#2).</strong> MOABB returns one row per (pipeline, subject,
+session). Aggregating <code class="docutils literal notranslate"><span class="pre">score</span></code> by (pipeline, subject) collapses
+the session axis and yields the per-subject <code class="docutils literal notranslate"><span class="pre">mean</span> <span class="pre">+/-</span> <span class="pre">std</span></code> table
+BCI papers publish. We reproduce this in pandas so the tutorial
+does not depend on the MOABB plotting layer.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">results</span></a><span class="p">[</span><span class="s2">&quot;subject&quot;</span><span class="p">]</span> <span class="o">=</span> <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">results</span></a><span class="p">[</span><span class="s2">&quot;subject&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">per_subject_results</span></a> <span class="o">=</span> <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.groupby.html#pandas.DataFrame.groupby" title="pandas.DataFrame.groupby" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-method"><span class="n">results</span><span class="o">.</span><span class="n">groupby</span></a><span class="p">([</span><span class="s2">&quot;subject&quot;</span><span class="p">,</span> <span class="s2">&quot;pipeline&quot;</span><span class="p">],</span> <span class="n">as_index</span><span class="o">=</span><span class="kc">False</span><span class="p">)[</span>
+    <span class="s2">&quot;score&quot;</span>
+<span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+
+<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">summary</span></a> <span class="o">=</span> <span class="p">(</span>
+    <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.groupby.html#pandas.DataFrame.groupby" title="pandas.DataFrame.groupby" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-method"><span class="n">per_subject_results</span><span class="o">.</span><span class="n">groupby</span></a><span class="p">(</span><span class="s2">&quot;pipeline&quot;</span><span class="p">)[</span><span class="s2">&quot;score&quot;</span><span class="p">]</span>
+    <span class="o">.</span><span class="n">agg</span><span class="p">([</span><span class="s2">&quot;mean&quot;</span><span class="p">,</span> <span class="s2">&quot;std&quot;</span><span class="p">,</span> <span class="s2">&quot;count&quot;</span><span class="p">])</span>
+    <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+    <span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;mean&quot;</span><span class="p">:</span> <span class="s2">&quot;mean_acc&quot;</span><span class="p">,</span> <span class="s2">&quot;std&quot;</span><span class="p">:</span> <span class="s2">&quot;std_acc&quot;</span><span class="p">,</span> <span class="s2">&quot;count&quot;</span><span class="p">:</span> <span class="s2">&quot;n_subjects&quot;</span><span class="p">})</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.to_string.html#pandas.DataFrame.to_string" title="pandas.DataFrame.to_string" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-method"><span class="n">summary</span><span class="o">.</span><span class="n">to_string</span></a><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>pipeline  mean_acc  std_acc  n_subjects
+ CSP+LDA  0.824396 0.260600           3
+  CSP+LR  0.832047 0.255142           3
+</pre></div>
+</div>
+<p><strong>Investigate.</strong> <code class="docutils literal notranslate"><span class="pre">mean_acc</span></code> is the cross-subject average a paper
+would print; <code class="docutils literal notranslate"><span class="pre">std_acc</span></code> is the across-subject spread Cisotto &amp;
+Chicco 2024 (Tip 9) ask reviewers to enforce. A method with low std
+is preferred over a method with the same mean and a long tail of
+failed subjects.</p>
+</section>
+<section id="a-common-mistake-and-how-to-recover">
+<h2>A common mistake, and how to recover<a class="headerlink" href="#a-common-mistake-and-how-to-recover" title="Link to this heading">#</a></h2>
+<p><strong>Run.</strong> Two failure modes show up the first time you wire a custom
+dataset into MOABB. The first is asking a paradigm for a dataset it
+does not recognise (<code class="docutils literal notranslate"><span class="pre">LeftRightImagery</span></code> on a P300 dataset).
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">moabb.paradigms.base.BaseParadigm.is_valid()</span></code> returns <code class="docutils literal notranslate"><span class="pre">False</span></code>
+in that case; passing the dataset to <code class="docutils literal notranslate"><span class="pre">process</span></code> anyway raises
+<code class="docutils literal notranslate"><span class="pre">ValueError</span></code>. The second is asking
+<a class="reference external" href="https://braindecode.org/stable/generated/braindecode.datasets.BaseConcatDataset.html#braindecode.datasets.BaseConcatDataset.get_metadata" title="(in Braindecode v1.5)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">braindecode.datasets.BaseConcatDataset.get_metadata()</span></code></a> for a <code class="docutils literal notranslate"><span class="pre">target</span></code> that is
+not present on the windows or the description; the helper returns a
+zero-vector <code class="docutils literal notranslate"><span class="pre">y</span></code> rather than crashing, which is the right default
+for un-targeted splits but the wrong default for stratified ones.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">try</span><span class="p">:</span>
+    <span class="k">if</span> <a href="https://docs.python.org/3/library/functions.html#bool" title="builtins.bool" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">MOABB_AVAILABLE</span></a><span class="p">:</span>
+        <span class="c1"># P300 paradigm against a motor-imagery dataset is the canonical</span>
+        <span class="c1"># paradigm-incompatible pair. ``is_valid`` returns False; passing</span>
+        <span class="c1"># this dataset to ``Evaluation.process`` would otherwise raise</span>
+        <span class="c1"># deep inside MOABB&#39;s loop after data download.</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">moabb.paradigms</span><span class="w"> </span><span class="kn">import</span> <span class="n">P300</span>
+
+        <span class="n">wrong_paradigm</span> <span class="o">=</span> <span class="n">P300</span><span class="p">()</span>
+        <span class="n">bnci_check</span> <span class="o">=</span> <span class="n">BNCI2014_001</span><span class="p">()</span>
+        <a href="https://docs.python.org/3/library/functions.html#bool" title="builtins.bool" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ok</span></a> <span class="o">=</span> <span class="n">wrong_paradigm</span><span class="o">.</span><span class="n">is_valid</span><span class="p">(</span><span class="n">bnci_check</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;P300 accepts BNCI2014_001? </span><span class="si">{</span><a href="https://docs.python.org/3/library/functions.html#bool" title="builtins.bool" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ok</span></a><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <a href="https://docs.python.org/3/library/functions.html#bool" title="builtins.bool" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ok</span></a><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;paradigm rejects dataset (P300 vs MotorImagery)&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="s2">&quot;moabb not installed&quot;</span><span class="p">)</span>
+<span class="k">except</span> <span class="p">(</span><span class="ne">ImportError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">)</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Caught </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">exc</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">exc</span><span class="p">)[:</span><span class="mi">100</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span>
+        <span class="s2">&quot;Recovery: call `paradigm.is_valid(dataset)` before &quot;</span>
+        <span class="s2">&quot;`Evaluation.process(...)`; pick the matching paradigm class &quot;</span>
+        <span class="s2">&quot;from `moabb.paradigms.*` (LeftRightImagery, P300, SSVEP, ...).&quot;</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>P300 accepts BNCI2014_001? False
+Caught ValueError: paradigm rejects dataset (P300 vs MotorImagery)
+Recovery: call `paradigm.is_valid(dataset)` before `Evaluation.process(...)`; pick the matching paradigm class from `moabb.paradigms.*` (LeftRightImagery, P300, SSVEP, ...).
+</pre></div>
+</div>
+</section>
+<section id="modify-drop-one-pipeline">
+<h2>Modify: drop one pipeline<a class="headerlink" href="#modify-drop-one-pipeline" title="Link to this heading">#</a></h2>
+<p><strong>Modify.</strong> Re-run <code class="xref py py-meth docutils literal notranslate"><span class="pre">process()</span></code>
+with a single-pipeline dict. Predict first: the frame loses the
+<code class="docutils literal notranslate"><span class="pre">CSP+LR</span></code> rows but keeps the same row-per-fold shape for
+<code class="docutils literal notranslate"><span class="pre">CSP+LDA</span></code>. The figure helper accepts <code class="docutils literal notranslate"><span class="pre">pipeline_b=None</span></code>.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">solo_results</span></a> <span class="o">=</span> <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">per_subject_results</span></a><span class="p">[</span><a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">per_subject_results</span></a><span class="p">[</span><span class="s2">&quot;pipeline&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;CSP+LDA&quot;</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;solo subset: rows=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">solo_results</span></a><span class="p">)</span><span class="si">}</span><span class="s2"> | pipelines=</span><span class="si">{</span><a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">solo_results</span></a><span class="p">[</span><span class="s1">&#39;pipeline&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>solo subset: rows=3 | pipelines=[&#39;CSP+LDA&#39;]
+</pre></div>
+</div>
+</section>
+<section id="headline-figure-per-subject-bars-paired-comparison-integration-flow">
+<h2>Headline figure: per-subject bars, paired comparison, integration flow<a class="headerlink" href="#headline-figure-per-subject-bars-paired-comparison-integration-flow" title="Link to this heading">#</a></h2>
+<p>Three panels read together. Panel 1 is per-subject MOABB accuracy
+bars for <code class="docutils literal notranslate"><span class="pre">CSP+LDA</span></code> with the cross-subject mean band and chance
+reference. Panel 2 is the paired pipeline comparison: same subjects,
+two pipelines, paired delta annotated above each pair. Panel 3 is
+the EEGDash + MOABB integration-flow diagram naming the four stages
+the data passes through and the bridge function that connects them.
+The drawing helpers live in a sibling <code class="xref py py-mod docutils literal notranslate"><span class="pre">_moabb_interop_figure</span></code>
+module; the call below is the only line that matters.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">_moabb_interop_figure</span><span class="w"> </span><span class="kn">import</span> <span class="n">draw_moabb_interop_figure</span>
+
+<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="matplotlib.figure.Figure" class="sphx-glr-backref-module-matplotlib-figure sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">fig</span></a> <span class="o">=</span> <span class="n">draw_moabb_interop_figure</span><span class="p">(</span>
+    <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">per_subject_results</span></a><span class="o">=</span><a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">per_subject_results</span></a><span class="p">,</span>
+    <span class="n">dataset_name</span><span class="o">=</span><span class="s2">&quot;BNCI2014_001&quot;</span><span class="p">,</span>
+    <span class="n">paradigm_name</span><span class="o">=</span><span class="s2">&quot;MotorImagery (left vs right hand)&quot;</span><span class="p">,</span>
+    <span class="n">pipeline_a</span><span class="o">=</span><span class="s2">&quot;CSP+LDA&quot;</span><span class="p">,</span>
+    <span class="n">pipeline_b</span><span class="o">=</span><span class="s2">&quot;CSP+LR&quot;</span><span class="p">,</span>
+    <span class="n">chance_level</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+    <a href="https://docs.python.org/3/library/functions.html#bool" title="builtins.bool" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">used_moabb</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/functions.html#bool" title="builtins.bool" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">used_moabb</span></a><span class="p">,</span>
+    <span class="n">plot_id</span><span class="o">=</span><span class="s2">&quot;plot_55&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
+</pre></div>
+</div>
+<img src="../../../../_images/sphx_glr_plot_55_moabb_interop_001.png" srcset="../../../../_images/sphx_glr_plot_55_moabb_interop_001.png" alt="plot 55 moabb interop" class = "sphx-glr-single-img"/><p><strong>Investigate.</strong> Read the three panels in order.</p>
+<ol class="arabic simple">
+<li><p><em>Per-subject bars</em>: every subject above the chance line is the win condition; a subject pulling the mean down flags an individual the paradigm is not capturing.</p></li>
+<li><p><em>Paired comparison</em>: positive paired deltas (blue) mean Pipeline A won; negative (orange) mean B won. The mean delta and win count are what a paired Wilcoxon test consumes (see <a class="reference internal" href="plot_54_compare_two_pipelines.html"><span class="doc">Is Pipeline A really better than Pipeline B, or did it luck out on one subject?</span></a>).</p></li>
+<li><p><em>Integration flow</em>: the bridge string at the bottom is the single line of glue code a reader needs to remember.</p></li>
+</ol>
+</section>
+<section id="result-cross-subject-mean-accuracy-std-e5-43">
+<h2>Result: cross-subject mean accuracy +/- std (E5.43)<a class="headerlink" href="#result-cross-subject-mean-accuracy-std-e5-43" title="Link to this heading">#</a></h2>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">headline_pipeline</span></a> <span class="o">=</span> <span class="s2">&quot;CSP+LDA&quot;</span>
+<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">headline</span></a> <span class="o">=</span> <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.loc.html#pandas.DataFrame.loc" title="pandas.DataFrame.loc" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-property"><span class="n">per_subject_results</span><span class="o">.</span><span class="n">loc</span></a><span class="p">[</span>
+    <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">per_subject_results</span></a><span class="p">[</span><span class="s2">&quot;pipeline&quot;</span><span class="p">]</span> <span class="o">==</span> <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">headline_pipeline</span></a><span class="p">,</span> <span class="s2">&quot;score&quot;</span>
+<span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">headline_pipeline</span></a><span class="si">}</span><span class="s2"> on BNCI2014_001 (LeftRightImagery): &quot;</span>
+    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">headline</span></a><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> +/- </span><span class="si">{</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">headline</span></a><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">ddof</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> &quot;</span>
+    <span class="sa">f</span><span class="s2">&quot;| n_subjects=</span><span class="si">{</span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">headline</span><span class="o">.</span><span class="n">size</span></a><span class="si">}</span><span class="s2"> | metric=accuracy | backend=&quot;</span>
+    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;moabb&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><a href="https://docs.python.org/3/library/functions.html#bool" title="builtins.bool" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">used_moabb</span></a><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;synthetic&#39;</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>CSP+LDA on BNCI2014_001 (LeftRightImagery): 0.824 +/- 0.213 | n_subjects=3 | metric=accuracy | backend=moabb
+</pre></div>
+</div>
+</section>
+<section id="make-extend-to-a-third-pipeline">
+<h2>Make: extend to a third pipeline<a class="headerlink" href="#make-extend-to-a-third-pipeline" title="Link to this heading">#</a></h2>
+<p><strong>Mini-project.</strong> Add a third pipeline to <code class="docutils literal notranslate"><span class="pre">pipelines</span></code>: a
+<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.StandardScaler.html#sklearn.preprocessing.StandardScaler" title="(in scikit-learn v1.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">StandardScaler</span></code></a> on flattened trials
+plus a one-hidden-layer <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.neural_network.MLPClassifier.html#sklearn.neural_network.MLPClassifier" title="(in scikit-learn v1.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">MLPClassifier</span></code></a>.
+Re-run <code class="xref py py-meth docutils literal notranslate"><span class="pre">process()</span></code> and
+append the new rows to <code class="docutils literal notranslate"><span class="pre">per_subject_results</span></code>. The figure helper
+auto-pivots the long-format frame, so passing <code class="docutils literal notranslate"><span class="pre">pipeline_b=&quot;MLP&quot;</span></code>
+swaps which pipeline lands in the orange bars without other changes.</p>
+</section>
+<section id="wrap-up">
+<h2>Wrap-up<a class="headerlink" href="#wrap-up" title="Link to this heading">#</a></h2>
+<p>We took an <code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code> over <code class="docutils literal notranslate"><span class="pre">ds002718</span></code>,
+extracted the <code class="docutils literal notranslate"><span class="pre">(y,</span> <span class="pre">metadata)</span></code> MOABB splitters expect through
+<a class="reference external" href="https://braindecode.org/stable/generated/braindecode.datasets.BaseConcatDataset.html#braindecode.datasets.BaseConcatDataset.get_metadata" title="(in Braindecode v1.5)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">braindecode.datasets.BaseConcatDataset.get_metadata()</span></code></a>, and ran a
+<code class="xref py py-class docutils literal notranslate"><span class="pre">CrossSessionEvaluation</span></code> on
+<code class="xref py py-class docutils literal notranslate"><span class="pre">BNCI2014_001</span></code> with two CSP-based pipelines.
+The result is one mean +/- std summary plus a per-subject panel
+that flags which subjects pull the average down. The same machinery
+extends to <code class="xref py py-class docutils literal notranslate"><span class="pre">CrossSubjectEvaluation</span></code> and to
+any paradigm-compatible MOABB dataset.</p>
+</section>
+<section id="try-it-yourself">
+<h2>Try it yourself<a class="headerlink" href="#try-it-yourself" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Switch to <code class="xref py py-class docutils literal notranslate"><span class="pre">WithinSessionEvaluation</span></code>. The
+per-fold variance shrinks because the splits stay inside one
+session; the headline number is the upper bound on what a more
+honest cross-subject evaluation can produce.</p></li>
+<li><p>Replace <a class="reference external" href="https://mne.tools/stable/generated/mne.decoding.CSP.html#mne.decoding.CSP" title="(in MNE v1.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">CSP</span></code></a> with the eight-component variant
+(<code class="docutils literal notranslate"><span class="pre">n_components=8</span></code>). Predict before running: does the gap between
+<code class="docutils literal notranslate"><span class="pre">CSP+LDA</span></code> and <code class="docutils literal notranslate"><span class="pre">CSP+LR</span></code> widen or shrink?</p></li>
+<li><p>Run <a class="reference external" href="https://braindecode.org/stable/generated/braindecode.datasets.BaseConcatDataset.html#braindecode.datasets.BaseConcatDataset.get_metadata" title="(in Braindecode v1.5)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">braindecode.datasets.BaseConcatDataset.get_metadata()</span></code></a> on the windowed
+dataset from <code class="docutils literal notranslate"><span class="pre">plot_02</span></code>. Confirm the metadata frame has one row
+per window, not one per record.</p></li>
+</ul>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<p>See <a class="reference internal" href="../../../../references.html"><span class="doc">References</span></a> for the centralised bibliography of papers
+cited above. Add or amend an entry once in
+<code class="file docutils literal notranslate"><span class="pre">docs/source/refs.bib</span></code>; every tutorial inherits the update.</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 29.290 seconds)</p>
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-auto-examples-tutorials-50-evaluation-plot-55-moabb-interop-py">
+<div class="binder-badge docutils container">
+<a class="reference external image-reference" href="https://mybinder.org/v2/gh/eegdash/EEGDash/main?urlpath=lab/tree/notebooks/generated/auto_examples/tutorials/50_evaluation/plot_55_moabb_interop.ipynb"><img alt="Launch binder" src="../../../../_images/binder_badge_logo10.svg" style="width: 150px;" />
+</a>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../../../../_downloads/28f5448227fc042a10955249d368bde2/plot_55_moabb_interop.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_55_moabb_interop.ipynb</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../../../../_downloads/fee75604d1ab38046a4794620fc45414/plot_55_moabb_interop.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_55_moabb_interop.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-zip docutils container">
+<p><a class="reference download internal" download="" href="../../../../_downloads/24aa7275263446b571919820fe500490/plot_55_moabb_interop.zip"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">zipped:</span> <span class="pre">plot_55_moabb_interop.zip</span></code></a></p>
+</div>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="plot_54_compare_two_pipelines.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Is Pipeline A really better than Pipeline B, or did it luck out on one subject?</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../70_transfer_foundation/index.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Transfer, Foundation Models, and EEG2025</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">Learning objectives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#requirements">Requirements</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eegdash-and-moabb-the-mental-model">EEGDash and MOABB: the mental model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-the-eegdash-side-ds002718-face-recognition">Step 1. The EEGDash side, ds002718 face recognition</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-the-moabb-side-bnci2014-001-motor-imagery">Step 2. The MOABB side, BNCI2014_001 motor imagery</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-run-the-moabb-crosssession-evaluation">Step 3. Run the MOABB CrossSession evaluation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-4-read-the-per-subject-benchmark-frame">Step 4. Read the per-subject benchmark frame</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-common-mistake-and-how-to-recover">A common mistake, and how to recover</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#modify-drop-one-pipeline">Modify: drop one pipeline</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#headline-figure-per-subject-bars-paired-comparison-integration-flow">Headline figure: per-subject bars, paired comparison, integration flow</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#result-cross-subject-mean-accuracy-std-e5-43">Result: cross-subject mean accuracy +/- std (E5.43)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#make-extend-to-a-third-pipeline">Make: extend to a third pipeline</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#wrap-up">Wrap-up</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#try-it-yourself">Try it yourself</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb"></script>
+<script defer src="../../../../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025-2026, EEG Dash Developers.
+      <br/>
+    
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.17.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

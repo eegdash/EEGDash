@@ -13,9 +13,9 @@ metadata records stored in the EEGDash database via REST API.
 | `EEGDash`(\*[, database, api_url, auth_token])   | High-level interface to the EEGDash metadata database.   |
 |--------------------------------------------------|----------------------------------------------------------|
 
-### *class* eegdash.api.EEGDash(, database: str = 'eegdash', api_url: str | None = None, auth_token: str | None = None)
+### *class* eegdash.api.EEGDash(, database: [str](https://docs.python.org/3/library/stdtypes.html#str) = 'eegdash', api_url: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, auth_token: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None)
 
-Bases: `object`
+Bases: [`object`](https://docs.python.org/3/library/functions.html#object)
 
 High-level interface to the EEGDash metadata database.
 
@@ -30,12 +30,12 @@ For working with collections of recordings as PyTorch datasets, prefer
 Create a new EEGDash client.
 
 * **Parameters:**
-  * **database** (*str* *,* *default "eegdash"*) – Name of the MongoDB database to connect to. Common values:
+  * **database** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *,* *default "eegdash"*) – Name of the MongoDB database to connect to. Common values:
     `"eegdash"` (production), `"eegdash_staging"` (staging),
     `"eegdash_v1"` (legacy archive).
-  * **api_url** (*str* *,* *optional*) – Override the default API URL. If not provided, uses the default
+  * **api_url** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *,* *optional*) – Override the default API URL. If not provided, uses the default
     public endpoint or the `EEGDASH_API_URL` environment variable.
-  * **auth_token** (*str* *,* *optional*) – Authentication token for admin write operations. Not required for
+  * **auth_token** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *,* *optional*) – Authentication token for admin write operations. Not required for
     public read operations.
 
 ### Examples
@@ -48,21 +48,69 @@ Create a new EEGDash client.
 
 <!-- !! processed by numpydoc !! -->
 
-#### find_datasets(query: dict[str, Any] | None = None, limit: int = 1000) → list[Mapping[str, Any]]
+#### find_datasets(query: [dict](https://docs.python.org/3/library/stdtypes.html#dict)[[str](https://docs.python.org/3/library/stdtypes.html#str), [Any](https://docs.python.org/3/library/typing.html#typing.Any)] | [None](https://docs.python.org/3/library/constants.html#None) = None, limit: [int](https://docs.python.org/3/library/functions.html#int) = 1000) → [list](https://docs.python.org/3/library/stdtypes.html#list)[[Mapping](https://docs.python.org/3/library/typing.html#typing.Mapping)[[str](https://docs.python.org/3/library/stdtypes.html#str), [Any](https://docs.python.org/3/library/typing.html#typing.Any)]]
 
 Find datasets matching query.
 
 * **Parameters:**
-  * **query** (*dict*) – Filter query.
-  * **limit** (*int*) – Max number of datasets to return.
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Filter query.
+  * **limit** ([*int*](https://docs.python.org/3/library/functions.html#int)) – Max number of datasets to return.
 * **Returns:**
   List of dataset metadata documents.
 * **Return type:**
-  list of dict
+  [list](https://docs.python.org/3/library/stdtypes.html#list) of [dict](https://docs.python.org/3/library/stdtypes.html#dict)
 
 <!-- !! processed by numpydoc !! -->
 
-#### find(query: dict[str, Any] = None, , \*\*kwargs) → list[Mapping[str, Any]]
+#### search_datasets(, modality: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, task: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, clinical_group: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, source: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, n_subjects_min: [int](https://docs.python.org/3/library/functions.html#int) | [None](https://docs.python.org/3/library/constants.html#None) = None, license: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, limit: [int](https://docs.python.org/3/library/functions.html#int) = 100)
+
+Search the dataset catalogue with friendly keyword filters.
+
+Convenience wrapper around `find_datasets()` that translates a
+small set of human-friendly keyword arguments into a MongoDB-style
+query and returns a tidy summary [`pandas.DataFrame`](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame). This is
+the metadata-only entry point used by tutorials such as
+`plot_00_first_search`.
+
+* **Parameters:**
+  * **modality** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *,* *optional*) – Filter by recording modality (e.g., `"eeg"`, `"meeg"`).
+    Matched case-insensitively against the `modality` field.
+  * **task** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *,* *optional*) – Filter by BIDS task name (e.g., `"rest"`, `"FacePerception"`).
+  * **clinical_group** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *,* *optional*) – Filter by clinical cohort label (e.g., `"healthy"`, `"adhd"`).
+    Matched against `clinical.group` (nested) and falls back to the
+    flat `clinical_group` field.
+  * **source** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *,* *optional*) – Filter by data source (e.g., `"openneuro"`, `"nemar"`,
+    `"hbn"`). Matched against `source` and `provider` fields.
+  * **n_subjects_min** ([*int*](https://docs.python.org/3/library/functions.html#int) *,* *optional*) – Minimum number of subjects in the dataset. Maps to
+    `{"n_subjects": {"$gte": n_subjects_min}}`.
+  * **license** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *,* *optional*) – Filter by data license (e.g., `"CC0"`, `"CC-BY-4.0"`).
+    Matched against the `license` field.
+  * **limit** ([*int*](https://docs.python.org/3/library/functions.html#int) *,* *default 100*) – Maximum number of datasets to return.
+* **Returns:**
+  One row per matching dataset with summary columns:
+  `dataset_id`, `name`, `modality`, `task`, `n_subjects`,
+  `source`, `license`, `dataset_doi`. Missing fields surface
+  as `None`. The frame is empty (zero rows) when nothing matches.
+* **Return type:**
+  [pandas.DataFrame](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame)
+
+### Notes
+
+`search_datasets` does not download any signal bytes; only small
+JSON catalogue documents are transferred. Pair with
+[`EEGDashDataset`](../../dataset/eegdash.EEGDashDataset.md#eegdash.EEGDashDataset) once a candidate dataset is chosen.
+
+### Examples
+
+```pycon
+>>> client = EEGDash()
+>>> df = client.search_datasets(modality="eeg", n_subjects_min=10)
+>>> df = client.search_datasets(task="rest", source="openneuro")
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### find(query: [dict](https://docs.python.org/3/library/stdtypes.html#dict)[[str](https://docs.python.org/3/library/stdtypes.html#str), [Any](https://docs.python.org/3/library/typing.html#typing.Any)] = None, , \*\*kwargs) → [list](https://docs.python.org/3/library/stdtypes.html#list)[[Mapping](https://docs.python.org/3/library/typing.html#typing.Mapping)[[str](https://docs.python.org/3/library/stdtypes.html#str), [Any](https://docs.python.org/3/library/typing.html#typing.Any)]]
 
 Find records in the collection.
 
@@ -79,7 +127,7 @@ Find records in the collection.
 ```
 
 * **Parameters:**
-  * **query** (*dict* *,* *optional*) – Complete MongoDB query dictionary. This is a positional-only
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *,* *optional*) – Complete MongoDB query dictionary. This is a positional-only
     argument.
   * **\*\*kwargs** – User-friendly field filters that are converted to a MongoDB query.
     Values can be scalars (e.g., `"sub-01"`) or sequences (translated
@@ -88,21 +136,21 @@ Find records in the collection.
 * **Returns:**
   DB records that match the query.
 * **Return type:**
-  list of dict
+  [list](https://docs.python.org/3/library/stdtypes.html#list) of [dict](https://docs.python.org/3/library/stdtypes.html#dict)
 
 <!-- !! processed by numpydoc !! -->
 
-#### exists(query: dict[str, Any] = None, , \*\*kwargs) → bool
+#### exists(query: [dict](https://docs.python.org/3/library/stdtypes.html#dict)[[str](https://docs.python.org/3/library/stdtypes.html#str), [Any](https://docs.python.org/3/library/typing.html#typing.Any)] = None, , \*\*kwargs) → [bool](https://docs.python.org/3/library/functions.html#bool)
 
 Check if at least one record matches the query.
 
 * **Parameters:**
-  * **query** (*dict* *,* *optional*) – Complete query dictionary. This is a positional-only argument.
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *,* *optional*) – Complete query dictionary. This is a positional-only argument.
   * **\*\*kwargs** – User-friendly field filters (same as find()).
 * **Returns:**
   True if at least one matching record exists; False otherwise.
 * **Return type:**
-  bool
+  [bool](https://docs.python.org/3/library/functions.html#bool)
 
 ### Examples
 
@@ -114,17 +162,17 @@ Check if at least one record matches the query.
 
 <!-- !! processed by numpydoc !! -->
 
-#### count(query: dict[str, Any] = None, , \*\*kwargs) → int
+#### count(query: [dict](https://docs.python.org/3/library/stdtypes.html#dict)[[str](https://docs.python.org/3/library/stdtypes.html#str), [Any](https://docs.python.org/3/library/typing.html#typing.Any)] = None, , \*\*kwargs) → [int](https://docs.python.org/3/library/functions.html#int)
 
 Count documents matching the query.
 
 * **Parameters:**
-  * **query** (*dict* *,* *optional*) – Complete query dictionary. This is a positional-only argument.
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *,* *optional*) – Complete query dictionary. This is a positional-only argument.
   * **\*\*kwargs** – User-friendly field filters (same as find()).
 * **Returns:**
   Number of matching documents.
 * **Return type:**
-  int
+  [int](https://docs.python.org/3/library/functions.html#int)
 
 ### Examples
 
@@ -136,17 +184,17 @@ Count documents matching the query.
 
 <!-- !! processed by numpydoc !! -->
 
-#### find_one(query: dict[str, Any] = None, , \*\*kwargs) → Mapping[str, Any] | None
+#### find_one(query: [dict](https://docs.python.org/3/library/stdtypes.html#dict)[[str](https://docs.python.org/3/library/stdtypes.html#str), [Any](https://docs.python.org/3/library/typing.html#typing.Any)] = None, , \*\*kwargs) → [Mapping](https://docs.python.org/3/library/typing.html#typing.Mapping)[[str](https://docs.python.org/3/library/stdtypes.html#str), [Any](https://docs.python.org/3/library/typing.html#typing.Any)] | [None](https://docs.python.org/3/library/constants.html#None)
 
 Find a single record matching the query.
 
 * **Parameters:**
-  * **query** (*dict* *,* *optional*) – Complete query dictionary. This is a positional-only argument.
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *,* *optional*) – Complete query dictionary. This is a positional-only argument.
   * **\*\*kwargs** – User-friendly field filters (same as find()).
 * **Returns:**
   The first matching record, or None if no match.
 * **Return type:**
-  dict or None
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict) or None
 
 ### Examples
 
@@ -157,29 +205,29 @@ Find a single record matching the query.
 
 <!-- !! processed by numpydoc !! -->
 
-#### get_dataset(dataset_id: str) → Mapping[str, Any] | None
+#### get_dataset(dataset_id: [str](https://docs.python.org/3/library/stdtypes.html#str)) → [Mapping](https://docs.python.org/3/library/typing.html#typing.Mapping)[[str](https://docs.python.org/3/library/stdtypes.html#str), [Any](https://docs.python.org/3/library/typing.html#typing.Any)] | [None](https://docs.python.org/3/library/constants.html#None)
 
 Fetch metadata for a specific dataset.
 
 * **Parameters:**
-  **dataset_id** (*str*) – The unique identifier of the dataset (e.g., ‘ds002718’).
+  **dataset_id** ([*str*](https://docs.python.org/3/library/stdtypes.html#str)) – The unique identifier of the dataset (e.g., ‘ds002718’).
 * **Returns:**
   The dataset metadata document, or None if not found.
 * **Return type:**
-  dict or None
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict) or None
 
 <!-- !! processed by numpydoc !! -->
 
-#### insert(records: dict[str, Any] | list[dict[str, Any]]) → int
+#### insert(records: [dict](https://docs.python.org/3/library/stdtypes.html#dict)[[str](https://docs.python.org/3/library/stdtypes.html#str), [Any](https://docs.python.org/3/library/typing.html#typing.Any)] | [list](https://docs.python.org/3/library/stdtypes.html#list)[[dict](https://docs.python.org/3/library/stdtypes.html#dict)[[str](https://docs.python.org/3/library/stdtypes.html#str), [Any](https://docs.python.org/3/library/typing.html#typing.Any)]]) → [int](https://docs.python.org/3/library/functions.html#int)
 
 Insert one or more records (requires auth_token).
 
 * **Parameters:**
-  **records** (*dict* *or* *list* *of* *dict*) – A single record or list of records to insert.
+  **records** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *or* [*list*](https://docs.python.org/3/library/stdtypes.html#list) *of* [*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – A single record or list of records to insert.
 * **Returns:**
   Number of records inserted.
 * **Return type:**
-  int
+  [int](https://docs.python.org/3/library/functions.html#int)
 
 ### Examples
 
@@ -191,7 +239,7 @@ Insert one or more records (requires auth_token).
 
 <!-- !! processed by numpydoc !! -->
 
-#### update_field(query: dict[str, Any] = None, , , update: dict[str, Any], \*\*kwargs) → tuple[int, int]
+#### update_field(query: [dict](https://docs.python.org/3/library/stdtypes.html#dict)[[str](https://docs.python.org/3/library/stdtypes.html#str), [Any](https://docs.python.org/3/library/typing.html#typing.Any)] = None, , , update: [dict](https://docs.python.org/3/library/stdtypes.html#dict)[[str](https://docs.python.org/3/library/stdtypes.html#str), [Any](https://docs.python.org/3/library/typing.html#typing.Any)], \*\*kwargs) → [tuple](https://docs.python.org/3/library/stdtypes.html#tuple)[[int](https://docs.python.org/3/library/functions.html#int), [int](https://docs.python.org/3/library/functions.html#int)]
 
 Update fields on records matching the query (requires auth_token).
 
@@ -199,13 +247,13 @@ Use this to add or modify fields across matching records,
 e.g., after re-extracting entities with an improved algorithm.
 
 * **Parameters:**
-  * **query** (*dict* *,* *optional*) – Filter query to match records. This is a positional-only argument.
-  * **update** (*dict*) – Fields to update. Keys are field names, values are new values.
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *,* *optional*) – Filter query to match records. This is a positional-only argument.
+  * **update** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Fields to update. Keys are field names, values are new values.
   * **\*\*kwargs** – User-friendly field filters (same as find()).
 * **Returns:**
   Number of records matched and actually modified.
 * **Return type:**
-  tuple of (matched_count, modified_count)
+  [tuple](https://docs.python.org/3/library/stdtypes.html#tuple) of (matched_count, modified_count)
 
 ### Examples
 
@@ -221,17 +269,17 @@ e.g., after re-extracting entities with an improved algorithm.
 
 <!-- !! processed by numpydoc !! -->
 
-#### update_dataset(dataset_id: str, update: dict[str, Any]) → int
+#### update_dataset(dataset_id: [str](https://docs.python.org/3/library/stdtypes.html#str), update: [dict](https://docs.python.org/3/library/stdtypes.html#dict)[[str](https://docs.python.org/3/library/stdtypes.html#str), [Any](https://docs.python.org/3/library/typing.html#typing.Any)]) → [int](https://docs.python.org/3/library/functions.html#int)
 
 Update metadata for a specific dataset (requires auth_token).
 
 * **Parameters:**
-  * **dataset_id** (*str*) – The unique identifier of the dataset (e.g., ‘ds002718’).
-  * **update** (*dict*) – Dictionary of fields to update.
+  * **dataset_id** ([*str*](https://docs.python.org/3/library/stdtypes.html#str)) – The unique identifier of the dataset (e.g., ‘ds002718’).
+  * **update** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Dictionary of fields to update.
 * **Returns:**
   Number of documents modified (0 or 1).
 * **Return type:**
-  int
+  [int](https://docs.python.org/3/library/functions.html#int)
 
 ### Examples
 

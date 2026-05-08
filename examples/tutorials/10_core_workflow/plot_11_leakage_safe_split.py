@@ -485,9 +485,7 @@ print(f"cross_session overlap: {session_overlap}")
 #
 #     md = windows.get_metadata()
 #     y = md["target"].to_numpy()
-#     splitter = CrossSubjectSplitter(
-#         cv_class=GroupKFold, n_splits=5, random_state=42,
-#     )
+#     splitter = CrossSubjectSplitter(cv_class=GroupKFold, n_splits=5)
 #     for tr_idx, te_idx in splitter.split(y, md):
 #         tr_subjects = set(md.iloc[tr_idx]["subject"])
 #         te_subjects = set(md.iloc[te_idx]["subject"])

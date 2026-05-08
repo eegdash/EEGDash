@@ -389,9 +389,7 @@ X_imb, meta_imb = make_cohort(
     sizes_imb, prefix="imb", rng=np.random.default_rng(SEED + 1)
 )
 y_imb = meta_imb["target"].to_numpy()
-splitter_imb = CrossSubjectSplitter(
-    cv_class=GroupKFold, n_splits=len(sizes_imb), random_state=SEED
-)
+splitter_imb = CrossSubjectSplitter(cv_class=GroupKFold, n_splits=len(sizes_imb))
 n_imb = len(meta_imb)
 folds_imb: list[tuple[np.ndarray, np.ndarray]] = []
 for tr_idx, te_idx in splitter_imb.split(y_imb, meta_imb):

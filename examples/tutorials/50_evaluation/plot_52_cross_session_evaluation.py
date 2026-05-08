@@ -390,7 +390,7 @@ trimmed_y = trimmed_md["target"].to_numpy()
 # Drop ``n_folds`` so MOABB falls back to its native LeaveOneGroupOut
 # behaviour: subjects with 2 remaining sessions contribute 2 folds, the
 # others contribute one fold per session as usual.
-trimmed_splitter = CrossSessionSplitter(random_state=SEED)
+trimmed_splitter = CrossSessionSplitter()
 trimmed_folds = list(trimmed_splitter.split(trimmed_y, trimmed_md))
 print(
     f"Trimmed: {len(trimmed_folds)} folds (was {len(folds)}), "

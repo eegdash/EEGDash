@@ -168,7 +168,7 @@ def test_search_datasets_no_filters_returns_dataframe(mocked_client):
 
 
 def test_search_datasets_combines_filters_into_and_query(mocked_client):
-    """Multiple filters compose as $and; modality wraps in $or for casing."""
+    """Multiple filters compose: simple fields go top-level, OR-flavoured under $and."""
     eeg, client = mocked_client
     client.find_datasets.return_value = []
 
@@ -186,15 +186,16 @@ def test_search_datasets_combines_filters_into_and_query(mocked_client):
     args, kwargs = client.find_datasets.call_args
     query = args[0]
     assert kwargs == {"limit": 25}
+    # Simple single-path single-value fields stay flat at the top level.
+    assert query["task"] == "rest"
+    assert query["license"] == "CC0"
+    assert query["n_subjects"] == {"$gte": 10}
+    # OR-flavoured fields (path aliases or case-insensitive) collect in $and.
     assert "$and" in query
     clauses = query["$and"]
-    # modality clause uses $or to handle case variants.
     assert {"$or": [{"modality": "EEG"}, {"modality": "eeg"}]} in clauses
-    assert {"task": "rest"} in clauses
     assert {"$or": [{"clinical.group": "adhd"}, {"clinical_group": "adhd"}]} in clauses
     assert {"$or": [{"source": "openneuro"}, {"provider": "openneuro"}]} in clauses
-    assert {"n_subjects": {"$gte": 10}} in clauses
-    assert {"license": "CC0"} in clauses
 
 
 def test_search_datasets_handles_legacy_schemas(mocked_client):

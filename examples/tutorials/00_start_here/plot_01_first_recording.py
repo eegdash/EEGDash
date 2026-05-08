@@ -116,6 +116,7 @@ dataset
 
 # %%
 description = dataset.description
+first_record = dataset.records[0] if getattr(dataset, "records", None) else {}
 
 
 def _nunique(col: str) -> int:
@@ -128,8 +129,8 @@ pd.Series(
         "n_subjects": _nunique("subject"),
         "n_tasks": _nunique("task"),
         "n_sessions": _nunique("session"),
-        "channels": int(description["nchans"].iloc[0]),
-        "sampling_frequency_hz": float(description["sampling_frequency"].iloc[0]),
+        "channels": int(first_record.get("nchans", 0)),
+        "sampling_frequency_hz": float(first_record.get("sampling_frequency", 0.0)),
     },
     name="value",
 ).to_frame()

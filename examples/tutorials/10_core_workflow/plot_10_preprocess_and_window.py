@@ -478,13 +478,6 @@ except (ValueError, RuntimeError) as exc:
 # %% [markdown]
 # References
 # ----------
-# - Cisotto & Chicco 2024, Ten quick tips for clinical EEG, *PeerJ Computer Science*. https://doi.org/10.7717/peerj-cs.2256
-# - Pernet et al. 2019, EEG-BIDS, *Scientific Data* 6:103. https://doi.org/10.1038/s41597-019-0104-8
-# - Delorme et al. 2022, NEMAR, *Database* baac096. https://doi.org/10.1093/database/baac096
-# - Delorme & Makeig 2004, EEGLAB, *J Neurosci Methods* 134(1):9-21. https://doi.org/10.1016/j.jneumeth.2003.10.009
-# - Gramfort et al. 2013, MNE-Python, *Frontiers in Neuroscience* 7:267. https://doi.org/10.3389/fnins.2013.00267
-# - Wakeman & Henson 2015, OpenNeuro ds002718, *Scientific Data* 2:150001. https://doi.org/10.1038/sdata.2015.1
-# - Kessler, Enge & Skeide 2025, How EEG preprocessing shapes decoding performance, *Communications Biology* 8:1039. https://doi.org/10.1038/s42003-025-08464-3
-# - Delorme 2023, EEG is better left alone, *Scientific Reports* 13:2372. https://doi.org/10.1038/s41598-023-27528-0
-# - Mullen, Kothe, Chi, Ojeda, Kerth, Makeig, Jung & Cauwenberghs 2015, Real-time neuroimaging and cognitive monitoring using wearable dry EEG, *IEEE Transactions on Biomedical Engineering* 62(11):2553-2567. https://doi.org/10.1109/TBME.2015.2481482
-# - Kothe & Makeig 2013, BCILAB: a platform for brain-computer interface development, *Journal of Neural Engineering* 10:056014. https://doi.org/10.1088/1741-2560/10/5/056014
+# See :doc:`/references` for the centralised bibliography of papers
+# cited above. Add or amend an entry once in
+# :file:`docs/source/refs.bib`; every tutorial inherits the update.

@@ -464,32 +464,6 @@ except (ValueError, RuntimeError) as exc:
 # %% [markdown]
 # References
 # ----------
-#
-# - Polich 2007, Updating P300: an integrative theory of P3a and P3b,
-#   *Clinical Neurophysiology* 118(10):2128-2148.
-#   https://doi.org/10.1016/j.clinph.2007.04.019
-# - Naatanen et al. 2007, The mismatch negativity (MMN) in basic
-#   research of central auditory processing: a review,
-#   *Clinical Neurophysiology* 118(12):2544-2590.
-#   https://doi.org/10.1016/j.clinph.2007.04.026
-# - Squires, Squires & Hillyard 1975, Two varieties of long-latency
-#   positive waves evoked by unpredictable auditory stimuli in man,
-#   *Electroencephalography and Clinical Neurophysiology* 38(4):387-401.
-#   https://doi.org/10.1016/0013-4694(75)90263-1
-# - Delorme et al. 2022, NEMAR, an open access data, tools and compute
-#   resource operating on neuroelectromagnetic data, *Database*
-#   baac096. https://doi.org/10.1093/database/baac096
-# - Pernet et al. 2019, EEG-BIDS, *Scientific Data* 6:103.
-#   https://doi.org/10.1038/s41597-019-0104-8
-# - Gramfort et al. 2013, MEG and EEG data analysis with MNE-Python,
-#   *Frontiers in Neuroscience* 7:267.
-#   https://doi.org/10.3389/fnins.2013.00267
-# - Cisotto & Chicco 2024, Ten quick tips for clinical EEG,
-#   *PeerJ Computer Science* 10:e2256.
-#   https://doi.org/10.7717/peerj-cs.2256
-# - Nederbragt et al. 2020, Ten simple rules for live coding tutorials,
-#   *PLOS Computational Biology* 16(9):e1008090.
-#   https://doi.org/10.1371/journal.pcbi.1008090
-# - Dataset: OpenNeuro ``ds003061`` (Delorme 2020,
-#   doi:10.18112/openneuro.ds003061.v1.1.0).
-# - Concept: :doc:`/concepts/leakage_and_evaluation`.
+# See :doc:`/references` for the centralised bibliography of papers
+# cited above. Add or amend an entry once in
+# :file:`docs/source/refs.bib`; every tutorial inherits the update.

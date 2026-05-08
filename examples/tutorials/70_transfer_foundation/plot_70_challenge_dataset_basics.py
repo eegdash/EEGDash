@@ -439,18 +439,6 @@ pd.DataFrame(release_table_rows)
 # %% [markdown]
 # References
 # ----------
-# - Alexander et al. 2017, An open resource for transdiagnostic research
-#   in pediatric mental health and learning disorders, *Scientific Data*
-#   4:170181. https://doi.org/10.1038/sdata.2017.181
-# - Delorme et al. 2022, NEMAR: an open access data, tools and compute
-#   resource operating on neuroelectromagnetic data, *Database* baac096.
-#   https://doi.org/10.1093/database/baac096
-# - Pernet et al. 2019, EEG-BIDS: an extension to the brain imaging data
-#   structure for electroencephalography, *Scientific Data* 6:103.
-#   https://doi.org/10.1038/s41597-019-0104-8
-# - Cisotto & Chicco 2024, Ten quick tips for clinical
-#   electroencephalographic (EEG) data acquisition and signal processing,
-#   *PeerJ Computer Science* 10:e2256.
-#   https://doi.org/10.7717/peerj-cs.2256
-# - EEG 2025 Foundation Challenge: https://eeg2025.github.io
-# - Challenge preprocessing recipe: https://github.com/eeg2025/downsample-datasets
+# See :doc:`/references` for the centralised bibliography of papers
+# cited above. Add or amend an entry once in
+# :file:`docs/source/refs.bib`; every tutorial inherits the update.

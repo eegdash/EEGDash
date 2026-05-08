@@ -378,23 +378,6 @@ assert mean_mae < mean_baseline_mae, "Model MAE must be below the median-baselin
 # %% [markdown]
 # References
 # ----------
-# - Alexander et al. 2017, *Sci. Data* 4:170181, the Healthy Brain
-#   Network (HBN) child / adolescent dataset behind ``ds005505``.
-#   https://doi.org/10.1038/sdata.2017.181
-# - Delorme et al. 2022, *NAR Genom. Bioinform.* 4:lqac023, NEMAR, the
-#   neuroelectromagnetic data archive.
-#   https://doi.org/10.1093/nargab/lqac023
-# - Cisotto and Chicco 2024, *PeerJ CS* 10:e2256, ten quick tips for
-#   clinical-EEG good practice.
-#   https://doi.org/10.7717/peerj-cs.2256
-# - Zoubi et al. 2018, *Front. Hum. Neurosci.* 12:461, predicting age
-#   from resting EEG, the prior-art reference for brain-age regression.
-#   https://doi.org/10.3389/fnhum.2018.00461
-# - Song et al. 2023, *IEEE TNSRE* 31:710, EEG Conformer, a deep encoder
-#   alternative to Ridge over features.
-#   https://doi.org/10.1109/TNSRE.2022.3230250
-# - Pedregosa et al. 2011, *JMLR* 12:2825, scikit-learn.
-#   https://doi.org/10.5555/1953048.2078195
-# - Pernet et al. 2019, *Sci. Data* 6:103, EEG-BIDS, dataset reporting
-#   discipline that the diagnostic plate above maps to.
-#   https://doi.org/10.1038/s41597-019-0104-8
+# See :doc:`/references` for the centralised bibliography of papers
+# cited above. Add or amend an entry once in
+# :file:`docs/source/refs.bib`; every tutorial inherits the update.

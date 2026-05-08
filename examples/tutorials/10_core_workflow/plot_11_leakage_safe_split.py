@@ -556,11 +556,6 @@ pd.DataFrame(fold_sizes, columns=["n_train_rows", "n_test_rows"]).head()
 # %% [markdown]
 # References
 # ----------
-#
-# - Brookshire et al. 2024, Data leakage in deep learning studies of translational EEG, *Frontiers in Neuroscience* 18:1373515. https://doi.org/10.3389/fnins.2024.1373515
-# - Cisotto & Chicco 2024, Ten quick tips for clinical EEG, *PeerJ Computer Science* 10:e2256. https://doi.org/10.7717/peerj-cs.2256
-# - Aristimunha et al. 2023, Mother of All BCI Benchmarks (MOABB), *Journal of Neural Engineering* 20:056025. https://doi.org/10.1088/1741-2552/aceaf8
-# - Wakeman & Henson 2015, A multi-subject, multi-modal human neuroimaging dataset, *Scientific Data* 2:150001. https://doi.org/10.1038/sdata.2015.1
-# - Delorme et al. 2022, NEMAR, an open access data, tools and compute resource operating on neuroelectromagnetic data, *Database* baac096. https://doi.org/10.1093/database/baac096
-# - Pernet et al. 2019, EEG-BIDS, *Scientific Data* 6:103. https://doi.org/10.1038/s41597-019-0104-8
-# - scikit-learn, ``sklearn.model_selection.GroupKFold``. https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GroupKFold.html
+# See :doc:`/references` for the centralised bibliography of papers
+# cited above. Add or amend an entry once in
+# :file:`docs/source/refs.bib`; every tutorial inherits the update.

@@ -423,18 +423,9 @@ print(
 # average-effect uncertainty, and the cumulative-wins shape visible
 # in one read.
 #
+# %% [markdown]
 # References
 # ----------
-#
-# - Delorme et al. 2022, NEMAR: an open-access data, tools and compute
-#   resource operating on neuroelectromagnetic data, *Database* baac096.
-#   https://doi.org/10.1093/database/baac096
-# - Demsar 2006, Statistical comparisons of classifiers over multiple
-#   data sets, *JMLR* 7. https://www.jmlr.org/papers/v7/demsar06a.html
-# - Cisotto & Chicco 2024, Ten quick tips for clinical EEG, *PeerJ CS*.
-#   https://doi.org/10.7717/peerj-cs.2256, Tip 9 on paired evaluation.
-# - Wilcoxon 1945, Individual comparisons by ranking methods,
-#   *Biometrics Bulletin*. https://doi.org/10.2307/3001968
-# - Pedregosa et al. 2011, scikit-learn ``Pipeline`` and
-#   ``MLPClassifier``, *JMLR* 12. https://dl.acm.org/doi/10.5555/1953048.2078195
-# - Concept: :doc:`/concepts/leakage_and_evaluation`.
+# See :doc:`/references` for the centralised bibliography of papers
+# cited above. Add or amend an entry once in
+# :file:`docs/source/refs.bib`; every tutorial inherits the update.

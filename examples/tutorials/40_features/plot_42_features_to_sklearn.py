@@ -543,11 +543,6 @@ print(
 # %% [markdown]
 # References
 # ----------
-# - Delorme et al. 2022, NEMAR, an open access data, tools and compute resource operating on neuroelectromagnetic data, *Database* baac096. https://doi.org/10.1093/database/baac096
-# - Pedregosa et al. 2011, Scikit-learn: Machine Learning in Python, *Journal of Machine Learning Research* 12. https://www.jmlr.org/papers/v12/pedregosa11a.html
-# - Cisotto & Chicco 2024, Ten quick tips for clinical EEG, *PeerJ Computer Science*. https://doi.org/10.7717/peerj-cs.2256
-# - Brookshire et al. 2024, Data leakage in deep learning studies of translational EEG, *Frontiers in Neuroscience* 18:1373515. https://doi.org/10.3389/fnins.2024.1373515
-# - Berger 1929. https://doi.org/10.1007/BF01797193
-# - HBN ds005514 (Release 9). https://doi.org/10.18112/openneuro.ds005514.v1.0.0
-# - Sentance et al. 2019, Teachers' experiences of using PRIMM to teach programming in school, *Computer Science Education* 29(2-3). https://doi.org/10.1080/08993408.2019.1608781
-# - Concept page: :doc:`/concepts/features_vs_deep_learning`.
+# See :doc:`/references` for the centralised bibliography of papers
+# cited above. Add or amend an entry once in
+# :file:`docs/source/refs.bib`; every tutorial inherits the update.

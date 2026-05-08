@@ -432,10 +432,6 @@ except (ValueError, TypeError) as exc:
 # %% [markdown]
 # References
 # ----------
-# - Alexander et al. 2017, *Sci. Data* 4:170181, HBN. https://doi.org/10.1038/sdata.2017.181
-# - Caspi et al. 2014, *Clin. Psychol. Sci.* 2:119, p-factor. https://doi.org/10.1177/2167702613497473
-# - Delorme et al. 2022, *NAR Genom. Bioinform.* 4:lqac023, NEMAR. https://doi.org/10.1093/nargab/lqac023
-# - Cisotto and Chicco 2024, *PeerJ CS* 10:e2256, clinical-EEG tips. https://doi.org/10.7717/peerj-cs.2256
-# - Schirrmeister et al. 2017, *Hum. Brain Mapp.* 38:5391, Braindecode. https://doi.org/10.1002/hbm.23730
-# - Song et al. 2023, *IEEE TNSRE* 31:710, EEGConformer. https://doi.org/10.1109/TNSRE.2022.3230250
-# - Nederbragt et al. 2020, *PLOS Comput. Biol.* 16:e1008090, teaching-coding rules. https://doi.org/10.1371/journal.pcbi.1008090
+# See :doc:`/references` for the centralised bibliography of papers
+# cited above. Add or amend an entry once in
+# :file:`docs/source/refs.bib`; every tutorial inherits the update.

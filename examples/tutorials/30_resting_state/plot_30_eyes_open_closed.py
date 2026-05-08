@@ -644,13 +644,6 @@ print(
 # %% [markdown]
 # References
 # ----------
-# - Berger, H. 1929, Über das Elektrenkephalogramm des Menschen, *Archiv für Psychiatrie und Nervenkrankheiten* 87, 527-570. (Discovery of the alpha rhythm; cited textually, no DOI.)
-# - Niedermeyer, E. 1999, The normal EEG of the waking adult, in Niedermeyer & Lopes da Silva, *Electroencephalography: Basic Principles, Clinical Applications, and Related Fields*, 4th ed., Williams & Wilkins, ch. 9.
-# - Klimesch, W. 2012, Alpha-band oscillations, attention, and controlled access to stored information, *Trends in Cognitive Sciences* 16(12), 606-617. https://doi.org/10.1016/j.tics.2012.10.007
-# - Alexander, L. M. et al. 2017, An open resource for transdiagnostic research in pediatric mental health and learning disorders, *Scientific Data* 4:170181. https://doi.org/10.1038/sdata.2017.181
-# - Delorme, A. et al. 2022, NEMAR, an open access data, tools and compute resource operating on neuroelectromagnetic data, *Database* baac096. https://doi.org/10.1093/database/baac096
-# - Cisotto, G. & Chicco, D. 2024, Ten quick tips for clinical EEG, *PeerJ Computer Science* 10:e2256. https://doi.org/10.7717/peerj-cs.2256
-# - Pernet, C. et al. 2019, EEG-BIDS, *Scientific Data* 6:103. https://doi.org/10.1038/s41597-019-0104-8
-# - Gramfort, A. et al. 2013, MEG and EEG data analysis with MNE-Python, *Frontiers in Neuroscience* 7:267. https://doi.org/10.3389/fnins.2013.00267
-# - Pedregosa, F. et al. 2011, scikit-learn: Machine learning in Python, *Journal of Machine Learning Research* 12, 2825-2830. https://www.jmlr.org/papers/v12/pedregosa11a.html
-# - HBN ``ds005514``, https://doi.org/10.18112/openneuro.ds005514.v1.0.0
+# See :doc:`/references` for the centralised bibliography of papers
+# cited above. Add or amend an entry once in
+# :file:`docs/source/refs.bib`; every tutorial inherits the update.

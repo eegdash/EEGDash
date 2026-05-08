@@ -428,26 +428,9 @@ except (AssertionError, ValueError) as exc:
 # regime; when val plateaus well above chance, the saturation point
 # names the budget.
 #
+# %% [markdown]
 # References
 # ----------
-#
-# - Hoffmann, U., Garcia, G., Vesin, J.-M., et al. 2014, "An efficient
-#   P300-based brain-computer interface for disabled subjects", *IEEE
-#   Trans. Biomed. Eng.*, doi:10.1109/TBME.2014.2300855. Section IV
-#   sweeps training set size and reports the plateau on a real BCI.
-# - Schirrmeister, R. T., Springenberg, J. T., Fiederer, L. D. J. et al.
-#   2017, "Deep learning with convolutional neural networks for EEG
-#   decoding and visualization", *Hum. Brain Mapp.*,
-#   doi:10.1002/hbm.23730. Braindecode; Figure 8 is a learning curve.
-# - Chevallier, S., Aristimunha, B., et al. 2024, "The largest EEG-based
-#   BCI reproducibility study for open science: the MOABB benchmark",
-#   *arXiv*, doi:10.48550/arXiv.2404.15319. Learning curves on EEG
-#   pipelines.
-# - Cisotto, C. & Chicco, D. 2024, "Ten quick tips for clinical
-#   electroencephalography", *PeerJ Computer Science*,
-#   doi:10.7717/peerj-cs.2256. Tip 9 (chance-aware reporting).
-# - Delorme, A., Truong, D., Martinez-Cancino, R., et al. 2022, "NEMAR:
-#   an open-access data, tools and compute resource operating on
-#   NeuroElectroMagnetic data", *Database (Oxford)*,
-#   doi:10.1093/database/baac096.
-# - Concept: :doc:`/concepts/leakage_and_evaluation`.
+# See :doc:`/references` for the centralised bibliography of papers
+# cited above. Add or amend an entry once in
+# :file:`docs/source/refs.bib`; every tutorial inherits the update.

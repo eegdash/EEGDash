@@ -553,9 +553,6 @@ plt.show()
 # %% [markdown]
 # References
 # ----------
-# - Alexander et al. 2017, An open resource for transdiagnostic research in pediatric mental health and learning disorders, *Scientific Data* 4:170181. https://doi.org/10.1038/sdata.2017.181
-# - Healthy Brain Network release on OpenNeuro (ds005505). https://doi.org/10.18112/openneuro.ds005505.v1.0.0
-# - Delorme et al. 2022, NEMAR, an open access data, tools and compute resource operating on neuroelectromagnetic data, *Database* baac096. https://doi.org/10.1093/database/baac096
-# - Pedregosa et al. 2011, Scikit-learn: Machine Learning in Python, *Journal of Machine Learning Research* 12. https://www.jmlr.org/papers/v12/pedregosa11a.html
-# - Cisotto and Chicco 2024, Ten quick tips for clinical electroencephalographic data acquisition and signal processing, *PeerJ Computer Science*. https://doi.org/10.7717/peerj-cs.2256
-# - Schirrmeister et al. 2017, Deep learning with convolutional neural networks for EEG decoding and visualization, *Human Brain Mapping* 38(11). https://doi.org/10.1002/hbm.23730
+# See :doc:`/references` for the centralised bibliography of papers
+# cited above. Add or amend an entry once in
+# :file:`docs/source/refs.bib`; every tutorial inherits the update.

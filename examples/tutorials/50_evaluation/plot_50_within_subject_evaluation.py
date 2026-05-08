@@ -464,10 +464,6 @@ print(
 # %% [markdown]
 # References
 # ----------
-#
-# - Delorme et al. 2022, NEMAR, *Database* baac096. https://doi.org/10.1093/database/baac096
-# - Cisotto & Chicco 2024, Ten quick tips for clinical EEG, *PeerJ CS*. https://doi.org/10.7717/peerj-cs.2256
-# - Brookshire et al. 2024, Data leakage in deep learning studies of clinical EEG, *Frontiers in Neuroscience* 18:1373515. https://doi.org/10.3389/fnins.2024.1373515
-# - Combrisson & Jerbi 2015, Exceeding chance level by chance, *J. Neuroscience Methods* 250. https://doi.org/10.1016/j.jneumeth.2015.01.010
-# - Chevallier, Aristimunha et al. 2024, MOABB benchmark. https://doi.org/10.48550/arXiv.2404.15319
-# - Concept page: :doc:`/concepts/leakage_and_evaluation`.
+# See :doc:`/references` for the centralised bibliography of papers
+# cited above. Add or amend an entry once in
+# :file:`docs/source/refs.bib`; every tutorial inherits the update.

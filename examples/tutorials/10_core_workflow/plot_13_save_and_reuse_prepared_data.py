@@ -547,27 +547,6 @@ print("cleanup OK")
 # %% [markdown]
 # References
 # ----------
-# - Wilkinson et al. 2016, *The FAIR Guiding Principles for scientific
-#   data management and stewardship*, Sci Data 3:160018.
-#   https://doi.org/10.1038/sdata.2016.18
-# - Miles et al. 2020, *Zarr: storage of chunked, compressed,
-#   N-dimensional arrays*, Zenodo.
-#   https://doi.org/10.5281/zenodo.3773450
-# - Vohra 2016, *Apache Parquet*, in *Practical Hadoop Ecosystem*,
-#   Apress, pp. 325-335. https://doi.org/10.1007/978-1-4842-2199-0_8;
-#   project site https://parquet.apache.org/.
-# - Schirrmeister et al. 2017, *Deep learning with convolutional neural
-#   networks for EEG decoding*, Hum Brain Mapp 38(11).
-#   https://doi.org/10.1002/hbm.23730
-# - Gramfort et al. 2013, *MEG and EEG data analysis with MNE-Python*,
-#   Front Neurosci 7:267. https://doi.org/10.3389/fnins.2013.00267
-# - Rule et al. 2019, *Ten simple rules for writing and sharing
-#   computational analyses in Jupyter notebooks*, PLOS Comput Biol
-#   15(7):e1007007. https://doi.org/10.1371/journal.pcbi.1007007
-# - Nederbragt et al. 2020, *Ten simple rules for live coding tutorials*,
-#   PLOS Comput Biol 16(9):e1008090.
-#   https://doi.org/10.1371/journal.pcbi.1008090
-# - API: :func:`braindecode.datautil.load_concat_dataset`,
-#   :meth:`braindecode.datasets.BaseConcatDataset.save`,
-#   :meth:`pandas.DataFrame.to_parquet`, :func:`pandas.read_parquet`,
-#   :class:`pathlib.Path`, :func:`subprocess.run`.
+# See :doc:`/references` for the centralised bibliography of papers
+# cited above. Add or amend an entry once in
+# :file:`docs/source/refs.bib`; every tutorial inherits the update.

@@ -739,17 +739,6 @@ pd.Series(
 # %% [markdown]
 # References
 # ----------
-# - Wakeman & Henson 2015, A multi-subject, multi-modal human neuroimaging dataset, *Scientific Data* 2:150001. https://doi.org/10.1038/sdata.2015.1
-# - Delorme et al. 2022, NEMAR, an open access data, tools and compute resource operating on neuroelectromagnetic data, *Database* baac096. https://doi.org/10.1093/database/baac096
-# - Pernet et al. 2019, EEG-BIDS, *Scientific Data* 6:103. https://doi.org/10.1038/s41597-019-0104-8
-# - Schirrmeister et al. 2017, Deep learning with convolutional neural networks for EEG decoding and visualization, *Human Brain Mapping* 38(11). https://doi.org/10.1002/hbm.23730
-# - Gramfort et al. 2013, MEG and EEG data analysis with MNE-Python, *Frontiers in Neuroscience* 7:267. https://doi.org/10.3389/fnins.2013.00267
-# - Paszke et al. 2019, PyTorch: An imperative style, high-performance deep learning library, *NeurIPS* 32. https://papers.nips.cc/paper_files/paper/2019/hash/bdbca288fee7f92f2bfa9f7012727740-Abstract.html
-# - PyTorch tutorial, Datasets & DataLoaders. https://docs.pytorch.org/tutorials/beginner/basics/data_tutorial.html
-# - PyTorch docs, Reproducibility (DataLoader: ``seed_worker`` template). https://docs.pytorch.org/docs/stable/notes/randomness.html
-# - HuggingFace Datasets, Use with PyTorch (with_format, IterableDataset, num_workers). https://huggingface.co/docs/datasets/use_with_pytorch
-# - MNE-Python, mne.Epochs API (event_id, metadata, drop_bad). https://mne.tools/stable/generated/mne.Epochs.html
-# - PyTorch torchdata, StatefulDataLoader (checkpoint/resume). https://github.com/pytorch/data
-# - Miles et al. 2020, Zarr: storage of chunked, compressed, N-dimensional arrays, *Zenodo*. https://doi.org/10.5281/zenodo.3773450
-# - Cisotto & Chicco 2024, Ten quick tips for clinical EEG, *PeerJ Computer Science*. https://doi.org/10.7717/peerj-cs.2256
-# - Nederbragt et al. 2020, Ten simple rules for live coding tutorials, *PLOS Comp Bio*. https://doi.org/10.1371/journal.pcbi.1008090
+# See :doc:`/references` for the centralised bibliography of papers
+# cited above. Add or amend an entry once in
+# :file:`docs/source/refs.bib`; every tutorial inherits the update.

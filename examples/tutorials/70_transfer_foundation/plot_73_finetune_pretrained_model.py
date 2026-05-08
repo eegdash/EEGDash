@@ -490,18 +490,6 @@ print(
 # %% [markdown]
 # References
 # ----------
-# - Delorme et al. 2022, NEMAR, *Scientific Data*.
-#   https://doi.org/10.1038/s41597-022-01795-4
-# - Schirrmeister et al. 2017, Deep learning with CNNs for EEG decoding,
-#   *Human Brain Mapping*. https://doi.org/10.1002/hbm.23730
-# - Banville et al. 2021, Self-supervised learning on clinical EEG,
-#   *J. Neural Engineering*. https://doi.org/10.1088/1741-2552/abca18
-# - Defossez et al. 2023, Decoding speech from non-invasive brain
-#   recordings, *Nature Machine Intelligence*.
-#   https://doi.org/10.1038/s42256-023-00714-5
-# - Cisotto & Chicco 2024, Ten quick tips for clinical
-#   electroencephalography, *PeerJ Computer Science*.
-#   https://doi.org/10.7717/peerj-cs.2256
-# - Pernet et al. 2019, EEG-BIDS, *Scientific Data*.
-#   https://doi.org/10.1038/s41597-019-0104-8
-# - Concept page: :doc:`/concepts/features_vs_deep_learning`.
+# See :doc:`/references` for the centralised bibliography of papers
+# cited above. Add or amend an entry once in
+# :file:`docs/source/refs.bib`; every tutorial inherits the update.

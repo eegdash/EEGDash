@@ -449,13 +449,6 @@ plt.show()
 # %% [markdown]
 # References
 # ----------
-# - Berger, H. 1929, Über das Elektrenkephalogramm des Menschen, *Archiv für Psychiatrie und Nervenkrankheiten* 87, 527-570. https://doi.org/10.1007/BF01797193
-# - Klimesch, W. 2012, Alpha-band oscillations, attention, and controlled access to stored information, *Trends in Cognitive Sciences* 16(12), 606-617. https://doi.org/10.1016/j.tics.2012.10.007
-# - Welch, P. 1967, The use of fast Fourier transform for the estimation of power spectra, *IEEE Trans. Audio Electroacoust.* 15(2), 70-73. https://doi.org/10.1109/TAU.1967.1161901
-# - Gramfort, A. et al. 2013, MEG and EEG data analysis with MNE-Python, *Frontiers in Neuroscience* 7:267. https://doi.org/10.3389/fnins.2013.00267
-# - Pedregosa, F. et al. 2011, Scikit-learn: Machine learning in Python, *JMLR* 12, 2825-2830. https://www.jmlr.org/papers/v12/pedregosa11a.html
-# - Delorme, A. et al. 2022, NEMAR, an open access data, tools and compute resource operating on neuroelectromagnetic data, *Database* baac096. https://doi.org/10.1093/database/baac096
-# - Alexander, L. M. et al. 2017, An open resource for transdiagnostic research in pediatric mental health and learning disorders, *Scientific Data* 4:170181. https://doi.org/10.1038/sdata.2017.181
-# - Cisotto, G. & Chicco, D. 2024, Ten quick tips for clinical EEG, *PeerJ Computer Science* 10:e2256. https://doi.org/10.7717/peerj-cs.2256
-# - Nederbragt, A. J. et al. 2020, Ten simple rules for live coding tutorials, *PLOS Computational Biology* 16(9):e1008090. https://doi.org/10.1371/journal.pcbi.1008090
-# - HBN resting-state dataset, OpenNeuro ds005514. https://doi.org/10.18112/openneuro.ds005514.v1.0.0
+# See :doc:`/references` for the centralised bibliography of papers
+# cited above. Add or amend an entry once in
+# :file:`docs/source/refs.bib`; every tutorial inherits the update.

@@ -323,8 +323,6 @@ pd.DataFrame(
 # %% [markdown]
 # References
 # ----------
-# - Miltiadous et al. 2023, A dataset of EEG recordings from Alzheimer's disease, frontotemporal dementia and healthy subjects, *Data* 8(6):95. https://doi.org/10.18112/openneuro.ds004504.v1.0.5
-# - Delorme et al. 2022, NEMAR, an open access data, tools and compute resource operating on neuroelectromagnetic data, *Database* baac096. https://doi.org/10.1093/database/baac096
-# - Pernet et al. 2019, EEG-BIDS, *Scientific Data* 6:103. https://doi.org/10.1038/s41597-019-0104-8
-# - Gramfort et al. 2013, MEG and EEG data analysis with MNE-Python, *Frontiers in Neuroscience* 7:267. https://doi.org/10.3389/fnins.2013.00267
-# - Delorme & Makeig 2004, EEGLAB, *J Neurosci Methods* 134(1):9-21. https://doi.org/10.1016/j.jneumeth.2003.10.009
+# See :doc:`/references` for the centralised bibliography of papers
+# cited above. Add or amend an entry once in
+# :file:`docs/source/refs.bib`; every tutorial inherits the update.

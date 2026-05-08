@@ -477,15 +477,6 @@ print(
 # %% [markdown]
 # References
 # ----------
-#
-# - Aristimunha et al. 2023, Mother of All BCI Benchmarks (MOABB), *Journal of Neural Engineering* 20:056025. https://doi.org/10.1088/1741-2552/aceaf8
-# - Chevallier et al. 2024, The largest EEG-based BCI reproducibility study for open science. *arXiv* 2404.15319. https://doi.org/10.48550/arXiv.2404.15319
-# - Brookshire et al. 2024, Data leakage in deep learning studies of translational EEG, *Frontiers in Neuroscience* 18:1373515. https://doi.org/10.3389/fnins.2024.1373515
-# - Cisotto & Chicco 2024, Ten quick tips for clinical EEG, *PeerJ Computer Science* 10:e2256. https://doi.org/10.7717/peerj-cs.2256
-# - Tangermann et al. 2012, Review of the BCI Competition IV (BNCI2014_001), *Frontiers in Neuroscience* 6:55. https://doi.org/10.3389/fnins.2012.00055
-# - Wakeman & Henson 2015, A multi-subject, multi-modal human neuroimaging dataset, *Scientific Data* 2:150001. https://doi.org/10.1038/sdata.2015.1
-# - Delorme et al. 2022, NEMAR, an open access data, tools and compute resource operating on neuroelectromagnetic data, *Database* baac096. https://doi.org/10.1093/database/baac096
-# - Pernet et al. 2019, EEG-BIDS, *Scientific Data* 6:103. https://doi.org/10.1038/s41597-019-0104-8
-# - Schirrmeister et al. 2017, Deep learning with convolutional neural networks for EEG decoding, *Human Brain Mapping* 38:5391-5420. https://doi.org/10.1002/hbm.23730
-# - Pedregosa et al. 2011, Scikit-learn: Machine Learning in Python, *Journal of Machine Learning Research* 12. https://www.jmlr.org/papers/v12/pedregosa11a.html
-# - MOABB documentation, paradigms and evaluations. https://moabb.neurotechx.com/
+# See :doc:`/references` for the centralised bibliography of papers
+# cited above. Add or amend an entry once in
+# :file:`docs/source/refs.bib`; every tutorial inherits the update.

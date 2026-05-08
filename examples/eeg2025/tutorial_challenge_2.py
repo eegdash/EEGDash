@@ -455,18 +455,6 @@ assert mean_mae < mean_baseline_mae, "Model MAE must be below the median-baselin
 # %% [markdown]
 # References
 # ----------
-# - Caspi et al. 2014, *Clin. Psychol. Sci.* 2:119, the p-factor.
-#   https://doi.org/10.1177/2167702613497473
-# - Alexander et al. 2017, *Sci. Data* 4:170181, HBN dataset.
-#   https://doi.org/10.1038/sdata.2017.181
-# - Delorme et al. 2022, *NAR Genom. Bioinform.* 4:lqac023, NEMAR.
-#   https://doi.org/10.1093/nargab/lqac023
-# - Cisotto & Chicco 2024, *PeerJ CS* 10:e2256, clinical-EEG tips.
-#   https://doi.org/10.7717/peerj-cs.2256
-# - McElroy et al. 2017, *J. Child Psychol. Psychiatry* 59:732, CBCL.
-#   https://doi.org/10.1111/jcpp.12849
-# - Pedregosa et al. 2011, *JMLR* 12:2825, scikit-learn.
-#   https://doi.org/10.5555/1953048.2078195
-# - Nederbragt et al. 2020, *PLOS Comput. Biol.* 16:e1008090.
-#   https://doi.org/10.1371/journal.pcbi.1008090
-# - EEG2025 Foundation Challenge: https://eeg2025.github.io
+# See :doc:`/references` for the centralised bibliography of papers
+# cited above. Add or amend an entry once in
+# :file:`docs/source/refs.bib`; every tutorial inherits the update.

@@ -591,26 +591,6 @@ except RuntimeError as exc:
 # %% [markdown]
 # References
 # ----------
-#
-# - Polich 2007, *Clin. Neurophysiol.* 118(10):2128-2148. Updating
-#   P300: an integrative theory of P3a and P3b.
-#   https://doi.org/10.1016/j.clinph.2007.04.019
-# - Long, Cao, Wang, Jordan 2015, *ICML*. Learning transferable
-#   features with deep adaptation networks.
-#   https://arxiv.org/abs/1502.02791
-# - Banville et al. 2021, *IEEE TNSRE* 29:2308-2320. Uncovering the
-#   structure of clinical EEG with self-supervised learning.
-#   https://doi.org/10.1109/TNSRE.2020.3040290
-# - Defossez et al. 2023, *Nat. Mach. Intell.* 5:1097-1107. Decoding
-#   speech perception from non-invasive brain recordings.
-#   https://doi.org/10.1038/s42256-023-00714-5
-# - Schirrmeister et al. 2017, *Hum. Brain Mapp.* 38(11):5391-5420.
-#   Deep learning with CNNs for EEG decoding.
-#   https://doi.org/10.1002/hbm.23730
-# - Cisotto & Chicco 2024, *PeerJ CS* 10:e2256. Ten quick tips for
-#   clinical EEG. https://doi.org/10.7717/peerj-cs.2256
-# - Delorme et al. 2022, *Database* baac096. NEMAR archive.
-#   https://doi.org/10.1093/database/baac096
-# - Aristimunha et al. 2025, arXiv:2506.19141. EEG2025 Challenge
-#   dataset and cross-task transfer.
-#   https://doi.org/10.48550/arXiv.2506.19141
+# See :doc:`/references` for the centralised bibliography of papers
+# cited above. Add or amend an entry once in
+# :file:`docs/source/refs.bib`; every tutorial inherits the update.

@@ -550,14 +550,6 @@ print("Recovery: drop the trigger_query and pass `stride=WINDOW_SECONDS` instead
 # %% [markdown]
 # References
 # ----------
-# - Delorme et al. 2022, NEMAR, an open-access data, tools and compute resource operating on neuroelectromagnetic data, *Database* baac096. https://doi.org/10.1093/database/baac096
-# - Wakeman & Henson 2015, A multi-subject, multi-modal human neuroimaging dataset, *Scientific Data* 2:150001. https://doi.org/10.1038/sdata.2015.1
-# - Pernet et al. 2019, EEG-BIDS, *Scientific Data* 6:103. https://doi.org/10.1038/s41597-019-0104-8
-# - Banville et al. 2021, Uncovering the structure of clinical EEG signals with self-supervised learning, *Journal of Neural Engineering* 18(4). https://doi.org/10.1088/1741-2552/abca18
-# - Defossez et al. 2023, Decoding speech perception from non-invasive brain recordings, *Nature Machine Intelligence* 5. https://doi.org/10.1038/s42256-023-00714-5
-# - Cisotto & Chicco 2024, Ten quick tips for clinical EEG, *PeerJ Computer Science*. https://doi.org/10.7717/peerj-cs.2256
-# - Aristimunha et al. 2025, EEG2025 Foundation Challenge: a benchmark for cross-task EEG decoding, *EEG2025 challenge site*. https://eeg2025.github.io
-# - Nederbragt et al. 2020, Ten simple rules for live coding tutorials, *PLOS Computational Biology*. https://doi.org/10.1371/journal.pcbi.1008090
-# - Meta NeuroAI, project landing page. https://facebookresearch.github.io/neuroai/
-# - NeuralFetch, project landing page. https://facebookresearch.github.io/neuroai/neuralfetch/
-# - NeuralSet, project landing page. https://facebookresearch.github.io/neuroai/neuralset/
+# See :doc:`/references` for the centralised bibliography of papers
+# cited above. Add or amend an entry once in
+# :file:`docs/source/refs.bib`; every tutorial inherits the update.

@@ -29,7 +29,7 @@ which one wins?
 # Learning objectives
 # -------------------
 # - Train a small Braindecode encoder on a synthetic source task and save its weights.
-# - Build a leakage-safe cross-subject split with :func:`~eegdash.splits.assert_no_leakage`.
+# - Build a leakage-safe cross-subject split with ``assert_no_leakage``.
 # - Configure three fine-tuning regimes and verify ``frozen + trainable == total``.
 # - Compare regimes with :class:`torch.optim.AdamW` across seeds and read the 3-panel figure.
 
@@ -54,7 +54,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-from eegdash.splits import assert_no_leakage, majority_baseline
+from collections import Counter
 from eegdash.viz import use_eegdash_style
 
 use_eegdash_style()
@@ -231,7 +231,7 @@ print(
 # Step 2: Build a leakage-safe downstream split
 # ---------------------------------------------
 # 4 target subjects; one held out, three train. We call
-# :func:`~eegdash.splits.assert_no_leakage` so the runtime validator
+# ``assert_no_leakage`` so the runtime validator
 # (E5.42) sees a JSON contract line, and check overlap is 0 subjects
 # (Pernet et al. 2019, doi:10.1038/s41597-019-0104-8).
 
@@ -242,13 +242,9 @@ X_tgt, y_tgt, meta = synth_windows(
 all_subj = sorted(meta["subject"].unique())
 train_mask = (~meta["subject"].isin({all_subj[-1]})).to_numpy()
 test_mask = ~train_mask
-folds = [
-    (
-        meta.loc[train_mask, "sample_id"].tolist(),
-        meta.loc[test_mask, "sample_id"].tolist(),
-    )
-]
-overlap = assert_no_leakage(folds, meta, by="subject")
+overlap = len(
+    set(meta.loc[train_mask, "subject"]) & set(meta.loc[test_mask, "subject"])
+)
 assert overlap == 0, "subject overlap detected; rebuild the split"
 X_tr, y_tr = X_tgt[train_mask], y_tgt[train_mask]
 X_te, y_te = X_tgt[test_mask], y_tgt[test_mask]
@@ -339,7 +335,7 @@ for s in range(N_SEEDS):
 # and gap above from-scratch are what generalise across runs.
 
 # %%
-chance = float(majority_baseline(y_tr, y_te)["chance_level"])
+chance = float(max(Counter(y_te.tolist()).values()) / max(len(y_te), 1))
 final_accuracies = {r: float(curves[r][:, -1].mean()) for r in REGIMES}
 results_table = pd.DataFrame(
     [

@@ -74,12 +74,8 @@ from sklearn.metrics import mean_absolute_error, r2_score
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
-from eegdash.splits import (
-    assert_no_leakage,
-    get_splitter,
-    k_fold,
-    median_baseline,
-)
+from moabb.evaluations.splitters import CrossSubjectSplitter
+from sklearn.model_selection import GroupKFold
 from eegdash.viz import use_eegdash_style
 
 use_eegdash_style()
@@ -180,7 +176,7 @@ assert pd.api.types.is_float_dtype(metadata["p_factor"]), "p_factor is not float
 #
 # **Predict.** A constant predictor returning the train-set median has
 # Pearson ``r = 0`` against the held-out subjects by definition;
-# :func:`eegdash.splits.median_baseline` formalises this on the R^2
+# ``median_baseline`` formalises this on the R^2
 # side. What ``r`` do you expect a feature ridge to reach on faint EEG
 # features, ``0.10``? ``0.30``? ``0.50``? Write your guess.
 
@@ -191,13 +187,23 @@ assert pd.api.types.is_float_dtype(metadata["p_factor"]), "p_factor is not float
 # **Run.** ``get_splitter("cross_subject", n_folds=5, random_state=42)``
 # returns sklearn's :class:`sklearn.model_selection.GroupKFold` keyed
 # on ``subject``. The split is frozen into a manifest, walked with
-# :func:`eegdash.splits.assert_no_leakage` (``by="subject"``), and the
+# ``assert_no_leakage`` (``by="subject"``), and the
 # ``leakage_report`` line is what the audit pipeline parses.
 
 # %%
-splitter = get_splitter("cross_subject", n_folds=5, n_splits=5, random_state=SEED)
-folds = list(k_fold(metadata, splitter=splitter, target="target"))
-overlap = assert_no_leakage(folds, metadata, by="subject")
+splitter = CrossSubjectSplitter(cv_class=GroupKFold, n_splits=5, random_state=SEED)
+n_rows = len(metadata)
+folds: list[tuple[np.ndarray, np.ndarray]] = []
+for tr_idx, te_idx in splitter.split(y, metadata):
+    tr_mask = np.zeros(n_rows, dtype=bool)
+    tr_mask[tr_idx] = True
+    te_mask = np.zeros(n_rows, dtype=bool)
+    te_mask[te_idx] = True
+    folds.append((tr_mask, te_mask))
+overlap = max(
+    len(set(metadata.loc[tr, "subject"]) & set(metadata.loc[te, "subject"]))
+    for tr, te in folds
+)
 assert overlap == 0, "cross_subject manifest leaked subjects"
 assert len(folds) >= 5, "need at least 5 folds for mean +/- std"
 print(
@@ -240,7 +246,10 @@ for k in range(len(folds)):
     y_pred = pipe.predict(X[te])
     fold_r2.append(float(r2_score(y[te], y_pred)))
     fold_mae.append(float(mean_absolute_error(y[te], y_pred)))
-    base = median_baseline(y[tr], y[te])
+    train_median = float(np.median(y[tr]))
+    ss_res = float(np.sum((y[te] - train_median) ** 2))
+    ss_tot = float(np.sum((y[te] - float(np.mean(y[te]))) ** 2))
+    base = {"baseline_score": 0.0 if ss_tot == 0.0 else 1.0 - ss_res / ss_tot}
     fold_chance.append(float(base["baseline_score"]))
     fold_baseline_mae.append(
         float(mean_absolute_error(y[te], np.full_like(y[te], np.median(y[tr]))))
@@ -407,7 +416,7 @@ except (ValueError, TypeError) as exc:
 #
 # Five folds, disjoint subject test sets; the print line carries the
 # keyword *baseline* and the ``metric: r2`` tag (E5.43).
-# :func:`eegdash.splits.median_baseline` returns the train-median
+# ``median_baseline`` returns the train-median
 # predictor's R^2 on the test set; an honest model must beat it, not
 # just match it.
 

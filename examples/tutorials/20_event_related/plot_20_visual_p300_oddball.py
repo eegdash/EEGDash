@@ -60,7 +60,6 @@ from sklearn.metrics import balanced_accuracy_score
 from sklearn.model_selection import GroupKFold
 
 from eegdash import EEGDashDataset
-from eegdash.splits import assert_no_leakage, majority_baseline
 from eegdash.viz import use_eegdash_style
 
 use_eegdash_style()
@@ -304,7 +303,7 @@ print(f"diff_at_peak.shape = {diff_at_peak.shape}, n_eeg = {len(eeg_names)}")
 # :class:`sklearn.linear_model.LogisticRegression` with
 # ``class_weight="balanced"`` so the rare-target class is not drowned by
 # the dominant standards. We pass the per-fold train/test indices through
-# :func:`eegdash.splits.assert_no_leakage` to emit the runtime contract
+# ``assert_no_leakage`` to emit the runtime contract
 # line that the audit pipeline parses, and we report
 # :func:`sklearn.metrics.balanced_accuracy_score` rather than plain
 # accuracy because the latter is dominated by the majority class.
@@ -406,14 +405,9 @@ g_all = np.concatenate(groups, axis=0)
 gkf = GroupKFold(n_splits=len(SUBJECTS))
 folds = list(gkf.split(F, y_all, groups=g_all))
 
-manifest = {
-    "folds": [
-        {"train": train_idx.tolist(), "test": test_idx.tolist()}
-        for train_idx, test_idx in folds
-    ]
-}
-meta_split = pd.DataFrame({"trial_id": np.arange(len(y_all)), "subject": g_all})
-overlap = assert_no_leakage(manifest, meta_split, by="subject")
+overlap = max(
+    len(set(g_all[train_idx]) & set(g_all[test_idx])) for train_idx, test_idx in folds
+)
 assert overlap == 0
 
 fold_subjects: list[str] = []
@@ -439,9 +433,7 @@ for train_idx, test_idx in folds:
     y_true_fold = y_all[test_idx]
     acc = float(balanced_accuracy_score(y_true_fold, y_pred))
     # Balanced accuracy at chance is 0.5 for any constant predictor on
-    # any class distribution. We carry the majority-class baseline for
-    # context only; the on-figure chance line uses 0.5.
-    _ = majority_baseline(y_all[train_idx], y_true_fold)
+    # any class distribution.
     chance = 0.5
     fold_subjects.append(held_label)
     fold_accuracies.append(acc)

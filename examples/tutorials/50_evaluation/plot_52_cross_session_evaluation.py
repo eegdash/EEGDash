@@ -40,9 +40,9 @@ same subject?
 # -------------------
 #
 # - Explain why decoders drift across sessions of the same subject (electrode placement, impedance, attention, time of day).
-# - Build a cross-session split with :func:`eegdash.splits.get_splitter` (``"cross_session"``) keyed on the BIDS ``session`` entity.
+# - Build a cross-session split with ``get_splitter`` (``"cross_session"``) keyed on the BIDS ``session`` entity.
 # - Assert that no session appears in both train and test for any ``(subject, fold)`` pair while subjects remain shared by design.
-# - Compare within-session accuracy to cross-session accuracy and read the per-subject drift delta against :func:`eegdash.splits.majority_baseline`.
+# - Compare within-session accuracy to cross-session accuracy and read the per-subject drift delta against ``majority_baseline``.
 # - Plot the 1 x 3 ``draw_cross_session_figure`` on the live numbers (transfer matrix, paired bars, drift histogram).
 #
 # Requirements
@@ -61,13 +61,10 @@ import pandas as pd
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
 
-from eegdash.splits import (
-    assert_no_leakage,
-    describe_split,
-    get_splitter,
-    k_fold,
-    majority_baseline,
-)
+from collections import Counter
+
+from moabb.evaluations.splitters import CrossSessionSplitter
+from sklearn.model_selection import GroupKFold
 from eegdash.viz import use_eegdash_style
 
 from _cross_session_figure import draw_cross_session_figure
@@ -139,8 +136,15 @@ print(
 # **Run.** ``make_split_manifest`` freezes the splitter output as IDs.
 
 # %%
-splitter = get_splitter("cross_session", n_folds=3, n_splits=3, random_state=SEED)
-folds = list(k_fold(metadata, splitter=splitter, target="target"))
+splitter = CrossSessionSplitter(cv_class=GroupKFold, n_splits=3, random_state=SEED)
+n_rows = len(metadata)
+folds: list[tuple[np.ndarray, np.ndarray]] = []
+for tr_idx, te_idx in splitter.split(y, metadata):
+    tr_mask = np.zeros(n_rows, dtype=bool)
+    tr_mask[tr_idx] = True
+    te_mask = np.zeros(n_rows, dtype=bool)
+    te_mask[te_idx] = True
+    folds.append((tr_mask, te_mask))
 print(f"Splitter: {type(splitter).__name__} | folds: {len(folds)}")
 
 # %% [markdown]
@@ -154,7 +158,10 @@ print(f"Splitter: {type(splitter).__name__} | folds: {len(folds)}")
 # "within-subject, across-session" rather than cross-subject.
 
 # %%
-session_overlap = assert_no_leakage(folds, metadata, by="session")
+session_overlap = max(
+    len(set(metadata.loc[tr, "session"]) & set(metadata.loc[te, "session"]))
+    for tr, te in folds
+)
 assert session_overlap == 0, "cross_session manifest leaked a session!"
 fold_subj_overlaps = []
 for tr_mask, te_mask in folds:
@@ -216,7 +223,7 @@ for tr_mask, te_mask in folds:
 
 within_acc = float(np.mean(within_scores))
 cross_acc = float(np.mean(cross_scores))
-chance = float(majority_baseline(y_train=y, y_test=y)["chance_level"])
+chance = float(max(Counter(y.tolist()).values()) / max(len(y), 1))
 print(
     f"within-session accuracy = {within_acc:.3f}, "
     f"cross-session accuracy = {cross_acc:.3f}, "
@@ -233,13 +240,14 @@ print(
 # subject in test (1 session), with balanced classes.
 
 # %%
-summary = describe_split(folds, metadata, target="target", print_report=False)
-for i, fold in enumerate(summary["per_fold"][:3]):
-    bal = fold["class_balance_test"]
+for i, (tr_mask, te_mask) in enumerate(folds[:3]):
+    bal = dict(Counter(metadata.loc[te_mask, "target"].dropna().tolist()))
     ratio = max(bal.values()) / (sum(bal.values()) or 1)
     print(
-        f"Fold {i}: train={fold['n_train']} ({fold['sessions_train']} ses), "
-        f"test={fold['n_test']} ({fold['sessions_test']} ses), "
+        f"Fold {i}: train={int(tr_mask.sum())} "
+        f"({metadata.loc[tr_mask, 'session'].nunique()} ses), "
+        f"test={int(te_mask.sum())} "
+        f"({metadata.loc[te_mask, 'session'].nunique()} ses), "
         f"class_balance_ratio={ratio:.2f}"
     )
 
@@ -351,17 +359,19 @@ for subj, w, c in ranked:
 # A common slip, and how to recover
 # -----------------------------------
 #
-# **Run.** Calling ``assert_no_leakage`` with the default
-# ``by="subject"`` on a cross-session manifest looks like a leak
-# (subjects are shared on purpose). Recovery: pass ``by="session"``.
+# **Run.** Checking ``by="subject"`` on a cross-session split looks
+# like a leak (subjects are shared on purpose). Recovery: check
+# ``by="session"`` instead.
 
 # %%
-try:
-    assert_no_leakage(folds, metadata)  # default by="subject"
-    raise AssertionError("expected a LeakageError")
-except Exception as exc:
-    print(f"Caught {type(exc).__name__}: retrying with by='session'.")
-    print(f"Recovery overlap = {assert_no_leakage(folds, metadata, by='session')}")
+subject_overlap = max(
+    len(set(metadata.loc[tr, "subject"]) & set(metadata.loc[te, "subject"]))
+    for tr, te in folds
+)
+print(
+    f"by='subject' overlap = {subject_overlap} (expected by design); "
+    f"recovery: by='session' overlap = {session_overlap}"
+)
 
 # %% [markdown]
 # Modify: try a 2-session subject
@@ -380,13 +390,8 @@ trimmed_y = trimmed_md["target"].to_numpy()
 # Drop ``n_folds`` so MOABB falls back to its native LeaveOneGroupOut
 # behaviour: subjects with 2 remaining sessions contribute 2 folds, the
 # others contribute one fold per session as usual.
-trimmed_folds = list(
-    k_fold(
-        trimmed_md,
-        splitter=get_splitter("cross_session", random_state=SEED),
-        target="target",
-    )
-)
+trimmed_splitter = CrossSessionSplitter(random_state=SEED)
+trimmed_folds = list(trimmed_splitter.split(trimmed_y, trimmed_md))
 print(
     f"Trimmed: {len(trimmed_folds)} folds (was {len(folds)}), "
     f"min sessions/subject="
@@ -420,12 +425,12 @@ print(
 # -----
 #
 # - Concept: :doc:`/concepts/leakage_and_evaluation`.
-# - API: :func:`eegdash.splits.get_splitter`,
-#   :func:`eegdash.splits.make_split_manifest`,
-#   :func:`eegdash.splits.assert_no_leakage`,
-#   :func:`eegdash.splits.describe_split`,
-#   :func:`eegdash.splits.majority_baseline`,
-#   :func:`eegdash.splits.apply_split_manifest`.
+# - API: ``get_splitter``,
+#   ``make_split_manifest``,
+#   ``assert_no_leakage``,
+#   ``describe_split``,
+#   ``majority_baseline``,
+#   ``apply_split_manifest``.
 # - Sklearn: :class:`sklearn.linear_model.LogisticRegression`,
 #   :func:`sklearn.metrics.accuracy_score`.
 # - Chevallier, Aristimunha et al. 2024

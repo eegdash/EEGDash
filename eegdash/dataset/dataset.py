@@ -663,63 +663,6 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
             )
         return datasets
 
-    # ------------------------------------------------------------------ #
-    # HuggingFace-style split helpers (require ``eegdash[moabb]``)        #
-    # ------------------------------------------------------------------ #
-
-    def train_test_split(
-        self,
-        *,
-        test_size: float | None = None,
-        group: str = "subject",
-        target: str | None = "target",
-        seed: int | None = 42,
-        **splitter_kwargs: Any,
-    ) -> dict[str, "EEGDashDataset"]:
-        """Group-aware train/test split mirroring HuggingFace ``datasets``.
-
-        Returns ``{"train": <subset>, "test": <subset>}`` where the chosen
-        ``group`` (``"subject"``, ``"session"`` or ``"dataset"``) stays
-        disjoint across the two halves. Requires
-        ``pip install eegdash[moabb]``.
-        """
-        from ..splits import train_test_split as _split
-
-        return _split(
-            self,
-            test_size=test_size,
-            group=group,
-            target=target,
-            seed=seed,
-            **splitter_kwargs,
-        )
-
-    def k_fold(
-        self,
-        *,
-        n_folds: int = 5,
-        group: str = "subject",
-        target: str | None = "target",
-        seed: int | None = 42,
-        **splitter_kwargs: Any,
-    ):
-        """Iterate ``(train, test)`` pairs over group-aware folds.
-
-        Mirrors :class:`sklearn.model_selection.KFold` iteration with the
-        HuggingFace dataset-views shape. Requires
-        ``pip install eegdash[moabb]``.
-        """
-        from ..splits import k_fold as _kf
-
-        return _kf(
-            self,
-            n_folds=n_folds,
-            group=group,
-            target=target,
-            seed=seed,
-            **splitter_kwargs,
-        )
-
 
 class EEGChallengeDataset(EEGDashDataset):
     """A dataset helper for the EEG 2025 Challenge.

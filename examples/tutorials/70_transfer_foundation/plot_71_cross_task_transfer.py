@@ -50,12 +50,10 @@ from braindecode.models import ShallowFBCSPNet
 from torch import nn
 
 from _cross_task_figure import draw_cross_task_figure
-from eegdash.splits import (
-    assert_no_leakage,
-    get_splitter,
-    k_fold,
-    majority_baseline,
-)
+from collections import Counter
+
+from moabb.evaluations.splitters import CrossSubjectSplitter
+from sklearn.model_selection import GroupKFold
 from eegdash.viz import use_eegdash_style
 
 use_eegdash_style()
@@ -173,13 +171,21 @@ def make_model():
 
 def split_subject_aware(meta, X, y, target="label"):
     """Cross-subject 2-fold split + leakage assertion."""
-    splitter = get_splitter("cross_subject", n_folds=2, random_state=SEED)
-    folds = list(k_fold(meta, splitter=splitter, target=target))
-    overlap = assert_no_leakage(folds, meta, by="subject")
+    splitter = CrossSubjectSplitter(cv_class=GroupKFold, n_splits=2, random_state=SEED)
+    n = len(meta)
+    folds: list[tuple[np.ndarray, np.ndarray]] = []
+    for tr_idx, te_idx in splitter.split(meta[target].to_numpy(), meta):
+        tr_mask = np.zeros(n, dtype=bool)
+        tr_mask[tr_idx] = True
+        te_mask = np.zeros(n, dtype=bool)
+        te_mask[te_idx] = True
+        folds.append((tr_mask, te_mask))
+    overlap = max(
+        len(set(meta.loc[tr, "subject"]) & set(meta.loc[te, "subject"]))
+        for tr, te in folds
+    )
     assert overlap == 0, "cross-subject split leaked"
-    train_mask = folds[0][0]
-    test_mask = folds[0][1]
-    return train_mask, test_mask
+    return folds[0]
 
 
 def train_loop(model, X, y, train_mask, n_epochs=5, lr=1e-3, batch=32):
@@ -286,8 +292,8 @@ scratch_acc = eval_acc(scratch_model, X_tgt, y_tgt, tgt_test)
 # chance is the gap that matters (E5.43).
 
 # %%
-chance_info = majority_baseline(y_tgt[tgt_train], y_tgt[tgt_test])
-chance = float(chance_info["chance_level"])
+test_counts = Counter(y_tgt[tgt_test].tolist())
+chance = float(max(test_counts.values()) / max(int(tgt_test.sum()), 1))
 gap = finetune_acc - scratch_acc
 print(
     f"finetune={finetune_acc:.3f} | scratch={scratch_acc:.3f} | "
@@ -488,7 +494,7 @@ print(f"frozen-encoder mode: trainable params={n_trainable}")
 #
 # - Concept: :doc:`/concepts/features_vs_deep_learning`.
 # - API: :class:`eegdash.EEGChallengeDataset`,
-#   :func:`eegdash.splits.assert_no_leakage`.
+#   ``assert_no_leakage``.
 # - Schirrmeister et al. 2017 (doi:10.1002/hbm.23730), Braindecode CNNs.
 # - Banville et al. 2021 (doi:10.1109/TNSRE.2020.3040290), self-
 #   supervised EEG.

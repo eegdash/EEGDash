@@ -52,12 +52,10 @@ from sklearn.neural_network import MLPClassifier
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
-from eegdash.splits import (
-    assert_no_leakage,
-    get_splitter,
-    k_fold,
-    majority_baseline,
-)
+from collections import Counter
+
+from moabb.evaluations.splitters import CrossSubjectSplitter
+from sklearn.model_selection import GroupKFold
 from eegdash.viz import use_eegdash_style
 
 from _compare_pipelines_figure import draw_compare_pipelines_figure
@@ -129,19 +127,30 @@ print(
 # Step 3. Build ONE cross-subject split manifest
 # ------------------------------------------------
 #
-# **Run.** :func:`eegdash.splits.get_splitter` returns a leave-one-
+# **Run.** ``get_splitter`` returns a leave-one-
 # subject-out manifest (``n_folds=N_SUBJECTS``); each fold's test set
-# is exactly one held-out subject. :func:`~eegdash.splits.assert_no_leakage`
+# is exactly one held-out subject. ``assert_no_leakage``
 # emits the JSON contract line a downstream auditor can grep for.
 # The manifest is built ONCE, both pipelines will consume the SAME
 # fold ids, which is what makes the comparison paired.
 
 # %%
-splitter = get_splitter(
-    "cross_subject", n_folds=N_SUBJECTS, n_splits=N_SUBJECTS, random_state=SEED
+splitter = CrossSubjectSplitter(
+    cv_class=GroupKFold, n_splits=N_SUBJECTS, random_state=SEED
 )
-folds = list(k_fold(metadata, splitter=splitter, target="target"))
-overlap = assert_no_leakage(folds, metadata, by="subject")
+y = metadata["target"].to_numpy()
+n_rows = len(metadata)
+folds: list[tuple[np.ndarray, np.ndarray]] = []
+for tr_idx, te_idx in splitter.split(y, metadata):
+    tr_mask = np.zeros(n_rows, dtype=bool)
+    tr_mask[tr_idx] = True
+    te_mask = np.zeros(n_rows, dtype=bool)
+    te_mask[te_idx] = True
+    folds.append((tr_mask, te_mask))
+overlap = max(
+    len(set(metadata.loc[tr, "subject"]) & set(metadata.loc[te, "subject"]))
+    for tr, te in folds
+)
 assert overlap == 0, "cross_subject manifest leaked across subjects."
 n_folds = len(folds)
 print(f"manifest: {type(splitter).__name__} | folds: {n_folds}")
@@ -171,7 +180,9 @@ def run_pipeline(estimator) -> tuple[list[float], list[str], list[float]]:
         y_test = feature_table.loc[test_mask, "target"].to_numpy()
         estimator.fit(X_train, y_train)
         accs.append(float(accuracy_score(y_test, estimator.predict(X_test))))
-        chances.append(float(majority_baseline(y_train, y_test)["chance_level"]))
+        chances.append(
+            float(max(Counter(y_test.tolist()).values()) / max(len(y_test), 1))
+        )
         # Hash the test ids; this string is the fold's identity contract.
         fold_ids.append("|".join(sorted(metadata.loc[test_mask, "sample_id"].tolist())))
     return accs, fold_ids, chances

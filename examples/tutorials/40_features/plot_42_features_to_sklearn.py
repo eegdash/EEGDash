@@ -12,7 +12,7 @@ reaching for a deep net, this tutorial wires the feature matrix into
 :class:`~sklearn.preprocessing.StandardScaler` and
 :class:`~sklearn.linear_model.LogisticRegression`, runs a leave-one-
 subject-out loop with a leakage-safe split from
-:func:`eegdash.splits.get_splitter`, and reports per-fold accuracy
+``get_splitter``, and reports per-fold accuracy
 against ``majority_baseline``. The deliverable is a three-panel
 diagnostic that mirrors the one from plot_12 so the two read together:
 plot_12 trains the same Pipeline on log-band-power features computed
@@ -27,7 +27,7 @@ baseline clears the chance line on a held-out subject?
 # Learning objectives
 # -------------------
 # - Load (or mock) the feature table that plot_40 saves as parquet.
-# - Run a leakage-safe cross-subject split via :func:`eegdash.splits.get_splitter` and check it with :func:`~eegdash.splits.assert_no_leakage`.
+# - Run a leakage-safe cross-subject split via ``get_splitter`` and check it with ``assert_no_leakage``.
 # - Wire the feature matrix into :class:`sklearn.pipeline.Pipeline` with :class:`~sklearn.preprocessing.StandardScaler` and :class:`~sklearn.linear_model.LogisticRegression`, fit per fold, and pool predictions across LOSO folds.
 # - Compare the per-fold accuracy to ``majority_baseline`` chance level on the same split.
 # - Read the three-panel diagnostic figure: PCA + per-fold bars + pooled-LOSO confusion matrix.
@@ -61,7 +61,7 @@ baseline clears the chance line on a held-out subject?
 # The cross-subject loop is wired before any model selection because
 # EEG amplitude varies more across subjects than across conditions; a
 # within-subject split double-counts that variance and inflates
-# accuracy. :func:`~eegdash.splits.majority_baseline` is computed on
+# accuracy. ``majority_baseline`` is computed on
 # the held-out test set, so the chance number reported tracks the
 # class balance of the test fold.
 
@@ -84,12 +84,10 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
 import eegdash
-from eegdash.splits import (
-    assert_no_leakage,
-    get_splitter,
-    k_fold,
-    majority_baseline,
-)
+from collections import Counter
+
+from moabb.evaluations.splitters import CrossSubjectSplitter
+from sklearn.model_selection import GroupKFold
 from eegdash.viz import use_eegdash_style
 
 use_eegdash_style()
@@ -188,12 +186,12 @@ column_summary.groupby("family").size().to_frame("n_columns")
 # %% [markdown]
 # Step 3: Leakage-safe cross-subject split
 # ----------------------------------------
-# **Run.** :func:`eegdash.splits.get_splitter` returns a MOABB
+# **Run.** ``get_splitter`` returns a MOABB
 # ``CrossSubjectSplitter`` (or a sklearn ``GroupKFold`` keyed on
 # ``subject`` when MOABB is not installed).
-# :func:`~eegdash.splits.assert_no_leakage` prints the contract line
+# ``assert_no_leakage`` prints the contract line
 # E5.42 parses; the fold structure is materialised once via
-# :func:`~eegdash.splits.make_split_manifest` so every fold is
+# ``make_split_manifest`` so every fold is
 # reproducible from the same seed.
 
 # %%
@@ -202,16 +200,27 @@ metadata["session"] = "ses-01"
 metadata["run"] = "run-01"
 metadata["dataset"] = "ds-plot42-mock"
 metadata["sample_id"] = [f"row_{i:04d}" for i in range(len(metadata))]
-splitter = get_splitter(
-    "cross_subject",
-    n_folds=N_SUBJECTS,
-    n_splits=N_SUBJECTS,
-    random_state=SEED,
+splitter = CrossSubjectSplitter(
+    cv_class=GroupKFold, n_splits=N_SUBJECTS, random_state=SEED
 )
-folds = list(k_fold(metadata, splitter=splitter, target="target"))
-overlap = assert_no_leakage(folds, metadata, by="subject")
-assert overlap == 0, "cross_subject manifest leaked!"
-n_folds = len(folds)
+y = metadata["target"].to_numpy()
+fold_idx_pairs = list(splitter.split(y, metadata))
+n_folds = len(fold_idx_pairs)
+folds = [
+    (
+        np.zeros(len(metadata), dtype=bool),
+        np.zeros(len(metadata), dtype=bool),
+    )
+    for _ in fold_idx_pairs
+]
+for (train_idx, test_idx), (tr_mask, te_mask) in zip(fold_idx_pairs, folds):
+    tr_mask[train_idx] = True
+    te_mask[test_idx] = True
+max_overlap = max(
+    len(set(metadata.iloc[tr]["subject"]) & set(metadata.iloc[te]["subject"]))
+    for tr, te in fold_idx_pairs
+)
+assert max_overlap == 0, "cross_subject split leaked!"
 print(f"manifest: n_folds={n_folds} | splitter={type(splitter).__name__}")
 
 # %% [markdown]
@@ -247,7 +256,7 @@ print(pipe)
 # ``n_folds=4``, every fold trains on three subjects and tests on the
 # fourth. The held-out subject id is the same as the group id of the
 # test windows.
-# **Run.** :func:`~eegdash.splits.apply_split_manifest` materializes
+# **Run.** ``apply_split_manifest`` materializes
 # each fold as a boolean mask aligned with the feature DataFrame; the
 # Pipeline is rebuilt from scratch on every fold so the fitted
 # ``StandardScaler`` only ever sees the train slice.
@@ -277,7 +286,9 @@ for fold_idx in range(n_folds):
     y_pred = fold_pipe.predict(X_test)
 
     fold_accuracies.append(float(accuracy_score(y_test, y_pred)))
-    fold_chance.append(float(majority_baseline(y_train, y_test)["chance_level"]))
+    fold_chance.append(
+        float(max(Counter(y_test.tolist()).values()) / max(len(y_test), 1))
+    )
     pooled_y_true.append(np.asarray(y_test))
     pooled_y_pred.append(np.asarray(y_pred))
 
@@ -507,7 +518,7 @@ print(
 # -------
 # We loaded a feature table with the plot_40 schema, ran a 4-fold
 # leave-one-subject-out split with
-# :func:`~eegdash.splits.get_splitter`, fit a
+# ``get_splitter``, fit a
 # :class:`~sklearn.pipeline.Pipeline` of
 # :class:`~sklearn.preprocessing.StandardScaler` and
 # :class:`~sklearn.linear_model.LogisticRegression` on each train slice,

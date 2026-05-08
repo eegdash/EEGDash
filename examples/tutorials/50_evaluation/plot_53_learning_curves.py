@@ -33,7 +33,7 @@ does the model first reach 90% of its plateau accuracy?
 # - Read the curve to decide whether more recording time will move the needle, or whether the bottleneck lives in features or model.
 # - Identify the saturation point: the smallest ``n_train`` at which val balanced accuracy first reaches 90% of its plateau.
 # - Interpret the bias-variance gap and name the regime: shrinking, stable, or widening.
-# - Verify subject-disjointness with :func:`eegdash.splits.assert_no_leakage` at every fold the curve touched.
+# - Verify subject-disjointness with ``assert_no_leakage`` at every fold the curve touched.
 #
 # Requirements
 # ------------
@@ -55,12 +55,9 @@ import pandas as pd
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import GroupShuffleSplit, learning_curve
 
-from eegdash.splits import (
-    assert_no_leakage,
-    describe_split,
-    get_splitter,
-    k_fold,
-)
+
+from moabb.evaluations.splitters import LearningCurveSplitter
+
 from eegdash.viz import use_eegdash_style
 
 from _learning_curves_figure import draw_learning_curves_figure  # noqa: E402
@@ -225,18 +222,22 @@ print(
 # **Run.** ``learning_curve`` does not return its split indices, so we
 # replay the same :class:`~sklearn.model_selection.GroupShuffleSplit` and
 # check the train-vs-val pools with
-# :func:`eegdash.splits.assert_no_leakage`. One missed subject in both
+# ``assert_no_leakage``. One missed subject in both
 # pools and the curve is a fiction (E5.43, E5.46).
 
 # %%
 audit_cv = GroupShuffleSplit(n_splits=N_PERMS, test_size=TEST_SIZE, random_state=SEED)
-audit_folds = []
-for train_idx, val_idx in audit_cv.split(X, y, groups=groups):
-    audit_folds.append({"train": train_idx.tolist(), "test": val_idx.tolist()})
-assert_no_leakage({"folds": audit_folds}, metadata, by="subject")
+audit_folds: list[tuple[np.ndarray, np.ndarray]] = list(
+    audit_cv.split(X, y, groups=groups)
+)
+audit_overlap = max(
+    len(set(metadata.iloc[tr]["subject"]) & set(metadata.iloc[te]["subject"]))
+    for tr, te in audit_folds
+)
+assert audit_overlap == 0, "audit folds leaked subjects"
 audit_subjects = {
-    "train": int(metadata.iloc[audit_folds[0]["train"]]["subject"].nunique()),
-    "val": int(metadata.iloc[audit_folds[0]["test"]]["subject"].nunique()),
+    "train": int(metadata.iloc[audit_folds[0][0]]["subject"].nunique()),
+    "val": int(metadata.iloc[audit_folds[0][1]]["subject"].nunique()),
 }
 print(
     f"Leakage audit: PASS. {N_PERMS} folds, "
@@ -300,26 +301,26 @@ plt.show()
 # ----------------------------------------------------------
 #
 # **Investigate.** The same protocol is available through
-# :func:`eegdash.splits.get_splitter` with ``name="learning_curve"``,
+# ``get_splitter`` with ``name="learning_curve"``,
 # which builds the manifest sklearn writes by hand here. We rebuild the
 # manifest at the FRACTIONS we just swept and confirm the audit head
 # count matches.
 
 # %%
-splitter = get_splitter(
-    "learning_curve",
+splitter = LearningCurveSplitter(
     data_size={"policy": "ratio", "value": train_sizes_frac.tolist()},
     n_perms=N_PERMS,
     test_size=TEST_SIZE,
     random_state=SEED,
 )
-folds = list(k_fold(metadata, splitter=splitter, target="target"))
-summary = describe_split(folds, metadata, target="target", print_report=False)
+groups_arr = metadata["subject"].to_numpy()
+folds: list[tuple[np.ndarray, np.ndarray]] = list(
+    splitter.split(X, y, groups=groups_arr)
+)
 print(
-    f"eegdash manifest: {type(splitter).__name__.rsplit('.', 1)[-1]} | "
-    f"n_folds={summary['n_folds']} "
-    f"(expected {len(train_sizes_frac) * N_PERMS}) | "
-    f"sklearn-only mode"
+    f"learning-curve splitter: {type(splitter).__name__.rsplit('.', 1)[-1]} | "
+    f"n_folds={len(folds)} "
+    f"(expected {len(train_sizes_frac) * N_PERMS}) | sklearn-only mode"
 )
 
 # %% [markdown]
@@ -371,18 +372,23 @@ try:
         # Simulate the leak: pretend the user forgot ``groups`` by
         # mixing windows from train subjects into the val set.
         mixed_val = np.concatenate([val_idx, train_idx[:5]])
-        leak_folds = [{"train": train_idx.tolist(), "test": mixed_val.tolist()}]
-        assert_no_leakage({"folds": leak_folds}, metadata, by="subject")
-except (AssertionError, ValueError) as exc:
+        leak_overlap = len(
+            set(metadata.iloc[train_idx]["subject"])
+            & set(metadata.iloc[mixed_val]["subject"])
+        )
+        if leak_overlap:
+            raise ValueError(f"leak detected: {leak_overlap} shared subjects")
+except ValueError as exc:
     print(f"Caught {type(exc).__name__}: {exc}")
     # Recovery: rebuild the splitter with ``groups=`` honoured and
     # re-run the audit. That is the canonical fix.
     safe_cv = GroupShuffleSplit(n_splits=2, test_size=TEST_SIZE, random_state=SEED)
-    safe_folds = [
-        {"train": tr.tolist(), "test": va.tolist()}
-        for tr, va in safe_cv.split(X, y, groups=groups)
-    ]
-    assert_no_leakage({"folds": safe_folds}, metadata, by="subject")
+    safe_folds = list(safe_cv.split(X, y, groups=groups))
+    safe_overlap = max(
+        len(set(metadata.iloc[tr]["subject"]) & set(metadata.iloc[te]["subject"]))
+        for tr, te in safe_folds
+    )
+    assert safe_overlap == 0, "recovery folds still leaked"
     print(
         f"Recovery: re-run with groups= honoured. "
         f"Leakage audit on {len(safe_folds)} folds: PASS."

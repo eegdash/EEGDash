@@ -86,9 +86,10 @@ from sklearn.model_selection import GroupKFold
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
+from collections import Counter
+
 import eegdash
 from eegdash import EEGDashDataset
-from eegdash.splits import majority_baseline
 from eegdash.viz import use_eegdash_style
 
 use_eegdash_style()
@@ -364,7 +365,7 @@ for fold_idx, (train_idx, test_idx) in enumerate(splitter.split(F, y, groups=gro
     acc = float(accuracy_score(y[test_idx], y_pred))
     fold_accuracies.append(acc)
     fold_chance.append(
-        float(majority_baseline(y[train_idx], y[test_idx])["chance_level"])
+        float(max(Counter(y[test_idx].tolist()).values()) / max(len(y[test_idx]), 1))
     )
     pooled_y_true.append(np.asarray(y[test_idx]))
     pooled_y_pred.append(np.asarray(y_pred))

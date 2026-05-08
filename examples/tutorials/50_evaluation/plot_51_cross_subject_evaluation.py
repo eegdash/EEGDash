@@ -52,17 +52,13 @@ import warnings
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+from collections import Counter
+
+from moabb.evaluations.splitters import CrossSubjectSplitter
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import balanced_accuracy_score
-from sklearn.model_selection import LeaveOneGroupOut
+from sklearn.model_selection import GroupKFold, LeaveOneGroupOut
 
-from eegdash.splits import (
-    assert_no_leakage,
-    describe_split,
-    get_splitter,
-    k_fold,
-    majority_baseline,
-)
 from eegdash.viz import use_eegdash_style
 
 use_eegdash_style()
@@ -148,7 +144,7 @@ print(
 #
 # **Run.** :class:`~sklearn.model_selection.LeaveOneGroupOut` with
 # ``groups=metadata["subject"]`` is the canonical LOSO splitter. The
-# :func:`eegdash.splits.get_splitter` registry returns the same object
+# ``get_splitter`` registry returns the same object
 # under the ``"cross_subject"`` engine when you ask for one fold per
 # subject. We use sklearn directly here so the loop reads as plain
 # scikit-learn; the manifest path mirrors the one ``plot_11``
@@ -158,15 +154,22 @@ print(
 n_loso_folds = LeaveOneGroupOut().get_n_splits(X, y, groups)
 print(f"n_subjects={N_SUBJECTS} | n_loso_folds={n_loso_folds}")
 
-splitter = get_splitter(
-    "cross_subject",
-    n_folds=N_SUBJECTS,
-    n_splits=N_SUBJECTS,
-    random_state=SEED,
+splitter = CrossSubjectSplitter(
+    cv_class=GroupKFold, n_splits=N_SUBJECTS, random_state=SEED
 )
-folds = list(k_fold(metadata, splitter=splitter, target="target"))
-overlap = assert_no_leakage(folds, metadata, by="subject")
-assert overlap == 0, "cross-subject manifest leaked subjects"
+n_rows = len(metadata)
+folds: list[tuple[np.ndarray, np.ndarray]] = []
+for tr_idx, te_idx in splitter.split(y, metadata):
+    tr_mask = np.zeros(n_rows, dtype=bool)
+    tr_mask[tr_idx] = True
+    te_mask = np.zeros(n_rows, dtype=bool)
+    te_mask[te_idx] = True
+    folds.append((tr_mask, te_mask))
+overlap = max(
+    len(set(metadata.loc[tr, "subject"]) & set(metadata.loc[te, "subject"]))
+    for tr, te in folds
+)
+assert overlap == 0, "cross-subject split leaked subjects"
 print(
     f"splitter={type(splitter).__name__} | folds={len(folds)} | "
     f"max subject overlap={overlap}"
@@ -198,7 +201,10 @@ def loso_loop(X, y, metadata, folds):
         y_true = y[test_mask]
         fold_acc.append(float(balanced_accuracy_score(y_true, y_pred)))
         fold_chance.append(
-            float(majority_baseline(y[train_mask], y[test_mask])["chance_level"])
+            float(
+                max(Counter(y[test_mask].tolist()).values())
+                / max(int(test_mask.sum()), 1)
+            )
         )
         held_out = sorted(metadata.loc[test_mask, "subject"].unique())
         fold_subject.append(held_out[0] if held_out else f"fold-{k}")
@@ -232,11 +238,9 @@ print(
 #
 # **Run (#3).** The cross-subject contract is that every held-out
 # subject appears in exactly one test fold; the union across folds
-# tiles the cohort. :func:`eegdash.splits.describe_split` returns the
-# audit; the per-fold lookup below confirms the contract holds.
+# tiles the cohort. The per-fold lookup below confirms the contract.
 
 # %%
-describe_split(folds, metadata, target="target", print_report=False)
 test_subjects_by_fold = []
 for _tr_mask, te_mask in folds:
     subs = sorted(metadata.loc[te_mask, "subject"].unique())
@@ -331,20 +335,12 @@ print(
 
 # %%
 try:
-    bad = get_splitter(
-        "cross_subject",
-        n_folds=20,
-        n_splits=20,
-        random_state=SEED,
-    )
-    list(k_fold(metadata, splitter=bad, target="target"))
+    bad = CrossSubjectSplitter(cv_class=GroupKFold, n_splits=20, random_state=SEED)
+    list(bad.split(y, metadata))
 except ValueError as exc:
     print(f"Caught ValueError: {str(exc)[:90]}")
-    fixed = get_splitter(
-        "cross_subject",
-        n_folds=N_SUBJECTS,
-        n_splits=N_SUBJECTS,
-        random_state=SEED,
+    fixed = CrossSubjectSplitter(
+        cv_class=GroupKFold, n_splits=N_SUBJECTS, random_state=SEED
     )
     print(
         f"Recovery: clamp n_folds to n_subjects={N_SUBJECTS} -> {type(fixed).__name__}"
@@ -361,14 +357,21 @@ except ValueError as exc:
 # estimate this cohort can give.
 
 # %%
-splitter5 = get_splitter(
-    "cross_subject",
-    n_folds=5,
-    n_splits=5,
-    random_state=SEED,
-)
-folds5 = list(k_fold(metadata, splitter=splitter5, target="target"))
-assert_no_leakage(folds5, metadata, by="subject")
+splitter5 = CrossSubjectSplitter(cv_class=GroupKFold, n_splits=5, random_state=SEED)
+folds5: list[tuple[np.ndarray, np.ndarray]] = []
+for tr_idx, te_idx in splitter5.split(y, metadata):
+    tr_mask = np.zeros(n_rows, dtype=bool)
+    tr_mask[tr_idx] = True
+    te_mask = np.zeros(n_rows, dtype=bool)
+    te_mask[te_idx] = True
+    folds5.append((tr_mask, te_mask))
+assert (
+    max(
+        len(set(metadata.loc[tr, "subject"]) & set(metadata.loc[te, "subject"]))
+        for tr, te in folds5
+    )
+    == 0
+), "5-fold split leaked"
 acc5, _, _, _, _ = loso_loop(X, y, metadata, folds5)
 print(
     f"5-fold cross-subject: {acc5.mean():.3f} +/- {acc5.std(ddof=0):.3f} | "
@@ -390,14 +393,24 @@ X_imb, meta_imb = make_cohort(
     sizes_imb, prefix="imb", rng=np.random.default_rng(SEED + 1)
 )
 y_imb = meta_imb["target"].to_numpy()
-splitter_imb = get_splitter(
-    "cross_subject",
-    n_folds=len(sizes_imb),
-    n_splits=len(sizes_imb),
-    random_state=SEED,
+splitter_imb = CrossSubjectSplitter(
+    cv_class=GroupKFold, n_splits=len(sizes_imb), random_state=SEED
 )
-folds_imb = list(k_fold(meta_imb, splitter=splitter_imb, target="target"))
-assert_no_leakage(folds_imb, meta_imb, by="subject")
+n_imb = len(meta_imb)
+folds_imb: list[tuple[np.ndarray, np.ndarray]] = []
+for tr_idx, te_idx in splitter_imb.split(y_imb, meta_imb):
+    tr_mask = np.zeros(n_imb, dtype=bool)
+    tr_mask[tr_idx] = True
+    te_mask = np.zeros(n_imb, dtype=bool)
+    te_mask[te_idx] = True
+    folds_imb.append((tr_mask, te_mask))
+assert (
+    max(
+        len(set(meta_imb.loc[tr, "subject"]) & set(meta_imb.loc[te, "subject"]))
+        for tr, te in folds_imb
+    )
+    == 0
+), "imbalanced split leaked"
 acc_imb, _, _, _, _ = loso_loop(X_imb, y_imb, meta_imb, folds_imb)
 print(
     f"imbalanced LOSO: {acc_imb.mean():.3f} +/- {acc_imb.std(ddof=0):.3f} | "
@@ -455,11 +468,11 @@ plt.show()
 # -------
 #
 # We built per-subject metadata, asked
-# :func:`eegdash.splits.get_splitter` for an N-fold cross-subject
+# ``get_splitter`` for an N-fold cross-subject
 # manifest, asserted zero subject leakage, ran a LOSO loop with
 # :class:`~sklearn.linear_model.LogisticRegression`, and reported
 # ``mean +/- std`` of :func:`~sklearn.metrics.balanced_accuracy_score`
-# against a :func:`~eegdash.splits.majority_baseline` chance level.
+# against a ``majority_baseline`` chance level.
 # Disjoint test subjects across folds tile the cohort. The transfer
 # matrix is the diagnostic a reviewer reaches for when the headline
 # mean looks fine but the std is suspicious.

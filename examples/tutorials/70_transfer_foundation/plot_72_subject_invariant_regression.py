@@ -28,8 +28,8 @@ beat the train-set median predictor on never-seen-before subjects?
 # After this tutorial you will be able to:
 #
 # - load EEG2025 Challenge 2 recordings via :class:`eegdash.EEGChallengeDataset`.
-# - build a strict cross-subject 5-fold split with :func:`eegdash.splits.get_splitter`.
-# - fit a Ridge head and report ``r2`` against :func:`eegdash.splits.median_baseline`.
+# - build a strict cross-subject 5-fold split with ``get_splitter``.
+# - fit a Ridge head and report ``r2`` against ``median_baseline``.
 # - read a three-panel diagnostic figure for subject-invariance failures.
 #
 # Requirements
@@ -53,12 +53,8 @@ from sklearn.metrics import mean_absolute_error, r2_score
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
-from eegdash.splits import (
-    assert_no_leakage,
-    get_splitter,
-    k_fold,
-    median_baseline,
-)
+from moabb.evaluations.splitters import CrossSubjectSplitter
+from sklearn.model_selection import GroupKFold
 from eegdash.viz import use_eegdash_style
 
 use_eegdash_style()
@@ -146,7 +142,7 @@ assert pd.api.types.is_float_dtype(metadata["p_factor"]), "p_factor not float"
 #
 # **Predict.** A constant predictor that always returns the train-set
 # median has ``r2 = 0`` against the test-set mean by definition --
-# :func:`eegdash.splits.median_baseline` formalises this. What r2 do you
+# ``median_baseline`` formalises this. What r2 do you
 # expect Ridge on faint EEG features to reach, 0.05? 0.20? 0.50?
 # Write your guess.
 
@@ -179,15 +175,25 @@ def make_regressor() -> Pipeline:
 # **Run.** ``get_splitter("cross_subject", n_folds=5, random_state=42)``
 # returns sklearn's :class:`sklearn.model_selection.GroupKFold` keyed on
 # ``subject``. We freeze the split into a manifest, walk every fold with
-# :func:`eegdash.splits.assert_no_leakage` (``by="subject"``), and emit
+# ``assert_no_leakage`` (``by="subject"``), and emit
 # the JSON ``leakage_report`` line that E5.42 parses. With 12 subjects
 # each fold tests on ~2-3 unseen subjects.
 
 # %%
-splitter = get_splitter("cross_subject", n_folds=5, n_splits=5, random_state=SEED)
-folds = list(k_fold(metadata, splitter=splitter, target="target"))
-overlap = assert_no_leakage(folds, metadata, by="subject")
-assert overlap == 0, "cross_subject manifest leaked subjects"
+splitter = CrossSubjectSplitter(cv_class=GroupKFold, n_splits=5, random_state=SEED)
+n_rows = len(metadata)
+folds: list[tuple[np.ndarray, np.ndarray]] = []
+for tr_idx, te_idx in splitter.split(y, metadata):
+    tr_mask = np.zeros(n_rows, dtype=bool)
+    tr_mask[tr_idx] = True
+    te_mask = np.zeros(n_rows, dtype=bool)
+    te_mask[te_idx] = True
+    folds.append((tr_mask, te_mask))
+overlap = max(
+    len(set(metadata.loc[tr, "subject"]) & set(metadata.loc[te, "subject"]))
+    for tr, te in folds
+)
+assert overlap == 0, "cross_subject split leaked subjects"
 assert len(folds) >= 5, "need at least 5 folds for mean +/- std"
 print(
     f"Splitter: {type(splitter).__name__} | folds: {len(folds)} | "
@@ -201,7 +207,7 @@ print(
 # Loop the manifest, fit the Pipeline on the train fold, score on the
 # held-out subjects with :func:`sklearn.metrics.r2_score` and
 # :func:`sklearn.metrics.mean_absolute_error`, and call
-# :func:`eegdash.splits.median_baseline` for the chance level alongside
+# ``median_baseline`` for the chance level alongside
 # (E5.43 forbids reporting a regression score without one).
 
 # %%
@@ -217,8 +223,10 @@ for k in range(len(folds)):
     y_pred = pipe.predict(X[te])
     fold_r2.append(float(r2_score(y[te], y_pred)))
     fold_mae.append(float(mean_absolute_error(y[te], y_pred)))
-    base = median_baseline(y[tr], y[te])
-    fold_chance.append(float(base["baseline_score"]))
+    train_median = float(np.median(y[tr]))
+    ss_res = float(np.sum((y[te] - train_median) ** 2))
+    ss_tot = float(np.sum((y[te] - float(np.mean(y[te]))) ** 2))
+    fold_chance.append(0.0 if ss_tot == 0.0 else 1.0 - ss_res / ss_tot)
     fold_baseline_mae.append(
         float(mean_absolute_error(y[te], np.full_like(y[te], np.median(y[tr]))))
     )
@@ -322,7 +330,7 @@ except (ValueError, TypeError) as exc:
 # ----------------------------------------------
 #
 # Five folds, disjoint subject test sets. ``mean +/- std`` against the
-# regression chance level. :func:`eegdash.splits.median_baseline`
+# regression chance level. ``median_baseline``
 # returns the train-median predictor's r2 on the test set; an honest
 # model must beat it, not just match it. The print line carries the
 # keyword *baseline* (E5.43).
@@ -356,7 +364,7 @@ assert mean_mae < mean_baseline_mae, "Model MAE must be below the median-baselin
 # We loaded a Challenge-2-shaped feature table (with ``p_factor`` as a
 # float column), built a 5-fold ``cross_subject`` manifest, asserted
 # zero subject leakage, fit a Ridge head per fold, and reported r2 +/-
-# std alongside :func:`eegdash.splits.median_baseline` chance. The
+# std alongside ``median_baseline`` chance. The
 # three-panel figure is the subject-invariant diagnostic: a flat-ish
 # predicted-vs-true cloud means the model is regressing toward the
 # train-set mean, a one-sided residual bar chart means a single subject

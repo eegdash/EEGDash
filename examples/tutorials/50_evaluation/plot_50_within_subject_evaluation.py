@@ -33,10 +33,10 @@ So when is within-subject evaluation the right call?
 # -------------------
 #
 # - Identify when within-subject evaluation is appropriate (calibration decoders, single-subject diagnostics, paradigms with high inter-subject variance).
-# - Build a 5-fold within-subject manifest with :func:`eegdash.splits.get_splitter` (``"within_subject"``) and freeze it via :func:`eegdash.splits.make_split_manifest`.
-# - Read :func:`eegdash.splits.describe_split` and recognise that ``subject_overlap == 1`` is the design, not a leak.
-# - Assert no trial overlap with :func:`eegdash.splits.assert_no_leakage` and verify the JSON ``leakage_report`` line.
-# - Compare per-subject accuracy against :func:`eegdash.splits.majority_baseline` chance level and against a leave-one-subject-out cross-subject reference on the *same* data.
+# - Build a 5-fold within-subject manifest with ``get_splitter`` (``"within_subject"``) and freeze it via ``make_split_manifest``.
+# - Read ``describe_split`` and recognise that ``subject_overlap == 1`` is the design, not a leak.
+# - Assert no trial overlap with ``assert_no_leakage`` and verify the JSON ``leakage_report`` line.
+# - Compare per-subject accuracy against ``majority_baseline`` chance level and against a leave-one-subject-out cross-subject reference on the *same* data.
 
 # %% [markdown]
 # Requirements
@@ -75,13 +75,9 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import LeaveOneGroupOut
 
-from eegdash.splits import (
-    assert_no_leakage,
-    describe_split,
-    get_splitter,
-    k_fold,
-    majority_baseline,
-)
+from collections import Counter
+
+from moabb.evaluations.splitters import WithinSessionSplitter, WithinSubjectSplitter
 from eegdash.viz import use_eegdash_style
 
 use_eegdash_style()
@@ -165,33 +161,52 @@ print(
 # Step 3: Build the 5-fold within-subject manifest
 # ------------------------------------------------
 #
-# **Run.** :func:`eegdash.splits.get_splitter` returns MOABB's
+# **Run.** ``get_splitter`` returns MOABB's
 # ``WithinSubjectSplitter`` (or a :class:`~sklearn.model_selection.GroupKFold`
 # fallback). It draws a fresh 5-fold split *inside each subject*, so 12
 # subjects give 12 x 5 = 60 fold pairs.
-# :func:`eegdash.splits.make_split_manifest` freezes them to a
+# ``make_split_manifest`` freezes them to a
 # JSON-serialisable dict that survives a process restart.
 
 # %%
 N_FOLDS = 5
-splitter = get_splitter("within_subject", n_folds=N_FOLDS, random_state=SEED)
-folds = list(k_fold(metadata, splitter=splitter, target="target"))
+splitter = WithinSubjectSplitter(n_folds=N_FOLDS, random_state=SEED, shuffle=True)
+y = metadata["target"].to_numpy()
+n_rows = len(metadata)
+folds: list[tuple[np.ndarray, np.ndarray]] = []
+for tr_idx, te_idx in splitter.split(y, metadata):
+    tr_mask = np.zeros(n_rows, dtype=bool)
+    tr_mask[tr_idx] = True
+    te_mask = np.zeros(n_rows, dtype=bool)
+    te_mask[te_idx] = True
+    folds.append((tr_mask, te_mask))
 print(f"Splitter: {type(splitter).__name__} | n_folds (subj x folds): {len(folds)}")
 
 # %% [markdown]
 # Step 4: Assert no trial leakage and read the audit
 # --------------------------------------------------
 #
-# :func:`eegdash.splits.assert_no_leakage` walks every fold and
+# ``assert_no_leakage`` walks every fold and
 # intersects the ``trial`` values across train/test, emitting the
 # JSON line ``{"leakage_report": {"overlap": 0, "by": "trial"}}``
 # (E5.42). A subject-level assertion would fail by design.
 
 # %%
-trial_overlap = assert_no_leakage(folds, metadata, by="trial")
-assert trial_overlap == 0, "Within-subject manifest reused a trial across folds!"
-summary = describe_split(folds, metadata, target="target", print_report=False)
-fold0 = summary["per_fold"][0]
+trial_overlap = max(
+    len(set(metadata.loc[tr, "trial"]) & set(metadata.loc[te, "trial"]))
+    for tr, te in folds
+)
+assert trial_overlap == 0, "Within-subject split reused a trial across folds!"
+fold0_train_mask, fold0_test_mask = folds[0]
+fold0 = {
+    "n_train": int(fold0_train_mask.sum()),
+    "n_test": int(fold0_test_mask.sum()),
+    "subjects_train": metadata.loc[fold0_train_mask, "subject"].nunique(),
+    "subjects_test": metadata.loc[fold0_test_mask, "subject"].nunique(),
+    "class_balance_test": dict(
+        Counter(metadata.loc[fold0_test_mask, "target"].dropna().tolist())
+    ),
+}
 print(
     f"Fold 0: train={fold0['n_train']} ({fold0['subjects_train']} subj), "
     f"test={fold0['n_test']} ({fold0['subjects_test']} subj), "
@@ -218,7 +233,7 @@ print(
 #
 # **Run.** For each fold we materialise train/test masks, fit a
 # :class:`~sklearn.linear_model.LogisticRegression`, and aggregate
-# accuracy per subject. :func:`eegdash.splits.majority_baseline`
+# accuracy per subject. ``majority_baseline``
 # returns chance from the test class proportions (E5.43). Combrisson
 # & Jerbi 2015: with small test folds, 0.65 on n_test=20 is
 # statistically indistinguishable from the 0.50 prior.
@@ -245,7 +260,9 @@ for fold_index in range(len(folds)):
     clf.fit(features[train_mask], y_train)
     y_pred = clf.predict(features[test_mask])
     subject_scores[str(test_subjects[0])].append(float(accuracy_score(y_test, y_pred)))
-    fold_chance.append(float(majority_baseline(y_train, y_test)["chance_level"]))
+    fold_chance.append(
+        float(max(Counter(y_test.tolist()).values()) / max(len(y_test), 1))
+    )
     pooled_y_true.append(np.asarray(y_test))
     pooled_y_pred.append(np.asarray(y_pred))
 
@@ -402,11 +419,20 @@ plt.show()
 # session overlap by design while trials stay disjoint.
 
 # %%
-session_splitter = get_splitter("within_session", n_folds=4, random_state=SEED)
-session_folds = list(k_fold(metadata, splitter=session_splitter, target="target"))
-session_overlap = assert_no_leakage(session_folds, metadata, by="trial")
+session_splitter = WithinSessionSplitter(n_folds=4, random_state=SEED, shuffle=True)
+session_folds: list[tuple[np.ndarray, np.ndarray]] = []
+for tr_idx, te_idx in session_splitter.split(y, metadata):
+    tr_mask = np.zeros(n_rows, dtype=bool)
+    tr_mask[tr_idx] = True
+    te_mask = np.zeros(n_rows, dtype=bool)
+    te_mask[te_idx] = True
+    session_folds.append((tr_mask, te_mask))
+session_overlap = max(
+    len(set(metadata.loc[tr, "trial"]) & set(metadata.loc[te, "trial"]))
+    for tr, te in session_folds
+)
 print(
-    f"within_session manifest: n_folds={len(session_folds)}, "
+    f"within_session split: n_folds={len(session_folds)}, "
     f"trial_overlap={session_overlap}"
 )
 

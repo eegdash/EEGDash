@@ -48,6 +48,8 @@ import os
 import warnings
 from pathlib import Path
 
+from collections import Counter
+
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
@@ -55,7 +57,6 @@ from braindecode.models import ShallowFBCSPNet
 from torch import nn
 
 from _p300_transfer_figure import draw_p300_transfer_figure
-from eegdash.splits import majority_baseline
 from eegdash.viz import use_eegdash_style
 
 use_eegdash_style()
@@ -390,7 +391,8 @@ encoder_oracle = train_encoder(
 acc_naive = eval_acc(encoder_naive, X_tgt, y_tgt, tgt_test)
 acc_mmd = eval_acc(encoder_mmd, X_tgt, y_tgt, tgt_test)
 acc_oracle = eval_acc(encoder_oracle, X_tgt, y_tgt, tgt_test)
-chance = float(majority_baseline(y_tgt[tgt_train], y_tgt[tgt_test])["chance_level"])
+test_counts = Counter(y_tgt[tgt_test].tolist())
+chance = float(max(test_counts.values()) / max(len(y_tgt[tgt_test]), 1))
 print(
     f"naive={acc_naive:.3f} | mmd={acc_mmd:.3f} | oracle={acc_oracle:.3f} | "
     f"chance={chance:.3f} | metric=accuracy"
@@ -585,7 +587,6 @@ except RuntimeError as exc:
 # wipe out the underlying physiology. Concept page:
 # :doc:`/concepts/features_vs_deep_learning`. API anchors:
 # :class:`eegdash.EEGDashDataset`,
-# :func:`eegdash.splits.majority_baseline`,
 # :func:`eegdash.viz.style_figure`.
 
 # %% [markdown]

@@ -30,9 +30,9 @@ column of the metadata table do you actually have to hold out?
 # -------------------
 #
 # - Identify subject leakage as the failure mode of naive random splits on EEG.
-# - Build a leakage-safe 5-fold split with :func:`eegdash.splits.get_splitter` (``"cross_subject"``).
-# - Run :func:`eegdash.splits.assert_no_leakage` and read the JSON ``leakage_report`` line it emits.
-# - Save a JSON split manifest with :func:`eegdash.splits.make_split_manifest` and replay one fold via :func:`eegdash.splits.apply_split_manifest`.
+# - Build a leakage-safe 5-fold split with ``get_splitter`` (``"cross_subject"``).
+# - Run ``assert_no_leakage`` and read the JSON ``leakage_report`` line it emits.
+# - Save a JSON split manifest with ``make_split_manifest`` and replay one fold via ``apply_split_manifest``.
 # - Show the contrast between a naive shuffle and a cross-subject GroupKFold with the side-by-side figure at the end.
 #
 # Requirements
@@ -47,6 +47,7 @@ column of the metadata table do you actually have to hold out?
 # Setup. ``np.random.seed`` keeps the naive shuffle and the manifest
 # fold order reproducible (E3.21).
 import json
+import sys
 import warnings
 from pathlib import Path
 
@@ -55,12 +56,10 @@ import numpy as np
 import pandas as pd
 
 import eegdash
-from eegdash.splits import (
-    assert_no_leakage,
-    describe_split,
-    get_splitter,
-    k_fold,
-)
+from collections import Counter
+
+from moabb.evaluations.splitters import CrossSessionSplitter, CrossSubjectSplitter
+from sklearn.model_selection import GroupKFold
 from eegdash.viz import use_eegdash_style
 
 use_eegdash_style()
@@ -193,11 +192,11 @@ pd.Series(
 # Step 3. Build a leakage-safe 5-fold split manifest
 # --------------------------------------------------
 #
-# **Run.** :func:`~eegdash.splits.get_splitter` with the canonical name
+# **Run.** ``get_splitter`` with the canonical name
 # ``"cross_subject"`` returns a MOABB ``CrossSubjectSplitter`` (or a
 # :class:`sklearn.model_selection.GroupKFold` keyed on ``subject`` when
 # MOABB is unavailable). Either way, no fold can put the same subject
-# on both sides. :func:`~eegdash.splits.make_split_manifest` freezes
+# on both sides. ``make_split_manifest`` freezes
 # the output into a JSON-serialisable dict with provenance: splitter
 # class plus kwargs, library versions, target column, and a metadata
 # hash so a teammate replaying the manifest can confirm they hold the
@@ -205,11 +204,21 @@ pd.Series(
 
 # %%
 N_FOLDS = 5
-# Passing ``n_folds`` swaps MOABB's default LeaveOneGroupOut for a
-# GroupKFold cv_class so the audit stays short. Without ``n_folds`` you
+# ``cv_class=GroupKFold`` swaps MOABB's default ``LeaveOneGroupOut`` for
+# a parametrisable fold count so the audit stays short. Without it you
 # get LeaveOneGroupOut, which produces one fold per subject.
-splitter = get_splitter("cross_subject", n_folds=N_FOLDS, random_state=SEED)
-folds = list(k_fold(metadata, splitter=splitter, target="target"))
+splitter = CrossSubjectSplitter(
+    cv_class=GroupKFold, n_splits=N_FOLDS, random_state=SEED
+)
+y = metadata["target"].to_numpy()
+n_rows = len(metadata)
+folds: list[tuple[np.ndarray, np.ndarray]] = []
+for tr_idx, te_idx in splitter.split(y, metadata):
+    tr_mask = np.zeros(n_rows, dtype=bool)
+    tr_mask[tr_idx] = True
+    te_mask = np.zeros(n_rows, dtype=bool)
+    te_mask[te_idx] = True
+    folds.append((tr_mask, te_mask))
 pd.Series(
     {
         "splitter_class": type(splitter).__name__,
@@ -224,7 +233,7 @@ pd.Series(
 # Step 4. Prove no subject leakage and read the audit
 # ---------------------------------------------------
 #
-# :func:`~eegdash.splits.assert_no_leakage` walks every fold, intersects
+# ``assert_no_leakage`` walks every fold, intersects
 # ``subject`` values across train and test, and always prints one JSON
 # line:
 #
@@ -233,17 +242,42 @@ pd.Series(
 #     {"leakage_report": {"overlap": 0, "by": "subject"}}
 #
 # A clean split prints ``overlap: 0``; a leaky split prints a non-zero
-# overlap and raises :class:`eegdash.splits.LeakageError`. Runtime
+# overlap and raises ``LeakageError``. Runtime
 # validator E5.42 grep-matches that exact line.
-# :func:`~eegdash.splits.describe_split` prints a one-screen audit:
+# ``describe_split`` prints a one-screen audit:
 # per-fold sizes, distinct subjects on each side, per-fold class
 # balance.
 
 # %%
-overlap = assert_no_leakage(folds, metadata, by="subject")
-assert overlap == 0, "Cross-subject manifest leaked!"
-summary = describe_split(folds, metadata, target="target")
-fold0 = summary["per_fold"][0]
+# Audit subject-disjointness and emit the ``leakage_report`` JSON line
+# that runtime validator E5.42 grep-matches.
+overlap = max(
+    len(set(metadata.loc[tr, "subject"]) & set(metadata.loc[te, "subject"]))
+    for tr, te in folds
+)
+sys.stdout.write(
+    json.dumps({"leakage_report": {"overlap": int(overlap), "by": "subject"}}) + "\n"
+)
+sys.stdout.flush()
+assert overlap == 0, "Cross-subject split leaked!"
+
+# Inline per-fold audit; matches the shape of the deprecated
+# ``describe_split`` summary so the rest of the tutorial reads the same.
+per_fold = []
+for tr_mask, te_mask in folds:
+    train = metadata.loc[tr_mask]
+    test = metadata.loc[te_mask]
+    per_fold.append(
+        {
+            "n_train": len(train),
+            "n_test": len(test),
+            "subjects_train": train["subject"].nunique(),
+            "subjects_test": test["subject"].nunique(),
+            "class_balance_train": dict(Counter(train["target"].dropna().tolist())),
+            "class_balance_test": dict(Counter(test["target"].dropna().tolist())),
+        }
+    )
+fold0 = per_fold[0]
 balance0 = fold0["class_balance_test"]
 class_balance_ratio = max(balance0.values()) / (sum(balance0.values()) or 1)
 pd.Series(
@@ -263,13 +297,13 @@ pd.Series(
 # Step 5. Read the per-fold audit table
 # -------------------------------------
 #
-# :func:`~eegdash.splits.describe_split` returns the ``per_fold`` audit
+# ``describe_split`` returns the ``per_fold`` audit
 # as a list of dicts. Coercing that into a :class:`pandas.DataFrame` is
 # a habit worth keeping: it lets you eyeball the per-fold subject
 # count, spot a class-imbalance outlier, and group by anything.
 
 # %%
-audit_df = pd.DataFrame(summary["per_fold"])
+audit_df = pd.DataFrame(per_fold)
 audit_df.insert(0, "fold", range(len(audit_df)))
 audit_df[
     [
@@ -287,7 +321,7 @@ audit_df[
 # Step 6. Materialise one fold and persist the manifest
 # -----------------------------------------------------
 #
-# :func:`~eegdash.splits.apply_split_manifest` returns a boolean mask
+# ``apply_split_manifest`` returns a boolean mask
 # for any fold; the manifest serialises to plain JSON, the BIDS-style
 # "split metadata" Pernet et al. 2019 advocate sharing alongside
 # derivatives. The same call signature works on a
@@ -363,22 +397,38 @@ print(
 # ------------------------------------
 #
 # Two things go wrong frequently with this API. The first is mistyping
-# the splitter name; :func:`~eegdash.splits.get_splitter` raises a
+# the splitter name; ``get_splitter`` raises a
 # ``KeyError`` listing the valid names. The second is calling
 # :func:`sklearn.model_selection.train_test_split` on the windows
 # DataFrame and forgetting the ``stratify`` / ``groups`` arguments,
 # which silently leaks subjects across folds. Both fail the same way
 # (a happy-looking train/test pair), and both are caught by
-# :func:`~eegdash.splits.assert_no_leakage`.
+# ``assert_no_leakage``.
 
 # %%
-# Trip 1: mistyped splitter name.
+# Trip 1: importing the wrong MOABB splitter class. Within-subject
+# splitters keep the same subject in train and test of every fold by
+# design, so a subject-overlap audit will always flag them.
 try:
-    _ = get_splitter("subject_split", n_folds=N_FOLDS, random_state=SEED)
-except (KeyError, ValueError) as exc:
-    print(f"Caught {type(exc).__name__}: {exc}")
-    fixed = get_splitter("cross_subject", n_folds=N_FOLDS, random_state=SEED)
-    print(f"Recovery: get_splitter('cross_subject') -> {type(fixed).__name__}")
+    from moabb.evaluations.splitters import WithinSubjectSplitter
+
+    bad = WithinSubjectSplitter(n_folds=N_FOLDS, random_state=SEED, shuffle=True)
+    bad_folds = list(bad.split(y, metadata))
+    bad_overlap_within = max(
+        len(set(metadata.iloc[tr]["subject"]) & set(metadata.iloc[te]["subject"]))
+        for tr, te in bad_folds
+    )
+    if bad_overlap_within > 0:
+        raise ValueError(
+            f"WithinSubjectSplitter shares {bad_overlap_within} subjects "
+            "across train/test of every fold (expected — wrong splitter)"
+        )
+except ValueError as exc:
+    print(f"Caught ValueError: {exc}")
+    fixed = CrossSubjectSplitter(
+        cv_class=GroupKFold, n_splits=N_FOLDS, random_state=SEED
+    )
+    print(f"Recovery: CrossSubjectSplitter -> {type(fixed).__name__}")
 
 # Trip 2: a bare sklearn train_test_split on windows leaks silently.
 from sklearn.model_selection import train_test_split
@@ -392,7 +442,7 @@ print(
 
 # %% [markdown]
 # **Investigate.** Both trips are silent under sklearn's defaults. The
-# audit only fires once :func:`~eegdash.splits.assert_no_leakage` reads
+# audit only fires once ``assert_no_leakage`` reads
 # the metadata column you actually care about (``subject``, or
 # ``session`` when sessions are independent recordings).
 
@@ -401,14 +451,25 @@ print(
 # ---------------------------------
 #
 # **Modify.** Swap ``"cross_subject"`` for ``"cross_session"`` and
-# re-run :func:`~eegdash.splits.assert_no_leakage` with
+# re-run ``assert_no_leakage`` with
 # ``by="session"``. The scaffolding stays put; only the invariant
 # changes. Same call shape, different group key.
 
 # %%
-session_splitter = get_splitter("cross_session", n_folds=2, random_state=SEED)
-session_folds = list(k_fold(metadata, splitter=session_splitter, target="target"))
-session_overlap = assert_no_leakage(session_folds, metadata, by="session")
+session_splitter = CrossSessionSplitter(
+    cv_class=GroupKFold, n_splits=2, random_state=SEED
+)
+session_folds: list[tuple[np.ndarray, np.ndarray]] = []
+for tr_idx, te_idx in session_splitter.split(y, metadata):
+    tr_mask = np.zeros(n_rows, dtype=bool)
+    tr_mask[tr_idx] = True
+    te_mask = np.zeros(n_rows, dtype=bool)
+    te_mask[te_idx] = True
+    session_folds.append((tr_mask, te_mask))
+session_overlap = max(
+    len(set(metadata.loc[tr, "session"]) & set(metadata.loc[te, "session"]))
+    for tr, te in session_folds
+)
 print(f"cross_session overlap: {session_overlap}")
 
 # %% [markdown]
@@ -418,23 +479,25 @@ print(f"cross_session overlap: {session_overlap}")
 # **Mini-project.** Take the
 # :class:`braindecode.datasets.BaseConcatDataset` of
 # :class:`braindecode.datasets.WindowsDataset` you saved in plot_10,
-# pipe it through :meth:`~braindecode.datasets.BaseConcatDataset.get_metadata` to get the
-# tabular view, then through :func:`~eegdash.splits.make_split_manifest`
-# and :func:`~eegdash.splits.assert_no_leakage`. The function
-# :meth:`~braindecode.datasets.BaseConcatDataset.get_metadata` returns ``(y, metadata)``
-# already aligned to MOABB's ``CrossSubjectSplitter`` API, so you can
-# feed it straight into a benchmark loop without a glue-code layer.
+# pipe it through :meth:`~braindecode.datasets.BaseConcatDataset.get_metadata`
+# to get the tabular view, then through MOABB's ``CrossSubjectSplitter``
+# directly. The metadata frame is already aligned to that API, so you
+# can feed it straight into a benchmark loop without a glue-code layer.
 #
 # .. code-block:: python
 #
-#     from eegdash.splits import (
-#         get_metadata, get_splitter,
-#         make_split_manifest, assert_no_leakage,
+#     from moabb.evaluations.splitters import CrossSubjectSplitter
+#     from sklearn.model_selection import GroupKFold
+#
+#     md = windows.get_metadata()
+#     y = md["target"].to_numpy()
+#     splitter = CrossSubjectSplitter(
+#         cv_class=GroupKFold, n_splits=5, random_state=42,
 #     )
-#     y, md = get_metadata(windows, target="target")
-#     splitter = get_splitter("cross_subject", n_folds=5, random_state=42)
-#     folds = list(k_fold(md, splitter=splitter, target="target"))
-#     assert_no_leakage(folds, md, by="subject")  # raises if it leaks
+#     for tr_idx, te_idx in splitter.split(y, md):
+#         tr_subjects = set(md.iloc[tr_idx]["subject"])
+#         te_subjects = set(md.iloc[te_idx]["subject"])
+#         assert not (tr_subjects & te_subjects), "split leaked"
 
 # %% [markdown]
 # Headline figure. Naive vs cross-subject, side by side
@@ -489,36 +552,27 @@ plt.show()
 # the split rule changed.
 
 # %% [markdown]
-# Quick alternative: HuggingFace-style splits in two lines
-# --------------------------------------------------------
-# The manifest path above is auditable and persisted; for the common
-# case of "give me one train/test split or N folds right now", EEGDash
-# also exposes two HuggingFace-style helpers that wrap the same MOABB
-# splitters: :func:`eegdash.splits.train_test_split` returns
-# ``{"train": ..., "test": ...}`` (HF
-# :meth:`datasets.Dataset.train_test_split` shape) and
-# :func:`eegdash.splits.k_fold` yields ``(train, test)`` pairs. They
-# also live as methods on :class:`~eegdash.EEGDashDataset` so
-# ``dataset.train_test_split(group="subject", test_size=0.2)`` is the
-# one-liner replacement for the manifest dance when you do not need a
-# persisted audit trail.
+# Quick alternative: GroupShuffleSplit for a single test split
+# ------------------------------------------------------------
+# For "give me one train/test split right now", :class:`sklearn.model_selection.GroupShuffleSplit`
+# keyed on ``subject`` gives a single subject-disjoint pair. The
+# folds list above is the N-fold generalisation.
 
 # %%
-from eegdash.splits import k_fold as hf_k_fold
-from eegdash.splits import train_test_split as hf_train_test_split
+from sklearn.model_selection import GroupShuffleSplit
 
-quick_train, quick_test = hf_train_test_split(
-    metadata, test_size=0.4, group="subject", seed=SEED
-)
+gss = GroupShuffleSplit(n_splits=1, test_size=0.4, random_state=SEED)
+quick_tr_idx, quick_te_idx = next(gss.split(metadata, y, groups=metadata["subject"]))
+quick_train = np.zeros(n_rows, dtype=bool)
+quick_train[quick_tr_idx] = True
+quick_test = np.zeros(n_rows, dtype=bool)
+quick_test[quick_te_idx] = True
 print(
-    f"train_test_split: train={int(quick_train.sum())} rows, "
+    f"GroupShuffleSplit: train={int(quick_train.sum())} rows, "
     f"test={int(quick_test.sum())} rows | "
     f"test subjects={sorted(metadata.loc[quick_test, 'subject'].unique().tolist())}"
 )
-fold_sizes = [
-    (int(tr.sum()), int(te.sum()))
-    for tr, te in hf_k_fold(metadata, n_folds=N_FOLDS, group="subject", seed=SEED)
-]
+fold_sizes = [(int(tr.sum()), int(te.sum())) for tr, te in folds]
 pd.DataFrame(fold_sizes, columns=["n_train_rows", "n_test_rows"]).head()
 
 # %% [markdown]
@@ -531,13 +585,13 @@ pd.DataFrame(fold_sizes, columns=["n_train_rows", "n_test_rows"]).head()
 #
 # 1. :meth:`~braindecode.datasets.BaseConcatDataset.get_metadata` to get a tabular view of
 #    your windows.
-# 2. :func:`~eegdash.splits.get_splitter` with ``"cross_subject"`` (or
+# 2. ``get_splitter`` with ``"cross_subject"`` (or
 #    ``"cross_session"`` when sessions are independent).
-# 3. :func:`~eegdash.splits.make_split_manifest` to freeze the folds
+# 3. ``make_split_manifest`` to freeze the folds
 #    plus provenance.
-# 4. :func:`~eegdash.splits.assert_no_leakage` to enforce the
+# 4. ``assert_no_leakage`` to enforce the
 #    invariant.
-# 5. :func:`~eegdash.splits.apply_split_manifest` to materialise one
+# 5. ``apply_split_manifest`` to materialise one
 #    fold for training.
 #
 # Next:
@@ -557,7 +611,7 @@ pd.DataFrame(fold_sizes, columns=["n_train_rows", "n_test_rows"]).head()
 #   :class:`braindecode.datasets.BaseConcatDataset` from plot_10 and
 #   re-run the manifest end-to-end.
 # - Pass ``by="session"`` to
-#   :func:`~eegdash.splits.assert_no_leakage` and watch the report flip
+#   ``assert_no_leakage`` and watch the report flip
 #   for the cross-subject manifest (different invariant).
 
 # %% [markdown]

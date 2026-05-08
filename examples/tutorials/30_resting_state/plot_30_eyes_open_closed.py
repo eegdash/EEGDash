@@ -56,7 +56,7 @@ from sklearn.metrics import accuracy_score
 from sklearn.model_selection import GroupKFold
 
 from eegdash import EEGDashDataset
-from eegdash.splits import assert_no_leakage, majority_baseline
+from collections import Counter
 from braindecode.preprocessing import Preprocessor
 
 from eegdash.hbn.preprocessing import hbn_ec_ec_reannotation
@@ -384,9 +384,8 @@ for s in set(groups):
 # train a flat :class:`sklearn.linear_model.LogisticRegression` on the
 # per-subject-standardised log alpha-band power features (one per
 # channel) and read accuracy on the held-out subject.
-# :func:`eegdash.splits.assert_no_leakage` is the Cisotto & Chicco 2024
-# (Tip 9) check that confirms zero subject overlap on the contract by
-# subject id.
+# An inline subject-overlap check is the Cisotto & Chicco 2024 (Tip 9)
+# guard that confirms zero subject overlap on the contract by subject id.
 
 # %%
 n_folds = min(len(unique_subjects), 4)
@@ -396,24 +395,13 @@ fold_accuracies: list[float] = []
 all_y_true: list[np.ndarray] = []
 all_y_pred: list[np.ndarray] = []
 
-metadata = pd.DataFrame(
-    {
-        "subject": groups,
-        "sample_id": [f"w{i:04d}" for i in range(len(y))],
-        "target": y,
-    }
-)
-
 for fold_i, (train_idx, test_idx) in enumerate(gkf.split(features, y, groups=groups)):
     held_out = sorted(set(groups[test_idx].tolist()))
-    fold_pair = [
-        (
-            metadata.loc[train_idx, "sample_id"].tolist(),
-            metadata.loc[test_idx, "sample_id"].tolist(),
-        )
-    ]
-    overlap = assert_no_leakage(fold_pair, metadata, by="subject")
-    assert overlap == 0, f"fold {fold_i}: subject overlap detected"
+    train_subjects = set(groups[train_idx].tolist())
+    test_subjects = set(groups[test_idx].tolist())
+    assert not (train_subjects & test_subjects), (
+        f"fold {fold_i}: subject overlap detected"
+    )
 
     clf = LogisticRegression(random_state=SEED, max_iter=400)
     clf.fit(features[train_idx], y[train_idx])
@@ -431,7 +419,7 @@ for fold_i, (train_idx, test_idx) in enumerate(gkf.split(features, y, groups=gro
 
 mean_acc = float(np.mean(fold_accuracies))
 std_acc = float(np.std(fold_accuracies))
-chance = float(majority_baseline(y, y)["chance_level"])
+chance = float(max(Counter(y.tolist()).values()) / max(len(y), 1))
 y_pooled_true = np.concatenate(all_y_true)
 y_pooled_pred = np.concatenate(all_y_pred)
 pooled_acc = float((y_pooled_true == y_pooled_pred).mean())

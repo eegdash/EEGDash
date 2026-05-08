@@ -262,7 +262,7 @@ def draw_cross_subject_figure(
         the LOSO loop covers every subject in the cohort.
     chance_level : float, default 0.5
         Reference chance accuracy from
-        :func:`eegdash.splits.majority_baseline` (or 0.5 for a balanced
+        ``majority_baseline`` (or 0.5 for a balanced
         binary task). Drawn as a dashed horizontal line on Panel 2.
     plot_id : str, default ``"plot_51"``
         Tutorial id forwarded to :func:`add_provenance_footer`.

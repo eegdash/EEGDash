@@ -311,15 +311,14 @@ def test_eegdashdataset_constructor_uses_default_cache_dir(tmp_path, cache_input
         patch(
             "eegdash.dataset.dataset.get_default_cache_dir", return_value=str(tmp_path)
         ),
-        patch("eegdash.dataset.dataset.logger") as mock_logger,
         patch("eegdash.dataset.dataset.EEGDashRaw"),
     ):
-        _ = EEGDashDataset(
+        ds = EEGDashDataset(
             cache_dir=cache_input,
             records=records,
             download=True,
         )
-    assert mock_logger.warning.call_count >= 1
+    assert str(ds.cache_dir) == str(tmp_path)
 
 
 def test_eegdashdataset_constructor_creates_missing_cache_dir(tmp_path):

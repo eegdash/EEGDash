@@ -327,4 +327,8 @@ class StorageAccessError(EEGDashError):
         super().__init__(message)
 
 
-__all__ = ["EEGDashError", "DataIntegrityError", "StorageAccessError"]
+__all__ = [
+    "EEGDashError",
+    "DataIntegrityError",
+    "StorageAccessError",
+]

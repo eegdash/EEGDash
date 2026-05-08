@@ -98,7 +98,7 @@
 
             .. container:: hf-card-actions
 
-               .. button-ref:: user_guide
+               .. button-ref:: quickstart
                   :color: primary
                   :class: sd-btn-sm hf-btn hf-btn-primary
 
@@ -210,7 +210,7 @@
          EEG, MEG, fNIRS, EMG, and iEEG coverage.
 
    .. grid-item-card:: BIDS-first
-      :link: user_guide
+      :link: quickstart
       :link-type: doc
       :text-align: left
       :class-card: hf-stat-card hf-reveal hf-delay-3
@@ -316,7 +316,9 @@
    :hidden:
 
    Datasets <dataset_summary>
-   User Guide <user_guide>
+   Quick Start <quickstart>
    Install <install/install>
    Examples <generated/auto_examples/index>
+   Concepts <concepts/index>
    Docs <api/api>
+   References <references>

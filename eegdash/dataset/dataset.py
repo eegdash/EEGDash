@@ -35,6 +35,44 @@ from .registry import register_openneuro_datasets
 # Valid extensions for EEG data files (from MNE-BIDS reader configuration)
 _VALID_DATA_EXTENSIONS = frozenset(reader.keys())
 
+# Default fields surfaced on every per-record description.
+_DEFAULT_DESCRIPTION_FIELDS = [
+    "subject",
+    "session",
+    "run",
+    "task",
+    "age",
+    "gender",
+    "sex",
+]
+
+
+def _warn_if_competition_dataset(dataset_id: str) -> None:
+    """Render a Rich panel reminding users to use EEGChallengeDataset for the EEG 2025 Competition."""
+    if dataset_id not in RELEASE_TO_OPENNEURO_DATASET_MAP.values():
+        return
+    message = Text.from_markup(
+        "[italic]This notice is only for users who are participating in the [link=https://eeg2025.github.io/]EEG 2025 Competition[/link].[/italic]\n\n"
+        "[bold]EEG 2025 Competition Data Notice![/bold]\n"
+        "You are loading one of the datasets that is used in competition, but via `EEGDashDataset`.\n\n"
+        "[bold red]IMPORTANT[/bold red]: \n"
+        "If you download data from `EEGDashDataset`, it is [u]NOT[/u] identical to the official \n"
+        "competition data, which is accessed via `EEGChallengeDataset`. "
+        "The competition data has been downsampled and filtered.\n\n"
+        "[bold]If you are participating in the competition, \nyou must use the `EEGChallengeDataset` object to ensure consistency.[/bold] \n\n"
+        "If you are not participating in the competition, you can ignore this message."
+    )
+    panel = Panel(
+        message,
+        title="[yellow]EEG 2025 Competition Data Notice[/yellow]",
+        subtitle="[cyan]Source: EEGDashDataset[/cyan]",
+        border_style="yellow",
+    )
+    try:
+        Console().print(panel)
+    except Exception:
+        logger.warning(str(message))
+
 
 class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitMeta):
     """Create a new EEGDashDataset from a given query or local BIDS dataset directory
@@ -171,102 +209,43 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
         on_error: str = "raise",
         **kwargs,
     ):
-        # Parameters that don't need validation
-        _suppress_comp_warning: bool = kwargs.pop("_suppress_comp_warning", False)
+        # Internal-only kwargs
+        suppress_comp_warning = kwargs.pop("_suppress_comp_warning", False)
         self._dedupe_records: bool = kwargs.pop("_dedupe_records", False)
+
         self._on_error = on_error
         self.s3_bucket = s3_bucket
         self.database = database
         self.auth_token = auth_token
-        self.records = records
         self.download = download
         self.n_jobs = n_jobs
         self.eeg_dash_instance = eeg_dash_instance
+        description_fields = description_fields or _DEFAULT_DESCRIPTION_FIELDS
 
-        if description_fields is None:
-            description_fields = [
-                "subject",
-                "session",
-                "run",
-                "task",
-                "age",
-                "gender",
-                "sex",
-            ]
+        self.cache_dir = Path(cache_dir or get_default_cache_dir())
+        self.cache_dir.mkdir(parents=True, exist_ok=True)
 
-        self.cache_dir = cache_dir
-        if self.cache_dir == "" or self.cache_dir is None:
-            self.cache_dir = get_default_cache_dir()
-            logger.warning(
-                f"Cache directory is empty, using the eegdash default path: {self.cache_dir}"
-            )
-
-        self.cache_dir = Path(self.cache_dir)
-
-        if not self.cache_dir.exists():
-            logger.warning(
-                f"Cache directory does not exist, creating it: {self.cache_dir}"
-            )
-            self.cache_dir.mkdir(exist_ok=True, parents=True)
-
-        # Extract query filters from kwargs (validates field names)
+        # Extract & validate query filters from kwargs.
         query_kwargs = {k: v for k, v in kwargs.items() if k in ALLOWED_QUERY_FIELDS}
         if query_kwargs:
-            # Validate early: this raises ValueError for unknown fields or empty values
             build_query_from_kwargs(**query_kwargs)
 
-        # Separate query kwargs from BaseDataset constructor kwargs
-        self.query = query or {}
-        self.query.update(query_kwargs)
+        self.query = (query or {}) | query_kwargs
         base_dataset_kwargs = {
             k: v for k, v in kwargs.items() if k not in ALLOWED_QUERY_FIELDS
         }
         base_dataset_kwargs["on_error"] = self._on_error
 
         if "dataset" not in self.query:
-            # If explicit records are provided, infer dataset from records
-            if isinstance(records, list) and records and isinstance(records[0], dict):
-                inferred = records[0].get("dataset")
-                if inferred:
-                    self.query["dataset"] = inferred
-                else:
-                    raise ValueError("You must provide a 'dataset' argument")
-            else:
+            inferred = records[0].get("dataset") if records else None
+            if not inferred:
                 raise ValueError("You must provide a 'dataset' argument")
+            self.query["dataset"] = inferred
 
-        # Decide on a dataset subfolder name for cache isolation. If using
-        # challenge/preprocessed buckets (e.g., BDF, mini subsets), append
-        # informative suffixes to avoid overlapping with the original dataset.
-        dataset_folder = self.query["dataset"]
+        self.data_dir = self.cache_dir / self.query["dataset"]
 
-        self.data_dir = self.cache_dir / dataset_folder
-
-        if (
-            not _suppress_comp_warning
-            and self.query["dataset"] in RELEASE_TO_OPENNEURO_DATASET_MAP.values()
-        ):
-            message_text = Text.from_markup(
-                "[italic]This notice is only for users who are participating in the [link=https://eeg2025.github.io/]EEG 2025 Competition[/link].[/italic]\n\n"
-                "[bold]EEG 2025 Competition Data Notice![/bold]\n"
-                "You are loading one of the datasets that is used in competition, but via `EEGDashDataset`.\n\n"
-                "[bold red]IMPORTANT[/bold red]: \n"
-                "If you download data from `EEGDashDataset`, it is [u]NOT[/u] identical to the official \n"
-                "competition data, which is accessed via `EEGChallengeDataset`. "
-                "The competition data has been downsampled and filtered.\n\n"
-                "[bold]If you are participating in the competition, \nyou must use the `EEGChallengeDataset` object to ensure consistency.[/bold] \n\n"
-                "If you are not participating in the competition, you can ignore this message."
-            )
-            warning_panel = Panel(
-                message_text,
-                title="[yellow]EEG 2025 Competition Data Notice[/yellow]",
-                subtitle="[cyan]Source: EEGDashDataset[/cyan]",
-                border_style="yellow",
-            )
-
-            try:
-                Console().print(warning_panel)
-            except Exception:
-                logger.warning(str(message_text))
+        if not suppress_comp_warning:
+            _warn_if_competition_dataset(self.query["dataset"])
 
         if records is not None:
             self.records = self._normalize_records(records)
@@ -330,7 +309,6 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
                 # to avoid circular import
                 from ..api import EEGDash
 
-                # Pass database and auth_token if specified
                 eegdash_kwargs = {}
                 if self.database:
                     eegdash_kwargs["database"] = self.database
@@ -342,10 +320,7 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
                 description_fields=description_fields,
                 base_dataset_kwargs=base_dataset_kwargs,
             )
-            # We only need filesystem if we need to access S3
-            self.filesystem = downloader.get_s3_filesystem()
 
-            # Provide helpful error message when no datasets are found
             if len(datasets) == 0:
                 query_str = build_query_from_kwargs(**self.query)
                 raise ValueError(

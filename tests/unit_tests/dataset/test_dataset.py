@@ -976,31 +976,6 @@ def test_dataset_init_infer_from_records(tmp_path):
     assert ds.query["dataset"] == "ds_inferred"
 
 
-def test_dataset_empty_cache_warning(tmp_path):
-    """Test warning when cache_dir is empty/None."""
-    # Ensure data dir exists to pass offline check
-    (tmp_path / "ds1").mkdir()
-
-    with patch(
-        "eegdash.dataset.dataset.get_default_cache_dir", return_value=str(tmp_path)
-    ):
-        with patch("eegdash.dataset.dataset.logger") as mock_logger:
-            # We mock _find_local_bids_records so we don't return empty datasets list
-            with patch(
-                "eegdash.dataset.dataset.EEGDashDataset._find_local_bids_records"
-            ) as mock_find:
-                mock_find.return_value = [
-                    {
-                        "dataset": "ds1",
-                        "bidspath": "p",
-                        "storage": {"base": "b"},
-                        "bids_relpath": "p",
-                    }
-                ]
-                EEGDashDataset(cache_dir="", dataset="ds1", download=False)
-                mock_logger.warning.assert_called()
-
-
 def test_find_datasets_empty_result(tmp_path):
     """Test ValueError when query returns no datasets."""
     mock_api = MagicMock()

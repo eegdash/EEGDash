@@ -56,12 +56,10 @@ import pandas as pd
 
 import eegdash
 from eegdash.splits import (
-    apply_split_manifest,
     assert_no_leakage,
     describe_split,
     get_splitter,
-    make_split_manifest,
-    manifest_to_json,
+    k_fold,
 )
 from eegdash.viz import use_eegdash_style
 
@@ -211,15 +209,13 @@ N_FOLDS = 5
 # GroupKFold cv_class so the audit stays short. Without ``n_folds`` you
 # get LeaveOneGroupOut, which produces one fold per subject.
 splitter = get_splitter("cross_subject", n_folds=N_FOLDS, random_state=SEED)
-manifest = make_split_manifest(
-    splitter, metadata["target"].to_numpy(), metadata, target="target"
-)
+folds = list(k_fold(metadata, splitter=splitter, target="target"))
 pd.Series(
     {
-        "splitter_class": manifest["splitter_class"],
-        "n_folds": manifest["n_folds"],
-        "target": manifest["target"],
-        "random_seed": manifest["random_seed"],
+        "splitter_class": type(splitter).__name__,
+        "n_folds": len(folds),
+        "target": "target",
+        "random_seed": SEED,
     },
     name="value",
 ).to_frame()
@@ -244,9 +240,9 @@ pd.Series(
 # balance.
 
 # %%
-overlap = assert_no_leakage(manifest, metadata, by="subject")
+overlap = assert_no_leakage(folds, metadata, by="subject")
 assert overlap == 0, "Cross-subject manifest leaked!"
-summary = describe_split(manifest, metadata, target="target")
+summary = describe_split(folds, metadata, target="target")
 fold0 = summary["per_fold"][0]
 balance0 = fold0["class_balance_test"]
 class_balance_ratio = max(balance0.values()) / (sum(balance0.values()) or 1)
@@ -301,12 +297,27 @@ audit_df[
 # subset-of-windows back.
 
 # %%
-train_mask = apply_split_manifest(metadata, manifest, fold=0, split="train")
-test_mask = apply_split_manifest(metadata, manifest, fold=0, split="test")
+train_mask = folds[0][0]
+test_mask = folds[0][1]
 cache_dir = Path("./eegdash_cache")
 cache_dir.mkdir(parents=True, exist_ok=True)
 manifest_path = cache_dir / "plot_11_split_manifest.json"
-manifest_path.write_text(manifest_to_json(manifest), encoding="utf-8")
+manifest_payload = {
+    "splitter_class": type(splitter).__name__,
+    "random_seed": SEED,
+    "n_folds": len(folds),
+    "target": "target",
+    "folds": [
+        {
+            "train": metadata.loc[tr, "sample_id"].tolist(),
+            "test": metadata.loc[te, "sample_id"].tolist(),
+        }
+        for tr, te in folds
+    ],
+}
+manifest_path.write_text(
+    json.dumps(manifest_payload, sort_keys=True, default=str), encoding="utf-8"
+)
 pd.Series(
     {
         "train_mask sum": int(train_mask.sum()),
@@ -339,7 +350,7 @@ print(
     json.dumps(
         {
             "n_subjects_total": int(metadata["subject"].nunique()),
-            "n_folds": int(manifest["n_folds"]),
+            "n_folds": int(len(folds)),
             "subject_overlap": int(overlap),
             "naive_random_split_overlap": int(naive_overlap),
             "class_balance_ratio_fold0": round(float(class_balance_ratio), 3),
@@ -396,13 +407,8 @@ print(
 
 # %%
 session_splitter = get_splitter("cross_session", n_folds=2, random_state=SEED)
-session_manifest = make_split_manifest(
-    session_splitter,
-    metadata["target"].to_numpy(),
-    metadata,
-    target="target",
-)
-session_overlap = assert_no_leakage(session_manifest, metadata, by="session")
+session_folds = list(k_fold(metadata, splitter=session_splitter, target="target"))
+session_overlap = assert_no_leakage(session_folds, metadata, by="session")
 print(f"cross_session overlap: {session_overlap}")
 
 # %% [markdown]
@@ -427,8 +433,8 @@ print(f"cross_session overlap: {session_overlap}")
 #     )
 #     y, md = get_metadata(windows, target="target")
 #     splitter = get_splitter("cross_subject", n_folds=5, random_state=42)
-#     manifest = make_split_manifest(splitter, y, md, target="target")
-#     assert_no_leakage(manifest, md, by="subject")  # raises if it leaks
+#     folds = list(k_fold(md, splitter=splitter, target="target"))
+#     assert_no_leakage(folds, md, by="subject")  # raises if it leaks
 
 # %% [markdown]
 # Headline figure. Naive vs cross-subject, side by side
@@ -457,8 +463,8 @@ naive_assignment = np.full((n_subj_fig, n_folds_fig), 2, dtype=int)
 # a clean (n_subjects, n_folds) matrix where each subject is test in
 # exactly one fold and train in the rest.
 safe_assignment = np.zeros((n_subj_fig, n_folds_fig), dtype=int)
-for fold_index in range(min(n_folds_fig, manifest["n_folds"])):
-    test_ids = manifest["folds"][fold_index]["test"]
+for fold_index in range(min(n_folds_fig, len(folds))):
+    test_ids = folds[fold_index][1]
     test_subjects = {sid.split("__")[0] for sid in test_ids}
     for row_idx, subject_id in enumerate(subjects_for_fig):
         if subject_id in test_subjects:
@@ -501,14 +507,16 @@ plt.show()
 from eegdash.splits import k_fold as hf_k_fold
 from eegdash.splits import train_test_split as hf_train_test_split
 
-quick = hf_train_test_split(metadata, test_size=0.4, group="subject", seed=SEED)
+quick_train, quick_test = hf_train_test_split(
+    metadata, test_size=0.4, group="subject", seed=SEED
+)
 print(
-    f"train_test_split: train={len(quick['train'])} rows, "
-    f"test={len(quick['test'])} rows | "
-    f"test subjects={sorted(quick['test']['subject'].unique().tolist())}"
+    f"train_test_split: train={int(quick_train.sum())} rows, "
+    f"test={int(quick_test.sum())} rows | "
+    f"test subjects={sorted(metadata.loc[quick_test, 'subject'].unique().tolist())}"
 )
 fold_sizes = [
-    (len(tr), len(te))
+    (int(tr.sum()), int(te.sum()))
     for tr, te in hf_k_fold(metadata, n_folds=N_FOLDS, group="subject", seed=SEED)
 ]
 pd.DataFrame(fold_sizes, columns=["n_train_rows", "n_test_rows"]).head()

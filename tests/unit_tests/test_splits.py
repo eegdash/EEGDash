@@ -21,13 +21,13 @@ import pytest
 
 from eegdash.splits import (
     LeakageError,
-    apply_split_manifest,
     assert_no_leakage,
     describe_split,
     get_splitter,
+    k_fold,
     majority_baseline,
-    make_split_manifest,
     median_baseline,
+    train_test_split,
 )
 
 # ---------------------------------------------------------------------------
@@ -98,75 +98,49 @@ def test_get_splitter_cross_subject_with_n_splits(metadata):
 
 
 # ---------------------------------------------------------------------------
-# make_split_manifest
+# k_fold + train_test_split
 # ---------------------------------------------------------------------------
 
 
-def test_make_split_manifest_is_deterministic(metadata):
+def test_k_fold_yields_disjoint_masks(metadata):
+    splitter = get_splitter("cross_subject", n_splits=4)
+    folds = list(k_fold(metadata, splitter=splitter, target="target"))
+    assert len(folds) == 4
+    for train_mask, test_mask in folds:
+        assert isinstance(train_mask, np.ndarray)
+        assert train_mask.dtype == bool
+        assert test_mask.dtype == bool
+        assert train_mask.sum() + test_mask.sum() == len(metadata.index)
+        assert not np.any(train_mask & test_mask)
+
+
+def test_k_fold_is_deterministic(metadata):
     splitter_a = get_splitter("cross_subject", n_splits=4)
-    manifest_a = make_split_manifest(
-        splitter_a,
-        metadata["target"].to_numpy(),
-        metadata,
-        target="target",
-    )
+    folds_a = list(k_fold(metadata, splitter=splitter_a, target="target"))
     splitter_b = get_splitter("cross_subject", n_splits=4)
-    manifest_b = make_split_manifest(
-        splitter_b,
-        metadata["target"].to_numpy(),
-        metadata,
-        target="target",
+    folds_b = list(k_fold(metadata, splitter=splitter_b, target="target"))
+    for (tr_a, te_a), (tr_b, te_b) in zip(folds_a, folds_b):
+        assert np.array_equal(tr_a, tr_b)
+        assert np.array_equal(te_a, te_b)
+
+
+def test_train_test_split_returns_first_fold(metadata):
+    train_mask, test_mask = train_test_split(
+        metadata, group="subject", target="target", seed=42
     )
-    assert manifest_a["folds"] == manifest_b["folds"]
-    # JSON-serialisable.
-    json.dumps(manifest_a, default=str)
-
-
-def test_make_split_manifest_records_provenance(metadata):
-    splitter = get_splitter("cross_subject", n_splits=4)
-    manifest = make_split_manifest(
-        splitter,
-        metadata["target"].to_numpy(),
-        metadata,
-        target="target",
-    )
-    assert manifest["n_folds"] == 4
-    assert manifest["target"] == "target"
-    assert "splitter_class" in manifest
-    assert "random_seed" in manifest
-    assert manifest["splitter_class"].startswith("moabb.")
-
-
-# ---------------------------------------------------------------------------
-# apply_split_manifest
-# ---------------------------------------------------------------------------
-
-
-def test_apply_split_manifest_selects_correct_indices(metadata):
-    splitter = get_splitter("cross_subject", n_splits=4)
-    manifest = make_split_manifest(
-        splitter,
-        metadata["target"].to_numpy(),
-        metadata,
-        target="target",
-    )
-    train_mask = apply_split_manifest(metadata, manifest, fold=0, split="train")
-    test_mask = apply_split_manifest(metadata, manifest, fold=0, split="test")
     assert isinstance(train_mask, np.ndarray)
     assert train_mask.dtype == bool
-    assert train_mask.sum() + test_mask.sum() == len(metadata.index)
-    assert not np.any(train_mask & test_mask)
+    assert int(train_mask.sum()) + int(test_mask.sum()) == len(metadata.index)
 
 
-def test_apply_split_manifest_invalid_split(metadata):
-    splitter = get_splitter("cross_subject", n_splits=4)
-    manifest = make_split_manifest(
-        splitter, metadata["target"].to_numpy(), metadata, target="target"
-    )
-    with pytest.raises(ValueError, match="train"):
-        apply_split_manifest(metadata, manifest, fold=0, split="bogus")
-    with pytest.raises(IndexError):
-        apply_split_manifest(metadata, manifest, fold=999, split="train")
+def test_k_fold_default_group_aware_splitter(metadata):
+    """Without splitter=, k_fold builds a group-aware MOABB splitter."""
+    folds = list(k_fold(metadata, n_folds=5, group="subject", target="target"))
+    assert len(folds) >= 1
+    for train_mask, test_mask in folds:
+        train_subjects = set(metadata.loc[train_mask, "subject"])
+        test_subjects = set(metadata.loc[test_mask, "subject"])
+        assert not (train_subjects & test_subjects), "subjects leaked across fold"
 
 
 # ---------------------------------------------------------------------------
@@ -186,13 +160,22 @@ def _capture_stdout(callable_, *args, **kwargs) -> tuple[object, str]:
     return result, buf.getvalue()
 
 
+def _mask_pair(
+    metadata: pd.DataFrame, train_idx, test_idx
+) -> tuple[np.ndarray, np.ndarray]:
+    n = len(metadata.index)
+    tr = np.zeros(n, dtype=bool)
+    tr[list(train_idx)] = True
+    te = np.zeros(n, dtype=bool)
+    te[list(test_idx)] = True
+    return tr, te
+
+
 def test_assert_no_leakage_passes_for_clean_split(metadata):
     splitter = get_splitter("cross_subject", n_splits=4)
-    manifest = make_split_manifest(
-        splitter, metadata["target"].to_numpy(), metadata, target="target"
-    )
+    folds = list(k_fold(metadata, splitter=splitter, target="target"))
     overlap, captured = _capture_stdout(
-        assert_no_leakage, manifest, metadata, by="subject"
+        assert_no_leakage, folds, metadata, by="subject"
     )
     assert overlap == 0
     # The JSON line must appear exactly as the validator E5.42 expects.
@@ -203,18 +186,9 @@ def test_assert_no_leakage_passes_for_clean_split(metadata):
 
 
 def test_assert_no_leakage_detects_subject_overlap(metadata):
-    """A hand-crafted 'leaky' manifest must raise LeakageError."""
-    sample_ids = metadata["sample_id"].tolist()
+    """A hand-crafted 'leaky' fold pair must raise LeakageError."""
     # Put the same subject in train and test of the only fold.
-    leaky = {
-        "n_folds": 1,
-        "folds": [
-            {
-                "train": sample_ids[:50],  # subjects 00..09
-                "test": sample_ids[40:60],  # subjects 08..11 -> overlap with 08, 09
-            }
-        ],
-    }
+    leaky = [_mask_pair(metadata, range(50), range(40, 60))]
     with pytest.raises(LeakageError):
         # Capture stdout to keep tests quiet but still verify line emission.
         _capture_stdout(assert_no_leakage, leaky, metadata, by="subject")
@@ -222,16 +196,7 @@ def test_assert_no_leakage_detects_subject_overlap(metadata):
 
 def test_assert_no_leakage_emits_line_even_on_overlap(metadata):
     """The JSON line must be printed *before* raising, for E5.42."""
-    sample_ids = metadata["sample_id"].tolist()
-    leaky = {
-        "n_folds": 1,
-        "folds": [
-            {
-                "train": sample_ids[:50],
-                "test": sample_ids[40:60],
-            }
-        ],
-    }
+    leaky = [_mask_pair(metadata, range(50), range(40, 60))]
     buf = io.StringIO()
     saved = sys.stdout
     sys.stdout = buf
@@ -257,10 +222,8 @@ def test_assert_no_leakage_emits_line_even_on_overlap(metadata):
 
 def test_describe_split_basic(metadata):
     splitter = get_splitter("cross_subject", n_splits=4)
-    manifest = make_split_manifest(
-        splitter, metadata["target"].to_numpy(), metadata, target="target"
-    )
-    summary = describe_split(manifest, metadata, target="target", print_report=False)
+    folds = list(k_fold(metadata, splitter=splitter, target="target"))
+    summary = describe_split(folds, metadata, target="target", print_report=False)
     assert summary["n_folds"] == 4
     assert summary["coverage"]["n_subjects"] == 20
     assert len(summary["per_fold"]) == 4

@@ -76,12 +76,11 @@ from sklearn.metrics import accuracy_score
 from sklearn.model_selection import LeaveOneGroupOut
 
 from eegdash.splits import (
-    apply_split_manifest,
     assert_no_leakage,
     describe_split,
     get_splitter,
+    k_fold,
     majority_baseline,
-    make_split_manifest,
 )
 from eegdash.viz import use_eegdash_style
 
@@ -176,13 +175,8 @@ print(
 # %%
 N_FOLDS = 5
 splitter = get_splitter("within_subject", n_folds=N_FOLDS, random_state=SEED)
-manifest = make_split_manifest(
-    splitter, metadata["target"].to_numpy(), metadata, target="target"
-)
-print(
-    f"Splitter: {manifest['splitter_class']} | "
-    f"n_folds (subj x folds): {manifest['n_folds']}"
-)
+folds = list(k_fold(metadata, splitter=splitter, target="target"))
+print(f"Splitter: {type(splitter).__name__} | n_folds (subj x folds): {len(folds)}")
 
 # %% [markdown]
 # Step 4: Assert no trial leakage and read the audit
@@ -194,9 +188,9 @@ print(
 # (E5.42). A subject-level assertion would fail by design.
 
 # %%
-trial_overlap = assert_no_leakage(manifest, metadata, by="trial")
+trial_overlap = assert_no_leakage(folds, metadata, by="trial")
 assert trial_overlap == 0, "Within-subject manifest reused a trial across folds!"
-summary = describe_split(manifest, metadata, target="target", print_report=False)
+summary = describe_split(folds, metadata, target="target", print_report=False)
 fold0 = summary["per_fold"][0]
 print(
     f"Fold 0: train={fold0['n_train']} ({fold0['subjects_train']} subj), "
@@ -204,11 +198,9 @@ print(
     f"classes_test={fold0['class_balance_test']}"
 )
 overlapping_subjects = []
-for fold_record in manifest["folds"]:
-    train_sub = set(
-        metadata[metadata["sample_id"].isin(fold_record["train"])]["subject"]
-    )
-    test_sub = set(metadata[metadata["sample_id"].isin(fold_record["test"])]["subject"])
+for tr_mask, te_mask in folds:
+    train_sub = set(metadata.loc[tr_mask, "subject"])
+    test_sub = set(metadata.loc[te_mask, "subject"])
     overlapping_subjects.append(len(train_sub & test_sub))
 print(
     f"Subject overlap per fold (intentional): min={min(overlapping_subjects)}, "
@@ -237,11 +229,9 @@ subject_scores: dict[str, list[float]] = {sid: [] for sid in subjects}
 fold_chance: list[float] = []
 pooled_y_true: list[np.ndarray] = []
 pooled_y_pred: list[np.ndarray] = []
-for fold_index in range(manifest["n_folds"]):
-    train_mask = apply_split_manifest(
-        metadata, manifest, fold=fold_index, split="train"
-    )
-    test_mask = apply_split_manifest(metadata, manifest, fold=fold_index, split="test")
+for fold_index in range(len(folds)):
+    train_mask = folds[fold_index][0]
+    test_mask = folds[fold_index][1]
     if train_mask.sum() == 0 or test_mask.sum() == 0:
         continue
     y_train = metadata.loc[train_mask, "target"].to_numpy()
@@ -334,7 +324,7 @@ print(
 )
 invariants = {
     "n_subjects": int(metadata["subject"].nunique()),
-    "n_folds": int(manifest["n_folds"]),
+    "n_folds": int(len(folds)),
     "trial_overlap": int(trial_overlap),
     "subject_overlap_per_fold": int(max(overlapping_subjects)),
     "within_mean_accuracy": round(within_mean, 3),
@@ -413,12 +403,10 @@ plt.show()
 
 # %%
 session_splitter = get_splitter("within_session", n_folds=4, random_state=SEED)
-session_manifest = make_split_manifest(
-    session_splitter, metadata["target"].to_numpy(), metadata, target="target"
-)
-session_overlap = assert_no_leakage(session_manifest, metadata, by="trial")
+session_folds = list(k_fold(metadata, splitter=session_splitter, target="target"))
+session_overlap = assert_no_leakage(session_folds, metadata, by="trial")
 print(
-    f"within_session manifest: n_folds={session_manifest['n_folds']}, "
+    f"within_session manifest: n_folds={len(session_folds)}, "
     f"trial_overlap={session_overlap}"
 )
 

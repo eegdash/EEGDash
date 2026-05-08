@@ -85,11 +85,10 @@ from sklearn.preprocessing import StandardScaler
 
 import eegdash
 from eegdash.splits import (
-    apply_split_manifest,
     assert_no_leakage,
     get_splitter,
+    k_fold,
     majority_baseline,
-    make_split_manifest,
 )
 from eegdash.viz import use_eegdash_style
 
@@ -209,13 +208,11 @@ splitter = get_splitter(
     n_splits=N_SUBJECTS,
     random_state=SEED,
 )
-manifest = make_split_manifest(
-    splitter, metadata["target"].to_numpy(), metadata, target="target"
-)
-overlap = assert_no_leakage(manifest, metadata, by="subject")
+folds = list(k_fold(metadata, splitter=splitter, target="target"))
+overlap = assert_no_leakage(folds, metadata, by="subject")
 assert overlap == 0, "cross_subject manifest leaked!"
-n_folds = manifest["n_folds"]
-print(f"manifest: n_folds={n_folds} | splitter={manifest['splitter_class']}")
+n_folds = len(folds)
+print(f"manifest: n_folds={n_folds} | splitter={type(splitter).__name__}")
 
 # %% [markdown]
 # Step 4: Wire the feature matrix into a Pipeline
@@ -264,8 +261,8 @@ pooled_y_true: list[np.ndarray] = []
 pooled_y_pred: list[np.ndarray] = []
 
 for fold_idx in range(n_folds):
-    train_mask = apply_split_manifest(metadata, manifest, fold=fold_idx, split="train")
-    test_mask = apply_split_manifest(metadata, manifest, fold=fold_idx, split="test")
+    train_mask = folds[fold_idx][0]
+    test_mask = folds[fold_idx][1]
     fold_assignment[test_mask] = fold_idx
 
     held = sorted(set(metadata.loc[test_mask, "subject"]))
@@ -383,12 +380,8 @@ plt.show()
 # slice only and re-applies at predict time.
 
 # %%
-X_train_arr = feature_table.loc[
-    apply_split_manifest(metadata, manifest, fold=0, split="train"), feature_cols
-].to_numpy(dtype=float)
-y_train_arr = feature_table.loc[
-    apply_split_manifest(metadata, manifest, fold=0, split="train"), "target"
-].to_numpy()
+X_train_arr = feature_table.loc[folds[0][0], feature_cols].to_numpy(dtype=float)
+y_train_arr = feature_table.loc[folds[0][0], "target"].to_numpy()
 try:
     with warnings.catch_warnings():
         warnings.simplefilter("error")
@@ -411,8 +404,8 @@ except (Warning, ValueError) as exc:
 ridge_pipe = Pipeline(
     [("scaler", StandardScaler()), ("clf", RidgeClassifier(random_state=SEED))]
 )
-fold0_train = apply_split_manifest(metadata, manifest, fold=0, split="train")
-fold0_test = apply_split_manifest(metadata, manifest, fold=0, split="test")
+fold0_train = folds[0][0]
+fold0_test = folds[0][1]
 ridge_pipe.fit(
     feature_table.loc[fold0_train, feature_cols].to_numpy(),
     feature_table.loc[fold0_train, "target"].to_numpy(),

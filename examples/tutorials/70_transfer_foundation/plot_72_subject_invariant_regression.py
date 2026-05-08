@@ -54,10 +54,9 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
 from eegdash.splits import (
-    apply_split_manifest,
     assert_no_leakage,
     get_splitter,
-    make_split_manifest,
+    k_fold,
     median_baseline,
 )
 from eegdash.viz import use_eegdash_style
@@ -186,12 +185,12 @@ def make_regressor() -> Pipeline:
 
 # %%
 splitter = get_splitter("cross_subject", n_folds=5, n_splits=5, random_state=SEED)
-manifest = make_split_manifest(splitter, y, metadata, target="target")
-overlap = assert_no_leakage(manifest, metadata, by="subject")
+folds = list(k_fold(metadata, splitter=splitter, target="target"))
+overlap = assert_no_leakage(folds, metadata, by="subject")
 assert overlap == 0, "cross_subject manifest leaked subjects"
-assert manifest["n_folds"] >= 5, "need at least 5 folds for mean +/- std"
+assert len(folds) >= 5, "need at least 5 folds for mean +/- std"
 print(
-    f"Splitter: {manifest['splitter_class']} | folds: {manifest['n_folds']} | "
+    f"Splitter: {type(splitter).__name__} | folds: {len(folds)} | "
     f"max subject overlap: {overlap}"
 )
 
@@ -211,9 +210,9 @@ fold_mae: list[float] = []
 fold_chance: list[float] = []
 fold_baseline_mae: list[float] = []
 test_residuals: list[tuple[str, float, float]] = []
-for k in range(manifest["n_folds"]):
-    tr = apply_split_manifest(metadata, manifest, fold=k, split="train")
-    te = apply_split_manifest(metadata, manifest, fold=k, split="test")
+for k in range(len(folds)):
+    tr = folds[k][0]
+    te = folds[k][1]
     pipe = make_regressor().fit(X[tr], y[tr])
     y_pred = pipe.predict(X[te])
     fold_r2.append(float(r2_score(y[te], y_pred)))

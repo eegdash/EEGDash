@@ -59,7 +59,7 @@ from eegdash.splits import (
     assert_no_leakage,
     describe_split,
     get_splitter,
-    make_split_manifest,
+    k_fold,
 )
 from eegdash.viz import use_eegdash_style
 
@@ -313,10 +313,10 @@ splitter = get_splitter(
     test_size=TEST_SIZE,
     random_state=SEED,
 )
-manifest = make_split_manifest(splitter, y, metadata, target="target")
-summary = describe_split(manifest, metadata, target="target", print_report=False)
+folds = list(k_fold(metadata, splitter=splitter, target="target"))
+summary = describe_split(folds, metadata, target="target", print_report=False)
 print(
-    f"eegdash manifest: {manifest['splitter_class'].rsplit('.', 1)[-1]} | "
+    f"eegdash manifest: {type(splitter).__name__.rsplit('.', 1)[-1]} | "
     f"n_folds={summary['n_folds']} "
     f"(expected {len(train_sizes_frac) * N_PERMS}) | "
     f"sklearn-only mode"

@@ -57,12 +57,11 @@ from sklearn.metrics import balanced_accuracy_score
 from sklearn.model_selection import LeaveOneGroupOut
 
 from eegdash.splits import (
-    apply_split_manifest,
     assert_no_leakage,
     describe_split,
     get_splitter,
+    k_fold,
     majority_baseline,
-    make_split_manifest,
 )
 from eegdash.viz import use_eegdash_style
 
@@ -165,11 +164,11 @@ splitter = get_splitter(
     n_splits=N_SUBJECTS,
     random_state=SEED,
 )
-manifest = make_split_manifest(splitter, y, metadata, target="target")
-overlap = assert_no_leakage(manifest, metadata, by="subject")
+folds = list(k_fold(metadata, splitter=splitter, target="target"))
+overlap = assert_no_leakage(folds, metadata, by="subject")
 assert overlap == 0, "cross-subject manifest leaked subjects"
 print(
-    f"splitter={manifest['splitter_class']} | folds={manifest['n_folds']} | "
+    f"splitter={type(splitter).__name__} | folds={len(folds)} | "
     f"max subject overlap={overlap}"
 )
 
@@ -186,13 +185,13 @@ print(
 
 
 # %%
-def loso_loop(X, y, metadata, manifest):
+def loso_loop(X, y, metadata, folds):
     """Return per-fold balanced accuracy plus pooled (true, pred)."""
     fold_acc, fold_chance, fold_subject = [], [], []
     pooled_true, pooled_pred = [], []
-    for k in range(manifest["n_folds"]):
-        train_mask = apply_split_manifest(metadata, manifest, fold=k, split="train")
-        test_mask = apply_split_manifest(metadata, manifest, fold=k, split="test")
+    for k in range(len(folds)):
+        train_mask = folds[k][0]
+        test_mask = folds[k][1]
         clf = LogisticRegression(random_state=SEED, max_iter=300)
         clf.fit(X[train_mask], y[train_mask])
         y_pred = clf.predict(X[test_mask])
@@ -215,7 +214,7 @@ def loso_loop(X, y, metadata, manifest):
 
 
 fold_acc, fold_chance, held_out_subjects, y_true_pooled, y_pred_pooled = loso_loop(
-    X, y, metadata, manifest
+    X, y, metadata, folds
 )
 mean_loso = float(fold_acc.mean())
 std_loso = float(fold_acc.std(ddof=0))
@@ -237,12 +236,10 @@ print(
 # audit; the per-fold lookup below confirms the contract holds.
 
 # %%
-describe_split(manifest, metadata, target="target", print_report=False)
+describe_split(folds, metadata, target="target", print_report=False)
 test_subjects_by_fold = []
-for k, fold in enumerate(manifest["folds"]):
-    subs = sorted(
-        metadata[metadata["sample_id"].isin(fold["test"])]["subject"].unique()
-    )
+for _tr_mask, te_mask in folds:
+    subs = sorted(metadata.loc[te_mask, "subject"].unique())
     test_subjects_by_fold.append(subs)
 print(
     f"union across folds: {len(set().union(*test_subjects_by_fold))} | "
@@ -340,7 +337,7 @@ try:
         n_splits=20,
         random_state=SEED,
     )
-    make_split_manifest(bad, y, metadata, target="target")
+    list(k_fold(metadata, splitter=bad, target="target"))
 except ValueError as exc:
     print(f"Caught ValueError: {str(exc)[:90]}")
     fixed = get_splitter(
@@ -370,9 +367,9 @@ splitter5 = get_splitter(
     n_splits=5,
     random_state=SEED,
 )
-manifest5 = make_split_manifest(splitter5, y, metadata, target="target")
-assert_no_leakage(manifest5, metadata, by="subject")
-acc5, _, _, _, _ = loso_loop(X, y, metadata, manifest5)
+folds5 = list(k_fold(metadata, splitter=splitter5, target="target"))
+assert_no_leakage(folds5, metadata, by="subject")
+acc5, _, _, _, _ = loso_loop(X, y, metadata, folds5)
 print(
     f"5-fold cross-subject: {acc5.mean():.3f} +/- {acc5.std(ddof=0):.3f} | "
     f"LOSO ({N_SUBJECTS} folds): {mean_loso:.3f} +/- {std_loso:.3f}"
@@ -399,9 +396,9 @@ splitter_imb = get_splitter(
     n_splits=len(sizes_imb),
     random_state=SEED,
 )
-manifest_imb = make_split_manifest(splitter_imb, y_imb, meta_imb, target="target")
-assert_no_leakage(manifest_imb, meta_imb, by="subject")
-acc_imb, _, _, _, _ = loso_loop(X_imb, y_imb, meta_imb, manifest_imb)
+folds_imb = list(k_fold(meta_imb, splitter=splitter_imb, target="target"))
+assert_no_leakage(folds_imb, meta_imb, by="subject")
+acc_imb, _, _, _, _ = loso_loop(X_imb, y_imb, meta_imb, folds_imb)
 print(
     f"imbalanced LOSO: {acc_imb.mean():.3f} +/- {acc_imb.std(ddof=0):.3f} | "
     f"sizes={sizes_imb}"

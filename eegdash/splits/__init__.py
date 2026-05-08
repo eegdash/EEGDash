@@ -10,17 +10,17 @@ Opt-in subpackage; requires MOABB:
 
     pip install eegdash[moabb]
 
-Public surface:
+Public surface (single-API: every entry point yields boolean mask pairs):
 
-- :func:`get_splitter` — friendly factory over :mod:`moabb.evaluations.splitters`.
-- :func:`make_split_manifest` / :func:`apply_split_manifest` /
-  :func:`manifest_to_json` — JSON-serialisable folds.
-- :func:`train_test_split`, :func:`k_fold` — HuggingFace-style entry
-  points returning ``{"train": ..., "test": ...}`` and ``(train, test)``
-  iterables.
+- :func:`get_splitter` — factory over :mod:`moabb.evaluations.splitters`.
+- :func:`train_test_split`, :func:`k_fold` — return / yield
+  ``(train_mask, test_mask)`` boolean arrays aligned with ``metadata`` rows.
+  Pass ``splitter=`` to use any pre-built splitter (``learning_curve``,
+  ``within_subject``, ...); otherwise builds a group-aware MOABB splitter
+  from ``group``/``n_folds``/``test_size``.
 - :func:`assert_no_leakage`, :class:`LeakageError` — disjointness check
   + JSON ``leakage_report`` line on stdout.
-- :func:`describe_split` — one-screen audit of a manifest.
+- :func:`describe_split` — one-screen audit of a folds list.
 - :func:`majority_baseline`, :func:`median_baseline` — chance-level
   baselines for classification and regression.
 """
@@ -34,20 +34,20 @@ except ImportError as exc:  # pragma: no cover - exercised on bare installs
         "eegdash.splits requires MOABB. Install with: pip install eegdash[moabb]"
     ) from exc
 
+import inspect
 import json
 import sys
 from collections import Counter
-from collections.abc import Iterator
+from collections.abc import Iterable, Iterator
 from typing import Any, Optional, Sequence, Union
 
 import numpy as np
 import pandas as pd
 
-from ._manifest import apply_split_manifest, make_split_manifest, manifest_to_json
 from ._splitters import get_splitter
 
 ArrayLike = Union[Sequence, np.ndarray]
-ManifestLike = Union[dict, Sequence[tuple]]
+FoldsLike = Iterable[tuple[np.ndarray, np.ndarray]]
 
 _GROUP_TO_SPLITTER: dict[str, str] = {
     "subject": "cross_subject",
@@ -57,7 +57,7 @@ _GROUP_TO_SPLITTER: dict[str, str] = {
 
 
 # --------------------------------------------------------------------------- #
-# HuggingFace-style entry points                                              #
+# Internal helpers                                                            #
 # --------------------------------------------------------------------------- #
 
 
@@ -89,18 +89,6 @@ def _resolve_metadata(
     return y, metadata
 
 
-def _select(dataset: Any, indices: np.ndarray) -> Any:
-    """Return the subset of ``dataset`` at ``indices`` (HF, braindecode, or DataFrame)."""
-    idx = [int(i) for i in indices]
-    if hasattr(dataset, "select"):
-        return dataset.select(idx)
-    if hasattr(dataset, "split"):
-        return dataset.split({"_subset": idx})["_subset"]
-    if hasattr(dataset, "iloc"):
-        return dataset.iloc[idx]
-    return [dataset[i] for i in idx]
-
-
 def _resolve_splitter(group: str, **kwargs: Any):
     if group not in _GROUP_TO_SPLITTER:
         raise ValueError(
@@ -110,53 +98,90 @@ def _resolve_splitter(group: str, **kwargs: Any):
     return get_splitter(_GROUP_TO_SPLITTER[group], **kwargs)
 
 
-def train_test_split(
-    dataset: Any,
-    *,
-    test_size: float | None = None,
-    group: str = "subject",
-    target: str | None = "target",
-    seed: int | None = 42,
-    **splitter_kwargs: Any,
-) -> dict[str, Any]:
-    """Group-aware ``{"train": ..., "test": ...}`` split, HF-style.
+def _iter_fold_masks(
+    splitter: Any, y: np.ndarray, metadata: pd.DataFrame
+) -> Iterator[tuple[np.ndarray, np.ndarray]]:
+    """Run ``splitter`` and yield ``(train_mask, test_mask)`` boolean arrays.
 
-    Mirrors :meth:`datasets.Dataset.train_test_split`. The chosen
-    ``group`` (``"subject"`` / ``"session"`` / ``"dataset"``) stays
-    disjoint between the two halves.
+    MOABB evaluation splitters expose ``split(y, metadata)``; sklearn-style
+    splitters (e.g. :class:`moabb.evaluations.splitters.LearningCurveSplitter`)
+    expose ``split(X, y, groups=...)``. Dispatched by signature.
     """
-    y, metadata = _resolve_metadata(dataset, target)
-    if test_size is not None:
-        splitter_kwargs.setdefault("test_size", float(test_size))
-    splitter_kwargs.setdefault("random_state", seed)
-    splitter = _resolve_splitter(group, **splitter_kwargs)
-    for train_idx, test_idx in splitter.split(y, metadata):
-        return {
-            "train": _select(dataset, np.asarray(train_idx)),
-            "test": _select(dataset, np.asarray(test_idx)),
-        }
-    raise RuntimeError("Splitter produced no folds.")
+    n = len(metadata.index)
+    if "groups" in inspect.signature(splitter.split).parameters:
+        groups = (
+            metadata["subject"].to_numpy() if "subject" in metadata.columns else None
+        )
+        fold_iter = splitter.split(np.zeros((n, 1)), np.asarray(y), groups=groups)
+    else:
+        fold_iter = splitter.split(np.asarray(y), metadata)
+    for train_idx, test_idx in fold_iter:
+        train_mask = np.zeros(n, dtype=bool)
+        train_mask[np.asarray(train_idx, dtype=int)] = True
+        test_mask = np.zeros(n, dtype=bool)
+        test_mask[np.asarray(test_idx, dtype=int)] = True
+        yield train_mask, test_mask
+
+
+# --------------------------------------------------------------------------- #
+# Single-API entry points                                                     #
+# --------------------------------------------------------------------------- #
 
 
 def k_fold(
     dataset: Any,
     *,
+    splitter: Any = None,
     n_folds: int = 5,
     group: str = "subject",
-    target: str | None = "target",
-    seed: int | None = 42,
+    target: Optional[str] = "target",
+    seed: Optional[int] = 42,
     **splitter_kwargs: Any,
-) -> Iterator[tuple[Any, Any]]:
-    """Yield ``(train, test)`` pairs across ``n_folds`` group-aware folds."""
+) -> Iterator[tuple[np.ndarray, np.ndarray]]:
+    """Yield ``(train_mask, test_mask)`` boolean arrays per fold.
+
+    With ``splitter=None``, builds a group-aware MOABB splitter from
+    ``group`` / ``n_folds`` / ``seed``. Pass ``splitter=`` to use any
+    pre-built splitter (``"learning_curve"``, ``"within_subject"``, ...).
+    Masks align with ``metadata`` rows: slice arrays with ``X[train_mask]``
+    or DataFrames with ``metadata.loc[train_mask]``.
+    """
     y, metadata = _resolve_metadata(dataset, target)
-    splitter_kwargs.setdefault("n_folds", n_folds)
-    splitter_kwargs.setdefault("random_state", seed)
-    splitter = _resolve_splitter(group, **splitter_kwargs)
-    for train_idx, test_idx in splitter.split(y, metadata):
-        yield (
-            _select(dataset, np.asarray(train_idx)),
-            _select(dataset, np.asarray(test_idx)),
-        )
+    if splitter is None:
+        splitter_kwargs.setdefault("n_folds", n_folds)
+        splitter_kwargs.setdefault("random_state", seed)
+        splitter = _resolve_splitter(group, **splitter_kwargs)
+    yield from _iter_fold_masks(splitter, y, metadata)
+
+
+def train_test_split(
+    dataset: Any,
+    *,
+    splitter: Any = None,
+    test_size: Optional[float] = None,
+    group: str = "subject",
+    target: Optional[str] = "target",
+    seed: Optional[int] = 42,
+    **splitter_kwargs: Any,
+) -> tuple[np.ndarray, np.ndarray]:
+    """Return ``(train_mask, test_mask)`` for the first fold of ``k_fold``.
+
+    Mirrors the single-fold case of :func:`k_fold`. The chosen ``group``
+    (``"subject"`` / ``"session"`` / ``"dataset"``) stays disjoint between
+    train and test.
+    """
+    if test_size is not None:
+        splitter_kwargs.setdefault("test_size", float(test_size))
+    for fold in k_fold(
+        dataset,
+        splitter=splitter,
+        group=group,
+        target=target,
+        seed=seed,
+        **splitter_kwargs,
+    ):
+        return fold
+    raise RuntimeError("Splitter produced no folds.")
 
 
 # --------------------------------------------------------------------------- #
@@ -165,57 +190,45 @@ def k_fold(
 
 
 class LeakageError(ValueError):
-    """Raised when a split manifest leaks groups across train/test."""
+    """Raised when a folds list leaks groups across train/test."""
 
 
-def _values_for_ids(metadata: pd.DataFrame, ids: Sequence, by: str) -> set:
-    """Return the set of ``by`` values reachable from a list of ``sample_id``s or row indices."""
+def _values_for_mask(metadata: pd.DataFrame, mask: ArrayLike, by: str) -> set:
     if by not in metadata.columns:
         raise ValueError(
             f"Metadata has no column '{by}'. "
             f"Available columns: {list(metadata.columns)}"
         )
-    if "sample_id" in metadata.columns:
-        mask = metadata["sample_id"].isin(set(ids))
-        if mask.any():
-            return set(metadata.loc[mask, by].dropna().astype(str).unique().tolist())
-    try:
-        idx = [int(i) for i in ids]
-    except (TypeError, ValueError):
+    arr = np.asarray(mask)
+    if arr.size == 0:
         return set()
-    if not idx:
-        return set()
-    return set(metadata.iloc[idx][by].dropna().astype(str).unique().tolist())
+    rows = metadata.loc[arr] if arr.dtype == bool else metadata.iloc[arr.astype(int)]
+    return set(rows[by].dropna().astype(str).unique().tolist())
 
 
 def assert_no_leakage(
-    manifest_or_splits: ManifestLike,
-    metadata: pd.DataFrame,
-    by: str = "subject",
+    folds: FoldsLike, metadata: pd.DataFrame, by: str = "subject"
 ) -> int:
     """Assert no train/test overlap on the ``by`` column for any fold.
 
     Always emits a JSON line ``{"leakage_report": {"overlap": <int>,
-    "by": "<by>"}}`` on stdout, even when the overlap is 0.
+    "by": "<by>"}}`` on stdout, even when the overlap is 0. ``folds`` is
+    any iterable of ``(train_mask, test_mask)`` tuples (e.g. the output of
+    ``list(k_fold(...))``).
     """
     if not isinstance(metadata, pd.DataFrame):
         raise TypeError("metadata must be a pandas DataFrame.")
     if not isinstance(by, str) or not by:
         raise ValueError("`by` must be a non-empty string column name.")
 
-    if isinstance(manifest_or_splits, dict) and "folds" in manifest_or_splits:
-        pairs = [(f["train"], f["test"]) for f in manifest_or_splits["folds"]]
-    else:
-        pairs = list(manifest_or_splits)
-        for pair in pairs:
-            if not (isinstance(pair, (tuple, list)) and len(pair) == 2):
-                raise TypeError("Each fold must be a (train_ids, test_ids) tuple/list.")
-
     fold_overlaps: list[dict] = []
     max_overlap = 0
-    for fold_index, (train_ids, test_ids) in enumerate(pairs):
-        overlap = _values_for_ids(metadata, train_ids, by) & _values_for_ids(
-            metadata, test_ids, by
+    for fold_index, pair in enumerate(folds):
+        if not (isinstance(pair, (tuple, list)) and len(pair) == 2):
+            raise TypeError("Each fold must be a (train_mask, test_mask) tuple/list.")
+        train_mask, test_mask = pair
+        overlap = _values_for_mask(metadata, train_mask, by) & _values_for_mask(
+            metadata, test_mask, by
         )
         if overlap:
             fold_overlaps.append(
@@ -305,11 +318,18 @@ def _nunique_safe(df: pd.DataFrame, col: str) -> int:
     return int(df[col].nunique()) if col in df.columns else 0
 
 
+def _slice_mask(metadata: pd.DataFrame, mask: np.ndarray) -> pd.DataFrame:
+    return metadata.loc[mask] if mask.dtype == bool else metadata.iloc[mask.astype(int)]
+
+
 def _fold_stats(
-    fold: dict[str, list[str]], metadata: pd.DataFrame, target: Optional[str]
+    train_mask: np.ndarray,
+    test_mask: np.ndarray,
+    metadata: pd.DataFrame,
+    target: Optional[str],
 ) -> dict[str, Any]:
-    train = metadata[metadata["sample_id"].isin(set(fold["train"]))]
-    test = metadata[metadata["sample_id"].isin(set(fold["test"]))]
+    train = _slice_mask(metadata, train_mask)
+    test = _slice_mask(metadata, test_mask)
     out: dict[str, Any] = {"n_train": len(train.index), "n_test": len(test.index)}
     for col in ("subject", "session", "dataset"):
         out[f"{col}s_train"] = _nunique_safe(train, col)
@@ -321,19 +341,21 @@ def _fold_stats(
 
 
 def describe_split(
-    manifest: dict[str, Any],
+    folds: FoldsLike,
     metadata: pd.DataFrame,
     target: Optional[str] = None,
     print_report: bool = True,
 ) -> dict[str, Any]:
-    """Return a structured summary of a manifest and optionally print it."""
+    """Audit ``folds`` (list of ``(train_mask, test_mask)`` tuples) against ``metadata``.
+
+    Returns a dict with per-fold sizes, distinct subjects/sessions per side,
+    optional class balance, and a list of structural warnings (empty test
+    set, single-class test set, single-subject test set).
+    """
     if not isinstance(metadata, pd.DataFrame):
         raise TypeError("metadata must be a pandas DataFrame.")
-    if "sample_id" not in metadata.columns:
-        raise ValueError("metadata must have a 'sample_id' column.")
-
-    folds = manifest.get("folds", [])
-    per_fold = [_fold_stats(f, metadata, target) for f in folds]
+    folds_list = [(np.asarray(tr), np.asarray(te)) for tr, te in folds]
+    per_fold = [_fold_stats(tr, te, metadata, target) for tr, te in folds_list]
     coverage = {
         "n_samples": int(len(metadata.index)),
         **{
@@ -358,19 +380,15 @@ def describe_split(
                 f"({list(classes.keys())[0]!r}) -- chance level will be 100%."
             )
     summary = {
-        "n_folds": int(manifest.get("n_folds", len(folds))),
-        "splitter_class": manifest.get("splitter_class"),
-        "random_seed": manifest.get("random_seed"),
-        "target": manifest.get("target", target),
+        "n_folds": len(folds_list),
+        "target": target,
         "coverage": coverage,
         "per_fold": per_fold,
         "warnings": warnings,
     }
     if print_report:
         print(
-            f"Split summary -- folds={summary['n_folds']}, "
-            f"splitter={summary['splitter_class']}, "
-            f"seed={summary['random_seed']}, target={summary['target']}"
+            f"Split summary -- folds={summary['n_folds']}, target={summary['target']}"
         )
         print(f"Coverage: {coverage}")
         for i, stats in enumerate(per_fold):
@@ -389,14 +407,11 @@ def describe_split(
 
 __all__ = [
     "LeakageError",
-    "apply_split_manifest",
     "assert_no_leakage",
     "describe_split",
     "get_splitter",
     "k_fold",
     "majority_baseline",
-    "make_split_manifest",
-    "manifest_to_json",
     "median_baseline",
     "train_test_split",
 ]

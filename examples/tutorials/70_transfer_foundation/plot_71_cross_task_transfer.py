@@ -51,11 +51,10 @@ from torch import nn
 
 from _cross_task_figure import draw_cross_task_figure
 from eegdash.splits import (
-    apply_split_manifest,
     assert_no_leakage,
     get_splitter,
+    k_fold,
     majority_baseline,
-    make_split_manifest,
 )
 from eegdash.viz import use_eegdash_style
 
@@ -175,11 +174,11 @@ def make_model():
 def split_subject_aware(meta, X, y, target="label"):
     """Cross-subject 2-fold split + leakage assertion."""
     splitter = get_splitter("cross_subject", n_folds=2, random_state=SEED)
-    manifest = make_split_manifest(splitter, y, meta, target=target)
-    overlap = assert_no_leakage(manifest, meta, by="subject")
+    folds = list(k_fold(meta, splitter=splitter, target=target))
+    overlap = assert_no_leakage(folds, meta, by="subject")
     assert overlap == 0, "cross-subject split leaked"
-    train_mask = apply_split_manifest(meta, manifest, fold=0, split="train")
-    test_mask = apply_split_manifest(meta, manifest, fold=0, split="test")
+    train_mask = folds[0][0]
+    test_mask = folds[0][1]
     return train_mask, test_mask
 
 

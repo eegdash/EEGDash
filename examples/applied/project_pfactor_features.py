@@ -65,10 +65,9 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
 from eegdash.splits import (
-    apply_split_manifest,
     assert_no_leakage,
     get_splitter,
-    make_split_manifest,
+    k_fold,
     median_baseline,
 )
 from eegdash.viz import use_eegdash_style
@@ -233,12 +232,12 @@ def make_forest() -> RandomForestRegressor:
 
 # %%
 splitter = get_splitter("cross_subject", n_folds=5, n_splits=5, random_state=SEED)
-manifest = make_split_manifest(splitter, y, metadata, target="target")
-overlap = assert_no_leakage(manifest, metadata, by="subject")
+folds = list(k_fold(metadata, splitter=splitter, target="target"))
+overlap = assert_no_leakage(folds, metadata, by="subject")
 assert overlap == 0, "cross_subject manifest leaked subjects"
-assert manifest["n_folds"] >= 5, "need at least 5 folds for mean +/- std"
+assert len(folds) >= 5, "need at least 5 folds for mean +/- std"
 print(
-    f"Splitter: {manifest['splitter_class']} | folds: {manifest['n_folds']} | "
+    f"Splitter: {type(splitter).__name__} | folds: {len(folds)} | "
     f"max subject overlap: {overlap}"
 )
 
@@ -263,9 +262,9 @@ test_residuals: list[tuple[str, float, float]] = []
 ridge_coefs = np.zeros(len(feature_cols), dtype=float)
 forest_imp = np.zeros(len(feature_cols), dtype=float)
 
-for k in range(manifest["n_folds"]):
-    tr = apply_split_manifest(metadata, manifest, fold=k, split="train")
-    te = apply_split_manifest(metadata, manifest, fold=k, split="test")
+for k in range(len(folds)):
+    tr = folds[k][0]
+    te = folds[k][1]
     ridge = make_ridge_pipeline().fit(X[tr], y[tr])
     forest = make_forest().fit(X[tr], y[tr])
     # The forest predicts directly on raw features. We use it as the
@@ -292,8 +291,8 @@ for k in range(manifest["n_folds"]):
         f"baseline_r2={fold_chance_r2[-1]:+.3f}"
     )
 
-forest_imp /= manifest["n_folds"]
-ridge_coefs /= manifest["n_folds"]
+forest_imp /= len(folds)
+ridge_coefs /= len(folds)
 mean_r2 = float(np.mean(fold_r2))
 std_r2 = float(np.std(fold_r2, ddof=1))
 mean_mae = float(np.mean(fold_mae))

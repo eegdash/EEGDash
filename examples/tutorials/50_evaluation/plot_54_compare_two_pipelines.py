@@ -53,11 +53,10 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
 from eegdash.splits import (
-    apply_split_manifest,
     assert_no_leakage,
     get_splitter,
+    k_fold,
     majority_baseline,
-    make_split_manifest,
 )
 from eegdash.viz import use_eegdash_style
 
@@ -141,13 +140,11 @@ print(
 splitter = get_splitter(
     "cross_subject", n_folds=N_SUBJECTS, n_splits=N_SUBJECTS, random_state=SEED
 )
-manifest = make_split_manifest(
-    splitter, metadata["target"].to_numpy(), metadata, target="target"
-)
-overlap = assert_no_leakage(manifest, metadata, by="subject")
+folds = list(k_fold(metadata, splitter=splitter, target="target"))
+overlap = assert_no_leakage(folds, metadata, by="subject")
 assert overlap == 0, "cross_subject manifest leaked across subjects."
-n_folds = manifest["n_folds"]
-print(f"manifest: {manifest['splitter_class']} | folds: {n_folds}")
+n_folds = len(folds)
+print(f"manifest: {type(splitter).__name__} | folds: {n_folds}")
 
 # %% [markdown]
 # Step 4. Score both pipelines on the SAME folds
@@ -166,8 +163,8 @@ def run_pipeline(estimator) -> tuple[list[float], list[str], list[float]]:
     fold_ids: list[str] = []
     chances: list[float] = []
     for k in range(n_folds):
-        train_mask = apply_split_manifest(metadata, manifest, fold=k, split="train")
-        test_mask = apply_split_manifest(metadata, manifest, fold=k, split="test")
+        train_mask = folds[k][0]
+        test_mask = folds[k][1]
         X_train = feature_table.loc[train_mask, feature_cols].to_numpy()
         X_test = feature_table.loc[test_mask, feature_cols].to_numpy()
         y_train = feature_table.loc[train_mask, "target"].to_numpy()
@@ -176,7 +173,7 @@ def run_pipeline(estimator) -> tuple[list[float], list[str], list[float]]:
         accs.append(float(accuracy_score(y_test, estimator.predict(X_test))))
         chances.append(float(majority_baseline(y_train, y_test)["chance_level"]))
         # Hash the test ids; this string is the fold's identity contract.
-        fold_ids.append("|".join(sorted(manifest["folds"][k]["test"])))
+        fold_ids.append("|".join(sorted(metadata.loc[test_mask, "sample_id"].tolist())))
     return accs, fold_ids, chances
 
 
@@ -231,7 +228,7 @@ n = deltas.size
 # every test set contains exactly one subject.
 held_out_subjects = []
 for k in range(n_folds):
-    test_mask = apply_split_manifest(metadata, manifest, fold=k, split="test")
+    test_mask = folds[k][1]
     subjects_in_fold = metadata.loc[test_mask, "subject"].unique().tolist()
     assert len(subjects_in_fold) == 1, "cross_subject fold contained >1 subject."
     held_out_subjects.append(str(subjects_in_fold[0]))

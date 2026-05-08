@@ -65,8 +65,8 @@ from eegdash.splits import (
     assert_no_leakage,
     describe_split,
     get_splitter,
+    k_fold,
     majority_baseline,
-    make_split_manifest,
 )
 from eegdash.viz import use_eegdash_style
 
@@ -140,8 +140,8 @@ print(
 
 # %%
 splitter = get_splitter("cross_session", n_folds=3, n_splits=3, random_state=SEED)
-manifest = make_split_manifest(splitter, y, metadata, target="target")
-print(f"Splitter: {manifest['splitter_class']} | folds: {manifest['n_folds']}")
+folds = list(k_fold(metadata, splitter=splitter, target="target"))
+print(f"Splitter: {type(splitter).__name__} | folds: {len(folds)}")
 
 # %% [markdown]
 # Step 3. Assert no session leakage; confirm subjects are shared
@@ -154,12 +154,12 @@ print(f"Splitter: {manifest['splitter_class']} | folds: {manifest['n_folds']}")
 # "within-subject, across-session" rather than cross-subject.
 
 # %%
-session_overlap = assert_no_leakage(manifest, metadata, by="session")
+session_overlap = assert_no_leakage(folds, metadata, by="session")
 assert session_overlap == 0, "cross_session manifest leaked a session!"
 fold_subj_overlaps = []
-for fold in manifest["folds"]:
-    tr_s = set(metadata.loc[metadata["sample_id"].isin(fold["train"]), "subject"])
-    te_s = set(metadata.loc[metadata["sample_id"].isin(fold["test"]), "subject"])
+for tr_mask, te_mask in folds:
+    tr_s = set(metadata.loc[tr_mask, "subject"])
+    te_s = set(metadata.loc[te_mask, "subject"])
     fold_subj_overlaps.append(len(tr_s & te_s))
 assert min(fold_subj_overlaps) == 1, "every fold must keep the same subject"
 print(
@@ -206,9 +206,9 @@ for subj, sub_md in metadata.groupby("subject"):
     within_per_subject[str(subj)] = sub_w
     within_scores.extend(sub_w)
 
-for fold in manifest["folds"]:
-    tr = np.where(metadata["sample_id"].isin(fold["train"]).to_numpy())[0]
-    te = np.where(metadata["sample_id"].isin(fold["test"]).to_numpy())[0]
+for tr_mask, te_mask in folds:
+    tr = np.where(tr_mask)[0]
+    te = np.where(te_mask)[0]
     score = _fit_score(tr, te)
     cross_scores.append(score)
     test_subject = str(metadata.iloc[te[0]]["subject"])
@@ -233,7 +233,7 @@ print(
 # subject in test (1 session), with balanced classes.
 
 # %%
-summary = describe_split(manifest, metadata, target="target", print_report=False)
+summary = describe_split(folds, metadata, target="target", print_report=False)
 for i, fold in enumerate(summary["per_fold"][:3]):
     bal = fold["class_balance_test"]
     ratio = max(bal.values()) / (sum(bal.values()) or 1)
@@ -357,11 +357,11 @@ for subj, w, c in ranked:
 
 # %%
 try:
-    assert_no_leakage(manifest, metadata)  # default by="subject"
+    assert_no_leakage(folds, metadata)  # default by="subject"
     raise AssertionError("expected a LeakageError")
 except Exception as exc:
     print(f"Caught {type(exc).__name__}: retrying with by='session'.")
-    print(f"Recovery overlap = {assert_no_leakage(manifest, metadata, by='session')}")
+    print(f"Recovery overlap = {assert_no_leakage(folds, metadata, by='session')}")
 
 # %% [markdown]
 # Modify: try a 2-session subject
@@ -380,14 +380,15 @@ trimmed_y = trimmed_md["target"].to_numpy()
 # Drop ``n_folds`` so MOABB falls back to its native LeaveOneGroupOut
 # behaviour: subjects with 2 remaining sessions contribute 2 folds, the
 # others contribute one fold per session as usual.
-trimmed_man = make_split_manifest(
-    get_splitter("cross_session", random_state=SEED),
-    trimmed_y,
-    trimmed_md,
-    target="target",
+trimmed_folds = list(
+    k_fold(
+        trimmed_md,
+        splitter=get_splitter("cross_session", random_state=SEED),
+        target="target",
+    )
 )
 print(
-    f"Trimmed: {trimmed_man['n_folds']} folds (was {manifest['n_folds']}), "
+    f"Trimmed: {len(trimmed_folds)} folds (was {len(folds)}), "
     f"min sessions/subject="
     f"{trimmed_md.groupby('subject')['session'].nunique().min()}"
 )

@@ -121,6 +121,7 @@ docs = [
   "sphinx-sitemap",
   "sphinxext-opengraph",
   "sphinx-markdown-builder",
+  "sphinxcontrib-bibtex",
   "numpydoc",
   "lightgbm",
   "plotly",

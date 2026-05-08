@@ -61,7 +61,15 @@ extensions = [
     "sphinxext.opengraph",
     "sphinx_copybutton",
     "sphinx_time_estimation",
+    "sphinxcontrib.bibtex",
 ]
+
+# Centralised bibliography (see docs/source/refs.bib + references.rst).
+# Cite an entry from any RST or sphinx-gallery markdown cell with
+# ``:cite:`<key>``` and the bibliography page renders the canonical list.
+bibtex_bibfiles = ["refs.bib"]
+bibtex_default_style = "plain"
+bibtex_reference_style = "author_year"
 
 # -- Open Graph / Twitter Card configuration --------------------------------
 # Populates <meta property="og:*"> and <meta name="twitter:*"> tags per page.

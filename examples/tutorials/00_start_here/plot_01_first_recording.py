@@ -37,6 +37,7 @@ from pathlib import Path
 
 import matplotlib.pyplot as plt
 import mne
+import numpy as np
 import pandas as pd
 
 import eegdash
@@ -203,23 +204,35 @@ fig_raw = raw.plot(
 # we drop them and let the spatial pattern speak.
 
 # %%
-# HBN data ships with a GSN-HydroCel-129 layout; set the montage so
-# plot_sensors has channel positions to draw. ``match_alias=True`` lets
-# the montage absorb minor channel-name variants (e.g. ``E1`` vs ``E001``).
+# HBN data ships with a GSN-HydroCel-129 layout. Apply it with
+# ``match_alias=True`` so minor channel-name variants (e.g. ``E1`` vs
+# ``E001``) are absorbed, then draw ``plot_sensors`` only when at least
+# one EEG channel actually has a position attached.
 raw.set_montage(
     "GSN-HydroCel-129",
     match_case=False,
     match_alias=True,
     on_missing="ignore",
 )
+has_positions = any(not np.allclose(ch["loc"][:3], 0.0) for ch in raw.info["chs"])
 fig_sens, ax_sens = plt.subplots(figsize=(5.0, 5.0))
-raw.plot_sensors(
-    kind="topomap",
-    show_names=False,
-    axes=ax_sens,
-    show=False,
-)
-ax_sens.set_title("")
+if has_positions:
+    raw.plot_sensors(
+        kind="topomap",
+        show_names=False,
+        axes=ax_sens,
+        show=False,
+    )
+    ax_sens.set_title("")
+else:
+    ax_sens.text(
+        0.5,
+        0.5,
+        "Sensor positions unavailable in this build's montage",
+        ha="center",
+        va="center",
+    )
+    ax_sens.set_axis_off()
 fig_sens.tight_layout()
 
 # %% [markdown]

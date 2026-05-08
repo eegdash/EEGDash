@@ -97,27 +97,6 @@ from .serialization import (
 from .trainable import TrainableFeature
 from .utils import extract_features, fit_feature_extractors
 
-
-def fit_feature_extractor(*args, **kwargs):
-    """Backward-compatible alias for :func:`fit_feature_extractors`.
-
-    .. deprecated:: 0.7.3
-        Use :func:`fit_feature_extractors` (plural). This singular name was
-        used in early tutorial drafts; it now forwards to the plural API and
-        emits a :class:`DeprecationWarning`.
-
-    """
-    import warnings
-
-    warnings.warn(
-        "fit_feature_extractor is deprecated; use fit_feature_extractors "
-        "(plural). The singular name will be removed in a future release.",
-        DeprecationWarning,
-        stacklevel=2,
-    )
-    return fit_feature_extractors(*args, **kwargs)
-
-
 __all__ = [
     "BivariateIterator",
     "FeaturesConcatDataset",
@@ -152,7 +131,6 @@ __all__ = [
     "load_features_concat_dataset",
     "TrainableFeature",
     "extract_features",
-    "fit_feature_extractor",
     "fit_feature_extractors",
     # Feature part
     # Complexity

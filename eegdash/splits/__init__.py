@@ -10,17 +10,16 @@ Opt-in subpackage; requires MOABB:
 
     pip install eegdash[moabb]
 
-Public surface (one short file per real concern):
+Public surface:
 
-- :func:`get_splitter` (in ``_splitters``) — friendly factory over
-  :mod:`moabb.evaluations.splitters`.
+- :func:`get_splitter` — friendly factory over :mod:`moabb.evaluations.splitters`.
 - :func:`make_split_manifest` / :func:`apply_split_manifest` /
-  :func:`manifest_to_json` (in ``_manifest``) — JSON-serialisable folds.
+  :func:`manifest_to_json` — JSON-serialisable folds.
 - :func:`train_test_split`, :func:`k_fold` — HuggingFace-style entry
   points returning ``{"train": ..., "test": ...}`` and ``(train, test)``
   iterables.
 - :func:`assert_no_leakage`, :class:`LeakageError` — disjointness check
-  + the ``leakage_report`` JSON line consumed by runtime validators.
+  + JSON ``leakage_report`` line on stdout.
 - :func:`describe_split` — one-screen audit of a manifest.
 - :func:`majority_baseline`, :func:`median_baseline` — chance-level
   baselines for classification and regression.
@@ -39,7 +38,7 @@ import json
 import sys
 from collections import Counter
 from collections.abc import Iterator
-from typing import Any, Iterable, Optional, Sequence, Union
+from typing import Any, Optional, Sequence, Union
 
 import numpy as np
 import pandas as pd
@@ -61,9 +60,6 @@ _GROUP_TO_SPLITTER: dict[str, str] = {
     "dataset": "cross_dataset",
 }
 
-# Test folds smaller than this trigger a describe_split warning.
-_MIN_TEST_GROUP_WARNING: int = 2
-
 
 # --------------------------------------------------------------------------- #
 # HuggingFace-style entry points                                              #
@@ -73,21 +69,14 @@ _MIN_TEST_GROUP_WARNING: int = 2
 def _resolve_metadata(
     dataset: Any, target: Optional[str]
 ) -> tuple[np.ndarray, pd.DataFrame]:
-    """Return ``(y, metadata)`` from a dataset or a DataFrame.
-
-    Uses :meth:`braindecode.datasets.BaseConcatDataset.get_metadata`
-    (per-window) when present, falls back to the
-    :attr:`braindecode.datasets.BaseConcatDataset.description` property
-    (per-record) on a raw concat dataset, and treats a
-    :class:`pandas.DataFrame` as the metadata directly.
-    """
-    if hasattr(dataset, "get_metadata"):
+    """Return ``(y, metadata)`` from a braindecode dataset or a DataFrame."""
+    if isinstance(dataset, pd.DataFrame):
+        metadata = dataset
+    elif hasattr(dataset, "get_metadata"):
         try:
             metadata = pd.DataFrame(dataset.get_metadata()).reset_index(drop=True)
         except (TypeError, AttributeError, ValueError):
             metadata = pd.DataFrame(dataset.description).reset_index(drop=True)
-    elif isinstance(dataset, pd.DataFrame):
-        metadata = dataset
     elif hasattr(dataset, "description"):
         metadata = pd.DataFrame(dataset.description).reset_index(drop=True)
     else:
@@ -106,6 +95,7 @@ def _resolve_metadata(
 
 
 def _select(dataset: Any, indices: np.ndarray) -> Any:
+    """Return the subset of ``dataset`` at ``indices`` (HF, braindecode, or DataFrame)."""
     idx = [int(i) for i in indices]
     if hasattr(dataset, "select"):
         return dataset.select(idx)
@@ -123,12 +113,6 @@ def _resolve_splitter(group: str, **kwargs: Any):
             f"{sorted(_GROUP_TO_SPLITTER.keys())}."
         )
     return get_splitter(_GROUP_TO_SPLITTER[group], **kwargs)
-
-
-def _first_fold(splitter, y: np.ndarray, metadata) -> tuple[np.ndarray, np.ndarray]:
-    for train_idx, test_idx in splitter.split(y, metadata):
-        return np.asarray(train_idx), np.asarray(test_idx)
-    raise RuntimeError("Splitter produced no folds.")
 
 
 def train_test_split(
@@ -151,11 +135,12 @@ def train_test_split(
         splitter_kwargs.setdefault("test_size", float(test_size))
     splitter_kwargs.setdefault("random_state", seed)
     splitter = _resolve_splitter(group, **splitter_kwargs)
-    train_idx, test_idx = _first_fold(splitter, y, metadata)
-    return {
-        "train": _select(dataset, train_idx),
-        "test": _select(dataset, test_idx),
-    }
+    for train_idx, test_idx in splitter.split(y, metadata):
+        return {
+            "train": _select(dataset, np.asarray(train_idx)),
+            "test": _select(dataset, np.asarray(test_idx)),
+        }
+    raise RuntimeError("Splitter produced no folds.")
 
 
 def k_fold(
@@ -188,26 +173,8 @@ class LeakageError(ValueError):
     """Raised when a split manifest leaks groups across train/test."""
 
 
-def _emit_report(overlap: int, by: str) -> None:
-    payload = {"leakage_report": {"overlap": int(overlap), "by": str(by)}}
-    sys.stdout.write(json.dumps(payload) + "\n")
-    sys.stdout.flush()
-
-
-def _iter_fold_pairs(
-    manifest_or_splits: ManifestLike,
-) -> Iterable[tuple[Sequence, Sequence]]:
-    if isinstance(manifest_or_splits, dict) and "folds" in manifest_or_splits:
-        for fold in manifest_or_splits["folds"]:
-            yield fold["train"], fold["test"]
-        return
-    for pair in manifest_or_splits:  # type: ignore[arg-type]
-        if not (isinstance(pair, (tuple, list)) and len(pair) == 2):
-            raise TypeError("Each fold must be a (train_ids, test_ids) tuple/list.")
-        yield pair[0], pair[1]
-
-
 def _values_for_ids(metadata: pd.DataFrame, ids: Sequence, by: str) -> set:
+    """Return the set of ``by`` values reachable from a list of ``sample_id``s or row indices."""
     if by not in metadata.columns:
         raise ValueError(
             f"Metadata has no column '{by}'. "
@@ -241,22 +208,31 @@ def assert_no_leakage(
     if not isinstance(by, str) or not by:
         raise ValueError("`by` must be a non-empty string column name.")
 
-    max_overlap = 0
+    if isinstance(manifest_or_splits, dict) and "folds" in manifest_or_splits:
+        pairs = [(f["train"], f["test"]) for f in manifest_or_splits["folds"]]
+    else:
+        pairs = list(manifest_or_splits)
+        for pair in pairs:
+            if not (isinstance(pair, (tuple, list)) and len(pair) == 2):
+                raise TypeError("Each fold must be a (train_ids, test_ids) tuple/list.")
+
     fold_overlaps: list[dict] = []
-    for fold_index, (train_ids, test_ids) in enumerate(
-        _iter_fold_pairs(manifest_or_splits)
-    ):
+    max_overlap = 0
+    for fold_index, (train_ids, test_ids) in enumerate(pairs):
         overlap = _values_for_ids(metadata, train_ids, by) & _values_for_ids(
             metadata, test_ids, by
         )
-        n_overlap = len(overlap)
-        if n_overlap:
+        if overlap:
             fold_overlaps.append(
-                {"fold": fold_index, "n": n_overlap, "values": sorted(overlap)[:10]}
+                {"fold": fold_index, "n": len(overlap), "values": sorted(overlap)[:10]}
             )
-        max_overlap = max(max_overlap, n_overlap)
+        max_overlap = max(max_overlap, len(overlap))
 
-    _emit_report(max_overlap, by)
+    sys.stdout.write(
+        json.dumps({"leakage_report": {"overlap": int(max_overlap), "by": str(by)}})
+        + "\n"
+    )
+    sys.stdout.flush()
     if max_overlap > 0:
         raise LeakageError(
             f"Detected train/test overlap on column '{by}' "
@@ -271,11 +247,6 @@ def assert_no_leakage(
 # --------------------------------------------------------------------------- #
 
 
-def _to_numpy(values: ArrayLike) -> np.ndarray:
-    array = np.asarray(values)
-    return array.reshape(1) if array.ndim == 0 else array
-
-
 def majority_baseline(
     y_train: ArrayLike, y_test: ArrayLike
 ) -> dict[str, Union[float, str]]:
@@ -283,8 +254,8 @@ def majority_baseline(
 
     Returns ``{"chance_level", "baseline_score", "metric": "accuracy"}``.
     """
-    y_train_arr = _to_numpy(y_train)
-    y_test_arr = _to_numpy(y_test)
+    y_train_arr = np.atleast_1d(np.asarray(y_train))
+    y_test_arr = np.atleast_1d(np.asarray(y_test))
     if y_train_arr.size == 0:
         raise ValueError("y_train is empty; cannot fit a majority baseline.")
     if y_test_arr.size == 0:
@@ -309,8 +280,8 @@ def median_baseline(
 
     Returns ``{"chance_level": 0.0, "baseline_score", "metric": "r2"}``.
     """
-    y_train_arr = _to_numpy(y_train).astype(float)
-    y_test_arr = _to_numpy(y_test).astype(float)
+    y_train_arr = np.atleast_1d(np.asarray(y_train)).astype(float)
+    y_test_arr = np.atleast_1d(np.asarray(y_test)).astype(float)
     if y_train_arr.size == 0:
         raise ValueError("y_train is empty; cannot fit a median baseline.")
     if y_test_arr.size == 0:
@@ -320,9 +291,8 @@ def median_baseline(
             "metric": "r2",
         }
     train_median = float(np.median(y_train_arr))
-    test_mean = float(np.mean(y_test_arr))
     ss_res = float(np.sum((y_test_arr - train_median) ** 2))
-    ss_tot = float(np.sum((y_test_arr - test_mean) ** 2))
+    ss_tot = float(np.sum((y_test_arr - float(np.mean(y_test_arr))) ** 2))
     baseline_score = 0.0 if ss_tot == 0.0 else 1.0 - ss_res / ss_tot
     return {
         "chance_level": 0.0,
@@ -336,60 +306,23 @@ def median_baseline(
 # --------------------------------------------------------------------------- #
 
 
-def _describe_fold(
-    fold: dict[str, list[str]],
-    metadata: pd.DataFrame,
-    target: Optional[str],
+def _nunique_safe(df: pd.DataFrame, col: str) -> int:
+    return int(df[col].nunique()) if col in df.columns else 0
+
+
+def _fold_stats(
+    fold: dict[str, list[str]], metadata: pd.DataFrame, target: Optional[str]
 ) -> dict[str, Any]:
-    if "sample_id" not in metadata.columns:
-        raise ValueError(
-            "metadata must have a 'sample_id' column to describe a manifest."
-        )
-    train_rows = metadata[metadata["sample_id"].isin(set(fold["train"]))]
-    test_rows = metadata[metadata["sample_id"].isin(set(fold["test"]))]
-    out: dict[str, Any] = {
-        "n_train": len(train_rows.index),
-        "n_test": len(test_rows.index),
-        "subjects_train": int(train_rows.get("subject", pd.Series([])).nunique()),
-        "subjects_test": int(test_rows.get("subject", pd.Series([])).nunique()),
-        "sessions_train": int(train_rows.get("session", pd.Series([])).nunique()),
-        "sessions_test": int(test_rows.get("session", pd.Series([])).nunique()),
-        "datasets_train": int(train_rows.get("dataset", pd.Series([])).nunique()),
-        "datasets_test": int(test_rows.get("dataset", pd.Series([])).nunique()),
-    }
-    if target is not None and target in metadata.columns:
-        out["class_balance_train"] = dict(Counter(train_rows[target].dropna().tolist()))
-        out["class_balance_test"] = dict(Counter(test_rows[target].dropna().tolist()))
+    train = metadata[metadata["sample_id"].isin(set(fold["train"]))]
+    test = metadata[metadata["sample_id"].isin(set(fold["test"]))]
+    out: dict[str, Any] = {"n_train": len(train.index), "n_test": len(test.index)}
+    for col in ("subject", "session", "dataset"):
+        out[f"{col}s_train"] = _nunique_safe(train, col)
+        out[f"{col}s_test"] = _nunique_safe(test, col)
+    if target and target in metadata.columns:
+        out["class_balance_train"] = dict(Counter(train[target].dropna().tolist()))
+        out["class_balance_test"] = dict(Counter(test[target].dropna().tolist()))
     return out
-
-
-def _print_report(summary: dict[str, Any]) -> None:
-    cov = summary["coverage"]
-    print(
-        "Split summary -- "
-        f"folds={summary['n_folds']}, "
-        f"splitter={summary['splitter_class']}, "
-        f"seed={summary['random_seed']}, "
-        f"target={summary['target']}"
-    )
-    print(
-        f"Coverage: n_samples={cov['n_samples']}, "
-        f"subjects={cov['n_subjects']}, sessions={cov['n_sessions']}, "
-        f"runs={cov['n_runs']}, datasets={cov['n_datasets']}"
-    )
-    for index, stats in enumerate(summary["per_fold"]):
-        line = (
-            f"Fold {index}: "
-            f"train={stats['n_train']} ({stats['subjects_train']} subj), "
-            f"test={stats['n_test']} ({stats['subjects_test']} subj)"
-        )
-        if "class_balance_test" in stats:
-            line += f", classes_test={stats['class_balance_test']}"
-        print(line)
-    if summary["warnings"]:
-        print("Warnings:")
-        for warning in summary["warnings"]:
-            print(f"  - {warning}")
 
 
 def describe_split(
@@ -401,31 +334,34 @@ def describe_split(
     """Return a structured summary of a manifest and optionally print it."""
     if not isinstance(metadata, pd.DataFrame):
         raise TypeError("metadata must be a pandas DataFrame.")
+    if "sample_id" not in metadata.columns:
+        raise ValueError("metadata must have a 'sample_id' column.")
+
     folds = manifest.get("folds", [])
-    per_fold = [_describe_fold(f, metadata, target) for f in folds]
+    per_fold = [_fold_stats(f, metadata, target) for f in folds]
     coverage = {
         "n_samples": int(len(metadata.index)),
-        "n_subjects": int(metadata.get("subject", pd.Series([])).nunique()),
-        "n_sessions": int(metadata.get("session", pd.Series([])).nunique()),
-        "n_runs": int(metadata.get("run", pd.Series([])).nunique()),
-        "n_datasets": int(metadata.get("dataset", pd.Series([])).nunique()),
+        **{
+            f"n_{col}s": int(metadata[col].nunique())
+            for col in ("subject", "session", "run", "dataset")
+            if col in metadata.columns
+        },
     }
     warnings: list[str] = []
-    for index, stats in enumerate(per_fold):
+    for i, stats in enumerate(per_fold):
         if stats["n_test"] == 0:
-            warnings.append(f"Fold {index} has an empty test set.")
-        if stats["subjects_test"] < _MIN_TEST_GROUP_WARNING:
+            warnings.append(f"Fold {i} has an empty test set.")
+        if stats.get("subjects_test", 0) < 2:
             warnings.append(
-                f"Fold {index} test set covers only "
-                f"{stats['subjects_test']} subject(s)."
+                f"Fold {i} test set covers only "
+                f"{stats.get('subjects_test', 0)} subject(s)."
             )
-        if target is not None and "class_balance_test" in stats:
-            classes = stats["class_balance_test"]
-            if classes and len(classes) < 2:
-                warnings.append(
-                    f"Fold {index} test set has a single class "
-                    f"({list(classes.keys())[0]!r}) -- chance level will be 100%."
-                )
+        classes = stats.get("class_balance_test") or {}
+        if target and 0 < len(classes) < 2:
+            warnings.append(
+                f"Fold {i} test set has a single class "
+                f"({list(classes.keys())[0]!r}) -- chance level will be 100%."
+            )
     summary = {
         "n_folds": int(manifest.get("n_folds", len(folds))),
         "splitter_class": manifest.get("splitter_class"),
@@ -436,7 +372,23 @@ def describe_split(
         "warnings": warnings,
     }
     if print_report:
-        _print_report(summary)
+        print(
+            f"Split summary -- folds={summary['n_folds']}, "
+            f"splitter={summary['splitter_class']}, "
+            f"seed={summary['random_seed']}, target={summary['target']}"
+        )
+        print(f"Coverage: {coverage}")
+        for i, stats in enumerate(per_fold):
+            line = (
+                f"Fold {i}: train={stats['n_train']} "
+                f"({stats.get('subjects_train', 0)} subj), "
+                f"test={stats['n_test']} ({stats.get('subjects_test', 0)} subj)"
+            )
+            if "class_balance_test" in stats:
+                line += f", classes_test={stats['class_balance_test']}"
+            print(line)
+        for w in warnings:
+            print(f"Warning: {w}")
     return summary
 
 

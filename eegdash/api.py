@@ -9,10 +9,72 @@ interacting with the EEGDash ecosystem. It offers methods to query, insert, and 
 metadata records stored in the EEGDash database via REST API.
 """
 
-from typing import Any, Mapping
+from typing import Any, Iterable, Mapping, Sequence
 
 from .bids_metadata import merge_query
 from .http_api_client import get_client
+
+# --- DataFrame projection ------------------------------------------------ #
+# Search-style endpoints map MongoDB JSON records onto a fixed column
+# layout. ``_records_to_dataframe`` is the single helper every such
+# endpoint reuses; per-endpoint specs (``columns`` + ``aliases``) live as
+# module constants right next to the method that consumes them.
+#
+# ``aliases`` lets one canonical column draw from several legacy/nested
+# field paths (dotted keys are resolved via :func:`pandas.json_normalize`).
+# The first non-null value across the alias list wins per row, so the
+# helper survives v1/v2 record schema drift without per-endpoint glue.
+
+_DATASET_SUMMARY_COLUMNS: Sequence[str] = (
+    "dataset_id",
+    "name",
+    "modality",
+    "task",
+    "n_subjects",
+    "source",
+    "license",
+    "dataset_doi",
+)
+_DATASET_FIELD_ALIASES: Mapping[str, Sequence[str]] = {
+    "dataset_id": ("dataset_id", "dataset", "_id"),
+    "source": ("source", "provider"),
+}
+
+
+def _records_to_dataframe(
+    records: Iterable[Mapping[str, Any]],
+    columns: Sequence[str],
+    aliases: Mapping[str, Sequence[str]] | None = None,
+):
+    """Project a list of MongoDB JSON records onto a fixed DataFrame layout.
+
+    Uses :func:`pandas.json_normalize` to flatten one level of nesting
+    (so dotted alias paths like ``clinical.group`` resolve), then for
+    each canonical column picks the first non-null value across its
+    alias list. Records that are not mappings are skipped.
+
+    Returns an empty DataFrame with the right column set when ``records``
+    is empty, so callers get a stable schema regardless of result size.
+    """
+    import pandas as pd
+
+    aliases = dict(aliases or {})
+    rows = [r for r in records if isinstance(r, Mapping)]
+    if not rows:
+        return pd.DataFrame(columns=list(columns))
+
+    flat = pd.json_normalize(rows, max_level=1)
+    out = pd.DataFrame(index=flat.index)
+    for col in columns:
+        sources = aliases.get(col, (col,))
+        present = [s for s in sources if s in flat.columns]
+        if not present:
+            out[col] = None
+        elif len(present) == 1:
+            out[col] = flat[present[0]]
+        else:
+            out[col] = flat[present].bfill(axis=1).iloc[:, 0]
+    return out[list(columns)]
 
 
 class EEGDash:
@@ -139,19 +201,9 @@ class EEGDash:
         >>> df = client.search_datasets(task="rest", source="openneuro")
 
         """
-        # Lazy import: keep the top-level surface light for users who only
-        # call ``find`` / ``find_datasets``.
-        try:
-            import pandas as pd
-        except ImportError as exc:  # pragma: no cover - pandas is a hard dep
-            raise ImportError(
-                "search_datasets returns a pandas DataFrame; install pandas "
-                "to use it (already a hard dependency of eegdash)."
-            ) from exc
-
-        # Build a MongoDB-style query from the friendly kwargs. We use $or
-        # for fields with multiple plausible storage shapes (flat vs nested)
-        # so the helper survives v1/v2 record formats.
+        # Build a MongoDB-style query from the friendly kwargs. Fields
+        # with multiple plausible storage shapes (flat vs nested) use
+        # ``$or`` so this survives v1/v2 record formats.
         and_clauses: list[dict[str, Any]] = []
         if modality is not None:
             and_clauses.append(
@@ -175,7 +227,6 @@ class EEGDash:
         if license is not None:
             and_clauses.append({"license": license})
 
-        query: dict[str, Any] | None
         if not and_clauses:
             query = None
         elif len(and_clauses) == 1:
@@ -183,36 +234,11 @@ class EEGDash:
         else:
             query = {"$and": and_clauses}
 
-        records = self._client.find_datasets(query, limit=limit) or []
-
-        summary_keys = (
-            "dataset_id",
-            "name",
-            "modality",
-            "task",
-            "n_subjects",
-            "source",
-            "license",
-            "dataset_doi",
+        return _records_to_dataframe(
+            self._client.find_datasets(query, limit=limit) or [],
+            _DATASET_SUMMARY_COLUMNS,
+            _DATASET_FIELD_ALIASES,
         )
-        rows: list[dict[str, Any]] = []
-        for rec in records:
-            if not isinstance(rec, Mapping):
-                continue
-            row: dict[str, Any] = {}
-            for key in summary_keys:
-                # ``dataset_id`` may surface as ``dataset`` or ``_id`` in
-                # older schemas; ``source`` may live under ``provider``.
-                if key == "dataset_id":
-                    row[key] = (
-                        rec.get("dataset_id") or rec.get("dataset") or rec.get("_id")
-                    )
-                elif key == "source":
-                    row[key] = rec.get("source") or rec.get("provider")
-                else:
-                    row[key] = rec.get(key)
-            rows.append(row)
-        return pd.DataFrame(rows, columns=list(summary_keys))
 
     def find(
         self, query: dict[str, Any] = None, /, **kwargs

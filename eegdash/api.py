@@ -9,32 +9,11 @@ interacting with the EEGDash ecosystem. It offers methods to query, insert, and 
 metadata records stored in the EEGDash database via REST API.
 """
 
-from typing import Any, Mapping, Sequence
+from typing import Any, Mapping
 
 from .bids_metadata import merge_query, records_to_dataframe
+from .const import DATASET_FIELD_ALIASES, DATASET_SUMMARY_COLUMNS
 from .http_api_client import get_client
-
-# Search-endpoint projection specs: per-endpoint ``columns`` + ``aliases``
-# fed to :func:`~eegdash.bids_metadata.records_to_dataframe`. ``aliases``
-# lets one canonical column draw from several legacy/nested field paths
-# (dotted keys are resolved via :func:`pandas.json_normalize`); the
-# first non-null source wins per row, so the helper survives v1/v2
-# record schema drift without per-endpoint glue.
-
-_DATASET_SUMMARY_COLUMNS: Sequence[str] = (
-    "dataset_id",
-    "name",
-    "modality",
-    "task",
-    "n_subjects",
-    "source",
-    "license",
-    "dataset_doi",
-)
-_DATASET_FIELD_ALIASES: Mapping[str, Sequence[str]] = {
-    "dataset_id": ("dataset_id", "dataset", "_id"),
-    "source": ("source", "provider"),
-}
 
 
 class EEGDash:
@@ -196,8 +175,8 @@ class EEGDash:
 
         return records_to_dataframe(
             self._client.find_datasets(query, limit=limit) or [],
-            _DATASET_SUMMARY_COLUMNS,
-            _DATASET_FIELD_ALIASES,
+            DATASET_SUMMARY_COLUMNS,
+            DATASET_FIELD_ALIASES,
         )
 
     def find(

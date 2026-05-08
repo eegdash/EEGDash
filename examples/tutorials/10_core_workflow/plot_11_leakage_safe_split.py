@@ -219,7 +219,6 @@ pd.Series(
         "splitter_class": manifest["splitter_class"],
         "n_folds": manifest["n_folds"],
         "target": manifest["target"],
-        "metadata_hash": manifest["metadata_hash"][:12] + "...",
         "random_seed": manifest["random_seed"],
     },
     name="value",

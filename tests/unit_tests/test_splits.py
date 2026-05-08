@@ -118,10 +118,8 @@ def test_make_split_manifest_is_deterministic(metadata):
         target="target",
     )
     assert manifest_a["folds"] == manifest_b["folds"]
-    assert manifest_a["metadata_hash"] == manifest_b["metadata_hash"]
-    # JSON-serializability check.
-    text = json.dumps(manifest_a, default=str)
-    assert "schema_version" in text
+    # JSON-serialisable.
+    json.dumps(manifest_a, default=str)
 
 
 def test_make_split_manifest_records_provenance(metadata):
@@ -132,12 +130,11 @@ def test_make_split_manifest_records_provenance(metadata):
         metadata,
         target="target",
     )
-    assert manifest["schema_version"]
     assert manifest["n_folds"] == 4
     assert manifest["target"] == "target"
-    assert "metadata_hash" in manifest
-    assert "library_versions" in manifest
-    assert "generated_at" in manifest
+    assert "splitter_class" in manifest
+    assert "random_seed" in manifest
+    assert manifest["splitter_class"].startswith("moabb.")
 
 
 # ---------------------------------------------------------------------------

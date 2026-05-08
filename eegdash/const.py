@@ -13,6 +13,8 @@ __all__ = [
     "config",
     "ALLOWED_QUERY_FIELDS",
     "DEFAULT_DESCRIPTION_FIELDS",
+    "DATASET_SUMMARY_COLUMNS",
+    "DATASET_FIELD_ALIASES",
     "RELEASE_TO_OPENNEURO_DATASET_MAP",
     "SUBJECT_MINI_RELEASE_MAP",
     "MODALITY_ALIASES",
@@ -45,6 +47,28 @@ DEFAULT_DESCRIPTION_FIELDS = [
 """list: BIDS-entity fields surfaced on every per-record description by
 :class:`~eegdash.api.EEGDashDataset` when the constructor is called without
 an explicit ``description_fields=`` argument."""
+
+DATASET_SUMMARY_COLUMNS = (
+    "dataset_id",
+    "name",
+    "modality",
+    "task",
+    "n_subjects",
+    "source",
+    "license",
+    "dataset_doi",
+)
+"""tuple: Column layout for the DataFrame returned by
+:meth:`~eegdash.api.EEGDash.search_datasets`. One row per matching dataset."""
+
+DATASET_FIELD_ALIASES = {
+    "dataset_id": ("dataset_id", "dataset", "_id"),
+    "source": ("source", "provider"),
+}
+"""dict: Per-canonical-column ordered alias paths fed to
+:func:`~eegdash.bids_metadata.records_to_dataframe`. Lets one summary
+column draw from several legacy/nested record fields, so the helper
+survives v1/v2 schema drift without per-endpoint glue."""
 
 MODALITY_ALIASES = {"fnirs": "nirs"}
 

@@ -378,8 +378,11 @@ except Exception as exc:
 keep = ~((metadata["subject"] == "sub-00") & (metadata["session"] == "ses-03"))
 trimmed_md = metadata.loc[keep].reset_index(drop=True)
 trimmed_y = trimmed_md["target"].to_numpy()
+# Drop ``n_folds`` so MOABB falls back to its native LeaveOneGroupOut
+# behaviour: subjects with 2 remaining sessions contribute 2 folds, the
+# others contribute one fold per session as usual.
 trimmed_man = make_split_manifest(
-    get_splitter("cross_session", n_folds=3, random_state=SEED),
+    get_splitter("cross_session", random_state=SEED),
     trimmed_y,
     trimmed_md,
     target="target",

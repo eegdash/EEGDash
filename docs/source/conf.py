@@ -331,7 +331,7 @@ sphinx_gallery_conf = {
     "plot_gallery": True,
     # Don't fail the build when examples error (e.g. missing cache, API down).
     # Failed examples show a traceback in the gallery instead of crashing CI.
-    "abort_on_example_error": False,
+    "abort_on_example_error": True,
     "only_warn_on_example_error": True,
     "binder": {
         "org": "eegdash",

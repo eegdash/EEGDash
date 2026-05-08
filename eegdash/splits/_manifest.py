@@ -9,6 +9,7 @@ from __future__ import annotations
 import datetime
 import hashlib
 import importlib
+import inspect
 import json
 from typing import Any, Optional, Sequence
 
@@ -128,8 +129,21 @@ def make_split_manifest(
             f"(got {len(sample_ids)} vs {len(metadata.index)})."
         )
 
+    # MOABB's evaluation splitters take ``split(y, metadata)`` (DataFrame
+    # as second arg); MOABB's LearningCurveSplitter follows sklearn's
+    # ``split(X, y, groups=...)`` instead. Detect by signature.
+    split_params = list(inspect.signature(splitter.split).parameters)
     fold_records: list[dict[str, list[str]]] = []
-    for train_idx, test_idx in splitter.split(np.asarray(y), metadata):
+    if "groups" in split_params:
+        groups_arr = (
+            metadata["subject"].to_numpy() if "subject" in metadata.columns else None
+        )
+        fold_iter = splitter.split(
+            np.zeros((len(metadata.index), 1)), np.asarray(y), groups=groups_arr
+        )
+    else:
+        fold_iter = splitter.split(np.asarray(y), metadata)
+    for train_idx, test_idx in fold_iter:
         train_idx_arr = np.asarray(list(train_idx), dtype=int)
         test_idx_arr = np.asarray(list(test_idx), dtype=int)
         fold_records.append(

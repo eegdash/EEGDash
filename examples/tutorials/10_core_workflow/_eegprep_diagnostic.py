@@ -443,7 +443,7 @@ def draw_eegprep_diagnostic(
         title="EEGPrep before vs after: one recording, four views",
         subtitle=subtitle,
         source=(
-            f"EEGDash {plot_id} | OpenNeuro {dataset} (Wakeman & Henson 2015) "
+            f"EEGDash {plot_id} | OpenNeuro {dataset} :cite:`wakeman2015` "
             f"| ASR per Mullen et al. 2015"
         ),
     )

@@ -9,7 +9,7 @@ quality. The textbook answer is the *learning curve* (Hoffmann et al.
 grow the training pool over orders of magnitude, and read the slope.
 This tutorial sweeps training sizes from 50 to ~1000 windows on a
 synthetic cohort that mirrors a `NEMAR <https://nemar.org>`_
-(Delorme et al. 2022) `OpenNeuro <https://openneuro.org>`_ dataset
+:cite:`delorme2022nemar` `OpenNeuro <https://openneuro.org>`_ dataset
 with 24 subjects, scores balanced accuracy with
 :func:`sklearn.model_selection.learning_curve`, and renders two panels:
 the curve itself and the train-minus-val gap that names the
@@ -361,7 +361,7 @@ assert val_mean[-1] >= val_mean[0] - 0.05, (
 # :class:`~sklearn.model_selection.KFold` that shuffles windows across
 # subjects, so every val fold contains windows from training
 # subjects. Val accuracy jumps by ``0.05`` to ``0.20`` for the wrong reason
-# (Brookshire 2024). Trigger it on purpose with ``try/except`` so the
+# :cite:`brookshire2024leakage`. Trigger it on purpose with ``try/except`` so the
 # failure mode is visible:
 
 # %%

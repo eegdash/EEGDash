@@ -457,7 +457,7 @@ def draw_pfactor_deep_figure(
     source = add_provenance_footer(
         None,
         plot_id=plot_id,
-        citation="HBN release (Alexander et al. 2017) via NEMAR | seeded across runs",
+        citation="HBN release :cite:`alexander2017hbn` via NEMAR | seeded across runs",
     )
     style_figure(
         fig,

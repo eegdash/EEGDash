@@ -424,7 +424,7 @@ except (ValueError, RuntimeError) as exc:
 # frontal-central P3 family, and a smaller amplitude than the visual
 # version. A clean ERP shape only confirms the picture; classifier
 # performance on auditory P300 lives in :ref:`Try it yourself
-# <plot_21-tryit>` (Cisotto & Chicco 2024).
+# <plot_21-tryit>` :cite:`cisotto2024tips`.
 
 # %% [markdown]
 # Wrap-up

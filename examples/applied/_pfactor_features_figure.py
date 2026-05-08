@@ -348,7 +348,7 @@ def draw_pfactor_features_figure(
     subject_ids: Sequence[str] | None = None,
     top_k: int = 10,
     plot_id: str = "project_pfactor_features",
-    citation: str = "HBN release R5 (Alexander et al. 2017) via NEMAR",
+    citation: str = "HBN release R5 :cite:`alexander2017hbn` via NEMAR",
 ) -> plt.Figure:
     """Render the three-panel feature-based p-factor diagnostic.
 

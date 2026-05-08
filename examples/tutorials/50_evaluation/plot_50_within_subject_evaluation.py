@@ -20,7 +20,7 @@ that trap. Cisotto & Chicco 2024 (Tip 9) call within-subject the
 score is never extrapolated to a new participant. Combrisson &
 Jerbi 2015 add the chance-level statistics: a small test fold can
 produce 0.65 from random labels, and the binomial chance check is
-the only way to spot it. OpenNeuro/NEMAR (Delorme et al. 2022) hosts
+the only way to spot it. OpenNeuro/NEMAR :cite:`delorme2022nemar` hosts
 the public benchmarks where both regimes get reported.
 
 So when is within-subject evaluation the right call?
@@ -459,7 +459,7 @@ print(
 #   still holds.
 # - Replace the synthetic features with windows from plot_10 +
 #   plot_40 and re-run on a real BIDS dataset such as ``ds002718``
-#   from NEMAR (Delorme et al. 2022).
+#   from NEMAR :cite:`delorme2022nemar`.
 
 # %% [markdown]
 # References

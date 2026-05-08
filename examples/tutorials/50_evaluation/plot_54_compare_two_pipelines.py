@@ -410,7 +410,7 @@ print(
 #   Bonferroni correction across the three pairwise Wilcoxon tests
 #   (Demsar 2006, Section 3.2). Report the corrected p-values.
 # - Replace the synthetic feature table with a real OpenNeuro cohort
-#   pulled via NEMAR (Delorme et al. 2022). The manifest contract
+#   pulled via NEMAR :cite:`delorme2022nemar`. The manifest contract
 #   stays identical; only the feature loader changes.
 #
 # Wrap-up

@@ -409,6 +409,6 @@ def draw_pipeline(
             f"{window_size_samples} samples -> "
             f"{n_batches_est:,} batches of {batch_size}"
         ),
-        source="EEGDash plot_02 | OpenNeuro ds002718 (Wakeman & Henson 2015)",
+        source="EEGDash plot_02 | OpenNeuro ds002718 :cite:`wakeman2015`",
     )
     return fig

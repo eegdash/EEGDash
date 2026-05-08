@@ -2,10 +2,10 @@
 ==================================================================
 
 A starter project: pull metadata for the OpenNeuro ``ds004504`` clinical EEG
-release (Miltiadous et al. 2023) through :class:`~eegdash.EEGDashDataset`,
+release :cite:`miltiadous2023` through :class:`~eegdash.EEGDashDataset`,
 without downloading any signal bytes, and answer four questions a project
 plan needs answered before any modelling. The pool is served via
-`NEMAR <https://nemar.org>`_ (Delorme et al. 2022); the polished clinical
+`NEMAR <https://nemar.org>`_ :cite:`delorme2022nemar`; the polished clinical
 workflow recipe follows Cisotto and Chicco 2024. The deliverable is one
 :class:`pandas.DataFrame` with per-condition counts and one three-panel
 figure rendered from the live catalog numbers. Cohort imbalance, age

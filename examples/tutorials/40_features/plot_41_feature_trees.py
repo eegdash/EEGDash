@@ -1,7 +1,7 @@
 """How do classical EEG markers compose on top of one Welch PSD?
 ==================================================================
 
-Welch's method (Welch 1967) returns one power spectrum per window; band
+Welch's method :cite:`welch1967psd` returns one power spectrum per window; band
 power, spectral entropy, peak frequency, and the 1/f slope (Demanuele
 et al. 2007; Donoghue et al. 2020) are four scalars *derived* from that
 same spectrum. If a feature dictionary asks for four band powers as
@@ -17,7 +17,7 @@ Live data come from the same 1-40 Hz FIR-filtered windows used in
 :doc:`/auto_examples/tutorials/40_features/plot_40_first_features` to
 keep the tutorial self-contained and offline-runnable, with the same
 HBN resting-state ds005514 recipe served through `NEMAR
-<https://nemar.org>`_ (Delorme et al. 2022) and the BIDS conventions
+<https://nemar.org>`_ :cite:`delorme2022nemar` and the BIDS conventions
 of Pernet et al. (2019); for clinical EEG good-practice on band
 selection see Cisotto and Chicco (2024).
 
@@ -51,7 +51,7 @@ separately, how many PSDs run per batch, and what does sharing one
 # (E3.21). One global Welch counter lets us prove the shared-PSD claim
 # at runtime; the counter is reset to the original Welch in a try/finally
 # so subsequent tutorials in the same sphinx-gallery process see a clean
-# ``_spec.welch`` (Gramfort et al. 2013).
+# ``_spec.welch`` :cite:`gramfort2013mne`.
 import time
 from functools import partial
 
@@ -534,7 +534,7 @@ print(
 # all built on top of one Welch PSD per window. The shared-PSD tree
 # divides the FFT work by the number of spectral features. A clean
 # table only confirms plumbing; signal quality and task design are
-# still open questions (Cisotto and Chicco 2024).
+# still open questions :cite:`cisotto2024tips`.
 
 # %%
 result = pd.DataFrame(

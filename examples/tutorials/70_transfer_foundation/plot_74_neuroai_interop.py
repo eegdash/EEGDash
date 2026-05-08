@@ -13,10 +13,10 @@ PhysioNet, Dryad, Donders, DataLad, Synapse, and OSF. This tutorial
 walks the four-stage path
 ``EEGDashDataset -> NeuralFetch.Study -> NeuralSet.Segmenter ->
 torch.utils.data.DataLoader`` so a recording cataloged on `NEMAR
-<https://nemar.org>`_ (Delorme et al. 2022) flows through the rest of
-the NeuroAI stack with the bytes intact (Cisotto & Chicco 2024). The
+<https://nemar.org>`_ :cite:`delorme2022nemar` flows through the rest of
+the NeuroAI stack with the bytes intact :cite:`cisotto2024tips`. The
 recipe composes with self-supervised pretraining on EEG (Banville et
-al. 2021) and cross-task brain decoding (Defossez et al. 2023). The
+al. 2021) and cross-task brain decoding :cite:`defossez2023brain`. The
 deliverable is a 3-panel figure: stage diagram, per-stage shape sanity
 check, integration matrix. So which projects already share the events
 DataFrame, and which ones live downstream of it?
@@ -141,7 +141,7 @@ surface_df
 # Same idiom as
 # :doc:`/auto_examples/tutorials/00_start_here/plot_01_first_recording`.
 # One subject, one task; the records-level metadata carries BIDS
-# entities forward to every later stage (Pernet et al. 2019).
+# entities forward to every later stage :cite:`pernet2019eegbids`.
 
 # %%
 DATASET = "ds002718"
@@ -517,7 +517,7 @@ print("Recovery: drop the trigger_query and pass `stride=WINDOW_SECONDS` instead
 # stages, sanity-checks that the per-window byte payload survives the
 # pipeline, and pins each NeuroAI module to its integration status. A
 # clean handoff only confirms plumbing; signal quality and task
-# design are still open questions (Cisotto & Chicco 2024).
+# design are still open questions :cite:`cisotto2024tips`.
 
 # %% [markdown]
 # Wrap-up

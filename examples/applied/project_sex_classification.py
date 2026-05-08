@@ -5,7 +5,7 @@
 A canonical "is this signal even predictive?" benchmark task on resting-state
 EEG from `OpenNeuro <https://openneuro.org>`_ ``ds005505`` (Healthy Brain
 Network; Alexander et al. 2017), reachable through `NEMAR
-<https://nemar.org>`_ (Delorme et al. 2022). Log band-power features feed
+<https://nemar.org>`_ :cite:`delorme2022nemar`. Log band-power features feed
 :class:`sklearn.pipeline.Pipeline` (Pedregosa et al. 2011) with
 :class:`~sklearn.preprocessing.StandardScaler` and
 :class:`~sklearn.linear_model.LogisticRegression`. A 3-fold cross-subject
@@ -120,7 +120,7 @@ print(f"eegdash {eegdash.__version__} | cache_dir={CACHE_DIR}")
 # Step 1. Pull ds005505 resting-state metadata
 # --------------------------------------------
 # **Predict.** ds005505 carries Healthy Brain Network resting-state
-# recordings on a 128-channel HydroCel cap (Alexander et al. 2017). The
+# recordings on a 128-channel HydroCel cap :cite:`alexander2017hbn`. The
 # metadata-only first pass populates each record's ``description`` with
 # the BIDS ``sex`` field; recordings without a usable label are dropped
 # before any preprocessing fires.
@@ -256,7 +256,7 @@ print(
 # (1 to 4 Hz), theta (4 to 8 Hz), alpha (8 to 13 Hz), beta (13 to
 # 30 Hz). The feature shape is ``(n_windows, n_bands * n_channels)``.
 # ``log(mean(|FFT|**2))`` is the cheapest band-power feature that
-# survives a review (Schirrmeister et al. 2017).
+# survives a review :cite:`schirrmeister2017braindecode`.
 
 # %%
 BANDS: tuple[tuple[float, float], ...] = (
@@ -535,7 +535,7 @@ plt.show()
 # number worth quoting in a benchmark submission; the per-fold table
 # shows whether that AUC is stable. A clean shape and a chance-anchored
 # AUC only confirm plumbing; signal quality and the sex-vs-confound
-# question are still open (Cisotto and Chicco 2024).
+# question are still open :cite:`cisotto2024tips`.
 
 # %% [markdown]
 # Try it yourself

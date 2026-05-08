@@ -2,13 +2,13 @@
 ========================================================
 
 Hans Berger reported in 1929 that the parieto-occipital alpha rhythm
-rises when the eyes close and falls when they open (Berger 1929). This
+rises when the eyes close and falls when they open :cite:`berger1929`. This
 textbook resting-state EEG result that every dataset still reproduces
-(Niedermeyer 1999; Klimesch 2012). The contrast is the simplest possible
+:cite:`klimesch2012alpha`. The contrast is the simplest possible
 binary EEG decoding problem and an excellent first resting-state
 tutorial. We reproduce it on Healthy Brain Network ``ds005514``
-(Alexander et al. 2017) reachable through `NEMAR <https://nemar.org>`_
-(Delorme et al. 2022): a leave-one-subject-out logistic regression on
+:cite:`alexander2017hbn` reachable through `NEMAR <https://nemar.org>`_
+:cite:`delorme2022nemar`: a leave-one-subject-out logistic regression on
 log alpha-band power features.
 
 Can we tell from a 2-second EEG snippet whether a child has the eyes
@@ -121,7 +121,7 @@ SUBJECTS = [
     "NDARAL897CYV",
 ]
 ALPHA_BAND = (8.0, 13.0)
-DATASET = "ds005514"  # HBN Release 9 (Alexander et al. 2017)
+DATASET = "ds005514"  # HBN Release 9 :cite:`alexander2017hbn`
 TASK = "RestingState"
 BANDPASS = (1.0, 55.0)
 RESAMPLE_HZ = 128
@@ -490,7 +490,7 @@ plt.show()
 # **Run.** A textbook slip is to pin the alpha window to 10-12 Hz in
 # place of the canonical 8-13 Hz. Individual alpha frequency varies
 # from 7.5 Hz to 12.5 Hz in healthy adults and shifts even more in
-# children (Klimesch 2012). A narrow 10-12 Hz window misses the lower
+# children :cite:`klimesch2012alpha`. A narrow 10-12 Hz window misses the lower
 # half of pediatric alpha; the mean ratio collapses toward 1.0 and the
 # decoder loses signal. We trigger the failure with ``try / except`` so
 # the recovery path is visible.
@@ -622,7 +622,7 @@ print(
 # eyes-closed at the occipital anchor; the topomap places the bump on
 # the parieto-occipital scalp; the LOSO bars sit well above the
 # majority-class chance level, which is the only honest summary of a
-# cross-subject decoder (Cisotto & Chicco 2024). Next:
+# cross-subject decoder :cite:`cisotto2024tips`. Next:
 # :doc:`/auto_examples/tutorials/40_features/plot_40_first_features`
 # replaces the hand-rolled Welch features with the EEGDash feature
 # pipeline; :doc:`/auto_examples/tutorials/50_evaluation/plot_51_cross_subject_evaluation`

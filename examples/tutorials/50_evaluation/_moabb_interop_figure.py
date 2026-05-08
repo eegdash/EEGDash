@@ -577,7 +577,7 @@ def draw_moabb_interop_figure(
         f"| backend={backend}"
     )
     citation = (
-        "BNCI2014_001 (Tangermann et al. 2012)"
+        "BNCI2014_001 :cite:`tangermann2012bnci`"
         if dataset_name.startswith("BNCI")
         else f"{dataset_name}"
     )

@@ -3,8 +3,8 @@
 
 A model trains on tensor batches, not on continuous voltage traces. This
 tutorial closes the gap on one BIDS recording from `OpenNeuro
-<https://openneuro.org>`_ ``ds002718`` (Wakeman & Henson 2015), reachable
-through `NEMAR <https://nemar.org>`_ (Delorme et al. 2022): two safe
+<https://openneuro.org>`_ ``ds002718`` :cite:`wakeman2015`, reachable
+through `NEMAR <https://nemar.org>`_ :cite:`delorme2022nemar`: two safe
 preprocessors, a fixed-length window step, a :class:`DataLoader
 <torch.utils.data.DataLoader>` (Paszke et al. 2019), and an optional
 Zarr cache that turns batch reads into a few milliseconds of random
@@ -170,7 +170,7 @@ pd.DataFrame({"method": windows_methods}).head(20)
 # --------------------------------
 # Same idiom as ``plot_01``. One subject keeps the run inside the
 # tutorial budget; the BIDS query language carries through unchanged
-# (Pernet et al. 2019).
+# :cite:`pernet2019eegbids`.
 
 # %%
 DATASET = "ds002718"
@@ -567,7 +567,7 @@ pd.Series(
 # that lets you write trial-level filters such as
 # ``epochs[epochs.metadata.task == 'face']``. ``Raw`` is one continuous
 # array; ``Epochs`` is *already cut*, with its own ``event_id`` /
-# ``metadata`` / ``drop_bad`` machinery (Gramfort et al. 2013).
+# ``metadata`` / ``drop_bad`` machinery :cite:`gramfort2013mne`.
 #
 # Two functions take you from ``Raw`` to that shape; the DataLoader
 # does not care which one ran.
@@ -704,7 +704,7 @@ pd.Series(
 # windowing, batched read. The first batch is shaped
 # ``(batch_size, n_channels, window_samples)`` with floating-point
 # dtype. A clean batch shape only confirms plumbing; signal quality and
-# task design are still open questions (Cisotto & Chicco 2024).
+# task design are still open questions :cite:`cisotto2024tips`.
 
 # %% [markdown]
 # Wrap-up

@@ -398,7 +398,7 @@ def draw_age_regression_figure(
         None,
         plot_id=plot_id,
         openneuro_id="ds005505",
-        citation="HBN (Alexander et al. 2017) via NEMAR",
+        citation="HBN :cite:`alexander2017hbn` via NEMAR",
     )
     style_figure(
         fig,

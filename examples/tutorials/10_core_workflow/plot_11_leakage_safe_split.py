@@ -111,8 +111,8 @@ print(f"eegdash {eegdash.__version__}; numpy {np.__version__}")
 # same way on a Braindecode :class:`braindecode.datasets.WindowsDataset`
 # and on a DataFrame because both expose a ``subject`` column. The 12
 # subjects x 2 sessions x 8 windows = 192 rows mirror what plot_10
-# produced for ``ds002718`` (Wakeman & Henson 2015), reachable through
-# `NEMAR <https://nemar.org>`_ (Delorme et al. 2022).
+# produced for ``ds002718`` :cite:`wakeman2015`, reachable through
+# `NEMAR <https://nemar.org>`_ :cite:`delorme2022nemar`.
 
 # %%
 N_SUBJECTS = 12

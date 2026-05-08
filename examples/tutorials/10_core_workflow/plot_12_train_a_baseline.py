@@ -48,7 +48,7 @@ which trials does the model confuse?
 # bookkeeping than a classifier you do not understand at 0.71. The
 # linear baseline is also the gating fence: a deep network that fails
 # to clear the linear bar usually has a leakage or labelling bug, not
-# a capacity gap (Schirrmeister et al. 2017).
+# a capacity gap :cite:`schirrmeister2017braindecode`.
 #
 # Three reasons we wire the cross-subject loop *first*, before any
 # feature engineering:

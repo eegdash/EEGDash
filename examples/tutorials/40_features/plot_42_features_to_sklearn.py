@@ -110,7 +110,7 @@ print(f"eegdash {eegdash.__version__} | cache_dir={CACHE_DIR}")
 # synthesise the same column layout: per-channel variance plus
 # four-band power for ``delta``, ``theta``, ``alpha``, ``beta`` on a
 # parieto-occipital montage. Eyes-closed gets the textbook alpha bump
-# (Berger 1929) plus a per-window Gaussian jitter so the across-subject
+# :cite:`berger1929` plus a per-window Gaussian jitter so the across-subject
 # accuracy lands below the ceiling and the per-fold variance is
 # visible.
 
@@ -224,7 +224,7 @@ print(f"manifest: n_folds={n_folds} | splitter={manifest['splitter_class']}")
 # :class:`~sklearn.preprocessing.StandardScaler` on ``X_train`` only and
 # reapplies the same ``transform`` at predict time. Without the
 # Pipeline, scaling on the union of train and test counts as leakage
-# (Brookshire et al. 2024). ``random_state=42`` on the classifier makes
+# :cite:`brookshire2024leakage`. ``random_state=42`` on the classifier makes
 # the printed accuracy byte-stable.
 
 # %%
@@ -523,7 +523,7 @@ print(
 # benchmark submission; the per-fold table shows whether that mean is
 # stable. A clean shape and a chance-anchored accuracy only confirm
 # plumbing; signal quality and task design are still open questions
-# (Cisotto & Chicco 2024).
+# :cite:`cisotto2024tips`.
 
 # %% [markdown]
 # Try it yourself

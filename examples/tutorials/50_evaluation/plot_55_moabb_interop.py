@@ -2,8 +2,8 @@
 =====================================================
 
 EEGDash and MOABB sit on opposite ends of the BCI evaluation pipeline.
-EEGDash is a metadata index over BIDS-curated EEG (Pernet et al. 2019)
-served from `NEMAR <https://nemar.org>`_ (Delorme et al. 2022); MOABB
+EEGDash is a metadata index over BIDS-curated EEG :cite:`pernet2019eegbids`
+served from `NEMAR <https://nemar.org>`_ :cite:`delorme2022nemar`; MOABB
 is the de-facto benchmark suite that pairs paradigm definitions
 (:class:`~moabb.paradigms.MotorImagery`, :class:`~moabb.paradigms.P300`)
 with evaluation procedures
@@ -20,7 +20,7 @@ This tutorial wires both halves together: an
 :class:`~eegdash.api.EEGDashDataset` over ``ds002718`` (Wakeman & Henson
 2015), the ``(y, metadata)`` pair, then a real
 :class:`~moabb.evaluations.CrossSessionEvaluation` on
-:class:`~moabb.datasets.BNCI2014_001` (Tangermann et al. 2012). Two
+:class:`~moabb.datasets.BNCI2014_001` :cite:`tangermann2012bnci`. Two
 sklearn pipelines compete, paired by the MOABB evaluator. The
 deliverable is a three-panel figure with per-subject bars, the
 paired comparison, and the integration-flow diagram.
@@ -175,7 +175,7 @@ pd.Series(
 # :class:`~moabb.paradigms.LeftRightImagery` requires motor-imagery
 # events with ``left_hand`` and ``right_hand`` labels; ``ds002718``
 # is face-recognition and would be rejected. We use
-# :class:`~moabb.datasets.BNCI2014_001` (Tangermann et al. 2012),
+# :class:`~moabb.datasets.BNCI2014_001` :cite:`tangermann2012bnci`,
 # the canonical motor-imagery benchmark shipped with MOABB.
 #
 # **Predict.** With 3 subjects and 2 sessions per subject, how many

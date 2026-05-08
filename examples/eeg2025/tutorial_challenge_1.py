@@ -7,11 +7,11 @@ Challenge 1 of the EEG2025 Foundation Challenge asks you to decode a
 contrast slowly ramps up, and the subject presses left or right to report
 which one. The data come from the Healthy Brain Network release (HBN;
 Alexander et al. 2017) served through `NEMAR <https://nemar.org>`_
-(Delorme et al. 2022) and shipped via :class:`~eegdash.dataset.EEGChallengeDataset`
+:cite:`delorme2022nemar` and shipped via :class:`~eegdash.dataset.EEGChallengeDataset`
 as 100 Hz BDFs (downsampled, 0.5-50 Hz pass-band; Cisotto & Chicco 2024).
 This starter kit walks through the four steps every Challenge 1 entry has
 to clear: load the CCD recordings, carve out a stimulus-locked window,
-train a small Braindecode CNN baseline (Schirrmeister et al. 2017), and
+train a small Braindecode CNN baseline :cite:`schirrmeister2017braindecode`, and
 ship one figure that ties the trial structure, the windowed signal, and
 the per-fold accuracy together (Aristimunha et al. 2025,
 doi:10.48550/arXiv.2506.19141). The deliverable is one
@@ -30,7 +30,7 @@ release?
 #
 # - Build :class:`~eegdash.dataset.EEGChallengeDataset` for ``task="contrastChangeDetection"``, ``release="R5"``, ``mini=True``.
 # - Carve stimulus-locked CCD windows of shape ``(n_channels=129, n_samples=200)`` with :func:`braindecode.preprocessing.create_windows_from_events`.
-# - Split subjects into 5 cross-subject folds with :class:`sklearn.model_selection.KFold` and assert no subject leakage across folds (Pernet et al. 2019).
+# - Split subjects into 5 cross-subject folds with :class:`sklearn.model_selection.KFold` and assert no subject leakage across folds :cite:`pernet2019eegbids`.
 # - Train an :class:`~braindecode.models.EEGNeX` baseline and report per-fold test accuracy with mean +/- std next to chance.
 # - Plot a three-panel figure (trial schematic, one CCD window, per-fold accuracy) via ``draw_challenge_1_figure`` and save the model state_dict.
 
@@ -561,8 +561,8 @@ print("  metric = torch.sqrt(((preds - rt) ** 2).mean())  # RMSE in seconds")
 #
 # We loaded the EEG2025 Challenge 1 CCD task on a single subject pool,
 # carved stimulus-locked windows of shape ``(129, 200)``, split subjects
-# into 5 folds with no leakage (Pernet et al. 2019), trained an EEGNeX
-# baseline (Schirrmeister et al. 2017), and reported per-fold accuracy
+# into 5 folds with no leakage :cite:`pernet2019eegbids`, trained an EEGNeX
+# baseline :cite:`schirrmeister2017braindecode`, and reported per-fold accuracy
 # next to chance. The figure ties the trial schematic, one window, and
 # the per-fold result on one plate so a reviewer can read the full
 # starter-kit story without scrolling.

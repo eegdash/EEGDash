@@ -415,7 +415,7 @@ def draw_challenge_2_figure(
         None,
         plot_id=plot_id,
         openneuro_id=None,
-        citation="HBN release R5 (Alexander et al. 2017) via NEMAR",
+        citation="HBN release R5 :cite:`alexander2017hbn` via NEMAR",
         extra=f"train cohort n={train_n}",
     )
     style_figure(

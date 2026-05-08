@@ -2,7 +2,7 @@
 ==============================================================
 
 Plot_30 closed the loop on the parieto-occipital alpha rhythm Hans Berger
-first reported in 1929 (Klimesch 2012). This tutorial generalises the
+first reported in 1929 :cite:`klimesch2012alpha`. This tutorial generalises the
 recipe: starting from windowed EEG (the same Healthy Brain Network
 ``ds005514`` resting-state idiom we keep across the gallery, reachable
 through `NEMAR <https://nemar.org>`_, Delorme et al. 2022; Alexander et
@@ -77,7 +77,7 @@ print(f"eegdash {eegdash.__version__}; cache_dir={cache_dir}")
 # Concept: from windows to a feature matrix
 # -----------------------------------------
 # Plot_30 showed that closing the eyes releases parieto-occipital alpha
-# power (Klimesch 2012). The natural follow-up is to summarise every
+# power :cite:`klimesch2012alpha`. The natural follow-up is to summarise every
 # window with a few numbers per channel and stack the result into a
 # tensor a learner can consume. Three shapes carry the story:
 #
@@ -117,7 +117,7 @@ print(f"eegdash {eegdash.__version__}; cache_dir={cache_dir}")
 # :func:`braindecode.datautil.load_concat_dataset`. To stay offline and
 # reproducible we synthesise two short HBN-style recordings at 128 Hz on
 # a 24-channel parieto-occipital-leaning montage and inject a 10 Hz
-# alpha oscillation into the eyes-closed recording (Berger 1929). The
+# alpha oscillation into the eyes-closed recording :cite:`berger1929`. The
 # 1-48 Hz FIR (firwin) band-pass below writes the pass-band into MNE's
 # info; ``spectral_preprocessor`` reads it back later (Cisotto & Chicco
 # 2024 Tip 4-5).

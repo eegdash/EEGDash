@@ -6,7 +6,7 @@ practical: what does *one* recording actually contain? This tutorial loads a
 single BIDS file from `OpenNeuro <https://openneuro.org>`_ ``ds004504``
 (Miltiadous et al. 2023; Alzheimer / frontotemporal dementia / healthy
 controls) through the catalogue shared with `NEMAR <https://nemar.org>`_
-(Delorme et al. 2022), unwraps the :class:`mne.io.Raw` object, and inspects
+:cite:`delorme2022nemar`, unwraps the :class:`mne.io.Raw` object, and inspects
 channels, montage, and spectrum. The dataset is small (88 subjects, ~10 min
 per subject, 19 channels at 500 Hz on a standard 10-20 layout) so the first
 fetch is under 25 MB and every later step is a hot-cache read.
@@ -87,7 +87,7 @@ print(f"eegdash {eegdash.__version__}; cache_dir={cache_dir}")
 #   versioned, ML-ready artefacts you build *on top* of them.
 # - **BIDS entities are the query language.** ``dataset``, ``subject``,
 #   ``task``, ``session``, ``run`` flow through to the index unchanged
-#   (Pernet et al. 2019).
+#   :cite:`pernet2019eegbids`.
 #
 # Step 1: Build the dataset (lazy)
 # ---------------------------------
@@ -144,7 +144,7 @@ pd.Series(
 # subclass) carrying a BIDS path, a description, and the lazy ``raw``
 # property. Indexing into that list is the standard Python idiom for
 # grabbing one; ``record.raw`` is what triggers the download and opens
-# the file with MNE-Python (Gramfort et al. 2013).
+# the file with MNE-Python :cite:`gramfort2013mne`.
 
 # %%
 record = dataset.datasets[0]
@@ -153,7 +153,7 @@ raw = record.raw
 # %% [markdown]
 # Step 4: BIDS metadata as a DataFrame
 # ------------------------------------
-# Every recording carries the same BIDS envelope (Pernet et al. 2019).
+# Every recording carries the same BIDS envelope :cite:`pernet2019eegbids`.
 # ``record.description`` already is a :class:`pandas.Series`; keeping the
 # fields we care about and adding the duration gives a readable view.
 
@@ -267,7 +267,7 @@ style_figure(
     fig_psd,
     title="Power spectral density (Welch)",
     subtitle=f"{DATASET} sub-{SUBJECT} | {len(raw.copy().pick('eeg').ch_names)} EEG channels | fmax=80 Hz",
-    source=f"EEGDash plot_01 | OpenNeuro {DATASET} (Miltiadous et al. 2023)",
+    source=f"EEGDash plot_01 | OpenNeuro {DATASET} :cite:`miltiadous2023`",
 )
 plt.show()
 

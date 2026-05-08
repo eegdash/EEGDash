@@ -6,10 +6,10 @@ The EEG 2025 Foundation Challenge ships its own loader,
 ``eegdash`` infrastructure that powers
 :class:`~eegdash.dataset.EEGDashDataset`. The data pool is the
 Healthy Brain Network release (HBN; Alexander et al. 2017), reachable
-through `NEMAR <https://nemar.org>`_ (Delorme et al. 2022): every
+through `NEMAR <https://nemar.org>`_ :cite:`delorme2022nemar`: every
 recording is downsampled from 500 Hz to 100 Hz, band-pass filtered
 0.5-50 Hz, and shipped via a fixed S3 bucket so the leaderboard contract
-stays reproducible (Cisotto & Chicco 2024). This tutorial walks through
+stays reproducible :cite:`cisotto2024tips`. This tutorial walks through
 the loader, surfaces the task taxonomy, the participant-level metadata,
 and the official catalog row a single recording carries. The deliverable
 is one :class:`pandas.DataFrame` with records-per-task counts and one

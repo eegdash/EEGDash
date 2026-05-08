@@ -10,8 +10,8 @@ the de-facto evaluation in clinical-EEG decoding. Brookshire et al.
 roughly half; on properly subject-held-out splits, the same
 architectures dropped on average from 0.83 accuracy to 0.62.
 Cisotto & Chicco 2024 (Tip 9) name leakage the single most common
-reporting mistake. ``ds002718`` (Wakeman & Henson 2015), reachable
-through `NEMAR <https://nemar.org>`_ (Delorme et al. 2022), is the
+reporting mistake. ``ds002718`` :cite:`wakeman2015`, reachable
+through `NEMAR <https://nemar.org>`_ :cite:`delorme2022nemar`, is the
 running example throughout the gallery.
 
 Where ``plot_11`` proved a single split is leakage-free and ``plot_12``

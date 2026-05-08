@@ -12,7 +12,7 @@ pipeline from a 1 Hz high-pass plus a mastoid reference plus no ICA, and
 the two can disagree about a class boundary.
 
 This page does not prescribe a recipe. EEGDash is preprocessing-agnostic
-and forwards your data to MNE-Python (Gramfort et al. 2013) [1]_ and
+and forwards your data to MNE-Python :cite:`gramfort2013mne` [1]_ and
 braindecode for transformation. What this page does is name the choices
 that matter, describe what flips when you change them, and point at the
 tutorial where each one is exercised. The framing follows Tips 4–7 of

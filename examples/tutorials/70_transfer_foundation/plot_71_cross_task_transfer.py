@@ -26,7 +26,7 @@ encoder transfers, by how much does it beat chance?
 # - load ``EEGChallengeDataset(release="R5", mini=True)`` source + target.
 # - train a ``ShallowFBCSPNet`` encoder, snapshot it, and fine-tune on CCD.
 # - compare fine-tune, scratch, and **chance level** accuracy (E5.43).
-# - assert no subject leakage across both pipelines (Pernet et al. 2019).
+# - assert no subject leakage across both pipelines :cite:`pernet2019eegbids`.
 # - plot a 3x3 transfer matrix and a PCA of penultimate-layer features.
 #
 # Requirements

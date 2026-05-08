@@ -113,7 +113,7 @@ print(f"cache_dir = {CACHE_DIR}")
 # We query :class:`~eegdash.api.EEGDashDataset` for one subject of
 # ``ds005863`` (visual oddball). The accession resolves through
 # `NEMAR <https://nemar.org>`_; the underlying recording is BrainVision
-# (Pernet et al. 2019).
+# :cite:`pernet2019eegbids`.
 
 # %%
 SUBJECT = "002"

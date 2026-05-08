@@ -13,7 +13,7 @@ reproducibility study covering 30+ datasets (Aristimunha et al. 2023,
 Chevallier et al. 2024). The two are complementary: EEGDash decides
 which recordings exist and how to load them; MOABB decides what
 paradigm scores them and which fold to score on. The bridge
-:func:`eegdash.splits.to_moabb_split_inputs` returns ``(y, metadata)``
+:meth:`braindecode.datasets.BaseConcatDataset.get_metadata` returns ``(y, metadata)``
 for any MOABB stratified splitter.
 
 This tutorial wires both halves together: an
@@ -36,7 +36,7 @@ two sklearn pipelines look like once they finish the benchmark?
 # -------------------
 #
 # - Explain why EEGDash (catalog) and MOABB (paradigm + evaluator) are complementary halves of a benchmark pipeline.
-# - Convert a windowed :class:`~eegdash.api.EEGDashDataset` into the ``(y, metadata)`` pair every MOABB splitter consumes via :func:`eegdash.splits.to_moabb_split_inputs`.
+# - Convert a windowed :class:`~eegdash.api.EEGDashDataset` into the ``(y, metadata)`` pair every MOABB splitter consumes via :meth:`braindecode.datasets.BaseConcatDataset.get_metadata`.
 # - Run a small :class:`~moabb.evaluations.CrossSessionEvaluation` on :class:`~moabb.datasets.BNCI2014_001` and read per-subject accuracy off the result :class:`pandas.DataFrame`.
 # - Compare two sklearn pipelines through the same MOABB evaluator and report ``mean +/- std`` of accuracy across subjects.
 # - Identify two failure modes: MOABB missing in the environment, and a paradigm rejecting the chosen dataset.
@@ -68,7 +68,6 @@ import pandas as pd
 
 import eegdash
 from eegdash import EEGDashDataset
-from eegdash.splits import to_moabb_split_inputs
 from eegdash.viz import use_eegdash_style
 
 use_eegdash_style()
@@ -96,7 +95,7 @@ print(f"cache_dir={CACHE_DIR}")
 # (EEGDash). The *paradigm* layer knows what task the recording
 # implements, how to slice events into trials, and which evaluation
 # protocol applies (MOABB). The bridge between the two is
-# :func:`eegdash.splits.to_moabb_split_inputs`: it takes an
+# :meth:`braindecode.datasets.BaseConcatDataset.get_metadata`: it takes an
 # :class:`~eegdash.api.EEGDashDataset` (or a windowed braindecode
 # dataset) and returns ``(y, metadata)`` where ``metadata`` carries
 # the ``subject``, ``session``, ``run`` columns MOABB splitters
@@ -105,12 +104,12 @@ print(f"cache_dir={CACHE_DIR}")
 # .. code-block:: text
 #
 #     EEGDash catalog          ---bridge--->          MOABB evaluator
-#     +-----------------+      to_moabb_   +--------------------------+
-#     | EEGDashDataset  |    split_inputs  | Paradigm.get_data()      |
-#     |  - BIDS query   | ---------------> | CrossSessionEvaluation   |
-#     |  - subject      |                  |  - LeaveOneGroupOut      |
-#     |  - task         |                  |  - per-subject score     |
-#     +-----------------+                  +--------------------------+
+#     +-----------------+      get_metadata +--------------------------+
+#     | EEGDashDataset  |     ------------> | Paradigm.get_data()      |
+#     |  - BIDS query   |     (y, metadata) | CrossSessionEvaluation   |
+#     |  - subject      |                   |  - LeaveOneGroupOut      |
+#     |  - task         |                   |  - per-subject score     |
+#     +-----------------+                   +--------------------------+
 #
 # Brookshire et al. 2024 surveyed 81 deep-learning EEG papers and
 # found leakage in roughly half; pushing the splitter logic into a
@@ -120,16 +119,16 @@ print(f"cache_dir={CACHE_DIR}")
 # Step 1. The EEGDash side, ds002718 face recognition
 # ---------------------------------------------------
 #
-# EEGDash hands MOABB the data layer through one method:
-# :func:`eegdash.splits.to_moabb_split_inputs`. We build an
-# :class:`~eegdash.api.EEGDashDataset` for one subject of ``ds002718``
-# (Wakeman & Henson 2015), then read the ``(y, metadata)`` pair every
-# MOABB stratified splitter consumes. The same call works on a windowed
-# :class:`braindecode.datasets.WindowsDataset` (see ``plot_02`` Pattern
-# 0). On the description-only payload of an
-# :class:`~eegdash.api.EEGDashDataset` we get one row per record,
-# which is the right shape for a sanity check before the heavier
-# benchmark below.
+# EEGDash hands MOABB the data layer through whatever metadata accessor
+# the dataset already exposes:
+# :meth:`braindecode.datasets.BaseConcatDataset.get_metadata` once the
+# windows are built (one row per window), or the per-record
+# ``description`` frame on a fresh
+# :class:`~eegdash.api.EEGDashDataset` (one row per recording, the right
+# shape for a sanity check before the heavier benchmark below). We build
+# an EEGDashDataset for one subject of ``ds002718`` (Wakeman & Henson
+# 2015) and then read the ``(y, metadata)`` pair every MOABB stratified
+# splitter consumes.
 
 # %%
 DATASET = "ds002718"
@@ -142,8 +141,11 @@ eegdash_dataset = EEGDashDataset(
 n_records = len(eegdash_dataset.datasets)
 print(f"EEGDashDataset: {n_records} record(s) for sub-{SUBJECT}, task={TASK}")
 
-# The bridge: MOABB-shaped (y, metadata).
-y_eegdash, meta_eegdash = to_moabb_split_inputs(eegdash_dataset, target="task")
+# The bridge: MOABB-shaped (y, metadata). On a fresh EEGDashDataset (no
+# windows yet) we read the per-record descriptions directly. After
+# windowing the same idiom would be ``windows.get_metadata()``.
+meta_eegdash = pd.DataFrame([d.description for d in eegdash_dataset.datasets])
+y_eegdash = meta_eegdash["task"].to_numpy()
 pd.Series(
     {
         "y.shape": str(y_eegdash.shape),
@@ -334,7 +336,7 @@ print(summary.to_string(index=False))
 # :meth:`moabb.paradigms.base.BaseParadigm.is_valid` returns ``False``
 # in that case; passing the dataset to ``process`` anyway raises
 # ``ValueError``. The second is asking
-# :func:`eegdash.splits.to_moabb_split_inputs` for a ``target`` that is
+# :meth:`braindecode.datasets.BaseConcatDataset.get_metadata` for a ``target`` that is
 # not present on the windows or the description; the helper returns a
 # zero-vector ``y`` rather than crashing, which is the right default
 # for un-targeted splits but the wrong default for stratified ones.
@@ -448,7 +450,7 @@ print(
 #
 # We took an :class:`~eegdash.api.EEGDashDataset` over ``ds002718``,
 # extracted the ``(y, metadata)`` MOABB splitters expect through
-# :func:`eegdash.splits.to_moabb_split_inputs`, and ran a
+# :meth:`braindecode.datasets.BaseConcatDataset.get_metadata`, and ran a
 # :class:`~moabb.evaluations.CrossSessionEvaluation` on
 # :class:`~moabb.datasets.BNCI2014_001` with two CSP-based pipelines.
 # The result is one mean +/- std summary plus a per-subject panel
@@ -467,7 +469,7 @@ print(
 # - Replace :class:`~mne.decoding.CSP` with the eight-component variant
 #   (``n_components=8``). Predict before running: does the gap between
 #   ``CSP+LDA`` and ``CSP+LR`` widen or shrink?
-# - Run :func:`eegdash.splits.to_moabb_split_inputs` on the windowed
+# - Run :meth:`braindecode.datasets.BaseConcatDataset.get_metadata` on the windowed
 #   dataset from ``plot_02``. Confirm the metadata frame has one row
 #   per window, not one per record.
 

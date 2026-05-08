@@ -62,8 +62,6 @@ from eegdash.splits import (
     get_splitter,
     make_split_manifest,
     manifest_to_json,
-    to_moabb_split_inputs,
-    to_split_metadata,
 )
 from eegdash.viz import use_eegdash_style
 
@@ -135,13 +133,14 @@ rows = [
 ]
 raw_metadata = pd.DataFrame(rows)
 
-# ``to_split_metadata`` is the canonical entry point. On a Braindecode
-# concat-of-WindowsDataset it walks per-record descriptions; on a
-# DataFrame it normalises the schema (sample_id, subject, session, ...)
-# and validates the requested target column. Either way you get the
-# same tabular view back, ready for splitter/manifest calls below.
-metadata = to_split_metadata(raw_metadata, target="target")
-y, _md_via_moabb = to_moabb_split_inputs(metadata, target="target")
+# For a Braindecode concat-of-WindowsDataset the canonical metadata
+# accessor is :meth:`braindecode.datasets.BaseConcatDataset.get_metadata`
+# (one row per window, BIDS columns from each record's ``description``
+# already merged in). When you start from a hand-built DataFrame, just
+# use it directly: pass the frame as ``metadata`` and the column you
+# want to stratify on as ``y``.
+metadata = raw_metadata
+y = metadata["target"].to_numpy()
 pd.Series(
     {
         "rows": len(metadata),
@@ -414,20 +413,20 @@ print(f"cross_session overlap: {session_overlap}")
 # **Mini-project.** Take the
 # :class:`braindecode.datasets.BaseConcatDataset` of
 # :class:`braindecode.datasets.WindowsDataset` you saved in plot_10,
-# pipe it through :func:`~eegdash.splits.to_split_metadata` to get the
+# pipe it through :meth:`~braindecode.datasets.BaseConcatDataset.get_metadata` to get the
 # tabular view, then through :func:`~eegdash.splits.make_split_manifest`
 # and :func:`~eegdash.splits.assert_no_leakage`. The function
-# :func:`~eegdash.splits.to_moabb_split_inputs` returns ``(y, metadata)``
+# :meth:`~braindecode.datasets.BaseConcatDataset.get_metadata` returns ``(y, metadata)``
 # already aligned to MOABB's ``CrossSubjectSplitter`` API, so you can
 # feed it straight into a benchmark loop without a glue-code layer.
 #
 # .. code-block:: python
 #
 #     from eegdash.splits import (
-#         to_moabb_split_inputs, get_splitter,
+#         get_metadata, get_splitter,
 #         make_split_manifest, assert_no_leakage,
 #     )
-#     y, md = to_moabb_split_inputs(windows, target="target")
+#     y, md = get_metadata(windows, target="target")
 #     splitter = get_splitter("cross_subject", n_folds=5, random_state=42)
 #     manifest = make_split_manifest(splitter, y, md, target="target")
 #     assert_no_leakage(manifest, md, by="subject")  # raises if it leaks
@@ -523,7 +522,7 @@ pd.DataFrame(fold_sizes, columns=["n_train_rows", "n_test_rows"]).head()
 # only protocol that reports a number you can compare across papers,
 # sites, and clinical pipelines. The recipe is:
 #
-# 1. :func:`~eegdash.splits.to_split_metadata` to get a tabular view of
+# 1. :meth:`~braindecode.datasets.BaseConcatDataset.get_metadata` to get a tabular view of
 #    your windows.
 # 2. :func:`~eegdash.splits.get_splitter` with ``"cross_subject"`` (or
 #    ``"cross_session"`` when sessions are independent).

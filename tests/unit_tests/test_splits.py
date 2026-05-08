@@ -28,8 +28,6 @@ from eegdash.splits import (
     majority_baseline,
     make_split_manifest,
     median_baseline,
-    to_moabb_split_inputs,
-    to_split_metadata,
 )
 
 # ---------------------------------------------------------------------------
@@ -66,54 +64,6 @@ def _build_metadata(
 @pytest.fixture()
 def metadata() -> pd.DataFrame:
     return _build_metadata()
-
-
-# ---------------------------------------------------------------------------
-# to_split_metadata / to_moabb_split_inputs
-# ---------------------------------------------------------------------------
-
-
-def test_to_split_metadata_passthrough_dataframe(metadata):
-    out = to_split_metadata(metadata, target="target")
-    assert {"subject", "session", "run", "dataset", "sample_id", "target"}.issubset(
-        out.columns
-    )
-    assert len(out.index) == len(metadata.index)
-
-
-def test_to_moabb_split_inputs_returns_aligned_y(metadata):
-    y, meta = to_moabb_split_inputs(metadata, target="target")
-    assert isinstance(y, np.ndarray)
-    assert len(y) == len(meta.index)
-    np.testing.assert_array_equal(y, metadata["target"].to_numpy())
-
-
-def test_to_split_metadata_concat_dataset_shim():
-    """A minimal concat-style object should be normalized to per-sample rows."""
-
-    class _Sub:
-        def __init__(self, subject: str, n_windows: int):
-            self.description = pd.Series(
-                {
-                    "subject": subject,
-                    "session": "ses-01",
-                    "run": "run-01",
-                    "dataset": "synthetic",
-                }
-            )
-            self._n = n_windows
-
-        def __len__(self) -> int:
-            return self._n
-
-    class _Concat:
-        def __init__(self, subs):
-            self.datasets = subs
-
-    container = _Concat([_Sub("sub-00", 4), _Sub("sub-01", 3)])
-    out = to_split_metadata(container)
-    assert len(out.index) == 7
-    assert out["subject"].tolist() == ["sub-00"] * 4 + ["sub-01"] * 3
 
 
 # ---------------------------------------------------------------------------

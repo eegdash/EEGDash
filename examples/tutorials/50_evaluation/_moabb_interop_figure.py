@@ -445,7 +445,7 @@ def _draw_integration_diagram(
     ax.text(
         0.5,
         0.13,
-        "bridge: eegdash.splits.to_moabb_split_inputs(dataset, target=...) -> (y, metadata)",
+        "bridge: dataset.get_metadata()[col] -> (y, metadata)",
         ha="center",
         va="center",
         fontsize=7.8,

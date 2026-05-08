@@ -606,15 +606,11 @@ pd.Series(
 # entities (``subject``, ``task``, ``session``, ``run``, ``age``,
 # ``gender``, ``sex``, plus any ``participants.tsv`` extras) onto each
 # record's :attr:`~braindecode.datasets.BaseDataset.description` at
-# dataset construction. :func:`eegdash.splits.to_split_metadata`
-# resolves a target name against three sources in order: the per-window
-# ``metadata`` column, the per-record ``description``, and the ``y``
-# fallback. No mutation needed to label every window with the
-# recording's task, the subject id, the clinical group, or any field
-# from ``participants.tsv``.
-# :func:`~eegdash.splits.to_moabb_split_inputs` returns the same
-# information as ``(y, metadata)`` ready for MOABB stratified
-# splitters.
+# dataset construction. The braindecode windowing step then folds those
+# values into :meth:`braindecode.datasets.BaseConcatDataset.get_metadata`
+# (one row per window), so picking a column out of that DataFrame is the
+# whole adapter — ``y = metadata[col].to_numpy()`` is what feeds MOABB
+# stratified splitters.
 #
 # **Pattern 1: relabel in place.** Mutate the metadata column and the
 # parallel ``y`` list on every per-record subdataset. Lasts for the
@@ -629,20 +625,17 @@ pd.Series(
 
 # %%
 # Pattern 0: read BIDS fields as a target without any mutation.
-# ``to_split_metadata`` walks (per-window metadata) -> (per-record
-# description) -> (ds.y), so a BIDS field on the description becomes a
-# per-window target by name.
-from eegdash.splits import to_moabb_split_inputs, to_split_metadata
-
-md_task = to_split_metadata(windows, target="task")
-md_subject = to_split_metadata(windows, target="subject")
-y_subject, _ = to_moabb_split_inputs(windows, target="subject")
+# ``windows.get_metadata()`` is the braindecode adapter: one row per
+# window, with the per-record ``description`` columns merged in. Picking
+# a column gives the per-window target.
+metadata = windows.get_metadata()
+y_subject = metadata["subject"].to_numpy()
 pd.Series(
     {
-        "rows in md_task": len(md_task),
-        "md_task['target'] unique": str(md_task["target"].unique().tolist()),
-        "md_subject['target'] unique": str(md_subject["target"].unique().tolist()),
-        "to_moabb y dtype": str(y_subject.dtype),
+        "rows in metadata": len(metadata),
+        "task unique": str(metadata["task"].unique().tolist()),
+        "subject unique": str(metadata["subject"].unique().tolist()),
+        "y_subject dtype": str(y_subject.dtype),
         "windows.datasets[0].description['task']": str(
             windows.datasets[0].description.get("task")
         ),
@@ -670,8 +663,8 @@ pd.Series(
 # %%
 # Pattern 1: relabel one recording in place. First half gets label 0,
 # second half label 1. The DataLoader picks up the new targets without
-# any rebuild, and ``to_split_metadata(target='target')`` would now
-# read these mutated values.
+# any rebuild, and ``windows.get_metadata()['target']`` would now
+# return these mutated values.
 sub_ds = windows.datasets[0]
 n = len(sub_ds)
 half = n // 2

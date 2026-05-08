@@ -3,14 +3,116 @@
 % Cite an entry from any RST/Markdown / sphinx-gallery tutorial with
 % ``:cite:`<key>``` after enabling the ``sphinxcontrib.bibtex`` extension.
 % The bibliography is rendered on ``docs/source/references.rst``.
+%
+% Editorial policy:
+% 1. The DOI on every entry is the source of truth — it always wins.
+% 2. Author lists are conservative: the first author plus ``and others``
+%    when the full list was not verified, exact otherwise.
+% 3. Entries scoped to MOABB (the software, the benchmark, the per-dataset
+%    citations) are copied verbatim from the upstream
+%    ``docs/source/cite.rst`` and per-dataset numpydoc ``References``
+%    blocks in moabb so they stay aligned with that project.
 
 % --------------------------------------------------------------------------
-% EEGDash, NEMAR, BIDS, MOABB, MNE
+% MOABB — verbatim from upstream docs/source/cite.rst
+% --------------------------------------------------------------------------
+
+@software{aristimunha_moabb_software,
+  author       = {Aristimunha, Bruno and Carrara, Igor and Guetschel, Pierre and
+                  Sedlar, Sara and Rodrigues, Pedro and Sosulski, Jan and
+                  Narayanan, Divyesh and Bjareholt, Erik and Barthelemy, Quentin and
+                  Schirrmeister, Robin Tibor and Kobler, Reinmar and
+                  Kalunga, Emmanuel and Darmet, Ludovic and Gregoire, Cattan and
+                  Abdul Hussain, Ali and Gatti, Ramiro and Goncharenko, Vladislav and
+                  Andreev, Anton and Tates, Alberto and Kojima, Simon and
+                  Thielen, Jordy and Hajhassani, Davoud and Begany, Katelyn and
+                  Moreau, Thomas and Roy, Yannick and Jayaram, Vinay and
+                  Barachant, Alexandre and Chevallier, Sylvain},
+  title        = {Mother of all {BCI} Benchmarks},
+  year         = 2026,
+  publisher    = {Zenodo},
+  version      = {1.5.0},
+  url          = {https://github.com/NeuroTechX/moabb},
+  doi          = {10.5281/zenodo.10034223},
+}
+
+@article{jayaram2018moabb,
+  author    = {Jayaram, Vinay and Barachant, Alexandre},
+  title     = {{MOABB}: trustworthy algorithm benchmarking for {BCIs}},
+  journal   = {Journal of Neural Engineering},
+  year      = {2018},
+  volume    = {15},
+  number    = {6},
+  pages     = {066011},
+  doi       = {10.1088/1741-2552/aadea0},
+}
+
+@misc{chevallier2024moabb,
+  author = {Chevallier, Sylvain and Carrara, Igor and Aristimunha, Bruno and
+            Guetschel, Pierre and Lopes, Bruna Junqueira and Velut, Sébastien and
+            Khazem, Salim and Moreau, Thomas},
+  title  = {The largest {EEG}-based {BCI} reproducibility study for open science: the {MOABB} benchmark},
+  year   = {2024},
+  note   = {HAL preprint hal-04537061},
+  url    = {https://cnrs.hal.science/hal-04537061/},
+  doi    = {10.48550/arXiv.2404.15319},
+}
+
+% --------------------------------------------------------------------------
+% Datasets used by the gallery
+% --------------------------------------------------------------------------
+
+% BNCI2014_001 — verbatim from moabb.datasets.BNCI2014_001 docstring.
+@article{tangermann2012bnci,
+  author  = {Tangermann, M. and Muller, K.R. and Aertsen, A. and Birbaumer, N. and
+             Braun, C. and Brunner, C. and Leeb, R. and Mehring, C. and
+             Miller, K.J. and Mueller-Putz, G. and Nolte, G.},
+  title   = {Review of the {BCI} Competition {IV}},
+  journal = {Frontiers in Neuroscience},
+  year    = {2012},
+  volume  = {6},
+  pages   = {55},
+  doi     = {10.3389/fnins.2012.00055},
+}
+
+@article{alexander2017hbn,
+  author  = {Alexander, Lindsay M. and others},
+  title   = {An open resource for transdiagnostic research in pediatric mental health and learning disorders},
+  journal = {Scientific Data},
+  year    = {2017},
+  volume  = {4},
+  pages   = {170181},
+  doi     = {10.1038/sdata.2017.181},
+}
+
+@article{wakeman2015,
+  author  = {Wakeman, Daniel G. and Henson, Richard N.},
+  title   = {A multi-subject, multi-modal human neuroimaging dataset},
+  journal = {Scientific Data},
+  year    = {2015},
+  volume  = {2},
+  pages   = {150001},
+  doi     = {10.1038/sdata.2015.1},
+}
+
+@article{miltiadous2023,
+  author  = {Miltiadous, Andreas and others},
+  title   = {A dataset of {EEG} recordings from {Alzheimer's} disease, frontotemporal dementia and healthy subjects},
+  journal = {Data},
+  year    = {2023},
+  volume  = {8},
+  number  = {6},
+  pages   = {95},
+  doi     = {10.18112/openneuro.ds004504.v1.0.5},
+}
+
+% --------------------------------------------------------------------------
+% NEMAR, EEG-BIDS, MNE, EEGLAB
 % --------------------------------------------------------------------------
 
 @article{delorme2022nemar,
-  author  = {Delorme, Arnaud and Truong, Dung and Martinez-Cancino, Ramon and Pernet, Cyril and Sivagnanam, Subhashini and Yoshimoto, Kenneth and Poldrack, Russell and Majumdar, Amitava and Makeig, Scott},
-  title   = {{NEMAR}: an open access data, tools and compute resource operating on neuroelectromagnetic data},
+  author  = {Delorme, Arnaud and others},
+  title   = {{NEMAR}: an open-access data, tools and compute resource operating on neuroelectromagnetic data},
   journal = {Database},
   year    = {2022},
   volume  = {2022},
@@ -19,8 +121,8 @@
 }
 
 @article{pernet2019eegbids,
-  author  = {Pernet, Cyril R. and Appelhoff, Stefan and Gorgolewski, Krzysztof J. and Flandin, Guillaume and Phillips, Christophe and Delorme, Arnaud and Oostenveld, Robert},
-  title   = {{EEG-BIDS}, an extension to the brain imaging data structure for electroencephalography},
+  author  = {Pernet, Cyril R. and others},
+  title   = {{EEG-BIDS}: an extension to the brain imaging data structure for electroencephalography},
   journal = {Scientific Data},
   year    = {2019},
   volume  = {6},
@@ -28,27 +130,8 @@
   doi     = {10.1038/s41597-019-0104-8},
 }
 
-@article{aristimunha2023moabb,
-  author  = {Aristimunha, Bruno and Carrara, Igor and Guetschel, Pierre and Sedlar, Sara and Rodrigues, Pedro and Sosulski, Jan and Narayanan, Divyesh and Bjareholt, Erik and Quentin, Barthelemy and Junior, Jorge Manuel and Carlos, Alvarado and Lukas, M{\"u}ller and Korczowski, Louis and Tavakoli, Saeideh and Kreuger, Maxime and Roy, Quentin and Kalunga, Emmanuel K. and Tabuet, Pierre-Antoine and Cornelius, Glaser and Garcia-Salinas, Jesus and Krzemi{\'n}ski, Dawid and Wirtz, Aleksander and Manh, Q. and Kobler, Reinmar and Carozza, Sofia and Charbonnier, Sylvain and Caraty, Jean-Marc and Aubergon, Adrien and Yamamoto, Maria Sayu and Chevallier, Sylvain},
-  title   = {Mother of All {BCI} Benchmarks (MOABB)},
-  journal = {Journal of Neural Engineering},
-  year    = {2023},
-  volume  = {20},
-  number  = {5},
-  pages   = {056025},
-  doi     = {10.1088/1741-2552/aceaf8},
-}
-
-@article{chevallier2024moabb,
-  author  = {Chevallier, Sylvain and Aristimunha, Bruno and Carrara, Igor and Guetschel, Pierre and Sedlar, Sara and Lopes, Bruna and Velut, Sébastien and Khazem, Salim and Moreau, Thomas},
-  title   = {The largest {EEG}-based {BCI} reproducibility study for open science: the {MOABB} benchmark},
-  journal = {arXiv preprint},
-  year    = {2024},
-  doi     = {10.48550/arXiv.2404.15319},
-}
-
 @article{gramfort2013mne,
-  author  = {Gramfort, Alexandre and Luessi, Martin and Larson, Eric and Engemann, Denis A. and Strohmeier, Daniel and Brodbeck, Christian and Goj, Roman and Jas, Mainak and Brooks, Teon and Parkkonen, Lauri and Hämäläinen, Matti},
+  author  = {Gramfort, Alexandre and others},
   title   = {{MEG} and {EEG} data analysis with {MNE-Python}},
   journal = {Frontiers in Neuroscience},
   year    = {2013},
@@ -69,56 +152,11 @@
 }
 
 % --------------------------------------------------------------------------
-% Datasets the tutorials use
-% --------------------------------------------------------------------------
-
-@article{alexander2017hbn,
-  author  = {Alexander, Lindsay M. and Escalera, Jasmine and Ai, Lei and Andreotti, Charissa and Febre, Karina and Mangone, Alexander and Vega-Potler, Natan and Langer, Nicolas and Alexander, Alexis and Kovacs, Meagan and Litke, Shannon and O'Hagan, Bridget and Andersen, Jennifer and Bronstein, Batya and Bui, Anastasia and Bushey, Marijayne and Butler, Henry and Castagna, Victoria and Camacho, Nicolas and Chan, Elisha and Citera, Danielle and Clucas, Jon and Cohen, Samantha and Dufek, Sarah and Eaves, Megan and Fradera, Brian and Gardner, Judith and Grant-Villegas, Natalie and Green, Gabriella and Gregory, Camille and Hart, Emily and Harris, Shana and Horton, Megan and Kahn, Danielle and Kabotyanski, Katherine and Karmel, Bernard and Kelly, Simon P. and Kleinman, Kayla and Koo, Bonhwang and Kramer, Eliza and Lennon, Elizabeth and Lord, Catherine and Mantello, Ginny and Margolis, Amy and Merikangas, Kathleen R. and Milham, Judith and Minniti, Giuseppe and Neuhaus, Rebecca and Levine, Alexandra and Osman, Yael and Parra, Lucas C. and Pugh, Ken R. and Racanello, Amy and Restrepo, Anita and Saltzman, Tian and Septimus, Batya and Tobe, Russell and Waltz, Rachel and Williams, Anna and Yeo, Anna and Castellanos, Francisco X. and Klein, Arno and Paus, Tomas and Leventhal, Bennett L. and Craddock, R. Cameron and Koplewicz, Harold S. and Milham, Michael P.},
-  title   = {An open resource for transdiagnostic research in pediatric mental health and learning disorders},
-  journal = {Scientific Data},
-  year    = {2017},
-  volume  = {4},
-  pages   = {170181},
-  doi     = {10.1038/sdata.2017.181},
-}
-
-@article{wakeman2015,
-  author  = {Wakeman, Daniel G. and Henson, Richard N.},
-  title   = {A multi-subject, multi-modal human neuroimaging dataset},
-  journal = {Scientific Data},
-  year    = {2015},
-  volume  = {2},
-  pages   = {150001},
-  doi     = {10.1038/sdata.2015.1},
-}
-
-@article{miltiadous2023,
-  author  = {Miltiadous, Andreas and Tzimourta, Katerina D. and Afrantou, Theodora and Ioannidis, Panagiotis and Grigoriadis, Nikolaos and Tsalikakis, Dimitrios G. and Angelidis, Pantelis and Tsipouras, Markos G. and Glavas, Euripidis and Giannakeas, Nikolaos and Tzallas, Alexandros T.},
-  title   = {A dataset of {EEG} recordings from {Alzheimer's} disease, frontotemporal dementia and healthy subjects},
-  journal = {Data},
-  year    = {2023},
-  volume  = {8},
-  number  = {6},
-  pages   = {95},
-  doi     = {10.18112/openneuro.ds004504.v1.0.5},
-}
-
-@article{tangermann2012bnci,
-  author  = {Tangermann, Michael and Müller, Klaus-Robert and Aertsen, Ad and Birbaumer, Niels and Braun, Christoph and Brunner, Clemens and Leeb, Robert and Mehring, Carsten and Miller, Kai J. and Mueller-Putz, Gernot and Nolte, Guido and Pfurtscheller, Gert and Preissl, Hubert and Schalk, Gerwin and Schlögl, Alois and Vidaurre, Carmen and Waldert, Stephan and Blankertz, Benjamin},
-  title   = {Review of the {BCI} Competition {IV}},
-  journal = {Frontiers in Neuroscience},
-  year    = {2012},
-  volume  = {6},
-  pages   = {55},
-  doi     = {10.3389/fnins.2012.00055},
-}
-
-% --------------------------------------------------------------------------
 % Models, training, transfer learning
 % --------------------------------------------------------------------------
 
 @article{schirrmeister2017braindecode,
-  author  = {Schirrmeister, Robin Tibor and Springenberg, Jost Tobias and Fiederer, Lukas Dominique Josef and Glasstetter, Martin and Eggensperger, Katharina and Tangermann, Michael and Hutter, Frank and Burgard, Wolfram and Ball, Tonio},
+  author  = {Schirrmeister, Robin Tibor and others},
   title   = {Deep learning with convolutional neural networks for {EEG} decoding and visualization},
   journal = {Human Brain Mapping},
   year    = {2017},
@@ -129,7 +167,7 @@
 }
 
 @article{banville2021selfsup,
-  author  = {Banville, Hubert and Chehab, Omar and Hyvärinen, Aapo and Engemann, Denis-Alexander and Gramfort, Alexandre},
+  author  = {Banville, Hubert and others},
   title   = {Uncovering the structure of clinical {EEG} signals with self-supervised learning},
   journal = {Journal of Neural Engineering},
   year    = {2021},
@@ -139,7 +177,8 @@
 }
 
 @article{defossez2023brain,
-  author  = {Défossez, Alexandre and Caucheteux, Charlotte and Rapin, Jérémy and Kabeli, Ori and King, Jean-Rémi},
+  author  = {Défossez, Alexandre and Caucheteux, Charlotte and Rapin, Jérémy and
+             Kabeli, Ori and King, Jean-Rémi},
   title   = {Decoding speech perception from non-invasive brain recordings},
   journal = {Nature Machine Intelligence},
   year    = {2023},
@@ -148,7 +187,8 @@
 }
 
 @article{chambon2018sleep,
-  author  = {Chambon, Stanislas and Galtier, Mathieu N. and Arnal, Pierrick J. and Wainrib, Gilles and Gramfort, Alexandre},
+  author  = {Chambon, Stanislas and Galtier, Mathieu N. and Arnal, Pierrick J. and
+             Wainrib, Gilles and Gramfort, Alexandre},
   title   = {A deep learning architecture for temporal sleep stage classification using multivariate and multimodal time series},
   journal = {{IEEE} Transactions on Neural Systems and Rehabilitation Engineering},
   year    = {2018},
@@ -192,7 +232,7 @@
 }
 
 @article{brookshire2024leakage,
-  author  = {Brookshire, Geoffrey and Kasper, Joel and Blauch, Nick and Wu, Yuan-Chia and Glatt, Ryan and Merrill, David A. and Gerrol, Spencer and Yoder, Keith and Quirk, Colin and Lucero, Cesar},
+  author  = {Brookshire, Geoffrey and others},
   title   = {Data leakage in deep learning studies of translational {EEG}},
   journal = {Frontiers in Neuroscience},
   year    = {2024},
@@ -202,7 +242,7 @@
 }
 
 @article{donoghue2020fooof,
-  author  = {Donoghue, Thomas and Haller, Matar and Peterson, Erik J. and Varma, Paroma and Sebastian, Priyadarshini and Gao, Richard and Noto, Torben and Lara, Antonio H. and Wallis, Joni D. and Knight, Robert T. and Shestyuk, Avgusta and Voytek, Bradley},
+  author  = {Donoghue, Thomas and others},
   title   = {Parameterizing neural power spectra into periodic and aperiodic components},
   journal = {Nature Neuroscience},
   year    = {2020},
@@ -247,7 +287,7 @@
 }
 
 @article{caspi2014pfactor,
-  author  = {Caspi, Avshalom and Houts, Renate M. and Belsky, Daniel W. and Goldman-Mellor, Sidra J. and Harrington, HonaLee and Israel, Salomon and Meier, Madeline H. and Ramrakha, Sandhya and Shalev, Idan and Poulton, Richie and Moffitt, Terrie E.},
+  author  = {Caspi, Avshalom and others},
   title   = {The {p} factor: one general psychopathology factor in the structure of psychiatric disorders?},
   journal = {Clinical Psychological Science},
   year    = {2014},
@@ -265,13 +305,5 @@
   author       = {{EEG 2025 Foundation Challenge}},
   title        = {{EEG} 2025 {Foundation} {Challenge}},
   year         = {2025},
-  howpublished = {\url{https://eeg2025.github.io}},
-}
-
-@article{aristimunha2025eeg2025,
-  author  = {Aristimunha, Bruno and {others}},
-  title   = {{EEG2025} {Foundation} {Challenge}: a benchmark for cross-task {EEG} decoding},
-  journal = {Challenge site},
-  year    = {2025},
   howpublished = {\url{https://eeg2025.github.io}},
 }

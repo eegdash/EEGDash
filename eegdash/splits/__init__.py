@@ -75,18 +75,25 @@ def _resolve_metadata(
 ) -> tuple[np.ndarray, pd.DataFrame]:
     """Return ``(y, metadata)`` from a dataset or a DataFrame.
 
-    Uses :meth:`braindecode.datasets.BaseConcatDataset.get_metadata` (one
-    row per window) when available; otherwise treats ``dataset`` as the
-    metadata frame itself.
+    Uses :meth:`braindecode.datasets.BaseConcatDataset.get_metadata`
+    (per-window) when present, falls back to the
+    :attr:`braindecode.datasets.BaseConcatDataset.description` property
+    (per-record) on a raw concat dataset, and treats a
+    :class:`pandas.DataFrame` as the metadata directly.
     """
     if hasattr(dataset, "get_metadata"):
-        metadata = pd.DataFrame(dataset.get_metadata()).reset_index(drop=True)
+        try:
+            metadata = pd.DataFrame(dataset.get_metadata()).reset_index(drop=True)
+        except (TypeError, AttributeError, ValueError):
+            metadata = pd.DataFrame(dataset.description).reset_index(drop=True)
     elif isinstance(dataset, pd.DataFrame):
         metadata = dataset
+    elif hasattr(dataset, "description"):
+        metadata = pd.DataFrame(dataset.description).reset_index(drop=True)
     else:
         raise TypeError(
             f"Cannot extract metadata from {type(dataset).__name__}; pass a "
-            "Braindecode dataset (with get_metadata) or a DataFrame."
+            "braindecode dataset or a DataFrame."
         )
     if "sample_id" not in metadata.columns:
         metadata = metadata.copy()

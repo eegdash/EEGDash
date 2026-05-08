@@ -141,10 +141,11 @@ eegdash_dataset = EEGDashDataset(
 n_records = len(eegdash_dataset.datasets)
 print(f"EEGDashDataset: {n_records} record(s) for sub-{SUBJECT}, task={TASK}")
 
-# The bridge: MOABB-shaped (y, metadata). On a fresh EEGDashDataset (no
-# windows yet) we read the per-record descriptions directly. After
-# windowing the same idiom would be ``windows.get_metadata()``.
-meta_eegdash = pd.DataFrame([d.description for d in eegdash_dataset.datasets])
+# The bridge: MOABB-shaped (y, metadata). braindecode's
+# ``BaseConcatDataset.description`` already returns the per-record
+# DataFrame; after windowing the same role is played by
+# ``windows.get_metadata()`` (one row per window).
+meta_eegdash = eegdash_dataset.description
 y_eegdash = meta_eegdash["task"].to_numpy()
 pd.Series(
     {

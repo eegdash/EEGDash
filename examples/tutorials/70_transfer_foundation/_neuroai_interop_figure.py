@@ -37,7 +37,7 @@ _STAGE_DEFS = [
         "key": "neuralfetch",
         "color": EEGDASH_PURPLE,
         "title": "NeuralFetch.Study",
-        "role": "standardise events",
+        "role": "standardize events",
     },
     {
         "key": "neuralset",

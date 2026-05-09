@@ -13,9 +13,7 @@ evaluation regime, runs a defensible baseline, and surfaces the
 limitations honestly so you know what would have to change before any
 result here could be cited. Compared with tutorials, these projects
 emphasise labels, splits, baselines, and reporting rather than the
-individual EEGDash API calls. Sourced from
-``docs/tutorial_restructure_plan.md`` Category G (lines 1052-1100,
-"Applied Examples To Keep But Reframe").
+individual EEGDash API calls.
 
 What you will learn:
 
@@ -25,7 +23,7 @@ What you will learn:
   data size and the question being asked.
 - How to apply transfer learning across paradigms (P300 transfer
   across subjects and sessions) without leaking labels.
-- How to summarise a clinical catalogue (subjects, sessions,
+- How to summarize a clinical catalogue (subjects, sessions,
   conditions, hours of recording) for inclusion in a paper.
 - How to write up the limitations section that an EEG paper actually
   needs (Cisotto and Chicco 2024; Pernet et al. 2019 for BIDS).

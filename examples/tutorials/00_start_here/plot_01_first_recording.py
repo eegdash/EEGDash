@@ -1,5 +1,7 @@
-"""How do I load one EEG recording from EEGDash?
-==================================================
+"""Load one EEG recording
+========================
+
+**Difficulty 1** | **Runtime: 2m** | **Compute: CPU**
 
 Once a search returns a candidate dataset (see plot_00), the next question is
 practical: what does *one* recording actually contain? This tutorial loads a
@@ -12,6 +14,7 @@ per subject, 19 channels at 500 Hz on a standard 10-20 layout) so the first
 fetch is under 25 MB and every later step is a hot-cache read.
 
 .. sphinx_gallery_thumbnail_path = '_static/thumbs/plot_01_first_recording.png'
+Keywords: loading, BIDS
 """
 
 # %% [markdown]
@@ -106,7 +109,7 @@ dataset = EEGDashDataset(cache_dir=cache_dir, dataset=DATASET, subject=SUBJECT)
 dataset
 
 # %% [markdown]
-# Step 2: Summarise without touching the network
+# Step 2: Summarize without touching the network
 # ----------------------------------------------
 # Every matched record exposes its BIDS metadata on
 # :attr:`~eegdash.api.EEGDashDataset.description`, a
@@ -337,6 +340,6 @@ pd.DataFrame(
 # %% [markdown]
 # References
 # ----------
-# See :doc:`/references` for the centralised bibliography of papers
+# See :doc:`/references` for the centralized bibliography of papers
 # cited above. Add or amend an entry once in
 # :file:`docs/source/refs.bib`; every tutorial inherits the update.

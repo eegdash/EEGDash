@@ -31,7 +31,7 @@ from ..logging import logger
 
 
 class _MultiLocaleParserInfo(parserinfo):
-    """``parserinfo`` subclass that recognises non-English month abbreviations.
+    """``parserinfo`` subclass that recognizes non-English month abbreviations.
 
     Covers German, Italian, French, Spanish, and Dutch short-month names
     commonly found in CTF MEG date headers.

@@ -360,7 +360,7 @@ def draw_compare_pipelines_figure(
         Two-sided p-value from a paired test (Wilcoxon signed-rank or
         :func:`scipy.stats.ttest_rel`). Printed inside the centre panel.
     cohens_d : float
-        Standardised effect size on the paired differences. Printed
+        Standardized effect size on the paired differences. Printed
         next to the p-value.
     chance_level : float, default ``0.5``
         Chance-accuracy reference rendered on the bar panel.

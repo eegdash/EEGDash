@@ -1,14 +1,18 @@
-"""How do I find datasets in EEGDash?
-======================================
+"""Find datasets with the EEGDash API
+=====================================
+
+**Difficulty 1** | **Runtime: <2m** | **Compute: CPU**
 
 EEGDash exposes a metadata index over hundreds of BIDS-curated EEG datasets,
 served by the public REST API at https://data.eegdash.org. The same
 catalogue powers `NEMAR <https://nemar.org>`_, the EEGLAB-ecosystem portal
 that hosts EEG/MEG datasets with browsing, compute, and provenance tools
 (Delorme et al., 2022). The :class:`~eegdash.api.EEGDash` client searches,
-filters, and summarises that index without downloading a single sample.
+filters, and summarizes that index without downloading a single sample.
 
 .. sphinx_gallery_thumbnail_path = '_static/thumbs/plot_00_first_search.png'
+
+Keywords: loading, metadata, API
 """
 
 # %% [markdown]
@@ -62,6 +66,16 @@ for m in public_methods:
 # ``find_datasets``, ``search_datasets``, ``get_dataset``, plus three
 # admin verbs. ``find`` and ``find_datasets`` are the read paths we use
 # throughout the gallery.
+
+# %% [markdown]
+# Validate your result
+# --------------------
+# A successful ``EEGDash()`` initialization and ``count()`` should return:
+#
+# 1. A method list containing ``find``, ``count``, and ``get_dataset``.
+# 2. A record count > 10,000 (the index is growing).
+# 3. A projection with columns like ``subject``, ``session``, and ``task``.
+# 4. Filtered results with extra columns like ``sfreq`` and ``n_channels``.
 
 # %% [markdown]
 # Step 2: How big is the catalogue?
@@ -265,6 +279,6 @@ candidate_cohort(min_subjects=5, sfreq_min=200.0)
 # %% [markdown]
 # References
 # ----------
-# See :doc:`/references` for the centralised bibliography of papers
+# See :doc:`/references` for the centralized bibliography of papers
 # cited above. Add or amend an entry once in
 # :file:`docs/source/refs.bib`; every tutorial inherits the update.

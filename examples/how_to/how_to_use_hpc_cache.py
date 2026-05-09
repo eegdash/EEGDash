@@ -1,6 +1,8 @@
 """Place the EEGDash cache on shared or local cluster storage
 ==========================================================
 
+**Difficulty 2** | **Runtime: 20s** | **Compute: CPU**
+
 On HPC clusters, *where* you put the EEGDash cache is often the difference
 between a 30-minute and a 30-second epoch. Shared filesystems (Lustre, GPFS,
 NFS) survive job restarts but throttle under metadata-heavy access; node-local
@@ -10,10 +12,22 @@ at the right tier, stage data once, and verify the cache before training.
 
 The recipe assumes you already know how to populate the cache (see
 ``how_to_download_a_dataset``) and load offline (see ``how_to_work_offline``).
-We follow the cluster-software best practices summarised by Cisotto and
+We follow the cluster-software best practices summarized by Cisotto and
 Chicco (2024, doi:10.3389/fninf.2024.1338139): keep heavy IO on local-to-node
 storage, stage in at job-start, and never read training data over the network
-home.
+# home.
+#
+# Validate your result
+# --------------------
+# - **Environment Variable.** Run ``echo $EEGDASH_CACHE_DIR`` to ensure it
+#   points to the expected high-speed tier (e.g., ``/scratch`` or
+#   ``$SLURM_TMPDIR``).
+# - **Path Resolution.** Call ``get_default_cache_dir()`` in Python and
+#   verify it returns the same path as the environment variable.
+# - **Data Staging.** Verify that the ``cp -r`` command in your submission
+#   script successfully populated the local node storage before training.
+#
+# Keywords: HPC, cache, SLURM, I/O
 """
 
 # sphinx_gallery_thumbnail_path = '_static/thumbs/how_to_use_hpc_cache.png'

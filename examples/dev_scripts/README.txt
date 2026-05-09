@@ -7,8 +7,7 @@ development -- for example, comparing Braindecode's BIDSDataset against
 EEGDash's own loader.
 
 This section is intentionally hidden from the rendered Examples
-gallery (``docs/source/conf.py`` aggregator,
-``docs/tutorial_restructure_plan.md`` Phase 1 step 5, line 1190). The
+gallery (``docs/source/conf.py`` aggregator). The
 files remain in-tree so internal documentation references still
 resolve, but they are not surfaced as tutorials and are not held to the
 49-rule rubric (E1-E6) that applies to the public sections.

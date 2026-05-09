@@ -1,5 +1,7 @@
-"""How does the auditory P300 differ from the visual P300 of plot_20?
-=====================================================================
+"""Auditory P300 oddball decoding
+================================
+
+**Difficulty 2** | **Runtime: 3m** | **Compute: CPU**
 
 The visual oddball of :doc:`/auto_examples/tutorials/20_event_related/plot_20_visual_p300_oddball`
 delivered a parietal positive bump near 350 ms. Swap the eyes for ears
@@ -22,8 +24,22 @@ doi:10.1038/s41597-019-0104-8), and lands on a 1x3 figure that places
 the auditory P300 next to the visual P300 reference values from
 ``plot_20``. The deliverable is the *contrast*, not a duplicate
 classifier (Cisotto & Chicco 2024, doi:10.7717/peerj-cs.2256). So:
-which numbers stay the same when we swap modalities, and which
-numbers move?
+# numbers stay the same when we swap modalities, and which
+# numbers move?
+#
+# Validate your result
+# --------------------
+# - **Event-locked Annotations.** Expect labels like ``stimulus/standard`` and
+#   ``stimulus/oddball_with_response``.
+# - **Epoch Shape.** Each window should be ``(n_channels, sfreq * 0.7s)``.
+#   With the default 128 Hz, expect 90 samples per window.
+# - **Auditory P300 characteristics.** The ERP should peak earlier than the
+#   visual P300 (around 300 ms) and show a more frontal distribution (largest
+#   at Cz/FCz).
+# - **Comparison.** Compare these results with the visual P300 in
+#   :doc:`plot_20_visual_p300_oddball`.
+#
+#
 """
 
 # sphinx_gallery_thumbnail_path = '_static/thumbs/plot_21_auditory_oddball.png'
@@ -41,7 +57,7 @@ numbers move?
 #   per-class :class:`mne.EvokedArray`, and quantify the auditory P300
 #   peak latency at Cz.
 # - render a difference-wave scalp topomap with
-#   :func:`mne.viz.plot_topomap` and recognise the frontal-central
+#   :func:`mne.viz.plot_topomap` and recognize the frontal-central
 #   distribution of the auditory P300.
 # - state, in one sentence each, what stays the same and what shifts
 #   between visual (``plot_20``) and auditory P300.
@@ -464,6 +480,6 @@ except (ValueError, RuntimeError) as exc:
 # %% [markdown]
 # References
 # ----------
-# See :doc:`/references` for the centralised bibliography of papers
+# See :doc:`/references` for the centralized bibliography of papers
 # cited above. Add or amend an entry once in
 # :file:`docs/source/refs.bib`; every tutorial inherits the update.

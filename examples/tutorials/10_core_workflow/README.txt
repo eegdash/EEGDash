@@ -11,8 +11,7 @@ This category encodes the mistakes EEG decoding papers most often make
 baselines that beat chance only because of a confound, and re-windowing
 every session because nothing was cached. The leakage-safe split lesson
 is the rubric anchor for E3.27 invariants and tracks the evaluation
-guidance in Cisotto and Chicco (2024). Sourced from
-``docs/tutorial_restructure_plan.md`` Category B (lines 380-410).
+guidance in Cisotto and Chicco (2024).
 
 What you will learn:
 
@@ -21,7 +20,7 @@ What you will learn:
   consistently across recordings.
 - How to cut continuous signal into fixed-length and event-locked
   windows.
-- Why subject-aware splitting is non-negotiable for generalisation
+- Why subject-aware splitting is non-negotiable for generalization
   claims, and how to implement one with EEGDash's split helpers.
 - How to train a small baseline model against an explicit chance level
   and report a confidence interval.

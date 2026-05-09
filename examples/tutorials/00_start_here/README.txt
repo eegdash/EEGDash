@@ -11,8 +11,7 @@ This category is the gateway to every other section in this gallery.
 The core decoding workflow assumes you have already loaded a recording;
 the features and evaluation tracks assume you understand windowing; the
 transfer / foundation track assumes you can wire an ``EEGDashDataset``
-into a dataloader. Sourced from ``docs/tutorial_restructure_plan.md``
-Category A (lines 360-380), with BIDS metadata handling per Pernet et
+into a dataloader, with BIDS metadata handling per Pernet et
 al. (2019).
 
 What you will learn:

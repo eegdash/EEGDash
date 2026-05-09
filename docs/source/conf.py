@@ -64,7 +64,7 @@ extensions = [
     "sphinxcontrib.bibtex",
 ]
 
-# Centralised bibliography (see docs/source/refs.bib + references.rst).
+# Centralized bibliography (see docs/source/refs.bib + references.rst).
 # Cite an entry from any RST or sphinx-gallery markdown cell with
 # ``:cite:`<key>``` and the bibliography page renders the canonical list.
 bibtex_bibfiles = ["refs.bib"]
@@ -385,7 +385,7 @@ sphinx_gallery_conf = {
     "within_subsection_order": FileNameSortKey,
     # Polish: hide sub-1s timing rows, drop the noisy module signature line,
     # strip ``# sphinx-gallery-...`` config comments from the rendered output,
-    # standardise card thumbnails at 320x224, ship a branded fallback when a
+    # standardize card thumbnails at 320x224, ship a branded fallback when a
     # tutorial produces no figure, promote bare-string sentences to titles,
     # and pin the scraper list (we never use mayavi) to a single matplotlib
     # entry so docs builds don't import optional viz deps.
@@ -394,7 +394,7 @@ sphinx_gallery_conf = {
     "remove_config_comments": True,
     "thumbnail_size": (320, 224),
     "default_thumb_file": str(Path(__file__).parent / "_static" / "eegdash_thumb.png"),
-    # Note: ``promote_strings_to_titles`` is not a recognised key in
+    # Note: ``promote_strings_to_titles`` is not a recognized key in
     # sphinx-gallery 0.20.x (raises ``ConfigError`` at startup), so it is
     # intentionally omitted; revisit when we bump to a release that ships it.
     "image_scrapers": ("matplotlib",),
@@ -517,7 +517,7 @@ What's in the registry
 ----------------------
 
 EEGDash exposes **700+ OpenNeuro EEG datasets**, registered dynamically
-from MongoDB. The table below summarises the breakdown by experimental
+from MongoDB. The table below summarizes the breakdown by experimental
 type ({dataset_count} datasets in this build).
 
 Base Dataset API
@@ -3218,7 +3218,7 @@ def _inject_seo_context(app, pagename, templatename, context, doctree) -> None:
         )
 
     # DataCatalog JSON-LD for the dataset_summary page. Google Dataset
-    # Search uses this to recognise the page as a catalog aggregator; the
+    # Search uses this to recognize the page as a catalog aggregator; the
     # per-row Dataset JSON-LD lives on individual
     # `api/dataset/eegdash.dataset.*.html` pages and is reached via the
     # sitemap.
@@ -3635,8 +3635,7 @@ def _write_auto_examples_root_index(app):
             "install to a working PyTorch ``DataLoader`` over real EEG "
             "records: find datasets and records, load one recording and "
             "inspect it, then turn an ``EEGDashDataset`` into windows and "
-            "a dataloader. CPU-only, each runs in under a few minutes "
-            "(plan §Category A, lines 360-380).",
+            "a dataloader. CPU-only, each runs in under a few minutes.",
         ),
         (
             "tutorials/10_core_workflow",
@@ -3644,7 +3643,7 @@ def _write_auto_examples_root_index(app):
             "Difficulty 1-2. The canonical EEG decoding pipeline in four "
             "lessons: preprocess and window, split without subject leakage, "
             "train a baseline against chance, and persist prepared data for "
-            "reuse (plan §Category B). The leakage-safe split lesson is "
+            "reuse. The leakage-safe split lesson is "
             "the rubric anchor for E3.27 invariants and Cisotto and Chicco "
             "2024's evaluation guidance.",
         ),
@@ -3655,7 +3654,7 @@ def _write_auto_examples_root_index(app):
             "events and annotations rather than continuous state: a P3 "
             "target-versus-standard classifier on a visual oddball "
             "paradigm, then the auditory oddball framed as a contrast "
-            "with the visual case (plan §Category C).",
+            "with the visual case.",
         ),
         (
             "tutorials/30_resting_state",
@@ -3663,7 +3662,7 @@ def _write_auto_examples_root_index(app):
             "Difficulty 1. The canonical beginner decoding lesson: "
             "eyes-open versus eyes-closed classification on resting-state "
             "EEG, decoded from alpha-rhythm differences with a band-power "
-            "baseline (plan §Category D).",
+            "baseline.",
         ),
         (
             "tutorials/40_features",
@@ -3673,7 +3672,7 @@ def _write_auto_examples_root_index(app):
             "Three lessons cover feature tables from windows, preprocessor "
             "and dependency trees that avoid recomputation, and a "
             "scikit-learn / LightGBM baseline straight from the feature "
-            "table (plan §Category E).",
+            "table.",
         ),
         (
             "tutorials/50_evaluation",
@@ -3683,8 +3682,7 @@ def _write_auto_examples_root_index(app):
             "et al. 2024). Builds from a single split toward "
             "benchmark-grade pipeline comparison: within-subject, "
             "cross-subject, cross-session, learning curves, and a paired "
-            "Wilcoxon comparison of two pipelines (plan §Category F, "
-            "lines 425-442).",
+            "Wilcoxon comparison of two pipelines.",
         ),
         (
             "tutorials/70_transfer_foundation",
@@ -3694,8 +3692,7 @@ def _write_auto_examples_root_index(app):
             "Foundation Challenge: ``EEGChallengeDataset`` basics, "
             "cross-task transfer (Challenge 1), subject-invariant "
             "p-factor regression (Challenge 2), and fine-tuning a "
-            "Braindecode pretrained model (plan §Category H, lines "
-            "458-470). Builds on Schirrmeister et al. 2017.",
+            "Braindecode pretrained model. Builds on Schirrmeister et al. 2017.",
         ),
     ]
     leaf_sections = [
@@ -3706,8 +3703,7 @@ def _write_auto_examples_root_index(app):
             "basics: how to download a dataset, run preprocessing on "
             "SLURM, parallelize feature extraction, use the HPC cache, "
             "and work offline. Each guide answers a single question; "
-            "cross-link with the HPC track when relevant (plan "
-            "§Category I, lines 615-621 and 1021-1037).",
+            "cross-link with the HPC track when relevant.",
         ),
         (
             "applied",
@@ -3716,13 +3712,12 @@ def _write_auto_examples_root_index(app):
             "question -- age regression, p-factor prediction, sex "
             "classification, P300 transfer, clinical-catalog summary -- "
             "with realistic data sizes, runtimes, and limitations. Treat "
-            "them as starting points, not prescriptive recipes (plan "
-            "§Category G, lines 1052-1100).",
+            "them as starting points, not prescriptive recipes.",
         ),
         (
             "eeg2025",
-            "EEG 2025 Foundation Challenge",
-            "End-to-end pipelines for the two EEG 2025 Foundation "
+            "EEG2025 Foundation Challenge",
+            "End-to-end pipelines for the two EEG2025 Foundation "
             "Challenge tracks: cross-task transfer learning (passive to "
             "active), and subject-invariant representations for clinical "
             "factor prediction. Pre-trained weights ship alongside each "
@@ -3774,7 +3769,7 @@ def _write_auto_examples_root_index(app):
         "",
         "The intended path: read the curated **Tutorials** in order, dip "
         "into **How-to recipes** when you have a specific question, then "
-        "scale up using the **Applied research projects**, the **EEG 2025 "
+        "scale up using the **Applied research projects**, the **EEG2025 "
         "Foundation Challenge** pipelines, and the **High-performance "
         "computing** track.",
         "",
@@ -3798,9 +3793,60 @@ def _write_auto_examples_root_index(app):
         "",
         "Seven categories, ordered the way we would teach them: install, "
         "load, decode events, decode state, engineer features, evaluate "
-        "rigorously, then scale to transfer and foundation models. Numbers "
-        "are tutorial-id prefixes (``plot_00_*`` through ``plot_73_*``); "
-        "skip rather than reorder them.",
+        "rigorously, then scale to transfer and foundation models.",
+        "",
+        "Choose your path",
+        "~~~~~~~~~~~~~~~~",
+        "",
+        ".. list-table::",
+        "   :header-rows: 1",
+        "   :widths: 30 35 35",
+        "",
+        "   * - Your goal",
+        "     - Start with",
+        "     - Then read",
+        "   * - **Load my first dataset**",
+        "     - :doc:`tutorials/00_start_here/index`",
+        "     - :doc:`tutorials/10_core_workflow/index`",
+        "   * - **Train a classifier safely**",
+        "     - :doc:`tutorials/10_core_workflow/index`",
+        "     - :doc:`tutorials/50_evaluation/index`",
+        "   * - **Extract classical features**",
+        "     - :doc:`tutorials/40_features/index`",
+        "     - :doc:`how_to/index`",
+        "   * - **Run on a cluster**",
+        "     - :doc:`how_to/index`",
+        "     - :doc:`hpc/index`",
+        "   * - **Join EEG2025**",
+        "     - :doc:`tutorials/70_transfer_foundation/index`",
+        "     - :doc:`eeg2025/index`",
+        "",
+        ".. grid:: 1 2 2 4",
+        "   :gutter: 3",
+        "",
+        "   .. grid-item-card:: 🚀 Learn the basics",
+        "      :link: tutorials/00_start_here/index",
+        "      :link-type: doc",
+        "",
+        "      Start with the absolute beginner tutorials.",
+        "",
+        "   .. grid-item-card:: 🔬 Run an applied project",
+        "      :link: applied/index",
+        "      :link-type: doc",
+        "",
+        "      Dive into real-world research case studies.",
+        "",
+        "   .. grid-item-card:: ⚡ Scale on HPC",
+        "      :link: hpc/index",
+        "      :link-type: doc",
+        "",
+        "      Move from local scripts to cluster-wide jobs.",
+        "",
+        "   .. grid-item-card:: 🏆 Join EEG2025",
+        "      :link: eeg2025/index",
+        "      :link-type: doc",
+        "",
+        "      Enter the official Foundation Challenge.",
         "",
     ]
     for rel, title, intro in tutorial_sections:
@@ -3830,7 +3876,7 @@ def _write_auto_examples_root_index(app):
     # ``dev_scripts`` is kept in the build (linked under a hidden toctree
     # so internal references stay valid) but is intentionally absent from
     # the visible gallery -- it's an internal debugging catalogue, not
-    # public-facing tutorial content (plan §Phase 1 step 5, line 1190).
+    # public-facing tutorial content.
     parts.append(".. toctree::")
     parts.append("   :hidden:")
     parts.append("")

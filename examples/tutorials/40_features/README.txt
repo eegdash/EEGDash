@@ -12,8 +12,7 @@ datasets. They are interpretable, sample-efficient, and reproducible,
 and a feature pipeline is the right tool the moment you have fewer than
 a few thousand windows per class. The dependency-tree lesson teaches
 why you should compute the spectrum once and derive band powers from
-it, rather than recomputing the FFT five times. Sourced from
-``docs/tutorial_restructure_plan.md`` Category E (lines 442-458).
+it, rather than recomputing the FFT five times.
 
 What you will learn:
 

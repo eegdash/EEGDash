@@ -1,5 +1,7 @@
-"""How much does a within-session decoder drift across sessions of the same subject?
-====================================================================================
+"""Cross-session decoding evaluation
+==================================
+
+**Difficulty 2-3** | **Runtime: 2m** | **Compute: CPU**
 
 A model that scores 90% on session 1 of ``sub-03`` can slump to 70% on
 session 2 of the *same* subject. The cap and electrodes were placed a
@@ -30,7 +32,18 @@ session transfer matrix, paired within-vs-between bars per subject,
 and a drift-magnitude histogram across subjects.
 
 So how much does a within-session decoder drift across sessions of the
-same subject?
+# same subject?
+#
+# Validate your result
+# --------------------
+# - **Drift Magnitude.** Expect a 5-20% drop in accuracy when moving from
+#   within-session to cross-session evaluation.
+# - **Session Transfer Matrix.** The matrix should show whether certain
+#   session pairs (e.g., adjacent days) have higher transfer than others.
+# - **Subject Consistency.** Check if certain subjects are more prone to
+#   drift than others in the paired bar plot.
+#
+# Keywords: evaluation, cross-session, drift
 """
 
 # sphinx_gallery_thumbnail_path = '_static/thumbs/plot_52_cross_session_evaluation.png'
@@ -184,7 +197,7 @@ print(
 # (calibration ceiling); (2) cross-session, the 24 manifest folds.
 #
 # **Investigate.** The drop is calibration drift: the part of the
-# within-session score that came from memorising the day-specific
+# within-session score that came from memorizing the day-specific
 # feature distribution rather than the paradigm. Jayaram & Barachant
 # 2018 (doi:10.1088/1741-2552/aabea9) frame the same gap as covariate
 # shift between calibration sessions; Riemannian alignment of the
@@ -418,7 +431,7 @@ print(
 # windows with ``apply_split_manifest`` per fold, fit the same baseline,
 # and compare the drift histogram with the synthetic version. The shape
 # of the histogram (mean drift, tail width) is the per-cohort
-# generalisation report; benchmark publications increasingly include
+# generalization report; benchmark publications increasingly include
 # both panels (Chevallier, Aristimunha et al. 2024).
 #
 # Links

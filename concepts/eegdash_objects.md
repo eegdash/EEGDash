@@ -15,7 +15,7 @@ In short:
   catalogue query into a list of recordings that can be loaded, preprocessed,
   windowed, and iterated over.
 - `EEGChallengeDataset` is a **frozen, derivative dataset**, used for
-  shared-benchmark contexts (currently the EEG 2025 Competition). It loads
+  shared-benchmark contexts (currently the EEG2025 Competition). It loads
   pre-resampled, pre-filtered, pre-cut data so that every participant is
   evaluated against an identical signal.
 
@@ -109,7 +109,7 @@ when a few files in a release are known to be corrupt.
 `EEGChallengeDataset` is a thin wrapper over the same machinery, but
 points at a frozen, preprocessed bucket: the data are downsampled to a
 fixed rate, filtered with a fixed band, and cut into the canonical task
-blocks used by the EEG 2025 Competition. If you are participating in the
+blocks used by the EEG2025 Competition. If you are participating in the
 competition, you **must** use `EEGChallengeDataset`; otherwise your
 local results are not comparable to the public leaderboard. If you are
 not participating, `EEGChallengeDataset` is still useful when you want
@@ -124,7 +124,7 @@ A practical decision tree:
 
 - “I just want to know what is out there.” → `EEGDash`.
 - “I want a PyTorch-style dataset for my own analysis.” → `EEGDashDataset`.
-- “I am running EEG 2025 Competition code, or I want strictly identical
+- “I am running EEG2025 Competition code, or I want strictly identical
   preprocessing across users.” → `EEGChallengeDataset`.
 
 Mixing modes inside a single experiment is fine: a common workflow uses
@@ -133,13 +133,13 @@ Mixing modes inside a single experiment is fine: a common workflow uses
 
 ## Related tutorials
 
-- [How do I find datasets in EEGDash?](../generated/auto_examples/tutorials/00_start_here/plot_00_first_search.md)
+- [Find datasets with the EEGDash API](../generated/auto_examples/tutorials/00_start_here/plot_00_first_search.md)
   walks through metadata-only catalogue exploration with `EEGDash`.
-- [How do I load one EEG recording from EEGDash?](../generated/auto_examples/tutorials/00_start_here/plot_01_first_recording.md)
+- [Load one EEG recording](../generated/auto_examples/tutorials/00_start_here/plot_01_first_recording.md)
   contrasts the catalogue view with a first `EEGDashDataset` load.
-- [How do I turn one EEG recording into a PyTorch DataLoader?](../generated/auto_examples/tutorials/00_start_here/plot_02_dataset_to_dataloader.md)
+- [EEG recording to PyTorch DataLoader](../generated/auto_examples/tutorials/00_start_here/plot_02_dataset_to_dataloader.md)
   builds a PyTorch `DataLoader` on top of an `EEGDashDataset`.
-- [How do I save and reload prepared windows + features?](../generated/auto_examples/tutorials/10_core_workflow/plot_13_save_and_reuse_prepared_data.md)
+- [Save and reload prepared data](../generated/auto_examples/tutorials/10_core_workflow/plot_13_save_and_reuse_prepared_data.md)
   shows how to persist a preprocessed dataset to disk and reload without
   re-running the catalogue query.
 

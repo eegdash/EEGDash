@@ -6,7 +6,9 @@
 
 <a id="sphx-glr-generated-auto-examples-tutorials-50-evaluation-plot-54-compare-two-pipelines-py"></a>
 
-# Is Pipeline A really better than Pipeline B, or did it luck out on one subject?
+# Compare two decoding pipelines
+
+**Difficulty 2-3** | **Runtime: 2m** | **Compute: CPU**
 
 A new decoding pipeline beats your linear baseline by three accuracy
 points on the held-out subject in a hackathon notebook. The gap looks
@@ -21,13 +23,24 @@ JMLR) is the canonical reference for the recipe; Cisotto & Chicco 2024
 (doi:10.7717/peerj-cs.2256, Tip 9) flag the unpaired comparison as the
 single most common over-claim in clinical EEG. So: does the win
 survive a paired test, and how big is the effect once we strip the
-between-subject variance?
+# between-subject variance?
+#
+# Validate your result
+# ——————–
+# - **Paired Verification.** Confirm that `fold_ids_a == fold_ids_b`. An
+#   unpaired comparison on EEG is invalid due to high subject variance.
+# - **Wilcoxon p-value.** A value < 0.05 indicates a statistically
+#   significant difference between the two pipelines.
+# - **Cohen’s d.** This measures the effect size of the improvement. Values
+#   > 0.8 are generally considered large effects.
+#
+# Keywords: evaluation, comparison, statistics
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 19-21 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 32-34 -->
 ```Python
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 23-40 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 36-53 -->
 
 ## Learning objectives
 
@@ -45,11 +58,11 @@ between-subject variance?
 - Theory: [Leakage and evaluation](../../../../concepts/leakage_and_evaluation.md).
 - **Estimated time**: ~5 s on CPU. **Data**: 0 MB (synthetic 12-subject cohort).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 42-43 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 55-56 -->
 
 Setup, seed and imports.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 43-69 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 56-82 -->
 ```Python
 import warnings
 
@@ -78,17 +91,17 @@ SEED = 42
 np.random.seed(SEED)
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 70-78 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 83-91 -->
 
 ## Step 1. A 12-subject feature table to compare on
 
-We synthesise 12 subjects x 16 windows of band-power features
+We synthesize 12 subjects x 16 windows of band-power features
 (alpha bump on closed eyes, identical layout to plot_42). On real
 data you would reload the parquet feature table from plot_40, the
 only thing the comparison cares about is that one row of metadata
 carries a `subject` column the splitter can group on.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 80-113 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 93-126 -->
 ```Python
 N_SUBJECTS, N_PER_SUBJECT = 12, 16
 CH_NAMES = ["O1", "Oz", "O2", "Cz"]
@@ -128,7 +141,7 @@ print(
 feature table: rows=192 | features=16 | subjects=12 | classes={0: np.int64(96), 1: np.int64(96)}
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 114-136 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 127-149 -->
 
 ## Step 2. Predict which pipeline wins
 
@@ -151,7 +164,7 @@ emits the JSON contract line a downstream auditor can grep for.
 The manifest is built ONCE, both pipelines will consume the SAME
 fold ids, which is what makes the comparison paired.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 138-156 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 151-169 -->
 ```Python
 splitter = CrossSubjectSplitter(cv_class=GroupKFold, n_splits=N_SUBJECTS)
 y = metadata["target"].to_numpy()
@@ -176,7 +189,7 @@ print(f"manifest: {type(splitter).__name__} | folds: {n_folds}")
 manifest: CrossSubjectSplitter | folds: 12
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 157-164 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 170-177 -->
 
 ## Step 4. Score both pipelines on the SAME folds
 
@@ -185,7 +198,7 @@ test, and returns three aligned arrays per pipeline: per-fold
 accuracy, per-fold subject id, and the chance level. `random_state`
 everywhere keeps the comparison byte-stable.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 167-201 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 180-214 -->
 ```Python
 def run_pipeline(estimator) -> tuple[list[float], list[str], list[float]]:
     """Score ``estimator`` on every fold of the SHARED manifest."""
@@ -226,7 +239,7 @@ print(
 Pipeline A (LogReg): mean=0.698 +/- 0.098 | chance=0.500 (n_subjects=12)
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 202-223 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 215-236 -->
 ```Python
 pipe_b = Pipeline(
     [
@@ -254,7 +267,7 @@ print(
 Pipeline B (MLP): mean=0.672 +/- 0.114 | chance=0.500 (n_subjects=12)
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 224-231 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 237-244 -->
 
 ## Step 5. Assert the paired contract holds
 
@@ -263,7 +276,7 @@ for pairing. We assert the invariant in code (not just prose); when
 it fails the assertion fires before the test, so a future reader
 never picks the wrong p-value off an unpaired evaluation.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 233-251 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 246-264 -->
 ```Python
 assert fold_ids_a == fold_ids_b, "fold ids diverged: comparison is NOT paired."
 deltas = np.asarray(accs_a) - np.asarray(accs_b)  # A minus B per subject
@@ -288,7 +301,7 @@ print(
 paired contract: 12 per-subject deltas | sign(A-B): wins=4, ties=5, losses=3
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 252-267 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 265-280 -->
 
 ## Step 6. Wilcoxon, paired t-test, Cohen’s d, 95% CI
 
@@ -300,12 +313,12 @@ reader can see whether the two tests agree, they usually do, but
 disagreement is informative when it happens.
 
 Cohen’s d on the paired differences is `mean(d) / sd(d)`; this is
-the standardised effect size, comparable across studies and units.
+the standardized effect size, comparable across studies and units.
 A 95% CI on the mean delta gives the practical-significance ruler:
 values inside the CI are the effects you cannot rule out at this
 sample size.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 269-287 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 282-300 -->
 ```Python
 mean_delta = float(deltas.mean())
 sd_delta = float(deltas.std(ddof=1)) if n > 1 else 0.0
@@ -332,7 +345,7 @@ paired t : t=1.10 | p=0.295
 mean(A-B)=+0.026 | 95% CI=[-0.020, +0.072] | Cohen's d=+0.32 (n=12)
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 288-294 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 301-307 -->
 
 ## Step 7. Per-subject paired comparison table
 
@@ -340,7 +353,7 @@ Tabulate the per-subject rows so the reader can scan which subjects
 A wins on, which it loses on, and where the deltas concentrate. The
 next cell turns the same numbers into the three-panel figure.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 296-307 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 309-320 -->
 ```Python
 paired_df = pd.DataFrame(
     {
@@ -370,7 +383,7 @@ subject  pipeline_a_acc  pipeline_b_acc  delta_a_minus_b  chance
  sub-00           0.688           0.562            0.125   0.500
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 308-326 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 321-339 -->
 
 ## Step 8. Read the three-panel figure
 
@@ -390,7 +403,7 @@ left-to-right as the argument Demsar 2006 would write up:
   bound; the flat line is the no-wins bound; the observed curve
   tells you when in the sorted sequence the wins came in.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 328-340 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 341-353 -->
 ```Python
 fig = draw_compare_pipelines_figure(
     pipeline_a_scores=accs_a,
@@ -405,7 +418,7 @@ fig = draw_compare_pipelines_figure(
 plt.show()
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 341-350 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 354-363 -->
 
 ## Result: report the comparison with the hedging Demsar 2006 asks for
 
@@ -416,7 +429,7 @@ paired test answers a narrow question (does A beat B on these N
 subjects from this distribution?), not the broader “is A a better
 pipeline?”, that needs cross-dataset replication.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 352-361 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 365-374 -->
 ```Python
 print(
     f"Pipeline A - Pipeline B = {100 * mean_delta:+.2f} accuracy points "
@@ -433,7 +446,7 @@ Pipeline A - Pipeline B = +2.60 accuracy points (95% CI [-2.03, +7.24]); paired 
 Hedge: small sample, single mock dataset, fixed hyperparameters.
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 362-369 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 375-382 -->
 
 ## A common mistake, and how to recover
 
@@ -442,7 +455,7 @@ deltas (e.g. when one pipeline was never evaluated on any fold)
 raises [`ValueError`](https://docs.python.org/3/library/exceptions.html#ValueError). We trigger it on purpose so you see the
 error message and the recovery path next to it.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 371-381 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 384-394 -->
 ```Python
 try:
     empty_deltas: list[float] = []  # what you would get if pipe_b never ran
@@ -460,7 +473,7 @@ Caught ValueError: zero_method='wilcox' requires at least one non-zero delta
 Recovery: paired deltas have 12 entries, re-run pipe_b.
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 382-388 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 395-401 -->
 
 ## Modify: swap Pipeline B for a different head
 
@@ -468,7 +481,7 @@ Recovery: paired deltas have 12 entries, re-run pipe_b.
 stronger-regularised [`LogisticRegression`](https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html#sklearn.linear_model.LogisticRegression)
 (`C=0.1`) and rerun. The paired contract still has to hold.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 390-407 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 403-420 -->
 ```Python
 pipe_b_alt = Pipeline(
     [
@@ -492,7 +505,7 @@ print(
 Modify (LogReg C=0.1): mean(A-B')=-0.016 | p=0.250 | Cohen's d=-0.55
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 408-438 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 421-451 -->
 
 ## Try it yourself / Extensions
 
@@ -519,10 +532,10 @@ in one read.
 %% [markdown]
 References
 ———-
-See [References](../../../../references.md) for the centralised bibliography of papers
+See [References](../../../../references.md) for the centralized bibliography of papers
 cited above. Add or amend an entry once in
 `docs/source/refs.bib`; every tutorial inherits the update.
 
-**Total running time of the script:** (0 minutes 2.331 seconds)
+**Total running time of the script:** (0 minutes 2.296 seconds)
 
 <a id="sphx-glr-download-generated-auto-examples-tutorials-50-evaluation-plot-54-compare-two-pipelines-py"></a>

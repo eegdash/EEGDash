@@ -7,18 +7,18 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta property="og:title" content="Decode eyes-open vs. eyes-closed from resting-state EEG" />
+<meta property="og:title" content="Decode eyes open vs. eyes closed" />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://eegdash.org/generated/auto_examples/tutorials/30_resting_state/plot_30_eyes_open_closed.html" />
 <meta property="og:site_name" content="EEG Dash" />
-<meta property="og:description" content="Hans Berger reported in 1929 that the parieto-occipital alpha rhythm rises when the eyes close and falls when they open[ Berger, 1929]. This textbook…" />
+<meta property="og:description" content="Difficulty 1| Runtime: 5m| Compute: CPU Hans Berger reported in 1929 that the parieto-occipital alpha rhythm rises when the eyes close and falls when…" />
 <meta property="og:image" content="https://eegdash.org/_static/eegdash_social_card.png" />
 <meta property="og:image:alt" content="EEG Dash — data-sharing interface for M/EEG datasets" />
-<meta name="description" content="Hans Berger reported in 1929 that the parieto-occipital alpha rhythm rises when the eyes close and falls when they open[ Berger, 1929]. This textbook…" />
+<meta name="description" content="Difficulty 1| Runtime: 5m| Compute: CPU Hans Berger reported in 1929 that the parieto-occipital alpha rhythm rises when the eyes close and falls when…" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@eegdash" />
 
-    <title>Decode eyes-open vs. eyes-closed from resting-state EEG &#8212; EEG Dash</title>
+    <title>Decode eyes open vs. eyes closed &#8212; EEG Dash</title>
   
   
   
@@ -563,7 +563,7 @@
     
     <li class="breadcrumb-item"><a href="index.html" class="nav-link">Resting-State and State Decoding</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Decode eyes-open vs. eyes-closed from resting-state EEG</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Decode eyes open vs. eyes closed</span></li>
   </ul>
 </nav>
 </div>
@@ -585,8 +585,9 @@
 <p><a class="reference internal" href="#sphx-glr-download-generated-auto-examples-tutorials-30-resting-state-plot-30-eyes-open-closed-py"><span class="std std-ref">Go to the end</span></a>
 to download the full example code or to run this example in your browser via Binder.</p>
 </div>
-<section class="sphx-glr-example-title" id="decode-eyes-open-vs-eyes-closed-from-resting-state-eeg">
-<span id="sphx-glr-generated-auto-examples-tutorials-30-resting-state-plot-30-eyes-open-closed-py"></span><h1>Decode eyes-open vs. eyes-closed from resting-state EEG<a class="headerlink" href="#decode-eyes-open-vs-eyes-closed-from-resting-state-eeg" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">19 minutes</span></div>
+<section class="sphx-glr-example-title" id="decode-eyes-open-vs-eyes-closed">
+<span id="sphx-glr-generated-auto-examples-tutorials-30-resting-state-plot-30-eyes-open-closed-py"></span><h1>Decode eyes open vs. eyes closed<a class="headerlink" href="#decode-eyes-open-vs-eyes-closed" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">20 minutes</span></div>
+<p><strong>Difficulty 1</strong> | <strong>Runtime: 5m</strong> | <strong>Compute: CPU</strong></p>
 <p>Hans Berger reported in 1929 that the parieto-occipital alpha rhythm
 rises when the eyes close and falls when they open <span class="bibtex-citation" id="id1">[<a class="reference internal" href="../../../../references.html#id24" title="Hans Berger. Über das elektrenkephalogramm des menschen. Archiv für Psychiatrie und Nervenkrankheiten, 87(1):527-570, 1929. doi:10.1007/BF01797193.">Berger, 1929</a>]</span>. This
 textbook resting-state EEG result that every dataset still reproduces
@@ -597,7 +598,8 @@ tutorial. We reproduce it on Healthy Brain Network <code class="docutils literal
 <span class="bibtex-citation" id="id4">[<a class="reference internal" href="../../../../references.html#id6" title="Arnaud Delorme, Dung Truong, Choonhan Youn, Subhashini Sivagnanam, Claire Stirm, Kenneth Yoshimoto, Russell A Poldrack, Amitava Majumdar, and Scott Makeig. Nemar: an open access data, tools and compute resource operating on neuroelectromagnetic data. Database, 2022. doi:10.1093/database/baac096.">Delorme <em>et al.</em>, 2022</a>]</span>: a leave-one-subject-out logistic regression on
 log alpha-band power features.</p>
 <p>Can we tell from a 2-second EEG snippet whether a child has the eyes
-open or closed?</p>
+open or closed?
+Keywords: classification, resting-state, alpha</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span>
 </pre></div>
 </div>
@@ -622,7 +624,7 @@ are cached (~120 MB into <code class="docutils literal notranslate"><span class=
 <span class="xref std std-doc">/auto_examples/tutorials/10_core_workflow/plot_11_leakage_safe_split</span>.</p></li>
 <li><p>Concept: <a class="reference internal" href="../../../../concepts/preprocessing_decisions.html"><span class="doc">Preprocessing decisions</span></a>.</p></li>
 </ul>
-<p>Setup. Seed (E3.21) and a parametrised cache dir (E3.24) keep the
+<p>Setup. Seed (E3.21) and a parameterized cache dir (E3.24) keep the
 tutorial reproducible and the network calls confined to the first run.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
@@ -683,6 +685,17 @@ flat posterior topography        parieto-occipital alpha bump
 -&gt; &quot;open&quot; class label            -&gt; &quot;closed&quot; class label
 </pre></div>
 </div>
+</section>
+<section id="validate-your-result">
+<h2>Validate your result<a class="headerlink" href="#validate-your-result" title="Link to this heading">#</a></h2>
+<p>Before you trust the decoder, verify the data pipeline:</p>
+<ol class="arabic simple">
+<li><p><strong>Window counts.</strong> For 6 HBN subjects, you should expect ~100-200 windows per class.</p></li>
+<li><p><strong>Class balance.</strong> The reannotation should produce roughly equal counts for EO and EC.</p></li>
+<li><p><strong>Tensor shape.</strong> Each window is <code class="docutils literal notranslate"><span class="pre">(24,</span> <span class="pre">256)</span></code> (24 channels, 2 seconds at 128 Hz).</p></li>
+<li><p><strong>Accuracy.</strong> Expect cross-subject accuracy significantly above chance (typically &gt;0.70).</p></li>
+<li><p><strong>Interpretation.</strong> The confusion matrix should show whether one state is harder to decode (often “open” due to more artifacts).</p></li>
+</ol>
 </section>
 <section id="step-1-configure-the-eoec-recipe">
 <h2>Step 1. Configure the EOEC recipe<a class="headerlink" href="#step-1-configure-the-eoec-recipe" title="Link to this heading">#</a></h2>
@@ -837,22 +850,22 @@ which is what makes the per-class window counts balanced.</p>
 ╰─────────────────────────── Source: EEGDashDataset ───────────────────────────╯
 
 Downloading sub-NDARAC589YMB_task-RestingState_channels.tsv:   0%|          | 0.00/1.42k [00:00&lt;?, ?B/s]
-Downloading sub-NDARAC589YMB_task-RestingState_channels.tsv: 100%|██████████| 1.42k/1.42k [00:00&lt;00:00, 6.27MB/s]
+Downloading sub-NDARAC589YMB_task-RestingState_channels.tsv: 100%|██████████| 1.42k/1.42k [00:00&lt;00:00, 6.31MB/s]
 
 Downloading sub-NDARAC589YMB_task-RestingState_events.tsv:   0%|          | 0.00/618 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAC589YMB_task-RestingState_events.tsv: 100%|██████████| 618/618 [00:00&lt;00:00, 3.22MB/s]
+Downloading sub-NDARAC589YMB_task-RestingState_events.tsv: 100%|██████████| 618/618 [00:00&lt;00:00, 2.64MB/s]
 
 Downloading sub-NDARAC589YMB_task-RestingState_eeg.json:   0%|          | 0.00/231 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAC589YMB_task-RestingState_eeg.json: 100%|██████████| 231/231 [00:00&lt;00:00, 1.24MB/s]
-[05/08/26 18:42:57] WARNING  File not found on S3, skipping:   downloader.py:163
+Downloading sub-NDARAC589YMB_task-RestingState_eeg.json: 100%|██████████| 231/231 [00:00&lt;00:00, 1.08MB/s]
+[05/09/26 20:25:53] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds005514/sub-N
                              DARAC589YMB/eeg/sub-NDARAC589YMB_
                              task-RestingState_eeg.fdt
 
 Downloading sub-NDARAC589YMB_task-RestingState_eeg.set:   0%|          | 0.00/90.7M [00:00&lt;?, ?B/s]
-Downloading sub-NDARAC589YMB_task-RestingState_eeg.set:  55%|█████▌    | 50.0M/90.7M [00:01&lt;00:00, 46.9MB/s]
-Downloading sub-NDARAC589YMB_task-RestingState_eeg.set: 100%|██████████| 90.7M/90.7M [00:01&lt;00:00, 84.4MB/s]
-[05/08/26 18:42:58] INFO     Original events found with ids: preprocessing.py:66
+Downloading sub-NDARAC589YMB_task-RestingState_eeg.set:  55%|█████▌    | 50.0M/90.7M [00:00&lt;00:00, 74.9MB/s]
+Downloading sub-NDARAC589YMB_task-RestingState_eeg.set: 100%|██████████| 90.7M/90.7M [00:00&lt;00:00, 134MB/s]
+[05/09/26 20:25:54] INFO     Original events found with ids: preprocessing.py:66
                              {np.str_(&#39;boundary&#39;): 1,
                              np.str_(&#39;break cnt&#39;): 2,
                              np.str_(&#39;instructed_toCloseEyes
@@ -862,22 +875,22 @@ Downloading sub-NDARAC589YMB_task-RestingState_eeg.set: 100%|██████�
                              5}
 
 Downloading sub-NDARAC853CR6_task-RestingState_channels.tsv:   0%|          | 0.00/1.42k [00:00&lt;?, ?B/s]
-Downloading sub-NDARAC853CR6_task-RestingState_channels.tsv: 100%|██████████| 1.42k/1.42k [00:00&lt;00:00, 5.48MB/s]
+Downloading sub-NDARAC853CR6_task-RestingState_channels.tsv: 100%|██████████| 1.42k/1.42k [00:00&lt;00:00, 7.03MB/s]
 
 Downloading sub-NDARAC853CR6_task-RestingState_events.tsv:   0%|          | 0.00/616 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAC853CR6_task-RestingState_events.tsv: 100%|██████████| 616/616 [00:00&lt;00:00, 2.19MB/s]
+Downloading sub-NDARAC853CR6_task-RestingState_events.tsv: 100%|██████████| 616/616 [00:00&lt;00:00, 2.78MB/s]
 
 Downloading sub-NDARAC853CR6_task-RestingState_eeg.json:   0%|          | 0.00/231 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAC853CR6_task-RestingState_eeg.json: 100%|██████████| 231/231 [00:00&lt;00:00, 1.08MB/s]
-[05/08/26 18:43:00] WARNING  File not found on S3, skipping:   downloader.py:163
+Downloading sub-NDARAC853CR6_task-RestingState_eeg.json: 100%|██████████| 231/231 [00:00&lt;00:00, 1.17MB/s]
+[05/09/26 20:25:55] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds005514/sub-N
                              DARAC853CR6/eeg/sub-NDARAC853CR6_
                              task-RestingState_eeg.fdt
 
 Downloading sub-NDARAC853CR6_task-RestingState_eeg.set:   0%|          | 0.00/92.1M [00:00&lt;?, ?B/s]
-Downloading sub-NDARAC853CR6_task-RestingState_eeg.set:  54%|█████▍    | 50.0M/92.1M [00:01&lt;00:01, 42.2MB/s]
-Downloading sub-NDARAC853CR6_task-RestingState_eeg.set: 100%|██████████| 92.1M/92.1M [00:01&lt;00:00, 77.0MB/s]
-[05/08/26 18:43:01] INFO     Original events found with ids: preprocessing.py:66
+Downloading sub-NDARAC853CR6_task-RestingState_eeg.set:  54%|█████▍    | 50.0M/92.1M [00:00&lt;00:00, 57.9MB/s]
+Downloading sub-NDARAC853CR6_task-RestingState_eeg.set: 100%|██████████| 92.1M/92.1M [00:00&lt;00:00, 105MB/s]
+[05/09/26 20:25:56] INFO     Original events found with ids: preprocessing.py:66
                              {np.str_(&#39;boundary&#39;): 1,
                              np.str_(&#39;break cnt&#39;): 2,
                              np.str_(&#39;instructed_toCloseEyes
@@ -887,22 +900,22 @@ Downloading sub-NDARAC853CR6_task-RestingState_eeg.set: 100%|██████�
                              5}
 
 Downloading sub-NDARAE710YWG_task-RestingState_channels.tsv:   0%|          | 0.00/1.42k [00:00&lt;?, ?B/s]
-Downloading sub-NDARAE710YWG_task-RestingState_channels.tsv: 100%|██████████| 1.42k/1.42k [00:00&lt;00:00, 4.86MB/s]
+Downloading sub-NDARAE710YWG_task-RestingState_channels.tsv: 100%|██████████| 1.42k/1.42k [00:00&lt;00:00, 7.03MB/s]
 
 Downloading sub-NDARAE710YWG_task-RestingState_events.tsv:   0%|          | 0.00/616 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAE710YWG_task-RestingState_events.tsv: 100%|██████████| 616/616 [00:00&lt;00:00, 3.14MB/s]
+Downloading sub-NDARAE710YWG_task-RestingState_events.tsv: 100%|██████████| 616/616 [00:00&lt;00:00, 3.63MB/s]
 
 Downloading sub-NDARAE710YWG_task-RestingState_eeg.json:   0%|          | 0.00/231 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAE710YWG_task-RestingState_eeg.json: 100%|██████████| 231/231 [00:00&lt;00:00, 970kB/s]
-[05/08/26 18:43:02] WARNING  File not found on S3, skipping:   downloader.py:163
+Downloading sub-NDARAE710YWG_task-RestingState_eeg.json: 100%|██████████| 231/231 [00:00&lt;00:00, 1.40MB/s]
+[05/09/26 20:25:58] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds005514/sub-N
                              DARAE710YWG/eeg/sub-NDARAE710YWG_
                              task-RestingState_eeg.fdt
 
 Downloading sub-NDARAE710YWG_task-RestingState_eeg.set:   0%|          | 0.00/90.6M [00:00&lt;?, ?B/s]
-Downloading sub-NDARAE710YWG_task-RestingState_eeg.set:  55%|█████▌    | 50.0M/90.6M [00:00&lt;00:00, 58.9MB/s]
-Downloading sub-NDARAE710YWG_task-RestingState_eeg.set: 100%|██████████| 90.6M/90.6M [00:00&lt;00:00, 105MB/s]
-[05/08/26 18:43:03] INFO     Original events found with ids: preprocessing.py:66
+Downloading sub-NDARAE710YWG_task-RestingState_eeg.set:  55%|█████▌    | 50.0M/90.6M [00:00&lt;00:00, 76.0MB/s]
+Downloading sub-NDARAE710YWG_task-RestingState_eeg.set: 100%|██████████| 90.6M/90.6M [00:00&lt;00:00, 135MB/s]
+[05/09/26 20:25:59] INFO     Original events found with ids: preprocessing.py:66
                              {np.str_(&#39;boundary&#39;): 1,
                              np.str_(&#39;break cnt&#39;): 2,
                              np.str_(&#39;instructed_toCloseEyes
@@ -912,22 +925,22 @@ Downloading sub-NDARAE710YWG_task-RestingState_eeg.set: 100%|██████�
                              5}
 
 Downloading sub-NDARAH239PGG_task-RestingState_channels.tsv:   0%|          | 0.00/1.42k [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH239PGG_task-RestingState_channels.tsv: 100%|██████████| 1.42k/1.42k [00:00&lt;00:00, 4.94MB/s]
+Downloading sub-NDARAH239PGG_task-RestingState_channels.tsv: 100%|██████████| 1.42k/1.42k [00:00&lt;00:00, 6.63MB/s]
 
 Downloading sub-NDARAH239PGG_task-RestingState_events.tsv:   0%|          | 0.00/615 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH239PGG_task-RestingState_events.tsv: 100%|██████████| 615/615 [00:00&lt;00:00, 2.30MB/s]
+Downloading sub-NDARAH239PGG_task-RestingState_events.tsv: 100%|██████████| 615/615 [00:00&lt;00:00, 3.35MB/s]
 
 Downloading sub-NDARAH239PGG_task-RestingState_eeg.json:   0%|          | 0.00/231 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH239PGG_task-RestingState_eeg.json: 100%|██████████| 231/231 [00:00&lt;00:00, 1.04MB/s]
-[05/08/26 18:43:04] WARNING  File not found on S3, skipping:   downloader.py:163
+Downloading sub-NDARAH239PGG_task-RestingState_eeg.json: 100%|██████████| 231/231 [00:00&lt;00:00, 716kB/s]
+[05/09/26 20:26:00] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds005514/sub-N
                              DARAH239PGG/eeg/sub-NDARAH239PGG_
                              task-RestingState_eeg.fdt
 
 Downloading sub-NDARAH239PGG_task-RestingState_eeg.set:   0%|          | 0.00/90.1M [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH239PGG_task-RestingState_eeg.set:  55%|█████▌    | 50.0M/90.1M [00:00&lt;00:00, 74.1MB/s]
-Downloading sub-NDARAH239PGG_task-RestingState_eeg.set: 100%|██████████| 90.1M/90.1M [00:00&lt;00:00, 132MB/s]
-[05/08/26 18:43:05] INFO     Original events found with ids: preprocessing.py:66
+Downloading sub-NDARAH239PGG_task-RestingState_eeg.set:  55%|█████▌    | 50.0M/90.1M [00:00&lt;00:00, 71.4MB/s]
+Downloading sub-NDARAH239PGG_task-RestingState_eeg.set: 100%|██████████| 90.1M/90.1M [00:00&lt;00:00, 127MB/s]
+[05/09/26 20:26:01] INFO     Original events found with ids: preprocessing.py:66
                              {np.str_(&#39;boundary&#39;): 1,
                              np.str_(&#39;break cnt&#39;): 2,
                              np.str_(&#39;instructed_toCloseEyes
@@ -937,22 +950,22 @@ Downloading sub-NDARAH239PGG_task-RestingState_eeg.set: 100%|██████�
                              5}
 
 Downloading sub-NDARAL897CYV_task-RestingState_channels.tsv:   0%|          | 0.00/1.42k [00:00&lt;?, ?B/s]
-Downloading sub-NDARAL897CYV_task-RestingState_channels.tsv: 100%|██████████| 1.42k/1.42k [00:00&lt;00:00, 5.96MB/s]
+Downloading sub-NDARAL897CYV_task-RestingState_channels.tsv: 100%|██████████| 1.42k/1.42k [00:00&lt;00:00, 5.98MB/s]
 
 Downloading sub-NDARAL897CYV_task-RestingState_events.tsv:   0%|          | 0.00/616 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAL897CYV_task-RestingState_events.tsv: 100%|██████████| 616/616 [00:00&lt;00:00, 2.54MB/s]
+Downloading sub-NDARAL897CYV_task-RestingState_events.tsv: 100%|██████████| 616/616 [00:00&lt;00:00, 2.94MB/s]
 
 Downloading sub-NDARAL897CYV_task-RestingState_eeg.json:   0%|          | 0.00/231 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAL897CYV_task-RestingState_eeg.json: 100%|██████████| 231/231 [00:00&lt;00:00, 730kB/s]
-[05/08/26 18:43:06] WARNING  File not found on S3, skipping:   downloader.py:163
+Downloading sub-NDARAL897CYV_task-RestingState_eeg.json: 100%|██████████| 231/231 [00:00&lt;00:00, 1.08MB/s]
+[05/09/26 20:26:02] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds005514/sub-N
                              DARAL897CYV/eeg/sub-NDARAL897CYV_
                              task-RestingState_eeg.fdt
 
 Downloading sub-NDARAL897CYV_task-RestingState_eeg.set:   0%|          | 0.00/87.5M [00:00&lt;?, ?B/s]
-Downloading sub-NDARAL897CYV_task-RestingState_eeg.set:  57%|█████▋    | 50.0M/87.5M [00:00&lt;00:00, 73.7MB/s]
-Downloading sub-NDARAL897CYV_task-RestingState_eeg.set: 100%|██████████| 87.5M/87.5M [00:00&lt;00:00, 127MB/s]
-[05/08/26 18:43:07] INFO     Original events found with ids: preprocessing.py:66
+Downloading sub-NDARAL897CYV_task-RestingState_eeg.set:  57%|█████▋    | 50.0M/87.5M [00:00&lt;00:00, 68.6MB/s]
+Downloading sub-NDARAL897CYV_task-RestingState_eeg.set: 100%|██████████| 87.5M/87.5M [00:00&lt;00:00, 118MB/s]
+[05/09/26 20:26:03] INFO     Original events found with ids: preprocessing.py:66
                              {np.str_(&#39;boundary&#39;): 1,
                              np.str_(&#39;break cnt&#39;): 2,
                              np.str_(&#39;instructed_toCloseEyes
@@ -960,7 +973,7 @@ Downloading sub-NDARAL897CYV_task-RestingState_eeg.set: 100%|██████�
                              np.str_(&#39;instructed_toOpenEyes&#39;
                              ): 4, np.str_(&#39;resting_start&#39;):
                              5}
-[05/08/26 18:43:08] WARNING  File not found on S3, skipping:   downloader.py:163
+[05/09/26 20:26:04] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds005514/sub-N
                              DARDB033FW5/eeg/sub-NDARDB033FW5_
                              task-RestingState_eeg.fdt
@@ -1306,9 +1319,9 @@ this file apply (plus whatever default styling the IDE applies).
 
 
 
-<tr class="mne-repr-section-header general-19fe88f4-5893-4684-80da-617aad08fd7e"
+<tr class="mne-repr-section-header general-af5381f7-1dbf-495e-82f6-722a7e4c7546"
      title="Hide section"
-    onclick="toggleVisibility('general-19fe88f4-5893-4684-80da-617aad08fd7e')">
+    onclick="toggleVisibility('general-af5381f7-1dbf-495e-82f6-722a7e4c7546')">
     <th class="mne-repr-section-toggle">
         <button >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
@@ -1320,26 +1333,26 @@ this file apply (plus whatever default styling the IDE applies).
 </tr>
 
 
-<tr class="repr-element general-19fe88f4-5893-4684-80da-617aad08fd7e ">
+<tr class="repr-element general-af5381f7-1dbf-495e-82f6-722a7e4c7546 ">
     <td class="mne-repr-section-toggle"></td>
     <td>MNE object type</td>
     <td>Info</td>
 </tr>
-<tr class="repr-element general-19fe88f4-5893-4684-80da-617aad08fd7e ">
+<tr class="repr-element general-af5381f7-1dbf-495e-82f6-722a7e4c7546 ">
     <td class="mne-repr-section-toggle"></td>
     <td>Measurement date</td>
 
     <td>Unknown</td>
 
 </tr>
-<tr class="repr-element general-19fe88f4-5893-4684-80da-617aad08fd7e ">
+<tr class="repr-element general-af5381f7-1dbf-495e-82f6-722a7e4c7546 ">
     <td class="mne-repr-section-toggle"></td>
     <td>Participant</td>
 
     <td>Unknown</td>
 
 </tr>
-<tr class="repr-element general-19fe88f4-5893-4684-80da-617aad08fd7e ">
+<tr class="repr-element general-af5381f7-1dbf-495e-82f6-722a7e4c7546 ">
     <td class="mne-repr-section-toggle"></td>
     <td>Experimenter</td>
 
@@ -1354,9 +1367,9 @@ this file apply (plus whatever default styling the IDE applies).
 
 
 
-<tr class="mne-repr-section-header acquisition-d7998e94-40c2-48d4-9d45-46b2afcc6909"
+<tr class="mne-repr-section-header acquisition-41c78bd8-d95c-4cad-a451-baf4a83d0a83"
      title="Hide section"
-    onclick="toggleVisibility('acquisition-d7998e94-40c2-48d4-9d45-46b2afcc6909')">
+    onclick="toggleVisibility('acquisition-41c78bd8-d95c-4cad-a451-baf4a83d0a83')">
     <th class="mne-repr-section-toggle">
         <button >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
@@ -1375,7 +1388,7 @@ this file apply (plus whatever default styling the IDE applies).
 
 
 
-<tr class="repr-element acquisition-d7998e94-40c2-48d4-9d45-46b2afcc6909 ">
+<tr class="repr-element acquisition-41c78bd8-d95c-4cad-a451-baf4a83d0a83 ">
     <td class="mne-repr-section-toggle"></td>
     <td>Sampling frequency</td>
     <td>128.00 Hz</td>
@@ -1391,9 +1404,9 @@ this file apply (plus whatever default styling the IDE applies).
 
 
 
-<tr class="mne-repr-section-header channels-5ca4da09-94fe-4d56-bd3a-f0f9a6b29ba3"
+<tr class="mne-repr-section-header channels-a214bbad-a5f3-494f-b903-4d0a3e4f4415"
      title="Hide section"
-    onclick="toggleVisibility('channels-5ca4da09-94fe-4d56-bd3a-f0f9a6b29ba3')">
+    onclick="toggleVisibility('channels-a214bbad-a5f3-494f-b903-4d0a3e4f4415')">
     <th class="mne-repr-section-toggle">
         <button >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
@@ -1406,7 +1419,7 @@ this file apply (plus whatever default styling the IDE applies).
 
 
 
-<tr class="repr-element channels-5ca4da09-94fe-4d56-bd3a-f0f9a6b29ba3 ">
+<tr class="repr-element channels-a214bbad-a5f3-494f-b903-4d0a3e4f4415 ">
     <td class="mne-repr-section-toggle"></td>
     <td>EEG</td>
     <td>
@@ -1419,7 +1432,7 @@ this file apply (plus whatever default styling the IDE applies).
 </tr>
 
 
-<tr class="repr-element channels-5ca4da09-94fe-4d56-bd3a-f0f9a6b29ba3 ">
+<tr class="repr-element channels-a214bbad-a5f3-494f-b903-4d0a3e4f4415 ">
     <td class="mne-repr-section-toggle"></td>
     <td>Head & sensor digitization</td>
 
@@ -1434,9 +1447,9 @@ this file apply (plus whatever default styling the IDE applies).
 
 
 
-<tr class="mne-repr-section-header filters-01a6ac2f-9596-4ede-9aeb-d78dcbb1deca"
+<tr class="mne-repr-section-header filters-a77f7884-054e-4738-90b3-c969f043dbab"
      title="Hide section"
-    onclick="toggleVisibility('filters-01a6ac2f-9596-4ede-9aeb-d78dcbb1deca')">
+    onclick="toggleVisibility('filters-a77f7884-054e-4738-90b3-c969f043dbab')">
     <th class="mne-repr-section-toggle">
         <button >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
@@ -1448,14 +1461,14 @@ this file apply (plus whatever default styling the IDE applies).
 </tr>
 
 
-<tr class="repr-element filters-01a6ac2f-9596-4ede-9aeb-d78dcbb1deca ">
+<tr class="repr-element filters-a77f7884-054e-4738-90b3-c969f043dbab ">
     <td class="mne-repr-section-toggle"></td>
     <td>Highpass</td>
     <td>0.00 Hz</td>
 </tr>
 
 
-<tr class="repr-element filters-01a6ac2f-9596-4ede-9aeb-d78dcbb1deca ">
+<tr class="repr-element filters-a77f7884-054e-4738-90b3-c969f043dbab ">
     <td class="mne-repr-section-toggle"></td>
     <td>Lowpass</td>
     <td>64.00 Hz</td>
@@ -1473,7 +1486,7 @@ this file apply (plus whatever default styling the IDE applies).
 magnitude (skull thickness, pediatric age effects, electrode
 impedance). The closed-vs-open <em>contrast</em> is preserved, but a flat
 linear model fed raw log-power features sees the per-subject offset
-as the dominant axis and loses signal. We standardise each subject’s
+as the dominant axis and loses signal. We standardize each subject’s
 24 features to zero mean / unit std so the model sees the <em>relative</em>
 alpha pattern instead of the absolute amplitude.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">features</span></a> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">alpha_log_power</span></a><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
@@ -1491,7 +1504,7 @@ alpha pattern instead of the absolute amplitude.</p>
 <code class="docutils literal notranslate"><span class="pre">groups</span> <span class="pre">=</span> <span class="pre">subject</span> <span class="pre">id</span></code> produces a leave-one-subject-out split (one
 fold per subject when <code class="docutils literal notranslate"><span class="pre">n_splits</span> <span class="pre">==</span> <span class="pre">n_subjects</span></code>). On each fold we
 train a flat <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html#sklearn.linear_model.LogisticRegression" title="(in scikit-learn v1.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.linear_model.LogisticRegression</span></code></a> on the
-per-subject-standardised log alpha-band power features (one per
+per-subject-standardized log alpha-band power features (one per
 channel) and read accuracy on the held-out subject.
 An inline subject-overlap check is the Cisotto &amp; Chicco 2024 (Tip 9)
 guard that confirms zero subject overlap on the contract by subject id.</p>
@@ -1755,10 +1768,10 @@ trained on the raw windows (see
 </section>
 <section id="references">
 <h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
-<p>See <a class="reference internal" href="../../../../references.html"><span class="doc">References</span></a> for the centralised bibliography of papers
+<p>See <a class="reference internal" href="../../../../references.html"><span class="doc">References</span></a> for the centralized bibliography of papers
 cited above. Add or amend an entry once in
 <code class="file docutils literal notranslate"><span class="pre">docs/source/refs.bib</span></code>; every tutorial inherits the update.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 15.112 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 14.643 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-auto-examples-tutorials-30-resting-state-plot-30-eyes-open-closed-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/eegdash/EEGDash/main?urlpath=lab/tree/notebooks/generated/auto_examples/tutorials/30_resting_state/plot_30_eyes_open_closed.ipynb"><img alt="Launch binder" src="../../../../_images/binder_badge_logo8.svg" style="width: 150px;" />
@@ -1827,6 +1840,7 @@ cited above. Add or amend an entry once in
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">Learning objectives</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#requirements">Requirements</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#concept-the-alpha-rhythm-and-what-eyes-closed-does-to-it">Concept: the alpha rhythm and what eyes-closed does to it</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#validate-your-result">Validate your result</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-configure-the-eoec-recipe">Step 1. Configure the EOEC recipe</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-primm-predict">Step 2. PRIMM Predict</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-load-six-subjects-and-window-them">Step 3. Load six subjects and window them</a></li>

@@ -6,7 +6,9 @@
 
 <a id="sphx-glr-generated-auto-examples-tutorials-20-event-related-plot-20-visual-p300-oddball-py"></a>
 
-# How does the brain answer a rare visual target?
+# Visual P300 oddball decoding
+
+**Difficulty 2** | **Runtime: 2m** | **Compute: CPU**
 
 A child watches letters flash one by one on a screen. Most letters are
 *standards*; one is the block’s *target*. The brain answers the rare
@@ -20,12 +22,13 @@ artefacts side by side: an ERP at Pz, a scalp topography of the
 difference wave at the peak, and a 3-fold leave-one-subject-out
 accuracy on a logistic-regression decoder. Where does the textbook
 P300 actually live in the data?
+Keywords: classification, P300, oddball
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 21-23 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 24-26 -->
 ```Python
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 25-31 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 28-34 -->
 
 ## Learning objectives
 
@@ -34,7 +37,7 @@ P300 actually live in the data?
 - Compute the P300 peak amplitude and latency at Pz and plot the per-channel difference wave on a scalp topography with [`mne.viz.plot_topomap()`](https://mne.tools/stable/generated/mne.viz.plot_topomap.html#mne.viz.plot_topomap).
 - Evaluate a 3-fold leave-one-subject-out classifier with [`sklearn.model_selection.GroupKFold`](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GroupKFold.html#sklearn.model_selection.GroupKFold) and [`sklearn.linear_model.LogisticRegression`](https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html#sklearn.linear_model.LogisticRegression) against the right balanced-accuracy chance line for an oddball.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 33-41 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 36-44 -->
 
 ## Requirements
 
@@ -45,12 +48,12 @@ P300 actually live in the data?
 - Concept: [Leakage and evaluation](../../../../concepts/leakage_and_evaluation.md).
 - Data: three subjects of `ds005863` (`visualoddball` task).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 43-45 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 46-48 -->
 
 Setup. Two seeds keep the splits and the classifier reproducible across
 runs; `EEGDASH_CACHE_DIR` controls where the BIDS bytes land.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 45-75 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 48-78 -->
 ```Python
 import os
 import warnings
@@ -87,7 +90,7 @@ print(f"cache_dir = {CACHE_DIR}")
 cache_dir = /home/runner/eegdash_cache
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 76-108 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 79-111 -->
 
 ## The oddball paradigm in two paragraphs
 
@@ -121,7 +124,20 @@ S S S T S S T S          [-100 ... 800] ms     uV
                              search 300-450 ms  |/      ~~  standard
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 110-116 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 113-123 -->
+
+## Validate your result
+
+- **Event-Label Validation.** Stimulus code `XY` should decode as a
+  *target* if `X == Y` and *standard* otherwise.
+- **Class Balance.** Targets are rare. Expect a ratio of roughly 1 target to
+  4 standard trials (20% targets).
+- **Epoch Shape.** Each window should be `(n_channels, sfreq * 1.2s)`.
+  With the default 5 channels and 128 Hz, expect `(5, 154)`.
+- **P3 component.** The ERP at Pz should show a clear positive bump between
+  300-500 ms on target trials compared to standards.
+
+<!-- GENERATED FROM PYTHON SOURCE LINES 125-131 -->
 
 ## Step 1: Pick a P300 dataset
 
@@ -130,7 +146,7 @@ We query `EEGDashDataset` for one subject of
 [NEMAR](https://nemar.org); the underlying recording is BrainVision
 [[Pernet *et al.*, 2019](../../../../references.md#id7)].
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 118-138 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 133-153 -->
 ```Python
 SUBJECT = "002"
 dataset = EEGDashDataset(
@@ -155,28 +171,28 @@ pd.Series(
 
 ```none
 Downloading sub-002_task-visualoddball_events.tsv:   0%|          | 0.00/9.03k [00:00<?, ?B/s]
-Downloading sub-002_task-visualoddball_events.tsv: 100%|██████████| 9.03k/9.03k [00:00<00:00, 34.9MB/s]
+Downloading sub-002_task-visualoddball_events.tsv: 100%|██████████| 9.03k/9.03k [00:00<00:00, 36.3MB/s]
 
 Downloading sub-002_task-visualoddball_events.json:   0%|          | 0.00/2.22k [00:00<?, ?B/s]
-Downloading sub-002_task-visualoddball_events.json: 100%|██████████| 2.22k/2.22k [00:00<00:00, 8.27MB/s]
+Downloading sub-002_task-visualoddball_events.json: 100%|██████████| 2.22k/2.22k [00:00<00:00, 9.80MB/s]
 
 Downloading sub-002_task-visualoddball_eeg.json:   0%|          | 0.00/793 [00:00<?, ?B/s]
-Downloading sub-002_task-visualoddball_eeg.json: 100%|██████████| 793/793 [00:00<00:00, 4.04MB/s]
+Downloading sub-002_task-visualoddball_eeg.json: 100%|██████████| 793/793 [00:00<00:00, 4.08MB/s]
 
 Downloading sub-002_task-visualoddball_eeg.eeg:   0%|          | 0.00/28.4M [00:00<?, ?B/s]
-Downloading sub-002_task-visualoddball_eeg.eeg:  60%|█████▉    | 16.9M/28.4M [00:00<00:00, 68.1MB/s]
-Downloading sub-002_task-visualoddball_eeg.eeg: 100%|██████████| 28.4M/28.4M [00:00<00:00, 89.6MB/s]
+Downloading sub-002_task-visualoddball_eeg.eeg: 100%|█████████▉| 28.4M/28.4M [00:00<00:00, 148MB/s]
+Downloading sub-002_task-visualoddball_eeg.eeg: 100%|██████████| 28.4M/28.4M [00:00<00:00, 147MB/s]
 
 Downloading sub-002_task-visualoddball_eeg.vmrk:   0%|          | 0.00/13.7k [00:00<?, ?B/s]
-Downloading sub-002_task-visualoddball_eeg.vmrk: 100%|██████████| 13.7k/13.7k [00:00<00:00, 44.0MB/s]
-[05/08/26 18:42:41] WARNING  File not found on S3, skipping:   downloader.py:163
+Downloading sub-002_task-visualoddball_eeg.vmrk: 100%|██████████| 13.7k/13.7k [00:00<00:00, 40.6MB/s]
+[05/09/26 20:25:36] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds005863/sub-0
                              02/eeg/sub-002_task-visualoddball
                              _eeg.dat
 
 Downloading sub-002_task-visualoddball_eeg.vhdr:   0%|          | 0.00/6.22k [00:00<?, ?B/s]
-Downloading sub-002_task-visualoddball_eeg.vhdr: 100%|██████████| 6.22k/6.22k [00:00<00:00, 20.6MB/s]
-                    INFO     Auto-repairing                            io.py:219
+Downloading sub-002_task-visualoddball_eeg.vhdr: 100%|██████████| 6.22k/6.22k [00:00<00:00, 19.8MB/s]
+[05/09/26 20:25:37] INFO     Auto-repairing                            io.py:219
                              sub-002_task-visualoddball_eeg.vhdr:
                              DataFile=COCOA_014_VO.eeg ->
                              sub-002_task-visualoddball_eeg.eeg
@@ -235,7 +251,7 @@ Downloading sub-002_task-visualoddball_eeg.vhdr: 100%|████████�
 </div>
 <br />
 <br />
-<!-- GENERATED FROM PYTHON SOURCE LINES 139-145 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 154-160 -->
 
 ## Step 2: Inspect the events table
 
@@ -244,7 +260,7 @@ and exposes one integer code per stimulus. The block-relative coding
 above (`S XY`) means a target trial is any annotation whose two
 trailing digits match.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 147-165 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 162-180 -->
 ```Python
 events, event_id = mne.events_from_annotations(raw)
 descriptions = sorted(d for d in event_id if d.startswith("S "))
@@ -314,14 +330,14 @@ pd.Series(
 </div>
 <br />
 <br />
-<!-- GENERATED FROM PYTHON SOURCE LINES 166-170 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 181-185 -->
 
 **Predict.** What difference do you expect between target and standard
 ERPs at centro-parietal Pz, in the 300-450 ms window? The literature
 answers a positive bump on targets only; the size depends on how
 attentive the child is, and on band-pass and reference choices.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 172-183 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 187-198 -->
 
 ## Step 3: Preprocess and create event-locked windows
 
@@ -335,7 +351,7 @@ with a `mapping` that keeps each block-relative code distinct so we
 can re-collapse to a binary target/standard label downstream.
 **Run.** Preprocess and epoch.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 185-222 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 200-237 -->
 ```Python
 SFREQ = 128.0
 preprocess(
@@ -437,7 +453,7 @@ pd.Series(
 </div>
 <br />
 <br />
-<!-- GENERATED FROM PYTHON SOURCE LINES 223-228 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 238-243 -->
 
 **Investigate.** `X.shape` is `(n_windows, n_channels, n_times)`.
 The window length in samples is `int((TMAX - TMIN) * SFREQ) + 1` for
@@ -445,7 +461,7 @@ this version of braindecode; that includes the t=0 sample. The
 imbalance comes through unchanged: the dataset’s ~4:1 standard:target
 ratio is preserved, exactly the regime an oddball decoder must handle.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 230-237 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 245-252 -->
 
 ## Step 4: ERP at Pz with baseline correction
 
@@ -455,7 +471,7 @@ pre-stimulus baseline and the per-window mean over that slice is what
 we subtract from every sample to form the corrected ERP. Picton 1992
 is the standard reference for this convention.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 239-277 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 254-292 -->
 ```Python
 sfreq_post = float(record.raw.info["sfreq"])
 ch_names_full = list(record.raw.ch_names)
@@ -500,7 +516,7 @@ print(
 P300 (target - standard) at Pz: peak +4.05 uV @ 447 ms
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 278-285 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 293-300 -->
 
 ## Step 5: Topography of the difference wave at the peak
 
@@ -510,7 +526,7 @@ latency and feed that vector to [`mne.viz.plot_topomap()`](https://mne.tools/sta
 colormap is divergent so positive (target > standard) and negative
 values read clearly even when projected to grayscale.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 287-294 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 302-309 -->
 ```Python
 target_evoked_all = X_bc[y == 1].mean(axis=0) * 1e6  # (n_eeg, n_times) in uV
 standard_evoked_all = X_bc[y == 0].mean(axis=0) * 1e6
@@ -524,12 +540,12 @@ print(f"diff_at_peak.shape = {diff_at_peak.shape}, n_eeg = {len(eeg_names)}")
 diff_at_peak.shape = (26,), n_eeg = 26
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 295-312 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 310-327 -->
 
 ## Step 6: Cross-subject decoding with leave-one-subject-out
 
 Within-subject splits report an upper bound on what a given decoder
-learns. Cross-subject splits report what generalises. We pull two more
+learns. Cross-subject splits report what generalizes. We pull two more
 subjects (`010`, `017`), run the same preprocessing, extract a
 single P300 amplitude feature per channel (mean voltage in 300-450 ms),
 and run [`sklearn.model_selection.GroupKFold`](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GroupKFold.html#sklearn.model_selection.GroupKFold) with the subject id
@@ -544,7 +560,7 @@ accuracy because the latter is dominated by the majority class.
 **Run.** Build the cross-subject features and report the per-fold
 balanced accuracy.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 315-459 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 330-474 -->
 ```Python
 def _amplitude_features(
     cache_dir: Path,
@@ -694,14 +710,14 @@ pd.DataFrame(
 ```none
 /home/runner/work/EEGDash/EEGDash/.venv/lib/python3.12/site-packages/braindecode/preprocessing/preprocess.py:78: UserWarning: apply_on_array can only be True if fn is a callable function. Automatically correcting to apply_on_array=False.
   warn(
-[05/08/26 18:42:42] WARNING  File not found on S3, skipping:   downloader.py:163
+                    WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds005863/sub-0
                              02/eeg/sub-002_task-visualoddball
                              _eeg.dat
 
 Downloading sub-002_task-visualoddball_eeg.vhdr:   0%|          | 0.00/6.22k [00:00<?, ?B/s]
-Downloading sub-002_task-visualoddball_eeg.vhdr: 100%|██████████| 6.22k/6.22k [00:00<00:00, 27.2MB/s]
-                    INFO     Auto-repairing                            io.py:219
+Downloading sub-002_task-visualoddball_eeg.vhdr: 100%|██████████| 6.22k/6.22k [00:00<00:00, 19.8MB/s]
+[05/09/26 20:25:38] INFO     Auto-repairing                            io.py:219
                              sub-002_task-visualoddball_eeg.vhdr:
                              DataFile=COCOA_014_VO.eeg ->
                              sub-002_task-visualoddball_eeg.eeg
@@ -717,27 +733,27 @@ Downloading sub-002_task-visualoddball_eeg.vhdr: 100%|████████�
   warn(
 
 Downloading sub-010_task-visualoddball_events.tsv:   0%|          | 0.00/9.00k [00:00<?, ?B/s]
-Downloading sub-010_task-visualoddball_events.tsv: 100%|██████████| 9.00k/9.00k [00:00<00:00, 24.1MB/s]
+Downloading sub-010_task-visualoddball_events.tsv: 100%|██████████| 9.00k/9.00k [00:00<00:00, 29.6MB/s]
 
 Downloading sub-010_task-visualoddball_events.json:   0%|          | 0.00/2.22k [00:00<?, ?B/s]
-Downloading sub-010_task-visualoddball_events.json: 100%|██████████| 2.22k/2.22k [00:00<00:00, 6.05MB/s]
+Downloading sub-010_task-visualoddball_events.json: 100%|██████████| 2.22k/2.22k [00:00<00:00, 11.5MB/s]
 
 Downloading sub-010_task-visualoddball_eeg.json:   0%|          | 0.00/793 [00:00<?, ?B/s]
-Downloading sub-010_task-visualoddball_eeg.json: 100%|██████████| 793/793 [00:00<00:00, 2.70MB/s]
+Downloading sub-010_task-visualoddball_eeg.json: 100%|██████████| 793/793 [00:00<00:00, 2.19MB/s]
 
 Downloading sub-010_task-visualoddball_eeg.eeg:   0%|          | 0.00/26.7M [00:00<?, ?B/s]
-Downloading sub-010_task-visualoddball_eeg.eeg:  63%|██████▎   | 16.9M/26.7M [00:00<00:00, 62.8MB/s]
-Downloading sub-010_task-visualoddball_eeg.eeg: 100%|██████████| 26.7M/26.7M [00:00<00:00, 71.7MB/s]
+Downloading sub-010_task-visualoddball_eeg.eeg:  75%|███████▍  | 19.9M/26.7M [00:00<00:00, 104MB/s]
+Downloading sub-010_task-visualoddball_eeg.eeg: 100%|██████████| 26.7M/26.7M [00:00<00:00, 73.4MB/s]
 
 Downloading sub-010_task-visualoddball_eeg.vmrk:   0%|          | 0.00/13.7k [00:00<?, ?B/s]
-Downloading sub-010_task-visualoddball_eeg.vmrk: 100%|██████████| 13.7k/13.7k [00:00<00:00, 38.0MB/s]
-[05/08/26 18:42:44] WARNING  File not found on S3, skipping:   downloader.py:163
+Downloading sub-010_task-visualoddball_eeg.vmrk: 100%|██████████| 13.7k/13.7k [00:00<00:00, 55.4MB/s]
+[05/09/26 20:25:39] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds005863/sub-0
                              10/eeg/sub-010_task-visualoddball
                              _eeg.dat
 
 Downloading sub-010_task-visualoddball_eeg.vhdr:   0%|          | 0.00/6.22k [00:00<?, ?B/s]
-Downloading sub-010_task-visualoddball_eeg.vhdr: 100%|██████████| 6.22k/6.22k [00:00<00:00, 26.3MB/s]
+Downloading sub-010_task-visualoddball_eeg.vhdr: 100%|██████████| 6.22k/6.22k [00:00<00:00, 29.8MB/s]
                     INFO     Auto-repairing                            io.py:219
                              sub-010_task-visualoddball_eeg.vhdr:
                              DataFile=COCOA_022_VO.eeg ->
@@ -754,27 +770,27 @@ Downloading sub-010_task-visualoddball_eeg.vhdr: 100%|████████�
   warn(
 
 Downloading sub-017_task-visualoddball_events.tsv:   0%|          | 0.00/8.98k [00:00<?, ?B/s]
-Downloading sub-017_task-visualoddball_events.tsv: 100%|██████████| 8.98k/8.98k [00:00<00:00, 35.6MB/s]
+Downloading sub-017_task-visualoddball_events.tsv: 100%|██████████| 8.98k/8.98k [00:00<00:00, 39.9MB/s]
 
 Downloading sub-017_task-visualoddball_events.json:   0%|          | 0.00/2.22k [00:00<?, ?B/s]
-Downloading sub-017_task-visualoddball_events.json: 100%|██████████| 2.22k/2.22k [00:00<00:00, 9.52MB/s]
+Downloading sub-017_task-visualoddball_events.json: 100%|██████████| 2.22k/2.22k [00:00<00:00, 9.69MB/s]
 
 Downloading sub-017_task-visualoddball_eeg.json:   0%|          | 0.00/793 [00:00<?, ?B/s]
-Downloading sub-017_task-visualoddball_eeg.json: 100%|██████████| 793/793 [00:00<00:00, 3.58MB/s]
+Downloading sub-017_task-visualoddball_eeg.json: 100%|██████████| 793/793 [00:00<00:00, 3.62MB/s]
 
 Downloading sub-017_task-visualoddball_eeg.eeg:   0%|          | 0.00/25.6M [00:00<?, ?B/s]
-Downloading sub-017_task-visualoddball_eeg.eeg:  66%|██████▋   | 16.9M/25.6M [00:00<00:00, 88.4MB/s]
-Downloading sub-017_task-visualoddball_eeg.eeg: 100%|██████████| 25.6M/25.6M [00:00<00:00, 111MB/s]
+Downloading sub-017_task-visualoddball_eeg.eeg:  66%|██████▋   | 16.9M/25.6M [00:00<00:00, 86.7MB/s]
+Downloading sub-017_task-visualoddball_eeg.eeg: 100%|██████████| 25.6M/25.6M [00:00<00:00, 97.9MB/s]
 
 Downloading sub-017_task-visualoddball_eeg.vmrk:   0%|          | 0.00/13.7k [00:00<?, ?B/s]
-Downloading sub-017_task-visualoddball_eeg.vmrk: 100%|██████████| 13.7k/13.7k [00:00<00:00, 43.4MB/s]
-[05/08/26 18:42:45] WARNING  File not found on S3, skipping:   downloader.py:163
+Downloading sub-017_task-visualoddball_eeg.vmrk: 100%|██████████| 13.7k/13.7k [00:00<00:00, 45.8MB/s]
+[05/09/26 20:25:41] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds005863/sub-0
                              17/eeg/sub-017_task-visualoddball
                              _eeg.dat
 
 Downloading sub-017_task-visualoddball_eeg.vhdr:   0%|          | 0.00/6.22k [00:00<?, ?B/s]
-Downloading sub-017_task-visualoddball_eeg.vhdr: 100%|██████████| 6.22k/6.22k [00:00<00:00, 19.3MB/s]
+Downloading sub-017_task-visualoddball_eeg.vhdr: 100%|██████████| 6.22k/6.22k [00:00<00:00, 31.7MB/s]
                     INFO     Auto-repairing                            io.py:219
                              sub-017_task-visualoddball_eeg.vhdr:
                              DataFile=COCOA_029_VO.eeg ->
@@ -838,7 +854,7 @@ Downloading sub-017_task-visualoddball_eeg.vhdr: 100%|████████�
 </div>
 <br />
 <br />
-<!-- GENERATED FROM PYTHON SOURCE LINES 460-467 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 475-482 -->
 
 **Investigate.** Per-fold balanced accuracy fluctuates a few points
 around its mean. The chance line is 0.5 by construction: any constant
@@ -848,7 +864,7 @@ right one for an oddball task. The plain accuracy a majority-class
 predictor would reach (~0.80 here) flatters the trivial baseline; the
 balanced metric does not.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 469-478 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 484-493 -->
 
 ## Step 7: The headline plate
 
@@ -860,7 +876,7 @@ imbalance. The figure code lives in a sibling `_p300_figure` module
 so the rendering plumbing stays out of the tutorial; the call below
 is the only line that matters.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 480-510 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 495-525 -->
 ```Python
 from _p300_figure import draw_p300_figure
 
@@ -893,7 +909,7 @@ fig = draw_p300_figure(
 plt.show()
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 511-518 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 526-533 -->
 
 ## A common mistake, and how to recover
 
@@ -903,7 +919,7 @@ BrainVision codes `S 11` … `S 55` and the binary task label has
 to be derived from the digit pair. We trigger the failure on purpose
 so the recovery is visible [[Nederbragt *et al.*, 2020](../../../../references.md#id31)].
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 520-531 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 535-546 -->
 ```Python
 try:
     bad_mapping = {"target": 1, "standard": 0}
@@ -923,7 +939,7 @@ Recovery: known stim codes start with [np.str_('S 11'), np.str_('S 12'), np.str_
 Map them via the digit-pair convention used in Step 3.
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 532-539 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 547-554 -->
 
 ## Modify
 
@@ -933,7 +949,7 @@ excludes the late P300 tail; the per-fold accuracy stays close because
 the centro-parietal positivity onsets earlier than 350 ms on this
 dataset.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 541-549 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 556-564 -->
 
 ## Make
 
@@ -942,13 +958,13 @@ the flattened `X_bc` window (`F_i = X_bc.reshape(n_epochs, -1)`)
 and rerun the LOSO fit. Compare wall-time, accuracy, and the
 `LogisticRegression` coefficient pattern: the high-dimensional fit
 can overfit one subject’s noise, so the LOSO mean is the honest
-summary of what generalises.
+summary of what generalizes.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 551-553 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 566-568 -->
 
 ## Result
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 555-564 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 570-579 -->
 ```Python
 print("\n| metric                            | value |")
 print("|-----------------------------------|-------|")
@@ -971,7 +987,7 @@ print(f"| n_standards (sub-{SUBJECT})            | {n_standards} |")
 | n_standards (sub-002)            | 168 |
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 565-579 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 580-594 -->
 
 ## Wrap-up
 
@@ -988,7 +1004,7 @@ applies the same windowing to an auditory paradigm; the
 tutorial shows how to swap the scalar feature here for a richer feature
 matrix without touching the leakage-aware split.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 581-595 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 596-610 -->
 
 ## Try it yourself
 
@@ -1005,14 +1021,14 @@ matrix without touching the leakage-aware split.
   largest positive `diff_at_peak` and confirm they sit on the
   posterior midline.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 597-602 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 612-617 -->
 
 ## References
 
-See [References](../../../../references.md) for the centralised bibliography of papers
+See [References](../../../../references.md) for the centralized bibliography of papers
 cited above. Add or amend an entry once in
 `docs/source/refs.bib`; every tutorial inherits the update.
 
-**Total running time of the script:** (0 minutes 6.388 seconds)
+**Total running time of the script:** (0 minutes 6.635 seconds)
 
 <a id="sphx-glr-download-generated-auto-examples-tutorials-20-event-related-plot-20-visual-p300-oddball-py"></a>

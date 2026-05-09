@@ -11,10 +11,10 @@
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://eegdash.org/generated/auto_examples/tutorials/70_transfer_foundation/plot_74_neuroai_interop.html" />
 <meta property="og:site_name" content="EEG Dash" />
-<meta property="og:description" content="Meta Research ships four projects under the NeuroAI umbrella ( https://facebookresearch.github.io/neuroai/): NeuralFetch for unified dataset discovery…" />
+<meta property="og:description" content="Difficulty 3| Runtime: 20s| Compute: CPU (GPU Recommended) Meta Research ships four projects under the NeuroAI umbrella (…" />
 <meta property="og:image" content="https://eegdash.org/_static/eegdash_social_card.png" />
 <meta property="og:image:alt" content="EEG Dash — data-sharing interface for M/EEG datasets" />
-<meta name="description" content="Meta Research ships four projects under the NeuroAI umbrella ( https://facebookresearch.github.io/neuroai/): NeuralFetch for unified dataset discovery…" />
+<meta name="description" content="Difficulty 3| Runtime: 20s| Compute: CPU (GPU Recommended) Meta Research ships four projects under the NeuroAI umbrella (…" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@eegdash" />
 
@@ -587,6 +587,7 @@ to download the full example code or to run this example in your browser via Bin
 </div>
 <section class="sphx-glr-example-title" id="how-do-i-plug-eegdash-into-the-meta-neuroai-ecosystem">
 <span id="sphx-glr-generated-auto-examples-tutorials-70-transfer-foundation-plot-74-neuroai-interop-py"></span><h1>How do I plug EEGDash into the Meta NeuroAI ecosystem?<a class="headerlink" href="#how-do-i-plug-eegdash-into-the-meta-neuroai-ecosystem" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">16 minutes</span></div>
+<p><strong>Difficulty 3</strong> | <strong>Runtime: 20s</strong> | <strong>Compute: CPU (GPU Recommended)</strong></p>
 <p>Meta Research ships four projects under the NeuroAI umbrella
 (<a class="reference external" href="https://facebookresearch.github.io/neuroai/">https://facebookresearch.github.io/neuroai/</a>): <strong>NeuralFetch</strong> for
 unified dataset discovery across 12 catalogues, <strong>NeuralSet</strong> for
@@ -605,6 +606,7 @@ al. 2021) and cross-task brain decoding <span class="bibtex-citation" id="id3">[
 deliverable is a 3-panel figure: stage diagram, per-stage shape sanity
 check, integration matrix. So which projects already share the events
 DataFrame, and which ones live downstream of it?</p>
+<p>Keywords: interop, NeuroAI, Meta</p>
 <section id="learning-objectives">
 <h2>Learning objectives<a class="headerlink" href="#learning-objectives" title="Link to this heading">#</a></h2>
 <ul class="simple">
@@ -627,7 +629,7 @@ each NeuroAI module.</p></li>
 <li><p>About 1 min on CPU.</p></li>
 <li><p>Network on first call (~30 MB into <code class="docutils literal notranslate"><span class="pre">cache_dir</span></code> for the EEGDash query).</p></li>
 <li><p>Prerequisites: <span class="xref std std-doc">/auto_examples/tutorials/00_start_here/plot_02_dataset_to_dataloader</span>
-(DataLoader basics), <a class="reference internal" href="plot_70_challenge_dataset_basics.html"><span class="doc">How do I get started with the EEG 2025 Foundation Challenge dataset?</span></a>
+(DataLoader basics), <a class="reference internal" href="plot_70_challenge_dataset_basics.html"><span class="doc">How do I get started with the EEG2025 Foundation Challenge dataset?</span></a>
 (challenge loader).</p></li>
 <li><p>Concept: <a class="reference internal" href="../../../../concepts/eegdash_objects.html"><span class="doc">EEGDash objects: EEGDash, EEGDashDataset, EEGChallengeDataset</span></a>.</p></li>
 </ul>
@@ -674,7 +676,7 @@ left-to-right pipeline, not four independent libraries. Each one owns
 one verb and forwards a clean handoff to the next:</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>EEGDashDataset    NeuralFetch.Study    NeuralSet.Segmenter   PyTorch
 (BIDS query +     (12 catalogues +     (events DataFrame      DataLoader
- lazy Raw)         standardiser)        + extractors -&gt; X)    (consumer)
+ lazy Raw)         standardizer)        + extractors -&gt; X)    (consumer)
 +-------------+   +--------------+     +------------------+   +--------+
 | record 0  --|--&gt;| events row 0 |     | segment 0 (X, t) |   |batch 0 |
 | record 1  --|--&gt;| events row 1 |----&gt;| segment 1 (X, t) |--&gt;|batch 1 |
@@ -688,7 +690,7 @@ one verb and forwards a clean handoff to the next:</p>
 <ul class="simple">
 <li><p><strong>Discovery vs tensorisation are different jobs.</strong>
 <code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code> and <code class="docutils literal notranslate"><span class="pre">neuralfetch.Study</span></code>
-discover and standardise; <code class="xref py py-class docutils literal notranslate"><span class="pre">neuralset.Segmenter</span></code> and the
+discover and standardize; <code class="xref py py-class docutils literal notranslate"><span class="pre">neuralset.Segmenter</span></code> and the
 PyTorch <a class="reference external" href="https://docs.pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader" title="(in PyTorch v2.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataLoader</span></code></a> cut and batch. The
 contracts are different on purpose: a discovery layer hides
 catalogue-specific quirks; a tensor layer hides MNE / NWB quirks.</p></li>
@@ -703,6 +705,17 @@ least <code class="docutils literal notranslate"><span class="pre">start</span><
 NeuralSet’s <code class="docutils literal notranslate"><span class="pre">Segmenter</span></code> consumes that frame. Knowing the schema
 lets you swap any dataset on the discovery side without touching
 the tensor pipeline.</p></li>
+</ul>
+</section>
+<section id="validate-your-result">
+<h2>Validate your result<a class="headerlink" href="#validate-your-result" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Stack Verification.</strong> Each stage (NeuralFetch -&gt; NeuralSet -&gt;
+NeuralTrain) should pass a shape sanity check.</p></li>
+<li><p><strong>Events DataFrame.</strong> The event DataFrame should follow the NeuroAI
+schema: <code class="docutils literal notranslate"><span class="pre">(start,</span> <span class="pre">duration,</span> <span class="pre">type,</span> <span class="pre">timeline)</span></code>.</p></li>
+<li><p><strong>DataLoader Batch.</strong> The final PyTorch batch should match your
+configured <code class="docutils literal notranslate"><span class="pre">window_size</span></code> and <code class="docutils literal notranslate"><span class="pre">n_channels</span></code>.</p></li>
 </ul>
 </section>
 <section id="what-does-the-neuralset-pipeline-expose">
@@ -842,7 +855,7 @@ entities forward to every later stage <span class="bibtex-citation" id="id4">[<a
 <span class="p">)</span><span class="o">.</span><span class="n">to_frame</span><span class="p">()</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[05/08/26 18:44:10] WARNING  File not found on S3, skipping:   downloader.py:163
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[05/09/26 20:27:06] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds002718/sub-0
                              02/eeg/sub-002_task-FaceRecogniti
                              on_eeg.fdt
@@ -1236,17 +1249,17 @@ specific events) or <code class="docutils literal notranslate"><span class="pre"
 <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">seg_card</span></a>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2026-05-08 18:44:12 - WARNING - neuralset.segments:665 - 403 segments out of 1495 did not contain valid events for event type &lt;class &#39;neuralset.events.etypes.Stimulus&#39;&gt;
-[05/08/26 18:44:12] WARNING  403 segments out of 1495 did not    segments.py:665
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2026-05-09 20:27:08 - WARNING - neuralset.segments:665 - 403 segments out of 1495 did not contain valid events for event type &lt;class &#39;neuralset.events.etypes.Stimulus&#39;&gt;
+[05/09/26 20:27:08] WARNING  403 segments out of 1495 did not    segments.py:665
                              contain valid events for event type
                              &lt;class
                              &#39;neuralset.events.etypes.Stimulus&#39;&gt;
-2026-05-08 18:44:12 - INFO - neuralset.dataloader:618 - 403 segments are missing events of type Stimulus. They will be populated with default missing values through prepare.
+2026-05-09 20:27:08 - INFO - neuralset.dataloader:618 - 403 segments are missing events of type Stimulus. They will be populated with default missing values through prepare.
                     INFO     403 segments are missing events   dataloader.py:618
                              of type Stimulus. They will be
                              populated with default missing
                              values through prepare.
-2026-05-08 18:44:12 - INFO - neuralset.dataloader:625 - Removing 403 segments out of 1495
+2026-05-09 20:27:08 - INFO - neuralset.dataloader:625 - Removing 403 segments out of 1495
                     INFO     Removing 403 segments out of 1495 dataloader.py:625
 </pre></div>
 </div>
@@ -1399,7 +1412,7 @@ Use the matrix as a navigation map when you read the rest of the
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">integration_matrix</span></a> <span class="o">=</span> <span class="p">[</span>
     <span class="p">{</span>
         <span class="s2">&quot;project&quot;</span><span class="p">:</span> <span class="s2">&quot;NeuralFetch&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;discover + standardise across 12 catalogues&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;discover + standardize across 12 catalogues&quot;</span><span class="p">,</span>
         <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;shipped (EEGDash backend)&quot;</span><span class="p">,</span>
         <span class="s2">&quot;status_kind&quot;</span><span class="p">:</span> <span class="s2">&quot;shipped&quot;</span><span class="p">,</span>
         <span class="s2">&quot;tutorial&quot;</span><span class="p">:</span> <span class="s2">&quot;plot_74 (this one)&quot;</span><span class="p">,</span>
@@ -1459,7 +1472,7 @@ Use the matrix as a navigation map when you read the rest of the
     <tr>
       <th>0</th>
       <td>NeuralFetch</td>
-      <td>discover + standardise across 12 catalogues</td>
+      <td>discover + standardize across 12 catalogues</td>
       <td>shipped (EEGDash backend)</td>
       <td>shipped</td>
       <td>plot_74 (this one)</td>
@@ -1607,10 +1620,10 @@ EEG) and re-run. The events schema is unchanged.</p></li>
 </section>
 <section id="references">
 <h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
-<p>See <a class="reference internal" href="../../../../references.html"><span class="doc">References</span></a> for the centralised bibliography of papers
+<p>See <a class="reference internal" href="../../../../references.html"><span class="doc">References</span></a> for the centralized bibliography of papers
 cited above. Add or amend an entry once in
 <code class="file docutils literal notranslate"><span class="pre">docs/source/refs.bib</span></code>; every tutorial inherits the update.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 3.396 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 3.287 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-auto-examples-tutorials-70-transfer-foundation-plot-74-neuroai-interop-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/eegdash/EEGDash/main?urlpath=lab/tree/notebooks/generated/auto_examples/tutorials/70_transfer_foundation/plot_74_neuroai_interop.ipynb"><img alt="Launch binder" src="../../../../_images/binder_badge_logo11.svg" style="width: 150px;" />
@@ -1679,6 +1692,7 @@ cited above. Add or amend an entry once in
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">Learning objectives</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#requirements">Requirements</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#four-projects-one-chain-the-mental-model">Four projects, one chain: the mental model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#validate-your-result">Validate your result</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-does-the-neuralset-pipeline-expose">What does the NeuralSet pipeline expose?</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-load-one-eegdash-recording">Step 1. Load one EEGDash recording</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-build-the-events-dataframe-the-neuroai-bus">Step 2. Build the events DataFrame (the NeuroAI bus)</a></li>

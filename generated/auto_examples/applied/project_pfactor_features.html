@@ -7,18 +7,18 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta property="og:title" content="Predicting p-factor from EEG with hand-crafted features (project starter)" />
+<meta property="og:title" content="Predict p-factor from EEG features" />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://eegdash.org/generated/auto_examples/applied/project_pfactor_features.html" />
 <meta property="og:site_name" content="EEG Dash" />
-<meta property="og:description" content="Companion to project_pfactor_deep.py: same target, different model class. The deep variant asks whether an EEGConformer can learn the p_factor from raw…" />
+<meta property="og:description" content="Difficulty 3| Runtime: 30s| Compute: CPU Companion to project_pfactor_deep.py: same target, different model class. The deep variant asks whether an…" />
 <meta property="og:image" content="https://eegdash.org/_static/eegdash_social_card.png" />
 <meta property="og:image:alt" content="EEG Dash — data-sharing interface for M/EEG datasets" />
-<meta name="description" content="Companion to project_pfactor_deep.py: same target, different model class. The deep variant asks whether an EEGConformer can learn the p_factor from raw…" />
+<meta name="description" content="Difficulty 3| Runtime: 30s| Compute: CPU Companion to project_pfactor_deep.py: same target, different model class. The deep variant asks whether an…" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@eegdash" />
 
-    <title>Predicting p-factor from EEG with hand-crafted features (project starter) &#8212; EEG Dash</title>
+    <title>Predict p-factor from EEG features &#8212; EEG Dash</title>
   
   
   
@@ -74,8 +74,8 @@
     <link rel="icon" href="../../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="Is resting-state EEG even predictive of the BIDS sex label? (Project Starter)" href="project_sex_classification.html" />
-    <link rel="prev" title="Predict p-factor from EEG with a Braindecode model (deep-learning regime)" href="project_pfactor_deep.html" />
+    <link rel="next" title="Sex classification from EEG" href="project_sex_classification.html" />
+    <link rel="prev" title="Predict p-factor with deep learning" href="project_pfactor_deep.html" />
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="0.7" />
 
@@ -563,7 +563,7 @@
     
     <li class="breadcrumb-item"><a href="index.html" class="nav-link">Applied Research Projects</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Predicting p-factor from EEG with hand-crafted features (project starter)</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Predict p-factor from EEG features</span></li>
   </ul>
 </nav>
 </div>
@@ -585,30 +585,43 @@
 <p><a class="reference internal" href="#sphx-glr-download-generated-auto-examples-applied-project-pfactor-features-py"><span class="std std-ref">Go to the end</span></a>
 to download the full example code or to run this example in your browser via Binder.</p>
 </div>
-<section class="sphx-glr-example-title" id="predicting-p-factor-from-eeg-with-hand-crafted-features-project-starter">
-<span id="sphx-glr-generated-auto-examples-applied-project-pfactor-features-py"></span><h1>Predicting p-factor from EEG with hand-crafted features (project starter)<a class="headerlink" href="#predicting-p-factor-from-eeg-with-hand-crafted-features-project-starter" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">8 minutes</span></div>
+<section class="sphx-glr-example-title" id="predict-p-factor-from-eeg-features">
+<span id="sphx-glr-generated-auto-examples-applied-project-pfactor-features-py"></span><h1>Predict p-factor from EEG features<a class="headerlink" href="#predict-p-factor-from-eeg-features" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">9 minutes</span></div>
+<p><strong>Difficulty 3</strong> | <strong>Runtime: 30s</strong> | <strong>Compute: CPU</strong></p>
 <p>Companion to <code class="docutils literal notranslate"><span class="pre">project_pfactor_deep.py</span></code>: same target, different model
 class. The deep variant asks whether an EEGConformer can learn the
 <code class="docutils literal notranslate"><span class="pre">p_factor</span></code> from raw windows, this one asks which interpretable EEG
-features carry the signal. The p-factor (Caspi et al. 2014,
-doi:10.1177/2167702613497473) is a transdiagnostic mental-health summary
-score derived from parent-and-child psychiatric questionnaires; the EEG
-side comes from the Healthy Brain Network release distributed on
+features carry the signal.
+<strong>p-factor</strong> (Caspi et al. 2014, doi:10.1177/2167702613497473) is a
+transdiagnostic mental-health summary score derived from parent-and-child
+psychiatric questionnaires; it captures a general dimension of
+psychopathology common across different disorders.</p>
+<p>The EEG side comes from the Healthy Brain Network release distributed on
 OpenNeuro and on the EEG2025 Challenge mirror as <code class="docutils literal notranslate"><span class="pre">EEG2025r5</span></code>
 (Alexander et al. 2017, doi:10.1038/sdata.2017.181), surfaced through
-NEMAR (Delorme et al. 2022, doi:10.1093/nargab/lqac023). Splits stay
-strictly subject-disjoint per Cisotto and Chicco 2024 Tip 9
-(doi:10.7717/peerj-cs.2256).</p>
+NEMAR (Delorme et al. 2022, doi:10.1093/nargab/lqac023).</p>
+<section id="validate-your-result">
+<h2>Validate your result<a class="headerlink" href="#validate-your-result" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Expected Columns.</strong> The feature table should contain columns like
+<code class="docutils literal notranslate"><span class="pre">theta_Cz</span></code>, <code class="docutils literal notranslate"><span class="pre">alpha_Cz</span></code>, <code class="docutils literal notranslate"><span class="pre">beta_Cz</span></code>, <code class="docutils literal notranslate"><span class="pre">gamma_Cz</span></code>, plus connectivity
+and entropy features, and the target <code class="docutils literal notranslate"><span class="pre">p_factor</span></code>.</p></li>
+<li><p><strong>Related Material.</strong> See <a class="reference internal" href="project_pfactor_deep.html"><span class="doc">Predict p-factor with deep learning</span></a> for a deep learning
+approach and the <span class="xref std std-doc">/auto_examples/eeg2025/index</span> for the official
+challenge tracks.</p></li>
+</ul>
 <p>The deliverable is a feature-importance panel plus the regression
 diagnostic on never-seen subjects: which feature family (band power,
 connectivity, entropy) carries the most weight in a sklearn ridge or
 random-forest head (Pedregosa et al. 2011, doi:10.5555/1953048.2078195),
 and how flat is the predicted-vs-true cloud at the subject level?</p>
 <p>Can hand-crafted spectral and signal features beat the train-median
-predictor on held-out subjects, and which family pulls the most weight?</p>
+predictor on held-out subjects, and which family pulls the most weight?
+Keywords: features, applied, p-factor</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span>
 </pre></div>
 </div>
+</section>
 <section id="learning-objectives">
 <h2>Learning objectives<a class="headerlink" href="#learning-objectives" title="Link to this heading">#</a></h2>
 <p>After this study you will be able to:</p>
@@ -630,7 +643,7 @@ for the features-to-sklearn idiom and
 for the cross-subject regression contract this study satisfies.</p></li>
 <li><p>Concept page: <a class="reference internal" href="../../../concepts/leakage_and_evaluation.html"><span class="doc">Leakage and evaluation</span></a>.</p></li>
 </ul>
-<p>Setup. Seed (E3.21) and a parametrised cache directory (E3.24) keep the
+<p>Setup. Seed (E3.21) and a parameterized cache directory (E3.24) keep the
 study reproducible; warnings are tightened so sklearn convergence
 chatter does not drown the result print.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
@@ -667,7 +680,7 @@ chatter does not drown the result print.</p>
 <p>In production, <code class="xref py py-class docutils literal notranslate"><span class="pre">eegdash.EEGChallengeDataset</span></code> exposes <code class="docutils literal notranslate"><span class="pre">p_factor</span></code>
 through <code class="docutils literal notranslate"><span class="pre">description_fields</span></code> so it surfaces as a per-recording column
 (Alexander et al. 2017; Delorme et al. 2022). The canonical call is
-below; the study then synthesises a feature table with the same column
+below; the study then synthesizes a feature table with the same column
 layout so the gallery runs offline (E3.24). The synthetic data follows
 the EEG2025r5 layout: 16 subjects, 24 windows per subject, four band-
 power features per channel (delta/theta/alpha/beta), two connectivity
@@ -1018,7 +1031,7 @@ feature head and the deep head disagree on the same subject?</p></li>
 </section>
 <section id="references">
 <h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
-<p>See <a class="reference internal" href="../../../references.html"><span class="doc">References</span></a> for the centralised bibliography of papers
+<p>See <a class="reference internal" href="../../../references.html"><span class="doc">References</span></a> for the centralized bibliography of papers
 cited above. Add or amend an entry once in
 <code class="file docutils literal notranslate"><span class="pre">docs/source/refs.bib</span></code>; every tutorial inherits the update.</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-auto-examples-applied-project-pfactor-features-py">
@@ -1055,7 +1068,7 @@ cited above. Add or amend an entry once in
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Predict p-factor from EEG with a Braindecode model (deep-learning regime)</p>
+        <p class="prev-next-title">Predict p-factor with deep learning</p>
       </div>
     </a>
     <a class="right-next"
@@ -1063,7 +1076,7 @@ cited above. Add or amend an entry once in
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Is resting-state EEG even predictive of the BIDS sex label? (Project Starter)</p>
+        <p class="prev-next-title">Sex classification from EEG</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -1086,6 +1099,7 @@ cited above. Add or amend an entry once in
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#validate-your-result">Validate your result</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">Learning objectives</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#requirements">Requirements</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-load-eeg2025r5-with-the-p-factor-target">Step 1. Load EEG2025r5 with the p-factor target</a></li>

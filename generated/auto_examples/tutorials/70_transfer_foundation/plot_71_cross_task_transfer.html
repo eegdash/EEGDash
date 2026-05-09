@@ -7,18 +7,18 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta property="og:title" content="Pretrain on resting-state, fine-tune on contrast-change detection" />
+<meta property="og:title" content="Pretrain on resting-state, fine-tune on contrast-change detection (Simulated Data)" />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://eegdash.org/generated/auto_examples/tutorials/70_transfer_foundation/plot_71_cross_task_transfer.html" />
 <meta property="og:site_name" content="EEG Dash" />
-<meta property="og:description" content="Can a small EEG encoder pretrained on passive resting-state windows help a downstream model decode contrastChangeDetection (CCD) that it never saw, on…" />
+<meta property="og:description" content="Difficulty 3| Runtime: 6m| Compute: GPU Preferred Can a small EEG encoder pretrained on passive resting-state windows help a downstream model decode…" />
 <meta property="og:image" content="https://eegdash.org/_static/eegdash_social_card.png" />
 <meta property="og:image:alt" content="EEG Dash — data-sharing interface for M/EEG datasets" />
-<meta name="description" content="Can a small EEG encoder pretrained on passive resting-state windows help a downstream model decode contrastChangeDetection (CCD) that it never saw, on…" />
+<meta name="description" content="Difficulty 3| Runtime: 6m| Compute: GPU Preferred Can a small EEG encoder pretrained on passive resting-state windows help a downstream model decode…" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@eegdash" />
 
-    <title>Pretrain on resting-state, fine-tune on contrast-change detection &#8212; EEG Dash</title>
+    <title>Pretrain on resting-state, fine-tune on contrast-change detection (Simulated Data) &#8212; EEG Dash</title>
   
   
   
@@ -75,7 +75,7 @@
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" />
     <link rel="next" title="Subject-invariant p-factor regression (EEG2025 Challenge 2)" href="plot_72_subject_invariant_regression.html" />
-    <link rel="prev" title="How do I get started with the EEG 2025 Foundation Challenge dataset?" href="plot_70_challenge_dataset_basics.html" />
+    <link rel="prev" title="How do I get started with the EEG2025 Foundation Challenge dataset?" href="plot_70_challenge_dataset_basics.html" />
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="0.7" />
 
@@ -563,7 +563,7 @@
     
     <li class="breadcrumb-item"><a href="index.html" class="nav-link">Transfer, Foundation Models, and EEG2025</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Pretrain on resting-state, fine-tune on contrast-change detection</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Pretrain on resting-state, fine-tune on contrast-change detection (Simulated Data)</span></li>
   </ul>
 </nav>
 </div>
@@ -585,8 +585,16 @@
 <p><a class="reference internal" href="#sphx-glr-download-generated-auto-examples-tutorials-70-transfer-foundation-plot-71-cross-task-transfer-py"><span class="std std-ref">Go to the end</span></a>
 to download the full example code or to run this example in your browser via Binder.</p>
 </div>
-<section class="sphx-glr-example-title" id="pretrain-on-resting-state-fine-tune-on-contrast-change-detection">
-<span id="sphx-glr-generated-auto-examples-tutorials-70-transfer-foundation-plot-71-cross-task-transfer-py"></span><h1>Pretrain on resting-state, fine-tune on contrast-change detection<a class="headerlink" href="#pretrain-on-resting-state-fine-tune-on-contrast-change-detection" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">8 minutes</span></div>
+<section class="sphx-glr-example-title" id="pretrain-on-resting-state-fine-tune-on-contrast-change-detection-simulated-data">
+<span id="sphx-glr-generated-auto-examples-tutorials-70-transfer-foundation-plot-71-cross-task-transfer-py"></span><h1>Pretrain on resting-state, fine-tune on contrast-change detection (Simulated Data)<a class="headerlink" href="#pretrain-on-resting-state-fine-tune-on-contrast-change-detection-simulated-data" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">8 minutes</span></div>
+<p><strong>Difficulty 3</strong> | <strong>Runtime: 6m</strong> | <strong>Compute: GPU Preferred</strong></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>Simulated Data.</strong> This tutorial uses synthetic tensors to illustrate
+transfer learning mechanics without a large data download. For real-data
+transfer examples, see <span class="xref std std-doc">/auto_examples/applied/project_p300_transfer</span>
+and the <span class="xref std std-doc">/auto_examples/eeg2025/index</span> challenge tracks.</p>
+</div>
 <p>Can a small EEG encoder pretrained on <strong>passive resting-state</strong> windows
 help a downstream model decode <strong>contrastChangeDetection (CCD)</strong> that it
 never saw, on the same subjects drawn from the EEG2025 Challenge 1 mini
@@ -600,7 +608,8 @@ EEG2025 Challenge 1 together, passive source and active target on the
 same subject pool (Aristimunha et al. 2025,
 doi:10.48550/arXiv.2506.19141), and asks how big the gap between a
 fine-tuned encoder and a from-scratch baseline really is. When the
-encoder transfers, by how much does it beat chance?</p>
+encoder transfers, by how much does it beat chance?
+Keywords: transfer-learning, fine-tuning, synthetic</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span>
 </pre></div>
 </div>
@@ -662,7 +671,7 @@ encoder transfers, by how much does it beat chance?</p>
 <code class="docutils literal notranslate"><span class="pre">task=&quot;contrastChangeDetection&quot;</span></code>: same release, same mini subject
 list, two paradigms (NEMAR, Delorme et al. 2022,
 doi:10.1016/j.neuroimage.2022.119666). To keep this tutorial
-reproducible without a 1.5 GB download we synthesise the windowed
+reproducible without a 1.5 GB download we synthesize the windowed
 shape <code class="docutils literal notranslate"><span class="pre">(n_windows,</span> <span class="pre">n_channels,</span> <span class="pre">n_times)</span></code> directly with task-specific
 1-30 Hz Butterworth pass-band content, keeping the spec invariant
 <code class="docutils literal notranslate"><span class="pre">pretext_subjects</span> <span class="pre">==</span> <span class="pre">target_subjects</span></code>. Two extra “source” tasks
@@ -692,7 +701,7 @@ fill in a 3x3 transfer matrix at the end.</p>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">make_task_windows</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="n">rng</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Synthesise one task&#39;s windows on the same subject pool.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Synthesize one task&#39;s windows on the same subject pool.&quot;&quot;&quot;</span>
     <span class="n">rng</span> <span class="o">=</span> <span class="n">rng</span> <span class="ow">or</span> <a href="https://numpy.org/doc/stable/reference/random/generator.html#numpy.random.default_rng" title="numpy.random.default_rng" class="sphx-glr-backref-module-numpy-random sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span></a><span class="p">(</span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">SEED</span></a> <span class="o">+</span> <span class="nb">abs</span><span class="p">(</span><span class="nb">hash</span><span class="p">(</span><span class="n">task</span><span class="p">))</span> <span class="o">%</span> <span class="mi">997</span><span class="p">)</span>
     <span class="n">profile</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">TASK_PROFILES</span></a><span class="p">[</span><span class="n">task</span><span class="p">]</span>
     <span class="n">t</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.arange.html#numpy.arange" title="numpy.arange" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">arange</span></a><span class="p">(</span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">N_TIMES</span></a><span class="p">)</span> <span class="o">/</span> <a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">SFREQ</span></a>
@@ -833,7 +842,7 @@ snapshot the encoder weights.</p>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;pretrain losses (RestingState): </span><span class="si">{</span><span class="p">[</span><span class="nb">round</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">pretrain_losses</span></a><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>pretrain losses (RestingState): [0.083, 0.004, 0.001, 0.002, 0.0]
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>pretrain losses (RestingState): [0.036, 0.001, 0.0, 0.001, 0.0]
 </pre></div>
 </div>
 </section>
@@ -853,7 +862,7 @@ split is materialised independently with a fresh leakage assertion.</p>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;finetune losses (CCD): </span><span class="si">{</span><span class="p">[</span><span class="nb">round</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">finetune_losses</span></a><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>finetune losses (CCD): [0.583, 0.541, 0.452, 0.413, 0.353]
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>finetune losses (CCD): [0.549, 0.46, 0.461, 0.343, 0.278]
 </pre></div>
 </div>
 </section>
@@ -883,7 +892,7 @@ chance is the gap that matters (E5.43).</p>
 <span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>finetune=0.650 | scratch=0.700 | chance=0.500 | metric=accuracy | gap=-0.050
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>finetune=0.483 | scratch=0.717 | chance=0.517 | metric=accuracy | gap=-0.233
 </pre></div>
 </div>
 </section>
@@ -941,9 +950,9 @@ from-scratch encoder on that target.</p>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>transfer matrix Δacc (rows=source, cols=target):
               contrastChangeDetection  symbolSearch  surroundSupp
-RestingState                    0.217         0.133         0.083
-surroundSupp                    0.317         0.150         0.083
-symbolSearch                    0.267         0.117         0.067
+RestingState                    0.117         0.067         0.000
+surroundSupp                    0.433         0.050         0.000
+symbolSearch                    0.200        -0.067        -0.033
 </pre></div>
 </div>
 </section>
@@ -1008,10 +1017,10 @@ claim falsifiable (E5.43, E5.46).</p>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>| condition           | accuracy |
 |---------------------|----------|
-| pretrain -&gt; finetune| 0.650   |
-| from scratch        | 0.700   |
-| chance (majority)   | 0.500   |
-{&quot;encoder_weights_path&quot;: &quot;plot_71_pretrained_encoder.pt&quot;, &quot;pretext_subjects&quot;: 8, &quot;target_subjects&quot;: 8, &quot;transfer_gap&quot;: -0.05, &quot;transfer_matrix_mean_delta&quot;: 0.1593}
+| pretrain -&gt; finetune| 0.483   |
+| from scratch        | 0.717   |
+| chance (majority)   | 0.517   |
+{&quot;encoder_weights_path&quot;: &quot;plot_71_pretrained_encoder.pt&quot;, &quot;pretext_subjects&quot;: 8, &quot;target_subjects&quot;: 8, &quot;transfer_gap&quot;: -0.2333, &quot;transfer_matrix_mean_delta&quot;: 0.0852}
 </pre></div>
 </div>
 </section>
@@ -1102,7 +1111,7 @@ speech with cross-task pretraining.</p></li>
 <li><p>EEG2025 Challenge 1 (doi:10.48550/arXiv.2506.19141), cross-task
 transfer <span class="bibtex-citation" id="id2">[<a class="reference internal" href="../../../../references.html#id36" title="Bruno Aristimunha, Dung Truong, Pierre Guetschel, Seyed Yahya Shirazi, Isabelle Guyon, Alexandre R. Franco, Michael P. Milham, Aviv Dotan, Scott Makeig, Alexandre Gramfort, Jean-Remi King, Marie-Constance Corsi, Pedro A. Valdés-Sosa, Amit Majumdar, Alan Evans, Terrence J. Sejnowski, Oren Shriki, Sylvain Chevallier, and Arnaud Delorme. EEG foundation challenge: from cross-task to cross-subject EEG decoding. 2025. arXiv preprint, NeurIPS 2025 Competition track. doi:10.48550/arXiv.2506.19141.">Aristimunha <em>et al.</em>, 2025</a>]</span>.</p></li>
 </ul>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 5.148 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 5.389 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-auto-examples-tutorials-70-transfer-foundation-plot-71-cross-task-transfer-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/eegdash/EEGDash/main?urlpath=lab/tree/notebooks/generated/auto_examples/tutorials/70_transfer_foundation/plot_71_cross_task_transfer.ipynb"><img alt="Launch binder" src="../../../../_images/binder_badge_logo11.svg" style="width: 150px;" />
@@ -1137,7 +1146,7 @@ transfer <span class="bibtex-citation" id="id2">[<a class="reference internal" h
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">How do I get started with the EEG 2025 Foundation Challenge dataset?</p>
+        <p class="prev-next-title">How do I get started with the EEG2025 Foundation Challenge dataset?</p>
       </div>
     </a>
     <a class="right-next"

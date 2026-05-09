@@ -26,7 +26,7 @@ Pick features when at least two of the following are true:
 - **You have less than ~50 subjects.** A logistic regression or SVM on
   10 well-chosen features fits with minimal regularisation. A
   convolutional network has hundreds of thousands of parameters and
-  needs orders of magnitude more data to avoid memorising subject
+  needs orders of magnitude more data to avoid memorizing subject
   identity (see [Leakage and evaluation](leakage_and_evaluation.md)).
 - **The relevant rhythm is known.** If you are decoding alpha-band
   modulation, log-power in 8–13 Hz is a near-optimal feature; a deep
@@ -40,7 +40,7 @@ Pick features when at least two of the following are true:
   on another for trivial reasons.
 - **You are CPU-bound.** Feature pipelines fit on a laptop in seconds.
 
-The [How do I turn EEG windows into a band-power feature matrix?](../generated/auto_examples/tutorials/40_features/plot_40_first_features.md)
+The [Extract band-power features](../generated/auto_examples/tutorials/40_features/plot_40_first_features.md)
 tutorial shows the simplest version of this argument: build a band-power
 table, fit a logistic regression, and read off the result.
 
@@ -66,7 +66,7 @@ Pick a deep model when at least two of the following are true:
 - **You will fine-tune downstream.** A pre-trained deep model is a
   reusable asset; a hand-tuned feature pipeline is bespoke per task.
 
-The [How do I train a leakage-safe baseline classifier on EEG?](../generated/auto_examples/tutorials/10_core_workflow/plot_12_train_a_baseline.md)
+The [Train a leakage-safe baseline](../generated/auto_examples/tutorials/10_core_workflow/plot_12_train_a_baseline.md)
 tutorial trains a small braindecode ConvNet on the same data the feature
 tutorials use, so that you can compare the two pipelines head to head.
 
@@ -77,7 +77,7 @@ Before you commit to a deep architecture for a new dataset:
 
 1. Build a one-page feature pipeline (band power, ratios, simple
    covariance summary). The
-   [How do I turn EEG windows into a band-power feature matrix?](../generated/auto_examples/tutorials/40_features/plot_40_first_features.md)
+   [Extract band-power features](../generated/auto_examples/tutorials/40_features/plot_40_first_features.md)
    recipe is enough.
 2. Fit a logistic regression or shallow tree on top.
 3. Use exactly the same split (preferably subject-aware; see
@@ -92,9 +92,9 @@ deliverable. You will save weeks of GPU time, and your paper will be
 honest.
 
 The
-[How do classical EEG markers compose on top of one Welch PSD?](../generated/auto_examples/tutorials/40_features/plot_41_feature_trees.md)
+[Compose EEG markers from Welch PSD](../generated/auto_examples/tutorials/40_features/plot_41_feature_trees.md)
 and
-[How do I push EEGDash features through a scikit-learn Pipeline?](../generated/auto_examples/tutorials/40_features/plot_42_features_to_sklearn.md)
+[EEGDash features to scikit-learn](../generated/auto_examples/tutorials/40_features/plot_42_features_to_sklearn.md)
 tutorials extend the feature baseline to richer models (gradient
 boosting, full scikit-learn pipelines) without leaving the
 feature-engineering regime.
@@ -122,13 +122,13 @@ it honestly is to run both pipelines under the same evaluation.
 
 ## Related tutorials
 
-- [How do I turn EEG windows into a band-power feature matrix?](../generated/auto_examples/tutorials/40_features/plot_40_first_features.md)
+- [Extract band-power features](../generated/auto_examples/tutorials/40_features/plot_40_first_features.md)
   — minimal band-power feature pipeline.
-- [How do classical EEG markers compose on top of one Welch PSD?](../generated/auto_examples/tutorials/40_features/plot_41_feature_trees.md)
+- [Compose EEG markers from Welch PSD](../generated/auto_examples/tutorials/40_features/plot_41_feature_trees.md)
   — tree-based models on the same features.
-- [How do I push EEGDash features through a scikit-learn Pipeline?](../generated/auto_examples/tutorials/40_features/plot_42_features_to_sklearn.md)
+- [EEGDash features to scikit-learn](../generated/auto_examples/tutorials/40_features/plot_42_features_to_sklearn.md)
   — full scikit-learn integration.
-- [How do I train a leakage-safe baseline classifier on EEG?](../generated/auto_examples/tutorials/10_core_workflow/plot_12_train_a_baseline.md)
+- [Train a leakage-safe baseline](../generated/auto_examples/tutorials/10_core_workflow/plot_12_train_a_baseline.md)
   — a deep braindecode baseline on the same data, suitable for a head-
   to-head comparison.
 

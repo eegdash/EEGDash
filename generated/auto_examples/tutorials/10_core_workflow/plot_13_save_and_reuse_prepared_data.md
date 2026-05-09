@@ -6,7 +6,9 @@
 
 <a id="sphx-glr-generated-auto-examples-tutorials-10-core-workflow-plot-13-save-and-reuse-prepared-data-py"></a>
 
-# How do I save and reload prepared windows + features?
+# Save and reload prepared data
+
+**Difficulty 1-2** | **Runtime: 5s** | **Compute: CPU**
 
 Preprocessing EEG is expensive. Filtering, resampling, and windowing one
 subject can take seconds; doing it for every kernel restart wastes hours
@@ -22,10 +24,22 @@ recomputed it. Every step below pairs an artifact with the metadata that
 makes it reusable: FIF for windowed signals (Larson et al. 2024 / MNE),
 Apache Parquet for tabular features, and an optional Zarr store for
 chunked random-access reads. The lesson
-ends with a three-panel figure that puts the actual cost on disk.
+# ends with a three-panel figure that puts the actual cost on disk.
+#
+# Validate your result
+# ——————–
+# - **Cache Artifacts.** After running, you should find `.fif`, `.parquet`,
+#   or `.zarr` files in your `cache_dir`.
+# - **Data Integrity.** Reloaded windows should have identical shapes and
+#   values to the original (assert with `np.allclose`).
+# - **Loading Speed.** The hot-cache load (Step 3) should be significantly
+#   faster than the first-run preprocessing (Step 1).
 
 <!-- sphinx_gallery_thumbnail_path = '_static/thumbs/plot_13_save_and_reuse_prepared_data.png' -->
-<!-- GENERATED FROM PYTHON SOURCE LINES 24-39 -->
+
+Keywords: offline, caching, I/O
+
+<!-- GENERATED FROM PYTHON SOURCE LINES 36-51 -->
 
 ## Learning objectives
 
@@ -43,12 +57,12 @@ ends with a three-panel figure that puts the actual cost on disk.
 - Read the cost of each format off a single ledger figure: write-time,
   read-time, on-disk MB, and the residual heatmap for parity.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 41-53 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 53-65 -->
 
 ## Requirements
 
 - Estimated time: about 5 s on CPU, no GPU.
-- Network: none. The signal is synthesised locally so the lesson runs
+- Network: none. The signal is synthesized locally so the lesson runs
   offline (E3.24). Every artifact is routed through
   [`tempfile.mkdtemp()`](https://docs.python.org/3/library/tempfile.html#tempfile.mkdtemp) so we never write outside `/tmp`.
 - Prerequisites:
@@ -58,12 +72,12 @@ ends with a three-panel figure that puts the actual cost on disk.
   a feature row maps to a window). Concept reference:
   [EEGDash objects: EEGDash, EEGDashDataset, EEGChallengeDataset](../../../../concepts/eegdash_objects.md).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 55-57 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 67-69 -->
 
 Setup. `np.random.seed(42)` makes the synthetic signal byte-identical
 across runs (E3.21).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 57-87 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 69-99 -->
 ```Python
 from __future__ import annotations
 
@@ -100,7 +114,7 @@ print(
 eegdash 0.7.2 | braindecode 1.5.0 | numpy 2.4.4
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 88-113 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 100-125 -->
 
 ## Cache files outlive code: a mental model
 
@@ -128,7 +142,7 @@ n_times)` array per window, which the model needs. Parquet stores
 columnar features, which downstream notebooks consume without ever
 touching the signal. Caching both lets each tool read the right shape.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 115-125 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 127-137 -->
 
 ## Step 1: build a small windowed dataset
 
@@ -141,7 +155,7 @@ preprocessing pipeline.
 `drop_last_window=True`, how many windows fit in 4 s of signal at
 100 Hz with 2-second windows?
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 127-156 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 139-168 -->
 ```Python
 SFREQ, WIN_S = 100, 2
 signal = np.random.randn(2, 4 * SFREQ).astype("float32") * 1e-6
@@ -218,7 +232,7 @@ pd.Series(
 </div>
 <br />
 <br />
-<!-- GENERATED FROM PYTHON SOURCE LINES 157-168 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 169-180 -->
 
 ## Step 2: save the windows to FIF
 
@@ -232,7 +246,7 @@ window kwargs).
 **Run.** Write to a fresh temporary directory and time the call; the
 `write_s` and `size_mb` figures feed Panel 1 of the final figure.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 170-195 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 182-207 -->
 ```Python
 cache_root = Path(tempfile.mkdtemp(prefix="eegdash_save_"))
 windows_path = cache_root / "windows"
@@ -261,12 +275,12 @@ print(f"FIF write_s={fif_write_s:.4f} s, size_mb={fif_size_mb:.4f}")
 ```
 
 ```none
-saved: /tmp/eegdash_save_gy1ke71s/windows
+saved: /tmp/eegdash_save_4h42jmzb/windows
 artifact tree (first 6): ['windows/0', 'windows/0/0-raw.fif', 'windows/0/description.json', 'windows/0/metadata_df.pkl', 'windows/0/raw_preproc_kwargs.json', 'windows/0/window_kwargs.json']
-FIF write_s=0.0053 s, size_mb=0.0055
+FIF write_s=0.0055 s, size_mb=0.0055
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 196-204 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 208-216 -->
 
 ## Step 3: reload the windows in a fresh handle
 
@@ -277,7 +291,7 @@ array in RAM, which is what every downstream tutorial expects.
 **Run.** Rehydrate the artifact, time the read, and confirm we got a
 [`BaseConcatDataset`](https://braindecode.org/stable/generated/braindecode.datasets.BaseConcatDataset.html#braindecode.datasets.BaseConcatDataset) of the right length.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 206-214 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 218-226 -->
 ```Python
 t0 = time.perf_counter()
 reloaded_fif = load_concat_dataset(windows_path, preload=True)
@@ -289,10 +303,10 @@ print(
 ```
 
 ```none
-reload OK: type=BaseConcatDataset, n=2, read_s=0.0064
+reload OK: type=BaseConcatDataset, n=2, read_s=0.0063
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 215-220 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 227-232 -->
 
 **Investigate.** Shape and sample-level parity. The spec asserts
 `reloaded.shape == original.shape` and that the metadata frame
@@ -300,7 +314,7 @@ survives the round-trip. FIF rounds samples through float32, so we
 use [`numpy.allclose()`](https://numpy.org/doc/stable/reference/generated/numpy.allclose.html#numpy.allclose) rather than [`numpy.array_equal()`](https://numpy.org/doc/stable/reference/generated/numpy.array_equal.html#numpy.array_equal). The
 residual we keep here drives Panel 2 of the figure.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 222-234 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 234-246 -->
 ```Python
 x_orig = np.asarray(windows[0][0]).copy()
 x_re = np.asarray(reloaded_fif[0][0]).copy()
@@ -319,7 +333,7 @@ print(
 shapes match: original=(2, 200), reloaded=(2, 200); max|residual|=0.00e+00
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 235-248 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 247-260 -->
 
 ## Step 4: optional Zarr cache (chunked random access)
 
@@ -335,7 +349,7 @@ without raising when the optional extra is absent.
 **Run.** Detect the Zarr code path; record write-time, read-time, and
 on-disk MB into the same ledger.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 250-289 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 262-301 -->
 ```Python
 try:
     BaseConcatDataset._convert_to_zarr_inline  # noqa: B018 - feature probe
@@ -378,10 +392,10 @@ else:
 ```
 
 ```none
-Zarr write_s=0.0168, read_s=0.0060, size_mb=0.0080
+Zarr write_s=0.0169, read_s=0.0060, size_mb=0.0080
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 290-298 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 302-310 -->
 
 ## Step 5: save and reload a tabular feature table
 
@@ -392,7 +406,7 @@ one feature per channel per window (per-channel mean) and assert the
 round trip preserves dtypes, which is the property a feature store
 relies on.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 300-328 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 312-340 -->
 ```Python
 features = pd.DataFrame(
     [
@@ -428,7 +442,7 @@ feature table dtype:
 Cz_mean       float64
 Pz_mean       float64
 window_idx      int64
-Parquet write_s=0.0154, read_s=0.0118, size_mb=0.0024
+Parquet write_s=0.0151, read_s=0.0115, size_mb=0.0024
 ```
 
 <div class="output_subarea output_html rendered_html output_result">
@@ -474,7 +488,7 @@ Parquet write_s=0.0154, read_s=0.0118, size_mb=0.0024
 </div>
 <br />
 <br />
-<!-- GENERATED FROM PYTHON SOURCE LINES 329-334 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 341-346 -->
 
 ## Step 6: assemble the format-records ledger
 
@@ -482,7 +496,7 @@ Every row of the table below feeds Panel 1 of the final figure. The
 values are live; nothing is hard-coded. `has_zarr=False` simply omits
 the Zarr row.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 336-359 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 348-371 -->
 ```Python
 format_records = [
     {
@@ -537,22 +551,22 @@ records_df[["name", "write_ms", "read_ms", "size_mb"]]
     <tr>
       <th>0</th>
       <td>windows/ (FIF)</td>
-      <td>5.31</td>
-      <td>6.43</td>
+      <td>5.53</td>
+      <td>6.33</td>
       <td>0.005461</td>
     </tr>
     <tr>
       <th>1</th>
       <td>windows.zarr (Zarr)</td>
-      <td>16.82</td>
-      <td>6.04</td>
+      <td>16.87</td>
+      <td>6.02</td>
       <td>0.007955</td>
     </tr>
     <tr>
       <th>2</th>
       <td>features.parquet</td>
-      <td>15.35</td>
-      <td>11.82</td>
+      <td>15.08</td>
+      <td>11.49</td>
       <td>0.002384</td>
     </tr>
   </tbody>
@@ -561,7 +575,7 @@ records_df[["name", "write_ms", "read_ms", "size_mb"]]
 </div>
 <br />
 <br />
-<!-- GENERATED FROM PYTHON SOURCE LINES 360-366 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 372-378 -->
 
 ## Step 7: provenance stamp
 
@@ -570,7 +584,7 @@ rerun the upstream pipeline: package versions, the seed, and the git
 short-SHA. The [`subprocess.run()`](https://docs.python.org/3/library/subprocess.html#subprocess.run) call falls back gracefully when
 git is unavailable (CI sandbox, source archive without `.git`).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 369-396 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 381-408 -->
 ```Python
 def _git_short_sha() -> str:
     """Return the current git short-SHA, or a fallback string when git is missing."""
@@ -649,7 +663,7 @@ pd.Series(provenance, name="value").to_frame()
     </tr>
     <tr>
       <th>git</th>
-      <td>d10bf91</td>
+      <td>3333e09</td>
     </tr>
   </tbody>
 </table>
@@ -657,7 +671,7 @@ pd.Series(provenance, name="value").to_frame()
 </div>
 <br />
 <br />
-<!-- GENERATED FROM PYTHON SOURCE LINES 397-405 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 409-417 -->
 
 ## A common mistake, and how to recover
 
@@ -668,7 +682,7 @@ common pitfall is calling `load_concat_dataset` on a path that is
 missing its sidecars; the helper raises a clear error rather than
 returning a corrupt dataset.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 407-426 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 419-438 -->
 ```Python
 try:
     windows.save(str(windows_path), overwrite=False)
@@ -691,12 +705,12 @@ except (FileNotFoundError, IndexError, KeyError, ValueError) as exc:
 ```
 
 ```none
-Caught FileExistsError: Subdirectory /tmp/eegdash_save_gy1ke71s/windows/0 already exists. Please select
+Caught FileExistsError: Subdirectory /tmp/eegdash_save_4h42jmzb/windows/0 already exists. Please select
 Recovery: rmtree + save without overwrite=True succeeded.
 Recovery: load_concat_dataset rejected broken layout (IndexError: list index out of range).
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 427-437 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 439-449 -->
 
 ## Round-trip ledger figure
 
@@ -709,7 +723,7 @@ live in a sibling \_ledger_figure module so the rendering plumbing
 stays out of this tutorial; the call below is the only line that
 matters.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 439-452 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 451-464 -->
 ```Python
 from _ledger_figure import draw_ledger_figure
 
@@ -725,7 +739,7 @@ fig = draw_ledger_figure(
 plt.show()
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 453-461 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 465-473 -->
 
 ## Modify
 
@@ -736,7 +750,7 @@ Predict before running: how should `len(windows)` change? How should
 one row per window? The Zarr row should grow with chunked
 compression, not with raw byte count.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 463-469 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 475-481 -->
 
 ## Make
 
@@ -745,7 +759,7 @@ compression, not with raw byte count.
 to the artifact. Persisting the version dict alongside the data is the
 smallest useful step toward FAIR provenance [[Wilkinson *et al.*, 2016](../../../../references.md#id30)].
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 471-510 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 483-522 -->
 ```Python
 import json
 
@@ -791,7 +805,7 @@ print(
 cache_or_compute OK: hits=True, manifest=True
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 511-518 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 523-530 -->
 
 ## Result
 
@@ -801,7 +815,7 @@ feature table (Parquet), and reloaded each artifact with shape,
 dtype, and value parity. The ledger figure puts the cost of each
 format on one page so the trade-off is visible without a stopwatch.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 520-523 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 532-535 -->
 ```Python
 shutil.rmtree(cache_root, ignore_errors=True)  # keep the cache in real projects
 print("cleanup OK")
@@ -811,7 +825,7 @@ print("cleanup OK")
 cleanup OK
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 524-533 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 536-545 -->
 
 ## Wrap-up
 
@@ -823,7 +837,7 @@ extracts a real feature table from cached windows;
 /auto_examples/how_to/how_to_work_offline
 walks through the cache contract for sealed-environment runs.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 535-546 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 547-558 -->
 
 ## Try it yourself
 
@@ -837,11 +851,11 @@ walks through the cache contract for sealed-environment runs.
 - Set `compression="zstd"` in the Zarr call and compare `size_mb`
   against `compression="blosc"`.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 548-553 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 560-565 -->
 
 ## References
 
-See [References](../../../../references.md) for the centralised bibliography of papers
+See [References](../../../../references.md) for the centralized bibliography of papers
 cited above. Add or amend an entry once in
 `docs/source/refs.bib`; every tutorial inherits the update.
 

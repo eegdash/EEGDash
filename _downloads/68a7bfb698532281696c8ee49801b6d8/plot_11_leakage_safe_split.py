@@ -1,11 +1,13 @@
-"""How do I split EEG data without subject leakage?
-====================================================
+"""Split EEG without subject leakage
+====================================
+
+**Difficulty 1-2** | **Runtime: 30s** | **Compute: CPU**
 
 Random window splits on cross-subject EEG decoders post training-set
 accuracy near 99% and collapse on a held-out participant. The reason is
 not exotic: every recording produces hundreds of overlapping windows
 from the same brain, so a uniform shuffle scatters each subject across
-both train and test, and the model memorises subject-level fingerprints
+both train and test, and the model memorizes subject-level fingerprints
 (heart-rate, alpha amplitude, electrode impedance) instead of the task
 we actually want to decode.
 
@@ -23,6 +25,7 @@ the most common evaluation pitfall in clinical EEG; the MOABB benchmark
 
 So why does a random window split look great on paper, and which
 column of the metadata table do you actually have to hold out?
+Keywords: evaluation, leakage, splitting
 """
 
 # %% [markdown]
@@ -95,6 +98,15 @@ print(f"eegdash {eegdash.__version__}; numpy {np.__version__}")
 # ``CrossSubjectSplitter``) put each subject in exactly one test fold.
 # :mod:`eegdash.splits` wraps both behind one entry point, persists the
 # manifest, and emits a JSON line a runtime validator can grep for.
+#
+# Validate your result
+# --------------------
+# - **Leakage Check.** After splitting, run ``assert_no_leakage(train_ids, test_ids)``.
+#   This should raise no error and return ``True``.
+# - **Leakage Report.** The ``leakage_report`` JSON should show zero overlapping
+#   subjects.
+# - **Accuracy Gap.** Expect the naive random split to outperform the
+#   leakage-safe split by 10-30 points (the "leakage tax").
 
 # %% [markdown]
 # Step 1. Build a windows metadata table for 12 subjects
@@ -183,8 +195,8 @@ pd.Series(
 
 # %% [markdown]
 # **Investigate.** Almost every subject sits on both sides of the split.
-# A classifier trained here can memorise the alpha-rhythm fingerprint
-# of subject 03 and recognise it again on subject 03's test windows.
+# A classifier trained here can memorize the alpha-rhythm fingerprint
+# of subject 03 and recognize it again on subject 03's test windows.
 # The accuracy is a subject-identification score, not a task-decoding
 # score; deployment on a new participant collapses to chance.
 
@@ -320,7 +332,7 @@ audit_df[
 # -----------------------------------------------------
 #
 # ``apply_split_manifest`` returns a boolean mask
-# for any fold; the manifest serialises to plain JSON, the BIDS-style
+# for any fold; the manifest serializes to plain JSON, the BIDS-style
 # "split metadata" Pernet et al. 2019 advocate sharing alongside
 # derivatives. The same call signature works on a
 # :class:`braindecode.datasets.BaseConcatDataset` of
@@ -548,7 +560,7 @@ plt.show()
 # ------------------------------------------------------------
 # For "give me one train/test split right now", :class:`sklearn.model_selection.GroupShuffleSplit`
 # keyed on ``subject`` gives a single subject-disjoint pair. The
-# folds list above is the N-fold generalisation.
+# folds list above is the N-fold generalization.
 
 # %%
 from sklearn.model_selection import GroupShuffleSplit
@@ -609,6 +621,6 @@ pd.DataFrame(fold_sizes, columns=["n_train_rows", "n_test_rows"]).head()
 # %% [markdown]
 # References
 # ----------
-# See :doc:`/references` for the centralised bibliography of papers
+# See :doc:`/references` for the centralized bibliography of papers
 # cited above. Add or amend an entry once in
 # :file:`docs/source/refs.bib`; every tutorial inherits the update.

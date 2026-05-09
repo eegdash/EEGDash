@@ -6,20 +6,32 @@
 
 <a id="sphx-glr-generated-auto-examples-applied-project-pfactor-features-py"></a>
 
-# Predicting p-factor from EEG with hand-crafted features (project starter)
+# Predict p-factor from EEG features
+
+**Difficulty 3** | **Runtime: 30s** | **Compute: CPU**
 
 Companion to `project_pfactor_deep.py`: same target, different model
 class. The deep variant asks whether an EEGConformer can learn the
 `p_factor` from raw windows, this one asks which interpretable EEG
-features carry the signal. The p-factor (Caspi et al. 2014,
-doi:10.1177/2167702613497473) is a transdiagnostic mental-health summary
-score derived from parent-and-child psychiatric questionnaires; the EEG
-side comes from the Healthy Brain Network release distributed on
+features carry the signal.
+**p-factor** (Caspi et al. 2014, doi:10.1177/2167702613497473) is a
+transdiagnostic mental-health summary score derived from parent-and-child
+psychiatric questionnaires; it captures a general dimension of
+psychopathology common across different disorders.
+
+The EEG side comes from the Healthy Brain Network release distributed on
 OpenNeuro and on the EEG2025 Challenge mirror as `EEG2025r5`
 (Alexander et al. 2017, doi:10.1038/sdata.2017.181), surfaced through
-NEMAR (Delorme et al. 2022, doi:10.1093/nargab/lqac023). Splits stay
-strictly subject-disjoint per Cisotto and Chicco 2024 Tip 9
-(doi:10.7717/peerj-cs.2256).
+NEMAR (Delorme et al. 2022, doi:10.1093/nargab/lqac023).
+
+## Validate your result
+
+- **Expected Columns.** The feature table should contain columns like
+  `theta_Cz`, `alpha_Cz`, `beta_Cz`, `gamma_Cz`, plus connectivity
+  and entropy features, and the target `p_factor`.
+- **Related Material.** See [Predict p-factor with deep learning](project_pfactor_deep.md) for a deep learning
+  approach and the /auto_examples/eeg2025/index for the official
+  challenge tracks.
 
 The deliverable is a feature-importance panel plus the regression
 diagnostic on never-seen subjects: which feature family (band power,
@@ -29,12 +41,13 @@ and how flat is the predicted-vs-true cloud at the subject level?
 
 Can hand-crafted spectral and signal features beat the train-median
 predictor on held-out subjects, and which family pulls the most weight?
+Keywords: features, applied, p-factor
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 26-28 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 39-41 -->
 ```Python
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 30-48 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 43-61 -->
 
 ## Learning objectives
 
@@ -55,13 +68,13 @@ After this study you will be able to:
   for the cross-subject regression contract this study satisfies.
 - Concept page: [Leakage and evaluation](../../../concepts/leakage_and_evaluation.md).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 50-53 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 63-66 -->
 
-Setup. Seed (E3.21) and a parametrised cache directory (E3.24) keep the
+Setup. Seed (E3.21) and a parameterized cache directory (E3.24) keep the
 study reproducible; warnings are tightened so sklearn convergence
 chatter does not drown the result print.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 53-80 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 66-93 -->
 ```Python
 import os
 import warnings
@@ -91,14 +104,14 @@ cache_dir = Path(os.environ.get("EEGDASH_CACHE_DIR", Path.cwd() / "eegdash_cache
 cache_dir.mkdir(parents=True, exist_ok=True)
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 81-105 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 94-118 -->
 
 ## Step 1. Load EEG2025r5 with the p-factor target
 
 In production, `eegdash.EEGChallengeDataset` exposes `p_factor`
 through `description_fields` so it surfaces as a per-recording column
 (Alexander et al. 2017; Delorme et al. 2022). The canonical call is
-below; the study then synthesises a feature table with the same column
+below; the study then synthesizes a feature table with the same column
 layout so the gallery runs offline (E3.24). The synthetic data follows
 the EEG2025r5 layout: 16 subjects, 24 windows per subject, four band-
 power features per channel (delta/theta/alpha/beta), two connectivity
@@ -117,7 +130,7 @@ ds = EEGChallengeDataset(
 )
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 107-164 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 120-177 -->
 ```Python
 N_SUBJECTS, N_WINDOWS = 16, 24
 BANDS = ("delta", "theta", "alpha", "beta")
@@ -177,7 +190,7 @@ assert metadata["p_factor"].notna().all(), "p_factor has NaN rows"
 assert pd.api.types.is_float_dtype(metadata["p_factor"]), "p_factor not float"
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 165-174 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 178-187 -->
 
 ## Step 2. Predict: which family will the model lean on?
 
@@ -188,7 +201,7 @@ Will the importance bars cluster on band-power blue, on connectivity
 orange, or on entropy purple? What R^2 do you expect on held-out
 subjects, 0.05? 0.20? 0.50?
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 176-188 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 189-201 -->
 
 ## Step 3. Build the regression head
 
@@ -202,7 +215,7 @@ correlated band-power columns gracefully [[Pedregosa *et al.*, 2011](../../../re
 in front of the ridge so the regularisation strength compares across
 columns of different scale.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 191-217 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 204-230 -->
 ```Python
 def make_ridge_pipeline() -> Pipeline:
     """Return a fresh ``StandardScaler -> Ridge`` Pipeline (E3.21)."""
@@ -230,7 +243,7 @@ def make_forest() -> RandomForestRegressor:
     )
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 218-228 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 231-241 -->
 
 ## Step 4. Cross-subject split and assert_no_leakage
 
@@ -242,7 +255,7 @@ the JSON `leakage_report` line that downstream tooling parses is
 emitted. With 16 subjects each fold tests on three or four unseen
 subjects.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 230-250 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 243-263 -->
 ```Python
 splitter = CrossSubjectSplitter(cv_class=GroupKFold, n_splits=5)
 n_rows = len(metadata)
@@ -265,7 +278,7 @@ print(
 )
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 251-261 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 264-274 -->
 
 ## Step 5. Fit, score, accumulate per-fold importances
 
@@ -277,7 +290,7 @@ random-forest `feature_importances_` are averaged across folds; the
 average is what the figure plots so a single fold cannot dominate the
 bar order.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 263-310 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 276-323 -->
 ```Python
 fold_r2: list[float] = []
 fold_mae: list[float] = []
@@ -327,7 +340,7 @@ mean_chance_r2 = float(np.mean(fold_chance_r2))
 mean_baseline_mae = float(np.mean(fold_baseline_mae))
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 311-322 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 324-335 -->
 
 ## Step 6. Investigate the importance bars (figure)
 
@@ -340,7 +353,7 @@ level error histogram with a Gaussian overlay so bias and spread land
 on the same axis. This is the diagnostic Pernet et al. 2019
 (doi:10.1038/s41597-019-0104-8) recommend before any clinical claim.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 324-354 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 337-367 -->
 ```Python
 res_df = pd.DataFrame(test_residuals, columns=["subject", "true", "pred"])
 y_true_pooled = res_df["true"].to_numpy()
@@ -373,7 +386,7 @@ print(
 print(f"top-3 features: {top3}")
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 355-367 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 368-380 -->
 
 ## A common mistake, and how to recover
 
@@ -387,7 +400,7 @@ triggers the failure on purpose with `try/except` so the recovery
 path is visible (Nederbragt et al. 2020,
 doi:10.1371/journal.pcbi.1008090).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 369-384 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 382-397 -->
 ```Python
 try:
     bad_X = X.copy()
@@ -405,7 +418,7 @@ except (ValueError, TypeError) as exc:
     print(f"Recovery: replace inf, fillna(0), refit (rows={len(fixed)}); Ridge fit.")
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 385-396 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 398-409 -->
 
 ## Modify: gradient boosting and permutation importance (concept only)
 
@@ -418,7 +431,7 @@ feature-out score that is less biased toward features with many split
 points [[Pedregosa *et al.*, 2011](../../../references.md#id33)]. Both keep the cross-subject contract
 above, so dropping them in only changes the importance panel.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 398-406 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 411-419 -->
 
 ## Result: feature-based R^2 vs median baseline (chance)
 
@@ -428,7 +441,7 @@ the train-median predictor’s R^2 on the test set; an honest model must
 beat it, not just match it. The print line carries the keyword
 *baseline* (E5.43).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 408-423 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 421-436 -->
 ```Python
 print(
     f"Cross-subject 5-fold p-factor regression: r2={mean_r2:+.3f} +/- {std_r2:.3f} "
@@ -446,7 +459,7 @@ print(
 assert mean_mae < mean_baseline_mae, "Model MAE must be below the median-baseline MAE."
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 424-438 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 437-451 -->
 
 ## Wrap-up
 
@@ -463,7 +476,7 @@ clinical claim once it survives an external cohort (Cisotto and Chicco
 2024 Tip 9). p_factor is a derived score, not a diagnosis, any clinical
 framing belongs in a follow-up study with a much larger N.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 440-454 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 453-467 -->
 
 ## Try it yourself
 
@@ -480,11 +493,11 @@ framing belongs in a follow-up study with a much larger N.
   its predicted-vs-true scatter on the same axes; how often do the
   feature head and the deep head disagree on the same subject?
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 456-461 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 469-474 -->
 
 ## References
 
-See [References](../../../references.md) for the centralised bibliography of papers
+See [References](../../../references.md) for the centralized bibliography of papers
 cited above. Add or amend an entry once in
 `docs/source/refs.bib`; every tutorial inherits the update.
 

@@ -610,7 +610,7 @@ filters work the same way regardless of the originating lab or repository.
 This page explains what those entities mean, how they map to EEGDash query
 keywords, and where participant-level metadata enters the picture.</p>
 <p>The EEG-BIDS specification was published as Pernet et al. (2019) <a class="footnote-reference brackets" href="#id3" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>; if you
-have not skimmed the paper, the short version is that BIDS standardises file
+have not skimmed the paper, the short version is that BIDS standardizes file
 names, directory layout, and accompanying JSON/TSV sidecars so that any tool
 can walk a dataset without bespoke loaders. EEGDash reuses those entity names
 verbatim in its query API.</p>
@@ -725,8 +725,8 @@ braindecode-compatible <code class="docutils literal notranslate"><span class="p
 each window automatically, so subject-aware splitters and metadata-driven
 analyses both read from the same source of truth.</p>
 </section>
-<section id="why-standardised-metadata-matters">
-<h2>Why standardised metadata matters<a class="headerlink" href="#why-standardised-metadata-matters" title="Link to this heading">#</a></h2>
+<section id="why-standardized-metadata-matters">
+<h2>Why standardized metadata matters<a class="headerlink" href="#why-standardized-metadata-matters" title="Link to this heading">#</a></h2>
 <p>Two practical consequences fall out of using BIDS as the primary metadata
 layer:</p>
 <ol class="arabic simple">
@@ -747,14 +747,68 @@ datasets. Spending an afternoon converting a folder of <code class="docutils lit
 BIDS is almost always worth it; see the EEG-BIDS paper <a class="footnote-reference brackets" href="#id3" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> for the full
 specification.</p>
 </section>
+<section id="metadata-glossary">
+<h2>Metadata Glossary<a class="headerlink" href="#metadata-glossary" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<colgroup>
+<col style="width: 20.0%" />
+<col style="width: 80.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Field</p></th>
+<th class="head"><p>Definition</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>dataset</strong></p></td>
+<td><p>The BIDS dataset identifier (e.g., <code class="docutils literal notranslate"><span class="pre">ds004504</span></code>). Identifies the
+originating release.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>subject</strong></p></td>
+<td><p>A unique identifier for a participant within a dataset.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>session</strong></p></td>
+<td><p>A single appointment or day of recording for a subject.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>task</strong></p></td>
+<td><p>The experimental paradigm (e.g., <code class="docutils literal notranslate"><span class="pre">RestingState</span></code>, <code class="docutils literal notranslate"><span class="pre">visualoddball</span></code>).</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>run</strong></p></td>
+<td><p>A repetition of the same task within one session.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>age</strong></p></td>
+<td><p>Participant age, typically in years at the time of the first session.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>sex</strong></p></td>
+<td><p>Biological status (typically <code class="docutils literal notranslate"><span class="pre">M</span></code> or <code class="docutils literal notranslate"><span class="pre">F</span></code>) as recorded by the sponsor.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>gender</strong></p></td>
+<td><p>Participant’s self-reported gender identity.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>p_factor</strong></p></td>
+<td><p>A transdiagnostic mental-health summary score derived from
+psychiatric questionnaires.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>BIDS</strong></p></td>
+<td><p>Brain Imaging Data Structure. The standard directory layout and
+naming convention for neural data.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>windows</strong></p></td>
+<td><p>Short, fixed-length segments of EEG data (e.g., 2 seconds) used as
+individual samples for machine learning.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
 <section id="related-tutorials">
 <h2>Related tutorials<a class="headerlink" href="#related-tutorials" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p><a class="reference internal" href="../generated/auto_examples/tutorials/00_start_here/plot_00_first_search.html"><span class="doc">How do I find datasets in EEGDash?</span></a>
+<li><p><a class="reference internal" href="../generated/auto_examples/tutorials/00_start_here/plot_00_first_search.html"><span class="doc">Find datasets with the EEGDash API</span></a>
 uses BIDS entity filters end to end.</p></li>
-<li><p><a class="reference internal" href="../generated/auto_examples/tutorials/00_start_here/plot_01_first_recording.html"><span class="doc">How do I load one EEG recording from EEGDash?</span></a>
+<li><p><a class="reference internal" href="../generated/auto_examples/tutorials/00_start_here/plot_01_first_recording.html"><span class="doc">Load one EEG recording</span></a>
 shows how the recording-level metadata lines up with the actual data.</p></li>
-<li><p><a class="reference internal" href="../generated/auto_examples/tutorials/10_core_workflow/plot_11_leakage_safe_split.html"><span class="doc">How do I split EEG data without subject leakage?</span></a>
+<li><p><a class="reference internal" href="../generated/auto_examples/tutorials/10_core_workflow/plot_11_leakage_safe_split.html"><span class="doc">Split EEG without subject leakage</span></a>
 consumes <code class="docutils literal notranslate"><span class="pre">description[&quot;subject&quot;]</span></code> to build subject-aware splits.</p></li>
 </ul>
 </section>
@@ -833,7 +887,8 @@ electroencephalographic (EEG) data acquisition and signal processing.
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bids-entities-at-a-glance">BIDS entities at a glance</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mapping-bids-entities-to-eegdash-query-keywords">Mapping BIDS entities to EEGDash query keywords</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#participant-metadata-and-description-fields">Participant metadata and <code class="docutils literal notranslate"><span class="pre">description_fields</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-standardised-metadata-matters">Why standardised metadata matters</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-standardized-metadata-matters">Why standardized metadata matters</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#metadata-glossary">Metadata Glossary</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#related-tutorials">Related tutorials</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#further-reading">Further reading</a></li>
 </ul>

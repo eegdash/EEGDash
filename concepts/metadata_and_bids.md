@@ -11,7 +11,7 @@ This page explains what those entities mean, how they map to EEGDash query
 keywords, and where participant-level metadata enters the picture.
 
 The EEG-BIDS specification was published as Pernet et al. (2019) <sup>[1](#id3)</sup>; if you
-have not skimmed the paper, the short version is that BIDS standardises file
+have not skimmed the paper, the short version is that BIDS standardizes file
 names, directory layout, and accompanying JSON/TSV sidecars so that any tool
 can walk a dataset without bespoke loaders. EEGDash reuses those entity names
 verbatim in its query API.
@@ -88,7 +88,7 @@ braindecode-compatible `WindowsDataset` will copy these descriptors onto
 each window automatically, so subject-aware splitters and metadata-driven
 analyses both read from the same source of truth.
 
-## Why standardised metadata matters
+## Why standardized metadata matters
 
 Two practical consequences fall out of using BIDS as the primary metadata
 layer:
@@ -110,13 +110,29 @@ datasets. Spending an afternoon converting a folder of `.set` files to
 BIDS is almost always worth it; see the EEG-BIDS paper <sup>[1](#id3)</sup> for the full
 specification.
 
+## Metadata Glossary
+
+| Field        | Definition                                                                                                      |
+|--------------|-----------------------------------------------------------------------------------------------------------------|
+| **dataset**  | The BIDS dataset identifier (e.g., `ds004504`). Identifies the<br/>originating release.                         |
+| **subject**  | A unique identifier for a participant within a dataset.                                                         |
+| **session**  | A single appointment or day of recording for a subject.                                                         |
+| **task**     | The experimental paradigm (e.g., `RestingState`, `visualoddball`).                                              |
+| **run**      | A repetition of the same task within one session.                                                               |
+| **age**      | Participant age, typically in years at the time of the first session.                                           |
+| **sex**      | Biological status (typically `M` or `F`) as recorded by the sponsor.                                            |
+| **gender**   | Participant’s self-reported gender identity.                                                                    |
+| **p_factor** | A transdiagnostic mental-health summary score derived from<br/>psychiatric questionnaires.                      |
+| **BIDS**     | Brain Imaging Data Structure. The standard directory layout and<br/>naming convention for neural data.          |
+| **windows**  | Short, fixed-length segments of EEG data (e.g., 2 seconds) used as<br/>individual samples for machine learning. |
+
 ## Related tutorials
 
-- [How do I find datasets in EEGDash?](../generated/auto_examples/tutorials/00_start_here/plot_00_first_search.md)
+- [Find datasets with the EEGDash API](../generated/auto_examples/tutorials/00_start_here/plot_00_first_search.md)
   uses BIDS entity filters end to end.
-- [How do I load one EEG recording from EEGDash?](../generated/auto_examples/tutorials/00_start_here/plot_01_first_recording.md)
+- [Load one EEG recording](../generated/auto_examples/tutorials/00_start_here/plot_01_first_recording.md)
   shows how the recording-level metadata lines up with the actual data.
-- [How do I split EEG data without subject leakage?](../generated/auto_examples/tutorials/10_core_workflow/plot_11_leakage_safe_split.md)
+- [Split EEG without subject leakage](../generated/auto_examples/tutorials/10_core_workflow/plot_11_leakage_safe_split.md)
   consumes `description["subject"]` to build subject-aware splits.
 
 ## Further reading

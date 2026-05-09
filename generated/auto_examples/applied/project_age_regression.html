@@ -7,18 +7,18 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta property="og:title" content="Age regression from EEG (applied case study)" />
+<meta property="og:title" content="Age regression from EEG" />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://eegdash.org/generated/auto_examples/applied/project_age_regression.html" />
 <meta property="og:site_name" content="EEG Dash" />
-<meta property="og:description" content="Can a feature-based regression head predict a child’s age from a few seconds of resting-state EEG, on subjects the model has never seen? This applied…" />
+<meta property="og:description" content="Difficulty 3| Runtime: 30s| Compute: CPU Can a feature-based regression head predict a child’s age from a few seconds of resting-state EEG, on subjects…" />
 <meta property="og:image" content="https://eegdash.org/_static/eegdash_social_card.png" />
 <meta property="og:image:alt" content="EEG Dash — data-sharing interface for M/EEG datasets" />
-<meta name="description" content="Can a feature-based regression head predict a child’s age from a few seconds of resting-state EEG, on subjects the model has never seen? This applied…" />
+<meta name="description" content="Difficulty 3| Runtime: 30s| Compute: CPU Can a feature-based regression head predict a child’s age from a few seconds of resting-state EEG, on subjects…" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@eegdash" />
 
-    <title>Age regression from EEG (applied case study) &#8212; EEG Dash</title>
+    <title>Age regression from EEG &#8212; EEG Dash</title>
   
   
   
@@ -74,7 +74,7 @@
     <link rel="icon" href="../../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="How do I survey a clinical EEG dataset before training a model?" href="project_clinical_dataset_summary.html" />
+    <link rel="next" title="Survey clinical EEG datasets" href="project_clinical_dataset_summary.html" />
     <link rel="prev" title="Applied Research Projects" href="index.html" />
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="0.7" />
@@ -563,7 +563,7 @@
     
     <li class="breadcrumb-item"><a href="index.html" class="nav-link">Applied Research Projects</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Age regression from EEG (applied case study)</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Age regression from EEG</span></li>
   </ul>
 </nav>
 </div>
@@ -585,8 +585,9 @@
 <p><a class="reference internal" href="#sphx-glr-download-generated-auto-examples-applied-project-age-regression-py"><span class="std std-ref">Go to the end</span></a>
 to download the full example code or to run this example in your browser via Binder.</p>
 </div>
-<section class="sphx-glr-example-title" id="age-regression-from-eeg-applied-case-study">
-<span id="sphx-glr-generated-auto-examples-applied-project-age-regression-py"></span><h1>Age regression from EEG (applied case study)<a class="headerlink" href="#age-regression-from-eeg-applied-case-study" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">7 minutes</span></div>
+<section class="sphx-glr-example-title" id="age-regression-from-eeg">
+<span id="sphx-glr-generated-auto-examples-applied-project-age-regression-py"></span><h1>Age regression from EEG<a class="headerlink" href="#age-regression-from-eeg" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">8 minutes</span></div>
+<p><strong>Difficulty 3</strong> | <strong>Runtime: 30s</strong> | <strong>Compute: CPU</strong></p>
 <p>Can a feature-based regression head predict a child’s age from a few
 seconds of resting-state EEG, on subjects the model has never seen?
 This applied case study takes the Healthy Brain Network release
@@ -600,7 +601,8 @@ predictor. EEG-based brain-age regression has a long line of prior work
 (Zoubi et al. 2018, doi:10.3389/fnhum.2018.00461). The headline
 question here is not whether we beat the published literature; the
 honest one is, does the model beat the train-set median predictor on
-never-seen subjects?</p>
+never-seen subjects?
+Keywords: regression, applied, age</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Difficulty: 3-star (advanced applied project)</span>
 </pre></div>
 </div>
@@ -614,19 +616,34 @@ never-seen subjects?</p>
 <li><p>read a three-panel diagnostic plate (predicted vs true, per-subject signed residual, error histogram) for an EEG regression.</p></li>
 </ul>
 </section>
+<section id="validate-your-result">
+<h2>Validate your result<a class="headerlink" href="#validate-your-result" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Expected Target Distribution.</strong> HBN <code class="docutils literal notranslate"><span class="pre">ds005505</span></code> spans children and
+adolescents (approx. 5-22 years). Your ground-truth distribution should
+reflect this range.</p></li>
+<li><p><strong>Regression Metrics.</strong> Report <code class="docutils literal notranslate"><span class="pre">Pearson</span> <span class="pre">r</span></code> and <code class="docutils literal notranslate"><span class="pre">Spearman</span> <span class="pre">rho</span></code> for
+correlation, <code class="docutils literal notranslate"><span class="pre">R^2</span></code> for explained variance, and <code class="docutils literal notranslate"><span class="pre">MAE</span></code> (Mean Absolute
+Error) in years for absolute performance.</p></li>
+<li><p><strong>Confounds Warning.</strong> Age prediction is sensitive to acquisition site and
+equipment. A model that works well on one dataset may fail on another due
+to “site effects” that correlate with age (e.g., younger children being
+recorded more frequently at one site).</p></li>
+</ul>
+</section>
 <section id="requirements">
 <h2>Requirements<a class="headerlink" href="#requirements" title="Link to this heading">#</a></h2>
 <ul class="simple">
 <li><p>~30 s on CPU when the gallery uses the offline feature path (default).</p></li>
 <li><p>Real-data path needs network access to NEMAR plus <code class="docutils literal notranslate"><span class="pre">braindecode[hub]</span></code>.</p></li>
-<li><p>Prereqs: <a class="reference internal" href="../tutorials/00_start_here/plot_02_dataset_to_dataloader.html"><span class="doc">How do I turn one EEG recording into a PyTorch DataLoader?</span></a>
-and <a class="reference internal" href="../tutorials/40_features/plot_42_features_to_sklearn.html"><span class="doc">How do I push EEGDash features through a scikit-learn Pipeline?</span></a>.</p></li>
+<li><p>Prereqs: <a class="reference internal" href="../tutorials/00_start_here/plot_02_dataset_to_dataloader.html"><span class="doc">EEG recording to PyTorch DataLoader</span></a>
+and <a class="reference internal" href="../tutorials/40_features/plot_42_features_to_sklearn.html"><span class="doc">EEGDash features to scikit-learn</span></a>.</p></li>
 <li><p>Concept: <a class="reference internal" href="../../../concepts/leakage_and_evaluation.html"><span class="doc">Leakage and evaluation</span></a> for the subject-aware
 evaluation rationale that the figure plate is built around.</p></li>
 </ul>
 </section>
-<section id="step-1-setup-seeds-parametrised-cache">
-<h2>Step 1. Setup, seeds, parametrised cache<a class="headerlink" href="#step-1-setup-seeds-parametrised-cache" title="Link to this heading">#</a></h2>
+<section id="step-1-setup-seeds-parameterized-cache">
+<h2>Step 1. Setup, seeds, parameterized cache<a class="headerlink" href="#step-1-setup-seeds-parameterized-cache" title="Link to this heading">#</a></h2>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <a href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="pathlib.Path" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">Path</span></a>
@@ -663,12 +680,12 @@ EEG is a hard inverse problem; what r2 do you expect a Ridge head on
 ~12 features to reach with only ~12 held-out subjects: 0.10? 0.40?
 0.80? Write your guess before scrolling.</p>
 </section>
-<section id="step-3-load-hbn-ds005505-real-path-or-synthesise-a-feature-table-gallery">
-<h2>Step 3. Load HBN ds005505 (real path) or synthesise a feature table (gallery)<a class="headerlink" href="#step-3-load-hbn-ds005505-real-path-or-synthesise-a-feature-table-gallery" title="Link to this heading">#</a></h2>
+<section id="step-3-load-hbn-ds005505-real-path-or-synthesize-a-feature-table-gallery">
+<h2>Step 3. Load HBN ds005505 (real path) or synthesize a feature table (gallery)<a class="headerlink" href="#step-3-load-hbn-ds005505-real-path-or-synthesize-a-feature-table-gallery" title="Link to this heading">#</a></h2>
 <p>In production, <a class="reference internal" href="../../../api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset" title="eegdash.EEGDashDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">eegdash.EEGDashDataset</span></code></a> exposes <code class="docutils literal notranslate"><span class="pre">age</span></code> and
 <code class="docutils literal notranslate"><span class="pre">sex</span></code> through <code class="docutils literal notranslate"><span class="pre">description_fields</span></code> so they surface as per-recording
 columns. The canonical call is shown below; this case study then
-synthesises a feature table with the same column layout so the
+synthesizes a feature table with the same column layout so the
 rendered gallery runs offline and the smoke test stays fast.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">eegdash</span><span class="w"> </span><span class="kn">import</span> <span class="n">EEGDashDataset</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">braindecode.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
@@ -709,7 +726,7 @@ plus a subject-level <code class="docutils literal notranslate"><span class="pre
     <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N_WINDOWS</span><span class="p">):</span>
         <span class="c1"># Per-window features: a faint age signal in alpha / beta plus a</span>
         <span class="c1"># mild subject-level offset (the part the cross-subject loop must</span>
-        <span class="c1"># not memorise) and a noise floor that keeps R^2 modest.</span>
+        <span class="c1"># not memorize) and a noise floor that keeps R^2 modest.</span>
         <span class="n">bias</span> <span class="o">=</span> <span class="mf">0.04</span> <span class="o">*</span> <span class="p">(</span><span class="n">s</span> <span class="o">-</span> <span class="n">N_SUBJECTS</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
         <span class="n">row</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;subject&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;sub-NDARAA</span><span class="si">{</span><span class="n">s</span><span class="si">:</span><span class="s2">04d</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
@@ -820,7 +837,7 @@ the assertion below is non-negotiable.</p>
 <h2>Step 6. A common mistake, and how to recover<a class="headerlink" href="#step-6-a-common-mistake-and-how-to-recover" title="Link to this heading">#</a></h2>
 <p><strong>Run.</strong> A frequent slip is wiring a non-numeric <code class="docutils literal notranslate"><span class="pre">age</span></code> column into
 <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Ridge.html#sklearn.linear_model.Ridge" title="(in scikit-learn v1.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.linear_model.Ridge</span></code></a>. <code class="docutils literal notranslate"><span class="pre">age</span></code> arrives as strings if a
-CSV was loaded without dtype hints (or if a NEMAR sidecar serialises
+CSV was loaded without dtype hints (or if a NEMAR sidecar serializes
 it as text), and Ridge then refuses to fit. We trigger the failure
 on purpose with <code class="docutils literal notranslate"><span class="pre">try</span> <span class="pre">/</span> <span class="pre">except</span></code> so the error message and the
 recovery sit next to each other in the rendered gallery.</p>
@@ -945,7 +962,7 @@ and feed encoder activations into the same Ridge head.</p></li>
 </section>
 <section id="references">
 <h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
-<p>See <a class="reference internal" href="../../../references.html"><span class="doc">References</span></a> for the centralised bibliography of papers
+<p>See <a class="reference internal" href="../../../references.html"><span class="doc">References</span></a> for the centralized bibliography of papers
 cited above. Add or amend an entry once in
 <code class="file docutils literal notranslate"><span class="pre">docs/source/refs.bib</span></code>; every tutorial inherits the update.</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-auto-examples-applied-project-age-regression-py">
@@ -990,7 +1007,7 @@ cited above. Add or amend an entry once in
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">How do I survey a clinical EEG dataset before training a model?</p>
+        <p class="prev-next-title">Survey clinical EEG datasets</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -1014,10 +1031,11 @@ cited above. Add or amend an entry once in
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">Learning objectives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#validate-your-result">Validate your result</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#requirements">Requirements</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-setup-seeds-parametrised-cache">Step 1. Setup, seeds, parametrised cache</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-setup-seeds-parameterized-cache">Step 1. Setup, seeds, parameterized cache</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-predict-what-do-you-expect">Step 2. Predict, what do you expect?</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-load-hbn-ds005505-real-path-or-synthesise-a-feature-table-gallery">Step 3. Load HBN ds005505 (real path) or synthesise a feature table (gallery)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-load-hbn-ds005505-real-path-or-synthesize-a-feature-table-gallery">Step 3. Load HBN ds005505 (real path) or synthesize a feature table (gallery)</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-4-build-a-ridge-regression-head-on-top-of-features">Step 4. Build a Ridge regression head on top of features</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-5-cross-subject-5-fold-split-no-subject-leakage">Step 5. Cross-subject 5-fold split, no subject leakage</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-6-a-common-mistake-and-how-to-recover">Step 6. A common mistake, and how to recover</a></li>

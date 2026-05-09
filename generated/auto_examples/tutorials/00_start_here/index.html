@@ -74,7 +74,7 @@
     <link rel="icon" href="../../../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" />
-    <link rel="next" title="How do I find datasets in EEGDash?" href="plot_00_first_search.html" />
+    <link rel="next" title="Find datasets with the EEGDash API" href="plot_00_first_search.html" />
     <link rel="prev" title="Examples gallery" href="../../index.html" />
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="0.7" />
@@ -574,7 +574,7 @@
                 <article class="bd-article">
                   
   <section id="start-here">
-<h1>Start Here<a class="headerlink" href="#start-here" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">3 minutes</span></div>
+<h1>Start Here<a class="headerlink" href="#start-here" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">2 minutes</span></div>
 <p>Three short, CPU-only lessons that take you from a fresh <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span>
 <span class="pre">eegdash</span></code> to a working PyTorch <code class="docutils literal notranslate"><span class="pre">DataLoader</span></code> over real BIDS-curated EEG
 records. Each tutorial runs in under a few minutes, executes on the
@@ -584,8 +584,7 @@ docs CI matrix on every build, and has a matching YAML spec under
 The core decoding workflow assumes you have already loaded a recording;
 the features and evaluation tracks assume you understand windowing; the
 transfer / foundation track assumes you can wire an <code class="docutils literal notranslate"><span class="pre">EEGDashDataset</span></code>
-into a dataloader. Sourced from <code class="docutils literal notranslate"><span class="pre">docs/tutorial_restructure_plan.md</span></code>
-Category A (lines 360-380), with BIDS metadata handling per Pernet et
+into a dataloader, with BIDS metadata handling per Pernet et
 al. (2019).</p>
 <p>What you will learn:</p>
 <ul class="simple">
@@ -607,15 +606,15 @@ and confirm one batch’s shape.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">plot_02_dataset_to_dataloader.py</span></code> – build windows and a
 PyTorch <code class="docutils literal notranslate"><span class="pre">DataLoader</span></code>.</p></li>
 </ol>
-<div id='sg-tag-list' class='sphx-glr-tag-list'></div><div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="EEGDash exposes a metadata index over hundreds of BIDS-curated EEG datasets, served by the public REST API at https://data.eegdash.org. The same catalogue powers NEMAR, the EEGLAB-ecosystem portal that hosts EEG/MEG datasets with browsing, compute, and provenance tools (Delorme et al., 2022). The EEGDash client searches, filters, and summarises that index without downloading a single sample."><img alt="" src="../../../../_images/sphx_glr_plot_00_first_search_thumb.png" />
-<p><a class="reference internal" href="plot_00_first_search.html"><span class="doc">How do I find datasets in EEGDash?</span></a></p>
-  <div class="sphx-glr-thumbnail-title">How do I find datasets in EEGDash?</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="Once a search returns a candidate dataset (see plot_00), the next question is practical: what does one recording actually contain? This tutorial loads a single BIDS file from OpenNeuro ds004504 (Miltiadous et al. 2023; Alzheimer / frontotemporal dementia / healthy controls) through the catalogue shared with NEMAR delorme2022nemar, unwraps the mne.io.Raw object, and inspects channels, montage, and spectrum. The dataset is small (88 subjects, ~10 min per subject, 19 channels at 500 Hz on a standard 10-20 layout) so the first fetch is under 25 MB and every later step is a hot-cache read."><img alt="" src="../../../../_images/sphx_glr_plot_01_first_recording_thumb.png" />
-<p><a class="reference internal" href="plot_01_first_recording.html"><span class="doc">How do I load one EEG recording from EEGDash?</span></a></p>
-  <div class="sphx-glr-thumbnail-title">How do I load one EEG recording from EEGDash?</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="A model trains on tensor batches, not on continuous voltage traces. This tutorial closes the gap on one BIDS recording from OpenNeuro ds002718 wakeman2015, reachable through NEMAR delorme2022nemar: two safe preprocessors, a fixed-length window step, a torch.utils.data.DataLoader paszke2019pytorch, and an optional Zarr cache that turns batch reads into a few milliseconds of random access. We do not train a model. The deliverable is one batch&#x27;s shape and dtype."><img alt="" src="../../../../_images/sphx_glr_plot_02_dataset_to_dataloader_thumb.png" />
-<p><a class="reference internal" href="plot_02_dataset_to_dataloader.html"><span class="doc">How do I turn one EEG recording into a PyTorch DataLoader?</span></a></p>
-  <div class="sphx-glr-thumbnail-title">How do I turn one EEG recording into a PyTorch DataLoader?</div>
+<div id='sg-tag-list' class='sphx-glr-tag-list'></div><div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="Difficulty 1 | Runtime: &lt;2m | Compute: CPU"><img alt="" src="../../../../_images/sphx_glr_plot_00_first_search_thumb.png" />
+<p><a class="reference internal" href="plot_00_first_search.html"><span class="doc">Find datasets with the EEGDash API</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Find datasets with the EEGDash API</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Difficulty 1 | Runtime: 2m | Compute: CPU"><img alt="" src="../../../../_images/sphx_glr_plot_01_first_recording_thumb.png" />
+<p><a class="reference internal" href="plot_01_first_recording.html"><span class="doc">Load one EEG recording</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Load one EEG recording</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Difficulty 1 | Runtime: 2m | Compute: CPU"><img alt="" src="../../../../_images/sphx_glr_plot_02_dataset_to_dataloader_thumb.png" />
+<p><a class="reference internal" href="plot_02_dataset_to_dataloader.html"><span class="doc">EEG recording to PyTorch DataLoader</span></a></p>
+  <div class="sphx-glr-thumbnail-title">EEG recording to PyTorch DataLoader</div>
 </div></div><div class="toctree-wrapper compound">
 </div>
 <div class="sphx-glr-footer sphx-glr-footer-gallery docutils container">
@@ -652,7 +651,7 @@ PyTorch <code class="docutils literal notranslate"><span class="pre">DataLoader<
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">How do I find datasets in EEGDash?</p>
+        <p class="prev-next-title">Find datasets with the EEGDash API</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

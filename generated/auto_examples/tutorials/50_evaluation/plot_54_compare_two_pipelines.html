@@ -7,18 +7,18 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta property="og:title" content="Is Pipeline A really better than Pipeline B, or did it luck out on one subject?" />
+<meta property="og:title" content="Compare two decoding pipelines" />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://eegdash.org/generated/auto_examples/tutorials/50_evaluation/plot_54_compare_two_pipelines.html" />
 <meta property="og:site_name" content="EEG Dash" />
-<meta property="og:description" content="A new decoding pipeline beats your linear baseline by three accuracy points on the held-out subject in a hackathon notebook. The gap looks big until…" />
+<meta property="og:description" content="Difficulty 2-3| Runtime: 2m| Compute: CPU A new decoding pipeline beats your linear baseline by three accuracy points on the held-out subject in a…" />
 <meta property="og:image" content="https://eegdash.org/_static/eegdash_social_card.png" />
 <meta property="og:image:alt" content="EEG Dash — data-sharing interface for M/EEG datasets" />
-<meta name="description" content="A new decoding pipeline beats your linear baseline by three accuracy points on the held-out subject in a hackathon notebook. The gap looks big until…" />
+<meta name="description" content="Difficulty 2-3| Runtime: 2m| Compute: CPU A new decoding pipeline beats your linear baseline by three accuracy points on the held-out subject in a…" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@eegdash" />
 
-    <title>Is Pipeline A really better than Pipeline B, or did it luck out on one subject? &#8212; EEG Dash</title>
+    <title>Compare two decoding pipelines &#8212; EEG Dash</title>
   
   
   
@@ -74,8 +74,8 @@
     <link rel="icon" href="../../../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" />
-    <link rel="next" title="How do I benchmark an EEGDash dataset with MOABB?" href="plot_55_moabb_interop.html" />
-    <link rel="prev" title="How does decoding accuracy scale with training-set size, and where does the curve plateau?" href="plot_53_learning_curves.html" />
+    <link rel="next" title="Benchmark EEGDash with MOABB" href="plot_55_moabb_interop.html" />
+    <link rel="prev" title="Decoding accuracy learning curves" href="plot_53_learning_curves.html" />
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="0.7" />
 
@@ -563,7 +563,7 @@
     
     <li class="breadcrumb-item"><a href="index.html" class="nav-link">Evaluation and Benchmarking</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Is Pipeline A really better than Pipeline B, or did it luck out on one subject?</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Compare two decoding pipelines</span></li>
   </ul>
 </nav>
 </div>
@@ -585,8 +585,9 @@
 <p><a class="reference internal" href="#sphx-glr-download-generated-auto-examples-tutorials-50-evaluation-plot-54-compare-two-pipelines-py"><span class="std std-ref">Go to the end</span></a>
 to download the full example code or to run this example in your browser via Binder.</p>
 </div>
-<section class="sphx-glr-example-title" id="is-pipeline-a-really-better-than-pipeline-b-or-did-it-luck-out-on-one-subject">
-<span id="sphx-glr-generated-auto-examples-tutorials-50-evaluation-plot-54-compare-two-pipelines-py"></span><h1>Is Pipeline A really better than Pipeline B, or did it luck out on one subject?<a class="headerlink" href="#is-pipeline-a-really-better-than-pipeline-b-or-did-it-luck-out-on-one-subject" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">8 minutes</span></div>
+<section class="sphx-glr-example-title" id="compare-two-decoding-pipelines">
+<span id="sphx-glr-generated-auto-examples-tutorials-50-evaluation-plot-54-compare-two-pipelines-py"></span><h1>Compare two decoding pipelines<a class="headerlink" href="#compare-two-decoding-pipelines" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">8 minutes</span></div>
+<p><strong>Difficulty 2-3</strong> | <strong>Runtime: 2m</strong> | <strong>Compute: CPU</strong></p>
 <p>A new decoding pipeline beats your linear baseline by three accuracy
 points on the held-out subject in a hackathon notebook. The gap looks
 big until somebody asks the obvious follow-up: would the same gap show
@@ -600,7 +601,18 @@ JMLR) is the canonical reference for the recipe; Cisotto &amp; Chicco 2024
 (doi:10.7717/peerj-cs.2256, Tip 9) flag the unpaired comparison as the
 single most common over-claim in clinical EEG. So: does the win
 survive a paired test, and how big is the effect once we strip the
-between-subject variance?</p>
+# between-subject variance?
+#
+# Validate your result
+# ——————–
+# - <strong>Paired Verification.</strong> Confirm that <code class="docutils literal notranslate"><span class="pre">fold_ids_a</span> <span class="pre">==</span> <span class="pre">fold_ids_b</span></code>. An
+#   unpaired comparison on EEG is invalid due to high subject variance.
+# - <strong>Wilcoxon p-value.</strong> A value &lt; 0.05 indicates a statistically
+#   significant difference between the two pipelines.
+# - <strong>Cohen’s d.</strong> This measures the effect size of the improvement. Values
+#   &gt; 0.8 are generally considered large effects.
+#
+# Keywords: evaluation, comparison, statistics</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span>
 </pre></div>
 </div>
@@ -654,7 +666,7 @@ between-subject variance?</p>
 </section>
 <section id="step-1-a-12-subject-feature-table-to-compare-on">
 <h2>Step 1. A 12-subject feature table to compare on<a class="headerlink" href="#step-1-a-12-subject-feature-table-to-compare-on" title="Link to this heading">#</a></h2>
-<p>We synthesise 12 subjects x 16 windows of band-power features
+<p>We synthesize 12 subjects x 16 windows of band-power features
 (alpha bump on closed eyes, identical layout to plot_42). On real
 data you would reload the parquet feature table from plot_40, the
 only thing the comparison cares about is that one row of metadata
@@ -848,7 +860,7 @@ We still report <a class="reference external" href="https://docs.scipy.org/doc/s
 reader can see whether the two tests agree, they usually do, but
 disagreement is informative when it happens.</p>
 <p>Cohen’s d on the paired differences is <code class="docutils literal notranslate"><span class="pre">mean(d)</span> <span class="pre">/</span> <span class="pre">sd(d)</span></code>; this is
-the standardised effect size, comparable across studies and units.
+the standardized effect size, comparable across studies and units.
 A 95% CI on the mean delta gives the practical-significance ruler:
 values inside the CI are the effects you cannot rule out at this
 sample size.</p>
@@ -1040,10 +1052,10 @@ in one read.</p>
 <p>%% [markdown]
 References
 ———-
-See <a class="reference internal" href="../../../../references.html"><span class="doc">References</span></a> for the centralised bibliography of papers
+See <a class="reference internal" href="../../../../references.html"><span class="doc">References</span></a> for the centralized bibliography of papers
 cited above. Add or amend an entry once in
 <code class="file docutils literal notranslate"><span class="pre">docs/source/refs.bib</span></code>; every tutorial inherits the update.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 2.331 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 2.296 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-auto-examples-tutorials-50-evaluation-plot-54-compare-two-pipelines-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/eegdash/EEGDash/main?urlpath=lab/tree/notebooks/generated/auto_examples/tutorials/50_evaluation/plot_54_compare_two_pipelines.ipynb"><img alt="Launch binder" src="../../../../_images/binder_badge_logo10.svg" style="width: 150px;" />
@@ -1078,7 +1090,7 @@ cited above. Add or amend an entry once in
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">How does decoding accuracy scale with training-set size, and where does the curve plateau?</p>
+        <p class="prev-next-title">Decoding accuracy learning curves</p>
       </div>
     </a>
     <a class="right-next"
@@ -1086,7 +1098,7 @@ cited above. Add or amend an entry once in
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">How do I benchmark an EEGDash dataset with MOABB?</p>
+        <p class="prev-next-title">Benchmark EEGDash with MOABB</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

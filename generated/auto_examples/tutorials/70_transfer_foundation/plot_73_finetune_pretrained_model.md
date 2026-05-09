@@ -8,6 +8,8 @@
 
 # How do I adapt a pretrained EEG model to a new task?
 
+**Difficulty 3** | **Runtime: 45s** | **Compute: GPU Recommended**
+
 A pretrained EEG encoder packs hundreds of hours of recordings into a
 weight matrix. Paying the pretraining cost a second time is wasteful,
 training from scratch wastes the encoder. The decision in between is
@@ -28,12 +30,13 @@ gradients; Banville et al. 2021, doi:10.1088/1741-2552/abca18), and
 Defossez et al. 2023, doi:10.1038/s42256-023-00714-5). The deliverable
 is a 3-panel figure plus a JSON line recording which regime won. So
 which one wins?
+Keywords: transfer-learning, fine-tuning, pretrained
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 25-27 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 28-30 -->
 ```Python
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 29-35 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 32-57 -->
 
 ## Learning objectives
 
@@ -42,23 +45,32 @@ which one wins?
 - Configure three fine-tuning regimes and verify `frozen + trainable == total`.
 - Compare regimes with [`torch.optim.AdamW`](https://docs.pytorch.org/docs/stable/generated/torch.optim.AdamW.html#torch.optim.AdamW) across seeds and read the 3-panel figure.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 37-45 -->
+## Validate your result
 
-## Requirements
+- **Trainable Parameters.** Linear-probe should have significantly fewer
+  trainable parameters than full-finetune or from-scratch.
+- **Convergence Speed.** Full-finetune typically converges faster (fewer
+  epochs) than from-scratch.
+- **Accuracy Gap.** Compare the final validation accuracy. Fine-tuning
+  should outperform training from-scratch when labels are scarce.
 
+%% [markdown]
+Requirements
+————
 - **Estimated time**: ~60 s on CPU, ~15 s on GPU.
 - **Data downloaded**: 0 MB (synthetic windows; deterministic seed).
-- **Prerequisites**: [Pretrain on resting-state, fine-tune on contrast-change detection](plot_71_cross_task_transfer.md) (encoder
-  snapshot), /auto_examples/tutorials/10_core_workflow/plot_11_leakage_safe_split
-  (cross-subject split).
+- **Prerequisites**: [Pretrain on resting-state, fine-tune on contrast-change detection (Simulated Data)](plot_71_cross_task_transfer.md) (encoder
+
+> snapshot), /auto_examples/tutorials/10_core_workflow/plot_11_leakage_safe_split
+> (cross-subject split).
 - **Concept page**: [Features vs. deep learning](../../../../concepts/features_vs_deep_learning.md).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 47-49 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 59-61 -->
 
 Seeding numpy and torch makes the printed accuracy and the rendered
 curves byte-stable across reruns (E3.21).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 49-73 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 61-85 -->
 ```Python
 import json
 import os
@@ -87,10 +99,10 @@ torch.manual_seed(SEED)
 ```
 
 ```none
-<torch._C.Generator object at 0x7f363891c8d0>
+<torch._C.Generator object at 0x7f96841148d0>
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 74-95 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 86-107 -->
 
 ## Three regimes, one figure: the mental model
 
@@ -114,7 +126,7 @@ measures how much the pretrained features want to move. Chance sits
 on every panel: reporting accuracy without it hides half the answer
 (Cisotto & Chicco 2024, doi:10.7717/peerj-cs.2256, Tip 9).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 97-102 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 109-114 -->
 
 ## What does ShallowFBCSPNet expose?
 
@@ -122,7 +134,7 @@ List the named parameters so the freeze step has something to point
 at. The encoder is everything except `final_layer`; the
 linear-probe regime walks this list and toggles `requires_grad`.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 104-115 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 116-127 -->
 ```Python
 _peek = ShallowFBCSPNet(8, 2, n_times=256, final_conv_length="auto")
 print(
@@ -147,7 +159,7 @@ final_layer.conv_classifier.weight (2, 40, 11, 1)       880
   final_layer.conv_classifier.bias           (2,)         2
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 116-126 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 128-138 -->
 
 ## Step 1: Pretrain a small encoder on a synthetic source task
 
@@ -160,14 +172,14 @@ reloads them like `from_pretrained`. 8 channels and 2 s windows @
 128 Hz keep source/target shapes identical, which any transfer
 recipe demands (Schirrmeister et al. 2017, doi:10.1002/hbm.23730).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 126-131 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 138-143 -->
 ```Python
 N_CHANS, N_TIMES, SFREQ = 8, 256, 128.0
 PRETRAIN_TASK = "alpha-vs-delta-source"
 TARGET_TASK = "alpha-vs-delta-target"
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 132-174 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 144-186 -->
 ```Python
 def synth_windows(n_subj, n_per, prefix="src", freq_offset=0.0, snr=2.0):
     """Two-class alpha-vs-delta windows with tunable signal-to-noise.
@@ -215,7 +227,7 @@ print(f"source X={X_src.shape}, y={y_src.shape}")
 source X=(240, 8, 256), y=(240,)
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 175-225 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 187-237 -->
 ```Python
 def evaluate(model, X, y):
     """Classification accuracy on ``(X, y)``."""
@@ -272,13 +284,13 @@ print(
 saved encoder: plot_73_pretrained_encoder.pt (8 tensors); pretrain loss trajectory=[0.153, 0.002]
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 226-229 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 238-241 -->
 
 **Predict.** Three regimes share data, optimiser, and budget; which
 wins on a 3-train-subject target task: from-scratch, linear-probe, or
 full-finetune? Write a one-line guess before running Step 4.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 231-237 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 243-249 -->
 
 ## Step 2: Build a leakage-safe downstream split
 
@@ -287,7 +299,7 @@ full-finetune? Write a one-line guess before running Step 4.
 (E5.42) sees a JSON contract line, and check overlap is 0 subjects
 (Pernet et al. 2019, doi:10.1038/s41597-019-0104-8).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 239-258 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 251-270 -->
 ```Python
 X_tgt, y_tgt, meta = synth_windows(
     n_subj=4, n_per=18, prefix="tgt", freq_offset=0.7, snr=0.55
@@ -313,7 +325,7 @@ print(
 target: train=54 test=18 n_train_subjects=3 n_test_subjects=1
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 259-267 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 271-279 -->
 
 ## Step 3: Configure the three regimes
 
@@ -324,7 +336,7 @@ state, leave the freshly-initialised `final_layer` alone, toggle
 gradients per regime, and assert `frozen + trainable == total`
 (spec invariant E3.22).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 270-294 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 282-306 -->
 ```Python
 def configure_regime(model, regime):
     """Apply one regime in place; return ``(frozen, trainable, total)``."""
@@ -350,7 +362,7 @@ def configure_regime(model, regime):
     return model, (frozen, trainable, total)
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 295-300 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 307-312 -->
 
 ## Step 4: Run each regime across multiple seeds
 
@@ -358,7 +370,7 @@ Single-seed accuracies on a small target are noisy. We train each
 regime with 3 seeds and 4 epochs, recording per-epoch validation
 accuracy. The figure renders mean +/- std across seeds.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 302-330 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 314-342 -->
 ```Python
 EPOCHS_FT = 4
 N_SEEDS = 3
@@ -395,15 +407,15 @@ seed 1: from-scratch=0.94 | linear-probe=1.00 | full-finetune=1.00
 seed 2: from-scratch=0.50 | linear-probe=0.94 | full-finetune=0.89
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 331-336 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 343-348 -->
 
 ## Investigate
 
 Three numbers per regime: trainable parameter count, final validation
 accuracy across seeds, and gap above chance. The gap above chance
-and gap above from-scratch are what generalise across runs.
+and gap above from-scratch are what generalize across runs.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 338-354 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 350-366 -->
 ```Python
 chance = float(max(Counter(y_te.tolist()).values()) / max(len(y_te), 1))
 final_accuracies = {r: float(curves[r][:, -1].mean()) for r in REGIMES}
@@ -429,7 +441,7 @@ print(results_table.to_string(index=False))
 full-finetune             14802           0.963          0.052          0.463
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 355-362 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 367-374 -->
 
 ## Result
 
@@ -439,7 +451,7 @@ vs accuracy in log-x. Drawing helpers live in a sibling
 `_finetune_figure` module so the plumbing stays out of the
 rendered tutorial.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 364-381 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 376-393 -->
 ```Python
 from _finetune_figure import draw_finetune_figure
 
@@ -459,7 +471,7 @@ fig = draw_finetune_figure(
 plt.show()
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 382-388 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 394-400 -->
 
 ## A common mistake, and how to recover
 
@@ -468,7 +480,7 @@ differs raises a size-mismatch [`RuntimeError`](https://docs.python.org/3/librar
 conv. We trigger it with `try/except` so the failure mode is
 visible (Nederbragt et al. 2020, doi:10.1371/journal.pcbi.1008090).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 390-403 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 402-415 -->
 ```Python
 try:
     # pretrained on 8 chans; rebuild with 10 to trip the size check.
@@ -490,7 +502,7 @@ Caught RuntimeError: Error(s) in loading state_dict for ShallowFBCSPNet:
 Recovery: matching n_chans + strict=False; head re-init=True.
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 404-411 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 416-423 -->
 
 ## Modify
 
@@ -500,7 +512,7 @@ below switches `requires_grad` on for any name containing
 `"conv_classifier"` or `"bnorm"`; re-run the 3-seed loop and add
 a row to `results_table`.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 413-429 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 425-441 -->
 ```Python
 last_block = build_model()
 last_block.load_state_dict(
@@ -523,23 +535,23 @@ print(
 last-block starter: trainable=962 (linear-probe=882, full-finetune=14802)
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 430-437 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 442-449 -->
 
 ## Mini-project
 
 Replace the synthetic source/target with a real EEGDash query (one
 task for source, a different task for target on the same subject
-pool, mirrored from [Pretrain on resting-state, fine-tune on contrast-change detection](plot_71_cross_task_transfer.md)). Keep
+pool, mirrored from [Pretrain on resting-state, fine-tune on contrast-change detection (Simulated Data)](plot_71_cross_task_transfer.md)). Keep
 `n_chans`, `n_times`, and the optimiser fixed; replot the same
 3-panel figure and compare gap-above-chance.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 439-442 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 451-454 -->
 
 One JSON line carries the headline numbers a reviewer needs: which
 regime won, by how much over chance, by how much over from-scratch,
 and the trainable parameter cost.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 442-461 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 454-473 -->
 ```Python
 best_name = max(final_accuracies, key=final_accuracies.get)
 best_acc = final_accuracies[best_name]
@@ -565,7 +577,7 @@ print(
 {"pretrain_task": "alpha-vs-delta-source", "target_task": "alpha-vs-delta-target", "n_train_subjects": 3, "n_test_subjects": 1, "best_regime": "linear-probe", "best_accuracy": 0.981, "chance_level": 0.5, "gap_vs_chance": 0.481, "gap_vs_scratch": 0.333, "trainable_params": {"from-scratch": 14802, "linear-probe": 882, "full-finetune": 14802}}
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 462-474 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 474-486 -->
 
 ## Wrap-up
 
@@ -580,7 +592,7 @@ Braindecode foundation-model API stabilises, the only edits are to
 swap `build_model` + `torch.load` for `from_pretrained(...)`
 and call `model.reset_head(n_outputs=K)`.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 476-485 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 488-497 -->
 
 ## Try it yourself
 
@@ -592,14 +604,14 @@ and call `model.reset_head(n_outputs=K)`.
 - Replace synth data with a windowed EEGDash query
   (/auto_examples/tutorials/10_core_workflow/plot_10_preprocess_and_window).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 487-492 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 499-504 -->
 
 ## References
 
-See [References](../../../../references.md) for the centralised bibliography of papers
+See [References](../../../../references.md) for the centralized bibliography of papers
 cited above. Add or amend an entry once in
 `docs/source/refs.bib`; every tutorial inherits the update.
 
-**Total running time of the script:** (0 minutes 1.895 seconds)
+**Total running time of the script:** (0 minutes 1.949 seconds)
 
 <a id="sphx-glr-download-generated-auto-examples-tutorials-70-transfer-foundation-plot-73-finetune-pretrained-model-py"></a>

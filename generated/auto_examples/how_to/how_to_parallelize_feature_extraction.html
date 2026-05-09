@@ -7,18 +7,18 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta property="og:title" content="Parallelise EEGDash feature extraction" />
+<meta property="og:title" content="Parallelize EEGDash feature extraction" />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://eegdash.org/generated/auto_examples/how_to/how_to_parallelize_feature_extraction.html" />
 <meta property="og:site_name" content="EEG Dash" />
-<meta property="og:description" content="Goal: scale eegdash.features.extract_features() across multiple cores on one node by tuning n_jobs and batch_size, then persist the result so re-runs are…" />
+<meta property="og:description" content="Difficulty 2| Runtime: 30s| Compute: CPU (Multi-core) Goal: scale eegdash.features.extract_features() across multiple cores on one node by tuning n_jobs…" />
 <meta property="og:image" content="https://eegdash.org/_static/eegdash_social_card.png" />
 <meta property="og:image:alt" content="EEG Dash — data-sharing interface for M/EEG datasets" />
-<meta name="description" content="Goal: scale eegdash.features.extract_features() across multiple cores on one node by tuning n_jobs and batch_size, then persist the result so re-runs are…" />
+<meta name="description" content="Difficulty 2| Runtime: 30s| Compute: CPU (Multi-core) Goal: scale eegdash.features.extract_features() across multiple cores on one node by tuning n_jobs…" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@eegdash" />
 
-    <title>Parallelise EEGDash feature extraction &#8212; EEG Dash</title>
+    <title>Parallelize EEGDash feature extraction &#8212; EEG Dash</title>
   
   
   
@@ -563,7 +563,7 @@
     
     <li class="breadcrumb-item"><a href="index.html" class="nav-link">How-To Guides</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Parallelise EEGDash feature extraction</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Parallelize EEGDash feature extraction</span></li>
   </ul>
 </nav>
 </div>
@@ -585,13 +585,23 @@
 <p><a class="reference internal" href="#sphx-glr-download-generated-auto-examples-how-to-how-to-parallelize-feature-extraction-py"><span class="std std-ref">Go to the end</span></a>
 to download the full example code or to run this example in your browser via Binder.</p>
 </div>
-<section class="sphx-glr-example-title" id="parallelise-eegdash-feature-extraction">
-<span id="sphx-glr-generated-auto-examples-how-to-how-to-parallelize-feature-extraction-py"></span><h1>Parallelise EEGDash feature extraction<a class="headerlink" href="#parallelise-eegdash-feature-extraction" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">4 minutes</span></div>
+<section class="sphx-glr-example-title" id="parallelize-eegdash-feature-extraction">
+<span id="sphx-glr-generated-auto-examples-how-to-how-to-parallelize-feature-extraction-py"></span><h1>Parallelize EEGDash feature extraction<a class="headerlink" href="#parallelize-eegdash-feature-extraction" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">4 minutes</span></div>
+<p><strong>Difficulty 2</strong> | <strong>Runtime: 30s</strong> | <strong>Compute: CPU (Multi-core)</strong></p>
 <p>Goal: scale <a class="reference internal" href="../../../api/features_overview.html#eegdash.features.extract_features" title="eegdash.features.extract_features"><code class="xref py py-func docutils literal notranslate"><span class="pre">eegdash.features.extract_features()</span></code></a> across multiple cores
 on one node by tuning <code class="docutils literal notranslate"><span class="pre">n_jobs</span></code> and <code class="docutils literal notranslate"><span class="pre">batch_size</span></code>, then persist the
-result so re-runs are free.</p>
-<p>How-to recipe (kind=how-to, no PRIMM). Synthetic data so it runs locally
-in under 90 s on a 4-core CPU.</p>
+# result so re-runs are free.
+#
+# Validate your result
+# ——————–
+# - <strong>Wall-clock Speedup.</strong> Using <code class="docutils literal notranslate"><span class="pre">n_jobs=4</span></code> should significantly reduce
+#   extraction time compared to <code class="docutils literal notranslate"><span class="pre">n_jobs=1</span></code>.
+# - <strong>Memory Usage.</strong> Monitor your system’s RAM; parallel jobs increase
+#   memory pressure linearly with <code class="docutils literal notranslate"><span class="pre">n_jobs</span></code>.
+# - <strong>Consistency Check.</strong> The resulting feature table should be identical
+#   to a single-core run (assert with <code class="docutils literal notranslate"><span class="pre">pd.testing.assert_frame_equal</span></code>).
+#
+# Keywords: parallel, feature-extraction, joblib</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span>
 </pre></div>
 </div>

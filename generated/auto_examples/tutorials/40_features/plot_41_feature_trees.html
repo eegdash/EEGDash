@@ -7,18 +7,18 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta property="og:title" content="How do classical EEG markers compose on top of one Welch PSD?" />
+<meta property="og:title" content="Compose EEG markers from Welch PSD" />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://eegdash.org/generated/auto_examples/tutorials/40_features/plot_41_feature_trees.html" />
 <meta property="og:site_name" content="EEG Dash" />
-<meta property="og:description" content="Welch’s method[ Welch, 1967] returns one power spectrum per window; band power, spectral entropy, peak frequency, and the 1/f slope (Demanuele et al…" />
+<meta property="og:description" content="Difficulty 1-2| Runtime: 5s| Compute: CPU Welch’s method[ Welch, 1967] returns one power spectrum per window; band power, spectral entropy, peak…" />
 <meta property="og:image" content="https://eegdash.org/_static/eegdash_social_card.png" />
 <meta property="og:image:alt" content="EEG Dash — data-sharing interface for M/EEG datasets" />
-<meta name="description" content="Welch’s method[ Welch, 1967] returns one power spectrum per window; band power, spectral entropy, peak frequency, and the 1/f slope (Demanuele et al…" />
+<meta name="description" content="Difficulty 1-2| Runtime: 5s| Compute: CPU Welch’s method[ Welch, 1967] returns one power spectrum per window; band power, spectral entropy, peak…" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@eegdash" />
 
-    <title>How do classical EEG markers compose on top of one Welch PSD? &#8212; EEG Dash</title>
+    <title>Compose EEG markers from Welch PSD &#8212; EEG Dash</title>
   
   
   
@@ -74,8 +74,8 @@
     <link rel="icon" href="../../../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" />
-    <link rel="next" title="How do I push EEGDash features through a scikit-learn Pipeline?" href="plot_42_features_to_sklearn.html" />
-    <link rel="prev" title="How do I turn EEG windows into a band-power feature matrix?" href="plot_40_first_features.html" />
+    <link rel="next" title="EEGDash features to scikit-learn" href="plot_42_features_to_sklearn.html" />
+    <link rel="prev" title="Extract band-power features" href="plot_40_first_features.html" />
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="0.7" />
 
@@ -563,7 +563,7 @@
     
     <li class="breadcrumb-item"><a href="index.html" class="nav-link">Feature Engineering</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">How do classical EEG markers compose on top of one Welch PSD?</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Compose EEG markers from Welch PSD</span></li>
   </ul>
 </nav>
 </div>
@@ -585,8 +585,9 @@
 <p><a class="reference internal" href="#sphx-glr-download-generated-auto-examples-tutorials-40-features-plot-41-feature-trees-py"><span class="std std-ref">Go to the end</span></a>
 to download the full example code or to run this example in your browser via Binder.</p>
 </div>
-<section class="sphx-glr-example-title" id="how-do-classical-eeg-markers-compose-on-top-of-one-welch-psd">
-<span id="sphx-glr-generated-auto-examples-tutorials-40-features-plot-41-feature-trees-py"></span><h1>How do classical EEG markers compose on top of one Welch PSD?<a class="headerlink" href="#how-do-classical-eeg-markers-compose-on-top-of-one-welch-psd" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">10 minutes</span></div>
+<section class="sphx-glr-example-title" id="compose-eeg-markers-from-welch-psd">
+<span id="sphx-glr-generated-auto-examples-tutorials-40-features-plot-41-feature-trees-py"></span><h1>Compose EEG markers from Welch PSD<a class="headerlink" href="#compose-eeg-markers-from-welch-psd" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">11 minutes</span></div>
+<p><strong>Difficulty 1-2</strong> | <strong>Runtime: 5s</strong> | <strong>Compute: CPU</strong></p>
 <p>Welch’s method <span class="bibtex-citation" id="id1">[<a class="reference internal" href="../../../../references.html#id17" title="P. Welch. The use of fast fourier transform for the estimation of power spectra: a method based on time averaging over short, modified periodograms. IEEE Transactions on Audio and Electroacoustics, 15(2):70-73, 1967. doi:10.1109/TAU.1967.1161901.">Welch, 1967</a>]</span> returns one power spectrum per window; band
 power, spectral entropy, peak frequency, and the 1/f slope (Demanuele
 et al. 2007; Donoghue et al. 2020) are four scalars <em>derived</em> from that
@@ -606,7 +607,8 @@ of Pernet et al. (2019); for clinical EEG good-practice on band
 selection see Cisotto and Chicco (2024).</p>
 <p>So if alpha-, beta-, theta-, and delta-band powers each call Welch
 separately, how many PSDs run per batch, and what does sharing one
-<code class="docutils literal notranslate"><span class="pre">spectral_preprocessor</span></code> change?</p>
+<code class="docutils literal notranslate"><span class="pre">spectral_preprocessor</span></code> change?
+Keywords: features, spectral, trees</p>
 <section id="learning-objectives">
 <h2>Learning objectives<a class="headerlink" href="#learning-objectives" title="Link to this heading">#</a></h2>
 <ul class="simple">
@@ -697,9 +699,20 @@ for the 1/f fit). A shared <code class="docutils literal notranslate"><span clas
 <code class="xref py py-func docutils literal notranslate"><span class="pre">feature_predecessor()</span></code>-tagged consumers solve
 both at once.</p>
 </section>
-<section id="step-1-build-a-small-windowed-dataset">
-<h2>Step 1: Build a small windowed dataset<a class="headerlink" href="#step-1-build-a-small-windowed-dataset" title="Link to this heading">#</a></h2>
-<p>Two 16 s recordings at 128 Hz on a 4-channel parieto-occipital
+<section id="validate-your-result">
+<h2>Validate your result<a class="headerlink" href="#validate-your-result" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Dependency Tree.</strong> The printed extractor tree should show exactly ONE
+root <code class="docutils literal notranslate"><span class="pre">spectral_preprocessor</span></code> shared by all band-power features.</p></li>
+<li><p><strong>Feature Count.</strong> The resulting table should have <code class="docutils literal notranslate"><span class="pre">n_channels</span> <span class="pre">*</span> <span class="pre">4</span></code>
+columns (theta, alpha, beta, gamma).</p></li>
+<li><p><strong>Correlation Matrix.</strong> Band-power features from the same channel should
+show some degree of positive correlation.</p></li>
+</ul>
+<p>%% [markdown]
+Step 1: Build a small windowed dataset
+————————————–
+Two 16 s recordings at 128 Hz on a 4-channel parieto-occipital
 montage. Eyes-closed gets a 10 Hz alpha sine on top of the noise
 floor; eyes-open does not. The non-causal 1-40 Hz FIR band-pass
 writes <code class="docutils literal notranslate"><span class="pre">info[&quot;highpass&quot;]</span></code> and <code class="docutils literal notranslate"><span class="pre">info[&quot;lowpass&quot;]</span></code> so that the
@@ -854,7 +867,7 @@ Welch counter records the redundant calls.</p>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Extracting features:   0%|          | 0/2 [00:00&lt;?, ?it/s]
-Extracting features: 100%|██████████| 2/2 [00:00&lt;00:00, 260.77it/s]
+Extracting features: 100%|██████████| 2/2 [00:00&lt;00:00, 263.78it/s]
 </pre></div>
 </div>
 </section>
@@ -867,7 +880,7 @@ equals <code class="docutils literal notranslate"><span class="pre">n_bands</spa
 <span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>flat: shape=(16, 17) | runtime=0.0097 s | PSDs=8
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>flat: shape=(16, 17) | runtime=0.0096 s | PSDs=8
 </pre></div>
 </div>
 </section>
@@ -896,7 +909,7 @@ below. Printing the extractor renders the dependency tree exactly as
 ╚═ beta_pow: spectral_bands_power
 
 Extracting features:   0%|          | 0/2 [00:00&lt;?, ?it/s]
-Extracting features: 100%|██████████| 2/2 [00:00&lt;00:00, 448.01it/s]
+Extracting features: 100%|██████████| 2/2 [00:00&lt;00:00, 447.99it/s]
 </pre></div>
 </div>
 </section>
@@ -920,7 +933,7 @@ the same sphinx-gallery process sees the original Welch.</p>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;welch restored&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>tree: shape=(16, 17) | runtime=0.0063 s | PSDs=2 | speedup=1.53x
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>tree: shape=(16, 17) | runtime=0.0062 s | PSDs=2 | speedup=1.55x
 welch restored
 </pre></div>
 </div>
@@ -995,7 +1008,7 @@ one column per key (<code class="docutils literal notranslate"><span class="pre"
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Extracting features:   0%|          | 0/2 [00:00&lt;?, ?it/s]
-Extracting features: 100%|██████████| 2/2 [00:00&lt;00:00, 397.96it/s]
+Extracting features: 100%|██████████| 2/2 [00:00&lt;00:00, 405.29it/s]
 marker columns (first 10): [&#39;alpha_pow_O1&#39;, &#39;alpha_pow_Oz&#39;, &#39;alpha_pow_O2&#39;, &#39;alpha_pow_Cz&#39;, &#39;alpha_peak_O1&#39;, &#39;alpha_peak_Oz&#39;, &#39;alpha_peak_O2&#39;, &#39;alpha_peak_Cz&#39;, &#39;norm_spec_ent_O1&#39;, &#39;norm_spec_ent_Oz&#39;]
 markers table shape: (16, 21)
 </pre></div>
@@ -1189,7 +1202,7 @@ tree. Runtime barely budges; the flat version would pay a fifth PSD.</p>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Extracting features:   0%|          | 0/2 [00:00&lt;?, ?it/s]
-Extracting features: 100%|██████████| 2/2 [00:00&lt;00:00, 339.14it/s]
+Extracting features: 100%|██████████| 2/2 [00:00&lt;00:00, 356.43it/s]
 extended (with gamma): n_cols=21
 </pre></div>
 </div>
@@ -1226,7 +1239,7 @@ and Chicco 2024 Tip 5).</p>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Extracting features:   0%|          | 0/2 [00:00&lt;?, ?it/s]
-Extracting features: 100%|██████████| 2/2 [00:00&lt;00:00, 420.82it/s]
+Extracting features: 100%|██████████| 2/2 [00:00&lt;00:00, 429.85it/s]
 custom rel_alpha columns: [&#39;rel_alpha_O1&#39;, &#39;rel_alpha_Oz&#39;, &#39;rel_alpha_O2&#39;, &#39;rel_alpha_Cz&#39;]
 </pre></div>
 </div>
@@ -1253,8 +1266,8 @@ still open questions <span class="bibtex-citation" id="id4">[<a class="reference
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>                   n_features  runtime_s  psds_computed  speedup_vs_flat
-flat (no tree)             16     0.0097              8           1.0000
-tree (shared PSD)          16     0.0063              2           1.5349
+flat (no tree)             16     0.0096              8           1.0000
+tree (shared PSD)          16     0.0062              2           1.5473
 </pre></div>
 </div>
 </section>
@@ -1280,7 +1293,7 @@ turns this table into a scikit-learn estimator. Concept:
 </section>
 <section id="references">
 <h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
-<p>See <a class="reference internal" href="../../../../references.html"><span class="doc">References</span></a> for the centralised bibliography of papers
+<p>See <a class="reference internal" href="../../../../references.html"><span class="doc">References</span></a> for the centralized bibliography of papers
 cited above. Add or amend an entry once in
 <code class="file docutils literal notranslate"><span class="pre">docs/source/refs.bib</span></code>; every tutorial inherits the update.</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-auto-examples-tutorials-40-features-plot-41-feature-trees-py">
@@ -1317,7 +1330,7 @@ cited above. Add or amend an entry once in
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">How do I turn EEG windows into a band-power feature matrix?</p>
+        <p class="prev-next-title">Extract band-power features</p>
       </div>
     </a>
     <a class="right-next"
@@ -1325,7 +1338,7 @@ cited above. Add or amend an entry once in
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">How do I push EEGDash features through a scikit-learn Pipeline?</p>
+        <p class="prev-next-title">EEGDash features to scikit-learn</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -1351,7 +1364,7 @@ cited above. Add or amend an entry once in
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">Learning objectives</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#requirements">Requirements</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mental-model-psd-is-the-parent-of-every-classical-eeg-marker">Mental model: PSD is the parent of every classical EEG marker</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-build-a-small-windowed-dataset">Step 1: Build a small windowed dataset</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#validate-your-result">Validate your result</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-predict-primm">Step 2: Predict (PRIMM)</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-run-1-without-the-tree">Step 3: Run #1, without the tree</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-4-investigate-the-flat-run">Step 4: Investigate the flat run</a></li>

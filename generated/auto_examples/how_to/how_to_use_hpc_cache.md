@@ -8,6 +8,8 @@
 
 # Place the EEGDash cache on shared or local cluster storage
 
+**Difficulty 2** | **Runtime: 20s** | **Compute: CPU**
+
 On HPC clusters, *where* you put the EEGDash cache is often the difference
 between a 30-minute and a 30-second epoch. Shared filesystems (Lustre, GPFS,
 NFS) survive job restarts but throttle under metadata-heavy access; node-local
@@ -17,16 +19,28 @@ at the right tier, stage data once, and verify the cache before training.
 
 The recipe assumes you already know how to populate the cache (see
 `how_to_download_a_dataset`) and load offline (see `how_to_work_offline`).
-We follow the cluster-software best practices summarised by Cisotto and
+We follow the cluster-software best practices summarized by Cisotto and
 Chicco (2024, doi:10.3389/fninf.2024.1338139): keep heavy IO on local-to-node
 storage, stage in at job-start, and never read training data over the network
-home.
+# home.
+#
+# Validate your result
+# ——————–
+# - **Environment Variable.** Run `echo $EEGDASH_CACHE_DIR` to ensure it
+#   points to the expected high-speed tier (e.g., `/scratch` or
+#   `$SLURM_TMPDIR`).
+# - **Path Resolution.** Call `get_default_cache_dir()` in Python and
+#   verify it returns the same path as the environment variable.
+# - **Data Staging.** Verify that the `cp -r` command in your submission
+#   script successfully populated the local node storage before training.
+#
+# Keywords: HPC, cache, SLURM, I/O
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 18-20 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 32-34 -->
 ```Python
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 22-28 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 36-42 -->
 
 ## Goal
 
@@ -34,7 +48,7 @@ Resolve `cache_dir` from a SLURM environment variable, stage data from a
 shared persistent location to per-node fast scratch at job start, and verify
 the cache hit on subsequent runs without contacting S3.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 30-39 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 44-53 -->
 
 ## Prerequisites
 
@@ -45,7 +59,7 @@ the cache hit on subsequent runs without contacting S3.
 - The dataset of interest already populated once on the shared filesystem
   (head node with internet, or via `how_to_download_a_dataset`).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 41-60 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 55-74 -->
 
 ## Recipe
 
@@ -65,7 +79,7 @@ echo "TMPDIR  = ${TMPDIR:-/tmp}"
 df -h "$TMPDIR" "${SCRATCH:-/scratch/$USER}"
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 62-75 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 76-89 -->
 
 ### Step 2 – Set `EEGDASH_CACHE_DIR` to fast scratch
 
@@ -80,7 +94,7 @@ mkdir -p "$EEGDASH_CACHE_DIR"
 
 Verify from Python that the resolution works as expected.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 75-94 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 89-108 -->
 ```Python
 import os
 import random
@@ -102,7 +116,7 @@ print(f"EEGDash will read/write under: {local_cache}")
 assert local_cache == Path(os.environ["EEGDASH_CACHE_DIR"]).resolve()
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 95-115 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 109-129 -->
 
 ### Step 3 – Stage data from shared to node-local at job start
 
@@ -124,7 +138,7 @@ export EEGDASH_CACHE_DIR="$LOCAL_CACHE"
 trap 'rsync -a --update "$LOCAL_CACHE"/ "$SHARED_CACHE"/' EXIT
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 117-125 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 131-139 -->
 
 ### Step 4 – Verify cache hit on subsequent runs
 
@@ -134,7 +148,7 @@ Use this as a smoke test at the top of your training script – if it fails,
 stage-in did not complete and you should fail fast rather than silently
 re-downloading from S3.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 125-143 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 139-157 -->
 ```Python
 print("\nSimulating a stage-in verification (no real cluster needed):")
 local_cache.mkdir(parents=True, exist_ok=True)
@@ -155,7 +169,7 @@ print("  --> training can proceed offline (download=False)")
 #     assert len(ds.datasets) == n_records
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 144-162 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 158-176 -->
 
 ## Common pitfalls
 
@@ -175,7 +189,7 @@ print("  --> training can proceed offline (download=False)")
   epoch IO is slow but disk bandwidth is idle, the bottleneck is metadata,
   not throughput – move to node-local NVMe.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 164-170 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 178-184 -->
 
 ## See also
 
@@ -183,7 +197,7 @@ print("  --> training can proceed offline (download=False)")
 - `how_to_run_preprocessing_on_slurm`: a full sbatch template wrapping
   the stage-in/stage-out pattern shown here.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 172-179 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 186-193 -->
 
 ## References
 

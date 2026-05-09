@@ -8,14 +8,27 @@
 
 # Download an EEGDash dataset in advance and validate the local cache
 
-Download all files for a dataset in advance, validate completeness, and
-inspect the cache.
+**Difficulty 1** | **Runtime: 1m** | **Compute: CPU**
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 7-9 -->
+Download all files for a dataset in advance, validate completeness, and
+# inspect the cache.
+#
+# Validate your result
+# ——————–
+# - **Cache Populated.** After download, check that `cache_dir/ds005506`
+#   exists and contains `participants.tsv`.
+# - **File Count.** Verify that the number of `.bdf` or `.set` files on
+#   disk matches `len(ds.records)`.
+# - **Offline Check.** Set `EEGDASH_OFFLINE=1` and re-initialize the
+#   dataset; it should load instantly without network calls.
+#
+# Keywords: loading, cache, download
+
+<!-- GENERATED FROM PYTHON SOURCE LINES 20-22 -->
 ```Python
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 11-20 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 24-33 -->
 
 ## Goal
 
@@ -26,7 +39,7 @@ reports the same record count and that every recording really exists on
 disk. The same recipe scales to `EEGChallengeDataset` releases by
 swapping the constructor.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 22-32 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 35-45 -->
 
 ## Prerequisites
 
@@ -38,7 +51,7 @@ swapping the constructor.
   ~ 80 MB; full HBN releases are tens of GB).
 - Imports follow EEGDash convention: stdlib, third-party, then `eegdash`.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 34-44 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 47-57 -->
 ```Python
 import os
 from pathlib import Path
@@ -51,7 +64,7 @@ from eegdash.paths import get_default_cache_dir
 np.random.seed(42)
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 45-55 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 58-68 -->
 
 ## Recipe
 
@@ -62,7 +75,7 @@ We use OpenNeuro `ds002718` (Wakeman & Henson visual face perception,
 The cache directory is resolved from `EEGDASH_CACHE_DIR` so the recipe
 stays portable between a workstation, a SLURM scratch volume, and CI.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 57-63 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 70-76 -->
 ```Python
 DATASET = "ds002718"
 CACHE_DIR = Path(get_default_cache_dir()).resolve()
@@ -71,7 +84,7 @@ print(f"cache_dir = {CACHE_DIR}")
 print(f"EEGDASH_CACHE_DIR set: {bool(os.environ.get('EEGDASH_CACHE_DIR'))}")
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 64-71 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 77-84 -->
 
 ### Step 2 – Instantiate `EEGDashDataset`
 
@@ -80,7 +93,7 @@ yet – recordings stay lazy until `.raw` is accessed or
 `download_all` is called. We restrict to a single task so the example
 is bounded; drop the filter to stage the full release.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 73-82 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 86-95 -->
 ```Python
 dataset = EEGDashDataset(
     cache_dir=CACHE_DIR,
@@ -92,7 +105,7 @@ n_records = len(dataset.datasets)
 print(f"queried {n_records} record(s) from {DATASET}")
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 83-92 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 96-105 -->
 
 ### Step 3 – Call `download_all`
 
@@ -103,13 +116,13 @@ parallel threads. `n_jobs=-1` uses all cores; pin to a small number
 idempotent – re-running it after a crash only refetches the missing
 files.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 94-97 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 107-110 -->
 ```Python
 dataset.download_all(n_jobs=4)
 print("prefetch complete")
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 98-110 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 111-123 -->
 
 ### Step 4 – Verify completeness
 
@@ -123,7 +136,7 @@ Three independent checks together prove the cache is usable offline:
 3. The summed footprint sanity-checks that no file was truncated to
    zero bytes.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 112-130 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 125-143 -->
 ```Python
 local_paths = [Path(ds.record["bidspath"]) for ds in dataset.datasets]
 missing = [p for p in local_paths if not (CACHE_DIR / DATASET / p).exists()]
@@ -144,7 +157,7 @@ total_bytes = sum(p.stat().st_size for p in ds_root.rglob("*") if p.is_file())
 print(f"on-disk footprint: {total_bytes / 1e6:.1f} MB across {n_records} record(s)")
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 131-138 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 144-151 -->
 
 ### Step 5 – Inspect the cache layout
 
@@ -153,7 +166,7 @@ the top-level entries confirms the dataset descriptor, participant
 table, and per-subject folders are all present – exactly what
 `download=False` needs later.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 140-147 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 153-160 -->
 ```Python
 top_level = sorted(p.name for p in ds_root.iterdir())
 print(f"{ds_root.name}/ contains {len(top_level)} entries:")
@@ -163,7 +176,7 @@ if len(top_level) > 10:
     print(f"  ... ({len(top_level) - 10} more)")
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 148-169 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 161-182 -->
 
 ## Common pitfalls
 
@@ -186,7 +199,7 @@ if len(top_level) > 10:
   mini=True)` (a few subjects) instead of the full release to keep
   wall time bounded.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 171-190 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 184-203 -->
 
 ## See also
 

@@ -7,18 +7,18 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta property="og:title" content="How does the brain answer a rare visual target?" />
+<meta property="og:title" content="Visual P300 oddball decoding" />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://eegdash.org/generated/auto_examples/tutorials/20_event_related/plot_20_visual_p300_oddball.html" />
 <meta property="og:site_name" content="EEG Dash" />
-<meta property="og:description" content="A child watches letters flash one by one on a screen. Most letters are standards; one is the block’s target. The brain answers the rare target with a…" />
+<meta property="og:description" content="Difficulty 2| Runtime: 2m| Compute: CPU A child watches letters flash one by one on a screen. Most letters are standards; one is the block’s target. The…" />
 <meta property="og:image" content="https://eegdash.org/_static/eegdash_social_card.png" />
 <meta property="og:image:alt" content="EEG Dash — data-sharing interface for M/EEG datasets" />
-<meta name="description" content="A child watches letters flash one by one on a screen. Most letters are standards; one is the block’s target. The brain answers the rare target with a…" />
+<meta name="description" content="Difficulty 2| Runtime: 2m| Compute: CPU A child watches letters flash one by one on a screen. Most letters are standards; one is the block’s target. The…" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@eegdash" />
 
-    <title>How does the brain answer a rare visual target? &#8212; EEG Dash</title>
+    <title>Visual P300 oddball decoding &#8212; EEG Dash</title>
   
   
   
@@ -74,7 +74,7 @@
     <link rel="icon" href="../../../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" />
-    <link rel="next" title="How does the auditory P300 differ from the visual P300 of plot_20?" href="plot_21_auditory_oddball.html" />
+    <link rel="next" title="Auditory P300 oddball decoding" href="plot_21_auditory_oddball.html" />
     <link rel="prev" title="Event-Related Decoding" href="index.html" />
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="0.7" />
@@ -563,7 +563,7 @@
     
     <li class="breadcrumb-item"><a href="index.html" class="nav-link">Event-Related Decoding</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">How does the brain answer a rare visual target?</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Visual P300 oddball decoding</span></li>
   </ul>
 </nav>
 </div>
@@ -585,8 +585,9 @@
 <p><a class="reference internal" href="#sphx-glr-download-generated-auto-examples-tutorials-20-event-related-plot-20-visual-p300-oddball-py"><span class="std std-ref">Go to the end</span></a>
 to download the full example code or to run this example in your browser via Binder.</p>
 </div>
-<section class="sphx-glr-example-title" id="how-does-the-brain-answer-a-rare-visual-target">
-<span id="sphx-glr-generated-auto-examples-tutorials-20-event-related-plot-20-visual-p300-oddball-py"></span><h1>How does the brain answer a rare visual target?<a class="headerlink" href="#how-does-the-brain-answer-a-rare-visual-target" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">12 minutes</span></div>
+<section class="sphx-glr-example-title" id="visual-p300-oddball-decoding">
+<span id="sphx-glr-generated-auto-examples-tutorials-20-event-related-plot-20-visual-p300-oddball-py"></span><h1>Visual P300 oddball decoding<a class="headerlink" href="#visual-p300-oddball-decoding" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">12 minutes</span></div>
+<p><strong>Difficulty 2</strong> | <strong>Runtime: 2m</strong> | <strong>Compute: CPU</strong></p>
 <p>A child watches letters flash one by one on a screen. Most letters are
 <em>standards</em>; one is the block’s <em>target</em>. The brain answers the rare
 target with a positive deflection over centro-parietal cortex peaking
@@ -598,7 +599,8 @@ onset with baseline correction (<a class="reference external" href="https://doi.
 artefacts side by side: an ERP at Pz, a scalp topography of the
 difference wave at the peak, and a 3-fold leave-one-subject-out
 accuracy on a logistic-regression decoder. Where does the textbook
-P300 actually live in the data?</p>
+P300 actually live in the data?
+Keywords: classification, P300, oddball</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span>
 </pre></div>
 </div>
@@ -688,6 +690,19 @@ S S S T S S T S          [-100 ... 800] ms     uV
 </pre></div>
 </div>
 </section>
+<section id="validate-your-result">
+<h2>Validate your result<a class="headerlink" href="#validate-your-result" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Event-Label Validation.</strong> Stimulus code <code class="docutils literal notranslate"><span class="pre">XY</span></code> should decode as a
+<em>target</em> if <code class="docutils literal notranslate"><span class="pre">X</span> <span class="pre">==</span> <span class="pre">Y</span></code> and <em>standard</em> otherwise.</p></li>
+<li><p><strong>Class Balance.</strong> Targets are rare. Expect a ratio of roughly 1 target to
+4 standard trials (20% targets).</p></li>
+<li><p><strong>Epoch Shape.</strong> Each window should be <code class="docutils literal notranslate"><span class="pre">(n_channels,</span> <span class="pre">sfreq</span> <span class="pre">*</span> <span class="pre">1.2s)</span></code>.
+With the default 5 channels and 128 Hz, expect <code class="docutils literal notranslate"><span class="pre">(5,</span> <span class="pre">154)</span></code>.</p></li>
+<li><p><strong>P3 component.</strong> The ERP at Pz should show a clear positive bump between
+300-500 ms on target trials compared to standards.</p></li>
+</ul>
+</section>
 <section id="step-1-pick-a-p300-dataset">
 <h2>Step 1: Pick a P300 dataset<a class="headerlink" href="#step-1-pick-a-p300-dataset" title="Link to this heading">#</a></h2>
 <p>We query <code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code> for one subject of
@@ -716,28 +731,28 @@ S S S T S S T S          [-100 ... 800] ms     uV
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Downloading sub-002_task-visualoddball_events.tsv:   0%|          | 0.00/9.03k [00:00&lt;?, ?B/s]
-Downloading sub-002_task-visualoddball_events.tsv: 100%|██████████| 9.03k/9.03k [00:00&lt;00:00, 34.9MB/s]
+Downloading sub-002_task-visualoddball_events.tsv: 100%|██████████| 9.03k/9.03k [00:00&lt;00:00, 36.3MB/s]
 
 Downloading sub-002_task-visualoddball_events.json:   0%|          | 0.00/2.22k [00:00&lt;?, ?B/s]
-Downloading sub-002_task-visualoddball_events.json: 100%|██████████| 2.22k/2.22k [00:00&lt;00:00, 8.27MB/s]
+Downloading sub-002_task-visualoddball_events.json: 100%|██████████| 2.22k/2.22k [00:00&lt;00:00, 9.80MB/s]
 
 Downloading sub-002_task-visualoddball_eeg.json:   0%|          | 0.00/793 [00:00&lt;?, ?B/s]
-Downloading sub-002_task-visualoddball_eeg.json: 100%|██████████| 793/793 [00:00&lt;00:00, 4.04MB/s]
+Downloading sub-002_task-visualoddball_eeg.json: 100%|██████████| 793/793 [00:00&lt;00:00, 4.08MB/s]
 
 Downloading sub-002_task-visualoddball_eeg.eeg:   0%|          | 0.00/28.4M [00:00&lt;?, ?B/s]
-Downloading sub-002_task-visualoddball_eeg.eeg:  60%|█████▉    | 16.9M/28.4M [00:00&lt;00:00, 68.1MB/s]
-Downloading sub-002_task-visualoddball_eeg.eeg: 100%|██████████| 28.4M/28.4M [00:00&lt;00:00, 89.6MB/s]
+Downloading sub-002_task-visualoddball_eeg.eeg: 100%|█████████▉| 28.4M/28.4M [00:00&lt;00:00, 148MB/s]
+Downloading sub-002_task-visualoddball_eeg.eeg: 100%|██████████| 28.4M/28.4M [00:00&lt;00:00, 147MB/s]
 
 Downloading sub-002_task-visualoddball_eeg.vmrk:   0%|          | 0.00/13.7k [00:00&lt;?, ?B/s]
-Downloading sub-002_task-visualoddball_eeg.vmrk: 100%|██████████| 13.7k/13.7k [00:00&lt;00:00, 44.0MB/s]
-[05/08/26 18:42:41] WARNING  File not found on S3, skipping:   downloader.py:163
+Downloading sub-002_task-visualoddball_eeg.vmrk: 100%|██████████| 13.7k/13.7k [00:00&lt;00:00, 40.6MB/s]
+[05/09/26 20:25:36] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds005863/sub-0
                              02/eeg/sub-002_task-visualoddball
                              _eeg.dat
 
 Downloading sub-002_task-visualoddball_eeg.vhdr:   0%|          | 0.00/6.22k [00:00&lt;?, ?B/s]
-Downloading sub-002_task-visualoddball_eeg.vhdr: 100%|██████████| 6.22k/6.22k [00:00&lt;00:00, 20.6MB/s]
-                    INFO     Auto-repairing                            io.py:219
+Downloading sub-002_task-visualoddball_eeg.vhdr: 100%|██████████| 6.22k/6.22k [00:00&lt;00:00, 19.8MB/s]
+[05/09/26 20:25:37] INFO     Auto-repairing                            io.py:219
                              sub-002_task-visualoddball_eeg.vhdr:
                              DataFile=COCOA_014_VO.eeg -&gt;
                              sub-002_task-visualoddball_eeg.eeg
@@ -1061,7 +1076,7 @@ values read clearly even when projected to grayscale.</p>
 <section id="step-6-cross-subject-decoding-with-leave-one-subject-out">
 <h2>Step 6: Cross-subject decoding with leave-one-subject-out<a class="headerlink" href="#step-6-cross-subject-decoding-with-leave-one-subject-out" title="Link to this heading">#</a></h2>
 <p>Within-subject splits report an upper bound on what a given decoder
-learns. Cross-subject splits report what generalises. We pull two more
+learns. Cross-subject splits report what generalizes. We pull two more
 subjects (<code class="docutils literal notranslate"><span class="pre">010</span></code>, <code class="docutils literal notranslate"><span class="pre">017</span></code>), run the same preprocessing, extract a
 single P300 amplitude feature per channel (mean voltage in 300-450 ms),
 and run <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GroupKFold.html#sklearn.model_selection.GroupKFold" title="(in scikit-learn v1.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.model_selection.GroupKFold</span></code></a> with the subject id
@@ -1222,14 +1237,14 @@ balanced accuracy.</p>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/runner/work/EEGDash/EEGDash/.venv/lib/python3.12/site-packages/braindecode/preprocessing/preprocess.py:78: UserWarning: apply_on_array can only be True if fn is a callable function. Automatically correcting to apply_on_array=False.
   warn(
-[05/08/26 18:42:42] WARNING  File not found on S3, skipping:   downloader.py:163
+                    WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds005863/sub-0
                              02/eeg/sub-002_task-visualoddball
                              _eeg.dat
 
 Downloading sub-002_task-visualoddball_eeg.vhdr:   0%|          | 0.00/6.22k [00:00&lt;?, ?B/s]
-Downloading sub-002_task-visualoddball_eeg.vhdr: 100%|██████████| 6.22k/6.22k [00:00&lt;00:00, 27.2MB/s]
-                    INFO     Auto-repairing                            io.py:219
+Downloading sub-002_task-visualoddball_eeg.vhdr: 100%|██████████| 6.22k/6.22k [00:00&lt;00:00, 19.8MB/s]
+[05/09/26 20:25:38] INFO     Auto-repairing                            io.py:219
                              sub-002_task-visualoddball_eeg.vhdr:
                              DataFile=COCOA_014_VO.eeg -&gt;
                              sub-002_task-visualoddball_eeg.eeg
@@ -1245,27 +1260,27 @@ Downloading sub-002_task-visualoddball_eeg.vhdr: 100%|████████�
   warn(
 
 Downloading sub-010_task-visualoddball_events.tsv:   0%|          | 0.00/9.00k [00:00&lt;?, ?B/s]
-Downloading sub-010_task-visualoddball_events.tsv: 100%|██████████| 9.00k/9.00k [00:00&lt;00:00, 24.1MB/s]
+Downloading sub-010_task-visualoddball_events.tsv: 100%|██████████| 9.00k/9.00k [00:00&lt;00:00, 29.6MB/s]
 
 Downloading sub-010_task-visualoddball_events.json:   0%|          | 0.00/2.22k [00:00&lt;?, ?B/s]
-Downloading sub-010_task-visualoddball_events.json: 100%|██████████| 2.22k/2.22k [00:00&lt;00:00, 6.05MB/s]
+Downloading sub-010_task-visualoddball_events.json: 100%|██████████| 2.22k/2.22k [00:00&lt;00:00, 11.5MB/s]
 
 Downloading sub-010_task-visualoddball_eeg.json:   0%|          | 0.00/793 [00:00&lt;?, ?B/s]
-Downloading sub-010_task-visualoddball_eeg.json: 100%|██████████| 793/793 [00:00&lt;00:00, 2.70MB/s]
+Downloading sub-010_task-visualoddball_eeg.json: 100%|██████████| 793/793 [00:00&lt;00:00, 2.19MB/s]
 
 Downloading sub-010_task-visualoddball_eeg.eeg:   0%|          | 0.00/26.7M [00:00&lt;?, ?B/s]
-Downloading sub-010_task-visualoddball_eeg.eeg:  63%|██████▎   | 16.9M/26.7M [00:00&lt;00:00, 62.8MB/s]
-Downloading sub-010_task-visualoddball_eeg.eeg: 100%|██████████| 26.7M/26.7M [00:00&lt;00:00, 71.7MB/s]
+Downloading sub-010_task-visualoddball_eeg.eeg:  75%|███████▍  | 19.9M/26.7M [00:00&lt;00:00, 104MB/s]
+Downloading sub-010_task-visualoddball_eeg.eeg: 100%|██████████| 26.7M/26.7M [00:00&lt;00:00, 73.4MB/s]
 
 Downloading sub-010_task-visualoddball_eeg.vmrk:   0%|          | 0.00/13.7k [00:00&lt;?, ?B/s]
-Downloading sub-010_task-visualoddball_eeg.vmrk: 100%|██████████| 13.7k/13.7k [00:00&lt;00:00, 38.0MB/s]
-[05/08/26 18:42:44] WARNING  File not found on S3, skipping:   downloader.py:163
+Downloading sub-010_task-visualoddball_eeg.vmrk: 100%|██████████| 13.7k/13.7k [00:00&lt;00:00, 55.4MB/s]
+[05/09/26 20:25:39] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds005863/sub-0
                              10/eeg/sub-010_task-visualoddball
                              _eeg.dat
 
 Downloading sub-010_task-visualoddball_eeg.vhdr:   0%|          | 0.00/6.22k [00:00&lt;?, ?B/s]
-Downloading sub-010_task-visualoddball_eeg.vhdr: 100%|██████████| 6.22k/6.22k [00:00&lt;00:00, 26.3MB/s]
+Downloading sub-010_task-visualoddball_eeg.vhdr: 100%|██████████| 6.22k/6.22k [00:00&lt;00:00, 29.8MB/s]
                     INFO     Auto-repairing                            io.py:219
                              sub-010_task-visualoddball_eeg.vhdr:
                              DataFile=COCOA_022_VO.eeg -&gt;
@@ -1282,27 +1297,27 @@ Downloading sub-010_task-visualoddball_eeg.vhdr: 100%|████████�
   warn(
 
 Downloading sub-017_task-visualoddball_events.tsv:   0%|          | 0.00/8.98k [00:00&lt;?, ?B/s]
-Downloading sub-017_task-visualoddball_events.tsv: 100%|██████████| 8.98k/8.98k [00:00&lt;00:00, 35.6MB/s]
+Downloading sub-017_task-visualoddball_events.tsv: 100%|██████████| 8.98k/8.98k [00:00&lt;00:00, 39.9MB/s]
 
 Downloading sub-017_task-visualoddball_events.json:   0%|          | 0.00/2.22k [00:00&lt;?, ?B/s]
-Downloading sub-017_task-visualoddball_events.json: 100%|██████████| 2.22k/2.22k [00:00&lt;00:00, 9.52MB/s]
+Downloading sub-017_task-visualoddball_events.json: 100%|██████████| 2.22k/2.22k [00:00&lt;00:00, 9.69MB/s]
 
 Downloading sub-017_task-visualoddball_eeg.json:   0%|          | 0.00/793 [00:00&lt;?, ?B/s]
-Downloading sub-017_task-visualoddball_eeg.json: 100%|██████████| 793/793 [00:00&lt;00:00, 3.58MB/s]
+Downloading sub-017_task-visualoddball_eeg.json: 100%|██████████| 793/793 [00:00&lt;00:00, 3.62MB/s]
 
 Downloading sub-017_task-visualoddball_eeg.eeg:   0%|          | 0.00/25.6M [00:00&lt;?, ?B/s]
-Downloading sub-017_task-visualoddball_eeg.eeg:  66%|██████▋   | 16.9M/25.6M [00:00&lt;00:00, 88.4MB/s]
-Downloading sub-017_task-visualoddball_eeg.eeg: 100%|██████████| 25.6M/25.6M [00:00&lt;00:00, 111MB/s]
+Downloading sub-017_task-visualoddball_eeg.eeg:  66%|██████▋   | 16.9M/25.6M [00:00&lt;00:00, 86.7MB/s]
+Downloading sub-017_task-visualoddball_eeg.eeg: 100%|██████████| 25.6M/25.6M [00:00&lt;00:00, 97.9MB/s]
 
 Downloading sub-017_task-visualoddball_eeg.vmrk:   0%|          | 0.00/13.7k [00:00&lt;?, ?B/s]
-Downloading sub-017_task-visualoddball_eeg.vmrk: 100%|██████████| 13.7k/13.7k [00:00&lt;00:00, 43.4MB/s]
-[05/08/26 18:42:45] WARNING  File not found on S3, skipping:   downloader.py:163
+Downloading sub-017_task-visualoddball_eeg.vmrk: 100%|██████████| 13.7k/13.7k [00:00&lt;00:00, 45.8MB/s]
+[05/09/26 20:25:41] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds005863/sub-0
                              17/eeg/sub-017_task-visualoddball
                              _eeg.dat
 
 Downloading sub-017_task-visualoddball_eeg.vhdr:   0%|          | 0.00/6.22k [00:00&lt;?, ?B/s]
-Downloading sub-017_task-visualoddball_eeg.vhdr: 100%|██████████| 6.22k/6.22k [00:00&lt;00:00, 19.3MB/s]
+Downloading sub-017_task-visualoddball_eeg.vhdr: 100%|██████████| 6.22k/6.22k [00:00&lt;00:00, 31.7MB/s]
                     INFO     Auto-repairing                            io.py:219
                              sub-017_task-visualoddball_eeg.vhdr:
                              DataFile=COCOA_029_VO.eeg -&gt;
@@ -1454,7 +1469,7 @@ the flattened <code class="docutils literal notranslate"><span class="pre">X_bc<
 and rerun the LOSO fit. Compare wall-time, accuracy, and the
 <code class="docutils literal notranslate"><span class="pre">LogisticRegression</span></code> coefficient pattern: the high-dimensional fit
 can overfit one subject’s noise, so the LOSO mean is the honest
-summary of what generalises.</p>
+summary of what generalizes.</p>
 </section>
 <section id="result">
 <h2>Result<a class="headerlink" href="#result" title="Link to this heading">#</a></h2>
@@ -1513,10 +1528,10 @@ posterior midline.</p></li>
 </section>
 <section id="references">
 <h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
-<p>See <a class="reference internal" href="../../../../references.html"><span class="doc">References</span></a> for the centralised bibliography of papers
+<p>See <a class="reference internal" href="../../../../references.html"><span class="doc">References</span></a> for the centralized bibliography of papers
 cited above. Add or amend an entry once in
 <code class="file docutils literal notranslate"><span class="pre">docs/source/refs.bib</span></code>; every tutorial inherits the update.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 6.388 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 6.635 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-auto-examples-tutorials-20-event-related-plot-20-visual-p300-oddball-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/eegdash/EEGDash/main?urlpath=lab/tree/notebooks/generated/auto_examples/tutorials/20_event_related/plot_20_visual_p300_oddball.ipynb"><img alt="Launch binder" src="../../../../_images/binder_badge_logo7.svg" style="width: 150px;" />
@@ -1559,7 +1574,7 @@ cited above. Add or amend an entry once in
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">How does the auditory P300 differ from the visual P300 of plot_20?</p>
+        <p class="prev-next-title">Auditory P300 oddball decoding</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -1585,6 +1600,7 @@ cited above. Add or amend an entry once in
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">Learning objectives</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#requirements">Requirements</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-oddball-paradigm-in-two-paragraphs">The oddball paradigm in two paragraphs</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#validate-your-result">Validate your result</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-pick-a-p300-dataset">Step 1: Pick a P300 dataset</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-inspect-the-events-table">Step 2: Inspect the events table</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-preprocess-and-create-event-locked-windows">Step 3: Preprocess and create event-locked windows</a></li>

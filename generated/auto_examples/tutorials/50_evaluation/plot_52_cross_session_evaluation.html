@@ -7,18 +7,18 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta property="og:title" content="How much does a within-session decoder drift across sessions of the same subject?" />
+<meta property="og:title" content="Cross-session decoding evaluation" />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://eegdash.org/generated/auto_examples/tutorials/50_evaluation/plot_52_cross_session_evaluation.html" />
 <meta property="og:site_name" content="EEG Dash" />
-<meta property="og:description" content="A model that scores 90% on session 1 of sub-03 can slump to 70% on session 2 of the same subject. The cap and electrodes were placed a millimetre off…" />
+<meta property="og:description" content="Difficulty 2-3| Runtime: 2m| Compute: CPU A model that scores 90% on session 1 of sub-03 can slump to 70% on session 2 of the same subject. The cap and…" />
 <meta property="og:image" content="https://eegdash.org/_static/eegdash_social_card.png" />
 <meta property="og:image:alt" content="EEG Dash — data-sharing interface for M/EEG datasets" />
-<meta name="description" content="A model that scores 90% on session 1 of sub-03 can slump to 70% on session 2 of the same subject. The cap and electrodes were placed a millimetre off…" />
+<meta name="description" content="Difficulty 2-3| Runtime: 2m| Compute: CPU A model that scores 90% on session 1 of sub-03 can slump to 70% on session 2 of the same subject. The cap and…" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@eegdash" />
 
-    <title>How much does a within-session decoder drift across sessions of the same subject? &#8212; EEG Dash</title>
+    <title>Cross-session decoding evaluation &#8212; EEG Dash</title>
   
   
   
@@ -74,8 +74,8 @@
     <link rel="icon" href="../../../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" />
-    <link rel="next" title="How does decoding accuracy scale with training-set size, and where does the curve plateau?" href="plot_53_learning_curves.html" />
-    <link rel="prev" title="How well does an EEG decoder generalise to a never-seen subject?" href="plot_51_cross_subject_evaluation.html" />
+    <link rel="next" title="Decoding accuracy learning curves" href="plot_53_learning_curves.html" />
+    <link rel="prev" title="Cross-subject decoding evaluation" href="plot_51_cross_subject_evaluation.html" />
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="0.7" />
 
@@ -563,7 +563,7 @@
     
     <li class="breadcrumb-item"><a href="index.html" class="nav-link">Evaluation and Benchmarking</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">How much does a within-session decoder drift across sessions of the same subject?</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Cross-session decoding evaluation</span></li>
   </ul>
 </nav>
 </div>
@@ -585,8 +585,9 @@
 <p><a class="reference internal" href="#sphx-glr-download-generated-auto-examples-tutorials-50-evaluation-plot-52-cross-session-evaluation-py"><span class="std std-ref">Go to the end</span></a>
 to download the full example code or to run this example in your browser via Binder.</p>
 </div>
-<section class="sphx-glr-example-title" id="how-much-does-a-within-session-decoder-drift-across-sessions-of-the-same-subject">
-<span id="sphx-glr-generated-auto-examples-tutorials-50-evaluation-plot-52-cross-session-evaluation-py"></span><h1>How much does a within-session decoder drift across sessions of the same subject?<a class="headerlink" href="#how-much-does-a-within-session-decoder-drift-across-sessions-of-the-same-subject" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">8 minutes</span></div>
+<section class="sphx-glr-example-title" id="cross-session-decoding-evaluation">
+<span id="sphx-glr-generated-auto-examples-tutorials-50-evaluation-plot-52-cross-session-evaluation-py"></span><h1>Cross-session decoding evaluation<a class="headerlink" href="#cross-session-decoding-evaluation" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">8 minutes</span></div>
+<p><strong>Difficulty 2-3</strong> | <strong>Runtime: 2m</strong> | <strong>Compute: CPU</strong></p>
 <p>A model that scores 90% on session 1 of <code class="docutils literal notranslate"><span class="pre">sub-03</span></code> can slump to 70% on
 session 2 of the <em>same</em> subject. The cap and electrodes were placed a
 millimetre off, the gel impedance dropped, the participant slept poorly,
@@ -613,7 +614,18 @@ documented recovery for severe drift; here we just measure it.</p>
 session transfer matrix, paired within-vs-between bars per subject,
 and a drift-magnitude histogram across subjects.</p>
 <p>So how much does a within-session decoder drift across sessions of the
-same subject?</p>
+# same subject?
+#
+# Validate your result
+# ——————–
+# - <strong>Drift Magnitude.</strong> Expect a 5-20% drop in accuracy when moving from
+#   within-session to cross-session evaluation.
+# - <strong>Session Transfer Matrix.</strong> The matrix should show whether certain
+#   session pairs (e.g., adjacent days) have higher transfer than others.
+# - <strong>Subject Consistency.</strong> Check if certain subjects are more prone to
+#   drift than others in the paired bar plot.
+#
+# Keywords: evaluation, cross-session, drift</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span>
 </pre></div>
 </div>
@@ -766,7 +778,7 @@ must reuse the same subject on both sides. That keeps the split
 (1) within-session, 75/25 split per <code class="docutils literal notranslate"><span class="pre">(subject,</span> <span class="pre">session)</span></code> block
 (calibration ceiling); (2) cross-session, the 24 manifest folds.</p>
 <p><strong>Investigate.</strong> The drop is calibration drift: the part of the
-within-session score that came from memorising the day-specific
+within-session score that came from memorizing the day-specific
 feature distribution rather than the paradigm. Jayaram &amp; Barachant
 2018 (doi:10.1088/1741-2552/aabea9) frame the same gap as covariate
 shift between calibration sessions; Riemannian alignment of the
@@ -1013,7 +1025,7 @@ move.</p></li>
 windows with <code class="docutils literal notranslate"><span class="pre">apply_split_manifest</span></code> per fold, fit the same baseline,
 and compare the drift histogram with the synthetic version. The shape
 of the histogram (mean drift, tail width) is the per-cohort
-generalisation report; benchmark publications increasingly include
+generalization report; benchmark publications increasingly include
 both panels (Chevallier, Aristimunha et al. 2024).</p>
 </section>
 <section id="links">
@@ -1077,7 +1089,7 @@ transfer learning in BCI calibration.</p></li>
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">How well does an EEG decoder generalise to a never-seen subject?</p>
+        <p class="prev-next-title">Cross-subject decoding evaluation</p>
       </div>
     </a>
     <a class="right-next"
@@ -1085,7 +1097,7 @@ transfer learning in BCI calibration.</p></li>
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">How does decoding accuracy scale with training-set size, and where does the curve plateau?</p>
+        <p class="prev-next-title">Decoding accuracy learning curves</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

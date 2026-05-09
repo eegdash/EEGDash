@@ -6,7 +6,9 @@
 
 <a id="sphx-glr-generated-auto-examples-applied-project-age-regression-py"></a>
 
-# Age regression from EEG (applied case study)
+# Age regression from EEG
+
+**Difficulty 3** | **Runtime: 30s** | **Compute: CPU**
 
 Can a feature-based regression head predict a child’s age from a few
 seconds of resting-state EEG, on subjects the model has never seen?
@@ -22,13 +24,14 @@ predictor. EEG-based brain-age regression has a long line of prior work
 question here is not whether we beat the published literature; the
 honest one is, does the model beat the train-set median predictor on
 never-seen subjects?
+Keywords: regression, applied, age
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 19-22 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 22-25 -->
 ```Python
 # Difficulty: 3-star (advanced applied project)
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 23-40 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 26-56 -->
 
 ## Learning objectives
 
@@ -39,20 +42,33 @@ After this case study you will be able to:
 - fit a [`sklearn.linear_model.Ridge`](https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Ridge.html#sklearn.linear_model.Ridge) head on a feature table and report `r2`, MAE, and a median-baseline reference.
 - read a three-panel diagnostic plate (predicted vs true, per-subject signed residual, error histogram) for an EEG regression.
 
+## Validate your result
+
+- **Expected Target Distribution.** HBN `ds005505` spans children and
+  adolescents (approx. 5-22 years). Your ground-truth distribution should
+  reflect this range.
+- **Regression Metrics.** Report `Pearson r` and `Spearman rho` for
+  correlation, `R^2` for explained variance, and `MAE` (Mean Absolute
+  Error) in years for absolute performance.
+- **Confounds Warning.** Age prediction is sensitive to acquisition site and
+  equipment. A model that works well on one dataset may fail on another due
+  to “site effects” that correlate with age (e.g., younger children being
+  recorded more frequently at one site).
+
 ## Requirements
 
 - ~30 s on CPU when the gallery uses the offline feature path (default).
 - Real-data path needs network access to NEMAR plus `braindecode[hub]`.
-- Prereqs: [How do I turn one EEG recording into a PyTorch DataLoader?](../tutorials/00_start_here/plot_02_dataset_to_dataloader.md)
-  and [How do I push EEGDash features through a scikit-learn Pipeline?](../tutorials/40_features/plot_42_features_to_sklearn.md).
+- Prereqs: [EEG recording to PyTorch DataLoader](../tutorials/00_start_here/plot_02_dataset_to_dataloader.md)
+  and [EEGDash features to scikit-learn](../tutorials/40_features/plot_42_features_to_sklearn.md).
 - Concept: [Leakage and evaluation](../../../concepts/leakage_and_evaluation.md) for the subject-aware
   evaluation rationale that the figure plate is built around.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 42-44 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 58-60 -->
 
-## Step 1. Setup, seeds, parametrised cache
+## Step 1. Setup, seeds, parameterized cache
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 44-69 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 60-85 -->
 ```Python
 import os
 import warnings
@@ -80,7 +96,7 @@ cache_dir = Path(os.environ.get("EEGDASH_CACHE_DIR", Path.cwd() / "eegdash_cache
 cache_dir.mkdir(parents=True, exist_ok=True)
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 70-79 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 86-95 -->
 
 ## Step 2. Predict, what do you expect?
 
@@ -91,14 +107,14 @@ EEG is a hard inverse problem; what r2 do you expect a Ridge head on
 ~12 features to reach with only ~12 held-out subjects: 0.10? 0.40?
 0.80? Write your guess before scrolling.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 81-118 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 97-134 -->
 
-## Step 3. Load HBN ds005505 (real path) or synthesise a feature table (gallery)
+## Step 3. Load HBN ds005505 (real path) or synthesize a feature table (gallery)
 
 In production, [`eegdash.EEGDashDataset`](../../../api/dataset/eegdash.EEGDashDataset.md#eegdash.EEGDashDataset) exposes `age` and
 `sex` through `description_fields` so they surface as per-recording
 columns. The canonical call is shown below; this case study then
-synthesises a feature table with the same column layout so the
+synthesizes a feature table with the same column layout so the
 rendered gallery runs offline and the smoke test stays fast.
 
 ```python
@@ -130,7 +146,7 @@ We mirror the resulting shape: 12 subjects, ~24 windows per subject,
 plus a subject-level `age` drawn from the HBN child cohort range
 (roughly 6 to 18 years).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 120-168 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 136-184 -->
 ```Python
 N_SUBJECTS, N_WINDOWS = 12, 24
 BANDS = ("delta", "theta", "alpha", "beta")
@@ -144,7 +160,7 @@ for s in range(N_SUBJECTS):
     for w in range(N_WINDOWS):
         # Per-window features: a faint age signal in alpha / beta plus a
         # mild subject-level offset (the part the cross-subject loop must
-        # not memorise) and a noise floor that keeps R^2 modest.
+        # not memorize) and a noise floor that keeps R^2 modest.
         bias = 0.04 * (s - N_SUBJECTS / 2)
         row = {
             "subject": f"sub-NDARAA{s:04d}",
@@ -181,7 +197,7 @@ assert metadata["age"].notna().all(), "age has NaN rows"
 assert pd.api.types.is_float_dtype(metadata["age"]), "age is not float"
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 169-177 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 185-193 -->
 
 ## Step 4. Build a Ridge regression head on top of features
 
@@ -191,7 +207,7 @@ A [`sklearn.preprocessing.StandardScaler`](https://scikit-learn.org/stable/modul
 analogue of a logistic head. `alpha=1.0` is a defensible default for
 a 12-feature table, and `random_state=42` keeps the loop byte stable.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 180-190 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 196-206 -->
 ```Python
 def make_regressor() -> Pipeline:
     """Return a fresh ``StandardScaler -> Ridge`` Pipeline."""
@@ -203,7 +219,7 @@ def make_regressor() -> Pipeline:
     )
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 191-201 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 207-217 -->
 
 ## Step 5. Cross-subject 5-fold split, no subject leakage
 
@@ -215,7 +231,7 @@ in step 7 sees every subject once. Subject leakage routinely
 produces optimistic accuracies (Cisotto and Chicco 2024 Tip 9), so
 the assertion below is non-negotiable.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 203-243 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 219-259 -->
 ```Python
 groups = metadata["subject"].to_numpy()
 unique_subjects = np.unique(groups)
@@ -258,18 +274,18 @@ mean_mae = float(np.mean(fold_mae))
 mean_baseline_mae = float(np.mean(fold_baseline_mae))
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 244-253 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 260-269 -->
 
 ## Step 6. A common mistake, and how to recover
 
 **Run.** A frequent slip is wiring a non-numeric `age` column into
 [`sklearn.linear_model.Ridge`](https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Ridge.html#sklearn.linear_model.Ridge). `age` arrives as strings if a
-CSV was loaded without dtype hints (or if a NEMAR sidecar serialises
+CSV was loaded without dtype hints (or if a NEMAR sidecar serializes
 it as text), and Ridge then refuses to fit. We trigger the failure
 on purpose with `try / except` so the error message and the
 recovery sit next to each other in the rendered gallery.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 255-265 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 271-281 -->
 ```Python
 try:
     bad_y = metadata["age"].astype(str).to_numpy()
@@ -282,7 +298,7 @@ except (ValueError, TypeError) as exc:
     print(f"Recovery: cast age to float (dtype={fixed_y.dtype}); Ridge fit.")
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 266-279 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 282-295 -->
 
 ## Step 7. Investigate, three-panel diagnostic plate
 
@@ -297,7 +313,7 @@ window-level errors with a Gaussian density overlay so the bias
 diagnostic Pernet et al. 2019 (doi:10.1038/s41597-019-0104-8)
 recommend before any clinical claim.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 281-309 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 297-325 -->
 ```Python
 held_df = pd.DataFrame(held_records, columns=["subject", "sex", "true", "pred"])
 y_true_pooled = held_df["true"].to_numpy()
@@ -328,7 +344,7 @@ print(
 )
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 310-323 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 326-339 -->
 
 ## Modify, where to take this next (concept only)
 
@@ -343,7 +359,7 @@ run it here (gpu_required + multi-hour fit out of scope), but the
 subject-aware split contract above is the floor any such system must
 still satisfy.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 325-333 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 341-349 -->
 
 ## Result, model vs median baseline
 
@@ -353,7 +369,7 @@ trained model must come in below. The pooled-window vs subject-level
 numbers split the disagreement: pooled noise vs subject-level rank
 reversal (Cisotto and Chicco 2024 Tip 7).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 335-353 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 351-369 -->
 ```Python
 pearson_pooled = float(pearsonr(y_true_pooled, y_pred_pooled).statistic)
 spearman_pooled = float(spearmanr(y_true_pooled, y_pred_pooled).statistic)
@@ -374,7 +390,7 @@ print(
 assert mean_mae < mean_baseline_mae, "Model MAE must be below the median-baseline MAE."
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 354-368 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 370-384 -->
 
 ## Wrap-up
 
@@ -391,7 +407,7 @@ clinical claims. Age in HBN is a derived metadata column, not a
 diagnosis; any clinical framing belongs in a follow-up study with
 much larger N.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 370-377 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 386-393 -->
 
 ## Try it yourself
 
@@ -401,11 +417,11 @@ much larger N.
   and feed encoder activations into the same Ridge head.
 - Bump `n_folds` to `N_SUBJECTS` for leave-one-subject-out variance.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 379-384 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 395-400 -->
 
 ## References
 
-See [References](../../../references.md) for the centralised bibliography of papers
+See [References](../../../references.md) for the centralized bibliography of papers
 cited above. Add or amend an entry once in
 `docs/source/refs.bib`; every tutorial inherits the update.
 

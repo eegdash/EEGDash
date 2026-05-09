@@ -7,18 +7,18 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta property="og:title" content="How do I turn one EEG recording into a PyTorch DataLoader?" />
+<meta property="og:title" content="EEG recording to PyTorch DataLoader" />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://eegdash.org/generated/auto_examples/tutorials/00_start_here/plot_02_dataset_to_dataloader.html" />
 <meta property="og:site_name" content="EEG Dash" />
-<meta property="og:description" content="A model trains on tensor batches, not on continuous voltage traces. This tutorial closes the gap on one BIDS recording from OpenNeuro ds002718[ Wakeman…" />
+<meta property="og:description" content="Difficulty 1| Runtime: 2m| Compute: CPU A model trains on tensor batches, not on continuous voltage traces. This tutorial closes the gap on one BIDS…" />
 <meta property="og:image" content="https://eegdash.org/_static/eegdash_social_card.png" />
 <meta property="og:image:alt" content="EEG Dash — data-sharing interface for M/EEG datasets" />
-<meta name="description" content="A model trains on tensor batches, not on continuous voltage traces. This tutorial closes the gap on one BIDS recording from OpenNeuro ds002718[ Wakeman…" />
+<meta name="description" content="Difficulty 1| Runtime: 2m| Compute: CPU A model trains on tensor batches, not on continuous voltage traces. This tutorial closes the gap on one BIDS…" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@eegdash" />
 
-    <title>How do I turn one EEG recording into a PyTorch DataLoader? &#8212; EEG Dash</title>
+    <title>EEG recording to PyTorch DataLoader &#8212; EEG Dash</title>
   
   
   
@@ -75,7 +75,7 @@
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" />
     <link rel="next" title="Core Decoding Workflow" href="../10_core_workflow/index.html" />
-    <link rel="prev" title="How do I load one EEG recording from EEGDash?" href="plot_01_first_recording.html" />
+    <link rel="prev" title="Load one EEG recording" href="plot_01_first_recording.html" />
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="0.7" />
 
@@ -563,7 +563,7 @@
     
     <li class="breadcrumb-item"><a href="index.html" class="nav-link">Start Here</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">How do I turn one EEG recording into a PyTorch DataLoader?</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">EEG recording to PyTorch DataLoader</span></li>
   </ul>
 </nav>
 </div>
@@ -585,8 +585,9 @@
 <p><a class="reference internal" href="#sphx-glr-download-generated-auto-examples-tutorials-00-start-here-plot-02-dataset-to-dataloader-py"><span class="std std-ref">Go to the end</span></a>
 to download the full example code or to run this example in your browser via Binder.</p>
 </div>
-<section class="sphx-glr-example-title" id="how-do-i-turn-one-eeg-recording-into-a-pytorch-dataloader">
-<span id="sphx-glr-generated-auto-examples-tutorials-00-start-here-plot-02-dataset-to-dataloader-py"></span><h1>How do I turn one EEG recording into a PyTorch DataLoader?<a class="headerlink" href="#how-do-i-turn-one-eeg-recording-into-a-pytorch-dataloader" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">19 minutes</span></div>
+<section class="sphx-glr-example-title" id="eeg-recording-to-pytorch-dataloader">
+<span id="sphx-glr-generated-auto-examples-tutorials-00-start-here-plot-02-dataset-to-dataloader-py"></span><h1>EEG recording to PyTorch DataLoader<a class="headerlink" href="#eeg-recording-to-pytorch-dataloader" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">19 minutes</span></div>
+<p><strong>Difficulty 1</strong> | <strong>Runtime: 2m</strong> | <strong>Compute: CPU</strong></p>
 <p>A model trains on tensor batches, not on continuous voltage traces. This
 tutorial closes the gap on one BIDS recording from <a class="reference external" href="https://openneuro.org">OpenNeuro</a> <code class="docutils literal notranslate"><span class="pre">ds002718</span></code> <span class="bibtex-citation" id="id1">[<a class="reference internal" href="../../../../references.html#id14" title="Daniel G Wakeman and Richard N Henson. A multi-subject, multi-modal human neuroimaging dataset. Scientific Data, 2015. doi:10.1038/sdata.2015.1.">Wakeman and Henson, 2015</a>]</span>, reachable
 through <a class="reference external" href="https://nemar.org">NEMAR</a> <span class="bibtex-citation" id="id2">[<a class="reference internal" href="../../../../references.html#id6" title="Arnaud Delorme, Dung Truong, Choonhan Youn, Subhashini Sivagnanam, Claire Stirm, Kenneth Yoshimoto, Russell A Poldrack, Amitava Majumdar, and Scott Makeig. Nemar: an open access data, tools and compute resource operating on neuroelectromagnetic data. Database, 2022. doi:10.1093/database/baac096.">Delorme <em>et al.</em>, 2022</a>]</span>: two safe
@@ -594,6 +595,7 @@ preprocessors, a fixed-length window step, a <a class="reference external" href=
 Zarr cache that turns batch reads into a few milliseconds of random
 access. We do not train a model. The deliverable is one batch’s
 <code class="docutils literal notranslate"><span class="pre">shape</span></code> and <code class="docutils literal notranslate"><span class="pre">dtype</span></code>.</p>
+<p>Keywords: loading, PyTorch, DataLoader</p>
 <section id="learning-objectives">
 <h2>Learning objectives<a class="headerlink" href="#learning-objectives" title="Link to this heading">#</a></h2>
 <ul class="simple">
@@ -616,7 +618,7 @@ and <code class="docutils literal notranslate"><span class="pre">shuffle</span><
 <ul class="simple">
 <li><p>About 2 min on CPU on first run; under 20 s once cached.</p></li>
 <li><p>Network on first call (~30-60 MB into <code class="docutils literal notranslate"><span class="pre">cache_dir</span></code>); offline thereafter.</p></li>
-<li><p>Prerequisites: <a class="reference internal" href="plot_00_first_search.html"><span class="doc">How do I find datasets in EEGDash?</span></a> (catalogue), <a class="reference internal" href="plot_01_first_recording.html"><span class="doc">How do I load one EEG recording from EEGDash?</span></a> (one <code class="docutils literal notranslate"><span class="pre">Raw</span></code>).</p></li>
+<li><p>Prerequisites: <a class="reference internal" href="plot_00_first_search.html"><span class="doc">Find datasets with the EEGDash API</span></a> (catalogue), <a class="reference internal" href="plot_01_first_recording.html"><span class="doc">Load one EEG recording</span></a> (one <code class="docutils literal notranslate"><span class="pre">Raw</span></code>).</p></li>
 <li><p>Concept: <a class="reference internal" href="../../../../concepts/eegdash_objects.html"><span class="doc">EEGDash objects: EEGDash, EEGDashDataset, EEGChallengeDataset</span></a>.</p></li>
 </ul>
 <p>Setup. <code class="docutils literal notranslate"><span class="pre">np.random.seed</span></code> and <code class="docutils literal notranslate"><span class="pre">torch.manual_seed</span></code> make <code class="docutils literal notranslate"><span class="pre">shuffle=True</span></code>
@@ -802,27 +804,27 @@ tutorial budget; the BIDS query language carries through unchanged
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Downloading sub-002_task-FaceRecognition_channels.tsv:   0%|          | 0.00/1.31k [00:00&lt;?, ?B/s]
-Downloading sub-002_task-FaceRecognition_channels.tsv: 100%|██████████| 1.31k/1.31k [00:00&lt;00:00, 5.58MB/s]
+Downloading sub-002_task-FaceRecognition_channels.tsv: 100%|██████████| 1.31k/1.31k [00:00&lt;00:00, 6.35MB/s]
 
 Downloading sub-002_task-FaceRecognition_events.tsv:   0%|          | 0.00/105k [00:00&lt;?, ?B/s]
-Downloading sub-002_task-FaceRecognition_events.tsv: 100%|██████████| 105k/105k [00:00&lt;00:00, 117MB/s]
+Downloading sub-002_task-FaceRecognition_events.tsv: 100%|██████████| 105k/105k [00:00&lt;00:00, 35.8MB/s]
 
 Downloading sub-002_task-FaceRecognition_electrodes.tsv:   0%|          | 0.00/1.68k [00:00&lt;?, ?B/s]
-Downloading sub-002_task-FaceRecognition_electrodes.tsv: 100%|██████████| 1.68k/1.68k [00:00&lt;00:00, 6.88MB/s]
+Downloading sub-002_task-FaceRecognition_electrodes.tsv: 100%|██████████| 1.68k/1.68k [00:00&lt;00:00, 9.44MB/s]
 
 Downloading sub-002_task-FaceRecognition_eeg.json:   0%|          | 0.00/1.28k [00:00&lt;?, ?B/s]
-Downloading sub-002_task-FaceRecognition_eeg.json: 100%|██████████| 1.28k/1.28k [00:00&lt;00:00, 4.99MB/s]
+Downloading sub-002_task-FaceRecognition_eeg.json: 100%|██████████| 1.28k/1.28k [00:00&lt;00:00, 4.78MB/s]
 
 Downloading sub-002_task-FaceRecognition_coordsystem.json:   0%|          | 0.00/283 [00:00&lt;?, ?B/s]
-Downloading sub-002_task-FaceRecognition_coordsystem.json: 100%|██████████| 283/283 [00:00&lt;00:00, 1.09MB/s]
-[05/08/26 18:41:34] WARNING  File not found on S3, skipping:   downloader.py:163
+Downloading sub-002_task-FaceRecognition_coordsystem.json: 100%|██████████| 283/283 [00:00&lt;00:00, 1.10MB/s]
+[05/09/26 20:24:29] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds002718/sub-0
                              02/eeg/sub-002_task-FaceRecogniti
                              on_eeg.fdt
 
 Downloading sub-002_task-FaceRecognition_eeg.set:   0%|          | 0.00/224M [00:00&lt;?, ?B/s]
-Downloading sub-002_task-FaceRecognition_eeg.set:  22%|██▏       | 50.0M/224M [00:01&lt;00:05, 31.7MB/s]
-Downloading sub-002_task-FaceRecognition_eeg.set: 100%|██████████| 224M/224M [00:01&lt;00:00, 138MB/s]
+Downloading sub-002_task-FaceRecognition_eeg.set:  22%|██▏       | 50.0M/224M [00:01&lt;00:04, 45.3MB/s]
+Downloading sub-002_task-FaceRecognition_eeg.set: 100%|██████████| 224M/224M [00:01&lt;00:00, 195MB/s]
 </pre></div>
 </div>
 <div class="output_subarea output_html rendered_html output_result">
@@ -1716,10 +1718,10 @@ against the in-RAM <code class="docutils literal notranslate"><span class="pre">
 </section>
 <section id="references">
 <h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
-<p>See <a class="reference internal" href="../../../../references.html"><span class="doc">References</span></a> for the centralised bibliography of papers
+<p>See <a class="reference internal" href="../../../../references.html"><span class="doc">References</span></a> for the centralized bibliography of papers
 cited above. Add or amend an entry once in
 <code class="file docutils literal notranslate"><span class="pre">docs/source/refs.bib</span></code>; every tutorial inherits the update.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 9.836 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 9.421 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-auto-examples-tutorials-00-start-here-plot-02-dataset-to-dataloader-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/eegdash/EEGDash/main?urlpath=lab/tree/notebooks/generated/auto_examples/tutorials/00_start_here/plot_02_dataset_to_dataloader.ipynb"><img alt="Launch binder" src="../../../../_images/binder_badge_logo5.svg" style="width: 150px;" />
@@ -1754,7 +1756,7 @@ cited above. Add or amend an entry once in
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">How do I load one EEG recording from EEGDash?</p>
+        <p class="prev-next-title">Load one EEG recording</p>
       </div>
     </a>
     <a class="right-next"

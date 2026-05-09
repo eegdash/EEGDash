@@ -65,7 +65,7 @@ eegdash = EEGDash()
 
 For a fully worked example with cohort statistics and BIDS entity
 fields, see
-[How do I find datasets in EEGDash?](generated/auto_examples/tutorials/00_start_here/plot_00_first_search.md).
+[Find datasets with the EEGDash API](generated/auto_examples/tutorials/00_start_here/plot_00_first_search.md).
 
 ### Finding records
 
@@ -85,7 +85,7 @@ print(f"Found {len(records_advanced)} records with advanced query.")
 ```
 
 The same query mechanism feeds the on-ramp tutorial
-[How do I find datasets in EEGDash?](generated/auto_examples/tutorials/00_start_here/plot_00_first_search.md),
+[Find datasets with the EEGDash API](generated/auto_examples/tutorials/00_start_here/plot_00_first_search.md),
 which walks through interpreting the BIDS fields you get back.
 
 ### Filtering by task
@@ -109,7 +109,7 @@ print(f"Found {len(resting_state_dataset)} resting-state recordings.")
 
 For the end-to-end version that loads one recording and inspects its
 annotations, see
-[How do I load one EEG recording from EEGDash?](generated/auto_examples/tutorials/00_start_here/plot_01_first_recording.md).
+[Load one EEG recording](generated/auto_examples/tutorials/00_start_here/plot_01_first_recording.md).
 
 ### Filtering by subject
 
@@ -138,7 +138,7 @@ print(f"Found {len(multi_subject_dataset)} recordings for subjects 012-014.")
 
 To take a single-subject `EEGDashDataset` all the way to a PyTorch
 `DataLoader` – preprocessing, windowing, batch shape – see
-[How do I turn one EEG recording into a PyTorch DataLoader?](generated/auto_examples/tutorials/00_start_here/plot_02_dataset_to_dataloader.md).
+[EEG recording to PyTorch DataLoader](generated/auto_examples/tutorials/00_start_here/plot_02_dataset_to_dataloader.md).
 
 ## API configuration
 
@@ -167,7 +167,7 @@ trail.
 
 The full curated learning path: seven tutorial categories from
 Start-Here to transfer learning, plus how-to recipes, applied
-projects, EEG 2025 Foundation Challenge pipelines, and HPC
+projects, EEG2025 Foundation Challenge pipelines, and HPC
 templates.
 
 Diataxis explanation pages: the `EEGDashDataset` object model,

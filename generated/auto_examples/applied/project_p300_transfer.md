@@ -6,7 +6,9 @@
 
 <a id="sphx-glr-generated-auto-examples-applied-project-p300-transfer-py"></a>
 
-# Cross-cohort P3 transfer with AS-MMD: train on one oddball, deploy on another
+# P300 transfer with AS-MMD
+
+**Difficulty 3** | **Runtime: 2m** | **Compute: GPU Recommended**
 
 Two laboratories run a visual oddball task on different participants,
 different head-caps, different software stacks. Both pipelines produce
@@ -27,12 +29,13 @@ ask through `EEGChallengeDataset` on the NEMAR archive (Delorme et
 al. 2022, doi:10.1093/database/baac096): by how much does AS-MMD close
 the naive-to-oracle gap, and does the alignment preserve the
 underlying P3 component?
+Keywords: transfer-learning, applied, P300
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 24-26 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 27-29 -->
 ```Python
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 28-42 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 31-59 -->
 
 ## Learning objectives
 
@@ -41,17 +44,31 @@ underlying P3 component?
 - compare target accuracy for all three on the same figure with chance drawn on the same axes.
 - verify the alignment preserves the P3 component via an ERP overlay at Pz.
 
+## AS-MMD Explanation
+
+**Adversarial-Style Maximum Mean Discrepancy (AS-MMD)** is a domain-adaptation
+method that minimizes the distance between the source and target feature
+distributions. Unlike standard MMD, it uses an adversarial training
+approach (similar to GANs) to learn features that are discriminative
+for the task but invariant to the domain (laboratory, cap, etc.).
+
+## Requirements & Validation
+
+- **Runtime Warning.** This tutorial involves training deep networks. On a 4-core CPU, the smoke run takes ~2 minutes. For full training on real data, a GPU is recommended.
+- **Minimum Data Assumptions.** Requires at least two domains (source and target) with overlapping task labels (e.g., target vs. standard).
+- **Expected Fold Outputs.** Per-fold target accuracy should show the AS-MMD aligned model outperforming the naive model and approaching the oracle (upper bound).
+
 ## Requirements
 
 - prereqs: plot_12 (baseline) and plot_71 (cross-task transfer).
 - CUDA optional; the CPU-only smoke run finishes in roughly 2 min.
 - Concept page: [Features vs. deep learning](../../../concepts/features_vs_deep_learning.md).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 44-46 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 61-63 -->
 
 ## Step 1. Setup, seeds, cache, and device
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 46-72 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 63-89 -->
 ```Python
 import json
 import os
@@ -80,19 +97,19 @@ cache_dir.mkdir(parents=True, exist_ok=True)
 print(f"device={DEVICE}, seed={SEED}")
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 73-83 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 90-100 -->
 
 ## Step 2. Configure source and target cohorts
 
 In a full run we would build two `EEGDashDataset` queries and run
 the standard P3 windowing recipe from `plot_20`. To keep the case
-study reproducible without paying a multi-GB download, we synthesise
+study reproducible without paying a multi-GB download, we synthesize
 source + target tensors with a shared P3-like component and
 dataset-specific noise + drift; the defaults wire `ds005863`
 (visualoddball, NEMAR; Delorme et al. 2022) to a placeholder target
 id, both overridable via environment variables.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 85-94 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 102-111 -->
 ```Python
 SOURCE_ID = os.environ.get("EEGDASH_SOURCE_DATASET", "ds005863")
 TARGET_ID = os.environ.get("EEGDASH_TARGET_DATASET", "ds003061")
@@ -104,9 +121,9 @@ CHANNEL_NAMES = ["Fz", "Cz", "Pz", "P3", "P4"]
 PZ_INDEX = CHANNEL_NAMES.index("Pz")
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 95-105 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 112-122 -->
 
-## Step 3. Synthesise oddball windows with a shared P3 + domain shift
+## Step 3. Synthesize oddball windows with a shared P3 + domain shift
 
 Each window is a 1.2 s epoch at 128 Hz. *Target* class carries a
 centro-parietal positive bump at 380 ms; *standard* class does not.
@@ -116,7 +133,7 @@ attenuated 35 % relative to source. The three knobs together produce
 a non-trivial AS-MMD problem that mirrors cross-equipment EEG
 transfer symptoms (Cisotto & Chicco 2024, Tip 8).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 108-180 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 125-197 -->
 ```Python
 def _p3_template(times_s: np.ndarray, peak_uv: float = 3.0) -> np.ndarray:
     """One-channel P3-like Gaussian bump at ~380 ms."""
@@ -138,7 +155,7 @@ def make_oddball_windows(
     target_fraction: float,
     rng: np.random.Generator,
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
-    """Synthesise ``(X, y, subject_ids)`` for one domain.
+    """Synthesize ``(X, y, subject_ids)`` for one domain.
 
     The shared P3 template lives at index ``PZ_INDEX`` with a domain-
     specific scaling so source and target carry the same physiological
@@ -191,7 +208,7 @@ print(
 )
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 181-189 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 198-206 -->
 
 ## Step 4. Predict
 
@@ -201,7 +218,7 @@ accuracy; on the *target* domain a cross-domain encoder typically
 falls 5-10 points below the oracle. By how much do you expect AS-MMD
 alignment to close that gap, in absolute accuracy on target?
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 191-198 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 208-215 -->
 
 ## Step 5. Subject-aware split for both cohorts
 
@@ -210,7 +227,7 @@ Every model is evaluated on held-out subjects (Cisotto & Chicco
 so the leakage failure mode that plagues many published EEG decoders
 is structurally avoided.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 200-232 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 217-249 -->
 ```Python
 TEST_FRACTION = 0.5  # held-out target subjects for evaluation
 
@@ -245,7 +262,7 @@ print(f"source: n_train_subj={n_src_tr}, n_test_subj={n_src_te}")
 print(f"target: n_train_subj={n_tgt_tr}, n_test_subj={n_tgt_te}")
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 233-243 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 250-260 -->
 
 ## Step 6. Encoder, MMD primitive, and training loop
 
@@ -257,7 +274,7 @@ https://arxiv.org/abs/1502.02791); the *adversarial-style* twist
 gates the MMD weight by an inverse-temperature schedule so the
 encoder cannot trivially collapse all features to one point early.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 245-359 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 262-376 -->
 ```Python
 N_EPOCHS = 8
 BATCH = 32
@@ -373,7 +390,7 @@ def encoder_features(model: nn.Module, X: np.ndarray, mask: np.ndarray) -> np.nd
     return feats.reshape(feats.shape[0], -1)
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 360-367 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 377-384 -->
 
 ## Step 7. Train the three encoders and read out target accuracy
 
@@ -382,7 +399,7 @@ only differences are the training data and the AS-MMD switch:
 *naive* trains on labelled source only, *AS-MMD* adds the unlabelled
 target via the MMD term, *oracle* trains on labelled target only.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 369-403 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 386-420 -->
 ```Python
 encoder_naive = train_encoder(
     X_source=X_src[src_train],
@@ -419,7 +436,7 @@ print(
 assert acc_mmd > acc_naive - 0.02, "AS-MMD was actively harmful (>2 pts)"
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 404-411 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 421-428 -->
 
 **Investigate.** `acc_naive` is the cross-domain floor (encoder
 never saw the target distribution); `acc_mmd` is AS-MMD on the
@@ -429,14 +446,14 @@ headroom; gap `mmd - naive` is the AS-MMD gain. Reporting all four
 numbers (including chance) on the same line is the falsifiable form
 of the claim (Cisotto & Chicco 2024, Tip 9).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 413-417 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 430-434 -->
 ```Python
 print(f"oracle - naive = {acc_oracle - acc_naive:+.03f} (transfer headroom)")
 print(f"oracle - mmd   = {acc_oracle - acc_mmd:+.03f} (residual after AS-MMD)")
 print(f"mmd - naive    = {acc_mmd - acc_naive:+.03f} (AS-MMD gain)")
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 418-425 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 435-442 -->
 
 ## Step 9. Penultimate-layer features for the PCA panel
 
@@ -445,7 +462,7 @@ and capture the activations right before the classification head.
 PCA down to 2D shows whether AS-MMD pulled the two distributions
 into a shared subspace.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 427-435 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 444-452 -->
 ```Python
 emb_src_before = encoder_features(encoder_naive, X_src, src_test)
 emb_tgt_before = encoder_features(encoder_naive, X_tgt, tgt_test)
@@ -456,7 +473,7 @@ print(
 )
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 436-443 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 453-460 -->
 
 ## Step 10. ERP overlay: did AS-MMD destroy the P3?
 
@@ -465,7 +482,7 @@ signal onto a shared mean-zero subspace. We compare
 target-minus-standard waveforms at Pz on the held-out windows for
 both domains; both bumps should still be visible.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 446-476 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 463-493 -->
 ```Python
 def diff_and_se(
     X: np.ndarray, y: np.ndarray, mask: np.ndarray
@@ -498,7 +515,7 @@ print(
 )
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 477-484 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 494-501 -->
 
 ## Step 11. Render the three-panel transfer figure
 
@@ -507,7 +524,7 @@ annotated. Panel 2 is the side-by-side PCA of penultimate-layer
 activations before and after alignment, source in blue and target in
 orange. Panel 3 is the ERP overlay at Pz.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 486-503 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 503-520 -->
 ```Python
 fig = draw_p300_transfer_figure(
     accuracies_dict={"naive": acc_naive, "mmd": acc_mmd, "oracle": acc_oracle},
@@ -527,7 +544,7 @@ fig = draw_p300_transfer_figure(
 plt.show()
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 504-511 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 521-528 -->
 
 ## Result, one row per condition
 
@@ -536,7 +553,7 @@ stays below the within-domain oracle ceiling. The single-seed gap
 must be hedged: a real comparison demands repeats and subject-grouped
 CV across both cohorts.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 513-533 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 530-550 -->
 ```Python
 print("\n| condition           | accuracy |")
 print("|---------------------|----------|")
@@ -559,7 +576,7 @@ print(
 )
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 534-541 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 551-558 -->
 
 ## A common mistake, and how to recover
 
@@ -568,7 +585,7 @@ a `RuntimeError` on the first forward pass (size mismatch on the
 spatial conv). We trigger it with `try/except` and recover by
 rebuilding with the right shape.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 543-553 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 560-570 -->
 ```Python
 try:
     wrong = ShallowFBCSPNet(
@@ -581,7 +598,7 @@ except RuntimeError as exc:
     print(f"Recovery: ShallowFBCSPNet(n_chans={N_CHANS}) -> {type(fixed).__name__}")
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 554-574 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 571-591 -->
 
 ## Extensions
 
@@ -592,7 +609,7 @@ all features to a domain-invariant point that throws the P3 signal
 away. Rerun at `0.05`, `0.2`, `0.4`, `1.0` and plot
 `acc_mmd` against the chosen weight.
 
-**Mini-project.** Replace the synthesised tensors with real cohorts
+**Mini-project.** Replace the synthesized tensors with real cohorts
 via [`eegdash.EEGDashDataset`](../../../api/dataset/eegdash.EEGDashDataset.md#eegdash.EEGDashDataset). Set `EEGDASH_SOURCE_DATASET`
 and `EEGDASH_TARGET_DATASET` to two oddball accessions on NEMAR
 (Delorme et al. 2022; e.g. `ds005863` and `ds003061`), apply the
@@ -603,7 +620,7 @@ plot_20 windowing recipe to both, then rerun this script.
 - extend the head to multi-class (P3a vs P3b vs standard) and check per-class gains.
 - replace `ShallowFBCSPNet` with EEGConformer (re-anchor the encoder hook).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 576-591 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 593-608 -->
 
 ## Wrap-up
 
@@ -620,11 +637,11 @@ wipe out the underlying physiology. Concept page:
 [`eegdash.EEGDashDataset`](../../../api/dataset/eegdash.EEGDashDataset.md#eegdash.EEGDashDataset),
 `eegdash.viz.style_figure()`.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 593-598 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 610-615 -->
 
 ## References
 
-See [References](../../../references.md) for the centralised bibliography of papers
+See [References](../../../references.md) for the centralized bibliography of papers
 cited above. Add or amend an entry once in
 `docs/source/refs.bib`; every tutorial inherits the update.
 

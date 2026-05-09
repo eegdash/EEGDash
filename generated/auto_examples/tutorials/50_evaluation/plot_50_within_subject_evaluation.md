@@ -6,9 +6,11 @@
 
 <a id="sphx-glr-generated-auto-examples-tutorials-50-evaluation-plot-50-within-subject-evaluation-py"></a>
 
-# When is within-subject decoding the right scientific question?
+# Within-subject decoding evaluation
 
-Cross-subject generalisation (plot_11) is the headline benchmark for
+**Difficulty 1-2** | **Runtime: 2m** | **Compute: CPU**
+
+Cross-subject generalization (plot_11) is the headline benchmark for
 EEG papers, but a calibration-style P300 speller, a clinical seizure
 detector tuned to one patient, or a lab paradigm where inter-subject
 variance dominates the contrast all care about a *single* brain at
@@ -30,23 +32,34 @@ produce 0.65 from random labels, and the binomial chance check is
 the only way to spot it. OpenNeuro/NEMAR [[Delorme *et al.*, 2022](../../../../references.md#id6)] hosts
 the public benchmarks where both regimes get reported.
 
-So when is within-subject evaluation the right call?
+# So when is within-subject evaluation the right call?
+#
+# Validate your result
+# ——————–
+# - **Intentional Overlap.** Confirm that `subject_overlap == 1` in your
+#   split report. This is expected in the within-subject regime.
+# - **Per-Subject Accuracy.** Accuracy should be higher than the cross-subject
+#   reference, often by a large margin (the “calibration benefit”).
+# - **Binomial Chance.** Verify your results against the binomial chance
+#   level, especially for subjects with few trials.
+#
+# Keywords: evaluation, within-subject
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 28-30 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 41-43 -->
 ```Python
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 32-40 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 45-53 -->
 
 ## Learning objectives
 
 - Identify when within-subject evaluation is appropriate (calibration decoders, single-subject diagnostics, paradigms with high inter-subject variance).
 - Build a 5-fold within-subject manifest with `get_splitter` (`"within_subject"`) and freeze it via `make_split_manifest`.
-- Read `describe_split` and recognise that `subject_overlap == 1` is the design, not a leak.
+- Read `describe_split` and recognize that `subject_overlap == 1` is the design, not a leak.
 - Assert no trial overlap with `assert_no_leakage` and verify the JSON `leakage_report` line.
 - Compare per-subject accuracy against `majority_baseline` chance level and against a leave-one-subject-out cross-subject reference on the *same* data.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 42-48 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 55-61 -->
 
 ## Requirements
 
@@ -54,7 +67,7 @@ So when is within-subject evaluation the right call?
 - CPU only, runtime ~30 s. No network: the metadata table is built in-script.
 - Concept refresher: [Leakage and evaluation](../../../../concepts/leakage_and_evaluation.md).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 50-64 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 63-77 -->
 
 ## Mental model: which window goes where?
 
@@ -70,12 +83,12 @@ cross-subject   : {sub-j != i} -> train ; sub-i -> test
                   Q: "does the decoder transfer to a new person?"
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 66-68 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 79-81 -->
 
 Setup. `np.random.seed` keeps the synthetic manifold and the fold
 ordering reproducible across runs (E3.21).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 68-89 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 81-102 -->
 ```Python
 import json
 import warnings
@@ -99,7 +112,7 @@ rng = np.random.default_rng(SEED)
 np.random.seed(SEED)
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 90-99 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 103-112 -->
 
 ## Step 1: Build a per-subject windowed metadata table
 
@@ -110,7 +123,7 @@ accepts either a Braindecode
 [`DataFrame`](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame) with the same columns; the DataFrame
 route keeps the split discipline isolated from any I/O.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 101-119 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 114-132 -->
 ```Python
 N_SUBJECTS, N_SESSIONS, N_WINDOWS_PER_BLOCK, N_FEATURES = 12, 2, 8, 8
 n_windows_per_subject = N_SESSIONS * N_WINDOWS_PER_BLOCK
@@ -131,14 +144,14 @@ rows = [
 metadata = pd.DataFrame(rows)
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 120-124 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 133-137 -->
 
 A per-subject 5-fold split needs at least five trials per class
 per subject so every fold is non-empty. With 16 trials per subject
 at 50/50 we get 8 windows per class per subject; on real EEG you
 would inspect `class_balance_test` here before fitting.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 126-146 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 139-159 -->
 ```Python
 n_subj = metadata["subject"].nunique()
 features = rng.normal(size=(len(metadata), N_FEATURES)) * 0.5
@@ -165,7 +178,7 @@ print(
 Windows metadata: rows=192, subjects=12, classes={0: np.int64(96), 1: np.int64(96)}
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 147-159 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 160-172 -->
 
 ## Step 2: Predict the right invariant
 
@@ -179,7 +192,7 @@ the question is “does the decoder calibrate to subject X?”, not
 “does it transfer to a new person”. The leak we still police is on
 `trial`: no window may appear in both train and test.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 161-170 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 174-183 -->
 
 ## Step 3: Build the 5-fold within-subject manifest
 
@@ -190,7 +203,7 @@ subjects give 12 x 5 = 60 fold pairs.
 `make_split_manifest` freezes them to a
 JSON-serialisable dict that survives a process restart.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 172-185 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 185-198 -->
 ```Python
 N_FOLDS = 5
 splitter = WithinSubjectSplitter(n_folds=N_FOLDS, random_state=SEED, shuffle=True)
@@ -210,7 +223,7 @@ print(f"Splitter: {type(splitter).__name__} | n_folds (subj x folds): {len(folds
 Splitter: WithinSubjectSplitter | n_folds (subj x folds): 60
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 186-193 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 199-206 -->
 
 ## Step 4: Assert no trial leakage and read the audit
 
@@ -219,7 +232,7 @@ intersects the `trial` values across train/test, emitting the
 JSON line `{"leakage_report": {"overlap": 0, "by": "trial"}}`
 (E5.42). A subject-level assertion would fail by design.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 195-225 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 208-238 -->
 ```Python
 trial_overlap = max(
     len(set(metadata.loc[tr, "trial"]) & set(metadata.loc[te, "trial"]))
@@ -257,13 +270,13 @@ Fold 0: train=12 (1 subj), test=4 (1 subj), classes_test={0: 2, 1: 2}
 Subject overlap per fold (intentional): min=1, max=1
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 226-229 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 239-242 -->
 
 **Investigate.** Every fold has exactly one subject in train and
 the same subject in test; the trial intersection is empty. On real
 EEG you would gate on `class_balance_test` here.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 231-240 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 244-253 -->
 
 ## Step 5: Train per-subject and quote chance level
 
@@ -274,7 +287,7 @@ returns chance from the test class proportions (E5.43). Combrisson
 & Jerbi 2015: with small test folds, 0.65 on n_test=20 is
 statistically indistinguishable from the 0.50 prior.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 242-279 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 255-292 -->
 ```Python
 subjects = sorted(metadata["subject"].unique())
 subject_scores: dict[str, list[float]] = {sid: [] for sid in subjects}
@@ -314,7 +327,7 @@ within_std = float(np.nanstd(per_subject_accuracies, ddof=0))
 mean_chance = float(np.mean(fold_chance)) if fold_chance else float("nan")
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 280-287 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 293-300 -->
 
 ## Step 6: Cross-subject reference on the same data
 
@@ -323,7 +336,7 @@ might be excellent (calibration, hard paradigm) or unimpressive
 (subject-fingerprint features). A leave-one-subject-out loop on
 the same features makes the contrast mechanical.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 289-302 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 302-315 -->
 ```Python
 loso = LeaveOneGroupOut()
 groups = metadata["subject"].to_numpy()
@@ -339,7 +352,7 @@ cross_mean = float(np.mean(cross_fold_accuracies))
 cross_std = float(np.std(cross_fold_accuracies, ddof=0))
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 303-312 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 316-325 -->
 
 ## Result table: within-subject vs cross-subject
 
@@ -350,7 +363,7 @@ number as if it answered the cross-subject question is the failure
 mode Brookshire et al. 2024 diagnose: ~half of 81 deep-learning
 EEG studies leaked subjects.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 314-328 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 327-341 -->
 ```Python
 results_df = pd.DataFrame(
     {
@@ -420,7 +433,7 @@ results_df
 </div>
 <br />
 <br />
-<!-- GENERATED FROM PYTHON SOURCE LINES 329-335 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 342-348 -->
 
 **Investigate.** The within-subject mean lands above the cross-
 subject mean by construction; on real EEG the gap maps to
@@ -429,7 +442,7 @@ conductivity. A small gap says the features are dominated by task
 signal, which is the regime where deep cross-subject decoders have
 any chance of working.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 337-353 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 350-366 -->
 ```Python
 print(
     f"within-subject CV: mean={within_mean:.3f} +/- {within_std:.3f} | "
@@ -453,7 +466,7 @@ within-subject CV: mean=0.921 +/- 0.151 | cross-subject LOSO: mean=0.521 +/- 0.1
 Final invariants: {"n_subjects": 12, "n_folds": 60, "trial_overlap": 0, "subject_overlap_per_fold": 1, "within_mean_accuracy": 0.921, "cross_mean_accuracy": 0.521, "mean_chance_level": 0.633}
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 354-360 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 367-373 -->
 
 ## A common mistake, and how to recover
 
@@ -461,7 +474,7 @@ Final invariants: {"n_subjects": 12, "n_folds": 60, "trial_overlap": 0, "subject
 drop it and the splitter raises a `KeyError`. We trigger it on
 purpose so you see what the error looks like.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 362-371 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 375-384 -->
 ```Python
 try:
     bad_metadata = metadata.drop(columns=["subject"])
@@ -478,7 +491,7 @@ Caught KeyError: "'subject' column missing from metadata"
 Recovery: keep `subject` (have ['dataset', 'run', 'sample_id', 'session', 'subject', 'target', 'trial']).
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 372-382 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 385-395 -->
 
 ## Three-panel diagnostic figure
 
@@ -490,7 +503,7 @@ comparison between the two regimes, and a pooled
 helpers live in a sibling `_within_subject_figure` module; the
 call below is the only line that matters.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 384-399 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 397-412 -->
 ```Python
 from _within_subject_figure import draw_within_subject_figure
 
@@ -508,7 +521,7 @@ fig = draw_within_subject_figure(
 plt.show()
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 400-411 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 413-424 -->
 
 **Investigate.** Read the three panels in order.
 
@@ -522,7 +535,7 @@ plt.show()
    per-subject classifier separates the classes; an off-diagonal
    stripe means the model has collapsed onto the majority class.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 413-420 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 426-433 -->
 
 ## Modify: swap to within-session
 
@@ -531,7 +544,7 @@ drift)? Swap `within_subject` for `within_session`: the
 splitter iterates k-fold inside each session, so subject and
 session overlap by design while trials stay disjoint.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 422-439 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 435-452 -->
 ```Python
 session_splitter = WithinSessionSplitter(n_folds=4, random_state=SEED, shuffle=True)
 session_folds: list[tuple[np.ndarray, np.ndarray]] = []
@@ -555,7 +568,7 @@ print(
 within_session split: n_folds=96, trial_overlap=0
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 440-452 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 453-465 -->
 
 ## Wrap-up
 
@@ -569,7 +582,7 @@ calibration-style decoders; the cross-subject mean is the right
 number when the question is transfer to a new person. Mixing the
 two is the leakage failure mode Brookshire et al. 2024 documented.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 454-464 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 467-477 -->
 
 ## Mini-project
 
@@ -581,7 +594,7 @@ within-vs-cross gap bigger or smaller than the linear gap? A
 widening gap signals subject-fingerprint exploitation; a flat gap
 means task-contrast reading.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 466-477 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 479-490 -->
 
 ## Try it yourself
 
@@ -594,11 +607,11 @@ means task-contrast reading.
   plot_40 and re-run on a real BIDS dataset such as `ds002718`
   from NEMAR [[Delorme *et al.*, 2022](../../../../references.md#id6)].
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 479-484 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 492-497 -->
 
 ## References
 
-See [References](../../../../references.md) for the centralised bibliography of papers
+See [References](../../../../references.md) for the centralized bibliography of papers
 cited above. Add or amend an entry once in
 `docs/source/refs.bib`; every tutorial inherits the update.
 

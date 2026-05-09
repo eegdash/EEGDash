@@ -57,7 +57,7 @@ A few rules of thumb:
   high-gamma work and is what HBN-style data are typically delivered at.
 
 Tutorial
-[How do I preprocess EEG and create model-ready windows?](../generated/auto_examples/tutorials/10_core_workflow/plot_10_preprocess_and_window.md)
+[Preprocess EEG and create windows](../generated/auto_examples/tutorials/10_core_workflow/plot_10_preprocess_and_window.md)
 walks through this on a real recording, including the choice of filter
 order and zero-phase vs. causal filtering.
 
@@ -143,13 +143,13 @@ list is the most important paragraph in the paper.
 
 ## Related tutorials
 
-- [How do I preprocess EEG and create model-ready windows?](../generated/auto_examples/tutorials/10_core_workflow/plot_10_preprocess_and_window.md)
+- [Preprocess EEG and create windows](../generated/auto_examples/tutorials/10_core_workflow/plot_10_preprocess_and_window.md)
   is the runnable companion to this page. It applies a defensible
   default pipeline to an EEGDash recording and explains each step.
-- [Decode eyes-open vs. eyes-closed from resting-state EEG](../generated/auto_examples/tutorials/30_resting_state/plot_30_eyes_open_closed.md)
+- [Decode eyes open vs. eyes closed](../generated/auto_examples/tutorials/30_resting_state/plot_30_eyes_open_closed.md)
   shows how preprocessing interacts with a class-boundary (eyes open
   vs. closed) where alpha-band content is the main feature.
-- [How does the brain answer a rare visual target?](../generated/auto_examples/tutorials/20_event_related/plot_20_visual_p300_oddball.md)
+- [Visual P300 oddball decoding](../generated/auto_examples/tutorials/20_event_related/plot_20_visual_p300_oddball.md)
   uses ERP-style preprocessing (low high-pass, ICA blink removal).
 
 ## Further reading

@@ -8,6 +8,8 @@
 
 # How do I plug EEGDash into the Meta NeuroAI ecosystem?
 
+**Difficulty 3** | **Runtime: 20s** | **Compute: CPU (GPU Recommended)**
+
 Meta Research ships four projects under the NeuroAI umbrella
 ([https://facebookresearch.github.io/neuroai/](https://facebookresearch.github.io/neuroai/)): **NeuralFetch** for
 unified dataset discovery across 12 catalogues, **NeuralSet** for
@@ -28,7 +30,10 @@ check, integration matrix. So which projects already share the events
 DataFrame, and which ones live downstream of it?
 
 <!-- sphinx_gallery_thumbnail_path = '_static/thumbs/plot_74_neuroai_interop.png' -->
-<!-- GENERATED FROM PYTHON SOURCE LINES 28-41 -->
+
+Keywords: interop, NeuroAI, Meta
+
+<!-- GENERATED FROM PYTHON SOURCE LINES 31-44 -->
 
 ## Learning objectives
 
@@ -44,22 +49,22 @@ DataFrame, and which ones live downstream of it?
 - Read the 3-panel figure and pick the right downstream tutorial for
   each NeuroAI module.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 43-51 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 46-54 -->
 
 ## Requirements
 
 - About 1 min on CPU.
 - Network on first call (~30 MB into `cache_dir` for the EEGDash query).
 - Prerequisites: /auto_examples/tutorials/00_start_here/plot_02_dataset_to_dataloader
-  (DataLoader basics), [How do I get started with the EEG 2025 Foundation Challenge dataset?](plot_70_challenge_dataset_basics.md)
+  (DataLoader basics), [How do I get started with the EEG2025 Foundation Challenge dataset?](plot_70_challenge_dataset_basics.md)
   (challenge loader).
 - Concept: [EEGDash objects: EEGDash, EEGDashDataset, EEGChallengeDataset](../../../../concepts/eegdash_objects.md).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 53-54 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 56-57 -->
 
 Setup. Seeding `numpy` keeps any sampling reproducible across runs.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 54-83 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 57-86 -->
 ```Python
 import os
 import warnings
@@ -96,7 +101,7 @@ eegdash version: 0.7.2
 cache directory: /home/runner/eegdash_cache
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 84-122 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 87-134 -->
 
 ## Four projects, one chain: the mental model
 
@@ -107,7 +112,7 @@ one verb and forwards a clean handoff to the next:
 ```text
 EEGDashDataset    NeuralFetch.Study    NeuralSet.Segmenter   PyTorch
 (BIDS query +     (12 catalogues +     (events DataFrame      DataLoader
- lazy Raw)         standardiser)        + extractors -> X)    (consumer)
+ lazy Raw)         standardizer)        + extractors -> X)    (consumer)
 +-------------+   +--------------+     +------------------+   +--------+
 | record 0  --|-->| events row 0 |     | segment 0 (X, t) |   |batch 0 |
 | record 1  --|-->| events row 1 |---->| segment 1 (X, t) |-->|batch 1 |
@@ -121,7 +126,7 @@ Three corollaries follow:
 
 - **Discovery vs tensorisation are different jobs.**
   `EEGDashDataset` and `neuralfetch.Study`
-  discover and standardise; `neuralset.Segmenter` and the
+  discover and standardize; `neuralset.Segmenter` and the
   PyTorch [`DataLoader`](https://docs.pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader) cut and batch. The
   contracts are different on purpose: a discovery layer hides
   catalogue-specific quirks; a tensor layer hides MNE / NWB quirks.
@@ -137,7 +142,16 @@ Three corollaries follow:
   lets you swap any dataset on the discovery side without touching
   the tensor pipeline.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 124-130 -->
+## Validate your result
+
+- **Stack Verification.** Each stage (NeuralFetch -> NeuralSet ->
+  NeuralTrain) should pass a shape sanity check.
+- **Events DataFrame.** The event DataFrame should follow the NeuroAI
+  schema: `(start, duration, type, timeline)`.
+- **DataLoader Batch.** The final PyTorch batch should match your
+  configured `window_size` and `n_channels`.
+
+<!-- GENERATED FROM PYTHON SOURCE LINES 136-142 -->
 
 ## What does the NeuralSet pipeline expose?
 
@@ -146,7 +160,7 @@ Before building anything, list the public symbols on the
 `Segmenter`, `Chain`, `SegmentDataset`, and the `extractors`
 subpackage are the surface this tutorial exercises.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 132-138 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 144-150 -->
 ```Python
 ns_public = sorted(
     name for name in dir(ns) if not name.startswith("_") and not name == "base"
@@ -248,7 +262,7 @@ surface_df
 </div>
 <br />
 <br />
-<!-- GENERATED FROM PYTHON SOURCE LINES 139-145 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 151-157 -->
 
 ## Step 1. Load one EEGDash recording
 
@@ -257,7 +271,7 @@ Same idiom as
 One subject, one task; the records-level metadata carries BIDS
 entities forward to every later stage [[Pernet *et al.*, 2019](../../../../references.md#id7)].
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 147-171 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 159-183 -->
 ```Python
 DATASET = "ds002718"
 SUBJECT = "002"  # E3.23 data minimality: one subject keeps the run small
@@ -285,7 +299,7 @@ pd.Series(
 ```
 
 ```none
-[05/08/26 18:44:10] WARNING  File not found on S3, skipping:   downloader.py:163
+[05/09/26 20:27:06] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds002718/sub-0
                              02/eeg/sub-002_task-FaceRecogniti
                              on_eeg.fdt
@@ -344,7 +358,7 @@ pd.Series(
 </div>
 <br />
 <br />
-<!-- GENERATED FROM PYTHON SOURCE LINES 172-177 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 184-189 -->
 
 **Investigate.** `raw.annotations` carries the BIDS event list
 attached to this recording. Every event has an onset (seconds), a
@@ -352,7 +366,7 @@ duration (seconds), and a description string. The next step turns
 that into the events-DataFrame layout that NeuralFetch’s
 `Study.run()` returns.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 179-194 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 191-206 -->
 
 ## Step 2. Build the events DataFrame (the NeuroAI bus)
 
@@ -370,7 +384,7 @@ identifier (subject + task + run); a downstream
 `neuralset.Segmenter` groups segments inside a single
 timeline, so a leakage-aware split lives at this granularity.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 197-247 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 209-259 -->
 ```Python
 def annotations_to_events(
     raw, *, timeline: str, recording_duration: float
@@ -540,7 +554,7 @@ events: 1480 rows; types: 3
 </div>
 <br />
 <br />
-<!-- GENERATED FROM PYTHON SOURCE LINES 248-254 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 260-266 -->
 
 **Investigate.** The first few rows look like a flat event log: one
 row per BIDS annotation, with the timeline column threading the rows
@@ -549,7 +563,7 @@ studies land on regardless of the source catalogue (OpenNeuro,
 DANDI, HuggingFace, …). Keeping the schema thin is what lets the
 NeuralSet side stay catalogue-agnostic.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 256-266 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 268-278 -->
 
 ## Step 3. Show the NeuralFetch handoff
 
@@ -562,7 +576,7 @@ The tutorial does not call `.run()` here because it would download
 the full study; the construction surface is enough to confirm the
 handoff.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 268-291 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 280-303 -->
 ```Python
 neuralfetch_card = pd.Series(
     {
@@ -645,7 +659,7 @@ neuralfetch_card
 </div>
 <br />
 <br />
-<!-- GENERATED FROM PYTHON SOURCE LINES 292-304 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 304-316 -->
 
 ## Step 4. Cut into segments with NeuralSet
 
@@ -660,7 +674,7 @@ point. The two parameters that matter at first read are `duration`
 specific events) or `stride` (sliding window). The
 `extractors` dict names the per-segment outputs.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 306-346 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 318-358 -->
 ```Python
 WINDOW_SECONDS = 2.0
 window_samples = int(WINDOW_SECONDS * sfreq)
@@ -704,17 +718,17 @@ seg_card
 ```
 
 ```none
-2026-05-08 18:44:12 - WARNING - neuralset.segments:665 - 403 segments out of 1495 did not contain valid events for event type <class 'neuralset.events.etypes.Stimulus'>
-[05/08/26 18:44:12] WARNING  403 segments out of 1495 did not    segments.py:665
+2026-05-09 20:27:08 - WARNING - neuralset.segments:665 - 403 segments out of 1495 did not contain valid events for event type <class 'neuralset.events.etypes.Stimulus'>
+[05/09/26 20:27:08] WARNING  403 segments out of 1495 did not    segments.py:665
                              contain valid events for event type
                              <class
                              'neuralset.events.etypes.Stimulus'>
-2026-05-08 18:44:12 - INFO - neuralset.dataloader:618 - 403 segments are missing events of type Stimulus. They will be populated with default missing values through prepare.
+2026-05-09 20:27:08 - INFO - neuralset.dataloader:618 - 403 segments are missing events of type Stimulus. They will be populated with default missing values through prepare.
                     INFO     403 segments are missing events   dataloader.py:618
                              of type Stimulus. They will be
                              populated with default missing
                              values through prepare.
-2026-05-08 18:44:12 - INFO - neuralset.dataloader:625 - Removing 403 segments out of 1495
+2026-05-09 20:27:08 - INFO - neuralset.dataloader:625 - Removing 403 segments out of 1495
                     INFO     Removing 403 segments out of 1495 dataloader.py:625
 ```
 
@@ -767,7 +781,7 @@ seg_card
 </div>
 <br />
 <br />
-<!-- GENERATED FROM PYTHON SOURCE LINES 347-353 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 359-365 -->
 
 **Investigate.** When the live run completes, `n_segments` lines up
 with `floor(timeline_duration / WINDOW_SECONDS)`. The first segment
@@ -776,7 +790,7 @@ carries one entry per extractor under `segment.data`; with the
 of shape `(1, n_channels, window_samples)` (the leading 1 is the
 batch axis NeuralSet always prepends).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 355-365 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 367-377 -->
 
 ## Step 5. Wrap the segments in a PyTorch DataLoader
 
@@ -789,7 +803,7 @@ except for the `collate_fn` argument, which is the only line that
 changes when you move from braindecode windows to NeuralSet
 segments.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 367-391 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 379-403 -->
 ```Python
 from torch.utils.data import DataLoader
 
@@ -861,14 +875,14 @@ loader_card
 </div>
 <br />
 <br />
-<!-- GENERATED FROM PYTHON SOURCE LINES 392-396 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 404-408 -->
 
 **Investigate.** The DataLoader call above does not change when you
 swap the source catalogue: the same line works for an OpenNeuro
 pull, a DANDI NWB pull, or a HuggingFace dataset, because the events
 DataFrame is the bus.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 398-405 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 410-417 -->
 
 ## Where does each NeuroAI module fit?
 
@@ -878,12 +892,12 @@ integration status and the gallery tutorial that demonstrates it.
 Use the matrix as a navigation map when you read the rest of the
 70_transfer_foundation track.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 407-439 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 419-451 -->
 ```Python
 integration_matrix = [
     {
         "project": "NeuralFetch",
-        "role": "discover + standardise across 12 catalogues",
+        "role": "discover + standardize across 12 catalogues",
         "status": "shipped (EEGDash backend)",
         "status_kind": "shipped",
         "tutorial": "plot_74 (this one)",
@@ -943,7 +957,7 @@ pd.DataFrame(integration_matrix).head(4)
     <tr>
       <th>0</th>
       <td>NeuralFetch</td>
-      <td>discover + standardise across 12 catalogues</td>
+      <td>discover + standardize across 12 catalogues</td>
       <td>shipped (EEGDash backend)</td>
       <td>shipped</td>
       <td>plot_74 (this one)</td>
@@ -978,7 +992,7 @@ pd.DataFrame(integration_matrix).head(4)
 </div>
 <br />
 <br />
-<!-- GENERATED FROM PYTHON SOURCE LINES 440-448 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 452-460 -->
 
 ## Pipeline at a glance: live shapes
 
@@ -989,7 +1003,7 @@ index. The drawing helper lives in a sibling
 `_neuroai_interop_figure` module so the rendering plumbing stays
 out of this tutorial; the call below is the only line that matters.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 450-469 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 462-481 -->
 ```Python
 from _neuroai_interop_figure import draw_neuroai_interop_figure
 
@@ -1011,7 +1025,7 @@ fig = draw_neuroai_interop_figure(
 plt.show()
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 470-476 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 482-488 -->
 
 ## A common mistake, and how to recover
 
@@ -1020,7 +1034,7 @@ zero events raises a [`RuntimeError`](https://docs.python.org/3/library/exceptio
 [[Nederbragt *et al.*, 2020](../../../../references.md#id31)]. The recovery is to widen the query or
 fall back to a stride-based segmenter.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 478-492 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 490-504 -->
 ```Python
 bad_segmenter = Segmenter(
     start=0.0,
@@ -1043,7 +1057,7 @@ Caught RuntimeError: the trigger query: type == 'this-event-type-does-not-exist'
 Recovery: drop the trigger_query and pass `stride=WINDOW_SECONDS` instead.
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 493-500 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 505-512 -->
 
 ## Modify
 
@@ -1053,7 +1067,7 @@ the segment shape before running:
 `(1, n_channels, window_samples)`. Verify on
 `seg_dataset[0].data['eeg'].shape`.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 502-511 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 514-523 -->
 
 ## Mini-project
 
@@ -1065,7 +1079,7 @@ feed straight into NeuralSet without going through any per-record
 loop. Hint: `pd.concat([annotations_to_events(rec.raw, timeline=...)
 for rec in dataset.datasets])`.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 513-521 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 525-533 -->
 
 ## Result
 
@@ -1076,7 +1090,7 @@ pipeline, and pins each NeuroAI module to its integration status. A
 clean handoff only confirms plumbing; signal quality and task
 design are still open questions [[Cisotto and Chicco, 2024](../../../../references.md#id19)].
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 523-536 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 535-548 -->
 
 ## Wrap-up
 
@@ -1092,7 +1106,7 @@ automates);
 /auto_examples/tutorials/70_transfer_foundation/plot_73_finetune_pretrained_model
 runs the fine-tune regimes on top of that encoder.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 538-549 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 550-561 -->
 
 ## Try it yourself
 
@@ -1106,14 +1120,14 @@ runs the fine-tune regimes on top of that encoder.
   `extractors` dict and confirm the per-segment shape becomes
   `(1, n_channels, window_samples)`.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 551-556 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 563-568 -->
 
 ## References
 
-See [References](../../../../references.md) for the centralised bibliography of papers
+See [References](../../../../references.md) for the centralized bibliography of papers
 cited above. Add or amend an entry once in
 `docs/source/refs.bib`; every tutorial inherits the update.
 
-**Total running time of the script:** (0 minutes 3.396 seconds)
+**Total running time of the script:** (0 minutes 3.287 seconds)
 
 <a id="sphx-glr-download-generated-auto-examples-tutorials-70-transfer-foundation-plot-74-neuroai-interop-py"></a>

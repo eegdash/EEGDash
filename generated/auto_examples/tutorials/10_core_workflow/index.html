@@ -74,8 +74,8 @@
     <link rel="icon" href="../../../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" />
-    <link rel="next" title="How do I preprocess EEG and create model-ready windows?" href="plot_10_preprocess_and_window.html" />
-    <link rel="prev" title="How do I turn one EEG recording into a PyTorch DataLoader?" href="../00_start_here/plot_02_dataset_to_dataloader.html" />
+    <link rel="next" title="Preprocess EEG and create windows" href="plot_10_preprocess_and_window.html" />
+    <link rel="prev" title="EEG recording to PyTorch DataLoader" href="../00_start_here/plot_02_dataset_to_dataloader.html" />
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="0.7" />
 
@@ -574,7 +574,7 @@
                 <article class="bd-article">
                   
   <section id="core-decoding-workflow">
-<h1>Core Decoding Workflow<a class="headerlink" href="#core-decoding-workflow" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">4 minutes</span></div>
+<h1>Core Decoding Workflow<a class="headerlink" href="#core-decoding-workflow" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">3 minutes</span></div>
 <p>The canonical EEG decoding pipeline in four lessons: preprocess and
 window, split without subject leakage, train a baseline against chance,
 then persist prepared data so you do not pay the windowing cost on
@@ -584,8 +584,7 @@ every rerun. Difficulty 1-2; assumes the <em>Start Here</em> trio.</p>
 baselines that beat chance only because of a confound, and re-windowing
 every session because nothing was cached. The leakage-safe split lesson
 is the rubric anchor for E3.27 invariants and tracks the evaluation
-guidance in Cisotto and Chicco (2024). Sourced from
-<code class="docutils literal notranslate"><span class="pre">docs/tutorial_restructure_plan.md</span></code> Category B (lines 380-410).</p>
+guidance in Cisotto and Chicco (2024).</p>
 <p>What you will learn:</p>
 <ul class="simple">
 <li><p>How to compose preprocessing as a list of Braindecode preprocessors
@@ -593,7 +592,7 @@ guidance in Cisotto and Chicco (2024). Sourced from
 consistently across recordings.</p></li>
 <li><p>How to cut continuous signal into fixed-length and event-locked
 windows.</p></li>
-<li><p>Why subject-aware splitting is non-negotiable for generalisation
+<li><p>Why subject-aware splitting is non-negotiable for generalization
 claims, and how to implement one with EEGDash’s split helpers.</p></li>
 <li><p>How to train a small baseline model against an explicit chance level
 and report a confidence interval.</p></li>
@@ -610,18 +609,18 @@ test split.</p></li>
 level.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">plot_13_save_and_reuse_prepared_data.py</span></code> – save once, reuse many.</p></li>
 </ol>
-<div id='sg-tag-list' class='sphx-glr-tag-list'></div><div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="Raw EEG is rarely model-ready: wrong sampling rate, drift and line noise, no fixed reference, sporadic large-amplitude bursts, a continuous timeline instead of fixed epochs. This tutorial walks the canonical EEGDash preprocessing recipe on one recording from OpenNeuro ds002718 (Wakeman &amp; Henson 2015), reachable through NEMAR (Delorme et al. 2022). Every choice is named (Cisotto &amp; Chicco 2024 Tips 4-5), inspected on the array, and the recipe ends with a windowed dataset the next four core-workflow tutorials reuse. The closing diagnostic figure compares the recording before and after a one-call braindecode.preprocessing.EEGPrep pass that wraps ASR (Mullen et al. 2015), bad-channel detection, high-pass, and CAR."><img alt="" src="../../../../_images/sphx_glr_plot_10_preprocess_and_window_thumb.png" />
-<p><a class="reference internal" href="plot_10_preprocess_and_window.html"><span class="doc">How do I preprocess EEG and create model-ready windows?</span></a></p>
-  <div class="sphx-glr-thumbnail-title">How do I preprocess EEG and create model-ready windows?</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="Random window splits on cross-subject EEG decoders post training-set accuracy near 99% and collapse on a held-out participant. The reason is not exotic: every recording produces hundreds of overlapping windows from the same brain, so a uniform shuffle scatters each subject across both train and test, and the model memorises subject-level fingerprints (heart-rate, alpha amplitude, electrode impedance) instead of the task we actually want to decode."><img alt="" src="../../../../_images/sphx_glr_plot_11_leakage_safe_split_thumb.png" />
-<p><a class="reference internal" href="plot_11_leakage_safe_split.html"><span class="doc">How do I split EEG data without subject leakage?</span></a></p>
-  <div class="sphx-glr-thumbnail-title">How do I split EEG data without subject leakage?</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="A model that scores 0.78 on held-out windows is only useful when you also know what 0.50 (chance) and 0.55 (a transparent linear baseline) look like on the same split. This tutorial trains that linear baseline on three subjects of OpenNeuro ds002718 (Wakeman &amp; Henson 2015), reachable through NEMAR (Delorme et al. 2022). Four bands of log power per channel feed sklearn.linear_model.LogisticRegression (Pedregosa et al. 2011); a 3-fold cross-subject loop with sklearn.model_selection.GroupKFold keeps every subject in exactly one fold. The deliverable is a single three-panel figure that answers three questions on one screen: do the features separate the classes, how does the accuracy vary across held-out subjects, and which trials does the model confuse?"><img alt="" src="../../../../_images/sphx_glr_plot_12_train_a_baseline_thumb.png" />
-<p><a class="reference internal" href="plot_12_train_a_baseline.html"><span class="doc">How do I train a leakage-safe baseline classifier on EEG?</span></a></p>
-  <div class="sphx-glr-thumbnail-title">How do I train a leakage-safe baseline classifier on EEG?</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="Preprocessing EEG is expensive. Filtering, resampling, and windowing one subject can take seconds; doing it for every kernel restart wastes hours over the lifetime of a project. The work has already been done once. The question is how to write it to disk so the next session, the next collaborator, and the future you all skip the recompute."><img alt="" src="../../../../_images/sphx_glr_plot_13_save_and_reuse_prepared_data_thumb.png" />
-<p><a class="reference internal" href="plot_13_save_and_reuse_prepared_data.html"><span class="doc">How do I save and reload prepared windows + features?</span></a></p>
-  <div class="sphx-glr-thumbnail-title">How do I save and reload prepared windows + features?</div>
+<div id='sg-tag-list' class='sphx-glr-tag-list'></div><div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="Difficulty 1-2 | Runtime: 2m | Compute: CPU"><img alt="" src="../../../../_images/sphx_glr_plot_10_preprocess_and_window_thumb.png" />
+<p><a class="reference internal" href="plot_10_preprocess_and_window.html"><span class="doc">Preprocess EEG and create windows</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Preprocess EEG and create windows</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Difficulty 1-2 | Runtime: 30s | Compute: CPU"><img alt="" src="../../../../_images/sphx_glr_plot_11_leakage_safe_split_thumb.png" />
+<p><a class="reference internal" href="plot_11_leakage_safe_split.html"><span class="doc">Split EEG without subject leakage</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Split EEG without subject leakage</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Difficulty 1-2 | Runtime: 30s | Compute: CPU"><img alt="" src="../../../../_images/sphx_glr_plot_12_train_a_baseline_thumb.png" />
+<p><a class="reference internal" href="plot_12_train_a_baseline.html"><span class="doc">Train a leakage-safe baseline</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Train a leakage-safe baseline</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Difficulty 1-2 | Runtime: 5s | Compute: CPU"><img alt="" src="../../../../_images/sphx_glr_plot_13_save_and_reuse_prepared_data_thumb.png" />
+<p><a class="reference internal" href="plot_13_save_and_reuse_prepared_data.html"><span class="doc">Save and reload prepared data</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Save and reload prepared data</div>
 </div></div><div class="toctree-wrapper compound">
 </div>
 <div class="sphx-glr-footer sphx-glr-footer-gallery docutils container">
@@ -650,7 +649,7 @@ level.</p></li>
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">How do I turn one EEG recording into a PyTorch DataLoader?</p>
+        <p class="prev-next-title">EEG recording to PyTorch DataLoader</p>
       </div>
     </a>
     <a class="right-next"
@@ -658,7 +657,7 @@ level.</p></li>
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">How do I preprocess EEG and create model-ready windows?</p>
+        <p class="prev-next-title">Preprocess EEG and create windows</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

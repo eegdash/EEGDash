@@ -6,13 +6,15 @@
 
 <a id="sphx-glr-generated-auto-examples-tutorials-10-core-workflow-plot-11-leakage-safe-split-py"></a>
 
-# How do I split EEG data without subject leakage?
+# Split EEG without subject leakage
+
+**Difficulty 1-2** | **Runtime: 30s** | **Compute: CPU**
 
 Random window splits on cross-subject EEG decoders post training-set
 accuracy near 99% and collapse on a held-out participant. The reason is
 not exotic: every recording produces hundreds of overlapping windows
 from the same brain, so a uniform shuffle scatters each subject across
-both train and test, and the model memorises subject-level fingerprints
+both train and test, and the model memorizes subject-level fingerprints
 (heart-rate, alpha amplitude, electrode impedance) instead of the task
 we actually want to decode.
 
@@ -30,8 +32,9 @@ the most common evaluation pitfall in clinical EEG; the MOABB benchmark
 
 So why does a random window split look great on paper, and which
 column of the metadata table do you actually have to hold out?
+Keywords: evaluation, leakage, splitting
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 29-45 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 32-48 -->
 
 ## Learning objectives
 
@@ -48,12 +51,12 @@ column of the metadata table do you actually have to hold out?
 - About 30 s on CPU. No network: the metadata table is built in-script.
 - Concept refresher: [Leakage and evaluation](../../../../concepts/leakage_and_evaluation.md).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 47-49 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 50-52 -->
 
 Setup. `np.random.seed` keeps the naive shuffle and the manifest
 fold order reproducible (E3.21).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 49-71 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 52-74 -->
 ```Python
 import json
 import sys
@@ -82,7 +85,7 @@ print(f"eegdash {eegdash.__version__}; numpy {np.__version__}")
 eegdash 0.7.2; numpy 2.4.4
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 72-98 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 75-110 -->
 
 ## Why subject leakage hits EEG harder than other domains
 
@@ -110,7 +113,16 @@ window by its `subject` id and let
 `eegdash.splits` wraps both behind one entry point, persists the
 manifest, and emits a JSON line a runtime validator can grep for.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 100-113 -->
+## Validate your result
+
+- **Leakage Check.** After splitting, run `assert_no_leakage(train_ids, test_ids)`.
+  This should raise no error and return `True`.
+- **Leakage Report.** The `leakage_report` JSON should show zero overlapping
+  subjects.
+- **Accuracy Gap.** Expect the naive random split to outperform the
+  leakage-safe split by 10-30 points (the “leakage tax”).
+
+<!-- GENERATED FROM PYTHON SOURCE LINES 112-125 -->
 
 ## Step 1. Build a windows metadata table for 12 subjects
 
@@ -125,7 +137,7 @@ subjects x 2 sessions x 8 windows = 192 rows mirror what plot_10
 produced for `ds002718` [[Wakeman and Henson, 2015](../../../../references.md#id14)], reachable through
 [NEMAR](https://nemar.org) [[Delorme *et al.*, 2022](../../../../references.md#id6)].
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 115-154 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 127-166 -->
 ```Python
 N_SUBJECTS = 12
 N_SESSIONS = 2
@@ -216,7 +228,7 @@ pd.Series(
 </div>
 <br />
 <br />
-<!-- GENERATED FROM PYTHON SOURCE LINES 155-164 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 167-176 -->
 
 ## Step 2. Predict, then run the WRONG way
 
@@ -227,7 +239,7 @@ Pick one of: 0, around 5, all 12.
 **Run.** A window-level random shuffle: pick 20% of indices for test
 and call it a day.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 166-184 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 178-196 -->
 ```Python
 rng = np.random.default_rng(SEED)
 shuffled = rng.permutation(len(metadata))
@@ -297,15 +309,15 @@ pd.Series(
 </div>
 <br />
 <br />
-<!-- GENERATED FROM PYTHON SOURCE LINES 185-190 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 197-202 -->
 
 **Investigate.** Almost every subject sits on both sides of the split.
-A classifier trained here can memorise the alpha-rhythm fingerprint
-of subject 03 and recognise it again on subject 03’s test windows.
+A classifier trained here can memorize the alpha-rhythm fingerprint
+of subject 03 and recognize it again on subject 03’s test windows.
 The accuracy is a subject-identification score, not a task-decoding
 score; deployment on a new participant collapses to chance.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 192-204 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 204-216 -->
 
 ## Step 3. Build a leakage-safe 5-fold split manifest
 
@@ -319,7 +331,7 @@ class plus kwargs, library versions, target column, and a metadata
 hash so a teammate replaying the manifest can confirm they hold the
 same windows.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 206-230 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 218-242 -->
 ```Python
 N_FOLDS = 5
 # ``cv_class=GroupKFold`` swaps MOABB's default ``LeaveOneGroupOut`` for
@@ -391,7 +403,7 @@ pd.Series(
 </div>
 <br />
 <br />
-<!-- GENERATED FROM PYTHON SOURCE LINES 231-248 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 243-260 -->
 
 ## Step 4. Prove no subject leakage and read the audit
 
@@ -410,12 +422,12 @@ validator E5.42 grep-matches that exact line.
 per-fold sizes, distinct subjects on each side, per-fold class
 balance.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 250-252 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 262-264 -->
 
 Audit subject-disjointness and emit the `leakage_report` JSON line
 that runtime validator E5.42 grep-matches.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 252-294 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 264-306 -->
 ```Python
 overlap = max(
     len(set(metadata.loc[tr, "subject"]) & set(metadata.loc[te, "subject"]))
@@ -521,7 +533,7 @@ pd.Series(
 </div>
 <br />
 <br />
-<!-- GENERATED FROM PYTHON SOURCE LINES 295-302 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 307-314 -->
 
 ## Step 5. Read the per-fold audit table
 
@@ -530,7 +542,7 @@ as a list of dicts. Coercing that into a [`pandas.DataFrame`](https://pandas.pyd
 a habit worth keeping: it lets you eyeball the per-fold subject
 count, spot a class-imbalance outlier, and group by anything.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 304-318 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 316-330 -->
 ```Python
 audit_df = pd.DataFrame(per_fold)
 audit_df.insert(0, "fold", range(len(audit_df)))
@@ -632,12 +644,12 @@ audit_df[
 </div>
 <br />
 <br />
-<!-- GENERATED FROM PYTHON SOURCE LINES 319-330 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 331-342 -->
 
 ## Step 6. Materialise one fold and persist the manifest
 
 `apply_split_manifest` returns a boolean mask
-for any fold; the manifest serialises to plain JSON, the BIDS-style
+for any fold; the manifest serializes to plain JSON, the BIDS-style
 “split metadata” Pernet et al. 2019 advocate sharing alongside
 derivatives. The same call signature works on a
 [`braindecode.datasets.BaseConcatDataset`](https://braindecode.org/stable/generated/braindecode.datasets.BaseConcatDataset.html#braindecode.datasets.BaseConcatDataset) of
@@ -645,7 +657,7 @@ derivatives. The same call signature works on a
 dataset from plot_10 in place of the DataFrame and you get a
 subset-of-windows back.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 332-363 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 344-375 -->
 ```Python
 train_mask = folds[0][0]
 test_mask = folds[0][1]
@@ -724,7 +736,7 @@ pd.Series(
 </div>
 <br />
 <br />
-<!-- GENERATED FROM PYTHON SOURCE LINES 364-369 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 376-381 -->
 
 **Investigate.** `train_mask` and `test_mask` are disjoint
 boolean arrays whose union covers every row. The manifest on disk is
@@ -732,7 +744,7 @@ small enough to commit alongside an experiment notebook and large
 enough to be self-describing (splitter class, kwargs, hash, library
 versions, generated-at timestamp).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 371-378 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 383-390 -->
 
 ## Result
 
@@ -741,7 +753,7 @@ cross-subject manifest prints
 `{"leakage_report": {"overlap": 0, "by": "subject"}}` and spreads
 12 subjects across 5 folds with balanced classes per fold.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 380-393 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 392-405 -->
 ```Python
 print(
     "Final invariants:",
@@ -761,7 +773,7 @@ print(
 Final invariants: {"n_subjects_total": 12, "n_folds": 5, "subject_overlap": 0, "naive_random_split_overlap": 11, "class_balance_ratio_fold0": 0.5}
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 394-405 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 406-417 -->
 
 ## A common mistake, and how to recover
 
@@ -774,13 +786,13 @@ which silently leaks subjects across folds. Both fail the same way
 (a happy-looking train/test pair), and both are caught by
 `assert_no_leakage`.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 407-410 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 419-422 -->
 
 Trip 1: importing the wrong MOABB splitter class. Within-subject
 splitters keep the same subject in train and test of every fold by
 design, so a subject-overlap audit will always flag them.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 410-439 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 422-451 -->
 ```Python
 try:
     from moabb.evaluations.splitters import WithinSubjectSplitter
@@ -818,14 +830,14 @@ Recovery: CrossSubjectSplitter -> CrossSubjectSplitter
 train_test_split(...) leaks 12/12 subjects; assert_no_leakage would raise LeakageError.
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 440-444 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 452-456 -->
 
 **Investigate.** Both trips are silent under sklearn’s defaults. The
 audit only fires once `assert_no_leakage` reads
 the metadata column you actually care about (`subject`, or
 `session` when sessions are independent recordings).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 446-453 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 458-465 -->
 
 ## Modify. Try a session-aware split
 
@@ -834,7 +846,7 @@ re-run `assert_no_leakage` with
 `by="session"`. The scaffolding stays put; only the invariant
 changes. Same call shape, different group key.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 455-469 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 467-481 -->
 ```Python
 session_splitter = CrossSessionSplitter(cv_class=GroupKFold, n_splits=2)
 session_folds: list[tuple[np.ndarray, np.ndarray]] = []
@@ -855,7 +867,7 @@ print(f"cross_session overlap: {session_overlap}")
 cross_session overlap: 0
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 470-493 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 482-505 -->
 
 ## Mini-project. Apply this flow to your own windows
 
@@ -880,7 +892,7 @@ for tr_idx, te_idx in splitter.split(y, md):
     assert not (tr_subjects & te_subjects), "split leaked"
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 495-504 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 507-516 -->
 
 ## Headline figure. Naive vs cross-subject, side by side
 
@@ -891,7 +903,7 @@ splitter’s own folds: `0` = subject is fully on the train side of
 fold `j`, `1` = fully on the test side, `2` = split across
 train and test within fold `j` (the leakage failure mode).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 506-537 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 518-549 -->
 ```Python
 from _leakage_figure import draw_leakage_figure
 
@@ -925,7 +937,7 @@ fig = draw_leakage_figure(
 plt.show()
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 538-545 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 550-557 -->
 
 **Investigate.** Row 1 hatches every cell; row 2 carries one orange
 cell per subject. The Sankey-lite bars in column 2 say the same
@@ -935,15 +947,15 @@ bar. The pills in column 3 read `10/10` for the naive row and
 `0/10` for the cross-subject row. Same windows, same labels, only
 the split rule changed.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 547-552 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 559-564 -->
 
 ## Quick alternative: GroupShuffleSplit for a single test split
 
 For “give me one train/test split right now”, [`sklearn.model_selection.GroupShuffleSplit`](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GroupShuffleSplit.html#sklearn.model_selection.GroupShuffleSplit)
 keyed on `subject` gives a single subject-disjoint pair. The
-folds list above is the N-fold generalisation.
+folds list above is the N-fold generalization.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 554-570 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 566-582 -->
 ```Python
 from sklearn.model_selection import GroupShuffleSplit
 
@@ -1021,7 +1033,7 @@ GroupShuffleSplit: train=112 rows, test=80 rows | test subjects=['sub-01', 'sub-
 </div>
 <br />
 <br />
-<!-- GENERATED FROM PYTHON SOURCE LINES 571-593 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 583-605 -->
 
 ## Wrap-up
 
@@ -1045,7 +1057,7 @@ Next:
 trains a baseline on top of these folds; the manifest is loaded by
 reference so the splits are auditable end-to-end.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 595-608 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 607-620 -->
 
 ## Try it yourself
 
@@ -1060,11 +1072,11 @@ reference so the splits are auditable end-to-end.
   `assert_no_leakage` and watch the report flip
   for the cross-subject manifest (different invariant).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 610-615 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 622-627 -->
 
 ## References
 
-See [References](../../../../references.md) for the centralised bibliography of papers
+See [References](../../../../references.md) for the centralized bibliography of papers
 cited above. Add or amend an entry once in
 `docs/source/refs.bib`; every tutorial inherits the update.
 

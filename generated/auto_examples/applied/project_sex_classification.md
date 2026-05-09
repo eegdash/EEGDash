@@ -6,7 +6,9 @@
 
 <a id="sphx-glr-generated-auto-examples-applied-project-sex-classification-py"></a>
 
-# Is resting-state EEG even predictive of the BIDS sex label? (Project Starter)
+# Sex classification from EEG
+
+**Difficulty 3** | **Runtime: 3-5m** | **Compute: CPU**
 
 A canonical “is this signal even predictive?” benchmark task on resting-state
 EEG from [OpenNeuro](https://openneuro.org) `ds005505` (Healthy Brain
@@ -21,39 +23,51 @@ helpers, [`DecisionBoundaryDisplay`](https://scikit-learn.org/stable/modules/gen
 [`ConfusionMatrixDisplay`](https://scikit-learn.org/stable/modules/generated/sklearn.metrics.ConfusionMatrixDisplay.html#sklearn.metrics.ConfusionMatrixDisplay). Do the features
 separate the classes, how stable is held-out AUC across subjects, and
 which class does the model confuse?
+Keywords: classification, applied, sex
 
-## Learning objectives
+<!-- GENERATED FROM PYTHON SOURCE LINES 25-59 -->
 
-- Use [`eegdash.EEGDashDataset`](../../../api/dataset/eegdash.EEGDashDataset.md#eegdash.EEGDashDataset) to pull resting-state ds005505 recordings and balance the cohort by the BIDS `sex` field.
-- Compute log band-power features (delta, theta, alpha, beta) per channel from fixed-length 2 s windows.
-- Run a 3-fold cross-subject loop with [`GroupKFold`](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GroupKFold.html#sklearn.model_selection.GroupKFold) and fit a leakage-safe [`Pipeline`](https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html#sklearn.pipeline.Pipeline) of [`StandardScaler`](https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.StandardScaler.html#sklearn.preprocessing.StandardScaler) and [`LogisticRegression`](https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html#sklearn.linear_model.LogisticRegression).
-- Read the three-panel sklearn-display diagnostic built from [`DecisionBoundaryDisplay`](https://scikit-learn.org/stable/modules/generated/sklearn.inspection.DecisionBoundaryDisplay.html#sklearn.inspection.DecisionBoundaryDisplay), [`RocCurveDisplay`](https://scikit-learn.org/stable/modules/generated/sklearn.metrics.RocCurveDisplay.html#sklearn.metrics.RocCurveDisplay), and [`ConfusionMatrixDisplay`](https://scikit-learn.org/stable/modules/generated/sklearn.metrics.ConfusionMatrixDisplay.html#sklearn.metrics.ConfusionMatrixDisplay).
+## Metadata: Sex vs. Gender
 
-#### WARNING
-**Treat this as a workflow example, not a result.** Three caveats sit
-on top of every number this script prints. (1) **Labels are metadata,
-not biological ground truth.** The BIDS `sex` field is subject
-self-report or sponsor-coded; any clean separation speaks to that
-categorical label, not to chromosomal status, hormones, or brain
-organisation. (2) **Confounds can dominate.** Recording site,
-acquisition system, cap density, age distribution, and within-cohort
-sampling can all correlate with the label. Cross-site or cross-dataset
-validation is required before any inference about EEG-vs-sex is
-supportable (Cisotto and Chicco 2024, Tip 9). (3) **A linear baseline
-is a sanity floor, not a finding.** A balanced split on a single
-dataset with a small subject pool will routinely overstate transferable
-performance.
+EEGDash loads both `sex` and `gender` fields from the BIDS
+`participants.tsv` if available. While often used interchangeably in
+metadata, `sex` typically refers to biological status as recorded by the
+sponsor, while `gender` reflects subject self-report. When both are
+present, this tutorial defaults to the `sex` field for classification,
+but users should verify the source-dataset’s data dictionary (JSON sidecar)
+for the specific semantics of each field.
 
-Three artefacts answer the project’s central question: do the features
-separate the classes, how stable is held-out AUC across subjects, and
-which class does the model confuse?
+## Leakage and Splits
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 47-50 -->
+Naive window-level or recording-level splits on the same subject will
+cause **subject leakage**. Since resting-state EEG is a “biometric fingerprint”,
+the model will learn to recognize the subject rather than generalize the
+label. We use `GroupKFold(groups=subjects)` to ensure that windows from
+the same participant never appear in both training and test sets.
+See [Leakage and evaluation](../../../concepts/leakage_and_evaluation.md) for the full rationale.
+
+## Validate your result
+
+- **Class Balance.** HBN `ds005505` is relatively balanced by sex. Verify
+  that your filtered dataset maintains a reasonable ratio (e.g., 40/60).
+- **Metrics.** Report **Balanced Accuracy** and **ROC AUC**. Since clinical
+  cohorts often have slight imbalances, raw accuracy can be misleading.
+- **Baseline Comparison.** Compare your model against a `majority_class`
+  baseline. A model that doesn’t beat the majority class has not learned
+  anything from the EEG.
+- **Ethical & Context Caveats.** (1) **Labels are metadata, not biology.**
+  The BIDS `sex` field is often sponsor-coded; any separation speaks to
+  that category, not to chromosomal or hormonal status. (2) **Confounds.**
+  Recording site, age, and equipment can correlate with sex in small
+  cohorts, leading to “clever Hans” effects where the model learns the
+  site rather than the phenomenon.
+
+<!-- GENERATED FROM PYTHON SOURCE LINES 59-62 -->
 ```Python
 # Difficulty: 3-star (advanced applied project)
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 51-59 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 63-71 -->
 
 ## Requirements
 
@@ -64,7 +78,7 @@ which class does the model confuse?
   /auto_examples/tutorials/40_features/plot_42_features_to_sklearn.
 - Concept: [Features vs. deep learning](../../../concepts/features_vs_deep_learning.md).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 61-74 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 73-86 -->
 
 ## Why a sklearn-display diagnostic?
 
@@ -80,12 +94,12 @@ EEG classifier; this project demonstrates it on the sex-prediction
 question because that is the most direct test of whether the resting-
 state signal carries predictive information about a categorical label.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 76-78 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 88-90 -->
 
 Setup. `random_state=42` on every estimator and splitter is what
 keeps the printed metrics byte-stable across runs (E3.21).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 78-119 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 90-131 -->
 ```Python
 import os
 import warnings
@@ -129,7 +143,7 @@ CACHE_DIR.mkdir(parents=True, exist_ok=True)
 print(f"eegdash {eegdash.__version__} | cache_dir={CACHE_DIR}")
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 120-127 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 132-139 -->
 
 ## Step 1. Pull ds005505 resting-state metadata
 
@@ -139,7 +153,7 @@ metadata-only first pass populates each record’s `description` with
 the BIDS `sex` field; recordings without a usable label are dropped
 before any preprocessing fires.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 129-147 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 141-159 -->
 ```Python
 DATASET = "ds005505"
 TASK = "RestingState"
@@ -160,7 +174,7 @@ print(
 )
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 148-153 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 160-165 -->
 
 ## Step 2. Balance the cohort by the BIDS sex label
 
@@ -168,7 +182,7 @@ A 50 / 50 sex balance pins the chance line at 0.50 on every fold. We
 sort the candidate list by subject id (deterministic across runs) and
 take the first `N_PER_SEX` of each label so the cohort is reproducible.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 155-175 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 167-187 -->
 ```Python
 by_sex: dict[str, list] = {"F": [], "M": []}
 for d in sorted(candidates, key=lambda r: str(r.description.get("subject"))):
@@ -191,7 +205,7 @@ cohort_summary = pd.Series(
 cohort_summary
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 176-185 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 188-197 -->
 
 ## Step 3. Pick a small montage, resample, and window
 
@@ -203,7 +217,7 @@ band-pass. Fixed-length 2 s windows feed the feature stage. The
 resting-state EEG carries predictive information at all, not whether
 128 electrodes carry more than 8.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 187-221 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 199-233 -->
 ```Python
 CH_NAMES = ["E22", "E9", "E33", "E11", "E122", "E29", "E124", "Cz"]
 TARGET_SFREQ = 100  # Hz
@@ -240,7 +254,7 @@ print(
 )
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 222-229 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 234-241 -->
 
 ## Step 4. Materialize windows + per-window subject id and label
 
@@ -250,7 +264,7 @@ class label (0 = F, 1 = M). Iterating the per-record sub-datasets and
 reading `braindecode.datasets.WindowsDataset.description` once
 per record is the most direct route.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 231-252 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 243-264 -->
 ```Python
 SEX_TO_INT = {"F": 0, "M": 1}
 CLASS_NAMES = ("F", "M")
@@ -274,7 +288,7 @@ print(
 )
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 253-260 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 265-272 -->
 
 ## Step 5. Compute log band-power features
 
@@ -284,7 +298,7 @@ Per window: one log-power value per channel per band, on delta
 `log(mean(|FFT|**2))` is the cheapest band-power feature that
 survives a review [[Schirrmeister *et al.*, 2017](../../../references.md#id8)].
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 262-297 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 274-309 -->
 ```Python
 BANDS: tuple[tuple[float, float], ...] = (
     (1.0, 4.0),  # delta
@@ -322,7 +336,7 @@ print(
 )
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 298-303 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 310-315 -->
 
 ## Discovery: feature distributions
 
@@ -330,14 +344,14 @@ A quick descriptive table on the first eight features flags dead
 channels (variance close to zero) and saturated bands (variance much
 larger than its peers).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 305-309 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 317-321 -->
 ```Python
 feature_names = [f"{b}_{c}" for b in BAND_NAMES for c in CH_NAMES]
 features_df = pd.DataFrame(X_features, columns=feature_names)
 features_df.iloc[:, :8].describe().round(3)
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 310-317 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 322-329 -->
 
 ## Step 6. 3-fold cross-subject CV with GroupKFold
 
@@ -347,7 +361,7 @@ every fold trains on 4 subjects and tests on 2.
 predictions; the pooled scores feed the confusion matrix and the
 pooled ROC.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 319-366 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 331-378 -->
 ```Python
 N_FOLDS = 3
 splitter = GroupKFold(n_splits=N_FOLDS)
@@ -397,13 +411,13 @@ print(
 )
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 367-370 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 379-382 -->
 
 ## Result table: per-fold metrics
 
 Chance is 0.50 for both AUC and accuracy on this balanced cohort.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 372-382 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 384-394 -->
 ```Python
 results_df = pd.DataFrame(
     {
@@ -416,7 +430,7 @@ results_df = pd.DataFrame(
 results_df
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 383-393 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 395-405 -->
 
 **Investigate.** On a 6-subject balanced cohort with these 32 log-
 power features, the pooled AUC routinely lands well below 0.50: the
@@ -429,7 +443,7 @@ above AUC = 0.95 in the same script is a leakage smell: re-check
 that `groups` is the subject id and that the cohort balancing step
 did not collapse the label.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 395-401 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 407-413 -->
 
 ## Common mistake: scaling on the union of train and test
 
@@ -438,7 +452,7 @@ did not collapse the label.
 matrix before splitting. The mean and std then leak test-fold statistics
 into the train slice. We trigger the slip on purpose and recover.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 403-440 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 415-452 -->
 ```Python
 try:
     sneaky_train_idx, sneaky_test_idx = next(
@@ -478,7 +492,7 @@ except ValueError as exc:
     print(f"Caught ValueError: {str(exc)[:120]}")
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 441-446 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 453-458 -->
 
 ## Discovery: the pooled confusion matrix in raw counts
 
@@ -486,7 +500,7 @@ The figure below renders a row-normalised matrix; the table here
 carries the raw counts so a 0.55 cell can be traced back to 11/20
 vs 550/1000.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 448-456 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 460-468 -->
 ```Python
 cm = confusion_matrix(y_true_pooled, y_pred_pooled)
 cm_df = pd.DataFrame(
@@ -497,7 +511,7 @@ cm_df = pd.DataFrame(
 cm_df
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 457-466 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 469-478 -->
 
 ## Three-panel sklearn-display diagnostic
 
@@ -509,13 +523,13 @@ balanced. The rendering plumbing lives in a sibling
 `_sex_classification_figure` module so the project keeps a single
 call to plug live runtime values into the figure.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 468-471 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 480-483 -->
 
 PCA + a logistic regression refit in PCA space so the decision
 contour shares coordinates with the scattered points; the actual
 model the project reports lives in the original feature space.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 471-496 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 483-508 -->
 ```Python
 X_std = StandardScaler().fit_transform(X_features)
 X_pca = PCA(n_components=2, random_state=SEED).fit_transform(X_std)
@@ -543,7 +557,7 @@ fig = draw_sex_classification_figure(
 plt.show()
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 497-508 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 509-520 -->
 
 **Investigate.** Read the panels in order. (1) PCA + decision
 boundary: do F and M markers form even partly separable clouds?
@@ -557,7 +571,7 @@ condition; an off-diagonal stripe means the model has collapsed onto
 one class. The monospace `balanced_acc=...` annotation carries the
 headline metric so the figure stands alone.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 510-516 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 522-528 -->
 
 ## Modify
 
@@ -566,7 +580,7 @@ Step 6. An AUC drop of more than 0.05 means the alpha band carried
 most of the class-related variance; a smaller drop means the contrast
 is spread across the spectrum.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 518-527 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 530-539 -->
 
 ## Make
 
@@ -578,7 +592,7 @@ forest does not beat the linear baseline, that is the most useful
 finding the project will produce: linear features deserve a linear
 model.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 529-539 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 541-551 -->
 
 ## Wrap-up
 
@@ -591,7 +605,7 @@ shows whether that AUC is stable. A clean shape and a chance-anchored
 AUC only confirm plumbing; signal quality and the sex-vs-confound
 question are still open [[Cisotto and Chicco, 2024](../../../references.md#id19)].
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 541-552 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 553-564 -->
 
 ## Try it yourself
 
@@ -605,11 +619,11 @@ question are still open [[Cisotto and Chicco, 2024](../../../references.md#id19)
   [`Ridge`](https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Ridge.html#sklearn.linear_model.Ridge) plus a continuous-target
   variant of the diagnostic.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 554-559 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 566-571 -->
 
 ## References
 
-See [References](../../../references.md) for the centralised bibliography of papers
+See [References](../../../references.md) for the centralized bibliography of papers
 cited above. Add or amend an entry once in
 `docs/source/refs.bib`; every tutorial inherits the update.
 

@@ -6,17 +6,22 @@
 
 <a id="sphx-glr-generated-auto-examples-tutorials-00-start-here-plot-00-first-search-py"></a>
 
-# How do I find datasets in EEGDash?
+# Find datasets with the EEGDash API
+
+**Difficulty 1** | **Runtime: <2m** | **Compute: CPU**
 
 EEGDash exposes a metadata index over hundreds of BIDS-curated EEG datasets,
 served by the public REST API at [https://data.eegdash.org](https://data.eegdash.org). The same
 catalogue powers [NEMAR](https://nemar.org), the EEGLAB-ecosystem portal
 that hosts EEG/MEG datasets with browsing, compute, and provenance tools
 (Delorme et al., 2022). The `EEGDash` client searches,
-filters, and summarises that index without downloading a single sample.
+filters, and summarizes that index without downloading a single sample.
 
 <!-- sphinx_gallery_thumbnail_path = '_static/thumbs/plot_00_first_search.png' -->
-<!-- GENERATED FROM PYTHON SOURCE LINES 15-21 -->
+
+Keywords: loading, metadata, API
+
+<!-- GENERATED FROM PYTHON SOURCE LINES 19-25 -->
 
 ## Learning objectives
 
@@ -25,7 +30,7 @@ filters, and summarises that index without downloading a single sample.
 - Convert query results into a [`pandas.DataFrame`](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame) for analysis.
 - Compute cohort statistics (subjects, sampling rates, modalities) from metadata only.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 23-28 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 27-32 -->
 
 ## Requirements
 
@@ -33,11 +38,11 @@ filters, and summarises that index without downloading a single sample.
 - Network required; `EEGDash` consumes the public API at
   `https://data.eegdash.org`. No authentication is needed for read access.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 30-31 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 34-35 -->
 
 Setup. No randomness here, so no seed.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 31-41 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 35-45 -->
 ```Python
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -54,7 +59,7 @@ print(f"eegdash {eegdash.__version__}")
 eegdash 0.7.2
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 42-50 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 46-54 -->
 
 ## Step 1: Discover the EEGDash client
 
@@ -65,7 +70,7 @@ verbs: count, find, get. How many does `EEGDash` actually have?
 
 **Run.** Print the public method list.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 52-60 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 56-64 -->
 ```Python
 client = EEGDash()
 public_methods = sorted(
@@ -90,20 +95,31 @@ EEGDash() exposes 10 public methods:
   - update_field
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 61-65 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 65-69 -->
 
 **Investigate.** `count`, `exists`, `find`, `find_one`,
 `find_datasets`, `search_datasets`, `get_dataset`, plus three
 admin verbs. `find` and `find_datasets` are the read paths we use
 throughout the gallery.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 67-70 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 71-79 -->
+
+## Validate your result
+
+A successful `EEGDash()` initialization and `count()` should return:
+
+1. A method list containing `find`, `count`, and `get_dataset`.
+2. A record count > 10,000 (the index is growing).
+3. A projection with columns like `subject`, `session`, and `task`.
+4. Filtered results with extra columns like `sfreq` and `n_channels`.
+
+<!-- GENERATED FROM PYTHON SOURCE LINES 81-84 -->
 
 ## Step 2: How big is the catalogue?
 
 `count` runs server-side and is the cheapest call we can make.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 72-75 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 86-89 -->
 ```Python
 n_records = client.count({})
 print(f"records in the index: {n_records:,}")
@@ -113,7 +129,7 @@ print(f"records in the index: {n_records:,}")
 records in the index: 305,393
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 76-83 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 90-97 -->
 
 ## Step 3: A broad scan vs. a targeted query
 
@@ -123,7 +139,7 @@ only, no signal-shape fields. A dataset filter unlocks the full record
 
 **Run** both and compare the columns.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 85-97 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 99-111 -->
 ```Python
 broad = pd.DataFrame(client.find({}, limit=200)).drop(columns=["_id"], errors="ignore")
 focused = pd.DataFrame(
@@ -144,7 +160,7 @@ focused : 200 rows x 22 cols
 extra columns when filtered: ['_has_missing_files', 'ch_names', 'montage_hash', 'nchans', 'ntimes', 'participant_tsv', 'sampling_frequency']
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 98-106 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 112-120 -->
 
 ## Step 4: What does one record actually contain?
 
@@ -155,7 +171,7 @@ duration in samples) and storage hints (relative path, datatype). Per
 the EEG-BIDS spec (Pernet et al. 2019, doi:10.1038/s41597-019-0104-8),
 every recording exposes these fields.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 108-126 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 122-140 -->
 ```Python
 fields = [
     "dataset",
@@ -245,18 +261,18 @@ record_view
 </div>
 <br />
 <br />
-<!-- GENERATED FROM PYTHON SOURCE LINES 127-131 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 141-145 -->
 
 ## Step 5: Cohort analysis on the DataFrame
 
 `value_counts`, `groupby`, and `describe` cover most catalogue
 questions; the EEGDash client stays out of the way.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 133-134 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 147-148 -->
 
 Records per dataset.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 134-136 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 148-150 -->
 ```Python
 focused["dataset"].value_counts().to_frame("records")
 ```
@@ -306,11 +322,11 @@ focused["dataset"].value_counts().to_frame("records")
 </div>
 <br />
 <br />
-<!-- GENERATED FROM PYTHON SOURCE LINES 137-138 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 151-152 -->
 
 Sampling-rate distribution.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 138-140 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 152-154 -->
 ```Python
 focused["sampling_frequency"].value_counts().head(8).to_frame("records")
 ```
@@ -360,11 +376,11 @@ focused["sampling_frequency"].value_counts().head(8).to_frame("records")
 </div>
 <br />
 <br />
-<!-- GENERATED FROM PYTHON SOURCE LINES 141-142 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 155-156 -->
 
 Top tasks.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 142-144 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 156-158 -->
 ```Python
 focused["task"].value_counts().head(8).to_frame("records")
 ```
@@ -434,13 +450,13 @@ focused["task"].value_counts().head(8).to_frame("records")
 </div>
 <br />
 <br />
-<!-- GENERATED FROM PYTHON SOURCE LINES 145-148 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 159-162 -->
 
 ## Step 6: Visualise the cohort
 
 A horizontal bar of “records per dataset” reads at a glance.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 150-165 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 164-179 -->
 ```Python
 counts = focused["dataset"].value_counts().iloc[::-1]
 fig, ax = plt.subplots(figsize=(7, 4.2))
@@ -458,7 +474,7 @@ style_figure(
 plt.show()
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 166-171 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 180-185 -->
 
 ## Step 7: Dataset-level documents
 
@@ -466,7 +482,7 @@ plt.show()
 with DOI, BIDS version, demographics, and citation counts. Promote
 them to a DataFrame and shortlist by subject count.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 173-185 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 187-199 -->
 ```Python
 catalogue = pd.DataFrame(client.find_datasets({}, limit=300))
 catalogue["n_subjects"] = catalogue["demographics"].apply(
@@ -572,7 +588,7 @@ shortlist
 </div>
 <br />
 <br />
-<!-- GENERATED FROM PYTHON SOURCE LINES 186-191 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 200-205 -->
 
 ## A common mistake, and how to recover
 
@@ -580,7 +596,7 @@ shortlist
 error. The recovery is to surface what tasks the catalogue actually
 carries [[Nederbragt *et al.*, 2020](../../../../references.md#id31)].
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 193-198 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 207-212 -->
 ```Python
 unknown = client.find(task="FacePerceptionXYZ", limit=5)
 print(f"records for unknown task: {len(unknown)}")
@@ -593,7 +609,7 @@ records for unknown task: 0
 known tasks (first 8): ['DespicableMe', 'DiaryOfAWimpyKid', 'FaceRecognition', 'FunwithFractals', 'P300', 'RestingState', 'ThePresent', 'contrastChangeDetection']
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 199-205 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 213-219 -->
 
 ## Modify
 
@@ -602,7 +618,7 @@ sampling_frequency=250, limit=20)`, then add `subject="012"`. The
 query language is keyword-style for simple cases and Mongo-style
 (`{"$gte": 250}`) for ranges.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 207-210 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 221-224 -->
 ```Python
 combined = client.find(task="RestingState", limit=20)
 print(f"records for task=RestingState: {len(combined)}")
@@ -612,7 +628,7 @@ print(f"records for task=RestingState: {len(combined)}")
 records for task=RestingState: 20
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 211-216 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 225-230 -->
 
 ## Make
 
@@ -620,7 +636,7 @@ records for task=RestingState: 20
 and a minimum subject count, then return a DataFrame with
 `[dataset_id, n_subjects, sampling_rates_seen]`. Starter below.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 219-245 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 233-259 -->
 ```Python
 def candidate_cohort(min_subjects: int = 5, sfreq_min: float = 200.0) -> pd.DataFrame:
     """Shortlist EEG datasets with >= ``min_subjects`` and at least one sampling rate >= ``sfreq_min``."""
@@ -692,21 +708,21 @@ candidate_cohort(min_subjects=5, sfreq_min=200.0)
 </div>
 <br />
 <br />
-<!-- GENERATED FROM PYTHON SOURCE LINES 246-250 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 260-264 -->
 
 ## Result
 
 We surveyed the EEGDash index without pulling a single sample, ran
 multi-field queries, and shortlisted candidate datasets in a DataFrame.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 252-256 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 266-270 -->
 
 ## Wrap-up
 
 Next: `plot_01_first_recording.py` actually downloads one record from
 the shortlist above and inspects its raw signal, channels, and duration.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 258-264 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 272-278 -->
 
 ## Try it yourself
 
@@ -715,14 +731,14 @@ the shortlist above and inspects its raw signal, channels, and duration.
   to get total recorded hours per dataset.
 - Persist your shortlist with `shortlist.to_parquet("candidates.parquet")`.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 266-271 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 280-285 -->
 
 ## References
 
-See [References](../../../../references.md) for the centralised bibliography of papers
+See [References](../../../../references.md) for the centralized bibliography of papers
 cited above. Add or amend an entry once in
 `docs/source/refs.bib`; every tutorial inherits the update.
 
-**Total running time of the script:** (0 minutes 5.883 seconds)
+**Total running time of the script:** (0 minutes 8.197 seconds)
 
 <a id="sphx-glr-download-generated-auto-examples-tutorials-00-start-here-plot-00-first-search-py"></a>

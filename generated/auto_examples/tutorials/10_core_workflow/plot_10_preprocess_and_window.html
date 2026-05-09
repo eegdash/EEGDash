@@ -7,18 +7,18 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta property="og:title" content="How do I preprocess EEG and create model-ready windows?" />
+<meta property="og:title" content="Preprocess EEG and create windows" />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://eegdash.org/generated/auto_examples/tutorials/10_core_workflow/plot_10_preprocess_and_window.html" />
 <meta property="og:site_name" content="EEG Dash" />
-<meta property="og:description" content="Raw EEG is rarely model-ready: wrong sampling rate, drift and line noise, no fixed reference, sporadic large-amplitude bursts, a continuous timeline…" />
+<meta property="og:description" content="Difficulty 1-2| Runtime: 2m| Compute: CPU Raw EEG is rarely model-ready: wrong sampling rate, drift and line noise, no fixed reference, sporadic…" />
 <meta property="og:image" content="https://eegdash.org/_static/eegdash_social_card.png" />
 <meta property="og:image:alt" content="EEG Dash — data-sharing interface for M/EEG datasets" />
-<meta name="description" content="Raw EEG is rarely model-ready: wrong sampling rate, drift and line noise, no fixed reference, sporadic large-amplitude bursts, a continuous timeline…" />
+<meta name="description" content="Difficulty 1-2| Runtime: 2m| Compute: CPU Raw EEG is rarely model-ready: wrong sampling rate, drift and line noise, no fixed reference, sporadic…" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@eegdash" />
 
-    <title>How do I preprocess EEG and create model-ready windows? &#8212; EEG Dash</title>
+    <title>Preprocess EEG and create windows &#8212; EEG Dash</title>
   
   
   
@@ -74,7 +74,7 @@
     <link rel="icon" href="../../../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" />
-    <link rel="next" title="How do I split EEG data without subject leakage?" href="plot_11_leakage_safe_split.html" />
+    <link rel="next" title="Split EEG without subject leakage" href="plot_11_leakage_safe_split.html" />
     <link rel="prev" title="Core Decoding Workflow" href="index.html" />
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="0.7" />
@@ -563,7 +563,7 @@
     
     <li class="breadcrumb-item"><a href="index.html" class="nav-link">Core Decoding Workflow</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">How do I preprocess EEG and create model-ready windows?</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Preprocess EEG and create windows</span></li>
   </ul>
 </nav>
 </div>
@@ -585,8 +585,9 @@
 <p><a class="reference internal" href="#sphx-glr-download-generated-auto-examples-tutorials-10-core-workflow-plot-10-preprocess-and-window-py"><span class="std std-ref">Go to the end</span></a>
 to download the full example code or to run this example in your browser via Binder.</p>
 </div>
-<section class="sphx-glr-example-title" id="how-do-i-preprocess-eeg-and-create-model-ready-windows">
-<span id="sphx-glr-generated-auto-examples-tutorials-10-core-workflow-plot-10-preprocess-and-window-py"></span><h1>How do I preprocess EEG and create model-ready windows?<a class="headerlink" href="#how-do-i-preprocess-eeg-and-create-model-ready-windows" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">24 minutes</span></div>
+<section class="sphx-glr-example-title" id="preprocess-eeg-and-create-windows">
+<span id="sphx-glr-generated-auto-examples-tutorials-10-core-workflow-plot-10-preprocess-and-window-py"></span><h1>Preprocess EEG and create windows<a class="headerlink" href="#preprocess-eeg-and-create-windows" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">24 minutes</span></div>
+<p><strong>Difficulty 1-2</strong> | <strong>Runtime: 2m</strong> | <strong>Compute: CPU</strong></p>
 <p>Raw EEG is rarely model-ready: wrong sampling rate, drift and line noise,
 no fixed reference, sporadic large-amplitude bursts, a continuous
 timeline instead of fixed epochs. This tutorial walks the canonical
@@ -599,6 +600,7 @@ core-workflow tutorials reuse. The closing diagnostic figure compares
 the recording before and after a one-call
 <a class="reference external" href="https://braindecode.org/stable/generated/braindecode.preprocessing.EEGPrep.html#braindecode.preprocessing.EEGPrep" title="(in Braindecode v1.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">braindecode.preprocessing.EEGPrep</span></code></a> pass that wraps ASR (Mullen
 et al. 2015), bad-channel detection, high-pass, and CAR.</p>
+<p>Keywords: preprocessing, windowing, ASR</p>
 <section id="learning-objectives">
 <h2>Learning objectives<a class="headerlink" href="#learning-objectives" title="Link to this heading">#</a></h2>
 <ul class="simple">
@@ -1004,7 +1006,7 @@ alternative when ASR-style cleanup is needed.</p>
 <span class="n">raw</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[05/08/26 18:41:44] WARNING  File not found on S3, skipping:   downloader.py:163
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[05/09/26 20:24:39] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds002718/sub-0
                              02/eeg/sub-002_task-FaceRecogniti
                              on_eeg.fdt
@@ -1158,9 +1160,9 @@ this file apply (plus whatever default styling the IDE applies).
 
 
 
-<tr class="mne-repr-section-header general-3c820d7f-4372-4804-ac20-ca5fdacc687e"
+<tr class="mne-repr-section-header general-7c912cfe-d2b0-4804-ae45-48d634e4e8b3"
      title="Hide section"
-    onclick="toggleVisibility('general-3c820d7f-4372-4804-ac20-ca5fdacc687e')">
+    onclick="toggleVisibility('general-7c912cfe-d2b0-4804-ae45-48d634e4e8b3')">
     <th class="mne-repr-section-toggle">
         <button >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
@@ -1172,7 +1174,7 @@ this file apply (plus whatever default styling the IDE applies).
 </tr>
 
 
-<tr class="repr-element general-3c820d7f-4372-4804-ac20-ca5fdacc687e ">
+<tr class="repr-element general-7c912cfe-d2b0-4804-ae45-48d634e4e8b3 ">
     <td class="mne-repr-section-toggle"></td>
     <td>Filename(s)</td>
     <td>
@@ -1183,26 +1185,26 @@ this file apply (plus whatever default styling the IDE applies).
     </td>
 </tr>
 
-<tr class="repr-element general-3c820d7f-4372-4804-ac20-ca5fdacc687e ">
+<tr class="repr-element general-7c912cfe-d2b0-4804-ae45-48d634e4e8b3 ">
     <td class="mne-repr-section-toggle"></td>
     <td>MNE object type</td>
     <td>RawEEGLAB</td>
 </tr>
-<tr class="repr-element general-3c820d7f-4372-4804-ac20-ca5fdacc687e ">
+<tr class="repr-element general-7c912cfe-d2b0-4804-ae45-48d634e4e8b3 ">
     <td class="mne-repr-section-toggle"></td>
     <td>Measurement date</td>
 
     <td>Unknown</td>
 
 </tr>
-<tr class="repr-element general-3c820d7f-4372-4804-ac20-ca5fdacc687e ">
+<tr class="repr-element general-7c912cfe-d2b0-4804-ae45-48d634e4e8b3 ">
     <td class="mne-repr-section-toggle"></td>
     <td>Participant</td>
 
 
 
 </tr>
-<tr class="repr-element general-3c820d7f-4372-4804-ac20-ca5fdacc687e ">
+<tr class="repr-element general-7c912cfe-d2b0-4804-ae45-48d634e4e8b3 ">
     <td class="mne-repr-section-toggle"></td>
     <td>Experimenter</td>
 
@@ -1217,9 +1219,9 @@ this file apply (plus whatever default styling the IDE applies).
 
 
 
-<tr class="mne-repr-section-header acquisition-f5e697d9-7ffe-4775-874b-6df6df9f475f"
+<tr class="mne-repr-section-header acquisition-cd7e5804-3488-40f4-b2f2-0a74ef433a02"
      title="Hide section"
-    onclick="toggleVisibility('acquisition-f5e697d9-7ffe-4775-874b-6df6df9f475f')">
+    onclick="toggleVisibility('acquisition-cd7e5804-3488-40f4-b2f2-0a74ef433a02')">
     <th class="mne-repr-section-toggle">
         <button >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
@@ -1231,7 +1233,7 @@ this file apply (plus whatever default styling the IDE applies).
 </tr>
 
 
-<tr class="repr-element acquisition-f5e697d9-7ffe-4775-874b-6df6df9f475f ">
+<tr class="repr-element acquisition-cd7e5804-3488-40f4-b2f2-0a74ef433a02 ">
     <td class="mne-repr-section-toggle"></td>
     <td>Duration</td>
     <td>00:49:51 (HH:MM:SS)</td>
@@ -1244,14 +1246,14 @@ this file apply (plus whatever default styling the IDE applies).
 
 
 
-<tr class="repr-element acquisition-f5e697d9-7ffe-4775-874b-6df6df9f475f ">
+<tr class="repr-element acquisition-cd7e5804-3488-40f4-b2f2-0a74ef433a02 ">
     <td class="mne-repr-section-toggle"></td>
     <td>Sampling frequency</td>
     <td>250.00 Hz</td>
 </tr>
 
 
-<tr class="repr-element acquisition-f5e697d9-7ffe-4775-874b-6df6df9f475f ">
+<tr class="repr-element acquisition-cd7e5804-3488-40f4-b2f2-0a74ef433a02 ">
     <td class="mne-repr-section-toggle"></td>
     <td>Time points</td>
     <td>747,750</td>
@@ -1266,9 +1268,9 @@ this file apply (plus whatever default styling the IDE applies).
 
 
 
-<tr class="mne-repr-section-header channels-ad629f5e-142d-4f73-958d-95c0c8f6a2cf"
+<tr class="mne-repr-section-header channels-17b42248-df90-4817-ac8e-db5a69315b4d"
      title="Hide section"
-    onclick="toggleVisibility('channels-ad629f5e-142d-4f73-958d-95c0c8f6a2cf')">
+    onclick="toggleVisibility('channels-17b42248-df90-4817-ac8e-db5a69315b4d')">
     <th class="mne-repr-section-toggle">
         <button >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
@@ -1281,7 +1283,7 @@ this file apply (plus whatever default styling the IDE applies).
 
 
 
-<tr class="repr-element channels-ad629f5e-142d-4f73-958d-95c0c8f6a2cf ">
+<tr class="repr-element channels-17b42248-df90-4817-ac8e-db5a69315b4d ">
     <td class="mne-repr-section-toggle"></td>
     <td>EEG</td>
     <td>
@@ -1294,7 +1296,7 @@ this file apply (plus whatever default styling the IDE applies).
 </tr>
 
 
-<tr class="repr-element channels-ad629f5e-142d-4f73-958d-95c0c8f6a2cf ">
+<tr class="repr-element channels-17b42248-df90-4817-ac8e-db5a69315b4d ">
     <td class="mne-repr-section-toggle"></td>
     <td>EOG</td>
     <td>
@@ -1307,7 +1309,7 @@ this file apply (plus whatever default styling the IDE applies).
 </tr>
 
 
-<tr class="repr-element channels-ad629f5e-142d-4f73-958d-95c0c8f6a2cf ">
+<tr class="repr-element channels-17b42248-df90-4817-ac8e-db5a69315b4d ">
     <td class="mne-repr-section-toggle"></td>
     <td>misc</td>
     <td>
@@ -1320,7 +1322,7 @@ this file apply (plus whatever default styling the IDE applies).
 </tr>
 
 
-<tr class="repr-element channels-ad629f5e-142d-4f73-958d-95c0c8f6a2cf ">
+<tr class="repr-element channels-17b42248-df90-4817-ac8e-db5a69315b4d ">
     <td class="mne-repr-section-toggle"></td>
     <td>Head & sensor digitization</td>
 
@@ -1335,9 +1337,9 @@ this file apply (plus whatever default styling the IDE applies).
 
 
 
-<tr class="mne-repr-section-header filters-b1825856-fe28-4654-b1d2-29615b004f03"
+<tr class="mne-repr-section-header filters-f3f81c9b-1e99-465e-8467-1b8011cb4821"
      title="Hide section"
-    onclick="toggleVisibility('filters-b1825856-fe28-4654-b1d2-29615b004f03')">
+    onclick="toggleVisibility('filters-f3f81c9b-1e99-465e-8467-1b8011cb4821')">
     <th class="mne-repr-section-toggle">
         <button >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
@@ -1349,14 +1351,14 @@ this file apply (plus whatever default styling the IDE applies).
 </tr>
 
 
-<tr class="repr-element filters-b1825856-fe28-4654-b1d2-29615b004f03 ">
+<tr class="repr-element filters-f3f81c9b-1e99-465e-8467-1b8011cb4821 ">
     <td class="mne-repr-section-toggle"></td>
     <td>Highpass</td>
     <td>0.00 Hz</td>
 </tr>
 
 
-<tr class="repr-element filters-b1825856-fe28-4654-b1d2-29615b004f03 ">
+<tr class="repr-element filters-f3f81c9b-1e99-465e-8467-1b8011cb4821 ">
     <td class="mne-repr-section-toggle"></td>
     <td>Lowpass</td>
     <td>125.00 Hz</td>
@@ -1691,11 +1693,11 @@ show.</p>
 <span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[05/08/26 18:42:01] WARNING  File not found on S3, skipping:   downloader.py:163
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[05/09/26 20:24:56] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds002718/sub-0
                              02/eeg/sub-002_task-FaceRecogniti
                              on_eeg.fdt
-/tmp/tmpp46w_cj3.set
+/tmp/tmpnfxwkh3i.set
 Field &#39;subject&#39; is missing from the EEG dictionnary, adding it.
 Field &#39;group&#39; is missing from the EEG dictionnary, adding it.
 Field &#39;condition&#39; is missing from the EEG dictionnary, adding it.
@@ -1721,10 +1723,10 @@ Field &#39;etc&#39; is missing from the EEG dictionnary, adding it.
 Field &#39;datfile&#39; is missing from the EEG dictionnary, adding it.
 Field &#39;run&#39; is missing from the EEG dictionnary, adding it.
 Field &#39;roi&#39; is missing from the EEG dictionnary, adding it.
-[05/08/26 18:42:02] INFO     Detecting flat line          clean_artifacts.py:182
+[05/09/26 20:24:58] INFO     Detecting flat line          clean_artifacts.py:182
                              channels...
                     INFO     Applying high‑pass filter... clean_artifacts.py:191
-[05/08/26 18:42:03] INFO     Scanning for bad channels...   clean_channels.py:79
+                    INFO     Scanning for bad channels...   clean_channels.py:79
                     WARNING  clean_channels failed (To    clean_artifacts.py:216
                              use this function most of
                              your channels should have
@@ -1736,7 +1738,7 @@ Field &#39;roi&#39; is missing from the EEG dictionnary, adding it.
                              data for calibration...
                     INFO     Determining time window        clean_windows.py:115
                              rejection thresholds...
-[05/08/26 18:42:05] INFO     done.                          clean_windows.py:147
+[05/09/26 20:25:00] INFO     done.                          clean_windows.py:147
                     INFO     Keeping 36.9% (11 seconds) of  clean_windows.py:179
                              the data.
                     ERROR    Could not select time windows  clean_windows.py:204
@@ -1752,7 +1754,7 @@ Field &#39;roi&#39; is missing from the EEG dictionnary, adding it.
                     INFO     Calculating robust geometric median      asr.py:207
                              covariance...
                     INFO     Determining per-component thresholds...  asr.py:227
-[05/08/26 18:42:07] INFO     Thresholds calculation complete.         asr.py:289
+[05/09/26 20:25:03] INFO     Thresholds calculation complete.         asr.py:289
                     INFO     Applying ASR processing...         clean_asr.py:177
                     INFO     Cleaning data in 32 blocks               asr.py:427
                     INFO     Finished cleaning.                       asr.py:546
@@ -1762,7 +1764,7 @@ Field &#39;roi&#39; is missing from the EEG dictionnary, adding it.
                              windows...
                     INFO     Determining time window        clean_windows.py:115
                              rejection thresholds...
-[05/08/26 18:42:10] INFO     done.                          clean_windows.py:147
+[05/09/26 20:25:05] INFO     done.                          clean_windows.py:147
                     INFO     Keeping 100.0% (30 seconds) of clean_windows.py:179
                              the data.
                     ERROR    Could not select time windows  clean_windows.py:204
@@ -1927,10 +1929,10 @@ session without re-running preprocessing (covered in
 </section>
 <section id="references">
 <h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
-<p>See <a class="reference internal" href="../../../../references.html"><span class="doc">References</span></a> for the centralised bibliography of papers
+<p>See <a class="reference internal" href="../../../../references.html"><span class="doc">References</span></a> for the centralized bibliography of papers
 cited above. Add or amend an entry once in
 <code class="file docutils literal notranslate"><span class="pre">docs/source/refs.bib</span></code>; every tutorial inherits the update.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 27.225 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 27.573 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-auto-examples-tutorials-10-core-workflow-plot-10-preprocess-and-window-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/eegdash/EEGDash/main?urlpath=lab/tree/notebooks/generated/auto_examples/tutorials/10_core_workflow/plot_10_preprocess_and_window.ipynb"><img alt="Launch binder" src="../../../../_images/binder_badge_logo6.svg" style="width: 150px;" />
@@ -1973,7 +1975,7 @@ cited above. Add or amend an entry once in
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">How do I split EEG data without subject leakage?</p>
+        <p class="prev-next-title">Split EEG without subject leakage</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

@@ -74,8 +74,8 @@
     <link rel="icon" href="../../../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" />
-    <link rel="next" title="How do I turn EEG windows into a band-power feature matrix?" href="plot_40_first_features.html" />
-    <link rel="prev" title="Decode eyes-open vs. eyes-closed from resting-state EEG" href="../30_resting_state/plot_30_eyes_open_closed.html" />
+    <link rel="next" title="Extract band-power features" href="plot_40_first_features.html" />
+    <link rel="prev" title="Decode eyes open vs. eyes closed" href="../30_resting_state/plot_30_eyes_open_closed.html" />
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="0.7" />
 
@@ -574,7 +574,7 @@
                 <article class="bd-article">
                   
   <section id="feature-engineering">
-<h1>Feature Engineering<a class="headerlink" href="#feature-engineering" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">4 minutes</span></div>
+<h1>Feature Engineering<a class="headerlink" href="#feature-engineering" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">2 minutes</span></div>
 <p>EEGDash’s feature extraction package as a first-class option, not an
 afterthought to deep learning. Three lessons cover feature tables from
 windows, preprocessor / dependency trees that avoid recomputation, and
@@ -585,8 +585,7 @@ datasets. They are interpretable, sample-efficient, and reproducible,
 and a feature pipeline is the right tool the moment you have fewer than
 a few thousand windows per class. The dependency-tree lesson teaches
 why you should compute the spectrum once and derive band powers from
-it, rather than recomputing the FFT five times. Sourced from
-<code class="docutils literal notranslate"><span class="pre">docs/tutorial_restructure_plan.md</span></code> Category E (lines 442-458).</p>
+it, rather than recomputing the FFT five times.</p>
 <p>What you will learn:</p>
 <ul class="simple">
 <li><p>How to extract a small feature table (band power, statistical
@@ -605,15 +604,15 @@ split (the <em>Evaluation</em> track builds on this).</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">plot_42_features_to_sklearn.py</span></code> – a scikit-learn / LightGBM
 baseline from feature tables.</p></li>
 </ol>
-<div id='sg-tag-list' class='sphx-glr-tag-list'></div><div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="Plot_30 closed the loop on the parieto-occipital alpha rhythm Hans Berger first reported in 1929 klimesch2012alpha. This tutorial generalises the recipe: starting from windowed EEG (the same Healthy Brain Network ds005514 resting-state idiom we keep across the gallery, reachable through NEMAR, Delorme et al. 2022; Alexander et al. 2017), it extracts a band-power feature per channel for each of theta, alpha, beta, and gamma. The deliverable is a (n_windows, 4, n_channels) tensor of log10 band power that plot_42 hands to scikit-learn pedregosa2011sklearn without any further reshaping."><img alt="" src="../../../../_images/sphx_glr_plot_40_first_features_thumb.png" />
-<p><a class="reference internal" href="plot_40_first_features.html"><span class="doc">How do I turn EEG windows into a band-power feature matrix?</span></a></p>
-  <div class="sphx-glr-thumbnail-title">How do I turn EEG windows into a band-power feature matrix?</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="Welch&#x27;s method welch1967psd returns one power spectrum per window; band power, spectral entropy, peak frequency, and the 1/f slope (Demanuele et al. 2007; Donoghue et al. 2020) are four scalars derived from that same spectrum. If a feature dictionary asks for four band powers as four independent features, the FFT runs four times per window. The FeatureExtractor dependency tree shares one spectral_preprocessor across every spectral feature so the FFT runs once. The deliverable for this tutorial is one feature table with the four derived columns, plus a three-panel figure that names the hierarchy, shows each feature&#x27;s distribution, and prints the 4x4 Pearson correlation between them."><img alt="" src="../../../../_images/sphx_glr_plot_41_feature_trees_thumb.png" />
-<p><a class="reference internal" href="plot_41_feature_trees.html"><span class="doc">How do classical EEG markers compose on top of one Welch PSD?</span></a></p>
-  <div class="sphx-glr-thumbnail-title">How do classical EEG markers compose on top of one Welch PSD?</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="A feature table from plot_40 is one row per window with columns shaped &lt;feature&gt;_&lt;channel&gt;. The data follows the same OpenNeuro ds005514 HBN resting-state contour as plot_40, reachable through NEMAR (Delorme et al. 2022); to keep the run offline-reproducible the feature table is synthesised with the column layout plot_40 saves to parquet. Before reaching for a deep net, this tutorial wires the feature matrix into sklearn.pipeline.Pipeline pedregosa2011sklearn with StandardScaler and LogisticRegression, runs a leave-one- subject-out loop with a leakage-safe split from get_splitter, and reports per-fold accuracy against majority_baseline. The deliverable is a three-panel diagnostic that mirrors the one from plot_12 so the two read together: plot_12 trains the same Pipeline on log-band-power features computed inline, plot_42 trains it on the feature table extracted by plot_40. The question the figure answers is whether a transparent linear baseline clears the chance line on a held-out subject?"><img alt="" src="../../../../_images/sphx_glr_plot_42_features_to_sklearn_thumb.png" />
-<p><a class="reference internal" href="plot_42_features_to_sklearn.html"><span class="doc">How do I push EEGDash features through a scikit-learn Pipeline?</span></a></p>
-  <div class="sphx-glr-thumbnail-title">How do I push EEGDash features through a scikit-learn Pipeline?</div>
+<div id='sg-tag-list' class='sphx-glr-tag-list'></div><div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="Difficulty 1-2 | Runtime: 30s | Compute: CPU"><img alt="" src="../../../../_images/sphx_glr_plot_40_first_features_thumb.png" />
+<p><a class="reference internal" href="plot_40_first_features.html"><span class="doc">Extract band-power features</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Extract band-power features</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Difficulty 1-2 | Runtime: 5s | Compute: CPU"><img alt="" src="../../../../_images/sphx_glr_plot_41_feature_trees_thumb.png" />
+<p><a class="reference internal" href="plot_41_feature_trees.html"><span class="doc">Compose EEG markers from Welch PSD</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Compose EEG markers from Welch PSD</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Difficulty 1-2 | Runtime: 10s | Compute: CPU"><img alt="" src="../../../../_images/sphx_glr_plot_42_features_to_sklearn_thumb.png" />
+<p><a class="reference internal" href="plot_42_features_to_sklearn.html"><span class="doc">EEGDash features to scikit-learn</span></a></p>
+  <div class="sphx-glr-thumbnail-title">EEGDash features to scikit-learn</div>
 </div></div><div class="toctree-wrapper compound">
 </div>
 <div class="sphx-glr-footer sphx-glr-footer-gallery docutils container">
@@ -642,7 +641,7 @@ baseline from feature tables.</p></li>
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Decode eyes-open vs. eyes-closed from resting-state EEG</p>
+        <p class="prev-next-title">Decode eyes open vs. eyes closed</p>
       </div>
     </a>
     <a class="right-next"
@@ -650,7 +649,7 @@ baseline from feature tables.</p></li>
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">How do I turn EEG windows into a band-power feature matrix?</p>
+        <p class="prev-next-title">Extract band-power features</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

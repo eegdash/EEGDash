@@ -6,7 +6,9 @@
 
 <a id="sphx-glr-generated-auto-examples-applied-project-clinical-dataset-summary-py"></a>
 
-# How do I survey a clinical EEG dataset before training a model?
+# Survey clinical EEG datasets
+
+**Difficulty 1** | **Runtime: 20s** | **Compute: CPU**
 
 A starter project: pull metadata for the OpenNeuro `ds004504` clinical EEG
 release [[Miltiadous *et al.*, 2023](../../../references.md#id5)] through [`EEGDashDataset`](../../../api/dataset/eegdash.EEGDashDataset.md#eegdash.EEGDashDataset),
@@ -17,14 +19,28 @@ workflow recipe follows Cisotto and Chicco 2024. The deliverable is one
 [`pandas.DataFrame`](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame) with per-condition counts and one three-panel
 figure rendered from the live catalog numbers. Cohort imbalance, age
 confounds, recording-length mismatch, and channel-count drift are the
-four dataset-level pitfalls that silently break clinical EEG decoders
-before training even starts, so why not answer them first?
+# four dataset-level pitfalls that silently break clinical EEG decoders
+# before training even starts, so why not answer them first?
+#
+# Validate your result
+# ——————–
+# - **Required Metadata Columns.** For `ds004504`, expect columns like
+#   `Group`, `Age`, `Gender`, and `MMSE`.
+# - **Fallback Behavior.** If a column is missing from the API, EEGDash
+#   fills it with `None` or `NaN`.
+# - **Sparse Metadata.** When the public API returns sparse metadata, you
+#   can verify the local `participants.tsv` in the BIDS directory if you
+#   have the full dataset downloaded, or use `ds.description` to check
+#   which fields were successfully projected from the catalog.
+#
+# Keywords: metadata, applied, clinical
+#
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 16-18 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 32-34 -->
 ```Python
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 20-26 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 36-42 -->
 
 ## Learning objectives
 
@@ -33,7 +49,7 @@ before training even starts, so why not answer them first?
 - Compute recording-duration and channel-count distributions from `ds.records` without any signal download.
 - Show the four headline numbers a project plan needs: `n_subjects`, `n_recordings`, mean duration, `n_channels`.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 28-38 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 44-54 -->
 
 ## Requirements
 
@@ -46,13 +62,13 @@ before training even starts, so why not answer them first?
   /auto_examples/tutorials/00_start_here/plot_01_first_recording.
 - Concept: [EEGDash objects: EEGDash, EEGDashDataset, EEGChallengeDataset](../../../concepts/eegdash_objects.md).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 40-43 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 56-59 -->
 
 Step 0. Setup. `np.random.seed` keeps any later sampling reproducible;
 `use_eegdash_style` aligns matplotlib defaults with the rest of the
 gallery.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 43-68 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 59-84 -->
 ```Python
 import os
 import warnings
@@ -80,7 +96,7 @@ print(f"cache directory: {cache_dir}")
 print(f"dataset:         {DATASET}")
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 69-78 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 85-94 -->
 
 ## Step 1. The mental model: catalog row first, signals second
 
@@ -92,7 +108,7 @@ storage descriptor, the technical fields (`sampling_frequency`,
 panel of this figure can be answered from the catalog alone; no S3
 traffic happens until `ds.datasets[i].raw` is accessed.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 80-85 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 96-101 -->
 
 ## What does `EEGDashDataset` expose?
 
@@ -100,13 +116,13 @@ Before instantiating it, list the public methods and properties on the
 class. The `description`, `records`, and `datasets` names are the
 ones the rest of the script leans on.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 87-90 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 103-106 -->
 ```Python
 ds_attrs = sorted(name for name in dir(EEGDashDataset) if not name.startswith("_"))
 pd.DataFrame({"attribute": ds_attrs}).head(20)
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 91-96 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 107-112 -->
 
 ## Step 2. Build the dataset and read the description frame
 
@@ -114,7 +130,7 @@ pd.DataFrame({"attribute": ds_attrs}).head(20)
 instantly. `ds.description` is a [`pandas.DataFrame`](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame) with one
 row per recording and the participants.tsv columns merged in.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 98-104 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 114-120 -->
 ```Python
 ds = EEGDashDataset(dataset=DATASET, cache_dir=str(cache_dir))
 desc = ds.description
@@ -123,7 +139,7 @@ print(f"columns: {list(desc.columns)}")
 desc.head(8)
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 105-115 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 121-131 -->
 
 ## Step 3. Subjects per condition
 
@@ -136,7 +152,7 @@ choice (loss weights, baseline accuracies, cross-validation folds).
 **Run.** The `Group` column lives in `participant_tsv` and is also
 surfaced as the lowercase `group` column on the description frame.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 117-128 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 133-144 -->
 ```Python
 GROUP_LABELS = {
     "A": "Alzheimer's disease",
@@ -150,7 +166,7 @@ condition_counts = desc.groupby("condition")["subject"].nunique().to_dict()
 pd.Series(condition_counts, name="n_subjects").rename_axis("condition").to_frame()
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 129-136 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 145-152 -->
 
 **Investigate.** The cohort is mildly imbalanced: the largest group is
 roughly 1.5x the smallest. That ratio is benign enough to train a
@@ -160,7 +176,7 @@ accuracy or a per-class F1 should be the headline metric on this
 dataset (Cisotto and Chicco 2024 give the same advice for any clinical
 EEG cohort with a non-uniform group distribution).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 138-144 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 154-160 -->
 
 ## Step 4. Age distribution per condition
 
@@ -169,7 +185,7 @@ Age is the most common confound in clinical EEG: a group difference on
 any spectral feature can quietly track age before it tracks the
 diagnosis (Cisotto and Chicco 2024, tip 7).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 146-158 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 162-174 -->
 ```Python
 ages_by_condition = {
     cond: desc.loc[desc["condition"] == cond, "age"].dropna().tolist()
@@ -184,7 +200,7 @@ age_summary = (
 age_summary
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 159-164 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 175-180 -->
 
 ## Step 5. Recording duration and channel count
 
@@ -192,7 +208,7 @@ age_summary
 seconds); channel count is `nchans`. Both are catalog fields, no
 signal download required.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 166-191 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 182-207 -->
 ```Python
 records_df = pd.DataFrame(
     [
@@ -220,7 +236,7 @@ pd.Series(
 ).to_frame()
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 192-200 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 208-216 -->
 
 **Investigate.** Two technical invariants pop out of the summary above.
 First, every recording in `ds004504` lists the same `nchans` and the
@@ -231,7 +247,7 @@ recordings); a fixed-length window count per recording will skew toward
 the longer recordings unless windows are capped per subject before the
 split.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 202-209 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 218-225 -->
 
 ## Step 6. Render the live numbers as a 3-panel figure
 
@@ -241,7 +257,7 @@ the per-condition bar chart from Step 3, Panel 2 is the age histogram
 from Step 4, and Panel 3 is the four-cell metadata card built from
 Steps 2 and 5.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 211-233 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 227-249 -->
 ```Python
 from _clinical_summary_figure import draw_clinical_summary_figure
 
@@ -266,7 +282,7 @@ fig = draw_clinical_summary_figure(
 plt.show()
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 234-241 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 250-257 -->
 
 ## A common mistake, and how to recover
 
@@ -276,7 +292,7 @@ silently passes any `len(ds)` check. We trigger the failure on
 purpose so the recovery path is visible: catch the empty frame at
 construction time, fail loud, and print the close matches.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 243-256 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 259-272 -->
 ```Python
 try:
     ds_typo = EEGDashDataset(dataset="ds04504", cache_dir=str(cache_dir))
@@ -292,7 +308,7 @@ except Exception as exc:
     print(f"Recovery: use the canonical accession '{DATASET}'")
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 257-263 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 273-279 -->
 
 ## Step 7. Modify: pivot the cohort by sex
 
@@ -301,7 +317,7 @@ instead of `condition` so the project-plan section can answer “is the
 sex split balanced inside each condition?” before training a sex-
 adjusted decoder.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 265-270 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 281-286 -->
 ```Python
 sex_by_condition = (
     desc.groupby(["condition", "gender"])["subject"].nunique().unstack(fill_value=0)
@@ -309,7 +325,7 @@ sex_by_condition = (
 sex_by_condition
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 271-278 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 287-294 -->
 
 ## Step 8. Make: a one-row dataset card
 
@@ -319,7 +335,7 @@ plan or a manuscript Methods section needs: `dataset`, `n_subjects`,
 and the per-condition counts. The cell below collapses the survey into
 that single row.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 281-300 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 297-316 -->
 ```Python
 def _per_condition_str(counts: dict[str, int]) -> str:
     return ", ".join(f"{k}={v}" for k, v in sorted(counts.items()))
@@ -341,7 +357,7 @@ dataset_card = pd.DataFrame(
 dataset_card
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 301-310 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 317-326 -->
 
 ## Result
 
@@ -353,7 +369,7 @@ a custom participants.tsv parser, and a custom merge step; the catalog
 rolls all three into one query (Cisotto and Chicco 2024 would say: do
 not rebuild what the dataset class already enforces).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 312-325 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 328-341 -->
 
 ## Wrap-up
 
@@ -369,7 +385,7 @@ how to extract per-recording features from the same catalog rows;
 shows how to run a leakage-safe cross-subject evaluation on top of the
 windowed dataset.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 327-338 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 343-354 -->
 
 ## Try it yourself (Extensions)
 
@@ -383,11 +399,11 @@ windowed dataset.
   `raw.info['sfreq'] == 500.0` and `len(raw.info['ch_names']) == 19`;
   the catalog numbers and the loaded raw must agree.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 340-345 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 356-361 -->
 
 ## References
 
-See [References](../../../references.md) for the centralised bibliography of papers
+See [References](../../../references.md) for the centralized bibliography of papers
 cited above. Add or amend an entry once in
 `docs/source/refs.bib`; every tutorial inherits the update.
 

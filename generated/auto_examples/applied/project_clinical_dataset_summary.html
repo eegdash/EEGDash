@@ -7,18 +7,18 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta property="og:title" content="How do I survey a clinical EEG dataset before training a model?" />
+<meta property="og:title" content="Survey clinical EEG datasets" />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://eegdash.org/generated/auto_examples/applied/project_clinical_dataset_summary.html" />
 <meta property="og:site_name" content="EEG Dash" />
-<meta property="og:description" content="A starter project: pull metadata for the OpenNeuro ds004504 clinical EEG release[ Miltiadous et al., 2023] through EEGDashDataset, without downloading…" />
+<meta property="og:description" content="Difficulty 1| Runtime: 20s| Compute: CPU A starter project: pull metadata for the OpenNeuro ds004504 clinical EEG release[ Miltiadous et al., 2023]…" />
 <meta property="og:image" content="https://eegdash.org/_static/eegdash_social_card.png" />
 <meta property="og:image:alt" content="EEG Dash — data-sharing interface for M/EEG datasets" />
-<meta name="description" content="A starter project: pull metadata for the OpenNeuro ds004504 clinical EEG release[ Miltiadous et al., 2023] through EEGDashDataset, without downloading…" />
+<meta name="description" content="Difficulty 1| Runtime: 20s| Compute: CPU A starter project: pull metadata for the OpenNeuro ds004504 clinical EEG release[ Miltiadous et al., 2023]…" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@eegdash" />
 
-    <title>How do I survey a clinical EEG dataset before training a model? &#8212; EEG Dash</title>
+    <title>Survey clinical EEG datasets &#8212; EEG Dash</title>
   
   
   
@@ -74,8 +74,8 @@
     <link rel="icon" href="../../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="Cross-cohort P3 transfer with AS-MMD: train on one oddball, deploy on another" href="project_p300_transfer.html" />
-    <link rel="prev" title="Age regression from EEG (applied case study)" href="project_age_regression.html" />
+    <link rel="next" title="P300 transfer with AS-MMD" href="project_p300_transfer.html" />
+    <link rel="prev" title="Age regression from EEG" href="project_age_regression.html" />
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="0.7" />
 
@@ -563,7 +563,7 @@
     
     <li class="breadcrumb-item"><a href="index.html" class="nav-link">Applied Research Projects</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">How do I survey a clinical EEG dataset before training a model?</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Survey clinical EEG datasets</span></li>
   </ul>
 </nav>
 </div>
@@ -585,8 +585,9 @@
 <p><a class="reference internal" href="#sphx-glr-download-generated-auto-examples-applied-project-clinical-dataset-summary-py"><span class="std std-ref">Go to the end</span></a>
 to download the full example code or to run this example in your browser via Binder.</p>
 </div>
-<section class="sphx-glr-example-title" id="how-do-i-survey-a-clinical-eeg-dataset-before-training-a-model">
-<span id="sphx-glr-generated-auto-examples-applied-project-clinical-dataset-summary-py"></span><h1>How do I survey a clinical EEG dataset before training a model?<a class="headerlink" href="#how-do-i-survey-a-clinical-eeg-dataset-before-training-a-model" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">8 minutes</span></div>
+<section class="sphx-glr-example-title" id="survey-clinical-eeg-datasets">
+<span id="sphx-glr-generated-auto-examples-applied-project-clinical-dataset-summary-py"></span><h1>Survey clinical EEG datasets<a class="headerlink" href="#survey-clinical-eeg-datasets" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">8 minutes</span></div>
+<p><strong>Difficulty 1</strong> | <strong>Runtime: 20s</strong> | <strong>Compute: CPU</strong></p>
 <p>A starter project: pull metadata for the OpenNeuro <code class="docutils literal notranslate"><span class="pre">ds004504</span></code> clinical EEG
 release <span class="bibtex-citation" id="id1">[<a class="reference internal" href="../../../references.html#id5" title="Andreas Miltiadous, Katerina D. Tzimourta, Theodora Afrantou, Panagiotis Ioannidis, Nikolaos Grigoriadis, Dimitrios G. Tsalikakis, Pantelis Angelidis, Markos G. Tsipouras, Euripidis Glavas, Nikolaos Giannakeas, and Alexandros T. Tzallas. A dataset of scalp eeg recordings of alzheimer’s disease, frontotemporal dementia and healthy subjects from routine eeg. Data, 8(6):95, 2023. doi:10.3390/data8060095.">Miltiadous <em>et al.</em>, 2023</a>]</span> through <a class="reference internal" href="../../../api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset" title="eegdash.EEGDashDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code></a>,
 without downloading any signal bytes, and answer four questions a project
@@ -596,8 +597,22 @@ workflow recipe follows Cisotto and Chicco 2024. The deliverable is one
 <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v3.0.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a> with per-condition counts and one three-panel
 figure rendered from the live catalog numbers. Cohort imbalance, age
 confounds, recording-length mismatch, and channel-count drift are the
-four dataset-level pitfalls that silently break clinical EEG decoders
-before training even starts, so why not answer them first?</p>
+# four dataset-level pitfalls that silently break clinical EEG decoders
+# before training even starts, so why not answer them first?
+#
+# Validate your result
+# ——————–
+# - <strong>Required Metadata Columns.</strong> For <code class="docutils literal notranslate"><span class="pre">ds004504</span></code>, expect columns like
+#   <code class="docutils literal notranslate"><span class="pre">Group</span></code>, <code class="docutils literal notranslate"><span class="pre">Age</span></code>, <code class="docutils literal notranslate"><span class="pre">Gender</span></code>, and <code class="docutils literal notranslate"><span class="pre">MMSE</span></code>.
+# - <strong>Fallback Behavior.</strong> If a column is missing from the API, EEGDash
+#   fills it with <code class="docutils literal notranslate"><span class="pre">None</span></code> or <code class="docutils literal notranslate"><span class="pre">NaN</span></code>.
+# - <strong>Sparse Metadata.</strong> When the public API returns sparse metadata, you
+#   can verify the local <code class="docutils literal notranslate"><span class="pre">participants.tsv</span></code> in the BIDS directory if you
+#   have the full dataset downloaded, or use <code class="docutils literal notranslate"><span class="pre">ds.description</span></code> to check
+#   which fields were successfully projected from the catalog.
+#
+# Keywords: metadata, applied, clinical
+#</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span>
 </pre></div>
 </div>
@@ -908,7 +923,7 @@ the catalog numbers and the loaded raw must agree.</p></li>
 </section>
 <section id="references">
 <h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
-<p>See <a class="reference internal" href="../../../references.html"><span class="doc">References</span></a> for the centralised bibliography of papers
+<p>See <a class="reference internal" href="../../../references.html"><span class="doc">References</span></a> for the centralized bibliography of papers
 cited above. Add or amend an entry once in
 <code class="file docutils literal notranslate"><span class="pre">docs/source/refs.bib</span></code>; every tutorial inherits the update.</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-auto-examples-applied-project-clinical-dataset-summary-py">
@@ -945,7 +960,7 @@ cited above. Add or amend an entry once in
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Age regression from EEG (applied case study)</p>
+        <p class="prev-next-title">Age regression from EEG</p>
       </div>
     </a>
     <a class="right-next"
@@ -953,7 +968,7 @@ cited above. Add or amend an entry once in
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Cross-cohort P3 transfer with AS-MMD: train on one oddball, deploy on another</p>
+        <p class="prev-next-title">P300 transfer with AS-MMD</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

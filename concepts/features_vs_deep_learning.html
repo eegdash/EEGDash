@@ -624,7 +624,7 @@ with careful regularisation.</p>
 <li><p><strong>You have less than ~50 subjects.</strong> A logistic regression or SVM on
 10 well-chosen features fits with minimal regularisation. A
 convolutional network has hundreds of thousands of parameters and
-needs orders of magnitude more data to avoid memorising subject
+needs orders of magnitude more data to avoid memorizing subject
 identity (see <a class="reference internal" href="leakage_and_evaluation.html"><span class="doc">Leakage and evaluation</span></a>).</p></li>
 <li><p><strong>The relevant rhythm is known.</strong> If you are decoding alpha-band
 modulation, log-power in 8–13 Hz is a near-optimal feature; a deep
@@ -638,7 +638,7 @@ reference change). A vanilla ConvNet trained on one montage can fail
 on another for trivial reasons.</p></li>
 <li><p><strong>You are CPU-bound.</strong> Feature pipelines fit on a laptop in seconds.</p></li>
 </ul>
-<p>The <a class="reference internal" href="../generated/auto_examples/tutorials/40_features/plot_40_first_features.html"><span class="doc">How do I turn EEG windows into a band-power feature matrix?</span></a>
+<p>The <a class="reference internal" href="../generated/auto_examples/tutorials/40_features/plot_40_first_features.html"><span class="doc">Extract band-power features</span></a>
 tutorial shows the simplest version of this argument: build a band-power
 table, fit a logistic regression, and read off the result.</p>
 </section>
@@ -664,7 +664,7 @@ model is usually under-regularised.</p></li>
 <li><p><strong>You will fine-tune downstream.</strong> A pre-trained deep model is a
 reusable asset; a hand-tuned feature pipeline is bespoke per task.</p></li>
 </ul>
-<p>The <a class="reference internal" href="../generated/auto_examples/tutorials/10_core_workflow/plot_12_train_a_baseline.html"><span class="doc">How do I train a leakage-safe baseline classifier on EEG?</span></a>
+<p>The <a class="reference internal" href="../generated/auto_examples/tutorials/10_core_workflow/plot_12_train_a_baseline.html"><span class="doc">Train a leakage-safe baseline</span></a>
 tutorial trains a small braindecode ConvNet on the same data the feature
 tutorials use, so that you can compare the two pipelines head to head.</p>
 </section>
@@ -675,7 +675,7 @@ Before you commit to a deep architecture for a new dataset:</p>
 <ol class="arabic simple">
 <li><p>Build a one-page feature pipeline (band power, ratios, simple
 covariance summary). The
-<a class="reference internal" href="../generated/auto_examples/tutorials/40_features/plot_40_first_features.html"><span class="doc">How do I turn EEG windows into a band-power feature matrix?</span></a>
+<a class="reference internal" href="../generated/auto_examples/tutorials/40_features/plot_40_first_features.html"><span class="doc">Extract band-power features</span></a>
 recipe is enough.</p></li>
 <li><p>Fit a logistic regression or shallow tree on top.</p></li>
 <li><p>Use exactly the same split (preferably subject-aware; see
@@ -689,9 +689,9 @@ held-out cohorts. If it does not, the feature pipeline <em>is</em> your
 deliverable. You will save weeks of GPU time, and your paper will be
 honest.</p>
 <p>The
-<a class="reference internal" href="../generated/auto_examples/tutorials/40_features/plot_41_feature_trees.html"><span class="doc">How do classical EEG markers compose on top of one Welch PSD?</span></a>
+<a class="reference internal" href="../generated/auto_examples/tutorials/40_features/plot_41_feature_trees.html"><span class="doc">Compose EEG markers from Welch PSD</span></a>
 and
-<a class="reference internal" href="../generated/auto_examples/tutorials/40_features/plot_42_features_to_sklearn.html"><span class="doc">How do I push EEGDash features through a scikit-learn Pipeline?</span></a>
+<a class="reference internal" href="../generated/auto_examples/tutorials/40_features/plot_42_features_to_sklearn.html"><span class="doc">EEGDash features to scikit-learn</span></a>
 tutorials extend the feature baseline to richer models (gradient
 boosting, full scikit-learn pipelines) without leaving the
 feature-engineering regime.</p>
@@ -720,13 +720,13 @@ it honestly is to run both pipelines under the same evaluation.</p>
 <section id="related-tutorials">
 <h2>Related tutorials<a class="headerlink" href="#related-tutorials" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p><a class="reference internal" href="../generated/auto_examples/tutorials/40_features/plot_40_first_features.html"><span class="doc">How do I turn EEG windows into a band-power feature matrix?</span></a>
+<li><p><a class="reference internal" href="../generated/auto_examples/tutorials/40_features/plot_40_first_features.html"><span class="doc">Extract band-power features</span></a>
 — minimal band-power feature pipeline.</p></li>
-<li><p><a class="reference internal" href="../generated/auto_examples/tutorials/40_features/plot_41_feature_trees.html"><span class="doc">How do classical EEG markers compose on top of one Welch PSD?</span></a>
+<li><p><a class="reference internal" href="../generated/auto_examples/tutorials/40_features/plot_41_feature_trees.html"><span class="doc">Compose EEG markers from Welch PSD</span></a>
 — tree-based models on the same features.</p></li>
-<li><p><a class="reference internal" href="../generated/auto_examples/tutorials/40_features/plot_42_features_to_sklearn.html"><span class="doc">How do I push EEGDash features through a scikit-learn Pipeline?</span></a>
+<li><p><a class="reference internal" href="../generated/auto_examples/tutorials/40_features/plot_42_features_to_sklearn.html"><span class="doc">EEGDash features to scikit-learn</span></a>
 — full scikit-learn integration.</p></li>
-<li><p><a class="reference internal" href="../generated/auto_examples/tutorials/10_core_workflow/plot_12_train_a_baseline.html"><span class="doc">How do I train a leakage-safe baseline classifier on EEG?</span></a>
+<li><p><a class="reference internal" href="../generated/auto_examples/tutorials/10_core_workflow/plot_12_train_a_baseline.html"><span class="doc">Train a leakage-safe baseline</span></a>
 — a deep braindecode baseline on the same data, suitable for a head-
 to-head comparison.</p></li>
 </ul>

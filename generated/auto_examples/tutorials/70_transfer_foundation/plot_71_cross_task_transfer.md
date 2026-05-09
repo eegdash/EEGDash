@@ -6,7 +6,15 @@
 
 <a id="sphx-glr-generated-auto-examples-tutorials-70-transfer-foundation-plot-71-cross-task-transfer-py"></a>
 
-# Pretrain on resting-state, fine-tune on contrast-change detection
+# Pretrain on resting-state, fine-tune on contrast-change detection (Simulated Data)
+
+**Difficulty 3** | **Runtime: 6m** | **Compute: GPU Preferred**
+
+#### NOTE
+**Simulated Data.** This tutorial uses synthetic tensors to illustrate
+transfer learning mechanics without a large data download. For real-data
+transfer examples, see /auto_examples/applied/project_p300_transfer
+and the /auto_examples/eeg2025/index challenge tracks.
 
 Can a small EEG encoder pretrained on **passive resting-state** windows
 help a downstream model decode **contrastChangeDetection (CCD)** that it
@@ -22,12 +30,13 @@ same subject pool (Aristimunha et al. 2025,
 doi:10.48550/arXiv.2506.19141), and asks how big the gap between a
 fine-tuned encoder and a from-scratch baseline really is. When the
 encoder transfers, by how much does it beat chance?
+Keywords: transfer-learning, fine-tuning, synthetic
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 19-21 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 28-30 -->
 ```Python
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 23-38 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 32-47 -->
 
 ## Learning objectives
 
@@ -43,11 +52,11 @@ encoder transfers, by how much does it beat chance?
 - CUDA GPU preferred; CPU fallback runs in ~6 min on the mini release.
 - Concept page: [Features vs. deep learning](../../../../concepts/features_vs_deep_learning.md).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 40-41 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 49-50 -->
 
 Setup, seeds (E3.21), cache, and device.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 41-69 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 50-78 -->
 ```Python
 import json
 import warnings
@@ -82,7 +91,7 @@ print(f"device={DEVICE}, seed={SEED}")
 device=cpu, seed=42
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 70-84 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 79-93 -->
 
 ## Step 1, load source + target tasks (same subject pool)
 
@@ -91,14 +100,14 @@ release="R5", mini=True, ...)` and again with
 `task="contrastChangeDetection"`: same release, same mini subject
 list, two paradigms (NEMAR, Delorme et al. 2022,
 doi:10.1016/j.neuroimage.2022.119666). To keep this tutorial
-reproducible without a 1.5 GB download we synthesise the windowed
+reproducible without a 1.5 GB download we synthesize the windowed
 shape `(n_windows, n_channels, n_times)` directly with task-specific
 1-30 Hz Butterworth pass-band content, keeping the spec invariant
 `pretext_subjects == target_subjects`. Two extra “source” tasks
 (`surroundSupp` and `symbolSearch`) and two extra “target” tasks
 fill in a 3x3 transfer matrix at the end.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 86-145 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 95-154 -->
 ```Python
 N_SUBJECTS, N_PER_SUBJECT, N_CHANS, N_TIMES, SFREQ = 8, 60, 19, 200, 100.0
 TASK_SOURCE, TASK_TARGET = "RestingState", "contrastChangeDetection"
@@ -124,7 +133,7 @@ TASK_PROFILES = {
 
 
 def make_task_windows(task, rng=None):
-    """Synthesise one task's windows on the same subject pool."""
+    """Synthesize one task's windows on the same subject pool."""
     rng = rng or np.random.default_rng(SEED + abs(hash(task)) % 997)
     profile = TASK_PROFILES[task]
     t = np.arange(N_TIMES) / SFREQ
@@ -164,7 +173,7 @@ print(f"source={TASK_SOURCE}: X={X_src.shape} | target={TASK_TARGET}: X={X_tgt.s
 source=RestingState: X=(480, 19, 200) | target=contrastChangeDetection: X=(120, 19, 200)
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 146-153 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 155-162 -->
 
 ## Step 2, predict
 
@@ -173,7 +182,7 @@ much above chance do you expect a `ShallowFBCSPNet` to land after 5
 pretrain epochs + 5 fine-tune epochs vs 5 from-scratch epochs? Guess
 (e.g. finetune 0.70 / scratch 0.62) before running the next cells.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 155-162 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 164-171 -->
 
 ## Step 3, build encoder, pretrain on source, save weights
 
@@ -182,7 +191,7 @@ doi:10.1002/hbm.23730) is a small temporal-then-spatial CNN. We
 instantiate it for the binary source pretext, train briefly, and
 snapshot the encoder weights.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 165-244 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 174-253 -->
 ```Python
 def make_model():
     """Return a fresh ShallowFBCSPNet sized for the windows above."""
@@ -263,7 +272,7 @@ def encoder_features(model, X, mask):
     return feats.reshape(feats.shape[0], -1)
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 245-253 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 254-262 -->
 ```Python
 src_train, src_test = split_subject_aware(meta_src, X_src, y_src)
 encoder = make_model()
@@ -275,10 +284,10 @@ print(f"pretrain losses (RestingState): {[round(x, 3) for x in pretrain_losses]}
 ```
 
 ```none
-pretrain losses (RestingState): [0.083, 0.004, 0.001, 0.002, 0.0]
+pretrain losses (RestingState): [0.036, 0.001, 0.0, 0.001, 0.0]
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 254-260 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 263-269 -->
 
 ## Step 4, fine-tune the pretrained encoder on the target
 
@@ -286,7 +295,7 @@ pretrain losses (RestingState): [0.083, 0.004, 0.001, 0.002, 0.0]
 state dict, then keeps training on **CCD** windows. The cross-subject
 split is materialised independently with a fresh leakage assertion.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 262-272 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 271-281 -->
 ```Python
 FINETUNE_LR = 5e-4  # lower than pretrain so the encoder is not wiped.
 tgt_train, tgt_test = split_subject_aware(meta_tgt, X_tgt, y_tgt)
@@ -300,10 +309,10 @@ print(f"finetune losses (CCD): {[round(x, 3) for x in finetune_losses]}")
 ```
 
 ```none
-finetune losses (CCD): [0.583, 0.541, 0.452, 0.413, 0.353]
+finetune losses (CCD): [0.549, 0.46, 0.461, 0.343, 0.278]
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 273-279 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 282-288 -->
 
 ## Step 5, train a from-scratch baseline on the target
 
@@ -311,14 +320,14 @@ Same architecture, same budget, same split: only the starting weights
 differ. Without source-task inductive bias, scratch typically lands
 closer to chance.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 281-285 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 290-294 -->
 ```Python
 scratch_model = make_model()
 scratch_losses = train_loop(scratch_model, X_tgt, y_tgt, tgt_train, n_epochs=5)
 scratch_acc = eval_acc(scratch_model, X_tgt, y_tgt, tgt_test)
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 286-293 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 295-302 -->
 
 ## Step 6, compare fine-tune vs scratch vs chance
 
@@ -327,7 +336,7 @@ of the most common label, a defensible chance level (Cisotto & Chicco
 2024, Tip 9, doi:10.7717/peerj-cs.2256). Reporting accuracy next to
 chance is the gap that matters (E5.43).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 295-303 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 304-312 -->
 ```Python
 test_counts = Counter(y_tgt[tgt_test].tolist())
 chance = float(max(test_counts.values()) / max(int(tgt_test.sum()), 1))
@@ -339,10 +348,10 @@ print(
 ```
 
 ```none
-finetune=0.650 | scratch=0.700 | chance=0.500 | metric=accuracy | gap=-0.050
+finetune=0.483 | scratch=0.717 | chance=0.517 | metric=accuracy | gap=-0.233
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 304-313 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 313-322 -->
 
 ## Step 7, run a 3x3 source -> target sweep
 
@@ -353,7 +362,7 @@ loops = 18 short runs) so the cell stays under a minute even on CPU.
 Each cell of the resulting matrix is the accuracy delta versus a
 from-scratch encoder on that target.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 315-358 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 324-367 -->
 ```Python
 target_cache = {}
 for tgt in TARGET_TASKS:
@@ -402,12 +411,12 @@ print(pd.DataFrame(transfer_matrix, index=SOURCE_TASKS, columns=TARGET_TASKS).ro
 ```none
 transfer matrix Δacc (rows=source, cols=target):
               contrastChangeDetection  symbolSearch  surroundSupp
-RestingState                    0.217         0.133         0.083
-surroundSupp                    0.317         0.150         0.083
-symbolSearch                    0.267         0.117         0.067
+RestingState                    0.117         0.067         0.000
+surroundSupp                    0.433         0.050         0.000
+symbolSearch                    0.200        -0.067        -0.033
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 359-369 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 368-378 -->
 
 ## Step 8, render the three-panel transfer figure
 
@@ -419,7 +428,7 @@ Panel 3 projects the encoder’s penultimate-layer activations on the
 CCD windows down to two PCA components, side-by-side for the
 from-scratch and the finetuned encoders.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 371-395 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 380-404 -->
 ```Python
 finetune_row = finetune_acc_grid[SOURCE_TASKS.index("RestingState")]
 ccd_idx = TARGET_TASKS.index("contrastChangeDetection")
@@ -446,7 +455,7 @@ fig = draw_cross_task_figure(
 plt.show()
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 396-403 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 405-412 -->
 
 ## Result, one row per condition
 
@@ -455,7 +464,7 @@ both above chance. With a single seed and the mini release the
 absolute gap is small; reporting it next to chance is what makes the
 claim falsifiable (E5.43, E5.46).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 405-422 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 414-431 -->
 ```Python
 print("\n| condition           | accuracy |")
 print("|---------------------|----------|")
@@ -478,13 +487,13 @@ print(
 ```none
 | condition           | accuracy |
 |---------------------|----------|
-| pretrain -> finetune| 0.650   |
-| from scratch        | 0.700   |
-| chance (majority)   | 0.500   |
-{"encoder_weights_path": "plot_71_pretrained_encoder.pt", "pretext_subjects": 8, "target_subjects": 8, "transfer_gap": -0.05, "transfer_matrix_mean_delta": 0.1593}
+| pretrain -> finetune| 0.483   |
+| from scratch        | 0.717   |
+| chance (majority)   | 0.517   |
+{"encoder_weights_path": "plot_71_pretrained_encoder.pt", "pretext_subjects": 8, "target_subjects": 8, "transfer_gap": -0.2333, "transfer_matrix_mean_delta": 0.0852}
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 423-429 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 432-438 -->
 
 ## A common mistake, and how to recover
 
@@ -492,7 +501,7 @@ Loading a state dict whose `n_outputs` mismatches the pretrained one
 raises `RuntimeError` (size mismatch on the final layer). We trigger
 it with `try/except` and then rebuild with the right shape.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 431-441 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 440-450 -->
 ```Python
 try:
     wrong = ShallowFBCSPNet(N_CHANS, 3, n_times=N_TIMES, sfreq=int(SFREQ)).to(DEVICE)
@@ -511,7 +520,7 @@ Caught RuntimeError: Error(s) in loading state_dict for ShallowFBCSPNet:
 Recovery: ShallowFBCSPNet(n_outputs=2) -> ShallowFBCSPNet
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 442-449 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 451-458 -->
 
 ## Modify, freeze the encoder, train only the head
 
@@ -520,7 +529,7 @@ on small mini-release data this often beats full fine-tune because
 the head has fewer parameters to overfit. Swap the fine-tune model
 above for the frozen variant and rerun `eval_acc`.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 451-459 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 460-468 -->
 ```Python
 frozen = make_model()
 frozen.load_state_dict(torch.load(weights_path, map_location=DEVICE))
@@ -535,7 +544,7 @@ print(f"frozen-encoder mode: trainable params={n_trainable}")
 frozen-encoder mode: trainable params=562
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 460-468 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 469-477 -->
 
 ## Make, swap in a different source pretext task
 
@@ -545,7 +554,7 @@ report the gap on CCD again. Different pretexts trade off how well
 their representations transfer, the core EEG2025 Challenge 1 question
 (Aristimunha et al. 2025, doi:10.48550/arXiv.2506.19141).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 470-480 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 479-489 -->
 
 ## Extensions
 
@@ -557,7 +566,7 @@ their representations transfer, the core EEG2025 Challenge 1 question
 - partial-freeze: freeze temporal conv only, retrain spatial conv +
   head.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 482-508 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 491-517 -->
 
 ## Wrap-up
 
@@ -584,6 +593,6 @@ doi:10.1038/s41597-019-0104-8). The single-seed lift must be hedged.
 - EEG2025 Challenge 1 (doi:10.48550/arXiv.2506.19141), cross-task
   transfer [[Aristimunha *et al.*, 2025](../../../../references.md#id36)].
 
-**Total running time of the script:** (0 minutes 5.148 seconds)
+**Total running time of the script:** (0 minutes 5.389 seconds)
 
 <a id="sphx-glr-download-generated-auto-examples-tutorials-70-transfer-foundation-plot-71-cross-task-transfer-py"></a>

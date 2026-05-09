@@ -6,7 +6,9 @@
 
 <a id="sphx-glr-generated-auto-examples-eeg2025-tutorial-challenge-2-py"></a>
 
-# How do I submit a baseline to EEG2025 Challenge 2 (predict the p-factor)?
+# EEG2025 Challenge 2 Baseline (p-factor)
+
+**Difficulty 3** | **Runtime: 30s** | **Compute: CPU (GPU Optional)**
 
 The EEG2025 Foundation Challenge ships two regression tracks, and
 Challenge 2 asks for a single number per subject, the **p-factor**,
@@ -30,21 +32,33 @@ After this tutorial you will be able to:
 
 - load EEG2025 Challenge 2 recordings via `eegdash.EEGChallengeDataset`.
 - fit a [`sklearn.linear_model.Ridge`](https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Ridge.html#sklearn.linear_model.Ridge) head and report Pearson r, R^2, MAE.
-- produce a leaderboard card placing the starter score next to chance and target.
-- phrase the result in clinical-cautious language for the p-factor.
 
-The headline question is not “can we win Challenge 2?”, the p-factor
+# - produce a leaderboard card placing the starter score next to chance and target.
+# - phrase the result in clinical-cautious language for the p-factor.
+#
+# Validate your result
+# ——————–
+# - **Expected Inputs.** Resting-state EEG windows of shape `(n_channels=129, n_samples=500)` (5 seconds at 100 Hz).
+# - **Expected Outputs.** A single scalar prediction per subject representing the predicted `p_factor`.
+# - **Scoring Metric.** The official Challenge 2 metric is **Mean Absolute Error (MAE)**.
+# - **Local Smoke-test Size.** The `mini=True` release uses 8 subjects for a fast local run.
+# - **Common Failures.**
+#   - **Cache Permissions.** Ensure the `EEGDASH_CACHE_DIR` is writable.
+#   - **Authentication.** Challenge 2 requires a valid access token for some restricted releases; verify your `.env` file.
+#
+# The headline question is not “can we win Challenge 2?”, the p-factor
 signal in EEG is faint, but the honest one: does this model beat the
 train median predictor on never-seen subjects?
+Keywords: EEG2025, challenge, regression
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 33-35 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 46-48 -->
 ```Python
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 37-43 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 50-56 -->
 
 <a id="challenge-2"></a>
-<!-- GENERATED FROM PYTHON SOURCE LINES 45-56 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 58-69 -->
 
 ## Requirements
 
@@ -55,15 +69,15 @@ train median predictor on never-seen subjects?
 Open in Colab:
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/eeg2025/startkit/blob/main/challenge_2.ipynb)
-<!-- GENERATED FROM PYTHON SOURCE LINES 58-63 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 71-76 -->
 
 ## Step 0. Setup and imports
 
-numpy seeding (E3.21), parametrised cache (E3.24), and the
+numpy seeding (E3.21), parameterized cache (E3.24), and the
 `use_eegdash_style` one-call rcParams setup so every figure inherits
 the EEGDash identity (Helvetica fallback, muted grid, Data Rail).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 63-92 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 76-105 -->
 ```Python
 import os
 import warnings
@@ -99,7 +113,7 @@ print(f"device={device} | cache_dir={cache_dir}")
 device=cpu | cache_dir=/home/runner/eegdash_cache
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 93-124 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 106-137 -->
 
 ## Step 1. Load the challenge cohort with `p_factor` attached
 
@@ -111,7 +125,7 @@ one subject carries the same value.
 
 **Run.** [`EEGChallengeDataset`](../../../api/dataset/eegdash.dataset.EEGChallengeDataset.md#eegdash.dataset.EEGChallengeDataset) exposes
 `p_factor` through `description_fields`. The canonical call is
-below; the rendered gallery then synthesises a feature table with the
+below; the rendered gallery then synthesizes a feature table with the
 same column layout so the build runs offline.
 
 ```python
@@ -132,7 +146,7 @@ cohort = ds.description.copy()
 print(cohort.shape, cohort["p_factor"].describe())
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 126-132 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 139-145 -->
 
 Mirror the Challenge 2 schema: 20 subjects, a handful of windows per
 subject, eight features per window (band-power proxies plus variance
@@ -141,7 +155,7 @@ The columns below match what
 [`EEGChallengeDataset`](../../../api/dataset/eegdash.dataset.EEGChallengeDataset.md#eegdash.dataset.EEGChallengeDataset) surfaces on a live
 call, so the rest of the notebook is identical online and offline.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 132-173 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 145-186 -->
 ```Python
 N_SUBJECTS, N_WINDOWS = 20, 24
 BANDS = ("delta", "theta", "alpha", "beta")
@@ -189,7 +203,7 @@ assert pd.api.types.is_float_dtype(metadata["p_factor"]), "p_factor is not float
 feature_table: rows=480 | features=10 | subjects=20 | p_factor_dtype=float64
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 174-182 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 187-195 -->
 
 ## Step 2. Predict: what r should chance look like?
 
@@ -199,7 +213,7 @@ Pearson `r = 0` against the held-out subjects by definition;
 side. What `r` do you expect a feature ridge to reach on faint EEG
 features, `0.10`? `0.30`? `0.50`? Write your guess.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 184-192 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 197-205 -->
 
 ## Step 3. Build a leakage-safe cross-subject split
 
@@ -209,7 +223,7 @@ on `subject`. The split is frozen into a manifest, walked with
 `assert_no_leakage` (`by="subject"`), and the
 `leakage_report` line is what the audit pipeline parses.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 194-214 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 207-227 -->
 ```Python
 splitter = CrossSubjectSplitter(cv_class=GroupKFold, n_splits=5)
 n_rows = len(metadata)
@@ -236,7 +250,7 @@ print(
 Splitter: CrossSubjectSplitter | folds: 5 | max subject overlap: 0
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 215-224 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 228-237 -->
 
 ## Step 4. Fit a ridge head per fold and pool predictions
 
@@ -247,7 +261,7 @@ regression analogue of the plot_42 classification baseline. `alpha=1.0`
 is a defensible default for an 8-feature table; `GroupKFold` keys on
 subject so a held-out subject never appears in any train fold.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 227-271 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 240-284 -->
 ```Python
 def make_regressor() -> Pipeline:
     """Return a fresh ``StandardScaler -> Ridge`` Pipeline (E3.21)."""
@@ -302,7 +316,7 @@ Fold 3: r2=+0.219 | mae=0.495 | baseline_r2=-0.003
 Fold 4: r2=+0.255 | mae=0.679 | baseline_r2=-0.152
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 272-280 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 285-293 -->
 
 ## Step 5. Investigate: pooled metrics on the held-out cohort
 
@@ -312,7 +326,7 @@ scoring once gives the leaderboard metric: Pearson `r` as the
 primary score, `MAE` as a secondary diagnostic (Cisotto & Chicco
 2024 Tip 7).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 282-301 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 295-314 -->
 ```Python
 res_df = pd.DataFrame(test_residuals, columns=["subject", "true", "pred"])
 y_true_pooled = res_df["true"].to_numpy()
@@ -338,7 +352,7 @@ print(
 subject-level: r=+0.663 | R^2=+0.309 | MAE=0.602 | n_subjects=20
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 302-311 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 315-324 -->
 
 ## Step 6. Render the three-panel starter-kit figure
 
@@ -349,7 +363,7 @@ panel 2 is the predicted vs true scatter on held-out subjects;
 panel 3 is a leaderboard-style result card placing the starter-kit
 baseline next to chance and the public top score.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 313-362 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 326-375 -->
 ```Python
 from _challenge_2_figure import draw_challenge_2_figure  # noqa: E402
 
@@ -359,7 +373,7 @@ p_factor_distribution = metadata.drop_duplicates("subject")["p_factor"].to_numpy
 
 # Leaderboard rows: chance, the pooled starter score, and a placeholder
 # for the EEG2025 dashboard top score (``score=nan`` so the bar reads
-# "n/a" until the organisers publish the live number).
+# "n/a" until the organizers publish the live number).
 leaderboard_rows = [
     {
         "team": "median baseline (chance)",
@@ -405,7 +419,7 @@ print(
 figure metrics: r=+0.663 | R^2=+0.309 | MAE=0.602 | n_subjects=20
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 363-372 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 376-385 -->
 
 ## A common mistake, and how to recover
 
@@ -416,7 +430,7 @@ solve. The cell below triggers it on purpose with `try/except` so
 the failure mode is visible (Nederbragt et al. 2020,
 doi:10.1371/journal.pcbi.1008090).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 374-383 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 387-396 -->
 ```Python
 try:
     bad_y = metadata["p_factor"].astype(str).to_numpy()  # string p-factor
@@ -428,7 +442,7 @@ except (ValueError, TypeError) as exc:
     print(f"Recovery: cast p_factor to float (dtype={fixed_y.dtype}); Ridge fit.")
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 384-412 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 397-425 -->
 
 ## Modify: deep-learning baseline (concept only)
 
@@ -458,7 +472,7 @@ for X_batch, y_batch, _, _ in loader:
 torch.save(model.state_dict(), "weights_challenge_2.pt")
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 414-422 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 427-435 -->
 
 ## Result: starter-kit baseline vs median chance
 
@@ -468,7 +482,7 @@ keyword *baseline* and the `metric: r2` tag (E5.43).
 predictor’s R^2 on the test set; an honest model must beat it, not
 just match it.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 424-439 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 437-452 -->
 ```Python
 print(
     f"Cross-subject 5-fold p-factor regression: r2={mean_r2:+.3f} "
@@ -492,7 +506,7 @@ Subject-level leaderboard score: r=+0.663 | R^2=+0.309 | MAE=0.602
 chance: predicting the train-median scores baseline_r2=-0.784 on test.
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 440-452 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 453-465 -->
 
 ## Wrap-up
 
@@ -507,7 +521,7 @@ challenge top score. `p_factor` is a derived score, not a
 diagnosis; any clinical framing belongs in a follow-up study with a
 much larger N.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 454-462 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 467-475 -->
 
 ## Try it yourself
 
@@ -518,11 +532,11 @@ much larger N.
   passive tasks and feed its activations as features.
 - Bump `n_folds` to `N_SUBJECTS` for leave-one-subject-out.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 464-469 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 477-482 -->
 
 ## References
 
-See [References](../../../references.md) for the centralised bibliography of papers
+See [References](../../../references.md) for the centralized bibliography of papers
 cited above. Add or amend an entry once in
 `docs/source/refs.bib`; every tutorial inherits the update.
 

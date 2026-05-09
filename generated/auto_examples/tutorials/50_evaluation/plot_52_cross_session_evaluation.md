@@ -6,7 +6,9 @@
 
 <a id="sphx-glr-generated-auto-examples-tutorials-50-evaluation-plot-52-cross-session-evaluation-py"></a>
 
-# How much does a within-session decoder drift across sessions of the same subject?
+# Cross-session decoding evaluation
+
+**Difficulty 2-3** | **Runtime: 2m** | **Compute: CPU**
 
 A model that scores 90% on session 1 of `sub-03` can slump to 70% on
 session 2 of the *same* subject. The cap and electrodes were placed a
@@ -37,13 +39,24 @@ session transfer matrix, paired within-vs-between bars per subject,
 and a drift-magnitude histogram across subjects.
 
 So how much does a within-session decoder drift across sessions of the
-same subject?
+# same subject?
+#
+# Validate your result
+# ——————–
+# - **Drift Magnitude.** Expect a 5-20% drop in accuracy when moving from
+#   within-session to cross-session evaluation.
+# - **Session Transfer Matrix.** The matrix should show whether certain
+#   session pairs (e.g., adjacent days) have higher transfer than others.
+# - **Subject Consistency.** Check if certain subjects are more prone to
+#   drift than others in the paired bar plot.
+#
+# Keywords: evaluation, cross-session, drift
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 35-37 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 48-50 -->
 ```Python
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 39-53 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 52-66 -->
 
 ## Learning objectives
 
@@ -58,11 +71,11 @@ same subject?
 - You finished /auto_examples/tutorials/10_core_workflow/plot_11_leakage_safe_split, /auto_examples/tutorials/10_core_workflow/plot_12_train_a_baseline, and /auto_examples/tutorials/50_evaluation/plot_50_within_subject_evaluation.
 - Theory: [Leakage and evaluation](../../../../concepts/leakage_and_evaluation.md).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 55-56 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 68-69 -->
 
 Setup, seed (E3.21), imports, mock-cohort sizing.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 56-80 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 69-93 -->
 ```Python
 import warnings
 
@@ -89,7 +102,7 @@ rng = np.random.default_rng(SEED)
 N_SUBJECTS, N_SESSIONS, N_WINDOWS = 8, 3, 8
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 81-89 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 94-102 -->
 
 ## Step 1. Build per-subject per-session metadata
 
@@ -99,7 +112,7 @@ model rides) plus a per-session shift (the calibration drift). Labels
 are paradigm-driven by construction, so a cross-session model must
 ignore the shift and key on the paradigm signal.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 91-124 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 104-137 -->
 ```Python
 subj_off = rng.normal(scale=2.0, size=(N_SUBJECTS, 4))
 ses_drift = rng.normal(scale=1.5, size=(N_SUBJECTS, N_SESSIONS, 4))
@@ -139,7 +152,7 @@ print(
 Windows: rows=192, subjects=8, sessions/subject=3, classes={0: np.int64(96), 1: np.int64(96)}
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 125-137 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 138-150 -->
 
 ## Step 2. Predict, then build the cross-session split
 
@@ -153,7 +166,7 @@ session in test.
 
 **Run.** `make_split_manifest` freezes the splitter output as IDs.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 139-150 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 152-163 -->
 ```Python
 splitter = CrossSessionSplitter(cv_class=GroupKFold, n_splits=3)
 n_rows = len(metadata)
@@ -171,7 +184,7 @@ print(f"Splitter: {type(splitter).__name__} | folds: {len(folds)}")
 Splitter: CrossSessionSplitter | folds: 24
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 151-159 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 164-172 -->
 
 ## Step 3. Assert no session leakage; confirm subjects are shared
 
@@ -181,7 +194,7 @@ We then assert the *opposite* invariant for `subject`: every fold
 must reuse the same subject on both sides. That keeps the split
 “within-subject, across-session” rather than cross-subject.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 161-178 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 174-191 -->
 ```Python
 session_overlap = max(
     len(set(metadata.loc[tr, "session"]) & set(metadata.loc[te, "session"]))
@@ -205,7 +218,7 @@ print(
 session_overlap per fold = 0 (asserted); subject_overlap per fold = 1 across 24 folds
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 179-193 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 192-206 -->
 
 ## Step 4. Run within-session and cross-session on the SAME data
 
@@ -214,14 +227,14 @@ session_overlap per fold = 0 (asserted); subject_overlap per fold = 1 across 24 
 (calibration ceiling); (2) cross-session, the 24 manifest folds.
 
 **Investigate.** The drop is calibration drift: the part of the
-within-session score that came from memorising the day-specific
+within-session score that came from memorizing the day-specific
 feature distribution rather than the paradigm. Jayaram & Barachant
 2018 (doi:10.1088/1741-2552/aabea9) frame the same gap as covariate
 shift between calibration sessions; Riemannian alignment of the
 per-session covariance matrices is one documented recovery on
 motor-imagery cohorts. We just measure the gap here.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 196-233 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 209-246 -->
 ```Python
 def _fit_score(tr_idx: np.ndarray, te_idx: np.ndarray) -> float:
     """Fit a logistic baseline on ``tr_idx`` and score on ``te_idx``."""
@@ -265,7 +278,7 @@ print(
 within-session accuracy = 0.875, cross-session accuracy = 0.766, chance = 0.500, drift_delta = +0.109
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 234-241 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 247-254 -->
 
 ## Step 5. `describe_split` shows the per-(subject, session) audit
 
@@ -274,7 +287,7 @@ session counts and class balance. We print the first three of 24
 folds: each holds one subject in train (2 sessions) and the same
 subject in test (1 session), with balanced classes.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 243-254 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 256-267 -->
 ```Python
 for i, (tr_mask, te_mask) in enumerate(folds[:3]):
     bal = dict(Counter(metadata.loc[te_mask, "target"].dropna().tolist()))
@@ -294,7 +307,7 @@ Fold 1: train=16 (2 ses), test=8 (1 ses), class_balance_ratio=0.50
 Fold 2: train=16 (2 ses), test=8 (1 ses), class_balance_ratio=0.50
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 255-263 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 268-276 -->
 
 ## Step 6. Build the session x session transfer matrix
 
@@ -304,7 +317,7 @@ The aggregate numbers say drift is real; the next step is to read
 The diagonal carries the within-session ceiling; the off-diagonal
 carries the cross-session score under drift.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 265-300 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 278-313 -->
 ```Python
 session_ids = sorted(metadata["session"].unique())
 session_matrix = np.zeros((N_SESSIONS, N_SESSIONS))
@@ -350,7 +363,7 @@ train=ses-02        0.703        0.875        0.609
 train=ses-03        0.703        0.594        0.938
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 301-310 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 314-323 -->
 
 ## Step 7. Render the cross-session drift figure
 
@@ -361,7 +374,7 @@ drift histogram on the right. The subtitle reports
 `n_subjects | n_sessions | mean_within | mean_between | drift` from
 the live numbers above.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 312-329 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 325-342 -->
 ```Python
 subject_ids = sorted(metadata["subject"].unique())
 within_per_subject_arr = np.asarray(
@@ -381,7 +394,7 @@ fig = draw_cross_session_figure(
 plt.show()
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 330-339 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 343-352 -->
 
 ## Result: calibration drift is real
 
@@ -392,7 +405,7 @@ top three drifters in this synthetic cohort are listed below; severe
 drifters are typical candidates for Riemannian alignment of the
 per-session covariance matrices before the classifier.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 341-358 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 354-371 -->
 ```Python
 ranked = sorted(
     [
@@ -419,7 +432,7 @@ Top 3 drift subjects (subject, within, cross):
   sub-01: within=1.000, cross=0.833, drift=+0.167
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 359-365 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 372-378 -->
 
 ## A common slip, and how to recover
 
@@ -427,7 +440,7 @@ Top 3 drift subjects (subject, within, cross):
 like a leak (subjects are shared on purpose). Recovery: check
 `by="session"` instead.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 367-376 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 380-389 -->
 ```Python
 subject_overlap = max(
     len(set(metadata.loc[tr, "subject"]) & set(metadata.loc[te, "subject"]))
@@ -443,7 +456,7 @@ print(
 by='subject' overlap = 1 (expected by design); recovery: by='session' overlap = 0
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 377-385 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 390-398 -->
 
 ## Modify: try a 2-session subject
 
@@ -453,7 +466,7 @@ folds for the other 7, giving 23 in total. Fold count depends on
 each subject’s session inventory, which is the same reason real
 BIDS cohorts produce uneven fold counts when sessions are missing.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 387-401 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 400-414 -->
 ```Python
 keep = ~((metadata["subject"] == "sub-00") & (metadata["session"] == "ses-03"))
 trimmed_md = metadata.loc[keep].reset_index(drop=True)
@@ -474,7 +487,7 @@ print(
 Trimmed: 23 folds (was 24), min sessions/subject=2
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 402-446 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 415-459 -->
 
 ## Try it yourself
 
@@ -493,7 +506,7 @@ Trimmed: 23 folds (was 24), min sessions/subject=2
 windows with `apply_split_manifest` per fold, fit the same baseline,
 and compare the drift histogram with the synthetic version. The shape
 of the histogram (mean drift, tail width) is the per-cohort
-generalisation report; benchmark publications increasingly include
+generalization report; benchmark publications increasingly include
 both panels (Chevallier, Aristimunha et al. 2024).
 
 ## Links

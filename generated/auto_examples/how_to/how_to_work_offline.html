@@ -11,10 +11,10 @@
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://eegdash.org/generated/auto_examples/how_to/how_to_work_offline.html" />
 <meta property="og:site_name" content="EEG Dash" />
-<meta property="og:description" content="Goal: instantiate EEGChallengeDataset with download=False and load the same records as the online path, with no network calls. Goal: Load and filter…" />
+<meta property="og:description" content="Difficulty 2| Runtime: 4m| Compute: CPU Goal: instantiate EEGChallengeDataset with download=False and load the same records as the online path, with no…" />
 <meta property="og:image" content="https://eegdash.org/_static/eegdash_social_card.png" />
 <meta property="og:image:alt" content="EEG Dash — data-sharing interface for M/EEG datasets" />
-<meta name="description" content="Goal: instantiate EEGChallengeDataset with download=False and load the same records as the online path, with no network calls. Goal: Load and filter…" />
+<meta name="description" content="Difficulty 2| Runtime: 4m| Compute: CPU Goal: instantiate EEGChallengeDataset with download=False and load the same records as the online path, with no…" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@eegdash" />
 
@@ -586,9 +586,11 @@
 to download the full example code or to run this example in your browser via Binder.</p>
 </div>
 <section class="sphx-glr-example-title" id="how-to-work-offline-against-a-populated-eegdash-cache">
-<span id="sphx-glr-generated-auto-examples-how-to-how-to-work-offline-py"></span><h1>How-to: work offline against a populated EEGDash cache<a class="headerlink" href="#how-to-work-offline-against-a-populated-eegdash-cache" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">4 minutes</span></div>
+<span id="sphx-glr-generated-auto-examples-how-to-how-to-work-offline-py"></span><h1>How-to: work offline against a populated EEGDash cache<a class="headerlink" href="#how-to-work-offline-against-a-populated-eegdash-cache" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">5 minutes</span></div>
+<p><strong>Difficulty 2</strong> | <strong>Runtime: 4m</strong> | <strong>Compute: CPU</strong></p>
 <p>Goal: instantiate <code class="docutils literal notranslate"><span class="pre">EEGChallengeDataset</span></code> with <code class="docutils literal notranslate"><span class="pre">download=False</span></code> and load
-the same records as the online path, with no network calls.</p>
+the same records as the online path, with no network calls.
+Keywords: offline, cache, metadata</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span>
 </pre></div>
 </div>
@@ -741,6 +743,35 @@ silently match nothing; pre-stage a derived manifest if you need them.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">download=False</span></code> skips S3 but still walks the BIDS tree on
 instantiation. On Lustre/NFS this can stall; stage the cache to local
 NVMe (see <code class="docutils literal notranslate"><span class="pre">how_to_use_hpc_cache</span></code>) before training.</p></li>
+</ul>
+<p>%% [markdown]
+Validate your result
+——————–
+- <strong>Prove it is offline.</strong> Disconnect your network or use a dummy API URL.</p>
+<blockquote>
+<div><p>Loading with <code class="docutils literal notranslate"><span class="pre">download=False</span></code> should succeed if the cache is populated.</p>
+</div></blockquote>
+<ul>
+<li><p><strong>Cache Tree Example.</strong> Your cache should look like this:
+.. code-block:: text</p>
+<blockquote>
+<div><p>.eegdash_cache/
+└── ds005506-bdf-mini/</p>
+<blockquote>
+<div><p>├── participants.tsv
+├── sub-001/
+│   └── eeg/
+│       └── sub-001_task-RestingState_eeg.bdf
+└── …</p>
+</div></blockquote>
+</div></blockquote>
+</li>
+<li><dl class="simple">
+<dt><strong>Recovery from Partial Downloads.</strong> If a download was interrupted, delete</dt><dd><p>the incomplete file (or the whole subject folder) and re-run
+<code class="docutils literal notranslate"><span class="pre">download_all(n_jobs=1)</span></code> to ensure a clean state.</p>
+</dd>
+</dl>
+</li>
 </ul>
 </section>
 <section id="see-also">

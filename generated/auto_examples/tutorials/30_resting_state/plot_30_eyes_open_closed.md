@@ -6,7 +6,9 @@
 
 <a id="sphx-glr-generated-auto-examples-tutorials-30-resting-state-plot-30-eyes-open-closed-py"></a>
 
-# Decode eyes-open vs. eyes-closed from resting-state EEG
+# Decode eyes open vs. eyes closed
+
+**Difficulty 1** | **Runtime: 5m** | **Compute: CPU**
 
 Hans Berger reported in 1929 that the parieto-occipital alpha rhythm
 rises when the eyes close and falls when they open [[Berger, 1929](../../../../references.md#id24)]. This
@@ -20,12 +22,13 @@ log alpha-band power features.
 
 Can we tell from a 2-second EEG snippet whether a child has the eyes
 open or closed?
+Keywords: classification, resting-state, alpha
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 17-19 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 20-22 -->
 ```Python
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 21-39 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 24-42 -->
 
 ## Learning objectives
 
@@ -46,12 +49,12 @@ After this tutorial you will be able to:
   /auto_examples/tutorials/10_core_workflow/plot_11_leakage_safe_split.
 - Concept: [Preprocessing decisions](../../../../concepts/preprocessing_decisions.md).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 41-43 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 44-46 -->
 
-Setup. Seed (E3.21) and a parametrised cache dir (E3.24) keep the
+Setup. Seed (E3.21) and a parameterized cache dir (E3.24) keep the
 tutorial reproducible and the network calls confined to the first run.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 43-73 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 46-76 -->
 ```Python
 import json
 import os
@@ -84,7 +87,7 @@ cache_dir = Path(os.environ.get("EEGDASH_CACHE_DIR", Path.home() / ".eegdash_cac
 cache_dir.mkdir(parents=True, exist_ok=True)
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 74-101 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 77-104 -->
 
 ## Concept: the alpha rhythm and what eyes-closed does to it
 
@@ -114,7 +117,19 @@ flat posterior topography        parieto-occipital alpha bump
 -> "open" class label            -> "closed" class label
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 103-113 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 106-115 -->
+
+## Validate your result
+
+Before you trust the decoder, verify the data pipeline:
+
+1. **Window counts.** For 6 HBN subjects, you should expect ~100-200 windows per class.
+2. **Class balance.** The reannotation should produce roughly equal counts for EO and EC.
+3. **Tensor shape.** Each window is `(24, 256)` (24 channels, 2 seconds at 128 Hz).
+4. **Accuracy.** Expect cross-subject accuracy significantly above chance (typically >0.70).
+5. **Interpretation.** The confusion matrix should show whether one state is harder to decode (often “open” due to more artifacts).
+
+<!-- GENERATED FROM PYTHON SOURCE LINES 117-127 -->
 
 ## Step 1. Configure the EOEC recipe
 
@@ -127,7 +142,7 @@ IIR Butterworth band-pass 1.0-55.0 Hz
 the run inside the tutorial budget and leave enough material for a
 leave-one-subject-out split.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 115-169 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 129-183 -->
 ```Python
 SUBJECTS = [
     "NDARDB033FW5",
@@ -190,7 +205,7 @@ print(
 Task: eyes-open-closed | dataset=ds005514 | n_subjects=6 | classes=['eyes_open', 'eyes_closed'] | filter=(1.0, 55.0) Hz
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 170-177 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 184-191 -->
 
 ## Step 2. PRIMM Predict
 
@@ -200,7 +215,7 @@ alpha power over parieto-occipital channels, and by what factor on a
 log scale? Note your guess. (Spoiler: closed; the bump sits over
 E70/E62/E83 in the HydroCel layout and is typically 1.5-3x bigger.)
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 179-189 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 193-203 -->
 
 ## Step 3. Load six subjects and window them
 
@@ -213,7 +228,7 @@ instruction markers (`instructed_toCloseEyes` / `...toOpenEyes`)
 with regularly spaced 2-second `eyes_open` / `eyes_closed` events,
 which is what makes the per-class window counts balanced.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 191-232 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 205-246 -->
 ```Python
 query = {"dataset": DATASET, "task": TASK, "subject": {"$in": SUBJECTS}}
 ds = EEGDashDataset(query=query, cache_dir=cache_dir)
@@ -280,22 +295,22 @@ pd.Series(
 ╰─────────────────────────── Source: EEGDashDataset ───────────────────────────╯
 
 Downloading sub-NDARAC589YMB_task-RestingState_channels.tsv:   0%|          | 0.00/1.42k [00:00<?, ?B/s]
-Downloading sub-NDARAC589YMB_task-RestingState_channels.tsv: 100%|██████████| 1.42k/1.42k [00:00<00:00, 6.27MB/s]
+Downloading sub-NDARAC589YMB_task-RestingState_channels.tsv: 100%|██████████| 1.42k/1.42k [00:00<00:00, 6.31MB/s]
 
 Downloading sub-NDARAC589YMB_task-RestingState_events.tsv:   0%|          | 0.00/618 [00:00<?, ?B/s]
-Downloading sub-NDARAC589YMB_task-RestingState_events.tsv: 100%|██████████| 618/618 [00:00<00:00, 3.22MB/s]
+Downloading sub-NDARAC589YMB_task-RestingState_events.tsv: 100%|██████████| 618/618 [00:00<00:00, 2.64MB/s]
 
 Downloading sub-NDARAC589YMB_task-RestingState_eeg.json:   0%|          | 0.00/231 [00:00<?, ?B/s]
-Downloading sub-NDARAC589YMB_task-RestingState_eeg.json: 100%|██████████| 231/231 [00:00<00:00, 1.24MB/s]
-[05/08/26 18:42:57] WARNING  File not found on S3, skipping:   downloader.py:163
+Downloading sub-NDARAC589YMB_task-RestingState_eeg.json: 100%|██████████| 231/231 [00:00<00:00, 1.08MB/s]
+[05/09/26 20:25:53] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds005514/sub-N
                              DARAC589YMB/eeg/sub-NDARAC589YMB_
                              task-RestingState_eeg.fdt
 
 Downloading sub-NDARAC589YMB_task-RestingState_eeg.set:   0%|          | 0.00/90.7M [00:00<?, ?B/s]
-Downloading sub-NDARAC589YMB_task-RestingState_eeg.set:  55%|█████▌    | 50.0M/90.7M [00:01<00:00, 46.9MB/s]
-Downloading sub-NDARAC589YMB_task-RestingState_eeg.set: 100%|██████████| 90.7M/90.7M [00:01<00:00, 84.4MB/s]
-[05/08/26 18:42:58] INFO     Original events found with ids: preprocessing.py:66
+Downloading sub-NDARAC589YMB_task-RestingState_eeg.set:  55%|█████▌    | 50.0M/90.7M [00:00<00:00, 74.9MB/s]
+Downloading sub-NDARAC589YMB_task-RestingState_eeg.set: 100%|██████████| 90.7M/90.7M [00:00<00:00, 134MB/s]
+[05/09/26 20:25:54] INFO     Original events found with ids: preprocessing.py:66
                              {np.str_('boundary'): 1,
                              np.str_('break cnt'): 2,
                              np.str_('instructed_toCloseEyes
@@ -305,22 +320,22 @@ Downloading sub-NDARAC589YMB_task-RestingState_eeg.set: 100%|██████�
                              5}
 
 Downloading sub-NDARAC853CR6_task-RestingState_channels.tsv:   0%|          | 0.00/1.42k [00:00<?, ?B/s]
-Downloading sub-NDARAC853CR6_task-RestingState_channels.tsv: 100%|██████████| 1.42k/1.42k [00:00<00:00, 5.48MB/s]
+Downloading sub-NDARAC853CR6_task-RestingState_channels.tsv: 100%|██████████| 1.42k/1.42k [00:00<00:00, 7.03MB/s]
 
 Downloading sub-NDARAC853CR6_task-RestingState_events.tsv:   0%|          | 0.00/616 [00:00<?, ?B/s]
-Downloading sub-NDARAC853CR6_task-RestingState_events.tsv: 100%|██████████| 616/616 [00:00<00:00, 2.19MB/s]
+Downloading sub-NDARAC853CR6_task-RestingState_events.tsv: 100%|██████████| 616/616 [00:00<00:00, 2.78MB/s]
 
 Downloading sub-NDARAC853CR6_task-RestingState_eeg.json:   0%|          | 0.00/231 [00:00<?, ?B/s]
-Downloading sub-NDARAC853CR6_task-RestingState_eeg.json: 100%|██████████| 231/231 [00:00<00:00, 1.08MB/s]
-[05/08/26 18:43:00] WARNING  File not found on S3, skipping:   downloader.py:163
+Downloading sub-NDARAC853CR6_task-RestingState_eeg.json: 100%|██████████| 231/231 [00:00<00:00, 1.17MB/s]
+[05/09/26 20:25:55] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds005514/sub-N
                              DARAC853CR6/eeg/sub-NDARAC853CR6_
                              task-RestingState_eeg.fdt
 
 Downloading sub-NDARAC853CR6_task-RestingState_eeg.set:   0%|          | 0.00/92.1M [00:00<?, ?B/s]
-Downloading sub-NDARAC853CR6_task-RestingState_eeg.set:  54%|█████▍    | 50.0M/92.1M [00:01<00:01, 42.2MB/s]
-Downloading sub-NDARAC853CR6_task-RestingState_eeg.set: 100%|██████████| 92.1M/92.1M [00:01<00:00, 77.0MB/s]
-[05/08/26 18:43:01] INFO     Original events found with ids: preprocessing.py:66
+Downloading sub-NDARAC853CR6_task-RestingState_eeg.set:  54%|█████▍    | 50.0M/92.1M [00:00<00:00, 57.9MB/s]
+Downloading sub-NDARAC853CR6_task-RestingState_eeg.set: 100%|██████████| 92.1M/92.1M [00:00<00:00, 105MB/s]
+[05/09/26 20:25:56] INFO     Original events found with ids: preprocessing.py:66
                              {np.str_('boundary'): 1,
                              np.str_('break cnt'): 2,
                              np.str_('instructed_toCloseEyes
@@ -330,22 +345,22 @@ Downloading sub-NDARAC853CR6_task-RestingState_eeg.set: 100%|██████�
                              5}
 
 Downloading sub-NDARAE710YWG_task-RestingState_channels.tsv:   0%|          | 0.00/1.42k [00:00<?, ?B/s]
-Downloading sub-NDARAE710YWG_task-RestingState_channels.tsv: 100%|██████████| 1.42k/1.42k [00:00<00:00, 4.86MB/s]
+Downloading sub-NDARAE710YWG_task-RestingState_channels.tsv: 100%|██████████| 1.42k/1.42k [00:00<00:00, 7.03MB/s]
 
 Downloading sub-NDARAE710YWG_task-RestingState_events.tsv:   0%|          | 0.00/616 [00:00<?, ?B/s]
-Downloading sub-NDARAE710YWG_task-RestingState_events.tsv: 100%|██████████| 616/616 [00:00<00:00, 3.14MB/s]
+Downloading sub-NDARAE710YWG_task-RestingState_events.tsv: 100%|██████████| 616/616 [00:00<00:00, 3.63MB/s]
 
 Downloading sub-NDARAE710YWG_task-RestingState_eeg.json:   0%|          | 0.00/231 [00:00<?, ?B/s]
-Downloading sub-NDARAE710YWG_task-RestingState_eeg.json: 100%|██████████| 231/231 [00:00<00:00, 970kB/s]
-[05/08/26 18:43:02] WARNING  File not found on S3, skipping:   downloader.py:163
+Downloading sub-NDARAE710YWG_task-RestingState_eeg.json: 100%|██████████| 231/231 [00:00<00:00, 1.40MB/s]
+[05/09/26 20:25:58] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds005514/sub-N
                              DARAE710YWG/eeg/sub-NDARAE710YWG_
                              task-RestingState_eeg.fdt
 
 Downloading sub-NDARAE710YWG_task-RestingState_eeg.set:   0%|          | 0.00/90.6M [00:00<?, ?B/s]
-Downloading sub-NDARAE710YWG_task-RestingState_eeg.set:  55%|█████▌    | 50.0M/90.6M [00:00<00:00, 58.9MB/s]
-Downloading sub-NDARAE710YWG_task-RestingState_eeg.set: 100%|██████████| 90.6M/90.6M [00:00<00:00, 105MB/s]
-[05/08/26 18:43:03] INFO     Original events found with ids: preprocessing.py:66
+Downloading sub-NDARAE710YWG_task-RestingState_eeg.set:  55%|█████▌    | 50.0M/90.6M [00:00<00:00, 76.0MB/s]
+Downloading sub-NDARAE710YWG_task-RestingState_eeg.set: 100%|██████████| 90.6M/90.6M [00:00<00:00, 135MB/s]
+[05/09/26 20:25:59] INFO     Original events found with ids: preprocessing.py:66
                              {np.str_('boundary'): 1,
                              np.str_('break cnt'): 2,
                              np.str_('instructed_toCloseEyes
@@ -355,22 +370,22 @@ Downloading sub-NDARAE710YWG_task-RestingState_eeg.set: 100%|██████�
                              5}
 
 Downloading sub-NDARAH239PGG_task-RestingState_channels.tsv:   0%|          | 0.00/1.42k [00:00<?, ?B/s]
-Downloading sub-NDARAH239PGG_task-RestingState_channels.tsv: 100%|██████████| 1.42k/1.42k [00:00<00:00, 4.94MB/s]
+Downloading sub-NDARAH239PGG_task-RestingState_channels.tsv: 100%|██████████| 1.42k/1.42k [00:00<00:00, 6.63MB/s]
 
 Downloading sub-NDARAH239PGG_task-RestingState_events.tsv:   0%|          | 0.00/615 [00:00<?, ?B/s]
-Downloading sub-NDARAH239PGG_task-RestingState_events.tsv: 100%|██████████| 615/615 [00:00<00:00, 2.30MB/s]
+Downloading sub-NDARAH239PGG_task-RestingState_events.tsv: 100%|██████████| 615/615 [00:00<00:00, 3.35MB/s]
 
 Downloading sub-NDARAH239PGG_task-RestingState_eeg.json:   0%|          | 0.00/231 [00:00<?, ?B/s]
-Downloading sub-NDARAH239PGG_task-RestingState_eeg.json: 100%|██████████| 231/231 [00:00<00:00, 1.04MB/s]
-[05/08/26 18:43:04] WARNING  File not found on S3, skipping:   downloader.py:163
+Downloading sub-NDARAH239PGG_task-RestingState_eeg.json: 100%|██████████| 231/231 [00:00<00:00, 716kB/s]
+[05/09/26 20:26:00] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds005514/sub-N
                              DARAH239PGG/eeg/sub-NDARAH239PGG_
                              task-RestingState_eeg.fdt
 
 Downloading sub-NDARAH239PGG_task-RestingState_eeg.set:   0%|          | 0.00/90.1M [00:00<?, ?B/s]
-Downloading sub-NDARAH239PGG_task-RestingState_eeg.set:  55%|█████▌    | 50.0M/90.1M [00:00<00:00, 74.1MB/s]
-Downloading sub-NDARAH239PGG_task-RestingState_eeg.set: 100%|██████████| 90.1M/90.1M [00:00<00:00, 132MB/s]
-[05/08/26 18:43:05] INFO     Original events found with ids: preprocessing.py:66
+Downloading sub-NDARAH239PGG_task-RestingState_eeg.set:  55%|█████▌    | 50.0M/90.1M [00:00<00:00, 71.4MB/s]
+Downloading sub-NDARAH239PGG_task-RestingState_eeg.set: 100%|██████████| 90.1M/90.1M [00:00<00:00, 127MB/s]
+[05/09/26 20:26:01] INFO     Original events found with ids: preprocessing.py:66
                              {np.str_('boundary'): 1,
                              np.str_('break cnt'): 2,
                              np.str_('instructed_toCloseEyes
@@ -380,22 +395,22 @@ Downloading sub-NDARAH239PGG_task-RestingState_eeg.set: 100%|██████�
                              5}
 
 Downloading sub-NDARAL897CYV_task-RestingState_channels.tsv:   0%|          | 0.00/1.42k [00:00<?, ?B/s]
-Downloading sub-NDARAL897CYV_task-RestingState_channels.tsv: 100%|██████████| 1.42k/1.42k [00:00<00:00, 5.96MB/s]
+Downloading sub-NDARAL897CYV_task-RestingState_channels.tsv: 100%|██████████| 1.42k/1.42k [00:00<00:00, 5.98MB/s]
 
 Downloading sub-NDARAL897CYV_task-RestingState_events.tsv:   0%|          | 0.00/616 [00:00<?, ?B/s]
-Downloading sub-NDARAL897CYV_task-RestingState_events.tsv: 100%|██████████| 616/616 [00:00<00:00, 2.54MB/s]
+Downloading sub-NDARAL897CYV_task-RestingState_events.tsv: 100%|██████████| 616/616 [00:00<00:00, 2.94MB/s]
 
 Downloading sub-NDARAL897CYV_task-RestingState_eeg.json:   0%|          | 0.00/231 [00:00<?, ?B/s]
-Downloading sub-NDARAL897CYV_task-RestingState_eeg.json: 100%|██████████| 231/231 [00:00<00:00, 730kB/s]
-[05/08/26 18:43:06] WARNING  File not found on S3, skipping:   downloader.py:163
+Downloading sub-NDARAL897CYV_task-RestingState_eeg.json: 100%|██████████| 231/231 [00:00<00:00, 1.08MB/s]
+[05/09/26 20:26:02] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds005514/sub-N
                              DARAL897CYV/eeg/sub-NDARAL897CYV_
                              task-RestingState_eeg.fdt
 
 Downloading sub-NDARAL897CYV_task-RestingState_eeg.set:   0%|          | 0.00/87.5M [00:00<?, ?B/s]
-Downloading sub-NDARAL897CYV_task-RestingState_eeg.set:  57%|█████▋    | 50.0M/87.5M [00:00<00:00, 73.7MB/s]
-Downloading sub-NDARAL897CYV_task-RestingState_eeg.set: 100%|██████████| 87.5M/87.5M [00:00<00:00, 127MB/s]
-[05/08/26 18:43:07] INFO     Original events found with ids: preprocessing.py:66
+Downloading sub-NDARAL897CYV_task-RestingState_eeg.set:  57%|█████▋    | 50.0M/87.5M [00:00<00:00, 68.6MB/s]
+Downloading sub-NDARAL897CYV_task-RestingState_eeg.set: 100%|██████████| 87.5M/87.5M [00:00<00:00, 118MB/s]
+[05/09/26 20:26:03] INFO     Original events found with ids: preprocessing.py:66
                              {np.str_('boundary'): 1,
                              np.str_('break cnt'): 2,
                              np.str_('instructed_toCloseEyes
@@ -403,7 +418,7 @@ Downloading sub-NDARAL897CYV_task-RestingState_eeg.set: 100%|██████�
                              np.str_('instructed_toOpenEyes'
                              ): 4, np.str_('resting_start'):
                              5}
-[05/08/26 18:43:08] WARNING  File not found on S3, skipping:   downloader.py:163
+[05/09/26 20:26:04] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds005514/sub-N
                              DARDB033FW5/eeg/sub-NDARDB033FW5_
                              task-RestingState_eeg.fdt
@@ -470,7 +485,7 @@ Downloading sub-NDARAL897CYV_task-RestingState_eeg.set: 100%|██████�
 </div>
 <br />
 <br />
-<!-- GENERATED FROM PYTHON SOURCE LINES 233-240 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 247-254 -->
 
 ## Step 4. PRIMM Run: Welch PSD per window
 
@@ -480,7 +495,7 @@ resolution, restrict the analysis range to 1-40 Hz so the alpha bump
 dominates the picture, and integrate the canonical 8-13 Hz pass-band
 per channel to get one log-power feature per (window, channel).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 242-261 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 256-275 -->
 ```Python
 psd, freqs = psd_array_welch(
     X,
@@ -506,7 +521,7 @@ print(
 PSD shape: (420, 24, 79)  (n_windows, n_channels, n_freqs) | alpha bins in 8-13 Hz: 11
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 262-273 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 276-287 -->
 
 ## Step 5. PRIMM Investigate: posterior alpha
 
@@ -520,7 +535,7 @@ eyes-closed curve sits visibly above the eyes-open curve inside the
 alpha shading; the rest of the spectrum overlaps to within plotting
 precision.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 275-312 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 289-326 -->
 ```Python
 ANCHOR = "E70"
 anchor_idx = ch_names.index(ANCHOR)
@@ -565,7 +580,7 @@ Anchor channel E70 | per-subject ratios: 3.67x, 2.70x, 4.12x, 0.25x, 4.30x, 3.32
 closed/open alpha at E70: mean = 3.06x | median = 3.50x
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 313-323 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 327-337 -->
 
 ## Per-channel alpha-power difference
 
@@ -578,7 +593,7 @@ pattern. Posterior electrodes (E70, E92, E96, around Oz / O2) should
 land on the red side of the divergent colormap; anterior electrodes
 hover near zero.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 325-344 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 339-358 -->
 ```Python
 per_subject_log_diff = []
 for s in unique_subjects:
@@ -604,7 +619,7 @@ assert positive_channel_ratio >= 0.50, (
 Top-3 alpha-bump channels (closed - open, log10):  E96 +0.567 | E70 +0.536 | E92 +0.461
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 345-352 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 359-366 -->
 
 ## Step 6. Build the topomap [`mne.Info`](https://mne.tools/stable/generated/mne.Info.html#mne.Info)
 
@@ -614,7 +629,7 @@ The HBN recordings ship as the GSN-HydroCel-128 montage; we attach the
 standard montage to a fresh `Info` so the topomap can place each
 E-channel at its scalp location.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 354-358 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 368-372 -->
 ```Python
 mont = mne.channels.make_standard_montage("GSN-HydroCel-128")
 info = mne.create_info(ch_names, sfreq, ch_types="eeg")
@@ -769,9 +784,9 @@ this file apply (plus whatever default styling the IDE applies).
 
 
 
-<tr class="mne-repr-section-header general-19fe88f4-5893-4684-80da-617aad08fd7e"
+<tr class="mne-repr-section-header general-af5381f7-1dbf-495e-82f6-722a7e4c7546"
      title="Hide section"
-    onclick="toggleVisibility('general-19fe88f4-5893-4684-80da-617aad08fd7e')">
+    onclick="toggleVisibility('general-af5381f7-1dbf-495e-82f6-722a7e4c7546')">
     <th class="mne-repr-section-toggle">
         <button >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
@@ -783,26 +798,26 @@ this file apply (plus whatever default styling the IDE applies).
 </tr>
 
 
-<tr class="repr-element general-19fe88f4-5893-4684-80da-617aad08fd7e ">
+<tr class="repr-element general-af5381f7-1dbf-495e-82f6-722a7e4c7546 ">
     <td class="mne-repr-section-toggle"></td>
     <td>MNE object type</td>
     <td>Info</td>
 </tr>
-<tr class="repr-element general-19fe88f4-5893-4684-80da-617aad08fd7e ">
+<tr class="repr-element general-af5381f7-1dbf-495e-82f6-722a7e4c7546 ">
     <td class="mne-repr-section-toggle"></td>
     <td>Measurement date</td>
 
     <td>Unknown</td>
 
 </tr>
-<tr class="repr-element general-19fe88f4-5893-4684-80da-617aad08fd7e ">
+<tr class="repr-element general-af5381f7-1dbf-495e-82f6-722a7e4c7546 ">
     <td class="mne-repr-section-toggle"></td>
     <td>Participant</td>
 
     <td>Unknown</td>
 
 </tr>
-<tr class="repr-element general-19fe88f4-5893-4684-80da-617aad08fd7e ">
+<tr class="repr-element general-af5381f7-1dbf-495e-82f6-722a7e4c7546 ">
     <td class="mne-repr-section-toggle"></td>
     <td>Experimenter</td>
 
@@ -817,9 +832,9 @@ this file apply (plus whatever default styling the IDE applies).
 
 
 
-<tr class="mne-repr-section-header acquisition-d7998e94-40c2-48d4-9d45-46b2afcc6909"
+<tr class="mne-repr-section-header acquisition-41c78bd8-d95c-4cad-a451-baf4a83d0a83"
      title="Hide section"
-    onclick="toggleVisibility('acquisition-d7998e94-40c2-48d4-9d45-46b2afcc6909')">
+    onclick="toggleVisibility('acquisition-41c78bd8-d95c-4cad-a451-baf4a83d0a83')">
     <th class="mne-repr-section-toggle">
         <button >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
@@ -838,7 +853,7 @@ this file apply (plus whatever default styling the IDE applies).
 
 
 
-<tr class="repr-element acquisition-d7998e94-40c2-48d4-9d45-46b2afcc6909 ">
+<tr class="repr-element acquisition-41c78bd8-d95c-4cad-a451-baf4a83d0a83 ">
     <td class="mne-repr-section-toggle"></td>
     <td>Sampling frequency</td>
     <td>128.00 Hz</td>
@@ -854,9 +869,9 @@ this file apply (plus whatever default styling the IDE applies).
 
 
 
-<tr class="mne-repr-section-header channels-5ca4da09-94fe-4d56-bd3a-f0f9a6b29ba3"
+<tr class="mne-repr-section-header channels-a214bbad-a5f3-494f-b903-4d0a3e4f4415"
      title="Hide section"
-    onclick="toggleVisibility('channels-5ca4da09-94fe-4d56-bd3a-f0f9a6b29ba3')">
+    onclick="toggleVisibility('channels-a214bbad-a5f3-494f-b903-4d0a3e4f4415')">
     <th class="mne-repr-section-toggle">
         <button >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
@@ -869,7 +884,7 @@ this file apply (plus whatever default styling the IDE applies).
 
 
 
-<tr class="repr-element channels-5ca4da09-94fe-4d56-bd3a-f0f9a6b29ba3 ">
+<tr class="repr-element channels-a214bbad-a5f3-494f-b903-4d0a3e4f4415 ">
     <td class="mne-repr-section-toggle"></td>
     <td>EEG</td>
     <td>
@@ -882,7 +897,7 @@ this file apply (plus whatever default styling the IDE applies).
 </tr>
 
 
-<tr class="repr-element channels-5ca4da09-94fe-4d56-bd3a-f0f9a6b29ba3 ">
+<tr class="repr-element channels-a214bbad-a5f3-494f-b903-4d0a3e4f4415 ">
     <td class="mne-repr-section-toggle"></td>
     <td>Head & sensor digitization</td>
 
@@ -897,9 +912,9 @@ this file apply (plus whatever default styling the IDE applies).
 
 
 
-<tr class="mne-repr-section-header filters-01a6ac2f-9596-4ede-9aeb-d78dcbb1deca"
+<tr class="mne-repr-section-header filters-a77f7884-054e-4738-90b3-c969f043dbab"
      title="Hide section"
-    onclick="toggleVisibility('filters-01a6ac2f-9596-4ede-9aeb-d78dcbb1deca')">
+    onclick="toggleVisibility('filters-a77f7884-054e-4738-90b3-c969f043dbab')">
     <th class="mne-repr-section-toggle">
         <button >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
@@ -911,14 +926,14 @@ this file apply (plus whatever default styling the IDE applies).
 </tr>
 
 
-<tr class="repr-element filters-01a6ac2f-9596-4ede-9aeb-d78dcbb1deca ">
+<tr class="repr-element filters-a77f7884-054e-4738-90b3-c969f043dbab ">
     <td class="mne-repr-section-toggle"></td>
     <td>Highpass</td>
     <td>0.00 Hz</td>
 </tr>
 
 
-<tr class="repr-element filters-01a6ac2f-9596-4ede-9aeb-d78dcbb1deca ">
+<tr class="repr-element filters-a77f7884-054e-4738-90b3-c969f043dbab ">
     <td class="mne-repr-section-toggle"></td>
     <td>Lowpass</td>
     <td>64.00 Hz</td>
@@ -929,7 +944,7 @@ this file apply (plus whatever default styling the IDE applies).
 </div>
 <br />
 <br />
-<!-- GENERATED FROM PYTHON SOURCE LINES 359-369 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 373-383 -->
 
 ## Step 7. Per-subject standardisation
 
@@ -938,11 +953,11 @@ Cross-subject decoding has to deal with one structural problem: the
 magnitude (skull thickness, pediatric age effects, electrode
 impedance). The closed-vs-open *contrast* is preserved, but a flat
 linear model fed raw log-power features sees the per-subject offset
-as the dominant axis and loses signal. We standardise each subject’s
+as the dominant axis and loses signal. We standardize each subject’s
 24 features to zero mean / unit std so the model sees the *relative*
 alpha pattern instead of the absolute amplitude.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 371-378 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 385-392 -->
 ```Python
 features = alpha_log_power.copy()
 for s in set(groups):
@@ -952,7 +967,7 @@ for s in set(groups):
     )
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 379-389 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 393-403 -->
 
 ## Step 8. Cross-subject decoding (leave-one-subject-out)
 
@@ -960,12 +975,12 @@ for s in set(groups):
 `groups = subject id` produces a leave-one-subject-out split (one
 fold per subject when `n_splits == n_subjects`). On each fold we
 train a flat [`sklearn.linear_model.LogisticRegression`](https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html#sklearn.linear_model.LogisticRegression) on the
-per-subject-standardised log alpha-band power features (one per
+per-subject-standardized log alpha-band power features (one per
 channel) and read accuracy on the held-out subject.
 An inline subject-overlap check is the Cisotto & Chicco 2024 (Tip 9)
 guard that confirms zero subject overlap on the contract by subject id.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 391-434 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 405-448 -->
 ```Python
 n_folds = min(len(unique_subjects), 4)
 gkf = GroupKFold(n_splits=n_folds)
@@ -1020,7 +1035,7 @@ LOSO mean accuracy: 0.82 +/- 0.03 | chance level: 0.50
 LOSO pooled: n_test_windows=420 | pooled accuracy=0.824
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 435-446 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 449-460 -->
 
 ## Step 9. Render the 4-panel figure
 
@@ -1034,7 +1049,7 @@ reader can tell whether the decoder is symmetric across the two
 conditions. The drawing helpers live in the sibling `_alpha_figure`
 module so the rendering plumbing stays out of this tutorial.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 448-475 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 462-489 -->
 ```Python
 from _alpha_figure import draw_alpha_figure
 
@@ -1064,7 +1079,7 @@ fig = draw_alpha_figure(
 plt.show()
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 476-485 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 490-499 -->
 
 ## A common mistake, and how to recover
 
@@ -1076,7 +1091,7 @@ half of pediatric alpha; the mean ratio collapses toward 1.0 and the
 decoder loses signal. We trigger the failure with `try / except` so
 the recovery path is visible.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 487-502 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 501-516 -->
 ```Python
 try:
     narrow = (10.0, 12.0)
@@ -1094,7 +1109,7 @@ except (ValueError, RuntimeError) as exc:
     print(f"Recovery: integrate over {ALPHA_BAND} Hz instead.")
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 503-509 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 517-523 -->
 
 ## Modify: swap the band
 
@@ -1103,7 +1118,7 @@ of 8-13 Hz alpha. The contrast collapses (and the LOSO classifier with
 it) because the eyes-closed bump lives in alpha; broadband power does
 not carry the open-vs-closed signal.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 511-530 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 525-544 -->
 ```Python
 slow_mask = (freqs >= 1.0) & (freqs <= 7.0)
 slow_log_power = np.log10(psd_uv2[..., slow_mask].mean(axis=-1) + 1e-30)
@@ -1129,7 +1144,7 @@ print(
 1-7 Hz contrast: mean log10 power diff=+0.009 | LOSO acc 0.57 (alpha was 0.82)
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 531-538 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 545-552 -->
 
 ## Make: a per-channel ablation
 
@@ -1139,7 +1154,7 @@ anterior-only (`E22`, `E9`, `E11`), central-only (`Cz`,
 `E96`). Predict before running: which subset crosses 0.80 first?
 (The posterior subset, by a wide margin, alpha is a posterior story.)
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 540-547 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 554-561 -->
 
 ## Result
 
@@ -1149,12 +1164,12 @@ leave-one-subject-out accuracy, and the chance level. Eyes-closed
 carries more posterior alpha; the decoder picks the contrast up
 across subjects it never saw at fit time.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 549-551 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 563-565 -->
 
 Per-subject mean log10 alpha at the anchor (then averaged) so the
 table reads in the same units as the PSD panel.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 551-601 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 565-615 -->
 ```Python
 log_open_per_sub = [
     float(np.log10(per_subject_open[i][alpha_mask].mean()))
@@ -1217,7 +1232,7 @@ print(
 {"alpha_ratio_closed_over_open": 3.0607, "alpha_positive_channel_ratio": 0.875, "loso_mean_accuracy": 0.8161, "loso_std_accuracy": 0.0269, "chance_level": 0.5, "n_subjects": 6, "n_open": 210, "n_closed": 210}
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 602-618 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 616-632 -->
 
 ## Wrap-up
 
@@ -1236,7 +1251,7 @@ replaces the hand-rolled Welch features with the EEGDash feature
 pipeline; /auto_examples/tutorials/50_evaluation/plot_51_cross_subject_evaluation
 expands the LOSO loop into a full cross-subject evaluation pipeline.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 620-631 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 634-645 -->
 
 ## Try it yourself
 
@@ -1250,14 +1265,14 @@ expands the LOSO loop into a full cross-subject evaluation pipeline.
   trained on the raw windows (see
   /auto_examples/tutorials/10_core_workflow/plot_12_train_a_baseline).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 633-638 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 647-652 -->
 
 ## References
 
-See [References](../../../../references.md) for the centralised bibliography of papers
+See [References](../../../../references.md) for the centralized bibliography of papers
 cited above. Add or amend an entry once in
 `docs/source/refs.bib`; every tutorial inherits the update.
 
-**Total running time of the script:** (0 minutes 15.112 seconds)
+**Total running time of the script:** (0 minutes 14.643 seconds)
 
 <a id="sphx-glr-download-generated-auto-examples-tutorials-30-resting-state-plot-30-eyes-open-closed-py"></a>

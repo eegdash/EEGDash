@@ -1,5 +1,7 @@
-"""Is Pipeline A really better than Pipeline B, or did it luck out on one subject?
-=================================================================================
+"""Compare two decoding pipelines
+=============================
+
+**Difficulty 2-3** | **Runtime: 2m** | **Compute: CPU**
 
 A new decoding pipeline beats your linear baseline by three accuracy
 points on the held-out subject in a hackathon notebook. The gap looks
@@ -14,7 +16,18 @@ JMLR) is the canonical reference for the recipe; Cisotto & Chicco 2024
 (doi:10.7717/peerj-cs.2256, Tip 9) flag the unpaired comparison as the
 single most common over-claim in clinical EEG. So: does the win
 survive a paired test, and how big is the effect once we strip the
-between-subject variance?
+# between-subject variance?
+#
+# Validate your result
+# --------------------
+# - **Paired Verification.** Confirm that ``fold_ids_a == fold_ids_b``. An
+#   unpaired comparison on EEG is invalid due to high subject variance.
+# - **Wilcoxon p-value.** A value < 0.05 indicates a statistically
+#   significant difference between the two pipelines.
+# - **Cohen's d.** This measures the effect size of the improvement. Values
+#   > 0.8 are generally considered large effects.
+#
+# Keywords: evaluation, comparison, statistics
 """
 
 # sphinx_gallery_thumbnail_path = '_static/thumbs/plot_54_compare_two_pipelines.png'
@@ -70,7 +83,7 @@ np.random.seed(SEED)
 # Step 1. A 12-subject feature table to compare on
 # --------------------------------------------------
 #
-# We synthesise 12 subjects x 16 windows of band-power features
+# We synthesize 12 subjects x 16 windows of band-power features
 # (alpha bump on closed eyes, identical layout to plot_42). On real
 # data you would reload the parquet feature table from plot_40, the
 # only thing the comparison cares about is that one row of metadata
@@ -260,7 +273,7 @@ print(
 # disagreement is informative when it happens.
 #
 # Cohen's d on the paired differences is ``mean(d) / sd(d)``; this is
-# the standardised effect size, comparable across studies and units.
+# the standardized effect size, comparable across studies and units.
 # A 95% CI on the mean delta gives the practical-significance ruler:
 # values inside the CI are the effects you cannot rule out at this
 # sample size.
@@ -432,6 +445,6 @@ print(
 # %% [markdown]
 # References
 # ----------
-# See :doc:`/references` for the centralised bibliography of papers
+# See :doc:`/references` for the centralized bibliography of papers
 # cited above. Add or amend an entry once in
 # :file:`docs/source/refs.bib`; every tutorial inherits the update.

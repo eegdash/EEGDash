@@ -6,9 +6,11 @@
 
 <a id="sphx-glr-generated-auto-examples-tutorials-50-evaluation-plot-51-cross-subject-evaluation-py"></a>
 
-# How well does an EEG decoder generalise to a never-seen subject?
+# Cross-subject decoding evaluation
 
-Cross-subject generalisation is the gold standard for any decoding
+**Difficulty 2-3** | **Runtime: 2m** | **Compute: CPU**
+
+Cross-subject generalization is the gold standard for any decoding
 claim. Train on N-1 subjects, test on the held-out one, repeat for
 every subject: that is leave-one-subject-out cross-validation (LOSO),
 the protocol behind the MOABB benchmark [[Aristimunha *et al.*, 2023](../../../../references.md#id35)] and
@@ -26,17 +28,28 @@ trained one model on one cross-subject split, this tutorial steps up
 to the actual evaluation: a LOSO loop that holds a different subject
 out each time, a subject x subject transfer heatmap, and a pooled
 confusion matrix over every held-out prediction. The deliverable is a
-single three-panel figure.
+# single three-panel figure.
+#
+# Validate your result
+# ——————–
+# - **Fold Count.** For N subjects, you should expect exactly N folds in your
+#   LOSO loop.
+# - **Transfer Heatmap.** The diagonal of the subject-x-subject matrix
+#   represents within-subject performance; the off-diagonal represents
+#   generalization.
+# - **Accuracy Spread.** Expect higher variance across subjects than across
+#   random seeds. Report both the mean and the standard deviation.
 
 <!-- sphinx_gallery_thumbnail_path = '_static/thumbs/plot_51_cross_subject_evaluation.png' -->
 
 So how big is the across-subject spread once you run the loop?
+Keywords: evaluation, cross-subject, generalization
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 30-45 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 43-58 -->
 
 ## Learning objectives
 
-- Explain why cross-subject evaluation is the gold standard for EEG decoding generalisation.
+- Explain why cross-subject evaluation is the gold standard for EEG decoding generalization.
 - Build a leave-one-subject-out loop with [`sklearn.model_selection.LeaveOneGroupOut`](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.LeaveOneGroupOut.html#sklearn.model_selection.LeaveOneGroupOut) keyed on `subject`.
 - Compute a subject x subject train-test transfer matrix and read which held-out subjects are systematically harder.
 - Quote `mean +/- std` of LOSO [`sklearn.metrics.balanced_accuracy_score()`](https://scikit-learn.org/stable/modules/generated/sklearn.metrics.balanced_accuracy_score.html#sklearn.metrics.balanced_accuracy_score) against a chance level computed on the test fold.
@@ -48,13 +61,13 @@ So how big is the across-subject spread once you run the loop?
 - About 30 s on CPU. No network: the cohort is built in-script.
 - Concept: [Leakage and evaluation](../../../../concepts/leakage_and_evaluation.md).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 47-50 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 60-63 -->
 
 Setup. `random_state=42` on every estimator and splitter and
 `np.random.seed` keeps the printed accuracy byte-stable across
 runs (E3.21).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 50-70 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 63-83 -->
 ```Python
 import warnings
 
@@ -77,7 +90,7 @@ np.random.seed(SEED)
 rng = np.random.default_rng(SEED)
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 71-92 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 84-105 -->
 
 ## Why LOSO and not a single 80/20 split?
 
@@ -100,7 +113,7 @@ subject `i` and evaluated on subject `j`. A column with low values
 means subject `j` is hard regardless of who trained the model; a row
 with low values means subject `i` does not contribute useful signal.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 94-102 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 107-115 -->
 
 ## Step 1. Build per-subject metadata for 8 subjects
 
@@ -110,7 +123,7 @@ a 2-D feature carrying class signal plus a per-subject offset (the
 `eegdash.splits` accepts a
 [`braindecode.datasets.WindowsDataset`](https://braindecode.org/stable/generated/braindecode.datasets.WindowsDataset.html#braindecode.datasets.WindowsDataset) or this DataFrame.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 105-137 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 118-150 -->
 ```Python
 def make_cohort(sizes, *, prefix: str, rng):
     """Return ``(X, metadata)`` for a synthetic cross-subject toy task."""
@@ -149,7 +162,7 @@ print(
 rows=480 | subjects=8 | classes={1: np.int64(242), 0: np.int64(238)}
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 138-152 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 151-165 -->
 
 ## Step 2. Predict the LOSO fold count, then build the splits
 
@@ -165,7 +178,7 @@ subject. We use sklearn directly here so the loop reads as plain
 scikit-learn; the manifest path mirrors the one `plot_11`
 demonstrated.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 154-176 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 167-189 -->
 ```Python
 n_loso_folds = LeaveOneGroupOut().get_n_splits(X, y, groups)
 print(f"n_subjects={N_SUBJECTS} | n_loso_folds={n_loso_folds}")
@@ -195,7 +208,7 @@ n_subjects=8 | n_loso_folds=8
 splitter=CrossSubjectSplitter | folds=8 | max subject overlap=0
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 177-186 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 190-199 -->
 
 ## Step 3. Run the LOSO loop and pool the predictions
 
@@ -206,7 +219,7 @@ in the train mask, predict the one held-out subject, score with
 (true, pred) pair into pooled arrays so the pooled confusion matrix
 in the headline figure carries every held-out window once.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 189-233 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 202-246 -->
 ```Python
 def loso_loop(X, y, metadata, folds):
     """Return per-fold balanced accuracy plus pooled (true, pred)."""
@@ -265,7 +278,7 @@ Fold 7: held-out sub-00 | balanced_acc=0.884 | chance=0.550
 LOSO summary: balanced_acc=0.878 +/- 0.031 | chance=0.550 | n_folds=8
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 234-240 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 247-253 -->
 
 ## Step 4. Each fold’s test set has DIFFERENT subjects
 
@@ -273,7 +286,7 @@ LOSO summary: balanced_acc=0.878 +/- 0.031 | chance=0.550 | n_folds=8
 subject appears in exactly one test fold; the union across folds
 tiles the cohort. The per-fold lookup below confirms the contract.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 242-251 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 255-264 -->
 ```Python
 test_subjects_by_fold = []
 for _tr_mask, te_mask in folds:
@@ -289,7 +302,7 @@ print(
 union across folds: 8 | cohort size: 8
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 252-265 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 265-278 -->
 
 ## Step 5. Build the subject x subject transfer matrix
 
@@ -298,13 +311,13 @@ transfer matrix keeps the resolution: cell `(i, j)` = balanced
 accuracy of a model trained on source subject `i` alone and
 evaluated on held-out subject `j`. The diagonal `(j, j)` is the
 within-subject case and is masked because cross-subject
-generalisation is the point. A column with low values flags a test
+generalization is the point. A column with low values flags a test
 subject who is hard to decode regardless of who trained the model;
 a row with low values flags a source subject whose data does not
 transfer. Bouchard et al. and the MOABB benchmark report variants of
 this matrix as the diagnostic for *who* the cohort is hard for.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 268-298 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 281-311 -->
 ```Python
 def transfer_matrix_pairwise(X, y, metadata, subject_ids):
     """Cell (i, j): train on source subject i alone, score on subject j."""
@@ -341,7 +354,7 @@ print(
 transfer matrix: shape=(8, 8) | hardest test subject=sub-07 | easiest test subject=sub-03
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 299-307 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 312-320 -->
 
 ## Step 6. The per-subject accuracy distribution
 
@@ -351,7 +364,7 @@ for others. The MOABB benchmark publishes both numbers for every BCI
 task; treat `mean - std` as the lower envelope of what a new
 subject can expect.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 309-315 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 322-328 -->
 ```Python
 print("Per-subject balanced-accuracy histogram:")
 edges = np.linspace(min(fold_acc) - 0.01, max(fold_acc) + 0.01, 6)
@@ -369,11 +382,11 @@ Per-subject balanced-accuracy histogram:
   [0.91, 0.94): #
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 316-318 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 329-331 -->
 
 ## Result: one number, one error bar, against chance (E5.43)
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 320-325 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 333-338 -->
 ```Python
 print(
     f"LOSO balanced accuracy: {mean_loso:.3f} +/- {std_loso:.3f} | "
@@ -385,7 +398,7 @@ print(
 LOSO balanced accuracy: 0.878 +/- 0.031 | chance level: 0.550 | metric: balanced_accuracy
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 326-333 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 339-346 -->
 
 ## A common mistake, and how to recover
 
@@ -394,7 +407,7 @@ than subjects (`n_folds=20` on an 8-subject cohort).
 [`GroupKFold`](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GroupKFold.html#sklearn.model_selection.GroupKFold) raises `ValueError` –
 catch it and clamp to N.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 335-345 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 348-358 -->
 ```Python
 try:
     bad = CrossSubjectSplitter(cv_class=GroupKFold, n_splits=20)
@@ -412,7 +425,7 @@ Caught ValueError: Cannot have number of splits n_splits=20 greater than the num
 Recovery: clamp n_folds to n_subjects=8 -> CrossSubjectSplitter
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 346-354 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 359-367 -->
 
 ## Modify: compare 5-fold cross-subject vs LOSO variance
 
@@ -422,7 +435,7 @@ always shrinks because each test fold pools two subjects, averaging
 out the per-subject noise. LOSO is the higher-fidelity variance
 estimate this cohort can give.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 356-377 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 369-390 -->
 ```Python
 splitter5 = CrossSubjectSplitter(cv_class=GroupKFold, n_splits=5)
 folds5: list[tuple[np.ndarray, np.ndarray]] = []
@@ -450,16 +463,16 @@ print(
 5-fold cross-subject: 0.885 +/- 0.026 | LOSO (8 folds): 0.878 +/- 0.031
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 378-385 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 391-398 -->
 
 ## Make: apply the loop to a cohort with imbalanced subjects
 
 **Make.** Real cohorts rarely have equal trials per subject. Build a
 cohort where subjects contribute different counts, re-run LOSO. The
 contract holds (no subject leakage); the headline `mean +/- std`
-tells you whether the imbalance hurts generalisation.
+tells you whether the imbalance hurts generalization.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 387-414 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 400-427 -->
 ```Python
 sizes_imb = [20, 30, 30, 40, 50, 50, 60, 80]
 X_imb, meta_imb = make_cohort(
@@ -493,7 +506,7 @@ print(
 imbalanced LOSO: 0.813 +/- 0.049 | sizes=[20, 30, 30, 40, 50, 50, 60, 80]
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 415-426 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 428-439 -->
 
 ## Headline figure, transfer matrix, LOSO bars, pooled confusion
 
@@ -506,7 +519,7 @@ prediction. The drawing helpers live in a sibling
 `_cross_subject_figure` module so the matplotlib geometry stays out
 of this tutorial; the call below is the only line that matters.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 428-443 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 441-456 -->
 ```Python
 from _cross_subject_figure import draw_cross_subject_figure
 
@@ -524,7 +537,7 @@ fig = draw_cross_subject_figure(
 plt.show()
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 444-459 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 457-472 -->
 
 **Investigate.** Read the three panels in order.
 
@@ -542,7 +555,7 @@ plt.show()
    below carries the pooled `balanced_acc` and the total number of
    held-out windows.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 461-473 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 474-486 -->
 
 ## Wrap-up
 
@@ -556,7 +569,7 @@ Disjoint test subjects across folds tile the cohort. The transfer
 matrix is the diagnostic a reviewer reaches for when the headline
 mean looks fine but the std is suspicious.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 475-481 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 488-494 -->
 
 ## Try it yourself
 
@@ -564,11 +577,11 @@ mean looks fine but the std is suspicious.
 - Reorder `subject_ids` in the transfer matrix to put the hardest test subject first. The figure becomes the diagnostic for which subject to investigate next.
 - Swap the synthetic cohort for the windows + manifest you saved in `plot_11` and re-run LOSO end-to-end.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 483-488 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 496-501 -->
 
 ## References
 
-See [References](../../../../references.md) for the centralised bibliography of papers
+See [References](../../../../references.md) for the centralized bibliography of papers
 cited above. Add or amend an entry once in
 `docs/source/refs.bib`; every tutorial inherits the update.
 

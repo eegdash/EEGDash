@@ -7,18 +7,18 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta property="og:title" content="Is resting-state EEG even predictive of the BIDS sex label? (Project Starter)" />
+<meta property="og:title" content="Sex classification from EEG" />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://eegdash.org/generated/auto_examples/applied/project_sex_classification.html" />
 <meta property="og:site_name" content="EEG Dash" />
-<meta property="og:description" content="A canonical “is this signal even predictive?” benchmark task on resting-state EEG from OpenNeuro ds005505(Healthy Brain Network; Alexander et al. 2017)…" />
+<meta property="og:description" content="Difficulty 3| Runtime: 3-5m| Compute: CPU A canonical “is this signal even predictive?” benchmark task on resting-state EEG from OpenNeuro…" />
 <meta property="og:image" content="https://eegdash.org/_static/eegdash_social_card.png" />
 <meta property="og:image:alt" content="EEG Dash — data-sharing interface for M/EEG datasets" />
-<meta name="description" content="A canonical “is this signal even predictive?” benchmark task on resting-state EEG from OpenNeuro ds005505(Healthy Brain Network; Alexander et al. 2017)…" />
+<meta name="description" content="Difficulty 3| Runtime: 3-5m| Compute: CPU A canonical “is this signal even predictive?” benchmark task on resting-state EEG from OpenNeuro…" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@eegdash" />
 
-    <title>Is resting-state EEG even predictive of the BIDS sex label? (Project Starter) &#8212; EEG Dash</title>
+    <title>Sex classification from EEG &#8212; EEG Dash</title>
   
   
   
@@ -74,8 +74,8 @@
     <link rel="icon" href="../../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="EEG 2025 Foundation Challenge" href="../eeg2025/index.html" />
-    <link rel="prev" title="Predicting p-factor from EEG with hand-crafted features (project starter)" href="project_pfactor_features.html" />
+    <link rel="next" title="EEG2025 Foundation Challenge" href="../eeg2025/index.html" />
+    <link rel="prev" title="Predict p-factor from EEG features" href="project_pfactor_features.html" />
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="0.7" />
 
@@ -563,7 +563,7 @@
     
     <li class="breadcrumb-item"><a href="index.html" class="nav-link">Applied Research Projects</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Is resting-state EEG even predictive of the BIDS sex label? (Project Starter)</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Sex classification from EEG</span></li>
   </ul>
 </nav>
 </div>
@@ -585,8 +585,9 @@
 <p><a class="reference internal" href="#sphx-glr-download-generated-auto-examples-applied-project-sex-classification-py"><span class="std std-ref">Go to the end</span></a>
 to download the full example code or to run this example in your browser via Binder.</p>
 </div>
-<section class="sphx-glr-example-title" id="is-resting-state-eeg-even-predictive-of-the-bids-sex-label-project-starter">
-<span id="sphx-glr-generated-auto-examples-applied-project-sex-classification-py"></span><h1>Is resting-state EEG even predictive of the BIDS sex label? (Project Starter)<a class="headerlink" href="#is-resting-state-eeg-even-predictive-of-the-bids-sex-label-project-starter" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">10 minutes</span></div>
+<section class="sphx-glr-example-title" id="sex-classification-from-eeg">
+<span id="sphx-glr-generated-auto-examples-applied-project-sex-classification-py"></span><h1>Sex classification from EEG<a class="headerlink" href="#sex-classification-from-eeg" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">10 minutes</span></div>
+<p><strong>Difficulty 3</strong> | <strong>Runtime: 3-5m</strong> | <strong>Compute: CPU</strong></p>
 <p>A canonical “is this signal even predictive?” benchmark task on resting-state
 EEG from <a class="reference external" href="https://openneuro.org">OpenNeuro</a> <code class="docutils literal notranslate"><span class="pre">ds005505</span></code> (Healthy Brain
 Network; Alexander et al. 2017), reachable through <a class="reference external" href="https://nemar.org">NEMAR</a> <span class="bibtex-citation" id="id1">[<a class="reference internal" href="../../../references.html#id6" title="Arnaud Delorme, Dung Truong, Choonhan Youn, Subhashini Sivagnanam, Claire Stirm, Kenneth Yoshimoto, Russell A Poldrack, Amitava Majumdar, and Scott Makeig. Nemar: an open access data, tools and compute resource operating on neuroelectromagnetic data. Database, 2022. doi:10.1093/database/baac096.">Delorme <em>et al.</em>, 2022</a>]</span>. Log band-power features feed
@@ -599,34 +600,44 @@ helpers, <a class="reference external" href="https://scikit-learn.org/stable/mod
 <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.RocCurveDisplay.html#sklearn.metrics.RocCurveDisplay" title="(in scikit-learn v1.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">RocCurveDisplay</span></code></a>, and
 <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.ConfusionMatrixDisplay.html#sklearn.metrics.ConfusionMatrixDisplay" title="(in scikit-learn v1.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConfusionMatrixDisplay</span></code></a>. Do the features
 separate the classes, how stable is held-out AUC across subjects, and
-which class does the model confuse?</p>
-<section id="learning-objectives">
-<h2>Learning objectives<a class="headerlink" href="#learning-objectives" title="Link to this heading">#</a></h2>
+which class does the model confuse?
+Keywords: classification, applied, sex</p>
+<section id="metadata-sex-vs-gender">
+<h2>Metadata: Sex vs. Gender<a class="headerlink" href="#metadata-sex-vs-gender" title="Link to this heading">#</a></h2>
+<p>EEGDash loads both <code class="docutils literal notranslate"><span class="pre">sex</span></code> and <code class="docutils literal notranslate"><span class="pre">gender</span></code> fields from the BIDS
+<code class="docutils literal notranslate"><span class="pre">participants.tsv</span></code> if available. While often used interchangeably in
+metadata, <code class="docutils literal notranslate"><span class="pre">sex</span></code> typically refers to biological status as recorded by the
+sponsor, while <code class="docutils literal notranslate"><span class="pre">gender</span></code> reflects subject self-report. When both are
+present, this tutorial defaults to the <code class="docutils literal notranslate"><span class="pre">sex</span></code> field for classification,
+but users should verify the source-dataset’s data dictionary (JSON sidecar)
+for the specific semantics of each field.</p>
+</section>
+<section id="leakage-and-splits">
+<h2>Leakage and Splits<a class="headerlink" href="#leakage-and-splits" title="Link to this heading">#</a></h2>
+<p>Naive window-level or recording-level splits on the same subject will
+cause <strong>subject leakage</strong>. Since resting-state EEG is a “biometric fingerprint”,
+the model will learn to recognize the subject rather than generalize the
+label. We use <code class="docutils literal notranslate"><span class="pre">GroupKFold(groups=subjects)</span></code> to ensure that windows from
+the same participant never appear in both training and test sets.
+See <a class="reference internal" href="../../../concepts/leakage_and_evaluation.html"><span class="doc">Leakage and evaluation</span></a> for the full rationale.</p>
+</section>
+<section id="validate-your-result">
+<h2>Validate your result<a class="headerlink" href="#validate-your-result" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p>Use <a class="reference internal" href="../../../api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset" title="eegdash.EEGDashDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">eegdash.EEGDashDataset</span></code></a> to pull resting-state ds005505 recordings and balance the cohort by the BIDS <code class="docutils literal notranslate"><span class="pre">sex</span></code> field.</p></li>
-<li><p>Compute log band-power features (delta, theta, alpha, beta) per channel from fixed-length 2 s windows.</p></li>
-<li><p>Run a 3-fold cross-subject loop with <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GroupKFold.html#sklearn.model_selection.GroupKFold" title="(in scikit-learn v1.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">GroupKFold</span></code></a> and fit a leakage-safe <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html#sklearn.pipeline.Pipeline" title="(in scikit-learn v1.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Pipeline</span></code></a> of <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.StandardScaler.html#sklearn.preprocessing.StandardScaler" title="(in scikit-learn v1.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">StandardScaler</span></code></a> and <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html#sklearn.linear_model.LogisticRegression" title="(in scikit-learn v1.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">LogisticRegression</span></code></a>.</p></li>
-<li><p>Read the three-panel sklearn-display diagnostic built from <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.inspection.DecisionBoundaryDisplay.html#sklearn.inspection.DecisionBoundaryDisplay" title="(in scikit-learn v1.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">DecisionBoundaryDisplay</span></code></a>, <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.RocCurveDisplay.html#sklearn.metrics.RocCurveDisplay" title="(in scikit-learn v1.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">RocCurveDisplay</span></code></a>, and <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.ConfusionMatrixDisplay.html#sklearn.metrics.ConfusionMatrixDisplay" title="(in scikit-learn v1.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConfusionMatrixDisplay</span></code></a>.</p></li>
+<li><p><strong>Class Balance.</strong> HBN <code class="docutils literal notranslate"><span class="pre">ds005505</span></code> is relatively balanced by sex. Verify
+that your filtered dataset maintains a reasonable ratio (e.g., 40/60).</p></li>
+<li><p><strong>Metrics.</strong> Report <strong>Balanced Accuracy</strong> and <strong>ROC AUC</strong>. Since clinical
+cohorts often have slight imbalances, raw accuracy can be misleading.</p></li>
+<li><p><strong>Baseline Comparison.</strong> Compare your model against a <code class="docutils literal notranslate"><span class="pre">majority_class</span></code>
+baseline. A model that doesn’t beat the majority class has not learned
+anything from the EEG.</p></li>
+<li><p><strong>Ethical &amp; Context Caveats.</strong> (1) <strong>Labels are metadata, not biology.</strong>
+The BIDS <code class="docutils literal notranslate"><span class="pre">sex</span></code> field is often sponsor-coded; any separation speaks to
+that category, not to chromosomal or hormonal status. (2) <strong>Confounds.</strong>
+Recording site, age, and equipment can correlate with sex in small
+cohorts, leading to “clever Hans” effects where the model learns the
+site rather than the phenomenon.</p></li>
 </ul>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p><strong>Treat this as a workflow example, not a result.</strong> Three caveats sit
-on top of every number this script prints. (1) <strong>Labels are metadata,
-not biological ground truth.</strong> The BIDS <code class="docutils literal notranslate"><span class="pre">sex</span></code> field is subject
-self-report or sponsor-coded; any clean separation speaks to that
-categorical label, not to chromosomal status, hormones, or brain
-organisation. (2) <strong>Confounds can dominate.</strong> Recording site,
-acquisition system, cap density, age distribution, and within-cohort
-sampling can all correlate with the label. Cross-site or cross-dataset
-validation is required before any inference about EEG-vs-sex is
-supportable (Cisotto and Chicco 2024, Tip 9). (3) <strong>A linear baseline
-is a sanity floor, not a finding.</strong> A balanced split on a single
-dataset with a small subject pool will routinely overstate transferable
-performance.</p>
-</div>
-<p>Three artefacts answer the project’s central question: do the features
-separate the classes, how stable is held-out AUC across subjects, and
-which class does the model confuse?</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Difficulty: 3-star (advanced applied project)</span>
 </pre></div>
 </div>
@@ -1119,7 +1130,7 @@ variant of the diagnostic.</p></li>
 </section>
 <section id="references">
 <h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
-<p>See <a class="reference internal" href="../../../references.html"><span class="doc">References</span></a> for the centralised bibliography of papers
+<p>See <a class="reference internal" href="../../../references.html"><span class="doc">References</span></a> for the centralized bibliography of papers
 cited above. Add or amend an entry once in
 <code class="file docutils literal notranslate"><span class="pre">docs/source/refs.bib</span></code>; every tutorial inherits the update.</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-auto-examples-applied-project-sex-classification-py">
@@ -1156,7 +1167,7 @@ cited above. Add or amend an entry once in
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Predicting p-factor from EEG with hand-crafted features (project starter)</p>
+        <p class="prev-next-title">Predict p-factor from EEG features</p>
       </div>
     </a>
     <a class="right-next"
@@ -1164,7 +1175,7 @@ cited above. Add or amend an entry once in
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">EEG 2025 Foundation Challenge</p>
+        <p class="prev-next-title">EEG2025 Foundation Challenge</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -1187,7 +1198,9 @@ cited above. Add or amend an entry once in
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">Learning objectives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#metadata-sex-vs-gender">Metadata: Sex vs. Gender</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#leakage-and-splits">Leakage and Splits</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#validate-your-result">Validate your result</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#requirements">Requirements</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-a-sklearn-display-diagnostic">Why a sklearn-display diagnostic?</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-pull-ds005505-resting-state-metadata">Step 1. Pull ds005505 resting-state metadata</a></li>

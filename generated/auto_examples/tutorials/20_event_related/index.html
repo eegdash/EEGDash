@@ -74,8 +74,8 @@
     <link rel="icon" href="../../../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" />
-    <link rel="next" title="How does the brain answer a rare visual target?" href="plot_20_visual_p300_oddball.html" />
-    <link rel="prev" title="How do I save and reload prepared windows + features?" href="../10_core_workflow/plot_13_save_and_reuse_prepared_data.html" />
+    <link rel="next" title="Visual P300 oddball decoding" href="plot_20_visual_p300_oddball.html" />
+    <link rel="prev" title="Save and reload prepared data" href="../10_core_workflow/plot_13_save_and_reuse_prepared_data.html" />
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="0.7" />
 
@@ -574,7 +574,7 @@
                 <article class="bd-article">
                   
   <section id="event-related-decoding">
-<h1>Event-Related Decoding<a class="headerlink" href="#event-related-decoding" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">3 minutes</span></div>
+<h1>Event-Related Decoding<a class="headerlink" href="#event-related-decoding" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">2 minutes</span></div>
 <p>Two lessons covering tasks where labels come from events and BIDS
 annotations rather than continuous state. Difficulty 2; assumes the
 core workflow track.</p>
@@ -583,9 +583,8 @@ trials by <code class="docutils literal notranslate"><span class="pre">trial_typ
 and decode contrasts (target vs standard, congruent vs incongruent).
 The visual P300 oddball lesson is the canonical first event-related
 decoding task; the auditory variant is staged as a contrast that holds
-the paradigm fixed and changes only the modality. Sourced from
-<code class="docutils literal notranslate"><span class="pre">docs/tutorial_restructure_plan.md</span></code> Category C (lines 410-425), with
-BIDS event handling per Pernet et al. (2019).</p>
+the paradigm fixed and changes only the modality, with BIDS event
+handling per Pernet et al. (2019).</p>
 <p>What you will learn:</p>
 <ul class="simple">
 <li><p>How to filter recordings to include only event-locked trials of a
@@ -603,12 +602,12 @@ oddball) holding the analysis pipeline constant.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">plot_21_auditory_oddball.py</span></code> – auditory oddball as a controlled
 contrast.</p></li>
 </ol>
-<div id='sg-tag-list' class='sphx-glr-tag-list'></div><div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="A child watches letters flash one by one on a screen. Most letters are standards; one is the block&#x27;s target. The brain answers the rare target with a positive deflection over centro-parietal cortex peaking 300-450 ms after stimulus onset, the classic visual P300 (Polich 2007; Picton 1992). This tutorial loads one BIDS recording from OpenNeuro ds005863 (the visualoddball task, reachable through NEMAR; Delorme et al. 2022), turns the BrainVision event codes into a target-vs-standard label, epochs around stimulus onset with baseline correction (Cisotto &amp; Chicco 2024, Tip 7), and produces three artefacts side by side: an ERP at Pz, a scalp topography of the difference wave at the peak, and a 3-fold leave-one-subject-out accuracy on a logistic-regression decoder. Where does the textbook P300 actually live in the data?"><img alt="" src="../../../../_images/sphx_glr_plot_20_visual_p300_oddball_thumb.png" />
-<p><a class="reference internal" href="plot_20_visual_p300_oddball.html"><span class="doc">How does the brain answer a rare visual target?</span></a></p>
-  <div class="sphx-glr-thumbnail-title">How does the brain answer a rare visual target?</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="The visual oddball of /auto_examples/tutorials/20_event_related/plot_20_visual_p300_oddball delivered a parietal positive bump near 350 ms. Swap the eyes for ears and the same paradigm structure (rare deviant inside a stream of standards) yields a different brain answer: an early mismatch negativity (MMN, ~150-250 ms) followed by a frontal-central P3a/P3b family (~250-400 ms). The latency is shorter, the topography is shifted, and the subcomponent vocabulary changes (Polich 2007, doi:10.1016/j.clinph.2007.04.019; Naatanen et al. 2007, doi:10.1016/j.clinph.2007.04.026; Squires et al. 1975, doi:10.1016/0013-4694(75)90263-1)."><img alt="" src="../../../../_images/sphx_glr_plot_21_auditory_oddball_thumb.png" />
-<p><a class="reference internal" href="plot_21_auditory_oddball.html"><span class="doc">How does the auditory P300 differ from the visual P300 of plot_20?</span></a></p>
-  <div class="sphx-glr-thumbnail-title">How does the auditory P300 differ from the visual P300 of plot_20?</div>
+<div id='sg-tag-list' class='sphx-glr-tag-list'></div><div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="Difficulty 2 | Runtime: 2m | Compute: CPU"><img alt="" src="../../../../_images/sphx_glr_plot_20_visual_p300_oddball_thumb.png" />
+<p><a class="reference internal" href="plot_20_visual_p300_oddball.html"><span class="doc">Visual P300 oddball decoding</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Visual P300 oddball decoding</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Difficulty 2 | Runtime: 3m | Compute: CPU"><img alt="" src="../../../../_images/sphx_glr_plot_21_auditory_oddball_thumb.png" />
+<p><a class="reference internal" href="plot_21_auditory_oddball.html"><span class="doc">Auditory P300 oddball decoding</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Auditory P300 oddball decoding</div>
 </div></div><div class="toctree-wrapper compound">
 </div>
 <div class="sphx-glr-footer sphx-glr-footer-gallery docutils container">
@@ -637,7 +636,7 @@ contrast.</p></li>
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">How do I save and reload prepared windows + features?</p>
+        <p class="prev-next-title">Save and reload prepared data</p>
       </div>
     </a>
     <a class="right-next"
@@ -645,7 +644,7 @@ contrast.</p></li>
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">How does the brain answer a rare visual target?</p>
+        <p class="prev-next-title">Visual P300 oddball decoding</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

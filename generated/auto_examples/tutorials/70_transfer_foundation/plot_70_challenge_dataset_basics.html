@@ -7,18 +7,18 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta property="og:title" content="How do I get started with the EEG 2025 Foundation Challenge dataset?" />
+<meta property="og:title" content="How do I get started with the EEG2025 Foundation Challenge dataset?" />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://eegdash.org/generated/auto_examples/tutorials/70_transfer_foundation/plot_70_challenge_dataset_basics.html" />
 <meta property="og:site_name" content="EEG Dash" />
-<meta property="og:description" content="The EEG 2025 Foundation Challenge ships its own loader, EEGChallengeDataset, on top of the same eegdash infrastructure that powers EEGDashDataset. The…" />
+<meta property="og:description" content="Difficulty 1-2| Runtime: 10s| Compute: CPU The EEG2025 Foundation Challenge ships its own loader, EEGChallengeDataset, on top of the same eegdash…" />
 <meta property="og:image" content="https://eegdash.org/_static/eegdash_social_card.png" />
 <meta property="og:image:alt" content="EEG Dash — data-sharing interface for M/EEG datasets" />
-<meta name="description" content="The EEG 2025 Foundation Challenge ships its own loader, EEGChallengeDataset, on top of the same eegdash infrastructure that powers EEGDashDataset. The…" />
+<meta name="description" content="Difficulty 1-2| Runtime: 10s| Compute: CPU The EEG2025 Foundation Challenge ships its own loader, EEGChallengeDataset, on top of the same eegdash…" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@eegdash" />
 
-    <title>How do I get started with the EEG 2025 Foundation Challenge dataset? &#8212; EEG Dash</title>
+    <title>How do I get started with the EEG2025 Foundation Challenge dataset? &#8212; EEG Dash</title>
   
   
   
@@ -74,7 +74,7 @@
     <link rel="icon" href="../../../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" />
-    <link rel="next" title="Pretrain on resting-state, fine-tune on contrast-change detection" href="plot_71_cross_task_transfer.html" />
+    <link rel="next" title="Pretrain on resting-state, fine-tune on contrast-change detection (Simulated Data)" href="plot_71_cross_task_transfer.html" />
     <link rel="prev" title="Transfer, Foundation Models, and EEG2025" href="index.html" />
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="0.7" />
@@ -563,7 +563,7 @@
     
     <li class="breadcrumb-item"><a href="index.html" class="nav-link">Transfer, Foundation Models, and EEG2025</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">How do I get started with the EEG 2025 Foundation Challenge dataset?</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">How do I get started with the EEG2025 Foundation Challenge dataset?</span></li>
   </ul>
 </nav>
 </div>
@@ -585,9 +585,10 @@
 <p><a class="reference internal" href="#sphx-glr-download-generated-auto-examples-tutorials-70-transfer-foundation-plot-70-challenge-dataset-basics-py"><span class="std std-ref">Go to the end</span></a>
 to download the full example code or to run this example in your browser via Binder.</p>
 </div>
-<section class="sphx-glr-example-title" id="how-do-i-get-started-with-the-eeg-2025-foundation-challenge-dataset">
-<span id="sphx-glr-generated-auto-examples-tutorials-70-transfer-foundation-plot-70-challenge-dataset-basics-py"></span><h1>How do I get started with the EEG 2025 Foundation Challenge dataset?<a class="headerlink" href="#how-do-i-get-started-with-the-eeg-2025-foundation-challenge-dataset" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">18 minutes</span></div>
-<p>The EEG 2025 Foundation Challenge ships its own loader,
+<section class="sphx-glr-example-title" id="how-do-i-get-started-with-the-eeg2025-foundation-challenge-dataset">
+<span id="sphx-glr-generated-auto-examples-tutorials-70-transfer-foundation-plot-70-challenge-dataset-basics-py"></span><h1>How do I get started with the EEG2025 Foundation Challenge dataset?<a class="headerlink" href="#how-do-i-get-started-with-the-eeg2025-foundation-challenge-dataset" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">18 minutes</span></div>
+<p><strong>Difficulty 1-2</strong> | <strong>Runtime: 10s</strong> | <strong>Compute: CPU</strong></p>
+<p>The EEG2025 Foundation Challenge ships its own loader,
 <a class="reference internal" href="../../../../api/dataset/eegdash.dataset.EEGChallengeDataset.html#eegdash.dataset.EEGChallengeDataset" title="eegdash.dataset.EEGChallengeDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">EEGChallengeDataset</span></code></a>, on top of the same
 <code class="docutils literal notranslate"><span class="pre">eegdash</span></code> infrastructure that powers
 <code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code>. The data pool is the
@@ -600,6 +601,7 @@ the loader, surfaces the task taxonomy, the participant-level metadata,
 and the official catalog row a single recording carries. The deliverable
 is one <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v3.0.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a> with records-per-task counts and one
 three-panel figure rendered from the live metadata.</p>
+<p>Keywords: EEG2025, dataset, basics</p>
 <section id="learning-objectives">
 <h2>Learning objectives<a class="headerlink" href="#learning-objectives" title="Link to this heading">#</a></h2>
 <ul class="simple">
@@ -615,7 +617,18 @@ sampling frequency, channel count, and the participants.tsv extras.</p></li>
 and contrast the loader against
 <code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code> for the same subjects.</p></li>
 <li><p>Read the leaderboard contract: see <a class="reference internal" href="../../../../concepts/eegdash_objects.html"><span class="doc">EEGDash objects: EEGDash, EEGDashDataset, EEGChallengeDataset</span></a>
-and the EEG 2025 challenge site for evaluation rules.</p></li>
+and the EEG2025 challenge site for evaluation rules.</p></li>
+</ul>
+</section>
+<section id="validate-your-result">
+<h2>Validate your result<a class="headerlink" href="#validate-your-result" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Release Check.</strong> Confirm that <code class="docutils literal notranslate"><span class="pre">ds.release</span></code> matches your requested
+release (e.g., “R5”).</p></li>
+<li><p><strong>Task Taxonomy.</strong> Verify that task names like <code class="docutils literal notranslate"><span class="pre">RestingState</span></code> and
+<code class="docutils literal notranslate"><span class="pre">contrastChangeDetection</span></code> appear in your task counts.</p></li>
+<li><p><strong>Mini-Subset.</strong> If <code class="docutils literal notranslate"><span class="pre">mini=True</span></code>, you should see exactly 8 subjects
+(or as defined by the release) for a fast local run.</p></li>
 </ul>
 </section>
 <section id="requirements">
@@ -836,7 +849,7 @@ query alone is enough to enumerate the task taxonomy.</p>
 │ If you are participating in the competition, always use                      │
 │ `EEGChallengeDataset` to ensure consistency with the challenge data.         │
 ╰──────────────────────── Source: EEGChallengeDataset ─────────────────────────╯
-[05/08/26 18:43:51] INFO     Auto-corrected misrouted             dataset.py:402
+[05/09/26 20:26:46] INFO     Auto-corrected misrouted             dataset.py:402
                              storage.base for dataset
                              EEG2025r5mini: None -&gt;
                              s3://nemar/EEG2025r5mini
@@ -1471,7 +1484,7 @@ claim.</p>
 │ If you are participating in the competition, always use                      │
 │ `EEGChallengeDataset` to ensure consistency with the challenge data.         │
 ╰──────────────────────── Source: EEGChallengeDataset ─────────────────────────╯
-[05/08/26 18:43:53] INFO     Auto-corrected misrouted             dataset.py:402
+[05/09/26 20:26:49] INFO     Auto-corrected misrouted             dataset.py:402
                              storage.base for dataset EEG2025r5:
                              None -&gt; s3://nemar/EEG2025r5
 </pre></div>
@@ -1678,7 +1691,7 @@ are different by design, but the relationship <code class="docutils literal notr
 │ If you are participating in the competition, always use                      │
 │ `EEGChallengeDataset` to ensure consistency with the challenge data.         │
 ╰──────────────────────── Source: EEGChallengeDataset ─────────────────────────╯
-[05/08/26 18:44:00] INFO     Auto-corrected misrouted             dataset.py:402
+[05/09/26 20:26:55] INFO     Auto-corrected misrouted             dataset.py:402
                              storage.base for dataset
                              EEG2025r2mini: None -&gt;
                              s3://nemar/EEG2025r2mini
@@ -1886,10 +1899,10 @@ confirm <code class="docutils literal notranslate"><span class="pre">raw.info[&q
 </section>
 <section id="references">
 <h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
-<p>See <a class="reference internal" href="../../../../references.html"><span class="doc">References</span></a> for the centralised bibliography of papers
+<p>See <a class="reference internal" href="../../../../references.html"><span class="doc">References</span></a> for the centralized bibliography of papers
 cited above. Add or amend an entry once in
 <code class="file docutils literal notranslate"><span class="pre">docs/source/refs.bib</span></code>; every tutorial inherits the update.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 10.245 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 9.832 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-auto-examples-tutorials-70-transfer-foundation-plot-70-challenge-dataset-basics-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/eegdash/EEGDash/main?urlpath=lab/tree/notebooks/generated/auto_examples/tutorials/70_transfer_foundation/plot_70_challenge_dataset_basics.ipynb"><img alt="Launch binder" src="../../../../_images/binder_badge_logo11.svg" style="width: 150px;" />
@@ -1932,7 +1945,7 @@ cited above. Add or amend an entry once in
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Pretrain on resting-state, fine-tune on contrast-change detection</p>
+        <p class="prev-next-title">Pretrain on resting-state, fine-tune on contrast-change detection (Simulated Data)</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -1956,6 +1969,7 @@ cited above. Add or amend an entry once in
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">Learning objectives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#validate-your-result">Validate your result</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#requirements">Requirements</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#two-loaders-one-catalog-the-mental-model">Two loaders, one catalog: the mental model</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-does-eegchallengedataset-expose">What does <code class="docutils literal notranslate"><span class="pre">EEGChallengeDataset</span></code> expose?</a></li>

@@ -6,7 +6,9 @@
 
 <a id="sphx-glr-generated-auto-examples-tutorials-00-start-here-plot-02-dataset-to-dataloader-py"></a>
 
-# How do I turn one EEG recording into a PyTorch DataLoader?
+# EEG recording to PyTorch DataLoader
+
+**Difficulty 1** | **Runtime: 2m** | **Compute: CPU**
 
 A model trains on tensor batches, not on continuous voltage traces. This
 tutorial closes the gap on one BIDS recording from [OpenNeuro](https://openneuro.org) `ds002718` [[Wakeman and Henson, 2015](../../../../references.md#id14)], reachable
@@ -17,7 +19,10 @@ access. We do not train a model. The deliverable is one batch’s
 `shape` and `dtype`.
 
 <!-- sphinx_gallery_thumbnail_path = '_static/thumbs/plot_02_dataset_to_dataloader.png' -->
-<!-- GENERATED FROM PYTHON SOURCE LINES 18-32 -->
+
+Keywords: loading, PyTorch, DataLoader
+
+<!-- GENERATED FROM PYTHON SOURCE LINES 21-35 -->
 
 ## Learning objectives
 
@@ -34,21 +39,21 @@ access. We do not train a model. The deliverable is one batch’s
 - Pick safe values for `batch_size`, `num_workers`, `pin_memory`,
   and `shuffle` for an EEG workload.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 34-40 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 37-43 -->
 
 ## Requirements
 
 - About 2 min on CPU on first run; under 20 s once cached.
 - Network on first call (~30-60 MB into `cache_dir`); offline thereafter.
-- Prerequisites: [How do I find datasets in EEGDash?](plot_00_first_search.md) (catalogue), [How do I load one EEG recording from EEGDash?](plot_01_first_recording.md) (one `Raw`).
+- Prerequisites: [Find datasets with the EEGDash API](plot_00_first_search.md) (catalogue), [Load one EEG recording](plot_01_first_recording.md) (one `Raw`).
 - Concept: [EEGDash objects: EEGDash, EEGDashDataset, EEGChallengeDataset](../../../../concepts/eegdash_objects.md).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 42-44 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 45-47 -->
 
 Setup. `np.random.seed` and `torch.manual_seed` make `shuffle=True`
 and any model init reproducible across runs (E3.21).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 44-76 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 47-79 -->
 ```Python
 import os
 from pathlib import Path
@@ -88,7 +93,7 @@ eegdash 0.7.2; braindecode 1.5.0; torch 2.11.0+cu130
 cache_dir=/home/runner/eegdash_cache
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 77-104 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 80-107 -->
 
 ## Dataset vs DataLoader: the mental model
 
@@ -118,7 +123,7 @@ EEGDashDataset                  WindowsDataset                DataLoader
 Once the pipeline runs, we re-draw this diagram further down with the
 *live* shapes that came out of the runtime.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 107-149 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 110-152 -->
 
 ## Five corollaries
 
@@ -162,7 +167,7 @@ Once the pipeline runs, we re-draw this diagram further down with the
   and reloads the prepared windows so subsequent sessions skip the
   cut.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 151-157 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 154-160 -->
 
 ## What can a windowed dataset do?
 
@@ -171,7 +176,7 @@ Before building one, list the methods
 the verbs a DataLoader implicitly relies on (`__len__`,
 `__getitem__`, `set_description`, `transform`).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 159-168 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 162-171 -->
 ```Python
 from braindecode.datasets import WindowsDataset
 
@@ -216,7 +221,7 @@ pd.DataFrame({"method": windows_methods}).head(20)
 </div>
 <br />
 <br />
-<!-- GENERATED FROM PYTHON SOURCE LINES 169-174 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 172-177 -->
 
 ## Step 1: Build the dataset (lazy)
 
@@ -224,7 +229,7 @@ Same idiom as `plot_01`. One subject keeps the run inside the
 tutorial budget; the BIDS query language carries through unchanged
 [[Pernet *et al.*, 2019](../../../../references.md#id7)].
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 176-194 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 179-197 -->
 ```Python
 DATASET = "ds002718"
 SUBJECT = "002"  # E3.23 data minimality: one subject, one task
@@ -247,27 +252,27 @@ pd.Series(
 
 ```none
 Downloading sub-002_task-FaceRecognition_channels.tsv:   0%|          | 0.00/1.31k [00:00<?, ?B/s]
-Downloading sub-002_task-FaceRecognition_channels.tsv: 100%|██████████| 1.31k/1.31k [00:00<00:00, 5.58MB/s]
+Downloading sub-002_task-FaceRecognition_channels.tsv: 100%|██████████| 1.31k/1.31k [00:00<00:00, 6.35MB/s]
 
 Downloading sub-002_task-FaceRecognition_events.tsv:   0%|          | 0.00/105k [00:00<?, ?B/s]
-Downloading sub-002_task-FaceRecognition_events.tsv: 100%|██████████| 105k/105k [00:00<00:00, 117MB/s]
+Downloading sub-002_task-FaceRecognition_events.tsv: 100%|██████████| 105k/105k [00:00<00:00, 35.8MB/s]
 
 Downloading sub-002_task-FaceRecognition_electrodes.tsv:   0%|          | 0.00/1.68k [00:00<?, ?B/s]
-Downloading sub-002_task-FaceRecognition_electrodes.tsv: 100%|██████████| 1.68k/1.68k [00:00<00:00, 6.88MB/s]
+Downloading sub-002_task-FaceRecognition_electrodes.tsv: 100%|██████████| 1.68k/1.68k [00:00<00:00, 9.44MB/s]
 
 Downloading sub-002_task-FaceRecognition_eeg.json:   0%|          | 0.00/1.28k [00:00<?, ?B/s]
-Downloading sub-002_task-FaceRecognition_eeg.json: 100%|██████████| 1.28k/1.28k [00:00<00:00, 4.99MB/s]
+Downloading sub-002_task-FaceRecognition_eeg.json: 100%|██████████| 1.28k/1.28k [00:00<00:00, 4.78MB/s]
 
 Downloading sub-002_task-FaceRecognition_coordsystem.json:   0%|          | 0.00/283 [00:00<?, ?B/s]
-Downloading sub-002_task-FaceRecognition_coordsystem.json: 100%|██████████| 283/283 [00:00<00:00, 1.09MB/s]
-[05/08/26 18:41:34] WARNING  File not found on S3, skipping:   downloader.py:163
+Downloading sub-002_task-FaceRecognition_coordsystem.json: 100%|██████████| 283/283 [00:00<00:00, 1.10MB/s]
+[05/09/26 20:24:29] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds002718/sub-0
                              02/eeg/sub-002_task-FaceRecogniti
                              on_eeg.fdt
 
 Downloading sub-002_task-FaceRecognition_eeg.set:   0%|          | 0.00/224M [00:00<?, ?B/s]
-Downloading sub-002_task-FaceRecognition_eeg.set:  22%|██▏       | 50.0M/224M [00:01<00:05, 31.7MB/s]
-Downloading sub-002_task-FaceRecognition_eeg.set: 100%|██████████| 224M/224M [00:01<00:00, 138MB/s]
+Downloading sub-002_task-FaceRecognition_eeg.set:  22%|██▏       | 50.0M/224M [00:01<00:04, 45.3MB/s]
+Downloading sub-002_task-FaceRecognition_eeg.set: 100%|██████████| 224M/224M [00:01<00:00, 195MB/s]
 ```
 
 <div class="output_subarea output_html rendered_html output_result">
@@ -315,7 +320,7 @@ Downloading sub-002_task-FaceRecognition_eeg.set: 100%|████████�
 </div>
 <br />
 <br />
-<!-- GENERATED FROM PYTHON SOURCE LINES 195-205 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 198-208 -->
 
 ## Step 2: Two safe preprocessors
 
@@ -328,7 +333,7 @@ downsamples. Filter and reference live in `plot_10`; here we keep
 the recipe to two named steps so the focus stays on the
 `Raw -> windows -> DataLoader` plumbing.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 207-227 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 210-230 -->
 ```Python
 TARGET_SFREQ = 100  # Hz
 preprocess(
@@ -398,7 +403,7 @@ NOTE: pick_types() is a legacy function. New code should use inst.pick(...).
 </div>
 <br />
 <br />
-<!-- GENERATED FROM PYTHON SOURCE LINES 228-242 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 231-245 -->
 
 ## Step 3: Cut into fixed-length windows
 
@@ -415,7 +420,7 @@ Two parameters drive every shape from here on: window size and stride.
 **Predict.** `len(windows)` for a 1-second recording at 100 Hz with
 2-second windows? (Answer: zero, after `drop_last_window=True`.)
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 244-265 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 247-268 -->
 ```Python
 WINDOW_SECONDS = 2.0
 window_size_samples = int(WINDOW_SECONDS * TARGET_SFREQ)
@@ -488,7 +493,7 @@ pd.Series(
 </div>
 <br />
 <br />
-<!-- GENERATED FROM PYTHON SOURCE LINES 266-282 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 269-285 -->
 
 ## Step 4: Wrap in a DataLoader
 
@@ -507,7 +512,7 @@ at default until the model trains.
 - `pin_memory`. Set to `True` if a CUDA device is present and you
   plan to send batches with `.to(device, non_blocking=True)`.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 284-307 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 287-310 -->
 ```Python
 BATCH_SIZE = 8
 gen = torch.Generator().manual_seed(SEED)
@@ -586,7 +591,7 @@ pd.Series(
 </div>
 <br />
 <br />
-<!-- GENERATED FROM PYTHON SOURCE LINES 308-313 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 311-316 -->
 
 **Investigate.** The batch tensor is shaped
 `(batch_size, n_channels, window_size_samples)` with floating-point
@@ -594,7 +599,7 @@ dtype. That is exactly what Braindecode models such as
 [`ShallowFBCSPNet`](https://braindecode.org/stable/generated/braindecode.models.ShallowFBCSPNet.html#braindecode.models.ShallowFBCSPNet) and
 `EEGNetv4` consume.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 315-322 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 318-325 -->
 
 ## Pipeline at a glance: the live shapes
 
@@ -604,7 +609,7 @@ drawing helpers live in a sibling \_pipeline_diagram module so the
 rendering plumbing stays out of this tutorial; the call below is the
 only line that matters.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 324-341 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 327-344 -->
 ```Python
 from _pipeline_diagram import draw_pipeline
 
@@ -624,7 +629,7 @@ fig_pipe = draw_pipeline(
 plt.show()
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 342-361 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 345-364 -->
 
 ## Reproducibility: which random source draws which window?
 
@@ -646,7 +651,7 @@ pipelines.
   `seed_worker(worker_id)` template below; this is what PyTorch’s
   own reproducibility guide recommends.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 363-413 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 366-416 -->
 ```Python
 import random
 
@@ -740,7 +745,7 @@ pd.Series(
 </div>
 <br />
 <br />
-<!-- GENERATED FROM PYTHON SOURCE LINES 414-471 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 417-474 -->
 
 ## Step 5: Unlock random-access speed with Zarr
 
@@ -799,7 +804,7 @@ windows at 100 Hz. With Zarr in place,
 `DataLoader(num_workers=4, pin_memory=True)` becomes the right
 default rather than an over-eager guess.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 473-479 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 476-482 -->
 
 ## A common mistake, and how to recover
 
@@ -808,7 +813,7 @@ zero. We trigger it on purpose so the failure mode is visible
 [[Nederbragt *et al.*, 2020](../../../../references.md#id31)]: a `DataLoader(empty)` quietly yields
 nothing, which masks the bug.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 481-495 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 484-498 -->
 ```Python
 huge = int(raw_pp.times[-1] * TARGET_SFREQ * 10)  # 10x recording length
 try:
@@ -830,7 +835,7 @@ Caught ValueError: Window size 2990990 exceeds trial duration 299100.
 Recovery: keep window_size_samples=200 (<< recording).
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 496-501 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 499-504 -->
 
 ## Modify
 
@@ -838,7 +843,7 @@ Recovery: keep window_size_samples=200 (<< recording).
 Predict before running: how should `windows[0][0].shape[1]` change?
 How should `len(windows)` change?
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 503-512 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 506-515 -->
 
 ## Make
 
@@ -850,7 +855,7 @@ Lightning `LightningDataModule`, and any code that calls
 tensor’s role at the call site rather than relying on positional
 convention.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 515-553 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 518-556 -->
 ```Python
 def dict_collate(batch):
     """Stack a list of ``(X, y, idx)`` items into a keyed batch dict."""
@@ -944,14 +949,14 @@ pd.Series(
 </div>
 <br />
 <br />
-<!-- GENERATED FROM PYTHON SOURCE LINES 554-558 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 557-561 -->
 
 **Investigate.** `model(**batch)` now passes `signal=...`,
 `target=...`, `index=...` as keyword arguments. That matches the
 convention used by HuggingFace `Trainer` and PyTorch Lightning data
 modules without any glue code.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 560-594 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 563-597 -->
 
 ## Continuous windows vs event-based epochs
 
@@ -988,7 +993,7 @@ does not care which one ran.
 The DataLoader code from Step 4 is byte-identical in both cases.
 Switching is one line in the windowing call.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 596-625 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 599-628 -->
 
 ## Changing the label without rebuilding the windows
 
@@ -1020,14 +1025,14 @@ the BIDS sidecar does not carry).
 [`create_windows_from_events()`](https://braindecode.org/stable/generated/braindecode.preprocessing.create_windows_from_events.html#braindecode.preprocessing.create_windows_from_events). The
 integer codes land in `metadata['target']` directly.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 627-631 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 630-634 -->
 
 Pattern 0: read BIDS fields as a target without any mutation.
 `windows.get_metadata()` is the braindecode adapter: one row per
 window, with the per-record `description` columns merged in. Picking
 a column gives the per-window target.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 631-646 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 634-649 -->
 ```Python
 metadata = windows.get_metadata()
 y_subject = metadata["subject"].to_numpy()
@@ -1094,7 +1099,7 @@ pd.Series(
 </div>
 <br />
 <br />
-<!-- GENERATED FROM PYTHON SOURCE LINES 647-655 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 650-658 -->
 
 **Investigate.** Every window inherited the recording’s
 `task` / `subject` from the BIDS-merged description without
@@ -1105,7 +1110,7 @@ group label. This is what
 /auto_examples/tutorials/10_core_workflow/plot_11_leakage_safe_split
 leans on for subject-aware MOABB splits.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 657-662 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 660-665 -->
 
 ## Pattern 1: relabel in place
 
@@ -1113,14 +1118,14 @@ Right call when the label cannot come from a BIDS field on the
 description: a self-supervised pretext label, a sliding-window stage
 tag, or a teacher-model output.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 664-668 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 667-671 -->
 
 Pattern 1: relabel one recording in place. First half gets label 0,
 second half label 1. The DataLoader picks up the new targets without
 any rebuild, and `windows.get_metadata()['target']` would now
 return these mutated values.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 668-688 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 671-691 -->
 ```Python
 sub_ds = windows.datasets[0]
 n = len(sub_ds)
@@ -1184,7 +1189,7 @@ pd.Series(
 </div>
 <br />
 <br />
-<!-- GENERATED FROM PYTHON SOURCE LINES 689-698 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 692-701 -->
 
 **Investigate.** `y.unique()` flipped from a single value to `[0,
 1]`. The metadata mutation is what carried the change forward; the
@@ -1196,7 +1201,7 @@ without updating `metadata['target']` works for read-only iteration but
 breaks any downstream code (leakage-aware splits, Hub upload) that
 consults the metadata frame instead of the list. Change both together.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 700-708 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 703-711 -->
 
 ## Result
 
@@ -1207,7 +1212,7 @@ windowing, batched read. The first batch is shaped
 dtype. A clean batch shape only confirms plumbing; signal quality and
 task design are still open questions [[Cisotto and Chicco, 2024](../../../../references.md#id19)].
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 710-723 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 713-726 -->
 
 ## Wrap-up
 
@@ -1223,7 +1228,7 @@ splits the windows without leakage;
 /auto_examples/tutorials/10_core_workflow/plot_13_save_and_reuse_prepared_data
 saves and reloads the windows so subsequent sessions skip the cut.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 725-738 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 728-741 -->
 
 ## Try it yourself
 
@@ -1239,14 +1244,14 @@ saves and reloads the windows so subsequent sessions skip the cut.
   (`repo_id="local-only/<name>"`); compare random-read latency
   against the in-RAM `DataLoader`.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 740-745 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 743-748 -->
 
 ## References
 
-See [References](../../../../references.md) for the centralised bibliography of papers
+See [References](../../../../references.md) for the centralized bibliography of papers
 cited above. Add or amend an entry once in
 `docs/source/refs.bib`; every tutorial inherits the update.
 
-**Total running time of the script:** (0 minutes 9.836 seconds)
+**Total running time of the script:** (0 minutes 9.421 seconds)
 
 <a id="sphx-glr-download-generated-auto-examples-tutorials-00-start-here-plot-02-dataset-to-dataloader-py"></a>

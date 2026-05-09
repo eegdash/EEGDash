@@ -183,13 +183,13 @@ Electrode coordinates are provided in \*\*MNI space\*\*, registered to the \*\*M
 ## Electrode Layout
 
 <details class="electrode-explorer">
-  <summary>Electrode layout — iEEG · 175 sensors — 175 channels</summary>
+  <summary>Electrode layout — iEEG · 168 sensors — 168 channels</summary>
   <iframe
-    data-src="https://electrodes.eegdash.org/?montage=2c6595d282768743&embed=1"
+    data-src="https://electrodes.eegdash.org/?montage=93aadeb3de407cb4&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
-    title="Topomap of iEEG · 175 sensors"
+    title="Topomap of iEEG · 168 sensors"
     referrerpolicy="no-referrer">
   </iframe>
 </details>

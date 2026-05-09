@@ -7,18 +7,18 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta property="og:title" content="How do I find datasets in EEGDash?" />
+<meta property="og:title" content="Find datasets with the EEGDash API" />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://eegdash.org/generated/auto_examples/tutorials/00_start_here/plot_00_first_search.html" />
 <meta property="og:site_name" content="EEG Dash" />
-<meta property="og:description" content="EEGDash exposes a metadata index over hundreds of BIDS-curated EEG datasets, served by the public REST API at https://data.eegdash.org. The same…" />
+<meta property="og:description" content="Difficulty 1| Runtime: &lt;2m| Compute: CPU EEGDash exposes a metadata index over hundreds of BIDS-curated EEG datasets, served by the public REST API at…" />
 <meta property="og:image" content="https://eegdash.org/_static/eegdash_social_card.png" />
 <meta property="og:image:alt" content="EEG Dash — data-sharing interface for M/EEG datasets" />
-<meta name="description" content="EEGDash exposes a metadata index over hundreds of BIDS-curated EEG datasets, served by the public REST API at https://data.eegdash.org. The same…" />
+<meta name="description" content="Difficulty 1| Runtime: &lt;2m| Compute: CPU EEGDash exposes a metadata index over hundreds of BIDS-curated EEG datasets, served by the public REST API at…" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@eegdash" />
 
-    <title>How do I find datasets in EEGDash? &#8212; EEG Dash</title>
+    <title>Find datasets with the EEGDash API &#8212; EEG Dash</title>
   
   
   
@@ -74,7 +74,7 @@
     <link rel="icon" href="../../../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" />
-    <link rel="next" title="How do I load one EEG recording from EEGDash?" href="plot_01_first_recording.html" />
+    <link rel="next" title="Load one EEG recording" href="plot_01_first_recording.html" />
     <link rel="prev" title="Start Here" href="index.html" />
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="0.7" />
@@ -563,7 +563,7 @@
     
     <li class="breadcrumb-item"><a href="index.html" class="nav-link">Start Here</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">How do I find datasets in EEGDash?</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Find datasets with the EEGDash API</span></li>
   </ul>
 </nav>
 </div>
@@ -585,14 +585,16 @@
 <p><a class="reference internal" href="#sphx-glr-download-generated-auto-examples-tutorials-00-start-here-plot-00-first-search-py"><span class="std std-ref">Go to the end</span></a>
 to download the full example code or to run this example in your browser via Binder.</p>
 </div>
-<section class="sphx-glr-example-title" id="how-do-i-find-datasets-in-eegdash">
-<span id="sphx-glr-generated-auto-examples-tutorials-00-start-here-plot-00-first-search-py"></span><h1>How do I find datasets in EEGDash?<a class="headerlink" href="#how-do-i-find-datasets-in-eegdash" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">9 minutes</span></div>
+<section class="sphx-glr-example-title" id="find-datasets-with-the-eegdash-api">
+<span id="sphx-glr-generated-auto-examples-tutorials-00-start-here-plot-00-first-search-py"></span><h1>Find datasets with the EEGDash API<a class="headerlink" href="#find-datasets-with-the-eegdash-api" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">9 minutes</span></div>
+<p><strong>Difficulty 1</strong> | <strong>Runtime: &lt;2m</strong> | <strong>Compute: CPU</strong></p>
 <p>EEGDash exposes a metadata index over hundreds of BIDS-curated EEG datasets,
 served by the public REST API at <a class="reference external" href="https://data.eegdash.org">https://data.eegdash.org</a>. The same
 catalogue powers <a class="reference external" href="https://nemar.org">NEMAR</a>, the EEGLAB-ecosystem portal
 that hosts EEG/MEG datasets with browsing, compute, and provenance tools
 (Delorme et al., 2022). The <code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDash</span></code> client searches,
-filters, and summarises that index without downloading a single sample.</p>
+filters, and summarizes that index without downloading a single sample.</p>
+<p>Keywords: loading, metadata, API</p>
 <section id="learning-objectives">
 <h2>Learning objectives<a class="headerlink" href="#learning-objectives" title="Link to this heading">#</a></h2>
 <ul class="simple">
@@ -657,6 +659,16 @@ verbs: count, find, get. How many does <code class="docutils literal notranslate
 <code class="docutils literal notranslate"><span class="pre">find_datasets</span></code>, <code class="docutils literal notranslate"><span class="pre">search_datasets</span></code>, <code class="docutils literal notranslate"><span class="pre">get_dataset</span></code>, plus three
 admin verbs. <code class="docutils literal notranslate"><span class="pre">find</span></code> and <code class="docutils literal notranslate"><span class="pre">find_datasets</span></code> are the read paths we use
 throughout the gallery.</p>
+</section>
+<section id="validate-your-result">
+<h2>Validate your result<a class="headerlink" href="#validate-your-result" title="Link to this heading">#</a></h2>
+<p>A successful <code class="docutils literal notranslate"><span class="pre">EEGDash()</span></code> initialization and <code class="docutils literal notranslate"><span class="pre">count()</span></code> should return:</p>
+<ol class="arabic simple">
+<li><p>A method list containing <code class="docutils literal notranslate"><span class="pre">find</span></code>, <code class="docutils literal notranslate"><span class="pre">count</span></code>, and <code class="docutils literal notranslate"><span class="pre">get_dataset</span></code>.</p></li>
+<li><p>A record count &gt; 10,000 (the index is growing).</p></li>
+<li><p>A projection with columns like <code class="docutils literal notranslate"><span class="pre">subject</span></code>, <code class="docutils literal notranslate"><span class="pre">session</span></code>, and <code class="docutils literal notranslate"><span class="pre">task</span></code>.</p></li>
+<li><p>Filtered results with extra columns like <code class="docutils literal notranslate"><span class="pre">sfreq</span></code> and <code class="docutils literal notranslate"><span class="pre">n_channels</span></code>.</p></li>
+</ol>
 </section>
 <section id="step-2-how-big-is-the-catalogue">
 <h2>Step 2: How big is the catalogue?<a class="headerlink" href="#step-2-how-big-is-the-catalogue" title="Link to this heading">#</a></h2>
@@ -1214,10 +1226,10 @@ to get total recorded hours per dataset.</p></li>
 </section>
 <section id="references">
 <h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
-<p>See <a class="reference internal" href="../../../../references.html"><span class="doc">References</span></a> for the centralised bibliography of papers
+<p>See <a class="reference internal" href="../../../../references.html"><span class="doc">References</span></a> for the centralized bibliography of papers
 cited above. Add or amend an entry once in
 <code class="file docutils literal notranslate"><span class="pre">docs/source/refs.bib</span></code>; every tutorial inherits the update.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 5.883 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 8.197 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-auto-examples-tutorials-00-start-here-plot-00-first-search-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/eegdash/EEGDash/main?urlpath=lab/tree/notebooks/generated/auto_examples/tutorials/00_start_here/plot_00_first_search.ipynb"><img alt="Launch binder" src="../../../../_images/binder_badge_logo5.svg" style="width: 150px;" />
@@ -1260,7 +1272,7 @@ cited above. Add or amend an entry once in
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">How do I load one EEG recording from EEGDash?</p>
+        <p class="prev-next-title">Load one EEG recording</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -1286,6 +1298,7 @@ cited above. Add or amend an entry once in
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">Learning objectives</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#requirements">Requirements</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-discover-the-eegdash-client">Step 1: Discover the EEGDash client</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#validate-your-result">Validate your result</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-how-big-is-the-catalogue">Step 2: How big is the catalogue?</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-a-broad-scan-vs-a-targeted-query">Step 3: A broad scan vs. a targeted query</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-4-what-does-one-record-actually-contain">Step 4: What does one record actually contain?</a></li>

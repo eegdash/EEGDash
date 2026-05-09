@@ -6,7 +6,9 @@
 
 <a id="sphx-glr-generated-auto-examples-applied-project-pfactor-deep-py"></a>
 
-# Predict p-factor from EEG with a Braindecode model (deep-learning regime)
+# Predict p-factor with deep learning
+
+**Difficulty 3** | **Runtime: 25s** | **Compute: GPU Recommended**
 
 This is the deep-learning case study for the p-factor regression
 project. The companion script `project_pfactor_features.py` covers
@@ -25,12 +27,13 @@ pretrained Braindecode encoder (Schirrmeister et al. 2017,
 doi:10.1002/hbm.23730), and read back where the network looks. The
 deliverable is a 3-panel figure plus printed metrics. So can a small
 EEGConformer beat the train-mean predictor on held-out subjects?
+Keywords: deep-learning, applied, p-factor
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 22-24 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 25-27 -->
 ```Python
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 26-34 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 29-37 -->
 
 ## Learning objectives
 
@@ -41,7 +44,19 @@ After this case study you will be able to:
 - train [`braindecode.models.EEGConformer`](https://braindecode.org/stable/generated/braindecode.models.EEGConformer.html#braindecode.models.EEGConformer) end-to-end with AdamW.
 - read a 3-panel figure: curves, predicted-vs-true scatter, saliency.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 36-45 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 39-60 -->
+
+## Validate your result
+
+- **Metric Interpretation.** R^2 (Coefficient of Determination) tells you
+  what fraction of p-factor variance is explained by the EEG. MAE tells you
+  the average error in p-factor units.
+- **Baseline Expectations.** A deep model should at minimum outperform a
+  `median_baseline` (always predicting the training set median). If R^2
+  is negative, the model is worse than the median predictor.
+- **Split Guidance.** Always use a subject-disjoint split. If your data
+  spans multiple sites, consider a **site-disjoint split** to ensure the
+  model isn’t just learning site-specific noise.
 
 ## Requirements
 
@@ -53,16 +68,16 @@ After this case study you will be able to:
   (the feature analogue of this script).
 - **Concept page**: [Leakage and evaluation](../../../concepts/leakage_and_evaluation.md).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 47-53 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 62-68 -->
 
-## Step 1. Setup, seeding (E3.21), parametrised cache (E3.24)
+## Step 1. Setup, seeding (E3.21), parameterized cache (E3.24)
 
 Numpy and torch seeds make the printed metrics and the rendered curves
-byte-stable across reruns. The cache dir is parametrised through the
+byte-stable across reruns. The cache dir is parameterized through the
 `EEGDASH_CACHE` env var so HPC and local runs share one prepared
 windowed dataset.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 53-80 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 68-95 -->
 ```Python
 import os
 import warnings
@@ -93,7 +108,7 @@ from braindecode.models import EEGConformer
 torch.manual_seed(SEED)
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 81-115 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 96-130 -->
 
 ## Step 2. The mental model and the production data path
 
@@ -127,21 +142,21 @@ windows = create_fixed_length_windows(ds,
     drop_last_window=True, preload=False)
 ```
 
-Below we synthesise a Challenge-shaped windowed table with the same
+Below we synthesize a Challenge-shaped windowed table with the same
 column layout so the gallery runs offline (E3.24).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 117-125 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 132-140 -->
 
-## Step 3. Synthesise a Challenge-shaped windowed table
+## Step 3. Synthesize a Challenge-shaped windowed table
 
 18 subjects, 24 windows each, 8 channels, 200 samples per 2 s window
 at 100 Hz. p_factor lives at subject level (one score per subject,
 replicated per window). A faint 10 Hz signal hides in Cz and E62 (the
 central and parietal midline); everything else is i.i.d. Gaussian
 noise plus a per-subject offset that the cross-subject split must NOT
-let the network memorise.
+let the network memorize.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 125-162 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 140-177 -->
 ```Python
 N_SUBJECTS, N_WINDOWS = 18, 24
 N_CHANS, N_TIMES = 8, 200
@@ -160,7 +175,7 @@ for s in range(N_SUBJECTS):
         carrier = 0.30 * p * np.sin(2 * np.pi * 10.0 * t).astype(np.float32)
         base[1] += carrier
         base[2] += 0.85 * carrier
-        # Subject identity offset that a leaky split would memorise.
+        # Subject identity offset that a leaky split would memorize.
         base += np.float32(bias)
         X_list.append(base)
         rows.append(
@@ -181,7 +196,7 @@ print(
 assert pd.api.types.is_float_dtype(meta["p_factor"]), "p_factor must be float"
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 163-170 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 178-185 -->
 
 ## Step 4. Predict: what r should chance look like?
 
@@ -191,7 +206,7 @@ subjects and 4 held-out subjects, what r do you expect a small
 EEGConformer to reach: 0.05? 0.20? 0.50? Write your guess; the
 scatter panel will overwrite it.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 172-179 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 187-194 -->
 
 ## Step 5. Cross-subject split before windowing
 
@@ -201,7 +216,7 @@ mode for clinical EEG regression; an honest validation r demands
 subject-disjoint cohorts (Cisotto and Chicco 2024 Tip 9,
 doi:10.7717/peerj-cs.2256).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 179-196 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 194-211 -->
 ```Python
 unique_subj = sorted(meta["subject"].unique())
 n_val = max(2, int(round(0.20 * len(unique_subj))))
@@ -221,7 +236,7 @@ print(
 )
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 197-203 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 212-218 -->
 
 ## Step 6. Configure EEGConformer for regression
 
@@ -230,7 +245,7 @@ doi:10.1109/TNSRE.2022.3230250) pairs convolutional embeddings with a
 transformer encoder. `n_outputs=1` makes the final layer a scalar
 regression head; `num_layers=3` keeps a CPU smoke run under a minute.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 206-224 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 221-239 -->
 ```Python
 def build_model() -> "nn.Module":
     """Return a fresh EEGConformer regression head (n_outputs=1)."""
@@ -250,7 +265,7 @@ def normalize_batch(x: "torch.Tensor") -> "torch.Tensor":
     return (x - x.mean(dim=2, keepdim=True)) / (x.std(dim=2, keepdim=True) + 1e-6)
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 225-231 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 240-246 -->
 
 ## Step 7. Run: train across seeds, record per-epoch curves
 
@@ -259,7 +274,7 @@ fit the model with `N_SEEDS=2` seeds and `NUM_EPOCHS=4` and
 record train MSE, val MSE, and val Pearson r per epoch. The figure
 folds the seeds into a mean +/- SE band.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 231-306 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 246-321 -->
 ```Python
 NUM_EPOCHS = 4
 N_SEEDS = 2
@@ -337,7 +352,7 @@ for s in range(N_SEEDS):
     )
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 307-316 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 322-331 -->
 
 ## Step 8. Investigate: per-subject scatter and saliency
 
@@ -346,10 +361,10 @@ which channel-time region it reads. The scatter panel aggregates val
 predictions to one point per held-out subject; the saliency panel
 averages `|grad x|` over the highest-confidence test windows, so
 the heatmap tells you whether the network read the carrier we hid in
-Cz/E62 or just memorised the per-subject offset (Schirrmeister et
+Cz/E62 or just memorized the per-subject offset (Schirrmeister et
 al. 2017, doi:10.1002/hbm.23730).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 319-342 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 334-357 -->
 ```Python
 def compute_saliency(model, X_va_t, y_va_t, *, top_frac=0.5):
     """|grad x|, averaged over the top-confidence half of val windows."""
@@ -375,7 +390,7 @@ print(
 )
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 343-349 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 358-364 -->
 
 ## Step 9. Result: the 3-panel diagnostic
 
@@ -384,7 +399,7 @@ the plumbing stays out of the rendered case study. The subtitle
 threads live runtime values: train/val subject counts, epochs, and
 best val r averaged across seeds.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 351-379 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 366-394 -->
 ```Python
 from _pfactor_deep_figure import draw_pfactor_deep_figure
 
@@ -415,7 +430,7 @@ print(
 )
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 380-386 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 395-401 -->
 
 ## Step 10. A common mistake, and how to recover
 
@@ -424,7 +439,7 @@ frequent slip when CSV loaders skip dtype hints; the model then
 refuses to backprop. We trigger it with try/except so the failure
 mode is visible (Nederbragt et al. 2020, doi:10.1371/journal.pcbi.1008090).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 388-399 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 403-414 -->
 ```Python
 try:
     bad_y = meta["p_factor"].astype(str).to_numpy()
@@ -438,7 +453,7 @@ except (ValueError, TypeError) as exc:
     )
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 400-409 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 415-424 -->
 
 ## Step 11. Modify: from-scratch -> linear-probe -> full-finetune
 
@@ -450,7 +465,7 @@ head only (linear-probe) or on every parameter (full-finetune), keep
 the rest constant, and compare best_val_r and gap-vs-from-scratch on
 the same 3-panel figure.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 411-420 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 426-435 -->
 
 ## Wrap-up
 
@@ -462,7 +477,7 @@ network. The p-factor signal in EEG is genuinely faint and
 `p_factor` is a derived score, not a diagnosis; any clinical framing
 belongs in a follow-up study with much larger N.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 422-431 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 437-446 -->
 
 ## Try it yourself
 
@@ -474,11 +489,11 @@ belongs in a follow-up study with much larger N.
 - Pretrain on eyes-open vs eyes-closed and run linear-probe;
   compare best_val_r with the from-scratch run from this script.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 433-438 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 448-453 -->
 
 ## References
 
-See [References](../../../references.md) for the centralised bibliography of papers
+See [References](../../../references.md) for the centralized bibliography of papers
 cited above. Add or amend an entry once in
 `docs/source/refs.bib`; every tutorial inherits the update.
 

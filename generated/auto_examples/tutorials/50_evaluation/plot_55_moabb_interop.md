@@ -6,7 +6,9 @@
 
 <a id="sphx-glr-generated-auto-examples-tutorials-50-evaluation-plot-55-moabb-interop-py"></a>
 
-# How do I benchmark an EEGDash dataset with MOABB?
+# Benchmark EEGDash with MOABB
+
+**Difficulty 2-3** | **Runtime: 2m** | **Compute: CPU**
 
 EEGDash and MOABB sit on opposite ends of the BCI evaluation pipeline.
 EEGDash is a metadata index over BIDS-curated EEG [[Pernet *et al.*, 2019](../../../../references.md#id7)]
@@ -36,8 +38,9 @@ paired comparison, and the integration-flow diagram.
 
 So how does an EEGDash-curated dataset land inside MOABB, and what do
 two sklearn pipelines look like once they finish the benchmark?
+Keywords: evaluation, MOABB, benchmarking
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 35-56 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 38-59 -->
 
 ## Learning objectives
 
@@ -59,13 +62,13 @@ two sklearn pipelines look like once they finish the benchmark?
   MOABB is missing the tutorial falls back to a synthetic-results
   path so the figure still renders.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 58-61 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 61-64 -->
 
 Setup. `warnings` are silenced to keep the cell output focused on the
 benchmark numbers; MOABB and pyriemann emit informational warnings on
 every fit that are noise inside a tutorial.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 61-89 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 64-92 -->
 ```Python
 import os
 import warnings
@@ -101,7 +104,7 @@ eegdash 0.7.2
 cache_dir=/home/runner/eegdash_cache
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 90-117 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 93-132 -->
 
 ## EEGDash and MOABB: the mental model
 
@@ -130,7 +133,19 @@ Brookshire et al. 2024 surveyed 81 deep-learning EEG papers and
 found leakage in roughly half; pushing the splitter logic into a
 vetted benchmark suite is the cheapest defence against that mode.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 119-132 -->
+## Validate your result
+
+- **Result DataFrame.** MOABB returns a [`pandas.DataFrame`](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame) where
+  each row is a subject-session-pipeline triplet.
+- **Metric.** The default metric is usually **Accuracy** or **ROC AUC**,
+  depending on the paradigm.
+- **Comparison.** Verify that the “advanced” pipeline outperforms the
+  “baseline” pipeline on the majority of subjects in the paired plot.
+- **Failure Modes.** If MOABB raises a `ValueError: No subjects found`,
+  check that your dataset’s labels match the MOABB paradigm’s expected
+  labels.
+
+<!-- GENERATED FROM PYTHON SOURCE LINES 134-147 -->
 
 ## Step 1. The EEGDash side, ds002718 face recognition
 
@@ -145,7 +160,7 @@ an EEGDashDataset for one subject of `ds002718` (Wakeman & Henson
 2015) and then read the `(y, metadata)` pair every MOABB stratified
 splitter consumes.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 134-160 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 149-175 -->
 ```Python
 DATASET = "ds002718"
 SUBJECT = "002"  # E3.23 data minimality: one subject is enough for the bridge.
@@ -223,7 +238,7 @@ EEGDashDataset: 1 record(s) for sub-002, task=FaceRecognition
 </div>
 <br />
 <br />
-<!-- GENERATED FROM PYTHON SOURCE LINES 161-168 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 176-183 -->
 
 **Investigate.** `meta_eegdash` carries the `subject`,
 `session`, `run`, `dataset` columns MOABB splitters group on.
@@ -233,7 +248,7 @@ splitters fail when `y` is constant; the benchmark below uses a
 multi-class MOABB dataset where `y` carries class labels, not the
 BIDS task name.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 170-183 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 185-198 -->
 
 ## Step 2. The MOABB side, BNCI2014_001 motor imagery
 
@@ -248,7 +263,7 @@ the canonical motor-imagery benchmark shipped with MOABB.
 **Predict.** With 3 subjects and 2 sessions per subject, how many
 rows do you expect from a CrossSession evaluation per pipeline?
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 185-227 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 200-242 -->
 ```Python
 try:
     from moabb.datasets import BNCI2014_001
@@ -297,7 +312,7 @@ else:
 pipelines: ['CSP+LDA', 'CSP+LR']
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 228-237 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 243-252 -->
 
 ## Step 3. Run the MOABB CrossSession evaluation
 
@@ -308,7 +323,7 @@ session column. The result is a long-format
 session) and a `score` column. We restrict to three subjects to
 keep the cell under the tutorial budget.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 239-268 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 254-283 -->
 ```Python
 N_SUBJECTS_BENCH = 3  # E3.23: smallest cohort that exercises mean +/- std
 
@@ -346,193 +361,184 @@ benchmark cohort: subjects=[1, 2, 3]
   warnings.warn(
 
   0%|                                              | 0.00/42.8M [00:00<?, ?B/s]
-  0%|                                     | 8.19k/42.8M [00:00<08:47, 81.1kB/s]
-  0%|                                      | 56.3k/42.8M [00:00<02:17, 311kB/s]
-  0%|                                       | 128k/42.8M [00:00<01:27, 487kB/s]
-  0%|▏                                      | 184k/42.8M [00:00<01:22, 514kB/s]
-  1%|▎                                      | 312k/42.8M [00:00<00:54, 780kB/s]
-  1%|▍                                      | 449k/42.8M [00:00<00:43, 967kB/s]
-  2%|▌                                     | 688k/42.8M [00:00<00:29, 1.42MB/s]
-  2%|▊                                     | 904k/42.8M [00:00<00:25, 1.64MB/s]
-  3%|█▏                                   | 1.34M/42.8M [00:00<00:16, 2.44MB/s]
-  4%|█▌                                   | 1.74M/42.8M [00:01<00:14, 2.92MB/s]
-  6%|██▏                                  | 2.54M/42.8M [00:01<00:09, 4.39MB/s]
-  8%|██▊                                  | 3.26M/42.8M [00:01<00:07, 5.22MB/s]
- 11%|████                                 | 4.72M/42.8M [00:01<00:04, 7.95MB/s]
- 14%|█████▎                               | 6.08M/42.8M [00:01<00:03, 9.56MB/s]
- 20%|███████▌                             | 8.74M/42.8M [00:01<00:02, 14.5MB/s]
- 26%|█████████▋                           | 11.3M/42.8M [00:01<00:01, 17.6MB/s]
- 38%|█████████████▉                       | 16.1M/42.8M [00:01<00:01, 26.5MB/s]
- 48%|█████████████████▉                   | 20.8M/42.8M [00:01<00:00, 32.2MB/s]
- 61%|██████████████████████▌              | 26.1M/42.8M [00:01<00:00, 38.0MB/s]
- 76%|████████████████████████████▏        | 32.6M/42.8M [00:02<00:00, 44.8MB/s]
- 91%|█████████████████████████████████▊   | 39.1M/42.8M [00:02<00:00, 49.5MB/s]
+  0%|                                     | 8.19k/42.8M [00:00<09:13, 77.4kB/s]
+  0%|                                      | 39.9k/42.8M [00:00<03:27, 206kB/s]
+  0%|                                      | 96.3k/42.8M [00:00<02:01, 352kB/s]
+  0%|▏                                      | 161k/42.8M [00:00<01:34, 450kB/s]
+  1%|▏                                      | 216k/42.8M [00:00<01:30, 472kB/s]
+  1%|▎                                      | 337k/42.8M [00:00<01:01, 694kB/s]
+  1%|▍                                      | 457k/42.8M [00:00<00:50, 832kB/s]
+  2%|▌                                     | 673k/42.8M [00:00<00:34, 1.21MB/s]
+  2%|▊                                     | 881k/42.8M [00:00<00:29, 1.44MB/s]
+  3%|█                                    | 1.21M/42.8M [00:01<00:21, 1.93MB/s]
+  4%|█▎                                   | 1.56M/42.8M [00:01<00:17, 2.35MB/s]
+  5%|█▊                                   | 2.04M/42.8M [00:01<00:13, 2.99MB/s]
+  6%|██▏                                  | 2.60M/42.8M [00:01<00:10, 3.66MB/s]
+  8%|██▉                                  | 3.37M/42.8M [00:01<00:08, 4.72MB/s]
+ 10%|███▋                                 | 4.26M/42.8M [00:01<00:06, 5.79MB/s]
+ 13%|████▊                                | 5.50M/42.8M [00:01<00:04, 7.52MB/s]
+ 16%|██████                               | 6.98M/42.8M [00:01<00:03, 9.40MB/s]
+ 21%|███████▊                             | 8.98M/42.8M [00:01<00:02, 12.2MB/s]
+ 27%|█████████▉                           | 11.5M/42.8M [00:02<00:02, 15.5MB/s]
+ 35%|████████████▊                        | 14.8M/42.8M [00:02<00:01, 20.1MB/s]
+ 44%|████████████████▎                    | 18.9M/42.8M [00:02<00:00, 25.7MB/s]
+ 55%|████████████████████▍                | 23.7M/42.8M [00:02<00:00, 31.3MB/s]
+ 67%|████████████████████████▉            | 28.8M/42.8M [00:02<00:00, 35.9MB/s]
+ 82%|██████████████████████████████▎      | 35.1M/42.8M [00:02<00:00, 42.0MB/s]
+ 97%|███████████████████████████████████▉ | 41.6M/42.8M [00:02<00:00, 46.8MB/s]
   0%|                                              | 0.00/42.8M [00:00<?, ?B/s]
-100%|██████████████████████████████████████| 42.8M/42.8M [00:00<00:00, 197GB/s]
+100%|██████████████████████████████████████| 42.8M/42.8M [00:00<00:00, 263GB/s]
 /home/runner/work/EEGDash/EEGDash/.venv/lib/python3.12/site-packages/urllib3/connectionpool.py:1110: InsecureRequestWarning: Unverified HTTPS request is being made to host 'lampx.tugraz.at'. Adding certificate verification is strongly advised. See: https://urllib3.readthedocs.io/en/latest/advanced-usage.html#tls-warnings
   warnings.warn(
 
   0%|                                              | 0.00/43.8M [00:00<?, ?B/s]
-  0%|                                      | 16.4k/43.8M [00:00<04:31, 161kB/s]
-  0%|                                      | 64.5k/43.8M [00:00<02:06, 344kB/s]
-  0%|                                      | 99.3k/43.8M [00:00<02:07, 342kB/s]
-  0%|▏                                      | 176k/43.8M [00:00<01:26, 503kB/s]
-  1%|▏                                      | 249k/43.8M [00:00<01:15, 578kB/s]
-  1%|▎                                      | 344k/43.8M [00:00<01:02, 697kB/s]
-  1%|▍                                      | 465k/43.8M [00:00<00:50, 855kB/s]
-  1%|▍                                      | 560k/43.8M [00:00<00:49, 879kB/s]
-  2%|▋                                     | 728k/43.8M [00:00<00:38, 1.12MB/s]
-  2%|▊                                     | 889k/43.8M [00:01<00:34, 1.26MB/s]
-  3%|▉                                    | 1.10M/43.8M [00:01<00:28, 1.49MB/s]
-  3%|█                                    | 1.30M/43.8M [00:01<00:26, 1.63MB/s]
-  4%|█▎                                   | 1.56M/43.8M [00:01<00:22, 1.92MB/s]
-  4%|█▌                                   | 1.84M/43.8M [00:01<00:19, 2.16MB/s]
-  5%|█▉                                   | 2.23M/43.8M [00:01<00:15, 2.67MB/s]
-  6%|██▏                                  | 2.65M/43.8M [00:01<00:13, 3.08MB/s]
-  7%|██▊                                  | 3.26M/43.8M [00:01<00:10, 3.97MB/s]
-  9%|███▍                                 | 4.05M/43.8M [00:01<00:07, 5.08MB/s]
- 12%|████▍                                | 5.18M/43.8M [00:01<00:05, 6.88MB/s]
- 15%|█████▌                               | 6.54M/43.8M [00:02<00:04, 8.78MB/s]
- 20%|███████▎                             | 8.60M/43.8M [00:02<00:02, 12.2MB/s]
- 25%|█████████▎                           | 11.0M/43.8M [00:02<00:02, 15.6MB/s]
- 34%|████████████▍                        | 14.8M/43.8M [00:02<00:01, 22.0MB/s]
- 44%|████████████████▏                    | 19.1M/43.8M [00:02<00:00, 28.0MB/s]
- 56%|████████████████████▊                | 24.6M/43.8M [00:02<00:00, 35.9MB/s]
- 69%|█████████████████████████▌           | 30.2M/43.8M [00:02<00:00, 41.9MB/s]
- 82%|██████████████████████████████▎      | 35.8M/43.8M [00:02<00:00, 46.2MB/s]
- 97%|███████████████████████████████████▊ | 42.4M/43.8M [00:02<00:00, 50.6MB/s]
+  0%|                                     | 8.19k/43.8M [00:00<09:23, 77.7kB/s]
+  0%|                                      | 56.3k/43.8M [00:00<02:26, 299kB/s]
+  0%|                                       | 113k/43.8M [00:00<01:48, 404kB/s]
+  0%|▏                                      | 184k/43.8M [00:00<01:25, 510kB/s]
+  1%|▏                                      | 256k/43.8M [00:00<01:16, 569kB/s]
+  1%|▎                                      | 329k/43.8M [00:00<01:11, 607kB/s]
+  1%|▍                                      | 424k/43.8M [00:00<01:01, 701kB/s]
+  1%|▍                                      | 512k/43.8M [00:00<00:58, 741kB/s]
+  1%|▌                                      | 656k/43.8M [00:00<00:46, 933kB/s]
+  2%|▋                                      | 753k/43.8M [00:01<00:46, 924kB/s]
+  2%|▊                                     | 984k/43.8M [00:01<00:32, 1.31MB/s]
+  3%|█                                    | 1.26M/43.8M [00:01<00:25, 1.69MB/s]
+  4%|█▎                                   | 1.61M/43.8M [00:01<00:19, 2.18MB/s]
+  5%|█▋                                   | 2.04M/43.8M [00:01<00:15, 2.74MB/s]
+  6%|██▎                                  | 2.67M/43.8M [00:01<00:11, 3.71MB/s]
+  8%|██▉                                  | 3.44M/43.8M [00:01<00:08, 4.76MB/s]
+ 10%|███▊                                 | 4.53M/43.8M [00:01<00:06, 6.39MB/s]
+ 13%|████▉                                | 5.78M/43.8M [00:01<00:04, 8.00MB/s]
+ 17%|██████▍                              | 7.56M/43.8M [00:02<00:03, 10.6MB/s]
+ 23%|████████▍                            | 10.0M/43.8M [00:02<00:02, 14.3MB/s]
+ 30%|███████████▏                         | 13.2M/43.8M [00:02<00:01, 19.1MB/s]
+ 40%|██████████████▉                      | 17.6M/43.8M [00:02<00:01, 25.8MB/s]
+ 50%|██████████████████▋                  | 22.0M/43.8M [00:02<00:00, 30.5MB/s]
+ 62%|██████████████████████▉              | 27.1M/43.8M [00:02<00:00, 35.3MB/s]
+ 75%|███████████████████████████▉         | 33.0M/43.8M [00:02<00:00, 41.3MB/s]
+ 90%|█████████████████████████████████▍   | 39.5M/43.8M [00:02<00:00, 45.9MB/s]
   0%|                                              | 0.00/43.8M [00:00<?, ?B/s]
-100%|██████████████████████████████████████| 43.8M/43.8M [00:00<00:00, 279GB/s]
+100%|██████████████████████████████████████| 43.8M/43.8M [00:00<00:00, 252GB/s]
 /home/runner/work/EEGDash/EEGDash/.venv/lib/python3.12/site-packages/urllib3/connectionpool.py:1110: InsecureRequestWarning: Unverified HTTPS request is being made to host 'lampx.tugraz.at'. Adding certificate verification is strongly advised. See: https://urllib3.readthedocs.io/en/latest/advanced-usage.html#tls-warnings
   warnings.warn(
 
   0%|                                              | 0.00/43.1M [00:00<?, ?B/s]
-  0%|                                     | 8.19k/43.1M [00:00<08:51, 81.0kB/s]
-  0%|                                      | 48.1k/43.1M [00:00<02:43, 264kB/s]
-  0%|                                      | 96.3k/43.1M [00:00<02:00, 358kB/s]
-  0%|▏                                      | 153k/43.1M [00:00<01:38, 434kB/s]
-  0%|▏                                      | 201k/43.1M [00:00<01:35, 447kB/s]
-  1%|▎                                      | 281k/43.1M [00:00<01:16, 560kB/s]
-  1%|▎                                      | 360k/43.1M [00:00<01:07, 632kB/s]
-  1%|▍                                      | 449k/43.1M [00:00<01:00, 704kB/s]
-  1%|▍                                      | 537k/43.1M [00:00<00:56, 753kB/s]
-  1%|▌                                      | 633k/43.1M [00:01<00:52, 810kB/s]
-  2%|▋                                      | 728k/43.1M [00:01<00:50, 846kB/s]
-  2%|▊                                      | 849k/43.1M [00:01<00:44, 948kB/s]
-  2%|▊                                      | 952k/43.1M [00:01<00:43, 966kB/s]
-  3%|▉                                    | 1.12M/43.1M [00:01<00:35, 1.17MB/s]
-  3%|█                                    | 1.26M/43.1M [00:01<00:33, 1.24MB/s]
-  4%|█▎                                   | 1.51M/43.1M [00:01<00:26, 1.60MB/s]
-  4%|█▍                                   | 1.69M/43.1M [00:01<00:25, 1.63MB/s]
-  5%|█▊                                   | 2.14M/43.1M [00:01<00:16, 2.45MB/s]
-  6%|██                                   | 2.38M/43.1M [00:01<00:16, 2.44MB/s]
-  7%|██▋                                  | 3.17M/43.1M [00:02<00:09, 4.01MB/s]
-  9%|███▍                                 | 3.98M/43.1M [00:02<00:07, 5.20MB/s]
- 12%|████▍                                | 5.22M/43.1M [00:02<00:05, 7.27MB/s]
- 15%|█████▌                               | 6.49M/43.1M [00:02<00:04, 8.79MB/s]
- 20%|███████▍                             | 8.59M/43.1M [00:02<00:02, 12.3MB/s]
- 23%|████████▋                            | 10.1M/43.1M [00:02<00:02, 13.0MB/s]
- 32%|███████████▊                         | 13.7M/43.1M [00:02<00:01, 19.7MB/s]
- 41%|███████████████                      | 17.6M/43.1M [00:02<00:01, 25.1MB/s]
- 51%|███████████████████                  | 22.1M/43.1M [00:02<00:00, 30.9MB/s]
- 66%|████████████████████████▍            | 28.5M/43.1M [00:02<00:00, 39.4MB/s]
- 78%|████████████████████████████▉        | 33.7M/43.1M [00:03<00:00, 42.7MB/s]
- 92%|██████████████████████████████████▏  | 39.7M/43.1M [00:03<00:00, 46.7MB/s]
+  0%|                                      | 16.4k/43.1M [00:00<04:29, 160kB/s]
+  0%|                                      | 64.5k/43.1M [00:00<02:05, 342kB/s]
+  0%|                                       | 121k/43.1M [00:00<01:38, 435kB/s]
+  0%|▏                                      | 193k/43.1M [00:00<01:19, 538kB/s]
+  1%|▎                                      | 289k/43.1M [00:00<01:02, 681kB/s]
+  1%|▎                                      | 377k/43.1M [00:00<00:57, 739kB/s]
+  1%|▍                                      | 505k/43.1M [00:00<00:47, 903kB/s]
+  2%|▌                                     | 673k/43.1M [00:00<00:37, 1.13MB/s]
+  2%|▋                                     | 824k/43.1M [00:00<00:34, 1.24MB/s]
+  3%|▉                                    | 1.08M/43.1M [00:01<00:25, 1.62MB/s]
+  3%|█▏                                   | 1.35M/43.1M [00:01<00:21, 1.93MB/s]
+  4%|█▍                                   | 1.71M/43.1M [00:01<00:17, 2.41MB/s]
+  5%|█▊                                   | 2.16M/43.1M [00:01<00:13, 3.00MB/s]
+  7%|██▍                                  | 2.83M/43.1M [00:01<00:09, 4.06MB/s]
+  8%|███                                  | 3.60M/43.1M [00:01<00:07, 5.08MB/s]
+ 11%|████▏                                | 4.81M/43.1M [00:01<00:05, 7.08MB/s]
+ 14%|█████▎                               | 6.16M/43.1M [00:01<00:04, 8.89MB/s]
+ 20%|███████▏                             | 8.41M/43.1M [00:01<00:02, 12.8MB/s]
+ 25%|█████████▎                           | 10.8M/43.1M [00:01<00:02, 15.9MB/s]
+ 35%|████████████▊                        | 15.0M/43.1M [00:02<00:01, 23.2MB/s]
+ 45%|████████████████▍                    | 19.2M/43.1M [00:02<00:00, 28.6MB/s]
+ 57%|████████████████████▉                | 24.4M/43.1M [00:02<00:00, 35.5MB/s]
+ 70%|█████████████████████████▊           | 30.0M/43.1M [00:02<00:00, 41.6MB/s]
+ 83%|██████████████████████████████▊      | 35.8M/43.1M [00:02<00:00, 46.3MB/s]
+ 98%|████████████████████████████████████▎| 42.3M/43.1M [00:02<00:00, 50.5MB/s]
   0%|                                              | 0.00/43.1M [00:00<?, ?B/s]
-100%|██████████████████████████████████████| 43.1M/43.1M [00:00<00:00, 261GB/s]
+100%|██████████████████████████████████████| 43.1M/43.1M [00:00<00:00, 228GB/s]
 /home/runner/work/EEGDash/EEGDash/.venv/lib/python3.12/site-packages/urllib3/connectionpool.py:1110: InsecureRequestWarning: Unverified HTTPS request is being made to host 'lampx.tugraz.at'. Adding certificate verification is strongly advised. See: https://urllib3.readthedocs.io/en/latest/advanced-usage.html#tls-warnings
   warnings.warn(
 
   0%|                                              | 0.00/44.2M [00:00<?, ?B/s]
-  0%|                                     | 8.19k/44.2M [00:00<09:06, 80.9kB/s]
-  0%|                                      | 56.3k/44.2M [00:00<02:22, 311kB/s]
-  0%|                                       | 121k/44.2M [00:00<01:36, 457kB/s]
-  0%|▏                                      | 193k/44.2M [00:00<01:19, 553kB/s]
-  1%|▎                                      | 289k/44.2M [00:00<01:03, 693kB/s]
-  1%|▎                                      | 377k/44.2M [00:00<00:58, 749kB/s]
-  1%|▍                                      | 480k/44.2M [00:00<00:52, 835kB/s]
-  1%|▌                                      | 608k/44.2M [00:00<00:45, 965kB/s]
-  2%|▋                                     | 776k/44.2M [00:00<00:36, 1.18MB/s]
-  2%|▊                                     | 921k/44.2M [00:01<00:34, 1.25MB/s]
-  3%|▉                                    | 1.17M/44.2M [00:01<00:26, 1.61MB/s]
-  3%|█▏                                   | 1.40M/44.2M [00:01<00:23, 1.81MB/s]
-  4%|█▍                                   | 1.74M/44.2M [00:01<00:18, 2.28MB/s]
-  5%|█▊                                   | 2.11M/44.2M [00:01<00:15, 2.67MB/s]
-  6%|██▏                                  | 2.58M/44.2M [00:01<00:12, 3.26MB/s]
-  7%|██▋                                  | 3.16M/44.2M [00:01<00:10, 3.97MB/s]
-  9%|███▎                                 | 3.90M/44.2M [00:01<00:08, 4.94MB/s]
- 11%|████                                 | 4.85M/44.2M [00:01<00:06, 6.25MB/s]
- 14%|█████                                | 6.02M/44.2M [00:01<00:04, 7.82MB/s]
- 17%|██████▎                              | 7.55M/44.2M [00:02<00:03, 9.95MB/s]
- 21%|███████▉                             | 9.46M/44.2M [00:02<00:02, 12.6MB/s]
- 27%|██████████                           | 12.0M/44.2M [00:02<00:01, 16.2MB/s]
- 34%|████████████▋                        | 15.1M/44.2M [00:02<00:01, 20.6MB/s]
- 44%|████████████████▏                    | 19.3M/44.2M [00:02<00:00, 26.7MB/s]
- 55%|████████████████████▎                | 24.2M/44.2M [00:02<00:00, 32.7MB/s]
- 65%|████████████████████████▏            | 28.9M/44.2M [00:02<00:00, 36.4MB/s]
- 80%|█████████████████████████████▌       | 35.4M/44.2M [00:02<00:00, 43.8MB/s]
- 93%|██████████████████████████████████▍  | 41.2M/44.2M [00:02<00:00, 47.5MB/s]
+  0%|                                      | 16.4k/44.2M [00:00<04:48, 153kB/s]
+  0%|                                      | 56.3k/44.2M [00:00<02:36, 283kB/s]
+  0%|                                       | 121k/44.2M [00:00<01:42, 428kB/s]
+  0%|▏                                      | 176k/44.2M [00:00<01:35, 463kB/s]
+  1%|▎                                      | 289k/44.2M [00:00<01:05, 674kB/s]
+  1%|▎                                      | 360k/44.2M [00:00<01:05, 672kB/s]
+  1%|▍                                     | 568k/44.2M [00:00<00:40, 1.09MB/s]
+  2%|▋                                     | 784k/44.2M [00:00<00:31, 1.38MB/s]
+  3%|▉                                    | 1.18M/44.2M [00:00<00:20, 2.09MB/s]
+  3%|█▎                                   | 1.52M/44.2M [00:01<00:17, 2.43MB/s]
+  5%|█▉                                   | 2.25M/44.2M [00:01<00:11, 3.76MB/s]
+  7%|██▍                                  | 2.93M/44.2M [00:01<00:09, 4.54MB/s]
+  9%|███▍                                 | 4.16M/44.2M [00:01<00:06, 6.64MB/s]
+ 12%|████▍                                | 5.34M/44.2M [00:01<00:04, 7.94MB/s]
+ 17%|██████▎                              | 7.58M/44.2M [00:01<00:03, 11.9MB/s]
+ 22%|████████▏                            | 9.73M/44.2M [00:01<00:02, 14.3MB/s]
+ 31%|███████████▌                         | 13.8M/44.2M [00:01<00:01, 21.5MB/s]
+ 40%|██████████████▊                      | 17.8M/44.2M [00:01<00:01, 25.9MB/s]
+ 52%|███████████████████                  | 22.8M/44.2M [00:02<00:00, 32.9MB/s]
+ 64%|███████████████████████▌             | 28.2M/44.2M [00:02<00:00, 38.8MB/s]
+ 77%|████████████████████████████▎        | 33.9M/44.2M [00:02<00:00, 43.3MB/s]
+ 91%|█████████████████████████████████▊   | 40.4M/44.2M [00:02<00:00, 47.8MB/s]
   0%|                                              | 0.00/44.2M [00:00<?, ?B/s]
-100%|██████████████████████████████████████| 44.2M/44.2M [00:00<00:00, 273GB/s]
+100%|██████████████████████████████████████| 44.2M/44.2M [00:00<00:00, 194GB/s]
 /home/runner/work/EEGDash/EEGDash/.venv/lib/python3.12/site-packages/urllib3/connectionpool.py:1110: InsecureRequestWarning: Unverified HTTPS request is being made to host 'lampx.tugraz.at'. Adding certificate verification is strongly advised. See: https://urllib3.readthedocs.io/en/latest/advanced-usage.html#tls-warnings
   warnings.warn(
 
   0%|                                              | 0.00/44.1M [00:00<?, ?B/s]
-  0%|                                     | 8.19k/44.1M [00:00<09:03, 81.0kB/s]
-  0%|                                      | 56.3k/44.1M [00:00<02:21, 311kB/s]
-  0%|                                       | 121k/44.1M [00:00<01:36, 457kB/s]
-  0%|▏                                      | 184k/44.1M [00:00<01:24, 521kB/s]
-  1%|▎                                      | 289k/44.1M [00:00<01:02, 701kB/s]
-  1%|▎                                      | 400k/44.1M [00:00<00:52, 833kB/s]
-  1%|▍                                     | 552k/44.1M [00:00<00:41, 1.04MB/s]
-  2%|▋                                     | 728k/44.1M [00:00<00:34, 1.26MB/s]
-  2%|▊                                     | 969k/44.1M [00:00<00:26, 1.60MB/s]
-  3%|█                                    | 1.23M/44.1M [00:01<00:22, 1.90MB/s]
-  4%|█▎                                   | 1.63M/44.1M [00:01<00:16, 2.51MB/s]
-  5%|█▋                                   | 2.07M/44.1M [00:01<00:13, 3.06MB/s]
-  6%|██▎                                  | 2.72M/44.1M [00:01<00:10, 4.05MB/s]
-  8%|██▉                                  | 3.46M/44.1M [00:01<00:08, 4.99MB/s]
- 10%|███▊                                 | 4.52M/44.1M [00:01<00:05, 6.62MB/s]
- 13%|████▊                                | 5.76M/44.1M [00:01<00:04, 8.27MB/s]
- 18%|██████▌                              | 7.79M/44.1M [00:01<00:03, 11.7MB/s]
- 23%|████████▍                            | 10.0M/44.1M [00:01<00:02, 14.7MB/s]
- 31%|███████████▌                         | 13.7M/44.1M [00:01<00:01, 21.2MB/s]
- 40%|██████████████▊                      | 17.7M/44.1M [00:02<00:00, 26.4MB/s]
- 53%|███████████████████▍                 | 23.2M/44.1M [00:02<00:00, 34.7MB/s]
- 64%|███████████████████████▊             | 28.4M/44.1M [00:02<00:00, 39.9MB/s]
- 77%|████████████████████████████▍        | 33.9M/44.1M [00:02<00:00, 44.4MB/s]
- 91%|█████████████████████████████████▊   | 40.3M/44.1M [00:02<00:00, 49.3MB/s]
+  0%|                                     | 8.19k/44.1M [00:00<09:25, 77.8kB/s]
+  0%|                                      | 56.3k/44.1M [00:00<02:27, 299kB/s]
+  0%|                                       | 113k/44.1M [00:00<01:48, 404kB/s]
+  0%|▏                                      | 168k/44.1M [00:00<01:37, 449kB/s]
+  1%|▏                                      | 249k/44.1M [00:00<01:18, 561kB/s]
+  1%|▎                                      | 321k/44.1M [00:00<01:12, 599kB/s]
+  1%|▍                                      | 457k/44.1M [00:00<00:53, 821kB/s]
+  1%|▌                                      | 585k/44.1M [00:00<00:46, 943kB/s]
+  2%|▋                                     | 801k/44.1M [00:00<00:33, 1.28MB/s]
+  2%|▊                                    | 1.03M/44.1M [00:01<00:27, 1.56MB/s]
+  3%|█▏                                   | 1.35M/44.1M [00:01<00:21, 2.00MB/s]
+  4%|█▍                                   | 1.72M/44.1M [00:01<00:17, 2.44MB/s]
+  5%|█▊                                   | 2.23M/44.1M [00:01<00:13, 3.16MB/s]
+  6%|██▎                                  | 2.80M/44.1M [00:01<00:10, 3.82MB/s]
+  8%|███                                  | 3.58M/44.1M [00:01<00:08, 4.86MB/s]
+ 10%|███▊                                 | 4.51M/44.1M [00:01<00:06, 6.04MB/s]
+ 13%|████▊                                | 5.76M/44.1M [00:01<00:04, 7.75MB/s]
+ 16%|██████                               | 7.25M/44.1M [00:01<00:03, 9.62MB/s]
+ 21%|███████▊                             | 9.28M/44.1M [00:02<00:02, 12.5MB/s]
+ 27%|█████████▉                           | 11.8M/44.1M [00:02<00:02, 15.8MB/s]
+ 34%|████████████▋                        | 15.1M/44.1M [00:02<00:01, 20.3MB/s]
+ 44%|████████████████▏                    | 19.2M/44.1M [00:02<00:00, 25.9MB/s]
+ 55%|████████████████████▏                | 24.0M/44.1M [00:02<00:00, 31.5MB/s]
+ 66%|████████████████████████▍            | 29.1M/44.1M [00:02<00:00, 36.0MB/s]
+ 80%|█████████████████████████████▊       | 35.4M/44.1M [00:02<00:00, 42.5MB/s]
+ 95%|███████████████████████████████████  | 41.8M/44.1M [00:02<00:00, 47.6MB/s]
   0%|                                              | 0.00/44.1M [00:00<?, ?B/s]
-100%|██████████████████████████████████████| 44.1M/44.1M [00:00<00:00, 260GB/s]
+100%|██████████████████████████████████████| 44.1M/44.1M [00:00<00:00, 247GB/s]
 /home/runner/work/EEGDash/EEGDash/.venv/lib/python3.12/site-packages/urllib3/connectionpool.py:1110: InsecureRequestWarning: Unverified HTTPS request is being made to host 'lampx.tugraz.at'. Adding certificate verification is strongly advised. See: https://urllib3.readthedocs.io/en/latest/advanced-usage.html#tls-warnings
   warnings.warn(
 
   0%|                                              | 0.00/42.3M [00:00<?, ?B/s]
-  0%|                                     | 8.19k/42.3M [00:00<08:43, 80.9kB/s]
-  0%|                                      | 56.3k/42.3M [00:00<02:16, 311kB/s]
-  0%|                                       | 121k/42.3M [00:00<01:32, 457kB/s]
-  0%|▏                                      | 176k/42.3M [00:00<01:26, 489kB/s]
-  1%|▎                                      | 272k/42.3M [00:00<01:04, 652kB/s]
-  1%|▎                                      | 360k/42.3M [00:00<00:58, 723kB/s]
-  1%|▍                                     | 528k/42.3M [00:00<00:40, 1.02MB/s]
-  2%|▋                                     | 705k/42.3M [00:00<00:33, 1.24MB/s]
-  2%|▉                                    | 1.01M/42.3M [00:00<00:23, 1.78MB/s]
-  3%|█▏                                   | 1.32M/42.3M [00:01<00:18, 2.17MB/s]
-  4%|█▋                                   | 1.90M/42.3M [00:01<00:12, 3.23MB/s]
-  6%|██                                   | 2.41M/42.3M [00:01<00:10, 3.77MB/s]
-  8%|███                                  | 3.50M/42.3M [00:01<00:06, 5.87MB/s]
- 11%|███▉                                 | 4.50M/42.3M [00:01<00:05, 7.02MB/s]
- 15%|█████▋                               | 6.50M/42.3M [00:01<00:03, 10.8MB/s]
- 20%|███████▎                             | 8.42M/42.3M [00:01<00:02, 13.2MB/s]
- 28%|██████████▌                          | 12.0M/42.3M [00:01<00:01, 19.8MB/s]
- 37%|█████████████▌                       | 15.5M/42.3M [00:01<00:01, 24.2MB/s]
- 50%|██████████████████▋                  | 21.3M/42.3M [00:01<00:00, 33.5MB/s]
- 65%|████████████████████████             | 27.5M/42.3M [00:02<00:00, 40.9MB/s]
- 77%|████████████████████████████▋        | 32.7M/42.3M [00:02<00:00, 43.7MB/s]
- 93%|██████████████████████████████████▎  | 39.2M/42.3M [00:02<00:00, 48.7MB/s]
+  0%|                                      | 16.4k/42.3M [00:00<04:24, 160kB/s]
+  0%|                                      | 64.5k/42.3M [00:00<02:03, 342kB/s]
+  0%|                                       | 121k/42.3M [00:00<01:36, 435kB/s]
+  0%|▏                                      | 209k/42.3M [00:00<01:10, 601kB/s]
+  1%|▎                                      | 289k/42.3M [00:00<01:03, 663kB/s]
+  1%|▍                                      | 449k/42.3M [00:00<00:43, 965kB/s]
+  1%|▌                                     | 616k/42.3M [00:00<00:35, 1.18MB/s]
+  2%|▊                                     | 904k/42.3M [00:00<00:24, 1.69MB/s]
+  3%|█                                    | 1.19M/42.3M [00:00<00:20, 2.04MB/s]
+  4%|█▍                                   | 1.70M/42.3M [00:01<00:13, 2.94MB/s]
+  5%|█▉                                   | 2.19M/42.3M [00:01<00:11, 3.49MB/s]
+  7%|██▊                                  | 3.15M/42.3M [00:01<00:07, 5.26MB/s]
+ 10%|███▌                                 | 4.06M/42.3M [00:01<00:06, 6.34MB/s]
+ 14%|█████                                | 5.86M/42.3M [00:01<00:03, 9.68MB/s]
+ 18%|██████▌                              | 7.51M/42.3M [00:01<00:03, 11.6MB/s]
+ 26%|█████████▍                           | 10.9M/42.3M [00:01<00:01, 17.9MB/s]
+ 33%|████████████▏                        | 14.0M/42.3M [00:01<00:01, 21.6MB/s]
+ 46%|█████████████████▏                   | 19.6M/42.3M [00:01<00:00, 31.3MB/s]
+ 60%|██████████████████████▎              | 25.4M/42.3M [00:01<00:00, 38.4MB/s]
+ 73%|██████████████████████████▉          | 30.8M/42.3M [00:02<00:00, 42.1MB/s]
+ 88%|████████████████████████████████▋    | 37.3M/42.3M [00:02<00:00, 47.5MB/s]
   0%|                                              | 0.00/42.3M [00:00<?, ?B/s]
-100%|██████████████████████████████████████| 42.3M/42.3M [00:00<00:00, 261GB/s]
-[05/08/26 18:43:49] INFO     CSP+LDA | BNCI2014-001 | 1 | 0train:   base.py:1067
+100%|██████████████████████████████████████| 42.3M/42.3M [00:00<00:00, 196GB/s]
+[05/09/26 20:26:44] INFO     CSP+LDA | BNCI2014-001 | 1 | 0train:   base.py:1067
                              Score 0.937
                     INFO     CSP+LR | BNCI2014-001 | 1 | 0train:    base.py:1067
                              Score 0.955
@@ -559,7 +565,7 @@ benchmark cohort: subjects=[1, 2, 3]
 results frame: rows=12 | cols=['score', 'time', 'samples', 'samples_test', 'n_classes', 'subject'] ...
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 269-275 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 284-290 -->
 
 Synthetic-results fallback. The plotting code below operates on a
 long-format frame with three columns: `subject`, `pipeline`,
@@ -568,7 +574,7 @@ from the fallback, the figure renders identically; hardcoding
 plausible motor-imagery numbers keeps the gallery green when
 MOABB is missing.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 277-299 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 292-314 -->
 ```Python
 if not used_moabb:
     fallback_subjects = [f"sub-{i:02d}" for i in range(1, N_SUBJECTS_BENCH + 1)]
@@ -593,7 +599,7 @@ if not used_moabb:
     )
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 300-308 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 315-323 -->
 
 ## Step 4. Read the per-subject benchmark frame
 
@@ -603,7 +609,7 @@ the session axis and yields the per-subject `mean +/- std` table
 BCI papers publish. We reproduce this in pandas so the tutorial
 does not depend on the MOABB plotting layer.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 310-323 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 325-338 -->
 ```Python
 results["subject"] = results["subject"].astype(str)
 per_subject_results = results.groupby(["subject", "pipeline"], as_index=False)[
@@ -625,7 +631,7 @@ pipeline  mean_acc  std_acc  n_subjects
   CSP+LR  0.832047 0.255142           3
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 324-329 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 339-344 -->
 
 **Investigate.** `mean_acc` is the cross-subject average a paper
 would print; `std_acc` is the across-subject spread Cisotto &
@@ -633,13 +639,13 @@ Chicco 2024 (Tip 9) ask reviewers to enforce. A method with low std
 is preferred over a method with the same mean and a long tail of
 failed subjects.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 331-344 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 346-359 -->
 
 ## A common mistake, and how to recover
 
 **Run.** Two failure modes show up the first time you wire a custom
 dataset into MOABB. The first is asking a paradigm for a dataset it
-does not recognise (`LeftRightImagery` on a P300 dataset).
+does not recognize (`LeftRightImagery` on a P300 dataset).
 `moabb.paradigms.base.BaseParadigm.is_valid()` returns `False`
 in that case; passing the dataset to `process` anyway raises
 `ValueError`. The second is asking
@@ -648,7 +654,7 @@ not present on the windows or the description; the helper returns a
 zero-vector `y` rather than crashing, which is the right default
 for un-targeted splits but the wrong default for stratified ones.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 346-370 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 361-385 -->
 ```Python
 try:
     if MOABB_AVAILABLE:
@@ -681,7 +687,7 @@ Caught ValueError: paradigm rejects dataset (P300 vs MotorImagery)
 Recovery: call `paradigm.is_valid(dataset)` before `Evaluation.process(...)`; pick the matching paradigm class from `moabb.paradigms.*` (LeftRightImagery, P300, SSVEP, ...).
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 371-378 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 386-393 -->
 
 ## Modify: drop one pipeline
 
@@ -690,7 +696,7 @@ with a single-pipeline dict. Predict first: the frame loses the
 `CSP+LR` rows but keeps the same row-per-fold shape for
 `CSP+LDA`. The figure helper accepts `pipeline_b=None`.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 380-385 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 395-400 -->
 ```Python
 solo_results = per_subject_results[per_subject_results["pipeline"] == "CSP+LDA"]
 print(
@@ -702,7 +708,7 @@ print(
 solo subset: rows=3 | pipelines=['CSP+LDA']
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 386-397 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 401-412 -->
 
 ## Headline figure: per-subject bars, paired comparison, integration flow
 
@@ -715,7 +721,7 @@ the data passes through and the bridge function that connects them.
 The drawing helpers live in a sibling `_moabb_interop_figure`
 module; the call below is the only line that matters.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 399-413 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 414-428 -->
 ```Python
 from _moabb_interop_figure import draw_moabb_interop_figure
 
@@ -732,19 +738,19 @@ fig = draw_moabb_interop_figure(
 plt.show()
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 414-419 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 429-434 -->
 
 **Investigate.** Read the three panels in order.
 
 1. *Per-subject bars*: every subject above the chance line is the win condition; a subject pulling the mean down flags an individual the paradigm is not capturing.
-2. *Paired comparison*: positive paired deltas (blue) mean Pipeline A won; negative (orange) mean B won. The mean delta and win count are what a paired Wilcoxon test consumes (see [Is Pipeline A really better than Pipeline B, or did it luck out on one subject?](plot_54_compare_two_pipelines.md)).
+2. *Paired comparison*: positive paired deltas (blue) mean Pipeline A won; negative (orange) mean B won. The mean delta and win count are what a paired Wilcoxon test consumes (see [Compare two decoding pipelines](plot_54_compare_two_pipelines.md)).
 3. *Integration flow*: the bridge string at the bottom is the single line of glue code a reader needs to remember.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 421-423 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 436-438 -->
 
 ## Result: cross-subject mean accuracy +/- std (E5.43)
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 425-436 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 440-451 -->
 ```Python
 headline_pipeline = "CSP+LDA"
 headline = per_subject_results.loc[
@@ -762,7 +768,7 @@ print(
 CSP+LDA on BNCI2014_001 (LeftRightImagery): 0.824 +/- 0.213 | n_subjects=3 | metric=accuracy | backend=moabb
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 437-447 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 452-462 -->
 
 ## Make: extend to a third pipeline
 
@@ -774,7 +780,7 @@ append the new rows to `per_subject_results`. The figure helper
 auto-pivots the long-format frame, so passing `pipeline_b="MLP"`
 swaps which pipeline lands in the orange bars without other changes.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 449-461 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 464-476 -->
 
 ## Wrap-up
 
@@ -788,7 +794,7 @@ that flags which subjects pull the average down. The same machinery
 extends to `CrossSubjectEvaluation` and to
 any paradigm-compatible MOABB dataset.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 463-476 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 478-491 -->
 
 ## Try it yourself
 
@@ -803,14 +809,14 @@ any paradigm-compatible MOABB dataset.
   dataset from `plot_02`. Confirm the metadata frame has one row
   per window, not one per record.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 478-483 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 493-498 -->
 
 ## References
 
-See [References](../../../../references.md) for the centralised bibliography of papers
+See [References](../../../../references.md) for the centralized bibliography of papers
 cited above. Add or amend an entry once in
 `docs/source/refs.bib`; every tutorial inherits the update.
 
-**Total running time of the script:** (0 minutes 29.290 seconds)
+**Total running time of the script:** (0 minutes 29.618 seconds)
 
 <a id="sphx-glr-download-generated-auto-examples-tutorials-50-evaluation-plot-55-moabb-interop-py"></a>

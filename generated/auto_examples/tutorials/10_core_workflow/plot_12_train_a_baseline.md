@@ -6,7 +6,9 @@
 
 <a id="sphx-glr-generated-auto-examples-tutorials-10-core-workflow-plot-12-train-a-baseline-py"></a>
 
-# How do I train a leakage-safe baseline classifier on EEG?
+# Train a leakage-safe baseline
+
+**Difficulty 1-2** | **Runtime: 30s** | **Compute: CPU**
 
 A model that scores 0.78 on held-out windows is only useful when you
 also know what 0.50 (chance) and 0.55 (a transparent linear baseline)
@@ -23,7 +25,10 @@ classes, how does the accuracy vary across held-out subjects, and
 which trials does the model confuse?
 
 <!-- sphinx_gallery_thumbnail_path = '_static/thumbs/plot_12_train_a_baseline.png' -->
-<!-- GENERATED FROM PYTHON SOURCE LINES 22-29 -->
+
+Keywords: classification, baseline, evaluation
+
+<!-- GENERATED FROM PYTHON SOURCE LINES 25-32 -->
 
 ## Learning objectives
 
@@ -33,17 +38,17 @@ which trials does the model confuse?
 - Compare those numbers against `majority_baseline` chance level on the same split.
 - Produce a three-panel diagnostic that lets a reader judge the baseline at a glance.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 31-38 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 34-41 -->
 
 ## Requirements
 
 - About 90 s on CPU on first run; under 30 s once cached.
 - Network on first call (~30 MB into `cache_dir`); offline thereafter.
-- Prerequisites: [How do I split EEG data without subject leakage?](plot_11_leakage_safe_split.md) (cross-subject
-  splits), [How do I preprocess EEG and create model-ready windows?](plot_10_preprocess_and_window.md) (event windowing).
+- Prerequisites: [Split EEG without subject leakage](plot_11_leakage_safe_split.md) (cross-subject
+  splits), [Preprocess EEG and create windows](plot_10_preprocess_and_window.md) (event windowing).
 - Concept: [Features vs. deep learning](../../../../concepts/features_vs_deep_learning.md).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 40-66 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 43-79 -->
 
 ## Why a baseline before a deep net?
 
@@ -72,12 +77,22 @@ feature engineering:
   tracks the actual class balance of the test fold, not a notional
   50 / 50 prior.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 68-70 -->
+## Validate your result
+
+- **Accuracy.** Expect the linear baseline to score significantly above
+  chance (e.g., 0.60-0.75 for visual P300) but below a well-tuned deep
+  model.
+- **Chance Level.** Verify that `majority_baseline` matches the class
+  imbalance of your dataset (e.g., 0.50 for balanced EO/EC).
+- **Confusion Matrix.** The row-normalized confusion matrix should show
+  diagonal dominance if the model has learned the task.
+
+<!-- GENERATED FROM PYTHON SOURCE LINES 81-83 -->
 
 Setup. `random_state=42` on every estimator and splitter is what
 keeps the printed accuracy byte-stable across runs (E3.21).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 70-103 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 83-116 -->
 ```Python
 import os
 import warnings
@@ -117,7 +132,7 @@ print(f"eegdash {eegdash.__version__} | cache_dir={CACHE_DIR}")
 eegdash 0.7.2 | cache_dir=/home/runner/eegdash_cache
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 104-114 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 117-127 -->
 
 ## Step 1: Pull three subjects of ds002718
 
@@ -130,7 +145,7 @@ stay roughly balanced and the chance level lands at 0.50; the
 subjects (`002`, `003`, `004`) keep the runtime inside budget
 while leaving enough subjects for a 3-fold cross-subject split.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 116-133 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 129-146 -->
 ```Python
 DATASET = "ds002718"
 SUBJECTS = ["002", "003", "004"]
@@ -151,7 +166,7 @@ records_summary
 ```
 
 ```none
-[05/08/26 18:42:12] WARNING  File not found on S3, skipping:   downloader.py:163
+[05/09/26 20:25:08] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds002718/sub-0
                              02/eeg/sub-002_task-FaceRecogniti
                              on_eeg.fdt
@@ -202,7 +217,7 @@ records_summary
 </div>
 <br />
 <br />
-<!-- GENERATED FROM PYTHON SOURCE LINES 134-140 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 147-153 -->
 
 ## Annotation discovery: which event names are actually in the file?
 
@@ -211,7 +226,7 @@ records_summary
 'scrambled': 1}` against an assumed schema is the most common cause
 of a silent zero-window dataset.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 142-153 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 155-166 -->
 ```Python
 descriptions: list[str] = []
 for record in dataset.datasets:
@@ -227,50 +242,50 @@ event_counts.head(12)
 
 ```none
 Downloading sub-003_task-FaceRecognition_channels.tsv:   0%|          | 0.00/1.31k [00:00<?, ?B/s]
-Downloading sub-003_task-FaceRecognition_channels.tsv: 100%|██████████| 1.31k/1.31k [00:00<00:00, 5.50MB/s]
+Downloading sub-003_task-FaceRecognition_channels.tsv: 100%|██████████| 1.31k/1.31k [00:00<00:00, 5.56MB/s]
 
 Downloading sub-003_task-FaceRecognition_events.tsv:   0%|          | 0.00/122k [00:00<?, ?B/s]
-Downloading sub-003_task-FaceRecognition_events.tsv: 100%|██████████| 122k/122k [00:00<00:00, 17.8MB/s]
+Downloading sub-003_task-FaceRecognition_events.tsv: 100%|██████████| 122k/122k [00:00<00:00, 9.88MB/s]
 
 Downloading sub-003_task-FaceRecognition_electrodes.tsv:   0%|          | 0.00/1.67k [00:00<?, ?B/s]
-Downloading sub-003_task-FaceRecognition_electrodes.tsv: 100%|██████████| 1.67k/1.67k [00:00<00:00, 6.68MB/s]
+Downloading sub-003_task-FaceRecognition_electrodes.tsv: 100%|██████████| 1.67k/1.67k [00:00<00:00, 8.30MB/s]
 
 Downloading sub-003_task-FaceRecognition_eeg.json:   0%|          | 0.00/1.28k [00:00<?, ?B/s]
-Downloading sub-003_task-FaceRecognition_eeg.json: 100%|██████████| 1.28k/1.28k [00:00<00:00, 5.54MB/s]
+Downloading sub-003_task-FaceRecognition_eeg.json: 100%|██████████| 1.28k/1.28k [00:00<00:00, 7.03MB/s]
 
 Downloading sub-003_task-FaceRecognition_coordsystem.json:   0%|          | 0.00/281 [00:00<?, ?B/s]
-Downloading sub-003_task-FaceRecognition_coordsystem.json: 100%|██████████| 281/281 [00:00<00:00, 1.45MB/s]
-[05/08/26 18:42:14] WARNING  File not found on S3, skipping:   downloader.py:163
+Downloading sub-003_task-FaceRecognition_coordsystem.json: 100%|██████████| 281/281 [00:00<00:00, 1.38MB/s]
+[05/09/26 20:25:09] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds002718/sub-0
                              03/eeg/sub-003_task-FaceRecogniti
                              on_eeg.fdt
 
 Downloading sub-003_task-FaceRecognition_eeg.set:   0%|          | 0.00/221M [00:00<?, ?B/s]
-Downloading sub-003_task-FaceRecognition_eeg.set:  23%|██▎       | 50.0M/221M [00:01<00:05, 34.5MB/s]
-Downloading sub-003_task-FaceRecognition_eeg.set: 100%|██████████| 221M/221M [00:01<00:00, 148MB/s]
+Downloading sub-003_task-FaceRecognition_eeg.set:  23%|██▎       | 50.0M/221M [00:01<00:04, 40.9MB/s]
+Downloading sub-003_task-FaceRecognition_eeg.set: 100%|██████████| 221M/221M [00:01<00:00, 175MB/s]
 
 Downloading sub-004_task-FaceRecognition_channels.tsv:   0%|          | 0.00/1.31k [00:00<?, ?B/s]
-Downloading sub-004_task-FaceRecognition_channels.tsv: 100%|██████████| 1.31k/1.31k [00:00<00:00, 4.22MB/s]
+Downloading sub-004_task-FaceRecognition_channels.tsv: 100%|██████████| 1.31k/1.31k [00:00<00:00, 4.74MB/s]
 
 Downloading sub-004_task-FaceRecognition_events.tsv:   0%|          | 0.00/119k [00:00<?, ?B/s]
-Downloading sub-004_task-FaceRecognition_events.tsv: 100%|██████████| 119k/119k [00:00<00:00, 220MB/s]
+Downloading sub-004_task-FaceRecognition_events.tsv: 100%|██████████| 119k/119k [00:00<00:00, 52.8MB/s]
 
 Downloading sub-004_task-FaceRecognition_electrodes.tsv:   0%|          | 0.00/1.67k [00:00<?, ?B/s]
-Downloading sub-004_task-FaceRecognition_electrodes.tsv: 100%|██████████| 1.67k/1.67k [00:00<00:00, 8.92MB/s]
+Downloading sub-004_task-FaceRecognition_electrodes.tsv: 100%|██████████| 1.67k/1.67k [00:00<00:00, 8.83MB/s]
 
 Downloading sub-004_task-FaceRecognition_eeg.json:   0%|          | 0.00/1.28k [00:00<?, ?B/s]
-Downloading sub-004_task-FaceRecognition_eeg.json: 100%|██████████| 1.28k/1.28k [00:00<00:00, 7.39MB/s]
+Downloading sub-004_task-FaceRecognition_eeg.json: 100%|██████████| 1.28k/1.28k [00:00<00:00, 6.87MB/s]
 
 Downloading sub-004_task-FaceRecognition_coordsystem.json:   0%|          | 0.00/278 [00:00<?, ?B/s]
-Downloading sub-004_task-FaceRecognition_coordsystem.json: 100%|██████████| 278/278 [00:00<00:00, 1.60MB/s]
-[05/08/26 18:42:17] WARNING  File not found on S3, skipping:   downloader.py:163
+Downloading sub-004_task-FaceRecognition_coordsystem.json: 100%|██████████| 278/278 [00:00<00:00, 1.37MB/s]
+[05/09/26 20:25:13] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds002718/sub-0
                              04/eeg/sub-004_task-FaceRecogniti
                              on_eeg.fdt
 
 Downloading sub-004_task-FaceRecognition_eeg.set:   0%|          | 0.00/223M [00:00<?, ?B/s]
-Downloading sub-004_task-FaceRecognition_eeg.set:  22%|██▏       | 50.0M/223M [00:01<00:05, 34.0MB/s]
-Downloading sub-004_task-FaceRecognition_eeg.set: 100%|██████████| 223M/223M [00:01<00:00, 147MB/s]
+Downloading sub-004_task-FaceRecognition_eeg.set:  22%|██▏       | 50.0M/223M [00:00<00:03, 58.6MB/s]
+Downloading sub-004_task-FaceRecognition_eeg.set: 100%|██████████| 223M/223M [00:00<00:00, 249MB/s]
 ```
 
 <div class="output_subarea output_html rendered_html output_result">
@@ -354,7 +369,7 @@ Downloading sub-004_task-FaceRecognition_eeg.set: 100%|████████�
 </div>
 <br />
 <br />
-<!-- GENERATED FROM PYTHON SOURCE LINES 154-164 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 167-177 -->
 
 **Investigate.** The trial-type column carries fine-grained labels:
 `famous_new`, `famous_second_early`, `famous_second_late`,
@@ -367,7 +382,7 @@ events are dropped (they would skew the balance to 2:1). Button
 presses and `boundary` markers are ignored. Famous vs scrambled is
 the canonical Wakeman & Henson contrast.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 166-174 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 179-187 -->
 
 ## Step 2: Two safe preprocessors and event windowing
 
@@ -378,7 +393,7 @@ window covers 1 s after stimulus onset (`trial_start_offset_samples
 = 0`, `trial_stop_offset_samples = sfreq`) which spans the early
 visual response while keeping the window count manageable.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 176-211 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 189-224 -->
 ```Python
 TARGET_SFREQ = 100  # Hz
 WINDOW_SECONDS = 1.0
@@ -426,7 +441,7 @@ print(
 n_windows=1772 | n_channels=70 | sfreq=100 Hz | window_size_samples=100
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 212-219 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 225-232 -->
 
 ## Step 3: Materialize windows + per-window subject id
 
@@ -436,7 +451,7 @@ easiest route is iterating windows and reading
 `braindecode.datasets.WindowsDataset.description` once per
 per-record subdataset.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 221-235 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 234-248 -->
 ```Python
 X_list: list[np.ndarray] = []
 y_list: list[int] = []
@@ -453,7 +468,7 @@ y = np.asarray(y_list, dtype=int)
 groups = np.asarray(groups_list)
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 236-241 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 249-254 -->
 
 **Predict.** `X.shape` should be
 `(n_windows, n_channels, window_size_samples)`. The class counts on
@@ -461,7 +476,7 @@ groups = np.asarray(groups_list)
 mappings and the three scrambled mappings carry roughly the same
 trial counts in ds002718.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 243-255 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 256-268 -->
 ```Python
 shape_summary = pd.Series(
     {
@@ -525,7 +540,7 @@ shape_summary
 </div>
 <br />
 <br />
-<!-- GENERATED FROM PYTHON SOURCE LINES 256-267 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 269-280 -->
 
 ## Step 4: Compute log band-power features
 
@@ -539,7 +554,7 @@ survives a review. Four bands give the linear classifier enough
 spectral signal to clear chance on this contrast; staying with
 only theta + alpha lands on a flat coin-toss.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 269-315 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 282-328 -->
 ```Python
 BANDS: tuple[tuple[float, float], ...] = (
     (4.0, 8.0),  # theta
@@ -592,7 +607,7 @@ print(
 feature matrix=(1772, 280) (log-power per channel for theta, alpha, beta, gamma) | dtype=float32
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 316-322 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 329-335 -->
 
 ## Discovery: feature distributions
 
@@ -601,7 +616,7 @@ spot a dead channel (variance ~ 0) or a saturated band (variance much
 larger than its peers). We inspect the first eight features to keep
 the table short.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 324-328 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 337-341 -->
 ```Python
 feature_names = [f"{band}_{ch}" for band in BAND_NAMES for ch in ch_names]
 features_df = pd.DataFrame(F, columns=feature_names)
@@ -732,7 +747,7 @@ features_df.iloc[:, :8].describe().round(3)
 </div>
 <br />
 <br />
-<!-- GENERATED FROM PYTHON SOURCE LINES 329-337 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 342-350 -->
 
 ## Step 5: 3-fold cross-subject CV with GroupKFold
 
@@ -743,7 +758,7 @@ subject id is the same as the group id of the test windows.
 possible held-out group; we store accuracy and confusion-matrix counts
 per fold.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 339-384 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 352-397 -->
 ```Python
 N_FOLDS = 3
 splitter = GroupKFold(n_splits=N_FOLDS)
@@ -795,7 +810,7 @@ print(
 cross-subject CV: mean=0.547 +/- 0.019 | chance=0.502 | folds=3
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 385-390 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 398-403 -->
 
 ## Result table: per-fold accuracy vs chance
 
@@ -803,7 +818,7 @@ One row per fold so the chance disclosure (E5.43) and the model number
 sit on the same screen. The held-out column is the subject id that
 was *not* in the training fold.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 392-403 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 405-416 -->
 ```Python
 results_df = pd.DataFrame(
     {
@@ -877,7 +892,7 @@ results_df
 </div>
 <br />
 <br />
-<!-- GENERATED FROM PYTHON SOURCE LINES 404-411 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 417-424 -->
 
 **Investigate.** A famous-vs-scrambled split on band-power features
 typically lands in the 0.53-0.60 range with three subjects (chance
@@ -887,7 +902,7 @@ subject id, not the trial id, and that the event mapping has not
 collapsed both classes into one. A number near 0.50 is the honest
 floor; deep models should beat it before anyone reports them.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 413-419 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 426-432 -->
 
 ## Common mistake: training on the held-out fold by accident
 
@@ -896,7 +911,7 @@ the model on the test slice. The fix is mechanical, but the symptom
 is a deceptively high accuracy that the figure below would otherwise
 rubber-stamp. We trigger the slip on purpose and recover.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 421-453 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 434-466 -->
 ```Python
 try:
     sneaky_train_idx, sneaky_test_idx = next(splitter.split(F, y, groups=groups))
@@ -935,7 +950,7 @@ except ValueError as exc:
 Train-on-test (wrong) acc=0.87 | train-on-train (correct) acc=0.57 | gap=+0.30
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 454-465 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 467-478 -->
 
 ## Three-panel diagnostic figure
 
@@ -949,7 +964,7 @@ confuses on the held-out fold. The drawing helpers live in a sibling
 `_baseline_diagnostic` module so the rendering plumbing stays out of
 this tutorial; the call below is the only line that matters.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 467-484 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 480-497 -->
 ```Python
 from _baseline_diagnostic import draw_baseline_diagnostic
 
@@ -969,7 +984,7 @@ fig = draw_baseline_diagnostic(
 plt.show()
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 485-497 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 498-510 -->
 
 **Investigate.** Read the three panels in order.
 
@@ -984,7 +999,7 @@ plt.show()
    deep blue is the win condition; an off-diagonal stripe means the
    model has collapsed onto the majority class.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 499-507 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 512-520 -->
 
 ## Modify
 
@@ -995,7 +1010,7 @@ running: does the mean cross-subject accuracy hold, drop, or rise?
 Wider bands smear the spectral signature so the linear separator has
 less to work with; keep an eye on the mean +/- std band.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 509-520 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 522-533 -->
 
 ## Make
 
@@ -1009,7 +1024,7 @@ If it does not beat the linear baseline, that is the most useful
 finding the project will produce: linear features deserve a linear
 model.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 522-535 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 535-548 -->
 
 ## Wrap-up
 
@@ -1025,7 +1040,7 @@ The cross-subject mean +/- std is the only number worth quoting in a
 benchmark submission; the per-fold table shows whether that mean is
 stable.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 537-549 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 550-562 -->
 
 ## Try it yourself
 
@@ -1040,14 +1055,14 @@ stable.
   show less separation? Does the held-out mean drop below chance, or
   does theta-alpha-beta carry most of the lift on its own?
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 551-556 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 564-569 -->
 
 ## References
 
-See [References](../../../../references.md) for the centralised bibliography of papers
+See [References](../../../../references.md) for the centralized bibliography of papers
 cited above. Add or amend an entry once in
 `docs/source/refs.bib`; every tutorial inherits the update.
 
-**Total running time of the script:** (0 minutes 27.353 seconds)
+**Total running time of the script:** (0 minutes 27.111 seconds)
 
 <a id="sphx-glr-download-generated-auto-examples-tutorials-10-core-workflow-plot-12-train-a-baseline-py"></a>

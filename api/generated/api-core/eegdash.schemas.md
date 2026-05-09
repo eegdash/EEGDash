@@ -318,7 +318,7 @@ Descriptive title of the dataset.
 
 #### canonical_name
 
-Canonical / community-recognised name(s) for the dataset, each a valid
+Canonical / community-recognized name(s) for the dataset, each a valid
 Python identifier (e.g. `["BrainTreeBank"]`, `["SleepEDF",
 "SleepEDFPlus"]`). Used to register importable class aliases alongside
 the `DS…`-style ID. Empty list or `None` means no alias is
@@ -1124,7 +1124,7 @@ external links.
 * **Parameters:**
   * **dataset_id** ([*str*](https://docs.python.org/3/library/stdtypes.html#str)) – Dataset identifier (e.g., “ds001785”).
   * **name** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *,* *optional*) – Dataset title/name.
-  * **canonical_name** ([*list*](https://docs.python.org/3/library/stdtypes.html#list) *[*[*str*](https://docs.python.org/3/library/stdtypes.html#str) *]* *,* *optional*) – Canonical / community-recognised name(s) for the dataset (each a valid
+  * **canonical_name** ([*list*](https://docs.python.org/3/library/stdtypes.html#list) *[*[*str*](https://docs.python.org/3/library/stdtypes.html#str) *]* *,* *optional*) – Canonical / community-recognized name(s) for the dataset (each a valid
     Python identifier, e.g. `["BrainTreeBank"]` or `["SleepEDF",
     "SleepEDFPlus"]`). Used by the dataset class registry to expose
     importable aliases. Empty list or `None` registers no aliases.

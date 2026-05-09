@@ -6,7 +6,9 @@
 
 <a id="sphx-glr-generated-auto-examples-tutorials-10-core-workflow-plot-10-preprocess-and-window-py"></a>
 
-# How do I preprocess EEG and create model-ready windows?
+# Preprocess EEG and create windows
+
+**Difficulty 1-2** | **Runtime: 2m** | **Compute: CPU**
 
 Raw EEG is rarely model-ready: wrong sampling rate, drift and line noise,
 no fixed reference, sporadic large-amplitude bursts, a continuous
@@ -22,7 +24,10 @@ the recording before and after a one-call
 et al. 2015), bad-channel detection, high-pass, and CAR.
 
 <!-- sphinx_gallery_thumbnail_path = '_static/thumbs/plot_10_preprocess_and_window.png' -->
-<!-- GENERATED FROM PYTHON SOURCE LINES 21-28 -->
+
+Keywords: preprocessing, windowing, ASR
+
+<!-- GENERATED FROM PYTHON SOURCE LINES 24-31 -->
 
 ## Learning objectives
 
@@ -32,7 +37,7 @@ et al. 2015), bad-channel detection, high-pass, and CAR.
 - Convert continuous data into fixed-length windows of shape `(n_channels, window_samples)` with [`braindecode.preprocessing.create_fixed_length_windows()`](https://braindecode.org/stable/generated/braindecode.preprocessing.create_fixed_length_windows.html#braindecode.preprocessing.create_fixed_length_windows).
 - Apply [`braindecode.preprocessing.EEGPrep`](https://braindecode.org/stable/generated/braindecode.preprocessing.EEGPrep.html#braindecode.preprocessing.EEGPrep) (an ASR-based one-call pipeline, Mullen et al. 2015) and inspect what it changed on a 4-panel diagnostic figure.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 30-36 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 33-39 -->
 
 ## Requirements
 
@@ -41,11 +46,11 @@ et al. 2015), bad-channel detection, high-pass, and CAR.
 - Prerequisite: `plot_01_first_recording`.
 - Concept: [Preprocessing decisions](../../../../concepts/preprocessing_decisions.md).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 38-39 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 41-42 -->
 
 Setup. Preprocessing is deterministic given the parameters, so no seed.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 39-65 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 42-68 -->
 ```Python
 import matplotlib.pyplot as plt
 import mne
@@ -78,7 +83,7 @@ print(f"eegdash {eegdash.__version__}; cache_dir={CACHE_DIR}")
 eegdash 0.7.2; cache_dir=/home/runner/eegdash_cache
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 66-89 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 69-92 -->
 
 ## Concepts behind preprocessing
 
@@ -104,7 +109,7 @@ Three ideas are worth keeping in mind before any code runs:
    attached. We use both: `raw` for inspection, `preprocess` for
    the pipeline.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 91-122 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 94-125 -->
 
 ## Evidence on what helps and what hurts
 
@@ -138,7 +143,7 @@ ICA or ASR (Mullen et al. 2015; Kothe & Makeig 2013) only after a
 measurement protocol can show they help on *your* downstream task.
 The five steps below are the floor, not the ceiling.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 124-129 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 127-132 -->
 
 ## What can a Raw object do?
 
@@ -146,7 +151,7 @@ Before applying anything, list the methods [`mne.io.Raw`](https://mne.tools/stab
 exposes so the recipe stops feeling magical. Most of the verbs here
 are reused below.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 131-138 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 134-141 -->
 ```Python
 raw_methods = sorted(
     name
@@ -285,7 +290,7 @@ pd.DataFrame({"method": raw_methods}).head(25)
 </div>
 <br />
 <br />
-<!-- GENERATED FROM PYTHON SOURCE LINES 139-148 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 142-151 -->
 
 ## What’s in [`mne.preprocessing`](https://mne.tools/stable/api/preprocessing.html#module-mne.preprocessing)?
 
@@ -297,7 +302,7 @@ helpers, and so on. The [`braindecode.preprocessing.EEGPrep`](https://braindecod
 pass at the end of this tutorial sits next to these as a one-call
 alternative when ASR-style cleanup is needed.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 150-155 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 153-158 -->
 ```Python
 prep_attrs = sorted(
     name for name in dir(mne.preprocessing) if not name.startswith("_")
@@ -434,14 +439,14 @@ pd.DataFrame({"mne.preprocessing": prep_attrs})
 </div>
 <br />
 <br />
-<!-- GENERATED FROM PYTHON SOURCE LINES 156-160 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 159-163 -->
 
 ## Step 1: Load one recording (lazy)
 
 Same idiom as `plot_01`: build the dataset, index in,
 `record.raw` triggers the download and opens the file with MNE.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 162-172 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 165-175 -->
 ```Python
 DATASET = "ds002718"
 SUBJECT = "002"
@@ -455,7 +460,7 @@ raw
 ```
 
 ```none
-[05/08/26 18:41:44] WARNING  File not found on S3, skipping:   downloader.py:163
+[05/09/26 20:24:39] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds002718/sub-0
                              02/eeg/sub-002_task-FaceRecogniti
                              on_eeg.fdt
@@ -609,9 +614,9 @@ this file apply (plus whatever default styling the IDE applies).
 
 
 
-<tr class="mne-repr-section-header general-3c820d7f-4372-4804-ac20-ca5fdacc687e"
+<tr class="mne-repr-section-header general-7c912cfe-d2b0-4804-ae45-48d634e4e8b3"
      title="Hide section"
-    onclick="toggleVisibility('general-3c820d7f-4372-4804-ac20-ca5fdacc687e')">
+    onclick="toggleVisibility('general-7c912cfe-d2b0-4804-ae45-48d634e4e8b3')">
     <th class="mne-repr-section-toggle">
         <button >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
@@ -623,7 +628,7 @@ this file apply (plus whatever default styling the IDE applies).
 </tr>
 
 
-<tr class="repr-element general-3c820d7f-4372-4804-ac20-ca5fdacc687e ">
+<tr class="repr-element general-7c912cfe-d2b0-4804-ae45-48d634e4e8b3 ">
     <td class="mne-repr-section-toggle"></td>
     <td>Filename(s)</td>
     <td>
@@ -634,26 +639,26 @@ this file apply (plus whatever default styling the IDE applies).
     </td>
 </tr>
 
-<tr class="repr-element general-3c820d7f-4372-4804-ac20-ca5fdacc687e ">
+<tr class="repr-element general-7c912cfe-d2b0-4804-ae45-48d634e4e8b3 ">
     <td class="mne-repr-section-toggle"></td>
     <td>MNE object type</td>
     <td>RawEEGLAB</td>
 </tr>
-<tr class="repr-element general-3c820d7f-4372-4804-ac20-ca5fdacc687e ">
+<tr class="repr-element general-7c912cfe-d2b0-4804-ae45-48d634e4e8b3 ">
     <td class="mne-repr-section-toggle"></td>
     <td>Measurement date</td>
 
     <td>Unknown</td>
 
 </tr>
-<tr class="repr-element general-3c820d7f-4372-4804-ac20-ca5fdacc687e ">
+<tr class="repr-element general-7c912cfe-d2b0-4804-ae45-48d634e4e8b3 ">
     <td class="mne-repr-section-toggle"></td>
     <td>Participant</td>
 
 
 
 </tr>
-<tr class="repr-element general-3c820d7f-4372-4804-ac20-ca5fdacc687e ">
+<tr class="repr-element general-7c912cfe-d2b0-4804-ae45-48d634e4e8b3 ">
     <td class="mne-repr-section-toggle"></td>
     <td>Experimenter</td>
 
@@ -668,9 +673,9 @@ this file apply (plus whatever default styling the IDE applies).
 
 
 
-<tr class="mne-repr-section-header acquisition-f5e697d9-7ffe-4775-874b-6df6df9f475f"
+<tr class="mne-repr-section-header acquisition-cd7e5804-3488-40f4-b2f2-0a74ef433a02"
      title="Hide section"
-    onclick="toggleVisibility('acquisition-f5e697d9-7ffe-4775-874b-6df6df9f475f')">
+    onclick="toggleVisibility('acquisition-cd7e5804-3488-40f4-b2f2-0a74ef433a02')">
     <th class="mne-repr-section-toggle">
         <button >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
@@ -682,7 +687,7 @@ this file apply (plus whatever default styling the IDE applies).
 </tr>
 
 
-<tr class="repr-element acquisition-f5e697d9-7ffe-4775-874b-6df6df9f475f ">
+<tr class="repr-element acquisition-cd7e5804-3488-40f4-b2f2-0a74ef433a02 ">
     <td class="mne-repr-section-toggle"></td>
     <td>Duration</td>
     <td>00:49:51 (HH:MM:SS)</td>
@@ -695,14 +700,14 @@ this file apply (plus whatever default styling the IDE applies).
 
 
 
-<tr class="repr-element acquisition-f5e697d9-7ffe-4775-874b-6df6df9f475f ">
+<tr class="repr-element acquisition-cd7e5804-3488-40f4-b2f2-0a74ef433a02 ">
     <td class="mne-repr-section-toggle"></td>
     <td>Sampling frequency</td>
     <td>250.00 Hz</td>
 </tr>
 
 
-<tr class="repr-element acquisition-f5e697d9-7ffe-4775-874b-6df6df9f475f ">
+<tr class="repr-element acquisition-cd7e5804-3488-40f4-b2f2-0a74ef433a02 ">
     <td class="mne-repr-section-toggle"></td>
     <td>Time points</td>
     <td>747,750</td>
@@ -717,9 +722,9 @@ this file apply (plus whatever default styling the IDE applies).
 
 
 
-<tr class="mne-repr-section-header channels-ad629f5e-142d-4f73-958d-95c0c8f6a2cf"
+<tr class="mne-repr-section-header channels-17b42248-df90-4817-ac8e-db5a69315b4d"
      title="Hide section"
-    onclick="toggleVisibility('channels-ad629f5e-142d-4f73-958d-95c0c8f6a2cf')">
+    onclick="toggleVisibility('channels-17b42248-df90-4817-ac8e-db5a69315b4d')">
     <th class="mne-repr-section-toggle">
         <button >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
@@ -732,7 +737,7 @@ this file apply (plus whatever default styling the IDE applies).
 
 
 
-<tr class="repr-element channels-ad629f5e-142d-4f73-958d-95c0c8f6a2cf ">
+<tr class="repr-element channels-17b42248-df90-4817-ac8e-db5a69315b4d ">
     <td class="mne-repr-section-toggle"></td>
     <td>EEG</td>
     <td>
@@ -745,7 +750,7 @@ this file apply (plus whatever default styling the IDE applies).
 </tr>
 
 
-<tr class="repr-element channels-ad629f5e-142d-4f73-958d-95c0c8f6a2cf ">
+<tr class="repr-element channels-17b42248-df90-4817-ac8e-db5a69315b4d ">
     <td class="mne-repr-section-toggle"></td>
     <td>EOG</td>
     <td>
@@ -758,7 +763,7 @@ this file apply (plus whatever default styling the IDE applies).
 </tr>
 
 
-<tr class="repr-element channels-ad629f5e-142d-4f73-958d-95c0c8f6a2cf ">
+<tr class="repr-element channels-17b42248-df90-4817-ac8e-db5a69315b4d ">
     <td class="mne-repr-section-toggle"></td>
     <td>misc</td>
     <td>
@@ -771,7 +776,7 @@ this file apply (plus whatever default styling the IDE applies).
 </tr>
 
 
-<tr class="repr-element channels-ad629f5e-142d-4f73-958d-95c0c8f6a2cf ">
+<tr class="repr-element channels-17b42248-df90-4817-ac8e-db5a69315b4d ">
     <td class="mne-repr-section-toggle"></td>
     <td>Head & sensor digitization</td>
 
@@ -786,9 +791,9 @@ this file apply (plus whatever default styling the IDE applies).
 
 
 
-<tr class="mne-repr-section-header filters-b1825856-fe28-4654-b1d2-29615b004f03"
+<tr class="mne-repr-section-header filters-f3f81c9b-1e99-465e-8467-1b8011cb4821"
      title="Hide section"
-    onclick="toggleVisibility('filters-b1825856-fe28-4654-b1d2-29615b004f03')">
+    onclick="toggleVisibility('filters-f3f81c9b-1e99-465e-8467-1b8011cb4821')">
     <th class="mne-repr-section-toggle">
         <button >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
@@ -800,14 +805,14 @@ this file apply (plus whatever default styling the IDE applies).
 </tr>
 
 
-<tr class="repr-element filters-b1825856-fe28-4654-b1d2-29615b004f03 ">
+<tr class="repr-element filters-f3f81c9b-1e99-465e-8467-1b8011cb4821 ">
     <td class="mne-repr-section-toggle"></td>
     <td>Highpass</td>
     <td>0.00 Hz</td>
 </tr>
 
 
-<tr class="repr-element filters-b1825856-fe28-4654-b1d2-29615b004f03 ">
+<tr class="repr-element filters-f3f81c9b-1e99-465e-8467-1b8011cb4821 ">
     <td class="mne-repr-section-toggle"></td>
     <td>Lowpass</td>
     <td>125.00 Hz</td>
@@ -818,13 +823,13 @@ this file apply (plus whatever default styling the IDE applies).
 </div>
 <br />
 <br />
-<!-- GENERATED FROM PYTHON SOURCE LINES 173-176 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 176-179 -->
 
 **Predict.** What is the shape of `raw.get_data()` for this
 recording? Channels-by-samples, with samples = `sfreq * duration`.
 Write a guess down before peeking.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 178-192 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 181-195 -->
 ```Python
 data_in = raw.get_data()
 pd.DataFrame(
@@ -890,7 +895,7 @@ pd.DataFrame(
 </div>
 <br />
 <br />
-<!-- GENERATED FROM PYTHON SOURCE LINES 193-198 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 196-201 -->
 
 ## Step 2: Set the montage
 
@@ -898,7 +903,7 @@ A montage tells MNE where each electrode sits in 3D. We attach the
 10-20 standard positions; `on_missing="ignore"` leaves non-EEG
 sensors (EOG, ref) untouched.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 200-205 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 203-208 -->
 ```Python
 raw.set_montage("standard_1020", on_missing="ignore")
 montage = raw.get_montage()
@@ -910,7 +915,7 @@ print(f"montage attached: standard_1020 ({n_pos} channel positions)")
 montage attached: standard_1020 (70 channel positions)
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 206-214 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 209-217 -->
 
 ## Step 3: Set an average reference
 
@@ -921,7 +926,7 @@ whole-head montages (Cisotto & Chicco 2024 Tip 5).
 `projection=False` applies it immediately rather than as a lazy
 projector.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 216-219 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 219-222 -->
 ```Python
 raw.set_eeg_reference("average", projection=False)
 print(f"custom_ref_applied={raw.info['custom_ref_applied']}")
@@ -931,7 +936,7 @@ print(f"custom_ref_applied={raw.info['custom_ref_applied']}")
 custom_ref_applied=1 (FIFFV_MNE_CUSTOM_REF_ON)
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 220-232 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 223-235 -->
 
 ## Step 4: Band-pass filter (1-40 Hz, FIR, zero-phase)
 
@@ -946,7 +951,7 @@ single preprocessing choice with the most consistent positive effect
 on downstream task performance. If you have headroom in your time
 domain, try `L_FREQ=0.5` and `L_FREQ=1.5` and compare.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 234-244 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 237-247 -->
 ```Python
 raw.filter(
     l_freq=L_FREQ,
@@ -963,12 +968,12 @@ print(f"highpass={raw.info['highpass']:.2f} Hz, lowpass={raw.info['lowpass']:.2f
 highpass=1.00 Hz, lowpass=40.00 Hz
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 245-247 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 248-250 -->
 
 **Investigate.** Plot the PSD: drift below 1 Hz and the
 high-frequency tail are gone; the alpha bump near 10 Hz survives.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 249-261 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 252-264 -->
 ```Python
 psd = raw.copy().pick("eeg").compute_psd(fmax=80.0, verbose=False)
 fig_psd = psd.plot(picks="eeg", average=True, show=False)
@@ -988,7 +993,7 @@ plt.show()
   fig.subplots_adjust(top=0.84, bottom=0.18, left=0.12, right=0.95)
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 262-269 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 265-272 -->
 
 ## Step 5: Resample to 200 Hz
 
@@ -998,7 +1003,7 @@ memory by a factor of `original_sfreq / 200`, and stays inside
 the set of rates ASR is calibrated for (100, 128, 200, 250, 256,
 300, 500, 512 Hz). We reuse this rate in the EEGPrep pass below.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 271-276 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 274-279 -->
 ```Python
 sfreq_before = raw.info["sfreq"]
 raw.resample(TARGET_SFREQ, verbose=False)
@@ -1011,7 +1016,7 @@ sfreq: 250.0 Hz -> 200.0 Hz
 raw.get_data().shape -> (74, 598200)
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 277-285 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 280-288 -->
 
 ## Step 6: Apply the same recipe to the dataset (and create windows)
 
@@ -1022,7 +1027,7 @@ metadata across recordings). Then
 400-sample windows (`WINDOW_SIZE_S * TARGET_SFREQ`) with stride
 equal to the window size for 0% overlap.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 287-323 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 290-326 -->
 ```Python
 WINDOW_SAMPLES = int(WINDOW_SIZE_S * TARGET_SFREQ)
 preprocess(
@@ -1115,14 +1120,14 @@ pd.DataFrame(
 </div>
 <br />
 <br />
-<!-- GENERATED FROM PYTHON SOURCE LINES 324-328 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 327-331 -->
 
 **Investigate.** `windows[0][0]` is a
 `(n_channels, window_samples)` [`numpy.ndarray`](https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray); each window
 also carries metadata columns (`i_start_in_trial`, `target`,
 …) the next tutorial uses for subject-aware splits.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 330-351 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 333-354 -->
 
 ## Step 7: One-call cleanup with [`EEGPrep`](https://braindecode.org/stable/generated/braindecode.preprocessing.EEGPrep.html#braindecode.preprocessing.EEGPrep)
 
@@ -1146,7 +1151,7 @@ inside [`preprocess()`](https://braindecode.org/stable/generated/braindecode.pre
 direct here so the before/after diagnostic has a clean `Raw` to
 show.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 353-394 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 356-397 -->
 ```Python
 record_pp = EEGDashDataset(
     cache_dir=CACHE_DIR, dataset=DATASET, subject=SUBJECT, task=TASK
@@ -1191,11 +1196,11 @@ pd.DataFrame(
 ```
 
 ```none
-[05/08/26 18:42:01] WARNING  File not found on S3, skipping:   downloader.py:163
+[05/09/26 20:24:56] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds002718/sub-0
                              02/eeg/sub-002_task-FaceRecogniti
                              on_eeg.fdt
-/tmp/tmpp46w_cj3.set
+/tmp/tmpnfxwkh3i.set
 Field 'subject' is missing from the EEG dictionnary, adding it.
 Field 'group' is missing from the EEG dictionnary, adding it.
 Field 'condition' is missing from the EEG dictionnary, adding it.
@@ -1221,10 +1226,10 @@ Field 'etc' is missing from the EEG dictionnary, adding it.
 Field 'datfile' is missing from the EEG dictionnary, adding it.
 Field 'run' is missing from the EEG dictionnary, adding it.
 Field 'roi' is missing from the EEG dictionnary, adding it.
-[05/08/26 18:42:02] INFO     Detecting flat line          clean_artifacts.py:182
+[05/09/26 20:24:58] INFO     Detecting flat line          clean_artifacts.py:182
                              channels...
                     INFO     Applying high‑pass filter... clean_artifacts.py:191
-[05/08/26 18:42:03] INFO     Scanning for bad channels...   clean_channels.py:79
+                    INFO     Scanning for bad channels...   clean_channels.py:79
                     WARNING  clean_channels failed (To    clean_artifacts.py:216
                              use this function most of
                              your channels should have
@@ -1236,7 +1241,7 @@ Field 'roi' is missing from the EEG dictionnary, adding it.
                              data for calibration...
                     INFO     Determining time window        clean_windows.py:115
                              rejection thresholds...
-[05/08/26 18:42:05] INFO     done.                          clean_windows.py:147
+[05/09/26 20:25:00] INFO     done.                          clean_windows.py:147
                     INFO     Keeping 36.9% (11 seconds) of  clean_windows.py:179
                              the data.
                     ERROR    Could not select time windows  clean_windows.py:204
@@ -1252,7 +1257,7 @@ Field 'roi' is missing from the EEG dictionnary, adding it.
                     INFO     Calculating robust geometric median      asr.py:207
                              covariance...
                     INFO     Determining per-component thresholds...  asr.py:227
-[05/08/26 18:42:07] INFO     Thresholds calculation complete.         asr.py:289
+[05/09/26 20:25:03] INFO     Thresholds calculation complete.         asr.py:289
                     INFO     Applying ASR processing...         clean_asr.py:177
                     INFO     Cleaning data in 32 blocks               asr.py:427
                     INFO     Finished cleaning.                       asr.py:546
@@ -1262,7 +1267,7 @@ Field 'roi' is missing from the EEG dictionnary, adding it.
                              windows...
                     INFO     Determining time window        clean_windows.py:115
                              rejection thresholds...
-[05/08/26 18:42:10] INFO     done.                          clean_windows.py:147
+[05/09/26 20:25:05] INFO     done.                          clean_windows.py:147
                     INFO     Keeping 100.0% (30 seconds) of clean_windows.py:179
                              the data.
                     ERROR    Could not select time windows  clean_windows.py:204
@@ -1342,7 +1347,7 @@ Field 'roi' is missing from the EEG dictionnary, adding it.
 </div>
 <br />
 <br />
-<!-- GENERATED FROM PYTHON SOURCE LINES 395-403 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 398-406 -->
 
 ## Step 7b: A four-panel before/after diagnostic
 
@@ -1353,7 +1358,7 @@ before EEGPrep (top-left) next to the same slice afterwards
 (top-right) at identical color limits, the PSD overlay on the
 bottom-left, and a stage-status bar diagram on the bottom-right.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 405-419 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 408-422 -->
 ```Python
 from _eegprep_diagnostic import draw_eegprep_diagnostic  # noqa: E402
 
@@ -1370,7 +1375,7 @@ fig_diag = draw_eegprep_diagnostic(
 plt.show()
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 420-428 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 423-431 -->
 
 Caveat from the evidence above. Kessler et al. (2025) and Delorme
 (2023) both report that automated artefact-correction stages
@@ -1381,7 +1386,7 @@ the configuration in. The class docstring also flags a within-session
 leakage caveat: ASR calibration uses statistics from the whole
 recording, so cross-session protocols are the safer fit.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 430-436 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 433-439 -->
 
 ## A common mistake, and how to recover
 
@@ -1390,7 +1395,7 @@ a frequent slip when porting a recipe across recordings with
 different sampling rates. MNE catches it with a `ValueError`; we
 trigger it on purpose so the failure mode is visible.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 438-447 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 441-450 -->
 ```Python
 try:
     raw.copy().filter(l_freq=L_FREQ, h_freq=raw.info["sfreq"], verbose=False)
@@ -1407,7 +1412,7 @@ Caught ValueError: h_freq ([200.]) must be less than the Nyquist frequency 100.0
 Recovery: keep h_freq < Nyquist (100.0 Hz at sfreq=200 Hz).
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 448-455 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 451-458 -->
 
 ## Modify
 
@@ -1417,7 +1422,7 @@ disappear; explain why in one sentence. Then rerun Step 7 with
 `burst_removal_cutoff=20.0` and watch the bad-window annotations
 shrink as ASR turns more conservative.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 457-465 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 460-468 -->
 
 ## Mini-project
 
@@ -1428,7 +1433,7 @@ inside [`preprocess()`](https://braindecode.org/stable/generated/braindecode.pre
 whole-cohort pass replays the same configuration across every
 recording in the dataset.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 467-477 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 470-480 -->
 
 ## Try it yourself
 
@@ -1441,14 +1446,14 @@ recording in the dataset.
   session without re-running preprocessing (covered in
   /auto_examples/tutorials/10_core_workflow/plot_13_save_and_reuse_prepared_data).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 479-484 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 482-487 -->
 
 ## References
 
-See [References](../../../../references.md) for the centralised bibliography of papers
+See [References](../../../../references.md) for the centralized bibliography of papers
 cited above. Add or amend an entry once in
 `docs/source/refs.bib`; every tutorial inherits the update.
 
-**Total running time of the script:** (0 minutes 27.225 seconds)
+**Total running time of the script:** (0 minutes 27.573 seconds)
 
 <a id="sphx-glr-download-generated-auto-examples-tutorials-10-core-workflow-plot-10-preprocess-and-window-py"></a>

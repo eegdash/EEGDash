@@ -15,11 +15,11 @@ The advice below is consistent with Tip 9 of Cisotto & Chicco (2024) <sup>[1](#i
 which explicitly identifies subject-aware cross-validation as the only
 defensible default for clinical EEG. Tutorials that demonstrate the
 problem live in
-[How do I split EEG data without subject leakage?](../generated/auto_examples/tutorials/10_core_workflow/plot_11_leakage_safe_split.md),
-[When is within-subject decoding the right scientific question?](../generated/auto_examples/tutorials/50_evaluation/plot_50_within_subject_evaluation.md),
-[How well does an EEG decoder generalise to a never-seen subject?](../generated/auto_examples/tutorials/50_evaluation/plot_51_cross_subject_evaluation.md),
+[Split EEG without subject leakage](../generated/auto_examples/tutorials/10_core_workflow/plot_11_leakage_safe_split.md),
+[Within-subject decoding evaluation](../generated/auto_examples/tutorials/50_evaluation/plot_50_within_subject_evaluation.md),
+[Cross-subject decoding evaluation](../generated/auto_examples/tutorials/50_evaluation/plot_51_cross_subject_evaluation.md),
 and
-[How much does a within-session decoder drift across sessions of the same subject?](../generated/auto_examples/tutorials/50_evaluation/plot_52_cross_session_evaluation.md).
+[Cross-session decoding evaluation](../generated/auto_examples/tutorials/50_evaluation/plot_52_cross_session_evaluation.md).
 
 ## Why subject leakage destroys generalization claims
 
@@ -27,13 +27,13 @@ EEG signals carry strong, idiosyncratic, *subject-specific* statistics:
 skull thickness, hair impedance, electrode placement, baseline alpha
 power, blink habits, posture. A neural network with a few thousand free
 parameters easily latches onto those identity features because they
-generalise perfectly within a subject — every window from subject A
+generalize perfectly within a subject — every window from subject A
 “smells like” subject A.
 
 Now imagine a binary decoder for “eyes open vs. eyes closed”. You shuffle
 all windows across all subjects and split 80/20 randomly. The classifier
 quickly discovers that a few windows from each subject are in the test
-set, and its best strategy is to memorise the spectral fingerprint of
+set, and its best strategy is to memorize the spectral fingerprint of
 subject A and reuse it for the held-out windows from subject A. It then
 reports an apparent accuracy of, say, 0.94. Unfortunately, this number
 is a lower-bounded *identification* accuracy plus the actual condition
@@ -51,7 +51,7 @@ A *window* is a short, overlapping slice of a recording. If you make
 2-second windows with 50% overlap, neighbouring windows share a full
 second of samples; their feature vectors differ only by smoothing. When
 you assign one to “train” and the other to “test”, the test score is
-almost a noise estimate, not a generalisation estimate.
+almost a noise estimate, not a generalization estimate.
 
 This problem exists on top of the subject leakage problem: even within a
 single subject, randomising windows leaks information across the train/
@@ -70,7 +70,7 @@ independently.
 
 ## Within-subject vs. cross-session vs. cross-subject
 
-These three terms describe what kind of generalisation you are claiming
+These three terms describe what kind of generalization you are claiming
 to measure. They differ in which axis the held-out fold spans:
 
 - **Within-subject** evaluation holds out *time* within a single
@@ -86,7 +86,7 @@ to measure. They differ in which axis the held-out fold spans:
   any real-world deployment where calibration is rare.
 - **Cross-subject** evaluation holds out *different participants*.
   Train on subjects A–T, test on subjects U–Z. Answer: *does the model
-  generalise to a person it has never seen?* This is the standard for
+  generalize to a person it has never seen?* This is the standard for
   any “subject-invariant” or “foundation-model” claim.
 
 Each setting answers a different scientific question, so neither one is
@@ -105,7 +105,7 @@ honest work even if the number is lower.
 2. Treat the split function as part of the experiment, not a utility.
    Print, log, and version-control the participants in each fold.
    Tutorials such as
-   [How do I split EEG data without subject leakage?](../generated/auto_examples/tutorials/10_core_workflow/plot_11_leakage_safe_split.md)
+   [Split EEG without subject leakage](../generated/auto_examples/tutorials/10_core_workflow/plot_11_leakage_safe_split.md)
    include an audit step that verifies disjointness.
 3. Pick a splitter that matches your scientific question — within-subject,
    cross-session, or cross-subject. If you cannot decide, default to
@@ -138,16 +138,16 @@ When you see one of those, re-read this page and re-check the splitter.
 
 ## Related tutorials
 
-- [How do I split EEG data without subject leakage?](../generated/auto_examples/tutorials/10_core_workflow/plot_11_leakage_safe_split.md)
+- [Split EEG without subject leakage](../generated/auto_examples/tutorials/10_core_workflow/plot_11_leakage_safe_split.md)
   is the canonical demonstration of leaky vs. safe splits on EEGDash data.
-- [When is within-subject decoding the right scientific question?](../generated/auto_examples/tutorials/50_evaluation/plot_50_within_subject_evaluation.md),
-  [How well does an EEG decoder generalise to a never-seen subject?](../generated/auto_examples/tutorials/50_evaluation/plot_51_cross_subject_evaluation.md),
+- [Within-subject decoding evaluation](../generated/auto_examples/tutorials/50_evaluation/plot_50_within_subject_evaluation.md),
+  [Cross-subject decoding evaluation](../generated/auto_examples/tutorials/50_evaluation/plot_51_cross_subject_evaluation.md),
   and
-  [How much does a within-session decoder drift across sessions of the same subject?](../generated/auto_examples/tutorials/50_evaluation/plot_52_cross_session_evaluation.md)
+  [Cross-session decoding evaluation](../generated/auto_examples/tutorials/50_evaluation/plot_52_cross_session_evaluation.md)
   show the same dataset evaluated under each protocol.
-- [How does decoding accuracy scale with training-set size, and where does the curve plateau?](../generated/auto_examples/tutorials/50_evaluation/plot_53_learning_curves.md)
+- [Decoding accuracy learning curves](../generated/auto_examples/tutorials/50_evaluation/plot_53_learning_curves.md)
   illustrates how leakage interacts with sample-size effects.
-- [Is Pipeline A really better than Pipeline B, or did it luck out on one subject?](../generated/auto_examples/tutorials/50_evaluation/plot_54_compare_two_pipelines.md)
+- [Compare two decoding pipelines](../generated/auto_examples/tutorials/50_evaluation/plot_54_compare_two_pipelines.md)
   shows how to compare pipelines once a defensible split is in place.
 
 ## Further reading

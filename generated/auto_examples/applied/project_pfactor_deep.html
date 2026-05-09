@@ -7,18 +7,18 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta property="og:title" content="Predict p-factor from EEG with a Braindecode model (deep-learning regime)" />
+<meta property="og:title" content="Predict p-factor with deep learning" />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://eegdash.org/generated/auto_examples/applied/project_pfactor_deep.html" />
 <meta property="og:site_name" content="EEG Dash" />
-<meta property="og:description" content="This is the deep-learning case study for the p-factor regression project. The companion script project_pfactor_features.py covers the feature-based…" />
+<meta property="og:description" content="Difficulty 3| Runtime: 25s| Compute: GPU Recommended This is the deep-learning case study for the p-factor regression project. The companion script…" />
 <meta property="og:image" content="https://eegdash.org/_static/eegdash_social_card.png" />
 <meta property="og:image:alt" content="EEG Dash — data-sharing interface for M/EEG datasets" />
-<meta name="description" content="This is the deep-learning case study for the p-factor regression project. The companion script project_pfactor_features.py covers the feature-based…" />
+<meta name="description" content="Difficulty 3| Runtime: 25s| Compute: GPU Recommended This is the deep-learning case study for the p-factor regression project. The companion script…" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@eegdash" />
 
-    <title>Predict p-factor from EEG with a Braindecode model (deep-learning regime) &#8212; EEG Dash</title>
+    <title>Predict p-factor with deep learning &#8212; EEG Dash</title>
   
   
   
@@ -74,8 +74,8 @@
     <link rel="icon" href="../../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="Predicting p-factor from EEG with hand-crafted features (project starter)" href="project_pfactor_features.html" />
-    <link rel="prev" title="Cross-cohort P3 transfer with AS-MMD: train on one oddball, deploy on another" href="project_p300_transfer.html" />
+    <link rel="next" title="Predict p-factor from EEG features" href="project_pfactor_features.html" />
+    <link rel="prev" title="P300 transfer with AS-MMD" href="project_p300_transfer.html" />
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="0.7" />
 
@@ -563,7 +563,7 @@
     
     <li class="breadcrumb-item"><a href="index.html" class="nav-link">Applied Research Projects</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Predict p-factor from EEG with a Braindecode model (deep-learning regime)</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Predict p-factor with deep learning</span></li>
   </ul>
 </nav>
 </div>
@@ -585,8 +585,9 @@
 <p><a class="reference internal" href="#sphx-glr-download-generated-auto-examples-applied-project-pfactor-deep-py"><span class="std std-ref">Go to the end</span></a>
 to download the full example code or to run this example in your browser via Binder.</p>
 </div>
-<section class="sphx-glr-example-title" id="predict-p-factor-from-eeg-with-a-braindecode-model-deep-learning-regime">
-<span id="sphx-glr-generated-auto-examples-applied-project-pfactor-deep-py"></span><h1>Predict p-factor from EEG with a Braindecode model (deep-learning regime)<a class="headerlink" href="#predict-p-factor-from-eeg-with-a-braindecode-model-deep-learning-regime" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">8 minutes</span></div>
+<section class="sphx-glr-example-title" id="predict-p-factor-with-deep-learning">
+<span id="sphx-glr-generated-auto-examples-applied-project-pfactor-deep-py"></span><h1>Predict p-factor with deep learning<a class="headerlink" href="#predict-p-factor-with-deep-learning" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">8 minutes</span></div>
+<p><strong>Difficulty 3</strong> | <strong>Runtime: 25s</strong> | <strong>Compute: GPU Recommended</strong></p>
 <p>This is the deep-learning case study for the p-factor regression
 project. The companion script <code class="docutils literal notranslate"><span class="pre">project_pfactor_features.py</span></code> covers
 the feature-based regime; this one trains
@@ -603,7 +604,8 @@ mirroring cousin tutorial plot_73: train from scratch, fine-tune a
 pretrained Braindecode encoder (Schirrmeister et al. 2017,
 doi:10.1002/hbm.23730), and read back where the network looks. The
 deliverable is a 3-panel figure plus printed metrics. So can a small
-EEGConformer beat the train-mean predictor on held-out subjects?</p>
+EEGConformer beat the train-mean predictor on held-out subjects?
+Keywords: deep-learning, applied, p-factor</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span>
 </pre></div>
 </div>
@@ -615,6 +617,20 @@ EEGConformer beat the train-mean predictor on held-out subjects?</p>
 <li><p>build a strict cross-subject split before any windowing happens.</p></li>
 <li><p>train <a class="reference external" href="https://braindecode.org/stable/generated/braindecode.models.EEGConformer.html#braindecode.models.EEGConformer" title="(in Braindecode v1.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">braindecode.models.EEGConformer</span></code></a> end-to-end with AdamW.</p></li>
 <li><p>read a 3-panel figure: curves, predicted-vs-true scatter, saliency.</p></li>
+</ul>
+</section>
+<section id="validate-your-result">
+<h2>Validate your result<a class="headerlink" href="#validate-your-result" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Metric Interpretation.</strong> R^2 (Coefficient of Determination) tells you
+what fraction of p-factor variance is explained by the EEG. MAE tells you
+the average error in p-factor units.</p></li>
+<li><p><strong>Baseline Expectations.</strong> A deep model should at minimum outperform a
+<code class="docutils literal notranslate"><span class="pre">median_baseline</span></code> (always predicting the training set median). If R^2
+is negative, the model is worse than the median predictor.</p></li>
+<li><p><strong>Split Guidance.</strong> Always use a subject-disjoint split. If your data
+spans multiple sites, consider a <strong>site-disjoint split</strong> to ensure the
+model isn’t just learning site-specific noise.</p></li>
 </ul>
 </section>
 <section id="requirements">
@@ -629,10 +645,10 @@ real ds005505 windows on the HBN path (cached after first run).</p></li>
 <li><p><strong>Concept page</strong>: <a class="reference internal" href="../../../concepts/leakage_and_evaluation.html"><span class="doc">Leakage and evaluation</span></a>.</p></li>
 </ul>
 </section>
-<section id="step-1-setup-seeding-e3-21-parametrised-cache-e3-24">
-<h2>Step 1. Setup, seeding (E3.21), parametrised cache (E3.24)<a class="headerlink" href="#step-1-setup-seeding-e3-21-parametrised-cache-e3-24" title="Link to this heading">#</a></h2>
+<section id="step-1-setup-seeding-e3-21-parameterized-cache-e3-24">
+<h2>Step 1. Setup, seeding (E3.21), parameterized cache (E3.24)<a class="headerlink" href="#step-1-setup-seeding-e3-21-parameterized-cache-e3-24" title="Link to this heading">#</a></h2>
 <p>Numpy and torch seeds make the printed metrics and the rendered curves
-byte-stable across reruns. The cache dir is parametrised through the
+byte-stable across reruns. The cache dir is parameterized through the
 <code class="docutils literal notranslate"><span class="pre">EEGDASH_CACHE</span></code> env var so HPC and local runs share one prepared
 windowed dataset.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
@@ -694,17 +710,17 @@ beat the train-set mean on never-seen subjects?”</p>
     <span class="n">drop_last_window</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">preload</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Below we synthesise a Challenge-shaped windowed table with the same
+<p>Below we synthesize a Challenge-shaped windowed table with the same
 column layout so the gallery runs offline (E3.24).</p>
 </section>
-<section id="step-3-synthesise-a-challenge-shaped-windowed-table">
-<h2>Step 3. Synthesise a Challenge-shaped windowed table<a class="headerlink" href="#step-3-synthesise-a-challenge-shaped-windowed-table" title="Link to this heading">#</a></h2>
+<section id="step-3-synthesize-a-challenge-shaped-windowed-table">
+<h2>Step 3. Synthesize a Challenge-shaped windowed table<a class="headerlink" href="#step-3-synthesize-a-challenge-shaped-windowed-table" title="Link to this heading">#</a></h2>
 <p>18 subjects, 24 windows each, 8 channels, 200 samples per 2 s window
 at 100 Hz. p_factor lives at subject level (one score per subject,
 replicated per window). A faint 10 Hz signal hides in Cz and E62 (the
 central and parietal midline); everything else is i.i.d. Gaussian
 noise plus a per-subject offset that the cross-subject split must NOT
-let the network memorise.</p>
+let the network memorize.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">N_SUBJECTS</span><span class="p">,</span> <span class="n">N_WINDOWS</span> <span class="o">=</span> <span class="mi">18</span><span class="p">,</span> <span class="mi">24</span>
 <span class="n">N_CHANS</span><span class="p">,</span> <span class="n">N_TIMES</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">200</span>
 <span class="n">SFREQ</span> <span class="o">=</span> <span class="mf">100.0</span>
@@ -722,7 +738,7 @@ let the network memorise.</p>
         <span class="n">carrier</span> <span class="o">=</span> <span class="mf">0.30</span> <span class="o">*</span> <span class="n">p</span> <span class="o">*</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.sin.html#numpy.sin" title="numpy.sin" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-data"><span class="n">np</span><span class="o">.</span><span class="n">sin</span></a><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <a href="https://numpy.org/doc/stable/reference/constants.html#numpy.pi" title="numpy.pi" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-data"><span class="n">np</span><span class="o">.</span><span class="n">pi</span></a> <span class="o">*</span> <span class="mf">10.0</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.float32" title="numpy.float32" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-attribute"><span class="n">np</span><span class="o">.</span><span class="n">float32</span></a><span class="p">)</span>
         <span class="n">base</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="n">carrier</span>
         <span class="n">base</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+=</span> <span class="mf">0.85</span> <span class="o">*</span> <span class="n">carrier</span>
-        <span class="c1"># Subject identity offset that a leaky split would memorise.</span>
+        <span class="c1"># Subject identity offset that a leaky split would memorize.</span>
         <span class="n">base</span> <span class="o">+=</span> <a href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.float32" title="numpy.float32" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-attribute"><span class="n">np</span><span class="o">.</span><span class="n">float32</span></a><span class="p">(</span><span class="n">bias</span><span class="p">)</span>
         <span class="n">X_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">base</span><span class="p">)</span>
         <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
@@ -893,7 +909,7 @@ which channel-time region it reads. The scatter panel aggregates val
 predictions to one point per held-out subject; the saliency panel
 averages <code class="docutils literal notranslate"><span class="pre">|grad</span> <span class="pre">x|</span></code> over the highest-confidence test windows, so
 the heatmap tells you whether the network read the carrier we hid in
-Cz/E62 or just memorised the per-subject offset (Schirrmeister et
+Cz/E62 or just memorized the per-subject offset (Schirrmeister et
 al. 2017, doi:10.1002/hbm.23730).</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">compute_saliency</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">X_va_t</span><span class="p">,</span> <span class="n">y_va_t</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">top_frac</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;|grad x|, averaged over the top-confidence half of val windows.&quot;&quot;&quot;</span>
@@ -1009,7 +1025,7 @@ compare best_val_r with the from-scratch run from this script.</p></li>
 </section>
 <section id="references">
 <h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
-<p>See <a class="reference internal" href="../../../references.html"><span class="doc">References</span></a> for the centralised bibliography of papers
+<p>See <a class="reference internal" href="../../../references.html"><span class="doc">References</span></a> for the centralized bibliography of papers
 cited above. Add or amend an entry once in
 <code class="file docutils literal notranslate"><span class="pre">docs/source/refs.bib</span></code>; every tutorial inherits the update.</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-auto-examples-applied-project-pfactor-deep-py">
@@ -1046,7 +1062,7 @@ cited above. Add or amend an entry once in
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Cross-cohort P3 transfer with AS-MMD: train on one oddball, deploy on another</p>
+        <p class="prev-next-title">P300 transfer with AS-MMD</p>
       </div>
     </a>
     <a class="right-next"
@@ -1054,7 +1070,7 @@ cited above. Add or amend an entry once in
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Predicting p-factor from EEG with hand-crafted features (project starter)</p>
+        <p class="prev-next-title">Predict p-factor from EEG features</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -1078,10 +1094,11 @@ cited above. Add or amend an entry once in
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">Learning objectives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#validate-your-result">Validate your result</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#requirements">Requirements</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-setup-seeding-e3-21-parametrised-cache-e3-24">Step 1. Setup, seeding (E3.21), parametrised cache (E3.24)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-setup-seeding-e3-21-parameterized-cache-e3-24">Step 1. Setup, seeding (E3.21), parameterized cache (E3.24)</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-the-mental-model-and-the-production-data-path">Step 2. The mental model and the production data path</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-synthesise-a-challenge-shaped-windowed-table">Step 3. Synthesise a Challenge-shaped windowed table</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-synthesize-a-challenge-shaped-windowed-table">Step 3. Synthesize a Challenge-shaped windowed table</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-4-predict-what-r-should-chance-look-like">Step 4. Predict: what r should chance look like?</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-5-cross-subject-split-before-windowing">Step 5. Cross-subject split before windowing</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-6-configure-eegconformer-for-regression">Step 6. Configure EEGConformer for regression</a></li>

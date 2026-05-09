@@ -7,18 +7,18 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta property="og:title" content="Exploring Braindecode’s BIDSDataset" />
+<meta property="og:title" content="[Developer Only] Exploring Braindecode’s BIDSDataset" />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://eegdash.org/generated/auto_examples/dev_scripts/debug_pybids_braindecode.html" />
 <meta property="og:site_name" content="EEG Dash" />
-<meta property="og:description" content="Tests showing BIDSDataset not able to handle example EEGLAB dataset and slower than pybids Tests showing pybids utilities as well as limitations…" />
+<meta property="og:description" content="Note for Developers. This script is an internal debugging catalogue for mapping PyBIDS and Braindecode behavior. It is not part of the public learning…" />
 <meta property="og:image" content="https://eegdash.org/_static/eegdash_social_card.png" />
 <meta property="og:image:alt" content="EEG Dash — data-sharing interface for M/EEG datasets" />
-<meta name="description" content="Tests showing BIDSDataset not able to handle example EEGLAB dataset and slower than pybids Tests showing pybids utilities as well as limitations…" />
+<meta name="description" content="Note for Developers. This script is an internal debugging catalogue for mapping PyBIDS and Braindecode behavior. It is not part of the public learning…" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@eegdash" />
 
-    <title>Exploring Braindecode’s BIDSDataset &#8212; EEG Dash</title>
+    <title>[Developer Only] Exploring Braindecode’s BIDSDataset &#8212; EEG Dash</title>
   
   
   
@@ -559,7 +559,7 @@
     
     <li class="breadcrumb-item"><a href="index.html" class="nav-link">Dev scripts for EEGDash</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Exploring Braindecode’s BIDSDataset</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">[Developer Only] Exploring Braindecode’s BIDSDataset</span></li>
   </ul>
 </nav>
 </div>
@@ -581,8 +581,12 @@
 <p><a class="reference internal" href="#sphx-glr-download-generated-auto-examples-dev-scripts-debug-pybids-braindecode-py"><span class="std std-ref">Go to the end</span></a>
 to download the full example code or to run this example in your browser via Binder.</p>
 </div>
-<section class="sphx-glr-example-title" id="exploring-braindecode-s-bidsdataset">
-<span id="pybids-bidsdataset-demo"></span><span id="sphx-glr-generated-auto-examples-dev-scripts-debug-pybids-braindecode-py"></span><h1>Exploring Braindecode’s BIDSDataset<a class="headerlink" href="#exploring-braindecode-s-bidsdataset" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">2 minutes</span></div>
+<section class="sphx-glr-example-title" id="developer-only-exploring-braindecode-s-bidsdataset">
+<span id="pybids-bidsdataset-demo"></span><span id="sphx-glr-generated-auto-examples-dev-scripts-debug-pybids-braindecode-py"></span><h1>[Developer Only] Exploring Braindecode’s BIDSDataset<a class="headerlink" href="#developer-only-exploring-braindecode-s-bidsdataset" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">2 minutes</span></div>
+<p><strong>Note for Developers.</strong> This script is an internal debugging catalogue for
+mapping PyBIDS and Braindecode behavior. It is not part of the public
+learning path. For standard data-loading workflows, users should prefer
+the <span class="xref std std-doc">/auto_examples/tutorials/00_start_here/index</span> tutorials.</p>
 <p>Tests showing BIDSDataset not able to handle example EEGLAB dataset and slower than pybids</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <a href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="pathlib.Path" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">Path</span></a>
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>

@@ -7,18 +7,18 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta property="og:title" content="How do I split EEG data without subject leakage?" />
+<meta property="og:title" content="Split EEG without subject leakage" />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://eegdash.org/generated/auto_examples/tutorials/10_core_workflow/plot_11_leakage_safe_split.html" />
 <meta property="og:site_name" content="EEG Dash" />
-<meta property="og:description" content="Random window splits on cross-subject EEG decoders post training-set accuracy near 99% and collapse on a held-out participant. The reason is not exotic:…" />
+<meta property="og:description" content="Difficulty 1-2| Runtime: 30s| Compute: CPU Random window splits on cross-subject EEG decoders post training-set accuracy near 99% and collapse on a…" />
 <meta property="og:image" content="https://eegdash.org/_static/eegdash_social_card.png" />
 <meta property="og:image:alt" content="EEG Dash — data-sharing interface for M/EEG datasets" />
-<meta name="description" content="Random window splits on cross-subject EEG decoders post training-set accuracy near 99% and collapse on a held-out participant. The reason is not exotic:…" />
+<meta name="description" content="Difficulty 1-2| Runtime: 30s| Compute: CPU Random window splits on cross-subject EEG decoders post training-set accuracy near 99% and collapse on a…" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@eegdash" />
 
-    <title>How do I split EEG data without subject leakage? &#8212; EEG Dash</title>
+    <title>Split EEG without subject leakage &#8212; EEG Dash</title>
   
   
   
@@ -74,8 +74,8 @@
     <link rel="icon" href="../../../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" />
-    <link rel="next" title="How do I train a leakage-safe baseline classifier on EEG?" href="plot_12_train_a_baseline.html" />
-    <link rel="prev" title="How do I preprocess EEG and create model-ready windows?" href="plot_10_preprocess_and_window.html" />
+    <link rel="next" title="Train a leakage-safe baseline" href="plot_12_train_a_baseline.html" />
+    <link rel="prev" title="Preprocess EEG and create windows" href="plot_10_preprocess_and_window.html" />
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="0.7" />
 
@@ -563,7 +563,7 @@
     
     <li class="breadcrumb-item"><a href="index.html" class="nav-link">Core Decoding Workflow</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">How do I split EEG data without subject leakage?</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Split EEG without subject leakage</span></li>
   </ul>
 </nav>
 </div>
@@ -585,13 +585,14 @@
 <p><a class="reference internal" href="#sphx-glr-download-generated-auto-examples-tutorials-10-core-workflow-plot-11-leakage-safe-split-py"><span class="std std-ref">Go to the end</span></a>
 to download the full example code or to run this example in your browser via Binder.</p>
 </div>
-<section class="sphx-glr-example-title" id="how-do-i-split-eeg-data-without-subject-leakage">
-<span id="sphx-glr-generated-auto-examples-tutorials-10-core-workflow-plot-11-leakage-safe-split-py"></span><h1>How do I split EEG data without subject leakage?<a class="headerlink" href="#how-do-i-split-eeg-data-without-subject-leakage" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">15 minutes</span></div>
+<section class="sphx-glr-example-title" id="split-eeg-without-subject-leakage">
+<span id="sphx-glr-generated-auto-examples-tutorials-10-core-workflow-plot-11-leakage-safe-split-py"></span><h1>Split EEG without subject leakage<a class="headerlink" href="#split-eeg-without-subject-leakage" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">15 minutes</span></div>
+<p><strong>Difficulty 1-2</strong> | <strong>Runtime: 30s</strong> | <strong>Compute: CPU</strong></p>
 <p>Random window splits on cross-subject EEG decoders post training-set
 accuracy near 99% and collapse on a held-out participant. The reason is
 not exotic: every recording produces hundreds of overlapping windows
 from the same brain, so a uniform shuffle scatters each subject across
-both train and test, and the model memorises subject-level fingerprints
+both train and test, and the model memorizes subject-level fingerprints
 (heart-rate, alpha amplitude, electrode impedance) instead of the task
 we actually want to decode.</p>
 <p>This tutorial shows the failure first on synthetic windows, then
@@ -603,7 +604,8 @@ data leakage in roughly half. Cisotto &amp; Chicco 2024 (Tip 9) name this
 the most common evaluation pitfall in clinical EEG; the MOABB benchmark
 <span class="bibtex-citation" id="id1">[<a class="reference internal" href="../../../../references.html#id35" title="Bruno Aristimunha, Raphael Y. de Camargo, Walter H. Lopez Pinaya, Sylvain Chevallier, Alexandre Gramfort, and Cedric Rommel. Evaluating the structure of cognitive tasks with transfer learning. 2023. arXiv preprint. doi:10.48550/arXiv.2308.02408.">Aristimunha <em>et al.</em>, 2023</a>]</span> uses the cross-subject protocol throughout.</p>
 <p>So why does a random window split look great on paper, and which
-column of the metadata table do you actually have to hold out?</p>
+column of the metadata table do you actually have to hold out?
+Keywords: evaluation, leakage, splitting</p>
 <section id="learning-objectives">
 <h2>Learning objectives<a class="headerlink" href="#learning-objectives" title="Link to this heading">#</a></h2>
 <ul class="simple">
@@ -674,6 +676,17 @@ window by its <code class="docutils literal notranslate"><span class="pre">subje
 <code class="docutils literal notranslate"><span class="pre">CrossSubjectSplitter</span></code>) put each subject in exactly one test fold.
 <code class="xref py py-mod docutils literal notranslate"><span class="pre">eegdash.splits</span></code> wraps both behind one entry point, persists the
 manifest, and emits a JSON line a runtime validator can grep for.</p>
+</section>
+<section id="validate-your-result">
+<h2>Validate your result<a class="headerlink" href="#validate-your-result" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Leakage Check.</strong> After splitting, run <code class="docutils literal notranslate"><span class="pre">assert_no_leakage(train_ids,</span> <span class="pre">test_ids)</span></code>.
+This should raise no error and return <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+<li><p><strong>Leakage Report.</strong> The <code class="docutils literal notranslate"><span class="pre">leakage_report</span></code> JSON should show zero overlapping
+subjects.</p></li>
+<li><p><strong>Accuracy Gap.</strong> Expect the naive random split to outperform the
+leakage-safe split by 10-30 points (the “leakage tax”).</p></li>
+</ul>
 </section>
 <section id="step-1-build-a-windows-metadata-table-for-12-subjects">
 <h2>Step 1. Build a windows metadata table for 12 subjects<a class="headerlink" href="#step-1-build-a-windows-metadata-table-for-12-subjects" title="Link to this heading">#</a></h2>
@@ -851,8 +864,8 @@ and call it a day.</p>
 </div>
 <br />
 <br /><p><strong>Investigate.</strong> Almost every subject sits on both sides of the split.
-A classifier trained here can memorise the alpha-rhythm fingerprint
-of subject 03 and recognise it again on subject 03’s test windows.
+A classifier trained here can memorize the alpha-rhythm fingerprint
+of subject 03 and recognize it again on subject 03’s test windows.
 The accuracy is a subject-identification score, not a task-decoding
 score; deployment on a new participant collapses to chance.</p>
 </section>
@@ -1165,7 +1178,7 @@ count, spot a class-imbalance outlier, and group by anything.</p>
 <section id="step-6-materialise-one-fold-and-persist-the-manifest">
 <h2>Step 6. Materialise one fold and persist the manifest<a class="headerlink" href="#step-6-materialise-one-fold-and-persist-the-manifest" title="Link to this heading">#</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">apply_split_manifest</span></code> returns a boolean mask
-for any fold; the manifest serialises to plain JSON, the BIDS-style
+for any fold; the manifest serializes to plain JSON, the BIDS-style
 “split metadata” Pernet et al. 2019 advocate sharing alongside
 derivatives. The same call signature works on a
 <a class="reference external" href="https://braindecode.org/stable/generated/braindecode.datasets.BaseConcatDataset.html#braindecode.datasets.BaseConcatDataset" title="(in Braindecode v1.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">braindecode.datasets.BaseConcatDataset</span></code></a> of
@@ -1430,7 +1443,7 @@ the split rule changed.</p>
 <h2>Quick alternative: GroupShuffleSplit for a single test split<a class="headerlink" href="#quick-alternative-groupshufflesplit-for-a-single-test-split" title="Link to this heading">#</a></h2>
 <p>For “give me one train/test split right now”, <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GroupShuffleSplit.html#sklearn.model_selection.GroupShuffleSplit" title="(in scikit-learn v1.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.model_selection.GroupShuffleSplit</span></code></a>
 keyed on <code class="docutils literal notranslate"><span class="pre">subject</span></code> gives a single subject-disjoint pair. The
-folds list above is the N-fold generalisation.</p>
+folds list above is the N-fold generalization.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <a href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GroupShuffleSplit.html#sklearn.model_selection.GroupShuffleSplit" title="sklearn.model_selection.GroupShuffleSplit" class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-class"><span class="n">GroupShuffleSplit</span></a>
 
 <a href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GroupShuffleSplit.html#sklearn.model_selection.GroupShuffleSplit" title="sklearn.model_selection.GroupShuffleSplit" class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">gss</span></a> <span class="o">=</span> <a href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GroupShuffleSplit.html#sklearn.model_selection.GroupShuffleSplit" title="sklearn.model_selection.GroupShuffleSplit" class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-class"><span class="n">GroupShuffleSplit</span></a><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">SEED</span></a><span class="p">)</span>
@@ -1545,7 +1558,7 @@ for the cross-subject manifest (different invariant).</p></li>
 </section>
 <section id="references">
 <h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
-<p>See <a class="reference internal" href="../../../../references.html"><span class="doc">References</span></a> for the centralised bibliography of papers
+<p>See <a class="reference internal" href="../../../../references.html"><span class="doc">References</span></a> for the centralized bibliography of papers
 cited above. Add or amend an entry once in
 <code class="file docutils literal notranslate"><span class="pre">docs/source/refs.bib</span></code>; every tutorial inherits the update.</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-auto-examples-tutorials-10-core-workflow-plot-11-leakage-safe-split-py">
@@ -1582,7 +1595,7 @@ cited above. Add or amend an entry once in
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">How do I preprocess EEG and create model-ready windows?</p>
+        <p class="prev-next-title">Preprocess EEG and create windows</p>
       </div>
     </a>
     <a class="right-next"
@@ -1590,7 +1603,7 @@ cited above. Add or amend an entry once in
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">How do I train a leakage-safe baseline classifier on EEG?</p>
+        <p class="prev-next-title">Train a leakage-safe baseline</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -1616,6 +1629,7 @@ cited above. Add or amend an entry once in
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">Learning objectives</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#requirements">Requirements</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-subject-leakage-hits-eeg-harder-than-other-domains">Why subject leakage hits EEG harder than other domains</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#validate-your-result">Validate your result</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-build-a-windows-metadata-table-for-12-subjects">Step 1. Build a windows metadata table for 12 subjects</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-predict-then-run-the-wrong-way">Step 2. Predict, then run the WRONG way</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-build-a-leakage-safe-5-fold-split-manifest">Step 3. Build a leakage-safe 5-fold split manifest</a></li>

@@ -17,6 +17,6 @@ $(document).ready( function () {
 } );
 </script>
 
-| Example                                                                                                                                                                     | Time      |   Mem (MB) |
-|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------|------------|
-| [Exploring Braindecode’s BIDSDataset](debug_pybids_braindecode.md#sphx-glr-generated-auto-examples-dev-scripts-debug-pybids-braindecode-py) (`debug_pybids_braindecode.py`) | 00:00.000 |          0 |
+| Example                                                                                                                                                                                      | Time      |   Mem (MB) |
+|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------|------------|
+| [[Developer Only] Exploring Braindecode’s BIDSDataset](debug_pybids_braindecode.md#sphx-glr-generated-auto-examples-dev-scripts-debug-pybids-braindecode-py) (`debug_pybids_braindecode.py`) | 00:00.000 |          0 |

@@ -8,11 +8,16 @@
 
 <a id="pybids-bidsdataset-demo"></a>
 
-# Exploring Braindecode’s BIDSDataset
+# [Developer Only] Exploring Braindecode’s BIDSDataset
+
+**Note for Developers.** This script is an internal debugging catalogue for
+mapping PyBIDS and Braindecode behavior. It is not part of the public
+learning path. For standard data-loading workflows, users should prefer
+the /auto_examples/tutorials/00_start_here/index tutorials.
 
 Tests showing BIDSDataset not able to handle example EEGLAB dataset and slower than pybids
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 11-41 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 16-46 -->
 ```Python
 from pathlib import Path
 import os
@@ -45,7 +50,7 @@ bids = BIDSDataset(root=str(root), preload=False)
 # Can't import regular EEGLAB dataset
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 42-49 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 47-54 -->
 
 Tests showing pybids utilities as well as limitations
 
@@ -55,7 +60,7 @@ Tests showing pybids utilities as well as limitations
 - Not all file level metadata files can be retrieved even though they exist
 - Top level json associated with a file can’t be retrieved from file level
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 52-69 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 57-74 -->
 ```Python
 def get_recordings(layout: BIDSLayout):
     extensions = {
@@ -75,7 +80,7 @@ def get_recordings(layout: BIDSLayout):
 print(get_recordings(BIDSLayout(str(root))))
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 70-80 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 75-85 -->
 ```Python
 layout = BIDSLayout(str(root))
 # get file from path
@@ -88,7 +93,7 @@ bidsfile = layout.get(**entities)[0]
 print(bidsfile)
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 81-86 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 86-91 -->
 ```Python
 import pprint
 
@@ -96,20 +101,20 @@ import pprint
 pprint.pprint(bidsfile.get_entities(metadata="all"))
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 87-88 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 92-93 -->
 
 get associations doesn’t give us all desired bids dependencies
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 88-90 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 93-95 -->
 ```Python
 bidsfile.get_associations()
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 91-92 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 96-97 -->
 
 top level events.json can’t be retrieved from a file level
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 92-118 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 97-123 -->
 ```Python
 file_entities = bidsfile.get_entities()
 # remove 'datatype'

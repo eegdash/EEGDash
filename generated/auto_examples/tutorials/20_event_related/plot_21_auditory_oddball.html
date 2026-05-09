@@ -7,18 +7,18 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta property="og:title" content="How does the auditory P300 differ from the visual P300 of plot_20?" />
+<meta property="og:title" content="Auditory P300 oddball decoding" />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://eegdash.org/generated/auto_examples/tutorials/20_event_related/plot_21_auditory_oddball.html" />
 <meta property="og:site_name" content="EEG Dash" />
-<meta property="og:description" content="The visual oddball of/auto_examples/tutorials/20_event_related/plot_20_visual_p300_oddball delivered a parietal positive bump near 350 ms. Swap the eyes…" />
+<meta property="og:description" content="Difficulty 2| Runtime: 3m| Compute: CPU The visual oddball of/auto_examples/tutorials/20_event_related/plot_20_visual_p300_oddball delivered a parietal…" />
 <meta property="og:image" content="https://eegdash.org/_static/eegdash_social_card.png" />
 <meta property="og:image:alt" content="EEG Dash — data-sharing interface for M/EEG datasets" />
-<meta name="description" content="The visual oddball of/auto_examples/tutorials/20_event_related/plot_20_visual_p300_oddball delivered a parietal positive bump near 350 ms. Swap the eyes…" />
+<meta name="description" content="Difficulty 2| Runtime: 3m| Compute: CPU The visual oddball of/auto_examples/tutorials/20_event_related/plot_20_visual_p300_oddball delivered a parietal…" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@eegdash" />
 
-    <title>How does the auditory P300 differ from the visual P300 of plot_20? &#8212; EEG Dash</title>
+    <title>Auditory P300 oddball decoding &#8212; EEG Dash</title>
   
   
   
@@ -75,7 +75,7 @@
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" />
     <link rel="next" title="Resting-State and State Decoding" href="../30_resting_state/index.html" />
-    <link rel="prev" title="How does the brain answer a rare visual target?" href="plot_20_visual_p300_oddball.html" />
+    <link rel="prev" title="Visual P300 oddball decoding" href="plot_20_visual_p300_oddball.html" />
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="0.7" />
 
@@ -563,7 +563,7 @@
     
     <li class="breadcrumb-item"><a href="index.html" class="nav-link">Event-Related Decoding</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">How does the auditory P300 differ from the visual P300 of plot_20?</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Auditory P300 oddball decoding</span></li>
   </ul>
 </nav>
 </div>
@@ -585,8 +585,9 @@
 <p><a class="reference internal" href="#sphx-glr-download-generated-auto-examples-tutorials-20-event-related-plot-21-auditory-oddball-py"><span class="std std-ref">Go to the end</span></a>
 to download the full example code or to run this example in your browser via Binder.</p>
 </div>
-<section class="sphx-glr-example-title" id="how-does-the-auditory-p300-differ-from-the-visual-p300-of-plot-20">
-<span id="sphx-glr-generated-auto-examples-tutorials-20-event-related-plot-21-auditory-oddball-py"></span><h1>How does the auditory P300 differ from the visual P300 of plot_20?<a class="headerlink" href="#how-does-the-auditory-p300-differ-from-the-visual-p300-of-plot-20" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">11 minutes</span></div>
+<section class="sphx-glr-example-title" id="auditory-p300-oddball-decoding">
+<span id="sphx-glr-generated-auto-examples-tutorials-20-event-related-plot-21-auditory-oddball-py"></span><h1>Auditory P300 oddball decoding<a class="headerlink" href="#auditory-p300-oddball-decoding" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">11 minutes</span></div>
+<p><strong>Difficulty 2</strong> | <strong>Runtime: 3m</strong> | <strong>Compute: CPU</strong></p>
 <p>The visual oddball of <span class="xref std std-doc">/auto_examples/tutorials/20_event_related/plot_20_visual_p300_oddball</span>
 delivered a parietal positive bump near 350 ms. Swap the eyes for ears
 and the same paradigm structure (rare deviant inside a stream of
@@ -607,8 +608,22 @@ doi:10.1038/s41597-019-0104-8), and lands on a 1x3 figure that places
 the auditory P300 next to the visual P300 reference values from
 <code class="docutils literal notranslate"><span class="pre">plot_20</span></code>. The deliverable is the <em>contrast</em>, not a duplicate
 classifier (Cisotto &amp; Chicco 2024, doi:10.7717/peerj-cs.2256). So:
-which numbers stay the same when we swap modalities, and which
-numbers move?</p>
+# numbers stay the same when we swap modalities, and which
+# numbers move?
+#
+# Validate your result
+# ——————–
+# - <strong>Event-locked Annotations.</strong> Expect labels like <code class="docutils literal notranslate"><span class="pre">stimulus/standard</span></code> and
+#   <code class="docutils literal notranslate"><span class="pre">stimulus/oddball_with_response</span></code>.
+# - <strong>Epoch Shape.</strong> Each window should be <code class="docutils literal notranslate"><span class="pre">(n_channels,</span> <span class="pre">sfreq</span> <span class="pre">*</span> <span class="pre">0.7s)</span></code>.
+#   With the default 128 Hz, expect 90 samples per window.
+# - <strong>Auditory P300 characteristics.</strong> The ERP should peak earlier than the
+#   visual P300 (around 300 ms) and show a more frontal distribution (largest
+#   at Cz/FCz).
+# - <strong>Comparison.</strong> Compare these results with the visual P300 in
+#   <a class="reference internal" href="plot_20_visual_p300_oddball.html"><span class="doc">Visual P300 oddball decoding</span></a>.
+#
+#</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span>
 </pre></div>
 </div>
@@ -623,7 +638,7 @@ annotations (<code class="docutils literal notranslate"><span class="pre">stimul
 per-class <a class="reference external" href="https://mne.tools/stable/generated/mne.EvokedArray.html#mne.EvokedArray" title="(in MNE v1.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">mne.EvokedArray</span></code></a>, and quantify the auditory P300
 peak latency at Cz.</p></li>
 <li><p>render a difference-wave scalp topomap with
-<a class="reference external" href="https://mne.tools/stable/generated/mne.viz.plot_topomap.html#mne.viz.plot_topomap" title="(in MNE v1.12)"><code class="xref py py-func docutils literal notranslate"><span class="pre">mne.viz.plot_topomap()</span></code></a> and recognise the frontal-central
+<a class="reference external" href="https://mne.tools/stable/generated/mne.viz.plot_topomap.html#mne.viz.plot_topomap" title="(in MNE v1.12)"><code class="xref py py-func docutils literal notranslate"><span class="pre">mne.viz.plot_topomap()</span></code></a> and recognize the frontal-central
 distribution of the auditory P300.</p></li>
 <li><p>state, in one sentence each, what stays the same and what shifts
 between visual (<code class="docutils literal notranslate"><span class="pre">plot_20</span></code>) and auditory P300.</p></li>
@@ -634,7 +649,7 @@ between visual (<code class="docutils literal notranslate"><span class="pre">plo
 <ul class="simple">
 <li><p>About 3 min on CPU (single subject, cached after the first fetch).</p></li>
 <li><p>Network on first run: ~30 MB into <code class="docutils literal notranslate"><span class="pre">cache_dir</span></code>; offline after that.</p></li>
-<li><p>Prerequisites: <a class="reference internal" href="plot_20_visual_p300_oddball.html"><span class="doc">How does the brain answer a rare visual target?</span></a> (event mapping,
+<li><p>Prerequisites: <a class="reference internal" href="plot_20_visual_p300_oddball.html"><span class="doc">Visual P300 oddball decoding</span></a> (event mapping,
 ERP plot, oddball imbalance).</p></li>
 <li><p>Concept: <a class="reference internal" href="../../../../concepts/leakage_and_evaluation.html"><span class="doc">Leakage and evaluation</span></a>.</p></li>
 </ul>
@@ -781,30 +796,30 @@ returns a string-to-int code mapping.</p>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Downloading sub-001_task-P300_run-2_channels.tsv:   0%|          | 0.00/1.12k [00:00&lt;?, ?B/s]
-Downloading sub-001_task-P300_run-2_channels.tsv: 100%|██████████| 1.12k/1.12k [00:00&lt;00:00, 5.93MB/s]
+Downloading sub-001_task-P300_run-2_channels.tsv: 100%|██████████| 1.12k/1.12k [00:00&lt;00:00, 4.37MB/s]
 
 Downloading sub-001_task-P300_run-2_events.tsv:   0%|          | 0.00/44.2k [00:00&lt;?, ?B/s]
-Downloading sub-001_task-P300_run-2_events.tsv: 100%|██████████| 44.2k/44.2k [00:00&lt;00:00, 43.9MB/s]
+Downloading sub-001_task-P300_run-2_events.tsv: 100%|██████████| 44.2k/44.2k [00:00&lt;00:00, 61.3MB/s]
 
 Downloading sub-001_task-P300_run-2_events.json:   0%|          | 0.00/1.85k [00:00&lt;?, ?B/s]
-Downloading sub-001_task-P300_run-2_events.json: 100%|██████████| 1.85k/1.85k [00:00&lt;00:00, 7.66MB/s]
+Downloading sub-001_task-P300_run-2_events.json: 100%|██████████| 1.85k/1.85k [00:00&lt;00:00, 10.7MB/s]
 
 Downloading sub-001_task-P300_run-2_electrodes.tsv:   0%|          | 0.00/1.68k [00:00&lt;?, ?B/s]
-Downloading sub-001_task-P300_run-2_electrodes.tsv: 100%|██████████| 1.68k/1.68k [00:00&lt;00:00, 8.67MB/s]
+Downloading sub-001_task-P300_run-2_electrodes.tsv: 100%|██████████| 1.68k/1.68k [00:00&lt;00:00, 6.79MB/s]
 
 Downloading sub-001_task-P300_run-2_coordsystem.json:   0%|          | 0.00/97.0 [00:00&lt;?, ?B/s]
-Downloading sub-001_task-P300_run-2_coordsystem.json: 100%|██████████| 97.0/97.0 [00:00&lt;00:00, 551kB/s]
+Downloading sub-001_task-P300_run-2_coordsystem.json: 100%|██████████| 97.0/97.0 [00:00&lt;00:00, 509kB/s]
 
 Downloading sub-001_task-P300_run-2_eeg.json:   0%|          | 0.00/1.34k [00:00&lt;?, ?B/s]
-Downloading sub-001_task-P300_run-2_eeg.json: 100%|██████████| 1.34k/1.34k [00:00&lt;00:00, 7.83MB/s]
-[05/08/26 18:42:47] WARNING  File not found on S3, skipping:   downloader.py:163
+Downloading sub-001_task-P300_run-2_eeg.json: 100%|██████████| 1.34k/1.34k [00:00&lt;00:00, 6.91MB/s]
+[05/09/26 20:25:43] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds003061/sub-0
                              01/eeg/sub-001_task-P300_run-2_ee
                              g.fdt
 
 Downloading sub-001_task-P300_run-2_eeg.set:   0%|          | 0.00/60.5M [00:00&lt;?, ?B/s]
-Downloading sub-001_task-P300_run-2_eeg.set:  83%|████████▎ | 50.0M/60.5M [00:00&lt;00:00, 60.7MB/s]
-Downloading sub-001_task-P300_run-2_eeg.set: 100%|██████████| 60.5M/60.5M [00:00&lt;00:00, 73.2MB/s]
+Downloading sub-001_task-P300_run-2_eeg.set:  83%|████████▎ | 50.0M/60.5M [00:00&lt;00:00, 66.5MB/s]
+Downloading sub-001_task-P300_run-2_eeg.set: 100%|██████████| 60.5M/60.5M [00:00&lt;00:00, 80.1MB/s]
 </pre></div>
 </div>
 <div class="output_subarea output_html rendered_html output_result">
@@ -862,7 +877,7 @@ verbatim).</p></li>
 <code class="docutils literal notranslate"><span class="pre">&quot;response&quot;</span></code>) describe distractor tones and motor responses; we
 ignore them in the contrast above.</p></li>
 <li><p>The recording has ~80 channels at 256 Hz; we resample to
-<code class="docutils literal notranslate"><span class="pre">SFREQ=128</span></code> Hz to match <a class="reference internal" href="plot_20_visual_p300_oddball.html"><span class="doc">How does the brain answer a rare visual target?</span></a>.</p></li>
+<code class="docutils literal notranslate"><span class="pre">SFREQ=128</span></code> Hz to match <a class="reference internal" href="plot_20_visual_p300_oddball.html"><span class="doc">Visual P300 oddball decoding</span></a>.</p></li>
 </ul>
 </section>
 <section id="step-3-preprocess-and-epoch-around-each-oddball">
@@ -924,56 +939,56 @@ pre-stimulus interval (E5.41).</p>
   warn(
 
 Downloading sub-001_task-P300_run-3_channels.tsv:   0%|          | 0.00/1.12k [00:00&lt;?, ?B/s]
-Downloading sub-001_task-P300_run-3_channels.tsv: 100%|██████████| 1.12k/1.12k [00:00&lt;00:00, 5.36MB/s]
+Downloading sub-001_task-P300_run-3_channels.tsv: 100%|██████████| 1.12k/1.12k [00:00&lt;00:00, 4.18MB/s]
 
 Downloading sub-001_task-P300_run-3_events.tsv:   0%|          | 0.00/44.1k [00:00&lt;?, ?B/s]
-Downloading sub-001_task-P300_run-3_events.tsv: 100%|██████████| 44.1k/44.1k [00:00&lt;00:00, 37.5MB/s]
+Downloading sub-001_task-P300_run-3_events.tsv: 100%|██████████| 44.1k/44.1k [00:00&lt;00:00, 46.3MB/s]
 
 Downloading sub-001_task-P300_run-3_events.json:   0%|          | 0.00/1.85k [00:00&lt;?, ?B/s]
-Downloading sub-001_task-P300_run-3_events.json: 100%|██████████| 1.85k/1.85k [00:00&lt;00:00, 7.40MB/s]
+Downloading sub-001_task-P300_run-3_events.json: 100%|██████████| 1.85k/1.85k [00:00&lt;00:00, 5.49MB/s]
 
 Downloading sub-001_task-P300_run-3_electrodes.tsv:   0%|          | 0.00/1.68k [00:00&lt;?, ?B/s]
-Downloading sub-001_task-P300_run-3_electrodes.tsv: 100%|██████████| 1.68k/1.68k [00:00&lt;00:00, 8.72MB/s]
+Downloading sub-001_task-P300_run-3_electrodes.tsv: 100%|██████████| 1.68k/1.68k [00:00&lt;00:00, 7.74MB/s]
 
 Downloading sub-001_task-P300_run-3_coordsystem.json:   0%|          | 0.00/97.0 [00:00&lt;?, ?B/s]
-Downloading sub-001_task-P300_run-3_coordsystem.json: 100%|██████████| 97.0/97.0 [00:00&lt;00:00, 485kB/s]
+Downloading sub-001_task-P300_run-3_coordsystem.json: 100%|██████████| 97.0/97.0 [00:00&lt;00:00, 490kB/s]
 
 Downloading sub-001_task-P300_run-3_eeg.json:   0%|          | 0.00/1.34k [00:00&lt;?, ?B/s]
-Downloading sub-001_task-P300_run-3_eeg.json: 100%|██████████| 1.34k/1.34k [00:00&lt;00:00, 6.53MB/s]
-[05/08/26 18:42:49] WARNING  File not found on S3, skipping:   downloader.py:163
+Downloading sub-001_task-P300_run-3_eeg.json: 100%|██████████| 1.34k/1.34k [00:00&lt;00:00, 6.45MB/s]
+[05/09/26 20:25:45] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds003061/sub-0
                              01/eeg/sub-001_task-P300_run-3_ee
                              g.fdt
 
 Downloading sub-001_task-P300_run-3_eeg.set:   0%|          | 0.00/60.4M [00:00&lt;?, ?B/s]
-Downloading sub-001_task-P300_run-3_eeg.set:  83%|████████▎ | 50.0M/60.4M [00:00&lt;00:00, 81.7MB/s]
-Downloading sub-001_task-P300_run-3_eeg.set: 100%|██████████| 60.4M/60.4M [00:00&lt;00:00, 98.3MB/s]
+Downloading sub-001_task-P300_run-3_eeg.set:  83%|████████▎ | 50.0M/60.4M [00:00&lt;00:00, 81.5MB/s]
+Downloading sub-001_task-P300_run-3_eeg.set: 100%|██████████| 60.4M/60.4M [00:00&lt;00:00, 97.9MB/s]
 
 Downloading sub-001_task-P300_run-1_channels.tsv:   0%|          | 0.00/1.12k [00:00&lt;?, ?B/s]
-Downloading sub-001_task-P300_run-1_channels.tsv: 100%|██████████| 1.12k/1.12k [00:00&lt;00:00, 5.36MB/s]
+Downloading sub-001_task-P300_run-1_channels.tsv: 100%|██████████| 1.12k/1.12k [00:00&lt;00:00, 5.10MB/s]
 
 Downloading sub-001_task-P300_run-1_events.tsv:   0%|          | 0.00/44.3k [00:00&lt;?, ?B/s]
-Downloading sub-001_task-P300_run-1_events.tsv: 100%|██████████| 44.3k/44.3k [00:00&lt;00:00, 112MB/s]
+Downloading sub-001_task-P300_run-1_events.tsv: 100%|██████████| 44.3k/44.3k [00:00&lt;00:00, 65.9MB/s]
 
 Downloading sub-001_task-P300_run-1_events.json:   0%|          | 0.00/1.85k [00:00&lt;?, ?B/s]
-Downloading sub-001_task-P300_run-1_events.json: 100%|██████████| 1.85k/1.85k [00:00&lt;00:00, 11.6MB/s]
+Downloading sub-001_task-P300_run-1_events.json: 100%|██████████| 1.85k/1.85k [00:00&lt;00:00, 11.3MB/s]
 
 Downloading sub-001_task-P300_run-1_electrodes.tsv:   0%|          | 0.00/1.68k [00:00&lt;?, ?B/s]
-Downloading sub-001_task-P300_run-1_electrodes.tsv: 100%|██████████| 1.68k/1.68k [00:00&lt;00:00, 8.89MB/s]
+Downloading sub-001_task-P300_run-1_electrodes.tsv: 100%|██████████| 1.68k/1.68k [00:00&lt;00:00, 9.35MB/s]
 
 Downloading sub-001_task-P300_run-1_coordsystem.json:   0%|          | 0.00/97.0 [00:00&lt;?, ?B/s]
-Downloading sub-001_task-P300_run-1_coordsystem.json: 100%|██████████| 97.0/97.0 [00:00&lt;00:00, 491kB/s]
+Downloading sub-001_task-P300_run-1_coordsystem.json: 100%|██████████| 97.0/97.0 [00:00&lt;00:00, 572kB/s]
 
 Downloading sub-001_task-P300_run-1_eeg.json:   0%|          | 0.00/1.34k [00:00&lt;?, ?B/s]
-Downloading sub-001_task-P300_run-1_eeg.json: 100%|██████████| 1.34k/1.34k [00:00&lt;00:00, 5.34MB/s]
-[05/08/26 18:42:52] WARNING  File not found on S3, skipping:   downloader.py:163
+Downloading sub-001_task-P300_run-1_eeg.json: 100%|██████████| 1.34k/1.34k [00:00&lt;00:00, 8.07MB/s]
+[05/09/26 20:25:48] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds003061/sub-0
                              01/eeg/sub-001_task-P300_run-1_ee
                              g.fdt
 
 Downloading sub-001_task-P300_run-1_eeg.set:   0%|          | 0.00/60.6M [00:00&lt;?, ?B/s]
-Downloading sub-001_task-P300_run-1_eeg.set:  83%|████████▎ | 50.0M/60.6M [00:01&lt;00:00, 38.5MB/s]
-Downloading sub-001_task-P300_run-1_eeg.set: 100%|██████████| 60.6M/60.6M [00:01&lt;00:00, 46.5MB/s]
+Downloading sub-001_task-P300_run-1_eeg.set:  83%|████████▎ | 50.0M/60.6M [00:01&lt;00:00, 43.7MB/s]
+Downloading sub-001_task-P300_run-1_eeg.set: 100%|██████████| 60.6M/60.6M [00:01&lt;00:00, 52.8MB/s]
 epochs: 637 | deviants=111, standards=526 | n_channels=64, sfreq=128 Hz
 </pre></div>
 </div>
@@ -1142,7 +1157,7 @@ tail rather than the peak.</p>
 </section>
 <section id="make">
 <h2>Make<a class="headerlink" href="#make" title="Link to this heading">#</a></h2>
-<p><strong>Mini-project.</strong> Re-run <a class="reference internal" href="plot_20_visual_p300_oddball.html"><span class="doc">How does the brain answer a rare visual target?</span></a> with the
+<p><strong>Mini-project.</strong> Re-run <a class="reference internal" href="plot_20_visual_p300_oddball.html"><span class="doc">Visual P300 oddball decoding</span></a> with the
 same epoch window (<code class="docutils literal notranslate"><span class="pre">TMIN=-0.1</span></code>, <code class="docutils literal notranslate"><span class="pre">TMAX=0.6</span></code>) and overlay the two
 difference waves at Cz on one panel: orange for auditory (this
 tutorial), blue for visual (plot_20). Read off the latency gap. The
@@ -1153,7 +1168,7 @@ P3b by ~30-50 ms because sensory transduction is faster.</p>
 <h2>Result<a class="headerlink" href="#result" title="Link to this heading">#</a></h2>
 <p>The figure rendered above places the live auditory P300 (peak
 latency, peak channel, peak amplitude at <code class="docutils literal notranslate"><span class="pre">Cz</span></code>) next to the visual
-P300 reference values from <a class="reference internal" href="plot_20_visual_p300_oddball.html"><span class="doc">How does the brain answer a rare visual target?</span></a>. Same
+P300 reference values from <a class="reference internal" href="plot_20_visual_p300_oddball.html"><span class="doc">Visual P300 oddball decoding</span></a>. Same
 oddball plumbing, different brain answer: an earlier MMN, a
 frontal-central P3 family, and a smaller amplitude than the visual
 version. A clean ERP shape only confirms the picture; classifier
@@ -1186,16 +1201,16 @@ latency and amplitude.</p></li>
 re-run; the topomap polarity inversion at frontal poles should
 weaken because there is no mean-removed common signal.</p></li>
 <li><p>Train a flattened-window logistic regression on the epochs (see
-<a class="reference internal" href="plot_20_visual_p300_oddball.html"><span class="doc">How does the brain answer a rare visual target?</span></a> Step 5) and compare ROC-AUC
+<a class="reference internal" href="plot_20_visual_p300_oddball.html"><span class="doc">Visual P300 oddball decoding</span></a> Step 5) and compare ROC-AUC
 against the visual P300 number you obtained in plot_20.</p></li>
 </ul>
 </section>
 <section id="references">
 <h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
-<p>See <a class="reference internal" href="../../../../references.html"><span class="doc">References</span></a> for the centralised bibliography of papers
+<p>See <a class="reference internal" href="../../../../references.html"><span class="doc">References</span></a> for the centralized bibliography of papers
 cited above. Add or amend an entry once in
 <code class="file docutils literal notranslate"><span class="pre">docs/source/refs.bib</span></code>; every tutorial inherits the update.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 9.753 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 9.993 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-auto-examples-tutorials-20-event-related-plot-21-auditory-oddball-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/eegdash/EEGDash/main?urlpath=lab/tree/notebooks/generated/auto_examples/tutorials/20_event_related/plot_21_auditory_oddball.ipynb"><img alt="Launch binder" src="../../../../_images/binder_badge_logo7.svg" style="width: 150px;" />
@@ -1230,7 +1245,7 @@ cited above. Add or amend an entry once in
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">How does the brain answer a rare visual target?</p>
+        <p class="prev-next-title">Visual P300 oddball decoding</p>
       </div>
     </a>
     <a class="right-next"

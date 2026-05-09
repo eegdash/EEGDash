@@ -6,7 +6,9 @@
 
 <a id="sphx-glr-generated-auto-examples-tutorials-20-event-related-plot-21-auditory-oddball-py"></a>
 
-# How does the auditory P300 differ from the visual P300 of plot_20?
+# Auditory P300 oddball decoding
+
+**Difficulty 2** | **Runtime: 3m** | **Compute: CPU**
 
 The visual oddball of /auto_examples/tutorials/20_event_related/plot_20_visual_p300_oddball
 delivered a parietal positive bump near 350 ms. Swap the eyes for ears
@@ -29,14 +31,28 @@ doi:10.1038/s41597-019-0104-8), and lands on a 1x3 figure that places
 the auditory P300 next to the visual P300 reference values from
 `plot_20`. The deliverable is the *contrast*, not a duplicate
 classifier (Cisotto & Chicco 2024, doi:10.7717/peerj-cs.2256). So:
-which numbers stay the same when we swap modalities, and which
-numbers move?
+# numbers stay the same when we swap modalities, and which
+# numbers move?
+#
+# Validate your result
+# ——————–
+# - **Event-locked Annotations.** Expect labels like `stimulus/standard` and
+#   `stimulus/oddball_with_response`.
+# - **Epoch Shape.** Each window should be `(n_channels, sfreq * 0.7s)`.
+#   With the default 128 Hz, expect 90 samples per window.
+# - **Auditory P300 characteristics.** The ERP should peak earlier than the
+#   visual P300 (around 300 ms) and show a more frontal distribution (largest
+#   at Cz/FCz).
+# - **Comparison.** Compare these results with the visual P300 in
+#   [Visual P300 oddball decoding](plot_20_visual_p300_oddball.md).
+#
+#
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 28-30 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 44-46 -->
 ```Python
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 32-48 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 48-64 -->
 
 ## Learning objectives
 
@@ -49,27 +65,27 @@ After this tutorial you will be able to:
   per-class [`mne.EvokedArray`](https://mne.tools/stable/generated/mne.EvokedArray.html#mne.EvokedArray), and quantify the auditory P300
   peak latency at Cz.
 - render a difference-wave scalp topomap with
-  [`mne.viz.plot_topomap()`](https://mne.tools/stable/generated/mne.viz.plot_topomap.html#mne.viz.plot_topomap) and recognise the frontal-central
+  [`mne.viz.plot_topomap()`](https://mne.tools/stable/generated/mne.viz.plot_topomap.html#mne.viz.plot_topomap) and recognize the frontal-central
   distribution of the auditory P300.
 - state, in one sentence each, what stays the same and what shifts
   between visual (`plot_20`) and auditory P300.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 50-58 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 66-74 -->
 
 ## Requirements
 
 - About 3 min on CPU (single subject, cached after the first fetch).
 - Network on first run: ~30 MB into `cache_dir`; offline after that.
-- Prerequisites: [How does the brain answer a rare visual target?](plot_20_visual_p300_oddball.md) (event mapping,
+- Prerequisites: [Visual P300 oddball decoding](plot_20_visual_p300_oddball.md) (event mapping,
   ERP plot, oddball imbalance).
 - Concept: [Leakage and evaluation](../../../../concepts/leakage_and_evaluation.md).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 60-62 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 76-78 -->
 
 Setup. `np.random.seed` and a quiet [`mne.set_log_level()`](https://mne.tools/stable/generated/mne.set_log_level.html#mne.set_log_level) keep
 the run reproducible and the console clean (E3.21).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 62-91 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 78-107 -->
 ```Python
 import os
 import warnings
@@ -101,7 +117,7 @@ MMN_WIN_MS = (150.0, 250.0)  # Naatanen et al. 2007
 P300_WIN_MS = (250.0, 400.0)  # Polich 2007 / Squires et al. 1975
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 92-114 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 108-130 -->
 
 ## Mental model: MMN, P3a, P3b in one paragraph
 
@@ -125,7 +141,7 @@ onto a frontal-central scalp pattern rather than the parietal one.
 The figure at the bottom of this tutorial pulls the two pictures
 side by side.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 116-126 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 132-142 -->
 
 ## Step 1: Build the dataset (lazy)
 
@@ -137,7 +153,7 @@ that OpenNeuro’s BIDS task labels do not always align with the
 modality they describe. We resolve the recordings without filtering
 on task to stay portable.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 128-140 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 144-156 -->
 ```Python
 dataset = EEGDashDataset(cache_dir=CACHE_DIR, dataset=DATASET, subject=SUBJECT)
 record = dataset.datasets[0]
@@ -193,7 +209,7 @@ raw_meta
 </div>
 <br />
 <br />
-<!-- GENERATED FROM PYTHON SOURCE LINES 141-153 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 157-169 -->
 
 ## Step 2: Investigate the BIDS annotations
 
@@ -207,7 +223,7 @@ expect the annotation strings to look like. The visual oddball used
 `events.tsv` onto the [`mne.io.Raw.annotations`](https://mne.tools/stable/generated/mne.io.Raw.html#mne.io.Raw.annotations) track and
 returns a string-to-int code mapping.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 155-168 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 171-184 -->
 ```Python
 raw0 = record.raw.load_data().copy()
 events_table, event_id_table = mne.events_from_annotations(raw0)
@@ -225,30 +241,30 @@ pd.Series(
 
 ```none
 Downloading sub-001_task-P300_run-2_channels.tsv:   0%|          | 0.00/1.12k [00:00<?, ?B/s]
-Downloading sub-001_task-P300_run-2_channels.tsv: 100%|██████████| 1.12k/1.12k [00:00<00:00, 5.93MB/s]
+Downloading sub-001_task-P300_run-2_channels.tsv: 100%|██████████| 1.12k/1.12k [00:00<00:00, 4.37MB/s]
 
 Downloading sub-001_task-P300_run-2_events.tsv:   0%|          | 0.00/44.2k [00:00<?, ?B/s]
-Downloading sub-001_task-P300_run-2_events.tsv: 100%|██████████| 44.2k/44.2k [00:00<00:00, 43.9MB/s]
+Downloading sub-001_task-P300_run-2_events.tsv: 100%|██████████| 44.2k/44.2k [00:00<00:00, 61.3MB/s]
 
 Downloading sub-001_task-P300_run-2_events.json:   0%|          | 0.00/1.85k [00:00<?, ?B/s]
-Downloading sub-001_task-P300_run-2_events.json: 100%|██████████| 1.85k/1.85k [00:00<00:00, 7.66MB/s]
+Downloading sub-001_task-P300_run-2_events.json: 100%|██████████| 1.85k/1.85k [00:00<00:00, 10.7MB/s]
 
 Downloading sub-001_task-P300_run-2_electrodes.tsv:   0%|          | 0.00/1.68k [00:00<?, ?B/s]
-Downloading sub-001_task-P300_run-2_electrodes.tsv: 100%|██████████| 1.68k/1.68k [00:00<00:00, 8.67MB/s]
+Downloading sub-001_task-P300_run-2_electrodes.tsv: 100%|██████████| 1.68k/1.68k [00:00<00:00, 6.79MB/s]
 
 Downloading sub-001_task-P300_run-2_coordsystem.json:   0%|          | 0.00/97.0 [00:00<?, ?B/s]
-Downloading sub-001_task-P300_run-2_coordsystem.json: 100%|██████████| 97.0/97.0 [00:00<00:00, 551kB/s]
+Downloading sub-001_task-P300_run-2_coordsystem.json: 100%|██████████| 97.0/97.0 [00:00<00:00, 509kB/s]
 
 Downloading sub-001_task-P300_run-2_eeg.json:   0%|          | 0.00/1.34k [00:00<?, ?B/s]
-Downloading sub-001_task-P300_run-2_eeg.json: 100%|██████████| 1.34k/1.34k [00:00<00:00, 7.83MB/s]
-[05/08/26 18:42:47] WARNING  File not found on S3, skipping:   downloader.py:163
+Downloading sub-001_task-P300_run-2_eeg.json: 100%|██████████| 1.34k/1.34k [00:00<00:00, 6.91MB/s]
+[05/09/26 20:25:43] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds003061/sub-0
                              01/eeg/sub-001_task-P300_run-2_ee
                              g.fdt
 
 Downloading sub-001_task-P300_run-2_eeg.set:   0%|          | 0.00/60.5M [00:00<?, ?B/s]
-Downloading sub-001_task-P300_run-2_eeg.set:  83%|████████▎ | 50.0M/60.5M [00:00<00:00, 60.7MB/s]
-Downloading sub-001_task-P300_run-2_eeg.set: 100%|██████████| 60.5M/60.5M [00:00<00:00, 73.2MB/s]
+Downloading sub-001_task-P300_run-2_eeg.set:  83%|████████▎ | 50.0M/60.5M [00:00<00:00, 66.5MB/s]
+Downloading sub-001_task-P300_run-2_eeg.set: 100%|██████████| 60.5M/60.5M [00:00<00:00, 80.1MB/s]
 ```
 
 <div class="output_subarea output_html rendered_html output_result">
@@ -296,7 +312,7 @@ Downloading sub-001_task-P300_run-2_eeg.set: 100%|██████████
 </div>
 <br />
 <br />
-<!-- GENERATED FROM PYTHON SOURCE LINES 169-181 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 185-197 -->
 
 **Investigate.** Three observations matter for the rest of the
 pipeline:
@@ -309,9 +325,9 @@ pipeline:
   `"response"`) describe distractor tones and motor responses; we
   ignore them in the contrast above.
 - The recording has ~80 channels at 256 Hz; we resample to
-  `SFREQ=128` Hz to match [How does the brain answer a rare visual target?](plot_20_visual_p300_oddball.md).
+  `SFREQ=128` Hz to match [Visual P300 oddball decoding](plot_20_visual_p300_oddball.md).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 183-193 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 199-209 -->
 
 ## Step 3: Preprocess and epoch around each oddball
 
@@ -323,7 +339,7 @@ right after, so the recipe matches plot_20 step for step (band-pass
 epoch window is `-100..600 ms` with baseline correction over the
 pre-stimulus interval (E5.41).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 195-240 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 211-256 -->
 ```Python
 preprocess(
     dataset,
@@ -376,60 +392,60 @@ assert n_deviants > 0 and n_standards > 0, "expected both classes after epoching
   warn(
 
 Downloading sub-001_task-P300_run-3_channels.tsv:   0%|          | 0.00/1.12k [00:00<?, ?B/s]
-Downloading sub-001_task-P300_run-3_channels.tsv: 100%|██████████| 1.12k/1.12k [00:00<00:00, 5.36MB/s]
+Downloading sub-001_task-P300_run-3_channels.tsv: 100%|██████████| 1.12k/1.12k [00:00<00:00, 4.18MB/s]
 
 Downloading sub-001_task-P300_run-3_events.tsv:   0%|          | 0.00/44.1k [00:00<?, ?B/s]
-Downloading sub-001_task-P300_run-3_events.tsv: 100%|██████████| 44.1k/44.1k [00:00<00:00, 37.5MB/s]
+Downloading sub-001_task-P300_run-3_events.tsv: 100%|██████████| 44.1k/44.1k [00:00<00:00, 46.3MB/s]
 
 Downloading sub-001_task-P300_run-3_events.json:   0%|          | 0.00/1.85k [00:00<?, ?B/s]
-Downloading sub-001_task-P300_run-3_events.json: 100%|██████████| 1.85k/1.85k [00:00<00:00, 7.40MB/s]
+Downloading sub-001_task-P300_run-3_events.json: 100%|██████████| 1.85k/1.85k [00:00<00:00, 5.49MB/s]
 
 Downloading sub-001_task-P300_run-3_electrodes.tsv:   0%|          | 0.00/1.68k [00:00<?, ?B/s]
-Downloading sub-001_task-P300_run-3_electrodes.tsv: 100%|██████████| 1.68k/1.68k [00:00<00:00, 8.72MB/s]
+Downloading sub-001_task-P300_run-3_electrodes.tsv: 100%|██████████| 1.68k/1.68k [00:00<00:00, 7.74MB/s]
 
 Downloading sub-001_task-P300_run-3_coordsystem.json:   0%|          | 0.00/97.0 [00:00<?, ?B/s]
-Downloading sub-001_task-P300_run-3_coordsystem.json: 100%|██████████| 97.0/97.0 [00:00<00:00, 485kB/s]
+Downloading sub-001_task-P300_run-3_coordsystem.json: 100%|██████████| 97.0/97.0 [00:00<00:00, 490kB/s]
 
 Downloading sub-001_task-P300_run-3_eeg.json:   0%|          | 0.00/1.34k [00:00<?, ?B/s]
-Downloading sub-001_task-P300_run-3_eeg.json: 100%|██████████| 1.34k/1.34k [00:00<00:00, 6.53MB/s]
-[05/08/26 18:42:49] WARNING  File not found on S3, skipping:   downloader.py:163
+Downloading sub-001_task-P300_run-3_eeg.json: 100%|██████████| 1.34k/1.34k [00:00<00:00, 6.45MB/s]
+[05/09/26 20:25:45] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds003061/sub-0
                              01/eeg/sub-001_task-P300_run-3_ee
                              g.fdt
 
 Downloading sub-001_task-P300_run-3_eeg.set:   0%|          | 0.00/60.4M [00:00<?, ?B/s]
-Downloading sub-001_task-P300_run-3_eeg.set:  83%|████████▎ | 50.0M/60.4M [00:00<00:00, 81.7MB/s]
-Downloading sub-001_task-P300_run-3_eeg.set: 100%|██████████| 60.4M/60.4M [00:00<00:00, 98.3MB/s]
+Downloading sub-001_task-P300_run-3_eeg.set:  83%|████████▎ | 50.0M/60.4M [00:00<00:00, 81.5MB/s]
+Downloading sub-001_task-P300_run-3_eeg.set: 100%|██████████| 60.4M/60.4M [00:00<00:00, 97.9MB/s]
 
 Downloading sub-001_task-P300_run-1_channels.tsv:   0%|          | 0.00/1.12k [00:00<?, ?B/s]
-Downloading sub-001_task-P300_run-1_channels.tsv: 100%|██████████| 1.12k/1.12k [00:00<00:00, 5.36MB/s]
+Downloading sub-001_task-P300_run-1_channels.tsv: 100%|██████████| 1.12k/1.12k [00:00<00:00, 5.10MB/s]
 
 Downloading sub-001_task-P300_run-1_events.tsv:   0%|          | 0.00/44.3k [00:00<?, ?B/s]
-Downloading sub-001_task-P300_run-1_events.tsv: 100%|██████████| 44.3k/44.3k [00:00<00:00, 112MB/s]
+Downloading sub-001_task-P300_run-1_events.tsv: 100%|██████████| 44.3k/44.3k [00:00<00:00, 65.9MB/s]
 
 Downloading sub-001_task-P300_run-1_events.json:   0%|          | 0.00/1.85k [00:00<?, ?B/s]
-Downloading sub-001_task-P300_run-1_events.json: 100%|██████████| 1.85k/1.85k [00:00<00:00, 11.6MB/s]
+Downloading sub-001_task-P300_run-1_events.json: 100%|██████████| 1.85k/1.85k [00:00<00:00, 11.3MB/s]
 
 Downloading sub-001_task-P300_run-1_electrodes.tsv:   0%|          | 0.00/1.68k [00:00<?, ?B/s]
-Downloading sub-001_task-P300_run-1_electrodes.tsv: 100%|██████████| 1.68k/1.68k [00:00<00:00, 8.89MB/s]
+Downloading sub-001_task-P300_run-1_electrodes.tsv: 100%|██████████| 1.68k/1.68k [00:00<00:00, 9.35MB/s]
 
 Downloading sub-001_task-P300_run-1_coordsystem.json:   0%|          | 0.00/97.0 [00:00<?, ?B/s]
-Downloading sub-001_task-P300_run-1_coordsystem.json: 100%|██████████| 97.0/97.0 [00:00<00:00, 491kB/s]
+Downloading sub-001_task-P300_run-1_coordsystem.json: 100%|██████████| 97.0/97.0 [00:00<00:00, 572kB/s]
 
 Downloading sub-001_task-P300_run-1_eeg.json:   0%|          | 0.00/1.34k [00:00<?, ?B/s]
-Downloading sub-001_task-P300_run-1_eeg.json: 100%|██████████| 1.34k/1.34k [00:00<00:00, 5.34MB/s]
-[05/08/26 18:42:52] WARNING  File not found on S3, skipping:   downloader.py:163
+Downloading sub-001_task-P300_run-1_eeg.json: 100%|██████████| 1.34k/1.34k [00:00<00:00, 8.07MB/s]
+[05/09/26 20:25:48] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds003061/sub-0
                              01/eeg/sub-001_task-P300_run-1_ee
                              g.fdt
 
 Downloading sub-001_task-P300_run-1_eeg.set:   0%|          | 0.00/60.6M [00:00<?, ?B/s]
-Downloading sub-001_task-P300_run-1_eeg.set:  83%|████████▎ | 50.0M/60.6M [00:01<00:00, 38.5MB/s]
-Downloading sub-001_task-P300_run-1_eeg.set: 100%|██████████| 60.6M/60.6M [00:01<00:00, 46.5MB/s]
+Downloading sub-001_task-P300_run-1_eeg.set:  83%|████████▎ | 50.0M/60.6M [00:01<00:00, 43.7MB/s]
+Downloading sub-001_task-P300_run-1_eeg.set: 100%|██████████| 60.6M/60.6M [00:01<00:00, 52.8MB/s]
 epochs: 637 | deviants=111, standards=526 | n_channels=64, sfreq=128 Hz
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 241-250 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 257-266 -->
 
 ## Step 4: Per-class evoked + standard-error bands
 
@@ -440,7 +456,7 @@ the figure can shade `+/- SE` bands. `Cz` is the canonical
 headline channel for the auditory P300 (frontal-central), which is
 exactly where the visual-vs-auditory contrast becomes visible.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 252-273 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 268-289 -->
 ```Python
 data_dev = epochs[ev_dev].get_data() * 1e6  # uV (E5.41)
 data_std = epochs[ev_std].get_data() * 1e6
@@ -468,7 +484,7 @@ print(f"headline channel: {cz_label} (index {cz_idx})")
 headline channel: Cz (index 47)
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 274-284 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 290-300 -->
 
 ## Step 5: Locate the auditory P300 peak
 
@@ -480,7 +496,7 @@ so the topomap caption can carry the per-channel hot spot. The
 numbers feed straight into the figure subtitle and the comparison
 card.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 286-302 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 302-318 -->
 ```Python
 diff_evk = erp_dev - erp_std  # shape (n_channels, n_times)
 p3_mask = (times_ms >= P300_WIN_MS[0]) & (times_ms <= P300_WIN_MS[1])
@@ -503,7 +519,7 @@ print(
 auditory P300 at Cz: +375 ms, +11.08 uV | strongest channel at peak: AF8 (diff=-18.98 uV)
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 303-315 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 319-331 -->
 
 **Investigate.** Two single-subject details to register:
 
@@ -518,7 +534,7 @@ auditory P300 at Cz: +375 ms, +11.08 uV | strongest channel at peak: AF8 (diff=-
   peaking on whichever side dominates the noise. The topomap below
   makes the dipole visible in one glance.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 317-325 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 333-341 -->
 
 ## Step 6: Render the auditory-vs-visual figure
 
@@ -528,7 +544,7 @@ The figure pulls in three live arrays (the ERP at `Cz`, its SE
 bands, and the difference-wave topomap at the P300 peak) and combines
 them with the per-tutorial subtitle / provenance footer (E5.43).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 327-350 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 343-366 -->
 ```Python
 from _auditory_figure import draw_auditory_figure  # noqa: E402
 
@@ -554,7 +570,7 @@ fig = draw_auditory_figure(
 plt.show()
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 351-360 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 367-376 -->
 
 ## A common mistake, and how to recover
 
@@ -565,7 +581,7 @@ earlier near 200 ms, never enters the analysis. The block below
 triggers the mistake on purpose so the failure mode is visible
 (Nederbragt et al. 2020, doi:10.1371/journal.pcbi.1008090).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 362-388 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 378-404 -->
 ```Python
 try:
     too_late = (300.0, 450.0)  # plot_20's visual-P300 window
@@ -599,14 +615,14 @@ Caught RuntimeError: late window (300.0, 450.0) captured P300 at +11.08 uV but t
 Recovery: search MMN inside 150-250 ms :cite:`naatanen2007mmn` and P300 inside 250-400 ms :cite:`polich2007p300`. Use both windows together.
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 389-393 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 405-409 -->
 
 **Investigate.** The auditory paradigm runs *two* subcomponents
 inside the post-stimulus interval, not one. A recipe that simply
 copies the visual-P300 latency window misses the MMN and reports a
 blunter contrast than the data actually carries.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 395-404 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 411-420 -->
 
 ## Modify
 
@@ -617,30 +633,30 @@ or smaller than at Cz? Why? The expected answer follows from the
 topomap: auditory P3b sits *between* Cz and CPz, so Pz catches the
 tail rather than the peak.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 406-415 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 422-431 -->
 
 ## Make
 
-**Mini-project.** Re-run [How does the brain answer a rare visual target?](plot_20_visual_p300_oddball.md) with the
+**Mini-project.** Re-run [Visual P300 oddball decoding](plot_20_visual_p300_oddball.md) with the
 same epoch window (`TMIN=-0.1`, `TMAX=0.6`) and overlay the two
 difference waves at Cz on one panel: orange for auditory (this
 tutorial), blue for visual (plot_20). Read off the latency gap. The
 expected answer follows from Polich 2007: auditory P3b leads visual
 P3b by ~30-50 ms because sensory transduction is faster.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 417-428 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 433-444 -->
 
 ## Result
 
 The figure rendered above places the live auditory P300 (peak
 latency, peak channel, peak amplitude at `Cz`) next to the visual
-P300 reference values from [How does the brain answer a rare visual target?](plot_20_visual_p300_oddball.md). Same
+P300 reference values from [Visual P300 oddball decoding](plot_20_visual_p300_oddball.md). Same
 oddball plumbing, different brain answer: an earlier MMN, a
 frontal-central P3 family, and a smaller amplitude than the visual
 version. A clean ERP shape only confirms the picture; classifier
 performance on auditory P300 lives in [Try it yourself](#plot-21-tryit) [[Cisotto and Chicco, 2024](../../../../references.md#id19)].
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 430-445 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 446-461 -->
 
 ## Wrap-up
 
@@ -657,7 +673,7 @@ moves from event-related to resting-state contrasts;
 turns the same epochs into hand-crafted features for an interpretable
 baseline.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 447-463 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 463-479 -->
 
 <a id="plot-21-tryit"></a>
 
@@ -672,17 +688,17 @@ baseline.
   re-run; the topomap polarity inversion at frontal poles should
   weaken because there is no mean-removed common signal.
 - Train a flattened-window logistic regression on the epochs (see
-  [How does the brain answer a rare visual target?](plot_20_visual_p300_oddball.md) Step 5) and compare ROC-AUC
+  [Visual P300 oddball decoding](plot_20_visual_p300_oddball.md) Step 5) and compare ROC-AUC
   against the visual P300 number you obtained in plot_20.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 465-470 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 481-486 -->
 
 ## References
 
-See [References](../../../../references.md) for the centralised bibliography of papers
+See [References](../../../../references.md) for the centralized bibliography of papers
 cited above. Add or amend an entry once in
 `docs/source/refs.bib`; every tutorial inherits the update.
 
-**Total running time of the script:** (0 minutes 9.753 seconds)
+**Total running time of the script:** (0 minutes 9.993 seconds)
 
 <a id="sphx-glr-download-generated-auto-examples-tutorials-20-event-related-plot-21-auditory-oddball-py"></a>

@@ -7,18 +7,18 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta property="og:title" content="Cross-cohort P3 transfer with AS-MMD: train on one oddball, deploy on another" />
+<meta property="og:title" content="P300 transfer with AS-MMD" />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://eegdash.org/generated/auto_examples/applied/project_p300_transfer.html" />
 <meta property="og:site_name" content="EEG Dash" />
-<meta property="og:description" content="Two laboratories run a visual oddball task on different participants, different head-caps, different software stacks. Both pipelines produce EEG epochs…" />
+<meta property="og:description" content="Difficulty 3| Runtime: 2m| Compute: GPU Recommended Two laboratories run a visual oddball task on different participants, different head-caps, different…" />
 <meta property="og:image" content="https://eegdash.org/_static/eegdash_social_card.png" />
 <meta property="og:image:alt" content="EEG Dash — data-sharing interface for M/EEG datasets" />
-<meta name="description" content="Two laboratories run a visual oddball task on different participants, different head-caps, different software stacks. Both pipelines produce EEG epochs…" />
+<meta name="description" content="Difficulty 3| Runtime: 2m| Compute: GPU Recommended Two laboratories run a visual oddball task on different participants, different head-caps, different…" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@eegdash" />
 
-    <title>Cross-cohort P3 transfer with AS-MMD: train on one oddball, deploy on another &#8212; EEG Dash</title>
+    <title>P300 transfer with AS-MMD &#8212; EEG Dash</title>
   
   
   
@@ -74,8 +74,8 @@
     <link rel="icon" href="../../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="Predict p-factor from EEG with a Braindecode model (deep-learning regime)" href="project_pfactor_deep.html" />
-    <link rel="prev" title="How do I survey a clinical EEG dataset before training a model?" href="project_clinical_dataset_summary.html" />
+    <link rel="next" title="Predict p-factor with deep learning" href="project_pfactor_deep.html" />
+    <link rel="prev" title="Survey clinical EEG datasets" href="project_clinical_dataset_summary.html" />
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="0.7" />
 
@@ -563,7 +563,7 @@
     
     <li class="breadcrumb-item"><a href="index.html" class="nav-link">Applied Research Projects</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Cross-cohort P3 transfer with AS-MMD: train on one oddball, deploy on another</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">P300 transfer with AS-MMD</span></li>
   </ul>
 </nav>
 </div>
@@ -585,8 +585,9 @@
 <p><a class="reference internal" href="#sphx-glr-download-generated-auto-examples-applied-project-p300-transfer-py"><span class="std std-ref">Go to the end</span></a>
 to download the full example code or to run this example in your browser via Binder.</p>
 </div>
-<section class="sphx-glr-example-title" id="cross-cohort-p3-transfer-with-as-mmd-train-on-one-oddball-deploy-on-another">
-<span id="sphx-glr-generated-auto-examples-applied-project-p300-transfer-py"></span><h1>Cross-cohort P3 transfer with AS-MMD: train on one oddball, deploy on another<a class="headerlink" href="#cross-cohort-p3-transfer-with-as-mmd-train-on-one-oddball-deploy-on-another" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">8 minutes</span></div>
+<section class="sphx-glr-example-title" id="p300-transfer-with-as-mmd">
+<span id="sphx-glr-generated-auto-examples-applied-project-p300-transfer-py"></span><h1>P300 transfer with AS-MMD<a class="headerlink" href="#p300-transfer-with-as-mmd" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">9 minutes</span></div>
+<p><strong>Difficulty 3</strong> | <strong>Runtime: 2m</strong> | <strong>Compute: GPU Recommended</strong></p>
 <p>Two laboratories run a visual oddball task on different participants,
 different head-caps, different software stacks. Both pipelines produce
 EEG epochs locked to a rare <em>target</em> and a frequent <em>standard</em>; both
@@ -605,7 +606,8 @@ benchmark (Aristimunha et al. 2025, doi:10.48550/arXiv.2506.19141)
 ask through <code class="docutils literal notranslate"><span class="pre">EEGChallengeDataset</span></code> on the NEMAR archive (Delorme et
 al. 2022, doi:10.1093/database/baac096): by how much does AS-MMD close
 the naive-to-oracle gap, and does the alignment preserve the
-underlying P3 component?</p>
+underlying P3 component?
+Keywords: transfer-learning, applied, P300</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span>
 </pre></div>
 </div>
@@ -616,6 +618,22 @@ underlying P3 component?</p>
 <li><p>train three encoders on shared architecture + budget: naive, AS-MMD aligned, oracle.</p></li>
 <li><p>compare target accuracy for all three on the same figure with chance drawn on the same axes.</p></li>
 <li><p>verify the alignment preserves the P3 component via an ERP overlay at Pz.</p></li>
+</ul>
+</section>
+<section id="as-mmd-explanation">
+<h2>AS-MMD Explanation<a class="headerlink" href="#as-mmd-explanation" title="Link to this heading">#</a></h2>
+<p><strong>Adversarial-Style Maximum Mean Discrepancy (AS-MMD)</strong> is a domain-adaptation
+method that minimizes the distance between the source and target feature
+distributions. Unlike standard MMD, it uses an adversarial training
+approach (similar to GANs) to learn features that are discriminative
+for the task but invariant to the domain (laboratory, cap, etc.).</p>
+</section>
+<section id="requirements-validation">
+<h2>Requirements &amp; Validation<a class="headerlink" href="#requirements-validation" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Runtime Warning.</strong> This tutorial involves training deep networks. On a 4-core CPU, the smoke run takes ~2 minutes. For full training on real data, a GPU is recommended.</p></li>
+<li><p><strong>Minimum Data Assumptions.</strong> Requires at least two domains (source and target) with overlapping task labels (e.g., target vs. standard).</p></li>
+<li><p><strong>Expected Fold Outputs.</strong> Per-fold target accuracy should show the AS-MMD aligned model outperforming the naive model and approaching the oracle (upper bound).</p></li>
 </ul>
 </section>
 <section id="requirements">
@@ -660,7 +678,7 @@ underlying P3 component?</p>
 <h2>Step 2. Configure source and target cohorts<a class="headerlink" href="#step-2-configure-source-and-target-cohorts" title="Link to this heading">#</a></h2>
 <p>In a full run we would build two <code class="docutils literal notranslate"><span class="pre">EEGDashDataset</span></code> queries and run
 the standard P3 windowing recipe from <code class="docutils literal notranslate"><span class="pre">plot_20</span></code>. To keep the case
-study reproducible without paying a multi-GB download, we synthesise
+study reproducible without paying a multi-GB download, we synthesize
 source + target tensors with a shared P3-like component and
 dataset-specific noise + drift; the defaults wire <code class="docutils literal notranslate"><span class="pre">ds005863</span></code>
 (visualoddball, NEMAR; Delorme et al. 2022) to a placeholder target
@@ -676,8 +694,8 @@ id, both overridable via environment variables.</p>
 </pre></div>
 </div>
 </section>
-<section id="step-3-synthesise-oddball-windows-with-a-shared-p3-domain-shift">
-<h2>Step 3. Synthesise oddball windows with a shared P3 + domain shift<a class="headerlink" href="#step-3-synthesise-oddball-windows-with-a-shared-p3-domain-shift" title="Link to this heading">#</a></h2>
+<section id="step-3-synthesize-oddball-windows-with-a-shared-p3-domain-shift">
+<h2>Step 3. Synthesize oddball windows with a shared P3 + domain shift<a class="headerlink" href="#step-3-synthesize-oddball-windows-with-a-shared-p3-domain-shift" title="Link to this heading">#</a></h2>
 <p>Each window is a 1.2 s epoch at 128 Hz. <em>Target</em> class carries a
 centro-parietal positive bump at 380 ms; <em>standard</em> class does not.
 Domains differ in three ways: target-side noise floor is higher,
@@ -705,7 +723,7 @@ transfer symptoms (Cisotto &amp; Chicco 2024, Tip 8).</p>
     <span class="n">target_fraction</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
     <span class="n">rng</span><span class="p">:</span> <a href="https://numpy.org/doc/stable/reference/random/generator.html#numpy.random.Generator" title="numpy.random.Generator" class="sphx-glr-backref-module-numpy-random sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">Generator</span></a><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span></a><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Synthesise ``(X, y, subject_ids)`` for one domain.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Synthesize ``(X, y, subject_ids)`` for one domain.</span>
 
 <span class="sd">    The shared P3 template lives at index ``PZ_INDEX`` with a domain-</span>
 <span class="sd">    specific scaling so source and target carry the same physiological</span>
@@ -1118,7 +1136,7 @@ behaves like the naive baseline; too large and the encoder collapses
 all features to a domain-invariant point that throws the P3 signal
 away. Rerun at <code class="docutils literal notranslate"><span class="pre">0.05</span></code>, <code class="docutils literal notranslate"><span class="pre">0.2</span></code>, <code class="docutils literal notranslate"><span class="pre">0.4</span></code>, <code class="docutils literal notranslate"><span class="pre">1.0</span></code> and plot
 <code class="docutils literal notranslate"><span class="pre">acc_mmd</span></code> against the chosen weight.</p>
-<p><strong>Mini-project.</strong> Replace the synthesised tensors with real cohorts
+<p><strong>Mini-project.</strong> Replace the synthesized tensors with real cohorts
 via <a class="reference internal" href="../../../api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset" title="eegdash.EEGDashDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">eegdash.EEGDashDataset</span></code></a>. Set <code class="docutils literal notranslate"><span class="pre">EEGDASH_SOURCE_DATASET</span></code>
 and <code class="docutils literal notranslate"><span class="pre">EEGDASH_TARGET_DATASET</span></code> to two oddball accessions on NEMAR
 (Delorme et al. 2022; e.g. <code class="docutils literal notranslate"><span class="pre">ds005863</span></code> and <code class="docutils literal notranslate"><span class="pre">ds003061</span></code>), apply the
@@ -1147,7 +1165,7 @@ wipe out the underlying physiology. Concept page:
 </section>
 <section id="references">
 <h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
-<p>See <a class="reference internal" href="../../../references.html"><span class="doc">References</span></a> for the centralised bibliography of papers
+<p>See <a class="reference internal" href="../../../references.html"><span class="doc">References</span></a> for the centralized bibliography of papers
 cited above. Add or amend an entry once in
 <code class="file docutils literal notranslate"><span class="pre">docs/source/refs.bib</span></code>; every tutorial inherits the update.</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-auto-examples-applied-project-p300-transfer-py">
@@ -1184,7 +1202,7 @@ cited above. Add or amend an entry once in
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">How do I survey a clinical EEG dataset before training a model?</p>
+        <p class="prev-next-title">Survey clinical EEG datasets</p>
       </div>
     </a>
     <a class="right-next"
@@ -1192,7 +1210,7 @@ cited above. Add or amend an entry once in
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Predict p-factor from EEG with a Braindecode model (deep-learning regime)</p>
+        <p class="prev-next-title">Predict p-factor with deep learning</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -1216,10 +1234,12 @@ cited above. Add or amend an entry once in
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">Learning objectives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#as-mmd-explanation">AS-MMD Explanation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#requirements-validation">Requirements &amp; Validation</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#requirements">Requirements</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-setup-seeds-cache-and-device">Step 1. Setup, seeds, cache, and device</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-configure-source-and-target-cohorts">Step 2. Configure source and target cohorts</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-synthesise-oddball-windows-with-a-shared-p3-domain-shift">Step 3. Synthesise oddball windows with a shared P3 + domain shift</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-synthesize-oddball-windows-with-a-shared-p3-domain-shift">Step 3. Synthesize oddball windows with a shared P3 + domain shift</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-4-predict">Step 4. Predict</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-5-subject-aware-split-for-both-cohorts">Step 5. Subject-aware split for both cohorts</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-6-encoder-mmd-primitive-and-training-loop">Step 6. Encoder, MMD primitive, and training loop</a></li>

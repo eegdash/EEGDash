@@ -614,7 +614,7 @@ returns <em>records</em> (dicts of metadata). Nothing is downloaded.</p></li>
 catalogue query into a list of recordings that can be loaded, preprocessed,
 windowed, and iterated over.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">EEGChallengeDataset</span></code> is a <strong>frozen, derivative dataset</strong>, used for
-shared-benchmark contexts (currently the EEG 2025 Competition). It loads
+shared-benchmark contexts (currently the EEG2025 Competition). It loads
 pre-resampled, pre-filtered, pre-cut data so that every participant is
 evaluated against an identical signal.</p></li>
 </ul>
@@ -702,7 +702,7 @@ when a few files in a release are known to be corrupt.</p>
 <p><code class="docutils literal notranslate"><span class="pre">EEGChallengeDataset</span></code> is a thin wrapper over the same machinery, but
 points at a frozen, preprocessed bucket: the data are downsampled to a
 fixed rate, filtered with a fixed band, and cut into the canonical task
-blocks used by the EEG 2025 Competition. If you are participating in the
+blocks used by the EEG2025 Competition. If you are participating in the
 competition, you <strong>must</strong> use <code class="docutils literal notranslate"><span class="pre">EEGChallengeDataset</span></code>; otherwise your
 local results are not comparable to the public leaderboard. If you are
 not participating, <code class="docutils literal notranslate"><span class="pre">EEGChallengeDataset</span></code> is still useful when you want
@@ -716,7 +716,7 @@ through plain <code class="docutils literal notranslate"><span class="pre">EEGDa
 <ul class="simple">
 <li><p>“I just want to know what is out there.” → <code class="docutils literal notranslate"><span class="pre">EEGDash</span></code>.</p></li>
 <li><p>“I want a PyTorch-style dataset for my own analysis.” → <code class="docutils literal notranslate"><span class="pre">EEGDashDataset</span></code>.</p></li>
-<li><p>“I am running EEG 2025 Competition code, or I want strictly identical
+<li><p>“I am running EEG2025 Competition code, or I want strictly identical
 preprocessing across users.” → <code class="docutils literal notranslate"><span class="pre">EEGChallengeDataset</span></code>.</p></li>
 </ul>
 <p>Mixing modes inside a single experiment is fine: a common workflow uses
@@ -726,13 +726,13 @@ preprocessing across users.” → <code class="docutils literal notranslate"><s
 <section id="related-tutorials">
 <h2>Related tutorials<a class="headerlink" href="#related-tutorials" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p><a class="reference internal" href="../generated/auto_examples/tutorials/00_start_here/plot_00_first_search.html"><span class="doc">How do I find datasets in EEGDash?</span></a>
+<li><p><a class="reference internal" href="../generated/auto_examples/tutorials/00_start_here/plot_00_first_search.html"><span class="doc">Find datasets with the EEGDash API</span></a>
 walks through metadata-only catalogue exploration with <code class="docutils literal notranslate"><span class="pre">EEGDash</span></code>.</p></li>
-<li><p><a class="reference internal" href="../generated/auto_examples/tutorials/00_start_here/plot_01_first_recording.html"><span class="doc">How do I load one EEG recording from EEGDash?</span></a>
+<li><p><a class="reference internal" href="../generated/auto_examples/tutorials/00_start_here/plot_01_first_recording.html"><span class="doc">Load one EEG recording</span></a>
 contrasts the catalogue view with a first <code class="docutils literal notranslate"><span class="pre">EEGDashDataset</span></code> load.</p></li>
-<li><p><a class="reference internal" href="../generated/auto_examples/tutorials/00_start_here/plot_02_dataset_to_dataloader.html"><span class="doc">How do I turn one EEG recording into a PyTorch DataLoader?</span></a>
+<li><p><a class="reference internal" href="../generated/auto_examples/tutorials/00_start_here/plot_02_dataset_to_dataloader.html"><span class="doc">EEG recording to PyTorch DataLoader</span></a>
 builds a PyTorch <code class="docutils literal notranslate"><span class="pre">DataLoader</span></code> on top of an <code class="docutils literal notranslate"><span class="pre">EEGDashDataset</span></code>.</p></li>
-<li><p><a class="reference internal" href="../generated/auto_examples/tutorials/10_core_workflow/plot_13_save_and_reuse_prepared_data.html"><span class="doc">How do I save and reload prepared windows + features?</span></a>
+<li><p><a class="reference internal" href="../generated/auto_examples/tutorials/10_core_workflow/plot_13_save_and_reuse_prepared_data.html"><span class="doc">Save and reload prepared data</span></a>
 shows how to persist a preprocessed dataset to disk and reload without
 re-running the catalogue query.</p></li>
 </ul>

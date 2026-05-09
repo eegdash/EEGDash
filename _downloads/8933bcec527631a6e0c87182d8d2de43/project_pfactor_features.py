@@ -1,18 +1,30 @@
-"""Predicting p-factor from EEG with hand-crafted features (project starter)
-============================================================================
+"""Predict p-factor from EEG features
+====================================
+
+**Difficulty 3** | **Runtime: 30s** | **Compute: CPU**
 
 Companion to ``project_pfactor_deep.py``: same target, different model
 class. The deep variant asks whether an EEGConformer can learn the
 ``p_factor`` from raw windows, this one asks which interpretable EEG
-features carry the signal. The p-factor (Caspi et al. 2014,
-doi:10.1177/2167702613497473) is a transdiagnostic mental-health summary
-score derived from parent-and-child psychiatric questionnaires; the EEG
-side comes from the Healthy Brain Network release distributed on
+features carry the signal.
+**p-factor** (Caspi et al. 2014, doi:10.1177/2167702613497473) is a
+transdiagnostic mental-health summary score derived from parent-and-child
+psychiatric questionnaires; it captures a general dimension of
+psychopathology common across different disorders.
+
+The EEG side comes from the Healthy Brain Network release distributed on
 OpenNeuro and on the EEG2025 Challenge mirror as ``EEG2025r5``
 (Alexander et al. 2017, doi:10.1038/sdata.2017.181), surfaced through
-NEMAR (Delorme et al. 2022, doi:10.1093/nargab/lqac023). Splits stay
-strictly subject-disjoint per Cisotto and Chicco 2024 Tip 9
-(doi:10.7717/peerj-cs.2256).
+NEMAR (Delorme et al. 2022, doi:10.1093/nargab/lqac023).
+
+Validate your result
+--------------------
+- **Expected Columns.** The feature table should contain columns like
+  ``theta_Cz``, ``alpha_Cz``, ``beta_Cz``, ``gamma_Cz``, plus connectivity
+  and entropy features, and the target ``p_factor``.
+- **Related Material.** See :doc:`project_pfactor_deep` for a deep learning
+  approach and the :doc:`/auto_examples/eeg2025/index` for the official
+  challenge tracks.
 
 The deliverable is a feature-importance panel plus the regression
 diagnostic on never-seen subjects: which feature family (band power,
@@ -22,6 +34,7 @@ and how flat is the predicted-vs-true cloud at the subject level?
 
 Can hand-crafted spectral and signal features beat the train-median
 predictor on held-out subjects, and which family pulls the most weight?
+Keywords: features, applied, p-factor
 """
 
 # sphinx_gallery_thumbnail_path = '_static/thumbs/project_pfactor_features.png'
@@ -47,7 +60,7 @@ predictor on held-out subjects, and which family pulls the most weight?
 # - Concept page: :doc:`/concepts/leakage_and_evaluation`.
 
 # %%
-# Setup. Seed (E3.21) and a parametrised cache directory (E3.24) keep the
+# Setup. Seed (E3.21) and a parameterized cache directory (E3.24) keep the
 # study reproducible; warnings are tightened so sklearn convergence
 # chatter does not drown the result print.
 import os
@@ -84,7 +97,7 @@ cache_dir.mkdir(parents=True, exist_ok=True)
 # In production, :class:`eegdash.EEGChallengeDataset` exposes ``p_factor``
 # through ``description_fields`` so it surfaces as a per-recording column
 # (Alexander et al. 2017; Delorme et al. 2022). The canonical call is
-# below; the study then synthesises a feature table with the same column
+# below; the study then synthesizes a feature table with the same column
 # layout so the gallery runs offline (E3.24). The synthetic data follows
 # the EEG2025r5 layout: 16 subjects, 24 windows per subject, four band-
 # power features per channel (delta/theta/alpha/beta), two connectivity
@@ -455,6 +468,6 @@ assert mean_mae < mean_baseline_mae, "Model MAE must be below the median-baselin
 # %% [markdown]
 # References
 # ----------
-# See :doc:`/references` for the centralised bibliography of papers
+# See :doc:`/references` for the centralized bibliography of papers
 # cited above. Add or amend an entry once in
 # :file:`docs/source/refs.bib`; every tutorial inherits the update.

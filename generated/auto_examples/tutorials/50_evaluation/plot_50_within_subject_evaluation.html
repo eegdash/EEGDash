@@ -7,18 +7,18 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta property="og:title" content="When is within-subject decoding the right scientific question?" />
+<meta property="og:title" content="Within-subject decoding evaluation" />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://eegdash.org/generated/auto_examples/tutorials/50_evaluation/plot_50_within_subject_evaluation.html" />
 <meta property="og:site_name" content="EEG Dash" />
-<meta property="og:description" content="Cross-subject generalisation (plot_11) is the headline benchmark for EEG papers, but a calibration-style P300 speller, a clinical seizure detector tuned…" />
+<meta property="og:description" content="Difficulty 1-2| Runtime: 2m| Compute: CPU Cross-subject generalization (plot_11) is the headline benchmark for EEG papers, but a calibration-style P300…" />
 <meta property="og:image" content="https://eegdash.org/_static/eegdash_social_card.png" />
 <meta property="og:image:alt" content="EEG Dash — data-sharing interface for M/EEG datasets" />
-<meta name="description" content="Cross-subject generalisation (plot_11) is the headline benchmark for EEG papers, but a calibration-style P300 speller, a clinical seizure detector tuned…" />
+<meta name="description" content="Difficulty 1-2| Runtime: 2m| Compute: CPU Cross-subject generalization (plot_11) is the headline benchmark for EEG papers, but a calibration-style P300…" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@eegdash" />
 
-    <title>When is within-subject decoding the right scientific question? &#8212; EEG Dash</title>
+    <title>Within-subject decoding evaluation &#8212; EEG Dash</title>
   
   
   
@@ -74,7 +74,7 @@
     <link rel="icon" href="../../../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" />
-    <link rel="next" title="How well does an EEG decoder generalise to a never-seen subject?" href="plot_51_cross_subject_evaluation.html" />
+    <link rel="next" title="Cross-subject decoding evaluation" href="plot_51_cross_subject_evaluation.html" />
     <link rel="prev" title="Evaluation and Benchmarking" href="index.html" />
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="0.7" />
@@ -563,7 +563,7 @@
     
     <li class="breadcrumb-item"><a href="index.html" class="nav-link">Evaluation and Benchmarking</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">When is within-subject decoding the right scientific question?</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Within-subject decoding evaluation</span></li>
   </ul>
 </nav>
 </div>
@@ -585,9 +585,10 @@
 <p><a class="reference internal" href="#sphx-glr-download-generated-auto-examples-tutorials-50-evaluation-plot-50-within-subject-evaluation-py"><span class="std std-ref">Go to the end</span></a>
 to download the full example code or to run this example in your browser via Binder.</p>
 </div>
-<section class="sphx-glr-example-title" id="when-is-within-subject-decoding-the-right-scientific-question">
-<span id="sphx-glr-generated-auto-examples-tutorials-50-evaluation-plot-50-within-subject-evaluation-py"></span><h1>When is within-subject decoding the right scientific question?<a class="headerlink" href="#when-is-within-subject-decoding-the-right-scientific-question" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">10 minutes</span></div>
-<p>Cross-subject generalisation (plot_11) is the headline benchmark for
+<section class="sphx-glr-example-title" id="within-subject-decoding-evaluation">
+<span id="sphx-glr-generated-auto-examples-tutorials-50-evaluation-plot-50-within-subject-evaluation-py"></span><h1>Within-subject decoding evaluation<a class="headerlink" href="#within-subject-decoding-evaluation" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">10 minutes</span></div>
+<p><strong>Difficulty 1-2</strong> | <strong>Runtime: 2m</strong> | <strong>Compute: CPU</strong></p>
+<p>Cross-subject generalization (plot_11) is the headline benchmark for
 EEG papers, but a calibration-style P300 speller, a clinical seizure
 detector tuned to one patient, or a lab paradigm where inter-subject
 variance dominates the contrast all care about a <em>single</em> brain at
@@ -607,7 +608,18 @@ Jerbi 2015 add the chance-level statistics: a small test fold can
 produce 0.65 from random labels, and the binomial chance check is
 the only way to spot it. OpenNeuro/NEMAR <span class="bibtex-citation" id="id1">[<a class="reference internal" href="../../../../references.html#id6" title="Arnaud Delorme, Dung Truong, Choonhan Youn, Subhashini Sivagnanam, Claire Stirm, Kenneth Yoshimoto, Russell A Poldrack, Amitava Majumdar, and Scott Makeig. Nemar: an open access data, tools and compute resource operating on neuroelectromagnetic data. Database, 2022. doi:10.1093/database/baac096.">Delorme <em>et al.</em>, 2022</a>]</span> hosts
 the public benchmarks where both regimes get reported.</p>
-<p>So when is within-subject evaluation the right call?</p>
+<p># So when is within-subject evaluation the right call?
+#
+# Validate your result
+# ——————–
+# - <strong>Intentional Overlap.</strong> Confirm that <code class="docutils literal notranslate"><span class="pre">subject_overlap</span> <span class="pre">==</span> <span class="pre">1</span></code> in your
+#   split report. This is expected in the within-subject regime.
+# - <strong>Per-Subject Accuracy.</strong> Accuracy should be higher than the cross-subject
+#   reference, often by a large margin (the “calibration benefit”).
+# - <strong>Binomial Chance.</strong> Verify your results against the binomial chance
+#   level, especially for subjects with few trials.
+#
+# Keywords: evaluation, within-subject</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span>
 </pre></div>
 </div>
@@ -616,7 +628,7 @@ the public benchmarks where both regimes get reported.</p>
 <ul class="simple">
 <li><p>Identify when within-subject evaluation is appropriate (calibration decoders, single-subject diagnostics, paradigms with high inter-subject variance).</p></li>
 <li><p>Build a 5-fold within-subject manifest with <code class="docutils literal notranslate"><span class="pre">get_splitter</span></code> (<code class="docutils literal notranslate"><span class="pre">&quot;within_subject&quot;</span></code>) and freeze it via <code class="docutils literal notranslate"><span class="pre">make_split_manifest</span></code>.</p></li>
-<li><p>Read <code class="docutils literal notranslate"><span class="pre">describe_split</span></code> and recognise that <code class="docutils literal notranslate"><span class="pre">subject_overlap</span> <span class="pre">==</span> <span class="pre">1</span></code> is the design, not a leak.</p></li>
+<li><p>Read <code class="docutils literal notranslate"><span class="pre">describe_split</span></code> and recognize that <code class="docutils literal notranslate"><span class="pre">subject_overlap</span> <span class="pre">==</span> <span class="pre">1</span></code> is the design, not a leak.</p></li>
 <li><p>Assert no trial overlap with <code class="docutils literal notranslate"><span class="pre">assert_no_leakage</span></code> and verify the JSON <code class="docutils literal notranslate"><span class="pre">leakage_report</span></code> line.</p></li>
 <li><p>Compare per-subject accuracy against <code class="docutils literal notranslate"><span class="pre">majority_baseline</span></code> chance level and against a leave-one-subject-out cross-subject reference on the <em>same</em> data.</p></li>
 </ul>
@@ -1098,7 +1110,7 @@ from NEMAR <span class="bibtex-citation" id="id2">[<a class="reference internal"
 </section>
 <section id="references">
 <h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
-<p>See <a class="reference internal" href="../../../../references.html"><span class="doc">References</span></a> for the centralised bibliography of papers
+<p>See <a class="reference internal" href="../../../../references.html"><span class="doc">References</span></a> for the centralized bibliography of papers
 cited above. Add or amend an entry once in
 <code class="file docutils literal notranslate"><span class="pre">docs/source/refs.bib</span></code>; every tutorial inherits the update.</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-auto-examples-tutorials-50-evaluation-plot-50-within-subject-evaluation-py">
@@ -1143,7 +1155,7 @@ cited above. Add or amend an entry once in
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">How well does an EEG decoder generalise to a never-seen subject?</p>
+        <p class="prev-next-title">Cross-subject decoding evaluation</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

@@ -6,10 +6,12 @@
 
 <a id="sphx-glr-generated-auto-examples-tutorials-40-features-plot-40-first-features-py"></a>
 
-# How do I turn EEG windows into a band-power feature matrix?
+# Extract band-power features
+
+**Difficulty 1-2** | **Runtime: 30s** | **Compute: CPU**
 
 Plot_30 closed the loop on the parieto-occipital alpha rhythm Hans Berger
-first reported in 1929 [[Klimesch, 2012](../../../../references.md#id16)]. This tutorial generalises the
+first reported in 1929 [[Klimesch, 2012](../../../../references.md#id16)]. This tutorial generalizes the
 recipe: starting from windowed EEG (the same Healthy Brain Network
 `ds005514` resting-state idiom we keep across the gallery, reachable
 through [NEMAR](https://nemar.org), Delorme et al. 2022; Alexander et
@@ -19,14 +21,15 @@ theta, alpha, beta, and gamma. The deliverable is a
 hands to scikit-learn [[Pedregosa *et al.*, 2011](../../../../references.md#id33)] without any further
 reshaping.
 
-Can a small set of band-power features per channel summarise a window
+Can a small set of band-power features per channel summarize a window
 well enough to feed downstream ML?
+Keywords: features, band-power, spectral
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 18-20 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 21-23 -->
 ```Python
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 22-40 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 25-43 -->
 
 ## Learning objectives
 
@@ -39,7 +42,7 @@ well enough to feed downstream ML?
 ## Requirements
 
 - About 30 s on CPU. No GPU. No network on this run (the data is
-  synthesised offline so the tutorial is reproducible without
+  synthesized offline so the tutorial is reproducible without
   touching NEMAR; Delorme et al. 2022).
 - Prerequisite:
   /auto_examples/tutorials/10_core_workflow/plot_10_preprocess_and_window
@@ -47,13 +50,13 @@ well enough to feed downstream ML?
   /auto_examples/tutorials/30_resting_state/plot_30_eyes_open_closed.
 - Concept page: [Features vs. deep learning](../../../../concepts/features_vs_deep_learning.md).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 42-45 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 45-48 -->
 
-Setup. Seed (E3.21) and a parametrised cache directory (E3.24) keep the
+Setup. Seed (E3.21) and a parameterized cache directory (E3.24) keep the
 tutorial reproducible and the output table inside `cache_dir`. Cisotto
 & Chicco 2024 frame both as Tip 4 / Tip 5 of clinical-EEG good practice.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 45-76 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 48-79 -->
 ```Python
 import os
 from functools import partial
@@ -91,12 +94,12 @@ print(f"eegdash {eegdash.__version__}; cache_dir={cache_dir}")
 eegdash 0.7.2; cache_dir=/home/runner/eegdash_cache
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 77-112 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 80-123 -->
 
 ## Concept: from windows to a feature matrix
 
 Plot_30 showed that closing the eyes releases parieto-occipital alpha
-power [[Klimesch, 2012](../../../../references.md#id16)]. The natural follow-up is to summarise every
+power [[Klimesch, 2012](../../../../references.md#id16)]. The natural follow-up is to summarize every
 window with a few numbers per channel and stack the result into a
 tensor a learner can consume. Three shapes carry the story:
 
@@ -116,6 +119,29 @@ WindowsDataset            tidy DataFrame             feature tensor
                             each band per channel       channel separate
 ```
 
+## Validate your result
+
+- **Output Shape.** The tidy DataFrame should have `n_windows` rows and
+  `n_features * n_channels` columns. For the default set, expect
+  `4 * n_channels` columns.
+- **Feature Values.** Log-power values are typically negative (since power
+  is < 1 V^2/Hz). For alpha-band in a resting subject, expect values
+  between `-10` and `-15`.
+- **Missing Data.** Check for `NaN` values if your windows are shorter than
+  the minimum required for a specific frequency band.
+
+## Feature Naming and Shapes
+
+- **Naming.** Feature columns follow the template `{feature_name}_{channel_name}` (e.g., `alpha_Oz`).
+- **Matrix Shape.** The primary output is a tidy DataFrame with `n_windows` rows and `n_features * n_channels` columns.
+- **Missing Features.** If a window is too short for a specific feature (e.g., a Welch PSD on a 0.5s window for delta), EEGDash returns `NaN`.
+- **Why features?** Classical features are preferable to CNNs when:
+  1. **Interpretability is key.** You can map a specific band-power rise to a brain region.
+  2. **Data is sparse.** Deep nets often overfit on small cohorts (N < 100).
+  3. **Compute is limited.** Feature extraction is CPU-bound and much faster than training deep models.
+
+<!-- GENERATED FROM PYTHON SOURCE LINES 125-137 -->
+
 Two design choices keep the recipe portable. The DataFrame is the
 format learners and dashboards consume; the band-aware tensor is the
 format every panel of the figure below was designed around.
@@ -129,20 +155,20 @@ format every panel of the figure below was designed around.
   id, so a learner can `grep alpha_` to pick out the alpha view, or
   reshape into `(n_windows, n_bands, n_channels)` once.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 114-124 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 139-149 -->
 
 ## Step 1. Reload (or mimic) the windows from plot_10
 
 In production you would reload the windows produced by plot_10 with
 [`braindecode.datautil.load_concat_dataset()`](https://braindecode.org/stable/generated/braindecode.datautil.load_concat_dataset.html#braindecode.datautil.load_concat_dataset). To stay offline and
-reproducible we synthesise two short HBN-style recordings at 128 Hz on
+reproducible we synthesize two short HBN-style recordings at 128 Hz on
 a 24-channel parieto-occipital-leaning montage and inject a 10 Hz
 alpha oscillation into the eyes-closed recording [[Berger, 1929](../../../../references.md#id24)]. The
 1-48 Hz FIR (firwin) band-pass below writes the pass-band into MNE’s
 info; `spectral_preprocessor` reads it back later (Cisotto & Chicco
 2024 Tip 4-5).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 126-195 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 151-220 -->
 ```Python
 SFREQ = 128
 WINDOW_S = 2.0
@@ -263,7 +289,7 @@ pd.Series(
 </div>
 <br />
 <br />
-<!-- GENERATED FROM PYTHON SOURCE LINES 196-206 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 221-231 -->
 
 ## Step 2. Pick a small feature set
 
@@ -276,7 +302,7 @@ possible is the topic of plot_41.
 show *higher* or *lower* power than eyes-open? Which channels should
 peak first? Note your guess.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 208-231 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 233-256 -->
 ```Python
 BANDS = {
     "theta": (4.5, 8.0),
@@ -306,7 +332,7 @@ print(f"feature kinds: {list(features_dict)} | bands: {list(BANDS)}")
 feature kinds: ['var', 'rms', 'spec'] | bands: ['theta', 'alpha', 'beta', 'gamma']
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 232-239 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 257-264 -->
 
 ## Step 3. Run extract_features
 
@@ -316,7 +342,7 @@ each feature; column names are `<feature>_<channel>` for the
 univariate kinds and `<group>_band_power_<band>_<channel>` for the
 spectral group, so a learner can grep `alpha_O1` directly.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 241-255 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 266-280 -->
 ```Python
 features_ds = extract_features(windows, features_dict, batch_size=64, n_jobs=1)
 feature_table = features_ds.to_dataframe(include_target=True)
@@ -335,7 +361,7 @@ pd.Series(
 
 ```none
 Extracting features:   0%|          | 0/2 [00:00<?, ?it/s]
-Extracting features: 100%|██████████| 2/2 [00:00<00:00, 144.81it/s]
+Extracting features: 100%|██████████| 2/2 [00:00<00:00, 155.92it/s]
 ```
 
 <div class="output_subarea output_html rendered_html output_result">
@@ -387,14 +413,14 @@ Extracting features: 100%|██████████| 2/2 [00:00<00:00, 144.
 </div>
 <br />
 <br />
-<!-- GENERATED FROM PYTHON SOURCE LINES 256-260 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 281-285 -->
 
 **Investigate.** Each row is one window; column names embed the
 channel name. The structural invariants from the spec hold by
 construction; we assert them so a regression in the extractor would
 fail the tutorial loud and early [[Nederbragt *et al.*, 2020](../../../../references.md#id31)].
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 262-274 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 287-299 -->
 ```Python
 non_meta_cols = [c for c in feature_table.columns if c != "target"]
 assert n_rows == n_windows_total
@@ -418,7 +444,7 @@ alpha mean (closed) / alpha mean (open) at the parieto-occipital pole:
   Pz: closed/open = 119.0x
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 275-281 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 300-306 -->
 
 ## Step 4. Reshape into a (windows, bands, channels) tensor
 
@@ -427,7 +453,7 @@ figure and for plot_42 we also want the band axis and the channel axis
 kept separate. The reshape is one `np.stack` over the per-band
 views.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 283-303 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 308-328 -->
 ```Python
 band_names = list(BANDS)
 log_power_per_band: dict[str, np.ndarray] = {}
@@ -491,7 +517,7 @@ pd.Series(
 </div>
 <br />
 <br />
-<!-- GENERATED FROM PYTHON SOURCE LINES 304-310 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 329-335 -->
 
 ## Step 5. Save the feature table for plot_42
 
@@ -500,7 +526,7 @@ expect [[Pedregosa *et al.*, 2011](../../../../references.md#id33)]. Saving the 
 the tensor keeps column names and the target column visible to any
 downstream consumer.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 312-319 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 337-344 -->
 ```Python
 parquet_path = cache_dir / "plot_40_features.parquet"
 feature_table.to_parquet(parquet_path)
@@ -514,7 +540,7 @@ print(f"saved {parquet_path.name}; reload shape={roundtrip.shape}")
 saved plot_40_features.parquet; reload shape=(32, 145)
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 320-328 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 345-353 -->
 
 ## A common mistake, and how to recover
 
@@ -525,7 +551,7 @@ the extractor cannot apply a non-function to a window. We trigger it
 inside `try / except` so the failure mode is visible (Nederbragt et
 al. 2020).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 330-336 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 355-361 -->
 ```Python
 try:
     extract_features(windows, {"varience": "not_a_callable"}, batch_size=64)
@@ -541,7 +567,7 @@ Caught TypeError: 'not_a_callable' is not a callable object
 Recovery: known feature keys -> ['var', 'rms', 'spec']
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 337-350 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 362-375 -->
 
 ## Modify
 
@@ -557,7 +583,7 @@ Predict before running: how should `feature_table.shape[1]` change?
 defines a peak-to-peak / std ratio; plug it into `features_dict` and
 rerun Step 3.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 353-366 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 378-391 -->
 ```Python
 @univariate_feature
 def signal_peak_to_peak_ratio(x, /):
@@ -575,11 +601,11 @@ print(f"extended n_cols={extended.shape[1]} (was {n_cols - 1})")
 
 ```none
 Extracting features:   0%|          | 0/2 [00:00<?, ?it/s]
-Extracting features: 100%|██████████| 2/2 [00:00<00:00, 148.27it/s]
+Extracting features: 100%|██████████| 2/2 [00:00<00:00, 145.26it/s]
 extended n_cols=168 (was 144)
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 367-379 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 392-404 -->
 
 ## Headline figure: heatmap, distributions, top-K
 
@@ -594,7 +620,7 @@ tutorial; the call below is the only line that matters.
 - *Right*: per-channel `closed - open` alpha log-power difference,
   with the top-K channels picked by absolute magnitude.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 381-411 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 406-436 -->
 ```Python
 from _features_figure import draw_features_figure
 
@@ -632,7 +658,7 @@ alpha peak channel: POz (+2.17 log10 power)
 top-8 alpha-discriminative channels: ['POz', 'O2', 'Oz', 'Pz', 'O1', 'E05', 'E08', 'P7']
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 412-425 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 437-450 -->
 
 ## Result
 
@@ -648,7 +674,7 @@ top-8 alpha-discriminative channels: ['POz', 'O2', 'Oz', 'Pz', 'O1', 'E05', 'E08
 - Parquet at `cache_dir / "plot_40_features.parquet"` carries the
   table to plot_42.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 427-448 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 452-473 -->
 
 ## Try it yourself / Extensions
 
@@ -672,11 +698,11 @@ top-8 alpha-discriminative channels: ['POz', 'O2', 'Oz', 'Pz', 'O1', 'E05', 'E08
 - Next: /auto_examples/tutorials/40_features/plot_42_features_to_sklearn
   reloads the parquet and runs a leakage-safe sklearn classifier.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 450-455 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 475-480 -->
 
 ## References
 
-See [References](../../../../references.md) for the centralised bibliography of papers
+See [References](../../../../references.md) for the centralized bibliography of papers
 cited above. Add or amend an entry once in
 `docs/source/refs.bib`; every tutorial inherits the update.
 

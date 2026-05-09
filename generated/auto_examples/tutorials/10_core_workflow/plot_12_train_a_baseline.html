@@ -7,18 +7,18 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta property="og:title" content="How do I train a leakage-safe baseline classifier on EEG?" />
+<meta property="og:title" content="Train a leakage-safe baseline" />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://eegdash.org/generated/auto_examples/tutorials/10_core_workflow/plot_12_train_a_baseline.html" />
 <meta property="og:site_name" content="EEG Dash" />
-<meta property="og:description" content="A model that scores 0.78 on held-out windows is only useful when you also know what 0.50 (chance) and 0.55 (a transparent linear baseline) look like on…" />
+<meta property="og:description" content="Difficulty 1-2| Runtime: 30s| Compute: CPU A model that scores 0.78 on held-out windows is only useful when you also know what 0.50 (chance) and 0.55 (a…" />
 <meta property="og:image" content="https://eegdash.org/_static/eegdash_social_card.png" />
 <meta property="og:image:alt" content="EEG Dash — data-sharing interface for M/EEG datasets" />
-<meta name="description" content="A model that scores 0.78 on held-out windows is only useful when you also know what 0.50 (chance) and 0.55 (a transparent linear baseline) look like on…" />
+<meta name="description" content="Difficulty 1-2| Runtime: 30s| Compute: CPU A model that scores 0.78 on held-out windows is only useful when you also know what 0.50 (chance) and 0.55 (a…" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@eegdash" />
 
-    <title>How do I train a leakage-safe baseline classifier on EEG? &#8212; EEG Dash</title>
+    <title>Train a leakage-safe baseline &#8212; EEG Dash</title>
   
   
   
@@ -74,8 +74,8 @@
     <link rel="icon" href="../../../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" />
-    <link rel="next" title="How do I save and reload prepared windows + features?" href="plot_13_save_and_reuse_prepared_data.html" />
-    <link rel="prev" title="How do I split EEG data without subject leakage?" href="plot_11_leakage_safe_split.html" />
+    <link rel="next" title="Save and reload prepared data" href="plot_13_save_and_reuse_prepared_data.html" />
+    <link rel="prev" title="Split EEG without subject leakage" href="plot_11_leakage_safe_split.html" />
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="0.7" />
 
@@ -563,7 +563,7 @@
     
     <li class="breadcrumb-item"><a href="index.html" class="nav-link">Core Decoding Workflow</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">How do I train a leakage-safe baseline classifier on EEG?</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Train a leakage-safe baseline</span></li>
   </ul>
 </nav>
 </div>
@@ -585,8 +585,9 @@
 <p><a class="reference internal" href="#sphx-glr-download-generated-auto-examples-tutorials-10-core-workflow-plot-12-train-a-baseline-py"><span class="std std-ref">Go to the end</span></a>
 to download the full example code or to run this example in your browser via Binder.</p>
 </div>
-<section class="sphx-glr-example-title" id="how-do-i-train-a-leakage-safe-baseline-classifier-on-eeg">
-<span id="sphx-glr-generated-auto-examples-tutorials-10-core-workflow-plot-12-train-a-baseline-py"></span><h1>How do I train a leakage-safe baseline classifier on EEG?<a class="headerlink" href="#how-do-i-train-a-leakage-safe-baseline-classifier-on-eeg" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">16 minutes</span></div>
+<section class="sphx-glr-example-title" id="train-a-leakage-safe-baseline">
+<span id="sphx-glr-generated-auto-examples-tutorials-10-core-workflow-plot-12-train-a-baseline-py"></span><h1>Train a leakage-safe baseline<a class="headerlink" href="#train-a-leakage-safe-baseline" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">16 minutes</span></div>
+<p><strong>Difficulty 1-2</strong> | <strong>Runtime: 30s</strong> | <strong>Compute: CPU</strong></p>
 <p>A model that scores 0.78 on held-out windows is only useful when you
 also know what 0.50 (chance) and 0.55 (a transparent linear baseline)
 look like on the same split. This tutorial trains that linear
@@ -600,6 +601,7 @@ exactly one fold. The deliverable is a single three-panel figure that
 answers three questions on one screen: do the features separate the
 classes, how does the accuracy vary across held-out subjects, and
 which trials does the model confuse?</p>
+<p>Keywords: classification, baseline, evaluation</p>
 <section id="learning-objectives">
 <h2>Learning objectives<a class="headerlink" href="#learning-objectives" title="Link to this heading">#</a></h2>
 <ul class="simple">
@@ -615,8 +617,8 @@ which trials does the model confuse?</p>
 <ul class="simple">
 <li><p>About 90 s on CPU on first run; under 30 s once cached.</p></li>
 <li><p>Network on first call (~30 MB into <code class="docutils literal notranslate"><span class="pre">cache_dir</span></code>); offline thereafter.</p></li>
-<li><p>Prerequisites: <a class="reference internal" href="plot_11_leakage_safe_split.html"><span class="doc">How do I split EEG data without subject leakage?</span></a> (cross-subject
-splits), <a class="reference internal" href="plot_10_preprocess_and_window.html"><span class="doc">How do I preprocess EEG and create model-ready windows?</span></a> (event windowing).</p></li>
+<li><p>Prerequisites: <a class="reference internal" href="plot_11_leakage_safe_split.html"><span class="doc">Split EEG without subject leakage</span></a> (cross-subject
+splits), <a class="reference internal" href="plot_10_preprocess_and_window.html"><span class="doc">Preprocess EEG and create windows</span></a> (event windowing).</p></li>
 <li><p>Concept: <a class="reference internal" href="../../../../concepts/features_vs_deep_learning.html"><span class="doc">Features vs. deep learning</span></a>.</p></li>
 </ul>
 </section>
@@ -645,6 +647,18 @@ memorize this person?”.</p></li>
 computed on the held-out test set, so the chance number you report
 tracks the actual class balance of the test fold, not a notional
 50 / 50 prior.</p></li>
+</ul>
+</section>
+<section id="validate-your-result">
+<h2>Validate your result<a class="headerlink" href="#validate-your-result" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Accuracy.</strong> Expect the linear baseline to score significantly above
+chance (e.g., 0.60-0.75 for visual P300) but below a well-tuned deep
+model.</p></li>
+<li><p><strong>Chance Level.</strong> Verify that <code class="docutils literal notranslate"><span class="pre">majority_baseline</span></code> matches the class
+imbalance of your dataset (e.g., 0.50 for balanced EO/EC).</p></li>
+<li><p><strong>Confusion Matrix.</strong> The row-normalized confusion matrix should show
+diagonal dominance if the model has learned the task.</p></li>
 </ul>
 <p>Setup. <code class="docutils literal notranslate"><span class="pre">random_state=42</span></code> on every estimator and splitter is what
 keeps the printed accuracy byte-stable across runs (E3.21).</p>
@@ -714,7 +728,7 @@ while leaving enough subjects for a 3-fold cross-subject split.</p>
 <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">records_summary</span></a>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[05/08/26 18:42:12] WARNING  File not found on S3, skipping:   downloader.py:163
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[05/09/26 20:25:08] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds002718/sub-0
                              02/eeg/sub-002_task-FaceRecogniti
                              on_eeg.fdt
@@ -784,50 +798,50 @@ of a silent zero-window dataset.</p>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Downloading sub-003_task-FaceRecognition_channels.tsv:   0%|          | 0.00/1.31k [00:00&lt;?, ?B/s]
-Downloading sub-003_task-FaceRecognition_channels.tsv: 100%|██████████| 1.31k/1.31k [00:00&lt;00:00, 5.50MB/s]
+Downloading sub-003_task-FaceRecognition_channels.tsv: 100%|██████████| 1.31k/1.31k [00:00&lt;00:00, 5.56MB/s]
 
 Downloading sub-003_task-FaceRecognition_events.tsv:   0%|          | 0.00/122k [00:00&lt;?, ?B/s]
-Downloading sub-003_task-FaceRecognition_events.tsv: 100%|██████████| 122k/122k [00:00&lt;00:00, 17.8MB/s]
+Downloading sub-003_task-FaceRecognition_events.tsv: 100%|██████████| 122k/122k [00:00&lt;00:00, 9.88MB/s]
 
 Downloading sub-003_task-FaceRecognition_electrodes.tsv:   0%|          | 0.00/1.67k [00:00&lt;?, ?B/s]
-Downloading sub-003_task-FaceRecognition_electrodes.tsv: 100%|██████████| 1.67k/1.67k [00:00&lt;00:00, 6.68MB/s]
+Downloading sub-003_task-FaceRecognition_electrodes.tsv: 100%|██████████| 1.67k/1.67k [00:00&lt;00:00, 8.30MB/s]
 
 Downloading sub-003_task-FaceRecognition_eeg.json:   0%|          | 0.00/1.28k [00:00&lt;?, ?B/s]
-Downloading sub-003_task-FaceRecognition_eeg.json: 100%|██████████| 1.28k/1.28k [00:00&lt;00:00, 5.54MB/s]
+Downloading sub-003_task-FaceRecognition_eeg.json: 100%|██████████| 1.28k/1.28k [00:00&lt;00:00, 7.03MB/s]
 
 Downloading sub-003_task-FaceRecognition_coordsystem.json:   0%|          | 0.00/281 [00:00&lt;?, ?B/s]
-Downloading sub-003_task-FaceRecognition_coordsystem.json: 100%|██████████| 281/281 [00:00&lt;00:00, 1.45MB/s]
-[05/08/26 18:42:14] WARNING  File not found on S3, skipping:   downloader.py:163
+Downloading sub-003_task-FaceRecognition_coordsystem.json: 100%|██████████| 281/281 [00:00&lt;00:00, 1.38MB/s]
+[05/09/26 20:25:09] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds002718/sub-0
                              03/eeg/sub-003_task-FaceRecogniti
                              on_eeg.fdt
 
 Downloading sub-003_task-FaceRecognition_eeg.set:   0%|          | 0.00/221M [00:00&lt;?, ?B/s]
-Downloading sub-003_task-FaceRecognition_eeg.set:  23%|██▎       | 50.0M/221M [00:01&lt;00:05, 34.5MB/s]
-Downloading sub-003_task-FaceRecognition_eeg.set: 100%|██████████| 221M/221M [00:01&lt;00:00, 148MB/s]
+Downloading sub-003_task-FaceRecognition_eeg.set:  23%|██▎       | 50.0M/221M [00:01&lt;00:04, 40.9MB/s]
+Downloading sub-003_task-FaceRecognition_eeg.set: 100%|██████████| 221M/221M [00:01&lt;00:00, 175MB/s]
 
 Downloading sub-004_task-FaceRecognition_channels.tsv:   0%|          | 0.00/1.31k [00:00&lt;?, ?B/s]
-Downloading sub-004_task-FaceRecognition_channels.tsv: 100%|██████████| 1.31k/1.31k [00:00&lt;00:00, 4.22MB/s]
+Downloading sub-004_task-FaceRecognition_channels.tsv: 100%|██████████| 1.31k/1.31k [00:00&lt;00:00, 4.74MB/s]
 
 Downloading sub-004_task-FaceRecognition_events.tsv:   0%|          | 0.00/119k [00:00&lt;?, ?B/s]
-Downloading sub-004_task-FaceRecognition_events.tsv: 100%|██████████| 119k/119k [00:00&lt;00:00, 220MB/s]
+Downloading sub-004_task-FaceRecognition_events.tsv: 100%|██████████| 119k/119k [00:00&lt;00:00, 52.8MB/s]
 
 Downloading sub-004_task-FaceRecognition_electrodes.tsv:   0%|          | 0.00/1.67k [00:00&lt;?, ?B/s]
-Downloading sub-004_task-FaceRecognition_electrodes.tsv: 100%|██████████| 1.67k/1.67k [00:00&lt;00:00, 8.92MB/s]
+Downloading sub-004_task-FaceRecognition_electrodes.tsv: 100%|██████████| 1.67k/1.67k [00:00&lt;00:00, 8.83MB/s]
 
 Downloading sub-004_task-FaceRecognition_eeg.json:   0%|          | 0.00/1.28k [00:00&lt;?, ?B/s]
-Downloading sub-004_task-FaceRecognition_eeg.json: 100%|██████████| 1.28k/1.28k [00:00&lt;00:00, 7.39MB/s]
+Downloading sub-004_task-FaceRecognition_eeg.json: 100%|██████████| 1.28k/1.28k [00:00&lt;00:00, 6.87MB/s]
 
 Downloading sub-004_task-FaceRecognition_coordsystem.json:   0%|          | 0.00/278 [00:00&lt;?, ?B/s]
-Downloading sub-004_task-FaceRecognition_coordsystem.json: 100%|██████████| 278/278 [00:00&lt;00:00, 1.60MB/s]
-[05/08/26 18:42:17] WARNING  File not found on S3, skipping:   downloader.py:163
+Downloading sub-004_task-FaceRecognition_coordsystem.json: 100%|██████████| 278/278 [00:00&lt;00:00, 1.37MB/s]
+[05/09/26 20:25:13] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds002718/sub-0
                              04/eeg/sub-004_task-FaceRecogniti
                              on_eeg.fdt
 
 Downloading sub-004_task-FaceRecognition_eeg.set:   0%|          | 0.00/223M [00:00&lt;?, ?B/s]
-Downloading sub-004_task-FaceRecognition_eeg.set:  22%|██▏       | 50.0M/223M [00:01&lt;00:05, 34.0MB/s]
-Downloading sub-004_task-FaceRecognition_eeg.set: 100%|██████████| 223M/223M [00:01&lt;00:00, 147MB/s]
+Downloading sub-004_task-FaceRecognition_eeg.set:  22%|██▏       | 50.0M/223M [00:00&lt;00:03, 58.6MB/s]
+Downloading sub-004_task-FaceRecognition_eeg.set: 100%|██████████| 223M/223M [00:00&lt;00:00, 249MB/s]
 </pre></div>
 </div>
 <div class="output_subarea output_html rendered_html output_result">
@@ -1541,10 +1555,10 @@ does theta-alpha-beta carry most of the lift on its own?</p></li>
 </section>
 <section id="references">
 <h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
-<p>See <a class="reference internal" href="../../../../references.html"><span class="doc">References</span></a> for the centralised bibliography of papers
+<p>See <a class="reference internal" href="../../../../references.html"><span class="doc">References</span></a> for the centralized bibliography of papers
 cited above. Add or amend an entry once in
 <code class="file docutils literal notranslate"><span class="pre">docs/source/refs.bib</span></code>; every tutorial inherits the update.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 27.353 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 27.111 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-auto-examples-tutorials-10-core-workflow-plot-12-train-a-baseline-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/eegdash/EEGDash/main?urlpath=lab/tree/notebooks/generated/auto_examples/tutorials/10_core_workflow/plot_12_train_a_baseline.ipynb"><img alt="Launch binder" src="../../../../_images/binder_badge_logo6.svg" style="width: 150px;" />
@@ -1579,7 +1593,7 @@ cited above. Add or amend an entry once in
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">How do I split EEG data without subject leakage?</p>
+        <p class="prev-next-title">Split EEG without subject leakage</p>
       </div>
     </a>
     <a class="right-next"
@@ -1587,7 +1601,7 @@ cited above. Add or amend an entry once in
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">How do I save and reload prepared windows + features?</p>
+        <p class="prev-next-title">Save and reload prepared data</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -1613,6 +1627,7 @@ cited above. Add or amend an entry once in
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">Learning objectives</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#requirements">Requirements</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-a-baseline-before-a-deep-net">Why a baseline before a deep net?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#validate-your-result">Validate your result</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-pull-three-subjects-of-ds002718">Step 1: Pull three subjects of ds002718</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#annotation-discovery-which-event-names-are-actually-in-the-file">Annotation discovery: which event names are actually in the file?</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-two-safe-preprocessors-and-event-windowing">Step 2: Two safe preprocessors and event windowing</a></li>

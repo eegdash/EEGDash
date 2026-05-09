@@ -8,8 +8,10 @@
 
 # Subject-invariant p-factor regression (EEG2025 Challenge 2)
 
+**Difficulty 3** | **Runtime: 30s** | **Compute: CPU (GPU Recommended)**
+
 Challenge 2 of the EEG2025 Foundation Challenge asks whether a model can
-predict the **p-factor** from EEG without secretly memorising subject
+predict the **p-factor** from EEG without secretly memorizing subject
 identity. The p-factor (Caspi et al. 2014, doi:10.1177/2167702613497473)
 is a general dimension of psychopathology derived from the Child
 Behavior Checklist; the EEG side comes from the Healthy Brain Network
@@ -17,7 +19,7 @@ release distributed via `EEGChallengeDataset` (Alexander et al. 2017,
 doi:10.1038/sdata.2017.181), surfaced through NEMAR (Delorme et al.
 2022, doi:10.1093/nargab/lqac023). The setup is a strict
 out-of-distribution regression: the test cohort never overlaps with the
-train cohort on subject. A model that secretly memorises subjects scores
+train cohort on subject. A model that secretly memorizes subjects scores
 well within-fold and collapses on a new sitting, so we build the
 `cross_subject` loop from plot_51, fit a feature-based regression
 head, and report `r2` against `median_baseline`, the chance level
@@ -25,12 +27,13 @@ for regression (Cisotto & Chicco 2024 Tip 9, doi:10.7717/peerj-cs.2256).
 The headline question is not “can we win Challenge 2?”; the p-factor
 signal in EEG is genuinely faint. The honest one is: does this model
 beat the train-set median predictor on never-seen-before subjects?
+Keywords: regression, p-factor, EEG2025
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 22-24 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 25-27 -->
 ```Python
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 26-40 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 29-52 -->
 
 ## Learning objectives
 
@@ -41,17 +44,26 @@ After this tutorial you will be able to:
 - fit a Ridge head and report `r2` against `median_baseline`.
 - read a three-panel diagnostic figure for subject-invariance failures.
 
+## Validate your result
+
+- **Metric Interpretation.** R^2 (Coefficient of Determination) tells you
+  what fraction of p-factor variance is explained by the EEG.
+- **Baseline Comparison.** A model must beat the `median_baseline`. If
+  R^2 is negative, your model is worse than a trivial predictor.
+- **Invariance Check.** Look at the predicted-vs-true scatter plot. If it
+  is perfectly flat, the model has failed to learn the p-factor signal.
+
 ## Requirements
 
 - ~30 s on CPU; GPU optional. No live network.
-- Prereqs: [How do I get started with the EEG 2025 Foundation Challenge dataset?](plot_70_challenge_dataset_basics.md) and plot_42_features_to_sklearn.
+- Prereqs: [How do I get started with the EEG2025 Foundation Challenge dataset?](plot_70_challenge_dataset_basics.md) and plot_42_features_to_sklearn.
 - Concept: [Leakage and evaluation](../../../../concepts/leakage_and_evaluation.md).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 42-43 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 54-55 -->
 
-Setup, numpy seeding (E3.21) plus a parametrised cache (E3.24).
+Setup, numpy seeding (E3.21) plus a parameterized cache (E3.24).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 43-69 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 55-81 -->
 ```Python
 import os
 import warnings
@@ -80,14 +92,14 @@ cache_dir = Path(os.environ.get("EEGDASH_CACHE_DIR", Path.cwd() / "eegdash_cache
 cache_dir.mkdir(parents=True, exist_ok=True)
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 70-93 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 82-105 -->
 
 ## Step 1. Load EEGChallengeDataset for the p-factor task
 
 In production, `eegdash.EEGChallengeDataset` exposes `p_factor`
 through `description_fields` so it surfaces as a per-recording
 column. The canonical call is shown below; this tutorial then
-synthesises a feature table with the same column layout so the gallery
+synthesizes a feature table with the same column layout so the gallery
 runs offline (E3.24).
 
 ```python
@@ -105,7 +117,7 @@ subject, eight features per window (band-power proxies + variance),
 and a subject-level p_factor drawn from a roughly N(0, 1)
 distribution.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 95-139 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 107-151 -->
 ```Python
 N_SUBJECTS, N_WINDOWS = 12, 24
 BANDS = ("delta", "theta", "alpha", "beta")
@@ -116,7 +128,7 @@ for s in range(N_SUBJECTS):
     p = float(subject_p[s])
     for w in range(N_WINDOWS):
         # Per-window features: a faint p-factor signal in alpha/beta plus
-        # a subject-level offset (the "subject identity" we must NOT memorise)
+        # a subject-level offset (the "subject identity" we must NOT memorize)
         # and a generous noise floor that keeps R^2 modest.
         bias = 0.15 * (s - N_SUBJECTS / 2)
         row = {
@@ -156,7 +168,7 @@ assert pd.api.types.is_float_dtype(metadata["p_factor"]), "p_factor not float"
 feature_table: rows=288 | features=10 | subjects=12 | p_factor_dtype=float64
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 140-148 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 152-160 -->
 
 ## Step 2. Predict: what r2 should chance look like?
 
@@ -166,7 +178,7 @@ median has `r2 = 0` against the test-set mean by definition –
 expect Ridge on faint EEG features to reach, 0.05? 0.20? 0.50?
 Write your guess.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 150-158 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 162-170 -->
 
 ## Step 3. Build a regression head on top of features
 
@@ -176,7 +188,7 @@ doi:10.5555/1953048.2078195) is the regression analogue of plot_42’s
 logistic head. `alpha=1.0` is a defensible default for an 8-feature
 table; `random_state=42` keeps the loop byte-stable.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 161-171 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 173-183 -->
 ```Python
 def make_regressor() -> Pipeline:
     """Return a fresh ``StandardScaler -> Ridge`` Pipeline (E3.21)."""
@@ -188,7 +200,7 @@ def make_regressor() -> Pipeline:
     )
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 172-181 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 184-193 -->
 
 ## Step 4. Cross-subject split, assert_no_leakage, train per fold
 
@@ -199,7 +211,7 @@ returns sklearn’s [`sklearn.model_selection.GroupKFold`](https://scikit-learn.
 the JSON `leakage_report` line that E5.42 parses. With 12 subjects
 each fold tests on ~2-3 unseen subjects.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 183-203 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 195-215 -->
 ```Python
 splitter = CrossSubjectSplitter(cv_class=GroupKFold, n_splits=5)
 n_rows = len(metadata)
@@ -226,7 +238,7 @@ print(
 Splitter: CrossSubjectSplitter | folds: 5 | max subject overlap: 0
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 204-212 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 216-224 -->
 
 ## Step 5. Mean r2 +/- std across folds vs the median baseline
 
@@ -236,7 +248,7 @@ held-out subjects with [`sklearn.metrics.r2_score()`](https://scikit-learn.org/s
 `median_baseline` for the chance level alongside
 (E5.43 forbids reporting a regression score without one).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 214-250 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 226-262 -->
 ```Python
 fold_r2: list[float] = []
 fold_mae: list[float] = []
@@ -283,13 +295,13 @@ Fold 3: r2=-2.018 | mae=0.677 | baseline_r2=-1.350
 Fold 4: r2=-1.306 | mae=0.674 | baseline_r2=-0.092
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 251-265 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 263-277 -->
 
 ## Step 6. Investigate per-subject residuals (figure)
 
 **Investigate.** Mean r2 hides the failure mode that matters here:
 subject-invariance. If residuals concentrate around zero across all
-held-out subjects the model generalises; if a few subjects monopolise
+held-out subjects the model generalizes; if a few subjects monopolize
 the error we are still leaking subject-specific signal. The sibling
 `_pfactor_figure.py` renders three panels: predicted vs true (one
 point per held-out subject) with Pearson r / Spearman rho / R^2 / MAE
@@ -299,7 +311,7 @@ histogram of window-level errors with the bias annotated. This is the
 diagnostic Pernet et al. 2019 (doi:10.1038/s41597-019-0104-8)
 recommend before any clinical claim.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 267-293 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 279-305 -->
 ```Python
 res_df = pd.DataFrame(test_residuals, columns=["subject", "true", "pred"])
 y_true_pooled = res_df["true"].to_numpy()
@@ -332,7 +344,7 @@ print(
 figure metrics: r=+0.693 | rho=+0.629 | R^2=+0.330 | MAE=0.633 | n_subjects=12
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 294-303 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 306-315 -->
 
 ## A common mistake, and how to recover
 
@@ -343,7 +355,7 @@ solve. We trigger it on purpose with `try/except` so you see exactly
 what the error looks like (Nederbragt et al. 2020,
 doi:10.1371/journal.pcbi.1008090).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 305-315 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 317-327 -->
 ```Python
 try:
     bad_y = metadata["p_factor"].astype(str).to_numpy()  # string p-factor
@@ -356,7 +368,7 @@ except (ValueError, TypeError) as exc:
     print(f"Recovery: cast p_factor to float (dtype={fixed_y.dtype}); Ridge fit.")
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 316-327 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 328-339 -->
 
 ## Modify: domain-adversarial training (concept only)
 
@@ -369,7 +381,7 @@ encoder to discard subject-specific features. We do not run it here
 (Difficulty 3, GPU + braindecode encoder out of scope), but the cross-
 subject loop above is the contract any such system must still satisfy.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 329-337 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 341-349 -->
 
 ## Result: model r2 vs median baseline (chance)
 
@@ -379,7 +391,7 @@ returns the train-median predictor’s r2 on the test set; an honest
 model must beat it, not just match it. The print line carries the
 keyword *baseline* (E5.43).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 339-361 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 351-373 -->
 ```Python
 print(
     f"Cross-subject 5-fold p-factor regression: r2={mean_r2:+.3f} +/- {std_r2:.3f} "
@@ -410,7 +422,7 @@ pooled-window r=+0.379 | rho=+0.373 | subject r=+0.693 | subject rho=+0.629
 chance: predicting the train-median scores baseline_r2=-2.027 on test.
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 362-375 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 374-387 -->
 
 ## Wrap-up
 
@@ -426,7 +438,7 @@ spread of per-window errors leaves little room for clinical claims.
 p_factor is a derived score, not a diagnosis, any clinical framing
 belongs in a follow-up study with much larger N.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 377-384 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 389-396 -->
 
 ## Try it yourself
 
@@ -436,11 +448,11 @@ belongs in a follow-up study with much larger N.
   and feed activations in.
 - Bump `n_folds` to `N_SUBJECTS` for leave-one-subject-out variance.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 386-391 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 398-403 -->
 
 ## References
 
-See [References](../../../../references.md) for the centralised bibliography of papers
+See [References](../../../../references.md) for the centralized bibliography of papers
 cited above. Add or amend an entry once in
 `docs/source/refs.bib`; every tutorial inherits the update.
 

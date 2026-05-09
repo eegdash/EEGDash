@@ -6,7 +6,9 @@
 
 <a id="sphx-glr-generated-auto-examples-tutorials-00-start-here-plot-01-first-recording-py"></a>
 
-# How do I load one EEG recording from EEGDash?
+# Load one EEG recording
+
+**Difficulty 1** | **Runtime: 2m** | **Compute: CPU**
 
 Once a search returns a candidate dataset (see plot_00), the next question is
 practical: what does *one* recording actually contain? This tutorial loads a
@@ -19,7 +21,10 @@ per subject, 19 channels at 500 Hz on a standard 10-20 layout) so the first
 fetch is under 25 MB and every later step is a hot-cache read.
 
 <!-- sphinx_gallery_thumbnail_path = '_static/thumbs/plot_01_first_recording.png' -->
-<!-- GENERATED FROM PYTHON SOURCE LINES 18-26 -->
+
+Keywords: loading, BIDS
+
+<!-- GENERATED FROM PYTHON SOURCE LINES 21-29 -->
 
 ## Learning objectives
 
@@ -30,7 +35,7 @@ fetch is under 25 MB and every later step is a hot-cache read.
 - Look at the signal (`raw.plot`), the montage (`raw.plot_sensors`),
   and the spectrum (`raw.compute_psd().plot`).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 28-35 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 31-38 -->
 
 ## Requirements
 
@@ -40,11 +45,11 @@ fetch is under 25 MB and every later step is a hot-cache read.
   `~/.eegdash_cache`.
 - Prerequisite: `plot_00_first_search`.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 37-38 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 40-41 -->
 
 Setup. No randomness here, so no seed.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 38-58 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 41-61 -->
 ```Python
 import os
 from pathlib import Path
@@ -72,7 +77,7 @@ Using matplotlib as 2D backend.
 eegdash 0.7.2; cache_dir=/home/runner/eegdash_cache
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 59-101 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 62-104 -->
 
 ## Concepts behind `EEGDashDataset`
 
@@ -117,7 +122,7 @@ dataset?
 
 **Run.** Build the object; the HTML repr below shows what matched.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 103-108 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 106-111 -->
 ```Python
 DATASET = "ds004504"  # Miltiadous AD/FTD/HC, 19 ch standard 10-20, 500 Hz
 SUBJECT = "001"
@@ -144,16 +149,16 @@ dataset
 </div>
 <br />
 <br />
-<!-- GENERATED FROM PYTHON SOURCE LINES 109-115 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 112-118 -->
 
-## Step 2: Summarise without touching the network
+## Step 2: Summarize without touching the network
 
 Every matched record exposes its BIDS metadata on
 `description`, a
 [`pandas.DataFrame`](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame) materialised without any network call. Useful
 for sanity-checking a query before paying any download cost.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 117-137 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 120-140 -->
 ```Python
 description = dataset.description
 first_record = dataset.records[0] if getattr(dataset, "records", None) else {}
@@ -229,7 +234,7 @@ pd.Series(
 </div>
 <br />
 <br />
-<!-- GENERATED FROM PYTHON SOURCE LINES 138-147 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 141-150 -->
 
 ## Step 3: Pick one record
 
@@ -241,13 +246,13 @@ property. Indexing into that list is the standard Python idiom for
 grabbing one; `record.raw` is what triggers the download and opens
 the file with MNE-Python [[Gramfort *et al.*, 2013](../../../../references.md#id25)].
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 149-152 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 152-155 -->
 ```Python
 record = dataset.datasets[0]
 raw = record.raw
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 153-158 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 156-161 -->
 
 ## Step 4: BIDS metadata as a DataFrame
 
@@ -255,7 +260,7 @@ Every recording carries the same BIDS envelope [[Pernet *et al.*, 2019](../../..
 `record.description` already is a [`pandas.Series`](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.html#pandas.Series); keeping the
 fields we care about and adding the duration gives a readable view.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 160-176 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 163-179 -->
 ```Python
 keep = [
     "dataset",
@@ -347,7 +352,7 @@ meta_view
 </div>
 <br />
 <br />
-<!-- GENERATED FROM PYTHON SOURCE LINES 177-184 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 180-187 -->
 
 ## Step 5: Inspect the MNE Raw object
 
@@ -357,7 +362,7 @@ with sampling rate, projections, bad channels, and channel types.
 **Investigate.** Read the rate, the channel-type breakdown, and check
 the “bad channels” row: empty here (no bad channels marked yet).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 186-188 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 189-191 -->
 ```Python
 raw
 ```
@@ -510,9 +515,9 @@ this file apply (plus whatever default styling the IDE applies).
 
 
 
-<tr class="mne-repr-section-header general-d4e6ed8e-1160-4699-b389-f6e410f5f137"
+<tr class="mne-repr-section-header general-daae88fb-50ff-44a5-9aad-8e5d97898c97"
      title="Hide section"
-    onclick="toggleVisibility('general-d4e6ed8e-1160-4699-b389-f6e410f5f137')">
+    onclick="toggleVisibility('general-daae88fb-50ff-44a5-9aad-8e5d97898c97')">
     <th class="mne-repr-section-toggle">
         <button >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
@@ -524,7 +529,7 @@ this file apply (plus whatever default styling the IDE applies).
 </tr>
 
 
-<tr class="repr-element general-d4e6ed8e-1160-4699-b389-f6e410f5f137 ">
+<tr class="repr-element general-daae88fb-50ff-44a5-9aad-8e5d97898c97 ">
     <td class="mne-repr-section-toggle"></td>
     <td>Filename(s)</td>
     <td>
@@ -535,26 +540,26 @@ this file apply (plus whatever default styling the IDE applies).
     </td>
 </tr>
 
-<tr class="repr-element general-d4e6ed8e-1160-4699-b389-f6e410f5f137 ">
+<tr class="repr-element general-daae88fb-50ff-44a5-9aad-8e5d97898c97 ">
     <td class="mne-repr-section-toggle"></td>
     <td>MNE object type</td>
     <td>RawEEGLAB</td>
 </tr>
-<tr class="repr-element general-d4e6ed8e-1160-4699-b389-f6e410f5f137 ">
+<tr class="repr-element general-daae88fb-50ff-44a5-9aad-8e5d97898c97 ">
     <td class="mne-repr-section-toggle"></td>
     <td>Measurement date</td>
 
     <td>Unknown</td>
 
 </tr>
-<tr class="repr-element general-d4e6ed8e-1160-4699-b389-f6e410f5f137 ">
+<tr class="repr-element general-daae88fb-50ff-44a5-9aad-8e5d97898c97 ">
     <td class="mne-repr-section-toggle"></td>
     <td>Participant</td>
 
 
 
 </tr>
-<tr class="repr-element general-d4e6ed8e-1160-4699-b389-f6e410f5f137 ">
+<tr class="repr-element general-daae88fb-50ff-44a5-9aad-8e5d97898c97 ">
     <td class="mne-repr-section-toggle"></td>
     <td>Experimenter</td>
 
@@ -569,9 +574,9 @@ this file apply (plus whatever default styling the IDE applies).
 
 
 
-<tr class="mne-repr-section-header acquisition-c2084ef7-43cb-48ce-b60f-87206f71eca3"
+<tr class="mne-repr-section-header acquisition-db376152-5b79-4fd4-a6f4-c74c533d8f04"
      title="Hide section"
-    onclick="toggleVisibility('acquisition-c2084ef7-43cb-48ce-b60f-87206f71eca3')">
+    onclick="toggleVisibility('acquisition-db376152-5b79-4fd4-a6f4-c74c533d8f04')">
     <th class="mne-repr-section-toggle">
         <button >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
@@ -583,7 +588,7 @@ this file apply (plus whatever default styling the IDE applies).
 </tr>
 
 
-<tr class="repr-element acquisition-c2084ef7-43cb-48ce-b60f-87206f71eca3 ">
+<tr class="repr-element acquisition-db376152-5b79-4fd4-a6f4-c74c533d8f04 ">
     <td class="mne-repr-section-toggle"></td>
     <td>Duration</td>
     <td>00:10:00 (HH:MM:SS)</td>
@@ -596,14 +601,14 @@ this file apply (plus whatever default styling the IDE applies).
 
 
 
-<tr class="repr-element acquisition-c2084ef7-43cb-48ce-b60f-87206f71eca3 ">
+<tr class="repr-element acquisition-db376152-5b79-4fd4-a6f4-c74c533d8f04 ">
     <td class="mne-repr-section-toggle"></td>
     <td>Sampling frequency</td>
     <td>500.00 Hz</td>
 </tr>
 
 
-<tr class="repr-element acquisition-c2084ef7-43cb-48ce-b60f-87206f71eca3 ">
+<tr class="repr-element acquisition-db376152-5b79-4fd4-a6f4-c74c533d8f04 ">
     <td class="mne-repr-section-toggle"></td>
     <td>Time points</td>
     <td>299,900</td>
@@ -618,9 +623,9 @@ this file apply (plus whatever default styling the IDE applies).
 
 
 
-<tr class="mne-repr-section-header channels-ac1bb64e-f28c-4009-bc76-35f864c6cecc"
+<tr class="mne-repr-section-header channels-b59b1a4c-6d79-4f0a-9b59-c902808e549f"
      title="Hide section"
-    onclick="toggleVisibility('channels-ac1bb64e-f28c-4009-bc76-35f864c6cecc')">
+    onclick="toggleVisibility('channels-b59b1a4c-6d79-4f0a-9b59-c902808e549f')">
     <th class="mne-repr-section-toggle">
         <button >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
@@ -633,7 +638,7 @@ this file apply (plus whatever default styling the IDE applies).
 
 
 
-<tr class="repr-element channels-ac1bb64e-f28c-4009-bc76-35f864c6cecc ">
+<tr class="repr-element channels-b59b1a4c-6d79-4f0a-9b59-c902808e549f ">
     <td class="mne-repr-section-toggle"></td>
     <td>EEG</td>
     <td>
@@ -646,7 +651,7 @@ this file apply (plus whatever default styling the IDE applies).
 </tr>
 
 
-<tr class="repr-element channels-ac1bb64e-f28c-4009-bc76-35f864c6cecc ">
+<tr class="repr-element channels-b59b1a4c-6d79-4f0a-9b59-c902808e549f ">
     <td class="mne-repr-section-toggle"></td>
     <td>Head & sensor digitization</td>
 
@@ -661,9 +666,9 @@ this file apply (plus whatever default styling the IDE applies).
 
 
 
-<tr class="mne-repr-section-header filters-4d5eb2ad-a730-4877-bb5a-8013103ea59a"
+<tr class="mne-repr-section-header filters-6f5762a2-c26d-44da-b175-7ce84a385119"
      title="Hide section"
-    onclick="toggleVisibility('filters-4d5eb2ad-a730-4877-bb5a-8013103ea59a')">
+    onclick="toggleVisibility('filters-6f5762a2-c26d-44da-b175-7ce84a385119')">
     <th class="mne-repr-section-toggle">
         <button >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
@@ -675,14 +680,14 @@ this file apply (plus whatever default styling the IDE applies).
 </tr>
 
 
-<tr class="repr-element filters-4d5eb2ad-a730-4877-bb5a-8013103ea59a ">
+<tr class="repr-element filters-6f5762a2-c26d-44da-b175-7ce84a385119 ">
     <td class="mne-repr-section-toggle"></td>
     <td>Highpass</td>
     <td>0.00 Hz</td>
 </tr>
 
 
-<tr class="repr-element filters-4d5eb2ad-a730-4877-bb5a-8013103ea59a ">
+<tr class="repr-element filters-6f5762a2-c26d-44da-b175-7ce84a385119 ">
     <td class="mne-repr-section-toggle"></td>
     <td>Lowpass</td>
     <td>250.00 Hz</td>
@@ -693,7 +698,7 @@ this file apply (plus whatever default styling the IDE applies).
 </div>
 <br />
 <br />
-<!-- GENERATED FROM PYTHON SOURCE LINES 189-196 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 192-199 -->
 
 ## Step 6: Plot the signal
 
@@ -703,7 +708,7 @@ Explicit `scalings` and a longer `duration` make the morphology
 legible; default settings squeeze too many channels into the same
 strip and flatten the signal.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 198-215 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 201-218 -->
 ```Python
 midline_picks = [
     ch
@@ -723,7 +728,7 @@ fig_raw = raw.plot(
 )
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 216-222 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 219-225 -->
 
 ## Step 7: Sensor topology
 
@@ -732,14 +737,14 @@ Where the electrodes sit on the scalp matters for every later analysis.
 schematic. With 74 channels, channel-name overlays clutter the view;
 we drop them and let the spatial pattern speak.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 224-228 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 227-231 -->
 
 ds004504 uses the standard 10-20 layout (Fp1, Fp2, F3, F4, … Cz, Pz,
 19 electrodes); `standard_1020` covers all of them. `plot_sensors`
 is rendered only when positions actually got attached, so the cell
 stays robust against arbitrary channel-naming.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 228-255 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 231-258 -->
 ```Python
 raw.set_montage(
     "standard_1020",
@@ -769,7 +774,7 @@ else:
 fig_sens.tight_layout()
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 256-261 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 259-264 -->
 
 ## Step 8: Power spectral density
 
@@ -777,7 +782,7 @@ A PSD is the cleanest first look at signal quality: line noise spikes at
 50 or 60 Hz, slow drifts below 1 Hz, broadband 1/f. We compute Welch’s
 PSD on EEG channels only and plot in dB.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 263-273 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 266-276 -->
 ```Python
 psd = raw.copy().pick("eeg").compute_psd(fmax=80.0, verbose=False)
 fig_psd = psd.plot(picks="eeg", average=True, show=False)
@@ -796,7 +801,7 @@ Plotting power spectral density (dB=True).
   fig.subplots_adjust(top=0.84, bottom=0.18, left=0.12, right=0.95)
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 274-279 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 277-282 -->
 
 ## A common mistake, and how to recover
 
@@ -804,7 +809,7 @@ Plotting power spectral density (dB=True).
 [`IndexError`](https://docs.python.org/3/library/exceptions.html#IndexError), the standard Python contract. We trigger it on
 purpose so the failure mode is visible [[Nederbragt *et al.*, 2020](../../../../references.md#id31)].
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 281-288 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 284-291 -->
 ```Python
 try:
     _ = dataset.datasets[999]
@@ -819,7 +824,7 @@ Caught IndexError: list index out of range
 Recovery: dataset.datasets[0] instead.
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 289-294 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 292-297 -->
 
 ## Modify
 
@@ -827,7 +832,7 @@ Recovery: dataset.datasets[0] instead.
 The acquisition protocol is shared, so sampling rate and channel count
 match; small differences in run length per subject are normal.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 296-318 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 299-321 -->
 ```Python
 SECOND_SUBJECT = "002"
 raw_b = (
@@ -854,18 +859,18 @@ pd.DataFrame(
 
 ```none
 Downloading sub-002_task-eyesclosed_channels.tsv:   0%|          | 0.00/284 [00:00<?, ?B/s]
-Downloading sub-002_task-eyesclosed_channels.tsv: 100%|██████████| 284/284 [00:00<00:00, 816kB/s]
+Downloading sub-002_task-eyesclosed_channels.tsv: 100%|██████████| 284/284 [00:00<00:00, 1.31MB/s]
 
 Downloading sub-002_task-eyesclosed_eeg.json:   0%|          | 0.00/868 [00:00<?, ?B/s]
-Downloading sub-002_task-eyesclosed_eeg.json: 100%|██████████| 868/868 [00:00<00:00, 4.02MB/s]
-[05/08/26 18:41:32] WARNING  File not found on S3, skipping:   downloader.py:163
+Downloading sub-002_task-eyesclosed_eeg.json: 100%|██████████| 868/868 [00:00<00:00, 4.77MB/s]
+[05/09/26 20:24:28] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds004504/sub-0
                              02/eeg/sub-002_task-eyesclosed_ee
                              g.fdt
 
 Downloading sub-002_task-eyesclosed_eeg.set:   0%|          | 0.00/30.3M [00:00<?, ?B/s]
-Downloading sub-002_task-eyesclosed_eeg.set:  56%|█████▌    | 16.9M/30.3M [00:00<00:00, 75.4MB/s]
-Downloading sub-002_task-eyesclosed_eeg.set: 100%|██████████| 30.3M/30.3M [00:00<00:00, 82.7MB/s]
+Downloading sub-002_task-eyesclosed_eeg.set:  63%|██████▎   | 19.1M/30.3M [00:00<00:00, 100MB/s]
+Downloading sub-002_task-eyesclosed_eeg.set: 100%|██████████| 30.3M/30.3M [00:00<00:00, 117MB/s]
 ```
 
 <div class="output_subarea output_html rendered_html output_result">
@@ -913,7 +918,7 @@ Downloading sub-002_task-eyesclosed_eeg.set: 100%|██████████
 </div>
 <br />
 <br />
-<!-- GENERATED FROM PYTHON SOURCE LINES 319-324 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 322-327 -->
 
 ## Make
 
@@ -921,7 +926,7 @@ Downloading sub-002_task-eyesclosed_eeg.set: 100%|██████████
 `ds002893` for a 32-channel auditory study) and repeat Steps 1, 3, and
 5. Compare the montage and the PSD shape.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 326-336 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 329-339 -->
 
 ## Wrap-up
 
@@ -934,14 +939,14 @@ belongs in `plot_10_preprocess_and_window`. Next:
 `plot_02_dataset_to_dataloader` wraps these recordings in a PyTorch
 `DataLoader`.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 338-343 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 341-346 -->
 
 ## References
 
-See [References](../../../../references.md) for the centralised bibliography of papers
+See [References](../../../../references.md) for the centralized bibliography of papers
 cited above. Add or amend an entry once in
 `docs/source/refs.bib`; every tutorial inherits the update.
 
-**Total running time of the script:** (0 minutes 3.892 seconds)
+**Total running time of the script:** (0 minutes 3.703 seconds)
 
 <a id="sphx-glr-download-generated-auto-examples-tutorials-00-start-here-plot-01-first-recording-py"></a>

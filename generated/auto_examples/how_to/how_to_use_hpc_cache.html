@@ -11,10 +11,10 @@
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://eegdash.org/generated/auto_examples/how_to/how_to_use_hpc_cache.html" />
 <meta property="og:site_name" content="EEG Dash" />
-<meta property="og:description" content="On HPC clusters, where you put the EEGDash cache is often the difference between a 30-minute and a 30-second epoch. Shared filesystems (Lustre, GPFS…" />
+<meta property="og:description" content="Difficulty 2| Runtime: 20s| Compute: CPU On HPC clusters, where you put the EEGDash cache is often the difference between a 30-minute and a 30-second…" />
 <meta property="og:image" content="https://eegdash.org/_static/eegdash_social_card.png" />
 <meta property="og:image:alt" content="EEG Dash — data-sharing interface for M/EEG datasets" />
-<meta name="description" content="On HPC clusters, where you put the EEGDash cache is often the difference between a 30-minute and a 30-second epoch. Shared filesystems (Lustre, GPFS…" />
+<meta name="description" content="Difficulty 2| Runtime: 20s| Compute: CPU On HPC clusters, where you put the EEGDash cache is often the difference between a 30-minute and a 30-second…" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@eegdash" />
 
@@ -75,7 +75,7 @@
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
     <link rel="next" title="How-to: work offline against a populated EEGDash cache" href="how_to_work_offline.html" />
-    <link rel="prev" title="Parallelise EEGDash feature extraction" href="how_to_parallelize_feature_extraction.html" />
+    <link rel="prev" title="Parallelize EEGDash feature extraction" href="how_to_parallelize_feature_extraction.html" />
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="0.7" />
 
@@ -587,6 +587,7 @@ to download the full example code or to run this example in your browser via Bin
 </div>
 <section class="sphx-glr-example-title" id="place-the-eegdash-cache-on-shared-or-local-cluster-storage">
 <span id="sphx-glr-generated-auto-examples-how-to-how-to-use-hpc-cache-py"></span><h1>Place the EEGDash cache on shared or local cluster storage<a class="headerlink" href="#place-the-eegdash-cache-on-shared-or-local-cluster-storage" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">5 minutes</span></div>
+<p><strong>Difficulty 2</strong> | <strong>Runtime: 20s</strong> | <strong>Compute: CPU</strong></p>
 <p>On HPC clusters, <em>where</em> you put the EEGDash cache is often the difference
 between a 30-minute and a 30-second epoch. Shared filesystems (Lustre, GPFS,
 NFS) survive job restarts but throttle under metadata-heavy access; node-local
@@ -595,10 +596,22 @@ training. This how-to shows how to point <code class="xref py py-func docutils l
 at the right tier, stage data once, and verify the cache before training.</p>
 <p>The recipe assumes you already know how to populate the cache (see
 <code class="docutils literal notranslate"><span class="pre">how_to_download_a_dataset</span></code>) and load offline (see <code class="docutils literal notranslate"><span class="pre">how_to_work_offline</span></code>).
-We follow the cluster-software best practices summarised by Cisotto and
+We follow the cluster-software best practices summarized by Cisotto and
 Chicco (2024, doi:10.3389/fninf.2024.1338139): keep heavy IO on local-to-node
 storage, stage in at job-start, and never read training data over the network
-home.</p>
+# home.
+#
+# Validate your result
+# ——————–
+# - <strong>Environment Variable.</strong> Run <code class="docutils literal notranslate"><span class="pre">echo</span> <span class="pre">$EEGDASH_CACHE_DIR</span></code> to ensure it
+#   points to the expected high-speed tier (e.g., <code class="docutils literal notranslate"><span class="pre">/scratch</span></code> or
+#   <code class="docutils literal notranslate"><span class="pre">$SLURM_TMPDIR</span></code>).
+# - <strong>Path Resolution.</strong> Call <code class="docutils literal notranslate"><span class="pre">get_default_cache_dir()</span></code> in Python and
+#   verify it returns the same path as the environment variable.
+# - <strong>Data Staging.</strong> Verify that the <code class="docutils literal notranslate"><span class="pre">cp</span> <span class="pre">-r</span></code> command in your submission
+#   script successfully populated the local node storage before training.
+#
+# Keywords: HPC, cache, SLURM, I/O</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span>
 </pre></div>
 </div>
@@ -782,7 +795,7 @@ doi:10.3389/fninf.2024.1338139</p>
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Parallelise EEGDash feature extraction</p>
+        <p class="prev-next-title">Parallelize EEGDash feature extraction</p>
       </div>
     </a>
     <a class="right-next"

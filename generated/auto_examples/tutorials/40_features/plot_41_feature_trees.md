@@ -6,7 +6,9 @@
 
 <a id="sphx-glr-generated-auto-examples-tutorials-40-features-plot-41-feature-trees-py"></a>
 
-# How do classical EEG markers compose on top of one Welch PSD?
+# Compose EEG markers from Welch PSD
+
+**Difficulty 1-2** | **Runtime: 5s** | **Compute: CPU**
 
 Welch’s method [[Welch, 1967](../../../../references.md#id17)] returns one power spectrum per window; band
 power, spectral entropy, peak frequency, and the 1/f slope (Demanuele
@@ -32,8 +34,9 @@ selection see Cisotto and Chicco (2024).
 So if alpha-, beta-, theta-, and delta-band powers each call Welch
 separately, how many PSDs run per batch, and what does sharing one
 `spectral_preprocessor` change?
+Keywords: features, spectral, trees
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 32-39 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 35-42 -->
 
 ## Learning objectives
 
@@ -43,7 +46,7 @@ separately, how many PSDs run per batch, and what does sharing one
 - Compute the wall-time speedup from sharing one PSD versus N.
 - Implement a custom decorated feature on the same shared PSD.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 41-48 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 44-51 -->
 
 ## Requirements
 
@@ -53,7 +56,7 @@ separately, how many PSDs run per batch, and what does sharing one
   /auto_examples/tutorials/40_features/plot_40_first_features.
 - Concept: [Features vs. deep learning](../../../../concepts/features_vs_deep_learning.md).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 50-55 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 53-58 -->
 
 Setup. `np.random.seed` makes the synthetic recordings reproducible
 (E3.21). One global Welch counter lets us prove the shared-PSD claim
@@ -61,7 +64,7 @@ at runtime; the counter is reset to the original Welch in a try/finally
 so subsequent tutorials in the same sphinx-gallery process see a clean
 `_spec.welch` [[Gramfort *et al.*, 2013](../../../../references.md#id25)].
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 55-96 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 58-99 -->
 ```Python
 import time
 from functools import partial
@@ -109,7 +112,7 @@ _spec.welch = _counting_welch
 eegdash 0.7.2
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 97-118 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 100-142 -->
 
 ## Mental model: PSD is the parent of every classical EEG marker
 
@@ -133,10 +136,18 @@ for the 1/f fit). A shared `spectral_preprocessor` plus
 `feature_predecessor()`-tagged consumers solve
 both at once.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 120-130 -->
+## Validate your result
 
-## Step 1: Build a small windowed dataset
+- **Dependency Tree.** The printed extractor tree should show exactly ONE
+  root `spectral_preprocessor` shared by all band-power features.
+- **Feature Count.** The resulting table should have `n_channels * 4`
+  columns (theta, alpha, beta, gamma).
+- **Correlation Matrix.** Band-power features from the same channel should
+  show some degree of positive correlation.
 
+%% [markdown]
+Step 1: Build a small windowed dataset
+————————————–
 Two 16 s recordings at 128 Hz on a 4-channel parieto-occipital
 montage. Eyes-closed gets a 10 Hz alpha sine on top of the noise
 floor; eyes-open does not. The non-causal 1-40 Hz FIR band-pass
@@ -146,7 +157,7 @@ integration window. Synthetic data keep the tutorial offline; the
 same code path runs on real `ds005514` windows from
 /auto_examples/tutorials/10_core_workflow/plot_10_preprocess_and_window.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 132-183 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 144-195 -->
 ```Python
 SFREQ, CH_NAMES, WIN = 128, ["O1", "Oz", "O2", "Cz"], int(2.0 * 128)
 
@@ -249,7 +260,7 @@ pd.Series(
 </div>
 <br />
 <br />
-<!-- GENERATED FROM PYTHON SOURCE LINES 184-190 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 196-202 -->
 
 ## Step 2: Predict (PRIMM)
 
@@ -258,7 +269,7 @@ extractors each call Welch separately, so the FFT runs four times per
 batch. With one shared `spectral_preprocessor` the count should
 drop to one per batch. Predict the speedup before running.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 192-198 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 204-210 -->
 
 ## Step 3: Run #1, without the tree
 
@@ -267,7 +278,7 @@ drop to one per batch. Predict the speedup before running.
 `spectral_preprocessor`. The FFT runs once per band per batch; the
 Welch counter records the redundant calls.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 200-231 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 212-243 -->
 ```Python
 BANDS = {"delta": (1, 4.5), "theta": (4.5, 8), "alpha": (8, 12), "beta": (12, 30)}
 
@@ -303,17 +314,17 @@ psds_flat = PSD_CALLS["flat"]
 
 ```none
 Extracting features:   0%|          | 0/2 [00:00<?, ?it/s]
-Extracting features: 100%|██████████| 2/2 [00:00<00:00, 260.77it/s]
+Extracting features: 100%|██████████| 2/2 [00:00<00:00, 263.78it/s]
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 232-236 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 244-248 -->
 
 ## Step 4: Investigate the flat run
 
 **Investigate.** Every band rebuilt the PSD. The total Welch count
 equals `n_bands * n_batches`.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 238-242 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 250-254 -->
 ```Python
 print(
     f"flat: shape={flat_table.shape} | runtime={runtime_flat:.4f} s | PSDs={psds_flat}"
@@ -321,10 +332,10 @@ print(
 ```
 
 ```none
-flat: shape=(16, 17) | runtime=0.0097 s | PSDs=8
+flat: shape=(16, 17) | runtime=0.0096 s | PSDs=8
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 243-248 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 255-260 -->
 
 ## Step 5: Run #2, with the tree (shared PSD)
 
@@ -332,7 +343,7 @@ flat: shape=(16, 17) | runtime=0.0097 s | PSDs=8
 below. Printing the extractor renders the dependency tree exactly as
 [`get_feature_predecessors()`](../../../../api/features_overview.md#eegdash.features.get_feature_predecessors) would describe it.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 250-262 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 262-274 -->
 ```Python
 tree_extractor = FeatureExtractor(
     {f"{n}_pow": _band_pow(n, lim) for n, lim in BANDS.items()}, preprocessor=_psd_pre()
@@ -355,10 +366,10 @@ spectral_preprocessor
 ╚═ beta_pow: spectral_bands_power
 
 Extracting features:   0%|          | 0/2 [00:00<?, ?it/s]
-Extracting features: 100%|██████████| 2/2 [00:00<00:00, 448.01it/s]
+Extracting features: 100%|██████████| 2/2 [00:00<00:00, 447.99it/s]
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 263-269 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 275-281 -->
 
 ## Step 6: Investigate the speedup
 
@@ -367,7 +378,7 @@ counter dropped 4x. After Run #1 and Run #2 we restore
 `_spec.welch` in a `try`/`finally` so any subsequent tutorial in
 the same sphinx-gallery process sees the original Welch.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 271-284 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 283-296 -->
 ```Python
 try:
     speedup = max(runtime_flat / max(runtime_tree, 1e-6), 1.0)
@@ -384,11 +395,11 @@ finally:
 ```
 
 ```none
-tree: shape=(16, 17) | runtime=0.0063 s | PSDs=2 | speedup=1.53x
+tree: shape=(16, 17) | runtime=0.0062 s | PSDs=2 | speedup=1.55x
 welch restored
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 285-299 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 297-311 -->
 
 ## Step 7: Four derived markers on one shared PSD
 
@@ -405,7 +416,7 @@ is decorated with the matching
 normalised, raw, and decibel views of the same Welch output to the
 four leaves without recomputing the FFT.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 302-337 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 314-349 -->
 ```Python
 @feature_predecessor(spectral_preprocessor)
 @univariate_feature
@@ -443,7 +454,7 @@ markers = FeatureExtractor(
 )
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 338-346 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 350-358 -->
 
 #### NOTE
 Spectral entropy needs the *normalised* PSD; the 1/f slope needs
@@ -453,7 +464,7 @@ still runs once per window. `spectral_slope()`
 returns `{'exp': ..., 'int': ...}`; the extractor expands it into
 one column per key (`db_slope_1f_exp_<channel>`, `..._int_...`).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 348-357 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 360-369 -->
 ```Python
 markers_table = extract_features(
     windows, markers, batch_size=64, n_jobs=1
@@ -467,12 +478,12 @@ print(f"markers table shape: {markers_table.shape}")
 
 ```none
 Extracting features:   0%|          | 0/2 [00:00<?, ?it/s]
-Extracting features: 100%|██████████| 2/2 [00:00<00:00, 397.96it/s]
+Extracting features: 100%|██████████| 2/2 [00:00<00:00, 405.29it/s]
 marker columns (first 10): ['alpha_pow_O1', 'alpha_pow_Oz', 'alpha_pow_O2', 'alpha_pow_Cz', 'alpha_peak_O1', 'alpha_peak_Oz', 'alpha_peak_O2', 'alpha_peak_Cz', 'norm_spec_ent_O1', 'norm_spec_ent_Oz']
 markers table shape: (16, 21)
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 358-364 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 370-376 -->
 
 ## Step 8: Reduce the per-channel markers to four scalars per window
 
@@ -481,7 +492,7 @@ scalar per window per marker. We average over the four
 parieto-occipital channels per row. On a real recording the right
 reduction is task-specific (Cisotto and Chicco 2024 Tip 5).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 367-390 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 379-402 -->
 ```Python
 def _mean_over_channels(df: pd.DataFrame, prefix: str) -> np.ndarray:
     """Average ``<prefix>_<channel>`` columns into one scalar per row."""
@@ -514,7 +525,7 @@ mean   8.26e-12             2.66           10.2     -0.45
 std    8.38e-12             1.38          0.403     0.553
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 391-397 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 403-409 -->
 
 ## Step 9: Compute the per-window Welch PSD for the figure
 
@@ -523,7 +534,7 @@ off the spectrum. The PSD is computed once from the windowed dataset
 using `nperseg = sfreq` (1 s segments) to match
 `spectral_preprocessor`.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 399-426 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 411-438 -->
 ```Python
 from scipy.signal import welch as _welch_clean
 
@@ -602,7 +613,7 @@ pd.Series(
 </div>
 <br />
 <br />
-<!-- GENERATED FROM PYTHON SOURCE LINES 427-436 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 439-448 -->
 
 ## Step 10: Plot the feature tree, distributions, and correlations
 
@@ -614,7 +625,7 @@ alpha-rich windows. The drawing helpers live in a sibling
 `_feature_tree_figure` module so the rendering plumbing stays out
 of this tutorial.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 438-452 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 450-464 -->
 ```Python
 from _feature_tree_figure import draw_feature_tree_figure
 
@@ -631,7 +642,7 @@ fig = draw_feature_tree_figure(
 plt.show()
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 453-458 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 465-470 -->
 
 **Investigate.** Panel 2 shows that the four markers are not
 redundant: band power and peak frequency span different ranges, and
@@ -639,7 +650,7 @@ the 1/f slope sits well below zero across every window. Panel 3
 names which pairs co-vary; on a real cohort, those off-diagonals are
 the columns a clinician reads first when comparing wake states.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 460-467 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 472-479 -->
 
 ## A common mistake, and how to recover
 
@@ -649,7 +660,7 @@ mask and the column comes back all NaN. We trigger it on purpose with
 a `try`/`except` so the failure mode is visible (Nederbragt et
 al. 2020).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 469-478 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 481-490 -->
 ```Python
 try:
     bad_band = (12, 8)  # reversed (lo > hi)
@@ -666,14 +677,14 @@ Caught ValueError: band tuple (12, 8) reversed: lo must be < hi
 Recovery: use (8, 12) so lo < hi.
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 479-483 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 491-495 -->
 
 ## Modify: add a fifth band (gamma)
 
 **Your turn.** Add `gamma` (30-40 Hz) to `BANDS` and rerun the
 tree. Runtime barely budges; the flat version would pay a fifth PSD.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 485-495 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 497-507 -->
 ```Python
 EXTENDED = {**BANDS, "gamma": (30, 40)}
 ext_tree = FeatureExtractor(
@@ -688,11 +699,11 @@ print(f"extended (with gamma): n_cols={ext_table.shape[1]}")
 
 ```none
 Extracting features:   0%|          | 0/2 [00:00<?, ?it/s]
-Extracting features: 100%|██████████| 2/2 [00:00<00:00, 339.14it/s]
+Extracting features: 100%|██████████| 2/2 [00:00<00:00, 356.43it/s]
 extended (with gamma): n_cols=21
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 496-503 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 508-515 -->
 
 ## Make: a custom feature on the same shared PSD
 
@@ -702,7 +713,7 @@ extended (with gamma): n_cols=21
 channel. Relative alpha is a classical drowsiness marker (Cisotto
 and Chicco 2024 Tip 5).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 506-529 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 518-541 -->
 ```Python
 @feature_predecessor(spectral_preprocessor)
 @univariate_feature
@@ -730,11 +741,11 @@ print(
 
 ```none
 Extracting features:   0%|          | 0/2 [00:00<?, ?it/s]
-Extracting features: 100%|██████████| 2/2 [00:00<00:00, 420.82it/s]
+Extracting features: 100%|██████████| 2/2 [00:00<00:00, 429.85it/s]
 custom rel_alpha columns: ['rel_alpha_O1', 'rel_alpha_Oz', 'rel_alpha_O2', 'rel_alpha_Cz']
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 530-538 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 542-550 -->
 
 ## Result
 
@@ -745,7 +756,7 @@ divides the FFT work by the number of spectral features. A clean
 table only confirms plumbing; signal quality and task design are
 still open questions [[Cisotto and Chicco, 2024](../../../../references.md#id19)].
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 540-552 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 552-564 -->
 ```Python
 result = pd.DataFrame(
     {
@@ -762,11 +773,11 @@ assert speedup >= 1.0
 
 ```none
                    n_features  runtime_s  psds_computed  speedup_vs_flat
-flat (no tree)             16     0.0097              8           1.0000
-tree (shared PSD)          16     0.0063              2           1.5349
+flat (no tree)             16     0.0096              8           1.0000
+tree (shared PSD)          16     0.0062              2           1.5473
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 553-561 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 565-573 -->
 
 ## Try it yourself
 
@@ -777,7 +788,7 @@ tree (shared PSD)          16     0.0063              2           1.5349
 - Compare runtimes on a longer recording (~5 minutes); the speedup
   widens with FFT size.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 563-571 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 575-583 -->
 
 ## Wrap-up
 
@@ -788,11 +799,11 @@ checked that the columns are not redundant. Next:
 turns this table into a scikit-learn estimator. Concept:
 [Features vs. deep learning](../../../../concepts/features_vs_deep_learning.md).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 573-578 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 585-590 -->
 
 ## References
 
-See [References](../../../../references.md) for the centralised bibliography of papers
+See [References](../../../../references.md) for the centralized bibliography of papers
 cited above. Add or amend an entry once in
 `docs/source/refs.bib`; every tutorial inherits the update.
 

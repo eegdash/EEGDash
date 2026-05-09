@@ -8,18 +8,18 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta content="true" name="html_theme.sidebar_secondary.remove" />
-<meta property="og:title" content="How do I submit a baseline to EEG2025 Challenge 2 (predict the p-factor)?" />
+<meta property="og:title" content="EEG2025 Challenge 2 Baseline (p-factor)" />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://eegdash.org/generated/auto_examples/eeg2025/tutorial_challenge_2.html" />
 <meta property="og:site_name" content="EEG Dash" />
-<meta property="og:description" content="The EEG2025 Foundation Challenge ships two regression tracks, and Challenge 2 asks for a single number per subject, the p-factor, from a short clip of…" />
+<meta property="og:description" content="Difficulty 3| Runtime: 30s| Compute: CPU (GPU Optional) The EEG2025 Foundation Challenge ships two regression tracks, and Challenge 2 asks for a single…" />
 <meta property="og:image" content="https://eegdash.org/_static/eegdash_social_card.png" />
 <meta property="og:image:alt" content="EEG Dash — data-sharing interface for M/EEG datasets" />
-<meta name="description" content="The EEG2025 Foundation Challenge ships two regression tracks, and Challenge 2 asks for a single number per subject, the p-factor, from a short clip of…" />
+<meta name="description" content="Difficulty 3| Runtime: 30s| Compute: CPU (GPU Optional) The EEG2025 Foundation Challenge ships two regression tracks, and Challenge 2 asks for a single…" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@eegdash" />
 
-    <title>How do I submit a baseline to EEG2025 Challenge 2 (predict the p-factor)? &#8212; EEG Dash</title>
+    <title>EEG2025 Challenge 2 Baseline (p-factor) &#8212; EEG Dash</title>
   
   
   
@@ -76,7 +76,7 @@
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
     <link rel="next" title="HPC tutorials" href="../hpc/index.html" />
-    <link rel="prev" title="How do I get my first baseline running for EEG2025 Challenge 1 (CCD)?" href="tutorial_challenge_1.html" />
+    <link rel="prev" title="EEG2025 Challenge 1 Baseline (CCD)" href="tutorial_challenge_1.html" />
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="0.7" />
 
@@ -562,9 +562,9 @@
     <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Examples gallery</a></li>
     
     
-    <li class="breadcrumb-item"><a href="index.html" class="nav-link">EEG 2025 Foundation Challenge</a></li>
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">EEG2025 Foundation Challenge</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">How do I submit a baseline to EEG2025 Challenge 2 (predict the p-factor)?</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">EEG2025 Challenge 2 Baseline (p-factor)</span></li>
   </ul>
 </nav>
 </div>
@@ -586,8 +586,9 @@
 <p><a class="reference internal" href="#sphx-glr-download-generated-auto-examples-eeg2025-tutorial-challenge-2-py"><span class="std std-ref">Go to the end</span></a>
 to download the full example code or to run this example in your browser via Binder.</p>
 </div>
-<section class="sphx-glr-example-title" id="how-do-i-submit-a-baseline-to-eeg2025-challenge-2-predict-the-p-factor">
-<span id="sphx-glr-generated-auto-examples-eeg2025-tutorial-challenge-2-py"></span><h1>How do I submit a baseline to EEG2025 Challenge 2 (predict the p-factor)?<a class="headerlink" href="#how-do-i-submit-a-baseline-to-eeg2025-challenge-2-predict-the-p-factor" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">7 minutes</span></div>
+<section class="sphx-glr-example-title" id="eeg2025-challenge-2-baseline-p-factor">
+<span id="sphx-glr-generated-auto-examples-eeg2025-tutorial-challenge-2-py"></span><h1>EEG2025 Challenge 2 Baseline (p-factor)<a class="headerlink" href="#eeg2025-challenge-2-baseline-p-factor" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">8 minutes</span></div>
+<p><strong>Difficulty 3</strong> | <strong>Runtime: 30s</strong> | <strong>Compute: CPU (GPU Optional)</strong></p>
 <p>The EEG2025 Foundation Challenge ships two regression tracks, and
 Challenge 2 asks for a single number per subject, the <strong>p-factor</strong>,
 from a short clip of resting-state EEG. The p-factor (Caspi et al.
@@ -608,12 +609,24 @@ doi:10.7717/peerj-cs.2256).</p>
 <ul class="simple">
 <li><p>load EEG2025 Challenge 2 recordings via <code class="xref py py-class docutils literal notranslate"><span class="pre">eegdash.EEGChallengeDataset</span></code>.</p></li>
 <li><p>fit a <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Ridge.html#sklearn.linear_model.Ridge" title="(in scikit-learn v1.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.linear_model.Ridge</span></code></a> head and report Pearson r, R^2, MAE.</p></li>
-<li><p>produce a leaderboard card placing the starter score next to chance and target.</p></li>
-<li><p>phrase the result in clinical-cautious language for the p-factor.</p></li>
 </ul>
-<p>The headline question is not “can we win Challenge 2?”, the p-factor
+<p># - produce a leaderboard card placing the starter score next to chance and target.
+# - phrase the result in clinical-cautious language for the p-factor.
+#
+# Validate your result
+# ——————–
+# - <strong>Expected Inputs.</strong> Resting-state EEG windows of shape <code class="docutils literal notranslate"><span class="pre">(n_channels=129,</span> <span class="pre">n_samples=500)</span></code> (5 seconds at 100 Hz).
+# - <strong>Expected Outputs.</strong> A single scalar prediction per subject representing the predicted <code class="docutils literal notranslate"><span class="pre">p_factor</span></code>.
+# - <strong>Scoring Metric.</strong> The official Challenge 2 metric is <strong>Mean Absolute Error (MAE)</strong>.
+# - <strong>Local Smoke-test Size.</strong> The <code class="docutils literal notranslate"><span class="pre">mini=True</span></code> release uses 8 subjects for a fast local run.
+# - <strong>Common Failures.</strong>
+#   - <strong>Cache Permissions.</strong> Ensure the <code class="docutils literal notranslate"><span class="pre">EEGDASH_CACHE_DIR</span></code> is writable.
+#   - <strong>Authentication.</strong> Challenge 2 requires a valid access token for some restricted releases; verify your <code class="docutils literal notranslate"><span class="pre">.env</span></code> file.
+#
+# The headline question is not “can we win Challenge 2?”, the p-factor
 signal in EEG is faint, but the honest one: does this model beat the
-train median predictor on never-seen subjects?</p>
+train median predictor on never-seen subjects?
+Keywords: EEG2025, challenge, regression</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span>
 </pre></div>
 </div>
@@ -631,7 +644,7 @@ train median predictor on never-seen subjects?</p>
 </section>
 <section id="step-0-setup-and-imports">
 <h2>Step 0. Setup and imports<a class="headerlink" href="#step-0-setup-and-imports" title="Link to this heading">#</a></h2>
-<p>numpy seeding (E3.21), parametrised cache (E3.24), and the
+<p>numpy seeding (E3.21), parameterized cache (E3.24), and the
 <code class="docutils literal notranslate"><span class="pre">use_eegdash_style</span></code> one-call rcParams setup so every figure inherits
 the EEGDash identity (Helvetica fallback, muted grid, Data Rail).</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
@@ -677,7 +690,7 @@ tasks; <code class="docutils literal notranslate"><span class="pre">p_factor</sp
 one subject carries the same value.</p>
 <p><strong>Run.</strong> <a class="reference internal" href="../../../api/dataset/eegdash.dataset.EEGChallengeDataset.html#eegdash.dataset.EEGChallengeDataset" title="eegdash.dataset.EEGChallengeDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">EEGChallengeDataset</span></code></a> exposes
 <code class="docutils literal notranslate"><span class="pre">p_factor</span></code> through <code class="docutils literal notranslate"><span class="pre">description_fields</span></code>. The canonical call is
-below; the rendered gallery then synthesises a feature table with the
+below; the rendered gallery then synthesizes a feature table with the
 same column layout so the build runs offline.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">eegdash</span><span class="w"> </span><span class="kn">import</span> <span class="n">EEGChallengeDataset</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">eegdash.paths</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_default_cache_dir</span>
@@ -896,7 +909,7 @@ baseline next to chance and the public top score.</p>
 
 <span class="c1"># Leaderboard rows: chance, the pooled starter score, and a placeholder</span>
 <span class="c1"># for the EEG2025 dashboard top score (``score=nan`` so the bar reads</span>
-<span class="c1"># &quot;n/a&quot; until the organisers publish the live number).</span>
+<span class="c1"># &quot;n/a&quot; until the organizers publish the live number).</span>
 <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">leaderboard_rows</span></a> <span class="o">=</span> <span class="p">[</span>
     <span class="p">{</span>
         <span class="s2">&quot;team&quot;</span><span class="p">:</span> <span class="s2">&quot;median baseline (chance)&quot;</span><span class="p">,</span>
@@ -1043,7 +1056,7 @@ passive tasks and feed its activations as features.</p></li>
 </section>
 <section id="references">
 <h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
-<p>See <a class="reference internal" href="../../../references.html"><span class="doc">References</span></a> for the centralised bibliography of papers
+<p>See <a class="reference internal" href="../../../references.html"><span class="doc">References</span></a> for the centralized bibliography of papers
 cited above. Add or amend an entry once in
 <code class="file docutils literal notranslate"><span class="pre">docs/source/refs.bib</span></code>; every tutorial inherits the update.</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-auto-examples-eeg2025-tutorial-challenge-2-py">
@@ -1080,7 +1093,7 @@ cited above. Add or amend an entry once in
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">How do I get my first baseline running for EEG2025 Challenge 1 (CCD)?</p>
+        <p class="prev-next-title">EEG2025 Challenge 1 Baseline (CCD)</p>
       </div>
     </a>
     <a class="right-next"

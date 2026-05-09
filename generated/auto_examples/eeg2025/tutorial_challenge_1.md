@@ -6,7 +6,9 @@
 
 <a id="sphx-glr-generated-auto-examples-eeg2025-tutorial-challenge-1-py"></a>
 
-# How do I get my first baseline running for EEG2025 Challenge 1 (CCD)?
+# EEG2025 Challenge 1 Baseline (CCD)
+
+**Difficulty 3** | **Runtime: 3-6m** | **Compute: CPU (GPU Recommended)**
 
 Challenge 1 of the EEG2025 Foundation Challenge asks you to decode a
 **trial-level cognitive decision** from EEG: in the contrastChangeDetection
@@ -29,8 +31,9 @@ three-panel figure ready to drop into your submission.
 
 So how far above chance can a small CNN push CCD decoding on the mini
 release?
+Keywords: EEG2025, challenge, transfer
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 28-36 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 31-73 -->
 
 ## Learning objectives
 
@@ -40,7 +43,23 @@ release?
 - Train an [`EEGNeX`](https://braindecode.org/stable/generated/braindecode.models.EEGNeX.html#braindecode.models.EEGNeX) baseline and report per-fold test accuracy with mean +/- std next to chance.
 - Plot a three-panel figure (trial schematic, one CCD window, per-fold accuracy) via `draw_challenge_1_figure` and save the model state_dict.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 38-53 -->
+## EEG2025 Competition Notes
+
+- **Community & Support.** Join the official EEG2025 Discord for task
+  clarifications and to find teammates.
+- **Submission Artifacts.** A complete submission requires:
+  1. **Model Weights.** The `state_dict` of your trained model.
+  2. **Prediction CSV.** A file containing your model’s predictions on the
+  > held-out test set.
+  1. **Reproducibility Report.** A short document (PDF or Markdown)
+     detailing your architecture, training regime, and hardware.
+
+## Reproducibility Checklist
+
+- [ ] Use a fixed random seed (e.g., `SEED = 2025`).
+- [ ] Ensure no subject leakage between folds.
+- [ ] Report both mean accuracy and standard deviation across folds.
+- [ ] Specify your hardware (CPU/GPU) and total training time.
 
 ## Requirements
 
@@ -57,13 +76,13 @@ release?
   /auto_examples/tutorials/00_start_here/plot_02_dataset_to_dataloader
   for the windowing -> [`torch.utils.data.DataLoader`](https://docs.pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader) flow.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 55-58 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 75-78 -->
 
 Setup, seeds, cache, and device. `np.random.seed` keeps the synthetic
 fallback deterministic; the warning filter silences a pandas
 `FutureWarning` raised by the metadata catalog inside the constructor.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 58-82 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 78-102 -->
 ```Python
 import os
 import warnings
@@ -94,7 +113,7 @@ print(f"device={DEVICE} | seed={SEED} | cache={cache_dir}")
 device=cpu | seed=2025 | cache=/home/runner/eegdash_cache
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 83-102 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 103-122 -->
 
 ## Step 1. The CCD task and the input/output contract
 
@@ -115,7 +134,7 @@ contract so submissions are comparable:
   0.5) instead of a regression metric. Swap in
   `rt_from_stimulus` to match the leaderboard exactly.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 104-122 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 124-142 -->
 ```Python
 N_CHANS, N_SAMPLES, SFREQ = 129, 200, 100.0
 SHIFT_AFTER_STIM = 0.5  # seconds: window starts +0.5 s after the stim anchor
@@ -193,20 +212,20 @@ pd.Series(
 </div>
 <br />
 <br />
-<!-- GENERATED FROM PYTHON SOURCE LINES 123-134 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 143-154 -->
 
 ## Step 2. Two paths: real CCD data, or a synthetic fallback
 
 **Run.** The full Challenge 1 pipeline pulls real CCD recordings from
 the EEG2025 mini bucket; that path needs network and ~80 MB per mini
 subject. To keep the rendered tutorial reproducible without network we
-also synthesise the windowed shape `(n_windows, 129, 200)` directly.
+also synthesize the windowed shape `(n_windows, 129, 200)` directly.
 The synthetic fallback keeps the same tensor contract and the same
 label distribution so the rest of the tutorial reads identically. Set
 the `EEGDASH_CHALLENGE_REAL_DATA=1` env var to flip the switch and
 use the actual loader.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 136-139 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 156-159 -->
 ```Python
 USE_REAL_DATA = os.environ.get("EEGDASH_CHALLENGE_REAL_DATA", "0") == "1"
 print(f"USE_REAL_DATA={USE_REAL_DATA} (set EEGDASH_CHALLENGE_REAL_DATA=1 to flip)")
@@ -216,7 +235,7 @@ print(f"USE_REAL_DATA={USE_REAL_DATA} (set EEGDASH_CHALLENGE_REAL_DATA=1 to flip
 USE_REAL_DATA=False (set EEGDASH_CHALLENGE_REAL_DATA=1 to flip)
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 140-146 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 160-166 -->
 
 **Predict.** Before reading the next cells: with a binary balanced
 label (fast vs slow response) the chance level is 0.5. How much above
@@ -225,7 +244,7 @@ mini release? The Foundation Challenge baseline lifts CCD accuracy a
 few points above chance per fold; the EEG2025 winners cleared that
 bar by larger margins [[Aristimunha *et al.*, 2025](../../../references.md#id36)].
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 148-159 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 168-179 -->
 
 ## Step 3. Build the windowed dataset
 
@@ -238,7 +257,7 @@ stimulus-locked windows with
 synthetic branch stamps the same shape and metadata directly so the
 downstream split / training code is unchanged.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 161-308 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 181-328 -->
 ```Python
 N_SUBJECTS_SYNTH = 8
 N_PER_SUBJECT_SYNTH = 60
@@ -393,7 +412,7 @@ synthesising CCD-shaped windows for offline reproducibility ...
 X=(480, 129, 200) | y=(480,) | n_subjects=8
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 309-315 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 329-335 -->
 
 **Investigate.** `X` carries one row per stimulus-locked window with
 the canonical Challenge 1 shape; `y` is the binary fast/slow target
@@ -402,7 +421,7 @@ split stays auditable. Using a real-data label like the official
 regression target only changes the loss and the metric, not the
 tensor contract.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 317-325 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 337-345 -->
 
 ## Step 4. Cross-subject split with leakage guard
 
@@ -412,7 +431,7 @@ al. 2019, EEG-BIDS). We split *subjects* into folds with
 [`sklearn.model_selection.KFold`](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.KFold.html#sklearn.model_selection.KFold) over the unique subject ids and
 assert no overlap.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 327-342 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 347-362 -->
 ```Python
 N_FOLDS = 5
 unique_subjects = np.array(sorted(meta_all["subject"].unique()))
@@ -434,7 +453,7 @@ print(
 n_folds=5 | subjects per test fold ~ 1
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 343-350 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 363-370 -->
 
 ## Step 5. Build the EEGNeX baseline
 
@@ -443,7 +462,7 @@ spatial CNN sized for the Challenge 1 input contract. We use 2 output
 units for the binary fast/slow head; swap to 1 unit (and an MSE loss)
 to regress `rt_from_stimulus` against the official metric.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 352-395 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 372-415 -->
 ```Python
 from braindecode.models import EEGNeX
 from torch import nn
@@ -488,7 +507,7 @@ def train_one_fold(
     return acc, losses
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 396-403 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 416-423 -->
 
 ## Step 6. Train the baseline and collect per-fold accuracy
 
@@ -497,7 +516,7 @@ minute on CPU for the synthetic path while still showing the noise
 floor. Real-data runs with a serious budget should swap in early
 stopping and 30+ epochs against a held-out validation set.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 405-415 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 425-435 -->
 ```Python
 fold_accuracies: list[float] = []
 for f, (tr_mask, te_mask) in enumerate(fold_assignments):
@@ -519,7 +538,7 @@ fold 5/5: test_acc=0.533
 baseline accuracy: mean=0.535 | std=0.017 | chance=0.50
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 416-426 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 436-446 -->
 
 ## Step 7. Render the three-panel starter-kit figure
 
@@ -531,7 +550,7 @@ chance line. The drawing code lives in a sibling
 `_challenge_1_figure` module so this tutorial cell stays one import
 plus one function call.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 428-462 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 448-482 -->
 ```Python
 from _challenge_1_figure import draw_challenge_1_figure
 
@@ -568,7 +587,7 @@ fig = draw_challenge_1_figure(
 plt.show()
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 463-470 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 483-490 -->
 
 ## Result, one row per condition
 
@@ -577,7 +596,7 @@ With a single seed and a small mini cohort the absolute number is
 noisy: report mean +/- std (E5.43, E5.46) and resist the urge to read
 fold-to-fold lifts as effects.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 472-482 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 492-502 -->
 ```Python
 print("\n| condition          | accuracy |")
 print("|--------------------|----------|")
@@ -599,7 +618,7 @@ print(
 folds=5 | task=contrastChangeDetection | release=R5 | window=129x200 | sfreq=100 Hz
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 483-490 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 503-510 -->
 
 ## Step 8. Save the model weights for submission
 
@@ -608,7 +627,7 @@ code. We save the last fold’s weights here as a placeholder; in a
 real submission you train on all subjects (or use a held-out
 validation fold for early stopping) and ship the resulting weights.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 492-497 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 512-517 -->
 ```Python
 weights_path = cache_dir / "tutorial_challenge_1_weights.pt"
 torch.save(model.state_dict(), weights_path)
@@ -620,7 +639,7 @@ print(f"saved baseline weights -> {weights_path}")
 saved baseline weights -> /home/runner/eegdash_cache/tutorial_challenge_1_weights.pt
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 498-506 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 518-526 -->
 
 ## A common mistake, and how to recover
 
@@ -630,7 +649,7 @@ size-mismatch error the moment a `(B, 129, 200)` batch lands. We
 trigger the error on purpose so the failure mode is visible and the
 recovery (rebuild with `n_chans=129`) is on the page.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 508-518 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 528-538 -->
 ```Python
 try:
     bad = EEGNeX(n_chans=64, n_outputs=2, n_times=N_SAMPLES, sfreq=int(SFREQ)).to(
@@ -648,7 +667,7 @@ Caught RuntimeError: mat1 and mat2 shapes cannot be multiplied (2x3168 and 48x2)
 Recovery: EEGNeX(n_chans=129, ...) -> EEGNeX
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 519-528 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 539-548 -->
 
 ## Modify, swap the binary head for the official regression target
 
@@ -659,7 +678,7 @@ not the binary fast/slow head we used here. To match it, change
 report RMSE instead of accuracy, and feed the raw response time as
 the target. The window contract stays the same.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 530-535 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 550-555 -->
 ```Python
 print("regression head sketch:")
 print("  model = EEGNeX(n_chans=129, n_outputs=1, n_times=200, sfreq=100)")
@@ -674,7 +693,7 @@ regression head sketch:
   metric = torch.sqrt(((preds - rt) ** 2).mean())  # RMSE in seconds
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 536-544 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 556-564 -->
 
 ## Make, scale up to the full release
 
@@ -684,7 +703,7 @@ real-data branch, drop the synthetic fallback, raise `n_epochs` to
 the leaderboard metric (RMSE) instead of accuracy. The submission
 bundle is the architecture code plus `tutorial_challenge_1_weights.pt`.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 546-557 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 566-577 -->
 
 ## Extensions
 
@@ -697,7 +716,7 @@ bundle is the architecture code plus `tutorial_challenge_1_weights.pt`.
 - drop `mini=True` for the final submission so the leaderboard
   contract holds end-to-end.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 559-583 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 579-603 -->
 
 ## Wrap-up
 
@@ -722,14 +741,14 @@ starter-kit story without scrolling.
   /auto_examples/tutorials/70_transfer_foundation/plot_73_finetune_pretrained_model
   fine-tunes a foundation model with the same loader.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 585-590 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 605-610 -->
 
 ## References
 
-See [References](../../../references.md) for the centralised bibliography of papers
+See [References](../../../references.md) for the centralized bibliography of papers
 cited above. Add or amend an entry once in
 `docs/source/refs.bib`; every tutorial inherits the update.
 
-**Total running time of the script:** (8 minutes 8.307 seconds)
+**Total running time of the script:** (8 minutes 11.719 seconds)
 
 <a id="sphx-glr-download-generated-auto-examples-eeg2025-tutorial-challenge-1-py"></a>

@@ -6,7 +6,9 @@
 
 <a id="sphx-glr-generated-auto-examples-tutorials-50-evaluation-plot-53-learning-curves-py"></a>
 
-# How does decoding accuracy scale with training-set size, and where does the curve plateau?
+# Decoding accuracy learning curves
+
+**Difficulty 2-3** | **Runtime: 2m** | **Compute: CPU**
 
 Recording another month of EEG is expensive. Before committing more
 budget to data collection, ask whether the model is data-starved or
@@ -27,13 +29,25 @@ Schirrmeister et al. 2017 (doi:10.1002/hbm.23730, Braindecode) and the
 MOABB benchmark (Chevallier, Aristimunha et al. 2024,
 doi:10.48550/arXiv.2404.15319) sweep the same protocol on real EEG
 pipelines. The deliverable is one number: at what training-set size
-does the model first reach 90% of its plateau accuracy?
+# does the model first reach 90% of its plateau accuracy?
+#
+# Validate your result
+# ——————–
+# - **Saturation Point.** The accuracy should plateau as `n_train` increases.
+#   Identify the point where the slope becomes near-zero.
+# - **Bias-Variance Gap.** A wide gap between train and val accuracy
+#   indicates overfitting (high variance); a small gap with low accuracy
+#   indicates underfitting (high bias).
+# - **Chance Line.** The val accuracy must be consistently above the
+#   majority-class chance line.
+#
+# Keywords: evaluation, learning-curves, data-size
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 25-27 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 39-41 -->
 ```Python
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 29-47 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 43-61 -->
 
 ## Learning objectives
 
@@ -52,11 +66,11 @@ does the model first reach 90% of its plateau accuracy?
 - Theory: [Leakage and evaluation](../../../../concepts/leakage_and_evaluation.md).
 - **Estimated time**: ~6 s on CPU. **Data**: 0 MB (synthetic cohort).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 49-50 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 63-64 -->
 
 Setup. Seed, imports, and runtime stamp.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 50-72 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 64-86 -->
 ```Python
 import warnings
 
@@ -85,7 +99,7 @@ print(f"sklearn learning_curve sweep: seed={SEED}")
 sklearn learning_curve sweep: seed=42
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 73-105 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 87-119 -->
 
 ## The mental model: grow the train pool, hold the val pool fixed
 
@@ -115,11 +129,11 @@ screen.
 
 **Predict.** As `n_train` climbs from 50 to 1000 windows, val
 accuracy rises monotonically in expectation; train accuracy falls,
-because a tiny train set memorises easily and a larger one cannot.
+because a tiny train set memorizes easily and a larger one cannot.
 Where do they cross? Where does val first reach 90% of its plateau?
 Guess before scrolling.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 107-117 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 121-131 -->
 
 ## Step 1: Build a 24-subject synthetic cohort (~1440 windows)
 
@@ -131,7 +145,7 @@ the curve has space to bend. Real EEG features (band power, riemannian
 tangent space, deep nets) sit somewhere on this spectrum. The
 learning curve tells you where.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 119-153 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 133-167 -->
 ```Python
 N_SUBJECTS = 24
 N_WINDOWS_PER_SUBJECT = 60
@@ -172,7 +186,7 @@ print(
 Cohort: rows=1,440, subjects=24, X=(1440, 8), class balance=0.51
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 154-167 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 168-181 -->
 
 ## Step 2: Pick the training-size grid (log-spaced)
 
@@ -187,7 +201,7 @@ Why log-spaced and not linear: doubling a training set rarely doubles
 the gain. Saturation is usually a power law in `n_train`, and a
 linear grid hides the early bend.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 169-179 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 183-193 -->
 ```Python
 TARGET_SIZES = np.array([50, 100, 200, 500, 1000], dtype=int)
 TEST_SIZE = 0.25
@@ -204,7 +218,7 @@ print(
 Inner train pool: 1080 windows; sweep fractions: [0.046, 0.093, 0.185, 0.463, 0.926]
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 180-192 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 194-206 -->
 
 ## Step 3: Run [`sklearn.model_selection.learning_curve()`](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.learning_curve.html#sklearn.model_selection.learning_curve) with subject-disjoint CV
 
@@ -218,7 +232,7 @@ shuffle and quietly leaks subjects across train and val (Brookshire
 2024). Scoring is balanced accuracy so a class imbalance does not
 inflate the numbers.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 194-218 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 208-232 -->
 ```Python
 clf = LogisticRegression(random_state=SEED, max_iter=200)
 cv = GroupShuffleSplit(n_splits=N_PERMS, test_size=TEST_SIZE, random_state=SEED)
@@ -249,7 +263,7 @@ print(
 Per-size val balanced accuracy (mean +/- std): n=50: 0.55+/-0.02, n=100: 0.56+/-0.02, n=200: 0.59+/-0.01, n=500: 0.59+/-0.02, n=1000: 0.57+/-0.02
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 219-227 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 233-241 -->
 
 ## Step 4: Audit subject-disjointness at every fold
 
@@ -259,7 +273,7 @@ check the train-vs-val pools with
 `assert_no_leakage`. One missed subject in both
 pools and the curve is a fiction (E5.43, E5.46).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 229-247 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 243-261 -->
 ```Python
 audit_cv = GroupShuffleSplit(n_splits=N_PERMS, test_size=TEST_SIZE, random_state=SEED)
 audit_folds: list[tuple[np.ndarray, np.ndarray]] = list(
@@ -284,7 +298,7 @@ print(
 Leakage audit: PASS. 5 folds, train_subjects=18, val_subjects=6
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 248-257 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 262-271 -->
 
 ## Step 5: Locate the plateau and the 90%-of-plateau saturation point
 
@@ -295,7 +309,7 @@ the actionable number: collecting enough data to reach saturation
 captures 90% of the gain over chance. Anything beyond pays
 diminishing returns.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 259-274 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 273-288 -->
 ```Python
 CHANCE = 0.5
 plateau_idx = int(np.argmax(val_mean))
@@ -317,7 +331,7 @@ print(
 Plateau: val=0.59 at n_train=500 | 90%-of-plateau target=0.58; first reached at n_train=200
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 275-284 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 289-298 -->
 
 ## Step 6: Render the two-panel figure
 
@@ -328,7 +342,7 @@ The subtitle carries the live `n_total_windows | n_subjects |
 n_features | min/max train sizes` block; the geometry sits in the
 sibling helper so this cell is one import + one call + `plt.show`.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 286-299 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 300-313 -->
 ```Python
 fig = draw_learning_curves_figure(
     train_sizes=train_sizes_abs,
@@ -344,7 +358,7 @@ fig = draw_learning_curves_figure(
 plt.show()
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 300-308 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 314-322 -->
 
 ## Step 7: Cross-check the slope against the eegdash splitter
 
@@ -354,7 +368,7 @@ which builds the manifest sklearn writes by hand here. We rebuild the
 manifest at the FRACTIONS we just swept and confirm the audit head
 count matches.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 310-326 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 324-340 -->
 ```Python
 splitter = LearningCurveSplitter(
     data_size={"policy": "ratio", "value": train_sizes_frac.tolist()},
@@ -377,7 +391,7 @@ print(
 learning-curve splitter: LearningCurveSplitter | n_folds=25 (expected 25) | sklearn-only mode
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 327-334 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 341-348 -->
 
 ## Result: learning-curve table
 
@@ -386,7 +400,7 @@ One row per training-set size: `train_acc` and `val_acc` mean
 size is the row with the highest `val_acc`; the saturation size is
 the smallest row at or above `chance + 0.9 * (plateau - chance)`.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 336-357 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 350-371 -->
 ```Python
 table_rows = []
 for i, n in enumerate(train_sizes_abs):
@@ -419,7 +433,7 @@ n_train  train_acc_mean  train_acc_std  val_acc_mean  val_acc_std   gap
    1000           0.604          0.009         0.574        0.023 0.030
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 358-367 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 372-381 -->
 
 ## A common mistake, and how to recover
 
@@ -430,7 +444,7 @@ subjects. Val accuracy jumps by `0.05` to `0.20` for the wrong reason
 [[Brookshire *et al.*, 2024](../../../../references.md#id10)]. Trigger it on purpose with `try/except` so the
 failure mode is visible:
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 369-397 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 383-411 -->
 ```Python
 try:
     leaky_cv = GroupShuffleSplit(n_splits=2, test_size=TEST_SIZE, random_state=SEED)
@@ -466,7 +480,7 @@ Caught ValueError: leak detected: 1 shared subjects
 Recovery: re-run with groups= honoured. Leakage audit on 2 folds: PASS.
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 398-408 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 412-422 -->
 
 ## Modify: destroy the class signal and watch the curve flatten
 
@@ -478,7 +492,7 @@ at every training size. A flat curve hugging the chance line says
 gap stays close to zero but for the wrong reason: bias is the model
 nailing chance.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 410-443 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 424-457 -->
 
 ## Try it yourself
 
@@ -508,7 +522,7 @@ names the budget.
 %% [markdown]
 References
 ———-
-See [References](../../../../references.md) for the centralised bibliography of papers
+See [References](../../../../references.md) for the centralized bibliography of papers
 cited above. Add or amend an entry once in
 `docs/source/refs.bib`; every tutorial inherits the update.
 

@@ -6,9 +6,11 @@
 
 <a id="sphx-glr-generated-auto-examples-tutorials-70-transfer-foundation-plot-70-challenge-dataset-basics-py"></a>
 
-# How do I get started with the EEG 2025 Foundation Challenge dataset?
+# How do I get started with the EEG2025 Foundation Challenge dataset?
 
-The EEG 2025 Foundation Challenge ships its own loader,
+**Difficulty 1-2** | **Runtime: 10s** | **Compute: CPU**
+
+The EEG2025 Foundation Challenge ships its own loader,
 [`EEGChallengeDataset`](../../../../api/dataset/eegdash.dataset.EEGChallengeDataset.md#eegdash.dataset.EEGChallengeDataset), on top of the same
 `eegdash` infrastructure that powers
 `EEGDashDataset`. The data pool is the
@@ -23,7 +25,10 @@ is one [`pandas.DataFrame`](https://pandas.pydata.org/pandas-docs/stable/referen
 three-panel figure rendered from the live metadata.
 
 <!-- sphinx_gallery_thumbnail_path = '_static/thumbs/plot_70_challenge_dataset_basics.png' -->
-<!-- GENERATED FROM PYTHON SOURCE LINES 22-37 -->
+
+Keywords: EEG2025, dataset, basics
+
+<!-- GENERATED FROM PYTHON SOURCE LINES 25-49 -->
 
 ## Learning objectives
 
@@ -39,9 +44,18 @@ three-panel figure rendered from the live metadata.
   and contrast the loader against
   `EEGDashDataset` for the same subjects.
 - Read the leaderboard contract: see [EEGDash objects: EEGDash, EEGDashDataset, EEGChallengeDataset](../../../../concepts/eegdash_objects.md)
-  and the EEG 2025 challenge site for evaluation rules.
+  and the EEG2025 challenge site for evaluation rules.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 39-50 -->
+## Validate your result
+
+- **Release Check.** Confirm that `ds.release` matches your requested
+  release (e.g., “R5”).
+- **Task Taxonomy.** Verify that task names like `RestingState` and
+  `contrastChangeDetection` appear in your task counts.
+- **Mini-Subset.** If `mini=True`, you should see exactly 8 subjects
+  (or as defined by the release) for a fast local run.
+
+<!-- GENERATED FROM PYTHON SOURCE LINES 51-62 -->
 
 ## Requirements
 
@@ -55,13 +69,13 @@ three-panel figure rendered from the live metadata.
   /auto_examples/tutorials/00_start_here/plot_01_first_recording.
 - Concept: [EEGDash objects: EEGDash, EEGDashDataset, EEGChallengeDataset](../../../../concepts/eegdash_objects.md).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 52-55 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 64-67 -->
 
 Setup. `np.random.seed` keeps any later sampling reproducible; the
 warning filter silences a pandas `FutureWarning` raised by the
 metadata catalog inside the constructor.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 55-82 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 67-94 -->
 ```Python
 import os
 import warnings
@@ -96,7 +110,7 @@ eegdash version: 0.7.2
 cache directory: /home/runner/eegdash_cache
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 83-112 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 95-124 -->
 
 ## Two loaders, one catalog: the mental model
 
@@ -128,7 +142,7 @@ fast iteration. Mixing those preprocessed cubes with raw OpenNeuro pulls
 would silently break the leaderboard contract, so the two classes stay
 separate even though they share the same lazy-loading machinery.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 114-119 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 126-131 -->
 
 ## What does `EEGChallengeDataset` expose?
 
@@ -136,7 +150,7 @@ Before instantiating one, list the public methods and properties on the
 class. The `release`, `mini`, `description`, `records`, and
 `datasets` names are the ones the rest of the tutorial leans on.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 121-126 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 133-138 -->
 ```Python
 challenge_attrs = sorted(
     name for name in dir(EEGChallengeDataset) if not name.startswith("_")
@@ -233,7 +247,7 @@ pd.DataFrame({"attribute": challenge_attrs}).head(20)
 </div>
 <br />
 <br />
-<!-- GENERATED FROM PYTHON SOURCE LINES 127-134 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 139-146 -->
 
 ## Step 1: Build `EEGChallengeDataset(release='R5', mini=True)`
 
@@ -243,7 +257,7 @@ defaults to `True` for the constructor itself, but no S3 traffic
 happens until a call asks for `record.raw`, the metadata catalog
 query alone is enough to enumerate the task taxonomy.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 136-152 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 148-164 -->
 ```Python
 RELEASE = "R5"
 ds_mini = EEGChallengeDataset(release=RELEASE, cache_dir=str(cache_dir), mini=True)
@@ -280,7 +294,7 @@ pd.Series(
 │ If you are participating in the competition, always use                      │
 │ `EEGChallengeDataset` to ensure consistency with the challenge data.         │
 ╰──────────────────────── Source: EEGChallengeDataset ─────────────────────────╯
-[05/08/26 18:43:51] INFO     Auto-corrected misrouted             dataset.py:402
+[05/09/26 20:26:46] INFO     Auto-corrected misrouted             dataset.py:402
                              storage.base for dataset
                              EEG2025r5mini: None ->
                              s3://nemar/EEG2025r5mini
@@ -339,7 +353,7 @@ pd.Series(
 </div>
 <br />
 <br />
-<!-- GENERATED FROM PYTHON SOURCE LINES 153-165 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 165-177 -->
 
 ## Step 2: The HBN task taxonomy
 
@@ -354,7 +368,7 @@ suppression, symbol search), and two sequence-learning variants
 row per recording. The `task` column carries the BIDS task entity,
 untouched by the preprocessing pipeline.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 167-171 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 179-183 -->
 ```Python
 task_counts = ds_mini.description["task"].value_counts().to_dict()
 n_tasks = len(task_counts)
@@ -434,7 +448,7 @@ pd.Series(task_counts, name="records").rename_axis("task").to_frame()
 </div>
 <br />
 <br />
-<!-- GENERATED FROM PYTHON SOURCE LINES 172-180 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 184-192 -->
 
 **Investigate.** A few observations from the count above. The active
 cognitive tasks (`contrastChangeDetection`, `surroundSupp`) appear
@@ -445,7 +459,7 @@ three runs. The passive videos (`DespicableMe`, `ThePresent`,
 subset of the cohort because the sequence-learning protocol was added
 mid-study.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 182-190 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 194-202 -->
 
 ## Step 3: The participant-level metadata
 
@@ -456,7 +470,7 @@ scores (`p_factor`, `attention`, `internalizing`,
 availability flag (`available` / `not available`) for the ten HBN
 tasks. The next cell surfaces the columns at a glance.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 192-195 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 204-207 -->
 ```Python
 metadata_columns = list(ds_mini.description.columns)
 pd.DataFrame({"column": metadata_columns}).head(30)
@@ -595,7 +609,7 @@ pd.DataFrame({"column": metadata_columns}).head(30)
 </div>
 <br />
 <br />
-<!-- GENERATED FROM PYTHON SOURCE LINES 196-202 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 208-214 -->
 
 ## Step 4: Build an age x task availability matrix
 
@@ -604,7 +618,7 @@ the resting-state and passive-video runs are present at every age,
 whereas sequence learning was added later in the protocol. Bin the
 ages into four buckets and pivot.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 204-220 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 216-232 -->
 ```Python
 age_bins = pd.IntervalIndex.from_tuples(
     [(5, 8), (8, 12), (12, 16), (16, 19)], closed="left"
@@ -726,7 +740,7 @@ age_task_matrix
 </div>
 <br />
 <br />
-<!-- GENERATED FROM PYTHON SOURCE LINES 221-228 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 233-240 -->
 
 ## Step 5: One catalog row, fully expanded
 
@@ -736,7 +750,7 @@ participants.tsv extras. `ds.records[0]` is exactly that row,
 returned as a Python `dict`. The next cell renders it as a
 [`pandas.DataFrame`](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame) so the long fields stay readable.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 230-237 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 242-249 -->
 ```Python
 sample_record = dict(ds_mini.records[0])
 record_view = pd.Series(
@@ -855,7 +869,7 @@ record_view.head(20)
 </div>
 <br />
 <br />
-<!-- GENERATED FROM PYTHON SOURCE LINES 238-249 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 250-261 -->
 
 **Investigate.** A handful of fields are load-bearing for downstream
 code:
@@ -869,7 +883,7 @@ code:
   500 Hz), and `nchans` is the post-Cz-reference channel count.
 - `storage` carries the S3 backend descriptor (`s3://nmdatasets/NeurIPS25/...`).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 251-257 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 263-269 -->
 
 ## Step 6: Render the live numbers as a 3-panel figure
 
@@ -878,7 +892,7 @@ module so the rendering plumbing stays out of this tutorial. Panel 1
 is the records-per-task bar chart from Step 2; panel 2 is the age x
 task matrix from Step 4; panel 3 is the catalog row from Step 5.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 259-274 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 271-286 -->
 ```Python
 from _challenge_basics_figure import draw_challenge_basics_figure
 
@@ -896,7 +910,7 @@ fig = draw_challenge_basics_figure(
 plt.show()
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 275-282 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 287-294 -->
 
 ## Step 7: Verify the strict-subset invariant
 
@@ -906,7 +920,7 @@ and renames the dataset id to `EEG2025r5mini` for cache isolation.
 Build the full release the same way and check the strict-subset
 claim.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 284-308 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 296-320 -->
 ```Python
 ds_full = EEGChallengeDataset(release=RELEASE, cache_dir=str(cache_dir), mini=False)
 mini_subjects = sorted(set(ds_mini.description["subject"]))
@@ -951,7 +965,7 @@ pd.Series(
 │ If you are participating in the competition, always use                      │
 │ `EEGChallengeDataset` to ensure consistency with the challenge data.         │
 ╰──────────────────────── Source: EEGChallengeDataset ─────────────────────────╯
-[05/08/26 18:43:53] INFO     Auto-corrected misrouted             dataset.py:402
+[05/09/26 20:26:49] INFO     Auto-corrected misrouted             dataset.py:402
                              storage.base for dataset EEG2025r5:
                              None -> s3://nemar/EEG2025r5
 ```
@@ -1005,7 +1019,7 @@ pd.Series(
 </div>
 <br />
 <br />
-<!-- GENERATED FROM PYTHON SOURCE LINES 309-315 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 321-327 -->
 
 ## Step 8: Same subjects, two views via `EEGDashDataset`
 
@@ -1014,7 +1028,7 @@ pd.Series(
 recording (500 Hz, no challenge band-pass). The leaderboard contract
 explicitly forbids mixing the two views in a submission.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 317-332 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 329-344 -->
 ```Python
 ds_eegdash = EEGDashDataset(
     cache_dir=str(cache_dir),
@@ -1100,7 +1114,7 @@ pd.Series(
 </div>
 <br />
 <br />
-<!-- GENERATED FROM PYTHON SOURCE LINES 333-339 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 345-351 -->
 
 ## A common mistake, and how to recover
 
@@ -1109,7 +1123,7 @@ pd.Series(
 , before any S3 traffic happens. We trigger the error on purpose so
 the failure mode is visible.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 341-354 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 353-366 -->
 ```Python
 try:
     _bogus = EEGChallengeDataset(
@@ -1130,7 +1144,7 @@ Caught ValueError: Unknown release: R12, expected one of ['R11', 'R10', 'R9', 'R
 Recovery: use one of ['R1', 'R2', 'R3', 'R4', 'R5', 'R6', 'R7', 'R8', 'R9', 'R10', 'R11']
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 355-361 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 367-373 -->
 
 ## Modify: pick a different release
 
@@ -1139,7 +1153,7 @@ re-check the strict-subset invariant. The 20 mini subjects per release
 are different by design, but the relationship `mini` is a subset of
 `full` holds for every release in the map.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 363-378 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 375-390 -->
 ```Python
 ds_alt = EEGChallengeDataset(release="R2", cache_dir=str(cache_dir), mini=True)
 alt_subjects = set(ds_alt.description["subject"])
@@ -1175,7 +1189,7 @@ pd.Series(
 │ If you are participating in the competition, always use                      │
 │ `EEGChallengeDataset` to ensure consistency with the challenge data.         │
 ╰──────────────────────── Source: EEGChallengeDataset ─────────────────────────╯
-[05/08/26 18:44:00] INFO     Auto-corrected misrouted             dataset.py:402
+[05/09/26 20:26:55] INFO     Auto-corrected misrouted             dataset.py:402
                              storage.base for dataset
                              EEG2025r2mini: None ->
                              s3://nemar/EEG2025r2mini
@@ -1226,7 +1240,7 @@ pd.Series(
 </div>
 <br />
 <br />
-<!-- GENERATED FROM PYTHON SOURCE LINES 379-386 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 391-398 -->
 
 ## Make: a release-by-release tabulation
 
@@ -1236,7 +1250,7 @@ The cell below does the loop on the mini side without touching the
 full pool (so it stays fast); the `|full|` column is read straight
 from the participants.tsv via the metadata catalog.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 388-401 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 400-413 -->
 ```Python
 release_table_rows = []
 for release in sorted(
@@ -1349,7 +1363,7 @@ pd.DataFrame(release_table_rows)
 </div>
 <br />
 <br />
-<!-- GENERATED FROM PYTHON SOURCE LINES 402-411 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 414-423 -->
 
 ## Result
 
@@ -1361,7 +1375,7 @@ cache key, and a custom subject filter; the loader rolls all three
 into one constructor call (Cisotto & Chicco 2024 would say: do not
 rebuild what the dataset class already enforces).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 413-428 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 425-440 -->
 
 ## Wrap-up
 
@@ -1379,7 +1393,7 @@ enumerated;
 /auto_examples/tutorials/70_transfer_foundation/plot_73_finetune_pretrained_model
 fine-tunes a foundation model with the same loader.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 430-438 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 442-450 -->
 
 ## Try it yourself (Extensions)
 
@@ -1390,14 +1404,14 @@ fine-tunes a foundation model with the same loader.
 - Run with `download=True`, access `ds_mini.datasets[0].raw`, and
   confirm `raw.info["sfreq"] == 100.0` (the challenge downsample step).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 440-445 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 452-457 -->
 
 ## References
 
-See [References](../../../../references.md) for the centralised bibliography of papers
+See [References](../../../../references.md) for the centralized bibliography of papers
 cited above. Add or amend an entry once in
 `docs/source/refs.bib`; every tutorial inherits the update.
 
-**Total running time of the script:** (0 minutes 10.245 seconds)
+**Total running time of the script:** (0 minutes 9.832 seconds)
 
 <a id="sphx-glr-download-generated-auto-examples-tutorials-70-transfer-foundation-plot-70-challenge-dataset-basics-py"></a>

@@ -6,20 +6,30 @@
 
 <a id="sphx-glr-generated-auto-examples-how-to-how-to-parallelize-feature-extraction-py"></a>
 
-# Parallelise EEGDash feature extraction
+# Parallelize EEGDash feature extraction
+
+**Difficulty 2** | **Runtime: 30s** | **Compute: CPU (Multi-core)**
 
 Goal: scale [`eegdash.features.extract_features()`](../../../api/features_overview.md#eegdash.features.extract_features) across multiple cores
 on one node by tuning `n_jobs` and `batch_size`, then persist the
-result so re-runs are free.
+# result so re-runs are free.
+#
+# Validate your result
+# ——————–
+# - **Wall-clock Speedup.** Using `n_jobs=4` should significantly reduce
+#   extraction time compared to `n_jobs=1`.
+# - **Memory Usage.** Monitor your system’s RAM; parallel jobs increase
+#   memory pressure linearly with `n_jobs`.
+# - **Consistency Check.** The resulting feature table should be identical
+#   to a single-core run (assert with `pd.testing.assert_frame_equal`).
+#
+# Keywords: parallel, feature-extraction, joblib
 
-How-to recipe (kind=how-to, no PRIMM). Synthetic data so it runs locally
-in under 90 s on a 4-core CPU.
-
-<!-- GENERATED FROM PYTHON SOURCE LINES 11-13 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 21-23 -->
 ```Python
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 15-37 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 25-47 -->
 
 ## Goal
 
@@ -44,7 +54,7 @@ scikit-learn (Pedregosa et al., 2011).
   `EEGDASH_CACHE` and `EEGDASH_FEATURES_CACHE` should point.
 - Local Python with [`braindecode`](https://braindecode.org/stable/api.html#module-braindecode), [`mne`](https://mne.tools/stable/api/python_reference.html#module-mne), `joblib`, `pyarrow`.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 39-71 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 49-81 -->
 ```Python
 import os
 
@@ -78,14 +88,14 @@ CACHE.mkdir(parents=True, exist_ok=True)
 N_CORES = os.cpu_count() or 1
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 72-76 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 82-86 -->
 
 ## Synthetic dataset (mimics plot_10 windows)
 
 16 short 6-channel resting-state recordings at 128 Hz; half get a 10 Hz
 alpha bump so the feature table is non-degenerate.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 76-110 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 86-120 -->
 ```Python
 def _make_raw(seed: int, eyes_closed: bool, secs: int = 240) -> mne.io.Raw:
     n = 128 * secs
@@ -122,13 +132,13 @@ N_WIN = sum(len(d) for d in windows.datasets)
 print(f"recordings={N_REC} windows={N_WIN} cores_available={N_CORES}")
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 111-114 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 121-124 -->
 
 Feature mix: multiscale sample entropy dominates and is what makes
 parallelism pay; `spectral_preprocessor` is shared so the Welch PSD runs
 once per window, not once per band.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 114-128 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 124-138 -->
 ```Python
 features = {
     "var": signal_variance,
@@ -144,13 +154,13 @@ features = {
 }
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 129-132 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 139-142 -->
 
 ## Step 1 – profile the single-threaded baseline
 
 Run once with `n_jobs=1` and assert no rows are silently dropped.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 132-143 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 142-153 -->
 ```Python
 def _run(nj: int, bs: int = 64) -> float:
     t = time.perf_counter()
@@ -164,14 +174,14 @@ t1 = _run(nj=1)
 print(f"baseline n_jobs=1: {t1:.2f}s")
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 144-148 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 154-158 -->
 
 ## Step 2 – scale with `n_jobs`
 
 Read `n_jobs` from `$SLURM_CPUS_PER_TASK` (or your scheduler’s
 equivalent). Never hard-code `-1` on a shared node.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 148-165 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 158-175 -->
 ```Python
 sched = int(os.environ.get("SLURM_CPUS_PER_TASK", min(4, N_CORES)))
 sweep = sorted({1, 2, sched})
@@ -191,14 +201,14 @@ print(pd.DataFrame(scaling).to_string(index=False))
 # curve flattens once n_jobs equals the number of recordings.
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 166-170 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 176-180 -->
 
 ## Step 3 – tune `batch_size`
 
 `batch_size` controls how many windows each worker holds in memory.
 Too small and Python per-batch overhead dominates; too large and you OOM.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 170-175 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 180-185 -->
 ```Python
 batch_report = [
     {"batch_size": bs, "wall_s": round(_run(sched, bs), 2)} for bs in (16, 64, 256)
@@ -206,13 +216,13 @@ batch_report = [
 print(pd.DataFrame(batch_report).to_string(index=False))
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 176-179 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 186-189 -->
 
 ## Step 4 – persist intermediate results
 
 Write the feature table to parquet once; reload on every subsequent call.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 179-192 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 189-202 -->
 ```Python
 parquet = CACHE / "features.parquet"
 if parquet.exists():
@@ -228,14 +238,14 @@ assert parquet.exists() and len(df) == N_WIN
 print(f"persisted={parquet.name} rows={len(df)} reload_s={reload_s:.3f}")
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 193-197 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 203-207 -->
 
 ## Step 5 (optional) – `joblib.dump` the extractor
 
 When the pipeline contains a fitted CSP or trainable feature, pickling the
 extractor lets you reapply it to held-out data without retraining.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 197-202 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 207-212 -->
 ```Python
 extractor_path = CACHE / "extractor.joblib"
 joblib.dump(features, extractor_path)
@@ -243,7 +253,7 @@ reused = joblib.load(extractor_path)
 print(f"checkpoint -> {extractor_path.name} (keys={list(reused)})")
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 203-232 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 213-242 -->
 
 ## Common pitfalls
 

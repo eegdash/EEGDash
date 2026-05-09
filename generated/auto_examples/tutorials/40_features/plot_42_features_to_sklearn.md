@@ -6,13 +6,15 @@
 
 <a id="sphx-glr-generated-auto-examples-tutorials-40-features-plot-42-features-to-sklearn-py"></a>
 
-# How do I push EEGDash features through a scikit-learn Pipeline?
+# EEGDash features to scikit-learn
+
+**Difficulty 1-2** | **Runtime: 10s** | **Compute: CPU**
 
 A feature table from plot_40 is one row per window with columns shaped
 `<feature>_<channel>`. The data follows the same [OpenNeuro](https://openneuro.org) `ds005514` HBN resting-state contour as
 plot_40, reachable through [NEMAR](https://nemar.org) (Delorme et
 al. 2022); to keep the run offline-reproducible the feature table is
-synthesised with the column layout plot_40 saves to parquet. Before
+synthesized with the column layout plot_40 saves to parquet. Before
 reaching for a deep net, this tutorial wires the feature matrix into
 [`sklearn.pipeline.Pipeline`](https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html#sklearn.pipeline.Pipeline) [[Pedregosa *et al.*, 2011](../../../../references.md#id33)] with
 [`StandardScaler`](https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.StandardScaler.html#sklearn.preprocessing.StandardScaler) and
@@ -25,12 +27,13 @@ plot_12 trains the same Pipeline on log-band-power features computed
 inline, plot_42 trains it on the feature table extracted by plot_40.
 The question the figure answers is whether a transparent linear
 baseline clears the chance line on a held-out subject?
+Keywords: features, scikit-learn, pipeline
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 23-25 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 26-28 -->
 ```Python
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 27-34 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 30-57 -->
 
 ## Learning objectives
 
@@ -40,19 +43,28 @@ baseline clears the chance line on a held-out subject?
 - Compare the per-fold accuracy to `majority_baseline` chance level on the same split.
 - Read the three-panel diagnostic figure: PCA + per-fold bars + pooled-LOSO confusion matrix.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 36-45 -->
+## Validate your result
 
-## Requirements
+- **Pipeline Output.** The `predict()` method should return an array of
+  class labels (0 or 1) of length `n_test_windows`.
+- **PCA Plot.** The first two principal components should ideally show some
+  separation between classes if the features are discriminative.
+- **Fold Accuracy.** Each fold in the LOSO loop should report balanced
+  accuracy significantly above chance if the model generalizes.
 
+%% [markdown]
+Requirements
+————
 - About 5 s on CPU on first run. No network, no GPU.
 - Prerequisites:
-  /auto_examples/tutorials/40_features/plot_40_first_features
-  (feature table),
-  /auto_examples/tutorials/10_core_workflow/plot_11_leakage_safe_split
-  (leakage-safe split).
+
+> /auto_examples/tutorials/40_features/plot_40_first_features
+> (feature table),
+> /auto_examples/tutorials/10_core_workflow/plot_11_leakage_safe_split
+> (leakage-safe split).
 - Concept: [Features vs. deep learning](../../../../concepts/features_vs_deep_learning.md).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 47-67 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 59-79 -->
 
 ## Why a Pipeline before a deep net?
 
@@ -75,12 +87,12 @@ accuracy. `majority_baseline` is computed on
 the held-out test set, so the chance number reported tracks the
 class balance of the test fold.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 69-71 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 81-83 -->
 
 Setup. `random_state=42` on every estimator and splitter is what
 keeps the printed accuracy byte-stable across runs (E3.21).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 71-102 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 83-114 -->
 ```Python
 import json
 import os
@@ -118,20 +130,20 @@ print(f"eegdash {eegdash.__version__} | cache_dir={CACHE_DIR}")
 eegdash 0.7.2 | cache_dir=/home/runner/eegdash_cache
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 103-113 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 115-125 -->
 
 ## Step 1: Load (or mimic) the feature table from plot_40
 
 In production you would call `pd.read_parquet(CACHE_DIR /
 "plot_40_features.parquet")`. To stay reproducible offline we
-synthesise the same column layout: per-channel variance plus
+synthesize the same column layout: per-channel variance plus
 four-band power for `delta`, `theta`, `alpha`, `beta` on a
 parieto-occipital montage. Eyes-closed gets the textbook alpha bump
 [[Berger, 1929](../../../../references.md#id24)] plus a per-window Gaussian jitter so the across-subject
 accuracy lands below the ceiling and the per-fold variance is
 visible.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 115-157 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 127-169 -->
 ```Python
 CH_NAMES = ["O1", "Oz", "O2", "Cz"]
 BANDS = ("delta", "theta", "alpha", "beta")
@@ -180,7 +192,7 @@ print(
 feature table: rows=96 | features=20 | subjects=4 | classes={0: np.int64(48), 1: np.int64(48)}
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 158-165 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 170-177 -->
 
 ## Discovery: column families on the feature table
 
@@ -190,7 +202,7 @@ The columns split into `var_<channel>` (one per channel) and
 parquet schema survived the round-trip and to reach for a feature
 family by name later.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 167-177 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 179-189 -->
 ```Python
 column_summary = pd.DataFrame(
     {
@@ -244,7 +256,7 @@ column_summary.groupby("family").size().to_frame("n_columns")
 </div>
 <br />
 <br />
-<!-- GENERATED FROM PYTHON SOURCE LINES 178-185 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 190-197 -->
 
 ## Step 2: Predict before you fit
 
@@ -254,7 +266,7 @@ subject above the 0.5 chance line? The PRIMM cycle (Sentance et al.
 2019) turns the gap between the prediction and the runtime number
 into the lesson.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 187-196 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 199-208 -->
 
 ## Step 3: Leakage-safe cross-subject split
 
@@ -266,7 +278,7 @@ E5.42 parses; the fold structure is materialised once via
 `make_split_manifest` so every fold is
 reproducible from the same seed.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 198-224 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 210-236 -->
 ```Python
 metadata = feature_table[["subject", "target"]].copy()
 metadata["session"] = "ses-01"
@@ -299,7 +311,7 @@ print(f"manifest: n_folds={n_folds} | splitter={type(splitter).__name__}")
 manifest: n_folds=4 | splitter=CrossSubjectSplitter
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 225-233 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 237-245 -->
 
 ## Step 4: Wire the feature matrix into a Pipeline
 
@@ -310,7 +322,7 @@ Pipeline, scaling on the union of train and test counts as leakage
 [[Brookshire *et al.*, 2024](../../../../references.md#id10)]. `random_state=42` on the classifier makes
 the printed accuracy byte-stable.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 235-250 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 247-262 -->
 ```Python
 def _build_pipeline() -> Pipeline:
     """Return a fresh (StandardScaler -> LogisticRegression) Pipeline."""
@@ -331,7 +343,7 @@ Pipeline(steps=[('scaler', StandardScaler()),
                 ('clf', LogisticRegression(max_iter=400, random_state=42))])
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 251-261 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 263-273 -->
 
 ## Step 5: Loop the Pipeline across leave-one-subject-out folds
 
@@ -344,7 +356,7 @@ each fold as a boolean mask aligned with the feature DataFrame; the
 Pipeline is rebuilt from scratch on every fold so the fitted
 `StandardScaler` only ever sees the train slice.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 263-303 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 275-315 -->
 ```Python
 fold_assignment = np.full(len(feature_table), -1, dtype=int)
 fold_accuracies: list[float] = []
@@ -391,7 +403,7 @@ print(
 LOSO CV: mean=0.979 +/- 0.036 | chance=0.500 | folds=4
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 304-309 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 316-321 -->
 
 ## Result table: per-fold accuracy vs chance
 
@@ -399,7 +411,7 @@ One row per fold so the chance disclosure (E5.43) and the model
 number sit on the same screen. The held-out column is the subject id
 that was *not* in the training fold.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 311-322 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 323-334 -->
 ```Python
 results_df = pd.DataFrame(
     {
@@ -480,7 +492,7 @@ results_df
 </div>
 <br />
 <br />
-<!-- GENERATED FROM PYTHON SOURCE LINES 323-330 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 335-342 -->
 
 **Investigate.** Eyes-open vs eyes-closed on a small mock cohort
 usually lands in the 0.85-1.00 range with this Pipeline (chance =
@@ -490,7 +502,7 @@ amplitude varies subject by subject. A number near 0.50 is the
 floor; a deep model should beat the linear bar before anyone takes
 its accuracy at face value.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 332-344 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 344-356 -->
 
 ## Three-panel diagnostic figure
 
@@ -505,7 +517,7 @@ helpers live in a sibling `_features_sklearn_figure` module so the
 rendering plumbing stays out of this tutorial; the call below is the
 only line that matters.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 346-361 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 358-373 -->
 ```Python
 from _features_sklearn_figure import draw_features_sklearn_figure
 
@@ -523,7 +535,7 @@ fig = draw_features_sklearn_figure(
 plt.show()
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 362-379 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 374-391 -->
 
 **Investigate.** Read the three panels in order.
 
@@ -535,7 +547,7 @@ plt.show()
    the boundary is visible.
 2. Per-fold bars: every bar should sit above the dashed chance line.
    The shaded band is mean +/- std across folds; a tight band means
-   the linear baseline generalises to every held-out subject in this
+   the linear baseline generalizes to every held-out subject in this
    cohort.
 3. Pooled confusion matrix: a row-normalized matrix with a clean
    diagonal in deep blue is the win condition. The monospace
@@ -543,7 +555,7 @@ plt.show()
    the raw counts since normalised cells hide whether 0.92 came from
    22/24 or 220/240.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 381-390 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 393-402 -->
 
 ## A common mistake, and how to recover
 
@@ -555,7 +567,7 @@ stricter settings). The fix is mechanical: wrap the classifier in a
 [`Pipeline`](https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html#sklearn.pipeline.Pipeline) so scaling fits on the train
 slice only and re-applies at predict time.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 392-404 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 404-416 -->
 ```Python
 X_train_arr = feature_table.loc[folds[0][0], feature_cols].to_numpy(dtype=float)
 y_train_arr = feature_table.loc[folds[0][0], "target"].to_numpy()
@@ -576,7 +588,7 @@ STOP: TOTAL NO. OF IT
 Recovery: wrap StandardScaler -> LogisticRegression in a Pipeline.
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 405-411 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 417-423 -->
 
 ## Modify: swap the classifier head, keep the Pipeline
 
@@ -585,7 +597,7 @@ Recovery: wrap StandardScaler -> LogisticRegression in a Pipeline.
 alternative to logistic regression; on linearly-separable features it
 usually matches the LogReg accuracy and is faster to fit.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 413-430 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 425-442 -->
 ```Python
 ridge_pipe = Pipeline(
     [("scaler", StandardScaler()), ("clf", RidgeClassifier(random_state=SEED))]
@@ -609,7 +621,7 @@ print(f"RidgeClassifier (fold 0) accuracy: {ridge_acc:.3f}")
 RidgeClassifier (fold 0) accuracy: 0.917
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 431-438 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 443-450 -->
 
 ## Make: try LightGBM, fall back to RandomForest
 
@@ -619,7 +631,7 @@ RidgeClassifier (fold 0) accuracy: 0.917
 slot into the same [`Pipeline`](https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html#sklearn.pipeline.Pipeline) so only the
 second step changes.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 440-461 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 452-473 -->
 ```Python
 try:
     from lightgbm import LGBMClassifier  # type: ignore
@@ -647,7 +659,7 @@ print(f"{boost_name} (fold 0) accuracy: {boost_acc:.3f}")
 LightGBM (fold 0) accuracy: 1.000
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 462-468 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 474-480 -->
 
 ## Result: model vs chance table
 
@@ -656,7 +668,7 @@ alongside (E5.43); the LogReg Pipeline is saved for reuse so the
 downstream evaluation tutorials in track 50 / 51 can reload it
 without recomputing the fit.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 470-514 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 482-526 -->
 ```Python
 result_summary = pd.DataFrame(
     [
@@ -711,7 +723,7 @@ LightGBM           1.000         0.500          20
 {"model_accuracy_test_mean": 0.979, "model_accuracy_test_std": 0.036, "chance_level": 0.5, "n_features": 20, "n_folds": 4, "saved_pipeline": "plot_42_logreg_pipeline.joblib"}
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 515-529 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 527-541 -->
 
 ## Wrap-up
 
@@ -728,11 +740,11 @@ stable. A clean shape and a chance-anchored accuracy only confirm
 plumbing; signal quality and task design are still open questions
 [[Cisotto and Chicco, 2024](../../../../references.md#id19)].
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 531-544 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 543-556 -->
 
 ## Try it yourself
 
-- Replace the synthesised feature table with
+- Replace the synthesized feature table with
   `pd.read_parquet(CACHE_DIR / "plot_40_features.parquet")` once
   plot_40 has been run end-to-end.
 - Inspect `pipe.named_steps['clf'].coef_` for the saved Pipeline
@@ -744,11 +756,11 @@ plumbing; signal quality and task design are still open questions
   panel still separate the classes? Does the held-out mean drop to
   chance?
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 546-551 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 558-563 -->
 
 ## References
 
-See [References](../../../../references.md) for the centralised bibliography of papers
+See [References](../../../../references.md) for the centralized bibliography of papers
 cited above. Add or amend an entry once in
 `docs/source/refs.bib`; every tutorial inherits the update.
 

@@ -11,10 +11,10 @@
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://eegdash.org/generated/auto_examples/how_to/how_to_download_a_dataset.html" />
 <meta property="og:site_name" content="EEG Dash" />
-<meta property="og:description" content="Download all files for a dataset in advance, validate completeness, and inspect the cache. Goal: Stage every file for a query before a long training run…" />
+<meta property="og:description" content="Difficulty 1| Runtime: 1m| Compute: CPU Download all files for a dataset in advance, validate completeness, and # inspect the cache. # # Validate your…" />
 <meta property="og:image" content="https://eegdash.org/_static/eegdash_social_card.png" />
 <meta property="og:image:alt" content="EEG Dash — data-sharing interface for M/EEG datasets" />
-<meta name="description" content="Download all files for a dataset in advance, validate completeness, and inspect the cache. Goal: Stage every file for a query before a long training run…" />
+<meta name="description" content="Difficulty 1| Runtime: 1m| Compute: CPU Download all files for a dataset in advance, validate completeness, and # inspect the cache. # # Validate your…" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@eegdash" />
 
@@ -74,7 +74,7 @@
     <link rel="icon" href="../../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="Parallelise EEGDash feature extraction" href="how_to_parallelize_feature_extraction.html" />
+    <link rel="next" title="Parallelize EEGDash feature extraction" href="how_to_parallelize_feature_extraction.html" />
     <link rel="prev" title="How-To Guides" href="index.html" />
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="0.7" />
@@ -587,8 +587,20 @@ to download the full example code or to run this example in your browser via Bin
 </div>
 <section class="sphx-glr-example-title" id="download-an-eegdash-dataset-in-advance-and-validate-the-local-cache">
 <span id="sphx-glr-generated-auto-examples-how-to-how-to-download-a-dataset-py"></span><h1>Download an EEGDash dataset in advance and validate the local cache<a class="headerlink" href="#download-an-eegdash-dataset-in-advance-and-validate-the-local-cache" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">5 minutes</span></div>
+<p><strong>Difficulty 1</strong> | <strong>Runtime: 1m</strong> | <strong>Compute: CPU</strong></p>
 <p>Download all files for a dataset in advance, validate completeness, and
-inspect the cache.</p>
+# inspect the cache.
+#
+# Validate your result
+# ——————–
+# - <strong>Cache Populated.</strong> After download, check that <code class="docutils literal notranslate"><span class="pre">cache_dir/ds005506</span></code>
+#   exists and contains <code class="docutils literal notranslate"><span class="pre">participants.tsv</span></code>.
+# - <strong>File Count.</strong> Verify that the number of <code class="docutils literal notranslate"><span class="pre">.bdf</span></code> or <code class="docutils literal notranslate"><span class="pre">.set</span></code> files on
+#   disk matches <code class="docutils literal notranslate"><span class="pre">len(ds.records)</span></code>.
+# - <strong>Offline Check.</strong> Set <code class="docutils literal notranslate"><span class="pre">EEGDASH_OFFLINE=1</span></code> and re-initialize the
+#   dataset; it should load instantly without network calls.
+#
+# Keywords: loading, cache, download</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span>
 </pre></div>
 </div>
@@ -804,7 +816,7 @@ human neuroimaging dataset. <em>Scientific Data</em> 2:150001. OpenNeuro
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Parallelise EEGDash feature extraction</p>
+        <p class="prev-next-title">Parallelize EEGDash feature extraction</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

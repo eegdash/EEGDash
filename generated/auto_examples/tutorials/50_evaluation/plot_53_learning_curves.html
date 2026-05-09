@@ -7,18 +7,18 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta property="og:title" content="How does decoding accuracy scale with training-set size, and where does the curve plateau?" />
+<meta property="og:title" content="Decoding accuracy learning curves" />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://eegdash.org/generated/auto_examples/tutorials/50_evaluation/plot_53_learning_curves.html" />
 <meta property="og:site_name" content="EEG Dash" />
-<meta property="og:description" content="Recording another month of EEG is expensive. Before committing more budget to data collection, ask whether the model is data-starved or whether the…" />
+<meta property="og:description" content="Difficulty 2-3| Runtime: 2m| Compute: CPU Recording another month of EEG is expensive. Before committing more budget to data collection, ask whether the…" />
 <meta property="og:image" content="https://eegdash.org/_static/eegdash_social_card.png" />
 <meta property="og:image:alt" content="EEG Dash — data-sharing interface for M/EEG datasets" />
-<meta name="description" content="Recording another month of EEG is expensive. Before committing more budget to data collection, ask whether the model is data-starved or whether the…" />
+<meta name="description" content="Difficulty 2-3| Runtime: 2m| Compute: CPU Recording another month of EEG is expensive. Before committing more budget to data collection, ask whether the…" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@eegdash" />
 
-    <title>How does decoding accuracy scale with training-set size, and where does the curve plateau? &#8212; EEG Dash</title>
+    <title>Decoding accuracy learning curves &#8212; EEG Dash</title>
   
   
   
@@ -74,8 +74,8 @@
     <link rel="icon" href="../../../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" />
-    <link rel="next" title="Is Pipeline A really better than Pipeline B, or did it luck out on one subject?" href="plot_54_compare_two_pipelines.html" />
-    <link rel="prev" title="How much does a within-session decoder drift across sessions of the same subject?" href="plot_52_cross_session_evaluation.html" />
+    <link rel="next" title="Compare two decoding pipelines" href="plot_54_compare_two_pipelines.html" />
+    <link rel="prev" title="Cross-session decoding evaluation" href="plot_52_cross_session_evaluation.html" />
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="0.7" />
 
@@ -563,7 +563,7 @@
     
     <li class="breadcrumb-item"><a href="index.html" class="nav-link">Evaluation and Benchmarking</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">How does decoding accuracy scale with training-set size, and where does the curve plateau?</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Decoding accuracy learning curves</span></li>
   </ul>
 </nav>
 </div>
@@ -585,8 +585,9 @@
 <p><a class="reference internal" href="#sphx-glr-download-generated-auto-examples-tutorials-50-evaluation-plot-53-learning-curves-py"><span class="std std-ref">Go to the end</span></a>
 to download the full example code or to run this example in your browser via Binder.</p>
 </div>
-<section class="sphx-glr-example-title" id="how-does-decoding-accuracy-scale-with-training-set-size-and-where-does-the-curve-plateau">
-<span id="sphx-glr-generated-auto-examples-tutorials-50-evaluation-plot-53-learning-curves-py"></span><h1>How does decoding accuracy scale with training-set size, and where does the curve plateau?<a class="headerlink" href="#how-does-decoding-accuracy-scale-with-training-set-size-and-where-does-the-curve-plateau" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">8 minutes</span></div>
+<section class="sphx-glr-example-title" id="decoding-accuracy-learning-curves">
+<span id="sphx-glr-generated-auto-examples-tutorials-50-evaluation-plot-53-learning-curves-py"></span><h1>Decoding accuracy learning curves<a class="headerlink" href="#decoding-accuracy-learning-curves" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">9 minutes</span></div>
+<p><strong>Difficulty 2-3</strong> | <strong>Runtime: 2m</strong> | <strong>Compute: CPU</strong></p>
 <p>Recording another month of EEG is expensive. Before committing more
 budget to data collection, ask whether the model is data-starved or
 whether the bottleneck sits elsewhere: features, architecture, label
@@ -606,7 +607,19 @@ Schirrmeister et al. 2017 (doi:10.1002/hbm.23730, Braindecode) and the
 MOABB benchmark (Chevallier, Aristimunha et al. 2024,
 doi:10.48550/arXiv.2404.15319) sweep the same protocol on real EEG
 pipelines. The deliverable is one number: at what training-set size
-does the model first reach 90% of its plateau accuracy?</p>
+# does the model first reach 90% of its plateau accuracy?
+#
+# Validate your result
+# ——————–
+# - <strong>Saturation Point.</strong> The accuracy should plateau as <code class="docutils literal notranslate"><span class="pre">n_train</span></code> increases.
+#   Identify the point where the slope becomes near-zero.
+# - <strong>Bias-Variance Gap.</strong> A wide gap between train and val accuracy
+#   indicates overfitting (high variance); a small gap with low accuracy
+#   indicates underfitting (high bias).
+# - <strong>Chance Line.</strong> The val accuracy must be consistently above the
+#   majority-class chance line.
+#
+# Keywords: evaluation, learning-curves, data-size</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span>
 </pre></div>
 </div>
@@ -683,7 +696,7 @@ small synthetic cohort the per-window framing exposes the curve in one
 screen.</p>
 <p><strong>Predict.</strong> As <code class="docutils literal notranslate"><span class="pre">n_train</span></code> climbs from 50 to 1000 windows, val
 accuracy rises monotonically in expectation; train accuracy falls,
-because a tiny train set memorises easily and a larger one cannot.
+because a tiny train set memorizes easily and a larger one cannot.
 Where do they cross? Where does val first reach 90% of its plateau?
 Guess before scrolling.</p>
 </section>
@@ -1028,7 +1041,7 @@ names the budget.</p>
 <p>%% [markdown]
 References
 ———-
-See <a class="reference internal" href="../../../../references.html"><span class="doc">References</span></a> for the centralised bibliography of papers
+See <a class="reference internal" href="../../../../references.html"><span class="doc">References</span></a> for the centralized bibliography of papers
 cited above. Add or amend an entry once in
 <code class="file docutils literal notranslate"><span class="pre">docs/source/refs.bib</span></code>; every tutorial inherits the update.</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-auto-examples-tutorials-50-evaluation-plot-53-learning-curves-py">
@@ -1065,7 +1078,7 @@ cited above. Add or amend an entry once in
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">How much does a within-session decoder drift across sessions of the same subject?</p>
+        <p class="prev-next-title">Cross-session decoding evaluation</p>
       </div>
     </a>
     <a class="right-next"
@@ -1073,7 +1086,7 @@ cited above. Add or amend an entry once in
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Is Pipeline A really better than Pipeline B, or did it luck out on one subject?</p>
+        <p class="prev-next-title">Compare two decoding pipelines</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

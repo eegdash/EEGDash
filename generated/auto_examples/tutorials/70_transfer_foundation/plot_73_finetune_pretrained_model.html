@@ -11,10 +11,10 @@
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://eegdash.org/generated/auto_examples/tutorials/70_transfer_foundation/plot_73_finetune_pretrained_model.html" />
 <meta property="og:site_name" content="EEG Dash" />
-<meta property="og:description" content="A pretrained EEG encoder packs hundreds of hours of recordings into a weight matrix. Paying the pretraining cost a second time is wasteful, training from…" />
+<meta property="og:description" content="Difficulty 3| Runtime: 45s| Compute: GPU Recommended A pretrained EEG encoder packs hundreds of hours of recordings into a weight matrix. Paying the…" />
 <meta property="og:image" content="https://eegdash.org/_static/eegdash_social_card.png" />
 <meta property="og:image:alt" content="EEG Dash — data-sharing interface for M/EEG datasets" />
-<meta name="description" content="A pretrained EEG encoder packs hundreds of hours of recordings into a weight matrix. Paying the pretraining cost a second time is wasteful, training from…" />
+<meta name="description" content="Difficulty 3| Runtime: 45s| Compute: GPU Recommended A pretrained EEG encoder packs hundreds of hours of recordings into a weight matrix. Paying the…" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@eegdash" />
 
@@ -587,6 +587,7 @@ to download the full example code or to run this example in your browser via Bin
 </div>
 <section class="sphx-glr-example-title" id="how-do-i-adapt-a-pretrained-eeg-model-to-a-new-task">
 <span id="sphx-glr-generated-auto-examples-tutorials-70-transfer-foundation-plot-73-finetune-pretrained-model-py"></span><h1>How do I adapt a pretrained EEG model to a new task?<a class="headerlink" href="#how-do-i-adapt-a-pretrained-eeg-model-to-a-new-task" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">8 minutes</span></div>
+<p><strong>Difficulty 3</strong> | <strong>Runtime: 45s</strong> | <strong>Compute: GPU Recommended</strong></p>
 <p>A pretrained EEG encoder packs hundreds of hours of recordings into a
 weight matrix. Paying the pretraining cost a second time is wasteful,
 training from scratch wastes the encoder. The decision in between is
@@ -606,7 +607,8 @@ gradients; Banville et al. 2021, doi:10.1088/1741-2552/abca18), and
 <strong>full-finetune</strong> (encoder loaded, head reset, every parameter trains;
 Defossez et al. 2023, doi:10.1038/s42256-023-00714-5). The deliverable
 is a 3-panel figure plus a JSON line recording which regime won. So
-which one wins?</p>
+which one wins?
+Keywords: transfer-learning, fine-tuning, pretrained</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span>
 </pre></div>
 </div>
@@ -619,14 +621,27 @@ which one wins?</p>
 <li><p>Compare regimes with <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.optim.AdamW.html#torch.optim.AdamW" title="(in PyTorch v2.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.optim.AdamW</span></code></a> across seeds and read the 3-panel figure.</p></li>
 </ul>
 </section>
-<section id="requirements">
-<h2>Requirements<a class="headerlink" href="#requirements" title="Link to this heading">#</a></h2>
+<section id="validate-your-result">
+<h2>Validate your result<a class="headerlink" href="#validate-your-result" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p><strong>Estimated time</strong>: ~60 s on CPU, ~15 s on GPU.</p></li>
-<li><p><strong>Data downloaded</strong>: 0 MB (synthetic windows; deterministic seed).</p></li>
-<li><p><strong>Prerequisites</strong>: <a class="reference internal" href="plot_71_cross_task_transfer.html"><span class="doc">Pretrain on resting-state, fine-tune on contrast-change detection</span></a> (encoder
-snapshot), <span class="xref std std-doc">/auto_examples/tutorials/10_core_workflow/plot_11_leakage_safe_split</span>
-(cross-subject split).</p></li>
+<li><p><strong>Trainable Parameters.</strong> Linear-probe should have significantly fewer
+trainable parameters than full-finetune or from-scratch.</p></li>
+<li><p><strong>Convergence Speed.</strong> Full-finetune typically converges faster (fewer
+epochs) than from-scratch.</p></li>
+<li><p><strong>Accuracy Gap.</strong> Compare the final validation accuracy. Fine-tuning
+should outperform training from-scratch when labels are scarce.</p></li>
+</ul>
+<p>%% [markdown]
+Requirements
+————
+- <strong>Estimated time</strong>: ~60 s on CPU, ~15 s on GPU.
+- <strong>Data downloaded</strong>: 0 MB (synthetic windows; deterministic seed).
+- <strong>Prerequisites</strong>: <a class="reference internal" href="plot_71_cross_task_transfer.html"><span class="doc">Pretrain on resting-state, fine-tune on contrast-change detection (Simulated Data)</span></a> (encoder</p>
+<blockquote>
+<div><p>snapshot), <span class="xref std std-doc">/auto_examples/tutorials/10_core_workflow/plot_11_leakage_safe_split</span>
+(cross-subject split).</p>
+</div></blockquote>
+<ul class="simple">
 <li><p><strong>Concept page</strong>: <a class="reference internal" href="../../../../concepts/features_vs_deep_learning.html"><span class="doc">Features vs. deep learning</span></a>.</p></li>
 </ul>
 <p>Seeding numpy and torch makes the printed accuracy and the rendered
@@ -657,7 +672,7 @@ curves byte-stable across reruns (E3.21).</p>
 <a href="https://docs.pytorch.org/docs/stable/generated/torch.manual_seed.html#torch.manual_seed" title="torch.manual_seed" class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function"><span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span></a><span class="p">(</span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">SEED</span></a><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;torch._C.Generator object at 0x7f363891c8d0&gt;
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;torch._C.Generator object at 0x7f96841148d0&gt;
 </pre></div>
 </div>
 </section>
@@ -934,7 +949,7 @@ seed 2: from-scratch=0.50 | linear-probe=0.94 | full-finetune=0.89
 <h2>Investigate<a class="headerlink" href="#investigate" title="Link to this heading">#</a></h2>
 <p>Three numbers per regime: trainable parameter count, final validation
 accuracy across seeds, and gap above chance. The gap above chance
-and gap above from-scratch are what generalise across runs.</p>
+and gap above from-scratch are what generalize across runs.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">chance</span></a> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><a href="https://docs.python.org/3/library/collections.html#collections.Counter" title="collections.Counter" class="sphx-glr-backref-module-collections sphx-glr-backref-type-py-class"><span class="n">Counter</span></a><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">y_te</span></a><span class="o">.</span><span class="n">tolist</span><span class="p">())</span><span class="o">.</span><span class="n">values</span><span class="p">())</span> <span class="o">/</span> <span class="nb">max</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">y_te</span></a><span class="p">),</span> <span class="mi">1</span><span class="p">))</span>
 <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">final_accuracies</span></a> <span class="o">=</span> <span class="p">{</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">r</span></a><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">curves</span></a><span class="p">[</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">r</span></a><span class="p">][:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span> <span class="k">for</span> <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">r</span></a> <span class="ow">in</span> <a href="https://docs.python.org/3/library/stdtypes.html#tuple" title="builtins.tuple" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">REGIMES</span></a><span class="p">}</span>
 <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">results_table</span></a> <span class="o">=</span> <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class"><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span></a><span class="p">(</span>
@@ -1043,7 +1058,7 @@ a row to <code class="docutils literal notranslate"><span class="pre">results_ta
 <h2>Mini-project<a class="headerlink" href="#mini-project" title="Link to this heading">#</a></h2>
 <p>Replace the synthetic source/target with a real EEGDash query (one
 task for source, a different task for target on the same subject
-pool, mirrored from <a class="reference internal" href="plot_71_cross_task_transfer.html"><span class="doc">Pretrain on resting-state, fine-tune on contrast-change detection</span></a>). Keep
+pool, mirrored from <a class="reference internal" href="plot_71_cross_task_transfer.html"><span class="doc">Pretrain on resting-state, fine-tune on contrast-change detection (Simulated Data)</span></a>). Keep
 <code class="docutils literal notranslate"><span class="pre">n_chans</span></code>, <code class="docutils literal notranslate"><span class="pre">n_times</span></code>, and the optimiser fixed; replot the same
 3-panel figure and compare gap-above-chance.</p>
 <p>One JSON line carries the headline numbers a reviewer needs: which
@@ -1100,10 +1115,10 @@ faster?</p></li>
 </section>
 <section id="references">
 <h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
-<p>See <a class="reference internal" href="../../../../references.html"><span class="doc">References</span></a> for the centralised bibliography of papers
+<p>See <a class="reference internal" href="../../../../references.html"><span class="doc">References</span></a> for the centralized bibliography of papers
 cited above. Add or amend an entry once in
 <code class="file docutils literal notranslate"><span class="pre">docs/source/refs.bib</span></code>; every tutorial inherits the update.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 1.895 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 1.949 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-auto-examples-tutorials-70-transfer-foundation-plot-73-finetune-pretrained-model-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/eegdash/EEGDash/main?urlpath=lab/tree/notebooks/generated/auto_examples/tutorials/70_transfer_foundation/plot_73_finetune_pretrained_model.ipynb"><img alt="Launch binder" src="../../../../_images/binder_badge_logo11.svg" style="width: 150px;" />
@@ -1170,7 +1185,7 @@ cited above. Add or amend an entry once in
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">Learning objectives</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#requirements">Requirements</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#validate-your-result">Validate your result</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#three-regimes-one-figure-the-mental-model">Three regimes, one figure: the mental model</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-does-shallowfbcspnet-expose">What does ShallowFBCSPNet expose?</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-pretrain-a-small-encoder-on-a-synthetic-source-task">Step 1: Pretrain a small encoder on a synthetic source task</a></li>

@@ -8,14 +8,17 @@
 
 # How-to: work offline against a populated EEGDash cache
 
+**Difficulty 2** | **Runtime: 4m** | **Compute: CPU**
+
 Goal: instantiate `EEGChallengeDataset` with `download=False` and load
 the same records as the online path, with no network calls.
+Keywords: offline, cache, metadata
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 7-9 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 10-12 -->
 ```Python
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 11-16 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 14-19 -->
 
 ## Goal
 
@@ -23,7 +26,7 @@ Load and filter EEGDash records from a local BIDS cache on an HPC node
 or air-gapped workstation, with zero network calls, and prove the cache
 is complete by comparing online vs. offline shape and metadata.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 18-27 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 21-30 -->
 
 ## Prerequisites
 
@@ -35,11 +38,11 @@ is complete by comparing online vs. offline shape and metadata.
 - Data: HBN release `R2` (OpenNeuro `ds005506`), task
   `RestingState`, `mini=True` subset (<200 MB).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 29-30 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 32-33 -->
 
 Setup – seed and resolve the cache directory from the environment.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 30-51 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 33-54 -->
 ```Python
 import os
 from pathlib import Path
@@ -63,11 +66,11 @@ cache_dir.mkdir(parents=True, exist_ok=True)
 print(f"cache_dir = {cache_dir}")
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 52-54 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 55-57 -->
 
 ## Recipe
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 56-61 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 59-64 -->
 
 ### Step 1 – Populate the cache (online, once)
 
@@ -75,7 +78,7 @@ Run this block on a node with internet. `download_all` prefetches
 every record so subsequent runs can use `download=False`. If your
 cache is already populated, this is a near-instant no-op.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 63-72 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 66-75 -->
 ```Python
 ds_online = EEGChallengeDataset(
     release=RELEASE,
@@ -87,7 +90,7 @@ ds_online.download_all(n_jobs=-1)
 print(f"online: {len(ds_online.datasets)} recording(s) cached.")
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 73-78 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 76-81 -->
 
 ### Step 2 – Load offline with `download=False`
 
@@ -95,7 +98,7 @@ This is the air-gapped path: EEGDash parses BIDS filenames in the cache
 instead of querying the database or S3. The challenge subset lives at
 `<cache_dir>/<dataset_id>-bdf-mini`; check it exists before loading.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 80-93 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 83-96 -->
 ```Python
 offline_root = cache_dir / f"{DATASET_ID}-bdf-mini"
 assert offline_root.exists(), f"missing cache folder: {offline_root}"
@@ -111,7 +114,7 @@ if ds_offline.datasets:
     print("first bidspath:", ds_offline.datasets[0].record["bidspath"])
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 94-100 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 97-103 -->
 
 ### Step 3 – Filter by BIDS entity offline
 
@@ -120,7 +123,7 @@ With `download=False` you can still filter by `subject`, `session`,
 the database. Database-only fields (e.g., `modality` aliases) are not
 available offline.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 102-114 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 105-117 -->
 ```Python
 ds_offline_sub = EEGChallengeDataset(
     release=RELEASE,
@@ -135,7 +138,7 @@ assert len(ds_offline_sub.datasets) <= len(ds_offline.datasets), (
 )
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 115-120 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 118-123 -->
 
 ### Step 4 – Verify the cache is complete
 
@@ -143,7 +146,7 @@ Compare record counts, raw-data shapes, and the description tables. If
 any of these diverge, the cache is partial – re-run `download_all` or
 clear the suffixed folder and start over.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 122-137 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 125-140 -->
 ```Python
 assert len(ds_offline.datasets) == len(ds_online.datasets), (
     "offline record count must match online; cache is partial"
@@ -161,7 +164,7 @@ assert desc_offline.equals(desc_online), "description metadata diverges"
 print("offline cache is complete.")
 ```
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 138-147 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 141-150 -->
 
 ## Result
 
@@ -173,7 +176,7 @@ print("offline cache is complete.")
 
 Source: HBN release R2 (OpenNeuro ds005506), task RestingState, mini=True.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 149-164 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 152-186 -->
 
 ## Common pitfalls
 
@@ -191,7 +194,26 @@ Source: HBN release R2 (OpenNeuro ds005506), task RestingState, mini=True.
   instantiation. On Lustre/NFS this can stall; stage the cache to local
   NVMe (see `how_to_use_hpc_cache`) before training.
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 166-173 -->
+%% [markdown]
+Validate your result
+——————–
+- **Prove it is offline.** Disconnect your network or use a dummy API URL.
+
+> Loading with `download=False` should succeed if the cache is populated.
+- **Cache Tree Example.** Your cache should look like this:
+  .. code-block:: text
+  > .eegdash_cache/
+  > └── ds005506-bdf-mini/
+  > > ├── participants.tsv
+  > > ├── sub-001/
+  > > │   └── eeg/
+  > > │       └── sub-001_task-RestingState_eeg.bdf
+  > > └── …
+- **Recovery from Partial Downloads.** If a download was interrupted, delete
+  : the incomplete file (or the whole subject folder) and re-run
+    `download_all(n_jobs=1)` to ensure a clean state.
+
+<!-- GENERATED FROM PYTHON SOURCE LINES 188-195 -->
 
 ## See also
 
@@ -201,7 +223,7 @@ Source: HBN release R2 (OpenNeuro ds005506), task RestingState, mini=True.
   onto local-node storage for IO-bound jobs.
 - Concept: [docs/source/concepts/lazy_loading_and_cache.rst](../../docs/source/concepts/lazy_loading_and_cache.rst).
 
-<!-- GENERATED FROM PYTHON SOURCE LINES 175-182 -->
+<!-- GENERATED FROM PYTHON SOURCE LINES 197-204 -->
 
 ## References
 

@@ -10,9 +10,8 @@ Single-machine examples cover the API; the HPC track covers the
 operational layer that lets you run those examples at the scale a real
 study requires. The cache layout, environment setup, and SLURM array
 patterns here are the same ones used in production for the EEGDash
-benchmark runs. Sourced from
-`docs/tutorial_restructure_plan.md` Category J (HPC operations).
-Cross-link with the *How-To* guide for parallel feature extraction.
+benchmark runs. Cross-link with the *How-To* guide for parallel
+feature extraction.
 
 What you will learn:
 
@@ -30,6 +29,6 @@ Each script in this directory is a runnable example; `instructions.md`
 walks through the cluster-side setup once before you launch.
 
 <div id='sg-tag-list' class='sphx-glr-tag-list'></div><div class="sphx-glr-thumbnails">
-<!-- thumbnail-parent-div-open --><div class="sphx-glr-thumbcontainer" tooltip="EEGDash example for eyes open vs. closed classification.">  <div class="sphx-glr-thumbnail-title">Eyes Open vs. Closed Classification</div>
+<!-- thumbnail-parent-div-open --><div class="sphx-glr-thumbcontainer" tooltip="Difficulty 2 | Runtime: 5-10m | Compute: HPC / Cluster">  <div class="sphx-glr-thumbnail-title">Eyes Open vs. Closed Classification (HPC)</div>
 </div>
 <!-- thumbnail-parent-div-close --></div>

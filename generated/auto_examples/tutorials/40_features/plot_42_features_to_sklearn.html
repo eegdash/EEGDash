@@ -7,18 +7,18 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta property="og:title" content="How do I push EEGDash features through a scikit-learn Pipeline?" />
+<meta property="og:title" content="EEGDash features to scikit-learn" />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://eegdash.org/generated/auto_examples/tutorials/40_features/plot_42_features_to_sklearn.html" />
 <meta property="og:site_name" content="EEG Dash" />
-<meta property="og:description" content="A feature table from plot_40 is one row per window with columns shaped&lt;feature&gt;_&lt;channel&gt;. The data follows the same OpenNeuro ds005514 HBN resting-state…" />
+<meta property="og:description" content="Difficulty 1-2| Runtime: 10s| Compute: CPU A feature table from plot_40 is one row per window with columns shaped&lt;feature&gt;_&lt;channel&gt;. The data follows…" />
 <meta property="og:image" content="https://eegdash.org/_static/eegdash_social_card.png" />
 <meta property="og:image:alt" content="EEG Dash — data-sharing interface for M/EEG datasets" />
-<meta name="description" content="A feature table from plot_40 is one row per window with columns shaped&lt;feature&gt;_&lt;channel&gt;. The data follows the same OpenNeuro ds005514 HBN resting-state…" />
+<meta name="description" content="Difficulty 1-2| Runtime: 10s| Compute: CPU A feature table from plot_40 is one row per window with columns shaped&lt;feature&gt;_&lt;channel&gt;. The data follows…" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@eegdash" />
 
-    <title>How do I push EEGDash features through a scikit-learn Pipeline? &#8212; EEG Dash</title>
+    <title>EEGDash features to scikit-learn &#8212; EEG Dash</title>
   
   
   
@@ -75,7 +75,7 @@
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" />
     <link rel="next" title="Evaluation and Benchmarking" href="../50_evaluation/index.html" />
-    <link rel="prev" title="How do classical EEG markers compose on top of one Welch PSD?" href="plot_41_feature_trees.html" />
+    <link rel="prev" title="Compose EEG markers from Welch PSD" href="plot_41_feature_trees.html" />
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="0.7" />
 
@@ -563,7 +563,7 @@
     
     <li class="breadcrumb-item"><a href="index.html" class="nav-link">Feature Engineering</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">How do I push EEGDash features through a scikit-learn Pipeline?</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">EEGDash features to scikit-learn</span></li>
   </ul>
 </nav>
 </div>
@@ -585,13 +585,14 @@
 <p><a class="reference internal" href="#sphx-glr-download-generated-auto-examples-tutorials-40-features-plot-42-features-to-sklearn-py"><span class="std std-ref">Go to the end</span></a>
 to download the full example code or to run this example in your browser via Binder.</p>
 </div>
-<section class="sphx-glr-example-title" id="how-do-i-push-eegdash-features-through-a-scikit-learn-pipeline">
-<span id="sphx-glr-generated-auto-examples-tutorials-40-features-plot-42-features-to-sklearn-py"></span><h1>How do I push EEGDash features through a scikit-learn Pipeline?<a class="headerlink" href="#how-do-i-push-eegdash-features-through-a-scikit-learn-pipeline" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">11 minutes</span></div>
+<section class="sphx-glr-example-title" id="eegdash-features-to-scikit-learn">
+<span id="sphx-glr-generated-auto-examples-tutorials-40-features-plot-42-features-to-sklearn-py"></span><h1>EEGDash features to scikit-learn<a class="headerlink" href="#eegdash-features-to-scikit-learn" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">11 minutes</span></div>
+<p><strong>Difficulty 1-2</strong> | <strong>Runtime: 10s</strong> | <strong>Compute: CPU</strong></p>
 <p>A feature table from plot_40 is one row per window with columns shaped
 <code class="docutils literal notranslate"><span class="pre">&lt;feature&gt;_&lt;channel&gt;</span></code>. The data follows the same <a class="reference external" href="https://openneuro.org">OpenNeuro</a> <code class="docutils literal notranslate"><span class="pre">ds005514</span></code> HBN resting-state contour as
 plot_40, reachable through <a class="reference external" href="https://nemar.org">NEMAR</a> (Delorme et
 al. 2022); to keep the run offline-reproducible the feature table is
-synthesised with the column layout plot_40 saves to parquet. Before
+synthesized with the column layout plot_40 saves to parquet. Before
 reaching for a deep net, this tutorial wires the feature matrix into
 <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html#sklearn.pipeline.Pipeline" title="(in scikit-learn v1.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.pipeline.Pipeline</span></code></a> <span class="bibtex-citation" id="id1">[<a class="reference internal" href="../../../../references.html#id33" title="F. Pedregosa, G. Varoquaux, A. Gramfort, V. Michel, B. Thirion, O. Grisel, M. Blondel, P. Prettenhofer, R. Weiss, V. Dubourg, J. Vanderplas, A. Passos, D. Cournapeau, M. Brucher, M. Perrot, and E. Duchesnay. Scikit-learn: machine learning in Python. Journal of Machine Learning Research, 12:2825–2830, 2011.">Pedregosa <em>et al.</em>, 2011</a>]</span> with
 <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.StandardScaler.html#sklearn.preprocessing.StandardScaler" title="(in scikit-learn v1.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">StandardScaler</span></code></a> and
@@ -603,7 +604,8 @@ diagnostic that mirrors the one from plot_12 so the two read together:
 plot_12 trains the same Pipeline on log-band-power features computed
 inline, plot_42 trains it on the feature table extracted by plot_40.
 The question the figure answers is whether a transparent linear
-baseline clears the chance line on a held-out subject?</p>
+baseline clears the chance line on a held-out subject?
+Keywords: features, scikit-learn, pipeline</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span>
 </pre></div>
 </div>
@@ -617,15 +619,28 @@ baseline clears the chance line on a held-out subject?</p>
 <li><p>Read the three-panel diagnostic figure: PCA + per-fold bars + pooled-LOSO confusion matrix.</p></li>
 </ul>
 </section>
-<section id="requirements">
-<h2>Requirements<a class="headerlink" href="#requirements" title="Link to this heading">#</a></h2>
+<section id="validate-your-result">
+<h2>Validate your result<a class="headerlink" href="#validate-your-result" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p>About 5 s on CPU on first run. No network, no GPU.</p></li>
-<li><p>Prerequisites:
-<span class="xref std std-doc">/auto_examples/tutorials/40_features/plot_40_first_features</span>
+<li><p><strong>Pipeline Output.</strong> The <code class="docutils literal notranslate"><span class="pre">predict()</span></code> method should return an array of
+class labels (0 or 1) of length <code class="docutils literal notranslate"><span class="pre">n_test_windows</span></code>.</p></li>
+<li><p><strong>PCA Plot.</strong> The first two principal components should ideally show some
+separation between classes if the features are discriminative.</p></li>
+<li><p><strong>Fold Accuracy.</strong> Each fold in the LOSO loop should report balanced
+accuracy significantly above chance if the model generalizes.</p></li>
+</ul>
+<p>%% [markdown]
+Requirements
+————
+- About 5 s on CPU on first run. No network, no GPU.
+- Prerequisites:</p>
+<blockquote>
+<div><p><span class="xref std std-doc">/auto_examples/tutorials/40_features/plot_40_first_features</span>
 (feature table),
 <span class="xref std std-doc">/auto_examples/tutorials/10_core_workflow/plot_11_leakage_safe_split</span>
-(leakage-safe split).</p></li>
+(leakage-safe split).</p>
+</div></blockquote>
+<ul class="simple">
 <li><p>Concept: <a class="reference internal" href="../../../../concepts/features_vs_deep_learning.html"><span class="doc">Features vs. deep learning</span></a>.</p></li>
 </ul>
 </section>
@@ -690,7 +705,7 @@ keeps the printed accuracy byte-stable across runs (E3.21).</p>
 <h2>Step 1: Load (or mimic) the feature table from plot_40<a class="headerlink" href="#step-1-load-or-mimic-the-feature-table-from-plot-40" title="Link to this heading">#</a></h2>
 <p>In production you would call <code class="docutils literal notranslate"><span class="pre">pd.read_parquet(CACHE_DIR</span> <span class="pre">/</span>
 <span class="pre">&quot;plot_40_features.parquet&quot;)</span></code>. To stay reproducible offline we
-synthesise the same column layout: per-channel variance plus
+synthesize the same column layout: per-channel variance plus
 four-band power for <code class="docutils literal notranslate"><span class="pre">delta</span></code>, <code class="docutils literal notranslate"><span class="pre">theta</span></code>, <code class="docutils literal notranslate"><span class="pre">alpha</span></code>, <code class="docutils literal notranslate"><span class="pre">beta</span></code> on a
 parieto-occipital montage. Eyes-closed gets the textbook alpha bump
 <span class="bibtex-citation" id="id2">[<a class="reference internal" href="../../../../references.html#id24" title="Hans Berger. Über das elektrenkephalogramm des menschen. Archiv für Psychiatrie und Nervenkrankheiten, 87(1):527-570, 1929. doi:10.1007/BF01797193.">Berger, 1929</a>]</span> plus a per-window Gaussian jitter so the across-subject
@@ -1061,7 +1076,7 @@ are shaped by held-out fold so a single subject pulling against
 the boundary is visible.</p></li>
 <li><p>Per-fold bars: every bar should sit above the dashed chance line.
 The shaded band is mean +/- std across folds; a tight band means
-the linear baseline generalises to every held-out subject in this
+the linear baseline generalizes to every held-out subject in this
 cohort.</p></li>
 <li><p>Pooled confusion matrix: a row-normalized matrix with a clean
 diagonal in deep blue is the win condition. The monospace
@@ -1236,7 +1251,7 @@ plumbing; signal quality and task design are still open questions
 <section id="try-it-yourself">
 <h2>Try it yourself<a class="headerlink" href="#try-it-yourself" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p>Replace the synthesised feature table with
+<li><p>Replace the synthesized feature table with
 <code class="docutils literal notranslate"><span class="pre">pd.read_parquet(CACHE_DIR</span> <span class="pre">/</span> <span class="pre">&quot;plot_40_features.parquet&quot;)</span></code> once
 plot_40 has been run end-to-end.</p></li>
 <li><p>Inspect <code class="docutils literal notranslate"><span class="pre">pipe.named_steps['clf'].coef_</span></code> for the saved Pipeline
@@ -1251,7 +1266,7 @@ chance?</p></li>
 </section>
 <section id="references">
 <h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
-<p>See <a class="reference internal" href="../../../../references.html"><span class="doc">References</span></a> for the centralised bibliography of papers
+<p>See <a class="reference internal" href="../../../../references.html"><span class="doc">References</span></a> for the centralized bibliography of papers
 cited above. Add or amend an entry once in
 <code class="file docutils literal notranslate"><span class="pre">docs/source/refs.bib</span></code>; every tutorial inherits the update.</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-auto-examples-tutorials-40-features-plot-42-features-to-sklearn-py">
@@ -1288,7 +1303,7 @@ cited above. Add or amend an entry once in
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">How do classical EEG markers compose on top of one Welch PSD?</p>
+        <p class="prev-next-title">Compose EEG markers from Welch PSD</p>
       </div>
     </a>
     <a class="right-next"
@@ -1320,7 +1335,7 @@ cited above. Add or amend an entry once in
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">Learning objectives</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#requirements">Requirements</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#validate-your-result">Validate your result</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-a-pipeline-before-a-deep-net">Why a Pipeline before a deep net?</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-load-or-mimic-the-feature-table-from-plot-40">Step 1: Load (or mimic) the feature table from plot_40</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discovery-column-families-on-the-feature-table">Discovery: column families on the feature table</a></li>

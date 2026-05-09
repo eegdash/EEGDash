@@ -577,7 +577,7 @@
   <section id="examples-gallery">
 <span id="sphx-glr-generated-auto-examples"></span><h1>Examples gallery<a class="headerlink" href="#examples-gallery" title="Link to this heading">#</a></h1>
 <p>The EEGDash gallery is the runnable, narrative half of the docs: the <strong>Concepts</strong> chapter explains <em>why</em> a decision matters, the API reference enumerates every public symbol, and the gallery you’re reading shows the choices in motion against real BIDS-curated EEG records. Every script under <code class="docutils literal notranslate"><span class="pre">examples/</span></code> is a sphinx-gallery tutorial – meaning it executes top to bottom on every documentation build, and the captured first figure is the thumbnail you see below.</p>
-<p>The intended path: read the curated <strong>Tutorials</strong> in order, dip into <strong>How-to recipes</strong> when you have a specific question, then scale up using the <strong>Applied research projects</strong>, the <strong>EEG 2025 Foundation Challenge</strong> pipelines, and the <strong>High-performance computing</strong> track.</p>
+<p>The intended path: read the curated <strong>Tutorials</strong> in order, dip into <strong>How-to recipes</strong> when you have a specific question, then scale up using the <strong>Applied research projects</strong>, the <strong>EEG2025 Foundation Challenge</strong> pipelines, and the <strong>High-performance computing</strong> track.</p>
 <div class="tip eegdash-gallery-howto admonition">
 <p class="admonition-title">How to read this gallery</p>
 <ul class="simple">
@@ -588,162 +588,241 @@
 </div>
 <section id="tutorials-curated-learning-path">
 <h2>Tutorials (curated learning path)<a class="headerlink" href="#tutorials-curated-learning-path" title="Link to this heading">#</a></h2>
-<p>Seven categories, ordered the way we would teach them: install, load, decode events, decode state, engineer features, evaluate rigorously, then scale to transfer and foundation models. Numbers are tutorial-id prefixes (<code class="docutils literal notranslate"><span class="pre">plot_00_*</span></code> through <code class="docutils literal notranslate"><span class="pre">plot_73_*</span></code>); skip rather than reorder them.</p>
+<p>Seven categories, ordered the way we would teach them: install, load, decode events, decode state, engineer features, evaluate rigorously, then scale to transfer and foundation models.</p>
+<section id="choose-your-path">
+<h3>Choose your path<a class="headerlink" href="#choose-your-path" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<colgroup>
+<col style="width: 30.0%" />
+<col style="width: 35.0%" />
+<col style="width: 35.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Your goal</p></th>
+<th class="head"><p>Start with</p></th>
+<th class="head"><p>Then read</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Load my first dataset</strong></p></td>
+<td><p><a class="reference internal" href="tutorials/00_start_here/index.html"><span class="doc">Start Here</span></a></p></td>
+<td><p><a class="reference internal" href="tutorials/10_core_workflow/index.html"><span class="doc">Core Decoding Workflow</span></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Train a classifier safely</strong></p></td>
+<td><p><a class="reference internal" href="tutorials/10_core_workflow/index.html"><span class="doc">Core Decoding Workflow</span></a></p></td>
+<td><p><a class="reference internal" href="tutorials/50_evaluation/index.html"><span class="doc">Evaluation and Benchmarking</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Extract classical features</strong></p></td>
+<td><p><a class="reference internal" href="tutorials/40_features/index.html"><span class="doc">Feature Engineering</span></a></p></td>
+<td><p><a class="reference internal" href="how_to/index.html"><span class="doc">How-To Guides</span></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Run on a cluster</strong></p></td>
+<td><p><a class="reference internal" href="how_to/index.html"><span class="doc">How-To Guides</span></a></p></td>
+<td><p><a class="reference internal" href="hpc/index.html"><span class="doc">HPC tutorials</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Join EEG2025</strong></p></td>
+<td><p><a class="reference internal" href="tutorials/70_transfer_foundation/index.html"><span class="doc">Transfer, Foundation Models, and EEG2025</span></a></p></td>
+<td><p><a class="reference internal" href="eeg2025/index.html"><span class="doc">EEG2025 Foundation Challenge</span></a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-4 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-card-hover docutils">
+<div class="sd-card-body docutils">
+<div class="sd-card-title sd-font-weight-bold docutils">
+🚀 Learn the basics</div>
+<p class="sd-card-text">Start with the absolute beginner tutorials.</p>
+</div>
+<a class="sd-stretched-link sd-hide-link-text reference internal" href="tutorials/00_start_here/index.html"><span class="doc">Start Here</span></a></div>
+</div>
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-card-hover docutils">
+<div class="sd-card-body docutils">
+<div class="sd-card-title sd-font-weight-bold docutils">
+🔬 Run an applied project</div>
+<p class="sd-card-text">Dive into real-world research case studies.</p>
+</div>
+<a class="sd-stretched-link sd-hide-link-text reference internal" href="applied/index.html"><span class="doc">Applied Research Projects</span></a></div>
+</div>
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-card-hover docutils">
+<div class="sd-card-body docutils">
+<div class="sd-card-title sd-font-weight-bold docutils">
+⚡ Scale on HPC</div>
+<p class="sd-card-text">Move from local scripts to cluster-wide jobs.</p>
+</div>
+<a class="sd-stretched-link sd-hide-link-text reference internal" href="hpc/index.html"><span class="doc">HPC tutorials</span></a></div>
+</div>
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-card-hover docutils">
+<div class="sd-card-body docutils">
+<div class="sd-card-title sd-font-weight-bold docutils">
+🏆 Join EEG2025</div>
+<p class="sd-card-text">Enter the official Foundation Challenge.</p>
+</div>
+<a class="sd-stretched-link sd-hide-link-text reference internal" href="eeg2025/index.html"><span class="doc">EEG2025 Foundation Challenge</span></a></div>
+</div>
+</div>
+</div>
+</section>
 <section id="start-here">
 <h3>Start Here<a class="headerlink" href="#start-here" title="Link to this heading">#</a></h3>
-<p>Difficulty 1. Three short lessons that take you from a fresh install to a working PyTorch <code class="docutils literal notranslate"><span class="pre">DataLoader</span></code> over real EEG records: find datasets and records, load one recording and inspect it, then turn an <code class="docutils literal notranslate"><span class="pre">EEGDashDataset</span></code> into windows and a dataloader. CPU-only, each runs in under a few minutes (plan §Category A, lines 360-380).</p>
-<div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="EEGDash exposes a metadata index over hundreds of BIDS-curated EEG datasets, served by the public REST API at https://data.eegdash.org. The same catalogue powers NEMAR, the EEGLAB-ecosystem portal that hosts EEG/MEG datasets with browsing, compute, and provenance tools (Delorme et al., 2022). The EEGDash client searches, filters, and summarises that index without downloading a single sample."><img alt="" src="../../_images/sphx_glr_plot_00_first_search_thumb.png" />
-<p><a class="reference internal" href="tutorials/00_start_here/plot_00_first_search.html"><span class="doc">How do I find datasets in EEGDash?</span></a></p>
-  <div class="sphx-glr-thumbnail-title">How do I find datasets in EEGDash?</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="Once a search returns a candidate dataset (see plot_00), the next question is practical: what does one recording actually contain? This tutorial loads a single BIDS file from OpenNeuro ds004504 (Miltiadous et al. 2023; Alzheimer / frontotemporal dementia / healthy controls) through the catalogue shared with NEMAR delorme2022nemar, unwraps the mne.io.Raw object, and inspects channels, montage, and spectrum. The dataset is small (88 subjects, ~10 min per subject, 19 channels at 500 Hz on a standard 10-20 layout) so the first fetch is under 25 MB and every later step is a hot-cache read."><img alt="" src="../../_images/sphx_glr_plot_01_first_recording_thumb.png" />
-<p><a class="reference internal" href="tutorials/00_start_here/plot_01_first_recording.html"><span class="doc">How do I load one EEG recording from EEGDash?</span></a></p>
-  <div class="sphx-glr-thumbnail-title">How do I load one EEG recording from EEGDash?</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="A model trains on tensor batches, not on continuous voltage traces. This tutorial closes the gap on one BIDS recording from OpenNeuro ds002718 wakeman2015, reachable through NEMAR delorme2022nemar: two safe preprocessors, a fixed-length window step, a torch.utils.data.DataLoader paszke2019pytorch, and an optional Zarr cache that turns batch reads into a few milliseconds of random access. We do not train a model. The deliverable is one batch&#x27;s shape and dtype."><img alt="" src="../../_images/sphx_glr_plot_02_dataset_to_dataloader_thumb.png" />
-<p><a class="reference internal" href="tutorials/00_start_here/plot_02_dataset_to_dataloader.html"><span class="doc">How do I turn one EEG recording into a PyTorch DataLoader?</span></a></p>
-  <div class="sphx-glr-thumbnail-title">How do I turn one EEG recording into a PyTorch DataLoader?</div>
+<p>Difficulty 1. Three short lessons that take you from a fresh install to a working PyTorch <code class="docutils literal notranslate"><span class="pre">DataLoader</span></code> over real EEG records: find datasets and records, load one recording and inspect it, then turn an <code class="docutils literal notranslate"><span class="pre">EEGDashDataset</span></code> into windows and a dataloader. CPU-only, each runs in under a few minutes.</p>
+<div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="Difficulty 1 | Runtime: &lt;2m | Compute: CPU"><img alt="" src="../../_images/sphx_glr_plot_00_first_search_thumb.png" />
+<p><a class="reference internal" href="tutorials/00_start_here/plot_00_first_search.html"><span class="doc">Find datasets with the EEGDash API</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Find datasets with the EEGDash API</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Difficulty 1 | Runtime: 2m | Compute: CPU"><img alt="" src="../../_images/sphx_glr_plot_01_first_recording_thumb.png" />
+<p><a class="reference internal" href="tutorials/00_start_here/plot_01_first_recording.html"><span class="doc">Load one EEG recording</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Load one EEG recording</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Difficulty 1 | Runtime: 2m | Compute: CPU"><img alt="" src="../../_images/sphx_glr_plot_02_dataset_to_dataloader_thumb.png" />
+<p><a class="reference internal" href="tutorials/00_start_here/plot_02_dataset_to_dataloader.html"><span class="doc">EEG recording to PyTorch DataLoader</span></a></p>
+  <div class="sphx-glr-thumbnail-title">EEG recording to PyTorch DataLoader</div>
 </div></div></section>
 <section id="core-decoding-workflow">
 <h3>Core Decoding Workflow<a class="headerlink" href="#core-decoding-workflow" title="Link to this heading">#</a></h3>
-<p>Difficulty 1-2. The canonical EEG decoding pipeline in four lessons: preprocess and window, split without subject leakage, train a baseline against chance, and persist prepared data for reuse (plan §Category B). The leakage-safe split lesson is the rubric anchor for E3.27 invariants and Cisotto and Chicco 2024’s evaluation guidance.</p>
-<div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="Raw EEG is rarely model-ready: wrong sampling rate, drift and line noise, no fixed reference, sporadic large-amplitude bursts, a continuous timeline instead of fixed epochs. This tutorial walks the canonical EEGDash preprocessing recipe on one recording from OpenNeuro ds002718 (Wakeman &amp; Henson 2015), reachable through NEMAR (Delorme et al. 2022). Every choice is named (Cisotto &amp; Chicco 2024 Tips 4-5), inspected on the array, and the recipe ends with a windowed dataset the next four core-workflow tutorials reuse. The closing diagnostic figure compares the recording before and after a one-call braindecode.preprocessing.EEGPrep pass that wraps ASR (Mullen et al. 2015), bad-channel detection, high-pass, and CAR."><img alt="" src="../../_images/sphx_glr_plot_10_preprocess_and_window_thumb.png" />
-<p><a class="reference internal" href="tutorials/10_core_workflow/plot_10_preprocess_and_window.html"><span class="doc">How do I preprocess EEG and create model-ready windows?</span></a></p>
-  <div class="sphx-glr-thumbnail-title">How do I preprocess EEG and create model-ready windows?</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="Random window splits on cross-subject EEG decoders post training-set accuracy near 99% and collapse on a held-out participant. The reason is not exotic: every recording produces hundreds of overlapping windows from the same brain, so a uniform shuffle scatters each subject across both train and test, and the model memorises subject-level fingerprints (heart-rate, alpha amplitude, electrode impedance) instead of the task we actually want to decode."><img alt="" src="../../_images/sphx_glr_plot_11_leakage_safe_split_thumb.png" />
-<p><a class="reference internal" href="tutorials/10_core_workflow/plot_11_leakage_safe_split.html"><span class="doc">How do I split EEG data without subject leakage?</span></a></p>
-  <div class="sphx-glr-thumbnail-title">How do I split EEG data without subject leakage?</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="A model that scores 0.78 on held-out windows is only useful when you also know what 0.50 (chance) and 0.55 (a transparent linear baseline) look like on the same split. This tutorial trains that linear baseline on three subjects of OpenNeuro ds002718 (Wakeman &amp; Henson 2015), reachable through NEMAR (Delorme et al. 2022). Four bands of log power per channel feed sklearn.linear_model.LogisticRegression (Pedregosa et al. 2011); a 3-fold cross-subject loop with sklearn.model_selection.GroupKFold keeps every subject in exactly one fold. The deliverable is a single three-panel figure that answers three questions on one screen: do the features separate the classes, how does the accuracy vary across held-out subjects, and which trials does the model confuse?"><img alt="" src="../../_images/sphx_glr_plot_12_train_a_baseline_thumb.png" />
-<p><a class="reference internal" href="tutorials/10_core_workflow/plot_12_train_a_baseline.html"><span class="doc">How do I train a leakage-safe baseline classifier on EEG?</span></a></p>
-  <div class="sphx-glr-thumbnail-title">How do I train a leakage-safe baseline classifier on EEG?</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="Preprocessing EEG is expensive. Filtering, resampling, and windowing one subject can take seconds; doing it for every kernel restart wastes hours over the lifetime of a project. The work has already been done once. The question is how to write it to disk so the next session, the next collaborator, and the future you all skip the recompute."><img alt="" src="../../_images/sphx_glr_plot_13_save_and_reuse_prepared_data_thumb.png" />
-<p><a class="reference internal" href="tutorials/10_core_workflow/plot_13_save_and_reuse_prepared_data.html"><span class="doc">How do I save and reload prepared windows + features?</span></a></p>
-  <div class="sphx-glr-thumbnail-title">How do I save and reload prepared windows + features?</div>
+<p>Difficulty 1-2. The canonical EEG decoding pipeline in four lessons: preprocess and window, split without subject leakage, train a baseline against chance, and persist prepared data for reuse. The leakage-safe split lesson is the rubric anchor for E3.27 invariants and Cisotto and Chicco 2024’s evaluation guidance.</p>
+<div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="Difficulty 1-2 | Runtime: 2m | Compute: CPU"><img alt="" src="../../_images/sphx_glr_plot_10_preprocess_and_window_thumb.png" />
+<p><a class="reference internal" href="tutorials/10_core_workflow/plot_10_preprocess_and_window.html"><span class="doc">Preprocess EEG and create windows</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Preprocess EEG and create windows</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Difficulty 1-2 | Runtime: 30s | Compute: CPU"><img alt="" src="../../_images/sphx_glr_plot_11_leakage_safe_split_thumb.png" />
+<p><a class="reference internal" href="tutorials/10_core_workflow/plot_11_leakage_safe_split.html"><span class="doc">Split EEG without subject leakage</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Split EEG without subject leakage</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Difficulty 1-2 | Runtime: 30s | Compute: CPU"><img alt="" src="../../_images/sphx_glr_plot_12_train_a_baseline_thumb.png" />
+<p><a class="reference internal" href="tutorials/10_core_workflow/plot_12_train_a_baseline.html"><span class="doc">Train a leakage-safe baseline</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Train a leakage-safe baseline</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Difficulty 1-2 | Runtime: 5s | Compute: CPU"><img alt="" src="../../_images/sphx_glr_plot_13_save_and_reuse_prepared_data_thumb.png" />
+<p><a class="reference internal" href="tutorials/10_core_workflow/plot_13_save_and_reuse_prepared_data.html"><span class="doc">Save and reload prepared data</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Save and reload prepared data</div>
 </div></div></section>
 <section id="event-related-decoding">
 <h3>Event-Related Decoding<a class="headerlink" href="#event-related-decoding" title="Link to this heading">#</a></h3>
-<p>Difficulty 2. Two lessons that decode labels coming from events and annotations rather than continuous state: a P3 target-versus-standard classifier on a visual oddball paradigm, then the auditory oddball framed as a contrast with the visual case (plan §Category C).</p>
-<div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="A child watches letters flash one by one on a screen. Most letters are standards; one is the block&#x27;s target. The brain answers the rare target with a positive deflection over centro-parietal cortex peaking 300-450 ms after stimulus onset, the classic visual P300 (Polich 2007; Picton 1992). This tutorial loads one BIDS recording from OpenNeuro ds005863 (the visualoddball task, reachable through NEMAR; Delorme et al. 2022), turns the BrainVision event codes into a target-vs-standard label, epochs around stimulus onset with baseline correction (Cisotto &amp; Chicco 2024, Tip 7), and produces three artefacts side by side: an ERP at Pz, a scalp topography of the difference wave at the peak, and a 3-fold leave-one-subject-out accuracy on a logistic-regression decoder. Where does the textbook P300 actually live in the data?"><img alt="" src="../../_images/sphx_glr_plot_20_visual_p300_oddball_thumb.png" />
-<p><a class="reference internal" href="tutorials/20_event_related/plot_20_visual_p300_oddball.html"><span class="doc">How does the brain answer a rare visual target?</span></a></p>
-  <div class="sphx-glr-thumbnail-title">How does the brain answer a rare visual target?</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="The visual oddball of /auto_examples/tutorials/20_event_related/plot_20_visual_p300_oddball delivered a parietal positive bump near 350 ms. Swap the eyes for ears and the same paradigm structure (rare deviant inside a stream of standards) yields a different brain answer: an early mismatch negativity (MMN, ~150-250 ms) followed by a frontal-central P3a/P3b family (~250-400 ms). The latency is shorter, the topography is shifted, and the subcomponent vocabulary changes (Polich 2007, doi:10.1016/j.clinph.2007.04.019; Naatanen et al. 2007, doi:10.1016/j.clinph.2007.04.026; Squires et al. 1975, doi:10.1016/0013-4694(75)90263-1)."><img alt="" src="../../_images/sphx_glr_plot_21_auditory_oddball_thumb.png" />
-<p><a class="reference internal" href="tutorials/20_event_related/plot_21_auditory_oddball.html"><span class="doc">How does the auditory P300 differ from the visual P300 of plot_20?</span></a></p>
-  <div class="sphx-glr-thumbnail-title">How does the auditory P300 differ from the visual P300 of plot_20?</div>
+<p>Difficulty 2. Two lessons that decode labels coming from events and annotations rather than continuous state: a P3 target-versus-standard classifier on a visual oddball paradigm, then the auditory oddball framed as a contrast with the visual case.</p>
+<div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="Difficulty 2 | Runtime: 2m | Compute: CPU"><img alt="" src="../../_images/sphx_glr_plot_20_visual_p300_oddball_thumb.png" />
+<p><a class="reference internal" href="tutorials/20_event_related/plot_20_visual_p300_oddball.html"><span class="doc">Visual P300 oddball decoding</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Visual P300 oddball decoding</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Difficulty 2 | Runtime: 3m | Compute: CPU"><img alt="" src="../../_images/sphx_glr_plot_21_auditory_oddball_thumb.png" />
+<p><a class="reference internal" href="tutorials/20_event_related/plot_21_auditory_oddball.html"><span class="doc">Auditory P300 oddball decoding</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Auditory P300 oddball decoding</div>
 </div></div></section>
 <section id="resting-state-and-state-decoding">
 <h3>Resting-State and State Decoding<a class="headerlink" href="#resting-state-and-state-decoding" title="Link to this heading">#</a></h3>
-<p>Difficulty 1. The canonical beginner decoding lesson: eyes-open versus eyes-closed classification on resting-state EEG, decoded from alpha-rhythm differences with a band-power baseline (plan §Category D).</p>
-<div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="Hans Berger reported in 1929 that the parieto-occipital alpha rhythm rises when the eyes close and falls when they open berger1929. This textbook resting-state EEG result that every dataset still reproduces klimesch2012alpha. The contrast is the simplest possible binary EEG decoding problem and an excellent first resting-state tutorial. We reproduce it on Healthy Brain Network ds005514 alexander2017hbn reachable through NEMAR delorme2022nemar: a leave-one-subject-out logistic regression on log alpha-band power features."><img alt="" src="../../_images/sphx_glr_plot_30_eyes_open_closed_thumb.png" />
-<p><a class="reference internal" href="tutorials/30_resting_state/plot_30_eyes_open_closed.html"><span class="doc">Decode eyes-open vs. eyes-closed from resting-state EEG</span></a></p>
-  <div class="sphx-glr-thumbnail-title">Decode eyes-open vs. eyes-closed from resting-state EEG</div>
+<p>Difficulty 1. The canonical beginner decoding lesson: eyes-open versus eyes-closed classification on resting-state EEG, decoded from alpha-rhythm differences with a band-power baseline.</p>
+<div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="Difficulty 1 | Runtime: 5m | Compute: CPU"><img alt="" src="../../_images/sphx_glr_plot_30_eyes_open_closed_thumb.png" />
+<p><a class="reference internal" href="tutorials/30_resting_state/plot_30_eyes_open_closed.html"><span class="doc">Decode eyes open vs. eyes closed</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Decode eyes open vs. eyes closed</div>
 </div></div></section>
 <section id="feature-engineering">
 <h3>Feature Engineering<a class="headerlink" href="#feature-engineering" title="Link to this heading">#</a></h3>
-<p>Difficulty 1-2. EEGDash’s feature extraction package as a first-class option, not an afterthought to deep learning. Three lessons cover feature tables from windows, preprocessor and dependency trees that avoid recomputation, and a scikit-learn / LightGBM baseline straight from the feature table (plan §Category E).</p>
-<div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="Plot_30 closed the loop on the parieto-occipital alpha rhythm Hans Berger first reported in 1929 klimesch2012alpha. This tutorial generalises the recipe: starting from windowed EEG (the same Healthy Brain Network ds005514 resting-state idiom we keep across the gallery, reachable through NEMAR, Delorme et al. 2022; Alexander et al. 2017), it extracts a band-power feature per channel for each of theta, alpha, beta, and gamma. The deliverable is a (n_windows, 4, n_channels) tensor of log10 band power that plot_42 hands to scikit-learn pedregosa2011sklearn without any further reshaping."><img alt="" src="../../_images/sphx_glr_plot_40_first_features_thumb.png" />
-<p><a class="reference internal" href="tutorials/40_features/plot_40_first_features.html"><span class="doc">How do I turn EEG windows into a band-power feature matrix?</span></a></p>
-  <div class="sphx-glr-thumbnail-title">How do I turn EEG windows into a band-power feature matrix?</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="Welch&#x27;s method welch1967psd returns one power spectrum per window; band power, spectral entropy, peak frequency, and the 1/f slope (Demanuele et al. 2007; Donoghue et al. 2020) are four scalars derived from that same spectrum. If a feature dictionary asks for four band powers as four independent features, the FFT runs four times per window. The FeatureExtractor dependency tree shares one spectral_preprocessor across every spectral feature so the FFT runs once. The deliverable for this tutorial is one feature table with the four derived columns, plus a three-panel figure that names the hierarchy, shows each feature&#x27;s distribution, and prints the 4x4 Pearson correlation between them."><img alt="" src="../../_images/sphx_glr_plot_41_feature_trees_thumb.png" />
-<p><a class="reference internal" href="tutorials/40_features/plot_41_feature_trees.html"><span class="doc">How do classical EEG markers compose on top of one Welch PSD?</span></a></p>
-  <div class="sphx-glr-thumbnail-title">How do classical EEG markers compose on top of one Welch PSD?</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="A feature table from plot_40 is one row per window with columns shaped &lt;feature&gt;_&lt;channel&gt;. The data follows the same OpenNeuro ds005514 HBN resting-state contour as plot_40, reachable through NEMAR (Delorme et al. 2022); to keep the run offline-reproducible the feature table is synthesised with the column layout plot_40 saves to parquet. Before reaching for a deep net, this tutorial wires the feature matrix into sklearn.pipeline.Pipeline pedregosa2011sklearn with StandardScaler and LogisticRegression, runs a leave-one- subject-out loop with a leakage-safe split from get_splitter, and reports per-fold accuracy against majority_baseline. The deliverable is a three-panel diagnostic that mirrors the one from plot_12 so the two read together: plot_12 trains the same Pipeline on log-band-power features computed inline, plot_42 trains it on the feature table extracted by plot_40. The question the figure answers is whether a transparent linear baseline clears the chance line on a held-out subject?"><img alt="" src="../../_images/sphx_glr_plot_42_features_to_sklearn_thumb.png" />
-<p><a class="reference internal" href="tutorials/40_features/plot_42_features_to_sklearn.html"><span class="doc">How do I push EEGDash features through a scikit-learn Pipeline?</span></a></p>
-  <div class="sphx-glr-thumbnail-title">How do I push EEGDash features through a scikit-learn Pipeline?</div>
+<p>Difficulty 1-2. EEGDash’s feature extraction package as a first-class option, not an afterthought to deep learning. Three lessons cover feature tables from windows, preprocessor and dependency trees that avoid recomputation, and a scikit-learn / LightGBM baseline straight from the feature table.</p>
+<div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="Difficulty 1-2 | Runtime: 30s | Compute: CPU"><img alt="" src="../../_images/sphx_glr_plot_40_first_features_thumb.png" />
+<p><a class="reference internal" href="tutorials/40_features/plot_40_first_features.html"><span class="doc">Extract band-power features</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Extract band-power features</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Difficulty 1-2 | Runtime: 5s | Compute: CPU"><img alt="" src="../../_images/sphx_glr_plot_41_feature_trees_thumb.png" />
+<p><a class="reference internal" href="tutorials/40_features/plot_41_feature_trees.html"><span class="doc">Compose EEG markers from Welch PSD</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Compose EEG markers from Welch PSD</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Difficulty 1-2 | Runtime: 10s | Compute: CPU"><img alt="" src="../../_images/sphx_glr_plot_42_features_to_sklearn_thumb.png" />
+<p><a class="reference internal" href="tutorials/40_features/plot_42_features_to_sklearn.html"><span class="doc">EEGDash features to scikit-learn</span></a></p>
+  <div class="sphx-glr-thumbnail-title">EEGDash features to scikit-learn</div>
 </div></div></section>
 <section id="evaluation-and-benchmarking">
 <h3>Evaluation and Benchmarking<a class="headerlink" href="#evaluation-and-benchmarking" title="Link to this heading">#</a></h3>
-<p>Difficulty 2-3. Five lessons that treat decoding evaluation as a core skill, drawing on MOABB (Chevallier, Aristimunha et al. 2024). Builds from a single split toward benchmark-grade pipeline comparison: within-subject, cross-subject, cross-session, learning curves, and a paired Wilcoxon comparison of two pipelines (plan §Category F, lines 425-442).</p>
-<div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="Cross-subject generalisation (plot_11) is the headline benchmark for EEG papers, but a calibration-style P300 speller, a clinical seizure detector tuned to one patient, or a lab paradigm where inter-subject variance dominates the contrast all care about a single brain at a time. In those cases subject overlap between train and test is intentional. This tutorial builds a 5-fold within-subject split, proves it is trial-disjoint, fits one LogisticRegression per subject, and puts the per-subject scores next to a leave-one-subject-out cross-subject reference on the same data."><img alt="" src="../../_images/sphx_glr_plot_50_within_subject_evaluation_thumb.png" />
-<p><a class="reference internal" href="tutorials/50_evaluation/plot_50_within_subject_evaluation.html"><span class="doc">When is within-subject decoding the right scientific question?</span></a></p>
-  <div class="sphx-glr-thumbnail-title">When is within-subject decoding the right scientific question?</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="Cross-subject generalisation is the gold standard for any decoding claim. Train on N-1 subjects, test on the held-out one, repeat for every subject: that is leave-one-subject-out cross-validation (LOSO), the protocol behind the MOABB benchmark aristimunha2023transferstructure and the de-facto evaluation in clinical-EEG decoding. Brookshire et al. 2024 surveyed 81 deep-learning EEG papers and found data leakage in roughly half; on properly subject-held-out splits, the same architectures dropped on average from 0.83 accuracy to 0.62. Cisotto &amp; Chicco 2024 (Tip 9) name leakage the single most common reporting mistake. ds002718 wakeman2015, reachable through NEMAR delorme2022nemar, is the running example throughout the gallery."><img alt="" src="../../_images/sphx_glr_plot_51_cross_subject_evaluation_thumb.png" />
-<p><a class="reference internal" href="tutorials/50_evaluation/plot_51_cross_subject_evaluation.html"><span class="doc">How well does an EEG decoder generalise to a never-seen subject?</span></a></p>
-  <div class="sphx-glr-thumbnail-title">How well does an EEG decoder generalise to a never-seen subject?</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="A model that scores 90% on session 1 of sub-03 can slump to 70% on session 2 of the same subject. The cap and electrodes were placed a millimetre off, the gel impedance dropped, the participant slept poorly, or the recording fell at the wrong time of day. The decoder inherits all of those nuisance factors and the score drops the next morning. This is calibration drift: a covariate shift in the feature distribution that the within-session score never had to handle (Jayaram &amp; Barachant 2018, doi:10.1088/1741-2552/aabea9)."><img alt="" src="../../_images/sphx_glr_plot_52_cross_session_evaluation_thumb.png" />
-<p><a class="reference internal" href="tutorials/50_evaluation/plot_52_cross_session_evaluation.html"><span class="doc">How much does a within-session decoder drift across sessions of the same subject?</span></a></p>
-  <div class="sphx-glr-thumbnail-title">How much does a within-session decoder drift across sessions of the same subject?</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="Recording another month of EEG is expensive. Before committing more budget to data collection, ask whether the model is data-starved or whether the bottleneck sits elsewhere: features, architecture, label quality. The textbook answer is the learning curve (Hoffmann et al. 2014, doi:10.1109/TBME.2014.2300855): hold the validation pool fixed, grow the training pool over orders of magnitude, and read the slope. This tutorial sweeps training sizes from 50 to ~1000 windows on a synthetic cohort that mirrors a NEMAR delorme2022nemar OpenNeuro dataset with 24 subjects, scores balanced accuracy with sklearn.model_selection.learning_curve, and renders two panels: the curve itself and the train-minus-val gap that names the bias-variance regime. Cisotto &amp; Chicco 2024 (doi:10.7717/peerj-cs.2256, Tip 9) flag chance-aware reporting as the most-violated rule in clinical EEG; the chance line is on the figure. Schirrmeister et al. 2017 (doi:10.1002/hbm.23730, Braindecode) and the MOABB benchmark (Chevallier, Aristimunha et al. 2024, doi:10.48550/arXiv.2404.15319) sweep the same protocol on real EEG pipelines. The deliverable is one number: at what training-set size does the model first reach 90% of its plateau accuracy?"><img alt="" src="../../_images/sphx_glr_plot_53_learning_curves_thumb.png" />
-<p><a class="reference internal" href="tutorials/50_evaluation/plot_53_learning_curves.html"><span class="doc">How does decoding accuracy scale with training-set size, and where does the curve plateau?</span></a></p>
-  <div class="sphx-glr-thumbnail-title">How does decoding accuracy scale with training-set size, and where does the curve plateau?</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="A new decoding pipeline beats your linear baseline by three accuracy points on the held-out subject in a hackathon notebook. The gap looks big until somebody asks the obvious follow-up: would the same gap show up if you swap the test subject for any of the others sitting in NEMAR (Delorme et al. 2022, doi:10.1093/database/baac096)? When the same N subjects are scored by both pipelines you can answer that directly with a paired statistical test on the per-subject deltas. Demsar 2006 (Statistical comparisons of classifiers, JMLR) is the canonical reference for the recipe; Cisotto &amp; Chicco 2024 (doi:10.7717/peerj-cs.2256, Tip 9) flag the unpaired comparison as the single most common over-claim in clinical EEG. So: does the win survive a paired test, and how big is the effect once we strip the between-subject variance?"><img alt="" src="../../_images/sphx_glr_plot_54_compare_two_pipelines_thumb.png" />
-<p><a class="reference internal" href="tutorials/50_evaluation/plot_54_compare_two_pipelines.html"><span class="doc">Is Pipeline A really better than Pipeline B, or did it luck out on one subject?</span></a></p>
-  <div class="sphx-glr-thumbnail-title">Is Pipeline A really better than Pipeline B, or did it luck out on one subject?</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="EEGDash and MOABB sit on opposite ends of the BCI evaluation pipeline. EEGDash is a metadata index over BIDS-curated EEG pernet2019eegbids served from NEMAR delorme2022nemar; MOABB is the de-facto benchmark suite that pairs paradigm definitions (~moabb.paradigms.MotorImagery, P300) with evaluation procedures (~moabb.evaluations.CrossSessionEvaluation, CrossSubjectEvaluation) and a reproducibility study covering 30+ datasets (Aristimunha et al. 2023, Chevallier et al. 2024). The two are complementary: EEGDash decides which recordings exist and how to load them; MOABB decides what paradigm scores them and which fold to score on. The bridge braindecode.datasets.BaseConcatDataset.get_metadata returns (y, metadata) for any MOABB stratified splitter."><img alt="" src="../../_images/sphx_glr_plot_55_moabb_interop_thumb.png" />
-<p><a class="reference internal" href="tutorials/50_evaluation/plot_55_moabb_interop.html"><span class="doc">How do I benchmark an EEGDash dataset with MOABB?</span></a></p>
-  <div class="sphx-glr-thumbnail-title">How do I benchmark an EEGDash dataset with MOABB?</div>
+<p>Difficulty 2-3. Five lessons that treat decoding evaluation as a core skill, drawing on MOABB (Chevallier, Aristimunha et al. 2024). Builds from a single split toward benchmark-grade pipeline comparison: within-subject, cross-subject, cross-session, learning curves, and a paired Wilcoxon comparison of two pipelines.</p>
+<div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="Difficulty 1-2 | Runtime: 2m | Compute: CPU"><img alt="" src="../../_images/sphx_glr_plot_50_within_subject_evaluation_thumb.png" />
+<p><a class="reference internal" href="tutorials/50_evaluation/plot_50_within_subject_evaluation.html"><span class="doc">Within-subject decoding evaluation</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Within-subject decoding evaluation</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Difficulty 2-3 | Runtime: 2m | Compute: CPU"><img alt="" src="../../_images/sphx_glr_plot_51_cross_subject_evaluation_thumb.png" />
+<p><a class="reference internal" href="tutorials/50_evaluation/plot_51_cross_subject_evaluation.html"><span class="doc">Cross-subject decoding evaluation</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Cross-subject decoding evaluation</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Difficulty 2-3 | Runtime: 2m | Compute: CPU"><img alt="" src="../../_images/sphx_glr_plot_52_cross_session_evaluation_thumb.png" />
+<p><a class="reference internal" href="tutorials/50_evaluation/plot_52_cross_session_evaluation.html"><span class="doc">Cross-session decoding evaluation</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Cross-session decoding evaluation</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Difficulty 2-3 | Runtime: 2m | Compute: CPU"><img alt="" src="../../_images/sphx_glr_plot_53_learning_curves_thumb.png" />
+<p><a class="reference internal" href="tutorials/50_evaluation/plot_53_learning_curves.html"><span class="doc">Decoding accuracy learning curves</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Decoding accuracy learning curves</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Difficulty 2-3 | Runtime: 2m | Compute: CPU"><img alt="" src="../../_images/sphx_glr_plot_54_compare_two_pipelines_thumb.png" />
+<p><a class="reference internal" href="tutorials/50_evaluation/plot_54_compare_two_pipelines.html"><span class="doc">Compare two decoding pipelines</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Compare two decoding pipelines</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Difficulty 2-3 | Runtime: 2m | Compute: CPU"><img alt="" src="../../_images/sphx_glr_plot_55_moabb_interop_thumb.png" />
+<p><a class="reference internal" href="tutorials/50_evaluation/plot_55_moabb_interop.html"><span class="doc">Benchmark EEGDash with MOABB</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Benchmark EEGDash with MOABB</div>
 </div></div></section>
 <section id="transfer-foundation-models-and-eeg2025">
 <h3>Transfer, Foundation Models, and EEG2025<a class="headerlink" href="#transfer-foundation-models-and-eeg2025" title="Link to this heading">#</a></h3>
-<p>Difficulty 3. Four advanced lessons on transfer learning and foundation-model fine-tuning, framed around the EEG2025 Foundation Challenge: <code class="docutils literal notranslate"><span class="pre">EEGChallengeDataset</span></code> basics, cross-task transfer (Challenge 1), subject-invariant p-factor regression (Challenge 2), and fine-tuning a Braindecode pretrained model (plan §Category H, lines 458-470). Builds on Schirrmeister et al. 2017.</p>
-<div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="The EEG 2025 Foundation Challenge ships its own loader, EEGChallengeDataset, on top of the same eegdash infrastructure that powers EEGDashDataset. The data pool is the Healthy Brain Network release (HBN; Alexander et al. 2017), reachable through NEMAR delorme2022nemar: every recording is downsampled from 500 Hz to 100 Hz, band-pass filtered 0.5-50 Hz, and shipped via a fixed S3 bucket so the leaderboard contract stays reproducible cisotto2024tips. This tutorial walks through the loader, surfaces the task taxonomy, the participant-level metadata, and the official catalog row a single recording carries. The deliverable is one pandas.DataFrame with records-per-task counts and one three-panel figure rendered from the live metadata."><img alt="" src="../../_images/sphx_glr_plot_70_challenge_dataset_basics_thumb.png" />
-<p><a class="reference internal" href="tutorials/70_transfer_foundation/plot_70_challenge_dataset_basics.html"><span class="doc">How do I get started with the EEG 2025 Foundation Challenge dataset?</span></a></p>
-  <div class="sphx-glr-thumbnail-title">How do I get started with the EEG 2025 Foundation Challenge dataset?</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="Can a small EEG encoder pretrained on passive resting-state windows help a downstream model decode contrastChangeDetection (CCD) that it never saw, on the same subjects drawn from the EEG2025 Challenge 1 mini release? In vision and language the answer is &quot;yes by a wide margin&quot;. For EEG the literature is younger but converging on the same shape: self-supervised or auxiliary-task pretraining tends to lift downstream accuracy when labels are scarce (Banville et al. 2021, doi:10.1109/TNSRE.2020.3040290; Defossez et al. 2023, doi:10.1038/s42256-023-00714-5). This tutorial wires the two halves of EEG2025 Challenge 1 together, passive source and active target on the same subject pool (Aristimunha et al. 2025, doi:10.48550/arXiv.2506.19141), and asks how big the gap between a fine-tuned encoder and a from-scratch baseline really is. When the encoder transfers, by how much does it beat chance?"><img alt="" src="../../_images/sphx_glr_plot_71_cross_task_transfer_thumb.png" />
-<p><a class="reference internal" href="tutorials/70_transfer_foundation/plot_71_cross_task_transfer.html"><span class="doc">Pretrain on resting-state, fine-tune on contrast-change detection</span></a></p>
-  <div class="sphx-glr-thumbnail-title">Pretrain on resting-state, fine-tune on contrast-change detection</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="Challenge 2 of the EEG2025 Foundation Challenge asks whether a model can predict the p-factor from EEG without secretly memorising subject identity. The p-factor (Caspi et al. 2014, doi:10.1177/2167702613497473) is a general dimension of psychopathology derived from the Child Behavior Checklist; the EEG side comes from the Healthy Brain Network release distributed via EEGChallengeDataset (Alexander et al. 2017, doi:10.1038/sdata.2017.181), surfaced through NEMAR (Delorme et al. 2022, doi:10.1093/nargab/lqac023). The setup is a strict out-of-distribution regression: the test cohort never overlaps with the train cohort on subject. A model that secretly memorises subjects scores well within-fold and collapses on a new sitting, so we build the cross_subject loop from plot_51, fit a feature-based regression head, and report r2 against median_baseline, the chance level for regression (Cisotto &amp; Chicco 2024 Tip 9, doi:10.7717/peerj-cs.2256). The headline question is not &quot;can we win Challenge 2?&quot;; the p-factor signal in EEG is genuinely faint. The honest one is: does this model beat the train-set median predictor on never-seen-before subjects?"><img alt="" src="../../_images/sphx_glr_plot_72_subject_invariant_regression_thumb.png" />
+<p>Difficulty 3. Four advanced lessons on transfer learning and foundation-model fine-tuning, framed around the EEG2025 Foundation Challenge: <code class="docutils literal notranslate"><span class="pre">EEGChallengeDataset</span></code> basics, cross-task transfer (Challenge 1), subject-invariant p-factor regression (Challenge 2), and fine-tuning a Braindecode pretrained model. Builds on Schirrmeister et al. 2017.</p>
+<div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="Difficulty 1-2 | Runtime: 10s | Compute: CPU"><img alt="" src="../../_images/sphx_glr_plot_70_challenge_dataset_basics_thumb.png" />
+<p><a class="reference internal" href="tutorials/70_transfer_foundation/plot_70_challenge_dataset_basics.html"><span class="doc">How do I get started with the EEG2025 Foundation Challenge dataset?</span></a></p>
+  <div class="sphx-glr-thumbnail-title">How do I get started with the EEG2025 Foundation Challenge dataset?</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Difficulty 3 | Runtime: 6m | Compute: GPU Preferred"><img alt="" src="../../_images/sphx_glr_plot_71_cross_task_transfer_thumb.png" />
+<p><a class="reference internal" href="tutorials/70_transfer_foundation/plot_71_cross_task_transfer.html"><span class="doc">Pretrain on resting-state, fine-tune on contrast-change detection (Simulated Data)</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Pretrain on resting-state, fine-tune on contrast-change detection (Simulated Data)</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Difficulty 3 | Runtime: 30s | Compute: CPU (GPU Recommended)"><img alt="" src="../../_images/sphx_glr_plot_72_subject_invariant_regression_thumb.png" />
 <p><a class="reference internal" href="tutorials/70_transfer_foundation/plot_72_subject_invariant_regression.html"><span class="doc">Subject-invariant p-factor regression (EEG2025 Challenge 2)</span></a></p>
   <div class="sphx-glr-thumbnail-title">Subject-invariant p-factor regression (EEG2025 Challenge 2)</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="A pretrained EEG encoder packs hundreds of hours of recordings into a weight matrix. Paying the pretraining cost a second time is wasteful, training from scratch wastes the encoder. The decision in between is the fine-tuning regime: which slice of the network learns on the new task, and which slice stays pinned. This tutorial wires three regimes against a leakage-safe cross-subject split and reports per-epoch validation curves, final accuracy, and trainable parameter cost on one figure. The data come through a synthetic pretrain/target pair sized to mirror an OpenNeuro recording cataloged on NEMAR (Delorme et al. 2022, doi:10.1038/s41597-022-01795-4); the recipe transfers to any EEGDash windowed dataset by swapping synth_windows for an EEGDashDataset query. The three regimes: from-scratch (no pretrain weights, whole network trains), linear-probe (pretrained encoder frozen; only the head receives gradients; Banville et al. 2021, doi:10.1088/1741-2552/abca18), and full-finetune (encoder loaded, head reset, every parameter trains; Defossez et al. 2023, doi:10.1038/s42256-023-00714-5). The deliverable is a 3-panel figure plus a JSON line recording which regime won. So which one wins?"><img alt="" src="../../_images/sphx_glr_plot_73_finetune_pretrained_model_thumb.png" />
+</div><div class="sphx-glr-thumbcontainer" tooltip="Difficulty 3 | Runtime: 45s | Compute: GPU Recommended"><img alt="" src="../../_images/sphx_glr_plot_73_finetune_pretrained_model_thumb.png" />
 <p><a class="reference internal" href="tutorials/70_transfer_foundation/plot_73_finetune_pretrained_model.html"><span class="doc">How do I adapt a pretrained EEG model to a new task?</span></a></p>
   <div class="sphx-glr-thumbnail-title">How do I adapt a pretrained EEG model to a new task?</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="Meta Research ships four projects under the NeuroAI umbrella (https://facebookresearch.github.io/neuroai/): NeuralFetch for unified dataset discovery across 12 catalogues, NeuralSet for turning neural and stimulus data into AI-ready tensors, NeuralTrain for deep-learning training on the resulting PyTorch dataset, and NeuralBench for a unified benchmark across brain foundation models. EEGDash is one of NeuralFetch&#x27;s 12 supported backends, alongside OpenNeuro (BIDS), DANDI (NWB), HuggingFace, Zenodo, Figshare, PhysioNet, Dryad, Donders, DataLad, Synapse, and OSF. This tutorial walks the four-stage path EEGDashDataset -&gt; NeuralFetch.Study -&gt; NeuralSet.Segmenter -&gt; torch.utils.data.DataLoader so a recording cataloged on NEMAR delorme2022nemar flows through the rest of the NeuroAI stack with the bytes intact cisotto2024tips. The recipe composes with self-supervised pretraining on EEG (Banville et al. 2021) and cross-task brain decoding defossez2023brain. The deliverable is a 3-panel figure: stage diagram, per-stage shape sanity check, integration matrix. So which projects already share the events DataFrame, and which ones live downstream of it?"><img alt="" src="../../_images/sphx_glr_plot_74_neuroai_interop_thumb.png" />
+</div><div class="sphx-glr-thumbcontainer" tooltip="Difficulty 3 | Runtime: 20s | Compute: CPU (GPU Recommended)"><img alt="" src="../../_images/sphx_glr_plot_74_neuroai_interop_thumb.png" />
 <p><a class="reference internal" href="tutorials/70_transfer_foundation/plot_74_neuroai_interop.html"><span class="doc">How do I plug EEGDash into the Meta NeuroAI ecosystem?</span></a></p>
   <div class="sphx-glr-thumbnail-title">How do I plug EEGDash into the Meta NeuroAI ecosystem?</div>
 </div></div></section>
 </section>
 <section id="how-to-recipes">
 <h2>How-to recipes<a class="headerlink" href="#how-to-recipes" title="Link to this heading">#</a></h2>
-<p>Task-focused snippets that assume you already know the basics: how to download a dataset, run preprocessing on SLURM, parallelize feature extraction, use the HPC cache, and work offline. Each guide answers a single question; cross-link with the HPC track when relevant (plan §Category I, lines 615-621 and 1021-1037).</p>
-<div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="Download all files for a dataset in advance, validate completeness, and inspect the cache."><img alt="" src="../../_images/sphx_glr_how_to_download_a_dataset_thumb.png" />
+<p>Task-focused snippets that assume you already know the basics: how to download a dataset, run preprocessing on SLURM, parallelize feature extraction, use the HPC cache, and work offline. Each guide answers a single question; cross-link with the HPC track when relevant.</p>
+<div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="Difficulty 1 | Runtime: 1m | Compute: CPU"><img alt="" src="../../_images/sphx_glr_how_to_download_a_dataset_thumb.png" />
 <p><a class="reference internal" href="how_to/how_to_download_a_dataset.html"><span class="doc">Download an EEGDash dataset in advance and validate the local cache</span></a></p>
   <div class="sphx-glr-thumbnail-title">Download an EEGDash dataset in advance and validate the local cache</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="Goal: scale eegdash.features.extract_features across multiple cores on one node by tuning n_jobs and batch_size, then persist the result so re-runs are free."><img alt="" src="../../_images/sphx_glr_how_to_parallelize_feature_extraction_thumb.png" />
-<p><a class="reference internal" href="how_to/how_to_parallelize_feature_extraction.html"><span class="doc">Parallelise EEGDash feature extraction</span></a></p>
-  <div class="sphx-glr-thumbnail-title">Parallelise EEGDash feature extraction</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="On HPC clusters, where you put the EEGDash cache is often the difference between a 30-minute and a 30-second epoch. Shared filesystems (Lustre, GPFS, NFS) survive job restarts but throttle under metadata-heavy access; node-local NVMe is fast but volatile; and $HOME is almost always too slow for training. This how-to shows how to point eegdash.paths.get_default_cache_dir at the right tier, stage data once, and verify the cache before training."><img alt="" src="../../_images/sphx_glr_how_to_use_hpc_cache_thumb.png" />
+</div><div class="sphx-glr-thumbcontainer" tooltip="Difficulty 2 | Runtime: 30s | Compute: CPU (Multi-core)"><img alt="" src="../../_images/sphx_glr_how_to_parallelize_feature_extraction_thumb.png" />
+<p><a class="reference internal" href="how_to/how_to_parallelize_feature_extraction.html"><span class="doc">Parallelize EEGDash feature extraction</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Parallelize EEGDash feature extraction</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Difficulty 2 | Runtime: 20s | Compute: CPU"><img alt="" src="../../_images/sphx_glr_how_to_use_hpc_cache_thumb.png" />
 <p><a class="reference internal" href="how_to/how_to_use_hpc_cache.html"><span class="doc">Place the EEGDash cache on shared or local cluster storage</span></a></p>
   <div class="sphx-glr-thumbnail-title">Place the EEGDash cache on shared or local cluster storage</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="Goal: instantiate EEGChallengeDataset with download=False and load the same records as the online path, with no network calls."><img alt="" src="../../_images/sphx_glr_how_to_work_offline_thumb.png" />
+</div><div class="sphx-glr-thumbcontainer" tooltip="Difficulty 2 | Runtime: 4m | Compute: CPU"><img alt="" src="../../_images/sphx_glr_how_to_work_offline_thumb.png" />
 <p><a class="reference internal" href="how_to/how_to_work_offline.html"><span class="doc">How-to: work offline against a populated EEGDash cache</span></a></p>
   <div class="sphx-glr-thumbnail-title">How-to: work offline against a populated EEGDash cache</div>
 </div></div></section>
 <section id="applied-research-projects">
 <h2>Applied research projects<a class="headerlink" href="#applied-research-projects" title="Link to this heading">#</a></h2>
-<p>Project-style examples that target a concrete scientific question – age regression, p-factor prediction, sex classification, P300 transfer, clinical-catalog summary – with realistic data sizes, runtimes, and limitations. Treat them as starting points, not prescriptive recipes (plan §Category G, lines 1052-1100).</p>
-<div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="Can a feature-based regression head predict a child&#x27;s age from a few seconds of resting-state EEG, on subjects the model has never seen? This applied case study takes the Healthy Brain Network release ds005505 (Alexander et al. 2017, doi:10.1038/sdata.2017.181), surfaced through NEMAR (Delorme et al. 2022, doi:10.1093/nargab/lqac023), wires up an eegdash.EEGDashDataset query, builds a strict subject-aware split (Cisotto and Chicco 2024, doi:10.7717/peerj-cs.2256), fits a sklearn.linear_model.Ridge head on band-power features, and reports Pearson r, Spearman rho, R^2, and MAE against a median-baseline predictor. EEG-based brain-age regression has a long line of prior work (Zoubi et al. 2018, doi:10.3389/fnhum.2018.00461). The headline question here is not whether we beat the published literature; the honest one is, does the model beat the train-set median predictor on never-seen subjects?"><img alt="" src="../../_images/sphx_glr_project_age_regression_thumb.png" />
-<p><a class="reference internal" href="applied/project_age_regression.html"><span class="doc">Age regression from EEG (applied case study)</span></a></p>
-  <div class="sphx-glr-thumbnail-title">Age regression from EEG (applied case study)</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="A starter project: pull metadata for the OpenNeuro ds004504 clinical EEG release miltiadous2023 through EEGDashDataset, without downloading any signal bytes, and answer four questions a project plan needs answered before any modelling. The pool is served via NEMAR delorme2022nemar; the polished clinical workflow recipe follows Cisotto and Chicco 2024. The deliverable is one pandas.DataFrame with per-condition counts and one three-panel figure rendered from the live catalog numbers. Cohort imbalance, age confounds, recording-length mismatch, and channel-count drift are the four dataset-level pitfalls that silently break clinical EEG decoders before training even starts, so why not answer them first?"><img alt="" src="../../_images/sphx_glr_project_clinical_dataset_summary_thumb.png" />
-<p><a class="reference internal" href="applied/project_clinical_dataset_summary.html"><span class="doc">How do I survey a clinical EEG dataset before training a model?</span></a></p>
-  <div class="sphx-glr-thumbnail-title">How do I survey a clinical EEG dataset before training a model?</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="Two laboratories run a visual oddball task on different participants, different head-caps, different software stacks. Both pipelines produce EEG epochs locked to a rare target and a frequent standard; both target the centro-parietal P3 component (Polich 2007, doi:10.1016/j.clinph.2007.04.019). Yet a P3 decoder trained on cohort A and evaluated on cohort B systematically loses several accuracy points relative to a target-trained ceiling (Cisotto &amp; Chicco 2024, Tip 8, doi:10.7717/peerj-cs.2256). This case study wires adversarial-style maximum mean discrepancy (AS-MMD; Long et al. 2015, https://arxiv.org/abs/1502.02791) between source and target, trains a small encoder, and asks the same applied question that cross-task pretraining (Banville et al. 2021, doi:10.1109/TNSRE.2020.3040290; Defossez et al. 2023, doi:10.1038/s42256-023-00714-5) and the EEG2025 cross-task transfer benchmark (Aristimunha et al. 2025, doi:10.48550/arXiv.2506.19141) ask through EEGChallengeDataset on the NEMAR archive (Delorme et al. 2022, doi:10.1093/database/baac096): by how much does AS-MMD close the naive-to-oracle gap, and does the alignment preserve the underlying P3 component?"><img alt="" src="../../_images/sphx_glr_project_p300_transfer_thumb.png" />
-<p><a class="reference internal" href="applied/project_p300_transfer.html"><span class="doc">Cross-cohort P3 transfer with AS-MMD: train on one oddball, deploy on another</span></a></p>
-  <div class="sphx-glr-thumbnail-title">Cross-cohort P3 transfer with AS-MMD: train on one oddball, deploy on another</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="This is the deep-learning case study for the p-factor regression project. The companion script project_pfactor_features.py covers the feature-based regime; this one trains braindecode.models.EEGConformer end-to-end on raw resting-state windows from the Healthy Brain Network release ds005505 (Alexander et al. 2017, doi:10.1038/sdata.2017.181), surfaced through NEMAR (Delorme et al. 2022, doi:10.1093/nargab/lqac023). The p-factor is a transdiagnostic score from the Child Behavior Checklist (Caspi et al. 2014, doi:10.1177/2167702613497473) and the modelling contract is the clinical-cautious one Cisotto and Chicco 2024 (doi:10.7717/peerj-cs.2256) ask for: cross-subject split, baseline alongside score, no diagnostic claim. Three regimes shape the framing, mirroring cousin tutorial plot_73: train from scratch, fine-tune a pretrained Braindecode encoder (Schirrmeister et al. 2017, doi:10.1002/hbm.23730), and read back where the network looks. The deliverable is a 3-panel figure plus printed metrics. So can a small EEGConformer beat the train-mean predictor on held-out subjects?"><img alt="" src="../../_images/sphx_glr_project_pfactor_deep_thumb.png" />
-<p><a class="reference internal" href="applied/project_pfactor_deep.html"><span class="doc">Predict p-factor from EEG with a Braindecode model (deep-learning regime)</span></a></p>
-  <div class="sphx-glr-thumbnail-title">Predict p-factor from EEG with a Braindecode model (deep-learning regime)</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="Companion to project_pfactor_deep.py: same target, different model class. The deep variant asks whether an EEGConformer can learn the p_factor from raw windows, this one asks which interpretable EEG features carry the signal. The p-factor (Caspi et al. 2014, doi:10.1177/2167702613497473) is a transdiagnostic mental-health summary score derived from parent-and-child psychiatric questionnaires; the EEG side comes from the Healthy Brain Network release distributed on OpenNeuro and on the EEG2025 Challenge mirror as EEG2025r5 (Alexander et al. 2017, doi:10.1038/sdata.2017.181), surfaced through NEMAR (Delorme et al. 2022, doi:10.1093/nargab/lqac023). Splits stay strictly subject-disjoint per Cisotto and Chicco 2024 Tip 9 (doi:10.7717/peerj-cs.2256)."><img alt="" src="../../_images/sphx_glr_project_pfactor_features_thumb.png" />
-<p><a class="reference internal" href="applied/project_pfactor_features.html"><span class="doc">Predicting p-factor from EEG with hand-crafted features (project starter)</span></a></p>
-  <div class="sphx-glr-thumbnail-title">Predicting p-factor from EEG with hand-crafted features (project starter)</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="A canonical &quot;is this signal even predictive?&quot; benchmark task on resting-state EEG from OpenNeuro ds005505 (Healthy Brain Network; Alexander et al. 2017), reachable through NEMAR delorme2022nemar. Log band-power features feed sklearn.pipeline.Pipeline pedregosa2011sklearn with StandardScaler and LogisticRegression. A 3-fold cross-subject loop via GroupKFold keeps every subject in exactly one fold; held-out predictions feed three sklearn display helpers, DecisionBoundaryDisplay, RocCurveDisplay, and ConfusionMatrixDisplay. Do the features separate the classes, how stable is held-out AUC across subjects, and which class does the model confuse?"><img alt="" src="../../_images/sphx_glr_project_sex_classification_thumb.png" />
-<p><a class="reference internal" href="applied/project_sex_classification.html"><span class="doc">Is resting-state EEG even predictive of the BIDS sex label? (Project Starter)</span></a></p>
-  <div class="sphx-glr-thumbnail-title">Is resting-state EEG even predictive of the BIDS sex label? (Project Starter)</div>
+<p>Project-style examples that target a concrete scientific question – age regression, p-factor prediction, sex classification, P300 transfer, clinical-catalog summary – with realistic data sizes, runtimes, and limitations. Treat them as starting points, not prescriptive recipes.</p>
+<div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="Difficulty 3 | Runtime: 30s | Compute: CPU"><img alt="" src="../../_images/sphx_glr_project_age_regression_thumb.png" />
+<p><a class="reference internal" href="applied/project_age_regression.html"><span class="doc">Age regression from EEG</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Age regression from EEG</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Difficulty 1 | Runtime: 20s | Compute: CPU"><img alt="" src="../../_images/sphx_glr_project_clinical_dataset_summary_thumb.png" />
+<p><a class="reference internal" href="applied/project_clinical_dataset_summary.html"><span class="doc">Survey clinical EEG datasets</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Survey clinical EEG datasets</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Difficulty 3 | Runtime: 2m | Compute: GPU Recommended"><img alt="" src="../../_images/sphx_glr_project_p300_transfer_thumb.png" />
+<p><a class="reference internal" href="applied/project_p300_transfer.html"><span class="doc">P300 transfer with AS-MMD</span></a></p>
+  <div class="sphx-glr-thumbnail-title">P300 transfer with AS-MMD</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Difficulty 3 | Runtime: 25s | Compute: GPU Recommended"><img alt="" src="../../_images/sphx_glr_project_pfactor_deep_thumb.png" />
+<p><a class="reference internal" href="applied/project_pfactor_deep.html"><span class="doc">Predict p-factor with deep learning</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Predict p-factor with deep learning</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Difficulty 3 | Runtime: 30s | Compute: CPU"><img alt="" src="../../_images/sphx_glr_project_pfactor_features_thumb.png" />
+<p><a class="reference internal" href="applied/project_pfactor_features.html"><span class="doc">Predict p-factor from EEG features</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Predict p-factor from EEG features</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Difficulty 3 | Runtime: 3-5m | Compute: CPU"><img alt="" src="../../_images/sphx_glr_project_sex_classification_thumb.png" />
+<p><a class="reference internal" href="applied/project_sex_classification.html"><span class="doc">Sex classification from EEG</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Sex classification from EEG</div>
 </div></div></section>
-<section id="eeg-2025-foundation-challenge">
-<h2>EEG 2025 Foundation Challenge<a class="headerlink" href="#eeg-2025-foundation-challenge" title="Link to this heading">#</a></h2>
-<p>End-to-end pipelines for the two EEG 2025 Foundation Challenge tracks: cross-task transfer learning (passive to active), and subject-invariant representations for clinical factor prediction. Pre-trained weights ship alongside each tutorial.</p>
-<div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="Challenge 1 of the EEG2025 Foundation Challenge asks you to decode a trial-level cognitive decision from EEG: in the contrastChangeDetection (CCD) task subjects watch two flickering striped discs, one disc&#x27;s contrast slowly ramps up, and the subject presses left or right to report which one. The data come from the Healthy Brain Network release (HBN; Alexander et al. 2017) served through NEMAR delorme2022nemar and shipped via EEGChallengeDataset as 100 Hz BDFs (downsampled, 0.5-50 Hz pass-band; Cisotto &amp; Chicco 2024). This starter kit walks through the four steps every Challenge 1 entry has to clear: load the CCD recordings, carve out a stimulus-locked window, train a small Braindecode CNN baseline schirrmeister2017braindecode, and ship one figure that ties the trial structure, the windowed signal, and the per-fold accuracy together (Aristimunha et al. 2025, doi:10.48550/arXiv.2506.19141). The deliverable is one (n_channels, n_samples) = (129, 200) window contract and one three-panel figure ready to drop into your submission."><img alt="" src="../../_images/sphx_glr_tutorial_challenge_1_thumb.png" />
-<p><a class="reference internal" href="eeg2025/tutorial_challenge_1.html"><span class="doc">How do I get my first baseline running for EEG2025 Challenge 1 (CCD)?</span></a></p>
-  <div class="sphx-glr-thumbnail-title">How do I get my first baseline running for EEG2025 Challenge 1 (CCD)?</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="The EEG2025 Foundation Challenge ships two regression tracks, and Challenge 2 asks for a single number per subject, the p-factor, from a short clip of resting-state EEG. The p-factor (Caspi et al. 2014, doi:10.1177/2167702613497473) is a general dimension of psychopathology derived from the Child Behavior Checklist; the EEG side comes from the Healthy Brain Network release distributed via EEGChallengeDataset (Alexander et al. 2017, doi:10.1038/sdata.2017.181), surfaced through NEMAR (Delorme et al. 2022, doi:10.1093/nargab/lqac023)."><img alt="" src="../../_images/sphx_glr_tutorial_challenge_2_thumb.png" />
-<p><a class="reference internal" href="eeg2025/tutorial_challenge_2.html"><span class="doc">How do I submit a baseline to EEG2025 Challenge 2 (predict the p-factor)?</span></a></p>
-  <div class="sphx-glr-thumbnail-title">How do I submit a baseline to EEG2025 Challenge 2 (predict the p-factor)?</div>
+<section id="eeg2025-foundation-challenge">
+<h2>EEG2025 Foundation Challenge<a class="headerlink" href="#eeg2025-foundation-challenge" title="Link to this heading">#</a></h2>
+<p>End-to-end pipelines for the two EEG2025 Foundation Challenge tracks: cross-task transfer learning (passive to active), and subject-invariant representations for clinical factor prediction. Pre-trained weights ship alongside each tutorial.</p>
+<div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="Difficulty 3 | Runtime: 3-6m | Compute: CPU (GPU Recommended)"><img alt="" src="../../_images/sphx_glr_tutorial_challenge_1_thumb.png" />
+<p><a class="reference internal" href="eeg2025/tutorial_challenge_1.html"><span class="doc">EEG2025 Challenge 1 Baseline (CCD)</span></a></p>
+  <div class="sphx-glr-thumbnail-title">EEG2025 Challenge 1 Baseline (CCD)</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Difficulty 3 | Runtime: 30s | Compute: CPU (GPU Optional)"><img alt="" src="../../_images/sphx_glr_tutorial_challenge_2_thumb.png" />
+<p><a class="reference internal" href="eeg2025/tutorial_challenge_2.html"><span class="doc">EEG2025 Challenge 2 Baseline (p-factor)</span></a></p>
+  <div class="sphx-glr-thumbnail-title">EEG2025 Challenge 2 Baseline (p-factor)</div>
 </div></div></section>
 <section id="high-performance-computing">
 <h2>High-performance computing<a class="headerlink" href="#high-performance-computing" title="Link to this heading">#</a></h2>
 <p>Reference setup for running EEGDash on shared HPC clusters: SLURM submission scripts (CPU and GPU), a Dockerfile, and a tutorial showing how to combine the on-disk cache with batch scheduling for an eyes-open / eyes-closed run.</p>
-<div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="EEGDash example for eyes open vs. closed classification."><img alt="" src="../../_images/sphx_glr_tutorial_hpc_cache_and_slurm_thumb.png" />
-<p><a class="reference internal" href="hpc/tutorial_hpc_cache_and_slurm.html"><span class="doc">Eyes Open vs. Closed Classification</span></a></p>
-  <div class="sphx-glr-thumbnail-title">Eyes Open vs. Closed Classification</div>
+<div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="Difficulty 2 | Runtime: 5-10m | Compute: HPC / Cluster"><img alt="" src="../../_images/sphx_glr_tutorial_hpc_cache_and_slurm_thumb.png" />
+<p><a class="reference internal" href="hpc/tutorial_hpc_cache_and_slurm.html"><span class="doc">Eyes Open vs. Closed Classification (HPC)</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Eyes Open vs. Closed Classification (HPC)</div>
 </div></div><div class="toctree-wrapper compound">
 </div>
 <div class="toctree-wrapper compound">
@@ -801,6 +880,7 @@
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tutorials-curated-learning-path">Tutorials (curated learning path)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#choose-your-path">Choose your path</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#start-here">Start Here</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#core-decoding-workflow">Core Decoding Workflow</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#event-related-decoding">Event-Related Decoding</a></li>
@@ -812,7 +892,7 @@
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-to-recipes">How-to recipes</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#applied-research-projects">Applied research projects</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eeg-2025-foundation-challenge">EEG 2025 Foundation Challenge</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eeg2025-foundation-challenge">EEG2025 Foundation Challenge</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#high-performance-computing">High-performance computing</a><ul class="nav section-nav flex-column">
 </ul>
 </li>

@@ -1,7 +1,9 @@
-"""How well does an EEG decoder generalise to a never-seen subject?
-==================================================================
+"""Cross-subject decoding evaluation
+==================================
 
-Cross-subject generalisation is the gold standard for any decoding
+**Difficulty 2-3** | **Runtime: 2m** | **Compute: CPU**
+
+Cross-subject generalization is the gold standard for any decoding
 claim. Train on N-1 subjects, test on the held-out one, repeat for
 every subject: that is leave-one-subject-out cross-validation (LOSO),
 the protocol behind the MOABB benchmark :cite:`aristimunha2023transferstructure` and
@@ -19,18 +21,29 @@ trained one model on one cross-subject split, this tutorial steps up
 to the actual evaluation: a LOSO loop that holds a different subject
 out each time, a subject x subject transfer heatmap, and a pooled
 confusion matrix over every held-out prediction. The deliverable is a
-single three-panel figure.
+# single three-panel figure.
+#
+# Validate your result
+# --------------------
+# - **Fold Count.** For N subjects, you should expect exactly N folds in your
+#   LOSO loop.
+# - **Transfer Heatmap.** The diagonal of the subject-x-subject matrix
+#   represents within-subject performance; the off-diagonal represents
+#   generalization.
+# - **Accuracy Spread.** Expect higher variance across subjects than across
+#   random seeds. Report both the mean and the standard deviation.
 
 .. sphinx_gallery_thumbnail_path = '_static/thumbs/plot_51_cross_subject_evaluation.png'
 
 So how big is the across-subject spread once you run the loop?
+Keywords: evaluation, cross-subject, generalization
 """
 
 # %% [markdown]
 # Learning objectives
 # -------------------
 #
-# - Explain why cross-subject evaluation is the gold standard for EEG decoding generalisation.
+# - Explain why cross-subject evaluation is the gold standard for EEG decoding generalization.
 # - Build a leave-one-subject-out loop with :class:`sklearn.model_selection.LeaveOneGroupOut` keyed on ``subject``.
 # - Compute a subject x subject train-test transfer matrix and read which held-out subjects are systematically harder.
 # - Quote ``mean +/- std`` of LOSO :func:`sklearn.metrics.balanced_accuracy_score` against a chance level computed on the test fold.
@@ -257,7 +270,7 @@ print(
 # accuracy of a model trained on source subject ``i`` alone and
 # evaluated on held-out subject ``j``. The diagonal ``(j, j)`` is the
 # within-subject case and is masked because cross-subject
-# generalisation is the point. A column with low values flags a test
+# generalization is the point. A column with low values flags a test
 # subject who is hard to decode regardless of who trained the model;
 # a row with low values flags a source subject whose data does not
 # transfer. Bouchard et al. and the MOABB benchmark report variants of
@@ -381,7 +394,7 @@ print(
 # **Make.** Real cohorts rarely have equal trials per subject. Build a
 # cohort where subjects contribute different counts, re-run LOSO. The
 # contract holds (no subject leakage); the headline ``mean +/- std``
-# tells you whether the imbalance hurts generalisation.
+# tells you whether the imbalance hurts generalization.
 
 # %%
 sizes_imb = [20, 30, 30, 40, 50, 50, 60, 80]
@@ -482,6 +495,6 @@ plt.show()
 # %% [markdown]
 # References
 # ----------
-# See :doc:`/references` for the centralised bibliography of papers
+# See :doc:`/references` for the centralized bibliography of papers
 # cited above. Add or amend an entry once in
 # :file:`docs/source/refs.bib`; every tutorial inherits the update.

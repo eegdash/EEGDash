@@ -1,8 +1,10 @@
 """Subject-invariant p-factor regression (EEG2025 Challenge 2)
 ================================================================
 
+**Difficulty 3** | **Runtime: 30s** | **Compute: CPU (GPU Recommended)**
+
 Challenge 2 of the EEG2025 Foundation Challenge asks whether a model can
-predict the **p-factor** from EEG without secretly memorising subject
+predict the **p-factor** from EEG without secretly memorizing subject
 identity. The p-factor (Caspi et al. 2014, doi:10.1177/2167702613497473)
 is a general dimension of psychopathology derived from the Child
 Behavior Checklist; the EEG side comes from the Healthy Brain Network
@@ -10,7 +12,7 @@ release distributed via ``EEGChallengeDataset`` (Alexander et al. 2017,
 doi:10.1038/sdata.2017.181), surfaced through NEMAR (Delorme et al.
 2022, doi:10.1093/nargab/lqac023). The setup is a strict
 out-of-distribution regression: the test cohort never overlaps with the
-train cohort on subject. A model that secretly memorises subjects scores
+train cohort on subject. A model that secretly memorizes subjects scores
 well within-fold and collapses on a new sitting, so we build the
 ``cross_subject`` loop from plot_51, fit a feature-based regression
 head, and report ``r2`` against ``median_baseline``, the chance level
@@ -18,6 +20,7 @@ for regression (Cisotto & Chicco 2024 Tip 9, doi:10.7717/peerj-cs.2256).
 The headline question is not "can we win Challenge 2?"; the p-factor
 signal in EEG is genuinely faint. The honest one is: does this model
 beat the train-set median predictor on never-seen-before subjects?
+Keywords: regression, p-factor, EEG2025
 """
 
 # sphinx_gallery_thumbnail_path = '_static/thumbs/plot_72_subject_invariant_regression.png'
@@ -32,6 +35,15 @@ beat the train-set median predictor on never-seen-before subjects?
 # - fit a Ridge head and report ``r2`` against ``median_baseline``.
 # - read a three-panel diagnostic figure for subject-invariance failures.
 #
+# Validate your result
+# --------------------
+# - **Metric Interpretation.** R^2 (Coefficient of Determination) tells you
+#   what fraction of p-factor variance is explained by the EEG.
+# - **Baseline Comparison.** A model must beat the ``median_baseline``. If
+#   R^2 is negative, your model is worse than a trivial predictor.
+# - **Invariance Check.** Look at the predicted-vs-true scatter plot. If it
+#   is perfectly flat, the model has failed to learn the p-factor signal.
+#
 # Requirements
 # ------------
 # - ~30 s on CPU; GPU optional. No live network.
@@ -39,7 +51,7 @@ beat the train-set median predictor on never-seen-before subjects?
 # - Concept: :doc:`/concepts/leakage_and_evaluation`.
 
 # %%
-# Setup, numpy seeding (E3.21) plus a parametrised cache (E3.24).
+# Setup, numpy seeding (E3.21) plus a parameterized cache (E3.24).
 import os
 import warnings
 from pathlib import Path
@@ -73,7 +85,7 @@ cache_dir.mkdir(parents=True, exist_ok=True)
 # In production, :class:`eegdash.EEGChallengeDataset` exposes ``p_factor``
 # through ``description_fields`` so it surfaces as a per-recording
 # column. The canonical call is shown below; this tutorial then
-# synthesises a feature table with the same column layout so the gallery
+# synthesizes a feature table with the same column layout so the gallery
 # runs offline (E3.24).
 #
 # .. code-block:: python
@@ -101,7 +113,7 @@ for s in range(N_SUBJECTS):
     p = float(subject_p[s])
     for w in range(N_WINDOWS):
         # Per-window features: a faint p-factor signal in alpha/beta plus
-        # a subject-level offset (the "subject identity" we must NOT memorise)
+        # a subject-level offset (the "subject identity" we must NOT memorize)
         # and a generous noise floor that keeps R^2 modest.
         bias = 0.15 * (s - N_SUBJECTS / 2)
         row = {
@@ -253,7 +265,7 @@ mean_baseline_mae = float(np.mean(fold_baseline_mae))
 #
 # **Investigate.** Mean r2 hides the failure mode that matters here:
 # subject-invariance. If residuals concentrate around zero across all
-# held-out subjects the model generalises; if a few subjects monopolise
+# held-out subjects the model generalizes; if a few subjects monopolize
 # the error we are still leaking subject-specific signal. The sibling
 # ``_pfactor_figure.py`` renders three panels: predicted vs true (one
 # point per held-out subject) with Pearson r / Spearman rho / R^2 / MAE
@@ -385,6 +397,6 @@ assert mean_mae < mean_baseline_mae, "Model MAE must be below the median-baselin
 # %% [markdown]
 # References
 # ----------
-# See :doc:`/references` for the centralised bibliography of papers
+# See :doc:`/references` for the centralized bibliography of papers
 # cited above. Add or amend an entry once in
 # :file:`docs/source/refs.bib`; every tutorial inherits the update.

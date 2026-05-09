@@ -4,7 +4,7 @@
 and cache directory, and run an EEGDash preprocessing entry-point reproducibly
 on a SLURM cluster — sharded one-subject-per-task with per-task logs, atomic
 output renames so a re-queued job picks up cleanly, and a final manifest
-summarising shard status.
+summarizing shard status.
 
 This how-to is a template + commentary, not a Python script. It assumes you
 already downloaded the data offline (see `how_to_download_a_dataset`) and know

@@ -1,7 +1,9 @@
-"""How do I get started with the EEG 2025 Foundation Challenge dataset?
+"""How do I get started with the EEG2025 Foundation Challenge dataset?
 ========================================================================
 
-The EEG 2025 Foundation Challenge ships its own loader,
+**Difficulty 1-2** | **Runtime: 10s** | **Compute: CPU**
+
+The EEG2025 Foundation Challenge ships its own loader,
 :class:`~eegdash.dataset.EEGChallengeDataset`, on top of the same
 ``eegdash`` infrastructure that powers
 :class:`~eegdash.dataset.EEGDashDataset`. The data pool is the
@@ -16,6 +18,7 @@ is one :class:`pandas.DataFrame` with records-per-task counts and one
 three-panel figure rendered from the live metadata.
 
 .. sphinx_gallery_thumbnail_path = '_static/thumbs/plot_70_challenge_dataset_basics.png'
+Keywords: EEG2025, dataset, basics
 """
 
 # %% [markdown]
@@ -33,7 +36,16 @@ three-panel figure rendered from the live metadata.
 #   and contrast the loader against
 #   :class:`~eegdash.dataset.EEGDashDataset` for the same subjects.
 # - Read the leaderboard contract: see :doc:`/concepts/eegdash_objects`
-#   and the EEG 2025 challenge site for evaluation rules.
+#   and the EEG2025 challenge site for evaluation rules.
+#
+# Validate your result
+# --------------------
+# - **Release Check.** Confirm that ``ds.release`` matches your requested
+#   release (e.g., "R5").
+# - **Task Taxonomy.** Verify that task names like ``RestingState`` and
+#   ``contrastChangeDetection`` appear in your task counts.
+# - **Mini-Subset.** If ``mini=True``, you should see exactly 8 subjects
+#   (or as defined by the release) for a fast local run.
 
 # %% [markdown]
 # Requirements
@@ -439,6 +451,6 @@ pd.DataFrame(release_table_rows)
 # %% [markdown]
 # References
 # ----------
-# See :doc:`/references` for the centralised bibliography of papers
+# See :doc:`/references` for the centralized bibliography of papers
 # cited above. Add or amend an entry once in
 # :file:`docs/source/refs.bib`; every tutorial inherits the update.

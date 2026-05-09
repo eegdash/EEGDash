@@ -1,5 +1,7 @@
-"""How do I train a leakage-safe baseline classifier on EEG?
-=============================================================
+"""Train a leakage-safe baseline
+================================
+
+**Difficulty 1-2** | **Runtime: 30s** | **Compute: CPU**
 
 A model that scores 0.78 on held-out windows is only useful when you
 also know what 0.50 (chance) and 0.55 (a transparent linear baseline)
@@ -16,6 +18,7 @@ classes, how does the accuracy vary across held-out subjects, and
 which trials does the model confuse?
 
 .. sphinx_gallery_thumbnail_path = '_static/thumbs/plot_12_train_a_baseline.png'
+Keywords: classification, baseline, evaluation
 """
 
 # %% [markdown]
@@ -63,6 +66,16 @@ which trials does the model confuse?
 #   computed on the held-out test set, so the chance number you report
 #   tracks the actual class balance of the test fold, not a notional
 #   50 / 50 prior.
+#
+# Validate your result
+# --------------------
+# - **Accuracy.** Expect the linear baseline to score significantly above
+#   chance (e.g., 0.60-0.75 for visual P300) but below a well-tuned deep
+#   model.
+# - **Chance Level.** Verify that ``majority_baseline`` matches the class
+#   imbalance of your dataset (e.g., 0.50 for balanced EO/EC).
+# - **Confusion Matrix.** The row-normalized confusion matrix should show
+#   diagonal dominance if the model has learned the task.
 
 # %%
 # Setup. ``random_state=42`` on every estimator and splitter is what
@@ -550,6 +563,6 @@ plt.show()
 # %% [markdown]
 # References
 # ----------
-# See :doc:`/references` for the centralised bibliography of papers
+# See :doc:`/references` for the centralized bibliography of papers
 # cited above. Add or amend an entry once in
 # :file:`docs/source/refs.bib`; every tutorial inherits the update.

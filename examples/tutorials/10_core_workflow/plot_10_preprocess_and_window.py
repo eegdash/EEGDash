@@ -1,5 +1,7 @@
-"""How do I preprocess EEG and create model-ready windows?
-=========================================================
+"""Preprocess EEG and create windows
+==================================
+
+**Difficulty 1-2** | **Runtime: 2m** | **Compute: CPU**
 
 Raw EEG is rarely model-ready: wrong sampling rate, drift and line noise,
 no fixed reference, sporadic large-amplitude bursts, a continuous
@@ -15,6 +17,7 @@ the recording before and after a one-call
 et al. 2015), bad-channel detection, high-pass, and CAR.
 
 .. sphinx_gallery_thumbnail_path = '_static/thumbs/plot_10_preprocess_and_window.png'
+Keywords: preprocessing, windowing, ASR
 """
 
 # %% [markdown]
@@ -478,6 +481,6 @@ except (ValueError, RuntimeError) as exc:
 # %% [markdown]
 # References
 # ----------
-# See :doc:`/references` for the centralised bibliography of papers
+# See :doc:`/references` for the centralized bibliography of papers
 # cited above. Add or amend an entry once in
 # :file:`docs/source/refs.bib`; every tutorial inherits the update.

@@ -1,5 +1,7 @@
-"""How does decoding accuracy scale with training-set size, and where does the curve plateau?
-==============================================================================================
+"""Decoding accuracy learning curves
+=================================
+
+**Difficulty 2-3** | **Runtime: 2m** | **Compute: CPU**
 
 Recording another month of EEG is expensive. Before committing more
 budget to data collection, ask whether the model is data-starved or
@@ -20,7 +22,19 @@ Schirrmeister et al. 2017 (doi:10.1002/hbm.23730, Braindecode) and the
 MOABB benchmark (Chevallier, Aristimunha et al. 2024,
 doi:10.48550/arXiv.2404.15319) sweep the same protocol on real EEG
 pipelines. The deliverable is one number: at what training-set size
-does the model first reach 90% of its plateau accuracy?
+# does the model first reach 90% of its plateau accuracy?
+#
+# Validate your result
+# --------------------
+# - **Saturation Point.** The accuracy should plateau as ``n_train`` increases.
+#   Identify the point where the slope becomes near-zero.
+# - **Bias-Variance Gap.** A wide gap between train and val accuracy
+#   indicates overfitting (high variance); a small gap with low accuracy
+#   indicates underfitting (high bias).
+# - **Chance Line.** The val accuracy must be consistently above the
+#   majority-class chance line.
+#
+# Keywords: evaluation, learning-curves, data-size
 """
 
 # sphinx_gallery_thumbnail_path = '_static/thumbs/plot_53_learning_curves.png'
@@ -99,7 +113,7 @@ print(f"sklearn learning_curve sweep: seed={SEED}")
 #
 # **Predict.** As ``n_train`` climbs from 50 to 1000 windows, val
 # accuracy rises monotonically in expectation; train accuracy falls,
-# because a tiny train set memorises easily and a larger one cannot.
+# because a tiny train set memorizes easily and a larger one cannot.
 # Where do they cross? Where does val first reach 90% of its plateau?
 # Guess before scrolling.
 
@@ -437,6 +451,6 @@ except ValueError as exc:
 # %% [markdown]
 # References
 # ----------
-# See :doc:`/references` for the centralised bibliography of papers
+# See :doc:`/references` for the centralized bibliography of papers
 # cited above. Add or amend an entry once in
 # :file:`docs/source/refs.bib`; every tutorial inherits the update.

@@ -1,6 +1,8 @@
 """How do I adapt a pretrained EEG model to a new task?
 ==========================================================
 
+**Difficulty 3** | **Runtime: 45s** | **Compute: GPU Recommended**
+
 A pretrained EEG encoder packs hundreds of hours of recordings into a
 weight matrix. Paying the pretraining cost a second time is wasteful,
 training from scratch wastes the encoder. The decision in between is
@@ -21,6 +23,7 @@ gradients; Banville et al. 2021, doi:10.1088/1741-2552/abca18), and
 Defossez et al. 2023, doi:10.1038/s42256-023-00714-5). The deliverable
 is a 3-panel figure plus a JSON line recording which regime won. So
 which one wins?
+Keywords: transfer-learning, fine-tuning, pretrained
 """
 
 # sphinx_gallery_thumbnail_path = '_static/thumbs/plot_73_finetune_pretrained_model.png'
@@ -32,7 +35,16 @@ which one wins?
 # - Build a leakage-safe cross-subject split with ``assert_no_leakage``.
 # - Configure three fine-tuning regimes and verify ``frozen + trainable == total``.
 # - Compare regimes with :class:`torch.optim.AdamW` across seeds and read the 3-panel figure.
-
+#
+# Validate your result
+# --------------------
+# - **Trainable Parameters.** Linear-probe should have significantly fewer
+#   trainable parameters than full-finetune or from-scratch.
+# - **Convergence Speed.** Full-finetune typically converges faster (fewer
+#   epochs) than from-scratch.
+# - **Accuracy Gap.** Compare the final validation accuracy. Fine-tuning
+#   should outperform training from-scratch when labels are scarce.
+#
 # %% [markdown]
 # Requirements
 # ------------
@@ -332,7 +344,7 @@ for s in range(N_SEEDS):
 # -----------
 # Three numbers per regime: trainable parameter count, final validation
 # accuracy across seeds, and gap above chance. The gap above chance
-# and gap above from-scratch are what generalise across runs.
+# and gap above from-scratch are what generalize across runs.
 
 # %%
 chance = float(max(Counter(y_te.tolist()).values()) / max(len(y_te), 1))
@@ -486,6 +498,6 @@ print(
 # %% [markdown]
 # References
 # ----------
-# See :doc:`/references` for the centralised bibliography of papers
+# See :doc:`/references` for the centralized bibliography of papers
 # cited above. Add or amend an entry once in
 # :file:`docs/source/refs.bib`; every tutorial inherits the update.

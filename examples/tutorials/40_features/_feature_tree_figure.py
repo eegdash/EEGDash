@@ -410,7 +410,7 @@ def _draw_correlation_panel(
     derived_features: np.ndarray,
     feature_names: Sequence[str],
 ) -> None:
-    # Per-column standardise, then compute Pearson correlation.
+    # Per-column standardize, then compute Pearson correlation.
     finite = np.all(np.isfinite(derived_features), axis=1)
     X = derived_features[finite]
     # Replace zero-variance columns with a tiny jitter to avoid NaN corr.

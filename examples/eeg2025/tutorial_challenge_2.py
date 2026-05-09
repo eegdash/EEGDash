@@ -1,5 +1,7 @@
-"""How do I submit a baseline to EEG2025 Challenge 2 (predict the p-factor)?
-==============================================================================
+"""EEG2025 Challenge 2 Baseline (p-factor)
+=========================================
+
+**Difficulty 3** | **Runtime: 30s** | **Compute: CPU (GPU Optional)**
 
 The EEG2025 Foundation Challenge ships two regression tracks, and
 Challenge 2 asks for a single number per subject, the **p-factor**,
@@ -23,12 +25,23 @@ After this tutorial you will be able to:
 
 - load EEG2025 Challenge 2 recordings via :class:`eegdash.EEGChallengeDataset`.
 - fit a :class:`sklearn.linear_model.Ridge` head and report Pearson r, R^2, MAE.
-- produce a leaderboard card placing the starter score next to chance and target.
-- phrase the result in clinical-cautious language for the p-factor.
-
-The headline question is not "can we win Challenge 2?", the p-factor
+# - produce a leaderboard card placing the starter score next to chance and target.
+# - phrase the result in clinical-cautious language for the p-factor.
+#
+# Validate your result
+# --------------------
+# - **Expected Inputs.** Resting-state EEG windows of shape ``(n_channels=129, n_samples=500)`` (5 seconds at 100 Hz).
+# - **Expected Outputs.** A single scalar prediction per subject representing the predicted ``p_factor``.
+# - **Scoring Metric.** The official Challenge 2 metric is **Mean Absolute Error (MAE)**.
+# - **Local Smoke-test Size.** The ``mini=True`` release uses 8 subjects for a fast local run.
+# - **Common Failures.**
+#   - **Cache Permissions.** Ensure the ``EEGDASH_CACHE_DIR`` is writable.
+#   - **Authentication.** Challenge 2 requires a valid access token for some restricted releases; verify your ``.env`` file.
+#
+# The headline question is not "can we win Challenge 2?", the p-factor
 signal in EEG is faint, but the honest one: does this model beat the
 train median predictor on never-seen subjects?
+Keywords: EEG2025, challenge, regression
 """
 
 # sphinx_gallery_thumbnail_path = '_static/thumbs/tutorial_challenge_2.png'
@@ -57,7 +70,7 @@ train median predictor on never-seen subjects?
 # %%
 # Step 0. Setup and imports
 # ---------------------------
-# numpy seeding (E3.21), parametrised cache (E3.24), and the
+# numpy seeding (E3.21), parameterized cache (E3.24), and the
 # ``use_eegdash_style`` one-call rcParams setup so every figure inherits
 # the EEGDash identity (Helvetica fallback, muted grid, Data Rail).
 import os
@@ -101,7 +114,7 @@ print(f"device={device} | cache_dir={cache_dir}")
 #
 # **Run.** :class:`~eegdash.dataset.EEGChallengeDataset` exposes
 # ``p_factor`` through ``description_fields``. The canonical call is
-# below; the rendered gallery then synthesises a feature table with the
+# below; the rendered gallery then synthesizes a feature table with the
 # same column layout so the build runs offline.
 #
 # .. code-block:: python
@@ -318,7 +331,7 @@ p_factor_distribution = metadata.drop_duplicates("subject")["p_factor"].to_numpy
 
 # Leaderboard rows: chance, the pooled starter score, and a placeholder
 # for the EEG2025 dashboard top score (``score=nan`` so the bar reads
-# "n/a" until the organisers publish the live number).
+# "n/a" until the organizers publish the live number).
 leaderboard_rows = [
     {
         "team": "median baseline (chance)",
@@ -463,6 +476,6 @@ assert mean_mae < mean_baseline_mae, "Model MAE must be below the median-baselin
 # %% [markdown]
 # References
 # ----------
-# See :doc:`/references` for the centralised bibliography of papers
+# See :doc:`/references` for the centralized bibliography of papers
 # cited above. Add or amend an entry once in
 # :file:`docs/source/refs.bib`; every tutorial inherits the update.

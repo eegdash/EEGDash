@@ -1,7 +1,9 @@
-"""When is within-subject decoding the right scientific question?
-==================================================================
+"""Within-subject decoding evaluation
+===================================
 
-Cross-subject generalisation (plot_11) is the headline benchmark for
+**Difficulty 1-2** | **Runtime: 2m** | **Compute: CPU**
+
+Cross-subject generalization (plot_11) is the headline benchmark for
 EEG papers, but a calibration-style P300 speller, a clinical seizure
 detector tuned to one patient, or a lab paradigm where inter-subject
 variance dominates the contrast all care about a *single* brain at
@@ -23,7 +25,18 @@ produce 0.65 from random labels, and the binomial chance check is
 the only way to spot it. OpenNeuro/NEMAR :cite:`delorme2022nemar` hosts
 the public benchmarks where both regimes get reported.
 
-So when is within-subject evaluation the right call?
+# So when is within-subject evaluation the right call?
+#
+# Validate your result
+# --------------------
+# - **Intentional Overlap.** Confirm that ``subject_overlap == 1`` in your
+#   split report. This is expected in the within-subject regime.
+# - **Per-Subject Accuracy.** Accuracy should be higher than the cross-subject
+#   reference, often by a large margin (the "calibration benefit").
+# - **Binomial Chance.** Verify your results against the binomial chance
+#   level, especially for subjects with few trials.
+#
+# Keywords: evaluation, within-subject
 """
 
 # sphinx_gallery_thumbnail_path = '_static/thumbs/plot_50_within_subject_evaluation.png'
@@ -34,7 +47,7 @@ So when is within-subject evaluation the right call?
 #
 # - Identify when within-subject evaluation is appropriate (calibration decoders, single-subject diagnostics, paradigms with high inter-subject variance).
 # - Build a 5-fold within-subject manifest with ``get_splitter`` (``"within_subject"``) and freeze it via ``make_split_manifest``.
-# - Read ``describe_split`` and recognise that ``subject_overlap == 1`` is the design, not a leak.
+# - Read ``describe_split`` and recognize that ``subject_overlap == 1`` is the design, not a leak.
 # - Assert no trial overlap with ``assert_no_leakage`` and verify the JSON ``leakage_report`` line.
 # - Compare per-subject accuracy against ``majority_baseline`` chance level and against a leave-one-subject-out cross-subject reference on the *same* data.
 
@@ -478,6 +491,6 @@ print(
 # %% [markdown]
 # References
 # ----------
-# See :doc:`/references` for the centralised bibliography of papers
+# See :doc:`/references` for the centralized bibliography of papers
 # cited above. Add or amend an entry once in
 # :file:`docs/source/refs.bib`; every tutorial inherits the update.

@@ -1,5 +1,7 @@
-"""Predict p-factor from EEG with a Braindecode model (deep-learning regime)
-==============================================================================
+"""Predict p-factor with deep learning
+====================================
+
+**Difficulty 3** | **Runtime: 25s** | **Compute: GPU Recommended**
 
 This is the deep-learning case study for the p-factor regression
 project. The companion script ``project_pfactor_features.py`` covers
@@ -18,6 +20,7 @@ pretrained Braindecode encoder (Schirrmeister et al. 2017,
 doi:10.1002/hbm.23730), and read back where the network looks. The
 deliverable is a 3-panel figure plus printed metrics. So can a small
 EEGConformer beat the train-mean predictor on held-out subjects?
+Keywords: deep-learning, applied, p-factor
 """
 
 # sphinx_gallery_thumbnail_path = '_static/thumbs/project_pfactor_deep.png'
@@ -33,6 +36,18 @@ EEGConformer beat the train-mean predictor on held-out subjects?
 # - read a 3-panel figure: curves, predicted-vs-true scatter, saliency.
 
 # %% [markdown]
+# Validate your result
+# --------------------
+# - **Metric Interpretation.** R^2 (Coefficient of Determination) tells you
+#   what fraction of p-factor variance is explained by the EEG. MAE tells you
+#   the average error in p-factor units.
+# - **Baseline Expectations.** A deep model should at minimum outperform a
+#   ``median_baseline`` (always predicting the training set median). If R^2
+#   is negative, the model is worse than the median predictor.
+# - **Split Guidance.** Always use a subject-disjoint split. If your data
+#   spans multiple sites, consider a **site-disjoint split** to ensure the
+#   model isn't just learning site-specific noise.
+#
 # Requirements
 # ------------
 # - **Estimated time**: ~25 s on CPU, ~10 s on GPU (synthetic surrogate).
@@ -44,10 +59,10 @@ EEGConformer beat the train-mean predictor on held-out subjects?
 # - **Concept page**: :doc:`/concepts/leakage_and_evaluation`.
 
 # %%
-# Step 1. Setup, seeding (E3.21), parametrised cache (E3.24)
+# Step 1. Setup, seeding (E3.21), parameterized cache (E3.24)
 # -----------------------------------------------------------
 # Numpy and torch seeds make the printed metrics and the rendered curves
-# byte-stable across reruns. The cache dir is parametrised through the
+# byte-stable across reruns. The cache dir is parameterized through the
 # ``EEGDASH_CACHE`` env var so HPC and local runs share one prepared
 # windowed dataset.
 import os
@@ -110,18 +125,18 @@ torch.manual_seed(SEED)
 #        window_size_samples=200, window_stride_samples=200,
 #        drop_last_window=True, preload=False)
 #
-# Below we synthesise a Challenge-shaped windowed table with the same
+# Below we synthesize a Challenge-shaped windowed table with the same
 # column layout so the gallery runs offline (E3.24).
 
 # %%
-# Step 3. Synthesise a Challenge-shaped windowed table
+# Step 3. Synthesize a Challenge-shaped windowed table
 # -----------------------------------------------------
 # 18 subjects, 24 windows each, 8 channels, 200 samples per 2 s window
 # at 100 Hz. p_factor lives at subject level (one score per subject,
 # replicated per window). A faint 10 Hz signal hides in Cz and E62 (the
 # central and parietal midline); everything else is i.i.d. Gaussian
 # noise plus a per-subject offset that the cross-subject split must NOT
-# let the network memorise.
+# let the network memorize.
 N_SUBJECTS, N_WINDOWS = 18, 24
 N_CHANS, N_TIMES = 8, 200
 SFREQ = 100.0
@@ -139,7 +154,7 @@ for s in range(N_SUBJECTS):
         carrier = 0.30 * p * np.sin(2 * np.pi * 10.0 * t).astype(np.float32)
         base[1] += carrier
         base[2] += 0.85 * carrier
-        # Subject identity offset that a leaky split would memorise.
+        # Subject identity offset that a leaky split would memorize.
         base += np.float32(bias)
         X_list.append(base)
         rows.append(
@@ -311,7 +326,7 @@ for s in range(N_SEEDS):
 # predictions to one point per held-out subject; the saliency panel
 # averages ``|grad x|`` over the highest-confidence test windows, so
 # the heatmap tells you whether the network read the carrier we hid in
-# Cz/E62 or just memorised the per-subject offset (Schirrmeister et
+# Cz/E62 or just memorized the per-subject offset (Schirrmeister et
 # al. 2017, doi:10.1002/hbm.23730).
 
 
@@ -432,6 +447,6 @@ except (ValueError, TypeError) as exc:
 # %% [markdown]
 # References
 # ----------
-# See :doc:`/references` for the centralised bibliography of papers
+# See :doc:`/references` for the centralized bibliography of papers
 # cited above. Add or amend an entry once in
 # :file:`docs/source/refs.bib`; every tutorial inherits the update.

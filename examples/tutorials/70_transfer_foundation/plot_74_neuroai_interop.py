@@ -1,6 +1,8 @@
 """How do I plug EEGDash into the Meta NeuroAI ecosystem?
 ==========================================================
 
+**Difficulty 3** | **Runtime: 20s** | **Compute: CPU (GPU Recommended)**
+
 Meta Research ships four projects under the NeuroAI umbrella
 (https://facebookresearch.github.io/neuroai/): **NeuralFetch** for
 unified dataset discovery across 12 catalogues, **NeuralSet** for
@@ -22,6 +24,7 @@ check, integration matrix. So which projects already share the events
 DataFrame, and which ones live downstream of it?
 
 .. sphinx_gallery_thumbnail_path = '_static/thumbs/plot_74_neuroai_interop.png'
+Keywords: interop, NeuroAI, Meta
 """
 
 # %% [markdown]
@@ -91,7 +94,7 @@ from neuralset.extractors import Pulse
 #
 #     EEGDashDataset    NeuralFetch.Study    NeuralSet.Segmenter   PyTorch
 #     (BIDS query +     (12 catalogues +     (events DataFrame      DataLoader
-#      lazy Raw)         standardiser)        + extractors -> X)    (consumer)
+#      lazy Raw)         standardizer)        + extractors -> X)    (consumer)
 #     +-------------+   +--------------+     +------------------+   +--------+
 #     | record 0  --|-->| events row 0 |     | segment 0 (X, t) |   |batch 0 |
 #     | record 1  --|-->| events row 1 |---->| segment 1 (X, t) |-->|batch 1 |
@@ -104,7 +107,7 @@ from neuralset.extractors import Pulse
 #
 # - **Discovery vs tensorisation are different jobs.**
 #   :class:`~eegdash.api.EEGDashDataset` and ``neuralfetch.Study``
-#   discover and standardise; :class:`neuralset.Segmenter` and the
+#   discover and standardize; :class:`neuralset.Segmenter` and the
 #   PyTorch :class:`~torch.utils.data.DataLoader` cut and batch. The
 #   contracts are different on purpose: a discovery layer hides
 #   catalogue-specific quirks; a tensor layer hides MNE / NWB quirks.
@@ -119,6 +122,15 @@ from neuralset.extractors import Pulse
 #   NeuralSet's ``Segmenter`` consumes that frame. Knowing the schema
 #   lets you swap any dataset on the discovery side without touching
 #   the tensor pipeline.
+#
+# Validate your result
+# --------------------
+# - **Stack Verification.** Each stage (NeuralFetch -> NeuralSet ->
+#   NeuralTrain) should pass a shape sanity check.
+# - **Events DataFrame.** The event DataFrame should follow the NeuroAI
+#   schema: ``(start, duration, type, timeline)``.
+# - **DataLoader Batch.** The final PyTorch batch should match your
+#   configured ``window_size`` and ``n_channels``.
 
 # %% [markdown]
 # What does the NeuralSet pipeline expose?
@@ -407,7 +419,7 @@ loader_card
 integration_matrix = [
     {
         "project": "NeuralFetch",
-        "role": "discover + standardise across 12 catalogues",
+        "role": "discover + standardize across 12 catalogues",
         "status": "shipped (EEGDash backend)",
         "status_kind": "shipped",
         "tutorial": "plot_74 (this one)",
@@ -550,6 +562,6 @@ print("Recovery: drop the trigger_query and pass `stride=WINDOW_SECONDS` instead
 # %% [markdown]
 # References
 # ----------
-# See :doc:`/references` for the centralised bibliography of papers
+# See :doc:`/references` for the centralized bibliography of papers
 # cited above. Add or amend an entry once in
 # :file:`docs/source/refs.bib`; every tutorial inherits the update.

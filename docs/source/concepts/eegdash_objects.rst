@@ -16,7 +16,7 @@ In short:
   catalogue query into a list of recordings that can be loaded, preprocessed,
   windowed, and iterated over.
 - ``EEGChallengeDataset`` is a **frozen, derivative dataset**, used for
-  shared-benchmark contexts (currently the EEG 2025 Competition). It loads
+  shared-benchmark contexts (currently the EEG2025 Competition). It loads
   pre-resampled, pre-filtered, pre-cut data so that every participant is
   evaluated against an identical signal.
 
@@ -115,7 +115,7 @@ When to use ``EEGChallengeDataset``
 ``EEGChallengeDataset`` is a thin wrapper over the same machinery, but
 points at a frozen, preprocessed bucket: the data are downsampled to a
 fixed rate, filtered with a fixed band, and cut into the canonical task
-blocks used by the EEG 2025 Competition. If you are participating in the
+blocks used by the EEG2025 Competition. If you are participating in the
 competition, you **must** use ``EEGChallengeDataset``; otherwise your
 local results are not comparable to the public leaderboard. If you are
 not participating, ``EEGChallengeDataset`` is still useful when you want
@@ -131,7 +131,7 @@ A practical decision tree:
 
 - "I just want to know what is out there." → ``EEGDash``.
 - "I want a PyTorch-style dataset for my own analysis." → ``EEGDashDataset``.
-- "I am running EEG 2025 Competition code, or I want strictly identical
+- "I am running EEG2025 Competition code, or I want strictly identical
   preprocessing across users." → ``EEGChallengeDataset``.
 
 Mixing modes inside a single experiment is fine: a common workflow uses

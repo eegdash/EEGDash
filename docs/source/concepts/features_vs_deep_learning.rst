@@ -28,7 +28,7 @@ Pick features when at least two of the following are true:
 - **You have less than ~50 subjects.** A logistic regression or SVM on
   10 well-chosen features fits with minimal regularisation. A
   convolutional network has hundreds of thousands of parameters and
-  needs orders of magnitude more data to avoid memorising subject
+  needs orders of magnitude more data to avoid memorizing subject
   identity (see :doc:`leakage_and_evaluation`).
 - **The relevant rhythm is known.** If you are decoding alpha-band
   modulation, log-power in 8–13 Hz is a near-optimal feature; a deep

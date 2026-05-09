@@ -1,8 +1,11 @@
 """How-to: work offline against a populated EEGDash cache
 ========================================================
 
+**Difficulty 2** | **Runtime: 4m** | **Compute: CPU**
+
 Goal: instantiate ``EEGChallengeDataset`` with ``download=False`` and load
 the same records as the online path, with no network calls.
+Keywords: offline, cache, metadata
 """
 
 # sphinx_gallery_thumbnail_path = '_static/thumbs/how_to_work_offline.png'
@@ -161,6 +164,25 @@ print("offline cache is complete.")
 # - ``download=False`` skips S3 but still walks the BIDS tree on
 #   instantiation. On Lustre/NFS this can stall; stage the cache to local
 #   NVMe (see ``how_to_use_hpc_cache``) before training.
+#
+# %% [markdown]
+# Validate your result
+# --------------------
+# - **Prove it is offline.** Disconnect your network or use a dummy API URL.
+#   Loading with ``download=False`` should succeed if the cache is populated.
+# - **Cache Tree Example.** Your cache should look like this:
+#   .. code-block:: text
+#
+#      .eegdash_cache/
+#      └── ds005506-bdf-mini/
+#          ├── participants.tsv
+#          ├── sub-001/
+#          │   └── eeg/
+#          │       └── sub-001_task-RestingState_eeg.bdf
+#          └── ...
+# - **Recovery from Partial Downloads.** If a download was interrupted, delete
+#    the incomplete file (or the whole subject folder) and re-run
+#    ``download_all(n_jobs=1)`` to ensure a clean state.
 
 # %% [markdown]
 # See also

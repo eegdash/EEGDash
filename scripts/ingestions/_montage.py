@@ -901,7 +901,7 @@ def extract_meg_layout(
                     str(data_file), preload=False, verbose="error"
                 ).info
             else:
-                LOGGER.info("[layout.meg] unrecognised MEG format: %s", data_file)
+                LOGGER.info("[layout.meg] unrecognized MEG format: %s", data_file)
                 return None
         except Exception as direct_exc:  # noqa: BLE001
             LOGGER.debug(

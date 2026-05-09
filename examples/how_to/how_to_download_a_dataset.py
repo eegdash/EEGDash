@@ -1,8 +1,21 @@
 """Download an EEGDash dataset in advance and validate the local cache
 =====================================================================
 
+**Difficulty 1** | **Runtime: 1m** | **Compute: CPU**
+
 Download all files for a dataset in advance, validate completeness, and
-inspect the cache.
+# inspect the cache.
+#
+# Validate your result
+# --------------------
+# - **Cache Populated.** After download, check that ``cache_dir/ds005506``
+#   exists and contains ``participants.tsv``.
+# - **File Count.** Verify that the number of ``.bdf`` or ``.set`` files on
+#   disk matches ``len(ds.records)``.
+# - **Offline Check.** Set ``EEGDASH_OFFLINE=1`` and re-initialize the
+#   dataset; it should load instantly without network calls.
+#
+# Keywords: loading, cache, download
 """
 
 # sphinx_gallery_thumbnail_path = '_static/thumbs/how_to_download_a_dataset.png'

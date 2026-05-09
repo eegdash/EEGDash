@@ -1,5 +1,7 @@
-"""How do classical EEG markers compose on top of one Welch PSD?
-==================================================================
+"""Compose EEG markers from Welch PSD
+====================================
+
+**Difficulty 1-2** | **Runtime: 5s** | **Compute: CPU**
 
 Welch's method :cite:`welch1967psd` returns one power spectrum per window; band
 power, spectral entropy, peak frequency, and the 1/f slope (Demanuele
@@ -26,6 +28,7 @@ selection see Cisotto and Chicco (2024).
 So if alpha-, beta-, theta-, and delta-band powers each call Welch
 separately, how many PSDs run per batch, and what does sharing one
 ``spectral_preprocessor`` change?
+Keywords: features, spectral, trees
 """
 
 # %% [markdown]
@@ -115,7 +118,16 @@ _spec.welch = _counting_welch
 # for the 1/f fit). A shared ``spectral_preprocessor`` plus
 # :func:`~eegdash.features.feature_predecessor`-tagged consumers solve
 # both at once.
-
+#
+# Validate your result
+# --------------------
+# - **Dependency Tree.** The printed extractor tree should show exactly ONE
+#   root ``spectral_preprocessor`` shared by all band-power features.
+# - **Feature Count.** The resulting table should have ``n_channels * 4``
+#   columns (theta, alpha, beta, gamma).
+# - **Correlation Matrix.** Band-power features from the same channel should
+#   show some degree of positive correlation.
+#
 # %% [markdown]
 # Step 1: Build a small windowed dataset
 # --------------------------------------
@@ -572,6 +584,6 @@ assert speedup >= 1.0
 # %% [markdown]
 # References
 # ----------
-# See :doc:`/references` for the centralised bibliography of papers
+# See :doc:`/references` for the centralized bibliography of papers
 # cited above. Add or amend an entry once in
 # :file:`docs/source/refs.bib`; every tutorial inherits the update.

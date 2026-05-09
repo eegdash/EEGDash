@@ -219,7 +219,7 @@ trail.
 
       The full curated learning path: seven tutorial categories from
       Start-Here to transfer learning, plus how-to recipes, applied
-      projects, EEG 2025 Foundation Challenge pipelines, and HPC
+      projects, EEG2025 Foundation Challenge pipelines, and HPC
       templates.
 
    .. grid-item-card:: Concepts

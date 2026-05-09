@@ -1,8 +1,10 @@
-"""How do I turn EEG windows into a band-power feature matrix?
-==============================================================
+"""Extract band-power features
+=============================
+
+**Difficulty 1-2** | **Runtime: 30s** | **Compute: CPU**
 
 Plot_30 closed the loop on the parieto-occipital alpha rhythm Hans Berger
-first reported in 1929 :cite:`klimesch2012alpha`. This tutorial generalises the
+first reported in 1929 :cite:`klimesch2012alpha`. This tutorial generalizes the
 recipe: starting from windowed EEG (the same Healthy Brain Network
 ``ds005514`` resting-state idiom we keep across the gallery, reachable
 through `NEMAR <https://nemar.org>`_, Delorme et al. 2022; Alexander et
@@ -12,8 +14,9 @@ theta, alpha, beta, and gamma. The deliverable is a
 hands to scikit-learn :cite:`pedregosa2011sklearn` without any further
 reshaping.
 
-Can a small set of band-power features per channel summarise a window
+Can a small set of band-power features per channel summarize a window
 well enough to feed downstream ML?
+Keywords: features, band-power, spectral
 """
 
 # sphinx_gallery_thumbnail_path = '_static/thumbs/plot_40_first_features.png'
@@ -30,7 +33,7 @@ well enough to feed downstream ML?
 # Requirements
 # ------------
 # - About 30 s on CPU. No GPU. No network on this run (the data is
-#   synthesised offline so the tutorial is reproducible without
+#   synthesized offline so the tutorial is reproducible without
 #   touching NEMAR; Delorme et al. 2022).
 # - Prerequisite:
 #   :doc:`/auto_examples/tutorials/10_core_workflow/plot_10_preprocess_and_window`
@@ -39,7 +42,7 @@ well enough to feed downstream ML?
 # - Concept page: :doc:`/concepts/features_vs_deep_learning`.
 
 # %%
-# Setup. Seed (E3.21) and a parametrised cache directory (E3.24) keep the
+# Setup. Seed (E3.21) and a parameterized cache directory (E3.24) keep the
 # tutorial reproducible and the output table inside ``cache_dir``. Cisotto
 # & Chicco 2024 frame both as Tip 4 / Tip 5 of clinical-EEG good practice.
 import os
@@ -77,7 +80,7 @@ print(f"eegdash {eegdash.__version__}; cache_dir={cache_dir}")
 # Concept: from windows to a feature matrix
 # -----------------------------------------
 # Plot_30 showed that closing the eyes releases parieto-occipital alpha
-# power :cite:`klimesch2012alpha`. The natural follow-up is to summarise every
+# power :cite:`klimesch2012alpha`. The natural follow-up is to summarize every
 # window with a few numbers per channel and stack the result into a
 # tensor a learner can consume. Three shapes carry the story:
 #
@@ -97,6 +100,28 @@ print(f"eegdash {eegdash.__version__}; cache_dir={cache_dir}")
 #       returns one window        runs Welch + integrates    keeps band and
 #                                 each band per channel       channel separate
 #
+# Validate your result
+# --------------------
+# - **Output Shape.** The tidy DataFrame should have ``n_windows`` rows and
+#   ``n_features * n_channels`` columns. For the default set, expect
+#   ``4 * n_channels`` columns.
+# - **Feature Values.** Log-power values are typically negative (since power
+#   is < 1 V^2/Hz). For alpha-band in a resting subject, expect values
+#   between ``-10`` and ``-15``.
+# - **Missing Data.** Check for ``NaN`` values if your windows are shorter than
+#   the minimum required for a specific frequency band.
+#
+# Feature Naming and Shapes
+# -------------------------
+# - **Naming.** Feature columns follow the template ``{feature_name}_{channel_name}`` (e.g., ``alpha_Oz``).
+# - **Matrix Shape.** The primary output is a tidy DataFrame with ``n_windows`` rows and ``n_features * n_channels`` columns.
+# - **Missing Features.** If a window is too short for a specific feature (e.g., a Welch PSD on a 0.5s window for delta), EEGDash returns ``NaN``.
+# - **Why features?** Classical features are preferable to CNNs when:
+#   1. **Interpretability is key.** You can map a specific band-power rise to a brain region.
+#   2. **Data is sparse.** Deep nets often overfit on small cohorts (N < 100).
+#   3. **Compute is limited.** Feature extraction is CPU-bound and much faster than training deep models.
+
+# %% [markdown]
 # Two design choices keep the recipe portable. The DataFrame is the
 # format learners and dashboards consume; the band-aware tensor is the
 # format every panel of the figure below was designed around.
@@ -115,7 +140,7 @@ print(f"eegdash {eegdash.__version__}; cache_dir={cache_dir}")
 # ----------------------------------------------------
 # In production you would reload the windows produced by plot_10 with
 # :func:`braindecode.datautil.load_concat_dataset`. To stay offline and
-# reproducible we synthesise two short HBN-style recordings at 128 Hz on
+# reproducible we synthesize two short HBN-style recordings at 128 Hz on
 # a 24-channel parieto-occipital-leaning montage and inject a 10 Hz
 # alpha oscillation into the eyes-closed recording :cite:`berger1929`. The
 # 1-48 Hz FIR (firwin) band-pass below writes the pass-band into MNE's
@@ -449,6 +474,6 @@ plt.show()
 # %% [markdown]
 # References
 # ----------
-# See :doc:`/references` for the centralised bibliography of papers
+# See :doc:`/references` for the centralized bibliography of papers
 # cited above. Add or amend an entry once in
 # :file:`docs/source/refs.bib`; every tutorial inherits the update.

@@ -1,12 +1,14 @@
-"""How do I push EEGDash features through a scikit-learn Pipeline?
-==================================================================
+"""EEGDash features to scikit-learn
+==================================
+
+**Difficulty 1-2** | **Runtime: 10s** | **Compute: CPU**
 
 A feature table from plot_40 is one row per window with columns shaped
 ``<feature>_<channel>``. The data follows the same `OpenNeuro
 <https://openneuro.org>`_ ``ds005514`` HBN resting-state contour as
 plot_40, reachable through `NEMAR <https://nemar.org>`_ (Delorme et
 al. 2022); to keep the run offline-reproducible the feature table is
-synthesised with the column layout plot_40 saves to parquet. Before
+synthesized with the column layout plot_40 saves to parquet. Before
 reaching for a deep net, this tutorial wires the feature matrix into
 :class:`sklearn.pipeline.Pipeline` :cite:`pedregosa2011sklearn` with
 :class:`~sklearn.preprocessing.StandardScaler` and
@@ -19,6 +21,7 @@ plot_12 trains the same Pipeline on log-band-power features computed
 inline, plot_42 trains it on the feature table extracted by plot_40.
 The question the figure answers is whether a transparent linear
 baseline clears the chance line on a held-out subject?
+Keywords: features, scikit-learn, pipeline
 """
 
 # sphinx_gallery_thumbnail_path = '_static/thumbs/plot_42_features_to_sklearn.png'
@@ -31,7 +34,16 @@ baseline clears the chance line on a held-out subject?
 # - Wire the feature matrix into :class:`sklearn.pipeline.Pipeline` with :class:`~sklearn.preprocessing.StandardScaler` and :class:`~sklearn.linear_model.LogisticRegression`, fit per fold, and pool predictions across LOSO folds.
 # - Compare the per-fold accuracy to ``majority_baseline`` chance level on the same split.
 # - Read the three-panel diagnostic figure: PCA + per-fold bars + pooled-LOSO confusion matrix.
-
+#
+# Validate your result
+# --------------------
+# - **Pipeline Output.** The ``predict()`` method should return an array of
+#   class labels (0 or 1) of length ``n_test_windows``.
+# - **PCA Plot.** The first two principal components should ideally show some
+#   separation between classes if the features are discriminative.
+# - **Fold Accuracy.** Each fold in the LOSO loop should report balanced
+#   accuracy significantly above chance if the model generalizes.
+#
 # %% [markdown]
 # Requirements
 # ------------
@@ -104,7 +116,7 @@ print(f"eegdash {eegdash.__version__} | cache_dir={CACHE_DIR}")
 # ------------------------------------------------------
 # In production you would call ``pd.read_parquet(CACHE_DIR /
 # "plot_40_features.parquet")``. To stay reproducible offline we
-# synthesise the same column layout: per-channel variance plus
+# synthesize the same column layout: per-channel variance plus
 # four-band power for ``delta``, ``theta``, ``alpha``, ``beta`` on a
 # parieto-occipital montage. Eyes-closed gets the textbook alpha bump
 # :cite:`berger1929` plus a per-window Gaussian jitter so the across-subject
@@ -369,7 +381,7 @@ plt.show()
 #    the boundary is visible.
 # 2. Per-fold bars: every bar should sit above the dashed chance line.
 #    The shaded band is mean +/- std across folds; a tight band means
-#    the linear baseline generalises to every held-out subject in this
+#    the linear baseline generalizes to every held-out subject in this
 #    cohort.
 # 3. Pooled confusion matrix: a row-normalized matrix with a clean
 #    diagonal in deep blue is the win condition. The monospace
@@ -530,7 +542,7 @@ print(
 # %% [markdown]
 # Try it yourself
 # ---------------
-# - Replace the synthesised feature table with
+# - Replace the synthesized feature table with
 #   ``pd.read_parquet(CACHE_DIR / "plot_40_features.parquet")`` once
 #   plot_40 has been run end-to-end.
 # - Inspect ``pipe.named_steps['clf'].coef_`` for the saved Pipeline
@@ -545,6 +557,6 @@ print(
 # %% [markdown]
 # References
 # ----------
-# See :doc:`/references` for the centralised bibliography of papers
+# See :doc:`/references` for the centralized bibliography of papers
 # cited above. Add or amend an entry once in
 # :file:`docs/source/refs.bib`; every tutorial inherits the update.

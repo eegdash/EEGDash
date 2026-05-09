@@ -12,7 +12,7 @@ This page explains what those entities mean, how they map to EEGDash query
 keywords, and where participant-level metadata enters the picture.
 
 The EEG-BIDS specification was published as Pernet et al. (2019) [1]_; if you
-have not skimmed the paper, the short version is that BIDS standardises file
+have not skimmed the paper, the short version is that BIDS standardizes file
 names, directory layout, and accompanying JSON/TSV sidecars so that any tool
 can walk a dataset without bespoke loaders. EEGDash reuses those entity names
 verbatim in its query API.
@@ -118,7 +118,7 @@ braindecode-compatible ``WindowsDataset`` will copy these descriptors onto
 each window automatically, so subject-aware splitters and metadata-driven
 analyses both read from the same source of truth.
 
-Why standardised metadata matters
+Why standardized metadata matters
 ---------------------------------
 
 Two practical consequences fall out of using BIDS as the primary metadata
@@ -141,6 +141,42 @@ manually — but you lose the ability to discover, split, and merge across
 datasets. Spending an afternoon converting a folder of ``.set`` files to
 BIDS is almost always worth it; see the EEG-BIDS paper [1]_ for the full
 specification.
+
+Metadata Glossary
+-----------------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 80
+
+   * - Field
+     - Definition
+   * - **dataset**
+     - The BIDS dataset identifier (e.g., ``ds004504``). Identifies the
+       originating release.
+   * - **subject**
+     - A unique identifier for a participant within a dataset.
+   * - **session**
+     - A single appointment or day of recording for a subject.
+   * - **task**
+     - The experimental paradigm (e.g., ``RestingState``, ``visualoddball``).
+   * - **run**
+     - A repetition of the same task within one session.
+   * - **age**
+     - Participant age, typically in years at the time of the first session.
+   * - **sex**
+     - Biological status (typically ``M`` or ``F``) as recorded by the sponsor.
+   * - **gender**
+     - Participant's self-reported gender identity.
+   * - **p_factor**
+     - A transdiagnostic mental-health summary score derived from
+       psychiatric questionnaires.
+   * - **BIDS**
+     - Brain Imaging Data Structure. The standard directory layout and
+       naming convention for neural data.
+   * - **windows**
+     - Short, fixed-length segments of EEG data (e.g., 2 seconds) used as
+       individual samples for machine learning.
 
 Related tutorials
 -----------------

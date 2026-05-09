@@ -10,9 +10,8 @@ Resting-state state decoding is the cleanest neurophysiological
 benchmark in the field: the alpha increase on eye closure is large,
 reproducible, and present at the single-recording level, so it is the
 ideal lesson for verifying that your preprocessing pipeline is doing
-something sane before you point it at a noisier event-related task.
-Sourced from ``docs/tutorial_restructure_plan.md`` Category D (lines
-425-435), with preprocessing guidance from Cisotto and Chicco (2024).
+something sane before you point it at a noisier event-related task, with
+preprocessing guidance from Cisotto and Chicco (2024).
 
 What you will learn:
 

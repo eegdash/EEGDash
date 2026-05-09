@@ -358,7 +358,7 @@ class Dataset(TypedDict, total=False):
     name : str
         Descriptive title of the dataset.
     canonical_name : list[str] | None
-        Canonical / community-recognised name(s) for the dataset, each a valid
+        Canonical / community-recognized name(s) for the dataset, each a valid
         Python identifier (e.g. ``["BrainTreeBank"]``, ``["SleepEDF",
         "SleepEDFPlus"]``). Used to register importable class aliases alongside
         the ``DS…``-style ID. Empty list or ``None`` means no alias is
@@ -563,7 +563,7 @@ def create_dataset(
     name : str, optional
         Dataset title/name.
     canonical_name : list[str], optional
-        Canonical / community-recognised name(s) for the dataset (each a valid
+        Canonical / community-recognized name(s) for the dataset (each a valid
         Python identifier, e.g. ``["BrainTreeBank"]`` or ``["SleepEDF",
         "SleepEDFPlus"]``). Used by the dataset class registry to expose
         importable aliases. Empty list or ``None`` registers no aliases.

@@ -1,12 +1,22 @@
-"""Parallelise EEGDash feature extraction
+"""Parallelize EEGDash feature extraction
 ==========================================
+
+**Difficulty 2** | **Runtime: 30s** | **Compute: CPU (Multi-core)**
 
 Goal: scale :func:`eegdash.features.extract_features` across multiple cores
 on one node by tuning ``n_jobs`` and ``batch_size``, then persist the
-result so re-runs are free.
-
-How-to recipe (kind=how-to, no PRIMM). Synthetic data so it runs locally
-in under 90 s on a 4-core CPU.
+# result so re-runs are free.
+#
+# Validate your result
+# --------------------
+# - **Wall-clock Speedup.** Using ``n_jobs=4`` should significantly reduce
+#   extraction time compared to ``n_jobs=1``.
+# - **Memory Usage.** Monitor your system's RAM; parallel jobs increase
+#   memory pressure linearly with ``n_jobs``.
+# - **Consistency Check.** The resulting feature table should be identical
+#   to a single-core run (assert with ``pd.testing.assert_frame_equal``).
+#
+# Keywords: parallel, feature-extraction, joblib
 """
 
 # sphinx_gallery_thumbnail_path = '_static/thumbs/how_to_parallelize_feature_extraction.png'

@@ -1,5 +1,7 @@
-"""How do I survey a clinical EEG dataset before training a model?
-==================================================================
+"""Survey clinical EEG datasets
+=============================
+
+**Difficulty 1** | **Runtime: 20s** | **Compute: CPU**
 
 A starter project: pull metadata for the OpenNeuro ``ds004504`` clinical EEG
 release :cite:`miltiadous2023` through :class:`~eegdash.EEGDashDataset`,
@@ -10,8 +12,22 @@ workflow recipe follows Cisotto and Chicco 2024. The deliverable is one
 :class:`pandas.DataFrame` with per-condition counts and one three-panel
 figure rendered from the live catalog numbers. Cohort imbalance, age
 confounds, recording-length mismatch, and channel-count drift are the
-four dataset-level pitfalls that silently break clinical EEG decoders
-before training even starts, so why not answer them first?
+# four dataset-level pitfalls that silently break clinical EEG decoders
+# before training even starts, so why not answer them first?
+#
+# Validate your result
+# --------------------
+# - **Required Metadata Columns.** For ``ds004504``, expect columns like
+#   ``Group``, ``Age``, ``Gender``, and ``MMSE``.
+# - **Fallback Behavior.** If a column is missing from the API, EEGDash
+#   fills it with ``None`` or ``NaN``.
+# - **Sparse Metadata.** When the public API returns sparse metadata, you
+#   can verify the local ``participants.tsv`` in the BIDS directory if you
+#   have the full dataset downloaded, or use ``ds.description`` to check
+#   which fields were successfully projected from the catalog.
+#
+# Keywords: metadata, applied, clinical
+#
 """
 
 # sphinx_gallery_thumbnail_path = '_static/thumbs/project_clinical_dataset_summary.png'
@@ -339,6 +355,6 @@ dataset_card
 # %% [markdown]
 # References
 # ----------
-# See :doc:`/references` for the centralised bibliography of papers
+# See :doc:`/references` for the centralized bibliography of papers
 # cited above. Add or amend an entry once in
 # :file:`docs/source/refs.bib`; every tutorial inherits the update.

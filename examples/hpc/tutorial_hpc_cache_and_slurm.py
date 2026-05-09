@@ -1,9 +1,29 @@
 """.. _tutorial-eoec:
 
-Eyes Open vs. Closed Classification
-===================================
+Eyes Open vs. Closed Classification (HPC)
+=========================================
 
-EEGDash example for eyes open vs. closed classification.
+**Difficulty 2** | **Runtime: 5-10m** | **Compute: HPC / Cluster**
+
+EEGDash example for eyes open vs. closed classification on a shared cluster.
+
+Validate your result
+--------------------
+- **Scheduler Example (SLURM).** Submit this script with:
+  .. code-block:: bash
+
+     sbatch --cpus-per-task=4 --mem=16G --job-name=eeg-eoec tutorial_hpc_cache_and_slurm.py
+
+- **Environment Variable Checklist.** Ensure these are set:
+  - ``EEGDASH_CACHE_DIR``: Path to a shared or node-local cache.
+  - ``NUM_SUBJECTS``: Number of subjects to process (default 10).
+  - ``SEED``: Random seed for reproducibility.
+- **Node-Local Scratch Guidance.** For faster I/O, set ``EEGDASH_CACHE_DIR=$SLURM_TMPDIR``
+  and pre-stage your data using a ``cp`` command in your submission script.
+- **Log & Output Validation.** Check your ``slurm-*.out`` file for:
+  - "subjects discovered" count.
+  - "windows created" count per subject.
+  - Final test accuracy and saved plot path.
 
 CHANGES:
 - Uses the EEGDash API (no local OpenNeuro mirror required)
@@ -13,6 +33,8 @@ CHANGES:
 - Subject-wise train/test split (no leakage)
 - Robust windowing: one 2s window per event (avoids braindecode trial overlap errors)
 - Save plot to file (no GUI needed on compute nodes)
+
+Keywords: HPC, cluster, SLURM
 """
 
 from pathlib import Path

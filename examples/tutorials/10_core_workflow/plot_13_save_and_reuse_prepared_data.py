@@ -1,5 +1,7 @@
-"""How do I save and reload prepared windows + features?
-========================================================
+"""Save and reload prepared data
+===============================
+
+**Difficulty 1-2** | **Runtime: 5s** | **Compute: CPU**
 
 Preprocessing EEG is expensive. Filtering, resampling, and windowing one
 subject can take seconds; doing it for every kernel restart wastes hours
@@ -15,9 +17,19 @@ recomputed it. Every step below pairs an artifact with the metadata that
 makes it reusable: FIF for windowed signals (Larson et al. 2024 / MNE),
 Apache Parquet for tabular features, and an optional Zarr store for
 chunked random-access reads. The lesson
-ends with a three-panel figure that puts the actual cost on disk.
+# ends with a three-panel figure that puts the actual cost on disk.
+#
+# Validate your result
+# --------------------
+# - **Cache Artifacts.** After running, you should find ``.fif``, ``.parquet``,
+#   or ``.zarr`` files in your ``cache_dir``.
+# - **Data Integrity.** Reloaded windows should have identical shapes and
+#   values to the original (assert with ``np.allclose``).
+# - **Loading Speed.** The hot-cache load (Step 3) should be significantly
+#   faster than the first-run preprocessing (Step 1).
 
 .. sphinx_gallery_thumbnail_path = '_static/thumbs/plot_13_save_and_reuse_prepared_data.png'
+Keywords: offline, caching, I/O
 """
 
 # %% [markdown]
@@ -41,7 +53,7 @@ ends with a three-panel figure that puts the actual cost on disk.
 # Requirements
 # ------------
 # - Estimated time: about 5 s on CPU, no GPU.
-# - Network: none. The signal is synthesised locally so the lesson runs
+# - Network: none. The signal is synthesized locally so the lesson runs
 #   offline (E3.24). Every artifact is routed through
 #   :func:`tempfile.mkdtemp` so we never write outside ``/tmp``.
 # - Prerequisites:
@@ -547,6 +559,6 @@ print("cleanup OK")
 # %% [markdown]
 # References
 # ----------
-# See :doc:`/references` for the centralised bibliography of papers
+# See :doc:`/references` for the centralized bibliography of papers
 # cited above. Add or amend an entry once in
 # :file:`docs/source/refs.bib`; every tutorial inherits the update.

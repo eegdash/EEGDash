@@ -1,5 +1,7 @@
-"""Cross-cohort P3 transfer with AS-MMD: train on one oddball, deploy on another
-==================================================================================
+"""P300 transfer with AS-MMD
+===========================
+
+**Difficulty 3** | **Runtime: 2m** | **Compute: GPU Recommended**
 
 Two laboratories run a visual oddball task on different participants,
 different head-caps, different software stacks. Both pipelines produce
@@ -20,6 +22,7 @@ ask through ``EEGChallengeDataset`` on the NEMAR archive (Delorme et
 al. 2022, doi:10.1093/database/baac096): by how much does AS-MMD close
 the naive-to-oracle gap, and does the alignment preserve the
 underlying P3 component?
+Keywords: transfer-learning, applied, P300
 """
 
 # sphinx_gallery_thumbnail_path = '_static/thumbs/project_p300_transfer.png'
@@ -32,6 +35,20 @@ underlying P3 component?
 # - train three encoders on shared architecture + budget: naive, AS-MMD aligned, oracle.
 # - compare target accuracy for all three on the same figure with chance drawn on the same axes.
 # - verify the alignment preserves the P3 component via an ERP overlay at Pz.
+#
+# AS-MMD Explanation
+# ------------------
+# **Adversarial-Style Maximum Mean Discrepancy (AS-MMD)** is a domain-adaptation
+# method that minimizes the distance between the source and target feature
+# distributions. Unlike standard MMD, it uses an adversarial training
+# approach (similar to GANs) to learn features that are discriminative
+# for the task but invariant to the domain (laboratory, cap, etc.).
+#
+# Requirements & Validation
+# -------------------------
+# - **Runtime Warning.** This tutorial involves training deep networks. On a 4-core CPU, the smoke run takes ~2 minutes. For full training on real data, a GPU is recommended.
+# - **Minimum Data Assumptions.** Requires at least two domains (source and target) with overlapping task labels (e.g., target vs. standard).
+# - **Expected Fold Outputs.** Per-fold target accuracy should show the AS-MMD aligned model outperforming the naive model and approaching the oracle (upper bound).
 #
 # Requirements
 # ------------
@@ -75,7 +92,7 @@ print(f"device={DEVICE}, seed={SEED}")
 #
 # In a full run we would build two ``EEGDashDataset`` queries and run
 # the standard P3 windowing recipe from ``plot_20``. To keep the case
-# study reproducible without paying a multi-GB download, we synthesise
+# study reproducible without paying a multi-GB download, we synthesize
 # source + target tensors with a shared P3-like component and
 # dataset-specific noise + drift; the defaults wire ``ds005863``
 # (visualoddball, NEMAR; Delorme et al. 2022) to a placeholder target
@@ -92,7 +109,7 @@ CHANNEL_NAMES = ["Fz", "Cz", "Pz", "P3", "P4"]
 PZ_INDEX = CHANNEL_NAMES.index("Pz")
 
 # %% [markdown]
-# Step 3. Synthesise oddball windows with a shared P3 + domain shift
+# Step 3. Synthesize oddball windows with a shared P3 + domain shift
 # ------------------------------------------------------------------
 #
 # Each window is a 1.2 s epoch at 128 Hz. *Target* class carries a
@@ -125,7 +142,7 @@ def make_oddball_windows(
     target_fraction: float,
     rng: np.random.Generator,
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
-    """Synthesise ``(X, y, subject_ids)`` for one domain.
+    """Synthesize ``(X, y, subject_ids)`` for one domain.
 
     The shared P3 template lives at index ``PZ_INDEX`` with a domain-
     specific scaling so source and target carry the same physiological
@@ -561,7 +578,7 @@ except RuntimeError as exc:
 # away. Rerun at ``0.05``, ``0.2``, ``0.4``, ``1.0`` and plot
 # ``acc_mmd`` against the chosen weight.
 #
-# **Mini-project.** Replace the synthesised tensors with real cohorts
+# **Mini-project.** Replace the synthesized tensors with real cohorts
 # via :class:`eegdash.EEGDashDataset`. Set ``EEGDASH_SOURCE_DATASET``
 # and ``EEGDASH_TARGET_DATASET`` to two oddball accessions on NEMAR
 # (Delorme et al. 2022; e.g. ``ds005863`` and ``ds003061``), apply the
@@ -592,6 +609,6 @@ except RuntimeError as exc:
 # %% [markdown]
 # References
 # ----------
-# See :doc:`/references` for the centralised bibliography of papers
+# See :doc:`/references` for the centralized bibliography of papers
 # cited above. Add or amend an entry once in
 # :file:`docs/source/refs.bib`; every tutorial inherits the update.

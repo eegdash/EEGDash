@@ -1,5 +1,7 @@
-"""Decode eyes-open vs. eyes-closed from resting-state EEG
-========================================================
+"""Decode eyes open vs. eyes closed
+===================================
+
+**Difficulty 1** | **Runtime: 5m** | **Compute: CPU**
 
 Hans Berger reported in 1929 that the parieto-occipital alpha rhythm
 rises when the eyes close and falls when they open :cite:`berger1929`. This
@@ -13,6 +15,7 @@ log alpha-band power features.
 
 Can we tell from a 2-second EEG snippet whether a child has the eyes
 open or closed?
+Keywords: classification, resting-state, alpha
 """
 
 # sphinx_gallery_thumbnail_path = '_static/thumbs/plot_30_eyes_open_closed.png'
@@ -38,7 +41,7 @@ open or closed?
 # - Concept: :doc:`/concepts/preprocessing_decisions`.
 
 # %%
-# Setup. Seed (E3.21) and a parametrised cache dir (E3.24) keep the
+# Setup. Seed (E3.21) and a parameterized cache dir (E3.24) keep the
 # tutorial reproducible and the network calls confined to the first run.
 import json
 import os
@@ -98,6 +101,17 @@ cache_dir.mkdir(parents=True, exist_ok=True)
 #     low 8-13 Hz power                high 8-13 Hz power
 #     flat posterior topography        parieto-occipital alpha bump
 #     -> "open" class label            -> "closed" class label
+
+# %% [markdown]
+# Validate your result
+# --------------------
+# Before you trust the decoder, verify the data pipeline:
+#
+# 1. **Window counts.** For 6 HBN subjects, you should expect ~100-200 windows per class.
+# 2. **Class balance.** The reannotation should produce roughly equal counts for EO and EC.
+# 3. **Tensor shape.** Each window is ``(24, 256)`` (24 channels, 2 seconds at 128 Hz).
+# 4. **Accuracy.** Expect cross-subject accuracy significantly above chance (typically >0.70).
+# 5. **Interpretation.** The confusion matrix should show whether one state is harder to decode (often "open" due to more artifacts).
 
 # %% [markdown]
 # Step 1. Configure the EOEC recipe
@@ -363,7 +377,7 @@ info.set_montage(mont, match_case=False, on_missing="ignore", verbose="ERROR")
 # magnitude (skull thickness, pediatric age effects, electrode
 # impedance). The closed-vs-open *contrast* is preserved, but a flat
 # linear model fed raw log-power features sees the per-subject offset
-# as the dominant axis and loses signal. We standardise each subject's
+# as the dominant axis and loses signal. We standardize each subject's
 # 24 features to zero mean / unit std so the model sees the *relative*
 # alpha pattern instead of the absolute amplitude.
 
@@ -382,7 +396,7 @@ for s in set(groups):
 # ``groups = subject id`` produces a leave-one-subject-out split (one
 # fold per subject when ``n_splits == n_subjects``). On each fold we
 # train a flat :class:`sklearn.linear_model.LogisticRegression` on the
-# per-subject-standardised log alpha-band power features (one per
+# per-subject-standardized log alpha-band power features (one per
 # channel) and read accuracy on the held-out subject.
 # An inline subject-overlap check is the Cisotto & Chicco 2024 (Tip 9)
 # guard that confirms zero subject overlap on the contract by subject id.
@@ -632,6 +646,6 @@ print(
 # %% [markdown]
 # References
 # ----------
-# See :doc:`/references` for the centralised bibliography of papers
+# See :doc:`/references` for the centralized bibliography of papers
 # cited above. Add or amend an entry once in
 # :file:`docs/source/refs.bib`; every tutorial inherits the update.

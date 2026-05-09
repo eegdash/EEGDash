@@ -1,6 +1,8 @@
 # %% [markdown]
-"""Is resting-state EEG even predictive of the BIDS sex label? (Project Starter)
-=============================================================================
+"""Sex classification from EEG
+============================
+
+**Difficulty 3** | **Runtime: 3-5m** | **Compute: CPU**
 
 A canonical "is this signal even predictive?" benchmark task on resting-state
 EEG from `OpenNeuro <https://openneuro.org>`_ ``ds005505`` (Healthy Brain
@@ -16,34 +18,44 @@ helpers, :class:`~sklearn.inspection.DecisionBoundaryDisplay`,
 :class:`~sklearn.metrics.ConfusionMatrixDisplay`. Do the features
 separate the classes, how stable is held-out AUC across subjects, and
 which class does the model confuse?
-
-Learning objectives
--------------------
-
-- Use :class:`eegdash.EEGDashDataset` to pull resting-state ds005505 recordings and balance the cohort by the BIDS ``sex`` field.
-- Compute log band-power features (delta, theta, alpha, beta) per channel from fixed-length 2 s windows.
-- Run a 3-fold cross-subject loop with :class:`~sklearn.model_selection.GroupKFold` and fit a leakage-safe :class:`~sklearn.pipeline.Pipeline` of :class:`~sklearn.preprocessing.StandardScaler` and :class:`~sklearn.linear_model.LogisticRegression`.
-- Read the three-panel sklearn-display diagnostic built from :class:`~sklearn.inspection.DecisionBoundaryDisplay`, :class:`~sklearn.metrics.RocCurveDisplay`, and :class:`~sklearn.metrics.ConfusionMatrixDisplay`.
-
-.. warning::
-   **Treat this as a workflow example, not a result.** Three caveats sit
-   on top of every number this script prints. (1) **Labels are metadata,
-   not biological ground truth.** The BIDS ``sex`` field is subject
-   self-report or sponsor-coded; any clean separation speaks to that
-   categorical label, not to chromosomal status, hormones, or brain
-   organisation. (2) **Confounds can dominate.** Recording site,
-   acquisition system, cap density, age distribution, and within-cohort
-   sampling can all correlate with the label. Cross-site or cross-dataset
-   validation is required before any inference about EEG-vs-sex is
-   supportable (Cisotto and Chicco 2024, Tip 9). (3) **A linear baseline
-   is a sanity floor, not a finding.** A balanced split on a single
-   dataset with a small subject pool will routinely overstate transferable
-   performance.
-
-Three artefacts answer the project's central question: do the features
-separate the classes, how stable is held-out AUC across subjects, and
-which class does the model confuse?
+Keywords: classification, applied, sex
 """
+
+# %% [markdown]
+# Metadata: Sex vs. Gender
+# ------------------------
+# EEGDash loads both ``sex`` and ``gender`` fields from the BIDS
+# ``participants.tsv`` if available. While often used interchangeably in
+# metadata, ``sex`` typically refers to biological status as recorded by the
+# sponsor, while ``gender`` reflects subject self-report. When both are
+# present, this tutorial defaults to the ``sex`` field for classification,
+# but users should verify the source-dataset's data dictionary (JSON sidecar)
+# for the specific semantics of each field.
+#
+# Leakage and Splits
+# ------------------
+# Naive window-level or recording-level splits on the same subject will
+# cause **subject leakage**. Since resting-state EEG is a "biometric fingerprint",
+# the model will learn to recognize the subject rather than generalize the
+# label. We use ``GroupKFold(groups=subjects)`` to ensure that windows from
+# the same participant never appear in both training and test sets.
+# See :doc:`/concepts/leakage_and_evaluation` for the full rationale.
+#
+# Validate your result
+# --------------------
+# - **Class Balance.** HBN ``ds005505`` is relatively balanced by sex. Verify
+#   that your filtered dataset maintains a reasonable ratio (e.g., 40/60).
+# - **Metrics.** Report **Balanced Accuracy** and **ROC AUC**. Since clinical
+#   cohorts often have slight imbalances, raw accuracy can be misleading.
+# - **Baseline Comparison.** Compare your model against a ``majority_class``
+#   baseline. A model that doesn't beat the majority class has not learned
+#   anything from the EEG.
+# - **Ethical & Context Caveats.** (1) **Labels are metadata, not biology.**
+#   The BIDS ``sex`` field is often sponsor-coded; any separation speaks to
+#   that category, not to chromosomal or hormonal status. (2) **Confounds.**
+#   Recording site, age, and equipment can correlate with sex in small
+#   cohorts, leading to "clever Hans" effects where the model learns the
+#   site rather than the phenomenon.
 
 # Difficulty: 3-star (advanced applied project)
 
@@ -553,6 +565,6 @@ plt.show()
 # %% [markdown]
 # References
 # ----------
-# See :doc:`/references` for the centralised bibliography of papers
+# See :doc:`/references` for the centralized bibliography of papers
 # cited above. Add or amend an entry once in
 # :file:`docs/source/refs.bib`; every tutorial inherits the update.

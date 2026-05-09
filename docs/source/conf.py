@@ -490,6 +490,8 @@ Technical Details
 
 {electrodes_section}
 
+{traces_section}
+
 API Reference
 -------------
 
@@ -2295,6 +2297,104 @@ def _format_electrodes_section(context: Mapping[str, object]) -> str:
     return heading + html
 
 
+# ---------------------------------------------------------------------------
+# Trace viewer iframe: live signal preview from the eegdash-viewer
+# (https://eegdash.github.io/eegdash-viewer/) embedded as a lazy iframe.
+# Same lazy-load pattern as the electrode-explorer above (see lazy-embed.js):
+# zero bytes are fetched from the viewer or its CDN until a reader expands
+# the <details>.
+# ---------------------------------------------------------------------------
+
+_TRACE_VIEWER_BASE = "https://eegdash.github.io/eegdash-viewer/"
+
+_traces_recordings_cache: dict[str, object] | None = None
+
+
+def _load_traces_recordings() -> Mapping[str, Mapping[str, object]]:
+    """Read the trace-viewer recordings manifest (cached across calls).
+
+    Missing file or malformed JSON degrades silently to empty — dataset
+    pages then render no traces section instead of broken iframes.
+    """
+    global _traces_recordings_cache
+    if _traces_recordings_cache is not None:
+        return _traces_recordings_cache  # type: ignore[return-value]
+    path = (
+        Path(__file__).parent
+        / "_static"
+        / "dataset_generated"
+        / "traces-viewer-recordings.json"
+    )
+    try:
+        doc = json.loads(path.read_text(encoding="utf-8"))
+        recordings = doc.get("recordings", {})
+        if not isinstance(recordings, dict):
+            recordings = {}
+    except (FileNotFoundError, json.JSONDecodeError) as exc:
+        LOGGER.info("[traces-viewer] manifest unavailable (%s); section omitted", exc)
+        recordings = {}
+    _traces_recordings_cache = recordings
+    return recordings
+
+
+def _format_traces_section(context: Mapping[str, object]) -> str:
+    """Render a lazy <details><iframe> block for this dataset's signal preview.
+
+    If the manifest doesn't have an entry for this dataset_id we just
+    omit the section entirely (no placeholder) — the electrode-layout
+    section already shows when a dataset is recognised, and double-
+    placeholders would clutter the catalogue page.
+    """
+    dataset_id = str(context.get("dataset_id") or "").strip().lower()
+    if not dataset_id:
+        return ""
+
+    recordings = _load_traces_recordings()
+    entry = recordings.get(dataset_id)
+    if not entry:
+        return ""
+
+    # Required fields
+    sub = str(entry.get("sub") or "").strip()
+    task = str(entry.get("task") or "").strip()
+    ext = str(entry.get("ext") or "").strip()
+    if not sub or not task or not ext:
+        return ""
+
+    # Build the viewer URL
+    from urllib.parse import urlencode
+
+    qs_pairs = [("dataset", dataset_id), ("sub", sub), ("task", task)]
+    ses = entry.get("ses")
+    if ses:
+        qs_pairs.append(("ses", str(ses)))
+    run = entry.get("run")
+    if run:
+        qs_pairs.append(("run", str(run)))
+    qs_pairs.append(("ext", ext))
+    qs_pairs.append(("embed", "1"))
+    iframe_src = f"{_TRACE_VIEWER_BASE}?{urlencode(qs_pairs)}"
+
+    label = str(entry.get("label") or "Signal preview").strip()
+
+    heading = "Signal Preview\n--------------\n\n"
+    html = (
+        ".. raw:: html\n\n"
+        '   <details class="trace-viewer">\n'
+        f"     <summary>Live trace viewer — {label}</summary>\n"
+        "     <iframe\n"
+        f'       data-src="{iframe_src}"\n'
+        '       loading="lazy"\n'
+        '       width="100%" height="640"\n'
+        '       style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 1200px; display: block; background: transparent;"\n'
+        f'       title="Live EEG trace viewer for {dataset_id}"\n'
+        '       referrerpolicy="no-referrer">\n'
+        "     </iframe>\n"
+        "   </details>\n"
+    )
+    return heading + html
+
+
 def _format_see_also_section(
     dataset_id: str,
     class_name: str = "",
@@ -2607,6 +2707,7 @@ def _process_dataset_item(
         highlights_section=_format_highlights_section(context),
         quickstart_section=_format_quickstart_section(context),
         electrodes_section=_format_electrodes_section(context),
+        traces_section=_format_traces_section(context),
         api_section=_format_api_section(name),
         see_also_section=_format_see_also_section(dataset_id, name, related),
         feedback_section=_format_feedback_section(dataset_id, dataset_title),

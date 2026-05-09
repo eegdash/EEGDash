@@ -10,9 +10,8 @@ trials by ``trial_type``, align windows to a stimulus or response onset,
 and decode contrasts (target vs standard, congruent vs incongruent).
 The visual P300 oddball lesson is the canonical first event-related
 decoding task; the auditory variant is staged as a contrast that holds
-the paradigm fixed and changes only the modality. Sourced from
-``docs/tutorial_restructure_plan.md`` Category C (lines 410-425), with
-BIDS event handling per Pernet et al. (2019).
+the paradigm fixed and changes only the modality, with BIDS event
+handling per Pernet et al. (2019).
 
 What you will learn:
 

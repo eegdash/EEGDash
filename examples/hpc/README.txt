@@ -11,9 +11,8 @@ Single-machine examples cover the API; the HPC track covers the
 operational layer that lets you run those examples at the scale a real
 study requires. The cache layout, environment setup, and SLURM array
 patterns here are the same ones used in production for the EEGDash
-benchmark runs. Sourced from
-``docs/tutorial_restructure_plan.md`` Category J (HPC operations).
-Cross-link with the *How-To* guide for parallel feature extraction.
+benchmark runs. Cross-link with the *How-To* guide for parallel
+feature extraction.
 
 What you will learn:
 

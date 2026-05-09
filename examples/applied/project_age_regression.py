@@ -1,5 +1,7 @@
-"""Age regression from EEG (applied case study)
-==================================================
+"""Age regression from EEG
+=========================
+
+**Difficulty 3** | **Runtime: 30s** | **Compute: CPU**
 
 Can a feature-based regression head predict a child's age from a few
 seconds of resting-state EEG, on subjects the model has never seen?
@@ -15,6 +17,7 @@ predictor. EEG-based brain-age regression has a long line of prior work
 question here is not whether we beat the published literature; the
 honest one is, does the model beat the train-set median predictor on
 never-seen subjects?
+Keywords: regression, applied, age
 """
 
 # Difficulty: 3-star (advanced applied project)
@@ -29,6 +32,19 @@ never-seen subjects?
 # - fit a :class:`sklearn.linear_model.Ridge` head on a feature table and report ``r2``, MAE, and a median-baseline reference.
 # - read a three-panel diagnostic plate (predicted vs true, per-subject signed residual, error histogram) for an EEG regression.
 #
+# Validate your result
+# --------------------
+# - **Expected Target Distribution.** HBN ``ds005505`` spans children and
+#   adolescents (approx. 5-22 years). Your ground-truth distribution should
+#   reflect this range.
+# - **Regression Metrics.** Report ``Pearson r`` and ``Spearman rho`` for
+#   correlation, ``R^2`` for explained variance, and ``MAE`` (Mean Absolute
+#   Error) in years for absolute performance.
+# - **Confounds Warning.** Age prediction is sensitive to acquisition site and
+#   equipment. A model that works well on one dataset may fail on another due
+#   to "site effects" that correlate with age (e.g., younger children being
+#   recorded more frequently at one site).
+#
 # Requirements
 # ------------
 # - ~30 s on CPU when the gallery uses the offline feature path (default).
@@ -39,7 +55,7 @@ never-seen subjects?
 #   evaluation rationale that the figure plate is built around.
 
 # %%
-# Step 1. Setup, seeds, parametrised cache
+# Step 1. Setup, seeds, parameterized cache
 # ----------------------------------------
 import os
 import warnings
@@ -78,13 +94,13 @@ cache_dir.mkdir(parents=True, exist_ok=True)
 # 0.80? Write your guess before scrolling.
 
 # %% [markdown]
-# Step 3. Load HBN ds005505 (real path) or synthesise a feature table (gallery)
+# Step 3. Load HBN ds005505 (real path) or synthesize a feature table (gallery)
 # ------------------------------------------------------------------------------
 #
 # In production, :class:`eegdash.EEGDashDataset` exposes ``age`` and
 # ``sex`` through ``description_fields`` so they surface as per-recording
 # columns. The canonical call is shown below; this case study then
-# synthesises a feature table with the same column layout so the
+# synthesizes a feature table with the same column layout so the
 # rendered gallery runs offline and the smoke test stays fast.
 #
 # .. code-block:: python
@@ -129,7 +145,7 @@ for s in range(N_SUBJECTS):
     for w in range(N_WINDOWS):
         # Per-window features: a faint age signal in alpha / beta plus a
         # mild subject-level offset (the part the cross-subject loop must
-        # not memorise) and a noise floor that keeps R^2 modest.
+        # not memorize) and a noise floor that keeps R^2 modest.
         bias = 0.04 * (s - N_SUBJECTS / 2)
         row = {
             "subject": f"sub-NDARAA{s:04d}",
@@ -246,7 +262,7 @@ mean_baseline_mae = float(np.mean(fold_baseline_mae))
 #
 # **Run.** A frequent slip is wiring a non-numeric ``age`` column into
 # :class:`sklearn.linear_model.Ridge`. ``age`` arrives as strings if a
-# CSV was loaded without dtype hints (or if a NEMAR sidecar serialises
+# CSV was loaded without dtype hints (or if a NEMAR sidecar serializes
 # it as text), and Ridge then refuses to fit. We trigger the failure
 # on purpose with ``try / except`` so the error message and the
 # recovery sit next to each other in the rendered gallery.
@@ -378,6 +394,6 @@ assert mean_mae < mean_baseline_mae, "Model MAE must be below the median-baselin
 # %% [markdown]
 # References
 # ----------
-# See :doc:`/references` for the centralised bibliography of papers
+# See :doc:`/references` for the centralized bibliography of papers
 # cited above. Add or amend an entry once in
 # :file:`docs/source/refs.bib`; every tutorial inherits the update.

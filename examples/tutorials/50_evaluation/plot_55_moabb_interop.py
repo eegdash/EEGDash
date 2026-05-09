@@ -1,5 +1,7 @@
-"""How do I benchmark an EEGDash dataset with MOABB?
-=====================================================
+"""Benchmark EEGDash with MOABB
+============================
+
+**Difficulty 2-3** | **Runtime: 2m** | **Compute: CPU**
 
 EEGDash and MOABB sit on opposite ends of the BCI evaluation pipeline.
 EEGDash is a metadata index over BIDS-curated EEG :cite:`pernet2019eegbids`
@@ -29,6 +31,7 @@ paired comparison, and the integration-flow diagram.
 
 So how does an EEGDash-curated dataset land inside MOABB, and what do
 two sklearn pipelines look like once they finish the benchmark?
+Keywords: evaluation, MOABB, benchmarking
 """
 
 # %% [markdown]
@@ -114,6 +117,18 @@ print(f"cache_dir={CACHE_DIR}")
 # Brookshire et al. 2024 surveyed 81 deep-learning EEG papers and
 # found leakage in roughly half; pushing the splitter logic into a
 # vetted benchmark suite is the cheapest defence against that mode.
+#
+# Validate your result
+# --------------------
+# - **Result DataFrame.** MOABB returns a :class:`pandas.DataFrame` where
+#   each row is a subject-session-pipeline triplet.
+# - **Metric.** The default metric is usually **Accuracy** or **ROC AUC**,
+#   depending on the paradigm.
+# - **Comparison.** Verify that the "advanced" pipeline outperforms the
+#   "baseline" pipeline on the majority of subjects in the paired plot.
+# - **Failure Modes.** If MOABB raises a ``ValueError: No subjects found``,
+#   check that your dataset's labels match the MOABB paradigm's expected
+#   labels.
 
 # %% [markdown]
 # Step 1. The EEGDash side, ds002718 face recognition
@@ -333,7 +348,7 @@ print(summary.to_string(index=False))
 #
 # **Run.** Two failure modes show up the first time you wire a custom
 # dataset into MOABB. The first is asking a paradigm for a dataset it
-# does not recognise (``LeftRightImagery`` on a P300 dataset).
+# does not recognize (``LeftRightImagery`` on a P300 dataset).
 # :meth:`moabb.paradigms.base.BaseParadigm.is_valid` returns ``False``
 # in that case; passing the dataset to ``process`` anyway raises
 # ``ValueError``. The second is asking
@@ -477,6 +492,6 @@ print(
 # %% [markdown]
 # References
 # ----------
-# See :doc:`/references` for the centralised bibliography of papers
+# See :doc:`/references` for the centralized bibliography of papers
 # cited above. Add or amend an entry once in
 # :file:`docs/source/refs.bib`; every tutorial inherits the update.

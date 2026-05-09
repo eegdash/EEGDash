@@ -29,13 +29,13 @@ EEG signals carry strong, idiosyncratic, *subject-specific* statistics:
 skull thickness, hair impedance, electrode placement, baseline alpha
 power, blink habits, posture. A neural network with a few thousand free
 parameters easily latches onto those identity features because they
-generalise perfectly within a subject — every window from subject A
+generalize perfectly within a subject — every window from subject A
 "smells like" subject A.
 
 Now imagine a binary decoder for "eyes open vs. eyes closed". You shuffle
 all windows across all subjects and split 80/20 randomly. The classifier
 quickly discovers that a few windows from each subject are in the test
-set, and its best strategy is to memorise the spectral fingerprint of
+set, and its best strategy is to memorize the spectral fingerprint of
 subject A and reuse it for the held-out windows from subject A. It then
 reports an apparent accuracy of, say, 0.94. Unfortunately, this number
 is a lower-bounded *identification* accuracy plus the actual condition
@@ -54,7 +54,7 @@ A *window* is a short, overlapping slice of a recording. If you make
 2-second windows with 50% overlap, neighbouring windows share a full
 second of samples; their feature vectors differ only by smoothing. When
 you assign one to "train" and the other to "test", the test score is
-almost a noise estimate, not a generalisation estimate.
+almost a noise estimate, not a generalization estimate.
 
 This problem exists on top of the subject leakage problem: even within a
 single subject, randomising windows leaks information across the train/
@@ -74,7 +74,7 @@ independently.
 Within-subject vs. cross-session vs. cross-subject
 --------------------------------------------------
 
-These three terms describe what kind of generalisation you are claiming
+These three terms describe what kind of generalization you are claiming
 to measure. They differ in which axis the held-out fold spans:
 
 - **Within-subject** evaluation holds out *time* within a single
@@ -92,7 +92,7 @@ to measure. They differ in which axis the held-out fold spans:
 
 - **Cross-subject** evaluation holds out *different participants*.
   Train on subjects A–T, test on subjects U–Z. Answer: *does the model
-  generalise to a person it has never seen?* This is the standard for
+  generalize to a person it has never seen?* This is the standard for
   any "subject-invariant" or "foundation-model" claim.
 
 Each setting answers a different scientific question, so neither one is

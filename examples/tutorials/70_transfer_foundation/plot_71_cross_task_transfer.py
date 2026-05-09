@@ -1,5 +1,13 @@
-"""Pretrain on resting-state, fine-tune on contrast-change detection
-==================================================================
+"""Pretrain on resting-state, fine-tune on contrast-change detection (Simulated Data)
+==================================================================================
+
+**Difficulty 3** | **Runtime: 6m** | **Compute: GPU Preferred**
+
+.. note::
+   **Simulated Data.** This tutorial uses synthetic tensors to illustrate
+   transfer learning mechanics without a large data download. For real-data
+   transfer examples, see :doc:`/auto_examples/applied/project_p300_transfer`
+   and the :doc:`/auto_examples/eeg2025/index` challenge tracks.
 
 Can a small EEG encoder pretrained on **passive resting-state** windows
 help a downstream model decode **contrastChangeDetection (CCD)** that it
@@ -15,6 +23,7 @@ same subject pool (Aristimunha et al. 2025,
 doi:10.48550/arXiv.2506.19141), and asks how big the gap between a
 fine-tuned encoder and a from-scratch baseline really is. When the
 encoder transfers, by how much does it beat chance?
+Keywords: transfer-learning, fine-tuning, synthetic
 """
 
 # sphinx_gallery_thumbnail_path = '_static/thumbs/plot_71_cross_task_transfer.png'
@@ -75,7 +84,7 @@ print(f"device={DEVICE}, seed={SEED}")
 # ``task="contrastChangeDetection"``: same release, same mini subject
 # list, two paradigms (NEMAR, Delorme et al. 2022,
 # doi:10.1016/j.neuroimage.2022.119666). To keep this tutorial
-# reproducible without a 1.5 GB download we synthesise the windowed
+# reproducible without a 1.5 GB download we synthesize the windowed
 # shape ``(n_windows, n_channels, n_times)`` directly with task-specific
 # 1-30 Hz Butterworth pass-band content, keeping the spec invariant
 # ``pretext_subjects == target_subjects``. Two extra "source" tasks
@@ -107,7 +116,7 @@ TASK_PROFILES = {
 
 
 def make_task_windows(task, rng=None):
-    """Synthesise one task's windows on the same subject pool."""
+    """Synthesize one task's windows on the same subject pool."""
     rng = rng or np.random.default_rng(SEED + abs(hash(task)) % 997)
     profile = TASK_PROFILES[task]
     t = np.arange(N_TIMES) / SFREQ

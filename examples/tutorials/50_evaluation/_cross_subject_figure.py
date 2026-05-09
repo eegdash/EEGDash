@@ -343,7 +343,7 @@ def draw_cross_subject_figure(
 
     style_figure(
         fig,
-        title="How well does an EEG decoder generalise to a never-seen subject?",
+        title="How well does an EEG decoder generalize to a never-seen subject?",
         subtitle=subtitle,
         source=source,
         grid_axis="y",

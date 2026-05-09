@@ -1,5 +1,7 @@
-"""How does the brain answer a rare visual target?
-==================================================
+"""Visual P300 oddball decoding
+==============================
+
+**Difficulty 2** | **Runtime: 2m** | **Compute: CPU**
 
 A child watches letters flash one by one on a screen. Most letters are
 *standards*; one is the block's *target*. The brain answers the rare
@@ -17,6 +19,7 @@ artefacts side by side: an ERP at Pz, a scalp topography of the
 difference wave at the peak, and a 3-fold leave-one-subject-out
 accuracy on a logistic-regression decoder. Where does the textbook
 P300 actually live in the data?
+Keywords: classification, P300, oddball
 """
 
 # sphinx_gallery_thumbnail_path = '_static/thumbs/plot_20_visual_p300_oddball.png'
@@ -105,6 +108,18 @@ print(f"cache_dir = {CACHE_DIR}")
 #                                                     | /  \\__
 #                                  search 300-450 ms  |/      ~~  standard
 #
+
+# %% [markdown]
+# Validate your result
+# --------------------
+# - **Event-Label Validation.** Stimulus code ``XY`` should decode as a
+#   *target* if ``X == Y`` and *standard* otherwise.
+# - **Class Balance.** Targets are rare. Expect a ratio of roughly 1 target to
+#   4 standard trials (20% targets).
+# - **Epoch Shape.** Each window should be ``(n_channels, sfreq * 1.2s)``.
+#   With the default 5 channels and 128 Hz, expect ``(5, 154)``.
+# - **P3 component.** The ERP at Pz should show a clear positive bump between
+#   300-500 ms on target trials compared to standards.
 
 # %% [markdown]
 # Step 1: Pick a P300 dataset
@@ -295,7 +310,7 @@ print(f"diff_at_peak.shape = {diff_at_peak.shape}, n_eeg = {len(eeg_names)}")
 # Step 6: Cross-subject decoding with leave-one-subject-out
 # -----------------------------------------------------------
 # Within-subject splits report an upper bound on what a given decoder
-# learns. Cross-subject splits report what generalises. We pull two more
+# learns. Cross-subject splits report what generalizes. We pull two more
 # subjects (``010``, ``017``), run the same preprocessing, extract a
 # single P300 amplitude feature per channel (mean voltage in 300-450 ms),
 # and run :class:`sklearn.model_selection.GroupKFold` with the subject id
@@ -545,7 +560,7 @@ except (KeyError, ValueError) as exc:
 # and rerun the LOSO fit. Compare wall-time, accuracy, and the
 # ``LogisticRegression`` coefficient pattern: the high-dimensional fit
 # can overfit one subject's noise, so the LOSO mean is the honest
-# summary of what generalises.
+# summary of what generalizes.
 
 # %% [markdown]
 # Result
@@ -596,6 +611,6 @@ print(f"| n_standards (sub-{SUBJECT})            | {n_standards} |")
 # %% [markdown]
 # References
 # ----------
-# See :doc:`/references` for the centralised bibliography of papers
+# See :doc:`/references` for the centralized bibliography of papers
 # cited above. Add or amend an entry once in
 # :file:`docs/source/refs.bib`; every tutorial inherits the update.

@@ -1,5 +1,7 @@
-"""How do I get my first baseline running for EEG2025 Challenge 1 (CCD)?
-=========================================================================
+"""EEG2025 Challenge 1 Baseline (CCD)
+=====================================
+
+**Difficulty 3** | **Runtime: 3-6m** | **Compute: CPU (GPU Recommended)**
 
 Challenge 1 of the EEG2025 Foundation Challenge asks you to decode a
 **trial-level cognitive decision** from EEG: in the contrastChangeDetection
@@ -22,6 +24,7 @@ three-panel figure ready to drop into your submission.
 
 So how far above chance can a small CNN push CCD decoding on the mini
 release?
+Keywords: EEG2025, challenge, transfer
 """
 
 # %% [markdown]
@@ -33,8 +36,25 @@ release?
 # - Split subjects into 5 cross-subject folds with :class:`sklearn.model_selection.KFold` and assert no subject leakage across folds :cite:`pernet2019eegbids`.
 # - Train an :class:`~braindecode.models.EEGNeX` baseline and report per-fold test accuracy with mean +/- std next to chance.
 # - Plot a three-panel figure (trial schematic, one CCD window, per-fold accuracy) via ``draw_challenge_1_figure`` and save the model state_dict.
-
-# %% [markdown]
+#
+# EEG2025 Competition Notes
+# -------------------------
+# - **Community & Support.** Join the official EEG2025 Discord for task
+#   clarifications and to find teammates.
+# - **Submission Artifacts.** A complete submission requires:
+#   1. **Model Weights.** The ``state_dict`` of your trained model.
+#   2. **Prediction CSV.** A file containing your model's predictions on the
+#      held-out test set.
+#   3. **Reproducibility Report.** A short document (PDF or Markdown)
+#      detailing your architecture, training regime, and hardware.
+#
+# Reproducibility Checklist
+# -------------------------
+# - [ ] Use a fixed random seed (e.g., ``SEED = 2025``).
+# - [ ] Ensure no subject leakage between folds.
+# - [ ] Report both mean accuracy and standard deviation across folds.
+# - [ ] Specify your hardware (CPU/GPU) and total training time.
+#
 # Requirements
 # ------------
 #
@@ -126,7 +146,7 @@ pd.Series(
 # **Run.** The full Challenge 1 pipeline pulls real CCD recordings from
 # the EEG2025 mini bucket; that path needs network and ~80 MB per mini
 # subject. To keep the rendered tutorial reproducible without network we
-# also synthesise the windowed shape ``(n_windows, 129, 200)`` directly.
+# also synthesize the windowed shape ``(n_windows, 129, 200)`` directly.
 # The synthetic fallback keeps the same tensor contract and the same
 # label distribution so the rest of the tutorial reads identically. Set
 # the ``EEGDASH_CHALLENGE_REAL_DATA=1`` env var to flip the switch and
@@ -584,6 +604,6 @@ print("  metric = torch.sqrt(((preds - rt) ** 2).mean())  # RMSE in seconds")
 # %% [markdown]
 # References
 # ----------
-# See :doc:`/references` for the centralised bibliography of papers
+# See :doc:`/references` for the centralized bibliography of papers
 # cited above. Add or amend an entry once in
 # :file:`docs/source/refs.bib`; every tutorial inherits the update.

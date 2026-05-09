@@ -1,5 +1,7 @@
-"""How do I turn one EEG recording into a PyTorch DataLoader?
-============================================================
+"""EEG recording to PyTorch DataLoader
+======================================
+
+**Difficulty 1** | **Runtime: 2m** | **Compute: CPU**
 
 A model trains on tensor batches, not on continuous voltage traces. This
 tutorial closes the gap on one BIDS recording from `OpenNeuro
@@ -12,6 +14,7 @@ access. We do not train a model. The deliverable is one batch's
 ``shape`` and ``dtype``.
 
 .. sphinx_gallery_thumbnail_path = '_static/thumbs/plot_02_dataset_to_dataloader.png'
+Keywords: loading, PyTorch, DataLoader
 """
 
 # %% [markdown]
@@ -739,6 +742,6 @@ pd.Series(
 # %% [markdown]
 # References
 # ----------
-# See :doc:`/references` for the centralised bibliography of papers
+# See :doc:`/references` for the centralized bibliography of papers
 # cited above. Add or amend an entry once in
 # :file:`docs/source/refs.bib`; every tutorial inherits the update.

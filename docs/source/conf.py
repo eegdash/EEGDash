@@ -2300,95 +2300,90 @@ def _format_electrodes_section(context: Mapping[str, object]) -> str:
 # ---------------------------------------------------------------------------
 # Trace viewer iframe: live signal preview from the eegdash-viewer
 # (https://eegdash.github.io/eegdash-viewer/) embedded as a lazy iframe.
-# Same lazy-load pattern as the electrode-explorer above (see lazy-embed.js):
-# zero bytes are fetched from the viewer or its CDN until a reader expands
-# the <details>.
+# Query the eegdash API for the first supported EEG record per dataset.
 # ---------------------------------------------------------------------------
 
 _TRACE_VIEWER_BASE = "https://eegdash.github.io/eegdash-viewer/"
+_TRACE_API_URL = "https://data.eegdash.org/api/eegdash/records"
+_TRACE_SUPPORTED_EXT = (".set", ".edf", ".bdf", ".vhdr")
 
-_traces_recordings_cache: dict[str, object] | None = None
 
+def _get_first_eeg_record(dataset_id: str) -> dict[str, object] | None:
+    """Query eegdash API for the first supported EEG record in a dataset."""
+    import urllib.parse
+    import urllib.request
 
-def _load_traces_recordings() -> Mapping[str, Mapping[str, object]]:
-    """Read the trace-viewer recordings manifest (cached across calls).
+    query = {
+        "dataset": dataset_id,
+        "suffix": "eeg",
+        "extension": {"$in": list(_TRACE_SUPPORTED_EXT)},
+        "_has_missing_files": {"$ne": True},
+    }
+    params = {
+        "limit": 1,
+        "filter": json.dumps(query, separators=(",", ":")),
+    }
+    url = f"{_TRACE_API_URL}?{urllib.parse.urlencode(params)}"
 
-    Missing file or malformed JSON degrades silently to empty — dataset
-    pages then render no traces section instead of broken iframes.
-    """
-    global _traces_recordings_cache
-    if _traces_recordings_cache is not None:
-        return _traces_recordings_cache  # type: ignore[return-value]
-    path = (
-        Path(__file__).parent
-        / "_static"
-        / "dataset_generated"
-        / "traces-viewer-recordings.json"
-    )
     try:
-        doc = json.loads(path.read_text(encoding="utf-8"))
-        recordings = doc.get("recordings", {})
-        if not isinstance(recordings, dict):
-            recordings = {}
-    except (FileNotFoundError, json.JSONDecodeError) as exc:
-        LOGGER.info("[traces-viewer] manifest unavailable (%s); section omitted", exc)
-        recordings = {}
-    _traces_recordings_cache = recordings
-    return recordings
+        req = urllib.request.Request(url, headers={"Accept": "application/json"})
+        with urllib.request.urlopen(req, timeout=10) as resp:
+            body = json.loads(resp.read().decode("utf-8"))
+            if body.get("success") and body.get("data"):
+                return body["data"][0]
+    except Exception:
+        pass
+    return None
 
 
 def _format_traces_section(context: Mapping[str, object]) -> str:
-    """Render a lazy <details><iframe> block for this dataset's signal preview.
+    """Render an iframe for this dataset's signal preview.
 
-    The iframe shows ONE representative recording out of the many that
-    typically make up an OpenNeuro EEG dataset. Both the disclosure
-    summary and a short caption above the iframe make this explicit so
-    a reader doesn't mistake one example for the whole dataset.
-
-    If the manifest doesn't have an entry for this dataset_id we just
-    omit the section entirely (no placeholder) — the electrode-layout
-    section already shows when a dataset is recognised, and double-
-    placeholders would clutter the catalogue page.
+    Query the API for the first supported EEG record and build the viewer URL.
     """
     dataset_id = str(context.get("dataset_id") or "").strip().lower()
     if not dataset_id:
         return ""
 
-    recordings = _load_traces_recordings()
-    entry = recordings.get(dataset_id)
-    if not entry:
+    record = _get_first_eeg_record(dataset_id)
+    if not record:
         return ""
 
-    # Required fields
-    sub = str(entry.get("sub") or "").strip()
-    task = str(entry.get("task") or "").strip()
-    ext = str(entry.get("ext") or "").strip()
-    if not sub or not task or not ext:
+    # Extract entity info from record or its entities_mne dict
+    entities = (
+        record.get("entities_mne", {})
+        if isinstance(record.get("entities_mne"), dict)
+        else {}
+    )
+    sub = str(record.get("subject") or entities.get("subject") or "").strip()
+    task = str(record.get("task") or entities.get("task") or "").strip()
+    ext = str(record.get("extension") or "").strip().lstrip(".")
+
+    if not sub or not ext:
         return ""
 
     # Build the viewer URL
     from urllib.parse import urlencode
 
-    qs_pairs = [("dataset", dataset_id), ("sub", sub), ("task", task)]
-    ses = entry.get("ses")
+    qs_pairs = [("dataset", dataset_id), ("sub", sub)]
+    ses = record.get("session") or entities.get("session")
     if ses:
         qs_pairs.append(("ses", str(ses)))
-    run = entry.get("run")
+    if task:
+        qs_pairs.append(("task", task))
+    run = record.get("run") or entities.get("run")
     if run:
         qs_pairs.append(("run", str(run)))
     qs_pairs.append(("ext", ext))
     qs_pairs.append(("embed", "1"))
     iframe_src = f"{_TRACE_VIEWER_BASE}?{urlencode(qs_pairs)}"
 
-    # Build a recording label that names the specific entity tuple in
-    # BIDS notation (sub-NN · task-XX · run-NN). This makes the
-    # disclosure summary explicit about *which* recording is shown,
-    # separate from the format/channel-count "label" in the manifest.
-    fmt_label = str(entry.get("label") or "Signal preview").strip()
+    # Build entity label
     entity_bits = [f"sub-{sub}"]
     if ses:
         entity_bits.append(f"ses-{ses}")
-    entity_bits.append(f"task-{task}")
+    if task:
+        entity_bits.append(f"task-{task}")
     if run:
         entity_bits.append(f"run-{run}")
     entity_label = " · ".join(entity_bits)
@@ -2412,8 +2407,7 @@ def _format_traces_section(context: Mapping[str, object]) -> str:
     html = (
         ".. raw:: html\n\n"
         '   <details class="trace-viewer">\n'
-        f"     <summary>Live trace viewer — <strong>{entity_label}</strong> "
-        f'<span class="trace-viewer-fmt">({fmt_label})</span></summary>\n'
+        f"     <summary>Live trace viewer — <strong>{entity_label}</strong></summary>\n"
         '     <p class="trace-viewer-caption">\n'
         "       Showing <strong>one</strong> representative recording out of\n"
         f"       <strong>{scope_str}</strong> in this dataset.\n"

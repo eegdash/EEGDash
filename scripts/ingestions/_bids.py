@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import csv
 import re
 from pathlib import Path
 from typing import Any, Pattern
@@ -166,19 +167,16 @@ def find_channels_tsv(data_filepath: Path) -> Path:
 def count_bad_channels(channels_tsv_path: Path) -> int | None:
     """Count ``status: bad`` entries in a channels.tsv file.
 
-    Returns ``None`` when the file is missing or has no ``status`` column,
-    so callers can distinguish "no annotation" from "zero bad channels".
+    Returns ``None`` when the file is missing or has no ``status`` column
+    so callers can distinguish "no annotation" (None) from "zero bad
+    channels" (0).
     """
     if not channels_tsv_path.exists():
         return None
     try:
-        import csv
-
         with open(channels_tsv_path, newline="", encoding="utf-8") as fh:
             reader = csv.DictReader(fh, delimiter="\t")
-            if reader.fieldnames is None or "status" not in [
-                f.lower() for f in reader.fieldnames
-            ]:
+            if reader.fieldnames is None:
                 return None
             col = next((f for f in reader.fieldnames if f.lower() == "status"), None)
             if col is None:

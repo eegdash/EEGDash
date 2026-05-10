@@ -2309,6 +2309,63 @@ def _format_electrodes_section(context: Mapping[str, object]) -> str:
     return heading + html
 
 
+def _make_count_bar_chart(
+    entries: list,
+    label: str,
+    unit: str,
+    bar_color: str = "#4472c4",
+) -> str:
+    """Render a compact vertical bar chart for a count distribution as RST raw HTML."""
+    if not entries:
+        return ""
+    vals = [(e.get("val"), e.get("count")) for e in entries if e.get("val") is not None]
+    if not vals:
+        return ""
+    if len(vals) == 1:
+        return (
+            ".. raw:: html\n\n"
+            '   <div class="eegdash-stats-section" style="margin-bottom:1rem;">\n'
+            f"     <p><strong>{label}</strong>: {vals[0][0]} {unit}"
+            f" (n={vals[0][1]} recordings)</p>\n"
+            "   </div>\n\n"
+        )
+    max_count = max(c for _, c in vals)
+    bar_width = 28
+    bars_html = ""
+    labels_html = ""
+    for val, count in sorted(vals, key=lambda x: x[0]):
+        pct = int(count / max_count * 100) if max_count else 0
+        val_label = str(int(val)) if float(val) == int(float(val)) else f"{val:.1f}"
+        bars_html += (
+            f'<div style="width:{bar_width}px; height:{pct}%; '
+            f'background:{bar_color}; flex-shrink:0;" '
+            f'title="{val_label} {unit}: {count}"></div>'
+        )
+        labels_html += (
+            f'<span style="width:{bar_width}px; text-align:center; '
+            f'overflow:hidden; white-space:nowrap; font-size:9px;">{val_label}</span>'
+        )
+    return (
+        ".. raw:: html\n\n"
+        '   <div class="eegdash-stats-section" style="margin-bottom:1rem;">\n'
+        f"     <p><strong>{label}</strong> ({unit})</p>\n"
+        '     <div class="eeg-chart-row" style="display:flex; align-items:flex-end; '
+        'gap:2px; height:60px;">\n'
+        f"       {bars_html}\n"
+        "     </div>\n"
+        '     <div class="eeg-chart-labels" style="display:flex; gap:2px; font-size:10px;">\n'
+        f"       {labels_html}\n"
+        "     </div>\n"
+        "   </div>\n\n"
+    )
+
+
+# BIDS spec allows both short ("f"/"m") and long ("female"/"male") forms,
+# case-insensitive. Anything else is counted as "other/unknown".
+_BIDS_FEMALE_KEYS = {"f", "female"}
+_BIDS_MALE_KEYS = {"m", "male"}
+
+
 def _format_recording_stats_section(context: Mapping[str, object]) -> str:
     """Generate a Dataset Statistics section from EEGDash API data.
 
@@ -2334,7 +2391,7 @@ def _format_recording_stats_section(context: Mapping[str, object]) -> str:
     has_bad_channels = bad_channels_info is not None
 
     if not any(
-        [has_ages, has_sex, has_nchans, has_sfreq, has_duration, has_bad_channels]
+        (has_ages, has_sex, has_nchans, has_sfreq, has_duration, has_bad_channels)
     ):
         return ""
 
@@ -2349,28 +2406,18 @@ def _format_recording_stats_section(context: Mapping[str, object]) -> str:
         if valid_ages:
             age_min = min(valid_ages)
             age_max = max(valid_ages)
-            # 5-year buckets
             bucket_size = 5
-            bucket_start = int(age_min // bucket_size) * bucket_size
-            bucket_end = int(age_max // bucket_size) * bucket_size + bucket_size
-            buckets: dict[int, int] = {}
-            for start in range(bucket_start, bucket_end, bucket_size):
-                buckets[start] = 0
-            for a in valid_ages:
-                key = int(float(a) // bucket_size) * bucket_size
-                if key in buckets:
-                    buckets[key] += 1
-                else:
-                    buckets[key] = 1
-
-            max_count = max(buckets.values()) if buckets else 1
-            bar_width = 28  # px per bar
+            buckets: Counter[int] = Counter(
+                int(float(a) // bucket_size) * bucket_size for a in valid_ages
+            )
+            max_count = max(buckets.values())
+            bar_width = 28
 
             bars_html = ""
             labels_html = ""
             for start in sorted(buckets):
                 count = buckets[start]
-                pct = int(count / max_count * 100) if max_count else 0
+                pct = int(count / max_count * 100)
                 label = f"{start}-{start + bucket_size - 1}"
                 bars_html += (
                     f'<div style="width:{bar_width}px; height:{pct}%; '
@@ -2402,10 +2449,17 @@ def _format_recording_stats_section(context: Mapping[str, object]) -> str:
     # B. Sex distribution horizontal bar
     # ------------------------------------------------------------------
     if has_sex:
-        f_count = int(sex_dist.get("f") or sex_dist.get("F") or 0)
-        m_count = int(sex_dist.get("m") or sex_dist.get("M") or 0)
-        other_keys = {k for k in sex_dist if k.lower() not in ("f", "m")}
-        o_count = sum(int(sex_dist.get(k) or 0) for k in other_keys)
+        f_count = sum(
+            int(v or 0) for k, v in sex_dist.items() if k.lower() in _BIDS_FEMALE_KEYS
+        )
+        m_count = sum(
+            int(v or 0) for k, v in sex_dist.items() if k.lower() in _BIDS_MALE_KEYS
+        )
+        o_count = sum(
+            int(v or 0)
+            for k, v in sex_dist.items()
+            if k.lower() not in _BIDS_FEMALE_KEYS | _BIDS_MALE_KEYS
+        )
         total_sex = f_count + m_count + o_count
 
         if total_sex > 0:
@@ -2470,60 +2524,6 @@ def _format_recording_stats_section(context: Mapping[str, object]) -> str:
                 "   </div>\n\n"
             )
             parts.append(sex_html)
-
-    # ------------------------------------------------------------------
-    # Helper: compact bar chart for count distributions
-    # ------------------------------------------------------------------
-    def _make_count_bar_chart(
-        entries: list,
-        label: str,
-        unit: str,
-        bar_color: str = "#4472c4",
-    ) -> str:
-        if not entries:
-            return ""
-        vals = [
-            (e.get("val"), e.get("count")) for e in entries if e.get("val") is not None
-        ]
-        if not vals:
-            return ""
-        if len(vals) == 1:
-            return (
-                ".. raw:: html\n\n"
-                '   <div class="eegdash-stats-section" style="margin-bottom:1rem;">\n'
-                f"     <p><strong>{label}</strong>: {vals[0][0]} {unit}"
-                f" (n={vals[0][1]} recordings)</p>\n"
-                "   </div>\n\n"
-            )
-        max_count = max(c for _, c in vals) if vals else 1
-        bar_width = 28
-        bars_html = ""
-        labels_html = ""
-        for val, count in sorted(vals, key=lambda x: x[0]):
-            pct = int(count / max_count * 100) if max_count else 0
-            val_label = str(int(val)) if float(val) == int(float(val)) else f"{val:.1f}"
-            bars_html += (
-                f'<div style="width:{bar_width}px; height:{pct}%; '
-                f'background:{bar_color}; flex-shrink:0;" '
-                f'title="{val_label} {unit}: {count}"></div>'
-            )
-            labels_html += (
-                f'<span style="width:{bar_width}px; text-align:center; '
-                f'overflow:hidden; white-space:nowrap; font-size:9px;">{val_label}</span>'
-            )
-        return (
-            ".. raw:: html\n\n"
-            '   <div class="eegdash-stats-section" style="margin-bottom:1rem;">\n'
-            f"     <p><strong>{label}</strong> ({unit})</p>\n"
-            '     <div class="eeg-chart-row" style="display:flex; align-items:flex-end; '
-            'gap:2px; height:60px;">\n'
-            f"       {bars_html}\n"
-            "     </div>\n"
-            '     <div class="eeg-chart-labels" style="display:flex; gap:2px; font-size:10px;">\n'
-            f"       {labels_html}\n"
-            "     </div>\n"
-            "   </div>\n\n"
-        )
 
     # ------------------------------------------------------------------
     # C. Channel count distribution

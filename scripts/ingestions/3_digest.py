@@ -1321,10 +1321,6 @@ def extract_record(
         sidecar_inline=sidecar_inline or None,
     )
 
-    # Store BIDS-annotated bad channel count when available.
-    # n_bad_channels is None  → channels.tsv has no status column (not annotated)
-    # n_bad_channels is 0     → all channels are good
-    # n_bad_channels is N > 0 → N channels are marked status:bad
     if n_bad_channels is not None:
         record["n_bad_channels"] = n_bad_channels
 

@@ -2309,13 +2309,17 @@ _TRACE_SUPPORTED_EXT = (".set", ".edf", ".bdf", ".vhdr")
 
 
 def _get_first_eeg_record(dataset_id: str) -> dict[str, object] | None:
-    """Query eegdash API for the first supported EEG record in a dataset."""
+    """Query eegdash API for the first supported electrophysiology record.
+
+    Searches for any compatible modality (EEG, iEEG, EMG) that can be viewed
+    with the eegdash-viewer, prioritizing EEG.
+    """
     import urllib.parse
     import urllib.request
 
     query = {
         "dataset": dataset_id,
-        "suffix": "eeg",
+        "suffix": {"$in": ["eeg", "ieeg", "emg"]},
         "extension": {"$in": list(_TRACE_SUPPORTED_EXT)},
         "_has_missing_files": {"$ne": True},
     }

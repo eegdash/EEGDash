@@ -56,7 +56,7 @@ After this tutorial you will be able to:
 ## Requirements
 
 - ~30 s on CPU; GPU optional. No live network.
-- Prereqs: [How do I get started with the EEG2025 Foundation Challenge dataset?](plot_70_challenge_dataset_basics.md) and plot_42_features_to_sklearn.
+- Prereqs: [How do I get started with the EEG2025 Foundation Challenge dataset?](plot_70_challenge_dataset_basics.md) and [EEGDash features to scikit-learn](../40_features/plot_42_features_to_sklearn.md).
 - Concept: [Leakage and evaluation](../../../../concepts/leakage_and_evaluation.md).
 
 <!-- GENERATED FROM PYTHON SOURCE LINES 54-55 -->

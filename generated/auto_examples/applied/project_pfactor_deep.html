@@ -639,8 +639,8 @@ model isn’t just learning site-specific noise.</p></li>
 <li><p><strong>Estimated time</strong>: ~25 s on CPU, ~10 s on GPU (synthetic surrogate).</p></li>
 <li><p><strong>Data downloaded</strong>: 0 MB on the synthetic path; ~1.5 GB to fetch the
 real ds005505 windows on the HBN path (cached after first run).</p></li>
-<li><p><strong>Prerequisites</strong>: <span class="xref std std-doc">/auto_examples/tutorials/10_core_workflow/plot_11_leakage_safe_split</span>,
-<span class="xref std std-doc">/auto_examples/tutorials/70_transfer_foundation/plot_72_subject_invariant_regression</span>
+<li><p><strong>Prerequisites</strong>: <a class="reference internal" href="../tutorials/10_core_workflow/plot_11_leakage_safe_split.html"><span class="doc">Split EEG without subject leakage</span></a>,
+<a class="reference internal" href="../tutorials/70_transfer_foundation/plot_72_subject_invariant_regression.html"><span class="doc">Subject-invariant p-factor regression (EEG2025 Challenge 2)</span></a>
 (the feature analogue of this script).</p></li>
 <li><p><strong>Concept page</strong>: <a class="reference internal" href="../../../concepts/leakage_and_evaluation.html"><span class="doc">Leakage and evaluation</span></a>.</p></li>
 </ul>
@@ -1018,7 +1018,7 @@ belongs in a follow-up study with much larger N.</p>
 <a class="reference external" href="https://braindecode.org/stable/generated/braindecode.models.ShallowFBCSPNet.html#braindecode.models.ShallowFBCSPNet" title="(in Braindecode v1.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">braindecode.models.ShallowFBCSPNet</span></code></a> and rerun.</p></li>
 <li><p>Bump <code class="docutils literal notranslate"><span class="pre">N_SEEDS</span></code> to 5 and report the 5-seed mean r +/- SE.</p></li>
 <li><p>Replace the synthetic windows with a real ds005505 query
-(<span class="xref std std-doc">/auto_examples/tutorials/10_core_workflow/plot_10_preprocess_and_window</span>).</p></li>
+(<a class="reference internal" href="../tutorials/10_core_workflow/plot_10_preprocess_and_window.html"><span class="doc">Preprocess EEG and create windows</span></a>).</p></li>
 <li><p>Pretrain on eyes-open vs eyes-closed and run linear-probe;
 compare best_val_r with the from-scratch run from this script.</p></li>
 </ul>

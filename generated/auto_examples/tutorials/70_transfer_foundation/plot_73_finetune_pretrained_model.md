@@ -61,7 +61,7 @@ Requirements
 - **Data downloaded**: 0 MB (synthetic windows; deterministic seed).
 - **Prerequisites**: [Pretrain on resting-state, fine-tune on contrast-change detection (Simulated Data)](plot_71_cross_task_transfer.md) (encoder
 
-> snapshot), /auto_examples/tutorials/10_core_workflow/plot_11_leakage_safe_split
+> snapshot), [Split EEG without subject leakage](../10_core_workflow/plot_11_leakage_safe_split.md)
 > (cross-subject split).
 - **Concept page**: [Features vs. deep learning](../../../../concepts/features_vs_deep_learning.md).
 
@@ -99,7 +99,7 @@ torch.manual_seed(SEED)
 ```
 
 ```none
-<torch._C.Generator object at 0x7f23213cc8d0>
+<torch._C.Generator object at 0x7f6133fec8d0>
 ```
 
 <!-- GENERATED FROM PYTHON SOURCE LINES 86-107 -->
@@ -602,7 +602,7 @@ and call `model.reset_head(n_outputs=K)`.
   `EEGNetv4` and rerun the three regimes.
 - Hold out two subjects and report mean +/- std across folds.
 - Replace synth data with a windowed EEGDash query
-  (/auto_examples/tutorials/10_core_workflow/plot_10_preprocess_and_window).
+  ([Preprocess EEG and create windows](../10_core_workflow/plot_10_preprocess_and_window.md)).
 
 <!-- GENERATED FROM PYTHON SOURCE LINES 499-504 -->
 
@@ -612,6 +612,6 @@ See [References](../../../../references.md) for the centralized bibliography of 
 cited above. Add or amend an entry once in
 `docs/source/refs.bib`; every tutorial inherits the update.
 
-**Total running time of the script:** (0 minutes 1.927 seconds)
+**Total running time of the script:** (0 minutes 1.873 seconds)
 
 <a id="sphx-glr-download-generated-auto-examples-tutorials-70-transfer-foundation-plot-73-finetune-pretrained-model-py"></a>

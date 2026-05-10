@@ -655,9 +655,9 @@ stays reproducible without network.</p></li>
 <li><p>Network on first call (catalog query, ~1 MB into the cache; per-mini
 BDFs are pulled lazily when the model first asks for windows).</p></li>
 <li><p>Prerequisites:
-<span class="xref std std-doc">/auto_examples/tutorials/70_transfer_foundation/plot_70_challenge_dataset_basics</span>
+<a class="reference internal" href="../tutorials/70_transfer_foundation/plot_70_challenge_dataset_basics.html"><span class="doc">How do I get started with the EEG2025 Foundation Challenge dataset?</span></a>
 for <a class="reference internal" href="../../../api/dataset/eegdash.dataset.EEGChallengeDataset.html#eegdash.dataset.EEGChallengeDataset" title="eegdash.dataset.EEGChallengeDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">EEGChallengeDataset</span></code></a> basics, and
-<span class="xref std std-doc">/auto_examples/tutorials/00_start_here/plot_02_dataset_to_dataloader</span>
+<a class="reference internal" href="../tutorials/00_start_here/plot_02_dataset_to_dataloader.html"><span class="doc">EEG recording to PyTorch DataLoader</span></a>
 for the windowing -&gt; <a class="reference external" href="https://docs.pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader" title="(in PyTorch v2.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.utils.data.DataLoader</span></code></a> flow.</p></li>
 </ul>
 <p>Setup, seeds, cache, and device. <code class="docutils literal notranslate"><span class="pre">np.random.seed</span></code> keeps the synthetic
@@ -1253,10 +1253,10 @@ EEGChallengeDataset).</p></li>
 <li><p>Concept: <a class="reference internal" href="../../../concepts/leakage_and_evaluation.html"><span class="doc">Leakage and evaluation</span></a> (why we split on
 subjects, not trials).</p></li>
 <li><p>Next tutorial:
-<span class="xref std std-doc">/auto_examples/tutorials/70_transfer_foundation/plot_71_cross_task_transfer</span>
+<a class="reference internal" href="../tutorials/70_transfer_foundation/plot_71_cross_task_transfer.html"><span class="doc">Pretrain on resting-state, fine-tune on contrast-change detection (Simulated Data)</span></a>
 pretrains on RestingState and fine-tunes on CCD.</p></li>
 <li><p>Next tutorial:
-<span class="xref std std-doc">/auto_examples/tutorials/70_transfer_foundation/plot_73_finetune_pretrained_model</span>
+<a class="reference internal" href="../tutorials/70_transfer_foundation/plot_73_finetune_pretrained_model.html"><span class="doc">How do I adapt a pretrained EEG model to a new task?</span></a>
 fine-tunes a foundation model with the same loader.</p></li>
 </ul>
 </section>
@@ -1265,7 +1265,7 @@ fine-tunes a foundation model with the same loader.</p></li>
 <p>See <a class="reference internal" href="../../../references.html"><span class="doc">References</span></a> for the centralized bibliography of papers
 cited above. Add or amend an entry once in
 <code class="file docutils literal notranslate"><span class="pre">docs/source/refs.bib</span></code>; every tutorial inherits the update.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (8 minutes 9.627 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (8 minutes 6.148 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-auto-examples-eeg2025-tutorial-challenge-1-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/eegdash/EEGDash/main?urlpath=lab/tree/notebooks/generated/auto_examples/eeg2025/tutorial_challenge_1.ipynb"><img alt="Launch binder" src="../../../_images/binder_badge_logo2.svg" style="width: 150px;" />

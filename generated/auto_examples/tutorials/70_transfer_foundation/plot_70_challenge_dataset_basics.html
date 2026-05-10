@@ -640,8 +640,8 @@ is cached.</p></li>
 query). The challenge BDF files are not eagerly downloaded; that
 happens lazily when <code class="docutils literal notranslate"><span class="pre">record.raw</span></code> is accessed or a Braindecode
 pipeline pulls it.</p></li>
-<li><p>Prerequisites: <span class="xref std std-doc">/auto_examples/tutorials/00_start_here/plot_00_first_search</span>,
-<span class="xref std std-doc">/auto_examples/tutorials/00_start_here/plot_01_first_recording</span>.</p></li>
+<li><p>Prerequisites: <a class="reference internal" href="../00_start_here/plot_00_first_search.html"><span class="doc">Find datasets with the EEGDash API</span></a>,
+<a class="reference internal" href="../00_start_here/plot_01_first_recording.html"><span class="doc">Load one EEG recording</span></a>.</p></li>
 <li><p>Concept: <a class="reference internal" href="../../../../concepts/eegdash_objects.html"><span class="doc">EEGDash objects: EEGDash, EEGDashDataset, EEGChallengeDataset</span></a>.</p></li>
 </ul>
 <p>Setup. <code class="docutils literal notranslate"><span class="pre">np.random.seed</span></code> keeps any later sampling reproducible; the
@@ -849,7 +849,7 @@ query alone is enough to enumerate the task taxonomy.</p>
 │ If you are participating in the competition, always use                      │
 │ `EEGChallengeDataset` to ensure consistency with the challenge data.         │
 ╰──────────────────────── Source: EEGChallengeDataset ─────────────────────────╯
-[05/10/26 16:36:27] INFO     Auto-corrected misrouted             dataset.py:402
+[05/10/26 18:55:23] INFO     Auto-corrected misrouted             dataset.py:402
                              storage.base for dataset
                              EEG2025r5mini: None -&gt;
                              s3://nemar/EEG2025r5mini
@@ -1484,7 +1484,7 @@ claim.</p>
 │ If you are participating in the competition, always use                      │
 │ `EEGChallengeDataset` to ensure consistency with the challenge data.         │
 ╰──────────────────────── Source: EEGChallengeDataset ─────────────────────────╯
-[05/10/26 16:36:29] INFO     Auto-corrected misrouted             dataset.py:402
+[05/10/26 18:55:25] INFO     Auto-corrected misrouted             dataset.py:402
                              storage.base for dataset EEG2025r5:
                              None -&gt; s3://nemar/EEG2025r5
 </pre></div>
@@ -1691,7 +1691,7 @@ are different by design, but the relationship <code class="docutils literal notr
 │ If you are participating in the competition, always use                      │
 │ `EEGChallengeDataset` to ensure consistency with the challenge data.         │
 ╰──────────────────────── Source: EEGChallengeDataset ─────────────────────────╯
-[05/10/26 16:36:35] INFO     Auto-corrected misrouted             dataset.py:402
+[05/10/26 18:55:31] INFO     Auto-corrected misrouted             dataset.py:402
                              storage.base for dataset
                              EEG2025r2mini: None -&gt;
                              s3://nemar/EEG2025r2mini
@@ -1880,10 +1880,10 @@ to <code class="docutils literal notranslate"><span class="pre">mini=False</span
 with raw <code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code> pulls because the
 0.5-50 Hz pass-band and 100 Hz downsample make the two views
 incompatible. Next:
-<span class="xref std std-doc">/auto_examples/tutorials/70_transfer_foundation/plot_71_cross_task_transfer</span>
+<a class="reference internal" href="plot_71_cross_task_transfer.html"><span class="doc">Pretrain on resting-state, fine-tune on contrast-change detection (Simulated Data)</span></a>
 trains a transfer baseline across the task taxonomy you just
 enumerated;
-<span class="xref std std-doc">/auto_examples/tutorials/70_transfer_foundation/plot_73_finetune_pretrained_model</span>
+<a class="reference internal" href="plot_73_finetune_pretrained_model.html"><span class="doc">How do I adapt a pretrained EEG model to a new task?</span></a>
 fine-tunes a foundation model with the same loader.</p>
 </section>
 <section id="try-it-yourself-extensions">
@@ -1902,7 +1902,7 @@ confirm <code class="docutils literal notranslate"><span class="pre">raw.info[&q
 <p>See <a class="reference internal" href="../../../../references.html"><span class="doc">References</span></a> for the centralized bibliography of papers
 cited above. Add or amend an entry once in
 <code class="file docutils literal notranslate"><span class="pre">docs/source/refs.bib</span></code>; every tutorial inherits the update.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 8.614 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 8.154 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-auto-examples-tutorials-70-transfer-foundation-plot-70-challenge-dataset-basics-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/eegdash/EEGDash/main?urlpath=lab/tree/notebooks/generated/auto_examples/tutorials/70_transfer_foundation/plot_70_challenge_dataset_basics.ipynb"><img alt="Launch binder" src="../../../../_images/binder_badge_logo11.svg" style="width: 150px;" />

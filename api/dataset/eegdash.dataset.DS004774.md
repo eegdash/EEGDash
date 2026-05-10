@@ -119,7 +119,7 @@ No README content is available for this dataset.
 - Type: Clinical/Intervention
 
 - Size on disk: 24.8 GB
-- File count: 9
+- File count: 14
 - Format: BIDS
 
 - License: CC0

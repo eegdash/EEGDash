@@ -151,7 +151,7 @@ Note that although the original files were recorded at 2048 Hz, they were downsa
 ## Signal Preview
 
 <details class="trace-viewer">
-  <summary>Live trace viewer — <strong>sub-001 · ses-01 · task-meditation</strong></summary>
+  <summary>Live trace viewer — <strong>sub-021 · ses-01 · task-meditation</strong></summary>
   <p class="trace-viewer-caption">
     Showing <strong>one</strong> representative recording out of
     <strong>24 subjects and 40 recordings</strong> in this dataset.
@@ -160,11 +160,11 @@ Note that although the original files were recorded at 2048 Hz, they were downsa
     viewer (or pass <code>?eeg=&lt;url&gt;</code>) to inspect it.
   </p>
   <iframe
-    data-src="https://eegdash.github.io/eegdash-viewer/?dataset=ds001787&sub=001&ses=01&task=meditation&ext=bdf&embed=1"
+    data-src="https://eegdash.github.io/eegdash-viewer/?dataset=ds001787&sub=021&ses=01&task=meditation&ext=bdf&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 1200px; display: block; background: transparent;"
-    title="Live EEG trace viewer for ds001787 — sub-001 · ses-01 · task-meditation"
+    title="Live EEG trace viewer for ds001787 — sub-021 · ses-01 · task-meditation"
     referrerpolicy="no-referrer">
   </iframe>
 </details>

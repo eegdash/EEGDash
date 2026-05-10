@@ -122,6 +122,20 @@ Viewing distance: 60 cm; viewing angle: 7 degrees.
 - *Training images:* shown 4-5 times per participant
 - *Randomization:* constrained so no image repeats within 2 intervening items
 
+The stimulus images live under `/stimuli/<NNNNN>.jpg` (5-digit zero-padded, IDs `00000` through `16748`). They mirror the upstream HuggingFace `Alljoined/Alljoined-1.6M`’s `stimuli.zip`, which is itself the THINGS image set used by THINGS-EEG2 (see `nm000232`). Each `events.tsv` row whose `trial_type` starts with `stim_test,<id>,...` resolves to `stimuli/<id:05d>.jpg`.
+A small Python helper is provided to make alignment one line:
+
+```python
+import pandas as pd
+from code.align_stimuli import StimulusAligner
+aligner = StimulusAligner('.')
+events = pd.read_csv('sub-01/ses-01/eeg/sub-01_ses-01_task-images_run-01_events.tsv', sep='\t')
+paths = aligner.paths_for_events(events)        # list[Path | None]; None for non-stim_test rows
+img   = aligner.image_for_event(events.iloc[0]) # PIL.Image, or None
+```
+
+Run `python code/smoke_test.py` from the dataset root to verify every `stim_test` reference resolves to an existing image (currently 328,364/328,364 ≈ 100%).
+
 **Subjects, Sessions, and Runs**
 
 20 subjects, 4 sessions each (sub-08 has an additional session `ses-02old`, a retake of session 2). Each session contains 19 RSVP blocks (runs), approximately 5 minutes each. The first 4 runs per session present test images; the remaining 15 runs present training images.

@@ -58,9 +58,9 @@ Requirements
 - About 5 s on CPU on first run. No network, no GPU.
 - Prerequisites:
 
-> /auto_examples/tutorials/40_features/plot_40_first_features
+> [Extract band-power features](plot_40_first_features.md)
 > (feature table),
-> /auto_examples/tutorials/10_core_workflow/plot_11_leakage_safe_split
+> [Split EEG without subject leakage](../10_core_workflow/plot_11_leakage_safe_split.md)
 > (leakage-safe split).
 - Concept: [Features vs. deep learning](../../../../concepts/features_vs_deep_learning.md).
 

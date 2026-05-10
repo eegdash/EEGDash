@@ -63,7 +63,7 @@ the public benchmarks where both regimes get reported.
 
 ## Requirements
 
-- You finished /auto_examples/tutorials/10_core_workflow/plot_11_leakage_safe_split and /auto_examples/tutorials/10_core_workflow/plot_12_train_a_baseline.
+- You finished [Split EEG without subject leakage](../10_core_workflow/plot_11_leakage_safe_split.md) and [Train a leakage-safe baseline](../10_core_workflow/plot_12_train_a_baseline.md).
 - CPU only, runtime ~30 s. No network: the metadata table is built in-script.
 - Concept refresher: [Leakage and evaluation](../../../../concepts/leakage_and_evaluation.md).
 

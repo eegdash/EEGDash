@@ -23,7 +23,7 @@ hierarchy, shows each feature’s distribution, and prints the 4x4
 Pearson correlation between them.
 
 Live data come from the same 1-40 Hz FIR-filtered windows used in
-/auto_examples/tutorials/40_features/plot_40_first_features to
+[Extract band-power features](plot_40_first_features.md) to
 keep the tutorial self-contained and offline-runnable, with the same
 HBN resting-state ds005514 recipe served through [NEMAR](https://nemar.org) [[Delorme *et al.*, 2022](../../../../references.md#id6)] and the BIDS conventions
 of Pernet et al. (2019); for clinical EEG good-practice on band
@@ -52,8 +52,8 @@ Keywords: features, spectral, trees
 
 - About 5 s on CPU. No GPU. No network.
 - Prerequisites:
-  /auto_examples/tutorials/10_core_workflow/plot_10_preprocess_and_window,
-  /auto_examples/tutorials/40_features/plot_40_first_features.
+  [Preprocess EEG and create windows](../10_core_workflow/plot_10_preprocess_and_window.md),
+  [Extract band-power features](plot_40_first_features.md).
 - Concept: [Features vs. deep learning](../../../../concepts/features_vs_deep_learning.md).
 
 <!-- GENERATED FROM PYTHON SOURCE LINES 53-58 -->
@@ -155,7 +155,7 @@ writes `info["highpass"]` and `info["lowpass"]` so that the
 downstream `spectral_preprocessor` can read them when picking the
 integration window. Synthetic data keep the tutorial offline; the
 same code path runs on real `ds005514` windows from
-/auto_examples/tutorials/10_core_workflow/plot_10_preprocess_and_window.
+[Preprocess EEG and create windows](../10_core_workflow/plot_10_preprocess_and_window.md).
 
 <!-- GENERATED FROM PYTHON SOURCE LINES 144-195 -->
 ```Python
@@ -314,7 +314,7 @@ psds_flat = PSD_CALLS["flat"]
 
 ```none
 Extracting features:   0%|          | 0/2 [00:00<?, ?it/s]
-Extracting features: 100%|██████████| 2/2 [00:00<00:00, 264.29it/s]
+Extracting features: 100%|██████████| 2/2 [00:00<00:00, 267.66it/s]
 ```
 
 <!-- GENERATED FROM PYTHON SOURCE LINES 244-248 -->
@@ -332,7 +332,7 @@ print(
 ```
 
 ```none
-flat: shape=(16, 17) | runtime=0.0096 s | PSDs=8
+flat: shape=(16, 17) | runtime=0.0095 s | PSDs=8
 ```
 
 <!-- GENERATED FROM PYTHON SOURCE LINES 255-260 -->
@@ -366,7 +366,7 @@ spectral_preprocessor
 ╚═ beta_pow: spectral_bands_power
 
 Extracting features:   0%|          | 0/2 [00:00<?, ?it/s]
-Extracting features: 100%|██████████| 2/2 [00:00<00:00, 454.69it/s]
+Extracting features: 100%|██████████| 2/2 [00:00<00:00, 455.56it/s]
 ```
 
 <!-- GENERATED FROM PYTHON SOURCE LINES 275-281 -->
@@ -395,7 +395,7 @@ finally:
 ```
 
 ```none
-tree: shape=(16, 17) | runtime=0.0063 s | PSDs=2 | speedup=1.53x
+tree: shape=(16, 17) | runtime=0.0061 s | PSDs=2 | speedup=1.55x
 welch restored
 ```
 
@@ -478,7 +478,7 @@ print(f"markers table shape: {markers_table.shape}")
 
 ```none
 Extracting features:   0%|          | 0/2 [00:00<?, ?it/s]
-Extracting features: 100%|██████████| 2/2 [00:00<00:00, 405.09it/s]
+Extracting features: 100%|██████████| 2/2 [00:00<00:00, 405.33it/s]
 marker columns (first 10): ['alpha_pow_O1', 'alpha_pow_Oz', 'alpha_pow_O2', 'alpha_pow_Cz', 'alpha_peak_O1', 'alpha_peak_Oz', 'alpha_peak_O2', 'alpha_peak_Cz', 'norm_spec_ent_O1', 'norm_spec_ent_Oz']
 markers table shape: (16, 21)
 ```
@@ -699,7 +699,7 @@ print(f"extended (with gamma): n_cols={ext_table.shape[1]}")
 
 ```none
 Extracting features:   0%|          | 0/2 [00:00<?, ?it/s]
-Extracting features: 100%|██████████| 2/2 [00:00<00:00, 346.21it/s]
+Extracting features: 100%|██████████| 2/2 [00:00<00:00, 346.44it/s]
 extended (with gamma): n_cols=21
 ```
 
@@ -741,7 +741,7 @@ print(
 
 ```none
 Extracting features:   0%|          | 0/2 [00:00<?, ?it/s]
-Extracting features: 100%|██████████| 2/2 [00:00<00:00, 421.26it/s]
+Extracting features: 100%|██████████| 2/2 [00:00<00:00, 429.63it/s]
 custom rel_alpha columns: ['rel_alpha_O1', 'rel_alpha_Oz', 'rel_alpha_O2', 'rel_alpha_Cz']
 ```
 
@@ -773,8 +773,8 @@ assert speedup >= 1.0
 
 ```none
                    n_features  runtime_s  psds_computed  speedup_vs_flat
-flat (no tree)             16     0.0096              8           1.0000
-tree (shared PSD)          16     0.0063              2           1.5337
+flat (no tree)             16     0.0095              8           1.0000
+tree (shared PSD)          16     0.0061              2           1.5451
 ```
 
 <!-- GENERATED FROM PYTHON SOURCE LINES 565-573 -->
@@ -784,7 +784,7 @@ tree (shared PSD)          16     0.0063              2           1.5337
 - Add a fifth leaf for spectral edge frequency
   (`spectral_edge()`) on the same tree.
 - Save `markers_table` to parquet and continue in
-  /auto_examples/tutorials/40_features/plot_42_features_to_sklearn.
+  [EEGDash features to scikit-learn](plot_42_features_to_sklearn.md).
 - Compare runtimes on a longer recording (~5 minutes); the speedup
   widens with FFT size.
 
@@ -795,7 +795,7 @@ tree (shared PSD)          16     0.0063              2           1.5337
 We named four canonical PSD-derived markers, declared them on one
 shared `spectral_preprocessor`, plotted the dependency tree, and
 checked that the columns are not redundant. Next:
-/auto_examples/tutorials/40_features/plot_42_features_to_sklearn
+[EEGDash features to scikit-learn](plot_42_features_to_sklearn.md)
 turns this table into a scikit-learn estimator. Concept:
 [Features vs. deep learning](../../../../concepts/features_vs_deep_learning.md).
 

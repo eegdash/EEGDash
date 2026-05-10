@@ -700,7 +700,7 @@ metadata) feeds <a class="reference external" href="https://braindecode.org/stab
 (continuous, then windowed) which feeds
 <a class="reference external" href="https://docs.pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader" title="(in PyTorch v2.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataLoader</span></code></a> (windowed, then batched). Each
 stage carries the BIDS metadata forward, which keeps later splits
-subject-aware (see <span class="xref std std-doc">/auto_examples/tutorials/10_core_workflow/plot_11_leakage_safe_split</span>).</p></li>
+subject-aware (see <a class="reference internal" href="../10_core_workflow/plot_11_leakage_safe_split.html"><span class="doc">Split EEG without subject leakage</span></a>).</p></li>
 <li><p><strong>Two windowing surfaces.</strong>
 <a class="reference external" href="https://braindecode.org/stable/generated/braindecode.preprocessing.create_fixed_length_windows.html#braindecode.preprocessing.create_fixed_length_windows" title="(in Braindecode v1.5)"><code class="xref py py-func docutils literal notranslate"><span class="pre">create_fixed_length_windows()</span></code></a>
 strides across the continuous signal, ignoring events; useful for
@@ -804,27 +804,27 @@ tutorial budget; the BIDS query language carries through unchanged
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Downloading sub-002_task-FaceRecognition_channels.tsv:   0%|          | 0.00/1.31k [00:00&lt;?, ?B/s]
-Downloading sub-002_task-FaceRecognition_channels.tsv: 100%|██████████| 1.31k/1.31k [00:00&lt;00:00, 4.95MB/s]
+Downloading sub-002_task-FaceRecognition_channels.tsv: 100%|██████████| 1.31k/1.31k [00:00&lt;00:00, 5.39MB/s]
 
 Downloading sub-002_task-FaceRecognition_events.tsv:   0%|          | 0.00/105k [00:00&lt;?, ?B/s]
-Downloading sub-002_task-FaceRecognition_events.tsv: 100%|██████████| 105k/105k [00:00&lt;00:00, 90.1MB/s]
+Downloading sub-002_task-FaceRecognition_events.tsv: 100%|██████████| 105k/105k [00:00&lt;00:00, 18.8MB/s]
 
 Downloading sub-002_task-FaceRecognition_electrodes.tsv:   0%|          | 0.00/1.68k [00:00&lt;?, ?B/s]
-Downloading sub-002_task-FaceRecognition_electrodes.tsv: 100%|██████████| 1.68k/1.68k [00:00&lt;00:00, 6.89MB/s]
+Downloading sub-002_task-FaceRecognition_electrodes.tsv: 100%|██████████| 1.68k/1.68k [00:00&lt;00:00, 6.64MB/s]
 
 Downloading sub-002_task-FaceRecognition_eeg.json:   0%|          | 0.00/1.28k [00:00&lt;?, ?B/s]
-Downloading sub-002_task-FaceRecognition_eeg.json: 100%|██████████| 1.28k/1.28k [00:00&lt;00:00, 5.37MB/s]
+Downloading sub-002_task-FaceRecognition_eeg.json: 100%|██████████| 1.28k/1.28k [00:00&lt;00:00, 6.02MB/s]
 
 Downloading sub-002_task-FaceRecognition_coordsystem.json:   0%|          | 0.00/283 [00:00&lt;?, ?B/s]
-Downloading sub-002_task-FaceRecognition_coordsystem.json: 100%|██████████| 283/283 [00:00&lt;00:00, 997kB/s]
-[05/10/26 16:33:46] WARNING  File not found on S3, skipping:   downloader.py:163
+Downloading sub-002_task-FaceRecognition_coordsystem.json: 100%|██████████| 283/283 [00:00&lt;00:00, 1.31MB/s]
+[05/10/26 18:52:31] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds002718/sub-0
                              02/eeg/sub-002_task-FaceRecogniti
                              on_eeg.fdt
 
 Downloading sub-002_task-FaceRecognition_eeg.set:   0%|          | 0.00/224M [00:00&lt;?, ?B/s]
-Downloading sub-002_task-FaceRecognition_eeg.set:  22%|██▏       | 50.0M/224M [00:01&lt;00:06, 29.9MB/s]
-Downloading sub-002_task-FaceRecognition_eeg.set: 100%|██████████| 224M/224M [00:01&lt;00:00, 130MB/s]
+Downloading sub-002_task-FaceRecognition_eeg.set:  22%|██▏       | 50.0M/224M [00:02&lt;00:07, 23.8MB/s]
+Downloading sub-002_task-FaceRecognition_eeg.set: 100%|██████████| 224M/224M [00:02&lt;00:00, 104MB/s]
 </pre></div>
 </div>
 <div class="output_subarea output_html rendered_html output_result">
@@ -1595,7 +1595,7 @@ touching <code class="docutils literal notranslate"><span class="pre">windows.da
 with <code class="docutils literal notranslate"><span class="pre">target=&quot;age&quot;</span></code> would expose the participants.tsv age column;
 with <code class="docutils literal notranslate"><span class="pre">target=&quot;group&quot;</span></code> (when present) it would expose the clinical
 group label. This is what
-<span class="xref std std-doc">/auto_examples/tutorials/10_core_workflow/plot_11_leakage_safe_split</span>
+<a class="reference internal" href="../10_core_workflow/plot_11_leakage_safe_split.html"><span class="doc">Split EEG without subject leakage</span></a>
 leans on for subject-aware MOABB splits.</p>
 </section>
 <section id="pattern-1-relabel-in-place">
@@ -1692,12 +1692,12 @@ task design are still open questions <span class="bibtex-citation" id="id7">[<a 
 DataLoader, named the four knobs that matter, and pointed at the
 Zarr path that unlocks random-access speed once the project outgrows
 one recording in RAM. Next:
-<span class="xref std std-doc">/auto_examples/tutorials/10_core_workflow/plot_10_preprocess_and_window</span>
+<a class="reference internal" href="../10_core_workflow/plot_10_preprocess_and_window.html"><span class="doc">Preprocess EEG and create windows</span></a>
 replaces the two safe preprocessors with the full montage / reference
 / filter / resample recipe;
-<span class="xref std std-doc">/auto_examples/tutorials/10_core_workflow/plot_11_leakage_safe_split</span>
+<a class="reference internal" href="../10_core_workflow/plot_11_leakage_safe_split.html"><span class="doc">Split EEG without subject leakage</span></a>
 splits the windows without leakage;
-<span class="xref std std-doc">/auto_examples/tutorials/10_core_workflow/plot_13_save_and_reuse_prepared_data</span>
+<a class="reference internal" href="../10_core_workflow/plot_13_save_and_reuse_prepared_data.html"><span class="doc">Save and reload prepared data</span></a>
 saves and reloads the windows so subsequent sessions skip the cut.</p>
 </section>
 <section id="try-it-yourself">
@@ -1721,7 +1721,7 @@ against the in-RAM <code class="docutils literal notranslate"><span class="pre">
 <p>See <a class="reference internal" href="../../../../references.html"><span class="doc">References</span></a> for the centralized bibliography of papers
 cited above. Add or amend an entry once in
 <code class="file docutils literal notranslate"><span class="pre">docs/source/refs.bib</span></code>; every tutorial inherits the update.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 10.680 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 11.247 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-auto-examples-tutorials-00-start-here-plot-02-dataset-to-dataloader-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/eegdash/EEGDash/main?urlpath=lab/tree/notebooks/generated/auto_examples/tutorials/00_start_here/plot_02_dataset_to_dataloader.ipynb"><img alt="Launch binder" src="../../../../_images/binder_badge_logo5.svg" style="width: 150px;" />

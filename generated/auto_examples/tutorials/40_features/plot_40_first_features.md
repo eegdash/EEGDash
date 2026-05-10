@@ -45,9 +45,9 @@ Keywords: features, band-power, spectral
   synthesized offline so the tutorial is reproducible without
   touching NEMAR; Delorme et al. 2022).
 - Prerequisite:
-  /auto_examples/tutorials/10_core_workflow/plot_10_preprocess_and_window
+  [Preprocess EEG and create windows](../10_core_workflow/plot_10_preprocess_and_window.md)
   for the windowing recipe; the live HBN `ds005514` numbers are in
-  /auto_examples/tutorials/30_resting_state/plot_30_eyes_open_closed.
+  [Decode eyes open vs. eyes closed](../30_resting_state/plot_30_eyes_open_closed.md).
 - Concept page: [Features vs. deep learning](../../../../concepts/features_vs_deep_learning.md).
 
 <!-- GENERATED FROM PYTHON SOURCE LINES 45-48 -->
@@ -361,7 +361,7 @@ pd.Series(
 
 ```none
 Extracting features:   0%|          | 0/2 [00:00<?, ?it/s]
-Extracting features: 100%|██████████| 2/2 [00:00<00:00, 153.17it/s]
+Extracting features: 100%|██████████| 2/2 [00:00<00:00, 155.97it/s]
 ```
 
 <div class="output_subarea output_html rendered_html output_result">
@@ -601,7 +601,7 @@ print(f"extended n_cols={extended.shape[1]} (was {n_cols - 1})")
 
 ```none
 Extracting features:   0%|          | 0/2 [00:00<?, ?it/s]
-Extracting features: 100%|██████████| 2/2 [00:00<00:00, 147.60it/s]
+Extracting features: 100%|██████████| 2/2 [00:00<00:00, 150.03it/s]
 extended n_cols=168 (was 144)
 ```
 
@@ -684,7 +684,7 @@ top-8 alpha-discriminative channels: ['POz', 'O2', 'Oz', 'Pz', 'O1', 'E05', 'E08
   [`extract_features()`](../../../../api/features_overview.md#eegdash.features.extract_features); compare the per-channel
   alpha contrast to the synthetic numbers above.
 - Add `include_metadata=["subject"]` and check a leakage-safe split
-  /auto_examples/tutorials/10_core_workflow/plot_11_leakage_safe_split.
+  [Split EEG without subject leakage](../10_core_workflow/plot_11_leakage_safe_split.md).
 - Wire `spectral_entropy` plus
   `spectral_normalized_preprocessor()` (plot_41).
 
@@ -695,7 +695,7 @@ top-8 alpha-discriminative channels: ['POz', 'O2', 'Oz', 'Pz', 'O1', 'E05', 'E08
   `eegdash.features.FeatureExtractor`,
   `eegdash.features.spectral_bands_power()`,
   [`mne.time_frequency.psd_array_welch()`](https://mne.tools/stable/generated/mne.time_frequency.psd_array_welch.html#mne.time_frequency.psd_array_welch).
-- Next: /auto_examples/tutorials/40_features/plot_42_features_to_sklearn
+- Next: [EEGDash features to scikit-learn](plot_42_features_to_sklearn.md)
   reloads the parquet and runs a leakage-safe sklearn classifier.
 
 <!-- GENERATED FROM PYTHON SOURCE LINES 475-480 -->

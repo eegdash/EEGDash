@@ -621,9 +621,9 @@ Keywords: features, band-power, spectral</p>
 synthesized offline so the tutorial is reproducible without
 touching NEMAR; Delorme et al. 2022).</p></li>
 <li><p>Prerequisite:
-<span class="xref std std-doc">/auto_examples/tutorials/10_core_workflow/plot_10_preprocess_and_window</span>
+<a class="reference internal" href="../10_core_workflow/plot_10_preprocess_and_window.html"><span class="doc">Preprocess EEG and create windows</span></a>
 for the windowing recipe; the live HBN <code class="docutils literal notranslate"><span class="pre">ds005514</span></code> numbers are in
-<span class="xref std std-doc">/auto_examples/tutorials/30_resting_state/plot_30_eyes_open_closed</span>.</p></li>
+<a class="reference internal" href="../30_resting_state/plot_30_eyes_open_closed.html"><span class="doc">Decode eyes open vs. eyes closed</span></a>.</p></li>
 <li><p>Concept page: <a class="reference internal" href="../../../../concepts/features_vs_deep_learning.html"><span class="doc">Features vs. deep learning</span></a>.</p></li>
 </ul>
 <p>Setup. Seed (E3.21) and a parameterized cache directory (E3.24) keep the
@@ -914,7 +914,7 @@ spectral group, so a learner can grep <code class="docutils literal notranslate"
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Extracting features:   0%|          | 0/2 [00:00&lt;?, ?it/s]
-Extracting features: 100%|██████████| 2/2 [00:00&lt;00:00, 153.17it/s]
+Extracting features: 100%|██████████| 2/2 [00:00&lt;00:00, 155.97it/s]
 </pre></div>
 </div>
 <div class="output_subarea output_html rendered_html output_result">
@@ -1127,7 +1127,7 @@ rerun Step 3.</p>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Extracting features:   0%|          | 0/2 [00:00&lt;?, ?it/s]
-Extracting features: 100%|██████████| 2/2 [00:00&lt;00:00, 147.60it/s]
+Extracting features: 100%|██████████| 2/2 [00:00&lt;00:00, 150.03it/s]
 extended n_cols=168 (was 144)
 </pre></div>
 </div>
@@ -1206,7 +1206,7 @@ sensorimotor cortex) and rerun Step 3.</p></li>
 <a class="reference internal" href="../../../../api/features_overview.html#eegdash.features.extract_features" title="eegdash.features.extract_features"><code class="xref py py-func docutils literal notranslate"><span class="pre">extract_features()</span></code></a>; compare the per-channel
 alpha contrast to the synthetic numbers above.</p></li>
 <li><p>Add <code class="docutils literal notranslate"><span class="pre">include_metadata=[&quot;subject&quot;]</span></code> and check a leakage-safe split
-<span class="xref std std-doc">/auto_examples/tutorials/10_core_workflow/plot_11_leakage_safe_split</span>.</p></li>
+<a class="reference internal" href="../10_core_workflow/plot_11_leakage_safe_split.html"><span class="doc">Split EEG without subject leakage</span></a>.</p></li>
 <li><p>Wire <code class="docutils literal notranslate"><span class="pre">spectral_entropy</span></code> plus
 <code class="xref py py-func docutils literal notranslate"><span class="pre">spectral_normalized_preprocessor()</span></code> (plot_41).</p></li>
 </ul>
@@ -1219,7 +1219,7 @@ alpha contrast to the synthetic numbers above.</p></li>
 <code class="xref py py-class docutils literal notranslate"><span class="pre">eegdash.features.FeatureExtractor</span></code>,
 <code class="xref py py-func docutils literal notranslate"><span class="pre">eegdash.features.spectral_bands_power()</span></code>,
 <a class="reference external" href="https://mne.tools/stable/generated/mne.time_frequency.psd_array_welch.html#mne.time_frequency.psd_array_welch" title="(in MNE v1.12)"><code class="xref py py-func docutils literal notranslate"><span class="pre">mne.time_frequency.psd_array_welch()</span></code></a>.</p></li>
-<li><p>Next: <span class="xref std std-doc">/auto_examples/tutorials/40_features/plot_42_features_to_sklearn</span>
+<li><p>Next: <a class="reference internal" href="plot_42_features_to_sklearn.html"><span class="doc">EEGDash features to scikit-learn</span></a>
 reloads the parquet and runs a leakage-safe sklearn classifier.</p></li>
 </ul>
 </section>

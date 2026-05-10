@@ -58,8 +58,8 @@ confounds, recording-length mismatch, and channel-count drift are the
 - Network on first call (~1 MB into `cache_dir` for the catalog query).
   No EEG signal bytes are pulled; the catalog row carries every number
   this script reports.
-- Prerequisites: /auto_examples/tutorials/00_start_here/plot_00_first_search,
-  /auto_examples/tutorials/00_start_here/plot_01_first_recording.
+- Prerequisites: [Find datasets with the EEGDash API](../tutorials/00_start_here/plot_00_first_search.md),
+  [Load one EEG recording](../tutorials/00_start_here/plot_01_first_recording.md).
 - Concept: [EEGDash objects: EEGDash, EEGDashDataset, EEGChallengeDataset](../../../concepts/eegdash_objects.md).
 
 <!-- GENERATED FROM PYTHON SOURCE LINES 56-59 -->
@@ -379,9 +379,9 @@ class imbalance (Step 3), age confound (Step 4), per-recording window
 count drift (Step 5), and channel-count mismatch (also Step 5). The
 polished workflow recipe in Cisotto and Chicco 2024 walks through how
 to defuse each one before training. Next up:
-/auto_examples/tutorials/40_features/plot_40_first_features shows
+[Extract band-power features](../tutorials/40_features/plot_40_first_features.md) shows
 how to extract per-recording features from the same catalog rows;
-/auto_examples/tutorials/50_evaluation/plot_51_cross_subject_evaluation
+[Cross-subject decoding evaluation](../tutorials/50_evaluation/plot_51_cross_subject_evaluation.md)
 shows how to run a leakage-safe cross-subject evaluation on top of the
 windowed dataset.
 

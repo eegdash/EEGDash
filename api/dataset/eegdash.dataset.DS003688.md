@@ -136,13 +136,34 @@ UMC Utrecht Team
 ## Electrode Layout
 
 <details class="electrode-explorer">
-  <summary>Electrode layout — iEEG · 128 sensors — 128 channels</summary>
+  <summary>Electrode layout — iEEG · 64 sensors — 64 channels</summary>
   <iframe
-    data-src="https://electrodes.eegdash.org/?montage=043bad9133ee0ca0&embed=1"
+    data-src="https://electrodes.eegdash.org/?montage=e657792aea40966f&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
-    title="Topomap of iEEG · 128 sensors"
+    title="Topomap of iEEG · 64 sensors"
+    referrerpolicy="no-referrer">
+  </iframe>
+</details>
+
+## Signal Preview
+
+<details class="trace-viewer">
+  <summary>Live trace viewer — <strong>sub-13 · ses-iemu · task-film · run-1</strong></summary>
+  <p class="trace-viewer-caption">
+    Showing <strong>one</strong> representative recording out of
+    <strong>51 subjects and 107 recordings</strong> in this dataset.
+    Browse the full set on <a href="https://openneuro.org/datasets/ds003688" target="_blank" rel="noopener">OpenNeuro</a>;
+    drop any other <code>_ieeg.{set,edf,bdf,vhdr}</code> file onto the
+    viewer (or pass <code>?ieeg=&lt;url&gt;</code>) to inspect it.
+  </p>
+  <iframe
+    data-src="https://eegdash.github.io/eegdash-viewer/?dataset=ds003688&sub=13&ses=iemu&task=film&run=1&ext=vhdr&suffix=ieeg&embed=1"
+    loading="lazy"
+    width="100%" height="640"
+    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 1200px; display: block; background: transparent;"
+    title="Live iEEG trace viewer for ds003688 — sub-13 · ses-iemu · task-film · run-1"
     referrerpolicy="no-referrer">
   </iframe>
 </details>

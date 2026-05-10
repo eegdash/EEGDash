@@ -138,7 +138,7 @@ Once the pipeline runs, we re-draw this diagram further down with the
   (continuous, then windowed) which feeds
   [`DataLoader`](https://docs.pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader) (windowed, then batched). Each
   stage carries the BIDS metadata forward, which keeps later splits
-  subject-aware (see /auto_examples/tutorials/10_core_workflow/plot_11_leakage_safe_split).
+  subject-aware (see [Split EEG without subject leakage](../10_core_workflow/plot_11_leakage_safe_split.md)).
 - **Two windowing surfaces.**
   [`create_fixed_length_windows()`](https://braindecode.org/stable/generated/braindecode.preprocessing.create_fixed_length_windows.html#braindecode.preprocessing.create_fixed_length_windows)
   strides across the continuous signal, ignoring events; useful for
@@ -252,27 +252,27 @@ pd.Series(
 
 ```none
 Downloading sub-002_task-FaceRecognition_channels.tsv:   0%|          | 0.00/1.31k [00:00<?, ?B/s]
-Downloading sub-002_task-FaceRecognition_channels.tsv: 100%|██████████| 1.31k/1.31k [00:00<00:00, 4.95MB/s]
+Downloading sub-002_task-FaceRecognition_channels.tsv: 100%|██████████| 1.31k/1.31k [00:00<00:00, 5.39MB/s]
 
 Downloading sub-002_task-FaceRecognition_events.tsv:   0%|          | 0.00/105k [00:00<?, ?B/s]
-Downloading sub-002_task-FaceRecognition_events.tsv: 100%|██████████| 105k/105k [00:00<00:00, 90.1MB/s]
+Downloading sub-002_task-FaceRecognition_events.tsv: 100%|██████████| 105k/105k [00:00<00:00, 18.8MB/s]
 
 Downloading sub-002_task-FaceRecognition_electrodes.tsv:   0%|          | 0.00/1.68k [00:00<?, ?B/s]
-Downloading sub-002_task-FaceRecognition_electrodes.tsv: 100%|██████████| 1.68k/1.68k [00:00<00:00, 6.89MB/s]
+Downloading sub-002_task-FaceRecognition_electrodes.tsv: 100%|██████████| 1.68k/1.68k [00:00<00:00, 6.64MB/s]
 
 Downloading sub-002_task-FaceRecognition_eeg.json:   0%|          | 0.00/1.28k [00:00<?, ?B/s]
-Downloading sub-002_task-FaceRecognition_eeg.json: 100%|██████████| 1.28k/1.28k [00:00<00:00, 5.37MB/s]
+Downloading sub-002_task-FaceRecognition_eeg.json: 100%|██████████| 1.28k/1.28k [00:00<00:00, 6.02MB/s]
 
 Downloading sub-002_task-FaceRecognition_coordsystem.json:   0%|          | 0.00/283 [00:00<?, ?B/s]
-Downloading sub-002_task-FaceRecognition_coordsystem.json: 100%|██████████| 283/283 [00:00<00:00, 997kB/s]
-[05/10/26 16:33:46] WARNING  File not found on S3, skipping:   downloader.py:163
+Downloading sub-002_task-FaceRecognition_coordsystem.json: 100%|██████████| 283/283 [00:00<00:00, 1.31MB/s]
+[05/10/26 18:52:31] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds002718/sub-0
                              02/eeg/sub-002_task-FaceRecogniti
                              on_eeg.fdt
 
 Downloading sub-002_task-FaceRecognition_eeg.set:   0%|          | 0.00/224M [00:00<?, ?B/s]
-Downloading sub-002_task-FaceRecognition_eeg.set:  22%|██▏       | 50.0M/224M [00:01<00:06, 29.9MB/s]
-Downloading sub-002_task-FaceRecognition_eeg.set: 100%|██████████| 224M/224M [00:01<00:00, 130MB/s]
+Downloading sub-002_task-FaceRecognition_eeg.set:  22%|██▏       | 50.0M/224M [00:02<00:07, 23.8MB/s]
+Downloading sub-002_task-FaceRecognition_eeg.set: 100%|██████████| 224M/224M [00:02<00:00, 104MB/s]
 ```
 
 <div class="output_subarea output_html rendered_html output_result">
@@ -1107,7 +1107,7 @@ touching `windows.datasets[i].metadata['target']`. The same call
 with `target="age"` would expose the participants.tsv age column;
 with `target="group"` (when present) it would expose the clinical
 group label. This is what
-/auto_examples/tutorials/10_core_workflow/plot_11_leakage_safe_split
+[Split EEG without subject leakage](../10_core_workflow/plot_11_leakage_safe_split.md)
 leans on for subject-aware MOABB splits.
 
 <!-- GENERATED FROM PYTHON SOURCE LINES 660-665 -->
@@ -1220,12 +1220,12 @@ We went from a single-record `EEGDashDataset` to a
 DataLoader, named the four knobs that matter, and pointed at the
 Zarr path that unlocks random-access speed once the project outgrows
 one recording in RAM. Next:
-/auto_examples/tutorials/10_core_workflow/plot_10_preprocess_and_window
+[Preprocess EEG and create windows](../10_core_workflow/plot_10_preprocess_and_window.md)
 replaces the two safe preprocessors with the full montage / reference
 / filter / resample recipe;
-/auto_examples/tutorials/10_core_workflow/plot_11_leakage_safe_split
+[Split EEG without subject leakage](../10_core_workflow/plot_11_leakage_safe_split.md)
 splits the windows without leakage;
-/auto_examples/tutorials/10_core_workflow/plot_13_save_and_reuse_prepared_data
+[Save and reload prepared data](../10_core_workflow/plot_13_save_and_reuse_prepared_data.md)
 saves and reloads the windows so subsequent sessions skip the cut.
 
 <!-- GENERATED FROM PYTHON SOURCE LINES 728-741 -->
@@ -1252,6 +1252,6 @@ See [References](../../../../references.md) for the centralized bibliography of 
 cited above. Add or amend an entry once in
 `docs/source/refs.bib`; every tutorial inherits the update.
 
-**Total running time of the script:** (0 minutes 10.680 seconds)
+**Total running time of the script:** (0 minutes 11.247 seconds)
 
 <a id="sphx-glr-download-generated-auto-examples-tutorials-00-start-here-plot-02-dataset-to-dataloader-py"></a>

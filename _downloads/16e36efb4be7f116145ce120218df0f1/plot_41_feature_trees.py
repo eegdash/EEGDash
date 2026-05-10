@@ -16,7 +16,7 @@ hierarchy, shows each feature's distribution, and prints the 4x4
 Pearson correlation between them.
 
 Live data come from the same 1-40 Hz FIR-filtered windows used in
-:doc:`/auto_examples/tutorials/40_features/plot_40_first_features` to
+:doc:`/generated/auto_examples/tutorials/40_features/plot_40_first_features` to
 keep the tutorial self-contained and offline-runnable, with the same
 HBN resting-state ds005514 recipe served through `NEMAR
 <https://nemar.org>`_ :cite:`delorme2022nemar` and the BIDS conventions
@@ -45,8 +45,8 @@ Keywords: features, spectral, trees
 # ------------
 # - About 5 s on CPU. No GPU. No network.
 # - Prerequisites:
-#   :doc:`/auto_examples/tutorials/10_core_workflow/plot_10_preprocess_and_window`,
-#   :doc:`/auto_examples/tutorials/40_features/plot_40_first_features`.
+#   :doc:`/generated/auto_examples/tutorials/10_core_workflow/plot_10_preprocess_and_window`,
+#   :doc:`/generated/auto_examples/tutorials/40_features/plot_40_first_features`.
 # - Concept: :doc:`/concepts/features_vs_deep_learning`.
 
 # %%
@@ -138,7 +138,7 @@ _spec.welch = _counting_welch
 # downstream ``spectral_preprocessor`` can read them when picking the
 # integration window. Synthetic data keep the tutorial offline; the
 # same code path runs on real ``ds005514`` windows from
-# :doc:`/auto_examples/tutorials/10_core_workflow/plot_10_preprocess_and_window`.
+# :doc:`/generated/auto_examples/tutorials/10_core_workflow/plot_10_preprocess_and_window`.
 
 # %%
 SFREQ, CH_NAMES, WIN = 128, ["O1", "Oz", "O2", "Cz"], int(2.0 * 128)
@@ -567,7 +567,7 @@ assert speedup >= 1.0
 # - Add a fifth leaf for spectral edge frequency
 #   (:func:`~eegdash.features.spectral_edge`) on the same tree.
 # - Save ``markers_table`` to parquet and continue in
-#   :doc:`/auto_examples/tutorials/40_features/plot_42_features_to_sklearn`.
+#   :doc:`/generated/auto_examples/tutorials/40_features/plot_42_features_to_sklearn`.
 # - Compare runtimes on a longer recording (~5 minutes); the speedup
 #   widens with FFT size.
 
@@ -577,7 +577,7 @@ assert speedup >= 1.0
 # We named four canonical PSD-derived markers, declared them on one
 # shared ``spectral_preprocessor``, plotted the dependency tree, and
 # checked that the columns are not redundant. Next:
-# :doc:`/auto_examples/tutorials/40_features/plot_42_features_to_sklearn`
+# :doc:`/generated/auto_examples/tutorials/40_features/plot_42_features_to_sklearn`
 # turns this table into a scikit-learn estimator. Concept:
 # :doc:`/concepts/features_vs_deep_learning`.
 

@@ -49,8 +49,8 @@ scikit-learn (Pedregosa et al., 2011).
 
 ## Prerequisites
 
-- Completed /auto_examples/tutorials/40_features/plot_40_first_features.
-- Read /auto_examples/how_to/how_to_use_hpc_cache so you know where
+- Completed [Extract band-power features](../tutorials/40_features/plot_40_first_features.md).
+- Read [Place the EEGDash cache on shared or local cluster storage](how_to_use_hpc_cache.md) so you know where
   `EEGDASH_CACHE` and `EEGDASH_FEATURES_CACHE` should point.
 - Local Python with [`braindecode`](https://braindecode.org/stable/api.html#module-braindecode), [`mne`](https://mne.tools/stable/api/python_reference.html#module-mne), `joblib`, `pyarrow`.
 
@@ -270,9 +270,9 @@ print(f"checkpoint -> {extractor_path.name} (keys={list(reused)})")
 
 ## See also
 
-- /auto_examples/tutorials/40_features/plot_41_feature_trees –
+- [Compose EEG markers from Welch PSD](../tutorials/40_features/plot_41_feature_trees.md) –
   shared-preprocessor pipelines that amplify the speedup here.
-- /auto_examples/how_to/how_to_use_hpc_cache – placing
+- [Place the EEGDash cache on shared or local cluster storage](how_to_use_hpc_cache.md) – placing
   `EEGDASH_CACHE` on local NVMe.
 
 ## References

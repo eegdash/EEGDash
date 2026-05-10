@@ -30,7 +30,7 @@ NEMAR (Delorme et al. 2022, doi:10.1093/nargab/lqac023).
   `theta_Cz`, `alpha_Cz`, `beta_Cz`, `gamma_Cz`, plus connectivity
   and entropy features, and the target `p_factor`.
 - **Related Material.** See [Predict p-factor with deep learning](project_pfactor_deep.md) for a deep learning
-  approach and the /auto_examples/eeg2025/index for the official
+  approach and the [EEG2025 Foundation Challenge](../eeg2025/index.md) for the official
   challenge tracks.
 
 The deliverable is a feature-importance panel plus the regression
@@ -62,9 +62,9 @@ After this study you will be able to:
 ## Requirements
 
 - Around 30 s on CPU. No GPU. No live network.
-- Prereqs: /auto_examples/tutorials/40_features/plot_42_features_to_sklearn
+- Prereqs: [EEGDash features to scikit-learn](../tutorials/40_features/plot_42_features_to_sklearn.md)
   for the features-to-sklearn idiom and
-  /auto_examples/tutorials/70_transfer_foundation/plot_72_subject_invariant_regression
+  [Subject-invariant p-factor regression (EEG2025 Challenge 2)](../tutorials/70_transfer_foundation/plot_72_subject_invariant_regression.md)
   for the cross-subject regression contract this study satisfies.
 - Concept page: [Leakage and evaluation](../../../concepts/leakage_and_evaluation.md).
 

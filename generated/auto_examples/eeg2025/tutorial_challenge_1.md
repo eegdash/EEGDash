@@ -71,9 +71,9 @@ Keywords: EEG2025, challenge, transfer
 - Network on first call (catalog query, ~1 MB into the cache; per-mini
   BDFs are pulled lazily when the model first asks for windows).
 - Prerequisites:
-  /auto_examples/tutorials/70_transfer_foundation/plot_70_challenge_dataset_basics
+  [How do I get started with the EEG2025 Foundation Challenge dataset?](../tutorials/70_transfer_foundation/plot_70_challenge_dataset_basics.md)
   for [`EEGChallengeDataset`](../../../api/dataset/eegdash.dataset.EEGChallengeDataset.md#eegdash.dataset.EEGChallengeDataset) basics, and
-  /auto_examples/tutorials/00_start_here/plot_02_dataset_to_dataloader
+  [EEG recording to PyTorch DataLoader](../tutorials/00_start_here/plot_02_dataset_to_dataloader.md)
   for the windowing -> [`torch.utils.data.DataLoader`](https://docs.pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader) flow.
 
 <!-- GENERATED FROM PYTHON SOURCE LINES 75-78 -->
@@ -735,10 +735,10 @@ starter-kit story without scrolling.
 - Concept: [Leakage and evaluation](../../../concepts/leakage_and_evaluation.md) (why we split on
   subjects, not trials).
 - Next tutorial:
-  /auto_examples/tutorials/70_transfer_foundation/plot_71_cross_task_transfer
+  [Pretrain on resting-state, fine-tune on contrast-change detection (Simulated Data)](../tutorials/70_transfer_foundation/plot_71_cross_task_transfer.md)
   pretrains on RestingState and fine-tunes on CCD.
 - Next tutorial:
-  /auto_examples/tutorials/70_transfer_foundation/plot_73_finetune_pretrained_model
+  [How do I adapt a pretrained EEG model to a new task?](../tutorials/70_transfer_foundation/plot_73_finetune_pretrained_model.md)
   fine-tunes a foundation model with the same loader.
 
 <!-- GENERATED FROM PYTHON SOURCE LINES 605-610 -->
@@ -749,6 +749,6 @@ See [References](../../../references.md) for the centralized bibliography of pap
 cited above. Add or amend an entry once in
 `docs/source/refs.bib`; every tutorial inherits the update.
 
-**Total running time of the script:** (8 minutes 9.627 seconds)
+**Total running time of the script:** (8 minutes 6.148 seconds)
 
 <a id="sphx-glr-download-generated-auto-examples-eeg2025-tutorial-challenge-1-py"></a>

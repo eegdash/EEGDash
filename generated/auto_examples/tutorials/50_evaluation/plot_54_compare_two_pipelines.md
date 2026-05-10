@@ -52,9 +52,9 @@ survive a paired test, and how big is the effect once we strip the
 
 ## Requirements
 
-- Prerequisites: /auto_examples/tutorials/10_core_workflow/plot_12_train_a_baseline,
-  /auto_examples/tutorials/40_features/plot_42_features_to_sklearn,
-  /auto_examples/tutorials/50_evaluation/plot_51_cross_subject_evaluation.
+- Prerequisites: [Train a leakage-safe baseline](../10_core_workflow/plot_12_train_a_baseline.md),
+  [EEGDash features to scikit-learn](../40_features/plot_42_features_to_sklearn.md),
+  [Cross-subject decoding evaluation](plot_51_cross_subject_evaluation.md).
 - Theory: [Leakage and evaluation](../../../../concepts/leakage_and_evaluation.md).
 - **Estimated time**: ~5 s on CPU. **Data**: 0 MB (synthetic 12-subject cohort).
 
@@ -536,6 +536,6 @@ See [References](../../../../references.md) for the centralized bibliography of 
 cited above. Add or amend an entry once in
 `docs/source/refs.bib`; every tutorial inherits the update.
 
-**Total running time of the script:** (0 minutes 2.409 seconds)
+**Total running time of the script:** (0 minutes 2.283 seconds)
 
 <a id="sphx-glr-download-generated-auto-examples-tutorials-50-evaluation-plot-54-compare-two-pipelines-py"></a>

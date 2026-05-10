@@ -68,7 +68,7 @@ So how much does a within-session decoder drift across sessions of the
 
 ## Requirements
 
-- You finished /auto_examples/tutorials/10_core_workflow/plot_11_leakage_safe_split, /auto_examples/tutorials/10_core_workflow/plot_12_train_a_baseline, and /auto_examples/tutorials/50_evaluation/plot_50_within_subject_evaluation.
+- You finished [Split EEG without subject leakage](../10_core_workflow/plot_11_leakage_safe_split.md), [Train a leakage-safe baseline](../10_core_workflow/plot_12_train_a_baseline.md), and [Within-subject decoding evaluation](plot_50_within_subject_evaluation.md).
 - Theory: [Leakage and evaluation](../../../../concepts/leakage_and_evaluation.md).
 
 <!-- GENERATED FROM PYTHON SOURCE LINES 68-69 -->

@@ -203,11 +203,11 @@ if len(top_level) > 10:
 
 ## See also
 
-- how_to_work_offline
+- [how_to_work_offline](how_to_work_offline.md)
   – consume the cache populated above with `download=False`.
-- /concepts/lazy_loading_and_cache – how the cache is laid out
+- [Lazy loading and caching](../../../concepts/eegdash_objects.md#concepts-lazy-loading-and-cache) – how the cache is laid out
   and when files are materialised.
-- plot_01_first_recording
+- [plot_01_first_recording](../tutorials/00_start_here/plot_01_first_recording.md)
   – the prerequisite single-recording tutorial.
 
 ## References

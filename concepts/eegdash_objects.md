@@ -86,6 +86,8 @@ raw = ds[0].raw                 # triggers the first download
 raw.filter(0.5, 40)             # mne.io.Raw operations
 ```
 
+<a id="concepts-lazy-loading-and-cache"></a>
+
 ## Lazy loading and caching
 
 The dataset is *lazy*. Construction merely resolves the metadata; the

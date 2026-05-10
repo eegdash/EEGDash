@@ -65,8 +65,8 @@ Keywords: EEG2025, dataset, basics
   query). The challenge BDF files are not eagerly downloaded; that
   happens lazily when `record.raw` is accessed or a Braindecode
   pipeline pulls it.
-- Prerequisites: /auto_examples/tutorials/00_start_here/plot_00_first_search,
-  /auto_examples/tutorials/00_start_here/plot_01_first_recording.
+- Prerequisites: [Find datasets with the EEGDash API](../00_start_here/plot_00_first_search.md),
+  [Load one EEG recording](../00_start_here/plot_01_first_recording.md).
 - Concept: [EEGDash objects: EEGDash, EEGDashDataset, EEGChallengeDataset](../../../../concepts/eegdash_objects.md).
 
 <!-- GENERATED FROM PYTHON SOURCE LINES 64-67 -->
@@ -294,7 +294,7 @@ pd.Series(
 │ If you are participating in the competition, always use                      │
 │ `EEGChallengeDataset` to ensure consistency with the challenge data.         │
 ╰──────────────────────── Source: EEGChallengeDataset ─────────────────────────╯
-[05/10/26 16:36:27] INFO     Auto-corrected misrouted             dataset.py:402
+[05/10/26 18:55:23] INFO     Auto-corrected misrouted             dataset.py:402
                              storage.base for dataset
                              EEG2025r5mini: None ->
                              s3://nemar/EEG2025r5mini
@@ -965,7 +965,7 @@ pd.Series(
 │ If you are participating in the competition, always use                      │
 │ `EEGChallengeDataset` to ensure consistency with the challenge data.         │
 ╰──────────────────────── Source: EEGChallengeDataset ─────────────────────────╯
-[05/10/26 16:36:29] INFO     Auto-corrected misrouted             dataset.py:402
+[05/10/26 18:55:25] INFO     Auto-corrected misrouted             dataset.py:402
                              storage.base for dataset EEG2025r5:
                              None -> s3://nemar/EEG2025r5
 ```
@@ -1189,7 +1189,7 @@ pd.Series(
 │ If you are participating in the competition, always use                      │
 │ `EEGChallengeDataset` to ensure consistency with the challenge data.         │
 ╰──────────────────────── Source: EEGChallengeDataset ─────────────────────────╯
-[05/10/26 16:36:35] INFO     Auto-corrected misrouted             dataset.py:402
+[05/10/26 18:55:31] INFO     Auto-corrected misrouted             dataset.py:402
                              storage.base for dataset
                              EEG2025r2mini: None ->
                              s3://nemar/EEG2025r2mini
@@ -1387,10 +1387,10 @@ to `mini=False` for a final submission; never mix challenge data
 with raw `EEGDashDataset` pulls because the
 0.5-50 Hz pass-band and 100 Hz downsample make the two views
 incompatible. Next:
-/auto_examples/tutorials/70_transfer_foundation/plot_71_cross_task_transfer
+[Pretrain on resting-state, fine-tune on contrast-change detection (Simulated Data)](plot_71_cross_task_transfer.md)
 trains a transfer baseline across the task taxonomy you just
 enumerated;
-/auto_examples/tutorials/70_transfer_foundation/plot_73_finetune_pretrained_model
+[How do I adapt a pretrained EEG model to a new task?](plot_73_finetune_pretrained_model.md)
 fine-tunes a foundation model with the same loader.
 
 <!-- GENERATED FROM PYTHON SOURCE LINES 442-450 -->
@@ -1412,6 +1412,6 @@ See [References](../../../../references.md) for the centralized bibliography of 
 cited above. Add or amend an entry once in
 `docs/source/refs.bib`; every tutorial inherits the update.
 
-**Total running time of the script:** (0 minutes 8.614 seconds)
+**Total running time of the script:** (0 minutes 8.154 seconds)
 
 <a id="sphx-glr-download-generated-auto-examples-tutorials-70-transfer-foundation-plot-70-challenge-dataset-basics-py"></a>

@@ -119,6 +119,48 @@ Participants viewed natural images in a rapid serial visual presentation (RSVP) 
 - *9,000 unique images:* different for each participant
 
 Each image was shown 4 times per participant across blocks and sessions (presented twice per block, with blocks repeated within sessions).
+The BIDS event tables (every `events.tsv`) reference the stimuli as
+`trial_type = "image/N"` where `N` is a 1-indexed position (1..960) into
+the shared subset. The full mapping chain is:
+
+```text
+events.tsv `value` (N, 1..960)
+    ↓
+
+sharedix[N-1]                                    (from code/0_data_collection/nsd_expdesign.mat; 1-indexed NSD id)
+    ↓
+
+nsdId = sharedix[N-1] - 1                        (0-indexed)
+    ↓
+
+code/1_preprocessing/data/nsd_stim_info_merged.csv
+    ↓
+
+cocoId, cocoSplit (val2017 / train2017)
+    ↓
+
+stimuli/<cocoSplit>/000000<cocoId:012d>.jpg      (preserves original COCO 2017 layout)
+```
+
+Empirically the 960 shared NSD ids are all in `train2017`, so every
+stimulus path under this dataset is `stimuli/train2017/000000<id>.jpg`.
+To populate `stimuli/`:
+
+```bash
+python code/download_stimuli.py            # ~140 MB, fetches only the 960 needed
+python code/smoke_test.py                  # confirms every event row resolves
+```
+
+A small alignment helper is provided:
+
+```python
+import pandas as pd
+from code.align_stimuli import StimulusAligner
+aligner = StimulusAligner('.')
+events = pd.read_csv('sub-01/ses-01/eeg/sub-01_ses-01_task-images_events.tsv', sep='\t')
+paths = aligner.paths_for_events(events, subject=1, session=1)   # list[Path | None]
+img   = aligner.image_for_event(events.iloc[0], subject=1, session=1)  # PIL.Image
+```
 
 **Subjects and Sessions**
 

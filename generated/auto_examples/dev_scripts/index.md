@@ -15,6 +15,6 @@ If you arrived here looking for a learning path, start with
 `examples/tutorials/00_start_here/` instead.
 
 <div id='sg-tag-list' class='sphx-glr-tag-list'></div><div class="sphx-glr-thumbnails">
-<!-- thumbnail-parent-div-open --><div class="sphx-glr-thumbcontainer" tooltip="Note for Developers. This script is an internal debugging catalogue for mapping PyBIDS and Braindecode behavior. It is not part of the public learning path. For standard data-loading workflows, users should prefer the /auto_examples/tutorials/00_start_here/index tutorials.">  <div class="sphx-glr-thumbnail-title">[Developer Only] Exploring Braindecode's BIDSDataset</div>
+<!-- thumbnail-parent-div-open --><div class="sphx-glr-thumbcontainer" tooltip="Note for Developers. This script is an internal debugging catalogue for mapping PyBIDS and Braindecode behavior. It is not part of the public learning path. For standard data-loading workflows, users should prefer the /generated/auto_examples/tutorials/00_start_here/index tutorials.">  <div class="sphx-glr-thumbnail-title">[Developer Only] Exploring Braindecode's BIDSDataset</div>
 </div>
 <!-- thumbnail-parent-div-close --></div>

@@ -245,6 +245,27 @@ No scalp electrode layout is currently indexed for this
 dataset. Once the eegdash montage registry ingests it,
 the interactive viewer will appear here automatically.
 
+## Signal Preview
+
+<details class="trace-viewer">
+  <summary>Live trace viewer — <strong>sub-13 · ses-meg · task-facerecognition · run-05</strong></summary>
+  <p class="trace-viewer-caption">
+    Showing <strong>one</strong> representative recording out of
+    <strong>17 subjects and 104 recordings</strong> in this dataset.
+    Browse the full set on <a href="https://openneuro.org/datasets/ds000117" target="_blank" rel="noopener">OpenNeuro</a>;
+    drop any other <code>_meg.{set,edf,bdf,vhdr}</code> file onto the
+    viewer (or pass <code>?meg=&lt;url&gt;</code>) to inspect it.
+  </p>
+  <iframe
+    data-src="https://eegdash.github.io/eegdash-viewer/?dataset=ds000117&sub=13&ses=meg&task=facerecognition&run=05&ext=fif&suffix=meg&embed=1"
+    loading="lazy"
+    width="100%" height="640"
+    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 1200px; display: block; background: transparent;"
+    title="Live MEG trace viewer for ds000117 — sub-13 · ses-meg · task-facerecognition · run-05"
+    referrerpolicy="no-referrer">
+  </iframe>
+</details>
+
 ## API Reference
 
 Use the `DS000117` class to access this dataset programmatically.

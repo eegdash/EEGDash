@@ -628,7 +628,7 @@ each NeuroAI module.</p></li>
 <ul class="simple">
 <li><p>About 1 min on CPU.</p></li>
 <li><p>Network on first call (~30 MB into <code class="docutils literal notranslate"><span class="pre">cache_dir</span></code> for the EEGDash query).</p></li>
-<li><p>Prerequisites: <span class="xref std std-doc">/auto_examples/tutorials/00_start_here/plot_02_dataset_to_dataloader</span>
+<li><p>Prerequisites: <a class="reference internal" href="../00_start_here/plot_02_dataset_to_dataloader.html"><span class="doc">EEG recording to PyTorch DataLoader</span></a>
 (DataLoader basics), <a class="reference internal" href="plot_70_challenge_dataset_basics.html"><span class="doc">How do I get started with the EEG2025 Foundation Challenge dataset?</span></a>
 (challenge loader).</p></li>
 <li><p>Concept: <a class="reference internal" href="../../../../concepts/eegdash_objects.html"><span class="doc">EEGDash objects: EEGDash, EEGDashDataset, EEGChallengeDataset</span></a>.</p></li>
@@ -827,7 +827,7 @@ subpackage are the surface this tutorial exercises.</p>
 <section id="step-1-load-one-eegdash-recording">
 <h2>Step 1. Load one EEGDash recording<a class="headerlink" href="#step-1-load-one-eegdash-recording" title="Link to this heading">#</a></h2>
 <p>Same idiom as
-<span class="xref std std-doc">/auto_examples/tutorials/00_start_here/plot_01_first_recording</span>.
+<a class="reference internal" href="../00_start_here/plot_01_first_recording.html"><span class="doc">Load one EEG recording</span></a>.
 One subject, one task; the records-level metadata carries BIDS
 entities forward to every later stage <span class="bibtex-citation" id="id4">[<a class="reference internal" href="../../../../references.html#id7" title="Cyril R. Pernet, Stefan Appelhoff, Krzysztof J. Gorgolewski, Guillaume Flandin, Christophe Phillips, Arnaud Delorme, and Robert Oostenveld. Eeg-bids, an extension to the brain imaging data structure for electroencephalography. Scientific Data, 2019. doi:10.1038/s41597-019-0104-8.">Pernet <em>et al.</em>, 2019</a>]</span>.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">DATASET</span></a> <span class="o">=</span> <span class="s2">&quot;ds002718&quot;</span>
@@ -855,7 +855,7 @@ entities forward to every later stage <span class="bibtex-citation" id="id4">[<a
 <span class="p">)</span><span class="o">.</span><span class="n">to_frame</span><span class="p">()</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[05/10/26 16:36:46] WARNING  File not found on S3, skipping:   downloader.py:163
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[05/10/26 18:55:41] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds002718/sub-0
                              02/eeg/sub-002_task-FaceRecogniti
                              on_eeg.fdt
@@ -1249,17 +1249,17 @@ specific events) or <code class="docutils literal notranslate"><span class="pre"
 <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">seg_card</span></a>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2026-05-10 16:36:47 - WARNING - neuralset.segments:665 - 403 segments out of 1495 did not contain valid events for event type &lt;class &#39;neuralset.events.etypes.Stimulus&#39;&gt;
-[05/10/26 16:36:47] WARNING  403 segments out of 1495 did not    segments.py:665
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2026-05-10 18:55:43 - WARNING - neuralset.segments:665 - 403 segments out of 1495 did not contain valid events for event type &lt;class &#39;neuralset.events.etypes.Stimulus&#39;&gt;
+[05/10/26 18:55:43] WARNING  403 segments out of 1495 did not    segments.py:665
                              contain valid events for event type
                              &lt;class
                              &#39;neuralset.events.etypes.Stimulus&#39;&gt;
-2026-05-10 16:36:47 - INFO - neuralset.dataloader:618 - 403 segments are missing events of type Stimulus. They will be populated with default missing values through prepare.
+2026-05-10 18:55:43 - INFO - neuralset.dataloader:618 - 403 segments are missing events of type Stimulus. They will be populated with default missing values through prepare.
                     INFO     403 segments are missing events   dataloader.py:618
                              of type Stimulus. They will be
                              populated with default missing
                              values through prepare.
-2026-05-10 16:36:47 - INFO - neuralset.dataloader:625 - Removing 403 segments out of 1495
+2026-05-10 18:55:43 - INFO - neuralset.dataloader:625 - Removing 403 segments out of 1495
                     INFO     Removing 403 segments out of 1495 dataloader.py:625
 </pre></div>
 </div>
@@ -1324,7 +1324,7 @@ batch axis NeuralSet always prepends).</p>
 <code class="docutils literal notranslate"><span class="pre">collate_fn</span></code> that knows how to stack the dict-of-tensors layout
 Segmenter emits. The <a class="reference external" href="https://docs.pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader" title="(in PyTorch v2.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataLoader</span></code></a> call
 below is byte-identical to the one in
-<span class="xref std std-doc">/auto_examples/tutorials/00_start_here/plot_02_dataset_to_dataloader</span>
+<a class="reference internal" href="../00_start_here/plot_02_dataset_to_dataloader.html"><span class="doc">EEG recording to PyTorch DataLoader</span></a>
 except for the <code class="docutils literal notranslate"><span class="pre">collate_fn</span></code> argument, which is the only line that
 changes when you move from braindecode windows to NeuralSet
 segments.</p>
@@ -1595,13 +1595,13 @@ design are still open questions <span class="bibtex-citation" id="id6">[<a class
 <p>We took one record of <code class="docutils literal notranslate"><span class="pre">ds002718</span></code>, fit it into the NeuroAI events
 schema, and ran NeuralSet’s Segmenter to recover a PyTorch dataset
 the rest of the stack consumes. Next:
-<span class="xref std std-doc">/auto_examples/tutorials/70_transfer_foundation/plot_70_challenge_dataset_basics</span>
+<a class="reference internal" href="plot_70_challenge_dataset_basics.html"><span class="doc">How do I get started with the EEG2025 Foundation Challenge dataset?</span></a>
 loads the EEG2025 challenge cohort that NeuralBench evaluates on
 <span class="bibtex-citation" id="id7">[<a class="reference internal" href="../../../../references.html#id36" title="Bruno Aristimunha, Dung Truong, Pierre Guetschel, Seyed Yahya Shirazi, Isabelle Guyon, Alexandre R. Franco, Michael P. Milham, Aviv Dotan, Scott Makeig, Alexandre Gramfort, Jean-Remi King, Marie-Constance Corsi, Pedro A. Valdés-Sosa, Amit Majumdar, Alan Evans, Terrence J. Sejnowski, Oren Shriki, Sylvain Chevallier, and Arnaud Delorme. EEG foundation challenge: from cross-task to cross-subject EEG decoding. 2025. arXiv preprint, NeurIPS 2025 Competition track. doi:10.48550/arXiv.2506.19141.">Aristimunha <em>et al.</em>, 2025</a>]</span>;
-<span class="xref std std-doc">/auto_examples/tutorials/70_transfer_foundation/plot_71_cross_task_transfer</span>
+<a class="reference internal" href="plot_71_cross_task_transfer.html"><span class="doc">Pretrain on resting-state, fine-tune on contrast-change detection (Simulated Data)</span></a>
 trains a small encoder across tasks (the territory NeuralTrain
 automates);
-<span class="xref std std-doc">/auto_examples/tutorials/70_transfer_foundation/plot_73_finetune_pretrained_model</span>
+<a class="reference internal" href="plot_73_finetune_pretrained_model.html"><span class="doc">How do I adapt a pretrained EEG model to a new task?</span></a>
 runs the fine-tune regimes on top of that encoder.</p>
 </section>
 <section id="try-it-yourself">
@@ -1623,7 +1623,7 @@ EEG) and re-run. The events schema is unchanged.</p></li>
 <p>See <a class="reference internal" href="../../../../references.html"><span class="doc">References</span></a> for the centralized bibliography of papers
 cited above. Add or amend an entry once in
 <code class="file docutils literal notranslate"><span class="pre">docs/source/refs.bib</span></code>; every tutorial inherits the update.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 3.577 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 3.616 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-auto-examples-tutorials-70-transfer-foundation-plot-74-neuroai-interop-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/eegdash/EEGDash/main?urlpath=lab/tree/notebooks/generated/auto_examples/tutorials/70_transfer_foundation/plot_74_neuroai_interop.ipynb"><img alt="Launch binder" src="../../../../_images/binder_badge_logo11.svg" style="width: 150px;" />

@@ -11,10 +11,10 @@
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://eegdash.org/generated/auto_examples/tutorials/20_event_related/plot_21_auditory_oddball.html" />
 <meta property="og:site_name" content="EEG Dash" />
-<meta property="og:description" content="Difficulty 2| Runtime: 3m| Compute: CPU The visual oddball of/auto_examples/tutorials/20_event_related/plot_20_visual_p300_oddball delivered a parietal…" />
+<meta property="og:description" content="Difficulty 2| Runtime: 3m| Compute: CPU The visual oddball of Visual P300 oddball decoding delivered a parietal positive bump near 350 ms. Swap the eyes…" />
 <meta property="og:image" content="https://eegdash.org/_static/eegdash_social_card.png" />
 <meta property="og:image:alt" content="EEG Dash — data-sharing interface for M/EEG datasets" />
-<meta name="description" content="Difficulty 2| Runtime: 3m| Compute: CPU The visual oddball of/auto_examples/tutorials/20_event_related/plot_20_visual_p300_oddball delivered a parietal…" />
+<meta name="description" content="Difficulty 2| Runtime: 3m| Compute: CPU The visual oddball of Visual P300 oddball decoding delivered a parietal positive bump near 350 ms. Swap the eyes…" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@eegdash" />
 
@@ -588,7 +588,7 @@ to download the full example code or to run this example in your browser via Bin
 <section class="sphx-glr-example-title" id="auditory-p300-oddball-decoding">
 <span id="sphx-glr-generated-auto-examples-tutorials-20-event-related-plot-21-auditory-oddball-py"></span><h1>Auditory P300 oddball decoding<a class="headerlink" href="#auditory-p300-oddball-decoding" title="Link to this heading">#</a></h1><div class="eegdash-reading-time" role="note"><span class="eegdash-reading-time__label">Estimated reading time:</span><span class="eegdash-reading-time__value">11 minutes</span></div>
 <p><strong>Difficulty 2</strong> | <strong>Runtime: 3m</strong> | <strong>Compute: CPU</strong></p>
-<p>The visual oddball of <span class="xref std std-doc">/auto_examples/tutorials/20_event_related/plot_20_visual_p300_oddball</span>
+<p>The visual oddball of <a class="reference internal" href="plot_20_visual_p300_oddball.html"><span class="doc">Visual P300 oddball decoding</span></a>
 delivered a parietal positive bump near 350 ms. Swap the eyes for ears
 and the same paradigm structure (rare deviant inside a stream of
 standards) yields a <em>different</em> brain answer: an early <strong>mismatch
@@ -599,7 +599,7 @@ doi:10.1016/j.clinph.2007.04.019; Naatanen et al. 2007,
 doi:10.1016/j.clinph.2007.04.026; Squires et al. 1975,
 doi:10.1016/0013-4694(75)90263-1).</p>
 <p>This tutorial reuses the <code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code> plumbing
-introduced in <span class="xref std std-doc">/auto_examples/tutorials/00_start_here/plot_02_dataset_to_dataloader</span>,
+introduced in <a class="reference internal" href="../00_start_here/plot_02_dataset_to_dataloader.html"><span class="doc">EEG recording to PyTorch DataLoader</span></a>,
 loads OpenNeuro <code class="docutils literal notranslate"><span class="pre">ds003061</span></code> (Delorme 2020,
 doi:10.18112/openneuro.ds003061.v1.1.0; reachable via NEMAR, Delorme et
 al. 2022, doi:10.1093/database/baac096), epochs around the oddball
@@ -796,30 +796,30 @@ returns a string-to-int code mapping.</p>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Downloading sub-001_task-P300_run-2_channels.tsv:   0%|          | 0.00/1.12k [00:00&lt;?, ?B/s]
-Downloading sub-001_task-P300_run-2_channels.tsv: 100%|██████████| 1.12k/1.12k [00:00&lt;00:00, 4.90MB/s]
+Downloading sub-001_task-P300_run-2_channels.tsv: 100%|██████████| 1.12k/1.12k [00:00&lt;00:00, 5.37MB/s]
 
 Downloading sub-001_task-P300_run-2_events.tsv:   0%|          | 0.00/44.2k [00:00&lt;?, ?B/s]
-Downloading sub-001_task-P300_run-2_events.tsv: 100%|██████████| 44.2k/44.2k [00:00&lt;00:00, 109MB/s]
+Downloading sub-001_task-P300_run-2_events.tsv: 100%|██████████| 44.2k/44.2k [00:00&lt;00:00, 66.6MB/s]
 
 Downloading sub-001_task-P300_run-2_events.json:   0%|          | 0.00/1.85k [00:00&lt;?, ?B/s]
-Downloading sub-001_task-P300_run-2_events.json: 100%|██████████| 1.85k/1.85k [00:00&lt;00:00, 7.00MB/s]
+Downloading sub-001_task-P300_run-2_events.json: 100%|██████████| 1.85k/1.85k [00:00&lt;00:00, 8.88MB/s]
 
 Downloading sub-001_task-P300_run-2_electrodes.tsv:   0%|          | 0.00/1.68k [00:00&lt;?, ?B/s]
-Downloading sub-001_task-P300_run-2_electrodes.tsv: 100%|██████████| 1.68k/1.68k [00:00&lt;00:00, 6.43MB/s]
+Downloading sub-001_task-P300_run-2_electrodes.tsv: 100%|██████████| 1.68k/1.68k [00:00&lt;00:00, 7.27MB/s]
 
 Downloading sub-001_task-P300_run-2_coordsystem.json:   0%|          | 0.00/97.0 [00:00&lt;?, ?B/s]
-Downloading sub-001_task-P300_run-2_coordsystem.json: 100%|██████████| 97.0/97.0 [00:00&lt;00:00, 394kB/s]
+Downloading sub-001_task-P300_run-2_coordsystem.json: 100%|██████████| 97.0/97.0 [00:00&lt;00:00, 370kB/s]
 
 Downloading sub-001_task-P300_run-2_eeg.json:   0%|          | 0.00/1.34k [00:00&lt;?, ?B/s]
-Downloading sub-001_task-P300_run-2_eeg.json: 100%|██████████| 1.34k/1.34k [00:00&lt;00:00, 5.70MB/s]
-[05/10/26 16:35:09] WARNING  File not found on S3, skipping:   downloader.py:163
+Downloading sub-001_task-P300_run-2_eeg.json: 100%|██████████| 1.34k/1.34k [00:00&lt;00:00, 6.10MB/s]
+[05/10/26 18:53:54] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds003061/sub-0
                              01/eeg/sub-001_task-P300_run-2_ee
                              g.fdt
 
 Downloading sub-001_task-P300_run-2_eeg.set:   0%|          | 0.00/60.5M [00:00&lt;?, ?B/s]
-Downloading sub-001_task-P300_run-2_eeg.set:  83%|████████▎ | 50.0M/60.5M [00:01&lt;00:00, 33.5MB/s]
-Downloading sub-001_task-P300_run-2_eeg.set: 100%|██████████| 60.5M/60.5M [00:01&lt;00:00, 40.4MB/s]
+Downloading sub-001_task-P300_run-2_eeg.set:  83%|████████▎ | 50.0M/60.5M [00:02&lt;00:00, 25.2MB/s]
+Downloading sub-001_task-P300_run-2_eeg.set: 100%|██████████| 60.5M/60.5M [00:02&lt;00:00, 30.4MB/s]
 </pre></div>
 </div>
 <div class="output_subarea output_html rendered_html output_result">
@@ -939,56 +939,56 @@ pre-stimulus interval (E5.41).</p>
   warn(
 
 Downloading sub-001_task-P300_run-3_channels.tsv:   0%|          | 0.00/1.12k [00:00&lt;?, ?B/s]
-Downloading sub-001_task-P300_run-3_channels.tsv: 100%|██████████| 1.12k/1.12k [00:00&lt;00:00, 4.72MB/s]
+Downloading sub-001_task-P300_run-3_channels.tsv: 100%|██████████| 1.12k/1.12k [00:00&lt;00:00, 4.34MB/s]
 
 Downloading sub-001_task-P300_run-3_events.tsv:   0%|          | 0.00/44.1k [00:00&lt;?, ?B/s]
-Downloading sub-001_task-P300_run-3_events.tsv: 100%|██████████| 44.1k/44.1k [00:00&lt;00:00, 33.7MB/s]
+Downloading sub-001_task-P300_run-3_events.tsv: 100%|██████████| 44.1k/44.1k [00:00&lt;00:00, 89.8MB/s]
 
 Downloading sub-001_task-P300_run-3_events.json:   0%|          | 0.00/1.85k [00:00&lt;?, ?B/s]
-Downloading sub-001_task-P300_run-3_events.json: 100%|██████████| 1.85k/1.85k [00:00&lt;00:00, 8.83MB/s]
+Downloading sub-001_task-P300_run-3_events.json: 100%|██████████| 1.85k/1.85k [00:00&lt;00:00, 7.34MB/s]
 
 Downloading sub-001_task-P300_run-3_electrodes.tsv:   0%|          | 0.00/1.68k [00:00&lt;?, ?B/s]
-Downloading sub-001_task-P300_run-3_electrodes.tsv: 100%|██████████| 1.68k/1.68k [00:00&lt;00:00, 6.91MB/s]
+Downloading sub-001_task-P300_run-3_electrodes.tsv: 100%|██████████| 1.68k/1.68k [00:00&lt;00:00, 6.69MB/s]
 
 Downloading sub-001_task-P300_run-3_coordsystem.json:   0%|          | 0.00/97.0 [00:00&lt;?, ?B/s]
-Downloading sub-001_task-P300_run-3_coordsystem.json: 100%|██████████| 97.0/97.0 [00:00&lt;00:00, 441kB/s]
+Downloading sub-001_task-P300_run-3_coordsystem.json: 100%|██████████| 97.0/97.0 [00:00&lt;00:00, 493kB/s]
 
 Downloading sub-001_task-P300_run-3_eeg.json:   0%|          | 0.00/1.34k [00:00&lt;?, ?B/s]
-Downloading sub-001_task-P300_run-3_eeg.json: 100%|██████████| 1.34k/1.34k [00:00&lt;00:00, 6.17MB/s]
-[05/10/26 16:35:12] WARNING  File not found on S3, skipping:   downloader.py:163
+Downloading sub-001_task-P300_run-3_eeg.json: 100%|██████████| 1.34k/1.34k [00:00&lt;00:00, 6.93MB/s]
+[05/10/26 18:53:58] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds003061/sub-0
                              01/eeg/sub-001_task-P300_run-3_ee
                              g.fdt
 
 Downloading sub-001_task-P300_run-3_eeg.set:   0%|          | 0.00/60.4M [00:00&lt;?, ?B/s]
-Downloading sub-001_task-P300_run-3_eeg.set:  83%|████████▎ | 50.0M/60.4M [00:00&lt;00:00, 53.2MB/s]
-Downloading sub-001_task-P300_run-3_eeg.set: 100%|██████████| 60.4M/60.4M [00:00&lt;00:00, 64.1MB/s]
+Downloading sub-001_task-P300_run-3_eeg.set:  83%|████████▎ | 50.0M/60.4M [00:01&lt;00:00, 44.0MB/s]
+Downloading sub-001_task-P300_run-3_eeg.set: 100%|██████████| 60.4M/60.4M [00:01&lt;00:00, 53.0MB/s]
 
 Downloading sub-001_task-P300_run-1_channels.tsv:   0%|          | 0.00/1.12k [00:00&lt;?, ?B/s]
-Downloading sub-001_task-P300_run-1_channels.tsv: 100%|██████████| 1.12k/1.12k [00:00&lt;00:00, 4.54MB/s]
+Downloading sub-001_task-P300_run-1_channels.tsv: 100%|██████████| 1.12k/1.12k [00:00&lt;00:00, 4.53MB/s]
 
 Downloading sub-001_task-P300_run-1_events.tsv:   0%|          | 0.00/44.3k [00:00&lt;?, ?B/s]
-Downloading sub-001_task-P300_run-1_events.tsv: 100%|██████████| 44.3k/44.3k [00:00&lt;00:00, 74.7MB/s]
+Downloading sub-001_task-P300_run-1_events.tsv: 100%|██████████| 44.3k/44.3k [00:00&lt;00:00, 113MB/s]
 
 Downloading sub-001_task-P300_run-1_events.json:   0%|          | 0.00/1.85k [00:00&lt;?, ?B/s]
-Downloading sub-001_task-P300_run-1_events.json: 100%|██████████| 1.85k/1.85k [00:00&lt;00:00, 8.29MB/s]
+Downloading sub-001_task-P300_run-1_events.json: 100%|██████████| 1.85k/1.85k [00:00&lt;00:00, 9.42MB/s]
 
 Downloading sub-001_task-P300_run-1_electrodes.tsv:   0%|          | 0.00/1.68k [00:00&lt;?, ?B/s]
-Downloading sub-001_task-P300_run-1_electrodes.tsv: 100%|██████████| 1.68k/1.68k [00:00&lt;00:00, 7.25MB/s]
+Downloading sub-001_task-P300_run-1_electrodes.tsv: 100%|██████████| 1.68k/1.68k [00:00&lt;00:00, 7.06MB/s]
 
 Downloading sub-001_task-P300_run-1_coordsystem.json:   0%|          | 0.00/97.0 [00:00&lt;?, ?B/s]
-Downloading sub-001_task-P300_run-1_coordsystem.json: 100%|██████████| 97.0/97.0 [00:00&lt;00:00, 405kB/s]
+Downloading sub-001_task-P300_run-1_coordsystem.json: 100%|██████████| 97.0/97.0 [00:00&lt;00:00, 342kB/s]
 
 Downloading sub-001_task-P300_run-1_eeg.json:   0%|          | 0.00/1.34k [00:00&lt;?, ?B/s]
-Downloading sub-001_task-P300_run-1_eeg.json: 100%|██████████| 1.34k/1.34k [00:00&lt;00:00, 5.44MB/s]
-[05/10/26 16:35:17] WARNING  File not found on S3, skipping:   downloader.py:163
+Downloading sub-001_task-P300_run-1_eeg.json: 100%|██████████| 1.34k/1.34k [00:00&lt;00:00, 5.38MB/s]
+[05/10/26 18:54:03] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds003061/sub-0
                              01/eeg/sub-001_task-P300_run-1_ee
                              g.fdt
 
 Downloading sub-001_task-P300_run-1_eeg.set:   0%|          | 0.00/60.6M [00:00&lt;?, ?B/s]
-Downloading sub-001_task-P300_run-1_eeg.set:  83%|████████▎ | 50.0M/60.6M [00:01&lt;00:00, 39.2MB/s]
-Downloading sub-001_task-P300_run-1_eeg.set: 100%|██████████| 60.6M/60.6M [00:01&lt;00:00, 47.4MB/s]
+Downloading sub-001_task-P300_run-1_eeg.set:  83%|████████▎ | 50.0M/60.6M [00:01&lt;00:00, 42.0MB/s]
+Downloading sub-001_task-P300_run-1_eeg.set: 100%|██████████| 60.6M/60.6M [00:01&lt;00:00, 50.8MB/s]
 epochs: 637 | deviants=111, standards=526 | n_channels=64, sfreq=128 Hz
 </pre></div>
 </div>
@@ -1183,9 +1183,9 @@ computed two <a class="reference external" href="https://mne.tools/stable/genera
 Cz, and rendered the difference-wave topomap with
 <a class="reference external" href="https://mne.tools/stable/generated/mne.viz.plot_topomap.html#mne.viz.plot_topomap" title="(in MNE v1.12)"><code class="xref py py-func docutils literal notranslate"><span class="pre">mne.viz.plot_topomap()</span></code></a>. The figure makes the auditory-vs-visual
 contrast the <em>headline</em> of the tutorial. Next:
-<span class="xref std std-doc">/auto_examples/tutorials/30_resting_state/plot_30_eyes_open_closed</span>
+<a class="reference internal" href="../30_resting_state/plot_30_eyes_open_closed.html"><span class="doc">Decode eyes open vs. eyes closed</span></a>
 moves from event-related to resting-state contrasts;
-<span class="xref std std-doc">/auto_examples/tutorials/40_features/plot_40_first_features</span>
+<a class="reference internal" href="../40_features/plot_40_first_features.html"><span class="doc">Extract band-power features</span></a>
 turns the same epochs into hand-crafted features for an interpretable
 baseline.</p>
 </section>
@@ -1210,7 +1210,7 @@ against the visual P300 number you obtained in plot_20.</p></li>
 <p>See <a class="reference internal" href="../../../../references.html"><span class="doc">References</span></a> for the centralized bibliography of papers
 cited above. Add or amend an entry once in
 <code class="file docutils literal notranslate"><span class="pre">docs/source/refs.bib</span></code>; every tutorial inherits the update.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 13.273 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 14.639 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-auto-examples-tutorials-20-event-related-plot-21-auditory-oddball-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/eegdash/EEGDash/main?urlpath=lab/tree/notebooks/generated/auto_examples/tutorials/20_event_related/plot_21_auditory_oddball.ipynb"><img alt="Launch binder" src="../../../../_images/binder_badge_logo7.svg" style="width: 150px;" />

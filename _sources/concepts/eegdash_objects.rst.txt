@@ -90,6 +90,8 @@ small set of dataset-construction options.
    raw = ds[0].raw                 # triggers the first download
    raw.filter(0.5, 40)             # mne.io.Raw operations
 
+.. _concepts-lazy-loading-and-cache:
+
 Lazy loading and caching
 ------------------------
 

@@ -47,7 +47,7 @@ Keywords: evaluation, leakage, splitting
 ## Requirements
 
 - You finished
-  /auto_examples/tutorials/10_core_workflow/plot_10_preprocess_and_window.
+  [Preprocess EEG and create windows](plot_10_preprocess_and_window.md).
 - About 30 s on CPU. No network: the metadata table is built in-script.
 - Concept refresher: [Leakage and evaluation](../../../../concepts/leakage_and_evaluation.md).
 
@@ -1053,7 +1053,7 @@ sites, and clinical pipelines. The recipe is:
    fold for training.
 
 Next:
-/auto_examples/tutorials/10_core_workflow/plot_12_train_a_baseline
+[Train a leakage-safe baseline](plot_12_train_a_baseline.md)
 trains a baseline on top of these folds; the manifest is loaded by
 reference so the splits are auditable end-to-end.
 

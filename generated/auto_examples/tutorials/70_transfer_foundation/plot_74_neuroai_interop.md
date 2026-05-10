@@ -55,7 +55,7 @@ Keywords: interop, NeuroAI, Meta
 
 - About 1 min on CPU.
 - Network on first call (~30 MB into `cache_dir` for the EEGDash query).
-- Prerequisites: /auto_examples/tutorials/00_start_here/plot_02_dataset_to_dataloader
+- Prerequisites: [EEG recording to PyTorch DataLoader](../00_start_here/plot_02_dataset_to_dataloader.md)
   (DataLoader basics), [How do I get started with the EEG2025 Foundation Challenge dataset?](plot_70_challenge_dataset_basics.md)
   (challenge loader).
 - Concept: [EEGDash objects: EEGDash, EEGDashDataset, EEGChallengeDataset](../../../../concepts/eegdash_objects.md).
@@ -267,7 +267,7 @@ surface_df
 ## Step 1. Load one EEGDash recording
 
 Same idiom as
-/auto_examples/tutorials/00_start_here/plot_01_first_recording.
+[Load one EEG recording](../00_start_here/plot_01_first_recording.md).
 One subject, one task; the records-level metadata carries BIDS
 entities forward to every later stage [[Pernet *et al.*, 2019](../../../../references.md#id7)].
 
@@ -299,7 +299,7 @@ pd.Series(
 ```
 
 ```none
-[05/10/26 16:36:46] WARNING  File not found on S3, skipping:   downloader.py:163
+[05/10/26 18:55:41] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds002718/sub-0
                              02/eeg/sub-002_task-FaceRecogniti
                              on_eeg.fdt
@@ -718,17 +718,17 @@ seg_card
 ```
 
 ```none
-2026-05-10 16:36:47 - WARNING - neuralset.segments:665 - 403 segments out of 1495 did not contain valid events for event type <class 'neuralset.events.etypes.Stimulus'>
-[05/10/26 16:36:47] WARNING  403 segments out of 1495 did not    segments.py:665
+2026-05-10 18:55:43 - WARNING - neuralset.segments:665 - 403 segments out of 1495 did not contain valid events for event type <class 'neuralset.events.etypes.Stimulus'>
+[05/10/26 18:55:43] WARNING  403 segments out of 1495 did not    segments.py:665
                              contain valid events for event type
                              <class
                              'neuralset.events.etypes.Stimulus'>
-2026-05-10 16:36:47 - INFO - neuralset.dataloader:618 - 403 segments are missing events of type Stimulus. They will be populated with default missing values through prepare.
+2026-05-10 18:55:43 - INFO - neuralset.dataloader:618 - 403 segments are missing events of type Stimulus. They will be populated with default missing values through prepare.
                     INFO     403 segments are missing events   dataloader.py:618
                              of type Stimulus. They will be
                              populated with default missing
                              values through prepare.
-2026-05-10 16:36:47 - INFO - neuralset.dataloader:625 - Removing 403 segments out of 1495
+2026-05-10 18:55:43 - INFO - neuralset.dataloader:625 - Removing 403 segments out of 1495
                     INFO     Removing 403 segments out of 1495 dataloader.py:625
 ```
 
@@ -798,7 +798,7 @@ The segment dataset exposes `__len__` and `__getitem__` plus a
 `collate_fn` that knows how to stack the dict-of-tensors layout
 Segmenter emits. The [`DataLoader`](https://docs.pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader) call
 below is byte-identical to the one in
-/auto_examples/tutorials/00_start_here/plot_02_dataset_to_dataloader
+[EEG recording to PyTorch DataLoader](../00_start_here/plot_02_dataset_to_dataloader.md)
 except for the `collate_fn` argument, which is the only line that
 changes when you move from braindecode windows to NeuralSet
 segments.
@@ -1097,13 +1097,13 @@ design are still open questions [[Cisotto and Chicco, 2024](../../../../referenc
 We took one record of `ds002718`, fit it into the NeuroAI events
 schema, and ran NeuralSet’s Segmenter to recover a PyTorch dataset
 the rest of the stack consumes. Next:
-/auto_examples/tutorials/70_transfer_foundation/plot_70_challenge_dataset_basics
+[How do I get started with the EEG2025 Foundation Challenge dataset?](plot_70_challenge_dataset_basics.md)
 loads the EEG2025 challenge cohort that NeuralBench evaluates on
 [[Aristimunha *et al.*, 2025](../../../../references.md#id36)];
-/auto_examples/tutorials/70_transfer_foundation/plot_71_cross_task_transfer
+[Pretrain on resting-state, fine-tune on contrast-change detection (Simulated Data)](plot_71_cross_task_transfer.md)
 trains a small encoder across tasks (the territory NeuralTrain
 automates);
-/auto_examples/tutorials/70_transfer_foundation/plot_73_finetune_pretrained_model
+[How do I adapt a pretrained EEG model to a new task?](plot_73_finetune_pretrained_model.md)
 runs the fine-tune regimes on top of that encoder.
 
 <!-- GENERATED FROM PYTHON SOURCE LINES 550-561 -->
@@ -1128,6 +1128,6 @@ See [References](../../../../references.md) for the centralized bibliography of 
 cited above. Add or amend an entry once in
 `docs/source/refs.bib`; every tutorial inherits the update.
 
-**Total running time of the script:** (0 minutes 3.577 seconds)
+**Total running time of the script:** (0 minutes 3.616 seconds)
 
 <a id="sphx-glr-download-generated-auto-examples-tutorials-70-transfer-foundation-plot-74-neuroai-interop-py"></a>

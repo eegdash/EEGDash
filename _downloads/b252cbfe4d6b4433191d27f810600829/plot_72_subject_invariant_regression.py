@@ -47,7 +47,7 @@ Keywords: regression, p-factor, EEG2025
 # Requirements
 # ------------
 # - ~30 s on CPU; GPU optional. No live network.
-# - Prereqs: :doc:`plot_70_challenge_dataset_basics` and :doc:`plot_42_features_to_sklearn`.
+# - Prereqs: :doc:`plot_70_challenge_dataset_basics` and :doc:`/generated/auto_examples/tutorials/40_features/plot_42_features_to_sklearn`.
 # - Concept: :doc:`/concepts/leakage_and_evaluation`.
 
 # %%

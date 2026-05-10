@@ -143,17 +143,6 @@ Preprocessed data files from “Internal selective attention is delayed by compe
   </iframe>
 </details>
 
-## Signal Preview
-
-<iframe
-  src="https://eegdash.github.io/eegdash-viewer/?dataset=ds004519&embed=1"
-  loading="lazy"
-  width="100%" height="640"
-  style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 1200px; display: block; background: transparent;"
-  title="Live EEG trace viewer for ds004519"
-  referrerpolicy="no-referrer">
-</iframe>
-
 ## API Reference
 
 Use the `DS004519` class to access this dataset programmatically.

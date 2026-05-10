@@ -156,17 +156,6 @@ Participant numbering in this dataset starts at 12. Participants 1 to 11 were pi
   </iframe>
 </details>
 
-## Signal Preview
-
-<iframe
-  src="https://eegdash.github.io/eegdash-viewer/?dataset=ds006897&embed=1"
-  loading="lazy"
-  width="100%" height="640"
-  style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 1200px; display: block; background: transparent;"
-  title="Live EEG trace viewer for ds006897"
-  referrerpolicy="no-referrer">
-</iframe>
-
 ## API Reference
 
 Use the `DS006897` class to access this dataset programmatically.

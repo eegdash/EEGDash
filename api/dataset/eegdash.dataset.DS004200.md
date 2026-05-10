@@ -146,17 +146,6 @@ Preprint: [https://doi.org/10.1101/2020.12.11.421180](https://doi.org/10.1101/20
   </iframe>
 </details>
 
-## Signal Preview
-
-<iframe
-  src="https://eegdash.github.io/eegdash-viewer/?dataset=ds004200&embed=1"
-  loading="lazy"
-  width="100%" height="640"
-  style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 1200px; display: block; background: transparent;"
-  title="Live EEG trace viewer for ds004200"
-  referrerpolicy="no-referrer">
-</iframe>
-
 ## API Reference
 
 Use the `DS004200` class to access this dataset programmatically.

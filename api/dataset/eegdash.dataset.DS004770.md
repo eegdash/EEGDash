@@ -141,27 +141,16 @@ Subfolders:
 ## Electrode Layout
 
 <details class="electrode-explorer">
-  <summary>Electrode layout — iEEG · 110 sensors — 110 channels</summary>
+  <summary>Electrode layout — iEEG · 75 sensors — 75 channels</summary>
   <iframe
-    data-src="https://electrodes.eegdash.org/?montage=31bdf0fa90600db9&embed=1"
+    data-src="https://electrodes.eegdash.org/?montage=56368a54bb18e300&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
-    title="Topomap of iEEG · 110 sensors"
+    title="Topomap of iEEG · 75 sensors"
     referrerpolicy="no-referrer">
   </iframe>
 </details>
-
-## Signal Preview
-
-<iframe
-  src="https://eegdash.github.io/eegdash-viewer/?dataset=ds004770&embed=1"
-  loading="lazy"
-  width="100%" height="640"
-  style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 1200px; display: block; background: transparent;"
-  title="Live EEG trace viewer for ds004770"
-  referrerpolicy="no-referrer">
-</iframe>
 
 ## API Reference
 

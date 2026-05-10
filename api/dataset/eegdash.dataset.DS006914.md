@@ -137,27 +137,16 @@ Ryuzaburo Kochi, Aya Kanno, Hiroshi Uda, Keisuke Hatano,  Masaki Sonoda, Hidenor
 ## Electrode Layout
 
 <details class="electrode-explorer">
-  <summary>Electrode layout — iEEG · 150 sensors — 150 channels</summary>
+  <summary>Electrode layout — iEEG · 113 sensors — 113 channels</summary>
   <iframe
-    data-src="https://electrodes.eegdash.org/?montage=b231812da1c14e8f&embed=1"
+    data-src="https://electrodes.eegdash.org/?montage=3e16488275b64766&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
-    title="Topomap of iEEG · 150 sensors"
+    title="Topomap of iEEG · 113 sensors"
     referrerpolicy="no-referrer">
   </iframe>
 </details>
-
-## Signal Preview
-
-<iframe
-  src="https://eegdash.github.io/eegdash-viewer/?dataset=ds006914&embed=1"
-  loading="lazy"
-  width="100%" height="640"
-  style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 1200px; display: block; background: transparent;"
-  title="Live EEG trace viewer for ds006914"
-  referrerpolicy="no-referrer">
-</iframe>
 
 ## API Reference
 

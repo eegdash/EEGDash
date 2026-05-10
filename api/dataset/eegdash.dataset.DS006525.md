@@ -140,7 +140,7 @@ The data was then sampled down to 250 Hz to reduce file size while keeping enoug
 <details class="electrode-explorer">
   <summary>Electrode layout — EEG · 129 sensors — 129 channels</summary>
   <iframe
-    data-src="https://electrodes.eegdash.org/?montage=c26c4ff3323c435b&embed=1"
+    data-src="https://electrodes.eegdash.org/?montage=6813d1097ac68316&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
@@ -148,17 +148,6 @@ The data was then sampled down to 250 Hz to reduce file size while keeping enoug
     referrerpolicy="no-referrer">
   </iframe>
 </details>
-
-## Signal Preview
-
-<iframe
-  src="https://eegdash.github.io/eegdash-viewer/?dataset=ds006525&embed=1"
-  loading="lazy"
-  width="100%" height="640"
-  style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 1200px; display: block; background: transparent;"
-  title="Live EEG trace viewer for ds006525"
-  referrerpolicy="no-referrer">
-</iframe>
 
 ## API Reference
 

@@ -154,17 +154,6 @@ Respiration and heart rate was recorded with Invivo MRI Sensors at a sampling ra
   </iframe>
 </details>
 
-## Signal Preview
-
-<iframe
-  src="https://eegdash.github.io/eegdash-viewer/?dataset=ds005795&embed=1"
-  loading="lazy"
-  width="100%" height="640"
-  style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 1200px; display: block; background: transparent;"
-  title="Live EEG trace viewer for ds005795"
-  referrerpolicy="no-referrer">
-</iframe>
-
 ## API Reference
 
 Use the `DS005795` class to access this dataset programmatically.

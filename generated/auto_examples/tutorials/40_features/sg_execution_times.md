@@ -2,7 +2,7 @@
 
 # Computation times
 
-**00:01.118** total execution time for 3 files **from generated/auto_examples/tutorials/40_features**:
+**00:01.225** total execution time for 3 files **from generated/auto_examples/tutorials/40_features**:
 
 <style scoped>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet" />
@@ -19,6 +19,6 @@ $(document).ready( function () {
 
 | Example                                                                                                                                                                                     | Time      |   Mem (MB) |
 |---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------|------------|
-| [EEGDash features to scikit-learn](plot_42_features_to_sklearn.md#sphx-glr-generated-auto-examples-tutorials-40-features-plot-42-features-to-sklearn-py) (`plot_42_features_to_sklearn.py`) | 00:00.400 |          0 |
-| [Extract band-power features](plot_40_first_features.md#sphx-glr-generated-auto-examples-tutorials-40-features-plot-40-first-features-py) (`plot_40_first_features.py`)                     | 00:00.367 |          0 |
-| [Compose EEG markers from Welch PSD](plot_41_feature_trees.md#sphx-glr-generated-auto-examples-tutorials-40-features-plot-41-feature-trees-py) (`plot_41_feature_trees.py`)                 | 00:00.351 |          0 |
+| [EEGDash features to scikit-learn](plot_42_features_to_sklearn.md#sphx-glr-generated-auto-examples-tutorials-40-features-plot-42-features-to-sklearn-py) (`plot_42_features_to_sklearn.py`) | 00:00.440 |          0 |
+| [Extract band-power features](plot_40_first_features.md#sphx-glr-generated-auto-examples-tutorials-40-features-plot-40-first-features-py) (`plot_40_first_features.py`)                     | 00:00.403 |          0 |
+| [Compose EEG markers from Welch PSD](plot_41_feature_trees.md#sphx-glr-generated-auto-examples-tutorials-40-features-plot-41-feature-trees-py) (`plot_41_feature_trees.py`)                 | 00:00.381 |          0 |

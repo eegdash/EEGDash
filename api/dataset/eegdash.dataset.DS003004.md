@@ -136,27 +136,37 @@ During the study, participants listen to 15 voice recordings that each suggest i
 ## Electrode Layout
 
 <details class="electrode-explorer">
-  <summary>Electrode layout — EEG · 212 sensors — 212 channels</summary>
+  <summary>Electrode layout — EEG · 224 sensors — 224 channels</summary>
   <iframe
-    data-src="https://electrodes.eegdash.org/?montage=ae05bbc89e70cd4b&embed=1"
+    data-src="https://electrodes.eegdash.org/?montage=f13e2011507d8d77&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
-    title="Topomap of EEG · 212 sensors"
+    title="Topomap of EEG · 224 sensors"
     referrerpolicy="no-referrer">
   </iframe>
 </details>
 
 ## Signal Preview
 
-<iframe
-  src="https://eegdash.github.io/eegdash-viewer/?dataset=ds003004&embed=1"
-  loading="lazy"
-  width="100%" height="640"
-  style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 1200px; display: block; background: transparent;"
-  title="Live EEG trace viewer for ds003004"
-  referrerpolicy="no-referrer">
-</iframe>
+<details class="trace-viewer">
+  <summary>Live trace viewer — <strong>sub-13 · task-ImaginedEmotion</strong></summary>
+  <p class="trace-viewer-caption">
+    Showing <strong>one</strong> representative recording out of
+    <strong>34 subjects and 34 recordings</strong> in this dataset.
+    Browse the full set on <a href="https://openneuro.org/datasets/ds003004" target="_blank" rel="noopener">OpenNeuro</a>;
+    drop any other <code>_eeg.{set,edf,bdf,vhdr}</code> file onto the
+    viewer (or pass <code>?eeg=&lt;url&gt;</code>) to inspect it.
+  </p>
+  <iframe
+    data-src="https://eegdash.github.io/eegdash-viewer/?dataset=ds003004&sub=13&task=ImaginedEmotion&ext=set&embed=1"
+    loading="lazy"
+    width="100%" height="640"
+    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 1200px; display: block; background: transparent;"
+    title="Live EEG trace viewer for ds003004 — sub-13 · task-ImaginedEmotion"
+    referrerpolicy="no-referrer">
+  </iframe>
+</details>
 
 ## API Reference
 

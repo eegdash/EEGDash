@@ -132,27 +132,16 @@ Welcome to the numbers dataset. These data were collected using stereoelectroenc
 ## Electrode Layout
 
 <details class="electrode-explorer">
-  <summary>Electrode layout — iEEG · 189 sensors — 189 channels</summary>
+  <summary>Electrode layout — iEEG · 164 sensors — 164 channels</summary>
   <iframe
-    data-src="https://electrodes.eegdash.org/?montage=973bc1f8e8306502&embed=1"
+    data-src="https://electrodes.eegdash.org/?montage=d068abd9732afd1f&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
-    title="Topomap of iEEG · 189 sensors"
+    title="Topomap of iEEG · 164 sensors"
     referrerpolicy="no-referrer">
   </iframe>
 </details>
-
-## Signal Preview
-
-<iframe
-  src="https://eegdash.github.io/eegdash-viewer/?dataset=ds005415&embed=1"
-  loading="lazy"
-  width="100%" height="640"
-  style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 1200px; display: block; background: transparent;"
-  title="Live EEG trace viewer for ds005415"
-  referrerpolicy="no-referrer">
-</iframe>
 
 ## API Reference
 

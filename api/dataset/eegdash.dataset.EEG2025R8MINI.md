@@ -257,17 +257,6 @@ No scalp electrode layout is currently indexed for this
 dataset. Once the eegdash montage registry ingests it,
 the interactive viewer will appear here automatically.
 
-## Signal Preview
-
-<iframe
-  src="https://eegdash.github.io/eegdash-viewer/?dataset=eeg2025r8mini&embed=1"
-  loading="lazy"
-  width="100%" height="640"
-  style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 1200px; display: block; background: transparent;"
-  title="Live EEG trace viewer for eeg2025r8mini"
-  referrerpolicy="no-referrer">
-</iframe>
-
 ## API Reference
 
 Use the `EEG2025R8MINI` class to access this dataset programmatically.

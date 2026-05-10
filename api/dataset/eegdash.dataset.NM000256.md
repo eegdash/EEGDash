@@ -251,17 +251,6 @@ The table below is a breakdown on the total minutes of raw data available for ea
   </iframe>
 </details>
 
-## Signal Preview
-
-<iframe
-  src="https://eegdash.github.io/eegdash-viewer/?dataset=nm000256&embed=1"
-  loading="lazy"
-  width="100%" height="640"
-  style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 1200px; display: block; background: transparent;"
-  title="Live EEG trace viewer for nm000256"
-  referrerpolicy="no-referrer">
-</iframe>
-
 ## API Reference
 
 Use the `NM000256` class to access this dataset programmatically.

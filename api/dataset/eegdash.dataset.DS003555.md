@@ -202,14 +202,24 @@ For questions on the dataset or the task, contact Johannes Sarnthein at [johanne
 
 ## Signal Preview
 
-<iframe
-  src="https://eegdash.github.io/eegdash-viewer/?dataset=ds003555&embed=1"
-  loading="lazy"
-  width="100%" height="640"
-  style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 1200px; display: block; background: transparent;"
-  title="Live EEG trace viewer for ds003555"
-  referrerpolicy="no-referrer">
-</iframe>
+<details class="trace-viewer">
+  <summary>Live trace viewer — <strong>sub-13 · ses-01 · task-hfo</strong></summary>
+  <p class="trace-viewer-caption">
+    Showing <strong>one</strong> representative recording out of
+    <strong>30 subjects and 30 recordings</strong> in this dataset.
+    Browse the full set on <a href="https://openneuro.org/datasets/ds003555" target="_blank" rel="noopener">OpenNeuro</a>;
+    drop any other <code>_eeg.{set,edf,bdf,vhdr}</code> file onto the
+    viewer (or pass <code>?eeg=&lt;url&gt;</code>) to inspect it.
+  </p>
+  <iframe
+    data-src="https://eegdash.github.io/eegdash-viewer/?dataset=ds003555&sub=13&ses=01&task=hfo&ext=edf&embed=1"
+    loading="lazy"
+    width="100%" height="640"
+    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 1200px; display: block; background: transparent;"
+    title="Live EEG trace viewer for ds003555 — sub-13 · ses-01 · task-hfo"
+    referrerpolicy="no-referrer">
+  </iframe>
+</details>
 
 ## API Reference
 

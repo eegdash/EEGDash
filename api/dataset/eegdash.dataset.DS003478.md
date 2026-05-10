@@ -145,14 +145,24 @@ Resting EEG data with 122 college-age participants. These are the same participa
 
 ## Signal Preview
 
-<iframe
-  src="https://eegdash.github.io/eegdash-viewer/?dataset=ds003478&embed=1"
-  loading="lazy"
-  width="100%" height="640"
-  style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 1200px; display: block; background: transparent;"
-  title="Live EEG trace viewer for ds003478"
-  referrerpolicy="no-referrer">
-</iframe>
+<details class="trace-viewer">
+  <summary>Live trace viewer — <strong>sub-021 · task-Rest · run-02</strong></summary>
+  <p class="trace-viewer-caption">
+    Showing <strong>one</strong> representative recording out of
+    <strong>122 subjects and 243 recordings</strong> in this dataset.
+    Browse the full set on <a href="https://openneuro.org/datasets/ds003478" target="_blank" rel="noopener">OpenNeuro</a>;
+    drop any other <code>_eeg.{set,edf,bdf,vhdr}</code> file onto the
+    viewer (or pass <code>?eeg=&lt;url&gt;</code>) to inspect it.
+  </p>
+  <iframe
+    data-src="https://eegdash.github.io/eegdash-viewer/?dataset=ds003478&sub=021&task=Rest&run=02&ext=set&embed=1"
+    loading="lazy"
+    width="100%" height="640"
+    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 1200px; display: block; background: transparent;"
+    title="Live EEG trace viewer for ds003478 — sub-021 · task-Rest · run-02"
+    referrerpolicy="no-referrer">
+  </iframe>
+</details>
 
 ## API Reference
 

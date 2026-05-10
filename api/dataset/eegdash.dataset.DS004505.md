@@ -136,7 +136,7 @@ Please refer to our publication for more details.
 <details class="electrode-explorer">
   <summary>Electrode layout — EEG · 120 sensors — 120 channels</summary>
   <iframe
-    data-src="https://electrodes.eegdash.org/?montage=1decd953582f94dd&embed=1"
+    data-src="https://electrodes.eegdash.org/?montage=17db718e5264ecd5&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
@@ -144,17 +144,6 @@ Please refer to our publication for more details.
     referrerpolicy="no-referrer">
   </iframe>
 </details>
-
-## Signal Preview
-
-<iframe
-  src="https://eegdash.github.io/eegdash-viewer/?dataset=ds004505&embed=1"
-  loading="lazy"
-  width="100%" height="640"
-  style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 1200px; display: block; background: transparent;"
-  title="Live EEG trace viewer for ds004505"
-  referrerpolicy="no-referrer">
-</iframe>
 
 ## API Reference
 

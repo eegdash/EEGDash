@@ -159,27 +159,16 @@ For questions or inquiries, please contact [sas-kahana-sysadmin@sas.upenn.edu](m
 ## Electrode Layout
 
 <details class="electrode-explorer">
-  <summary>Electrode layout — iEEG · 78 sensors — 78 channels</summary>
+  <summary>Electrode layout — iEEG · 126 sensors — 126 channels</summary>
   <iframe
-    data-src="https://electrodes.eegdash.org/?montage=618f80cbf91e4ad2&embed=1"
+    data-src="https://electrodes.eegdash.org/?montage=cc151e239b33fb27&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
-    title="Topomap of iEEG · 78 sensors"
+    title="Topomap of iEEG · 126 sensors"
     referrerpolicy="no-referrer">
   </iframe>
 </details>
-
-## Signal Preview
-
-<iframe
-  src="https://eegdash.github.io/eegdash-viewer/?dataset=ds005558&embed=1"
-  loading="lazy"
-  width="100%" height="640"
-  style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 1200px; display: block; background: transparent;"
-  title="Live EEG trace viewer for ds005558"
-  referrerpolicy="no-referrer">
-</iframe>
 
 ## API Reference
 

@@ -148,14 +148,24 @@ The EEG dataset from the different stages of processing can be requested to the 
 
 ## Signal Preview
 
-<iframe
-  src="https://eegdash.github.io/eegdash-viewer/?dataset=ds003194&embed=1"
-  loading="lazy"
-  width="100%" height="640"
-  style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 1200px; display: block; background: transparent;"
-  title="Live EEG trace viewer for ds003194"
-  referrerpolicy="no-referrer">
-</iframe>
+<details class="trace-viewer">
+  <summary>Live trace viewer — <strong>sub-NEPO03 · ses-Nepopre · task-taskprenepo</strong></summary>
+  <p class="trace-viewer-caption">
+    Showing <strong>one</strong> representative recording out of
+    <strong>15 subjects and 29 recordings</strong> in this dataset.
+    Browse the full set on <a href="https://openneuro.org/datasets/ds003194" target="_blank" rel="noopener">OpenNeuro</a>;
+    drop any other <code>_eeg.{set,edf,bdf,vhdr}</code> file onto the
+    viewer (or pass <code>?eeg=&lt;url&gt;</code>) to inspect it.
+  </p>
+  <iframe
+    data-src="https://eegdash.github.io/eegdash-viewer/?dataset=ds003194&sub=NEPO03&ses=Nepopre&task=taskprenepo&ext=edf&embed=1"
+    loading="lazy"
+    width="100%" height="640"
+    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 1200px; display: block; background: transparent;"
+    title="Live EEG trace viewer for ds003194 — sub-NEPO03 · ses-Nepopre · task-taskprenepo"
+    referrerpolicy="no-referrer">
+  </iframe>
+</details>
 
 ## API Reference
 

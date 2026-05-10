@@ -146,14 +146,24 @@ More specifically, in the animal categorization task, participants had to respon
 
 ## Signal Preview
 
-<iframe
-  src="https://eegdash.github.io/eegdash-viewer/?dataset=ds002680&embed=1"
-  loading="lazy"
-  width="100%" height="640"
-  style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 1200px; display: block; background: transparent;"
-  title="Live EEG trace viewer for ds002680"
-  referrerpolicy="no-referrer">
-</iframe>
+<details class="trace-viewer">
+  <summary>Live trace viewer — <strong>sub-010 · ses-02 · task-gonogo · run-4</strong></summary>
+  <p class="trace-viewer-caption">
+    Showing <strong>one</strong> representative recording out of
+    <strong>14 subjects and 350 recordings</strong> in this dataset.
+    Browse the full set on <a href="https://openneuro.org/datasets/ds002680" target="_blank" rel="noopener">OpenNeuro</a>;
+    drop any other <code>_eeg.{set,edf,bdf,vhdr}</code> file onto the
+    viewer (or pass <code>?eeg=&lt;url&gt;</code>) to inspect it.
+  </p>
+  <iframe
+    data-src="https://eegdash.github.io/eegdash-viewer/?dataset=ds002680&sub=010&ses=02&task=gonogo&run=4&ext=set&embed=1"
+    loading="lazy"
+    width="100%" height="640"
+    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 1200px; display: block; background: transparent;"
+    title="Live EEG trace viewer for ds002680 — sub-010 · ses-02 · task-gonogo · run-4"
+    referrerpolicy="no-referrer">
+  </iframe>
+</details>
 
 ## API Reference
 

@@ -2,7 +2,7 @@
 
 # Computation times
 
-**00:57.851** total execution time for 4 files **from generated/auto_examples/tutorials/10_core_workflow**:
+**00:52.304** total execution time for 4 files **from generated/auto_examples/tutorials/10_core_workflow**:
 
 <style scoped>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet" />
@@ -19,7 +19,7 @@ $(document).ready( function () {
 
 | Example                                                                                                                                                                                                                  | Time      |   Mem (MB) |
 |--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------|------------|
-| [Train a leakage-safe baseline](plot_12_train_a_baseline.md#sphx-glr-generated-auto-examples-tutorials-10-core-workflow-plot-12-train-a-baseline-py) (`plot_12_train_a_baseline.py`)                                     | 00:28.738 |          0 |
-| [Preprocess EEG and create windows](plot_10_preprocess_and_window.md#sphx-glr-generated-auto-examples-tutorials-10-core-workflow-plot-10-preprocess-and-window-py) (`plot_10_preprocess_and_window.py`)                  | 00:28.364 |          0 |
-| [Split EEG without subject leakage](plot_11_leakage_safe_split.md#sphx-glr-generated-auto-examples-tutorials-10-core-workflow-plot-11-leakage-safe-split-py) (`plot_11_leakage_safe_split.py`)                           | 00:00.437 |          0 |
-| [Save and reload prepared data](plot_13_save_and_reuse_prepared_data.md#sphx-glr-generated-auto-examples-tutorials-10-core-workflow-plot-13-save-and-reuse-prepared-data-py) (`plot_13_save_and_reuse_prepared_data.py`) | 00:00.313 |          0 |
+| [Preprocess EEG and create windows](plot_10_preprocess_and_window.md#sphx-glr-generated-auto-examples-tutorials-10-core-workflow-plot-10-preprocess-and-window-py) (`plot_10_preprocess_and_window.py`)                  | 00:26.679 |          0 |
+| [Train a leakage-safe baseline](plot_12_train_a_baseline.md#sphx-glr-generated-auto-examples-tutorials-10-core-workflow-plot-12-train-a-baseline-py) (`plot_12_train_a_baseline.py`)                                     | 00:24.965 |          0 |
+| [Split EEG without subject leakage](plot_11_leakage_safe_split.md#sphx-glr-generated-auto-examples-tutorials-10-core-workflow-plot-11-leakage-safe-split-py) (`plot_11_leakage_safe_split.py`)                           | 00:00.376 |          0 |
+| [Save and reload prepared data](plot_13_save_and_reuse_prepared_data.md#sphx-glr-generated-auto-examples-tutorials-10-core-workflow-plot-13-save-and-reuse-prepared-data-py) (`plot_13_save_and_reuse_prepared_data.py`) | 00:00.283 |          0 |

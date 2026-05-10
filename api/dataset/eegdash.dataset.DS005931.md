@@ -140,13 +140,13 @@ sub-/ses-/ieeg/: Contains the raw iEEG data in .edf format for each subject. Eac
 ## Electrode Layout
 
 <details class="electrode-explorer">
-  <summary>Electrode layout — iEEG · 128 sensors — 128 channels</summary>
+  <summary>Electrode layout — iEEG · 118 sensors — 118 channels</summary>
   <iframe
-    data-src="https://electrodes.eegdash.org/?montage=fd9813db1631f2d4&embed=1"
+    data-src="https://electrodes.eegdash.org/?montage=1ccffbf472dbc297&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
-    title="Topomap of iEEG · 128 sensors"
+    title="Topomap of iEEG · 118 sensors"
     referrerpolicy="no-referrer">
   </iframe>
 </details>

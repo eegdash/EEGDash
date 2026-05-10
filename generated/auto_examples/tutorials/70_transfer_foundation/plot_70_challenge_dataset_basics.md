@@ -294,7 +294,7 @@ pd.Series(
 │ If you are participating in the competition, always use                      │
 │ `EEGChallengeDataset` to ensure consistency with the challenge data.         │
 ╰──────────────────────── Source: EEGChallengeDataset ─────────────────────────╯
-[05/10/26 10:18:56] INFO     Auto-corrected misrouted             dataset.py:402
+[05/10/26 12:46:28] INFO     Auto-corrected misrouted             dataset.py:402
                              storage.base for dataset
                              EEG2025r5mini: None ->
                              s3://nemar/EEG2025r5mini
@@ -965,7 +965,7 @@ pd.Series(
 │ If you are participating in the competition, always use                      │
 │ `EEGChallengeDataset` to ensure consistency with the challenge data.         │
 ╰──────────────────────── Source: EEGChallengeDataset ─────────────────────────╯
-[05/10/26 10:18:58] INFO     Auto-corrected misrouted             dataset.py:402
+[05/10/26 12:46:30] INFO     Auto-corrected misrouted             dataset.py:402
                              storage.base for dataset EEG2025r5:
                              None -> s3://nemar/EEG2025r5
 ```
@@ -1189,7 +1189,7 @@ pd.Series(
 │ If you are participating in the competition, always use                      │
 │ `EEGChallengeDataset` to ensure consistency with the challenge data.         │
 ╰──────────────────────── Source: EEGChallengeDataset ─────────────────────────╯
-[05/10/26 10:19:05] INFO     Auto-corrected misrouted             dataset.py:402
+[05/10/26 12:46:36] INFO     Auto-corrected misrouted             dataset.py:402
                              storage.base for dataset
                              EEG2025r2mini: None ->
                              s3://nemar/EEG2025r2mini
@@ -1412,6 +1412,6 @@ See [References](../../../../references.md) for the centralized bibliography of 
 cited above. Add or amend an entry once in
 `docs/source/refs.bib`; every tutorial inherits the update.
 
-**Total running time of the script:** (0 minutes 10.015 seconds)
+**Total running time of the script:** (0 minutes 9.246 seconds)
 
 <a id="sphx-glr-download-generated-auto-examples-tutorials-70-transfer-foundation-plot-70-challenge-dataset-basics-py"></a>

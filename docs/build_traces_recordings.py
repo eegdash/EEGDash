@@ -39,11 +39,11 @@ OUTPUT = (
 
 VIEWER_BASE = "https://eegdash.github.io/eegdash-viewer/"
 
-# Hand-curated initial set. Three formats × three datasets, each
-# validated end-to-end via tests/e2e/multi-record-smoke.spec.mjs
+# Hand-curated initial OpenNeuro set: three formats × three datasets,
+# each validated end-to-end via tests/e2e/multi-record-smoke.spec.mjs
 # in the eegdash-viewer repo (real Chromium loads each through the
 # Cloudflare Worker proxy; canvas paints, no console errors).
-RECORDINGS: dict[str, dict[str, object]] = {
+OPENNEURO_RECORDINGS: dict[str, dict[str, object]] = {
     "ds002893": {
         "label": "EEGLAB · 36 channels · 250 Hz",
         "sub": "001",
@@ -71,6 +71,40 @@ RECORDINGS: dict[str, dict[str, object]] = {
         "n_channels": 64,
         "fs_hz": 5000,
     },
+}
+
+# NEMAR-only set: nm-prefixed datasets resolve via the eegdash
+# records API (one call returns sidecars inline plus the SHA-keyed
+# binary URL), then route the binary through cdn.eegdash.org which
+# proxies nemar.s3.amazonaws.com and adds the missing CORS layer.
+# Curated separately from OpenNeuro because the resolution path,
+# upstream constraints, and validation suite all differ.
+#
+# Inline-data .set is the common modern EEGLAB layout (single .set
+# file with the data array inside the MAT struct, no sibling .fdt);
+# the viewer's reader downloads + parses the MAT v5 in the worker.
+# Other NEMAR formats are blocked upstream today: BrainVision
+# (nm000166) and EDF (nm000181) datasets return S3 403 on their
+# annex objects (NEMAR-side ACL gap).
+NEMAR_RECORDINGS: dict[str, dict[str, object]] = {
+    # nm000121: smallest NEMAR .set (~1 MB, 14 ch, 128 Hz, ~140 s),
+    # inline-data MAT v5. Snappiest demo of the SHA-keyed S3 path
+    # plus the inline-MAT parser path in the same recording.
+    "nm000121": {
+        "label": "NEMAR EEGLAB · 14 channels · 128 Hz · SSVEP",
+        "sub": "6",
+        "ses": "0",
+        "task": "ssvep",
+        "run": "6",
+        "ext": "set",
+        "n_channels": 14,
+        "fs_hz": 128,
+    },
+}
+
+RECORDINGS: dict[str, dict[str, object]] = {
+    **OPENNEURO_RECORDINGS,
+    **NEMAR_RECORDINGS,
 }
 
 

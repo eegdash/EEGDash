@@ -151,16 +151,27 @@ Please contact Dora Hermes ([hermes.dora@mayo.edu](mailto:hermes.dora@mayo.edu))
 ## Electrode Layout
 
 <details class="electrode-explorer">
-  <summary>Electrode layout — iEEG · 102 sensors — 102 channels</summary>
+  <summary>Electrode layout — iEEG · 147 sensors — 147 channels</summary>
   <iframe
-    data-src="https://electrodes.eegdash.org/?montage=d456f092684d0fdf&embed=1"
+    data-src="https://electrodes.eegdash.org/?montage=e8c5b27b9de33e2e&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
-    title="Topomap of iEEG · 102 sensors"
+    title="Topomap of iEEG · 147 sensors"
     referrerpolicy="no-referrer">
   </iframe>
 </details>
+
+## Signal Preview
+
+<iframe
+  src="https://eegdash.github.io/eegdash-viewer/?dataset=ds004457&embed=1"
+  loading="lazy"
+  width="100%" height="640"
+  style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 1200px; display: block; background: transparent;"
+  title="Live EEG trace viewer for ds004457"
+  referrerpolicy="no-referrer">
+</iframe>
 
 ## API Reference
 

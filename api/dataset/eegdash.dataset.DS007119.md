@@ -140,7 +140,7 @@ Japan Society for the Promotion of Science (JP22J23281, JP22KJ0323, and 20256057
 <details class="electrode-explorer">
   <summary>Electrode layout — iEEG · 124 sensors — 124 channels</summary>
   <iframe
-    data-src="https://electrodes.eegdash.org/?montage=1d72b80304ea9095&embed=1"
+    data-src="https://electrodes.eegdash.org/?montage=f5b00d0accd6c6f9&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
@@ -148,6 +148,17 @@ Japan Society for the Promotion of Science (JP22J23281, JP22KJ0323, and 20256057
     referrerpolicy="no-referrer">
   </iframe>
 </details>
+
+## Signal Preview
+
+<iframe
+  src="https://eegdash.github.io/eegdash-viewer/?dataset=ds007119&embed=1"
+  loading="lazy"
+  width="100%" height="640"
+  style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 1200px; display: block; background: transparent;"
+  title="Live EEG trace viewer for ds007119"
+  referrerpolicy="no-referrer">
+</iframe>
 
 ## API Reference
 

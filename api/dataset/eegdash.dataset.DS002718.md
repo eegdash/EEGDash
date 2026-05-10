@@ -182,7 +182,7 @@ Ramon Martinez, Dung Truong, Scott Makeig, Arnaud Delorme (UCSD, La Jolla, CA, U
 <details class="electrode-explorer">
   <summary>Electrode layout — EEG · 70 sensors — 70 channels</summary>
   <iframe
-    data-src="https://electrodes.eegdash.org/?montage=499cdaee0aacbdce&embed=1"
+    data-src="https://electrodes.eegdash.org/?montage=a539176c88d1c9c2&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
@@ -190,6 +190,17 @@ Ramon Martinez, Dung Truong, Scott Makeig, Arnaud Delorme (UCSD, La Jolla, CA, U
     referrerpolicy="no-referrer">
   </iframe>
 </details>
+
+## Signal Preview
+
+<iframe
+  src="https://eegdash.github.io/eegdash-viewer/?dataset=ds002718&embed=1"
+  loading="lazy"
+  width="100%" height="640"
+  style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 1200px; display: block; background: transparent;"
+  title="Live EEG trace viewer for ds002718"
+  referrerpolicy="no-referrer">
+</iframe>
 
 ## API Reference
 

@@ -184,16 +184,27 @@ For questions on the dataset or the task, contact Johannes Sarnthein at [johanne
 ## Electrode Layout
 
 <details class="electrode-explorer">
-  <summary>Electrode layout — iEEG · 4 sensors — 4 channels</summary>
+  <summary>Electrode layout — iEEG · 2 sensors — 2 channels</summary>
   <iframe
-    data-src="https://electrodes.eegdash.org/?montage=da8e482045db874e&embed=1"
+    data-src="https://electrodes.eegdash.org/?montage=1313d30de5f5e402&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
-    title="Topomap of iEEG · 4 sensors"
+    title="Topomap of iEEG · 2 sensors"
     referrerpolicy="no-referrer">
   </iframe>
 </details>
+
+## Signal Preview
+
+<iframe
+  src="https://eegdash.github.io/eegdash-viewer/?dataset=ds003374&embed=1"
+  loading="lazy"
+  width="100%" height="640"
+  style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 1200px; display: block; background: transparent;"
+  title="Live EEG trace viewer for ds003374"
+  referrerpolicy="no-referrer">
+</iframe>
 
 ## API Reference
 

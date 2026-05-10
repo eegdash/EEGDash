@@ -195,6 +195,17 @@ Research reported in this publication was supported by EpilepsieNL under Award N
   </iframe>
 </details>
 
+## Signal Preview
+
+<iframe
+  src="https://eegdash.github.io/eegdash-viewer/?dataset=ds004370&embed=1"
+  loading="lazy"
+  width="100%" height="640"
+  style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 1200px; display: block; background: transparent;"
+  title="Live EEG trace viewer for ds004370"
+  referrerpolicy="no-referrer">
+</iframe>
+
 ## API Reference
 
 Use the `DS004370` class to access this dataset programmatically.

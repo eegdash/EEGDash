@@ -143,6 +143,17 @@ EEG during during continuous gameplay of an 8-bit style video game.  EEG publish
   </iframe>
 </details>
 
+## Signal Preview
+
+<iframe
+  src="https://eegdash.github.io/eegdash-viewer/?dataset=ds003517&embed=1"
+  loading="lazy"
+  width="100%" height="640"
+  style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 1200px; display: block; background: transparent;"
+  title="Live EEG trace viewer for ds003517"
+  referrerpolicy="no-referrer">
+</iframe>
+
 ## API Reference
 
 Use the `DS003517` class to access this dataset programmatically.

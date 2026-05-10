@@ -133,16 +133,27 @@ We introduce the “Podcast” electrocorticography (ECoG) dataset for modeling 
 ## Electrode Layout
 
 <details class="electrode-explorer">
-  <summary>Electrode layout — iEEG · 264 sensors — 264 channels</summary>
+  <summary>Electrode layout — iEEG · 188 sensors — 188 channels</summary>
   <iframe
-    data-src="https://electrodes.eegdash.org/?montage=431e791383138226&embed=1"
+    data-src="https://electrodes.eegdash.org/?montage=ef0b4505dfbdbdfd&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
-    title="Topomap of iEEG · 264 sensors"
+    title="Topomap of iEEG · 188 sensors"
     referrerpolicy="no-referrer">
   </iframe>
 </details>
+
+## Signal Preview
+
+<iframe
+  src="https://eegdash.github.io/eegdash-viewer/?dataset=ds005574&embed=1"
+  loading="lazy"
+  width="100%" height="640"
+  style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 1200px; display: block; background: transparent;"
+  title="Live EEG trace viewer for ds005574"
+  referrerpolicy="no-referrer">
+</iframe>
 
 ## API Reference
 

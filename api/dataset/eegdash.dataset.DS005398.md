@@ -142,16 +142,27 @@ References:
 ## Electrode Layout
 
 <details class="electrode-explorer">
-  <summary>Electrode layout — iEEG · 106 sensors — 106 channels</summary>
+  <summary>Electrode layout — iEEG · 121 sensors — 121 channels</summary>
   <iframe
-    data-src="https://electrodes.eegdash.org/?montage=5f028895aa0e8916&embed=1"
+    data-src="https://electrodes.eegdash.org/?montage=d3514cee47bb0d5b&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
-    title="Topomap of iEEG · 106 sensors"
+    title="Topomap of iEEG · 121 sensors"
     referrerpolicy="no-referrer">
   </iframe>
 </details>
+
+## Signal Preview
+
+<iframe
+  src="https://eegdash.github.io/eegdash-viewer/?dataset=ds005398&embed=1"
+  loading="lazy"
+  width="100%" height="640"
+  style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 1200px; display: block; background: transparent;"
+  title="Live EEG trace viewer for ds005398"
+  referrerpolicy="no-referrer">
+</iframe>
 
 ## API Reference
 

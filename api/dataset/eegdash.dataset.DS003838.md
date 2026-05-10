@@ -152,6 +152,17 @@ sub-013, sub-014, sub-015, sub-016, sub-017, sub-018, sub-019, sub-020, sub-021,
   </iframe>
 </details>
 
+## Signal Preview
+
+<iframe
+  src="https://eegdash.github.io/eegdash-viewer/?dataset=ds003838&embed=1"
+  loading="lazy"
+  width="100%" height="640"
+  style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 1200px; display: block; background: transparent;"
+  title="Live EEG trace viewer for ds003838"
+  referrerpolicy="no-referrer">
+</iframe>
+
 ## API Reference
 
 Use the `DS003838` class to access this dataset programmatically.

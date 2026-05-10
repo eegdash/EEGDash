@@ -55,7 +55,7 @@ the public benchmarks where both regimes get reported.
 # Requirements
 # ------------
 #
-# - You finished :doc:`/auto_examples/tutorials/10_core_workflow/plot_11_leakage_safe_split` and :doc:`/auto_examples/tutorials/10_core_workflow/plot_12_train_a_baseline`.
+# - You finished :doc:`/generated/auto_examples/tutorials/10_core_workflow/plot_11_leakage_safe_split` and :doc:`/generated/auto_examples/tutorials/10_core_workflow/plot_12_train_a_baseline`.
 # - CPU only, runtime ~30 s. No network: the metadata table is built in-script.
 # - Concept refresher: :doc:`/concepts/leakage_and_evaluation`.
 

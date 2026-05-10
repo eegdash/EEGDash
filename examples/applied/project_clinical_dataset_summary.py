@@ -48,8 +48,8 @@ confounds, recording-length mismatch, and channel-count drift are the
 # - Network on first call (~1 MB into ``cache_dir`` for the catalog query).
 #   No EEG signal bytes are pulled; the catalog row carries every number
 #   this script reports.
-# - Prerequisites: :doc:`/auto_examples/tutorials/00_start_here/plot_00_first_search`,
-#   :doc:`/auto_examples/tutorials/00_start_here/plot_01_first_recording`.
+# - Prerequisites: :doc:`/generated/auto_examples/tutorials/00_start_here/plot_00_first_search`,
+#   :doc:`/generated/auto_examples/tutorials/00_start_here/plot_01_first_recording`.
 # - Concept: :doc:`/concepts/eegdash_objects`.
 
 # %%
@@ -333,9 +333,9 @@ dataset_card
 # count drift (Step 5), and channel-count mismatch (also Step 5). The
 # polished workflow recipe in Cisotto and Chicco 2024 walks through how
 # to defuse each one before training. Next up:
-# :doc:`/auto_examples/tutorials/40_features/plot_40_first_features` shows
+# :doc:`/generated/auto_examples/tutorials/40_features/plot_40_first_features` shows
 # how to extract per-recording features from the same catalog rows;
-# :doc:`/auto_examples/tutorials/50_evaluation/plot_51_cross_subject_evaluation`
+# :doc:`/generated/auto_examples/tutorials/50_evaluation/plot_51_cross_subject_evaluation`
 # shows how to run a leakage-safe cross-subject evaluation on top of the
 # windowed dataset.
 

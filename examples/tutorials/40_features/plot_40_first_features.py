@@ -36,9 +36,9 @@ Keywords: features, band-power, spectral
 #   synthesized offline so the tutorial is reproducible without
 #   touching NEMAR; Delorme et al. 2022).
 # - Prerequisite:
-#   :doc:`/auto_examples/tutorials/10_core_workflow/plot_10_preprocess_and_window`
+#   :doc:`/generated/auto_examples/tutorials/10_core_workflow/plot_10_preprocess_and_window`
 #   for the windowing recipe; the live HBN ``ds005514`` numbers are in
-#   :doc:`/auto_examples/tutorials/30_resting_state/plot_30_eyes_open_closed`.
+#   :doc:`/generated/auto_examples/tutorials/30_resting_state/plot_30_eyes_open_closed`.
 # - Concept page: :doc:`/concepts/features_vs_deep_learning`.
 
 # %%
@@ -457,7 +457,7 @@ plt.show()
 #   :func:`~eegdash.features.extract_features`; compare the per-channel
 #   alpha contrast to the synthetic numbers above.
 # - Add ``include_metadata=["subject"]`` and check a leakage-safe split
-#   :doc:`/auto_examples/tutorials/10_core_workflow/plot_11_leakage_safe_split`.
+#   :doc:`/generated/auto_examples/tutorials/10_core_workflow/plot_11_leakage_safe_split`.
 # - Wire ``spectral_entropy`` plus
 #   :func:`~eegdash.features.spectral_normalized_preprocessor` (plot_41).
 #
@@ -468,7 +468,7 @@ plt.show()
 #   :class:`eegdash.features.FeatureExtractor`,
 #   :func:`eegdash.features.spectral_bands_power`,
 #   :func:`mne.time_frequency.psd_array_welch`.
-# - Next: :doc:`/auto_examples/tutorials/40_features/plot_42_features_to_sklearn`
+# - Next: :doc:`/generated/auto_examples/tutorials/40_features/plot_42_features_to_sklearn`
 #   reloads the parquet and runs a leakage-safe sklearn classifier.
 
 # %% [markdown]

@@ -45,9 +45,9 @@ survive a paired test, and how big is the effect once we strip the
 # Requirements
 # ------------
 #
-# - Prerequisites: :doc:`/auto_examples/tutorials/10_core_workflow/plot_12_train_a_baseline`,
-#   :doc:`/auto_examples/tutorials/40_features/plot_42_features_to_sklearn`,
-#   :doc:`/auto_examples/tutorials/50_evaluation/plot_51_cross_subject_evaluation`.
+# - Prerequisites: :doc:`/generated/auto_examples/tutorials/10_core_workflow/plot_12_train_a_baseline`,
+#   :doc:`/generated/auto_examples/tutorials/40_features/plot_42_features_to_sklearn`,
+#   :doc:`/generated/auto_examples/tutorials/50_evaluation/plot_51_cross_subject_evaluation`.
 # - Theory: :doc:`/concepts/leakage_and_evaluation`.
 # - **Estimated time**: ~5 s on CPU. **Data**: 0 MB (synthetic 12-subject cohort).
 

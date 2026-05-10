@@ -61,7 +61,7 @@ So how much does a within-session decoder drift across sessions of the
 # Requirements
 # ------------
 #
-# - You finished :doc:`/auto_examples/tutorials/10_core_workflow/plot_11_leakage_safe_split`, :doc:`/auto_examples/tutorials/10_core_workflow/plot_12_train_a_baseline`, and :doc:`/auto_examples/tutorials/50_evaluation/plot_50_within_subject_evaluation`.
+# - You finished :doc:`/generated/auto_examples/tutorials/10_core_workflow/plot_11_leakage_safe_split`, :doc:`/generated/auto_examples/tutorials/10_core_workflow/plot_12_train_a_baseline`, and :doc:`/generated/auto_examples/tutorials/50_evaluation/plot_50_within_subject_evaluation`.
 # - Theory: :doc:`/concepts/leakage_and_evaluation`.
 
 # %%

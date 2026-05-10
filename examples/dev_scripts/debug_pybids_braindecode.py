@@ -7,7 +7,7 @@
 **Note for Developers.** This script is an internal debugging catalogue for
 mapping PyBIDS and Braindecode behavior. It is not part of the public
 learning path. For standard data-loading workflows, users should prefer
-the :doc:`/auto_examples/tutorials/00_start_here/index` tutorials.
+the :doc:`/generated/auto_examples/tutorials/00_start_here/index` tutorials.
 
 Tests showing BIDSDataset not able to handle example EEGLAB dataset and slower than pybids
 """

@@ -6,8 +6,8 @@
 .. note::
    **Simulated Data.** This tutorial uses synthetic tensors to illustrate
    transfer learning mechanics without a large data download. For real-data
-   transfer examples, see :doc:`/auto_examples/applied/project_p300_transfer`
-   and the :doc:`/auto_examples/eeg2025/index` challenge tracks.
+   transfer examples, see :doc:`/generated/auto_examples/applied/project_p300_transfer`
+   and the :doc:`/generated/auto_examples/eeg2025/index` challenge tracks.
 
 Can a small EEG encoder pretrained on **passive resting-state** windows
 help a downstream model decode **contrastChangeDetection (CCD)** that it

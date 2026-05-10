@@ -3,7 +3,7 @@
 
 **Difficulty 2** | **Runtime: 3m** | **Compute: CPU**
 
-The visual oddball of :doc:`/auto_examples/tutorials/20_event_related/plot_20_visual_p300_oddball`
+The visual oddball of :doc:`/generated/auto_examples/tutorials/20_event_related/plot_20_visual_p300_oddball`
 delivered a parietal positive bump near 350 ms. Swap the eyes for ears
 and the same paradigm structure (rare deviant inside a stream of
 standards) yields a *different* brain answer: an early **mismatch
@@ -15,7 +15,7 @@ doi:10.1016/j.clinph.2007.04.026; Squires et al. 1975,
 doi:10.1016/0013-4694(75)90263-1).
 
 This tutorial reuses the :class:`~eegdash.api.EEGDashDataset` plumbing
-introduced in :doc:`/auto_examples/tutorials/00_start_here/plot_02_dataset_to_dataloader`,
+introduced in :doc:`/generated/auto_examples/tutorials/00_start_here/plot_02_dataset_to_dataloader`,
 loads OpenNeuro ``ds003061`` (Delorme 2020,
 doi:10.18112/openneuro.ds003061.v1.1.0; reachable via NEMAR, Delorme et
 al. 2022, doi:10.1093/database/baac096), epochs around the oddball
@@ -453,9 +453,9 @@ except (ValueError, RuntimeError) as exc:
 # Cz, and rendered the difference-wave topomap with
 # :func:`mne.viz.plot_topomap`. The figure makes the auditory-vs-visual
 # contrast the *headline* of the tutorial. Next:
-# :doc:`/auto_examples/tutorials/30_resting_state/plot_30_eyes_open_closed`
+# :doc:`/generated/auto_examples/tutorials/30_resting_state/plot_30_eyes_open_closed`
 # moves from event-related to resting-state contrasts;
-# :doc:`/auto_examples/tutorials/40_features/plot_40_first_features`
+# :doc:`/generated/auto_examples/tutorials/40_features/plot_40_first_features`
 # turns the same epochs into hand-crafted features for an interpretable
 # baseline.
 

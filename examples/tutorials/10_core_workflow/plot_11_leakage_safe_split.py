@@ -42,7 +42,7 @@ Keywords: evaluation, leakage, splitting
 # ------------
 #
 # - You finished
-#   :doc:`/auto_examples/tutorials/10_core_workflow/plot_10_preprocess_and_window`.
+#   :doc:`/generated/auto_examples/tutorials/10_core_workflow/plot_10_preprocess_and_window`.
 # - About 30 s on CPU. No network: the metadata table is built in-script.
 # - Concept refresher: :doc:`/concepts/leakage_and_evaluation`.
 
@@ -599,7 +599,7 @@ pd.DataFrame(fold_sizes, columns=["n_train_rows", "n_test_rows"]).head()
 #    fold for training.
 #
 # Next:
-# :doc:`/auto_examples/tutorials/10_core_workflow/plot_12_train_a_baseline`
+# :doc:`/generated/auto_examples/tutorials/10_core_workflow/plot_12_train_a_baseline`
 # trains a baseline on top of these folds; the manifest is loaded by
 # reference so the splits are auditable end-to-end.
 

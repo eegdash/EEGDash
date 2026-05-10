@@ -53,9 +53,9 @@ pipelines. The deliverable is one number: at what training-set size
 # ------------
 #
 # - Prereqs:
-#   :doc:`/auto_examples/tutorials/10_core_workflow/plot_11_leakage_safe_split`,
+#   :doc:`/generated/auto_examples/tutorials/10_core_workflow/plot_11_leakage_safe_split`,
 #   ``plot_12_train_a_baseline``, and
-#   :doc:`/auto_examples/tutorials/50_evaluation/plot_51_cross_subject_evaluation`.
+#   :doc:`/generated/auto_examples/tutorials/50_evaluation/plot_51_cross_subject_evaluation`.
 # - Theory: :doc:`/concepts/leakage_and_evaluation`.
 # - **Estimated time**: ~6 s on CPU. **Data**: 0 MB (synthetic cohort).
 
@@ -432,7 +432,7 @@ except ValueError as exc:
 # - Widen the grid to ``[25, 50, 100, 200, 500, 1000]`` and re-read
 #   the saturation point.
 # - Swap the synthetic features for windows from
-#   :doc:`/auto_examples/tutorials/10_core_workflow/plot_10_eeg_prep` and
+#   :doc:`/generated/auto_examples/tutorials/10_core_workflow/plot_10_preprocess_and_window` and
 #   re-run; the saturation point on real EEG sits orders of magnitude
 #   higher than on toy data.
 #

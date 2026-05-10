@@ -66,9 +66,9 @@ Keywords: EEG2025, challenge, transfer
 # - Network on first call (catalog query, ~1 MB into the cache; per-mini
 #   BDFs are pulled lazily when the model first asks for windows).
 # - Prerequisites:
-#   :doc:`/auto_examples/tutorials/70_transfer_foundation/plot_70_challenge_dataset_basics`
+#   :doc:`/generated/auto_examples/tutorials/70_transfer_foundation/plot_70_challenge_dataset_basics`
 #   for :class:`~eegdash.dataset.EEGChallengeDataset` basics, and
-#   :doc:`/auto_examples/tutorials/00_start_here/plot_02_dataset_to_dataloader`
+#   :doc:`/generated/auto_examples/tutorials/00_start_here/plot_02_dataset_to_dataloader`
 #   for the windowing -> :class:`torch.utils.data.DataLoader` flow.
 
 # %%
@@ -595,10 +595,10 @@ print("  metric = torch.sqrt(((preds - rt) ** 2).mean())  # RMSE in seconds")
 # - Concept: :doc:`/concepts/leakage_and_evaluation` (why we split on
 #   subjects, not trials).
 # - Next tutorial:
-#   :doc:`/auto_examples/tutorials/70_transfer_foundation/plot_71_cross_task_transfer`
+#   :doc:`/generated/auto_examples/tutorials/70_transfer_foundation/plot_71_cross_task_transfer`
 #   pretrains on RestingState and fine-tunes on CCD.
 # - Next tutorial:
-#   :doc:`/auto_examples/tutorials/70_transfer_foundation/plot_73_finetune_pretrained_model`
+#   :doc:`/generated/auto_examples/tutorials/70_transfer_foundation/plot_73_finetune_pretrained_model`
 #   fine-tunes a foundation model with the same loader.
 
 # %% [markdown]

@@ -49,9 +49,9 @@ Keywords: features, scikit-learn, pipeline
 # ------------
 # - About 5 s on CPU on first run. No network, no GPU.
 # - Prerequisites:
-#   :doc:`/auto_examples/tutorials/40_features/plot_40_first_features`
+#   :doc:`/generated/auto_examples/tutorials/40_features/plot_40_first_features`
 #   (feature table),
-#   :doc:`/auto_examples/tutorials/10_core_workflow/plot_11_leakage_safe_split`
+#   :doc:`/generated/auto_examples/tutorials/10_core_workflow/plot_11_leakage_safe_split`
 #   (leakage-safe split).
 # - Concept: :doc:`/concepts/features_vs_deep_learning`.
 

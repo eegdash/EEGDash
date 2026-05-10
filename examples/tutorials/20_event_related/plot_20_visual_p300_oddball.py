@@ -37,8 +37,8 @@ Keywords: classification, P300, oddball
 # ------------
 # - About 2 min on CPU once cached; first run pays a ~80 MB download for
 #   three subjects of ``ds005863``.
-# - Prerequisites: :doc:`/auto_examples/tutorials/10_core_workflow/plot_10_preprocess_and_window`,
-#   :doc:`/auto_examples/tutorials/10_core_workflow/plot_11_leakage_safe_split`.
+# - Prerequisites: :doc:`/generated/auto_examples/tutorials/10_core_workflow/plot_10_preprocess_and_window`,
+#   :doc:`/generated/auto_examples/tutorials/10_core_workflow/plot_11_leakage_safe_split`.
 # - Concept: :doc:`/concepts/leakage_and_evaluation`.
 # - Data: three subjects of ``ds005863`` (``visualoddball`` task).
 
@@ -187,7 +187,7 @@ pd.Series(
 # Step 3: Preprocess and create event-locked windows
 # ----------------------------------------------------
 # The recipe is the conservative one from
-# :doc:`/auto_examples/tutorials/10_core_workflow/plot_10_preprocess_and_window`:
+# :doc:`/generated/auto_examples/tutorials/10_core_workflow/plot_10_preprocess_and_window`:
 # common-average reference, a 128 Hz resample, and a 0.5-30 Hz non-causal
 # FIR band-pass. Each kept stimulus event becomes a window from -100 ms
 # to +800 ms relative to onset (the literature default for visual P300).
@@ -586,9 +586,9 @@ print(f"| n_standards (sub-{SUBJECT})            | {n_standards} |")
 # channel takes a logistic regression a few accuracy points above the
 # majority-class baseline across held-out subjects. Two follow-on
 # tutorials carry the recipe further:
-# :doc:`/auto_examples/tutorials/20_event_related/plot_21_auditory_oddball`
+# :doc:`/generated/auto_examples/tutorials/20_event_related/plot_21_auditory_oddball`
 # applies the same windowing to an auditory paradigm; the
-# :doc:`/auto_examples/tutorials/40_features/plot_42_features_to_sklearn`
+# :doc:`/generated/auto_examples/tutorials/40_features/plot_42_features_to_sklearn`
 # tutorial shows how to swap the scalar feature here for a richer feature
 # matrix without touching the leakage-aware split.
 

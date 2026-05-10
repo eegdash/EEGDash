@@ -476,7 +476,7 @@ except (ValueError, RuntimeError) as exc:
 # - Save the windows with
 #   :meth:`braindecode.datasets.WindowsDataset.save` and reload next
 #   session without re-running preprocessing (covered in
-#   :doc:`/auto_examples/tutorials/10_core_workflow/plot_13_save_and_reuse_prepared_data`).
+#   :doc:`/generated/auto_examples/tutorials/10_core_workflow/plot_13_save_and_reuse_prepared_data`).
 
 # %% [markdown]
 # References

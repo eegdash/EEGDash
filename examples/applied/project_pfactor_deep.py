@@ -53,8 +53,8 @@ Keywords: deep-learning, applied, p-factor
 # - **Estimated time**: ~25 s on CPU, ~10 s on GPU (synthetic surrogate).
 # - **Data downloaded**: 0 MB on the synthetic path; ~1.5 GB to fetch the
 #   real ds005505 windows on the HBN path (cached after first run).
-# - **Prerequisites**: :doc:`/auto_examples/tutorials/10_core_workflow/plot_11_leakage_safe_split`,
-#   :doc:`/auto_examples/tutorials/70_transfer_foundation/plot_72_subject_invariant_regression`
+# - **Prerequisites**: :doc:`/generated/auto_examples/tutorials/10_core_workflow/plot_11_leakage_safe_split`,
+#   :doc:`/generated/auto_examples/tutorials/70_transfer_foundation/plot_72_subject_invariant_regression`
 #   (the feature analogue of this script).
 # - **Concept page**: :doc:`/concepts/leakage_and_evaluation`.
 
@@ -440,7 +440,7 @@ except (ValueError, TypeError) as exc:
 #   :class:`braindecode.models.ShallowFBCSPNet` and rerun.
 # - Bump ``N_SEEDS`` to 5 and report the 5-seed mean r +/- SE.
 # - Replace the synthetic windows with a real ds005505 query
-#   (:doc:`/auto_examples/tutorials/10_core_workflow/plot_10_preprocess_and_window`).
+#   (:doc:`/generated/auto_examples/tutorials/10_core_workflow/plot_10_preprocess_and_window`).
 # - Pretrain on eyes-open vs eyes-closed and run linear-probe;
 #   compare best_val_r with the from-scratch run from this script.
 

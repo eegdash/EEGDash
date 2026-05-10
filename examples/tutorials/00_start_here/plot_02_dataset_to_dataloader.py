@@ -121,7 +121,7 @@ print(f"cache_dir={CACHE_DIR}")
 #   (continuous, then windowed) which feeds
 #   :class:`~torch.utils.data.DataLoader` (windowed, then batched). Each
 #   stage carries the BIDS metadata forward, which keeps later splits
-#   subject-aware (see :doc:`/auto_examples/tutorials/10_core_workflow/plot_11_leakage_safe_split`).
+#   subject-aware (see :doc:`/generated/auto_examples/tutorials/10_core_workflow/plot_11_leakage_safe_split`).
 # - **Two windowing surfaces.**
 #   :func:`~braindecode.preprocessing.create_fixed_length_windows`
 #   strides across the continuous signal, ignoring events; useful for
@@ -653,7 +653,7 @@ pd.Series(
 # with ``target="age"`` would expose the participants.tsv age column;
 # with ``target="group"`` (when present) it would expose the clinical
 # group label. This is what
-# :doc:`/auto_examples/tutorials/10_core_workflow/plot_11_leakage_safe_split`
+# :doc:`/generated/auto_examples/tutorials/10_core_workflow/plot_11_leakage_safe_split`
 # leans on for subject-aware MOABB splits.
 
 # %% [markdown]
@@ -716,12 +716,12 @@ pd.Series(
 # DataLoader, named the four knobs that matter, and pointed at the
 # Zarr path that unlocks random-access speed once the project outgrows
 # one recording in RAM. Next:
-# :doc:`/auto_examples/tutorials/10_core_workflow/plot_10_preprocess_and_window`
+# :doc:`/generated/auto_examples/tutorials/10_core_workflow/plot_10_preprocess_and_window`
 # replaces the two safe preprocessors with the full montage / reference
 # / filter / resample recipe;
-# :doc:`/auto_examples/tutorials/10_core_workflow/plot_11_leakage_safe_split`
+# :doc:`/generated/auto_examples/tutorials/10_core_workflow/plot_11_leakage_safe_split`
 # splits the windows without leakage;
-# :doc:`/auto_examples/tutorials/10_core_workflow/plot_13_save_and_reuse_prepared_data`
+# :doc:`/generated/auto_examples/tutorials/10_core_workflow/plot_13_save_and_reuse_prepared_data`
 # saves and reloads the windows so subsequent sessions skip the cut.
 
 # %% [markdown]

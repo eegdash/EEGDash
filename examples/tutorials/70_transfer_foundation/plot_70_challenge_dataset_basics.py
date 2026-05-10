@@ -56,8 +56,8 @@ Keywords: EEG2025, dataset, basics
 #   query). The challenge BDF files are not eagerly downloaded; that
 #   happens lazily when ``record.raw`` is accessed or a Braindecode
 #   pipeline pulls it.
-# - Prerequisites: :doc:`/auto_examples/tutorials/00_start_here/plot_00_first_search`,
-#   :doc:`/auto_examples/tutorials/00_start_here/plot_01_first_recording`.
+# - Prerequisites: :doc:`/generated/auto_examples/tutorials/00_start_here/plot_00_first_search`,
+#   :doc:`/generated/auto_examples/tutorials/00_start_here/plot_01_first_recording`.
 # - Concept: :doc:`/concepts/eegdash_objects`.
 
 # %%
@@ -432,10 +432,10 @@ pd.DataFrame(release_table_rows)
 # with raw :class:`~eegdash.dataset.EEGDashDataset` pulls because the
 # 0.5-50 Hz pass-band and 100 Hz downsample make the two views
 # incompatible. Next:
-# :doc:`/auto_examples/tutorials/70_transfer_foundation/plot_71_cross_task_transfer`
+# :doc:`/generated/auto_examples/tutorials/70_transfer_foundation/plot_71_cross_task_transfer`
 # trains a transfer baseline across the task taxonomy you just
 # enumerated;
-# :doc:`/auto_examples/tutorials/70_transfer_foundation/plot_73_finetune_pretrained_model`
+# :doc:`/generated/auto_examples/tutorials/70_transfer_foundation/plot_73_finetune_pretrained_model`
 # fine-tunes a foundation model with the same loader.
 
 # %% [markdown]

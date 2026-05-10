@@ -134,7 +134,7 @@ TODO: Provide description for the dataset – basic details about the study, pos
 <details class="electrode-explorer">
   <summary>Electrode layout — EEG · 63 sensors — 63 channels</summary>
   <iframe
-    data-src="https://electrodes.eegdash.org/?montage=7243fc85304a31d6&embed=1"
+    data-src="https://electrodes.eegdash.org/?montage=d1ce5500347d76e7&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"

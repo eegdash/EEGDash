@@ -184,13 +184,13 @@ For questions on the dataset or the task, contact Johannes Sarnthein at [johanne
 ## Electrode Layout
 
 <details class="electrode-explorer">
-  <summary>Electrode layout — iEEG · 2 sensors — 2 channels</summary>
+  <summary>Electrode layout — iEEG · 4 sensors — 4 channels</summary>
   <iframe
-    data-src="https://electrodes.eegdash.org/?montage=1313d30de5f5e402&embed=1"
+    data-src="https://electrodes.eegdash.org/?montage=da8e482045db874e&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
-    title="Topomap of iEEG · 2 sensors"
+    title="Topomap of iEEG · 4 sensors"
     referrerpolicy="no-referrer">
   </iframe>
 </details>

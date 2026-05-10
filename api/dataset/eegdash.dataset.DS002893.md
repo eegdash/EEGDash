@@ -204,6 +204,20 @@ Updated versions of the curation notebooks can be found at:
   </iframe>
 </details>
 
+## Signal Preview
+
+<details class="trace-viewer">
+  <summary>Live trace viewer — EEGLAB · 36 channels · 250 Hz</summary>
+  <iframe
+    data-src="https://eegdash.github.io/eegdash-viewer/?dataset=ds002893&sub=001&task=AuditoryVisualShift&run=01&ext=set&embed=1"
+    loading="lazy"
+    width="100%" height="640"
+    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 1200px; display: block; background: transparent;"
+    title="Live EEG trace viewer for ds002893"
+    referrerpolicy="no-referrer">
+  </iframe>
+</details>
+
 ## API Reference
 
 Use the `DS002893` class to access this dataset programmatically.

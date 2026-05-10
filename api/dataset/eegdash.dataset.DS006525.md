@@ -140,7 +140,7 @@ The data was then sampled down to 250 Hz to reduce file size while keeping enoug
 <details class="electrode-explorer">
   <summary>Electrode layout — EEG · 129 sensors — 129 channels</summary>
   <iframe
-    data-src="https://electrodes.eegdash.org/?montage=9a35a2e28f9caae1&embed=1"
+    data-src="https://electrodes.eegdash.org/?montage=899c37d8aaeacabf&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"

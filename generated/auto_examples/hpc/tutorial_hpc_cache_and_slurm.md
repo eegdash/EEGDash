@@ -66,11 +66,11 @@ Discovered subjects (first 20): ['NDARAC589YMB', 'NDARAC853CR6', 'NDARAE710YWG',
 │ If you are not participating in the competition, you can ignore this         │
 │ message.                                                                     │
 ╰─────────────────────────── Source: EEGDashDataset ───────────────────────────╯
-[05/09/26 23:50:34] WARNING  File not found on S3, skipping:   downloader.py:163
+[05/10/26 10:27:32] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds005514/sub-N
                              DARAC589YMB/eeg/sub-NDARAC589YMB_
                              task-RestingState_eeg.fdt
-                    INFO     Original events found with ids: preprocessing.py:66
+[05/10/26 10:27:33] INFO     Original events found with ids: preprocessing.py:66
                              {np.str_('boundary'): 1,
                              np.str_('break cnt'): 2,
                              np.str_('instructed_toCloseEyes
@@ -101,7 +101,7 @@ Windows for subject: 70
 │ If you are not participating in the competition, you can ignore this         │
 │ message.                                                                     │
 ╰─────────────────────────── Source: EEGDashDataset ───────────────────────────╯
-[05/09/26 23:50:35] WARNING  File not found on S3, skipping:   downloader.py:163
+[05/10/26 10:27:34] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds005514/sub-N
                              DARAC853CR6/eeg/sub-NDARAC853CR6_
                              task-RestingState_eeg.fdt
@@ -136,7 +136,7 @@ Windows for subject: 70
 │ If you are not participating in the competition, you can ignore this         │
 │ message.                                                                     │
 ╰─────────────────────────── Source: EEGDashDataset ───────────────────────────╯
-[05/09/26 23:50:37] WARNING  File not found on S3, skipping:   downloader.py:163
+[05/10/26 10:27:36] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds005514/sub-N
                              DARAE710YWG/eeg/sub-NDARAE710YWG_
                              task-RestingState_eeg.fdt
@@ -171,7 +171,7 @@ Windows for subject: 70
 │ If you are not participating in the competition, you can ignore this         │
 │ message.                                                                     │
 ╰─────────────────────────── Source: EEGDashDataset ───────────────────────────╯
-[05/09/26 23:50:38] WARNING  File not found on S3, skipping:   downloader.py:163
+[05/10/26 10:27:38] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds005514/sub-N
                              DARAH239PGG/eeg/sub-NDARAH239PGG_
                              task-RestingState_eeg.fdt
@@ -206,11 +206,11 @@ Windows for subject: 70
 │ If you are not participating in the competition, you can ignore this         │
 │ message.                                                                     │
 ╰─────────────────────────── Source: EEGDashDataset ───────────────────────────╯
-[05/09/26 23:50:39] WARNING  File not found on S3, skipping:   downloader.py:163
+[05/10/26 10:27:39] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds005514/sub-N
                              DARAL897CYV/eeg/sub-NDARAL897CYV_
                              task-RestingState_eeg.fdt
-                    INFO     Original events found with ids: preprocessing.py:66
+[05/10/26 10:27:40] INFO     Original events found with ids: preprocessing.py:66
                              {np.str_('boundary'): 1,
                              np.str_('break cnt'): 2,
                              np.str_('instructed_toCloseEyes
@@ -243,22 +243,22 @@ Windows for subject: 70
 ╰─────────────────────────── Source: EEGDashDataset ───────────────────────────╯
 
 Downloading sub-NDARAN160GUF_task-RestingState_channels.tsv:   0%|          | 0.00/1.42k [00:00<?, ?B/s]
-Downloading sub-NDARAN160GUF_task-RestingState_channels.tsv: 100%|██████████| 1.42k/1.42k [00:00<00:00, 5.40MB/s]
+Downloading sub-NDARAN160GUF_task-RestingState_channels.tsv: 100%|██████████| 1.42k/1.42k [00:00<00:00, 5.45MB/s]
 
 Downloading sub-NDARAN160GUF_task-RestingState_events.tsv:   0%|          | 0.00/621 [00:00<?, ?B/s]
-Downloading sub-NDARAN160GUF_task-RestingState_events.tsv: 100%|██████████| 621/621 [00:00<00:00, 2.55MB/s]
+Downloading sub-NDARAN160GUF_task-RestingState_events.tsv: 100%|██████████| 621/621 [00:00<00:00, 2.35MB/s]
 
 Downloading sub-NDARAN160GUF_task-RestingState_eeg.json:   0%|          | 0.00/230 [00:00<?, ?B/s]
-Downloading sub-NDARAN160GUF_task-RestingState_eeg.json: 100%|██████████| 230/230 [00:00<00:00, 909kB/s]
-[05/09/26 23:50:41] WARNING  File not found on S3, skipping:   downloader.py:163
+Downloading sub-NDARAN160GUF_task-RestingState_eeg.json: 100%|██████████| 230/230 [00:00<00:00, 871kB/s]
+[05/10/26 10:27:41] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds005514/sub-N
                              DARAN160GUF/eeg/sub-NDARAN160GUF_
                              task-RestingState_eeg.fdt
 
 Downloading sub-NDARAN160GUF_task-RestingState_eeg.set:   0%|          | 0.00/106M [00:00<?, ?B/s]
-Downloading sub-NDARAN160GUF_task-RestingState_eeg.set:  47%|████▋     | 50.0M/106M [00:00<00:00, 85.9MB/s]
-Downloading sub-NDARAN160GUF_task-RestingState_eeg.set: 100%|██████████| 106M/106M [00:00<00:00, 179MB/s]
-[05/09/26 23:50:42] INFO     Original events found with ids: preprocessing.py:66
+Downloading sub-NDARAN160GUF_task-RestingState_eeg.set:  47%|████▋     | 50.0M/106M [00:00<00:00, 70.0MB/s]
+Downloading sub-NDARAN160GUF_task-RestingState_eeg.set: 100%|██████████| 106M/106M [00:00<00:00, 146MB/s]
+[05/10/26 10:27:42] INFO     Original events found with ids: preprocessing.py:66
                              {np.str_('boundary'): 1,
                              np.str_('break cnt'): 2,
                              np.str_('instructed_toCloseEyes
@@ -291,22 +291,22 @@ Windows for subject: 70
 ╰─────────────────────────── Source: EEGDashDataset ───────────────────────────╯
 
 Downloading sub-NDARAP049KXJ_task-RestingState_channels.tsv:   0%|          | 0.00/1.42k [00:00<?, ?B/s]
-Downloading sub-NDARAP049KXJ_task-RestingState_channels.tsv: 100%|██████████| 1.42k/1.42k [00:00<00:00, 5.78MB/s]
+Downloading sub-NDARAP049KXJ_task-RestingState_channels.tsv: 100%|██████████| 1.42k/1.42k [00:00<00:00, 5.31MB/s]
 
 Downloading sub-NDARAP049KXJ_task-RestingState_events.tsv:   0%|          | 0.00/616 [00:00<?, ?B/s]
-Downloading sub-NDARAP049KXJ_task-RestingState_events.tsv: 100%|██████████| 616/616 [00:00<00:00, 3.05MB/s]
+Downloading sub-NDARAP049KXJ_task-RestingState_events.tsv: 100%|██████████| 616/616 [00:00<00:00, 2.36MB/s]
 
 Downloading sub-NDARAP049KXJ_task-RestingState_eeg.json:   0%|          | 0.00/231 [00:00<?, ?B/s]
-Downloading sub-NDARAP049KXJ_task-RestingState_eeg.json: 100%|██████████| 231/231 [00:00<00:00, 748kB/s]
-[05/09/26 23:50:43] WARNING  File not found on S3, skipping:   downloader.py:163
+Downloading sub-NDARAP049KXJ_task-RestingState_eeg.json: 100%|██████████| 231/231 [00:00<00:00, 966kB/s]
+[05/10/26 10:27:44] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds005514/sub-N
                              DARAP049KXJ/eeg/sub-NDARAP049KXJ_
                              task-RestingState_eeg.fdt
 
 Downloading sub-NDARAP049KXJ_task-RestingState_eeg.set:   0%|          | 0.00/88.0M [00:00<?, ?B/s]
-Downloading sub-NDARAP049KXJ_task-RestingState_eeg.set:  57%|█████▋    | 50.0M/88.0M [00:00<00:00, 85.7MB/s]
-Downloading sub-NDARAP049KXJ_task-RestingState_eeg.set: 100%|██████████| 88.0M/88.0M [00:00<00:00, 149MB/s]
-[05/09/26 23:50:44] INFO     Original events found with ids: preprocessing.py:66
+Downloading sub-NDARAP049KXJ_task-RestingState_eeg.set:  57%|█████▋    | 50.0M/88.0M [00:00<00:00, 83.3MB/s]
+Downloading sub-NDARAP049KXJ_task-RestingState_eeg.set: 100%|██████████| 88.0M/88.0M [00:00<00:00, 144MB/s]
+[05/10/26 10:27:45] INFO     Original events found with ids: preprocessing.py:66
                              {np.str_('boundary'): 1,
                              np.str_('break cnt'): 2,
                              np.str_('instructed_toCloseEyes
@@ -339,22 +339,22 @@ Windows for subject: 70
 ╰─────────────────────────── Source: EEGDashDataset ───────────────────────────╯
 
 Downloading sub-NDARAP457WB5_task-RestingState_channels.tsv:   0%|          | 0.00/1.42k [00:00<?, ?B/s]
-Downloading sub-NDARAP457WB5_task-RestingState_channels.tsv: 100%|██████████| 1.42k/1.42k [00:00<00:00, 6.10MB/s]
+Downloading sub-NDARAP457WB5_task-RestingState_channels.tsv: 100%|██████████| 1.42k/1.42k [00:00<00:00, 5.49MB/s]
 
 Downloading sub-NDARAP457WB5_task-RestingState_events.tsv:   0%|          | 0.00/614 [00:00<?, ?B/s]
-Downloading sub-NDARAP457WB5_task-RestingState_events.tsv: 100%|██████████| 614/614 [00:00<00:00, 2.81MB/s]
+Downloading sub-NDARAP457WB5_task-RestingState_events.tsv: 100%|██████████| 614/614 [00:00<00:00, 2.21MB/s]
 
 Downloading sub-NDARAP457WB5_task-RestingState_eeg.json:   0%|          | 0.00/231 [00:00<?, ?B/s]
-Downloading sub-NDARAP457WB5_task-RestingState_eeg.json: 100%|██████████| 231/231 [00:00<00:00, 1.01MB/s]
-[05/09/26 23:50:45] WARNING  File not found on S3, skipping:   downloader.py:163
+Downloading sub-NDARAP457WB5_task-RestingState_eeg.json: 100%|██████████| 231/231 [00:00<00:00, 891kB/s]
+[05/10/26 10:27:47] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds005514/sub-N
                              DARAP457WB5/eeg/sub-NDARAP457WB5_
                              task-RestingState_eeg.fdt
 
 Downloading sub-NDARAP457WB5_task-RestingState_eeg.set:   0%|          | 0.00/89.9M [00:00<?, ?B/s]
-Downloading sub-NDARAP457WB5_task-RestingState_eeg.set:  56%|█████▌    | 50.0M/89.9M [00:00<00:00, 96.3MB/s]
-Downloading sub-NDARAP457WB5_task-RestingState_eeg.set: 100%|██████████| 89.9M/89.9M [00:00<00:00, 170MB/s]
-[05/09/26 23:50:46] INFO     Original events found with ids: preprocessing.py:66
+Downloading sub-NDARAP457WB5_task-RestingState_eeg.set:  56%|█████▌    | 50.0M/89.9M [00:00<00:00, 95.0MB/s]
+Downloading sub-NDARAP457WB5_task-RestingState_eeg.set: 100%|██████████| 89.9M/89.9M [00:00<00:00, 168MB/s]
+                    INFO     Original events found with ids: preprocessing.py:66
                              {np.str_('boundary'): 1,
                              np.str_('break cnt'): 2,
                              np.str_('instructed_toCloseEyes
@@ -387,22 +387,22 @@ Windows for subject: 70
 ╰─────────────────────────── Source: EEGDashDataset ───────────────────────────╯
 
 Downloading sub-NDARAU939WUK_task-RestingState_channels.tsv:   0%|          | 0.00/1.42k [00:00<?, ?B/s]
-Downloading sub-NDARAU939WUK_task-RestingState_channels.tsv: 100%|██████████| 1.42k/1.42k [00:00<00:00, 5.42MB/s]
+Downloading sub-NDARAU939WUK_task-RestingState_channels.tsv: 100%|██████████| 1.42k/1.42k [00:00<00:00, 5.40MB/s]
 
 Downloading sub-NDARAU939WUK_task-RestingState_events.tsv:   0%|          | 0.00/621 [00:00<?, ?B/s]
-Downloading sub-NDARAU939WUK_task-RestingState_events.tsv: 100%|██████████| 621/621 [00:00<00:00, 2.71MB/s]
+Downloading sub-NDARAU939WUK_task-RestingState_events.tsv: 100%|██████████| 621/621 [00:00<00:00, 2.43MB/s]
 
 Downloading sub-NDARAU939WUK_task-RestingState_eeg.json:   0%|          | 0.00/230 [00:00<?, ?B/s]
 Downloading sub-NDARAU939WUK_task-RestingState_eeg.json: 100%|██████████| 230/230 [00:00<00:00, 1.03MB/s]
-[05/09/26 23:50:47] WARNING  File not found on S3, skipping:   downloader.py:163
+[05/10/26 10:27:49] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds005514/sub-N
                              DARAU939WUK/eeg/sub-NDARAU939WUK_
                              task-RestingState_eeg.fdt
 
 Downloading sub-NDARAU939WUK_task-RestingState_eeg.set:   0%|          | 0.00/97.9M [00:00<?, ?B/s]
-Downloading sub-NDARAU939WUK_task-RestingState_eeg.set:  51%|█████     | 50.0M/97.9M [00:00<00:00, 81.3MB/s]
-Downloading sub-NDARAU939WUK_task-RestingState_eeg.set: 100%|██████████| 97.9M/97.9M [00:00<00:00, 156MB/s]
-[05/09/26 23:50:48] INFO     Original events found with ids: preprocessing.py:66
+Downloading sub-NDARAU939WUK_task-RestingState_eeg.set:  51%|█████     | 50.0M/97.9M [00:00<00:00, 94.7MB/s]
+Downloading sub-NDARAU939WUK_task-RestingState_eeg.set: 100%|██████████| 97.9M/97.9M [00:00<00:00, 181MB/s]
+[05/10/26 10:27:50] INFO     Original events found with ids: preprocessing.py:66
                              {np.str_('boundary'): 1,
                              np.str_('break cnt'): 2,
                              np.str_('instructed_toCloseEyes
@@ -435,22 +435,22 @@ Windows for subject: 70
 ╰─────────────────────────── Source: EEGDashDataset ───────────────────────────╯
 
 Downloading sub-NDARAW216PM7_task-RestingState_channels.tsv:   0%|          | 0.00/1.42k [00:00<?, ?B/s]
-Downloading sub-NDARAW216PM7_task-RestingState_channels.tsv: 100%|██████████| 1.42k/1.42k [00:00<00:00, 5.98MB/s]
+Downloading sub-NDARAW216PM7_task-RestingState_channels.tsv: 100%|██████████| 1.42k/1.42k [00:00<00:00, 4.80MB/s]
 
 Downloading sub-NDARAW216PM7_task-RestingState_events.tsv:   0%|          | 0.00/1.33k [00:00<?, ?B/s]
-Downloading sub-NDARAW216PM7_task-RestingState_events.tsv: 100%|██████████| 1.33k/1.33k [00:00<00:00, 6.98MB/s]
+Downloading sub-NDARAW216PM7_task-RestingState_events.tsv: 100%|██████████| 1.33k/1.33k [00:00<00:00, 5.26MB/s]
 
 Downloading sub-NDARAW216PM7_task-RestingState_eeg.json:   0%|          | 0.00/231 [00:00<?, ?B/s]
-Downloading sub-NDARAW216PM7_task-RestingState_eeg.json: 100%|██████████| 231/231 [00:00<00:00, 1.01MB/s]
-[05/09/26 23:50:50] WARNING  File not found on S3, skipping:   downloader.py:163
+Downloading sub-NDARAW216PM7_task-RestingState_eeg.json: 100%|██████████| 231/231 [00:00<00:00, 826kB/s]
+[05/10/26 10:27:52] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds005514/sub-N
                              DARAW216PM7/eeg/sub-NDARAW216PM7_
                              task-RestingState_eeg.fdt
 
 Downloading sub-NDARAW216PM7_task-RestingState_eeg.set:   0%|          | 0.00/114M [00:00<?, ?B/s]
-Downloading sub-NDARAW216PM7_task-RestingState_eeg.set:  44%|████▍     | 50.0M/114M [00:00<00:01, 62.1MB/s]
-Downloading sub-NDARAW216PM7_task-RestingState_eeg.set: 100%|██████████| 114M/114M [00:00<00:00, 139MB/s]
-[05/09/26 23:50:51] INFO     Original events found with ids: preprocessing.py:66
+Downloading sub-NDARAW216PM7_task-RestingState_eeg.set:  44%|████▍     | 50.0M/114M [00:00<00:01, 64.1MB/s]
+Downloading sub-NDARAW216PM7_task-RestingState_eeg.set: 100%|██████████| 114M/114M [00:00<00:00, 143MB/s]
+[05/10/26 10:27:53] INFO     Original events found with ids: preprocessing.py:66
                              {np.str_('break cnt'): 1,
                              np.str_('dot_no1_OFF'): 2,
                              np.str_('dot_no1_ON'): 3,
@@ -936,6 +936,6 @@ for e in range(epochs):
     print(f"Epoch {e}, Train accuracy: {train_acc:.2f}, Test accuracy: {test_acc:.2f}")
 ```
 
-**Total running time of the script:** (0 minutes 24.158 seconds)
+**Total running time of the script:** (0 minutes 27.865 seconds)
 
 <a id="sphx-glr-download-generated-auto-examples-hpc-tutorial-hpc-cache-and-slurm-py"></a>

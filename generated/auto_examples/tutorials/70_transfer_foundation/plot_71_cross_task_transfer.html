@@ -69,7 +69,7 @@
     <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <script defer="defer" src="../../../../_static/js/tag-palette.7346f567.js?v=6f5eac9a"></script>
     <script defer="defer" src="../../../../_static/js/search-as-you-type.e09b639d.js?v=8e93d0f7"></script>
-    <script defer="defer" src="../../../../_static/js/lazy-embed.23591732.js?v=9ea1e29f"></script>
+    <script defer="defer" src="../../../../_static/js/lazy-embed.1f1f83d2.js?v=118c4c47"></script>
     <link rel="canonical" href="https://eegdash.org/generated/auto_examples/tutorials/70_transfer_foundation/plot_71_cross_task_transfer.html" />
     <link rel="icon" href="../../../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../../../genindex.html" />
@@ -842,7 +842,7 @@ snapshot the encoder weights.</p>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;pretrain losses (RestingState): </span><span class="si">{</span><span class="p">[</span><span class="nb">round</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">pretrain_losses</span></a><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>pretrain losses (RestingState): [0.059, 0.005, 0.001, 0.001, 0.0]
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>pretrain losses (RestingState): [0.065, 0.002, 0.0, 0.001, 0.001]
 </pre></div>
 </div>
 </section>
@@ -862,7 +862,7 @@ split is materialised independently with a fresh leakage assertion.</p>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;finetune losses (CCD): </span><span class="si">{</span><span class="p">[</span><span class="nb">round</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">finetune_losses</span></a><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>finetune losses (CCD): [0.528, 0.475, 0.41, 0.358, 0.294]
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>finetune losses (CCD): [0.541, 0.434, 0.336, 0.33, 0.295]
 </pre></div>
 </div>
 </section>
@@ -892,7 +892,7 @@ chance is the gap that matters (E5.43).</p>
 <span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>finetune=0.567 | scratch=0.650 | chance=0.550 | metric=accuracy | gap=-0.083
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>finetune=0.567 | scratch=0.650 | chance=0.517 | metric=accuracy | gap=-0.083
 </pre></div>
 </div>
 </section>
@@ -950,9 +950,9 @@ from-scratch encoder on that target.</p>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>transfer matrix Δacc (rows=source, cols=target):
               contrastChangeDetection  symbolSearch  surroundSupp
-RestingState                    0.267         0.033           0.0
-surroundSupp                    0.483         0.033           0.0
-symbolSearch                    0.333        -0.017           0.0
+RestingState                    0.100         0.250           0.0
+surroundSupp                    0.417         0.250           0.0
+symbolSearch                    0.300         0.233           0.0
 </pre></div>
 </div>
 </section>
@@ -1019,8 +1019,8 @@ claim falsifiable (E5.43, E5.46).</p>
 |---------------------|----------|
 | pretrain -&gt; finetune| 0.567   |
 | from scratch        | 0.650   |
-| chance (majority)   | 0.550   |
-{&quot;encoder_weights_path&quot;: &quot;plot_71_pretrained_encoder.pt&quot;, &quot;pretext_subjects&quot;: 8, &quot;target_subjects&quot;: 8, &quot;transfer_gap&quot;: -0.0833, &quot;transfer_matrix_mean_delta&quot;: 0.1259}
+| chance (majority)   | 0.517   |
+{&quot;encoder_weights_path&quot;: &quot;plot_71_pretrained_encoder.pt&quot;, &quot;pretext_subjects&quot;: 8, &quot;target_subjects&quot;: 8, &quot;transfer_gap&quot;: -0.0833, &quot;transfer_matrix_mean_delta&quot;: 0.1722}
 </pre></div>
 </div>
 </section>
@@ -1111,7 +1111,7 @@ speech with cross-task pretraining.</p></li>
 <li><p>EEG2025 Challenge 1 (doi:10.48550/arXiv.2506.19141), cross-task
 transfer <span class="bibtex-citation" id="id2">[<a class="reference internal" href="../../../../references.html#id36" title="Bruno Aristimunha, Dung Truong, Pierre Guetschel, Seyed Yahya Shirazi, Isabelle Guyon, Alexandre R. Franco, Michael P. Milham, Aviv Dotan, Scott Makeig, Alexandre Gramfort, Jean-Remi King, Marie-Constance Corsi, Pedro A. Valdés-Sosa, Amit Majumdar, Alan Evans, Terrence J. Sejnowski, Oren Shriki, Sylvain Chevallier, and Arnaud Delorme. EEG foundation challenge: from cross-task to cross-subject EEG decoding. 2025. arXiv preprint, NeurIPS 2025 Competition track. doi:10.48550/arXiv.2506.19141.">Aristimunha <em>et al.</em>, 2025</a>]</span>.</p></li>
 </ul>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 5.373 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 5.416 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-auto-examples-tutorials-70-transfer-foundation-plot-71-cross-task-transfer-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/eegdash/EEGDash/main?urlpath=lab/tree/notebooks/generated/auto_examples/tutorials/70_transfer_foundation/plot_71_cross_task_transfer.ipynb"><img alt="Launch binder" src="../../../../_images/binder_badge_logo11.svg" style="width: 150px;" />

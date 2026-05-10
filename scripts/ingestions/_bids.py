@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import re
+from pathlib import Path
 from typing import Any, Pattern
 
 # Common BIDS indicator files (case-insensitive matching)
@@ -143,6 +144,50 @@ def validate_bids_structure_from_names(
         result["bids_zip_files"] = bids_zips[:bids_zip_files_limit]
 
     return result
+
+
+def find_channels_tsv(data_filepath: Path) -> Path:
+    """Locate channels.tsv for a BIDS data file.
+
+    Mirrors the BIDS inheritance lookup used in ``EEGBIDSDataset``:
+    1. ``<parent>/channels.tsv``
+    2. First ``*_channels.tsv`` whose prefix matches the data file stem.
+    """
+    parent = data_filepath.parent
+    candidate = parent / "channels.tsv"
+    if not candidate.exists():
+        for tsv_file in parent.glob("*_channels.tsv"):
+            prefix = tsv_file.stem.replace("_channels", "").lower()
+            if data_filepath.stem.lower().startswith(prefix):
+                return tsv_file
+    return candidate
+
+
+def count_bad_channels(channels_tsv_path: Path) -> int | None:
+    """Count ``status: bad`` entries in a channels.tsv file.
+
+    Returns ``None`` when the file is missing or has no ``status`` column,
+    so callers can distinguish "no annotation" from "zero bad channels".
+    """
+    if not channels_tsv_path.exists():
+        return None
+    try:
+        import csv
+
+        with open(channels_tsv_path, newline="", encoding="utf-8") as fh:
+            reader = csv.DictReader(fh, delimiter="\t")
+            if reader.fieldnames is None or "status" not in [
+                f.lower() for f in reader.fieldnames
+            ]:
+                return None
+            col = next((f for f in reader.fieldnames if f.lower() == "status"), None)
+            if col is None:
+                return None
+            return sum(
+                1 for row in reader if str(row.get(col, "")).strip().lower() == "bad"
+            )
+    except Exception:
+        return None
 
 
 def validate_bids_structure_from_files(

@@ -33,6 +33,7 @@ from typing import Any
 import mne
 import numpy as np
 import pandas as pd
+from _bids import count_bad_channels, find_channels_tsv
 from _constants import (
     CTF_INTERNAL_EXTENSIONS,
     MEF3_INTERNAL_DIRS,
@@ -916,6 +917,11 @@ def extract_record(
     except Exception:
         pass
 
+    # Count BIDS-annotated bad channels (status: bad in channels.tsv).
+    # Returns None when the column is absent so downstream can distinguish
+    # "no annotation" from "zero bad channels".
+    n_bad_channels: int | None = count_bad_channels(find_channels_tsv(Path(bids_file)))
+
     # Prefer channel_labels count over sidecar nchans
     # channels.tsv is the authoritative source for channel information
     # Sidecar JSON may only have partial counts (e.g., only EEGChannelCount)
@@ -1314,6 +1320,13 @@ def extract_record(
         annex_keys=annex_keys or None,
         sidecar_inline=sidecar_inline or None,
     )
+
+    # Store BIDS-annotated bad channel count when available.
+    # n_bad_channels is None  → channels.tsv has no status column (not annotated)
+    # n_bad_channels is 0     → all channels are good
+    # n_bad_channels is N > 0 → N channels are marked status:bad
+    if n_bad_channels is not None:
+        record["n_bad_channels"] = n_bad_channels
 
     # Restore participant_tsv metadata if available
     participant_tsv = bids_dataset.subject_participant_tsv(bids_file)

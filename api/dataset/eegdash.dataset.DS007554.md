@@ -111,7 +111,7 @@ No README content is available for this dataset.
 - Tasks: 7
 
 - Channels: 32
-- Sampling rate (Hz): 10.0 (519), 250.002243692634 (26), 250.00227279699027 (13), 250.00220003611236 (12), 250.00027916425347 (12), 250.0003082681523 (10), 250.0003228201043 (7), 250.00197788831903 (7), 250.0009635339967 (7), 250.00038784916032 (7), 249.99972619146294 (7), 250.00020640453602 (7), 250.0007861528667 (7), 250.00217093177304 (7), 250.0003892134066 (7), 250.0001952063645 (7), 249.99969708769964 (7), 250.00119525819466 (7), 250.0022582448113 (7), 249.99990081418517 (7), 249.99991536608968 (7), 250.0006918490773 (7), 250.00092087268928 (7), 249.9997989509009 (7), 250.00206906663882 (7), 250.0003344161922 (7), 250.00098976743945 (7), 250.0004683397171 (7), 250.00004633330667 (7), 250.00028848659534 (7), 250.00085794657687 (7), 250.0001184960745 (7), 250.00208361879578 (7), 250.0009023984434 (7), 249.99995902181342 (7), 250.00079612894984 (7), 250.00055565156606 (6), 250.00001813896364 (6), 250.0001383628698 (6), 250.00064410035029 (6), 250.00094787351506 (6), 250.00205451448358 (6), 250.00195992551573 (6), 250.0004374167852 (6), 250.00080547975216 (6), 250.0020981709544 (6), 250.0006486478473 (6), 250.00228734917093 (6), 249.99996084080226 (6), 250.00026461230658 (6), 250.00067934345654 (6), 250.00157429431061 (6), 250.00278212432153 (6), 250.0009258749471 (6), 250.0002209564761 (6), 250.00057674056998 (6), 250.00056292755625 (6), 250.00074721488596 (6), 250.00077165770458 (6), 250.00231645353733 (6), 250.00023550841792 (6), 250.0006891205781 (6), 250.00218548394184 (6), 250.0004249680335 (6), 250.00072163519718 (5), 250.0008785240374 (5), 250.00045378774817 (5), 250.00042468381545 (5), 250.00043923578096 (5), 250.00310227399197 (5), 250.00041013185162 (5), 250.00224414738952 (4), 249.99993719394965 (4), 250.0005021616826 (3), 249.99994446990382 (3), 250.00074846544865 (3), 250.0004295723662 (3), 249.99984988253266 (3), 250.00041146767637 (2), 250.00059930751343 (2), 250.00218593869715 (2)
+- Sampling rate (Hz): 10.0 (519), 250.002243692634 (26), 250.00227279699027 (13), 250.00027916425347 (12), 250.00220003611236 (12), 250.0003082681523 (10), 250.0003344161922 (7), 249.99972619146294 (7), 250.0004683397171 (7), 250.00098976743945 (7), 250.00020640453602 (7), 250.00004633330667 (7), 250.0003228201043 (7), 250.00197788831903 (7), 250.0009635339967 (7), 250.00038784916032 (7), 250.00092087268928 (7), 250.00206906663882 (7), 249.9997989509009 (7), 250.0022582448113 (7), 249.99995902181342 (7), 249.99990081418517 (7), 249.99991536608968 (7), 250.00079612894984 (7), 250.0006918490773 (7), 250.00028848659534 (7), 250.0001184960745 (7), 250.0007861528667 (7), 249.99969708769964 (7), 250.0001952063645 (7), 250.0003892134066 (7), 250.00208361879578 (7), 250.00085794657687 (7), 250.00119525819466 (7), 250.0009023984434 (7), 250.00217093177304 (7), 250.00195992551573 (6), 250.0020981709544 (6), 250.0004374167852 (6), 250.0002209564761 (6), 250.00080547975216 (6), 250.00055565156606 (6), 250.00001813896364 (6), 250.00067934345654 (6), 250.00157429431061 (6), 250.0001383628698 (6), 250.00278212432153 (6), 250.00064410035029 (6), 250.00094787351506 (6), 250.00205451448358 (6), 250.0009258749471 (6), 250.00228734917093 (6), 250.00231645353733 (6), 250.00023550841792 (6), 250.00218548394184 (6), 250.0006891205781 (6), 250.0004249680335 (6), 249.99996084080226 (6), 250.00026461230658 (6), 250.00057674056998 (6), 250.00056292755625 (6), 250.00074721488596 (6), 250.0006486478473 (6), 250.00077165770458 (6), 250.00041013185162 (5), 250.0008785240374 (5), 250.00043923578096 (5), 250.00042468381545 (5), 250.00072163519718 (5), 250.00045378774817 (5), 250.00310227399197 (5), 250.00224414738952 (4), 249.99993719394965 (4), 250.0004295723662 (3), 250.0005021616826 (3), 249.99994446990382 (3), 249.99984988253266 (3), 250.00074846544865 (3), 250.00041146767637 (2), 250.00218593869715 (2), 250.00059930751343 (2)
 - Duration (hours): 61.88401802488944
 
 - Pathology: Healthy
@@ -142,6 +142,260 @@ No README content is available for this dataset.
     referrerpolicy="no-referrer">
   </iframe>
 </details>
+
+## Dataset Statistics
+
+<div class="eegdash-stats-section" style="margin-bottom:1rem;">
+  <p><strong>Age distribution</strong> (n=19, range 21–40 yr)</p>
+  <div class="eeg-chart-row" style="display:flex; align-items:flex-end; gap:2px; height:60px;">
+    <div style="width:28px; height:100%; background:#4472c4; flex-shrink:0;" title="20-24: 12"></div><div style="width:28px; height:33%; background:#4472c4; flex-shrink:0;" title="25-29: 4"></div><div style="width:28px; height:8%; background:#4472c4; flex-shrink:0;" title="30-34: 1"></div><div style="width:28px; height:8%; background:#4472c4; flex-shrink:0;" title="35-39: 1"></div><div style="width:28px; height:8%; background:#4472c4; flex-shrink:0;" title="40-44: 1"></div>
+  </div>
+  <div class="eeg-chart-labels" style="display:flex; gap:2px; font-size:10px;">
+    <span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap;">20</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap;">25</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap;">30</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap;">35</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap;">40</span>
+  </div>
+</div><div class="eegdash-stats-section" style="margin-bottom:1rem;">
+  <p><strong>Sex distribution</strong></p>
+  <div style="display:flex; height:22px; width:100%; max-width:400px; border-radius:4px; overflow:hidden;">
+    <div style="width:60.0%; background:#e07ab5; display:inline-flex; align-items:center; justify-content:center; color:#fff; font-size:11px; min-width:2px;" title="Female: 18">18</div><div style="width:40.0%; background:#4472c4; display:inline-flex; align-items:center; justify-content:center; color:#fff; font-size:11px; min-width:2px;" title="Male: 12">12</div>
+  </div>
+  <div style="font-size:11px;margin-top:4px;"><span style="display:inline-block;width:12px;height:12px;background:#e07ab5;border-radius:2px;margin-right:4px;"></span>Female&nbsp;&nbsp;<span style="display:inline-block;width:12px;height:12px;background:#4472c4;border-radius:2px;margin-right:4px;"></span>Male&nbsp;&nbsp;<strong>Total: 30</strong></div>
+</div><div class="eegdash-stats-section" style="margin-bottom:1rem;">
+  <p><strong>Channel counts</strong>: 32 ch (n=1034 recordings)</p>
+</div><div class="eegdash-stats-section" style="margin-bottom:1rem;">
+  <p><strong>Sampling frequencies</strong> (Hz)</p>
+  <div class="eeg-chart-row" style="display:flex; align-items:flex-end; gap:2px; height:60px;">
+    <div style="width:28px; height:100%; background:#D55E00; flex-shrink:0;" title="10 Hz: 519"></div><div style="width:28px; height:1%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 7"></div><div style="width:28px; height:1%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 7"></div><div style="width:28px; height:1%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 7"></div><div style="width:28px; height:0%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 3"></div><div style="width:28px; height:1%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 7"></div><div style="width:28px; height:1%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 7"></div><div style="width:28px; height:0%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 4"></div><div style="width:28px; height:0%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 3"></div><div style="width:28px; height:1%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 7"></div><div style="width:28px; height:1%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 6"></div><div style="width:28px; height:1%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 6"></div><div style="width:28px; height:1%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 7"></div><div style="width:28px; height:1%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 7"></div><div style="width:28px; height:1%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 6"></div><div style="width:28px; height:1%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 7"></div><div style="width:28px; height:1%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 7"></div><div style="width:28px; height:1%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 6"></div><div style="width:28px; height:1%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 6"></div><div style="width:28px; height:1%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 6"></div><div style="width:28px; height:2%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 12"></div><div style="width:28px; height:1%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 7"></div><div style="width:28px; height:1%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 10"></div><div style="width:28px; height:1%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 7"></div><div style="width:28px; height:1%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 7"></div><div style="width:28px; height:1%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 7"></div><div style="width:28px; height:1%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 7"></div><div style="width:28px; height:0%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 5"></div><div style="width:28px; height:0%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 2"></div><div style="width:28px; height:0%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 5"></div><div style="width:28px; height:1%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 6"></div><div style="width:28px; height:0%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 3"></div><div style="width:28px; height:1%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 6"></div><div style="width:28px; height:0%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 5"></div><div style="width:28px; height:0%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 5"></div><div style="width:28px; height:1%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 7"></div><div style="width:28px; height:0%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 3"></div><div style="width:28px; height:1%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 6"></div><div style="width:28px; height:1%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 6"></div><div style="width:28px; height:1%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 6"></div><div style="width:28px; height:0%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 2"></div><div style="width:28px; height:1%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 6"></div><div style="width:28px; height:1%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 6"></div><div style="width:28px; height:1%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 6"></div><div style="width:28px; height:1%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 6"></div><div style="width:28px; height:1%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 7"></div><div style="width:28px; height:0%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 5"></div><div style="width:28px; height:1%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 6"></div><div style="width:28px; height:0%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 3"></div><div style="width:28px; height:1%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 6"></div><div style="width:28px; height:1%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 7"></div><div style="width:28px; height:1%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 7"></div><div style="width:28px; height:1%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 6"></div><div style="width:28px; height:1%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 7"></div><div style="width:28px; height:0%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 5"></div><div style="width:28px; height:1%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 7"></div><div style="width:28px; height:1%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 7"></div><div style="width:28px; height:1%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 6"></div><div style="width:28px; height:1%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 6"></div><div style="width:28px; height:1%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 7"></div><div style="width:28px; height:1%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 7"></div><div style="width:28px; height:1%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 7"></div><div style="width:28px; height:1%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 6"></div><div style="width:28px; height:1%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 6"></div><div style="width:28px; height:1%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 7"></div><div style="width:28px; height:1%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 6"></div><div style="width:28px; height:1%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 7"></div><div style="width:28px; height:1%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 7"></div><div style="width:28px; height:1%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 6"></div><div style="width:28px; height:1%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 7"></div><div style="width:28px; height:1%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 6"></div><div style="width:28px; height:0%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 2"></div><div style="width:28px; height:2%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 12"></div><div style="width:28px; height:5%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 26"></div><div style="width:28px; height:0%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 4"></div><div style="width:28px; height:1%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 7"></div><div style="width:28px; height:2%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 13"></div><div style="width:28px; height:1%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 6"></div><div style="width:28px; height:1%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 6"></div><div style="width:28px; height:1%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 6"></div><div style="width:28px; height:0%; background:#D55E00; flex-shrink:0;" title="250.0 Hz: 5"></div>
+  </div>
+  <div class="eeg-chart-labels" style="display:flex; gap:2px; font-size:10px;">
+    <span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">10</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">250.0</span>
+  </div>
+</div><div class="eegdash-stats-section" style="margin-bottom:1rem;">
+  <p><strong>Total recording duration</strong>: 61 h</p>
+</div>
+
+## NEMAR Processing Statistics
+
+The plots below are generated by [NEMAR’s automated EEG pipeline](https://nemar.org/dataexplorer/detail?dataset_id=ds007554). The histogram shows pipeline success for data cleaning and ICA decomposition, the percentage of data frames and EEG channels retained after artefact removal, line noise per channel (RMS, dB), and the age/gender distribution of participants.
+
+<div class="nemar-analysis-section">
+  <a href="https://nemar.org/dataexplorer/detail?dataset_id=ds007554" target="_blank" rel="noopener noreferrer">
+    <img
+      src="https://nemar.org/dataexplorer/download?filepath=/data/nemar/openneuro//processed/ds007554/code/ds007554_histogram.png"
+      alt="NEMAR pipeline statistics — DS007554"
+      loading="lazy"
+      style="max-width: 100%; border: 1px solid var(--pst-color-border); border-radius: 8px; margin-bottom: 1rem;"
+    />
+  </a>
+</div><details class="nemar-wordcloud-details" style="margin-top: 0.5rem;">
+  <summary>HED event descriptors word cloud</summary>
+  <img
+    src="https://nemar.org/dataexplorer/download?filepath=/data/nemar/openneuro//processed/event_summaries/ds007554/word_cloud.svg&file_type=svg"
+    alt="HED event descriptors word cloud — DS007554"
+    loading="lazy"
+    style="max-width: 60%; display: block; margin: 0.5rem auto;"
+  />
+</details>
+
+## File Explorer
+
+Browse the BIDS file structure of this dataset. Records are fetched on demand from the EEGDash catalog the first time you open the explorer.
+
+<style>
+.eegdash-explorer { font-family: system-ui, -apple-system, sans-serif; max-width: 100%; padding: 16px 0; }
+.eegdash-explorer .ee-search { width: 100%; padding: 8px; margin-bottom: 12px; border: 1px solid var(--pst-color-border, #ddd); border-radius: 4px; background: var(--pst-color-surface, #fff); color: inherit; box-sizing: border-box; }
+.eegdash-explorer .ee-stats { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 12px; font-size: 13px; }
+.eegdash-explorer .ee-stat { color: var(--pst-color-text-muted, #666); }
+.eegdash-explorer .ee-stat-val { font-weight: 600; color: var(--pst-color-success, #10b981); }
+.eegdash-explorer .ee-tree { padding: 12px; background: var(--pst-color-surface, #f9f9f9); border: 1px solid var(--pst-color-border, #e5e5e5); border-radius: 4px; max-height: 500px; overflow-y: auto; font-size: 13px; }
+.eegdash-explorer .ee-node { padding: 4px 0; cursor: pointer; user-select: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.eegdash-explorer .ee-node:hover { background: var(--pst-color-surface-hover, #f0f0f0); }
+.eegdash-explorer .ee-badge { display: inline-block; padding: 1px 6px; border-radius: 3px; font-size: 11px; font-weight: 600; margin-left: 8px; }
+.eegdash-explorer .ee-eeg { background: #dbeafe; color: #1e40af; }
+.eegdash-explorer .ee-meg { background: #e9d5ff; color: #6b21a8; }
+.eegdash-explorer .ee-ieeg { background: #fed7aa; color: #92400e; }
+.eegdash-explorer .ee-nirs { background: #dcfce7; color: #166534; }
+.eegdash-explorer .ee-emg { background: #fce7f3; color: #831843; }
+.eegdash-explorer .ee-info { margin-top: 12px; padding: 12px; background: var(--pst-color-surface, #f5f5f5); border-radius: 4px; font-size: 12px; }
+.eegdash-explorer .ee-info dt { font-weight: 600; margin-top: 6px; }
+.eegdash-explorer .ee-info dd { margin: 0 0 6px 0; color: var(--pst-color-text-muted, #666); }
+.eegdash-explorer .ee-status { padding: 16px; text-align: center; color: var(--pst-color-text-muted, #888); font-size: 13px; }
+.eegdash-explorer .ee-error { color: var(--pst-color-warning, #b45309); }
+</style>
+
+<div class="eegdash-explorer" data-dataset-id="DS007554">
+  <input type="text" class="ee-search" placeholder="Search files…" disabled>
+  <div class="ee-stats">
+    <div class="ee-stat">Files: <span class="ee-stat-val ee-file-count">—</span></div>
+    <div class="ee-stat">Size: <span class="ee-stat-val ee-total-size">—</span></div>
+    <div class="ee-stat">Subjects: <span class="ee-stat-val ee-subject-count">—</span></div>
+  </div>
+  <div class="ee-tree">
+    <div class="ee-status">Click to load file structure…</div>
+  </div>
+  <div class="ee-info" hidden></div>
+</div>
+
+<script>
+(function () {
+  const API_BASE = "https://data.eegdash.org";
+  const DATABASE = "eegdash";
+  const RECORD_LIMIT = 2000;
+
+  const containers = document.querySelectorAll(
+    ".eegdash-explorer:not([data-eegdash-init])"
+  );
+  containers.forEach(initExplorer);
+
+  function initExplorer(root) {
+    root.setAttribute("data-eegdash-init", "1");
+    const datasetId = root.dataset.datasetId;
+    if (!datasetId) return;
+
+    const tree = root.querySelector(".ee-tree");
+    const search = root.querySelector(".ee-search");
+    const info = root.querySelector(".ee-info");
+    const fileCount = root.querySelector(".ee-file-count");
+    const totalSize = root.querySelector(".ee-total-size");
+    const subjectCount = root.querySelector(".ee-subject-count");
+
+    let loaded = false;
+    let records = [];
+
+    // Lazy-load: fetch on first user interaction with the tree (or after a
+    // short idle, whichever comes first). Avoids hammering the API with 877
+    // requests when a user opens the catalog.
+    const trigger = () => { if (!loaded) load(); };
+    tree.addEventListener("click", trigger, { once: true });
+    search.addEventListener("focus", trigger, { once: true });
+    if ("requestIdleCallback" in window) {
+      requestIdleCallback(trigger, { timeout: 4000 });
+    } else {
+      setTimeout(trigger, 1500);
+    }
+
+    async function load() {
+      loaded = true;
+      tree.innerHTML = '<div class="ee-status">Loading…</div>';
+      try {
+        const filter = encodeURIComponent(JSON.stringify({ dataset: datasetId }));
+        const url = \`${API_BASE}/api/${DATABASE}/records?filter=${filter}&limit=${RECORD_LIMIT}\`;
+        const resp = await fetch(url);
+        if (!resp.ok) throw new Error(\`HTTP ${resp.status}\`);
+        const body = await resp.json();
+        records = (body.data || []).filter(r => r && (r.filepath || r.bidspath || r.path));
+        if (!records.length) {
+          tree.innerHTML = '<div class="ee-status">No file records indexed for this dataset yet.</div>';
+          return;
+        }
+        render();
+        wireSearch();
+        wireSelection();
+        search.disabled = false;
+      } catch (err) {
+        tree.innerHTML =
+          '<div class="ee-status ee-error">Could not load file list: ' +
+          escapeText(String(err && err.message || err)) +
+          '</div>';
+      }
+    }
+
+    function pathOf(r) { return r.filepath || r.bidspath || r.path || ""; }
+
+    function render() {
+      const subjects = new Set();
+      let bytes = 0;
+      records.forEach(r => {
+        if (r.subject) subjects.add(r.subject);
+        if (r.size) bytes += Number(r.size) || 0;
+      });
+      fileCount.textContent = String(records.length);
+      totalSize.textContent = formatBytes(bytes);
+      subjectCount.textContent = String(subjects.size);
+
+      const frag = document.createDocumentFragment();
+      records.slice().sort((a, b) => pathOf(a).localeCompare(pathOf(b))).forEach((r, i) => {
+        const path = pathOf(r);
+        const parts = path.split("/").filter(Boolean);
+        parts.forEach((p, j) => {
+          const isLast = j === parts.length - 1;
+          const node = document.createElement("div");
+          node.className = "ee-node";
+          node.style.paddingLeft = (j \* 20) + "px";
+          node.textContent = (isLast ? "📄 " : "📁 ") + p;
+          if (isLast && r.datatype) {
+            const badge = document.createElement("span");
+            badge.className = "ee-badge ee-" + String(r.datatype).toLowerCase();
+            badge.textContent = String(r.datatype).toUpperCase();
+            node.appendChild(badge);
+            node.dataset.recordIndex = String(i);
+          }
+          frag.appendChild(node);
+        });
+      });
+      tree.innerHTML = "";
+      tree.appendChild(frag);
+    }
+
+    function wireSearch() {
+      search.addEventListener("input", () => {
+        const q = search.value.toLowerCase();
+        tree.querySelectorAll(".ee-node").forEach(node => {
+          const match = !q || node.textContent.toLowerCase().includes(q);
+          node.style.display = match ? "" : "none";
+        });
+      });
+    }
+
+    function wireSelection() {
+      tree.addEventListener("click", e => {
+        const node = e.target.closest("[data-record-index]");
+        if (!node) return;
+        const r = records[Number(node.dataset.recordIndex)];
+        if (!r) return;
+        info.hidden = false;
+        info.innerHTML = "";
+        const dl = document.createElement("dl");
+        const add = (label, value) => {
+          if (value === undefined || value === null || value === "") return;
+          const dt = document.createElement("dt"); dt.textContent = label;
+          const dd = document.createElement("dd"); dd.textContent = String(value);
+          dl.appendChild(dt); dl.appendChild(dd);
+        };
+        add("File", pathOf(r));
+        add("Subject", r.subject);
+        add("Session", r.session);
+        add("Task", r.task);
+        add("Run", r.run);
+        add("Modality", r.datatype && String(r.datatype).toUpperCase());
+        add("Channels", r.nchans);
+        if (r.sfreq) add("Sample Rate", r.sfreq + " Hz");
+        if (r.duration) add("Duration", formatDuration(r.duration));
+        if (r.size) add("Size", formatBytes(r.size));
+        info.appendChild(dl);
+      });
+    }
+  }
+
+  function formatBytes(bytes) {
+    bytes = Number(bytes) || 0;
+    if (!bytes) return "0 B";
+    const units = ["B", "KB", "MB", "GB", "TB"];
+    const i = Math.min(Math.floor(Math.log(bytes) / Math.log(1024)), units.length - 1);
+    return (Math.round((bytes / Math.pow(1024, i)) \* 100) / 100) + " " + units[i];
+  }
+
+  function formatDuration(seconds) {
+    seconds = Number(seconds) || 0;
+    const h = Math.floor(seconds / 3600);
+    const m = Math.floor((seconds % 3600) / 60);
+    return h > 0 ? \`${h}h ${m}m\` : \`${m}m\`;
+  }
+
+  function escapeText(s) {
+    const d = document.createElement("div"); d.textContent = s; return d.innerHTML;
+  }
+})();
+</script>
 
 ## API Reference
 

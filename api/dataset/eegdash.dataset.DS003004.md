@@ -114,7 +114,7 @@ During the study, participants listen to 15 voice recordings that each suggest i
 - Recordings: 34
 - Tasks: 1
 
-- Channels: 219 (3), 224 (3), 212 (2), 214 (2), 221 (2), 231, 189, 211, 208, 196, 226, 223, 227, 220, 134, 232, 207, 213, 206, 180, 229, 215, 235, 209, 218, 201, 222
+- Channels: 224 (3), 219 (3), 221 (2), 214 (2), 212 (2), 201, 218, 222, 235, 209, 180, 229, 215, 206, 213, 207, 134, 232, 227, 220, 226, 223, 208, 196, 231, 189, 211
 - Sampling rate (Hz): 256.0
 - Duration (hours): 49.07222222222222
 
@@ -147,6 +147,59 @@ During the study, participants listen to 15 voice recordings that each suggest i
   </iframe>
 </details>
 
+## Dataset Statistics
+
+<div class="eegdash-stats-section" style="margin-bottom:1rem;">
+  <p><strong>Age distribution</strong> (n=34, range 18–38 yr)</p>
+  <div class="eeg-chart-row" style="display:flex; align-items:flex-end; gap:2px; height:60px;">
+    <div style="width:28px; height:12%; background:#4472c4; flex-shrink:0;" title="15-19: 2"></div><div style="width:28px; height:100%; background:#4472c4; flex-shrink:0;" title="20-24: 16"></div><div style="width:28px; height:68%; background:#4472c4; flex-shrink:0;" title="25-29: 11"></div><div style="width:28px; height:18%; background:#4472c4; flex-shrink:0;" title="30-34: 3"></div><div style="width:28px; height:12%; background:#4472c4; flex-shrink:0;" title="35-39: 2"></div>
+  </div>
+  <div class="eeg-chart-labels" style="display:flex; gap:2px; font-size:10px;">
+    <span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap;">15</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap;">20</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap;">25</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap;">30</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap;">35</span>
+  </div>
+</div><div class="eegdash-stats-section" style="margin-bottom:1rem;">
+  <p><strong>Sex distribution</strong></p>
+  <div style="display:flex; height:22px; width:100%; max-width:400px; border-radius:4px; overflow:hidden;">
+    <div style="width:58.8%; background:#e07ab5; display:inline-flex; align-items:center; justify-content:center; color:#fff; font-size:11px; min-width:2px;" title="Female: 20">20</div><div style="width:41.2%; background:#4472c4; display:inline-flex; align-items:center; justify-content:center; color:#fff; font-size:11px; min-width:2px;" title="Male: 14">14</div>
+  </div>
+  <div style="font-size:11px;margin-top:4px;"><span style="display:inline-block;width:12px;height:12px;background:#e07ab5;border-radius:2px;margin-right:4px;"></span>Female&nbsp;&nbsp;<span style="display:inline-block;width:12px;height:12px;background:#4472c4;border-radius:2px;margin-right:4px;"></span>Male&nbsp;&nbsp;<strong>Total: 34</strong></div>
+</div><div class="eegdash-stats-section" style="margin-bottom:1rem;">
+  <p><strong>Channel counts</strong> (ch)</p>
+  <div class="eeg-chart-row" style="display:flex; align-items:flex-end; gap:2px; height:60px;">
+    <div style="width:28px; height:33%; background:#009E73; flex-shrink:0;" title="134 ch: 1"></div><div style="width:28px; height:33%; background:#009E73; flex-shrink:0;" title="180 ch: 1"></div><div style="width:28px; height:33%; background:#009E73; flex-shrink:0;" title="189 ch: 1"></div><div style="width:28px; height:33%; background:#009E73; flex-shrink:0;" title="196 ch: 1"></div><div style="width:28px; height:33%; background:#009E73; flex-shrink:0;" title="201 ch: 1"></div><div style="width:28px; height:33%; background:#009E73; flex-shrink:0;" title="206 ch: 1"></div><div style="width:28px; height:33%; background:#009E73; flex-shrink:0;" title="207 ch: 1"></div><div style="width:28px; height:33%; background:#009E73; flex-shrink:0;" title="208 ch: 1"></div><div style="width:28px; height:33%; background:#009E73; flex-shrink:0;" title="209 ch: 1"></div><div style="width:28px; height:33%; background:#009E73; flex-shrink:0;" title="211 ch: 1"></div><div style="width:28px; height:66%; background:#009E73; flex-shrink:0;" title="212 ch: 2"></div><div style="width:28px; height:33%; background:#009E73; flex-shrink:0;" title="213 ch: 1"></div><div style="width:28px; height:66%; background:#009E73; flex-shrink:0;" title="214 ch: 2"></div><div style="width:28px; height:33%; background:#009E73; flex-shrink:0;" title="215 ch: 1"></div><div style="width:28px; height:33%; background:#009E73; flex-shrink:0;" title="218 ch: 1"></div><div style="width:28px; height:100%; background:#009E73; flex-shrink:0;" title="219 ch: 3"></div><div style="width:28px; height:33%; background:#009E73; flex-shrink:0;" title="220 ch: 1"></div><div style="width:28px; height:66%; background:#009E73; flex-shrink:0;" title="221 ch: 2"></div><div style="width:28px; height:33%; background:#009E73; flex-shrink:0;" title="222 ch: 1"></div><div style="width:28px; height:33%; background:#009E73; flex-shrink:0;" title="223 ch: 1"></div><div style="width:28px; height:100%; background:#009E73; flex-shrink:0;" title="224 ch: 3"></div><div style="width:28px; height:33%; background:#009E73; flex-shrink:0;" title="226 ch: 1"></div><div style="width:28px; height:33%; background:#009E73; flex-shrink:0;" title="227 ch: 1"></div><div style="width:28px; height:33%; background:#009E73; flex-shrink:0;" title="229 ch: 1"></div><div style="width:28px; height:33%; background:#009E73; flex-shrink:0;" title="231 ch: 1"></div><div style="width:28px; height:33%; background:#009E73; flex-shrink:0;" title="232 ch: 1"></div><div style="width:28px; height:33%; background:#009E73; flex-shrink:0;" title="235 ch: 1"></div>
+  </div>
+  <div class="eeg-chart-labels" style="display:flex; gap:2px; font-size:10px;">
+    <span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">134</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">180</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">189</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">196</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">201</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">206</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">207</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">208</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">209</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">211</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">212</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">213</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">214</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">215</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">218</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">219</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">220</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">221</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">222</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">223</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">224</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">226</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">227</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">229</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">231</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">232</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">235</span>
+  </div>
+</div><div class="eegdash-stats-section" style="margin-bottom:1rem;">
+  <p><strong>Sampling frequencies</strong>: 256.0 Hz (n=34 recordings)</p>
+</div><div class="eegdash-stats-section" style="margin-bottom:1rem;">
+  <p><strong>Total recording duration</strong>: 49 h</p>
+</div>
+
+## NEMAR Processing Statistics
+
+The plots below are generated by [NEMAR’s automated EEG pipeline](https://nemar.org/dataexplorer/detail?dataset_id=ds003004). The histogram shows pipeline success for data cleaning and ICA decomposition, the percentage of data frames and EEG channels retained after artefact removal, line noise per channel (RMS, dB), and the age/gender distribution of participants.
+
+<div class="nemar-analysis-section">
+  <a href="https://nemar.org/dataexplorer/detail?dataset_id=ds003004" target="_blank" rel="noopener noreferrer">
+    <img
+      src="https://nemar.org/dataexplorer/download?filepath=/data/nemar/openneuro//processed/ds003004/code/ds003004_histogram.png"
+      alt="NEMAR pipeline statistics — DS003004"
+      loading="lazy"
+      style="max-width: 100%; border: 1px solid var(--pst-color-border); border-radius: 8px; margin-bottom: 1rem;"
+    />
+  </a>
+</div><details class="nemar-wordcloud-details" style="margin-top: 0.5rem;">
+  <summary>HED event descriptors word cloud</summary>
+  <img
+    src="https://nemar.org/dataexplorer/download?filepath=/data/nemar/openneuro//processed/event_summaries/ds003004/word_cloud.svg&file_type=svg"
+    alt="HED event descriptors word cloud — DS003004"
+    loading="lazy"
+    style="max-width: 60%; display: block; margin: 0.5rem auto;"
+  />
+</details>
+
 ## Signal Preview
 
 <details class="trace-viewer">
@@ -167,6 +220,207 @@ During the study, participants listen to 15 voice recordings that each suggest i
     referrerpolicy="no-referrer">
   </iframe>
 </details>
+
+## File Explorer
+
+Browse the BIDS file structure of this dataset. Records are fetched on demand from the EEGDash catalog the first time you open the explorer.
+
+<style>
+.eegdash-explorer { font-family: system-ui, -apple-system, sans-serif; max-width: 100%; padding: 16px 0; }
+.eegdash-explorer .ee-search { width: 100%; padding: 8px; margin-bottom: 12px; border: 1px solid var(--pst-color-border, #ddd); border-radius: 4px; background: var(--pst-color-surface, #fff); color: inherit; box-sizing: border-box; }
+.eegdash-explorer .ee-stats { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 12px; font-size: 13px; }
+.eegdash-explorer .ee-stat { color: var(--pst-color-text-muted, #666); }
+.eegdash-explorer .ee-stat-val { font-weight: 600; color: var(--pst-color-success, #10b981); }
+.eegdash-explorer .ee-tree { padding: 12px; background: var(--pst-color-surface, #f9f9f9); border: 1px solid var(--pst-color-border, #e5e5e5); border-radius: 4px; max-height: 500px; overflow-y: auto; font-size: 13px; }
+.eegdash-explorer .ee-node { padding: 4px 0; cursor: pointer; user-select: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.eegdash-explorer .ee-node:hover { background: var(--pst-color-surface-hover, #f0f0f0); }
+.eegdash-explorer .ee-badge { display: inline-block; padding: 1px 6px; border-radius: 3px; font-size: 11px; font-weight: 600; margin-left: 8px; }
+.eegdash-explorer .ee-eeg { background: #dbeafe; color: #1e40af; }
+.eegdash-explorer .ee-meg { background: #e9d5ff; color: #6b21a8; }
+.eegdash-explorer .ee-ieeg { background: #fed7aa; color: #92400e; }
+.eegdash-explorer .ee-nirs { background: #dcfce7; color: #166534; }
+.eegdash-explorer .ee-emg { background: #fce7f3; color: #831843; }
+.eegdash-explorer .ee-info { margin-top: 12px; padding: 12px; background: var(--pst-color-surface, #f5f5f5); border-radius: 4px; font-size: 12px; }
+.eegdash-explorer .ee-info dt { font-weight: 600; margin-top: 6px; }
+.eegdash-explorer .ee-info dd { margin: 0 0 6px 0; color: var(--pst-color-text-muted, #666); }
+.eegdash-explorer .ee-status { padding: 16px; text-align: center; color: var(--pst-color-text-muted, #888); font-size: 13px; }
+.eegdash-explorer .ee-error { color: var(--pst-color-warning, #b45309); }
+</style>
+
+<div class="eegdash-explorer" data-dataset-id="DS003004">
+  <input type="text" class="ee-search" placeholder="Search files…" disabled>
+  <div class="ee-stats">
+    <div class="ee-stat">Files: <span class="ee-stat-val ee-file-count">—</span></div>
+    <div class="ee-stat">Size: <span class="ee-stat-val ee-total-size">—</span></div>
+    <div class="ee-stat">Subjects: <span class="ee-stat-val ee-subject-count">—</span></div>
+  </div>
+  <div class="ee-tree">
+    <div class="ee-status">Click to load file structure…</div>
+  </div>
+  <div class="ee-info" hidden></div>
+</div>
+
+<script>
+(function () {
+  const API_BASE = "https://data.eegdash.org";
+  const DATABASE = "eegdash";
+  const RECORD_LIMIT = 2000;
+
+  const containers = document.querySelectorAll(
+    ".eegdash-explorer:not([data-eegdash-init])"
+  );
+  containers.forEach(initExplorer);
+
+  function initExplorer(root) {
+    root.setAttribute("data-eegdash-init", "1");
+    const datasetId = root.dataset.datasetId;
+    if (!datasetId) return;
+
+    const tree = root.querySelector(".ee-tree");
+    const search = root.querySelector(".ee-search");
+    const info = root.querySelector(".ee-info");
+    const fileCount = root.querySelector(".ee-file-count");
+    const totalSize = root.querySelector(".ee-total-size");
+    const subjectCount = root.querySelector(".ee-subject-count");
+
+    let loaded = false;
+    let records = [];
+
+    // Lazy-load: fetch on first user interaction with the tree (or after a
+    // short idle, whichever comes first). Avoids hammering the API with 877
+    // requests when a user opens the catalog.
+    const trigger = () => { if (!loaded) load(); };
+    tree.addEventListener("click", trigger, { once: true });
+    search.addEventListener("focus", trigger, { once: true });
+    if ("requestIdleCallback" in window) {
+      requestIdleCallback(trigger, { timeout: 4000 });
+    } else {
+      setTimeout(trigger, 1500);
+    }
+
+    async function load() {
+      loaded = true;
+      tree.innerHTML = '<div class="ee-status">Loading…</div>';
+      try {
+        const filter = encodeURIComponent(JSON.stringify({ dataset: datasetId }));
+        const url = \`${API_BASE}/api/${DATABASE}/records?filter=${filter}&limit=${RECORD_LIMIT}\`;
+        const resp = await fetch(url);
+        if (!resp.ok) throw new Error(\`HTTP ${resp.status}\`);
+        const body = await resp.json();
+        records = (body.data || []).filter(r => r && (r.filepath || r.bidspath || r.path));
+        if (!records.length) {
+          tree.innerHTML = '<div class="ee-status">No file records indexed for this dataset yet.</div>';
+          return;
+        }
+        render();
+        wireSearch();
+        wireSelection();
+        search.disabled = false;
+      } catch (err) {
+        tree.innerHTML =
+          '<div class="ee-status ee-error">Could not load file list: ' +
+          escapeText(String(err && err.message || err)) +
+          '</div>';
+      }
+    }
+
+    function pathOf(r) { return r.filepath || r.bidspath || r.path || ""; }
+
+    function render() {
+      const subjects = new Set();
+      let bytes = 0;
+      records.forEach(r => {
+        if (r.subject) subjects.add(r.subject);
+        if (r.size) bytes += Number(r.size) || 0;
+      });
+      fileCount.textContent = String(records.length);
+      totalSize.textContent = formatBytes(bytes);
+      subjectCount.textContent = String(subjects.size);
+
+      const frag = document.createDocumentFragment();
+      records.slice().sort((a, b) => pathOf(a).localeCompare(pathOf(b))).forEach((r, i) => {
+        const path = pathOf(r);
+        const parts = path.split("/").filter(Boolean);
+        parts.forEach((p, j) => {
+          const isLast = j === parts.length - 1;
+          const node = document.createElement("div");
+          node.className = "ee-node";
+          node.style.paddingLeft = (j \* 20) + "px";
+          node.textContent = (isLast ? "📄 " : "📁 ") + p;
+          if (isLast && r.datatype) {
+            const badge = document.createElement("span");
+            badge.className = "ee-badge ee-" + String(r.datatype).toLowerCase();
+            badge.textContent = String(r.datatype).toUpperCase();
+            node.appendChild(badge);
+            node.dataset.recordIndex = String(i);
+          }
+          frag.appendChild(node);
+        });
+      });
+      tree.innerHTML = "";
+      tree.appendChild(frag);
+    }
+
+    function wireSearch() {
+      search.addEventListener("input", () => {
+        const q = search.value.toLowerCase();
+        tree.querySelectorAll(".ee-node").forEach(node => {
+          const match = !q || node.textContent.toLowerCase().includes(q);
+          node.style.display = match ? "" : "none";
+        });
+      });
+    }
+
+    function wireSelection() {
+      tree.addEventListener("click", e => {
+        const node = e.target.closest("[data-record-index]");
+        if (!node) return;
+        const r = records[Number(node.dataset.recordIndex)];
+        if (!r) return;
+        info.hidden = false;
+        info.innerHTML = "";
+        const dl = document.createElement("dl");
+        const add = (label, value) => {
+          if (value === undefined || value === null || value === "") return;
+          const dt = document.createElement("dt"); dt.textContent = label;
+          const dd = document.createElement("dd"); dd.textContent = String(value);
+          dl.appendChild(dt); dl.appendChild(dd);
+        };
+        add("File", pathOf(r));
+        add("Subject", r.subject);
+        add("Session", r.session);
+        add("Task", r.task);
+        add("Run", r.run);
+        add("Modality", r.datatype && String(r.datatype).toUpperCase());
+        add("Channels", r.nchans);
+        if (r.sfreq) add("Sample Rate", r.sfreq + " Hz");
+        if (r.duration) add("Duration", formatDuration(r.duration));
+        if (r.size) add("Size", formatBytes(r.size));
+        info.appendChild(dl);
+      });
+    }
+  }
+
+  function formatBytes(bytes) {
+    bytes = Number(bytes) || 0;
+    if (!bytes) return "0 B";
+    const units = ["B", "KB", "MB", "GB", "TB"];
+    const i = Math.min(Math.floor(Math.log(bytes) / Math.log(1024)), units.length - 1);
+    return (Math.round((bytes / Math.pow(1024, i)) \* 100) / 100) + " " + units[i];
+  }
+
+  function formatDuration(seconds) {
+    seconds = Number(seconds) || 0;
+    const h = Math.floor(seconds / 3600);
+    const m = Math.floor((seconds % 3600) / 60);
+    return h > 0 ? \`${h}h ${m}m\` : \`${m}m\`;
+  }
+
+  function escapeText(s) {
+    const d = document.createElement("div"); d.textContent = s; return d.innerHTML;
+  }
+})();
+</script>
 
 ## API Reference
 

@@ -125,7 +125,7 @@ For questions or inquiries, please contact [sas-kahana-sysadmin@sas.upenn.edu](m
 - Recordings: 172
 - Tasks: 1
 
-- Channels: 100 (7), 80 (5), 74 (5), 131 (5), 62 (4), 53 (4), 108 (4), 85 (4), 54 (4), 110 (4), 46 (4), 86 (4), 104 (3), 168 (3), 150 (3), 32 (3), 84 (3), 72 (3), 70 (3), 27 (3), 105 (3), 55 (3), 121 (3), 42 (3), 78 (3), 82 (3), 109 (3), 48 (3), 88 (3), 116 (3), 123 (3), 96 (3), 47 (3), 91 (3), 75 (3), 149 (2), 142 (2), 111 (2), 63 (2), 68 (2), 36 (2), 76 (2), 119 (2), 102 (2), 144 (2), 124 (2), 126 (2), 52 (2), 57 (2), 130 (2), 87 (2), 153 (2), 58 (2), 97, 94, 64, 98, 81, 203, 160, 95, 187, 56, 90, 101, 120
+- Channels: 100 (7), 131 (5), 80 (5), 74 (5), 86 (4), 46 (4), 110 (4), 54 (4), 85 (4), 108 (4), 53 (4), 62 (4), 75 (3), 91 (3), 47 (3), 123 (3), 96 (3), 116 (3), 48 (3), 88 (3), 109 (3), 82 (3), 78 (3), 121 (3), 42 (3), 27 (3), 105 (3), 55 (3), 72 (3), 70 (3), 84 (3), 32 (3), 104 (3), 168 (3), 150 (3), 58 (2), 149 (2), 153 (2), 87 (2), 57 (2), 130 (2), 126 (2), 124 (2), 52 (2), 144 (2), 119 (2), 102 (2), 63 (2), 68 (2), 76 (2), 36 (2), 142 (2), 111 (2), 120, 101, 90, 187, 56, 95, 81, 203, 160, 97, 94, 64, 98
 - Sampling rate (Hz): 1000.0 (102), 512.0 (40), 2000.0 (16), 400.0 (8), 499.7071 (6)
 - Duration (hours): 180.6291955494362
 
@@ -157,6 +157,266 @@ For questions or inquiries, please contact [sas-kahana-sysadmin@sas.upenn.edu](m
     referrerpolicy="no-referrer">
   </iframe>
 </details>
+
+## Dataset Statistics
+
+<div class="eegdash-stats-section" style="margin-bottom:1rem;">
+  <p><strong>Age distribution</strong> (n=48, range 15–57 yr)</p>
+  <div class="eeg-chart-row" style="display:flex; align-items:flex-end; gap:2px; height:60px;">
+    <div style="width:28px; height:40%; background:#4472c4; flex-shrink:0;" title="15-19: 4"></div><div style="width:28px; height:70%; background:#4472c4; flex-shrink:0;" title="20-24: 7"></div><div style="width:28px; height:100%; background:#4472c4; flex-shrink:0;" title="25-29: 10"></div><div style="width:28px; height:60%; background:#4472c4; flex-shrink:0;" title="30-34: 6"></div><div style="width:28px; height:40%; background:#4472c4; flex-shrink:0;" title="35-39: 4"></div><div style="width:28px; height:70%; background:#4472c4; flex-shrink:0;" title="40-44: 7"></div><div style="width:28px; height:40%; background:#4472c4; flex-shrink:0;" title="45-49: 4"></div><div style="width:28px; height:20%; background:#4472c4; flex-shrink:0;" title="50-54: 2"></div><div style="width:28px; height:40%; background:#4472c4; flex-shrink:0;" title="55-59: 4"></div>
+  </div>
+  <div class="eeg-chart-labels" style="display:flex; gap:2px; font-size:10px;">
+    <span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap;">15</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap;">20</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap;">25</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap;">30</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap;">35</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap;">40</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap;">45</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap;">50</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap;">55</span>
+  </div>
+</div><div class="eegdash-stats-section" style="margin-bottom:1rem;">
+  <p><strong>Sex distribution</strong></p>
+  <div style="display:flex; height:22px; width:100%; max-width:400px; border-radius:4px; overflow:hidden;">
+    <div style="width:43.8%; background:#e07ab5; display:inline-flex; align-items:center; justify-content:center; color:#fff; font-size:11px; min-width:2px;" title="Female: 21">21</div><div style="width:56.2%; background:#4472c4; display:inline-flex; align-items:center; justify-content:center; color:#fff; font-size:11px; min-width:2px;" title="Male: 27">27</div>
+  </div>
+  <div style="font-size:11px;margin-top:4px;"><span style="display:inline-block;width:12px;height:12px;background:#e07ab5;border-radius:2px;margin-right:4px;"></span>Female&nbsp;&nbsp;<span style="display:inline-block;width:12px;height:12px;background:#4472c4;border-radius:2px;margin-right:4px;"></span>Male&nbsp;&nbsp;<strong>Total: 48</strong></div>
+</div><div class="eegdash-stats-section" style="margin-bottom:1rem;">
+  <p><strong>Channel counts</strong> (ch)</p>
+  <div class="eeg-chart-row" style="display:flex; align-items:flex-end; gap:2px; height:60px;">
+    <div style="width:28px; height:42%; background:#009E73; flex-shrink:0;" title="27 ch: 3"></div><div style="width:28px; height:42%; background:#009E73; flex-shrink:0;" title="32 ch: 3"></div><div style="width:28px; height:28%; background:#009E73; flex-shrink:0;" title="36 ch: 2"></div><div style="width:28px; height:42%; background:#009E73; flex-shrink:0;" title="42 ch: 3"></div><div style="width:28px; height:57%; background:#009E73; flex-shrink:0;" title="46 ch: 4"></div><div style="width:28px; height:42%; background:#009E73; flex-shrink:0;" title="47 ch: 3"></div><div style="width:28px; height:42%; background:#009E73; flex-shrink:0;" title="48 ch: 3"></div><div style="width:28px; height:28%; background:#009E73; flex-shrink:0;" title="52 ch: 2"></div><div style="width:28px; height:57%; background:#009E73; flex-shrink:0;" title="53 ch: 4"></div><div style="width:28px; height:57%; background:#009E73; flex-shrink:0;" title="54 ch: 4"></div><div style="width:28px; height:42%; background:#009E73; flex-shrink:0;" title="55 ch: 3"></div><div style="width:28px; height:14%; background:#009E73; flex-shrink:0;" title="56 ch: 1"></div><div style="width:28px; height:28%; background:#009E73; flex-shrink:0;" title="57 ch: 2"></div><div style="width:28px; height:28%; background:#009E73; flex-shrink:0;" title="58 ch: 2"></div><div style="width:28px; height:57%; background:#009E73; flex-shrink:0;" title="62 ch: 4"></div><div style="width:28px; height:28%; background:#009E73; flex-shrink:0;" title="63 ch: 2"></div><div style="width:28px; height:14%; background:#009E73; flex-shrink:0;" title="64 ch: 1"></div><div style="width:28px; height:28%; background:#009E73; flex-shrink:0;" title="68 ch: 2"></div><div style="width:28px; height:42%; background:#009E73; flex-shrink:0;" title="70 ch: 3"></div><div style="width:28px; height:42%; background:#009E73; flex-shrink:0;" title="72 ch: 3"></div><div style="width:28px; height:71%; background:#009E73; flex-shrink:0;" title="74 ch: 5"></div><div style="width:28px; height:42%; background:#009E73; flex-shrink:0;" title="75 ch: 3"></div><div style="width:28px; height:28%; background:#009E73; flex-shrink:0;" title="76 ch: 2"></div><div style="width:28px; height:42%; background:#009E73; flex-shrink:0;" title="78 ch: 3"></div><div style="width:28px; height:71%; background:#009E73; flex-shrink:0;" title="80 ch: 5"></div><div style="width:28px; height:14%; background:#009E73; flex-shrink:0;" title="81 ch: 1"></div><div style="width:28px; height:42%; background:#009E73; flex-shrink:0;" title="82 ch: 3"></div><div style="width:28px; height:42%; background:#009E73; flex-shrink:0;" title="84 ch: 3"></div><div style="width:28px; height:57%; background:#009E73; flex-shrink:0;" title="85 ch: 4"></div><div style="width:28px; height:57%; background:#009E73; flex-shrink:0;" title="86 ch: 4"></div><div style="width:28px; height:28%; background:#009E73; flex-shrink:0;" title="87 ch: 2"></div><div style="width:28px; height:42%; background:#009E73; flex-shrink:0;" title="88 ch: 3"></div><div style="width:28px; height:14%; background:#009E73; flex-shrink:0;" title="90 ch: 1"></div><div style="width:28px; height:42%; background:#009E73; flex-shrink:0;" title="91 ch: 3"></div><div style="width:28px; height:14%; background:#009E73; flex-shrink:0;" title="94 ch: 1"></div><div style="width:28px; height:14%; background:#009E73; flex-shrink:0;" title="95 ch: 1"></div><div style="width:28px; height:42%; background:#009E73; flex-shrink:0;" title="96 ch: 3"></div><div style="width:28px; height:14%; background:#009E73; flex-shrink:0;" title="97 ch: 1"></div><div style="width:28px; height:14%; background:#009E73; flex-shrink:0;" title="98 ch: 1"></div><div style="width:28px; height:100%; background:#009E73; flex-shrink:0;" title="100 ch: 7"></div><div style="width:28px; height:14%; background:#009E73; flex-shrink:0;" title="101 ch: 1"></div><div style="width:28px; height:28%; background:#009E73; flex-shrink:0;" title="102 ch: 2"></div><div style="width:28px; height:42%; background:#009E73; flex-shrink:0;" title="104 ch: 3"></div><div style="width:28px; height:42%; background:#009E73; flex-shrink:0;" title="105 ch: 3"></div><div style="width:28px; height:57%; background:#009E73; flex-shrink:0;" title="108 ch: 4"></div><div style="width:28px; height:42%; background:#009E73; flex-shrink:0;" title="109 ch: 3"></div><div style="width:28px; height:57%; background:#009E73; flex-shrink:0;" title="110 ch: 4"></div><div style="width:28px; height:28%; background:#009E73; flex-shrink:0;" title="111 ch: 2"></div><div style="width:28px; height:42%; background:#009E73; flex-shrink:0;" title="116 ch: 3"></div><div style="width:28px; height:28%; background:#009E73; flex-shrink:0;" title="119 ch: 2"></div><div style="width:28px; height:14%; background:#009E73; flex-shrink:0;" title="120 ch: 1"></div><div style="width:28px; height:42%; background:#009E73; flex-shrink:0;" title="121 ch: 3"></div><div style="width:28px; height:42%; background:#009E73; flex-shrink:0;" title="123 ch: 3"></div><div style="width:28px; height:28%; background:#009E73; flex-shrink:0;" title="124 ch: 2"></div><div style="width:28px; height:28%; background:#009E73; flex-shrink:0;" title="126 ch: 2"></div><div style="width:28px; height:28%; background:#009E73; flex-shrink:0;" title="130 ch: 2"></div><div style="width:28px; height:71%; background:#009E73; flex-shrink:0;" title="131 ch: 5"></div><div style="width:28px; height:28%; background:#009E73; flex-shrink:0;" title="142 ch: 2"></div><div style="width:28px; height:28%; background:#009E73; flex-shrink:0;" title="144 ch: 2"></div><div style="width:28px; height:28%; background:#009E73; flex-shrink:0;" title="149 ch: 2"></div><div style="width:28px; height:42%; background:#009E73; flex-shrink:0;" title="150 ch: 3"></div><div style="width:28px; height:28%; background:#009E73; flex-shrink:0;" title="153 ch: 2"></div><div style="width:28px; height:14%; background:#009E73; flex-shrink:0;" title="160 ch: 1"></div><div style="width:28px; height:42%; background:#009E73; flex-shrink:0;" title="168 ch: 3"></div><div style="width:28px; height:14%; background:#009E73; flex-shrink:0;" title="187 ch: 1"></div><div style="width:28px; height:14%; background:#009E73; flex-shrink:0;" title="203 ch: 1"></div>
+  </div>
+  <div class="eeg-chart-labels" style="display:flex; gap:2px; font-size:10px;">
+    <span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">27</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">32</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">36</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">42</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">46</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">47</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">48</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">52</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">53</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">54</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">55</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">56</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">57</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">58</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">62</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">63</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">64</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">68</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">70</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">72</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">74</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">75</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">76</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">78</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">80</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">81</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">82</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">84</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">85</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">86</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">87</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">88</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">90</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">91</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">94</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">95</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">96</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">97</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">98</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">100</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">101</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">102</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">104</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">105</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">108</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">109</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">110</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">111</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">116</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">119</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">120</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">121</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">123</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">124</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">126</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">130</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">131</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">142</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">144</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">149</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">150</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">153</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">160</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">168</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">187</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">203</span>
+  </div>
+</div><div class="eegdash-stats-section" style="margin-bottom:1rem;">
+  <p><strong>Sampling frequencies</strong> (Hz)</p>
+  <div class="eeg-chart-row" style="display:flex; align-items:flex-end; gap:2px; height:60px;">
+    <div style="width:28px; height:7%; background:#D55E00; flex-shrink:0;" title="400 Hz: 8"></div><div style="width:28px; height:5%; background:#D55E00; flex-shrink:0;" title="499.7 Hz: 6"></div><div style="width:28px; height:39%; background:#D55E00; flex-shrink:0;" title="512 Hz: 40"></div><div style="width:28px; height:100%; background:#D55E00; flex-shrink:0;" title="1000 Hz: 102"></div><div style="width:28px; height:15%; background:#D55E00; flex-shrink:0;" title="2000 Hz: 16"></div>
+  </div>
+  <div class="eeg-chart-labels" style="display:flex; gap:2px; font-size:10px;">
+    <span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">400</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">499.7</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">512</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">1000</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap; font-size:9px;">2000</span>
+  </div>
+</div><div class="eegdash-stats-section" style="margin-bottom:1rem;">
+  <p><strong>Total recording duration</strong>: 180 h</p>
+</div>
+
+## NEMAR Processing Statistics
+
+The plots below are generated by [NEMAR’s automated EEG pipeline](https://nemar.org/dataexplorer/detail?dataset_id=ds004865). The histogram shows pipeline success for data cleaning and ICA decomposition, the percentage of data frames and EEG channels retained after artefact removal, line noise per channel (RMS, dB), and the age/gender distribution of participants.
+
+<div class="nemar-analysis-section">
+  <a href="https://nemar.org/dataexplorer/detail?dataset_id=ds004865" target="_blank" rel="noopener noreferrer">
+    <img
+      src="https://nemar.org/dataexplorer/download?filepath=/data/nemar/openneuro//processed/ds004865/code/ds004865_histogram.png"
+      alt="NEMAR pipeline statistics — DS004865"
+      loading="lazy"
+      style="max-width: 100%; border: 1px solid var(--pst-color-border); border-radius: 8px; margin-bottom: 1rem;"
+    />
+  </a>
+</div><details class="nemar-wordcloud-details" style="margin-top: 0.5rem;">
+  <summary>HED event descriptors word cloud</summary>
+  <img
+    src="https://nemar.org/dataexplorer/download?filepath=/data/nemar/openneuro//processed/event_summaries/ds004865/word_cloud.svg&file_type=svg"
+    alt="HED event descriptors word cloud — DS004865"
+    loading="lazy"
+    style="max-width: 60%; display: block; margin: 0.5rem auto;"
+  />
+</details>
+
+## File Explorer
+
+Browse the BIDS file structure of this dataset. Records are fetched on demand from the EEGDash catalog the first time you open the explorer.
+
+<style>
+.eegdash-explorer { font-family: system-ui, -apple-system, sans-serif; max-width: 100%; padding: 16px 0; }
+.eegdash-explorer .ee-search { width: 100%; padding: 8px; margin-bottom: 12px; border: 1px solid var(--pst-color-border, #ddd); border-radius: 4px; background: var(--pst-color-surface, #fff); color: inherit; box-sizing: border-box; }
+.eegdash-explorer .ee-stats { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 12px; font-size: 13px; }
+.eegdash-explorer .ee-stat { color: var(--pst-color-text-muted, #666); }
+.eegdash-explorer .ee-stat-val { font-weight: 600; color: var(--pst-color-success, #10b981); }
+.eegdash-explorer .ee-tree { padding: 12px; background: var(--pst-color-surface, #f9f9f9); border: 1px solid var(--pst-color-border, #e5e5e5); border-radius: 4px; max-height: 500px; overflow-y: auto; font-size: 13px; }
+.eegdash-explorer .ee-node { padding: 4px 0; cursor: pointer; user-select: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.eegdash-explorer .ee-node:hover { background: var(--pst-color-surface-hover, #f0f0f0); }
+.eegdash-explorer .ee-badge { display: inline-block; padding: 1px 6px; border-radius: 3px; font-size: 11px; font-weight: 600; margin-left: 8px; }
+.eegdash-explorer .ee-eeg { background: #dbeafe; color: #1e40af; }
+.eegdash-explorer .ee-meg { background: #e9d5ff; color: #6b21a8; }
+.eegdash-explorer .ee-ieeg { background: #fed7aa; color: #92400e; }
+.eegdash-explorer .ee-nirs { background: #dcfce7; color: #166534; }
+.eegdash-explorer .ee-emg { background: #fce7f3; color: #831843; }
+.eegdash-explorer .ee-info { margin-top: 12px; padding: 12px; background: var(--pst-color-surface, #f5f5f5); border-radius: 4px; font-size: 12px; }
+.eegdash-explorer .ee-info dt { font-weight: 600; margin-top: 6px; }
+.eegdash-explorer .ee-info dd { margin: 0 0 6px 0; color: var(--pst-color-text-muted, #666); }
+.eegdash-explorer .ee-status { padding: 16px; text-align: center; color: var(--pst-color-text-muted, #888); font-size: 13px; }
+.eegdash-explorer .ee-error { color: var(--pst-color-warning, #b45309); }
+</style>
+
+<div class="eegdash-explorer" data-dataset-id="DS004865">
+  <input type="text" class="ee-search" placeholder="Search files…" disabled>
+  <div class="ee-stats">
+    <div class="ee-stat">Files: <span class="ee-stat-val ee-file-count">—</span></div>
+    <div class="ee-stat">Size: <span class="ee-stat-val ee-total-size">—</span></div>
+    <div class="ee-stat">Subjects: <span class="ee-stat-val ee-subject-count">—</span></div>
+  </div>
+  <div class="ee-tree">
+    <div class="ee-status">Click to load file structure…</div>
+  </div>
+  <div class="ee-info" hidden></div>
+</div>
+
+<script>
+(function () {
+  const API_BASE = "https://data.eegdash.org";
+  const DATABASE = "eegdash";
+  const RECORD_LIMIT = 2000;
+
+  const containers = document.querySelectorAll(
+    ".eegdash-explorer:not([data-eegdash-init])"
+  );
+  containers.forEach(initExplorer);
+
+  function initExplorer(root) {
+    root.setAttribute("data-eegdash-init", "1");
+    const datasetId = root.dataset.datasetId;
+    if (!datasetId) return;
+
+    const tree = root.querySelector(".ee-tree");
+    const search = root.querySelector(".ee-search");
+    const info = root.querySelector(".ee-info");
+    const fileCount = root.querySelector(".ee-file-count");
+    const totalSize = root.querySelector(".ee-total-size");
+    const subjectCount = root.querySelector(".ee-subject-count");
+
+    let loaded = false;
+    let records = [];
+
+    // Lazy-load: fetch on first user interaction with the tree (or after a
+    // short idle, whichever comes first). Avoids hammering the API with 877
+    // requests when a user opens the catalog.
+    const trigger = () => { if (!loaded) load(); };
+    tree.addEventListener("click", trigger, { once: true });
+    search.addEventListener("focus", trigger, { once: true });
+    if ("requestIdleCallback" in window) {
+      requestIdleCallback(trigger, { timeout: 4000 });
+    } else {
+      setTimeout(trigger, 1500);
+    }
+
+    async function load() {
+      loaded = true;
+      tree.innerHTML = '<div class="ee-status">Loading…</div>';
+      try {
+        const filter = encodeURIComponent(JSON.stringify({ dataset: datasetId }));
+        const url = \`${API_BASE}/api/${DATABASE}/records?filter=${filter}&limit=${RECORD_LIMIT}\`;
+        const resp = await fetch(url);
+        if (!resp.ok) throw new Error(\`HTTP ${resp.status}\`);
+        const body = await resp.json();
+        records = (body.data || []).filter(r => r && (r.filepath || r.bidspath || r.path));
+        if (!records.length) {
+          tree.innerHTML = '<div class="ee-status">No file records indexed for this dataset yet.</div>';
+          return;
+        }
+        render();
+        wireSearch();
+        wireSelection();
+        search.disabled = false;
+      } catch (err) {
+        tree.innerHTML =
+          '<div class="ee-status ee-error">Could not load file list: ' +
+          escapeText(String(err && err.message || err)) +
+          '</div>';
+      }
+    }
+
+    function pathOf(r) { return r.filepath || r.bidspath || r.path || ""; }
+
+    function render() {
+      const subjects = new Set();
+      let bytes = 0;
+      records.forEach(r => {
+        if (r.subject) subjects.add(r.subject);
+        if (r.size) bytes += Number(r.size) || 0;
+      });
+      fileCount.textContent = String(records.length);
+      totalSize.textContent = formatBytes(bytes);
+      subjectCount.textContent = String(subjects.size);
+
+      const frag = document.createDocumentFragment();
+      records.slice().sort((a, b) => pathOf(a).localeCompare(pathOf(b))).forEach((r, i) => {
+        const path = pathOf(r);
+        const parts = path.split("/").filter(Boolean);
+        parts.forEach((p, j) => {
+          const isLast = j === parts.length - 1;
+          const node = document.createElement("div");
+          node.className = "ee-node";
+          node.style.paddingLeft = (j \* 20) + "px";
+          node.textContent = (isLast ? "📄 " : "📁 ") + p;
+          if (isLast && r.datatype) {
+            const badge = document.createElement("span");
+            badge.className = "ee-badge ee-" + String(r.datatype).toLowerCase();
+            badge.textContent = String(r.datatype).toUpperCase();
+            node.appendChild(badge);
+            node.dataset.recordIndex = String(i);
+          }
+          frag.appendChild(node);
+        });
+      });
+      tree.innerHTML = "";
+      tree.appendChild(frag);
+    }
+
+    function wireSearch() {
+      search.addEventListener("input", () => {
+        const q = search.value.toLowerCase();
+        tree.querySelectorAll(".ee-node").forEach(node => {
+          const match = !q || node.textContent.toLowerCase().includes(q);
+          node.style.display = match ? "" : "none";
+        });
+      });
+    }
+
+    function wireSelection() {
+      tree.addEventListener("click", e => {
+        const node = e.target.closest("[data-record-index]");
+        if (!node) return;
+        const r = records[Number(node.dataset.recordIndex)];
+        if (!r) return;
+        info.hidden = false;
+        info.innerHTML = "";
+        const dl = document.createElement("dl");
+        const add = (label, value) => {
+          if (value === undefined || value === null || value === "") return;
+          const dt = document.createElement("dt"); dt.textContent = label;
+          const dd = document.createElement("dd"); dd.textContent = String(value);
+          dl.appendChild(dt); dl.appendChild(dd);
+        };
+        add("File", pathOf(r));
+        add("Subject", r.subject);
+        add("Session", r.session);
+        add("Task", r.task);
+        add("Run", r.run);
+        add("Modality", r.datatype && String(r.datatype).toUpperCase());
+        add("Channels", r.nchans);
+        if (r.sfreq) add("Sample Rate", r.sfreq + " Hz");
+        if (r.duration) add("Duration", formatDuration(r.duration));
+        if (r.size) add("Size", formatBytes(r.size));
+        info.appendChild(dl);
+      });
+    }
+  }
+
+  function formatBytes(bytes) {
+    bytes = Number(bytes) || 0;
+    if (!bytes) return "0 B";
+    const units = ["B", "KB", "MB", "GB", "TB"];
+    const i = Math.min(Math.floor(Math.log(bytes) / Math.log(1024)), units.length - 1);
+    return (Math.round((bytes / Math.pow(1024, i)) \* 100) / 100) + " " + units[i];
+  }
+
+  function formatDuration(seconds) {
+    seconds = Number(seconds) || 0;
+    const h = Math.floor(seconds / 3600);
+    const m = Math.floor((seconds % 3600) / 60);
+    return h > 0 ? \`${h}h ${m}m\` : \`${m}m\`;
+  }
+
+  function escapeText(s) {
+    const d = document.createElement("div"); d.textContent = s; return d.innerHTML;
+  }
+})();
+</script>
 
 ## API Reference
 

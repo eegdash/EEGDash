@@ -17572,7 +17572,7 @@ Automatic Evoked Response Detection (ER-Detect) dataset
 Also importable as: `DS004774`, `Boom2023`.
 
 Modality: `ieeg`; Experiment type: `Clinical/Intervention`; Subject type: `Epilepsy`.
-Subjects: 9; recordings: 9; tasks: 1.
+Subjects: 14; recordings: 14; tasks: 2.
 
 * **Parameters:**
   * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *Path*) – Directory where data are cached locally.
@@ -18291,7 +18291,7 @@ Spatial Attention Decoding using fNIRS During Complex Scene Analysis
 Also importable as: `DS004830`, `Ning2023`.
 
 Modality: `fnirs`; Experiment type: `Attention`; Subject type: `Healthy`.
-Subjects: 12; recordings: 19; tasks: 5.
+Subjects: 12; recordings: 14; tasks: 1.
 
 * **Parameters:**
   * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *Path*) – Directory where data are cached locally.
@@ -18331,7 +18331,7 @@ Dataset-specific caveats are not provided in the summary metadata.
 
 OpenNeuro dataset: [https://openneuro.org/datasets/ds004830](https://openneuro.org/datasets/ds004830)
 NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=ds004830](https://nemar.org/dataexplorer/detail?dataset_id=ds004830)
-DOI: [https://doi.org/10.18112/openneuro.ds004830.v1.0.1](https://doi.org/10.18112/openneuro.ds004830.v1.0.1)
+DOI: [https://doi.org/10.18112/openneuro.ds004830.v2.0.0](https://doi.org/10.18112/openneuro.ds004830.v2.0.0)
 
 ### Examples
 
@@ -38746,7 +38746,7 @@ Dataset-specific caveats are not provided in the summary metadata.
 
 OpenNeuro dataset: [https://openneuro.org/datasets/ds007526](https://openneuro.org/datasets/ds007526)
 NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=ds007526](https://nemar.org/dataexplorer/detail?dataset_id=ds007526)
-DOI: [https://doi.org/10.18112/openneuro.ds007526.v1.0.0](https://doi.org/10.18112/openneuro.ds007526.v1.0.0)
+DOI: [https://doi.org/10.18112/openneuro.ds007526.v1.0.1](https://doi.org/10.18112/openneuro.ds007526.v1.0.1)
 
 ### Examples
 
@@ -39385,7 +39385,7 @@ Dataset-specific caveats are not provided in the summary metadata.
 
 OpenNeuro dataset: [https://openneuro.org/datasets/ds007629](https://openneuro.org/datasets/ds007629)
 NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=ds007629](https://nemar.org/dataexplorer/detail?dataset_id=ds007629)
-DOI: [https://doi.org/10.18112/openneuro.ds007629.v1.0.1](https://doi.org/10.18112/openneuro.ds007629.v1.0.1)
+DOI: [https://doi.org/10.18112/openneuro.ds007629.v1.0.2](https://doi.org/10.18112/openneuro.ds007629.v1.0.2)
 
 ### Examples
 

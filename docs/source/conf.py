@@ -2360,10 +2360,12 @@ def _make_count_bar_chart(
     )
 
 
-# BIDS spec allows both short ("f"/"m") and long ("female"/"male") forms,
-# case-insensitive. Anything else is counted as "other/unknown".
+# BIDS sex column (objects/columns.yaml) defines three phenotypical categories,
+# each with a short and long form, all case-insensitive.
+# Keys outside all three sets are treated as unknown and folded into "Other".
 _BIDS_FEMALE_KEYS = {"f", "female"}
 _BIDS_MALE_KEYS = {"m", "male"}
+_BIDS_OTHER_KEYS = {"o", "other"}
 
 
 def _format_recording_stats_section(context: Mapping[str, object]) -> str:
@@ -2449,12 +2451,14 @@ def _format_recording_stats_section(context: Mapping[str, object]) -> str:
     # B. Sex distribution horizontal bar
     # ------------------------------------------------------------------
     if has_sex:
+        _known_keys = _BIDS_FEMALE_KEYS | _BIDS_MALE_KEYS | _BIDS_OTHER_KEYS
         f_count = sum(
             int(v or 0) for k, v in sex_dist.items() if k.lower() in _BIDS_FEMALE_KEYS
         )
         m_count = sum(
             int(v or 0) for k, v in sex_dist.items() if k.lower() in _BIDS_MALE_KEYS
         )
+        # Explicit BIDS "other" (o/other) + any non-spec keys (n/a, unknown, …)
         o_count = sum(
             int(v or 0)
             for k, v in sex_dist.items()

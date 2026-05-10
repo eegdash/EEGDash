@@ -495,6 +495,8 @@ Technical Details
 
 {nemar_analysis_section}
 
+{traces_section}
+
 {explorer_section}
 
 API Reference
@@ -2715,6 +2717,156 @@ def _format_explorer_section(name: str, context: Mapping[str, object]) -> str:
     return heading + description + directive
 
 
+# ---------------------------------------------------------------------------
+# Trace viewer iframe: live signal preview from the eegdash-viewer
+# (https://eegdash.github.io/eegdash-viewer/) embedded as a lazy iframe.
+# Query the eegdash API for the first supported EEG record per dataset.
+# ---------------------------------------------------------------------------
+
+_TRACE_VIEWER_BASE = "https://eegdash.github.io/eegdash-viewer/"
+_TRACE_API_URL = "https://data.eegdash.org/api/eegdash/records"
+_TRACE_SUPPORTED_EXT = (".set", ".edf", ".bdf", ".vhdr", ".fif", ".fiff")
+
+
+def _get_first_eeg_record(dataset_id: str) -> dict[str, object] | None:
+    """Query eegdash API for the first supported electrophysiology record.
+
+    Searches for any compatible modality (EEG, iEEG, EMG, MEG) that can be viewed
+    with the eegdash-viewer, prioritizing EEG.
+    """
+    import urllib.parse
+    import urllib.request
+
+    query = {
+        "dataset": dataset_id,
+        "suffix": {"$in": ["eeg", "ieeg", "emg", "meg"]},
+        "extension": {"$in": list(_TRACE_SUPPORTED_EXT)},
+        "_has_missing_files": {"$ne": True},
+    }
+    params = {
+        "limit": 1,
+        "filter": json.dumps(query, separators=(",", ":")),
+    }
+    url = f"{_TRACE_API_URL}?{urllib.parse.urlencode(params)}"
+
+    try:
+        req = urllib.request.Request(url, headers={"Accept": "application/json"})
+        with urllib.request.urlopen(req, timeout=10) as resp:
+            body = json.loads(resp.read().decode("utf-8"))
+            if body.get("success") and body.get("data"):
+                return body["data"][0]
+    except Exception:
+        pass
+    return None
+
+
+def _format_traces_section(context: Mapping[str, object]) -> str:
+    """Render an iframe for this dataset's signal preview.
+
+    Query the API for the first supported electrophysiology record (EEG, iEEG, EMG)
+    and build the viewer URL.
+    """
+    dataset_id = str(context.get("dataset_id") or "").strip().lower()
+    if not dataset_id:
+        return ""
+
+    record = _get_first_eeg_record(dataset_id)
+    if not record:
+        return ""
+
+    # Extract entity info from record or its entities_mne dict
+    entities = (
+        record.get("entities_mne", {})
+        if isinstance(record.get("entities_mne"), dict)
+        else {}
+    )
+    sub = str(record.get("subject") or entities.get("subject") or "").strip()
+    task = str(record.get("task") or entities.get("task") or "").strip()
+    ext = str(record.get("extension") or "").strip().lstrip(".")
+    suffix = str(record.get("suffix") or "eeg").strip().lower()
+
+    if not sub or not ext:
+        return ""
+
+    # Build the viewer URL
+    from urllib.parse import urlencode
+
+    qs_pairs = [("dataset", dataset_id), ("sub", sub)]
+    ses = record.get("session") or entities.get("session")
+    if ses:
+        qs_pairs.append(("ses", str(ses)))
+    if task:
+        qs_pairs.append(("task", task))
+    run = record.get("run") or entities.get("run")
+    if run:
+        qs_pairs.append(("run", str(run)))
+    qs_pairs.append(("ext", ext))
+    # Add suffix parameter if it's not the default EEG
+    if suffix != "eeg":
+        qs_pairs.append(("suffix", suffix))
+    qs_pairs.append(("embed", "1"))
+    iframe_src = f"{_TRACE_VIEWER_BASE}?{urlencode(qs_pairs)}"
+
+    # Build entity label
+    entity_bits = [f"sub-{sub}"]
+    if ses:
+        entity_bits.append(f"ses-{ses}")
+    if task:
+        entity_bits.append(f"task-{task}")
+    if run:
+        entity_bits.append(f"run-{run}")
+    entity_label = " · ".join(entity_bits)
+
+    # Caption above the iframe: explicit "one of many" so a reader
+    # doesn't mistake the preview for the entire dataset. Pulls
+    # n_subjects + n_records from context when available; otherwise
+    # falls back to the generic "many recordings" phrasing.
+    n_subjects = context.get("n_subjects")
+    n_records = context.get("n_records")
+    scope_bits = []
+    if n_subjects:
+        scope_bits.append(f"{n_subjects} subjects")
+    if n_records:
+        scope_bits.append(f"{n_records} recordings")
+    scope_str = " and ".join(scope_bits) if scope_bits else "many recordings"
+
+    openneuro_url = f"https://openneuro.org/datasets/{dataset_id}"
+
+    # Map suffix to modality name for UI display
+    modality_names = {
+        "eeg": "EEG",
+        "ieeg": "iEEG",
+        "emg": "EMG",
+        "meg": "MEG",
+        "nirs": "fNIRS",
+    }
+    modality_display = modality_names.get(suffix, suffix.upper())
+
+    heading = "Signal Preview\n--------------\n\n"
+    html = (
+        ".. raw:: html\n\n"
+        '   <details class="trace-viewer">\n'
+        f"     <summary>Live trace viewer — <strong>{entity_label}</strong></summary>\n"
+        '     <p class="trace-viewer-caption">\n'
+        "       Showing <strong>one</strong> representative recording out of\n"
+        f"       <strong>{scope_str}</strong> in this dataset.\n"
+        f'       Browse the full set on <a href="{openneuro_url}" target="_blank" rel="noopener">OpenNeuro</a>;\n'
+        f"       drop any other <code>_{suffix}.{{set,edf,bdf,vhdr}}</code> file onto the\n"
+        f"       viewer (or pass <code>?{suffix}=&lt;url&gt;</code>) to inspect it.\n"
+        "     </p>\n"
+        "     <iframe\n"
+        f'       data-src="{iframe_src}"\n'
+        '       loading="lazy"\n'
+        '       width="100%" height="640"\n'
+        '       style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 1200px; display: block; background: transparent;"\n'
+        f'       title="Live {modality_display} trace viewer for {dataset_id} — {entity_label}"\n'
+        '       referrerpolicy="no-referrer">\n'
+        "     </iframe>\n"
+        "   </details>\n"
+    )
+    return heading + html
+
+
 def _format_see_also_section(
     dataset_id: str,
     class_name: str = "",
@@ -3029,6 +3181,7 @@ def _process_dataset_item(
         electrodes_section=_format_electrodes_section(context),
         recording_stats_section=_format_recording_stats_section(context),
         nemar_analysis_section=_format_nemar_analysis_section(context),
+        traces_section=_format_traces_section(context),
         explorer_section=_format_explorer_section(name, context),
         api_section=_format_api_section(name),
         see_also_section=_format_see_also_section(dataset_id, name, related),

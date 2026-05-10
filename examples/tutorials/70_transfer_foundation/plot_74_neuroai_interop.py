@@ -47,7 +47,7 @@ Keywords: interop, NeuroAI, Meta
 # ------------
 # - About 1 min on CPU.
 # - Network on first call (~30 MB into ``cache_dir`` for the EEGDash query).
-# - Prerequisites: :doc:`/auto_examples/tutorials/00_start_here/plot_02_dataset_to_dataloader`
+# - Prerequisites: :doc:`/generated/auto_examples/tutorials/00_start_here/plot_02_dataset_to_dataloader`
 #   (DataLoader basics), :doc:`plot_70_challenge_dataset_basics`
 #   (challenge loader).
 # - Concept: :doc:`/concepts/eegdash_objects`.
@@ -151,7 +151,7 @@ surface_df
 # Step 1. Load one EEGDash recording
 # ----------------------------------
 # Same idiom as
-# :doc:`/auto_examples/tutorials/00_start_here/plot_01_first_recording`.
+# :doc:`/generated/auto_examples/tutorials/00_start_here/plot_01_first_recording`.
 # One subject, one task; the records-level metadata carries BIDS
 # entities forward to every later stage :cite:`pernet2019eegbids`.
 
@@ -370,7 +370,7 @@ seg_card
 # ``collate_fn`` that knows how to stack the dict-of-tensors layout
 # Segmenter emits. The :class:`~torch.utils.data.DataLoader` call
 # below is byte-identical to the one in
-# :doc:`/auto_examples/tutorials/00_start_here/plot_02_dataset_to_dataloader`
+# :doc:`/generated/auto_examples/tutorials/00_start_here/plot_02_dataset_to_dataloader`
 # except for the ``collate_fn`` argument, which is the only line that
 # changes when you move from braindecode windows to NeuralSet
 # segments.
@@ -537,13 +537,13 @@ print("Recovery: drop the trigger_query and pass `stride=WINDOW_SECONDS` instead
 # We took one record of ``ds002718``, fit it into the NeuroAI events
 # schema, and ran NeuralSet's Segmenter to recover a PyTorch dataset
 # the rest of the stack consumes. Next:
-# :doc:`/auto_examples/tutorials/70_transfer_foundation/plot_70_challenge_dataset_basics`
+# :doc:`/generated/auto_examples/tutorials/70_transfer_foundation/plot_70_challenge_dataset_basics`
 # loads the EEG2025 challenge cohort that NeuralBench evaluates on
 # :cite:`aristimunha2025eeg2025paper`;
-# :doc:`/auto_examples/tutorials/70_transfer_foundation/plot_71_cross_task_transfer`
+# :doc:`/generated/auto_examples/tutorials/70_transfer_foundation/plot_71_cross_task_transfer`
 # trains a small encoder across tasks (the territory NeuralTrain
 # automates);
-# :doc:`/auto_examples/tutorials/70_transfer_foundation/plot_73_finetune_pretrained_model`
+# :doc:`/generated/auto_examples/tutorials/70_transfer_foundation/plot_73_finetune_pretrained_model`
 # runs the fine-tune regimes on top of that encoder.
 
 # %% [markdown]

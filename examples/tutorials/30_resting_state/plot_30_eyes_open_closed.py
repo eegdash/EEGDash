@@ -36,8 +36,8 @@ Keywords: classification, resting-state, alpha
 # - About 5 min on CPU on first run; under 45 s once the six subjects
 #   are cached (~120 MB into ``cache_dir``).
 # - Network on first call into ``cache_dir``; offline thereafter.
-# - Prerequisites: :doc:`/auto_examples/tutorials/10_core_workflow/plot_10_preprocess_and_window`,
-#   :doc:`/auto_examples/tutorials/10_core_workflow/plot_11_leakage_safe_split`.
+# - Prerequisites: :doc:`/generated/auto_examples/tutorials/10_core_workflow/plot_10_preprocess_and_window`,
+#   :doc:`/generated/auto_examples/tutorials/10_core_workflow/plot_11_leakage_safe_split`.
 # - Concept: :doc:`/concepts/preprocessing_decisions`.
 
 # %%
@@ -625,9 +625,9 @@ print(
 # the parieto-occipital scalp; the LOSO bars sit well above the
 # majority-class chance level, which is the only honest summary of a
 # cross-subject decoder :cite:`cisotto2024tips`. Next:
-# :doc:`/auto_examples/tutorials/40_features/plot_40_first_features`
+# :doc:`/generated/auto_examples/tutorials/40_features/plot_40_first_features`
 # replaces the hand-rolled Welch features with the EEGDash feature
-# pipeline; :doc:`/auto_examples/tutorials/50_evaluation/plot_51_cross_subject_evaluation`
+# pipeline; :doc:`/generated/auto_examples/tutorials/50_evaluation/plot_51_cross_subject_evaluation`
 # expands the LOSO loop into a full cross-subject evaluation pipeline.
 
 # %% [markdown]
@@ -641,7 +641,7 @@ print(
 # - Swap the flat :class:`~sklearn.linear_model.LogisticRegression`
 #   feature decoder for :class:`~braindecode.models.ShallowFBCSPNet`
 #   trained on the raw windows (see
-#   :doc:`/auto_examples/tutorials/10_core_workflow/plot_12_train_a_baseline`).
+#   :doc:`/generated/auto_examples/tutorials/10_core_workflow/plot_12_train_a_baseline`).
 
 # %% [markdown]
 # References

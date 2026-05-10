@@ -40,8 +40,8 @@ on one node by tuning ``n_jobs`` and ``batch_size``, then persist the
 #
 # Prerequisites
 # -------------
-# - Completed :doc:`/auto_examples/tutorials/40_features/plot_40_first_features`.
-# - Read :doc:`/auto_examples/how_to/how_to_use_hpc_cache` so you know where
+# - Completed :doc:`/generated/auto_examples/tutorials/40_features/plot_40_first_features`.
+# - Read :doc:`/generated/auto_examples/how_to/how_to_use_hpc_cache` so you know where
 #   ``EEGDASH_CACHE`` and ``EEGDASH_FEATURES_CACHE`` should point.
 # - Local Python with :mod:`braindecode`, :mod:`mne`, :mod:`joblib`, :mod:`pyarrow`.
 
@@ -225,9 +225,9 @@ print(f"checkpoint -> {extractor_path.name} (keys={list(reused)})")
 #
 # See also
 # --------
-# - :doc:`/auto_examples/tutorials/40_features/plot_41_feature_trees` --
+# - :doc:`/generated/auto_examples/tutorials/40_features/plot_41_feature_trees` --
 #   shared-preprocessor pipelines that amplify the speedup here.
-# - :doc:`/auto_examples/how_to/how_to_use_hpc_cache` -- placing
+# - :doc:`/generated/auto_examples/how_to/how_to_use_hpc_cache` -- placing
 #   ``EEGDASH_CACHE`` on local NVMe.
 #
 # References

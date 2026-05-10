@@ -184,11 +184,11 @@ if len(top_level) > 10:
 # See also
 # --------
 #
-# - :doc:`how_to_work_offline </auto_examples/how_to/how_to_work_offline>`
+# - :doc:`how_to_work_offline </generated/auto_examples/how_to/how_to_work_offline>`
 #   -- consume the cache populated above with ``download=False``.
-# - :doc:`/concepts/lazy_loading_and_cache` -- how the cache is laid out
+# - :ref:`concepts-lazy-loading-and-cache` -- how the cache is laid out
 #   and when files are materialised.
-# - :doc:`plot_01_first_recording </auto_examples/tutorials/00_start_here/plot_01_first_recording>`
+# - :doc:`plot_01_first_recording </generated/auto_examples/tutorials/00_start_here/plot_01_first_recording>`
 #   -- the prerequisite single-recording tutorial.
 #
 # References

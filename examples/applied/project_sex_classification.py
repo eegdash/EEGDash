@@ -65,8 +65,8 @@ Keywords: classification, applied, sex
 # - About 3 to 5 minutes on CPU on first run (network pull of six
 #   ds005505 ``.set`` files); under 30 s once cached.
 # - Prerequisites:
-#   :doc:`/auto_examples/tutorials/10_core_workflow/plot_11_leakage_safe_split`,
-#   :doc:`/auto_examples/tutorials/40_features/plot_42_features_to_sklearn`.
+#   :doc:`/generated/auto_examples/tutorials/10_core_workflow/plot_11_leakage_safe_split`,
+#   :doc:`/generated/auto_examples/tutorials/40_features/plot_42_features_to_sklearn`.
 # - Concept: :doc:`/concepts/features_vs_deep_learning`.
 
 # %% [markdown]

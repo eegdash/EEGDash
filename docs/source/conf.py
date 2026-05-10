@@ -2305,13 +2305,13 @@ def _format_electrodes_section(context: Mapping[str, object]) -> str:
 
 _TRACE_VIEWER_BASE = "https://eegdash.github.io/eegdash-viewer/"
 _TRACE_API_URL = "https://data.eegdash.org/api/eegdash/records"
-_TRACE_SUPPORTED_EXT = (".set", ".edf", ".bdf", ".vhdr")
+_TRACE_SUPPORTED_EXT = (".set", ".edf", ".bdf", ".vhdr", ".fif", ".fiff")
 
 
 def _get_first_eeg_record(dataset_id: str) -> dict[str, object] | None:
     """Query eegdash API for the first supported electrophysiology record.
 
-    Searches for any compatible modality (EEG, iEEG, EMG) that can be viewed
+    Searches for any compatible modality (EEG, iEEG, EMG, MEG) that can be viewed
     with the eegdash-viewer, prioritizing EEG.
     """
     import urllib.parse
@@ -2319,7 +2319,7 @@ def _get_first_eeg_record(dataset_id: str) -> dict[str, object] | None:
 
     query = {
         "dataset": dataset_id,
-        "suffix": {"$in": ["eeg", "ieeg", "emg"]},
+        "suffix": {"$in": ["eeg", "ieeg", "emg", "meg"]},
         "extension": {"$in": list(_TRACE_SUPPORTED_EXT)},
         "_has_missing_files": {"$ne": True},
     }

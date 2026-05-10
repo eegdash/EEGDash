@@ -17,7 +17,6 @@ from conftest.py to ensure consistent caching and avoid redundant downloads.
 import time
 
 import pytest
-
 from tests_support.bids_helpers import is_bids_dataset_available
 
 # Module-level skip if dataset not available

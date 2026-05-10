@@ -47,9 +47,9 @@ Keywords: evaluation, MOABB, benchmarking
 # Requirements
 # ------------
 #
-# - Prerequisites: :doc:`/auto_examples/tutorials/10_core_workflow/plot_11_leakage_safe_split`,
-#   :doc:`/auto_examples/tutorials/10_core_workflow/plot_12_train_a_baseline`,
-#   :doc:`/auto_examples/tutorials/50_evaluation/plot_51_cross_subject_evaluation`.
+# - Prerequisites: :doc:`/generated/auto_examples/tutorials/10_core_workflow/plot_11_leakage_safe_split`,
+#   :doc:`/generated/auto_examples/tutorials/10_core_workflow/plot_12_train_a_baseline`,
+#   :doc:`/generated/auto_examples/tutorials/50_evaluation/plot_51_cross_subject_evaluation`.
 # - Concept: :doc:`/concepts/leakage_and_evaluation`.
 # - About 3-5 min on CPU once both ``ds002718`` and ``BNCI2014_001``
 #   are cached. Network on first run only (cached thereafter via MNE).

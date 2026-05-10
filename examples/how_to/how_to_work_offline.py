@@ -24,7 +24,7 @@ Keywords: offline, cache, metadata
 #   first run only).
 # - You have already populated the cache via
 #   ``how_to_download_a_dataset`` (or ``download_all`` below).
-# - Concept: [docs/source/concepts/lazy_loading_and_cache.rst](../../docs/source/concepts/lazy_loading_and_cache.rst).
+# - Concept: [docs/source/concepts/eegdash_objects.rst](../../docs/source/concepts/eegdash_objects.rst).
 # - Data: HBN release ``R2`` (OpenNeuro ``ds005506``), task
 #   ``RestingState``, ``mini=True`` subset (<200 MB).
 
@@ -191,7 +191,7 @@ print("offline cache is complete.")
 #   the cache before going offline.
 # - [how_to_use_hpc_cache](how_to_use_hpc_cache.py) -- stage the cache
 #   onto local-node storage for IO-bound jobs.
-# - Concept: [docs/source/concepts/lazy_loading_and_cache.rst](../../docs/source/concepts/lazy_loading_and_cache.rst).
+# - Concept: [docs/source/concepts/eegdash_objects.rst](../../docs/source/concepts/eegdash_objects.rst).
 
 # %% [markdown]
 # References

@@ -23,7 +23,7 @@ Validate your result
   ``theta_Cz``, ``alpha_Cz``, ``beta_Cz``, ``gamma_Cz``, plus connectivity
   and entropy features, and the target ``p_factor``.
 - **Related Material.** See :doc:`project_pfactor_deep` for a deep learning
-  approach and the :doc:`/auto_examples/eeg2025/index` for the official
+  approach and the :doc:`/generated/auto_examples/eeg2025/index` for the official
   challenge tracks.
 
 The deliverable is a feature-importance panel plus the regression
@@ -53,9 +53,9 @@ Keywords: features, applied, p-factor
 # Requirements
 # ------------
 # - Around 30 s on CPU. No GPU. No live network.
-# - Prereqs: :doc:`/auto_examples/tutorials/40_features/plot_42_features_to_sklearn`
+# - Prereqs: :doc:`/generated/auto_examples/tutorials/40_features/plot_42_features_to_sklearn`
 #   for the features-to-sklearn idiom and
-#   :doc:`/auto_examples/tutorials/70_transfer_foundation/plot_72_subject_invariant_regression`
+#   :doc:`/generated/auto_examples/tutorials/70_transfer_foundation/plot_72_subject_invariant_regression`
 #   for the cross-subject regression contract this study satisfies.
 # - Concept page: :doc:`/concepts/leakage_and_evaluation`.
 

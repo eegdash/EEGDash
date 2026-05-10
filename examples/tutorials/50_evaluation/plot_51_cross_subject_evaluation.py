@@ -52,7 +52,7 @@ Keywords: evaluation, cross-subject, generalization
 # Requirements
 # ------------
 #
-# - Prerequisites: :doc:`/auto_examples/tutorials/10_core_workflow/plot_11_leakage_safe_split` (cross-subject splits) and ``plot_12_train_a_baseline`` (one model on one split).
+# - Prerequisites: :doc:`/generated/auto_examples/tutorials/10_core_workflow/plot_11_leakage_safe_split` (cross-subject splits) and ``plot_12_train_a_baseline`` (one model on one split).
 # - About 30 s on CPU. No network: the cohort is built in-script.
 # - Concept: :doc:`/concepts/leakage_and_evaluation`.
 

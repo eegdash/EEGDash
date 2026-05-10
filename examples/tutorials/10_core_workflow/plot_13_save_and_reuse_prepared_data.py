@@ -57,9 +57,9 @@ Keywords: offline, caching, I/O
 #   offline (E3.24). Every artifact is routed through
 #   :func:`tempfile.mkdtemp` so we never write outside ``/tmp``.
 # - Prerequisites:
-#   :doc:`/auto_examples/tutorials/10_core_workflow/plot_10_preprocess_and_window`
+#   :doc:`/generated/auto_examples/tutorials/10_core_workflow/plot_10_preprocess_and_window`
 #   (how a windowed ``BaseConcatDataset`` is built) and
-#   :doc:`/auto_examples/tutorials/40_features/plot_40_first_features` (how
+#   :doc:`/generated/auto_examples/tutorials/40_features/plot_40_first_features` (how
 #   a feature row maps to a window). Concept reference:
 #   :doc:`/concepts/eegdash_objects`.
 
@@ -538,9 +538,9 @@ print("cleanup OK")
 # You can now stop paying the preprocessing cost on every kernel
 # restart; downstream tutorials consume the saved artifact directly.
 # Next:
-# :doc:`/auto_examples/tutorials/40_features/plot_40_first_features`
+# :doc:`/generated/auto_examples/tutorials/40_features/plot_40_first_features`
 # extracts a real feature table from cached windows;
-# :doc:`/auto_examples/how_to/how_to_work_offline`
+# :doc:`/generated/auto_examples/how_to/how_to_work_offline`
 # walks through the cache contract for sealed-environment runs.
 
 # %% [markdown]

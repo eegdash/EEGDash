@@ -51,7 +51,7 @@ Keywords: transfer-learning, fine-tuning, pretrained
 # - **Estimated time**: ~60 s on CPU, ~15 s on GPU.
 # - **Data downloaded**: 0 MB (synthetic windows; deterministic seed).
 # - **Prerequisites**: :doc:`plot_71_cross_task_transfer` (encoder
-#   snapshot), :doc:`/auto_examples/tutorials/10_core_workflow/plot_11_leakage_safe_split`
+#   snapshot), :doc:`/generated/auto_examples/tutorials/10_core_workflow/plot_11_leakage_safe_split`
 #   (cross-subject split).
 # - **Concept page**: :doc:`/concepts/features_vs_deep_learning`.
 
@@ -493,7 +493,7 @@ print(
 #   :class:`~braindecode.models.EEGNetv4` and rerun the three regimes.
 # - Hold out two subjects and report mean +/- std across folds.
 # - Replace synth data with a windowed EEGDash query
-#   (:doc:`/auto_examples/tutorials/10_core_workflow/plot_10_preprocess_and_window`).
+#   (:doc:`/generated/auto_examples/tutorials/10_core_workflow/plot_10_preprocess_and_window`).
 
 # %% [markdown]
 # References

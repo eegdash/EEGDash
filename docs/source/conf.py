@@ -2298,138 +2298,33 @@ def _format_electrodes_section(context: Mapping[str, object]) -> str:
 
 
 # ---------------------------------------------------------------------------
-# Trace viewer iframe: live signal preview from the eegdash-viewer
-# (https://eegdash.github.io/eegdash-viewer/) embedded as a lazy iframe.
-# Same lazy-load pattern as the electrode-explorer above (see lazy-embed.js):
-# zero bytes are fetched from the viewer or its CDN until a reader expands
-# the <details>.
+# Trace viewer iframe: simple lazy-loaded embed of eegdash-viewer
+# (https://eegdash.github.io/eegdash-viewer/) passing dataset ID.
+# Uses native iframe loading="lazy" (no JS, no manifest).
 # ---------------------------------------------------------------------------
 
 _TRACE_VIEWER_BASE = "https://eegdash.github.io/eegdash-viewer/"
 
-_traces_recordings_cache: dict[str, object] | None = None
-
-
-def _load_traces_recordings() -> Mapping[str, Mapping[str, object]]:
-    """Read the trace-viewer recordings manifest (cached across calls).
-
-    Missing file or malformed JSON degrades silently to empty — dataset
-    pages then render no traces section instead of broken iframes.
-    """
-    global _traces_recordings_cache
-    if _traces_recordings_cache is not None:
-        return _traces_recordings_cache  # type: ignore[return-value]
-    path = (
-        Path(__file__).parent
-        / "_static"
-        / "dataset_generated"
-        / "traces-viewer-recordings.json"
-    )
-    try:
-        doc = json.loads(path.read_text(encoding="utf-8"))
-        recordings = doc.get("recordings", {})
-        if not isinstance(recordings, dict):
-            recordings = {}
-    except (FileNotFoundError, json.JSONDecodeError) as exc:
-        LOGGER.info("[traces-viewer] manifest unavailable (%s); section omitted", exc)
-        recordings = {}
-    _traces_recordings_cache = recordings
-    return recordings
-
 
 def _format_traces_section(context: Mapping[str, object]) -> str:
-    """Render a lazy <details><iframe> block for this dataset's signal preview.
-
-    The iframe shows ONE representative recording out of the many that
-    typically make up an OpenNeuro EEG dataset. Both the disclosure
-    summary and a short caption above the iframe make this explicit so
-    a reader doesn't mistake one example for the whole dataset.
-
-    If the manifest doesn't have an entry for this dataset_id we just
-    omit the section entirely (no placeholder) — the electrode-layout
-    section already shows when a dataset is recognised, and double-
-    placeholders would clutter the catalogue page.
-    """
+    """Render a lazy <iframe> with just dataset_id for signal preview."""
     dataset_id = str(context.get("dataset_id") or "").strip().lower()
     if not dataset_id:
         return ""
 
-    recordings = _load_traces_recordings()
-    entry = recordings.get(dataset_id)
-    if not entry:
-        return ""
-
-    # Required fields
-    sub = str(entry.get("sub") or "").strip()
-    task = str(entry.get("task") or "").strip()
-    ext = str(entry.get("ext") or "").strip()
-    if not sub or not task or not ext:
-        return ""
-
-    # Build the viewer URL
-    from urllib.parse import urlencode
-
-    qs_pairs = [("dataset", dataset_id), ("sub", sub), ("task", task)]
-    ses = entry.get("ses")
-    if ses:
-        qs_pairs.append(("ses", str(ses)))
-    run = entry.get("run")
-    if run:
-        qs_pairs.append(("run", str(run)))
-    qs_pairs.append(("ext", ext))
-    qs_pairs.append(("embed", "1"))
-    iframe_src = f"{_TRACE_VIEWER_BASE}?{urlencode(qs_pairs)}"
-
-    # Build a recording label that names the specific entity tuple in
-    # BIDS notation (sub-NN · task-XX · run-NN). This makes the
-    # disclosure summary explicit about *which* recording is shown,
-    # separate from the format/channel-count "label" in the manifest.
-    fmt_label = str(entry.get("label") or "Signal preview").strip()
-    entity_bits = [f"sub-{sub}"]
-    if ses:
-        entity_bits.append(f"ses-{ses}")
-    entity_bits.append(f"task-{task}")
-    if run:
-        entity_bits.append(f"run-{run}")
-    entity_label = " · ".join(entity_bits)
-
-    # Caption above the iframe: explicit "one of many" so a reader
-    # doesn't mistake the preview for the entire dataset. Pulls
-    # n_subjects + n_records from context when available; otherwise
-    # falls back to the generic "many recordings" phrasing.
-    n_subjects = context.get("n_subjects")
-    n_records = context.get("n_records")
-    scope_bits = []
-    if n_subjects:
-        scope_bits.append(f"{n_subjects} subjects")
-    if n_records:
-        scope_bits.append(f"{n_records} recordings")
-    scope_str = " and ".join(scope_bits) if scope_bits else "many recordings"
-
-    openneuro_url = f"https://openneuro.org/datasets/{dataset_id}"
+    iframe_src = f"{_TRACE_VIEWER_BASE}?dataset={dataset_id}&embed=1"
 
     heading = "Signal Preview\n--------------\n\n"
     html = (
         ".. raw:: html\n\n"
-        '   <details class="trace-viewer">\n'
-        f"     <summary>Live trace viewer — <strong>{entity_label}</strong> "
-        f'<span class="trace-viewer-fmt">({fmt_label})</span></summary>\n'
-        '     <p class="trace-viewer-caption">\n'
-        "       Showing <strong>one</strong> representative recording out of\n"
-        f"       <strong>{scope_str}</strong> in this dataset.\n"
-        f'       Browse the full set on <a href="{openneuro_url}" target="_blank" rel="noopener">OpenNeuro</a>;\n'
-        "       drop any other <code>_eeg.{set,edf,bdf,vhdr}</code> file onto the\n"
-        "       viewer (or pass <code>?eeg=&lt;url&gt;</code>) to inspect it.\n"
-        "     </p>\n"
-        "     <iframe\n"
-        f'       data-src="{iframe_src}"\n'
-        '       loading="lazy"\n'
-        '       width="100%" height="640"\n'
-        '       style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 1200px; display: block; background: transparent;"\n'
-        f'       title="Live EEG trace viewer for {dataset_id} — {entity_label}"\n'
-        '       referrerpolicy="no-referrer">\n'
-        "     </iframe>\n"
-        "   </details>\n"
+        "   <iframe\n"
+        f'     src="{iframe_src}"\n'
+        '     loading="lazy"\n'
+        '     width="100%" height="640"\n'
+        '     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 1200px; display: block; background: transparent;"\n'
+        f'     title="Live EEG trace viewer for {dataset_id}"\n'
+        '     referrerpolicy="no-referrer">\n'
+        "   </iframe>\n"
     )
     return heading + html
 

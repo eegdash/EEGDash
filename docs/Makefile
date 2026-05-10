@@ -10,7 +10,7 @@ APIDIR := $(SOURCEDIR)/api
 # Shared cache so tutorials find data regardless of sphinx CWD (mirrors CI's EEGDASH_CACHE_DIR).
 EEGDASH_CACHE_DIR ?= $(CURDIR)/../.eegdash_cache
 
-.PHONY: help clean apidoc llms-txt html html-noplot html-fast markdown electrode-layouts traces-recordings
+.PHONY: help clean apidoc llms-txt html html-noplot html-fast markdown electrode-layouts
 
 help:
 	@$(SPHINXBUILD) -M help "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
@@ -34,21 +34,14 @@ llms-txt: apidoc
 electrode-layouts:
 	@python build_electrode_layouts.py --keep-existing-on-empty || true
 
-# Refresh source/_static/dataset_generated/traces-viewer-recordings.json —
-# maps dataset_id → representative recording URL params for the
-# eegdash-viewer iframe embedded on each dataset page. Hand-curated
-# manifest today; future work: query the eegdash recording index.
-traces-recordings:
-	@python build_traces_recordings.py
-
 # Standard build runs examples
-html: apidoc llms-txt electrode-layouts traces-recordings
+html: apidoc llms-txt electrode-layouts
 	EEGDASH_CACHE_DIR=$(EEGDASH_CACHE_DIR) python prepare_summary_tables.py --target $(BUILDDIR)
 	EEGDASH_DATASET_REGISTRY_FROM_API=1 EEGDASH_CACHE_DIR=$(EEGDASH_CACHE_DIR) $(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 	@python fingerprint_assets.py --html-dir "$(BUILDDIR)/html"
 
 # Fast build: do NOT execute examples (sphinx-gallery)
-html-noplot: apidoc llms-txt electrode-layouts traces-recordings
+html-noplot: apidoc llms-txt electrode-layouts
 	@EEGDASH_CACHE_DIR=$(EEGDASH_CACHE_DIR) python prepare_summary_tables.py --target $(BUILDDIR)
 	@EEGDASH_DATASET_REGISTRY_FROM_API=1 EEGDASH_CACHE_DIR=$(EEGDASH_CACHE_DIR) $(SPHINXBUILD) -M html "$(SOURCEDIR)" "$(BUILDDIR)" \
 		$(SPHINXOPTS) -D sphinx_gallery_conf.plot_gallery=0 $(O)

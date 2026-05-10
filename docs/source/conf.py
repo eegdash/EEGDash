@@ -62,6 +62,7 @@ extensions = [
     "sphinx_copybutton",
     "sphinx_time_estimation",
     "sphinxcontrib.bibtex",
+    "dataset_explorer",
 ]
 
 # Centralized bibliography (see docs/source/refs.bib + references.rst).
@@ -493,6 +494,8 @@ Technical Details
 {recording_stats_section}
 
 {nemar_analysis_section}
+
+{explorer_section}
 
 API Reference
 -------------
@@ -2682,6 +2685,36 @@ def _format_nemar_analysis_section(context: Mapping[str, object]) -> str:
     return heading + description + html_histogram + html_wordcloud
 
 
+_EXPLORER_DATASET_RE = re.compile(r"^[A-Za-z0-9_\-]{1,64}$")
+
+
+def _format_explorer_section(name: str, context: Mapping[str, object]) -> str:
+    """Render the BIDS file explorer for this dataset.
+
+    Emits a ``.. dataset-explorer::`` directive for the catalog class
+    name. The browser-side widget fetches records lazily from the
+    EEGDash API the first time the user interacts with it, so there is
+    no per-page build cost beyond the static directive output.
+
+    Returns an empty string if ``name`` is not a safe identifier — this
+    is the same gate the directive itself enforces, applied here so
+    ``DATASET_PAGE_TEMPLATE`` collapses cleanly for any pathological
+    class name rather than failing the whole build.
+    """
+    safe = (name or "").strip()
+    if not safe or not _EXPLORER_DATASET_RE.match(safe):
+        return ""
+
+    heading = "File Explorer\n-------------\n\n"
+    description = (
+        "Browse the BIDS file structure of this dataset. Records are "
+        "fetched on demand from the EEGDash catalog the first time "
+        "you open the explorer.\n\n"
+    )
+    directive = f".. dataset-explorer::\n   :dataset: {safe}\n"
+    return heading + description + directive
+
+
 def _format_see_also_section(
     dataset_id: str,
     class_name: str = "",
@@ -2996,6 +3029,7 @@ def _process_dataset_item(
         electrodes_section=_format_electrodes_section(context),
         recording_stats_section=_format_recording_stats_section(context),
         nemar_analysis_section=_format_nemar_analysis_section(context),
+        explorer_section=_format_explorer_section(name, context),
         api_section=_format_api_section(name),
         see_also_section=_format_see_also_section(dataset_id, name, related),
         feedback_section=_format_feedback_section(dataset_id, dataset_title),

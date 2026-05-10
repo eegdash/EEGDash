@@ -24,12 +24,17 @@ class DatasetExplorerDirective(Directive):
         "dataset": directives.unchanged,
     }
 
+    # Allow any safe dataset identifier: letters, digits, underscore, hyphen.
+    # Catalog uses many shapes (DS002718, BNCI2020, EEG2025R1, LEMON, ...),
+    # so reject only path-traversal / template-injection characters.
+    _DATASET_ID_RE = re.compile(r"^[A-Za-z0-9_\-]{1,64}$")
+
     def run(self) -> list:
         dataset_id: str = self.options.get("dataset", "ds002718")
 
-        if not re.match(r"^ds\d+$", dataset_id):
+        if not self._DATASET_ID_RE.match(dataset_id):
             raise self.error(
-                f"Invalid dataset_id: {dataset_id}. Expected format: ds<digits> (e.g., ds002718)"
+                f"Invalid dataset_id: {dataset_id!r}. Must match [A-Za-z0-9_-]{{1,64}}."
             )
 
         template_path: Path = (

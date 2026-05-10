@@ -62,6 +62,7 @@ extensions = [
     "sphinx_copybutton",
     "sphinx_time_estimation",
     "sphinxcontrib.bibtex",
+    "dataset_explorer",
 ]
 
 # Centralized bibliography (see docs/source/refs.bib + references.rst).
@@ -490,7 +491,13 @@ Technical Details
 
 {electrodes_section}
 
+{recording_stats_section}
+
+{nemar_analysis_section}
+
 {traces_section}
+
+{explorer_section}
 
 API Reference
 -------------
@@ -917,6 +924,11 @@ def _fetch_dataset_details_from_api(dataset_id: str) -> dict[str, object]:
         "recording_modality": ds.get("recording_modality", []),
         "size_bytes": ds.get("size_bytes"),
         "source": _clean_value(ds.get("source")),
+        "demographics": ds.get("demographics"),
+        "nchans_counts": ds.get("nchans_counts"),
+        "sfreq_counts": ds.get("sfreq_counts"),
+        "total_duration_s": ds.get("total_duration_s"),
+        "bad_channels_info": ds.get("bad_channels_info"),
     }
 
     # Extract source URL from external_links
@@ -1103,6 +1115,11 @@ def _build_dataset_context(
         "format": dataset_format,
         "readme": _clean_value(details.get("readme")),
         "nemar_citation_count": _clean_value((row or {}).get("nemar_citation_count")),
+        "demographics": details.get("demographics") or {},
+        "nchans_counts": details.get("nchans_counts") or [],
+        "sfreq_counts": details.get("sfreq_counts") or [],
+        "total_duration_s": details.get("total_duration_s"),
+        "bad_channels_info": details.get("bad_channels_info"),
     }
 
 
@@ -2297,6 +2314,409 @@ def _format_electrodes_section(context: Mapping[str, object]) -> str:
     return heading + html
 
 
+def _make_count_bar_chart(
+    entries: list,
+    label: str,
+    unit: str,
+    bar_color: str = "#4472c4",
+) -> str:
+    """Render a compact vertical bar chart for a count distribution as RST raw HTML."""
+    if not entries:
+        return ""
+    vals = [(e.get("val"), e.get("count")) for e in entries if e.get("val") is not None]
+    if not vals:
+        return ""
+    if len(vals) == 1:
+        return (
+            ".. raw:: html\n\n"
+            '   <div class="eegdash-stats-section" style="margin-bottom:1rem;">\n'
+            f"     <p><strong>{label}</strong>: {vals[0][0]} {unit}"
+            f" (n={vals[0][1]} recordings)</p>\n"
+            "   </div>\n\n"
+        )
+    max_count = max(c for _, c in vals)
+    bar_width = 28
+    bars_html = ""
+    labels_html = ""
+    for val, count in sorted(vals, key=lambda x: x[0]):
+        pct = int(count / max_count * 100) if max_count else 0
+        val_label = str(int(val)) if float(val) == int(float(val)) else f"{val:.1f}"
+        bars_html += (
+            f'<div style="width:{bar_width}px; height:{pct}%; '
+            f'background:{bar_color}; flex-shrink:0;" '
+            f'title="{val_label} {unit}: {count}"></div>'
+        )
+        labels_html += (
+            f'<span style="width:{bar_width}px; text-align:center; '
+            f'overflow:hidden; white-space:nowrap; font-size:9px;">{val_label}</span>'
+        )
+    return (
+        ".. raw:: html\n\n"
+        '   <div class="eegdash-stats-section" style="margin-bottom:1rem;">\n'
+        f"     <p><strong>{label}</strong> ({unit})</p>\n"
+        '     <div class="eeg-chart-row" style="display:flex; align-items:flex-end; '
+        'gap:2px; height:60px;">\n'
+        f"       {bars_html}\n"
+        "     </div>\n"
+        '     <div class="eeg-chart-labels" style="display:flex; gap:2px; font-size:10px;">\n'
+        f"       {labels_html}\n"
+        "     </div>\n"
+        "   </div>\n\n"
+    )
+
+
+# BIDS sex column (objects/columns.yaml) defines three phenotypical categories,
+# each with a short and long form, all case-insensitive.
+# Keys outside all three sets are treated as unknown and folded into "Other".
+_BIDS_FEMALE_KEYS = {"f", "female"}
+_BIDS_MALE_KEYS = {"m", "male"}
+_BIDS_OTHER_KEYS = {"o", "other"}
+
+
+def _format_recording_stats_section(context: Mapping[str, object]) -> str:
+    """Generate a Dataset Statistics section from EEGDash API data.
+
+    Renders inline HTML bar charts and text stats for age distribution,
+    sex distribution, channel counts, sampling frequencies, and total
+    recording duration.  Returns an empty string when no useful data
+    is present so the template placeholder collapses silently.
+    """
+    demographics: dict = context.get("demographics") or {}
+    nchans_counts: list = context.get("nchans_counts") or []
+    sfreq_counts: list = context.get("sfreq_counts") or []
+    total_duration_s = context.get("total_duration_s")
+    bad_channels_info: dict | None = context.get("bad_channels_info")
+
+    ages: list = demographics.get("ages") or []
+    sex_dist: dict = demographics.get("sex_distribution") or {}
+
+    has_ages = bool(ages)
+    has_sex = bool(sex_dist)
+    has_nchans = bool(nchans_counts)
+    has_sfreq = bool(sfreq_counts)
+    has_duration = total_duration_s is not None
+    has_bad_channels = bad_channels_info is not None
+
+    if not any(
+        (has_ages, has_sex, has_nchans, has_sfreq, has_duration, has_bad_channels)
+    ):
+        return ""
+
+    heading = "Dataset Statistics\n------------------\n\n"
+    parts: list[str] = []
+
+    # ------------------------------------------------------------------
+    # A. Age distribution bar chart
+    # ------------------------------------------------------------------
+    if has_ages:
+        valid_ages = [float(a) for a in ages if a is not None]
+        if valid_ages:
+            age_min = min(valid_ages)
+            age_max = max(valid_ages)
+            bucket_size = 5
+            buckets: Counter[int] = Counter(
+                int(float(a) // bucket_size) * bucket_size for a in valid_ages
+            )
+            max_count = max(buckets.values())
+            bar_width = 28
+
+            bars_html = ""
+            labels_html = ""
+            for start in sorted(buckets):
+                count = buckets[start]
+                pct = int(count / max_count * 100)
+                label = f"{start}-{start + bucket_size - 1}"
+                bars_html += (
+                    f'<div style="width:{bar_width}px; height:{pct}%; '
+                    f'background:#4472c4; flex-shrink:0;" '
+                    f'title="{label}: {count}"></div>'
+                )
+                labels_html += (
+                    f'<span style="width:{bar_width}px; text-align:center; '
+                    f'overflow:hidden; white-space:nowrap;">{start}</span>'
+                )
+
+            age_html = (
+                ".. raw:: html\n\n"
+                '   <div class="eegdash-stats-section" style="margin-bottom:1rem;">\n'
+                "     <p><strong>Age distribution</strong> "
+                f"(n={len(valid_ages)}, range {age_min:.0f}–{age_max:.0f} yr)</p>\n"
+                '     <div class="eeg-chart-row" style="display:flex; align-items:flex-end; '
+                'gap:2px; height:60px;">\n'
+                f"       {bars_html}\n"
+                "     </div>\n"
+                '     <div class="eeg-chart-labels" style="display:flex; gap:2px; font-size:10px;">\n'
+                f"       {labels_html}\n"
+                "     </div>\n"
+                "   </div>\n\n"
+            )
+            parts.append(age_html)
+
+    # ------------------------------------------------------------------
+    # B. Sex distribution horizontal bar
+    # ------------------------------------------------------------------
+    if has_sex:
+        _known_keys = _BIDS_FEMALE_KEYS | _BIDS_MALE_KEYS | _BIDS_OTHER_KEYS
+        f_count = sum(
+            int(v or 0) for k, v in sex_dist.items() if k.lower() in _BIDS_FEMALE_KEYS
+        )
+        m_count = sum(
+            int(v or 0) for k, v in sex_dist.items() if k.lower() in _BIDS_MALE_KEYS
+        )
+        # Explicit BIDS "other" (o/other) + any non-spec keys (n/a, unknown, …)
+        o_count = sum(
+            int(v or 0)
+            for k, v in sex_dist.items()
+            if k.lower() not in _BIDS_FEMALE_KEYS | _BIDS_MALE_KEYS
+        )
+        total_sex = f_count + m_count + o_count
+
+        if total_sex > 0:
+            f_pct = f_count / total_sex * 100
+            m_pct = m_count / total_sex * 100
+            o_pct = o_count / total_sex * 100
+
+            bar_segments = ""
+            if f_count:
+                bar_segments += (
+                    f'<div style="width:{f_pct:.1f}%; background:#e07ab5; '
+                    "display:inline-flex; align-items:center; justify-content:center; "
+                    f'color:#fff; font-size:11px; min-width:2px;" title="Female: {f_count}">'
+                    f"{f_count if f_pct >= 8 else ''}</div>"
+                )
+            if m_count:
+                bar_segments += (
+                    f'<div style="width:{m_pct:.1f}%; background:#4472c4; '
+                    "display:inline-flex; align-items:center; justify-content:center; "
+                    f'color:#fff; font-size:11px; min-width:2px;" title="Male: {m_count}">'
+                    f"{m_count if m_pct >= 8 else ''}</div>"
+                )
+            if o_count:
+                bar_segments += (
+                    f'<div style="width:{o_pct:.1f}%; background:#999; '
+                    "display:inline-flex; align-items:center; justify-content:center; "
+                    f'color:#fff; font-size:11px; min-width:2px;" title="Other: {o_count}">'
+                    f"{o_count if o_pct >= 8 else ''}</div>"
+                )
+
+            legend = []
+            if f_count:
+                legend.append(
+                    '<span style="display:inline-block;width:12px;height:12px;'
+                    'background:#e07ab5;border-radius:2px;margin-right:4px;"></span>Female'
+                )
+            if m_count:
+                legend.append(
+                    '<span style="display:inline-block;width:12px;height:12px;'
+                    'background:#4472c4;border-radius:2px;margin-right:4px;"></span>Male'
+                )
+            if o_count:
+                legend.append(
+                    '<span style="display:inline-block;width:12px;height:12px;'
+                    'background:#999;border-radius:2px;margin-right:4px;"></span>Other'
+                )
+            legend_html = (
+                '<div style="font-size:11px;margin-top:4px;">'
+                + "&nbsp;&nbsp;".join(legend)
+                + f"&nbsp;&nbsp;<strong>Total: {total_sex}</strong></div>"
+            )
+
+            sex_html = (
+                ".. raw:: html\n\n"
+                '   <div class="eegdash-stats-section" style="margin-bottom:1rem;">\n'
+                "     <p><strong>Sex distribution</strong></p>\n"
+                '     <div style="display:flex; height:22px; width:100%; max-width:400px; '
+                'border-radius:4px; overflow:hidden;">\n'
+                f"       {bar_segments}\n"
+                "     </div>\n"
+                f"     {legend_html}\n"
+                "   </div>\n\n"
+            )
+            parts.append(sex_html)
+
+    # ------------------------------------------------------------------
+    # C. Channel count distribution
+    # ------------------------------------------------------------------
+    if has_nchans:
+        parts.append(
+            _make_count_bar_chart(
+                nchans_counts, "Channel counts", "ch", bar_color="#009E73"
+            )
+        )
+
+    # ------------------------------------------------------------------
+    # D. Sampling frequency distribution
+    # ------------------------------------------------------------------
+    if has_sfreq:
+        parts.append(
+            _make_count_bar_chart(
+                sfreq_counts, "Sampling frequencies", "Hz", bar_color="#D55E00"
+            )
+        )
+
+    # ------------------------------------------------------------------
+    # E. Total recording duration
+    # ------------------------------------------------------------------
+    if has_duration:
+        try:
+            total_s = float(total_duration_s)
+            total_h = int(total_s // 3600)
+            remaining_m = int((total_s % 3600) // 60)
+            if total_h >= 24:
+                duration_str = f"{total_h} h"
+            else:
+                duration_str = (
+                    f"{total_h} h {remaining_m} min"
+                    if total_h
+                    else f"{remaining_m} min"
+                )
+            duration_html = (
+                ".. raw:: html\n\n"
+                '   <div class="eegdash-stats-section" style="margin-bottom:1rem;">\n'
+                f"     <p><strong>Total recording duration</strong>: {duration_str}</p>\n"
+                "   </div>\n\n"
+            )
+            parts.append(duration_html)
+        except (TypeError, ValueError):
+            pass
+
+    # ------------------------------------------------------------------
+    # F. BIDS-annotated channel retention
+    # ------------------------------------------------------------------
+    if has_bad_channels:
+        try:
+            retained_pct = float(bad_channels_info["mean_retained_pct"])  # type: ignore[index]
+            n_annotated = int(bad_channels_info["n_annotated"])  # type: ignore[index]
+            bar_pct = int(retained_pct)
+            # Colour: green (good retention) → red (poor retention)
+            r = int(255 * (1 - retained_pct / 100))
+            g = int(200 * retained_pct / 100)
+            bar_color = f"rgb({r},{g},50)"
+            bad_ch_html = (
+                ".. raw:: html\n\n"
+                '   <div class="eegdash-stats-section" style="margin-bottom:1rem;">\n'
+                "     <p><strong>Channels retained (BIDS annotation)</strong>"
+                f" — {retained_pct:.1f}% average across {n_annotated} annotated recording(s)</p>\n"
+                '     <div style="display:flex; align-items:center; gap:8px;">\n'
+                '       <div style="flex:1; max-width:300px; height:14px; '
+                'background:#e0e0e0; border-radius:4px; overflow:hidden;">\n'
+                f'         <div style="width:{bar_pct}%; height:100%; background:{bar_color};"></div>\n'
+                "       </div>\n"
+                f'       <span style="font-size:12px;">{retained_pct:.1f}%</span>\n'
+                "     </div>\n"
+                '     <p style="font-size:11px; color:var(--pst-color-muted, #666); margin-top:4px;">'
+                "Based on <code>status: bad</code> in BIDS <code>channels.tsv</code>. "
+                "This reflects researcher annotation, not automated pipeline rejection.</p>\n"
+                "   </div>\n\n"
+            )
+            parts.append(bad_ch_html)
+        except (TypeError, ValueError, KeyError):
+            pass
+
+    if not parts:
+        return ""
+
+    return heading + "".join(parts)
+
+
+def _format_nemar_analysis_section(context: Mapping[str, object]) -> str:
+    """Embed NEMAR pre-generated pipeline analysis plots for OpenNeuro/NEMAR datasets.
+
+    NEMAR runs an automated EEG processing pipeline (via the Neuroscience Gateway)
+    on all OpenNeuro datasets. The resulting static plots are publicly accessible
+    at a consistent URL pattern and include:
+      - Pipeline success: data-cleaning and ICA-decomposition pass/fail counts
+      - Data frames retained (%) after cleaning
+      - Line noise per channel (channel RMS, dB)
+      - Data channels retained (%) after cleaning
+      - Age and gender distribution of participants
+      - HED event-descriptor word cloud (for HED-annotated datasets)
+    """
+    dataset_id = str(context.get("dataset_id") or "").strip().lower()
+    source = str(context.get("source") or "").strip().lower()
+
+    if not dataset_id or source not in ("openneuro", "nemar"):
+        return ""
+
+    nemar_url = str(
+        context.get("nemar_url")
+        or f"https://nemar.org/dataexplorer/detail?dataset_id={dataset_id}"
+    )
+    histogram_url = (
+        "https://nemar.org/dataexplorer/download"
+        f"?filepath=/data/nemar/openneuro//processed/{dataset_id}/code/{dataset_id}_histogram.png"
+    )
+    wordcloud_url = (
+        "https://nemar.org/dataexplorer/download"
+        f"?filepath=/data/nemar/openneuro//processed/event_summaries/{dataset_id}/word_cloud.svg"
+        "&file_type=svg"
+    )
+
+    heading = "NEMAR Processing Statistics\n---------------------------\n\n"
+    description = (
+        f"The plots below are generated by `NEMAR's automated EEG pipeline <{nemar_url}>`_. "
+        f"The histogram shows pipeline success for data cleaning and ICA decomposition, "
+        "the percentage of data frames and EEG channels retained after artefact removal, "
+        "line noise per channel (RMS, dB), and the age/gender distribution of participants.\n\n"
+    )
+    html_histogram = (
+        ".. raw:: html\n\n"
+        '   <div class="nemar-analysis-section">\n'
+        f'     <a href="{nemar_url}" target="_blank" rel="noopener noreferrer">\n'
+        "       <img\n"
+        f'         src="{histogram_url}"\n'
+        f'         alt="NEMAR pipeline statistics — {dataset_id.upper()}"\n'
+        '         loading="lazy"\n'
+        '         style="max-width: 100%; border: 1px solid var(--pst-color-border); border-radius: 8px; margin-bottom: 1rem;"\n'
+        "       />\n"
+        "     </a>\n"
+        "   </div>\n\n"
+    )
+    html_wordcloud = (
+        ".. raw:: html\n\n"
+        '   <details class="nemar-wordcloud-details" style="margin-top: 0.5rem;">\n'
+        "     <summary>HED event descriptors word cloud</summary>\n"
+        "     <img\n"
+        f'       src="{wordcloud_url}"\n'
+        f'       alt="HED event descriptors word cloud — {dataset_id.upper()}"\n'
+        '       loading="lazy"\n'
+        '       style="max-width: 60%; display: block; margin: 0.5rem auto;"\n'
+        "     />\n"
+        "   </details>\n"
+    )
+    return heading + description + html_histogram + html_wordcloud
+
+
+_EXPLORER_DATASET_RE = re.compile(r"^[A-Za-z0-9_\-]{1,64}$")
+
+
+def _format_explorer_section(name: str, context: Mapping[str, object]) -> str:
+    """Render the BIDS file explorer for this dataset.
+
+    Emits a ``.. dataset-explorer::`` directive for the catalog class
+    name. The browser-side widget fetches records lazily from the
+    EEGDash API the first time the user interacts with it, so there is
+    no per-page build cost beyond the static directive output.
+
+    Returns an empty string if ``name`` is not a safe identifier — this
+    is the same gate the directive itself enforces, applied here so
+    ``DATASET_PAGE_TEMPLATE`` collapses cleanly for any pathological
+    class name rather than failing the whole build.
+    """
+    safe = (name or "").strip()
+    if not safe or not _EXPLORER_DATASET_RE.match(safe):
+        return ""
+
+    heading = "File Explorer\n-------------\n\n"
+    description = (
+        "Browse the BIDS file structure of this dataset. Records are "
+        "fetched on demand from the EEGDash catalog the first time "
+        "you open the explorer.\n\n"
+    )
+    directive = f".. dataset-explorer::\n   :dataset: {safe}\n"
+    return heading + description + directive
+
+
 # ---------------------------------------------------------------------------
 # Trace viewer iframe: live signal preview from the eegdash-viewer
 # (https://eegdash.github.io/eegdash-viewer/) embedded as a lazy iframe.
@@ -2759,7 +3179,10 @@ def _process_dataset_item(
         highlights_section=_format_highlights_section(context),
         quickstart_section=_format_quickstart_section(context),
         electrodes_section=_format_electrodes_section(context),
+        recording_stats_section=_format_recording_stats_section(context),
+        nemar_analysis_section=_format_nemar_analysis_section(context),
         traces_section=_format_traces_section(context),
+        explorer_section=_format_explorer_section(name, context),
         api_section=_format_api_section(name),
         see_also_section=_format_see_also_section(dataset_id, name, related),
         feedback_section=_format_feedback_section(dataset_id, dataset_title),

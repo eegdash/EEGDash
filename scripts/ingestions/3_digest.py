@@ -19,16 +19,22 @@ Usage:
 import argparse
 import json
 import logging
+import multiprocessing as mp
 import os
+import queue
 import re
 import sys
+import time
+import traceback
 import urllib.error
 import urllib.request
 import warnings
-from concurrent.futures import ProcessPoolExecutor, as_completed
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
+
+# Avoid numba cache issues by setting cache dir before importing MNE.
+os.environ.setdefault("NUMBA_CACHE_DIR", str(Path(".cache") / "numba"))
 
 import mne
 import numpy as np
@@ -52,6 +58,7 @@ from _montage import extract_layout
 from _set_parser import parse_set_metadata
 from _snirf_parser import parse_snirf_metadata
 from _vhdr_parser import parse_vhdr_metadata
+from mne_bids.config import ALLOWED_DATATYPE_EXTENSIONS  # noqa: E402
 from tqdm import tqdm
 
 from eegdash.dataset.bids_dataset import _COMPANION_FILES, EEGBIDSDataset
@@ -62,10 +69,6 @@ from eegdash.schemas import (
     create_dataset,
     create_record,
 )
-
-# Avoid numba cache issues on CI by setting cache dir before MNE-BIDS import
-os.environ.setdefault("NUMBA_CACHE_DIR", str(Path(".cache") / "numba"))
-from mne_bids.config import ALLOWED_DATATYPE_EXTENSIONS  # noqa: E402
 
 # Storage configuration per source. Keep aligned with
 # ``eegdash/dataset/_source_inference.py::STORAGE_CONFIGS``. NEMAR uses a
@@ -85,6 +88,11 @@ STORAGE_CONFIGS = {
 
 # Default config for unknown sources
 DEFAULT_STORAGE_CONFIG = {"backend": "https", "base": "https://unknown"}
+
+DEFAULT_DATASET_TIMEOUT_SECONDS = 2 * 60
+WORKER_POLL_INTERVAL_SECONDS = 1.0
+PROCESS_SHUTDOWN_TIMEOUT_SECONDS = 5.0
+RESULT_QUEUE_TIMEOUT_SECONDS = 5.0
 
 # Datasets to explicitly ignore during ingestion
 EXCLUDED_DATASETS = {
@@ -1066,15 +1074,21 @@ def extract_record(
 
     # VHDR: also try MNE for n_times (requires binary companion)
     if ext == ".vhdr" and not ntimes:
+        raw = None
         try:
             raw = mne.io.read_raw_brainvision(
                 str(bids_file_path), preload=False, verbose=False
             )
             if raw.n_times and raw.n_times > 0:
                 ntimes = int(raw.n_times)
-            raw.close()
         except Exception:
             pass
+        finally:
+            if raw is not None:
+                try:
+                    raw.close()
+                except Exception:
+                    pass
 
     # FIF fallback using MNE
     fif_is_split = False
@@ -2373,6 +2387,14 @@ def digest_dataset(
         Summary of digestion results
 
     """
+    # **SKIP CHECK**: If output already exists, skip reprocessing
+    output_dir_path = output_dir / dataset_id
+    if output_dir_path.exists():
+        return {
+            "status": "skipped",
+            "dataset_id": dataset_id,
+            "reason": "already digested",
+        }
     dataset_dir = input_dir / dataset_id
     dataset_output_dir = output_dir / dataset_id
 
@@ -2681,6 +2703,343 @@ def find_datasets(input_dir: Path, datasets: list[str] | None = None) -> list[st
     return sorted(found)
 
 
+def _positive_float(value: str) -> float:
+    """Argparse type for positive float values."""
+    try:
+        parsed = float(value)
+    except ValueError as exc:
+        raise argparse.ArgumentTypeError("must be a number") from exc
+    if parsed <= 0:
+        raise argparse.ArgumentTypeError("must be greater than 0")
+    return parsed
+
+
+def _dataset_boundary_profile(dataset_id: str, input_dir: Path) -> str:
+    """Return a cheap structural profile for stall-boundary diagnostics."""
+    dataset_dir = input_dir / dataset_id
+    if not dataset_dir.exists():
+        return f"{dataset_id}: missing directory"
+
+    manifest_path = dataset_dir / "manifest.json"
+    description_path = dataset_dir / "dataset_description.json"
+    parts = [
+        f"{dataset_id}:",
+        f"pattern_source={_source_from_dataset_id(dataset_id)}",
+        f"manifest={manifest_path.exists()}",
+        f"dataset_description={description_path.exists()}",
+    ]
+
+    if manifest_path.exists():
+        try:
+            with open(manifest_path) as f:
+                manifest = json.load(f)
+            manifest_source = manifest.get("source")
+            files = manifest.get("files", [])
+            zip_contents = manifest.get("zip_contents", [])
+            files_count = len(files) if isinstance(files, list) else "n/a"
+            zip_contents_count = (
+                len(zip_contents) if isinstance(zip_contents, list) else "n/a"
+            )
+            parts.extend(
+                [
+                    f"manifest_source={manifest_source!r}",
+                    f"manifest_files={files_count}",
+                    f"zip_contents={zip_contents_count}",
+                ]
+            )
+        except Exception as exc:  # noqa: BLE001
+            parts.append(f"manifest_error={exc}")
+
+    try:
+        root_entries = list(dataset_dir.iterdir())
+        root_dirs = sum(1 for p in root_entries if p.is_dir())
+        root_files = sum(1 for p in root_entries if p.is_file() or p.is_symlink())
+        parts.extend([f"root_dirs={root_dirs}", f"root_files={root_files}"])
+    except Exception as exc:  # noqa: BLE001
+        parts.append(f"root_scan_error={exc}")
+
+    return " ".join(parts)
+
+
+def print_stall_boundary_diagnostics(dataset_ids: list[str], input_dir: Path) -> None:
+    """Print the datasets around the reported deterministic #287 stall point."""
+    boundary_indices = [285, 286]  # 0-based: completed #286 and next #287.
+    present = [idx for idx in boundary_indices if idx < len(dataset_ids)]
+    if not present:
+        return
+
+    print("Stall-boundary diagnostics:")
+    for idx in present:
+        profile = _dataset_boundary_profile(dataset_ids[idx], input_dir)
+        print(f"  #{idx + 1} (0-based {idx}): {profile}")
+
+
+def _worker_error_result(
+    dataset_id: str,
+    error: str,
+    *,
+    elapsed_seconds: float | None = None,
+    traceback_text: str | None = None,
+) -> dict[str, Any]:
+    """Build an error result that keeps batch summary accounting unchanged."""
+    result: dict[str, Any] = {
+        "status": "error",
+        "dataset_id": dataset_id,
+        "error": error,
+    }
+    if elapsed_seconds is not None:
+        result["elapsed_seconds"] = round(elapsed_seconds, 3)
+    if traceback_text:
+        result["traceback"] = traceback_text
+    return result
+
+
+def _digest_dataset_worker(
+    dataset_id: str,
+    input_dir: Path,
+    output_dir: Path,
+    result_queue: Any,
+) -> None:
+    """Run one dataset digestion and always report success or failure."""
+    try:
+        try:
+            result = digest_dataset(dataset_id, input_dir, output_dir)
+            if not isinstance(result, dict):
+                result = _worker_error_result(
+                    dataset_id,
+                    f"digest_dataset returned {type(result).__name__}, expected dict",
+                )
+        except BaseException as exc:  # noqa: BLE001
+            result = _worker_error_result(
+                dataset_id,
+                f"{type(exc).__name__}: {exc}",
+                traceback_text=traceback.format_exc(),
+            )
+        result_queue.put(result, timeout=RESULT_QUEUE_TIMEOUT_SECONDS)
+    finally:
+        logging.shutdown()
+
+
+def _start_digest_process(
+    ctx: mp.context.BaseContext,
+    dataset_id: str,
+    input_dir: Path,
+    output_dir: Path,
+    *,
+    position: int,
+    total: int,
+) -> dict[str, Any]:
+    """Start a child process for one dataset."""
+    result_queue = ctx.Queue(maxsize=100)
+    process = ctx.Process(
+        target=_digest_dataset_worker,
+        args=(dataset_id, input_dir, output_dir, result_queue),
+        name=f"digest-{position}-{dataset_id}",
+    )
+    process.start()
+    return {
+        "dataset_id": dataset_id,
+        "position": position,
+        "total": total,
+        "process": process,
+        "queue": result_queue,
+        "started_at": time.monotonic(),
+    }
+
+
+def _close_active_resources(active: dict[str, Any]) -> None:
+    """Release local process and queue handles without blocking indefinitely."""
+    result_queue = active.get("queue")
+    if result_queue is not None:
+        try:
+            result_queue.close()
+        except Exception:
+            pass
+
+    process = active.get("process")
+    if process is not None:
+        try:
+            process.close()
+        except Exception:
+            pass
+
+
+def _terminate_active_process(active: dict[str, Any], reason: str) -> None:
+    """Terminate a child process, escalating to kill if it ignores terminate."""
+    process = active["process"]
+    dataset_id = active["dataset_id"]
+
+    if process.is_alive():
+        tqdm.write(f"[digest] terminating {dataset_id}: {reason}")
+        process.terminate()
+        process.join(timeout=PROCESS_SHUTDOWN_TIMEOUT_SECONDS)
+
+    if process.is_alive():
+        tqdm.write(f"[digest] killing {dataset_id}: terminate did not exit")
+        process.kill()
+        process.join(timeout=PROCESS_SHUTDOWN_TIMEOUT_SECONDS)
+
+    if process.is_alive():
+        tqdm.write(f"[digest] warning {dataset_id}: process still alive after kill")
+
+
+def _collect_finished_process(active: dict[str, Any]) -> dict[str, Any]:
+    """Collect one completed child result; queue reads use an explicit timeout."""
+    process = active["process"]
+    dataset_id = active["dataset_id"]
+    elapsed = time.monotonic() - active["started_at"]
+
+    try:
+        result = active["queue"].get(timeout=RESULT_QUEUE_TIMEOUT_SECONDS)
+    except queue.Empty:
+        result = _worker_error_result(
+            dataset_id,
+            f"worker exited without returning a result (exitcode={process.exitcode})",
+            elapsed_seconds=elapsed,
+        )
+    except Exception as exc:  # noqa: BLE001
+        result = _worker_error_result(
+            dataset_id,
+            f"failed to collect worker result: {type(exc).__name__}: {exc}",
+            elapsed_seconds=elapsed,
+        )
+
+    process.join(timeout=PROCESS_SHUTDOWN_TIMEOUT_SECONDS)
+    if process.is_alive():
+        _terminate_active_process(active, "process still alive after result collection")
+
+    if isinstance(result, dict):
+        result.setdefault("dataset_id", dataset_id)
+        result.setdefault("elapsed_seconds", round(elapsed, 3))
+        return result
+
+    return _worker_error_result(
+        dataset_id,
+        f"worker returned {type(result).__name__}, expected dict",
+        elapsed_seconds=elapsed,
+    )
+
+
+def _timeout_active_process(
+    active: dict[str, Any],
+    dataset_timeout: float,
+) -> dict[str, Any]:
+    """Kill a stalled dataset worker and return an error result."""
+    elapsed = time.monotonic() - active["started_at"]
+    dataset_id = active["dataset_id"]
+    _terminate_active_process(
+        active,
+        f"dataset exceeded {dataset_timeout:.1f}s timeout",
+    )
+    return _worker_error_result(
+        dataset_id,
+        f"dataset exceeded {dataset_timeout:.1f}s timeout",
+        elapsed_seconds=elapsed,
+    )
+
+
+def process_datasets_with_watchdog(
+    dataset_ids: list[str],
+    input_dir: Path,
+    output_dir: Path,
+    *,
+    workers: int,
+    dataset_timeout: float,
+) -> tuple[list[dict[str, Any]], dict[str, int]]:
+    """Process datasets with per-dataset process supervision.
+
+    Each dataset runs in its own process so a stuck parser, file read, or MNE
+    call can be terminated without wedging the whole batch. Blocking process
+    joins and queue operations all use explicit timeouts.
+    """
+    total = len(dataset_ids)
+    max_workers = max(1, workers)
+    ctx = mp.get_context()
+    active: dict[int, dict[str, Any]] = {}
+    results: list[dict[str, Any]] = []
+    stats = {"success": 0, "error": 0, "skipped": 0, "empty": 0}
+    next_index = 0
+
+    with tqdm(total=total, desc="Digesting") as progress:
+        try:
+            while next_index < total or active:
+                while next_index < total and len(active) < max_workers:
+                    dataset_id = dataset_ids[next_index]
+                    active_job = _start_digest_process(
+                        ctx,
+                        dataset_id,
+                        input_dir,
+                        output_dir,
+                        position=next_index + 1,
+                        total=total,
+                    )
+                    active[id(active_job["process"])] = active_job
+                    next_index += 1
+
+                finished: list[tuple[int, dict[str, Any]]] = []
+                now = time.monotonic()
+                for key, active_job in list(active.items()):
+                    dataset_id = active_job["dataset_id"]
+                    process = active_job["process"]
+                    elapsed = now - active_job["started_at"]
+
+                    # **CRITICAL FIX**: Try to drain queue FIRST (non-blocking)
+                    # to prevent deadlock on full queue with blocking worker.
+                    # Worker may be alive but stuck on queue.put() if main never reads.
+                    result_queue = active_job["queue"]
+                    try:
+                        result = result_queue.get_nowait()
+                        print(
+                            f"[QUEUE] Got result from {dataset_id} after {elapsed:.1f}s",
+                            flush=True,
+                        )
+                        finished.append((key, result))
+                        process.join(timeout=PROCESS_SHUTDOWN_TIMEOUT_SECONDS)
+                        continue
+                    except Exception as e:
+                        print(
+                            f"[QUEUE] No result yet for {dataset_id}: {type(e).__name__}",
+                            flush=True,
+                        )
+                        pass  # No result yet or queue error, continue checking
+
+                    if process.is_alive():
+                        if elapsed > dataset_timeout:
+                            result = _timeout_active_process(
+                                active_job, dataset_timeout
+                            )
+                            finished.append((key, result))
+                        continue
+
+                    result = _collect_finished_process(active_job)
+                    finished.append((key, result))
+
+                if not finished:
+                    time.sleep(WORKER_POLL_INTERVAL_SECONDS)
+                    continue
+
+                for key, result in finished:
+                    active_job = active.pop(key, None)
+                    if active_job is not None:
+                        _close_active_resources(active_job)
+                    results.append(result)
+                    status = result.get("status", "error")
+                    stats[status] = stats.get(status, 0) + 1
+                    if status == "error":
+                        tqdm.write(
+                            f"[digest] error {result.get('dataset_id')}: "
+                            f"{result.get('error', 'unknown error')}"
+                        )
+                    progress.update(1)
+        except KeyboardInterrupt:
+            for active_job in list(active.values()):
+                _terminate_active_process(active_job, "interrupted")
+                _close_active_resources(active_job)
+            raise
+
+    return results, stats
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="Digest BIDS datasets and generate Dataset + Record JSON for MongoDB."
@@ -2715,6 +3074,15 @@ def main():
         default=None,
         help="Maximum number of datasets to process (for testing)",
     )
+    parser.add_argument(
+        "--dataset-timeout",
+        type=_positive_float,
+        default=DEFAULT_DATASET_TIMEOUT_SECONDS,
+        help=(
+            "Seconds to allow one dataset before killing its worker "
+            f"(default: {DEFAULT_DATASET_TIMEOUT_SECONDS:g})"
+        ),
+    )
 
     args = parser.parse_args()
 
@@ -2725,36 +3093,22 @@ def main():
 
     print(f"Found {len(dataset_ids)} datasets to digest")
     print(f"Workers: {args.workers}")
+    print(f"Dataset timeout: {args.dataset_timeout:g}s")
+    print_stall_boundary_diagnostics(dataset_ids, args.input)
     print("=" * 60)
 
     # Create output directory
     args.output.mkdir(parents=True, exist_ok=True)
 
-    # Process datasets
-    results = []
-    stats = {"success": 0, "error": 0, "skipped": 0, "empty": 0}
-
-    if args.workers > 1:
-        # Parallel processing
-        with ProcessPoolExecutor(max_workers=args.workers) as executor:
-            futures = {
-                executor.submit(digest_dataset, ds_id, args.input, args.output): ds_id
-                for ds_id in dataset_ids
-            }
-            for future in tqdm(
-                as_completed(futures), total=len(futures), desc="Digesting"
-            ):
-                result = future.result()
-                results.append(result)
-                status = result.get("status", "error")
-                stats[status] = stats.get(status, 0) + 1
-    else:
-        # Sequential processing
-        for ds_id in tqdm(dataset_ids, desc="Digesting"):
-            result = digest_dataset(ds_id, args.input, args.output)
-            results.append(result)
-            status = result.get("status", "error")
-            stats[status] = stats.get(status, 0) + 1
+    # Process datasets under a watchdog even with one worker. This keeps
+    # dataset-specific parser or filesystem stalls from freezing the batch.
+    results, stats = process_datasets_with_watchdog(
+        dataset_ids,
+        args.input,
+        args.output,
+        workers=args.workers,
+        dataset_timeout=args.dataset_timeout,
+    )
 
     # Save batch summary
     batch_summary = {

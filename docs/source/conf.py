@@ -2339,7 +2339,8 @@ def _get_first_eeg_record(dataset_id: str) -> dict[str, object] | None:
 def _format_traces_section(context: Mapping[str, object]) -> str:
     """Render an iframe for this dataset's signal preview.
 
-    Query the API for the first supported EEG record and build the viewer URL.
+    Query the API for the first supported electrophysiology record (EEG, iEEG, EMG)
+    and build the viewer URL.
     """
     dataset_id = str(context.get("dataset_id") or "").strip().lower()
     if not dataset_id:
@@ -2358,6 +2359,7 @@ def _format_traces_section(context: Mapping[str, object]) -> str:
     sub = str(record.get("subject") or entities.get("subject") or "").strip()
     task = str(record.get("task") or entities.get("task") or "").strip()
     ext = str(record.get("extension") or "").strip().lstrip(".")
+    suffix = str(record.get("suffix") or "eeg").strip().lower()
 
     if not sub or not ext:
         return ""
@@ -2375,6 +2377,9 @@ def _format_traces_section(context: Mapping[str, object]) -> str:
     if run:
         qs_pairs.append(("run", str(run)))
     qs_pairs.append(("ext", ext))
+    # Add suffix parameter if it's not the default EEG
+    if suffix != "eeg":
+        qs_pairs.append(("suffix", suffix))
     qs_pairs.append(("embed", "1"))
     iframe_src = f"{_TRACE_VIEWER_BASE}?{urlencode(qs_pairs)}"
 
@@ -2403,6 +2408,16 @@ def _format_traces_section(context: Mapping[str, object]) -> str:
 
     openneuro_url = f"https://openneuro.org/datasets/{dataset_id}"
 
+    # Map suffix to modality name for UI display
+    modality_names = {
+        "eeg": "EEG",
+        "ieeg": "iEEG",
+        "emg": "EMG",
+        "meg": "MEG",
+        "nirs": "fNIRS",
+    }
+    modality_display = modality_names.get(suffix, suffix.upper())
+
     heading = "Signal Preview\n--------------\n\n"
     html = (
         ".. raw:: html\n\n"
@@ -2412,15 +2427,15 @@ def _format_traces_section(context: Mapping[str, object]) -> str:
         "       Showing <strong>one</strong> representative recording out of\n"
         f"       <strong>{scope_str}</strong> in this dataset.\n"
         f'       Browse the full set on <a href="{openneuro_url}" target="_blank" rel="noopener">OpenNeuro</a>;\n'
-        "       drop any other <code>_eeg.{set,edf,bdf,vhdr}</code> file onto the\n"
-        "       viewer (or pass <code>?eeg=&lt;url&gt;</code>) to inspect it.\n"
+        f"       drop any other <code>_{suffix}.{{set,edf,bdf,vhdr}}</code> file onto the\n"
+        f"       viewer (or pass <code>?{suffix}=&lt;url&gt;</code>) to inspect it.\n"
         "     </p>\n"
         "     <iframe\n"
         f'       data-src="{iframe_src}"\n'
         '       loading="lazy"\n'
         '       width="100%" height="640"\n'
         '       style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 1200px; display: block; background: transparent;"\n'
-        f'       title="Live EEG trace viewer for {dataset_id} — {entity_label}"\n'
+        f'       title="Live {modality_display} trace viewer for {dataset_id} — {entity_label}"\n'
         '       referrerpolicy="no-referrer">\n'
         "     </iframe>\n"
         "   </details>\n"

@@ -29,11 +29,13 @@ def normalize_data(x):
     return x
 
 
+def _slice_dataset_to_numpy(dataset):
+    return np.stack([np.asarray(item) for item in dataset])
+
+
 def test_complete_train(windows_ds):
     """Test the complete training process with the EEG dataset."""
-    label_eye_open_closed = np.array(
-        SliceDataset(windows_ds, idx=1)
-    ).T  # Extract labels (eyes open/closed)
+    label_eye_open_closed = np.asarray(list(SliceDataset(windows_ds, idx=1))).T
 
     # train-test split
     train_idx, valid_idx = train_test_split(
@@ -45,12 +47,10 @@ def test_complete_train(windows_ds):
 
     # Convert the data to tensors
     X_train = SliceDataset(windows_ds, idx=0, indices=train_idx)
-    # Convert list of arrays to torch
-    X_train = torch.FloatTensor(np.array(X_train))
+    X_train = torch.from_numpy(_slice_dataset_to_numpy(X_train)).float()
 
     X_valid = SliceDataset(windows_ds, idx=0, indices=valid_idx)
-    # Convert list of arrays to torch
-    X_valid = torch.FloatTensor(np.array(X_valid))
+    X_valid = torch.from_numpy(_slice_dataset_to_numpy(X_valid)).float()
     # Convert targets to tensor
     y_train = torch.LongTensor(label_eye_open_closed[train_idx])
     y_valid = torch.LongTensor(label_eye_open_closed[valid_idx])

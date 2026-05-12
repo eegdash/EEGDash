@@ -151,7 +151,7 @@ def _log_sparkbar(
     ``label_fn(vi)`` formats the displayed number; the ``--pct`` CSS
     variable drives the bar width; the hover ``title`` adds distribution
     context ("above 72% of datasets") so the length encoding is
-    self-explanatory without a separate legend. The synthesised ``Total``
+    self-explanatory without a separate legend. The synthesized ``Total``
     row is excluded when computing the peak so a single outlier can't
     compress the rest of the distribution to near-zero.
     """

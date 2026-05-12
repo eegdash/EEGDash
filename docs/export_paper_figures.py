@@ -208,7 +208,7 @@ def _collect_bubble_outliers(
     """Identify top outlier datasets from the original (non-serialized) figure.
 
     Must be called on the *original* figure before ``copy.deepcopy``,
-    because deep-copying a Plotly figure serialises trace arrays into
+    because deep-copying a Plotly figure serializes trace arrays into
     binary dicts that cannot be iterated.
 
     Returns a list of dicts with keys: name, x, y, subjects, records.

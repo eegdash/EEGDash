@@ -14,15 +14,10 @@ Note: This module uses the shared `bids_mini_dataset_path` and `cache_dir` fixtu
 from conftest.py to ensure consistent caching and avoid redundant downloads.
 """
 
-import sys
 import time
-from pathlib import Path
 
 import pytest
-
-# Add parent directory to path for conftest import
-sys.path.insert(0, str(Path(__file__).parent.parent))
-from conftest import is_bids_dataset_available
+from tests_support.bids_helpers import is_bids_dataset_available
 
 # Module-level skip if dataset not available
 _available, _reason = is_bids_dataset_available()

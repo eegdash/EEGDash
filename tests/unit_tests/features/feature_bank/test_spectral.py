@@ -75,7 +75,7 @@ def test_spectral_more():
     # lines 27-34: skip_outlier_noise
     # Use longer signal for better frequency resolution to satisfy frequency bands
     # f0 = 2 * fs / n. For fs=100, n=200 -> f0=1.0. Delta starts at 1.0
-    data = np.random.randn(2, 4, 300)
+    data = np.random.randn(2, 4, 512)
     metadata = {"info": {"sfreq": 100.0}}
     f, p = spectral_preprocessor(data, _metadata=metadata, fs=100.0)
 

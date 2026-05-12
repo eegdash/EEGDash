@@ -20,11 +20,22 @@ from rich.console import Console
 from .logging import logger
 
 
-def get_s3_filesystem() -> s3fs.S3FileSystem:
+def get_s3_filesystem(
+    *,
+    max_concurrency: int = 20,
+    region: str = "us-east-2",
+) -> s3fs.S3FileSystem:
     """Get an anonymous S3 filesystem object.
 
     Initializes and returns an ``s3fs.S3FileSystem`` for anonymous access
-    to public S3 buckets, configured for the 'us-east-2' region.
+    to public S3 buckets.
+
+    Parameters
+    ----------
+    max_concurrency : int
+        Maximum number of parallel transfer connections (default 20).
+    region : str
+        AWS region for the S3 endpoint (default ``"us-east-2"``).
 
     Returns
     -------
@@ -32,7 +43,13 @@ def get_s3_filesystem() -> s3fs.S3FileSystem:
         An S3 filesystem object.
 
     """
-    return s3fs.S3FileSystem(anon=True, client_kwargs={"region_name": "us-east-2"})
+    if max_concurrency < 1:
+        raise ValueError(f"max_concurrency must be >= 1, got {max_concurrency}")
+    return s3fs.S3FileSystem(
+        anon=True,
+        max_concurrency=max_concurrency,
+        client_kwargs={"region_name": region},
+    )
 
 
 def get_s3path(s3_bucket: str, filepath: str) -> str:

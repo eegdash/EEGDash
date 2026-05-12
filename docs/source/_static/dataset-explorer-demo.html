@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dataset File Explorer Demo</title>
+  <style>
+    body { font-family: system-ui; max-width: 1000px; margin: 0 auto; padding: 20px; background: #f5f5f5; }
+    #explorer { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    #explorer input { width: 100%; padding: 8px; margin-bottom: 12px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
+    #explorer .tree { padding: 12px; background: #f9f9f9; border-radius: 4px; max-height: 500px; overflow-y: auto; }
+    #explorer .tree-node { padding: 4px 0; font-size: 13px; cursor: pointer; user-select: none; }
+    #explorer .tree-node:hover { background: #f0f0f0; padding: 4px 4px; }
+    #explorer .badge { display: inline-block; padding: 2px 6px; border-radius: 3px; font-size: 11px; font-weight: 600; margin-left: 8px; }
+    #explorer .eeg { background: #dbeafe; color: #1e40af; }
+    #explorer .meg { background: #e9d5ff; color: #6b21a8; }
+    #explorer .ieeg { background: #fed7aa; color: #92400e; }
+    #explorer .nirs { background: #dcfce7; color: #166534; }
+    #explorer .emg { background: #fce7f3; color: #831843; }
+    #explorer .stats { display: flex; gap: 20px; margin-bottom: 12px; font-size: 13px; }
+    #explorer .stat { color: #666; }
+    #explorer .stat-val { font-weight: 600; color: #10b981; }
+    #explorer .details { margin-top: 12px; padding: 12px; background: #f5f5f5; border-radius: 4px; font-size: 12px; }
+    #explorer .details dt { font-weight: 600; margin-top: 6px; }
+    #explorer .details dd { margin: 0 0 6px 0; color: #666; }
+    h1 { color: #333; }
+    .info { background: #e8f4f8; padding: 12px; border-radius: 4px; margin-bottom: 20px; font-size: 13px; }
+  </style>
+</head>
+<body>
+  <h1>📊 Dataset File Explorer Demo</h1>
+
+  <div class="info">
+    <strong>Try it:</strong> Search for "eeg", "sub-01", or "rest" • Click any file to see details
+  </div>
+
+  <div id="explorer">
+    <input type="text" id="search" placeholder="Search files..." autofocus>
+
+    <div class="stats">
+      <div class="stat">Files: <span class="stat-val" id="file-count">0</span></div>
+      <div class="stat">Size: <span class="stat-val" id="total-size">0</span></div>
+      <div class="stat">Subjects: <span class="stat-val" id="subject-count">0</span></div>
+    </div>
+
+    <div class="tree" id="tree"></div>
+    <div class="details" id="details" style="display:none;"></div>
+  </div>
+
+  <script>
+const MOCK = [
+  { path: 'sub-01/ses-01/eeg/sub-01_ses-01_task-rest_eeg.edf', subject: 'sub-01', session: 'ses-01', task: 'rest', datatype: 'eeg', channels: 64, sfreq: 512, duration: 600, size: 245000000 },
+  { path: 'sub-01/ses-01/emg/sub-01_ses-01_task-rest_emg.tsv', subject: 'sub-01', session: 'ses-01', task: 'rest', datatype: 'emg', channels: 8, sfreq: 2000, duration: 600, size: 9600000 },
+  { path: 'sub-02/eeg/sub-02_task-facerecon_eeg.edf', subject: 'sub-02', task: 'facerecon', datatype: 'eeg', channels: 32, sfreq: 256, duration: 900, size: 187000000 },
+  { path: 'sub-02/emg/sub-02_task-facerecon_emg.tsv', subject: 'sub-02', task: 'facerecon', datatype: 'emg', channels: 6, sfreq: 1000, duration: 900, size: 5400000 },
+  { path: 'sub-03/meg/sub-03_task-rest_meg.fif', subject: 'sub-03', task: 'rest', datatype: 'meg', channels: 248, sfreq: 1000, duration: 480, size: 890000000 },
+  { path: 'sub-03/nirs/sub-03_task-rest_nirs.snirf', subject: 'sub-03', task: 'rest', datatype: 'nirs', channels: 20, sfreq: 10, duration: 480, size: 45000000 },
+];
+
+function formatBytes(bytes) {
+  if (bytes === 0) return '0 B';
+  const k = 1024;
+  const sizes = ['B', 'KB', 'MB', 'GB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+}
+
+function formatDur(seconds) {
+  const h = Math.floor(seconds / 3600);
+  const m = Math.floor((seconds % 3600) / 60);
+  return h > 0 ? h + 'h ' + m + 'm' : m + 'm';
+}
+
+function buildFileNodes(records) {
+  const nodes = [];
+  records.forEach((r) => {
+    const parts = r.path.split('/');
+    parts.forEach((p, j) => {
+      const isLast = j === parts.length - 1;
+      const icon = isLast ? '📄' : '📁';
+      const node = document.createElement('div');
+      node.className = 'tree-node';
+      node.style.paddingLeft = (j * 20) + 'px';
+      node.textContent = icon + ' ' + p;
+      if (isLast && r.datatype) {
+        const badge = document.createElement('span');
+        badge.className = `badge ${r.datatype}`;
+        badge.textContent = r.datatype.toUpperCase();
+        node.appendChild(badge);
+      }
+      node.dataset.file = JSON.stringify(r);
+      nodes.push(node);
+    });
+  });
+  return nodes;
+}
+
+function init() {
+  const tree = document.getElementById('tree');
+  const nodes = buildFileNodes(MOCK);
+  nodes.forEach(node => tree.appendChild(node));
+
+  // Stats
+  const files = MOCK.length;
+  const size = MOCK.reduce((s, r) => s + (r.size || 0), 0);
+  const subs = new Set(MOCK.map(r => r.subject).filter(Boolean)).size;
+  document.getElementById('file-count').textContent = files;
+  document.getElementById('total-size').textContent = formatBytes(size);
+  document.getElementById('subject-count').textContent = subs;
+
+  // Click handler
+  tree.addEventListener('click', e => {
+    const node = e.target.closest('[data-file]');
+    if (!node) return;
+    const fileData = JSON.parse(node.dataset.file);
+    const details = document.getElementById('details');
+    const dl = document.createElement('dl');
+    dl.className = 'details';
+
+    const addDetail = (label, value) => {
+      const dt = document.createElement('dt');
+      dt.textContent = label;
+      dl.appendChild(dt);
+      const dd = document.createElement('dd');
+      dd.textContent = value;
+      dl.appendChild(dd);
+    };
+
+    addDetail('File', fileData.path);
+    if (fileData.subject) addDetail('Subject', fileData.subject);
+    if (fileData.task) addDetail('Task', fileData.task);
+    if (fileData.datatype) {
+      const dt = document.createElement('dt');
+      dt.textContent = 'Modality';
+      dl.appendChild(dt);
+      const dd = document.createElement('dd');
+      const badge = document.createElement('span');
+      badge.className = `badge ${fileData.datatype}`;
+      badge.textContent = fileData.datatype.toUpperCase();
+      dd.appendChild(badge);
+      dl.appendChild(dd);
+    }
+    if (fileData.channels) addDetail('Channels', fileData.channels);
+    if (fileData.sfreq) addDetail('Sample Rate', fileData.sfreq + ' Hz');
+    if (fileData.duration) addDetail('Duration', formatDur(fileData.duration));
+    if (fileData.size) addDetail('Size', formatBytes(fileData.size));
+
+    details.innerHTML = '';
+    details.appendChild(dl);
+    details.style.display = 'block';
+  });
+
+  // Search
+  document.getElementById('search').addEventListener('keyup', e => {
+    const q = e.target.value.toLowerCase();
+    document.querySelectorAll('#tree .tree-node').forEach(node => {
+      const matches = node.textContent.toLowerCase().includes(q) || q === '';
+      node.style.display = matches ? '' : 'none';
+    });
+  });
+}
+
+init();
+  </script>
+</body>
+</html>

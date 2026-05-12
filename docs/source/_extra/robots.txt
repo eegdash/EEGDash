@@ -7,7 +7,7 @@
 #
 # Content-Signals policy (search=yes, ai-input=yes, ai-train=no) —
 # currently kept as a comment because Lighthouse's robots.txt validator
-# does not yet recognise the Cloudflare Content-Signal directive and
+# does not yet recognize the Cloudflare Content-Signal directive and
 # flags it as an "unknown directive", dragging the PSI SEO score.
 # Reinstate as a live directive once Lighthouse ships the parser update,
 # or move in front of a reverse proxy (see docs/deploy/cloudflare-proxy)

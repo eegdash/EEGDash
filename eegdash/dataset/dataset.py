@@ -341,18 +341,22 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
 
         super().__init__(datasets, lazy=True)
 
-        # Warn when a requested field produced no values across all recordings
+        # Warn when a requested field produced no values across all recordings.
+        # Guarded with try/except because self.description requires real EEGDashRaw
+        # instances; mocked datasets (e.g. in unit tests) may not satisfy that.
         if datasets:
-            all_none = [
-                col
-                for col in self.description.columns
-                if self.description[col].isna().all()
-            ]
-            if all_none:
-                logger.warning(
-                    "description_fields %s are None for all recordings — possible typo?",
-                    all_none,
-                )
+            try:
+                desc_df = self.description
+                all_none = [
+                    col for col in desc_df.columns if desc_df[col].isna().all()
+                ]
+                if all_none:
+                    logger.warning(
+                        "description_fields %s are None for all recordings — possible typo?",
+                        all_none,
+                    )
+            except Exception:
+                pass
 
     @property
     def cumulative_sizes(self) -> list[int]:
@@ -589,6 +593,22 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
         ``participant_tsv`` key inside the record (online paths).  When both
         the record and participant data carry the same field, the record value
         wins; a ``debug``-level log is emitted when the values differ.
+
+        Parameters
+        ----------
+        record : dict
+            The metadata for a single record.
+        description_fields : list of str
+            The fields to include in the description.
+        participants_row : dict or None
+            Optional participant-level metadata to merge. If None, the method
+            will look for an embedded ``participant_tsv`` key in the record.
+
+        Returns
+        -------
+        dict
+            A dictionary containing the requested description fields for the record.
+
         """
         # Pre-fill with None so .description["subject"] never raises KeyError
         description: dict[str, Any] = {field: None for field in description_fields}

@@ -11,7 +11,13 @@ metadata records stored in the EEGDash database via REST API.
 
 from typing import Any, Mapping
 
-from .bids_metadata import merge_query
+from .bids_metadata import build_query_from_kwargs, merge_query, records_to_dataframe
+from .const import (
+    DATASET_FIELD_ALIASES,
+    DATASET_QUERY_ALLOWED,
+    DATASET_QUERY_FIELD_SPEC,
+    DATASET_SUMMARY_COLUMNS,
+)
 from .http_api_client import get_client
 
 
@@ -75,6 +81,97 @@ class EEGDash:
 
         """
         return self._client.find_datasets(query, limit=limit)
+
+    def search_datasets(
+        self,
+        *,
+        modality: str | None = None,
+        task: str | None = None,
+        clinical_group: str | None = None,
+        source: str | None = None,
+        n_subjects_min: int | None = None,
+        license: str | None = None,
+        limit: int = 100,
+    ):
+        """Search the dataset catalogue with friendly keyword filters.
+
+        Convenience wrapper around :meth:`find_datasets` that translates a
+        small set of human-friendly keyword arguments into a MongoDB-style
+        query and returns a tidy summary :class:`pandas.DataFrame`. This is
+        the metadata-only entry point used by tutorials such as
+        ``plot_00_first_search``.
+
+        Parameters
+        ----------
+        modality : str, optional
+            Filter by recording modality (e.g., ``"eeg"``, ``"meeg"``).
+            Matched case-insensitively against the ``modality`` field.
+        task : str, optional
+            Filter by BIDS task name (e.g., ``"rest"``, ``"FacePerception"``).
+        clinical_group : str, optional
+            Filter by clinical cohort label (e.g., ``"healthy"``, ``"adhd"``).
+            Matched against ``clinical.group`` (nested) and falls back to the
+            flat ``clinical_group`` field.
+        source : str, optional
+            Filter by data source (e.g., ``"openneuro"``, ``"nemar"``,
+            ``"hbn"``). Matched against ``source`` and ``provider`` fields.
+        n_subjects_min : int, optional
+            Minimum number of subjects in the dataset. Maps to
+            ``{"n_subjects": {"$gte": n_subjects_min}}``.
+        license : str, optional
+            Filter by data license (e.g., ``"CC0"``, ``"CC-BY-4.0"``).
+            Matched against the ``license`` field.
+        limit : int, default 100
+            Maximum number of datasets to return.
+
+        Returns
+        -------
+        pandas.DataFrame
+            One row per matching dataset with summary columns:
+            ``dataset_id``, ``name``, ``modality``, ``task``, ``n_subjects``,
+            ``source``, ``license``, ``dataset_doi``. Missing fields surface
+            as ``None``. The frame is empty (zero rows) when nothing matches.
+
+        Notes
+        -----
+        ``search_datasets`` does not download any signal bytes; only small
+        JSON catalogue documents are transferred. Pair with
+        :class:`~eegdash.EEGDashDataset` once a candidate dataset is chosen.
+
+        Examples
+        --------
+        >>> client = EEGDash()
+        >>> df = client.search_datasets(modality="eeg", n_subjects_min=10)
+        >>> df = client.search_datasets(task="rest", source="openneuro")
+
+        """
+        # Build a MongoDB-style query through the shared helper. Fields
+        # with multiple plausible storage shapes (flat vs nested) and
+        # range operators are encoded once in DATASET_QUERY_FIELD_SPEC.
+        kw = {
+            "modality": modality,
+            "task": task,
+            "clinical_group": clinical_group,
+            "source": source,
+            "license": license,
+            "n_subjects_min": n_subjects_min,
+        }
+        kw = {k: v for k, v in kw.items() if v is not None}
+        query = (
+            build_query_from_kwargs(
+                allowed_fields=DATASET_QUERY_ALLOWED,
+                field_spec=DATASET_QUERY_FIELD_SPEC,
+                **kw,
+            )
+            if kw
+            else None
+        )
+
+        return records_to_dataframe(
+            self._client.find_datasets(query, limit=limit) or [],
+            DATASET_SUMMARY_COLUMNS,
+            DATASET_FIELD_ALIASES,
+        )
 
     def find(
         self, query: dict[str, Any] = None, /, **kwargs

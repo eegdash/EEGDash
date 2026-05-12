@@ -1,10 +1,13 @@
 import json
+import warnings
 from pathlib import Path
+from types import SimpleNamespace
 from unittest.mock import MagicMock, patch
 
 import numpy as np
 import pytest
 from scipy.io import loadmat, savemat
+from scipy.io.matlab import MatWriteWarning
 
 from eegdash.dataset.io import (
     _convert_time_with_numeric_dash,
@@ -20,16 +23,25 @@ from eegdash.dataset.io import (
     _generate_vmrk_stub,
     _load_raw_eeglab_alleeg,
     _load_raw_from_eeglab_epochs,
+    _parse_set_metadata,
+    _read_bids_channels_tsv,
     _repair_channels_tsv,
     _repair_channels_tsv_duplicates,
     _repair_eeglab_fdt,
     _repair_events_tsv_nan_samples,
+    _repair_scans_tsv_timestamps,
     _repair_tsv_decimal_separators,
     _repair_tsv_encoding,
     _repair_tsv_na_whitespace,
     _repair_vhdr_missing_markerfile,
     _repair_vhdr_pointers,
 )
+
+
+def _savemat_without_matwritewarning(path: Path, data: dict) -> None:
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", MatWriteWarning)
+        savemat(str(path), data, do_compression=False)
 
 
 def test_convert_time_with_numeric_dash_dd_mm_yyyy():
@@ -300,6 +312,95 @@ def test_find_best_matching_file_no_candidates(tmp_path):
     """Test returns None when no files with extension exist."""
     result = _find_best_matching_file(tmp_path, "missing.eeg", ".eeg")
     assert result is None
+
+
+@pytest.mark.parametrize(
+    "chanlocs,expected_names",
+    [
+        (
+            [SimpleNamespace(labels="Fp1"), SimpleNamespace(labels="Fp2")],
+            ["Fp1", "Fp2"],
+        ),
+        (SimpleNamespace(labels="Cz"), ["Cz"]),
+    ],
+    ids=["iterable_chanlocs", "single_chanloc"],
+)
+def test_parse_set_metadata_chanloc_variants(tmp_path, chanlocs, expected_names):
+    """Extract channel names from iterable and scalar chanloc variants."""
+    eeg = SimpleNamespace(
+        srate=np.array([256.0]),
+        nbchan=np.array([len(expected_names)]),
+        pnts=np.array([4]),
+        chanlocs=chanlocs,
+        data=np.ones((len(expected_names), 4), dtype=np.float64),
+    )
+    with patch("scipy.io.loadmat", return_value={"EEG": eeg}):
+        meta = _parse_set_metadata(tmp_path / "dummy.set")
+
+    assert meta["srate"] == 256.0
+    assert meta["nbchan"] == len(expected_names)
+    assert meta["pnts"] == 4
+    assert meta["ch_names"] == expected_names
+    assert meta["data"].dtype == np.float32
+
+
+@pytest.mark.parametrize("missing_field", ["srate", "nbchan", "pnts"])
+def test_parse_set_metadata_missing_required_fields(tmp_path, missing_field):
+    """Missing required EEG fields raise ValueError with a clear message."""
+    eeg = SimpleNamespace(
+        srate=np.array([256.0]),
+        nbchan=np.array([2]),
+        pnts=np.array([10]),
+        chanlocs=None,
+    )
+    setattr(eeg, missing_field, None)
+
+    with patch("scipy.io.loadmat", return_value={"EEG": eeg}):
+        with pytest.raises(
+            ValueError, match=f"Missing required field '{missing_field}'"
+        ):
+            _parse_set_metadata(tmp_path / "dummy.set")
+
+
+@pytest.mark.parametrize(
+    "rows,expected",
+    [
+        ("Fz\tEEG\tuV\nEOG1\tEOG\tuV\n", (["Fz", "EOG1"], ["eeg", "eog"])),
+        ("A1\tXYZ\tuV\nA2\t\t\n", (["A1", "A2"], ["eeg", "eeg"])),
+        (" \tEEG\tuV\n", None),
+    ],
+    ids=["known_types", "unknown_or_empty_type_fallback", "blank_names_dropped"],
+)
+def test_read_bids_channels_tsv_parametrized(tmp_path, rows, expected):
+    """BIDS channel parsing maps types and drops empty-name rows."""
+    channels_tsv = tmp_path / "sub-01_task-rest_channels.tsv"
+    channels_tsv.write_text("name\ttype\tunits\n" + rows)
+
+    assert _read_bids_channels_tsv(tmp_path) == expected
+
+
+@pytest.mark.parametrize(
+    "acq_time,expected_time,expected_repaired",
+    [
+        ("2024-01-02 03:04:05", "2024-01-02T03:04:05.000000", True),
+        ("2024-01-02T03:04:99", "n/a", True),
+        ("2024-01-02T03:04:05.000000", "2024-01-02T03:04:05.000000", False),
+    ],
+    ids=["normalize_space_separator", "invalid_timestamp_to_na", "already_normalized"],
+)
+def test_repair_scans_tsv_timestamps_parametrized(
+    tmp_path, acq_time, expected_time, expected_repaired
+):
+    """Repair scans.tsv acq_time normalization and invalid-value handling."""
+    data_dir = tmp_path / "sub-01" / "eeg"
+    data_dir.mkdir(parents=True)
+    scans_tsv = data_dir.parent / "sub-01_scans.tsv"
+    scans_tsv.write_text(f"filename\tacq_time\nsub-01/eeg/test.eeg\t{acq_time}\n")
+
+    repaired = _repair_scans_tsv_timestamps(data_dir)
+
+    assert repaired is expected_repaired
+    assert scans_tsv.read_text().splitlines()[1].split("\t")[1] == expected_time
 
 
 def test_repair_vhdr_fuzzy_match_typo(tmp_path):
@@ -836,7 +937,6 @@ def test_repair_events_tsv_mixed_nan_types(tmp_path):
 def _create_minimal_set_fdt(tmp_path, n_channels=3, n_samples=100, sfreq=256.0):
     """Helper: create a minimal .set + .fdt pair for testing."""
     import numpy as np
-    import scipy.io
 
     set_path = tmp_path / "test.set"
     fdt_path = tmp_path / "test.fdt"
@@ -854,7 +954,7 @@ def _create_minimal_set_fdt(tmp_path, n_channels=3, n_samples=100, sfreq=256.0):
         "data": np.array(["test.fdt"]),
     }
 
-    scipy.io.savemat(str(set_path), {"EEG": eeg})
+    _savemat_without_matwritewarning(set_path, {"EEG": eeg})
     return set_path, fdt_path, data
 
 
@@ -898,7 +998,6 @@ def test_load_raw_eeglab_fallback_with_bids_channels(tmp_path):
 def test_load_raw_eeglab_fallback_no_data_raises(tmp_path):
     """Raises ValueError when no .fdt and no embedded data."""
     import numpy as np
-    import scipy.io
 
     from eegdash.dataset.io import _load_raw_eeglab_fallback
 
@@ -911,7 +1010,7 @@ def test_load_raw_eeglab_fallback_no_data_raises(tmp_path):
         "datfile": np.array([""]),
         "data": np.array(["test.fdt"]),
     }
-    scipy.io.savemat(str(set_path), {"EEG": eeg})
+    _savemat_without_matwritewarning(set_path, {"EEG": eeg})
 
     with pytest.raises(ValueError, match="No data source"):
         _load_raw_eeglab_fallback(set_path)
@@ -920,7 +1019,6 @@ def test_load_raw_eeglab_fallback_no_data_raises(tmp_path):
 def test_load_raw_eeglab_fallback_size_mismatch_raises(tmp_path):
     """Raises ValueError when .fdt size doesn't match metadata."""
     import numpy as np
-    import scipy.io
 
     from eegdash.dataset.io import _load_raw_eeglab_fallback
 
@@ -937,10 +1035,46 @@ def test_load_raw_eeglab_fallback_size_mismatch_raises(tmp_path):
         "datfile": np.array(["test.fdt"]),
         "data": np.array(["test.fdt"]),
     }
-    scipy.io.savemat(str(set_path), {"EEG": eeg})
+    _savemat_without_matwritewarning(set_path, {"EEG": eeg})
 
     with pytest.raises(ValueError, match="FDT size mismatch"):
         _load_raw_eeglab_fallback(set_path)
+
+
+@pytest.mark.parametrize(
+    "embedded_data,expected_shape,raises",
+    [
+        (np.arange(6, dtype=np.float32).reshape(2, 3), (2, 3), False),
+        (np.arange(6, dtype=np.float32), (2, 3), False),
+        (np.arange(5, dtype=np.float32), None, True),
+    ],
+    ids=["already_2d", "reshape_1d", "shape_mismatch_raises"],
+)
+def test_load_raw_eeglab_fallback_embedded_data_paths(
+    tmp_path, embedded_data, expected_shape, raises
+):
+    """Embedded .set data path handles reshape and mismatch cases."""
+    from eegdash.dataset.io import _load_raw_eeglab_fallback
+
+    set_path = tmp_path / "embedded.set"
+    set_path.write_text("placeholder")
+
+    meta = {
+        "nbchan": 2,
+        "pnts": 3,
+        "srate": 128.0,
+        "ch_names": ["Fz", "Cz"],
+        "data": embedded_data,
+    }
+
+    with patch("eegdash.dataset.io._parse_set_metadata", return_value=meta):
+        if raises:
+            with pytest.raises(ValueError, match="Embedded data shape"):
+                _load_raw_eeglab_fallback(set_path)
+        else:
+            raw = _load_raw_eeglab_fallback(set_path)
+            assert raw.get_data().shape == expected_shape
+            assert raw.ch_names == ["Fz", "Cz"]
 
 
 # ---------- _repair_channels_tsv ----------
@@ -1107,7 +1241,7 @@ def test_repair_eeglab_fdt_truncated_fdt_repairs(tmp_path):
         "xmax": (pnts_orig - 1) / 250.0,
         "data": "test.fdt",
     }
-    savemat(str(set_path), eeg, do_compression=False)
+    _savemat_without_matwritewarning(set_path, eeg)
 
     result = _repair_eeglab_fdt(set_path)
     assert result is True
@@ -1141,7 +1275,7 @@ def test_eeglab_load_first_eeg_returns_eeg_when_valid_set(tmp_path):
 
     set_path = tmp_path / "valid.set"
     eeg = {"nbchan": 2, "pnts": 10, "srate": 250.0, "data": "valid.fdt"}
-    savemat(str(set_path), eeg, do_compression=False)
+    _savemat_without_matwritewarning(set_path, eeg)
     out = _eeglab_load_first_eeg(set_path)
     assert out is not None
     assert int(out["nbchan"]) == 2 and int(out["pnts"]) == 10
@@ -1158,7 +1292,7 @@ def test_repair_eeglab_fdt_no_fdt_file_returns_false(tmp_path):
 
     set_path = tmp_path / "nofdt.set"
     eeg = {"nbchan": 2, "pnts": 10, "srate": 250.0, "data": "nofdt.fdt"}
-    savemat(str(set_path), eeg, do_compression=False)
+    _savemat_without_matwritewarning(set_path, eeg)
     assert _repair_eeglab_fdt(set_path) is False
 
 
@@ -1171,7 +1305,7 @@ def test_repair_eeglab_fdt_not_truncated_returns_false(tmp_path):
     nbchan, pnts = 2, 10
     fdt_path.write_bytes(b"\x00" * (nbchan * pnts * 4))
     eeg = {"nbchan": nbchan, "pnts": pnts, "srate": 250.0, "data": "full.fdt"}
-    savemat(str(set_path), eeg, do_compression=False)
+    _savemat_without_matwritewarning(set_path, eeg)
     assert _repair_eeglab_fdt(set_path) is False
 
 
@@ -1183,7 +1317,7 @@ def test_repair_eeglab_fdt_fdt_too_small_returns_false(tmp_path):
     fdt_path = tmp_path / "tiny.fdt"
     fdt_path.write_bytes(b"\x00" * 4)  # 4 bytes, 2 channels -> 0 samples
     eeg = {"nbchan": 2, "pnts": 100, "srate": 250.0, "data": "tiny.fdt"}
-    savemat(str(set_path), eeg, do_compression=False)
+    _savemat_without_matwritewarning(set_path, eeg)
     assert _repair_eeglab_fdt(set_path) is False
 
 
@@ -1208,7 +1342,7 @@ def test_load_raw_eeglab_alleeg_success(tmp_path):
         "data": "raw.fdt",
         "chanlocs": [{"labels": "Fp1"}, {"labels": "Fp2"}],
     }
-    savemat(str(set_path), eeg, do_compression=False)
+    _savemat_without_matwritewarning(set_path, eeg)
     raw = _load_raw_eeglab_alleeg(set_path)
     assert raw is not None
     assert raw.info["nchan"] == nbchan
@@ -1231,7 +1365,7 @@ def test_load_raw_eeglab_alleeg_truncated_fdt_pads(tmp_path):
         "data": "trunc.fdt",
         "chanlocs": [{"labels": "A"}, {"labels": "B"}],
     }
-    savemat(str(set_path), eeg, do_compression=False)
+    _savemat_without_matwritewarning(set_path, eeg)
     raw = _load_raw_eeglab_alleeg(set_path)
     assert raw is not None
     assert raw.info["nchan"] == nbchan
@@ -1252,7 +1386,7 @@ def test_load_raw_eeglab_alleeg_inline_data(tmp_path):
         "data": data,
         "chanlocs": [{"labels": "Fp1"}, {"labels": "Fp2"}],
     }
-    savemat(str(set_path), eeg, do_compression=False)
+    _savemat_without_matwritewarning(set_path, eeg)
     raw = _load_raw_eeglab_alleeg(set_path)
     assert raw is not None
     assert raw.info["nchan"] == nbchan

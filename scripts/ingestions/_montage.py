@@ -886,6 +886,7 @@ def extract_meg_layout(
     name = data_file.name.lower()
 
     info = None
+    raw = None
     tmp_path: str | None = None
     try:
         try:
@@ -893,15 +894,17 @@ def extract_meg_layout(
                 info = mne.io.read_info(str(data_file), verbose="error")
             elif data_file.is_dir() and suffix == ".ds":
                 # CTF datasets are directories; read_raw_ctf takes the .ds path.
-                info = mne.io.read_raw_ctf(
+                raw = mne.io.read_raw_ctf(
                     str(data_file), preload=False, verbose="error"
-                ).info
+                )
+                info = raw.info
             elif suffix in {".sqd", ".con"} or name.endswith(".kit"):
-                info = mne.io.read_raw_kit(
+                raw = mne.io.read_raw_kit(
                     str(data_file), preload=False, verbose="error"
-                ).info
+                )
+                info = raw.info
             else:
-                LOGGER.info("[layout.meg] unrecognised MEG format: %s", data_file)
+                LOGGER.info("[layout.meg] unrecognized MEG format: %s", data_file)
                 return None
         except Exception as direct_exc:  # noqa: BLE001
             LOGGER.debug(
@@ -949,6 +952,11 @@ def extract_meg_layout(
                 )
                 return None
     finally:
+        if raw is not None:
+            try:
+                raw.close()
+            except Exception:
+                pass
         if tmp_path:
             try:
                 Path(tmp_path).unlink()

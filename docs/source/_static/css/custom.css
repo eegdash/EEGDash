@@ -558,3 +558,23 @@ html[data-theme="dark"] .sd-card ul li {
   }
 }
 
+
+/* Pandas DataFrame inline rendering inside sphinx-gallery output blocks.
+   The default 12px is too small for inline cohort views; bump to 14px and
+   give cells a touch more vertical breathing room. */
+.sphx-glr-script-out table.dataframe,
+table.dataframe {
+  font-size: 14px;
+}
+.sphx-glr-script-out table.dataframe th,
+.sphx-glr-script-out table.dataframe td,
+table.dataframe th,
+table.dataframe td {
+  padding: 0.55em 0.7em;
+  line-height: 1.35;
+}
+.sphx-glr-script-out table.dataframe thead th,
+table.dataframe thead th {
+  font-size: 14px;
+  font-weight: 600;
+}

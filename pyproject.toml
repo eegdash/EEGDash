@@ -97,6 +97,8 @@ tests = [
     'pytest',
     'pytest-cov',
     'pytest-benchmark',
+    'plotly',
+    'moabb',
 ]
 dev = [
   "pre-commit",
@@ -111,12 +113,16 @@ docs = [
   "sphinx-sitemap",
   "sphinxext-opengraph",
   "sphinx-markdown-builder",
+  "sphinxcontrib-bibtex",
   "numpydoc",
   "lightgbm",
   "mne-icalabel",
   "plotly",
-  "plotly",
   "seaborn",
+  "moabb",
+  "neuralfetch>=0.2",
+  "neuralset>=0.2",
+  "eegprep",
 ]
 
 digestion = [

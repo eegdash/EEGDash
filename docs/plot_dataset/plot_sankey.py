@@ -4,7 +4,7 @@ from __future__ import annotations
 
 The script loads ``eegdash/dataset/dataset_summary.csv`` (by default) and builds
 an interactive Plotly Sankey diagram connecting three categorical columns. This
-mirrors how the documentation summarises datasets across subject type, modality,
+mirrors how the documentation summarizes datasets across subject type, modality,
 and experiment type, but can be reused with any trio of categorical columns via
 CLI arguments.
 """

@@ -16,9 +16,12 @@ from typing import Iterable, Mapping, Sequence
 from urllib.parse import quote
 
 from sphinx.util import logging
-from sphinx_gallery.sorting import ExplicitOrder, FileNameSortKey
+from sphinx_gallery.sorting import FileNameSortKey
 
 sys.path.insert(0, os.path.abspath(".."))
+# Local Sphinx extensions live under ``docs/source/_extensions``; make them
+# importable before the ``extensions`` list below references them.
+sys.path.insert(0, os.path.abspath("_extensions"))
 if os.environ.get("SPHINX_BUILD", "") == "":
     os.environ["SPHINX_BUILD"] = "1"
 
@@ -58,7 +61,16 @@ extensions = [
     "sphinxext.opengraph",
     "sphinx_copybutton",
     "sphinx_time_estimation",
+    "sphinxcontrib.bibtex",
+    "dataset_explorer",
 ]
+
+# Centralized bibliography (see docs/source/refs.bib + references.rst).
+# Cite an entry from any RST or sphinx-gallery markdown cell with
+# ``:cite:`<key>``` and the bibliography page renders the canonical list.
+bibtex_bibfiles = ["refs.bib"]
+bibtex_default_style = "plain"
+bibtex_reference_style = "author_year"
 
 # -- Open Graph / Twitter Card configuration --------------------------------
 # Populates <meta property="og:*"> and <meta name="twitter:*"> tags per page.
@@ -104,6 +116,23 @@ autodoc_type_aliases = {
 }
 
 python_use_unqualified_type_names = False
+
+# -- intersphinx ------------------------------------------------------------
+# Resolve cross-references to external libraries so ``:class:`pandas.DataFrame```
+# etc. become real hyperlinks in the rendered HTML instead of plain inline
+# code. Inventories are cached locally by Sphinx; broken or unreachable
+# upstream sites don't block local builds.
+intersphinx_mapping = {
+    "python": ("https://docs.python.org/3", None),
+    "numpy": ("https://numpy.org/doc/stable", None),
+    "pandas": ("https://pandas.pydata.org/pandas-docs/stable", None),
+    "scipy": ("https://docs.scipy.org/doc/scipy", None),
+    "sklearn": ("https://scikit-learn.org/stable", None),
+    "torch": ("https://docs.pytorch.org/docs/stable", None),
+    "mne": ("https://mne.tools/stable", None),
+    "braindecode": ("https://braindecode.org/stable", None),
+    "matplotlib": ("https://matplotlib.org/stable", None),
+}
 
 # -- Options for HTML output -------------------------------------------------
 
@@ -195,8 +224,10 @@ html_sidebars = {
     # ~15 KB of chrome above the fold for no navigation gain (gallery
     # pages already have their own previous/next nav injected).
     "generated/auto_examples/*": [],
-    "generated/auto_examples/core/*": [],
     "generated/auto_examples/tutorials/*": [],
+    "generated/auto_examples/tutorials/*/*": [],
+    "generated/auto_examples/applied/*": [],
+    "generated/auto_examples/how_to/*": [],
     "generated/auto_examples/dev_scripts/*": [],
     "generated/auto_examples/eeg2025/*": [],
     "generated/auto_examples/hpc/*": [],
@@ -278,14 +309,38 @@ numpydoc_show_class_members = False
 
 # Sphinx Gallery
 EX_DIR = "../../examples"  # relative to docs/source
+# Sphinx-gallery 0.20 only walks one level: each entry in `examples_dirs` is
+# treated as a gallery root, and its immediate subdirectories become
+# subsections (with plot_*.py files collected at that depth only).
+# `examples/tutorials/` itself is two levels deep (it has nested category
+# subdirs like ``00_start_here/`` rather than ``plot_*.py`` files at the
+# top), so we list each tutorial category as its own gallery root and pair
+# it with a matching `gallery_dirs` entry. Same pattern for the leaf-only
+# directories (`how_to`, `applied`, `eeg2025`, `hpc`, `dev_scripts`).
+TUTORIAL_SUBDIRS = [
+    "00_start_here",
+    "10_core_workflow",
+    "20_event_related",
+    "30_resting_state",
+    "40_features",
+    "50_evaluation",
+    "70_transfer_foundation",
+]
+LEAF_DIRS = ["how_to", "applied", "eeg2025", "hpc", "dev_scripts"]
+EX_DIRS = [f"{EX_DIR}/tutorials/{name}" for name in TUTORIAL_SUBDIRS] + [
+    f"{EX_DIR}/{name}" for name in LEAF_DIRS
+]
+GALLERY_DIRS = [
+    f"generated/auto_examples/tutorials/{name}" for name in TUTORIAL_SUBDIRS
+] + [f"generated/auto_examples/{name}" for name in LEAF_DIRS]
 sphinx_gallery_conf = {
-    "examples_dirs": [f"{EX_DIR}"],
-    "gallery_dirs": ["generated/auto_examples"],
+    "examples_dirs": EX_DIRS,
+    "gallery_dirs": GALLERY_DIRS,
     # Execute examples by default for CI builds; use html-noplot target for local fast builds
     "plot_gallery": True,
     # Don't fail the build when examples error (e.g. missing cache, API down).
     # Failed examples show a traceback in the gallery instead of crashing CI.
-    "abort_on_example_error": False,
+    "abort_on_example_error": True,
     "only_warn_on_example_error": True,
     "binder": {
         "org": "eegdash",
@@ -297,6 +352,10 @@ sphinx_gallery_conf = {
         "use_jupyter_lab": True,
     },
     "capture_repr": ("_repr_html_", "__repr__"),
+    # Each entry in `examples_dirs` above is a leaf gallery (its plot_*.py
+    # files are immediate children), so `nested_sections=False` is correct
+    # and avoids the `_replace_md5(None)` AssertionError that sphinx-gallery
+    # 0.20 raises when a parent gallery dir contains only subdirectories.
     "nested_sections": False,
     "backreferences_dir": "gen_modules/backreferences",
     "inspect_global_variables": True,
@@ -304,7 +363,15 @@ sphinx_gallery_conf = {
     "show_api_usage": True,
     "doc_module": ("eegdash", "numpy", "scipy", "matplotlib"),
     "reference_url": {"eegdash": None},
-    "filename_pattern": r"/(?:plot|tutorial)_(?!_).*\.py",
+    "filename_pattern": os.environ.get(
+        "EEGDASH_GALLERY_FILENAME_PATTERN",
+        r"/(?:plot|tutorial)_(?!_).*\.py",
+    ),
+    # Skip private helper modules (leading underscore) entirely. The
+    # default ignore_pattern only matches __init__.py, which leaves files
+    # like _pipeline_diagram.py rendered as standalone gallery pages
+    # when they are imported by a sibling tutorial.
+    "ignore_pattern": r"(?:^|/)_[^/]*\.py$",
     "matplotlib_animations": True,
     "reset_modules": ("matplotlib", "seaborn"),
     "first_notebook_cell": (
@@ -312,8 +379,26 @@ sphinx_gallery_conf = {
         "# `pip install eegdash`\n"
         "%matplotlib inline"
     ),
-    "subsection_order": ExplicitOrder([f"{EX_DIR}/core", "*"]),
+    # `subsection_order` is no longer required because each tutorial
+    # category and how-to/applied bucket is now its own gallery root (see
+    # `examples_dirs` above). Order is therefore controlled by the order of
+    # the entries in `examples_dirs`/`gallery_dirs`.
     "within_subsection_order": FileNameSortKey,
+    # Polish: hide sub-1s timing rows, drop the noisy module signature line,
+    # strip ``# sphinx-gallery-...`` config comments from the rendered output,
+    # standardize card thumbnails at 320x224, ship a branded fallback when a
+    # tutorial produces no figure, promote bare-string sentences to titles,
+    # and pin the scraper list (we never use mayavi) to a single matplotlib
+    # entry so docs builds don't import optional viz deps.
+    "min_reported_time": 1,
+    "show_signature": False,
+    "remove_config_comments": True,
+    "thumbnail_size": (320, 224),
+    "default_thumb_file": str(Path(__file__).parent / "_static" / "eegdash_thumb.png"),
+    # Note: ``promote_strings_to_titles`` is not a recognized key in
+    # sphinx-gallery 0.20.x (raises ``ConfigError`` at startup), so it is
+    # intentionally omitted; revisit when we bump to a release that ships it.
+    "image_scrapers": ("matplotlib",),
 }
 
 # -- Custom Setup Function to fix the error -----------------------------------
@@ -406,6 +491,14 @@ Technical Details
 
 {electrodes_section}
 
+{recording_stats_section}
+
+{nemar_analysis_section}
+
+{traces_section}
+
+{explorer_section}
+
 API Reference
 -------------
 
@@ -433,7 +526,7 @@ What's in the registry
 ----------------------
 
 EEGDash exposes **700+ OpenNeuro EEG datasets**, registered dynamically
-from MongoDB. The table below summarises the breakdown by experimental
+from MongoDB. The table below summarizes the breakdown by experimental
 type ({dataset_count} datasets in this build).
 
 Base Dataset API
@@ -831,6 +924,11 @@ def _fetch_dataset_details_from_api(dataset_id: str) -> dict[str, object]:
         "recording_modality": ds.get("recording_modality", []),
         "size_bytes": ds.get("size_bytes"),
         "source": _clean_value(ds.get("source")),
+        "demographics": ds.get("demographics"),
+        "nchans_counts": ds.get("nchans_counts"),
+        "sfreq_counts": ds.get("sfreq_counts"),
+        "total_duration_s": ds.get("total_duration_s"),
+        "bad_channels_info": ds.get("bad_channels_info"),
     }
 
     # Extract source URL from external_links
@@ -1017,6 +1115,11 @@ def _build_dataset_context(
         "format": dataset_format,
         "readme": _clean_value(details.get("readme")),
         "nemar_citation_count": _clean_value((row or {}).get("nemar_citation_count")),
+        "demographics": details.get("demographics") or {},
+        "nchans_counts": details.get("nchans_counts") or [],
+        "sfreq_counts": details.get("sfreq_counts") or [],
+        "total_duration_s": details.get("total_duration_s"),
+        "bad_channels_info": details.get("bad_channels_info"),
     }
 
 
@@ -2211,6 +2314,559 @@ def _format_electrodes_section(context: Mapping[str, object]) -> str:
     return heading + html
 
 
+def _make_count_bar_chart(
+    entries: list,
+    label: str,
+    unit: str,
+    bar_color: str = "#4472c4",
+) -> str:
+    """Render a compact vertical bar chart for a count distribution as RST raw HTML."""
+    if not entries:
+        return ""
+    vals = [(e.get("val"), e.get("count")) for e in entries if e.get("val") is not None]
+    if not vals:
+        return ""
+    if len(vals) == 1:
+        return (
+            ".. raw:: html\n\n"
+            '   <div class="eegdash-stats-section" style="margin-bottom:1rem;">\n'
+            f"     <p><strong>{label}</strong>: {vals[0][0]} {unit}"
+            f" (n={vals[0][1]} recordings)</p>\n"
+            "   </div>\n\n"
+        )
+    max_count = max(c for _, c in vals)
+    bar_width = 28
+    bars_html = ""
+    labels_html = ""
+    for val, count in sorted(vals, key=lambda x: x[0]):
+        pct = int(count / max_count * 100) if max_count else 0
+        val_label = str(int(val)) if float(val) == int(float(val)) else f"{val:.1f}"
+        bars_html += (
+            f'<div style="width:{bar_width}px; height:{pct}%; '
+            f'background:{bar_color}; flex-shrink:0;" '
+            f'title="{val_label} {unit}: {count}"></div>'
+        )
+        labels_html += (
+            f'<span style="width:{bar_width}px; text-align:center; '
+            f'overflow:hidden; white-space:nowrap; font-size:9px;">{val_label}</span>'
+        )
+    return (
+        ".. raw:: html\n\n"
+        '   <div class="eegdash-stats-section" style="margin-bottom:1rem;">\n'
+        f"     <p><strong>{label}</strong> ({unit})</p>\n"
+        '     <div class="eeg-chart-row" style="display:flex; align-items:flex-end; '
+        'gap:2px; height:60px;">\n'
+        f"       {bars_html}\n"
+        "     </div>\n"
+        '     <div class="eeg-chart-labels" style="display:flex; gap:2px; font-size:10px;">\n'
+        f"       {labels_html}\n"
+        "     </div>\n"
+        "   </div>\n\n"
+    )
+
+
+# BIDS sex column (objects/columns.yaml) defines three phenotypical categories,
+# each with a short and long form, all case-insensitive.
+# Keys outside all three sets are treated as unknown and folded into "Other".
+_BIDS_FEMALE_KEYS = {"f", "female"}
+_BIDS_MALE_KEYS = {"m", "male"}
+_BIDS_OTHER_KEYS = {"o", "other"}
+
+
+def _format_recording_stats_section(context: Mapping[str, object]) -> str:
+    """Generate a Dataset Statistics section from EEGDash API data.
+
+    Renders inline HTML bar charts and text stats for age distribution,
+    sex distribution, channel counts, sampling frequencies, and total
+    recording duration.  Returns an empty string when no useful data
+    is present so the template placeholder collapses silently.
+    """
+    demographics: dict = context.get("demographics") or {}
+    nchans_counts: list = context.get("nchans_counts") or []
+    sfreq_counts: list = context.get("sfreq_counts") or []
+    total_duration_s = context.get("total_duration_s")
+    bad_channels_info: dict | None = context.get("bad_channels_info")
+
+    ages: list = demographics.get("ages") or []
+    sex_dist: dict = demographics.get("sex_distribution") or {}
+
+    has_ages = bool(ages)
+    has_sex = bool(sex_dist)
+    has_nchans = bool(nchans_counts)
+    has_sfreq = bool(sfreq_counts)
+    has_duration = total_duration_s is not None
+    has_bad_channels = bad_channels_info is not None
+
+    if not any(
+        (has_ages, has_sex, has_nchans, has_sfreq, has_duration, has_bad_channels)
+    ):
+        return ""
+
+    heading = "Dataset Statistics\n------------------\n\n"
+    parts: list[str] = []
+
+    # ------------------------------------------------------------------
+    # A. Age distribution bar chart
+    # ------------------------------------------------------------------
+    if has_ages:
+        valid_ages = [float(a) for a in ages if a is not None]
+        if valid_ages:
+            age_min = min(valid_ages)
+            age_max = max(valid_ages)
+            bucket_size = 5
+            buckets: Counter[int] = Counter(
+                int(float(a) // bucket_size) * bucket_size for a in valid_ages
+            )
+            max_count = max(buckets.values())
+            bar_width = 28
+
+            bars_html = ""
+            labels_html = ""
+            for start in sorted(buckets):
+                count = buckets[start]
+                pct = int(count / max_count * 100)
+                label = f"{start}-{start + bucket_size - 1}"
+                bars_html += (
+                    f'<div style="width:{bar_width}px; height:{pct}%; '
+                    f'background:#4472c4; flex-shrink:0;" '
+                    f'title="{label}: {count}"></div>'
+                )
+                labels_html += (
+                    f'<span style="width:{bar_width}px; text-align:center; '
+                    f'overflow:hidden; white-space:nowrap;">{start}</span>'
+                )
+
+            age_html = (
+                ".. raw:: html\n\n"
+                '   <div class="eegdash-stats-section" style="margin-bottom:1rem;">\n'
+                "     <p><strong>Age distribution</strong> "
+                f"(n={len(valid_ages)}, range {age_min:.0f}–{age_max:.0f} yr)</p>\n"
+                '     <div class="eeg-chart-row" style="display:flex; align-items:flex-end; '
+                'gap:2px; height:60px;">\n'
+                f"       {bars_html}\n"
+                "     </div>\n"
+                '     <div class="eeg-chart-labels" style="display:flex; gap:2px; font-size:10px;">\n'
+                f"       {labels_html}\n"
+                "     </div>\n"
+                "   </div>\n\n"
+            )
+            parts.append(age_html)
+
+    # ------------------------------------------------------------------
+    # B. Sex distribution horizontal bar
+    # ------------------------------------------------------------------
+    if has_sex:
+        _known_keys = _BIDS_FEMALE_KEYS | _BIDS_MALE_KEYS | _BIDS_OTHER_KEYS
+        f_count = sum(
+            int(v or 0) for k, v in sex_dist.items() if k.lower() in _BIDS_FEMALE_KEYS
+        )
+        m_count = sum(
+            int(v or 0) for k, v in sex_dist.items() if k.lower() in _BIDS_MALE_KEYS
+        )
+        # Explicit BIDS "other" (o/other) + any non-spec keys (n/a, unknown, …)
+        o_count = sum(
+            int(v or 0)
+            for k, v in sex_dist.items()
+            if k.lower() not in _BIDS_FEMALE_KEYS | _BIDS_MALE_KEYS
+        )
+        total_sex = f_count + m_count + o_count
+
+        if total_sex > 0:
+            f_pct = f_count / total_sex * 100
+            m_pct = m_count / total_sex * 100
+            o_pct = o_count / total_sex * 100
+
+            bar_segments = ""
+            if f_count:
+                bar_segments += (
+                    f'<div style="width:{f_pct:.1f}%; background:#e07ab5; '
+                    "display:inline-flex; align-items:center; justify-content:center; "
+                    f'color:#fff; font-size:11px; min-width:2px;" title="Female: {f_count}">'
+                    f"{f_count if f_pct >= 8 else ''}</div>"
+                )
+            if m_count:
+                bar_segments += (
+                    f'<div style="width:{m_pct:.1f}%; background:#4472c4; '
+                    "display:inline-flex; align-items:center; justify-content:center; "
+                    f'color:#fff; font-size:11px; min-width:2px;" title="Male: {m_count}">'
+                    f"{m_count if m_pct >= 8 else ''}</div>"
+                )
+            if o_count:
+                bar_segments += (
+                    f'<div style="width:{o_pct:.1f}%; background:#999; '
+                    "display:inline-flex; align-items:center; justify-content:center; "
+                    f'color:#fff; font-size:11px; min-width:2px;" title="Other: {o_count}">'
+                    f"{o_count if o_pct >= 8 else ''}</div>"
+                )
+
+            legend = []
+            if f_count:
+                legend.append(
+                    '<span style="display:inline-block;width:12px;height:12px;'
+                    'background:#e07ab5;border-radius:2px;margin-right:4px;"></span>Female'
+                )
+            if m_count:
+                legend.append(
+                    '<span style="display:inline-block;width:12px;height:12px;'
+                    'background:#4472c4;border-radius:2px;margin-right:4px;"></span>Male'
+                )
+            if o_count:
+                legend.append(
+                    '<span style="display:inline-block;width:12px;height:12px;'
+                    'background:#999;border-radius:2px;margin-right:4px;"></span>Other'
+                )
+            legend_html = (
+                '<div style="font-size:11px;margin-top:4px;">'
+                + "&nbsp;&nbsp;".join(legend)
+                + f"&nbsp;&nbsp;<strong>Total: {total_sex}</strong></div>"
+            )
+
+            sex_html = (
+                ".. raw:: html\n\n"
+                '   <div class="eegdash-stats-section" style="margin-bottom:1rem;">\n'
+                "     <p><strong>Sex distribution</strong></p>\n"
+                '     <div style="display:flex; height:22px; width:100%; max-width:400px; '
+                'border-radius:4px; overflow:hidden;">\n'
+                f"       {bar_segments}\n"
+                "     </div>\n"
+                f"     {legend_html}\n"
+                "   </div>\n\n"
+            )
+            parts.append(sex_html)
+
+    # ------------------------------------------------------------------
+    # C. Channel count distribution
+    # ------------------------------------------------------------------
+    if has_nchans:
+        parts.append(
+            _make_count_bar_chart(
+                nchans_counts, "Channel counts", "ch", bar_color="#009E73"
+            )
+        )
+
+    # ------------------------------------------------------------------
+    # D. Sampling frequency distribution
+    # ------------------------------------------------------------------
+    if has_sfreq:
+        parts.append(
+            _make_count_bar_chart(
+                sfreq_counts, "Sampling frequencies", "Hz", bar_color="#D55E00"
+            )
+        )
+
+    # ------------------------------------------------------------------
+    # E. Total recording duration
+    # ------------------------------------------------------------------
+    if has_duration:
+        try:
+            total_s = float(total_duration_s)
+            total_h = int(total_s // 3600)
+            remaining_m = int((total_s % 3600) // 60)
+            if total_h >= 24:
+                duration_str = f"{total_h} h"
+            else:
+                duration_str = (
+                    f"{total_h} h {remaining_m} min"
+                    if total_h
+                    else f"{remaining_m} min"
+                )
+            duration_html = (
+                ".. raw:: html\n\n"
+                '   <div class="eegdash-stats-section" style="margin-bottom:1rem;">\n'
+                f"     <p><strong>Total recording duration</strong>: {duration_str}</p>\n"
+                "   </div>\n\n"
+            )
+            parts.append(duration_html)
+        except (TypeError, ValueError):
+            pass
+
+    # ------------------------------------------------------------------
+    # F. BIDS-annotated channel retention
+    # ------------------------------------------------------------------
+    if has_bad_channels:
+        try:
+            retained_pct = float(bad_channels_info["mean_retained_pct"])  # type: ignore[index]
+            n_annotated = int(bad_channels_info["n_annotated"])  # type: ignore[index]
+            bar_pct = int(retained_pct)
+            # Colour: green (good retention) → red (poor retention)
+            r = int(255 * (1 - retained_pct / 100))
+            g = int(200 * retained_pct / 100)
+            bar_color = f"rgb({r},{g},50)"
+            bad_ch_html = (
+                ".. raw:: html\n\n"
+                '   <div class="eegdash-stats-section" style="margin-bottom:1rem;">\n'
+                "     <p><strong>Channels retained (BIDS annotation)</strong>"
+                f" — {retained_pct:.1f}% average across {n_annotated} annotated recording(s)</p>\n"
+                '     <div style="display:flex; align-items:center; gap:8px;">\n'
+                '       <div style="flex:1; max-width:300px; height:14px; '
+                'background:#e0e0e0; border-radius:4px; overflow:hidden;">\n'
+                f'         <div style="width:{bar_pct}%; height:100%; background:{bar_color};"></div>\n'
+                "       </div>\n"
+                f'       <span style="font-size:12px;">{retained_pct:.1f}%</span>\n'
+                "     </div>\n"
+                '     <p style="font-size:11px; color:var(--pst-color-muted, #666); margin-top:4px;">'
+                "Based on <code>status: bad</code> in BIDS <code>channels.tsv</code>. "
+                "This reflects researcher annotation, not automated pipeline rejection.</p>\n"
+                "   </div>\n\n"
+            )
+            parts.append(bad_ch_html)
+        except (TypeError, ValueError, KeyError):
+            pass
+
+    if not parts:
+        return ""
+
+    return heading + "".join(parts)
+
+
+def _format_nemar_analysis_section(context: Mapping[str, object]) -> str:
+    """Embed NEMAR pre-generated pipeline analysis plots for OpenNeuro/NEMAR datasets.
+
+    NEMAR runs an automated EEG processing pipeline (via the Neuroscience Gateway)
+    on all OpenNeuro datasets. The resulting static plots are publicly accessible
+    at a consistent URL pattern and include:
+      - Pipeline success: data-cleaning and ICA-decomposition pass/fail counts
+      - Data frames retained (%) after cleaning
+      - Line noise per channel (channel RMS, dB)
+      - Data channels retained (%) after cleaning
+      - Age and gender distribution of participants
+      - HED event-descriptor word cloud (for HED-annotated datasets)
+    """
+    dataset_id = str(context.get("dataset_id") or "").strip().lower()
+    source = str(context.get("source") or "").strip().lower()
+
+    if not dataset_id or source not in ("openneuro", "nemar"):
+        return ""
+
+    nemar_url = str(
+        context.get("nemar_url")
+        or f"https://nemar.org/dataexplorer/detail?dataset_id={dataset_id}"
+    )
+    histogram_url = (
+        "https://nemar.org/dataexplorer/download"
+        f"?filepath=/data/nemar/openneuro//processed/{dataset_id}/code/{dataset_id}_histogram.png"
+    )
+    wordcloud_url = (
+        "https://nemar.org/dataexplorer/download"
+        f"?filepath=/data/nemar/openneuro//processed/event_summaries/{dataset_id}/word_cloud.svg"
+        "&file_type=svg"
+    )
+
+    heading = "NEMAR Processing Statistics\n---------------------------\n\n"
+    description = (
+        f"The plots below are generated by `NEMAR's automated EEG pipeline <{nemar_url}>`_. "
+        f"The histogram shows pipeline success for data cleaning and ICA decomposition, "
+        "the percentage of data frames and EEG channels retained after artefact removal, "
+        "line noise per channel (RMS, dB), and the age/gender distribution of participants.\n\n"
+    )
+    html_histogram = (
+        ".. raw:: html\n\n"
+        '   <div class="nemar-analysis-section">\n'
+        f'     <a href="{nemar_url}" target="_blank" rel="noopener noreferrer">\n'
+        "       <img\n"
+        f'         src="{histogram_url}"\n'
+        f'         alt="NEMAR pipeline statistics — {dataset_id.upper()}"\n'
+        '         loading="lazy"\n'
+        '         style="max-width: 100%; border: 1px solid var(--pst-color-border); border-radius: 8px; margin-bottom: 1rem;"\n'
+        "       />\n"
+        "     </a>\n"
+        "   </div>\n\n"
+    )
+    html_wordcloud = (
+        ".. raw:: html\n\n"
+        '   <details class="nemar-wordcloud-details" style="margin-top: 0.5rem;">\n'
+        "     <summary>HED event descriptors word cloud</summary>\n"
+        "     <img\n"
+        f'       src="{wordcloud_url}"\n'
+        f'       alt="HED event descriptors word cloud — {dataset_id.upper()}"\n'
+        '       loading="lazy"\n'
+        '       style="max-width: 60%; display: block; margin: 0.5rem auto;"\n'
+        "     />\n"
+        "   </details>\n"
+    )
+    return heading + description + html_histogram + html_wordcloud
+
+
+_EXPLORER_DATASET_RE = re.compile(r"^[A-Za-z0-9_\-]{1,64}$")
+
+
+def _format_explorer_section(name: str, context: Mapping[str, object]) -> str:
+    """Render the BIDS file explorer for this dataset.
+
+    Emits a ``.. dataset-explorer::`` directive for the catalog class
+    name. The browser-side widget fetches records lazily from the
+    EEGDash API the first time the user interacts with it, so there is
+    no per-page build cost beyond the static directive output.
+
+    Returns an empty string if ``name`` is not a safe identifier — this
+    is the same gate the directive itself enforces, applied here so
+    ``DATASET_PAGE_TEMPLATE`` collapses cleanly for any pathological
+    class name rather than failing the whole build.
+    """
+    safe = (name or "").strip()
+    if not safe or not _EXPLORER_DATASET_RE.match(safe):
+        return ""
+
+    heading = "File Explorer\n-------------\n\n"
+    description = (
+        "Browse the BIDS file structure of this dataset. Records are "
+        "fetched on demand from the EEGDash catalog the first time "
+        "you open the explorer.\n\n"
+    )
+    directive = f".. dataset-explorer::\n   :dataset: {safe}\n"
+    return heading + description + directive
+
+
+# ---------------------------------------------------------------------------
+# Trace viewer iframe: live signal preview from the eegdash-viewer
+# (https://eegdash.github.io/eegdash-viewer/) embedded as a lazy iframe.
+# Query the eegdash API for the first supported EEG record per dataset.
+# ---------------------------------------------------------------------------
+
+_TRACE_VIEWER_BASE = "https://eegdash.github.io/eegdash-viewer/"
+_TRACE_API_URL = "https://data.eegdash.org/api/eegdash/records"
+_TRACE_SUPPORTED_EXT = (".set", ".edf", ".bdf", ".vhdr", ".fif", ".fiff")
+
+
+def _get_first_eeg_record(dataset_id: str) -> dict[str, object] | None:
+    """Query eegdash API for the first supported electrophysiology record.
+
+    Searches for any compatible modality (EEG, iEEG, EMG, MEG) that can be viewed
+    with the eegdash-viewer, prioritizing EEG.
+    """
+    import urllib.parse
+    import urllib.request
+
+    query = {
+        "dataset": dataset_id,
+        "suffix": {"$in": ["eeg", "ieeg", "emg", "meg"]},
+        "extension": {"$in": list(_TRACE_SUPPORTED_EXT)},
+        "_has_missing_files": {"$ne": True},
+    }
+    params = {
+        "limit": 1,
+        "filter": json.dumps(query, separators=(",", ":")),
+    }
+    url = f"{_TRACE_API_URL}?{urllib.parse.urlencode(params)}"
+
+    try:
+        req = urllib.request.Request(url, headers={"Accept": "application/json"})
+        with urllib.request.urlopen(req, timeout=10) as resp:
+            body = json.loads(resp.read().decode("utf-8"))
+            if body.get("success") and body.get("data"):
+                return body["data"][0]
+    except Exception:
+        pass
+    return None
+
+
+def _format_traces_section(context: Mapping[str, object]) -> str:
+    """Render an iframe for this dataset's signal preview.
+
+    Query the API for the first supported electrophysiology record (EEG, iEEG, EMG)
+    and build the viewer URL.
+    """
+    dataset_id = str(context.get("dataset_id") or "").strip().lower()
+    if not dataset_id:
+        return ""
+
+    record = _get_first_eeg_record(dataset_id)
+    if not record:
+        return ""
+
+    # Extract entity info from record or its entities_mne dict
+    entities = (
+        record.get("entities_mne", {})
+        if isinstance(record.get("entities_mne"), dict)
+        else {}
+    )
+    sub = str(record.get("subject") or entities.get("subject") or "").strip()
+    task = str(record.get("task") or entities.get("task") or "").strip()
+    ext = str(record.get("extension") or "").strip().lstrip(".")
+    suffix = str(record.get("suffix") or "eeg").strip().lower()
+
+    if not sub or not ext:
+        return ""
+
+    # Build the viewer URL
+    from urllib.parse import urlencode
+
+    qs_pairs = [("dataset", dataset_id), ("sub", sub)]
+    ses = record.get("session") or entities.get("session")
+    if ses:
+        qs_pairs.append(("ses", str(ses)))
+    if task:
+        qs_pairs.append(("task", task))
+    run = record.get("run") or entities.get("run")
+    if run:
+        qs_pairs.append(("run", str(run)))
+    qs_pairs.append(("ext", ext))
+    # Add suffix parameter if it's not the default EEG
+    if suffix != "eeg":
+        qs_pairs.append(("suffix", suffix))
+    qs_pairs.append(("embed", "1"))
+    iframe_src = f"{_TRACE_VIEWER_BASE}?{urlencode(qs_pairs)}"
+
+    # Build entity label
+    entity_bits = [f"sub-{sub}"]
+    if ses:
+        entity_bits.append(f"ses-{ses}")
+    if task:
+        entity_bits.append(f"task-{task}")
+    if run:
+        entity_bits.append(f"run-{run}")
+    entity_label = " · ".join(entity_bits)
+
+    # Caption above the iframe: explicit "one of many" so a reader
+    # doesn't mistake the preview for the entire dataset. Pulls
+    # n_subjects + n_records from context when available; otherwise
+    # falls back to the generic "many recordings" phrasing.
+    n_subjects = context.get("n_subjects")
+    n_records = context.get("n_records")
+    scope_bits = []
+    if n_subjects:
+        scope_bits.append(f"{n_subjects} subjects")
+    if n_records:
+        scope_bits.append(f"{n_records} recordings")
+    scope_str = " and ".join(scope_bits) if scope_bits else "many recordings"
+
+    openneuro_url = f"https://openneuro.org/datasets/{dataset_id}"
+
+    # Map suffix to modality name for UI display
+    modality_names = {
+        "eeg": "EEG",
+        "ieeg": "iEEG",
+        "emg": "EMG",
+        "meg": "MEG",
+        "nirs": "fNIRS",
+    }
+    modality_display = modality_names.get(suffix, suffix.upper())
+
+    heading = "Signal Preview\n--------------\n\n"
+    html = (
+        ".. raw:: html\n\n"
+        '   <details class="trace-viewer">\n'
+        f"     <summary>Live trace viewer — <strong>{entity_label}</strong></summary>\n"
+        '     <p class="trace-viewer-caption">\n'
+        "       Showing <strong>one</strong> representative recording out of\n"
+        f"       <strong>{scope_str}</strong> in this dataset.\n"
+        f'       Browse the full set on <a href="{openneuro_url}" target="_blank" rel="noopener">OpenNeuro</a>;\n'
+        f"       drop any other <code>_{suffix}.{{set,edf,bdf,vhdr}}</code> file onto the\n"
+        f"       viewer (or pass <code>?{suffix}=&lt;url&gt;</code>) to inspect it.\n"
+        "     </p>\n"
+        "     <iframe\n"
+        f'       data-src="{iframe_src}"\n'
+        '       loading="lazy"\n'
+        '       width="100%" height="640"\n'
+        '       style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 1200px; display: block; background: transparent;"\n'
+        f'       title="Live {modality_display} trace viewer for {dataset_id} — {entity_label}"\n'
+        '       referrerpolicy="no-referrer">\n'
+        "     </iframe>\n"
+        "   </details>\n"
+    )
+    return heading + html
+
+
 def _format_see_also_section(
     dataset_id: str,
     class_name: str = "",
@@ -2523,6 +3179,10 @@ def _process_dataset_item(
         highlights_section=_format_highlights_section(context),
         quickstart_section=_format_quickstart_section(context),
         electrodes_section=_format_electrodes_section(context),
+        recording_stats_section=_format_recording_stats_section(context),
+        nemar_analysis_section=_format_nemar_analysis_section(context),
+        traces_section=_format_traces_section(context),
+        explorer_section=_format_explorer_section(name, context),
         api_section=_format_api_section(name),
         see_also_section=_format_see_also_section(dataset_id, name, related),
         feedback_section=_format_feedback_section(dataset_id, dataset_title),
@@ -3082,13 +3742,14 @@ def _article_jsonld(title: str, description: str, url: str) -> dict:
 
 
 _ARTICLE_JSONLD: Mapping[str, dict] = {
-    "user_guide": _article_jsonld(
-        "EEGDash user guide",
+    "quickstart": _article_jsonld(
+        "EEGDash quick start guide",
         (
-            "Narrative walkthrough of the EEGDash Python library — query "
-            "datasets, load BIDS records, and build reproducible ML pipelines."
+            "Quick start hub for the EEGDash Python library — the curated "
+            "Cat A learning path, copy-paste recipes for query and filter, "
+            "API configuration, and links to the full gallery and concepts."
         ),
-        "https://eegdash.org/user_guide.html",
+        "https://eegdash.org/quickstart.html",
     ),
     "developer_notes": _article_jsonld(
         "EEGDash developer notes",
@@ -3133,7 +3794,7 @@ def _inject_seo_context(app, pagename, templatename, context, doctree) -> None:
         )
 
     # DataCatalog JSON-LD for the dataset_summary page. Google Dataset
-    # Search uses this to recognise the page as a catalog aggregator; the
+    # Search uses this to recognize the page as a catalog aggregator; the
     # per-row Dataset JSON-LD lives on individual
     # `api/dataset/eegdash.dataset.*.html` pages and is reached via the
     # sitemap.
@@ -3476,6 +4137,331 @@ def _cap_descriptions_hook(app, pagename, templatename, context, doctree):
     context["metatags"] = _cap_descriptions_in_metatags(context.get("metatags") or "")
 
 
+def _extract_sg_thumbnail_block(child_index_path: Path) -> str | None:
+    """Return the sphinx-gallery thumbnail-grid block from a child gallery.
+
+    Sphinx-gallery emits a self-contained card grid in each leaf
+    ``index.rst`` between two ``raw:: html`` blocks: it opens with
+    ``<div class="sphx-glr-thumbnails">`` and closes with the matching
+    ``</div>``. Inside, every tutorial card is its own
+    ``<div class="sphx-glr-thumbcontainer">`` with thumbnail image,
+    cross-reference link, and caption.
+
+    The grid block is everything from the first ``.. raw:: html`` line
+    that opens the ``<div class="sphx-glr-thumbnails">`` container up to
+    and including the closing ``raw:: html`` block whose payload is
+    ``</div>`` and that is followed by a non-card structural element
+    (download footer or hidden toctree). Returns the raw text ready to
+    be inlined under any heading; returns ``None`` if the marker can't
+    be found (for example, the gallery is empty).
+    """
+    try:
+        text = child_index_path.read_text(encoding="utf-8")
+    except (FileNotFoundError, OSError):
+        return None
+    open_marker = '<div class="sphx-glr-thumbnails">'
+    open_idx = text.find(open_marker)
+    if open_idx < 0:
+        return None
+    # Walk back to the directive header for the opening raw block so we
+    # capture the whole ``.. raw:: html\n\n    <div...>`` chunk.
+    block_start = text.rfind(".. raw:: html", 0, open_idx)
+    if block_start < 0:
+        return None
+    # The grid ends at the ``.. toctree::`` (hidden) that sphinx-gallery
+    # appends right after closing ``</div>``. That toctree is content we
+    # render via our own toctree, so cut the slice just before it.
+    toctree_idx = text.find(".. toctree::", open_idx)
+    if toctree_idx < 0:
+        return None
+    return text[block_start:toctree_idx].rstrip() + "\n"
+
+
+def _write_auto_examples_root_index(app):
+    """Write a top-level ``generated/auto_examples/index.rst`` aggregator.
+
+    Sphinx-gallery is configured with multiple gallery roots (one per
+    tutorial category, plus how-to / applied / eeg2025 / hpc / dev_scripts).
+    Each emits its own ``index.rst`` containing a card grid of tutorial
+    thumbnails. This hook reads those per-leaf indexes and stitches them
+    into a single parent page that mimics the SPDLearn theory aggregator:
+    a hero intro, a "how to read this gallery" callout, and one section
+    per gallery root with its full thumbnail card grid surfaced inline.
+
+    Runs at priority 600 so that sphinx-gallery's own
+    ``generate_gallery_rst`` (default priority 500) has already run and
+    materialised every per-leaf ``index.rst``. ``dev_scripts`` is kept
+    in the build (so internal links still resolve via a hidden toctree)
+    but is omitted from the visible card grid: the plan calls it an
+    internal-only catalogue.
+    """
+    src_root = Path(app.srcdir) / "generated" / "auto_examples"
+    out_path = src_root / "index.rst"
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+
+    # Per-section metadata: gallery dir (relative to ``generated/auto_examples``),
+    # H3 title, intro paragraph. Pulled from the per-folder README and the
+    # tutorial restructure plan so the wording stays in lockstep with the
+    # source-of-truth roster.
+    tutorial_sections = [
+        (
+            "tutorials/00_start_here",
+            "Start Here",
+            "Difficulty 1. Three short lessons that take you from a fresh "
+            "install to a working PyTorch ``DataLoader`` over real EEG "
+            "records: find datasets and records, load one recording and "
+            "inspect it, then turn an ``EEGDashDataset`` into windows and "
+            "a dataloader. CPU-only, each runs in under a few minutes.",
+        ),
+        (
+            "tutorials/10_core_workflow",
+            "Core Decoding Workflow",
+            "Difficulty 1-2. The canonical EEG decoding pipeline in four "
+            "lessons: preprocess and window, split without subject leakage, "
+            "train a baseline against chance, and persist prepared data for "
+            "reuse. The leakage-safe split lesson is "
+            "the rubric anchor for E3.27 invariants and Cisotto and Chicco "
+            "2024's evaluation guidance.",
+        ),
+        (
+            "tutorials/20_event_related",
+            "Event-Related Decoding",
+            "Difficulty 2. Two lessons that decode labels coming from "
+            "events and annotations rather than continuous state: a P3 "
+            "target-versus-standard classifier on a visual oddball "
+            "paradigm, then the auditory oddball framed as a contrast "
+            "with the visual case.",
+        ),
+        (
+            "tutorials/30_resting_state",
+            "Resting-State and State Decoding",
+            "Difficulty 1. The canonical beginner decoding lesson: "
+            "eyes-open versus eyes-closed classification on resting-state "
+            "EEG, decoded from alpha-rhythm differences with a band-power "
+            "baseline.",
+        ),
+        (
+            "tutorials/40_features",
+            "Feature Engineering",
+            "Difficulty 1-2. EEGDash's feature extraction package as a "
+            "first-class option, not an afterthought to deep learning. "
+            "Three lessons cover feature tables from windows, preprocessor "
+            "and dependency trees that avoid recomputation, and a "
+            "scikit-learn / LightGBM baseline straight from the feature "
+            "table.",
+        ),
+        (
+            "tutorials/50_evaluation",
+            "Evaluation and Benchmarking",
+            "Difficulty 2-3. Five lessons that treat decoding evaluation "
+            "as a core skill, drawing on MOABB (Chevallier, Aristimunha "
+            "et al. 2024). Builds from a single split toward "
+            "benchmark-grade pipeline comparison: within-subject, "
+            "cross-subject, cross-session, learning curves, and a paired "
+            "Wilcoxon comparison of two pipelines.",
+        ),
+        (
+            "tutorials/70_transfer_foundation",
+            "Transfer, Foundation Models, and EEG2025",
+            "Difficulty 3. Four advanced lessons on transfer learning "
+            "and foundation-model fine-tuning, framed around the EEG2025 "
+            "Foundation Challenge: ``EEGChallengeDataset`` basics, "
+            "cross-task transfer (Challenge 1), subject-invariant "
+            "p-factor regression (Challenge 2), and fine-tuning a "
+            "Braindecode pretrained model. Builds on Schirrmeister et al. 2017.",
+        ),
+    ]
+    leaf_sections = [
+        (
+            "how_to",
+            "How-to recipes",
+            "Task-focused snippets that assume you already know the "
+            "basics: how to download a dataset, run preprocessing on "
+            "SLURM, parallelize feature extraction, use the HPC cache, "
+            "and work offline. Each guide answers a single question; "
+            "cross-link with the HPC track when relevant.",
+        ),
+        (
+            "applied",
+            "Applied research projects",
+            "Project-style examples that target a concrete scientific "
+            "question -- age regression, p-factor prediction, sex "
+            "classification, P300 transfer, clinical-catalog summary -- "
+            "with realistic data sizes, runtimes, and limitations. Treat "
+            "them as starting points, not prescriptive recipes.",
+        ),
+        (
+            "eeg2025",
+            "EEG2025 Foundation Challenge",
+            "End-to-end pipelines for the two EEG2025 Foundation "
+            "Challenge tracks: cross-task transfer learning (passive to "
+            "active), and subject-invariant representations for clinical "
+            "factor prediction. Pre-trained weights ship alongside each "
+            "tutorial.",
+        ),
+        (
+            "hpc",
+            "High-performance computing",
+            "Reference setup for running EEGDash on shared HPC clusters: "
+            "SLURM submission scripts (CPU and GPU), a Dockerfile, and a "
+            "tutorial showing how to combine the on-disk cache with batch "
+            "scheduling for an eyes-open / eyes-closed run.",
+        ),
+    ]
+
+    def _section_block(rel_dir: str, title: str, intro: str, level: str) -> str:
+        """Build one section: heading + intro paragraph + thumbnail grid."""
+        underline = level * len(title)
+        index_path = src_root / rel_dir / "index.rst"
+        thumb_block = _extract_sg_thumbnail_block(index_path)
+        if thumb_block is None:
+            # Defensive fallback: no card grid available, defer to a
+            # plain reference link so the section still renders.
+            log = logging.getLogger(__name__)
+            log.warning(
+                "auto_examples aggregator: no thumbnail grid in %s; "
+                "falling back to bare link",
+                index_path,
+            )
+            thumb_block = (
+                f":doc:`Browse {title} </generated/auto_examples/{rel_dir}/index>`\n"
+            )
+        return f"{title}\n{underline}\n\n{intro}\n\n{thumb_block}\n"
+
+    parts: list[str] = [
+        ":orphan:\n",
+        ".. _sphx_glr_generated_auto_examples:\n",
+        "Examples gallery",
+        "================",
+        "",
+        "The EEGDash gallery is the runnable, narrative half of the docs: "
+        "the **Concepts** chapter explains *why* a decision matters, the "
+        "API reference enumerates every public symbol, and the gallery "
+        "you're reading shows the choices in motion against real BIDS-"
+        "curated EEG records. Every script under ``examples/`` is a "
+        "sphinx-gallery tutorial -- meaning it executes top to bottom on "
+        "every documentation build, and the captured first figure is the "
+        "thumbnail you see below.",
+        "",
+        "The intended path: read the curated **Tutorials** in order, dip "
+        "into **How-to recipes** when you have a specific question, then "
+        "scale up using the **Applied research projects**, the **EEG2025 "
+        "Foundation Challenge** pipelines, and the **High-performance "
+        "computing** track.",
+        "",
+        ".. admonition:: How to read this gallery",
+        "   :class: tip eegdash-gallery-howto",
+        "",
+        "   - **Reading order.** Tutorials are sorted by category and "
+        "numbered (``plot_00_*``, ``plot_10_*``, ...). Inside a category "
+        "they're sequenced beginner-first; the file numbers are the "
+        "intended path.",
+        "   - **Cards show the captured first figure.** Sphinx-gallery "
+        "stores the first ``matplotlib`` figure as the thumbnail, so the "
+        "card preview is the literal output of running the script. A "
+        "branded fallback is shown when the tutorial produces no figure.",
+        "   - **Difficulty.** Each section header states the difficulty "
+        "range (1 = absolute beginner, 3 = advanced / foundation-model "
+        "tier).",
+        "",
+        "Tutorials (curated learning path)",
+        "---------------------------------",
+        "",
+        "Seven categories, ordered the way we would teach them: install, "
+        "load, decode events, decode state, engineer features, evaluate "
+        "rigorously, then scale to transfer and foundation models.",
+        "",
+        "Choose your path",
+        "~~~~~~~~~~~~~~~~",
+        "",
+        ".. list-table::",
+        "   :header-rows: 1",
+        "   :widths: 30 35 35",
+        "",
+        "   * - Your goal",
+        "     - Start with",
+        "     - Then read",
+        "   * - **Load my first dataset**",
+        "     - :doc:`tutorials/00_start_here/index`",
+        "     - :doc:`tutorials/10_core_workflow/index`",
+        "   * - **Train a classifier safely**",
+        "     - :doc:`tutorials/10_core_workflow/index`",
+        "     - :doc:`tutorials/50_evaluation/index`",
+        "   * - **Extract classical features**",
+        "     - :doc:`tutorials/40_features/index`",
+        "     - :doc:`how_to/index`",
+        "   * - **Run on a cluster**",
+        "     - :doc:`how_to/index`",
+        "     - :doc:`hpc/index`",
+        "   * - **Join EEG2025**",
+        "     - :doc:`tutorials/70_transfer_foundation/index`",
+        "     - :doc:`eeg2025/index`",
+        "",
+        ".. grid:: 1 2 2 4",
+        "   :gutter: 3",
+        "",
+        "   .. grid-item-card:: 🚀 Learn the basics",
+        "      :link: tutorials/00_start_here/index",
+        "      :link-type: doc",
+        "",
+        "      Start with the absolute beginner tutorials.",
+        "",
+        "   .. grid-item-card:: 🔬 Run an applied project",
+        "      :link: applied/index",
+        "      :link-type: doc",
+        "",
+        "      Dive into real-world research case studies.",
+        "",
+        "   .. grid-item-card:: ⚡ Scale on HPC",
+        "      :link: hpc/index",
+        "      :link-type: doc",
+        "",
+        "      Move from local scripts to cluster-wide jobs.",
+        "",
+        "   .. grid-item-card:: 🏆 Join EEG2025",
+        "      :link: eeg2025/index",
+        "      :link-type: doc",
+        "",
+        "      Enter the official Foundation Challenge.",
+        "",
+    ]
+    for rel, title, intro in tutorial_sections:
+        parts.append(_section_block(rel, title, intro, level="~"))
+
+    for rel, title, intro in leaf_sections:
+        parts.append(_section_block(rel, title, intro, level="-"))
+
+    # Toctrees keep the navigation tree wired up so individual tutorials
+    # remain reachable from the sidebar. They render hidden because the
+    # visible content is the card grid above; a visible toctree on top
+    # of cards would duplicate the listing as a bullet list.
+    parts.append(".. toctree::")
+    parts.append("   :hidden:")
+    parts.append("   :caption: Tutorials (curated learning path)")
+    parts.append("")
+    for rel, _title, _intro in tutorial_sections:
+        parts.append(f"   {rel}/index")
+    parts.append("")
+    parts.append(".. toctree::")
+    parts.append("   :hidden:")
+    parts.append("   :caption: Recipes and applied work")
+    parts.append("")
+    for rel, _title, _intro in leaf_sections:
+        parts.append(f"   {rel}/index")
+    parts.append("")
+    # ``dev_scripts`` is kept in the build (linked under a hidden toctree
+    # so internal references stay valid) but is intentionally absent from
+    # the visible gallery -- it's an internal debugging catalogue, not
+    # public-facing tutorial content.
+    parts.append(".. toctree::")
+    parts.append("   :hidden:")
+    parts.append("")
+    parts.append("   dev_scripts/index")
+    parts.append("")
+
+    out_path.write_text("\n".join(parts) + "\n", encoding="utf-8")
+
+
 def setup(app):
     """Create the back-references directory and setup Sphinx events."""
     backreferences_dir = os.path.join(
@@ -3486,6 +4472,9 @@ def setup(app):
 
     app.connect("builder-inited", _assert_dataset_table_inlines_datatables)
     app.connect("builder-inited", _generate_dataset_docs)
+    # Run after sphinx-gallery's `generate_gallery_rst` (priority 500) so
+    # the per-leaf index files exist before we link to them.
+    app.connect("builder-inited", _write_auto_examples_root_index, priority=600)
     app.connect("build-finished", _copy_dataset_summary)
     # Align sitemap homepage entry with the canonical emitted in
     # `_inject_seo_context`. Must run after `sphinx-sitemap` writes

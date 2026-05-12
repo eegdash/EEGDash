@@ -14,6 +14,7 @@ from eegdash.features.utils import (
 
 def test_utils_gaps(features_dataset):
     from eegdash.features.base_utils import get_underlying_func
+    from eegdash.features.output_types import SignalOutputType
 
     # 52-85: extract_features
     mock_ds = MagicMock()
@@ -25,7 +26,7 @@ def test_utils_gaps(features_dataset):
     mock_ds.datasets[0].raw.info = {"sfreq": 100}
 
     fe = FeatureExtractor({"f": lambda x: {"f1": [1.0]}})
-    fe.parent_extractor_type = [None]
+    fe.parent_extractor_type = [SignalOutputType]
     # We must patch where FeaturesConcatDataset is used
     with patch("eegdash.features.utils.FeaturesConcatDataset"):
         extract_features(mock_ds, fe)
@@ -99,7 +100,6 @@ def test_utils_gaps(features_dataset):
 
     # 178, 183-192: fit_feature_extractors
     from eegdash.features.kinds import UnivariateFeature
-    from eegdash.features.output_types import SignalOutputType
 
     class MyTrainable(FeatureExtractor):
         def __init__(self, *args, **kwargs):

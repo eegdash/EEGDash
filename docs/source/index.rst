@@ -118,52 +118,62 @@
 
 .. container:: hf-badges
 
+   .. Badges come from shield/badge services (GitHub Actions, img.shields.io,
+      pepy.tech, codecov) whose SVGs all share the same natural height (20)
+      but have different natural widths driven by their text content. Each
+      ``:width:`` below matches the exact natural width of its SVG; every
+      ``:height:`` is 20. Rendering at 1:1 scale avoids the aspect-ratio
+      distortion that PSI flagged (e.g. Python versions badge: natural
+      198x20), and every ``<img>`` ships with explicit width+height so the
+      browser reserves accurate layout space — no CLS regression, SEO
+      contract preserved.
+
    .. image:: https://github.com/eegdash/EEGDash/actions/workflows/tests.yml/badge.svg
       :alt: Test Status
       :target: https://github.com/eegdash/EEGDash/actions/workflows/tests.yml
-      :width: 90
+      :width: 104
       :height: 20
 
    .. image:: https://github.com/eegdash/EEGDash/actions/workflows/doc.yaml/badge.svg
       :alt: Doc Status
       :target: https://github.com/eegdash/EEGDash/actions/workflows/doc.yaml
-      :width: 90
+      :width: 102
       :height: 20
 
    .. image:: https://img.shields.io/pypi/v/eegdash?color=blue&style=flat-square
       :alt: PyPI
       :target: https://pypi.org/project/eegdash/
-      :width: 120
+      :width: 78
       :height: 20
 
    .. image:: https://img.shields.io/pypi/pyversions/eegdash?style=flat-square
       :alt: Python Versions
       :target: https://pypi.org/project/eegdash/
-      :width: 140
+      :width: 198
       :height: 20
 
    .. image:: https://pepy.tech/badge/eegdash
       :alt: Downloads
       :target: https://pepy.tech/project/eegdash
-      :width: 120
+      :width: 106
       :height: 20
 
    .. image:: https://codecov.io/gh/eegdash/EEGDash/branch/main/graph/badge.svg
       :alt: Code Coverage
       :target: https://codecov.io/gh/eegdash/EEGDash
-      :width: 120
+      :width: 112
       :height: 20
 
    .. image:: https://img.shields.io/pypi/l/eegdash?style=flat-square
       :alt: License
       :target: https://github.com/eegdash/EEGDash/blob/main/LICENSE
-      :width: 120
+      :width: 134
       :height: 20
 
    .. image:: https://img.shields.io/github/stars/eegdash/eegdash?style=flat-square
       :alt: GitHub Stars
       :target: https://github.com/eegdash/EEGDash
-      :width: 120
+      :width: 60
       :height: 20
 
 

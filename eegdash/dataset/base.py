@@ -12,8 +12,10 @@ braindecode for machine learning workflows and handles data loading from both lo
 import configparser
 import re
 import shutil
+import urllib.error
+import urllib.request
 from contextlib import contextmanager
-from functools import partial
+from functools import lru_cache, partial
 from pathlib import Path, PurePosixPath
 from typing import Any
 
@@ -28,9 +30,10 @@ from braindecode.datasets.base import RawDataset
 from .. import downloader
 from ..const import MODALITY_ALIASES
 from ..logging import logger
-from ..schemas import validate_record
+from ..schemas import NEMAR_ROOT_METADATA_FILES, validate_record
+from ._source_inference import correct_storage_inplace
 from .bids_dataset import _COMPANION_FILES
-from .exceptions import DataIntegrityError
+from .exceptions import DataIntegrityError, StorageAccessError
 from .io import (
     _ANNEX_KEY_RE,
     _convert_time_with_numeric_dash,
@@ -226,6 +229,182 @@ def _make_tolerant_get_sample_info(orig_fn):
     return _tolerant_get_sample_info
 
 
+# NEMAR's S3 bucket allows anonymous GET on SHA-keyed objects under
+# ``s3://nemar/<id>/objects/<KEY>`` but not on BIDS-named paths (git-annex
+# stores by content hash). The BIDS-path → SHA-key mapping lives in the
+# dataset's git-annex pointer file, fetched here from GitHub raw.
+
+_NEMAR_RAW_URL = (
+    "https://raw.githubusercontent.com/NEMARDatasets/{dataset_id}/HEAD/{relpath}"
+)
+_NEMAR_POINTER_TIMEOUT = 30  # seconds — pointer files are tiny
+_NEMAR_USER_AGENT = "eegdash-runtime/nemar-resolver"
+
+
+def _fetch_nemar_pointer(dataset_id: str, relpath: str) -> bytes:
+    """Fetch the raw bytes of a NEMAR-tracked file from GitHub.
+
+    For annex-managed files this returns the git-annex symlink target
+    string; for files committed directly to git (sidecars) it returns
+    the actual file content.
+    """
+    url = _NEMAR_RAW_URL.format(dataset_id=dataset_id, relpath=relpath.lstrip("/"))
+    req = urllib.request.Request(url, headers={"User-Agent": _NEMAR_USER_AGENT})
+    with urllib.request.urlopen(req, timeout=_NEMAR_POINTER_TIMEOUT) as resp:
+        return resp.read()
+
+
+@lru_cache(maxsize=4096)
+def _resolve_nemar_pointer(dataset_id: str, relpath: str) -> tuple[str | None, bytes]:
+    """Return ``(annex_key, raw_bytes)`` for a NEMAR-tracked file.
+
+    ``annex_key`` is the SHA-keyed object name when the file is
+    annex-managed, ``None`` when the file is committed directly to git
+    (in which case ``raw_bytes`` is the actual content).
+    """
+    raw = _fetch_nemar_pointer(dataset_id, relpath)
+    try:
+        text = raw.decode("utf-8").strip()
+    except UnicodeDecodeError:
+        return None, raw
+    # git-annex pointers/symlinks always reference ``/annex/objects/``;
+    # everything else is a directly-tracked file (sidecar JSON/TSV).
+    if "/annex/objects/" not in text:
+        return None, raw
+    candidate = text.rsplit("/", 1)[-1]
+    if _ANNEX_KEY_RE.match(candidate):
+        return candidate, raw
+    return None, raw
+
+
+def _nemar_fast_paths(storage: dict, relpath: str) -> tuple[str | None, str | None]:
+    """Return ``(annex SHA key, inline sidecar text)`` for *relpath*.
+
+    Either or both may be ``None``. They are mutually exclusive by
+    schema invariant; ``_resolve_one_nemar_entry`` prefers the SHA key
+    when both are present.
+    """
+    return (
+        (storage.get("annex_keys") or {}).get(relpath),
+        (storage.get("sidecar_inline") or {}).get(relpath),
+    )
+
+
+def _resolve_nemar_uris(
+    record: dict, raw_dest: Path, dep_keys: list[str], dep_dests: list[Path]
+) -> tuple[str | None, list[str]]:
+    """Resolve SHA-keyed S3 URIs for a NEMAR record.
+
+    Per-entry resolution is delegated to ``_resolve_one_nemar_entry``
+    which honors the digest-time fast paths.
+    """
+    storage = record.get("storage") or {}
+    base = (storage.get("base") or "").rstrip("/")
+    raw_key = storage.get("raw_key", "")
+    dataset_id = record.get("dataset", "")
+    if not (base and raw_key and dataset_id):
+        return None, []
+
+    stored_key, stored_sidecar = _nemar_fast_paths(storage, raw_key)
+    raw_uri = _resolve_one_nemar_entry(
+        dataset_id=dataset_id,
+        relpath=raw_key,
+        base=base,
+        dest=raw_dest,
+        stored_key=stored_key,
+        stored_sidecar=stored_sidecar,
+        is_required=True,
+    )
+
+    dep_uris: list[str] = []
+    for dep_key, dep_dest in zip(dep_keys, dep_dests, strict=False):
+        dep_stored_key, dep_stored_sidecar = _nemar_fast_paths(storage, dep_key)
+        try:
+            uri = _resolve_one_nemar_entry(
+                dataset_id=dataset_id,
+                relpath=dep_key,
+                base=base,
+                dest=dep_dest,
+                stored_key=dep_stored_key,
+                stored_sidecar=dep_stored_sidecar,
+                is_required=False,
+            )
+        except (urllib.error.HTTPError, urllib.error.URLError) as e:
+            # Sidecar resolution failures are best-effort: log and skip,
+            # so a missing sidecar doesn't take out the whole load.
+            logger.warning(
+                "Could not resolve NEMAR sidecar %s/%s: %s",
+                dataset_id,
+                dep_key,
+                e,
+            )
+            continue
+        if uri:
+            dep_uris.append(uri)
+
+    return raw_uri, dep_uris
+
+
+def _resolve_one_nemar_entry(
+    *,
+    dataset_id: str,
+    relpath: str,
+    base: str,
+    dest: Path,
+    stored_key: str | None,
+    stored_sidecar: str | None,
+    is_required: bool,
+) -> str | None:
+    """Return the S3 URI for one entry, or ``None`` if it was inlined.
+
+    Two digest-time fast paths take precedence over the GitHub fetch:
+    ``stored_key`` (annex SHA key) yields the SHA-addressed S3 URI
+    directly; ``stored_sidecar`` (inline UTF-8 bytes) is written to disk
+    and we return ``None`` to signal "no remote URI needed". Both fast
+    paths are populated only at digest time and are never set together
+    for the same relpath. When neither is present we fall back to the
+    original ``_resolve_nemar_pointer`` GitHub-raw path.
+    """
+    if stored_key:
+        return f"{base}/objects/{stored_key}"
+
+    if stored_sidecar is not None:
+        if not dest.exists():
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            # Atomic write so concurrent loaders never see a partial file.
+            tmp = dest.with_suffix(dest.suffix + ".tmp")
+            tmp.write_text(stored_sidecar, encoding="utf-8", newline="")
+            tmp.replace(dest)
+        return None
+
+    try:
+        annex_key, payload = _resolve_nemar_pointer(dataset_id, relpath)
+    except urllib.error.URLError as e:
+        if not is_required:
+            raise
+        detail = (
+            f"HTTP {e.code} {e.reason}"
+            if isinstance(e, urllib.error.HTTPError)
+            else str(e.reason)
+        )
+        raise StorageAccessError(
+            f"Could not resolve NEMAR pointer {dataset_id}/{relpath} from "
+            f"GitHub raw: {detail}",
+            dataset_id=dataset_id,
+            backend="nemar",
+            logical_uri=f"{base}/{relpath}",
+            cache_path=str(dest),
+        ) from e
+
+    if annex_key:
+        return f"{base}/objects/{annex_key}"
+
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    if not dest.exists():
+        dest.write_bytes(payload)
+    return None
+
+
 class EEGDashRaw(RawDataset):
     """A single EEG recording dataset.
 
@@ -277,41 +456,37 @@ class EEGDashRaw(RawDataset):
 
         self.record = record
 
-        # Derive local cache paths from record fields (portable - no absolute paths stored)
+        # Self-heal records constructed directly (bypassing
+        # ``EEGDashDataset._normalize_records``).
+        correct_storage_inplace(self.record)
+
         storage = self.record.get("storage", {})
         dataset_id = self.record["dataset"]
         bids_relpath = self.record["bids_relpath"]
-        dep_keys = storage.get("dep_keys", [])
+        dep_keys = storage.get("dep_keys") or []
 
-        # Robust root resolution: check if a folder with the dataset_id exists,
-        # or if there's a unique folder that "matches" the dataset (e.g. ds0001mini)
         self.bids_root = self.cache_dir / dataset_id
-
         self.filecache = self.bids_root / bids_relpath
         self._dep_paths = [self.bids_root / p for p in dep_keys]
 
-        # Build remote URIs based on storage backend
         backend = storage.get("backend")
         base = storage.get("base", "").rstrip("/")
         raw_key = storage.get("raw_key", "")
-        dep_keys = storage.get("dep_keys") or []
+
+        # Default: no remote URIs. The two backends below override.
+        self._raw_uri: str | None = None
+        self._dep_uris: list[str] = []
+        self._storage_backend = backend
 
         if backend in ("s3", "https") and base and raw_key:
             self._raw_uri = f"{base}/{raw_key}"
             self._dep_uris = [f"{base}/{k}" for k in dep_keys]
         elif backend == "local" and base:
-            # Local backend: data already exists at storage.base
             local_base = Path(base)
             self.bids_root = local_base
             self.filecache = local_base / raw_key if raw_key else self.filecache
-            self._dep_paths = (
-                [local_base / k for k in dep_keys] if dep_keys else self._dep_paths
-            )
-            self._raw_uri = None
-            self._dep_uris = []
-        else:
-            self._raw_uri = None
-            self._dep_uris = []
+            if dep_keys:
+                self._dep_paths = [local_base / k for k in dep_keys]
 
         if not self.bids_root.exists() and self._raw_uri:
             self.bids_root.mkdir(parents=True, exist_ok=True)
@@ -377,6 +552,25 @@ class EEGDashRaw(RawDataset):
         return uri.rsplit("/", 1)[0] + "/" + bids_filename
 
     def _download_required_files(self) -> None:
+        # NEMAR records carry a logical ``s3://nemar/<id>/<bids_relpath>``
+        # base, but actual fetching has to go through the SHA-keyed
+        # object name under ``s3://nemar/<id>/objects/<KEY>``. Resolve
+        # the keys lazily (and only when the file isn't already cached)
+        # so that we don't hit GitHub raw for files that are already on
+        # disk.
+        if (
+            self._raw_uri is None
+            and self._storage_backend == "nemar"
+            and not self.filecache.exists()
+        ):
+            dep_keys = (self.record.get("storage") or {}).get("dep_keys") or []
+            self._raw_uri, self._dep_uris = _resolve_nemar_uris(
+                self.record,
+                raw_dest=self.filecache,
+                dep_keys=list(dep_keys),
+                dep_dests=list(self._dep_paths),
+            )
+
         if self._raw_uri is not None:
             filesystem = downloader.get_s3_filesystem()
 
@@ -432,6 +626,8 @@ class EEGDashRaw(RawDataset):
             # Auto-discover and download companion files (.fdt, .eeg, .vmrk)
             # that may not have been included in dep_keys.
             self._download_companion_files(filesystem)
+            if self._storage_backend == "nemar":
+                self._fetch_nemar_root_metadata()
 
         # CTF MEG .ds directories require internal files (.meg4, .res4, etc.)
         if self.filecache and self.filecache.suffix == ".ds":
@@ -439,6 +635,54 @@ class EEGDashRaw(RawDataset):
 
         # Always set filenames (important for local datasets)
         self.filenames = [self.filecache]
+
+    # BIDS root files not enumerated in dep_keys but expected by mne-bids /
+    # braindecode. All are direct-git on NEMAR (excluded from annex).
+    # Source of truth lives in eegdash.schemas to keep digest + runtime aligned.
+    _NEMAR_ROOT_METADATA_FILES = NEMAR_ROOT_METADATA_FILES
+
+    def _fetch_nemar_root_metadata(self) -> None:
+        storage = self.record.get("storage") or {}
+        dataset_id = self.record.get("dataset", "")
+        base = (storage.get("base") or "").rstrip("/")
+        if not (dataset_id and base and self.bids_root):
+            return
+        self.bids_root.mkdir(parents=True, exist_ok=True)
+        # If the digest enriched this record (sidecar_inline non-empty),
+        # trust the inlined apex map as authoritative: skip GitHub probes
+        # for files not present in it. Legacy un-enriched records keep
+        # the original full-iteration GitHub-fallback behavior.
+        sidecar_inline = storage.get("sidecar_inline") or {}
+        if sidecar_inline:
+            candidates = tuple(
+                n for n in self._NEMAR_ROOT_METADATA_FILES if n in sidecar_inline
+            )
+        else:
+            candidates = self._NEMAR_ROOT_METADATA_FILES
+        for relname in candidates:
+            dest = self.bids_root / relname
+            if dest.exists():
+                continue
+            stored_key, stored_sidecar = _nemar_fast_paths(storage, relname)
+            try:
+                _resolve_one_nemar_entry(
+                    dataset_id=dataset_id,
+                    relpath=relname,
+                    base=base,
+                    dest=dest,
+                    stored_key=stored_key,
+                    stored_sidecar=stored_sidecar,
+                    is_required=False,
+                )
+            except urllib.error.URLError as e:
+                # 404 = file simply absent; everything else is worth a warning.
+                if not (isinstance(e, urllib.error.HTTPError) and e.code == 404):
+                    logger.warning(
+                        "Could not fetch NEMAR root metadata %s for %s: %s",
+                        relname,
+                        dataset_id,
+                        e,
+                    )
 
     def _download_companion_files(self, filesystem) -> None:
         """Download companion files for formats that require them.
@@ -448,26 +692,41 @@ class EEGDashRaw(RawDataset):
         ``.vmrk``).  When the ingestion pipeline does not list these in
         ``dep_keys``, they are never fetched.  This method inspects
         ``_COMPANION_FILES`` and attempts to download any missing
-        companions from S3.
+        companions, routed appropriately per backend.
         """
         suffix = self.filecache.suffix.lower()
         companions = _COMPANION_FILES.get(suffix)
         if not companions:
             return
 
-        # Use BIDS-named base URI when the raw URI has a git-annex key,
-        # so companion URIs also resolve to real S3 objects.
-        base_uri = self._raw_uri
-        if _ANNEX_KEY_RE.match(PurePosixPath(self._raw_uri).name):
-            bids_filename = PurePosixPath(self.record["bids_relpath"]).name
-            base_uri = self._raw_uri.rsplit("/", 1)[0] + "/" + bids_filename
+        storage = self.record.get("storage") or {}
+        dep_keys = set(storage.get("dep_keys") or [])
+        raw_relpath = storage.get("raw_key") or self.record.get("bids_relpath") or ""
 
         for ext in companions:
             local_path = self.filecache.with_suffix(ext)
             if local_path.exists():
                 continue
 
-            # Derive S3 URI by replacing the primary file's extension
+            # Skip companions already declared at digest time — they were
+            # resolved through the backend's dep_keys path (success or
+            # legitimate 404). Re-fetching them here either duplicates work
+            # or re-issues the same failing request.
+            companion_relpath = (
+                raw_relpath.rsplit(".", 1)[0] + ext if raw_relpath else ""
+            )
+            if companion_relpath and companion_relpath in dep_keys:
+                continue
+
+            if self._storage_backend == "nemar":
+                self._fetch_nemar_companion(local_path, companion_relpath, filesystem)
+                continue
+
+            # Other backends (OpenNeuro etc.) store under BIDS-named keys.
+            base_uri = self._raw_uri
+            if _ANNEX_KEY_RE.match(PurePosixPath(self._raw_uri).name):
+                bids_filename = PurePosixPath(self.record["bids_relpath"]).name
+                base_uri = self._raw_uri.rsplit("/", 1)[0] + "/" + bids_filename
             companion_uri = base_uri.rsplit(".", 1)[0] + ext
 
             try:
@@ -486,6 +745,50 @@ class EEGDashRaw(RawDataset):
                         base_uri,
                     )
                 continue
+
+    def _fetch_nemar_companion(
+        self, local_path: Path, companion_relpath: str, filesystem
+    ) -> None:
+        """Resolve a NEMAR companion file via the GitHub-annex pointer path.
+
+        The git-annex pointer at ``raw.githubusercontent.com/.../<relpath>``
+        is authoritative for whether the file exists and where its bytes
+        live: a directly-tracked file (typically <100 KB metadata) returns
+        its content inline, an annexed file returns a SHA-keyed pointer
+        that resolves to ``s3://nemar/<id>/objects/<KEY>``. A 404 from
+        GitHub is the genuine "missing" answer (S3 by itself can't tell
+        us, since anonymous ListBucket is denied).
+        """
+        if not companion_relpath:
+            return
+        storage = self.record.get("storage") or {}
+        dataset_id = self.record.get("dataset", "")
+        base = (storage.get("base") or "").rstrip("/")
+        if not (dataset_id and base):
+            return
+        stored_key, stored_sidecar = _nemar_fast_paths(storage, companion_relpath)
+        try:
+            companion_uri = _resolve_one_nemar_entry(
+                dataset_id=dataset_id,
+                relpath=companion_relpath,
+                base=base,
+                dest=local_path,
+                stored_key=stored_key,
+                stored_sidecar=stored_sidecar,
+                is_required=False,
+            )
+        except (urllib.error.HTTPError, urllib.error.URLError) as e:
+            logger.warning(
+                "Companion %s not available on NEMAR for %s: %s",
+                companion_relpath,
+                dataset_id,
+                e,
+            )
+            return
+        if companion_uri:
+            downloader.download_s3_file(
+                companion_uri, local_path, filesystem=filesystem
+            )
 
     def _download_embedded_fdt(self, filesystem) -> None:
         """Download a non-BIDS-named ``.fdt`` referenced inside a ``.set`` header.
@@ -521,7 +824,9 @@ class EEGDashRaw(RawDataset):
         try:
             downloader.download_s3_file(fdt_uri, local_path, filesystem=filesystem)
             logger.info("Downloaded embedded .fdt companion: %s", datfile)
-        except FileNotFoundError:
+        except (FileNotFoundError, PermissionError):
+            # NEMAR returns 403 (PermissionError) for missing keys when
+            # anonymous ListBucket is denied — see _download_companion_files.
             logger.warning(
                 "Embedded .fdt %s not found on S3 for %s",
                 datfile,

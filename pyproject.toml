@@ -115,6 +115,8 @@ docs = [
   "lightgbm",
   "mne-icalabel",
   "plotly",
+  "plotly",
+  "seaborn",
 ]
 
 digestion = [

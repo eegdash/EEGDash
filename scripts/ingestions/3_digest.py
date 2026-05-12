@@ -41,9 +41,14 @@ from _constants import (
     MODALITY_DETECTION_TARGETS,
     NEURO_MODALITIES,
 )
-from _file_utils import get_annex_file_size
+from _file_utils import (
+    get_annex_file_key,
+    get_annex_file_size,
+    read_inline_sidecar,
+)
 from _fingerprint import fingerprint_from_files, fingerprint_from_manifest
 from _mef3_parser import parse_mef3_metadata
+from _montage import extract_layout
 from _set_parser import parse_set_metadata
 from _snirf_parser import parse_snirf_metadata
 from _vhdr_parser import parse_vhdr_metadata
@@ -51,17 +56,25 @@ from tqdm import tqdm
 
 from eegdash.dataset.bids_dataset import _COMPANION_FILES, EEGBIDSDataset
 from eegdash.dataset.io import _repair_participants_tsv_ids
-from eegdash.schemas import Storage, create_dataset, create_record
+from eegdash.schemas import (
+    NEMAR_ROOT_METADATA_FILES,
+    Storage,
+    create_dataset,
+    create_record,
+)
 
 # Avoid numba cache issues on CI by setting cache dir before MNE-BIDS import
 os.environ.setdefault("NUMBA_CACHE_DIR", str(Path(".cache") / "numba"))
 from mne_bids.config import ALLOWED_DATATYPE_EXTENSIONS  # noqa: E402
 
-# Storage configuration per source
-# Each source has a backend type and base URL pattern
+# Storage configuration per source. Keep aligned with
+# ``eegdash/dataset/_source_inference.py::STORAGE_CONFIGS``. NEMAR uses a
+# dedicated ``"nemar"`` backend because direct fetches against
+# ``s3://nemar/<id>/<bidspath>`` don't work (filenames are SHA-resolved by
+# git-annex); the runtime resolves BIDS paths to SHA keys at fetch time.
 STORAGE_CONFIGS = {
     "openneuro": {"backend": "s3", "base": "s3://openneuro.org"},
-    "nemar": {"backend": "s3", "base": "s3://nemar"},  # NEMAR uses S3 too
+    "nemar": {"backend": "nemar", "base": "s3://nemar"},
     "gin": {"backend": "https", "base": "https://gin.g-node.org"},
     "figshare": {"backend": "https", "base": "https://figshare.com/ndownloader/files"},
     "zenodo": {"backend": "https", "base": "https://zenodo.org/records"},
@@ -110,6 +123,11 @@ EXCLUDED_DATASETS = {
     "BENABBOU",
     "BING",
     "BOXIN",
+    # OpenNeuro IDs that now redirect to other datasets on openneuro.org.
+    # ds004929 and ds005930 are fNIRS-only (no EEG); ds005407 redirects.
+    "ds004929",
+    "ds005407",
+    "ds005930",
 }
 
 
@@ -130,27 +148,65 @@ def get_storage_backend(source: str) -> str:
     return config["backend"]
 
 
+def _source_from_dataset_id(dataset_id: str) -> str:
+    """Infer source from a dataset_id pattern.
+
+    Mirrors the pattern-based detection used in ``2_clone.py`` so the two
+    stages stay aligned (OpenNeuro ``dsNNNNNN``, NEMAR ``nmNNNNNN``).
+    """
+    if dataset_id.startswith("ds") and dataset_id[2:].isdigit():
+        return "openneuro"
+    if dataset_id.startswith("nm") and dataset_id[2:].isdigit():
+        return "nemar"
+    if "EEGManyLabs" in dataset_id:
+        return "gin"
+    if dataset_id.startswith("EEG2025"):
+        return "nemar"
+    return "unknown"
+
+
+def _reconcile_source(
+    manifest_src: str | None, dataset_id: str, *, context: str
+) -> str:
+    """Resolve the authoritative source for a dataset.
+
+    When the manifest carries a source but the dataset_id pattern implies
+    a different one (the bug behind the NEMAR mislabel — manifests said
+    ``openneuro`` for ``nm*`` ids), trust the pattern and warn loudly.
+    Without this guardrail the bad value flows straight into Mongo and we
+    get records pointing at the wrong S3 bucket.
+    """
+    pattern_src = _source_from_dataset_id(dataset_id)
+    if (
+        manifest_src
+        and pattern_src not in (None, "unknown")
+        and manifest_src != pattern_src
+    ):
+        print(
+            f"WARNING [{context}]: {dataset_id} manifest source={manifest_src!r} "
+            f"disagrees with id-pattern source={pattern_src!r}; using pattern.",
+            file=sys.stderr,
+        )
+        return pattern_src
+    if manifest_src:
+        return manifest_src
+    return pattern_src
+
+
 def detect_source(dataset_dir: Path) -> str:
     """Detect source from manifest.json or dataset structure."""
+    dataset_id = dataset_dir.name
     manifest_path = dataset_dir / "manifest.json"
+    manifest_src: str | None = None
     if manifest_path.exists():
         try:
             with open(manifest_path) as f:
                 manifest = json.load(f)
-                return manifest.get("source", "openneuro")
+            manifest_src = manifest.get("source")
         except Exception:
-            pass
+            manifest_src = None
 
-    # Fallback: check dataset_id pattern
-    dataset_id = dataset_dir.name
-    if dataset_id.startswith("ds"):
-        return "openneuro"
-    elif "EEGManyLabs" in dataset_id:
-        return "gin"
-    elif dataset_id.startswith("EEG2025"):
-        return "nemar"
-
-    return "openneuro"
+    return _reconcile_source(manifest_src, dataset_id, context="detect_source")
 
 
 def _parse_edf_with_mne(edf_path: Path) -> dict[str, Any] | None:
@@ -786,6 +842,7 @@ def extract_record(
     dataset_id: str,
     source: str,
     digested_at: str,
+    apex_sidecar_inline: dict[str, str] | None = None,
 ) -> dict[str, Any]:
     """Extract Record metadata for a single BIDS file.
 
@@ -1194,6 +1251,46 @@ def extract_record(
                 bids_relpath,
             )
 
+    # NEMAR fast-path enrichment for the runtime; see Storage TypedDict
+    # in eegdash/schemas.py for the contract.
+    #
+    # Apex BIDS files (participants.tsv, dataset_description.json, README,
+    # …) live once per dataset but mne-bids/braindecode expects them on
+    # disk per recording. We get them via the caller-provided
+    # apex_sidecar_inline (computed once per dataset; see digest_dataset)
+    # rather than re-reading from disk per record. They're stored on every
+    # record so each load is self-contained, at the cost of duplicated
+    # bytes in MongoDB.
+    #
+    # TODO(scale): two known sources of byte duplication in MongoDB:
+    #   (1) session-level sidecars (events.json shared across runs in a
+    #       session) — multi-KB × N runs in same session;
+    #   (2) apex sidecars (dataset_description.json, README, etc.)
+    #       duplicated across every record in a dataset.
+    # The structurally-correct fix is to move both classes into a per-
+    # dataset side-collection (`nemar_dataset_sidecars` keyed by
+    # (dataset_id, relpath)) referenced by record. Trigger to revisit:
+    # >100 MB inline payload for a single dataset, OR an HBN/M3CV-style
+    # ingest with a >500 KB participants.tsv.
+    annex_keys: dict[str, str] = {}
+    sidecar_inline: dict[str, str] = dict(apex_sidecar_inline or {})
+    if source == "nemar":
+        bids_root_path = bids_dataset.bidsdir  # already a Path
+        raw_annex_key = get_annex_file_key(Path(bids_file))
+        if raw_annex_key:
+            annex_keys[bids_relpath] = raw_annex_key
+        for dep in dep_keys:
+            dep_path = bids_root_path / dep
+            dep_annex_key = get_annex_file_key(dep_path)
+            if dep_annex_key:
+                annex_keys[dep] = dep_annex_key
+                continue
+            if dep in sidecar_inline:
+                continue
+            inline = read_inline_sidecar(dep_path)
+            if inline is not None:
+                sidecar_inline[dep] = inline
+
     # Create record using the schema
     record = create_record(
         dataset=dataset_id,
@@ -1214,6 +1311,8 @@ def extract_record(
         nchans=nchans,
         ntimes=ntimes,
         digested_at=digested_at,
+        annex_keys=annex_keys or None,
+        sidecar_inline=sidecar_inline or None,
     )
 
     # Restore participant_tsv metadata if available
@@ -1663,7 +1762,9 @@ def digest_from_manifest(
             "error": f"Failed to load manifest: {e}",
         }
 
-    source = manifest.get("source", "osf")
+    source = _reconcile_source(
+        manifest.get("source"), dataset_id, context="digest_from_manifest"
+    )
     digested_at = datetime.now(timezone.utc).isoformat()
 
     # Get file list from manifest
@@ -1707,6 +1808,21 @@ def digest_from_manifest(
         else:
             # Default: use base/dataset_id pattern
             storage_base = f"{base}/{dataset_id}"
+    else:
+        # Sanity-check explicit storage_base against the resolved source.
+        # 2_clone.py used to write ``s3://openneuro.org/<id>`` for any
+        # git-cloned dataset, including NEMAR — that value reached MongoDB
+        # as ``storage.base`` and we'd 404 on download. Reject the mismatch
+        # here so the bad value never gets written again.
+        expected_prefix = get_storage_config(source).get("base", "")
+        if expected_prefix and not str(storage_base).startswith(expected_prefix):
+            print(
+                f"WARNING [digest]: {dataset_id} manifest storage_base="
+                f"{storage_base!r} does not start with {expected_prefix!r} "
+                f"for source={source!r}; rebuilding from source config.",
+                file=sys.stderr,
+            )
+            storage_base = f"{expected_prefix}/{dataset_id}"
 
     # Collect BIDS entities from file paths (both direct files and ZIP contents)
     subjects = set()
@@ -2356,6 +2472,19 @@ def digest_dataset(
     # Extract Record metadata for each file
     records = []
     errors = []
+    montages: dict[str, dict[str, Any]] = {}
+
+    # NEMAR-only: read apex BIDS files once per dataset and reuse the
+    # decoded text across every record (Python str is immutable so the
+    # values are shared by reference). Cuts ~N × len(NEMAR_ROOT_METADATA_FILES)
+    # stat+read+decode calls per dataset.
+    apex_sidecar_inline: dict[str, str] = {}
+    if source == "nemar":
+        bids_root_path = bids_dataset.bidsdir
+        for root_name in NEMAR_ROOT_METADATA_FILES:
+            inline = read_inline_sidecar(bids_root_path / root_name)
+            if inline is not None:
+                apex_sidecar_inline[root_name] = inline
 
     for bids_file in files:
         # Filter out non-neuro data files (sidecars, etc.)
@@ -2364,7 +2493,12 @@ def digest_dataset(
 
         try:
             record = extract_record(
-                bids_dataset, bids_file, dataset_id, source, digested_at
+                bids_dataset,
+                bids_file,
+                dataset_id,
+                source,
+                digested_at,
+                apex_sidecar_inline=apex_sidecar_inline,
             )
             # Skip records for split FIF files with missing continuations
             if any(
@@ -2378,6 +2512,37 @@ def digest_dataset(
                     }
                 )
                 continue
+            record_datatype = (record.get("datatype") or "").lower()
+            try:
+                layout_result = extract_layout(
+                    Path(str(bids_file)), dataset_dir, datatype=record_datatype
+                )
+            except Exception as layout_exc:  # noqa: BLE001
+                # best-effort; missing sidecars are fine
+                layout_result = None
+                errors.append(
+                    {
+                        "file": str(bids_file),
+                        "error": f"layout extraction failed: {layout_exc}",
+                    }
+                )
+            if layout_result is not None:
+                h, doc = layout_result
+                record["montage_hash"] = h
+                if h not in montages:
+                    # First time we see this hash in this dataset — stamp
+                    # the provenance fields that live outside the hashed
+                    # content. The API upsert layer uses $setOnInsert so
+                    # these don't get overwritten when the same hash
+                    # appears in a later dataset.
+                    doc["first_seen"] = digested_at
+                    doc["representative_dataset"] = dataset_id
+                    subject_entity = record.get("entities", {}).get("subject")
+                    if subject_entity:
+                        doc["representative_subject"] = f"sub-{subject_entity}"
+                    montages[h] = doc
+            else:
+                record["montage_hash"] = None
             records.append(record)
         except Exception as e:
             errors.append({"file": str(bids_file), "error": str(e)})
@@ -2433,6 +2598,18 @@ def digest_dataset(
     with open(records_path, "w") as f:
         json.dump(records_data, f, indent=2, default=_json_serializer)
 
+    # Always written (even when empty) so downstream tooling can assume it exists.
+    montages_path = dataset_output_dir / f"{dataset_id}_montages.json"
+    montages_data = {
+        "dataset": dataset_id,
+        "source": source,
+        "digested_at": digested_at,
+        "montage_count": len(montages),
+        "montages": list(montages.values()),
+    }
+    with open(montages_path, "w") as f:
+        json.dump(montages_data, f, indent=2, default=_json_serializer)
+
     # Save summary
     summary = {
         "status": "success",
@@ -2441,8 +2618,10 @@ def digest_dataset(
         "record_count": len(records),
         "error_count": len(errors),
         "integrity_issues_count": integrity_issues_count,
+        "montage_count": len(montages),
         "dataset_file": str(dataset_path),
         "records_file": str(records_path),
+        "montages_file": str(montages_path),
     }
 
     # Log warnings for datasets with integrity issues

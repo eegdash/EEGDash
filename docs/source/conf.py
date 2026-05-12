@@ -132,6 +132,8 @@ html_js_files = [
     ("js/tag-palette.js", {"defer": "defer"}),
     # Live search in PyData theme search modal (rendered on every page).
     ("js/search-as-you-type.js", {"defer": "defer"}),
+    # Lazy-load the electrode-explorer iframe on <details> expansion.
+    ("js/lazy-embed.js", {"defer": "defer"}),
 ]
 
 # Required for sphinx-sitemap: set the canonical base URL of the site
@@ -401,6 +403,8 @@ Technical Details
 -----------------
 
 {highlights_section}
+
+{electrodes_section}
 
 API Reference
 -------------
@@ -1469,6 +1473,24 @@ def _convert_readme_to_rst(text: str) -> str:
     text = text.lstrip("\ufeff")
     # Normalize HTML line breaks to newlines
     text = re.sub(r"<br\s*/?>", "\n", text, flags=re.IGNORECASE)
+    # Downgrade literal HTML headers so they don't collide with the
+    # page's own `<h1>`. Upstream dataset READMEs (e.g. DS004100)
+    # sometimes contain raw `<h1>HUP iEEG dataset</h1>` which Sphinx
+    # passes through verbatim and Ahrefs then flags as "Multiple H1
+    # tags". `<h2>` is the highest level that can safely sit inside the
+    # "About this dataset" section which is already H2.
+    text = re.sub(
+        r"<(/?)h1(\b[^>]*)>",
+        r"<\g<1>h3\g<2>>",
+        text,
+        flags=re.IGNORECASE,
+    )
+    text = re.sub(
+        r"<(/?)h2(\b[^>]*)>",
+        r"<\g<1>h4\g<2>>",
+        text,
+        flags=re.IGNORECASE,
+    )
     # Replace leading tabs with spaces (tabs cause RST block-quote interpretation)
     text = re.sub(r"^\t+", lambda m: "  " * len(m.group(0)), text, flags=re.MULTILINE)
 
@@ -2068,6 +2090,127 @@ def _format_api_section(class_name: str) -> str:
     )
 
 
+# ---------------------------------------------------------------------------
+# Electrode-explorer embed (Step 5 of the electrodes integration plan).
+#
+# `_static/dataset_generated/electrode-layouts.json` maps dataset_id →
+# {label, n_channels, tsv_url, coords_url}. It is eventually populated
+# by the eegdash backend montage registry; while that's being built we
+# maintain a curated subset here as a fallback.
+#
+# Each dataset page gets a collapsed <details> block. Expanding it swaps
+# the iframe's `data-src` onto `src` (see lazy-embed.js), so zero bytes
+# are fetched from electrodes.eegdash.org until a reader opts in.
+# ---------------------------------------------------------------------------
+
+_ELECTRODE_EXPLORER_BASE = "https://electrodes.eegdash.org/"
+
+_electrode_layouts_cache: dict[str, object] | None = None
+
+
+def _load_electrode_layouts() -> Mapping[str, Mapping[str, object]]:
+    """Read the curated electrode-layouts manifest (cached across calls).
+
+    Missing file or malformed JSON degrades silently to empty — dataset
+    pages then render a 'no scalp layout published' placeholder instead
+    of the iframe.
+    """
+    global _electrode_layouts_cache
+    if _electrode_layouts_cache is not None:
+        return _electrode_layouts_cache  # type: ignore[return-value]
+    path = (
+        Path(__file__).parent
+        / "_static"
+        / "dataset_generated"
+        / "electrode-layouts.json"
+    )
+    try:
+        doc = json.loads(path.read_text(encoding="utf-8"))
+        layouts = doc.get("layouts", {})
+        if not isinstance(layouts, dict):
+            layouts = {}
+    except (FileNotFoundError, json.JSONDecodeError) as exc:
+        LOGGER.info(
+            "[electrode-layouts] manifest unavailable (%s); placeholders only", exc
+        )
+        layouts = {}
+    _electrode_layouts_cache = layouts
+    return layouts
+
+
+def _format_electrodes_section(context: Mapping[str, object]) -> str:
+    """Render a lazy <details><iframe> block for this dataset's montage.
+
+    If the manifest doesn't have an entry for this dataset_id, we still
+    emit the section but with a short note — keeps the page layout
+    consistent across the catalog.
+    """
+    dataset_id = str(context.get("dataset_id") or "").strip().lower()
+    if not dataset_id:
+        return ""
+
+    layouts = _load_electrode_layouts()
+    entry = layouts.get(dataset_id)
+
+    heading = "Electrode Layout\n----------------\n\n"
+
+    if not entry or not (entry.get("montage_id") or entry.get("tsv_url")):
+        # Placeholder — keeps the section visible so readers know the
+        # catalog intends to show it, just that this particular dataset
+        # hasn't been indexed yet. Either shape of URL is acceptable:
+        # schema v2 carries ``montage_id`` (the registry hash), schema
+        # v1 carried ``tsv_url`` + optional ``coords_url``.
+        body = (
+            "No scalp electrode layout is currently indexed for this\n"
+            "dataset. Once the eegdash montage registry ingests it,\n"
+            "the interactive viewer will appear here automatically.\n"
+        )
+        return heading + body
+
+    # Build the iframe URL. Prefer the registry id shape if present;
+    # otherwise fall back to direct tsv/coords URLs so pages work even
+    # before the registry endpoint is live.
+    label = str(entry.get("label") or "Electrodes").strip()
+    n_channels = entry.get("n_channels")
+    montage_id = str(entry.get("montage_id") or "").strip()
+
+    if montage_id:
+        query = f"montage={montage_id}"
+    else:
+        from urllib.parse import quote
+
+        tsv_q = quote(str(entry["tsv_url"]), safe="")
+        parts = [f"tsv={tsv_q}"]
+        coords_url = entry.get("coords_url")
+        if coords_url:
+            parts.append(f"coords={quote(str(coords_url), safe='')}")
+        query = "&".join(parts)
+
+    iframe_src = f"{_ELECTRODE_EXPLORER_BASE}?{query}&embed=1"
+
+    title_bits = [label]
+    if n_channels:
+        title_bits.append(f"{n_channels} channels")
+    summary_text = " — ".join(title_bits)
+
+    # Keep the HTML block compact; Sphinx renders it as-is.
+    html = (
+        ".. raw:: html\n\n"
+        '   <details class="electrode-explorer">\n'
+        f"     <summary>Electrode layout — {summary_text}</summary>\n"
+        "     <iframe\n"
+        f'       data-src="{iframe_src}"\n'
+        '       loading="lazy"\n'
+        '       width="100%" height="640"\n'
+        '       style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"\n'
+        f'       title="Topomap of {label}"\n'
+        '       referrerpolicy="no-referrer">\n'
+        "     </iframe>\n"
+        "   </details>\n"
+    )
+    return heading + html
+
+
 def _format_see_also_section(
     dataset_id: str,
     class_name: str = "",
@@ -2379,6 +2522,7 @@ def _process_dataset_item(
         readme_section=_format_readme_section(context),
         highlights_section=_format_highlights_section(context),
         quickstart_section=_format_quickstart_section(context),
+        electrodes_section=_format_electrodes_section(context),
         api_section=_format_api_section(name),
         see_also_section=_format_see_also_section(dataset_id, name, related),
         feedback_section=_format_feedback_section(dataset_id, dataset_title),
@@ -2680,6 +2824,65 @@ def _copy_dataset_summary(app, exception) -> None:
         shutil.copy2(csv_path, static_dir / "dataset_summary.csv")
     except OSError as exc:
         LOGGER.warning("Unable to copy dataset_summary.csv to _static: %s", exc)
+
+
+def _rewrite_sitemap_index(app, exception) -> None:
+    """Rewrite the homepage entry in ``sitemap.xml`` to the canonical
+    bare-host URL.
+
+    ``sphinx-sitemap`` emits ``https://eegdash.org/index.html`` for the
+    homepage because that's the page's filename. We set a
+    ``<link rel="canonical">`` override to ``https://eegdash.org/`` in
+    ``_inject_seo_context``, which creates a mismatch Ahrefs flags as
+    "Non-canonical page in sitemap". The two fixes must stay in sync —
+    so we patch the emitted sitemap here at ``build-finished`` rather
+    than fighting sphinx-sitemap's URL-construction logic.
+
+    Originally shipped in #319 but silently dropped during the #318
+    rebase conflict resolution (``git checkout --theirs`` on conf.py
+    took the pre-#319 branch version). Re-adding here so the sitemap
+    emitted on each deploy stays canonical.
+
+    Safe no-op on: missing sitemap, non-HTML builder, already-canonical
+    sitemap.
+    """
+    if exception is not None:
+        return
+    builder = getattr(app, "builder", None)
+    if builder is None or builder.name != "html":
+        return
+
+    sitemap_path = Path(app.outdir) / "sitemap.xml"
+    if not sitemap_path.exists():
+        return
+
+    try:
+        text = sitemap_path.read_text(encoding="utf-8")
+    except OSError as exc:
+        LOGGER.warning("Unable to read %s: %s", sitemap_path, exc)
+        return
+
+    base = getattr(app.config, "html_baseurl", "") or ""
+    if not base.endswith("/"):
+        base += "/"
+    index_url = f"{base}index.html"
+    canonical = base
+
+    if index_url not in text:
+        return
+
+    updated = text.replace(f"<loc>{index_url}</loc>", f"<loc>{canonical}</loc>")
+    if updated == text:
+        return
+    try:
+        sitemap_path.write_text(updated, encoding="utf-8")
+        LOGGER.info(
+            "sitemap.xml: rewrote %s -> %s for canonical alignment",
+            index_url,
+            canonical,
+        )
+    except OSError as exc:
+        LOGGER.warning("Unable to write %s: %s", sitemap_path, exc)
 
 
 def _inject_counter_values(app, docname, source) -> None:
@@ -3008,32 +3211,58 @@ def _inject_seo_context(app, pagename, templatename, context, doctree) -> None:
         context["metatags"] = existing + tag
 
     # Backstop meta descriptions for the auto-generated reference pages
-    # (per-dataset, per-module). These pages don't carry a `.. meta::`
-    # directive, so without this hook Ahrefs flags 70+ pages as
-    # "description too short". The templates match the page family, so
-    # every generated page ships a unique, keyword-appropriate blurb.
-    if _page_still_lacks_description(context):
-        synth = _synthesize_description(pagename)
-        if synth:
+    # (per-dataset, per-module). These pages ship either no description
+    # at all or a very short first-paragraph excerpt that Ahrefs flags
+    # as "too short" (< 50 chars). The hook fires in BOTH cases:
+    # - no description  -> append our template
+    # - short description (<50 chars) -> replace it with our template
+    synth = _synthesize_description(pagename)
+    if synth:
+        existing = context.get("metatags") or ""
+        current = _extract_first_description(existing)
+        if current is None:
+            # No description yet: append.
             escaped = html.escape(_cap_meta_description(synth), quote=True)
             tag = (
                 f'<meta name="description" content="{escaped}" />'
                 f'<meta property="og:description" content="{escaped}" />'
             )
-            existing = context.get("metatags") or ""
             context["metatags"] = existing + tag
+        elif len(current) < _MIN_META_DESC_CHARS:
+            # Too short: swap in the synth text, preserving the surrounding
+            # `<meta>` tag shape so nothing else in the pipeline gets
+            # surprised by the edit.
+            context["metatags"] = _replace_descriptions_in_metatags(
+                existing, _cap_meta_description(synth)
+            )
 
     # Dataset-summary chart fragments (`dataset_summary/table`,
     # `.../treemap`, etc.) are partial `.. include::` sources; Sphinx
     # builds them as standalone pages as a side-effect but they render
     # the same chart twice when someone lands on them directly. Tag
     # them `noindex` so search engines don't show them as orphan hits.
-    if pagename.startswith("dataset_summary/") and pagename != "dataset_summary":
+    # Also noindex Sphinx's own utility pages that ship without a
+    # sitemap entry (genindex, search, sg_api_usage) — otherwise
+    # scanners flag them as "indexable page with missing description".
+    _NOINDEX_PAGENAMES = {"genindex", "search", "sg_api_usage"}
+    noindex_needed = pagename in _NOINDEX_PAGENAMES or (
+        pagename.startswith("dataset_summary/") and pagename != "dataset_summary"
+    )
+    if noindex_needed:
         existing = context.get("metatags") or ""
         if 'name="robots"' not in existing:
             context["metatags"] = (
                 existing + '<meta name="robots" content="noindex,follow" />'
             )
+
+    # NOTE: description capping runs from a separate late-priority hook
+    # (``_cap_descriptions_hook`` below). Doing it here would miss any
+    # descriptions that sphinxext-opengraph adds later in the same
+    # ``html-page-context`` phase — its handler runs after ours at the
+    # default priority.
+
+
+_MIN_META_DESC_CHARS = 50  # Ahrefs' "too short" threshold
 
 
 def _cap_meta_description(text: str, limit: int = 160) -> str:
@@ -3048,6 +3277,111 @@ def _cap_meta_description(text: str, limit: int = 160) -> str:
         return text
     trimmed = text[: limit - 1].rsplit(" ", 1)[0]
     return trimmed.rstrip(",. ") + "…"
+
+
+# 8 narrow regexes (4 attribute orderings x 2 quote styles) covering
+# every shape we've seen in the built HTML. One compound alternation
+# with `[^"']*` fails when the content carries a different quote char
+# (e.g. an apostrophe inside a double-quoted attribute — that silently
+# broke a prior cap that shipped in #315 and was fixed in #317).
+_META_DESC_PATTERNS = [
+    # <meta name="description" … content="…">
+    re.compile(
+        r'<meta\s+(?:[^>]*?\s)?name="description"'
+        r'\s+(?:[^>]*?\s)?content="(?P<v>[^"]*)"[^>]*>',
+        flags=re.IGNORECASE,
+    ),
+    re.compile(
+        r"<meta\s+(?:[^>]*?\s)?name='description'"
+        r"\s+(?:[^>]*?\s)?content='(?P<v>[^']*)'[^>]*>",
+        flags=re.IGNORECASE,
+    ),
+    # <meta content="…" … name="description">
+    re.compile(
+        r'<meta\s+(?:[^>]*?\s)?content="(?P<v>[^"]*)"'
+        r'\s+(?:[^>]*?\s)?name="description"[^>]*>',
+        flags=re.IGNORECASE,
+    ),
+    re.compile(
+        r"<meta\s+(?:[^>]*?\s)?content='(?P<v>[^']*)'"
+        r"\s+(?:[^>]*?\s)?name='description'[^>]*>",
+        flags=re.IGNORECASE,
+    ),
+    # <meta property="og:description" … content="…">
+    re.compile(
+        r'<meta\s+(?:[^>]*?\s)?property="og:description"'
+        r'\s+(?:[^>]*?\s)?content="(?P<v>[^"]*)"[^>]*>',
+        flags=re.IGNORECASE,
+    ),
+    re.compile(
+        r"<meta\s+(?:[^>]*?\s)?property='og:description'"
+        r"\s+(?:[^>]*?\s)?content='(?P<v>[^']*)'[^>]*>",
+        flags=re.IGNORECASE,
+    ),
+    # <meta content="…" … property="og:description">
+    re.compile(
+        r'<meta\s+(?:[^>]*?\s)?content="(?P<v>[^"]*)"'
+        r'\s+(?:[^>]*?\s)?property="og:description"[^>]*>',
+        flags=re.IGNORECASE,
+    ),
+    re.compile(
+        r"<meta\s+(?:[^>]*?\s)?content='(?P<v>[^']*)'"
+        r"\s+(?:[^>]*?\s)?property='og:description'[^>]*>",
+        flags=re.IGNORECASE,
+    ),
+]
+
+
+def _extract_first_description(metatags: str) -> str | None:
+    """Return the first description content found in ``metatags``, or
+    ``None`` if no description tag is present. Used to decide whether
+    the backstop needs to fire (missing) or override (too short).
+    """
+    if not metatags:
+        return None
+    for pattern in _META_DESC_PATTERNS:
+        m = pattern.search(metatags)
+        if m:
+            return html.unescape(m.group("v"))
+    return None
+
+
+def _replace_descriptions_in_metatags(metatags: str, new_text: str) -> str:
+    """Rewrite the `content` attribute of every description /
+    og:description tag in ``metatags`` to ``new_text``. The surrounding
+    tag structure is preserved so extensions parsing the string later
+    still see well-formed markup.
+    """
+    escaped = html.escape(new_text, quote=True)
+
+    def _swap(m: re.Match) -> str:
+        original = m.group(0)
+        return original.replace(m.group("v"), escaped)
+
+    for pattern in _META_DESC_PATTERNS:
+        metatags = pattern.sub(_swap, metatags)
+    return metatags
+
+
+def _cap_descriptions_in_metatags(metatags: str, limit: int = 155) -> str:
+    """Cap every description / og:description content value in
+    ``metatags`` at ``limit`` chars. HTML-entity-decodes before
+    comparing so the visible budget is what the SERP renders.
+    """
+    if not metatags:
+        return metatags
+
+    def _trim(m: re.Match) -> str:
+        value = m.group("v")
+        decoded = html.unescape(value)
+        if len(decoded) <= limit:
+            return m.group(0)
+        capped = _cap_meta_description(decoded, limit=limit)
+        return m.group(0).replace(value, html.escape(capped, quote=True))
+
+    for pattern in _META_DESC_PATTERNS:
+        metatags = pattern.sub(_trim, metatags)
+    return metatags
 
 
 def _page_still_lacks_description(context) -> bool:
@@ -3072,6 +3406,18 @@ def _synthesize_description(pagename: str) -> str | None:
             f"MNE-Python and braindecode. Full metadata, channels, and "
             f"citation on this page."
         )
+    # Module pages that landed under api/dataset/eegdash.* (not
+    # .dataset.*) — e.g. http_api_client, EEGDashDataset, bids_metadata.
+    # Sphinx-apidoc puts them here but they lack their own descriptions.
+    other_ds_prefix = "api/dataset/eegdash."
+    if pagename.startswith(other_ds_prefix) and not pagename.startswith(ds_prefix):
+        module = pagename[len(other_ds_prefix) :]
+        return (
+            f"EEGDash Python API reference for `eegdash.{module}` — "
+            f"classes, functions, and schemas used to discover, load, "
+            f"and preprocess BIDS-first EEG/MEG datasets for PyTorch "
+            f"machine-learning workflows."
+        )
     # Per-module API reference under api/generated/api-core/* or api-features/*
     if pagename.startswith("api/generated/api-core/"):
         module = pagename.rsplit("/", 1)[-1]
@@ -3087,7 +3433,47 @@ def _synthesize_description(pagename: str) -> str | None:
             f"spectral, connectivity, complexity, and spatial feature "
             f"extractors for EEG/MEG machine-learning pipelines."
         )
+    # Sphinx-gallery tutorial pages — sphinxext-opengraph picks the
+    # first paragraph from the gallery-generated RST, which is usually
+    # a one-liner ("This is a minimal tutorial demonstrating…") that
+    # Ahrefs flags as too short. Pad with keywords that match the
+    # tutorial's purpose.
+    if pagename.startswith("generated/auto_examples/"):
+        slug = pagename.rsplit("/", 1)[-1].replace("_", " ").removeprefix("noplot ")
+        slug = slug.replace("tutorial ", "").strip() or "tutorial"
+        return (
+            f"EEGDash tutorial — {slug}. Runnable Python example showing "
+            f"how to load BIDS-first EEG/MEG datasets, preprocess them "
+            f"with MNE-Python, and train a model end-to-end."
+        )
+    # Source-aggregator pages under api/dataset/source_* (one per
+    # upstream archive: OpenNeuro, NEMAR, Figshare, Zenodo, …). These
+    # are generated by `_generate_dataset_docs` and don't carry their
+    # own meta description.
+    src_prefix = "api/dataset/source_"
+    if pagename.startswith(src_prefix):
+        source = pagename[len(src_prefix) :].replace("_", " ").title()
+        return (
+            f"EEG, MEG, and iEEG datasets from {source} wrapped by the "
+            f"EEGDash Python library. Load any record with a single "
+            f"call; preprocess with MNE-Python; train with braindecode."
+        )
     return None
+
+
+def _cap_descriptions_hook(app, pagename, templatename, context, doctree):
+    """Late-priority ``html-page-context`` handler that caps every
+    description / og:description tag added by any earlier handler.
+
+    Sphinx delivers events to connected callbacks in priority order
+    (higher priority == later execution; default 500). sphinxext-
+    opengraph registers at the default priority and writes its own
+    description into ``context['metatags']`` during this phase, so
+    any capping we do inside our own default-priority handler misses
+    those insertions. Running at priority 900 guarantees we see the
+    final value regardless of load order.
+    """
+    context["metatags"] = _cap_descriptions_in_metatags(context.get("metatags") or "")
 
 
 def setup(app):
@@ -3101,8 +3487,14 @@ def setup(app):
     app.connect("builder-inited", _assert_dataset_table_inlines_datatables)
     app.connect("builder-inited", _generate_dataset_docs)
     app.connect("build-finished", _copy_dataset_summary)
+    # Align sitemap homepage entry with the canonical emitted in
+    # `_inject_seo_context`. Must run after `sphinx-sitemap` writes
+    # the file; using `build-finished` is the safest hook for that.
+    app.connect("build-finished", _rewrite_sitemap_index)
     app.connect("source-read", _inject_counter_values)
     app.connect("html-page-context", _inject_seo_context)
+    # Must run last — see docstring on ``_cap_descriptions_hook``.
+    app.connect("html-page-context", _cap_descriptions_hook, priority=900)
 
 
 # Configure sitemap URL format (omit .html where possible)

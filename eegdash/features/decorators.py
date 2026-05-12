@@ -243,7 +243,7 @@ def _feature_predecessor_update(
     return func
 
 
-def feature_predecessor(*parent_extractor_type: List[Callable]) -> Callable:
+def feature_predecessor(*parent_extractor_type: List[Callable | Type]) -> Callable:
     r"""Decorator to specify parent extractors for a feature function.
 
     This decorator attaches a list of immediate parent preprocessing steps to
@@ -253,7 +253,7 @@ def feature_predecessor(*parent_extractor_type: List[Callable]) -> Callable:
 
     Parameters
     ----------
-    *parent_extractor_type : list of callable
+    *parent_extractor_type : list of callable or type
         A list of preprocessing functions that this feature immediately
         depends on.
         Default is [:class:`~eegdash.features.output_types.SignalOutputType`].

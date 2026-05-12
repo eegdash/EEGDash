@@ -114,11 +114,14 @@ jobs:
         EEGDASH_API_TOKEN: ${{ secrets.EEGDASH_API_TOKEN }}
       run: pytest -vvv -s --tb=long --durations=0 --log-cli-level=INFO --cov=eegdash --cov-report=xml tests --verbose
 
-    - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v5
-      with:
-        token: ${{ secrets.CODECOV_TOKEN }}
-        files: ./coverage.xml
-        flags: unittests
-        name: codecov-umbrella
-        fail_ci_if_error: true
+    # Temporarily disabled: upstream Codecov CLI publishes a SHA256SUM.sig
+    # that fails GPG verification, causing `fail_ci_if_error: true` to red-X
+    # the whole job even when pytest passes. Re-enable once Codecov fixes it.
+    # - name: Upload coverage to Codecov
+    #   uses: codecov/codecov-action@v5
+    #   with:
+    #     token: ${{ secrets.CODECOV_TOKEN }}
+    #     files: ./coverage.xml
+    #     flags: unittests
+    #     name: codecov-umbrella
+    #     fail_ci_if_error: true

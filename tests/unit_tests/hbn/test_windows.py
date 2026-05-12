@@ -153,7 +153,7 @@ def test_hbn_annotate_trials_gaps(tmp_path):
             ) as _mock_unlink:  # Mock unlink to avoid deleting our test file (optional)
                 with pytest.raises(OSError, match="Incomplete download"):
                     download_s3_file("s3://bucket/key", p)
-                assert mock_fs.get.called
+                assert mock_fs.get_file.called
 
     pass
 

@@ -15,7 +15,7 @@ from collections.abc import Callable
 from functools import partial
 from pathlib import Path
 from types import FunctionType
-from typing import Dict
+from typing import Dict, Tuple
 
 import numpy as np
 
@@ -30,6 +30,28 @@ from .trainable import TrainableFeature
 __all__ = [
     "FeatureExtractor",
 ]
+
+
+def _get_func_name(func: Callable) -> str:
+    """Get the name of a function or callable object.
+
+    Parameters
+    ----------
+    func: Callable
+        A function or a callable object.
+
+    Returns
+    -------
+    str
+        The name of the function or callable object.
+
+    """
+    func = get_underlying_func(func)
+    if hasattr(func, "__name__"):
+        return func.__name__
+    if hasattr(func, "__class__"):
+        return func.__class__.__name__
+    return str(func)
 
 
 def _func_to_dict(func: FunctionType | partial) -> dict:
@@ -51,7 +73,7 @@ def _func_to_dict(func: FunctionType | partial) -> dict:
     _func_from_dict
 
     """
-    func_dict = {"name": get_underlying_func(func).__name__}
+    func_dict = {"name": _get_func_name(func)}
     if isinstance(func, partial):
         if func.args:
             func_dict["args"] = list(func.args)
@@ -119,6 +141,137 @@ def _adjust_dict_types(d: dict) -> dict:
     return dd
 
 
+def _tree_to_str(d: dict, s=None, prefix: str = "") -> str:
+    """Convert a tree-style dict to directory-style string.
+
+    Parameters
+    ----------
+    d: dict
+        A tree-like dictionary.
+    s:
+        A stem object (optional).
+    prefix: str
+        A common prefix for all rows.
+
+    Returns
+    -------
+    str
+        A directory-tree-like string representing the tree-like dictionary.
+
+    """
+    out_str = []
+    if s is not None:
+        out_str.append(f"{s}")
+    for i, (k, v) in enumerate(d.items()):
+        conn = "╠═ " if i < len(d) - 1 else "╚═ "
+        if isinstance(v, tuple):
+            v, p = v
+            if p is not None:
+                out_str.append(f"{prefix}{conn}{k}: {p}")
+        else:
+            p = None
+        if isinstance(v, dict):
+            if p is None:
+                out_str.append(f"{prefix}{conn}{k}:")
+            out_str.append(
+                _tree_to_str(v, prefix=prefix + ("║  " if i < len(d) - 1 else "   "))
+            )
+        else:
+            out_str.append(f"{prefix}{conn}{k}: {v}")
+    return "\n".join(out_str)
+
+
+def _call_with_metadata(func: Callable, *x, _metadata: dict) -> Tuple[tuple, dict]:
+    """Calls a feature or preprocessor with metadata if required.
+
+    Parameters
+    ----------
+    func : Callable
+        A function to be called.
+    *x : tuple[Any]
+        Positional arguments to pass to `func`.
+    _metadata : dict
+        A metadata dictionary to pass into `func` if `func` receives
+        a keyword argument called `_metadata`.
+
+    Returns
+    -------
+    *z : tuple[Any]
+        `func`s output.
+    _metadata : dict
+        A metadata dictionary. May be altered by `func` if it is a
+        metadata preprocessor.
+
+    """
+    if (
+        isinstance(func, FeatureExtractor)
+        or "_metadata" in inspect.signature(func).parameters
+    ):
+        if hasattr(get_underlying_func(func), "metadata_preprocessor"):
+            *z, _metadata = func(*x, _metadata=_metadata.copy())
+            z = (*z,)
+        else:
+            z = func(*x, _metadata=_metadata)
+    else:
+        z = func(*x)
+    return z, _metadata
+
+
+def _concat_calls(funcs: list[Callable], *x, _metadata: dict) -> tuple:
+    """Call a list of callable in a chain.
+
+    Parameters
+    ----------
+    funcs : list[Callable]
+        A list of callable to chain.
+    *x : tuple[Any]
+        An input batch to the first callable in `funcs`.
+    _metadata : dict
+        A metadata dictionary to pass to the first callable in `funcs`.
+
+    Returns
+    -------
+    *z : tuple
+        The chained function output.
+    _metadata (optional)
+        An altered metadata dictionary. Only returned if the last callable
+        in `funcs` is a metadata preprocessor.
+
+    """
+    z = x
+    for func in funcs:
+        z, _metadata = _call_with_metadata(func, *z, _metadata=_metadata)
+    if "_metadata" in inspect.signature(funcs[-1]).parameters and hasattr(
+        get_underlying_func(funcs[-1]), "metadata_preprocessor"
+    ):
+        return *z, _metadata
+    return z
+
+
+def _merge_call_list(funcs: list[Callable]) -> list[Callable]:
+    r"""Merge a list of callables and chained callables.
+
+    Parameters
+    ----------
+    funcs : list[Callable]
+        A list of callables.
+
+    Returns
+    -------
+    list[Callables]
+        Same as `funcs`, but any chained callable (a partial of
+        :func:`_concat_calls`) is replaced by the chained callables themselves.
+
+    """
+    func_list = []
+    for f in funcs:
+        if isinstance(f, partial) and f.func is _concat_calls:
+            func_list.extend(f.args[0])
+        else:
+            func_list.append(f)
+    return func_list
+
+
 class FeatureExtractor(TrainableFeature):
     r"""Pipeline for multi-stage feature extraction.
 
@@ -172,9 +325,9 @@ class FeatureExtractor(TrainableFeature):
         preprocessor: Callable | None = None,
     ):
         self.preprocessor = preprocessor
-        self._validate_execution_tree(feature_extractors)
         self.feature_extractors_dict = feature_extractors
-        self._is_trainable = self._check_is_trainable(feature_extractors)
+        self._validate_execution_tree()
+        self._is_trainable = self._check_is_trainable()
         super().__init__()
 
         # bypassing feature_predecessor to avoid circular import
@@ -185,18 +338,9 @@ class FeatureExtractor(TrainableFeature):
         elif not hasattr(self, "parent_extractor_type"):
             self.parent_extractor_type = [SignalOutputType]
 
-        self.features_kwargs = dict()
-        if preprocessor is not None and isinstance(preprocessor, partial):
-            self.features_kwargs["preprocess_kwargs"] = preprocessor.args
-        for fn, fe in feature_extractors.items():
-            if isinstance(fe, FeatureExtractor):
-                self.features_kwargs[fn] = fe.features_kwargs
-            if isinstance(fe, partial):
-                self.features_kwargs[fn] = fe.keywords
+        self.features_kwargs = self.to_dict()
 
-    def _validate_execution_tree(
-        self, feature_extractors: dict, parent_type=None
-    ) -> dict:
+    def _validate_execution_tree(self, parent_type: Callable | None = None):
         r"""Validate the consistency of the feature dependency graph.
 
         Parameters
@@ -228,7 +372,7 @@ class FeatureExtractor(TrainableFeature):
                 return
             parent_type = preprocessor
 
-        for fname, f in feature_extractors.items():
+        for fname, f in self.feature_extractors_dict.items():
             fe = None
             if isinstance(f, FeatureExtractor):
                 fe = f
@@ -236,7 +380,7 @@ class FeatureExtractor(TrainableFeature):
             f = get_underlying_func(f)
             if isinstance(f, AsInputOutputType):
                 if fe is not None:
-                    fe._validate_execution_tree(fe.feature_extractors_dict, parent_type)
+                    fe._validate_execution_tree(parent_type)
                     continue
                 elif hasattr(parent_type, "feature_kind"):
                     continue
@@ -254,13 +398,13 @@ class FeatureExtractor(TrainableFeature):
                         is_valid_by_output_type = True
                         break
             if not is_valid_by_output_type:
-                parent = getattr(parent_type, "__name__", parent_type)
-                child = getattr(f, "__name__", f)
+                parent = _get_func_name(parent_type)
+                child = _get_func_name(f)
                 raise TypeError(
                     f"Feature '{fname}: {child}' cannot be a child of {parent}"
                 )
 
-    def _check_is_trainable(self, feature_extractors: dict) -> bool:
+    def _check_is_trainable(self) -> bool:
         r"""Scan the execution tree for components requiring training.
 
         Returns
@@ -269,7 +413,7 @@ class FeatureExtractor(TrainableFeature):
             True if any child function or nested extractor is trainable.
 
         """
-        for fname, f in feature_extractors.items():
+        for fname, f in self.feature_extractors_dict.items():
             if isinstance(f, FeatureExtractor):
                 if f._is_trainable:
                     return True
@@ -277,7 +421,7 @@ class FeatureExtractor(TrainableFeature):
                 return True
         return False
 
-    def preprocess(self, *x, _metadata: dict):
+    def preprocess(self, *x, _metadata: dict) -> tuple:
         r"""Apply the shared preprocessor to the input data.
 
         Parameters
@@ -298,14 +442,10 @@ class FeatureExtractor(TrainableFeature):
         """
         if self.preprocessor is None:
             z = (*x,)
-        elif "_metadata" in inspect.signature(self.preprocessor).parameters:
-            if hasattr(get_underlying_func(self.preprocessor), "metadata_preprocessor"):
-                *z, _metadata = self.preprocessor(*x, _metadata=_metadata.copy())
-                z = (*z,)
-            else:
-                z = self.preprocessor(*x, _metadata=_metadata)
         else:
-            z = self.preprocessor(*x)
+            z, _metadata = _call_with_metadata(
+                self.preprocessor, *x, _metadata=_metadata
+            )
         if not isinstance(z, tuple):
             z = (z,)
         return z, _metadata
@@ -343,13 +483,7 @@ class FeatureExtractor(TrainableFeature):
         z, _metadata = self.preprocess(*x, _metadata=_metadata)
         preprocessor_f_und = get_underlying_func(self.preprocessor)
         for fname, f in self.feature_extractors_dict.items():
-            if (
-                isinstance(f, FeatureExtractor)
-                or "_metadata" in inspect.signature(f).parameters
-            ):
-                r = f(*z, _metadata=_metadata)
-            else:
-                r = f(*z)
+            r, _ = _call_with_metadata(f, *z, _metadata=_metadata)
             f_und = get_underlying_func(f)
             if hasattr(f_und, "feature_kind"):
                 r = f_und.feature_kind(r, _metadata=_metadata)
@@ -357,8 +491,10 @@ class FeatureExtractor(TrainableFeature):
                 f_und, FeatureExtractor
             ):
                 r = preprocessor_f_und.feature_kind(r, _metadata=_metadata)
-            if not isinstance(fname, str) or not fname:
-                fname = getattr(f_und, "__name__", "")
+            if (not isinstance(fname, str) or not fname) and not isinstance(
+                f, FeatureExtractor
+            ):
+                fname = _get_func_name(f_und)
             if isinstance(r, dict):
                 prefix = f"{fname}_" if fname else ""
                 for k, v in r.items():
@@ -437,6 +573,100 @@ class FeatureExtractor(TrainableFeature):
             if isinstance(f, TrainableFeature):
                 f.fit()
         super().fit()
+
+    def __len__(self) -> int:
+        """Get the number of children features/extractors."""
+        return np.sum(
+            [
+                len(f) if isinstance(f, FeatureExtractor) else 1
+                for f in self.feature_extractors_dict.values()
+            ]
+        )
+
+    def _concat_preprocessor_to_child_func(self, func: Callable) -> Callable:
+        r"""Chain the preprocessor (if there is any) in front of a callable.
+
+        Parameters
+        ----------
+        func : Callable
+            A function to chain to the preprocessor.
+
+        Returns
+        -------
+        Callable
+            A chained callable.
+
+        """
+        if self.preprocessor is None:
+            return func
+        return partial(_concat_calls, _merge_call_list([self.preprocessor, func]))
+
+    def __getitem__(self, key) -> Callable:
+        """Get a feature/extractor by its key.
+
+        Parameters
+        ----------
+        key : str or Any
+            Either a key from the feature extractors dict, or a string
+            representing a path to a node in the execution tree.
+
+        Returns
+        -------
+        Callable
+            A callable receiving an input batch as positional argument and
+            `_metadata` as a mandatory keyword argument. The callable chains
+            all preprocessors in the execution path of the tree, with the
+            required node (either a feature or a preprocessor) on top.
+
+        """
+        if key in self.feature_extractors_dict:
+            return self._concat_preprocessor_to_child_func(
+                self.feature_extractors_dict[key]
+            )
+        if not isinstance(key, str):
+            raise ValueError(
+                "Non-string keys are supported only for direct keys.\n"
+                + f"Key {key} is not a direct key of the FeatureExtractor.\n"
+                + "Possible direct keys are: "
+                + f"{self.feature_extractors_dict.keys()}"
+            )
+        for k, f in self.feature_extractors_dict.items():
+            if not isinstance(f, FeatureExtractor):
+                continue
+            if not isinstance(k, str) or k == "":
+                kk = key
+            elif key.startswith(k + "_"):
+                kk = key[len(k) + 1 :]
+            else:
+                continue
+            try:
+                func = f[kk]
+            except ValueError:
+                continue
+            else:
+                return self._concat_preprocessor_to_child_func(func)
+
+        raise ValueError(
+            f"Key {key} not found in FeatureExtractor.\n"
+            + "Possible direct keys are: "
+            + f"{self.feature_extractors_dict.keys()}"
+        )
+
+    @property
+    def feature_names(self) -> list[str]:
+        """A list of full feature names (without the channel names)."""
+        fnames = []
+        for fname, f in self.feature_extractors_dict.items():
+            if (not isinstance(fname, str) or not fname) and not isinstance(
+                f, FeatureExtractor
+            ):
+                fname = _get_func_name(get_underlying_func(f))
+            if isinstance(f, FeatureExtractor):
+                prefix = f"{fname}_" if fname else ""
+                fnames.extend([prefix + fn for fn in f.feature_names])
+            else:
+                fnames.append(fname)
+        return fnames
 
     def to_dict(self) -> dict:
         r"""Dumps the feature extractor to a dictionary.
@@ -548,3 +778,35 @@ class FeatureExtractor(TrainableFeature):
             outfile.write(
                 HOCONConverter.to_hocon(ConfigFactory.from_dict(self.to_dict()))
             )
+
+    def _repr(self) -> Tuple[dict, Callable | None]:
+        d = {}
+        for k, v in self.feature_extractors_dict.items():
+            if isinstance(v, FeatureExtractor):
+                v = v._repr()
+            d[k] = v
+        if self.preprocessor is not None:
+            s = self.preprocessor
+        else:
+            s = None
+        return d, s
+
+    def __repr__(self) -> str:
+        return _tree_to_str(*self._repr())
+
+    def _str(self) -> Tuple[dict, str | None]:
+        d = {}
+        for k, v in self.feature_extractors_dict.items():
+            if isinstance(v, FeatureExtractor):
+                v = v._str()
+            else:
+                v = _get_func_name(v)
+            d[k] = v
+        if self.preprocessor is not None:
+            s = _get_func_name(self.preprocessor)
+        else:
+            s = None
+        return d, s
+
+    def __str__(self) -> str:
+        return _tree_to_str(*self._str())

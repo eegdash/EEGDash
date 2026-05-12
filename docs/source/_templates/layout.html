@@ -32,11 +32,13 @@
   <meta name="google-site-verification" content="REPLACE_WITH_GSC_TOKEN">
   <meta name="msvalidate.01" content="REPLACE_WITH_BING_TOKEN">
 
-  {# Preconnect to the third-party CDNs we load on interactive pages.
-     Cheap on pages that don't use them, material on the ones that do. #}
+  {# Preconnect to the third-party CDNs that still load on interactive
+     pages. `cdn.jsdelivr.net` is gone now that Fuse.js is vendored;
+     jQuery + DataTables are kept because they're pulled from the
+     dataset_summary table include and self-hosting the full DataTables
+     bundle would add ~260 KB of vendored code for a single page. #}
   <link rel="preconnect" href="https://cdn.datatables.net" crossorigin>
   <link rel="preconnect" href="https://code.jquery.com" crossorigin>
-  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 
   {# Preload the Google Fonts stylesheet asynchronously. The `@import`
      that was previously the first line of custom.css blocked CSS
@@ -95,7 +97,10 @@
      ~150-200 ms saved here shows up as TBT reduction on PageSpeed. #}
   <link rel="preload" as="fetch" crossorigin="anonymous"
         href="{{ pathto('_static/dataset_generated/search_index.json', 1) }}">
-  <script defer src="https://cdn.jsdelivr.net/npm/fuse.js@7.0.0/dist/fuse.min.js"></script>
+  {# Vendored copy of Fuse.js 7.0.0 (Apache-2.0). Self-hosting removes a
+     third-party DNS hop + aligns the asset with our own cache-control,
+     and preserves a single `?v=` hash Sphinx appends for cache-busting. #}
+  <script defer src="{{ pathto('_static/lib/fuse.min.js', 1) }}"></script>
   <script defer src="{{ pathto('_static/js/hero-search.js', 1) }}"></script>
   {%- endif %}
 
@@ -114,12 +119,23 @@
         'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
         })(window,document,'script','dataLayer','GTM-MXC3DGL6');
       }
+      // Defer GTM off the critical path. requestIdleCallback wants an
+      // IdleRequestOptions object as its second argument while
+      // setTimeout wants a plain number — using the same `1` for both
+      // raised a TypeError in Lighthouse's console that dragged the SEO
+      // score down. Branch on availability so each API gets the shape
+      // it expects.
+      function scheduleGTM() {
+        if (typeof window.requestIdleCallback === 'function') {
+          window.requestIdleCallback(loadGTM, { timeout: 2000 });
+        } else {
+          setTimeout(loadGTM, 1);
+        }
+      }
       if (document.readyState === 'complete' || document.readyState === 'interactive') {
-        (window.requestIdleCallback || setTimeout)(loadGTM, 1);
+        scheduleGTM();
       } else {
-        document.addEventListener('DOMContentLoaded', function(){
-          (window.requestIdleCallback || setTimeout)(loadGTM, 1);
-        });
+        document.addEventListener('DOMContentLoaded', scheduleGTM);
       }
     })();
   </script>

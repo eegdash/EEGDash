@@ -94,9 +94,6 @@ class CommonSpatialPattern(TrainableFeature):
 
     """
 
-    def __init__(self):
-        super().__init__()
-
     def clear(self):
         r"""Reset the internal state of the feature extractor.
 

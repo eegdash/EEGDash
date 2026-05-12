@@ -198,26 +198,30 @@ def test_extractors_more():
 
     # 127, 130, 132: features_kwargs
     fe = FeatureExtractor({"feat": partial(f1, a=2)})
-    assert "feat" in fe.features_kwargs
-    assert fe.features_kwargs["feat"] == {"a": 2}
+    assert "feature_extractors" in fe.features_kwargs
+    assert "feat" in fe.features_kwargs["feature_extractors"]
+    assert fe.features_kwargs["feature_extractors"]["feat"]["kwargs"] == {"a": 2}
 
     def pre(x, a=1):
         return x
 
     f1.parent_extractor_type = [SignalOutputType, pre]  # add pre to parent types
     fe_pre = FeatureExtractor({"feat": f1}, preprocessor=partial(pre, a=2))
-    assert "preprocess_kwargs" in fe_pre.features_kwargs
+    assert "preprocessor" in fe_pre.features_kwargs
     # 181: call with preprocessor
     fe_pre(
         np.array([[[1.0]]]), _metadata={"batch_size": 1, "info": {"ch_names": ["ch1"]}}
     )
     fe_inner = FeatureExtractor({"inner": f1})
     fe_outer = FeatureExtractor({"outer": fe_inner})
-    assert "outer" in fe_outer.features_kwargs
-    assert fe_outer.features_kwargs["outer"] == fe_inner.features_kwargs
+    assert "outer" in fe_outer.features_kwargs["feature_extractors"]
+    assert (
+        fe_outer.features_kwargs["feature_extractors"]["outer"]
+        == fe_inner.features_kwargs
+    )
 
     # 159, 161: _check_is_trainable
-    fe_outer._check_is_trainable({"f": fe_inner})
+    fe_outer._check_is_trainable()
 
     class MyTrainable(FeatureExtractor):
         def __init__(self, *args, **kwargs):
@@ -231,14 +235,13 @@ def test_extractors_more():
             pass
 
         def fit(self):
-            self._is_fitted = True
+            self._is_trained = True
 
     def feat(x):
         return x
 
     feat.parent_extractor_type = [SignalOutputType]
-    trainable_fe = MyTrainable({"f": feat})
-    fe_outer._check_is_trainable({"f": trainable_fe})
+    fe_outer._check_is_trainable()
 
     # 158-159, 161, 181 ...
     # circular import check bypass usually works
@@ -345,7 +348,7 @@ def test_feature_extractor_with_partial_preprocessor():
     partial_preproc = partial(preprocessor, scale=2.0)
 
     fe = FeatureExtractor({"simple": simple_feature}, preprocessor=partial_preproc)
-    assert "preprocess_kwargs" in fe.features_kwargs
+    assert "preprocessor" in fe.features_kwargs
 
 
 def test_feature_extractor_nested_check_trainable():

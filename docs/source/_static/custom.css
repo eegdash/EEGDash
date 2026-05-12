@@ -2125,7 +2125,8 @@ html[data-theme="dark"] .hf-search-submit {
 }
 
 .hf-badges img {
-  height: 26px;
+  /* height + width are set inline per-badge in index.rst (SEO/CLS);
+     do not override here, or the browser will stretch SVGs off-ratio. */
   filter: saturate(0.9);
 }
 

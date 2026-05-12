@@ -10,7 +10,7 @@ APIDIR := $(SOURCEDIR)/api
 # Shared cache so tutorials find data regardless of sphinx CWD (mirrors CI's EEGDASH_CACHE_DIR).
 EEGDASH_CACHE_DIR ?= $(CURDIR)/../.eegdash_cache
 
-.PHONY: help clean apidoc llms-txt html html-noplot html-fast markdown
+.PHONY: help clean apidoc llms-txt html html-noplot html-fast markdown electrode-layouts
 
 help:
 	@$(SPHINXBUILD) -M help "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
@@ -27,23 +27,33 @@ apidoc:
 llms-txt: apidoc
 	@python generate_llms_txt.py --source "$(SOURCEDIR)" --output "$(SOURCEDIR)/_extra/llms.txt"
 
+# Refresh source/_static/dataset_generated/electrode-layouts.json from the
+# live montage registry. The script fails soft (zero layouts → warning
+# but exit 0) so a transient API outage never blocks the docs build;
+# the --keep-existing-on-empty flag preserves the last good manifest.
+electrode-layouts:
+	@python build_electrode_layouts.py --keep-existing-on-empty || true
 
 # Standard build runs examples
-html: apidoc llms-txt
+html: apidoc llms-txt electrode-layouts
 	EEGDASH_CACHE_DIR=$(EEGDASH_CACHE_DIR) python prepare_summary_tables.py --target $(BUILDDIR)
 	EEGDASH_DATASET_REGISTRY_FROM_API=1 EEGDASH_CACHE_DIR=$(EEGDASH_CACHE_DIR) $(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
+	@python fingerprint_assets.py --html-dir "$(BUILDDIR)/html"
 
 # Fast build: do NOT execute examples (sphinx-gallery)
-html-noplot: apidoc llms-txt
+html-noplot: apidoc llms-txt electrode-layouts
 	@EEGDASH_CACHE_DIR=$(EEGDASH_CACHE_DIR) python prepare_summary_tables.py --target $(BUILDDIR)
 	@EEGDASH_DATASET_REGISTRY_FROM_API=1 EEGDASH_CACHE_DIR=$(EEGDASH_CACHE_DIR) $(SPHINXBUILD) -M html "$(SOURCEDIR)" "$(BUILDDIR)" \
 		$(SPHINXOPTS) -D sphinx_gallery_conf.plot_gallery=0 $(O)
+	@python fingerprint_assets.py --html-dir "$(BUILDDIR)/html"
 
-# Very fast build: limit datasets to 5
+# Very fast build: limit datasets to 5 (skip the electrode registry leg;
+# manifest stays at whatever was last generated)
 html-fast: apidoc llms-txt
 	@EEGDASH_DOC_LIMIT=5 EEGDASH_CACHE_DIR=$(EEGDASH_CACHE_DIR) python prepare_summary_tables.py --target $(BUILDDIR)
 	@EEGDASH_DOC_LIMIT=5 EEGDASH_DATASET_REGISTRY_FROM_API=1 EEGDASH_CACHE_DIR=$(EEGDASH_CACHE_DIR) $(SPHINXBUILD) -M html "$(SOURCEDIR)" "$(BUILDDIR)" \
 		$(SPHINXOPTS) -D sphinx_gallery_conf.plot_gallery=0 $(O)
+	@python fingerprint_assets.py --html-dir "$(BUILDDIR)/html"
 
 # Markdown sibling build. Run *after* `make html` — we reuse the already
 # generated apidoc/summary tables and only build the markdown tree, then

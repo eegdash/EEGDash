@@ -123,8 +123,8 @@ def pick_channel_pairs_preprocessor(
     _metadata : dict
         Updated metadata dictionary.
 
-    Note
-    ----
+    Notes
+    -----
     Picking by index pair, e.g., ``x[i, j]``, is not directly supported because
     the result may not be an `numpy.ndarray`. It is preferred to use a pair
     axis. It is possible, however, to pick just by ``x_index`` with

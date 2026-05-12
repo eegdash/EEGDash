@@ -55,6 +55,7 @@ eegdash-datasets/
 eegdash/data/
 examples/data
 examples/eeg2025/weights*
+examples/new_tutorials/eegdash_data/
 note
 pip-log.txt
 tags

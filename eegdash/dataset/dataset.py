@@ -13,9 +13,8 @@ from braindecode.datasets import BaseConcatDataset
 
 from .. import downloader
 from ..bids_metadata import (
+    build_description,
     build_query_from_kwargs,
-    merge_participants_fields,
-    normalize_key,
 )
 from ..const import (
     ALLOWED_QUERY_FIELDS,
@@ -183,17 +182,8 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
 
         - ``"record"`` (default): the record-level value is kept.
         - ``"participant_tsv"``: the ``participant_tsv`` value overwrites the
-          record value for conflicting fields.
-
-        In both cases a ``debug``-level log is emitted when a conflict is
-        detected.
-
-        .. note::
-            When ``description_precedence="participant_tsv"``, a ``None``
-            value in ``participant_tsv`` will overwrite a non-``None`` record
-            value for the same field. This is deliberate — choosing this mode
-            means trusting the ``participant_tsv`` source fully, including its
-            gaps.
+          record value, including ``None`` values. Raises ``ValueError`` if
+          not one of the above.
     **kwargs : dict
         Additional keyword arguments serving two purposes:
 
@@ -270,17 +260,17 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
 
         if records is not None:
             self.records = self._normalize_records(records)
-            datasets = []
-            for norm_record in self.records:
-                description = self._build_description(norm_record, description_fields)
-                datasets.append(
-                    EEGDashRaw(
-                        norm_record,
-                        self.cache_dir,
-                        description=description,
-                        **base_dataset_kwargs,
-                    )
+            datasets = [
+                EEGDashRaw(
+                    record,
+                    self.cache_dir,
+                    description=build_description(
+                        record, description_fields, self._description_precedence
+                    ),
+                    **base_dataset_kwargs,
                 )
+                for record in self.records
+            ]
         elif not download:  # only assume local data is complete if not downloading
             if not self.data_dir.exists():
                 raise ValueError(
@@ -309,8 +299,8 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
                         part_row = row if isinstance(row, dict) else None
                     except Exception:
                         pass
-                desc = self._build_description(
-                    record, description_fields, participants_row=part_row
+                desc = build_description(
+                    record, description_fields, self._description_precedence, part_row
                 )
                 datasets.append(
                     EEGDashRaw(
@@ -581,122 +571,6 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
         """
         return discover_local_bids_records(dataset_root, filters)
 
-    def _build_description(
-        self,
-        record: dict[str, Any],
-        description_fields: list[str],
-        participants_row: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
-        """Build a description dict for a single record.
-
-        Extracts values for each requested field from the record, then merges
-        participant data from either an explicit ``participants_row`` (offline
-        path, from a local ``participants.tsv``) or the embedded
-        ``participant_tsv`` key inside the record (online paths).  Fields still
-        absent after the merge are set to ``None`` so the schema is always
-        complete.  When both the record and participant data carry the same
-        field, precedence is determined by ``self._description_precedence``; a
-        ``debug``-level log is emitted when the values differ.
-
-        Parameters
-        ----------
-        record : dict
-            The metadata for a single record.
-        description_fields : list of str
-            The fields to include in the description.
-        participants_row : dict or None
-            Optional participant-level metadata to merge. If None, the method
-            will look for an embedded ``participant_tsv`` key in the record.
-
-        Returns
-        -------
-        dict
-            A dictionary containing the requested description fields for the record.
-
-        """
-        description: dict[str, Any] = {}
-
-        for field_name in description_fields:
-            value = self._find_key_in_nested_dict(record, field_name)
-            if value is not None:
-                description[field_name] = value
-
-        effective_part = participants_row
-        if effective_part is None:
-            embedded = self._find_key_in_nested_dict(record, "participant_tsv")
-            if isinstance(embedded, dict):
-                effective_part = embedded
-
-        if isinstance(effective_part, dict):
-            norm_present = {
-                normalize_key(k): k for k, v in description.items() if v is not None
-            }
-            for part_key, part_val in effective_part.items():
-                existing_field = norm_present.get(normalize_key(part_key))
-                if (
-                    existing_field is not None
-                    and description[existing_field] != part_val
-                ):
-                    if self._description_precedence == "participant_tsv":
-                        logger.debug(
-                            "Field '%s': participant_tsv value %r overwrote record value %r.",
-                            existing_field,
-                            part_val,
-                            description[existing_field],
-                        )
-                        description[existing_field] = part_val
-                    else:
-                        logger.debug(
-                            "Field '%s': record value %r kept over participant_tsv value %r.",
-                            existing_field,
-                            description[existing_field],
-                            part_val,
-                        )
-            description = merge_participants_fields(
-                description=description,
-                participants_row=effective_part,
-                description_fields=description_fields,
-            )
-
-        # Ensure all requested fields are present; None for any that were not found
-        for field in description_fields:
-            description.setdefault(field, None)
-
-        return description
-
-    def _find_key_in_nested_dict(self, data: Any, target_key: str) -> Any:
-        """Recursively search for a key in nested dicts/lists.
-
-        Performs a case-insensitive and underscore/hyphen-agnostic search.
-
-        Parameters
-        ----------
-        data : Any
-            The nested data structure (dicts, lists) to search.
-        target_key : str
-            The key to search for.
-
-        Returns
-        -------
-        Any
-            The value of the first matching key, or None if not found.
-
-        """
-        norm_target = normalize_key(target_key)
-        if isinstance(data, dict):
-            for k, v in data.items():
-                if normalize_key(k) == norm_target:
-                    return v
-                res = self._find_key_in_nested_dict(v, target_key)
-                if res is not None:
-                    return res
-        elif isinstance(data, list):
-            for item in data:
-                res = self._find_key_in_nested_dict(item, target_key)
-                if res is not None:
-                    return res
-        return None
-
     def _find_datasets(
         self,
         query: dict[str, Any] | None,
@@ -742,7 +616,7 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
                     f"Record data_name: {record.get('data_name', 'unknown')}"
                 )
 
-            description = self._build_description(record, description_fields)
+            description = build_description(record, description_fields, self._description_precedence)
             datasets.append(
                 EEGDashRaw(
                     record,

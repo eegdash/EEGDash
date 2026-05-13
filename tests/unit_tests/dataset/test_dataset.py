@@ -134,9 +134,7 @@ def test_dataset_gaps(tmp_path):
         ds.cache_dir = tmp_path
         ds.eeg_dash_instance = MagicMock()
         ds._normalize_records = lambda x: x
-        ds._find_key_in_nested_dict = EEGDashDataset._find_key_in_nested_dict.__get__(
-            ds
-        )
+        ds._description_precedence = "record"
 
         # 514: Trigger v2 format validation error
         invalid_record = {"data_name": "bad_rec"}
@@ -154,7 +152,7 @@ def test_dataset_gaps(tmp_path):
         ds.eeg_dash_instance.find.return_value = [valid_record]
         with patch("eegdash.dataset.dataset.validate_record", return_value=[]):
             with patch(
-                "eegdash.dataset.dataset.merge_participants_fields"
+                "eegdash.bids_metadata.merge_participants_fields"
             ) as mock_merge:
                 with patch("eegdash.dataset.dataset.EEGDashRaw"):
                     EEGDashDataset._find_datasets(
@@ -199,10 +197,10 @@ def test_dataset_init_exception_gap(tmp_path):
                 mock_bids = mock_bids_cls.return_value
                 mock_bids.subject_participant_tsv.return_value = {}
 
-                # merge_participants_fields raises inside _build_description's offline
+                # merge_participants_fields raises inside build_description's offline
                 # enrichment path; the per-record exception must be swallowed.
                 with patch(
-                    "eegdash.dataset.dataset.merge_participants_fields",
+                    "eegdash.bids_metadata.merge_participants_fields",
                     side_effect=Exception("Boom"),
                 ):
                     ds = EEGDashDataset(
@@ -261,7 +259,7 @@ def test_cache_dir_does_not_exist_creates(tmp_path, caplog):
 
 def test_iterate_local_with_participants_exception(tmp_path):
     """Test that exception in merge_participants_fields is handled."""
-    from eegdash.dataset.dataset import merge_participants_fields
+    from eegdash.bids_metadata import merge_participants_fields
 
     # Test merge_participants_fields with None participants_row
     result = merge_participants_fields(
@@ -293,38 +291,14 @@ def test_normalize_records_with_list():
 
 
 def test_dataset_find_key_nested(tmp_path):
-    """Test _find_key_in_nested_dict recursion."""
-    from unittest.mock import patch
-
-    from eegdash.dataset.dataset import EEGDashDataset
-
-    d = tmp_path / "ds999"
-    d.mkdir()
-
-    valid_record = {
-        "dataset": "ds999",
-        "data_name": "sub-01_task-rest_eeg.set",
-        "bidspath": "ds999/sub-01/eeg/sub-01_task-rest_eeg.set",
-        "bids_relpath": "sub-01/eeg/sub-01_task-rest_eeg.set",
-        "subject": "01",
-        "task": "rest",
-        "storage": {"base": str(d), "backend": "local"},
-    }
-    # Mocking discover to return proper records so init doesn't fail
-    with patch("eegdash.dataset.dataset.discover_local_bids_records") as mock_discover:
-        mock_discover.return_value = [valid_record]
-        ds = EEGDashDataset(
-            cache_dir=str(tmp_path),
-            dataset="ds999",
-            download=False,
-            _suppress_comp_warning=True,
-        )
+    """Test find_key_in_nested_dict recursion."""
+    from eegdash.bids_metadata import find_key_in_nested_dict
 
     data = {"a": 1, "b": {"c": 2, "d": [{"e": 3}, {"f": 4}]}}
-    assert ds._find_key_in_nested_dict(data, "a") == 1
-    assert ds._find_key_in_nested_dict(data, "c") == 2
-    assert ds._find_key_in_nested_dict(data, "e") == 3
-    assert ds._find_key_in_nested_dict(data, "z") is None
+    assert find_key_in_nested_dict(data, "a") == 1
+    assert find_key_in_nested_dict(data, "c") == 2
+    assert find_key_in_nested_dict(data, "e") == 3
+    assert find_key_in_nested_dict(data, "z") is None
 
 
 def test_dataset_normalize_records_dedupe(tmp_path):
@@ -752,8 +726,10 @@ def test_dataset_recursive_search(tmp_path):
         _suppress_comp_warning=True,
         cache_dir=str(tmp_path),
     )
-    assert real_ds._find_key_in_nested_dict(data, "b-c") == 1
-    assert real_ds._find_key_in_nested_dict([{"x": 2}], "x") == 2
+    from eegdash.bids_metadata import find_key_in_nested_dict
+
+    assert find_key_in_nested_dict(data, "b-c") == 1
+    assert find_key_in_nested_dict([{"x": 2}], "x") == 2
 
 
 def test_dataset_init_error_no_args(tmp_path):

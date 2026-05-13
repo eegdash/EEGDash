@@ -177,6 +177,23 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
 
         Skipped recordings are flagged via ``ds._skipped`` so callers can
         filter them out with a list comprehension after iteration.
+    description_precedence : str, default "record"
+        Which source wins when the same field appears in both the record and
+        the embedded ``participant_tsv`` data:
+
+        - ``"record"`` (default): the record-level value is kept.
+        - ``"participant_tsv"``: the ``participant_tsv`` value overwrites the
+          record value for conflicting fields.
+
+        In both cases a ``debug``-level log is emitted when a conflict is
+        detected.
+
+        .. note::
+            When ``description_precedence="participant_tsv"``, a ``None``
+            value in ``participant_tsv`` will overwrite a non-``None`` record
+            value for the same field. This is deliberate — choosing this mode
+            means trusting the ``participant_tsv`` source fully, including its
+            gaps.
     **kwargs : dict
         Additional keyword arguments serving two purposes:
 
@@ -201,6 +218,7 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
         auth_token: str | None = None,
         on_error: str = "raise",
         max_concurrency: int = 20,
+        description_precedence: str = "record",
         **kwargs,
     ):
         # Internal-only kwargs
@@ -208,6 +226,13 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
         self._dedupe_records: bool = kwargs.pop("_dedupe_records", False)
 
         self._on_error = on_error
+        _VALID_PRECEDENCE = {"record", "participant_tsv"}
+        if description_precedence not in _VALID_PRECEDENCE:
+            raise ValueError(
+                f"description_precedence must be one of {sorted(_VALID_PRECEDENCE)}, "
+                f"got {description_precedence!r}"
+            )
+        self._description_precedence = description_precedence
         self.s3_bucket = s3_bucket
         self.database = database
         self.auth_token = auth_token
@@ -243,11 +268,14 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
         if not suppress_comp_warning:
             _warn_if_competition_dataset(self.query["dataset"])
 
+        _built_descriptions: list[dict] = []
+
         if records is not None:
             datasets = []
             self.records = []
             for raw_record in records:
                 description = self._build_description(raw_record, description_fields)
+                _built_descriptions.append(description)
                 normalised = self._normalize_records([raw_record])
                 if not normalised:
                     continue
@@ -292,6 +320,7 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
                 desc = self._build_description(
                     record, description_fields, participants_row=part_row
                 )
+                _built_descriptions.append(desc)
                 datasets.append(
                     EEGDashRaw(
                         record=record,
@@ -316,6 +345,7 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
                 query=build_query_from_kwargs(**self.query),
                 description_fields=description_fields,
                 base_dataset_kwargs=base_dataset_kwargs,
+                built_descriptions=_built_descriptions,
             )
 
             if len(datasets) == 0:
@@ -342,21 +372,19 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
         super().__init__(datasets, lazy=True)
 
         # Warn when a requested field produced no values across all recordings.
-        # Guarded with try/except because self.description requires real EEGDashRaw
-        # instances; mocked datasets (e.g. in unit tests) may not satisfy that.
-        if datasets:
-            try:
-                desc_df = self.description
-                all_none = [
-                    col for col in desc_df.columns if desc_df[col].isna().all()
-                ]
-                if all_none:
-                    logger.warning(
-                        "description_fields %s are None for all recordings — possible typo?",
-                        all_none,
-                    )
-            except Exception:
-                pass
+        # Uses the plain-dict descriptions collected during the build loops so
+        # this check is safe even when EEGDashRaw is mocked in unit tests.
+        if _built_descriptions:
+            all_none = [
+                f
+                for f in description_fields
+                if all(d.get(f) is None for d in _built_descriptions)
+            ]
+            if all_none:
+                logger.warning(
+                    "description_fields %s are None for all recordings — possible typo?",
+                    all_none,
+                )
 
     @property
     def cumulative_sizes(self) -> list[int]:
@@ -629,12 +657,21 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
             for part_key, part_val in effective_part.items():
                 existing_field = norm_present.get(normalize_key(part_key))
                 if existing_field is not None and description[existing_field] != part_val:
-                    logger.debug(
-                        "Field '%s': record value %r kept over participant_tsv value %r.",
-                        existing_field,
-                        description[existing_field],
-                        part_val,
-                    )
+                    if self._description_precedence == "participant_tsv":
+                        logger.debug(
+                            "Field '%s': participant_tsv value %r overwrote record value %r.",
+                            existing_field,
+                            part_val,
+                            description[existing_field],
+                        )
+                        description[existing_field] = part_val
+                    else:
+                        logger.debug(
+                            "Field '%s': record value %r kept over participant_tsv value %r.",
+                            existing_field,
+                            description[existing_field],
+                            part_val,
+                        )
             description = merge_participants_fields(
                 description=description,
                 participants_row=effective_part,
@@ -681,6 +718,7 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
         query: dict[str, Any] | None,
         description_fields: list[str],
         base_dataset_kwargs: dict,
+        built_descriptions: list[dict] | None = None,
     ) -> list[EEGDashRaw]:
         """Find and construct datasets from a MongoDB query.
 
@@ -722,6 +760,8 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
                 )
 
             description = self._build_description(record, description_fields)
+            if built_descriptions is not None:
+                built_descriptions.append(description)
             datasets.append(
                 EEGDashRaw(
                     record,

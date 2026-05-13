@@ -16,7 +16,6 @@ import pytest
 
 from eegdash.dataset.dataset import EEGDashDataset
 
-
 # ---------------------------------------------------------------------------
 # Lightweight EEGDashRaw stub
 # ---------------------------------------------------------------------------
@@ -33,7 +32,10 @@ class _FakeRaw:
     """
 
     def __init__(self, record, cache_dir=None, description=None, **kwargs):
-        _ = cache_dir, kwargs  # accepted to match EEGDashRaw's signature; not needed in stub
+        _ = (
+            cache_dir,
+            kwargs,
+        )  # accepted to match EEGDashRaw's signature; not needed in stub
         self.record = record
         self.description = pd.Series(description or {}, dtype=object)
 
@@ -164,7 +166,6 @@ def test_dataset_initialization_path_parity(tmp_path, parity_record):
     (tmp_path / "ds_parity").mkdir(parents=True, exist_ok=True)
 
     with patch("eegdash.dataset.dataset.EEGDashRaw", _FakeRaw):
-
         # -- Path 1: records= ------------------------------------------------
         ds_records = EEGDashDataset(
             cache_dir=tmp_path,
@@ -254,7 +255,9 @@ def test_build_description_participant_tsv_precedence(tmp_path):
     }
     desc = ds._build_description(record, description_fields=["age", "sex"])
 
-    assert desc["age"] == 99, "participant_tsv value must win when precedence='participant_tsv'"
+    assert desc["age"] == 99, (
+        "participant_tsv value must win when precedence='participant_tsv'"
+    )
     assert desc["sex"] == "M"
 
     # None in participant_tsv overwrites a real record value (documented behaviour).

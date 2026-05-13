@@ -653,10 +653,15 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
                 effective_part = embedded
 
         if isinstance(effective_part, dict):
-            norm_present = {normalize_key(k): k for k, v in description.items() if v is not None}
+            norm_present = {
+                normalize_key(k): k for k, v in description.items() if v is not None
+            }
             for part_key, part_val in effective_part.items():
                 existing_field = norm_present.get(normalize_key(part_key))
-                if existing_field is not None and description[existing_field] != part_val:
+                if (
+                    existing_field is not None
+                    and description[existing_field] != part_val
+                ):
                     if self._description_precedence == "participant_tsv":
                         logger.debug(
                             "Field '%s': participant_tsv value %r overwrote record value %r.",

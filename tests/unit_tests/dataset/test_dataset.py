@@ -171,19 +171,11 @@ def test_datasets_init_gap():
     # We can just try to instantiate with minimum args
     # Patching the CLASS method
     with patch(
-        "eegdash.dataset.dataset.EEGDashDataset._find_datasets", return_value=[]
+        "eegdash.dataset.dataset.EEGDashDataset._find_datasets",
+        return_value=[MagicMock()],
     ):
-        # But wait, if it returns empty list, init might raise "No datasets found"
-        # We need to see code.
-        # If I look above, standard logic is: datasets = self._find_datasets... if not datasets: raise ValueError
-        # So we must return a non-empty list
-        with patch(
-            "eegdash.dataset.dataset.EEGDashDataset._find_datasets",
-            return_value=[MagicMock()],
-        ):
-            ds = EEGDashDataset(query={}, cache_dir=".", dataset="ds001")
-            # query is set before _find_datasets check
-            assert ds.query == {"dataset": "ds001"}
+        ds = EEGDashDataset(query={}, cache_dir=".", dataset="ds001")
+        assert ds.query == {"dataset": "ds001"}
 
 
 def test_dataset_init_exception_gap(tmp_path):
@@ -202,35 +194,25 @@ def test_dataset_init_exception_gap(tmp_path):
             {"path": "s2", "bidspath": "foo/baz", "dataset": "ds001"},
         ]
 
-        # Try patching the class in the module
         with patch("eegdash.dataset.dataset.EEGDashRaw"):
-            # Mock get_entities_from_record (plural) called in dataset.py
-            with patch(
-                "eegdash.dataset.dataset.get_entities_from_record",
-                return_value={"sub": "01"},
-            ):
-                # Mock participants_row_for_subject is NOT called directly, usage is:
-                # part_row = bids_ds.subject_participant_tsv(local_file)
-                # So we mock EEGBIDSDataset or its method?
-                # In the code: bids_ds = EEGBIDSDataset(...)
-                # We should patch EEGBIDSDataset class in dataset.py
-                with patch("eegdash.dataset.dataset.EEGBIDSDataset") as mock_bids_cls:
-                    mock_bids = mock_bids_cls.return_value
-                    mock_bids.subject_participant_tsv.return_value = {}
+            with patch("eegdash.dataset.dataset.EEGBIDSDataset") as mock_bids_cls:
+                mock_bids = mock_bids_cls.return_value
+                mock_bids.subject_participant_tsv.return_value = {}
 
-                    # Mock merge_participants_fields to raise Exception
-                    with patch(
-                        "eegdash.dataset.dataset.merge_participants_fields",
-                        side_effect=Exception("Boom"),
-                    ):
-                        ds = EEGDashDataset(
-                            cache_dir=cache,
-                            dataset="ds001",
-                            check_files=False,
-                            download=False,
-                        )
-                        # Should swallow exception and continue
-                        assert len(ds.datasets) == 2
+                # merge_participants_fields raises inside _build_description's offline
+                # enrichment path; the per-record exception must be swallowed.
+                with patch(
+                    "eegdash.dataset.dataset.merge_participants_fields",
+                    side_effect=Exception("Boom"),
+                ):
+                    ds = EEGDashDataset(
+                        cache_dir=cache,
+                        dataset="ds001",
+                        check_files=False,
+                        download=False,
+                    )
+                    # Should swallow exception and continue
+                    assert len(ds.datasets) == 2
 
 
 def test_dataset_init_kwargs_gap(tmp_path):

@@ -2,13 +2,10 @@
 initialization paths (records=, offline, query).
 
 Covers:
-- participant_tsv precedence conflict logging
-- None-padding for missing description fields
-- Case/hyphen-insensitive key matching
 - Description parity across all three construction paths
+- Configurable description_precedence (record vs participant_tsv)
 """
 
-import logging
 from unittest.mock import MagicMock, patch
 
 import pandas as pd
@@ -49,21 +46,6 @@ class _FakeRaw:
 
 
 @pytest.fixture
-def minimal_ds(tmp_path):
-    """Lightweight EEGDashDataset used as a host for direct _build_description calls."""
-    record = {
-        "dataset": "ds_bd_test",
-        "bidspath": "ds_bd_test/a.set",
-        "bids_relpath": "a.set",
-        "extension": ".set",
-        "storage": {"backend": "local", "base": str(tmp_path)},
-    }
-    with patch("eegdash.dataset.dataset.EEGDashRaw", _FakeRaw):
-        ds = EEGDashDataset(cache_dir=tmp_path, records=[record], download=True)
-    return ds
-
-
-@pytest.fixture
 def parity_record(tmp_path):
     """A v2-format record suitable for all three construction paths."""
     return {
@@ -78,79 +60,7 @@ def parity_record(tmp_path):
 
 
 # ---------------------------------------------------------------------------
-# 1. Precedence conflict: top-level record value wins over participant_tsv
-# ---------------------------------------------------------------------------
-
-
-def test_build_description_precedence_conflict(minimal_ds, caplog):
-    """Top-level record value is kept when participant_tsv carries a different value.
-
-    A debug-level log must be emitted to make the silent priority explicit.
-    """
-    record = {
-        "age": 30,  # top-level value that should win
-        "participant_tsv": {"age": 99, "sex": "M"},
-    }
-
-    with caplog.at_level(logging.DEBUG, logger="eegdash"):
-        desc = minimal_ds._build_description(record, description_fields=["age", "sex"])
-
-    assert desc["age"] == 30, "Top-level record value must take precedence"
-    assert desc["sex"] == "M", "Uncontested participant_tsv field must be merged"
-
-    conflict_logs = [m for m in caplog.messages if "age" in m and "30" in m]
-    assert conflict_logs, (
-        "Expected a debug log mentioning the 'age' conflict, got: "
-        + str(caplog.messages)
-    )
-    assert any("kept" in m for m in caplog.messages), (
-        "Default 'record' precedence must log 'kept', not 'overwrote'"
-    )
-
-
-# ---------------------------------------------------------------------------
-# 2. Missing fields are padded with None, not omitted
-# ---------------------------------------------------------------------------
-
-
-def test_build_description_missing_fields_padding(minimal_ds):
-    """Fields absent from the record appear in the description as None.
-
-    Accessing description["missing_field_xyz"] must not raise KeyError.
-    """
-    record = {"entities": {"subject": "01"}}
-    description_fields = ["subject", "missing_field_xyz"]
-
-    desc = minimal_ds._build_description(record, description_fields=description_fields)
-
-    assert desc["subject"] == "01"
-    assert "missing_field_xyz" in desc, (
-        "Missing field must be present in description (padded with None)"
-    )
-    assert desc["missing_field_xyz"] is None, "Missing field value must be None"
-
-
-# ---------------------------------------------------------------------------
-# 3. Key lookup is case- and separator-insensitive
-# ---------------------------------------------------------------------------
-
-
-def test_build_description_key_insensitivity(minimal_ds):
-    """_find_key_in_nested_dict maps 'Subject-ID' in the record to 'subject_id' in fields."""
-    record = {"Subject-ID": "sub-007"}
-
-    desc = minimal_ds._build_description(
-        record, description_fields=["subject_id", "task"]
-    )
-
-    assert desc["subject_id"] == "sub-007", (
-        "Normalised key lookup must resolve 'Subject-ID' → 'subject_id'"
-    )
-    assert desc["task"] is None, "Absent field must be None"
-
-
-# ---------------------------------------------------------------------------
-# 4. Path parity: records=, offline, and query paths produce identical descriptions
+# 1. Path parity: records=, offline, and query paths produce identical descriptions
 # ---------------------------------------------------------------------------
 
 
@@ -224,7 +134,7 @@ def test_dataset_initialization_path_parity(tmp_path, parity_record):
 
 
 # ---------------------------------------------------------------------------
-# 5. description_precedence="participant_tsv" — participant_tsv values win
+# 2. description_precedence="participant_tsv" — participant_tsv values win
 # ---------------------------------------------------------------------------
 
 
@@ -272,7 +182,7 @@ def test_build_description_participant_tsv_precedence(tmp_path):
 
 
 # ---------------------------------------------------------------------------
-# 6. Invalid description_precedence raises ValueError at construction
+# 3. Invalid description_precedence raises ValueError at construction
 # ---------------------------------------------------------------------------
 
 

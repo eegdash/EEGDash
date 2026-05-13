@@ -226,10 +226,10 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
         self._dedupe_records: bool = kwargs.pop("_dedupe_records", False)
 
         self._on_error = on_error
-        _VALID_PRECEDENCE = {"record", "participant_tsv"}
-        if description_precedence not in _VALID_PRECEDENCE:
+        _valid = {"record", "participant_tsv"}
+        if description_precedence not in _valid:
             raise ValueError(
-                f"description_precedence must be one of {sorted(_VALID_PRECEDENCE)}, "
+                f"description_precedence must be one of {sorted(_valid)}, "
                 f"got {description_precedence!r}"
             )
         self._description_precedence = description_precedence
@@ -268,18 +268,11 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
         if not suppress_comp_warning:
             _warn_if_competition_dataset(self.query["dataset"])
 
-        _built_descriptions: list[dict] = []
-
         if records is not None:
+            self.records = self._normalize_records(records)
             datasets = []
-            self.records = []
-            for raw_record in records:
-                description = self._build_description(raw_record, description_fields)
-                _built_descriptions.append(description)
-                normalised = self._normalize_records([raw_record])
-                if not normalised:
-                    continue
-                norm_record = normalised[0]
+            for norm_record in self.records:
+                description = self._build_description(norm_record, description_fields)
                 datasets.append(
                     EEGDashRaw(
                         norm_record,
@@ -288,7 +281,6 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
                         **base_dataset_kwargs,
                     )
                 )
-                self.records.append(norm_record)
         elif not download:  # only assume local data is complete if not downloading
             if not self.data_dir.exists():
                 raise ValueError(
@@ -320,7 +312,6 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
                 desc = self._build_description(
                     record, description_fields, participants_row=part_row
                 )
-                _built_descriptions.append(desc)
                 datasets.append(
                     EEGDashRaw(
                         record=record,
@@ -345,7 +336,6 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
                 query=build_query_from_kwargs(**self.query),
                 description_fields=description_fields,
                 base_dataset_kwargs=base_dataset_kwargs,
-                built_descriptions=_built_descriptions,
             )
 
             if len(datasets) == 0:
@@ -370,21 +360,6 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
                 pass
 
         super().__init__(datasets, lazy=True)
-
-        # Warn when a requested field produced no values across all recordings.
-        # Uses the plain-dict descriptions collected during the build loops so
-        # this check is safe even when EEGDashRaw is mocked in unit tests.
-        if _built_descriptions:
-            all_none = [
-                f
-                for f in description_fields
-                if all(d.get(f) is None for d in _built_descriptions)
-            ]
-            if all_none:
-                logger.warning(
-                    "description_fields %s are None for all recordings — possible typo?",
-                    all_none,
-                )
 
     @property
     def cumulative_sizes(self) -> list[int]:
@@ -614,13 +589,14 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
     ) -> dict[str, Any]:
         """Build a description dict for a single record.
 
-        Pre-fills every requested field with ``None`` so the schema is always
-        complete, then overwrites with values found in the record.  Merges
+        Extracts values for each requested field from the record, then merges
         participant data from either an explicit ``participants_row`` (offline
         path, from a local ``participants.tsv``) or the embedded
-        ``participant_tsv`` key inside the record (online paths).  When both
-        the record and participant data carry the same field, the record value
-        wins; a ``debug``-level log is emitted when the values differ.
+        ``participant_tsv`` key inside the record (online paths).  Fields still
+        absent after the merge are set to ``None`` so the schema is always
+        complete.  When both the record and participant data carry the same
+        field, precedence is determined by ``self._description_precedence``; a
+        ``debug``-level log is emitted when the values differ.
 
         Parameters
         ----------
@@ -638,8 +614,7 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
             A dictionary containing the requested description fields for the record.
 
         """
-        # Pre-fill with None so .description["subject"] never raises KeyError
-        description: dict[str, Any] = {field: None for field in description_fields}
+        description: dict[str, Any] = {}
 
         for field_name in description_fields:
             value = self._find_key_in_nested_dict(record, field_name)
@@ -683,6 +658,10 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
                 description_fields=description_fields,
             )
 
+        # Ensure all requested fields are present; None for any that were not found
+        for field in description_fields:
+            description.setdefault(field, None)
+
         return description
 
     def _find_key_in_nested_dict(self, data: Any, target_key: str) -> Any:
@@ -723,7 +702,6 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
         query: dict[str, Any] | None,
         description_fields: list[str],
         base_dataset_kwargs: dict,
-        built_descriptions: list[dict] | None = None,
     ) -> list[EEGDashRaw]:
         """Find and construct datasets from a MongoDB query.
 
@@ -765,8 +743,6 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
                 )
 
             description = self._build_description(record, description_fields)
-            if built_descriptions is not None:
-                built_descriptions.append(description)
             datasets.append(
                 EEGDashRaw(
                     record,

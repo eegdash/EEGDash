@@ -161,12 +161,25 @@ article.bd-article .eegdash-ed-footnotes,
 article.bd-article .eegdash-ed-figpair,
 article.bd-article .eegdash-ed-apicard,
 article.bd-article .eegdash-ed-access,
+article.bd-article .eegdash-ed-examples,
 article.bd-article .eegdash-ed-caveat,
 article.bd-article .eegdash-stats-section,
 article.bd-article .eegdash-ed-pills,
 article.bd-article .eegdash-ed-issue,
 article.bd-article .sd-tab-set,
-article.bd-article > section > .nemar-analysis-section {
+article.bd-article > section > .nemar-analysis-section,
+/* Autodoc tables (Parameters / Returns / etc.) and code Examples are
+   reference material that already self-paces its line lengths — the
+   780 px prose cap would otherwise leave the right third of the API
+   section empty. */
+article.bd-article #api-reference p,
+article.bd-article #api-reference ul,
+article.bd-article #api-reference ol,
+article.bd-article #api-reference dl.field-list,
+article.bd-article #api-reference dl.py,
+article.bd-article #dataset-information p,
+article.bd-article #dataset-information ul,
+article.bd-article #dataset-information ol {
   max-width: none;
 }
 
@@ -196,6 +209,12 @@ article.bd-article h2 {
   margin-bottom: 18px;
   border-top: 1.5px solid var(--ed-ink);
   padding-top: 24px;
+  /* New block formatting context so the `border-top` stops at the
+     floated field-card rail's left edge instead of being drawn behind
+     it (the rail's translucent background otherwise lets the rule
+     bleed through the card body). Mirrors the same fix on
+     `.eegdash-ed-secnum`. */
+  display: flow-root;
 }
 
 article.bd-article h3 {
@@ -239,6 +258,25 @@ article.bd-article a:not(.headerlink):not(.btn):not(.sd-btn) {
 }
 article.bd-article a:not(.headerlink):not(.btn):not(.sd-btn):hover {
   border-bottom-color: var(--ed-accent);
+}
+
+/* Hide the literal `#` Sphinx renders on headerlink anchors — it shows
+   up as "number sign link" to screen readers and as a sad hash to
+   sighted users. Reveal a chain-icon glyph on focus/hover only. */
+article.bd-article .headerlink {
+  color: var(--ed-rule);
+  text-decoration: none;
+  margin-left: 6px;
+  opacity: 0;
+  transition: opacity 120ms ease, color 120ms ease;
+}
+article.bd-article h1:hover .headerlink,
+article.bd-article h2:hover .headerlink,
+article.bd-article h3:hover .headerlink,
+article.bd-article h4:hover .headerlink,
+article.bd-article .headerlink:focus {
+  opacity: 1;
+  color: var(--ed-accent);
 }
 
 /* =========================================================================
@@ -476,7 +514,7 @@ article.bd-article p.sd-badges {
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
-  margin: 18px 0 28px;
+  margin: 10px 0 18px;
   padding: 0;
 }
 
@@ -527,7 +565,7 @@ article.bd-article p.sd-badges {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 0;
-  margin: 36px 0 56px;
+  margin: 20px 0 32px;
   border: 1px solid var(--ed-ink);
   background: var(--ed-paper);
   position: relative;
@@ -602,10 +640,16 @@ html[data-theme="dark"] .eegdash-ed-layers > div { background: rgba(0, 0, 0, 0.2
   color: var(--ed-accent);
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  display: block;
-  margin-top: 80px;
-  margin-bottom: -8px;
-  padding-top: 24px;
+  /* `display: flow-root` makes the secnum its own block formatting
+     context, so the rule above (`border-top`) stops at the floated
+     rail's left edge instead of being drawn behind the rail (the rail
+     uses a translucent background, so the line was bleeding through). */
+  display: flow-root;
+  /* Tightened from 80px / -8px / 24px so dense pages don't burn a
+     viewport-height of whitespace at every section boundary. */
+  margin-top: 48px;
+  margin-bottom: -6px;
+  padding-top: 16px;
   border-top: 1.5px solid var(--ed-ink);
   font-weight: 600;
 }
@@ -647,15 +691,16 @@ section:has(> .eegdash-ed-secnum:last-child) + section > h2 {
   font-size: 17px;
   line-height: 1.6;
   color: var(--ed-ink-2);
-  column-count: 2;
-  column-gap: 48px;
-  column-rule: 1px solid var(--ed-rule);
-  margin: 36px 0 48px;
+  /* Single column. The previous `column-count: 2` looked great on long
+     editorial ledes but most README first-paragraphs are 3–5 lines and
+     the second column ended up empty, leaving an awkward gutter on the
+     right. */
+  max-width: 720px;
+  margin: 24px 0 36px;
 }
 .eegdash-ed-lede p {
   margin-bottom: 14px;
   text-wrap: pretty;
-  break-inside: avoid-column;
 }
 .eegdash-ed-lede p:first-child::first-letter {
   font-family: var(--ed-font-serif);
@@ -665,10 +710,6 @@ section:has(> .eegdash-ed-secnum:last-child) + section > h2 {
   line-height: 0.85;
   padding: 6px 10px 0 0;
   color: var(--ed-accent);
-}
-
-@media (max-width: 900px) {
-  .eegdash-ed-lede { column-count: 1; }
 }
 
 /* =========================================================================
@@ -1347,6 +1388,120 @@ html[data-theme="dark"] .eegdash-ed-access {
 }
 
 /* =========================================================================
+   9c. Examples gallery (.eegdash-ed-examples) — curated start-here tutorials.
+       MOABB-inspired: a few concrete entry points after the API block.
+   ========================================================================= */
+
+.eegdash-ed-examples {
+  margin: 24px 0 0;
+  border: 1px solid var(--ed-ink);
+  background: var(--ed-paper-2);
+  font-family: var(--ed-font-sans);
+}
+html[data-theme="dark"] .eegdash-ed-examples { background: var(--ed-paper); }
+
+.eegdash-ed-examples .sidecar-hdr {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--ed-rule);
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ed-muted);
+}
+.eegdash-ed-examples .sidecar-hdr b { font-weight: 600; }
+.eegdash-ed-examples .sidecar-hdr .right {
+  font-family: var(--ed-font-mono);
+  letter-spacing: 0.06em;
+  color: var(--ed-accent);
+}
+
+.eegdash-ed-examples .ex-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+}
+.eegdash-ed-examples .ex-card {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: inherit;
+  border-right: 1px solid var(--ed-rule);
+  border-bottom: 1px solid var(--ed-rule);
+  background: var(--ed-paper);
+  transition: background-color 120ms ease, transform 120ms ease;
+}
+.eegdash-ed-examples .ex-card:hover {
+  background: rgba(0, 108, 163, 0.05);
+}
+.eegdash-ed-examples .ex-card:nth-child(3n) { border-right: 0; }
+.eegdash-ed-examples .ex-card:nth-last-child(-n+3) { border-bottom: 0; }
+
+.eegdash-ed-examples .ex-thumb {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: var(--ed-paper-2);
+  border-bottom: 1px solid var(--ed-rule);
+}
+.eegdash-ed-examples .ex-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+.eegdash-ed-examples .ex-body {
+  display: block;
+  padding: 12px 14px 14px;
+}
+.eegdash-ed-examples .ex-title {
+  display: block;
+  font-family: var(--ed-font-serif);
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 1.25;
+  color: var(--ed-ink);
+  margin-bottom: 4px;
+}
+.eegdash-ed-examples .ex-blurb {
+  display: block;
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: var(--ed-muted);
+}
+.eegdash-ed-examples .ex-hint {
+  margin: 0;
+  padding: 10px 16px;
+  border-top: 1px solid var(--ed-rule);
+  font-size: 12px;
+  color: var(--ed-muted);
+}
+.eegdash-ed-examples .ex-hint code {
+  font-family: var(--ed-font-mono);
+  background: rgba(0, 108, 163, 0.08);
+  color: var(--ed-accent);
+  padding: 1px 4px;
+  border-radius: 2px;
+}
+
+@media (max-width: 900px) {
+  .eegdash-ed-examples .ex-grid { grid-template-columns: repeat(2, 1fr); }
+  .eegdash-ed-examples .ex-card:nth-child(3n) { border-right: 1px solid var(--ed-rule); }
+  .eegdash-ed-examples .ex-card:nth-child(2n) { border-right: 0; }
+  .eegdash-ed-examples .ex-card:nth-last-child(-n+3) { border-bottom: 1px solid var(--ed-rule); }
+  .eegdash-ed-examples .ex-card:nth-last-child(-n+2) { border-bottom: 0; }
+}
+@media (max-width: 600px) {
+  .eegdash-ed-examples .ex-grid { grid-template-columns: 1fr; }
+  .eegdash-ed-examples .ex-card { border-right: 0 !important; border-bottom: 1px solid var(--ed-rule) !important; }
+  .eegdash-ed-examples .ex-card:last-child { border-bottom: 0 !important; }
+}
+
+/* =========================================================================
    10. Provenance strip — 5-column band at the bottom
    ========================================================================= */
 
@@ -1469,6 +1624,68 @@ html[data-theme="dark"] .eegdash-ed-access {
   font-size: 12px;
 }
 
+/* Compact related-dataset chips inside the footnotes block.
+   Each chip carries dataset id + modality + subject count, with a
+   "Same authors" tag when the surnames overlap. Stays a vertical list
+   so the three-column footnotes layout doesn't reflow. */
+.eegdash-ed-footnotes .rel-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 4px;
+}
+.eegdash-ed-footnotes .rel-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  column-gap: 10px;
+  padding: 6px 10px;
+  border: 1px solid var(--ed-rule);
+  border-radius: 2px;
+  background: var(--ed-paper);
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 120ms ease, background-color 120ms ease;
+}
+.eegdash-ed-footnotes .rel-card:hover {
+  border-color: var(--ed-accent);
+  background: rgba(0, 108, 163, 0.04);
+}
+.eegdash-ed-footnotes .rel-card .rel-id {
+  font-family: var(--ed-font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ed-accent);
+  letter-spacing: 0.02em;
+}
+.eegdash-ed-footnotes .rel-card .rel-meta {
+  font-family: var(--ed-font-sans);
+  font-size: 11px;
+  color: var(--ed-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  text-align: right;
+}
+.eegdash-ed-footnotes .rel-card .rel-tag {
+  grid-column: 1 / -1;
+  font-family: var(--ed-font-mono);
+  font-size: 10px;
+  color: var(--ed-accent);
+  background: rgba(0, 108, 163, 0.08);
+  padding: 1px 6px;
+  border-radius: 2px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  justify-self: start;
+  margin-top: 2px;
+}
+.eegdash-ed-footnotes .rel-more {
+  margin: 8px 0 0;
+  font-size: 12px;
+  color: var(--ed-muted);
+  font-style: italic;
+}
+
 @media (max-width: 900px) {
   .eegdash-ed-footnotes { grid-template-columns: 1fr; gap: 20px; }
 }
@@ -1554,7 +1771,17 @@ html[data-theme="dark"] .eegdash-ed-access {
   grid-column: 2;
   margin-bottom: 0 !important;
 }
-.eegdash-ed-cohort-grid > .eegdash-stats-section:nth-of-type(n+3) {
+/* Channel counts (3rd) and sampling frequencies (4th) each occupy one
+   column so the row reads as a horizontal stats strip instead of two
+   sparse full-width rows stacked vertically. Any further sections fall
+   back to full width on a new row. */
+.eegdash-ed-cohort-grid > .eegdash-stats-section:nth-of-type(3),
+.eegdash-ed-cohort-grid > .eegdash-stats-section:nth-of-type(4) {
+  grid-column: span 1;
+  margin-top: 12px;
+  min-width: 0;
+}
+.eegdash-ed-cohort-grid > .eegdash-stats-section:nth-of-type(n+5) {
   grid-column: 1 / -1;
   margin-top: 12px;
 }

@@ -98,7 +98,8 @@
   "identifier": "doi:10.82901/nemar.nm000149",
   "sameAs": [
     "https://doi.org/10.82901/nemar.nm000149",
-    "https://openneuro.org/datasets/nm000149"
+    "https://openneuro.org/datasets/nm000149",
+    "https://huggingface.co/datasets/EEGDash/nm000149"
   ],
   "citeAs": "Patrick Ofner, Andreas Schwarz, Joana Pereira, Daniela Wyss, Renate Wildburger (2019). BNCI 2019-001 Motor Imagery dataset for Spinal Cord Injury patients. doi:10.82901/nemar.nm000149",
   "version": "1.9.0",
@@ -139,6 +140,14 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=nm000149",
       "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000149-huggingface",
+      "name": "EEGDash/nm000149 on Hugging Face",
+      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
+      "contentUrl": "https://huggingface.co/datasets/EEGDash/nm000149",
+      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

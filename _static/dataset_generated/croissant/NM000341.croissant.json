@@ -80,7 +80,8 @@
   "identifier": "doi:10.5281/zenodo.2617084",
   "sameAs": [
     "https://doi.org/10.5281/zenodo.2617084",
-    "https://openneuro.org/datasets/nm000341"
+    "https://openneuro.org/datasets/nm000341",
+    "https://huggingface.co/datasets/EEGDash/nm000341"
   ],
   "citeAs": "G. Cattan, P. L. C. Rodrigues, M. Congedo (2019). Cattan, Rodrigues & Congedo 2019 — Passive Head-Mounted Display Music-Listening EEG dataset (PHMD). doi:10.5281/zenodo.2617084",
   "version": "1.9.0",
@@ -121,6 +122,14 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=nm000341",
       "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000341-huggingface",
+      "name": "EEGDash/nm000341 on Hugging Face",
+      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
+      "contentUrl": "https://huggingface.co/datasets/EEGDash/nm000341",
+      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

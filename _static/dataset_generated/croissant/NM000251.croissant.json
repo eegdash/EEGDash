@@ -108,7 +108,8 @@
   "identifier": "doi:10.1038/s41597-025-04741-2",
   "sameAs": [
     "https://doi.org/10.1038/s41597-025-04741-2",
-    "https://openneuro.org/datasets/nm000251"
+    "https://openneuro.org/datasets/nm000251",
+    "https://huggingface.co/datasets/EEGDash/nm000251"
   ],
   "citeAs": "Tianyu He, Mingyi Wei, Ruicong Wang, Renzhi Wang, Shiwei Du (2019). He et al. 2025 — VocalMind: A Stereotactic EEG Dataset for Vocalized, Mimed, and Imagined Speech in Tonal Language. doi:10.1038/s41597-025-04741-2",
   "version": "1.9.0",
@@ -151,6 +152,14 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=nm000251",
       "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000251-huggingface",
+      "name": "EEGDash/nm000251 on Hugging Face",
+      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
+      "contentUrl": "https://huggingface.co/datasets/EEGDash/nm000251",
+      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

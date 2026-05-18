@@ -100,7 +100,8 @@
   "identifier": "doi:10.82901/nemar.nm000311",
   "sameAs": [
     "https://doi.org/10.82901/nemar.nm000311",
-    "https://openneuro.org/datasets/nm000311"
+    "https://openneuro.org/datasets/nm000311",
+    "https://huggingface.co/datasets/EEGDash/nm000311"
   ],
   "citeAs": "Ji-Hoon Jeong, Jeong-Hyun Cho, Kyung-Hwan Shim, Byoung-Hee Kwon, Byeong-Hoo Lee (2020). Multimodal upper-limb MI/ME EEG (Jeong et al. 2020). doi:10.82901/nemar.nm000311",
   "version": "1.9.0",
@@ -141,6 +142,14 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=nm000311",
       "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000311-huggingface",
+      "name": "EEGDash/nm000311 on Hugging Face",
+      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
+      "contentUrl": "https://huggingface.co/datasets/EEGDash/nm000311",
+      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

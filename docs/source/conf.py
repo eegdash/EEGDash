@@ -8,6 +8,9 @@ import os
 import re
 import shutil
 import sys
+import threading
+import urllib.error
+import urllib.parse
 import urllib.request
 from collections import Counter, defaultdict
 from datetime import datetime, timezone
@@ -408,12 +411,69 @@ LOGGER = logging.getLogger(__name__)
 REPO_ROOT = Path(__file__).resolve().parents[2]
 CLONE_ROOT = REPO_ROOT / "ingestions" / "clone"
 _DATASET_DETAILS_CACHE: dict[str, dict[str, object]] = {}
+_DATASET_DETAILS_CACHE_LOCK = threading.Lock()
 _DATASET_SUMMARY_CACHE = None
 
 
 def _should_use_api_summary() -> bool:
     # Always try API first; set EEGDASH_NO_API=1 to disable
     return not bool(os.environ.get("EEGDASH_NO_API"))
+
+
+# Shared User-Agent for outbound probes — many of the targets (NEMAR
+# behind Cloudflare, HuggingFace) reject the bare urllib UA.
+_PROBE_UA = "Mozilla/5.0 (compatible; EEGDashDocsBuild)"
+
+
+def _get_json(
+    url: str,
+    *,
+    timeout: float = 10.0,
+    extra_headers: Mapping[str, str] | None = None,
+) -> dict | None:
+    """GET ``url`` and return parsed JSON, or ``None`` on a recoverable
+    error (network / HTTP error / bad JSON).
+
+    Centralises the boilerplate that was duplicated across every probe
+    helper: UA spoofing, timeout, narrow exception handling, JSON
+    decode. Unexpected errors propagate so real bugs aren't silently
+    swallowed.
+
+    Use ``_head_ok(url, …)`` for HEAD-only checks.
+    """
+    headers = {"Accept": "application/json", "User-Agent": _PROBE_UA}
+    if extra_headers:
+        headers.update(extra_headers)
+    try:
+        req = urllib.request.Request(url, headers=headers)
+        with urllib.request.urlopen(req, timeout=timeout) as resp:
+            return json.loads(resp.read().decode("utf-8"))
+    except (urllib.error.URLError, urllib.error.HTTPError, OSError):
+        return None
+    except (json.JSONDecodeError, ValueError):
+        return None
+
+
+def _head_content_length(
+    url: str,
+    *,
+    timeout: float = 8.0,
+) -> int | None:
+    """HEAD ``url`` and return the integer ``Content-Length`` (or None
+    when the request fails / header is missing). Used by probes that
+    only need to know whether a resource has a meaningful body.
+    """
+    try:
+        req = urllib.request.Request(
+            url, method="HEAD", headers={"User-Agent": _PROBE_UA}
+        )
+        with urllib.request.urlopen(req, timeout=timeout) as resp:
+            if not (200 <= resp.status < 400):
+                return None
+            length = resp.headers.get("Content-Length")
+            return int(length) if length is not None else None
+    except (urllib.error.URLError, urllib.error.HTTPError, OSError, ValueError):
+        return None
 
 
 def _load_dataset_summary_from_api():
@@ -460,6 +520,10 @@ DATASET_PAGE_TEMPLATE = """{notice}:html_theme.sidebar_secondary.remove:
 
 {meta_section}
 
+{editorial_kicker_section}
+
+{editorial_fieldcard_section}
+
 {title}
 {underline}
 
@@ -467,47 +531,70 @@ DATASET_PAGE_TEMPLATE = """{notice}:html_theme.sidebar_secondary.remove:
 
 {hero_section}
 
+{editorial_layers_section}
+
+{editorial_secnum_quickstart}
+
 Quickstart
 ----------
 
 {quickstart_section}
+
+{editorial_secnum_about}
 
 About This Dataset
 ------------------
 
 {readme_section}
 
-Dataset Information
--------------------
+{editorial_secnum_info}
 
-{dataset_info_section}
-
-{feedback_section}
-
-Technical Details
------------------
-
-{highlights_section}
-
-{electrodes_section}
+Cohort
+------
 
 {recording_stats_section}
 
+{editorial_caveat_section}
+
+{editorial_secnum_tech}
+
+Signal · Electrodes & live trace
+--------------------------------
+
+{electrodes_traces_pair}
+
 {nemar_analysis_section}
 
-{traces_section}
+{editorial_secnum_manifest}
+
+Manifest
+--------
 
 {explorer_section}
+
+{dataset_info_dropdown_section}
+
+{feedback_section}
+
+{editorial_secnum_api}
 
 API Reference
 -------------
 
 {api_section}
 
+{editorial_access_modes_section}
+
+{editorial_footnotes_section}
+
+{editorial_provenance_section}
+
 See Also
 --------
 
 {see_also_section}
+
+{editorial_colophon_section}
 
 """
 
@@ -618,7 +705,17 @@ def _write_if_changed(path: Path, content: str) -> bool:
 
 
 def _iter_dataset_classes() -> Sequence[str]:
-    """Return the sorted dataset class names exported by ``eegdash.dataset``."""
+    """Return the sorted dataset class names exported by ``eegdash.dataset``.
+
+    Honours two env vars for fast iteration / preview builds:
+
+    * ``EEGDASH_DOC_ONLY``: comma-separated list of dataset class names
+      to keep (e.g. ``DS002893,DS001785``). Useful when iterating on the
+      editorial template — limits the generator to just those datasets.
+    * ``EEGDASH_DOC_LIMIT``: integer cap on the number of datasets.
+      Applied after the ``DOC_ONLY`` filter (or to the full list when
+      ``DOC_ONLY`` is unset).
+    """
     class_names: list[str] = []
     for name in getattr(dataset_module, "__all__", []):
         if name == "EEGChallengeDataset":
@@ -632,7 +729,27 @@ def _iter_dataset_classes() -> Sequence[str]:
             continue
         class_names.append(name)
 
-    return tuple(sorted(class_names))
+    sorted_names = sorted(class_names)
+
+    only_env = (os.environ.get("EEGDASH_DOC_ONLY") or "").strip()
+    if only_env:
+        wanted = {n.strip().upper() for n in only_env.split(",") if n.strip()}
+        sorted_names = [n for n in sorted_names if n.upper() in wanted]
+        if not sorted_names:
+            LOGGER.warning(
+                "[dataset-docs] EEGDASH_DOC_ONLY=%r matched no datasets",
+                only_env,
+            )
+
+    limit_env = (os.environ.get("EEGDASH_DOC_LIMIT") or "").strip()
+    if limit_env:
+        try:
+            limit = max(0, int(limit_env))
+            sorted_names = sorted_names[:limit]
+        except ValueError:
+            pass
+
+    return tuple(sorted_names)
 
 
 def _load_experiment_counts(dataset_names: Iterable[str]) -> list[tuple[str, int]]:
@@ -918,10 +1035,13 @@ def _fetch_dataset_details_from_api(dataset_id: str) -> dict[str, object]:
         "readme": _clean_value(ds.get("readme")),
         "funding": _normalize_list(ds.get("funding")),
         "senior_author": _clean_value(ds.get("senior_author")),
+        "contact_info": _normalize_list(ds.get("contact_info")),
         "n_subjects": ds.get("demographics", {}).get("subjects_count"),
         "total_files": ds.get("total_files"),
         "n_tasks": len(ds.get("tasks", []) or []),
+        "tasks": ds.get("tasks") or [],
         "recording_modality": ds.get("recording_modality", []),
+        "datatypes": ds.get("datatypes") or [],
         "size_bytes": ds.get("size_bytes"),
         "source": _clean_value(ds.get("source")),
         "demographics": ds.get("demographics"),
@@ -929,30 +1049,52 @@ def _fetch_dataset_details_from_api(dataset_id: str) -> dict[str, object]:
         "sfreq_counts": ds.get("sfreq_counts"),
         "total_duration_s": ds.get("total_duration_s"),
         "bad_channels_info": ds.get("bad_channels_info"),
+        # Editorial Brief — fields the rich field-card and provenance strip
+        # need to render real values instead of TODO placeholders.
+        "bids_version": _clean_value(ds.get("bids_version")),
+        "tags": ds.get("tags") or {},
+        "dataset_storage": ds.get("storage") or {},
+        "associated_paper_doi": _clean_value(ds.get("associated_paper_doi")),
+        "stats_computed_at": _clean_value(ds.get("stats_computed_at")),
+        "digested_at": _clean_value((ds.get("timestamps") or {}).get("digested_at")),
     }
 
     # Extract source URL from external_links
     external_links = ds.get("external_links", {}) or {}
     details["source_url"] = _clean_value(external_links.get("source_url"))
+    details["paper_url"] = _clean_value(external_links.get("paper_url"))
+    details["github_url"] = _clean_value(external_links.get("github_url"))
+    details["osf_url"] = _clean_value(external_links.get("osf_url"))
 
     return details
 
 
 def _load_dataset_details(dataset_id: str) -> dict[str, object]:
+    """Aggregate per-dataset metadata from local files + API + probes.
+
+    Thread-safe: the in-process cache is guarded by a lock so that
+    duplicate workers don't waste 4 network probes on the same id.
+    Network probes are issued concurrently because they hit different
+    hosts (EEGDash API · NEMAR · HuggingFace) and don't depend on each
+    other.
+    """
     dataset_id = dataset_id.lower()
-    cached = _DATASET_DETAILS_CACHE.get(dataset_id)
-    if cached is not None:
-        return cached
+
+    # Fast read under the lock.
+    with _DATASET_DETAILS_CACHE_LOCK:
+        cached = _DATASET_DETAILS_CACHE.get(dataset_id)
+        if cached is not None:
+            return cached
 
     details: dict[str, object] = {}
 
-    # Try local files first
+    # --- Local files first --------------------------------------------
     dataset_dir = CLONE_ROOT / dataset_id
     desc_path = dataset_dir / "dataset_description.json"
     if desc_path.exists():
         try:
             data = json.loads(desc_path.read_text(encoding="utf-8"))
-        except Exception:
+        except (OSError, json.JSONDecodeError):
             data = {}
         details["title"] = _clean_value(data.get("Name"))
         details["authors"] = _normalize_list(data.get("Authors"))
@@ -966,20 +1108,261 @@ def _load_dataset_details(dataset_id: str) -> dict[str, object]:
     if manifest_path.exists():
         try:
             data = json.loads(manifest_path.read_text(encoding="utf-8"))
-        except Exception:
+        except (OSError, json.JSONDecodeError):
             data = {}
         details.setdefault("doi", _clean_value(data.get("dataset_doi")))
         details["source_url"] = _clean_value(data.get("source_url"))
 
-    # Fallback to API for missing fields
-    if not details.get("title") or not details.get("authors"):
-        api_details = _fetch_dataset_details_from_api(dataset_id)
-        for key, value in api_details.items():
-            if value and not details.get(key):
-                details[key] = value
+    # --- API + parallel probes ----------------------------------------
+    # `_fetch_dataset_details_from_api` must run first because the other
+    # probes don't depend on it. The four downstream probes hit
+    # different hosts (EEGDash, NEMAR, HuggingFace) and are network-bound,
+    # so we run them concurrently — drops single-dataset latency from
+    # ~5×timeout to ~max(timeouts).
+    api_details = _fetch_dataset_details_from_api(dataset_id)
+    for key, value in api_details.items():
+        if value and not details.get(key):
+            details[key] = value
 
-    _DATASET_DETAILS_CACHE[dataset_id] = details
-    return details
+    with concurrent.futures.ThreadPoolExecutor(max_workers=4) as pool:
+        futures = {
+            "sidecars_detected": pool.submit(_detect_sidecars_for_dataset, dataset_id),
+            "hed_annotated": pool.submit(_detect_hed_annotation, dataset_id),
+            "huggingface": pool.submit(_detect_huggingface_mirror, dataset_id),
+            "participants_rows": pool.submit(
+                _fetch_participants_from_records, dataset_id
+            ),
+        }
+        for key, future in futures.items():
+            try:
+                details[key] = future.result()
+            except Exception as exc:  # noqa: BLE001 — probe results are best-effort
+                LOGGER.warning(
+                    "[dataset-docs] probe %s failed for %s: %s",
+                    key,
+                    dataset_id,
+                    exc,
+                )
+                details[key] = (
+                    False
+                    if key == "hed_annotated"
+                    else {}
+                    if key == "huggingface"
+                    else []
+                )
+
+    # Write under the lock so a racing worker that already finished
+    # earlier doesn't get clobbered.
+    with _DATASET_DETAILS_CACHE_LOCK:
+        existing = _DATASET_DETAILS_CACHE.setdefault(dataset_id, details)
+    return existing
+
+
+# Suffixes the BIDS spec defines for the modality-specific sidecars the
+# editorial field-card lists ("events · channels · electrodes · coordsystem").
+# These match against the trailing path segment of each storage.dep_key.
+_SIDECAR_SUFFIXES = {
+    "events.tsv": "events",
+    "events.json": "events.json",
+    "channels.tsv": "channels",
+    "electrodes.tsv": "electrodes",
+    "coordsystem.json": "coordsystem",
+    "eeg.json": "eeg.json",
+    "meg.json": "meg.json",
+    "ieeg.json": "ieeg.json",
+    "physio.tsv": "physio",
+    "stim.tsv": "stim",
+}
+
+
+# Spec-conventional order for sidecar labels we render in the field-card.
+_SIDECAR_RENDER_ORDER = (
+    "events",
+    "events.json",
+    "channels",
+    "electrodes",
+    "coordsystem",
+    "eeg.json",
+    "meg.json",
+    "ieeg.json",
+    "physio",
+    "stim",
+)
+
+
+def _detect_sidecars_for_dataset(dataset_id: str) -> list[str]:
+    """Return a sorted list of BIDS sidecar kinds present for ``dataset_id``.
+
+    Probes ONE sample record via the eegdash records API and inspects
+    ``storage.dep_keys`` for known BIDS sidecar suffixes. Returns an
+    empty list if the probe fails (network error, dataset not yet
+    ingested).
+    """
+    if not _should_use_api_summary():
+        return []
+
+    dataset_lower = dataset_id.lower()
+    query = json.dumps(
+        {"dataset": dataset_lower, "_has_missing_files": {"$ne": True}},
+        separators=(",", ":"),
+    )
+    url = (
+        "https://data.eegdash.org/api/eegdash/records"
+        f"?{urllib.parse.urlencode({'limit': 1, 'filter': query})}"
+    )
+    body = _get_json(url)
+    if not body or not body.get("success") or not body.get("data"):
+        return []
+
+    storage = body["data"][0].get("storage") or {}
+    dep_keys = storage.get("dep_keys") or []
+    if not isinstance(dep_keys, list):
+        return []
+
+    found: set[str] = set()
+    for key in dep_keys:
+        path = str(key)
+        for suffix, label in _SIDECAR_SUFFIXES.items():
+            if path.endswith(suffix):
+                found.add(label)
+                break
+    return [k for k in _SIDECAR_RENDER_ORDER if k in found]
+
+
+def _detect_huggingface_mirror(dataset_id: str) -> dict[str, object]:
+    """Probe the EEGDash HuggingFace org for a mirror of ``dataset_id``.
+
+    Returns a dict with ``available`` (bool), ``url`` (str, dataset-specific
+    when available, org page otherwise), ``downloads`` (int when known),
+    and ``last_modified`` (ISO-8601 str when known). The HF API returns
+    200 with an ``{"error": "..."}`` body for missing datasets, so the
+    discriminator is the presence of an ``id`` field in the JSON payload.
+    """
+    org_url = "https://huggingface.co/EEGDash"
+    fallback: dict[str, object] = {
+        "available": False,
+        "url": org_url,
+        "downloads": None,
+        "last_modified": None,
+    }
+    if not _should_use_api_summary():
+        return fallback
+
+    dataset_lower = dataset_id.lower()
+    body = _get_json(
+        f"https://huggingface.co/api/datasets/EEGDash/{dataset_lower}",
+        timeout=8.0,
+    )
+    if not isinstance(body, dict) or not body.get("id"):
+        return fallback
+
+    return {
+        "available": True,
+        "url": f"https://huggingface.co/datasets/EEGDash/{dataset_lower}",
+        "downloads": body.get("downloads"),
+        "last_modified": body.get("lastModified"),
+    }
+
+
+def _fetch_participants_from_records(dataset_id: str) -> list[dict[str, object]]:
+    """Pull per-subject demographics for a dataset.
+
+    Prefers the dedicated ``/api/eegdash/datasets/{dataset_id}/participants``
+    endpoint, which deduplicates server-side via Mongo ``$group`` and
+    returns one row per subject in a single request. Falls back to
+    paginating ``/records`` for older server deployments that don't
+    expose the participants endpoint yet.
+
+    Returns a list of ``{subject, sex, age, group, …}`` dicts. Empty
+    list on any failure.
+    """
+    if not _should_use_api_summary():
+        return []
+
+    dataset_lower = dataset_id.lower()
+
+    # --- Primary path: dedicated participants endpoint ----------------
+    body = _get_json(
+        f"https://data.eegdash.org/api/eegdash/datasets/{dataset_lower}/participants",
+        timeout=12.0,
+    )
+    if body is not None and body.get("success") and isinstance(body.get("data"), list):
+        participants: list[dict[str, object]] = []
+        for entry in body["data"]:
+            subject = str(entry.get("subject") or "").strip()
+            if not subject:
+                continue
+            tsv = entry.get("participant_tsv") or {}
+            if not isinstance(tsv, dict):
+                tsv = {}
+            participants.append({"subject": subject, **tsv})
+        return participants
+
+    # --- Fallback: paginate /records ----------------------------------
+    # Triggered when the server lacks /participants (404/405) or when the
+    # primary request fails outright (network error). The records-based
+    # path returns the same shape so callers don't branch.
+    query = json.dumps(
+        {
+            "dataset": dataset_lower,
+            "suffix": {"$in": ["eeg", "ieeg", "emg", "meg"]},
+            "_has_missing_files": {"$ne": True},
+        },
+        separators=(",", ":"),
+    )
+    seen: set[str] = set()
+    participants = []
+    skip = 0
+    page_size = 1000
+    max_skip = 20000  # safety bound — no real dataset has 20k recordings
+    while skip < max_skip:
+        url = (
+            "https://data.eegdash.org/api/eegdash/records"
+            f"?{urllib.parse.urlencode({'limit': page_size, 'skip': skip, 'filter': query})}"
+        )
+        page = _get_json(url, timeout=12.0)
+        records = page.get("data") if isinstance(page, dict) else None
+        if not records:
+            break
+        for record in records:
+            subject = str(record.get("subject") or "").strip()
+            if not subject or subject in seen:
+                continue
+            seen.add(subject)
+            tsv = record.get("participant_tsv") or {}
+            if not isinstance(tsv, dict):
+                continue
+            participants.append({"subject": subject, **tsv})
+        if len(records) < page_size:
+            break
+        skip += page_size
+    return participants
+
+
+def _detect_hed_annotation(dataset_id: str) -> bool:
+    """Return True when NEMAR has published a HED word-cloud for this dataset.
+
+    Cheap signal: NEMAR only generates per-dataset HED word clouds when
+    the events sidecar carries valid HED tags. A HEAD request to the
+    SVG URL with a ``Content-Length > 1 KB`` check is enough — NEMAR's
+    download endpoint returns 200 for missing files but with empty body.
+
+    TODO: replace with a ``hed_annotated`` flag at ingest time so we
+    don't depend on a NEMAR HEAD round-trip.
+    """
+    if not _should_use_api_summary():
+        return False
+
+    url = (
+        "https://nemar.org/dataexplorer/download"
+        f"?filepath=/data/nemar/openneuro//processed/event_summaries/"
+        f"{dataset_id.lower()}/word_cloud.svg&file_type=svg"
+    )
+    # NEMAR returns 200 even for non-HED datasets (its download endpoint
+    # always succeeds) — but the body is empty. Use Content-Length > 1 KB
+    # to discriminate from a real word-cloud SVG.
+    length = _head_content_length(url, timeout=8.0)
+    return length is not None and length > 1024
 
 
 def _build_dataset_context(
@@ -1094,6 +1477,9 @@ def _build_dataset_context(
         "canonical_names": canonical_names,
         "author_year_name": author_year_name,
         "source_url": _clean_value(details.get("source_url")),
+        "paper_url": _clean_value(details.get("paper_url")),
+        "github_url": _clean_value(details.get("github_url")),
+        "osf_url": _clean_value(details.get("osf_url")),
         "references": details.get("references", []),
         "how_to_acknowledge": _clean_value(details.get("how_to_acknowledge")),
         "n_subjects": n_subjects,
@@ -1116,10 +1502,31 @@ def _build_dataset_context(
         "readme": _clean_value(details.get("readme")),
         "nemar_citation_count": _clean_value((row or {}).get("nemar_citation_count")),
         "demographics": details.get("demographics") or {},
+        "participants_rows": details.get("participants_rows") or [],
         "nchans_counts": details.get("nchans_counts") or [],
         "sfreq_counts": details.get("sfreq_counts") or [],
         "total_duration_s": details.get("total_duration_s"),
         "bad_channels_info": details.get("bad_channels_info"),
+        # Editorial Brief fields (surfaced from API; populated by
+        # _fetch_dataset_details_from_api + the sidecar/HED probes).
+        "bids_version": _clean_value(details.get("bids_version")),
+        "tags": details.get("tags") or {},
+        "datatypes": details.get("datatypes") or [],
+        "tasks": details.get("tasks") or [],
+        "funding": details.get("funding") or [],
+        "senior_author": _clean_value(details.get("senior_author")),
+        "contact_info": details.get("contact_info") or [],
+        "sidecars_detected": details.get("sidecars_detected") or [],
+        "hed_annotated": bool(details.get("hed_annotated")),
+        "huggingface": details.get("huggingface")
+        or {
+            "available": False,
+            "url": "https://huggingface.co/EEGDash",
+            "downloads": None,
+            "last_modified": None,
+        },
+        "associated_paper_doi": _clean_value(details.get("associated_paper_doi")),
+        "digested_at": _clean_value(details.get("digested_at")),
     }
 
 
@@ -1237,26 +1644,23 @@ def _format_hero_section(context: Mapping[str, object]) -> str:
 
     citation_block = f"**Citation:** {authors_text} ({year}). *{title}*. {doi_link}"
 
-    # Consolidate all badges into a single line with outline style for cleaner look
-    citation_count = context.get("nemar_citation_count", "")
-    all_badges = [
-        ("Modality", str(context.get("modality", ""))),
-        ("Subjects", str(context.get("n_subjects", ""))),
-        ("Recordings", str(context.get("n_records", ""))),
-        ("License", str(context.get("license", ""))),
-        ("Source", str(context.get("source", ""))),
-    ]
-    # Only add citations badge if there's a count
-    if citation_count:
-        all_badges.append(("Citations", str(citation_count)))
+    # Editorial Brief — drop the legacy sphinx-design `sd-badges` row +
+    # the standalone "Metadata: …" quality badge. Their data is already
+    # surfaced both as editorial pills (rendered below) and as rows in
+    # the field-card aside. Keeping all three would triplicate the same
+    # facts on every dataset page. Structured-data consumers (Google,
+    # llms.txt, Croissant) read the JSON-LD <script> tag, not these
+    # visual badges, so removing them is SEO-neutral.
+    hero_block = f"{tagline}\n\n{citation_block}"
 
-    badges_line = _format_badges(all_badges, outline=True)
+    # Editorial Brief — append the deck + byline directly under the
+    # citation block. The kicker / issue strip rides separately above
+    # the H1 via {editorial_kicker_section} in the page template.
+    extras = _format_editorial_hero_extras(context)
+    if extras:
+        hero_block = f"{hero_block}\n\n{extras}"
 
-    # Add quality indicator
-    quality_label, quality_color, quality_pct = _compute_quality_score(context)
-    quality_badge = f":bdg-{quality_color}:`Metadata: {quality_label} ({quality_pct}%)`"
-
-    return f"{tagline}\n\n{citation_block}\n\n{badges_line}\n\n{quality_badge}"
+    return hero_block
 
 
 def _stat_line(
@@ -1468,10 +1872,21 @@ def _format_dataset_info_section(context: Mapping[str, object]) -> str:
         ("Source links", " | ".join(source_links)),
     ]
 
-    lines = [".. list-table::", "   :widths: 25 75", "   :header-rows: 0", ""]
+    # Editorial Brief — wrap the list-table in a `eegdash-ed-fieldcard`
+    # container so the editorial CSS can re-skin it as a field card.
+    # `.. container::` is the standard sphinx way to add a wrapper class
+    # to its contents without changing the data model.
+    lines = [
+        ".. container:: eegdash-ed-fieldcard",
+        "",
+        "   .. list-table::",
+        "      :widths: 25 75",
+        "      :header-rows: 0",
+        "",
+    ]
     for label, value in rows:
-        lines.append(f"   * - {label}")
-        lines.append(f"     - {value}")
+        lines.append(f"      * - {label}")
+        lines.append(f"        - {value}")
 
     bibtex_dropdown = _format_bibtex_dropdown(dataset_id, context)
     if bibtex_dropdown:
@@ -2125,7 +2540,12 @@ def _convert_readme_to_rst(text: str) -> str:
 
 
 def _format_readme_section(context: Mapping[str, object]) -> str:
-    """Format the README content for RST display."""
+    """Format the README content for RST display.
+
+    The first two prose paragraphs are wrapped in an ``eegdash-ed-lede``
+    container so the editorial CSS can render the two-column drop-cap
+    intro from the v1-editorial-v2 design.
+    """
     readme = _clean_value(context.get("readme"))
 
     if not readme:
@@ -2135,20 +2555,97 @@ def _format_readme_section(context: Mapping[str, object]) -> str:
     content = _convert_readme_to_rst(readme)
     lines = content.split("\n")
 
-    # For long READMEs (>30 lines), wrap in dropdown
-    if len(lines) > 30:
-        preview_lines = lines[:10]
-        preview = "\n".join(preview_lines)
-        indented = "\n".join(f"   {line}" for line in lines)
-        return f"""{preview}
+    # Pull the first two non-empty paragraphs to render under the dropcap.
+    lede_paragraphs, remainder_lines = _split_lede_paragraphs(lines, max_paragraphs=2)
+    lede_block = ""
+    if lede_paragraphs:
+        # Wrap each paragraph in a `.. container::` so docutils renders
+        # <p> elements, then put the lot inside the dropcap container.
+        inner = []
+        for para in lede_paragraphs:
+            stripped = para.strip()
+            if stripped:
+                inner.append(stripped)
+        if inner:
+            paras_rst = "\n\n".join(f"   {p}" for p in inner)
+            lede_block = f".. container:: eegdash-ed-lede\n\n{paras_rst}\n\n"
 
-.. dropdown:: View full README
-   :class-container: sd-shadow-sm
+    # Reassemble the remainder.
+    remainder = "\n".join(remainder_lines).strip("\n")
 
-{indented}
-"""
+    if remainder:
+        # For long READMEs (>30 lines remaining), wrap in dropdown
+        rem_lines = remainder.split("\n")
+        if len(rem_lines) > 30:
+            preview = "\n".join(rem_lines[:10])
+            indented = "\n".join(f"   {line}" for line in rem_lines)
+            remainder = (
+                f"{preview}\n\n"
+                ".. dropdown:: View full README\n"
+                "   :class-container: sd-shadow-sm\n"
+                f"\n{indented}\n"
+            )
 
-    return content
+    return f"{lede_block}\n{remainder}".strip()
+
+
+def _split_lede_paragraphs(
+    lines: Sequence[str], max_paragraphs: int = 2
+) -> tuple[list[str], list[str]]:
+    """Return (lede_paragraphs, remainder_lines).
+
+    A paragraph is a run of consecutive non-blank lines that doesn't start
+    with an RST directive marker (``..``), heading underline, or list
+    bullet — i.e. ordinary prose. We collect at most ``max_paragraphs``
+    such paragraphs and hand the rest back as ``remainder_lines``.
+    """
+    paragraphs: list[str] = []
+    remainder_start = 0
+    i = 0
+    n = len(lines)
+
+    def _is_prose(text: str) -> bool:
+        stripped = text.strip()
+        if not stripped:
+            return False
+        # Skip RST directives, transitions, code/quote markers, list items.
+        if stripped.startswith(("..", "::", "#", "+", "|", ">")):
+            return False
+        if stripped.startswith(("- ", "+ ", ":")):  # bullet / field-list label
+            return False
+        # Skip bold-only "header" lines (e.g. ``**Audio-Visual Attention…**``)
+        # so the dropcap lands on the first real prose paragraph instead.
+        compact = stripped.rstrip(".:!?")
+        if (
+            compact.startswith("**")
+            and compact.endswith("**")
+            and compact.count("**") == 2
+        ):
+            return False
+        if (
+            compact.startswith("*")
+            and compact.endswith("*")
+            and compact.count("*") == 2
+        ):
+            return False
+        return True
+
+    while i < n and len(paragraphs) < max_paragraphs:
+        # skip blanks
+        while i < n and not lines[i].strip():
+            i += 1
+        if i >= n:
+            break
+        if not _is_prose(lines[i]):
+            break  # bail to remainder
+        # collect this paragraph
+        start = i
+        while i < n and lines[i].strip():
+            i += 1
+        paragraphs.append("\n".join(lines[start:i]).strip())
+        remainder_start = i
+
+    return paragraphs, list(lines[remainder_start:])
 
 
 def _format_schema_section(context: Mapping[str, object]) -> str:
@@ -2181,16 +2678,106 @@ def _format_quality_section(context: Mapping[str, object]) -> str:
     return "- No dataset-specific caveats are listed in the available metadata."
 
 
-def _format_api_section(class_name: str) -> str:
-    """Format the API section with autodoc."""
-    return (
-        f"Use the ``{class_name}`` class to access this dataset programmatically.\n\n"
+def _format_api_section(
+    class_name: str, context: Mapping[str, object] | None = None
+) -> str:
+    """Format the API section.
+
+    Two parts:
+
+    1. An editorial **Signature** card (raw HTML) that mirrors the
+       v1-editorial-v2 §05 Access design: left-gutter ``SIGNATURE``
+       label, a code-styled class signature, and an identifier table
+       (Author/year, Canonical, Importable as, Source) backed by real
+       registry data.
+    2. The Sphinx ``autoclass`` block, restyled by editorial.css so
+       the rendered Parameters / Attributes / Methods read as a
+       single design-system block.
+    """
+    # No leading "Use the X class..." paragraph — the signature card
+    # below already names the class, its bases, and how to import it.
+    autoclass = (
         ".. currentmodule:: eegdash.dataset\n\n"
         f".. autoclass:: eegdash.dataset.{class_name}\n"
         "   :members: __init__, save\n"
-        "   :show-inheritance:\n"
         "   :member-order: bysource\n"
     )
+
+    if context is None:
+        return autoclass
+
+    # --- Editorial signature card -----------------------------------------
+    dataset_upper = class_name.upper()
+    author_year_name = _clean_value(context.get("author_year_name"))
+    canonical_names = context.get("canonical_names") or []
+    if not isinstance(canonical_names, (list, tuple)):
+        canonical_names = []
+
+    importable = [dataset_upper]
+    if author_year_name and author_year_name not in importable:
+        importable.append(author_year_name)
+    for n in canonical_names:
+        if n and n not in importable:
+            importable.append(n)
+
+    importable_html = " · ".join(f"<code>{n}</code>" for n in importable)
+    author_year_html = f"<b>{author_year_name}</b>" if author_year_name else "—"
+    canonical_display = [n for n in canonical_names if n and n != author_year_name]
+    canonical_html = (
+        " · ".join(f"<code>{n}</code>" for n in canonical_display)
+        if canonical_display
+        else "—"
+    )
+
+    source_path = "eegdash/dataset/registry.py"
+    github_url = f"https://github.com/eegdash/EEGDash/blob/develop/{source_path}"
+
+    signature_card = (
+        ".. raw:: html\n\n"
+        '   <div class="eegdash-ed-apicard">\n'
+        '     <div class="apicard-gutter">'
+        '<div class="lbl">Signature</div>'
+        '<div class="cls"><code>eegdash.dataset</code></div>'
+        "</div>\n"
+        '     <div class="apicard-body">\n'
+        '       <div class="apicard-sig">\n'
+        '         <div class="sig-kind">class</div>\n'
+        f'         <div class="sig-line">'
+        '<span class="ns">eegdash.dataset.</span>'
+        f'<b class="cls-name">{class_name}</b>'
+        '<span class="paren">(</span>'
+        '<span class="arg">cache_dir</span>, '
+        '<span class="arg">query</span>=<span class="lit">None</span>, '
+        '<span class="arg">s3_bucket</span>=<span class="lit">None</span>, '
+        '<span class="arg">**kwargs</span>'
+        '<span class="paren">)</span>'
+        "</div>\n"
+        '         <div class="sig-base">Bases: <code>EEGDashDataset</code></div>\n'
+        "       </div>\n"
+        '       <div class="apicard-ids">\n'
+        '         <div class="id-row">'
+        '<span class="k">Author (year)</span>'
+        f'<span class="v">{author_year_html}</span>'
+        "</div>\n"
+        '         <div class="id-row">'
+        '<span class="k">Canonical</span>'
+        f'<span class="v">{canonical_html}</span>'
+        "</div>\n"
+        '         <div class="id-row">'
+        '<span class="k">Importable as</span>'
+        f'<span class="v">{importable_html}</span>'
+        "</div>\n"
+        '         <div class="id-row">'
+        '<span class="k">Source</span>'
+        f'<span class="v"><code>{source_path}</code> · '
+        f'<a href="{github_url}">[source ↗]</a></span>'
+        "</div>\n"
+        "       </div>\n"
+        "     </div>\n"
+        "   </div>\n"
+    )
+
+    return signature_card + "\n" + autoclass
 
 
 # ---------------------------------------------------------------------------
@@ -2373,6 +2960,148 @@ _BIDS_MALE_KEYS = {"m", "male"}
 _BIDS_OTHER_KEYS = {"o", "other"}
 
 
+def _is_positive_float(value: object) -> bool:
+    """Truthy iff ``value`` can be coerced to a finite positive float."""
+    try:
+        f = float(value)
+    except (TypeError, ValueError):
+        return False
+    return f > 0
+
+
+def _render_sex_donut(f_count: int, m_count: int, o_count: int, total: int) -> str:
+    """Render the sex distribution as an SVG donut chart + side legend.
+
+    Geometry matches the v1-editorial-v2 design: a 42×42 viewBox circle
+    (r=15.9 → circumference ≈ 100, so each segment's stroke-dasharray
+    reads as a percentage). Female draws first in EEGdash blue, male
+    continues in orange, and any remaining 'other' fills the rest in
+    neutral grey. Center label shows "{N} subjects" in serif.
+
+    The side legend lists each non-empty group with its count and adds
+    a Female : Male ratio row when both groups are present.
+    """
+    pct_f = f_count / total * 100 if total else 0.0
+    pct_m = m_count / total * 100 if total else 0.0
+    pct_o = o_count / total * 100 if total else 0.0
+
+    # Circumference of a r=15.9 circle is 2π·15.9 ≈ 99.9 → we treat the
+    # stroke as carrying exactly 100 "percent units" so each dasharray
+    # value is directly a percentage.
+    C = 100.0
+
+    arc_pieces: list[str] = []
+    offset = 25.0  # Start at 12 o'clock — rotate(-90) makes the arc clockwise.
+
+    def _arc(pct: float, color: str) -> str:
+        nonlocal offset
+        if pct <= 0:
+            return ""
+        length = pct / 100.0 * C
+        gap = C - length
+        piece = (
+            f'<circle cx="21" cy="21" r="15.9" fill="none" stroke="{color}" '
+            f'stroke-width="5" stroke-dasharray="{length:.3f} {gap:.3f}" '
+            f'stroke-dashoffset="{offset:.3f}" transform="rotate(-90 21 21)" '
+            'stroke-linecap="butt"/>'
+        )
+        offset -= length
+        if offset < 0:
+            offset += C
+        return piece
+
+    # Track ring underneath (covers any unaccounted slice when total > 0).
+    arc_pieces.append(
+        '<circle cx="21" cy="21" r="15.9" fill="none" stroke="#d0d6dc" '
+        'stroke-width="5"/>'
+    )
+    arc_pieces.append(_arc(pct_f, "#006ca3"))
+    arc_pieces.append(_arc(pct_m, "#f7941d"))
+    arc_pieces.append(_arc(pct_o, "#6b7785"))
+
+    arcs_svg = "".join(p for p in arc_pieces if p)
+
+    # Build the side legend table.
+    # Emit each row cell as a <div> (not <span>) — the global pydata
+    # custom.css applies `position: absolute` to legend-flavoured spans,
+    # which collapses the flex layout. Divs aren't targeted by those
+    # rules, so the row stays a clean swatch / label / value triplet.
+    legend_rows = []
+    if f_count:
+        legend_rows.append(("Female", f_count, "#006ca3"))
+    if m_count:
+        legend_rows.append(("Male", m_count, "#f7941d"))
+    if o_count:
+        legend_rows.append(("Other", o_count, "#6b7785"))
+    rows_html = ""
+    for label, count, color in legend_rows:
+        rows_html += (
+            '<div class="row">'
+            f'<div class="sw" style="background:{color}"></div>'
+            f'<div class="lbl">{label}</div>'
+            f'<div class="v">{count}</div>'
+            "</div>"
+        )
+
+    # F:M ratio row, only when both populated and m_count > 0
+    if f_count and m_count:
+        ratio = f_count / m_count
+        rows_html += (
+            '<div class="row ratio">'
+            '<div class="sw" style="visibility:hidden"></div>'
+            '<div class="lbl">F : M ratio</div>'
+            f'<div class="v">{ratio:.2f} : 1</div>'
+            "</div>"
+        )
+
+    # Center label inside the donut.
+    center_html = (
+        '<foreignObject x="0" y="0" width="42" height="42">'
+        '<div xmlns="http://www.w3.org/1999/xhtml" '
+        'style="width:100%;height:100%;display:flex;flex-direction:column;'
+        'align-items:center;justify-content:center;font-family:Spectral,Georgia,serif;">'
+        f'<div style="font-size:13px;line-height:1;letter-spacing:-.02em">{total}</div>'
+        '<div style="font-family:JetBrains Mono,monospace;font-size:2.8px;'
+        "letter-spacing:.18em;color:#6a6e75;margin-top:1.5px;"
+        'text-transform:uppercase">subjects</div>'
+        "</div>"
+        "</foreignObject>"
+    )
+
+    summary_note = ""
+    if f_count and m_count:
+        f_pct_int = round(pct_f)
+        summary_note = (
+            '<div class="sex-note" style="margin-top:14px; font-size:13px; '
+            "color:#34404e; line-height:1.5; max-width:520px; "
+            'font-family:Spectral,Georgia,serif;">'
+            f"{f_pct_int}% female · n = {total} subjects with reported sex."
+            "</div>"
+        )
+
+    return (
+        ".. raw:: html\n\n"
+        '   <div class="eegdash-stats-section eegdash-ed-sex" '
+        'style="margin-bottom:1rem;">\n'
+        "     <p><strong>Sex composition</strong></p>\n"
+        '     <div class="sex-wrap" style="display:flex; align-items:center; '
+        'gap:30px; flex-wrap:wrap;">\n'
+        '       <svg class="sex-donut" viewBox="0 0 42 42" '
+        'style="width:170px; height:170px; flex-shrink:0;">'
+        f"{arcs_svg}"
+        f"{center_html}"
+        "</svg>\n"
+        '       <div class="sex-legend" '
+        'style="flex:1; font-family:JetBrains Mono,monospace; '
+        'font-size:13px; min-width:220px;">'
+        f"{rows_html}"
+        "</div>\n"
+        "     </div>\n"
+        f"     {summary_note}\n"
+        "   </div>\n\n"
+    )
+
+
 def _format_recording_stats_section(context: Mapping[str, object]) -> str:
     """Generate a Dataset Statistics section from EEGDash API data.
 
@@ -2404,45 +3133,197 @@ def _format_recording_stats_section(context: Mapping[str, object]) -> str:
 
     heading = "Dataset Statistics\n------------------\n\n"
     parts: list[str] = []
+    # Open a 2-column grid wrapper so the age histogram and the sex
+    # donut render side-by-side (matching the v1-editorial-v2 design).
+    # The wrapper is closed at the end of the function via a paired
+    # raw-html block, regardless of how many sub-sections rendered.
+    parts.append('.. raw:: html\n\n   <div class="eegdash-ed-cohort-grid">\n')
 
     # ------------------------------------------------------------------
-    # A. Age distribution bar chart
+    # A. Age distribution — vertical bars stacked by gender
     # ------------------------------------------------------------------
-    if has_ages:
+    # When per-subject (age, sex) pairs are available via the EEGDash
+    # records endpoint (each record carries a `participant_tsv` blob),
+    # stack the histogram by gender — Female in EEGdash blue, Male in
+    # EEGdash orange. Other/unspecified renders in neutral grey on top.
+    # Falls back to single-color bars when only aggregate `ages` are
+    # known.
+    participants_rows = context.get("participants_rows") or []
+
+    pair_buckets_f: Counter[int] = Counter()
+    pair_buckets_m: Counter[int] = Counter()
+    pair_buckets_o: Counter[int] = Counter()
+    bucket_size = 5
+    paired_age_count = 0
+    for p in participants_rows:
+        try:
+            a = float(p.get("age"))
+        except (TypeError, ValueError):
+            continue
+        if a <= 0:
+            continue
+        sex = str(p.get("sex") or "").strip().lower()
+        bucket_start = int(a // bucket_size) * bucket_size
+        if sex in _BIDS_FEMALE_KEYS:
+            pair_buckets_f[bucket_start] += 1
+        elif sex in _BIDS_MALE_KEYS:
+            pair_buckets_m[bucket_start] += 1
+        else:
+            pair_buckets_o[bucket_start] += 1
+        paired_age_count += 1
+
+    if pair_buckets_f or pair_buckets_m or pair_buckets_o:
+        # Gender-stacked path — real per-subject data
+        all_buckets = sorted(
+            set(pair_buckets_f) | set(pair_buckets_m) | set(pair_buckets_o)
+        )
+        n_f = sum(pair_buckets_f.values())
+        n_m = sum(pair_buckets_m.values())
+        n_o = sum(pair_buckets_o.values())
+        max_total = max(
+            pair_buckets_f[b] + pair_buckets_m[b] + pair_buckets_o[b]
+            for b in all_buckets
+        )
+        bar_width = 28
+        chart_height = 80
+
+        ages_used = [
+            float(p.get("age"))
+            for p in participants_rows
+            if str(p.get("age")) not in ("", "None", "n/a")
+            and _is_positive_float(p.get("age"))
+        ]
+        age_min_v = min(ages_used) if ages_used else 0
+        age_max_v = max(ages_used) if ages_used else 0
+
+        bars_html = ""
+        labels_html = ""
+        for start in all_buckets:
+            f = pair_buckets_f.get(start, 0)
+            m = pair_buckets_m.get(start, 0)
+            o = pair_buckets_o.get(start, 0)
+            tot = f + m + o
+            # Stack bottom→top: Male orange, Female blue, Other grey
+            col_pieces = ""
+            if o:
+                h = int(o / max_total * chart_height)
+                col_pieces += (
+                    f'<div style="width:{bar_width}px; height:{h}px; '
+                    f'background:#6b7785; flex-shrink:0;" '
+                    f'title="{start}-{start + bucket_size - 1}: other n={o}">'
+                    "</div>"
+                )
+            if f:
+                h = int(f / max_total * chart_height)
+                col_pieces += (
+                    f'<div style="width:{bar_width}px; height:{h}px; '
+                    f'background:#006ca3; flex-shrink:0;" '
+                    f'title="{start}-{start + bucket_size - 1}: female n={f}">'
+                    "</div>"
+                )
+            if m:
+                h = int(m / max_total * chart_height)
+                col_pieces += (
+                    f'<div style="width:{bar_width}px; height:{h}px; '
+                    f'background:#f7941d; flex-shrink:0;" '
+                    f'title="{start}-{start + bucket_size - 1}: male n={m}">'
+                    "</div>"
+                )
+            bars_html += (
+                f'<div style="display:flex; flex-direction:column-reverse; '
+                f'justify-content:flex-start; gap:1px;" '
+                f'title="{start}-{start + bucket_size - 1}: n={tot}">'
+                f"{col_pieces}"
+                "</div>"
+            )
+            labels_html += (
+                f'<span style="width:{bar_width}px; text-align:center; '
+                f'overflow:hidden; white-space:nowrap;">{start}</span>'
+            )
+
+        legend_pieces = []
+        if n_f:
+            legend_pieces.append(
+                '<span style="display:inline-flex; align-items:center; gap:6px;">'
+                '<i style="width:10px; height:10px; background:#006ca3; '
+                'display:inline-block;"></i>'
+                f"Female · {n_f}</span>"
+            )
+        if n_m:
+            legend_pieces.append(
+                '<span style="display:inline-flex; align-items:center; gap:6px;">'
+                '<i style="width:10px; height:10px; background:#f7941d; '
+                'display:inline-block;"></i>'
+                f"Male · {n_m}</span>"
+            )
+        if n_o:
+            legend_pieces.append(
+                '<span style="display:inline-flex; align-items:center; gap:6px;">'
+                '<i style="width:10px; height:10px; background:#6b7785; '
+                'display:inline-block;"></i>'
+                f"Other · {n_o}</span>"
+            )
+        legend_html = (
+            (
+                '<div style="display:flex; gap:18px; margin-top:8px; '
+                'font-size:11px;">' + "".join(legend_pieces) + "</div>"
+            )
+            if legend_pieces
+            else ""
+        )
+
+        age_html = (
+            ".. raw:: html\n\n"
+            '   <div class="eegdash-stats-section" style="margin-bottom:1rem;">\n'
+            "     <p><strong>Age distribution by gender</strong> "
+            f"(n={paired_age_count}, range {age_min_v:.0f}–{age_max_v:.0f} yr)</p>\n"
+            f'     <div class="eeg-chart-row" style="display:flex; align-items:flex-end; '
+            f'gap:2px; height:{chart_height}px; border-bottom:1px solid #34404e;">\n'
+            f"       {bars_html}\n"
+            "     </div>\n"
+            '     <div class="eeg-chart-labels" style="display:flex; gap:2px; font-size:10px;">\n'
+            f"       {labels_html}\n"
+            "     </div>\n"
+            f"     {legend_html}\n"
+            "   </div>\n\n"
+        )
+        parts.append(age_html)
+
+    elif has_ages:
+        # Fall back to single-color age histogram when per-subject
+        # sex isn't available. Uses brand blue uniformly.
         valid_ages = [float(a) for a in ages if a is not None]
         if valid_ages:
             age_min = min(valid_ages)
             age_max = max(valid_ages)
-            bucket_size = 5
             buckets: Counter[int] = Counter(
                 int(float(a) // bucket_size) * bucket_size for a in valid_ages
             )
             max_count = max(buckets.values())
             bar_width = 28
-
+            chart_height = 80
             bars_html = ""
             labels_html = ""
             for start in sorted(buckets):
                 count = buckets[start]
-                pct = int(count / max_count * 100)
-                label = f"{start}-{start + bucket_size - 1}"
+                h = int(count / max_count * chart_height)
                 bars_html += (
-                    f'<div style="width:{bar_width}px; height:{pct}%; '
-                    f'background:#4472c4; flex-shrink:0;" '
-                    f'title="{label}: {count}"></div>'
+                    f'<div style="width:{bar_width}px; height:{h}px; '
+                    f'background:#006ca3; flex-shrink:0;" '
+                    f'title="{start}-{start + bucket_size - 1}: {count}"></div>'
                 )
                 labels_html += (
                     f'<span style="width:{bar_width}px; text-align:center; '
                     f'overflow:hidden; white-space:nowrap;">{start}</span>'
                 )
-
             age_html = (
                 ".. raw:: html\n\n"
                 '   <div class="eegdash-stats-section" style="margin-bottom:1rem;">\n'
                 "     <p><strong>Age distribution</strong> "
-                f"(n={len(valid_ages)}, range {age_min:.0f}–{age_max:.0f} yr)</p>\n"
-                '     <div class="eeg-chart-row" style="display:flex; align-items:flex-end; '
-                'gap:2px; height:60px;">\n'
+                f"(n={len(valid_ages)}, range {age_min:.0f}–{age_max:.0f} yr · "
+                "sex per subject not reported)</p>\n"
+                f'     <div class="eeg-chart-row" style="display:flex; align-items:flex-end; '
+                f'gap:2px; height:{chart_height}px; border-bottom:1px solid #34404e;">\n'
                 f"       {bars_html}\n"
                 "     </div>\n"
                 '     <div class="eeg-chart-labels" style="display:flex; gap:2px; font-size:10px;">\n'
@@ -2453,17 +3334,19 @@ def _format_recording_stats_section(context: Mapping[str, object]) -> str:
             parts.append(age_html)
 
     # ------------------------------------------------------------------
-    # B. Sex distribution horizontal bar
+    # B. Sex distribution — SVG donut
     # ------------------------------------------------------------------
+    # Replaces the older horizontal-bar treatment with a proper donut chart
+    # matching the v1-editorial-v2 design: blue female / orange male arcs,
+    # centered "N subjects" callout, side legend with female/male/other
+    # counts and the F:M ratio.
     if has_sex:
-        _known_keys = _BIDS_FEMALE_KEYS | _BIDS_MALE_KEYS | _BIDS_OTHER_KEYS
         f_count = sum(
             int(v or 0) for k, v in sex_dist.items() if k.lower() in _BIDS_FEMALE_KEYS
         )
         m_count = sum(
             int(v or 0) for k, v in sex_dist.items() if k.lower() in _BIDS_MALE_KEYS
         )
-        # Explicit BIDS "other" (o/other) + any non-spec keys (n/a, unknown, …)
         o_count = sum(
             int(v or 0)
             for k, v in sex_dist.items()
@@ -2472,67 +3355,7 @@ def _format_recording_stats_section(context: Mapping[str, object]) -> str:
         total_sex = f_count + m_count + o_count
 
         if total_sex > 0:
-            f_pct = f_count / total_sex * 100
-            m_pct = m_count / total_sex * 100
-            o_pct = o_count / total_sex * 100
-
-            bar_segments = ""
-            if f_count:
-                bar_segments += (
-                    f'<div style="width:{f_pct:.1f}%; background:#e07ab5; '
-                    "display:inline-flex; align-items:center; justify-content:center; "
-                    f'color:#fff; font-size:11px; min-width:2px;" title="Female: {f_count}">'
-                    f"{f_count if f_pct >= 8 else ''}</div>"
-                )
-            if m_count:
-                bar_segments += (
-                    f'<div style="width:{m_pct:.1f}%; background:#4472c4; '
-                    "display:inline-flex; align-items:center; justify-content:center; "
-                    f'color:#fff; font-size:11px; min-width:2px;" title="Male: {m_count}">'
-                    f"{m_count if m_pct >= 8 else ''}</div>"
-                )
-            if o_count:
-                bar_segments += (
-                    f'<div style="width:{o_pct:.1f}%; background:#999; '
-                    "display:inline-flex; align-items:center; justify-content:center; "
-                    f'color:#fff; font-size:11px; min-width:2px;" title="Other: {o_count}">'
-                    f"{o_count if o_pct >= 8 else ''}</div>"
-                )
-
-            legend = []
-            if f_count:
-                legend.append(
-                    '<span style="display:inline-block;width:12px;height:12px;'
-                    'background:#e07ab5;border-radius:2px;margin-right:4px;"></span>Female'
-                )
-            if m_count:
-                legend.append(
-                    '<span style="display:inline-block;width:12px;height:12px;'
-                    'background:#4472c4;border-radius:2px;margin-right:4px;"></span>Male'
-                )
-            if o_count:
-                legend.append(
-                    '<span style="display:inline-block;width:12px;height:12px;'
-                    'background:#999;border-radius:2px;margin-right:4px;"></span>Other'
-                )
-            legend_html = (
-                '<div style="font-size:11px;margin-top:4px;">'
-                + "&nbsp;&nbsp;".join(legend)
-                + f"&nbsp;&nbsp;<strong>Total: {total_sex}</strong></div>"
-            )
-
-            sex_html = (
-                ".. raw:: html\n\n"
-                '   <div class="eegdash-stats-section" style="margin-bottom:1rem;">\n'
-                "     <p><strong>Sex distribution</strong></p>\n"
-                '     <div style="display:flex; height:22px; width:100%; max-width:400px; '
-                'border-radius:4px; overflow:hidden;">\n'
-                f"       {bar_segments}\n"
-                "     </div>\n"
-                f"     {legend_html}\n"
-                "   </div>\n\n"
-            )
-            parts.append(sex_html)
+            parts.append(_render_sex_donut(f_count, m_count, o_count, total_sex))
 
     # ------------------------------------------------------------------
     # C. Channel count distribution
@@ -2613,8 +3436,13 @@ def _format_recording_stats_section(context: Mapping[str, object]) -> str:
         except (TypeError, ValueError, KeyError):
             pass
 
-    if not parts:
+    if len(parts) <= 1:
+        # Only the wrapper open was added (no chart parts) — skip the
+        # section entirely.
         return ""
+
+    # Close the 2-column grid wrapper we opened at the top.
+    parts.append(".. raw:: html\n\n   </div>\n")
 
     return heading + "".join(parts)
 
@@ -2931,6 +3759,1210 @@ def _format_feedback_section(dataset_id: str, title: str) -> str:
       Report an Issue on GitHub"""
 
 
+# ---------------------------------------------------------------------------
+# Editorial Brief — per-dataset chrome lifted from v1-editorial-v2.html.
+#
+# These helpers add the editorial cards (kicker, deck, 3-layer rail, caveat
+# callout, provenance strip, footnotes, colophon) that wrap the existing
+# Sphinx-rendered dataset content. They emit raw HTML blocks the
+# accompanying `_static/css/dataset-editorial.css` styles. Fabricated
+# placeholders (PSD curves, alpha-peak, frame retention) deliberately
+# resolve to TODO labels — the backend doesn't compute those numbers yet,
+# and shipping mock values site-wide would mislead readers.
+# ---------------------------------------------------------------------------
+
+_EDITORIAL_BRAND_GLYPH_SVG = (
+    '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">'
+    '<circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" stroke-width="1.4"/>'
+    '<path d="M2.5 16 Q4.5 12 6.5 16 Q8.5 20 10.5 14 Q12 12 13.5 18" '
+    'stroke="#006ca3" stroke-width="1.6" fill="none" stroke-linecap="round" '
+    'stroke-linejoin="round"/>'
+    '<line x1="16" y1="2.5" x2="16" y2="29.5" stroke="#d0d6dc" stroke-width=".6" '
+    'stroke-dasharray="1 2"/>'
+    '<g stroke="#f7941d" stroke-width=".8" fill="none" opacity=".85">'
+    '<path d="M19.5 10.5 L24.5 13 L21.5 19 L27 21.5 L19.5 10.5 L21.5 19 M24.5 13 L27 21.5"/>'
+    "</g>"
+    '<g fill="#f7941d">'
+    '<circle cx="19.5" cy="10.5" r="1.6"/>'
+    '<circle cx="24.5" cy="13" r="1.6"/>'
+    '<circle cx="21.5" cy="19" r="1.6"/>'
+    '<circle cx="27" cy="21.5" r="1.6"/>'
+    "</g></svg>"
+)
+
+
+def _editorial_html(block: str) -> str:
+    """Wrap an HTML block in a Sphinx ``.. raw:: html`` directive.
+
+    Indents the payload by three spaces (required by the directive) and
+    strips a trailing newline so successive editorial blocks don't
+    accumulate empty paragraphs between them.
+    """
+    indented = "\n".join("   " + line if line else "" for line in block.split("\n"))
+    return ".. raw:: html\n\n" + indented.rstrip()
+
+
+def _short_study_label(context: Mapping[str, object]) -> str:
+    """Trim the study title for use as a kicker / breadcrumb tail."""
+    title = _clean_value(context.get("title")) or str(context.get("class_name", ""))
+    short = title.split(":", 1)[0].strip() if ":" in title else title
+    if len(short) > 64:
+        short = short[:61].rstrip(" ,.;:") + "…"
+    return short or str(context.get("class_name", "")) or "Dataset"
+
+
+def _format_editorial_kicker_section(context: Mapping[str, object]) -> str:
+    """Editorial kicker + issue strip rendered above the H1."""
+    class_name = str(context.get("class_name", "")).strip()
+    short_label = _short_study_label(context)
+    source = _editorial_source_label(_clean_value(context.get("source")))
+    n_subjects = _value_or_unknown(_clean_value(context.get("n_subjects")), "subjects")
+    n_records = _value_or_unknown(_clean_value(context.get("n_records")), "recordings")
+    license_text = _value_or_unknown(_clean_value(context.get("license")), "license")
+    # Issue-line flavour: keep the actual dataset numeric tail so it
+    # reads as a real "issue" without inventing a volume number.
+    digits = "".join(c for c in class_name if c.isdigit())
+    issue_num = digits.lstrip("0") or digits or "—"
+    block = (
+        '<div class="eegdash-ed-issue">'
+        f'<div class="crumb">EEGdash'
+        f'<span class="crumb-sep">›</span>{source}'
+        f'<span class="crumb-sep">›</span><b>{class_name}</b></div>'
+        f"<div>Iss. {issue_num} · {n_subjects} subjects · "
+        f"{n_records} recordings · {license_text}</div>"
+        "</div>"
+        f'<div class="eegdash-ed-kicker">Dataset Brief · {short_label}</div>'
+    )
+    return _editorial_html(block)
+
+
+# ---------------------------------------------------------------------------
+# Editorial value formatters
+# ---------------------------------------------------------------------------
+# The CSV/API surface raw values that aren't display-ready (long fp seconds,
+# JSON-stringified sample-rate counts, lowercase source tags). The helpers
+# below normalise those to short, readable labels for the field card + pills.
+
+_SOURCE_LABEL_MAP = {
+    "openneuro": "OpenNeuro",
+    "nemar": "NeMAR",
+    "huggingface": "Hugging Face",
+    "hf": "Hugging Face",
+    "physionet": "PhysioNet",
+    "github": "GitHub",
+    "osf": "OSF",
+}
+
+_MODALITY_LABEL_MAP = {
+    "eeg": "EEG",
+    "ieeg": "iEEG",
+    "meg": "MEG",
+    "emg": "EMG",
+    "ecog": "ECoG",
+    "fnirs": "fNIRS",
+    "nirs": "fNIRS",
+}
+
+
+def _editorial_source_label(value: str) -> str:
+    """Title-case a source identifier (``openneuro`` → ``OpenNeuro``)."""
+    if not value:
+        return "OpenNeuro"
+    key = value.strip().lower()
+    return _SOURCE_LABEL_MAP.get(key, value.strip().title())
+
+
+def _editorial_modality_label(value: str) -> str:
+    """Convert a lowercase modality token to the canonical display form."""
+    if not value:
+        return "EEG"
+    cleaned = value.strip()
+    key = cleaned.lower()
+    if key in _MODALITY_LABEL_MAP:
+        return _MODALITY_LABEL_MAP[key]
+    # Multi-modality list ("eeg, meg") — uppercase each token.
+    parts = [
+        _MODALITY_LABEL_MAP.get(p.strip().lower(), p.strip().upper())
+        for p in cleaned.split(",")
+        if p.strip()
+    ]
+    return ", ".join(parts) if parts else cleaned.upper()
+
+
+def _editorial_sfreq_label(context: Mapping[str, object]) -> str:
+    """Compact sampling-rate label like ``250 Hz`` (or ``250, 1000 Hz``).
+
+    The CSV stores sampling-rate distributions as JSON arrays of
+    ``{val, count}`` records (see _format_stat_counts). For the field
+    card we want a single clean string — pick the modal value when
+    one dominates, else list distinct round-Hz values.
+    """
+    counts = context.get("sfreq_counts") or []
+    if isinstance(counts, list) and counts:
+        try:
+            valid = [
+                (int(round(float(c.get("val")))), int(c.get("count") or 0))
+                for c in counts
+                if isinstance(c, dict) and c.get("val") is not None
+            ]
+        except (TypeError, ValueError):
+            valid = []
+        if valid:
+            unique_vals = sorted({v for v, _ in valid})
+            if len(unique_vals) == 1:
+                return f"{unique_vals[0]} Hz"
+            # Heavily-skewed: modal value handles ≥80% of recordings.
+            total = sum(c for _, c in valid) or 1
+            top_val, top_count = max(valid, key=lambda x: x[1])
+            if top_count / total >= 0.8:
+                return f"{top_val} Hz · mixed"
+            return ", ".join(f"{v}" for v in unique_vals) + " Hz"
+
+    # Fall back to the raw stat-counts string from the CSV row.
+    raw = _value_or_unknown(
+        _clean_value(context.get("sampling_freqs")), "sampling_rate"
+    )
+    if raw in ("Varies", "—"):
+        return raw
+    return f"{raw} Hz" if not raw.endswith("Hz") else raw
+
+
+def _editorial_duration_label(context: Mapping[str, object]) -> str:
+    """Round duration to a clean ``XX.X h`` value (or ``Y min`` when short)."""
+    total_duration_s = context.get("total_duration_s")
+    seconds: float | None = None
+    if total_duration_s is not None:
+        try:
+            seconds = float(total_duration_s)
+        except (TypeError, ValueError):
+            seconds = None
+    if seconds is None:
+        # Fall back to the row's pre-computed hours field.
+        raw = _clean_value(context.get("duration_hours_total"))
+        if raw:
+            try:
+                seconds = float(raw) * 3600.0
+            except (TypeError, ValueError):
+                return raw  # last resort, return whatever was given
+    if seconds is None or seconds <= 0:
+        return "—"
+    hours = seconds / 3600.0
+    if hours < 1:
+        return f"{int(round(seconds / 60))} min"
+    if hours >= 100:
+        return f"{int(round(hours))} h"
+    return f"{hours:.1f} h"
+
+
+def _editorial_citation_label(value: object) -> str:
+    """Drop a stray .0 from NEMAR citation counts (``1.0`` → ``1``)."""
+    if value is None:
+        return "—"
+    text = str(value).strip()
+    if not text or text == "—":
+        return "—"
+    try:
+        f = float(text)
+    except (TypeError, ValueError):
+        return text
+    if f == int(f):
+        return str(int(f))
+    return f"{f:.1f}"
+
+
+def _format_editorial_fieldcard_section(context: Mapping[str, object]) -> str:
+    """Rich field-card aside emitted next to the hero.
+
+    Pairs with the H1/deck/byline/pills via CSS float-right. Renders Identity
+    / Signal / BIDS / ML sections backed by real API data — bids_version,
+    sidecar inventory, HED annotation status, tags, license, etc. Fields
+    with no real source resolve to "—" so the layout stays regular.
+    """
+    class_name = str(context.get("class_name", "")).strip()
+    license_text = _value_or_unknown(_clean_value(context.get("license")), "license")
+    source = _editorial_source_label(_clean_value(context.get("source")))
+    doi_clean = _normalize_doi(_clean_value(context.get("doi")))
+
+    # Identity: Dataset, Version, Source, License
+    # The "version" tag is the BIDS dataset version when present (extracted
+    # from the OpenNeuro DOI tail when it has the v1.0.0 suffix pattern).
+    version_tag = "—"
+    if doi_clean and "/" in doi_clean:
+        tail = doi_clean.rsplit("/", 1)[-1]
+        if ".v" in tail:
+            version_tag = "v" + tail.split(".v", 1)[1]
+
+    # Signal
+    n_subjects = _value_or_unknown(_clean_value(context.get("n_subjects")), "subjects")
+    n_records = _value_or_unknown(_clean_value(context.get("n_records")), "recordings")
+    modality_raw = _editorial_modality_label(_clean_value(context.get("modality")))
+    n_channels = _value_or_unknown(
+        _clean_value(context.get("n_channels")), "n_channels"
+    )
+    sfreq = _editorial_sfreq_label(context)
+    duration_label = _editorial_duration_label(context)
+    size_label = _value_or_unknown(_clean_value(context.get("size")), "general")
+
+    # BIDS
+    bids_version = _clean_value(context.get("bids_version")) or "—"
+    sidecars = context.get("sidecars_detected") or []
+    sidecar_line = (
+        " · ".join(sidecars) if sidecars else "<span class='dim'>not yet probed</span>"
+    )
+    hed_annotated = bool(context.get("hed_annotated"))
+    hed_label = (
+        '<a href="#nemar-processing-statistics">HED ✓</a>' if hed_annotated else "—"
+    )
+
+    # ML — citations from NEMAR + HuggingFace mirror status
+    citations = _editorial_citation_label(context.get("nemar_citation_count"))
+    hf_info = context.get("huggingface") or {}
+    hf_available = bool(hf_info.get("available"))
+    hf_url = str(hf_info.get("url") or "https://huggingface.co/EEGDash")
+    hf_label = (
+        f'<a href="{hf_url}">EEGDash/{context.get("dataset_id")}</a>'
+        if hf_available
+        else f'<a href="{hf_url}">org listing</a>'
+    )
+
+    # Tags
+    tags = context.get("tags") or {}
+    tag_pathology = _clean_value(
+        tags.get("pathology") if isinstance(tags, dict) else ""
+    )
+    tag_type = _clean_value(tags.get("type") if isinstance(tags, dict) else "")
+    tag_modality = _clean_value(tags.get("modality") if isinstance(tags, dict) else "")
+
+    # Quality / completeness score (already computed elsewhere)
+    quality_label, _quality_color, quality_pct = _compute_quality_score(context)
+    metadata_line = f"{quality_pct}% · {quality_label}"
+
+    # Build the action row at the bottom of the rail.
+    openneuro_url = str(context.get("openneuro_url") or "")
+    croissant_url = (
+        f"../../_static/dataset_generated/croissant/{class_name}.croissant.json"
+    )
+    actions = (
+        f'<a href="{openneuro_url}">OpenNeuro</a>'
+        f'<a href="{hf_url}">{"🤗 HF" if hf_available else "🤗 Org"}</a>'
+        f'<a href="{croissant_url}" download>Croissant</a>'
+    )
+
+    block = (
+        '<aside class="eegdash-ed-rail">'
+        "<h4>Field card</h4>"
+        "<dl>"
+        '<dt class="hdr">Identity</dt><dd class="hdrpad"></dd>'
+        f"<dt>Dataset</dt><dd>{class_name}</dd>"
+        f"<dt>Version</dt><dd>{version_tag}</dd>"
+        f"<dt>Source</dt><dd>{source}</dd>"
+        f"<dt>License</dt><dd>{license_text}</dd>"
+        '<dt class="hdr">Signal</dt><dd class="hdrpad"></dd>'
+        f"<dt>Subjects</dt><dd>{n_subjects}</dd>"
+        f"<dt>Recordings</dt><dd>{n_records}</dd>"
+        f"<dt>Modality</dt><dd>{modality_raw}</dd>"
+        f"<dt>Channels</dt><dd>{n_channels}</dd>"
+        f"<dt>Sample rate</dt><dd>{sfreq}</dd>"
+        f"<dt>Duration</dt><dd>{duration_label}</dd>"
+        f"<dt>Size</dt><dd>{size_label}</dd>"
+        '<dt class="hdr">BIDS</dt><dd class="hdrpad"></dd>'
+        f"<dt>BIDSVersion</dt><dd>{bids_version}</dd>"
+        f"<dt>Sidecars</dt><dd>{sidecar_line}</dd>"
+        f"<dt>Events ann.</dt><dd>{hed_label}</dd>"
+        f"<dt>Metadata</dt><dd>{metadata_line}</dd>"
+    )
+
+    # Tags section — pathology / modality-tag / type
+    if tag_pathology or tag_type or tag_modality:
+        block += '<dt class="hdr">Tags</dt><dd class="hdrpad"></dd>'
+        if tag_pathology:
+            block += f"<dt>Pathology</dt><dd>{tag_pathology}</dd>"
+        if tag_modality:
+            block += f"<dt>Modality</dt><dd>{tag_modality}</dd>"
+        if tag_type:
+            block += f"<dt>Type</dt><dd>{tag_type}</dd>"
+
+    # ML / Reach section — only emits when at least one field is present.
+    reach_rows: list[str] = []
+    if hf_available or hf_url:
+        reach_rows.append(f"<dt>HF mirror</dt><dd>{hf_label}</dd>")
+    if citations and citations != "—":
+        reach_rows.append(f"<dt>Citations</dt><dd>{citations}</dd>")
+    if reach_rows:
+        block += '<dt class="hdr">ML &amp; Reach</dt><dd class="hdrpad"></dd>'
+        block += "".join(reach_rows)
+
+    block += "</dl>"
+
+    # DOI block + action row
+    if doi_clean:
+        block += (
+            '<div class="doi">'
+            "<span>Persistent identifier</span>"
+            f'<a href="https://doi.org/{doi_clean}">{doi_clean}</a>'
+            "</div>"
+        )
+    block += f'<div class="actions">{actions}</div>'
+    block += "</aside>"
+
+    return _editorial_html(block)
+
+
+def _format_editorial_hero_extras(context: Mapping[str, object]) -> str:
+    """Editorial deck + byline + signal pills emitted after the citation block."""
+    title = _clean_value(context.get("title"))
+    authors = context.get("authors") or []
+    year = _clean_value(context.get("year"))
+    source = _editorial_source_label(_clean_value(context.get("source")))
+    n_subjects = _clean_value(context.get("n_subjects"))
+    modality = _editorial_modality_label(_clean_value(context.get("modality")))
+    senior = _clean_value(context.get("senior_author"))
+    funding = context.get("funding") or []
+    tags = context.get("tags") or {}
+
+    # Build a deck line — falls back gracefully when fields are missing.
+    parts = []
+    if n_subjects and n_subjects not in ("—", "0"):
+        parts.append(f"{n_subjects}-participant")
+    parts.append(f"{modality} dataset")
+    if title:
+        parts.append(f"— {title}")
+    deck_text = " ".join(parts).strip()
+    if not deck_text or deck_text == "EEG dataset":
+        deck_text = (
+            f"A {modality} dataset distributed through EEGDash with "
+            f"standardized BIDS metadata."
+        )
+
+    # Byline: first two authors as primary, rest folded.
+    primary = []
+    secondary = []
+    for idx, author in enumerate(authors):
+        cleaned = author.replace("*", "")
+        if idx < 2:
+            primary.append(f"<strong>{cleaned}</strong>")
+        else:
+            secondary.append(cleaned)
+    if primary:
+        byline_authors = " · ".join(primary)
+        if secondary:
+            byline_authors += " · " + " · ".join(secondary[:4])
+            if len(secondary) > 4:
+                byline_authors += " · …"
+    else:
+        byline_authors = "Authors unspecified"
+
+    year_line = ""
+    if year and year != "—":
+        year_line = (
+            f'<br/><span class="role">Year</span> {year} · Distributed via {source}'
+        )
+
+    senior_line = ""
+    if senior:
+        senior_line = (
+            f'<br/><span class="role">Senior author</span> <strong>{senior}</strong>'
+        )
+
+    funding_line = ""
+    if funding:
+        # Keep funding line short — collapse list to a single string.
+        fund_str = " · ".join(str(f).strip() for f in funding[:2] if str(f).strip())
+        if len(funding) > 2:
+            fund_str += f" · + {len(funding) - 2} more"
+        if fund_str:
+            funding_line = f'<br/><span class="role">Funding</span> {fund_str}'
+
+    # Editorial pill row — signal/format pills the sphinx-design badges
+    # don't already cover. These complement (not replace) the SEO badges.
+    pills: list[str] = []
+    n_channels = _clean_value(context.get("n_channels"))
+    if n_channels and n_channels not in ("—", "Varies"):
+        pills.append(f'<span class="pill">{modality} · {n_channels} ch</span>')
+    sfreq = _editorial_sfreq_label(context)
+    if sfreq and sfreq not in ("—", "Varies"):
+        pills.append(f'<span class="pill">{sfreq}</span>')
+    bids_version = _clean_value(context.get("bids_version"))
+    if bids_version:
+        pills.append(f'<span class="pill is-info">BIDS {bids_version}</span>')
+    if bool(context.get("hed_annotated")):
+        pills.append('<span class="pill is-warning">HED ✓</span>')
+    if isinstance(tags, dict):
+        tag_pathology = _clean_value(tags.get("pathology"))
+        tag_modality = _clean_value(tags.get("modality"))
+        tag_type = _clean_value(tags.get("type"))
+        if tag_pathology and tag_pathology.lower() not in ("not specified", "—"):
+            pills.append(f'<span class="pill">{tag_pathology}</span>')
+        if tag_modality and tag_modality.lower() not in ("—",):
+            pills.append(f'<span class="pill">{tag_modality}</span>')
+        if tag_type and tag_type.lower() not in ("—",):
+            pills.append(f'<span class="pill">{tag_type}</span>')
+    pills_html = (
+        f'<div class="eegdash-ed-pills">{"".join(pills)}</div>' if pills else ""
+    )
+
+    block = (
+        f'<p class="eegdash-ed-deck">{deck_text}.</p>'
+        f'<div class="eegdash-ed-byline">'
+        f'<span class="role">Data &amp; curation</span> {byline_authors}'
+        f"{senior_line}"
+        f"{year_line}"
+        f"{funding_line}"
+        "</div>"
+        f"{pills_html}"
+    )
+    return _editorial_html(block)
+
+
+def _format_editorial_layers_section(context: Mapping[str, object]) -> str:
+    """3-layer architecture rail — Study / Signal·BIDS / Training·ML."""
+    block = (
+        '<div class="eegdash-ed-layers">'
+        "<div>"
+        '<div class="ly-lbl"><span>Layer 01</span><b>Study</b></div>'
+        '<div class="ly-tit">What was asked</div>'
+        '<div class="ly-dsc">Hypothesis, independent &amp; dependent variables, '
+        "paradigm, cohort, and the editorial caveats around what the "
+        "recordings can and cannot answer.</div>"
+        "</div>"
+        "<div>"
+        '<div class="ly-lbl"><span>Layer 02</span><b>Signal · BIDS</b></div>'
+        '<div class="ly-tit">What was recorded</div>'
+        '<div class="ly-dsc">Sidecars, channels &amp; electrodes, coordinate '
+        "system, event semantics, and quality stats from the NEMAR pipeline "
+        "when available.</div>"
+        "</div>"
+        "<div>"
+        '<div class="ly-lbl"><span>Layer 03</span><b>Training · ML</b></div>'
+        '<div class="ly-tit">What you can train on</div>'
+        '<div class="ly-dsc">Recommended access modes — MNE Raw, '
+        "braindecode windows, PyTorch DataLoader — plus the targets the "
+        "metadata makes addressable.</div>"
+        "</div>"
+        "</div>"
+    )
+    return _editorial_html(block)
+
+
+def _editorial_secnum(num: int, label: str) -> str:
+    """Editorial § NN marker emitted before each major H2."""
+    block = f'<div class="eegdash-ed-secnum">§ {num:02d}<b>{label}</b></div>'
+    return _editorial_html(block)
+
+
+def _format_editorial_caveat_section(context: Mapping[str, object]) -> str:
+    """Conditional caveat callout — only fires for small cohorts (n < 50)."""
+    n_sub_raw = _clean_value(context.get("n_subjects"))
+    try:
+        n_sub = int(n_sub_raw)
+    except (TypeError, ValueError):
+        return ""
+    if n_sub <= 0 or n_sub >= 50:
+        return ""
+    modality = _clean_value(context.get("modality")) or "EEG"
+    block = (
+        '<div class="eegdash-ed-caveat">'
+        '<div class="c-lbl">Editorial caveat · cohort size</div>'
+        "<h4>Treat this as a features-first dataset, "
+        "not a deep-learning playground.</h4>"
+        f"<p>With <b>n = {n_sub}</b> {modality} participants, this dataset sits "
+        "below the ~50-subject threshold where deep networks trained from scratch "
+        "typically pay off. A well-tuned feature pipeline — band-power features, "
+        "Riemannian geometry, linear classifier — is the recommended baseline. "
+        "Use deep models only with transfer learning or pre-trained backbones.</p>"
+        "<p>For splits, prefer <code>GroupShuffleSplit</code> with "
+        "<code>groups=subject_id</code> so windows from the same recording do not "
+        "leak between train and test.</p>"
+        "</div>"
+    )
+    return _editorial_html(block)
+
+
+def _format_electrodes_traces_pair(name: str, context: Mapping[str, object]) -> str:
+    """Render electrode layout + signal-preview iframe as a paired figure.
+
+    Outputs a 2-column figure block matching the v1-editorial-v2 Fig. 01:
+    live trace viewer on the left, electrode topomap on the right, with
+    shared meta strip on top. Falls back to whichever section is
+    available when one is missing.
+    """
+    electrodes = _format_electrodes_section(context).strip()
+    traces = _format_traces_section(context).strip()
+
+    # Strip Sphinx headings — both helpers prepend their own H2 heading
+    # text. We want the iframes only because the paired figure header
+    # comes from the editorial `Signal · Electrodes & live trace` H2.
+    def _strip_heading(s: str) -> str:
+        if not s:
+            return ""
+        lines = s.splitlines()
+        # Drop any leading "Title\n----" or "Title\n====" heading + blank.
+        i = 0
+        while i + 1 < len(lines):
+            if (
+                lines[i].strip()
+                and i + 1 < len(lines)
+                and (
+                    set(lines[i + 1].strip()) <= set("-=")
+                    and len(lines[i + 1].strip()) >= 3
+                )
+            ):
+                i += 2
+                continue
+            break
+        # Skip blank lines after the heading
+        while i < len(lines) and not lines[i].strip():
+            i += 1
+        return "\n".join(lines[i:])
+
+    electrodes_body = _strip_heading(electrodes)
+    traces_body = _strip_heading(traces)
+
+    if not electrodes_body and not traces_body:
+        return ""
+
+    n_subjects = _value_or_unknown(_clean_value(context.get("n_subjects")), "subjects")
+    n_records = _value_or_unknown(_clean_value(context.get("n_records")), "recordings")
+    n_channels = _clean_value(context.get("n_channels")) or "—"
+    sfreq = _editorial_sfreq_label(context)
+    modality = _editorial_modality_label(_clean_value(context.get("modality")))
+
+    meta_line = (
+        f"{n_channels} ch · {modality} · {sfreq} · "
+        f"{n_subjects} subjects, {n_records} recordings"
+    )
+
+    # Open the meta strip + a CSS-grid wrapper. Both child sections are
+    # already raw HTML (their respective helpers emit `.. raw:: html`
+    # directives wrapping <details> elements), so we sandwich them
+    # between two `.. raw:: html` blocks that provide the wrapper.
+    wrapper_open = (
+        ".. raw:: html\n\n"
+        '   <div class="eegdash-ed-figpair">\n'
+        '     <div class="figpair-meta">\n'
+        f"       <b>Fig. 01</b> Signal &amp; montage\n"
+        f'       <span class="right">{meta_line}</span>\n'
+        "     </div>\n"
+        '     <div class="figpair-grid">\n'
+    )
+    wrapper_close = ".. raw:: html\n\n   </div></div>\n"
+
+    parts = [wrapper_open]
+    if traces_body:
+        parts.extend(
+            [
+                '.. raw:: html\n\n   <div class="figpair-cell figpair-trace">\n',
+                traces_body,
+                "\n.. raw:: html\n\n   </div>\n",
+            ]
+        )
+    if electrodes_body:
+        parts.extend(
+            [
+                '.. raw:: html\n\n   <div class="figpair-cell figpair-montage">\n',
+                electrodes_body,
+                "\n.. raw:: html\n\n   </div>\n",
+            ]
+        )
+    parts.append(wrapper_close)
+    return "\n\n".join(parts)
+
+
+def _format_dataset_info_dropdown(context: Mapping[str, object]) -> str:
+    """Wrap the Dataset Information table + BibTeX in a folded dropdown.
+
+    The field-card rail already shows every value from this table; we
+    keep the table itself accessible (for searchability / structured
+    metadata) but tucked inside a `.. dropdown::` so the visible page
+    stays compact.
+    """
+    inner = _format_dataset_info_section(context)
+    if not inner.strip():
+        return ""
+    indented = "\n".join(f"   {line}" if line else "" for line in inner.split("\n"))
+    return (
+        ".. dropdown:: Full dataset metadata table\n"
+        "   :class-container: sd-shadow-sm eegdash-ed-info-dropdown\n"
+        "\n"
+        f"{indented}\n"
+    )
+
+
+def _format_editorial_access_modes_section(
+    context: Mapping[str, object],
+) -> str:
+    """Sidecar card listing the access modes available for this dataset.
+
+    Generic across all datasets — each row maps a programmatic entry point
+    (MNE Raw, braindecode BaseConcatDataset, PyTorch DataLoader, Zarr,
+    HuggingFace, Croissant) to a one-line description. Rendered after the
+    API Reference so readers see the path from API class to data loop.
+    """
+    class_name = str(context.get("class_name", "")).strip()
+    croissant_url = (
+        f"../../_static/dataset_generated/croissant/{class_name}.croissant.json"
+    )
+    hf_info = context.get("huggingface") or {}
+    hf_available = bool(hf_info.get("available"))
+    hf_url = str(hf_info.get("url") or "https://huggingface.co/EEGDash")
+
+    if hf_available:
+        dataset_id_lower = str(context.get("dataset_id") or "").lower()
+        hf_blurb = (
+            "Pre-bundled mirror at "
+            f'<a href="{hf_url}">EEGDash/{dataset_id_lower}</a> · '
+            'pull with <code>datasets.load_dataset("EEGDash/'
+            f'{dataset_id_lower}")</code>.'
+        )
+    else:
+        hf_blurb = (
+            "No per-dataset mirror published yet — browse the "
+            f'<a href="{hf_url}">EEGDash org listing</a> for sibling datasets.'
+        )
+
+    rows = [
+        (
+            ".raw",
+            (
+                "MNE <code>Raw</code> object — standard tools (filter, epoch, "
+                "ICA, plot_psd)."
+            ),
+            "mne",
+        ),
+        (
+            "BaseConcatDataset",
+            (
+                "Each record is a lazy <code>BaseDataset</code> from "
+                "braindecode — windowed via <code>create_windows_from_events</code>."
+            ),
+            "braindecode",
+        ),
+        (
+            "DataLoader",
+            (
+                "Wraps the windowed dataset into a PyTorch <code>DataLoader</code>; "
+                "supports parallel workers and on-the-fly augmentations."
+            ),
+            "pytorch",
+        ),
+        (
+            "Zarr cache",
+            (
+                "Optional braindecode Zarr mirror for fast resume; persisted to "
+                "<code>cache_dir</code>."
+            ),
+            "zarr",
+        ),
+        (
+            "Hugging Face",
+            hf_blurb,
+            "huggingface",
+        ),
+        (
+            "Croissant 1.0",
+            (
+                f"Machine-readable JSON-LD descriptor — "
+                f'<a href="{croissant_url}" download>{class_name}.croissant.json</a> '
+                f"(MLCommons schema, ingestible by PyTorch / TensorFlow / JAX)."
+            ),
+            "mlcommons",
+        ),
+    ]
+
+    rows_html = "".join(
+        '<div class="am-row">'
+        f'<span class="name">{name}</span>'
+        f'<span class="what">{what}</span>'
+        f'<span class="badge">{badge}</span>'
+        "</div>"
+        for name, what, badge in rows
+    )
+
+    block = (
+        '<div class="eegdash-ed-access">'
+        '<div class="sidecar-hdr">'
+        "<span><b>Access modes</b></span>"
+        '<span class="right">MNE → braindecode → PyTorch → ML</span>'
+        "</div>"
+        f'<div class="am-list">{rows_html}</div>'
+        "</div>"
+    )
+    return _editorial_html(block)
+
+
+def _format_editorial_provenance_section(context: Mapping[str, object]) -> str:
+    """Provenance strip — five-column band placed before the See Also footer.
+
+    All fields now carry real values where the API supplies them:
+    * BIDS validity → BIDSVersion if known, otherwise "—".
+    * Provenance → license + DOI (always real when both exist).
+    * Sidecars → real list pulled from the per-record probe.
+    * Machine-readable → schema.org/Dataset (inline JSON-LD on this page)
+      and Croissant 1.0 (downloadable JSON-LD generated alongside the page).
+    * Mirrors → OpenNeuro + NEMAR + optional paper URL.
+    """
+    class_name = str(context.get("class_name", "")).strip()
+    openneuro_url = str(context.get("openneuro_url", ""))
+    nemar_url = str(context.get("nemar_url", ""))
+    paper_url = _clean_value(context.get("paper_url"))
+    license_text = _value_or_unknown(_clean_value(context.get("license")), "license")
+    doi_clean = _normalize_doi(_clean_value(context.get("doi")))
+    doi_link = (
+        f'<a href="https://doi.org/{doi_clean}">{doi_clean}</a>'
+        if doi_clean
+        else '<span class="todo">DOI not on file</span>'
+    )
+
+    bids_version = _clean_value(context.get("bids_version"))
+    bids_cell = (
+        f'<div class="v ok">BIDS {bids_version}</div>'
+        if bids_version
+        else '<div class="v todo">version not on file</div>'
+    )
+
+    sidecars = context.get("sidecars_detected") or []
+    if sidecars:
+        sidecars_cell = f'<div class="v">{" · ".join(sidecars)}</div>'
+    else:
+        sidecars_cell = '<div class="v todo">not yet probed</div>'
+
+    croissant_url = (
+        f"../../_static/dataset_generated/croissant/{class_name}.croissant.json"
+    )
+
+    hf_info = context.get("huggingface") or {}
+    hf_url = str(hf_info.get("url") or "https://huggingface.co/EEGDash")
+    hf_link_label = "HuggingFace" if hf_info.get("available") else "HF org"
+
+    mirrors = [
+        f'<a href="{openneuro_url}">OpenNeuro</a>',
+        f'<a href="{nemar_url}">NEMAR</a>',
+        f'<a href="{hf_url}">{hf_link_label}</a>',
+    ]
+    if paper_url:
+        mirrors.append(f'<a href="{paper_url}">Paper</a>')
+
+    block = (
+        '<div class="eegdash-ed-prov">'
+        "<div>"
+        '<div class="lbl">BIDS</div>'
+        f"{bids_cell}"
+        "</div>"
+        "<div>"
+        '<div class="lbl">Sidecars</div>'
+        f"{sidecars_cell}"
+        "</div>"
+        "<div>"
+        '<div class="lbl">Provenance</div>'
+        f'<div class="v">{license_text} · {doi_link}</div>'
+        "</div>"
+        "<div>"
+        '<div class="lbl">Machine-readable</div>'
+        '<div class="v">'
+        '<a href="#dataset-information">schema.org/Dataset</a> · '
+        f'<a href="{croissant_url}" download>Croissant</a>'
+        "</div>"
+        "</div>"
+        "<div>"
+        '<div class="lbl">Mirrors</div>'
+        f'<div class="v">{" · ".join(mirrors)}</div>'
+        "</div>"
+        "</div>"
+    )
+    return _editorial_html(block)
+
+
+def _format_editorial_footnotes_section(
+    context: Mapping[str, object],
+    related: Sequence[str] = (),
+) -> str:
+    """Three-column footnotes block — Citation / Provenance / Related."""
+    title = _clean_value(context.get("title"))
+    authors = context.get("authors") or []
+    year = _clean_value(context.get("year"))
+    doi_clean = _normalize_doi(_clean_value(context.get("doi")))
+    source = _clean_value(context.get("source")) or "OpenNeuro"
+
+    if authors:
+        author_str = ", ".join(a.replace("*", "") for a in authors[:5])
+        if len(authors) > 5:
+            author_str += ", …"
+    else:
+        author_str = "Authors unspecified"
+    year_str = year if year and year != "—" else "n.d."
+    citation = (
+        f"{author_str} ({year_str}). <em>{title or context.get('class_name')}</em>."
+    )
+    if doi_clean:
+        citation += f" <code>{doi_clean}</code>"
+
+    provenance_notes = [
+        f'<span class="note-num">¹</span>Contributed to {source} in BIDS format.',
+        '<span class="note-num">²</span>Curated &amp; ingested by the EEGDash '
+        "catalog; see CITATION.cff for canonical reference.",
+    ]
+    if doi_clean:
+        provenance_notes.append(
+            f'<span class="note-num">³</span>Persistent identifier: '
+            f"<code>{doi_clean}</code>."
+        )
+    provenance_html = "".join(f"<p>{n}</p>" for n in provenance_notes)
+
+    if related:
+        related_items = "<br/>".join(
+            f'<a href="{rel}.html">{rel}</a>' for rel in related[:5]
+        )
+        related_html = f"<p>{related_items}</p>"
+        if len(related) > 5:
+            related_html += (
+                f"<p><em>+ {len(related) - 5} more — see See Also below →</em></p>"
+            )
+    else:
+        related_html = (
+            "<p><em>No sibling datasets cross-linked for this modality yet.</em></p>"
+        )
+
+    block = (
+        '<div class="eegdash-ed-footnotes">'
+        "<div>"
+        "<h5>Citation</h5>"
+        f"<p>{citation}</p>"
+        "</div>"
+        "<div>"
+        "<h5>Provenance</h5>"
+        f"{provenance_html}"
+        "</div>"
+        "<div>"
+        "<h5>Related &amp; sibling datasets</h5>"
+        f"{related_html}"
+        "</div>"
+        "</div>"
+    )
+    return _editorial_html(block)
+
+
+# ---------------------------------------------------------------------------
+# Croissant 1.0 export
+# ---------------------------------------------------------------------------
+# Croissant is MLCommons' JSON-LD format for machine-readable dataset
+# descriptions consumable by PyTorch, TensorFlow, JAX, and HuggingFace. We
+# write one .croissant.json file per dataset alongside the .rst output;
+# Sphinx copies the result to /_static/dataset_generated/croissant/ via the
+# standard static asset pipeline.
+#
+# Spec: https://docs.mlcommons.org/croissant/docs/croissant-spec.html
+
+CROISSANT_DIR = Path(__file__).parent / "_static" / "dataset_generated" / "croissant"
+
+CROISSANT_CONTEXT = {
+    "@language": "en",
+    "@vocab": "https://schema.org/",
+    "citeAs": "cr:citeAs",
+    "column": "cr:column",
+    "conformsTo": "dct:conformsTo",
+    "cr": "http://mlcommons.org/croissant/",
+    "data": {"@id": "cr:data", "@type": "@json"},
+    "dataType": {"@id": "cr:dataType", "@type": "@vocab"},
+    "dct": "http://purl.org/dc/terms/",
+    "extract": "cr:extract",
+    "field": "cr:field",
+    "fileObject": "cr:fileObject",
+    "fileProperty": "cr:fileProperty",
+    "fileSet": "cr:fileSet",
+    "format": "cr:format",
+    "includes": "cr:includes",
+    "isLiveDataset": "cr:isLiveDataset",
+    "jsonPath": "cr:jsonPath",
+    "key": "cr:key",
+    "md5": "cr:md5",
+    "parentField": "cr:parentField",
+    "path": "cr:path",
+    "recordSet": "cr:recordSet",
+    "references": "cr:references",
+    "regex": "cr:regex",
+    "repeated": "cr:repeated",
+    "replace": "cr:replace",
+    "sc": "https://schema.org/",
+    "separator": "cr:separator",
+    "source": "cr:source",
+    "subField": "cr:subField",
+    "transform": "cr:transform",
+}
+
+
+def _build_croissant_export(context: Mapping[str, object]) -> dict[str, object]:
+    """Build a Croissant 1.0 JSON-LD descriptor for one EEGDash dataset.
+
+    Backed entirely by API fields surfaced in the dataset context. We do
+    not synthesize a recordSet (the BIDS file layout already documents
+    that) — the export sticks to the Dataset metadata + a few FileObject
+    distributions so ML frameworks can discover the canonical S3 bucket
+    and the EEGDash records endpoint.
+    """
+    class_name = str(context.get("class_name", "")).strip()
+    dataset_id = str(context.get("dataset_id", "")).strip().lower()
+    title = _clean_value(context.get("title")) or class_name
+    description = (
+        f"{title}. {context.get('modality') or 'EEG'} dataset accessible via "
+        f"EEGDash as `{class_name}` with standardized BIDS metadata."
+    )
+
+    doi_clean = _normalize_doi(_clean_value(context.get("doi")))
+    license_url = _resolve_license_url(_clean_value(context.get("license")))
+    page_url = f"https://eegdash.org/api/dataset/eegdash.dataset.{class_name}.html"
+
+    creators = []
+    for author in context.get("authors") or []:
+        cleaned = str(author).replace("*", "").strip()
+        if cleaned:
+            creators.append({"@type": "sc:Person", "name": cleaned})
+
+    keywords = ["EEG", "BIDS", "neuroscience"]
+    datatypes = context.get("datatypes") or []
+    if isinstance(datatypes, list):
+        for dt in datatypes:
+            dt_s = str(dt).strip().upper()
+            if dt_s and dt_s not in keywords:
+                keywords.append(dt_s)
+    tags = context.get("tags") or {}
+    if isinstance(tags, dict):
+        for key in ("modality", "pathology", "type"):
+            value = _clean_value(tags.get(key))
+            if value and value not in keywords:
+                keywords.append(value)
+    if bool(context.get("hed_annotated")):
+        keywords.append("HED")
+
+    distribution: list[dict[str, object]] = []
+
+    # 1. Canonical S3 bucket (OpenNeuro / NEMAR).
+    storage = context.get("dataset_storage") or {}
+    s3_base = None
+    if isinstance(storage, dict):
+        s3_base = storage.get("base")
+    if s3_base:
+        distribution.append(
+            {
+                "@type": "cr:FileObject",
+                "@id": f"{dataset_id}-bids-bucket",
+                "name": f"{dataset_id} BIDS bucket",
+                "description": (
+                    f"Canonical BIDS-formatted dataset bucket for {class_name}."
+                ),
+                "contentUrl": str(s3_base),
+                "encodingFormat": "application/vnd.bids+directory",
+            }
+        )
+
+    # 2. OpenNeuro web entry (always present for openneuro source).
+    openneuro_url = _clean_value(context.get("openneuro_url"))
+    if openneuro_url:
+        distribution.append(
+            {
+                "@type": "cr:FileObject",
+                "@id": f"{dataset_id}-openneuro",
+                "name": f"{dataset_id} on OpenNeuro",
+                "description": "OpenNeuro dataset landing page.",
+                "contentUrl": openneuro_url,
+                "encodingFormat": "text/html",
+            }
+        )
+
+    # 3. EEGDash MongoDB records endpoint — records describe individual
+    # BIDS files, lazily fetchable for ML pipelines.
+    records_query = json.dumps({"dataset": dataset_id}, separators=(",", ":"))
+    distribution.append(
+        {
+            "@type": "cr:FileObject",
+            "@id": f"{dataset_id}-eegdash-records",
+            "name": f"{dataset_id} EEGDash records (live)",
+            "description": (
+                "Live JSON listing of every recording in this dataset, "
+                "with BIDS metadata, channel counts, and S3 storage keys."
+            ),
+            "contentUrl": (
+                "https://data.eegdash.org/api/eegdash/records"
+                f"?filter={quote(records_query, safe='')}"
+            ),
+            "encodingFormat": "application/json",
+            "isLiveDataset": True,
+        }
+    )
+
+    # 4. NEMAR mirror.
+    nemar_url = _clean_value(context.get("nemar_url"))
+    if nemar_url:
+        distribution.append(
+            {
+                "@type": "cr:FileObject",
+                "@id": f"{dataset_id}-nemar",
+                "name": f"{dataset_id} on NeMAR",
+                "description": "NEMAR dataset landing page with pipeline plots.",
+                "contentUrl": nemar_url,
+                "encodingFormat": "text/html",
+            }
+        )
+
+    # 5. HuggingFace mirror under the EEGDash org. Only emit the dataset-
+    # specific entry when the probe confirmed the dataset exists; otherwise
+    # skip — distributing the bare org page as a "distribution" would
+    # confuse consumers.
+    hf_info = context.get("huggingface") or {}
+    hf_available = bool(hf_info.get("available"))
+    hf_url = str(hf_info.get("url") or "") if hf_available else ""
+    if hf_available and hf_url:
+        distribution.append(
+            {
+                "@type": "cr:FileObject",
+                "@id": f"{dataset_id}-huggingface",
+                "name": f"EEGDash/{dataset_id} on Hugging Face",
+                "description": (
+                    "Hugging Face dataset mirror — ready for "
+                    "`datasets.load_dataset(...)` pulls."
+                ),
+                "contentUrl": hf_url,
+                "encodingFormat": "application/vnd.huggingface-dataset+json",
+            }
+        )
+
+    document: dict[str, object] = {
+        "@context": CROISSANT_CONTEXT,
+        "@type": "sc:Dataset",
+        "conformsTo": "http://mlcommons.org/croissant/1.0",
+        "name": dataset_id or class_name,
+        "alternateName": [class_name],
+        "description": description,
+        "url": page_url,
+        "keywords": keywords,
+        "isAccessibleForFree": True,
+        "includedInDataCatalog": {
+            "@type": "sc:DataCatalog",
+            "name": "EEG Dash",
+            "url": "https://eegdash.org/",
+        },
+    }
+
+    if license_url:
+        document["license"] = license_url
+
+    if creators:
+        document["creator"] = creators
+
+    senior = _clean_value(context.get("senior_author"))
+    if senior:
+        document["editor"] = {"@type": "sc:Person", "name": senior}
+
+    funding = context.get("funding") or []
+    if funding:
+        document["funder"] = [
+            {"@type": "sc:Organization", "name": str(f).strip()}
+            for f in funding
+            if str(f).strip()
+        ]
+
+    year = _clean_value(context.get("year"))
+    if year and year != "—":
+        document["datePublished"] = year
+
+    if doi_clean:
+        document["identifier"] = f"doi:{doi_clean}"
+        same_as = [
+            f"https://doi.org/{doi_clean}",
+            openneuro_url or page_url,
+        ]
+        if hf_available and hf_url:
+            same_as.append(hf_url)
+        document["sameAs"] = same_as
+        # Croissant prefers a citeAs property if a DOI is present.
+        document["citeAs"] = (
+            f"{', '.join(str(a) for a in (context.get('authors') or [])[:5]) or 'EEGDash'} "
+            f"({year or 'n.d.'}). {title}. doi:{doi_clean}"
+        )
+
+    # Provide a BIDS version when known so consumers can dispatch on schema
+    # generation. Falls back to omission rather than guessing.
+    bids_version = _clean_value(context.get("bids_version"))
+    if bids_version:
+        document["version"] = bids_version
+
+    if distribution:
+        document["distribution"] = distribution
+
+    return document
+
+
+def _resolve_license_url(license_text: str) -> str:
+    """Best-effort SPDX → URL mapping for the Croissant `license` field."""
+    if not license_text:
+        return ""
+    lic = license_text.strip().lower()
+    if lic in ("cc0", "cc0 1.0", "cc-0", "cc0-1.0"):
+        return "https://creativecommons.org/publicdomain/zero/1.0/"
+    if lic.startswith("cc-by-sa") or lic.startswith("cc by-sa"):
+        return "https://creativecommons.org/licenses/by-sa/4.0/"
+    if lic.startswith("cc-by") or lic.startswith("cc by"):
+        return "https://creativecommons.org/licenses/by/4.0/"
+    if lic.startswith("mit"):
+        return "https://opensource.org/license/mit/"
+    if lic.startswith("apache"):
+        return "https://www.apache.org/licenses/LICENSE-2.0"
+    return license_text
+
+
+def _write_croissant_export(class_name: str, context: Mapping[str, object]) -> Path:
+    """Write the Croissant JSON-LD for ``class_name`` and return its path.
+
+    Writes are atomic via ``os.replace`` so that an interrupted build
+    cannot leave a reader observing a half-serialised file.
+    """
+    CROISSANT_DIR.mkdir(parents=True, exist_ok=True)
+    path = CROISSANT_DIR / f"{class_name}.croissant.json"
+    document = _build_croissant_export(context)
+    payload = json.dumps(document, indent=2, ensure_ascii=False, sort_keys=False)
+    if path.exists():
+        try:
+            if path.read_text(encoding="utf-8") == payload:
+                return path
+        except OSError:
+            pass  # fall through to rewrite
+    tmp = path.with_suffix(path.suffix + ".tmp")
+    tmp.write_text(payload, encoding="utf-8")
+    os.replace(tmp, path)
+    return path
+
+
+def _format_editorial_colophon_section(context: Mapping[str, object]) -> str:
+    """Footer band — typography credit, FAIR exports, DOI."""
+    class_name = str(context.get("class_name", "")).strip()
+    license_text = _value_or_unknown(_clean_value(context.get("license")), "license")
+    doi_clean = _normalize_doi(_clean_value(context.get("doi")))
+    doi_html = (
+        f'<a href="https://doi.org/{doi_clean}">{doi_clean}</a>'
+        if doi_clean
+        else '<span style="opacity:.6">DOI not on file</span>'
+    )
+
+    croissant_url = (
+        f"../../_static/dataset_generated/croissant/{class_name}.croissant.json"
+    )
+    hf_info = context.get("huggingface") or {}
+    hf_url = str(hf_info.get("url") or "https://huggingface.co/EEGDash")
+    hf_link_label = (
+        "Hugging Face mirror" if hf_info.get("available") else "Hugging Face org"
+    )
+    block = (
+        '<footer class="eegdash-ed-colophon">'
+        f"<div>EEGdash · <b>The Dataset Brief — {class_name}</b></div>"
+        "<div>FAIR exports · "
+        '<a href="#dataset-information">schema.org/Dataset</a> · '
+        f'<a href="{croissant_url}" download>Croissant 1.0</a> · '
+        f'<a href="{hf_url}">{hf_link_label}</a></div>'
+        f"<div>{license_text} · <b>{doi_html}</b></div>"
+        "</footer>"
+    )
+    return _editorial_html(block)
+
+
 def _format_dataset_meta_section(
     context: Mapping[str, object],
 ) -> tuple[str, str]:
@@ -3181,24 +5213,53 @@ def _process_dataset_item(
         meta_section=meta_section,
         jsonld_section=_format_dataset_jsonld_section(name, context),
         hero_section=_format_hero_section(context),
-        dataset_info_section=_format_dataset_info_section(context),
         readme_section=_format_readme_section(context),
-        highlights_section=_format_highlights_section(context),
         quickstart_section=_format_quickstart_section(context),
-        electrodes_section=_format_electrodes_section(context),
         recording_stats_section=_format_recording_stats_section(context),
         nemar_analysis_section=_format_nemar_analysis_section(context),
-        traces_section=_format_traces_section(context),
         explorer_section=_format_explorer_section(name, context),
-        api_section=_format_api_section(name),
+        api_section=_format_api_section(name, context),
         see_also_section=_format_see_also_section(dataset_id, name, related),
         feedback_section=_format_feedback_section(dataset_id, dataset_title),
+        # Combined electrodes + signal-preview figure block (replaces the
+        # old separate "Electrode Layout" and "Signal Preview" sections).
+        electrodes_traces_pair=_format_electrodes_traces_pair(name, context),
+        # Bibtex + Dataset Information table relocated into a single
+        # collapsible dropdown so the field-card rail stays the single
+        # source of truth for the data card.
+        dataset_info_dropdown_section=_format_dataset_info_dropdown(context),
+        # Editorial Brief — re-skin chrome lifted from v1-editorial-v2.html
+        editorial_kicker_section=_format_editorial_kicker_section(context),
+        editorial_fieldcard_section=_format_editorial_fieldcard_section(context),
+        editorial_layers_section=_format_editorial_layers_section(context),
+        editorial_secnum_quickstart=_editorial_secnum(1, "Access · Get started"),
+        editorial_secnum_about=_editorial_secnum(2, "Study · The README"),
+        editorial_secnum_info=_editorial_secnum(3, "Cohort · Participants"),
+        editorial_secnum_tech=_editorial_secnum(4, "Signal · Electrodes & trace"),
+        editorial_secnum_manifest=_editorial_secnum(5, "Manifest · BIDS tree"),
+        editorial_secnum_api=_editorial_secnum(6, "API · Programmatic access"),
+        editorial_caveat_section=_format_editorial_caveat_section(context),
+        editorial_access_modes_section=_format_editorial_access_modes_section(context),
+        editorial_provenance_section=_format_editorial_provenance_section(context),
+        editorial_footnotes_section=_format_editorial_footnotes_section(
+            context, related
+        ),
+        editorial_colophon_section=_format_editorial_colophon_section(context),
     )
     # Keep the file name with full prefix for URL stability
     page_path = dataset_dir / f"eegdash.dataset.{name}.rst"
     if _write_if_changed(page_path, page_content):
         rel = page_path.relative_to(srcdir)
         LOGGER.info("[dataset-docs] Updated %s", rel)
+
+    # Croissant JSON-LD export — written once per dataset under _static so
+    # Sphinx serves it at /_static/dataset_generated/croissant/<name>.croissant.json
+    # alongside the editorial dataset page.
+    try:
+        _write_croissant_export(name, context)
+    except Exception as exc:  # never let Croissant block the build
+        LOGGER.warning("[dataset-docs] Croissant export failed for %s: %s", name, exc)
+
     return page_path
 
 

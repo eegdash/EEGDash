@@ -151,9 +151,7 @@ def test_dataset_gaps(tmp_path):
         valid_record = {"dataset": "ds001", "participant_tsv": {"age": 25}}
         ds.eeg_dash_instance.find.return_value = [valid_record]
         with patch("eegdash.dataset.dataset.validate_record", return_value=[]):
-            with patch(
-                "eegdash.bids_metadata.merge_participants_fields"
-            ) as mock_merge:
+            with patch("eegdash.bids_metadata.merge_participants_fields") as mock_merge:
                 with patch("eegdash.dataset.dataset.EEGDashRaw"):
                     EEGDashDataset._find_datasets(
                         ds, query={}, description_fields=[], base_dataset_kwargs={}
@@ -720,7 +718,7 @@ def test_dataset_recursive_search(tmp_path):
     (ds_dir / "sub-01" / "eeg" / "sub-01_task-rest_eeg.set").touch()
 
     # In download=False mode, it calls _find_local_bids_records which calls discover_local_bids_records
-    real_ds = EEGDashDataset(
+    EEGDashDataset(
         dataset="ds",
         download=False,
         _suppress_comp_warning=True,

@@ -34,6 +34,7 @@ from __future__ import annotations
 import json
 import logging
 import os
+import re
 import urllib.error
 import urllib.request
 from datetime import datetime, timezone
@@ -68,13 +69,37 @@ _INSTANCE_CACHE: dict[tuple[str, str, int], "DatasetSnapshot"] = {}
 _INSTANCE_CACHE_LOCK = Lock()
 
 
+# Match the server's ``/snapshots/{date}`` route shape — ISO ``YYYY-MM-DD``
+# only. Reject anything else early with a ``ValueError`` so a typo
+# doesn't reach the network as a wildcard.
+_SNAPSHOT_DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+
+
 class DatasetSnapshot:
     """A frozen view of the dataset catalog used by one docs build.
 
-    Build it with :meth:`build` (network) or :meth:`load` (disk). All
-    consumers should read through the accessor methods rather than
+    There are three equal entry points, one per lifecycle:
+
+    - :meth:`build` — fetch the *current* catalog from the live API
+      (with disk / package-CSV fallback). Use this for normal docs
+      builds that always want the freshest data.
+    - :meth:`load` — re-hydrate a snapshot that was previously written
+      to disk (manifest JSON + parquet rows). Use this in tests, or
+      when round-tripping a snapshot through CI artefacts.
+    - :meth:`pin` — fetch a *specific dated* snapshot from the server's
+      ``/snapshots/{date}`` endpoint, byte-for-byte the same payload
+      that was frozen on that date. Use this for reproducible docs
+      builds (CI pinned to a fixed date) or for diffing two builds.
+
+    All three return the same kind of object; consumers should never
+    have to know which classmethod produced their snapshot. The
+    :attr:`source`, :attr:`fetched_at`, and :attr:`pinned_at`
+    properties self-report the provenance honestly.
+
+    All consumers should read through the accessor methods rather than
     poking at the underlying fields directly — the field set is
-    allowed to grow (see :attr:`manifest` placeholder for A2).
+    allowed to grow (see :attr:`manifest` for A2 and :attr:`pinned_at`
+    for A6).
 
     Attributes
     ----------
@@ -110,6 +135,12 @@ class DatasetSnapshot:
         ``last_stats_computed_at``, ``git_sha``, and ``name_coverage``.
         The schema is owned by the server (review §3 A2); this snapshot
         re-exposes it verbatim.
+    pinned_at : str | None
+        The ISO date (``YYYY-MM-DD``) this snapshot was pinned to via
+        :meth:`pin`, or ``None`` when the snapshot came from
+        :meth:`build` or :meth:`load`. Lets a consumer tell apart a
+        snapshot pinned to ``2026-04-01`` from a live build on the
+        same source tree.
 
     """
 
@@ -130,6 +161,7 @@ class DatasetSnapshot:
     fetched_at: datetime | None = None
     api_errors: list[str] = []  # noqa: RUF012 — overridden per-instance
     manifest: dict[str, Any] = {}  # noqa: RUF012 — overridden per-instance
+    pinned_at: str | None = None
 
     def __init__(
         self,
@@ -141,6 +173,7 @@ class DatasetSnapshot:
         fetched_at: datetime,
         api_errors: list[str] | None = None,
         manifest: dict[str, Any] | None = None,
+        pinned_at: str | None = None,
     ) -> None:
         # Snapshots are conceptually frozen. We don't use @dataclass
         # because dataclass fields don't surface in ``dir(cls)`` /
@@ -154,6 +187,7 @@ class DatasetSnapshot:
         object.__setattr__(self, "fetched_at", fetched_at)
         object.__setattr__(self, "api_errors", list(api_errors or []))
         object.__setattr__(self, "manifest", dict(manifest or {}))
+        object.__setattr__(self, "pinned_at", pinned_at)
 
     def __setattr__(self, name: str, value: Any) -> None:  # noqa: D401
         raise AttributeError(f"DatasetSnapshot is immutable; cannot assign to {name!r}")
@@ -357,6 +391,103 @@ class DatasetSnapshot:
             fetched_at=fetched_at,
             api_errors=list(manifest.get("api_errors") or []),
             manifest=manifest,
+        )
+
+    @classmethod
+    def pin(
+        cls,
+        date: str,
+        *,
+        api_base: str | None = None,
+        database: str | None = None,
+    ) -> "DatasetSnapshot":
+        """Pin to the server's dated snapshot for reproducible builds.
+
+        Fetches ``GET {api_base}/{database}/snapshots/{date}`` and
+        reconstructs a snapshot from the frozen ``chart_data`` +
+        ``build_manifest`` payload. The server's snapshot endpoint
+        emits ``Cache-Control: public, max-age=31536000, immutable``,
+        so the HTTP layer (or any future CDN) handles caching — this
+        method deliberately does NOT touch the disk cache or the
+        in-process ``_INSTANCE_CACHE`` used by :meth:`build`.
+
+        Use case: a docs CI pipeline pins to a fixed date so two
+        successive builds against the same source tree produce
+        byte-identical artefacts even when the live catalog ingests
+        new datasets between runs. Diffing two builds reduces to a
+        pair of pinned snapshots with different dates.
+
+        Parameters
+        ----------
+        date : str
+            ISO calendar date, ``YYYY-MM-DD``. Anything else raises
+            :class:`ValueError` before any network call is attempted.
+        api_base : str | None
+            Base URL of the EEGDash server. Defaults to the same value
+            :meth:`build` uses (``https://data.eegdash.org/api``).
+        database : str | None
+            Database / shard name. Defaults to ``eegdash``.
+
+        Returns
+        -------
+        DatasetSnapshot
+            A snapshot whose :attr:`source` is ``"live"`` (the
+            server's snapshot is authoritative live data, just
+            frozen), :attr:`fetched_at` is the original creation
+            time from the payload, and :attr:`pinned_at` is the
+            requested date.
+
+        Raises
+        ------
+        ValueError
+            If ``date`` does not match the ``YYYY-MM-DD`` ISO shape.
+        LookupError
+            If the server returns 404 for the requested date.
+
+        """
+        if not isinstance(date, str) or not _SNAPSHOT_DATE_RE.match(date):
+            raise ValueError(
+                f"date must match YYYY-MM-DD; got {date!r}. "
+                "Use DatasetSnapshot.build() for the current state."
+            )
+
+        resolved_api_base = (api_base or "https://data.eegdash.org/api").rstrip("/")
+        resolved_database = database or "eegdash"
+
+        url = f"{resolved_api_base}/{resolved_database}/snapshots/{date}"
+        try:
+            payload = _http_get_json(url)
+        except urllib.error.HTTPError as exc:
+            if exc.code == 404:
+                raise LookupError(f"snapshot for {date} not found") from exc
+            raise
+
+        chart_data = payload.get("chart_data") or {}
+        build_manifest = payload.get("build_manifest") or {}
+        created_at_raw = payload.get("created_at")
+        if not isinstance(created_at_raw, str):
+            raise ValueError(
+                f"snapshot payload for {date} missing or malformed 'created_at'"
+            )
+        # ``datetime.fromisoformat`` in 3.10 doesn't accept the
+        # trailing ``Z``; normalise to ``+00:00`` so the parse always
+        # round-trips.
+        fetched_at = datetime.fromisoformat(created_at_raw.replace("Z", "+00:00"))
+
+        datasets = chart_data.get("datasets") or []
+        rows = _rows_from_chart_data(datasets)
+        aggregations = chart_data.get("aggregations") or {}
+        montages = _montages_from_chart_data(datasets)
+
+        return cls(
+            rows=rows,
+            aggregations=aggregations,
+            montages=montages,
+            source="live",
+            fetched_at=fetched_at,
+            api_errors=[],
+            manifest=dict(build_manifest),
+            pinned_at=date,
         )
 
 

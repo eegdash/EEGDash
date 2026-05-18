@@ -331,6 +331,7 @@ def test_public_surface_complete():
     required = {
         "build",
         "load",
+        "pin",
         "rows",
         "aggregations",
         "montage",
@@ -339,6 +340,7 @@ def test_public_surface_complete():
         "dataset_count",
         "manifest",
         "api_errors",
+        "pinned_at",
     }
     missing = (
         required
@@ -991,6 +993,205 @@ def test_manifest_not_fetched_in_csv_fallback_path():
     # The fallback's local projection is what surfaces on ``manifest``.
     assert snapshot.manifest["source"] == "package-csv"
     assert snapshot.manifest["dataset_count"] == snapshot.dataset_count
+
+
+# ---------------------------------------------------------------------------
+# pin(date) — reproducible builds via /snapshots/{date} (arch #6)
+# ---------------------------------------------------------------------------
+
+
+def _snapshot_payload(
+    date: str = "2026-05-18",
+    *,
+    dataset_count: int = 1,
+    created_at: str = "2026-05-18T23:02:53.561107Z",
+    include_montage: bool = False,
+    chart_data_override: dict | None = None,
+    build_manifest_override: dict | None = None,
+) -> dict:
+    """A minimal but well-formed ``/snapshots/{date}`` payload.
+
+    Mirrors the production shape: ``{date, dataset_count, git_sha,
+    schema_version, chart_data, build_manifest, created_at}`` where
+    ``chart_data`` is the frozen ``/datasets/chart-data`` response.
+    """
+    cd = _chart_data_payload("ds_pin_1")
+    cd["count"] = dataset_count
+    cd["database"] = "eegdash"
+    if include_montage:
+        cd["datasets"][0]["montage"] = {
+            "hash": "42b9e8daf4ff0e6d",
+            "subject_count": 54,
+            "modality": "eeg",
+            "n_sensors": 63,
+            "space_declared": "CapTrak",
+            "units_declared": "mm",
+            "channel_names": ["AF3", "AF4", "Cz"],
+        }
+    if chart_data_override is not None:
+        cd.update(chart_data_override)
+
+    bm = _server_manifest(dataset_count=dataset_count)
+    if build_manifest_override is not None:
+        bm.update(build_manifest_override)
+
+    return {
+        "date": date,
+        "dataset_count": dataset_count,
+        "git_sha": "unknown",
+        "schema_version": "2.1.0",
+        "chart_data": cd,
+        "build_manifest": bm,
+        "created_at": created_at,
+    }
+
+
+def test_pin_valid_date_returns_snapshot():
+    """``pin(date)`` fetches ``/snapshots/{date}`` and surfaces the
+    frozen payload's provenance: ``source == "live"``, ``pinned_at``
+    set to the requested date, ``manifest`` byte-for-byte from the
+    payload's ``build_manifest``.
+    """
+    payload = _snapshot_payload(date="2026-05-18", dataset_count=1)
+
+    def fake_urlopen(url, *_, **__):
+        url_str = url if isinstance(url, str) else url.get_full_url()
+        assert "/snapshots/2026-05-18" in url_str, f"unexpected URL: {url_str}"
+        return _make_urlopen_response(payload)
+
+    with patch("urllib.request.urlopen", side_effect=fake_urlopen):
+        snapshot = DatasetSnapshot.pin("2026-05-18")
+
+    assert snapshot.source == "live"
+    assert snapshot.pinned_at == "2026-05-18"
+    assert snapshot.dataset_count == 1
+    assert snapshot.manifest == payload["build_manifest"]
+    assert snapshot.api_errors == []
+
+
+def test_pin_invalid_date_raises_value_error():
+    """Anything not matching ``YYYY-MM-DD`` must raise before any
+    network call. Catching the typo at the boundary keeps a wildcard
+    or path-injection from reaching the server route.
+    """
+    with pytest.raises(ValueError, match="YYYY-MM-DD"):
+        DatasetSnapshot.pin("not-a-date")
+    with pytest.raises(ValueError):
+        DatasetSnapshot.pin("2026/05/18")
+    with pytest.raises(ValueError):
+        DatasetSnapshot.pin("2026-5-18")  # missing zero pad
+    with pytest.raises(ValueError):
+        DatasetSnapshot.pin("")
+
+
+def test_pin_404_raises_lookup_error():
+    """A 404 from the server means "no snapshot frozen for that date".
+    Surface as ``LookupError`` so the caller can decide whether to
+    retry against a different date or fall back to :meth:`build`.
+    """
+    err = urllib.error.HTTPError(
+        "https://stub.example/eegdash/snapshots/2026-04-01",
+        404,
+        "not found",
+        {},
+        None,
+    )
+    with patch("urllib.request.urlopen", side_effect=err):
+        with pytest.raises(LookupError, match="2026-04-01"):
+            DatasetSnapshot.pin("2026-04-01")
+
+
+def test_pin_does_not_share_cache_with_build():
+    """A pinned snapshot and a live :meth:`build` must be different
+    objects. The in-process ``_INSTANCE_CACHE`` keys :meth:`build`
+    results by ``(api_base, database, limit)``; if :meth:`pin` ever
+    leaked into the same cache, a pin for one date could shadow the
+    live build (or vice-versa).
+    """
+    snapshot_payload = _snapshot_payload(date="2026-05-18", dataset_count=1)
+    build_chart = _chart_data_payload("ds_live_after_pin")
+    build_manifest = _server_manifest(dataset_count=1)
+
+    def fake_urlopen(url, *_, **__):
+        url_str = url if isinstance(url, str) else url.get_full_url()
+        if "/snapshots/2026-05-18" in url_str:
+            return _make_urlopen_response(snapshot_payload)
+        if "datasets/chart-data" in url_str:
+            return _make_urlopen_response(build_chart)
+        if "build-manifest" in url_str:
+            return _make_urlopen_response(build_manifest)
+        raise AssertionError(f"unexpected URL: {url_str}")
+
+    with patch("urllib.request.urlopen", side_effect=fake_urlopen):
+        s1 = DatasetSnapshot.pin("2026-05-18")
+        s2 = DatasetSnapshot.build(
+            api_base="https://data.eegdash.org/api", database="eegdash"
+        )
+
+    assert s1 is not s2
+    # Distinguishing provenance flags must also differ.
+    assert s1.pinned_at == "2026-05-18"
+    assert s2.pinned_at is None
+    # And the underlying row identities are different.
+    assert s1.rows().iloc[0]["dataset"] == "ds_pin_1"
+    assert s2.rows().iloc[0]["dataset"] == "ds_live_after_pin"
+
+    # Calling pin() twice for the same date returns a fresh object;
+    # we don't dedupe pinned snapshots in-process (the immutable HTTP
+    # cache is what makes the repeat cheap).
+    with patch("urllib.request.urlopen", side_effect=fake_urlopen):
+        s1b = DatasetSnapshot.pin("2026-05-18")
+    assert s1b is not s1
+
+
+def test_pin_carries_montages_when_included():
+    """When the frozen ``chart_data`` carries per-dataset ``montage``
+    objects, :meth:`pin` runs the same parser as the live path so the
+    docs viewer renders a real electrode layout instead of the
+    placeholder.
+    """
+    payload = _snapshot_payload(
+        date="2026-05-18", dataset_count=1, include_montage=True
+    )
+
+    def fake_urlopen(url, *_, **__):
+        return _make_urlopen_response(payload)
+
+    with patch("urllib.request.urlopen", side_effect=fake_urlopen):
+        snapshot = DatasetSnapshot.pin("2026-05-18")
+
+    mont = snapshot.montage("ds_pin_1")
+    assert mont is not None
+    assert mont["hash"] == "42b9e8daf4ff0e6d"
+    assert mont["modality"] == "eeg"
+    assert mont["n_sensors"] == 63
+    assert mont["n_channels"] == 63
+    assert mont["label"] == "EEG · 63 sensors"
+    assert mont["channel_names"] == ["AF3", "AF4", "Cz"]
+
+
+def test_pin_fetched_at_is_original_creation_time():
+    """``fetched_at`` carries the ``created_at`` from the frozen
+    payload, NOT the wall clock at pin time. That's the whole point
+    of a pinned snapshot: reproducibility means the timestamp is part
+    of the immutable artefact.
+    """
+    created_at = "2026-04-01T08:15:30.123456Z"
+    payload = _snapshot_payload(
+        date="2026-04-01", dataset_count=1, created_at=created_at
+    )
+
+    def fake_urlopen(url, *_, **__):
+        return _make_urlopen_response(payload)
+
+    with patch("urllib.request.urlopen", side_effect=fake_urlopen):
+        snapshot = DatasetSnapshot.pin("2026-04-01")
+
+    # Server emits trailing 'Z'; the parser normalises to +00:00 so
+    # ``fromisoformat`` round-trips on Python < 3.11.
+    expected = datetime.fromisoformat(created_at.replace("Z", "+00:00"))
+    assert snapshot.fetched_at == expected
+    assert snapshot.fetched_at.tzinfo is not None
 
 
 # ---------------------------------------------------------------------------

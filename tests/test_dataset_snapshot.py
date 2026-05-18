@@ -1,0 +1,427 @@
+"""Unit tests for :class:`eegdash.dataset.snapshot.DatasetSnapshot`.
+
+Coverage targets the contract documented in
+``docs_pipeline_architecture_review.md`` §3 B1 and B2 and verified by
+``docs_pipeline_validation_plan.md`` §3 step 5:
+
+- Happy path (``source == "live"``, dataset_count > 0) — when the live
+  API is reachable from the test environment.
+- ``source == "cached"`` after a successful build primes the disk cache
+  and a subsequent build hits a forced-failure network.
+- ``source == "package-csv"`` when neither the live API nor a disk
+  cache resolves.
+- :attr:`api_errors` is populated whenever a fallback fires.
+- Cache key includes ``api_base`` *and* ``database`` so two consumers
+  pointed at different shards never see each other's data — the
+  explicit bug ``_DATASET_SUMMARY_CACHE`` had in ``conf.py``.
+
+Every test stubs the network so the suite stays offline-safe.
+``test_build_live`` is also marked ``@pytest.mark.network`` so a
+CI/local run with the marker enabled can hit the real production API
+when that visibility is desired.
+"""
+
+from __future__ import annotations
+
+import json
+import urllib.error
+from datetime import datetime, timezone
+from pathlib import Path
+from unittest.mock import MagicMock, patch
+
+import pandas as pd
+import pytest
+
+from eegdash.dataset import snapshot as snapshot_mod
+from eegdash.dataset.snapshot import DatasetSnapshot
+
+# ---------------------------------------------------------------------------
+# Test fixtures
+# ---------------------------------------------------------------------------
+
+
+@pytest.fixture(autouse=True)
+def _isolated_caches(tmp_path, monkeypatch):
+    """Redirect both the in-memory and on-disk snapshot caches.
+
+    Each test gets a private temp directory for ``snapshot_*.parquet``
+    files and a fresh in-memory instance cache so the order of test
+    execution can never leak state across cases.
+    """
+    snapshot_mod._reset_instance_cache_for_testing()
+    monkeypatch.setattr(snapshot_mod, "get_default_cache_dir", lambda: tmp_path)
+    yield
+    snapshot_mod._reset_instance_cache_for_testing()
+
+
+def _chart_data_payload(dataset_id: str = "ds_live_1") -> dict:
+    """A minimal but well-formed ``/datasets/chart-data`` response."""
+    return {
+        "success": True,
+        "datasets": [
+            {
+                "dataset_id": dataset_id,
+                "name": f"{dataset_id} dataset",
+                "demographics": {"subjects_count": 12},
+                "total_files": 30,
+                "tasks": ["rest"],
+                "sessions": ["s1"],
+                "recording_modality": ["eeg"],
+                "tags": {"modality": ["visual"]},
+                "size_bytes": 1024,
+                "source": "openneuro",
+            }
+        ],
+        "aggregations": {
+            "totals": {"datasets": 1, "subjects": 12},
+            "modality_counts": {"eeg": 1},
+            "source_counts": {"openneuro": 1},
+        },
+    }
+
+
+def _summary_payload(dataset_id: str = "ds_summary_1") -> dict:
+    """A minimal ``/datasets/summary`` response (legacy shape)."""
+    return {
+        "success": True,
+        "data": [
+            {
+                "dataset_id": dataset_id,
+                "name": f"{dataset_id} dataset",
+                "demographics": {"subjects_count": 5},
+                "total_files": 10,
+                "tasks": ["task"],
+                "recording_modality": ["eeg"],
+                "tags": {},
+            }
+        ],
+    }
+
+
+def _make_urlopen_response(payload: dict) -> MagicMock:
+    response = MagicMock()
+    response.read.return_value = json.dumps(payload).encode("utf-8")
+    response.__enter__ = MagicMock(return_value=response)
+    response.__exit__ = MagicMock(return_value=False)
+    return response
+
+
+# ---------------------------------------------------------------------------
+# Required cases per the task spec (≥ 5)
+# ---------------------------------------------------------------------------
+
+
+def test_build_live_via_stubbed_http():
+    """Happy path: chart-data returns success → source == "live".
+
+    Offline-safe equivalent of the ``test_build_live`` case in the
+    task spec. The real-network version is at the bottom of this file
+    behind ``@pytest.mark.network``.
+    """
+    response = _make_urlopen_response(_chart_data_payload("ds_live_1"))
+
+    with patch("urllib.request.urlopen", return_value=response):
+        snapshot = DatasetSnapshot.build(
+            api_base="https://stub.example",
+            database="liveshard",
+            limit=10,
+        )
+
+    assert snapshot.source == "live"
+    assert snapshot.dataset_count == 1
+    assert snapshot.rows().iloc[0]["dataset"] == "ds_live_1"
+    assert snapshot.aggregations()["modality_counts"] == {"eeg": 1}
+    assert snapshot.api_errors == []
+    assert snapshot.fetched_at.tzinfo is not None
+    # Manifest carries enough provenance for downstream consumers
+    # before A2's ``/build-manifest`` ships.
+    assert snapshot.manifest["source"] == "live"
+    assert snapshot.manifest["dataset_count"] == 1
+
+
+def test_cached_on_api_failure_after_priming(tmp_path):
+    """First live call primes the disk cache; second call (forced
+    failure) reads the cache and tags source == "cached".
+    """
+    response = _make_urlopen_response(_chart_data_payload("ds_cached_1"))
+    api_base = "https://stub.example"
+    database = "cacheshard"
+
+    # 1. Prime: one successful live build writes the disk cache.
+    with patch("urllib.request.urlopen", return_value=response):
+        primed = DatasetSnapshot.build(api_base=api_base, database=database)
+    assert primed.source == "live"
+    # Reset in-memory instance cache so the next call exercises the
+    # *disk* cache rather than the process cache.
+    snapshot_mod._reset_instance_cache_for_testing()
+
+    # 2. Force-fail network: chart-data and summary both raise; snapshot
+    # must read the disk cache and tag source == "cached".
+    with patch(
+        "urllib.request.urlopen",
+        side_effect=urllib.error.URLError("network unreachable"),
+    ):
+        cached = DatasetSnapshot.build(api_base=api_base, database=database)
+
+    assert cached.source == "cached"
+    assert cached.dataset_count == 1
+    assert cached.rows().iloc[0]["dataset"] == "ds_cached_1"
+    assert cached.api_errors, "fallback paths must record the API error text"
+    # mtime of the parquet file is the snapshot's fetched_at.
+    parquet_path = snapshot_mod._disk_cache_path(database)
+    assert parquet_path.exists()
+    expected = datetime.fromtimestamp(parquet_path.stat().st_mtime, tz=timezone.utc)
+    assert cached.fetched_at == expected
+
+
+def test_csv_fallback_on_no_cache(tmp_path):
+    """No disk cache + dead API + present package CSV → source == "package-csv"."""
+    api_base = "https://stub.example"
+    database = "no_cache_shard"
+
+    with patch(
+        "urllib.request.urlopen",
+        side_effect=urllib.error.URLError("network unreachable"),
+    ):
+        snapshot = DatasetSnapshot.build(api_base=api_base, database=database)
+
+    assert snapshot.source == "package-csv"
+    # The shipped CSV has hundreds of rows; we don't assert an exact
+    # count (it changes whenever someone runs ``update_dataset_summary``)
+    # but we do assert the fallback actually wired data through.
+    assert snapshot.dataset_count > 0
+    assert snapshot.api_errors, "fallback must record API errors"
+    # No accidental disk cache write on the failure path.
+    assert not snapshot_mod._disk_cache_path(database).exists()
+
+
+def test_csv_fallback_when_package_csv_missing(monkeypatch):
+    """When neither network nor disk cache nor package CSV resolves,
+    the snapshot still returns a value (source=package-csv, empty
+    DataFrame) with the failure recorded — never raise.
+    """
+    monkeypatch.setattr(snapshot_mod, "PACKAGE_CSV_PATH", Path("/does/not/exist.csv"))
+
+    with patch(
+        "urllib.request.urlopen",
+        side_effect=urllib.error.URLError("network unreachable"),
+    ):
+        snapshot = DatasetSnapshot.build(
+            api_base="https://stub.example", database="empty_shard"
+        )
+
+    assert snapshot.source == "package-csv"
+    assert snapshot.dataset_count == 0
+    assert snapshot.api_errors, "every fallback path must populate api_errors"
+
+
+def test_api_errors_populated_with_exception_text():
+    """The ``api_errors`` list carries the actual exception strings, not
+    just a count — that's what the B2 CI gate inspects.
+    """
+    err = urllib.error.URLError("simulated DNS failure")
+    monkey_csv = pd.DataFrame([{"dataset": "ds_csv"}])
+    with (
+        patch("urllib.request.urlopen", side_effect=err),
+        patch.object(snapshot_mod, "_read_package_csv", return_value=monkey_csv),
+    ):
+        snapshot = DatasetSnapshot.build(
+            api_base="https://stub.example", database="errshard"
+        )
+
+    assert snapshot.source == "package-csv"
+    assert any("simulated DNS failure" in e for e in snapshot.api_errors)
+
+
+def test_cache_keyed_by_api_base_and_database():
+    """Two builds with different ``api_base`` must NOT share an instance.
+
+    Reproduces the bug the unkeyed ``_DATASET_SUMMARY_CACHE`` global in
+    ``conf.py`` had: any caller that pointed at a different shard
+    silently got stale data from the previous caller.
+    """
+    payload_a = _chart_data_payload("ds_from_a")
+    payload_b = _chart_data_payload("ds_from_b")
+
+    def urlopen_side_effect(url, *_, **__):
+        if "shard_a" in url:
+            return _make_urlopen_response(payload_a)
+        if "shard_b" in url:
+            return _make_urlopen_response(payload_b)
+        raise AssertionError(f"unexpected URL: {url}")
+
+    with patch("urllib.request.urlopen", side_effect=urlopen_side_effect):
+        a = DatasetSnapshot.build(api_base="https://shard_a.example", database="x")
+        b = DatasetSnapshot.build(api_base="https://shard_b.example", database="x")
+
+    assert a is not b, "cache leaked across api_base"
+    assert a.rows().iloc[0]["dataset"] == "ds_from_a"
+    assert b.rows().iloc[0]["dataset"] == "ds_from_b"
+
+    # Second call with the same key returns the SAME instance — the
+    # idempotency contract from the task spec.
+    with patch("urllib.request.urlopen", side_effect=urlopen_side_effect):
+        a2 = DatasetSnapshot.build(api_base="https://shard_a.example", database="x")
+    assert a is a2, "same key should return the cached instance"
+
+
+# ---------------------------------------------------------------------------
+# Surface checks for the public API
+# ---------------------------------------------------------------------------
+
+
+def test_public_surface_complete():
+    """Sanity check: every member the validation plan §3 step 5 names
+    is discoverable on the class.
+    """
+    required = {
+        "build",
+        "load",
+        "rows",
+        "aggregations",
+        "montage",
+        "source",
+        "fetched_at",
+        "dataset_count",
+        "manifest",
+        "api_errors",
+    }
+    missing = (
+        required
+        - set(dir(DatasetSnapshot))
+        - {a for a in required if hasattr(DatasetSnapshot, a)}
+    )
+    assert not missing, f"missing required members: {missing}"
+
+
+def test_snapshot_is_immutable():
+    """Attempting to reassign provenance attributes must raise."""
+    snapshot = DatasetSnapshot(
+        rows=pd.DataFrame([{"dataset": "ds_immutable"}]),
+        aggregations={},
+        montages={},
+        source="live",
+        fetched_at=datetime.now(timezone.utc),
+    )
+    with pytest.raises(AttributeError):
+        snapshot.source = "cached"  # type: ignore[misc]
+
+
+def test_provenance_logged_once(caplog):
+    """:meth:`DatasetSnapshot.build` emits exactly one I8-formatted
+    INFO line per build — the invariant the validation plan §2 grep's
+    for.
+    """
+    response = _make_urlopen_response(_chart_data_payload("ds_log_1"))
+    caplog.set_level("INFO", logger="eegdash.dataset.snapshot")
+    with patch("urllib.request.urlopen", return_value=response):
+        DatasetSnapshot.build(api_base="https://stub.example", database="logshard")
+
+    matching = [
+        rec
+        for rec in caplog.records
+        if rec.name == "eegdash.dataset.snapshot"
+        and rec.getMessage().startswith("DatasetSnapshot source=")
+    ]
+    assert len(matching) == 1, matching
+    msg = matching[0].getMessage()
+    assert "source=live" in msg
+    assert "dataset_count=1" in msg
+    assert "fetched_at=" in msg
+
+
+def test_load_roundtrip(tmp_path):
+    """A snapshot written by build can be re-hydrated via load."""
+    response = _make_urlopen_response(_chart_data_payload("ds_roundtrip"))
+    api_base = "https://stub.example"
+    database = "loadshard"
+    with patch("urllib.request.urlopen", return_value=response):
+        built = DatasetSnapshot.build(api_base=api_base, database=database)
+
+    parquet_path = snapshot_mod._disk_cache_path(database)
+    manifest_path = tmp_path / "manifest.json"
+    manifest_path.write_text(
+        json.dumps(
+            {
+                "source": built.source,
+                "dataset_count": built.dataset_count,
+                "fetched_at": built.fetched_at.isoformat(),
+                "aggregations": built.aggregations(),
+            }
+        )
+    )
+    parquet_dst = manifest_path.with_suffix(".parquet")
+    parquet_dst.write_bytes(parquet_path.read_bytes())
+
+    loaded = DatasetSnapshot.load(manifest_path)
+    assert loaded.source == built.source
+    assert loaded.dataset_count == built.dataset_count
+    assert loaded.rows().iloc[0]["dataset"] == "ds_roundtrip"
+
+
+def test_montage_returns_none_when_absent():
+    """No montages are populated today (A3 territory). ``montage()``
+    must return ``None`` rather than raising for any dataset id.
+    """
+    snapshot = DatasetSnapshot(
+        rows=pd.DataFrame([{"dataset": "ds_montage"}]),
+        aggregations={},
+        montages={},
+        source="live",
+        fetched_at=datetime.now(timezone.utc),
+    )
+    assert snapshot.montage("ds_montage") is None
+    assert snapshot.montage("") is None
+
+
+def test_montage_returns_data_when_present():
+    """When A3 ships, montages will land in the chart-data response;
+    surface them through ``montage()`` keyed by dataset_id.
+    """
+    snapshot = DatasetSnapshot(
+        rows=pd.DataFrame([{"dataset": "ds_montage"}]),
+        aggregations={},
+        montages={"ds_montage": {"name": "standard_1020", "n_channels": 64}},
+        source="live",
+        fetched_at=datetime.now(timezone.utc),
+    )
+    montage = snapshot.montage("ds_montage")
+    assert montage is not None
+    assert montage["name"] == "standard_1020"
+    # Returned value is a copy — mutations don't leak back to the cache.
+    montage["mutated"] = True
+    assert "mutated" not in snapshot.montage("ds_montage")
+
+
+def test_package_csv_fallback_skips_disk_cache_write(tmp_path):
+    """When fetch fails, the snapshot must NOT pollute the disk cache
+    with a package-csv fallback — that would mask a future "API is
+    back" run as still-broken.
+    """
+    with patch(
+        "urllib.request.urlopen",
+        side_effect=urllib.error.URLError("dead"),
+    ):
+        DatasetSnapshot.build(api_base="https://stub.example", database="no_pollute")
+
+    assert not snapshot_mod._disk_cache_path("no_pollute").exists()
+
+
+# ---------------------------------------------------------------------------
+# Optional: real-network smoke test (skipped by default)
+# ---------------------------------------------------------------------------
+
+
+@pytest.mark.network
+def test_build_live_against_real_api():
+    """Production-API smoke test corresponding to the
+    ``test_build_live`` case in the task spec.
+
+    Marked ``@pytest.mark.network`` so the offline default suite skips
+    it. Run with ``pytest -m network`` (or via the CI gate script
+    ``scripts/validation/check_snapshot_health.py``) to verify
+    end-to-end connectivity.
+    """
+    snapshot = DatasetSnapshot.build()
+    assert snapshot.source == "live"
+    assert snapshot.dataset_count > 0

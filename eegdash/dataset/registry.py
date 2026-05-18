@@ -3,15 +3,12 @@ from __future__ import annotations
 import json
 import keyword
 import logging
-import os
-import urllib.error
-import urllib.request
 from pathlib import Path
 from typing import Any, Dict
 
 import pandas as pd
 
-from ..paths import get_default_cache_dir
+from ..paths import get_default_cache_dir  # noqa: F401 — re-exported for legacy mocks
 
 logger = logging.getLogger(__name__)
 
@@ -203,7 +200,15 @@ def register_openneuro_datasets(
     df = pd.DataFrame()
     if from_api:
         try:
-            df = fetch_datasets_from_api(api_url, database)
+            from .snapshot import DatasetSnapshot  # noqa: PLC0415
+
+            snapshot = DatasetSnapshot.build(api_base=api_url, database=database)
+            # Mirror the pre-B1 contract for this caller: when every
+            # fallback bottomed out at the package CSV, fall through to
+            # the explicit ``summary_file`` branch below rather than
+            # double-loading the same data via two paths.
+            if snapshot.source != "package-csv":
+                df = snapshot.rows()
         except Exception:
             pass
 
@@ -581,11 +586,13 @@ def fetch_datasets_from_api(
     database: str = "eegdash",
     force_refresh: bool = False,
 ) -> pd.DataFrame:
-    """Fetch dataset summaries from API and return as DataFrame matching CSV structure.
+    """Fetch dataset summaries from API and return as DataFrame.
 
-    Note: This function makes a single API call to /datasets/summary.
-    Stats (nchans_counts, sfreq_counts) are already embedded in dataset documents
-    via the compute-stats endpoint, so no separate stats call is needed.
+    .. deprecated::
+       Compatibility shim over :class:`eegdash.dataset.snapshot.DatasetSnapshot`.
+       New consumers should call ``DatasetSnapshot.build(...).rows()``
+       directly; that surface exposes provenance (``source``,
+       ``fetched_at``, ``api_errors``) which this function discards.
 
     Parameters
     ----------
@@ -594,142 +601,34 @@ def fetch_datasets_from_api(
     database : str
         Database name.
     force_refresh : bool
-        If True, bypass the local cache and always fetch from the API.
+        If True, bypass the local cache and always re-fetch.
+
+    Returns
+    -------
+    pandas.DataFrame
+        Same column layout as before. Empty when the live API call
+        failed and no disk cache was available — preserves the
+        pre-B1 legacy contract of "silent empty on failure" for
+        callers that haven't migrated to :class:`DatasetSnapshot`.
+        New code should call :meth:`DatasetSnapshot.build` directly and
+        inspect ``source`` / ``api_errors`` to tell apart failure modes.
 
     """
-    cache_dir = get_default_cache_dir()
-    cache_file = cache_dir / "dataset_summary.csv"
+    from .snapshot import DatasetSnapshot  # noqa: PLC0415 — break import cycle
 
-    # Try loading from cache first (unless forced refresh)
-    if not force_refresh:
-        try:
-            if cache_file.exists():
-                return pd.read_csv(cache_file, comment="#", skip_blank_lines=True)
-        except Exception:
-            pass
-
-    limit = int(os.environ.get("EEGDASH_DOC_LIMIT", 1000))
-
-    # Single API call - stats are already embedded in dataset documents
-    url = f"{api_url}/{database}/datasets/summary?limit={limit}"
-    data: dict[str, Any] = {}
-    try:
-        with urllib.request.urlopen(url, timeout=30) as response:
-            data = json.loads(response.read().decode("utf-8"))
-    except Exception:
-        pass
-
-    if not data or not data.get("success"):
+    snapshot = DatasetSnapshot.build(
+        api_base=api_url, database=database, force_refresh=force_refresh
+    )
+    # Legacy contract: the original implementation did NOT consult the
+    # package CSV as a fallback. The snapshot module does (it is
+    # honest about its data source) — but the shim hides that
+    # tag-it-and-keep-going behaviour so callers that haven't migrated
+    # still see the old empty-on-failure shape. Once every consumer
+    # reads through ``DatasetSnapshot`` directly, this branch can be
+    # deleted along with the shim.
+    if snapshot.source == "package-csv":
         return pd.DataFrame()
-
-    datasets = data.get("data", [])
-
-    rows = []
-    for ds in datasets:
-        ds_id = ds.get("dataset_id", "").strip()
-        # Filter test datasets and excluded ones
-        if (
-            ds_id.lower() in ("test", "test_dataset")
-            or ds_id.upper() in EXCLUDED_DATASETS
-        ):
-            continue
-
-        # Stats are embedded in dataset documents (populated by compute-stats endpoint)
-        nchans_list = ds.get("nchans_counts") or []
-        sfreq_list = ds.get("sfreq_counts") or []
-
-        # Extract demographics
-        demographics = ds.get("demographics", {}) or {}
-        recording_modality = ds.get("recording_modality", []) or []
-        if isinstance(recording_modality, str):
-            recording_modality = [recording_modality]
-
-        # Extract tags (new structure) or fallback to clinical/paradigm (legacy)
-        tags = ds.get("tags", {}) or {}
-        clinical = ds.get("clinical", {}) or {}
-        paradigm = ds.get("paradigm", {}) or {}
-
-        # Use tags.pathology if available, otherwise fallback to clinical info
-        pathology_list = tags.get("pathology", [])
-        if pathology_list and isinstance(pathology_list, list):
-            type_subject = ", ".join(pathology_list)
-        elif clinical.get("is_clinical"):
-            type_subject = clinical.get("purpose") or "Unspecified Clinical"
-        elif clinical.get("is_clinical") is False:
-            type_subject = "Healthy"
-        else:
-            type_subject = ""
-
-        # Use tags.modality if available, otherwise fallback to paradigm.modality
-        modality_list = tags.get("modality", [])
-        if modality_list and isinstance(modality_list, list):
-            paradigm_modality = ", ".join(modality_list)
-        else:
-            paradigm_modality = paradigm.get("modality") or ""
-
-        # Use tags.type if available, otherwise fallback to paradigm.cognitive_domain
-        type_list = tags.get("type", [])
-        if type_list and isinstance(type_list, list):
-            cognitive_domain = ", ".join(type_list)
-        else:
-            cognitive_domain = paradigm.get("cognitive_domain") or ""
-
-        # Map API fields to expected CSV columns. ``name_source`` /
-        # ``author_year`` are persisted alongside ``canonical_name`` so the
-        # docs build can render the 3-line identity block (Study /
-        # Author-year / Canonical) without re-querying the API per page.
-        canonical_list = ds.get("canonical_name") or []
-        name_source = (ds.get("name_source") or "").strip()
-        author_year_value = (
-            _resolve_author_year(
-                name_source=name_source,
-                raw_aliases=canonical_list,
-                explicit=ds.get("author_year"),
-            )
-            or ""
-        )
-        row = {
-            "dataset": ds_id,
-            "canonical_name": json.dumps(canonical_list),
-            "name_source": name_source,
-            "author_year": author_year_value,
-            "n_subjects": demographics.get("subjects_count", 0) or 0,
-            "n_records": ds.get("total_files", 0) or 0,
-            "n_tasks": len(ds.get("tasks", []) or []),
-            # IMPORTANT: Keep these columns separate!
-            # "modality of exp" = experimental/paradigm modality (visual, auditory, motor, etc.)
-            # "record_modality" = BIDS recording modality (EEG, MEG, iEEG, etc.)
-            "modality of exp": paradigm_modality,  # DO NOT mix with recording_modality
-            "type of exp": cognitive_domain,  # cognitive domain only
-            "Type Subject": type_subject,
-            "duration_hours_total": (ds.get("total_duration_s") or 0) / 3600 or None,
-            "size_bytes": ds.get("size_bytes") or 0,
-            "size": ds.get("size_human") or _human_readable_size(ds.get("size_bytes")),
-            "source": ds.get("source") or "unknown",
-            # Extended fields for docs/summary tables
-            # Use computed_title if available (populated by compute-stats endpoint)
-            "dataset_title": ds.get("computed_title") or ds.get("name", ""),
-            "record_modality": ", ".join(recording_modality),
-            # We enforce JSON string for list/dict structures to survive CSV roundtrip reliably
-            "nchans_set": json.dumps(nchans_list),
-            "sampling_freqs": json.dumps(sfreq_list),
-            "license": ds.get("license", ""),
-            "doi": ds.get("dataset_doi", ""),
-            # Citation metrics from NEMAR
-            "nemar_citation_count": ds.get("nemar_citation_count"),
-        }
-        rows.append(row)
-
-    df = pd.DataFrame(rows)
-
-    # Save to cache if we got data
-    if not df.empty:
-        try:
-            df.to_csv(cache_file, index=False)
-        except Exception:
-            pass
-
-    return df
+    return snapshot.rows()
 
 
 def _normalize_tag_value(val):
@@ -746,124 +645,34 @@ def fetch_chart_data_from_api(
 ) -> tuple[pd.DataFrame, dict[str, Any]]:
     """Fetch pre-aggregated chart data from API.
 
-    This uses the optimized /datasets/chart-data endpoint which returns
-    only chart-relevant fields and pre-computed aggregations.
-
-    Falls back to /datasets/summary if chart-data endpoint is unavailable.
+    .. deprecated::
+       Compatibility shim over :class:`eegdash.dataset.snapshot.DatasetSnapshot`.
+       New consumers should call ``DatasetSnapshot.build(...)`` and read
+       ``.rows()`` / ``.aggregations()`` from it; that surface also exposes
+       provenance (``source``, ``fetched_at``, ``api_errors``) which this
+       2-tuple discards.
 
     Parameters
     ----------
     api_url : str
-        Base API URL
+        Base API URL.
     database : str
-        Database name
+        Database name.
     limit : int
-        Maximum datasets to fetch
+        Maximum datasets to fetch.
 
     Returns
     -------
-    tuple[pd.DataFrame, dict]
-        DataFrame with dataset records and dict with pre-computed aggregations
+    tuple[pandas.DataFrame, dict]
+        Rows and server-side aggregations. The aggregations dict is empty
+        when the data arrived through a fallback path. Preserves the
+        pre-B1 legacy contract of empty 2-tuple on full failure; new
+        code should consume :class:`DatasetSnapshot` directly.
 
     """
-    url = f"{api_url}/{database}/datasets/chart-data?limit={limit}"
+    from .snapshot import DatasetSnapshot  # noqa: PLC0415 — break import cycle
 
-    try:
-        with urllib.request.urlopen(url, timeout=30) as response:
-            data = json.loads(response.read().decode("utf-8"))
-    except urllib.error.HTTPError as e:
-        if e.code == 404:
-            # Endpoint not deployed yet, fallback to summary endpoint
-            print("  chart-data endpoint not available, falling back to summary...")
-            df = fetch_datasets_from_api(api_url, database)
-            return df, {}
-        print(f"Failed to fetch chart data: {e}")
+    snapshot = DatasetSnapshot.build(api_base=api_url, database=database, limit=limit)
+    if snapshot.source == "package-csv":
         return pd.DataFrame(), {}
-    except Exception as e:
-        print(f"Failed to fetch chart data: {e}")
-        return pd.DataFrame(), {}
-
-    if not data.get("success"):
-        return pd.DataFrame(), {}
-
-    datasets = data.get("datasets", [])
-    aggregations = data.get("aggregations", {})
-
-    rows = []
-    for ds in datasets:
-        ds_id = ds.get("dataset_id", "").strip()
-        if ds_id.upper() in EXCLUDED_DATASETS:
-            continue
-        # EEG2025r* entries are the BDF-converted Nemar mirrors of the
-        # HBN releases. They are first-class catalog entries now — expose
-        # them in the summary table so users can find them alongside the
-        # OpenNeuro originals. (Previously filtered out for "special
-        # handling"; that handling is now done at render time.)
-
-        # Extract nested fields
-        demographics = ds.get("demographics") or {}
-        tags = ds.get("tags") or {}
-        clinical = ds.get("clinical") or {}
-        paradigm = ds.get("paradigm") or {}
-        timestamps = ds.get("timestamps") or {}
-
-        recording_modality = ds.get("recording_modality") or []
-        if isinstance(recording_modality, str):
-            recording_modality = [recording_modality]
-
-        # Map tags to chart columns
-        type_subject = _normalize_tag_value(tags.get("pathology"))
-        if not type_subject and clinical.get("is_clinical"):
-            type_subject = clinical.get("purpose") or "Clinical"
-        elif not type_subject and clinical.get("is_clinical") is False:
-            type_subject = "Healthy"
-        elif not type_subject:
-            type_subject = "Unknown"
-
-        modality_of_exp = _normalize_tag_value(tags.get("modality"))
-        if not modality_of_exp:
-            modality_of_exp = paradigm.get("modality", "")
-
-        type_of_exp = _normalize_tag_value(tags.get("type"))
-        if not type_of_exp:
-            type_of_exp = paradigm.get("cognitive_domain", "")
-
-        canonical_list = ds.get("canonical_name") or []
-        name_source = (ds.get("name_source") or "").strip()
-        author_year_value = (
-            _resolve_author_year(
-                name_source=name_source,
-                raw_aliases=canonical_list,
-                explicit=ds.get("author_year"),
-            )
-            or ""
-        )
-        row = {
-            "dataset": ds_id,
-            "canonical_name": json.dumps(canonical_list),
-            "name_source": name_source,
-            "author_year": author_year_value,
-            "dataset_title": ds.get("computed_title") or ds.get("name", ""),
-            "n_subjects": demographics.get("subjects_count") or 0,
-            "n_records": ds.get("total_files") or 0,
-            "n_tasks": len(ds.get("tasks") or []),
-            "n_sessions": len(ds.get("sessions") or []),
-            "record_modality": ", ".join(recording_modality),
-            "recording_modality": ", ".join(recording_modality),
-            "modality of exp": modality_of_exp,
-            "type of exp": type_of_exp,
-            "Type Subject": type_subject,
-            "size_bytes": ds.get("size_bytes") or 0,
-            "size": ds.get("size_human") or _human_readable_size(ds.get("size_bytes")),
-            "source": ds.get("source") or "unknown",
-            "license": ds.get("license", ""),
-            "doi": ds.get("dataset_doi", ""),
-            "nchans_set": json.dumps(ds.get("nchans_counts") or []),
-            "sampling_freqs": json.dumps(ds.get("sfreq_counts") or []),
-            "dataset_created_at": timestamps.get("dataset_created_at", ""),
-            "nemar_citation_count": ds.get("nemar_citation_count"),
-            "duration_hours_total": (ds.get("total_duration_s") or 0) / 3600 or None,
-        }
-        rows.append(row)
-
-    return pd.DataFrame(rows), aggregations
+    return snapshot.rows(), snapshot.aggregations()

@@ -187,16 +187,35 @@ class DatasetSnapshot:
     def montage(self, dataset_id: str) -> Mapping[str, Any] | None:
         """Return the top montage for one dataset, or ``None``.
 
-        The lookup is keyed exactly on the catalog ``dataset_id``
-        (e.g. ``"ds002718"``). Returns ``None`` when no montage has
-        been joined into this snapshot. A3 will populate it
-        server-side via ``?include=montages``; today this is always
-        ``None`` and consumers must fall back to the per-dataset
-        ``/datasets/{id}/montages`` endpoint.
+        Lookup is case-insensitive on the catalog ``dataset_id``
+        (e.g. ``"ds002718"`` or ``"DS002718"``). Returns ``None`` when
+        no montage was joined into this snapshot (e.g. the server
+        omitted one, or the snapshot resolved from the disk-cache /
+        package-CSV fallback path and never received montage data in
+        the first place).
+
+        Population is driven server-side by ``?include=montages`` on
+        the ``/datasets/chart-data`` request (see arch #5). The shape
+        is the registry montage doc plus a couple of viewer-friendly
+        derived fields:
+
+        - ``hash`` — 16-char montage registry id
+        - ``modality`` — ``"eeg"``, ``"meg"``, ``"ieeg"``, ...
+        - ``n_sensors`` — channel count for this montage
+        - ``space_declared`` / ``units_declared`` — BIDS coords schema
+        - ``channel_names`` — list of strings (truncated server-side)
+        - ``label`` — pretty caption (``"EEG · 64 sensors"``)
+        - ``n_channels`` — alias of ``n_sensors`` for backward compat
+        - ``montage_id`` — alias of ``hash`` for backward compat
         """
         if not dataset_id:
             return None
-        result = self._montages.get(dataset_id)
+        # Try the exact key first (live path), then fall back to a
+        # case-folded match (covers the docs consumer that lowercases
+        # before lookup).
+        result = self._montages.get(dataset_id) or self._montages.get(
+            dataset_id.lower()
+        )
         if result is None:
             return None
         # Return a shallow copy so callers cannot mutate the cached
@@ -365,6 +384,21 @@ def _disk_cache_path(database: str) -> Path:
     return cache_dir / f"snapshot_{safe or 'default'}.parquet"
 
 
+def _montages_sidecar_path(database: str) -> Path:
+    """Where the per-dataset montage cache for ``database`` lives.
+
+    Sits next to the parquet rows cache (same directory, same naming)
+    so the two artefacts share one cache invalidation lifecycle. JSON
+    rather than parquet because the payload is shallow (~500 small
+    dicts at the production scale) and the docs-build consumer is
+    happiest with plain dicts.
+    """
+    cache_dir = get_default_cache_dir()
+    cache_dir.mkdir(parents=True, exist_ok=True)
+    safe = "".join(c for c in database if c.isalnum() or c in {"_", "-"})
+    return cache_dir / f"snapshot_{safe or 'default'}_montages.json"
+
+
 def _http_get_json(url: str, *, timeout: int = 30) -> dict[str, Any]:
     """Single GET → JSON helper. Raises on any failure."""
     with urllib.request.urlopen(url, timeout=timeout) as response:
@@ -374,9 +408,19 @@ def _http_get_json(url: str, *, timeout: int = 30) -> dict[str, Any]:
 
 def _try_fetch_chart_data(
     api_base: str, database: str, limit: int, *, errors: list[str]
-) -> tuple[pd.DataFrame, dict[str, Any]] | None:
-    """Attempt the rich chart-data endpoint. Returns ``None`` on failure."""
-    url = f"{api_base}/{database}/datasets/chart-data?limit={limit}"
+) -> tuple[pd.DataFrame, dict[str, Any], dict[str, dict[str, Any]]] | None:
+    """Attempt the rich chart-data endpoint. Returns ``None`` on failure.
+
+    Requests ``?include=montages`` so the top montage per dataset rides
+    along with the catalog rows in one round-trip (arch #5). The
+    parsed montage objects are returned as a third tuple element keyed
+    by lowercased ``dataset_id``; callers store it on
+    :attr:`DatasetSnapshot._montages`. When the server doesn't
+    populate a montage for a given dataset (or the field is absent
+    entirely on an old deployment) the per-dataset value is simply
+    missing from the dict — never ``None`` and never a partial doc.
+    """
+    url = f"{api_base}/{database}/datasets/chart-data?limit={limit}&include=montages"
     try:
         data = _http_get_json(url)
     except urllib.error.HTTPError as exc:
@@ -393,9 +437,11 @@ def _try_fetch_chart_data(
         errors.append(f"chart-data returned success=False at {url}")
         return None
 
-    rows = _rows_from_chart_data(data.get("datasets", []) or [])
+    datasets = data.get("datasets", []) or []
+    rows = _rows_from_chart_data(datasets)
     aggregations = data.get("aggregations") or {}
-    return rows, aggregations
+    montages = _montages_from_chart_data(datasets)
+    return rows, aggregations, montages
 
 
 def _try_fetch_summary(
@@ -447,6 +493,47 @@ def _write_disk_cache(df: pd.DataFrame, path: Path) -> None:
         logger.debug("snapshot disk cache write failed at %s: %s", path, exc)
 
 
+def _write_montages_sidecar(
+    montages: Mapping[str, Mapping[str, Any]], path: Path
+) -> None:
+    """Persist the parsed montages dict. Best-effort.
+
+    Sibling to :func:`_write_disk_cache` — writes a small JSON file
+    next to the parquet so a subsequent ``cached`` resolution still
+    has montages to serve. An empty dict is written when no montages
+    came through; that's expected when the server responds without
+    ``?include=montages`` support.
+    """
+    try:
+        path.write_text(
+            json.dumps(dict(montages), sort_keys=True, ensure_ascii=False),
+            encoding="utf-8",
+        )
+    except Exception as exc:  # noqa: BLE001
+        logger.debug("snapshot montages sidecar write failed at %s: %s", path, exc)
+
+
+def _read_montages_sidecar(
+    path: Path, *, errors: list[str]
+) -> dict[str, dict[str, Any]]:
+    """Re-hydrate the montages sidecar JSON. Empty dict on any failure.
+
+    Called from the disk-cache fallback path. A missing or corrupt
+    sidecar is downgraded to "no montages this build" — the consumer
+    renders the empty placeholder rather than crashing.
+    """
+    if not path.exists():
+        return {}
+    try:
+        raw = json.loads(path.read_text(encoding="utf-8"))
+    except Exception as exc:  # noqa: BLE001
+        errors.append(f"montages sidecar read failed at {path}: {exc}")
+        return {}
+    if not isinstance(raw, dict):
+        return {}
+    return {str(k): dict(v) for k, v in raw.items() if isinstance(v, dict)}
+
+
 def _build_uncached(
     *,
     api_base: str,
@@ -460,23 +547,31 @@ def _build_uncached(
     # 1. Live fetch — try the rich chart-data endpoint first.
     chart_result = _try_fetch_chart_data(api_base, database, limit, errors=errors)
     if chart_result is not None:
-        rows, aggregations = chart_result
+        rows, aggregations, montages = chart_result
         if not rows.empty:
             snapshot = _live_snapshot(
-                rows, aggregations, errors, api_base=api_base, database=database
+                rows,
+                aggregations,
+                montages,
+                errors,
+                api_base=api_base,
+                database=database,
             )
             _write_disk_cache(rows, _disk_cache_path(database))
+            _write_montages_sidecar(montages, _montages_sidecar_path(database))
             return snapshot
         errors.append("chart-data returned 0 datasets")
 
     # Fall back to the legacy summary endpoint when chart-data is
     # absent OR returned zero rows (the latter happens during early
     # ingestion windows and during tests that stub one endpoint at a
-    # time).
+    # time). The summary endpoint has no montage data, so the
+    # snapshot's :attr:`montage` accessor will return ``None`` until
+    # chart-data comes back online.
     summary_rows = _try_fetch_summary(api_base, database, limit, errors=errors)
     if summary_rows is not None and not summary_rows.empty:
         snapshot = _live_snapshot(
-            summary_rows, {}, errors, api_base=api_base, database=database
+            summary_rows, {}, {}, errors, api_base=api_base, database=database
         )
         _write_disk_cache(summary_rows, _disk_cache_path(database))
         return snapshot
@@ -495,10 +590,13 @@ def _build_uncached(
         cached_rows = _read_disk_cache(disk_path, errors=errors)
         if cached_rows is not None and not cached_rows.empty:
             cached_at = _mtime(disk_path)
+            cached_montages = _read_montages_sidecar(
+                _montages_sidecar_path(database), errors=errors
+            )
             return DatasetSnapshot(
                 rows=cached_rows,
                 aggregations={},
-                montages={},
+                montages=cached_montages,
                 source="cached",
                 fetched_at=cached_at,
                 api_errors=list(errors),
@@ -535,6 +633,7 @@ def _build_uncached(
 def _live_snapshot(
     rows: pd.DataFrame,
     aggregations: dict[str, Any],
+    montages: Mapping[str, Mapping[str, Any]],
     errors: list[str],
     *,
     api_base: str,
@@ -578,7 +677,7 @@ def _live_snapshot(
     return DatasetSnapshot(
         rows=rows,
         aggregations=aggregations,
-        montages={},
+        montages=montages,
         source="live",
         fetched_at=fetched_at,
         # Keep any partial errors collected before success — e.g. a
@@ -711,6 +810,81 @@ def _normalize_tag_value(val: Any) -> str:
     if isinstance(val, list):
         return ", ".join(val) if val else ""
     return val or ""
+
+
+# Pretty modality label used in the per-page caption. Lifted from the
+# retired ``docs/build_electrode_layouts.py`` so the rendered ``label``
+# string is byte-identical to the legacy JSON output.
+_MONTAGE_MODALITY_LABEL = {
+    "eeg": "EEG",
+    "ieeg": "iEEG",
+    "meg": "MEG",
+    "nirs": "fNIRS",
+    "emg": "EMG",
+}
+
+
+def _project_montage(montage: Mapping[str, Any]) -> dict[str, Any]:
+    """Project a server montage payload into the viewer-friendly dict.
+
+    Output shape — superset of the registry doc to keep both the
+    server fields (``hash``, ``modality``, ``n_sensors``,
+    ``channel_names``, ``space_declared``, ``units_declared``,
+    ``subject_count``) AND the legacy ``electrode-layouts.json`` keys
+    (``label``, ``n_channels``, ``montage_id``). The duplication is
+    cheap (~40 bytes per dataset) and keeps the dataset_page consumer
+    a no-op rename.
+    """
+    modality = str(montage.get("modality") or "").strip().lower()
+    n_sensors = int(montage.get("n_sensors") or 0)
+    mod_label = _MONTAGE_MODALITY_LABEL.get(modality, modality.upper() or "Sensors")
+    label = f"{mod_label} · {n_sensors} sensors" if n_sensors else mod_label
+
+    return {
+        # Server fields, passed through unchanged.
+        "hash": str(montage.get("hash") or "").strip(),
+        "subject_count": int(montage.get("subject_count") or 0),
+        "modality": modality or None,
+        "n_sensors": n_sensors,
+        "space_declared": montage.get("space_declared"),
+        "units_declared": montage.get("units_declared"),
+        "channel_names": list(montage.get("channel_names") or []),
+        # Viewer-friendly aliases. The retired build script used these
+        # exact key names; we keep them so the section formatter is a
+        # straight find-and-replace migration.
+        "label": label,
+        "n_channels": n_sensors,
+        "montage_id": str(montage.get("hash") or "").strip(),
+    }
+
+
+def _montages_from_chart_data(
+    datasets: list[dict[str, Any]],
+) -> dict[str, dict[str, Any]]:
+    """Pull the ``datasets[i].montage`` field into a ``{id: dict}`` map.
+
+    Keyed by lowercased ``dataset_id`` because the docs consumer
+    lowercases before lookup. Datasets without a top montage (server
+    returned ``null`` or omitted the field) are silently skipped, so a
+    missing key in this dict has the same meaning as the legacy
+    ``electrode-layouts.json``: "no scalp electrode layout currently
+    indexed for this dataset".
+    """
+    montages: dict[str, dict[str, Any]] = {}
+    for ds in datasets:
+        ds_id = str(ds.get("dataset_id") or "").strip().lower()
+        if not ds_id or ds_id.upper() in EXCLUDED_DATASETS:
+            continue
+        montage = ds.get("montage")
+        if not isinstance(montage, dict) or not montage:
+            continue
+        # Defensive: a future server version could emit only the hash
+        # without the joined registry doc. Require at least one
+        # informative field before we surface it.
+        if not (montage.get("hash") or montage.get("n_sensors")):
+            continue
+        montages[ds_id] = _project_montage(montage)
+    return montages
 
 
 def _rows_from_chart_data(datasets: list[dict[str, Any]]) -> pd.DataFrame:

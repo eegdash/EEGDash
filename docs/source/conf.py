@@ -57,7 +57,6 @@ extensions = [
     "copy_dataset_summary",
     "counter_values",
     "seo_context",
-    "description_cap",
 ]
 
 # Centralized bibliography (see docs/source/refs.bib + references.rst).

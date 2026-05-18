@@ -64,6 +64,7 @@ extensions = [
     "sphinxcontrib.bibtex",
     "dataset_explorer",
     "dataset_figure",
+    "assert_dataset_table",
 ]
 
 # Centralized bibliography (see docs/source/refs.bib + references.rst).
@@ -3429,52 +3430,6 @@ _DATASET_COUNTER_PLACEHOLDERS = {
 }
 
 
-def _assert_dataset_table_inlines_datatables(app) -> None:
-    """Fail fast if the generated dataset-summary table lost its inline JS.
-
-    ``html_css_files`` and ``html_js_files`` deliberately no longer load
-    the DataTables/jQuery stack globally; the contract is that
-    ``prepare_summary_tables.py`` inlines those CDN ``<script>`` tags
-    directly into
-    ``_static/dataset_generated/dataset_summary_table.html``. If the
-    generator changes and drops the inlining, the dataset_summary page
-    silently loses its interactivity — the HTML renders as a plain
-    ``<table>`` with no sorting or filtering, and the build still passes.
-
-    This hook verifies the marker scripts are present. Raise (not warn)
-    so the failure is loud: a silent loss of the flagship page's UI is
-    much worse than a build error.
-    """
-    table_path = (
-        Path(app.srcdir)
-        / "_static"
-        / "dataset_generated"
-        / "dataset_summary_table.html"
-    )
-    if not table_path.is_file():
-        # File missing entirely — `prepare_summary_tables.py` hasn't run
-        # yet (common on partial local rebuilds). Soft-warn rather than
-        # block the build; `make html`/`html-noplot` already run the
-        # generator before sphinx-build.
-        LOGGER.warning(
-            "Expected %s to exist; dataset_summary interactivity may be "
-            "disabled until prepare_summary_tables.py runs.",
-            table_path,
-        )
-        return
-    content = table_path.read_text(encoding="utf-8", errors="replace")
-    required_markers = ("datatables.min.js", "jquery-3.7.1.min.js")
-    missing = [m for m in required_markers if m not in content]
-    if missing:
-        raise RuntimeError(
-            f"{table_path.name} is missing expected inline CDN scripts: "
-            f"{missing}. The global `html_js_files` in conf.py was slimmed "
-            "on the assumption that prepare_summary_tables.py inlines the "
-            "DataTables stack. Either restore the inlining in the "
-            "generator, or re-add the scripts to `html_js_files`."
-        )
-
-
 def _copy_dataset_summary(app, exception) -> None:
     if exception is not None or not getattr(app, "builder", None):
         return
@@ -4478,7 +4433,6 @@ def setup(app):
     if not os.path.exists(backreferences_dir):
         os.makedirs(backreferences_dir)
 
-    app.connect("builder-inited", _assert_dataset_table_inlines_datatables)
     app.connect("builder-inited", _generate_dataset_docs)
     # Run after sphinx-gallery's `generate_gallery_rst` (priority 500) so
     # the per-leaf index files exist before we link to them.

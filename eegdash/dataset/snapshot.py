@@ -98,10 +98,18 @@ class DatasetSnapshot:
         ``source == "live"`` and the call succeeded; non-empty whenever
         a fallback fired.
     manifest : dict[str, Any]
-        Placeholder for the future ``/build-manifest`` server response
-        (review §3 A2). Today filled with ``{"dataset_count",
-        "source", "fetched_at"}`` so downstream consumers can read it
-        unconditionally; the schema will widen when A2 ships.
+        The server's ``/build-manifest`` response when reachable; falls
+        back to a locally-projected ``{"dataset_count", "source",
+        "fetched_at"}`` dict when the endpoint is offline, returns an
+        error, or the snapshot resolved from the disk cache / package
+        CSV without a live API call. Either way the field is never
+        ``None``, so downstream consumers can read it unconditionally.
+
+        When the server manifest is present it carries — at minimum —
+        ``dataset_count``, ``schema_version``, ``last_ingested_at``,
+        ``last_stats_computed_at``, ``git_sha``, and ``name_coverage``.
+        The schema is owned by the server (review §3 A2); this snapshot
+        re-exposes it verbatim.
 
     """
 
@@ -199,6 +207,17 @@ class DatasetSnapshot:
     def dataset_count(self) -> int:
         """Number of dataset rows in this snapshot."""
         return int(len(self._rows))
+
+    @property
+    def schema_version(self) -> str | None:
+        """The server-reported ``schema_version`` from ``/build-manifest``.
+
+        Returns ``None`` when the snapshot fell back to the local
+        manifest projection (i.e. the server wasn't reached). Convenience
+        accessor — equivalent to ``self.manifest.get("schema_version")``.
+        """
+        value = self.manifest.get("schema_version")
+        return value if isinstance(value, str) else None
 
     # ----- builders ------------------------------------------------------
 
@@ -443,7 +462,9 @@ def _build_uncached(
     if chart_result is not None:
         rows, aggregations = chart_result
         if not rows.empty:
-            snapshot = _live_snapshot(rows, aggregations, errors)
+            snapshot = _live_snapshot(
+                rows, aggregations, errors, api_base=api_base, database=database
+            )
             _write_disk_cache(rows, _disk_cache_path(database))
             return snapshot
         errors.append("chart-data returned 0 datasets")
@@ -454,7 +475,9 @@ def _build_uncached(
     # time).
     summary_rows = _try_fetch_summary(api_base, database, limit, errors=errors)
     if summary_rows is not None and not summary_rows.empty:
-        snapshot = _live_snapshot(summary_rows, {}, errors)
+        snapshot = _live_snapshot(
+            summary_rows, {}, errors, api_base=api_base, database=database
+        )
         _write_disk_cache(summary_rows, _disk_cache_path(database))
         return snapshot
     if summary_rows is not None and summary_rows.empty:
@@ -462,6 +485,11 @@ def _build_uncached(
 
     # 2. Disk cache fallback (skipped when force_refresh=True, but only
     # after the live attempt above — that's the contract callers expect).
+    #
+    # When we reach a fallback path the live API was unreachable for
+    # this build, so the server's ``/build-manifest`` is by definition
+    # not relevant: we are explicitly serving stale or shipped data and
+    # the local projection truthfully says so (``source != "live"``).
     if not force_refresh:
         disk_path = _disk_cache_path(database)
         cached_rows = _read_disk_cache(disk_path, errors=errors)
@@ -474,7 +502,7 @@ def _build_uncached(
                 source="cached",
                 fetched_at=cached_at,
                 api_errors=list(errors),
-                manifest=_manifest_from(
+                manifest=_local_manifest_projection(
                     source="cached",
                     dataset_count=len(cached_rows),
                     fetched_at=cached_at,
@@ -496,7 +524,7 @@ def _build_uncached(
         source="package-csv",
         fetched_at=fetched_at,
         api_errors=list(errors),
-        manifest=_manifest_from(
+        manifest=_local_manifest_projection(
             source="package-csv",
             dataset_count=len(csv_rows),
             fetched_at=fetched_at,
@@ -508,8 +536,45 @@ def _live_snapshot(
     rows: pd.DataFrame,
     aggregations: dict[str, Any],
     errors: list[str],
+    *,
+    api_base: str,
+    database: str,
 ) -> "DatasetSnapshot":
+    """Build a ``source="live"`` snapshot.
+
+    After rows have loaded successfully we ALSO hit the server's
+    ``/build-manifest`` endpoint and surface its response verbatim on
+    :attr:`DatasetSnapshot.manifest`. The local re-projection is only
+    used as a fallback when the manifest endpoint is missing or
+    erroring (offline build, old server deployment, transient 5xx).
+    """
     fetched_at = _utcnow()
+    dataset_count = len(rows)
+
+    server_manifest = _try_fetch_build_manifest(
+        api_base=api_base, database=database, errors=errors
+    )
+    if server_manifest is not None:
+        # Mismatch detection — if the server's reported dataset_count
+        # disagrees with the rows we just loaded, surface the divergence
+        # on ``api_errors`` so the B2 CI gate can refuse to publish.
+        # Don't crash: a benign skew is possible during an ingestion
+        # window (server has finished a batch but the chart-data shard
+        # hasn't caught up, or vice-versa).
+        server_count = server_manifest.get("dataset_count")
+        if isinstance(server_count, int) and server_count != dataset_count:
+            errors.append(
+                f"build-manifest dataset_count={server_count} "
+                f"but snapshot.rows()={dataset_count}"
+            )
+        manifest = dict(server_manifest)
+    else:
+        manifest = _local_manifest_projection(
+            source="live",
+            dataset_count=dataset_count,
+            fetched_at=fetched_at,
+        )
+
     return DatasetSnapshot(
         rows=rows,
         aggregations=aggregations,
@@ -518,20 +583,71 @@ def _live_snapshot(
         fetched_at=fetched_at,
         # Keep any partial errors collected before success — e.g. a
         # chart-data 404 followed by a successful summary call records
-        # the 404 as context, not as a failure.
+        # the 404 as context, not as a failure. The same convention
+        # applies to a missing ``/build-manifest`` endpoint: it's a
+        # warning but not a build failure.
         api_errors=list(errors),
-        manifest=_manifest_from(
-            source="live",
-            dataset_count=len(rows),
-            fetched_at=fetched_at,
-        ),
+        manifest=manifest,
     )
 
 
-def _manifest_from(
+def _try_fetch_build_manifest(
+    api_base: str,
+    database: str,
+    *,
+    timeout: float = 5.0,
+    errors: list[str] | None = None,
+) -> dict[str, Any] | None:
+    """Fetch the server's ``/build-manifest`` JSON, or ``None`` on failure.
+
+    The endpoint is treated as best-effort: any failure (timeout, 404,
+    JSON decode error, transport-level exception) returns ``None`` and
+    appends the error text to ``errors`` (when provided) so the caller
+    can decide whether to surface it via :attr:`DatasetSnapshot.api_errors`.
+
+    Parameters
+    ----------
+    api_base : str
+        Base URL of the EEGDash server, *without* a trailing slash.
+    database : str
+        Database / shard name.
+    timeout : float
+        Request timeout in seconds. Shorter than the rows-fetch
+        timeout because the docs build should not be held up by a
+        ``/build-manifest`` outage — the local projection is fine as
+        fallback.
+    errors : list[str] | None
+        Optional list to append error strings to. Caller decides
+        whether to attach these to ``snapshot.api_errors``.
+
+    """
+    url = f"{api_base}/{database}/build-manifest"
+    try:
+        with urllib.request.urlopen(url, timeout=timeout) as response:
+            payload = response.read().decode("utf-8")
+        return json.loads(payload)
+    except urllib.error.HTTPError as exc:
+        if errors is not None:
+            errors.append(f"build-manifest {exc.code} at {url}: {exc}")
+        return None
+    except Exception as exc:  # noqa: BLE001 — network/JSON libraries raise broadly
+        if errors is not None:
+            errors.append(f"build-manifest error at {url}: {exc}")
+        return None
+
+
+def _local_manifest_projection(
     *, source: Source, dataset_count: int, fetched_at: datetime
 ) -> dict[str, Any]:
-    """Minimal manifest dict. Widened when A2 (/build-manifest) ships."""
+    """Locally-projected manifest dict — only used when the server is unreachable.
+
+    The preferred manifest source is the server's ``/build-manifest``
+    response (see :func:`_try_fetch_build_manifest`). This projection
+    exists so that :attr:`DatasetSnapshot.manifest` is never ``None``:
+    when the live API isn't reached (offline build, disk-cache
+    fallback, package-CSV fallback) or when ``/build-manifest`` itself
+    fails, we surface what we already know.
+    """
     return {
         "source": source,
         "dataset_count": dataset_count,

@@ -106,6 +106,45 @@ def _make_urlopen_response(payload: dict) -> MagicMock:
     return response
 
 
+def _server_manifest(
+    dataset_count: int = 1,
+    schema_version: str = "2.1.0",
+    **overrides,
+) -> dict:
+    """A minimal but well-formed ``/build-manifest`` server response.
+
+    Mirrors the production payload shape:
+    ``{dataset_count, last_ingested_at, last_stats_computed_at,
+    schema_version, git_sha, name_coverage}``.
+    """
+    base = {
+        "dataset_count": dataset_count,
+        "last_ingested_at": "2026-04-18T16:10:52.827000Z",
+        "last_stats_computed_at": "2026-05-10T19:09:03.501782Z",
+        "schema_version": schema_version,
+        "git_sha": "unknown",
+        "name_coverage": 0.03,
+    }
+    base.update(overrides)
+    return base
+
+
+def _routing_urlopen(routes: dict[str, dict]):
+    """Build a urlopen side_effect that picks payloads by URL substring.
+
+    The earliest-matching key in iteration order wins (Python 3.7+
+    dicts preserve insertion order), so put more-specific paths first.
+    """
+
+    def urlopen_side_effect(url, *_, **__):
+        for needle, payload in routes.items():
+            if needle in url:
+                return _make_urlopen_response(payload)
+        raise AssertionError(f"unexpected URL: {url}")
+
+    return urlopen_side_effect
+
+
 # ---------------------------------------------------------------------------
 # Required cases per the task spec (≥ 5)
 # ---------------------------------------------------------------------------
@@ -117,10 +156,19 @@ def test_build_live_via_stubbed_http():
     Offline-safe equivalent of the ``test_build_live`` case in the
     task spec. The real-network version is at the bottom of this file
     behind ``@pytest.mark.network``.
-    """
-    response = _make_urlopen_response(_chart_data_payload("ds_live_1"))
 
-    with patch("urllib.request.urlopen", return_value=response):
+    Stubs both the chart-data and build-manifest endpoints; the
+    snapshot's :attr:`manifest` carries the server's response verbatim
+    when reachable (see A2).
+    """
+    side_effect = _routing_urlopen(
+        {
+            "datasets/chart-data": _chart_data_payload("ds_live_1"),
+            "build-manifest": _server_manifest(dataset_count=1),
+        }
+    )
+
+    with patch("urllib.request.urlopen", side_effect=side_effect):
         snapshot = DatasetSnapshot.build(
             api_base="https://stub.example",
             database="liveshard",
@@ -133,22 +181,28 @@ def test_build_live_via_stubbed_http():
     assert snapshot.aggregations()["modality_counts"] == {"eeg": 1}
     assert snapshot.api_errors == []
     assert snapshot.fetched_at.tzinfo is not None
-    # Manifest carries enough provenance for downstream consumers
-    # before A2's ``/build-manifest`` ships.
-    assert snapshot.manifest["source"] == "live"
+    # Manifest now carries the server's ``/build-manifest`` response
+    # verbatim — including schema_version and dataset_count.
+    assert snapshot.manifest["schema_version"] == "2.1.0"
     assert snapshot.manifest["dataset_count"] == 1
+    assert snapshot.schema_version == "2.1.0"
 
 
 def test_cached_on_api_failure_after_priming(tmp_path):
     """First live call primes the disk cache; second call (forced
     failure) reads the cache and tags source == "cached".
     """
-    response = _make_urlopen_response(_chart_data_payload("ds_cached_1"))
+    side_effect = _routing_urlopen(
+        {
+            "datasets/chart-data": _chart_data_payload("ds_cached_1"),
+            "build-manifest": _server_manifest(dataset_count=1),
+        }
+    )
     api_base = "https://stub.example"
     database = "cacheshard"
 
     # 1. Prime: one successful live build writes the disk cache.
-    with patch("urllib.request.urlopen", return_value=response):
+    with patch("urllib.request.urlopen", side_effect=side_effect):
         primed = DatasetSnapshot.build(api_base=api_base, database=database)
     assert primed.source == "live"
     # Reset in-memory instance cache so the next call exercises the
@@ -312,9 +366,14 @@ def test_provenance_logged_once(caplog):
     INFO line per build — the invariant the validation plan §2 grep's
     for.
     """
-    response = _make_urlopen_response(_chart_data_payload("ds_log_1"))
+    side_effect = _routing_urlopen(
+        {
+            "datasets/chart-data": _chart_data_payload("ds_log_1"),
+            "build-manifest": _server_manifest(dataset_count=1),
+        }
+    )
     caplog.set_level("INFO", logger="eegdash.dataset.snapshot")
-    with patch("urllib.request.urlopen", return_value=response):
+    with patch("urllib.request.urlopen", side_effect=side_effect):
         DatasetSnapshot.build(api_base="https://stub.example", database="logshard")
 
     matching = [
@@ -332,10 +391,15 @@ def test_provenance_logged_once(caplog):
 
 def test_load_roundtrip(tmp_path):
     """A snapshot written by build can be re-hydrated via load."""
-    response = _make_urlopen_response(_chart_data_payload("ds_roundtrip"))
+    side_effect = _routing_urlopen(
+        {
+            "datasets/chart-data": _chart_data_payload("ds_roundtrip"),
+            "build-manifest": _server_manifest(dataset_count=1),
+        }
+    )
     api_base = "https://stub.example"
     database = "loadshard"
-    with patch("urllib.request.urlopen", return_value=response):
+    with patch("urllib.request.urlopen", side_effect=side_effect):
         built = DatasetSnapshot.build(api_base=api_base, database=database)
 
     parquet_path = snapshot_mod._disk_cache_path(database)
@@ -595,6 +659,150 @@ def test_ci_gate_api_errors_ignored_on_fallback_source():
 
 
 # ---------------------------------------------------------------------------
+# /build-manifest server integration (arch #4)
+# ---------------------------------------------------------------------------
+
+
+def test_manifest_uses_server_when_available():
+    """``snapshot.manifest`` carries the server's ``/build-manifest``
+    response verbatim — including the keys the local projection never
+    populated (``schema_version``, ``last_ingested_at``, ``git_sha``,
+    ``name_coverage``).
+    """
+    server_payload = _server_manifest(
+        dataset_count=1, schema_version="2.1.0", git_sha="abc1234"
+    )
+
+    def fake_fetch_manifest(api_base, database, *, errors=None, timeout=5.0):
+        return dict(server_payload)
+
+    side_effect = _routing_urlopen(
+        {"datasets/chart-data": _chart_data_payload("ds_server_manifest")}
+    )
+
+    with (
+        patch("urllib.request.urlopen", side_effect=side_effect),
+        patch.object(snapshot_mod, "_try_fetch_build_manifest", fake_fetch_manifest),
+    ):
+        snapshot = DatasetSnapshot.build(
+            api_base="https://stub.example", database="manifestshard"
+        )
+
+    assert snapshot.source == "live"
+    assert snapshot.manifest["schema_version"] == "2.1.0"
+    assert snapshot.manifest["dataset_count"] == snapshot.dataset_count == 1
+    assert snapshot.manifest["git_sha"] == "abc1234"
+    assert snapshot.manifest["last_ingested_at"] == "2026-04-18T16:10:52.827000Z"
+    # Convenience property mirrors the manifest field.
+    assert snapshot.schema_version == "2.1.0"
+    # Count agreed → no mismatch warning leaked through.
+    assert not any("build-manifest dataset_count" in e for e in snapshot.api_errors)
+
+
+def test_manifest_falls_back_on_manifest_error():
+    """When ``/build-manifest`` raises, the snapshot still builds and
+    ``manifest`` reverts to the locally-projected dict — no exception
+    leaks to the caller.
+    """
+
+    def fake_fetch_manifest(api_base, database, *, errors=None, timeout=5.0):
+        # Mimic the helper's contract: on failure, append to errors and
+        # return ``None``. The caller (``_live_snapshot``) must still
+        # produce a valid snapshot.
+        if errors is not None:
+            errors.append("build-manifest error at ...: simulated outage")
+        return None
+
+    side_effect = _routing_urlopen(
+        {"datasets/chart-data": _chart_data_payload("ds_manifest_down")}
+    )
+
+    with (
+        patch("urllib.request.urlopen", side_effect=side_effect),
+        patch.object(snapshot_mod, "_try_fetch_build_manifest", fake_fetch_manifest),
+    ):
+        snapshot = DatasetSnapshot.build(
+            api_base="https://stub.example", database="manifestdown"
+        )
+
+    assert snapshot.source == "live"
+    assert snapshot.dataset_count == 1
+    # Local projection format: {"source", "dataset_count", "fetched_at"}.
+    assert snapshot.manifest["source"] == "live"
+    assert snapshot.manifest["dataset_count"] == 1
+    assert "fetched_at" in snapshot.manifest
+    # No server-only fields leaked through.
+    assert "schema_version" not in snapshot.manifest
+    assert snapshot.schema_version is None
+    # The fetch failure is surfaced on api_errors per the helper contract.
+    assert any("build-manifest" in e for e in snapshot.api_errors)
+
+
+def test_manifest_count_mismatch_tagged():
+    """Server's ``dataset_count`` disagreeing with the snapshot's row
+    count is surfaced on ``api_errors`` (never raised) so the B2 CI gate
+    can refuse to publish.
+    """
+    server_payload = _server_manifest(dataset_count=9999, schema_version="2.1.0")
+
+    def fake_fetch_manifest(api_base, database, *, errors=None, timeout=5.0):
+        return dict(server_payload)
+
+    side_effect = _routing_urlopen(
+        {"datasets/chart-data": _chart_data_payload("ds_skew")}
+    )
+
+    with (
+        patch("urllib.request.urlopen", side_effect=side_effect),
+        patch.object(snapshot_mod, "_try_fetch_build_manifest", fake_fetch_manifest),
+    ):
+        snapshot = DatasetSnapshot.build(
+            api_base="https://stub.example", database="skewshard"
+        )
+
+    # Snapshot still builds — divergence is a warning, not a failure.
+    assert snapshot.source == "live"
+    assert snapshot.dataset_count == 1  # the rows we actually loaded
+    # Server manifest still surfaced verbatim.
+    assert snapshot.manifest["dataset_count"] == 9999
+    # Mismatch tagged on api_errors with the exact format from the spec.
+    assert any(
+        "build-manifest dataset_count=9999" in e and "snapshot.rows()=1" in e
+        for e in snapshot.api_errors
+    ), snapshot.api_errors
+
+
+def test_manifest_not_fetched_in_csv_fallback_path():
+    """CSV-fallback paths must NOT hit ``/build-manifest``.
+
+    When the live API is unreachable we fall back to the disk cache
+    (or package CSV). In that state the server is by definition not
+    contributing data to this snapshot, so calling
+    ``/build-manifest`` would be both wasteful and potentially
+    misleading (it would attach server provenance to non-server
+    data). Verify the helper is never called on the fallback path.
+    """
+    fake_fetch_manifest = MagicMock(return_value=None)
+
+    with (
+        patch(
+            "urllib.request.urlopen",
+            side_effect=urllib.error.URLError("network unreachable"),
+        ),
+        patch.object(snapshot_mod, "_try_fetch_build_manifest", fake_fetch_manifest),
+    ):
+        snapshot = DatasetSnapshot.build(
+            api_base="https://stub.example", database="csvfallback"
+        )
+
+    assert snapshot.source == "package-csv"
+    fake_fetch_manifest.assert_not_called()
+    # The fallback's local projection is what surfaces on ``manifest``.
+    assert snapshot.manifest["source"] == "package-csv"
+    assert snapshot.manifest["dataset_count"] == snapshot.dataset_count
+
+
+# ---------------------------------------------------------------------------
 # Optional: real-network smoke test (skipped by default)
 # ---------------------------------------------------------------------------
 
@@ -612,3 +820,7 @@ def test_build_live_against_real_api():
     snapshot = DatasetSnapshot.build()
     assert snapshot.source == "live"
     assert snapshot.dataset_count > 0
+    # A2 contract: a live build surfaces the server manifest verbatim,
+    # including a schema_version string.
+    assert snapshot.schema_version is not None
+    assert "dataset_count" in snapshot.manifest

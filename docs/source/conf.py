@@ -3036,8 +3036,8 @@ def _make_count_bar_chart(
 # BIDS sex column (objects/columns.yaml) defines three phenotypical categories,
 # each with a short and long form, all case-insensitive.
 # Keys outside all three sets are treated as unknown and folded into "Other".
-_BIDS_FEMALE_KEYS = {"f", "female"}
-_BIDS_MALE_KEYS = {"m", "male"}
+_BIDS_FEMALE_KEYS = {"f", "female", "fem", "w", "women", "girl", "1"}
+_BIDS_MALE_KEYS = {"m", "male", "man", "men", "boy", "2"}
 _BIDS_OTHER_KEYS = {"o", "other"}
 
 
@@ -4138,21 +4138,56 @@ def _editorial_citation_label(value: object) -> str:
     return f"{f:.1f}"
 
 
+_BIDS_TASK_CAMEL_RE = re.compile(r"(?<=[a-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])")
+
+
+def _humanise_bids_task(token: str) -> str:
+    """Turn a BIDS task entity (``neurCorrYoung``) into a sentence-case
+    label (``Neur Corr Young``). Underscores and hyphens are also
+    softened to spaces. The canonical token is preserved separately so
+    callers can keep the original in ``<code>`` for copy-paste.
+    """
+    if not token:
+        return ""
+    parts = re.split(r"[_\-]+", token)
+    words: list[str] = []
+    for part in parts:
+        if not part:
+            continue
+        # Split camelCase / PascalCase runs without breaking acronym sequences.
+        for sub in _BIDS_TASK_CAMEL_RE.split(part):
+            if sub:
+                words.append(sub[0].upper() + sub[1:])
+    return " ".join(words)
+
+
 def _editorial_tasks_label(tasks: Sequence[str]) -> str:
     """Compact label for a tasks list.
 
     One task → just the name. Two or three → comma-joined. Four-plus
     → ``"<count> tasks · first, second, …"`` so the rail row stays
-    readable even for HBN-style 10-task datasets.
+    readable even for HBN-style 10-task datasets. Tokens that look like
+    camelCase BIDS task entities are softened into a human-readable
+    label paired with the canonical ``<code>`` so users can still
+    copy-paste the exact identifier.
     """
     cleaned = [str(t).strip() for t in (tasks or []) if str(t).strip()]
     if not cleaned:
         return "—"
+
+    def render(tok: str) -> str:
+        # Only annotate when humanising actually changes the token —
+        # short lower-case names like "rest" need no wrap.
+        nice = _humanise_bids_task(tok)
+        if nice and nice.lower().replace(" ", "") != tok.lower():
+            return f'<code title="{nice}">{tok}</code>'
+        return f"<code>{tok}</code>"
+
     if len(cleaned) == 1:
-        return f"<code>{cleaned[0]}</code>"
+        return render(cleaned[0])
     if len(cleaned) <= 3:
-        return " · ".join(f"<code>{t}</code>" for t in cleaned)
-    head = " · ".join(f"<code>{t}</code>" for t in cleaned[:2])
+        return " · ".join(render(t) for t in cleaned)
+    head = " · ".join(render(t) for t in cleaned[:2])
     return f"{len(cleaned)} tasks · {head} · …"
 
 
@@ -4343,13 +4378,23 @@ def _format_editorial_fieldcard_section(context: Mapping[str, object]) -> str:
     if s3_base:
         block += f"<dt>Storage</dt><dd><code>{s3_base}</code></dd>"
 
-    # Tags section — pathology / modality-tag / type
+    # Tags section — pathology / paradigm / experiment type.
+    # Rename the rail's "Modality" tag to "Paradigm" so it doesn't collide
+    # with the recording-modality row in the Signal section above, and
+    # drop "Type" when it duplicates "Paradigm" (NEMAR/OpenNeuro often
+    # surfaces the same string on both `modality of exp` and `type of exp`).
+    if (
+        tag_modality
+        and tag_type
+        and tag_modality.strip().lower() == tag_type.strip().lower()
+    ):
+        tag_type = ""
     if tag_pathology or tag_type or tag_modality:
         block += '<dt class="hdr">Tags</dt><dd class="hdrpad"></dd>'
         if tag_pathology:
             block += f"<dt>Pathology</dt><dd>{tag_pathology}</dd>"
         if tag_modality:
-            block += f"<dt>Modality</dt><dd>{tag_modality}</dd>"
+            block += f"<dt>Paradigm</dt><dd>{tag_modality}</dd>"
         if tag_type:
             block += f"<dt>Type</dt><dd>{tag_type}</dd>"
 

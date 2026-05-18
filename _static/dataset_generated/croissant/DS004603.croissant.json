@@ -1,0 +1,135 @@
+{
+  "@context": {
+    "@language": "en",
+    "@vocab": "https://schema.org/",
+    "citeAs": "cr:citeAs",
+    "column": "cr:column",
+    "conformsTo": "dct:conformsTo",
+    "cr": "http://mlcommons.org/croissant/",
+    "data": {
+      "@id": "cr:data",
+      "@type": "@json"
+    },
+    "dataType": {
+      "@id": "cr:dataType",
+      "@type": "@vocab"
+    },
+    "dct": "http://purl.org/dc/terms/",
+    "extract": "cr:extract",
+    "field": "cr:field",
+    "fileObject": "cr:fileObject",
+    "fileProperty": "cr:fileProperty",
+    "fileSet": "cr:fileSet",
+    "format": "cr:format",
+    "includes": "cr:includes",
+    "isLiveDataset": "cr:isLiveDataset",
+    "jsonPath": "cr:jsonPath",
+    "key": "cr:key",
+    "md5": "cr:md5",
+    "parentField": "cr:parentField",
+    "path": "cr:path",
+    "recordSet": "cr:recordSet",
+    "references": "cr:references",
+    "regex": "cr:regex",
+    "repeated": "cr:repeated",
+    "replace": "cr:replace",
+    "sc": "https://schema.org/",
+    "separator": "cr:separator",
+    "source": "cr:source",
+    "subField": "cr:subField",
+    "transform": "cr:transform"
+  },
+  "@type": "sc:Dataset",
+  "conformsTo": "http://mlcommons.org/croissant/1.0",
+  "name": "ds004603",
+  "alternateName": [
+    "DS004603"
+  ],
+  "description": "Visual Attribute-Specific Contextual Trajectory Paradigm. eeg dataset accessible via EEGDash as `DS004603` with standardized BIDS metadata.",
+  "url": "https://eegdash.org/api/dataset/eegdash.dataset.DS004603.html",
+  "keywords": [
+    "EEG",
+    "BIDS",
+    "neuroscience",
+    "Visual",
+    "Healthy",
+    "Perception"
+  ],
+  "isAccessibleForFree": true,
+  "includedInDataCatalog": {
+    "@type": "sc:DataCatalog",
+    "name": "EEG Dash",
+    "url": "https://eegdash.org/"
+  },
+  "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "creator": [
+    {
+      "@type": "sc:Person",
+      "name": "Benjamin Lowe (ben.lowe@mq.edu.au)"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Jonathan Robinson (jonathan.robinson@monash.edu)"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Naohide Yamamoto (naohide.yamamoto@qut.edu.au)"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Hinze Hogendoorn (hinze.hogendoorn@qut.edu.au)"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Patrick Johnston (dr.pat.johnston@icloud.com)"
+    }
+  ],
+  "editor": {
+    "@type": "sc:Person",
+    "name": "Patrick Johnston (dr.pat.johnston@icloud.com)"
+  },
+  "datePublished": "2023",
+  "identifier": "doi:10.18112/openneuro.ds004603.v1.1.0",
+  "sameAs": [
+    "https://doi.org/10.18112/openneuro.ds004603.v1.1.0",
+    "https://openneuro.org/datasets/ds004603",
+    "https://huggingface.co/datasets/EEGDash/ds004603"
+  ],
+  "citeAs": "Benjamin Lowe (ben.lowe@mq.edu.au), Jonathan Robinson (jonathan.robinson@monash.edu), Naohide Yamamoto (naohide.yamamoto@qut.edu.au), Hinze Hogendoorn (hinze.hogendoorn@qut.edu.au), Patrick Johnston (dr.pat.johnston@icloud.com) (2023). Visual Attribute-Specific Contextual Trajectory Paradigm. doi:10.18112/openneuro.ds004603.v1.1.0",
+  "version": "1.11.0",
+  "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004603-openneuro",
+      "name": "ds004603 on OpenNeuro",
+      "description": "OpenNeuro dataset landing page.",
+      "contentUrl": "https://openneuro.org/datasets/ds004603",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004603-eegdash-records",
+      "name": "ds004603 EEGDash records (live)",
+      "description": "Live JSON listing of every recording in this dataset, with BIDS metadata, channel counts, and S3 storage keys.",
+      "contentUrl": "https://data.eegdash.org/api/eegdash/records?filter=%7B%22dataset%22%3A%22ds004603%22%7D",
+      "encodingFormat": "application/json",
+      "isLiveDataset": true
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004603-nemar",
+      "name": "ds004603 on NeMAR",
+      "description": "NEMAR dataset landing page with pipeline plots.",
+      "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=ds004603",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004603-huggingface",
+      "name": "EEGDash/ds004603 on Hugging Face",
+      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
+      "contentUrl": "https://huggingface.co/datasets/EEGDash/ds004603",
+      "encodingFormat": "application/vnd.huggingface-dataset+json"
+    }
+  ]
+}

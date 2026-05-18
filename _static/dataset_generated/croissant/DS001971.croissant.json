@@ -1,0 +1,157 @@
+{
+  "@context": {
+    "@language": "en",
+    "@vocab": "https://schema.org/",
+    "citeAs": "cr:citeAs",
+    "column": "cr:column",
+    "conformsTo": "dct:conformsTo",
+    "cr": "http://mlcommons.org/croissant/",
+    "data": {
+      "@id": "cr:data",
+      "@type": "@json"
+    },
+    "dataType": {
+      "@id": "cr:dataType",
+      "@type": "@vocab"
+    },
+    "dct": "http://purl.org/dc/terms/",
+    "extract": "cr:extract",
+    "field": "cr:field",
+    "fileObject": "cr:fileObject",
+    "fileProperty": "cr:fileProperty",
+    "fileSet": "cr:fileSet",
+    "format": "cr:format",
+    "includes": "cr:includes",
+    "isLiveDataset": "cr:isLiveDataset",
+    "jsonPath": "cr:jsonPath",
+    "key": "cr:key",
+    "md5": "cr:md5",
+    "parentField": "cr:parentField",
+    "path": "cr:path",
+    "recordSet": "cr:recordSet",
+    "references": "cr:references",
+    "regex": "cr:regex",
+    "repeated": "cr:repeated",
+    "replace": "cr:replace",
+    "sc": "https://schema.org/",
+    "separator": "cr:separator",
+    "source": "cr:source",
+    "subField": "cr:subField",
+    "transform": "cr:transform"
+  },
+  "@type": "sc:Dataset",
+  "conformsTo": "http://mlcommons.org/croissant/1.0",
+  "name": "ds001971",
+  "alternateName": [
+    "DS001971"
+  ],
+  "description": "Audiocue walking study. eeg dataset accessible via EEGDash as `DS001971` with standardized BIDS metadata.",
+  "url": "https://eegdash.org/api/dataset/eegdash.dataset.DS001971.html",
+  "keywords": [
+    "EEG",
+    "BIDS",
+    "neuroscience",
+    "Auditory",
+    "Healthy",
+    "Motor"
+  ],
+  "isAccessibleForFree": true,
+  "includedInDataCatalog": {
+    "@type": "sc:DataCatalog",
+    "name": "EEG Dash",
+    "url": "https://eegdash.org/"
+  },
+  "license": "Creative commons",
+  "creator": [
+    {
+      "@type": "sc:Person",
+      "name": "Johanna Wagner"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Ramon Martinez-Cancino"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Scott Makeig"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Arnaud Delorme"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Christa Neuper"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Teodoro Solis-Escalante"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Gernot Mueller-Putz"
+    }
+  ],
+  "editor": {
+    "@type": "sc:Person",
+    "name": "Gernot Mueller-Putz"
+  },
+  "funder": [
+    {
+      "@type": "sc:Organization",
+      "name": "Future Labs Reloaded 2013 of the Faculty of Computer Science at the Graz University of Technology, Austria, OeAD (Austrian Agency for International Mobility)."
+    },
+    {
+      "@type": "sc:Organization",
+      "name": "Marietta Blau Grant to J.W., the BMWF (Austrian Federal Ministry of Science and Research)."
+    },
+    {
+      "@type": "sc:Organization",
+      "name": "Gift to University of California San Diego by the Swartz Foundation (Old Field, NY)."
+    }
+  ],
+  "datePublished": "2019",
+  "identifier": "doi:10.18112/openneuro.ds001971.v1.1.1",
+  "sameAs": [
+    "https://doi.org/10.18112/openneuro.ds001971.v1.1.1",
+    "https://openneuro.org/datasets/ds001971",
+    "https://huggingface.co/datasets/EEGDash/ds001971"
+  ],
+  "citeAs": "Johanna Wagner, Ramon Martinez-Cancino, Scott Makeig, Arnaud Delorme, Christa Neuper (2019). Audiocue walking study. doi:10.18112/openneuro.ds001971.v1.1.1",
+  "version": "v1.2.0",
+  "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds001971-openneuro",
+      "name": "ds001971 on OpenNeuro",
+      "description": "OpenNeuro dataset landing page.",
+      "contentUrl": "https://openneuro.org/datasets/ds001971",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds001971-eegdash-records",
+      "name": "ds001971 EEGDash records (live)",
+      "description": "Live JSON listing of every recording in this dataset, with BIDS metadata, channel counts, and S3 storage keys.",
+      "contentUrl": "https://data.eegdash.org/api/eegdash/records?filter=%7B%22dataset%22%3A%22ds001971%22%7D",
+      "encodingFormat": "application/json",
+      "isLiveDataset": true
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds001971-nemar",
+      "name": "ds001971 on NeMAR",
+      "description": "NEMAR dataset landing page with pipeline plots.",
+      "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=ds001971",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds001971-huggingface",
+      "name": "EEGDash/ds001971 on Hugging Face",
+      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
+      "contentUrl": "https://huggingface.co/datasets/EEGDash/ds001971",
+      "encodingFormat": "application/vnd.huggingface-dataset+json"
+    }
+  ]
+}

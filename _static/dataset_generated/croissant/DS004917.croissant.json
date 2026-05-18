@@ -1,0 +1,153 @@
+{
+  "@context": {
+    "@language": "en",
+    "@vocab": "https://schema.org/",
+    "citeAs": "cr:citeAs",
+    "column": "cr:column",
+    "conformsTo": "dct:conformsTo",
+    "cr": "http://mlcommons.org/croissant/",
+    "data": {
+      "@id": "cr:data",
+      "@type": "@json"
+    },
+    "dataType": {
+      "@id": "cr:dataType",
+      "@type": "@vocab"
+    },
+    "dct": "http://purl.org/dc/terms/",
+    "extract": "cr:extract",
+    "field": "cr:field",
+    "fileObject": "cr:fileObject",
+    "fileProperty": "cr:fileProperty",
+    "fileSet": "cr:fileSet",
+    "format": "cr:format",
+    "includes": "cr:includes",
+    "isLiveDataset": "cr:isLiveDataset",
+    "jsonPath": "cr:jsonPath",
+    "key": "cr:key",
+    "md5": "cr:md5",
+    "parentField": "cr:parentField",
+    "path": "cr:path",
+    "recordSet": "cr:recordSet",
+    "references": "cr:references",
+    "regex": "cr:regex",
+    "repeated": "cr:repeated",
+    "replace": "cr:replace",
+    "sc": "https://schema.org/",
+    "separator": "cr:separator",
+    "source": "cr:source",
+    "subField": "cr:subField",
+    "transform": "cr:transform"
+  },
+  "@type": "sc:Dataset",
+  "conformsTo": "http://mlcommons.org/croissant/1.0",
+  "name": "ds004917",
+  "alternateName": [
+    "DS004917"
+  ],
+  "description": "Probability Decision-making Task with ambiguity. eeg dataset accessible via EEGDash as `DS004917` with standardized BIDS metadata.",
+  "url": "https://eegdash.org/api/dataset/eegdash.dataset.DS004917.html",
+  "keywords": [
+    "EEG",
+    "BIDS",
+    "neuroscience",
+    "Multisensory",
+    "Healthy",
+    "Decision-making"
+  ],
+  "isAccessibleForFree": true,
+  "includedInDataCatalog": {
+    "@type": "sc:DataCatalog",
+    "name": "EEG Dash",
+    "url": "https://eegdash.org/"
+  },
+  "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "creator": [
+    {
+      "@type": "sc:Person",
+      "name": "Alejandra Figueroa-Vargas"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Gabriela Valdebenito-Oyarzo"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "María Paz Martínez-Molina"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Francisco Zamorano"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Pablo Billeke"
+    }
+  ],
+  "editor": {
+    "@type": "sc:Person",
+    "name": "Pablo Billeke"
+  },
+  "funder": [
+    {
+      "@type": "sc:Organization",
+      "name": "ANID FONDECYT 11140535"
+    },
+    {
+      "@type": "sc:Organization",
+      "name": "ANID FONDECYT 1181295"
+    },
+    {
+      "@type": "sc:Organization",
+      "name": "ANID FONDECYT 1211227"
+    },
+    {
+      "@type": "sc:Organization",
+      "name": "ANID FONDEQUIP EQM150076"
+    }
+  ],
+  "datePublished": "2024",
+  "identifier": "doi:10.18112/openneuro.ds004917.v1.0.1",
+  "sameAs": [
+    "https://doi.org/10.18112/openneuro.ds004917.v1.0.1",
+    "https://openneuro.org/datasets/ds004917",
+    "https://huggingface.co/datasets/EEGDash/ds004917"
+  ],
+  "citeAs": "Alejandra Figueroa-Vargas, Gabriela Valdebenito-Oyarzo, María Paz Martínez-Molina, Francisco Zamorano, Pablo Billeke (2024). Probability Decision-making Task with ambiguity. doi:10.18112/openneuro.ds004917.v1.0.1",
+  "version": "1.9.0",
+  "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004917-openneuro",
+      "name": "ds004917 on OpenNeuro",
+      "description": "OpenNeuro dataset landing page.",
+      "contentUrl": "https://openneuro.org/datasets/ds004917",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004917-eegdash-records",
+      "name": "ds004917 EEGDash records (live)",
+      "description": "Live JSON listing of every recording in this dataset, with BIDS metadata, channel counts, and S3 storage keys.",
+      "contentUrl": "https://data.eegdash.org/api/eegdash/records?filter=%7B%22dataset%22%3A%22ds004917%22%7D",
+      "encodingFormat": "application/json",
+      "isLiveDataset": true
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004917-nemar",
+      "name": "ds004917 on NeMAR",
+      "description": "NEMAR dataset landing page with pipeline plots.",
+      "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=ds004917",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004917-huggingface",
+      "name": "EEGDash/ds004917 on Hugging Face",
+      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
+      "contentUrl": "https://huggingface.co/datasets/EEGDash/ds004917",
+      "encodingFormat": "application/vnd.huggingface-dataset+json"
+    }
+  ]
+}

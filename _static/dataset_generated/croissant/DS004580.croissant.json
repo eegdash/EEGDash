@@ -1,0 +1,153 @@
+{
+  "@context": {
+    "@language": "en",
+    "@vocab": "https://schema.org/",
+    "citeAs": "cr:citeAs",
+    "column": "cr:column",
+    "conformsTo": "dct:conformsTo",
+    "cr": "http://mlcommons.org/croissant/",
+    "data": {
+      "@id": "cr:data",
+      "@type": "@json"
+    },
+    "dataType": {
+      "@id": "cr:dataType",
+      "@type": "@vocab"
+    },
+    "dct": "http://purl.org/dc/terms/",
+    "extract": "cr:extract",
+    "field": "cr:field",
+    "fileObject": "cr:fileObject",
+    "fileProperty": "cr:fileProperty",
+    "fileSet": "cr:fileSet",
+    "format": "cr:format",
+    "includes": "cr:includes",
+    "isLiveDataset": "cr:isLiveDataset",
+    "jsonPath": "cr:jsonPath",
+    "key": "cr:key",
+    "md5": "cr:md5",
+    "parentField": "cr:parentField",
+    "path": "cr:path",
+    "recordSet": "cr:recordSet",
+    "references": "cr:references",
+    "regex": "cr:regex",
+    "repeated": "cr:repeated",
+    "replace": "cr:replace",
+    "sc": "https://schema.org/",
+    "separator": "cr:separator",
+    "source": "cr:source",
+    "subField": "cr:subField",
+    "transform": "cr:transform"
+  },
+  "@type": "sc:Dataset",
+  "conformsTo": "http://mlcommons.org/croissant/1.0",
+  "name": "ds004580",
+  "alternateName": [
+    "DS004580"
+  ],
+  "description": "Simon-conflict Task.. eeg dataset accessible via EEGDash as `DS004580` with standardized BIDS metadata.",
+  "url": "https://eegdash.org/api/dataset/eegdash.dataset.DS004580.html",
+  "keywords": [
+    "EEG",
+    "BIDS",
+    "neuroscience",
+    "Visual",
+    "Parkinson's",
+    "Decision-making"
+  ],
+  "isAccessibleForFree": true,
+  "includedInDataCatalog": {
+    "@type": "sc:DataCatalog",
+    "name": "EEG Dash",
+    "url": "https://eegdash.org/"
+  },
+  "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "creator": [
+    {
+      "@type": "sc:Person",
+      "name": "Arun Singh arun.singh@usd.edu"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Rachel Cole rachel-cole@uiowa.edu"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Arturo Espinoza arturo-espinoza@uiowa.edu"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Jan R Wessel jan-wessel@uiowa.edu"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Jim Cavanagh jcavanagh@unm.edu"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Nandakumar Narayanan nandakumar-narayanan@uiowa.edu"
+    }
+  ],
+  "editor": {
+    "@type": "sc:Person",
+    "name": "Nandakumar Narayanan nandakumar-narayanan@uiowa.edu"
+  },
+  "funder": [
+    {
+      "@type": "sc:Organization",
+      "name": "This dataset was supported by NIH P20NS123151 and R01NS100849 to NSN,"
+    },
+    {
+      "@type": "sc:Organization",
+      "name": "and NRSA F32 AG069445-01 to RC. All research protocols were approved by the University of Iowa"
+    },
+    {
+      "@type": "sc:Organization",
+      "name": "Human Subjects Review Board (IRB# 201707828)."
+    }
+  ],
+  "datePublished": "2023",
+  "identifier": "doi:10.18112/openneuro.ds004580.v1.0.0",
+  "sameAs": [
+    "https://doi.org/10.18112/openneuro.ds004580.v1.0.0",
+    "https://openneuro.org/datasets/ds004580",
+    "https://huggingface.co/datasets/EEGDash/ds004580"
+  ],
+  "citeAs": "Arun Singh arun.singh@usd.edu, Rachel Cole rachel-cole@uiowa.edu, Arturo Espinoza arturo-espinoza@uiowa.edu, Jan R Wessel jan-wessel@uiowa.edu, Jim Cavanagh jcavanagh@unm.edu (2023). Simon-conflict Task.. doi:10.18112/openneuro.ds004580.v1.0.0",
+  "version": "v1.2.1",
+  "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004580-openneuro",
+      "name": "ds004580 on OpenNeuro",
+      "description": "OpenNeuro dataset landing page.",
+      "contentUrl": "https://openneuro.org/datasets/ds004580",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004580-eegdash-records",
+      "name": "ds004580 EEGDash records (live)",
+      "description": "Live JSON listing of every recording in this dataset, with BIDS metadata, channel counts, and S3 storage keys.",
+      "contentUrl": "https://data.eegdash.org/api/eegdash/records?filter=%7B%22dataset%22%3A%22ds004580%22%7D",
+      "encodingFormat": "application/json",
+      "isLiveDataset": true
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004580-nemar",
+      "name": "ds004580 on NeMAR",
+      "description": "NEMAR dataset landing page with pipeline plots.",
+      "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=ds004580",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004580-huggingface",
+      "name": "EEGDash/ds004580 on Hugging Face",
+      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
+      "contentUrl": "https://huggingface.co/datasets/EEGDash/ds004580",
+      "encodingFormat": "application/vnd.huggingface-dataset+json"
+    }
+  ]
+}

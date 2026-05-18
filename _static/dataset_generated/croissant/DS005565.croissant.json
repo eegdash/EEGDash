@@ -1,0 +1,139 @@
+{
+  "@context": {
+    "@language": "en",
+    "@vocab": "https://schema.org/",
+    "citeAs": "cr:citeAs",
+    "column": "cr:column",
+    "conformsTo": "dct:conformsTo",
+    "cr": "http://mlcommons.org/croissant/",
+    "data": {
+      "@id": "cr:data",
+      "@type": "@json"
+    },
+    "dataType": {
+      "@id": "cr:dataType",
+      "@type": "@vocab"
+    },
+    "dct": "http://purl.org/dc/terms/",
+    "extract": "cr:extract",
+    "field": "cr:field",
+    "fileObject": "cr:fileObject",
+    "fileProperty": "cr:fileProperty",
+    "fileSet": "cr:fileSet",
+    "format": "cr:format",
+    "includes": "cr:includes",
+    "isLiveDataset": "cr:isLiveDataset",
+    "jsonPath": "cr:jsonPath",
+    "key": "cr:key",
+    "md5": "cr:md5",
+    "parentField": "cr:parentField",
+    "path": "cr:path",
+    "recordSet": "cr:recordSet",
+    "references": "cr:references",
+    "regex": "cr:regex",
+    "repeated": "cr:repeated",
+    "replace": "cr:replace",
+    "sc": "https://schema.org/",
+    "separator": "cr:separator",
+    "source": "cr:source",
+    "subField": "cr:subField",
+    "transform": "cr:transform"
+  },
+  "@type": "sc:Dataset",
+  "conformsTo": "http://mlcommons.org/croissant/1.0",
+  "name": "ds005565",
+  "alternateName": [
+    "DS005565"
+  ],
+  "description": "Neural associations between fingerspelling, print, and signs: An ERP priming study with deaf readers. eeg dataset accessible via EEGDash as `DS005565` with standardized BIDS metadata.",
+  "url": "https://eegdash.org/api/dataset/eegdash.dataset.DS005565.html",
+  "keywords": [
+    "EEG",
+    "BIDS",
+    "neuroscience",
+    "['Visual']",
+    "['Healthy']",
+    "['Memory']"
+  ],
+  "isAccessibleForFree": true,
+  "includedInDataCatalog": {
+    "@type": "sc:DataCatalog",
+    "name": "EEG Dash",
+    "url": "https://eegdash.org/"
+  },
+  "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "creator": [
+    {
+      "@type": "sc:Person",
+      "name": "Brittany Lee"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Sofia E. Ortega"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Priscilla M. Martinez"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Katherine J. Midgley"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Phillip J. Holcomb"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Karen Emmorey"
+    }
+  ],
+  "editor": {
+    "@type": "sc:Person",
+    "name": "Karen Emmorey"
+  },
+  "datePublished": "2024",
+  "identifier": "doi:10.18112/openneuro.ds005565.v1.0.3",
+  "sameAs": [
+    "https://doi.org/10.18112/openneuro.ds005565.v1.0.3",
+    "https://openneuro.org/datasets/ds005565",
+    "https://huggingface.co/datasets/EEGDash/ds005565"
+  ],
+  "citeAs": "Brittany Lee, Sofia E. Ortega, Priscilla M. Martinez, Katherine J. Midgley, Phillip J. Holcomb (2024). Neural associations between fingerspelling, print, and signs: An ERP priming study with deaf readers. doi:10.18112/openneuro.ds005565.v1.0.3",
+  "version": "1.8.0",
+  "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005565-openneuro",
+      "name": "ds005565 on OpenNeuro",
+      "description": "OpenNeuro dataset landing page.",
+      "contentUrl": "https://openneuro.org/datasets/ds005565",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005565-eegdash-records",
+      "name": "ds005565 EEGDash records (live)",
+      "description": "Live JSON listing of every recording in this dataset, with BIDS metadata, channel counts, and S3 storage keys.",
+      "contentUrl": "https://data.eegdash.org/api/eegdash/records?filter=%7B%22dataset%22%3A%22ds005565%22%7D",
+      "encodingFormat": "application/json",
+      "isLiveDataset": true
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005565-nemar",
+      "name": "ds005565 on NeMAR",
+      "description": "NEMAR dataset landing page with pipeline plots.",
+      "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=ds005565",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005565-huggingface",
+      "name": "EEGDash/ds005565 on Hugging Face",
+      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
+      "contentUrl": "https://huggingface.co/datasets/EEGDash/ds005565",
+      "encodingFormat": "application/vnd.huggingface-dataset+json"
+    }
+  ]
+}

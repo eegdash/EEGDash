@@ -1,0 +1,266 @@
+{
+  "@context": {
+    "@language": "en",
+    "@vocab": "https://schema.org/",
+    "citeAs": "cr:citeAs",
+    "column": "cr:column",
+    "conformsTo": "dct:conformsTo",
+    "cr": "http://mlcommons.org/croissant/",
+    "data": {
+      "@id": "cr:data",
+      "@type": "@json"
+    },
+    "dataType": {
+      "@id": "cr:dataType",
+      "@type": "@vocab"
+    },
+    "dct": "http://purl.org/dc/terms/",
+    "extract": "cr:extract",
+    "field": "cr:field",
+    "fileObject": "cr:fileObject",
+    "fileProperty": "cr:fileProperty",
+    "fileSet": "cr:fileSet",
+    "format": "cr:format",
+    "includes": "cr:includes",
+    "isLiveDataset": "cr:isLiveDataset",
+    "jsonPath": "cr:jsonPath",
+    "key": "cr:key",
+    "md5": "cr:md5",
+    "parentField": "cr:parentField",
+    "path": "cr:path",
+    "recordSet": "cr:recordSet",
+    "references": "cr:references",
+    "regex": "cr:regex",
+    "repeated": "cr:repeated",
+    "replace": "cr:replace",
+    "sc": "https://schema.org/",
+    "separator": "cr:separator",
+    "source": "cr:source",
+    "subField": "cr:subField",
+    "transform": "cr:transform"
+  },
+  "@type": "sc:Dataset",
+  "conformsTo": "http://mlcommons.org/croissant/1.0",
+  "name": "ds007358",
+  "alternateName": [
+    "DS007358"
+  ],
+  "description": "A subset of large-scale EEG dataset (India + Tanzania). eeg dataset accessible via EEGDash as `DS007358` with standardized BIDS metadata.",
+  "url": "https://eegdash.org/api/dataset/eegdash.dataset.DS007358.html",
+  "keywords": [
+    "EEG",
+    "BIDS",
+    "neuroscience",
+    "['Resting State']",
+    "['Healthy']",
+    "['Resting-state']"
+  ],
+  "isAccessibleForFree": true,
+  "includedInDataCatalog": {
+    "@type": "sc:DataCatalog",
+    "name": "EEG Dash",
+    "url": "https://eegdash.org/"
+  },
+  "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "creator": [
+    {
+      "@type": "sc:Person",
+      "name": "John Mary Vianney"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Shailender Swaminathan"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Jennifer Jane Newson"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Dhanya Parameshwaran"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Narayan Puthanmadam Subramaniyam"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Swaeta Singha Roy"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Revocatus Machunda"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Achiwa Sapuli"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Santanu Pramanik"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "John Victor Arun Kumar"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Pramod Tiwari"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "G. Nelson Mathews Mathuram"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Laurent Boniface Bembeleza"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Joyce Philemon Laiser"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Winifrida Julius Luhwago"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Theresia Pastory Maduka"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "John Olais Mollel"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Neema Gadiely Mollel"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Adella Aloys Mugizi"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Isaac Lwaga Mwamakula"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Raymond Edwin Rweyemamu"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Upendo Firimini Samweli"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "James Isaac Simpito"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Kelvin Ewald Shirima"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Anand Anbalagan"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Suresh Kumar Arumugam"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Vinitha Dhanapal"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Kanimozhi Gunasekaran"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Neelu Kashyap"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Dheeraj Kumar"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Durgesh Pandey"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Poonam Pandey"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Arunkumar Panneerselvam"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Sonam Rai"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Porselvi Rajendran"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Santhoshkumar Sekar"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Oliazhagan Sivalingam"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Prahalad Soni"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Pushpkala Soni"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Tara C. Thiagarajan"
+    }
+  ],
+  "editor": {
+    "@type": "sc:Person",
+    "name": "Tara C. Thiagarajan"
+  },
+  "datePublished": "2026",
+  "identifier": "doi:10.18112/openneuro.ds007358.v1.0.0",
+  "sameAs": [
+    "https://doi.org/10.18112/openneuro.ds007358.v1.0.0",
+    "https://openneuro.org/datasets/ds007358"
+  ],
+  "citeAs": "John Mary Vianney, Shailender Swaminathan, Jennifer Jane Newson, Dhanya Parameshwaran, Narayan Puthanmadam Subramaniyam (2026). A subset of large-scale EEG dataset (India + Tanzania). doi:10.18112/openneuro.ds007358.v1.0.0",
+  "version": "1.8.0",
+  "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007358-openneuro",
+      "name": "ds007358 on OpenNeuro",
+      "description": "OpenNeuro dataset landing page.",
+      "contentUrl": "https://openneuro.org/datasets/ds007358",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007358-eegdash-records",
+      "name": "ds007358 EEGDash records (live)",
+      "description": "Live JSON listing of every recording in this dataset, with BIDS metadata, channel counts, and S3 storage keys.",
+      "contentUrl": "https://data.eegdash.org/api/eegdash/records?filter=%7B%22dataset%22%3A%22ds007358%22%7D",
+      "encodingFormat": "application/json",
+      "isLiveDataset": true
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007358-nemar",
+      "name": "ds007358 on NeMAR",
+      "description": "NEMAR dataset landing page with pipeline plots.",
+      "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=ds007358",
+      "encodingFormat": "text/html"
+    }
+  ]
+}

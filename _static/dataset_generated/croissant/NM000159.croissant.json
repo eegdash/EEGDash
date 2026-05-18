@@ -1,0 +1,150 @@
+{
+  "@context": {
+    "@language": "en",
+    "@vocab": "https://schema.org/",
+    "citeAs": "cr:citeAs",
+    "column": "cr:column",
+    "conformsTo": "dct:conformsTo",
+    "cr": "http://mlcommons.org/croissant/",
+    "data": {
+      "@id": "cr:data",
+      "@type": "@json"
+    },
+    "dataType": {
+      "@id": "cr:dataType",
+      "@type": "@vocab"
+    },
+    "dct": "http://purl.org/dc/terms/",
+    "extract": "cr:extract",
+    "field": "cr:field",
+    "fileObject": "cr:fileObject",
+    "fileProperty": "cr:fileProperty",
+    "fileSet": "cr:fileSet",
+    "format": "cr:format",
+    "includes": "cr:includes",
+    "isLiveDataset": "cr:isLiveDataset",
+    "jsonPath": "cr:jsonPath",
+    "key": "cr:key",
+    "md5": "cr:md5",
+    "parentField": "cr:parentField",
+    "path": "cr:path",
+    "recordSet": "cr:recordSet",
+    "references": "cr:references",
+    "regex": "cr:regex",
+    "repeated": "cr:repeated",
+    "replace": "cr:replace",
+    "sc": "https://schema.org/",
+    "separator": "cr:separator",
+    "source": "cr:source",
+    "subField": "cr:subField",
+    "transform": "cr:transform"
+  },
+  "@type": "sc:Dataset",
+  "conformsTo": "http://mlcommons.org/croissant/1.0",
+  "name": "nm000159",
+  "alternateName": [
+    "NM000159"
+  ],
+  "description": "MUniverse Avrillon et al 2024. emg dataset accessible via EEGDash as `NM000159` with standardized BIDS metadata.",
+  "url": "https://eegdash.org/api/dataset/eegdash.dataset.NM000159.html",
+  "keywords": [
+    "EEG",
+    "BIDS",
+    "neuroscience",
+    "EMG"
+  ],
+  "isAccessibleForFree": true,
+  "includedInDataCatalog": {
+    "@type": "sc:DataCatalog",
+    "name": "EEG Dash",
+    "url": "https://eegdash.org/"
+  },
+  "license": "CC0 BY 4.0",
+  "creator": [
+    {
+      "@type": "sc:Person",
+      "name": "Simon Avrillon"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Francois Hug"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Roger M. Enoka"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Arnault H. Caillet"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Dario Farina"
+    }
+  ],
+  "funder": [
+    {
+      "@type": "sc:Organization",
+      "name": "Agence Nationale de la Recherche (ANR-16-IDEX-0007)"
+    },
+    {
+      "@type": "sc:Organization",
+      "name": "Biotechnology and Biological Sciences Research Council (BB/V00896X)"
+    },
+    {
+      "@type": "sc:Organization",
+      "name": "Engineering and Physical Sciences Research Council (EP/T020970)"
+    },
+    {
+      "@type": "sc:Organization",
+      "name": "Agence Nationale de la Recherche (ANR-24-CE17-5805)"
+    },
+    {
+      "@type": "sc:Organization",
+      "name": "European Research Council (#810346)"
+    },
+    {
+      "@type": "sc:Organization",
+      "name": "Future project managed by the French National Research Agency (ANR-15-IDEX-01)"
+    },
+    {
+      "@type": "sc:Organization",
+      "name": "National Multiple Sclerosis Society (RG-2206-39688)"
+    }
+  ],
+  "datePublished": "20",
+  "identifier": "doi:https://doi.org/10.7910/DVN/L9OQY7",
+  "sameAs": [
+    "https://doi.org/https://doi.org/10.7910/DVN/L9OQY7",
+    "https://openneuro.org/datasets/nm000159"
+  ],
+  "citeAs": "Simon Avrillon, Francois Hug, Roger M. Enoka, Arnault H. Caillet, Dario Farina (20). MUniverse Avrillon et al 2024. doi:https://doi.org/10.7910/DVN/L9OQY7",
+  "version": "1.11.1",
+  "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000159-openneuro",
+      "name": "nm000159 on OpenNeuro",
+      "description": "OpenNeuro dataset landing page.",
+      "contentUrl": "https://openneuro.org/datasets/nm000159",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000159-eegdash-records",
+      "name": "nm000159 EEGDash records (live)",
+      "description": "Live JSON listing of every recording in this dataset, with BIDS metadata, channel counts, and S3 storage keys.",
+      "contentUrl": "https://data.eegdash.org/api/eegdash/records?filter=%7B%22dataset%22%3A%22nm000159%22%7D",
+      "encodingFormat": "application/json",
+      "isLiveDataset": true
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000159-nemar",
+      "name": "nm000159 on NeMAR",
+      "description": "NEMAR dataset landing page with pipeline plots.",
+      "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=nm000159",
+      "encodingFormat": "text/html"
+    }
+  ]
+}

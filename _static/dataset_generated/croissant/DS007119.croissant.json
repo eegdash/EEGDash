@@ -1,0 +1,180 @@
+{
+  "@context": {
+    "@language": "en",
+    "@vocab": "https://schema.org/",
+    "citeAs": "cr:citeAs",
+    "column": "cr:column",
+    "conformsTo": "dct:conformsTo",
+    "cr": "http://mlcommons.org/croissant/",
+    "data": {
+      "@id": "cr:data",
+      "@type": "@json"
+    },
+    "dataType": {
+      "@id": "cr:dataType",
+      "@type": "@vocab"
+    },
+    "dct": "http://purl.org/dc/terms/",
+    "extract": "cr:extract",
+    "field": "cr:field",
+    "fileObject": "cr:fileObject",
+    "fileProperty": "cr:fileProperty",
+    "fileSet": "cr:fileSet",
+    "format": "cr:format",
+    "includes": "cr:includes",
+    "isLiveDataset": "cr:isLiveDataset",
+    "jsonPath": "cr:jsonPath",
+    "key": "cr:key",
+    "md5": "cr:md5",
+    "parentField": "cr:parentField",
+    "path": "cr:path",
+    "recordSet": "cr:recordSet",
+    "references": "cr:references",
+    "regex": "cr:regex",
+    "repeated": "cr:repeated",
+    "replace": "cr:replace",
+    "sc": "https://schema.org/",
+    "separator": "cr:separator",
+    "source": "cr:source",
+    "subField": "cr:subField",
+    "transform": "cr:transform"
+  },
+  "@type": "sc:Dataset",
+  "conformsTo": "http://mlcommons.org/croissant/1.0",
+  "name": "ds007119",
+  "alternateName": [
+    "DS007119"
+  ],
+  "description": "iEEG_comprehensive_HFA_model_part3. ieeg dataset accessible via EEGDash as `DS007119` with standardized BIDS metadata.",
+  "url": "https://eegdash.org/api/dataset/eegdash.dataset.DS007119.html",
+  "keywords": [
+    "EEG",
+    "BIDS",
+    "neuroscience",
+    "IEEG",
+    "['Sleep']",
+    "['Unknown']"
+  ],
+  "isAccessibleForFree": true,
+  "includedInDataCatalog": {
+    "@type": "sc:DataCatalog",
+    "name": "EEG Dash",
+    "url": "https://eegdash.org/"
+  },
+  "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "creator": [
+    {
+      "@type": "sc:Person",
+      "name": "Keisuke Hatano"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Naoto Kuroda"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Hiroshi Uda"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Kazuki Sakakura"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Michael J. Cools"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Aimee F. Luat"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Shin-Ichiro Osawa"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Hitoshi Nemoto"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Kazushi Ukishiro"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Hidenori Endo"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Nobukazu Nakasato"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Yutaro Takayama"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Keiya Iijima"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Masaki Iwasaki"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Eishi Asano"
+    }
+  ],
+  "editor": {
+    "@type": "sc:Person",
+    "name": "Eishi Asano"
+  },
+  "funder": [
+    {
+      "@type": "sc:Organization",
+      "name": "the National Institutes of Health (NIH; NS064033 to E.A.)"
+    },
+    {
+      "@type": "sc:Organization",
+      "name": "the Uehara Memorial Foundation Postdoctoral Fellowship (202441017 to K.H.; 20210301 to H.U.)"
+    },
+    {
+      "@type": "sc:Organization",
+      "name": "the Japan Society for the Promotion of Science (JP22J23281 and JP22KJ0323 to N.K.; 202560628 to H.U.; JP19K09494 and 22K09296 to M.I.)"
+    }
+  ],
+  "datePublished": "2025",
+  "identifier": "doi:10.18112/openneuro.ds007119.v1.0.0",
+  "sameAs": [
+    "https://doi.org/10.18112/openneuro.ds007119.v1.0.0",
+    "https://openneuro.org/datasets/ds007119"
+  ],
+  "citeAs": "Keisuke Hatano, Naoto Kuroda, Hiroshi Uda, Kazuki Sakakura, Michael J. Cools (2025). iEEG_comprehensive_HFA_model_part3. doi:10.18112/openneuro.ds007119.v1.0.0",
+  "version": "1.7.0",
+  "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007119-openneuro",
+      "name": "ds007119 on OpenNeuro",
+      "description": "OpenNeuro dataset landing page.",
+      "contentUrl": "https://openneuro.org/datasets/ds007119",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007119-eegdash-records",
+      "name": "ds007119 EEGDash records (live)",
+      "description": "Live JSON listing of every recording in this dataset, with BIDS metadata, channel counts, and S3 storage keys.",
+      "contentUrl": "https://data.eegdash.org/api/eegdash/records?filter=%7B%22dataset%22%3A%22ds007119%22%7D",
+      "encodingFormat": "application/json",
+      "isLiveDataset": true
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007119-nemar",
+      "name": "ds007119 on NeMAR",
+      "description": "NEMAR dataset landing page with pipeline plots.",
+      "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=ds007119",
+      "encodingFormat": "text/html"
+    }
+  ]
+}

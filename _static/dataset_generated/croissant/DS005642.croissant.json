@@ -1,0 +1,145 @@
+{
+  "@context": {
+    "@language": "en",
+    "@vocab": "https://schema.org/",
+    "citeAs": "cr:citeAs",
+    "column": "cr:column",
+    "conformsTo": "dct:conformsTo",
+    "cr": "http://mlcommons.org/croissant/",
+    "data": {
+      "@id": "cr:data",
+      "@type": "@json"
+    },
+    "dataType": {
+      "@id": "cr:dataType",
+      "@type": "@vocab"
+    },
+    "dct": "http://purl.org/dc/terms/",
+    "extract": "cr:extract",
+    "field": "cr:field",
+    "fileObject": "cr:fileObject",
+    "fileProperty": "cr:fileProperty",
+    "fileSet": "cr:fileSet",
+    "format": "cr:format",
+    "includes": "cr:includes",
+    "isLiveDataset": "cr:isLiveDataset",
+    "jsonPath": "cr:jsonPath",
+    "key": "cr:key",
+    "md5": "cr:md5",
+    "parentField": "cr:parentField",
+    "path": "cr:path",
+    "recordSet": "cr:recordSet",
+    "references": "cr:references",
+    "regex": "cr:regex",
+    "repeated": "cr:repeated",
+    "replace": "cr:replace",
+    "sc": "https://schema.org/",
+    "separator": "cr:separator",
+    "source": "cr:source",
+    "subField": "cr:subField",
+    "transform": "cr:transform"
+  },
+  "@type": "sc:Dataset",
+  "conformsTo": "http://mlcommons.org/croissant/1.0",
+  "name": "ds005642",
+  "alternateName": [
+    "DS005642"
+  ],
+  "description": "illusory-face-eeg. eeg dataset accessible via EEGDash as `DS005642` with standardized BIDS metadata.",
+  "url": "https://eegdash.org/api/dataset/eegdash.dataset.DS005642.html",
+  "keywords": [
+    "EEG",
+    "BIDS",
+    "neuroscience",
+    "['Visual']",
+    "['Healthy']",
+    "['Perception']"
+  ],
+  "isAccessibleForFree": true,
+  "includedInDataCatalog": {
+    "@type": "sc:DataCatalog",
+    "name": "EEG Dash",
+    "url": "https://eegdash.org/"
+  },
+  "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "creator": [
+    {
+      "@type": "sc:Person",
+      "name": "Amanda K Robinson"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Greta Stuart"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Sophia M Shatek"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Adrian Herbert"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Jessica Taubert"
+    }
+  ],
+  "editor": {
+    "@type": "sc:Person",
+    "name": "Jessica Taubert"
+  },
+  "funder": [
+    {
+      "@type": "sc:Organization",
+      "name": "Australian Research Council Discovery Early Career Researcher Award DE200101159 (AKR)"
+    },
+    {
+      "@type": "sc:Organization",
+      "name": "Australian Research Council Future Fellowship FT200100843 (JT)"
+    }
+  ],
+  "datePublished": "2024",
+  "identifier": "doi:10.18112/openneuro.ds005642.v1.0.1",
+  "sameAs": [
+    "https://doi.org/10.18112/openneuro.ds005642.v1.0.1",
+    "https://openneuro.org/datasets/ds005642",
+    "https://huggingface.co/datasets/EEGDash/ds005642"
+  ],
+  "citeAs": "Amanda K Robinson, Greta Stuart, Sophia M Shatek, Adrian Herbert, Jessica Taubert (2024). illusory-face-eeg. doi:10.18112/openneuro.ds005642.v1.0.1",
+  "version": "1.0.0",
+  "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005642-openneuro",
+      "name": "ds005642 on OpenNeuro",
+      "description": "OpenNeuro dataset landing page.",
+      "contentUrl": "https://openneuro.org/datasets/ds005642",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005642-eegdash-records",
+      "name": "ds005642 EEGDash records (live)",
+      "description": "Live JSON listing of every recording in this dataset, with BIDS metadata, channel counts, and S3 storage keys.",
+      "contentUrl": "https://data.eegdash.org/api/eegdash/records?filter=%7B%22dataset%22%3A%22ds005642%22%7D",
+      "encodingFormat": "application/json",
+      "isLiveDataset": true
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005642-nemar",
+      "name": "ds005642 on NeMAR",
+      "description": "NEMAR dataset landing page with pipeline plots.",
+      "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=ds005642",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005642-huggingface",
+      "name": "EEGDash/ds005642 on Hugging Face",
+      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
+      "contentUrl": "https://huggingface.co/datasets/EEGDash/ds005642",
+      "encodingFormat": "application/vnd.huggingface-dataset+json"
+    }
+  ]
+}

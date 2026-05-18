@@ -1,0 +1,139 @@
+{
+  "@context": {
+    "@language": "en",
+    "@vocab": "https://schema.org/",
+    "citeAs": "cr:citeAs",
+    "column": "cr:column",
+    "conformsTo": "dct:conformsTo",
+    "cr": "http://mlcommons.org/croissant/",
+    "data": {
+      "@id": "cr:data",
+      "@type": "@json"
+    },
+    "dataType": {
+      "@id": "cr:dataType",
+      "@type": "@vocab"
+    },
+    "dct": "http://purl.org/dc/terms/",
+    "extract": "cr:extract",
+    "field": "cr:field",
+    "fileObject": "cr:fileObject",
+    "fileProperty": "cr:fileProperty",
+    "fileSet": "cr:fileSet",
+    "format": "cr:format",
+    "includes": "cr:includes",
+    "isLiveDataset": "cr:isLiveDataset",
+    "jsonPath": "cr:jsonPath",
+    "key": "cr:key",
+    "md5": "cr:md5",
+    "parentField": "cr:parentField",
+    "path": "cr:path",
+    "recordSet": "cr:recordSet",
+    "references": "cr:references",
+    "regex": "cr:regex",
+    "repeated": "cr:repeated",
+    "replace": "cr:replace",
+    "sc": "https://schema.org/",
+    "separator": "cr:separator",
+    "source": "cr:source",
+    "subField": "cr:subField",
+    "transform": "cr:transform"
+  },
+  "@type": "sc:Dataset",
+  "conformsTo": "http://mlcommons.org/croissant/1.0",
+  "name": "ds004075",
+  "alternateName": [
+    "DS004075"
+  ],
+  "description": "what_are_we_talking_about. eeg dataset accessible via EEGDash as `DS004075` with standardized BIDS metadata.",
+  "url": "https://eegdash.org/api/dataset/eegdash.dataset.DS004075.html",
+  "keywords": [
+    "EEG",
+    "BIDS",
+    "neuroscience",
+    "['Unknown']"
+  ],
+  "isAccessibleForFree": true,
+  "includedInDataCatalog": {
+    "@type": "sc:DataCatalog",
+    "name": "EEG Dash",
+    "url": "https://eegdash.org/"
+  },
+  "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "creator": [
+    {
+      "@type": "sc:Person",
+      "name": "Adam Boncz"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Brigitta Toth"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "István Winkler"
+    }
+  ],
+  "editor": {
+    "@type": "sc:Person",
+    "name": "István Winkler"
+  },
+  "funder": [
+    {
+      "@type": "sc:Organization",
+      "name": "Hungarian Academy of Sciences, grant LP2012-36/2012 (IW)"
+    },
+    {
+      "@type": "sc:Organization",
+      "name": "National Research, Development and Innovation Office, Hungary, grant K132642 (IW)"
+    },
+    {
+      "@type": "sc:Organization",
+      "name": "National Research, Development and Innovation Office, Hungary, grant PD123790 (BT)"
+    }
+  ],
+  "datePublished": "2022",
+  "identifier": "doi:10.18112/openneuro.ds004075.v1.0.0",
+  "sameAs": [
+    "https://doi.org/10.18112/openneuro.ds004075.v1.0.0",
+    "https://openneuro.org/datasets/ds004075",
+    "https://huggingface.co/datasets/EEGDash/ds004075"
+  ],
+  "citeAs": "Adam Boncz, Brigitta Toth, István Winkler (2022). what_are_we_talking_about. doi:10.18112/openneuro.ds004075.v1.0.0",
+  "version": "v1.7.0",
+  "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004075-openneuro",
+      "name": "ds004075 on OpenNeuro",
+      "description": "OpenNeuro dataset landing page.",
+      "contentUrl": "https://openneuro.org/datasets/ds004075",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004075-eegdash-records",
+      "name": "ds004075 EEGDash records (live)",
+      "description": "Live JSON listing of every recording in this dataset, with BIDS metadata, channel counts, and S3 storage keys.",
+      "contentUrl": "https://data.eegdash.org/api/eegdash/records?filter=%7B%22dataset%22%3A%22ds004075%22%7D",
+      "encodingFormat": "application/json",
+      "isLiveDataset": true
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004075-nemar",
+      "name": "ds004075 on NeMAR",
+      "description": "NEMAR dataset landing page with pipeline plots.",
+      "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=ds004075",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004075-huggingface",
+      "name": "EEGDash/ds004075 on Hugging Face",
+      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
+      "contentUrl": "https://huggingface.co/datasets/EEGDash/ds004075",
+      "encodingFormat": "application/vnd.huggingface-dataset+json"
+    }
+  ]
+}

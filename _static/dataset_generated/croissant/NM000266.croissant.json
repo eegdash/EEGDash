@@ -1,0 +1,132 @@
+{
+  "@context": {
+    "@language": "en",
+    "@vocab": "https://schema.org/",
+    "citeAs": "cr:citeAs",
+    "column": "cr:column",
+    "conformsTo": "dct:conformsTo",
+    "cr": "http://mlcommons.org/croissant/",
+    "data": {
+      "@id": "cr:data",
+      "@type": "@json"
+    },
+    "dataType": {
+      "@id": "cr:dataType",
+      "@type": "@vocab"
+    },
+    "dct": "http://purl.org/dc/terms/",
+    "extract": "cr:extract",
+    "field": "cr:field",
+    "fileObject": "cr:fileObject",
+    "fileProperty": "cr:fileProperty",
+    "fileSet": "cr:fileSet",
+    "format": "cr:format",
+    "includes": "cr:includes",
+    "isLiveDataset": "cr:isLiveDataset",
+    "jsonPath": "cr:jsonPath",
+    "key": "cr:key",
+    "md5": "cr:md5",
+    "parentField": "cr:parentField",
+    "path": "cr:path",
+    "recordSet": "cr:recordSet",
+    "references": "cr:references",
+    "regex": "cr:regex",
+    "repeated": "cr:repeated",
+    "replace": "cr:replace",
+    "sc": "https://schema.org/",
+    "separator": "cr:separator",
+    "source": "cr:source",
+    "subField": "cr:subField",
+    "transform": "cr:transform"
+  },
+  "@type": "sc:Dataset",
+  "conformsTo": "http://mlcommons.org/croissant/1.0",
+  "name": "nm000266",
+  "alternateName": [
+    "NM000266"
+  ],
+  "description": "Sosulski et al. 2019 — Online Optimization of Stimulation Speed in an Auditory Brain-Computer Interface under Time Constraints. eeg dataset accessible via EEGDash as `NM000266` with standardized BIDS metadata.",
+  "url": "https://eegdash.org/api/dataset/eegdash.dataset.NM000266.html",
+  "keywords": [
+    "EEG",
+    "BIDS",
+    "neuroscience",
+    "['Auditory']",
+    "['Healthy']",
+    "['Attention']"
+  ],
+  "isAccessibleForFree": true,
+  "includedInDataCatalog": {
+    "@type": "sc:DataCatalog",
+    "name": "EEG Dash",
+    "url": "https://eegdash.org/"
+  },
+  "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+  "creator": [
+    {
+      "@type": "sc:Person",
+      "name": "Jan Sosulski"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "David Hübner"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Aaron Klein"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Michael Tangermann"
+    }
+  ],
+  "funder": [
+    {
+      "@type": "sc:Organization",
+      "name": "Cluster of Excellence BrainLinks-BrainTools funded by the German Research Foundation (DFG) [grant number EXC 1086]"
+    },
+    {
+      "@type": "sc:Organization",
+      "name": "DFG project SuitAble [grant number TA 1258/1-1]"
+    },
+    {
+      "@type": "sc:Organization",
+      "name": "state of Baden-Württemberg, Germany, through bwHPC and the German Research Foundation (DFG) [grant number INST 39/963-1 FUGG]"
+    }
+  ],
+  "datePublished": "2019",
+  "identifier": "doi:10.48550/arXiv.2109.06011",
+  "sameAs": [
+    "https://doi.org/10.48550/arXiv.2109.06011",
+    "https://openneuro.org/datasets/nm000266"
+  ],
+  "citeAs": "Jan Sosulski, David Hübner, Aaron Klein, Michael Tangermann (2019). Sosulski et al. 2019 — Online Optimization of Stimulation Speed in an Auditory Brain-Computer Interface under Time Constraints. doi:10.48550/arXiv.2109.06011",
+  "version": "1.9.0",
+  "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000266-openneuro",
+      "name": "nm000266 on OpenNeuro",
+      "description": "OpenNeuro dataset landing page.",
+      "contentUrl": "https://openneuro.org/datasets/nm000266",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000266-eegdash-records",
+      "name": "nm000266 EEGDash records (live)",
+      "description": "Live JSON listing of every recording in this dataset, with BIDS metadata, channel counts, and S3 storage keys.",
+      "contentUrl": "https://data.eegdash.org/api/eegdash/records?filter=%7B%22dataset%22%3A%22nm000266%22%7D",
+      "encodingFormat": "application/json",
+      "isLiveDataset": true
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000266-nemar",
+      "name": "nm000266 on NeMAR",
+      "description": "NEMAR dataset landing page with pipeline plots.",
+      "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=nm000266",
+      "encodingFormat": "text/html"
+    }
+  ]
+}

@@ -1,0 +1,174 @@
+{
+  "@context": {
+    "@language": "en",
+    "@vocab": "https://schema.org/",
+    "citeAs": "cr:citeAs",
+    "column": "cr:column",
+    "conformsTo": "dct:conformsTo",
+    "cr": "http://mlcommons.org/croissant/",
+    "data": {
+      "@id": "cr:data",
+      "@type": "@json"
+    },
+    "dataType": {
+      "@id": "cr:dataType",
+      "@type": "@vocab"
+    },
+    "dct": "http://purl.org/dc/terms/",
+    "extract": "cr:extract",
+    "field": "cr:field",
+    "fileObject": "cr:fileObject",
+    "fileProperty": "cr:fileProperty",
+    "fileSet": "cr:fileSet",
+    "format": "cr:format",
+    "includes": "cr:includes",
+    "isLiveDataset": "cr:isLiveDataset",
+    "jsonPath": "cr:jsonPath",
+    "key": "cr:key",
+    "md5": "cr:md5",
+    "parentField": "cr:parentField",
+    "path": "cr:path",
+    "recordSet": "cr:recordSet",
+    "references": "cr:references",
+    "regex": "cr:regex",
+    "repeated": "cr:repeated",
+    "replace": "cr:replace",
+    "sc": "https://schema.org/",
+    "separator": "cr:separator",
+    "source": "cr:source",
+    "subField": "cr:subField",
+    "transform": "cr:transform"
+  },
+  "@type": "sc:Dataset",
+  "conformsTo": "http://mlcommons.org/croissant/1.0",
+  "name": "ds005777",
+  "alternateName": [
+    "DS005777"
+  ],
+  "description": "Electrical_Morphine_Placebo_2018. fnirs dataset accessible via EEGDash as `DS005777` with standardized BIDS metadata.",
+  "url": "https://eegdash.org/api/dataset/eegdash.dataset.DS005777.html",
+  "keywords": [
+    "EEG",
+    "BIDS",
+    "neuroscience",
+    "FNIRS",
+    "['Tactile']",
+    "['Unknown']",
+    "['Perception']"
+  ],
+  "isAccessibleForFree": true,
+  "includedInDataCatalog": {
+    "@type": "sc:DataCatalog",
+    "name": "EEG Dash",
+    "url": "https://eegdash.org/"
+  },
+  "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "creator": [
+    {
+      "@type": "sc:Person",
+      "name": "Peng, Ke"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Yücel, Meryem"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Steele, Sarah"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Bittner, Edward"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Aasted, Christopher"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Hoeft, Mark"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Lee, Arielle"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "George, Edward"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Boas, David"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Becerra, Lino"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Borsook, David"
+    }
+  ],
+  "editor": {
+    "@type": "sc:Person",
+    "name": "Borsook, David"
+  },
+  "funder": [
+    {
+      "@type": "sc:Organization",
+      "name": "NIH-NIGMS 1-R01-GM104986"
+    },
+    {
+      "@type": "sc:Organization",
+      "name": "NIH-NIGMS 1-R01-GM122405"
+    },
+    {
+      "@type": "sc:Organization",
+      "name": "The Mayday Fund, New York"
+    }
+  ],
+  "datePublished": "2025",
+  "identifier": "doi:10.18112/openneuro.ds005777.v1.0.1",
+  "sameAs": [
+    "https://doi.org/10.18112/openneuro.ds005777.v1.0.1",
+    "https://openneuro.org/datasets/ds005777",
+    "https://huggingface.co/datasets/EEGDash/ds005777"
+  ],
+  "citeAs": "Peng, Ke, Yücel, Meryem, Steele, Sarah, Bittner, Edward, Aasted, Christopher (2025). Electrical_Morphine_Placebo_2018. doi:10.18112/openneuro.ds005777.v1.0.1",
+  "version": "1.7.1",
+  "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005777-openneuro",
+      "name": "ds005777 on OpenNeuro",
+      "description": "OpenNeuro dataset landing page.",
+      "contentUrl": "https://openneuro.org/datasets/ds005777",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005777-eegdash-records",
+      "name": "ds005777 EEGDash records (live)",
+      "description": "Live JSON listing of every recording in this dataset, with BIDS metadata, channel counts, and S3 storage keys.",
+      "contentUrl": "https://data.eegdash.org/api/eegdash/records?filter=%7B%22dataset%22%3A%22ds005777%22%7D",
+      "encodingFormat": "application/json",
+      "isLiveDataset": true
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005777-nemar",
+      "name": "ds005777 on NeMAR",
+      "description": "NEMAR dataset landing page with pipeline plots.",
+      "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=ds005777",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005777-huggingface",
+      "name": "EEGDash/ds005777 on Hugging Face",
+      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
+      "contentUrl": "https://huggingface.co/datasets/EEGDash/ds005777",
+      "encodingFormat": "application/vnd.huggingface-dataset+json"
+    }
+  ]
+}

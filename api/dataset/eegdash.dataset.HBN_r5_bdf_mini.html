@@ -123,6 +123,21 @@
   <link rel="stylesheet" href="../../_static/css/dataset-explorer.412090dd.css">
   <script defer src="../../_static/js/dataset-explorer.d26dae94.js"></script>
 
+  
+  <link
+    rel="preload"
+    as="style"
+    href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap"
+    onload="this.onload=null;this.rel='stylesheet'">
+  <noscript>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap">
+  </noscript>
+  <link rel="stylesheet" href="../../_static/css/dataset-editorial.9233c3fb.css">
+  
+  <script>document.documentElement.classList.add('editorial-dataset');</script>
+
   <!-- Google Tag Manager — deferred to DOMContentLoaded so the GTM
        bootstrap no longer blocks first-paint or the Sphinx search-index
        load. Functionally equivalent to the inline snippet below but
@@ -639,14 +654,12 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="hbn-r5-bdf-mini-eeg-dataset">
+  <div class="eegdash-ed-issue"><div class="crumb">EEGdash<span class="crumb-sep">›</span>OpenNeuro<span class="crumb-sep">›</span><b>HBN_r5_bdf_mini</b></div><div>Iss. 5 · — subjects · — recordings · See source</div></div><div class="eegdash-ed-kicker">Dataset Brief · HBN_r5_bdf_mini</div><aside class="eegdash-ed-rail"><h4>Field card</h4><dl><dt class="hdr">Identity</dt><dd class="hdrpad"></dd><dt>Dataset</dt><dd>HBN_r5_bdf_mini</dd><dt>Version</dt><dd>—</dd><dt>Source</dt><dd>OpenNeuro</dd><dt>License</dt><dd>See source</dd><dt class="hdr">Signal</dt><dd class="hdrpad"></dd><dt>Subjects</dt><dd>—</dd><dt>Recordings</dt><dd>—</dd><dt>Modality</dt><dd>EEG</dd><dt>Channels</dt><dd>Varies</dd><dt>Sample rate</dt><dd>Varies</dd><dt>Duration</dt><dd>—</dd><dt>Size</dt><dd>—</dd><dt class="hdr">BIDS</dt><dd class="hdrpad"></dd><dt>BIDSVersion</dt><dd>—</dd><dt>Sidecars</dt><dd><span class='dim'>not yet probed</span></dd><dt>Events ann.</dt><dd>—</dd><dt>Metadata</dt><dd>0% · Limited</dd><dt class="hdr">ML &amp; Reach</dt><dd class="hdrpad"></dd><dt>HF mirror</dt><dd><a href="https://huggingface.co/EEGDash">org listing</a></dd></dl><div class="actions"><a href="https://openneuro.org/datasets/hbn_r5_bdf_mini">OpenNeuro</a><a href="https://huggingface.co/EEGDash">🤗 Org</a><a href="../../_static/dataset_generated/croissant/HBN_r5_bdf_mini.croissant.json" download>Croissant</a></div></aside><section id="hbn-r5-bdf-mini-eeg-dataset">
 <h1>HBN_r5_bdf_mini: EEG dataset<a class="headerlink" href="#hbn-r5-bdf-mini-eeg-dataset" title="Link to this heading">#</a></h1>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Dataset","name":"HBN_R5_BDF_MINI","alternateName":"HBN_R5_BDF_MINI","description":"EEG dataset accessible via EEGDash as ``HBN_r5_bdf_mini`` with standardized BIDS metadata.","url":"https://eegdash.org/api/dataset/eegdash.dataset.HBN_r5_bdf_mini.html","keywords":["EEG","BIDS","neuroscience","MEG"],"isAccessibleForFree":true,"includedInDataCatalog":{"@type":"DataCatalog","name":"EEG Dash","url":"https://eegdash.org/"},"sameAs":["https://openneuro.org/datasets/hbn_r5_bdf_mini","https://nemar.org/dataexplorer/detail?dataset_id=hbn_r5_bdf_mini"]}</script><p>Dataset from OpenNeuro.</p>
 <p>Access recordings and metadata through EEGDash.</p>
 <p><strong>Citation:</strong> Unknown (—). <a href="#id1"><span class="problematic" id="id2">**</span></a>.</p>
-<p class="sd-badges"><span class="sd-sphinx-override sd-badge sd-outline-primary sd-text-primary">Modality: —</span> <span class="sd-sphinx-override sd-badge sd-outline-secondary sd-text-secondary">Subjects: —</span> <span class="sd-sphinx-override sd-badge sd-outline-secondary sd-text-secondary">Recordings: —</span> <span class="sd-sphinx-override sd-badge sd-outline-success sd-text-success">License: —</span> <span class="sd-sphinx-override sd-badge sd-outline-warning sd-text-warning">Source: OpenNeuro</span></p>
-<p><span class="sd-sphinx-override sd-badge sd-bg-secondary sd-bg-text-secondary">Metadata: Limited (0%)</span></p>
-<section id="quickstart">
+<p class="eegdash-ed-deck">A EEG dataset distributed through EEGDash with standardized BIDS metadata..</p><div class="eegdash-ed-byline"><span class="role">Data &amp; curation</span> Authors unspecified</div><div class="eegdash-ed-layers"><div><div class="ly-lbl"><span>Layer 01</span><b>Study</b></div><div class="ly-tit">What was asked</div><div class="ly-dsc">Hypothesis, independent &amp; dependent variables, paradigm, cohort, and the editorial caveats around what the recordings can and cannot answer.</div></div><div><div class="ly-lbl"><span>Layer 02</span><b>Signal · BIDS</b></div><div class="ly-tit">What was recorded</div><div class="ly-dsc">Sidecars, channels &amp; electrodes, coordinate system, event semantics, and quality stats from the NEMAR pipeline when available.</div></div><div><div class="ly-lbl"><span>Layer 03</span><b>Training · ML</b></div><div class="ly-tit">What you can train on</div><div class="ly-dsc">Recommended access modes — MNE Raw, braindecode windows, PyTorch DataLoader — plus the targets the metadata makes addressable.</div></div></div><div class="eegdash-ed-secnum">§ 01<b>Access · Get started</b></div><section id="quickstart">
 <h2>Quickstart<a class="headerlink" href="#quickstart" title="Link to this heading">#</a></h2>
 <div class="sd-tab-set docutils">
 <input checked="checked" id="sd-tab-item-0" name="sd-tab-set-0" type="radio">
@@ -697,149 +710,25 @@ Cite This Dataset</label><div class="sd-tab-content docutils">
 </div>
 </div>
 </div>
-</section>
+<div class="eegdash-ed-secnum">§ 02<b>Study · The README</b></div></section>
 <section id="about-this-dataset">
 <h2>About This Dataset<a class="headerlink" href="#about-this-dataset" title="Link to this heading">#</a></h2>
 <p>No README content is available for this dataset.</p>
-</section>
-<section id="dataset-information">
-<h2>Dataset Information<a class="headerlink" href="#dataset-information" title="Link to this heading">#</a></h2>
-<div class="pst-scrollable-table-container"><table class="table">
-<colgroup>
-<col style="width: 25.0%" />
-<col style="width: 75.0%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p>Dataset ID</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">HBN_R5_BDF_MINI</span></code></p></td>
-</tr>
-<tr class="row-even"><td><p>Title</p></td>
-<td><p>—</p></td>
-</tr>
-<tr class="row-odd"><td><p>Author (year)</p></td>
-<td><p>—</p></td>
-</tr>
-<tr class="row-even"><td><p>Canonical</p></td>
-<td><p>—</p></td>
-</tr>
-<tr class="row-odd"><td><p>Importable as</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">HBN_R5_BDF_MINI</span></code></p></td>
-</tr>
-<tr class="row-even"><td><p>Year</p></td>
-<td><p>—</p></td>
-</tr>
-<tr class="row-odd"><td><p>Authors</p></td>
-<td><p>Unknown</p></td>
-</tr>
-<tr class="row-even"><td><p>License</p></td>
-<td><p>—</p></td>
-</tr>
-<tr class="row-odd"><td><p>Citation / DOI</p></td>
-<td><p>Unknown</p></td>
-</tr>
-<tr class="row-even"><td><p>Source links</p></td>
-<td><p><a class="reference external" href="https://openneuro.org/datasets/hbn_r5_bdf_mini">OpenNeuro</a> | <a class="reference external" href="https://nemar.org/dataexplorer/detail?dataset_id=hbn_r5_bdf_mini">NeMAR</a></p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="tip admonition">
-<p class="admonition-title">Found an issue with this dataset?</p>
-<p>If you encounter any problems with this dataset (missing files, incorrect metadata,
-loading errors, etc.), please let us know!</p>
-<p><a class="sd-sphinx-override sd-btn sd-text-wrap sd-btn-outline-primary reference external" href="https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20HBN_R5_BDF_MINI&amp;body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20HBN_R5_BDF_MINI%0A-%20%2A%2ATitle%3A%2A%2A%20%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&amp;labels=dataset"><span>Report an Issue on GitHub</span></a></p>
-</div>
-</section>
-<section id="technical-details">
-<h2>Technical Details<a class="headerlink" href="#technical-details" title="Link to this heading">#</a></h2>
-<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-3 sd-row-cols-lg-3 sd-g-2 sd-g-xs-2 sd-g-sm-2 sd-g-md-2 sd-g-lg-2 docutils">
-<div class="sd-col sd-d-flex-row docutils">
-<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-border-1 highlight-primary docutils">
-<div class="sd-card-body docutils">
-<div class="sd-card-title sd-font-weight-bold docutils">
-Subjects &amp; recordings</div>
-<ul class="simple">
-<li><p class="sd-card-text">Subjects: —</p></li>
-<li><p class="sd-card-text">Recordings: —</p></li>
-<li><p class="sd-card-text">Tasks: —</p></li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sd-col sd-d-flex-row docutils">
-<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-border-1 highlight-secondary docutils">
-<div class="sd-card-body docutils">
-<div class="sd-card-title sd-font-weight-bold docutils">
-Channels &amp; sampling rate</div>
-<ul class="simple">
-<li><p class="sd-card-text">Channels: Varies</p></li>
-<li><p class="sd-card-text">Sampling rate (Hz): Varies</p></li>
-<li><p class="sd-card-text">Duration (hours): Not calculated</p></li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sd-col sd-d-flex-row docutils">
-<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-border-1 highlight-tertiary docutils">
-<div class="sd-card-body docutils">
-<div class="sd-card-title sd-font-weight-bold docutils">
-Tags</div>
-<ul class="simple">
-<li><p class="sd-card-text">Pathology: Not specified</p></li>
-<li><p class="sd-card-text">Modality: —</p></li>
-<li><p class="sd-card-text">Type: —</p></li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sd-col sd-d-flex-row docutils">
-<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-border-1 docutils">
-<div class="sd-card-body docutils">
-<div class="sd-card-title sd-font-weight-bold docutils">
-Files &amp; format</div>
-<ul class="simple">
-<li><p class="sd-card-text">Size on disk: —</p></li>
-<li><p class="sd-card-text">File count: —</p></li>
-<li><p class="sd-card-text">Format: BIDS</p></li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sd-col sd-d-flex-row docutils">
-<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-border-1 docutils">
-<div class="sd-card-body docutils">
-<div class="sd-card-title sd-font-weight-bold docutils">
-License &amp; citation</div>
-<ul class="simple">
-<li><p class="sd-card-text">License: See source</p></li>
-<li><p class="sd-card-text">DOI: —</p></li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sd-col sd-d-flex-row docutils">
-<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-border-1 docutils">
-<div class="sd-card-body docutils">
-<div class="sd-card-title sd-font-weight-bold docutils">
-Provenance</div>
-<ul class="simple">
-<li><p class="sd-card-text">Source: OpenNeuro</p></li>
-<li><p class="sd-card-text">OpenNeuro: <a class="reference external" href="https://openneuro.org/datasets/hbn_r5_bdf_mini">hbn_r5_bdf_mini</a></p></li>
-<li><p class="sd-card-text">NeMAR: <a class="reference external" href="https://nemar.org/dataexplorer/detail?dataset_id=hbn_r5_bdf_mini">hbn_r5_bdf_mini</a></p></li>
-</ul>
-</div>
-</div>
-</div>
-</div>
-</div>
-</section>
-<section id="electrode-layout">
-<h2>Electrode Layout<a class="headerlink" href="#electrode-layout" title="Link to this heading">#</a></h2>
-<p>No scalp electrode layout is currently indexed for this
+<div class="eegdash-ed-secnum">§ 03<b>Cohort · Participants</b></div></section>
+<section id="cohort">
+<h2>Cohort<a class="headerlink" href="#cohort" title="Link to this heading">#</a></h2>
+<div class="eegdash-ed-secnum">§ 04<b>Signal · Electrodes & trace</b></div></section>
+<section id="signal-electrodes-live-trace">
+<h2>Signal · Electrodes &amp; live trace<a class="headerlink" href="#signal-electrodes-live-trace" title="Link to this heading">#</a></h2>
+<div class="eegdash-ed-figpair">
+  <div class="figpair-meta">
+    <b>Fig. 01</b> Signal &amp; montage
+    <span class="right">— ch · EEG · Varies · — subjects, — recordings</span>
+  </div>
+  <div class="figpair-grid"><div class="figpair-cell figpair-montage"><p>No scalp electrode layout is currently indexed for this
 dataset. Once the eegdash montage registry ingests it,
 the interactive viewer will appear here automatically.</p>
-</section>
+</div></div></div></section>
 <section id="nemar-processing-statistics">
 <h2>NEMAR Processing Statistics<a class="headerlink" href="#nemar-processing-statistics" title="Link to this heading">#</a></h2>
 <p>The plots below are generated by <a class="reference external" href="https://nemar.org/dataexplorer/detail?dataset_id=hbn_r5_bdf_mini">NEMAR’s automated EEG pipeline</a>. The histogram shows pipeline success for data cleaning and ICA decomposition, the percentage of data frames and EEG channels retained after artefact removal, line noise per channel (RMS, dB), and the age/gender distribution of participants.</p>
@@ -860,7 +749,10 @@ the interactive viewer will appear here automatically.</p>
     loading="lazy"
     style="max-width: 60%; display: block; margin: 0.5rem auto;"
   />
-</details></section>
+</details><div class="eegdash-ed-secnum">§ 05<b>Manifest · BIDS tree</b></div></section>
+<section id="manifest">
+<h2>Manifest<a class="headerlink" href="#manifest" title="Link to this heading">#</a></h2>
+</section>
 <section id="file-explorer">
 <h2>File Explorer<a class="headerlink" href="#file-explorer" title="Link to this heading">#</a></h2>
 <p>Browse the BIDS file structure of this dataset. Records are fetched on demand from the EEGDash catalog the first time you open the explorer.</p>
@@ -879,17 +771,82 @@ the interactive viewer will appear here automatically.</p>
     <div class="ee-status">Click to load file structure…</div>
   </div>
   <div class="ee-info" hidden></div>
-</div></section>
+</div><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3 sd-shadow-sm eegdash-ed-info-dropdown">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">Full dataset metadata table</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<div class="eegdash-ed-fieldcard docutils container">
+<div class="pst-scrollable-table-container"><table class="table">
+<colgroup>
+<col style="width: 25.0%" />
+<col style="width: 75.0%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p class="sd-card-text">Dataset ID</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">HBN_R5_BDF_MINI</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p class="sd-card-text">Title</p></td>
+<td><p class="sd-card-text">—</p></td>
+</tr>
+<tr class="row-odd"><td><p class="sd-card-text">Author (year)</p></td>
+<td><p class="sd-card-text">—</p></td>
+</tr>
+<tr class="row-even"><td><p class="sd-card-text">Canonical</p></td>
+<td><p class="sd-card-text">—</p></td>
+</tr>
+<tr class="row-odd"><td><p class="sd-card-text">Importable as</p></td>
+<td><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">HBN_R5_BDF_MINI</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p class="sd-card-text">Year</p></td>
+<td><p class="sd-card-text">—</p></td>
+</tr>
+<tr class="row-odd"><td><p class="sd-card-text">Authors</p></td>
+<td><p class="sd-card-text">Unknown</p></td>
+</tr>
+<tr class="row-even"><td><p class="sd-card-text">License</p></td>
+<td><p class="sd-card-text">—</p></td>
+</tr>
+<tr class="row-odd"><td><p class="sd-card-text">Citation / DOI</p></td>
+<td><p class="sd-card-text">Unknown</p></td>
+</tr>
+<tr class="row-even"><td><p class="sd-card-text">Source links</p></td>
+<td><p class="sd-card-text"><a class="reference external" href="https://openneuro.org/datasets/hbn_r5_bdf_mini">OpenNeuro</a> | <a class="reference external" href="https://nemar.org/dataexplorer/detail?dataset_id=hbn_r5_bdf_mini">NeMAR</a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</details><div class="tip admonition">
+<p class="admonition-title">Found an issue with this dataset?</p>
+<p>If you encounter any problems with this dataset (missing files, incorrect metadata,
+loading errors, etc.), please let us know!</p>
+<p><a class="sd-sphinx-override sd-btn sd-text-wrap sd-btn-outline-primary reference external" href="https://github.com/eegdash/EEGDash/issues/new?title=%5BDataset%5D%20Issue%20with%20HBN_R5_BDF_MINI&amp;body=%23%23%20Dataset%0A%0A-%20%2A%2ADataset%20ID%3A%2A%2A%20HBN_R5_BDF_MINI%0A-%20%2A%2ATitle%3A%2A%2A%20%0A%0A%23%23%20Issue%20Description%0A%0APlease%20describe%20the%20issue%20you%20encountered%20with%20this%20dataset%3A%0A%0A%23%23%20Steps%20to%20Reproduce%0A%0A1.%20%0A2.%20%0A3.%20%0A%0A%23%23%20Expected%20Behavior%0A%0A%0A%23%23%20Additional%20Context%0A%0A&amp;labels=dataset"><span>Report an Issue on GitHub</span></a></p>
+</div>
+<div class="eegdash-ed-secnum">§ 06<b>API · Programmatic access</b></div></section>
 <section id="api-reference">
 <h2>API Reference<a class="headerlink" href="#api-reference" title="Link to this heading">#</a></h2>
-<p>Use the <code class="docutils literal notranslate"><span class="pre">HBN_r5_bdf_mini</span></code> class to access this dataset programmatically.</p>
-<dl class="py attribute">
+<div class="eegdash-ed-apicard">
+  <div class="apicard-gutter"><div class="lbl">Signature</div><div class="cls"><code>eegdash.dataset</code></div></div>
+  <div class="apicard-body">
+    <div class="apicard-sig">
+      <div class="sig-kind">class</div>
+      <div class="sig-line"><span class="ns">eegdash.dataset.</span><b class="cls-name">HBN_r5_bdf_mini</b><span class="paren">(</span><span class="arg">cache_dir</span>, <span class="arg">query</span>=<span class="lit">None</span>, <span class="arg">s3_bucket</span>=<span class="lit">None</span>, <span class="arg">**kwargs</span><span class="paren">)</span></div>
+      <div class="sig-base">Bases: <code>EEGDashDataset</code></div>
+    </div>
+    <div class="apicard-ids">
+      <div class="id-row"><span class="k">Author (year)</span><span class="v">—</span></div>
+      <div class="id-row"><span class="k">Canonical</span><span class="v">—</span></div>
+      <div class="id-row"><span class="k">Importable as</span><span class="v"><code>HBN_R5_BDF_MINI</code></span></div>
+      <div class="id-row"><span class="k">Source</span><span class="v"><code>eegdash/dataset/registry.py</code> · <a href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/dataset/registry.py">[source ↗]</a></span></div>
+    </div>
+  </div>
+</div><dl class="py attribute">
 <dt class="sig sig-object py" id="eegdash.dataset.HBN_r5_bdf_mini">
 <span class="sig-prename descclassname"><span class="pre">eegdash.dataset.</span></span><span class="sig-name descname"><span class="pre">HBN_r5_bdf_mini</span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/dataset/dataset.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eegdash.dataset.HBN_r5_bdf_mini" title="Link to this definition">#</a></dt>
 <dd><p>alias of <a class="reference internal" href="eegdash.dataset.EEG2025R5MINI.html#eegdash.dataset.EEG2025R5MINI" title="eegdash.dataset.dataset.EEG2025R5MINI"><code class="xref py py-class docutils literal notranslate"><span class="pre">EEG2025R5MINI</span></code></a></p>
 </dd></dl>
 
-</section>
+<div class="eegdash-ed-access"><div class="sidecar-hdr"><span><b>Access modes</b></span><span class="right">MNE → braindecode → PyTorch → ML</span></div><div class="am-list"><div class="am-row"><span class="name">.raw</span><span class="what">MNE <code>Raw</code> object — standard tools (filter, epoch, ICA, plot_psd).</span><span class="badge">mne</span></div><div class="am-row"><span class="name">BaseConcatDataset</span><span class="what">Each record is a lazy <code>BaseDataset</code> from braindecode — windowed via <code>create_windows_from_events</code>.</span><span class="badge">braindecode</span></div><div class="am-row"><span class="name">DataLoader</span><span class="what">Wraps the windowed dataset into a PyTorch <code>DataLoader</code>; supports parallel workers and on-the-fly augmentations.</span><span class="badge">pytorch</span></div><div class="am-row"><span class="name">Zarr cache</span><span class="what">Optional braindecode Zarr mirror for fast resume; persisted to <code>cache_dir</code>.</span><span class="badge">zarr</span></div><div class="am-row"><span class="name">Hugging Face</span><span class="what">No per-dataset mirror published yet — browse the <a href="https://huggingface.co/EEGDash">EEGDash org listing</a> for sibling datasets.</span><span class="badge">huggingface</span></div><div class="am-row"><span class="name">Croissant 1.0</span><span class="what">Machine-readable JSON-LD descriptor — <a href="../../_static/dataset_generated/croissant/HBN_r5_bdf_mini.croissant.json" download>HBN_r5_bdf_mini.croissant.json</a> (MLCommons schema, ingestible by PyTorch / TensorFlow / JAX).</span><span class="badge">mlcommons</span></div></div></div><div class="eegdash-ed-footnotes"><div><h5>Citation</h5><p>Authors unspecified (n.d.). <em>HBN_r5_bdf_mini</em>.</p></div><div><h5>Provenance</h5><p><span class="note-num">¹</span>Contributed to OpenNeuro in BIDS format.</p><p><span class="note-num">²</span>Curated &amp; ingested by the EEGDash catalog; see CITATION.cff for canonical reference.</p></div><div><h5>Related &amp; sibling datasets</h5><p><em>No sibling datasets cross-linked for this modality yet.</em></p></div></div><div class="eegdash-ed-prov"><div><div class="lbl">BIDS</div><div class="v todo">version not on file</div></div><div><div class="lbl">Sidecars</div><div class="v todo">not yet probed</div></div><div><div class="lbl">Provenance</div><div class="v">See source · <span class="todo">DOI not on file</span></div></div><div><div class="lbl">Machine-readable</div><div class="v"><a href="#dataset-information">schema.org/Dataset</a> · <a href="../../_static/dataset_generated/croissant/HBN_r5_bdf_mini.croissant.json" download>Croissant</a></div></div><div><div class="lbl">Mirrors</div><div class="v"><a href="https://openneuro.org/datasets/hbn_r5_bdf_mini">OpenNeuro</a> · <a href="https://nemar.org/dataexplorer/detail?dataset_id=hbn_r5_bdf_mini">NEMAR</a> · <a href="https://huggingface.co/EEGDash">HF org</a></div></div></div></section>
 <section id="see-also">
 <h2>See Also<a class="headerlink" href="#see-also" title="Link to this heading">#</a></h2>
 <ul class="simple">
@@ -898,7 +855,7 @@ the interactive viewer will appear here automatically.</p>
 <li><p><a class="reference external" href="https://openneuro.org/datasets/hbn_r5_bdf_mini">OpenNeuro dataset page</a></p></li>
 <li><p><a class="reference external" href="https://nemar.org/dataexplorer/detail?dataset_id=hbn_r5_bdf_mini">NeMAR dataset page</a></p></li>
 </ul>
-</section>
+<footer class="eegdash-ed-colophon"><div>EEGdash · <b>The Dataset Brief — HBN_r5_bdf_mini</b></div><div>FAIR exports · <a href="#dataset-information">schema.org/Dataset</a> · <a href="../../_static/dataset_generated/croissant/HBN_r5_bdf_mini.croissant.json" download>Croissant 1.0</a> · <a href="https://huggingface.co/EEGDash">Hugging Face org</a></div><div>See source · <b><span style="opacity:.6">DOI not on file</span></b></div></footer></section>
 </section>
 
 

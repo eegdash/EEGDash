@@ -1,0 +1,124 @@
+{
+  "@context": {
+    "@language": "en",
+    "@vocab": "https://schema.org/",
+    "citeAs": "cr:citeAs",
+    "column": "cr:column",
+    "conformsTo": "dct:conformsTo",
+    "cr": "http://mlcommons.org/croissant/",
+    "data": {
+      "@id": "cr:data",
+      "@type": "@json"
+    },
+    "dataType": {
+      "@id": "cr:dataType",
+      "@type": "@vocab"
+    },
+    "dct": "http://purl.org/dc/terms/",
+    "extract": "cr:extract",
+    "field": "cr:field",
+    "fileObject": "cr:fileObject",
+    "fileProperty": "cr:fileProperty",
+    "fileSet": "cr:fileSet",
+    "format": "cr:format",
+    "includes": "cr:includes",
+    "isLiveDataset": "cr:isLiveDataset",
+    "jsonPath": "cr:jsonPath",
+    "key": "cr:key",
+    "md5": "cr:md5",
+    "parentField": "cr:parentField",
+    "path": "cr:path",
+    "recordSet": "cr:recordSet",
+    "references": "cr:references",
+    "regex": "cr:regex",
+    "repeated": "cr:repeated",
+    "replace": "cr:replace",
+    "sc": "https://schema.org/",
+    "separator": "cr:separator",
+    "source": "cr:source",
+    "subField": "cr:subField",
+    "transform": "cr:transform"
+  },
+  "@type": "sc:Dataset",
+  "conformsTo": "http://mlcommons.org/croissant/1.0",
+  "name": "nm000143",
+  "alternateName": [
+    "NM000143"
+  ],
+  "description": "BNCI2003_IVa Motor Imagery dataset. eeg dataset accessible via EEGDash as `NM000143` with standardized BIDS metadata.",
+  "url": "https://eegdash.org/api/dataset/eegdash.dataset.NM000143.html",
+  "keywords": [
+    "EEG",
+    "BIDS",
+    "neuroscience",
+    "['Visual']",
+    "['Healthy']",
+    "['Motor']"
+  ],
+  "isAccessibleForFree": true,
+  "includedInDataCatalog": {
+    "@type": "sc:DataCatalog",
+    "name": "EEG Dash",
+    "url": "https://eegdash.org/"
+  },
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "creator": [
+    {
+      "@type": "sc:Person",
+      "name": "Guido Dornhege"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Benjamin Blankertz"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Gabriel Curio"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Klaus-Robert Müller"
+    }
+  ],
+  "funder": [
+    {
+      "@type": "sc:Organization",
+      "name": "Bundesministerium für Bildung und Forschung (BMBF) under Grants FKZ 01IBB02A and FKZ 01IBB02B"
+    }
+  ],
+  "datePublished": "2019",
+  "identifier": "doi:10.82901/nemar.nm000143",
+  "sameAs": [
+    "https://doi.org/10.82901/nemar.nm000143",
+    "https://openneuro.org/datasets/nm000143"
+  ],
+  "citeAs": "Guido Dornhege, Benjamin Blankertz, Gabriel Curio, Klaus-Robert Müller (2019). BNCI2003_IVa Motor Imagery dataset. doi:10.82901/nemar.nm000143",
+  "version": "1.9.0",
+  "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000143-openneuro",
+      "name": "nm000143 on OpenNeuro",
+      "description": "OpenNeuro dataset landing page.",
+      "contentUrl": "https://openneuro.org/datasets/nm000143",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000143-eegdash-records",
+      "name": "nm000143 EEGDash records (live)",
+      "description": "Live JSON listing of every recording in this dataset, with BIDS metadata, channel counts, and S3 storage keys.",
+      "contentUrl": "https://data.eegdash.org/api/eegdash/records?filter=%7B%22dataset%22%3A%22nm000143%22%7D",
+      "encodingFormat": "application/json",
+      "isLiveDataset": true
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000143-nemar",
+      "name": "nm000143 on NeMAR",
+      "description": "NEMAR dataset landing page with pipeline plots.",
+      "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=nm000143",
+      "encodingFormat": "text/html"
+    }
+  ]
+}

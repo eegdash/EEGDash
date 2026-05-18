@@ -1,0 +1,167 @@
+{
+  "@context": {
+    "@language": "en",
+    "@vocab": "https://schema.org/",
+    "citeAs": "cr:citeAs",
+    "column": "cr:column",
+    "conformsTo": "dct:conformsTo",
+    "cr": "http://mlcommons.org/croissant/",
+    "data": {
+      "@id": "cr:data",
+      "@type": "@json"
+    },
+    "dataType": {
+      "@id": "cr:dataType",
+      "@type": "@vocab"
+    },
+    "dct": "http://purl.org/dc/terms/",
+    "extract": "cr:extract",
+    "field": "cr:field",
+    "fileObject": "cr:fileObject",
+    "fileProperty": "cr:fileProperty",
+    "fileSet": "cr:fileSet",
+    "format": "cr:format",
+    "includes": "cr:includes",
+    "isLiveDataset": "cr:isLiveDataset",
+    "jsonPath": "cr:jsonPath",
+    "key": "cr:key",
+    "md5": "cr:md5",
+    "parentField": "cr:parentField",
+    "path": "cr:path",
+    "recordSet": "cr:recordSet",
+    "references": "cr:references",
+    "regex": "cr:regex",
+    "repeated": "cr:repeated",
+    "replace": "cr:replace",
+    "sc": "https://schema.org/",
+    "separator": "cr:separator",
+    "source": "cr:source",
+    "subField": "cr:subField",
+    "transform": "cr:transform"
+  },
+  "@type": "sc:Dataset",
+  "conformsTo": "http://mlcommons.org/croissant/1.0",
+  "name": "ds006036",
+  "alternateName": [
+    "DS006036"
+  ],
+  "description": "A complementary dataset of open-eyes EEG recordings in a photo-stimulation setting from: Alzheimer's disease, Frontotemporal dementia and Healthy subjects. eeg dataset accessible via EEGDash as `DS006036` with standardized BIDS metadata.",
+  "url": "https://eegdash.org/api/dataset/eegdash.dataset.DS006036.html",
+  "keywords": [
+    "EEG",
+    "BIDS",
+    "neuroscience",
+    "['Visual']",
+    "['Dementia']",
+    "['Clinical/Intervention']"
+  ],
+  "isAccessibleForFree": true,
+  "includedInDataCatalog": {
+    "@type": "sc:DataCatalog",
+    "name": "EEG Dash",
+    "url": "https://eegdash.org/"
+  },
+  "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "creator": [
+    {
+      "@type": "sc:Person",
+      "name": "Aimilia Ntetska"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Andreas Miltiadous"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Alexandros T. Tzallas"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Katerina D. Tzimourta"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Theodora Afrantou"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Panagiotis Ioannidis"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Dimitrios G. Tsalikakis"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Nikolaos Grigoriadis"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Pantelis Angelidis"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Konstantinos Sakkas"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Emmanouil D. Oikonomou"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Nikolaos Giannakeas"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Markos G. Tsipouras"
+    }
+  ],
+  "editor": {
+    "@type": "sc:Person",
+    "name": "Markos G. Tsipouras"
+  },
+  "datePublished": "2025",
+  "identifier": "doi:10.18112/openneuro.ds006036.v1.0.6",
+  "sameAs": [
+    "https://doi.org/10.18112/openneuro.ds006036.v1.0.6",
+    "https://openneuro.org/datasets/ds006036",
+    "https://huggingface.co/datasets/EEGDash/ds006036"
+  ],
+  "citeAs": "Aimilia Ntetska, Andreas Miltiadous, Alexandros T. Tzallas, Katerina D. Tzimourta, Theodora Afrantou (2025). A complementary dataset of open-eyes EEG recordings in a photo-stimulation setting from: Alzheimer's disease, Frontotemporal dementia and Healthy subjects. doi:10.18112/openneuro.ds006036.v1.0.6",
+  "version": "1.8.0",
+  "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006036-openneuro",
+      "name": "ds006036 on OpenNeuro",
+      "description": "OpenNeuro dataset landing page.",
+      "contentUrl": "https://openneuro.org/datasets/ds006036",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006036-eegdash-records",
+      "name": "ds006036 EEGDash records (live)",
+      "description": "Live JSON listing of every recording in this dataset, with BIDS metadata, channel counts, and S3 storage keys.",
+      "contentUrl": "https://data.eegdash.org/api/eegdash/records?filter=%7B%22dataset%22%3A%22ds006036%22%7D",
+      "encodingFormat": "application/json",
+      "isLiveDataset": true
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006036-nemar",
+      "name": "ds006036 on NeMAR",
+      "description": "NEMAR dataset landing page with pipeline plots.",
+      "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=ds006036",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006036-huggingface",
+      "name": "EEGDash/ds006036 on Hugging Face",
+      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
+      "contentUrl": "https://huggingface.co/datasets/EEGDash/ds006036",
+      "encodingFormat": "application/vnd.huggingface-dataset+json"
+    }
+  ]
+}

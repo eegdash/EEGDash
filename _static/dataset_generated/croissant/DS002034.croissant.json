@@ -1,0 +1,137 @@
+{
+  "@context": {
+    "@language": "en",
+    "@vocab": "https://schema.org/",
+    "citeAs": "cr:citeAs",
+    "column": "cr:column",
+    "conformsTo": "dct:conformsTo",
+    "cr": "http://mlcommons.org/croissant/",
+    "data": {
+      "@id": "cr:data",
+      "@type": "@json"
+    },
+    "dataType": {
+      "@id": "cr:dataType",
+      "@type": "@vocab"
+    },
+    "dct": "http://purl.org/dc/terms/",
+    "extract": "cr:extract",
+    "field": "cr:field",
+    "fileObject": "cr:fileObject",
+    "fileProperty": "cr:fileProperty",
+    "fileSet": "cr:fileSet",
+    "format": "cr:format",
+    "includes": "cr:includes",
+    "isLiveDataset": "cr:isLiveDataset",
+    "jsonPath": "cr:jsonPath",
+    "key": "cr:key",
+    "md5": "cr:md5",
+    "parentField": "cr:parentField",
+    "path": "cr:path",
+    "recordSet": "cr:recordSet",
+    "references": "cr:references",
+    "regex": "cr:regex",
+    "repeated": "cr:repeated",
+    "replace": "cr:replace",
+    "sc": "https://schema.org/",
+    "separator": "cr:separator",
+    "source": "cr:source",
+    "subField": "cr:subField",
+    "transform": "cr:transform"
+  },
+  "@type": "sc:Dataset",
+  "conformsTo": "http://mlcommons.org/croissant/1.0",
+  "name": "ds002034",
+  "alternateName": [
+    "DS002034"
+  ],
+  "description": "Real-time EEG feedback on alpha power lateralization leads to behavioral improvements in a covert attention task. eeg dataset accessible via EEGDash as `DS002034` with standardized BIDS metadata.",
+  "url": "https://eegdash.org/api/dataset/eegdash.dataset.DS002034.html",
+  "keywords": [
+    "EEG",
+    "BIDS",
+    "neuroscience",
+    "Visual",
+    "Healthy",
+    "Attention"
+  ],
+  "isAccessibleForFree": true,
+  "includedInDataCatalog": {
+    "@type": "sc:DataCatalog",
+    "name": "EEG Dash",
+    "url": "https://eegdash.org/"
+  },
+  "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "creator": [
+    {
+      "@type": "sc:Person",
+      "name": "Christoph Schneider"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Michael Pereira"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Luca Tonin"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Jose del R. Millan"
+    }
+  ],
+  "editor": {
+    "@type": "sc:Person",
+    "name": "Jose del R. Millan"
+  },
+  "funder": [
+    {
+      "@type": "sc:Organization",
+      "name": "No external funding sources"
+    }
+  ],
+  "datePublished": "2019",
+  "identifier": "doi:10.18112/openneuro.ds002034.v1.0.3",
+  "sameAs": [
+    "https://doi.org/10.18112/openneuro.ds002034.v1.0.3",
+    "https://openneuro.org/datasets/ds002034",
+    "https://huggingface.co/datasets/EEGDash/ds002034"
+  ],
+  "citeAs": "Christoph Schneider, Michael Pereira, Luca Tonin, Jose del R. Millan (2019). Real-time EEG feedback on alpha power lateralization leads to behavioral improvements in a covert attention task. doi:10.18112/openneuro.ds002034.v1.0.3",
+  "version": "1.1.1",
+  "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds002034-openneuro",
+      "name": "ds002034 on OpenNeuro",
+      "description": "OpenNeuro dataset landing page.",
+      "contentUrl": "https://openneuro.org/datasets/ds002034",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds002034-eegdash-records",
+      "name": "ds002034 EEGDash records (live)",
+      "description": "Live JSON listing of every recording in this dataset, with BIDS metadata, channel counts, and S3 storage keys.",
+      "contentUrl": "https://data.eegdash.org/api/eegdash/records?filter=%7B%22dataset%22%3A%22ds002034%22%7D",
+      "encodingFormat": "application/json",
+      "isLiveDataset": true
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds002034-nemar",
+      "name": "ds002034 on NeMAR",
+      "description": "NEMAR dataset landing page with pipeline plots.",
+      "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=ds002034",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds002034-huggingface",
+      "name": "EEGDash/ds002034 on Hugging Face",
+      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
+      "contentUrl": "https://huggingface.co/datasets/EEGDash/ds002034",
+      "encodingFormat": "application/vnd.huggingface-dataset+json"
+    }
+  ]
+}

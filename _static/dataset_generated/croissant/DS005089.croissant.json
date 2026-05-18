@@ -1,0 +1,147 @@
+{
+  "@context": {
+    "@language": "en",
+    "@vocab": "https://schema.org/",
+    "citeAs": "cr:citeAs",
+    "column": "cr:column",
+    "conformsTo": "dct:conformsTo",
+    "cr": "http://mlcommons.org/croissant/",
+    "data": {
+      "@id": "cr:data",
+      "@type": "@json"
+    },
+    "dataType": {
+      "@id": "cr:dataType",
+      "@type": "@vocab"
+    },
+    "dct": "http://purl.org/dc/terms/",
+    "extract": "cr:extract",
+    "field": "cr:field",
+    "fileObject": "cr:fileObject",
+    "fileProperty": "cr:fileProperty",
+    "fileSet": "cr:fileSet",
+    "format": "cr:format",
+    "includes": "cr:includes",
+    "isLiveDataset": "cr:isLiveDataset",
+    "jsonPath": "cr:jsonPath",
+    "key": "cr:key",
+    "md5": "cr:md5",
+    "parentField": "cr:parentField",
+    "path": "cr:path",
+    "recordSet": "cr:recordSet",
+    "references": "cr:references",
+    "regex": "cr:regex",
+    "repeated": "cr:repeated",
+    "replace": "cr:replace",
+    "sc": "https://schema.org/",
+    "separator": "cr:separator",
+    "source": "cr:source",
+    "subField": "cr:subField",
+    "transform": "cr:transform"
+  },
+  "@type": "sc:Dataset",
+  "conformsTo": "http://mlcommons.org/croissant/1.0",
+  "name": "ds005089",
+  "alternateName": [
+    "DS005089"
+  ],
+  "description": "Proactive selective attention across competition contexts. eeg dataset accessible via EEGDash as `DS005089` with standardized BIDS metadata.",
+  "url": "https://eegdash.org/api/dataset/eegdash.dataset.DS005089.html",
+  "keywords": [
+    "EEG",
+    "BIDS",
+    "neuroscience",
+    "Visual",
+    "Healthy",
+    "Attention"
+  ],
+  "isAccessibleForFree": true,
+  "includedInDataCatalog": {
+    "@type": "sc:DataCatalog",
+    "name": "EEG Dash",
+    "url": "https://eegdash.org/"
+  },
+  "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "creator": [
+    {
+      "@type": "sc:Person",
+      "name": "Blanca Aguado-Lopez"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Ana F. Palenciano"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Jose M. G. Penalver"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Paloma Diaz-Gutierrez"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "David Lopez-Garcia"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Chiara Avancini"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Luis F. Ciria"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Maria Ruz"
+    }
+  ],
+  "editor": {
+    "@type": "sc:Person",
+    "name": "Maria Ruz"
+  },
+  "datePublished": "2024",
+  "identifier": "doi:10.18112/openneuro.ds005089.v1.0.1",
+  "sameAs": [
+    "https://doi.org/10.18112/openneuro.ds005089.v1.0.1",
+    "https://openneuro.org/datasets/ds005089",
+    "https://huggingface.co/datasets/EEGDash/ds005089"
+  ],
+  "citeAs": "Blanca Aguado-Lopez, Ana F. Palenciano, Jose M. G. Penalver, Paloma Diaz-Gutierrez, David Lopez-Garcia (2024). Proactive selective attention across competition contexts. doi:10.18112/openneuro.ds005089.v1.0.1",
+  "version": "1.2",
+  "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005089-openneuro",
+      "name": "ds005089 on OpenNeuro",
+      "description": "OpenNeuro dataset landing page.",
+      "contentUrl": "https://openneuro.org/datasets/ds005089",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005089-eegdash-records",
+      "name": "ds005089 EEGDash records (live)",
+      "description": "Live JSON listing of every recording in this dataset, with BIDS metadata, channel counts, and S3 storage keys.",
+      "contentUrl": "https://data.eegdash.org/api/eegdash/records?filter=%7B%22dataset%22%3A%22ds005089%22%7D",
+      "encodingFormat": "application/json",
+      "isLiveDataset": true
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005089-nemar",
+      "name": "ds005089 on NeMAR",
+      "description": "NEMAR dataset landing page with pipeline plots.",
+      "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=ds005089",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005089-huggingface",
+      "name": "EEGDash/ds005089 on Hugging Face",
+      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
+      "contentUrl": "https://huggingface.co/datasets/EEGDash/ds005089",
+      "encodingFormat": "application/vnd.huggingface-dataset+json"
+    }
+  ]
+}

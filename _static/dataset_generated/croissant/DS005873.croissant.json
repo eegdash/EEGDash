@@ -1,0 +1,168 @@
+{
+  "@context": {
+    "@language": "en",
+    "@vocab": "https://schema.org/",
+    "citeAs": "cr:citeAs",
+    "column": "cr:column",
+    "conformsTo": "dct:conformsTo",
+    "cr": "http://mlcommons.org/croissant/",
+    "data": {
+      "@id": "cr:data",
+      "@type": "@json"
+    },
+    "dataType": {
+      "@id": "cr:dataType",
+      "@type": "@vocab"
+    },
+    "dct": "http://purl.org/dc/terms/",
+    "extract": "cr:extract",
+    "field": "cr:field",
+    "fileObject": "cr:fileObject",
+    "fileProperty": "cr:fileProperty",
+    "fileSet": "cr:fileSet",
+    "format": "cr:format",
+    "includes": "cr:includes",
+    "isLiveDataset": "cr:isLiveDataset",
+    "jsonPath": "cr:jsonPath",
+    "key": "cr:key",
+    "md5": "cr:md5",
+    "parentField": "cr:parentField",
+    "path": "cr:path",
+    "recordSet": "cr:recordSet",
+    "references": "cr:references",
+    "regex": "cr:regex",
+    "repeated": "cr:repeated",
+    "replace": "cr:replace",
+    "sc": "https://schema.org/",
+    "separator": "cr:separator",
+    "source": "cr:source",
+    "subField": "cr:subField",
+    "transform": "cr:transform"
+  },
+  "@type": "sc:Dataset",
+  "conformsTo": "http://mlcommons.org/croissant/1.0",
+  "name": "ds005873",
+  "alternateName": [
+    "DS005873"
+  ],
+  "description": "SeizeIT2. eeg, emg dataset accessible via EEGDash as `DS005873` with standardized BIDS metadata.",
+  "url": "https://eegdash.org/api/dataset/eegdash.dataset.DS005873.html",
+  "keywords": [
+    "EEG",
+    "BIDS",
+    "neuroscience",
+    "EMG",
+    "['Other']",
+    "['Epilepsy']",
+    "['Clinical/Intervention']"
+  ],
+  "isAccessibleForFree": true,
+  "includedInDataCatalog": {
+    "@type": "sc:DataCatalog",
+    "name": "EEG Dash",
+    "url": "https://eegdash.org/"
+  },
+  "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "creator": [
+    {
+      "@type": "sc:Person",
+      "name": "Miguel Bhagubai"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Christos Chatzichristos"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Lauren Swinnen"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Jaiver Macea"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Jingwei Zhang"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Lieven Lagae"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Katrien Jansen"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Andreas Schulze-Bonhage"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Francisco Sales"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Benno Mahler"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Yvonne Weber"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Wim Van Paesschen"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Maarten De Vos"
+    }
+  ],
+  "editor": {
+    "@type": "sc:Person",
+    "name": "Maarten De Vos"
+  },
+  "datePublished": "2025",
+  "identifier": "doi:10.18112/openneuro.ds005873.v1.1.0",
+  "sameAs": [
+    "https://doi.org/10.18112/openneuro.ds005873.v1.1.0",
+    "https://openneuro.org/datasets/ds005873",
+    "https://huggingface.co/datasets/EEGDash/ds005873"
+  ],
+  "citeAs": "Miguel Bhagubai, Christos Chatzichristos, Lauren Swinnen, Jaiver Macea, Jingwei Zhang (2025). SeizeIT2. doi:10.18112/openneuro.ds005873.v1.1.0",
+  "version": "1.8.0",
+  "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005873-openneuro",
+      "name": "ds005873 on OpenNeuro",
+      "description": "OpenNeuro dataset landing page.",
+      "contentUrl": "https://openneuro.org/datasets/ds005873",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005873-eegdash-records",
+      "name": "ds005873 EEGDash records (live)",
+      "description": "Live JSON listing of every recording in this dataset, with BIDS metadata, channel counts, and S3 storage keys.",
+      "contentUrl": "https://data.eegdash.org/api/eegdash/records?filter=%7B%22dataset%22%3A%22ds005873%22%7D",
+      "encodingFormat": "application/json",
+      "isLiveDataset": true
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005873-nemar",
+      "name": "ds005873 on NeMAR",
+      "description": "NEMAR dataset landing page with pipeline plots.",
+      "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=ds005873",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005873-huggingface",
+      "name": "EEGDash/ds005873 on Hugging Face",
+      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
+      "contentUrl": "https://huggingface.co/datasets/EEGDash/ds005873",
+      "encodingFormat": "application/vnd.huggingface-dataset+json"
+    }
+  ]
+}

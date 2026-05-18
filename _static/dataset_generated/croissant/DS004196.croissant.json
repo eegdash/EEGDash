@@ -1,0 +1,161 @@
+{
+  "@context": {
+    "@language": "en",
+    "@vocab": "https://schema.org/",
+    "citeAs": "cr:citeAs",
+    "column": "cr:column",
+    "conformsTo": "dct:conformsTo",
+    "cr": "http://mlcommons.org/croissant/",
+    "data": {
+      "@id": "cr:data",
+      "@type": "@json"
+    },
+    "dataType": {
+      "@id": "cr:dataType",
+      "@type": "@vocab"
+    },
+    "dct": "http://purl.org/dc/terms/",
+    "extract": "cr:extract",
+    "field": "cr:field",
+    "fileObject": "cr:fileObject",
+    "fileProperty": "cr:fileProperty",
+    "fileSet": "cr:fileSet",
+    "format": "cr:format",
+    "includes": "cr:includes",
+    "isLiveDataset": "cr:isLiveDataset",
+    "jsonPath": "cr:jsonPath",
+    "key": "cr:key",
+    "md5": "cr:md5",
+    "parentField": "cr:parentField",
+    "path": "cr:path",
+    "recordSet": "cr:recordSet",
+    "references": "cr:references",
+    "regex": "cr:regex",
+    "repeated": "cr:repeated",
+    "replace": "cr:replace",
+    "sc": "https://schema.org/",
+    "separator": "cr:separator",
+    "source": "cr:source",
+    "subField": "cr:subField",
+    "transform": "cr:transform"
+  },
+  "@type": "sc:Dataset",
+  "conformsTo": "http://mlcommons.org/croissant/1.0",
+  "name": "ds004196",
+  "alternateName": [
+    "DS004196"
+  ],
+  "description": "Bimodal dataset on Inner speech. eeg dataset accessible via EEGDash as `DS004196` with standardized BIDS metadata.",
+  "url": "https://eegdash.org/api/dataset/eegdash.dataset.DS004196.html",
+  "keywords": [
+    "EEG",
+    "BIDS",
+    "neuroscience",
+    "Visual",
+    "Healthy",
+    "Clinical/Intervention"
+  ],
+  "isAccessibleForFree": true,
+  "includedInDataCatalog": {
+    "@type": "sc:DataCatalog",
+    "name": "EEG Dash",
+    "url": "https://eegdash.org/"
+  },
+  "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "creator": [
+    {
+      "@type": "sc:Person",
+      "name": "Foteini Liwicki"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Vibha Gupta"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Rajkumar Saini"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Kanjar De"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Nosheen Abid"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Sumit Rakesh"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Scott Wellington"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Holly Wilson"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Marcus Liwicki"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Johan Eriksson"
+    }
+  ],
+  "editor": {
+    "@type": "sc:Person",
+    "name": "Johan Eriksson"
+  },
+  "funder": [
+    {
+      "@type": "sc:Organization",
+      "name": "This research was funded by the Grants for excellent research projects proposals of SRT.ai 2022."
+    }
+  ],
+  "datePublished": "2022",
+  "identifier": "doi:10.18112/openneuro.ds004196.v2.0.2",
+  "sameAs": [
+    "https://doi.org/10.18112/openneuro.ds004196.v2.0.2",
+    "https://openneuro.org/datasets/ds004196",
+    "https://huggingface.co/datasets/EEGDash/ds004196"
+  ],
+  "citeAs": "Foteini Liwicki, Vibha Gupta, Rajkumar Saini, Kanjar De, Nosheen Abid (2022). Bimodal dataset on Inner speech. doi:10.18112/openneuro.ds004196.v2.0.2",
+  "version": "1.4",
+  "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004196-openneuro",
+      "name": "ds004196 on OpenNeuro",
+      "description": "OpenNeuro dataset landing page.",
+      "contentUrl": "https://openneuro.org/datasets/ds004196",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004196-eegdash-records",
+      "name": "ds004196 EEGDash records (live)",
+      "description": "Live JSON listing of every recording in this dataset, with BIDS metadata, channel counts, and S3 storage keys.",
+      "contentUrl": "https://data.eegdash.org/api/eegdash/records?filter=%7B%22dataset%22%3A%22ds004196%22%7D",
+      "encodingFormat": "application/json",
+      "isLiveDataset": true
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004196-nemar",
+      "name": "ds004196 on NeMAR",
+      "description": "NEMAR dataset landing page with pipeline plots.",
+      "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=ds004196",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004196-huggingface",
+      "name": "EEGDash/ds004196 on Hugging Face",
+      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
+      "contentUrl": "https://huggingface.co/datasets/EEGDash/ds004196",
+      "encodingFormat": "application/vnd.huggingface-dataset+json"
+    }
+  ]
+}

@@ -1,0 +1,136 @@
+{
+  "@context": {
+    "@language": "en",
+    "@vocab": "https://schema.org/",
+    "citeAs": "cr:citeAs",
+    "column": "cr:column",
+    "conformsTo": "dct:conformsTo",
+    "cr": "http://mlcommons.org/croissant/",
+    "data": {
+      "@id": "cr:data",
+      "@type": "@json"
+    },
+    "dataType": {
+      "@id": "cr:dataType",
+      "@type": "@vocab"
+    },
+    "dct": "http://purl.org/dc/terms/",
+    "extract": "cr:extract",
+    "field": "cr:field",
+    "fileObject": "cr:fileObject",
+    "fileProperty": "cr:fileProperty",
+    "fileSet": "cr:fileSet",
+    "format": "cr:format",
+    "includes": "cr:includes",
+    "isLiveDataset": "cr:isLiveDataset",
+    "jsonPath": "cr:jsonPath",
+    "key": "cr:key",
+    "md5": "cr:md5",
+    "parentField": "cr:parentField",
+    "path": "cr:path",
+    "recordSet": "cr:recordSet",
+    "references": "cr:references",
+    "regex": "cr:regex",
+    "repeated": "cr:repeated",
+    "replace": "cr:replace",
+    "sc": "https://schema.org/",
+    "separator": "cr:separator",
+    "source": "cr:source",
+    "subField": "cr:subField",
+    "transform": "cr:transform"
+  },
+  "@type": "sc:Dataset",
+  "conformsTo": "http://mlcommons.org/croissant/1.0",
+  "name": "ds007420",
+  "alternateName": [
+    "DS007420"
+  ],
+  "description": "A Light Weight Multi-Distance fNIRS Dataset for Ball-Squeezing Task and Purposeful Motion Artifact Creation Task. fnirs dataset accessible via EEGDash as `DS007420` with standardized BIDS metadata.",
+  "url": "https://eegdash.org/api/dataset/eegdash.dataset.DS007420.html",
+  "keywords": [
+    "EEG",
+    "BIDS",
+    "neuroscience",
+    "FNIRS",
+    "['Motor']",
+    "['Healthy']"
+  ],
+  "isAccessibleForFree": true,
+  "includedInDataCatalog": {
+    "@type": "sc:DataCatalog",
+    "name": "EEG Dash",
+    "url": "https://eegdash.org/"
+  },
+  "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "creator": [
+    {
+      "@type": "sc:Person",
+      "name": "Gao, Yuanyuan"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Rogers, De’Ja"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "von Lühmann, Alexander"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Ortega-Martinez, Antonio"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Boas, David"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Yücel, Meryem"
+    }
+  ],
+  "editor": {
+    "@type": "sc:Person",
+    "name": "Yücel, Meryem"
+  },
+  "funder": [
+    {
+      "@type": "sc:Organization",
+      "name": "NIH BRAIN Initiative (Grant No. 1U01EB029856-01)"
+    }
+  ],
+  "datePublished": "2026",
+  "identifier": "doi:10.18112/openneuro.ds007420.v1.0.2",
+  "sameAs": [
+    "https://doi.org/10.18112/openneuro.ds007420.v1.0.2",
+    "https://openneuro.org/datasets/ds007420"
+  ],
+  "citeAs": "Gao, Yuanyuan, Rogers, De’Ja, von Lühmann, Alexander, Ortega-Martinez, Antonio, Boas, David (2026). A Light Weight Multi-Distance fNIRS Dataset for Ball-Squeezing Task and Purposeful Motion Artifact Creation Task. doi:10.18112/openneuro.ds007420.v1.0.2",
+  "version": "1.7.1",
+  "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007420-openneuro",
+      "name": "ds007420 on OpenNeuro",
+      "description": "OpenNeuro dataset landing page.",
+      "contentUrl": "https://openneuro.org/datasets/ds007420",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007420-eegdash-records",
+      "name": "ds007420 EEGDash records (live)",
+      "description": "Live JSON listing of every recording in this dataset, with BIDS metadata, channel counts, and S3 storage keys.",
+      "contentUrl": "https://data.eegdash.org/api/eegdash/records?filter=%7B%22dataset%22%3A%22ds007420%22%7D",
+      "encodingFormat": "application/json",
+      "isLiveDataset": true
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007420-nemar",
+      "name": "ds007420 on NeMAR",
+      "description": "NEMAR dataset landing page with pipeline plots.",
+      "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=ds007420",
+      "encodingFormat": "text/html"
+    }
+  ]
+}

@@ -1,0 +1,131 @@
+{
+  "@context": {
+    "@language": "en",
+    "@vocab": "https://schema.org/",
+    "citeAs": "cr:citeAs",
+    "column": "cr:column",
+    "conformsTo": "dct:conformsTo",
+    "cr": "http://mlcommons.org/croissant/",
+    "data": {
+      "@id": "cr:data",
+      "@type": "@json"
+    },
+    "dataType": {
+      "@id": "cr:dataType",
+      "@type": "@vocab"
+    },
+    "dct": "http://purl.org/dc/terms/",
+    "extract": "cr:extract",
+    "field": "cr:field",
+    "fileObject": "cr:fileObject",
+    "fileProperty": "cr:fileProperty",
+    "fileSet": "cr:fileSet",
+    "format": "cr:format",
+    "includes": "cr:includes",
+    "isLiveDataset": "cr:isLiveDataset",
+    "jsonPath": "cr:jsonPath",
+    "key": "cr:key",
+    "md5": "cr:md5",
+    "parentField": "cr:parentField",
+    "path": "cr:path",
+    "recordSet": "cr:recordSet",
+    "references": "cr:references",
+    "regex": "cr:regex",
+    "repeated": "cr:repeated",
+    "replace": "cr:replace",
+    "sc": "https://schema.org/",
+    "separator": "cr:separator",
+    "source": "cr:source",
+    "subField": "cr:subField",
+    "transform": "cr:transform"
+  },
+  "@type": "sc:Dataset",
+  "conformsTo": "http://mlcommons.org/croissant/1.0",
+  "name": "ds005106",
+  "alternateName": [
+    "DS005106"
+  ],
+  "description": "200 Objects Infants EEG. eeg dataset accessible via EEGDash as `DS005106` with standardized BIDS metadata.",
+  "url": "https://eegdash.org/api/dataset/eegdash.dataset.DS005106.html",
+  "keywords": [
+    "EEG",
+    "BIDS",
+    "neuroscience",
+    "Visual",
+    "Healthy",
+    "Attention"
+  ],
+  "isAccessibleForFree": true,
+  "includedInDataCatalog": {
+    "@type": "sc:DataCatalog",
+    "name": "EEG Dash",
+    "url": "https://eegdash.org/"
+  },
+  "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "creator": [
+    {
+      "@type": "sc:Person",
+      "name": "Tijl Grootswagers"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Genevieve Quek"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Zhen Zeng"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Manuel Varlet"
+    }
+  ],
+  "editor": {
+    "@type": "sc:Person",
+    "name": "Manuel Varlet"
+  },
+  "datePublished": "2024",
+  "identifier": "doi:10.18112/openneuro.ds005106.v1.5.0",
+  "sameAs": [
+    "https://doi.org/10.18112/openneuro.ds005106.v1.5.0",
+    "https://openneuro.org/datasets/ds005106",
+    "https://huggingface.co/datasets/EEGDash/ds005106"
+  ],
+  "citeAs": "Tijl Grootswagers, Genevieve Quek, Zhen Zeng, Manuel Varlet (2024). 200 Objects Infants EEG. doi:10.18112/openneuro.ds005106.v1.5.0",
+  "version": "1.10.0",
+  "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005106-openneuro",
+      "name": "ds005106 on OpenNeuro",
+      "description": "OpenNeuro dataset landing page.",
+      "contentUrl": "https://openneuro.org/datasets/ds005106",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005106-eegdash-records",
+      "name": "ds005106 EEGDash records (live)",
+      "description": "Live JSON listing of every recording in this dataset, with BIDS metadata, channel counts, and S3 storage keys.",
+      "contentUrl": "https://data.eegdash.org/api/eegdash/records?filter=%7B%22dataset%22%3A%22ds005106%22%7D",
+      "encodingFormat": "application/json",
+      "isLiveDataset": true
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005106-nemar",
+      "name": "ds005106 on NeMAR",
+      "description": "NEMAR dataset landing page with pipeline plots.",
+      "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=ds005106",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005106-huggingface",
+      "name": "EEGDash/ds005106 on Hugging Face",
+      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
+      "contentUrl": "https://huggingface.co/datasets/EEGDash/ds005106",
+      "encodingFormat": "application/vnd.huggingface-dataset+json"
+    }
+  ]
+}

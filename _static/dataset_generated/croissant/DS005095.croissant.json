@@ -1,0 +1,147 @@
+{
+  "@context": {
+    "@language": "en",
+    "@vocab": "https://schema.org/",
+    "citeAs": "cr:citeAs",
+    "column": "cr:column",
+    "conformsTo": "dct:conformsTo",
+    "cr": "http://mlcommons.org/croissant/",
+    "data": {
+      "@id": "cr:data",
+      "@type": "@json"
+    },
+    "dataType": {
+      "@id": "cr:dataType",
+      "@type": "@vocab"
+    },
+    "dct": "http://purl.org/dc/terms/",
+    "extract": "cr:extract",
+    "field": "cr:field",
+    "fileObject": "cr:fileObject",
+    "fileProperty": "cr:fileProperty",
+    "fileSet": "cr:fileSet",
+    "format": "cr:format",
+    "includes": "cr:includes",
+    "isLiveDataset": "cr:isLiveDataset",
+    "jsonPath": "cr:jsonPath",
+    "key": "cr:key",
+    "md5": "cr:md5",
+    "parentField": "cr:parentField",
+    "path": "cr:path",
+    "recordSet": "cr:recordSet",
+    "references": "cr:references",
+    "regex": "cr:regex",
+    "repeated": "cr:repeated",
+    "replace": "cr:replace",
+    "sc": "https://schema.org/",
+    "separator": "cr:separator",
+    "source": "cr:source",
+    "subField": "cr:subField",
+    "transform": "cr:transform"
+  },
+  "@type": "sc:Dataset",
+  "conformsTo": "http://mlcommons.org/croissant/1.0",
+  "name": "ds005095",
+  "alternateName": [
+    "DS005095"
+  ],
+  "description": "STERNBERG DIFFICULT. eeg dataset accessible via EEGDash as `DS005095` with standardized BIDS metadata.",
+  "url": "https://eegdash.org/api/dataset/eegdash.dataset.DS005095.html",
+  "keywords": [
+    "EEG",
+    "BIDS",
+    "neuroscience",
+    "Visual",
+    "Healthy",
+    "Memory"
+  ],
+  "isAccessibleForFree": true,
+  "includedInDataCatalog": {
+    "@type": "sc:DataCatalog",
+    "name": "EEG Dash",
+    "url": "https://eegdash.org/"
+  },
+  "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "creator": [
+    {
+      "@type": "sc:Person",
+      "name": "Natalia Zhozhikashvili"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Maria Protopova"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Tatiana Shkurenko"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Marie Arsalidou"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Ilya Zakharov"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Boris Kotchoubey"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Sergey Malykh"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Yuri Pavlov"
+    }
+  ],
+  "editor": {
+    "@type": "sc:Person",
+    "name": "Yuri Pavlov"
+  },
+  "datePublished": "2024",
+  "identifier": "doi:10.18112/openneuro.ds005095.v1.0.2",
+  "sameAs": [
+    "https://doi.org/10.18112/openneuro.ds005095.v1.0.2",
+    "https://openneuro.org/datasets/ds005095",
+    "https://huggingface.co/datasets/EEGDash/ds005095"
+  ],
+  "citeAs": "Natalia Zhozhikashvili, Maria Protopova, Tatiana Shkurenko, Marie Arsalidou, Ilya Zakharov (2024). STERNBERG DIFFICULT. doi:10.18112/openneuro.ds005095.v1.0.2",
+  "version": "1.7.0",
+  "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005095-openneuro",
+      "name": "ds005095 on OpenNeuro",
+      "description": "OpenNeuro dataset landing page.",
+      "contentUrl": "https://openneuro.org/datasets/ds005095",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005095-eegdash-records",
+      "name": "ds005095 EEGDash records (live)",
+      "description": "Live JSON listing of every recording in this dataset, with BIDS metadata, channel counts, and S3 storage keys.",
+      "contentUrl": "https://data.eegdash.org/api/eegdash/records?filter=%7B%22dataset%22%3A%22ds005095%22%7D",
+      "encodingFormat": "application/json",
+      "isLiveDataset": true
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005095-nemar",
+      "name": "ds005095 on NeMAR",
+      "description": "NEMAR dataset landing page with pipeline plots.",
+      "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=ds005095",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005095-huggingface",
+      "name": "EEGDash/ds005095 on Hugging Face",
+      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
+      "contentUrl": "https://huggingface.co/datasets/EEGDash/ds005095",
+      "encodingFormat": "application/vnd.huggingface-dataset+json"
+    }
+  ]
+}

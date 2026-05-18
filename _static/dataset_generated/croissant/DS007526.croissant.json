@@ -1,0 +1,118 @@
+{
+  "@context": {
+    "@language": "en",
+    "@vocab": "https://schema.org/",
+    "citeAs": "cr:citeAs",
+    "column": "cr:column",
+    "conformsTo": "dct:conformsTo",
+    "cr": "http://mlcommons.org/croissant/",
+    "data": {
+      "@id": "cr:data",
+      "@type": "@json"
+    },
+    "dataType": {
+      "@id": "cr:dataType",
+      "@type": "@vocab"
+    },
+    "dct": "http://purl.org/dc/terms/",
+    "extract": "cr:extract",
+    "field": "cr:field",
+    "fileObject": "cr:fileObject",
+    "fileProperty": "cr:fileProperty",
+    "fileSet": "cr:fileSet",
+    "format": "cr:format",
+    "includes": "cr:includes",
+    "isLiveDataset": "cr:isLiveDataset",
+    "jsonPath": "cr:jsonPath",
+    "key": "cr:key",
+    "md5": "cr:md5",
+    "parentField": "cr:parentField",
+    "path": "cr:path",
+    "recordSet": "cr:recordSet",
+    "references": "cr:references",
+    "regex": "cr:regex",
+    "repeated": "cr:repeated",
+    "replace": "cr:replace",
+    "sc": "https://schema.org/",
+    "separator": "cr:separator",
+    "source": "cr:source",
+    "subField": "cr:subField",
+    "transform": "cr:transform"
+  },
+  "@type": "sc:Dataset",
+  "conformsTo": "http://mlcommons.org/croissant/1.0",
+  "name": "ds007526",
+  "alternateName": [
+    "DS007526"
+  ],
+  "description": "PD-EEG: Resting-State & Walking EEG in Parkinson's Disease. eeg dataset accessible via EEGDash as `DS007526` with standardized BIDS metadata.",
+  "url": "https://eegdash.org/api/dataset/eegdash.dataset.DS007526.html",
+  "keywords": [
+    "EEG",
+    "BIDS",
+    "neuroscience",
+    "['Motor']",
+    "[\"Parkinson's\"]",
+    "['Clinical/Intervention']"
+  ],
+  "isAccessibleForFree": true,
+  "includedInDataCatalog": {
+    "@type": "sc:DataCatalog",
+    "name": "EEG Dash",
+    "url": "https://eegdash.org/"
+  },
+  "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "creator": [
+    {
+      "@type": "sc:Person",
+      "name": "Zoya Katzir"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Daniel Vered"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Inbal Maidan (inbalm@tlvmc.gov.il)"
+    }
+  ],
+  "editor": {
+    "@type": "sc:Person",
+    "name": "Inbal Maidan (inbalm@tlvmc.gov.il)"
+  },
+  "datePublished": "2026",
+  "identifier": "doi:10.18112/openneuro.ds007526.v1.0.1",
+  "sameAs": [
+    "https://doi.org/10.18112/openneuro.ds007526.v1.0.1",
+    "https://openneuro.org/datasets/ds007526"
+  ],
+  "citeAs": "Zoya Katzir, Daniel Vered, Inbal Maidan (inbalm@tlvmc.gov.il) (2026). PD-EEG: Resting-State & Walking EEG in Parkinson's Disease. doi:10.18112/openneuro.ds007526.v1.0.1",
+  "version": "1.10.0",
+  "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007526-openneuro",
+      "name": "ds007526 on OpenNeuro",
+      "description": "OpenNeuro dataset landing page.",
+      "contentUrl": "https://openneuro.org/datasets/ds007526",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007526-eegdash-records",
+      "name": "ds007526 EEGDash records (live)",
+      "description": "Live JSON listing of every recording in this dataset, with BIDS metadata, channel counts, and S3 storage keys.",
+      "contentUrl": "https://data.eegdash.org/api/eegdash/records?filter=%7B%22dataset%22%3A%22ds007526%22%7D",
+      "encodingFormat": "application/json",
+      "isLiveDataset": true
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007526-nemar",
+      "name": "ds007526 on NeMAR",
+      "description": "NEMAR dataset landing page with pipeline plots.",
+      "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=ds007526",
+      "encodingFormat": "text/html"
+    }
+  ]
+}

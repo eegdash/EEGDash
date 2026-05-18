@@ -1,0 +1,157 @@
+{
+  "@context": {
+    "@language": "en",
+    "@vocab": "https://schema.org/",
+    "citeAs": "cr:citeAs",
+    "column": "cr:column",
+    "conformsTo": "dct:conformsTo",
+    "cr": "http://mlcommons.org/croissant/",
+    "data": {
+      "@id": "cr:data",
+      "@type": "@json"
+    },
+    "dataType": {
+      "@id": "cr:dataType",
+      "@type": "@vocab"
+    },
+    "dct": "http://purl.org/dc/terms/",
+    "extract": "cr:extract",
+    "field": "cr:field",
+    "fileObject": "cr:fileObject",
+    "fileProperty": "cr:fileProperty",
+    "fileSet": "cr:fileSet",
+    "format": "cr:format",
+    "includes": "cr:includes",
+    "isLiveDataset": "cr:isLiveDataset",
+    "jsonPath": "cr:jsonPath",
+    "key": "cr:key",
+    "md5": "cr:md5",
+    "parentField": "cr:parentField",
+    "path": "cr:path",
+    "recordSet": "cr:recordSet",
+    "references": "cr:references",
+    "regex": "cr:regex",
+    "repeated": "cr:repeated",
+    "replace": "cr:replace",
+    "sc": "https://schema.org/",
+    "separator": "cr:separator",
+    "source": "cr:source",
+    "subField": "cr:subField",
+    "transform": "cr:transform"
+  },
+  "@type": "sc:Dataset",
+  "conformsTo": "http://mlcommons.org/croissant/1.0",
+  "name": "ds004017",
+  "alternateName": [
+    "DS004017"
+  ],
+  "description": "Embodied Learning for Literacy EEG. eeg dataset accessible via EEGDash as `DS004017` with standardized BIDS metadata.",
+  "url": "https://eegdash.org/api/dataset/eegdash.dataset.DS004017.html",
+  "keywords": [
+    "EEG",
+    "BIDS",
+    "neuroscience",
+    "['Visual']",
+    "['Healthy']",
+    "['Learning']"
+  ],
+  "isAccessibleForFree": true,
+  "includedInDataCatalog": {
+    "@type": "sc:DataCatalog",
+    "name": "EEG Dash",
+    "url": "https://eegdash.org/"
+  },
+  "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "creator": [
+    {
+      "@type": "sc:Person",
+      "name": "Linn Damsgaard"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Marta Topor"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Anne-Mette Veber Nielsen"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Anne Kær Gejl"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Anne Sofie Bøgh Malling"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Mark Schram Christensen"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Rasmus Ahmt Hansen"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Søren Kildahl"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Jacob Wienecke"
+    }
+  ],
+  "editor": {
+    "@type": "sc:Person",
+    "name": "Jacob Wienecke"
+  },
+  "funder": [
+    {
+      "@type": "sc:Organization",
+      "name": "n/a"
+    }
+  ],
+  "datePublished": "2022",
+  "identifier": "doi:10.18112/openneuro.ds004017.v1.0.3",
+  "sameAs": [
+    "https://doi.org/10.18112/openneuro.ds004017.v1.0.3",
+    "https://openneuro.org/datasets/ds004017",
+    "https://huggingface.co/datasets/EEGDash/ds004017"
+  ],
+  "citeAs": "Linn Damsgaard, Marta Topor, Anne-Mette Veber Nielsen, Anne Kær Gejl, Anne Sofie Bøgh Malling (2022). Embodied Learning for Literacy EEG. doi:10.18112/openneuro.ds004017.v1.0.3",
+  "version": "1.2.0",
+  "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004017-openneuro",
+      "name": "ds004017 on OpenNeuro",
+      "description": "OpenNeuro dataset landing page.",
+      "contentUrl": "https://openneuro.org/datasets/ds004017",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004017-eegdash-records",
+      "name": "ds004017 EEGDash records (live)",
+      "description": "Live JSON listing of every recording in this dataset, with BIDS metadata, channel counts, and S3 storage keys.",
+      "contentUrl": "https://data.eegdash.org/api/eegdash/records?filter=%7B%22dataset%22%3A%22ds004017%22%7D",
+      "encodingFormat": "application/json",
+      "isLiveDataset": true
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004017-nemar",
+      "name": "ds004017 on NeMAR",
+      "description": "NEMAR dataset landing page with pipeline plots.",
+      "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=ds004017",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004017-huggingface",
+      "name": "EEGDash/ds004017 on Hugging Face",
+      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
+      "contentUrl": "https://huggingface.co/datasets/EEGDash/ds004017",
+      "encodingFormat": "application/vnd.huggingface-dataset+json"
+    }
+  ]
+}

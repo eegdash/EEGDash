@@ -1,0 +1,170 @@
+{
+  "@context": {
+    "@language": "en",
+    "@vocab": "https://schema.org/",
+    "citeAs": "cr:citeAs",
+    "column": "cr:column",
+    "conformsTo": "dct:conformsTo",
+    "cr": "http://mlcommons.org/croissant/",
+    "data": {
+      "@id": "cr:data",
+      "@type": "@json"
+    },
+    "dataType": {
+      "@id": "cr:dataType",
+      "@type": "@vocab"
+    },
+    "dct": "http://purl.org/dc/terms/",
+    "extract": "cr:extract",
+    "field": "cr:field",
+    "fileObject": "cr:fileObject",
+    "fileProperty": "cr:fileProperty",
+    "fileSet": "cr:fileSet",
+    "format": "cr:format",
+    "includes": "cr:includes",
+    "isLiveDataset": "cr:isLiveDataset",
+    "jsonPath": "cr:jsonPath",
+    "key": "cr:key",
+    "md5": "cr:md5",
+    "parentField": "cr:parentField",
+    "path": "cr:path",
+    "recordSet": "cr:recordSet",
+    "references": "cr:references",
+    "regex": "cr:regex",
+    "repeated": "cr:repeated",
+    "replace": "cr:replace",
+    "sc": "https://schema.org/",
+    "separator": "cr:separator",
+    "source": "cr:source",
+    "subField": "cr:subField",
+    "transform": "cr:transform"
+  },
+  "@type": "sc:Dataset",
+  "conformsTo": "http://mlcommons.org/croissant/1.0",
+  "name": "ds000248",
+  "alternateName": [
+    "DS000248"
+  ],
+  "description": "MNE-Sample-Data. meg dataset accessible via EEGDash as `DS000248` with standardized BIDS metadata.",
+  "url": "https://eegdash.org/api/dataset/eegdash.dataset.DS000248.html",
+  "keywords": [
+    "EEG",
+    "BIDS",
+    "neuroscience",
+    "MEG",
+    "['Multisensory']",
+    "['Healthy']",
+    "['Attention']"
+  ],
+  "isAccessibleForFree": true,
+  "includedInDataCatalog": {
+    "@type": "sc:DataCatalog",
+    "name": "EEG Dash",
+    "url": "https://eegdash.org/"
+  },
+  "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "creator": [
+    {
+      "@type": "sc:Person",
+      "name": "Alexandre Gramfort"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Matti S Hämäläinen"
+    }
+  ],
+  "editor": {
+    "@type": "sc:Person",
+    "name": "Matti S Hämäläinen"
+  },
+  "funder": [
+    {
+      "@type": "sc:Organization",
+      "name": "NIH 5R01EB009048"
+    },
+    {
+      "@type": "sc:Organization",
+      "name": "NIH 1R01EB009048"
+    },
+    {
+      "@type": "sc:Organization",
+      "name": "NIH R01EB006385"
+    },
+    {
+      "@type": "sc:Organization",
+      "name": "NIH 1R01HD40712"
+    },
+    {
+      "@type": "sc:Organization",
+      "name": "NIH 1R01NS44319"
+    },
+    {
+      "@type": "sc:Organization",
+      "name": "NIH 2R01NS37462"
+    },
+    {
+      "@type": "sc:Organization",
+      "name": "NIH P41EB015896"
+    },
+    {
+      "@type": "sc:Organization",
+      "name": "ANR-11-IDEX-0003-02"
+    },
+    {
+      "@type": "sc:Organization",
+      "name": "ERC-StG-263584"
+    },
+    {
+      "@type": "sc:Organization",
+      "name": "ERC-StG-676943"
+    },
+    {
+      "@type": "sc:Organization",
+      "name": "ANR-14-NEUC-0002-01"
+    }
+  ],
+  "datePublished": "2018",
+  "identifier": "doi:10.18112/openneuro.ds000248.v1.2.4",
+  "sameAs": [
+    "https://doi.org/10.18112/openneuro.ds000248.v1.2.4",
+    "https://openneuro.org/datasets/ds000248",
+    "https://huggingface.co/datasets/EEGDash/ds000248"
+  ],
+  "citeAs": "Alexandre Gramfort, Matti S Hämäläinen (2018). MNE-Sample-Data. doi:10.18112/openneuro.ds000248.v1.2.4",
+  "version": "1.4.0",
+  "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds000248-openneuro",
+      "name": "ds000248 on OpenNeuro",
+      "description": "OpenNeuro dataset landing page.",
+      "contentUrl": "https://openneuro.org/datasets/ds000248",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds000248-eegdash-records",
+      "name": "ds000248 EEGDash records (live)",
+      "description": "Live JSON listing of every recording in this dataset, with BIDS metadata, channel counts, and S3 storage keys.",
+      "contentUrl": "https://data.eegdash.org/api/eegdash/records?filter=%7B%22dataset%22%3A%22ds000248%22%7D",
+      "encodingFormat": "application/json",
+      "isLiveDataset": true
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds000248-nemar",
+      "name": "ds000248 on NeMAR",
+      "description": "NEMAR dataset landing page with pipeline plots.",
+      "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=ds000248",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds000248-huggingface",
+      "name": "EEGDash/ds000248 on Hugging Face",
+      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
+      "contentUrl": "https://huggingface.co/datasets/EEGDash/ds000248",
+      "encodingFormat": "application/vnd.huggingface-dataset+json"
+    }
+  ]
+}

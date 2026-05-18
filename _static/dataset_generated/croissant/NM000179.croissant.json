@@ -1,0 +1,401 @@
+{
+  "@context": {
+    "@language": "en",
+    "@vocab": "https://schema.org/",
+    "citeAs": "cr:citeAs",
+    "column": "cr:column",
+    "conformsTo": "dct:conformsTo",
+    "cr": "http://mlcommons.org/croissant/",
+    "data": {
+      "@id": "cr:data",
+      "@type": "@json"
+    },
+    "dataType": {
+      "@id": "cr:dataType",
+      "@type": "@vocab"
+    },
+    "dct": "http://purl.org/dc/terms/",
+    "extract": "cr:extract",
+    "field": "cr:field",
+    "fileObject": "cr:fileObject",
+    "fileProperty": "cr:fileProperty",
+    "fileSet": "cr:fileSet",
+    "format": "cr:format",
+    "includes": "cr:includes",
+    "isLiveDataset": "cr:isLiveDataset",
+    "jsonPath": "cr:jsonPath",
+    "key": "cr:key",
+    "md5": "cr:md5",
+    "parentField": "cr:parentField",
+    "path": "cr:path",
+    "recordSet": "cr:recordSet",
+    "references": "cr:references",
+    "regex": "cr:regex",
+    "repeated": "cr:repeated",
+    "replace": "cr:replace",
+    "sc": "https://schema.org/",
+    "separator": "cr:separator",
+    "source": "cr:source",
+    "subField": "cr:subField",
+    "transform": "cr:transform"
+  },
+  "@type": "sc:Dataset",
+  "conformsTo": "http://mlcommons.org/croissant/1.0",
+  "name": "nm000179",
+  "alternateName": [
+    "NM000179"
+  ],
+  "description": "LEMON: MPI Leipzig Mind-Brain-Body EEG (Resting State). eeg dataset accessible via EEGDash as `NM000179` with standardized BIDS metadata.",
+  "url": "https://eegdash.org/api/dataset/eegdash.dataset.NM000179.html",
+  "keywords": [
+    "EEG",
+    "BIDS",
+    "neuroscience"
+  ],
+  "isAccessibleForFree": true,
+  "includedInDataCatalog": {
+    "@type": "sc:DataCatalog",
+    "name": "EEG Dash",
+    "url": "https://eegdash.org/"
+  },
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "creator": [
+    {
+      "@type": "sc:Person",
+      "name": "Anahit Babayan"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Miray Erbey"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Deniz Kumral"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Janis D. Reinelt"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Andrea M.F. Reiter"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Josefin Röbbig"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "H. Lina Schaare"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Marie Uhlig"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Alfred Anwander"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Pierre-Louis Bazin"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Annette Horstmann"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Leonie Lampe"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Vadim V. Nikulin"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Hadas Okon-Singer"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Sven Preusser"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Andre Pampel"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Christiane S. Rohr"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Julia Sacher"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Angelika Thone-Otto"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Sabrina Trapp"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Till Nierhaus"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Denise Altmann"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Katrin Arelin"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Maria Blochl"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Edith Bongartz"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Patric Breig"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Elena Cesnaite"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Sufang Chen"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Roberto Cozatl"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Saskia Czerwonatis"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Gabriele Dambrauskaite"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Maria Dreyer"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Jessica Enders"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Melina Engelhardt"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Marie Michele Fischer"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Norman Forschack"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Johannes Golchert"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Laura Golz"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "C. Alexandrina Guran"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Susanna Hedrich"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Nicole Hentschel"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Daria I. Hoffmann"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Julia M. Huntenburg"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Rebecca Jost"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Anna Kosatschek"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Stella Kunzendorf"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Hannah Lammers"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Mark E. Lauckner"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Keyvan Mahjoory"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Natacha Mendes"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Ramona Menger"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Enzo Morino"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Karina Nathe"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Jennifer Neubauer"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Handan Noyan"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Sabine Oligschlager"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Patricia Panczyszyn-Trzewik"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Dorothee Poehlchen"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Nadine Putzke"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Sabrina Roski"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Marie-Catherine Schaller"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Anja Schieferbein"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Benito Schlaak"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Hanna Maria Schmidt"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Robert Schmidt"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Anne Schrimpf"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Sylvia Stasch"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Maria Voss"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Anett Wiedemann"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Daniel S. Margulies"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Michael Gaebler"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Arno Villringer"
+    }
+  ],
+  "funder": [
+    {
+      "@type": "sc:Organization",
+      "name": "Max Planck Society"
+    },
+    {
+      "@type": "sc:Organization",
+      "name": "German Research Foundation (CRC 1052 Obesity Mechanisms)"
+    },
+    {
+      "@type": "sc:Organization",
+      "name": "European Union (ERC-2016-StG-Self-Control-677804)"
+    }
+  ],
+  "datePublished": "2019",
+  "identifier": "doi:10.1038/sdata.2018.308",
+  "sameAs": [
+    "https://doi.org/10.1038/sdata.2018.308",
+    "https://openneuro.org/datasets/nm000179"
+  ],
+  "citeAs": "Anahit Babayan, Miray Erbey, Deniz Kumral, Janis D. Reinelt, Andrea M.F. Reiter (2019). LEMON: MPI Leipzig Mind-Brain-Body EEG (Resting State). doi:10.1038/sdata.2018.308",
+  "version": "1.9.0",
+  "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000179-openneuro",
+      "name": "nm000179 on OpenNeuro",
+      "description": "OpenNeuro dataset landing page.",
+      "contentUrl": "https://openneuro.org/datasets/nm000179",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000179-eegdash-records",
+      "name": "nm000179 EEGDash records (live)",
+      "description": "Live JSON listing of every recording in this dataset, with BIDS metadata, channel counts, and S3 storage keys.",
+      "contentUrl": "https://data.eegdash.org/api/eegdash/records?filter=%7B%22dataset%22%3A%22nm000179%22%7D",
+      "encodingFormat": "application/json",
+      "isLiveDataset": true
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000179-nemar",
+      "name": "nm000179 on NeMAR",
+      "description": "NEMAR dataset landing page with pipeline plots.",
+      "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=nm000179",
+      "encodingFormat": "text/html"
+    }
+  ]
+}

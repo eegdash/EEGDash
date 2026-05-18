@@ -1,0 +1,174 @@
+{
+  "@context": {
+    "@language": "en",
+    "@vocab": "https://schema.org/",
+    "citeAs": "cr:citeAs",
+    "column": "cr:column",
+    "conformsTo": "dct:conformsTo",
+    "cr": "http://mlcommons.org/croissant/",
+    "data": {
+      "@id": "cr:data",
+      "@type": "@json"
+    },
+    "dataType": {
+      "@id": "cr:dataType",
+      "@type": "@vocab"
+    },
+    "dct": "http://purl.org/dc/terms/",
+    "extract": "cr:extract",
+    "field": "cr:field",
+    "fileObject": "cr:fileObject",
+    "fileProperty": "cr:fileProperty",
+    "fileSet": "cr:fileSet",
+    "format": "cr:format",
+    "includes": "cr:includes",
+    "isLiveDataset": "cr:isLiveDataset",
+    "jsonPath": "cr:jsonPath",
+    "key": "cr:key",
+    "md5": "cr:md5",
+    "parentField": "cr:parentField",
+    "path": "cr:path",
+    "recordSet": "cr:recordSet",
+    "references": "cr:references",
+    "regex": "cr:regex",
+    "repeated": "cr:repeated",
+    "replace": "cr:replace",
+    "sc": "https://schema.org/",
+    "separator": "cr:separator",
+    "source": "cr:source",
+    "subField": "cr:subField",
+    "transform": "cr:transform"
+  },
+  "@type": "sc:Dataset",
+  "conformsTo": "http://mlcommons.org/croissant/1.0",
+  "name": "ds004080",
+  "alternateName": [
+    "DS004080"
+  ],
+  "description": "CCEP ECoG dataset across age 4-51. ieeg dataset accessible via EEGDash as `DS004080` with standardized BIDS metadata.",
+  "url": "https://eegdash.org/api/dataset/eegdash.dataset.DS004080.html",
+  "keywords": [
+    "EEG",
+    "BIDS",
+    "neuroscience",
+    "IEEG",
+    "['Other']",
+    "['Epilepsy']",
+    "['Clinical/Intervention']"
+  ],
+  "isAccessibleForFree": true,
+  "includedInDataCatalog": {
+    "@type": "sc:DataCatalog",
+    "name": "EEG Dash",
+    "url": "https://eegdash.org/"
+  },
+  "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "creator": [
+    {
+      "@type": "sc:Person",
+      "name": "D. van Blooijs"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "M.A. van den Boom"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "J.F. van der Aar"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "G.J.M. Huiskamp"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "G. Castegnaro"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "M. Demuru"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "W.J.E.M. Zweiphenning"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "P. van Eijsden"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "K. J. Miller"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "F.S.S. Leijten"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "D. Hermes"
+    }
+  ],
+  "editor": {
+    "@type": "sc:Person",
+    "name": "D. Hermes"
+  },
+  "funder": [
+    {
+      "@type": "sc:Organization",
+      "name": "NIMH R01MH122258"
+    },
+    {
+      "@type": "sc:Organization",
+      "name": "Alexandre Suerman Stipendium 2015"
+    },
+    {
+      "@type": "sc:Organization",
+      "name": "EpilepsieNL #17-07"
+    }
+  ],
+  "datePublished": "2022",
+  "identifier": "doi:10.18112/openneuro.ds004080.v1.2.4",
+  "sameAs": [
+    "https://doi.org/10.18112/openneuro.ds004080.v1.2.4",
+    "https://openneuro.org/datasets/ds004080",
+    "https://huggingface.co/datasets/EEGDash/ds004080"
+  ],
+  "citeAs": "D. van Blooijs, M.A. van den Boom, J.F. van der Aar, G.J.M. Huiskamp, G. Castegnaro (2022). CCEP ECoG dataset across age 4-51. doi:10.18112/openneuro.ds004080.v1.2.4",
+  "version": "Brain Imaging Data Structure Specification v1.6.0",
+  "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004080-openneuro",
+      "name": "ds004080 on OpenNeuro",
+      "description": "OpenNeuro dataset landing page.",
+      "contentUrl": "https://openneuro.org/datasets/ds004080",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004080-eegdash-records",
+      "name": "ds004080 EEGDash records (live)",
+      "description": "Live JSON listing of every recording in this dataset, with BIDS metadata, channel counts, and S3 storage keys.",
+      "contentUrl": "https://data.eegdash.org/api/eegdash/records?filter=%7B%22dataset%22%3A%22ds004080%22%7D",
+      "encodingFormat": "application/json",
+      "isLiveDataset": true
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004080-nemar",
+      "name": "ds004080 on NeMAR",
+      "description": "NEMAR dataset landing page with pipeline plots.",
+      "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=ds004080",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004080-huggingface",
+      "name": "EEGDash/ds004080 on Hugging Face",
+      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
+      "contentUrl": "https://huggingface.co/datasets/EEGDash/ds004080",
+      "encodingFormat": "application/vnd.huggingface-dataset+json"
+    }
+  ]
+}

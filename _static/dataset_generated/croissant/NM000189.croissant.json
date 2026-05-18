@@ -1,0 +1,130 @@
+{
+  "@context": {
+    "@language": "en",
+    "@vocab": "https://schema.org/",
+    "citeAs": "cr:citeAs",
+    "column": "cr:column",
+    "conformsTo": "dct:conformsTo",
+    "cr": "http://mlcommons.org/croissant/",
+    "data": {
+      "@id": "cr:data",
+      "@type": "@json"
+    },
+    "dataType": {
+      "@id": "cr:dataType",
+      "@type": "@vocab"
+    },
+    "dct": "http://purl.org/dc/terms/",
+    "extract": "cr:extract",
+    "field": "cr:field",
+    "fileObject": "cr:fileObject",
+    "fileProperty": "cr:fileProperty",
+    "fileSet": "cr:fileSet",
+    "format": "cr:format",
+    "includes": "cr:includes",
+    "isLiveDataset": "cr:isLiveDataset",
+    "jsonPath": "cr:jsonPath",
+    "key": "cr:key",
+    "md5": "cr:md5",
+    "parentField": "cr:parentField",
+    "path": "cr:path",
+    "recordSet": "cr:recordSet",
+    "references": "cr:references",
+    "regex": "cr:regex",
+    "repeated": "cr:repeated",
+    "replace": "cr:replace",
+    "sc": "https://schema.org/",
+    "separator": "cr:separator",
+    "source": "cr:source",
+    "subField": "cr:subField",
+    "transform": "cr:transform"
+  },
+  "@type": "sc:Dataset",
+  "conformsTo": "http://mlcommons.org/croissant/1.0",
+  "name": "nm000189",
+  "alternateName": [
+    "NM000189"
+  ],
+  "description": "BNCI 2015-003 P300 dataset. eeg dataset accessible via EEGDash as `NM000189` with standardized BIDS metadata.",
+  "url": "https://eegdash.org/api/dataset/eegdash.dataset.NM000189.html",
+  "keywords": [
+    "EEG",
+    "BIDS",
+    "neuroscience",
+    "['Auditory']",
+    "['Healthy']",
+    "['Attention']"
+  ],
+  "isAccessibleForFree": true,
+  "includedInDataCatalog": {
+    "@type": "sc:DataCatalog",
+    "name": "EEG Dash",
+    "url": "https://eegdash.org/"
+  },
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "creator": [
+    {
+      "@type": "sc:Person",
+      "name": "Martijn Schreuder"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Thomas Rost"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Michael Tangermann"
+    }
+  ],
+  "funder": [
+    {
+      "@type": "sc:Organization",
+      "name": "European ICT Programme Project FP7-224631"
+    },
+    {
+      "@type": "sc:Organization",
+      "name": "European ICT Programme Project FP7-216886"
+    },
+    {
+      "@type": "sc:Organization",
+      "name": "Deutsche Forschungsgemeinschaft (DFG MU 987/3-2)"
+    },
+    {
+      "@type": "sc:Organization",
+      "name": "Bundesministerium fur Bildung und Forschung (BMBF FKZ 01IB001A, 01GQ0850)"
+    },
+    {
+      "@type": "sc:Organization",
+      "name": "FP7-ICT PASCAL2 Network of Excellence ICT-216886"
+    }
+  ],
+  "datePublished": "2011",
+  "version": "1.9.0",
+  "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000189-openneuro",
+      "name": "nm000189 on OpenNeuro",
+      "description": "OpenNeuro dataset landing page.",
+      "contentUrl": "https://openneuro.org/datasets/nm000189",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000189-eegdash-records",
+      "name": "nm000189 EEGDash records (live)",
+      "description": "Live JSON listing of every recording in this dataset, with BIDS metadata, channel counts, and S3 storage keys.",
+      "contentUrl": "https://data.eegdash.org/api/eegdash/records?filter=%7B%22dataset%22%3A%22nm000189%22%7D",
+      "encodingFormat": "application/json",
+      "isLiveDataset": true
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000189-nemar",
+      "name": "nm000189 on NeMAR",
+      "description": "NEMAR dataset landing page with pipeline plots.",
+      "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=nm000189",
+      "encodingFormat": "text/html"
+    }
+  ]
+}

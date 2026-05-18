@@ -1,0 +1,237 @@
+{
+  "@context": {
+    "@language": "en",
+    "@vocab": "https://schema.org/",
+    "citeAs": "cr:citeAs",
+    "column": "cr:column",
+    "conformsTo": "dct:conformsTo",
+    "cr": "http://mlcommons.org/croissant/",
+    "data": {
+      "@id": "cr:data",
+      "@type": "@json"
+    },
+    "dataType": {
+      "@id": "cr:dataType",
+      "@type": "@vocab"
+    },
+    "dct": "http://purl.org/dc/terms/",
+    "extract": "cr:extract",
+    "field": "cr:field",
+    "fileObject": "cr:fileObject",
+    "fileProperty": "cr:fileProperty",
+    "fileSet": "cr:fileSet",
+    "format": "cr:format",
+    "includes": "cr:includes",
+    "isLiveDataset": "cr:isLiveDataset",
+    "jsonPath": "cr:jsonPath",
+    "key": "cr:key",
+    "md5": "cr:md5",
+    "parentField": "cr:parentField",
+    "path": "cr:path",
+    "recordSet": "cr:recordSet",
+    "references": "cr:references",
+    "regex": "cr:regex",
+    "repeated": "cr:repeated",
+    "replace": "cr:replace",
+    "sc": "https://schema.org/",
+    "separator": "cr:separator",
+    "source": "cr:source",
+    "subField": "cr:subField",
+    "transform": "cr:transform"
+  },
+  "@type": "sc:Dataset",
+  "conformsTo": "http://mlcommons.org/croissant/1.0",
+  "name": "ds006377",
+  "alternateName": [
+    "DS006377"
+  ],
+  "description": "InclusionStudy. fnirs dataset accessible via EEGDash as `DS006377` with standardized BIDS metadata.",
+  "url": "https://eegdash.org/api/dataset/eegdash.dataset.DS006377.html",
+  "keywords": [
+    "EEG",
+    "BIDS",
+    "neuroscience",
+    "FNIRS",
+    "['Motor']",
+    "['Unknown']"
+  ],
+  "isAccessibleForFree": true,
+  "includedInDataCatalog": {
+    "@type": "sc:DataCatalog",
+    "name": "EEG Dash",
+    "url": "https://eegdash.org/"
+  },
+  "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "creator": [
+    {
+      "@type": "sc:Person",
+      "name": "Meryem A. Yücel"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Jessica E. Anderson"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "De'Ja Rogers"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Parisa Hajirahimi"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Parya Farzam"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Yuanyuan Gao"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Rini I. Kaplan"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Emily J. Braun"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Nishaat Mukadam"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Sudan Duwadi"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Laura Carlton"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "David Beeler"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Lindsay K. Butler"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Erin Carpenter"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Jaimie Girnis"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "John Wilson"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Vaibhav Tripathi"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Yiwen Zhang"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Bettina Sorger"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Alexander von Lühmann"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "David C. Somers"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Alice Cronin-Golomb"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Swathi Kiran"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Terry D. Ellis"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "David A. Boas"
+    }
+  ],
+  "editor": {
+    "@type": "sc:Person",
+    "name": "David A. Boas"
+  },
+  "funder": [
+    {
+      "@type": "sc:Organization",
+      "name": "Meta Reality Labs (formerly Facebook Technologies, LLC)"
+    },
+    {
+      "@type": "sc:Organization",
+      "name": "NIH U01EB0239856"
+    },
+    {
+      "@type": "sc:Organization",
+      "name": "NSF Research Traineeship Program (DGE-1633516)"
+    },
+    {
+      "@type": "sc:Organization",
+      "name": "NWiOd i-VGrant VI.Vidi.191.210"
+    },
+    {
+      "@type": "sc:Organization",
+      "name": "German Federal Ministry of Education and Research (BIFOLD24B)"
+    }
+  ],
+  "datePublished": "2025",
+  "identifier": "doi:10.18112/openneuro.ds006377.v1.0.2",
+  "sameAs": [
+    "https://doi.org/10.18112/openneuro.ds006377.v1.0.2",
+    "https://openneuro.org/datasets/ds006377",
+    "https://huggingface.co/datasets/EEGDash/ds006377"
+  ],
+  "citeAs": "Meryem A. Yücel, Jessica E. Anderson, De'Ja Rogers, Parisa Hajirahimi, Parya Farzam (2025). InclusionStudy. doi:10.18112/openneuro.ds006377.v1.0.2",
+  "version": "1.8.0",
+  "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006377-openneuro",
+      "name": "ds006377 on OpenNeuro",
+      "description": "OpenNeuro dataset landing page.",
+      "contentUrl": "https://openneuro.org/datasets/ds006377",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006377-eegdash-records",
+      "name": "ds006377 EEGDash records (live)",
+      "description": "Live JSON listing of every recording in this dataset, with BIDS metadata, channel counts, and S3 storage keys.",
+      "contentUrl": "https://data.eegdash.org/api/eegdash/records?filter=%7B%22dataset%22%3A%22ds006377%22%7D",
+      "encodingFormat": "application/json",
+      "isLiveDataset": true
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006377-nemar",
+      "name": "ds006377 on NeMAR",
+      "description": "NEMAR dataset landing page with pipeline plots.",
+      "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=ds006377",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006377-huggingface",
+      "name": "EEGDash/ds006377 on Hugging Face",
+      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
+      "contentUrl": "https://huggingface.co/datasets/EEGDash/ds006377",
+      "encodingFormat": "application/vnd.huggingface-dataset+json"
+    }
+  ]
+}

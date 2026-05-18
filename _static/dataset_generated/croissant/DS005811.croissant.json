@@ -1,0 +1,153 @@
+{
+  "@context": {
+    "@language": "en",
+    "@vocab": "https://schema.org/",
+    "citeAs": "cr:citeAs",
+    "column": "cr:column",
+    "conformsTo": "dct:conformsTo",
+    "cr": "http://mlcommons.org/croissant/",
+    "data": {
+      "@id": "cr:data",
+      "@type": "@json"
+    },
+    "dataType": {
+      "@id": "cr:dataType",
+      "@type": "@vocab"
+    },
+    "dct": "http://purl.org/dc/terms/",
+    "extract": "cr:extract",
+    "field": "cr:field",
+    "fileObject": "cr:fileObject",
+    "fileProperty": "cr:fileProperty",
+    "fileSet": "cr:fileSet",
+    "format": "cr:format",
+    "includes": "cr:includes",
+    "isLiveDataset": "cr:isLiveDataset",
+    "jsonPath": "cr:jsonPath",
+    "key": "cr:key",
+    "md5": "cr:md5",
+    "parentField": "cr:parentField",
+    "path": "cr:path",
+    "recordSet": "cr:recordSet",
+    "references": "cr:references",
+    "regex": "cr:regex",
+    "repeated": "cr:repeated",
+    "replace": "cr:replace",
+    "sc": "https://schema.org/",
+    "separator": "cr:separator",
+    "source": "cr:source",
+    "subField": "cr:subField",
+    "transform": "cr:transform"
+  },
+  "@type": "sc:Dataset",
+  "conformsTo": "http://mlcommons.org/croissant/1.0",
+  "name": "ds005811",
+  "alternateName": [
+    "DS005811"
+  ],
+  "description": "NOD-EEG. eeg dataset accessible via EEGDash as `DS005811` with standardized BIDS metadata.",
+  "url": "https://eegdash.org/api/dataset/eegdash.dataset.DS005811.html",
+  "keywords": [
+    "EEG",
+    "BIDS",
+    "neuroscience",
+    "['Visual']",
+    "['Healthy']",
+    "['Perception']"
+  ],
+  "isAccessibleForFree": true,
+  "includedInDataCatalog": {
+    "@type": "sc:DataCatalog",
+    "name": "EEG Dash",
+    "url": "https://eegdash.org/"
+  },
+  "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "creator": [
+    {
+      "@type": "sc:Person",
+      "name": "Guohao Zhang"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Ming Zhou"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Shuyi Zhen"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Shaohua Tang"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Zheng Li"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Zonglei Zhen"
+    }
+  ],
+  "editor": {
+    "@type": "sc:Person",
+    "name": "Zonglei Zhen"
+  },
+  "funder": [
+    {
+      "@type": "sc:Organization",
+      "name": "Beijing Natural Science Foundation (#L247010)"
+    },
+    {
+      "@type": "sc:Organization",
+      "name": "National Natural Science Foundation of China (#62433015, #31771251)"
+    },
+    {
+      "@type": "sc:Organization",
+      "name": "STI 2030-436 Major Projects of the Ministry of Science and Technology of China437 (#2021ZD0200407)"
+    }
+  ],
+  "datePublished": "2025",
+  "identifier": "doi:10.18112/openneuro.ds005811.v1.0.9",
+  "sameAs": [
+    "https://doi.org/10.18112/openneuro.ds005811.v1.0.9",
+    "https://openneuro.org/datasets/ds005811",
+    "https://huggingface.co/datasets/EEGDash/ds005811"
+  ],
+  "citeAs": "Guohao Zhang, Ming Zhou, Shuyi Zhen, Shaohua Tang, Zheng Li (2025). NOD-EEG. doi:10.18112/openneuro.ds005811.v1.0.9",
+  "version": "1.10.1",
+  "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005811-openneuro",
+      "name": "ds005811 on OpenNeuro",
+      "description": "OpenNeuro dataset landing page.",
+      "contentUrl": "https://openneuro.org/datasets/ds005811",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005811-eegdash-records",
+      "name": "ds005811 EEGDash records (live)",
+      "description": "Live JSON listing of every recording in this dataset, with BIDS metadata, channel counts, and S3 storage keys.",
+      "contentUrl": "https://data.eegdash.org/api/eegdash/records?filter=%7B%22dataset%22%3A%22ds005811%22%7D",
+      "encodingFormat": "application/json",
+      "isLiveDataset": true
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005811-nemar",
+      "name": "ds005811 on NeMAR",
+      "description": "NEMAR dataset landing page with pipeline plots.",
+      "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=ds005811",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005811-huggingface",
+      "name": "EEGDash/ds005811 on Hugging Face",
+      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
+      "contentUrl": "https://huggingface.co/datasets/EEGDash/ds005811",
+      "encodingFormat": "application/vnd.huggingface-dataset+json"
+    }
+  ]
+}

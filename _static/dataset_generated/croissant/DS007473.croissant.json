@@ -1,0 +1,178 @@
+{
+  "@context": {
+    "@language": "en",
+    "@vocab": "https://schema.org/",
+    "citeAs": "cr:citeAs",
+    "column": "cr:column",
+    "conformsTo": "dct:conformsTo",
+    "cr": "http://mlcommons.org/croissant/",
+    "data": {
+      "@id": "cr:data",
+      "@type": "@json"
+    },
+    "dataType": {
+      "@id": "cr:dataType",
+      "@type": "@vocab"
+    },
+    "dct": "http://purl.org/dc/terms/",
+    "extract": "cr:extract",
+    "field": "cr:field",
+    "fileObject": "cr:fileObject",
+    "fileProperty": "cr:fileProperty",
+    "fileSet": "cr:fileSet",
+    "format": "cr:format",
+    "includes": "cr:includes",
+    "isLiveDataset": "cr:isLiveDataset",
+    "jsonPath": "cr:jsonPath",
+    "key": "cr:key",
+    "md5": "cr:md5",
+    "parentField": "cr:parentField",
+    "path": "cr:path",
+    "recordSet": "cr:recordSet",
+    "references": "cr:references",
+    "regex": "cr:regex",
+    "repeated": "cr:repeated",
+    "replace": "cr:replace",
+    "sc": "https://schema.org/",
+    "separator": "cr:separator",
+    "source": "cr:source",
+    "subField": "cr:subField",
+    "transform": "cr:transform"
+  },
+  "@type": "sc:Dataset",
+  "conformsTo": "http://mlcommons.org/croissant/1.0",
+  "name": "ds007473",
+  "alternateName": [
+    "DS007473"
+  ],
+  "description": "High-Density Diffuse Optical Tomography Audiovisual Movie Viewing Dataset. fnirs dataset accessible via EEGDash as `DS007473` with standardized BIDS metadata.",
+  "url": "https://eegdash.org/api/dataset/eegdash.dataset.DS007473.html",
+  "keywords": [
+    "EEG",
+    "BIDS",
+    "neuroscience",
+    "FNIRS",
+    "['Multisensory']",
+    "['Healthy']",
+    "['Perception']"
+  ],
+  "isAccessibleForFree": true,
+  "includedInDataCatalog": {
+    "@type": "sc:DataCatalog",
+    "name": "EEG Dash",
+    "url": "https://eegdash.org/"
+  },
+  "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "creator": [
+    {
+      "@type": "sc:Person",
+      "name": "Morgan Fogarty"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Kalyan Tripathy"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Alexandra M Svoboda"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Mariel L Schroeder"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Sean M Rafferty"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Edward J Richter"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Christopher Tracy"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Patricia K Mansfield"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Madison Booth"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Andrew K Fishell"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Arefeh Sherafati"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Zachary E Markow"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Muriah D Wheelock"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Ana Maria Arbelaez"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Bradley L Schlaggar"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Christopher D Smyser"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Adam T Eggebrecht"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Joseph P Culver"
+    }
+  ],
+  "editor": {
+    "@type": "sc:Person",
+    "name": "Joseph P Culver"
+  },
+  "datePublished": "2026",
+  "identifier": "doi:10.18112/openneuro.ds007473.v1.0.0",
+  "sameAs": [
+    "https://doi.org/10.18112/openneuro.ds007473.v1.0.0",
+    "https://openneuro.org/datasets/ds007473"
+  ],
+  "citeAs": "Morgan Fogarty, Kalyan Tripathy, Alexandra M Svoboda, Mariel L Schroeder, Sean M Rafferty (2026). High-Density Diffuse Optical Tomography Audiovisual Movie Viewing Dataset. doi:10.18112/openneuro.ds007473.v1.0.0",
+  "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007473-openneuro",
+      "name": "ds007473 on OpenNeuro",
+      "description": "OpenNeuro dataset landing page.",
+      "contentUrl": "https://openneuro.org/datasets/ds007473",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007473-eegdash-records",
+      "name": "ds007473 EEGDash records (live)",
+      "description": "Live JSON listing of every recording in this dataset, with BIDS metadata, channel counts, and S3 storage keys.",
+      "contentUrl": "https://data.eegdash.org/api/eegdash/records?filter=%7B%22dataset%22%3A%22ds007473%22%7D",
+      "encodingFormat": "application/json",
+      "isLiveDataset": true
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007473-nemar",
+      "name": "ds007473 on NeMAR",
+      "description": "NEMAR dataset landing page with pipeline plots.",
+      "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=ds007473",
+      "encodingFormat": "text/html"
+    }
+  ]
+}

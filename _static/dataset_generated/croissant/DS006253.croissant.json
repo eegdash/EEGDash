@@ -1,0 +1,170 @@
+{
+  "@context": {
+    "@language": "en",
+    "@vocab": "https://schema.org/",
+    "citeAs": "cr:citeAs",
+    "column": "cr:column",
+    "conformsTo": "dct:conformsTo",
+    "cr": "http://mlcommons.org/croissant/",
+    "data": {
+      "@id": "cr:data",
+      "@type": "@json"
+    },
+    "dataType": {
+      "@id": "cr:dataType",
+      "@type": "@vocab"
+    },
+    "dct": "http://purl.org/dc/terms/",
+    "extract": "cr:extract",
+    "field": "cr:field",
+    "fileObject": "cr:fileObject",
+    "fileProperty": "cr:fileProperty",
+    "fileSet": "cr:fileSet",
+    "format": "cr:format",
+    "includes": "cr:includes",
+    "isLiveDataset": "cr:isLiveDataset",
+    "jsonPath": "cr:jsonPath",
+    "key": "cr:key",
+    "md5": "cr:md5",
+    "parentField": "cr:parentField",
+    "path": "cr:path",
+    "recordSet": "cr:recordSet",
+    "references": "cr:references",
+    "regex": "cr:regex",
+    "repeated": "cr:repeated",
+    "replace": "cr:replace",
+    "sc": "https://schema.org/",
+    "separator": "cr:separator",
+    "source": "cr:source",
+    "subField": "cr:subField",
+    "transform": "cr:transform"
+  },
+  "@type": "sc:Dataset",
+  "conformsTo": "http://mlcommons.org/croissant/1.0",
+  "name": "ds006253",
+  "alternateName": [
+    "DS006253"
+  ],
+  "description": "MetaRDK. ieeg dataset accessible via EEGDash as `DS006253` with standardized BIDS metadata.",
+  "url": "https://eegdash.org/api/dataset/eegdash.dataset.DS006253.html",
+  "keywords": [
+    "EEG",
+    "BIDS",
+    "neuroscience",
+    "ANAT",
+    "BEH",
+    "IEEG",
+    "['Visual']",
+    "['Epilepsy']",
+    "['Decision-making']"
+  ],
+  "isAccessibleForFree": true,
+  "includedInDataCatalog": {
+    "@type": "sc:DataCatalog",
+    "name": "EEG Dash",
+    "url": "https://eegdash.org/"
+  },
+  "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "creator": [
+    {
+      "@type": "sc:Person",
+      "name": "Dorian Goueytes"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Francois Stockart"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Alexis Robin"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Lucien Gyger"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Martin Rouy"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Dominique Hoffmann"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Lorella Minotti"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Philippe Kahane"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Michael Pereira"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Nathan Faivre"
+    }
+  ],
+  "funder": [
+    {
+      "@type": "sc:Organization",
+      "name": "ERC Metaction 803122"
+    },
+    {
+      "@type": "sc:Organization",
+      "name": "ERC LEAP 101077874"
+    },
+    {
+      "@type": "sc:Organization",
+      "name": "ERC VOLTA 101125379"
+    },
+    {
+      "@type": "sc:Organization",
+      "name": "ERC Metaction, ERC LEAP, ERC, Volta: 803122, 101077874, 101125379"
+    }
+  ],
+  "identifier": "doi:10.18112/openneuro.ds006253.v1.0.3",
+  "sameAs": [
+    "https://doi.org/10.18112/openneuro.ds006253.v1.0.3",
+    "https://openneuro.org/datasets/ds006253",
+    "https://huggingface.co/datasets/EEGDash/ds006253"
+  ],
+  "citeAs": "Dorian Goueytes, Francois Stockart, Alexis Robin, Lucien Gyger, Martin Rouy (n.d.). MetaRDK. doi:10.18112/openneuro.ds006253.v1.0.3",
+  "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006253-openneuro",
+      "name": "ds006253 on OpenNeuro",
+      "description": "OpenNeuro dataset landing page.",
+      "contentUrl": "https://openneuro.org/datasets/ds006253",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006253-eegdash-records",
+      "name": "ds006253 EEGDash records (live)",
+      "description": "Live JSON listing of every recording in this dataset, with BIDS metadata, channel counts, and S3 storage keys.",
+      "contentUrl": "https://data.eegdash.org/api/eegdash/records?filter=%7B%22dataset%22%3A%22ds006253%22%7D",
+      "encodingFormat": "application/json",
+      "isLiveDataset": true
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006253-nemar",
+      "name": "ds006253 on NeMAR",
+      "description": "NEMAR dataset landing page with pipeline plots.",
+      "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=ds006253",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006253-huggingface",
+      "name": "EEGDash/ds006253 on Hugging Face",
+      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
+      "contentUrl": "https://huggingface.co/datasets/EEGDash/ds006253",
+      "encodingFormat": "application/vnd.huggingface-dataset+json"
+    }
+  ]
+}

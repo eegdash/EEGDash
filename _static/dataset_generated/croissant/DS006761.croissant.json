@@ -1,0 +1,161 @@
+{
+  "@context": {
+    "@language": "en",
+    "@vocab": "https://schema.org/",
+    "citeAs": "cr:citeAs",
+    "column": "cr:column",
+    "conformsTo": "dct:conformsTo",
+    "cr": "http://mlcommons.org/croissant/",
+    "data": {
+      "@id": "cr:data",
+      "@type": "@json"
+    },
+    "dataType": {
+      "@id": "cr:dataType",
+      "@type": "@vocab"
+    },
+    "dct": "http://purl.org/dc/terms/",
+    "extract": "cr:extract",
+    "field": "cr:field",
+    "fileObject": "cr:fileObject",
+    "fileProperty": "cr:fileProperty",
+    "fileSet": "cr:fileSet",
+    "format": "cr:format",
+    "includes": "cr:includes",
+    "isLiveDataset": "cr:isLiveDataset",
+    "jsonPath": "cr:jsonPath",
+    "key": "cr:key",
+    "md5": "cr:md5",
+    "parentField": "cr:parentField",
+    "path": "cr:path",
+    "recordSet": "cr:recordSet",
+    "references": "cr:references",
+    "regex": "cr:regex",
+    "repeated": "cr:repeated",
+    "replace": "cr:replace",
+    "sc": "https://schema.org/",
+    "separator": "cr:separator",
+    "source": "cr:source",
+    "subField": "cr:subField",
+    "transform": "cr:transform"
+  },
+  "@type": "sc:Dataset",
+  "conformsTo": "http://mlcommons.org/croissant/1.0",
+  "name": "ds006761",
+  "alternateName": [
+    "DS006761"
+  ],
+  "description": "Neural decoding of competitive decision-making in Rock-Paper-Scissors. eeg dataset accessible via EEGDash as `DS006761` with standardized BIDS metadata.",
+  "url": "https://eegdash.org/api/dataset/eegdash.dataset.DS006761.html",
+  "keywords": [
+    "EEG",
+    "BIDS",
+    "neuroscience",
+    "['Visual']",
+    "['Healthy']",
+    "['Decision-making']"
+  ],
+  "isAccessibleForFree": true,
+  "includedInDataCatalog": {
+    "@type": "sc:DataCatalog",
+    "name": "EEG Dash",
+    "url": "https://eegdash.org/"
+  },
+  "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "creator": [
+    {
+      "@type": "sc:Person",
+      "name": "Moerel, Denise"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Grootswagers, Tijl"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Chin, Jessica L.L."
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Ciardo, Francesca"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Nijhuis, Patti"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Quek, Genevieve L."
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Smit, Sophie"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Varlet, Manuel"
+    }
+  ],
+  "editor": {
+    "@type": "sc:Person",
+    "name": "Varlet, Manuel"
+  },
+  "funder": [
+    {
+      "@type": "sc:Organization",
+      "name": "ARC DP220103047 (MV)"
+    },
+    {
+      "@type": "sc:Organization",
+      "name": "H2020 Marie Curie 893960 (FC)"
+    },
+    {
+      "@type": "sc:Organization",
+      "name": "ARC DE230100380 (TG)"
+    }
+  ],
+  "datePublished": "2025",
+  "identifier": "doi:10.18112/openneuro.ds006761.v1.0.0",
+  "sameAs": [
+    "https://doi.org/10.18112/openneuro.ds006761.v1.0.0",
+    "https://openneuro.org/datasets/ds006761",
+    "https://huggingface.co/datasets/EEGDash/ds006761"
+  ],
+  "citeAs": "Moerel, Denise, Grootswagers, Tijl, Chin, Jessica L.L., Ciardo, Francesca, Nijhuis, Patti (2025). Neural decoding of competitive decision-making in Rock-Paper-Scissors. doi:10.18112/openneuro.ds006761.v1.0.0",
+  "version": "1.0.2",
+  "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006761-openneuro",
+      "name": "ds006761 on OpenNeuro",
+      "description": "OpenNeuro dataset landing page.",
+      "contentUrl": "https://openneuro.org/datasets/ds006761",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006761-eegdash-records",
+      "name": "ds006761 EEGDash records (live)",
+      "description": "Live JSON listing of every recording in this dataset, with BIDS metadata, channel counts, and S3 storage keys.",
+      "contentUrl": "https://data.eegdash.org/api/eegdash/records?filter=%7B%22dataset%22%3A%22ds006761%22%7D",
+      "encodingFormat": "application/json",
+      "isLiveDataset": true
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006761-nemar",
+      "name": "ds006761 on NeMAR",
+      "description": "NEMAR dataset landing page with pipeline plots.",
+      "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=ds006761",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006761-huggingface",
+      "name": "EEGDash/ds006761 on Hugging Face",
+      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
+      "contentUrl": "https://huggingface.co/datasets/EEGDash/ds006761",
+      "encodingFormat": "application/vnd.huggingface-dataset+json"
+    }
+  ]
+}

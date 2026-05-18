@@ -1,0 +1,170 @@
+{
+  "@context": {
+    "@language": "en",
+    "@vocab": "https://schema.org/",
+    "citeAs": "cr:citeAs",
+    "column": "cr:column",
+    "conformsTo": "dct:conformsTo",
+    "cr": "http://mlcommons.org/croissant/",
+    "data": {
+      "@id": "cr:data",
+      "@type": "@json"
+    },
+    "dataType": {
+      "@id": "cr:dataType",
+      "@type": "@vocab"
+    },
+    "dct": "http://purl.org/dc/terms/",
+    "extract": "cr:extract",
+    "field": "cr:field",
+    "fileObject": "cr:fileObject",
+    "fileProperty": "cr:fileProperty",
+    "fileSet": "cr:fileSet",
+    "format": "cr:format",
+    "includes": "cr:includes",
+    "isLiveDataset": "cr:isLiveDataset",
+    "jsonPath": "cr:jsonPath",
+    "key": "cr:key",
+    "md5": "cr:md5",
+    "parentField": "cr:parentField",
+    "path": "cr:path",
+    "recordSet": "cr:recordSet",
+    "references": "cr:references",
+    "regex": "cr:regex",
+    "repeated": "cr:repeated",
+    "replace": "cr:replace",
+    "sc": "https://schema.org/",
+    "separator": "cr:separator",
+    "source": "cr:source",
+    "subField": "cr:subField",
+    "transform": "cr:transform"
+  },
+  "@type": "sc:Dataset",
+  "conformsTo": "http://mlcommons.org/croissant/1.0",
+  "name": "ds007463",
+  "alternateName": [
+    "DS007463"
+  ],
+  "description": "Very-High-Density Diffuse Optical Tomography System Validation Dataset. fnirs dataset accessible via EEGDash as `DS007463` with standardized BIDS metadata.",
+  "url": "https://eegdash.org/api/dataset/eegdash.dataset.DS007463.html",
+  "keywords": [
+    "EEG",
+    "BIDS",
+    "neuroscience",
+    "FNIRS",
+    "['Visual']",
+    "['Healthy']",
+    "['Perception']"
+  ],
+  "isAccessibleForFree": true,
+  "includedInDataCatalog": {
+    "@type": "sc:DataCatalog",
+    "name": "EEG Dash",
+    "url": "https://eegdash.org/"
+  },
+  "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "creator": [
+    {
+      "@type": "sc:Person",
+      "name": "Morgan Fogarty"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Sean M. Rafferty"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Zachary E. Markow"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Anthony C. O’Sullivan"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Calamity F. Svoboda"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Tessa George"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Kelsey King"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Dana Wilhelm"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Kalyan Tripathy"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Emily M. Mugler"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Stephanie Naufel"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Allen Yin"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Jason W. Trobaugh"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Adam T. Eggebrecht"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Edward J. Richter"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Joseph P. Culver"
+    }
+  ],
+  "editor": {
+    "@type": "sc:Person",
+    "name": "Joseph P. Culver"
+  },
+  "datePublished": "2026",
+  "identifier": "doi:10.18112/openneuro.ds007463.v1.1.1",
+  "sameAs": [
+    "https://doi.org/10.18112/openneuro.ds007463.v1.1.1",
+    "https://openneuro.org/datasets/ds007463"
+  ],
+  "citeAs": "Morgan Fogarty, Sean M. Rafferty, Zachary E. Markow, Anthony C. O’Sullivan, Calamity F. Svoboda (2026). Very-High-Density Diffuse Optical Tomography System Validation Dataset. doi:10.18112/openneuro.ds007463.v1.1.1",
+  "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007463-openneuro",
+      "name": "ds007463 on OpenNeuro",
+      "description": "OpenNeuro dataset landing page.",
+      "contentUrl": "https://openneuro.org/datasets/ds007463",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007463-eegdash-records",
+      "name": "ds007463 EEGDash records (live)",
+      "description": "Live JSON listing of every recording in this dataset, with BIDS metadata, channel counts, and S3 storage keys.",
+      "contentUrl": "https://data.eegdash.org/api/eegdash/records?filter=%7B%22dataset%22%3A%22ds007463%22%7D",
+      "encodingFormat": "application/json",
+      "isLiveDataset": true
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007463-nemar",
+      "name": "ds007463 on NeMAR",
+      "description": "NEMAR dataset landing page with pipeline plots.",
+      "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=ds007463",
+      "encodingFormat": "text/html"
+    }
+  ]
+}

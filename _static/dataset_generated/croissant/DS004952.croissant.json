@@ -1,0 +1,179 @@
+{
+  "@context": {
+    "@language": "en",
+    "@vocab": "https://schema.org/",
+    "citeAs": "cr:citeAs",
+    "column": "cr:column",
+    "conformsTo": "dct:conformsTo",
+    "cr": "http://mlcommons.org/croissant/",
+    "data": {
+      "@id": "cr:data",
+      "@type": "@json"
+    },
+    "dataType": {
+      "@id": "cr:dataType",
+      "@type": "@vocab"
+    },
+    "dct": "http://purl.org/dc/terms/",
+    "extract": "cr:extract",
+    "field": "cr:field",
+    "fileObject": "cr:fileObject",
+    "fileProperty": "cr:fileProperty",
+    "fileSet": "cr:fileSet",
+    "format": "cr:format",
+    "includes": "cr:includes",
+    "isLiveDataset": "cr:isLiveDataset",
+    "jsonPath": "cr:jsonPath",
+    "key": "cr:key",
+    "md5": "cr:md5",
+    "parentField": "cr:parentField",
+    "path": "cr:path",
+    "recordSet": "cr:recordSet",
+    "references": "cr:references",
+    "regex": "cr:regex",
+    "repeated": "cr:repeated",
+    "replace": "cr:replace",
+    "sc": "https://schema.org/",
+    "separator": "cr:separator",
+    "source": "cr:source",
+    "subField": "cr:subField",
+    "transform": "cr:transform"
+  },
+  "@type": "sc:Dataset",
+  "conformsTo": "http://mlcommons.org/croissant/1.0",
+  "name": "ds004952",
+  "alternateName": [
+    "DS004952"
+  ],
+  "description": "ChineseEEG: A Chinese Linguistic Corpora EEG Dataset for Semantic Alignment and Neural Decoding. eeg dataset accessible via EEGDash as `DS004952` with standardized BIDS metadata.",
+  "url": "https://eegdash.org/api/dataset/eegdash.dataset.DS004952.html",
+  "keywords": [
+    "EEG",
+    "BIDS",
+    "neuroscience",
+    "Visual",
+    "Healthy",
+    "Attention"
+  ],
+  "isAccessibleForFree": true,
+  "includedInDataCatalog": {
+    "@type": "sc:DataCatalog",
+    "name": "EEG Dash",
+    "url": "https://eegdash.org/"
+  },
+  "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "creator": [
+    {
+      "@type": "sc:Person",
+      "name": "Xinyu Mou"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Cuilin He"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Liwei Tan"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Junjie Yu"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Huadong Liang"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Jianyu Zhang"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Tian Yan"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Yu-Fang Yang"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Ting Xu"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Qing Wang"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Miao Cao"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Zijiao Chen"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Chuan-Peng Hu"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Xindi Wang"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Quanying Liu"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Haiyan Wu"
+    }
+  ],
+  "editor": {
+    "@type": "sc:Person",
+    "name": "Haiyan Wu"
+  },
+  "datePublished": "2024",
+  "identifier": "doi:10.18112/openneuro.ds004952.v1.2.2",
+  "sameAs": [
+    "https://doi.org/10.18112/openneuro.ds004952.v1.2.2",
+    "https://openneuro.org/datasets/ds004952",
+    "https://huggingface.co/datasets/EEGDash/ds004952"
+  ],
+  "citeAs": "Xinyu Mou, Cuilin He, Liwei Tan, Junjie Yu, Huadong Liang (2024). ChineseEEG: A Chinese Linguistic Corpora EEG Dataset for Semantic Alignment and Neural Decoding. doi:10.18112/openneuro.ds004952.v1.2.2",
+  "version": "1.7.0",
+  "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004952-openneuro",
+      "name": "ds004952 on OpenNeuro",
+      "description": "OpenNeuro dataset landing page.",
+      "contentUrl": "https://openneuro.org/datasets/ds004952",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004952-eegdash-records",
+      "name": "ds004952 EEGDash records (live)",
+      "description": "Live JSON listing of every recording in this dataset, with BIDS metadata, channel counts, and S3 storage keys.",
+      "contentUrl": "https://data.eegdash.org/api/eegdash/records?filter=%7B%22dataset%22%3A%22ds004952%22%7D",
+      "encodingFormat": "application/json",
+      "isLiveDataset": true
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004952-nemar",
+      "name": "ds004952 on NeMAR",
+      "description": "NEMAR dataset landing page with pipeline plots.",
+      "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=ds004952",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004952-huggingface",
+      "name": "EEGDash/ds004952 on Hugging Face",
+      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
+      "contentUrl": "https://huggingface.co/datasets/EEGDash/ds004952",
+      "encodingFormat": "application/vnd.huggingface-dataset+json"
+    }
+  ]
+}

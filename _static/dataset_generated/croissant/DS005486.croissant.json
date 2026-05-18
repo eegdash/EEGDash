@@ -1,0 +1,171 @@
+{
+  "@context": {
+    "@language": "en",
+    "@vocab": "https://schema.org/",
+    "citeAs": "cr:citeAs",
+    "column": "cr:column",
+    "conformsTo": "dct:conformsTo",
+    "cr": "http://mlcommons.org/croissant/",
+    "data": {
+      "@id": "cr:data",
+      "@type": "@json"
+    },
+    "dataType": {
+      "@id": "cr:dataType",
+      "@type": "@vocab"
+    },
+    "dct": "http://purl.org/dc/terms/",
+    "extract": "cr:extract",
+    "field": "cr:field",
+    "fileObject": "cr:fileObject",
+    "fileProperty": "cr:fileProperty",
+    "fileSet": "cr:fileSet",
+    "format": "cr:format",
+    "includes": "cr:includes",
+    "isLiveDataset": "cr:isLiveDataset",
+    "jsonPath": "cr:jsonPath",
+    "key": "cr:key",
+    "md5": "cr:md5",
+    "parentField": "cr:parentField",
+    "path": "cr:path",
+    "recordSet": "cr:recordSet",
+    "references": "cr:references",
+    "regex": "cr:regex",
+    "repeated": "cr:repeated",
+    "replace": "cr:replace",
+    "sc": "https://schema.org/",
+    "separator": "cr:separator",
+    "source": "cr:source",
+    "subField": "cr:subField",
+    "transform": "cr:transform"
+  },
+  "@type": "sc:Dataset",
+  "conformsTo": "http://mlcommons.org/croissant/1.0",
+  "name": "ds005486",
+  "alternateName": [
+    "DS005486"
+  ],
+  "description": "PREDICT. eeg dataset accessible via EEGDash as `DS005486` with standardized BIDS metadata.",
+  "url": "https://eegdash.org/api/dataset/eegdash.dataset.DS005486.html",
+  "keywords": [
+    "EEG",
+    "BIDS",
+    "neuroscience",
+    "['Resting State']",
+    "['Unknown']",
+    "['Resting-state']"
+  ],
+  "isAccessibleForFree": true,
+  "includedInDataCatalog": {
+    "@type": "sc:DataCatalog",
+    "name": "EEG Dash",
+    "url": "https://eegdash.org/"
+  },
+  "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "creator": [
+    {
+      "@type": "sc:Person",
+      "name": "Nahian S. Chowdhury"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Chuan Bi"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Andrew J. Furman"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Alan KI Chiang"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Patrick Skippen"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Emily Si"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Samantha K Millard"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Sarah M. Margerison"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Darrah Spies"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Michael L. Keaser"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Joyce T. Da Silva"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Shuo Chen"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Siobhan M. Schabrun"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "David A. Seminowicz"
+    }
+  ],
+  "editor": {
+    "@type": "sc:Person",
+    "name": "David A. Seminowicz"
+  },
+  "datePublished": "2024",
+  "identifier": "doi:10.18112/openneuro.ds005486.v1.0.1",
+  "sameAs": [
+    "https://doi.org/10.18112/openneuro.ds005486.v1.0.1",
+    "https://openneuro.org/datasets/ds005486",
+    "https://huggingface.co/datasets/EEGDash/ds005486"
+  ],
+  "citeAs": "Nahian S. Chowdhury, Chuan Bi, Andrew J. Furman, Alan KI Chiang, Patrick Skippen (2024). PREDICT. doi:10.18112/openneuro.ds005486.v1.0.1",
+  "version": "1.6.0",
+  "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005486-openneuro",
+      "name": "ds005486 on OpenNeuro",
+      "description": "OpenNeuro dataset landing page.",
+      "contentUrl": "https://openneuro.org/datasets/ds005486",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005486-eegdash-records",
+      "name": "ds005486 EEGDash records (live)",
+      "description": "Live JSON listing of every recording in this dataset, with BIDS metadata, channel counts, and S3 storage keys.",
+      "contentUrl": "https://data.eegdash.org/api/eegdash/records?filter=%7B%22dataset%22%3A%22ds005486%22%7D",
+      "encodingFormat": "application/json",
+      "isLiveDataset": true
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005486-nemar",
+      "name": "ds005486 on NeMAR",
+      "description": "NEMAR dataset landing page with pipeline plots.",
+      "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=ds005486",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005486-huggingface",
+      "name": "EEGDash/ds005486 on Hugging Face",
+      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
+      "contentUrl": "https://huggingface.co/datasets/EEGDash/ds005486",
+      "encodingFormat": "application/vnd.huggingface-dataset+json"
+    }
+  ]
+}

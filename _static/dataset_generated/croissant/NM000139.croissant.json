@@ -1,0 +1,174 @@
+{
+  "@context": {
+    "@language": "en",
+    "@vocab": "https://schema.org/",
+    "citeAs": "cr:citeAs",
+    "column": "cr:column",
+    "conformsTo": "dct:conformsTo",
+    "cr": "http://mlcommons.org/croissant/",
+    "data": {
+      "@id": "cr:data",
+      "@type": "@json"
+    },
+    "dataType": {
+      "@id": "cr:dataType",
+      "@type": "@vocab"
+    },
+    "dct": "http://purl.org/dc/terms/",
+    "extract": "cr:extract",
+    "field": "cr:field",
+    "fileObject": "cr:fileObject",
+    "fileProperty": "cr:fileProperty",
+    "fileSet": "cr:fileSet",
+    "format": "cr:format",
+    "includes": "cr:includes",
+    "isLiveDataset": "cr:isLiveDataset",
+    "jsonPath": "cr:jsonPath",
+    "key": "cr:key",
+    "md5": "cr:md5",
+    "parentField": "cr:parentField",
+    "path": "cr:path",
+    "recordSet": "cr:recordSet",
+    "references": "cr:references",
+    "regex": "cr:regex",
+    "repeated": "cr:repeated",
+    "replace": "cr:replace",
+    "sc": "https://schema.org/",
+    "separator": "cr:separator",
+    "source": "cr:source",
+    "subField": "cr:subField",
+    "transform": "cr:transform"
+  },
+  "@type": "sc:Dataset",
+  "conformsTo": "http://mlcommons.org/croissant/1.0",
+  "name": "nm000139",
+  "alternateName": [
+    "NM000139"
+  ],
+  "description": "BNCI 2014-001 Motor Imagery dataset. eeg dataset accessible via EEGDash as `NM000139` with standardized BIDS metadata.",
+  "url": "https://eegdash.org/api/dataset/eegdash.dataset.NM000139.html",
+  "keywords": [
+    "EEG",
+    "BIDS",
+    "neuroscience",
+    "['Multisensory']",
+    "['Healthy']",
+    "['Motor']"
+  ],
+  "isAccessibleForFree": true,
+  "includedInDataCatalog": {
+    "@type": "sc:DataCatalog",
+    "name": "EEG Dash",
+    "url": "https://eegdash.org/"
+  },
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "creator": [
+    {
+      "@type": "sc:Person",
+      "name": "Michael Tangermann"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Klaus-Robert Müller"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Ad Aertsen"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Niels Birbaumer"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Christoph Braun"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Clemens Brunner"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Robert Leeb"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Carsten Mehring"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Kai J. Miller"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Gernot R. Müller-Putz"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Guido Nolte"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Gert Pfurtscheller"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Hubert Preissl"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Gerwin Schalk"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Alois Schlögl"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Carmen Vidaurre"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Stephan Waldert"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Benjamin Blankertz"
+    }
+  ],
+  "datePublished": "2019",
+  "identifier": "doi:10.82901/nemar.nm000139",
+  "sameAs": [
+    "https://doi.org/10.82901/nemar.nm000139",
+    "https://openneuro.org/datasets/nm000139"
+  ],
+  "citeAs": "Michael Tangermann, Klaus-Robert Müller, Ad Aertsen, Niels Birbaumer, Christoph Braun (2019). BNCI 2014-001 Motor Imagery dataset. doi:10.82901/nemar.nm000139",
+  "version": "1.9.0",
+  "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000139-openneuro",
+      "name": "nm000139 on OpenNeuro",
+      "description": "OpenNeuro dataset landing page.",
+      "contentUrl": "https://openneuro.org/datasets/nm000139",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000139-eegdash-records",
+      "name": "nm000139 EEGDash records (live)",
+      "description": "Live JSON listing of every recording in this dataset, with BIDS metadata, channel counts, and S3 storage keys.",
+      "contentUrl": "https://data.eegdash.org/api/eegdash/records?filter=%7B%22dataset%22%3A%22nm000139%22%7D",
+      "encodingFormat": "application/json",
+      "isLiveDataset": true
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000139-nemar",
+      "name": "nm000139 on NeMAR",
+      "description": "NEMAR dataset landing page with pipeline plots.",
+      "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=nm000139",
+      "encodingFormat": "text/html"
+    }
+  ]
+}

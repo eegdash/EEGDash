@@ -1,0 +1,250 @@
+{
+  "@context": {
+    "@language": "en",
+    "@vocab": "https://schema.org/",
+    "citeAs": "cr:citeAs",
+    "column": "cr:column",
+    "conformsTo": "dct:conformsTo",
+    "cr": "http://mlcommons.org/croissant/",
+    "data": {
+      "@id": "cr:data",
+      "@type": "@json"
+    },
+    "dataType": {
+      "@id": "cr:dataType",
+      "@type": "@vocab"
+    },
+    "dct": "http://purl.org/dc/terms/",
+    "extract": "cr:extract",
+    "field": "cr:field",
+    "fileObject": "cr:fileObject",
+    "fileProperty": "cr:fileProperty",
+    "fileSet": "cr:fileSet",
+    "format": "cr:format",
+    "includes": "cr:includes",
+    "isLiveDataset": "cr:isLiveDataset",
+    "jsonPath": "cr:jsonPath",
+    "key": "cr:key",
+    "md5": "cr:md5",
+    "parentField": "cr:parentField",
+    "path": "cr:path",
+    "recordSet": "cr:recordSet",
+    "references": "cr:references",
+    "regex": "cr:regex",
+    "repeated": "cr:repeated",
+    "replace": "cr:replace",
+    "sc": "https://schema.org/",
+    "separator": "cr:separator",
+    "source": "cr:source",
+    "subField": "cr:subField",
+    "transform": "cr:transform"
+  },
+  "@type": "sc:Dataset",
+  "conformsTo": "http://mlcommons.org/croissant/1.0",
+  "name": "ds003876",
+  "alternateName": [
+    "DS003876"
+  ],
+  "description": "Epilepsy-iEEG-Interictal-Multicenter-Dataset. ieeg dataset accessible via EEGDash as `DS003876` with standardized BIDS metadata.",
+  "url": "https://eegdash.org/api/dataset/eegdash.dataset.DS003876.html",
+  "keywords": [
+    "EEG",
+    "BIDS",
+    "neuroscience",
+    "IEEG",
+    "['Resting State']",
+    "['Epilepsy']",
+    "['Clinical/Intervention']"
+  ],
+  "isAccessibleForFree": true,
+  "includedInDataCatalog": {
+    "@type": "sc:DataCatalog",
+    "name": "EEG Dash",
+    "url": "https://eegdash.org/"
+  },
+  "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "creator": [
+    {
+      "@type": "sc:Person",
+      "name": "Gunnarsdottir, Kristin"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Li, Adam"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Smith, Rachel"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Kang, Joon"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Korzeniewska, Anna"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Crone, Nathan"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Rouse, Adam"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Cheng, Jennifer"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Kinsman, Michael"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Landazuri, Patrick"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Uysal, Utku"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Ulloa, Carol"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Cameron, Nathaniel"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Cajigas, Iahn"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Jagid, Jonathan"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Kanner, Andres"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Elarjani, Turki"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Bicchi, Manuel"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Inati, Sara"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Zaghloul, Kareem"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Boerwinkle, Varina"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Wyckoff, Sarah"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Barot, Niravkumar"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Gonzalez-Martinez, Jorge"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Sarma, Sridevi"
+    }
+  ],
+  "editor": {
+    "@type": "sc:Person",
+    "name": "Sarma, Sridevi"
+  },
+  "funder": [
+    {
+      "@type": "sc:Organization",
+      "name": "NIH T32 EB003383"
+    },
+    {
+      "@type": "sc:Organization",
+      "name": "NSF GRFP (DGE-1746891)"
+    },
+    {
+      "@type": "sc:Organization",
+      "name": "ARCS Scholarship"
+    },
+    {
+      "@type": "sc:Organization",
+      "name": "Whitaker Fellowship"
+    },
+    {
+      "@type": "sc:Organization",
+      "name": "Chateaubriand Fellowship"
+    },
+    {
+      "@type": "sc:Organization",
+      "name": "NIH R21 NS103113"
+    },
+    {
+      "@type": "sc:Organization",
+      "name": "US NSF Career Award 1055560"
+    },
+    {
+      "@type": "sc:Organization",
+      "name": "Burroughs Well CASI Award 1007274"
+    }
+  ],
+  "datePublished": "2021",
+  "identifier": "doi:10.18112/openneuro.ds003876.v1.0.2",
+  "sameAs": [
+    "https://doi.org/10.18112/openneuro.ds003876.v1.0.2",
+    "https://openneuro.org/datasets/ds003876",
+    "https://huggingface.co/datasets/EEGDash/ds003876"
+  ],
+  "citeAs": "Gunnarsdottir, Kristin, Li, Adam, Smith, Rachel, Kang, Joon, Korzeniewska, Anna (2021). Epilepsy-iEEG-Interictal-Multicenter-Dataset. doi:10.18112/openneuro.ds003876.v1.0.2",
+  "version": "1.6.0",
+  "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds003876-openneuro",
+      "name": "ds003876 on OpenNeuro",
+      "description": "OpenNeuro dataset landing page.",
+      "contentUrl": "https://openneuro.org/datasets/ds003876",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds003876-eegdash-records",
+      "name": "ds003876 EEGDash records (live)",
+      "description": "Live JSON listing of every recording in this dataset, with BIDS metadata, channel counts, and S3 storage keys.",
+      "contentUrl": "https://data.eegdash.org/api/eegdash/records?filter=%7B%22dataset%22%3A%22ds003876%22%7D",
+      "encodingFormat": "application/json",
+      "isLiveDataset": true
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds003876-nemar",
+      "name": "ds003876 on NeMAR",
+      "description": "NEMAR dataset landing page with pipeline plots.",
+      "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=ds003876",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds003876-huggingface",
+      "name": "EEGDash/ds003876 on Hugging Face",
+      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
+      "contentUrl": "https://huggingface.co/datasets/EEGDash/ds003876",
+      "encodingFormat": "application/vnd.huggingface-dataset+json"
+    }
+  ]
+}

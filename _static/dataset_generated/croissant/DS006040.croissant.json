@@ -1,0 +1,165 @@
+{
+  "@context": {
+    "@language": "en",
+    "@vocab": "https://schema.org/",
+    "citeAs": "cr:citeAs",
+    "column": "cr:column",
+    "conformsTo": "dct:conformsTo",
+    "cr": "http://mlcommons.org/croissant/",
+    "data": {
+      "@id": "cr:data",
+      "@type": "@json"
+    },
+    "dataType": {
+      "@id": "cr:dataType",
+      "@type": "@vocab"
+    },
+    "dct": "http://purl.org/dc/terms/",
+    "extract": "cr:extract",
+    "field": "cr:field",
+    "fileObject": "cr:fileObject",
+    "fileProperty": "cr:fileProperty",
+    "fileSet": "cr:fileSet",
+    "format": "cr:format",
+    "includes": "cr:includes",
+    "isLiveDataset": "cr:isLiveDataset",
+    "jsonPath": "cr:jsonPath",
+    "key": "cr:key",
+    "md5": "cr:md5",
+    "parentField": "cr:parentField",
+    "path": "cr:path",
+    "recordSet": "cr:recordSet",
+    "references": "cr:references",
+    "regex": "cr:regex",
+    "repeated": "cr:repeated",
+    "replace": "cr:replace",
+    "sc": "https://schema.org/",
+    "separator": "cr:separator",
+    "source": "cr:source",
+    "subField": "cr:subField",
+    "transform": "cr:transform"
+  },
+  "@type": "sc:Dataset",
+  "conformsTo": "http://mlcommons.org/croissant/1.0",
+  "name": "ds006040",
+  "alternateName": [
+    "DS006040"
+  ],
+  "description": "Sustained Attention Task (gradCPT) Dataset using simultaneous EEG-fMRI and DTI. eeg dataset accessible via EEGDash as `DS006040` with standardized BIDS metadata.",
+  "url": "https://eegdash.org/api/dataset/eegdash.dataset.DS006040.html",
+  "keywords": [
+    "EEG",
+    "BIDS",
+    "neuroscience",
+    "['Visual']",
+    "['Healthy']",
+    "['Other']"
+  ],
+  "isAccessibleForFree": true,
+  "includedInDataCatalog": {
+    "@type": "sc:DataCatalog",
+    "name": "EEG Dash",
+    "url": "https://eegdash.org/"
+  },
+  "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "creator": [
+    {
+      "@type": "sc:Person",
+      "name": "Younghwa Cha"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Yeji Lee"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Eunhee Ji"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "SoHyun Han"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Sunhyun Min"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Hyoungkyu Kim"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Minseo Cho"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Hae Seong Lee"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Youngjai Park"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Joon-Young Moon"
+    }
+  ],
+  "editor": {
+    "@type": "sc:Person",
+    "name": "Joon-Young Moon"
+  },
+  "funder": [
+    {
+      "@type": "sc:Organization",
+      "name": "The Institute for Basic Science of Korea (IBS, IBS-R015-Y3)"
+    },
+    {
+      "@type": "sc:Organization",
+      "name": "The National Research Foundation of Korea (NRF, RS-2023-00272652)"
+    }
+  ],
+  "datePublished": "2025",
+  "identifier": "doi:10.18112/openneuro.ds006040.v1.0.2",
+  "sameAs": [
+    "https://doi.org/10.18112/openneuro.ds006040.v1.0.2",
+    "https://openneuro.org/datasets/ds006040",
+    "https://huggingface.co/datasets/EEGDash/ds006040"
+  ],
+  "citeAs": "Younghwa Cha, Yeji Lee, Eunhee Ji, SoHyun Han, Sunhyun Min (2025). Sustained Attention Task (gradCPT) Dataset using simultaneous EEG-fMRI and DTI. doi:10.18112/openneuro.ds006040.v1.0.2",
+  "version": "1.4.0",
+  "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006040-openneuro",
+      "name": "ds006040 on OpenNeuro",
+      "description": "OpenNeuro dataset landing page.",
+      "contentUrl": "https://openneuro.org/datasets/ds006040",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006040-eegdash-records",
+      "name": "ds006040 EEGDash records (live)",
+      "description": "Live JSON listing of every recording in this dataset, with BIDS metadata, channel counts, and S3 storage keys.",
+      "contentUrl": "https://data.eegdash.org/api/eegdash/records?filter=%7B%22dataset%22%3A%22ds006040%22%7D",
+      "encodingFormat": "application/json",
+      "isLiveDataset": true
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006040-nemar",
+      "name": "ds006040 on NeMAR",
+      "description": "NEMAR dataset landing page with pipeline plots.",
+      "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=ds006040",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006040-huggingface",
+      "name": "EEGDash/ds006040 on Hugging Face",
+      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
+      "contentUrl": "https://huggingface.co/datasets/EEGDash/ds006040",
+      "encodingFormat": "application/vnd.huggingface-dataset+json"
+    }
+  ]
+}

@@ -1,0 +1,142 @@
+{
+  "@context": {
+    "@language": "en",
+    "@vocab": "https://schema.org/",
+    "citeAs": "cr:citeAs",
+    "column": "cr:column",
+    "conformsTo": "dct:conformsTo",
+    "cr": "http://mlcommons.org/croissant/",
+    "data": {
+      "@id": "cr:data",
+      "@type": "@json"
+    },
+    "dataType": {
+      "@id": "cr:dataType",
+      "@type": "@vocab"
+    },
+    "dct": "http://purl.org/dc/terms/",
+    "extract": "cr:extract",
+    "field": "cr:field",
+    "fileObject": "cr:fileObject",
+    "fileProperty": "cr:fileProperty",
+    "fileSet": "cr:fileSet",
+    "format": "cr:format",
+    "includes": "cr:includes",
+    "isLiveDataset": "cr:isLiveDataset",
+    "jsonPath": "cr:jsonPath",
+    "key": "cr:key",
+    "md5": "cr:md5",
+    "parentField": "cr:parentField",
+    "path": "cr:path",
+    "recordSet": "cr:recordSet",
+    "references": "cr:references",
+    "regex": "cr:regex",
+    "repeated": "cr:repeated",
+    "replace": "cr:replace",
+    "sc": "https://schema.org/",
+    "separator": "cr:separator",
+    "source": "cr:source",
+    "subField": "cr:subField",
+    "transform": "cr:transform"
+  },
+  "@type": "sc:Dataset",
+  "conformsTo": "http://mlcommons.org/croissant/1.0",
+  "name": "ds002893",
+  "alternateName": [
+    "DS002893"
+  ],
+  "description": "Auditory-Visual Shift Study. eeg dataset accessible via EEGDash as `DS002893` with standardized BIDS metadata.",
+  "url": "https://eegdash.org/api/dataset/eegdash.dataset.DS002893.html",
+  "keywords": [
+    "EEG",
+    "BIDS",
+    "neuroscience",
+    "Multisensory",
+    "Healthy",
+    "Attention",
+    "HED"
+  ],
+  "isAccessibleForFree": true,
+  "includedInDataCatalog": {
+    "@type": "sc:DataCatalog",
+    "name": "EEG Dash",
+    "url": "https://eegdash.org/"
+  },
+  "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "creator": [
+    {
+      "@type": "sc:Person",
+      "name": "Marissa Westerfield (data, curation)"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Scott Makeig (data, curation)"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Dung Truong (curation)"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Kay Robbins (curation)"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Arno Delorme (curation)"
+    }
+  ],
+  "editor": {
+    "@type": "sc:Person",
+    "name": "Arno Delorme (curation)"
+  },
+  "funder": [
+    {
+      "@type": "sc:Organization",
+      "name": "National Institutes of Health National Institute on Aging (R01-AG18030)."
+    }
+  ],
+  "datePublished": "2020",
+  "identifier": "doi:10.18112/openneuro.ds002893.v2.0.0",
+  "sameAs": [
+    "https://doi.org/10.18112/openneuro.ds002893.v2.0.0",
+    "https://openneuro.org/datasets/ds002893",
+    "https://huggingface.co/datasets/EEGDash/ds002893"
+  ],
+  "citeAs": "Marissa Westerfield (data, curation), Scott Makeig (data, curation), Dung Truong (curation), Kay Robbins (curation), Arno Delorme (curation) (2020). Auditory-Visual Shift Study. doi:10.18112/openneuro.ds002893.v2.0.0",
+  "version": "1.7.0",
+  "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds002893-openneuro",
+      "name": "ds002893 on OpenNeuro",
+      "description": "OpenNeuro dataset landing page.",
+      "contentUrl": "https://openneuro.org/datasets/ds002893",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds002893-eegdash-records",
+      "name": "ds002893 EEGDash records (live)",
+      "description": "Live JSON listing of every recording in this dataset, with BIDS metadata, channel counts, and S3 storage keys.",
+      "contentUrl": "https://data.eegdash.org/api/eegdash/records?filter=%7B%22dataset%22%3A%22ds002893%22%7D",
+      "encodingFormat": "application/json",
+      "isLiveDataset": true
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds002893-nemar",
+      "name": "ds002893 on NeMAR",
+      "description": "NEMAR dataset landing page with pipeline plots.",
+      "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=ds002893",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds002893-huggingface",
+      "name": "EEGDash/ds002893 on Hugging Face",
+      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
+      "contentUrl": "https://huggingface.co/datasets/EEGDash/ds002893",
+      "encodingFormat": "application/vnd.huggingface-dataset+json"
+    }
+  ]
+}

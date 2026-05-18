@@ -1,0 +1,140 @@
+{
+  "@context": {
+    "@language": "en",
+    "@vocab": "https://schema.org/",
+    "citeAs": "cr:citeAs",
+    "column": "cr:column",
+    "conformsTo": "dct:conformsTo",
+    "cr": "http://mlcommons.org/croissant/",
+    "data": {
+      "@id": "cr:data",
+      "@type": "@json"
+    },
+    "dataType": {
+      "@id": "cr:dataType",
+      "@type": "@vocab"
+    },
+    "dct": "http://purl.org/dc/terms/",
+    "extract": "cr:extract",
+    "field": "cr:field",
+    "fileObject": "cr:fileObject",
+    "fileProperty": "cr:fileProperty",
+    "fileSet": "cr:fileSet",
+    "format": "cr:format",
+    "includes": "cr:includes",
+    "isLiveDataset": "cr:isLiveDataset",
+    "jsonPath": "cr:jsonPath",
+    "key": "cr:key",
+    "md5": "cr:md5",
+    "parentField": "cr:parentField",
+    "path": "cr:path",
+    "recordSet": "cr:recordSet",
+    "references": "cr:references",
+    "regex": "cr:regex",
+    "repeated": "cr:repeated",
+    "replace": "cr:replace",
+    "sc": "https://schema.org/",
+    "separator": "cr:separator",
+    "source": "cr:source",
+    "subField": "cr:subField",
+    "transform": "cr:transform"
+  },
+  "@type": "sc:Dataset",
+  "conformsTo": "http://mlcommons.org/croissant/1.0",
+  "name": "ds007176",
+  "alternateName": [
+    "DS007176"
+  ],
+  "description": "Longitudinal EEG Test-Retest Reliability in Healthy Individuals. eeg dataset accessible via EEGDash as `DS007176` with standardized BIDS metadata.",
+  "url": "https://eegdash.org/api/dataset/eegdash.dataset.DS007176.html",
+  "keywords": [
+    "EEG",
+    "BIDS",
+    "neuroscience",
+    "['Resting State']",
+    "['Healthy']",
+    "['Resting-state']"
+  ],
+  "isAccessibleForFree": true,
+  "includedInDataCatalog": {
+    "@type": "sc:DataCatalog",
+    "name": "EEG Dash",
+    "url": "https://eegdash.org/"
+  },
+  "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "creator": [
+    {
+      "@type": "sc:Person",
+      "name": "Verónica Henao Isaza"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Valeria Cadavid Castro"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Luisa María Zapata Saldarriaga"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Yorguin-Jose Mantilla-Ramos"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Jazmín Ximena Suarez Revelo"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Carlos Andrés Tobón Quintero"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "John Fredy Ochoa Gómez"
+    }
+  ],
+  "editor": {
+    "@type": "sc:Person",
+    "name": "John Fredy Ochoa Gómez"
+  },
+  "funder": [
+    {
+      "@type": "sc:Organization",
+      "name": "Comité para el Desarrollo de la Investigación - CODI, Universidad de Antioquia"
+    }
+  ],
+  "datePublished": "2026",
+  "identifier": "doi:10.18112/openneuro.ds007176.v1.0.2",
+  "sameAs": [
+    "https://doi.org/10.18112/openneuro.ds007176.v1.0.2",
+    "https://openneuro.org/datasets/ds007176"
+  ],
+  "citeAs": "Verónica Henao Isaza, Valeria Cadavid Castro, Luisa María Zapata Saldarriaga, Yorguin-Jose Mantilla-Ramos, Jazmín Ximena Suarez Revelo (2026). Longitudinal EEG Test-Retest Reliability in Healthy Individuals. doi:10.18112/openneuro.ds007176.v1.0.2",
+  "version": "1.8.0",
+  "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007176-openneuro",
+      "name": "ds007176 on OpenNeuro",
+      "description": "OpenNeuro dataset landing page.",
+      "contentUrl": "https://openneuro.org/datasets/ds007176",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007176-eegdash-records",
+      "name": "ds007176 EEGDash records (live)",
+      "description": "Live JSON listing of every recording in this dataset, with BIDS metadata, channel counts, and S3 storage keys.",
+      "contentUrl": "https://data.eegdash.org/api/eegdash/records?filter=%7B%22dataset%22%3A%22ds007176%22%7D",
+      "encodingFormat": "application/json",
+      "isLiveDataset": true
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007176-nemar",
+      "name": "ds007176 on NeMAR",
+      "description": "NEMAR dataset landing page with pipeline plots.",
+      "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=ds007176",
+      "encodingFormat": "text/html"
+    }
+  ]
+}

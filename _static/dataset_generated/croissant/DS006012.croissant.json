@@ -1,0 +1,170 @@
+{
+  "@context": {
+    "@language": "en",
+    "@vocab": "https://schema.org/",
+    "citeAs": "cr:citeAs",
+    "column": "cr:column",
+    "conformsTo": "dct:conformsTo",
+    "cr": "http://mlcommons.org/croissant/",
+    "data": {
+      "@id": "cr:data",
+      "@type": "@json"
+    },
+    "dataType": {
+      "@id": "cr:dataType",
+      "@type": "@vocab"
+    },
+    "dct": "http://purl.org/dc/terms/",
+    "extract": "cr:extract",
+    "field": "cr:field",
+    "fileObject": "cr:fileObject",
+    "fileProperty": "cr:fileProperty",
+    "fileSet": "cr:fileSet",
+    "format": "cr:format",
+    "includes": "cr:includes",
+    "isLiveDataset": "cr:isLiveDataset",
+    "jsonPath": "cr:jsonPath",
+    "key": "cr:key",
+    "md5": "cr:md5",
+    "parentField": "cr:parentField",
+    "path": "cr:path",
+    "recordSet": "cr:recordSet",
+    "references": "cr:references",
+    "regex": "cr:regex",
+    "repeated": "cr:repeated",
+    "replace": "cr:replace",
+    "sc": "https://schema.org/",
+    "separator": "cr:separator",
+    "source": "cr:source",
+    "subField": "cr:subField",
+    "transform": "cr:transform"
+  },
+  "@type": "sc:Dataset",
+  "conformsTo": "http://mlcommons.org/croissant/1.0",
+  "name": "ds006012",
+  "alternateName": [
+    "DS006012"
+  ],
+  "description": "A geometric shape regularity effect in the human brain: MEG dataset. meg dataset accessible via EEGDash as `DS006012` with standardized BIDS metadata.",
+  "url": "https://eegdash.org/api/dataset/eegdash.dataset.DS006012.html",
+  "keywords": [
+    "EEG",
+    "BIDS",
+    "neuroscience",
+    "MEG",
+    "['Visual']",
+    "['Healthy']",
+    "['Perception']"
+  ],
+  "isAccessibleForFree": true,
+  "includedInDataCatalog": {
+    "@type": "sc:DataCatalog",
+    "name": "EEG Dash",
+    "url": "https://eegdash.org/"
+  },
+  "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "creator": [
+    {
+      "@type": "sc:Person",
+      "name": "Mathias Sablé-Meyer"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Lucas Benjamin"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Cassandra Potier Watkins"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Chenxi He"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Maxence Pajot"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Théo Morfoisse"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Fosca Al Roumi"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Stanislas Dehaene"
+    }
+  ],
+  "editor": {
+    "@type": "sc:Person",
+    "name": "Stanislas Dehaene"
+  },
+  "funder": [
+    {
+      "@type": "sc:Organization",
+      "name": "ERC-ADG-2015 NeuroSyntax to Stanislas Dehaene"
+    },
+    {
+      "@type": "sc:Organization",
+      "name": "CEA to Stanislas Dehaene"
+    },
+    {
+      "@type": "sc:Organization",
+      "name": "INSERM to Stanislas Dehaene"
+    },
+    {
+      "@type": "sc:Organization",
+      "name": "Collège de France to Stanislas Dehaene"
+    },
+    {
+      "@type": "sc:Organization",
+      "name": "FYSSEN to Mathias Sablé-Meyer"
+    }
+  ],
+  "datePublished": "2025",
+  "identifier": "doi:10.18112/openneuro.ds006012.v1.0.1",
+  "sameAs": [
+    "https://doi.org/10.18112/openneuro.ds006012.v1.0.1",
+    "https://openneuro.org/datasets/ds006012",
+    "https://huggingface.co/datasets/EEGDash/ds006012"
+  ],
+  "citeAs": "Mathias Sablé-Meyer, Lucas Benjamin, Cassandra Potier Watkins, Chenxi He, Maxence Pajot (2025). A geometric shape regularity effect in the human brain: MEG dataset. doi:10.18112/openneuro.ds006012.v1.0.1",
+  "version": "1.6.0",
+  "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006012-openneuro",
+      "name": "ds006012 on OpenNeuro",
+      "description": "OpenNeuro dataset landing page.",
+      "contentUrl": "https://openneuro.org/datasets/ds006012",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006012-eegdash-records",
+      "name": "ds006012 EEGDash records (live)",
+      "description": "Live JSON listing of every recording in this dataset, with BIDS metadata, channel counts, and S3 storage keys.",
+      "contentUrl": "https://data.eegdash.org/api/eegdash/records?filter=%7B%22dataset%22%3A%22ds006012%22%7D",
+      "encodingFormat": "application/json",
+      "isLiveDataset": true
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006012-nemar",
+      "name": "ds006012 on NeMAR",
+      "description": "NEMAR dataset landing page with pipeline plots.",
+      "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=ds006012",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006012-huggingface",
+      "name": "EEGDash/ds006012 on Hugging Face",
+      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
+      "contentUrl": "https://huggingface.co/datasets/EEGDash/ds006012",
+      "encodingFormat": "application/vnd.huggingface-dataset+json"
+    }
+  ]
+}

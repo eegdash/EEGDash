@@ -1,0 +1,177 @@
+{
+  "@context": {
+    "@language": "en",
+    "@vocab": "https://schema.org/",
+    "citeAs": "cr:citeAs",
+    "column": "cr:column",
+    "conformsTo": "dct:conformsTo",
+    "cr": "http://mlcommons.org/croissant/",
+    "data": {
+      "@id": "cr:data",
+      "@type": "@json"
+    },
+    "dataType": {
+      "@id": "cr:dataType",
+      "@type": "@vocab"
+    },
+    "dct": "http://purl.org/dc/terms/",
+    "extract": "cr:extract",
+    "field": "cr:field",
+    "fileObject": "cr:fileObject",
+    "fileProperty": "cr:fileProperty",
+    "fileSet": "cr:fileSet",
+    "format": "cr:format",
+    "includes": "cr:includes",
+    "isLiveDataset": "cr:isLiveDataset",
+    "jsonPath": "cr:jsonPath",
+    "key": "cr:key",
+    "md5": "cr:md5",
+    "parentField": "cr:parentField",
+    "path": "cr:path",
+    "recordSet": "cr:recordSet",
+    "references": "cr:references",
+    "regex": "cr:regex",
+    "repeated": "cr:repeated",
+    "replace": "cr:replace",
+    "sc": "https://schema.org/",
+    "separator": "cr:separator",
+    "source": "cr:source",
+    "subField": "cr:subField",
+    "transform": "cr:transform"
+  },
+  "@type": "sc:Dataset",
+  "conformsTo": "http://mlcommons.org/croissant/1.0",
+  "name": "ds001785",
+  "alternateName": [
+    "DS001785"
+  ],
+  "description": "Evidence accumulation relates to perceptual consciousness and monitoring. eeg dataset accessible via EEGDash as `DS001785` with standardized BIDS metadata.",
+  "url": "https://eegdash.org/api/dataset/eegdash.dataset.DS001785.html",
+  "keywords": [
+    "EEG",
+    "BIDS",
+    "neuroscience",
+    "Tactile",
+    "Healthy",
+    "Perception"
+  ],
+  "isAccessibleForFree": true,
+  "includedInDataCatalog": {
+    "@type": "sc:DataCatalog",
+    "name": "EEG Dash",
+    "url": "https://eegdash.org/"
+  },
+  "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "creator": [
+    {
+      "@type": "sc:Person",
+      "name": "Michael Pereira"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Pierre Mégevand"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Mi Xue Tan"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Wenwen Chang"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Shuo Wang"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Ali Rezai"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Margitta Seeck"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Marco Corniola"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Shahan Momjian"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Fosco Bernasconi"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Olaf Blanke"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Nathan Faivre"
+    }
+  ],
+  "editor": {
+    "@type": "sc:Person",
+    "name": "Nathan Faivre"
+  },
+  "funder": [
+    {
+      "@type": "sc:Organization",
+      "name": "Bertarelli Foundation"
+    },
+    {
+      "@type": "sc:Organization",
+      "name": "Swiss National Science Foundation"
+    },
+    {
+      "@type": "sc:Organization",
+      "name": "European Research Council (ERC)"
+    }
+  ],
+  "datePublished": "2019",
+  "identifier": "doi:10.18112/openneuro.ds001785.v1.1.1",
+  "sameAs": [
+    "https://doi.org/10.18112/openneuro.ds001785.v1.1.1",
+    "https://openneuro.org/datasets/ds001785",
+    "https://huggingface.co/datasets/EEGDash/ds001785"
+  ],
+  "citeAs": "Michael Pereira, Pierre Mégevand, Mi Xue Tan, Wenwen Chang, Shuo Wang (2019). Evidence accumulation relates to perceptual consciousness and monitoring. doi:10.18112/openneuro.ds001785.v1.1.1",
+  "version": "1.1.1",
+  "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds001785-openneuro",
+      "name": "ds001785 on OpenNeuro",
+      "description": "OpenNeuro dataset landing page.",
+      "contentUrl": "https://openneuro.org/datasets/ds001785",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds001785-eegdash-records",
+      "name": "ds001785 EEGDash records (live)",
+      "description": "Live JSON listing of every recording in this dataset, with BIDS metadata, channel counts, and S3 storage keys.",
+      "contentUrl": "https://data.eegdash.org/api/eegdash/records?filter=%7B%22dataset%22%3A%22ds001785%22%7D",
+      "encodingFormat": "application/json",
+      "isLiveDataset": true
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds001785-nemar",
+      "name": "ds001785 on NeMAR",
+      "description": "NEMAR dataset landing page with pipeline plots.",
+      "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=ds001785",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds001785-huggingface",
+      "name": "EEGDash/ds001785 on Hugging Face",
+      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
+      "contentUrl": "https://huggingface.co/datasets/EEGDash/ds001785",
+      "encodingFormat": "application/vnd.huggingface-dataset+json"
+    }
+  ]
+}

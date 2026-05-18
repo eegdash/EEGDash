@@ -1,0 +1,153 @@
+{
+  "@context": {
+    "@language": "en",
+    "@vocab": "https://schema.org/",
+    "citeAs": "cr:citeAs",
+    "column": "cr:column",
+    "conformsTo": "dct:conformsTo",
+    "cr": "http://mlcommons.org/croissant/",
+    "data": {
+      "@id": "cr:data",
+      "@type": "@json"
+    },
+    "dataType": {
+      "@id": "cr:dataType",
+      "@type": "@vocab"
+    },
+    "dct": "http://purl.org/dc/terms/",
+    "extract": "cr:extract",
+    "field": "cr:field",
+    "fileObject": "cr:fileObject",
+    "fileProperty": "cr:fileProperty",
+    "fileSet": "cr:fileSet",
+    "format": "cr:format",
+    "includes": "cr:includes",
+    "isLiveDataset": "cr:isLiveDataset",
+    "jsonPath": "cr:jsonPath",
+    "key": "cr:key",
+    "md5": "cr:md5",
+    "parentField": "cr:parentField",
+    "path": "cr:path",
+    "recordSet": "cr:recordSet",
+    "references": "cr:references",
+    "regex": "cr:regex",
+    "repeated": "cr:repeated",
+    "replace": "cr:replace",
+    "sc": "https://schema.org/",
+    "separator": "cr:separator",
+    "source": "cr:source",
+    "subField": "cr:subField",
+    "transform": "cr:transform"
+  },
+  "@type": "sc:Dataset",
+  "conformsTo": "http://mlcommons.org/croissant/1.0",
+  "name": "ds005530",
+  "alternateName": [
+    "DS005530"
+  ],
+  "description": "Depotentiation of emotional reactivity using TMR during REM sleep. eeg dataset accessible via EEGDash as `DS005530` with standardized BIDS metadata.",
+  "url": "https://eegdash.org/api/dataset/eegdash.dataset.DS005530.html",
+  "keywords": [
+    "EEG",
+    "BIDS",
+    "neuroscience",
+    "['Multisensory']",
+    "['Healthy']",
+    "['Sleep']"
+  ],
+  "isAccessibleForFree": true,
+  "includedInDataCatalog": {
+    "@type": "sc:DataCatalog",
+    "name": "EEG Dash",
+    "url": "https://eegdash.org/"
+  },
+  "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "creator": [
+    {
+      "@type": "sc:Person",
+      "name": "Viviana Greco"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Tamas A. Foldes"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Neil A. Harrison"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Kevin Murphy"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Marta Wawrzuta"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Mahmoud E. A. Abdellahi"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Penelope A. Lewis"
+    }
+  ],
+  "editor": {
+    "@type": "sc:Person",
+    "name": "Penelope A. Lewis"
+  },
+  "funder": [
+    {
+      "@type": "sc:Organization",
+      "name": "ERC consolidator grant SolutionSleep to Lewis P.A."
+    },
+    {
+      "@type": "sc:Organization",
+      "name": "The Wellcome Trust [WT224267] to Murphy K"
+    }
+  ],
+  "datePublished": "2024",
+  "identifier": "doi:10.18112/openneuro.ds005530.v1.0.9",
+  "sameAs": [
+    "https://doi.org/10.18112/openneuro.ds005530.v1.0.9",
+    "https://openneuro.org/datasets/ds005530",
+    "https://huggingface.co/datasets/EEGDash/ds005530"
+  ],
+  "citeAs": "Viviana Greco, Tamas A. Foldes, Neil A. Harrison, Kevin Murphy, Marta Wawrzuta (2024). Depotentiation of emotional reactivity using TMR during REM sleep. doi:10.18112/openneuro.ds005530.v1.0.9",
+  "version": "1.8.0",
+  "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005530-openneuro",
+      "name": "ds005530 on OpenNeuro",
+      "description": "OpenNeuro dataset landing page.",
+      "contentUrl": "https://openneuro.org/datasets/ds005530",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005530-eegdash-records",
+      "name": "ds005530 EEGDash records (live)",
+      "description": "Live JSON listing of every recording in this dataset, with BIDS metadata, channel counts, and S3 storage keys.",
+      "contentUrl": "https://data.eegdash.org/api/eegdash/records?filter=%7B%22dataset%22%3A%22ds005530%22%7D",
+      "encodingFormat": "application/json",
+      "isLiveDataset": true
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005530-nemar",
+      "name": "ds005530 on NeMAR",
+      "description": "NEMAR dataset landing page with pipeline plots.",
+      "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=ds005530",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005530-huggingface",
+      "name": "EEGDash/ds005530 on Hugging Face",
+      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
+      "contentUrl": "https://huggingface.co/datasets/EEGDash/ds005530",
+      "encodingFormat": "application/vnd.huggingface-dataset+json"
+    }
+  ]
+}

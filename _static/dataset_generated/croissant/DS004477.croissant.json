@@ -1,0 +1,141 @@
+{
+  "@context": {
+    "@language": "en",
+    "@vocab": "https://schema.org/",
+    "citeAs": "cr:citeAs",
+    "column": "cr:column",
+    "conformsTo": "dct:conformsTo",
+    "cr": "http://mlcommons.org/croissant/",
+    "data": {
+      "@id": "cr:data",
+      "@type": "@json"
+    },
+    "dataType": {
+      "@id": "cr:dataType",
+      "@type": "@vocab"
+    },
+    "dct": "http://purl.org/dc/terms/",
+    "extract": "cr:extract",
+    "field": "cr:field",
+    "fileObject": "cr:fileObject",
+    "fileProperty": "cr:fileProperty",
+    "fileSet": "cr:fileSet",
+    "format": "cr:format",
+    "includes": "cr:includes",
+    "isLiveDataset": "cr:isLiveDataset",
+    "jsonPath": "cr:jsonPath",
+    "key": "cr:key",
+    "md5": "cr:md5",
+    "parentField": "cr:parentField",
+    "path": "cr:path",
+    "recordSet": "cr:recordSet",
+    "references": "cr:references",
+    "regex": "cr:regex",
+    "repeated": "cr:repeated",
+    "replace": "cr:replace",
+    "sc": "https://schema.org/",
+    "separator": "cr:separator",
+    "source": "cr:source",
+    "subField": "cr:subField",
+    "transform": "cr:transform"
+  },
+  "@type": "sc:Dataset",
+  "conformsTo": "http://mlcommons.org/croissant/1.0",
+  "name": "ds004477",
+  "alternateName": [
+    "DS004477"
+  ],
+  "description": "PES - Pandemic Emergency Scenario. eeg dataset accessible via EEGDash as `DS004477` with standardized BIDS metadata.",
+  "url": "https://eegdash.org/api/dataset/eegdash.dataset.DS004477.html",
+  "keywords": [
+    "EEG",
+    "BIDS",
+    "neuroscience",
+    "Multisensory",
+    "Healthy",
+    "Decision-making"
+  ],
+  "isAccessibleForFree": true,
+  "includedInDataCatalog": {
+    "@type": "sc:DataCatalog",
+    "name": "EEG Dash",
+    "url": "https://eegdash.org/"
+  },
+  "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "creator": [
+    {
+      "@type": "sc:Person",
+      "name": "Tasos Papastylianou"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Rodrigo Ramele"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Luca Citi"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Caterina Cinel"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Riccardo Poli"
+    }
+  ],
+  "editor": {
+    "@type": "sc:Person",
+    "name": "Riccardo Poli"
+  },
+  "funder": [
+    {
+      "@type": "sc:Organization",
+      "name": "UK Ministry of Defence (MOD) via funding from US/UK DoD BARI"
+    }
+  ],
+  "datePublished": "2023",
+  "identifier": "doi:10.18112/openneuro.ds004477.v1.0.2",
+  "sameAs": [
+    "https://doi.org/10.18112/openneuro.ds004477.v1.0.2",
+    "https://openneuro.org/datasets/ds004477",
+    "https://huggingface.co/datasets/EEGDash/ds004477"
+  ],
+  "citeAs": "Tasos Papastylianou, Rodrigo Ramele, Luca Citi, Caterina Cinel, Riccardo Poli (2023). PES - Pandemic Emergency Scenario. doi:10.18112/openneuro.ds004477.v1.0.2",
+  "version": "1.7.0",
+  "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004477-openneuro",
+      "name": "ds004477 on OpenNeuro",
+      "description": "OpenNeuro dataset landing page.",
+      "contentUrl": "https://openneuro.org/datasets/ds004477",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004477-eegdash-records",
+      "name": "ds004477 EEGDash records (live)",
+      "description": "Live JSON listing of every recording in this dataset, with BIDS metadata, channel counts, and S3 storage keys.",
+      "contentUrl": "https://data.eegdash.org/api/eegdash/records?filter=%7B%22dataset%22%3A%22ds004477%22%7D",
+      "encodingFormat": "application/json",
+      "isLiveDataset": true
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004477-nemar",
+      "name": "ds004477 on NeMAR",
+      "description": "NEMAR dataset landing page with pipeline plots.",
+      "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=ds004477",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004477-huggingface",
+      "name": "EEGDash/ds004477 on Hugging Face",
+      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
+      "contentUrl": "https://huggingface.co/datasets/EEGDash/ds004477",
+      "encodingFormat": "application/vnd.huggingface-dataset+json"
+    }
+  ]
+}

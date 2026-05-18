@@ -1676,12 +1676,13 @@ def _format_hero_section(context: Mapping[str, object]) -> str:
     title = str(context.get("title", "")).strip()
     source = str(context.get("source", "")).strip() or "OpenNeuro"
 
-    # Build subtitle based on available info
+    # Build subtitle based on available info. The title is the deck;
+    # the boilerplate "Access recordings…" line below it was just noise
+    # because the byline + field card already convey provenance.
     if title:
         tagline = f"*{title}*"
     else:
         tagline = f"Dataset from {source}."
-    tagline = f"{tagline}\n\nAccess recordings and metadata through EEGDash."
 
     # Format citation
     authors = context.get("authors") or []

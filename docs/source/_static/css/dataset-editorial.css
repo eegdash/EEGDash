@@ -167,7 +167,19 @@ article.bd-article .eegdash-stats-section,
 article.bd-article .eegdash-ed-pills,
 article.bd-article .eegdash-ed-issue,
 article.bd-article .sd-tab-set,
-article.bd-article > section > .nemar-analysis-section {
+article.bd-article > section > .nemar-analysis-section,
+/* Autodoc tables (Parameters / Returns / etc.) and code Examples are
+   reference material that already self-paces its line lengths — the
+   780 px prose cap would otherwise leave the right third of the API
+   section empty. */
+article.bd-article #api-reference p,
+article.bd-article #api-reference ul,
+article.bd-article #api-reference ol,
+article.bd-article #api-reference dl.field-list,
+article.bd-article #api-reference dl.py,
+article.bd-article #dataset-information p,
+article.bd-article #dataset-information ul,
+article.bd-article #dataset-information ol {
   max-width: none;
 }
 
@@ -679,15 +691,16 @@ section:has(> .eegdash-ed-secnum:last-child) + section > h2 {
   font-size: 17px;
   line-height: 1.6;
   color: var(--ed-ink-2);
-  column-count: 2;
-  column-gap: 48px;
-  column-rule: 1px solid var(--ed-rule);
-  margin: 36px 0 48px;
+  /* Single column. The previous `column-count: 2` looked great on long
+     editorial ledes but most README first-paragraphs are 3–5 lines and
+     the second column ended up empty, leaving an awkward gutter on the
+     right. */
+  max-width: 720px;
+  margin: 24px 0 36px;
 }
 .eegdash-ed-lede p {
   margin-bottom: 14px;
   text-wrap: pretty;
-  break-inside: avoid-column;
 }
 .eegdash-ed-lede p:first-child::first-letter {
   font-family: var(--ed-font-serif);
@@ -697,10 +710,6 @@ section:has(> .eegdash-ed-secnum:last-child) + section > h2 {
   line-height: 0.85;
   padding: 6px 10px 0 0;
   color: var(--ed-accent);
-}
-
-@media (max-width: 900px) {
-  .eegdash-ed-lede { column-count: 1; }
 }
 
 /* =========================================================================
@@ -1762,7 +1771,17 @@ html[data-theme="dark"] .eegdash-ed-examples { background: var(--ed-paper); }
   grid-column: 2;
   margin-bottom: 0 !important;
 }
-.eegdash-ed-cohort-grid > .eegdash-stats-section:nth-of-type(n+3) {
+/* Channel counts (3rd) and sampling frequencies (4th) each occupy one
+   column so the row reads as a horizontal stats strip instead of two
+   sparse full-width rows stacked vertically. Any further sections fall
+   back to full width on a new row. */
+.eegdash-ed-cohort-grid > .eegdash-stats-section:nth-of-type(3),
+.eegdash-ed-cohort-grid > .eegdash-stats-section:nth-of-type(4) {
+  grid-column: span 1;
+  margin-top: 12px;
+  min-width: 0;
+}
+.eegdash-ed-cohort-grid > .eegdash-stats-section:nth-of-type(n+5) {
   grid-column: 1 / -1;
   margin-top: 12px;
 }

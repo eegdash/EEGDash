@@ -32,7 +32,7 @@ from sphinx.util import logging
 
 from eegdash.dataset.nemar import NemarClient, NemarMetadata
 
-from ._constants import _DOCS_SOURCE_ROOT, _LICENSE_URL_MAP
+from ._constants import _LICENSE_URL_MAP
 from .data_loaders import (
     _clean_value,
     _collapse_whitespace,
@@ -474,41 +474,52 @@ def _format_api_section(class_name: str) -> str:
 # ---------------------------------------------------------------------------
 # Electrode-explorer embed (Step 5 of the electrodes integration plan).
 #
-# `_static/dataset_generated/electrode-layouts.json` maps dataset_id ->
-# {label, n_channels, tsv_url, coords_url}. It is eventually populated by
-# the eegdash backend montage registry; while that's being built we
-# maintain a curated subset as a fallback.
+# Previously fed by ``docs/build_electrode_layouts.py`` writing
+# ``_static/dataset_generated/electrode-layouts.json`` from ~700
+# per-dataset GETs. Arch #5 retired that script: the server now joins
+# the top montage onto each ``/datasets/chart-data`` row when called
+# with ``?include=montages``, and ``DatasetSnapshot`` exposes it
+# through :meth:`DatasetSnapshot.montage`. The lookup shape is
+# unchanged (``label``, ``n_channels``, ``montage_id``) so this
+# section formatter is a straight rewire.
 #
-# Each dataset page gets a collapsed <details> block. Expanding it swaps
-# the iframe's `data-src` onto `src` (see lazy-embed.js), so zero bytes
-# are fetched from electrodes.eegdash.org until a reader opts in.
+# Each dataset page gets a collapsed <details> block. Expanding it
+# swaps the iframe's ``data-src`` onto ``src`` (see lazy-embed.js),
+# so zero bytes are fetched from electrodes.eegdash.org until a
+# reader opts in.
 # ---------------------------------------------------------------------------
 
 _ELECTRODE_EXPLORER_BASE = "https://electrodes.eegdash.org/"
 
-_electrode_layouts_cache: dict[str, object] | None = None
 
+def _load_electrode_layout(dataset_id: str) -> Mapping[str, object] | None:
+    """Return the top montage for ``dataset_id`` via the snapshot.
 
-def _load_electrode_layouts() -> Mapping[str, Mapping[str, object]]:
-    """Read the curated electrode-layouts manifest (cached across calls)."""
-    global _electrode_layouts_cache
-    if _electrode_layouts_cache is not None:
-        return _electrode_layouts_cache  # type: ignore[return-value]
-    path = (
-        _DOCS_SOURCE_ROOT / "_static" / "dataset_generated" / "electrode-layouts.json"
-    )
+    Returns ``None`` when:
+
+    * the dataset id is empty / falsy,
+    * the snapshot fell back to disk-cache / package-CSV without a
+      cached montages sidecar (live API unreachable for this build),
+    * the server did not join a montage onto that dataset row, or
+    * the snapshot's montage payload is structurally unusable.
+
+    The caller renders an empty placeholder for ``None``, so each of
+    these states degrades gracefully into "no layout indexed".
+    """
+    if not dataset_id:
+        return None
     try:
-        doc = json.loads(path.read_text(encoding="utf-8"))
-        layouts = doc.get("layouts", {})
-        if not isinstance(layouts, dict):
-            layouts = {}
-    except (FileNotFoundError, json.JSONDecodeError) as exc:
+        from eegdash.dataset.snapshot import DatasetSnapshot
+
+        snapshot = DatasetSnapshot.build()
+        return snapshot.montage(dataset_id)
+    except Exception as exc:  # noqa: BLE001 — must never break the docs build
         LOGGER.info(
-            "[electrode-layouts] manifest unavailable (%s); placeholders only", exc
+            "[electrode-layouts] snapshot lookup failed for %s (%s); placeholder",
+            dataset_id,
+            exc,
         )
-        layouts = {}
-    _electrode_layouts_cache = layouts
-    return layouts
+        return None
 
 
 def _format_electrodes_section(context: Mapping[str, object]) -> str:
@@ -517,8 +528,7 @@ def _format_electrodes_section(context: Mapping[str, object]) -> str:
     if not dataset_id:
         return ""
 
-    layouts = _load_electrode_layouts()
-    entry = layouts.get(dataset_id)
+    entry = _load_electrode_layout(dataset_id)
 
     heading = "Electrode Layout\n----------------\n\n"
 

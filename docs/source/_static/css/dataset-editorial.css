@@ -161,6 +161,7 @@ article.bd-article .eegdash-ed-footnotes,
 article.bd-article .eegdash-ed-figpair,
 article.bd-article .eegdash-ed-apicard,
 article.bd-article .eegdash-ed-access,
+article.bd-article .eegdash-ed-examples,
 article.bd-article .eegdash-ed-caveat,
 article.bd-article .eegdash-stats-section,
 article.bd-article .eegdash-ed-pills,
@@ -196,6 +197,12 @@ article.bd-article h2 {
   margin-bottom: 18px;
   border-top: 1.5px solid var(--ed-ink);
   padding-top: 24px;
+  /* New block formatting context so the `border-top` stops at the
+     floated field-card rail's left edge instead of being drawn behind
+     it (the rail's translucent background otherwise lets the rule
+     bleed through the card body). Mirrors the same fix on
+     `.eegdash-ed-secnum`. */
+  display: flow-root;
 }
 
 article.bd-article h3 {
@@ -602,7 +609,11 @@ html[data-theme="dark"] .eegdash-ed-layers > div { background: rgba(0, 0, 0, 0.2
   color: var(--ed-accent);
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  display: block;
+  /* `display: flow-root` makes the secnum its own block formatting
+     context, so the rule above (`border-top`) stops at the floated
+     rail's left edge instead of being drawn behind the rail (the rail
+     uses a translucent background, so the line was bleeding through). */
+  display: flow-root;
   margin-top: 80px;
   margin-bottom: -8px;
   padding-top: 24px;
@@ -1344,6 +1355,120 @@ html[data-theme="dark"] .eegdash-ed-access {
   border-radius: 2px;
   border: 1px solid rgba(0, 108, 163, 0.2);
   letter-spacing: 0.04em;
+}
+
+/* =========================================================================
+   9c. Examples gallery (.eegdash-ed-examples) — curated start-here tutorials.
+       MOABB-inspired: a few concrete entry points after the API block.
+   ========================================================================= */
+
+.eegdash-ed-examples {
+  margin: 32px 0 0;
+  border: 1px solid var(--ed-ink);
+  background: var(--ed-paper-2);
+  font-family: var(--ed-font-sans);
+}
+html[data-theme="dark"] .eegdash-ed-examples { background: var(--ed-paper); }
+
+.eegdash-ed-examples .sidecar-hdr {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--ed-rule);
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ed-muted);
+}
+.eegdash-ed-examples .sidecar-hdr b { font-weight: 600; }
+.eegdash-ed-examples .sidecar-hdr .right {
+  font-family: var(--ed-font-mono);
+  letter-spacing: 0.06em;
+  color: var(--ed-accent);
+}
+
+.eegdash-ed-examples .ex-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+}
+.eegdash-ed-examples .ex-card {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: inherit;
+  border-right: 1px solid var(--ed-rule);
+  border-bottom: 1px solid var(--ed-rule);
+  background: var(--ed-paper);
+  transition: background-color 120ms ease, transform 120ms ease;
+}
+.eegdash-ed-examples .ex-card:hover {
+  background: rgba(0, 108, 163, 0.05);
+}
+.eegdash-ed-examples .ex-card:nth-child(3n) { border-right: 0; }
+.eegdash-ed-examples .ex-card:nth-last-child(-n+3) { border-bottom: 0; }
+
+.eegdash-ed-examples .ex-thumb {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: var(--ed-paper-2);
+  border-bottom: 1px solid var(--ed-rule);
+}
+.eegdash-ed-examples .ex-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+.eegdash-ed-examples .ex-body {
+  display: block;
+  padding: 12px 14px 14px;
+}
+.eegdash-ed-examples .ex-title {
+  display: block;
+  font-family: var(--ed-font-serif);
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 1.25;
+  color: var(--ed-ink);
+  margin-bottom: 4px;
+}
+.eegdash-ed-examples .ex-blurb {
+  display: block;
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: var(--ed-muted);
+}
+.eegdash-ed-examples .ex-hint {
+  margin: 0;
+  padding: 10px 16px;
+  border-top: 1px solid var(--ed-rule);
+  font-size: 12px;
+  color: var(--ed-muted);
+}
+.eegdash-ed-examples .ex-hint code {
+  font-family: var(--ed-font-mono);
+  background: rgba(0, 108, 163, 0.08);
+  color: var(--ed-accent);
+  padding: 1px 4px;
+  border-radius: 2px;
+}
+
+@media (max-width: 900px) {
+  .eegdash-ed-examples .ex-grid { grid-template-columns: repeat(2, 1fr); }
+  .eegdash-ed-examples .ex-card:nth-child(3n) { border-right: 1px solid var(--ed-rule); }
+  .eegdash-ed-examples .ex-card:nth-child(2n) { border-right: 0; }
+  .eegdash-ed-examples .ex-card:nth-last-child(-n+3) { border-bottom: 1px solid var(--ed-rule); }
+  .eegdash-ed-examples .ex-card:nth-last-child(-n+2) { border-bottom: 0; }
+}
+@media (max-width: 600px) {
+  .eegdash-ed-examples .ex-grid { grid-template-columns: 1fr; }
+  .eegdash-ed-examples .ex-card { border-right: 0 !important; border-bottom: 1px solid var(--ed-rule) !important; }
+  .eegdash-ed-examples .ex-card:last-child { border-bottom: 0 !important; }
 }
 
 /* =========================================================================

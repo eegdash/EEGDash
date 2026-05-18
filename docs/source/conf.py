@@ -26,7 +26,7 @@ if os.environ.get("SPHINX_BUILD", "") == "":
 import eegdash
 import eegdash.dataset as dataset_module
 from eegdash.dataset import EEGDashDataset
-from eegdash.dataset.registry import fetch_datasets_from_api
+from eegdash.dataset.snapshot import DatasetSnapshot
 
 # -- Project information -----------------------------------------------------
 
@@ -414,7 +414,6 @@ LOGGER = logging.getLogger(__name__)
 REPO_ROOT = Path(__file__).resolve().parents[2]
 CLONE_ROOT = REPO_ROOT / "ingestions" / "clone"
 _DATASET_DETAILS_CACHE: dict[str, dict[str, object]] = {}
-_DATASET_SUMMARY_CACHE = None
 
 
 def _should_use_api_summary() -> bool:
@@ -423,24 +422,37 @@ def _should_use_api_summary() -> bool:
 
 
 def _load_dataset_summary_from_api():
+    """Return the dataset-summary DataFrame for the docs build.
+
+    Replaces the legacy ``_DATASET_SUMMARY_CACHE`` module-global with a
+    :class:`DatasetSnapshot` lookup. The snapshot's own in-process
+    cache is keyed by ``(api_base, database, limit)`` — fixing the
+    silent-stale bug the unkeyed global had whenever a future caller
+    might point Sphinx at a staging shard.
+
+    Returns ``None`` when the API is disabled (``EEGDASH_NO_API=1``) or
+    when every fallback produced an empty frame, preserving the
+    legacy caller's None-or-DataFrame contract.
+    """
     if not _should_use_api_summary():
         return None
 
-    global _DATASET_SUMMARY_CACHE
-    if _DATASET_SUMMARY_CACHE is not None:
-        return _DATASET_SUMMARY_CACHE
-
-    try:
-        df = fetch_datasets_from_api()
-    except Exception as exc:
-        LOGGER.info("[dataset-docs] API summary fetch failed: %s", exc)
-        df = None
-
-    if df is None or df.empty:
-        _DATASET_SUMMARY_CACHE = None
-    else:
-        _DATASET_SUMMARY_CACHE = df
-    return _DATASET_SUMMARY_CACHE
+    snapshot = DatasetSnapshot.build()
+    if snapshot.api_errors:
+        # Surface fallback failures at INFO so docs builds can spot
+        # silent regressions without scrolling through DEBUG noise.
+        LOGGER.info(
+            "[dataset-docs] DatasetSnapshot source=%s dataset_count=%d "
+            "errors=%d (first: %s)",
+            snapshot.source,
+            snapshot.dataset_count,
+            len(snapshot.api_errors),
+            snapshot.api_errors[0],
+        )
+    df = snapshot.rows()
+    if df.empty:
+        return None
+    return df
 
 
 DEFAULT_METADATA_FIELDS = [

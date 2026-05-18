@@ -41,15 +41,21 @@ class DatasetExplorerDirective(Directive):
             Path(__file__).parent.parent / "_templates" / "dataset-explorer.html"
         )
 
-        if not template_path.exists():
-            raise self.error(f"Template not found at {template_path}")
-
         try:
             template_text: str = template_path.read_text(encoding="utf-8")
             template: Template = Template(template_text)
             html: str = template.render(dataset_id=dataset_id)
+        except FileNotFoundError as e:
+            raise self.error(f"Template not found at {template_path}") from e
         except Exception as e:
             raise self.error(f"Failed to render dataset explorer template: {e}")
+
+        # Register the template as a build dependency so incremental
+        # builds re-run this directive whenever the template changes.
+        # Without this, edits to dataset-explorer.html are silently
+        # ignored on cached pages.
+        env = self.state.document.settings.env
+        env.note_dependency(str(template_path))
 
         return [nodes.raw("", html, format="html")]
 

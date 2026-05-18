@@ -104,6 +104,14 @@
   <script defer src="{{ pathto('_static/js/hero-search.js', 1) }}"></script>
   {%- endif %}
 
+  {# Per-dataset doc pages embed a file-tree widget via the
+     `dataset-explorer` directive. The CSS + JS live in `_static/` and
+     are loaded only here so other pages don't pay the ~12 KB cost. #}
+  {%- if pagename.startswith("api/dataset/eegdash.dataset.") %}
+  <link rel="stylesheet" href="{{ pathto('_static/css/dataset-explorer.css', 1) }}">
+  <script defer src="{{ pathto('_static/js/dataset-explorer.js', 1) }}"></script>
+  {%- endif %}
+
   <!-- Google Tag Manager — deferred to DOMContentLoaded so the GTM
        bootstrap no longer blocks first-paint or the Sphinx search-index
        load. Functionally equivalent to the inline snippet below but

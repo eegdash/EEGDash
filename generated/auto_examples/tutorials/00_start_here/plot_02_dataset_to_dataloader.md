@@ -89,7 +89,7 @@ print(f"cache_dir={CACHE_DIR}")
 ```
 
 ```none
-eegdash 0.7.2; braindecode 1.5.0; torch 2.11.0+cu130
+eegdash 0.7.2; braindecode 1.5.0; torch 2.12.0+cu130
 cache_dir=/home/runner/eegdash_cache
 ```
 
@@ -252,27 +252,27 @@ pd.Series(
 
 ```none
 Downloading sub-002_task-FaceRecognition_channels.tsv:   0%|          | 0.00/1.31k [00:00<?, ?B/s]
-Downloading sub-002_task-FaceRecognition_channels.tsv: 100%|██████████| 1.31k/1.31k [00:00<00:00, 5.15MB/s]
+Downloading sub-002_task-FaceRecognition_channels.tsv: 100%|██████████| 1.31k/1.31k [00:00<00:00, 4.21MB/s]
 
 Downloading sub-002_task-FaceRecognition_events.tsv:   0%|          | 0.00/105k [00:00<?, ?B/s]
-Downloading sub-002_task-FaceRecognition_events.tsv: 100%|██████████| 105k/105k [00:00<00:00, 58.9MB/s]
+Downloading sub-002_task-FaceRecognition_events.tsv: 100%|██████████| 105k/105k [00:00<00:00, 100MB/s]
 
 Downloading sub-002_task-FaceRecognition_electrodes.tsv:   0%|          | 0.00/1.68k [00:00<?, ?B/s]
-Downloading sub-002_task-FaceRecognition_electrodes.tsv: 100%|██████████| 1.68k/1.68k [00:00<00:00, 6.93MB/s]
+Downloading sub-002_task-FaceRecognition_electrodes.tsv: 100%|██████████| 1.68k/1.68k [00:00<00:00, 7.00MB/s]
 
 Downloading sub-002_task-FaceRecognition_eeg.json:   0%|          | 0.00/1.28k [00:00<?, ?B/s]
-Downloading sub-002_task-FaceRecognition_eeg.json: 100%|██████████| 1.28k/1.28k [00:00<00:00, 5.23MB/s]
+Downloading sub-002_task-FaceRecognition_eeg.json: 100%|██████████| 1.28k/1.28k [00:00<00:00, 5.22MB/s]
 
 Downloading sub-002_task-FaceRecognition_coordsystem.json:   0%|          | 0.00/283 [00:00<?, ?B/s]
 Downloading sub-002_task-FaceRecognition_coordsystem.json: 100%|██████████| 283/283 [00:00<00:00, 1.17MB/s]
-[05/10/26 19:36:22] WARNING  File not found on S3, skipping:   downloader.py:163
+[05/18/26 08:38:08] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds002718/sub-0
                              02/eeg/sub-002_task-FaceRecogniti
                              on_eeg.fdt
 
 Downloading sub-002_task-FaceRecognition_eeg.set:   0%|          | 0.00/224M [00:00<?, ?B/s]
-Downloading sub-002_task-FaceRecognition_eeg.set:  22%|██▏       | 50.0M/224M [00:02<00:07, 24.4MB/s]
-Downloading sub-002_task-FaceRecognition_eeg.set: 100%|██████████| 224M/224M [00:02<00:00, 107MB/s]
+Downloading sub-002_task-FaceRecognition_eeg.set:  22%|██▏       | 50.0M/224M [00:02<00:07, 23.1MB/s]
+Downloading sub-002_task-FaceRecognition_eeg.set: 100%|██████████| 224M/224M [00:02<00:00, 101MB/s]
 ```
 
 <div class="output_subarea output_html rendered_html output_result">
@@ -1252,6 +1252,6 @@ See [References](../../../../references.md) for the centralized bibliography of 
 cited above. Add or amend an entry once in
 `docs/source/refs.bib`; every tutorial inherits the update.
 
-**Total running time of the script:** (0 minutes 11.254 seconds)
+**Total running time of the script:** (0 minutes 11.519 seconds)
 
 <a id="sphx-glr-download-generated-auto-examples-tutorials-00-start-here-plot-02-dataset-to-dataloader-py"></a>

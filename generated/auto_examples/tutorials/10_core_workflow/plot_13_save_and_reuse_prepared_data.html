@@ -117,6 +117,8 @@
 
   
 
+  
+
   <!-- Google Tag Manager — deferred to DOMContentLoaded so the GTM
        bootstrap no longer blocks first-paint or the Sphinx search-index
        load. Functionally equivalent to the inline snippet below but
@@ -619,8 +621,8 @@ chunked random-access reads. The lesson
 <a class="reference external" href="https://braindecode.org/stable/generated/braindecode.datasets.BaseConcatDataset.html#braindecode.datasets.BaseConcatDataset.save" title="(in Braindecode v1.5)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">save()</span></code></a> and reload it
 with <a class="reference external" href="https://braindecode.org/stable/generated/braindecode.datautil.load_concat_dataset.html#braindecode.datautil.load_concat_dataset" title="(in Braindecode v1.5)"><code class="xref py py-func docutils literal notranslate"><span class="pre">braindecode.datautil.load_concat_dataset()</span></code></a>.</p></li>
 <li><p>Write a per-window feature table with
-<a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.to_parquet.html#pandas.DataFrame.to_parquet" title="(in pandas v3.0.2)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">pandas.DataFrame.to_parquet()</span></code></a> and reload it with
-<a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.read_parquet.html#pandas.read_parquet" title="(in pandas v3.0.2)"><code class="xref py py-func docutils literal notranslate"><span class="pre">pandas.read_parquet()</span></code></a>, preserving dtypes.</p></li>
+<a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.to_parquet.html#pandas.DataFrame.to_parquet" title="(in pandas v3.0.3)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">pandas.DataFrame.to_parquet()</span></code></a> and reload it with
+<a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.read_parquet.html#pandas.read_parquet" title="(in pandas v3.0.3)"><code class="xref py py-func docutils literal notranslate"><span class="pre">pandas.read_parquet()</span></code></a>, preserving dtypes.</p></li>
 <li><p>Verify the saved windows round-trip bit-for-bit (within float32) so
 the cache is safe to consume downstream.</p></li>
 <li><p>Stamp every cache with a provenance record (package versions, seed,
@@ -677,7 +679,7 @@ across runs (E3.21).</p>
 <span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>eegdash 0.7.2 | braindecode 1.5.0 | numpy 2.4.4
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>eegdash 0.7.2 | braindecode 1.5.0 | numpy 2.4.5
 </pre></div>
 </div>
 </section>
@@ -696,7 +698,7 @@ across runs (E3.21).</p>
 <p>Second, the read path. <code class="docutils literal notranslate"><span class="pre">load_concat_dataset(windows_path,</span> <span class="pre">preload=True)</span></code>
 rehydrates the FIF tree into a <a class="reference external" href="https://braindecode.org/stable/generated/braindecode.datasets.BaseConcatDataset.html#braindecode.datasets.BaseConcatDataset" title="(in Braindecode v1.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseConcatDataset</span></code></a>
 with the metadata frame intact. <code class="docutils literal notranslate"><span class="pre">pd.read_parquet</span></code> returns a
-<a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v3.0.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a> with the original dtypes. Both paths are
+<a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v3.0.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a> with the original dtypes. Both paths are
 version-stamped at the side because the alternative is silent rot: a
 cache that loads but no longer matches the code.</p>
 <p>Why split signals from features? FIF stores the full <code class="docutils literal notranslate"><span class="pre">(n_channels,</span>
@@ -824,9 +826,9 @@ window kwargs).</p>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;FIF write_s=</span><span class="si">{</span><a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">fif_write_s</span></a><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> s, size_mb=</span><span class="si">{</span><a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">fif_size_mb</span></a><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>saved: /tmp/eegdash_save_quzfsds1/windows
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>saved: /tmp/eegdash_save_zp39q_25/windows
 artifact tree (first 6): [&#39;windows/0&#39;, &#39;windows/0/0-raw.fif&#39;, &#39;windows/0/description.json&#39;, &#39;windows/0/metadata_df.pkl&#39;, &#39;windows/0/raw_preproc_kwargs.json&#39;, &#39;windows/0/window_kwargs.json&#39;]
-FIF write_s=0.0055 s, size_mb=0.0055
+FIF write_s=0.0052 s, size_mb=0.0055
 </pre></div>
 </div>
 </section>
@@ -846,7 +848,7 @@ array in RAM, which is what every downstream tutorial expects.</p>
 <span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>reload OK: type=BaseConcatDataset, n=2, read_s=0.0063
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>reload OK: type=BaseConcatDataset, n=2, read_s=0.0062
 </pre></div>
 </div>
 <p><strong>Investigate.</strong> Shape and sample-level parity. The spec asserts
@@ -923,7 +925,7 @@ on-disk MB into the same ledger.</p>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Zarr extra not installed (pip install braindecode[hub]); skipping.&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Zarr write_s=0.0168, read_s=0.0057, size_mb=0.0080
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Zarr write_s=0.0167, read_s=0.0060, size_mb=0.0080
 </pre></div>
 </div>
 </section>
@@ -968,7 +970,7 @@ relies on.</p>
 Cz_mean       float64
 Pz_mean       float64
 window_idx      int64
-Parquet write_s=0.0151, read_s=0.0115, size_mb=0.0024
+Parquet write_s=0.0153, read_s=0.0117, size_mb=0.0024
 </pre></div>
 </div>
 <div class="output_subarea output_html rendered_html output_result">
@@ -1072,22 +1074,22 @@ the Zarr row.</p>
     <tr>
       <th>0</th>
       <td>windows/ (FIF)</td>
-      <td>5.46</td>
-      <td>6.25</td>
+      <td>5.20</td>
+      <td>6.24</td>
       <td>0.005461</td>
     </tr>
     <tr>
       <th>1</th>
       <td>windows.zarr (Zarr)</td>
-      <td>16.81</td>
-      <td>5.74</td>
+      <td>16.65</td>
+      <td>6.00</td>
       <td>0.007955</td>
     </tr>
     <tr>
       <th>2</th>
       <td>features.parquet</td>
-      <td>15.07</td>
-      <td>11.54</td>
+      <td>15.26</td>
+      <td>11.75</td>
       <td>0.002384</td>
     </tr>
   </tbody>
@@ -1163,11 +1165,11 @@ git is unavailable (CI sandbox, source archive without <code class="docutils lit
     </tr>
     <tr>
       <th>numpy</th>
-      <td>2.4.4</td>
+      <td>2.4.5</td>
     </tr>
     <tr>
       <th>pandas</th>
-      <td>3.0.2</td>
+      <td>3.0.3</td>
     </tr>
     <tr>
       <th>mne</th>
@@ -1179,7 +1181,7 @@ git is unavailable (CI sandbox, source archive without <code class="docutils lit
     </tr>
     <tr>
       <th>git</th>
-      <td>16c7d06</td>
+      <td>3ad3e58</td>
     </tr>
   </tbody>
 </table>
@@ -1215,7 +1217,7 @@ returning a corrupt dataset.</p>
     <span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Caught FileExistsError: Subdirectory /tmp/eegdash_save_quzfsds1/windows/0 already exists. Please select
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Caught FileExistsError: Subdirectory /tmp/eegdash_save_zp39q_25/windows/0 already exists. Please select
 Recovery: rmtree + save without overwrite=True succeeded.
 Recovery: load_concat_dataset rejected broken layout (IndexError: list index out of range).
 </pre></div>

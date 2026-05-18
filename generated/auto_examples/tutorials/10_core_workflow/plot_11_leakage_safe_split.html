@@ -117,6 +117,8 @@
 
   
 
+  
+
   <!-- Google Tag Manager — deferred to DOMContentLoaded so the GTM
        bootstrap no longer blocks first-paint or the Sphinx search-index
        load. Functionally equivalent to the inline snippet below but
@@ -649,7 +651,7 @@ fold order reproducible (E3.21).</p>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;eegdash </span><span class="si">{</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">eegdash</span><span class="o">.</span><span class="n">__version__</span></a><span class="si">}</span><span class="s2">; numpy </span><span class="si">{</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">np</span><span class="o">.</span><span class="n">__version__</span></a><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>eegdash 0.7.2; numpy 2.4.4
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>eegdash 0.7.2; numpy 2.4.5
 </pre></div>
 </div>
 </section>
@@ -694,7 +696,7 @@ leakage-safe split by 10-30 points (the “leakage tax”).</p></li>
 <code class="xref py py-attr docutils literal notranslate"><span class="pre">braindecode.datasets.BaseConcatDataset.description</span></code> for per-
 recording subject ids. To keep split discipline as the only moving
 part, this tutorial materialises the metadata
-<a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v3.0.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a> directly. <code class="xref py py-mod docutils literal notranslate"><span class="pre">eegdash.splits</span></code> works the
+<a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v3.0.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a> directly. <code class="xref py py-mod docutils literal notranslate"><span class="pre">eegdash.splits</span></code> works the
 same way on a Braindecode <a class="reference external" href="https://braindecode.org/stable/generated/braindecode.datasets.WindowsDataset.html#braindecode.datasets.WindowsDataset" title="(in Braindecode v1.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">braindecode.datasets.WindowsDataset</span></code></a>
 and on a DataFrame because both expose a <code class="docutils literal notranslate"><span class="pre">subject</span></code> column. The 12
 subjects x 2 sessions x 8 windows = 192 rows mirror what plot_10
@@ -1072,7 +1074,7 @@ that runtime validator E5.42 grep-matches.</p>
 <section id="step-5-read-the-per-fold-audit-table">
 <h2>Step 5. Read the per-fold audit table<a class="headerlink" href="#step-5-read-the-per-fold-audit-table" title="Link to this heading">#</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">describe_split</span></code> returns the <code class="docutils literal notranslate"><span class="pre">per_fold</span></code> audit
-as a list of dicts. Coercing that into a <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v3.0.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a> is
+as a list of dicts. Coercing that into a <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v3.0.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a> is
 a habit worth keeping: it lets you eyeball the per-fold subject
 count, spot a class-imbalance outlier, and group by anything.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">audit_df</span></a> <span class="o">=</span> <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class"><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span></a><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">per_fold</span></a><span class="p">)</span>

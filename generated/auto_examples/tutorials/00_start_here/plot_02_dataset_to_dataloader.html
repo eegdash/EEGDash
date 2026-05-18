@@ -117,6 +117,8 @@
 
   
 
+  
+
   <!-- Google Tag Manager — deferred to DOMContentLoaded so the GTM
        bootstrap no longer blocks first-paint or the Sphinx search-index
        load. Functionally equivalent to the inline snippet below but
@@ -591,7 +593,7 @@ to download the full example code or to run this example in your browser via Bin
 <p>A model trains on tensor batches, not on continuous voltage traces. This
 tutorial closes the gap on one BIDS recording from <a class="reference external" href="https://openneuro.org">OpenNeuro</a> <code class="docutils literal notranslate"><span class="pre">ds002718</span></code> <span class="bibtex-citation" id="id1">[<a class="reference internal" href="../../../../references.html#id14" title="Daniel G Wakeman and Richard N Henson. A multi-subject, multi-modal human neuroimaging dataset. Scientific Data, 2015. doi:10.1038/sdata.2015.1.">Wakeman and Henson, 2015</a>]</span>, reachable
 through <a class="reference external" href="https://nemar.org">NEMAR</a> <span class="bibtex-citation" id="id2">[<a class="reference internal" href="../../../../references.html#id6" title="Arnaud Delorme, Dung Truong, Choonhan Youn, Subhashini Sivagnanam, Claire Stirm, Kenneth Yoshimoto, Russell A Poldrack, Amitava Majumdar, and Scott Makeig. Nemar: an open access data, tools and compute resource operating on neuroelectromagnetic data. Database, 2022. doi:10.1093/database/baac096.">Delorme <em>et al.</em>, 2022</a>]</span>: two safe
-preprocessors, a fixed-length window step, a <a class="reference external" href="https://docs.pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader" title="(in PyTorch v2.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataLoader</span></code></a> <span class="bibtex-citation" id="id3">[<a class="reference internal" href="../../../../references.html#id34" title="Adam Paszke, Sam Gross, Francisco Massa, Adam Lerer, James Bradbury, Gregory Chanan, Trevor Killeen, Zeming Lin, Natalia Gimelshein, Luca Antiga, Alban Desmaison, Andreas Köpf, Edward Yang, Zachary DeVito, Martin Raison, Alykhan Tejani, Sasank Chilamkurthy, Benoit Steiner, Lu Fang, Junjie Bai, and Soumith Chintala. PyTorch: an imperative style, high-performance deep learning library. In Advances in Neural Information Processing Systems 32, 8024–8035. 2019. doi:10.48550/arXiv.1912.01703.">Paszke <em>et al.</em>, 2019</a>]</span>, and an optional
+preprocessors, a fixed-length window step, a <a class="reference external" href="https://docs.pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader" title="(in PyTorch v2.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataLoader</span></code></a> <span class="bibtex-citation" id="id3">[<a class="reference internal" href="../../../../references.html#id34" title="Adam Paszke, Sam Gross, Francisco Massa, Adam Lerer, James Bradbury, Gregory Chanan, Trevor Killeen, Zeming Lin, Natalia Gimelshein, Luca Antiga, Alban Desmaison, Andreas Köpf, Edward Yang, Zachary DeVito, Martin Raison, Alykhan Tejani, Sasank Chilamkurthy, Benoit Steiner, Lu Fang, Junjie Bai, and Soumith Chintala. PyTorch: an imperative style, high-performance deep learning library. In Advances in Neural Information Processing Systems 32, 8024–8035. 2019. doi:10.48550/arXiv.1912.01703.">Paszke <em>et al.</em>, 2019</a>]</span>, and an optional
 Zarr cache that turns batch reads into a few milliseconds of random
 access. We do not train a model. The deliverable is one batch’s
 <code class="docutils literal notranslate"><span class="pre">shape</span></code> and <code class="docutils literal notranslate"><span class="pre">dtype</span></code>.</p>
@@ -605,7 +607,7 @@ access. We do not train a model. The deliverable is one batch’s
 subject.</p></li>
 <li><p>Predict the shape of one window from
 <code class="docutils literal notranslate"><span class="pre">(n_channels,</span> <span class="pre">window_seconds</span> <span class="pre">*</span> <span class="pre">sfreq)</span></code> and verify it.</p></li>
-<li><p>Read one batch from <a class="reference external" href="https://docs.pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader" title="(in PyTorch v2.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.utils.data.DataLoader</span></code></a> and explain
+<li><p>Read one batch from <a class="reference external" href="https://docs.pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader" title="(in PyTorch v2.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.utils.data.DataLoader</span></code></a> and explain
 each axis.</p></li>
 <li><p>Convert the windowed dataset to a Zarr store and re-read it for
 random-access speed.</p></li>
@@ -656,7 +658,7 @@ and any model init reproducible across runs (E3.21).</p>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;cache_dir=</span><span class="si">{</span><a href="https://docs.python.org/3/library/pathlib.html#pathlib.PosixPath" title="pathlib.PosixPath" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">CACHE_DIR</span></a><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>eegdash 0.7.2; braindecode 1.5.0; torch 2.11.0+cu130
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>eegdash 0.7.2; braindecode 1.5.0; torch 2.12.0+cu130
 cache_dir=/home/runner/eegdash_cache
 </pre></div>
 </div>
@@ -664,9 +666,9 @@ cache_dir=/home/runner/eegdash_cache
 <section id="dataset-vs-dataloader-the-mental-model">
 <h2>Dataset vs DataLoader: the mental model<a class="headerlink" href="#dataset-vs-dataloader-the-mental-model" title="Link to this heading">#</a></h2>
 <p>PyTorch’s official tutorial draws the line clearly: a
-<a class="reference external" href="https://docs.pytorch.org/docs/stable/data.html#torch.utils.data.Dataset" title="(in PyTorch v2.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dataset</span></code></a> <em>owns sample storage and retrieval</em>
+<a class="reference external" href="https://docs.pytorch.org/docs/stable/data.html#torch.utils.data.Dataset" title="(in PyTorch v2.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dataset</span></code></a> <em>owns sample storage and retrieval</em>
 (<code class="docutils literal notranslate"><span class="pre">__len__</span></code> and <code class="docutils literal notranslate"><span class="pre">__getitem__</span></code>); a
-<a class="reference external" href="https://docs.pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader" title="(in PyTorch v2.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataLoader</span></code></a> <em>consumes</em> the dataset and adds
+<a class="reference external" href="https://docs.pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader" title="(in PyTorch v2.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataLoader</span></code></a> <em>consumes</em> the dataset and adds
 batching, shuffling, and worker orchestration. The DataLoader is not a
 data store. It is an iterable that calls <code class="docutils literal notranslate"><span class="pre">__getitem__</span></code> on the
 dataset behind it and stacks the results.</p>
@@ -698,7 +700,7 @@ metadata) feeds <a class="reference external" href="https://braindecode.org/stab
 (in-place edits on each <a class="reference external" href="https://mne.tools/stable/generated/mne.io.Raw.html#mne.io.Raw" title="(in MNE v1.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">mne.io.Raw</span></code></a>) which feeds
 <a class="reference external" href="https://braindecode.org/stable/generated/braindecode.preprocessing.create_fixed_length_windows.html#braindecode.preprocessing.create_fixed_length_windows" title="(in Braindecode v1.5)"><code class="xref py py-func docutils literal notranslate"><span class="pre">create_fixed_length_windows()</span></code></a>
 (continuous, then windowed) which feeds
-<a class="reference external" href="https://docs.pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader" title="(in PyTorch v2.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataLoader</span></code></a> (windowed, then batched). Each
+<a class="reference external" href="https://docs.pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader" title="(in PyTorch v2.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataLoader</span></code></a> (windowed, then batched). Each
 stage carries the BIDS metadata forward, which keeps later splits
 subject-aware (see <a class="reference internal" href="../10_core_workflow/plot_11_leakage_safe_split.html"><span class="doc">Split EEG without subject leakage</span></a>).</p></li>
 <li><p><strong>Two windowing surfaces.</strong>
@@ -804,27 +806,27 @@ tutorial budget; the BIDS query language carries through unchanged
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Downloading sub-002_task-FaceRecognition_channels.tsv:   0%|          | 0.00/1.31k [00:00&lt;?, ?B/s]
-Downloading sub-002_task-FaceRecognition_channels.tsv: 100%|██████████| 1.31k/1.31k [00:00&lt;00:00, 5.15MB/s]
+Downloading sub-002_task-FaceRecognition_channels.tsv: 100%|██████████| 1.31k/1.31k [00:00&lt;00:00, 4.21MB/s]
 
 Downloading sub-002_task-FaceRecognition_events.tsv:   0%|          | 0.00/105k [00:00&lt;?, ?B/s]
-Downloading sub-002_task-FaceRecognition_events.tsv: 100%|██████████| 105k/105k [00:00&lt;00:00, 58.9MB/s]
+Downloading sub-002_task-FaceRecognition_events.tsv: 100%|██████████| 105k/105k [00:00&lt;00:00, 100MB/s]
 
 Downloading sub-002_task-FaceRecognition_electrodes.tsv:   0%|          | 0.00/1.68k [00:00&lt;?, ?B/s]
-Downloading sub-002_task-FaceRecognition_electrodes.tsv: 100%|██████████| 1.68k/1.68k [00:00&lt;00:00, 6.93MB/s]
+Downloading sub-002_task-FaceRecognition_electrodes.tsv: 100%|██████████| 1.68k/1.68k [00:00&lt;00:00, 7.00MB/s]
 
 Downloading sub-002_task-FaceRecognition_eeg.json:   0%|          | 0.00/1.28k [00:00&lt;?, ?B/s]
-Downloading sub-002_task-FaceRecognition_eeg.json: 100%|██████████| 1.28k/1.28k [00:00&lt;00:00, 5.23MB/s]
+Downloading sub-002_task-FaceRecognition_eeg.json: 100%|██████████| 1.28k/1.28k [00:00&lt;00:00, 5.22MB/s]
 
 Downloading sub-002_task-FaceRecognition_coordsystem.json:   0%|          | 0.00/283 [00:00&lt;?, ?B/s]
 Downloading sub-002_task-FaceRecognition_coordsystem.json: 100%|██████████| 283/283 [00:00&lt;00:00, 1.17MB/s]
-[05/10/26 19:36:22] WARNING  File not found on S3, skipping:   downloader.py:163
+[05/18/26 08:38:08] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds002718/sub-0
                              02/eeg/sub-002_task-FaceRecogniti
                              on_eeg.fdt
 
 Downloading sub-002_task-FaceRecognition_eeg.set:   0%|          | 0.00/224M [00:00&lt;?, ?B/s]
-Downloading sub-002_task-FaceRecognition_eeg.set:  22%|██▏       | 50.0M/224M [00:02&lt;00:07, 24.4MB/s]
-Downloading sub-002_task-FaceRecognition_eeg.set: 100%|██████████| 224M/224M [00:02&lt;00:00, 107MB/s]
+Downloading sub-002_task-FaceRecognition_eeg.set:  22%|██▏       | 50.0M/224M [00:02&lt;00:07, 23.1MB/s]
+Downloading sub-002_task-FaceRecognition_eeg.set: 100%|██████████| 224M/224M [00:02&lt;00:00, 101MB/s]
 </pre></div>
 </div>
 <div class="output_subarea output_html rendered_html output_result">
@@ -1041,7 +1043,7 @@ at default until the model trains.</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">batch_size</span></code>. 8-32 is a comfortable starting range for a CPU
 debug run; final-training values are dictated by GPU memory.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">shuffle</span></code>. <code class="docutils literal notranslate"><span class="pre">True</span></code> for training, <code class="docutils literal notranslate"><span class="pre">False</span></code> for evaluation.
-<code class="docutils literal notranslate"><span class="pre">True</span></code> requires a seeded <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.Generator.html#torch.Generator" title="(in PyTorch v2.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.Generator</span></code></a> if the first
+<code class="docutils literal notranslate"><span class="pre">True</span></code> requires a seeded <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.Generator.html#torch.Generator" title="(in PyTorch v2.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.Generator</span></code></a> if the first
 batch must match across runs.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">num_workers</span></code>. <code class="docutils literal notranslate"><span class="pre">0</span></code> (synchronous) is the right default with
 <code class="docutils literal notranslate"><span class="pre">preload=True</span></code> because windows already live in RAM. <code class="docutils literal notranslate"><span class="pre">&gt;0</span></code> helps
@@ -1167,7 +1169,7 @@ pipelines.</p>
 deterministic: model init, baseline <code class="docutils literal notranslate"><span class="pre">shuffle=True</span></code> ordering when
 <code class="docutils literal notranslate"><span class="pre">num_workers=0</span></code>, and any NumPy use inside the dataset’s
 <code class="docutils literal notranslate"><span class="pre">__getitem__</span></code>.</p></li>
-<li><p>A <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.Generator.html#torch.Generator" title="(in PyTorch v2.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.Generator</span></code></a> passed to the DataLoader fixes the
+<li><p>A <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.Generator.html#torch.Generator" title="(in PyTorch v2.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.Generator</span></code></a> passed to the DataLoader fixes the
 <em>sampling order</em>. Without it, two <code class="docutils literal notranslate"><span class="pre">shuffle=True</span></code> runs see
 different windows in the first batch. <code class="docutils literal notranslate"><span class="pre">torch.manual_seed</span></code> alone
 is not enough because PyTorch advances the global generator from
@@ -1467,7 +1469,7 @@ modules without any glue code.</p>
 an <a class="reference external" href="https://mne.tools/stable/generated/mne.Epochs.html#mne.Epochs" title="(in MNE v1.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">mne.Epochs</span></code></a> (or <a class="reference external" href="https://mne.tools/stable/generated/mne.EpochsArray.html#mne.EpochsArray" title="(in MNE v1.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">mne.EpochsArray</span></code></a>) object: a 3-D
 array shaped <code class="docutils literal notranslate"><span class="pre">(n_epochs,</span> <span class="pre">n_channels,</span> <span class="pre">n_times)</span></code> plus an <code class="docutils literal notranslate"><span class="pre">event_id</span></code>
 dict that maps condition strings to integer codes (<code class="docutils literal notranslate"><span class="pre">{'face':</span> <span class="pre">1,</span>
-<span class="pre">'scrambled':</span> <span class="pre">2}</span></code>) and an optional <code class="docutils literal notranslate"><span class="pre">metadata</span></code> <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v3.0.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a>
+<span class="pre">'scrambled':</span> <span class="pre">2}</span></code>) and an optional <code class="docutils literal notranslate"><span class="pre">metadata</span></code> <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v3.0.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a>
 that lets you write trial-level filters such as
 <code class="docutils literal notranslate"><span class="pre">epochs[epochs.metadata.task</span> <span class="pre">==</span> <span class="pre">'face']</span></code>. <code class="docutils literal notranslate"><span class="pre">Raw</span></code> is one continuous
 array; <code class="docutils literal notranslate"><span class="pre">Epochs</span></code> is <em>already cut</em>, with its own <code class="docutils literal notranslate"><span class="pre">event_id</span></code> /
@@ -1499,7 +1501,7 @@ Switching is one line in the windowing call.</p>
 <h2>Changing the label without rebuilding the windows<a class="headerlink" href="#changing-the-label-without-rebuilding-the-windows" title="Link to this heading">#</a></h2>
 <p>The most-missed edit: the <em>target</em> in
 <a class="reference external" href="https://braindecode.org/stable/generated/braindecode.datasets.WindowsDataset.html#braindecode.datasets.WindowsDataset" title="(in Braindecode v1.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">WindowsDataset</span></code></a> is a column called
-<code class="docutils literal notranslate"><span class="pre">&quot;target&quot;</span></code> on a per-record <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v3.0.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a> (the
+<code class="docutils literal notranslate"><span class="pre">&quot;target&quot;</span></code> on a per-record <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v3.0.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a> (the
 <a class="reference external" href="https://mne.tools/stable/generated/mne.Epochs.html#mne.Epochs" title="(in MNE v1.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">mne.Epochs</span></code></a> metadata). <code class="docutils literal notranslate"><span class="pre">__getitem__</span></code> reads
 <code class="docutils literal notranslate"><span class="pre">self.y[index]</span></code>, which was populated from that column at
 construction. Three patterns cover the practical cases.</p>
@@ -1705,7 +1707,7 @@ saves and reloads the windows so subsequent sessions skip the cut.</p>
 <ul class="simple">
 <li><p>Re-run with <code class="docutils literal notranslate"><span class="pre">shuffle=True</span></code> and <code class="docutils literal notranslate"><span class="pre">generator=None</span></code>: the first batch
 becomes non-deterministic across runs. Add the seeded
-<a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.Generator.html#torch.Generator" title="(in PyTorch v2.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.Generator</span></code></a> back and re-verify.</p></li>
+<a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.Generator.html#torch.Generator" title="(in PyTorch v2.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.Generator</span></code></a> back and re-verify.</p></li>
 <li><p>Set <code class="docutils literal notranslate"><span class="pre">num_workers=2</span></code> and confirm the batch shape is identical
 while wall-time changes; explain why on a 1-2-core CPU.</p></li>
 <li><p>Replace <code class="docutils literal notranslate"><span class="pre">window_stride_samples</span> <span class="pre">=</span> <span class="pre">window_size_samples</span></code> with a 50 %
@@ -1721,7 +1723,7 @@ against the in-RAM <code class="docutils literal notranslate"><span class="pre">
 <p>See <a class="reference internal" href="../../../../references.html"><span class="doc">References</span></a> for the centralized bibliography of papers
 cited above. Add or amend an entry once in
 <code class="file docutils literal notranslate"><span class="pre">docs/source/refs.bib</span></code>; every tutorial inherits the update.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 11.254 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 11.519 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-auto-examples-tutorials-00-start-here-plot-02-dataset-to-dataloader-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/eegdash/EEGDash/main?urlpath=lab/tree/notebooks/generated/auto_examples/tutorials/00_start_here/plot_02_dataset_to_dataloader.ipynb"><img alt="Launch binder" src="../../../../_images/binder_badge_logo5.svg" style="width: 150px;" />

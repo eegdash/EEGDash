@@ -117,6 +117,8 @@
 
   
 
+  
+
   <!-- Google Tag Manager — deferred to DOMContentLoaded so the GTM
        bootstrap no longer blocks first-paint or the Sphinx search-index
        load. Functionally equivalent to the inline snippet below but
@@ -599,7 +601,7 @@ recording is downsampled from 500 Hz to 100 Hz, band-pass filtered
 stays reproducible <span class="bibtex-citation" id="id2">[<a class="reference internal" href="../../../../references.html#id19" title="Giulia Cisotto and Davide Chicco. Ten quick tips for clinical electroencephalographic (eeg) data acquisition and signal processing. PeerJ Computer Science, 10:e2256, 2024. doi:10.7717/peerj-cs.2256.">Cisotto and Chicco, 2024</a>]</span>. This tutorial walks through
 the loader, surfaces the task taxonomy, the participant-level metadata,
 and the official catalog row a single recording carries. The deliverable
-is one <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v3.0.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a> with records-per-task counts and one
+is one <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v3.0.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a> with records-per-task counts and one
 three-panel figure rendered from the live metadata.</p>
 <p>Keywords: EEG2025, dataset, basics</p>
 <section id="learning-objectives">
@@ -849,7 +851,7 @@ query alone is enough to enumerate the task taxonomy.</p>
 │ If you are participating in the competition, always use                      │
 │ `EEGChallengeDataset` to ensure consistency with the challenge data.         │
 ╰──────────────────────── Source: EEGChallengeDataset ─────────────────────────╯
-[05/10/26 19:39:13] INFO     Auto-corrected misrouted             dataset.py:402
+[05/18/26 08:40:54] INFO     Auto-corrected misrouted             dataset.py:402
                              storage.base for dataset
                              EEG2025r5mini: None -&gt;
                              s3://nemar/EEG2025r5mini
@@ -916,7 +918,7 @@ protocol covers a resting-state run, four passive video clips,
 three active cognitive tasks (contrast change detection, surround
 suppression, symbol search), and two sequence-learning variants
 (Alexander et al. 2017, sec. 4.4).</p>
-<p><strong>Run.</strong> <code class="docutils literal notranslate"><span class="pre">ds.description</span></code> is a <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v3.0.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a> with one
+<p><strong>Run.</strong> <code class="docutils literal notranslate"><span class="pre">ds.description</span></code> is a <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v3.0.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a> with one
 row per recording. The <code class="docutils literal notranslate"><span class="pre">task</span></code> column carries the BIDS task entity,
 untouched by the preprocessing pipeline.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">task_counts</span></a> <span class="o">=</span> <a href="../../../../api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset.description" title="eegdash.EEGDashDataset.description" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-property"><span class="n">ds_mini</span><span class="o">.</span><span class="n">description</span></a><span class="p">[</span><span class="s2">&quot;task&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
@@ -1282,7 +1284,7 @@ ages into four buckets and pivot.</p>
 catalog with the BIDS entities, the storage descriptor, and the
 participants.tsv extras. <code class="docutils literal notranslate"><span class="pre">ds.records[0]</span></code> is exactly that row,
 returned as a Python <code class="docutils literal notranslate"><span class="pre">dict</span></code>. The next cell renders it as a
-<a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v3.0.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a> so the long fields stay readable.</p>
+<a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v3.0.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a> so the long fields stay readable.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sample_record</span></a> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ds_mini</span><span class="o">.</span><span class="n">records</span></a><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">record_view</span></a> <span class="o">=</span> <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.html#pandas.Series" title="pandas.Series" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class"><span class="n">pd</span><span class="o">.</span><span class="n">Series</span></a><span class="p">(</span>
     <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sample_record</span></a><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span> <span class="o">!=</span> <span class="s2">&quot;_id&quot;</span><span class="p">},</span>
@@ -1484,7 +1486,7 @@ claim.</p>
 │ If you are participating in the competition, always use                      │
 │ `EEGChallengeDataset` to ensure consistency with the challenge data.         │
 ╰──────────────────────── Source: EEGChallengeDataset ─────────────────────────╯
-[05/10/26 19:39:15] INFO     Auto-corrected misrouted             dataset.py:402
+[05/18/26 08:40:56] INFO     Auto-corrected misrouted             dataset.py:402
                              storage.base for dataset EEG2025r5:
                              None -&gt; s3://nemar/EEG2025r5
 </pre></div>
@@ -1691,7 +1693,7 @@ are different by design, but the relationship <code class="docutils literal notr
 │ If you are participating in the competition, always use                      │
 │ `EEGChallengeDataset` to ensure consistency with the challenge data.         │
 ╰──────────────────────── Source: EEGChallengeDataset ─────────────────────────╯
-[05/10/26 19:39:21] INFO     Auto-corrected misrouted             dataset.py:402
+[05/18/26 08:41:02] INFO     Auto-corrected misrouted             dataset.py:402
                              storage.base for dataset
                              EEG2025r2mini: None -&gt;
                              s3://nemar/EEG2025r2mini
@@ -1902,7 +1904,7 @@ confirm <code class="docutils literal notranslate"><span class="pre">raw.info[&q
 <p>See <a class="reference internal" href="../../../../references.html"><span class="doc">References</span></a> for the centralized bibliography of papers
 cited above. Add or amend an entry once in
 <code class="file docutils literal notranslate"><span class="pre">docs/source/refs.bib</span></code>; every tutorial inherits the update.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 8.186 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 8.401 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-auto-examples-tutorials-70-transfer-foundation-plot-70-challenge-dataset-basics-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/eegdash/EEGDash/main?urlpath=lab/tree/notebooks/generated/auto_examples/tutorials/70_transfer_foundation/plot_70_challenge_dataset_basics.ipynb"><img alt="Launch binder" src="../../../../_images/binder_badge_logo11.svg" style="width: 150px;" />

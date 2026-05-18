@@ -115,6 +115,8 @@
 
   
 
+  
+
   <!-- Google Tag Manager — deferred to DOMContentLoaded so the GTM
        bootstrap no longer blocks first-paint or the Sphinx search-index
        load. Functionally equivalent to the inline snippet below but
@@ -679,14 +681,14 @@ annotation extras.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.hbn.windows.</span></span><span class="sig-name descname"><span class="pre">build_trial_table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">events_df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v3.0.2)"><span class="pre">DataFrame</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v3.0.2)"><span class="pre">DataFrame</span></a></span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/hbn/windows.py#L23-L118"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">eegdash.hbn.windows.</span></span><span class="sig-name descname"><span class="pre">build_trial_table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">events_df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v3.0.3)"><span class="pre">DataFrame</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v3.0.3)"><span class="pre">DataFrame</span></a></span></span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/hbn/windows.py#L23-L118"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Build a table of contrast trials from an events DataFrame.</p>
 <p>This function processes a DataFrame of events (typically from a BIDS
 <cite>events.tsv</cite> file) to identify contrast trials and extract relevant
 metrics like stimulus onset, response onset, and reaction times.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>events_df</strong> (<a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v3.0.2)"><em>pandas.DataFrame</em></a>) – A DataFrame containing event information, with at least “onset” and
+<dd class="field-odd"><p><strong>events_df</strong> (<a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v3.0.3)"><em>pandas.DataFrame</em></a>) – A DataFrame containing event information, with at least “onset” and
 “value” columns.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -694,7 +696,7 @@ metrics like stimulus onset, response onset, and reaction times.</p>
 columns for onsets, reaction times, and response correctness.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v3.0.2)">pandas.DataFrame</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v3.0.3)">pandas.DataFrame</a></p>
 </dd>
 </dl>
 </dd></dl>

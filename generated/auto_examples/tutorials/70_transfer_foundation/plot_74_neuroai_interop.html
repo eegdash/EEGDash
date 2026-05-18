@@ -117,6 +117,8 @@
 
   
 
+  
+
   <!-- Google Tag Manager — deferred to DOMContentLoaded so the GTM
        bootstrap no longer blocks first-paint or the Sphinx search-index
        load. Functionally equivalent to the inline snippet below but
@@ -618,7 +620,7 @@ NeuralBench) and state where EEGDash plugs into the chain.</p></li>
 <code class="docutils literal notranslate"><span class="pre">neuralfetch.Study.run()</span></code> returns.</p></li>
 <li><p>Configure <code class="xref py py-class docutils literal notranslate"><span class="pre">neuralset.Segmenter</span></code> with a <code class="docutils literal notranslate"><span class="pre">trigger_query</span></code> and
 an <code class="docutils literal notranslate"><span class="pre">EegExtractor</span></code>, then read one batch from
-<a class="reference external" href="https://docs.pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader" title="(in PyTorch v2.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.utils.data.DataLoader</span></code></a>.</p></li>
+<a class="reference external" href="https://docs.pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader" title="(in PyTorch v2.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.utils.data.DataLoader</span></code></a>.</p></li>
 <li><p>Read the 3-panel figure and pick the right downstream tutorial for
 each NeuroAI module.</p></li>
 </ul>
@@ -691,7 +693,7 @@ one verb and forwards a clean handoff to the next:</p>
 <li><p><strong>Discovery vs tensorisation are different jobs.</strong>
 <code class="xref py py-class docutils literal notranslate"><span class="pre">EEGDashDataset</span></code> and <code class="docutils literal notranslate"><span class="pre">neuralfetch.Study</span></code>
 discover and standardize; <code class="xref py py-class docutils literal notranslate"><span class="pre">neuralset.Segmenter</span></code> and the
-PyTorch <a class="reference external" href="https://docs.pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader" title="(in PyTorch v2.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataLoader</span></code></a> cut and batch. The
+PyTorch <a class="reference external" href="https://docs.pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader" title="(in PyTorch v2.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataLoader</span></code></a> cut and batch. The
 contracts are different on purpose: a discovery layer hides
 catalogue-specific quirks; a tensor layer hides MNE / NWB quirks.</p></li>
 <li><p><strong>EEGDash is the EEG specialist</strong> for the catalogue mesh.
@@ -700,7 +702,7 @@ discovery and reuses the S3 downloader for transfer; the same
 discovery API the rest of this gallery exercises also feeds the
 NeuroAI stack.</p></li>
 <li><p><strong>The events DataFrame is the bus.</strong> NeuralFetch’s
-<code class="docutils literal notranslate"><span class="pre">Study.run()</span></code> returns a flat <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v3.0.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a> with at
+<code class="docutils literal notranslate"><span class="pre">Study.run()</span></code> returns a flat <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v3.0.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a> with at
 least <code class="docutils literal notranslate"><span class="pre">start</span></code>, <code class="docutils literal notranslate"><span class="pre">duration</span></code>, <code class="docutils literal notranslate"><span class="pre">type</span></code>, and <code class="docutils literal notranslate"><span class="pre">timeline</span></code> columns;
 NeuralSet’s <code class="docutils literal notranslate"><span class="pre">Segmenter</span></code> consumes that frame. Knowing the schema
 lets you swap any dataset on the discovery side without touching
@@ -855,7 +857,7 @@ entities forward to every later stage <span class="bibtex-citation" id="id4">[<a
 <span class="p">)</span><span class="o">.</span><span class="n">to_frame</span><span class="p">()</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[05/10/26 19:39:31] WARNING  File not found on S3, skipping:   downloader.py:163
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[05/18/26 08:41:13] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds002718/sub-0
                              02/eeg/sub-002_task-FaceRecogniti
                              on_eeg.fdt
@@ -1249,17 +1251,17 @@ specific events) or <code class="docutils literal notranslate"><span class="pre"
 <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">seg_card</span></a>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2026-05-10 19:39:33 - WARNING - neuralset.segments:665 - 403 segments out of 1495 did not contain valid events for event type &lt;class &#39;neuralset.events.etypes.Stimulus&#39;&gt;
-[05/10/26 19:39:33] WARNING  403 segments out of 1495 did not    segments.py:665
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2026-05-18 08:41:15 - WARNING - neuralset.segments:665 - 403 segments out of 1495 did not contain valid events for event type &lt;class &#39;neuralset.events.etypes.Stimulus&#39;&gt;
+[05/18/26 08:41:15] WARNING  403 segments out of 1495 did not    segments.py:665
                              contain valid events for event type
                              &lt;class
                              &#39;neuralset.events.etypes.Stimulus&#39;&gt;
-2026-05-10 19:39:33 - INFO - neuralset.dataloader:618 - 403 segments are missing events of type Stimulus. They will be populated with default missing values through prepare.
+2026-05-18 08:41:15 - INFO - neuralset.dataloader:618 - 403 segments are missing events of type Stimulus. They will be populated with default missing values through prepare.
                     INFO     403 segments are missing events   dataloader.py:618
                              of type Stimulus. They will be
                              populated with default missing
                              values through prepare.
-2026-05-10 19:39:33 - INFO - neuralset.dataloader:625 - Removing 403 segments out of 1495
+2026-05-18 08:41:15 - INFO - neuralset.dataloader:625 - Removing 403 segments out of 1495
                     INFO     Removing 403 segments out of 1495 dataloader.py:625
 </pre></div>
 </div>
@@ -1322,7 +1324,7 @@ batch axis NeuralSet always prepends).</p>
 <h2>Step 5. Wrap the segments in a PyTorch DataLoader<a class="headerlink" href="#step-5-wrap-the-segments-in-a-pytorch-dataloader" title="Link to this heading">#</a></h2>
 <p>The segment dataset exposes <code class="docutils literal notranslate"><span class="pre">__len__</span></code> and <code class="docutils literal notranslate"><span class="pre">__getitem__</span></code> plus a
 <code class="docutils literal notranslate"><span class="pre">collate_fn</span></code> that knows how to stack the dict-of-tensors layout
-Segmenter emits. The <a class="reference external" href="https://docs.pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader" title="(in PyTorch v2.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataLoader</span></code></a> call
+Segmenter emits. The <a class="reference external" href="https://docs.pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader" title="(in PyTorch v2.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataLoader</span></code></a> call
 below is byte-identical to the one in
 <a class="reference internal" href="../00_start_here/plot_02_dataset_to_dataloader.html"><span class="doc">EEG recording to PyTorch DataLoader</span></a>
 except for the <code class="docutils literal notranslate"><span class="pre">collate_fn</span></code> argument, which is the only line that
@@ -1623,7 +1625,7 @@ EEG) and re-run. The events schema is unchanged.</p></li>
 <p>See <a class="reference internal" href="../../../../references.html"><span class="doc">References</span></a> for the centralized bibliography of papers
 cited above. Add or amend an entry once in
 <code class="file docutils literal notranslate"><span class="pre">docs/source/refs.bib</span></code>; every tutorial inherits the update.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 3.652 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 3.679 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-auto-examples-tutorials-70-transfer-foundation-plot-74-neuroai-interop-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/eegdash/EEGDash/main?urlpath=lab/tree/notebooks/generated/auto_examples/tutorials/70_transfer_foundation/plot_74_neuroai_interop.ipynb"><img alt="Launch binder" src="../../../../_images/binder_badge_logo11.svg" style="width: 150px;" />

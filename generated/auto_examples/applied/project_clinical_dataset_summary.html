@@ -117,6 +117,8 @@
 
   
 
+  
+
   <!-- Google Tag Manager — deferred to DOMContentLoaded so the GTM
        bootstrap no longer blocks first-paint or the Sphinx search-index
        load. Functionally equivalent to the inline snippet below but
@@ -594,7 +596,7 @@ without downloading any signal bytes, and answer four questions a project
 plan needs answered before any modelling. The pool is served via
 <a class="reference external" href="https://nemar.org">NEMAR</a> <span class="bibtex-citation" id="id2">[<a class="reference internal" href="../../../references.html#id6" title="Arnaud Delorme, Dung Truong, Choonhan Youn, Subhashini Sivagnanam, Claire Stirm, Kenneth Yoshimoto, Russell A Poldrack, Amitava Majumdar, and Scott Makeig. Nemar: an open access data, tools and compute resource operating on neuroelectromagnetic data. Database, 2022. doi:10.1093/database/baac096.">Delorme <em>et al.</em>, 2022</a>]</span>; the polished clinical
 workflow recipe follows Cisotto and Chicco 2024. The deliverable is one
-<a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v3.0.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a> with per-condition counts and one three-panel
+<a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v3.0.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a> with per-condition counts and one three-panel
 figure rendered from the live catalog numbers. Cohort imbalance, age
 confounds, recording-length mismatch, and channel-count drift are the
 # four dataset-level pitfalls that silently break clinical EEG decoders
@@ -690,7 +692,7 @@ ones the rest of the script leans on.</p>
 <section id="step-2-build-the-dataset-and-read-the-description-frame">
 <h2>Step 2. Build the dataset and read the description frame<a class="headerlink" href="#step-2-build-the-dataset-and-read-the-description-frame" title="Link to this heading">#</a></h2>
 <p><strong>Run.</strong> Building the dataset issues one catalog query and returns
-instantly. <code class="docutils literal notranslate"><span class="pre">ds.description</span></code> is a <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v3.0.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a> with one
+instantly. <code class="docutils literal notranslate"><span class="pre">ds.description</span></code> is a <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v3.0.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a> with one
 row per recording and the participants.tsv columns merged in.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">ds</span> <span class="o">=</span> <a href="../../../api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset" title="eegdash.EEGDashDataset" class="sphx-glr-backref-module-eegdash sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">EEGDashDataset</span></a><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="n">DATASET</span><span class="p">,</span> <span class="n">cache_dir</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">cache_dir</span><span class="p">))</span>
 <span class="n">desc</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">description</span>

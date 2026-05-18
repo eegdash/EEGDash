@@ -117,6 +117,8 @@
 
   
 
+  
+
   <!-- Google Tag Manager — deferred to DOMContentLoaded so the GTM
        bootstrap no longer blocks first-paint or the Sphinx search-index
        load. Functionally equivalent to the inline snippet below but
@@ -618,7 +620,7 @@ Keywords: transfer-learning, fine-tuning, pretrained</p>
 <li><p>Train a small Braindecode encoder on a synthetic source task and save its weights.</p></li>
 <li><p>Build a leakage-safe cross-subject split with <code class="docutils literal notranslate"><span class="pre">assert_no_leakage</span></code>.</p></li>
 <li><p>Configure three fine-tuning regimes and verify <code class="docutils literal notranslate"><span class="pre">frozen</span> <span class="pre">+</span> <span class="pre">trainable</span> <span class="pre">==</span> <span class="pre">total</span></code>.</p></li>
-<li><p>Compare regimes with <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.optim.AdamW.html#torch.optim.AdamW" title="(in PyTorch v2.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.optim.AdamW</span></code></a> across seeds and read the 3-panel figure.</p></li>
+<li><p>Compare regimes with <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.optim.AdamW.html#torch.optim.AdamW" title="(in PyTorch v2.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.optim.AdamW</span></code></a> across seeds and read the 3-panel figure.</p></li>
 </ul>
 </section>
 <section id="validate-your-result">
@@ -672,7 +674,7 @@ curves byte-stable across reruns (E3.21).</p>
 <a href="https://docs.pytorch.org/docs/stable/generated/torch.manual_seed.html#torch.manual_seed" title="torch.manual_seed" class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function"><span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span></a><span class="p">(</span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">SEED</span></a><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;torch._C.Generator object at 0x7f9a67ff8930&gt;
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;torch._C.Generator object at 0x7ff58174d6d0&gt;
 </pre></div>
 </div>
 </section>
@@ -1118,7 +1120,7 @@ faster?</p></li>
 <p>See <a class="reference internal" href="../../../../references.html"><span class="doc">References</span></a> for the centralized bibliography of papers
 cited above. Add or amend an entry once in
 <code class="file docutils literal notranslate"><span class="pre">docs/source/refs.bib</span></code>; every tutorial inherits the update.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 1.876 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 1.920 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-auto-examples-tutorials-70-transfer-foundation-plot-73-finetune-pretrained-model-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/eegdash/EEGDash/main?urlpath=lab/tree/notebooks/generated/auto_examples/tutorials/70_transfer_foundation/plot_73_finetune_pretrained_model.ipynb"><img alt="Launch binder" src="../../../../_images/binder_badge_logo11.svg" style="width: 150px;" />

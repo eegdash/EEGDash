@@ -6,7 +6,6 @@ import inspect
 import json
 import os
 import re
-import shutil
 import sys
 import urllib.request
 from collections import Counter, defaultdict
@@ -67,6 +66,7 @@ extensions = [
     "assert_dataset_table",
     "sitemap_canonical",
     "auto_examples_index",
+    "copy_dataset_summary",
 ]
 
 # Centralized bibliography (see docs/source/refs.bib + references.rst).
@@ -3432,25 +3432,6 @@ _DATASET_COUNTER_PLACEHOLDERS = {
 }
 
 
-def _copy_dataset_summary(app, exception) -> None:
-    if exception is not None or not getattr(app, "builder", None):
-        return
-
-    csv_path = Path(importlib.import_module("eegdash.dataset").__file__).with_name(
-        "dataset_summary.csv"
-    )
-    if not csv_path.exists():
-        LOGGER.warning("dataset_summary.csv not found; skipping counter data copy.")
-        return
-
-    static_dir = Path(app.outdir) / "_static"
-    try:
-        static_dir.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(csv_path, static_dir / "dataset_summary.csv")
-    except OSError as exc:
-        LOGGER.warning("Unable to copy dataset_summary.csv to _static: %s", exc)
-
-
 def _inject_counter_values(app, docname, source) -> None:
     if docname != "dataset_summary":
         return
@@ -4052,7 +4033,6 @@ def setup(app):
         os.makedirs(backreferences_dir)
 
     app.connect("builder-inited", _generate_dataset_docs)
-    app.connect("build-finished", _copy_dataset_summary)
     app.connect("source-read", _inject_counter_values)
     app.connect("html-page-context", _inject_seo_context)
     # Must run last — see docstring on ``_cap_descriptions_hook``.

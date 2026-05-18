@@ -1,0 +1,235 @@
+/* Dataset File Explorer — page-gated to per-dataset doc pages via
+ * layout.html. The widget markup is emitted by the `dataset-explorer`
+ * Sphinx directive (see `_extensions/dataset_explorer.py`); this stylesheet
+ * + `_static/js/dataset-explorer.js` hydrate it. */
+
+.eegdash-explorer {
+  --ee-mono: "JetBrains Mono", "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --ee-text: var(--pst-color-text-base, #0f172a);
+  --ee-muted: var(--pst-color-text-muted, #64748b);
+  --ee-border: var(--pst-color-border, #e2e8f0);
+  --ee-surface: var(--pst-color-surface, #fafbfc);
+  --ee-surface-2: var(--pst-color-on-surface, #f1f5f9);
+  --ee-accent: var(--pst-color-primary, #0f766e);
+  --ee-data: #0369a1;
+  --ee-guide: rgba(100, 116, 139, 0.18);
+  --ee-row-h: 26px;
+  --ee-indent: 18px;
+  font-family: var(--pst-font-family-base, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif);
+  max-width: 100%;
+  padding: 18px 0 4px;
+  color: var(--ee-text);
+}
+
+/* Header bar: search + stats */
+.eegdash-explorer .ee-bar {
+  display: grid;
+  grid-template-columns: minmax(180px, 1fr) auto;
+  gap: 18px;
+  align-items: center;
+  padding: 10px 14px;
+  background: var(--ee-surface);
+  border: 1px solid var(--ee-border);
+  border-radius: 6px 6px 0 0;
+  border-bottom: none;
+}
+.eegdash-explorer .ee-search {
+  width: 100%;
+  padding: 7px 10px 7px 30px;
+  border: 1px solid var(--ee-border);
+  border-radius: 4px;
+  background: var(--pst-color-on-background, #fff)
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round'><circle cx='11' cy='11' r='7'/><path d='M21 21l-4.3-4.3'/></svg>")
+    10px center / 13px no-repeat;
+  font: inherit;
+  color: inherit;
+  box-sizing: border-box;
+}
+.eegdash-explorer .ee-search:focus {
+  outline: 2px solid var(--ee-accent);
+  outline-offset: -1px;
+}
+.eegdash-explorer .ee-search:disabled { opacity: 0.55; }
+
+.eegdash-explorer .ee-stats {
+  display: flex;
+  gap: 22px;
+  font-family: var(--ee-mono);
+}
+.eegdash-explorer .ee-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1px;
+  line-height: 1;
+}
+.eegdash-explorer .ee-stat-label {
+  font-size: 9.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ee-muted);
+}
+.eegdash-explorer .ee-stat-val {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ee-text);
+  letter-spacing: -0.01em;
+}
+.eegdash-explorer .ee-stat-val .ee-badge { margin-right: 4px; vertical-align: 1px; }
+
+/* Tree viewport */
+.eegdash-explorer .ee-tree {
+  font-family: var(--ee-mono);
+  font-size: 12.5px;
+  line-height: var(--ee-row-h);
+  background: var(--pst-color-on-background, #fff);
+  border: 1px solid var(--ee-border);
+  border-radius: 0 0 6px 6px;
+  max-height: 560px;
+  overflow: auto;
+  padding: 6px 0;
+}
+.eegdash-explorer .ee-status {
+  padding: 24px 14px;
+  text-align: center;
+  font-family: var(--ee-mono);
+  font-size: 12px;
+  color: var(--ee-muted);
+}
+.eegdash-explorer .ee-error { color: #b45309; }
+
+/* Tree rows */
+.eegdash-explorer .ee-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: var(--ee-row-h);
+  padding-right: 14px;
+  padding-left: calc(10px + var(--ee-depth, 0) * var(--ee-indent));
+  cursor: default;
+  user-select: none;
+  position: relative;
+  white-space: nowrap;
+  border-left: 2px solid transparent;
+  /* Vertical indent guides — one faint rule per ancestor level. */
+  background-image: repeating-linear-gradient(
+    to right,
+    transparent 0,
+    transparent calc(var(--ee-indent) - 1px),
+    var(--ee-guide) calc(var(--ee-indent) - 1px),
+    var(--ee-guide) var(--ee-indent)
+  );
+  background-size: calc(max(var(--ee-depth, 0), 0) * var(--ee-indent)) 100%;
+  background-position: 10px 0;
+  background-repeat: no-repeat;
+}
+.eegdash-explorer .ee-row:hover { background-color: var(--ee-surface-2); }
+.eegdash-explorer .ee-row.ee-folder { cursor: pointer; }
+.eegdash-explorer .ee-row.ee-sidecar,
+.eegdash-explorer .ee-row.ee-rootfile { color: var(--ee-muted); }
+.eegdash-explorer .ee-row.ee-sidecar .ee-name,
+.eegdash-explorer .ee-row.ee-rootfile .ee-name { font-style: italic; }
+.eegdash-explorer .ee-row.ee-data .ee-name { color: var(--ee-text); }
+.eegdash-explorer .ee-row.ee-selected {
+  background-color: var(--ee-surface);
+  border-left-color: var(--ee-accent);
+}
+
+/* Glyphs: chevron for folders, dot markers for files */
+.eegdash-explorer .ee-chev {
+  flex-shrink: 0;
+  width: 11px;
+  font-size: 9px;
+  color: var(--ee-muted);
+  text-align: center;
+  transition: transform 0.12s ease;
+}
+.eegdash-explorer .ee-row.ee-folder.ee-open .ee-chev { transform: rotate(90deg); }
+.eegdash-explorer .ee-row:not(.ee-folder) .ee-chev { visibility: hidden; }
+.eegdash-explorer .ee-mark {
+  flex-shrink: 0;
+  width: 10px;
+  text-align: center;
+  font-size: 10px;
+  color: var(--ee-muted);
+}
+.eegdash-explorer .ee-row.ee-folder .ee-mark { color: var(--ee-data); }
+.eegdash-explorer .ee-row.ee-data .ee-mark { color: var(--ee-accent); }
+
+.eegdash-explorer .ee-name {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* `.ee-meta` (here) is the right-side column inside a row. The
+ * dataset-root file kind uses the distinct `.ee-rootfile` row class to
+ * avoid a class collision with this column. */
+.eegdash-explorer .ee-meta {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 10.5px;
+  color: var(--ee-muted);
+  letter-spacing: 0.02em;
+}
+
+/* Badges */
+.eegdash-explorer .ee-badge {
+  display: inline-block;
+  padding: 1px 7px;
+  border-radius: 3px;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-family: var(--ee-mono);
+  line-height: 1.6;
+}
+.eegdash-explorer .ee-eeg { background: #dbeafe; color: #1e40af; }
+.eegdash-explorer .ee-meg { background: #ede9fe; color: #5b21b6; }
+.eegdash-explorer .ee-ieeg { background: #fed7aa; color: #92400e; }
+.eegdash-explorer .ee-nirs { background: #dcfce7; color: #166534; }
+.eegdash-explorer .ee-emg { background: #fce7f3; color: #831843; }
+.eegdash-explorer .ee-tag {
+  background: transparent;
+  color: var(--ee-muted);
+  border: 1px solid var(--ee-border);
+  font-weight: 500;
+}
+
+/* Selection panel */
+.eegdash-explorer .ee-info {
+  margin-top: 14px;
+  padding: 14px 16px;
+  background: var(--ee-surface);
+  border: 1px solid var(--ee-border);
+  border-left: 3px solid var(--ee-accent);
+  border-radius: 4px;
+  font-size: 13px;
+}
+.eegdash-explorer .ee-info-title {
+  font-family: var(--ee-mono);
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ee-muted);
+  margin-bottom: 8px;
+}
+.eegdash-explorer .ee-info dl {
+  margin: 0;
+  display: grid;
+  grid-template-columns: minmax(120px, max-content) 1fr;
+  gap: 4px 16px;
+}
+.eegdash-explorer .ee-info dt {
+  font-weight: 600;
+  color: var(--ee-text);
+}
+.eegdash-explorer .ee-info dd {
+  margin: 0;
+  font-family: var(--ee-mono);
+  font-size: 12px;
+  color: var(--ee-muted);
+  word-break: break-all;
+}

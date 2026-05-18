@@ -2703,7 +2703,14 @@ def _format_explorer_section(name: str, context: Mapping[str, object]) -> str:
     ``DATASET_PAGE_TEMPLATE`` collapses cleanly for any pathological
     class name rather than failing the whole build.
     """
-    safe = (name or "").strip()
+    # The records collection stores dataset IDs in their original
+    # ingested casing (e.g. ``ds001849``), while ``name`` is the Python
+    # class identifier (e.g. ``DS001849``). The Mongo ``dataset`` filter
+    # is case-sensitive, so prefer the lowercased ``dataset_id`` already
+    # computed by the catalog row builder — falling back to ``name`` for
+    # rows that have no separate id (and would have matched it anyway).
+    candidate = str(context.get("dataset_id") or name or "")
+    safe = candidate.strip()
     if not safe or not _EXPLORER_DATASET_RE.match(safe):
         return ""
 

@@ -36,7 +36,7 @@ from table_tag_utils import _normalize_values, wrap_tags
 
 # Ensure eegdash package is importable (this script lives in docs/)
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from eegdash.dataset.registry import fetch_chart_data_from_api
+from eegdash.dataset.snapshot import DatasetSnapshot
 
 # Directories
 DOCS_DIR = Path(__file__).resolve().parent
@@ -864,9 +864,25 @@ def main_from_api(target_dir: str, database: str = DEFAULT_DATABASE, limit: int 
     BUILD_STATIC_DIR.mkdir(parents=True, exist_ok=True)
 
     print(f"Fetching chart data from API (database: {database})...")
-    df_raw, aggregations = fetch_chart_data_from_api(
-        API_BASE_URL, database, limit=limit
+    snapshot = DatasetSnapshot.build(
+        api_base=API_BASE_URL, database=database, limit=limit
     )
+    df_raw = snapshot.rows()
+    aggregations = snapshot.aggregations()
+
+    # Tagged provenance the validation plan's I8 invariant grep's for.
+    # Print to stdout so it shows up in the docs build log alongside
+    # the existing "Fetching ..." status lines.
+    print(
+        f"  DatasetSnapshot source={snapshot.source} "
+        f"dataset_count={snapshot.dataset_count} "
+        f"fetched_at={snapshot.fetched_at.isoformat()}"
+    )
+    if snapshot.api_errors:
+        print(
+            f"  (encountered {len(snapshot.api_errors)} fallback error(s); "
+            f"first: {snapshot.api_errors[0]})"
+        )
 
     if aggregations:
         print(

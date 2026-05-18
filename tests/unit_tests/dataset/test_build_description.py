@@ -16,8 +16,7 @@ from eegdash.dataset.dataset import EEGDashDataset
 class _FakeRaw:
     """Minimal stand-in for EEGDashRaw.
 
-    MagicMock cannot be used: BaseConcatDataset iterates mock.description
-    indefinitely (100 % CPU). This stub provides a real pd.Series and __len__.
+    This stub provides a real pd.Series and __len__.
     """
 
     def __init__(self, record, cache_dir=None, description=None, **kwargs):

@@ -63,6 +63,7 @@ extensions = [
     "sphinx_time_estimation",
     "sphinxcontrib.bibtex",
     "dataset_explorer",
+    "dataset_figure",
 ]
 
 # Centralized bibliography (see docs/source/refs.bib + references.rst).

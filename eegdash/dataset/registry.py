@@ -9,6 +9,7 @@ from typing import Any, Dict
 import pandas as pd
 
 from ..paths import get_default_cache_dir  # noqa: F401 — re-exported for legacy mocks
+from ._excluded import EXCLUDED_DATASETS  # noqa: F401 — re-exported for back-compat
 
 logger = logging.getLogger(__name__)
 
@@ -539,46 +540,10 @@ Examples
     return docstring
 
 
-# Datasets to explicitly ignore (synced with rules in 3_digest.py)
-EXCLUDED_DATASETS = {
-    "ABUDUKADI",
-    "ABUDUKADI_2",
-    "ABUDUKADI_3",
-    "ABUDUKADI_4",
-    "AILIJIANG",
-    "AILIJIANG_3",
-    "AILIJIANG_4",
-    "AILIJIANG_5",
-    "AILIJIANG_7",
-    "AILIJIANG_8",
-    "BAIHETI",
-    "BAIHETI_2",
-    "BAIHETI_3",
-    "BIAN_3",
-    "BIN_27",
-    "BLIX",
-    "BOJIN",
-    "BOUSSAGOL",
-    "AISHENG",
-    "ACHOLA",
-    "ANASHKIN",
-    "ANJUM",
-    "BARBIERI",
-    "BIN_8",
-    "BIN_9",
-    "BING_4",
-    "BING_8",
-    "BOWEN_4",
-    "AZIZAH",
-    "BAO",
-    "BAO-YOU",
-    "BAO_2",
-    "BENABBOU",
-    "BING",
-    "BOXIN",
-    "test",
-    "ds003380",
-}
+# ``EXCLUDED_DATASETS`` (datasets to explicitly ignore — synced with
+# rules in 3_digest.py) is imported at the top of this module from
+# :mod:`eegdash.dataset._excluded`. That leaf module is the single
+# source of truth shared with :mod:`eegdash.dataset.snapshot`.
 
 
 def fetch_datasets_from_api(

@@ -408,6 +408,76 @@ def test_package_csv_fallback_skips_disk_cache_write(tmp_path):
 
 
 # ---------------------------------------------------------------------------
+# EXCLUDED_DATASETS — single source of truth across registry / snapshot
+# ---------------------------------------------------------------------------
+
+
+def test_excluded_datasets_is_single_source_of_truth():
+    """``registry`` and ``snapshot`` must share the exact same set
+    object — the B1 refactor had drifted a snapshot-local copy that
+    silently became the only effective filter for the docs build.
+
+    Regression test for the P1 code-review finding: snapshot's 21-entry
+    subset was missing 20 entries from the registry's curated list AND
+    contained 4 entries (``AGUS``, ``ALI``, ``ALYTUS``, ``AMERICO``)
+    that the registry never excluded.
+    """
+    from eegdash.dataset._excluded import EXCLUDED_DATASETS as canonical
+    from eegdash.dataset.registry import EXCLUDED_DATASETS as via_registry
+    from eegdash.dataset.snapshot import EXCLUDED_DATASETS as via_snapshot
+
+    # Identity, not just equality — the whole point is that there is
+    # one set object in memory and both modules re-export it.
+    assert via_registry is canonical
+    assert via_snapshot is canonical
+    assert via_registry is via_snapshot
+
+
+def test_excluded_datasets_canonical_membership():
+    """Canonical content check: the 37-entry curated registry list.
+
+    Locks in:
+    - The size matches the pre-refactor production filter.
+    - Entries from each of the formerly-divergent groups (the long
+      ``ABUDUKADI_n`` / ``AILIJIANG_n`` / ``BAIHETI_n`` / etc.
+      families that the snapshot copy had dropped) are present.
+    - The four entries that should NEVER have been excluded (the
+      snapshot-only additions ``AGUS``, ``ALI``, ``ALYTUS``,
+      ``AMERICO``) are absent.
+    """
+    from eegdash.dataset._excluded import EXCLUDED_DATASETS
+
+    assert len(EXCLUDED_DATASETS) == 37, (
+        f"canonical filter size changed: {len(EXCLUDED_DATASETS)}; "
+        "if intentional, update this test alongside the change"
+    )
+
+    # Representative entries from each formerly-divergent family.
+    must_be_present = {
+        "BIAN_3",
+        "BOJIN",
+        "AISHENG",
+        "ABUDUKADI_2",
+        "AILIJIANG_3",
+        "BAIHETI",
+        "BLIX",
+        "BOUSSAGOL",
+        "ACHOLA",
+        "ANASHKIN",
+    }
+    missing = must_be_present - set(EXCLUDED_DATASETS)
+    assert not missing, f"canonical entries dropped: {sorted(missing)}"
+
+    # Entries that the snapshot copy had wrongly added — NEVER include.
+    must_be_absent = {"AGUS", "ALI", "ALYTUS", "AMERICO"}
+    accidental = must_be_absent & set(EXCLUDED_DATASETS)
+    assert not accidental, (
+        f"snapshot-only additions leaked into the canonical filter: "
+        f"{sorted(accidental)}"
+    )
+
+
+# ---------------------------------------------------------------------------
 # Optional: real-network smoke test (skipped by default)
 # ---------------------------------------------------------------------------
 

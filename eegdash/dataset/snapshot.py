@@ -44,6 +44,7 @@ from typing import Any, Literal, Mapping
 import pandas as pd
 
 from ..paths import get_default_cache_dir
+from ._excluded import EXCLUDED_DATASETS  # noqa: F401 — re-exported
 
 logger = logging.getLogger(__name__)
 
@@ -571,34 +572,12 @@ def _log_provenance(snapshot: "DatasetSnapshot") -> None:
 # ---------------------------------------------------------------------------
 
 
-# Hardcoded list of datasets to skip when registering. Kept in sync
-# with the canonical list in :mod:`eegdash.dataset.registry`. The
-# duplication is intentional — moving the constant out of registry
-# would change registry's import surface, and registry imports
-# snapshot reciprocally. Defensive dedupe.
-EXCLUDED_DATASETS = {
-    "ABUDUKADI",
-    "AGUS",
-    "ALI",
-    "ALYTUS",
-    "AMERICO",
-    "ANJUM",
-    "BARBIERI",
-    "BIN_8",
-    "BIN_9",
-    "BING_4",
-    "BING_8",
-    "BOWEN_4",
-    "AZIZAH",
-    "BAO",
-    "BAO-YOU",
-    "BAO_2",
-    "BENABBOU",
-    "BING",
-    "BOXIN",
-    "test",
-    "ds003380",
-}
+# ``EXCLUDED_DATASETS`` is imported at the top of this module from
+# :mod:`eegdash.dataset._excluded`. Both this module and
+# :mod:`eegdash.dataset.registry` read from that single source of
+# truth — a B1-era snapshot-local copy had silently drifted 16 entries
+# away from the registry's curated list and become the only filter
+# effectively running in the docs build.
 
 
 def _human_readable_size(num_bytes: int | float | None) -> str:

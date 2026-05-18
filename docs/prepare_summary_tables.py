@@ -317,28 +317,54 @@ def process_chart_results(results: list[tuple[str, Path | None, str | None]]) ->
 # =============================================================================
 
 
-def save_summary_stats(df_raw: pd.DataFrame) -> None:
-    """Calculate and save summary stats for the documentation cards."""
-    unique_modalities = set()
-    col = (
-        "record_modality" if "record_modality" in df_raw.columns else "record modality"
-    )
-    if col in df_raw.columns:
-        for m in df_raw[col].dropna():
-            unique_modalities.update(_normalize_values(m))
-    unique_modalities = {m.strip().lower() for m in unique_modalities if m.strip()}
+def save_summary_stats(df_raw: pd.DataFrame, aggregations: dict | None = None) -> None:
+    """Calculate and save summary stats for the documentation cards.
 
-    n_subj_col = "n_subjects" if "n_subjects" in df_raw.columns else "subjects"
-    subjects_total = int(
-        pd.to_numeric(df_raw.get(n_subj_col, 0), errors="coerce").sum()
-    )
+    Prefers the pre-computed ``aggregations`` block returned by the
+    ``/datasets/chart-data`` endpoint as the source of truth for the
+    per-column counts (datasets, subjects, recording files, sources,
+    modalities). The server computes these in a single MongoDB pass; the
+    client recomputation that used to live here produced identical
+    numbers (verified via parity check) but added a second source of
+    truth. ``duration_hours`` is not exposed in the server ``totals``
+    block today, so it is still summed client-side from the dataframe.
 
-    n_rec_col = "n_records" if "n_records" in df_raw.columns else "records"
-    recording_total = int(
-        pd.to_numeric(df_raw.get(n_rec_col, 0), errors="coerce").sum()
-    )
+    When ``aggregations`` is missing keys (e.g. the chart-data endpoint
+    fell back to ``/datasets/summary`` and returned ``{}``), the
+    function falls back to the original client-side computation per
+    field so the build never silently emits 0 for counts.
+    """
+    aggregations = aggregations or {}
+    totals = aggregations.get("totals") or {}
+    source_counts = aggregations.get("source_counts") or {}
+    modality_counts = aggregations.get("modality_counts") or {}
 
-    # Duration may appear as total_duration_s (seconds) or duration_hours_total (hours)
+    # datasets_total: prefer server. Client fallback is len(df_raw),
+    # which the parity check confirmed equals totals.datasets.
+    datasets_total = totals.get("datasets")
+    if datasets_total is None:
+        datasets_total = len(df_raw)
+
+    # subjects_total: prefer server. Client fallback is sum of n_subjects.
+    subjects_total = totals.get("subjects")
+    if subjects_total is None:
+        n_subj_col = "n_subjects" if "n_subjects" in df_raw.columns else "subjects"
+        subjects_total = int(
+            pd.to_numeric(df_raw.get(n_subj_col, 0), errors="coerce").sum()
+        )
+
+    # recording_total: prefer server. Server exposes this as totals.files
+    # (one entry per recorded file); the client equivalent was a sum over
+    # the n_records column, which the parity check confirmed matches.
+    recording_total = totals.get("files")
+    if recording_total is None:
+        n_rec_col = "n_records" if "n_records" in df_raw.columns else "records"
+        recording_total = int(
+            pd.to_numeric(df_raw.get(n_rec_col, 0), errors="coerce").sum()
+        )
+
+    # duration_hours: not in server totals; keep client-side. May appear
+    # as total_duration_s (seconds) or duration_hours_total (hours).
     if "duration_hours_total" in df_raw.columns:
         duration_hours = int(
             pd.to_numeric(df_raw["duration_hours_total"], errors="coerce").sum()
@@ -350,15 +376,41 @@ def save_summary_stats(df_raw: pd.DataFrame) -> None:
     else:
         duration_hours = 0
 
+    # modalities_total: prefer server (one canonical bucket per recording
+    # modality, e.g. EEG/MEG/IEEG/FNIRS/EMG). The client fallback
+    # tokenizes record_modality strings and lowercases — verified to
+    # yield the same set size.
+    if modality_counts:
+        modalities_total = len(modality_counts)
+    else:
+        unique_modalities: set[str] = set()
+        col = (
+            "record_modality"
+            if "record_modality" in df_raw.columns
+            else "record modality"
+        )
+        if col in df_raw.columns:
+            for m in df_raw[col].dropna():
+                unique_modalities.update(_normalize_values(m))
+        unique_modalities = {m.strip().lower() for m in unique_modalities if m.strip()}
+        modalities_total = len(unique_modalities)
+
+    # sources_total: prefer server source_counts dict size. Client
+    # fallback is df['source'].nunique().
+    if source_counts:
+        sources_total = len(source_counts)
+    elif "source" in df_raw.columns:
+        sources_total = int(df_raw["source"].nunique())
+    else:
+        sources_total = 0
+
     summary_stats = {
-        "datasets_total": len(df_raw),
-        "subjects_total": subjects_total,
-        "recording_total": recording_total,
-        "duration_hours": duration_hours,
-        "modalities_total": len(unique_modalities),
-        "sources_total": df_raw["source"].nunique()
-        if "source" in df_raw.columns
-        else 0,
+        "datasets_total": int(datasets_total),
+        "subjects_total": int(subjects_total),
+        "recording_total": int(recording_total),
+        "duration_hours": int(duration_hours),
+        "modalities_total": int(modalities_total),
+        "sources_total": int(sources_total),
     }
 
     stats_path = STATIC_DATASET_DIR / "summary_stats.json"
@@ -857,8 +909,13 @@ def main_from_api(target_dir: str, database: str = DEFAULT_DATABASE, limit: int 
     chart_results = generate_charts_parallel(df_raw, target_dir, x_var="subjects")
     process_chart_results(chart_results)
 
-    # Save summary stats
-    save_summary_stats(df_raw)
+    # Save summary stats — feed in the server-side aggregations block so
+    # the per-column counts (datasets / subjects / recording / sources /
+    # modalities) come from MongoDB's single-pass aggregation rather
+    # than a second-source-of-truth recomputation over the dataframe.
+    # Falls back to client-side computation when aggregations is empty
+    # (chart-data 404 path).
+    save_summary_stats(df_raw, aggregations=aggregations)
 
     # Generate search index for fuzzy autocomplete
     generate_search_index(df_raw)

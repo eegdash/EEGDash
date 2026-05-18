@@ -478,6 +478,123 @@ def test_excluded_datasets_canonical_membership():
 
 
 # ---------------------------------------------------------------------------
+# CI gate: check_snapshot_health.evaluate_snapshot
+# ---------------------------------------------------------------------------
+
+
+def _load_check_snapshot_health():
+    """Load ``scripts/validation/check_snapshot_health.py`` as a module.
+
+    The script lives outside the importable package tree (``scripts/``
+    has no ``__init__.py`` on purpose: it's a CLI directory, not a
+    library). For tests we load the file directly via ``importlib``
+    rather than mutating ``sys.path`` globally.
+    """
+    import importlib.util
+
+    repo_root = Path(__file__).resolve().parents[1]
+    script_path = repo_root / "scripts" / "validation" / "check_snapshot_health.py"
+    spec = importlib.util.spec_from_file_location(
+        "check_snapshot_health_under_test", script_path
+    )
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def _gate_snapshot(*, source="live", dataset_count=1000, api_errors=()):
+    """Build a minimal snapshot with the provenance flags the gate
+    reads, without hitting the build/fetch path.
+
+    Only the four attributes ``evaluate_snapshot`` consults are
+    populated; the rest of the object is left at its constructor
+    defaults.
+    """
+    rows = pd.DataFrame([{"dataset": f"ds_{i}"} for i in range(dataset_count)])
+    return DatasetSnapshot(
+        rows=rows,
+        aggregations={},
+        montages={},
+        source=source,
+        fetched_at=datetime.now(timezone.utc),
+        api_errors=list(api_errors),
+    )
+
+
+def test_ci_gate_passes_clean_live_snapshot():
+    """Source=live, count over threshold, api_errors empty → OK."""
+    module = _load_check_snapshot_health()
+
+    snap = _gate_snapshot(source="live", dataset_count=800, api_errors=[])
+    assert module.evaluate_snapshot(snap, min_count=700) == []
+
+
+def test_ci_gate_fails_on_fallback_source():
+    """A cached snapshot is degraded, even with a full row count."""
+    module = _load_check_snapshot_health()
+
+    snap = _gate_snapshot(source="cached", dataset_count=900, api_errors=[])
+    failures = module.evaluate_snapshot(snap, min_count=700)
+    assert any("source" in msg for msg in failures), failures
+
+
+def test_ci_gate_fails_on_low_count():
+    """Row count at or below the floor must fail the gate."""
+    module = _load_check_snapshot_health()
+
+    snap = _gate_snapshot(source="live", dataset_count=700, api_errors=[])
+    failures = module.evaluate_snapshot(snap, min_count=700)
+    assert any("dataset_count" in msg for msg in failures), failures
+
+
+def test_ci_gate_fails_on_partial_degradation_api_errors():
+    """The motivating regression: chart-data dead, summary alive.
+
+    ``_build_uncached`` records the chart-data failure on
+    ``api_errors`` and then tags the snapshot ``source="live"``
+    because the summary endpoint saved the day. The pre-fix gate
+    looked only at ``source`` and ``dataset_count`` and let this
+    through — losing the aggregations block silently on the docs
+    site. The fixed gate catches it.
+    """
+    module = _load_check_snapshot_health()
+
+    snap = _gate_snapshot(
+        source="live",
+        dataset_count=900,
+        api_errors=[
+            "chart-data 404 at https://api.example/db/datasets/chart-data; "
+            "trying summary"
+        ],
+    )
+    failures = module.evaluate_snapshot(snap, min_count=700)
+    assert any("api_errors" in msg for msg in failures), (
+        f"partial degradation did not trip the gate; failures={failures}"
+    )
+
+
+def test_ci_gate_api_errors_ignored_on_fallback_source():
+    """When the snapshot has already fallen back, ``api_errors`` will
+    obviously be populated (every fallback path appends to it). The
+    source-tag check has already failed, so we should not double-count
+    the same degradation. This locks in that ``api_errors`` only
+    contributes a *new* failure when ``source == "live"``.
+    """
+    module = _load_check_snapshot_health()
+
+    snap = _gate_snapshot(
+        source="package-csv",
+        dataset_count=900,
+        api_errors=["chart-data error at ...", "summary error at ..."],
+    )
+    failures = module.evaluate_snapshot(snap, min_count=700)
+    # Exactly one failure: the source-tag failure. No api_errors line.
+    assert len(failures) == 1, failures
+    assert "source" in failures[0]
+
+
+# ---------------------------------------------------------------------------
 # Optional: real-network smoke test (skipped by default)
 # ---------------------------------------------------------------------------
 

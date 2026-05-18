@@ -424,8 +424,8 @@ def test_load_roundtrip(tmp_path):
 
 
 def test_montage_returns_none_when_absent():
-    """No montages are populated today (A3 territory). ``montage()``
-    must return ``None`` rather than raising for any dataset id.
+    """``montage()`` must return ``None`` rather than raising for an
+    unknown id, an empty id, or a snapshot that never received montages.
     """
     snapshot = DatasetSnapshot(
         rows=pd.DataFrame([{"dataset": "ds_montage"}]),
@@ -439,8 +439,9 @@ def test_montage_returns_none_when_absent():
 
 
 def test_montage_returns_data_when_present():
-    """When A3 ships, montages will land in the chart-data response;
-    surface them through ``montage()`` keyed by dataset_id.
+    """When chart-data is fetched with ``?include=montages``, the
+    montages land on the snapshot; surface them through ``montage()``
+    keyed by dataset_id.
     """
     snapshot = DatasetSnapshot(
         rows=pd.DataFrame([{"dataset": "ds_montage"}]),
@@ -455,6 +456,196 @@ def test_montage_returns_data_when_present():
     # Returned value is a copy — mutations don't leak back to the cache.
     montage["mutated"] = True
     assert "mutated" not in snapshot.montage("ds_montage")
+
+
+def test_montage_lookup_is_case_insensitive():
+    """Consumer paths sometimes lowercase the dataset id before
+    lookup (the dataset_page section does); other consumers pass it
+    through unchanged. Both must hit the same montage row.
+    """
+    snapshot = DatasetSnapshot(
+        rows=pd.DataFrame([{"dataset": "DS001785"}]),
+        aggregations={},
+        # Snapshot stores keys lowercased — the standard convention from
+        # ``_montages_from_chart_data``.
+        montages={"ds001785": {"hash": "abc", "n_channels": 63}},
+        source="live",
+        fetched_at=datetime.now(timezone.utc),
+    )
+    assert snapshot.montage("ds001785") == {"hash": "abc", "n_channels": 63}
+    assert snapshot.montage("DS001785") == {"hash": "abc", "n_channels": 63}
+
+
+def test_chart_data_request_includes_montages_param():
+    """The chart-data URL must carry ``?include=montages`` so the server
+    joins the top per-dataset montage onto every row in a single
+    round-trip (arch #5).
+    """
+    seen_urls: list[str] = []
+
+    def capture_urlopen(url, *_, **__):
+        # ``urlopen`` can take a string OR a Request; normalize both.
+        url_str = url if isinstance(url, str) else url.get_full_url()
+        seen_urls.append(url_str)
+        if "datasets/chart-data" in url_str:
+            return _make_urlopen_response(_chart_data_payload("ds_url_check"))
+        if "build-manifest" in url_str:
+            return _make_urlopen_response(_server_manifest(dataset_count=1))
+        raise AssertionError(f"unexpected URL: {url_str}")
+
+    with patch("urllib.request.urlopen", side_effect=capture_urlopen):
+        DatasetSnapshot.build(
+            api_base="https://stub.example", database="urlshard", limit=42
+        )
+
+    chart_urls = [u for u in seen_urls if "datasets/chart-data" in u]
+    assert chart_urls, f"chart-data was never requested; saw {seen_urls}"
+    assert "include=montages" in chart_urls[0], (
+        f"chart-data request missing include=montages: {chart_urls[0]}"
+    )
+    assert "limit=42" in chart_urls[0]
+
+
+def test_snapshot_populates_montages_when_included():
+    """Stub chart-data with montage objects on a couple of datasets;
+    ``snapshot.montage(dataset_id)`` must return the projected dict.
+
+    The projection layers viewer-friendly aliases (``label``,
+    ``n_channels``, ``montage_id``) on top of the registry doc — kept
+    backward-compatible with the retired build_electrode_layouts.py
+    output so the consumer is a no-op rename.
+    """
+    payload = _chart_data_payload("ds001785")
+    payload["datasets"][0]["montage"] = {
+        "hash": "42b9e8daf4ff0e6d",
+        "subject_count": 54,
+        "modality": "eeg",
+        "n_sensors": 63,
+        "space_declared": "CapTrak",
+        "units_declared": "mm",
+        "channel_names": ["AF3", "AF4", "Cz"],
+    }
+    # Second dataset omits the montage — it must NOT crash the parser
+    # and must NOT appear in the resulting map (the "no scalp layout
+    # indexed" placeholder is the correct downstream rendering).
+    payload["datasets"].append(
+        {
+            "dataset_id": "ds_no_montage",
+            "name": "no-montage",
+            "demographics": {"subjects_count": 1},
+            "total_files": 1,
+            "tasks": ["t"],
+            "recording_modality": ["eeg"],
+            "tags": {},
+            "montage": None,
+        }
+    )
+
+    side_effect = _routing_urlopen(
+        {
+            "datasets/chart-data": payload,
+            "build-manifest": _server_manifest(dataset_count=2),
+        }
+    )
+
+    with patch("urllib.request.urlopen", side_effect=side_effect):
+        snapshot = DatasetSnapshot.build(
+            api_base="https://stub.example", database="montageshard"
+        )
+
+    assert snapshot.source == "live"
+
+    mont = snapshot.montage("ds001785")
+    assert mont is not None
+    assert mont["modality"] == "eeg"
+    assert mont["n_sensors"] == 63
+    assert mont["n_channels"] == 63  # viewer-friendly alias
+    assert mont["hash"] == "42b9e8daf4ff0e6d"
+    assert mont["montage_id"] == "42b9e8daf4ff0e6d"  # alias
+    assert mont["label"] == "EEG · 63 sensors"
+    assert mont["space_declared"] == "CapTrak"
+    assert mont["channel_names"] == ["AF3", "AF4", "Cz"]
+
+    # Dataset without a montage must not appear in the map.
+    assert snapshot.montage("ds_no_montage") is None
+
+
+def test_snapshot_montages_persist_through_disk_cache(tmp_path):
+    """A live build writes a montages sidecar next to the parquet
+    rows; a subsequent ``cached`` resolution rehydrates it so the
+    docs build doesn't lose montage data the moment the API blips.
+    """
+    payload = _chart_data_payload("ds_persisted")
+    payload["datasets"][0]["montage"] = {
+        "hash": "deadbeef00000000",
+        "modality": "eeg",
+        "n_sensors": 32,
+        "channel_names": ["A1"],
+    }
+
+    side_effect = _routing_urlopen(
+        {
+            "datasets/chart-data": payload,
+            "build-manifest": _server_manifest(dataset_count=1),
+        }
+    )
+
+    with patch("urllib.request.urlopen", side_effect=side_effect):
+        primed = DatasetSnapshot.build(
+            api_base="https://stub.example", database="persistshard"
+        )
+    assert primed.source == "live"
+    assert primed.montage("ds_persisted") is not None
+
+    # Sidecar is on disk.
+    sidecar = snapshot_mod._montages_sidecar_path("persistshard")
+    assert sidecar.exists()
+
+    # Force the cached path: drop the in-memory cache and fail the
+    # network. The cached snapshot must still serve the montage.
+    snapshot_mod._reset_instance_cache_for_testing()
+    with patch(
+        "urllib.request.urlopen",
+        side_effect=urllib.error.URLError("network unreachable"),
+    ):
+        cached = DatasetSnapshot.build(
+            api_base="https://stub.example", database="persistshard"
+        )
+
+    assert cached.source == "cached"
+    rehydrated = cached.montage("ds_persisted")
+    assert rehydrated is not None
+    assert rehydrated["hash"] == "deadbeef00000000"
+    assert rehydrated["n_channels"] == 32
+
+
+def test_snapshot_montages_empty_when_summary_fallback_fires():
+    """When chart-data is unavailable and the snapshot falls back to
+    ``/datasets/summary`` (which has no montage data), ``montage()``
+    must return ``None`` for every dataset rather than raise.
+    """
+
+    def urlopen_side_effect(url, *_, **__):
+        url_str = url if isinstance(url, str) else url.get_full_url()
+        if "datasets/chart-data" in url_str:
+            raise urllib.error.HTTPError(url_str, 404, "no chart-data", {}, None)
+        if "datasets/summary" in url_str:
+            return _make_urlopen_response(_summary_payload("ds_summary_fallback"))
+        if "build-manifest" in url_str:
+            return _make_urlopen_response(_server_manifest(dataset_count=1))
+        raise AssertionError(f"unexpected URL: {url_str}")
+
+    with patch("urllib.request.urlopen", side_effect=urlopen_side_effect):
+        snapshot = DatasetSnapshot.build(
+            api_base="https://stub.example", database="summaryonlyshard"
+        )
+
+    assert snapshot.source == "live"
+    assert snapshot.dataset_count == 1
+    assert snapshot.montage("ds_summary_fallback") is None
+    # The chart-data 404 is recorded as context, but the build
+    # succeeded on the summary fallback.
+    assert any("chart-data 404" in e for e in snapshot.api_errors)
 
 
 def test_package_csv_fallback_skips_disk_cache_write(tmp_path):

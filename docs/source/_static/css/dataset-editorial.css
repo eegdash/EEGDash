@@ -248,6 +248,25 @@ article.bd-article a:not(.headerlink):not(.btn):not(.sd-btn):hover {
   border-bottom-color: var(--ed-accent);
 }
 
+/* Hide the literal `#` Sphinx renders on headerlink anchors — it shows
+   up as "number sign link" to screen readers and as a sad hash to
+   sighted users. Reveal a chain-icon glyph on focus/hover only. */
+article.bd-article .headerlink {
+  color: var(--ed-rule);
+  text-decoration: none;
+  margin-left: 6px;
+  opacity: 0;
+  transition: opacity 120ms ease, color 120ms ease;
+}
+article.bd-article h1:hover .headerlink,
+article.bd-article h2:hover .headerlink,
+article.bd-article h3:hover .headerlink,
+article.bd-article h4:hover .headerlink,
+article.bd-article .headerlink:focus {
+  opacity: 1;
+  color: var(--ed-accent);
+}
+
 /* =========================================================================
    1b. Field-card rail — floats next to the hero on wide viewports
    ---------------------------------------------------------------------------
@@ -483,7 +502,7 @@ article.bd-article p.sd-badges {
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
-  margin: 18px 0 28px;
+  margin: 10px 0 18px;
   padding: 0;
 }
 
@@ -534,7 +553,7 @@ article.bd-article p.sd-badges {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 0;
-  margin: 36px 0 56px;
+  margin: 20px 0 32px;
   border: 1px solid var(--ed-ink);
   background: var(--ed-paper);
   position: relative;
@@ -614,9 +633,11 @@ html[data-theme="dark"] .eegdash-ed-layers > div { background: rgba(0, 0, 0, 0.2
      rail's left edge instead of being drawn behind the rail (the rail
      uses a translucent background, so the line was bleeding through). */
   display: flow-root;
-  margin-top: 80px;
-  margin-bottom: -8px;
-  padding-top: 24px;
+  /* Tightened from 80px / -8px / 24px so dense pages don't burn a
+     viewport-height of whitespace at every section boundary. */
+  margin-top: 48px;
+  margin-bottom: -6px;
+  padding-top: 16px;
   border-top: 1.5px solid var(--ed-ink);
   font-weight: 600;
 }
@@ -1363,7 +1384,7 @@ html[data-theme="dark"] .eegdash-ed-access {
    ========================================================================= */
 
 .eegdash-ed-examples {
-  margin: 32px 0 0;
+  margin: 24px 0 0;
   border: 1px solid var(--ed-ink);
   background: var(--ed-paper-2);
   font-family: var(--ed-font-sans);
@@ -1592,6 +1613,68 @@ html[data-theme="dark"] .eegdash-ed-examples { background: var(--ed-paper); }
   background: var(--ed-paper-2);
   padding: 1px 4px;
   font-size: 12px;
+}
+
+/* Compact related-dataset chips inside the footnotes block.
+   Each chip carries dataset id + modality + subject count, with a
+   "Same authors" tag when the surnames overlap. Stays a vertical list
+   so the three-column footnotes layout doesn't reflow. */
+.eegdash-ed-footnotes .rel-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 4px;
+}
+.eegdash-ed-footnotes .rel-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  column-gap: 10px;
+  padding: 6px 10px;
+  border: 1px solid var(--ed-rule);
+  border-radius: 2px;
+  background: var(--ed-paper);
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 120ms ease, background-color 120ms ease;
+}
+.eegdash-ed-footnotes .rel-card:hover {
+  border-color: var(--ed-accent);
+  background: rgba(0, 108, 163, 0.04);
+}
+.eegdash-ed-footnotes .rel-card .rel-id {
+  font-family: var(--ed-font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ed-accent);
+  letter-spacing: 0.02em;
+}
+.eegdash-ed-footnotes .rel-card .rel-meta {
+  font-family: var(--ed-font-sans);
+  font-size: 11px;
+  color: var(--ed-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  text-align: right;
+}
+.eegdash-ed-footnotes .rel-card .rel-tag {
+  grid-column: 1 / -1;
+  font-family: var(--ed-font-mono);
+  font-size: 10px;
+  color: var(--ed-accent);
+  background: rgba(0, 108, 163, 0.08);
+  padding: 1px 6px;
+  border-radius: 2px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  justify-self: start;
+  margin-top: 2px;
+}
+.eegdash-ed-footnotes .rel-more {
+  margin: 8px 0 0;
+  font-size: 12px;
+  color: var(--ed-muted);
+  font-style: italic;
 }
 
 @media (max-width: 900px) {

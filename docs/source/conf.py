@@ -4858,8 +4858,15 @@ def _format_editorial_provenance_section(context: Mapping[str, object]) -> str:
 def _format_editorial_footnotes_section(
     context: Mapping[str, object],
     related: Sequence[str] = (),
+    related_meta: Sequence[Mapping[str, object]] = (),
 ) -> str:
-    """Three-column footnotes block — Citation / Provenance / Related."""
+    """Three-column footnotes block — Citation / Provenance / Related.
+
+    ``related_meta`` carries optional per-neighbour metadata (modality,
+    n_subjects, same-author flag) used to render compact cards. When
+    empty the function falls back to a plain link list so the section
+    still works for callers that haven't been updated.
+    """
     title = _clean_value(context.get("title"))
     authors = context.get("authors") or []
     year = _clean_value(context.get("year"))
@@ -4891,7 +4898,38 @@ def _format_editorial_footnotes_section(
         )
     provenance_html = "".join(f"<p>{n}</p>" for n in provenance_notes)
 
-    if related:
+    if related_meta:
+        cards = []
+        for meta in list(related_meta)[:5]:
+            rel_name = str(meta.get("name") or "").strip()
+            if not rel_name:
+                continue
+            modality = (str(meta.get("modality") or "")).upper() or "—"
+            n_sub = _clean_value(meta.get("n_subjects"))
+            same_authors = bool(meta.get("same_authors"))
+            meta_bits = [modality]
+            if n_sub and n_sub != "0":
+                meta_bits.append(f"{n_sub} subj")
+            badge = (
+                '<span class="rel-tag rel-same">Same authors</span>'
+                if same_authors
+                else ""
+            )
+            cards.append(
+                f'<a class="rel-card" href="{rel_name}.html">'
+                f'<span class="rel-id">{rel_name}</span>'
+                f'<span class="rel-meta">{" · ".join(meta_bits)}</span>'
+                f"{badge}"
+                "</a>"
+            )
+        related_html = f'<div class="rel-grid">{"".join(cards)}</div>'
+        if len(related_meta) > 5:
+            related_html += (
+                f'<p class="rel-more">+ {len(related_meta) - 5} more — '
+                "see See Also below →</p>"
+            )
+    elif related:
+        # Legacy fallback when no metadata was passed through.
         related_items = "<br/>".join(
             f'<a href="{rel}.html">{rel}</a>' for rel in related[:5]
         )
@@ -5794,6 +5832,7 @@ def _process_dataset_item(
     row: Mapping[str, str] | None,
     srcdir: Path,
     related: Sequence[str] = (),
+    related_meta: Sequence[Mapping[str, object]] = (),
 ) -> Path:
     context = _build_dataset_context(name, row)
 
@@ -5848,7 +5887,7 @@ def _process_dataset_item(
         editorial_examples_gallery=_format_editorial_examples_gallery(context),
         editorial_provenance_section=_format_editorial_provenance_section(context),
         editorial_footnotes_section=_format_editorial_footnotes_section(
-            context, related
+            context, related, related_meta
         ),
         editorial_colophon_section=_format_editorial_colophon_section(context),
     )
@@ -5970,6 +6009,30 @@ def _generate_dataset_docs(app) -> None:
         siblings = datasets_by_modality.get(mod.lower(), [])
         return [s for s in siblings if s != name][:6]
 
+    def _primary_author_key(value: object) -> str:
+        """Extract the surname token from an ``author_year`` string."""
+        text = _clean_value(value)
+        m = re.match(r"^([A-Za-z][A-Za-z\-']*)", text)
+        return m.group(1).lower() if m else ""
+
+    def _related_meta_for(name: str) -> list[dict[str, object]]:
+        """Return per-neighbour metadata for the footnotes "Related" card."""
+        me_key = _primary_author_key((dataset_rows.get(name) or {}).get("author_year"))
+        out: list[dict[str, object]] = []
+        for nb in _related_for(name):
+            nrow = dataset_rows.get(nb) or {}
+            nb_key = _primary_author_key(nrow.get("author_year"))
+            out.append(
+                {
+                    "name": nb,
+                    "modality": _clean_value(nrow.get("record_modality"))
+                    or _clean_value(nrow.get("modality of exp")),
+                    "n_subjects": _clean_value(nrow.get("n_subjects")),
+                    "same_authors": bool(me_key and nb_key and me_key == nb_key),
+                }
+            )
+        return out
+
     generated_paths: set[Path] = set()
     srcdir = Path(app.srcdir)
 
@@ -5982,6 +6045,7 @@ def _generate_dataset_docs(app) -> None:
                 dataset_rows.get(name),
                 srcdir,
                 _related_for(name),
+                _related_meta_for(name),
             ): name
             for name in dataset_names
         }

@@ -2,8 +2,9 @@
 
 Emits structured data (JSON-LD), canonical URL overrides, per-page meta
 descriptions, and noindex hints during the ``html-page-context`` phase.
-Coordinates with ``description_cap`` (a later-priority hook that caps
-every description tag in the final ``context['metatags']``) and with
+Also registers a later-priority (900) hook (``_cap_descriptions_hook``)
+that caps every description tag in the final ``context['metatags']``
+after sphinxext-opengraph has had its say. Coordinates with
 ``sitemap_canonical`` (which patches the emitted sitemap.xml to keep
 URLs aligned).
 """
@@ -571,13 +572,34 @@ def _inject_seo_context(app, pagename, templatename, context, doctree) -> None:
             )
 
     # NOTE: description capping runs from a separate late-priority hook
-    # (``description_cap``). Doing it here would miss any descriptions
-    # that sphinxext-opengraph adds later in the same ``html-page-context``
-    # phase — its handler runs after ours at the default priority.
+    # (``_cap_descriptions_hook``, connected at priority 900 below).
+    # Doing it here would miss any descriptions that sphinxext-opengraph
+    # adds later in the same ``html-page-context`` phase — its handler
+    # runs after ours at the default priority.
+
+
+def _cap_descriptions_hook(app, pagename, templatename, context, doctree):
+    """Late-priority ``html-page-context`` handler that caps every
+    description / og:description tag added by any earlier handler.
+
+    Sphinx delivers events to connected callbacks in priority order
+    (higher priority == later execution; default 500). sphinxext-
+    opengraph registers at the default priority and writes its own
+    description into ``context['metatags']`` during this phase, so
+    any capping we do inside our own default-priority handler misses
+    those insertions. Running at priority 900 guarantees we see the
+    final value regardless of load order.
+    """
+    context["metatags"] = _cap_descriptions_in_metatags(context.get("metatags") or "")
 
 
 def setup(app) -> dict:
     app.connect("html-page-context", _inject_seo_context)
+    # Priority 900 -- higher = later -- so we run after every other
+    # ``html-page-context`` listener (sphinxext-opengraph, the
+    # default-priority ``_inject_seo_context`` above) and see the final
+    # ``context['metatags']`` value before the template renders it.
+    app.connect("html-page-context", _cap_descriptions_hook, priority=900)
     return {
         "version": "0.1",
         "parallel_read_safe": True,

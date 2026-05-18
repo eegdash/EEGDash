@@ -424,6 +424,20 @@ def _should_use_api_summary() -> bool:
 # behind Cloudflare, HuggingFace) reject the bare urllib UA.
 _PROBE_UA = "Mozilla/5.0 (compatible; EEGDashDocsBuild)"
 
+# Match a "Paper DOI" shields.io badge inside a README and capture the
+# wrapping URL — e.g. ``[![Paper DOI](...)](https://doi.org/10.1109/…)``.
+# Used to recover paper DOIs that the structured ``external_links``
+# block doesn't carry yet (NEMAR-ingested NM-series datasets in particular).
+_README_PAPER_DOI_RE = re.compile(
+    r"\[!\[Paper[^\]]*\]\([^)]+\)\]\((https?://[^)\s]+)\)",
+    re.IGNORECASE,
+)
+
+# RST inline hyperlinks like `` `label <url>`__ `` or `` `label <url>`_ ``.
+# Used in ``_is_prose`` to detect lede paragraphs that are nothing but
+# README badge rows — those should never receive the drop-cap treatment.
+_RST_HYPERLINK_RE = re.compile(r"`[^`<]+<[^>]+>`__?")
+
 
 def _get_json(
     url: str,
@@ -584,6 +598,8 @@ API Reference
 {api_section}
 
 {editorial_access_modes_section}
+
+{editorial_examples_gallery}
 
 {editorial_footnotes_section}
 
@@ -1079,6 +1095,18 @@ def _fetch_dataset_details_from_api(dataset_id: str) -> dict[str, object]:
     details["paper_url"] = _clean_value(external_links.get("paper_url"))
     details["github_url"] = _clean_value(external_links.get("github_url"))
     details["osf_url"] = _clean_value(external_links.get("osf_url"))
+
+    # Some NEMAR-ingested datasets never populate ``external_links.paper_url``
+    # even though the README ships a ``[![Paper DOI](...)](https://doi.org/…)``
+    # badge. The lede block already turns that badge into a visible link, so
+    # mirror it into the rail's quick-actions row when no structured field
+    # exists yet.
+    if not details["paper_url"]:
+        readme = ds.get("readme") or ""
+        if isinstance(readme, str) and "Paper" in readme:
+            m = _README_PAPER_DOI_RE.search(readme)
+            if m:
+                details["paper_url"] = m.group(1)
 
     return details
 
@@ -2654,7 +2682,20 @@ def _split_lede_paragraphs(
             and compact.count("*") == 2
         ):
             return False
+        # Skip lines that are nothing but RST hyperlinks — README badge rows
+        # ("`DOI <...>`__ `Paper DOI <...>`__ `License <...>`__") would
+        # otherwise be treated as prose and absorb the drop cap, leaving a
+        # giant "D" floated next to a tiny "OI" subscript.
+        without_links = _RST_HYPERLINK_RE.sub("", stripped).strip()
+        if not without_links:
+            return False
         return True
+
+    # Anything before the first prose paragraph (badge rows, bold-only
+    # titles, RST directives) is "preamble" we want to keep in the remainder
+    # so it still renders below the lede — just without the drop cap.
+    preamble_end = 0
+    seen_prose = False
 
     while i < n and len(paragraphs) < max_paragraphs:
         # skip blanks
@@ -2663,7 +2704,14 @@ def _split_lede_paragraphs(
         if i >= n:
             break
         if not _is_prose(lines[i]):
-            break  # bail to remainder
+            # Walk past the non-prose run so we can look further down for
+            # the first real paragraph.
+            while i < n and lines[i].strip() and not _is_prose(lines[i]):
+                i += 1
+            if not seen_prose:
+                preamble_end = i
+            continue
+        seen_prose = True
         # collect this paragraph
         start = i
         while i < n and lines[i].strip():
@@ -2671,7 +2719,14 @@ def _split_lede_paragraphs(
         paragraphs.append("\n".join(lines[start:i]).strip())
         remainder_start = i
 
-    return paragraphs, list(lines[remainder_start:])
+    if paragraphs:
+        # Keep any preamble (badges/titles before the first prose) in front
+        # of the remainder so the surrounding chrome still renders.
+        remainder = list(lines[:preamble_end]) + list(lines[remainder_start:])
+    else:
+        remainder = list(lines)
+
+    return paragraphs, remainder
 
 
 def _format_schema_section(context: Mapping[str, object]) -> str:
@@ -4227,17 +4282,22 @@ def _format_editorial_fieldcard_section(context: Mapping[str, object]) -> str:
     )
 
     paper_doi = _normalize_doi(_clean_value(context.get("associated_paper_doi")))
+    paper_url = _clean_value(context.get("paper_url"))
     paper_doi_html = (
         f'<a href="https://doi.org/{paper_doi}">{paper_doi}</a>' if paper_doi else ""
     )
+    # Either a DOI or a free-form URL counts as a paper for the rail action.
+    paper_action_href = f"https://doi.org/{paper_doi}" if paper_doi else paper_url
 
     # Build the action row at the bottom of the rail.
     openneuro_url = str(context.get("openneuro_url") or "")
     croissant_url = (
         f"../../_static/dataset_generated/croissant/{class_name}.croissant.json"
     )
-    actions = (
-        f'<a href="{openneuro_url}">OpenNeuro</a>'
+    actions = f'<a href="{openneuro_url}">OpenNeuro</a>'
+    if paper_action_href:
+        actions += f'<a href="{paper_action_href}">Read paper</a>'
+    actions += (
         f'<a href="{hf_url}">{"🤗 HF" if hf_available else "🤗 Org"}</a>'
         f'<a href="{croissant_url}" download>Croissant</a>'
     )
@@ -4861,6 +4921,96 @@ def _format_editorial_footnotes_section(
         "</div>"
         "</div>"
     )
+    return _editorial_html(block)
+
+
+# Curated "start here" tutorials linked from every dataset page.
+# Each tuple: (slug, generated-rst subpath, title, one-line blurb).
+# Thumbnails live in docs/source/_static/thumbs/<slug>.png and pages render
+# under docs/source/generated/auto_examples/<subpath>/<slug>.html.
+_EDITORIAL_EXAMPLES = (
+    (
+        "plot_00_first_search",
+        "tutorials/00_start_here",
+        "Find datasets with the EEGDash API",
+        "Query the catalogue, filter by task or modality, list candidates.",
+    ),
+    (
+        "plot_01_first_recording",
+        "tutorials/00_start_here",
+        "Load one EEG recording",
+        "Resolve a single record to an MNE Raw with channels and events.",
+    ),
+    (
+        "plot_02_dataset_to_dataloader",
+        "tutorials/00_start_here",
+        "EEG recording to PyTorch DataLoader",
+        "Wrap braindecode windows in a DataLoader for model training.",
+    ),
+    (
+        "plot_10_preprocess_and_window",
+        "tutorials/10_core_workflow",
+        "Preprocess EEG and create windows",
+        "Filter, resample, epoch — and persist the windowed dataset.",
+    ),
+    (
+        "plot_13_save_and_reuse_prepared_data",
+        "tutorials/10_core_workflow",
+        "Save and reload prepared data",
+        "Cache a windowed dataset to disk and reattach it without recompute.",
+    ),
+    (
+        "how_to_download_a_dataset",
+        "how_to",
+        "Download a dataset locally",
+        "Prefetch BIDS files to a local cache and validate the layout.",
+    ),
+)
+
+
+def _format_editorial_examples_gallery(context: Mapping[str, object]) -> str:
+    """Six-card thumbnail gallery linking the canonical "start here" tutorials.
+
+    Borrowed from MOABB's dataset pages: instead of a wall of API text, give
+    readers a few concrete entry points where the dataset is actually being
+    used end to end. The list is shared across all dataset pages — the
+    landing page links into ``EEGDash`` ergonomics, not per-dataset code.
+
+    Returns an HTML block wrapped via ``_editorial_html`` so the surrounding
+    Sphinx parser leaves it alone.
+    """
+    dataset_id = str(context.get("dataset_id") or "").strip()
+    cards = []
+    for slug, subpath, title, blurb in _EDITORIAL_EXAMPLES:
+        thumb = f"../../_static/thumbs/{slug}.png"
+        href = f"../../generated/auto_examples/{subpath}/{slug}.html"
+        cards.append(
+            '<a class="ex-card" '
+            f'href="{href}">'
+            f'<span class="ex-thumb"><img src="{thumb}" alt="" loading="lazy"></span>'
+            '<span class="ex-body">'
+            f'<span class="ex-title">{title}</span>'
+            f'<span class="ex-blurb">{blurb}</span>'
+            "</span>"
+            "</a>"
+        )
+    hint = (
+        f"Swap any <code>load_dataset(...)</code> call for "
+        f"<code>{dataset_id}</code> to reproduce the tutorial on this dataset."
+        if dataset_id
+        else ""
+    )
+    block = (
+        '<section class="eegdash-ed-examples">'
+        '<div class="sidecar-hdr">'
+        "<span><b>Examples using EEGDash</b></span>"
+        '<span class="right">curated · start here</span>'
+        "</div>"
+        f'<div class="ex-grid">{"".join(cards)}</div>'
+    )
+    if hint:
+        block += f'<p class="ex-hint">{hint}</p>'
+    block += "</section>"
     return _editorial_html(block)
 
 
@@ -5501,6 +5651,7 @@ def _process_dataset_item(
         editorial_secnum_api=_editorial_secnum(6, "API · Programmatic access"),
         editorial_caveat_section=_format_editorial_caveat_section(context),
         editorial_access_modes_section=_format_editorial_access_modes_section(context),
+        editorial_examples_gallery=_format_editorial_examples_gallery(context),
         editorial_provenance_section=_format_editorial_provenance_section(context),
         editorial_footnotes_section=_format_editorial_footnotes_section(
             context, related

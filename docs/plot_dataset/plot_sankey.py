@@ -1,217 +1,147 @@
-from __future__ import annotations
+"""Source-to-modality Sankey diagram powered by ``/aggregations/sankey``.
 
-"""Generate a Sankey diagram from the EEG-Dash dataset summary.
+Pre-migration this module ran a ``df.groupby([col_from, col_to]).agg(
+subject_sum=..., dataset_count=...)`` to build links between (Type Subject,
+modality of exp, type of exp). It also exploded multi-modality datasets
+across each branch, double-counting subjects.
 
-The script loads ``eegdash/dataset/dataset_summary.csv`` (by default) and builds
-an interactive Plotly Sankey diagram connecting three categorical columns. This
-mirrors how the documentation summarizes datasets across subject type, modality,
-and experiment type, but can be reused with any trio of categorical columns via
-CLI arguments.
+The server's ``/aggregations/sankey?levels=source,modality`` endpoint
+returns one node per source (openneuro, nemar) and one per recording
+modality, with ``link.value == subject_sum`` and ``link.dataset_count``
+exposed alongside. This module is now a thin go.Sankey renderer over
+that response.
+
+Behavioural note: the new diagram visualises Source -> Recording
+Modality (the canonical two-level rollup the server owns), not the
+three-column Type-Subject / Modality / Type pipeline the legacy
+client tried to compute. The server takes the first ``recording_modality``
+per dataset so each dataset contributes once; the legacy chart's
+multi-modality double counting is intentionally dropped.
 """
 
-import argparse
-from pathlib import Path
-from typing import Sequence
+from __future__ import annotations
 
-import pandas as pd
+from pathlib import Path
+from typing import Any
+
 import plotly.graph_objects as go
 
-try:  # Support execution as a script or as a package module
-    from .colours import CANONICAL_MAP, COLUMN_COLOR_MAPS, hex_to_rgba
+try:
+    from ._live import AggregationFetchError, fetch_aggregation
+    from .colours import (
+        MODALITY_COLOR_MAP,
+        PATHOLOGY_PASTEL_OVERRIDES,
+        hex_to_rgba,
+    )
     from .utils import build_and_export_html
-except ImportError:  # pragma: no cover - fallback for direct script execution
-    from colours import CANONICAL_MAP, COLUMN_COLOR_MAPS, hex_to_rgba
+except ImportError:  # pragma: no cover - direct-script execution
+    from _live import AggregationFetchError, fetch_aggregation  # type: ignore
+    from colours import (  # type: ignore
+        MODALITY_COLOR_MAP,
+        PATHOLOGY_PASTEL_OVERRIDES,
+        hex_to_rgba,
+    )
     from utils import build_and_export_html  # type: ignore
 
-DEFAULT_COLUMNS = ["Type Subject", "modality of exp", "type of exp"]
-__all__ = ["generate_dataset_sankey", "build_sankey"]
+__all__ = ["generate_dataset_sankey"]
+
+# Default colour for unknown source / modality nodes (legacy slate-400).
+_DEFAULT_NODE_COLOR = "#94a3b8"
+
+# Source-level colours. Two known sources today; anything else falls
+# back to slate. PATHOLOGY_PASTEL_OVERRIDES carries the "Healthy"
+# pastel-green we want for openneuro, and the slate-300 we want for
+# the catch-all.
+_SOURCE_COLORS = {
+    "openneuro": PATHOLOGY_PASTEL_OVERRIDES.get("Healthy", "#86efac"),
+    "nemar": PATHOLOGY_PASTEL_OVERRIDES.get("Clinical", "#fecaca"),
+}
 
 
-def _prepare_dataframe(df: pd.DataFrame, columns: Sequence[str]) -> pd.DataFrame:
-    all_columns = list(columns)
-    if "n_subjects" not in all_columns:
-        all_columns.append("n_subjects")
+def _node_color(label: str, level: int) -> str:
+    if level == 0:
+        return _SOURCE_COLORS.get(label.lower(), _DEFAULT_NODE_COLOR)
+    return MODALITY_COLOR_MAP.get(label, _DEFAULT_NODE_COLOR)
 
-    missing = [col for col in all_columns if col not in df.columns]
-    if missing:
-        msg = f"Columns not found in dataframe: {missing}"
-        raise ValueError(msg)
 
-    cleaned = df.copy()
-
-    # Fill missing n_subjects with 1 (to count as at least one dataset)
-    # and ensure the column is numeric integer type.
-    cleaned["n_subjects"] = (
-        pd.to_numeric(cleaned["n_subjects"], errors="coerce").fillna(1).astype(int)
+def _empty_figure(reason: str, out_html: str | Path) -> Path:
+    fig = go.Figure()
+    fig.add_annotation(text=reason, showarrow=False)
+    fig.update_layout(template="plotly_white", height=600)
+    extra_style = (
+        '<div id="dataset-sankey-wrapper" style="width: 100%; height: 600px;">'
+    )
+    extra_html = "</div>"
+    return build_and_export_html(
+        fig,
+        out_html,
+        div_id="dataset-sankey",
+        extra_style=extra_style,
+        extra_html=extra_html,
+        include_default_style=False,
     )
 
-    # Process each column for cleaning and normalization
-    for col in columns:
-        # 1. Fill original NaN values with the string 'Unknown'
-        cleaned[col] = cleaned[col].fillna("Unknown")
 
-        # 2. Split multi-valued cells
-        cleaned[col] = cleaned[col].astype(str).str.split(r"/|;|,", regex=True)
-        cleaned = cleaned.explode(col)
+def _build_figure(payload: dict[str, Any], *, height: int) -> go.Figure:
+    nodes = payload.get("nodes") or []
+    links = payload.get("links") or []
+    if not nodes or not links:
+        raise ValueError("Sankey aggregation returned no nodes or links")
 
-        # 3. Clean up whitespace and any empty strings created by splitting
-        cleaned[col] = cleaned[col].str.strip()
-        cleaned[col] = cleaned[col].replace(["", "nan"], "Unknown")
-
-        # 4. Apply canonical mapping to standardize terms
-        if col in CANONICAL_MAP:
-            mapping = CANONICAL_MAP[col]
-            # Use .str.lower() for case-insensitive mapping
-            cleaned[col] = cleaned[col].str.lower().map(mapping).fillna(cleaned[col])
-
-    # 5. Apply special rule for 'Type Subject' after all other processing
-    if "Type Subject" in columns:
-        # The user wants to preserve original labels but color them as 'Clinical'.
-        # The relabeling to 'Clinical' is now removed. The coloring logic will handle this.
-        pass
-
-    return cleaned[all_columns]
-
-
-def _load_dataframe(path: Path, columns: Sequence[str]) -> pd.DataFrame:
-    df = pd.read_csv(
-        path,
-        index_col=False,
-        header=0,
-        skipinitialspace=True,
-    )
-    return _prepare_dataframe(df, columns)
-
-
-def _build_sankey_data(df: pd.DataFrame, columns: Sequence[str]):
     node_labels: list[str] = []
     node_colors: list[str] = []
-    node_index: dict[tuple[str, str], int] = {}
+    # Annotate level-0 nodes with the rollup subjects (link.value sums
+    # to the source's subjects across modalities by construction).
+    source_total_subjects = {
+        node["id"]: node.get("value", 0) for node in nodes if node.get("level") == 0
+    }
+    total_subjects = sum(source_total_subjects.values()) or 1
 
-    for col in columns:
-        color_map = COLUMN_COLOR_MAPS.get(col, {})
-
-        # Sort unique values to ensure "Unknown" appears at the bottom
-        all_unique = df[col].unique()
-        # Separate "Unknown" and sort the rest alphabetically
-        known_values = sorted([v for v in all_unique if v != "Unknown"])
-        unique_values = known_values
-        # Add "Unknown" to the end if it exists
-        if "Unknown" in all_unique:
-            unique_values.append("Unknown")
-
-        for val in unique_values:
-            if (col, val) not in node_index:
-                node_index[(col, val)] = len(node_labels)
-                node_labels.append(val)
-
-                # Get color from map - each condition has its own color
-                node_color = color_map.get(val, "#94a3b8")
-                node_colors.append(node_color)
+    for node in nodes:
+        label = str(node.get("label", ""))
+        level = int(node.get("level", 0) or 0)
+        color = _node_color(label, level)
+        if level == 0:
+            subj = int(node.get("value", 0))
+            pct = (subj / total_subjects) * 100
+            node_labels.append(f"{label}<br>({subj:,} subjects, {pct:.1f}%)")
+        else:
+            node_labels.append(label)
+        node_colors.append(color)
 
     sources: list[int] = []
     targets: list[int] = []
     values: list[int] = []
     link_colors: list[str] = []
-    link_hover_labels: list[str] = []
+    link_hover: list[str] = []
 
-    for idx in range(len(columns) - 1):
-        col_from, col_to = columns[idx], columns[idx + 1]
-
-        # Use the color from the source node for the link
-        source_color_map = COLUMN_COLOR_MAPS.get(col_from, {})
-
-        # Group by source and target, getting both sum of subjects and count of datasets
-        grouped = (
-            df.groupby([col_from, col_to])
-            .agg(
-                subject_sum=("n_subjects", "sum"),
-                dataset_count=("n_subjects", "size"),
-            )
-            .reset_index()
+    label_by_id = {node["id"]: node.get("label", "") for node in nodes}
+    for link in links:
+        src_id = link["source"]
+        tgt_id = link["target"]
+        subject_sum = int(link.get("subject_sum", link.get("value", 0)) or 0)
+        dataset_count = int(link.get("dataset_count", 0) or 0)
+        sources.append(src_id)
+        targets.append(tgt_id)
+        # link.value == subject_sum, fixed in server commit cc9785f.
+        values.append(subject_sum)
+        src_label = str(label_by_id.get(src_id, "")).lower()
+        link_colors.append(
+            hex_to_rgba(_SOURCE_COLORS.get(src_label, _DEFAULT_NODE_COLOR))
         )
-
-        for _, row in grouped.iterrows():
-            source_val, target_val, subject_sum, dataset_count = (
-                row[col_from],
-                row[col_to],
-                row["subject_sum"],
-                row["dataset_count"],
-            )
-
-            source_node_idx = node_index.get((col_from, source_val))
-            target_node_idx = node_index.get((col_to, target_val))
-
-            if source_node_idx is not None and target_node_idx is not None:
-                sources.append(source_node_idx)
-                targets.append(target_node_idx)
-                values.append(subject_sum)  # Weight links by sum of subjects
-                link_hover_labels.append(
-                    f"{source_val} → {target_val}:<br>"
-                    f"{subject_sum} subjects in {dataset_count} datasets"
-                )
-
-                # Assign color to the link based on the source node
-                source_color = source_color_map.get(source_val, "#94a3b8")
-                link_colors.append(hex_to_rgba(source_color))
-
-    # Add counts (subjects and datasets) and percentages to the first column labels
-    first_col_name = columns[0]
-    first_col_stats = df.groupby(first_col_name).agg(
-        subject_sum=("n_subjects", "sum"),
-        dataset_count=("n_subjects", "size"),
-    )
-    total_subjects = first_col_stats["subject_sum"].sum()
-
-    for i, label in enumerate(node_labels):
-        col, val = next((k for k, v in node_index.items() if v == i), (None, None))
-        if col == first_col_name and val in first_col_stats.index:
-            stats = first_col_stats.loc[val]
-            subject_sum = stats["subject_sum"]
-            dataset_count = stats["dataset_count"]
-            percentage = (
-                (subject_sum / total_subjects) * 100 if total_subjects > 0 else 0
-            )
-            node_labels[i] = (
-                f"{label}<br>({subject_sum} subjects, {dataset_count} datasets, {percentage:.1f}%)"
-            )
-
-    return (
-        node_labels,
-        node_colors,
-        sources,
-        targets,
-        values,
-        link_colors,
-        link_hover_labels,
-    )
-
-
-def build_sankey(
-    df: pd.DataFrame,
-    columns: Sequence[str],
-    *,
-    width: int = 1260,
-    height: int = 1100,
-) -> go.Figure:
-    (
-        labels,
-        colors,
-        sources,
-        targets,
-        values,
-        link_colors,
-        link_hover_labels,
-    ) = _build_sankey_data(df, columns)
+        link_hover.append(
+            f"{label_by_id.get(src_id, '')} → {label_by_id.get(tgt_id, '')}:<br>"
+            f"{subject_sum:,} subjects in {dataset_count:,} datasets"
+        )
 
     sankey = go.Sankey(
         arrangement="snap",
         node=dict(
             pad=30,
             thickness=18,
-            label=labels,
-            color=colors,
-            align="left",  # Align all labels to the left of the node bars
+            label=node_labels,
+            color=node_colors,
+            align="left",
         ),
         link=dict(
             source=sources,
@@ -219,12 +149,11 @@ def build_sankey(
             value=values,
             color=link_colors,
             hovertemplate="%{customdata}<extra></extra>",
-            customdata=link_hover_labels,
+            customdata=link_hover,
         ),
     )
 
     fig = go.Figure(sankey)
-
     fig.update_layout(
         font=dict(family="Inter, system-ui, sans-serif", size=13, color="#0f172a"),
         height=height,
@@ -237,16 +166,7 @@ def build_sankey(
                 y=1.05,
                 xref="paper",
                 yref="paper",
-                text="Population Type",
-                showarrow=False,
-                font=dict(size=16, color="black"),
-            ),
-            dict(
-                x=0.5,
-                y=1.05,
-                xref="paper",
-                yref="paper",
-                text="Experimental Modality",
+                text="Source",
                 showarrow=False,
                 font=dict(size=16, color="black"),
             ),
@@ -255,20 +175,9 @@ def build_sankey(
                 y=1.05,
                 xref="paper",
                 yref="paper",
-                text="Cognitive Domain",
+                text="Recording Modality",
                 showarrow=False,
                 font=dict(size=16, color="black"),
-            ),
-            dict(
-                x=0,
-                y=-0.15,  # Position the note below the chart
-                xref="paper",
-                yref="paper",
-                text='<b>Note on "Unknown" category:</b> This large portion represents datasets that are still pending categorization.',
-                showarrow=False,
-                align="left",
-                xanchor="left",
-                font=dict(size=12, color="dimgray"),
             ),
         ],
     )
@@ -276,17 +185,25 @@ def build_sankey(
 
 
 def generate_dataset_sankey(
-    df: pd.DataFrame,
-    out_html: str | Path,
+    df: Any | None = None,
+    out_html: str | Path = "dataset_sankey.html",
     *,
-    columns: Sequence[str] | None = None,
+    columns: Any | None = None,
     width: int = 1260,
     height: int = 1100,
 ) -> Path:
-    """Generate the dataset Sankey diagram and write it to *out_html*."""
-    selected_columns = list(columns) if columns is not None else list(DEFAULT_COLUMNS)
-    prepared = _prepare_dataframe(df, selected_columns)
-    fig = build_sankey(prepared, selected_columns, width=width, height=height)
+    """Render the dataset Sankey from the server aggregation."""
+    del df, columns, width  # Server owns the cross-tab; args retained.
+
+    try:
+        response = fetch_aggregation("sankey", {"levels": "source,modality"})
+    except AggregationFetchError as exc:
+        return _empty_figure(f"Sankey data unavailable: {exc}", out_html)
+
+    try:
+        fig = _build_figure(response.payload, height=height)
+    except ValueError as exc:
+        return _empty_figure(str(exc), out_html)
 
     extra_style = (
         f'<div id="dataset-sankey-wrapper" style="width: 100%; height: {height}px;">'
@@ -311,52 +228,3 @@ def generate_dataset_sankey(
         extra_html=extra_html,
         include_default_style=False,
     )
-
-
-def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(
-        description="Generate a Sankey diagram from the dataset summary CSV."
-    )
-    parser.add_argument(
-        "--source",
-        type=Path,
-        default=Path("eegdash/dataset/dataset_summary.csv"),
-        help="Path to the dataset summary CSV file.",
-    )
-    parser.add_argument(
-        "--columns",
-        nargs=3,
-        metavar=("FIRST", "SECOND", "THIRD"),
-        default=DEFAULT_COLUMNS,
-        help="Three categorical columns to connect in the Sankey plot.",
-    )
-    parser.add_argument(
-        "--output",
-        type=Path,
-        default=Path("dataset_summary_sankey.html"),
-        help="Output HTML file for the interactive Sankey diagram.",
-    )
-    return parser.parse_args()
-
-
-def main() -> None:
-    args = parse_args()
-    if not args.source.exists():
-        raise FileNotFoundError(f"Dataset summary CSV not found at {args.source}")
-
-    columns = list(args.columns)
-    df = _load_dataframe(args.source, columns)
-    fig = build_sankey(df, columns)
-
-    args.output.parent.mkdir(parents=True, exist_ok=True)
-    fig.write_html(
-        str(args.output),
-        include_plotlyjs="cdn",
-        full_html=True,
-        auto_open=False,
-    )
-    print(f"Sankey diagram saved to {args.output.resolve()}")
-
-
-if __name__ == "__main__":
-    main()

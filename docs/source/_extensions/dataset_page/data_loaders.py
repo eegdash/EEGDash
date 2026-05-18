@@ -520,10 +520,20 @@ def _build_dataset_context(
     canonical_names = _parse_canonical_names((row or {}).get("canonical_name"))
     author_year_name = _clean_value((row or {}).get("author_year"))
 
+    # NEMAR-native datasets have ids of the form ``nm000132``. The NEMAR
+    # client uses these as primary keys; surface them through the
+    # context so the section formatter does not need to re-derive on
+    # every page. Datasets sourced elsewhere (OpenNeuro ``dsNNNNNN``)
+    # leave ``nemar_id`` empty and the section is skipped.
+    nemar_id = ""
+    if dataset_id.startswith("nm"):
+        nemar_id = dataset_id
+
     return {
         "class_name": class_name,
         "dataset_id": dataset_id,
         "dataset_upper": dataset_id.upper(),
+        "nemar_id": nemar_id,
         "title": title,
         "year": year,
         "authors": details.get("authors", []),

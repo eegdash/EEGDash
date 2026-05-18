@@ -39,6 +39,7 @@ from .sections import (
     _format_hero_section,
     _format_highlights_section,
     _format_nemar_analysis_section,
+    _format_nemar_metadata_section,
     _format_quickstart_section,
     _format_readme_section,
     _format_recording_stats_section,
@@ -149,6 +150,12 @@ def _build_page_rst(class_name: str) -> str:
         "Dataset Information\n-------------------\n",
         _format_dataset_info_section(context),
         _format_feedback_section(dataset_id, dataset_title),
+        # NEMAR-specific metadata (authors with ORCID, MeSH keywords,
+        # DOI-stamped version history) sits between the OpenNeuro/NEMAR-
+        # agnostic "Dataset Information" block and the technical
+        # details. The section formatter returns ``""`` for non-NEMAR
+        # datasets so the seam is conditional.
+        _format_nemar_metadata_section(context),
         "Technical Details\n-----------------\n",
         _format_highlights_section(context),
         _format_electrodes_section(context),

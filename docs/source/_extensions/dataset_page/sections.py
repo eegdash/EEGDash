@@ -30,6 +30,8 @@ from urllib.parse import quote
 
 from sphinx.util import logging
 
+from eegdash.dataset.nemar import NemarClient, NemarMetadata
+
 from ._constants import _DOCS_SOURCE_ROOT, _LICENSE_URL_MAP
 from .data_loaders import (
     _clean_value,
@@ -847,6 +849,238 @@ def _format_recording_stats_section(context: Mapping[str, object]) -> str:
         return ""
 
     return heading + "".join(parts)
+
+
+# ---------------------------------------------------------------------------
+# NEMAR per-dataset metadata section
+#
+# Reuses :class:`eegdash.dataset.nemar.NemarClient` for the network +
+# cache work. The client is built once per process (module-level
+# memoisation) so its disk cache is hit across the 700+ directive
+# invocations in one Sphinx build.
+# ---------------------------------------------------------------------------
+
+
+_nemar_client: NemarClient | None = None
+
+
+def _get_nemar_client() -> NemarClient:
+    """Return the module-shared NEMAR client (built lazily)."""
+    global _nemar_client
+    if _nemar_client is None:
+        _nemar_client = NemarClient()
+    return _nemar_client
+
+
+def _human_readable_size(num_bytes: int) -> str:
+    """Bytes → human-readable string (e.g. ``"17.5 GB"``)."""
+    if not num_bytes:
+        return "0 B"
+    size = float(num_bytes)
+    for unit in ("B", "KB", "MB", "GB", "TB"):
+        if abs(size) < 1024.0:
+            return f"{size:.1f} {unit}"
+        size /= 1024.0
+    return f"{size:.1f} PB"
+
+
+def _format_authors_list(meta: NemarMetadata, *, max_visible: int = 5) -> list[str]:
+    """Render the authors block as an RST bullet list.
+
+    Each author becomes one bullet ``- Name (ORCID: 0000-...)`` with an
+    embedded external link when an ORCID is present. When the dataset
+    has more than ``max_visible`` authors, the trailing tail is collapsed
+    into a ``"... and N more"`` line so the section stays readable.
+    """
+    visible = meta.authors[:max_visible]
+    hidden = len(meta.authors) - len(visible)
+    lines: list[str] = []
+    for author in visible:
+        name = author.name.rstrip(".").rstrip()
+        if author.orcid:
+            lines.append(
+                f"- {name} (`ORCID: {author.orcid} "
+                f"<https://orcid.org/{author.orcid}>`__)"
+            )
+        else:
+            lines.append(f"- {name}")
+    if hidden > 0:
+        lines.append(f"- ... and {hidden} more")
+    return lines
+
+
+def _format_keywords_inline(meta: NemarMetadata) -> str:
+    """Render keywords as a comma-separated inline list.
+
+    MeSH-tagged keywords become RST external links into the controlled
+    vocabulary; plain keywords render as text. Returns ``""`` when no
+    keyword survives the cleaning pass.
+    """
+    parts: list[str] = []
+    for kw in meta.keywords:
+        term = kw.term.strip()
+        if not term:
+            continue
+        if kw.scheme and kw.scheme.upper() == "MESH" and kw.value_uri:
+            parts.append(f"`{term} <{kw.value_uri}>`__")
+        else:
+            parts.append(term)
+    return ", ".join(parts)
+
+
+def _render_version_rows(rows) -> list[str]:
+    """Render an RST list-table for a slice of :class:`NemarVersion`.
+
+    Extracted from :func:`_format_versions_table` so the visible /
+    overflow branches share one implementation -- and so the pre-commit
+    ``no-nested-functions`` hook stays happy.
+    """
+    lines = [
+        ".. list-table::",
+        "   :widths: 20 50 30",
+        "   :header-rows: 1",
+        "",
+        "   * - Version",
+        "     - DOI",
+        "     - Released",
+    ]
+    for v in rows:
+        doi_link = f"`{v.doi} <https://doi.org/{v.doi}>`__"
+        date_str = v.created_at.strftime("%Y-%m-%d")
+        lines.append(f"   * - ``{v.version}``")
+        lines.append(f"     - {doi_link}")
+        lines.append(f"     - {date_str}")
+    return lines
+
+
+def _format_versions_table(meta: NemarMetadata, *, visible_cap: int = 5) -> str:
+    """Render the versions history as an RST list-table.
+
+    Columns: ``Version``, ``DOI`` (linked), ``Date`` (UTC, ISO-8601).
+    Newest first, capped at ``visible_cap`` visible rows; anything past
+    that goes into a collapsed ``dropdown`` so long histories do not
+    swamp the page.
+    """
+    if not meta.versions:
+        return ""
+
+    visible = meta.versions[:visible_cap]
+    overflow = meta.versions[visible_cap:]
+
+    lines = _render_version_rows(visible)
+    if overflow:
+        lines.append("")
+        lines.append(f".. dropdown:: Older versions ({len(overflow)})")
+        lines.append("   :class-container: sd-shadow-sm")
+        lines.append("")
+        for line in _render_version_rows(overflow):
+            lines.append(f"   {line}")
+    return "\n".join(lines)
+
+
+def _format_license_line(meta: NemarMetadata) -> str:
+    """Render the license as ``License: <link>`` when SPDX-mappable."""
+    if not meta.license:
+        return ""
+    spdx_key = re.sub(r"\s+", " ", meta.license.strip()).upper()
+    url = _LICENSE_URL_MAP.get(spdx_key)
+    if url:
+        return f"**License**: `{meta.license} <{url}>`__"
+    return f"**License**: {meta.license}"
+
+
+def _maybe_format_manifest_summary(meta: NemarMetadata, *, dataset_id: str) -> str:
+    """Optionally fetch the latest manifest and emit a one-line summary.
+
+    Only fetched for EEG datasets and only for the latest version
+    (NEMAR manifests can be ~1k entries). Returns ``""`` on any
+    failure or empty manifest so the section degrades gracefully.
+    """
+    if not meta.versions:
+        return ""
+    has_eeg = any(m.upper() == "EEG" for m in meta.recording_modality)
+    if not has_eeg:
+        return ""
+    try:
+        entries = _get_nemar_client().manifest(dataset_id, version=meta.latest_version)
+    except Exception as exc:  # noqa: BLE001
+        LOGGER.debug(
+            "[nemar-section] manifest fetch failed for %s: %s", dataset_id, exc
+        )
+        return ""
+    if not entries:
+        return ""
+    total_size = sum(e.size for e in entries)
+    return (
+        f"**Manifest** ({meta.latest_version}): {len(entries):,} files, "
+        f"{_human_readable_size(total_size)} total"
+    )
+
+
+def _format_nemar_metadata_section(context: Mapping[str, object]) -> str:
+    """Render the "NEMAR Metadata" section for NEMAR-sourced datasets.
+
+    The section is emitted only when:
+
+    * the context carries a ``nemar_id`` (always present for NEMAR
+      datasets; derived from ``dataset_id`` when it starts with ``nm``),
+    * the NEMAR client returns a non-``None`` :class:`NemarMetadata`.
+
+    Otherwise an empty string is returned so the page builder can drop
+    the section silently.
+    """
+    nemar_id = str(context.get("nemar_id") or "").strip()
+    if not nemar_id:
+        # Allow the section formatter to be wired in unconditionally:
+        # non-NEMAR datasets just skip it.
+        dataset_id = str(context.get("dataset_id") or "").strip().lower()
+        if not dataset_id.startswith("nm"):
+            return ""
+        nemar_id = dataset_id
+
+    try:
+        meta = _get_nemar_client().metadata(nemar_id)
+    except Exception as exc:  # noqa: BLE001
+        LOGGER.debug("[nemar-section] metadata fetch failed for %s: %s", nemar_id, exc)
+        return ""
+    if meta is None:
+        return ""
+
+    heading = "NEMAR Metadata\n--------------\n\n"
+    parts: list[str] = []
+
+    # Prefer NEMAR's description when it is longer than what we already
+    # show on the page (the EEGDash chart-data response often carries a
+    # shorter summary or none at all).
+    page_desc = str(context.get("title") or "").strip()
+    nemar_desc = (meta.description or "").strip()
+    if nemar_desc and len(nemar_desc) > len(page_desc) + 20:
+        parts.append(nemar_desc)
+
+    license_line = _format_license_line(meta)
+    if license_line:
+        parts.append(license_line)
+
+    if meta.authors:
+        author_lines = _format_authors_list(meta)
+        parts.append("**Authors**:\n\n" + "\n".join(author_lines))
+
+    keywords_inline = _format_keywords_inline(meta)
+    if keywords_inline:
+        parts.append(f"**Keywords**: {keywords_inline}")
+
+    versions_block = _format_versions_table(meta)
+    if versions_block:
+        parts.append("**Versions**:\n\n" + versions_block)
+
+    manifest_summary = _maybe_format_manifest_summary(meta, dataset_id=nemar_id)
+    if manifest_summary:
+        parts.append(manifest_summary)
+
+    if not parts:
+        return ""
+
+    return heading + "\n\n".join(parts) + "\n"
 
 
 def _format_nemar_analysis_section(context: Mapping[str, object]) -> str:

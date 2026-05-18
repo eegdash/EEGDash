@@ -616,7 +616,9 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
                     f"Record data_name: {record.get('data_name', 'unknown')}"
                 )
 
-            description = build_description(record, description_fields, self._description_precedence)
+            description = build_description(
+                record, description_fields, self._description_precedence
+            )
             datasets.append(
                 EEGDashRaw(
                     record,

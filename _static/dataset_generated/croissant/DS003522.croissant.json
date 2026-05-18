@@ -85,7 +85,26 @@
   ],
   "citeAs": "James F Cavanagh, Davin Quinn (2021). EEG: Three-Stim Auditory Oddball and Rest in Acute and Chronic TBI. doi:10.18112/openneuro.ds003522.v1.1.0",
   "version": "1.1.1",
+  "dateCreated": "2021-02-19",
+  "dateModified": "2021-02-19",
+  "measurementTechnique": [
+    "BIDS task: ThreeStimAuditoryOddball"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "James F Cavanagh"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds003522-bids-bucket",
+      "name": "ds003522 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS003522.",
+      "contentUrl": "s3://openneuro.org/ds003522",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds003522-openneuro",

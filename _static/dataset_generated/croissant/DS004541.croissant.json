@@ -96,7 +96,26 @@
   ],
   "citeAs": "Catalina Saini Ferrón, Gabriela Vargas González, Carlos Valle Araya (2023). Multimodal EEG-fNIRS data from patients undergoing general anesthesia. doi:10.18112/openneuro.ds004541.v1.0.0",
   "version": "1.6.0",
+  "dateCreated": "2023-03-22",
+  "dateModified": "2026-03-24",
+  "measurementTechnique": [
+    "BIDS task: anesthesia"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Carlos Valle Araya"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004541-bids-bucket",
+      "name": "ds004541 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004541.",
+      "contentUrl": "s3://openneuro.org/ds004541",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004541-openneuro",

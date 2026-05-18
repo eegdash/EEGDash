@@ -81,7 +81,19 @@
   ],
   "citeAs": "Jonathan Xu, Si Kai Lee, Wangshu Jiang (2024). Alljoined1. doi:10.82901/nemar.nm000133",
   "version": "1.9.0",
+  "dateModified": "2026-03-18",
+  "measurementTechnique": [
+    "BIDS task: images"
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000133-bids-bucket",
+      "name": "nm000133 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for NM000133.",
+      "contentUrl": "s3://nemar/nm000133",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "nm000133-openneuro",

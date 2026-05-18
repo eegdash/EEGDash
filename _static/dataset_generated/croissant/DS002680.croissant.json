@@ -81,7 +81,26 @@
   ],
   "citeAs": "Arnaud Delorme (2020). Go-nogo categorization and detection task. doi:10.18112/openneuro.ds002680.v1.2.0",
   "version": "v1.2.1",
+  "dateCreated": "2020-04-02",
+  "dateModified": "2021-10-19",
+  "measurementTechnique": [
+    "BIDS task: gonogo"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Arnaud Delorme"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds002680-bids-bucket",
+      "name": "ds002680 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS002680.",
+      "contentUrl": "s3://openneuro.org/ds002680",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds002680-openneuro",

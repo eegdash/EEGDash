@@ -115,7 +115,32 @@
   ],
   "citeAs": "Zaineb Ajra, Grégoire Vergotte, Stéphane Perrey, Lilian Evra, Simon Pla (2026). Multimodal dataset from the CMx7-MM Experiment. doi:10.18112/openneuro.ds007554.v1.0.0",
   "version": "1.8.0",
+  "dateCreated": "2026-03-23",
+  "dateModified": "2026-03-23",
+  "measurementTechnique": [
+    "BIDS task: activemotor",
+    "BIDS task: full",
+    "BIDS task: mentalarithmetic",
+    "BIDS task: motorimagery",
+    "BIDS task: nback",
+    "BIDS task: nbackarithmetic",
+    "BIDS task: passivemotor"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Binbin XU"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007554-bids-bucket",
+      "name": "ds007554 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS007554.",
+      "contentUrl": "s3://openneuro.org/ds007554",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds007554-openneuro",

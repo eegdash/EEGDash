@@ -111,7 +111,26 @@
   ],
   "citeAs": "Grootswagers, Tijl, Zhou, Ivy, Robinson, Amanda, Hebart, Martin, Carlson, Thomas (2021). Human electroencephalography recordings from 50 subjects for 22,248 images from 1,854 object concepts. doi:10.18112/openneuro.ds003825.v1.1.0",
   "version": "1.0.2",
+  "dateCreated": "2021-09-30",
+  "dateModified": "2022-10-10",
+  "measurementTechnique": [
+    "BIDS task: rsvp"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Tijl Grootswagers"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds003825-bids-bucket",
+      "name": "ds003825 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS003825.",
+      "contentUrl": "s3://openneuro.org/ds003825",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds003825-openneuro",

@@ -127,7 +127,31 @@
   ],
   "citeAs": "Gan Huang, Zhenxing Hu, Weize Chen, Shaorong Zhang, Zhen Liang (2022). M3CV: Multi-subject, Multi-session, Multi-task EEG Database. doi:10.1016/j.neuroimage.2022.119666",
   "version": "1.9.0",
+  "dateModified": "2026-04-08",
+  "measurementTechnique": [
+    "BIDS task: aep",
+    "BIDS task: motorFoot",
+    "BIDS task: motorLHand",
+    "BIDS task: motorRHand",
+    "BIDS task: p300",
+    "BIDS task: restEC",
+    "BIDS task: restEO",
+    "BIDS task: sep",
+    "BIDS task: ssaep",
+    "BIDS task: sssep",
+    "BIDS task: ssvep",
+    "BIDS task: ssvepSA",
+    "BIDS task: vep"
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000166-bids-bucket",
+      "name": "nm000166 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for NM000166.",
+      "contentUrl": "s3://nemar/nm000166",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "nm000166-openneuro",

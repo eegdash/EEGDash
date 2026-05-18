@@ -106,7 +106,30 @@
   ],
   "citeAs": "Giorgio Selmin, Vasileios Dimakopoulos, Niklaus Krayenbühl, Luca Regli, Johannes Sarnthein (2022). Intraoperative EEG dataset during medianus-tibialis stimulation with 8 different rates. doi:10.18112/openneuro.ds004381.v1.0.2",
   "version": "1.4.0",
+  "dateCreated": "2022-12-20",
+  "dateModified": "2024-10-29",
+  "measurementTechnique": [
+    "BIDS task: sepRate"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Vasileios S. Dimakopoulos"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Johannes Sarnthein"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004381-bids-bucket",
+      "name": "ds004381 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004381.",
+      "contentUrl": "s3://openneuro.org/ds004381",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004381-openneuro",

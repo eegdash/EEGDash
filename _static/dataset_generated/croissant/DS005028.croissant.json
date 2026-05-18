@@ -115,7 +115,28 @@
   ],
   "citeAs": "Nand Chandravadia, Shrita Pendekanti, Dustin Roberts, Robert Tran, Saarang Panchavati (2024). Comparing P300 Flashing paradigms in online typing with language models. doi:10.18112/openneuro.ds005028.v1.0.0",
   "version": "1.8.0",
+  "dateCreated": "2024-03-11",
+  "dateModified": "2024-03-11",
+  "measurementTechnique": [
+    "BIDS task: cb",
+    "BIDS task: comb",
+    "BIDS task: rc"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Bill Speier"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005028-bids-bucket",
+      "name": "ds005028 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005028.",
+      "contentUrl": "s3://openneuro.org/ds005028",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005028-openneuro",

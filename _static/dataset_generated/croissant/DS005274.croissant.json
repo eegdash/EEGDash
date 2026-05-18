@@ -80,7 +80,26 @@
   ],
   "citeAs": "Yukako Ito (2024). UV_EEG. doi:10.18112/openneuro.ds005274.v1.0.0",
   "version": "1.6.0",
+  "dateCreated": "2024-06-21",
+  "dateModified": "2024-06-21",
+  "measurementTechnique": [
+    "BIDS task: 1"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Yukako Ito"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005274-bids-bucket",
+      "name": "ds005274 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005274.",
+      "contentUrl": "s3://openneuro.org/ds005274",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005274-openneuro",

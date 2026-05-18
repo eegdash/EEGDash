@@ -134,7 +134,42 @@
   ],
   "citeAs": "Chang Liu, Ryan J. Downey, Jacob S. Salminen, Sofia Arvelo Rojas, Erika M. Pliner (2023). Mind in Motion Young Adults Walking Over Uneven Terrain. doi:10.18112/openneuro.ds004625.v1.0.2",
   "version": "v1.0.0",
+  "dateCreated": "2023-07-02",
+  "dateModified": "2023-07-04",
+  "measurementTechnique": [
+    "BIDS task: 0p25",
+    "BIDS task: 0p5",
+    "BIDS task: 0p75",
+    "BIDS task: 1p0",
+    "BIDS task: flat",
+    "BIDS task: high",
+    "BIDS task: low",
+    "BIDS task: med",
+    "BIDS task: rest"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Chang Liu"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Daniel Ferris"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Jacob Salminen"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004625-bids-bucket",
+      "name": "ds004625 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004625.",
+      "contentUrl": "s3://openneuro.org/ds004625",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004625-openneuro",

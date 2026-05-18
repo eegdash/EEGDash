@@ -97,7 +97,26 @@
   ],
   "citeAs": "Arun Singh arun.singh@usd.edu, Rachel Cole rachel-cole@uiowa.edu, Arturo Espinoza arturo-espinoza@uiowa.edu, Jim Cavanagh jcavanagh@unm.edu, Nandakumar Narayanan nandakumar-narayanan@uiowa.edu (2023). Rest eyes open. doi:10.18112/openneuro.ds004584.v1.0.0",
   "version": "v1.2.1",
+  "dateCreated": "2023-05-31",
+  "dateModified": "2023-05-31",
+  "measurementTechnique": [
+    "BIDS task: Rest"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Nandakumar Narayanan"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004584-bids-bucket",
+      "name": "ds004584 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004584.",
+      "contentUrl": "s3://openneuro.org/ds004584",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004584-openneuro",

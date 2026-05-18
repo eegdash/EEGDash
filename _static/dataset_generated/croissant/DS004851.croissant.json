@@ -91,7 +91,26 @@
   ],
   "citeAs": "Tony Johnson, Stephen Gordon, Jon Touryan, Kevin King (2023). HID. doi:10.18112/openneuro.ds004851.v2.1.0",
   "version": "1.8.0",
+  "dateCreated": "2023-11-14",
+  "dateModified": "2024-07-09",
+  "measurementTechnique": [
+    "BIDS task: HID"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Kevin King"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004851-bids-bucket",
+      "name": "ds004851 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004851.",
+      "contentUrl": "s3://openneuro.org/ds004851",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004851-openneuro",

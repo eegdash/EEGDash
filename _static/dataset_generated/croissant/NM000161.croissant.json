@@ -74,7 +74,19 @@
   ],
   "datePublished": "2024",
   "version": "1.9.0",
+  "dateModified": "2026-04-02",
+  "measurementTechnique": [
+    "BIDS task: imagery"
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000161-bids-bucket",
+      "name": "nm000161 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for NM000161.",
+      "contentUrl": "s3://nemar/nm000161",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "nm000161-openneuro",
@@ -99,14 +111,6 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=nm000161",
       "encodingFormat": "text/html"
-    },
-    {
-      "@type": "cr:FileObject",
-      "@id": "nm000161-huggingface",
-      "name": "EEGDash/nm000161 on Hugging Face",
-      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
-      "contentUrl": "https://huggingface.co/datasets/EEGDash/nm000161",
-      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

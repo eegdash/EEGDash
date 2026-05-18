@@ -99,7 +99,26 @@
   ],
   "citeAs": "Leon C. Reteig, Lionel A. Newman, K. Richard Ridderinkhof, Heleen A. Slagter (2019). EEG study of the attentional blink; before, during, and after transcranial Direct Current Stimulation (tDCS). doi:10.18112/openneuro.ds001810.v1.1.0",
   "version": "v1.2.0-dev",
+  "dateCreated": "2019-03-21",
+  "dateModified": "2019-05-28",
+  "measurementTechnique": [
+    "BIDS task: attentionalblink"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Leon Reteig"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds001810-bids-bucket",
+      "name": "ds001810 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS001810.",
+      "contentUrl": "s3://openneuro.org/ds001810",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds001810-openneuro",

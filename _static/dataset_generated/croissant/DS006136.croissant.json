@@ -128,7 +128,30 @@
   ],
   "citeAs": "Vladimir Omelyusik, Tyler S. Davis, Satish S. Nair, Behrad Noudoost, Patrick Hackett (2025). OWM-Dataset. doi:10.18112/openneuro.ds006136.v1.0.1",
   "version": "1.10.0",
+  "dateCreated": "2025-04-16",
+  "dateModified": "2026-01-29",
+  "measurementTechnique": [
+    "BIDS task: OWM"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Vladimir Omelyusik"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Bornali Kundu"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006136-bids-bucket",
+      "name": "ds006136 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS006136.",
+      "contentUrl": "s3://openneuro.org/ds006136",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds006136-openneuro",

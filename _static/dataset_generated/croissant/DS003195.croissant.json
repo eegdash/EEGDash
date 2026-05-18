@@ -99,7 +99,27 @@
   ],
   "citeAs": "Maria Luisa Bringas Vega, Lilia Morales Chacon, Ivonne Pedroso Ibanez (2020). Placebo Neuroepo multisession. doi:10.18112/openneuro.ds003195.v1.0.3",
   "version": "1.2.0",
+  "dateCreated": "2020-09-28",
+  "dateModified": "2022-09-20",
+  "measurementTechnique": [
+    "BIDS task: taskplacebo6m",
+    "BIDS task: taskplacebopre"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Carlos López"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds003195-bids-bucket",
+      "name": "ds003195 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS003195.",
+      "contentUrl": "s3://openneuro.org/ds003195",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds003195-openneuro",

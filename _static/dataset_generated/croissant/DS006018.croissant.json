@@ -99,7 +99,29 @@
   ],
   "citeAs": "Elif Isbell, Amanda N. Peters, Dylan M. Richardson, Nancy E. R. De León (2025). Cognitive Electrophysiology in Socioeconomic Context in Adulthood: An EEG dataset. doi:10.18112/openneuro.ds006018.v1.2.2",
   "version": "1.9.0",
+  "dateCreated": "2025-03-14",
+  "dateModified": "2025-05-22",
+  "measurementTechnique": [
+    "BIDS task: auditoryoddball",
+    "BIDS task: flanker",
+    "BIDS task: visualoddball",
+    "BIDS task: visualsearch"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Elif Isbell"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006018-bids-bucket",
+      "name": "ds006018 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS006018.",
+      "contentUrl": "s3://openneuro.org/ds006018",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds006018-openneuro",

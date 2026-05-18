@@ -114,6 +114,19 @@
   ],
   "citeAs": "Seyed Yahya Shirazi, Alexandre Franco, Maurício Scopel Hoffmann, Nathalia B. Esper, Dung Truong (2024). Healthy Brain Network (HBN) EEG - Release 6 (BDF Converted). doi:10.18112/openneuro.ds005510.v1.0.1",
   "version": "1.9.0",
+  "dateCreated": "2024-10-04",
+  "measurementTechnique": [
+    "BIDS task: DespicableMe",
+    "BIDS task: DiaryOfAWimpyKid",
+    "BIDS task: FunwithFractals",
+    "BIDS task: RestingState",
+    "BIDS task: ThePresent",
+    "BIDS task: contrastChangeDetection",
+    "BIDS task: seqLearning6target",
+    "BIDS task: seqLearning8target",
+    "BIDS task: surroundSupp",
+    "BIDS task: symbolSearch"
+  ],
   "distribution": [
     {
       "@type": "cr:FileObject",

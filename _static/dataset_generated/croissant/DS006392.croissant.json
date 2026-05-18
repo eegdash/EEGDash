@@ -100,7 +100,26 @@
   ],
   "citeAs": "Tal Pal Attia, Kay Robbins, Dora Hermes (2025). HED schema library for SCORE annotations example. doi:10.18112/openneuro.ds006392.v1.0.1",
   "version": "1.9.0",
+  "dateCreated": "2025-06-25",
+  "dateModified": "2025-06-25",
+  "measurementTechnique": [
+    "BIDS task: photicstim"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Dora Hermes"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006392-bids-bucket",
+      "name": "ds006392 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS006392.",
+      "contentUrl": "s3://openneuro.org/ds006392",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds006392-openneuro",

@@ -100,7 +100,26 @@
   ],
   "citeAs": "Haydn G. Herrema, Michael J. Kahana (2023). Delayed Free Recall of Word Lists. doi:10.18112/openneuro.ds004789.v3.1.0",
   "version": "1.7.0",
+  "dateCreated": "2023-10-10",
+  "dateModified": "2024-04-22",
+  "measurementTechnique": [
+    "BIDS task: FR1"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Haydn Herrema"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004789-bids-bucket",
+      "name": "ds004789 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004789.",
+      "contentUrl": "s3://openneuro.org/ds004789",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004789-openneuro",

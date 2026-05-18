@@ -104,7 +104,42 @@
   ],
   "citeAs": "Marissa Westerfield (data, curation), Scott Makeig (data, curation), Dung Truong (curation), Kay Robbins (curation), Arno Delorme (curation) (2020). Auditory-Visual Shift Study. doi:10.18112/openneuro.ds002893.v2.0.0",
   "version": "1.7.0",
+  "dateCreated": "2020-06-15",
+  "dateModified": "2022-06-18",
+  "measurementTechnique": [
+    "BIDS task: AuditoryVisualShift"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Dung Truong"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Arnaud Delorme"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Kay Robbins"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Clement Lee"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Annalisa Salazar"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds002893-bids-bucket",
+      "name": "ds002893 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS002893.",
+      "contentUrl": "s3://openneuro.org/ds002893",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds002893-openneuro",

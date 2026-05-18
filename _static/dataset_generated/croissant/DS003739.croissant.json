@@ -99,7 +99,29 @@
   ],
   "citeAs": "Steven Peterson, Daniel Ferris (2021). Perturbed beam-walking task. doi:10.18112/openneuro.ds003739.v1.0.2",
   "version": "v1.6.0",
+  "dateCreated": "2021-07-22",
+  "dateModified": "2021-11-26",
+  "measurementTechnique": [
+    "BIDS task: pullstand",
+    "BIDS task: pullwalk",
+    "BIDS task: rotatestand",
+    "BIDS task: rotatewalk"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Steven Peterson"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds003739-bids-bucket",
+      "name": "ds003739 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS003739.",
+      "contentUrl": "s3://openneuro.org/ds003739",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds003739-openneuro",

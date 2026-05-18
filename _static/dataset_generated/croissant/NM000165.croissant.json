@@ -128,7 +128,28 @@
   ],
   "citeAs": "Agnese Grison, Irene Mendez Guerra, Alexander Kenneth Clarke, Silvia Muceli, Jaime Ibanez Pereda (20). MUniverse Grison et al 2025. doi:https://doi.org/10.7910/DVN/ID1WNQ",
   "version": "1.11.1",
+  "dateModified": "2026-04-08",
+  "measurementTechnique": [
+    "BIDS task: isometric10percentmvc",
+    "BIDS task: isometric15percentmvc",
+    "BIDS task: isometric20percentmvc",
+    "BIDS task: isometric25percentmvc",
+    "BIDS task: isometric30percentmvc",
+    "BIDS task: isometric35percentmvc",
+    "BIDS task: isometric40percentmvc",
+    "BIDS task: isometric50percentmvc",
+    "BIDS task: isometric60percentmvc",
+    "BIDS task: isometric70percentmvc"
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000165-bids-bucket",
+      "name": "nm000165 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for NM000165.",
+      "contentUrl": "s3://nemar/nm000165",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "nm000165-openneuro",

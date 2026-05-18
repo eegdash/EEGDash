@@ -88,7 +88,31 @@
   ],
   "citeAs": "Petunia Reinke, Lisa Deneke, Sebastian Ocklenburg (2026). EEG-Asymmetries Dataset. doi:10.18112/openneuro.ds007172.v1.0.0",
   "version": "1.7.0",
+  "dateCreated": "2026-01-05",
+  "dateModified": "2026-01-06",
+  "measurementTechnique": [
+    "BIDS task: emotions",
+    "BIDS task: emotios",
+    "BIDS task: faces",
+    "BIDS task: houses",
+    "BIDS task: rest",
+    "BIDS task: words"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Petunia Reinke"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007172-bids-bucket",
+      "name": "ds007172 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS007172.",
+      "contentUrl": "s3://openneuro.org/ds007172",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds007172-openneuro",

@@ -112,7 +112,30 @@
   ],
   "citeAs": "Jonathan Touryan (data and curation), Brent Lance (data), Scott Kerick (data), Anthony Ries (data), Kaleb McDowell (data) (2022). BCIT Basic Guard Duty. doi:10.18112/openneuro.ds004119.v1.0.0",
   "version": "1.7.0",
+  "dateCreated": "2022-05-02",
+  "dateModified": "2022-05-04",
+  "measurementTechnique": [
+    "BIDS task: GuardDuty"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Kay Robbins"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Jonathan Touryan"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004119-bids-bucket",
+      "name": "ds004119 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004119.",
+      "contentUrl": "s3://openneuro.org/ds004119",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004119-openneuro",

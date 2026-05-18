@@ -85,7 +85,30 @@
   ],
   "citeAs": "Ana Matran-Fernandez, Sebastian Halder (2025). Essex EEG Movie Memory dataset. doi:10.18112/openneuro.ds006142.v1.0.2",
   "version": "1.7.0",
+  "dateCreated": "2025-04-17",
+  "dateModified": "2025-09-03",
+  "measurementTechnique": [
+    "BIDS task: MovieMemory"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Ana Matran-Fernandez"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Sebastian Halder"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006142-bids-bucket",
+      "name": "ds006142 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS006142.",
+      "contentUrl": "s3://openneuro.org/ds006142",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds006142-openneuro",

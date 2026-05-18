@@ -128,7 +128,26 @@
   ],
   "citeAs": "Aya Kanno, Ryuzaburo Kochi, Kazuki Sakakura, Yu Kitazawa, Hiroshi Uda (2024). Auditory naming. doi:10.18112/openneuro.ds005545.v1.0.3",
   "version": "1.7.0",
+  "dateCreated": "2024-09-30",
+  "dateModified": "2025-04-23",
+  "measurementTechnique": [
+    "BIDS task: auditory"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Aya Kanno"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005545-bids-bucket",
+      "name": "ds005545 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005545.",
+      "contentUrl": "s3://openneuro.org/ds005545",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005545-openneuro",

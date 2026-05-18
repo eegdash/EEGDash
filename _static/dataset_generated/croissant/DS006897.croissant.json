@@ -95,7 +95,26 @@
   ],
   "citeAs": "Roy, N., Coll, MP, Coll LAB (2025). No effect of rhythmic visual stimulation on experimental pain perception. doi:10.18112/openneuro.ds006897.v1.0.0",
   "version": "1.9.0",
+  "dateCreated": "2025-11-04",
+  "dateModified": "2026-04-10",
+  "measurementTechnique": [
+    "BIDS task: eegsvr"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Michel-Pierre Coll"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006897-bids-bucket",
+      "name": "ds006897 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS006897.",
+      "contentUrl": "s3://openneuro.org/ds006897",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds006897-openneuro",

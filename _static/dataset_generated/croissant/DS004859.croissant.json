@@ -92,7 +92,26 @@
   ],
   "citeAs": "Kazuki Sakakura, Eishi Asano (2023). iEEG on children during Stroop task. doi:10.18112/openneuro.ds004859.v1.0.0",
   "version": "1.7.0",
+  "dateCreated": "2023-11-22",
+  "dateModified": "2023-11-22",
+  "measurementTechnique": [
+    "BIDS task: stroop"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Kaz Sakakura"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004859-bids-bucket",
+      "name": "ds004859 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004859.",
+      "contentUrl": "s3://openneuro.org/ds004859",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004859-openneuro",

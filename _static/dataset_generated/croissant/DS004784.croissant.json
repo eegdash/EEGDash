@@ -85,7 +85,39 @@
   ],
   "citeAs": "Ryan J. Downey, Daniel P. Ferris (2023). Phantom EEG Dataset with Motion, Muscle, and Eye Artifacts and Example Scripts. doi:10.18112/openneuro.ds004784.v1.0.4",
   "version": "1.8.0",
+  "dateCreated": "2023-09-29",
+  "dateModified": "2023-12-21",
+  "measurementTechnique": [
+    "BIDS task: All",
+    "BIDS task: Brain",
+    "BIDS task: Eyes",
+    "BIDS task: Facial",
+    "BIDS task: Neck",
+    "BIDS task: Walking"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Annalisa Salazar"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Arnaud Delorme"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Ryan Downey"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004784-bids-bucket",
+      "name": "ds004784 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004784.",
+      "contentUrl": "s3://openneuro.org/ds004784",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004784-openneuro",

@@ -88,7 +88,26 @@
   ],
   "citeAs": "Niu，Haijing, Zheng, Sha, Yuan, Haodong (2026). TimeSeries BIDS converted. doi:10.18112/openneuro.ds007477.v1.0.1",
   "version": "1.7.0",
+  "dateCreated": "2026-03-06",
+  "dateModified": "2026-03-18",
+  "measurementTechnique": [
+    "BIDS task: ort"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "浩东 苑"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007477-bids-bucket",
+      "name": "ds007477 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS007477.",
+      "contentUrl": "s3://openneuro.org/ds007477",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds007477-openneuro",

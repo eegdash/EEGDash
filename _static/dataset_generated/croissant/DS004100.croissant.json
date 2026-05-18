@@ -118,7 +118,39 @@
   ],
   "citeAs": "John M. Bernabei, Adam Li, Andrew Y. Revell, Rachel J. Smith, Kristin M. Gunnarsdottir (2022). HUP iEEG Epilepsy Dataset. doi:10.18112/openneuro.ds004100.v1.1.3",
   "version": "1.4.0",
+  "dateCreated": "2022-04-17",
+  "dateModified": "2023-03-22",
+  "measurementTechnique": [
+    "BIDS task: ictal",
+    "BIDS task: interictal"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Adam Li"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Adam Li"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "John Bernabei"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Ian Ong"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004100-bids-bucket",
+      "name": "ds004100 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004100.",
+      "contentUrl": "s3://openneuro.org/ds004100",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004100-openneuro",

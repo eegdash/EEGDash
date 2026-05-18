@@ -89,7 +89,26 @@
   ],
   "citeAs": "Couperus, J.W., Bukach, C.M., Reed, C.L. (2025). PURSUE N400 Word Processing. doi:10.18112/openneuro.ds007052.v1.1.2",
   "version": "1.8.0",
+  "dateCreated": "2025-12-09",
+  "dateModified": "2025-12-11",
+  "measurementTechnique": [
+    "BIDS task: WordPR"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Jane Couperus"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007052-bids-bucket",
+      "name": "ds007052 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS007052.",
+      "contentUrl": "s3://openneuro.org/ds007052",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds007052-openneuro",

@@ -92,7 +92,26 @@
   ],
   "citeAs": "Yu Kitazawa, Eishi Asano (2024). Auditory naming task with questions that begin or end with a wh-interrogative. doi:10.18112/openneuro.ds005007.v1.0.0",
   "version": "1.7.0",
+  "dateCreated": "2024-03-05",
+  "dateModified": "2024-03-07",
+  "measurementTechnique": [
+    "BIDS task: namingtask"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Kitazawa Yu"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005007-bids-bucket",
+      "name": "ds005007 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005007.",
+      "contentUrl": "s3://openneuro.org/ds005007",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005007-openneuro",

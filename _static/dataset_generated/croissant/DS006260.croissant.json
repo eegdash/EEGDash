@@ -111,7 +111,26 @@
   ],
   "citeAs": "César E. Corona-González, Claudia Rebeca De Stefano-Ramos, Juan Pablo Rosado-Aíza, David I. Ibarra-Zarate, Fabiola R. Gómez-Velázquez (2025). Dataset of psychophysiological data from children with learning difficulties who strengthen reading and math skills through assistive technology. doi:10.18112/openneuro.ds006260.v1.0.1",
   "version": "1.8.0",
+  "dateCreated": "2025-05-23",
+  "dateModified": "2025-05-29",
+  "measurementTechnique": [
+    "BIDS task: SmartickDataset"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Corona-González, César E."
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006260-bids-bucket",
+      "name": "ds006260 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS006260.",
+      "contentUrl": "s3://openneuro.org/ds006260",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds006260-openneuro",

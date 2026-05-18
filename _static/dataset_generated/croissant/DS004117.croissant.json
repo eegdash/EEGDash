@@ -108,7 +108,30 @@
   ],
   "citeAs": "Julie Onton (data), Scott Makeig (data and curation), Arnaud Delorme (data and curation), Dung Truong (curation), Kay Robbins (curation) (2022). Sternberg Working Memory. doi:10.18112/openneuro.ds004117.v1.0.1",
   "version": "1.7.0",
+  "dateCreated": "2022-05-01",
+  "dateModified": "2022-06-16",
+  "measurementTechnique": [
+    "BIDS task: WorkingMemory"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Dung Truong"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Kay Robbins"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004117-bids-bucket",
+      "name": "ds004117 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004117.",
+      "contentUrl": "s3://openneuro.org/ds004117",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004117-openneuro",

@@ -105,7 +105,23 @@
   ],
   "citeAs": "Ian Daly, Nicoletta Nicolaou, Duncan Williams, Faustina Hwang, Alexis Kirke (2020). An EEG dataset recorded during affective music listening. doi:10.18112/openneuro.ds002721.v1.0.2",
   "version": "1.0.2",
+  "dateCreated": "2020-04-22",
+  "dateModified": "2024-02-19",
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Ian Daly"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds002721-bids-bucket",
+      "name": "ds002721 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS002721.",
+      "contentUrl": "s3://openneuro.org/ds002721",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds002721-openneuro",

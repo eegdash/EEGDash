@@ -102,7 +102,26 @@
   ],
   "citeAs": "Matthew Ning, Sudan Duwadi, Meryem A. Yucel, Alexander Von Luhmann, David A. Boas (2023). Spatial Attention Decoding using fNIRS During Complex Scene Analysis. doi:10.18112/openneuro.ds004830.v2.0.0",
   "version": "1.7.1",
+  "dateCreated": "2023-10-27",
+  "dateModified": "2026-02-27",
+  "measurementTechnique": [
+    "BIDS task: overt"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Sudan Duwadi"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004830-bids-bucket",
+      "name": "ds004830 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004830.",
+      "contentUrl": "s3://openneuro.org/ds004830",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004830-openneuro",

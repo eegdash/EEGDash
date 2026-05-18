@@ -103,7 +103,33 @@
   ],
   "citeAs": "Dzianok Patrycja, Antonova Ingrida, Wojciechowski Jakub, Dreszer Joanna, Kublik Ewa (2023). The Nencki-Symfonia EEG/ERP dataset. doi:10.18112/openneuro.ds004621.v1.0.4",
   "version": "1.0.2",
+  "dateCreated": "2023-06-26",
+  "dateModified": "2025-06-21",
+  "measurementTechnique": [
+    "BIDS task: msit",
+    "BIDS task: oddball",
+    "BIDS task: rest",
+    "BIDS task: srt"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Patrycja Dzianok"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Patrycja Dzianok"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004621-bids-bucket",
+      "name": "ds004621 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004621.",
+      "contentUrl": "s3://openneuro.org/ds004621",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004621-openneuro",

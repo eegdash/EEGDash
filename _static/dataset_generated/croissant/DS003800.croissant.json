@@ -99,7 +99,27 @@
   ],
   "citeAs": "Mojtaba Lahijanian, Mohammad Javad Sedghizadeh, Hamid Aghajan, Zahra Vahabi (2021). Auditory Gamma Entrainment. doi:10.18112/openneuro.ds003800.v1.0.0",
   "version": "1.0.0",
+  "dateCreated": "2021-09-12",
+  "dateModified": "2021-09-27",
+  "measurementTechnique": [
+    "BIDS task: AuditoryGammaEntrainment",
+    "BIDS task: Rest"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Mojtaba Lahijanian"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds003800-bids-bucket",
+      "name": "ds003800 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS003800.",
+      "contentUrl": "s3://openneuro.org/ds003800",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds003800-openneuro",

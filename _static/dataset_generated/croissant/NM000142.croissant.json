@@ -92,7 +92,19 @@
   ],
   "citeAs": "Xiaoli Wu, Wenhui Zhang, Zhibo Fu, Roy T.H. Cheung, Rosa H.M. Chan (2020). Ear-EEG motor execution dataset from Wu et al 2020. doi:10.82901/nemar.nm000142",
   "version": "1.9.0",
+  "dateModified": "2026-04-17",
+  "measurementTechnique": [
+    "BIDS task: imagery"
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000142-bids-bucket",
+      "name": "nm000142 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for NM000142.",
+      "contentUrl": "s3://nemar/nm000142",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "nm000142-openneuro",

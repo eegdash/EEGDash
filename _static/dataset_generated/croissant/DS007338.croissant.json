@@ -98,7 +98,26 @@
   ],
   "citeAs": "Martyna Beata Płomecka, Ard Kastrati, Nicolas Langer (2026). EEGEyeNet Dataset. doi:10.18112/openneuro.ds007338.v1.0.0",
   "version": "1.7.0",
+  "dateCreated": "2026-01-27",
+  "dateModified": "2026-01-27",
+  "measurementTechnique": [
+    "BIDS task: dots"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Scott Huberty"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007338-bids-bucket",
+      "name": "ds007338 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS007338.",
+      "contentUrl": "s3://openneuro.org/ds007338",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds007338-openneuro",

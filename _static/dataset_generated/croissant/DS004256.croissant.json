@@ -89,7 +89,27 @@
   ],
   "citeAs": "Ole Bialas, Marc Schoenwiesner, Burkhard Maess (2022). Encoding of Sound Source Elevation in Human Cortex. doi:10.18112/openneuro.ds004256.v1.0.5",
   "version": "1.6.0",
+  "dateCreated": "2022-08-29",
+  "dateModified": "2022-09-24",
+  "measurementTechnique": [
+    "BIDS task: deviantdetection",
+    "BIDS task: oneback"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Ole Bialas"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004256-bids-bucket",
+      "name": "ds004256 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004256.",
+      "contentUrl": "s3://openneuro.org/ds004256",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004256-openneuro",

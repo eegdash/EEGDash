@@ -129,7 +129,26 @@
   ],
   "citeAs": "Aimilia Ntetska, Andreas Miltiadous, Alexandros T. Tzallas, Katerina D. Tzimourta, Theodora Afrantou (2025). A complementary dataset of open-eyes EEG recordings in a photo-stimulation setting from: Alzheimer's disease, Frontotemporal dementia and Healthy subjects. doi:10.18112/openneuro.ds006036.v1.0.6",
   "version": "1.8.0",
+  "dateCreated": "2025-03-21",
+  "dateModified": "2026-03-31",
+  "measurementTechnique": [
+    "BIDS task: photomark"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Andreas Miltiadous"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006036-bids-bucket",
+      "name": "ds006036 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS006036.",
+      "contentUrl": "s3://openneuro.org/ds006036",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds006036-openneuro",

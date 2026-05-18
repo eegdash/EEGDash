@@ -85,7 +85,30 @@
   ],
   "citeAs": "Arnaud Delorme, Tracy Brandmeyer (2019). EEG meditation study. doi:10.18112/openneuro.ds001787.v1.1.1",
   "version": "1.1.1",
+  "dateCreated": "2019-03-09",
+  "dateModified": "2024-06-17",
+  "measurementTechnique": [
+    "BIDS task: meditation"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Arnaud Delorme"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Annalisa Salazar"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds001787-bids-bucket",
+      "name": "ds001787 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS001787.",
+      "contentUrl": "s3://openneuro.org/ds001787",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds001787-openneuro",

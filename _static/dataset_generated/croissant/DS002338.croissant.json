@@ -111,7 +111,29 @@
   ],
   "citeAs": "Giulia Lioi, Claire Cury, Lorraine Perronnet, Marsel Mano, Elise Bannier (2019). A multi-modal human neuroimaging dataset for data integration: simultaneous EEG and fMRI acquisition during a motor imagery neurofeedback task: XP2. doi:10.18112/openneuro.ds002338.v2.0.1",
   "version": "1.2.0",
+  "dateCreated": "2019-12-03",
+  "dateModified": "2022-03-31",
+  "measurementTechnique": [
+    "BIDS task: 1dNF",
+    "BIDS task: 2dNF",
+    "BIDS task: MIpost",
+    "BIDS task: MIpre"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Claire Cury"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds002338-bids-bucket",
+      "name": "ds002338 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS002338.",
+      "contentUrl": "s3://openneuro.org/ds002338",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds002338-openneuro",

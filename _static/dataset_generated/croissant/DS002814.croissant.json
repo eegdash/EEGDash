@@ -103,7 +103,30 @@
   ],
   "citeAs": "Fatemeh Ebrahiminia, Morteza Mahdiani, Seyed-Mahdi Khaligh-Razavi (2020). A Multimodal Neuroimaging Dataset to Study Spatiotemporal Dynamics of Visual Processing in Humans. doi:10.18112/openneuro.ds002814.v1.3.0",
   "version": "1.0.1",
+  "dateCreated": "2020-05-20",
+  "dateModified": "2021-12-10",
+  "measurementTechnique": [
+    "BIDS task: categorySelectivity"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "morteza mahdiani"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Seyed-Mahdi Khaligh-Razavi"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds002814-bids-bucket",
+      "name": "ds002814 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS002814.",
+      "contentUrl": "s3://openneuro.org/ds002814",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds002814-openneuro",

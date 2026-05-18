@@ -127,7 +127,26 @@
   ],
   "citeAs": "Moerel, Denise, Grootswagers, Tijl, Robinson, Amanda, Shatek, Sophia, Woolgar, Alexandra (2022). The time-course of feature-based attention effects dissociated from temporal expectation and target-related processes. doi:10.18112/openneuro.ds004043.v1.1.0",
   "version": "1.0.2",
+  "dateCreated": "2022-02-25",
+  "dateModified": "2022-02-25",
+  "measurementTechnique": [
+    "BIDS task: tempex"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Tijl Grootswagers"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004043-bids-bucket",
+      "name": "ds004043 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004043.",
+      "contentUrl": "s3://openneuro.org/ds004043",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004043-openneuro",

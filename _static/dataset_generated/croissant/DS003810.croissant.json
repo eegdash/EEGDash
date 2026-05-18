@@ -93,7 +93,26 @@
   ],
   "citeAs": "Victoria Peterson, Catalina Maria Galvan, Hugo Sacha Hernadez, Ruben Spies (2021). Motor Imagery vs Rest - Low-Cost EEG System. doi:10.18112/openneuro.ds003810.v2.0.2",
   "version": "1.1.1",
+  "dateCreated": "2021-09-20",
+  "dateModified": "2021-11-09",
+  "measurementTechnique": [
+    "BIDS task: MIvsRest"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "María Paula Saavedra"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds003810-bids-bucket",
+      "name": "ds003810 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS003810.",
+      "contentUrl": "s3://openneuro.org/ds003810",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds003810-openneuro",

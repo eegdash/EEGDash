@@ -88,7 +88,19 @@
   ],
   "citeAs": "Patrick Kaifosh, Thomas R. Reardon, CTRL-labs at Reality Labs (2019). FRL Discrete Gestures: Hand Gesture Recognition from Surface Electromyography. doi:10.82901/nemar.nm000105",
   "version": "1.11.0",
+  "dateModified": "2026-02-25",
+  "measurementTechnique": [
+    "BIDS task: discretegestures"
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000105-bids-bucket",
+      "name": "nm000105 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for NM000105.",
+      "contentUrl": "s3://nemar/nm000105",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "nm000105-openneuro",

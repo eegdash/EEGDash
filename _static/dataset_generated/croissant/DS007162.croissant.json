@@ -84,7 +84,26 @@
   ],
   "citeAs": "[Unspecified1], [Unspecified2] (2026). Adaptive recruitment of cortex-wide recurrence for visual object recognition (EEG). doi:10.18112/openneuro.ds007162.v1.0.0",
   "version": "1.7.0",
+  "dateCreated": "2026-01-04",
+  "dateModified": "2026-01-05",
+  "measurementTechnique": [
+    "BIDS task: rcor"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Pablo Oyarzo"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007162-bids-bucket",
+      "name": "ds007162 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS007162.",
+      "contentUrl": "s3://openneuro.org/ds007162",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds007162-openneuro",

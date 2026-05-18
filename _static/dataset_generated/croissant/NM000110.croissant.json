@@ -93,7 +93,19 @@
   ],
   "citeAs": "Jack Connolly, Herman Edwards, Blaise Bourgeois, S. Ted Treves, Ali Shoeb (2010). CHB-MIT. doi:10.82901/nemar.nm000110",
   "version": "1.7.0",
+  "dateModified": "2026-03-13",
+  "measurementTechnique": [
+    "BIDS task: rest"
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000110-bids-bucket",
+      "name": "nm000110 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for NM000110.",
+      "contentUrl": "s3://nemar/nm000110",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "nm000110-openneuro",

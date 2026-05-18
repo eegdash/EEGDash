@@ -93,7 +93,26 @@
   ],
   "citeAs": "Sudhakar Mishra, Md. Asif, Uma Shanker Tiwary, Narayanan Srinivasan (2021). Dataset on Emotion with Naturalistic Stimuli (DENS). doi:10.18112/openneuro.ds003751.v1.0.2",
   "version": "1.4",
+  "dateCreated": "2021-07-30",
+  "dateModified": "2023-07-08",
+  "measurementTechnique": [
+    "BIDS task: Emotion"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "SUDHAKAR MISHRA"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds003751-bids-bucket",
+      "name": "ds003751 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS003751.",
+      "contentUrl": "s3://openneuro.org/ds003751",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds003751-openneuro",

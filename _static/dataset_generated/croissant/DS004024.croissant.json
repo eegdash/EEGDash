@@ -103,7 +103,28 @@
   ],
   "citeAs": "Julio Cesar Hernandez Pavon, Nils Schneider Garces, John Patrick Begnoche, Lee Miller, Tommi Raij (2022). TMS-EEG-MRI-fMRI-DWI data on paired associative stimulation and connectivity (Shirley Ryan AbilityLab, Chicago, IL). doi:10.18112/openneuro.ds004024.v1.0.1",
   "version": "1.6.0",
+  "dateCreated": "2022-02-11",
+  "dateModified": "2022-10-19",
+  "measurementTechnique": [
+    "BIDS task: ccPAS",
+    "BIDS task: rest",
+    "BIDS task: spTMS"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Tommi Raij"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004024-bids-bucket",
+      "name": "ds004024 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004024.",
+      "contentUrl": "s3://openneuro.org/ds004024",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004024-openneuro",

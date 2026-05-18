@@ -81,7 +81,30 @@
   ],
   "citeAs": "Klaus Gramann, Thomas Töllner, Hermann J. Müller (2025). Dimension-based attention modulates early visual processing. doi:10.18112/openneuro.ds006563.v1.0.0",
   "version": "1.8.0",
+  "dateCreated": "2025-08-15",
+  "dateModified": "2025-08-15",
+  "measurementTechnique": [
+    "BIDS task: DimensionDiscrimination"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Carlos H. Mendoza-Cardenas"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Austin Jay Brockmeier"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006563-bids-bucket",
+      "name": "ds006563 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS006563.",
+      "contentUrl": "s3://openneuro.org/ds006563",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds006563-openneuro",

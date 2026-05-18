@@ -96,7 +96,28 @@
   ],
   "citeAs": "Liberty S. Hamilton, Maansi Desai, Alyssa Field (2024). WIRED ICM Sample Dataset - Workshop on Intracranial Recordings in Humans, Epilepsy, DBS. doi:10.18112/openneuro.ds004993.v1.1.2",
   "version": "1.7.0",
+  "dateCreated": "2024-02-25",
+  "dateModified": "2024-03-01",
+  "measurementTechnique": [
+    "BIDS task: movietrailers",
+    "BIDS task: timit4",
+    "BIDS task: timit5"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Liberty Hamilton"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004993-bids-bucket",
+      "name": "ds004993 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004993.",
+      "contentUrl": "s3://openneuro.org/ds004993",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004993-openneuro",

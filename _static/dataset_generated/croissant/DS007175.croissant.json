@@ -80,7 +80,26 @@
   ],
   "citeAs": "[Unspecified] (2026). FFR-active-listening. doi:10.18112/openneuro.ds007175.v1.0.1",
   "version": "1.6.0",
+  "dateCreated": "2026-01-06",
+  "dateModified": "2026-01-07",
+  "measurementTechnique": [
+    "BIDS task: pitch"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Letitia Ho"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007175-bids-bucket",
+      "name": "ds007175 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS007175.",
+      "contentUrl": "s3://openneuro.org/ds007175",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds007175-openneuro",

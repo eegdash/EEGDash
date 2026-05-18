@@ -107,7 +107,26 @@
   ],
   "citeAs": "Rafal Bogacz, Vladimir Litvak (2020). Human MEG recordings during sequential conflict task. doi:10.18112/openneuro.ds002908.v1.0.0",
   "version": "1.0.1",
+  "dateCreated": "2020-06-22",
+  "dateModified": "2020-08-04",
+  "measurementTechnique": [
+    "BIDS task: mouse"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Eva Zita Patai"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds002908-bids-bucket",
+      "name": "ds002908 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS002908.",
+      "contentUrl": "s3://openneuro.org/ds002908",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds002908-openneuro",

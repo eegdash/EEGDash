@@ -98,7 +98,26 @@
   ],
   "citeAs": "Tamari Shalamberidze, Kyle Nash, Jeremy B. Caplan (2026). Resting-State EEG and Trait Anxiety. doi:10.18112/openneuro.ds007609.v1.0.0",
   "version": "1.9.0",
+  "dateCreated": "2026-03-31",
+  "dateModified": "2026-03-31",
+  "measurementTechnique": [
+    "BIDS task: rest"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Tamari Shalamberidze"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007609-bids-bucket",
+      "name": "ds007609 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS007609.",
+      "contentUrl": "s3://openneuro.org/ds007609",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds007609-openneuro",

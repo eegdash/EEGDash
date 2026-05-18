@@ -101,7 +101,26 @@
   ],
   "citeAs": "Seitaro Iwama, Masumi Morishige, Yoshikazu Takahashi, Ryotaro Hirose, Midori Kodama (2023). The BMI-HDEEG dataset 1. doi:10.18112/openneuro.ds004444.v1.0.1",
   "version": "1.7.0",
+  "dateCreated": "2023-01-25",
+  "dateModified": "2023-07-20",
+  "measurementTechnique": [
+    "BIDS task: smrbmi"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Seitaro Iwama"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004444-bids-bucket",
+      "name": "ds004444 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004444.",
+      "contentUrl": "s3://openneuro.org/ds004444",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004444-openneuro",

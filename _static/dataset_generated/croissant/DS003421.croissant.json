@@ -105,7 +105,26 @@
   ],
   "citeAs": "Ahmad Mheich, Olivier Dufor, Sahar Yassine, Aya Kabbara, Arnaud Biraben (2020). HD-EEGtask(Dataset 2). doi:10.18112/openneuro.ds003421.v1.0.2",
   "version": "1.2",
+  "dateCreated": "2020-12-04",
+  "dateModified": "2020-12-13",
+  "measurementTechnique": [
+    "BIDS task: PicturesNaming"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "EBN Lab"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds003421-bids-bucket",
+      "name": "ds003421 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS003421.",
+      "contentUrl": "s3://openneuro.org/ds003421",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds003421-openneuro",

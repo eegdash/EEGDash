@@ -139,7 +139,32 @@
   ],
   "citeAs": "Michael Pereira, Pierre Mégevand, Mi Xue Tan, Wenwen Chang, Shuo Wang (2019). Evidence accumulation relates to perceptual consciousness and monitoring. doi:10.18112/openneuro.ds001785.v1.1.1",
   "version": "1.1.1",
+  "dateCreated": "2019-03-08",
+  "dateModified": "2021-04-28",
+  "measurementTechnique": [
+    "BIDS task: adapt",
+    "BIDS task: thrdown",
+    "BIDS task: thrup"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Nathan Faivre"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Michael Pereira"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds001785-bids-bucket",
+      "name": "ds001785 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS001785.",
+      "contentUrl": "s3://openneuro.org/ds001785",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds001785-openneuro",

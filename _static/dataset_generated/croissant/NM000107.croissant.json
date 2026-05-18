@@ -88,7 +88,19 @@
   ],
   "citeAs": "Patrick Kaifosh, Thomas R. Reardon, CTRL-labs at Reality Labs (2025). FRL Wrist Control: Wrist Movement Decoding from Surface Electromyography. doi:10.82901/nemar.nm000107",
   "version": "1.11.0",
+  "dateModified": "2026-02-25",
+  "measurementTechnique": [
+    "BIDS task: wrist"
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000107-bids-bucket",
+      "name": "nm000107 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for NM000107.",
+      "contentUrl": "s3://nemar/nm000107",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "nm000107-openneuro",

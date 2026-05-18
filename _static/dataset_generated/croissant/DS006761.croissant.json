@@ -123,7 +123,26 @@
   ],
   "citeAs": "Moerel, Denise, Grootswagers, Tijl, Chin, Jessica L.L., Ciardo, Francesca, Nijhuis, Patti (2025). Neural decoding of competitive decision-making in Rock-Paper-Scissors. doi:10.18112/openneuro.ds006761.v1.0.0",
   "version": "1.0.2",
+  "dateCreated": "2025-10-08",
+  "dateModified": "2025-10-08",
+  "measurementTechnique": [
+    "BIDS task: RPS"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Denise Moerel"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006761-bids-bucket",
+      "name": "ds006761 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS006761.",
+      "contentUrl": "s3://openneuro.org/ds006761",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds006761-openneuro",

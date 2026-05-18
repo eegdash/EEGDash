@@ -101,7 +101,26 @@
   ],
   "citeAs": "V. Volpert, B. Xu, A. Tchechmedjiev, S. Harispe, A. Aksenov (2023). Forced Picture Naming Task. doi:10.18112/openneuro.ds004554.v1.0.4",
   "version": "1.8.0",
+  "dateCreated": "2023-04-21",
+  "dateModified": "2023-04-28",
+  "measurementTechnique": [
+    "BIDS task: picturenaming"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Binbin XU"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004554-bids-bucket",
+      "name": "ds004554 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004554.",
+      "contentUrl": "s3://openneuro.org/ds004554",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004554-openneuro",

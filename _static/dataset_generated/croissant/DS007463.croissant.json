@@ -140,7 +140,39 @@
     "https://openneuro.org/datasets/ds007463"
   ],
   "citeAs": "Morgan Fogarty, Sean M. Rafferty, Zachary E. Markow, Anthony C. O’Sullivan, Calamity F. Svoboda (2026). Very-High-Density Diffuse Optical Tomography System Validation Dataset. doi:10.18112/openneuro.ds007463.v1.1.1",
+  "dateCreated": "2026-03-02",
+  "dateModified": "2026-03-06",
+  "measurementTechnique": [
+    "BIDS task: AC001",
+    "BIDS task: AC002",
+    "BIDS task: GV001",
+    "BIDS task: GV002",
+    "BIDS task: GV003",
+    "BIDS task: HW001",
+    "BIDS task: HW002",
+    "BIDS task: HW003",
+    "BIDS task: MOT001",
+    "BIDS task: MOT002",
+    "BIDS task: MOV001",
+    "BIDS task: MOV002",
+    "BIDS task: MOV003",
+    "BIDS task: MOV004"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Morgan Fogarty"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007463-bids-bucket",
+      "name": "ds007463 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS007463.",
+      "contentUrl": "s3://openneuro.org/ds007463",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds007463-openneuro",

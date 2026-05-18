@@ -89,7 +89,36 @@
   ],
   "citeAs": "Amada Abrego, Wasif Khan, John P Seymour (2022). Somatosensory Cortex Rat DISC Data. doi:10.18112/openneuro.ds004127.v3.0.0",
   "version": "1.1.1",
+  "dateCreated": "2022-05-10",
+  "dateModified": "2022-08-23",
+  "measurementTechnique": [
+    "BIDS task: B1",
+    "BIDS task: B2",
+    "BIDS task: Beta",
+    "BIDS task: C1",
+    "BIDS task: C2",
+    "BIDS task: D1",
+    "BIDS task: D2",
+    "BIDS task: Delta",
+    "BIDS task: E1",
+    "BIDS task: Gamma",
+    "BIDS task: gamma"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Amada Abrego Mancilla"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004127-bids-bucket",
+      "name": "ds004127 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004127.",
+      "contentUrl": "s3://openneuro.org/ds004127",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004127-openneuro",

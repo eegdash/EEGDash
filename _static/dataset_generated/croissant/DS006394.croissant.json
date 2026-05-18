@@ -93,7 +93,27 @@
   ],
   "citeAs": "En-Lin Leong, Yun Da Chua, Takashi Obana, Christopher L. Asplund (2025). Electrophysiological markers of surprise-induced failures of visual and auditory awareness. doi:10.18112/openneuro.ds006394.v1.0.3",
   "version": "1.10.0",
+  "dateCreated": "2025-06-26",
+  "dateModified": "2025-06-27",
+  "measurementTechnique": [
+    "BIDS task: SiB",
+    "BIDS task: SiD"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "En-Lin Leong"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006394-bids-bucket",
+      "name": "ds006394 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS006394.",
+      "contentUrl": "s3://openneuro.org/ds006394",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds006394-openneuro",

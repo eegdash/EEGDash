@@ -142,7 +142,26 @@
   ],
   "citeAs": "Eduardo López-Larraz, María Sierra-Torralba, Sergio Clemente, Galit Fierro, David Oriol (2024). The Bitbrain Open Access Sleep (BOAS) dataset. doi:10.18112/openneuro.ds005555.v1.1.1",
   "version": "1.8.0",
+  "dateCreated": "2024-10-03",
+  "dateModified": "2025-05-22",
+  "measurementTechnique": [
+    "BIDS task: Sleep"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Eduardo López-Larraz"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005555-bids-bucket",
+      "name": "ds005555 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005555.",
+      "contentUrl": "s3://openneuro.org/ds005555",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005555-openneuro",

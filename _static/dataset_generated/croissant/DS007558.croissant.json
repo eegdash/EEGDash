@@ -80,7 +80,26 @@
   ],
   "citeAs": "Mengsha Qi (2026). EEG Pre/Post Intervention Dataset. doi:10.18112/openneuro.ds007558.v1.0.0",
   "version": "1.8.0",
+  "dateCreated": "2026-03-25",
+  "dateModified": "2026-03-25",
+  "measurementTechnique": [
+    "BIDS task: rest"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Mengsha Qi"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007558-bids-bucket",
+      "name": "ds007558 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS007558.",
+      "contentUrl": "s3://openneuro.org/ds007558",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds007558-openneuro",

@@ -85,7 +85,26 @@
   ],
   "citeAs": "Garima Singh, James F Cavanagh (2023). EEG: Alcohol imagery reinforcement learning task with light and heavy drinker participants. doi:10.18112/openneuro.ds004515.v1.0.0",
   "version": "1.1.1",
+  "dateCreated": "2023-03-01",
+  "dateModified": "2023-03-15",
+  "measurementTechnique": [
+    "BIDS task: ProbabilisticSelection"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "James F Cavanagh"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004515-bids-bucket",
+      "name": "ds004515 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004515.",
+      "contentUrl": "s3://openneuro.org/ds004515",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004515-openneuro",

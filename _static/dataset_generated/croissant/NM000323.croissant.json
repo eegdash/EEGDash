@@ -104,7 +104,19 @@
   ],
   "citeAs": "Min-Ho Lee, O-Yeon Kwon, Yong-Jeong Kim, Hong-Kyung Kim, Young-Eun Lee (2019). Lee et al. 2019 (ERP) — EEG dataset and OpenBMI toolbox for three BCI paradigms: an investigation into BCI illiteracy. doi:10.1093/gigascience/giz002",
   "version": "1.9.0",
+  "dateModified": "2026-04-11",
+  "measurementTechnique": [
+    "BIDS task: p300"
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000323-bids-bucket",
+      "name": "nm000323 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for NM000323.",
+      "contentUrl": "s3://nemar/nm000323",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "nm000323-openneuro",

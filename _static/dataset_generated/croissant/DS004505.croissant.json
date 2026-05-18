@@ -90,7 +90,26 @@
   ],
   "citeAs": "Amanda Studnicki, Daniel P. Ferris (2023). Real World Table Tennis. doi:10.18112/openneuro.ds004505.v1.0.4",
   "version": "1.1.1",
+  "dateCreated": "2023-02-17",
+  "dateModified": "2023-06-28",
+  "measurementTechnique": [
+    "BIDS task: TableTennis"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Amanda Studnicki"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004505-bids-bucket",
+      "name": "ds004505 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004505.",
+      "contentUrl": "s3://openneuro.org/ds004505",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004505-openneuro",

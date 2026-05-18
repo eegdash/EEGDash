@@ -93,7 +93,26 @@
   ],
   "citeAs": "Giovanni M Di Liberto, Michael P Broderick, Ole Bialas, Edmund C Lalor (2023). EEG responses to continuous naturalistic speech. doi:10.18112/openneuro.ds004408.v1.0.8",
   "version": "1.7.0",
+  "dateCreated": "2023-01-17",
+  "dateModified": "2023-08-01",
+  "measurementTechnique": [
+    "BIDS task: listening"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Ole Bialas"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004408-bids-bucket",
+      "name": "ds004408 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004408.",
+      "contentUrl": "s3://openneuro.org/ds004408",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004408-openneuro",

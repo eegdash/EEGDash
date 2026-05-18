@@ -86,7 +86,26 @@
   ],
   "citeAs": "Alexander P. Rockhill, Ahmed M. Raslan (2024). Numbers. doi:10.18112/openneuro.ds005415.v1.0.0",
   "version": "1.9.9",
+  "dateCreated": "2024-08-17",
+  "dateModified": "2024-10-25",
+  "measurementTechnique": [
+    "BIDS task: numbers"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Alexander Rockhill"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005415-bids-bucket",
+      "name": "ds005415 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005415.",
+      "contentUrl": "s3://openneuro.org/ds005415",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005415-openneuro",

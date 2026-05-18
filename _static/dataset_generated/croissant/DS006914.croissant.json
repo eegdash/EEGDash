@@ -124,7 +124,26 @@
   ],
   "citeAs": "Ryuzaburo Kochi, Aya Kanno, Hiroshi Uda, Keisuke Hatano, Masaki Sonoda (2025). Visual Naming EC. doi:10.18112/openneuro.ds006914.v1.0.3",
   "version": "1.7.0",
+  "dateCreated": "2025-11-09",
+  "dateModified": "2025-11-13",
+  "measurementTechnique": [
+    "BIDS task: picture"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Ryuzaburo Kochi"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006914-bids-bucket",
+      "name": "ds006914 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS006914.",
+      "contentUrl": "s3://openneuro.org/ds006914",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds006914-openneuro",

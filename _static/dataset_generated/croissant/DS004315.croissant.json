@@ -85,7 +85,30 @@
   ],
   "citeAs": "James F Cavanagh, Trevor C J Jackson (2022). Mood Manipulation and PST, Experiment 1. doi:10.18112/openneuro.ds004315.v1.0.0",
   "version": "1.1.1",
+  "dateCreated": "2022-10-27",
+  "dateModified": "2022-10-27",
+  "measurementTechnique": [
+    "BIDS task: PST"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Trevor C. J. Jackson"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "James F Cavanagh"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004315-bids-bucket",
+      "name": "ds004315 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004315.",
+      "contentUrl": "s3://openneuro.org/ds004315",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004315-openneuro",

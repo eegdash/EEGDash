@@ -89,7 +89,19 @@
   ],
   "citeAs": "Bob Kemp, Aeilko H. Zwinderman, Bert Tuk, Hilbert A.C. Kamphuisen, Josefien J.L. Oberye (2000). Sleep-EDF Expanded: Whole-Night PSG Recordings. doi:10.13026/C2X676",
   "version": "1.9.0",
+  "dateModified": "2026-04-09",
+  "measurementTechnique": [
+    "BIDS task: sleep"
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000185-bids-bucket",
+      "name": "nm000185 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for NM000185.",
+      "contentUrl": "s3://nemar/nm000185",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "nm000185-openneuro",

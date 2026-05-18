@@ -101,7 +101,26 @@
   ],
   "citeAs": "Seho Lee, Hee Ra Jung, In-Nea Wang, Min-Kyung Jung, Hakseung Kim (2022). Multimodal EEG and fNIRS Biosignal Acquisition during Motor Imagery Tasks in Patients with Orthopedic Impairment. doi:10.18112/openneuro.ds004022.v1.0.0",
   "version": "1.0.2",
+  "dateCreated": "2022-02-11",
+  "dateModified": "2022-02-09",
+  "measurementTechnique": [
+    "BIDS task: motorimagery"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "‍김동주[ 부교수 / 뇌공학과 ]"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004022-bids-bucket",
+      "name": "ds004022 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004022.",
+      "contentUrl": "s3://openneuro.org/ds004022",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004022-openneuro",

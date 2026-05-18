@@ -97,7 +97,26 @@
   ],
   "citeAs": "Bjoern Holtze, Marc Rosenkranz, Manuela Jaeger, Stefan Debener, Bojana Mirkovic (2022). Attended speaker paradigm (cEEGrid data). doi:10.18112/openneuro.ds004015.v1.0.2",
   "version": "v5.2",
+  "dateCreated": "2022-02-03",
+  "dateModified": "2022-10-04",
+  "measurementTechnique": [
+    "BIDS task: AttendedSpeakerParadigmcEEGridAttention"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Björn Holtze"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004015-bids-bucket",
+      "name": "ds004015 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004015.",
+      "contentUrl": "s3://openneuro.org/ds004015",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004015-openneuro",

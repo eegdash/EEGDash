@@ -106,7 +106,19 @@
   ],
   "citeAs": "James R. Stieger, Stephen A. Engel, Bin He (2021). Stieger et al. 2021 — Continuous sensorimotor rhythm based brain computer interface learning in a large population. doi:10.1038/s41597-021-00883-1",
   "version": "1.9.0",
+  "dateModified": "2026-04-11",
+  "measurementTechnique": [
+    "BIDS task: imagery"
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000339-bids-bucket",
+      "name": "nm000339 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for NM000339.",
+      "contentUrl": "s3://nemar/nm000339",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "nm000339-openneuro",

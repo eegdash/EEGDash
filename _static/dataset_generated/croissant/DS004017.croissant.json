@@ -119,7 +119,23 @@
   ],
   "citeAs": "Linn Damsgaard, Marta Topor, Anne-Mette Veber Nielsen, Anne Kær Gejl, Anne Sofie Bøgh Malling (2022). Embodied Learning for Literacy EEG. doi:10.18112/openneuro.ds004017.v1.0.3",
   "version": "1.2.0",
+  "dateCreated": "2022-02-08",
+  "dateModified": "2023-03-20",
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Marta Topor"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004017-bids-bucket",
+      "name": "ds004017 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004017.",
+      "contentUrl": "s3://openneuro.org/ds004017",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004017-openneuro",

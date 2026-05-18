@@ -94,7 +94,29 @@
   ],
   "citeAs": "Ahmet Levent Kandemir, Vladimir Litvak, Esther Florin (2020). DBS Phantom Recordings. doi:10.18112/openneuro.ds002885.v1.0.1",
   "version": "1.2",
+  "dateCreated": "2020-06-05",
+  "dateModified": "2020-06-24",
+  "measurementTechnique": [
+    "BIDS task: DMW",
+    "BIDS task: DSMW",
+    "BIDS task: EmptyRoom",
+    "BIDS task: Reference"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Ahmet Levent Kandemir"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds002885-bids-bucket",
+      "name": "ds002885 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS002885.",
+      "contentUrl": "s3://openneuro.org/ds002885",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds002885-openneuro",

@@ -99,7 +99,26 @@
   ],
   "citeAs": "Pena, P., Palenciano, A.F., González-García, C., Ruz, M. (2025). General Info: inst-comp-eeg. doi:10.18112/openneuro.ds005960.v1.0.0",
   "version": "v1.2.1",
+  "dateCreated": "2025-03-05",
+  "dateModified": "2025-03-13",
+  "measurementTechnique": [
+    "BIDS task: INSTCOMP"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Paula Pena"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005960-bids-bucket",
+      "name": "ds005960 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005960.",
+      "contentUrl": "s3://openneuro.org/ds005960",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005960-openneuro",

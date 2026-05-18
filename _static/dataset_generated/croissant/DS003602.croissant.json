@@ -95,7 +95,39 @@
   ],
   "citeAs": "Ozlem Korucuoglu, Andrey P. Anokhin (2021). Childhood Sexual Abuse and problem drinking in women: Neurobehavioral mechanisms. doi:10.18112/openneuro.ds003602.v1.0.0",
   "version": "v5.1",
+  "dateCreated": "2021-04-02",
+  "dateModified": "2022-07-27",
+  "measurementTechnique": [
+    "BIDS task: APA1",
+    "BIDS task: APA2",
+    "BIDS task: FP3",
+    "BIDS task: REST",
+    "BIDS task: VP1",
+    "BIDS task: VP3"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "özlem Korucuoglu"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Arnaud Delorme"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Annalisa Salazar"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds003602-bids-bucket",
+      "name": "ds003602 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS003602.",
+      "contentUrl": "s3://openneuro.org/ds003602",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds003602-openneuro",

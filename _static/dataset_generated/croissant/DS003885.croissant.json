@@ -103,7 +103,26 @@
   ],
   "citeAs": "Shatek, Sophia M., Robinson, Amanda K., Grootswagers, Tijl, Carlson, Thomas A. (2021). Capacity for movement is an organisational principle in object representations: EEG data from Experiment 1. doi:10.18112/openneuro.ds003885.v1.0.7",
   "version": "1.0.2",
+  "dateCreated": "2021-11-11",
+  "dateModified": "2023-05-24",
+  "measurementTechnique": [
+    "BIDS task: movement"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Sophia Shatek"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds003885-bids-bucket",
+      "name": "ds003885 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS003885.",
+      "contentUrl": "s3://openneuro.org/ds003885",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds003885-openneuro",

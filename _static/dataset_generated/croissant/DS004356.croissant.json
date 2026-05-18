@@ -95,7 +95,26 @@
   ],
   "citeAs": "Tong Shan, Madeline S. Cappelloni, Ross K. Maddox (2022). Subcortical responses to music and speech are alike while cortical responses diverge. doi:10.18112/openneuro.ds004356.v2.2.1",
   "version": "1.7.0",
+  "dateCreated": "2022-12-06",
+  "dateModified": "2024-01-18",
+  "measurementTechnique": [
+    "BIDS task: MusicvsSpeech"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Tong Shan"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004356-bids-bucket",
+      "name": "ds004356 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004356.",
+      "contentUrl": "s3://openneuro.org/ds004356",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004356-openneuro",

@@ -98,7 +98,26 @@
   ],
   "citeAs": "Katherine Hermann, Isabelle Rosenthal, Shridhar R. Singh, Dimitrios Pantazis, Bevil R. Conway (2020). 1 - Light Pink Spiral. doi:10.18112/openneuro.ds003352.v1.0.0",
   "version": "1.2.2",
+  "dateCreated": "2020-11-03",
+  "dateModified": "2020-11-04",
+  "measurementTechnique": [
+    "BIDS task: ColorSpirals"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Conway Lab"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds003352-bids-bucket",
+      "name": "ds003352 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS003352.",
+      "contentUrl": "s3://openneuro.org/ds003352",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds003352-openneuro",

@@ -93,7 +93,26 @@
   ],
   "citeAs": "Veillette, J., Heald, S., Wittenbrink, B., Nusbaum, H. (2022). eeg-neuroforecasting. doi:10.18112/openneuro.ds004284.v1.0.0",
   "version": "1.6.0",
+  "dateCreated": "2022-10-03",
+  "dateModified": "2022-10-03",
+  "measurementTechnique": [
+    "BIDS task: kickstarter"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "John Veillette"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004284-bids-bucket",
+      "name": "ds004284 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004284.",
+      "contentUrl": "s3://openneuro.org/ds004284",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004284-openneuro",

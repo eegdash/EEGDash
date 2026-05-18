@@ -85,7 +85,26 @@
   ],
   "citeAs": "Ethan Campbell, James F Cavanagh (2023). EEG: RL Task (3-Armed Bandit) with alcohol cues in hazardous drinkers and ctls. doi:10.18112/openneuro.ds004595.v1.0.0",
   "version": "1.1.1",
+  "dateCreated": "2023-06-09",
+  "dateModified": "2023-06-09",
+  "measurementTechnique": [
+    "BIDS task: ThreeArmedBandit"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "James F Cavanagh"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004595-bids-bucket",
+      "name": "ds004595 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004595.",
+      "contentUrl": "s3://openneuro.org/ds004595",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004595-openneuro",

@@ -74,7 +74,27 @@
   ],
   "citeAs": "Xueyi Zhang (2019). CerebroVoice: Bilingual sEEG Speech Dataset. doi:10.5281/zenodo.13332808",
   "version": "1.9.0",
+  "dateModified": "2026-04-12",
+  "measurementTechnique": [
+    "BIDS task: chinesebbs",
+    "BIDS task: chinesehga",
+    "BIDS task: chineselfs",
+    "BIDS task: digitbbs",
+    "BIDS task: digithga",
+    "BIDS task: digitlfs",
+    "BIDS task: englishbbs",
+    "BIDS task: englishhga",
+    "BIDS task: englishlfs"
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000241-bids-bucket",
+      "name": "nm000241 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for NM000241.",
+      "contentUrl": "s3://nemar/nm000241",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "nm000241-openneuro",

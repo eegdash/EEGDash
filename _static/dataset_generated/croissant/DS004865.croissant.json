@@ -96,7 +96,26 @@
   ],
   "citeAs": "Haydn G. Herrema, Michael J. Kahana (2023). pyFR: Delayed Free Recall of Word Lists, Preliminary Cognitive Electrophysiology Study. doi:10.18112/openneuro.ds004865.v2.0.1",
   "version": "1.7.0",
+  "dateCreated": "2023-11-29",
+  "dateModified": "2024-04-22",
+  "measurementTechnique": [
+    "BIDS task: pyFR"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Haydn Herrema"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004865-bids-bucket",
+      "name": "ds004865 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004865.",
+      "contentUrl": "s3://openneuro.org/ds004865",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004865-openneuro",

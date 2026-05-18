@@ -117,7 +117,40 @@
   ],
   "citeAs": "Lorenzo Cohen, Arnaud Delorme, Peiying Yang, Andrew Cusimano, Sharmistha Chakraborty (2024). The Effects of Directed Therapeutic Intent on Live and Damaged Cells. doi:10.18112/openneuro.ds005079.v2.0.0",
   "version": "v1.2.1",
+  "dateCreated": "2024-04-09",
+  "dateModified": "2024-07-01",
+  "measurementTechnique": [
+    "BIDS task: BaselinePostCellPresent",
+    "BIDS task: BaselinePostControl1",
+    "BIDS task: BaselinePostControl2",
+    "BIDS task: BaselinePreCellPresent",
+    "BIDS task: BaselinePreControl1",
+    "BIDS task: BaselinePreControl2",
+    "BIDS task: TreatmentFirst5minCellPresent",
+    "BIDS task: TreatmentFirst5minControl1",
+    "BIDS task: TreatmentFirst5minControl2",
+    "BIDS task: TreatmentLast5minCellPresent",
+    "BIDS task: TreatmentLast5minControl1",
+    "BIDS task: TreatmentLast5minControl2",
+    "BIDS task: TreatmentMid5minCellPresent",
+    "BIDS task: TreatmentMid5minControl1",
+    "BIDS task: TreatmentMid5minControl2"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Arnaud Delorme"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005079-bids-bucket",
+      "name": "ds005079 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005079.",
+      "contentUrl": "s3://openneuro.org/ds005079",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005079-openneuro",

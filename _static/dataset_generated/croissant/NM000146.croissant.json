@@ -122,7 +122,19 @@
   ],
   "citeAs": "Weibo Yi, Shuang Qiu, Kun Wang, Hongzhi Qi, Lixin Zhang (2014). Motor Imagery dataset from Weibo et al 2014. doi:10.82901/nemar.nm000146",
   "version": "1.9.0",
+  "dateModified": "2026-04-29",
+  "measurementTechnique": [
+    "BIDS task: imagery"
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000146-bids-bucket",
+      "name": "nm000146 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for NM000146.",
+      "contentUrl": "s3://nemar/nm000146",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "nm000146-openneuro",

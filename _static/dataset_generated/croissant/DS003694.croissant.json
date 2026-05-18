@@ -93,7 +93,26 @@
   ],
   "citeAs": "Benjamin J. Griffiths, María Carmen Martín-Buro, Bernhard Staresina, Simon Hanslmayr (2021). MEGMEM. doi:10.18112/openneuro.ds003694.v1.0.0",
   "version": "1.0.2",
+  "dateCreated": "2021-06-12",
+  "dateModified": "2021-06-14",
+  "measurementTechnique": [
+    "BIDS task: MEM"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Benjamin James Griffiths"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds003694-bids-bucket",
+      "name": "ds003694 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS003694.",
+      "contentUrl": "s3://openneuro.org/ds003694",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds003694-openneuro",

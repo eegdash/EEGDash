@@ -102,7 +102,19 @@
   ],
   "citeAs": "Patrick Ofner, Andreas Schwarz, Joana Pereira, Daniela Wyss, Renate Wildburger (2019). BNCI 2019-001 Motor Imagery dataset for Spinal Cord Injury patients. doi:10.82901/nemar.nm000149",
   "version": "1.9.0",
+  "dateModified": "2026-04-29",
+  "measurementTechnique": [
+    "BIDS task: imagery"
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000149-bids-bucket",
+      "name": "nm000149 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for NM000149.",
+      "contentUrl": "s3://nemar/nm000149",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "nm000149-openneuro",

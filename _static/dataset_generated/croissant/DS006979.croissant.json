@@ -91,7 +91,28 @@
   ],
   "citeAs": "Hanane Ramzaoui, Melissa Beck (2025). Examining Perceptual Grouping on Stages of Processing in Visual Working Memory: An ERP Study. doi:10.18112/openneuro.ds006979.v1.0.1",
   "version": "1.7.0",
+  "dateCreated": "2025-11-30",
+  "dateModified": "2026-03-05",
+  "measurementTechnique": [
+    "BIDS task: rest",
+    "BIDS task: test",
+    "BIDS task: visualworkingmemorytask"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Hanane Ramzaoui"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006979-bids-bucket",
+      "name": "ds006979 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS006979.",
+      "contentUrl": "s3://openneuro.org/ds006979",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds006979-openneuro",

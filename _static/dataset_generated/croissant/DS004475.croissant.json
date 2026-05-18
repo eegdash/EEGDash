@@ -94,7 +94,26 @@
   ],
   "citeAs": "Noelle A. Jacobsen, Daniel P. Ferris (2023). Mobile EEG split-belt walking study. doi:10.18112/openneuro.ds004475.v1.0.3",
   "version": "1.1.1",
+  "dateCreated": "2023-02-08",
+  "dateModified": "2023-07-31",
+  "measurementTechnique": [
+    "BIDS task: task"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Noelle Jacobsen"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004475-bids-bucket",
+      "name": "ds004475 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004475.",
+      "contentUrl": "s3://openneuro.org/ds004475",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004475-openneuro",

@@ -124,7 +124,26 @@
   ],
   "citeAs": "Jessica E. Anderson, Laura Carlton, Sreekanth Kura, Walker J. O'Brien, De'Ja Rogers (2025). High-DensityvSparsefNIRS_WordColorStroop_HD_Anderson_2025. doi:10.18112/openneuro.ds006460.v1.0.0",
   "version": "1.8.0",
+  "dateCreated": "2025-07-08",
+  "dateModified": "2025-07-08",
+  "measurementTechnique": [
+    "BIDS task: WordStroop"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Jessica E Anderson"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006460-bids-bucket",
+      "name": "ds006460 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS006460.",
+      "contentUrl": "s3://openneuro.org/ds006460",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds006460-openneuro",

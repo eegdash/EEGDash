@@ -98,7 +98,26 @@
   ],
   "citeAs": "Moerel, Denise, Chenh, Cecilia, Bowman, Sophie, Carlson, Thomas (2026). The effect of hunger and state preferences on the neural processing of food images. doi:10.18112/openneuro.ds007521.v1.0.1",
   "version": "1.0.2",
+  "dateCreated": "2026-03-16",
+  "dateModified": "2026-03-18",
+  "measurementTechnique": [
+    "BIDS task: food"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Denise Moerel"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007521-bids-bucket",
+      "name": "ds007521 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS007521.",
+      "contentUrl": "s3://openneuro.org/ds007521",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds007521-openneuro",

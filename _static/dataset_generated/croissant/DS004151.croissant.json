@@ -107,7 +107,26 @@
   ],
   "citeAs": "Graciela C. Alatorre-Cruz, Heather Downs, Darcy Hagood, Seth T. Sorensen, D. Keith Williams (2022). Effect of obesity on inhibitory control in preadolescents during stop-signal task. An event-related potentials study. doi:10.18112/openneuro.ds004151.v1.0.0",
   "version": "1",
+  "dateCreated": "2022-06-13",
+  "dateModified": "2022-06-14",
+  "measurementTechnique": [
+    "BIDS task: stop"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Graciela Catalina Alatorre Cruz"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004151-bids-bucket",
+      "name": "ds004151 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004151.",
+      "contentUrl": "s3://openneuro.org/ds004151",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004151-openneuro",

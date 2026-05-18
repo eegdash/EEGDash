@@ -80,7 +80,24 @@
     }
   ],
   "version": "1.10.0",
+  "dateModified": "2026-04-14",
+  "measurementTechnique": [
+    "BIDS task: stim01",
+    "BIDS task: stim02",
+    "BIDS task: stim03",
+    "BIDS task: stim04",
+    "BIDS task: stim05",
+    "BIDS task: stim06"
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000256-bids-bucket",
+      "name": "nm000256 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for NM000256.",
+      "contentUrl": "s3://nemar/nm000256",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "nm000256-openneuro",

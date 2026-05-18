@@ -58,6 +58,7 @@
     "name": "EEG Dash",
     "url": "https://eegdash.org/"
   },
+  "dateModified": "2026-03-30",
   "distribution": [
     {
       "@type": "cr:FileObject",

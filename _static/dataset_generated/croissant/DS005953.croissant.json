@@ -92,7 +92,26 @@
   ],
   "citeAs": "Jonathan Winawer, Dora Hermes (2025). iEEG_visual. doi:10.18112/openneuro.ds005953.v1.0.0",
   "version": "1.0.2",
+  "dateCreated": "2025-03-03",
+  "dateModified": "2025-03-03",
+  "measurementTechnique": [
+    "BIDS task: visual"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Dora Hermes"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005953-bids-bucket",
+      "name": "ds005953 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005953.",
+      "contentUrl": "s3://openneuro.org/ds005953",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005953-openneuro",

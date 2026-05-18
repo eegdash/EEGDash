@@ -81,7 +81,26 @@
   ],
   "citeAs": "James F Cavanagh jcavanagh@unm.edu (2021). EEG: 3-Stim Auditory Oddball and Rest in Parkinson's. doi:10.18112/openneuro.ds003490.v1.1.0",
   "version": "1.1.1",
+  "dateCreated": "2021-01-27",
+  "dateModified": "2021-01-27",
+  "measurementTechnique": [
+    "BIDS task: Rest"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "James F Cavanagh"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds003490-bids-bucket",
+      "name": "ds003490 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS003490.",
+      "contentUrl": "s3://openneuro.org/ds003490",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds003490-openneuro",

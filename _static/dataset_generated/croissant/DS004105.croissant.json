@@ -116,7 +116,30 @@
   ],
   "citeAs": "Javier Garcia (data), Justin Brooks (data), Scott Kerick (data), Tony Johnson (data and curation), Tim Mullen (data) (2022). BCIT Auditory Cueing. doi:10.18112/openneuro.ds004105.v1.0.0",
   "version": "1.7.0",
+  "dateCreated": "2022-04-21",
+  "dateModified": "2022-05-04",
+  "measurementTechnique": [
+    "BIDS task: DriveRandomSound"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Kay Robbins"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Jonathan Touryan"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004105-bids-bucket",
+      "name": "ds004105 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004105.",
+      "contentUrl": "s3://openneuro.org/ds004105",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004105-openneuro",

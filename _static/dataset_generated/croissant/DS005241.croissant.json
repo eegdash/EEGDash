@@ -108,7 +108,27 @@
   ],
   "citeAs": "Amilleah Rodriguez, Dan Zhao, Kyra Wilson, Ritika Saboo, Sergey V Samsonau (2024). NeuroMorph: A High-Temporal Resolution MEG Dataset for Morpheme-Based Linguistic Analysis. doi:10.18112/openneuro.ds005241.v1.1.0",
   "version": "1.7.0",
+  "dateCreated": "2024-06-12",
+  "dateModified": "2024-06-14",
+  "measurementTechnique": [
+    "BIDS task: lexicaldecision",
+    "BIDS task: localizer"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Amilleah Rodriguez"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005241-bids-bucket",
+      "name": "ds005241 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005241.",
+      "contentUrl": "s3://openneuro.org/ds005241",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005241-openneuro",

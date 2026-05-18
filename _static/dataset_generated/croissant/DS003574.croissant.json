@@ -123,7 +123,26 @@
   ],
   "citeAs": "Virginie Sterpenich, Mojca KM van Schie, Maximilien Catsiyannis, Avinash Ramyead, Stephen Perrig (2021). Reward biases spontaneous neural reactivation during sleep. doi:10.18112/openneuro.ds003574.v1.0.2",
   "version": "1.4.1",
+  "dateCreated": "2021-03-25",
+  "dateModified": "2021-06-07",
+  "measurementTechnique": [
+    "BIDS task: rest"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Virginie Sterpenich"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds003574-bids-bucket",
+      "name": "ds003574 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS003574.",
+      "contentUrl": "s3://openneuro.org/ds003574",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds003574-openneuro",

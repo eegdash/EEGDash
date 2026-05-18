@@ -150,7 +150,26 @@
   ],
   "citeAs": "Keisuke Hatano, Naoto Kuroda, Hiroshi Uda, Kazuki Sakakura, Michael J. Cools (2025). iEEG_comprehensive_HFA_model_part3. doi:10.18112/openneuro.ds007119.v1.0.0",
   "version": "1.7.0",
+  "dateCreated": "2025-12-19",
+  "dateModified": "2025-12-22",
+  "measurementTechnique": [
+    "BIDS task: sleep"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Keisuke Hatano"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007119-bids-bucket",
+      "name": "ds007119 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS007119.",
+      "contentUrl": "s3://openneuro.org/ds007119",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds007119-openneuro",

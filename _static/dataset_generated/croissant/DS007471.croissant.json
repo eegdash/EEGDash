@@ -96,7 +96,26 @@
   ],
   "citeAs": "Zijun Zhou, Anna Zamm, Justin Christensen, Vinesh Rao, Janeen Loehr (2026). Joint agency EEG dataset. doi:10.18112/openneuro.ds007471.v1.0.0",
   "version": "1.8.0",
+  "dateCreated": "2026-03-04",
+  "dateModified": "2026-03-04",
+  "measurementTechnique": [
+    "BIDS task: jointaction"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Zijun Zhou"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007471-bids-bucket",
+      "name": "ds007471 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS007471.",
+      "contentUrl": "s3://openneuro.org/ds007471",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds007471-openneuro",

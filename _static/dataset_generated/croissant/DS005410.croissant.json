@@ -81,7 +81,26 @@
   ],
   "citeAs": "Yuri G. Pavlov (2024). Semantic_conditioning. doi:10.18112/openneuro.ds005410.v1.0.1",
   "version": "1.8.0",
+  "dateCreated": "2024-08-13",
+  "dateModified": "2024-08-26",
+  "measurementTechnique": [
+    "BIDS task: conditioning"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Yuri G. Pavlov"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005410-bids-bucket",
+      "name": "ds005410 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005410.",
+      "contentUrl": "s3://openneuro.org/ds005410",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005410-openneuro",

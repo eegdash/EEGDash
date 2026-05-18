@@ -76,7 +76,19 @@
   ],
   "citeAs": "Alexandre Barachant (2019). Alex Motor Imagery dataset. doi:10.82901/nemar.nm000138",
   "version": "1.9.0",
+  "dateModified": "2026-04-17",
+  "measurementTechnique": [
+    "BIDS task: imagery"
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000138-bids-bucket",
+      "name": "nm000138 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for NM000138.",
+      "contentUrl": "s3://nemar/nm000138",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "nm000138-openneuro",

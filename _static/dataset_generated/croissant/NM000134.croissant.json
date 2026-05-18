@@ -101,7 +101,19 @@
   ],
   "citeAs": "Jonathan Xu, Ugo Bruzadin Nunes, Wangshu Jiang, Samuel Ryther, Jordan Pringle (2025). Alljoined-1.6M. doi:10.82901/nemar.nm000134",
   "version": "1.9.0",
+  "dateModified": "2026-03-18",
+  "measurementTechnique": [
+    "BIDS task: images"
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000134-bids-bucket",
+      "name": "nm000134 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for NM000134.",
+      "contentUrl": "s3://nemar/nm000134",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "nm000134-openneuro",

@@ -104,7 +104,19 @@
   ],
   "citeAs": "Banghua Yang, Fenqi Rong, Yunlong Xie, Du Li, Jiayang Zhang (2025). Yang et al. 2025 — A multi-day and high-quality EEG dataset for motor imagery brain-computer interface. doi:10.1038/s41597-025-04826-y",
   "version": "1.9.0",
+  "dateModified": "2026-04-11",
+  "measurementTechnique": [
+    "BIDS task: imagery"
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000348-bids-bucket",
+      "name": "nm000348 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for NM000348.",
+      "contentUrl": "s3://nemar/nm000348",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "nm000348-openneuro",

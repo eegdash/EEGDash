@@ -95,7 +95,26 @@
   ],
   "citeAs": "Carlos Valle Araya, Carolina Mendez-Orellana, Maria Rodriguez-Fernandez (2022). Large Spanish EEG. doi:10.18112/openneuro.ds004279.v1.1.2",
   "version": "1.6.0",
+  "dateCreated": "2022-09-26",
+  "dateModified": "2024-11-29",
+  "measurementTechnique": [
+    "BIDS task: sentences"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Carlos Valle Araya"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004279-bids-bucket",
+      "name": "ds004279 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004279.",
+      "contentUrl": "s3://openneuro.org/ds004279",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004279-openneuro",

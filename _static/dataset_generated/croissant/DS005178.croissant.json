@@ -128,7 +128,26 @@
   ],
   "citeAs": "Yousef Rezaei Tabar, Kaare Mikkelsen, Laura Birch, Nelly Shenton, Simon L Kappel (2024). Ear-EEG Sleep Monitoring 2023 (EESM23). doi:10.18112/openneuro.ds005178.v1.0.0",
   "version": "1.9.0",
+  "dateCreated": "2024-05-24",
+  "dateModified": "2024-05-31",
+  "measurementTechnique": [
+    "BIDS task: sleep"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "kaare mikkelsen"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005178-bids-bucket",
+      "name": "ds005178 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005178.",
+      "contentUrl": "s3://openneuro.org/ds005178",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005178-openneuro",

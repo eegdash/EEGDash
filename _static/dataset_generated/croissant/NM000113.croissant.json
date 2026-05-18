@@ -81,7 +81,19 @@
   ],
   "citeAs": "Seong-Whan Lee, Klaus-Robert Müller, José del R. Millán (20). 2020 BCI competition, track 3. doi:10.82901/nemar.nm000113",
   "version": "1.7.0",
+  "dateModified": "2026-03-14",
+  "measurementTechnique": [
+    "BIDS task: imaginedSpeech"
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000113-bids-bucket",
+      "name": "nm000113 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for NM000113.",
+      "contentUrl": "s3://nemar/nm000113",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "nm000113-openneuro",

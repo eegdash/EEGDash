@@ -81,7 +81,27 @@
   ],
   "citeAs": "HZY, Research Team (2026). MorseEEG-ATP. doi:10.18112/openneuro.ds007655.v1.0.0",
   "version": "1.10.1",
+  "dateCreated": "2026-04-15",
+  "dateModified": "2026-04-20",
+  "measurementTechnique": [
+    "BIDS task: dotcount",
+    "BIDS task: firstlast"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Zhongyang He"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007655-bids-bucket",
+      "name": "ds007655 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS007655.",
+      "contentUrl": "s3://openneuro.org/ds007655",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds007655-openneuro",

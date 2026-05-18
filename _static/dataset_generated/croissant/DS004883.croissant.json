@@ -85,7 +85,28 @@
   ],
   "citeAs": "Peter E. Clayson, Michael J. Larson (2023). Registerd Report of ERN During Three Versions of a Flanker Task. doi:10.18112/openneuro.ds004883.v1.0.0",
   "version": "v1.8.0",
+  "dateCreated": "2023-12-14",
+  "dateModified": "2023-12-21",
+  "measurementTechnique": [
+    "BIDS task: ffa",
+    "BIDS task: ffb",
+    "BIDS task: ffc"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Peter Clayson"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004883-bids-bucket",
+      "name": "ds004883 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004883.",
+      "contentUrl": "s3://openneuro.org/ds004883",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004883-openneuro",

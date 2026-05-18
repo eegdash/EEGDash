@@ -128,7 +128,19 @@
   ],
   "citeAs": "Jian Shi, Danyang Chen, Xingwei Zhao, Zhixian Zhao, Shengjie Li (2025). Shi et al. 2025 — HEFMI-ICH: a hybrid EEG-fNIRS motor imagery dataset for brain-computer interface in intracerebral hemorrhage. doi:10.1038/s41597-025-06100-7",
   "version": "1.9.0",
+  "dateModified": "2026-04-11",
+  "measurementTechnique": [
+    "BIDS task: imagery"
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000347-bids-bucket",
+      "name": "nm000347 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for NM000347.",
+      "contentUrl": "s3://nemar/nm000347",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "nm000347-openneuro",

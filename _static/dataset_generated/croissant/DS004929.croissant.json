@@ -107,7 +107,26 @@
   ],
   "citeAs": "Yuanyuan Gao, De’Ja Rogers, Alexander von Lühmann, Antonio Ortega-Martinez, David A. Boas (2024). BallSqueezingHD. doi:10.18112/openneuro.ds004929.v1.0.0",
   "version": "1.7.1",
+  "dateCreated": "2024-01-16",
+  "dateModified": "2024-01-16",
+  "measurementTechnique": [
+    "BIDS task: BallSqueezing"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Sreekanth kura"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004929-bids-bucket",
+      "name": "ds004929 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004929.",
+      "contentUrl": "s3://openneuro.org/ds004929",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004929-openneuro",

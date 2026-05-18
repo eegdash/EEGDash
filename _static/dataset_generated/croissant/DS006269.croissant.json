@@ -103,7 +103,27 @@
   ],
   "citeAs": "Lucy Pritchard, Ingrid Buller-Peralta, Sally M Till, Peter C Kind, Alfredo Gonzalez-Sulser (2025). Tethered EEG Recordings in Syngap1 rats. doi:10.18112/openneuro.ds006269.v1.0.0",
   "version": "1.8.0",
+  "dateCreated": "2025-05-30",
+  "dateModified": "2025-05-30",
+  "measurementTechnique": [
+    "BIDS task: rest",
+    "BIDS task: test"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Lucy Pritchard"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006269-bids-bucket",
+      "name": "ds006269 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS006269.",
+      "contentUrl": "s3://openneuro.org/ds006269",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds006269-openneuro",

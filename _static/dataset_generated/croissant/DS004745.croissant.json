@@ -107,7 +107,34 @@
   ],
   "citeAs": "Velu Prabhakar Kumaravel, Victor Kartsch, Simone Benatti, Giorgio Vallortigara, Elisabetta Farella (2023). 8-Channel SSVEP EEG Dataset with Artifact Trials. doi:10.18112/openneuro.ds004745.v1.0.1",
   "version": "1.8.0",
+  "dateCreated": "2023-09-08",
+  "dateModified": "2023-09-08",
+  "measurementTechnique": [
+    "BIDS task: unnamed"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Velu Prabhakar Kumaravel"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Velu Prabhakar Kumaravel"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Velu Prabhakar Kumaravel"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004745-bids-bucket",
+      "name": "ds004745 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004745.",
+      "contentUrl": "s3://openneuro.org/ds004745",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004745-openneuro",

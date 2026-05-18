@@ -100,7 +100,19 @@
   ],
   "datePublished": "2016",
   "version": "1.9.0",
+  "dateModified": "2026-04-29",
+  "measurementTechnique": [
+    "BIDS task: ssvep"
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000119-bids-bucket",
+      "name": "nm000119 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for NM000119.",
+      "contentUrl": "s3://nemar/nm000119",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "nm000119-openneuro",

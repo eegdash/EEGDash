@@ -103,7 +103,26 @@
   ],
   "citeAs": "Yücel, Meryem, Selb, Juliette, Boas, David, Cash, Sydney, Cooper, Robert (2025). Motion-Yucel2014. doi:10.18112/openneuro.ds005929.v1.0.1",
   "version": "1.7.1",
+  "dateCreated": "2025-02-17",
+  "dateModified": "2025-07-09",
+  "measurementTechnique": [
+    "BIDS task: MA"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "MERYEM YUCEL"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005929-bids-bucket",
+      "name": "ds005929 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005929.",
+      "contentUrl": "s3://openneuro.org/ds005929",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005929-openneuro",

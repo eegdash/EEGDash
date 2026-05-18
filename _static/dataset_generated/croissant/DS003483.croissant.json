@@ -94,7 +94,27 @@
   ],
   "citeAs": "Cognitive and Computational Neuroscience Laboratory (UPM - UCM)., PI: Fernando Maestu., PI: Carmen Requena, PI: Francisco Salto Alemany (2021). Logical reasoning study. doi:10.18112/openneuro.ds003483.v1.0.2",
   "version": "BIDS 1.2.0",
+  "dateCreated": "2021-01-21",
+  "dateModified": "2021-01-24",
+  "measurementTechnique": [
+    "BIDS task: deduction",
+    "BIDS task: induction"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Luis Fernando Antón Toro"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds003483-bids-bucket",
+      "name": "ds003483 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS003483.",
+      "contentUrl": "s3://openneuro.org/ds003483",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds003483-openneuro",

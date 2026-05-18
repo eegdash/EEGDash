@@ -97,7 +97,26 @@
   ],
   "citeAs": "Michael Freedberg, Jack A. Reeves, Sara J. Hussain, Kareem A. Zaghloul, Eric M. Wassermann (2019). RS_TMSEEG_Data. doi:10.18112/openneuro.ds001849.v1.0.2",
   "version": "2.7.0",
+  "dateCreated": "2019-04-11",
+  "dateModified": "2020-07-22",
+  "measurementTechnique": [
+    "BIDS task: tmseegrest"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Jack Reeves"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds001849-bids-bucket",
+      "name": "ds001849 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS001849.",
+      "contentUrl": "s3://openneuro.org/ds001849",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds001849-openneuro",

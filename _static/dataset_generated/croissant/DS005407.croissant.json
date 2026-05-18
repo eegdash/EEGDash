@@ -91,7 +91,26 @@
   ],
   "citeAs": "Melissa J. Polonenko, Ross K. Maddox (2024). The effect of speech masking on the subcortical response to speech. doi:10.18112/openneuro.ds005407.v1.0.1",
   "version": "1.7.0",
+  "dateCreated": "2024-08-10",
+  "dateModified": "2026-03-27",
+  "measurementTechnique": [
+    "BIDS task: peakysnr"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Melissa Polonenko"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005407-bids-bucket",
+      "name": "ds005407 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005407.",
+      "contentUrl": "s3://openneuro.org/ds005407",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005407-openneuro",

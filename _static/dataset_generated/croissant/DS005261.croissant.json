@@ -100,7 +100,27 @@
   ],
   "citeAs": "Snezana Todorovic, Elin Runnqvist, Valerie Chanoine, Jean-Michel Badier (2024). Gloups_MEG. doi:10.18112/openneuro.ds005261.v3.0.0",
   "version": "1.7.0",
+  "dateCreated": "2024-06-17",
+  "dateModified": "2025-05-12",
+  "measurementTechnique": [
+    "BIDS task: gloups",
+    "BIDS task: rest"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Valérie Chanoine"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005261-bids-bucket",
+      "name": "ds005261 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005261.",
+      "contentUrl": "s3://openneuro.org/ds005261",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005261-openneuro",

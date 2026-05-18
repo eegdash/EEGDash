@@ -103,7 +103,26 @@
   ],
   "citeAs": "Nayid Triana-Guzman, Alvaro D Orjuela-Cañon, Andres L Jutinico, Omar Mendoza-Montoya, Javier M Antelis (2024). EEG data offline and online during motor imagery for standing and sitting. doi:10.18112/openneuro.ds005342.v1.0.3",
   "version": "1.8.0",
+  "dateCreated": "2024-07-15",
+  "dateModified": "2024-07-15",
+  "measurementTechnique": [
+    "BIDS task: sitstand"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Nayid Triana Guzman"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005342-bids-bucket",
+      "name": "ds005342 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005342.",
+      "contentUrl": "s3://openneuro.org/ds005342",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005342-openneuro",

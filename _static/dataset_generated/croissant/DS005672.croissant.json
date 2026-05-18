@@ -85,7 +85,26 @@
   ],
   "citeAs": "Li Zhiyuan, Zhao Jiaxin (2024). PerceiveImagine. doi:10.18112/openneuro.ds005672.v1.0.0",
   "version": "1.8.0",
+  "dateCreated": "2024-11-30",
+  "dateModified": "2024-12-04",
+  "measurementTechnique": [
+    "BIDS task: PerceiveImagine"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Anonymous User"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005672-bids-bucket",
+      "name": "ds005672 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005672.",
+      "contentUrl": "s3://openneuro.org/ds005672",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005672-openneuro",

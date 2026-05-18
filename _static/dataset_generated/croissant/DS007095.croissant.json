@@ -131,7 +131,26 @@
   ],
   "citeAs": "Chen Feng, Haoqi Ni, Zhoule Zhu, Hongjie Jiang, Zhe Zheng (2025). RNS_Epilepsy-iBIDS. doi:10.18112/openneuro.ds007095.v1.0.0",
   "version": "1.8.0",
+  "dateCreated": "2025-12-16",
+  "dateModified": "2025-12-16",
+  "measurementTechnique": [
+    "BIDS task: seizure"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Haoqi Ni"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007095-bids-bucket",
+      "name": "ds007095 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS007095.",
+      "contentUrl": "s3://openneuro.org/ds007095",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds007095-openneuro",

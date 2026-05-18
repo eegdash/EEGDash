@@ -96,7 +96,30 @@
   ],
   "citeAs": "Yulin Wang, Wei Duan, Lihong Ding, Debo Dong, Xu Lei (2022). A test-retest resting and cognitive state EEG dataset. doi:10.18112/openneuro.ds004148.v1.0.0",
   "version": "1.2",
+  "dateCreated": "2022-06-08",
+  "dateModified": "2022-06-13",
+  "measurementTechnique": [
+    "BIDS task: eyesclosed",
+    "BIDS task: eyesopen",
+    "BIDS task: mathematic",
+    "BIDS task: memory",
+    "BIDS task: music"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Yulin Wang"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004148-bids-bucket",
+      "name": "ds004148 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004148.",
+      "contentUrl": "s3://openneuro.org/ds004148",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004148-openneuro",

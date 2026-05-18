@@ -93,6 +93,14 @@
   ],
   "citeAs": "Martin G. Frasch, Bernd Walter, Chrstophe L. Herry, Reinhard Bauer (2020). Corticothalamic communication under analgesia, sedation and gradual ischemia: a multimodal model of controlled gradual cerebral ischemia in pig. doi:10.18112/openneuro.ds003380.v1.0.0",
   "version": "1.1.1",
+  "dateCreated": "2020-11-13",
+  "dateModified": "2020-11-13",
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Martin Frasch"
+    }
+  ],
   "distribution": [
     {
       "@type": "cr:FileObject",

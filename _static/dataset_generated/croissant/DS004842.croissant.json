@@ -117,7 +117,26 @@
   ],
   "citeAs": "Gabriella Larkin, James A. Davis, Victor Paul, Marcel Cannon, Chris Manteuffel (2023). TX15. doi:10.18112/openneuro.ds004842.v1.0.0",
   "version": "1.8.0",
+  "dateCreated": "2023-11-13",
+  "dateModified": "2023-11-13",
+  "measurementTechnique": [
+    "BIDS task: DriveOnMission"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Kevin King"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004842-bids-bucket",
+      "name": "ds004842 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004842.",
+      "contentUrl": "s3://openneuro.org/ds004842",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004842-openneuro",

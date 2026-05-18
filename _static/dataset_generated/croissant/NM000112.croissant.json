@@ -81,7 +81,19 @@
   ],
   "citeAs": "Yisi Liu, Olga Sourina, Minh Khoa Nguyen (2023). FACED - Finer-grained Affective Computing EEG Dataset. doi:10.82901/nemar.nm000112",
   "version": "1.7.0",
+  "dateModified": "2026-03-23",
+  "measurementTechnique": [
+    "BIDS task: watchingVideoClips"
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000112-bids-bucket",
+      "name": "nm000112 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for NM000112.",
+      "contentUrl": "s3://nemar/nm000112",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "nm000112-openneuro",

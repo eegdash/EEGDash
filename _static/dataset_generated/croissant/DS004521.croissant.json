@@ -85,7 +85,26 @@
   ],
   "citeAs": "Edward Ester, Paige Pytel (2023). Changes in behavioral priority influence the accessibility of working memory content - Experiment 1. doi:10.18112/openneuro.ds004521.v1.0.1",
   "version": "1.8.0",
+  "dateCreated": "2023-03-05",
+  "dateModified": "2023-03-07",
+  "measurementTechnique": [
+    "BIDS task: Postcues"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Edward Ester"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004521-bids-bucket",
+      "name": "ds004521 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004521.",
+      "contentUrl": "s3://openneuro.org/ds004521",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004521-openneuro",

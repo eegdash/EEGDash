@@ -85,7 +85,26 @@
   ],
   "citeAs": "Weilong Li, Hua Fan (2024). PerceiveImagine. doi:10.18112/openneuro.ds005697.v1.0.2",
   "version": "1.8.0",
+  "dateCreated": "2024-12-05",
+  "dateModified": "2024-12-10",
+  "measurementTechnique": [
+    "BIDS task: PerceiveImagine"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Anonymous User"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005697-bids-bucket",
+      "name": "ds005697 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005697.",
+      "contentUrl": "s3://openneuro.org/ds005697",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005697-openneuro",

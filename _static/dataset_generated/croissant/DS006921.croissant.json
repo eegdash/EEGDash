@@ -97,7 +97,27 @@
   ],
   "citeAs": "Ramne, M., Damercheli, S., Apelgren, F., Pettersson, I., Lendaro, E. (2025). High Density Resting State EEG of Phantom Limb Pain and Controls. doi:10.18112/openneuro.ds006921.v1.1.1",
   "version": "1.9.0",
+  "dateCreated": "2025-11-10",
+  "dateModified": "2026-01-21",
+  "measurementTechnique": [
+    "BIDS task: EYESCLOSED",
+    "BIDS task: EYESOPEN"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Malin Ramne"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006921-bids-bucket",
+      "name": "ds006921 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS006921.",
+      "contentUrl": "s3://openneuro.org/ds006921",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds006921-openneuro",

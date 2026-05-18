@@ -93,7 +93,26 @@
   ],
   "citeAs": "Corentin Bel, Julie Bonnaire, Jean-Rémi King, Christophe Pallier (2026). LittlePrince_MEG_French_Read_Pallier2025. doi:10.18112/openneuro.ds007524.v1.0.1",
   "version": "1.6.0",
+  "dateCreated": "2026-03-17",
+  "dateModified": "2026-04-03",
+  "measurementTechnique": [
+    "BIDS task: read"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Christophe Pallier"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007524-bids-bucket",
+      "name": "ds007524 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS007524.",
+      "contentUrl": "s3://openneuro.org/ds007524",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds007524-openneuro",

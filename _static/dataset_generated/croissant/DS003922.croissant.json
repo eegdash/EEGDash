@@ -104,7 +104,28 @@
   ],
   "citeAs": "Pesnot Lerousseau, J., Parise, C., Ernst, MO., van Wassenhove, V. (2021). Multisensory Correlation Detector. doi:10.18112/openneuro.ds003922.v1.0.1",
   "version": "1.6.0",
+  "dateCreated": "2021-11-19",
+  "dateModified": "2022-05-02",
+  "measurementTechnique": [
+    "BIDS task: mcd",
+    "BIDS task: noise",
+    "BIDS task: rest"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Jacques Pesnot Lerousseau"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds003922-bids-bucket",
+      "name": "ds003922 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS003922.",
+      "contentUrl": "s3://openneuro.org/ds003922",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds003922-openneuro",

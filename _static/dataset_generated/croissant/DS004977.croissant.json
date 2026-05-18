@@ -123,7 +123,26 @@
   ],
   "citeAs": "Harvey Huang, Gabriela Ojeda Valencia, Nicholas M Gregg, Gamaleldin M Osman, Morgan N Montoya (2024). CARLA: Adjusted common average referencing for cortico-cortical evoked potential data. doi:10.18112/openneuro.ds004977.v1.2.0",
   "version": "v 1.14.0",
+  "dateCreated": "2024-02-19",
+  "dateModified": "2024-05-13",
+  "measurementTechnique": [
+    "BIDS task: ccep"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Harvey Huang"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004977-bids-bucket",
+      "name": "ds004977 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004977.",
+      "contentUrl": "s3://openneuro.org/ds004977",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004977-openneuro",

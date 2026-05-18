@@ -99,7 +99,26 @@
   ],
   "citeAs": "Gramann, K., Hohlefeld, F.U., Gehrke, L., Klug, M (2023). EEG and motion capture data set for a full-body/joystick rotation task. doi:10.18112/openneuro.ds004460.v1.1.0",
   "version": "n/a",
+  "dateCreated": "2023-02-02",
+  "dateModified": "2024-02-08",
+  "measurementTechnique": [
+    "BIDS task: Rotation"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Sein Jeung"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004460-bids-bucket",
+      "name": "ds004460 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004460.",
+      "contentUrl": "s3://openneuro.org/ds004460",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004460-openneuro",

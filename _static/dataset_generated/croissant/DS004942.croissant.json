@@ -85,7 +85,26 @@
   ],
   "citeAs": "Paul Kieffaber, Makenna McGill (2024). SpatialMemory. doi:10.18112/openneuro.ds004942.v1.0.0",
   "version": "1.8.0",
+  "dateCreated": "2024-01-23",
+  "dateModified": "2024-01-23",
+  "measurementTechnique": [
+    "BIDS task: SpatialMemory"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Paul Kieffaber"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004942-bids-bucket",
+      "name": "ds004942 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004942.",
+      "contentUrl": "s3://openneuro.org/ds004942",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004942-openneuro",

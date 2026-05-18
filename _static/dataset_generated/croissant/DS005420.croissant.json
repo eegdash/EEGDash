@@ -101,7 +101,27 @@
   ],
   "citeAs": "Miriam de Jesús Sánchez Gama, Luis Alberto Barradas Chacón, Leticia Chacón Gutiérrez, Thalía Fernández Harmony, Carlos Augusto Novo Olivas (2024). Resting state EEG with closed eyes and open eyes in females from 60 to 80 years old. doi:10.18112/openneuro.ds005420.v1.0.0",
   "version": "1.7.0",
+  "dateCreated": "2024-08-21",
+  "dateModified": "2024-08-21",
+  "measurementTechnique": [
+    "BIDS task: oa",
+    "BIDS task: oc"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Miriam Sánchez Gama"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005420-bids-bucket",
+      "name": "ds005420 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005420.",
+      "contentUrl": "s3://openneuro.org/ds005420",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005420-openneuro",

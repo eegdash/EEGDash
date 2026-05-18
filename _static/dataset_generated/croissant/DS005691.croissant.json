@@ -116,7 +116,26 @@
   ],
   "citeAs": "Max-Philipp Stenner, Cindy Marquez Nossa, Tino Zaehle, Elena Azanon, Hans-Jochen Heinze (2024). SpinalExpect_Invasive. doi:10.18112/openneuro.ds005691.v1.0.0",
   "version": "1.6",
+  "dateCreated": "2024-12-03",
+  "dateModified": "2024-12-03",
+  "measurementTechnique": [
+    "BIDS task: countingDeviants"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Max-Philipp Stenner"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005691-bids-bucket",
+      "name": "ds005691 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005691.",
+      "contentUrl": "s3://openneuro.org/ds005691",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005691-openneuro",

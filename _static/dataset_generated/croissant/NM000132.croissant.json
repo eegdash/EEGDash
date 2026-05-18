@@ -89,7 +89,24 @@
   ],
   "citeAs": "Emily S. Kappenman, Jaclyn L. Farrens, Wendy Zhang, Andrew X. Stewart, Steven J. Luck. (2004). ERP CORE. doi:10.82901/nemar.nm000132",
   "version": "1.10.1",
+  "dateModified": "2026-04-04",
+  "measurementTechnique": [
+    "BIDS task: MMN",
+    "BIDS task: N170",
+    "BIDS task: N2pc",
+    "BIDS task: N400",
+    "BIDS task: P3",
+    "BIDS task: flankers"
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000132-bids-bucket",
+      "name": "nm000132 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for NM000132.",
+      "contentUrl": "s3://nemar/nm000132",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "nm000132-openneuro",

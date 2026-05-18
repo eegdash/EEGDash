@@ -99,7 +99,26 @@
   ],
   "citeAs": "Wang,S., Oliveira,G.S., Djebbara,Z, Gramann, K. (2024). EEG data set for a architectural affordances task. doi:10.18112/openneuro.ds004980.v1.0.0",
   "version": "unofficial extension",
+  "dateCreated": "2024-02-20",
+  "dateModified": "2024-02-20",
+  "measurementTechnique": [
+    "BIDS task: DefaultTask"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "王圣"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004980-bids-bucket",
+      "name": "ds004980 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004980.",
+      "contentUrl": "s3://openneuro.org/ds004980",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004980-openneuro",

@@ -101,7 +101,26 @@
   ],
   "citeAs": "Arun Singh arun.singh@usd.edu, Rachel Cole rachel-cole@uiowa.edu, Arturo Espinoza arturo-espinoza@uiowa.edu, Jan R Wessel jan-wessel@uiowa.edu, Jim Cavanagh jcavanagh@unm.edu (2023). Interval Timing Task. doi:10.18112/openneuro.ds004579.v1.0.0",
   "version": "v1.2.1",
+  "dateCreated": "2023-05-25",
+  "dateModified": "2023-05-25",
+  "measurementTechnique": [
+    "BIDS task: IntervalTiming"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Nandakumar Narayanan"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004579-bids-bucket",
+      "name": "ds004579 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004579.",
+      "contentUrl": "s3://openneuro.org/ds004579",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004579-openneuro",

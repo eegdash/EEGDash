@@ -99,7 +99,30 @@
   ],
   "citeAs": "Andrew Goldman, Tyreek Jackson, Paul Sajda (2021). EEG: Improvisation and Musical Structures. doi:10.18112/openneuro.ds003570.v1.0.0",
   "version": "1.1.1",
+  "dateCreated": "2021-03-19",
+  "dateModified": "2021-03-19",
+  "measurementTechnique": [
+    "BIDS task: AuditoryOddballChords"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Andrew Goldman"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Josef Faller"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds003570-bids-bucket",
+      "name": "ds003570 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS003570.",
+      "contentUrl": "s3://openneuro.org/ds003570",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds003570-openneuro",

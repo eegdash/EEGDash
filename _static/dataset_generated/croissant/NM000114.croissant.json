@@ -93,7 +93,21 @@
   ],
   "citeAs": "Wajid Mumtaz, Likun Xia, Syed Saad Azhar Ali, Mohd Azhar Mohd Yasin, Mazhar Hussain (2017). MDD Patients and Healthy Controls EEG Data. doi:10.82901/nemar.nm000114",
   "version": "1.7.0",
+  "dateModified": "2026-03-14",
+  "measurementTechnique": [
+    "BIDS task: P300",
+    "BIDS task: eyesClosed",
+    "BIDS task: eyesOpen"
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000114-bids-bucket",
+      "name": "nm000114 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for NM000114.",
+      "contentUrl": "s3://nemar/nm000114",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "nm000114-openneuro",

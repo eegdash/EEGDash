@@ -120,7 +120,30 @@
   ],
   "citeAs": "Jonathan Touryan (data and curation), Greg Apker (data), Brent Lance (data), Scott Kerick (data), Anthony Ries (data) (2022). BCIT Traffic Complexity. doi:10.18112/openneuro.ds004123.v1.0.0",
   "version": "1.7.0",
+  "dateCreated": "2022-05-03",
+  "dateModified": "2022-05-04",
+  "measurementTechnique": [
+    "BIDS task: DriveWithComplexity"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Kay Robbins"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Jonathan Touryan"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004123-bids-bucket",
+      "name": "ds004123 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004123.",
+      "contentUrl": "s3://openneuro.org/ds004123",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004123-openneuro",

@@ -124,7 +124,26 @@
   ],
   "citeAs": "Kaare B. Mikkelsen, James K Ebajemito, Maria A Bonmati-Carrion, Nayantara Santhi, Victoria L Revell (2024). Surrey cEEGrid sleep data set. doi:10.18112/openneuro.ds005207.v1.0.0",
   "version": "1.7.0",
+  "dateCreated": "2024-05-31",
+  "dateModified": "2024-06-01",
+  "measurementTechnique": [
+    "BIDS task: sleep"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "kaare mikkelsen"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005207-bids-bucket",
+      "name": "ds005207 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005207.",
+      "contentUrl": "s3://openneuro.org/ds005207",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005207-openneuro",

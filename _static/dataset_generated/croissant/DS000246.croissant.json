@@ -104,7 +104,27 @@
   ],
   "citeAs": "Elizabeth Bock, Peter Donhauser, Francois Tadel, Guiomar Niso, Sylvain Baillet (2018). MEG-BIDS Brainstorm data sample. doi:10.18112/openneuro.ds000246.v1.0.1",
   "version": "1.4.1",
+  "dateCreated": "2018-03-30",
+  "dateModified": "2024-04-23",
+  "measurementTechnique": [
+    "BIDS task: AEF",
+    "BIDS task: noise"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Julia Guiomar Niso Galán"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds000246-bids-bucket",
+      "name": "ds000246 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS000246.",
+      "contentUrl": "s3://openneuro.org/ds000246",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds000246-openneuro",

@@ -136,7 +136,26 @@
   ],
   "citeAs": "D. van Blooijs, M.A. van den Boom, J.F. van der Aar, G.J.M. Huiskamp, G. Castegnaro (2022). CCEP ECoG dataset across age 4-51. doi:10.18112/openneuro.ds004080.v1.2.4",
   "version": "Brain Imaging Data Structure Specification v1.6.0",
+  "dateCreated": "2022-07-21",
+  "dateModified": "2023-03-12",
+  "measurementTechnique": [
+    "BIDS task: SPESclin"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Epilab UMCU"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004080-bids-bucket",
+      "name": "ds004080 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004080.",
+      "contentUrl": "s3://openneuro.org/ds004080",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004080-openneuro",

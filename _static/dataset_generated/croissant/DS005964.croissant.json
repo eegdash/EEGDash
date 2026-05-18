@@ -90,7 +90,20 @@
   ],
   "citeAs": "Robert Luke, Maureen Shader, David McAlpine (2025). FRESH Audio Dataset. doi:10.18112/openneuro.ds005964.v1.0.0",
   "version": "1.7.0",
+  "dateCreated": "2025-03-06",
+  "dateModified": "2025-03-06",
+  "measurementTechnique": [
+    "BIDS task: FRESHAUDIO"
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005964-bids-bucket",
+      "name": "ds005964 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005964.",
+      "contentUrl": "s3://openneuro.org/ds005964",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005964-openneuro",

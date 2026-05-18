@@ -93,7 +93,27 @@
   ],
   "citeAs": "Yuri G. Pavlov, Dauren Kasanov, Alexandra I. Kosachenko, Alexander I. Kotyusov (2021). EEG, pupillometry, ECG and photoplethysmography, and behavioral data in the digit span task and rest. doi:10.18112/openneuro.ds003838.v1.0.6",
   "version": "1.1.1",
+  "dateCreated": "2021-10-15",
+  "dateModified": "2024-02-11",
+  "measurementTechnique": [
+    "BIDS task: memory",
+    "BIDS task: rest"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Yuri G. Pavlov"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds003838-bids-bucket",
+      "name": "ds003838 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS003838.",
+      "contentUrl": "s3://openneuro.org/ds003838",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds003838-openneuro",

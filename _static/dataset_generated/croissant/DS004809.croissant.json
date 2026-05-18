@@ -100,7 +100,26 @@
   ],
   "citeAs": "Haydn G. Herrema, Michael J. Kahana (2023). Categorized Free Recall: Delayed Free Recall of Word Lists Organized by Semantic Categories. doi:10.18112/openneuro.ds004809.v2.2.0",
   "version": "1.7.0",
+  "dateCreated": "2023-10-19",
+  "dateModified": "2024-04-23",
+  "measurementTechnique": [
+    "BIDS task: catFR1"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Haydn Herrema"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004809-bids-bucket",
+      "name": "ds004809 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004809.",
+      "contentUrl": "s3://openneuro.org/ds004809",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004809-openneuro",

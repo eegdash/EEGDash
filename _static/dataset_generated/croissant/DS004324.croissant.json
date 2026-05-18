@@ -85,7 +85,26 @@
   ],
   "citeAs": "Luis Alberto Barradas Chacón, Selina C. Wriessnegger (2022). ToonFaces. doi:10.18112/openneuro.ds004324.v1.0.0",
   "version": "1.6.0",
+  "dateCreated": "2022-11-02",
+  "dateModified": "2023-03-08",
+  "measurementTechnique": [
+    "BIDS task: RSVP"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Luis Alberto Barradas Chacon"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004324-bids-bucket",
+      "name": "ds004324 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004324.",
+      "contentUrl": "s3://openneuro.org/ds004324",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004324-openneuro",

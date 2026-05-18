@@ -92,7 +92,27 @@
   ],
   "citeAs": "Jonathan Cote, Etienne de Villers-Sidani (2020). Auditory Cortex Mapping Dataset. doi:10.18112/openneuro.ds003082.v1.0.0",
   "version": "1.2.0",
+  "dateCreated": "2020-08-17",
+  "dateModified": "2021-11-17",
+  "measurementTechnique": [
+    "BIDS task: mapping",
+    "BIDS task: noise"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Jonathan Cote"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds003082-bids-bucket",
+      "name": "ds003082 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS003082.",
+      "contentUrl": "s3://openneuro.org/ds003082",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds003082-openneuro",

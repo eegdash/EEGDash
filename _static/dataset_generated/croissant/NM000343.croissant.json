@@ -106,7 +106,19 @@
   ],
   "citeAs": "Marcel F. Hinss, Emilie S. Jahanpour, Bertille Somon, Lou Pluchon, Frédéric Dehais (2023). Hinss et al. 2021 — Open multi-session and multi-task EEG cognitive Dataset for passive brain-computer Interface Applications. doi:10.1038/s41597-022-01898-y",
   "version": "1.9.0",
+  "dateModified": "2026-04-11",
+  "measurementTechnique": [
+    "BIDS task: rstate"
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000343-bids-bucket",
+      "name": "nm000343 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for NM000343.",
+      "contentUrl": "s3://nemar/nm000343",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "nm000343-openneuro",

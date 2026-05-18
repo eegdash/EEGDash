@@ -89,7 +89,26 @@
   ],
   "citeAs": "Christopher Stolz, Alan Pickering, Erik M. Mueller (2022). Reward gain and punishment avoidance reversal learning. doi:10.18112/openneuro.ds004295.v1.0.0",
   "version": "1.1.1",
+  "dateCreated": "2022-10-15",
+  "dateModified": "2022-10-15",
+  "measurementTechnique": [
+    "BIDS task: task"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Christopher Stolz"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004295-bids-bucket",
+      "name": "ds004295 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004295.",
+      "contentUrl": "s3://openneuro.org/ds004295",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004295-openneuro",

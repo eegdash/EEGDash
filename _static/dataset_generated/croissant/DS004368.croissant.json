@@ -101,7 +101,26 @@
   ],
   "citeAs": "Martin Rouy, Matthieu Roger, Dorian Goueytes, Michael Pereira, Paul Roux (2022). Meta-rdk: Preprocessed EEG data. doi:10.18112/openneuro.ds004368.v1.0.2",
   "version": "1.1.1",
+  "dateCreated": "2022-12-15",
+  "dateModified": "2022-12-15",
+  "measurementTechnique": [
+    "BIDS task: task"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Martin Rouy"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004368-bids-bucket",
+      "name": "ds004368 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004368.",
+      "contentUrl": "s3://openneuro.org/ds004368",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004368-openneuro",

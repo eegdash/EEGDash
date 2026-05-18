@@ -107,7 +107,30 @@
   ],
   "citeAs": "Sophie Smit, Almudena Ramírez-Haro, Manuel Varlet, Denise Moerel, Genevieve L. Quek (2024). A comprehensive EEG dataset for investigating visual touch perception. doi:10.18112/openneuro.ds005662.v2.0.1",
   "version": "1.0.0",
+  "dateCreated": "2024-11-27",
+  "dateModified": "2026-02-06",
+  "measurementTechnique": [
+    "BIDS task: video"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Sophie Smit"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Tijl Grootswagers"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005662-bids-bucket",
+      "name": "ds005662 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005662.",
+      "contentUrl": "s3://openneuro.org/ds005662",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005662-openneuro",

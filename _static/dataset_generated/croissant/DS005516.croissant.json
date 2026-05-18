@@ -119,7 +119,33 @@
   ],
   "citeAs": "Seyed Yahya Shirazi, Alexandre Franco, Maurício Scopel Hoffmann, Nathalia B. Esper, Dung Truong (2024). Healthy Brain Network (HBN) EEG - Release 11. doi:10.18112/openneuro.ds005516.v1.0.1",
   "version": "1.9.0",
+  "dateCreated": "2024-09-21",
+  "dateModified": "2025-03-11",
+  "measurementTechnique": [
+    "BIDS task: DespicableMe",
+    "BIDS task: DiaryOfAWimpyKid",
+    "BIDS task: FunwithFractals",
+    "BIDS task: RestingState",
+    "BIDS task: ThePresent",
+    "BIDS task: contrastChangeDetection",
+    "BIDS task: surroundSupp",
+    "BIDS task: symbolSearch"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Seyed Yahya Shirazi"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005516-bids-bucket",
+      "name": "ds005516 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005516.",
+      "contentUrl": "s3://openneuro.org/ds005516",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005516-openneuro",

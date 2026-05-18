@@ -95,7 +95,26 @@
   ],
   "citeAs": "Carolina Zaehme, Isabelle Sander, Klaus Gramann (2025). Urban Appraisal: Physiological Recording during Rating of Different Urban Environments. doi:10.18112/openneuro.ds006850.v1.0.0",
   "version": "unofficial extension",
+  "dateCreated": "2025-10-27",
+  "dateModified": "2025-10-30",
+  "measurementTechnique": [
+    "BIDS task: UrbanAppraisal"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Isabelle Sander"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006850-bids-bucket",
+      "name": "ds006850 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS006850.",
+      "contentUrl": "s3://openneuro.org/ds006850",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds006850-openneuro",

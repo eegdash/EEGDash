@@ -2,7 +2,7 @@
 
 # Computation times
 
-**00:27.240** total execution time for 1 file **from generated/auto_examples/hpc**:
+**00:34.926** total execution time for 1 file **from generated/auto_examples/hpc**:
 
 <style scoped>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet" />
@@ -19,4 +19,4 @@ $(document).ready( function () {
 
 | Example                                                                                                                                                                               | Time      |   Mem (MB) |
 |---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------|------------|
-| [Eyes Open vs. Closed Classification (HPC)](tutorial_hpc_cache_and_slurm.md#sphx-glr-generated-auto-examples-hpc-tutorial-hpc-cache-and-slurm-py) (`tutorial_hpc_cache_and_slurm.py`) | 00:27.240 |          0 |
+| [Eyes Open vs. Closed Classification (HPC)](tutorial_hpc_cache_and_slurm.md#sphx-glr-generated-auto-examples-hpc-tutorial-hpc-cache-and-slurm-py) (`tutorial_hpc_cache_and_slurm.py`) | 00:34.926 |          0 |

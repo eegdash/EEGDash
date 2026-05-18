@@ -111,7 +111,26 @@
   ],
   "citeAs": "Jessica G. Williams, William J. Harrison, Henry A. Beale, Jason B. Mattingley, Anthony M. Harris (2024). Tilt Illusion by Phase. doi:10.18112/openneuro.ds005021.v1.2.1",
   "version": "1.2.1",
+  "dateCreated": "2024-03-09",
+  "dateModified": "2024-03-11",
+  "measurementTechnique": [
+    "BIDS task: tiltillusion"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Anthony Harris"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005021-bids-bucket",
+      "name": "ds005021 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005021.",
+      "contentUrl": "s3://openneuro.org/ds005021",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005021-openneuro",

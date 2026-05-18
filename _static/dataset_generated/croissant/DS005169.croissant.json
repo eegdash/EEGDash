@@ -104,7 +104,26 @@
   ],
   "citeAs": "Andrei Barborica, Felicia Mihai, Laurentiu Tofan, Irina Oane, Ioana Mindruta (2024). Dataset of intracranial EEG during cortical stimulation evoking visual effects. doi:10.18112/openneuro.ds005169.v1.0.0",
   "version": "1.9.0",
+  "dateCreated": "2024-05-22",
+  "dateModified": "2024-05-22",
+  "measurementTechnique": [
+    "BIDS task: dcs"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Andrei Barborica"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005169-bids-bucket",
+      "name": "ds005169 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005169.",
+      "contentUrl": "s3://openneuro.org/ds005169",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005169-openneuro",

@@ -92,7 +92,19 @@
   ],
   "citeAs": "Boyla Mainsah, Chance Fleeting, Thomas Balmat, Eric Sellers, Leslie Collins (2019). Mainsah et al. 2025 — bigP3BCI: An Open, Diverse and Machine Learning Ready P300-based Brain-Computer Interface Dataset (Study R). doi:10.13026/0byy-ry86",
   "version": "1.9.0",
+  "dateModified": "2026-04-11",
+  "measurementTechnique": [
+    "BIDS task: p300"
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000336-bids-bucket",
+      "name": "nm000336 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for NM000336.",
+      "contentUrl": "s3://nemar/nm000336",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "nm000336-openneuro",

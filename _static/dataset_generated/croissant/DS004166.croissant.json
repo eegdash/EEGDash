@@ -135,7 +135,26 @@
   ],
   "citeAs": "Yang Li (data and curation), Wenjin Fu (data), Qiumei Zhang (data), Xiongying Chen (data), Xiaohong Li (data) (2022). Effects of Forward and Backward Span Trainings on Working Memory: Evidence from a Randomized, Controlled Trial. doi:10.18112/openneuro.ds004166.v1.0.0",
   "version": "1.7.0",
+  "dateCreated": "2022-06-17",
+  "dateModified": "2022-06-17",
+  "measurementTechnique": [
+    "BIDS task: WM"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Jun Li"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004166-bids-bucket",
+      "name": "ds004166 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004166.",
+      "contentUrl": "s3://openneuro.org/ds004166",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004166-openneuro",

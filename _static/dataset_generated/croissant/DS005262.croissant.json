@@ -109,7 +109,26 @@
   ],
   "citeAs": "Donia Metwalli, Eslam Ahmed, Antony Emil, Yousef A. Radwan, Mariam Barakat (2024). ArEEG: Arabic Inner Speech EEG dataset. doi:10.18112/openneuro.ds005262.v1.0.1",
   "version": "1.9.0",
+  "dateCreated": "2024-06-17",
+  "dateModified": "2025-01-22",
+  "measurementTechnique": [
+    "BIDS task: innerspeech"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Antony Emil"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005262-bids-bucket",
+      "name": "ds005262 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005262.",
+      "contentUrl": "s3://openneuro.org/ds005262",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005262-openneuro",

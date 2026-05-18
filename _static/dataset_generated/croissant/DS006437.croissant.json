@@ -81,7 +81,30 @@
   ],
   "citeAs": "anonymous (2025). LIGHT Hypnotherapy. doi:10.18112/openneuro.ds006437.v1.1.0",
   "version": "v1.10.0",
+  "dateCreated": "2025-07-02",
+  "dateModified": "2025-08-21",
+  "measurementTechnique": [
+    "BIDS task: baseline0",
+    "BIDS task: baseline1",
+    "BIDS task: baseline4",
+    "BIDS task: baseline8",
+    "BIDS task: hypnotherapy"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Enrique Carrillosulub"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006437-bids-bucket",
+      "name": "ds006437 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS006437.",
+      "contentUrl": "s3://openneuro.org/ds006437",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds006437-openneuro",

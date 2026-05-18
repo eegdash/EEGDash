@@ -99,7 +99,26 @@
   ],
   "citeAs": "Jack E. Taylor, Rasmus Sinn, Cosimo Iaia, Christian J. Fiebach (2024). Alphabetic Decision Task (Arial Light Font). doi:10.18112/openneuro.ds005594.v1.0.3",
   "version": "1.7.0",
+  "dateCreated": "2024-10-24",
+  "dateModified": "2024-11-12",
+  "measurementTechnique": [
+    "BIDS task: alphabeticdecision"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Jack E. Taylor"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005594-bids-bucket",
+      "name": "ds005594 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005594.",
+      "contentUrl": "s3://openneuro.org/ds005594",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005594-openneuro",

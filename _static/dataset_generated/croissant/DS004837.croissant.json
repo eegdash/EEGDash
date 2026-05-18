@@ -100,7 +100,26 @@
   ],
   "citeAs": "Fran López-Caballero, Mark Curtis, Brian Coffman, Dean Salisbury (2023). Magnetoencephalographic (MEG) Pitch and Duration Mismatch Negativity (MMN) in First-Episode Psychosis. doi:10.18112/openneuro.ds004837.v1.0.2",
   "version": "1.1.1",
+  "dateCreated": "2023-11-01",
+  "dateModified": "2025-05-27",
+  "measurementTechnique": [
+    "BIDS task: attnmod"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Fran López-Caballero"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004837-bids-bucket",
+      "name": "ds004837 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004837.",
+      "contentUrl": "s3://openneuro.org/ds004837",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004837-openneuro",

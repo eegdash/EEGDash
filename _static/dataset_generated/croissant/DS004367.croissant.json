@@ -101,7 +101,26 @@
   ],
   "citeAs": "Martin Rouy, Matthieu Roger, Dorian Goueytes, Michael Pereira, Paul Roux (2022). Meta-rdk: Raw EEG data. doi:10.18112/openneuro.ds004367.v1.0.2",
   "version": "1.1.1",
+  "dateCreated": "2022-12-15",
+  "dateModified": "2022-12-15",
+  "measurementTechnique": [
+    "BIDS task: rdk"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Martin Rouy"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004367-bids-bucket",
+      "name": "ds004367 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004367.",
+      "contentUrl": "s3://openneuro.org/ds004367",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004367-openneuro",

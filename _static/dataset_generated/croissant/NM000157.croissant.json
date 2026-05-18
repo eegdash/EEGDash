@@ -89,7 +89,19 @@
   ],
   "citeAs": "Boyla Mainsah, Chance Fleeting, Thomas Balmat, Eric Sellers, Leslie Collins (2019). Mainsah2025-B. doi:10.13026/0byy-ry86",
   "version": "1.9.0",
+  "dateModified": "2026-04-14",
+  "measurementTechnique": [
+    "BIDS task: p300"
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000157-bids-bucket",
+      "name": "nm000157 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for NM000157.",
+      "contentUrl": "s3://nemar/nm000157",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "nm000157-openneuro",

@@ -101,7 +101,26 @@
   ],
   "citeAs": "Chenot Quentin, Hamery Caroline, Truninger Moritz, De Boissezon Xavier, Langer Nicolas (2024). EEG Resting-state Microstates Correlates of Executive Functions. doi:10.18112/openneuro.ds005305.v1.0.1",
   "version": "1.8.0",
+  "dateCreated": "2024-07-03",
+  "dateModified": "2024-07-04",
+  "measurementTechnique": [
+    "BIDS task: restingstate"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Quentin Chenot"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005305-bids-bucket",
+      "name": "ds005305 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005305.",
+      "contentUrl": "s3://openneuro.org/ds005305",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005305-openneuro",

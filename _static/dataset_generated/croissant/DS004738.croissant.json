@@ -106,7 +106,27 @@
   ],
   "citeAs": "Bahne H. Bahners, Roxanne Lofredi, Tilmann Sander, Alfons Schnitzler, Andrea A. Kuhn (2023). sfb_meg_phantom (B04/C01). doi:10.18112/openneuro.ds004738.v1.0.1",
   "version": "1.2.0",
+  "dateCreated": "2023-09-03",
+  "dateModified": "2023-09-03",
+  "measurementTechnique": [
+    "BIDS task: dip13",
+    "BIDS task: dip13mov"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Bahne Bahners"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004738-bids-bucket",
+      "name": "ds004738 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004738.",
+      "contentUrl": "s3://openneuro.org/ds004738",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004738-openneuro",

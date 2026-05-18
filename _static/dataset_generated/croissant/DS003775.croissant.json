@@ -89,7 +89,26 @@
   ],
   "citeAs": "Christoffer Hatlestad-Hall, Trine Waage Rygvold, Stein Andersson (2021). SRM Resting-state EEG. doi:10.18112/openneuro.ds003775.v1.2.1",
   "version": "1.6.0",
+  "dateCreated": "2021-08-25",
+  "dateModified": "2022-11-23",
+  "measurementTechnique": [
+    "BIDS task: resteyesc"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Christoffer Hatlestad-Hall"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds003775-bids-bucket",
+      "name": "ds003775 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS003775.",
+      "contentUrl": "s3://openneuro.org/ds003775",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds003775-openneuro",

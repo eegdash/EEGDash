@@ -119,7 +119,19 @@
   ],
   "citeAs": "Mohammad M. Ghassemi, Benjamin E. Moody, Li-wei H. Lehman, Christopher Song, Qiao Li (2018). PhysioNet 2018 Challenge: Sleep Arousal Detection PSG (Training). doi:10.13026/6phb-r450",
   "version": "1.9.0",
+  "dateModified": "2026-04-10",
+  "measurementTechnique": [
+    "BIDS task: sleep"
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000225-bids-bucket",
+      "name": "nm000225 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for NM000225.",
+      "contentUrl": "s3://nemar/nm000225",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "nm000225-openneuro",

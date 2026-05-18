@@ -108,7 +108,30 @@
   ],
   "citeAs": "Filippo Costa, Niklaus Krayenbühl, Georgia Ramantani, Ece Boran, Kristina König (2024). Dataset of BCI2000-compatible intraoperative ECoG with neuromorphic encoding. doi:10.18112/openneuro.ds004944.v1.1.0",
   "version": "1.4.0",
+  "dateCreated": "2024-01-30",
+  "dateModified": "2024-04-11",
+  "measurementTechnique": [
+    "BIDS task: acute"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Filippo Costa"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Johannes Sarnthein"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004944-bids-bucket",
+      "name": "ds004944 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004944.",
+      "contentUrl": "s3://openneuro.org/ds004944",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004944-openneuro",

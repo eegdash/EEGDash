@@ -105,7 +105,23 @@
   ],
   "citeAs": "Ian Daly, Nicoletta Nicolaou, Duncan Williams, Faustina Hwang, Alexis Kirke (2020). A dataset recorded during development of a tempo-based brain-computer music interface. doi:10.18112/openneuro.ds002720.v1.0.1",
   "version": "1.0.2",
+  "dateCreated": "2020-04-22",
+  "dateModified": "2020-04-23",
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Ian Daly"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds002720-bids-bucket",
+      "name": "ds002720 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS002720.",
+      "contentUrl": "s3://openneuro.org/ds002720",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds002720-openneuro",

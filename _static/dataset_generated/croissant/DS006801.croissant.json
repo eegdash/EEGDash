@@ -99,7 +99,26 @@
   ],
   "citeAs": "Paloma Victoria de Sales Alves, Antonio Simeão Sobrinho Neto, Carla Alexandra da Silva Moita Minervino (2025). Resting-state EEG before and after different study methods. doi:10.18112/openneuro.ds006801.v1.0.0",
   "version": "1.9.0",
+  "dateCreated": "2025-10-16",
+  "dateModified": "2025-10-16",
+  "measurementTechnique": [
+    "BIDS task: rest"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "PALOMA ALVES"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006801-bids-bucket",
+      "name": "ds006801 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS006801.",
+      "contentUrl": "s3://openneuro.org/ds006801",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds006801-openneuro",

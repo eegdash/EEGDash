@@ -84,7 +84,19 @@
   ],
   "citeAs": "Maitreyee Wairagkar, Yoshikatsu Hayashi, Slawomir J. Nasuto (2018). Motor execution dataset from Wairagkar et al 2018. doi:10.82901/nemar.nm000141",
   "version": "1.9.0",
+  "dateModified": "2026-04-17",
+  "measurementTechnique": [
+    "BIDS task: imagery"
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000141-bids-bucket",
+      "name": "nm000141 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for NM000141.",
+      "contentUrl": "s3://nemar/nm000141",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "nm000141-openneuro",

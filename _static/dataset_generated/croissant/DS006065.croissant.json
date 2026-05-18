@@ -92,7 +92,35 @@
   ],
   "citeAs": "James Kragel, Joel Voss (2025). TSS_iEEG. doi:10.18112/openneuro.ds006065.v1.0.0",
   "version": "1.8",
+  "dateCreated": "2025-03-27",
+  "dateModified": "2025-03-29",
+  "measurementTechnique": [
+    "BIDS task: cl",
+    "BIDS task: clcontrol",
+    "BIDS task: epcontrolpost",
+    "BIDS task: epcontrolpre",
+    "BIDS task: eppost",
+    "BIDS task: eppre",
+    "BIDS task: restcontrolpost",
+    "BIDS task: restcontrolpre",
+    "BIDS task: restpost",
+    "BIDS task: restpre"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "James Kragel"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006065-bids-bucket",
+      "name": "ds006065 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS006065.",
+      "contentUrl": "s3://openneuro.org/ds006065",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds006065-openneuro",

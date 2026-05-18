@@ -115,7 +115,26 @@
   ],
   "citeAs": "Arun Singh arun.singh@usd.edu, Rachel Cole rachel-cole@uiowa.edu, Arturo Espinoza arturo-espinoza@uiowa.edu, Jan R Wessel jan-wessel@uiowa.edu, Jim Cavanagh jcavanagh@unm.edu (2023). Cross-modal Oddball Task.. doi:10.18112/openneuro.ds004574.v1.0.0",
   "version": "v1.2.1",
+  "dateCreated": "2023-05-24",
+  "dateModified": "2023-05-24",
+  "measurementTechnique": [
+    "BIDS task: Oddball"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Nandakumar Narayanan"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004574-bids-bucket",
+      "name": "ds004574 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004574.",
+      "contentUrl": "s3://openneuro.org/ds004574",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004574-openneuro",

@@ -99,7 +99,27 @@
   ],
   "citeAs": "Edmund Wascher, Daniel Schneider, Patrick D. Gajewski, Stephan Getzmann (2024). Resting-state EEG data before and after cognitive activity across the adult lifespan and a 5-year follow-up. doi:10.18112/openneuro.ds005385.v1.0.3",
   "version": "1.9.0",
+  "dateCreated": "2024-07-30",
+  "dateModified": "2025-05-05",
+  "measurementTechnique": [
+    "BIDS task: EyesClosed",
+    "BIDS task: EyesOpen"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Stephan Getzmann"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005385-bids-bucket",
+      "name": "ds005385 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005385.",
+      "contentUrl": "s3://openneuro.org/ds005385",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005385-openneuro",

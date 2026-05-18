@@ -144,7 +144,31 @@
   ],
   "citeAs": "M.P. Weisend, F.M. Hanlon, R. Montano, S.P. Ahlfors, A.C. Leuthold (2022). MIND DATA. doi:10.18112/openneuro.ds004107.v1.0.0",
   "version": "1.6.0",
+  "dateCreated": "2022-04-22",
+  "dateModified": "2022-04-22",
+  "measurementTechnique": [
+    "BIDS task: auditory",
+    "BIDS task: index",
+    "BIDS task: median",
+    "BIDS task: noise",
+    "BIDS task: rest",
+    "BIDS task: visual"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Alexandre Gramfort"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004107-bids-bucket",
+      "name": "ds004107 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004107.",
+      "contentUrl": "s3://openneuro.org/ds004107",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004107-openneuro",

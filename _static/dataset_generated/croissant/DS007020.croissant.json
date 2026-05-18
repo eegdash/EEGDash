@@ -93,7 +93,26 @@
   ],
   "citeAs": "Simin Jamshidi, Arturo Espinoza, Soura Dasgupta, Nandakumar Narayanan (2025). EEG Mortality Dataset in Parkinson's Disease. doi:10.18112/openneuro.ds007020.v1.0.0",
   "version": "1.8.0",
+  "dateCreated": "2025-12-02",
+  "dateModified": "2025-12-02",
+  "measurementTechnique": [
+    "BIDS task: rest"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Simin Jamshidi"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007020-bids-bucket",
+      "name": "ds007020 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS007020.",
+      "contentUrl": "s3://openneuro.org/ds007020",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds007020-openneuro",

@@ -101,7 +101,26 @@
   ],
   "citeAs": "Elizabeth M. Siefert, Sindhuja Uppuluri, Jianing Mu, Marlie C. Tandoc, James W. Antony (2024). Siefert2024. doi:10.18112/openneuro.ds005121.v1.0.2",
   "version": "1.2",
+  "dateCreated": "2024-05-02",
+  "dateModified": "2024-05-03",
+  "measurementTechnique": [
+    "BIDS task: Siefert2024"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Elizabeth M. Siefert"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005121-bids-bucket",
+      "name": "ds005121 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005121.",
+      "contentUrl": "s3://openneuro.org/ds005121",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005121-openneuro",

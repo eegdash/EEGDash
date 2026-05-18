@@ -120,7 +120,30 @@
   ],
   "citeAs": "Yücel, Meryem, Selb, Juliette, Aasted, Christopher, Petkov, Mihayl, Borsook, David (2025). Electrical_Thermal_FingerTapping_2015. doi:10.18112/openneuro.ds005776.v1.0.1",
   "version": "1.7.1",
+  "dateCreated": "2025-01-02",
+  "dateModified": "2025-07-09",
+  "measurementTechnique": [
+    "BIDS task: Electrical",
+    "BIDS task: FingerTapping",
+    "BIDS task: Imagery",
+    "BIDS task: Resting",
+    "BIDS task: Thermal"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "MERYEM YUCEL"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005776-bids-bucket",
+      "name": "ds005776 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005776.",
+      "contentUrl": "s3://openneuro.org/ds005776",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005776-openneuro",

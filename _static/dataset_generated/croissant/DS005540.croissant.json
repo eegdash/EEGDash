@@ -135,7 +135,26 @@
   ],
   "citeAs": "Xin XU, Xinke SHEN, Xuyang CHEN, Qingzhu ZHANG, Sitian WANG (2024). EmoEEG-MC: A Multi-Context Emotional EEG Dataset for Cross-Context Emotion Decoding. doi:10.18112/openneuro.ds005540.v1.0.7",
   "version": "1.6.0",
+  "dateCreated": "2024-09-30",
+  "dateModified": "2025-05-21",
+  "measurementTechnique": [
+    "BIDS task: emotion"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Xin XU"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005540-bids-bucket",
+      "name": "ds005540 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005540.",
+      "contentUrl": "s3://openneuro.org/ds005540",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005540-openneuro",

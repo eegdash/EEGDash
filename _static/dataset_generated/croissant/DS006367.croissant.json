@@ -81,7 +81,26 @@
   ],
   "citeAs": "xx (2025). Memory Reactivation Levels Remain Unaffected by Anticipated Interference. doi:10.18112/openneuro.ds006367.v1.0.1",
   "version": "v1.2.1",
+  "dateCreated": "2025-06-17",
+  "dateModified": "2025-06-25",
+  "measurementTechnique": [
+    "BIDS task: DelayedMatchtoSampleTask"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Nursena Ataseven"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006367-bids-bucket",
+      "name": "ds006367 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS006367.",
+      "contentUrl": "s3://openneuro.org/ds006367",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds006367-openneuro",

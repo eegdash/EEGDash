@@ -121,7 +121,26 @@
   ],
   "citeAs": "Kostas Georgiadis, Fotis P. Kalaganis, Kyriakos Riskos, Eleytheria Matta, Vangelis P. Oikonomou (2023). Neuma. doi:10.18112/openneuro.ds004588.v1.2.0",
   "version": "1.8.0",
+  "dateCreated": "2023-06-01",
+  "dateModified": "2023-06-01",
+  "measurementTechnique": [
+    "BIDS task: unnamed"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Kostas Georgiadis"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004588-bids-bucket",
+      "name": "ds004588 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004588.",
+      "contentUrl": "s3://openneuro.org/ds004588",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004588-openneuro",

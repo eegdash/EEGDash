@@ -115,7 +115,26 @@
   ],
   "citeAs": "Arun Singh arun.singh@usd.edu, Rachel Cole rachel-cole@uiowa.edu, Arturo Espinoza arturo-espinoza@uiowa.edu, Jan R Wessel jan-wessel@uiowa.edu, Jim Cavanagh jcavanagh@unm.edu (2023). Simon-conflict Task.. doi:10.18112/openneuro.ds004580.v1.0.0",
   "version": "v1.2.1",
+  "dateCreated": "2023-05-25",
+  "dateModified": "2023-05-25",
+  "measurementTechnique": [
+    "BIDS task: Simon"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Nandakumar Narayanan"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004580-bids-bucket",
+      "name": "ds004580 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004580.",
+      "contentUrl": "s3://openneuro.org/ds004580",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004580-openneuro",

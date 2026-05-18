@@ -103,7 +103,26 @@
   ],
   "citeAs": "Federico Frau, Paolo Canal, Maddalena Bressler, Chiara Pompei, Valentina Bambini (2025). ERC_CoG PROMENADE - WP2 - MetaImagery (Metaphor and Mental Imagery). doi:10.18112/openneuro.ds005946.v1.0.1",
   "version": "1.8.0",
+  "dateCreated": "2025-02-27",
+  "dateModified": "2025-02-27",
+  "measurementTechnique": [
+    "BIDS task: picturematching"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Federico Frau"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005946-bids-bucket",
+      "name": "ds005946 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005946.",
+      "contentUrl": "s3://openneuro.org/ds005946",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005946-openneuro",

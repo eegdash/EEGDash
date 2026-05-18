@@ -115,7 +115,30 @@
   ],
   "citeAs": "Viviana Greco, Tamas A. Foldes, Neil A. Harrison, Kevin Murphy, Marta Wawrzuta (2024). Depotentiation of emotional reactivity using TMR during REM sleep. doi:10.18112/openneuro.ds005530.v1.0.9",
   "version": "1.8.0",
+  "dateCreated": "2024-09-25",
+  "dateModified": "2025-02-24",
+  "measurementTechnique": [
+    "BIDS task: sleep"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Tamas Foldes"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "viviana greco"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005530-bids-bucket",
+      "name": "ds005530 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005530.",
+      "contentUrl": "s3://openneuro.org/ds005530",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005530-openneuro",

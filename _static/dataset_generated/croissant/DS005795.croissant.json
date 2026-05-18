@@ -127,7 +127,27 @@
   ],
   "citeAs": "Jörg Stadler, Torsten Stöter, Nicole Angenstein, Andreas Fügner, Marcel Lommerzheim (2025). MULTI-CLARID (Multimodal Category Learning and Resting-state Imaging Data). doi:10.18112/openneuro.ds005795.v1.0.0",
   "version": "1.10.0",
+  "dateCreated": "2025-01-08",
+  "dateModified": "2025-01-28",
+  "measurementTechnique": [
+    "BIDS task: learning",
+    "BIDS task: rest"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "André Brechmann"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005795-bids-bucket",
+      "name": "ds005795 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005795.",
+      "contentUrl": "s3://openneuro.org/ds005795",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005795-openneuro",

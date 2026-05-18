@@ -89,7 +89,26 @@
   ],
   "citeAs": "Cameron D. Hassall, Laurence T. Hunt, Clay B. Holroyd (2022). Average Task Value. doi:10.18112/openneuro.ds004147.v1.0.2",
   "version": "1.2.1",
+  "dateCreated": "2022-06-07",
+  "dateModified": "2024-01-24",
+  "measurementTechnique": [
+    "BIDS task: casinos"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Cameron Hassall"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004147-bids-bucket",
+      "name": "ds004147 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004147.",
+      "contentUrl": "s3://openneuro.org/ds004147",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004147-openneuro",

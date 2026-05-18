@@ -106,7 +106,34 @@
   ],
   "citeAs": "Oscar Ferrante, Ling Liu, Tamas Minarik, Urszula Gorska, Tara Ghafari (2022). FLUX: A pipeline for MEG analysis. doi:10.18112/openneuro.ds004346.v1.0.8",
   "version": "1.7.0",
+  "dateCreated": "2022-11-28",
+  "dateModified": "2024-06-07",
+  "measurementTechnique": [
+    "BIDS task: SpAtt"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Tara Ghafari"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Oscar Ferrante"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Oscar Ferrante"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004346-bids-bucket",
+      "name": "ds004346 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004346.",
+      "contentUrl": "s3://openneuro.org/ds004346",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004346-openneuro",

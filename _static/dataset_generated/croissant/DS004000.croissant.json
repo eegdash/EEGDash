@@ -105,7 +105,27 @@
   ],
   "citeAs": "Anna Padée, Pascal Missonnier, Anne Prévot, Grégoire Favre, Isabelle Gothuey (2022). Fribourg Ultimatum Game in Schizophrenia Study. doi:10.18112/openneuro.ds004000.v1.0.0",
   "version": "v1.6.0",
+  "dateCreated": "2022-01-19",
+  "dateModified": "2022-01-11",
+  "measurementTechnique": [
+    "BIDS task: proposer",
+    "BIDS task: responder"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Anna Padée"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004000-bids-bucket",
+      "name": "ds004000 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004000.",
+      "contentUrl": "s3://openneuro.org/ds004000",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004000-openneuro",

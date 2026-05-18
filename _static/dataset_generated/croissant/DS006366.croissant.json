@@ -166,7 +166,26 @@
   ],
   "citeAs": "Laura Rose, Alexander Neergaard Zahid, Javier García Ciudad, Christine Egebjerg, Louise Piilgaard (2025). Mouse Sleep Staging Validation dataset (MSSV). doi:10.18112/openneuro.ds006366.v1.0.1",
   "version": "1.10.0",
+  "dateCreated": "2025-06-17",
+  "dateModified": "2025-09-05",
+  "measurementTechnique": [
+    "BIDS task: sleep"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Javier García Ciudad"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006366-bids-bucket",
+      "name": "ds006366 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS006366.",
+      "contentUrl": "s3://openneuro.org/ds006366",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds006366-openneuro",

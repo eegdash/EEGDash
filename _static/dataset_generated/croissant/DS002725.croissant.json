@@ -105,7 +105,30 @@
   ],
   "citeAs": "Ian Daly, Nicoletta Nicolaou, Duncan Williams, Faustina Hwang, Alexis Kirke (2020). A dataset recording joint EEG-fMRI during affective music listening. doi:10.18112/openneuro.ds002725.v1.0.0",
   "version": "1.0.2",
+  "dateCreated": "2020-04-22",
+  "dateModified": "2020-04-24",
+  "measurementTechnique": [
+    "BIDS task: classicalMusic",
+    "BIDS task: genMusic01",
+    "BIDS task: genMusic02",
+    "BIDS task: genMusic03",
+    "BIDS task: washout"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Ian Daly"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds002725-bids-bucket",
+      "name": "ds002725 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS002725.",
+      "contentUrl": "s3://openneuro.org/ds002725",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds002725-openneuro",

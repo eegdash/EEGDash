@@ -92,7 +92,27 @@
   ],
   "citeAs": "Wakeman, DG, Henson, RN (2018). Multisubject, multimodal face processing. doi:10.18112/openneuro.ds000117.v1.1.0",
   "version": "1.0.2",
+  "dateCreated": "2018-03-30",
+  "dateModified": "2025-01-06",
+  "measurementTechnique": [
+    "BIDS task: facerecognition",
+    "BIDS task: noise"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Richard Henson"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds000117-bids-bucket",
+      "name": "ds000117 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS000117.",
+      "contentUrl": "s3://openneuro.org/ds000117",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds000117-openneuro",

@@ -99,7 +99,30 @@
   ],
   "citeAs": "[\"Christian Neumann\", \"Johanna Geritz\", \"Julian Keil\", \"Walter Maetzler\", \"Julius Welzel\"] (2026). EPOC. doi:10.18112/openneuro.ds007605.v1.0.0",
   "version": "1.8.0",
+  "dateCreated": "2026-03-31",
+  "dateModified": "2026-04-13",
+  "measurementTechnique": [
+    "BIDS task: pvt"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Christian Neumann"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Julius Welzel"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007605-bids-bucket",
+      "name": "ds007605 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS007605.",
+      "contentUrl": "s3://openneuro.org/ds007605",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds007605-openneuro",

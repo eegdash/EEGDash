@@ -89,7 +89,26 @@
   ],
   "citeAs": "Milan Rybář, Riccardo Poli, Ian Daly (2023). EEG recordings for semantic decoding of imagined animals and tools during auditory imagery task. doi:10.18112/openneuro.ds004517.v1.0.2",
   "version": "1.7.0",
+  "dateCreated": "2023-03-03",
+  "dateModified": "2025-04-03",
+  "measurementTechnique": [
+    "BIDS task: eeg"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Milan Rybář"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004517-bids-bucket",
+      "name": "ds004517 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004517.",
+      "contentUrl": "s3://openneuro.org/ds004517",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004517-openneuro",

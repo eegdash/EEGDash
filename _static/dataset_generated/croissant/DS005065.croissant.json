@@ -98,7 +98,26 @@
   ],
   "citeAs": "Evan M. Russek, Rani Moran, Yunzhe Liu, Ray Dolan, Quentin Huys (2024). Heuristics in risky decision-making relate to preferential representation of information MEG data. doi:10.18112/openneuro.ds005065.v1.0.0",
   "version": "v1.5.0",
+  "dateCreated": "2024-04-07",
+  "dateModified": "2024-04-09",
+  "measurementTechnique": [
+    "BIDS task: RiskyDecision"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Evan Russek"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005065-bids-bucket",
+      "name": "ds005065 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005065.",
+      "contentUrl": "s3://openneuro.org/ds005065",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005065-openneuro",

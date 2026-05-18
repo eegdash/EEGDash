@@ -94,7 +94,44 @@
   ],
   "citeAs": "Jixing Li, Yike Wang, Chengcheng Wang, Zhengwu Ma (2024). Naturalistic fMRI and MEG recordings during viewing of a reality TV show. doi:10.18112/openneuro.ds005346.v1.0.5",
   "version": "1.8.0",
+  "dateCreated": "2024-07-16",
+  "dateModified": "2025-12-18",
+  "measurementTechnique": [
+    "BIDS task: baba",
+    "BIDS task: question",
+    "BIDS task: replay"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Zhengwu Ma"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Jixing Li"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Chengcheng WANG"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Zhengwu Ma"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Jixing Li"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005346-bids-bucket",
+      "name": "ds005346 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005346.",
+      "contentUrl": "s3://openneuro.org/ds005346",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005346-openneuro",

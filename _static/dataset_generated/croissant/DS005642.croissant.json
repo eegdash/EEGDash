@@ -107,7 +107,26 @@
   ],
   "citeAs": "Amanda K Robinson, Greta Stuart, Sophia M Shatek, Adrian Herbert, Jessica Taubert (2024). illusory-face-eeg. doi:10.18112/openneuro.ds005642.v1.0.1",
   "version": "1.0.0",
+  "dateCreated": "2024-11-19",
+  "dateModified": "2025-07-08",
+  "measurementTechnique": [
+    "BIDS task: faceobj"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Amanda K Robinson"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005642-bids-bucket",
+      "name": "ds005642 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005642.",
+      "contentUrl": "s3://openneuro.org/ds005642",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005642-openneuro",

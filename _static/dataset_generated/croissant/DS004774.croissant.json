@@ -128,7 +128,27 @@
   ],
   "citeAs": "M.A. van den Boom, N.M. Gregg, G.O. Valencia, B.N. Lundstrom, K.J. Miller (2023). Automatic Evoked Response Detection (ER-Detect) dataset. doi:10.18112/openneuro.ds004774.v1.0.0",
   "version": "Brain Imaging Data Structure Specification v1.8.0",
+  "dateCreated": "2023-09-25",
+  "dateModified": "2023-12-30",
+  "measurementTechnique": [
+    "BIDS task: SPESclin",
+    "BIDS task: ccep"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Max van den Boom"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004774-bids-bucket",
+      "name": "ds004774 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004774.",
+      "contentUrl": "s3://openneuro.org/ds004774",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004774-openneuro",

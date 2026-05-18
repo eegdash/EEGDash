@@ -228,7 +228,26 @@
   ],
   "citeAs": "Keundong Lee, Angelique C. Paulk, Yun Goo Ro, Daniel R. Cleary, Karen J. Tonsfeldt (2023). Flexible, Scalable, High Channel Count Stereo-Electrode for Recording in the Human Brain. doi:10.18112/openneuro.ds004819.v1.0.0",
   "version": "1.7.0",
+  "dateCreated": "2023-10-25",
+  "dateModified": "2023-10-26",
+  "measurementTechnique": [
+    "BIDS task: BaselineandStimRecordingRAWEDF"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Angelique Paulk"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004819-bids-bucket",
+      "name": "ds004819 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004819.",
+      "contentUrl": "s3://openneuro.org/ds004819",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004819-openneuro",

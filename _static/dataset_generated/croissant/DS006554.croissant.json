@@ -79,7 +79,26 @@
   ],
   "citeAs": "Yaner Su (2025). Social Observation EEG raw data. doi:10.18112/openneuro.ds006554.v1.0.0",
   "version": "1.8.0",
+  "dateCreated": "2025-08-12",
+  "dateModified": "2025-08-12",
+  "measurementTechnique": [
+    "BIDS task: SocialObservation"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Yaner Su"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006554-bids-bucket",
+      "name": "ds006554 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS006554.",
+      "contentUrl": "s3://openneuro.org/ds006554",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds006554-openneuro",

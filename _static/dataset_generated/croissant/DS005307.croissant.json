@@ -125,7 +125,26 @@
   ],
   "citeAs": "Birgit Nierula, Tilman Stephani, Emma Bailey, Merve Kaptan, Lisa-Marie Pohle (2024). Laser-evoked potentials in the human spinal cord and cortex. doi:10.18112/openneuro.ds005307.v1.0.1",
   "version": "1.7.0",
+  "dateCreated": "2024-07-04",
+  "dateModified": "2024-08-15",
+  "measurementTechnique": [
+    "BIDS task: pain"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Falk Eippert"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005307-bids-bucket",
+      "name": "ds005307 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005307.",
+      "contentUrl": "s3://openneuro.org/ds005307",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005307-openneuro",

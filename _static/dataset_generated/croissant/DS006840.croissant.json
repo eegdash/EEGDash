@@ -106,7 +106,26 @@
   ],
   "citeAs": "Mengpu Cai, Rongrong Fu, Yaodong Wang, Bin Lu, Saiwei Guo (2025). IACKD: Intention Action Conflict EEG-Hand Kinematics Dataset. doi:10.18112/openneuro.ds006840.v1.0.0",
   "version": "1.7.0",
+  "dateCreated": "2025-10-25",
+  "dateModified": "2025-11-17",
+  "measurementTechnique": [
+    "BIDS task: ihc"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Mengpu Cai"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006840-bids-bucket",
+      "name": "ds006840 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS006840.",
+      "contentUrl": "s3://openneuro.org/ds006840",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds006840-openneuro",

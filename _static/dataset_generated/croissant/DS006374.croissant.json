@@ -101,7 +101,31 @@
   ],
   "citeAs": "Lisa-Marie Pohle, Moritz Nickel, Birgit Nierula, Markus Ploner, Ulrike Horn (2025). Expectation effects on repetition suppression in nociception. doi:10.18112/openneuro.ds006374.v1.0.0",
   "version": "1.6.0",
+  "dateCreated": "2025-06-19",
+  "dateModified": "2025-07-10",
+  "measurementTechnique": [
+    "BIDS task: detection",
+    "BIDS task: expsupp"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Lisa-Marie Geertje Pohle"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Falk Eippert"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006374-bids-bucket",
+      "name": "ds006374 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS006374.",
+      "contentUrl": "s3://openneuro.org/ds006374",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds006374-openneuro",

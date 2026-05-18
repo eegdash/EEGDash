@@ -154,7 +154,26 @@
   ],
   "citeAs": "Yipeng Zhang, Atsuro Daida, Lawrence Liu, Naoto Kuroda, Yuanyi Ding (2024). Open iEEG Dataset (Pediatric iEEG, Wayne State University and UCLA). doi:10.18112/openneuro.ds005398.v1.1.1",
   "version": "1.7.0",
+  "dateCreated": "2024-08-04",
+  "dateModified": "2026-03-24",
+  "measurementTechnique": [
+    "BIDS task: sleep"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Hiroki Nariai"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005398-bids-bucket",
+      "name": "ds005398 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005398.",
+      "contentUrl": "s3://openneuro.org/ds005398",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005398-openneuro",

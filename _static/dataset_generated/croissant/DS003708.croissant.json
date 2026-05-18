@@ -100,7 +100,26 @@
   ],
   "citeAs": "Dora Hermes, Gabriella Ojeda, Kai J. Miller, Multimodal Neuroimaging Laboratory at Mayo Clinic (2021). Basis profile curve identification to understand electrical stimulation effects in human brain networks. doi:10.18112/openneuro.ds003708.v1.0.0",
   "version": "v 1.3.0",
+  "dateCreated": "2021-06-23",
+  "dateModified": "2023-08-10",
+  "measurementTechnique": [
+    "BIDS task: ccep"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Dora Hermes"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds003708-bids-bucket",
+      "name": "ds003708 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS003708.",
+      "contentUrl": "s3://openneuro.org/ds003708",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds003708-openneuro",

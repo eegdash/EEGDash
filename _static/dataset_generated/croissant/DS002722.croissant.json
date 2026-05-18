@@ -105,7 +105,23 @@
   ],
   "citeAs": "Ian Daly, Nicoletta Nicolaou, Duncan Williams, Faustina Hwang, Alexis Kirke (2020). A dataset recorded during development of an affective brain-computer music interface: calibration session. doi:10.18112/openneuro.ds002722.v1.0.1",
   "version": "1.0.2",
+  "dateCreated": "2020-04-22",
+  "dateModified": "2020-04-23",
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Ian Daly"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds002722-bids-bucket",
+      "name": "ds002722 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS002722.",
+      "contentUrl": "s3://openneuro.org/ds002722",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds002722-openneuro",

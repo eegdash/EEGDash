@@ -138,7 +138,34 @@
   ],
   "citeAs": "Chang Liu, Erika M. Pliner, Jacob S. Salminen, Ryan Downey, Jungyun Hwang (2025). Mind in Motion Older Adults Walking Over Uneven Terrain. doi:10.18112/openneuro.ds006095.v1.0.0",
   "version": "v1.0.0",
+  "dateCreated": "2025-04-06",
+  "dateModified": "2025-04-07",
+  "measurementTechnique": [
+    "BIDS task: 0p25",
+    "BIDS task: 0p5",
+    "BIDS task: 0p75",
+    "BIDS task: 1p0",
+    "BIDS task: Rest",
+    "BIDS task: flat",
+    "BIDS task: high",
+    "BIDS task: low",
+    "BIDS task: med"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Chang Liu"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006095-bids-bucket",
+      "name": "ds006095 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS006095.",
+      "contentUrl": "s3://openneuro.org/ds006095",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds006095-openneuro",

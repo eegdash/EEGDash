@@ -99,7 +99,26 @@
   ],
   "citeAs": "Tong Shan, Edmund C. Lalor, Ross K. Maddox (2025). Chimeric music reveals an interaction of pitch and time in electrophysiological signatures of music encoding. doi:10.18112/openneuro.ds006735.v2.0.0",
   "version": "1.2.1",
+  "dateCreated": "2025-09-30",
+  "dateModified": "2026-01-15",
+  "measurementTechnique": [
+    "BIDS task: ChimericMusic"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Tong Shan"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006735-bids-bucket",
+      "name": "ds006735 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS006735.",
+      "contentUrl": "s3://openneuro.org/ds006735",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds006735-openneuro",

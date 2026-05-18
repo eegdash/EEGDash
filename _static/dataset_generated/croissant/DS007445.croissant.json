@@ -139,7 +139,30 @@
   ],
   "citeAs": "Saarang Panchavati, Atsuro Daida, Sotaro Kanai, Shingo Oana, Hiroya Ono (2026). Thalamocortical ictal iEEG dataset. doi:10.18112/openneuro.ds007445.v1.0.2",
   "version": "1.9.0",
+  "dateCreated": "2026-02-20",
+  "dateModified": "2026-02-21",
+  "measurementTechnique": [
+    "BIDS task: seizure"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Hiroki Nariai"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Saarang Panchavati"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007445-bids-bucket",
+      "name": "ds007445 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS007445.",
+      "contentUrl": "s3://openneuro.org/ds007445",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds007445-openneuro",

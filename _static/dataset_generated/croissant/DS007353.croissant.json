@@ -119,7 +119,27 @@
   ],
   "citeAs": "Guohao Zhang, Sai Ma, Ming Zhou, Shaohua Tang, Shuyi Zhen (2026). HAD-MEEG. doi:10.18112/openneuro.ds007353.v1.0.0",
   "version": "1.10.1",
+  "dateCreated": "2026-02-02",
+  "dateModified": "2026-02-03",
+  "measurementTechnique": [
+    "BIDS task: action",
+    "BIDS task: noise"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Guohao Zhang"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007353-bids-bucket",
+      "name": "ds007353 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS007353.",
+      "contentUrl": "s3://openneuro.org/ds007353",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds007353-openneuro",

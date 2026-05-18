@@ -110,7 +110,27 @@
   ],
   "citeAs": "Verónica Henao Isaza, Valeria Cadavid Castro, Luisa María Zapata Saldarriaga, Yorguin-Jose Mantilla-Ramos, Jazmín Ximena Suarez Revelo (2026). Longitudinal EEG Test-Retest Reliability in Healthy Individuals. doi:10.18112/openneuro.ds007176.v1.0.2",
   "version": "1.8.0",
+  "dateCreated": "2026-01-06",
+  "dateModified": "2026-04-07",
+  "measurementTechnique": [
+    "BIDS task: CE",
+    "BIDS task: OE"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Verónica Henao Isaza"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007176-bids-bucket",
+      "name": "ds007176 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS007176.",
+      "contentUrl": "s3://openneuro.org/ds007176",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds007176-openneuro",

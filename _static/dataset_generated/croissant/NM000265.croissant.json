@@ -84,7 +84,19 @@
   ],
   "citeAs": "Eva Guttmann-Flury, Xinjun Sheng, Xiangyang Zhu (2025). Guttmann-Flury et al. 2025 (Motor Imagery) — Dataset combining EEG, eye-tracking, and high-speed video for ocular activity analysis across BCI paradigms. doi:10.1038/s41597-025-04861-9",
   "version": "1.9.0",
+  "dateModified": "2026-04-11",
+  "measurementTechnique": [
+    "BIDS task: imagery"
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000265-bids-bucket",
+      "name": "nm000265 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for NM000265.",
+      "contentUrl": "s3://nemar/nm000265",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "nm000265-openneuro",

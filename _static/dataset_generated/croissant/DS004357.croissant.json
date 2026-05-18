@@ -93,7 +93,26 @@
   ],
   "citeAs": "Grootswagers, Tijl, Robinson, Amanda, Shatek, Sofia, Carlson, Thomas (2022). Features-EEG. doi:10.18112/openneuro.ds004357.v1.0.1",
   "version": "1.0.2",
+  "dateCreated": "2022-12-08",
+  "dateModified": "2024-01-10",
+  "measurementTechnique": [
+    "BIDS task: rsvp"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Tijl Grootswagers"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004357-bids-bucket",
+      "name": "ds004357 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004357.",
+      "contentUrl": "s3://openneuro.org/ds004357",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004357-openneuro",

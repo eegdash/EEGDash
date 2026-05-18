@@ -93,7 +93,26 @@
   ],
   "citeAs": "Corentin Bel, Julie Bonnaire, Christophe Pallier, Jean-Rémi King (2026). LPP MEG Listen. doi:10.18112/openneuro.ds007523.v1.0.0",
   "version": "1.7.0",
+  "dateCreated": "2026-03-17",
+  "dateModified": "2026-03-30",
+  "measurementTechnique": [
+    "BIDS task: listen"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Christophe Pallier"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007523-bids-bucket",
+      "name": "ds007523 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS007523.",
+      "contentUrl": "s3://openneuro.org/ds007523",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds007523-openneuro",

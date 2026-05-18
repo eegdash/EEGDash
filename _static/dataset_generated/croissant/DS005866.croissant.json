@@ -101,7 +101,26 @@
   ],
   "citeAs": "Brennan Terhune-Cotter, Phillip J. Holcomb, Katherine J. Midgley, Sofia E. Ortega, Emily M. Akers (2025). Flankers-NEAR. doi:10.18112/openneuro.ds005866.v1.0.1",
   "version": "1.8.0",
+  "dateCreated": "2025-01-21",
+  "dateModified": "2025-01-21",
+  "measurementTechnique": [
+    "BIDS task: FlankerNEAR"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Emily M. Akers"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005866-bids-bucket",
+      "name": "ds005866 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005866.",
+      "contentUrl": "s3://openneuro.org/ds005866",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005866-openneuro",

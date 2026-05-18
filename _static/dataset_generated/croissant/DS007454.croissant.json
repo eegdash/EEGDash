@@ -80,7 +80,26 @@
   ],
   "citeAs": "[Unspecified] (2026). A common neural mechanism underlies experiences of passage of time. doi:10.18112/openneuro.ds007454.v1.0.1",
   "version": "1.7.0",
+  "dateCreated": "2026-02-25",
+  "dateModified": "2026-02-27",
+  "measurementTechnique": [
+    "BIDS task: Starfield"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Mathis Jording"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007454-bids-bucket",
+      "name": "ds007454 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS007454.",
+      "contentUrl": "s3://openneuro.org/ds007454",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds007454-openneuro",

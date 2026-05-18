@@ -99,7 +99,26 @@
   ],
   "citeAs": "Holly Wilson, Mohammad Golbabaee, Michael Proulx, Eamonn O'Neill (2022). EEG Semantic Imagination and Perception Dataset. doi:10.18112/openneuro.ds004306.v1.0.2",
   "version": "1.7.0",
+  "dateCreated": "2022-10-25",
+  "dateModified": "2023-09-27",
+  "measurementTechnique": [
+    "BIDS task: experiment"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Holly Wilson"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004306-bids-bucket",
+      "name": "ds004306 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004306.",
+      "contentUrl": "s3://openneuro.org/ds004306",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004306-openneuro",

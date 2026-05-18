@@ -108,6 +108,17 @@
   ],
   "datePublished": "2025",
   "version": "1.9.0",
+  "dateCreated": "2025-03-05",
+  "measurementTechnique": [
+    "BIDS task: DespicableMe",
+    "BIDS task: DiaryOfAWimpyKid",
+    "BIDS task: FunwithFractals",
+    "BIDS task: RestingState",
+    "BIDS task: ThePresent",
+    "BIDS task: contrastChangeDetection",
+    "BIDS task: surroundSupp",
+    "BIDS task: symbolSearch"
+  ],
   "distribution": [
     {
       "@type": "cr:FileObject",

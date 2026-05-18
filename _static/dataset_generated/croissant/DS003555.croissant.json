@@ -107,7 +107,26 @@
   ],
   "citeAs": "Dorottya Cserpan, Ece Boran, Richard Rosch, San Pietro Lo Biundo, Georgia Ramantani (2021). Dataset of EEG recordings of pediatric patients with epilepsy based on the 10-20 system. doi:10.18112/openneuro.ds003555.v1.0.1",
   "version": "1.4.0",
+  "dateCreated": "2021-03-05",
+  "dateModified": "2021-03-08",
+  "measurementTechnique": [
+    "BIDS task: hfo"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Dorottya Cserpan"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds003555-bids-bucket",
+      "name": "ds003555 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS003555.",
+      "contentUrl": "s3://openneuro.org/ds003555",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds003555-openneuro",

@@ -99,7 +99,30 @@
   ],
   "citeAs": "Vasileios Dimakopoulos, Marian Neidert, Johannes Sarnthein (2023). Intraoperative recordings of medianus stimulation with low and high impedance ECoG. doi:10.18112/openneuro.ds004642.v1.0.1",
   "version": "1.4.0",
+  "dateCreated": "2023-07-17",
+  "dateModified": "2023-07-31",
+  "measurementTechnique": [
+    "BIDS task: lozHFO"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Vasileios S. Dimakopoulos"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Johannes Sarnthein"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004642-bids-bucket",
+      "name": "ds004642 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004642.",
+      "contentUrl": "s3://openneuro.org/ds004642",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004642-openneuro",

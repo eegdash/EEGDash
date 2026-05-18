@@ -98,7 +98,31 @@
   ],
   "citeAs": "Anthony Mensah, Gleb Perevoznyuk, Artyom Batov, Aleksandra S. Pleskovskaya (2025). TDCS Modulation of Visual Cortex in Motor Imagery. doi:10.18112/openneuro.ds006126.v1.0.0",
   "version": "1.7.0",
+  "dateCreated": "2025-04-15",
+  "dateModified": "2025-04-15",
+  "measurementTechnique": [
+    "BIDS task: B1",
+    "BIDS task: B2",
+    "BIDS task: BM",
+    "BIDS task: KI",
+    "BIDS task: V1",
+    "BIDS task: V3"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Anthony Mensah"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006126-bids-bucket",
+      "name": "ds006126 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS006126.",
+      "contentUrl": "s3://openneuro.org/ds006126",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds006126-openneuro",

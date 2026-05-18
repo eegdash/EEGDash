@@ -90,7 +90,19 @@
   ],
   "citeAs": "Stephanie Brandl, Benjamin Blankertz, Tobias Dahne (2020). Brandl et al. 2020 — Motor Imagery Under Distraction: An Open Access BCI Dataset. doi:10.3389/fnins.2020.566147",
   "version": "1.9.0",
+  "dateModified": "2026-04-11",
+  "measurementTechnique": [
+    "BIDS task: imagery"
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000329-bids-bucket",
+      "name": "nm000329 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for NM000329.",
+      "contentUrl": "s3://nemar/nm000329",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "nm000329-openneuro",

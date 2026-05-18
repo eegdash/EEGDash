@@ -99,7 +99,26 @@
   ],
   "citeAs": "Denise Moerel, James Psihoyos, Thomas A. Carlson (2024). The Time-Course of Food Representation in the Human Brain. doi:10.18112/openneuro.ds004995.v1.0.2",
   "version": "1.0.2",
+  "dateCreated": "2024-02-28",
+  "dateModified": "2024-03-24",
+  "measurementTechnique": [
+    "BIDS task: food"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Denise Moerel"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004995-bids-bucket",
+      "name": "ds004995 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004995.",
+      "contentUrl": "s3://openneuro.org/ds004995",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004995-openneuro",

@@ -115,7 +115,26 @@
   ],
   "citeAs": "Alejandra Figueroa-Vargas, Gabriela Valdebenito-Oyarzo, María Paz Martínez-Molina, Francisco Zamorano, Pablo Billeke (2024). Probability Decision-making Task with ambiguity. doi:10.18112/openneuro.ds004917.v1.0.1",
   "version": "1.9.0",
+  "dateCreated": "2024-01-04",
+  "dateModified": "2024-05-23",
+  "measurementTechnique": [
+    "BIDS task: pdm"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Alejandra Figueroa-Vargas"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004917-bids-bucket",
+      "name": "ds004917 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004917.",
+      "contentUrl": "s3://openneuro.org/ds004917",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004917-openneuro",

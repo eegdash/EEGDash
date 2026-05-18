@@ -97,7 +97,26 @@
   ],
   "citeAs": "Alexander P. Rockhill, Nicko Jackson, Jobi George, Adam Aron, Nicole C. Swann (2020). UC San Diego Resting State EEG Data from Patients with Parkinson's Disease. doi:10.18112/openneuro.ds002778.v1.0.5",
   "version": "1.2.2",
+  "dateCreated": "2020-05-05",
+  "dateModified": "2021-12-10",
+  "measurementTechnique": [
+    "BIDS task: rest"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Alexander Rockhill"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds002778-bids-bucket",
+      "name": "ds002778 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS002778.",
+      "contentUrl": "s3://openneuro.org/ds002778",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds002778-openneuro",

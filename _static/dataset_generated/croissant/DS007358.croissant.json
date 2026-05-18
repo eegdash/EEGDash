@@ -236,7 +236,28 @@
   ],
   "citeAs": "John Mary Vianney, Shailender Swaminathan, Jennifer Jane Newson, Dhanya Parameshwaran, Narayan Puthanmadam Subramaniyam (2026). A subset of large-scale EEG dataset (India + Tanzania). doi:10.18112/openneuro.ds007358.v1.0.0",
   "version": "1.8.0",
+  "dateCreated": "2026-02-04",
+  "dateModified": "2026-02-04",
+  "measurementTechnique": [
+    "BIDS task: ec",
+    "BIDS task: eo",
+    "BIDS task: pc"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Narayan Puthanmadam Subramaniyam"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007358-bids-bucket",
+      "name": "ds007358 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS007358.",
+      "contentUrl": "s3://openneuro.org/ds007358",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds007358-openneuro",

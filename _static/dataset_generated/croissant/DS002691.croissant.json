@@ -85,7 +85,30 @@
   ],
   "citeAs": "Arnaud Delorme, Dean Radin (2020). Internal attention study. doi:10.18112/openneuro.ds002691.v1.1.0",
   "version": "v1.2.1",
+  "dateCreated": "2020-04-08",
+  "dateModified": "2021-10-19",
+  "measurementTechnique": [
+    "BIDS task: internalattention"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Arnaud Delorme"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Annalisa Salazar"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds002691-bids-bucket",
+      "name": "ds002691 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS002691.",
+      "contentUrl": "s3://openneuro.org/ds002691",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds002691-openneuro",

@@ -85,7 +85,26 @@
   ],
   "citeAs": "Cabell L. Williams, Meghan H. Puglia (2021). APPLESEED Example Dataset. doi:10.18112/openneuro.ds003710.v1.0.2",
   "version": "v1.6.0",
+  "dateCreated": "2021-06-28",
+  "dateModified": "2022-10-20",
+  "measurementTechnique": [
+    "BIDS task: appleseedexample"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Meghan Puglia"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds003710-bids-bucket",
+      "name": "ds003710 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS003710.",
+      "contentUrl": "s3://openneuro.org/ds003710",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds003710-openneuro",

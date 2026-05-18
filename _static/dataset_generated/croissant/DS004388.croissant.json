@@ -115,7 +115,28 @@
   ],
   "citeAs": "Birgit Nierula, Tilman Stephani, Merve Kaptan, André Moruaux, Burkhard Maess (2023). Somatosensory evoked potentials in the human spinal cord to mixed nerve stimulation. doi:10.18112/openneuro.ds004388.v1.0.0",
   "version": "1.6.0",
+  "dateCreated": "2023-01-04",
+  "dateModified": "2023-07-06",
+  "measurementTechnique": [
+    "BIDS task: alternating",
+    "BIDS task: median",
+    "BIDS task: tibial"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Falk Eippert"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004388-bids-bucket",
+      "name": "ds004388 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004388.",
+      "contentUrl": "s3://openneuro.org/ds004388",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004388-openneuro",

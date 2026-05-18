@@ -93,7 +93,26 @@
   ],
   "citeAs": "Sophie Smit, Denise Moerel, Regine Zopf, Anina N Rich (2023). Vicarious touch: overlapping neural patterns between seeing and feeling touch. doi:10.18112/openneuro.ds004563.v1.0.1",
   "version": "v1.8.0",
+  "dateCreated": "2023-05-10",
+  "dateModified": "2023-07-06",
+  "measurementTechnique": [
+    "BIDS task: touchdecoding"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Sophie Smit"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004563-bids-bucket",
+      "name": "ds004563 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004563.",
+      "contentUrl": "s3://openneuro.org/ds004563",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004563-openneuro",

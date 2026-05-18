@@ -98,7 +98,19 @@
   ],
   "citeAs": "Josef Faller, Carmen Vidaurre, Teodoro Solis-Escalante, Christa Neuper, Reinhold Scherer (2012). BNCI 2015-001 Motor Imagery dataset. doi:10.82901/nemar.nm000140",
   "version": "1.9.0",
+  "dateModified": "2026-04-17",
+  "measurementTechnique": [
+    "BIDS task: imagery"
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000140-bids-bucket",
+      "name": "nm000140 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for NM000140.",
+      "contentUrl": "s3://nemar/nm000140",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "nm000140-openneuro",

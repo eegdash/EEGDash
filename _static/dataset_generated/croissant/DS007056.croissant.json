@@ -88,7 +88,26 @@
   ],
   "citeAs": "Couperus, J.W., Bukach, C.M., Reed, C.L. (2025). PURSUE P300 Visual Oddball. doi:10.18112/openneuro.ds007056.v1.1.1",
   "version": "1.8.0",
+  "dateCreated": "2025-12-10",
+  "dateModified": "2025-12-11",
+  "measurementTechnique": [
+    "BIDS task: VisualOddball"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Jane Couperus"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007056-bids-bucket",
+      "name": "ds007056 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS007056.",
+      "contentUrl": "s3://openneuro.org/ds007056",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds007056-openneuro",

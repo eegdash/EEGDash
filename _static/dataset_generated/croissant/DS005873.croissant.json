@@ -130,7 +130,30 @@
   ],
   "citeAs": "Miguel Bhagubai, Christos Chatzichristos, Lauren Swinnen, Jaiver Macea, Jingwei Zhang (2025). SeizeIT2. doi:10.18112/openneuro.ds005873.v1.1.0",
   "version": "1.8.0",
+  "dateCreated": "2025-01-23",
+  "dateModified": "2025-03-17",
+  "measurementTechnique": [
+    "BIDS task: szMonitoring"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Christos Chatzichristos"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Miguel Bhagubai"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005873-bids-bucket",
+      "name": "ds005873 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005873.",
+      "contentUrl": "s3://openneuro.org/ds005873",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005873-openneuro",

@@ -82,7 +82,30 @@
   ],
   "citeAs": "Maria Geisler, Marco Herbsleb, Feliberto de la Cruz, Sabrina von Au, Andy Schumann, Ilona Croy, Karl-Jürgen Bär (2025). Profound neuronal differences during Exercise-Induced Hypoalgesia between athletes and non-athletes revealed by functional near-infrared spectroscopy. doi:10.18112/openneuro.ds006902.v1.1.1",
   "version": "1.7.0",
+  "dateCreated": "2025-11-05",
+  "dateModified": "2025-11-06",
+  "measurementTechnique": [
+    "BIDS task: pain"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Maria Geisler"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Feliberto de la Cruz"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006902-bids-bucket",
+      "name": "ds006902 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS006902.",
+      "contentUrl": "s3://openneuro.org/ds006902",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds006902-openneuro",

@@ -84,7 +84,19 @@
   ],
   "citeAs": "G. Cattan, P. L. C. Rodrigues, M. Congedo (2019). Cattan, Rodrigues & Congedo 2019 — Passive Head-Mounted Display Music-Listening EEG dataset (PHMD). doi:10.5281/zenodo.2617084",
   "version": "1.9.0",
+  "dateModified": "2026-04-11",
+  "measurementTechnique": [
+    "BIDS task: rstate"
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000341-bids-bucket",
+      "name": "nm000341 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for NM000341.",
+      "contentUrl": "s3://nemar/nm000341",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "nm000341-openneuro",

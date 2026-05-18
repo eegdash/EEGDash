@@ -115,7 +115,26 @@
   ],
   "citeAs": "Marleen Haupt, Monika Graumann, Santani Teng, Carina Kaltenbach, Radoslaw M. Cichy (2024). Braille letters - EEG. doi:10.18112/openneuro.ds004951.v1.0.0",
   "version": "1.7.0",
+  "dateCreated": "2024-02-06",
+  "dateModified": "2024-02-06",
+  "measurementTechnique": [
+    "BIDS task: letters"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Marleen Haupt"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004951-bids-bucket",
+      "name": "ds004951 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004951.",
+      "contentUrl": "s3://openneuro.org/ds004951",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004951-openneuro",

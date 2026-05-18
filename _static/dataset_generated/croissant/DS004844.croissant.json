@@ -142,7 +142,26 @@
   ],
   "citeAs": "Jason S. Metcalfe, Victor Paul, Benamin Haynes, Corey Atwater, Amar Marathe (2023). T22. doi:10.18112/openneuro.ds004844.v1.0.0",
   "version": "1.8.0",
+  "dateCreated": "2023-11-13",
+  "dateModified": "2023-11-13",
+  "measurementTechnique": [
+    "BIDS task: Drive"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Kevin King"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004844-bids-bucket",
+      "name": "ds004844 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004844.",
+      "contentUrl": "s3://openneuro.org/ds004844",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004844-openneuro",

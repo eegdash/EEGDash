@@ -116,7 +116,26 @@
   ],
   "citeAs": "Fa-Hsuan Lin, Deirdre Foxe von Pechmann, Kaisu Lankinen, Seppo Ahlfors, Bruce Rosen (2025). somatomotor. doi:10.18112/openneuro.ds006035.v1.0.0",
   "version": "1.7.0",
+  "dateCreated": "2025-03-20",
+  "dateModified": "2025-03-21",
+  "measurementTechnique": [
+    "BIDS task: somatomotor"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Tommi Raij"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006035-bids-bucket",
+      "name": "ds006035 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS006035.",
+      "contentUrl": "s3://openneuro.org/ds006035",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds006035-openneuro",

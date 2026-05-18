@@ -93,7 +93,28 @@
   ],
   "citeAs": "Renate Rutiku, Chiara Fiscone, Marcello Massimini, Simone Sarasso (2024). Auditory oddball comparison (Optimum-1, Learning-oddball, and the local–global paradigm). doi:10.18112/openneuro.ds005429.v1.0.0",
   "version": "1.8",
+  "dateCreated": "2024-08-26",
+  "dateModified": "2024-08-30",
+  "measurementTechnique": [
+    "BIDS task: LearningOddball",
+    "BIDS task: LocalGlobal",
+    "BIDS task: Optimum1"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Renate Rutiku"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005429-bids-bucket",
+      "name": "ds005429 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005429.",
+      "contentUrl": "s3://openneuro.org/ds005429",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005429-openneuro",

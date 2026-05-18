@@ -89,7 +89,26 @@
   ],
   "citeAs": "Jason Helbing, Dejan Draschkow, Melissa L.-H. Võ (2024). Search Superiority Recollection Familiarity. doi:10.18112/openneuro.ds005189.v1.0.1",
   "version": "1.9.0",
+  "dateCreated": "2024-05-27",
+  "dateModified": "2024-06-16",
+  "measurementTechnique": [
+    "BIDS task: SearchSupRecFam"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Jason Helbing"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005189-bids-bucket",
+      "name": "ds005189 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005189.",
+      "contentUrl": "s3://openneuro.org/ds005189",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005189-openneuro",

@@ -115,7 +115,27 @@
     "https://huggingface.co/datasets/EEGDash/ds002761"
   ],
   "citeAs": "G. Elliott Wimmer, Yunzhe Liu, Neža Vehar, Timothy E.J. Behrens, Raymond J. Dolan (2020). memoryreplay. doi:10.18112/openneuro.ds002761.v1.1.2",
+  "dateCreated": "2020-04-29",
+  "dateModified": "2022-11-18",
+  "measurementTechnique": [
+    "BIDS task: loc",
+    "BIDS task: mem"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Elliott Wimmer"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds002761-bids-bucket",
+      "name": "ds002761 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS002761.",
+      "contentUrl": "s3://openneuro.org/ds002761",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds002761-openneuro",

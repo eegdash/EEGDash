@@ -92,7 +92,26 @@
   ],
   "citeAs": "Riyo Ueda, Eishi Asano (2025). Visuomotor_task. doi:10.18112/openneuro.ds005931.v1.0.0",
   "version": "1.7.0",
+  "dateCreated": "2025-02-18",
+  "dateModified": "2025-03-06",
+  "measurementTechnique": [
+    "BIDS task: game"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "riyo ueda"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005931-bids-bucket",
+      "name": "ds005931 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005931.",
+      "contentUrl": "s3://openneuro.org/ds005931",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005931-openneuro",

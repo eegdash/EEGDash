@@ -128,7 +128,26 @@
   ],
   "citeAs": "Jelsma S.B., Zijlmans M., Heijink I.B., Hoefnagels F.W.A., Raemakers M (2024). STReEF. doi:10.18112/openneuro.ds005448.v1.0.0",
   "version": "Brain Imaging Data Structure Specification v1.6.0",
+  "dateCreated": "2024-09-03",
+  "dateModified": "2024-10-08",
+  "measurementTechnique": [
+    "BIDS task: SPESclin"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Epilab UMCU"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005448-bids-bucket",
+      "name": "ds005448 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005448.",
+      "contentUrl": "s3://openneuro.org/ds005448",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005448-openneuro",

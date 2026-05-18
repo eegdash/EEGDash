@@ -127,7 +127,35 @@
   ],
   "citeAs": "Younghwa Cha, Yeji Lee, Eunhee Ji, SoHyun Han, Sunhyun Min (2025). Sustained Attention Task (gradCPT) Dataset using simultaneous EEG-fMRI and DTI. doi:10.18112/openneuro.ds006040.v1.0.2",
   "version": "1.4.0",
+  "dateCreated": "2025-03-24",
+  "dateModified": "2026-03-16",
+  "measurementTechnique": [
+    "BIDS task: CBOFF",
+    "BIDS task: CBON",
+    "BIDS task: ECOFF",
+    "BIDS task: ECON",
+    "BIDS task: EOOFF",
+    "BIDS task: EOON",
+    "BIDS task: GRADOFF",
+    "BIDS task: GRADON",
+    "BIDS task: IMAGON",
+    "BIDS task: IMGRADON"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Younghwa Cha"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006040-bids-bucket",
+      "name": "ds006040 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS006040.",
+      "contentUrl": "s3://openneuro.org/ds006040",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds006040-openneuro",

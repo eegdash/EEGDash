@@ -180,7 +180,26 @@
   ],
   "citeAs": "Adam Li, Sara Inati, Kareem Zaghloul, Nathan Crone, William Anderson (2020). Epilepsy-iEEG-Multicenter-Dataset. doi:10.18112/openneuro.ds003029.v1.0.5",
   "version": "1.4.0",
+  "dateCreated": "2020-07-26",
+  "dateModified": "2023-11-28",
+  "measurementTechnique": [
+    "BIDS task: ictal"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Adam Li"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds003029-bids-bucket",
+      "name": "ds003029 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS003029.",
+      "contentUrl": "s3://openneuro.org/ds003029",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds003029-openneuro",

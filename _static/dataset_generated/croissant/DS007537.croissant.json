@@ -85,7 +85,26 @@
   ],
   "citeAs": "Prakash Mishra, Tapan K. Gandhi, Saurabh R. Gandhi (2026). A multimodal dataset of EEG, eye-tracking, and physiological signals during smartphone interaction. doi:10.18112/openneuro.ds007537.v1.0.0",
   "version": "1.0.0",
+  "dateCreated": "2026-03-19",
+  "dateModified": "2026-04-18",
+  "measurementTechnique": [
+    "BIDS task: phoneuse"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Prakash Mishra"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007537-bids-bucket",
+      "name": "ds007537 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS007537.",
+      "contentUrl": "s3://openneuro.org/ds007537",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds007537-openneuro",

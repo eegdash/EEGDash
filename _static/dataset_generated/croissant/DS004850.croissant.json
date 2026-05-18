@@ -93,7 +93,26 @@
   ],
   "citeAs": "Tony Johnson, Stephen Gordon, Jon Touryan, Kevin King (2023). ODE. doi:10.18112/openneuro.ds004850.v1.0.0",
   "version": "1.8.0",
+  "dateCreated": "2023-11-14",
+  "dateModified": "2023-11-14",
+  "measurementTechnique": [
+    "BIDS task: nback"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Kevin King"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004850-bids-bucket",
+      "name": "ds004850 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004850.",
+      "contentUrl": "s3://openneuro.org/ds004850",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004850-openneuro",

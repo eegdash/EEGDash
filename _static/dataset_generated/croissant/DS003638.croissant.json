@@ -97,7 +97,26 @@
   ],
   "citeAs": "James F Cavanagh, Greg Light, Neal Swerdlow, Jonathan Brigman, Jared Young (2021). EEG: Electrophysiological biomarkers of behavioral dimensions from cross-species paradigms. doi:10.18112/openneuro.ds003638.v1.0.0",
   "version": "1.1.1",
+  "dateCreated": "2021-04-26",
+  "dateModified": "2021-08-25",
+  "measurementTechnique": [
+    "BIDS task: 5CCPTPSTPRBP"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "James F Cavanagh"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds003638-bids-bucket",
+      "name": "ds003638 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS003638.",
+      "contentUrl": "s3://openneuro.org/ds003638",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds003638-openneuro",

@@ -141,7 +141,26 @@
   ],
   "citeAs": "Xinyu Mou, Cuilin He, Liwei Tan, Junjie Yu, Huadong Liang (2024). ChineseEEG: A Chinese Linguistic Corpora EEG Dataset for Semantic Alignment and Neural Decoding. doi:10.18112/openneuro.ds004952.v1.2.2",
   "version": "1.7.0",
+  "dateCreated": "2024-02-07",
+  "dateModified": "2025-03-08",
+  "measurementTechnique": [
+    "BIDS task: reading"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Haiyan Wu"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004952-bids-bucket",
+      "name": "ds004952 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004952.",
+      "contentUrl": "s3://openneuro.org/ds004952",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004952-openneuro",

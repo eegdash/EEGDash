@@ -85,7 +85,26 @@
   ],
   "citeAs": "Soma Chaudhuri, Joydeep Bhattacharya (2025). Poetry Assessment EEG Dataset 2. doi:10.18112/openneuro.ds006647.v1.0.1",
   "version": "1.8.0",
+  "dateCreated": "2025-09-10",
+  "dateModified": "2025-09-11",
+  "measurementTechnique": [
+    "BIDS task: readpoetry"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "SOMA CHAUDHURI"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006647-bids-bucket",
+      "name": "ds006647 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS006647.",
+      "contentUrl": "s3://openneuro.org/ds006647",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds006647-openneuro",

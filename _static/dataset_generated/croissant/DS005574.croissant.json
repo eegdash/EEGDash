@@ -152,7 +152,26 @@
   ],
   "citeAs": "Zaid Zada, Samuel A. Nastase, Bobbi Aubrey, Itamar Jalon, Ariel Goldstein (2024). The \"Podcast\" ECoG dataset. doi:10.18112/openneuro.ds005574.v1.0.2",
   "version": "1.10.0",
+  "dateCreated": "2024-10-15",
+  "dateModified": "2025-02-17",
+  "measurementTechnique": [
+    "BIDS task: podcast"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Zaid Zada"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005574-bids-bucket",
+      "name": "ds005574 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005574.",
+      "contentUrl": "s3://openneuro.org/ds005574",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005574-openneuro",

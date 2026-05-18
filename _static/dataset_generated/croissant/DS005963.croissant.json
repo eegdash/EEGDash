@@ -81,7 +81,20 @@
   ],
   "citeAs": "Rickson C. Mesquita (2025). FRESH Motor Dataset. doi:10.18112/openneuro.ds005963.v1.0.0",
   "version": "1.7.0",
+  "dateCreated": "2025-03-06",
+  "dateModified": "2025-03-06",
+  "measurementTechnique": [
+    "BIDS task: FRESHMOTOR"
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005963-bids-bucket",
+      "name": "ds005963 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005963.",
+      "contentUrl": "s3://openneuro.org/ds005963",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005963-openneuro",

@@ -81,7 +81,26 @@
   ],
   "citeAs": "Kernel (2025). Reliability-Dubois2024. doi:10.18112/openneuro.ds006545.v1.0.0",
   "version": "1.6.0",
+  "dateCreated": "2025-08-12",
+  "dateModified": "2025-08-12",
+  "measurementTechnique": [
+    "BIDS task: audio"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Julien Dubois"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006545-bids-bucket",
+      "name": "ds006545 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS006545.",
+      "contentUrl": "s3://openneuro.org/ds006545",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds006545-openneuro",

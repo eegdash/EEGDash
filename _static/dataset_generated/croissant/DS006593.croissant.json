@@ -103,7 +103,34 @@
   ],
   "citeAs": "Basak Celik, Tab Memmott, Matthew Lawhead, Srikar Ananthoju, Deniz Erdogmus (2025). cBCI Matrix Multimodal Dataset. doi:10.18112/openneuro.ds006593.v1.0.0",
   "version": "1.7.0",
+  "dateCreated": "2025-08-23",
+  "dateModified": "2025-08-23",
+  "measurementTechnique": [
+    "BIDS task: MatrixCalibration"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Basak Celik"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Deniz Erdogmus"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Tab Memmott"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006593-bids-bucket",
+      "name": "ds006593 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS006593.",
+      "contentUrl": "s3://openneuro.org/ds006593",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds006593-openneuro",

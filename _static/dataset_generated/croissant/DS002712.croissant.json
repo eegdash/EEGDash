@@ -94,7 +94,26 @@
   ],
   "citeAs": "Sara Aurtenetxe, Nicola Molinaro, Doug Davidson, Manuel Carreiras (2020). Numbers and Letters. doi:10.18112/openneuro.ds002712.v1.0.1",
   "version": "1.1.1",
+  "dateCreated": "2020-04-16",
+  "dateModified": "2020-05-11",
+  "measurementTechnique": [
+    "BIDS task: numbersletters"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Nicola Molinaro"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds002712-bids-bucket",
+      "name": "ds002712 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS002712.",
+      "contentUrl": "s3://openneuro.org/ds002712",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds002712-openneuro",

@@ -88,7 +88,26 @@
   ],
   "citeAs": "Couperus, J.W., Bukach, C.M., Reed, C.L. (2025). PURSUE N2pc Visual Search. doi:10.18112/openneuro.ds007137.v1.0.0",
   "version": "1.8.0",
+  "dateCreated": "2025-12-27",
+  "dateModified": "2025-12-28",
+  "measurementTechnique": [
+    "BIDS task: VisualSearch"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Jane Couperus"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007137-bids-bucket",
+      "name": "ds007137 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS007137.",
+      "contentUrl": "s3://openneuro.org/ds007137",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds007137-openneuro",

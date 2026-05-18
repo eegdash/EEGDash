@@ -128,7 +128,53 @@
   ],
   "citeAs": "F. Mivalt, F. Lampert, M.A. van den Boom, P. Brunner, J. Kim (2023). Intracranial recordings using BCI2000 and the CorTec BrainInterchange. doi:10.18112/openneuro.ds004624.v2.0.0",
   "version": "Brain Imaging Data Structure Specification v1.8.0",
+  "dateCreated": "2023-06-30",
+  "dateModified": "2025-06-14",
+  "measurementTechnique": [
+    "BIDS task: 39db",
+    "BIDS task: 45db",
+    "BIDS task: 51db",
+    "BIDS task: 57db",
+    "BIDS task: Alpha",
+    "BIDS task: Auditory",
+    "BIDS task: Awake",
+    "BIDS task: Beta",
+    "BIDS task: Broadband",
+    "BIDS task: Lhpc2ma001",
+    "BIDS task: Lhpc3ma001",
+    "BIDS task: Lhpc4ma001",
+    "BIDS task: Passive",
+    "BIDS task: Rant2ma001",
+    "BIDS task: Rant3ma001",
+    "BIDS task: Rant4ma001",
+    "BIDS task: Rant5ma001",
+    "BIDS task: Recording",
+    "BIDS task: Rhpc2ma001",
+    "BIDS task: Rhpc3ma001",
+    "BIDS task: Rhpc4ma001",
+    "BIDS task: Sensorimotor",
+    "BIDS task: Sleep",
+    "BIDS task: Socialreinforcement",
+    "BIDS task: Somatosensory",
+    "BIDS task: Stimulation",
+    "BIDS task: Visual",
+    "BIDS task: rec"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Filip Mivalt"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004624-bids-bucket",
+      "name": "ds004624 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004624.",
+      "contentUrl": "s3://openneuro.org/ds004624",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004624-openneuro",

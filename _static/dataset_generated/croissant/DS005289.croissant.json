@@ -103,7 +103,26 @@
   ],
   "citeAs": "Zhao Xiangyue, Zhou Jingyao, Zhang Libo, Duan Haoqing, Wei Shiyu (2024). 39 By BP. doi:10.18112/openneuro.ds005289.v1.0.0",
   "version": "1.1.1",
+  "dateCreated": "2024-06-26",
+  "dateModified": "2024-06-26",
+  "measurementTechnique": [
+    "BIDS task: 39ByBP"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Xiangyue Zhao"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005289-bids-bucket",
+      "name": "ds005289 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005289.",
+      "contentUrl": "s3://openneuro.org/ds005289",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005289-openneuro",

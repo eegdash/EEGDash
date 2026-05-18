@@ -87,7 +87,27 @@
   ],
   "citeAs": "Enter author names here (2025). ball_squeeze_2025. doi:10.18112/openneuro.ds006903.v1.0.0",
   "version": "1.8.0",
+  "dateCreated": "2025-11-05",
+  "dateModified": "2025-11-05",
+  "measurementTechnique": [
+    "BIDS task: BS",
+    "BIDS task: RS"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Laura Carlton"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006903-bids-bucket",
+      "name": "ds006903 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS006903.",
+      "contentUrl": "s3://openneuro.org/ds006903",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds006903-openneuro",

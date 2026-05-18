@@ -97,7 +97,27 @@
   ],
   "citeAs": "Alexandra I. Kosachenko, Danil I. Syttykov, Dmitry A. Tarasov, Alexander I. Kotyusov, Yuri G. Pavlov (2025). AlphaDirection1: EEG, ECG, PPG in the resting state and working memory for sequentially and simultaneously presented digits. doi:10.18112/openneuro.ds006848.v1.0.0",
   "version": "1.7.0",
+  "dateCreated": "2025-10-27",
+  "dateModified": "2025-10-28",
+  "measurementTechnique": [
+    "BIDS task: rest",
+    "BIDS task: verbalwm"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Yuri G. Pavlov"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006848-bids-bucket",
+      "name": "ds006848 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS006848.",
+      "contentUrl": "s3://openneuro.org/ds006848",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds006848-openneuro",

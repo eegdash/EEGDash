@@ -86,7 +86,27 @@
   ],
   "citeAs": "Janine Mendola, Elizabeth Bock (2019). Rivalry_Tagging. doi:10.18112/openneuro.ds002001.v1.0.0",
   "version": "1.1.1",
+  "dateCreated": "2019-06-27",
+  "dateModified": "2019-06-28",
+  "measurementTechnique": [
+    "BIDS task: noise",
+    "BIDS task: rivalry"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Beth Bock"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds002001-bids-bucket",
+      "name": "ds002001 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS002001.",
+      "contentUrl": "s3://openneuro.org/ds002001",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds002001-openneuro",

@@ -109,7 +109,26 @@
   ],
   "citeAs": "Blanca Aguado-Lopez, Ana F. Palenciano, Jose M. G. Penalver, Paloma Diaz-Gutierrez, David Lopez-Garcia (2024). Proactive selective attention across competition contexts. doi:10.18112/openneuro.ds005089.v1.0.1",
   "version": "1.2",
+  "dateCreated": "2024-04-17",
+  "dateModified": "2024-04-18",
+  "measurementTechnique": [
+    "BIDS task: competition"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Blanca Aguado-López"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005089-bids-bucket",
+      "name": "ds005089 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005089.",
+      "contentUrl": "s3://openneuro.org/ds005089",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005089-openneuro",

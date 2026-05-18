@@ -91,7 +91,34 @@
   ],
   "citeAs": "Daniel G. Wakeman, Richard N Henson (2020). Face processing EEG dataset for EEGLAB. doi:10.18112/openneuro.ds002718.v1.1.0",
   "version": "v1.2.0",
+  "dateCreated": "2020-04-21",
+  "dateModified": "2025-11-08",
+  "measurementTechnique": [
+    "BIDS task: FaceRecognition"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Dung Truong"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Arnaud Delorme"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Annalisa Salazar"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds002718-bids-bucket",
+      "name": "ds002718 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS002718.",
+      "contentUrl": "s3://openneuro.org/ds002718",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds002718-openneuro",

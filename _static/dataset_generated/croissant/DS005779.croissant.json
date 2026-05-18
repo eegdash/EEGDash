@@ -85,7 +85,41 @@
   ],
   "citeAs": "Uttara Khatri, Sara Hussain (2025). Real-time personalized brain state-dependent TMS in healthy adults. doi:10.18112/openneuro.ds005779.v1.0.1",
   "version": "1.2",
+  "dateCreated": "2025-01-02",
+  "dateModified": "2025-01-02",
+  "measurementTechnique": [
+    "BIDS task: resting",
+    "BIDS task: testinghigh110RMT",
+    "BIDS task: testinghigh110RMTfile1",
+    "BIDS task: testinghigh110RMTfile2",
+    "BIDS task: testinghigh110RMTfile3",
+    "BIDS task: testinghigh120RMT",
+    "BIDS task: testinglow110RMT",
+    "BIDS task: testinglow120RMT",
+    "BIDS task: testingrandom110RMT",
+    "BIDS task: testingrandom120RMT",
+    "BIDS task: trainingblock1",
+    "BIDS task: trainingblock2",
+    "BIDS task: trainingblock3",
+    "BIDS task: trainingblock4",
+    "BIDS task: trainingblock5",
+    "BIDS task: trainingblock6"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Sara J Hussain"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005779-bids-bucket",
+      "name": "ds005779 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005779.",
+      "contentUrl": "s3://openneuro.org/ds005779",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005779-openneuro",

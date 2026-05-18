@@ -104,7 +104,27 @@
   ],
   "citeAs": "Xingyu Liu, Yuxuan Dai, Hailun Xie, Zonglei Zhen (2021). ForrestGump-MEG. doi:10.18112/openneuro.ds003633.v1.0.3",
   "version": "1.4.0",
+  "dateCreated": "2021-04-24",
+  "dateModified": "2022-12-29",
+  "measurementTechnique": [
+    "BIDS task: movie",
+    "BIDS task: noise"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Xingyu Liu"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds003633-bids-bucket",
+      "name": "ds003633 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS003633.",
+      "contentUrl": "s3://openneuro.org/ds003633",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds003633-openneuro",

@@ -79,7 +79,19 @@
     }
   ],
   "version": "1.9.0",
+  "dateModified": "2026-04-08",
+  "measurementTechnique": [
+    "BIDS task: tapping"
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000175-bids-bucket",
+      "name": "nm000175 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for NM000175.",
+      "contentUrl": "s3://nemar/nm000175",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "nm000175-openneuro",

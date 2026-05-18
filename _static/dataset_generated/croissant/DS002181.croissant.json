@@ -113,7 +113,34 @@
   ],
   "citeAs": "Wanze Xie, Sarah Jensen, Mark Wade, Swapna Kumar, Alissa Westerlund (2019). CRYPTO and PROVIDE EEG Baseline Data. doi:mockDOI",
   "version": "1.2",
+  "dateCreated": "2019-09-15",
+  "dateModified": "2019-09-27",
+  "measurementTechnique": [
+    "BIDS task: Baseline"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Wanze Xie"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Arnaud Delorme"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Annalisa Salazar"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds002181-bids-bucket",
+      "name": "ds002181 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS002181.",
+      "contentUrl": "s3://openneuro.org/ds002181",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds002181-openneuro",

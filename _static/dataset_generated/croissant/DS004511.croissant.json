@@ -89,7 +89,32 @@
   ],
   "citeAs": "Makowski, Dominique, Pham, Tam, Lau, Zen Juen (2023). Deception_data. doi:10.18112/openneuro.ds004511.v1.0.2",
   "version": "1.8.0",
+  "dateCreated": "2023-02-22",
+  "dateModified": "2023-06-05",
+  "measurementTechnique": [
+    "BIDS task: CC",
+    "BIDS task: GG",
+    "BIDS task: Rest"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Anshu Te"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Dominique Makowski"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004511-bids-bucket",
+      "name": "ds004511 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004511.",
+      "contentUrl": "s3://openneuro.org/ds004511",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004511-openneuro",

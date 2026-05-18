@@ -86,7 +86,26 @@
   ],
   "citeAs": "Wei Xu, et al. (2024). FACE-DEC. doi:10.18112/openneuro.ds005107.v2.0.0",
   "version": "1.7.0",
+  "dateCreated": "2024-04-24",
+  "dateModified": "2025-06-30",
+  "measurementTechnique": [
+    "BIDS task: face"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Wei Xu"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005107-bids-bucket",
+      "name": "ds005107 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005107.",
+      "contentUrl": "s3://openneuro.org/ds005107",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005107-openneuro",

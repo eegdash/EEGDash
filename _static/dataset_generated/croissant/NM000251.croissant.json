@@ -112,7 +112,21 @@
   ],
   "citeAs": "Tianyu He, Mingyi Wei, Ruicong Wang, Renzhi Wang, Shiwei Du (2019). He et al. 2025 — VocalMind: A Stereotactic EEG Dataset for Vocalized, Mimed, and Imagined Speech in Tonal Language. doi:10.1038/s41597-025-04741-2",
   "version": "1.9.0",
+  "dateModified": "2026-04-12",
+  "measurementTechnique": [
+    "BIDS task: imagined",
+    "BIDS task: mimed",
+    "BIDS task: vocalized"
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000251-bids-bucket",
+      "name": "nm000251 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for NM000251.",
+      "contentUrl": "s3://nemar/nm000251",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "nm000251-openneuro",

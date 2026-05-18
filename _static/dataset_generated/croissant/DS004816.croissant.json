@@ -93,7 +93,26 @@
   ],
   "citeAs": "Grootswagers, Tijl, Robinson, Amanda, Shatek, Sofia, Carlson, Thomas (2023). EEG-attention-rsvp-exp1. doi:10.18112/openneuro.ds004816.v1.0.0",
   "version": "1.0.2",
+  "dateCreated": "2023-10-24",
+  "dateModified": "2023-10-26",
+  "measurementTechnique": [
+    "BIDS task: rsvp"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Tijl Grootswagers"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004816-bids-bucket",
+      "name": "ds004816 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004816.",
+      "contentUrl": "s3://openneuro.org/ds004816",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004816-openneuro",

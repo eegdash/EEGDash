@@ -120,7 +120,26 @@
   ],
   "citeAs": "Simon Avrillon, Francois Hug, Roger M. Enoka, Arnault H. Caillet, Dario Farina (20). MUniverse Avrillon et al 2024. doi:https://doi.org/10.7910/DVN/L9OQY7",
   "version": "1.11.1",
+  "dateModified": "2026-04-08",
+  "measurementTechnique": [
+    "BIDS task: isometric10percentmvc",
+    "BIDS task: isometric20percentmvc",
+    "BIDS task: isometric30percentmvc",
+    "BIDS task: isometric40percentmvc",
+    "BIDS task: isometric50percentmvc",
+    "BIDS task: isometric60percentmvc",
+    "BIDS task: isometric70percentmvc",
+    "BIDS task: isometric80percentmvc"
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000159-bids-bucket",
+      "name": "nm000159 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for NM000159.",
+      "contentUrl": "s3://nemar/nm000159",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "nm000159-openneuro",

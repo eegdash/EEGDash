@@ -99,7 +99,26 @@
   ],
   "citeAs": "Veillette, J., Rosen, J., Margoliash, D., Nusbaum, H. (2024). Delayed Auditory Feedback EEG/EGG. doi:10.18112/openneuro.ds005403.v1.0.1",
   "version": "1.6.0",
+  "dateCreated": "2024-08-06",
+  "dateModified": "2024-08-06",
+  "measurementTechnique": [
+    "BIDS task: daf"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "John Veillette"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005403-bids-bucket",
+      "name": "ds005403 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005403.",
+      "contentUrl": "s3://openneuro.org/ds005403",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005403-openneuro",

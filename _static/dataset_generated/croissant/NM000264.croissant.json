@@ -96,7 +96,19 @@
   ],
   "citeAs": "E. Vaineau, A. Barachant, A. Andreev, P. Rodrigues, G. Cattan (2019). Vaineau, Barachant & Andreev 2013 — Brain Invaders Adaptive versus Non-Adaptive P300 Brain-Computer Interface dataset (BI2013a). doi:10.5281/zenodo.1494163",
   "version": "1.9.0",
+  "dateModified": "2026-04-11",
+  "measurementTechnique": [
+    "BIDS task: p300"
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000264-bids-bucket",
+      "name": "nm000264 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for NM000264.",
+      "contentUrl": "s3://nemar/nm000264",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "nm000264-openneuro",

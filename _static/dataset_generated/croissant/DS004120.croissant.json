@@ -116,7 +116,30 @@
   ],
   "citeAs": "Jonathan Touryan (data and curation), Greg Apker (data), Brent Lance (data), Scott Kerick (data), Anthony Ries (data) (2022). BCIT Baseline Driving. doi:10.18112/openneuro.ds004120.v1.0.0",
   "version": "1.7.0",
+  "dateCreated": "2022-05-03",
+  "dateModified": "2022-05-04",
+  "measurementTechnique": [
+    "BIDS task: DriveWithSpeedChange"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Jonathan Touryan"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Kay Robbins"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004120-bids-bucket",
+      "name": "ds004120 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004120.",
+      "contentUrl": "s3://openneuro.org/ds004120",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004120-openneuro",

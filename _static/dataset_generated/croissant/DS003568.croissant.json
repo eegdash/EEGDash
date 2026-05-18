@@ -112,7 +112,27 @@
   ],
   "citeAs": "Lucrezia Liuzzi, Katharine Chang, Hanna Keren, Charles Zheng, Dipta Saha (2021). Mood induction in MDD and healthy adolescents. doi:10.18112/openneuro.ds003568.v1.0.2",
   "version": "1.2.0",
+  "dateCreated": "2021-03-16",
+  "dateModified": "2023-07-19",
+  "measurementTechnique": [
+    "BIDS task: mmi3",
+    "BIDS task: rest"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Lucrezia Liuzzi"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds003568-bids-bucket",
+      "name": "ds003568 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS003568.",
+      "contentUrl": "s3://openneuro.org/ds003568",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds003568-openneuro",

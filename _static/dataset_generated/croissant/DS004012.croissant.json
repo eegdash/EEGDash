@@ -99,7 +99,35 @@
   ],
   "citeAs": "Nur Syairah Ab Rani, Nurfaizatul Aisyah Ab Aziz, Mohammed Farouq Reza, Muzaimi Mustapha (2022). BRAR_NQ. doi:10.18112/openneuro.ds004012.v1.0.0",
   "version": "1.6.0",
+  "dateCreated": "2022-02-03",
+  "dateModified": "2022-02-01",
+  "measurementTechnique": [
+    "BIDS task: rest01",
+    "BIDS task: rest02",
+    "BIDS task: stim01",
+    "BIDS task: stim02",
+    "BIDS task: stim03",
+    "BIDS task: stim04",
+    "BIDS task: stim05",
+    "BIDS task: stim06",
+    "BIDS task: stim07",
+    "BIDS task: stim08"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "MUHAMMAD HAKIMI BIN MOHD. RASHID"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004012-bids-bucket",
+      "name": "ds004012 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004012.",
+      "contentUrl": "s3://openneuro.org/ds004012",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004012-openneuro",

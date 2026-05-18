@@ -64,7 +64,28 @@
   "license": "https://creativecommons.org/publicdomain/zero/1.0/",
   "datePublished": "2019",
   "version": "1.3.0",
+  "dateCreated": "2019-08-02",
+  "dateModified": "2019-08-02",
+  "measurementTechnique": [
+    "BIDS task: rest",
+    "BIDS task: tmseeg1",
+    "BIDS task: tmseeg2"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Sara J Hussain"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds002094-bids-bucket",
+      "name": "ds002094 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS002094.",
+      "contentUrl": "s3://openneuro.org/ds002094",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds002094-openneuro",

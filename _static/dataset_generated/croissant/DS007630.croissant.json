@@ -115,7 +115,28 @@
   ],
   "citeAs": "Motoshige Sato, Ilya Horiguchi, Masakazu Inoue, Kenichi Tomeoka, Eri Hatakeyama (2026). EEG-Speech Brain Decoding Dataset. doi:10.18112/openneuro.ds007630.v1.0.0",
   "version": "1.9.0",
+  "dateCreated": "2026-04-05",
+  "dateModified": "2026-04-07",
+  "measurementTechnique": [
+    "BIDS task: listening",
+    "BIDS task: listeningcovert",
+    "BIDS task: speechopen"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Ilya Horiguchi"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007630-bids-bucket",
+      "name": "ds007630 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS007630.",
+      "contentUrl": "s3://openneuro.org/ds007630",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds007630-openneuro",

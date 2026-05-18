@@ -89,7 +89,26 @@
   ],
   "citeAs": "Cedric Cannard, Arnaud Delorme, Helane Wahbeh (2022). Trance channeling EEG study. doi:10.18112/openneuro.ds004040.v1.0.0",
   "version": "1.1.1",
+  "dateCreated": "2022-02-23",
+  "dateModified": "2022-02-24",
+  "measurementTechnique": [
+    "BIDS task: trance"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Arnaud Delorme"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004040-bids-bucket",
+      "name": "ds004040 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004040.",
+      "contentUrl": "s3://openneuro.org/ds004040",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004040-openneuro",

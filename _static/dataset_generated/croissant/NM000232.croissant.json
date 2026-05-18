@@ -99,7 +99,23 @@
   ],
   "citeAs": "Alessandro T. Gifford, Kshitij Dwivedi, Gemma Roig, Radoslaw M. Cichy (2022). THINGS-EEG2: A large and rich EEG dataset for modeling human visual object recognition. doi:10.17605/OSF.IO/3JK45",
   "version": "1.9.0",
+  "dateModified": "2026-04-11",
+  "measurementTechnique": [
+    "BIDS task: rest",
+    "BIDS task: rest1",
+    "BIDS task: rest2",
+    "BIDS task: test",
+    "BIDS task: train"
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000232-bids-bucket",
+      "name": "nm000232 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for NM000232.",
+      "contentUrl": "s3://nemar/nm000232",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "nm000232-openneuro",

@@ -87,7 +87,19 @@
   ],
   "citeAs": "Michele Romani, Devis Zanoni, Elisabetta Farella, Luca Turchet (n.d.). Romani et al. 2025 — BrainForm: a Serious Game for BCI Training and Data Collection (P300 ERP, University of Trento). doi:10.48550/arXiv.2510.10169",
   "version": "1.9.0",
+  "dateModified": "2026-04-11",
+  "measurementTechnique": [
+    "BIDS task: p300"
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000272-bids-bucket",
+      "name": "nm000272 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for NM000272.",
+      "contentUrl": "s3://nemar/nm000272",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "nm000272-openneuro",

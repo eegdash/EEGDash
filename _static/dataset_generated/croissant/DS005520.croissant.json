@@ -115,7 +115,28 @@
   ],
   "citeAs": "Hong-Zhi Li, Jia-Jia Yang, Zhen Lv, Li-Yang Wan, Wo Wang (2024). Research data supporting 'EEG recording during playing MOBA game'. doi:10.18112/openneuro.ds005520.v1.0.1",
   "version": "1.2",
+  "dateCreated": "2024-09-22",
+  "dateModified": "2025-05-16",
+  "measurementTechnique": [
+    "BIDS task: MOBAgame",
+    "BIDS task: restingeyeclosed",
+    "BIDS task: restingeyeopen"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Dongdong Zhou"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005520-bids-bucket",
+      "name": "ds005520 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005520.",
+      "contentUrl": "s3://openneuro.org/ds005520",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005520-openneuro",

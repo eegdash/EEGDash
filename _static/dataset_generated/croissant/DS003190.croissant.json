@@ -85,7 +85,27 @@
   ],
   "citeAs": "Omar Mendoza-Montoya, Javier M. Antelis (2020). Assesment of the visual stimuli properties in P300 paradigm. doi:10.18112/openneuro.ds003190.v1.0.1",
   "version": "1.2",
+  "dateCreated": "2020-09-25",
+  "dateModified": "2020-10-06",
+  "measurementTechnique": [
+    "BIDS task: cnos",
+    "BIDS task: ctos"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Juan David Chailloux Peguero"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds003190-bids-bucket",
+      "name": "ds003190 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS003190.",
+      "contentUrl": "s3://openneuro.org/ds003190",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds003190-openneuro",

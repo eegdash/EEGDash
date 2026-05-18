@@ -95,7 +95,26 @@
   ],
   "citeAs": "Xinyu Ma, Jiang Yi, Ning Jiang (2025). 3M-CPSEED：An EEG-based Dataset for Chinese Pinyin Production in Overt, Silent-intended, and Imagined Speech. doi:10.18112/openneuro.ds006465.v2.0.0",
   "version": "1.7.0",
+  "dateCreated": "2025-07-12",
+  "dateModified": "2025-10-29",
+  "measurementTechnique": [
+    "BIDS task: imaginedspeech"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Xinyu Ma"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006465-bids-bucket",
+      "name": "ds006465 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS006465.",
+      "contentUrl": "s3://openneuro.org/ds006465",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds006465-openneuro",

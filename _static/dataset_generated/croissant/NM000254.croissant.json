@@ -127,7 +127,30 @@
     }
   ],
   "version": "1.2.0",
+  "dateModified": "2026-04-14",
+  "measurementTechnique": [
+    "BIDS task: checker",
+    "BIDS task: checkeroff",
+    "BIDS task: checkerout",
+    "BIDS task: dme",
+    "BIDS task: dmh",
+    "BIDS task: inscapes",
+    "BIDS task: monkey1",
+    "BIDS task: monkey2",
+    "BIDS task: monkey5",
+    "BIDS task: peer",
+    "BIDS task: rest",
+    "BIDS task: tp"
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000254-bids-bucket",
+      "name": "nm000254 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for NM000254.",
+      "contentUrl": "s3://nemar/nm000254",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "nm000254-openneuro",

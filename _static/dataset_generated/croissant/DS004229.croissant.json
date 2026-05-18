@@ -98,7 +98,27 @@
   ],
   "citeAs": "Maria Mittag, Eric Larson, Maggie Clarke, Samu Taulu, Patricia K. Kuhl (2022). amnoise. doi:10.18112/openneuro.ds004229.v1.0.3",
   "version": "1.7.0",
+  "dateCreated": "2022-08-01",
+  "dateModified": "2023-11-03",
+  "measurementTechnique": [
+    "BIDS task: amnoise",
+    "BIDS task: noise"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Eric Larson"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004229-bids-bucket",
+      "name": "ds004229 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004229.",
+      "contentUrl": "s3://openneuro.org/ds004229",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004229-openneuro",

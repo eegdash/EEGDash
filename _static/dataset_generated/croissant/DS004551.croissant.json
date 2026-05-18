@@ -119,7 +119,26 @@
   ],
   "citeAs": "Kazuki Sakakura, Naoto Kuroda, Masaki Sonoda, Takumi Mitsuhashi, Ethan Firestone (2023). iEEG on children during slow wave sleep. doi:10.18112/openneuro.ds004551.v1.0.6",
   "version": "1.7.0",
+  "dateCreated": "2023-04-07",
+  "dateModified": "2023-05-30",
+  "measurementTechnique": [
+    "BIDS task: sleep"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Kaz Sakakura"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004551-bids-bucket",
+      "name": "ds004551 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004551.",
+      "contentUrl": "s3://openneuro.org/ds004551",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004551-openneuro",

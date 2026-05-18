@@ -102,7 +102,19 @@
   ],
   "citeAs": "Kalou Cabrera Castillos, Simon Ladouce, Ludovic Darmet, Frédéric Dehais (2023). CastillosCVEP100. doi:10.1016/j.neuroimage.2023.120446",
   "version": "1.9.0",
+  "dateModified": "2026-03-28",
+  "measurementTechnique": [
+    "BIDS task: cvep"
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000346-bids-bucket",
+      "name": "nm000346 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for NM000346.",
+      "contentUrl": "s3://nemar/nm000346",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "nm000346-openneuro",

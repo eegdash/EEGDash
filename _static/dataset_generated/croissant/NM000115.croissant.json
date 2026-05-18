@@ -89,7 +89,19 @@
   ],
   "citeAs": "Bangyan Zhou, Xiaopei Wu, Zongtan Lv, Lei Zhang, Xiaojin Guo (2016). Zhou2016. doi:10.82901/nemar.nm000115",
   "version": "1.9.0",
+  "dateModified": "2026-03-03",
+  "measurementTechnique": [
+    "BIDS task: imagery"
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000115-bids-bucket",
+      "name": "nm000115 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for NM000115.",
+      "contentUrl": "s3://nemar/nm000115",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "nm000115-openneuro",

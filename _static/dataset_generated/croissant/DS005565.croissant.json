@@ -101,7 +101,26 @@
   ],
   "citeAs": "Brittany Lee, Sofia E. Ortega, Priscilla M. Martinez, Katherine J. Midgley, Phillip J. Holcomb (2024). Neural associations between fingerspelling, print, and signs: An ERP priming study with deaf readers. doi:10.18112/openneuro.ds005565.v1.0.3",
   "version": "1.8.0",
+  "dateCreated": "2024-10-10",
+  "dateModified": "2024-10-17",
+  "measurementTechnique": [
+    "BIDS task: SemanticCategorization"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Sofia E. Ortega"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005565-bids-bucket",
+      "name": "ds005565 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005565.",
+      "contentUrl": "s3://openneuro.org/ds005565",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005565-openneuro",

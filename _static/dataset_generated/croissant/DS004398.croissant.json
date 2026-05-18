@@ -118,7 +118,26 @@
     "https://huggingface.co/datasets/EEGDash/ds004398"
   ],
   "citeAs": "G. Elliott Wimmer, Yunzhe Liu, Daniel C. McNamee, Raymond J. Dolan (2023). planmemreplay. doi:10.18112/openneuro.ds004398.v1.0.0",
+  "dateCreated": "2023-01-11",
+  "dateModified": "2023-01-25",
+  "measurementTechnique": [
+    "BIDS task: loc"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Elliott Wimmer"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004398-bids-bucket",
+      "name": "ds004398 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004398.",
+      "contentUrl": "s3://openneuro.org/ds004398",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004398-openneuro",

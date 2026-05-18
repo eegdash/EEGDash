@@ -85,7 +85,27 @@
   ],
   "citeAs": "Ole Bialas, Marc Schoewiesner (2024). Evoked responses to elevated sounds. doi:10.18112/openneuro.ds005131.v1.0.1",
   "version": "1.7.0",
+  "dateCreated": "2024-05-10",
+  "dateModified": "2024-07-28",
+  "measurementTechnique": [
+    "BIDS task: deviantdetection",
+    "BIDS task: oneback"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Ole Bialas"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005131-bids-bucket",
+      "name": "ds005131 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005131.",
+      "contentUrl": "s3://openneuro.org/ds005131",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005131-openneuro",

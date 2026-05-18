@@ -98,7 +98,26 @@
   ],
   "citeAs": "Anna Mai, Stephanie Ries, Sharona Ben-Haim, Jerry Shih, Timothy Gentner (2023). sEEG Passive listening to natural speech. doi:10.18112/openneuro.ds004703.v1.1.0",
   "version": "1.6.0",
+  "dateCreated": "2023-08-16",
+  "dateModified": "2023-08-18",
+  "measurementTechnique": [
+    "BIDS task: PassiveListen"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Anna Mai"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004703-bids-bucket",
+      "name": "ds004703 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004703.",
+      "contentUrl": "s3://openneuro.org/ds004703",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004703-openneuro",

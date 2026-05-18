@@ -91,7 +91,26 @@
   ],
   "citeAs": "Armen Bagdasarov, Michael S. Gaffrey (2024). Gaffrey Lab Infant Microstates and Attention. doi:10.18112/openneuro.ds005343.v1.0.0",
   "version": "1.8.0",
+  "dateCreated": "2024-07-16",
+  "dateModified": "2024-07-16",
+  "measurementTechnique": [
+    "BIDS task: resting"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Gaffrey Lab"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005343-bids-bucket",
+      "name": "ds005343 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005343.",
+      "contentUrl": "s3://openneuro.org/ds005343",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005343-openneuro",

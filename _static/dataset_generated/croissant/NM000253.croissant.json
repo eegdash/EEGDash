@@ -122,7 +122,19 @@
   ],
   "citeAs": "Christopher Wang, Adam Yaari, Aaditya K Singh, Vighnesh Subramaniam, Dana Rosenfarb (2019). Wang et al. 2024 — Brain Treebank: Large-scale intracranial recordings from naturalistic language stimuli. doi:10.48550/arXiv.2411.08343",
   "version": "1.9.0",
+  "dateModified": "2026-04-13",
+  "measurementTechnique": [
+    "BIDS task: movie"
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000253-bids-bucket",
+      "name": "nm000253 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for NM000253.",
+      "contentUrl": "s3://nemar/nm000253",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "nm000253-openneuro",

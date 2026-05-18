@@ -98,7 +98,30 @@
   ],
   "citeAs": "Gerwin Schalk, Dennis J McFarland, Thilo Hinterberger, Niels Birbaumer, Jonathan R Wolpaw (2022). EEG Motor Movement/Imagery Dataset. doi:10.18112/openneuro.ds004362.v1.0.0",
   "version": "1.8.0",
+  "dateCreated": "2022-12-12",
+  "dateModified": "2022-12-15",
+  "measurementTechnique": [
+    "BIDS task: motion"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Anonymous User"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Arnaud Delorme"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004362-bids-bucket",
+      "name": "ds004362 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004362.",
+      "contentUrl": "s3://openneuro.org/ds004362",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004362-openneuro",

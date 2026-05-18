@@ -97,7 +97,26 @@
   ],
   "citeAs": "Sanaz Ghaffari, Arian Yavari, Sara Bonyadian, Arsalan Ghofrani, Russell Butler (2025). Visual EEG Study (BrainVision → BIDS). doi:10.18112/openneuro.ds006547.v1.0.0",
   "version": "1.9.0",
+  "dateCreated": "2025-08-12",
+  "dateModified": "2025-08-12",
+  "measurementTechnique": [
+    "BIDS task: visual"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Russell Butler"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006547-bids-bucket",
+      "name": "ds006547 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS006547.",
+      "contentUrl": "s3://openneuro.org/ds006547",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds006547-openneuro",

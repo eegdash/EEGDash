@@ -104,7 +104,26 @@
   ],
   "citeAs": "Andrei Barborica, Cristina Ghita, Laurentiu Tofan, Irina Oane, Ioana Mindruta (2025). Dataset of intracranial EEG during cortical stimulations evoking negative motor responses. doi:10.18112/openneuro.ds006519.v1.0.0",
   "version": "1.9.0",
+  "dateCreated": "2025-07-31",
+  "dateModified": "2025-07-31",
+  "measurementTechnique": [
+    "BIDS task: dcs"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Andrei Barborica"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006519-bids-bucket",
+      "name": "ds006519 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS006519.",
+      "contentUrl": "s3://openneuro.org/ds006519",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds006519-openneuro",

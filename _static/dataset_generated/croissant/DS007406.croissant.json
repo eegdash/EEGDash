@@ -84,7 +84,26 @@
   ],
   "citeAs": "Allison Edit, Attila Pohlmann (2026). EEG dataset on consumer responses to extreme versus traditional marketing videos. doi:10.18112/openneuro.ds007406.v1.0.0",
   "version": "1.8.0",
+  "dateCreated": "2026-02-12",
+  "dateModified": "2026-02-12",
+  "measurementTechnique": [
+    "BIDS task: extremeversustraditionalvideos"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Attila Pohlmann"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007406-bids-bucket",
+      "name": "ds007406 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS007406.",
+      "contentUrl": "s3://openneuro.org/ds007406",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds007406-openneuro",

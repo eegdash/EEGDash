@@ -93,7 +93,26 @@
   ],
   "citeAs": "Silvia Formica, Anna Chaiken, Jan R. Wiersema, Emiel Cracco (2024). EEG frequency tagging reveals the integration of dissimilar observed actions. doi:10.18112/openneuro.ds005406.v1.0.0",
   "version": "1.7.0",
+  "dateCreated": "2024-08-09",
+  "dateModified": "2024-08-12",
+  "measurementTechnique": [
+    "BIDS task: FTdiss"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Silvia Formica"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005406-bids-bucket",
+      "name": "ds005406 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005406.",
+      "contentUrl": "s3://openneuro.org/ds005406",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005406-openneuro",

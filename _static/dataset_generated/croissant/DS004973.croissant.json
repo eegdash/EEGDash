@@ -118,7 +118,37 @@
   ],
   "citeAs": "Xiaofei Zhang, Qiaoya Wang, Jun Li, Xiaorong Gao, Bowen Li (2024). An fNIRS dataset for driving risk cognition of passengers in highly automated driving scenarios. doi:10.18112/openneuro.ds004973.v1.0.1",
   "version": "1.7.0",
+  "dateCreated": "2024-02-16",
+  "dateModified": "2024-02-17",
+  "measurementTechnique": [
+    "BIDS task: 1",
+    "BIDS task: 10",
+    "BIDS task: 11",
+    "BIDS task: 12",
+    "BIDS task: 2",
+    "BIDS task: 3",
+    "BIDS task: 4",
+    "BIDS task: 5",
+    "BIDS task: 6",
+    "BIDS task: 7",
+    "BIDS task: 8",
+    "BIDS task: 9"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Xiaofei Zhang"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004973-bids-bucket",
+      "name": "ds004973 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004973.",
+      "contentUrl": "s3://openneuro.org/ds004973",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004973-openneuro",

@@ -119,7 +119,30 @@
   ],
   "citeAs": "Henry Tan, Devon Griggs, Lucas Chen, Kahte Culevski, Kat Floerchinger (2024). visStim. doi:10.18112/openneuro.ds005688.v1.0.1",
   "version": "1.8.0",
+  "dateCreated": "2024-12-02",
+  "dateModified": "2024-12-03",
+  "measurementTechnique": [
+    "BIDS task: baseline",
+    "BIDS task: trial1",
+    "BIDS task: trial2",
+    "BIDS task: trial3",
+    "BIDS task: trial4"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Henry Tan"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005688-bids-bucket",
+      "name": "ds005688 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005688.",
+      "contentUrl": "s3://openneuro.org/ds005688",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005688-openneuro",

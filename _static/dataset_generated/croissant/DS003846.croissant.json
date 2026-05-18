@@ -97,7 +97,26 @@
   ],
   "citeAs": "Lukas Gehrke, Sezen Akman, Albert Chen, Pedro Lopes, Klaus Gramann (2021). Prediction Error. doi:10.18112/openneuro.ds003846.v2.0.2",
   "version": "1.8.0",
+  "dateCreated": "2021-10-18",
+  "dateModified": "2025-04-09",
+  "measurementTechnique": [
+    "BIDS task: PredictionError"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Lukas Gehrke"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds003846-bids-bucket",
+      "name": "ds003846 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS003846.",
+      "contentUrl": "s3://openneuro.org/ds003846",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds003846-openneuro",

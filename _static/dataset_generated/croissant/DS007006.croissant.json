@@ -105,7 +105,30 @@
   ],
   "citeAs": "Ying Wu, Enrique Carrillosulub, Leon Lange, Chloe Tanega, Nicole Wells (2025). VR-Compassion Cultivation Training. doi:10.18112/openneuro.ds007006.v1.0.0",
   "version": "v1.10.0",
+  "dateCreated": "2025-12-01",
+  "dateModified": "2025-12-01",
+  "measurementTechnique": [
+    "BIDS task: compTree",
+    "BIDS task: ivan",
+    "BIDS task: medBall",
+    "BIDS task: postbaseline",
+    "BIDS task: prebaseline"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Enrique Carrillosulub"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007006-bids-bucket",
+      "name": "ds007006 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS007006.",
+      "contentUrl": "s3://openneuro.org/ds007006",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds007006-openneuro",

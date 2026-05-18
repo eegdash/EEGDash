@@ -85,7 +85,34 @@
   ],
   "citeAs": "Julie Onton, Scott Makeig (2020). Imagined Emotion Study. doi:10.18112/openneuro.ds003004.v1.1.1",
   "version": "1.1.1",
+  "dateCreated": "2020-07-09",
+  "dateModified": "2022-08-23",
+  "measurementTechnique": [
+    "BIDS task: ImaginedEmotion"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Dung Truong"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Arnaud Delorme"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Kay Robbins"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds003004-bids-bucket",
+      "name": "ds003004 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS003004.",
+      "contentUrl": "s3://openneuro.org/ds003004",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds003004-openneuro",

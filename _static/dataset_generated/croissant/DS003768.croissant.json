@@ -118,7 +118,27 @@
   ],
   "citeAs": "Yameng Gu, Feng Han, Lucas E. Sainburg, Margeaux M. Schade, Orfeu M. Buxton (2021). Simultaneous EEG and fMRI signals during sleep from humans. doi:10.18112/openneuro.ds003768.v1.0.0",
   "version": "1.4.1",
+  "dateCreated": "2021-08-16",
+  "dateModified": "2026-01-06",
+  "measurementTechnique": [
+    "BIDS task: rest",
+    "BIDS task: sleep"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Xiao Liu"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds003768-bids-bucket",
+      "name": "ds003768 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS003768.",
+      "contentUrl": "s3://openneuro.org/ds003768",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds003768-openneuro",

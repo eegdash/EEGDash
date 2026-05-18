@@ -153,7 +153,32 @@
   ],
   "citeAs": "Michael J. Kahana, Joseph H. Rudoler, Lynn J. Lohnas, Karl Healey, Ada Aka (2023). Penn Electrophysiology of Encoding and Retrieval Study (PEERS). doi:10.18112/openneuro.ds004395.v2.0.0",
   "version": "1.6.0",
+  "dateCreated": "2023-01-10",
+  "dateModified": "2023-06-01",
+  "measurementTechnique": [
+    "BIDS task: VFFR",
+    "BIDS task: ltpFR",
+    "BIDS task: ltpFR2"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Joseph Rudoler"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Ryan Colyer"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004395-bids-bucket",
+      "name": "ds004395 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004395.",
+      "contentUrl": "s3://openneuro.org/ds004395",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004395-openneuro",

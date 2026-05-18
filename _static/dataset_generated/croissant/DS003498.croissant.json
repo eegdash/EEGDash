@@ -98,7 +98,27 @@
   ],
   "citeAs": "Fedele T, Krayenbühl N, Hilfiker P, Adam Li, Sarnthein J. (2021). interictal iEEG during slow-wave sleep with HFO markings. doi:10.18112/openneuro.ds003498.v1.0.1",
   "version": "1.4.0",
+  "dateCreated": "2021-02-01",
+  "dateModified": "2023-09-26",
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Johannes Sarnthein"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Adam Li"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds003498-bids-bucket",
+      "name": "ds003498 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS003498.",
+      "contentUrl": "s3://openneuro.org/ds003498",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds003498-openneuro",

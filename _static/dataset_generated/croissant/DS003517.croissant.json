@@ -85,7 +85,26 @@
   ],
   "citeAs": "James F Cavanagh, Joel Castellanos (2021). EEG: Continuous gameplay of an 8-bit style video game. doi:10.18112/openneuro.ds003517.v1.1.0",
   "version": "1.1.1",
+  "dateCreated": "2021-02-15",
+  "dateModified": "2021-02-15",
+  "measurementTechnique": [
+    "BIDS task: ContinuousVideoGamePlay"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "James F Cavanagh"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds003517-bids-bucket",
+      "name": "ds003517 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS003517.",
+      "contentUrl": "s3://openneuro.org/ds003517",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds003517-openneuro",

@@ -132,6 +132,12 @@
     "https://huggingface.co/datasets/EEGDash/ds006253"
   ],
   "citeAs": "Dorian Goueytes, Francois Stockart, Alexis Robin, Lucien Gyger, Martin Rouy (n.d.). MetaRDK. doi:10.18112/openneuro.ds006253.v1.0.3",
+  "measurementTechnique": [
+    "BIDS task: .gitattributes",
+    "BIDS task: CHANGES",
+    "BIDS task: MetaRDK",
+    "BIDS task: config"
+  ],
   "distribution": [
     {
       "@type": "cr:FileObject",

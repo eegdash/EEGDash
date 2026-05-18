@@ -121,7 +121,26 @@
   ],
   "citeAs": "Andreas Miltiadous, Katerina D. Tzimourta, Theodora Afrantou, Panagiotis Ioannidis, Nikolaos Grigoriadis (2023). A dataset of EEG recordings from: Alzheimer's disease, Frontotemporal dementia and Healthy subjects. doi:10.18112/openneuro.ds004504.v1.0.8",
   "version": "v1.2.1",
+  "dateCreated": "2023-02-17",
+  "dateModified": "2024-10-30",
+  "measurementTechnique": [
+    "BIDS task: eyesclosed"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Andreas Miltiadous"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004504-bids-bucket",
+      "name": "ds004504 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004504.",
+      "contentUrl": "s3://openneuro.org/ds004504",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004504-openneuro",

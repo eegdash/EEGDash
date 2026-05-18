@@ -97,7 +97,32 @@
   ],
   "citeAs": "Amanda K Robinson, Tijl Grootswagers, Sophia M Shatek, Marlene Behrmann, Thomas A Carlson (2024). rapid-hemifield-object-eeg. doi:10.18112/openneuro.ds005087.v1.0.1",
   "version": "1.9.1",
+  "dateCreated": "2024-04-15",
+  "dateModified": "2025-01-23",
+  "measurementTechnique": [
+    "BIDS task: restclosed",
+    "BIDS task: restopen",
+    "BIDS task: rsvp"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Tijl Grootswagers"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Amanda K Robinson"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005087-bids-bucket",
+      "name": "ds005087 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005087.",
+      "contentUrl": "s3://openneuro.org/ds005087",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005087-openneuro",

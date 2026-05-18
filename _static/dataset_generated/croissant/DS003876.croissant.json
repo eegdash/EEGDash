@@ -212,7 +212,32 @@
   ],
   "citeAs": "Gunnarsdottir, Kristin, Li, Adam, Smith, Rachel, Kang, Joon, Korzeniewska, Anna (2021). Epilepsy-iEEG-Interictal-Multicenter-Dataset. doi:10.18112/openneuro.ds003876.v1.0.2",
   "version": "1.6.0",
+  "dateCreated": "2021-11-09",
+  "dateModified": "2023-01-24",
+  "measurementTechnique": [
+    "BIDS task: interictal",
+    "BIDS task: interictalasleep",
+    "BIDS task: interictalawake"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Adam Li"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Kristín María Gunnarsdóttir"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds003876-bids-bucket",
+      "name": "ds003876 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS003876.",
+      "contentUrl": "s3://openneuro.org/ds003876",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds003876-openneuro",

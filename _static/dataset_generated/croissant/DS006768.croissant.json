@@ -93,7 +93,26 @@
   ],
   "citeAs": "Benjamin G. Lowe, Alexandra Woolgar, Sophie Smit, Anina N. Rich (2025). Multiple Object Monitoring (EEG). doi:10.18112/openneuro.ds006768.v1.1.0",
   "version": "1.11.0",
+  "dateCreated": "2025-10-09",
+  "dateModified": "2025-10-10",
+  "measurementTechnique": [
+    "BIDS task: MOM"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Benjamin G. Lowe"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006768-bids-bucket",
+      "name": "ds006768 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS006768.",
+      "contentUrl": "s3://openneuro.org/ds006768",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds006768-openneuro",

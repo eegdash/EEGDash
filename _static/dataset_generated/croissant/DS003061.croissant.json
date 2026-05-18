@@ -81,7 +81,30 @@
   ],
   "citeAs": "Arnaud Delorme (2020). EEG data from an auditory oddball task. doi:10.18112/openneuro.ds003061.v1.1.0",
   "version": "v1.2.1",
+  "dateCreated": "2020-08-08",
+  "dateModified": "2022-08-26",
+  "measurementTechnique": [
+    "BIDS task: P300"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Arnaud Delorme"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Dung Truong"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds003061-bids-bucket",
+      "name": "ds003061 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS003061.",
+      "contentUrl": "s3://openneuro.org/ds003061",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds003061-openneuro",

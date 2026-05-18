@@ -109,7 +109,27 @@
   ],
   "citeAs": "Joseph H. Rudoler, Matthew R. Dougherty, Brandon S. Katerman, James P. Bruska, Woohyeuk Chang (2023). Spatial memory and non-invasive closed-loop stimulus timing. doi:10.18112/openneuro.ds004706.v1.0.0",
   "version": "1.6.0",
+  "dateCreated": "2023-08-16",
+  "dateModified": "2023-08-22",
+  "measurementTechnique": [
+    "BIDS task: NiclsCourierClosedLoop",
+    "BIDS task: NiclsCourierReadOnly"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Joseph Rudoler"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004706-bids-bucket",
+      "name": "ds004706 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004706.",
+      "contentUrl": "s3://openneuro.org/ds004706",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004706-openneuro",

@@ -112,7 +112,26 @@
   ],
   "citeAs": "Johannes J.D. Singer, Radoslaw M. Cichy, Martin N. Hebart (2022). The spatiotemporal neural dynamics of object recognition for natural images and line drawings (MEG). doi:10.18112/openneuro.ds004330.v1.0.0",
   "version": "1.7.0",
+  "dateCreated": "2022-11-07",
+  "dateModified": "2022-11-08",
+  "measurementTechnique": [
+    "BIDS task: main"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Johannes Janek Daniel Singer"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004330-bids-bucket",
+      "name": "ds004330 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004330.",
+      "contentUrl": "s3://openneuro.org/ds004330",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004330-openneuro",

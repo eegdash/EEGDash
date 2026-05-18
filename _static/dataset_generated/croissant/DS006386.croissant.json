@@ -85,7 +85,26 @@
   ],
   "citeAs": "Jiangwei Yu, Aonan He (2025). PhysioMotion_Artifact. doi:10.18112/openneuro.ds006386.v1.0.1",
   "version": "1.7.0",
+  "dateCreated": "2025-06-25",
+  "dateModified": "2026-02-11",
+  "measurementTechnique": [
+    "BIDS task: artifact"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Jiangwei Yu"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006386-bids-bucket",
+      "name": "ds006386 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS006386.",
+      "contentUrl": "s3://openneuro.org/ds006386",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds006386-openneuro",

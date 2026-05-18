@@ -98,7 +98,34 @@
   ],
   "citeAs": "Lauri Parkkonen, Stefan Appelhoff, Alexandre Gramfort, Mainak Jas, Richard Höchenberger (2020). MNE-somato-data-bids (anonymized). doi:10.18112/openneuro.ds003104.v1.0.1",
   "version": "1.4.0",
+  "dateCreated": "2020-08-31",
+  "dateModified": "2026-03-13",
+  "measurementTechnique": [
+    "BIDS task: somato"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Richard Höchenberger"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Alexandre Gramfort"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Daniel McCloy"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds003104-bids-bucket",
+      "name": "ds003104 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS003104.",
+      "contentUrl": "s3://openneuro.org/ds003104",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds003104-openneuro",

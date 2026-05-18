@@ -144,7 +144,19 @@
   ],
   "citeAs": "Michael Tangermann, Klaus-Robert Müller, Ad Aertsen, Niels Birbaumer, Christoph Braun (2019). BNCI 2014-001 Motor Imagery dataset. doi:10.82901/nemar.nm000139",
   "version": "1.9.0",
+  "dateModified": "2026-04-17",
+  "measurementTechnique": [
+    "BIDS task: imagery"
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000139-bids-bucket",
+      "name": "nm000139 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for NM000139.",
+      "contentUrl": "s3://nemar/nm000139",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "nm000139-openneuro",

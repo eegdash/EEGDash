@@ -89,7 +89,26 @@
   ],
   "citeAs": "Haorui Sun, Ardyn Vivienne Olszko, Niharika Singh, David C. Jangraw (2026). ROAMM. doi:10.18112/openneuro.ds007629.v1.0.2",
   "version": "1.9.0",
+  "dateCreated": "2026-04-03",
+  "dateModified": "2026-04-08",
+  "measurementTechnique": [
+    "BIDS task: ReMind"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Haorui Sun"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007629-bids-bucket",
+      "name": "ds007629 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS007629.",
+      "contentUrl": "s3://openneuro.org/ds007629",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds007629-openneuro",

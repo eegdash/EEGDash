@@ -85,7 +85,30 @@
   ],
   "citeAs": "Arnaud Delorme, Scott Makeig (2020). Visual Oddball Task (256 channels). doi:10.18112/openneuro.ds002578.v1.1.0",
   "version": "v1.2.1",
+  "dateCreated": "2020-02-19",
+  "dateModified": "2021-10-26",
+  "measurementTechnique": [
+    "BIDS task: attention"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Arnaud Delorme"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Annalisa Salazar"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds002578-bids-bucket",
+      "name": "ds002578 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS002578.",
+      "contentUrl": "s3://openneuro.org/ds002578",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds002578-openneuro",

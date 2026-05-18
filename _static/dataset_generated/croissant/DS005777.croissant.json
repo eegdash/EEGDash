@@ -136,7 +136,27 @@
   ],
   "citeAs": "Peng, Ke, Yücel, Meryem, Steele, Sarah, Bittner, Edward, Aasted, Christopher (2025). Electrical_Morphine_Placebo_2018. doi:10.18112/openneuro.ds005777.v1.0.1",
   "version": "1.7.1",
+  "dateCreated": "2025-01-02",
+  "dateModified": "2025-07-09",
+  "measurementTechnique": [
+    "BIDS task: Electrical",
+    "BIDS task: TactilePerception"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "MERYEM YUCEL"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005777-bids-bucket",
+      "name": "ds005777 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005777.",
+      "contentUrl": "s3://openneuro.org/ds005777",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005777-openneuro",

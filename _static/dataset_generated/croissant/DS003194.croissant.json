@@ -99,7 +99,27 @@
   ],
   "citeAs": "Maria Luisa Bringas Vega, Lilia Morales Chacon, Ivonne Pedroso Ibanez (2020). Neuroepo multisession. doi:10.18112/openneuro.ds003194.v1.0.3",
   "version": "1.2.0",
+  "dateCreated": "2020-09-28",
+  "dateModified": "2022-09-20",
+  "measurementTechnique": [
+    "BIDS task: task6mnepo",
+    "BIDS task: taskprenepo"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Carlos López"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds003194-bids-bucket",
+      "name": "ds003194 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS003194.",
+      "contentUrl": "s3://openneuro.org/ds003194",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds003194-openneuro",

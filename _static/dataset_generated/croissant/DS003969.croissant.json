@@ -85,7 +85,29 @@
   ],
   "citeAs": "Arnaud Delorme, Claire Braboszcz (2021). Meditation vs thinking task. doi:10.18112/openneuro.ds003969.v1.0.0",
   "version": "v1.2.1",
+  "dateCreated": "2021-12-23",
+  "dateModified": "2021-12-10",
+  "measurementTechnique": [
+    "BIDS task: med1breath",
+    "BIDS task: med2",
+    "BIDS task: think1",
+    "BIDS task: think2"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Arnaud Delorme"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds003969-bids-bucket",
+      "name": "ds003969 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS003969.",
+      "contentUrl": "s3://openneuro.org/ds003969",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds003969-openneuro",

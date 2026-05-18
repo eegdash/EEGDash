@@ -94,7 +94,29 @@
   ],
   "citeAs": "Moon-A Yoo, Dong-Uk Kim, Soo-In Choi, Min-Young Kim, Sung-Phil Kim (2026). Dataset of emotion recognition using validated video stimuli with large-scale behavioral survey and MEG recordings. doi:10.18112/openneuro.ds007640.v1.0.0",
   "version": "TBD",
+  "dateCreated": "2026-04-08",
+  "dateModified": "2026-04-09",
+  "measurementTechnique": [
+    "BIDS task: HAHV",
+    "BIDS task: HALV",
+    "BIDS task: LAHV",
+    "BIDS task: LALV"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "MoonA Yoo"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007640-bids-bucket",
+      "name": "ds007640 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS007640.",
+      "contentUrl": "s3://openneuro.org/ds007640",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds007640-openneuro",

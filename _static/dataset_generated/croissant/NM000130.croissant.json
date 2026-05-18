@@ -102,7 +102,19 @@
   ],
   "citeAs": "Bingchuan Liu, Yijun Wang, Xiaorong Gao, Xiaogang Chen (2019). Liu2022 – eldBETA SSVEP benchmark dataset for elderly population. doi:10.82901/nemar.nm000130",
   "version": "1.9.0",
+  "dateModified": "2026-04-29",
+  "measurementTechnique": [
+    "BIDS task: ssvep"
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000130-bids-bucket",
+      "name": "nm000130 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for NM000130.",
+      "contentUrl": "s3://nemar/nm000130",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "nm000130-openneuro",

@@ -111,7 +111,26 @@
   ],
   "citeAs": "Marleen Haupt, Douglas D. Garrett, Radoslaw M. Cichy (2024). Object recognition in healthy aging (ORHA) - EEG. doi:10.18112/openneuro.ds005363.v1.0.0",
   "version": "1.7.0",
+  "dateCreated": "2024-07-23",
+  "dateModified": "2024-07-27",
+  "measurementTechnique": [
+    "BIDS task: objrecog"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Marleen Haupt"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005363-bids-bucket",
+      "name": "ds005363 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005363.",
+      "contentUrl": "s3://openneuro.org/ds005363",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005363-openneuro",

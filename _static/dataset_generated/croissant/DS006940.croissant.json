@@ -98,7 +98,40 @@
   ],
   "citeAs": "Shantanu Sarkar, Kevin Nathan, Jose L. Contreras-Vidal (2025). Dataset: EEG-Controlled Exoskeleton for Walking and Standing - A Longitudinal Study of Healthy Individuals. doi:10.18112/openneuro.ds006940.v1.0.0",
   "version": "1.8.0",
+  "dateCreated": "2025-11-15",
+  "dateModified": "2025-11-15",
+  "measurementTechnique": [
+    "BIDS task: stop6min",
+    "BIDS task: training",
+    "BIDS task: trial01",
+    "BIDS task: trial02",
+    "BIDS task: trial03",
+    "BIDS task: trial04",
+    "BIDS task: trial05",
+    "BIDS task: trial06",
+    "BIDS task: trial07",
+    "BIDS task: trial08",
+    "BIDS task: trial09",
+    "BIDS task: trial10",
+    "BIDS task: trial11",
+    "BIDS task: trial12",
+    "BIDS task: walk6min"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Shantanu Sarkar"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006940-bids-bucket",
+      "name": "ds006940 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS006940.",
+      "contentUrl": "s3://openneuro.org/ds006940",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds006940-openneuro",

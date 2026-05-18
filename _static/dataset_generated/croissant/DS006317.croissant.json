@@ -117,7 +117,27 @@
   ],
   "citeAs": "Zihan Zhang, Yu Bao, Tianyi Jiang, Xiao Ding, Xia Liang (2025). Chisco-2.0. doi:10.18112/openneuro.ds006317.v1.1.1",
   "version": "1.10.0",
+  "dateCreated": "2025-06-06",
+  "dateModified": "2026-04-08",
+  "measurementTechnique": [
+    "BIDS task: para1",
+    "BIDS task: para2"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Yu Bao"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006317-bids-bucket",
+      "name": "ds006317 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS006317.",
+      "contentUrl": "s3://openneuro.org/ds006317",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds006317-openneuro",

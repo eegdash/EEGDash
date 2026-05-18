@@ -112,7 +112,26 @@
   ],
   "citeAs": "Zweiphenning W., Demuru M., van Blooijs D., Leijten F, Zijlmans M. (2021). Dataset Clinical Epilepsy iEEG to BIDS -RESPect_intraoperative_iEEG. doi:10.18112/openneuro.ds003844.v1.0.1",
   "version": "BEP010",
+  "dateCreated": "2021-10-15",
+  "dateModified": "2021-10-26",
+  "measurementTechnique": [
+    "BIDS task: acute"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Epilab UMCU"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds003844-bids-bucket",
+      "name": "ds003844 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS003844.",
+      "contentUrl": "s3://openneuro.org/ds003844",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds003844-openneuro",

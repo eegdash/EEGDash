@@ -81,7 +81,26 @@
   ],
   "citeAs": "James F Cavanagh jcavanagh@unm.edu (2021). EEG: Probabilistic Selection and Depression. doi:10.18112/openneuro.ds003474.v1.1.0",
   "version": "1.1.1",
+  "dateCreated": "2021-01-15",
+  "dateModified": "2021-01-15",
+  "measurementTechnique": [
+    "BIDS task: ProbabilisticSelection"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "James F Cavanagh"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds003474-bids-bucket",
+      "name": "ds003474 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS003474.",
+      "contentUrl": "s3://openneuro.org/ds003474",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds003474-openneuro",

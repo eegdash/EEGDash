@@ -101,7 +101,26 @@
   ],
   "citeAs": "Denise Moerel, Tijl Grootswagers, Amanda K. Robinson, Patrick Engeler, Alex O. Holcombe (2022). Rotation-tolerant representations elucidate the time course of high-level object processing. doi:10.18112/openneuro.ds004252.v1.1.0",
   "version": "1.6.0",
+  "dateCreated": "2022-08-16",
+  "dateModified": "2026-04-15",
+  "measurementTechnique": [
+    "BIDS task: rsvp"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Denise Moerel"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004252-bids-bucket",
+      "name": "ds004252 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004252.",
+      "contentUrl": "s3://openneuro.org/ds004252",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004252-openneuro",

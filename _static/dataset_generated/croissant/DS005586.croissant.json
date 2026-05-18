@@ -85,7 +85,26 @@
   ],
   "citeAs": "Cemre Baykan, Alexander C. Schütz (2024). Electroencephalographic responses to the number of objects in partially occluded and uncovered scenes. doi:10.18112/openneuro.ds005586.v2.0.0",
   "version": "1.7.0",
+  "dateCreated": "2024-10-22",
+  "dateModified": "2024-10-24",
+  "measurementTechnique": [
+    "BIDS task: PassiveViewing"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Cemre Baykan"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005586-bids-bucket",
+      "name": "ds005586 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005586.",
+      "contentUrl": "s3://openneuro.org/ds005586",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005586-openneuro",

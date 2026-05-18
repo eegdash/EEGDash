@@ -97,7 +97,26 @@
   ],
   "citeAs": "Lisa Straetmans, Bjoern Holtze, Stefan Debener, Manuela Jaeger, Bojana Mirkovic (2021). Neural Tracking to go. doi:10.18112/openneuro.ds003801.v1.0.0",
   "version": "v2.0",
+  "dateCreated": "2021-09-13",
+  "dateModified": "2021-11-09",
+  "measurementTechnique": [
+    "BIDS task: NeuralTrackingToGo"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Lisa Straetmans"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds003801-bids-bucket",
+      "name": "ds003801 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS003801.",
+      "contentUrl": "s3://openneuro.org/ds003801",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds003801-openneuro",

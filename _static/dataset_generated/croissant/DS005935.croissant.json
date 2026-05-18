@@ -108,7 +108,26 @@
   ],
   "citeAs": "Xinge Li, Manon A. Krol, Sahar Jahani, David A. Boas, Helen Tager-Flusberg (2025). Mirror Neuron Study. doi:10.18112/openneuro.ds005935.v1.0.0",
   "version": "1.8.0",
+  "dateCreated": "2025-02-19",
+  "dateModified": "2025-02-19",
+  "measurementTechnique": [
+    "BIDS task: MirrorNeuron"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "MERYEM YUCEL"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005935-bids-bucket",
+      "name": "ds005935 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005935.",
+      "contentUrl": "s3://openneuro.org/ds005935",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005935-openneuro",

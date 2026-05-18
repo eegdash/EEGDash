@@ -103,7 +103,26 @@
   ],
   "citeAs": "Aura Polo, Elmer León, Mariana Pino-Melgarejo, Julie Viloria-Porto (2025). Dataset of Electroencephalograms of Juvenile Offenders. doi:10.18112/openneuro.ds006923.v1.0.0",
   "version": "1.0.0",
+  "dateCreated": "2025-11-11",
+  "dateModified": "2025-11-11",
+  "measurementTechnique": [
+    "BIDS task: restingstate"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Elmer David León Becerra"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006923-bids-bucket",
+      "name": "ds006923 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS006923.",
+      "contentUrl": "s3://openneuro.org/ds006923",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds006923-openneuro",

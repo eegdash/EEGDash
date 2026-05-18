@@ -101,7 +101,26 @@
   ],
   "citeAs": "Christopher Hilton, Lilian Befort, Ronja Brinkmann, Matthias Ballestrem, Joerg Fingerhut (2024). Affordances of stairs. doi:10.18112/openneuro.ds005397.v1.0.4",
   "version": "1.6.0",
+  "dateCreated": "2024-08-01",
+  "dateModified": "2025-11-10",
+  "measurementTechnique": [
+    "BIDS task: tectonic"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Christopher Hilton"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005397-bids-bucket",
+      "name": "ds005397 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005397.",
+      "contentUrl": "s3://openneuro.org/ds005397",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005397-openneuro",

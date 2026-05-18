@@ -101,7 +101,29 @@
   ],
   "citeAs": "Adam Boncz, Brigitta Toth, István Winkler (2022). what_are_we_talking_about. doi:10.18112/openneuro.ds004075.v1.0.0",
   "version": "v1.7.0",
+  "dateCreated": "2022-03-18",
+  "dateModified": "2022-03-18",
+  "measurementTechnique": [
+    "BIDS task: context03",
+    "BIDS task: context09",
+    "BIDS task: context10",
+    "BIDS task: context11"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Adam Boncz"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004075-bids-bucket",
+      "name": "ds004075 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004075.",
+      "contentUrl": "s3://openneuro.org/ds004075",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004075-openneuro",

@@ -104,7 +104,30 @@
   ],
   "citeAs": "Vasileios Dimakopoulos, Lennart Stieglitz, Lukas Imbach, Johannes Sarnthein (2023). Dataset of intracranial EEG, scalp EEG and beamforming sources from epilepsy patients performing a verbal working memory task. doi:10.18112/openneuro.ds004752.v1.0.1",
   "version": "1.4.0",
+  "dateCreated": "2023-09-13",
+  "dateModified": "2023-09-20",
+  "measurementTechnique": [
+    "BIDS task: verbalWM"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Vasileios S. Dimakopoulos"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Johannes Sarnthein"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004752-bids-bucket",
+      "name": "ds004752 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004752.",
+      "contentUrl": "s3://openneuro.org/ds004752",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004752-openneuro",

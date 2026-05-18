@@ -82,7 +82,26 @@
   ],
   "citeAs": "[Unspecified] (2024). MEG: Major Depression & Probabilistic Learning Task. doi:10.18112/openneuro.ds005356.v1.5.0",
   "version": "1.7.0",
+  "dateCreated": "2024-07-17",
+  "dateModified": "2025-03-06",
+  "measurementTechnique": [
+    "BIDS task: pst"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "James F Cavanagh"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005356-bids-bucket",
+      "name": "ds005356 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005356.",
+      "contentUrl": "s3://openneuro.org/ds005356",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005356-openneuro",

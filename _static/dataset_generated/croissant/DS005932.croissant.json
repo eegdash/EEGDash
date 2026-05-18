@@ -93,7 +93,34 @@
   ],
   "citeAs": "Phillip J. Holcomb, Jacklyn Jardel, Katherine J. Midgley, and Karen Emmorey (2025). PWIe. doi:10.18112/openneuro.ds005932.v1.0.0",
   "version": "1.8.0",
+  "dateCreated": "2025-02-19",
+  "dateModified": "2025-11-05",
+  "measurementTechnique": [
+    "BIDS task: PictureWordInterference"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Jacklyn Jardel"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Phillip Holcomb"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Phillip Holcomb"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005932-bids-bucket",
+      "name": "ds005932 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005932.",
+      "contentUrl": "s3://openneuro.org/ds005932",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005932-openneuro",

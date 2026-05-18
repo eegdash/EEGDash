@@ -93,7 +93,30 @@
   ],
   "citeAs": "Makowski, Dominique, Te, An-Shu, Kirk, Stephanie, Ngoi, Zi Liang (2023). FakeFaceEmo_data. doi:10.18112/openneuro.ds004582.v1.0.0",
   "version": "1.6.0",
+  "dateCreated": "2023-05-30",
+  "dateModified": "2023-06-01",
+  "measurementTechnique": [
+    "BIDS task: FF"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "An Shu Te"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Dominique Makowski"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004582-bids-bucket",
+      "name": "ds004582 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004582.",
+      "contentUrl": "s3://openneuro.org/ds004582",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004582-openneuro",

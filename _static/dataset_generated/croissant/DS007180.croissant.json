@@ -97,7 +97,26 @@
   ],
   "citeAs": "Águeda Fuentes-Guerra, Elisa Martín Arévalo, Freek van Ede, Carlos González-García (2026). Exo-EEG Experiment. doi:10.18112/openneuro.ds007180.v1.0.0",
   "version": "1.4.0",
+  "dateCreated": "2026-01-07",
+  "dateModified": "2026-01-07",
+  "measurementTechnique": [
+    "BIDS task: exo"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Águeda Fuentes-Guerra"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007180-bids-bucket",
+      "name": "ds007180 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS007180.",
+      "contentUrl": "s3://openneuro.org/ds007180",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds007180-openneuro",

@@ -97,7 +97,26 @@
   ],
   "citeAs": "Jose M. G. Penalver, David Lopez-Garcia, Blanca Aguado-Lopez, Carlos Gonzalez-Garcia, Maria Ruz (2023). Anticipatory differences between Attention and Expectation. doi:10.18112/openneuro.ds004502.v1.0.1",
   "version": "1.2",
+  "dateCreated": "2023-02-16",
+  "dateModified": "2023-03-06",
+  "measurementTechnique": [
+    "BIDS task: attexp"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "José M. G. Peñalver"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004502-bids-bucket",
+      "name": "ds004502 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004502.",
+      "contentUrl": "s3://openneuro.org/ds004502",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004502-openneuro",

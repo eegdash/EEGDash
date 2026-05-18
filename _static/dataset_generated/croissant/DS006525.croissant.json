@@ -87,7 +87,26 @@
   ],
   "citeAs": "Computational Neuroimaging and Neuroengineering Lab ar the University of Oklahoma (2025). Resting EEG. doi:10.18112/openneuro.ds006525.v1.0.0",
   "version": "1.8.0",
+  "dateCreated": "2025-08-01",
+  "dateModified": "2025-08-01",
+  "measurementTechnique": [
+    "BIDS task: resting"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Lei Ding"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006525-bids-bucket",
+      "name": "ds006525 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS006525.",
+      "contentUrl": "s3://openneuro.org/ds006525",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds006525-openneuro",

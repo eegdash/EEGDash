@@ -100,7 +100,26 @@
   ],
   "citeAs": "Samuel Planton*, Fosca Al Roumi*, Liping Wang, Stanislas Dehaene (2023). ABSeqMEG. doi:10.18112/openneuro.ds004483.v1.0.0",
   "version": "1.6.0",
+  "dateCreated": "2023-02-08",
+  "dateModified": "2023-02-13",
+  "measurementTechnique": [
+    "BIDS task: abseq"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Fosca Al Roumi"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004483-bids-bucket",
+      "name": "ds004483 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004483.",
+      "contentUrl": "s3://openneuro.org/ds004483",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004483-openneuro",

@@ -88,7 +88,28 @@
   ],
   "citeAs": "Kaare B. Mikkelsen, Preben Kidmose, Yousef Rezaei Tabar (2024). Ear-EEG Sleep Monitoring 2019 (EESM19). doi:10.18112/openneuro.ds005185.v1.0.2",
   "version": "1.7.0",
+  "dateCreated": "2024-05-25",
+  "dateModified": "2024-11-09",
+  "measurementTechnique": [
+    "BIDS task: ASSR",
+    "BIDS task: electrodeTestLab",
+    "BIDS task: sleep"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "kaare mikkelsen"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005185-bids-bucket",
+      "name": "ds005185 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005185.",
+      "contentUrl": "s3://openneuro.org/ds005185",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005185-openneuro",

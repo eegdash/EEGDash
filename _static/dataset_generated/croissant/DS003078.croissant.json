@@ -99,7 +99,26 @@
   ],
   "citeAs": "Philippe DOMENECH, Sylvain RHEIMS, Etienne KOECHLIN (2020). PROBE iEEG. doi:10.18112/openneuro.ds003078.v1.0.0",
   "version": "1.0.0",
+  "dateCreated": "2020-08-16",
+  "dateModified": "2020-08-17",
+  "measurementTechnique": [
+    "BIDS task: PROBE"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "philippe Domenech"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds003078-bids-bucket",
+      "name": "ds003078 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS003078.",
+      "contentUrl": "s3://openneuro.org/ds003078",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds003078-openneuro",

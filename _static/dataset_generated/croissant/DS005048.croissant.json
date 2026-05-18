@@ -95,7 +95,26 @@
   ],
   "citeAs": "Mojtaba Lahijanian, Hamid Aghajan, Zahra Vahabi (2024). 40Hz Auditory Entrainment. doi:10.18112/openneuro.ds005048.v1.0.1",
   "version": "1.8.0",
+  "dateCreated": "2024-03-19",
+  "dateModified": "2025-04-10",
+  "measurementTechnique": [
+    "BIDS task: 40HzAuditoryEntrainment"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Mojtaba Lahijanian"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005048-bids-bucket",
+      "name": "ds005048 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005048.",
+      "contentUrl": "s3://openneuro.org/ds005048",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005048-openneuro",

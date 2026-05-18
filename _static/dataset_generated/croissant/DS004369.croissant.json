@@ -93,7 +93,26 @@
   ],
   "citeAs": "Bjoern Holtze, Marc Rosenkranz, Martin Bleichner, Stefan Debener (2022). Blink-Pause-Relation (Competing Speaker Paradigm). doi:10.18112/openneuro.ds004369.v1.0.1",
   "version": "v5.2",
+  "dateCreated": "2022-12-16",
+  "dateModified": "2023-02-06",
+  "measurementTechnique": [
+    "BIDS task: attendedSpeakerParadigm"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Björn Holtze"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004369-bids-bucket",
+      "name": "ds004369 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004369.",
+      "contentUrl": "s3://openneuro.org/ds004369",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004369-openneuro",

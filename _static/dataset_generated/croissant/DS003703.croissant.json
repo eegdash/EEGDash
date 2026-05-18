@@ -96,7 +96,27 @@
   ],
   "citeAs": "Evgenii Kalenkovich, Anna Shestakova, Nina Kazanina (2021). Frequency Tagging of Syntactic Structure or Lexical Properties. doi:10.18112/openneuro.ds003703.v1.0.0",
   "version": "1.4.0",
+  "dateCreated": "2021-06-18",
+  "dateModified": "2021-06-23",
+  "measurementTechnique": [
+    "BIDS task: listeningToSpeech",
+    "BIDS task: rest"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Zhenya Kalenkovich"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds003703-bids-bucket",
+      "name": "ds003703 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS003703.",
+      "contentUrl": "s3://openneuro.org/ds003703",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds003703-openneuro",

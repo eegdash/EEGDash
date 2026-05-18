@@ -95,7 +95,26 @@
   ],
   "citeAs": "Naoto Kuroda, Eishi Asano, Nobukazu Nakasato (2025). iEEG_Neural_spatial_volatility. doi:10.18112/openneuro.ds006107.v1.0.0",
   "version": "1.7.0",
+  "dateCreated": "2025-04-08",
+  "dateModified": "2025-04-09",
+  "measurementTechnique": [
+    "BIDS task: sws"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Naoto Kuroda"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006107-bids-bucket",
+      "name": "ds006107 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS006107.",
+      "contentUrl": "s3://openneuro.org/ds006107",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds006107-openneuro",

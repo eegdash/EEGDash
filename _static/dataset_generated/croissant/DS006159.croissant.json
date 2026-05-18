@@ -81,7 +81,30 @@
   ],
   "citeAs": "Mateo Leganes-Fonteneau (2025). Implicit Learning EEG (BioSemi). doi:10.18112/openneuro.ds006159.v1.0.0",
   "version": "1.7.0",
+  "dateCreated": "2025-04-23",
+  "dateModified": "2025-05-21",
+  "measurementTechnique": [
+    "BIDS task: implicitlearn"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Mateo Leganes Fonteneau"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Paradeisios Alexandros BOULAKIS"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006159-bids-bucket",
+      "name": "ds006159 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS006159.",
+      "contentUrl": "s3://openneuro.org/ds006159",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds006159-openneuro",

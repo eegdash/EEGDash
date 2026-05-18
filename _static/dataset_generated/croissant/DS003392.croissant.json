@@ -104,7 +104,27 @@
   ],
   "citeAs": "Nicolas Zilber, Philippe Ciuciu, Alexandre Gramfort, Leila Azizi, Virginie van Wassenhove (2020). NeuroSpin hMT+ Localizer DATA (MEG & aMRI). doi:10.18112/openneuro.ds003392.v1.0.4",
   "version": "?",
+  "dateCreated": "2020-11-20",
+  "dateModified": "2021-05-18",
+  "measurementTechnique": [
+    "BIDS task: localizer",
+    "BIDS task: noise"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Alexandre Gramfort"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds003392-bids-bucket",
+      "name": "ds003392 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS003392.",
+      "contentUrl": "s3://openneuro.org/ds003392",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds003392-openneuro",

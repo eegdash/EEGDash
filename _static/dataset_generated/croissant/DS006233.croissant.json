@@ -120,7 +120,26 @@
   ],
   "citeAs": "Ryuzaburo Kochi, Aya Kanno, Hiroshi Uda, Keisuke Hatano, Hidenori Endo (2025). Picture naming. doi:10.18112/openneuro.ds006233.v1.0.0",
   "version": "1.7.0",
+  "dateCreated": "2025-05-13",
+  "dateModified": "2025-05-19",
+  "measurementTechnique": [
+    "BIDS task: picture"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Ryuzaburo Kochi"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006233-bids-bucket",
+      "name": "ds006233 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS006233.",
+      "contentUrl": "s3://openneuro.org/ds006233",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds006233-openneuro",

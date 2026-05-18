@@ -133,7 +133,26 @@
   ],
   "citeAs": "Nahian S. Chowdhury, Chuan Bi, Andrew J. Furman, Alan KI Chiang, Patrick Skippen (2024). PREDICT. doi:10.18112/openneuro.ds005486.v1.0.1",
   "version": "1.6.0",
+  "dateCreated": "2024-09-12",
+  "dateModified": "2025-03-01",
+  "measurementTechnique": [
+    "BIDS task: rest"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "David A Seminowicz"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005486-bids-bucket",
+      "name": "ds005486 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005486.",
+      "contentUrl": "s3://openneuro.org/ds005486",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005486-openneuro",

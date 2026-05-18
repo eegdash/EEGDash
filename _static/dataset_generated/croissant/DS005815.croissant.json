@@ -105,7 +105,28 @@
   ],
   "citeAs": "Yan-Han Chang, Hsi-An Chen, Min-Jiun Tsai, Chun-Lung Tseng, Ching-Huei Lo (2025). A Human EEG Dataset for Multisensory Perception and Mental Imagery. doi:10.18112/openneuro.ds005815.v2.0.1",
   "version": "1.10.0",
+  "dateCreated": "2025-01-12",
+  "dateModified": "2025-06-17",
+  "measurementTechnique": [
+    "BIDS task: rest1",
+    "BIDS task: rest2",
+    "BIDS task: task"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "cecnl lab"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005815-bids-bucket",
+      "name": "ds005815 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005815.",
+      "contentUrl": "s3://openneuro.org/ds005815",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005815-openneuro",

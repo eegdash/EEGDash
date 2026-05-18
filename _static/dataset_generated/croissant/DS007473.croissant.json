@@ -148,7 +148,44 @@
     "https://openneuro.org/datasets/ds007473"
   ],
   "citeAs": "Morgan Fogarty, Kalyan Tripathy, Alexandra M Svoboda, Mariel L Schroeder, Sean M Rafferty (2026). High-Density Diffuse Optical Tomography Audiovisual Movie Viewing Dataset. doi:10.18112/openneuro.ds007473.v1.0.0",
+  "dateCreated": "2026-03-05",
+  "dateModified": "2026-03-05",
+  "measurementTechnique": [
+    "BIDS task: CCW001",
+    "BIDS task: CCW002",
+    "BIDS task: CCW003",
+    "BIDS task: HW001",
+    "BIDS task: HW002",
+    "BIDS task: HWM001",
+    "BIDS task: HWM002",
+    "BIDS task: HWM003",
+    "BIDS task: MOT001",
+    "BIDS task: MOT002",
+    "BIDS task: MOV001",
+    "BIDS task: MOV002",
+    "BIDS task: MOV003",
+    "BIDS task: MOV004",
+    "BIDS task: MOV005",
+    "BIDS task: MOV006",
+    "BIDS task: MOV007",
+    "BIDS task: MOV008",
+    "BIDS task: MOV009"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Morgan Fogarty"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007473-bids-bucket",
+      "name": "ds007473 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS007473.",
+      "contentUrl": "s3://openneuro.org/ds007473",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds007473-openneuro",

@@ -96,7 +96,19 @@
   ],
   "citeAs": "G.F.P. Van Veen, A. Barachant, A. Andreev, G. Cattan, P. Rodrigues (2019). Van Veen, Barachant & Andreev 2012 — Building Brain Invaders: EEG data of an experimental validation (BI2012). doi:10.5281/zenodo.2649006",
   "version": "1.9.0",
+  "dateModified": "2026-04-11",
+  "measurementTechnique": [
+    "BIDS task: p300"
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000260-bids-bucket",
+      "name": "nm000260 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for NM000260.",
+      "contentUrl": "s3://nemar/nm000260",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "nm000260-openneuro",

@@ -101,7 +101,26 @@
   ],
   "citeAs": "Tania Yareni Pech-Canul, Roberto Guajardo, Luis Fernando Acosta-Soto, Mónica Sofía Margoya-Constantino, Juan Pablo Rosado-Aíza (2025). NeuroTechs Dataset for Stem Skills. doi:10.18112/openneuro.ds006803.v1.1.1",
   "version": "1.8.0",
+  "dateCreated": "2025-10-16",
+  "dateModified": "2026-01-27",
+  "measurementTechnique": [
+    "BIDS task: STEMSKILLS"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Juan Pablo Rosado-Aíza"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006803-bids-bucket",
+      "name": "ds006803 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS006803.",
+      "contentUrl": "s3://openneuro.org/ds006803",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds006803-openneuro",

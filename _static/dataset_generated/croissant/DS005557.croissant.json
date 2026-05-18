@@ -92,7 +92,26 @@
   ],
   "citeAs": "Haydn G. Herrema, Michael J. Kahana (2024). Free Recall with Closed-Loop Stimulation at Encoding (Encoding Classifier). doi:10.18112/openneuro.ds005557.v1.0.0",
   "version": "1.7.0",
+  "dateCreated": "2024-10-06",
+  "dateModified": "2024-10-06",
+  "measurementTechnique": [
+    "BIDS task: FR3"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Haydn Herrema"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005557-bids-bucket",
+      "name": "ds005557 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005557.",
+      "contentUrl": "s3://openneuro.org/ds005557",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005557-openneuro",

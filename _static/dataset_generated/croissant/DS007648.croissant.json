@@ -115,7 +115,26 @@
   ],
   "citeAs": "Marion Brickwedde, Rupali Limachya, Roksana Markiewicz, Emma Sutton, Christopher Postzich (2026). CrossModal Study. doi:10.18112/openneuro.ds007648.v1.1.0",
   "version": "1.8.0",
+  "dateCreated": "2026-04-13",
+  "dateModified": "2026-04-17",
+  "measurementTechnique": [
+    "BIDS task: CrossModal"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Marion Brickwedde"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007648-bids-bucket",
+      "name": "ds007648 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS007648.",
+      "contentUrl": "s3://openneuro.org/ds007648",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds007648-openneuro",

@@ -101,7 +101,26 @@
   ],
   "citeAs": "Brennan Terhune-Cotter, Phillip J. Holcomb, Katherine J. Midgley, Sofia E. Ortega, Emily M. Akers (2025). Flankers-FAR. doi:10.18112/openneuro.ds005868.v1.0.1",
   "version": "1.8.0",
+  "dateCreated": "2025-01-21",
+  "dateModified": "2025-01-22",
+  "measurementTechnique": [
+    "BIDS task: flankersFAR"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Emily M. Akers"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005868-bids-bucket",
+      "name": "ds005868 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005868.",
+      "contentUrl": "s3://openneuro.org/ds005868",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005868-openneuro",

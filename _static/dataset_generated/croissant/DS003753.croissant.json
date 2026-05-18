@@ -95,7 +95,26 @@
   ],
   "citeAs": "Darin R. Brown, Trevor Jackson, James F Cavanagh (2021). EEG: Probabilistic Learning with Affective Feedback: Exp #2. doi:10.18112/openneuro.ds003753.v1.1.0",
   "version": "1.1.1",
+  "dateCreated": "2021-07-30",
+  "dateModified": "2021-09-27",
+  "measurementTechnique": [
+    "BIDS task: ProbabilisticSelection"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "James F Cavanagh"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds003753-bids-bucket",
+      "name": "ds003753 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS003753.",
+      "contentUrl": "s3://openneuro.org/ds003753",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds003753-openneuro",

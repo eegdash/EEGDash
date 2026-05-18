@@ -103,7 +103,39 @@
   ],
   "citeAs": "Zoltan Kekecs, Kyra Girán, Vanda Vizkievicz, Anna Lutoskin, Yeganeh Farahzadi (2023). The effects of sham hypnosis techniques. doi:10.18112/openneuro.ds004572.v1.3.2",
   "version": "1.6.0",
+  "dateCreated": "2023-05-20",
+  "dateModified": "2026-02-13",
+  "measurementTechnique": [
+    "BIDS task: baseline1",
+    "BIDS task: baseline2",
+    "BIDS task: experience1",
+    "BIDS task: experience2",
+    "BIDS task: experience3",
+    "BIDS task: experience4",
+    "BIDS task: induction1",
+    "BIDS task: induction2",
+    "BIDS task: induction3",
+    "BIDS task: induction4"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Yeganeh Farahzadi"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Zoltan Kekecs"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004572-bids-bucket",
+      "name": "ds004572 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004572.",
+      "contentUrl": "s3://openneuro.org/ds004572",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004572-openneuro",

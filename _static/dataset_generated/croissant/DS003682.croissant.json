@@ -94,7 +94,26 @@
   ],
   "citeAs": "Toby Wise, Yunzhe Liu, Fatima Chowdhury, Raymond J. Dolan (2021). Model-based aversive learning in humans is supported by preferential task state reactivation. doi:10.18112/openneuro.ds003682.v1.0.0",
   "version": "v1.5.0",
+  "dateCreated": "2021-06-05",
+  "dateModified": "2021-06-05",
+  "measurementTechnique": [
+    "BIDS task: AversiveLearningReplay"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Toby Wise"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds003682-bids-bucket",
+      "name": "ds003682 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS003682.",
+      "contentUrl": "s3://openneuro.org/ds003682",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds003682-openneuro",

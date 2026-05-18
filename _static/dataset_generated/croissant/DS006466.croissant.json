@@ -93,7 +93,31 @@
   ],
   "citeAs": "Andy Jeesu Kim, Santiago Morales, Joshua Senior, Mara Mather (2025). HeartBEAM: Older Adult Resting State and Auditory Oddball Task EEG Data. doi:10.18112/openneuro.ds006466.v1.0.1",
   "version": "1.1.1",
+  "dateCreated": "2025-07-12",
+  "dateModified": "2025-10-06",
+  "measurementTechnique": [
+    "BIDS task: active",
+    "BIDS task: activeS",
+    "BIDS task: passive",
+    "BIDS task: passiveS",
+    "BIDS task: resting",
+    "BIDS task: restingS"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Andy Jeesu Kim"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006466-bids-bucket",
+      "name": "ds006466 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS006466.",
+      "contentUrl": "s3://openneuro.org/ds006466",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds006466-openneuro",

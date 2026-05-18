@@ -91,7 +91,28 @@
   ],
   "citeAs": "Maria J. Ribeiro, Miguel Castelo-Branco (2021). EEG, ECG and pupil data from young and older adults: rest and auditory cued reaction time tasks. doi:10.18112/openneuro.ds003690.v1.0.0",
   "version": "v1.2.1",
+  "dateCreated": "2021-06-09",
+  "dateModified": "2021-06-10",
+  "measurementTechnique": [
+    "BIDS task: gonogo",
+    "BIDS task: passive",
+    "BIDS task: simpleRT"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Maria José Ribeiro"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds003690-bids-bucket",
+      "name": "ds003690 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS003690.",
+      "contentUrl": "s3://openneuro.org/ds003690",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds003690-openneuro",

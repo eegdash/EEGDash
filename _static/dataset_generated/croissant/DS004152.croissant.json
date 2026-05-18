@@ -89,7 +89,26 @@
   ],
   "citeAs": "Cameron D. Hassall, Yan Yan, Laurence T. Hunt (2022). Drum Trainer. doi:10.18112/openneuro.ds004152.v1.1.2",
   "version": "1.2.1",
+  "dateCreated": "2022-06-14",
+  "dateModified": "2022-09-07",
+  "measurementTechnique": [
+    "BIDS task: drumtrainer"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Cameron Hassall"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004152-bids-bucket",
+      "name": "ds004152 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004152.",
+      "contentUrl": "s3://openneuro.org/ds004152",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004152-openneuro",

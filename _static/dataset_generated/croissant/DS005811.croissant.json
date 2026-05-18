@@ -115,7 +115,26 @@
   ],
   "citeAs": "Guohao Zhang, Ming Zhou, Shuyi Zhen, Shaohua Tang, Zheng Li (2025). NOD-EEG. doi:10.18112/openneuro.ds005811.v1.0.9",
   "version": "1.10.1",
+  "dateCreated": "2025-01-10",
+  "dateModified": "2026-03-13",
+  "measurementTechnique": [
+    "BIDS task: ImageNet"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Guohao Zhang"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005811-bids-bucket",
+      "name": "ds005811 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005811.",
+      "contentUrl": "s3://openneuro.org/ds005811",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005811-openneuro",

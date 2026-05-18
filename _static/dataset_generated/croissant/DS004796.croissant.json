@@ -91,7 +91,32 @@
   ],
   "citeAs": "Dzianok Patrycja, Kublik Ewa (2023). A Polish Electroencephalography, Alzheimer’s Risk-genes, Lifestyle and Neuroimaging (PEARL-Neuro) Database. doi:10.18112/openneuro.ds004796.v1.1.0",
   "version": "1.0.2",
+  "dateCreated": "2023-10-15",
+  "dateModified": "2025-06-22",
+  "measurementTechnique": [
+    "BIDS task: msit",
+    "BIDS task: rest",
+    "BIDS task: sternberg"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Patrycja Dzianok"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Patrycja Dzianok"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004796-bids-bucket",
+      "name": "ds004796 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004796.",
+      "contentUrl": "s3://openneuro.org/ds004796",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004796-openneuro",

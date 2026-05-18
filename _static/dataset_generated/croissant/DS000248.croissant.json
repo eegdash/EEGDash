@@ -132,7 +132,31 @@
   ],
   "citeAs": "Alexandre Gramfort, Matti S Hämäläinen (2018). MNE-Sample-Data. doi:10.18112/openneuro.ds000248.v1.2.4",
   "version": "1.4.0",
+  "dateCreated": "2018-03-30",
+  "dateModified": "2020-12-11",
+  "measurementTechnique": [
+    "BIDS task: audiovisual",
+    "BIDS task: noise"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Mainak Jas"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Alexandre Gramfort"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds000248-bids-bucket",
+      "name": "ds000248 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS000248.",
+      "contentUrl": "s3://openneuro.org/ds000248",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds000248-openneuro",

@@ -275,9 +275,9 @@ print(f"FIF write_s={fif_write_s:.4f} s, size_mb={fif_size_mb:.4f}")
 ```
 
 ```none
-saved: /tmp/eegdash_save_bxavm8hq/windows
+saved: /tmp/eegdash_save_d5nm984m/windows
 artifact tree (first 6): ['windows/0', 'windows/0/0-raw.fif', 'windows/0/description.json', 'windows/0/metadata_df.pkl', 'windows/0/raw_preproc_kwargs.json', 'windows/0/window_kwargs.json']
-FIF write_s=0.0057 s, size_mb=0.0055
+FIF write_s=0.0056 s, size_mb=0.0055
 ```
 
 <!-- GENERATED FROM PYTHON SOURCE LINES 208-216 -->
@@ -303,7 +303,7 @@ print(
 ```
 
 ```none
-reload OK: type=BaseConcatDataset, n=2, read_s=0.0063
+reload OK: type=BaseConcatDataset, n=2, read_s=0.0067
 ```
 
 <!-- GENERATED FROM PYTHON SOURCE LINES 227-232 -->
@@ -392,7 +392,7 @@ else:
 ```
 
 ```none
-Zarr write_s=0.0164, read_s=0.0057, size_mb=0.0080
+Zarr write_s=0.0175, read_s=0.0066, size_mb=0.0080
 ```
 
 <!-- GENERATED FROM PYTHON SOURCE LINES 302-310 -->
@@ -442,7 +442,7 @@ feature table dtype:
 Cz_mean       float64
 Pz_mean       float64
 window_idx      int64
-Parquet write_s=0.0161, read_s=0.0122, size_mb=0.0024
+Parquet write_s=0.0169, read_s=0.0133, size_mb=0.0024
 ```
 
 <div class="output_subarea output_html rendered_html output_result">
@@ -551,22 +551,22 @@ records_df[["name", "write_ms", "read_ms", "size_mb"]]
     <tr>
       <th>0</th>
       <td>windows/ (FIF)</td>
-      <td>5.66</td>
-      <td>6.33</td>
+      <td>5.56</td>
+      <td>6.73</td>
       <td>0.005461</td>
     </tr>
     <tr>
       <th>1</th>
       <td>windows.zarr (Zarr)</td>
-      <td>16.40</td>
-      <td>5.72</td>
+      <td>17.46</td>
+      <td>6.59</td>
       <td>0.007955</td>
     </tr>
     <tr>
       <th>2</th>
       <td>features.parquet</td>
-      <td>16.14</td>
-      <td>12.23</td>
+      <td>16.89</td>
+      <td>13.33</td>
       <td>0.002384</td>
     </tr>
   </tbody>
@@ -663,7 +663,7 @@ pd.Series(provenance, name="value").to_frame()
     </tr>
     <tr>
       <th>git</th>
-      <td>11175f9</td>
+      <td>9314ec1</td>
     </tr>
   </tbody>
 </table>
@@ -705,7 +705,7 @@ except (FileNotFoundError, IndexError, KeyError, ValueError) as exc:
 ```
 
 ```none
-Caught FileExistsError: Subdirectory /tmp/eegdash_save_bxavm8hq/windows/0 already exists. Please select
+Caught FileExistsError: Subdirectory /tmp/eegdash_save_d5nm984m/windows/0 already exists. Please select
 Recovery: rmtree + save without overwrite=True succeeded.
 Recovery: load_concat_dataset rejected broken layout (IndexError: list index out of range).
 ```

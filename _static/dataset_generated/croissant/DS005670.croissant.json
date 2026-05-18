@@ -82,7 +82,26 @@
   ],
   "citeAs": "Prof. Pengfei Xu (2024). SEEG Resting State Recording. doi:10.18112/openneuro.ds005670.v1.0.0",
   "version": "1.10.0",
+  "dateCreated": "2024-11-29",
+  "dateModified": "2024-11-29",
+  "measurementTechnique": [
+    "BIDS task: rest"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "CCN Beijing"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005670-bids-bucket",
+      "name": "ds005670 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005670.",
+      "contentUrl": "s3://openneuro.org/ds005670",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005670-openneuro",

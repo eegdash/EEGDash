@@ -91,7 +91,29 @@
   ],
   "citeAs": "C. Brigitte Aguilar Gonzales, Collaborators from the Experimental and Computational Neuroscience Group (2025). EEG recordings during sham neurofeedback in virtual reality. doi:10.18112/openneuro.ds006839.v1.0.0",
   "version": "1.9.0",
+  "dateCreated": "2025-10-24",
+  "dateModified": "2025-10-29",
+  "measurementTechnique": [
+    "BIDS task: control",
+    "BIDS task: negative",
+    "BIDS task: positive",
+    "BIDS task: resting"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Carmen Brigitte Aguilar Gonzales"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006839-bids-bucket",
+      "name": "ds006839 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS006839.",
+      "contentUrl": "s3://openneuro.org/ds006839",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds006839-openneuro",

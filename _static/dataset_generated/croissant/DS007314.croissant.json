@@ -114,7 +114,26 @@
   ],
   "citeAs": "Maria Martzoukou, Nefeli K. Dimitriou, Binbin Xu, Malo Renaud-d’Ambra, Anastasia Nousia (2026). tACS for Patients with Post-Stroke Anomia. doi:10.18112/openneuro.ds007314.v1.0.0",
   "version": "1.8.0",
+  "dateCreated": "2026-01-23",
+  "dateModified": "2026-04-03",
+  "measurementTechnique": [
+    "BIDS task: PictureNaming"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Maria Martzoukou"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007314-bids-bucket",
+      "name": "ds007314 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS007314.",
+      "contentUrl": "s3://openneuro.org/ds007314",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds007314-openneuro",

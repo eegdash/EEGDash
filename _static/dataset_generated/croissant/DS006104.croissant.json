@@ -105,7 +105,28 @@
   ],
   "citeAs": "João Pedro Carvalho Moreira, Vinícius Rezende Carvalho, Eduardo Mazoni Andrade Marçal Mendes, Ariah Fallah, Terrence J. Sejnowski (2025). EEG dataset for speech decoding. doi:10.18112/openneuro.ds006104.v1.0.1",
   "version": "1.6.0",
+  "dateCreated": "2025-04-08",
+  "dateModified": "2025-04-08",
+  "measurementTechnique": [
+    "BIDS task: Words",
+    "BIDS task: phonemes",
+    "BIDS task: singlephoneme"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "João Pedro Carvalho Moreira"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006104-bids-bucket",
+      "name": "ds006104 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS006104.",
+      "contentUrl": "s3://openneuro.org/ds006104",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds006104-openneuro",

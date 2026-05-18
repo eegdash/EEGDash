@@ -123,7 +123,30 @@
   ],
   "citeAs": "Foteini Liwicki, Vibha Gupta, Rajkumar Saini, Kanjar De, Nosheen Abid (2022). Bimodal dataset on Inner speech. doi:10.18112/openneuro.ds004196.v2.0.2",
   "version": "1.4",
+  "dateCreated": "2022-07-07",
+  "dateModified": "2023-06-16",
+  "measurementTechnique": [
+    "BIDS task: inner"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Foteini Simistira Liwicki"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Rajkumar Saini"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004196-bids-bucket",
+      "name": "ds004196 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004196.",
+      "contentUrl": "s3://openneuro.org/ds004196",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004196-openneuro",

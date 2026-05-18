@@ -104,7 +104,26 @@
   ],
   "citeAs": "Teon L Brooks, Laura Gwilliams, Alexandre Gramfort, Alec Marantz (2019). OcularLDT. doi:10.18112/openneuro.ds002312.v1.0.0",
   "version": "1.2.0",
+  "dateCreated": "2019-11-08",
+  "dateModified": "2019-11-08",
+  "measurementTechnique": [
+    "BIDS task: OcularLDT"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Teon L. Brooks"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds002312-bids-bucket",
+      "name": "ds002312 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS002312.",
+      "contentUrl": "s3://openneuro.org/ds002312",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds002312-openneuro",

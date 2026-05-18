@@ -109,7 +109,26 @@
   ],
   "citeAs": "Krishna Prasad Miyapuram, Pankaj Pandey, Nashra Ahmad, Bharatesh R Shiraguppi, Esha Sharma (2021). Music Listening- Genre EEG dataset (MUSIN-G). doi:10.18112/openneuro.ds003774.v1.0.0",
   "version": "1.1.1",
+  "dateCreated": "2021-08-23",
+  "dateModified": "2022-08-25",
+  "measurementTechnique": [
+    "BIDS task: MusicListening"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Krishna Miyapuram"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds003774-bids-bucket",
+      "name": "ds003774 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS003774.",
+      "contentUrl": "s3://openneuro.org/ds003774",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds003774-openneuro",

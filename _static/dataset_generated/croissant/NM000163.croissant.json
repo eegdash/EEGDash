@@ -96,7 +96,19 @@
   ],
   "datePublished": "2023",
   "version": "1.9.0",
+  "dateModified": "2026-04-02",
+  "measurementTechnique": [
+    "BIDS task: cvep"
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000163-bids-bucket",
+      "name": "nm000163 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for NM000163.",
+      "contentUrl": "s3://nemar/nm000163",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "nm000163-openneuro",

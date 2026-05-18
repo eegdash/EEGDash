@@ -199,7 +199,31 @@
   ],
   "citeAs": "Meryem A. Yücel, Jessica E. Anderson, De'Ja Rogers, Parisa Hajirahimi, Parya Farzam (2025). InclusionStudy. doi:10.18112/openneuro.ds006377.v1.0.2",
   "version": "1.8.0",
+  "dateCreated": "2025-06-20",
+  "dateModified": "2025-09-19",
+  "measurementTechnique": [
+    "BIDS task: 001RestingLH",
+    "BIDS task: 002RestingRH",
+    "BIDS task: 003RestingLH",
+    "BIDS task: 004RestingRH",
+    "BIDS task: 009BallLH",
+    "BIDS task: 010BallRH"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "MERYEM YUCEL"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006377-bids-bucket",
+      "name": "ds006377 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS006377.",
+      "contentUrl": "s3://openneuro.org/ds006377",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds006377-openneuro",

@@ -92,7 +92,29 @@
   ],
   "citeAs": "Till Habersetzer, Bernd T. Meyer (2025). MEG-SCANS - A comprehensive magnetoencephalography speech dataset with Stories, Chirps And Noisy Sentences.. doi:10.18112/openneuro.ds006468.v1.1.2",
   "version": "1.7.0",
+  "dateCreated": "2025-07-14",
+  "dateModified": "2025-12-10",
+  "measurementTechnique": [
+    "BIDS task: audiobook1",
+    "BIDS task: audiobook2",
+    "BIDS task: noise",
+    "BIDS task: olsa"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Till Habersetzer"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006468-bids-bucket",
+      "name": "ds006468 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS006468.",
+      "contentUrl": "s3://openneuro.org/ds006468",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds006468-openneuro",

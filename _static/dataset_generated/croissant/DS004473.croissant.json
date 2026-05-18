@@ -98,7 +98,26 @@
   ],
   "citeAs": "Alexander P. Rockhill, Alessandra Mantovani, Brittany Stedelin, Admed M. Raslan, Nicole C. Swann (2023). sEEG Forced Two-Choice Task. doi:10.18112/openneuro.ds004473.v1.0.1",
   "version": "1.9.2",
+  "dateCreated": "2023-02-07",
+  "dateModified": "2023-02-09",
+  "measurementTechnique": [
+    "BIDS task: SlowFast"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Alexander Rockhill"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004473-bids-bucket",
+      "name": "ds004473 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004473.",
+      "contentUrl": "s3://openneuro.org/ds004473",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004473-openneuro",

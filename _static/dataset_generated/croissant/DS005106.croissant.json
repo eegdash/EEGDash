@@ -93,7 +93,26 @@
   ],
   "citeAs": "Tijl Grootswagers, Genevieve Quek, Zhen Zeng, Manuel Varlet (2024). 200 Objects Infants EEG. doi:10.18112/openneuro.ds005106.v1.5.0",
   "version": "1.10.0",
+  "dateCreated": "2024-04-24",
+  "dateModified": "2025-03-05",
+  "measurementTechnique": [
+    "BIDS task: fix"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Tijl Grootswagers"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005106-bids-bucket",
+      "name": "ds005106 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005106.",
+      "contentUrl": "s3://openneuro.org/ds005106",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005106-openneuro",

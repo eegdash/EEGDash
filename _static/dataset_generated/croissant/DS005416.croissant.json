@@ -95,7 +95,26 @@
   ],
   "citeAs": "Yan Wu, Chunguang Tao, Qi Li (2024). Fatigue Characterization of EEG under Mixed Reality Stereo Vision. doi:10.18112/openneuro.ds005416.v1.0.1",
   "version": "1.1.1",
+  "dateCreated": "2024-08-19",
+  "dateModified": "2024-12-17",
+  "measurementTechnique": [
+    "BIDS task: WatchingTask"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "陶春光"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005416-bids-bucket",
+      "name": "ds005416 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005416.",
+      "contentUrl": "s3://openneuro.org/ds005416",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005416-openneuro",

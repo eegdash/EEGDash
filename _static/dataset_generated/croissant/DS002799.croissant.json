@@ -137,6 +137,10 @@
     "https://huggingface.co/datasets/EEGDash/ds002799"
   ],
   "citeAs": "Thompson WH*, Nair R*, Oya H*, Esteban O, Shine JM (n.d.). Human es-fMRI Resource: Concurrent deep-brain stimulation and whole-brain functional MRI. doi:10.18112/openneuro.ds002799.v1.0.4",
+  "measurementTechnique": [
+    "BIDS task: es",
+    "BIDS task: rest"
+  ],
   "distribution": [
     {
       "@type": "cr:FileObject",

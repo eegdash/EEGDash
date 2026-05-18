@@ -96,7 +96,26 @@
   ],
   "citeAs": "Nursena Ataseven, Sahcan Ozdemir, Wouter Kruijne, Daniel Schneider, Elkan G. Akyurek (2026). Diffuse predictions stabilize and reshape neural code during memory encoding. doi:10.18112/openneuro.ds007431.v1.0.0",
   "version": "v1.2.1",
+  "dateCreated": "2026-02-17",
+  "dateModified": "2026-02-17",
+  "measurementTechnique": [
+    "BIDS task: DelayedComparisonTask"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Nursena Ataseven"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007431-bids-bucket",
+      "name": "ds007431 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS007431.",
+      "contentUrl": "s3://openneuro.org/ds007431",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds007431-openneuro",

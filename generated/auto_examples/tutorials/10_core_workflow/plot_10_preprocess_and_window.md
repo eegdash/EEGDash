@@ -460,7 +460,7 @@ raw
 ```
 
 ```none
-[05/18/26 19:36:18] WARNING  File not found on S3, skipping:   downloader.py:163
+[05/18/26 20:13:51] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds002718/sub-0
                              02/eeg/sub-002_task-FaceRecogniti
                              on_eeg.fdt
@@ -614,9 +614,9 @@ this file apply (plus whatever default styling the IDE applies).
 
 
 
-<tr class="mne-repr-section-header general-7aaff682-b709-48a4-8932-8628ac7d3886"
+<tr class="mne-repr-section-header general-2afc2b90-6d36-40be-9061-4507fcb58a46"
      title="Hide section"
-    onclick="toggleVisibility('general-7aaff682-b709-48a4-8932-8628ac7d3886')">
+    onclick="toggleVisibility('general-2afc2b90-6d36-40be-9061-4507fcb58a46')">
     <th class="mne-repr-section-toggle">
         <button >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
@@ -628,7 +628,7 @@ this file apply (plus whatever default styling the IDE applies).
 </tr>
 
 
-<tr class="repr-element general-7aaff682-b709-48a4-8932-8628ac7d3886 ">
+<tr class="repr-element general-2afc2b90-6d36-40be-9061-4507fcb58a46 ">
     <td class="mne-repr-section-toggle"></td>
     <td>Filename(s)</td>
     <td>
@@ -639,26 +639,26 @@ this file apply (plus whatever default styling the IDE applies).
     </td>
 </tr>
 
-<tr class="repr-element general-7aaff682-b709-48a4-8932-8628ac7d3886 ">
+<tr class="repr-element general-2afc2b90-6d36-40be-9061-4507fcb58a46 ">
     <td class="mne-repr-section-toggle"></td>
     <td>MNE object type</td>
     <td>RawEEGLAB</td>
 </tr>
-<tr class="repr-element general-7aaff682-b709-48a4-8932-8628ac7d3886 ">
+<tr class="repr-element general-2afc2b90-6d36-40be-9061-4507fcb58a46 ">
     <td class="mne-repr-section-toggle"></td>
     <td>Measurement date</td>
 
     <td>Unknown</td>
 
 </tr>
-<tr class="repr-element general-7aaff682-b709-48a4-8932-8628ac7d3886 ">
+<tr class="repr-element general-2afc2b90-6d36-40be-9061-4507fcb58a46 ">
     <td class="mne-repr-section-toggle"></td>
     <td>Participant</td>
 
 
 
 </tr>
-<tr class="repr-element general-7aaff682-b709-48a4-8932-8628ac7d3886 ">
+<tr class="repr-element general-2afc2b90-6d36-40be-9061-4507fcb58a46 ">
     <td class="mne-repr-section-toggle"></td>
     <td>Experimenter</td>
 
@@ -673,9 +673,9 @@ this file apply (plus whatever default styling the IDE applies).
 
 
 
-<tr class="mne-repr-section-header acquisition-a7fc2adc-2fd1-4743-9b3d-943d91732eaf"
+<tr class="mne-repr-section-header acquisition-c340cdf8-d525-4fcc-94d9-903932713c66"
      title="Hide section"
-    onclick="toggleVisibility('acquisition-a7fc2adc-2fd1-4743-9b3d-943d91732eaf')">
+    onclick="toggleVisibility('acquisition-c340cdf8-d525-4fcc-94d9-903932713c66')">
     <th class="mne-repr-section-toggle">
         <button >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
@@ -687,7 +687,7 @@ this file apply (plus whatever default styling the IDE applies).
 </tr>
 
 
-<tr class="repr-element acquisition-a7fc2adc-2fd1-4743-9b3d-943d91732eaf ">
+<tr class="repr-element acquisition-c340cdf8-d525-4fcc-94d9-903932713c66 ">
     <td class="mne-repr-section-toggle"></td>
     <td>Duration</td>
     <td>00:49:51 (HH:MM:SS)</td>
@@ -700,14 +700,14 @@ this file apply (plus whatever default styling the IDE applies).
 
 
 
-<tr class="repr-element acquisition-a7fc2adc-2fd1-4743-9b3d-943d91732eaf ">
+<tr class="repr-element acquisition-c340cdf8-d525-4fcc-94d9-903932713c66 ">
     <td class="mne-repr-section-toggle"></td>
     <td>Sampling frequency</td>
     <td>250.00 Hz</td>
 </tr>
 
 
-<tr class="repr-element acquisition-a7fc2adc-2fd1-4743-9b3d-943d91732eaf ">
+<tr class="repr-element acquisition-c340cdf8-d525-4fcc-94d9-903932713c66 ">
     <td class="mne-repr-section-toggle"></td>
     <td>Time points</td>
     <td>747,750</td>
@@ -722,9 +722,9 @@ this file apply (plus whatever default styling the IDE applies).
 
 
 
-<tr class="mne-repr-section-header channels-8aec8c05-b115-4f72-a2fe-447d466469c0"
+<tr class="mne-repr-section-header channels-997f6a2f-0fe5-4e76-86b8-1d539c7319fc"
      title="Hide section"
-    onclick="toggleVisibility('channels-8aec8c05-b115-4f72-a2fe-447d466469c0')">
+    onclick="toggleVisibility('channels-997f6a2f-0fe5-4e76-86b8-1d539c7319fc')">
     <th class="mne-repr-section-toggle">
         <button >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
@@ -737,7 +737,7 @@ this file apply (plus whatever default styling the IDE applies).
 
 
 
-<tr class="repr-element channels-8aec8c05-b115-4f72-a2fe-447d466469c0 ">
+<tr class="repr-element channels-997f6a2f-0fe5-4e76-86b8-1d539c7319fc ">
     <td class="mne-repr-section-toggle"></td>
     <td>EEG</td>
     <td>
@@ -750,7 +750,7 @@ this file apply (plus whatever default styling the IDE applies).
 </tr>
 
 
-<tr class="repr-element channels-8aec8c05-b115-4f72-a2fe-447d466469c0 ">
+<tr class="repr-element channels-997f6a2f-0fe5-4e76-86b8-1d539c7319fc ">
     <td class="mne-repr-section-toggle"></td>
     <td>EOG</td>
     <td>
@@ -763,7 +763,7 @@ this file apply (plus whatever default styling the IDE applies).
 </tr>
 
 
-<tr class="repr-element channels-8aec8c05-b115-4f72-a2fe-447d466469c0 ">
+<tr class="repr-element channels-997f6a2f-0fe5-4e76-86b8-1d539c7319fc ">
     <td class="mne-repr-section-toggle"></td>
     <td>misc</td>
     <td>
@@ -776,7 +776,7 @@ this file apply (plus whatever default styling the IDE applies).
 </tr>
 
 
-<tr class="repr-element channels-8aec8c05-b115-4f72-a2fe-447d466469c0 ">
+<tr class="repr-element channels-997f6a2f-0fe5-4e76-86b8-1d539c7319fc ">
     <td class="mne-repr-section-toggle"></td>
     <td>Head & sensor digitization</td>
 
@@ -791,9 +791,9 @@ this file apply (plus whatever default styling the IDE applies).
 
 
 
-<tr class="mne-repr-section-header filters-faeebb1c-2308-427e-a88f-fb693847b8fa"
+<tr class="mne-repr-section-header filters-466ab7d0-3912-44a0-98fd-a75fe43eff4e"
      title="Hide section"
-    onclick="toggleVisibility('filters-faeebb1c-2308-427e-a88f-fb693847b8fa')">
+    onclick="toggleVisibility('filters-466ab7d0-3912-44a0-98fd-a75fe43eff4e')">
     <th class="mne-repr-section-toggle">
         <button >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
@@ -805,14 +805,14 @@ this file apply (plus whatever default styling the IDE applies).
 </tr>
 
 
-<tr class="repr-element filters-faeebb1c-2308-427e-a88f-fb693847b8fa ">
+<tr class="repr-element filters-466ab7d0-3912-44a0-98fd-a75fe43eff4e ">
     <td class="mne-repr-section-toggle"></td>
     <td>Highpass</td>
     <td>0.00 Hz</td>
 </tr>
 
 
-<tr class="repr-element filters-faeebb1c-2308-427e-a88f-fb693847b8fa ">
+<tr class="repr-element filters-466ab7d0-3912-44a0-98fd-a75fe43eff4e ">
     <td class="mne-repr-section-toggle"></td>
     <td>Lowpass</td>
     <td>125.00 Hz</td>
@@ -1196,11 +1196,11 @@ pd.DataFrame(
 ```
 
 ```none
-[05/18/26 19:36:36] WARNING  File not found on S3, skipping:   downloader.py:163
+[05/18/26 20:14:08] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds002718/sub-0
                              02/eeg/sub-002_task-FaceRecogniti
                              on_eeg.fdt
-/tmp/tmp2m434bs3.set
+/tmp/tmpxpvx8j63.set
 Field 'subject' is missing from the EEG dictionnary, adding it.
 Field 'group' is missing from the EEG dictionnary, adding it.
 Field 'condition' is missing from the EEG dictionnary, adding it.
@@ -1226,7 +1226,7 @@ Field 'etc' is missing from the EEG dictionnary, adding it.
 Field 'datfile' is missing from the EEG dictionnary, adding it.
 Field 'run' is missing from the EEG dictionnary, adding it.
 Field 'roi' is missing from the EEG dictionnary, adding it.
-[05/18/26 19:36:37] INFO     Detecting flat line          clean_artifacts.py:182
+[05/18/26 20:14:10] INFO     Detecting flat line          clean_artifacts.py:182
                              channels...
                     INFO     Applying high‑pass filter... clean_artifacts.py:191
                     INFO     Scanning for bad channels...   clean_channels.py:79
@@ -1241,7 +1241,7 @@ Field 'roi' is missing from the EEG dictionnary, adding it.
                              data for calibration...
                     INFO     Determining time window        clean_windows.py:115
                              rejection thresholds...
-[05/18/26 19:36:39] INFO     done.                          clean_windows.py:147
+[05/18/26 20:14:13] INFO     done.                          clean_windows.py:147
                     INFO     Keeping 36.9% (11 seconds) of  clean_windows.py:179
                              the data.
                     ERROR    Could not select time windows  clean_windows.py:204
@@ -1257,7 +1257,7 @@ Field 'roi' is missing from the EEG dictionnary, adding it.
                     INFO     Calculating robust geometric median      asr.py:207
                              covariance...
                     INFO     Determining per-component thresholds...  asr.py:227
-[05/18/26 19:36:41] INFO     Thresholds calculation complete.         asr.py:289
+[05/18/26 20:14:15] INFO     Thresholds calculation complete.         asr.py:289
                     INFO     Applying ASR processing...         clean_asr.py:177
                     INFO     Cleaning data in 32 blocks               asr.py:427
                     INFO     Finished cleaning.                       asr.py:546
@@ -1267,7 +1267,7 @@ Field 'roi' is missing from the EEG dictionnary, adding it.
                              windows...
                     INFO     Determining time window        clean_windows.py:115
                              rejection thresholds...
-[05/18/26 19:36:43] INFO     done.                          clean_windows.py:147
+[05/18/26 20:14:18] INFO     done.                          clean_windows.py:147
                     INFO     Keeping 100.0% (30 seconds) of clean_windows.py:179
                              the data.
                     ERROR    Could not select time windows  clean_windows.py:204
@@ -1454,6 +1454,6 @@ See [References](../../../../references.md) for the centralized bibliography of 
 cited above. Add or amend an entry once in
 `docs/source/refs.bib`; every tutorial inherits the update.
 
-**Total running time of the script:** (0 minutes 26.789 seconds)
+**Total running time of the script:** (0 minutes 28.704 seconds)
 
 <a id="sphx-glr-download-generated-auto-examples-tutorials-10-core-workflow-plot-10-preprocess-and-window-py"></a>

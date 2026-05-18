@@ -95,7 +95,26 @@
   ],
   "citeAs": "Samantha Gregory, Hongfang Wang, Klaus Kessler (2021). Social Memory cuing. doi:10.18112/openneuro.ds003702.v1.0.1",
   "version": "1.6.0",
+  "dateCreated": "2021-06-15",
+  "dateModified": "2024-09-17",
+  "measurementTechnique": [
+    "BIDS task: SocialMemoryCuing"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Samantha Gregory"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds003702-bids-bucket",
+      "name": "ds003702 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS003702.",
+      "contentUrl": "s3://openneuro.org/ds003702",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds003702-openneuro",

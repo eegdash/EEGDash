@@ -100,7 +100,27 @@
   ],
   "citeAs": "Valerie Chanoine, Jean-Michel Badier, Mireille Besson, Talya Inbar (2025). SINGSING. doi:10.18112/openneuro.ds006629.v1.0.1",
   "version": "1.7.0",
+  "dateCreated": "2025-09-04",
+  "dateModified": "2025-09-29",
+  "measurementTechnique": [
+    "BIDS task: MMNHCS",
+    "BIDS task: noise"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Valérie Chanoine"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006629-bids-bucket",
+      "name": "ds006629 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS006629.",
+      "contentUrl": "s3://openneuro.org/ds006629",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds006629-openneuro",

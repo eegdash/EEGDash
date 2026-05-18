@@ -123,7 +123,30 @@
   ],
   "citeAs": "Magnus Liebherr, Andrew W. Corcoran, Phillip M. Alday, Scott Coussens, Valeria Bellan (2021). Runabout: A mobile EEG study of auditory oddball processing in laboratory and real-world conditions. doi:10.18112/openneuro.ds003620.v1.1.1",
   "version": "1.4",
+  "dateCreated": "2021-04-15",
+  "dateModified": "2021-11-09",
+  "measurementTechnique": [
+    "BIDS task: oddball"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Andrew W Corcoran"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Scott Coussens"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds003620-bids-bucket",
+      "name": "ds003620 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS003620.",
+      "contentUrl": "s3://openneuro.org/ds003620",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds003620-openneuro",

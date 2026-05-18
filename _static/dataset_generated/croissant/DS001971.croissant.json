@@ -119,7 +119,26 @@
   ],
   "citeAs": "Johanna Wagner, Ramon Martinez-Cancino, Scott Makeig, Arnaud Delorme, Christa Neuper (2019). Audiocue walking study. doi:10.18112/openneuro.ds001971.v1.1.1",
   "version": "v1.2.0",
+  "dateCreated": "2019-06-06",
+  "dateModified": "2019-06-12",
+  "measurementTechnique": [
+    "BIDS task: AudioCueWalkingStudy"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Johanna Wagner"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds001971-bids-bucket",
+      "name": "ds001971 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS001971.",
+      "contentUrl": "s3://openneuro.org/ds001971",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds001971-openneuro",

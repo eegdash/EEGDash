@@ -113,7 +113,32 @@
   ],
   "citeAs": "Jose Cordoba-Silva, Rafael Maya, Mario Valderrama, Luis Felipe Giraldo, William Betancourt-Zapata (2023). Dataset of electrophysiological signals (EEG, ECG, EMG) during Music therapy with adult burn patients in the Intensive Care Unit.. doi:10.18112/openneuro.ds004840.v1.0.1",
   "version": "1.8.0",
+  "dateCreated": "2023-11-12",
+  "dateModified": "2023-11-12",
+  "measurementTechnique": [
+    "BIDS task: musicTherapy",
+    "BIDS task: postMusicTherapy",
+    "BIDS task: preMusicTherapy"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Jose Gabriel"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Mark Ettenberger"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004840-bids-bucket",
+      "name": "ds004840 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004840.",
+      "contentUrl": "s3://openneuro.org/ds004840",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004840-openneuro",

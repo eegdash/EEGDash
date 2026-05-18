@@ -102,7 +102,26 @@
   ],
   "citeAs": "Jason Metcalfe, Amar Marathe, Tony Johnson, Stephen Gordon, Jon Touryan (2023). Driving with Autonomous Aids. doi:10.18112/openneuro.ds004657.v1.0.3",
   "version": "1.8.0",
+  "dateCreated": "2023-08-05",
+  "dateModified": "2023-11-14",
+  "measurementTechnique": [
+    "BIDS task: Drive"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Kevin King"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004657-bids-bucket",
+      "name": "ds004657 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004657.",
+      "contentUrl": "s3://openneuro.org/ds004657",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004657-openneuro",

@@ -84,7 +84,26 @@
   ],
   "citeAs": "Julie Onton, Sarah Mednick (2025). Validation of Sleep Staging with Forehead EEG Patch. doi:10.18112/openneuro.ds006695.v1.0.2",
   "version": "1.8.0",
+  "dateCreated": "2025-09-20",
+  "dateModified": "2025-09-20",
+  "measurementTechnique": [
+    "BIDS task: sleep"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Arnaud Delorme"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006695-bids-bucket",
+      "name": "ds006695 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS006695.",
+      "contentUrl": "s3://openneuro.org/ds006695",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds006695-openneuro",

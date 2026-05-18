@@ -92,7 +92,19 @@
   ],
   "datePublished": "2021",
   "version": "1.9.0",
+  "dateModified": "2026-04-11",
+  "measurementTechnique": [
+    "BIDS task: imagery"
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000250-bids-bucket",
+      "name": "nm000250 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for NM000250.",
+      "contentUrl": "s3://nemar/nm000250",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "nm000250-openneuro",

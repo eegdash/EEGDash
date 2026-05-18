@@ -97,7 +97,26 @@
   ],
   "citeAs": "Benjamin Lowe (ben.lowe@mq.edu.au), Jonathan Robinson (jonathan.robinson@monash.edu), Naohide Yamamoto (naohide.yamamoto@qut.edu.au), Hinze Hogendoorn (hinze.hogendoorn@qut.edu.au), Patrick Johnston (dr.pat.johnston@icloud.com) (2023). Visual Attribute-Specific Contextual Trajectory Paradigm. doi:10.18112/openneuro.ds004603.v1.1.0",
   "version": "1.11.0",
+  "dateCreated": "2023-06-13",
+  "dateModified": "2023-09-21",
+  "measurementTechnique": [
+    "BIDS task: CTP"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Benjamin G. Lowe"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004603-bids-bucket",
+      "name": "ds004603 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004603.",
+      "contentUrl": "s3://openneuro.org/ds004603",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004603-openneuro",

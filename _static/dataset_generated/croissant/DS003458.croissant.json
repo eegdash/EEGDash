@@ -81,7 +81,26 @@
   ],
   "citeAs": "James F Cavanagh jcavanagh@unm.edu (2021). EEG: Three armed bandit gambling task. doi:10.18112/openneuro.ds003458.v1.1.0",
   "version": "1.1.1",
+  "dateCreated": "2021-01-04",
+  "dateModified": "2021-01-04",
+  "measurementTechnique": [
+    "BIDS task: ThreeArmedBandit"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "James F Cavanagh"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds003458-bids-bucket",
+      "name": "ds003458 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS003458.",
+      "contentUrl": "s3://openneuro.org/ds003458",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds003458-openneuro",

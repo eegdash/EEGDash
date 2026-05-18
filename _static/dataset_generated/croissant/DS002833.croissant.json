@@ -101,7 +101,20 @@
   ],
   "citeAs": "Ahmad Mheich, Olivier Dufor, Sahar Yassine, Aya Kabbara, Fabrice Wendling (2020). DataSet2. doi:10.18112/openneuro.ds002833.v1.0.0",
   "version": "2.1",
+  "dateCreated": "2020-05-21",
+  "dateModified": "2020-07-20",
+  "measurementTechnique": [
+    "BIDS task: PicturesNaming"
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds002833-bids-bucket",
+      "name": "ds002833 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS002833.",
+      "contentUrl": "s3://openneuro.org/ds002833",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds002833-openneuro",

@@ -111,7 +111,27 @@
   ],
   "citeAs": "María Paz Martínez-Molina, Alejandra Figueroa-Vargas, Francisco Zamorano, Pablo Billeke (2024). Expectation of Conflict Stimuli. doi:10.18112/openneuro.ds005571.v1.0.1",
   "version": "1.9.0",
+  "dateCreated": "2024-10-11",
+  "dateModified": "2024-11-11",
+  "measurementTechnique": [
+    "BIDS task: gnga",
+    "BIDS task: gngb"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Pablo Billeke"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005571-bids-bucket",
+      "name": "ds005571 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005571.",
+      "contentUrl": "s3://openneuro.org/ds005571",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005571-openneuro",

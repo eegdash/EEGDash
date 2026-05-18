@@ -81,7 +81,26 @@
   ],
   "citeAs": "Yuri G. Pavlov (2021). VerbalWorkingMemory. doi:10.18112/openneuro.ds003655.v1.0.0",
   "version": "1.1.1",
+  "dateCreated": "2021-05-17",
+  "dateModified": "2023-05-31",
+  "measurementTechnique": [
+    "BIDS task: VerbalWorkingMemory"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Yuri G. Pavlov"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds003655-bids-bucket",
+      "name": "ds003655 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS003655.",
+      "contentUrl": "s3://openneuro.org/ds003655",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds003655-openneuro",

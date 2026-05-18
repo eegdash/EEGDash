@@ -90,7 +90,27 @@
   ],
   "citeAs": "Milan Rybář, Riccardo Poli, Ian Daly (2023). Simultaneous EEG and fNIRS recordings for semantic decoding of imagined animals and tools. doi:10.18112/openneuro.ds004514.v1.1.2",
   "version": "1.7.0",
+  "dateCreated": "2023-02-27",
+  "dateModified": "2025-04-03",
+  "measurementTechnique": [
+    "BIDS task: eeg",
+    "BIDS task: nirs"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Milan Rybář"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004514-bids-bucket",
+      "name": "ds004514 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004514.",
+      "contentUrl": "s3://openneuro.org/ds004514",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004514-openneuro",

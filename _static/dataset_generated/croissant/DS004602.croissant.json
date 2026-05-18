@@ -85,7 +85,28 @@
   ],
   "citeAs": "Peter E Clayson, Michael J Larson (2023). Registered Replication Report of ERN/Pe Psychometrics. doi:10.18112/openneuro.ds004602.v1.0.1",
   "version": "v1.8.0",
+  "dateCreated": "2023-06-12",
+  "dateModified": "2023-08-27",
+  "measurementTechnique": [
+    "BIDS task: flanker",
+    "BIDS task: gonogo",
+    "BIDS task: stroop"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Peter Clayson"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004602-bids-bucket",
+      "name": "ds004602 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004602.",
+      "contentUrl": "s3://openneuro.org/ds004602",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004602-openneuro",

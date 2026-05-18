@@ -144,7 +144,40 @@
   ],
   "citeAs": "Iris Groen, Kenichi Yuasa, Amber Brands, Giovanni Piantoni, Stephanie Montenegro (2022). Visual ECoG dataset. doi:10.18112/openneuro.ds004194.v3.0.0",
   "version": "1.9.2",
+  "dateCreated": "2022-07-04",
+  "dateModified": "2025-04-01",
+  "measurementTechnique": [
+    "BIDS task: prf",
+    "BIDS task: sixcatlocdiffisi",
+    "BIDS task: sixcatlocisidiff",
+    "BIDS task: sixcatloctemporal",
+    "BIDS task: soc",
+    "BIDS task: spatialpattern",
+    "BIDS task: temporalpattern"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Iris Groen"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Jonathan Winawer"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Kenichi Yuasa"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds004194-bids-bucket",
+      "name": "ds004194 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS004194.",
+      "contentUrl": "s3://openneuro.org/ds004194",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds004194-openneuro",

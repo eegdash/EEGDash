@@ -85,7 +85,26 @@
   ],
   "citeAs": "[Adam Broitman], [Michael Kahana] (2025). ltpDelayRepFRReadOnly. doi:10.18112/openneuro.ds005857.v1.0.0",
   "version": "1.7.0",
+  "dateCreated": "2025-01-16",
+  "dateModified": "2025-04-02",
+  "measurementTechnique": [
+    "BIDS task: ltpDelayRepFRReadOnly"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Adam Broitman"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005857-bids-bucket",
+      "name": "ds005857 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005857.",
+      "contentUrl": "s3://openneuro.org/ds005857",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005857-openneuro",

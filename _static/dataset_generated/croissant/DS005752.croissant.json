@@ -188,7 +188,75 @@
   ],
   "citeAs": "Allison C. Nugent, Adam G Thomas, Margaret Mahoney, Alison Gibbons, Jarrod Smith (2024). The NIMH Healthy Research Volunteer Dataset. doi:10.18112/openneuro.ds005752.v2.1.0",
   "version": "1.9.0",
+  "dateCreated": "2024-12-20",
+  "dateModified": "2025-02-18",
+  "measurementTechnique": [
+    "BIDS task: airpuff",
+    "BIDS task: airpuffAltVer",
+    "BIDS task: artifact",
+    "BIDS task: gonogo",
+    "BIDS task: haririhammer",
+    "BIDS task: movie",
+    "BIDS task: noise",
+    "BIDS task: oddball",
+    "BIDS task: rest",
+    "BIDS task: sternberg"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Arshitha Basavaraj"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Adam G. Thomas"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Eric Earl"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Allison Nugent"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Jeff Stout"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Anna Namyst"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Anna M. Namyst"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Allison Nugent"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Dustin Moraczewski"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Dustin Moraczewski"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Research Volunteer"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds005752-bids-bucket",
+      "name": "ds005752 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS005752.",
+      "contentUrl": "s3://openneuro.org/ds005752",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds005752-openneuro",

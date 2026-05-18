@@ -89,7 +89,26 @@
   ],
   "citeAs": "Dean Salisbury, Dylan Seebold, Brian Coffman (2021). EEG: First Episode Psychosis vs. Control Resting Task 1. doi:10.18112/openneuro.ds003944.v1.0.1",
   "version": "v1.6.0",
+  "dateCreated": "2021-12-01",
+  "dateModified": "2022-08-12",
+  "measurementTechnique": [
+    "BIDS task: Rest"
+  ],
+  "maintainer": [
+    {
+      "@type": "sc:Person",
+      "name": "Arnaud Delorme"
+    }
+  ],
   "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds003944-bids-bucket",
+      "name": "ds003944 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS003944.",
+      "contentUrl": "s3://openneuro.org/ds003944",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
     {
       "@type": "cr:FileObject",
       "@id": "ds003944-openneuro",

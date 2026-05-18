@@ -68,6 +68,7 @@ extensions = [
     "copy_dataset_summary",
     "counter_values",
     "seo_context",
+    "description_cap",
 ]
 
 # Centralized bibliography (see docs/source/refs.bib + references.rst).
@@ -3338,28 +3339,6 @@ def _generate_dataset_docs(app) -> None:
             continue
 
 
-# Bridge to the SEO context extension: ``_cap_descriptions_hook`` (still
-# wired here pending its own extraction in C1) reuses the regex stack and
-# capping helper that already live in ``seo_context``. Importing here
-# avoids duplicating the patterns inside conf.py.
-from seo_context import _cap_descriptions_in_metatags  # noqa: E402
-
-
-def _cap_descriptions_hook(app, pagename, templatename, context, doctree):
-    """Late-priority ``html-page-context`` handler that caps every
-    description / og:description tag added by any earlier handler.
-
-    Sphinx delivers events to connected callbacks in priority order
-    (higher priority == later execution; default 500). sphinxext-
-    opengraph registers at the default priority and writes its own
-    description into ``context['metatags']`` during this phase, so
-    any capping we do inside our own default-priority handler misses
-    those insertions. Running at priority 900 guarantees we see the
-    final value regardless of load order.
-    """
-    context["metatags"] = _cap_descriptions_in_metatags(context.get("metatags") or "")
-
-
 def setup(app):
     """Create the back-references directory and setup Sphinx events."""
     backreferences_dir = os.path.join(
@@ -3369,8 +3348,6 @@ def setup(app):
         os.makedirs(backreferences_dir)
 
     app.connect("builder-inited", _generate_dataset_docs)
-    # Must run last — see docstring on ``_cap_descriptions_hook``.
-    app.connect("html-page-context", _cap_descriptions_hook, priority=900)
 
 
 # Configure sitemap URL format (omit .html where possible)

@@ -1057,6 +1057,20 @@ def _fetch_dataset_details_from_api(dataset_id: str) -> dict[str, object]:
         "associated_paper_doi": _clean_value(ds.get("associated_paper_doi")),
         "stats_computed_at": _clean_value(ds.get("stats_computed_at")),
         "digested_at": _clean_value((ds.get("timestamps") or {}).get("digested_at")),
+        # Additional fields surfaced from the summary endpoint:
+        "sessions": ds.get("sessions") or [],
+        "dataset_created_at": _clean_value(
+            (ds.get("timestamps") or {}).get("dataset_created_at")
+        ),
+        "dataset_modified_at": _clean_value(
+            (ds.get("timestamps") or {}).get("dataset_modified_at")
+        ),
+        "data_processed": bool(ds.get("data_processed")),
+        "contributing_labs": ds.get("contributing_labs") or [],
+        "n_contributing_labs": ds.get("n_contributing_labs"),
+        "experimental_modalities": ds.get("experimental_modalities") or [],
+        "study_design": _clean_value(ds.get("study_design")),
+        "study_domain": _clean_value(ds.get("study_domain")),
     }
 
     # Extract source URL from external_links
@@ -1527,6 +1541,18 @@ def _build_dataset_context(
         },
         "associated_paper_doi": _clean_value(details.get("associated_paper_doi")),
         "digested_at": _clean_value(details.get("digested_at")),
+        # Storage descriptor (backend, base S3 url, dep_keys).
+        "dataset_storage": details.get("dataset_storage") or {},
+        # Newly-surfaced fields for the editorial layout (#30):
+        "sessions": details.get("sessions") or [],
+        "dataset_created_at": _clean_value(details.get("dataset_created_at")),
+        "dataset_modified_at": _clean_value(details.get("dataset_modified_at")),
+        "data_processed": bool(details.get("data_processed")),
+        "contributing_labs": details.get("contributing_labs") or [],
+        "n_contributing_labs": details.get("n_contributing_labs"),
+        "experimental_modalities": details.get("experimental_modalities") or [],
+        "study_design": _clean_value(details.get("study_design")),
+        "study_domain": _clean_value(details.get("study_domain")),
     }
 
 
@@ -2969,7 +2995,14 @@ def _is_positive_float(value: object) -> bool:
     return f > 0
 
 
-def _render_sex_donut(f_count: int, m_count: int, o_count: int, total: int) -> str:
+def _render_sex_donut(
+    f_count: int,
+    m_count: int,
+    o_count: int,
+    total: int,
+    *,
+    handedness: Mapping[str, object] | None = None,
+) -> str:
     """Render the sex distribution as an SVG donut chart + side legend.
 
     Geometry matches the v1-editorial-v2 design: a 42×42 viewBox circle
@@ -2980,6 +3013,11 @@ def _render_sex_donut(f_count: int, m_count: int, o_count: int, total: int) -> s
 
     The side legend lists each non-empty group with its count and adds
     a Female : Male ratio row when both groups are present.
+
+    When ``handedness`` is supplied (e.g. ``{"R": 38, "L": 8, "A": 3}``
+    from the BIDS participants.tsv aggregate), a small chip-row
+    summary is appended beneath the donut so the cohort panel
+    surfaces handedness alongside sex without taking the donut's place.
     """
     pct_f = f_count / total * 100 if total else 0.0
     pct_m = m_count / total * 100 if total else 0.0
@@ -3079,6 +3117,53 @@ def _render_sex_donut(f_count: int, m_count: int, o_count: int, total: int) -> s
             "</div>"
         )
 
+    handedness_chip = ""
+    if handedness:
+        # BIDS uses ``R``/``L``/``A``/``n/a`` keys (case-insensitive).
+        # Aggregate into right/left/ambi/unknown so we can render a
+        # compact chip row beneath the donut.
+        h_buckets = {"right": 0, "left": 0, "ambi": 0, "unknown": 0}
+        for k, v in handedness.items():
+            try:
+                count = int(v or 0)
+            except (TypeError, ValueError):
+                continue
+            key = str(k).strip().lower()
+            if key in ("r", "right"):
+                h_buckets["right"] += count
+            elif key in ("l", "left"):
+                h_buckets["left"] += count
+            elif key in ("a", "ambi", "ambidextrous"):
+                h_buckets["ambi"] += count
+            else:
+                h_buckets["unknown"] += count
+        h_total = sum(h_buckets.values())
+        if h_total > 0:
+            chips = []
+            label_map = {
+                "right": "Right",
+                "left": "Left",
+                "ambi": "Ambidextrous",
+                "unknown": "Unknown",
+            }
+            for k, label in label_map.items():
+                if h_buckets[k]:
+                    chips.append(
+                        '<span style="display:inline-block; padding:2px 8px; '
+                        "margin-right:6px; font-family:Inter,sans-serif; "
+                        "font-size:11px; letter-spacing:.04em; "
+                        "background:rgba(0,108,163,0.08); color:#1a2532; "
+                        'border-radius:3px;">'
+                        f"{label} · {h_buckets[k]}"
+                        "</span>"
+                    )
+            handedness_chip = (
+                '<div class="hand-row" style="margin-top:10px; font-size:11px; '
+                'color:#6b7785; font-family:Inter,sans-serif;">'
+                '<span style="text-transform:uppercase; letter-spacing:.16em; '
+                'margin-right:10px;">Handedness</span>' + "".join(chips) + "</div>"
+            )
+
     return (
         ".. raw:: html\n\n"
         '   <div class="eegdash-stats-section eegdash-ed-sex" '
@@ -3098,6 +3183,7 @@ def _render_sex_donut(f_count: int, m_count: int, o_count: int, total: int) -> s
         "</div>\n"
         "     </div>\n"
         f"     {summary_note}\n"
+        f"     {handedness_chip}\n"
         "   </div>\n\n"
     )
 
@@ -3272,11 +3358,22 @@ def _format_recording_stats_section(context: Mapping[str, object]) -> str:
             else ""
         )
 
+        # Caption: include mean age when the API reports it, so the
+        # subheading is "n=45, range 20-78 yr, mean 49.9 yr" not just range.
+        age_mean_v = demographics.get("age_mean")
+        try:
+            mean_str = (
+                f", mean {float(age_mean_v):.1f} yr" if age_mean_v is not None else ""
+            )
+        except (TypeError, ValueError):
+            mean_str = ""
+
         age_html = (
             ".. raw:: html\n\n"
             '   <div class="eegdash-stats-section" style="margin-bottom:1rem;">\n'
             "     <p><strong>Age distribution by gender</strong> "
-            f"(n={paired_age_count}, range {age_min_v:.0f}–{age_max_v:.0f} yr)</p>\n"
+            f"(n={paired_age_count}, range {age_min_v:.0f}–{age_max_v:.0f} yr"
+            f"{mean_str})</p>\n"
             f'     <div class="eeg-chart-row" style="display:flex; align-items:flex-end; '
             f'gap:2px; height:{chart_height}px; border-bottom:1px solid #34404e;">\n'
             f"       {bars_html}\n"
@@ -3316,12 +3413,19 @@ def _format_recording_stats_section(context: Mapping[str, object]) -> str:
                     f'<span style="width:{bar_width}px; text-align:center; '
                     f'overflow:hidden; white-space:nowrap;">{start}</span>'
                 )
+            mean_v = demographics.get("age_mean")
+            try:
+                mean_str = (
+                    f", mean {float(mean_v):.1f} yr" if mean_v is not None else ""
+                )
+            except (TypeError, ValueError):
+                mean_str = ""
             age_html = (
                 ".. raw:: html\n\n"
                 '   <div class="eegdash-stats-section" style="margin-bottom:1rem;">\n'
                 "     <p><strong>Age distribution</strong> "
-                f"(n={len(valid_ages)}, range {age_min:.0f}–{age_max:.0f} yr · "
-                "sex per subject not reported)</p>\n"
+                f"(n={len(valid_ages)}, range {age_min:.0f}–{age_max:.0f} yr"
+                f"{mean_str} · sex per subject not reported)</p>\n"
                 f'     <div class="eeg-chart-row" style="display:flex; align-items:flex-end; '
                 f'gap:2px; height:{chart_height}px; border-bottom:1px solid #34404e;">\n'
                 f"       {bars_html}\n"
@@ -3355,7 +3459,16 @@ def _format_recording_stats_section(context: Mapping[str, object]) -> str:
         total_sex = f_count + m_count + o_count
 
         if total_sex > 0:
-            parts.append(_render_sex_donut(f_count, m_count, o_count, total_sex))
+            handedness = demographics.get("handedness_distribution") or {}
+            parts.append(
+                _render_sex_donut(
+                    f_count,
+                    m_count,
+                    o_count,
+                    total_sex,
+                    handedness=handedness if isinstance(handedness, dict) else None,
+                )
+            )
 
     # ------------------------------------------------------------------
     # C. Channel count distribution
@@ -3970,6 +4083,64 @@ def _editorial_citation_label(value: object) -> str:
     return f"{f:.1f}"
 
 
+def _editorial_tasks_label(tasks: Sequence[str]) -> str:
+    """Compact label for a tasks list.
+
+    One task → just the name. Two or three → comma-joined. Four-plus
+    → ``"<count> tasks · first, second, …"`` so the rail row stays
+    readable even for HBN-style 10-task datasets.
+    """
+    cleaned = [str(t).strip() for t in (tasks or []) if str(t).strip()]
+    if not cleaned:
+        return "—"
+    if len(cleaned) == 1:
+        return f"<code>{cleaned[0]}</code>"
+    if len(cleaned) <= 3:
+        return " · ".join(f"<code>{t}</code>" for t in cleaned)
+    head = " · ".join(f"<code>{t}</code>" for t in cleaned[:2])
+    return f"{len(cleaned)} tasks · {head} · …"
+
+
+def _editorial_sessions_label(sessions: Sequence[str]) -> str:
+    """Compact label for the BIDS sessions list."""
+    cleaned = [str(s).strip() for s in (sessions or []) if str(s).strip()]
+    if not cleaned:
+        return ""  # caller suppresses the row entirely
+    if len(cleaned) == 1:
+        return f"<code>{cleaned[0]}</code>"
+    if len(cleaned) <= 3:
+        return f"{len(cleaned)} · " + " · ".join(f"<code>{s}</code>" for s in cleaned)
+    return f"{len(cleaned)} · <code>{cleaned[0]}</code> … <code>{cleaned[-1]}</code>"
+
+
+def _editorial_contact_label(contacts: Sequence[str]) -> str:
+    """Comma-joined contact list, truncated to 3 names + ellipsis."""
+    cleaned = [str(c).strip() for c in (contacts or []) if str(c).strip()]
+    if not cleaned:
+        return ""
+    head = ", ".join(cleaned[:3])
+    if len(cleaned) > 3:
+        head += f" · +{len(cleaned) - 3}"
+    return head
+
+
+def _editorial_updated_label(iso_timestamp: str) -> str:
+    """Format an ISO-8601 timestamp as ``YYYY-MM-DD`` for the field card.
+
+    Empty / unparseable input yields an empty string so the caller can
+    decide whether to suppress the row.
+    """
+    if not iso_timestamp:
+        return ""
+    # Tolerate both trailing-Z and ``+00:00`` suffixes that the API ships.
+    cleaned = iso_timestamp.replace("Z", "+00:00")
+    try:
+        dt = datetime.fromisoformat(cleaned)
+    except ValueError:
+        return iso_timestamp[:10] if len(iso_timestamp) >= 10 else ""
+    return dt.date().isoformat()
+
+
 def _format_editorial_fieldcard_section(context: Mapping[str, object]) -> str:
     """Rich field-card aside emitted next to the hero.
 
@@ -4037,6 +4208,29 @@ def _format_editorial_fieldcard_section(context: Mapping[str, object]) -> str:
     quality_label, _quality_color, quality_pct = _compute_quality_score(context)
     metadata_line = f"{quality_pct}% · {quality_label}"
 
+    # --- Newly-surfaced fields (#30) ---------------------------------
+    tasks = context.get("tasks") or []
+    tasks_line = _editorial_tasks_label(tasks)
+
+    sessions = context.get("sessions") or []
+    sessions_line = _editorial_sessions_label(sessions)
+
+    contacts = context.get("contact_info") or []
+    contact_line = _editorial_contact_label(contacts)
+
+    storage = context.get("dataset_storage") or {}
+    s3_base = _clean_value(storage.get("base")) if isinstance(storage, dict) else ""
+
+    updated_line = _editorial_updated_label(
+        _clean_value(context.get("dataset_modified_at"))
+        or _clean_value(context.get("dataset_created_at"))
+    )
+
+    paper_doi = _normalize_doi(_clean_value(context.get("associated_paper_doi")))
+    paper_doi_html = (
+        f'<a href="https://doi.org/{paper_doi}">{paper_doi}</a>' if paper_doi else ""
+    )
+
     # Build the action row at the bottom of the rail.
     openneuro_url = str(context.get("openneuro_url") or "")
     croissant_url = (
@@ -4057,6 +4251,15 @@ def _format_editorial_fieldcard_section(context: Mapping[str, object]) -> str:
         f"<dt>Version</dt><dd>{version_tag}</dd>"
         f"<dt>Source</dt><dd>{source}</dd>"
         f"<dt>License</dt><dd>{license_text}</dd>"
+    )
+    if updated_line:
+        block += f"<dt>Updated</dt><dd>{updated_line}</dd>"
+    if contact_line:
+        block += f"<dt>Contact</dt><dd>{contact_line}</dd>"
+    if paper_doi_html:
+        block += f"<dt>Paper DOI</dt><dd>{paper_doi_html}</dd>"
+
+    block += (
         '<dt class="hdr">Signal</dt><dd class="hdrpad"></dd>'
         f"<dt>Subjects</dt><dd>{n_subjects}</dd>"
         f"<dt>Recordings</dt><dd>{n_records}</dd>"
@@ -4065,12 +4268,20 @@ def _format_editorial_fieldcard_section(context: Mapping[str, object]) -> str:
         f"<dt>Sample rate</dt><dd>{sfreq}</dd>"
         f"<dt>Duration</dt><dd>{duration_label}</dd>"
         f"<dt>Size</dt><dd>{size_label}</dd>"
+        f"<dt>Tasks</dt><dd>{tasks_line}</dd>"
+    )
+    if sessions_line:
+        block += f"<dt>Sessions</dt><dd>{sessions_line}</dd>"
+
+    block += (
         '<dt class="hdr">BIDS</dt><dd class="hdrpad"></dd>'
         f"<dt>BIDSVersion</dt><dd>{bids_version}</dd>"
         f"<dt>Sidecars</dt><dd>{sidecar_line}</dd>"
         f"<dt>Events ann.</dt><dd>{hed_label}</dd>"
         f"<dt>Metadata</dt><dd>{metadata_line}</dd>"
     )
+    if s3_base:
+        block += f"<dt>Storage</dt><dd><code>{s3_base}</code></dd>"
 
     # Tags section — pathology / modality-tag / type
     if tag_pathology or tag_type or tag_modality:
@@ -4187,6 +4398,18 @@ def _format_editorial_hero_extras(context: Mapping[str, object]) -> str:
         pills.append(f'<span class="pill is-info">BIDS {bids_version}</span>')
     if bool(context.get("hed_annotated")):
         pills.append('<span class="pill is-warning">HED ✓</span>')
+    # Tasks pill — single task surfaced verbatim, multi-task compressed
+    # to a count for legibility (HBN-style datasets have 10+).
+    task_list = context.get("tasks") or []
+    if isinstance(task_list, (list, tuple)) and task_list:
+        if len(task_list) == 1:
+            pills.append(f'<span class="pill">Task · {str(task_list[0])[:32]}</span>')
+        else:
+            pills.append(f'<span class="pill">{len(task_list)} tasks</span>')
+    # Sessions pill — only when the dataset is multi-session.
+    sess_list = context.get("sessions") or []
+    if isinstance(sess_list, (list, tuple)) and len(sess_list) > 1:
+        pills.append(f'<span class="pill">{len(sess_list)} sessions</span>')
     if isinstance(tags, dict):
         tag_pathology = _clean_value(tags.get("pathology"))
         tag_modality = _clean_value(tags.get("modality"))
@@ -4884,6 +5107,44 @@ def _build_croissant_export(context: Mapping[str, object]) -> dict[str, object]:
     bids_version = _clean_value(context.get("bids_version"))
     if bids_version:
         document["version"] = bids_version
+
+    # Created / modified timestamps from the OpenNeuro side (when present)
+    # — useful for ML pipelines that cache by mtime.
+    created_at = _clean_value(context.get("dataset_created_at"))
+    modified_at = _clean_value(context.get("dataset_modified_at"))
+    if created_at and not document.get("dateCreated"):
+        document["dateCreated"] = created_at[:10]
+    if modified_at:
+        document["dateModified"] = modified_at[:10]
+
+    # Associated paper DOI (when present) flows into `citation`, separate
+    # from the dataset DOI carried by `identifier` / `sameAs`.
+    paper_doi = _normalize_doi(_clean_value(context.get("associated_paper_doi")))
+    if paper_doi:
+        document["citation"] = {
+            "@type": "sc:ScholarlyArticle",
+            "identifier": f"doi:{paper_doi}",
+            "url": f"https://doi.org/{paper_doi}",
+        }
+
+    # Tasks → mlcommons measurementTechnique slot so downstream ML
+    # discovery surfaces (e.g. HuggingFace's Croissant ingestion) can
+    # filter datasets by paradigm.
+    tasks = context.get("tasks") or []
+    if isinstance(tasks, (list, tuple)) and tasks:
+        document["measurementTechnique"] = [
+            f"BIDS task: {str(t).strip()}" for t in tasks if str(t).strip()
+        ]
+
+    # Contact maintainers — separate from authors. Maps cleanly to
+    # schema.org `maintainer`.
+    contacts = context.get("contact_info") or []
+    if isinstance(contacts, (list, tuple)) and contacts:
+        document["maintainer"] = [
+            {"@type": "sc:Person", "name": str(c).strip()}
+            for c in contacts
+            if str(c).strip()
+        ]
 
     if distribution:
         document["distribution"] = distribution

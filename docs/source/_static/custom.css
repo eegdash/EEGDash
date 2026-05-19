@@ -20,7 +20,7 @@
   --hf-sun-strong: #ff9f1a;
   --hf-mint: #22d3ee;
   --hf-sand: #fff3d1;
-  --hf-grid-color: rgba(15, 23, 42, 0.03);
+  --hf-grid-color: rgba(15, 23, 42, 0.015);
   --hf-card-border: rgba(15, 23, 42, 0.12);
   --hf-surface: rgba(255, 255, 255, 0.7);
   --hf-surface-strong: rgba(15, 23, 42, 0.95);
@@ -53,7 +53,7 @@ html[data-theme="dark"] {
   /* Lighter blue for dark mode contrast */
   --pst-color-primary: var(--eegdash-primary);
   --sd-color-primary: var(--eegdash-primary);
-  --hf-grid-color: rgba(248, 250, 252, 0.04);
+  --hf-grid-color: rgba(248, 250, 252, 0.02);
   --hf-card-border: rgba(148, 163, 184, 0.25);
   --hf-surface: rgba(15, 23, 42, 0.7);
   --hf-surface-strong: rgba(15, 23, 42, 0.9);
@@ -643,10 +643,29 @@ html[data-theme="dark"].dataset-summary-page .sd-tab-set > input:checked + label
   margin-bottom: 2rem;
 }
 
-/* Ensure Back-top button doesn't cover data */
-.pst-back-to-top {
+/* Back-to-top button: keep it out of the reading column and only
+   assert itself on hover. The pydata theme leaves it at full opacity
+   over body text near references; pin it to the viewport corner and
+   lower contrast until a user actually targets it. Note: the theme
+   emits `id="pst-back-to-top"`, not a class — selector must match. */
+#pst-back-to-top {
+  position: fixed !important;
+  right: max(1rem, env(safe-area-inset-right, 1rem)) !important;
+  bottom: max(1.25rem, env(safe-area-inset-bottom, 1.25rem)) !important;
+  left: auto !important;
+  top: auto !important;
+  margin: 0 !important;
   z-index: 900;
-  transform: scale(0.9);
+  transform: scale(0.85);
+  opacity: 0.55;
+  transition: opacity 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 4px 12px -8px rgba(15, 23, 42, 0.4);
+}
+#pst-back-to-top:hover,
+#pst-back-to-top:focus {
+  opacity: 1;
+  transform: scale(0.95);
+  box-shadow: 0 10px 24px -12px rgba(15, 23, 42, 0.5);
 }
 
 /* Fix for any oversized icons in headers if user report was about SVG */
@@ -1743,7 +1762,7 @@ html[data-theme="dark"] .hf-hero {
     linear-gradient(var(--hf-grid-color) 1px, transparent 1px),
     linear-gradient(90deg, var(--hf-grid-color) 1px, transparent 1px);
   background-size: 100% 100%, 100% 100%, 48px 48px, 48px 48px;
-  opacity: 0.35;
+  opacity: 0.2;
   pointer-events: none;
 }
 

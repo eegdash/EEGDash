@@ -21,13 +21,14 @@ imports.
 
 from __future__ import annotations
 
+import ast
+import html
 import json
 import re
 import urllib.request  # noqa: F401 -- used by _get_first_eeg_record (urllib.request.Request/urlopen); ruff misses it because the function also does a local `import urllib.parse`
 from collections import Counter
 from datetime import datetime
 from typing import Mapping, Sequence
-from urllib.parse import quote
 
 from sphinx.util import logging
 
@@ -49,9 +50,108 @@ from .data_loaders import (
     _normalize_doi,
     _value_or_unknown,
 )
-from .readme import convert_readme_to_rst
+from .readme import _split_runon_lines, convert_readme_to_rst
 
 LOGGER = logging.getLogger(__name__)
+
+
+def _humanise_tag_value(value: object, default: str = "") -> str:
+    """Render a metadata tag value as a clean label.
+
+    Source values arrive in mixed shapes:
+
+    * ``"['Healthy']"`` -- Python list repr stringified
+    * ``["Healthy", "Visual"]`` -- actual Python list
+    * ``"Healthy"`` -- already a plain string
+
+    Returns a HTML-safe ``" · "``-joined label, with surrounding
+    brackets / quotes stripped and ``unknown`` / ``None`` filtered out.
+    """
+    if value is None:
+        return default
+
+    items: list[str]
+    if isinstance(value, (list, tuple, set)):
+        items = [str(v).strip() for v in value]
+    else:
+        text = _clean_value(value, default="")
+        if not text:
+            return default
+        # Try Python literal parsing for stringified lists.
+        if text.startswith(("[", "(")) and text.endswith(("]", ")")):
+            try:
+                parsed = ast.literal_eval(text)
+                if isinstance(parsed, (list, tuple, set)):
+                    items = [str(v).strip() for v in parsed]
+                else:
+                    items = [str(parsed).strip()]
+            except (SyntaxError, ValueError):
+                # Fallback: strip the obvious wrapper chars.
+                inner = text[1:-1]
+                items = [p.strip().strip("'\"") for p in inner.split(",")]
+        else:
+            items = [text]
+
+    # Drop empties, dedupe (case-insensitive, keep first), filter sentinels.
+    seen: set[str] = set()
+    cleaned: list[str] = []
+    for raw in items:
+        s = raw.strip().strip("'\"").strip()
+        if not s:
+            continue
+        if s.lower() in {"nan", "none", "null", "unknown"}:
+            continue
+        key = s.lower()
+        if key in seen:
+            continue
+        seen.add(key)
+        cleaned.append(s)
+
+    if not cleaned:
+        return default
+    return " · ".join(cleaned)
+
+
+def _tag_slug(value: str) -> str:
+    """Slugify a tag value for the ``data-tag-value`` palette key."""
+    return value.strip().lower().replace(" ", "-").replace("_", "-")
+
+
+def _rail_tag_dd(value: str, kind: str) -> str:
+    """Render tag values as colored chips matching the
+    dataset_summary palette. Multi-value tags get one chip each.
+    """
+    chips: list[str] = []
+    for item in (v.strip() for v in str(value).split("·")):
+        if not item:
+            continue
+        slug = _tag_slug(item)
+        chips.append(
+            f'<span class="tag rail-tag" '
+            f'data-tag-kind="{kind}" '
+            f'data-tag-value="{html.escape(slug, quote=True)}">'
+            f"{html.escape(item)}</span>"
+        )
+    return "".join(chips)
+
+
+def _access_mode_lnk(href: str, body: str) -> str:
+    """External-doc anchor used by the access-modes table cells."""
+    return f'<a href="{href}" target="_blank" rel="noopener">{body}</a>'
+
+
+def _access_mode_name_html(name: str, href_map: Mapping[str, str]) -> str:
+    """Render the ``.name`` cell — link the entry point to its upstream
+    when ``href_map`` carries a primary doc URL for ``name``.
+    """
+    href = href_map.get(name)
+    if href:
+        return (
+            f'<span class="name">'
+            f'<a href="{href}" target="_blank" rel="noopener">{name}</a>'
+            "</span>"
+        )
+    return f'<span class="name">{name}</span>'
 
 
 def _format_badges(items: Sequence[tuple[str, str]], outline: bool = False) -> str:
@@ -494,6 +594,11 @@ def _format_readme_section(context: Mapping[str, object]) -> str:
         return "No README content is available for this dataset."
 
     content = convert_readme_to_rst(readme)
+    # Light cleanup: split run-on lines that look like two sentences
+    # mashed together because the README omitted a blank line between
+    # them. Heuristic: a line ending with `:` followed immediately by a
+    # capital-letter line is almost always two paragraphs in disguise.
+    content = _split_runon_lines(content)
     lines = content.split("\n")
 
     # Pull the first two non-empty paragraphs to render under the dropcap.
@@ -1068,8 +1173,7 @@ def _format_recording_stats_section(context: Mapping[str, object]) -> str:
             pair_buckets_f[b] + pair_buckets_m[b] + pair_buckets_o[b]
             for b in all_buckets
         )
-        bar_width = 28
-        chart_height = 80
+        chart_height = 180
 
         ages_used = [
             float(p.get("age"))
@@ -1088,10 +1192,11 @@ def _format_recording_stats_section(context: Mapping[str, object]) -> str:
             o = pair_buckets_o.get(start, 0)
             tot = f + m + o
             col_pieces = ""
+            # Stack bottom→top: Male orange, Female blue, Other grey
             if o:
                 h = int(o / max_total * chart_height)
                 col_pieces += (
-                    f'<div style="width:{bar_width}px; height:{h}px; '
+                    f'<div style="width:100%; height:{h}px; '
                     f'background:#6b7785; flex-shrink:0;" '
                     f'title="{start}-{start + bucket_size - 1}: other n={o}">'
                     "</div>"
@@ -1099,7 +1204,7 @@ def _format_recording_stats_section(context: Mapping[str, object]) -> str:
             if f:
                 h = int(f / max_total * chart_height)
                 col_pieces += (
-                    f'<div style="width:{bar_width}px; height:{h}px; '
+                    f'<div style="width:100%; height:{h}px; '
                     f'background:#006ca3; flex-shrink:0;" '
                     f'title="{start}-{start + bucket_size - 1}: female n={f}">'
                     "</div>"
@@ -1107,21 +1212,23 @@ def _format_recording_stats_section(context: Mapping[str, object]) -> str:
             if m:
                 h = int(m / max_total * chart_height)
                 col_pieces += (
-                    f'<div style="width:{bar_width}px; height:{h}px; '
+                    f'<div style="width:100%; height:{h}px; '
                     f'background:#f7941d; flex-shrink:0;" '
                     f'title="{start}-{start + bucket_size - 1}: male n={m}">'
                     "</div>"
                 )
             bars_html += (
                 f'<div style="display:flex; flex-direction:column-reverse; '
-                f'justify-content:flex-start; gap:1px;" '
+                f"justify-content:flex-start; gap:1px; flex:1 1 0; "
+                f'min-width:0;" '
                 f'title="{start}-{start + bucket_size - 1}: n={tot}">'
                 f"{col_pieces}"
                 "</div>"
             )
             labels_html += (
-                f'<span style="width:{bar_width}px; text-align:center; '
-                f'overflow:hidden; white-space:nowrap;">{start}</span>'
+                f'<span style="flex:1 1 0; min-width:0; '
+                f"text-align:center; overflow:hidden; "
+                f'white-space:nowrap;">{start}</span>'
             )
 
         legend_pieces = []
@@ -1192,21 +1299,21 @@ def _format_recording_stats_section(context: Mapping[str, object]) -> str:
                 int(float(a) // bucket_size) * bucket_size for a in valid_ages
             )
             max_count = max(buckets.values())
-            bar_width = 28
-            chart_height = 80
+            chart_height = 180
             bars_html = ""
             labels_html = ""
             for start in sorted(buckets):
                 count = buckets[start]
                 h = int(count / max_count * chart_height)
                 bars_html += (
-                    f'<div style="width:{bar_width}px; height:{h}px; '
-                    f'background:#006ca3; flex-shrink:0;" '
+                    f'<div style="flex:1 1 0; min-width:0; '
+                    f'height:{h}px; background:#006ca3;" '
                     f'title="{start}-{start + bucket_size - 1}: {count}"></div>'
                 )
                 labels_html += (
-                    f'<span style="width:{bar_width}px; text-align:center; '
-                    f'overflow:hidden; white-space:nowrap;">{start}</span>'
+                    f'<span style="flex:1 1 0; min-width:0; '
+                    f"text-align:center; overflow:hidden; "
+                    f'white-space:nowrap;">{start}</span>'
                 )
             mean_v = demographics.get("age_mean")
             try:
@@ -1825,36 +1932,8 @@ def _format_see_also_section(
 
 
 def _format_feedback_section(dataset_id: str, title: str) -> str:
-    """Generate a feedback section with a button to report issues on GitHub."""
-    dataset_upper = dataset_id.upper()
-    issue_title = quote(f"[Dataset] Issue with {dataset_upper}")
-    issue_body = quote(
-        f"## Dataset\n\n"
-        f"- **Dataset ID:** {dataset_upper}\n"
-        f"- **Title:** {title}\n\n"
-        f"## Issue Description\n\n"
-        f"Please describe the issue you encountered with this dataset:\n\n"
-        f"## Steps to Reproduce\n\n"
-        f"1. \n2. \n3. \n\n"
-        f"## Expected Behavior\n\n\n"
-        f"## Additional Context\n\n"
-    )
-    github_url = (
-        f"https://github.com/eegdash/EEGDash/issues/new"
-        f"?title={issue_title}&body={issue_body}&labels=dataset"
-    )
-
-    return f""".. admonition:: Found an issue with this dataset?
-   :class: tip
-
-   If you encounter any problems with this dataset (missing files, incorrect metadata,
-   loading errors, etc.), please let us know!
-
-   .. button-link:: {github_url}
-      :color: primary
-      :outline:
-
-      Report an Issue on GitHub"""
+    """Feedback admonition disabled — user-requested removal."""
+    return ""
 
 
 def _format_dataset_meta_section(
@@ -2302,11 +2381,13 @@ def _format_editorial_fieldcard_section(context: Mapping[str, object]) -> str:
     )
 
     tags = context.get("tags") or {}
-    tag_pathology = _clean_value(
+    tag_pathology = _humanise_tag_value(
         tags.get("pathology") if isinstance(tags, dict) else ""
     )
-    tag_type = _clean_value(tags.get("type") if isinstance(tags, dict) else "")
-    tag_modality = _clean_value(tags.get("modality") if isinstance(tags, dict) else "")
+    tag_type = _humanise_tag_value(tags.get("type") if isinstance(tags, dict) else "")
+    tag_modality = _humanise_tag_value(
+        tags.get("modality") if isinstance(tags, dict) else ""
+    )
 
     quality_label, _quality_color, quality_pct = _compute_quality_score(context)
     metadata_line = f"{quality_pct}% · {quality_label}"
@@ -2396,12 +2477,23 @@ def _format_editorial_fieldcard_section(context: Mapping[str, object]) -> str:
         tag_type = ""
     if tag_pathology or tag_type or tag_modality:
         block += '<dt class="hdr">Tags</dt><dd class="hdrpad"></dd>'
+
         if tag_pathology:
-            block += f"<dt>Pathology</dt><dd>{tag_pathology}</dd>"
+            block += (
+                "<dt>Pathology</dt><dd>"
+                + _rail_tag_dd(tag_pathology, "dataset-pathology")
+                + "</dd>"
+            )
         if tag_modality:
-            block += f"<dt>Paradigm</dt><dd>{tag_modality}</dd>"
+            block += (
+                "<dt>Paradigm</dt><dd>"
+                + _rail_tag_dd(tag_modality, "dataset-modality")
+                + "</dd>"
+            )
         if tag_type:
-            block += f"<dt>Type</dt><dd>{tag_type}</dd>"
+            block += (
+                "<dt>Type</dt><dd>" + _rail_tag_dd(tag_type, "dataset-type") + "</dd>"
+            )
 
     reach_rows: list[str] = []
     if hf_available or hf_url:
@@ -2511,15 +2603,32 @@ def _format_editorial_hero_extras(context: Mapping[str, object]) -> str:
     if isinstance(sess_list, (list, tuple)) and len(sess_list) > 1:
         pills.append(f'<span class="pill">{len(sess_list)} sessions</span>')
     if isinstance(tags, dict):
-        tag_pathology = _clean_value(tags.get("pathology"))
-        tag_modality = _clean_value(tags.get("modality"))
-        tag_type = _clean_value(tags.get("type"))
-        if tag_pathology and tag_pathology.lower() not in ("not specified", "—"):
-            pills.append(f'<span class="pill">{tag_pathology}</span>')
-        if tag_modality and tag_modality.lower() not in ("—",):
-            pills.append(f'<span class="pill">{tag_modality}</span>')
-        if tag_type and tag_type.lower() not in ("—",):
-            pills.append(f'<span class="pill">{tag_type}</span>')
+        # Reuse the same humanised values the field-card rail uses so
+        # the pill row never shows raw Python list repr like "['Healthy']".
+        pill_pathology = _humanise_tag_value(tags.get("pathology"))
+        pill_modality = _humanise_tag_value(tags.get("modality"))
+        pill_type = _humanise_tag_value(tags.get("type"))
+
+        for value, kind in (
+            (pill_pathology, "dataset-pathology"),
+            (pill_modality, "dataset-modality"),
+            (pill_type, "dataset-type"),
+        ):
+            if not value or value.lower() in ("not specified", "—"):
+                continue
+            # Multi-value tags (e.g. "Visual · Auditory") emit one pill
+            # per value so each gets the correct gradient color via
+            # tag-palette.js.
+            for item in (v.strip() for v in value.split("·")):
+                if not item:
+                    continue
+                slug = _tag_slug(item)
+                pills.append(
+                    f'<span class="pill tag" '
+                    f'data-tag-kind="{kind}" '
+                    f'data-tag-value="{html.escape(slug, quote=True)}">'
+                    f"{html.escape(item)}</span>"
+                )
     pills_html = (
         f'<div class="eegdash-ed-pills">{"".join(pills)}</div>' if pills else ""
     )
@@ -2574,31 +2683,8 @@ def _editorial_secnum(num: int, label: str) -> str:
 
 
 def _format_editorial_caveat_section(context: Mapping[str, object]) -> str:
-    """Conditional caveat callout — only fires for small cohorts (n < 50)."""
-    n_sub_raw = _clean_value(context.get("n_subjects"))
-    try:
-        n_sub = int(n_sub_raw)
-    except (TypeError, ValueError):
-        return ""
-    if n_sub <= 0 or n_sub >= 50:
-        return ""
-    modality = _clean_value(context.get("modality")) or "EEG"
-    block = (
-        '<div class="eegdash-ed-caveat">'
-        '<div class="c-lbl">Editorial caveat · cohort size</div>'
-        "<h4>Treat this as a features-first dataset, "
-        "not a deep-learning playground.</h4>"
-        f"<p>With <b>n = {n_sub}</b> {modality} participants, this dataset sits "
-        "below the ~50-subject threshold where deep networks trained from scratch "
-        "typically pay off. A well-tuned feature pipeline — band-power features, "
-        "Riemannian geometry, linear classifier — is the recommended baseline. "
-        "Use deep models only with transfer learning or pre-trained backbones.</p>"
-        "<p>For splits, prefer <code>GroupShuffleSplit</code> with "
-        "<code>groups=subject_id</code> so windows from the same recording do not "
-        "leak between train and test.</p>"
-        "</div>"
-    )
-    return _editorial_html(block)
+    """Editorial caveat block disabled — user-requested removal."""
+    return ""
 
 
 def _strip_rst_heading(s: str) -> str:
@@ -2700,7 +2786,13 @@ def _format_dataset_info_dropdown(context: Mapping[str, object]) -> str:
 def _format_editorial_access_modes_section(
     context: Mapping[str, object],
 ) -> str:
-    """Sidecar card listing the access modes available for this dataset."""
+    """Sidecar card listing the access modes available for this dataset.
+
+    Generic across all datasets — each row maps a programmatic entry point
+    (MNE Raw, braindecode BaseConcatDataset, PyTorch DataLoader, Zarr,
+    HuggingFace, Croissant) to a one-line description. Rendered after the
+    API Reference so readers see the path from API class to data loop.
+    """
     class_name = str(context.get("class_name", "")).strip()
     croissant_url = (
         f"../../_static/dataset_generated/croissant/{class_name}.croissant.json"
@@ -2709,76 +2801,133 @@ def _format_editorial_access_modes_section(
     hf_available = bool(hf_info.get("available"))
     hf_url = str(hf_info.get("url") or "https://huggingface.co/EEGDash")
 
+    # Canonical inventory references — every external term in the
+    # access-modes table maps to its upstream documentation. Keeping
+    # them centralised here means downstream rows stay readable and we
+    # don't repeat URLs.
+    REF = {
+        # MNE
+        "mne_home": "https://mne.tools/stable/",
+        "mne_raw": "https://mne.tools/stable/generated/mne.io.Raw.html",
+        "mne_filter": "https://mne.tools/stable/generated/mne.io.Raw.html#mne.io.Raw.filter",
+        "mne_epochs": "https://mne.tools/stable/generated/mne.Epochs.html",
+        "mne_ica": "https://mne.tools/stable/generated/mne.preprocessing.ICA.html",
+        "mne_plot_psd": "https://mne.tools/stable/generated/mne.io.Raw.html#mne.io.Raw.compute_psd",
+        # Braindecode
+        "bd_home": "https://braindecode.org/stable/",
+        "bd_basedataset": "https://braindecode.org/stable/generated/braindecode.datasets.BaseDataset.html",
+        "bd_baseconcat": "https://braindecode.org/stable/generated/braindecode.datasets.BaseConcatDataset.html",
+        "bd_windows": "https://braindecode.org/stable/generated/braindecode.preprocessing.create_windows_from_events.html",
+        # PyTorch
+        "pt_home": "https://pytorch.org/",
+        "pt_dataloader": "https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader",
+        # Zarr
+        "zarr_home": "https://zarr.readthedocs.io/en/stable/",
+        # Hugging Face
+        "hf_datasets": "https://huggingface.co/docs/datasets/",
+        "hf_load": "https://huggingface.co/docs/datasets/loading",
+        # Croissant / MLCommons
+        "mlc_home": "https://mlcommons.org/working-groups/data/datasets/",
+        "croissant_spec": "https://docs.mlcommons.org/croissant/docs/croissant-spec.html",
+    }
+
     if hf_available:
         dataset_id_lower = str(context.get("dataset_id") or "").lower()
         hf_blurb = (
             "Pre-bundled mirror at "
             f'<a href="{hf_url}">EEGDash/{dataset_id_lower}</a> · '
-            'pull with <code>datasets.load_dataset("EEGDash/'
-            f'{dataset_id_lower}")</code>.'
+            "pull with "
+            f"{_access_mode_lnk(REF['hf_load'], '<code>datasets.load_dataset</code>')}"
+            f'("EEGDash/{dataset_id_lower}").'
         )
     else:
         hf_blurb = (
             "No per-dataset mirror published yet — browse the "
-            f'<a href="{hf_url}">EEGDash org listing</a> for sibling datasets.'
+            f'<a href="{hf_url}">EEGDash org listing</a> for sibling datasets. '
+            f"See the {_access_mode_lnk(REF['hf_datasets'], 'datasets')} loader API."
         )
 
     rows = [
         (
             ".raw",
             (
-                "MNE <code>Raw</code> object — standard tools (filter, epoch, "
-                "ICA, plot_psd)."
+                f"{_access_mode_lnk(REF['mne_raw'], 'MNE <code>Raw</code>')} object — "
+                f"standard tools ({_access_mode_lnk(REF['mne_filter'], 'filter')}, "
+                f"{_access_mode_lnk(REF['mne_epochs'], 'epoch')}, "
+                f"{_access_mode_lnk(REF['mne_ica'], 'ICA')}, "
+                f"{_access_mode_lnk(REF['mne_plot_psd'], 'plot_psd')})."
             ),
             "mne",
+            REF["mne_home"],
         ),
         (
             "BaseConcatDataset",
             (
-                "Each record is a lazy <code>BaseDataset</code> from "
-                "braindecode — windowed via <code>create_windows_from_events</code>."
+                "Each record is a lazy "
+                f"{_access_mode_lnk(REF['bd_basedataset'], '<code>BaseDataset</code>')} from "
+                f"{_access_mode_lnk(REF['bd_home'], 'braindecode')} — windowed via "
+                f"{_access_mode_lnk(REF['bd_windows'], '<code>create_windows_from_events</code>')}."
             ),
             "braindecode",
+            REF["bd_baseconcat"],
         ),
         (
             "DataLoader",
             (
-                "Wraps the windowed dataset into a PyTorch <code>DataLoader</code>; "
+                "Wraps the windowed dataset into a "
+                f"{_access_mode_lnk(REF['pt_dataloader'], 'PyTorch <code>DataLoader</code>')}; "
                 "supports parallel workers and on-the-fly augmentations."
             ),
             "pytorch",
+            REF["pt_home"],
         ),
         (
             "Zarr cache",
             (
-                "Optional braindecode Zarr mirror for fast resume; persisted to "
-                "<code>cache_dir</code>."
+                "Optional braindecode "
+                f"{_access_mode_lnk(REF['zarr_home'], 'Zarr')} mirror for fast resume; "
+                "persisted to <code>cache_dir</code>."
             ),
             "zarr",
+            REF["zarr_home"],
         ),
         (
             "Hugging Face",
             hf_blurb,
             "huggingface",
+            "https://huggingface.co/EEGDash",
         ),
         (
             "Croissant 1.0",
             (
-                f"Machine-readable JSON-LD descriptor — "
+                "Machine-readable "
+                f"{_access_mode_lnk(REF['croissant_spec'], 'JSON-LD descriptor')} — "
                 f'<a href="{croissant_url}" download>{class_name}.croissant.json</a> '
-                f"(MLCommons schema, ingestible by PyTorch / TensorFlow / JAX)."
+                f"({_access_mode_lnk(REF['mlc_home'], 'MLCommons')} schema, "
+                "ingestible by PyTorch / TensorFlow / JAX)."
             ),
             "mlcommons",
+            REF["croissant_spec"],
         ),
     ]
 
+    name_href_map = {
+        ".raw": REF["mne_raw"],
+        "BaseConcatDataset": REF["bd_baseconcat"],
+        "DataLoader": REF["pt_dataloader"],
+        "Zarr cache": REF["zarr_home"],
+        "Hugging Face": "https://huggingface.co/EEGDash",
+        "Croissant 1.0": REF["croissant_spec"],
+    }
+
     rows_html = "".join(
         '<div class="am-row">'
-        f'<span class="name">{name}</span>'
+        f"{_access_mode_name_html(name, name_href_map)}"
         f'<span class="what">{what}</span>'
-        f'<span class="badge">{badge}</span>'
+        f'<a class="badge" href="{badge_href}" target="_blank" '
+        f'rel="noopener">{badge}</a>'
         "</div>"
-        for name, what, badge in rows
+        for name, what, badge, badge_href in rows
     )
 
     block = (

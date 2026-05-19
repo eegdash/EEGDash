@@ -26,6 +26,40 @@ def _is_decorative_line(s: str) -> bool:
     return bool(re.match(r"^[—\-=_*#~]+$", s)) and len(set(s)) <= 2
 
 
+_README_COLON_SPLIT_RE = re.compile(r"^(.+:)\s*\n([A-Z].+)$", re.MULTILINE)
+_README_PERIOD_SPLIT_RE = re.compile(
+    r"^(.+[.!?])\s*\n(?=[A-Z][a-z])([A-Z].+)$", re.MULTILINE
+)
+
+
+def _split_runon_lines(text: str) -> str:
+    """Insert a blank line between adjacent prose lines that should be
+    separate paragraphs. Conservative: only fires when the preceding
+    line ends in ``:`` or sentence-terminator and the next starts with
+    a capital. Skips lines that look like RST/markdown structure.
+    """
+    # Don't touch indented (block-quote / code-block) content.
+    out_lines: list[str] = []
+    for chunk in text.split("\n\n"):
+        if not chunk.strip():
+            out_lines.append(chunk)
+            continue
+        # Only touch chunks that look like flat prose (no leading indent,
+        # no RST directive marker, no blockquote prefix).
+        first = chunk.lstrip("\n")
+        if (
+            first.startswith((" ", "\t", "..", ">", "|", "+", "-"))
+            or first.startswith("**")
+            or "```" in chunk
+        ):
+            out_lines.append(chunk)
+            continue
+        new = _README_COLON_SPLIT_RE.sub(r"\1\n\n\2", chunk)
+        new = _README_PERIOD_SPLIT_RE.sub(r"\1\n\n\2", new)
+        out_lines.append(new)
+    return "\n\n".join(out_lines)
+
+
 # Module-level helpers for ``_convert_readme_to_rst``. The README-to-RST
 # converter is large and these helpers were originally written inline; the
 # no-nested-functions check requires them at module scope.
@@ -307,6 +341,23 @@ def convert_readme_to_rst(text: str) -> str:
                 title = _sanitize_header_text(header_match.group(2).strip())
                 result.append("")
                 result.append(f"**{title}**")
+                result.append("")
+                i += 1
+                prev_was_list_item = False
+                continue
+
+        # Path-style sub-headings: lines like `**func/**`, `**meg/**`,
+        # `**stimuli/meg/**` are README directory markers, not prose.
+        # Emit them as a custom-class container so the editorial CSS
+        # can render them as compact mono sub-headings.
+        if not is_blockquote_line:
+            path_match = re.match(r"^\*\*([A-Za-z0-9_./-]+/)\*\*$", line.strip())
+            if path_match:
+                path = path_match.group(1)
+                result.append("")
+                result.append(".. container:: eegdash-readme-pathhead")
+                result.append("")
+                result.append(f"   {path}")
                 result.append("")
                 i += 1
                 prev_was_list_item = False

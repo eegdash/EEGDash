@@ -1431,6 +1431,220 @@ html[data-theme="dark"] .eegdash-ed-apicard .apicard-ids .id-row .v code {
   border-bottom: 0;
 }
 
+/* =========================================================================
+   9a-bis. API Reference per-section cards (Parameters / Attributes / Methods)
+   ---------------------------------------------------------------------------
+   Mirrors the Signature apicard rhythm. JS in api-section-cards.js
+   wraps the autoclass output below the signature card in these
+   variants so the three blocks read as one editorial spread.
+   ========================================================================= */
+
+article.bd-article .eegdash-ed-apicard.is-section {
+  margin: 18px 0 22px;
+}
+
+/* ---- Parameters --------------------------------------------------- */
+
+article.bd-article .eegdash-ed-apicard.is-params .apicard-ids {
+  grid-template-columns: 160px 1fr;
+  row-gap: 10px;
+}
+article.bd-article .eegdash-ed-apicard.is-params .id-row.is-param .k {
+  padding-top: 2px;
+}
+article.bd-article .eegdash-ed-apicard.is-params .id-row.is-param .k code {
+  background: #fff;
+  border: 1px solid var(--ed-rule);
+  padding: 1px 7px;
+  border-radius: 2px;
+  font-family: var(--ed-font-mono);
+  font-size: 12px;
+  color: var(--ed-ink);
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+html[data-theme="dark"]
+  article.bd-article
+  .eegdash-ed-apicard.is-params
+  .id-row.is-param
+  .k
+  code {
+  background: var(--ed-paper);
+}
+article.bd-article .eegdash-ed-apicard.is-params .id-row.is-param .v {
+  font-family: var(--ed-font-sans);
+  font-size: 13px;
+  color: var(--ed-ink-2);
+  line-height: 1.55;
+}
+article.bd-article
+  .eegdash-ed-apicard.is-params
+  .id-row.is-param
+  .v
+  .param-type {
+  display: inline-block;
+  font-family: var(--ed-font-mono);
+  font-size: 11.5px;
+  color: var(--ed-muted);
+  margin-right: 8px;
+  letter-spacing: 0.02em;
+}
+article.bd-article
+  .eegdash-ed-apicard.is-params
+  .id-row.is-param
+  .v
+  .param-desc {
+  color: var(--ed-ink-2);
+}
+article.bd-article
+  .eegdash-ed-apicard.is-params
+  .id-row.is-param
+  .v
+  .param-desc
+  a {
+  color: var(--ed-accent);
+}
+/* Dotted divider between rows — same vocabulary as the signature card. */
+article.bd-article .eegdash-ed-apicard.is-params .id-row.is-param + .id-row.is-param .k,
+article.bd-article .eegdash-ed-apicard.is-params .id-row.is-param + .id-row.is-param .v {
+  border-top: 1px dotted var(--ed-rule);
+  padding-top: 10px;
+}
+
+/* ---- Attributes --------------------------------------------------- */
+
+article.bd-article .eegdash-ed-apicard.is-attrs .apicard-attrs {
+  background: var(--ed-paper-2);
+  padding: 4px 18px;
+  border-radius: 3px;
+}
+article.bd-article .eegdash-ed-apicard.is-attrs .apicard-attrs dl.py.attribute,
+article.bd-article .eegdash-ed-apicard.is-attrs .apicard-attrs dl.py.property {
+  margin: 0 !important;
+  padding: 10px 0;
+  border-top: 1px dotted var(--ed-rule);
+}
+article.bd-article
+  .eegdash-ed-apicard.is-attrs
+  .apicard-attrs
+  dl.py.attribute:first-of-type,
+article.bd-article
+  .eegdash-ed-apicard.is-attrs
+  .apicard-attrs
+  dl.py.property:first-of-type {
+  border-top: 0;
+}
+article.bd-article .eegdash-ed-apicard.is-attrs .apicard-attrs dl.py.attribute > dt,
+article.bd-article .eegdash-ed-apicard.is-attrs .apicard-attrs dl.py.property > dt {
+  border-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
+article.bd-article .eegdash-ed-apicard.is-attrs .apicard-attrs dl.py.attribute > dd,
+article.bd-article .eegdash-ed-apicard.is-attrs .apicard-attrs dl.py.property > dd {
+  font-family: var(--ed-font-sans);
+  color: var(--ed-ink-2);
+  font-size: 13px;
+  line-height: 1.55;
+  padding: 4px 0 0 !important;
+}
+
+/* ---- Methods ------------------------------------------------------ */
+
+article.bd-article .eegdash-ed-apicard.is-methods .apicard-methods {
+  border-left: 2px solid var(--ed-accent);
+  padding: 4px 0 4px 16px;
+}
+article.bd-article .eegdash-ed-apicard.is-methods .apicard-methods dl.py.method,
+article.bd-article .eegdash-ed-apicard.is-methods .apicard-methods dl.py.classmethod,
+article.bd-article .eegdash-ed-apicard.is-methods .apicard-methods dl.py.staticmethod {
+  margin: 0 !important;
+  padding: 12px 0;
+  border-top: 1px dotted var(--ed-rule);
+}
+article.bd-article
+  .eegdash-ed-apicard.is-methods
+  .apicard-methods
+  dl.py.method:first-of-type,
+article.bd-article
+  .eegdash-ed-apicard.is-methods
+  .apicard-methods
+  dl.py.classmethod:first-of-type,
+article.bd-article
+  .eegdash-ed-apicard.is-methods
+  .apicard-methods
+  dl.py.staticmethod:first-of-type {
+  border-top: 0;
+  padding-top: 4px;
+}
+article.bd-article .eegdash-ed-apicard.is-methods .apicard-methods > * > dt {
+  font-family: var(--ed-font-mono) !important;
+  font-size: 12.5px !important;
+  line-height: 1.7;
+  color: var(--ed-ink);
+  background: transparent !important;
+  border-bottom: 0 !important;
+  padding: 0 !important;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+article.bd-article .eegdash-ed-apicard.is-methods .apicard-methods .sig-kind {
+  display: inline-block;
+  color: var(--ed-muted);
+  font-family: var(--ed-font-sans);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-right: 10px;
+  vertical-align: 0.05em;
+}
+article.bd-article
+  .eegdash-ed-apicard.is-methods
+  .apicard-methods
+  .sig-name.descname {
+  color: var(--ed-accent);
+  font-weight: 600;
+}
+article.bd-article .eegdash-ed-apicard.is-methods .apicard-methods > * > dd {
+  margin-left: 0;
+  padding: 6px 0 0 !important;
+  font-family: var(--ed-font-sans);
+  color: var(--ed-ink-2);
+  font-size: 13px;
+  line-height: 1.55;
+}
+article.bd-article .eegdash-ed-apicard.is-methods .apicard-methods > * > dd > p {
+  margin-bottom: 8px;
+}
+article.bd-article
+  .eegdash-ed-apicard.is-methods
+  .apicard-methods
+  > *
+  > dd
+  > dl.field-list {
+  margin: 8px 0 0;
+}
+
+/* ---- Mobile collapse (inherits from .eegdash-ed-apicard parent) --- */
+
+@media (max-width: 760px) {
+  article.bd-article .eegdash-ed-apicard.is-section {
+    grid-template-columns: 1fr;
+    gap: 6px 0;
+  }
+  article.bd-article .eegdash-ed-apicard.is-section .apicard-gutter {
+    display: flex;
+    gap: 12px;
+    align-items: baseline;
+  }
+  article.bd-article .eegdash-ed-apicard.is-params .apicard-ids {
+    grid-template-columns: 1fr;
+  }
+  article.bd-article .eegdash-ed-apicard.is-params .id-row.is-param .k {
+    padding-bottom: 0;
+  }
+}
+
 /* Restyle the autoclass output that follows the signature card. The
    parameters list, dl tables, and admonitions look dated by default —
    tighten them into the editorial type system.

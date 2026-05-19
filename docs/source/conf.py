@@ -171,6 +171,11 @@ html_js_files = [
     # each property reads as a single line "name : Type" instead of a
     # 4-line block.
     ("js/api-attribute-compact.js", {"defer": "defer"}),
+    # Wrap autoclass Parameters/Attributes/Methods in editorial cards
+    # that mirror the signature apicard above. Must run AFTER the
+    # compact script so the inlined Type spans land inside the new
+    # Attributes card unchanged.
+    ("js/api-section-cards.js", {"defer": "defer"}),
 ]
 
 # Required for sphinx-sitemap: set the canonical base URL of the site

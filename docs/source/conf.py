@@ -1746,10 +1746,12 @@ def _format_hero_section(context: Mapping[str, object]) -> str:
     # Build subtitle based on available info. The title is the deck;
     # the boilerplate "Access recordings…" line below it was just noise
     # because the byline + field card already convey provenance.
+    # `.. rst-class::` lets the editorial CSS target the italic title
+    # paragraph and size it up to read as a proper H2-weight subtitle.
     if title:
-        tagline = f"*{title}*"
+        tagline = f".. rst-class:: eegdash-ed-tagline\n\n*{title}*"
     else:
-        tagline = f"Dataset from {source}."
+        tagline = f".. rst-class:: eegdash-ed-tagline\n\nDataset from {source}."
 
     # Format citation
     authors = context.get("authors") or []

@@ -82,277 +82,278 @@ If you use this dataset in your research, please cite the original authors.
 **Sessions**: 100 total (1 per subject)
 **Publication**: Kaifosh et al., 2025 - “A generic non-invasive neuromotor interface for human-computer interaction” (Nature)
 
-> This dataset captures wrist-based sEMG signals during prompted discrete hand gestures for navigation and activation tasks. The goal is to enable gesture-based computer control without cameras or visible hand movements, with applications in AR/VR, mobile interfaces, and accessibility.
+> > This dataset captures wrist-based sEMG signals during prompted discrete hand gestures for navigation and activation tasks. The goal is to enable gesture-based computer control without cameras or visible hand movements, with applications in AR/VR, mobile interfaces, and accessibility.
+
+> **discrete_gestures: Discrete Hand Gesture Detection from EMG**
+
+> **Overview**
+
+> Key research objectives:
+> - Generic models that work across users without calibration
+> - Discrete gesture classification with high accuracy
+> - Real-time gesture detection for interactive systems
+> - Robustness to electrode placement variability
 
-Key research objectives:
-- Generic models that work across users without calibration
-- Discrete gesture classification with high accuracy
-- Real-time gesture detection for interactive systems
-- Robustness to electrode placement variability
+> ### View full README
 
-**discrete_gestures: Discrete Hand Gesture Detection from EMG**
+> **discrete_gestures: Discrete Hand Gesture Detection from EMG**
 
-**Overview**
+> **Overview**
+
+> Key research objectives:
+> - Generic models that work across users without calibration
+> - Discrete gesture classification with high accuracy
+> - Real-time gesture detection for interactive systems
+> - Robustness to electrode placement variability
 
-**Dataset Details**
+> **Dataset Details**
 
-**Participants**
+> **Participants**
 
-### View full README
+> **Sample size**: 100 participants
+> **Demographics**: Not available (age, sex, handedness marked as n/a)
+> **Recording side**: Dominant wrist (assumed right-handed, varies by participant)
+> **Sessions**: 1 session per participant
 
-**discrete_gestures: Discrete Hand Gesture Detection from EMG**
+> **Hardware**
 
-**Overview**
+> **Device**: sEMG Research Device (sEMG-RD)
+> **Configuration**: Single wristband (dominant wrist)
+> **Channels**: 16
+> **Sampling rate**: 2000 Hz
+> **Bit depth**: 12 bits
+> **Dynamic range**: ±6.6 mV
+> **Bandwidth**: 20-850 Hz
+> **Connectivity**: Bluetooth
+> **Electrode type**: Dry gold-plated differential pairs
 
-**Dataset Details**
+> **Gestures**
 
-**Participants**
+> **Nine discrete gestures**:
+> **Thumb swipes** (4):
+> - Left swipe
+> - Right swipe
+> - Up swipe
+> - Down swipe
 
-**Sample size**: 100 participants
-**Demographics**: Not available (age, sex, handedness marked as n/a)
-**Recording side**: Dominant wrist (assumed right-handed, varies by participant)
-**Sessions**: 1 session per participant
+> **Pinches** (4):
+> - Index-to-thumb pinch
+> - Middle-to-thumb pinch
+> - Ring-to-thumb pinch
+> - Pinky-to-thumb pinch
 
-**Hardware**
+> **Activation** (1):
+> - Thumb tap
 
-**Device**: sEMG Research Device (sEMG-RD)
-**Configuration**: Single wristband (dominant wrist)
-**Channels**: 16
-**Sampling rate**: 2000 Hz
-**Bit depth**: 12 bits
-**Dynamic range**: ±6.6 mV
-**Bandwidth**: 20-850 Hz
-**Connectivity**: Bluetooth
-**Electrode type**: Dry gold-plated differential pairs
+> **Recording Protocol**
 
-**Gestures**
+> 1. Participant dons sEMG-RD on dominant wrist
+> 2. Gesture prompter displays gesture cue (scrolling left-to-right)
+> 3. Participant performs prompted gesture
+> 4. Randomized order with randomized inter-gesture intervals
+> 5. Multiple repetitions of each gesture type
 
-**Nine discrete gestures**:
-**Thumb swipes** (4):
-- Left swipe
-- Right swipe
-- Up swipe
-- Down swipe
+> **Session duration**: Varies by participant
+> **Total gestures**: 1900 prompted gestures across all participants
+> **Stage boundaries**: 16 recording stages per session
 
-**Pinches** (4):
-- Index-to-thumb pinch
-- Middle-to-thumb pinch
-- Ring-to-thumb pinch
-- Pinky-to-thumb pinch
+> **Data Contents**
 
-**Activation** (1):
-- Thumb tap
+> **Files per Session**
 
-**Recording Protocol**
+> ```text
+> sub-XXX/ses-XXX/emg/
+> ```
 
-1. Participant dons sEMG-RD on dominant wrist
-2. Gesture prompter displays gesture cue (scrolling left-to-right)
-3. Participant performs prompted gesture
-4. Randomized order with randomized inter-gesture intervals
-5. Multiple repetitions of each gesture type
+> ```text
+> ├── sub-XXX_ses-XXX_task-discretegestures_emg.edf
+> ├── sub-XXX_ses-XXX_task-discretegestures_emg.json
+> ├── sub-XXX_ses-XXX_task-discretegestures_channels.tsv
+> ├── sub-XXX_ses-XXX_task-discretegestures_events.tsv
+> └── sub-XXX_ses-XXX_electrodes.tsv
+> ```
 
-**Session duration**: Varies by participant
-**Total gestures**: 1900 prompted gestures across all participants
-**Stage boundaries**: 16 recording stages per session
+> **Channel Configuration**
 
-**Data Contents**
+> **Total channels**: 16 (EMG0-EMG15)
+> **Channel naming**: Unique identifiers (EMG0-EMG15)
+> **Electrode naming**: E0-E15 (physical positions)
+> **Reference**: Bipolar (differential sensing)
+> **channels.tsv columns**:
+> - `name`: Channel identifier (EMG0-EMG15)
+> - `type`: EMG
+> - `units`: V
+> - `signal_electrode`: Physical electrode name (E0-E15)
+> - `reference`: bipolar
 
-**Files per Session**
+> **electrodes.tsv columns**:
+> - `name`: Electrode identifier (E0-E15)
+> - `x`, `y`, `z`: 3D coordinates (percent units, no decimals)
 
-```text
-sub-XXX/ses-XXX/emg/
-```
+> **Events**
 
-```text
-├── sub-XXX_ses-XXX_task-discretegestures_emg.edf
-├── sub-XXX_ses-XXX_task-discretegestures_emg.json
-├── sub-XXX_ses-XXX_task-discretegestures_channels.tsv
-├── sub-XXX_ses-XXX_task-discretegestures_events.tsv
-└── sub-XXX_ses-XXX_electrodes.tsv
-```
+> **events.tsv contains**:
+> - **Gesture prompts**: Timestamped prompts for each gesture
 
-**Channel Configuration**
+> > - `type`: gesture_X (where X is the gesture name)
+> > - `latency`: Sample index when gesture was prompted
+> > - `gesture_type`: Specific gesture (e.g., “index_pinch”, “thumb_swipe_left”)
+> - **Stage boundaries**: Recording session phases
+>   - `type`: stage_boundary
+>   - `stage_name`: Stage identifier
 
-**Total channels**: 16 (EMG0-EMG15)
-**Channel naming**: Unique identifiers (EMG0-EMG15)
-**Electrode naming**: E0-E15 (physical positions)
-**Reference**: Bipolar (differential sensing)
-**channels.tsv columns**:
-- `name`: Channel identifier (EMG0-EMG15)
-- `type`: EMG
-- `units`: V
-- `signal_electrode`: Physical electrode name (E0-E15)
-- `reference`: bipolar
+> **Total events**: 1916 (1900 gesture prompts + 16 stage boundaries)
 
-**electrodes.tsv columns**:
-- `name`: Electrode identifier (E0-E15)
-- `x`, `y`, `z`: 3D coordinates (percent units, no decimals)
+> **Coordinate System**
 
-**Events**
+> **Single coordinate system** (no space entity):
 
-**events.tsv contains**:
-- **Gesture prompts**: Timestamped prompts for each gesture
+> ```text
+> EMGCoordinateSystem: Other
+> EMGCoordinateUnits: percent
+> X: USP → RSP (0-100%)
+> Y: Right-hand rule perpendicular (0-100%)
+> Z: Radial offset (constant 10%)
+> ```
 
-> - `type`: gesture_X (where X is the gesture name)
-> - `latency`: Sample index when gesture was prompted
-> - `gesture_type`: Specific gesture (e.g., “index_pinch”, “thumb_swipe_left”)
-- **Stage boundaries**: Recording session phases
-  - `type`: stage_boundary
-  - `stage_name`: Stage identifier
+> **Anatomical landmarks**:
+> - RSP: Radial Styloid Process
+> - USP: Ulnar Styloid Process
 
-**Total events**: 1916 (1900 gesture prompts + 16 stage boundaries)
+> **Note**: Right-handed coordinate system for dominant wrist
 
-**Coordinate System**
+> **Signal Processing**
 
-**Single coordinate system** (no space entity):
+> **Preprocessing Applied**
 
-```text
-EMGCoordinateSystem: Other
-EMGCoordinateUnits: percent
-X: USP → RSP (0-100%)
-Y: Right-hand rule perpendicular (0-100%)
-Z: Radial offset (constant 10%)
-```
+> 1. **High-pass filtering**: 40 Hz cutoff
+> 2. **Clock drift correction**: Time synchronization
+> 3. **Irregular sampling handling**: Resampling when deviation >1% (up to 9290% deviation detected)
 
-**Anatomical landmarks**:
-- RSP: Radial Styloid Process
-- USP: Ulnar Styloid Process
+> **Signal Characteristics**
 
-**Note**: Right-handed coordinate system for dominant wrist
+> **Gesture patterns**:
+> - Patterned activity across channels corresponding to flexor/extensor muscles
+> - Fine differences across gesture instances
+> - Channel activity correlates with muscle positions (Fig. 1 in paper)
 
-**Signal Processing**
+> **Baseline Performance**
 
-**Preprocessing Applied**
+> **Published Results (Kaifosh et al., 2025)**
 
-1. **High-pass filtering**: 40 Hz cutoff
-2. **Clock drift correction**: Time synchronization
-3. **Irregular sampling handling**: Resampling when deviation >1% (up to 9290% deviation detected)
+> **Offline Classification** (held-out participants):
+> - Accuracy: >90% for gesture classification
+> - False-negative rate improves with more training data
+> - Generic models trained on hundreds of participants
 
-**Signal Characteristics**
+> **Closed-loop Performance** (n=24 naive test users):
+> - **First-hit probability**: Median improvement from 0.74 (practice) to 0.82 (evaluation block 2)
+> - **Gesture completion rate**: Median 0.88 gestures/second (evaluation block 2)
+> - **Baseline comparison**: Gaming controller achieves 1.45 completions/second
 
-**Gesture patterns**:
-- Patterned activity across channels corresponding to flexor/extensor muscles
-- Fine differences across gesture instances
-- Channel activity correlates with muscle positions (Fig. 1 in paper)
+> **Model architecture**: 1D convolution → LSTM layers
+> **Learning effects**: Participants improve from practice to evaluation blocks
 
-**Baseline Performance**
+> **Representation Analysis**
 
-**Published Results (Kaifosh et al., 2025)**
+> **Network learns**:
+> - First layer filters resemble motor unit action potentials (MUAPs)
+> - Deeper layers progressively separate gesture categories
+> - Invariance to nuisance variables (participant ID, electrode placement, signal power)
 
-**Offline Classification** (held-out participants):
-- Accuracy: >90% for gesture classification
-- False-negative rate improves with more training data
-- Generic models trained on hundreds of participants
+> **Confusion Matrix**
 
-**Closed-loop Performance** (n=24 naive test users):
-- **First-hit probability**: Median improvement from 0.74 (practice) to 0.82 (evaluation block 2)
-- **Gesture completion rate**: Median 0.88 gestures/second (evaluation block 2)
-- **Baseline comparison**: Gaming controller achieves 1.45 completions/second
+> **Common confusions** (from paper):
+> - Index and middle holds sometimes released too early
+> - Similar gestures (e.g., adjacent finger pinches) occasionally confused
+> - Swipe directions generally well-separated
 
-**Model architecture**: 1D convolution → LSTM layers
-**Learning effects**: Participants improve from practice to evaluation blocks
+> **Note**: Some errors are behavioral (wrong gesture performed) not just decoding errors
 
-**Representation Analysis**
+> **Use Cases**
 
-**Network learns**:
-- First layer filters resemble motor unit action potentials (MUAPs)
-- Deeper layers progressively separate gesture categories
-- Invariance to nuisance variables (participant ID, electrode placement, signal power)
+> **Machine Learning**
 
-**Confusion Matrix**
+> - **Time series classification**: Discrete event detection
+> - **Generic modeling**: Out-of-the-box cross-user generalization
+> - **Representation learning**: Physiologically-grounded features
+> - **Real-time prediction**: Low-latency gesture detection
 
-**Common confusions** (from paper):
-- Index and middle holds sometimes released too early
-- Similar gestures (e.g., adjacent finger pinches) occasionally confused
-- Swipe directions generally well-separated
+> **Applications**
 
-**Note**: Some errors are behavioral (wrong gesture performed) not just decoding errors
+> - **Grid navigation**: Discrete movement in 2D space
+> - **Menu selection**: Activation gestures for UI elements
+> - **Game control**: Gesture-based game inputs
+> - **AR/VR interfaces**: Hands-free navigation
+> - **Accessibility**: Alternative input modality
 
-**Use Cases**
+> **Known Issues and Limitations**
 
-**Machine Learning**
+> **By Design**
 
-- **Time series classification**: Discrete event detection
-- **Generic modeling**: Out-of-the-box cross-user generalization
-- **Representation learning**: Physiologically-grounded features
-- **Real-time prediction**: Low-latency gesture detection
+> - **Single wrist**: Dominant hand only (not bilateral)
+> - **Handedness unknown**: Assumed right-handed, varies by participant
+> - **Gesture novelty**: Users needed coaching to learn effective gestures
+> - **No demographic data**: Age, sex, handedness not collected
 
-**Applications**
+> **Technical**
 
-- **Grid navigation**: Discrete movement in 2D space
-- **Menu selection**: Activation gestures for UI elements
-- **Game control**: Gesture-based game inputs
-- **AR/VR interfaces**: Hands-free navigation
-- **Accessibility**: Alternative input modality
+> - **Electrode placement**: Single session per user (less cross-session data than emg2qwerty)
+> - **Signal amplitude**: Varies with gesture force
+> - **Hardware unavailable**: sEMG-RD not commercially available
 
-**Known Issues and Limitations**
+> **Data Quality**
 
-**By Design**
+> - **Irregular sampling**: High deviation detected (up to 9290%), resampling applied
+> - **Behavioral errors**: Not all errors are decoder errors (some user mistakes)
 
-- **Single wrist**: Dominant hand only (not bilateral)
-- **Handedness unknown**: Assumed right-handed, varies by participant
-- **Gesture novelty**: Users needed coaching to learn effective gestures
-- **No demographic data**: Age, sex, handedness not collected
+> **Comparison to Baselines**
 
-**Technical**
+> **Nintendo Joy-Con controller**:
+> - Median: 1.45 completions/second
+> - sEMG decoder: 0.88 completions/second (66% slower)
 
-- **Electrode placement**: Single session per user (less cross-session data than emg2qwerty)
-- **Signal amplitude**: Varies with gesture force
-- **Hardware unavailable**: sEMG-RD not commercially available
+> **However**: sEMG doesn’t require hand-encumbering device
 
-**Data Quality**
+> **BIDS Format**
 
-- **Irregular sampling**: High deviation detected (up to 9290%), resampling applied
-- **Behavioral errors**: Not all errors are decoder errors (some user mistakes)
+> ```text
+> Pernet, C.R., et al. (2019). EEG-BIDS, an extension to the brain
+> imaging data structure for electroencephalography.
+> Scientific Data, 6(1), 103.
+> ```
 
-**Comparison to Baselines**
+> **Access and Contact**
 
-**Nintendo Joy-Con controller**:
-- Median: 1.45 completions/second
-- sEMG decoder: 0.88 completions/second (66% slower)
+> **Original data**: Part of Meta Reality Labs neuromotor interface research
+> **BIDS conversion**: Custom MATLAB tools using EEGLAB BIDS plugin
+> **Data curator**: Yahya Shirazi, SCCN (Swartz Center for Computational Neuroscience), INC (Institute for Neural Computation), UCSD
+> **Contact**: See Nature paper for corresponding authors
 
-**However**: sEMG doesn’t require hand-encumbering device
+> **License**
 
-**BIDS Format**
+> Research and educational use. See original publication.
 
-```text
-Pernet, C.R., et al. (2019). EEG-BIDS, an extension to the brain
-imaging data structure for electroencephalography.
-Scientific Data, 6(1), 103.
-```
+> **Citation**
 
-**Access and Contact**
+> ```text
+> Kaifosh, P., Reardon, T.R., & CTRL-labs at Reality Labs. (2025).
+> A generic non-invasive neuromotor interface for human-computer interaction.
+> Nature, 645(8081), 702-711. https://doi.org/10.1038/s41586-025-09255-w
+> ```
 
-**Original data**: Part of Meta Reality Labs neuromotor interface research
-**BIDS conversion**: Custom MATLAB tools using EEGLAB BIDS plugin
-**Data curator**: Yahya Shirazi, SCCN (Swartz Center for Computational Neuroscience), INC (Institute for Neural Computation), UCSD
-**Contact**: See Nature paper for corresponding authors
+> **Data Curator**
 
-**License**
+> **Yahya Shirazi**
+> SCCN (Swartz Center for Computational Neuroscience)
+> INC (Institute for Neural Computation)
+> University of California San Diego
 
-Research and educational use. See original publication.
+> **Version History**
 
-**Citation**
+> **v1.0 (2025-10-01): Initial BIDS conversion**
 
-```text
-Kaifosh, P., Reardon, T.R., & CTRL-labs at Reality Labs. (2025).
-A generic non-invasive neuromotor interface for human-computer interaction.
-Nature, 645(8081), 702-711. https://doi.org/10.1038/s41586-025-09255-w
-```
-
-**Data Curator**
-
-**Yahya Shirazi**
-SCCN (Swartz Center for Computational Neuroscience)
-INC (Institute for Neural Computation)
-University of California San Diego
-
-**Version History**
-
-**v1.0 (2025-10-01): Initial BIDS conversion**
-
-**BIDS Version**: 1.11 | **EMG-BIDS**: BEP-042 | **Updated**: Oct 1, 2025
-
+> **BIDS Version**: 1.11 | **EMG-BIDS**: BEP-042 | **Updated**: Oct 1, 2025
 <div class="eegdash-ed-secnum">§ 03<b>Cohort · Participants</b></div>
 
 ## Cohort
@@ -583,7 +584,7 @@ path/
     one dataset has to be processed and saved at a time to account for
     its original position.
 
-<!-- !! processed by numpydoc !! --><div class="eegdash-ed-access"><div class="sidecar-hdr"><span><b>Access modes</b></span><span class="right">MNE → braindecode → PyTorch → ML</span></div><div class="am-list"><div class="am-row"><span class="name">.raw</span><span class="what">MNE <code>Raw</code> object — standard tools (filter, epoch, ICA, plot_psd).</span><span class="badge">mne</span></div><div class="am-row"><span class="name">BaseConcatDataset</span><span class="what">Each record is a lazy <code>BaseDataset</code> from braindecode — windowed via <code>create_windows_from_events</code>.</span><span class="badge">braindecode</span></div><div class="am-row"><span class="name">DataLoader</span><span class="what">Wraps the windowed dataset into a PyTorch <code>DataLoader</code>; supports parallel workers and on-the-fly augmentations.</span><span class="badge">pytorch</span></div><div class="am-row"><span class="name">Zarr cache</span><span class="what">Optional braindecode Zarr mirror for fast resume; persisted to <code>cache_dir</code>.</span><span class="badge">zarr</span></div><div class="am-row"><span class="name">Hugging Face</span><span class="what">No per-dataset mirror published yet — browse the <a href="https://huggingface.co/EEGDash">EEGDash org listing</a> for sibling datasets.</span><span class="badge">huggingface</span></div><div class="am-row"><span class="name">Croissant 1.0</span><span class="what">Machine-readable JSON-LD descriptor — <a href="../../_static/dataset_generated/croissant/NM000105.croissant.json" download>NM000105.croissant.json</a> (MLCommons schema, ingestible by PyTorch / TensorFlow / JAX).</span><span class="badge">mlcommons</span></div></div></div><section class="eegdash-ed-examples"><div class="sidecar-hdr"><span><b>Examples using EEGDash</b></span><span class="right">curated · start here</span></div><div class="ex-grid"><a class="ex-card" href="../../generated/auto_examples/tutorials/00_start_here/plot_00_first_search.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_00_first_search.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Find datasets with the EEGDash API</span><span class="ex-blurb">Query the catalogue, filter by task or modality, list candidates.</span></span></a><a class="ex-card" href="../../generated/auto_examples/tutorials/00_start_here/plot_01_first_recording.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_01_first_recording.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Load one EEG recording</span><span class="ex-blurb">Resolve a single record to an MNE Raw with channels and events.</span></span></a><a class="ex-card" href="../../generated/auto_examples/tutorials/00_start_here/plot_02_dataset_to_dataloader.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_02_dataset_to_dataloader.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">EEG recording to PyTorch DataLoader</span><span class="ex-blurb">Wrap braindecode windows in a DataLoader for model training.</span></span></a><a class="ex-card" href="../../generated/auto_examples/tutorials/10_core_workflow/plot_10_preprocess_and_window.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_10_preprocess_and_window.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Preprocess EEG and create windows</span><span class="ex-blurb">Filter, resample, epoch — and persist the windowed dataset.</span></span></a><a class="ex-card" href="../../generated/auto_examples/tutorials/10_core_workflow/plot_13_save_and_reuse_prepared_data.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_13_save_and_reuse_prepared_data.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Save and reload prepared data</span><span class="ex-blurb">Cache a windowed dataset to disk and reattach it without recompute.</span></span></a><a class="ex-card" href="../../generated/auto_examples/how_to/how_to_download_a_dataset.html"><span class="ex-thumb"><img src="../../_static/thumbs/how_to_download_a_dataset.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Download a dataset locally</span><span class="ex-blurb">Prefetch BIDS files to a local cache and validate the layout.</span></span></a></div><p class="ex-hint">Swap any <code>load_dataset(...)</code> call for <code>nm000105</code> to reproduce the tutorial on this dataset.</p></section><div class="eegdash-ed-footnotes"><div><h5>Citation</h5><p>Patrick Kaifosh, Thomas R. Reardon, CTRL-labs at Reality Labs (2019). <em>FRL Discrete Gestures: Hand Gesture Recognition from Surface Electromyography</em>. <code>10.82901/nemar.nm000105</code></p></div><div><h5>Provenance</h5><p><span class="note-num">¹</span>Contributed to nemar in BIDS format.</p><p><span class="note-num">²</span>Curated &amp; ingested by the EEGDash catalog; see CITATION.cff for canonical reference.</p><p><span class="note-num">³</span>Persistent identifier: <code>10.82901/nemar.nm000105</code>.</p></div><div><h5>Related &amp; sibling datasets</h5><div class="rel-grid"><a class="rel-card" href="NM000107.html"><span class="rel-id">NM000107</span><span class="rel-meta">EMG · 100 subj</span><span class="rel-tag rel-same">Same authors</span></a><a class="rel-card" href="NM000106.html"><span class="rel-id">NM000106</span><span class="rel-meta">EMG · 100 subj</span><span class="rel-tag rel-same">Same authors</span></a><a class="rel-card" href="NM000159.html"><span class="rel-id">NM000159</span><span class="rel-meta">EMG · 16 subj</span></a><a class="rel-card" href="NM000104.html"><span class="rel-id">NM000104</span><span class="rel-meta">EMG · 108 subj</span></a><a class="rel-card" href="NM000155.html"><span class="rel-id">NM000155</span><span class="rel-meta">EMG · 6 subj</span></a></div><p class="rel-more">+ 1 more — see See Also below →</p></div></div><div class="eegdash-ed-prov"><div><div class="lbl">BIDS</div><div class="v ok">BIDS 1.11.0</div></div><div><div class="lbl">Sidecars</div><div class="v todo">not yet probed</div></div><div><div class="lbl">Provenance</div><div class="v">CC-BY-NC 4.0 · <a href="https://doi.org/10.82901/nemar.nm000105">10.82901/nemar.nm000105</a></div></div><div><div class="lbl">Machine-readable</div><div class="v"><a href="#dataset-information">schema.org/Dataset</a> · <a href="../../_static/dataset_generated/croissant/NM000105.croissant.json" download>Croissant</a></div></div><div><div class="lbl">Mirrors</div><div class="v"><a href="https://openneuro.org/datasets/nm000105">OpenNeuro</a> · <a href="https://nemar.org/dataexplorer/detail?dataset_id=nm000105">NEMAR</a> · <a href="https://huggingface.co/EEGDash">HF org</a></div></div></div>
+<!-- !! processed by numpydoc !! --><div class="eegdash-ed-access"><div class="sidecar-hdr"><span><b>Access modes</b></span><span class="right">MNE → braindecode → PyTorch → ML</span></div><div class="am-list"><div class="am-row"><span class="name"><a href="https://mne.tools/stable/generated/mne.io.Raw.html" target="_blank" rel="noopener">.raw</a></span><span class="what"><a href="https://mne.tools/stable/generated/mne.io.Raw.html" target="_blank" rel="noopener">MNE <code>Raw</code></a> object — standard tools (<a href="https://mne.tools/stable/generated/mne.io.Raw.html#mne.io.Raw.filter" target="_blank" rel="noopener">filter</a>, <a href="https://mne.tools/stable/generated/mne.Epochs.html" target="_blank" rel="noopener">epoch</a>, <a href="https://mne.tools/stable/generated/mne.preprocessing.ICA.html" target="_blank" rel="noopener">ICA</a>, <a href="https://mne.tools/stable/generated/mne.io.Raw.html#mne.io.Raw.compute_psd" target="_blank" rel="noopener">plot_psd</a>).</span><a class="badge" href="https://mne.tools/stable/" target="_blank" rel="noopener">mne</a></div><div class="am-row"><span class="name"><a href="https://braindecode.org/stable/generated/braindecode.datasets.BaseConcatDataset.html" target="_blank" rel="noopener">BaseConcatDataset</a></span><span class="what">Each record is a lazy <a href="https://braindecode.org/stable/generated/braindecode.datasets.BaseDataset.html" target="_blank" rel="noopener"><code>BaseDataset</code></a> from <a href="https://braindecode.org/stable/" target="_blank" rel="noopener">braindecode</a> — windowed via <a href="https://braindecode.org/stable/generated/braindecode.preprocessing.create_windows_from_events.html" target="_blank" rel="noopener"><code>create_windows_from_events</code></a>.</span><a class="badge" href="https://braindecode.org/stable/generated/braindecode.datasets.BaseConcatDataset.html" target="_blank" rel="noopener">braindecode</a></div><div class="am-row"><span class="name"><a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader" target="_blank" rel="noopener">DataLoader</a></span><span class="what">Wraps the windowed dataset into a <a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader" target="_blank" rel="noopener">PyTorch <code>DataLoader</code></a>; supports parallel workers and on-the-fly augmentations.</span><a class="badge" href="https://pytorch.org/" target="_blank" rel="noopener">pytorch</a></div><div class="am-row"><span class="name"><a href="https://zarr.readthedocs.io/en/stable/" target="_blank" rel="noopener">Zarr cache</a></span><span class="what">Optional braindecode <a href="https://zarr.readthedocs.io/en/stable/" target="_blank" rel="noopener">Zarr</a> mirror for fast resume; persisted to <code>cache_dir</code>.</span><a class="badge" href="https://zarr.readthedocs.io/en/stable/" target="_blank" rel="noopener">zarr</a></div><div class="am-row"><span class="name"><a href="https://huggingface.co/EEGDash" target="_blank" rel="noopener">Hugging Face</a></span><span class="what">No per-dataset mirror published yet — browse the <a href="https://huggingface.co/EEGDash">EEGDash org listing</a> for sibling datasets. See the <a href="https://huggingface.co/docs/datasets/" target="_blank" rel="noopener">datasets</a> loader API.</span><a class="badge" href="https://huggingface.co/EEGDash" target="_blank" rel="noopener">huggingface</a></div><div class="am-row"><span class="name"><a href="https://docs.mlcommons.org/croissant/docs/croissant-spec.html" target="_blank" rel="noopener">Croissant 1.0</a></span><span class="what">Machine-readable <a href="https://docs.mlcommons.org/croissant/docs/croissant-spec.html" target="_blank" rel="noopener">JSON-LD descriptor</a> — <a href="../../_static/dataset_generated/croissant/NM000105.croissant.json" download>NM000105.croissant.json</a> (<a href="https://mlcommons.org/working-groups/data/datasets/" target="_blank" rel="noopener">MLCommons</a> schema, ingestible by PyTorch / TensorFlow / JAX).</span><a class="badge" href="https://docs.mlcommons.org/croissant/docs/croissant-spec.html" target="_blank" rel="noopener">mlcommons</a></div></div></div><section class="eegdash-ed-examples"><div class="sidecar-hdr"><span><b>Examples using EEGDash</b></span><span class="right">curated · start here</span></div><div class="ex-grid"><a class="ex-card" href="../../generated/auto_examples/tutorials/00_start_here/plot_00_first_search.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_00_first_search.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Find datasets with the EEGDash API</span><span class="ex-blurb">Query the catalogue, filter by task or modality, list candidates.</span></span></a><a class="ex-card" href="../../generated/auto_examples/tutorials/00_start_here/plot_01_first_recording.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_01_first_recording.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Load one EEG recording</span><span class="ex-blurb">Resolve a single record to an MNE Raw with channels and events.</span></span></a><a class="ex-card" href="../../generated/auto_examples/tutorials/00_start_here/plot_02_dataset_to_dataloader.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_02_dataset_to_dataloader.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">EEG recording to PyTorch DataLoader</span><span class="ex-blurb">Wrap braindecode windows in a DataLoader for model training.</span></span></a><a class="ex-card" href="../../generated/auto_examples/tutorials/10_core_workflow/plot_10_preprocess_and_window.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_10_preprocess_and_window.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Preprocess EEG and create windows</span><span class="ex-blurb">Filter, resample, epoch — and persist the windowed dataset.</span></span></a><a class="ex-card" href="../../generated/auto_examples/tutorials/10_core_workflow/plot_13_save_and_reuse_prepared_data.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_13_save_and_reuse_prepared_data.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Save and reload prepared data</span><span class="ex-blurb">Cache a windowed dataset to disk and reattach it without recompute.</span></span></a><a class="ex-card" href="../../generated/auto_examples/how_to/how_to_download_a_dataset.html"><span class="ex-thumb"><img src="../../_static/thumbs/how_to_download_a_dataset.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Download a dataset locally</span><span class="ex-blurb">Prefetch BIDS files to a local cache and validate the layout.</span></span></a></div><p class="ex-hint">Swap any <code>load_dataset(...)</code> call for <code>nm000105</code> to reproduce the tutorial on this dataset.</p></section><div class="eegdash-ed-footnotes"><div><h5>Citation</h5><p>Patrick Kaifosh, Thomas R. Reardon, CTRL-labs at Reality Labs (2019). <em>FRL Discrete Gestures: Hand Gesture Recognition from Surface Electromyography</em>. <code>10.82901/nemar.nm000105</code></p></div><div><h5>Provenance</h5><p><span class="note-num">¹</span>Contributed to nemar in BIDS format.</p><p><span class="note-num">²</span>Curated &amp; ingested by the EEGDash catalog; see CITATION.cff for canonical reference.</p><p><span class="note-num">³</span>Persistent identifier: <code>10.82901/nemar.nm000105</code>.</p></div><div><h5>Related &amp; sibling datasets</h5><div class="rel-grid"><a class="rel-card" href="NM000107.html"><span class="rel-id">NM000107</span><span class="rel-meta">EMG · 100 subj</span><span class="rel-tag rel-same">Same authors</span></a><a class="rel-card" href="NM000106.html"><span class="rel-id">NM000106</span><span class="rel-meta">EMG · 100 subj</span><span class="rel-tag rel-same">Same authors</span></a><a class="rel-card" href="NM000159.html"><span class="rel-id">NM000159</span><span class="rel-meta">EMG · 16 subj</span></a><a class="rel-card" href="NM000104.html"><span class="rel-id">NM000104</span><span class="rel-meta">EMG · 108 subj</span></a><a class="rel-card" href="NM000155.html"><span class="rel-id">NM000155</span><span class="rel-meta">EMG · 6 subj</span></a></div><p class="rel-more">+ 1 more — see See Also below →</p></div></div><div class="eegdash-ed-prov"><div><div class="lbl">BIDS</div><div class="v ok">BIDS 1.11.0</div></div><div><div class="lbl">Sidecars</div><div class="v todo">not yet probed</div></div><div><div class="lbl">Provenance</div><div class="v">CC-BY-NC 4.0 · <a href="https://doi.org/10.82901/nemar.nm000105">10.82901/nemar.nm000105</a></div></div><div><div class="lbl">Machine-readable</div><div class="v"><a href="#dataset-information">schema.org/Dataset</a> · <a href="../../_static/dataset_generated/croissant/NM000105.croissant.json" download>Croissant</a></div></div><div><div class="lbl">Mirrors</div><div class="v"><a href="https://openneuro.org/datasets/nm000105">OpenNeuro</a> · <a href="https://nemar.org/dataexplorer/detail?dataset_id=nm000105">NEMAR</a> · <a href="https://huggingface.co/EEGDash">HF org</a></div></div></div>
 
 ## See Also
 

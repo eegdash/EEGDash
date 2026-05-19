@@ -2,7 +2,7 @@
 
 # Computation times
 
-**07:39.358** total execution time for 2 files **from generated/auto_examples/eeg2025**:
+**07:36.228** total execution time for 2 files **from generated/auto_examples/eeg2025**:
 
 <style scoped>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet" />
@@ -17,7 +17,7 @@ $(document).ready( function () {
 } );
 </script>
 
-| Example                                                                                                                                                         | Time      |   Mem (MB) |
-|-----------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------|------------|
-| [EEG2025 Challenge 1 Baseline (CCD)](tutorial_challenge_1.md#sphx-glr-generated-auto-examples-eeg2025-tutorial-challenge-1-py) (`tutorial_challenge_1.py`)      | 07:39.127 |          0 |
-| [EEG2025 Challenge 2 Baseline (p-factor)](tutorial_challenge_2.md#sphx-glr-generated-auto-examples-eeg2025-tutorial-challenge-2-py) (`tutorial_challenge_2.py`) | 00:00.231 |          0 |
+| Example                                                                                                                                                         | Time       |   Mem (MB) |
+|-----------------------------------------------------------------------------------------------------------------------------------------------------------------|------------|------------|
+| [EEG2025 Challenge 1 Baseline (CCD)](tutorial_challenge_1.md#sphx-glr-generated-auto-examples-eeg2025-tutorial-challenge-1-py) (`tutorial_challenge_1.py`)      | 07:35.1000 |          0 |
+| [EEG2025 Challenge 2 Baseline (p-factor)](tutorial_challenge_2.md#sphx-glr-generated-auto-examples-eeg2025-tutorial-challenge-2-py) (`tutorial_challenge_2.py`) | 00:00.228  |          0 |

@@ -84,121 +84,137 @@ types of EEG signals across 15 runs per session (~50 min recording, ~2 h total
 including setup and rest). The original paper describes 14 signal types; the
 distributed data contains 13 task codes because nontarget P300 epochs were not
 included.
-The original data was recorded at 1000 Hz and preprocessed using Matlab 2018b
+
+> The original data was recorded at 1000 Hz and preprocessed using Matlab 2018b
+
 with Letswave7 (letswave.cn), then distributed as individual 4-second epoched
 .mat files at 250 Hz.
-This BIDS version reconstructs pseudo-continuous EEG by concatenating the
-distributed epochs per subject/session/task. Event markers indicate epoch
-boundaries and stimulus onsets derived from the original marker channel.
-Ethics: Medical Ethics Committee, Health Science Center, Shenzhen University
-(No. 2019053). All subjects gave informed consent.
 
-> (measured by TES-1332A light meter)
+> **M3CV: Multi-subject, Multi-session, and Multi-task EEG Database**
 
-**M3CV: Multi-subject, Multi-session, and Multi-task EEG Database**
+> **Overview**
 
-**Overview**
+> This BIDS version reconstructs pseudo-continuous EEG by concatenating the
+> distributed epochs per subject/session/task. Event markers indicate epoch
+> boundaries and stimulus onsets derived from the original marker channel.
 
-- Headphones: Nokia WH-102, 75 dB SPL average
-- Vibration motor: 1027 disk, 3 W rated, 80% efficiency, 10 mm x 2.7 mm,
-  placed on subject’s left hand
-- Power line frequency: 50 Hz
+> Ethics: Medical Ethics Committee, Health Science Center, Shenzhen University
 
-### View full README
+> ### View full README
 
-**M3CV: Multi-subject, Multi-session, and Multi-task EEG Database**
+> **M3CV: Multi-subject, Multi-session, and Multi-task EEG Database**
 
-**Overview**
+> **Overview**
 
-- Headphones: Nokia WH-102, 75 dB SPL average
-- Vibration motor: 1027 disk, 3 W rated, 80% efficiency, 10 mm x 2.7 mm,
-  placed on subject’s left hand
-- Power line frequency: 50 Hz
+> This BIDS version reconstructs pseudo-continuous EEG by concatenating the
+> distributed epochs per subject/session/task. Event markers indicate epoch
+> boundaries and stimulus onsets derived from the original marker channel.
 
-**Preprocessing (applied before distribution, Table 3 of paper)**
+> Ethics: Medical Ethics Committee, Health Science Center, Shenzhen University
+> (No. 2019053). All subjects gave informed consent.
 
-Software: Matlab 2018b & Letswave7 (letswave.cn)
-1. Bad channels identified manually, interpolated with mean of 3 surrounding
+> **Recording Setup**
 
-> channels (22 of 95 subjects had bad channels)
-1. Channel FCz (online reference) added back
-2. Channel IO (EOG) removed
-3. Bandpass filter: 0.01-200 Hz, 4th-order Butterworth, 24 dB/octave, zero-phase
-4. Notch filter: 49-51 Hz bandstop, 4th-order Butterworth, 24 dB/octave, zero-phase
-5. Re-referenced to mean of TP9 and TP10 (linked mastoids)
-6. ICA artifact removal: eye blink and eye movement components identified by
-   visual inspection of scalp topographies, time courses, and spectra
-   (Huang et al., 2020)
-7. Downsampled to 250 Hz
-8. No bad epoch rejection (intentional for ML robustness/repeatability)
+> - Amplifier: BrainAmp (Brain Products GmbH, Germany)
+> - Cap: 64-channel Easycap, standard 10-20 positions
+> - Online reference: FCz; Ground: AFz
+> - Sampling rate: 1000 Hz (distributed at 250 Hz after preprocessing)
+> - Impedance: < 20 kOhm
+> - Subject distance: ~1 meter from screen
+> - Screen: 24.5-inch Alienware AW2518H (1920x1080, 240 Hz refresh rate)
+> - Visual stimuli: Psychtoolbox-3 in Matlab
+> - Sensory stimuli: Arduino Uno platform via serial port to Matlab
+> - LED: 3 W, 2 cm diameter circular shield, 45 cm from eyes, 1074 Lux
+>   (measured by TES-1332A light meter)
+> - Headphones: Nokia WH-102, 75 dB SPL average
+> - Vibration motor: 1027 disk, 3 W rated, 80% efficiency, 10 mm x 2.7 mm,
+>   placed on subject’s left hand
+> - Power line frequency: 50 Hz
 
-Note: One subject was removed due to strong 10 Hz artifacts. The remaining 95
-subjects are included in the distributed data.
+> **Preprocessing (applied before distribution, Table 3 of paper)**
 
-**Paradigms (14 signal types, 13 in distributed data, 15 runs/session)**
+> Software: Matlab 2018b & Letswave7 (letswave.cn)
+> 1. Bad channels identified manually, interpolated with mean of 3 surrounding
 
-Run 01: Eyes Closed resting (restEC) — 1 min; fixate on LED (off)
-Run 02: Eyes Open resting (restEO) — 1 min; fixate ahead, minimal blink
-Run 03: Motor execution (motorFoot/motorRHand/motorLHand) — 20 trials each
-Run 04: Transient sensory (vep/aep/sep) — 30 trials each, random order, ~4.5 min
-Run 05: SSVEP (ssvep) — 10 Hz LED, 1 min
-Run 06: Motor execution — 20 trials each
-Run 07: P300 oddball (p300) — 600 stimuli (5% target=30, nontarget=570), 80 ms,
+> > channels (22 of 95 subjects had bad channels)
+> 1. Channel FCz (online reference) added back
+> 2. Channel IO (EOG) removed
+> 3. Bandpass filter: 0.01-200 Hz, 4th-order Butterworth, 24 dB/octave, zero-phase
+> 4. Notch filter: 49-51 Hz bandstop, 4th-order Butterworth, 24 dB/octave, zero-phase
+> 5. Re-referenced to mean of TP9 and TP10 (linked mastoids)
+> 6. ICA artifact removal: eye blink and eye movement components identified by
+>    visual inspection of scalp topographies, time courses, and spectra
+>    (Huang et al., 2020)
+> 7. Downsampled to 250 Hz
+> 8. No bad epoch rejection (intentional for ML robustness/repeatability)
 
-> ISI 200 ms, 2 min; red/white 300x300 px squares; subjects count red
+> Note: One subject was removed due to strong 10 Hz artifacts. The remaining 95
+> subjects are included in the distributed data.
 
-Run 08: SSVEP-SA (ssvepSA) — 6 freq (7/8/9/11/13/15 Hz), 12 segments x 10 s
-Run 09: SSAEP (ssaep) — 45.38 Hz, 2 min
-Run 10: Motor execution — 20 trials each
-Run 11: Transient sensory — 30 trials each, random order
-Run 12: SSSEP (sssep) — 22.04 Hz vibration, 2 min
-Run 13: Motor execution — 20 trials each
-Run 14: Eyes Closed resting (restEC) — 1 min
-Run 15: Eyes Open resting (restEO) — 1 min
-Motor execution details: subjects gripped (LH/RH) or lifted ankle (FT) at
-~2x/sec, ~80% maximum voluntary contraction, 3 s duration until cue offset.
-No feedback, metronome, or hint was provided. Experimenters monitored movement
-quality during recording.
+> **Paradigms (14 signal types, 13 in distributed data, 15 runs/session)**
 
-**Notes on distributed data**
+> Run 01: Eyes Closed resting (restEC) — 1 min; fixate on LED (off)
+> Run 02: Eyes Open resting (restEO) — 1 min; fixate ahead, minimal blink
+> Run 03: Motor execution (motorFoot/motorRHand/motorLHand) — 20 trials each
+> Run 04: Transient sensory (vep/aep/sep) — 30 trials each, random order, ~4.5 min
+> Run 05: SSVEP (ssvep) — 10 Hz LED, 1 min
+> Run 06: Motor execution — 20 trials each
+> Run 07: P300 oddball (p300) — 600 stimuli (5% target=30, nontarget=570), 80 ms,
 
-- 14 signal types in the paper, 13 task codes in distributed data:
-  nontarget P300 (paper task 10, trigger S10) was not distributed
-- P300: Only 30 target trials stored per subject; 570 nontarget discarded
-- SSVEP-SA: 6 frequency classes not distinguishable in marker; all marker=13
-- Trigger codes in original recording (S1-S25) differ from CSV Task column
-  (1-13). CSV Task 10=FT, 11=RH, 12=LH (paper tasks 11-13, triggers S6-S8)
-- Epoch ordering within task may not reflect original temporal sequence
-- 11 “intruder” subjects in Testing set have hidden SubjectIDs (excluded here)
+> > ISI 200 ms, 2 min; red/white 300x300 px squares; subjects count red
 
-**Subjects and Sessions**
+> Run 08: SSVEP-SA (ssvepSA) — 6 freq (7/8/9/11/13/15 Hz), 12 segments x 10 s
+> Run 09: SSAEP (ssaep) — 45.38 Hz, 2 min
+> Run 10: Motor execution — 20 trials each
+> Run 11: Transient sensory — 30 trials each, random order
+> Run 12: SSSEP (sssep) — 22.04 Hz vibration, 2 min
+> Run 13: Motor execution — 20 trials each
+> Run 14: Eyes Closed resting (restEC) — 1 min
+> Run 15: Eyes Open resting (restEO) — 1 min
+> Motor execution details: subjects gripped (LH/RH) or lifted ankle (FT) at
+> ~2x/sec, ~80% maximum voluntary contraction, 3 s duration until cue offset.
 
-- 106 total subjects; 95 completed both sessions
-- Age: 21.3 +/- 2.2 years (95 subjects); 73 males, 22 females
-- Normal hearing, normal/corrected vision, no neurological history (self-report)
-- Between-session interval: 6 to 139 days (mean ~20 days)
-- ses-01 = session 1 (Enrollment set)
-- ses-02 = session 2 (Calibration + Testing sets)
-- 11 “intruder” subjects (session 2 only, hidden IDs) are excluded from BIDS
+> No feedback, metronome, or hint was provided. Experimenters monitored movement
+> quality during recording.
 
-**Competition context**
+> **Notes on distributed data**
 
-Originally distributed for the M3CV EEG-based Biometric Competition on Kaggle
-(identification and verification tasks). Competition closed Apr 30, 2023; late
-submissions remain allowed.
+> - 14 signal types in the paper, 13 task codes in distributed data:
+>   nontarget P300 (paper task 10, trigger S10) was not distributed
+> - P300: Only 30 target trials stored per subject; 570 nontarget discarded
+> - SSVEP-SA: 6 frequency classes not distinguishable in marker; all marker=13
+> - Trigger codes in original recording (S1-S25) differ from CSV Task column
+>   (1-13). CSV Task 10=FT, 11=RH, 12=LH (paper tasks 11-13, triggers S6-S8)
+> - Epoch ordering within task may not reflect original temporal sequence
+> - 11 “intruder” subjects in Testing set have hidden SubjectIDs (excluded here)
 
-**Reference**
+> **Subjects and Sessions**
 
-Huang, G., Hu, Z., Chen, W., Zhang, S., Liang, Z., Li, L., Zhang, L., &
-Zhang, Z. (2022). M3CV: A multi-subject, multi-session, and multi-task
-database for EEG-based biometrics challenge. NeuroImage, 264, 119666.
-[https://doi.org/10.1016/j.neuroimage.2022.119666](https://doi.org/10.1016/j.neuroimage.2022.119666)
+> - 106 total subjects; 95 completed both sessions
+> - Age: 21.3 +/- 2.2 years (95 subjects); 73 males, 22 females
+> - Normal hearing, normal/corrected vision, no neurological history (self-report)
+> - Between-session interval: 6 to 139 days (mean ~20 days)
+> - ses-01 = session 1 (Enrollment set)
+> - ses-02 = session 2 (Calibration + Testing sets)
+> - 11 “intruder” subjects (session 2 only, hidden IDs) are excluded from BIDS
 
-**References**
+> **Competition context**
 
-Appelhoff, S., Sanderson, M., Brooks, T., Vliet, M., Quentin, R., Holdgraf, C., Chaumon, M., Mikulan, E., Tavabi, K., Höchenberger, R., Welke, D., Brunner, C., Rockhill, A., Larson, E., Gramfort, A. and Jas, M. (2019). MNE-BIDS: Organizing electrophysiological data into the BIDS format and facilitating their analysis. Journal of Open Source Software 4: (1896).https://doi.org/10.21105/joss.01896
-Pernet, C. R., Appelhoff, S., Gorgolewski, K. J., Flandin, G., Phillips, C., Delorme, A., Oostenveld, R. (2019). EEG-BIDS, an extension to the brain imaging data structure for electroencephalography. Scientific Data, 6, 103.https://doi.org/10.1038/s41597-019-0104-8
+> Originally distributed for the M3CV EEG-based Biometric Competition on Kaggle
+> (identification and verification tasks). Competition closed Apr 30, 2023; late
+> submissions remain allowed.
 
+> **Reference**
+
+> Huang, G., Hu, Z., Chen, W., Zhang, S., Liang, Z., Li, L., Zhang, L., &
+> Zhang, Z. (2022). M3CV: A multi-subject, multi-session, and multi-task
+> database for EEG-based biometrics challenge. NeuroImage, 264, 119666.
+> [https://doi.org/10.1016/j.neuroimage.2022.119666](https://doi.org/10.1016/j.neuroimage.2022.119666)
+
+> **References**
+
+> Appelhoff, S., Sanderson, M., Brooks, T., Vliet, M., Quentin, R., Holdgraf, C., Chaumon, M., Mikulan, E., Tavabi, K., Höchenberger, R., Welke, D., Brunner, C., Rockhill, A., Larson, E., Gramfort, A. and Jas, M. (2019). MNE-BIDS: Organizing electrophysiological data into the BIDS format and facilitating their analysis. Journal of Open Source Software 4: (1896).https://doi.org/10.21105/joss.01896
+> Pernet, C. R., Appelhoff, S., Gorgolewski, K. J., Flandin, G., Phillips, C., Delorme, A., Oostenveld, R. (2019). EEG-BIDS, an extension to the brain imaging data structure for electroencephalography. Scientific Data, 6, 103.https://doi.org/10.1038/s41597-019-0104-8
 <div class="eegdash-ed-secnum">§ 03<b>Cohort · Participants</b></div>
 
 ## Cohort
@@ -429,7 +445,7 @@ path/
     one dataset has to be processed and saved at a time to account for
     its original position.
 
-<!-- !! processed by numpydoc !! --><div class="eegdash-ed-access"><div class="sidecar-hdr"><span><b>Access modes</b></span><span class="right">MNE → braindecode → PyTorch → ML</span></div><div class="am-list"><div class="am-row"><span class="name">.raw</span><span class="what">MNE <code>Raw</code> object — standard tools (filter, epoch, ICA, plot_psd).</span><span class="badge">mne</span></div><div class="am-row"><span class="name">BaseConcatDataset</span><span class="what">Each record is a lazy <code>BaseDataset</code> from braindecode — windowed via <code>create_windows_from_events</code>.</span><span class="badge">braindecode</span></div><div class="am-row"><span class="name">DataLoader</span><span class="what">Wraps the windowed dataset into a PyTorch <code>DataLoader</code>; supports parallel workers and on-the-fly augmentations.</span><span class="badge">pytorch</span></div><div class="am-row"><span class="name">Zarr cache</span><span class="what">Optional braindecode Zarr mirror for fast resume; persisted to <code>cache_dir</code>.</span><span class="badge">zarr</span></div><div class="am-row"><span class="name">Hugging Face</span><span class="what">No per-dataset mirror published yet — browse the <a href="https://huggingface.co/EEGDash">EEGDash org listing</a> for sibling datasets.</span><span class="badge">huggingface</span></div><div class="am-row"><span class="name">Croissant 1.0</span><span class="what">Machine-readable JSON-LD descriptor — <a href="../../_static/dataset_generated/croissant/NM000166.croissant.json" download>NM000166.croissant.json</a> (MLCommons schema, ingestible by PyTorch / TensorFlow / JAX).</span><span class="badge">mlcommons</span></div></div></div><section class="eegdash-ed-examples"><div class="sidecar-hdr"><span><b>Examples using EEGDash</b></span><span class="right">curated · start here</span></div><div class="ex-grid"><a class="ex-card" href="../../generated/auto_examples/tutorials/00_start_here/plot_00_first_search.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_00_first_search.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Find datasets with the EEGDash API</span><span class="ex-blurb">Query the catalogue, filter by task or modality, list candidates.</span></span></a><a class="ex-card" href="../../generated/auto_examples/tutorials/00_start_here/plot_01_first_recording.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_01_first_recording.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Load one EEG recording</span><span class="ex-blurb">Resolve a single record to an MNE Raw with channels and events.</span></span></a><a class="ex-card" href="../../generated/auto_examples/tutorials/00_start_here/plot_02_dataset_to_dataloader.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_02_dataset_to_dataloader.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">EEG recording to PyTorch DataLoader</span><span class="ex-blurb">Wrap braindecode windows in a DataLoader for model training.</span></span></a><a class="ex-card" href="../../generated/auto_examples/tutorials/10_core_workflow/plot_10_preprocess_and_window.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_10_preprocess_and_window.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Preprocess EEG and create windows</span><span class="ex-blurb">Filter, resample, epoch — and persist the windowed dataset.</span></span></a><a class="ex-card" href="../../generated/auto_examples/tutorials/10_core_workflow/plot_13_save_and_reuse_prepared_data.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_13_save_and_reuse_prepared_data.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Save and reload prepared data</span><span class="ex-blurb">Cache a windowed dataset to disk and reattach it without recompute.</span></span></a><a class="ex-card" href="../../generated/auto_examples/how_to/how_to_download_a_dataset.html"><span class="ex-thumb"><img src="../../_static/thumbs/how_to_download_a_dataset.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Download a dataset locally</span><span class="ex-blurb">Prefetch BIDS files to a local cache and validate the layout.</span></span></a></div><p class="ex-hint">Swap any <code>load_dataset(...)</code> call for <code>nm000166</code> to reproduce the tutorial on this dataset.</p></section><div class="eegdash-ed-footnotes"><div><h5>Citation</h5><p>Gan Huang, Zhenxing Hu, Weize Chen, Shaorong Zhang, Zhen Liang, … (2022). <em>M3CV: Multi-subject, Multi-session, Multi-task EEG Database</em>. <code>10.1016/j.neuroimage.2022.119666</code></p></div><div><h5>Provenance</h5><p><span class="note-num">¹</span>Contributed to nemar in BIDS format.</p><p><span class="note-num">²</span>Curated &amp; ingested by the EEGDash catalog; see CITATION.cff for canonical reference.</p><p><span class="note-num">³</span>Persistent identifier: <code>10.1016/j.neuroimage.2022.119666</code>.</p></div><div><h5>Related &amp; sibling datasets</h5><div class="rel-grid"><a class="rel-card" href="NM000134.html"><span class="rel-id">NM000134</span><span class="rel-meta">EEG · 20 subj</span></a><a class="rel-card" href="NM000238.html"><span class="rel-id">NM000238</span><span class="rel-meta">EEG · 87 subj</span></a><a class="rel-card" href="NM000229.html"><span class="rel-id">NM000229</span><span class="rel-meta">EEG · 29 subj</span></a><a class="rel-card" href="NM000114.html"><span class="rel-id">NM000114</span><span class="rel-meta">EEG · 64 subj</span></a><a class="rel-card" href="NM000157.html"><span class="rel-id">NM000157</span><span class="rel-meta">EEG · 19 subj</span></a></div><p class="rel-more">+ 1 more — see See Also below →</p></div></div><div class="eegdash-ed-prov"><div><div class="lbl">BIDS</div><div class="v ok">BIDS 1.9.0</div></div><div><div class="lbl">Sidecars</div><div class="v todo">not yet probed</div></div><div><div class="lbl">Provenance</div><div class="v">CC BY 4.0 · <a href="https://doi.org/10.1016/j.neuroimage.2022.119666">10.1016/j.neuroimage.2022.119666</a></div></div><div><div class="lbl">Machine-readable</div><div class="v"><a href="#dataset-information">schema.org/Dataset</a> · <a href="../../_static/dataset_generated/croissant/NM000166.croissant.json" download>Croissant</a></div></div><div><div class="lbl">Mirrors</div><div class="v"><a href="https://openneuro.org/datasets/nm000166">OpenNeuro</a> · <a href="https://nemar.org/dataexplorer/detail?dataset_id=nm000166">NEMAR</a> · <a href="https://huggingface.co/EEGDash">HF org</a></div></div></div>
+<!-- !! processed by numpydoc !! --><div class="eegdash-ed-access"><div class="sidecar-hdr"><span><b>Access modes</b></span><span class="right">MNE → braindecode → PyTorch → ML</span></div><div class="am-list"><div class="am-row"><span class="name"><a href="https://mne.tools/stable/generated/mne.io.Raw.html" target="_blank" rel="noopener">.raw</a></span><span class="what"><a href="https://mne.tools/stable/generated/mne.io.Raw.html" target="_blank" rel="noopener">MNE <code>Raw</code></a> object — standard tools (<a href="https://mne.tools/stable/generated/mne.io.Raw.html#mne.io.Raw.filter" target="_blank" rel="noopener">filter</a>, <a href="https://mne.tools/stable/generated/mne.Epochs.html" target="_blank" rel="noopener">epoch</a>, <a href="https://mne.tools/stable/generated/mne.preprocessing.ICA.html" target="_blank" rel="noopener">ICA</a>, <a href="https://mne.tools/stable/generated/mne.io.Raw.html#mne.io.Raw.compute_psd" target="_blank" rel="noopener">plot_psd</a>).</span><a class="badge" href="https://mne.tools/stable/" target="_blank" rel="noopener">mne</a></div><div class="am-row"><span class="name"><a href="https://braindecode.org/stable/generated/braindecode.datasets.BaseConcatDataset.html" target="_blank" rel="noopener">BaseConcatDataset</a></span><span class="what">Each record is a lazy <a href="https://braindecode.org/stable/generated/braindecode.datasets.BaseDataset.html" target="_blank" rel="noopener"><code>BaseDataset</code></a> from <a href="https://braindecode.org/stable/" target="_blank" rel="noopener">braindecode</a> — windowed via <a href="https://braindecode.org/stable/generated/braindecode.preprocessing.create_windows_from_events.html" target="_blank" rel="noopener"><code>create_windows_from_events</code></a>.</span><a class="badge" href="https://braindecode.org/stable/generated/braindecode.datasets.BaseConcatDataset.html" target="_blank" rel="noopener">braindecode</a></div><div class="am-row"><span class="name"><a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader" target="_blank" rel="noopener">DataLoader</a></span><span class="what">Wraps the windowed dataset into a <a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader" target="_blank" rel="noopener">PyTorch <code>DataLoader</code></a>; supports parallel workers and on-the-fly augmentations.</span><a class="badge" href="https://pytorch.org/" target="_blank" rel="noopener">pytorch</a></div><div class="am-row"><span class="name"><a href="https://zarr.readthedocs.io/en/stable/" target="_blank" rel="noopener">Zarr cache</a></span><span class="what">Optional braindecode <a href="https://zarr.readthedocs.io/en/stable/" target="_blank" rel="noopener">Zarr</a> mirror for fast resume; persisted to <code>cache_dir</code>.</span><a class="badge" href="https://zarr.readthedocs.io/en/stable/" target="_blank" rel="noopener">zarr</a></div><div class="am-row"><span class="name"><a href="https://huggingface.co/EEGDash" target="_blank" rel="noopener">Hugging Face</a></span><span class="what">No per-dataset mirror published yet — browse the <a href="https://huggingface.co/EEGDash">EEGDash org listing</a> for sibling datasets. See the <a href="https://huggingface.co/docs/datasets/" target="_blank" rel="noopener">datasets</a> loader API.</span><a class="badge" href="https://huggingface.co/EEGDash" target="_blank" rel="noopener">huggingface</a></div><div class="am-row"><span class="name"><a href="https://docs.mlcommons.org/croissant/docs/croissant-spec.html" target="_blank" rel="noopener">Croissant 1.0</a></span><span class="what">Machine-readable <a href="https://docs.mlcommons.org/croissant/docs/croissant-spec.html" target="_blank" rel="noopener">JSON-LD descriptor</a> — <a href="../../_static/dataset_generated/croissant/NM000166.croissant.json" download>NM000166.croissant.json</a> (<a href="https://mlcommons.org/working-groups/data/datasets/" target="_blank" rel="noopener">MLCommons</a> schema, ingestible by PyTorch / TensorFlow / JAX).</span><a class="badge" href="https://docs.mlcommons.org/croissant/docs/croissant-spec.html" target="_blank" rel="noopener">mlcommons</a></div></div></div><section class="eegdash-ed-examples"><div class="sidecar-hdr"><span><b>Examples using EEGDash</b></span><span class="right">curated · start here</span></div><div class="ex-grid"><a class="ex-card" href="../../generated/auto_examples/tutorials/00_start_here/plot_00_first_search.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_00_first_search.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Find datasets with the EEGDash API</span><span class="ex-blurb">Query the catalogue, filter by task or modality, list candidates.</span></span></a><a class="ex-card" href="../../generated/auto_examples/tutorials/00_start_here/plot_01_first_recording.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_01_first_recording.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Load one EEG recording</span><span class="ex-blurb">Resolve a single record to an MNE Raw with channels and events.</span></span></a><a class="ex-card" href="../../generated/auto_examples/tutorials/00_start_here/plot_02_dataset_to_dataloader.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_02_dataset_to_dataloader.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">EEG recording to PyTorch DataLoader</span><span class="ex-blurb">Wrap braindecode windows in a DataLoader for model training.</span></span></a><a class="ex-card" href="../../generated/auto_examples/tutorials/10_core_workflow/plot_10_preprocess_and_window.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_10_preprocess_and_window.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Preprocess EEG and create windows</span><span class="ex-blurb">Filter, resample, epoch — and persist the windowed dataset.</span></span></a><a class="ex-card" href="../../generated/auto_examples/tutorials/10_core_workflow/plot_13_save_and_reuse_prepared_data.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_13_save_and_reuse_prepared_data.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Save and reload prepared data</span><span class="ex-blurb">Cache a windowed dataset to disk and reattach it without recompute.</span></span></a><a class="ex-card" href="../../generated/auto_examples/how_to/how_to_download_a_dataset.html"><span class="ex-thumb"><img src="../../_static/thumbs/how_to_download_a_dataset.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Download a dataset locally</span><span class="ex-blurb">Prefetch BIDS files to a local cache and validate the layout.</span></span></a></div><p class="ex-hint">Swap any <code>load_dataset(...)</code> call for <code>nm000166</code> to reproduce the tutorial on this dataset.</p></section><div class="eegdash-ed-footnotes"><div><h5>Citation</h5><p>Gan Huang, Zhenxing Hu, Weize Chen, Shaorong Zhang, Zhen Liang, … (2022). <em>M3CV: Multi-subject, Multi-session, Multi-task EEG Database</em>. <code>10.1016/j.neuroimage.2022.119666</code></p></div><div><h5>Provenance</h5><p><span class="note-num">¹</span>Contributed to nemar in BIDS format.</p><p><span class="note-num">²</span>Curated &amp; ingested by the EEGDash catalog; see CITATION.cff for canonical reference.</p><p><span class="note-num">³</span>Persistent identifier: <code>10.1016/j.neuroimage.2022.119666</code>.</p></div><div><h5>Related &amp; sibling datasets</h5><div class="rel-grid"><a class="rel-card" href="NM000134.html"><span class="rel-id">NM000134</span><span class="rel-meta">EEG · 20 subj</span></a><a class="rel-card" href="NM000238.html"><span class="rel-id">NM000238</span><span class="rel-meta">EEG · 87 subj</span></a><a class="rel-card" href="NM000229.html"><span class="rel-id">NM000229</span><span class="rel-meta">EEG · 29 subj</span></a><a class="rel-card" href="NM000114.html"><span class="rel-id">NM000114</span><span class="rel-meta">EEG · 64 subj</span></a><a class="rel-card" href="NM000157.html"><span class="rel-id">NM000157</span><span class="rel-meta">EEG · 19 subj</span></a></div><p class="rel-more">+ 1 more — see See Also below →</p></div></div><div class="eegdash-ed-prov"><div><div class="lbl">BIDS</div><div class="v ok">BIDS 1.9.0</div></div><div><div class="lbl">Sidecars</div><div class="v todo">not yet probed</div></div><div><div class="lbl">Provenance</div><div class="v">CC BY 4.0 · <a href="https://doi.org/10.1016/j.neuroimage.2022.119666">10.1016/j.neuroimage.2022.119666</a></div></div><div><div class="lbl">Machine-readable</div><div class="v"><a href="#dataset-information">schema.org/Dataset</a> · <a href="../../_static/dataset_generated/croissant/NM000166.croissant.json" download>Croissant</a></div></div><div><div class="lbl">Mirrors</div><div class="v"><a href="https://openneuro.org/datasets/nm000166">OpenNeuro</a> · <a href="https://nemar.org/dataexplorer/detail?dataset_id=nm000166">NEMAR</a> · <a href="https://huggingface.co/EEGDash">HF org</a></div></div></div>
 
 ## See Also
 

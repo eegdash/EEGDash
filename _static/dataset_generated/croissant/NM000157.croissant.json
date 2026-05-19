@@ -85,8 +85,7 @@
   "identifier": "doi:10.13026/0byy-ry86",
   "sameAs": [
     "https://doi.org/10.13026/0byy-ry86",
-    "https://openneuro.org/datasets/nm000157",
-    "https://huggingface.co/datasets/EEGDash/nm000157"
+    "https://openneuro.org/datasets/nm000157"
   ],
   "citeAs": "Boyla Mainsah, Chance Fleeting, Thomas Balmat, Eric Sellers, Leslie Collins (2019). Mainsah2025-B. doi:10.13026/0byy-ry86",
   "version": "1.9.0",
@@ -127,14 +126,6 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=nm000157",
       "encodingFormat": "text/html"
-    },
-    {
-      "@type": "cr:FileObject",
-      "@id": "nm000157-huggingface",
-      "name": "EEGDash/nm000157 on Hugging Face",
-      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
-      "contentUrl": "https://huggingface.co/datasets/EEGDash/nm000157",
-      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

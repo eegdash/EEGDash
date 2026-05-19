@@ -81,92 +81,106 @@ If you use this dataset in your research, please cite the original authors.
 
 ##Task
 Participants received cues to prepare for the target (auditory, visual or non-specific).
-Between cue and target were 3 seconds of task-irrelevant waiting time. For the duration of this interval, the fixation cross was frequency-tagged at 36 Hz and an amplitude modulated 40 Hz tone was played.
-The target was either a gabor-patch or a short tone.
-Participants were asked to differentiate one of 3 targets of each modality and indicate them with the arror buttons on the keyboard (e.g. low pitch tone left arrow button, middle pitch tone, arrow down button,…).
-In the auditory and the visual cuing condition, in 50 % of all trials, a random target of the uncued modality was also presented as distractor. In the non-specific cued condition, no distractors were presented, as the modality was unclear.
-For the task help participants saw at all times refer to the stimuli folder (task_help_crossmodal.pdf).
-For an illustration of the timing of the task refer to stimuli folder (task.png).
-For a detailed description of the task see: ([https://doi.org/10.7554/eLife.106050.1](https://doi.org/10.7554/eLife.106050.1)).
-##Task Instructions
-Welcome and thank you for taking part in our experiment! From this moment on, the experiment will roughly take 1 hour and 20 minutes.
-If anything is wrong, please contact the experimenter any time.
-In EEG-studies, it is important to be as MOTIONLESS as possible (even when moving the eyes or blinking)
-So please try to refrain from body movement and reduce blinking to a minimal level you can still feel comfortable with.
-You will have time to move and close your eyes in the breaks, so please use this time.
-Please fixate the cross in the center of the screen.’
-After a short time, one of the following three symbols will appear:
-(symbols shown on screen)
-They will tell you the type of target you will need to attend to later.
-Subsequently, you will see a cross and hear a sound for about 3 seconds. They are not important for you. During this time, continue to focus the cross at the center of the screen.
-AFTER THIS, the target will appear.
-(Target tones are presented)
-You just heard the three target tones. In the task, you will have to decide which one was presented to you.
-The target could be either visual or auditory. You will not know which it is, before the target appears.
-(visual targets are presented)
-In the task, you will have to decide wheter it is straight or tilted left or right.
-Use the arrow buttons on your keyboard to identify the target that was presented to you.
-Visual: tilted to the left (LEFT ARROW), straight (DOWN ARROW) and tilted to the right (RIGHT ARROW).
-Auditory: low tone (LEFT ARROW), middle tone (DOWN ARROW) and high tone (RIGHT ARROW).
-Always identify the target you were asked to attend to, even if both visual and auditory targets are presented.
-If you aren not told to attend to a speficic target, only one target will be presented.
-Your answer is timed, please try to accurately identify the target, while also reacting as fast as you can.
-After the practicing trials, there will be 28 blocks until the experiment is finished.
-If you have any questions, please inform the experimenter.
-If you understand the task, you can press the SPACE bar to start the practicing trials.
-(After this 36 practice trials were presented, these are NOT present in the recorded EEG data)
 
-**README**
+> **README**
 
-##Contact person
+> ##Contact person
 
-**Methods**
+> Between cue and target were 3 seconds of task-irrelevant waiting time. For the duration of this interval, the fixation cross was frequency-tagged at 36 Hz and an amplitude modulated 40 Hz tone was played.
+> The target was either a gabor-patch or a short tone.
 
-**Subjects**
+> Participants were asked to differentiate one of 3 targets of each modality and indicate them with the arror buttons on the keyboard (e.g. low pitch tone left arrow button, middle pitch tone, arrow down button,…).
+> In the auditory and the visual cuing condition, in 50 % of all trials, a random target of the uncued modality was also presented as distractor. In the non-specific cued condition, no distractors were presented, as the modality was unclear.
 
-All participants were healthy controls.
+> ### View full README
 
-### View full README
+> **README**
 
-**README**
+> ##Contact person
 
-##Contact person
+> Between cue and target were 3 seconds of task-irrelevant waiting time. For the duration of this interval, the fixation cross was frequency-tagged at 36 Hz and an amplitude modulated 40 Hz tone was played.
+> The target was either a gabor-patch or a short tone.
 
-**Methods**
+> Participants were asked to differentiate one of 3 targets of each modality and indicate them with the arror buttons on the keyboard (e.g. low pitch tone left arrow button, middle pitch tone, arrow down button,…).
+> In the auditory and the visual cuing condition, in 50 % of all trials, a random target of the uncued modality was also presented as distractor. In the non-specific cued condition, no distractors were presented, as the modality was unclear.
 
-**Subjects**
+> For the task help participants saw at all times refer to the stimuli folder (task_help_crossmodal.pdf).
+> For an illustration of the timing of the task refer to stimuli folder (task.png).
 
-All participants were healthy controls.
-inclusion criteria: normal or corrected-to-normal vision, no history of psychiatric or neurological illness (self-report)
+> For a detailed description of the task see: ([https://doi.org/10.7554/eLife.106050.1](https://doi.org/10.7554/eLife.106050.1)).
+> ##Task Instructions
+> Welcome and thank you for taking part in our experiment! From this moment on, the experiment will roughly take 1 hour and 20 minutes.
 
-**Task organization**
+> If anything is wrong, please contact the experimenter any time.
+> In EEG-studies, it is important to be as MOTIONLESS as possible (even when moving the eyes or blinking)
+> So please try to refrain from body movement and reduce blinking to a minimal level you can still feel comfortable with.
 
-6 conditions
-1. non-specific cue -> auditory target
-2. non-specific cue -> visual target
-3. auditory cue/target -> no distractor
-4. auditory cue/target -> visual distractor
-5. visual cue/target -> no distractor
-6. visual cue/target -> auditory distractor
+> You will have time to move and close your eyes in the breaks, so please use this time.
+> Please fixate the cross in the center of the screen.’
+> After a short time, one of the following three symbols will appear:
+> (symbols shown on screen)
+> They will tell you the type of target you will need to attend to later.
 
-were randomly ordered and balanced out over the experiment.
+> Subsequently, you will see a cross and hear a sound for about 3 seconds. They are not important for you. During this time, continue to focus the cross at the center of the screen.
+> AFTER THIS, the target will appear.
+> (Target tones are presented)
+> You just heard the three target tones. In the task, you will have to decide which one was presented to you.
 
-**Additional data acquired**
+> The target could be either visual or auditory. You will not know which it is, before the target appears.
+> (visual targets are presented)
+> In the task, you will have to decide wheter it is straight or tilted left or right.
 
-1 extra EOG channel to monitor eye-activity
+> Use the arrow buttons on your keyboard to identify the target that was presented to you.
+> Visual: tilted to the left (LEFT ARROW), straight (DOWN ARROW) and tilted to the right (RIGHT ARROW).
 
-**Experimental location**
+> Auditory: low tone (LEFT ARROW), middle tone (DOWN ARROW) and high tone (RIGHT ARROW).
+> Always identify the target you were asked to attend to, even if both visual and auditory targets are presented.
 
-Birmingham University, United Kingdom
+> If you aren not told to attend to a speficic target, only one target will be presented.
+> Your answer is timed, please try to accurately identify the target, while also reacting as fast as you can.
 
-**Missing data**
+> After the practicing trials, there will be 28 blocks until the experiment is finished.
+> If you have any questions, please inform the experimenter.
 
-sub-01 aborted the experiment.
-sub-17 did not perform above chance level.
-Both Participants were exlucded from the experiment.
-Acquisition dates were anonymised (01.01.2019, the year in which the study was recorded).
-Acquisition time of day is correct.
+> If you understand the task, you can press the SPACE bar to start the practicing trials.
+> (After this 36 practice trials were presented, these are NOT present in the recorded EEG data)
 
+> **Methods**
+
+> **Subjects**
+
+> All participants were healthy controls.
+> inclusion criteria: normal or corrected-to-normal vision, no history of psychiatric or neurological illness (self-report)
+
+> **Task organization**
+
+> 6 conditions
+> 1. non-specific cue -> auditory target
+> 2. non-specific cue -> visual target
+> 3. auditory cue/target -> no distractor
+> 4. auditory cue/target -> visual distractor
+> 5. visual cue/target -> no distractor
+> 6. visual cue/target -> auditory distractor
+
+> were randomly ordered and balanced out over the experiment.
+
+> **Additional data acquired**
+
+> 1 extra EOG channel to monitor eye-activity
+
+> **Experimental location**
+
+> Birmingham University, United Kingdom
+
+> **Missing data**
+
+> sub-01 aborted the experiment.
+> sub-17 did not perform above chance level.
+
+> Both Participants were exlucded from the experiment.
+> Acquisition dates were anonymised (01.01.2019, the year in which the study was recorded).
+
+> Acquisition time of day is correct.
 <div class="eegdash-ed-secnum">§ 03<b>Cohort · Participants</b></div>
 
 ## Cohort
@@ -175,11 +189,11 @@ Acquisition time of day is correct.
 
 <div class="eegdash-ed-cohort-grid"><div class="eegdash-stats-section" style="margin-bottom:1rem;">
   <p><strong>Age distribution by gender</strong> (n=22, range 18–27 yr, mean 19.1 yr)</p>
-  <div class="eeg-chart-row" style="display:flex; align-items:flex-end; gap:2px; height:80px; border-bottom:1px solid #34404e;">
-    <div style="display:flex; flex-direction:column-reverse; justify-content:flex-start; gap:1px;" title="15-19: n=18"><div style="width:28px; height:57px; background:#006ca3; flex-shrink:0;" title="15-19: female n=13"></div><div style="width:28px; height:22px; background:#f7941d; flex-shrink:0;" title="15-19: male n=5"></div></div><div style="display:flex; flex-direction:column-reverse; justify-content:flex-start; gap:1px;" title="20-24: n=3"><div style="width:28px; height:8px; background:#006ca3; flex-shrink:0;" title="20-24: female n=2"></div><div style="width:28px; height:4px; background:#f7941d; flex-shrink:0;" title="20-24: male n=1"></div></div><div style="display:flex; flex-direction:column-reverse; justify-content:flex-start; gap:1px;" title="25-29: n=1"><div style="width:28px; height:4px; background:#f7941d; flex-shrink:0;" title="25-29: male n=1"></div></div>
+  <div class="eeg-chart-row" style="display:flex; align-items:flex-end; gap:2px; height:180px; border-bottom:1px solid #34404e;">
+    <div style="display:flex; flex-direction:column-reverse; justify-content:flex-start; gap:1px; flex:1 1 0; min-width:0;" title="15-19: n=18"><div style="width:100%; height:130px; background:#006ca3; flex-shrink:0;" title="15-19: female n=13"></div><div style="width:100%; height:50px; background:#f7941d; flex-shrink:0;" title="15-19: male n=5"></div></div><div style="display:flex; flex-direction:column-reverse; justify-content:flex-start; gap:1px; flex:1 1 0; min-width:0;" title="20-24: n=3"><div style="width:100%; height:20px; background:#006ca3; flex-shrink:0;" title="20-24: female n=2"></div><div style="width:100%; height:10px; background:#f7941d; flex-shrink:0;" title="20-24: male n=1"></div></div><div style="display:flex; flex-direction:column-reverse; justify-content:flex-start; gap:1px; flex:1 1 0; min-width:0;" title="25-29: n=1"><div style="width:100%; height:10px; background:#f7941d; flex-shrink:0;" title="25-29: male n=1"></div></div>
   </div>
   <div class="eeg-chart-labels" style="display:flex; gap:2px; font-size:10px;">
-    <span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap;">15</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap;">20</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap;">25</span>
+    <span style="flex:1 1 0; min-width:0; text-align:center; overflow:hidden; white-space:nowrap;">15</span><span style="flex:1 1 0; min-width:0; text-align:center; overflow:hidden; white-space:nowrap;">20</span><span style="flex:1 1 0; min-width:0; text-align:center; overflow:hidden; white-space:nowrap;">25</span>
   </div>
   <div style="display:flex; gap:18px; margin-top:8px; font-size:11px;"><span style="display:inline-flex; align-items:center; gap:6px;"><i style="width:10px; height:10px; background:#006ca3; display:inline-block;"></i>Female · 15</span><span style="display:inline-flex; align-items:center; gap:6px;"><i style="width:10px; height:10px; background:#f7941d; display:inline-block;"></i>Male · 7</span></div>
 </div><div class="eegdash-stats-section eegdash-ed-sex" style="margin-bottom:1rem;">
@@ -196,7 +210,7 @@ Acquisition time of day is correct.
   <p><strong>Sampling frequencies</strong>: 500.0 Hz (n=22 recordings)</p>
 </div><div class="eegdash-stats-section" style="margin-bottom:1rem;">
   <p><strong>Total recording duration</strong>: 17 h 5 min</p>
-</div></div><div class="eegdash-ed-caveat"><div class="c-lbl">Editorial caveat · cohort size</div><h4>Treat this as a features-first dataset, not a deep-learning playground.</h4><p>With <b>n = 22</b> eeg participants, this dataset sits below the ~50-subject threshold where deep networks trained from scratch typically pay off. A well-tuned feature pipeline — band-power features, Riemannian geometry, linear classifier — is the recommended baseline. Use deep models only with transfer learning or pre-trained backbones.</p><p>For splits, prefer <code>GroupShuffleSplit</code> with <code>groups=subject_id</code> so windows from the same recording do not leak between train and test.</p></div><div class="eegdash-ed-secnum">§ 04<b>Signal · Electrodes & trace</b></div>
+</div></div><div class="eegdash-ed-secnum">§ 04<b>Signal · Electrodes & trace</b></div>
 
 ## Signal · Electrodes & live trace
 
@@ -431,7 +445,7 @@ path/
     one dataset has to be processed and saved at a time to account for
     its original position.
 
-<!-- !! processed by numpydoc !! --><div class="eegdash-ed-access"><div class="sidecar-hdr"><span><b>Access modes</b></span><span class="right">MNE → braindecode → PyTorch → ML</span></div><div class="am-list"><div class="am-row"><span class="name">.raw</span><span class="what">MNE <code>Raw</code> object — standard tools (filter, epoch, ICA, plot_psd).</span><span class="badge">mne</span></div><div class="am-row"><span class="name">BaseConcatDataset</span><span class="what">Each record is a lazy <code>BaseDataset</code> from braindecode — windowed via <code>create_windows_from_events</code>.</span><span class="badge">braindecode</span></div><div class="am-row"><span class="name">DataLoader</span><span class="what">Wraps the windowed dataset into a PyTorch <code>DataLoader</code>; supports parallel workers and on-the-fly augmentations.</span><span class="badge">pytorch</span></div><div class="am-row"><span class="name">Zarr cache</span><span class="what">Optional braindecode Zarr mirror for fast resume; persisted to <code>cache_dir</code>.</span><span class="badge">zarr</span></div><div class="am-row"><span class="name">Hugging Face</span><span class="what">No per-dataset mirror published yet — browse the <a href="https://huggingface.co/EEGDash">EEGDash org listing</a> for sibling datasets.</span><span class="badge">huggingface</span></div><div class="am-row"><span class="name">Croissant 1.0</span><span class="what">Machine-readable JSON-LD descriptor — <a href="../../_static/dataset_generated/croissant/DS007648.croissant.json" download>DS007648.croissant.json</a> (MLCommons schema, ingestible by PyTorch / TensorFlow / JAX).</span><span class="badge">mlcommons</span></div></div></div><section class="eegdash-ed-examples"><div class="sidecar-hdr"><span><b>Examples using EEGDash</b></span><span class="right">curated · start here</span></div><div class="ex-grid"><a class="ex-card" href="../../generated/auto_examples/tutorials/00_start_here/plot_00_first_search.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_00_first_search.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Find datasets with the EEGDash API</span><span class="ex-blurb">Query the catalogue, filter by task or modality, list candidates.</span></span></a><a class="ex-card" href="../../generated/auto_examples/tutorials/00_start_here/plot_01_first_recording.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_01_first_recording.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Load one EEG recording</span><span class="ex-blurb">Resolve a single record to an MNE Raw with channels and events.</span></span></a><a class="ex-card" href="../../generated/auto_examples/tutorials/00_start_here/plot_02_dataset_to_dataloader.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_02_dataset_to_dataloader.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">EEG recording to PyTorch DataLoader</span><span class="ex-blurb">Wrap braindecode windows in a DataLoader for model training.</span></span></a><a class="ex-card" href="../../generated/auto_examples/tutorials/10_core_workflow/plot_10_preprocess_and_window.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_10_preprocess_and_window.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Preprocess EEG and create windows</span><span class="ex-blurb">Filter, resample, epoch — and persist the windowed dataset.</span></span></a><a class="ex-card" href="../../generated/auto_examples/tutorials/10_core_workflow/plot_13_save_and_reuse_prepared_data.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_13_save_and_reuse_prepared_data.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Save and reload prepared data</span><span class="ex-blurb">Cache a windowed dataset to disk and reattach it without recompute.</span></span></a><a class="ex-card" href="../../generated/auto_examples/how_to/how_to_download_a_dataset.html"><span class="ex-thumb"><img src="../../_static/thumbs/how_to_download_a_dataset.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Download a dataset locally</span><span class="ex-blurb">Prefetch BIDS files to a local cache and validate the layout.</span></span></a></div><p class="ex-hint">Swap any <code>load_dataset(...)</code> call for <code>ds007648</code> to reproduce the tutorial on this dataset.</p></section><div class="eegdash-ed-footnotes"><div><h5>Citation</h5><p>Marion Brickwedde, Rupali Limachya, Roksana Markiewicz, Emma Sutton, Christopher Postzich, … (2026). <em>CrossModal Study</em>. <code>10.18112/openneuro.ds007648.v1.1.0</code></p></div><div><h5>Provenance</h5><p><span class="note-num">¹</span>Contributed to openneuro in BIDS format.</p><p><span class="note-num">²</span>Curated &amp; ingested by the EEGDash catalog; see CITATION.cff for canonical reference.</p><p><span class="note-num">³</span>Persistent identifier: <code>10.18112/openneuro.ds007648.v1.1.0</code>.</p></div><div><h5>Related &amp; sibling datasets</h5><div class="rel-grid"><a class="rel-card" href="DS003458.html"><span class="rel-id">DS003458</span><span class="rel-meta">EEG · 23 subj</span></a><a class="rel-card" href="DS003039.html"><span class="rel-id">DS003039</span><span class="rel-meta">EEG · 19 subj</span></a><a class="rel-card" href="DS004347.html"><span class="rel-id">DS004347</span><span class="rel-meta">EEG · 24 subj</span></a><a class="rel-card" href="DS003574.html"><span class="rel-id">DS003574</span><span class="rel-meta">EEG · 18 subj</span></a><a class="rel-card" href="DS003516.html"><span class="rel-id">DS003516</span><span class="rel-meta">EEG · 25 subj</span></a></div><p class="rel-more">+ 1 more — see See Also below →</p></div></div><div class="eegdash-ed-prov"><div><div class="lbl">BIDS</div><div class="v ok">BIDS 1.8.0</div></div><div><div class="lbl">Sidecars</div><div class="v">events · events.json · channels · electrodes · coordsystem · eeg.json</div></div><div><div class="lbl">Provenance</div><div class="v">CC0 · <a href="https://doi.org/10.18112/openneuro.ds007648.v1.1.0">10.18112/openneuro.ds007648.v1.1.0</a></div></div><div><div class="lbl">Machine-readable</div><div class="v"><a href="#dataset-information">schema.org/Dataset</a> · <a href="../../_static/dataset_generated/croissant/DS007648.croissant.json" download>Croissant</a></div></div><div><div class="lbl">Mirrors</div><div class="v"><a href="https://openneuro.org/datasets/ds007648">OpenNeuro</a> · <a href="https://nemar.org/dataexplorer/detail?dataset_id=ds007648">NEMAR</a> · <a href="https://huggingface.co/EEGDash">HF org</a></div></div></div>
+<!-- !! processed by numpydoc !! --><div class="eegdash-ed-access"><div class="sidecar-hdr"><span><b>Access modes</b></span><span class="right">MNE → braindecode → PyTorch → ML</span></div><div class="am-list"><div class="am-row"><span class="name"><a href="https://mne.tools/stable/generated/mne.io.Raw.html" target="_blank" rel="noopener">.raw</a></span><span class="what"><a href="https://mne.tools/stable/generated/mne.io.Raw.html" target="_blank" rel="noopener">MNE <code>Raw</code></a> object — standard tools (<a href="https://mne.tools/stable/generated/mne.io.Raw.html#mne.io.Raw.filter" target="_blank" rel="noopener">filter</a>, <a href="https://mne.tools/stable/generated/mne.Epochs.html" target="_blank" rel="noopener">epoch</a>, <a href="https://mne.tools/stable/generated/mne.preprocessing.ICA.html" target="_blank" rel="noopener">ICA</a>, <a href="https://mne.tools/stable/generated/mne.io.Raw.html#mne.io.Raw.compute_psd" target="_blank" rel="noopener">plot_psd</a>).</span><a class="badge" href="https://mne.tools/stable/" target="_blank" rel="noopener">mne</a></div><div class="am-row"><span class="name"><a href="https://braindecode.org/stable/generated/braindecode.datasets.BaseConcatDataset.html" target="_blank" rel="noopener">BaseConcatDataset</a></span><span class="what">Each record is a lazy <a href="https://braindecode.org/stable/generated/braindecode.datasets.BaseDataset.html" target="_blank" rel="noopener"><code>BaseDataset</code></a> from <a href="https://braindecode.org/stable/" target="_blank" rel="noopener">braindecode</a> — windowed via <a href="https://braindecode.org/stable/generated/braindecode.preprocessing.create_windows_from_events.html" target="_blank" rel="noopener"><code>create_windows_from_events</code></a>.</span><a class="badge" href="https://braindecode.org/stable/generated/braindecode.datasets.BaseConcatDataset.html" target="_blank" rel="noopener">braindecode</a></div><div class="am-row"><span class="name"><a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader" target="_blank" rel="noopener">DataLoader</a></span><span class="what">Wraps the windowed dataset into a <a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader" target="_blank" rel="noopener">PyTorch <code>DataLoader</code></a>; supports parallel workers and on-the-fly augmentations.</span><a class="badge" href="https://pytorch.org/" target="_blank" rel="noopener">pytorch</a></div><div class="am-row"><span class="name"><a href="https://zarr.readthedocs.io/en/stable/" target="_blank" rel="noopener">Zarr cache</a></span><span class="what">Optional braindecode <a href="https://zarr.readthedocs.io/en/stable/" target="_blank" rel="noopener">Zarr</a> mirror for fast resume; persisted to <code>cache_dir</code>.</span><a class="badge" href="https://zarr.readthedocs.io/en/stable/" target="_blank" rel="noopener">zarr</a></div><div class="am-row"><span class="name"><a href="https://huggingface.co/EEGDash" target="_blank" rel="noopener">Hugging Face</a></span><span class="what">No per-dataset mirror published yet — browse the <a href="https://huggingface.co/EEGDash">EEGDash org listing</a> for sibling datasets. See the <a href="https://huggingface.co/docs/datasets/" target="_blank" rel="noopener">datasets</a> loader API.</span><a class="badge" href="https://huggingface.co/EEGDash" target="_blank" rel="noopener">huggingface</a></div><div class="am-row"><span class="name"><a href="https://docs.mlcommons.org/croissant/docs/croissant-spec.html" target="_blank" rel="noopener">Croissant 1.0</a></span><span class="what">Machine-readable <a href="https://docs.mlcommons.org/croissant/docs/croissant-spec.html" target="_blank" rel="noopener">JSON-LD descriptor</a> — <a href="../../_static/dataset_generated/croissant/DS007648.croissant.json" download>DS007648.croissant.json</a> (<a href="https://mlcommons.org/working-groups/data/datasets/" target="_blank" rel="noopener">MLCommons</a> schema, ingestible by PyTorch / TensorFlow / JAX).</span><a class="badge" href="https://docs.mlcommons.org/croissant/docs/croissant-spec.html" target="_blank" rel="noopener">mlcommons</a></div></div></div><section class="eegdash-ed-examples"><div class="sidecar-hdr"><span><b>Examples using EEGDash</b></span><span class="right">curated · start here</span></div><div class="ex-grid"><a class="ex-card" href="../../generated/auto_examples/tutorials/00_start_here/plot_00_first_search.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_00_first_search.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Find datasets with the EEGDash API</span><span class="ex-blurb">Query the catalogue, filter by task or modality, list candidates.</span></span></a><a class="ex-card" href="../../generated/auto_examples/tutorials/00_start_here/plot_01_first_recording.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_01_first_recording.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Load one EEG recording</span><span class="ex-blurb">Resolve a single record to an MNE Raw with channels and events.</span></span></a><a class="ex-card" href="../../generated/auto_examples/tutorials/00_start_here/plot_02_dataset_to_dataloader.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_02_dataset_to_dataloader.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">EEG recording to PyTorch DataLoader</span><span class="ex-blurb">Wrap braindecode windows in a DataLoader for model training.</span></span></a><a class="ex-card" href="../../generated/auto_examples/tutorials/10_core_workflow/plot_10_preprocess_and_window.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_10_preprocess_and_window.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Preprocess EEG and create windows</span><span class="ex-blurb">Filter, resample, epoch — and persist the windowed dataset.</span></span></a><a class="ex-card" href="../../generated/auto_examples/tutorials/10_core_workflow/plot_13_save_and_reuse_prepared_data.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_13_save_and_reuse_prepared_data.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Save and reload prepared data</span><span class="ex-blurb">Cache a windowed dataset to disk and reattach it without recompute.</span></span></a><a class="ex-card" href="../../generated/auto_examples/how_to/how_to_download_a_dataset.html"><span class="ex-thumb"><img src="../../_static/thumbs/how_to_download_a_dataset.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Download a dataset locally</span><span class="ex-blurb">Prefetch BIDS files to a local cache and validate the layout.</span></span></a></div><p class="ex-hint">Swap any <code>load_dataset(...)</code> call for <code>ds007648</code> to reproduce the tutorial on this dataset.</p></section><div class="eegdash-ed-footnotes"><div><h5>Citation</h5><p>Marion Brickwedde, Rupali Limachya, Roksana Markiewicz, Emma Sutton, Christopher Postzich, … (2026). <em>CrossModal Study</em>. <code>10.18112/openneuro.ds007648.v1.1.0</code></p></div><div><h5>Provenance</h5><p><span class="note-num">¹</span>Contributed to openneuro in BIDS format.</p><p><span class="note-num">²</span>Curated &amp; ingested by the EEGDash catalog; see CITATION.cff for canonical reference.</p><p><span class="note-num">³</span>Persistent identifier: <code>10.18112/openneuro.ds007648.v1.1.0</code>.</p></div><div><h5>Related &amp; sibling datasets</h5><div class="rel-grid"><a class="rel-card" href="DS003458.html"><span class="rel-id">DS003458</span><span class="rel-meta">EEG · 23 subj</span></a><a class="rel-card" href="DS003039.html"><span class="rel-id">DS003039</span><span class="rel-meta">EEG · 19 subj</span></a><a class="rel-card" href="DS004347.html"><span class="rel-id">DS004347</span><span class="rel-meta">EEG · 24 subj</span></a><a class="rel-card" href="DS003574.html"><span class="rel-id">DS003574</span><span class="rel-meta">EEG · 18 subj</span></a><a class="rel-card" href="DS003516.html"><span class="rel-id">DS003516</span><span class="rel-meta">EEG · 25 subj</span></a></div><p class="rel-more">+ 1 more — see See Also below →</p></div></div><div class="eegdash-ed-prov"><div><div class="lbl">BIDS</div><div class="v ok">BIDS 1.8.0</div></div><div><div class="lbl">Sidecars</div><div class="v">events · events.json · channels · electrodes · coordsystem · eeg.json</div></div><div><div class="lbl">Provenance</div><div class="v">CC0 · <a href="https://doi.org/10.18112/openneuro.ds007648.v1.1.0">10.18112/openneuro.ds007648.v1.1.0</a></div></div><div><div class="lbl">Machine-readable</div><div class="v"><a href="#dataset-information">schema.org/Dataset</a> · <a href="../../_static/dataset_generated/croissant/DS007648.croissant.json" download>Croissant</a></div></div><div><div class="lbl">Mirrors</div><div class="v"><a href="https://openneuro.org/datasets/ds007648">OpenNeuro</a> · <a href="https://nemar.org/dataexplorer/detail?dataset_id=ds007648">NEMAR</a> · <a href="https://huggingface.co/EEGDash">HF org</a></div></div></div>
 
 ## See Also
 

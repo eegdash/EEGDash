@@ -81,120 +81,143 @@ If you use this dataset in your research, please cite the original authors.
 
 ##Task
 Participants received cues to prepare for the target (auditory or visual).
-Between cue and target were 3 seconds of task-irrelevant waiting time. For the duration of this interval, the fixation cross was frequency-tagged at 36 Hz and an amplitude modulated 40 Hz tone was played.
-The target was either a gabor-patch or a short tone.
-Participants were asked to differentiate one of 3 targets of each modality and indicate them with the arror buttons on the keyboard (e.g. low pitch tone left arrow button, middle pitch tone, arrow down button,…).
-In block one, targets were presented without distractors. In block 2, the target was always presented alongside a distractor from the target pool of the other modality (e.g. target visual, distractor auditory)
-For an illustration of the timing of the task refer to stimuli folder (task.png).
-Prior to the start of the recording, the difficulty of the stimuli was calibrated for both the auditory and the visual condition separately.
-For a detailed description of the task see: ([https://doi.org/10.7554/eLife.106050.1](https://doi.org/10.7554/eLife.106050.1)).
-##Task Instructions
-Welcome and thank you for taking part in our experiment!
-‘From this moment on, the experiment will roughly take 1 hour and 20 minutes.
-If anything is wrong, please contact the experimenter any time.
-We will first calibrate the task difficulty.
-We will show you three discs with varying amount of stripes.
-Your task will be to determine whether the disc you saw was the one with the least, the medium, or the highest amount of stripes.
-Press the middle button to continue.
-(stimuli shown)
-if you see the disc with the least amount of stripes, please press the left button.
-if you see the disc with the medium amount of stripes, please press the middle button.
-if you see the disc with the most amount of stripes, please press the right button.
-if you feel ready, press the middle button to continue.
-Your answer is timed, please try to accurately identify the target, while also reacting as fast as you can.
-The discs only appear for a very brief moment, so you need to look closely.
-If you have any questions, please inform the experimenter.
-If you understand the task, you can press the middle button to start.
-(calibration starts - determines the amount of stripes in each target)
-Great! The first part is done.
-We will now calibrate another part of the task involving tones.
-We will play three tones with different pitches.
-Your task will be to determine whether the pitch you heard was the lowest, medium, or the highest.
-Press the middle button to continue.
-(tones played)
-if you hear the tone with the lowest pitch, please press the left button.
-if you hear the tone with the medium pitch, please press the middle button.
-if you hear the tone with the highest pitch, please press the right button.
-if you feel ready, press the middle button to continue.
-Your answer is timed, please try to accurately identify the target, while also reacting as fast as you can.
-If you have any questions, please inform the experimenter.
-If you understand the task, you can press the middle button to start.
-(calibration starst - determines the tone pitch for the target tones)
-Perfect! Now we can begin with the real experiment.
-From this moment on, the experiment will roughly take 1 hour and 10 minutes.
-If anything is wrong, please contact the experimenter any time.
-In MEG-studies, it is important to be as MOTIONLESS as possible (even when moving the eyes or blinking)
-So please try to refrain from body movements and reduce blinking to a minimal level you can still feel comfortable with.
-You will have time to move and close your eyes in the breaks, so please use this time.
-Please press the middle button to continue.
-Please fixate the cross in the center of the screen.
-After a short while, one of the following two symbols will appear: (cues shown)
-They will tell you the whether your target will be a disc or a tone.
-Subsequently, you will see a flickering cross and hear a noisy sound for about 3 seconds.
-They are not important for you. During this time, continue to focus the cross at the center of the screen.
-AFTER THIS, the target will appear.
-Press the middle button to see and hear the targets we calbrated for you again.
-(targets shown and played)
-Use the button box in your right hand to identify the target that was presented to you.
-If you saw the visual symbol, your target will always be a disc. If you saw the auditory symbol, your target will always be a tone.
-Visual: least amount of stripes (LEFT BUTTON), medium amount of strips (MIDDLE BUTTON) and highest number of stripes (RIGHT BUTTON)
-Auditory: low tone (LEFT BUTTON), middle tone (MIDDLE BUTTON) and high tone (RIGHT BUTTON).
-Your answer is timed, please try to accurately identify the target, while also reacting as fast as you can.
-There will be 16 blocks until the experiment is finished.
-If you have any questions, please inform the experimenter.
-If you understand the task, you can press the middle button to start the experiment.
 
-**README**
+> **README**
 
-##Contact person
+> ##Contact person
 
-**Methods**
+> Between cue and target were 3 seconds of task-irrelevant waiting time. For the duration of this interval, the fixation cross was frequency-tagged at 36 Hz and an amplitude modulated 40 Hz tone was played.
+> The target was either a gabor-patch or a short tone.
 
-**Subjects**
+> Participants were asked to differentiate one of 3 targets of each modality and indicate them with the arror buttons on the keyboard (e.g. low pitch tone left arrow button, middle pitch tone, arrow down button,…).
+> In block one, targets were presented without distractors. In block 2, the target was always presented alongside a distractor from the target pool of the other modality (e.g. target visual, distractor auditory)
+> For an illustration of the timing of the task refer to stimuli folder (task.png).
 
-All participants were healthy controls.
+> ### View full README
 
-### View full README
+> **README**
 
-**README**
+> ##Contact person
 
-##Contact person
+> Between cue and target were 3 seconds of task-irrelevant waiting time. For the duration of this interval, the fixation cross was frequency-tagged at 36 Hz and an amplitude modulated 40 Hz tone was played.
+> The target was either a gabor-patch or a short tone.
 
-**Methods**
+> Participants were asked to differentiate one of 3 targets of each modality and indicate them with the arror buttons on the keyboard (e.g. low pitch tone left arrow button, middle pitch tone, arrow down button,…).
+> In block one, targets were presented without distractors. In block 2, the target was always presented alongside a distractor from the target pool of the other modality (e.g. target visual, distractor auditory)
+> For an illustration of the timing of the task refer to stimuli folder (task.png).
 
-**Subjects**
+> Prior to the start of the recording, the difficulty of the stimuli was calibrated for both the auditory and the visual condition separately.
+> For a detailed description of the task see: ([https://doi.org/10.7554/eLife.106050.1](https://doi.org/10.7554/eLife.106050.1)).
+> ##Task Instructions
+> Welcome and thank you for taking part in our experiment!
+> ‘From this moment on, the experiment will roughly take 1 hour and 20 minutes.
 
-All participants were healthy controls.
-inclusion criteria: normal or corrected-to-normal vision, no history of psychiatric or neurological illness (self-report)
+> If anything is wrong, please contact the experimenter any time.
+> We will first calibrate the task difficulty.
 
-**Task organization**
+> We will show you three discs with varying amount of stripes.
+> Your task will be to determine whether the disc you saw was the one with the least, the medium, or the highest amount of stripes.
 
-2 blocks with 2 conditions
-Block 1
-1. auditory cue –> auditory target
-2. visual cue –> visual target
+> Press the middle button to continue.
+> (stimuli shown)
+> if you see the disc with the least amount of stripes, please press the left button.
+> if you see the disc with the medium amount of stripes, please press the middle button.
+> if you see the disc with the most amount of stripes, please press the right button.
+> if you feel ready, press the middle button to continue.
 
-Block 2
-1. auditory cue –> auditory target, visual distractor
-2. visual cue –> visual target, auditory distractor
+> Your answer is timed, please try to accurately identify the target, while also reacting as fast as you can.
+> The discs only appear for a very brief moment, so you need to look closely.
 
-trials inside a block were randomly sequenced and balanced out.
+> If you have any questions, please inform the experimenter.
+> If you understand the task, you can press the middle button to start.
+> (calibration starts - determines the amount of stripes in each target)
+> Great! The first part is done.
 
-**Additional data acquired**
+> We will now calibrate another part of the task involving tones.
+> We will play three tones with different pitches.
 
-eye-link data to monitor eye-movement
+> Your task will be to determine whether the pitch you heard was the lowest, medium, or the highest.
+> Press the middle button to continue.
+> (tones played)
+> if you hear the tone with the lowest pitch, please press the left button.
+> if you hear the tone with the medium pitch, please press the middle button.
+> if you hear the tone with the highest pitch, please press the right button.
+> if you feel ready, press the middle button to continue.
 
-**Experimental location**
+> Your answer is timed, please try to accurately identify the target, while also reacting as fast as you can.
+> If you have any questions, please inform the experimenter.
 
-Birmingham University, United Kingdom
+> If you understand the task, you can press the middle button to start.
+> (calibration starst - determines the tone pitch for the target tones)
+> Perfect! Now we can begin with the real experiment.
 
-**Missing data**
+> From this moment on, the experiment will roughly take 1 hour and 10 minutes.
+> If anything is wrong, please contact the experimenter any time.
 
-sub-07 aborted the experiment after the 10th block because of feeling unwell and only had 42% of the trials correct.
-The participants was exlucded from the experiment.
-Acquisition dates were anonymised (01.01.2023, the year in which the study was recorded).
-Acquisition time of day is correct.
+> In MEG-studies, it is important to be as MOTIONLESS as possible (even when moving the eyes or blinking)
+> So please try to refrain from body movements and reduce blinking to a minimal level you can still feel comfortable with.
 
+> You will have time to move and close your eyes in the breaks, so please use this time.
+> Please press the middle button to continue.
+
+> Please fixate the cross in the center of the screen.
+> After a short while, one of the following two symbols will appear: (cues shown)
+> They will tell you the whether your target will be a disc or a tone.
+
+> Subsequently, you will see a flickering cross and hear a noisy sound for about 3 seconds.
+> They are not important for you. During this time, continue to focus the cross at the center of the screen.
+> AFTER THIS, the target will appear.
+
+> Press the middle button to see and hear the targets we calbrated for you again.
+> (targets shown and played)
+> Use the button box in your right hand to identify the target that was presented to you.
+
+> If you saw the visual symbol, your target will always be a disc. If you saw the auditory symbol, your target will always be a tone.
+> Visual: least amount of stripes (LEFT BUTTON), medium amount of strips (MIDDLE BUTTON) and highest number of stripes (RIGHT BUTTON)
+> Auditory: low tone (LEFT BUTTON), middle tone (MIDDLE BUTTON) and high tone (RIGHT BUTTON).
+
+> Your answer is timed, please try to accurately identify the target, while also reacting as fast as you can.
+> There will be 16 blocks until the experiment is finished.
+
+> If you have any questions, please inform the experimenter.
+> If you understand the task, you can press the middle button to start the experiment.
+
+> **Methods**
+
+> **Subjects**
+
+> All participants were healthy controls.
+> inclusion criteria: normal or corrected-to-normal vision, no history of psychiatric or neurological illness (self-report)
+
+> **Task organization**
+
+> 2 blocks with 2 conditions
+> Block 1
+> 1. auditory cue –> auditory target
+> 2. visual cue –> visual target
+
+> Block 2
+> 1. auditory cue –> auditory target, visual distractor
+> 2. visual cue –> visual target, auditory distractor
+
+> trials inside a block were randomly sequenced and balanced out.
+
+> **Additional data acquired**
+
+> eye-link data to monitor eye-movement
+
+> **Experimental location**
+
+> Birmingham University, United Kingdom
+
+> **Missing data**
+
+> sub-07 aborted the experiment after the 10th block because of feeling unwell and only had 42% of the trials correct.
+
+> The participants was exlucded from the experiment.
+> Acquisition dates were anonymised (01.01.2023, the year in which the study was recorded).
+
+> Acquisition time of day is correct.
 <div class="eegdash-ed-secnum">§ 03<b>Cohort · Participants</b></div>
 
 ## Cohort
@@ -203,11 +226,11 @@ Acquisition time of day is correct.
 
 <div class="eegdash-ed-cohort-grid"><div class="eegdash-stats-section" style="margin-bottom:1rem;">
   <p><strong>Age distribution by gender</strong> (n=27, range 18–31 yr, mean 23.3 yr)</p>
-  <div class="eeg-chart-row" style="display:flex; align-items:flex-end; gap:2px; height:80px; border-bottom:1px solid #34404e;">
-    <div style="display:flex; flex-direction:column-reverse; justify-content:flex-start; gap:1px;" title="15-19: n=2"><div style="width:28px; height:4px; background:#006ca3; flex-shrink:0;" title="15-19: female n=1"></div><div style="width:28px; height:4px; background:#f7941d; flex-shrink:0;" title="15-19: male n=1"></div></div><div style="display:flex; flex-direction:column-reverse; justify-content:flex-start; gap:1px;" title="20-24: n=17"><div style="width:28px; height:56px; background:#006ca3; flex-shrink:0;" title="20-24: female n=12"></div><div style="width:28px; height:23px; background:#f7941d; flex-shrink:0;" title="20-24: male n=5"></div></div><div style="display:flex; flex-direction:column-reverse; justify-content:flex-start; gap:1px;" title="25-29: n=6"><div style="width:28px; height:28px; background:#006ca3; flex-shrink:0;" title="25-29: female n=6"></div></div><div style="display:flex; flex-direction:column-reverse; justify-content:flex-start; gap:1px;" title="30-34: n=2"><div style="width:28px; height:9px; background:#f7941d; flex-shrink:0;" title="30-34: male n=2"></div></div>
+  <div class="eeg-chart-row" style="display:flex; align-items:flex-end; gap:2px; height:180px; border-bottom:1px solid #34404e;">
+    <div style="display:flex; flex-direction:column-reverse; justify-content:flex-start; gap:1px; flex:1 1 0; min-width:0;" title="15-19: n=2"><div style="width:100%; height:10px; background:#006ca3; flex-shrink:0;" title="15-19: female n=1"></div><div style="width:100%; height:10px; background:#f7941d; flex-shrink:0;" title="15-19: male n=1"></div></div><div style="display:flex; flex-direction:column-reverse; justify-content:flex-start; gap:1px; flex:1 1 0; min-width:0;" title="20-24: n=17"><div style="width:100%; height:127px; background:#006ca3; flex-shrink:0;" title="20-24: female n=12"></div><div style="width:100%; height:52px; background:#f7941d; flex-shrink:0;" title="20-24: male n=5"></div></div><div style="display:flex; flex-direction:column-reverse; justify-content:flex-start; gap:1px; flex:1 1 0; min-width:0;" title="25-29: n=6"><div style="width:100%; height:63px; background:#006ca3; flex-shrink:0;" title="25-29: female n=6"></div></div><div style="display:flex; flex-direction:column-reverse; justify-content:flex-start; gap:1px; flex:1 1 0; min-width:0;" title="30-34: n=2"><div style="width:100%; height:21px; background:#f7941d; flex-shrink:0;" title="30-34: male n=2"></div></div>
   </div>
   <div class="eeg-chart-labels" style="display:flex; gap:2px; font-size:10px;">
-    <span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap;">15</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap;">20</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap;">25</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap;">30</span>
+    <span style="flex:1 1 0; min-width:0; text-align:center; overflow:hidden; white-space:nowrap;">15</span><span style="flex:1 1 0; min-width:0; text-align:center; overflow:hidden; white-space:nowrap;">20</span><span style="flex:1 1 0; min-width:0; text-align:center; overflow:hidden; white-space:nowrap;">25</span><span style="flex:1 1 0; min-width:0; text-align:center; overflow:hidden; white-space:nowrap;">30</span>
   </div>
   <div style="display:flex; gap:18px; margin-top:8px; font-size:11px;"><span style="display:inline-flex; align-items:center; gap:6px;"><i style="width:10px; height:10px; background:#006ca3; display:inline-block;"></i>Female · 19</span><span style="display:inline-flex; align-items:center; gap:6px;"><i style="width:10px; height:10px; background:#f7941d; display:inline-block;"></i>Male · 8</span></div>
 </div><div class="eegdash-stats-section eegdash-ed-sex" style="margin-bottom:1rem;">
@@ -220,7 +243,7 @@ Acquisition time of day is correct.
   <div class="hand-row" style="margin-top:10px; font-size:11px; color:#6b7785; font-family:Inter,sans-serif;"><span style="text-transform:uppercase; letter-spacing:.16em; margin-right:10px;">Handedness</span><span style="display:inline-block; padding:2px 8px; margin-right:6px; font-family:Inter,sans-serif; font-size:11px; letter-spacing:.04em; background:rgba(0,108,163,0.08); color:#1a2532; border-radius:3px;">Right · 27</span></div>
 </div><div class="eegdash-stats-section" style="margin-bottom:1rem;">
   <p><strong>Channel counts</strong>: 334 ch (n=59 recordings)</p>
-</div></div><div class="eegdash-ed-caveat"><div class="c-lbl">Editorial caveat · cohort size</div><h4>Treat this as a features-first dataset, not a deep-learning playground.</h4><p>With <b>n = 27</b> meg participants, this dataset sits below the ~50-subject threshold where deep networks trained from scratch typically pay off. A well-tuned feature pipeline — band-power features, Riemannian geometry, linear classifier — is the recommended baseline. Use deep models only with transfer learning or pre-trained backbones.</p><p>For splits, prefer <code>GroupShuffleSplit</code> with <code>groups=subject_id</code> so windows from the same recording do not leak between train and test.</p></div><div class="eegdash-ed-secnum">§ 04<b>Signal · Electrodes & trace</b></div>
+</div></div><div class="eegdash-ed-secnum">§ 04<b>Signal · Electrodes & trace</b></div>
 
 ## Signal · Electrodes & live trace
 
@@ -451,7 +474,7 @@ path/
     one dataset has to be processed and saved at a time to account for
     its original position.
 
-<!-- !! processed by numpydoc !! --><div class="eegdash-ed-access"><div class="sidecar-hdr"><span><b>Access modes</b></span><span class="right">MNE → braindecode → PyTorch → ML</span></div><div class="am-list"><div class="am-row"><span class="name">.raw</span><span class="what">MNE <code>Raw</code> object — standard tools (filter, epoch, ICA, plot_psd).</span><span class="badge">mne</span></div><div class="am-row"><span class="name">BaseConcatDataset</span><span class="what">Each record is a lazy <code>BaseDataset</code> from braindecode — windowed via <code>create_windows_from_events</code>.</span><span class="badge">braindecode</span></div><div class="am-row"><span class="name">DataLoader</span><span class="what">Wraps the windowed dataset into a PyTorch <code>DataLoader</code>; supports parallel workers and on-the-fly augmentations.</span><span class="badge">pytorch</span></div><div class="am-row"><span class="name">Zarr cache</span><span class="what">Optional braindecode Zarr mirror for fast resume; persisted to <code>cache_dir</code>.</span><span class="badge">zarr</span></div><div class="am-row"><span class="name">Hugging Face</span><span class="what">No per-dataset mirror published yet — browse the <a href="https://huggingface.co/EEGDash">EEGDash org listing</a> for sibling datasets.</span><span class="badge">huggingface</span></div><div class="am-row"><span class="name">Croissant 1.0</span><span class="what">Machine-readable JSON-LD descriptor — <a href="../../_static/dataset_generated/croissant/DS007663.croissant.json" download>DS007663.croissant.json</a> (MLCommons schema, ingestible by PyTorch / TensorFlow / JAX).</span><span class="badge">mlcommons</span></div></div></div><section class="eegdash-ed-examples"><div class="sidecar-hdr"><span><b>Examples using EEGDash</b></span><span class="right">curated · start here</span></div><div class="ex-grid"><a class="ex-card" href="../../generated/auto_examples/tutorials/00_start_here/plot_00_first_search.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_00_first_search.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Find datasets with the EEGDash API</span><span class="ex-blurb">Query the catalogue, filter by task or modality, list candidates.</span></span></a><a class="ex-card" href="../../generated/auto_examples/tutorials/00_start_here/plot_01_first_recording.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_01_first_recording.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Load one EEG recording</span><span class="ex-blurb">Resolve a single record to an MNE Raw with channels and events.</span></span></a><a class="ex-card" href="../../generated/auto_examples/tutorials/00_start_here/plot_02_dataset_to_dataloader.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_02_dataset_to_dataloader.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">EEG recording to PyTorch DataLoader</span><span class="ex-blurb">Wrap braindecode windows in a DataLoader for model training.</span></span></a><a class="ex-card" href="../../generated/auto_examples/tutorials/10_core_workflow/plot_10_preprocess_and_window.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_10_preprocess_and_window.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Preprocess EEG and create windows</span><span class="ex-blurb">Filter, resample, epoch — and persist the windowed dataset.</span></span></a><a class="ex-card" href="../../generated/auto_examples/tutorials/10_core_workflow/plot_13_save_and_reuse_prepared_data.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_13_save_and_reuse_prepared_data.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Save and reload prepared data</span><span class="ex-blurb">Cache a windowed dataset to disk and reattach it without recompute.</span></span></a><a class="ex-card" href="../../generated/auto_examples/how_to/how_to_download_a_dataset.html"><span class="ex-thumb"><img src="../../_static/thumbs/how_to_download_a_dataset.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Download a dataset locally</span><span class="ex-blurb">Prefetch BIDS files to a local cache and validate the layout.</span></span></a></div><p class="ex-hint">Swap any <code>load_dataset(...)</code> call for <code>ds007663</code> to reproduce the tutorial on this dataset.</p></section><div class="eegdash-ed-footnotes"><div><h5>Citation</h5><p>Marion Brickwedde, Rupali Limachya, Roksana Markiewicz, Emma Sutton, Christopher Postzich, … (2026). <em>CrossModal Study</em>. <code>10.18112/openneuro.ds007663.v1.0.0</code></p></div><div><h5>Provenance</h5><p><span class="note-num">¹</span>Contributed to openneuro in BIDS format.</p><p><span class="note-num">²</span>Curated &amp; ingested by the EEGDash catalog; see CITATION.cff for canonical reference.</p><p><span class="note-num">³</span>Persistent identifier: <code>10.18112/openneuro.ds007663.v1.0.0</code>.</p></div><div><h5>Related &amp; sibling datasets</h5><div class="rel-grid"><a class="rel-card" href="DS007640.html"><span class="rel-id">DS007640</span><span class="rel-meta">MEG · 23 subj</span></a><a class="rel-card" href="DS004012.html"><span class="rel-id">DS004012</span><span class="rel-meta">MEG · 30 subj</span></a><a class="rel-card" href="DS003694.html"><span class="rel-id">DS003694</span><span class="rel-meta">MEG · 28 subj</span></a><a class="rel-card" href="DS002908.html"><span class="rel-id">DS002908</span><span class="rel-meta">MEG · 13 subj</span></a><a class="rel-card" href="DS004398.html"><span class="rel-id">DS004398</span><span class="rel-meta">MEG · 1 subj</span></a></div><p class="rel-more">+ 1 more — see See Also below →</p></div></div><div class="eegdash-ed-prov"><div><div class="lbl">BIDS</div><div class="v ok">BIDS 1.7.0</div></div><div><div class="lbl">Sidecars</div><div class="v todo">not yet probed</div></div><div><div class="lbl">Provenance</div><div class="v">CC0 · <a href="https://doi.org/10.18112/openneuro.ds007663.v1.0.0">10.18112/openneuro.ds007663.v1.0.0</a></div></div><div><div class="lbl">Machine-readable</div><div class="v"><a href="#dataset-information">schema.org/Dataset</a> · <a href="../../_static/dataset_generated/croissant/DS007663.croissant.json" download>Croissant</a></div></div><div><div class="lbl">Mirrors</div><div class="v"><a href="https://openneuro.org/datasets/ds007663">OpenNeuro</a> · <a href="https://nemar.org/dataexplorer/detail?dataset_id=ds007663">NEMAR</a> · <a href="https://huggingface.co/EEGDash">HF org</a></div></div></div>
+<!-- !! processed by numpydoc !! --><div class="eegdash-ed-access"><div class="sidecar-hdr"><span><b>Access modes</b></span><span class="right">MNE → braindecode → PyTorch → ML</span></div><div class="am-list"><div class="am-row"><span class="name"><a href="https://mne.tools/stable/generated/mne.io.Raw.html" target="_blank" rel="noopener">.raw</a></span><span class="what"><a href="https://mne.tools/stable/generated/mne.io.Raw.html" target="_blank" rel="noopener">MNE <code>Raw</code></a> object — standard tools (<a href="https://mne.tools/stable/generated/mne.io.Raw.html#mne.io.Raw.filter" target="_blank" rel="noopener">filter</a>, <a href="https://mne.tools/stable/generated/mne.Epochs.html" target="_blank" rel="noopener">epoch</a>, <a href="https://mne.tools/stable/generated/mne.preprocessing.ICA.html" target="_blank" rel="noopener">ICA</a>, <a href="https://mne.tools/stable/generated/mne.io.Raw.html#mne.io.Raw.compute_psd" target="_blank" rel="noopener">plot_psd</a>).</span><a class="badge" href="https://mne.tools/stable/" target="_blank" rel="noopener">mne</a></div><div class="am-row"><span class="name"><a href="https://braindecode.org/stable/generated/braindecode.datasets.BaseConcatDataset.html" target="_blank" rel="noopener">BaseConcatDataset</a></span><span class="what">Each record is a lazy <a href="https://braindecode.org/stable/generated/braindecode.datasets.BaseDataset.html" target="_blank" rel="noopener"><code>BaseDataset</code></a> from <a href="https://braindecode.org/stable/" target="_blank" rel="noopener">braindecode</a> — windowed via <a href="https://braindecode.org/stable/generated/braindecode.preprocessing.create_windows_from_events.html" target="_blank" rel="noopener"><code>create_windows_from_events</code></a>.</span><a class="badge" href="https://braindecode.org/stable/generated/braindecode.datasets.BaseConcatDataset.html" target="_blank" rel="noopener">braindecode</a></div><div class="am-row"><span class="name"><a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader" target="_blank" rel="noopener">DataLoader</a></span><span class="what">Wraps the windowed dataset into a <a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader" target="_blank" rel="noopener">PyTorch <code>DataLoader</code></a>; supports parallel workers and on-the-fly augmentations.</span><a class="badge" href="https://pytorch.org/" target="_blank" rel="noopener">pytorch</a></div><div class="am-row"><span class="name"><a href="https://zarr.readthedocs.io/en/stable/" target="_blank" rel="noopener">Zarr cache</a></span><span class="what">Optional braindecode <a href="https://zarr.readthedocs.io/en/stable/" target="_blank" rel="noopener">Zarr</a> mirror for fast resume; persisted to <code>cache_dir</code>.</span><a class="badge" href="https://zarr.readthedocs.io/en/stable/" target="_blank" rel="noopener">zarr</a></div><div class="am-row"><span class="name"><a href="https://huggingface.co/EEGDash" target="_blank" rel="noopener">Hugging Face</a></span><span class="what">No per-dataset mirror published yet — browse the <a href="https://huggingface.co/EEGDash">EEGDash org listing</a> for sibling datasets. See the <a href="https://huggingface.co/docs/datasets/" target="_blank" rel="noopener">datasets</a> loader API.</span><a class="badge" href="https://huggingface.co/EEGDash" target="_blank" rel="noopener">huggingface</a></div><div class="am-row"><span class="name"><a href="https://docs.mlcommons.org/croissant/docs/croissant-spec.html" target="_blank" rel="noopener">Croissant 1.0</a></span><span class="what">Machine-readable <a href="https://docs.mlcommons.org/croissant/docs/croissant-spec.html" target="_blank" rel="noopener">JSON-LD descriptor</a> — <a href="../../_static/dataset_generated/croissant/DS007663.croissant.json" download>DS007663.croissant.json</a> (<a href="https://mlcommons.org/working-groups/data/datasets/" target="_blank" rel="noopener">MLCommons</a> schema, ingestible by PyTorch / TensorFlow / JAX).</span><a class="badge" href="https://docs.mlcommons.org/croissant/docs/croissant-spec.html" target="_blank" rel="noopener">mlcommons</a></div></div></div><section class="eegdash-ed-examples"><div class="sidecar-hdr"><span><b>Examples using EEGDash</b></span><span class="right">curated · start here</span></div><div class="ex-grid"><a class="ex-card" href="../../generated/auto_examples/tutorials/00_start_here/plot_00_first_search.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_00_first_search.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Find datasets with the EEGDash API</span><span class="ex-blurb">Query the catalogue, filter by task or modality, list candidates.</span></span></a><a class="ex-card" href="../../generated/auto_examples/tutorials/00_start_here/plot_01_first_recording.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_01_first_recording.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Load one EEG recording</span><span class="ex-blurb">Resolve a single record to an MNE Raw with channels and events.</span></span></a><a class="ex-card" href="../../generated/auto_examples/tutorials/00_start_here/plot_02_dataset_to_dataloader.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_02_dataset_to_dataloader.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">EEG recording to PyTorch DataLoader</span><span class="ex-blurb">Wrap braindecode windows in a DataLoader for model training.</span></span></a><a class="ex-card" href="../../generated/auto_examples/tutorials/10_core_workflow/plot_10_preprocess_and_window.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_10_preprocess_and_window.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Preprocess EEG and create windows</span><span class="ex-blurb">Filter, resample, epoch — and persist the windowed dataset.</span></span></a><a class="ex-card" href="../../generated/auto_examples/tutorials/10_core_workflow/plot_13_save_and_reuse_prepared_data.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_13_save_and_reuse_prepared_data.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Save and reload prepared data</span><span class="ex-blurb">Cache a windowed dataset to disk and reattach it without recompute.</span></span></a><a class="ex-card" href="../../generated/auto_examples/how_to/how_to_download_a_dataset.html"><span class="ex-thumb"><img src="../../_static/thumbs/how_to_download_a_dataset.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Download a dataset locally</span><span class="ex-blurb">Prefetch BIDS files to a local cache and validate the layout.</span></span></a></div><p class="ex-hint">Swap any <code>load_dataset(...)</code> call for <code>ds007663</code> to reproduce the tutorial on this dataset.</p></section><div class="eegdash-ed-footnotes"><div><h5>Citation</h5><p>Marion Brickwedde, Rupali Limachya, Roksana Markiewicz, Emma Sutton, Christopher Postzich, … (2026). <em>CrossModal Study</em>. <code>10.18112/openneuro.ds007663.v1.0.0</code></p></div><div><h5>Provenance</h5><p><span class="note-num">¹</span>Contributed to openneuro in BIDS format.</p><p><span class="note-num">²</span>Curated &amp; ingested by the EEGDash catalog; see CITATION.cff for canonical reference.</p><p><span class="note-num">³</span>Persistent identifier: <code>10.18112/openneuro.ds007663.v1.0.0</code>.</p></div><div><h5>Related &amp; sibling datasets</h5><div class="rel-grid"><a class="rel-card" href="DS007640.html"><span class="rel-id">DS007640</span><span class="rel-meta">MEG · 23 subj</span></a><a class="rel-card" href="DS004012.html"><span class="rel-id">DS004012</span><span class="rel-meta">MEG · 30 subj</span></a><a class="rel-card" href="DS003694.html"><span class="rel-id">DS003694</span><span class="rel-meta">MEG · 28 subj</span></a><a class="rel-card" href="DS002908.html"><span class="rel-id">DS002908</span><span class="rel-meta">MEG · 13 subj</span></a><a class="rel-card" href="DS004398.html"><span class="rel-id">DS004398</span><span class="rel-meta">MEG · 1 subj</span></a></div><p class="rel-more">+ 1 more — see See Also below →</p></div></div><div class="eegdash-ed-prov"><div><div class="lbl">BIDS</div><div class="v ok">BIDS 1.7.0</div></div><div><div class="lbl">Sidecars</div><div class="v todo">not yet probed</div></div><div><div class="lbl">Provenance</div><div class="v">CC0 · <a href="https://doi.org/10.18112/openneuro.ds007663.v1.0.0">10.18112/openneuro.ds007663.v1.0.0</a></div></div><div><div class="lbl">Machine-readable</div><div class="v"><a href="#dataset-information">schema.org/Dataset</a> · <a href="../../_static/dataset_generated/croissant/DS007663.croissant.json" download>Croissant</a></div></div><div><div class="lbl">Mirrors</div><div class="v"><a href="https://openneuro.org/datasets/ds007663">OpenNeuro</a> · <a href="https://nemar.org/dataexplorer/detail?dataset_id=ds007663">NEMAR</a> · <a href="https://huggingface.co/EEGDash">HF org</a></div></div></div>
 
 ## See Also
 

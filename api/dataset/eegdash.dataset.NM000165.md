@@ -83,57 +83,58 @@ ankle dorsiflexions. EMG signals were recorded from the right tibialis anterior
 using two arrays of 64 surface electrodes (4 mm interelectrode distance, 13x5 configuration)
 for a total of 128 electrodes.
 
-**Grison et al 2025: HDsEMG recordings**
+> **Grison et al 2025: HDsEMG recordings**
 
-**Protocol description**
+> **Protocol description**
 
-The participant performed one, two, or three trapezoidal contractions (with repetitions being
-specified by the run labels) at 10, 15, 20, 25, 30, 35, 40, 50, 60, and 70 percent MVC
-with 120 s of rest in between, consisting of linear ramps up and down performed at
-5 percent per second and a plateau maintained for 20 s up to 30 percent MVC, 15 s for 35 percent
-and 40 percent MVC, and 10 s from 50 percent to 70 percent MVC. The order of the
-contractions was randomized.
+> The participant performed one, two, or three trapezoidal contractions (with repetitions being
+> specified by the run labels) at 10, 15, 20, 25, 30, 35, 40, 50, 60, and 70 percent MVC
+> with 120 s of rest in between, consisting of linear ramps up and down performed at
+> 5 percent per second and a plateau maintained for 20 s up to 30 percent MVC, 15 s for 35 percent
+> and 40 percent MVC, and 10 s from 50 percent to 70 percent MVC. The order of the
+> contractions was randomized.
 
-### View full README
+> ### View full README
 
-**Grison et al 2025: HDsEMG recordings**
+> **Grison et al 2025: HDsEMG recordings**
 
-**Protocol description**
+> **Protocol description**
 
-The participant performed one, two, or three trapezoidal contractions (with repetitions being
-specified by the run labels) at 10, 15, 20, 25, 30, 35, 40, 50, 60, and 70 percent MVC
-with 120 s of rest in between, consisting of linear ramps up and down performed at
-5 percent per second and a plateau maintained for 20 s up to 30 percent MVC, 15 s for 35 percent
-and 40 percent MVC, and 10 s from 50 percent to 70 percent MVC. The order of the
-contractions was randomized.
+> The participant performed one, two, or three trapezoidal contractions (with repetitions being
+> specified by the run labels) at 10, 15, 20, 25, 30, 35, 40, 50, 60, and 70 percent MVC
+> with 120 s of rest in between, consisting of linear ramps up and down performed at
+> 5 percent per second and a plateau maintained for 20 s up to 30 percent MVC, 15 s for 35 percent
+> and 40 percent MVC, and 10 s from 50 percent to 70 percent MVC. The order of the
+> contractions was randomized.
 
-**Set-up description**
+> **Set-up description**
 
-The participant sat on a chair with the hips flexed at 30 degrees, 0 degrees being
-the hip neutral position, and their knees fully extended. The foot of
-the dominant leg (right) was fixed onto the pedal of a commercial dynamometer (OT Bioelettronica)
-positioned at 30 degrees in the plantarflexion direction. Force signals
-were recorded with a load cell (CCT Transducer s.a.s.) connected in-series to the pedal
-using the same acquisition system as for the HD-EMG recordings.
+> The participant sat on a chair with the hips flexed at 30 degrees, 0 degrees being
+> the hip neutral position, and their knees fully extended. The foot of
+> the dominant leg (right) was fixed onto the pedal of a commercial dynamometer (OT Bioelettronica)
+> positioned at 30 degrees in the plantarflexion direction. Force signals
+> were recorded with a load cell (CCT Transducer s.a.s.) connected in-series to the pedal
+> using the same acquisition system as for the HD-EMG recordings.
 
-**Coordinate systems**
+> **Coordinate systems**
 
-All electrode coordinates (reported in mm) are reported in their respective
-grid coordinate system (*space-grid1\*and\*space-grid2*).
-Their relative positions as well as the positions of the reference
-and ground electrodes are reported in a separate coordinate system (*space-lowerLeg*)
-reported in percent of the lower leg length.
+> All electrode coordinates (reported in mm) are reported in their respective
+> grid coordinate system (*space-grid1\*and\*space-grid2*).
 
-**Labeled motor unit spike trains**
+> Their relative positions as well as the positions of the reference
+> and ground electrodes are reported in a separate coordinate system (*space-lowerLeg*)
+> reported in percent of the lower leg length.
 
-Labeled motor unit spike trains were derived from concurrently recorded invasive EMG
-and curated by an experienced investigator (only available for \*_run-01\* of each trial).
+> **Labeled motor unit spike trains**
 
-**Conversion**
+> Labeled motor unit spike trains were derived from concurrently recorded invasive EMG
+> and curated by an experienced investigator (only available for \*_run-01\* of each trial).
 
-The dataset has been converted semi-automatically using the [\*MUniverse\*](https://github.com/dfarinagroup/muniverse/tree/main) software.
-See *dataset_description.json* for further details.
+> **Conversion**
 
+> The dataset has been converted semi-automatically using the [\*MUniverse\*](https://github.com/dfarinagroup/muniverse/tree/main) software.
+
+> See *dataset_description.json* for further details.
 <div class="eegdash-ed-secnum">§ 03<b>Cohort · Participants</b></div>
 
 ## Cohort
@@ -154,7 +155,7 @@ See *dataset_description.json* for further details.
   <p><strong>Sampling frequencies</strong>: 10240.0 Hz (n=10 recordings)</p>
 </div><div class="eegdash-stats-section" style="margin-bottom:1rem;">
   <p><strong>Total recording duration</strong>: 8 min</p>
-</div></div><div class="eegdash-ed-caveat"><div class="c-lbl">Editorial caveat · cohort size</div><h4>Treat this as a features-first dataset, not a deep-learning playground.</h4><p>With <b>n = 1</b> emg participants, this dataset sits below the ~50-subject threshold where deep networks trained from scratch typically pay off. A well-tuned feature pipeline — band-power features, Riemannian geometry, linear classifier — is the recommended baseline. Use deep models only with transfer learning or pre-trained backbones.</p><p>For splits, prefer <code>GroupShuffleSplit</code> with <code>groups=subject_id</code> so windows from the same recording do not leak between train and test.</p></div><div class="eegdash-ed-secnum">§ 04<b>Signal · Electrodes & trace</b></div>
+</div></div><div class="eegdash-ed-secnum">§ 04<b>Signal · Electrodes & trace</b></div>
 
 ## Signal · Electrodes & live trace
 
@@ -368,7 +369,7 @@ path/
     one dataset has to be processed and saved at a time to account for
     its original position.
 
-<!-- !! processed by numpydoc !! --><div class="eegdash-ed-access"><div class="sidecar-hdr"><span><b>Access modes</b></span><span class="right">MNE → braindecode → PyTorch → ML</span></div><div class="am-list"><div class="am-row"><span class="name">.raw</span><span class="what">MNE <code>Raw</code> object — standard tools (filter, epoch, ICA, plot_psd).</span><span class="badge">mne</span></div><div class="am-row"><span class="name">BaseConcatDataset</span><span class="what">Each record is a lazy <code>BaseDataset</code> from braindecode — windowed via <code>create_windows_from_events</code>.</span><span class="badge">braindecode</span></div><div class="am-row"><span class="name">DataLoader</span><span class="what">Wraps the windowed dataset into a PyTorch <code>DataLoader</code>; supports parallel workers and on-the-fly augmentations.</span><span class="badge">pytorch</span></div><div class="am-row"><span class="name">Zarr cache</span><span class="what">Optional braindecode Zarr mirror for fast resume; persisted to <code>cache_dir</code>.</span><span class="badge">zarr</span></div><div class="am-row"><span class="name">Hugging Face</span><span class="what">No per-dataset mirror published yet — browse the <a href="https://huggingface.co/EEGDash">EEGDash org listing</a> for sibling datasets.</span><span class="badge">huggingface</span></div><div class="am-row"><span class="name">Croissant 1.0</span><span class="what">Machine-readable JSON-LD descriptor — <a href="../../_static/dataset_generated/croissant/NM000165.croissant.json" download>NM000165.croissant.json</a> (MLCommons schema, ingestible by PyTorch / TensorFlow / JAX).</span><span class="badge">mlcommons</span></div></div></div><section class="eegdash-ed-examples"><div class="sidecar-hdr"><span><b>Examples using EEGDash</b></span><span class="right">curated · start here</span></div><div class="ex-grid"><a class="ex-card" href="../../generated/auto_examples/tutorials/00_start_here/plot_00_first_search.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_00_first_search.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Find datasets with the EEGDash API</span><span class="ex-blurb">Query the catalogue, filter by task or modality, list candidates.</span></span></a><a class="ex-card" href="../../generated/auto_examples/tutorials/00_start_here/plot_01_first_recording.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_01_first_recording.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Load one EEG recording</span><span class="ex-blurb">Resolve a single record to an MNE Raw with channels and events.</span></span></a><a class="ex-card" href="../../generated/auto_examples/tutorials/00_start_here/plot_02_dataset_to_dataloader.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_02_dataset_to_dataloader.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">EEG recording to PyTorch DataLoader</span><span class="ex-blurb">Wrap braindecode windows in a DataLoader for model training.</span></span></a><a class="ex-card" href="../../generated/auto_examples/tutorials/10_core_workflow/plot_10_preprocess_and_window.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_10_preprocess_and_window.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Preprocess EEG and create windows</span><span class="ex-blurb">Filter, resample, epoch — and persist the windowed dataset.</span></span></a><a class="ex-card" href="../../generated/auto_examples/tutorials/10_core_workflow/plot_13_save_and_reuse_prepared_data.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_13_save_and_reuse_prepared_data.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Save and reload prepared data</span><span class="ex-blurb">Cache a windowed dataset to disk and reattach it without recompute.</span></span></a><a class="ex-card" href="../../generated/auto_examples/how_to/how_to_download_a_dataset.html"><span class="ex-thumb"><img src="../../_static/thumbs/how_to_download_a_dataset.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Download a dataset locally</span><span class="ex-blurb">Prefetch BIDS files to a local cache and validate the layout.</span></span></a></div><p class="ex-hint">Swap any <code>load_dataset(...)</code> call for <code>nm000165</code> to reproduce the tutorial on this dataset.</p></section><div class="eegdash-ed-footnotes"><div><h5>Citation</h5><p>Agnese Grison, Irene Mendez Guerra, Alexander Kenneth Clarke, Silvia Muceli, Jaime Ibanez Pereda, … (20). <em>MUniverse Grison et al 2025</em>. <code>https://doi.org/10.7910/DVN/ID1WNQ</code></p></div><div><h5>Provenance</h5><p><span class="note-num">¹</span>Contributed to nemar in BIDS format.</p><p><span class="note-num">²</span>Curated &amp; ingested by the EEGDash catalog; see CITATION.cff for canonical reference.</p><p><span class="note-num">³</span>Persistent identifier: <code>https://doi.org/10.7910/DVN/ID1WNQ</code>.</p></div><div><h5>Related &amp; sibling datasets</h5><div class="rel-grid"><a class="rel-card" href="NM000108.html"><span class="rel-id">NM000108</span><span class="rel-meta">EMG · 20 subj</span></a><a class="rel-card" href="NM000155.html"><span class="rel-id">NM000155</span><span class="rel-meta">EMG · 6 subj</span></a><a class="rel-card" href="NM000159.html"><span class="rel-id">NM000159</span><span class="rel-meta">EMG · 16 subj</span></a><a class="rel-card" href="NM000105.html"><span class="rel-id">NM000105</span><span class="rel-meta">EMG · 100 subj</span></a><a class="rel-card" href="NM000107.html"><span class="rel-id">NM000107</span><span class="rel-meta">EMG · 100 subj</span></a></div><p class="rel-more">+ 1 more — see See Also below →</p></div></div><div class="eegdash-ed-prov"><div><div class="lbl">BIDS</div><div class="v ok">BIDS 1.11.1</div></div><div><div class="lbl">Sidecars</div><div class="v todo">not yet probed</div></div><div><div class="lbl">Provenance</div><div class="v">CC0 BY 4.0 · <a href="https://doi.org/https://doi.org/10.7910/DVN/ID1WNQ">https://doi.org/10.7910/DVN/ID1WNQ</a></div></div><div><div class="lbl">Machine-readable</div><div class="v"><a href="#dataset-information">schema.org/Dataset</a> · <a href="../../_static/dataset_generated/croissant/NM000165.croissant.json" download>Croissant</a></div></div><div><div class="lbl">Mirrors</div><div class="v"><a href="https://openneuro.org/datasets/nm000165">OpenNeuro</a> · <a href="https://nemar.org/dataexplorer/detail?dataset_id=nm000165">NEMAR</a> · <a href="https://huggingface.co/EEGDash">HF org</a></div></div></div>
+<!-- !! processed by numpydoc !! --><div class="eegdash-ed-access"><div class="sidecar-hdr"><span><b>Access modes</b></span><span class="right">MNE → braindecode → PyTorch → ML</span></div><div class="am-list"><div class="am-row"><span class="name"><a href="https://mne.tools/stable/generated/mne.io.Raw.html" target="_blank" rel="noopener">.raw</a></span><span class="what"><a href="https://mne.tools/stable/generated/mne.io.Raw.html" target="_blank" rel="noopener">MNE <code>Raw</code></a> object — standard tools (<a href="https://mne.tools/stable/generated/mne.io.Raw.html#mne.io.Raw.filter" target="_blank" rel="noopener">filter</a>, <a href="https://mne.tools/stable/generated/mne.Epochs.html" target="_blank" rel="noopener">epoch</a>, <a href="https://mne.tools/stable/generated/mne.preprocessing.ICA.html" target="_blank" rel="noopener">ICA</a>, <a href="https://mne.tools/stable/generated/mne.io.Raw.html#mne.io.Raw.compute_psd" target="_blank" rel="noopener">plot_psd</a>).</span><a class="badge" href="https://mne.tools/stable/" target="_blank" rel="noopener">mne</a></div><div class="am-row"><span class="name"><a href="https://braindecode.org/stable/generated/braindecode.datasets.BaseConcatDataset.html" target="_blank" rel="noopener">BaseConcatDataset</a></span><span class="what">Each record is a lazy <a href="https://braindecode.org/stable/generated/braindecode.datasets.BaseDataset.html" target="_blank" rel="noopener"><code>BaseDataset</code></a> from <a href="https://braindecode.org/stable/" target="_blank" rel="noopener">braindecode</a> — windowed via <a href="https://braindecode.org/stable/generated/braindecode.preprocessing.create_windows_from_events.html" target="_blank" rel="noopener"><code>create_windows_from_events</code></a>.</span><a class="badge" href="https://braindecode.org/stable/generated/braindecode.datasets.BaseConcatDataset.html" target="_blank" rel="noopener">braindecode</a></div><div class="am-row"><span class="name"><a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader" target="_blank" rel="noopener">DataLoader</a></span><span class="what">Wraps the windowed dataset into a <a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader" target="_blank" rel="noopener">PyTorch <code>DataLoader</code></a>; supports parallel workers and on-the-fly augmentations.</span><a class="badge" href="https://pytorch.org/" target="_blank" rel="noopener">pytorch</a></div><div class="am-row"><span class="name"><a href="https://zarr.readthedocs.io/en/stable/" target="_blank" rel="noopener">Zarr cache</a></span><span class="what">Optional braindecode <a href="https://zarr.readthedocs.io/en/stable/" target="_blank" rel="noopener">Zarr</a> mirror for fast resume; persisted to <code>cache_dir</code>.</span><a class="badge" href="https://zarr.readthedocs.io/en/stable/" target="_blank" rel="noopener">zarr</a></div><div class="am-row"><span class="name"><a href="https://huggingface.co/EEGDash" target="_blank" rel="noopener">Hugging Face</a></span><span class="what">No per-dataset mirror published yet — browse the <a href="https://huggingface.co/EEGDash">EEGDash org listing</a> for sibling datasets. See the <a href="https://huggingface.co/docs/datasets/" target="_blank" rel="noopener">datasets</a> loader API.</span><a class="badge" href="https://huggingface.co/EEGDash" target="_blank" rel="noopener">huggingface</a></div><div class="am-row"><span class="name"><a href="https://docs.mlcommons.org/croissant/docs/croissant-spec.html" target="_blank" rel="noopener">Croissant 1.0</a></span><span class="what">Machine-readable <a href="https://docs.mlcommons.org/croissant/docs/croissant-spec.html" target="_blank" rel="noopener">JSON-LD descriptor</a> — <a href="../../_static/dataset_generated/croissant/NM000165.croissant.json" download>NM000165.croissant.json</a> (<a href="https://mlcommons.org/working-groups/data/datasets/" target="_blank" rel="noopener">MLCommons</a> schema, ingestible by PyTorch / TensorFlow / JAX).</span><a class="badge" href="https://docs.mlcommons.org/croissant/docs/croissant-spec.html" target="_blank" rel="noopener">mlcommons</a></div></div></div><section class="eegdash-ed-examples"><div class="sidecar-hdr"><span><b>Examples using EEGDash</b></span><span class="right">curated · start here</span></div><div class="ex-grid"><a class="ex-card" href="../../generated/auto_examples/tutorials/00_start_here/plot_00_first_search.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_00_first_search.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Find datasets with the EEGDash API</span><span class="ex-blurb">Query the catalogue, filter by task or modality, list candidates.</span></span></a><a class="ex-card" href="../../generated/auto_examples/tutorials/00_start_here/plot_01_first_recording.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_01_first_recording.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Load one EEG recording</span><span class="ex-blurb">Resolve a single record to an MNE Raw with channels and events.</span></span></a><a class="ex-card" href="../../generated/auto_examples/tutorials/00_start_here/plot_02_dataset_to_dataloader.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_02_dataset_to_dataloader.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">EEG recording to PyTorch DataLoader</span><span class="ex-blurb">Wrap braindecode windows in a DataLoader for model training.</span></span></a><a class="ex-card" href="../../generated/auto_examples/tutorials/10_core_workflow/plot_10_preprocess_and_window.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_10_preprocess_and_window.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Preprocess EEG and create windows</span><span class="ex-blurb">Filter, resample, epoch — and persist the windowed dataset.</span></span></a><a class="ex-card" href="../../generated/auto_examples/tutorials/10_core_workflow/plot_13_save_and_reuse_prepared_data.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_13_save_and_reuse_prepared_data.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Save and reload prepared data</span><span class="ex-blurb">Cache a windowed dataset to disk and reattach it without recompute.</span></span></a><a class="ex-card" href="../../generated/auto_examples/how_to/how_to_download_a_dataset.html"><span class="ex-thumb"><img src="../../_static/thumbs/how_to_download_a_dataset.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Download a dataset locally</span><span class="ex-blurb">Prefetch BIDS files to a local cache and validate the layout.</span></span></a></div><p class="ex-hint">Swap any <code>load_dataset(...)</code> call for <code>nm000165</code> to reproduce the tutorial on this dataset.</p></section><div class="eegdash-ed-footnotes"><div><h5>Citation</h5><p>Agnese Grison, Irene Mendez Guerra, Alexander Kenneth Clarke, Silvia Muceli, Jaime Ibanez Pereda, … (20). <em>MUniverse Grison et al 2025</em>. <code>https://doi.org/10.7910/DVN/ID1WNQ</code></p></div><div><h5>Provenance</h5><p><span class="note-num">¹</span>Contributed to nemar in BIDS format.</p><p><span class="note-num">²</span>Curated &amp; ingested by the EEGDash catalog; see CITATION.cff for canonical reference.</p><p><span class="note-num">³</span>Persistent identifier: <code>https://doi.org/10.7910/DVN/ID1WNQ</code>.</p></div><div><h5>Related &amp; sibling datasets</h5><div class="rel-grid"><a class="rel-card" href="NM000108.html"><span class="rel-id">NM000108</span><span class="rel-meta">EMG · 20 subj</span></a><a class="rel-card" href="NM000155.html"><span class="rel-id">NM000155</span><span class="rel-meta">EMG · 6 subj</span></a><a class="rel-card" href="NM000159.html"><span class="rel-id">NM000159</span><span class="rel-meta">EMG · 16 subj</span></a><a class="rel-card" href="NM000105.html"><span class="rel-id">NM000105</span><span class="rel-meta">EMG · 100 subj</span></a><a class="rel-card" href="NM000107.html"><span class="rel-id">NM000107</span><span class="rel-meta">EMG · 100 subj</span></a></div><p class="rel-more">+ 1 more — see See Also below →</p></div></div><div class="eegdash-ed-prov"><div><div class="lbl">BIDS</div><div class="v ok">BIDS 1.11.1</div></div><div><div class="lbl">Sidecars</div><div class="v todo">not yet probed</div></div><div><div class="lbl">Provenance</div><div class="v">CC0 BY 4.0 · <a href="https://doi.org/https://doi.org/10.7910/DVN/ID1WNQ">https://doi.org/10.7910/DVN/ID1WNQ</a></div></div><div><div class="lbl">Machine-readable</div><div class="v"><a href="#dataset-information">schema.org/Dataset</a> · <a href="../../_static/dataset_generated/croissant/NM000165.croissant.json" download>Croissant</a></div></div><div><div class="lbl">Mirrors</div><div class="v"><a href="https://openneuro.org/datasets/nm000165">OpenNeuro</a> · <a href="https://nemar.org/dataexplorer/detail?dataset_id=nm000165">NEMAR</a> · <a href="https://huggingface.co/EEGDash">HF org</a></div></div></div>
 
 ## See Also
 

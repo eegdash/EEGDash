@@ -91,77 +91,77 @@ The dataset includes 28 video clips designed to elicit nine emotion categories (
 - Joy (Videos 23-25): Durations 34-68 seconds, positive valence
 - Tenderness (Videos 26-28): Durations 54-77 seconds, positive valence
 
-[DOI](https://doi.org/10.82901/nemar.nm000112)
+> [DOI](https://doi.org/10.82901/nemar.nm000112)
 
-**FACED - Finer-grained Affective Computing EEG Dataset**
+> **FACED - Finer-grained Affective Computing EEG Dataset**
 
-**Introduction**
+> **Introduction**
 
-Metadata for each video (duration, source film, source database, valence, targeted emotion) is read from Stimuli_info.xlsx.
-*Event markers (from evt.bdf annotations):*
-- 100: Task/block start
+> Metadata for each video (duration, source film, source database, valence, targeted emotion) is read from Stimuli_info.xlsx.
+> *Event markers (from evt.bdf annotations):*
+> - 100: Task/block start
 
-### View full README
+> ### View full README
 
-[DOI](https://doi.org/10.82901/nemar.nm000112)
+> [DOI](https://doi.org/10.82901/nemar.nm000112)
 
-**FACED - Finer-grained Affective Computing EEG Dataset**
+> **FACED - Finer-grained Affective Computing EEG Dataset**
 
-**Introduction**
+> **Introduction**
 
-Metadata for each video (duration, source film, source database, valence, targeted emotion) is read from Stimuli_info.xlsx.
-*Event markers (from evt.bdf annotations):*
-- 100: Task/block start
-- 101: Video onset
-- 102: Video offset
-- 1–28: Video index (appears just before 101, used to link to stimulus metadata)
-- 201/202: Block boundary markers
-- “Start Impedance” / “Stop Impedance”: Technical markers (ignored)
+> Metadata for each video (duration, source film, source database, valence, targeted emotion) is read from Stimuli_info.xlsx.
+> *Event markers (from evt.bdf annotations):*
+> - 100: Task/block start
+> - 101: Video onset
+> - 102: Video offset
+> - 1–28: Video index (appears just before 101, used to link to stimulus metadata)
+> - 201/202: Block boundary markers
+> - “Start Impedance” / “Stop Impedance”: Technical markers (ignored)
 
-The conversion script reads evt.bdf annotations for each subject, parses video presentation spans (from video index + 101 to 102), and creates MNE Annotations with the source film title (video_title) as description. These annotations are exported to BIDS events.tsv with extra columns:
-- emotion_label: targeted emotion category (Anger, Disgust, Fear, Sadness, Neutral, Amusement, Inspiration, Joy, Tenderness)
-- binary_label: positive/negative/neutral classification
-- video_index: 1–28
-- Self-reported ratings (Joy, Tenderness, Inspiration, Amusement, Anger, Disgust, Fear, Sadness, Arousal, Valence, Familiarity, Liking)
+> The conversion script reads evt.bdf annotations for each subject, parses video presentation spans (from video index + 101 to 102), and creates MNE Annotations with the source film title (video_title) as description. These annotations are exported to BIDS events.tsv with extra columns:
+> - emotion_label: targeted emotion category (Anger, Disgust, Fear, Sadness, Neutral, Amusement, Inspiration, Joy, Tenderness)
+> - binary_label: positive/negative/neutral classification
+> - video_index: 1–28
+> - Self-reported ratings (Joy, Tenderness, Inspiration, Amusement, Anger, Disgust, Fear, Sadness, Arousal, Valence, Familiarity, Liking)
 
-**Description of the preprocessing if any**
+> **Description of the preprocessing if any**
 
-Raw BDF files from the biosignal recording system have been converted to BIDS format. Channel names are standardized to match the International 10-20 nomenclature. Subjects have been assigned numeric IDs (sub-000 through sub-122) corresponding to their original subject designations in the dataset. Recording dates have been set to a default value (2023-01-01) due to privacy considerations, while time relationships between files are preserved. Subject demographic information (age, sex) has been extracted from the Recording_info.csv file and properly formatted for BIDS.
-Stimulus timing information from the evt.bdf event files has been parsed and enriched with metadata from Stimuli_info.xlsx. Each video presentation is annotated with the targeted emotion category (Anger, Disgust, Fear, Sadness, Neutral, Amusement, Inspiration, Joy, Tenderness) and includes self-reported ratings from After_remarks.mat when available.
+> Raw BDF files from the biosignal recording system have been converted to BIDS format. Channel names are standardized to match the International 10-20 nomenclature. Subjects have been assigned numeric IDs (sub-000 through sub-122) corresponding to their original subject designations in the dataset. Recording dates have been set to a default value (2023-01-01) due to privacy considerations, while time relationships between files are preserved. Subject demographic information (age, sex) has been extracted from the Recording_info.csv file and properly formatted for BIDS.
 
-**Citation**
+> Stimulus timing information from the evt.bdf event files has been parsed and enriched with metadata from Stimuli_info.xlsx. Each video presentation is annotated with the targeted emotion category (Anger, Disgust, Fear, Sadness, Neutral, Amusement, Inspiration, Joy, Tenderness) and includes self-reported ratings from After_remarks.mat when available.
 
-When using this dataset, please cite:
-1. Liu, Y., Sourina, O., & Nguyen, M. K. (2023). Finer-grained Affective Computing EEG Dataset. Scientific Data, 10(1), 809. [https://doi.org/10.1038/s41597-023-02650-w](https://doi.org/10.1038/s41597-023-02650-w)
-2. Synapse Platform: [https://www.synapse.org/#!Synapse:syn50614194](https://www.synapse.org/#!Synapse:syn50614194)
-3. The dataset is available at the Synapse platform repository.
+> **Citation**
 
-*Data curators:*
-Pierre Guetschel (BIDS conversion)
-Original data collection team:
-- Yisi Liu (Nanyang Technological University)
-- Olga Sourina (Nanyang Technological University)
+> When using this dataset, please cite:
+> 1. Liu, Y., Sourina, O., & Nguyen, M. K. (2023). Finer-grained Affective Computing EEG Dataset. Scientific Data, 10(1), 809. [https://doi.org/10.1038/s41597-023-02650-w](https://doi.org/10.1038/s41597-023-02650-w)
+> 2. Synapse Platform: [https://www.synapse.org/#!Synapse:syn50614194](https://www.synapse.org/#!Synapse:syn50614194)
+> 3. The dataset is available at the Synapse platform repository.
 
-**- Minh Khoa Nguyen (Nanyang Technological University)**
+> *Data curators:*
+> Pierre Guetschel (BIDS conversion)
+> Original data collection team:
+> - Yisi Liu (Nanyang Technological University)
+> - Olga Sourina (Nanyang Technological University)
 
-**Automatic report**
+> **- Minh Khoa Nguyen (Nanyang Technological University)**
 
-*Report automatically generated by \`\`mne_bids.make_report()\`\`.*
+> **Automatic report**
 
-> The FACED - Finer-grained Affective Computing EEG Dataset dataset was created
+> *Report automatically generated by \`\`mne_bids.make_report()\`\`.*
 
-by Yisi Liu, Olga Sourina, and Minh Khoa Nguyen and conforms to BIDS version
-1.7.0. This report was generated with MNE-BIDS
-([https://doi.org/10.21105/joss.01896](https://doi.org/10.21105/joss.01896)). The dataset consists of 123 participants
-(comprised of 48 male and 75 female participants; handedness were all unknown;
-ages ranged from 17.0 to 38.0 (mean = 22.94, std = 4.66)) . Data was recorded
-using an EEG system (Biosemi) sampled at 1000.0, and 250.0 Hz with line noise at
-n/a Hz. There were 123 scans in total. Recording durations ranged from 3468.0 to
-6743.0 seconds (mean = 4544.83, std = 647.24), for a total of 559013.71 seconds
-of data recorded over all scans. For each dataset, there were on average 32.0
-(std = 0.0) recording channels per scan, out of which 32.0 (std = 0.0) were used
-in analysis (0.0 +/- 0.0 were removed from analysis).
+> > The FACED - Finer-grained Affective Computing EEG Dataset dataset was created
 
+> by Yisi Liu, Olga Sourina, and Minh Khoa Nguyen and conforms to BIDS version
+> 1.7.0. This report was generated with MNE-BIDS
+> ([https://doi.org/10.21105/joss.01896](https://doi.org/10.21105/joss.01896)). The dataset consists of 123 participants
+> (comprised of 48 male and 75 female participants; handedness were all unknown;
+> ages ranged from 17.0 to 38.0 (mean = 22.94, std = 4.66)) . Data was recorded
+> using an EEG system (Biosemi) sampled at 1000.0, and 250.0 Hz with line noise at
+> n/a Hz. There were 123 scans in total. Recording durations ranged from 3468.0 to
+> 6743.0 seconds (mean = 4544.83, std = 647.24), for a total of 559013.71 seconds
+> of data recorded over all scans. For each dataset, there were on average 32.0
+> (std = 0.0) recording channels per scan, out of which 32.0 (std = 0.0) were used
+> in analysis (0.0 +/- 0.0 were removed from analysis).
 <div class="eegdash-ed-secnum">§ 03<b>Cohort · Participants</b></div>
 
 ## Cohort
@@ -170,11 +170,11 @@ in analysis (0.0 +/- 0.0 were removed from analysis).
 
 <div class="eegdash-ed-cohort-grid"><div class="eegdash-stats-section" style="margin-bottom:1rem;">
   <p><strong>Age distribution by gender</strong> (n=123, range 17–38 yr, mean 22.9 yr)</p>
-  <div class="eeg-chart-row" style="display:flex; align-items:flex-end; gap:2px; height:80px; border-bottom:1px solid #34404e;">
-    <div style="display:flex; flex-direction:column-reverse; justify-content:flex-start; gap:1px;" title="15-19: n=17"><div style="width:28px; height:8px; background:#006ca3; flex-shrink:0;" title="15-19: female n=7"></div><div style="width:28px; height:11px; background:#f7941d; flex-shrink:0;" title="15-19: male n=10"></div></div><div style="display:flex; flex-direction:column-reverse; justify-content:flex-start; gap:1px;" title="20-24: n=70"><div style="width:28px; height:56px; background:#006ca3; flex-shrink:0;" title="20-24: female n=49"></div><div style="width:28px; height:24px; background:#f7941d; flex-shrink:0;" title="20-24: male n=21"></div></div><div style="display:flex; flex-direction:column-reverse; justify-content:flex-start; gap:1px;" title="25-29: n=18"><div style="width:28px; height:10px; background:#006ca3; flex-shrink:0;" title="25-29: female n=9"></div><div style="width:28px; height:10px; background:#f7941d; flex-shrink:0;" title="25-29: male n=9"></div></div><div style="display:flex; flex-direction:column-reverse; justify-content:flex-start; gap:1px;" title="30-34: n=16"><div style="width:28px; height:10px; background:#006ca3; flex-shrink:0;" title="30-34: female n=9"></div><div style="width:28px; height:8px; background:#f7941d; flex-shrink:0;" title="30-34: male n=7"></div></div><div style="display:flex; flex-direction:column-reverse; justify-content:flex-start; gap:1px;" title="35-39: n=2"><div style="width:28px; height:1px; background:#006ca3; flex-shrink:0;" title="35-39: female n=1"></div><div style="width:28px; height:1px; background:#f7941d; flex-shrink:0;" title="35-39: male n=1"></div></div>
+  <div class="eeg-chart-row" style="display:flex; align-items:flex-end; gap:2px; height:180px; border-bottom:1px solid #34404e;">
+    <div style="display:flex; flex-direction:column-reverse; justify-content:flex-start; gap:1px; flex:1 1 0; min-width:0;" title="15-19: n=17"><div style="width:100%; height:18px; background:#006ca3; flex-shrink:0;" title="15-19: female n=7"></div><div style="width:100%; height:25px; background:#f7941d; flex-shrink:0;" title="15-19: male n=10"></div></div><div style="display:flex; flex-direction:column-reverse; justify-content:flex-start; gap:1px; flex:1 1 0; min-width:0;" title="20-24: n=70"><div style="width:100%; height:125px; background:#006ca3; flex-shrink:0;" title="20-24: female n=49"></div><div style="width:100%; height:54px; background:#f7941d; flex-shrink:0;" title="20-24: male n=21"></div></div><div style="display:flex; flex-direction:column-reverse; justify-content:flex-start; gap:1px; flex:1 1 0; min-width:0;" title="25-29: n=18"><div style="width:100%; height:23px; background:#006ca3; flex-shrink:0;" title="25-29: female n=9"></div><div style="width:100%; height:23px; background:#f7941d; flex-shrink:0;" title="25-29: male n=9"></div></div><div style="display:flex; flex-direction:column-reverse; justify-content:flex-start; gap:1px; flex:1 1 0; min-width:0;" title="30-34: n=16"><div style="width:100%; height:23px; background:#006ca3; flex-shrink:0;" title="30-34: female n=9"></div><div style="width:100%; height:18px; background:#f7941d; flex-shrink:0;" title="30-34: male n=7"></div></div><div style="display:flex; flex-direction:column-reverse; justify-content:flex-start; gap:1px; flex:1 1 0; min-width:0;" title="35-39: n=2"><div style="width:100%; height:2px; background:#006ca3; flex-shrink:0;" title="35-39: female n=1"></div><div style="width:100%; height:2px; background:#f7941d; flex-shrink:0;" title="35-39: male n=1"></div></div>
   </div>
   <div class="eeg-chart-labels" style="display:flex; gap:2px; font-size:10px;">
-    <span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap;">15</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap;">20</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap;">25</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap;">30</span><span style="width:28px; text-align:center; overflow:hidden; white-space:nowrap;">35</span>
+    <span style="flex:1 1 0; min-width:0; text-align:center; overflow:hidden; white-space:nowrap;">15</span><span style="flex:1 1 0; min-width:0; text-align:center; overflow:hidden; white-space:nowrap;">20</span><span style="flex:1 1 0; min-width:0; text-align:center; overflow:hidden; white-space:nowrap;">25</span><span style="flex:1 1 0; min-width:0; text-align:center; overflow:hidden; white-space:nowrap;">30</span><span style="flex:1 1 0; min-width:0; text-align:center; overflow:hidden; white-space:nowrap;">35</span>
   </div>
   <div style="display:flex; gap:18px; margin-top:8px; font-size:11px;"><span style="display:inline-flex; align-items:center; gap:6px;"><i style="width:10px; height:10px; background:#006ca3; display:inline-block;"></i>Female · 75</span><span style="display:inline-flex; align-items:center; gap:6px;"><i style="width:10px; height:10px; background:#f7941d; display:inline-block;"></i>Male · 48</span></div>
 </div><div class="eegdash-stats-section eegdash-ed-sex" style="margin-bottom:1rem;">
@@ -415,7 +415,7 @@ path/
     one dataset has to be processed and saved at a time to account for
     its original position.
 
-<!-- !! processed by numpydoc !! --><div class="eegdash-ed-access"><div class="sidecar-hdr"><span><b>Access modes</b></span><span class="right">MNE → braindecode → PyTorch → ML</span></div><div class="am-list"><div class="am-row"><span class="name">.raw</span><span class="what">MNE <code>Raw</code> object — standard tools (filter, epoch, ICA, plot_psd).</span><span class="badge">mne</span></div><div class="am-row"><span class="name">BaseConcatDataset</span><span class="what">Each record is a lazy <code>BaseDataset</code> from braindecode — windowed via <code>create_windows_from_events</code>.</span><span class="badge">braindecode</span></div><div class="am-row"><span class="name">DataLoader</span><span class="what">Wraps the windowed dataset into a PyTorch <code>DataLoader</code>; supports parallel workers and on-the-fly augmentations.</span><span class="badge">pytorch</span></div><div class="am-row"><span class="name">Zarr cache</span><span class="what">Optional braindecode Zarr mirror for fast resume; persisted to <code>cache_dir</code>.</span><span class="badge">zarr</span></div><div class="am-row"><span class="name">Hugging Face</span><span class="what">No per-dataset mirror published yet — browse the <a href="https://huggingface.co/EEGDash">EEGDash org listing</a> for sibling datasets.</span><span class="badge">huggingface</span></div><div class="am-row"><span class="name">Croissant 1.0</span><span class="what">Machine-readable JSON-LD descriptor — <a href="../../_static/dataset_generated/croissant/NM000112.croissant.json" download>NM000112.croissant.json</a> (MLCommons schema, ingestible by PyTorch / TensorFlow / JAX).</span><span class="badge">mlcommons</span></div></div></div><section class="eegdash-ed-examples"><div class="sidecar-hdr"><span><b>Examples using EEGDash</b></span><span class="right">curated · start here</span></div><div class="ex-grid"><a class="ex-card" href="../../generated/auto_examples/tutorials/00_start_here/plot_00_first_search.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_00_first_search.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Find datasets with the EEGDash API</span><span class="ex-blurb">Query the catalogue, filter by task or modality, list candidates.</span></span></a><a class="ex-card" href="../../generated/auto_examples/tutorials/00_start_here/plot_01_first_recording.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_01_first_recording.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Load one EEG recording</span><span class="ex-blurb">Resolve a single record to an MNE Raw with channels and events.</span></span></a><a class="ex-card" href="../../generated/auto_examples/tutorials/00_start_here/plot_02_dataset_to_dataloader.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_02_dataset_to_dataloader.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">EEG recording to PyTorch DataLoader</span><span class="ex-blurb">Wrap braindecode windows in a DataLoader for model training.</span></span></a><a class="ex-card" href="../../generated/auto_examples/tutorials/10_core_workflow/plot_10_preprocess_and_window.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_10_preprocess_and_window.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Preprocess EEG and create windows</span><span class="ex-blurb">Filter, resample, epoch — and persist the windowed dataset.</span></span></a><a class="ex-card" href="../../generated/auto_examples/tutorials/10_core_workflow/plot_13_save_and_reuse_prepared_data.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_13_save_and_reuse_prepared_data.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Save and reload prepared data</span><span class="ex-blurb">Cache a windowed dataset to disk and reattach it without recompute.</span></span></a><a class="ex-card" href="../../generated/auto_examples/how_to/how_to_download_a_dataset.html"><span class="ex-thumb"><img src="../../_static/thumbs/how_to_download_a_dataset.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Download a dataset locally</span><span class="ex-blurb">Prefetch BIDS files to a local cache and validate the layout.</span></span></a></div><p class="ex-hint">Swap any <code>load_dataset(...)</code> call for <code>nm000112</code> to reproduce the tutorial on this dataset.</p></section><div class="eegdash-ed-footnotes"><div><h5>Citation</h5><p>Yisi Liu, Olga Sourina, Minh Khoa Nguyen (2023). <em>FACED - Finer-grained Affective Computing EEG Dataset</em>. <code>10.82901/nemar.nm000112</code></p></div><div><h5>Provenance</h5><p><span class="note-num">¹</span>Contributed to nemar in BIDS format.</p><p><span class="note-num">²</span>Curated &amp; ingested by the EEGDash catalog; see CITATION.cff for canonical reference.</p><p><span class="note-num">³</span>Persistent identifier: <code>10.82901/nemar.nm000112</code>.</p></div><div><h5>Related &amp; sibling datasets</h5><div class="rel-grid"><a class="rel-card" href="NM000132.html"><span class="rel-id">NM000132</span><span class="rel-meta">EEG · 40 subj</span></a><a class="rel-card" href="NM000114.html"><span class="rel-id">NM000114</span><span class="rel-meta">EEG · 64 subj</span></a><a class="rel-card" href="NM000180.html"><span class="rel-id">NM000180</span><span class="rel-meta">EEG · 45 subj</span></a><a class="rel-card" href="NM000109.html"><span class="rel-id">NM000109</span><span class="rel-meta">EEG · 36 subj</span></a><a class="rel-card" href="NM000156.html"><span class="rel-id">NM000156</span><span class="rel-meta">EEG · 37 subj</span></a></div><p class="rel-more">+ 1 more — see See Also below →</p></div></div><div class="eegdash-ed-prov"><div><div class="lbl">BIDS</div><div class="v ok">BIDS 1.7.0</div></div><div><div class="lbl">Sidecars</div><div class="v todo">not yet probed</div></div><div><div class="lbl">Provenance</div><div class="v">CC-BY-4.0 · <a href="https://doi.org/10.82901/nemar.nm000112">10.82901/nemar.nm000112</a></div></div><div><div class="lbl">Machine-readable</div><div class="v"><a href="#dataset-information">schema.org/Dataset</a> · <a href="../../_static/dataset_generated/croissant/NM000112.croissant.json" download>Croissant</a></div></div><div><div class="lbl">Mirrors</div><div class="v"><a href="https://openneuro.org/datasets/nm000112">OpenNeuro</a> · <a href="https://nemar.org/dataexplorer/detail?dataset_id=nm000112">NEMAR</a> · <a href="https://huggingface.co/EEGDash">HF org</a></div></div></div>
+<!-- !! processed by numpydoc !! --><div class="eegdash-ed-access"><div class="sidecar-hdr"><span><b>Access modes</b></span><span class="right">MNE → braindecode → PyTorch → ML</span></div><div class="am-list"><div class="am-row"><span class="name"><a href="https://mne.tools/stable/generated/mne.io.Raw.html" target="_blank" rel="noopener">.raw</a></span><span class="what"><a href="https://mne.tools/stable/generated/mne.io.Raw.html" target="_blank" rel="noopener">MNE <code>Raw</code></a> object — standard tools (<a href="https://mne.tools/stable/generated/mne.io.Raw.html#mne.io.Raw.filter" target="_blank" rel="noopener">filter</a>, <a href="https://mne.tools/stable/generated/mne.Epochs.html" target="_blank" rel="noopener">epoch</a>, <a href="https://mne.tools/stable/generated/mne.preprocessing.ICA.html" target="_blank" rel="noopener">ICA</a>, <a href="https://mne.tools/stable/generated/mne.io.Raw.html#mne.io.Raw.compute_psd" target="_blank" rel="noopener">plot_psd</a>).</span><a class="badge" href="https://mne.tools/stable/" target="_blank" rel="noopener">mne</a></div><div class="am-row"><span class="name"><a href="https://braindecode.org/stable/generated/braindecode.datasets.BaseConcatDataset.html" target="_blank" rel="noopener">BaseConcatDataset</a></span><span class="what">Each record is a lazy <a href="https://braindecode.org/stable/generated/braindecode.datasets.BaseDataset.html" target="_blank" rel="noopener"><code>BaseDataset</code></a> from <a href="https://braindecode.org/stable/" target="_blank" rel="noopener">braindecode</a> — windowed via <a href="https://braindecode.org/stable/generated/braindecode.preprocessing.create_windows_from_events.html" target="_blank" rel="noopener"><code>create_windows_from_events</code></a>.</span><a class="badge" href="https://braindecode.org/stable/generated/braindecode.datasets.BaseConcatDataset.html" target="_blank" rel="noopener">braindecode</a></div><div class="am-row"><span class="name"><a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader" target="_blank" rel="noopener">DataLoader</a></span><span class="what">Wraps the windowed dataset into a <a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader" target="_blank" rel="noopener">PyTorch <code>DataLoader</code></a>; supports parallel workers and on-the-fly augmentations.</span><a class="badge" href="https://pytorch.org/" target="_blank" rel="noopener">pytorch</a></div><div class="am-row"><span class="name"><a href="https://zarr.readthedocs.io/en/stable/" target="_blank" rel="noopener">Zarr cache</a></span><span class="what">Optional braindecode <a href="https://zarr.readthedocs.io/en/stable/" target="_blank" rel="noopener">Zarr</a> mirror for fast resume; persisted to <code>cache_dir</code>.</span><a class="badge" href="https://zarr.readthedocs.io/en/stable/" target="_blank" rel="noopener">zarr</a></div><div class="am-row"><span class="name"><a href="https://huggingface.co/EEGDash" target="_blank" rel="noopener">Hugging Face</a></span><span class="what">No per-dataset mirror published yet — browse the <a href="https://huggingface.co/EEGDash">EEGDash org listing</a> for sibling datasets. See the <a href="https://huggingface.co/docs/datasets/" target="_blank" rel="noopener">datasets</a> loader API.</span><a class="badge" href="https://huggingface.co/EEGDash" target="_blank" rel="noopener">huggingface</a></div><div class="am-row"><span class="name"><a href="https://docs.mlcommons.org/croissant/docs/croissant-spec.html" target="_blank" rel="noopener">Croissant 1.0</a></span><span class="what">Machine-readable <a href="https://docs.mlcommons.org/croissant/docs/croissant-spec.html" target="_blank" rel="noopener">JSON-LD descriptor</a> — <a href="../../_static/dataset_generated/croissant/NM000112.croissant.json" download>NM000112.croissant.json</a> (<a href="https://mlcommons.org/working-groups/data/datasets/" target="_blank" rel="noopener">MLCommons</a> schema, ingestible by PyTorch / TensorFlow / JAX).</span><a class="badge" href="https://docs.mlcommons.org/croissant/docs/croissant-spec.html" target="_blank" rel="noopener">mlcommons</a></div></div></div><section class="eegdash-ed-examples"><div class="sidecar-hdr"><span><b>Examples using EEGDash</b></span><span class="right">curated · start here</span></div><div class="ex-grid"><a class="ex-card" href="../../generated/auto_examples/tutorials/00_start_here/plot_00_first_search.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_00_first_search.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Find datasets with the EEGDash API</span><span class="ex-blurb">Query the catalogue, filter by task or modality, list candidates.</span></span></a><a class="ex-card" href="../../generated/auto_examples/tutorials/00_start_here/plot_01_first_recording.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_01_first_recording.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Load one EEG recording</span><span class="ex-blurb">Resolve a single record to an MNE Raw with channels and events.</span></span></a><a class="ex-card" href="../../generated/auto_examples/tutorials/00_start_here/plot_02_dataset_to_dataloader.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_02_dataset_to_dataloader.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">EEG recording to PyTorch DataLoader</span><span class="ex-blurb">Wrap braindecode windows in a DataLoader for model training.</span></span></a><a class="ex-card" href="../../generated/auto_examples/tutorials/10_core_workflow/plot_10_preprocess_and_window.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_10_preprocess_and_window.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Preprocess EEG and create windows</span><span class="ex-blurb">Filter, resample, epoch — and persist the windowed dataset.</span></span></a><a class="ex-card" href="../../generated/auto_examples/tutorials/10_core_workflow/plot_13_save_and_reuse_prepared_data.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_13_save_and_reuse_prepared_data.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Save and reload prepared data</span><span class="ex-blurb">Cache a windowed dataset to disk and reattach it without recompute.</span></span></a><a class="ex-card" href="../../generated/auto_examples/how_to/how_to_download_a_dataset.html"><span class="ex-thumb"><img src="../../_static/thumbs/how_to_download_a_dataset.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Download a dataset locally</span><span class="ex-blurb">Prefetch BIDS files to a local cache and validate the layout.</span></span></a></div><p class="ex-hint">Swap any <code>load_dataset(...)</code> call for <code>nm000112</code> to reproduce the tutorial on this dataset.</p></section><div class="eegdash-ed-footnotes"><div><h5>Citation</h5><p>Yisi Liu, Olga Sourina, Minh Khoa Nguyen (2023). <em>FACED - Finer-grained Affective Computing EEG Dataset</em>. <code>10.82901/nemar.nm000112</code></p></div><div><h5>Provenance</h5><p><span class="note-num">¹</span>Contributed to nemar in BIDS format.</p><p><span class="note-num">²</span>Curated &amp; ingested by the EEGDash catalog; see CITATION.cff for canonical reference.</p><p><span class="note-num">³</span>Persistent identifier: <code>10.82901/nemar.nm000112</code>.</p></div><div><h5>Related &amp; sibling datasets</h5><div class="rel-grid"><a class="rel-card" href="NM000132.html"><span class="rel-id">NM000132</span><span class="rel-meta">EEG · 40 subj</span></a><a class="rel-card" href="NM000114.html"><span class="rel-id">NM000114</span><span class="rel-meta">EEG · 64 subj</span></a><a class="rel-card" href="NM000180.html"><span class="rel-id">NM000180</span><span class="rel-meta">EEG · 45 subj</span></a><a class="rel-card" href="NM000109.html"><span class="rel-id">NM000109</span><span class="rel-meta">EEG · 36 subj</span></a><a class="rel-card" href="NM000156.html"><span class="rel-id">NM000156</span><span class="rel-meta">EEG · 37 subj</span></a></div><p class="rel-more">+ 1 more — see See Also below →</p></div></div><div class="eegdash-ed-prov"><div><div class="lbl">BIDS</div><div class="v ok">BIDS 1.7.0</div></div><div><div class="lbl">Sidecars</div><div class="v todo">not yet probed</div></div><div><div class="lbl">Provenance</div><div class="v">CC-BY-4.0 · <a href="https://doi.org/10.82901/nemar.nm000112">10.82901/nemar.nm000112</a></div></div><div><div class="lbl">Machine-readable</div><div class="v"><a href="#dataset-information">schema.org/Dataset</a> · <a href="../../_static/dataset_generated/croissant/NM000112.croissant.json" download>Croissant</a></div></div><div><div class="lbl">Mirrors</div><div class="v"><a href="https://openneuro.org/datasets/nm000112">OpenNeuro</a> · <a href="https://nemar.org/dataexplorer/detail?dataset_id=nm000112">NEMAR</a> · <a href="https://huggingface.co/EEGDash">HF org</a></div></div></div>
 
 ## See Also
 

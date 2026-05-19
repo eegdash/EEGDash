@@ -110,8 +110,7 @@
   "identifier": "doi:10.82901/nemar.nm000144",
   "sameAs": [
     "https://doi.org/10.82901/nemar.nm000144",
-    "https://openneuro.org/datasets/nm000144",
-    "https://huggingface.co/datasets/EEGDash/nm000144"
+    "https://openneuro.org/datasets/nm000144"
   ],
   "citeAs": "Reinhold Scherer, Josef Faller, Elisabeth V. C. Friedrich, Eloy Opisso, Ursula Costa (2017). BNCI 2015-004 Mental tasks dataset. doi:10.82901/nemar.nm000144",
   "version": "1.9.0",
@@ -152,14 +151,6 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=nm000144",
       "encodingFormat": "text/html"
-    },
-    {
-      "@type": "cr:FileObject",
-      "@id": "nm000144-huggingface",
-      "name": "EEGDash/nm000144 on Hugging Face",
-      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
-      "contentUrl": "https://huggingface.co/datasets/EEGDash/nm000144",
-      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

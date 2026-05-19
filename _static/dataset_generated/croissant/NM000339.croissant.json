@@ -102,8 +102,7 @@
   "identifier": "doi:10.1038/s41597-021-00883-1",
   "sameAs": [
     "https://doi.org/10.1038/s41597-021-00883-1",
-    "https://openneuro.org/datasets/nm000339",
-    "https://huggingface.co/datasets/EEGDash/nm000339"
+    "https://openneuro.org/datasets/nm000339"
   ],
   "citeAs": "James R. Stieger, Stephen A. Engel, Bin He (2021). Stieger et al. 2021 — Continuous sensorimotor rhythm based brain computer interface learning in a large population. doi:10.1038/s41597-021-00883-1",
   "version": "1.9.0",
@@ -144,14 +143,6 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=nm000339",
       "encodingFormat": "text/html"
-    },
-    {
-      "@type": "cr:FileObject",
-      "@id": "nm000339-huggingface",
-      "name": "EEGDash/nm000339 on Hugging Face",
-      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
-      "contentUrl": "https://huggingface.co/datasets/EEGDash/nm000339",
-      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

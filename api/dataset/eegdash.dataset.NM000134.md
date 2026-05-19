@@ -78,146 +78,159 @@ If you use this dataset in your research, please cite the original authors.
 Alljoined-1.6M is a large-scale EEG dataset of neural responses to rapid serial visual presentation (RSVP) of natural images, recorded using a consumer-grade 32-channel EMOTIV FLEX2 system. Twenty healthy adult participants (ages 23-63; 15 male, 5 female) each completed four recording sessions, generating over 1.6 million visual stimulus trials in total.
 
 The dataset was designed to evaluate whether deep neural network-based brain-computer interface (BCI) research and semantic decoding methods can be effectively conducted with affordable consumer-grade EEG systems (approximately $2.2k versus $35-60k for research-grade systems).
+
 *Reference:* Xu, J., Bruzadin Nunes, U., Jiang, W., Ryther, S., Pringle, J., Scotti, P. S., Delorme, A., & Kneeland, R. (2025). Alljoined-1.6M: A Million-Trial EEG-Image Dataset for Evaluating Affordable Brain-Computer Interfaces. [https://doi.org/10.48550/arXiv.2508.18571](https://doi.org/10.48550/arXiv.2508.18571)
+
+> [DOI](https://doi.org/10.82901/nemar.nm000134)
+
+> **Alljoined-1.6M: Million-Trial EEG Dataset with Consumer-Grade Hardware**
+
+> **Overview**
+
+> **Recording Setup**
+
+> - *Equipment:* EMOTIV FLEX2, 32-channel sintered Ag/AgCl gel-based electrodes
+
+> ### View full README
+
+> [DOI](https://doi.org/10.82901/nemar.nm000134)
+
+> **Alljoined-1.6M: Million-Trial EEG Dataset with Consumer-Grade Hardware**
+
+> **Overview**
+
+> **Recording Setup**
+
+> - *Equipment:* EMOTIV FLEX2, 32-channel sintered Ag/AgCl gel-based electrodes
+> - *Connectivity:* wireless Bluetooth 5.2
+> - *Sampling rate:* 256 Hz (resampled to 250 Hz in published analyses)
+> - *Montage:* extended 10-20 system, focused on occipital/visual regions
+> - *Channels:* Cz, Fp1, F7, F3, CP5, CP1, P1, P3, P5, P7, PO9, PO7, PO3, O1, O9, Pz, POz, Oz, O10, O2, PO4, PO8, PO10, P8, P6, P4, P2, CP2, CP6, F4, F8, Fp2
+> - *Firmware filters:* dual 50/60 Hz notch filter (built into EMOTIV firmware)
+> - *Cost:* approximately $2.2k (approximately 27x cheaper than research-grade systems)
+
+> **Task Paradigm**
 
 > Rapid Serial Visual Presentation (RSVP) with orthogonal oddball detection. Each trial consisted of an image presented for 100 ms, followed by 100 ms of blank screen (200 ms total cycle). A small semi-transparent red fixation dot (0.2 x 0.2 degrees, 50% opacity) was present throughout.
 
-Oddball detection: participants pressed a button when they detected catch trials featuring a Woody (Toy Story) character, which appeared in approximately 6% of sequences. Detection window was up to 2 seconds post-sequence. This task maintained engagement without biasing perception toward specific image categories.
-Viewing distance: 60 cm; viewing angle: 7 degrees.
+> Oddball detection: participants pressed a button when they detected catch trials featuring a Woody (Toy Story) character, which appeared in approximately 6% of sequences. Detection window was up to 2 seconds post-sequence. This task maintained engagement without biasing perception toward specific image categories.
+> Viewing distance: 60 cm; viewing angle: 7 degrees.
 
-[DOI](https://doi.org/10.82901/nemar.nm000134)
+> **Stimulus Set**
 
-**Alljoined-1.6M: Million-Trial EEG Dataset with Consumer-Grade Hardware**
+> 16,740 unique images from the THINGS database (26,000 total images across 1,854 object categories), identical to the THINGS-EEG2 stimulus set for direct comparison.
+> - *Test images:* shown 80 times per participant (4 sessions x 4 test blocks x 5 presentations)
+> - *Training images:* shown 4-5 times per participant
+> - *Randomization:* constrained so no image repeats within 2 intervening items
 
-**Overview**
+> The stimulus images live under `/stimuli/<NNNNN>.jpg` (5-digit zero-padded, IDs `00000` through `16748`). They mirror the upstream HuggingFace `Alljoined/Alljoined-1.6M`’s `stimuli.zip`, which is itself the THINGS image set used by THINGS-EEG2 (see `nm000232`). Each `events.tsv` row whose `trial_type` starts with `stim_test,<id>,...` resolves to `stimuli/<id:05d>.jpg`.
+> A small Python helper is provided to make alignment one line:
 
-**Stimulus Set**
+> ```python
+> import pandas as pd
+> from code.align_stimuli import StimulusAligner
+> aligner = StimulusAligner('.')
+> events = pd.read_csv('sub-01/ses-01/eeg/sub-01_ses-01_task-images_run-01_events.tsv', sep='\t')
+> paths = aligner.paths_for_events(events)        # list[Path | None]; None for non-stim_test rows
+> img   = aligner.image_for_event(events.iloc[0]) # PIL.Image, or None
+> ```
 
-16,740 unique images from the THINGS database (26,000 total images across 1,854 object categories), identical to the THINGS-EEG2 stimulus set for direct comparison.
+> Run `python code/smoke_test.py` from the dataset root to verify every `stim_test` reference resolves to an existing image (currently 328,364/328,364 ≈ 100%).
 
-### View full README
+> **Subjects, Sessions, and Runs**
 
-[DOI](https://doi.org/10.82901/nemar.nm000134)
+> 20 subjects, 4 sessions each (sub-08 has an additional session `ses-02old`, a retake of session 2). Each session contains 19 RSVP blocks (runs), approximately 5 minutes each. The first 4 runs per session present test images; the remaining 15 runs present training images.
 
-**Alljoined-1.6M: Million-Trial EEG Dataset with Consumer-Grade Hardware**
+> Total: 83,520 image trials per subject; approximately 1.6 million trials across all 20 participants.
 
-**Overview**
+> ```text
+> | Subject | Sessions | Runs | Notes |
+> |---------|----------|------|-------|
+> | sub-01 | 4 | 76 | |
+> | sub-02 | 4 | 76 | |
+> | sub-03 | 4 | 76 | |
+> | sub-04 | 4 | 76 | |
+> | sub-05 | 4 | 76 | |
+> | sub-06 | 4 | 76 | |
+> | sub-07 | 4 | 76 | |
+> | sub-08 | 5 | 81 | Includes ses-02old (session 2 retake) |
+> | sub-09 | 4 | 76 | |
+> | sub-10 | 4 | 76 | |
+> | sub-11 | 4 | 76 | |
+> | sub-12 | 4 | 76 | |
+> | sub-13 | 4 | 76 | |
+> | sub-14 | 4 | 76 | |
+> | sub-15 | 4 | 76 | |
+> | sub-16 | 4 | 76 | |
+> | sub-17 | 4 | 76 | |
+> | sub-18 | 4 | 76 | |
+> | sub-19 | 4 | 76 | |
+> | sub-20 | 4 | 76 | |
+> ```
 
-**Stimulus Set**
+> Participants were recruited from San Francisco via local platforms (Craigslist 55%, Instawork 35%) and filtered from an initial pool of 48 for high behavioral engagement. Mean oddball detection performance: 88% AUC (+/- 1% SE).
 
-16,740 unique images from the THINGS database (26,000 total images across 1,854 object categories), identical to the THINGS-EEG2 stimulus set for direct comparison.
-- *Test images:* shown 80 times per participant (4 sessions x 4 test blocks x 5 presentations)
-- *Training images:* shown 4-5 times per participant
-- *Randomization:* constrained so no image repeats within 2 intervening items
+> **Data Format**
 
-The stimulus images live under `/stimuli/<NNNNN>.jpg` (5-digit zero-padded, IDs `00000` through `16748`). They mirror the upstream HuggingFace `Alljoined/Alljoined-1.6M`’s `stimuli.zip`, which is itself the THINGS image set used by THINGS-EEG2 (see `nm000232`). Each `events.tsv` row whose `trial_type` starts with `stim_test,<id>,...` resolves to `stimuli/<id:05d>.jpg`.
-A small Python helper is provided to make alignment one line:
+> Raw continuous EEG recordings are stored as European Data Format (EDF) files, the native export format of the EMOTIV FLEX2 system (16-bit resolution). Only the 32 EEG channels are retained; EMOTIV metadata channels (timestamps, counters, contact quality, motion sensors, etc.) were excluded during conversion.
+> *Per-run files:*
 
-```python
-import pandas as pd
-from code.align_stimuli import StimulusAligner
-aligner = StimulusAligner('.')
-events = pd.read_csv('sub-01/ses-01/eeg/sub-01_ses-01_task-images_run-01_events.tsv', sep='\t')
-paths = aligner.paths_for_events(events)        # list[Path | None]; None for non-stim_test rows
-img   = aligner.image_for_event(events.iloc[0]) # PIL.Image, or None
-```
+> ```text
+> | Path | Description |
+> |------|-------------|
+> | `sub-XX/ses-YY/eeg/sub-XX_ses-YY_task-images_run-ZZ_eeg.edf` | Raw EEG |
+> | `sub-XX/ses-YY/eeg/sub-XX_ses-YY_task-images_run-ZZ_events.tsv` | Events |
+> | `sub-XX/ses-YY/eeg/sub-XX_ses-YY_task-images_run-ZZ_events.json` | Event metadata |
+> | `sub-XX/ses-YY/eeg/sub-XX_ses-YY_task-images_run-ZZ_channels.tsv` | Channels |
+> | `sub-XX/ses-YY/eeg/sub-XX_ses-YY_task-images_run-ZZ_eeg.json` | Recording parameters |
+> | `sub-XX/ses-YY/eeg/sub-XX_ses-YY_space-CapTrak_coordsystem.json` | Coordinate system |
+> | `sub-XX/ses-YY/eeg/sub-XX_ses-YY_space-CapTrak_electrodes.tsv` | Electrode positions |
+> ```
 
-Run `python code/smoke_test.py` from the dataset root to verify every `stim_test` reference resolves to an existing image (currently 328,364/328,364 ≈ 100%).
+> Event annotations in the events.tsv files use the following `trial_type` format from the EMOTIV recording system:
+> - `stim_test,{image_id},-1,{trial}` – test image presentation
+> - `oddball,...` – oddball (catch) trial
+> - `behav,...` – behavioral response (button press)
 
-**Subjects, Sessions, and Runs**
+> **Source Data**
 
-20 subjects, 4 sessions each (sub-08 has an additional session `ses-02old`, a retake of session 2). Each session contains 19 RSVP blocks (runs), approximately 5 minutes each. The first 4 runs per session present test images; the remaining 15 runs present training images.
-Total: 83,520 image trials per subject; approximately 1.6 million trials across all 20 participants.
+> The `sourcedata/` directory contains the original EMOTIV JSON metadata files from each recording block. These files include the raw EMOTIV marker data with precise timestamps, UUIDs, and port information as recorded by the EMOTIV software. They are the original, unprocessed recording artifacts from the EMOTIV system, not derived products, and are stored in `sourcedata/` per BIDS conventions.
 
-```text
-| Subject | Sessions | Runs | Notes |
-|---------|----------|------|-------|
-| sub-01 | 4 | 76 | |
-| sub-02 | 4 | 76 | |
-| sub-03 | 4 | 76 | |
-| sub-04 | 4 | 76 | |
-| sub-05 | 4 | 76 | |
-| sub-06 | 4 | 76 | |
-| sub-07 | 4 | 76 | |
-| sub-08 | 5 | 81 | Includes ses-02old (session 2 retake) |
-| sub-09 | 4 | 76 | |
-| sub-10 | 4 | 76 | |
-| sub-11 | 4 | 76 | |
-| sub-12 | 4 | 76 | |
-| sub-13 | 4 | 76 | |
-| sub-14 | 4 | 76 | |
-| sub-15 | 4 | 76 | |
-| sub-16 | 4 | 76 | |
-| sub-17 | 4 | 76 | |
-| sub-18 | 4 | 76 | |
-| sub-19 | 4 | 76 | |
-| sub-20 | 4 | 76 | |
-```
+> ```text
+> sourcedata/sub-XX/ses-YY/eeg/sub-XX_ses-YY_task-images_run-ZZ_recording.json
+> ```
 
-Participants were recruited from San Francisco via local platforms (Craigslist 55%, Instawork 35%) and filtered from an initial pool of 48 for high behavioral engagement. Mean oddball detection performance: 88% AUC (+/- 1% SE).
+> **Code**
 
-**Data Format**
+> The `code/` directory contains the original Alljoined-1.6M analysis code, cloned from [https://github.com/Alljoined/Alljoined-1.6M](https://github.com/Alljoined/Alljoined-1.6M).
 
-Raw continuous EEG recordings are stored as European Data Format (EDF) files, the native export format of the EMOTIV FLEX2 system (16-bit resolution). Only the 32 EEG channels are retained; EMOTIV metadata channels (timestamps, counters, contact quality, motion sensors, etc.) were excluded during conversion.
-*Per-run files:*
+> **BIDS Conversion**
 
-```text
-| Path | Description |
-|------|-------------|
-| `sub-XX/ses-YY/eeg/sub-XX_ses-YY_task-images_run-ZZ_eeg.edf` | Raw EEG |
-| `sub-XX/ses-YY/eeg/sub-XX_ses-YY_task-images_run-ZZ_events.tsv` | Events |
-| `sub-XX/ses-YY/eeg/sub-XX_ses-YY_task-images_run-ZZ_events.json` | Event metadata |
-| `sub-XX/ses-YY/eeg/sub-XX_ses-YY_task-images_run-ZZ_channels.tsv` | Channels |
-| `sub-XX/ses-YY/eeg/sub-XX_ses-YY_task-images_run-ZZ_eeg.json` | Recording parameters |
-| `sub-XX/ses-YY/eeg/sub-XX_ses-YY_space-CapTrak_coordsystem.json` | Coordinate system |
-| `sub-XX/ses-YY/eeg/sub-XX_ses-YY_space-CapTrak_electrodes.tsv` | Electrode positions |
-```
+> Converted to BIDS by Yahya Shirazi (Swartz Center for Computational Neuroscience, UC San Diego) using MNE-BIDS and custom scripts.
+> - *Source data:* HuggingFace [https://huggingface.co/datasets/Alljoined/Alljoined-1.6M](https://huggingface.co/datasets/Alljoined/Alljoined-1.6M)
+> - EMOTIV channel `Afz` renamed to `AFz` (standard 10-20 capitalization)
+> - Session label `session_02 old` sanitized to `ses-02old` for BIDS compliance
+> - 95 EMOTIV metadata channels excluded (only 32 EEG channels retained)
+> - Conversion validated with round-trip integrity checks (data amplitude, per-channel correlation, sampling frequency, event count, and event timing)
 
-Event annotations in the events.tsv files use the following `trial_type` format from the EMOTIV recording system:
-- `stim_test,{image_id},-1,{trial}` – test image presentation
-- `oddball,...` – oddball (catch) trial
-- `behav,...` – behavioral response (button press)
+> **License and Terms of Use**
 
-**Source Data**
+> This dataset is distributed under CC-BY-NC-ND-4.0 (Creative Commons Attribution-NonCommercial-NoDerivatives 4.0) with the following additional terms imposed by the Alljoined team. By using this dataset you agree to all conditions below.
+> 1. Researcher shall use the Dataset only for non-commercial research and educational purposes, in accordance with Alljoined’s [Terms of Use](https://www.alljoined.com/terms-of-use).
+> 2. *No Warranties:* Alljoined makes no representations or warranties regarding the Dataset, including but not limited to warranties of non-infringement or fitness for a particular purpose.
+> 3. *Full Responsibility:* Researcher accepts full responsibility for his or her use of the Dataset and shall defend and indemnify Alljoined, including their employees, officers and agents, against any and all claims arising from Researcher’s use of the Dataset.
+> 4. *Privacy Compliance:* Researcher shall comply with Alljoined’s [Privacy Policy](https://www.alljoined.com/privacy-policy) and ensure that any use of the Dataset respects the privacy rights of individuals whose data may be included.
+> 5. *Sharing Rights:* Researcher may provide research associates and colleagues with access to the Dataset provided that they first agree to be bound by these terms and conditions.
+> 6. *Termination Rights:* Alljoined reserves the right to terminate Researcher’s access to the Dataset at any time.
+> 7. *Commercial Entity Binding:* If Researcher is employed by a for-profit, commercial entity, Researcher’s employer shall also be bound by these terms and conditions, and Researcher hereby represents that he or she is fully authorized to enter into this agreement on behalf of such employer.
+> 8. *Governing Law:* The law of the State of California shall apply to all disputes under this agreement.
+> - Full terms: [https://www.alljoined.com/terms-of-use](https://www.alljoined.com/terms-of-use)
+> - Privacy policy: [https://www.alljoined.com/privacy-policy](https://www.alljoined.com/privacy-policy)
 
-The `sourcedata/` directory contains the original EMOTIV JSON metadata files from each recording block. These files include the raw EMOTIV marker data with precise timestamps, UUIDs, and port information as recorded by the EMOTIV software. They are the original, unprocessed recording artifacts from the EMOTIV system, not derived products, and are stored in `sourcedata/` per BIDS conventions.
+> **References**
 
-```text
-sourcedata/sub-XX/ses-YY/eeg/sub-XX_ses-YY_task-images_run-ZZ_recording.json
-```
-
-**Code**
-
-The `code/` directory contains the original Alljoined-1.6M analysis code, cloned from [https://github.com/Alljoined/Alljoined-1.6M](https://github.com/Alljoined/Alljoined-1.6M).
-
-**BIDS Conversion**
-
-Converted to BIDS by Yahya Shirazi (Swartz Center for Computational Neuroscience, UC San Diego) using MNE-BIDS and custom scripts.
-- *Source data:* HuggingFace [https://huggingface.co/datasets/Alljoined/Alljoined-1.6M](https://huggingface.co/datasets/Alljoined/Alljoined-1.6M)
-- EMOTIV channel `Afz` renamed to `AFz` (standard 10-20 capitalization)
-- Session label `session_02 old` sanitized to `ses-02old` for BIDS compliance
-- 95 EMOTIV metadata channels excluded (only 32 EEG channels retained)
-- Conversion validated with round-trip integrity checks (data amplitude, per-channel correlation, sampling frequency, event count, and event timing)
-
-**License and Terms of Use**
-
-This dataset is distributed under CC-BY-NC-ND-4.0 (Creative Commons Attribution-NonCommercial-NoDerivatives 4.0) with the following additional terms imposed by the Alljoined team. By using this dataset you agree to all conditions below.
-1. Researcher shall use the Dataset only for non-commercial research and educational purposes, in accordance with Alljoined’s [Terms of Use](https://www.alljoined.com/terms-of-use).
-2. *No Warranties:* Alljoined makes no representations or warranties regarding the Dataset, including but not limited to warranties of non-infringement or fitness for a particular purpose.
-3. *Full Responsibility:* Researcher accepts full responsibility for his or her use of the Dataset and shall defend and indemnify Alljoined, including their employees, officers and agents, against any and all claims arising from Researcher’s use of the Dataset.
-4. *Privacy Compliance:* Researcher shall comply with Alljoined’s [Privacy Policy](https://www.alljoined.com/privacy-policy) and ensure that any use of the Dataset respects the privacy rights of individuals whose data may be included.
-5. *Sharing Rights:* Researcher may provide research associates and colleagues with access to the Dataset provided that they first agree to be bound by these terms and conditions.
-6. *Termination Rights:* Alljoined reserves the right to terminate Researcher’s access to the Dataset at any time.
-7. *Commercial Entity Binding:* If Researcher is employed by a for-profit, commercial entity, Researcher’s employer shall also be bound by these terms and conditions, and Researcher hereby represents that he or she is fully authorized to enter into this agreement on behalf of such employer.
-8. *Governing Law:* The law of the State of California shall apply to all disputes under this agreement.
-- Full terms: [https://www.alljoined.com/terms-of-use](https://www.alljoined.com/terms-of-use)
-- Privacy policy: [https://www.alljoined.com/privacy-policy](https://www.alljoined.com/privacy-policy)
-
-**References**
-
-Xu, J., Bruzadin Nunes, U., Jiang, W., Ryther, S., Pringle, J., Scotti, P. S., Delorme, A., & Kneeland, R. (2025). Alljoined-1.6M: A Million-Trial EEG-Image Dataset for Evaluating Affordable Brain-Computer Interfaces. [https://doi.org/10.48550/arXiv.2508.18571](https://doi.org/10.48550/arXiv.2508.18571)
-Xu, J., Lee, S. K., & Jiang, W. (2024). Alljoined – A dataset for EEG-to-Image decoding. [https://doi.org/10.48550/arXiv.2404.05553](https://doi.org/10.48550/arXiv.2404.05553)
-
+> Xu, J., Bruzadin Nunes, U., Jiang, W., Ryther, S., Pringle, J., Scotti, P. S., Delorme, A., & Kneeland, R. (2025). Alljoined-1.6M: A Million-Trial EEG-Image Dataset for Evaluating Affordable Brain-Computer Interfaces. [https://doi.org/10.48550/arXiv.2508.18571](https://doi.org/10.48550/arXiv.2508.18571)
+> Xu, J., Lee, S. K., & Jiang, W. (2024). Alljoined – A dataset for EEG-to-Image decoding. [https://doi.org/10.48550/arXiv.2404.05553](https://doi.org/10.48550/arXiv.2404.05553)
 <div class="eegdash-ed-secnum">§ 03<b>Cohort · Participants</b></div>
 
 ## Cohort
@@ -230,7 +243,7 @@ Xu, J., Lee, S. K., & Jiang, W. (2024). Alljoined – A dataset for EEG-to-Image
   <p><strong>Sampling frequencies</strong>: 256.0 Hz (n=1525 recordings)</p>
 </div><div class="eegdash-stats-section" style="margin-bottom:1rem;">
   <p><strong>Total recording duration</strong>: 129 h</p>
-</div></div><div class="eegdash-ed-caveat"><div class="c-lbl">Editorial caveat · cohort size</div><h4>Treat this as a features-first dataset, not a deep-learning playground.</h4><p>With <b>n = 20</b> eeg participants, this dataset sits below the ~50-subject threshold where deep networks trained from scratch typically pay off. A well-tuned feature pipeline — band-power features, Riemannian geometry, linear classifier — is the recommended baseline. Use deep models only with transfer learning or pre-trained backbones.</p><p>For splits, prefer <code>GroupShuffleSplit</code> with <code>groups=subject_id</code> so windows from the same recording do not leak between train and test.</p></div><div class="eegdash-ed-secnum">§ 04<b>Signal · Electrodes & trace</b></div>
+</div></div><div class="eegdash-ed-secnum">§ 04<b>Signal · Electrodes & trace</b></div>
 
 ## Signal · Electrodes & live trace
 
@@ -448,7 +461,7 @@ path/
     one dataset has to be processed and saved at a time to account for
     its original position.
 
-<!-- !! processed by numpydoc !! --><div class="eegdash-ed-access"><div class="sidecar-hdr"><span><b>Access modes</b></span><span class="right">MNE → braindecode → PyTorch → ML</span></div><div class="am-list"><div class="am-row"><span class="name">.raw</span><span class="what">MNE <code>Raw</code> object — standard tools (filter, epoch, ICA, plot_psd).</span><span class="badge">mne</span></div><div class="am-row"><span class="name">BaseConcatDataset</span><span class="what">Each record is a lazy <code>BaseDataset</code> from braindecode — windowed via <code>create_windows_from_events</code>.</span><span class="badge">braindecode</span></div><div class="am-row"><span class="name">DataLoader</span><span class="what">Wraps the windowed dataset into a PyTorch <code>DataLoader</code>; supports parallel workers and on-the-fly augmentations.</span><span class="badge">pytorch</span></div><div class="am-row"><span class="name">Zarr cache</span><span class="what">Optional braindecode Zarr mirror for fast resume; persisted to <code>cache_dir</code>.</span><span class="badge">zarr</span></div><div class="am-row"><span class="name">Hugging Face</span><span class="what">No per-dataset mirror published yet — browse the <a href="https://huggingface.co/EEGDash">EEGDash org listing</a> for sibling datasets.</span><span class="badge">huggingface</span></div><div class="am-row"><span class="name">Croissant 1.0</span><span class="what">Machine-readable JSON-LD descriptor — <a href="../../_static/dataset_generated/croissant/NM000134.croissant.json" download>NM000134.croissant.json</a> (MLCommons schema, ingestible by PyTorch / TensorFlow / JAX).</span><span class="badge">mlcommons</span></div></div></div><section class="eegdash-ed-examples"><div class="sidecar-hdr"><span><b>Examples using EEGDash</b></span><span class="right">curated · start here</span></div><div class="ex-grid"><a class="ex-card" href="../../generated/auto_examples/tutorials/00_start_here/plot_00_first_search.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_00_first_search.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Find datasets with the EEGDash API</span><span class="ex-blurb">Query the catalogue, filter by task or modality, list candidates.</span></span></a><a class="ex-card" href="../../generated/auto_examples/tutorials/00_start_here/plot_01_first_recording.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_01_first_recording.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Load one EEG recording</span><span class="ex-blurb">Resolve a single record to an MNE Raw with channels and events.</span></span></a><a class="ex-card" href="../../generated/auto_examples/tutorials/00_start_here/plot_02_dataset_to_dataloader.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_02_dataset_to_dataloader.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">EEG recording to PyTorch DataLoader</span><span class="ex-blurb">Wrap braindecode windows in a DataLoader for model training.</span></span></a><a class="ex-card" href="../../generated/auto_examples/tutorials/10_core_workflow/plot_10_preprocess_and_window.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_10_preprocess_and_window.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Preprocess EEG and create windows</span><span class="ex-blurb">Filter, resample, epoch — and persist the windowed dataset.</span></span></a><a class="ex-card" href="../../generated/auto_examples/tutorials/10_core_workflow/plot_13_save_and_reuse_prepared_data.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_13_save_and_reuse_prepared_data.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Save and reload prepared data</span><span class="ex-blurb">Cache a windowed dataset to disk and reattach it without recompute.</span></span></a><a class="ex-card" href="../../generated/auto_examples/how_to/how_to_download_a_dataset.html"><span class="ex-thumb"><img src="../../_static/thumbs/how_to_download_a_dataset.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Download a dataset locally</span><span class="ex-blurb">Prefetch BIDS files to a local cache and validate the layout.</span></span></a></div><p class="ex-hint">Swap any <code>load_dataset(...)</code> call for <code>nm000134</code> to reproduce the tutorial on this dataset.</p></section><div class="eegdash-ed-footnotes"><div><h5>Citation</h5><p>Jonathan Xu, Ugo Bruzadin Nunes, Wangshu Jiang, Samuel Ryther, Jordan Pringle, … (2025). <em>Alljoined-1.6M</em>. <code>10.82901/nemar.nm000134</code></p></div><div><h5>Provenance</h5><p><span class="note-num">¹</span>Contributed to nemar in BIDS format.</p><p><span class="note-num">²</span>Curated &amp; ingested by the EEGDash catalog; see CITATION.cff for canonical reference.</p><p><span class="note-num">³</span>Persistent identifier: <code>10.82901/nemar.nm000134</code>.</p></div><div><h5>Related &amp; sibling datasets</h5><div class="rel-grid"><a class="rel-card" href="NM000229.html"><span class="rel-id">NM000229</span><span class="rel-meta">EEG · 29 subj</span></a><a class="rel-card" href="NM000157.html"><span class="rel-id">NM000157</span><span class="rel-meta">EEG · 19 subj</span></a><a class="rel-card" href="NM000203.html"><span class="rel-id">NM000203</span><span class="rel-meta">EEG · 13 subj</span></a><a class="rel-card" href="NM000110.html"><span class="rel-id">NM000110</span><span class="rel-meta">EEG · 24 subj</span></a><a class="rel-card" href="NM000232.html"><span class="rel-id">NM000232</span><span class="rel-meta">EEG · 10 subj</span></a></div><p class="rel-more">+ 1 more — see See Also below →</p></div></div><div class="eegdash-ed-prov"><div><div class="lbl">BIDS</div><div class="v ok">BIDS 1.9.0</div></div><div><div class="lbl">Sidecars</div><div class="v todo">not yet probed</div></div><div><div class="lbl">Provenance</div><div class="v">CC-BY-NC-ND-4.0 · <a href="https://doi.org/10.82901/nemar.nm000134">10.82901/nemar.nm000134</a></div></div><div><div class="lbl">Machine-readable</div><div class="v"><a href="#dataset-information">schema.org/Dataset</a> · <a href="../../_static/dataset_generated/croissant/NM000134.croissant.json" download>Croissant</a></div></div><div><div class="lbl">Mirrors</div><div class="v"><a href="https://openneuro.org/datasets/nm000134">OpenNeuro</a> · <a href="https://nemar.org/dataexplorer/detail?dataset_id=nm000134">NEMAR</a> · <a href="https://huggingface.co/EEGDash">HF org</a></div></div></div>
+<!-- !! processed by numpydoc !! --><div class="eegdash-ed-access"><div class="sidecar-hdr"><span><b>Access modes</b></span><span class="right">MNE → braindecode → PyTorch → ML</span></div><div class="am-list"><div class="am-row"><span class="name"><a href="https://mne.tools/stable/generated/mne.io.Raw.html" target="_blank" rel="noopener">.raw</a></span><span class="what"><a href="https://mne.tools/stable/generated/mne.io.Raw.html" target="_blank" rel="noopener">MNE <code>Raw</code></a> object — standard tools (<a href="https://mne.tools/stable/generated/mne.io.Raw.html#mne.io.Raw.filter" target="_blank" rel="noopener">filter</a>, <a href="https://mne.tools/stable/generated/mne.Epochs.html" target="_blank" rel="noopener">epoch</a>, <a href="https://mne.tools/stable/generated/mne.preprocessing.ICA.html" target="_blank" rel="noopener">ICA</a>, <a href="https://mne.tools/stable/generated/mne.io.Raw.html#mne.io.Raw.compute_psd" target="_blank" rel="noopener">plot_psd</a>).</span><a class="badge" href="https://mne.tools/stable/" target="_blank" rel="noopener">mne</a></div><div class="am-row"><span class="name"><a href="https://braindecode.org/stable/generated/braindecode.datasets.BaseConcatDataset.html" target="_blank" rel="noopener">BaseConcatDataset</a></span><span class="what">Each record is a lazy <a href="https://braindecode.org/stable/generated/braindecode.datasets.BaseDataset.html" target="_blank" rel="noopener"><code>BaseDataset</code></a> from <a href="https://braindecode.org/stable/" target="_blank" rel="noopener">braindecode</a> — windowed via <a href="https://braindecode.org/stable/generated/braindecode.preprocessing.create_windows_from_events.html" target="_blank" rel="noopener"><code>create_windows_from_events</code></a>.</span><a class="badge" href="https://braindecode.org/stable/generated/braindecode.datasets.BaseConcatDataset.html" target="_blank" rel="noopener">braindecode</a></div><div class="am-row"><span class="name"><a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader" target="_blank" rel="noopener">DataLoader</a></span><span class="what">Wraps the windowed dataset into a <a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader" target="_blank" rel="noopener">PyTorch <code>DataLoader</code></a>; supports parallel workers and on-the-fly augmentations.</span><a class="badge" href="https://pytorch.org/" target="_blank" rel="noopener">pytorch</a></div><div class="am-row"><span class="name"><a href="https://zarr.readthedocs.io/en/stable/" target="_blank" rel="noopener">Zarr cache</a></span><span class="what">Optional braindecode <a href="https://zarr.readthedocs.io/en/stable/" target="_blank" rel="noopener">Zarr</a> mirror for fast resume; persisted to <code>cache_dir</code>.</span><a class="badge" href="https://zarr.readthedocs.io/en/stable/" target="_blank" rel="noopener">zarr</a></div><div class="am-row"><span class="name"><a href="https://huggingface.co/EEGDash" target="_blank" rel="noopener">Hugging Face</a></span><span class="what">No per-dataset mirror published yet — browse the <a href="https://huggingface.co/EEGDash">EEGDash org listing</a> for sibling datasets. See the <a href="https://huggingface.co/docs/datasets/" target="_blank" rel="noopener">datasets</a> loader API.</span><a class="badge" href="https://huggingface.co/EEGDash" target="_blank" rel="noopener">huggingface</a></div><div class="am-row"><span class="name"><a href="https://docs.mlcommons.org/croissant/docs/croissant-spec.html" target="_blank" rel="noopener">Croissant 1.0</a></span><span class="what">Machine-readable <a href="https://docs.mlcommons.org/croissant/docs/croissant-spec.html" target="_blank" rel="noopener">JSON-LD descriptor</a> — <a href="../../_static/dataset_generated/croissant/NM000134.croissant.json" download>NM000134.croissant.json</a> (<a href="https://mlcommons.org/working-groups/data/datasets/" target="_blank" rel="noopener">MLCommons</a> schema, ingestible by PyTorch / TensorFlow / JAX).</span><a class="badge" href="https://docs.mlcommons.org/croissant/docs/croissant-spec.html" target="_blank" rel="noopener">mlcommons</a></div></div></div><section class="eegdash-ed-examples"><div class="sidecar-hdr"><span><b>Examples using EEGDash</b></span><span class="right">curated · start here</span></div><div class="ex-grid"><a class="ex-card" href="../../generated/auto_examples/tutorials/00_start_here/plot_00_first_search.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_00_first_search.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Find datasets with the EEGDash API</span><span class="ex-blurb">Query the catalogue, filter by task or modality, list candidates.</span></span></a><a class="ex-card" href="../../generated/auto_examples/tutorials/00_start_here/plot_01_first_recording.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_01_first_recording.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Load one EEG recording</span><span class="ex-blurb">Resolve a single record to an MNE Raw with channels and events.</span></span></a><a class="ex-card" href="../../generated/auto_examples/tutorials/00_start_here/plot_02_dataset_to_dataloader.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_02_dataset_to_dataloader.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">EEG recording to PyTorch DataLoader</span><span class="ex-blurb">Wrap braindecode windows in a DataLoader for model training.</span></span></a><a class="ex-card" href="../../generated/auto_examples/tutorials/10_core_workflow/plot_10_preprocess_and_window.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_10_preprocess_and_window.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Preprocess EEG and create windows</span><span class="ex-blurb">Filter, resample, epoch — and persist the windowed dataset.</span></span></a><a class="ex-card" href="../../generated/auto_examples/tutorials/10_core_workflow/plot_13_save_and_reuse_prepared_data.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_13_save_and_reuse_prepared_data.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Save and reload prepared data</span><span class="ex-blurb">Cache a windowed dataset to disk and reattach it without recompute.</span></span></a><a class="ex-card" href="../../generated/auto_examples/how_to/how_to_download_a_dataset.html"><span class="ex-thumb"><img src="../../_static/thumbs/how_to_download_a_dataset.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Download a dataset locally</span><span class="ex-blurb">Prefetch BIDS files to a local cache and validate the layout.</span></span></a></div><p class="ex-hint">Swap any <code>load_dataset(...)</code> call for <code>nm000134</code> to reproduce the tutorial on this dataset.</p></section><div class="eegdash-ed-footnotes"><div><h5>Citation</h5><p>Jonathan Xu, Ugo Bruzadin Nunes, Wangshu Jiang, Samuel Ryther, Jordan Pringle, … (2025). <em>Alljoined-1.6M</em>. <code>10.82901/nemar.nm000134</code></p></div><div><h5>Provenance</h5><p><span class="note-num">¹</span>Contributed to nemar in BIDS format.</p><p><span class="note-num">²</span>Curated &amp; ingested by the EEGDash catalog; see CITATION.cff for canonical reference.</p><p><span class="note-num">³</span>Persistent identifier: <code>10.82901/nemar.nm000134</code>.</p></div><div><h5>Related &amp; sibling datasets</h5><div class="rel-grid"><a class="rel-card" href="NM000229.html"><span class="rel-id">NM000229</span><span class="rel-meta">EEG · 29 subj</span></a><a class="rel-card" href="NM000157.html"><span class="rel-id">NM000157</span><span class="rel-meta">EEG · 19 subj</span></a><a class="rel-card" href="NM000203.html"><span class="rel-id">NM000203</span><span class="rel-meta">EEG · 13 subj</span></a><a class="rel-card" href="NM000110.html"><span class="rel-id">NM000110</span><span class="rel-meta">EEG · 24 subj</span></a><a class="rel-card" href="NM000232.html"><span class="rel-id">NM000232</span><span class="rel-meta">EEG · 10 subj</span></a></div><p class="rel-more">+ 1 more — see See Also below →</p></div></div><div class="eegdash-ed-prov"><div><div class="lbl">BIDS</div><div class="v ok">BIDS 1.9.0</div></div><div><div class="lbl">Sidecars</div><div class="v todo">not yet probed</div></div><div><div class="lbl">Provenance</div><div class="v">CC-BY-NC-ND-4.0 · <a href="https://doi.org/10.82901/nemar.nm000134">10.82901/nemar.nm000134</a></div></div><div><div class="lbl">Machine-readable</div><div class="v"><a href="#dataset-information">schema.org/Dataset</a> · <a href="../../_static/dataset_generated/croissant/NM000134.croissant.json" download>Croissant</a></div></div><div><div class="lbl">Mirrors</div><div class="v"><a href="https://openneuro.org/datasets/nm000134">OpenNeuro</a> · <a href="https://nemar.org/dataexplorer/detail?dataset_id=nm000134">NEMAR</a> · <a href="https://huggingface.co/EEGDash">HF org</a></div></div></div>
 
 ## See Also
 

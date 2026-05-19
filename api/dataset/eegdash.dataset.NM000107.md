@@ -82,140 +82,139 @@ If you use this dataset in your research, please cite the original authors.
 **Sessions**: 100 total (1 per subject)
 **Publication**: Kaifosh et al., 2025 - “A generic non-invasive neuromotor interface for human-computer interaction” (Nature)
 
-> This dataset captures wrist-based sEMG signals during wrist movements for continuous cursor control. Motion capture provides ground-truth wrist angles. The goal is to enable gesture-free control through wrist posture alone, demonstrating sEMG’s ability to decode motor intent before visible movement occurs.
+> > This dataset captures wrist-based sEMG signals during wrist movements for continuous cursor control. Motion capture provides ground-truth wrist angles. The goal is to enable gesture-free control through wrist posture alone, demonstrating sEMG’s ability to decode motor intent before visible movement occurs.
 
-**wrist: Wrist Movement Control from EMG**
+> **wrist: Wrist Movement Control from EMG**
 
-**Overview**
+> **Overview**
 
-**Dataset Details**
+> **Dataset Details**
 
-**Participants**
+> **Participants**
 
-### View full README
+> ### View full README
 
-**wrist: Wrist Movement Control from EMG**
+> **wrist: Wrist Movement Control from EMG**
 
-**Overview**
+> **Overview**
 
-**Dataset Details**
+> **Dataset Details**
 
-**Participants**
+> **Participants**
 
-- **Sample size**: 100 participants
-- **Demographics**: Not available (marked as n/a)
-- **Recording side**: Dominant wrist
-- **Sessions**: 1 per participant
+> - **Sample size**: 100 participants
+> - **Demographics**: Not available (marked as n/a)
+> - **Recording side**: Dominant wrist
+> - **Sessions**: 1 per participant
 
-**Hardware**
+> **Hardware**
 
-- **Device**: sEMG-RD (single wristband)
-- **Channels**: 16 (EMG0-EMG15)
-- **Sampling rate**: 2000 Hz
-- **Reference**: Bipolar differential
-- **Ground truth**: Motion capture wrist angles
+> - **Device**: sEMG-RD (single wristband)
+> - **Channels**: 16 (EMG0-EMG15)
+> - **Sampling rate**: 2000 Hz
+> - **Reference**: Bipolar differential
+> - **Ground truth**: Motion capture wrist angles
 
-**Recording Protocol**
+> **Recording Protocol**
 
-1. Participant wears sEMG-RD on dominant wrist
-2. Motion capture tracks wrist angles in real-time
-3. Participant controls horizontal cursor position with wrist flexion/extension
-4. Target acquisition task: Navigate to targets and hold for 500ms
+> 1. Participant wears sEMG-RD on dominant wrist
+> 2. Motion capture tracks wrist angles in real-time
+> 3. Participant controls horizontal cursor position with wrist flexion/extension
+> 4. Target acquisition task: Navigate to targets and hold for 500ms
 
-**Data Contents**
+> **Data Contents**
 
-**Files per Session**
+> **Files per Session**
 
-```text
-sub-XXX/ses-XXX/emg/
-```
+> ```text
+> sub-XXX/ses-XXX/emg/
+> ```
 
-```text
-├── sub-XXX_ses-XXX_task-wrist_emg.edf
-├── sub-XXX_ses-XXX_task-wrist_emg.json
-├── sub-XXX_ses-XXX_task-wrist_channels.tsv
-├── sub-XXX_ses-XXX_task-wrist_events.tsv
-└── sub-XXX_ses-XXX_electrodes.tsv
-```
+> ```text
+> ├── sub-XXX_ses-XXX_task-wrist_emg.edf
+> ├── sub-XXX_ses-XXX_task-wrist_emg.json
+> ├── sub-XXX_ses-XXX_task-wrist_channels.tsv
+> ├── sub-XXX_ses-XXX_task-wrist_events.tsv
+> └── sub-XXX_ses-XXX_electrodes.tsv
+> ```
 
-**Events**
+> **Events**
 
-- **Stage boundaries**: Task phases and movement trials
+> - **Stage boundaries**: Task phases and movement trials
 
-**Coordinate System**
+> **Coordinate System**
 
-Single coordinate system at root (dominant wrist, percent units, no decimals)
+> Single coordinate system at root (dominant wrist, percent units, no decimals)
 
-**Signal Processing**
+> **Signal Processing**
 
-**Note**: This dataset has significant data quality issues:
-- Duplicate timestamps found in many sessions (up to 88% duplicates)
-- Irregular sampling requiring resampling (up to 916% deviation)
-- Post-processing: Duplicate removal followed by resampling to regular 2000 Hz
+> **Note**: This dataset has significant data quality issues:
+> - Duplicate timestamps found in many sessions (up to 88% duplicates)
+> - Irregular sampling requiring resampling (up to 916% deviation)
+> - Post-processing: Duplicate removal followed by resampling to regular 2000 Hz
 
-**Baseline Performance**
+> **Baseline Performance**
 
-**Published Results (Kaifosh et al., 2025)**
+> **Published Results (Kaifosh et al., 2025)**
 
-**Offline Evaluation**:
-- Wrist angle velocity error: <13°/s
-- Error decreases with more training participants
+> **Offline Evaluation**:
+> - Wrist angle velocity error: <13°/s
+> - Error decreases with more training participants
 
-**Closed-loop Performance** (n=17 naive test users):
-- **Target acquisition time**: Median 1.51s (sEMG decoder)
-- **Dial-in time**: Time to re-acquire after premature exit
-- **Learning effects**: Improvement from practice to evaluation blocks
+> **Closed-loop Performance** (n=17 naive test users):
+> - **Target acquisition time**: Median 1.51s (sEMG decoder)
+> - **Dial-in time**: Time to re-acquire after premature exit
+> - **Learning effects**: Improvement from practice to evaluation blocks
 
-**Comparison**:
-- Motion capture ground truth: 0.96s
-- MacBook trackpad: 0.68s
-- sEMG decoder: 1.51s (2.2× slower than trackpad)
+> **Comparison**:
+> - Motion capture ground truth: 0.96s
+> - MacBook trackpad: 0.68s
+> - sEMG decoder: 1.51s (2.2× slower than trackpad)
 
-**Model architecture**: MPF features + LSTM
+> **Model architecture**: MPF features + LSTM
 
-**Key Findings**
+> **Key Findings**
 
-- **Predictive signals**: sEMG precedes movement by tens of milliseconds
-- **Generic models work**: Out-of-the-box cross-user generalization
-- **Continuous control**: Demonstrates feasibility of gesture-free interfaces
-- **Room for improvement**: Performance gap vs traditional inputs
+> - **Predictive signals**: sEMG precedes movement by tens of milliseconds
+> - **Generic models work**: Out-of-the-box cross-user generalization
+> - **Continuous control**: Demonstrates feasibility of gesture-free interfaces
+> - **Room for improvement**: Performance gap vs traditional inputs
 
-**Use Cases**
+> **Use Cases**
 
-- **Continuous control**: Cursor/pointer movement
-- **AR/VR navigation**: Hands-free interface
-- **Low-effort control**: Minimal visible movement required
-- **Predictive decoding**: Intent detection before motion completion
+> - **Continuous control**: Cursor/pointer movement
+> - **AR/VR navigation**: Hands-free interface
+> - **Low-effort control**: Minimal visible movement required
+> - **Predictive decoding**: Intent detection before motion completion
 
-**Known Limitations**
+> **Known Limitations**
 
-- Single degree of freedom (1D control only)
-- Single wrist (dominant hand)
-- Duplicate timestamps (data quality issue)
-- Performance below traditional inputs
-- Extension to 2D control not demonstrated
+> - Single degree of freedom (1D control only)
+> - Single wrist (dominant hand)
+> - Duplicate timestamps (data quality issue)
+> - Performance below traditional inputs
+> - Extension to 2D control not demonstrated
 
-**Citation**
+> **Citation**
 
-```text
-Kaifosh, P., Reardon, T.R., & CTRL-labs at Reality Labs. (2025).
-A generic non-invasive neuromotor interface for human-computer interaction.
-Nature, 645(8081), 702-711. https://doi.org/10.1038/s41586-025-09255-w
-```
+> ```text
+> Kaifosh, P., Reardon, T.R., & CTRL-labs at Reality Labs. (2025).
+> A generic non-invasive neuromotor interface for human-computer interaction.
+> Nature, 645(8081), 702-711. https://doi.org/10.1038/s41586-025-09255-w
+> ```
 
-**Data Curator**
+> **Data Curator**
 
-**Yahya Shirazi**
-SCCN (Swartz Center for Computational Neuroscience)
-INC (Institute for Neural Computation)
-University of California San Diego
+> **Yahya Shirazi**
+> SCCN (Swartz Center for Computational Neuroscience)
+> INC (Institute for Neural Computation)
+> University of California San Diego
 
-**Version History**
+> **Version History**
 
-**v1.0 (2025-10-01): Initial BIDS conversion**
+> **v1.0 (2025-10-01): Initial BIDS conversion**
 
-**BIDS Version**: 1.11 | **EMG-BIDS**: BEP-042 | **Updated**: Oct 1, 2025
-
+> **BIDS Version**: 1.11 | **EMG-BIDS**: BEP-042 | **Updated**: Oct 1, 2025
 <div class="eegdash-ed-secnum">§ 03<b>Cohort · Participants</b></div>
 
 ## Cohort
@@ -446,7 +445,7 @@ path/
     one dataset has to be processed and saved at a time to account for
     its original position.
 
-<!-- !! processed by numpydoc !! --><div class="eegdash-ed-access"><div class="sidecar-hdr"><span><b>Access modes</b></span><span class="right">MNE → braindecode → PyTorch → ML</span></div><div class="am-list"><div class="am-row"><span class="name">.raw</span><span class="what">MNE <code>Raw</code> object — standard tools (filter, epoch, ICA, plot_psd).</span><span class="badge">mne</span></div><div class="am-row"><span class="name">BaseConcatDataset</span><span class="what">Each record is a lazy <code>BaseDataset</code> from braindecode — windowed via <code>create_windows_from_events</code>.</span><span class="badge">braindecode</span></div><div class="am-row"><span class="name">DataLoader</span><span class="what">Wraps the windowed dataset into a PyTorch <code>DataLoader</code>; supports parallel workers and on-the-fly augmentations.</span><span class="badge">pytorch</span></div><div class="am-row"><span class="name">Zarr cache</span><span class="what">Optional braindecode Zarr mirror for fast resume; persisted to <code>cache_dir</code>.</span><span class="badge">zarr</span></div><div class="am-row"><span class="name">Hugging Face</span><span class="what">No per-dataset mirror published yet — browse the <a href="https://huggingface.co/EEGDash">EEGDash org listing</a> for sibling datasets.</span><span class="badge">huggingface</span></div><div class="am-row"><span class="name">Croissant 1.0</span><span class="what">Machine-readable JSON-LD descriptor — <a href="../../_static/dataset_generated/croissant/NM000107.croissant.json" download>NM000107.croissant.json</a> (MLCommons schema, ingestible by PyTorch / TensorFlow / JAX).</span><span class="badge">mlcommons</span></div></div></div><section class="eegdash-ed-examples"><div class="sidecar-hdr"><span><b>Examples using EEGDash</b></span><span class="right">curated · start here</span></div><div class="ex-grid"><a class="ex-card" href="../../generated/auto_examples/tutorials/00_start_here/plot_00_first_search.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_00_first_search.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Find datasets with the EEGDash API</span><span class="ex-blurb">Query the catalogue, filter by task or modality, list candidates.</span></span></a><a class="ex-card" href="../../generated/auto_examples/tutorials/00_start_here/plot_01_first_recording.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_01_first_recording.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Load one EEG recording</span><span class="ex-blurb">Resolve a single record to an MNE Raw with channels and events.</span></span></a><a class="ex-card" href="../../generated/auto_examples/tutorials/00_start_here/plot_02_dataset_to_dataloader.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_02_dataset_to_dataloader.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">EEG recording to PyTorch DataLoader</span><span class="ex-blurb">Wrap braindecode windows in a DataLoader for model training.</span></span></a><a class="ex-card" href="../../generated/auto_examples/tutorials/10_core_workflow/plot_10_preprocess_and_window.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_10_preprocess_and_window.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Preprocess EEG and create windows</span><span class="ex-blurb">Filter, resample, epoch — and persist the windowed dataset.</span></span></a><a class="ex-card" href="../../generated/auto_examples/tutorials/10_core_workflow/plot_13_save_and_reuse_prepared_data.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_13_save_and_reuse_prepared_data.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Save and reload prepared data</span><span class="ex-blurb">Cache a windowed dataset to disk and reattach it without recompute.</span></span></a><a class="ex-card" href="../../generated/auto_examples/how_to/how_to_download_a_dataset.html"><span class="ex-thumb"><img src="../../_static/thumbs/how_to_download_a_dataset.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Download a dataset locally</span><span class="ex-blurb">Prefetch BIDS files to a local cache and validate the layout.</span></span></a></div><p class="ex-hint">Swap any <code>load_dataset(...)</code> call for <code>nm000107</code> to reproduce the tutorial on this dataset.</p></section><div class="eegdash-ed-footnotes"><div><h5>Citation</h5><p>Patrick Kaifosh, Thomas R. Reardon, CTRL-labs at Reality Labs (2025). <em>FRL Wrist Control: Wrist Movement Decoding from Surface Electromyography</em>. <code>10.82901/nemar.nm000107</code></p></div><div><h5>Provenance</h5><p><span class="note-num">¹</span>Contributed to nemar in BIDS format.</p><p><span class="note-num">²</span>Curated &amp; ingested by the EEGDash catalog; see CITATION.cff for canonical reference.</p><p><span class="note-num">³</span>Persistent identifier: <code>10.82901/nemar.nm000107</code>.</p></div><div><h5>Related &amp; sibling datasets</h5><div class="rel-grid"><a class="rel-card" href="NM000105.html"><span class="rel-id">NM000105</span><span class="rel-meta">EMG · 100 subj</span><span class="rel-tag rel-same">Same authors</span></a><a class="rel-card" href="NM000106.html"><span class="rel-id">NM000106</span><span class="rel-meta">EMG · 100 subj</span><span class="rel-tag rel-same">Same authors</span></a><a class="rel-card" href="NM000104.html"><span class="rel-id">NM000104</span><span class="rel-meta">EMG · 108 subj</span></a><a class="rel-card" href="NM000159.html"><span class="rel-id">NM000159</span><span class="rel-meta">EMG · 16 subj</span></a><a class="rel-card" href="NM000155.html"><span class="rel-id">NM000155</span><span class="rel-meta">EMG · 6 subj</span></a></div><p class="rel-more">+ 1 more — see See Also below →</p></div></div><div class="eegdash-ed-prov"><div><div class="lbl">BIDS</div><div class="v ok">BIDS 1.11.0</div></div><div><div class="lbl">Sidecars</div><div class="v todo">not yet probed</div></div><div><div class="lbl">Provenance</div><div class="v">CC-BY-NC 4.0 · <a href="https://doi.org/10.82901/nemar.nm000107">10.82901/nemar.nm000107</a></div></div><div><div class="lbl">Machine-readable</div><div class="v"><a href="#dataset-information">schema.org/Dataset</a> · <a href="../../_static/dataset_generated/croissant/NM000107.croissant.json" download>Croissant</a></div></div><div><div class="lbl">Mirrors</div><div class="v"><a href="https://openneuro.org/datasets/nm000107">OpenNeuro</a> · <a href="https://nemar.org/dataexplorer/detail?dataset_id=nm000107">NEMAR</a> · <a href="https://huggingface.co/EEGDash">HF org</a></div></div></div>
+<!-- !! processed by numpydoc !! --><div class="eegdash-ed-access"><div class="sidecar-hdr"><span><b>Access modes</b></span><span class="right">MNE → braindecode → PyTorch → ML</span></div><div class="am-list"><div class="am-row"><span class="name"><a href="https://mne.tools/stable/generated/mne.io.Raw.html" target="_blank" rel="noopener">.raw</a></span><span class="what"><a href="https://mne.tools/stable/generated/mne.io.Raw.html" target="_blank" rel="noopener">MNE <code>Raw</code></a> object — standard tools (<a href="https://mne.tools/stable/generated/mne.io.Raw.html#mne.io.Raw.filter" target="_blank" rel="noopener">filter</a>, <a href="https://mne.tools/stable/generated/mne.Epochs.html" target="_blank" rel="noopener">epoch</a>, <a href="https://mne.tools/stable/generated/mne.preprocessing.ICA.html" target="_blank" rel="noopener">ICA</a>, <a href="https://mne.tools/stable/generated/mne.io.Raw.html#mne.io.Raw.compute_psd" target="_blank" rel="noopener">plot_psd</a>).</span><a class="badge" href="https://mne.tools/stable/" target="_blank" rel="noopener">mne</a></div><div class="am-row"><span class="name"><a href="https://braindecode.org/stable/generated/braindecode.datasets.BaseConcatDataset.html" target="_blank" rel="noopener">BaseConcatDataset</a></span><span class="what">Each record is a lazy <a href="https://braindecode.org/stable/generated/braindecode.datasets.BaseDataset.html" target="_blank" rel="noopener"><code>BaseDataset</code></a> from <a href="https://braindecode.org/stable/" target="_blank" rel="noopener">braindecode</a> — windowed via <a href="https://braindecode.org/stable/generated/braindecode.preprocessing.create_windows_from_events.html" target="_blank" rel="noopener"><code>create_windows_from_events</code></a>.</span><a class="badge" href="https://braindecode.org/stable/generated/braindecode.datasets.BaseConcatDataset.html" target="_blank" rel="noopener">braindecode</a></div><div class="am-row"><span class="name"><a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader" target="_blank" rel="noopener">DataLoader</a></span><span class="what">Wraps the windowed dataset into a <a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader" target="_blank" rel="noopener">PyTorch <code>DataLoader</code></a>; supports parallel workers and on-the-fly augmentations.</span><a class="badge" href="https://pytorch.org/" target="_blank" rel="noopener">pytorch</a></div><div class="am-row"><span class="name"><a href="https://zarr.readthedocs.io/en/stable/" target="_blank" rel="noopener">Zarr cache</a></span><span class="what">Optional braindecode <a href="https://zarr.readthedocs.io/en/stable/" target="_blank" rel="noopener">Zarr</a> mirror for fast resume; persisted to <code>cache_dir</code>.</span><a class="badge" href="https://zarr.readthedocs.io/en/stable/" target="_blank" rel="noopener">zarr</a></div><div class="am-row"><span class="name"><a href="https://huggingface.co/EEGDash" target="_blank" rel="noopener">Hugging Face</a></span><span class="what">No per-dataset mirror published yet — browse the <a href="https://huggingface.co/EEGDash">EEGDash org listing</a> for sibling datasets. See the <a href="https://huggingface.co/docs/datasets/" target="_blank" rel="noopener">datasets</a> loader API.</span><a class="badge" href="https://huggingface.co/EEGDash" target="_blank" rel="noopener">huggingface</a></div><div class="am-row"><span class="name"><a href="https://docs.mlcommons.org/croissant/docs/croissant-spec.html" target="_blank" rel="noopener">Croissant 1.0</a></span><span class="what">Machine-readable <a href="https://docs.mlcommons.org/croissant/docs/croissant-spec.html" target="_blank" rel="noopener">JSON-LD descriptor</a> — <a href="../../_static/dataset_generated/croissant/NM000107.croissant.json" download>NM000107.croissant.json</a> (<a href="https://mlcommons.org/working-groups/data/datasets/" target="_blank" rel="noopener">MLCommons</a> schema, ingestible by PyTorch / TensorFlow / JAX).</span><a class="badge" href="https://docs.mlcommons.org/croissant/docs/croissant-spec.html" target="_blank" rel="noopener">mlcommons</a></div></div></div><section class="eegdash-ed-examples"><div class="sidecar-hdr"><span><b>Examples using EEGDash</b></span><span class="right">curated · start here</span></div><div class="ex-grid"><a class="ex-card" href="../../generated/auto_examples/tutorials/00_start_here/plot_00_first_search.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_00_first_search.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Find datasets with the EEGDash API</span><span class="ex-blurb">Query the catalogue, filter by task or modality, list candidates.</span></span></a><a class="ex-card" href="../../generated/auto_examples/tutorials/00_start_here/plot_01_first_recording.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_01_first_recording.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Load one EEG recording</span><span class="ex-blurb">Resolve a single record to an MNE Raw with channels and events.</span></span></a><a class="ex-card" href="../../generated/auto_examples/tutorials/00_start_here/plot_02_dataset_to_dataloader.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_02_dataset_to_dataloader.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">EEG recording to PyTorch DataLoader</span><span class="ex-blurb">Wrap braindecode windows in a DataLoader for model training.</span></span></a><a class="ex-card" href="../../generated/auto_examples/tutorials/10_core_workflow/plot_10_preprocess_and_window.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_10_preprocess_and_window.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Preprocess EEG and create windows</span><span class="ex-blurb">Filter, resample, epoch — and persist the windowed dataset.</span></span></a><a class="ex-card" href="../../generated/auto_examples/tutorials/10_core_workflow/plot_13_save_and_reuse_prepared_data.html"><span class="ex-thumb"><img src="../../_static/thumbs/plot_13_save_and_reuse_prepared_data.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Save and reload prepared data</span><span class="ex-blurb">Cache a windowed dataset to disk and reattach it without recompute.</span></span></a><a class="ex-card" href="../../generated/auto_examples/how_to/how_to_download_a_dataset.html"><span class="ex-thumb"><img src="../../_static/thumbs/how_to_download_a_dataset.png" alt="" loading="lazy"></span><span class="ex-body"><span class="ex-title">Download a dataset locally</span><span class="ex-blurb">Prefetch BIDS files to a local cache and validate the layout.</span></span></a></div><p class="ex-hint">Swap any <code>load_dataset(...)</code> call for <code>nm000107</code> to reproduce the tutorial on this dataset.</p></section><div class="eegdash-ed-footnotes"><div><h5>Citation</h5><p>Patrick Kaifosh, Thomas R. Reardon, CTRL-labs at Reality Labs (2025). <em>FRL Wrist Control: Wrist Movement Decoding from Surface Electromyography</em>. <code>10.82901/nemar.nm000107</code></p></div><div><h5>Provenance</h5><p><span class="note-num">¹</span>Contributed to nemar in BIDS format.</p><p><span class="note-num">²</span>Curated &amp; ingested by the EEGDash catalog; see CITATION.cff for canonical reference.</p><p><span class="note-num">³</span>Persistent identifier: <code>10.82901/nemar.nm000107</code>.</p></div><div><h5>Related &amp; sibling datasets</h5><div class="rel-grid"><a class="rel-card" href="NM000105.html"><span class="rel-id">NM000105</span><span class="rel-meta">EMG · 100 subj</span><span class="rel-tag rel-same">Same authors</span></a><a class="rel-card" href="NM000106.html"><span class="rel-id">NM000106</span><span class="rel-meta">EMG · 100 subj</span><span class="rel-tag rel-same">Same authors</span></a><a class="rel-card" href="NM000104.html"><span class="rel-id">NM000104</span><span class="rel-meta">EMG · 108 subj</span></a><a class="rel-card" href="NM000159.html"><span class="rel-id">NM000159</span><span class="rel-meta">EMG · 16 subj</span></a><a class="rel-card" href="NM000155.html"><span class="rel-id">NM000155</span><span class="rel-meta">EMG · 6 subj</span></a></div><p class="rel-more">+ 1 more — see See Also below →</p></div></div><div class="eegdash-ed-prov"><div><div class="lbl">BIDS</div><div class="v ok">BIDS 1.11.0</div></div><div><div class="lbl">Sidecars</div><div class="v todo">not yet probed</div></div><div><div class="lbl">Provenance</div><div class="v">CC-BY-NC 4.0 · <a href="https://doi.org/10.82901/nemar.nm000107">10.82901/nemar.nm000107</a></div></div><div><div class="lbl">Machine-readable</div><div class="v"><a href="#dataset-information">schema.org/Dataset</a> · <a href="../../_static/dataset_generated/croissant/NM000107.croissant.json" download>Croissant</a></div></div><div><div class="lbl">Mirrors</div><div class="v"><a href="https://openneuro.org/datasets/nm000107">OpenNeuro</a> · <a href="https://nemar.org/dataexplorer/detail?dataset_id=nm000107">NEMAR</a> · <a href="https://huggingface.co/EEGDash">HF org</a></div></div></div>
 
 ## See Also
 

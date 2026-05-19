@@ -4886,76 +4886,148 @@ def _format_editorial_access_modes_section(
     hf_available = bool(hf_info.get("available"))
     hf_url = str(hf_info.get("url") or "https://huggingface.co/EEGDash")
 
+    # Canonical inventory references — every external term in the
+    # access-modes table maps to its upstream documentation. Keeping
+    # them centralised here means downstream rows stay readable and we
+    # don't repeat URLs.
+    REF = {
+        # MNE
+        "mne_home": "https://mne.tools/stable/",
+        "mne_raw": "https://mne.tools/stable/generated/mne.io.Raw.html",
+        "mne_filter": "https://mne.tools/stable/generated/mne.io.Raw.html#mne.io.Raw.filter",
+        "mne_epochs": "https://mne.tools/stable/generated/mne.Epochs.html",
+        "mne_ica": "https://mne.tools/stable/generated/mne.preprocessing.ICA.html",
+        "mne_plot_psd": "https://mne.tools/stable/generated/mne.io.Raw.html#mne.io.Raw.compute_psd",
+        # Braindecode
+        "bd_home": "https://braindecode.org/stable/",
+        "bd_basedataset": "https://braindecode.org/stable/generated/braindecode.datasets.BaseDataset.html",
+        "bd_baseconcat": "https://braindecode.org/stable/generated/braindecode.datasets.BaseConcatDataset.html",
+        "bd_windows": "https://braindecode.org/stable/generated/braindecode.preprocessing.create_windows_from_events.html",
+        # PyTorch
+        "pt_home": "https://pytorch.org/",
+        "pt_dataloader": "https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader",
+        # Zarr
+        "zarr_home": "https://zarr.readthedocs.io/en/stable/",
+        # Hugging Face
+        "hf_datasets": "https://huggingface.co/docs/datasets/",
+        "hf_load": "https://huggingface.co/docs/datasets/loading",
+        # Croissant / MLCommons
+        "mlc_home": "https://mlcommons.org/working-groups/data/datasets/",
+        "croissant_spec": "https://docs.mlcommons.org/croissant/docs/croissant-spec.html",
+    }
+
+    def lnk(href, body):
+        return f'<a href="{href}" target="_blank" rel="noopener">{body}</a>'
+
     if hf_available:
         dataset_id_lower = str(context.get("dataset_id") or "").lower()
         hf_blurb = (
             "Pre-bundled mirror at "
             f'<a href="{hf_url}">EEGDash/{dataset_id_lower}</a> · '
-            'pull with <code>datasets.load_dataset("EEGDash/'
-            f'{dataset_id_lower}")</code>.'
+            "pull with "
+            f"{lnk(REF['hf_load'], '<code>datasets.load_dataset</code>')}"
+            f'("EEGDash/{dataset_id_lower}").'
         )
     else:
         hf_blurb = (
             "No per-dataset mirror published yet — browse the "
-            f'<a href="{hf_url}">EEGDash org listing</a> for sibling datasets.'
+            f'<a href="{hf_url}">EEGDash org listing</a> for sibling datasets. '
+            f"See the {lnk(REF['hf_datasets'], 'datasets')} loader API."
         )
 
     rows = [
         (
             ".raw",
             (
-                "MNE <code>Raw</code> object — standard tools (filter, epoch, "
-                "ICA, plot_psd)."
+                f"{lnk(REF['mne_raw'], 'MNE <code>Raw</code>')} object — "
+                f"standard tools ({lnk(REF['mne_filter'], 'filter')}, "
+                f"{lnk(REF['mne_epochs'], 'epoch')}, "
+                f"{lnk(REF['mne_ica'], 'ICA')}, "
+                f"{lnk(REF['mne_plot_psd'], 'plot_psd')})."
             ),
             "mne",
+            REF["mne_home"],
         ),
         (
             "BaseConcatDataset",
             (
-                "Each record is a lazy <code>BaseDataset</code> from "
-                "braindecode — windowed via <code>create_windows_from_events</code>."
+                "Each record is a lazy "
+                f"{lnk(REF['bd_basedataset'], '<code>BaseDataset</code>')} from "
+                f"{lnk(REF['bd_home'], 'braindecode')} — windowed via "
+                f"{lnk(REF['bd_windows'], '<code>create_windows_from_events</code>')}."
             ),
             "braindecode",
+            REF["bd_baseconcat"],
         ),
         (
             "DataLoader",
             (
-                "Wraps the windowed dataset into a PyTorch <code>DataLoader</code>; "
+                "Wraps the windowed dataset into a "
+                f"{lnk(REF['pt_dataloader'], 'PyTorch <code>DataLoader</code>')}; "
                 "supports parallel workers and on-the-fly augmentations."
             ),
             "pytorch",
+            REF["pt_home"],
         ),
         (
             "Zarr cache",
             (
-                "Optional braindecode Zarr mirror for fast resume; persisted to "
-                "<code>cache_dir</code>."
+                "Optional braindecode "
+                f"{lnk(REF['zarr_home'], 'Zarr')} mirror for fast resume; "
+                "persisted to <code>cache_dir</code>."
             ),
             "zarr",
+            REF["zarr_home"],
         ),
         (
             "Hugging Face",
             hf_blurb,
             "huggingface",
+            "https://huggingface.co/EEGDash",
         ),
         (
             "Croissant 1.0",
             (
-                f"Machine-readable JSON-LD descriptor — "
+                "Machine-readable "
+                f"{lnk(REF['croissant_spec'], 'JSON-LD descriptor')} — "
                 f'<a href="{croissant_url}" download>{class_name}.croissant.json</a> '
-                f"(MLCommons schema, ingestible by PyTorch / TensorFlow / JAX)."
+                f"({lnk(REF['mlc_home'], 'MLCommons')} schema, "
+                "ingestible by PyTorch / TensorFlow / JAX)."
             ),
             "mlcommons",
+            REF["croissant_spec"],
         ),
     ]
 
+    def _name_html(name, badge_href):
+        """Render the .name cell — link the entry point to its upstream
+        when we have a primary doc URL.
+        """
+        href_map = {
+            ".raw": REF["mne_raw"],
+            "BaseConcatDataset": REF["bd_baseconcat"],
+            "DataLoader": REF["pt_dataloader"],
+            "Zarr cache": REF["zarr_home"],
+            "Hugging Face": "https://huggingface.co/EEGDash",
+            "Croissant 1.0": REF["croissant_spec"],
+        }
+        href = href_map.get(name)
+        if href:
+            return (
+                f'<span class="name">'
+                f'<a href="{href}" target="_blank" rel="noopener">{name}</a>'
+                "</span>"
+            )
+        return f'<span class="name">{name}</span>'
+
     rows_html = "".join(
         '<div class="am-row">'
-        f'<span class="name">{name}</span>'
+        f"{_name_html(name, badge_href)}"
         f'<span class="what">{what}</span>'
-        f'<span class="badge">{badge}</span>'
+        f'<a class="badge" href="{badge_href}" target="_blank" '
+        f'rel="noopener">{badge}</a>'
         "</div>"
-        for name, what, badge in rows
+        for name, what, badge, badge_href in rows
     )
 
     block = (

@@ -16,9 +16,12 @@
    ========================================================================= */
 
 :root {
-  --ed-paper: #f7f7f5;
-  --ed-paper-2: #e8eef3;
-  --ed-ink: #1a2532;
+  /* Match the dataset_summary index — pure white page surface. The
+     previous cream (#f7f7f5) created a visible mismatch when readers
+     navigated between the catalog index and a dataset detail page. */
+  --ed-paper: #ffffff;
+  --ed-paper-2: #f1f5f9;
+  --ed-ink: #222832;
   --ed-ink-2: #34404e;
   --ed-muted: #6b7785;
   --ed-rule: #d0d6dc;

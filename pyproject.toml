@@ -58,6 +58,7 @@ dependencies = [
   "mne>=1.11.0",
   "mne_bids>=0.18.0",
   "pandas",
+  "pyarrow",
   "pydantic",
   "pymatreader",
   "requests>=2.25.0",

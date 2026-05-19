@@ -4511,12 +4511,40 @@ def _format_editorial_fieldcard_section(context: Mapping[str, object]) -> str:
         tag_type = ""
     if tag_pathology or tag_type or tag_modality:
         block += '<dt class="hdr">Tags</dt><dd class="hdrpad"></dd>'
+
+        def _rail_tag_dd(value: str, kind: str) -> str:
+            """Render tag values as colored chips matching the
+            dataset_summary palette. Multi-value tags get one chip each.
+            """
+            chips: list[str] = []
+            for item in (v.strip() for v in str(value).split("·")):
+                if not item:
+                    continue
+                slug = item.strip().lower().replace(" ", "-").replace("_", "-")
+                chips.append(
+                    f'<span class="tag rail-tag" '
+                    f'data-tag-kind="{kind}" '
+                    f'data-tag-value="{html.escape(slug, quote=True)}">'
+                    f"{html.escape(item)}</span>"
+                )
+            return "".join(chips)
+
         if tag_pathology:
-            block += f"<dt>Pathology</dt><dd>{tag_pathology}</dd>"
+            block += (
+                "<dt>Pathology</dt><dd>"
+                + _rail_tag_dd(tag_pathology, "dataset-pathology")
+                + "</dd>"
+            )
         if tag_modality:
-            block += f"<dt>Paradigm</dt><dd>{tag_modality}</dd>"
+            block += (
+                "<dt>Paradigm</dt><dd>"
+                + _rail_tag_dd(tag_modality, "dataset-modality")
+                + "</dd>"
+            )
         if tag_type:
-            block += f"<dt>Type</dt><dd>{tag_type}</dd>"
+            block += (
+                "<dt>Type</dt><dd>" + _rail_tag_dd(tag_type, "dataset-type") + "</dd>"
+            )
 
     # ML / Reach section — only emits when at least one field is present.
     reach_rows: list[str] = []
@@ -4636,15 +4664,35 @@ def _format_editorial_hero_extras(context: Mapping[str, object]) -> str:
     if isinstance(sess_list, (list, tuple)) and len(sess_list) > 1:
         pills.append(f'<span class="pill">{len(sess_list)} sessions</span>')
     if isinstance(tags, dict):
-        tag_pathology = _clean_value(tags.get("pathology"))
-        tag_modality = _clean_value(tags.get("modality"))
-        tag_type = _clean_value(tags.get("type"))
-        if tag_pathology and tag_pathology.lower() not in ("not specified", "—"):
-            pills.append(f'<span class="pill">{tag_pathology}</span>')
-        if tag_modality and tag_modality.lower() not in ("—",):
-            pills.append(f'<span class="pill">{tag_modality}</span>')
-        if tag_type and tag_type.lower() not in ("—",):
-            pills.append(f'<span class="pill">{tag_type}</span>')
+        # Reuse the same humanised values the field-card rail uses so
+        # the pill row never shows raw Python list repr like "['Healthy']".
+        pill_pathology = _humanise_tag_value(tags.get("pathology"))
+        pill_modality = _humanise_tag_value(tags.get("modality"))
+        pill_type = _humanise_tag_value(tags.get("type"))
+
+        def _tag_slug(value: str) -> str:
+            return value.strip().lower().replace(" ", "-").replace("_", "-")
+
+        for value, kind in (
+            (pill_pathology, "dataset-pathology"),
+            (pill_modality, "dataset-modality"),
+            (pill_type, "dataset-type"),
+        ):
+            if not value or value.lower() in ("not specified", "—"):
+                continue
+            # Multi-value tags (e.g. "Visual · Auditory") emit one pill
+            # per value so each gets the correct gradient color via
+            # tag-palette.js.
+            for item in (v.strip() for v in value.split("·")):
+                if not item:
+                    continue
+                slug = _tag_slug(item)
+                pills.append(
+                    f'<span class="pill tag" '
+                    f'data-tag-kind="{kind}" '
+                    f'data-tag-value="{html.escape(slug, quote=True)}">'
+                    f"{html.escape(item)}</span>"
+                )
     pills_html = (
         f'<div class="eegdash-ed-pills">{"".join(pills)}</div>' if pills else ""
     )

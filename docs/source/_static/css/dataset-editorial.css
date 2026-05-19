@@ -557,6 +557,82 @@ article.bd-article p.sd-badges {
   border-radius: 0;
   line-height: 1.4;
 }
+/* Tag-class colored pills inherit the dataset_summary palette via
+   tag-palette.js. Need !important on background since the generic
+   pill rule above sets `background: transparent`. */
+.eegdash-ed-pills .pill.tag {
+  text-transform: none;
+  letter-spacing: 0.02em;
+  font-weight: 600;
+  font-size: 11.5px;
+  border-radius: 3px;
+  padding: 4px 9px;
+  background: var(--pill-bg, #f1f5f9) !important;
+}
+.eegdash-ed-pills .pill.tag-pathology-healthy {
+  background: linear-gradient(135deg, #ddf6e6, #bcedce) !important;
+  color: #00750e !important;
+}
+.eegdash-ed-pills .pill.tag-pathology-clinical {
+  background: linear-gradient(135deg, #fbdcdc, #f6c2c2) !important;
+  color: #8c0000 !important;
+}
+.eegdash-ed-pills .pill.tag-modality-visual {
+  background: linear-gradient(135deg, #dee7fc, #bdd0f9) !important;
+  color: #00139b !important;
+}
+.eegdash-ed-pills .pill.tag-modality-auditory {
+  background: linear-gradient(135deg, #daf1fb, #b6e4f8) !important;
+  color: #005599 !important;
+}
+.eegdash-ed-pills .pill.tag-modality-somatosensory,
+.eegdash-ed-pills .pill.tag-modality-tactile {
+  background: linear-gradient(135deg, #dbf4f1, #b8e9e4) !important;
+  color: #006856 !important;
+}
+.eegdash-ed-pills .pill.tag-modality-multisensory {
+  background: linear-gradient(135deg, #fce3ef, #f9c8e0) !important;
+  color: #9c0049 !important;
+}
+.eegdash-ed-pills .pill.tag-modality-motor {
+  background: linear-gradient(135deg, #fdf0da, #fce1b5) !important;
+  color: #a54e00 !important;
+}
+.eegdash-ed-pills .pill.tag-modality-rest,
+.eegdash-ed-pills .pill.tag-modality-resting-state {
+  background: linear-gradient(135deg, #e7e8fc, #d0d1fa) !important;
+  color: #1316a1 !important;
+}
+.eegdash-ed-pills .pill.tag-modality-sleep {
+  background: linear-gradient(135deg, #ebe1fc, #d7c3f9) !important;
+  color: #2c009d !important;
+}
+.eegdash-ed-pills .pill.tag-type-perception {
+  background: linear-gradient(135deg, #e1ecfd, #c4d9fc) !important;
+  color: #0032a6 !important;
+}
+.eegdash-ed-pills .pill.tag-type-decision,
+.eegdash-ed-pills .pill.tag-type-decision-making {
+  background: linear-gradient(135deg, #fbf3d9, #f8e8b4) !important;
+  color: #9a6300 !important;
+}
+.eegdash-ed-pills .pill.tag-type-rest,
+.eegdash-ed-pills .pill.tag-type-resting-state {
+  background: linear-gradient(135deg, #dcf1e3, #b9e3c8) !important;
+  color: #005300 !important;
+}
+.eegdash-ed-pills .pill.tag-type-sleep {
+  background: linear-gradient(135deg, #ede6fd, #dccefc) !important;
+  color: #3b0ca6 !important;
+}
+.eegdash-ed-pills .pill.tag-type-cognitive {
+  background: linear-gradient(135deg, #e7e8fc, #d0d1fa) !important;
+  color: #1316a1 !important;
+}
+.eegdash-ed-pills .pill.tag-type-clinical {
+  background: linear-gradient(135deg, #fbdcdc, #f6c2c2) !important;
+  color: #8c0000 !important;
+}
 .sd-badges .sd-badge.sd-bg-primary,
 .eegdash-ed-pills .pill.is-primary {
   background: var(--ed-accent);
@@ -772,6 +848,26 @@ section:has(> .eegdash-ed-secnum:last-child) + section > h2 {
   article.bd-article .eegdash-ed-readme .eegdash-ed-lede p {
     max-width: 780px;
   }
+}
+
+/* Field-card rail tag chips — sit on the right-hand value column,
+   pick up the dataset_summary palette colors via tag-palette.js so
+   colors stay consistent across the catalog index and the per-dataset
+   pages. */
+aside.eegdash-ed-rail .rail-tag {
+  display: inline-block;
+  font-family: var(--ed-font-mono);
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 3px;
+  margin-left: 0;
+  line-height: 1.4;
+  vertical-align: middle;
+}
+aside.eegdash-ed-rail .rail-tag + .rail-tag {
+  margin-left: 4px;
 }
 
 /* Path-style README sub-headings ("func/", "meg/", "stimuli/meg/").

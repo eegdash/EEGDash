@@ -162,7 +162,6 @@ article.bd-article .eegdash-ed-figpair,
 article.bd-article .eegdash-ed-apicard,
 article.bd-article .eegdash-ed-access,
 article.bd-article .eegdash-ed-examples,
-article.bd-article .eegdash-ed-caveat,
 article.bd-article .eegdash-stats-section,
 article.bd-article .eegdash-ed-pills,
 article.bd-article .eegdash-ed-issue,
@@ -223,8 +222,13 @@ article.bd-article h3 {
   font-size: 22px;
   letter-spacing: -0.005em;
   color: var(--ed-ink);
-  margin-top: 36px;
+  margin-top: 28px;
+  margin-bottom: 12px;
 }
+/* Tight rhythm inside the API reference — attribute groups should
+   read as a compact reference table, not airy editorial prose. */
+article.bd-article #api-reference h3 { margin-top: 20px; margin-bottom: 8px; }
+article.bd-article #api-reference h4 { margin-top: 14px; margin-bottom: 6px; }
 
 article.bd-article p,
 article.bd-article li {
@@ -242,12 +246,33 @@ article.bd-article code,
 article.bd-article kbd,
 article.bd-article tt {
   font-family: var(--ed-font-mono);
-  font-size: 0.92em;
-  background: var(--ed-paper-2);
+  font-size: 0.9em;
+  background: transparent;
   color: var(--ed-ink);
-  padding: 1px 5px;
+  padding: 0 2px;
   border-radius: 2px;
   border: 0;
+}
+/* Inline code in prose: soft tint, no chip outline. Keep the stronger
+   treatment only in actual code blocks (pre > code, highlight blocks). */
+article.bd-article p code,
+article.bd-article li code,
+article.bd-article dd code,
+article.bd-article td code {
+  background: rgba(15, 23, 42, 0.045);
+  padding: 1px 4px;
+}
+html[data-theme="dark"] article.bd-article p code,
+html[data-theme="dark"] article.bd-article li code,
+html[data-theme="dark"] article.bd-article dd code,
+html[data-theme="dark"] article.bd-article td code {
+  background: rgba(248, 250, 252, 0.06);
+}
+/* Code blocks keep their full styling — restore the paper-2 background
+   for highlighted pre blocks so they remain visually distinct. */
+article.bd-article div.highlight pre,
+article.bd-article pre.literal-block {
+  background: var(--ed-paper-2);
 }
 
 /* Anchor links — brand-blue with a subtle underline */
@@ -706,10 +731,19 @@ section:has(> .eegdash-ed-secnum:last-child) + section > h2 {
   font-family: var(--ed-font-serif);
   font-weight: 500;
   float: left;
-  font-size: 78px;
-  line-height: 0.85;
-  padding: 6px 10px 0 0;
+  font-size: 58px;
+  line-height: 0.9;
+  padding: 4px 8px 0 0;
   color: var(--ed-accent);
+}
+@media (max-width: 960px) {
+  .eegdash-ed-lede p:first-child::first-letter {
+    float: none;
+    font-size: inherit;
+    line-height: inherit;
+    padding: 0;
+    color: inherit;
+  }
 }
 
 /* =========================================================================
@@ -1075,6 +1109,7 @@ article.bd-article details.eegdash-ed-info-dropdown summary {
   background: linear-gradient(90deg, rgba(247, 148, 29, 0.07), transparent 70%);
   border-left: 3px solid var(--ed-accent-2);
   font-family: var(--ed-font-serif);
+  max-width: 820px;
 }
 html[data-theme="dark"] .eegdash-ed-caveat {
   background: linear-gradient(90deg, rgba(247, 148, 29, 0.12), transparent 70%);
@@ -1289,7 +1324,13 @@ article.bd-article dl.field-list > dd {
 }
 article.bd-article dl.py.attribute,
 article.bd-article dl.py.method {
-  margin: 12px 0 !important;
+  margin: 8px 0 !important;
+}
+article.bd-article dl.py.attribute + dl.py.attribute,
+article.bd-article dl.py.method + dl.py.method,
+article.bd-article dl.py.attribute + dl.py.method,
+article.bd-article dl.py.method + dl.py.attribute {
+  margin-top: 0 !important;
 }
 article.bd-article dl.py.attribute > dt,
 article.bd-article dl.py.method > dt {
@@ -1299,13 +1340,21 @@ article.bd-article dl.py.method > dt {
   background: transparent !important;
   border: 0 !important;
   border-bottom: 1px dotted var(--ed-rule) !important;
-  padding: 8px 0 !important;
+  padding: 6px 0 !important;
   font-weight: 600;
 }
 article.bd-article dl.py.attribute > dd,
 article.bd-article dl.py.method > dd {
   margin-left: 0 !important;
-  padding: 8px 0 !important;
+  padding: 6px 0 4px !important;
+}
+article.bd-article dl.py.attribute > dd > p,
+article.bd-article dl.py.method > dd > p {
+  margin-bottom: 6px;
+}
+article.bd-article dl.py.attribute > dd > p:last-child,
+article.bd-article dl.py.method > dd > p:last-child {
+  margin-bottom: 0;
 }
 
 /* =========================================================================
@@ -1752,8 +1801,21 @@ html[data-theme="dark"] .eegdash-ed-examples { background: var(--ed-paper); }
   display: grid;
   grid-template-columns: 1.4fr 1fr;
   gap: 28px;
-  align-items: start;
+  align-items: stretch;
   margin: 18px 0 28px;
+}
+.eegdash-ed-cohort-grid > .eegdash-stats-section:nth-of-type(1),
+.eegdash-ed-cohort-grid > .eegdash-stats-section:nth-of-type(2) {
+  min-height: 320px;
+  display: flex;
+  flex-direction: column;
+}
+.eegdash-ed-cohort-grid > .eegdash-stats-section:nth-of-type(1) .stat-block,
+.eegdash-ed-cohort-grid > .eegdash-stats-section:nth-of-type(2) .stat-block {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 @media (max-width: 1100px) {
   .eegdash-ed-cohort-grid { grid-template-columns: 1fr; }
@@ -1933,6 +1995,7 @@ article.bd-article div.admonition.note {
   border-left: 3px solid var(--ed-accent);
   border-radius: 0;
   font-family: var(--ed-font-sans);
+  max-width: 820px;
 }
 article.bd-article div.admonition.tip > .admonition-title,
 article.bd-article div.admonition.note > .admonition-title {

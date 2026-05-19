@@ -21,6 +21,11 @@ from unittest.mock import patch
 import pandas as pd
 import pytest
 
+# The dataset_page package transitively imports sphinx (it's a Sphinx
+# extension). Skip the whole module when sphinx isn't installed —
+# this happens on the test-only CI matrix that doesn't pull doc deps.
+pytest.importorskip("sphinx", reason="dataset_page extension requires sphinx")
+
 from eegdash.dataset.snapshot import DatasetSnapshot
 
 

@@ -28,23 +28,33 @@ from .data_loaders import (
     _iter_dataset_classes,
     _load_dataset_rows,
 )
+from .related import _build_related_index_gower, _related_meta_for
 from .sections import (
+    _editorial_secnum,
     _format_api_section,
-    _format_dataset_info_section,
+    _format_dataset_info_dropdown,
     _format_dataset_jsonld_section,
     _format_dataset_meta_section,
-    _format_electrodes_section,
+    _format_editorial_access_modes_section,
+    _format_editorial_caveat_section,
+    _format_editorial_colophon_section,
+    _format_editorial_examples_gallery,
+    _format_editorial_fieldcard_section,
+    _format_editorial_footnotes_section,
+    _format_editorial_hero_extras,
+    _format_editorial_kicker_section,
+    _format_editorial_layers_section,
+    _format_editorial_provenance_section,
+    _format_electrodes_traces_pair,
     _format_explorer_section,
     _format_feedback_section,
     _format_hero_section,
-    _format_highlights_section,
     _format_nemar_analysis_section,
     _format_nemar_metadata_section,
     _format_quickstart_section,
     _format_readme_section,
     _format_recording_stats_section,
     _format_see_also_section,
-    _format_traces_section,
 )
 
 LOGGER = logging.getLogger(__name__)
@@ -70,15 +80,13 @@ def _snapshot_rows() -> Mapping[str, Mapping[str, str]]:
 
 
 _MODALITY_INDEX_CACHE: dict[str, list[str]] | None = None
+_GOWER_INDEX_CACHE: dict[str, list[str]] | None = None
 
 
-def _related_for(name: str, rows: Mapping[str, Mapping[str, str]]) -> list[str]:
-    """Return up to 6 sibling datasets sharing the same modality.
-
-    Cross-link density helper -- previously inlined in
-    ``_generate_dataset_docs``. Recomputes the per-modality index on
-    first call; cheap (~700 rows).
-    """
+def _related_for_modality(
+    name: str, rows: Mapping[str, Mapping[str, str]]
+) -> list[str]:
+    """Modality-grouping fallback when Gower kNN is unavailable."""
     global _MODALITY_INDEX_CACHE
     if _MODALITY_INDEX_CACHE is None:
         index: dict[str, list[str]] = defaultdict(list)
@@ -101,13 +109,38 @@ def _related_for(name: str, rows: Mapping[str, Mapping[str, str]]) -> list[str]:
     return [s for s in siblings if s != name][:6]
 
 
+def _related_for(name: str, rows: Mapping[str, Mapping[str, str]]) -> list[str]:
+    """Return up to 6 sibling datasets via Gower-distance kNN.
+
+    Falls back to modality grouping when numpy is unavailable.
+    """
+    global _GOWER_INDEX_CACHE
+    if _GOWER_INDEX_CACHE is None:
+        try:
+            _GOWER_INDEX_CACHE = _build_related_index_gower(
+                list(rows.keys()), rows, k=6
+            )
+        except Exception as exc:  # noqa: BLE001
+            LOGGER.warning("[dataset-page] Gower kNN failed (%s); falling back", exc)
+            _GOWER_INDEX_CACHE = {}
+
+    if _GOWER_INDEX_CACHE:
+        siblings = _GOWER_INDEX_CACHE.get(name)
+        if siblings:
+            return siblings[:6]
+
+    return _related_for_modality(name, rows)
+
+
 def _build_page_rst(class_name: str) -> str:
     """Assemble the full page RST for ``class_name``.
 
     Replaces the legacy ``DATASET_PAGE_TEMPLATE`` f-string skeleton.
-    Each section formatter returns an RST fragment; the directive
-    concatenates them with section headings and parses the result via
-    ``nested_parse``.
+    Emits the editorial "Dataset Brief" layout: kicker + field-card,
+    H1, hero, layers rail, then six numbered sections (Quickstart /
+    About / Cohort / Signal / Manifest / API) flanked by editorial
+    chrome (caveat callout, access-modes sidecar, examples gallery,
+    provenance strip, footnotes, colophon).
     """
     rows = _snapshot_rows()
     row = rows.get(class_name)
@@ -128,6 +161,7 @@ def _build_page_rst(class_name: str) -> str:
     dataset_title = str(context.get("title", ""))
     og_description_field, meta_section = _format_dataset_meta_section(context)
     related = _related_for(class_name, rows)
+    related_meta = _related_meta_for(class_name, related, rows)
 
     # Top-of-page field list. Stays in a single contiguous block --
     # blank lines between entries would demote them to body text.
@@ -140,33 +174,55 @@ def _build_page_rst(class_name: str) -> str:
     sections: list[str] = [
         header_block,
         meta_section,
+        # Editorial kicker (breadcrumb + issue line) and field-card aside
+        # are emitted BEFORE the H1 so the rail floats next to the hero.
+        _format_editorial_kicker_section(context),
+        _format_editorial_fieldcard_section(context),
         f"{title}\n{'=' * len(title)}\n",
         _format_dataset_jsonld_section(class_name, context),
         _format_hero_section(context),
+        # Editorial deck + byline + signal pills sit just under the hero.
+        _format_editorial_hero_extras(context),
+        _format_editorial_layers_section(context),
+        # §01 Access · Get started
+        _editorial_secnum(1, "Access · Get started"),
         "Quickstart\n----------\n",
         _format_quickstart_section(context),
+        # §02 Study · The README
+        _editorial_secnum(2, "Study · The README"),
         "About This Dataset\n------------------\n",
         _format_readme_section(context),
-        "Dataset Information\n-------------------\n",
-        _format_dataset_info_section(context),
-        _format_feedback_section(dataset_id, dataset_title),
         # NEMAR-specific metadata (authors with ORCID, MeSH keywords,
-        # DOI-stamped version history) sits between the OpenNeuro/NEMAR-
-        # agnostic "Dataset Information" block and the technical
-        # details. The section formatter returns ``""`` for non-NEMAR
-        # datasets so the seam is conditional.
+        # DOI-stamped version history) — returns "" for non-NEMAR.
         _format_nemar_metadata_section(context),
-        "Technical Details\n-----------------\n",
-        _format_highlights_section(context),
-        _format_electrodes_section(context),
+        # §03 Cohort · Participants
+        _editorial_secnum(3, "Cohort · Participants"),
+        "Cohort\n------\n",
         _format_recording_stats_section(context),
+        # Editorial caveat fires only when n_subjects < 50.
+        _format_editorial_caveat_section(context),
+        # §04 Signal · Electrodes & trace
+        _editorial_secnum(4, "Signal · Electrodes & trace"),
+        "Signal · Electrodes & live trace\n--------------------------------\n",
+        _format_electrodes_traces_pair(class_name, context),
         _format_nemar_analysis_section(context),
-        _format_traces_section(context),
+        # §05 Manifest · BIDS tree
+        _editorial_secnum(5, "Manifest · BIDS tree"),
+        "Manifest\n--------\n",
         _format_explorer_section(class_name, context),
+        _format_dataset_info_dropdown(context),
+        _format_feedback_section(dataset_id, dataset_title),
+        # §06 API · Programmatic access
+        _editorial_secnum(6, "API · Programmatic access"),
         "API Reference\n-------------\n",
-        _format_api_section(class_name),
+        _format_api_section(class_name, context),
+        _format_editorial_access_modes_section(context),
+        _format_editorial_examples_gallery(context),
+        _format_editorial_footnotes_section(context, related, related_meta),
+        _format_editorial_provenance_section(context),
         "See Also\n--------\n",
         _format_see_also_section(dataset_id, class_name, related),
+        _format_editorial_colophon_section(context),
     ]
 
     # Filter out empty sections, then join with blank lines so adjacent

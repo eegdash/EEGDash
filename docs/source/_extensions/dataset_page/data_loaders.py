@@ -15,12 +15,16 @@ can be reasoned about as pure functions over the context dict.
 
 from __future__ import annotations
 
+import concurrent.futures
 import csv
 import importlib
 import inspect
 import json
 import os
 import re
+import threading
+import urllib.error
+import urllib.parse
 import urllib.request
 from collections import Counter
 from pathlib import Path
@@ -32,11 +36,66 @@ import eegdash.dataset as dataset_module
 from eegdash.dataset import EEGDashDataset
 from eegdash.dataset.snapshot import DatasetSnapshot
 
-from ._constants import CLONE_ROOT, DEFAULT_METADATA_FIELDS
+from ._constants import (
+    _PROBE_UA,
+    _README_PAPER_DOI_RE,
+    CLONE_ROOT,
+    DEFAULT_METADATA_FIELDS,
+)
 
 LOGGER = logging.getLogger(__name__)
 
 _DATASET_DETAILS_CACHE: dict[str, dict[str, object]] = {}
+_DATASET_DETAILS_CACHE_LOCK = threading.Lock()
+
+
+def _get_json(
+    url: str,
+    *,
+    timeout: float = 10.0,
+    extra_headers: Mapping[str, str] | None = None,
+) -> dict | None:
+    """GET ``url`` and return parsed JSON, or ``None`` on a recoverable
+    error (network / HTTP error / bad JSON).
+
+    Centralises the boilerplate that was duplicated across every probe
+    helper: UA spoofing, timeout, narrow exception handling, JSON
+    decode. Unexpected errors propagate so real bugs aren't silently
+    swallowed.
+    """
+    headers = {"Accept": "application/json", "User-Agent": _PROBE_UA}
+    if extra_headers:
+        headers.update(extra_headers)
+    try:
+        req = urllib.request.Request(url, headers=headers)
+        with urllib.request.urlopen(req, timeout=timeout) as resp:
+            return json.loads(resp.read().decode("utf-8"))
+    except (urllib.error.URLError, urllib.error.HTTPError, OSError):
+        return None
+    except (json.JSONDecodeError, ValueError):
+        return None
+
+
+def _head_content_length(
+    url: str,
+    *,
+    timeout: float = 8.0,
+) -> int | None:
+    """HEAD ``url`` and return the integer ``Content-Length`` (or None
+    when the request fails / header is missing). Used by probes that
+    only need to know whether a resource has a meaningful body.
+    """
+    try:
+        req = urllib.request.Request(
+            url, method="HEAD", headers={"User-Agent": _PROBE_UA}
+        )
+        with urllib.request.urlopen(req, timeout=timeout) as resp:
+            if not (200 <= resp.status < 400):
+                return None
+            length = resp.headers.get("Content-Length")
+            return int(length) if length is not None else None
+    except (urllib.error.URLError, urllib.error.HTTPError, OSError, ValueError):
+        return None
 
 
 def _should_use_api_summary() -> bool:
@@ -243,10 +302,13 @@ def _fetch_dataset_details_from_api(dataset_id: str) -> dict[str, object]:
         "readme": _clean_value(ds.get("readme")),
         "funding": _normalize_list(ds.get("funding")),
         "senior_author": _clean_value(ds.get("senior_author")),
+        "contact_info": _normalize_list(ds.get("contact_info")),
         "n_subjects": ds.get("demographics", {}).get("subjects_count"),
         "total_files": ds.get("total_files"),
         "n_tasks": len(ds.get("tasks", []) or []),
+        "tasks": ds.get("tasks") or [],
         "recording_modality": ds.get("recording_modality", []),
+        "datatypes": ds.get("datatypes") or [],
         "size_bytes": ds.get("size_bytes"),
         "source": _clean_value(ds.get("source")),
         "demographics": ds.get("demographics"),
@@ -254,19 +316,261 @@ def _fetch_dataset_details_from_api(dataset_id: str) -> dict[str, object]:
         "sfreq_counts": ds.get("sfreq_counts"),
         "total_duration_s": ds.get("total_duration_s"),
         "bad_channels_info": ds.get("bad_channels_info"),
+        # Editorial Brief — fields the rich field-card and provenance strip
+        # need to render real values instead of TODO placeholders.
+        "bids_version": _clean_value(ds.get("bids_version")),
+        "tags": ds.get("tags") or {},
+        "dataset_storage": ds.get("storage") or {},
+        "associated_paper_doi": _clean_value(ds.get("associated_paper_doi")),
+        "stats_computed_at": _clean_value(ds.get("stats_computed_at")),
+        "digested_at": _clean_value((ds.get("timestamps") or {}).get("digested_at")),
+        # Additional fields surfaced from the summary endpoint:
+        "sessions": ds.get("sessions") or [],
+        "dataset_created_at": _clean_value(
+            (ds.get("timestamps") or {}).get("dataset_created_at")
+        ),
+        "dataset_modified_at": _clean_value(
+            (ds.get("timestamps") or {}).get("dataset_modified_at")
+        ),
+        "data_processed": bool(ds.get("data_processed")),
+        "contributing_labs": ds.get("contributing_labs") or [],
+        "n_contributing_labs": ds.get("n_contributing_labs"),
+        "experimental_modalities": ds.get("experimental_modalities") or [],
+        "study_design": _clean_value(ds.get("study_design")),
+        "study_domain": _clean_value(ds.get("study_domain")),
     }
 
     external_links = ds.get("external_links", {}) or {}
     details["source_url"] = _clean_value(external_links.get("source_url"))
+    details["paper_url"] = _clean_value(external_links.get("paper_url"))
+    details["github_url"] = _clean_value(external_links.get("github_url"))
+    details["osf_url"] = _clean_value(external_links.get("osf_url"))
+
+    # Some NEMAR-ingested datasets never populate ``external_links.paper_url``
+    # even though the README ships a ``[![Paper DOI](...)](https://doi.org/…)``
+    # badge. The lede block already turns that badge into a visible link, so
+    # mirror it into the rail's quick-actions row when no structured field
+    # exists yet.
+    if not details["paper_url"]:
+        readme = ds.get("readme") or ""
+        if isinstance(readme, str) and "Paper" in readme:
+            m = _README_PAPER_DOI_RE.search(readme)
+            if m:
+                details["paper_url"] = m.group(1)
 
     return details
 
 
+# Suffixes the BIDS spec defines for the modality-specific sidecars the
+# editorial field-card lists ("events · channels · electrodes · coordsystem").
+# These match against the trailing path segment of each storage.dep_key.
+_SIDECAR_SUFFIXES = {
+    "events.tsv": "events",
+    "events.json": "events.json",
+    "channels.tsv": "channels",
+    "electrodes.tsv": "electrodes",
+    "coordsystem.json": "coordsystem",
+    "eeg.json": "eeg.json",
+    "meg.json": "meg.json",
+    "ieeg.json": "ieeg.json",
+    "physio.tsv": "physio",
+    "stim.tsv": "stim",
+}
+
+
+# Spec-conventional order for sidecar labels we render in the field-card.
+_SIDECAR_RENDER_ORDER = (
+    "events",
+    "events.json",
+    "channels",
+    "electrodes",
+    "coordsystem",
+    "eeg.json",
+    "meg.json",
+    "ieeg.json",
+    "physio",
+    "stim",
+)
+
+
+def _detect_sidecars_for_dataset(dataset_id: str) -> list[str]:
+    """Return a sorted list of BIDS sidecar kinds present for ``dataset_id``.
+
+    Probes ONE sample record via the eegdash records API and inspects
+    ``storage.dep_keys`` for known BIDS sidecar suffixes. Returns an
+    empty list if the probe fails (network error, dataset not yet
+    ingested).
+    """
+    if not _should_use_api_summary():
+        return []
+
+    dataset_lower = dataset_id.lower()
+    query = json.dumps(
+        {"dataset": dataset_lower, "_has_missing_files": {"$ne": True}},
+        separators=(",", ":"),
+    )
+    url = (
+        "https://data.eegdash.org/api/eegdash/records"
+        f"?{urllib.parse.urlencode({'limit': 1, 'filter': query})}"
+    )
+    body = _get_json(url)
+    if not body or not body.get("success") or not body.get("data"):
+        return []
+
+    storage = body["data"][0].get("storage") or {}
+    dep_keys = storage.get("dep_keys") or []
+    if not isinstance(dep_keys, list):
+        return []
+
+    found: set[str] = set()
+    for key in dep_keys:
+        path = str(key)
+        for suffix, label in _SIDECAR_SUFFIXES.items():
+            if path.endswith(suffix):
+                found.add(label)
+                break
+    return [k for k in _SIDECAR_RENDER_ORDER if k in found]
+
+
+def _detect_huggingface_mirror(dataset_id: str) -> dict[str, object]:
+    """Probe the EEGDash HuggingFace org for a mirror of ``dataset_id``.
+
+    Returns a dict with ``available`` (bool), ``url`` (str, dataset-specific
+    when available, org page otherwise), ``downloads`` (int when known),
+    and ``last_modified`` (ISO-8601 str when known). The HF API returns
+    200 with an ``{"error": "..."}`` body for missing datasets, so the
+    discriminator is the presence of an ``id`` field in the JSON payload.
+    """
+    org_url = "https://huggingface.co/EEGDash"
+    fallback: dict[str, object] = {
+        "available": False,
+        "url": org_url,
+        "downloads": None,
+        "last_modified": None,
+    }
+    if not _should_use_api_summary():
+        return fallback
+
+    dataset_lower = dataset_id.lower()
+    body = _get_json(
+        f"https://huggingface.co/api/datasets/EEGDash/{dataset_lower}",
+        timeout=8.0,
+    )
+    if not isinstance(body, dict) or not body.get("id"):
+        return fallback
+
+    return {
+        "available": True,
+        "url": f"https://huggingface.co/datasets/EEGDash/{dataset_lower}",
+        "downloads": body.get("downloads"),
+        "last_modified": body.get("lastModified"),
+    }
+
+
+def _fetch_participants_from_records(dataset_id: str) -> list[dict[str, object]]:
+    """Pull per-subject demographics for a dataset.
+
+    Prefers the dedicated ``/api/eegdash/datasets/{dataset_id}/participants``
+    endpoint, which deduplicates server-side via Mongo ``$group`` and
+    returns one row per subject in a single request. Falls back to
+    paginating ``/records`` for older server deployments that don't
+    expose the participants endpoint yet.
+    """
+    if not _should_use_api_summary():
+        return []
+
+    dataset_lower = dataset_id.lower()
+
+    # --- Primary path: dedicated participants endpoint ----------------
+    body = _get_json(
+        f"https://data.eegdash.org/api/eegdash/datasets/{dataset_lower}/participants",
+        timeout=12.0,
+    )
+    if body is not None and body.get("success") and isinstance(body.get("data"), list):
+        participants: list[dict[str, object]] = []
+        for entry in body["data"]:
+            subject = str(entry.get("subject") or "").strip()
+            if not subject:
+                continue
+            tsv = entry.get("participant_tsv") or {}
+            if not isinstance(tsv, dict):
+                tsv = {}
+            participants.append({"subject": subject, **tsv})
+        return participants
+
+    # --- Fallback: paginate /records ----------------------------------
+    query = json.dumps(
+        {
+            "dataset": dataset_lower,
+            "suffix": {"$in": ["eeg", "ieeg", "emg", "meg"]},
+            "_has_missing_files": {"$ne": True},
+        },
+        separators=(",", ":"),
+    )
+    seen: set[str] = set()
+    participants = []
+    skip = 0
+    page_size = 1000
+    max_skip = 20000  # safety bound — no real dataset has 20k recordings
+    while skip < max_skip:
+        url = (
+            "https://data.eegdash.org/api/eegdash/records"
+            f"?{urllib.parse.urlencode({'limit': page_size, 'skip': skip, 'filter': query})}"
+        )
+        page = _get_json(url, timeout=12.0)
+        records = page.get("data") if isinstance(page, dict) else None
+        if not records:
+            break
+        for record in records:
+            subject = str(record.get("subject") or "").strip()
+            if not subject or subject in seen:
+                continue
+            seen.add(subject)
+            tsv = record.get("participant_tsv") or {}
+            if not isinstance(tsv, dict):
+                continue
+            participants.append({"subject": subject, **tsv})
+        if len(records) < page_size:
+            break
+        skip += page_size
+    return participants
+
+
+def _detect_hed_annotation(dataset_id: str) -> bool:
+    """Return True when NEMAR has published a HED word-cloud for this dataset.
+
+    Cheap signal: NEMAR only generates per-dataset HED word clouds when
+    the events sidecar carries valid HED tags. A HEAD request to the
+    SVG URL with a ``Content-Length > 1 KB`` check is enough — NEMAR's
+    download endpoint returns 200 for missing files but with empty body.
+    """
+    if not _should_use_api_summary():
+        return False
+
+    url = (
+        "https://nemar.org/dataexplorer/download"
+        f"?filepath=/data/nemar/openneuro//processed/event_summaries/"
+        f"{dataset_id.lower()}/word_cloud.svg&file_type=svg"
+    )
+    length = _head_content_length(url, timeout=8.0)
+    return length is not None and length > 1024
+
+
 def _load_dataset_details(dataset_id: str) -> dict[str, object]:
+    """Aggregate per-dataset metadata from local files + API + probes.
+
+    Thread-safe: the in-process cache is guarded by a lock so that
+    duplicate workers don't waste 4 network probes on the same id.
+    Network probes are issued concurrently because they hit different
+    hosts (EEGDash API · NEMAR · HuggingFace) and don't depend on each
+    other.
+    """
     dataset_id = dataset_id.lower()
-    cached = _DATASET_DETAILS_CACHE.get(dataset_id)
-    if cached is not None:
-        return cached
+
+    with _DATASET_DETAILS_CACHE_LOCK:
+        cached = _DATASET_DETAILS_CACHE.get(dataset_id)
+        if cached is not None:
+            return cached
 
     details: dict[str, object] = {}
 
@@ -275,7 +579,7 @@ def _load_dataset_details(dataset_id: str) -> dict[str, object]:
     if desc_path.exists():
         try:
             data = json.loads(desc_path.read_text(encoding="utf-8"))
-        except Exception:
+        except (OSError, json.JSONDecodeError):
             data = {}
         details["title"] = _clean_value(data.get("Name"))
         details["authors"] = _normalize_list(data.get("Authors"))
@@ -289,19 +593,48 @@ def _load_dataset_details(dataset_id: str) -> dict[str, object]:
     if manifest_path.exists():
         try:
             data = json.loads(manifest_path.read_text(encoding="utf-8"))
-        except Exception:
+        except (OSError, json.JSONDecodeError):
             data = {}
         details.setdefault("doi", _clean_value(data.get("dataset_doi")))
         details["source_url"] = _clean_value(data.get("source_url"))
 
-    if not details.get("title") or not details.get("authors"):
-        api_details = _fetch_dataset_details_from_api(dataset_id)
-        for key, value in api_details.items():
-            if value and not details.get(key):
-                details[key] = value
+    # API call must run first; the parallel probes don't depend on it but
+    # we want the api_details merged in before they overwrite.
+    api_details = _fetch_dataset_details_from_api(dataset_id)
+    for key, value in api_details.items():
+        if value and not details.get(key):
+            details[key] = value
 
-    _DATASET_DETAILS_CACHE[dataset_id] = details
-    return details
+    with concurrent.futures.ThreadPoolExecutor(max_workers=4) as pool:
+        futures = {
+            "sidecars_detected": pool.submit(_detect_sidecars_for_dataset, dataset_id),
+            "hed_annotated": pool.submit(_detect_hed_annotation, dataset_id),
+            "huggingface": pool.submit(_detect_huggingface_mirror, dataset_id),
+            "participants_rows": pool.submit(
+                _fetch_participants_from_records, dataset_id
+            ),
+        }
+        for key, future in futures.items():
+            try:
+                details[key] = future.result()
+            except Exception as exc:  # noqa: BLE001 — probe results are best-effort
+                LOGGER.warning(
+                    "[dataset-docs] probe %s failed for %s: %s",
+                    key,
+                    dataset_id,
+                    exc,
+                )
+                details[key] = (
+                    False
+                    if key == "hed_annotated"
+                    else {}
+                    if key == "huggingface"
+                    else []
+                )
+
+    with _DATASET_DETAILS_CACHE_LOCK:
+        existing = _DATASET_DETAILS_CACHE.setdefault(dataset_id, details)
+    return existing
 
 
 # ---------------------------------------------------------------------------
@@ -542,6 +875,9 @@ def _build_dataset_context(
         "canonical_names": canonical_names,
         "author_year_name": author_year_name,
         "source_url": _clean_value(details.get("source_url")),
+        "paper_url": _clean_value(details.get("paper_url")),
+        "github_url": _clean_value(details.get("github_url")),
+        "osf_url": _clean_value(details.get("osf_url")),
         "references": details.get("references", []),
         "how_to_acknowledge": _clean_value(details.get("how_to_acknowledge")),
         "n_subjects": n_subjects,
@@ -564,10 +900,43 @@ def _build_dataset_context(
         "readme": _clean_value(details.get("readme")),
         "nemar_citation_count": _clean_value((row or {}).get("nemar_citation_count")),
         "demographics": details.get("demographics") or {},
+        "participants_rows": details.get("participants_rows") or [],
         "nchans_counts": details.get("nchans_counts") or [],
         "sfreq_counts": details.get("sfreq_counts") or [],
         "total_duration_s": details.get("total_duration_s"),
         "bad_channels_info": details.get("bad_channels_info"),
+        # Editorial Brief fields (surfaced from API; populated by
+        # _fetch_dataset_details_from_api + the sidecar/HED probes).
+        "bids_version": _clean_value(details.get("bids_version")),
+        "tags": details.get("tags") or {},
+        "datatypes": details.get("datatypes") or [],
+        "tasks": details.get("tasks") or [],
+        "funding": details.get("funding") or [],
+        "senior_author": _clean_value(details.get("senior_author")),
+        "contact_info": details.get("contact_info") or [],
+        "sidecars_detected": details.get("sidecars_detected") or [],
+        "hed_annotated": bool(details.get("hed_annotated")),
+        "huggingface": details.get("huggingface")
+        or {
+            "available": False,
+            "url": "https://huggingface.co/EEGDash",
+            "downloads": None,
+            "last_modified": None,
+        },
+        "associated_paper_doi": _clean_value(details.get("associated_paper_doi")),
+        "digested_at": _clean_value(details.get("digested_at")),
+        # Storage descriptor (backend, base S3 url, dep_keys).
+        "dataset_storage": details.get("dataset_storage") or {},
+        # Newly-surfaced fields for the editorial layout:
+        "sessions": details.get("sessions") or [],
+        "dataset_created_at": _clean_value(details.get("dataset_created_at")),
+        "dataset_modified_at": _clean_value(details.get("dataset_modified_at")),
+        "data_processed": bool(details.get("data_processed")),
+        "contributing_labs": details.get("contributing_labs") or [],
+        "n_contributing_labs": details.get("n_contributing_labs"),
+        "experimental_modalities": details.get("experimental_modalities") or [],
+        "study_design": _clean_value(details.get("study_design")),
+        "study_domain": _clean_value(details.get("study_domain")),
     }
 
 

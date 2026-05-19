@@ -2035,6 +2035,16 @@ html[data-theme="dark"] .eegdash-ed-access {
   font-weight: 500;
   font-size: 12px;
 }
+.eegdash-ed-access .am-row .name a {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px dotted var(--ed-rule);
+}
+.eegdash-ed-access .am-row .name a:hover,
+.eegdash-ed-access .am-row .name a:focus-visible {
+  color: var(--ed-accent);
+  border-bottom-color: var(--ed-accent);
+}
 .eegdash-ed-access .am-row .what {
   color: var(--ed-ink-2);
   font-family: var(--ed-font-sans);
@@ -2049,9 +2059,19 @@ html[data-theme="dark"] .eegdash-ed-access {
   color: var(--ed-ink);
 }
 .eegdash-ed-access .am-row .what a {
-  color: var(--ed-accent-2);
+  color: var(--ed-accent);
   text-decoration: none;
-  border-bottom: 1px dotted rgba(247, 148, 29, 0.4);
+  border-bottom: 1px dotted rgba(0, 108, 163, 0.35);
+}
+.eegdash-ed-access .am-row .what a:hover,
+.eegdash-ed-access .am-row .what a:focus-visible {
+  border-bottom-color: var(--ed-accent);
+}
+.eegdash-ed-access .am-row .what a code {
+  /* Inline code inside a link inherits the link color so the chip
+     reads as one clickable token. */
+  color: inherit;
+  background: rgba(0, 108, 163, 0.06);
 }
 .eegdash-ed-access .am-row .badge {
   font-family: var(--ed-font-mono);
@@ -2062,6 +2082,14 @@ html[data-theme="dark"] .eegdash-ed-access {
   border-radius: 2px;
   border: 1px solid rgba(0, 108, 163, 0.2);
   letter-spacing: 0.04em;
+  text-decoration: none;
+  transition: background 0.12s ease, color 0.12s ease;
+}
+.eegdash-ed-access .am-row a.badge:hover,
+.eegdash-ed-access .am-row a.badge:focus-visible {
+  background: var(--ed-accent);
+  color: #fff;
+  border-color: var(--ed-accent);
 }
 
 /* =========================================================================

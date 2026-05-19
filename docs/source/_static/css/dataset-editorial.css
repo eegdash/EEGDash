@@ -147,10 +147,16 @@ article.bd-article {
 article.bd-article p,
 article.bd-article ul,
 article.bd-article ol,
-article.bd-article .eegdash-ed-lede,
 article.bd-article .eegdash-ed-deck,
 article.bd-article .eegdash-ed-byline {
   max-width: 780px;
+}
+/* The lede deliberately fills the column. With the field-card rail
+   floating right, the natural column width gives the prose plenty of
+   room without sprawling past the rail. Setting `max-width: none`
+   keeps it from looking cramped while the right side stays empty. */
+article.bd-article .eegdash-ed-lede {
+  max-width: none;
 }
 /* But full-width chrome: figpair, layers rail, provenance, colophon,
    apicard, etc. should still span the full column. */
@@ -716,16 +722,20 @@ section:has(> .eegdash-ed-secnum:last-child) + section > h2 {
   font-size: 17px;
   line-height: 1.6;
   color: var(--ed-ink-2);
-  /* Single column. The previous `column-count: 2` looked great on long
-     editorial ledes but most README first-paragraphs are 3–5 lines and
-     the second column ended up empty, leaving an awkward gutter on the
-     right. */
-  max-width: 720px;
+  /* Fill the available column. The field-card rail floats on the
+     right, so on a 1440px viewport the lede gets ~1100px of usable
+     width. Capping the lede at 720px was leaving a large empty
+     column to the right that read as a layout bug. */
+  max-width: none;
   margin: 24px 0 36px;
 }
-.eegdash-ed-lede p {
+article.bd-article .eegdash-ed-lede p {
   margin-bottom: 14px;
   text-wrap: pretty;
+  /* Override the article-wide 780px prose cap so the lede paragraphs
+     actually fill the column the user can see. The field-card rail
+     floats right and naturally limits the available width. */
+  max-width: none;
 }
 .eegdash-ed-lede p:first-child::first-letter {
   font-family: var(--ed-font-serif);
@@ -1355,6 +1365,24 @@ article.bd-article dl.py.method > dd > p {
 article.bd-article dl.py.attribute > dd > p:last-child,
 article.bd-article dl.py.method > dd > p:last-child {
   margin-bottom: 0;
+}
+/* Inlined Type annotation injected by api-attribute-compact.js. The JS
+   pulls the "Type:" field value into the signature row as
+   ".eegdash-attr-type" so each attribute reads as a single line. */
+article.bd-article dl.py.attribute .eegdash-attr-type,
+article.bd-article dl.py.property .eegdash-attr-type {
+  color: var(--ed-muted);
+  font-weight: 400;
+  font-family: var(--ed-font-mono);
+}
+article.bd-article dl.py.attribute .eegdash-attr-type a,
+article.bd-article dl.py.property .eegdash-attr-type a {
+  color: inherit;
+  border-bottom: 0;
+}
+article.bd-article dl.py.attribute .eegdash-attr-type em,
+article.bd-article dl.py.property .eegdash-attr-type em {
+  font-style: normal;
 }
 
 /* =========================================================================

@@ -166,6 +166,10 @@ html_js_files = [
     ("js/search-as-you-type.js", {"defer": "defer"}),
     # Lazy-load the electrode-explorer iframe on <details> expansion.
     ("js/lazy-embed.js", {"defer": "defer"}),
+    # Inline the autodoc Type: field next to the attribute signature so
+    # each property reads as a single line "name : Type" instead of a
+    # 4-line block.
+    ("js/api-attribute-compact.js", {"defer": "defer"}),
 ]
 
 # Required for sphinx-sitemap: set the canonical base URL of the site
@@ -3326,7 +3330,6 @@ def _format_recording_stats_section(context: Mapping[str, object]) -> str:
             pair_buckets_f[b] + pair_buckets_m[b] + pair_buckets_o[b]
             for b in all_buckets
         )
-        bar_width = 56
         chart_height = 180
 
         ages_used = [
@@ -3350,7 +3353,7 @@ def _format_recording_stats_section(context: Mapping[str, object]) -> str:
             if o:
                 h = int(o / max_total * chart_height)
                 col_pieces += (
-                    f'<div style="width:{bar_width}px; height:{h}px; '
+                    f'<div style="width:100%; height:{h}px; '
                     f'background:#6b7785; flex-shrink:0;" '
                     f'title="{start}-{start + bucket_size - 1}: other n={o}">'
                     "</div>"
@@ -3358,7 +3361,7 @@ def _format_recording_stats_section(context: Mapping[str, object]) -> str:
             if f:
                 h = int(f / max_total * chart_height)
                 col_pieces += (
-                    f'<div style="width:{bar_width}px; height:{h}px; '
+                    f'<div style="width:100%; height:{h}px; '
                     f'background:#006ca3; flex-shrink:0;" '
                     f'title="{start}-{start + bucket_size - 1}: female n={f}">'
                     "</div>"
@@ -3366,21 +3369,23 @@ def _format_recording_stats_section(context: Mapping[str, object]) -> str:
             if m:
                 h = int(m / max_total * chart_height)
                 col_pieces += (
-                    f'<div style="width:{bar_width}px; height:{h}px; '
+                    f'<div style="width:100%; height:{h}px; '
                     f'background:#f7941d; flex-shrink:0;" '
                     f'title="{start}-{start + bucket_size - 1}: male n={m}">'
                     "</div>"
                 )
             bars_html += (
                 f'<div style="display:flex; flex-direction:column-reverse; '
-                f'justify-content:flex-start; gap:1px;" '
+                f"justify-content:flex-start; gap:1px; flex:1 1 0; "
+                f'min-width:0;" '
                 f'title="{start}-{start + bucket_size - 1}: n={tot}">'
                 f"{col_pieces}"
                 "</div>"
             )
             labels_html += (
-                f'<span style="width:{bar_width}px; text-align:center; '
-                f'overflow:hidden; white-space:nowrap;">{start}</span>'
+                f'<span style="flex:1 1 0; min-width:0; '
+                f"text-align:center; overflow:hidden; "
+                f'white-space:nowrap;">{start}</span>'
             )
 
         legend_pieces = []
@@ -3453,7 +3458,6 @@ def _format_recording_stats_section(context: Mapping[str, object]) -> str:
                 int(float(a) // bucket_size) * bucket_size for a in valid_ages
             )
             max_count = max(buckets.values())
-            bar_width = 56
             chart_height = 180
             bars_html = ""
             labels_html = ""
@@ -3461,13 +3465,14 @@ def _format_recording_stats_section(context: Mapping[str, object]) -> str:
                 count = buckets[start]
                 h = int(count / max_count * chart_height)
                 bars_html += (
-                    f'<div style="width:{bar_width}px; height:{h}px; '
-                    f'background:#006ca3; flex-shrink:0;" '
+                    f'<div style="flex:1 1 0; min-width:0; '
+                    f'height:{h}px; background:#006ca3;" '
                     f'title="{start}-{start + bucket_size - 1}: {count}"></div>'
                 )
                 labels_html += (
-                    f'<span style="width:{bar_width}px; text-align:center; '
-                    f'overflow:hidden; white-space:nowrap;">{start}</span>'
+                    f'<span style="flex:1 1 0; min-width:0; '
+                    f"text-align:center; overflow:hidden; "
+                    f'white-space:nowrap;">{start}</span>'
                 )
             mean_v = demographics.get("age_mean")
             try:
@@ -3896,36 +3901,8 @@ def _format_see_also_section(
 
 
 def _format_feedback_section(dataset_id: str, title: str) -> str:
-    """Generate a feedback section with a button to report issues on GitHub."""
-    dataset_upper = dataset_id.upper()
-    issue_title = quote(f"[Dataset] Issue with {dataset_upper}")
-    issue_body = quote(
-        f"## Dataset\n\n"
-        f"- **Dataset ID:** {dataset_upper}\n"
-        f"- **Title:** {title}\n\n"
-        f"## Issue Description\n\n"
-        f"Please describe the issue you encountered with this dataset:\n\n"
-        f"## Steps to Reproduce\n\n"
-        f"1. \n2. \n3. \n\n"
-        f"## Expected Behavior\n\n\n"
-        f"## Additional Context\n\n"
-    )
-    github_url = (
-        f"https://github.com/eegdash/EEGDash/issues/new"
-        f"?title={issue_title}&body={issue_body}&labels=dataset"
-    )
-
-    return f""".. admonition:: Found an issue with this dataset?
-   :class: tip
-
-   If you encounter any problems with this dataset (missing files, incorrect metadata,
-   loading errors, etc.), please let us know!
-
-   .. button-link:: {github_url}
-      :color: primary
-      :outline:
-
-      Report an Issue on GitHub"""
+    """Feedback admonition disabled — user-requested removal."""
+    return ""
 
 
 # ---------------------------------------------------------------------------
@@ -4580,31 +4557,8 @@ def _editorial_secnum(num: int, label: str) -> str:
 
 
 def _format_editorial_caveat_section(context: Mapping[str, object]) -> str:
-    """Conditional caveat callout — only fires for small cohorts (n < 50)."""
-    n_sub_raw = _clean_value(context.get("n_subjects"))
-    try:
-        n_sub = int(n_sub_raw)
-    except (TypeError, ValueError):
-        return ""
-    if n_sub <= 0 or n_sub >= 50:
-        return ""
-    modality = _clean_value(context.get("modality")) or "EEG"
-    block = (
-        '<div class="eegdash-ed-caveat">'
-        '<div class="c-lbl">Editorial caveat · cohort size</div>'
-        "<h4>Treat this as a features-first dataset, "
-        "not a deep-learning playground.</h4>"
-        f"<p>With <b>n = {n_sub}</b> {modality} participants, this dataset sits "
-        "below the ~50-subject threshold where deep networks trained from scratch "
-        "typically pay off. A well-tuned feature pipeline — band-power features, "
-        "Riemannian geometry, linear classifier — is the recommended baseline. "
-        "Use deep models only with transfer learning or pre-trained backbones.</p>"
-        "<p>For splits, prefer <code>GroupShuffleSplit</code> with "
-        "<code>groups=subject_id</code> so windows from the same recording do not "
-        "leak between train and test.</p>"
-        "</div>"
-    )
-    return _editorial_html(block)
+    """Editorial caveat block disabled — user-requested removal."""
+    return ""
 
 
 def _format_electrodes_traces_pair(name: str, context: Mapping[str, object]) -> str:

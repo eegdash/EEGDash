@@ -1809,43 +1809,70 @@ html[data-theme="dark"] .eegdash-ed-examples { background: var(--ed-paper); }
   min-height: 320px;
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
 }
-.eegdash-ed-cohort-grid > .eegdash-stats-section:nth-of-type(1) .stat-block,
-.eegdash-ed-cohort-grid > .eegdash-stats-section:nth-of-type(2) .stat-block {
-  flex: 1 1 auto;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+/* Editorial polish for the inline-styled age-histogram bars. The
+   generator (conf.py) ships pixel dimensions; this rule just adds
+   spacing/typography so the chart reads as part of the editorial
+   layer rather than a debug widget. */
+.eegdash-ed-cohort-grid > .eegdash-stats-section:nth-of-type(1) .eeg-chart-row {
+  gap: 8px !important;
+  margin-top: 8px;
+}
+.eegdash-ed-cohort-grid > .eegdash-stats-section:nth-of-type(1) .eeg-chart-labels {
+  gap: 8px !important;
+  font-size: 11px !important;
+  margin-top: 6px;
+}
+.eegdash-ed-cohort-grid > .eegdash-stats-section:nth-of-type(1) .eeg-chart-labels span {
+  font-family: var(--ed-font-mono);
+  color: var(--ed-muted);
+  letter-spacing: 0.04em;
+}
+/* Wide layout: 2-column grid with explicit cell placement. Below
+   1100px the grid collapses to a single column AND the explicit
+   `grid-column: <n>` placement is cleared so auto-flow stacks
+   cleanly instead of forcing phantom second columns that overflow
+   the viewport (which is what produced horizontal scroll on mobile).
+   Pattern: ship the desktop placement inside `@media (min-width)`. */
+@media (min-width: 1101px) {
+  .eegdash-ed-cohort-grid > .eegdash-stats-section:nth-of-type(1) {
+    grid-column: 1;
+    margin-bottom: 0 !important;
+  }
+  .eegdash-ed-cohort-grid > .eegdash-stats-section:nth-of-type(2) {
+    grid-column: 2;
+    margin-bottom: 0 !important;
+  }
+  /* Channel counts (3rd) + sampling frequencies (4th) each occupy
+     one column so the row reads as a horizontal stats strip. Any
+     further section falls back to full width on a new row. */
+  .eegdash-ed-cohort-grid > .eegdash-stats-section:nth-of-type(3),
+  .eegdash-ed-cohort-grid > .eegdash-stats-section:nth-of-type(4) {
+    grid-column: span 1;
+    margin-top: 12px;
+    min-width: 0;
+  }
+  .eegdash-ed-cohort-grid > .eegdash-stats-section:nth-of-type(n+5) {
+    grid-column: 1 / -1;
+    margin-top: 12px;
+  }
 }
 @media (max-width: 1100px) {
-  .eegdash-ed-cohort-grid { grid-template-columns: 1fr; }
-}
-/* The first .eegdash-stats-section inside the grid is the age chart
-   (taller); the next is the sex donut. After those, channel counts /
-   sampling frequencies / total duration should escape the grid so
-   they don't get squished into a column. Force grid-column on the
-   first two and full-width on the rest. */
-.eegdash-ed-cohort-grid > .eegdash-stats-section:nth-of-type(1) {
-  grid-column: 1;
-  margin-bottom: 0 !important;
-}
-.eegdash-ed-cohort-grid > .eegdash-stats-section:nth-of-type(2) {
-  grid-column: 2;
-  margin-bottom: 0 !important;
-}
-/* Channel counts (3rd) and sampling frequencies (4th) each occupy one
-   column so the row reads as a horizontal stats strip instead of two
-   sparse full-width rows stacked vertically. Any further sections fall
-   back to full width on a new row. */
-.eegdash-ed-cohort-grid > .eegdash-stats-section:nth-of-type(3),
-.eegdash-ed-cohort-grid > .eegdash-stats-section:nth-of-type(4) {
-  grid-column: span 1;
-  margin-top: 12px;
-  min-width: 0;
-}
-.eegdash-ed-cohort-grid > .eegdash-stats-section:nth-of-type(n+5) {
-  grid-column: 1 / -1;
-  margin-top: 12px;
+  .eegdash-ed-cohort-grid {
+    grid-template-columns: 1fr;
+  }
+  .eegdash-ed-cohort-grid > .eegdash-stats-section {
+    grid-column: 1 / -1;
+    min-width: 0;
+    margin-top: 12px;
+  }
+  /* Cancel the desktop min-height parity on mobile/tablet — the
+     histogram + donut don't need 320px when stacked. */
+  .eegdash-ed-cohort-grid > .eegdash-stats-section:nth-of-type(1),
+  .eegdash-ed-cohort-grid > .eegdash-stats-section:nth-of-type(2) {
+    min-height: 0;
+  }
 }
 
 /* Sex donut — light polish so the SVG sits on a paper background and

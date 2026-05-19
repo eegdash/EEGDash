@@ -3326,8 +3326,8 @@ def _format_recording_stats_section(context: Mapping[str, object]) -> str:
             pair_buckets_f[b] + pair_buckets_m[b] + pair_buckets_o[b]
             for b in all_buckets
         )
-        bar_width = 28
-        chart_height = 80
+        bar_width = 56
+        chart_height = 180
 
         ages_used = [
             float(p.get("age"))
@@ -3453,8 +3453,8 @@ def _format_recording_stats_section(context: Mapping[str, object]) -> str:
                 int(float(a) // bucket_size) * bucket_size for a in valid_ages
             )
             max_count = max(buckets.values())
-            bar_width = 28
-            chart_height = 80
+            bar_width = 56
+            chart_height = 180
             bars_html = ""
             labels_html = ""
             for start in sorted(buckets):

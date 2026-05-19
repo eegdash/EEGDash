@@ -645,19 +645,24 @@ html[data-theme="dark"].dataset-summary-page .sd-tab-set > input:checked + label
 
 /* Back-to-top button: keep it out of the reading column and only
    assert itself on hover. The pydata theme leaves it at full opacity
-   over body text near references; tuck it into the safe-area corner
-   and lower contrast until a user actually targets it. */
-.pst-back-to-top {
-  z-index: 900;
-  transform: scale(0.85);
+   over body text near references; pin it to the viewport corner and
+   lower contrast until a user actually targets it. Note: the theme
+   emits `id="pst-back-to-top"`, not a class — selector must match. */
+#pst-back-to-top {
+  position: fixed !important;
   right: max(1rem, env(safe-area-inset-right, 1rem)) !important;
   bottom: max(1.25rem, env(safe-area-inset-bottom, 1.25rem)) !important;
+  left: auto !important;
+  top: auto !important;
+  margin: 0 !important;
+  z-index: 900;
+  transform: scale(0.85);
   opacity: 0.55;
   transition: opacity 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
   box-shadow: 0 4px 12px -8px rgba(15, 23, 42, 0.4);
 }
-.pst-back-to-top:hover,
-.pst-back-to-top:focus {
+#pst-back-to-top:hover,
+#pst-back-to-top:focus {
   opacity: 1;
   transform: scale(0.95);
   box-shadow: 0 10px 24px -12px rgba(15, 23, 42, 0.5);

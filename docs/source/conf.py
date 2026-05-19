@@ -1,3 +1,4 @@
+import ast
 import concurrent.futures
 import csv
 import html
@@ -876,6 +877,63 @@ def _clean_value(value: object, default: str = "") -> str:
     if not text or text.lower() in {"nan", "none", "null", "unknown"}:
         return default
     return text
+
+
+def _humanise_tag_value(value: object, default: str = "") -> str:
+    """Render a metadata tag value as a clean label.
+
+    Source values arrive in mixed shapes:
+
+    * ``"['Healthy']"`` — Python list repr stringified
+    * ``["Healthy", "Visual"]`` — actual Python list
+    * ``"Healthy"`` — already a plain string
+
+    Returns a HTML-safe ``" · "``-joined label, with surrounding
+    brackets / quotes stripped and ``unknown`` / ``None`` filtered out.
+    """
+    if value is None:
+        return default
+
+    items: list[str]
+    if isinstance(value, (list, tuple, set)):
+        items = [str(v).strip() for v in value]
+    else:
+        text = _clean_value(value, default="")
+        if not text:
+            return default
+        # Try Python literal parsing for stringified lists.
+        if text.startswith(("[", "(")) and text.endswith(("]", ")")):
+            try:
+                parsed = ast.literal_eval(text)
+                if isinstance(parsed, (list, tuple, set)):
+                    items = [str(v).strip() for v in parsed]
+                else:
+                    items = [str(parsed).strip()]
+            except (SyntaxError, ValueError):
+                # Fallback: strip the obvious wrapper chars.
+                inner = text[1:-1]
+                items = [p.strip().strip("'\"") for p in inner.split(",")]
+        else:
+            items = [text]
+
+    # Drop empties, dedupe (case-insensitive, keep first), filter sentinels.
+    seen: set[str] = set()
+    cleaned: list[str] = []
+    for raw in items:
+        s = raw.strip().strip("'\"").strip()
+        if not s:
+            continue
+        if s.lower() in {"nan", "none", "null", "unknown"}:
+            continue
+        key = s.lower()
+        if key in seen:
+            continue
+        seen.add(key)
+        cleaned.append(s)
+
+    if not cleaned:
+        return default
+    return " · ".join(cleaned)
 
 
 def _format_stat_counts(value: object, default: str = "") -> str:
@@ -2270,6 +2328,23 @@ def _convert_readme_to_rst(text: str) -> str:
                 prev_was_list_item = False
                 continue
 
+        # Path-style sub-headings: lines like `**func/**`, `**meg/**`,
+        # `**stimuli/meg/**` are README directory markers, not prose.
+        # Emit them as a custom-class container so the editorial CSS
+        # can render them as compact mono sub-headings.
+        if not is_blockquote_line:
+            path_match = re.match(r"^\*\*([A-Za-z0-9_./-]+/)\*\*$", line.strip())
+            if path_match:
+                path = path_match.group(1)
+                result.append("")
+                result.append(".. container:: eegdash-readme-pathhead")
+                result.append("")
+                result.append(f"   {path}")
+                result.append("")
+                i += 1
+                prev_was_list_item = False
+                continue
+
         # Check for RST-style underline headers (Title followed by ==== or ----)
         # Only match if title is reasonably short (< 80 chars) to avoid matching paragraphs
         if not is_blockquote_line and i + 1 < len(lines) and len(line.strip()) < 80:
@@ -2601,9 +2676,20 @@ def _convert_readme_to_rst(text: str) -> str:
 def _format_readme_section(context: Mapping[str, object]) -> str:
     """Format the README content for RST display.
 
-    The first two prose paragraphs are wrapped in an ``eegdash-ed-lede``
-    container so the editorial CSS can render the two-column drop-cap
-    intro from the v1-editorial-v2 design.
+    Layout:
+
+      .. container:: eegdash-ed-readme
+
+         .. container:: eegdash-ed-lede
+
+            First 1-2 prose paragraphs (drop-cap candidate)
+
+         Remainder paragraphs / blockquotes / dropdown
+
+    The outer ``eegdash-ed-readme`` container gives the CSS a single
+    hook to apply editorial treatments (2-column flow, sub-heading
+    styling for directory tags) to the whole body, while the inner
+    ``eegdash-ed-lede`` keeps the drop-cap scoped to the opening.
     """
     readme = _clean_value(context.get("readme"))
 
@@ -2612,28 +2698,32 @@ def _format_readme_section(context: Mapping[str, object]) -> str:
 
     # Convert README content to RST (headers become bold)
     content = _convert_readme_to_rst(readme)
+    # Light cleanup: split run-on lines that look like two sentences
+    # mashed together because the README omitted a blank line between
+    # them. Heuristic: a line ending with `:` followed immediately by a
+    # capital-letter line is almost always two paragraphs in disguise.
+    content = _split_runon_lines(content)
     lines = content.split("\n")
 
     # Pull the first two non-empty paragraphs to render under the dropcap.
     lede_paragraphs, remainder_lines = _split_lede_paragraphs(lines, max_paragraphs=2)
     lede_block = ""
     if lede_paragraphs:
-        # Wrap each paragraph in a `.. container::` so docutils renders
-        # <p> elements, then put the lot inside the dropcap container.
         inner = []
         for para in lede_paragraphs:
             stripped = para.strip()
             if stripped:
                 inner.append(stripped)
         if inner:
-            paras_rst = "\n\n".join(f"   {p}" for p in inner)
-            lede_block = f".. container:: eegdash-ed-lede\n\n{paras_rst}\n\n"
+            # The lede sits inside the outer readme container, so its
+            # body needs an extra layer of indentation.
+            paras_rst = "\n\n".join(f"      {p}" for p in inner)
+            lede_block = "   .. container:: eegdash-ed-lede\n\n" + paras_rst + "\n\n"
 
     # Reassemble the remainder.
     remainder = "\n".join(remainder_lines).strip("\n")
 
     if remainder:
-        # For long READMEs (>30 lines remaining), wrap in dropdown
         rem_lines = remainder.split("\n")
         if len(rem_lines) > 30:
             preview = "\n".join(rem_lines[:10])
@@ -2645,7 +2735,57 @@ def _format_readme_section(context: Mapping[str, object]) -> str:
                 f"\n{indented}\n"
             )
 
-    return f"{lede_block}\n{remainder}".strip()
+    # Indent remainder so it lives inside the outer readme container.
+    remainder_indented = (
+        "\n".join(f"   {line}" if line else "" for line in remainder.split("\n"))
+        if remainder
+        else ""
+    )
+
+    return (
+        ".. container:: eegdash-ed-readme\n\n"
+        + (lede_block + ("\n" + remainder_indented if remainder_indented else ""))
+    ).rstrip() + "\n"
+
+
+# Lines like "Description: Multi-subject ... face processing\nPlease cite ..."
+# get joined into one giant paragraph by docutils because the README omitted
+# the blank line. Split when a line ending with `:` is followed by a line
+# starting with a capital letter — that's the canonical "label / new sentence"
+# pattern. Also handle the case where two complete sentences sit on
+# adjacent lines (period+capital).
+_README_COLON_SPLIT_RE = re.compile(r"^(.+:)\s*\n([A-Z].+)$", re.MULTILINE)
+_README_PERIOD_SPLIT_RE = re.compile(
+    r"^(.+[.!?])\s*\n(?=[A-Z][a-z])([A-Z].+)$", re.MULTILINE
+)
+
+
+def _split_runon_lines(text: str) -> str:
+    """Insert a blank line between adjacent prose lines that should be
+    separate paragraphs. Conservative: only fires when the preceding
+    line ends in ``:`` or sentence-terminator and the next starts with
+    a capital. Skips lines that look like RST/markdown structure.
+    """
+    # Don't touch indented (block-quote / code-block) content.
+    out_lines: list[str] = []
+    for chunk in text.split("\n\n"):
+        if not chunk.strip():
+            out_lines.append(chunk)
+            continue
+        # Only touch chunks that look like flat prose (no leading indent,
+        # no RST directive marker, no blockquote prefix).
+        first = chunk.lstrip("\n")
+        if (
+            first.startswith((" ", "\t", "..", ">", "|", "+", "-"))
+            or first.startswith("**")
+            or "```" in chunk
+        ):
+            out_lines.append(chunk)
+            continue
+        new = _README_COLON_SPLIT_RE.sub(r"\1\n\n\2", chunk)
+        new = _README_PERIOD_SPLIT_RE.sub(r"\1\n\n\2", new)
+        out_lines.append(new)
+    return "\n\n".join(out_lines)
 
 
 def _split_lede_paragraphs(
@@ -4266,11 +4406,13 @@ def _format_editorial_fieldcard_section(context: Mapping[str, object]) -> str:
 
     # Tags
     tags = context.get("tags") or {}
-    tag_pathology = _clean_value(
+    tag_pathology = _humanise_tag_value(
         tags.get("pathology") if isinstance(tags, dict) else ""
     )
-    tag_type = _clean_value(tags.get("type") if isinstance(tags, dict) else "")
-    tag_modality = _clean_value(tags.get("modality") if isinstance(tags, dict) else "")
+    tag_type = _humanise_tag_value(tags.get("type") if isinstance(tags, dict) else "")
+    tag_modality = _humanise_tag_value(
+        tags.get("modality") if isinstance(tags, dict) else ""
+    )
 
     # Quality / completeness score (already computed elsewhere)
     quality_label, _quality_color, quality_pct = _compute_quality_score(context)

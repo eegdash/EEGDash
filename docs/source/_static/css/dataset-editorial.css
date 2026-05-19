@@ -722,12 +722,67 @@ section:has(> .eegdash-ed-secnum:last-child) + section > h2 {
   font-size: 17px;
   line-height: 1.6;
   color: var(--ed-ink-2);
-  /* Fill the available column. The field-card rail floats on the
-     right, so on a 1440px viewport the lede gets ~1100px of usable
-     width. Capping the lede at 720px was leaving a large empty
-     column to the right that read as a layout bug. */
   max-width: none;
   margin: 24px 0 36px;
+}
+
+/* =========================================================================
+   About This Dataset — editorial 2-column flow
+   ---------------------------------------------------------------------------
+   The README body sits below the field-card rail, so the full article
+   column is available. Single-column at 1100+ px gives ~150ch lines
+   which is hostile to read; capping at 720 px wastes the right half.
+   The editorial answer is 2-column flow: each column lands around
+   ~62ch and the section fills the column naturally. Headings and
+   wide blocks (blockquotes, dropdown panels) span both columns.
+   ========================================================================= */
+@media (min-width: 1100px) {
+  article.bd-article #about-this-dataset {
+    column-count: 2;
+    column-gap: 48px;
+    column-rule: 1px solid var(--ed-rule);
+  }
+  /* Section heading + closing secnum span both columns */
+  article.bd-article #about-this-dataset > h2,
+  article.bd-article #about-this-dataset > .eegdash-ed-secnum {
+    column-span: all;
+  }
+  /* The lede flows naturally inside columns; its drop-cap is fine in
+     the first column. Override the article-wide 780px prose cap so
+     paragraphs use the full column width inside the multi-column flow. */
+  article.bd-article #about-this-dataset p,
+  article.bd-article #about-this-dataset ul,
+  article.bd-article #about-this-dataset ol {
+    max-width: none;
+  }
+  article.bd-article #about-this-dataset .eegdash-ed-lede,
+  article.bd-article #about-this-dataset .eegdash-ed-lede p {
+    max-width: none;
+    margin-top: 0;
+  }
+  /* Citations and the full-README dropdown break out — they look wrong
+     when split mid-quote across columns. */
+  article.bd-article #about-this-dataset blockquote,
+  article.bd-article #about-this-dataset details.sd-dropdown,
+  article.bd-article #about-this-dataset div.sd-dropdown {
+    column-span: all;
+    break-inside: avoid;
+    max-width: none;
+  }
+  /* Avoid orphaning a single line at the bottom of column 1. */
+  article.bd-article #about-this-dataset p {
+    break-inside: avoid-column;
+    orphans: 3;
+    widows: 3;
+  }
+}
+/* Below 1100px the field-card rail has wrapped under the hero anyway,
+   so single-column with a comfortable measure is fine. */
+@media (max-width: 1099px) {
+  article.bd-article #about-this-dataset .eegdash-ed-lede,
+  article.bd-article #about-this-dataset .eegdash-ed-lede p {
+    max-width: 780px;
+  }
 }
 article.bd-article .eegdash-ed-lede p {
   margin-bottom: 14px;

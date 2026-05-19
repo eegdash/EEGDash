@@ -54,6 +54,84 @@ DEFAULT_METADATA_FIELDS = [
 DATASET_NAME_RE: re.Pattern[str] = re.compile(r"^[A-Za-z0-9_\-]{1,64}$")
 
 
+# Shared User-Agent for outbound probes — many of the targets (NEMAR
+# behind Cloudflare, HuggingFace) reject the bare urllib UA.
+_PROBE_UA = "Mozilla/5.0 (compatible; EEGDashDocsBuild)"
+
+# Match a "Paper DOI" shields.io badge inside a README and capture the
+# wrapping URL — e.g. ``[![Paper DOI](...)](https://doi.org/10.1109/…)``.
+# Used to recover paper DOIs that the structured ``external_links``
+# block doesn't carry yet (NEMAR-ingested NM-series datasets in particular).
+_README_PAPER_DOI_RE = re.compile(
+    r"\[!\[Paper[^\]]*\]\([^)]+\)\]\((https?://[^)\s]+)\)",
+    re.IGNORECASE,
+)
+
+# RST inline hyperlinks like `` `label <url>`__ `` or `` `label <url>`_ ``.
+# Used in ``_is_prose`` to detect lede paragraphs that are nothing but
+# README badge rows — those should never receive the drop-cap treatment.
+_RST_HYPERLINK_RE = re.compile(r"`[^`<]+<[^>]+>`__?")
+
+
+# Editorial brand glyph — used as decorative SVG in the editorial layouts.
+_EDITORIAL_BRAND_GLYPH_SVG = (
+    '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">'
+    '<circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" stroke-width="1.4"/>'
+    '<path d="M2.5 16 Q4.5 12 6.5 16 Q8.5 20 10.5 14 Q12 12 13.5 18" '
+    'stroke="#006ca3" stroke-width="1.6" fill="none" stroke-linecap="round" '
+    'stroke-linejoin="round"/>'
+    '<line x1="16" y1="2.5" x2="16" y2="29.5" stroke="#d0d6dc" stroke-width=".6" '
+    'stroke-dasharray="1 2"/>'
+    '<g stroke="#f7941d" stroke-width=".8" fill="none" opacity=".85">'
+    '<path d="M19.5 10.5 L24.5 13 L21.5 19 L27 21.5 L19.5 10.5 L21.5 19 M24.5 13 L27 21.5"/>'
+    "</g>"
+    '<g fill="#f7941d">'
+    '<circle cx="19.5" cy="10.5" r="1.6"/>'
+    '<circle cx="24.5" cy="13" r="1.6"/>'
+    '<circle cx="21.5" cy="19" r="1.6"/>'
+    '<circle cx="27" cy="21.5" r="1.6"/>'
+    "</g></svg>"
+)
+
+
+# The CSV/API surface raw values that aren't display-ready (long fp seconds,
+# JSON-stringified sample-rate counts, lowercase source tags). The label
+# maps below normalise to short, readable labels for the field card + pills.
+
+_SOURCE_LABEL_MAP = {
+    "openneuro": "OpenNeuro",
+    "nemar": "NeMAR",
+    "huggingface": "Hugging Face",
+    "hf": "Hugging Face",
+    "physionet": "PhysioNet",
+    "github": "GitHub",
+    "osf": "OSF",
+}
+
+_MODALITY_LABEL_MAP = {
+    "eeg": "EEG",
+    "ieeg": "iEEG",
+    "meg": "MEG",
+    "emg": "EMG",
+    "ecog": "ECoG",
+    "fnirs": "fNIRS",
+    "nirs": "fNIRS",
+}
+
+
+# BIDS participant sex tokens. The wider sets accept the variants we
+# routinely see in NEMAR / OpenNeuro participants.tsv: numeric encodings,
+# pronoun-like words, and gender-specific synonyms. Lower-case matching.
+_BIDS_FEMALE_KEYS = {"f", "female", "fem", "w", "women", "girl", "1"}
+_BIDS_MALE_KEYS = {"m", "male", "man", "men", "boy", "2"}
+_BIDS_OTHER_KEYS = {"o", "other"}
+
+
+# Split BIDS task entities like ``neurCorrYoung`` into camelCase pieces
+# without breaking acronym runs (``EEGTest`` → ``EEG Test``).
+_BIDS_TASK_CAMEL_RE = re.compile(r"(?<=[a-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])")
+
+
 _LICENSE_URL_MAP: dict[str, str] = {
     # Keyed on the uppercased license string we receive from the dataset
     # registry. Mapping is intentionally narrow -- anything not listed

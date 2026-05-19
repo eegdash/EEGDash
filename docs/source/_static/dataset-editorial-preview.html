@@ -1,0 +1,1158 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>DS002893 · Editorial Brief</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f7f7f5;
+    --paper-2:#e8eef3;
+    --ink:#1a2532;
+    --ink-2:#34404e;
+    --muted:#6b7785;
+    --rule:#d0d6dc;
+    --accent:#006ca3;     /* EEGdash blue */
+    --accent-2:#f7941d;   /* EEGdash orange */
+    --mark:#d8e8f0;       /* pale blue */
+    --mark-2:#fde6c8;     /* pale orange */
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--paper);color:var(--ink);font-family:'Spectral',Georgia,serif;font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+  .page{max-width:1440px;margin:0 auto;padding:56px 72px 96px;position:relative}
+  /* paper texture */
+  body::before{content:"";position:fixed;inset:0;pointer-events:none;background-image:radial-gradient(rgba(28,26,22,.04) 1px,transparent 1px);background-size:3px 3px;mix-blend-mode:multiply;z-index:0}
+  .page>*{position:relative;z-index:1}
+
+  /* masthead */
+  .masthead{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:1.5px solid var(--ink);padding-bottom:14px;margin-bottom:48px;font-family:'Inter',sans-serif}
+  .brand{font-family:'Spectral',serif;font-weight:500;font-size:22px;letter-spacing:.01em;display:flex;align-items:center;gap:12px}
+  .brand .mark{width:30px;height:30px;display:inline-flex;flex-shrink:0}
+  .brand .wm{font-family:'Inter',sans-serif;font-weight:700;letter-spacing:.005em;font-size:21px;text-transform:lowercase}
+  .brand .wm .eeg{color:var(--accent)}
+  .brand .wm .dash{color:var(--accent-2)}
+  .brand .dot{display:none}
+  .brand-sub{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);font-weight:500;margin-left:8px;border-left:1px solid var(--rule);padding-left:14px}
+  .mast-nav{display:flex;gap:28px;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-2);font-weight:500}
+  .mast-nav a{color:inherit;text-decoration:none;padding-bottom:2px}
+  .mast-nav a.cur{border-bottom:1.5px solid var(--accent)}
+
+  /* breadcrumb / issue */
+  .issue{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:32px;font-family:'Inter',sans-serif;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
+  .issue .crumb b{color:var(--ink);font-weight:600;letter-spacing:.22em}
+
+  /* hero */
+  .hero{display:grid;grid-template-columns:1fr 360px;gap:64px;margin-bottom:64px;padding-bottom:48px;border-bottom:1px solid var(--rule)}
+  .kicker{font-family:'Inter',sans-serif;font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:18px}
+  .title{font-family:'Spectral',serif;font-weight:400;font-size:64px;line-height:1.02;letter-spacing:-.01em;margin-bottom:24px;text-wrap:balance}
+  .title em{font-style:italic;color:var(--ink-2)}
+  .deck{font-family:'Spectral',serif;font-size:21px;font-weight:300;line-height:1.45;color:var(--ink-2);max-width:620px;text-wrap:pretty}
+  .byline{margin-top:28px;font-family:'Inter',sans-serif;font-size:13px;color:var(--muted);line-height:1.7}
+  .byline .role{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-right:6px}
+  .byline strong{color:var(--ink);font-weight:600}
+
+  /* side rail */
+  .rail{font-family:'Inter',sans-serif;font-size:12px;border:1px solid var(--ink);background:rgba(255,255,255,.4)}
+  .rail h4{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);font-weight:600;padding:14px 18px 10px;border-bottom:1px solid var(--rule)}
+  .rail dl{display:grid;grid-template-columns:auto 1fr;gap:0;padding:6px 0}
+  .rail dt{padding:8px 18px;color:var(--muted);font-size:11px;letter-spacing:.06em;text-transform:uppercase;border-bottom:1px dotted var(--rule)}
+  .rail dd{padding:8px 18px 8px 0;text-align:right;font-weight:500;color:var(--ink);border-bottom:1px dotted var(--rule);font-family:'JetBrains Mono',monospace;font-size:12px}
+  .rail dl > :nth-last-child(-n+2){border-bottom:0}
+  .rail .doi{padding:14px 18px;border-top:1px solid var(--ink);background:var(--paper-2);font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink-2);word-break:break-all;line-height:1.5}
+  .rail .doi span{display:block;font-family:'Inter',sans-serif;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+  .rail .actions{display:flex;border-top:1px solid var(--ink)}
+  .rail .actions a{flex:1;text-align:center;padding:12px 8px;font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:600;color:var(--ink);text-decoration:none;border-right:1px solid var(--ink)}
+  .rail .actions a:last-child{border-right:0;background:var(--ink);color:var(--paper)}
+  .rail .actions a:hover{background:var(--mark)}
+  .rail .actions a:last-child:hover{background:var(--accent);color:#fff}
+
+  /* dropcap */
+  .lede{margin-bottom:48px;column-count:2;column-gap:48px;column-rule:1px solid var(--rule);font-size:17px;line-height:1.6;color:var(--ink-2)}
+  .lede p{margin-bottom:14px;text-wrap:pretty;break-inside:avoid-column}
+  .lede p:first-child::first-letter{font-family:'Spectral',serif;font-weight:500;float:left;font-size:78px;line-height:.85;padding:6px 10px 0 0;color:var(--accent)}
+
+  /* section header */
+  .section{margin:80px 0 36px;display:grid;grid-template-columns:120px 1fr;gap:48px;border-top:1.5px solid var(--ink);padding-top:24px}
+  .section-num{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent);letter-spacing:.1em}
+  .section-num b{display:block;font-family:'Spectral',serif;font-weight:400;font-size:32px;color:var(--ink);margin-top:6px;letter-spacing:-.01em}
+  .section h2{font-family:'Spectral',serif;font-weight:400;font-size:38px;line-height:1.05;letter-spacing:-.01em;margin-bottom:12px}
+  .section .lead{font-family:'Spectral',serif;font-size:17px;color:var(--ink-2);font-style:italic;max-width:680px;text-wrap:pretty}
+
+  /* method */
+  .method{display:grid;grid-template-columns:120px 1fr;gap:48px;margin-bottom:32px}
+  .method-meta{font-family:'Inter',sans-serif;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);padding-top:6px}
+  .method-meta b{display:block;color:var(--ink);font-weight:600;font-size:12px;margin-top:2px;letter-spacing:.12em}
+  .method-body{font-size:17px;line-height:1.65;color:var(--ink-2);max-width:740px}
+  .method-body h3{font-family:'Spectral',serif;font-weight:500;font-size:21px;color:var(--ink);margin:18px 0 10px;letter-spacing:-.005em}
+  .method-body h3:first-child{margin-top:0}
+  .method-body p{margin-bottom:12px;text-wrap:pretty}
+  .method-body strong{color:var(--ink);font-weight:500}
+  .marker{background:linear-gradient(180deg,transparent 55%,var(--mark) 55%);padding:0 2px}
+
+  /* figure */
+  figure{margin:48px 0;display:grid;grid-template-columns:120px 1fr;gap:48px;align-items:start}
+  .fig-meta{font-family:'Inter',sans-serif;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+  .fig-meta b{display:block;color:var(--accent);font-weight:600;margin-bottom:4px}
+  .fig-body{border:1px solid var(--ink)}
+  figcaption{font-family:'Inter',sans-serif;font-size:13px;color:var(--ink-2);padding:14px 18px;border-top:1px solid var(--rule);line-height:1.5;background:rgba(255,255,255,.4)}
+  figcaption b{font-weight:600;color:var(--ink);margin-right:6px;text-transform:uppercase;letter-spacing:.08em;font-size:11px}
+
+  /* electrode plot */
+  .scalp{aspect-ratio:1.6/1;background:#fff;padding:24px 32px;display:flex;align-items:center;justify-content:center}
+  .scalp svg{width:100%;height:100%;max-height:380px}
+
+  /* age-sex chart */
+  .demo{padding:24px 28px;background:#fff;display:grid;grid-template-columns:1fr 1fr;gap:24px}
+  .demo h5{font-family:'Inter',sans-serif;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:14px}
+  .age-strip{display:flex;align-items:flex-end;gap:1px;height:140px;border-bottom:1px solid var(--ink-2);position:relative}
+  .age-strip .bar{flex:1;background:var(--ink);transition:background .15s}
+  .age-strip .bar.young{background:var(--accent)}
+  .age-strip .bar.older{background:var(--accent-2)}
+  .age-axis{display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);margin-top:6px}
+  .legend{display:flex;gap:18px;margin-top:14px;font-family:'Inter',sans-serif;font-size:11px;color:var(--ink-2)}
+  .legend span{display:flex;align-items:center;gap:6px}
+  .legend i{width:10px;height:10px;display:inline-block}
+
+  /* sex donut */
+  .sex-wrap{display:flex;align-items:center;gap:30px}
+  .sex-donut{width:170px;height:170px;flex-shrink:0;position:relative}
+  .sex-donut .center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+  .sex-donut .center .n{font-family:'Spectral',serif;font-weight:400;font-size:42px;line-height:1;color:var(--ink);letter-spacing:-.02em}
+  .sex-donut .center .l{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.22em;color:var(--muted);margin-top:6px;text-transform:uppercase}
+  .sex-legend{flex:1;font-family:'JetBrains Mono',monospace;font-size:13px}
+  .sex-legend .row{display:flex;align-items:center;padding:8px 0;border-bottom:1px solid var(--rule)}
+  .sex-legend .row:last-child{border-bottom:0}
+  .sex-legend .row .sw{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:10px}
+  .sex-legend .row .lbl{flex:1;color:var(--ink-2)}
+  .sex-legend .row .v{font-family:'Spectral',serif;font-size:22px;color:var(--ink);font-weight:400}
+  .sex-legend .row.ratio .lbl{color:var(--muted);font-size:12px}
+  .sex-legend .row.ratio .v{font-family:'JetBrains Mono',monospace;font-size:14px}
+  .sex-note{margin-top:18px;font-size:14px;color:var(--ink-2);line-height:1.55;max-width:520px;font-family:'Spectral',serif}
+
+  /* code box */
+  .code{font-family:'JetBrains Mono',monospace;font-size:13px;background:#16181c;color:#e6e8ec;padding:18px 22px;line-height:1.7;border:1px solid var(--ink);position:relative;white-space:pre;overflow-x:auto}
+  .code .c{color:#7d818c;font-style:italic}
+  .code .k{color:#c89cd8}
+  .code .s{color:#9ed1a3}
+  .code .v{color:#9cc8e8}
+  .code-tabs{display:flex;border:1px solid var(--ink);border-bottom:0;font-family:'Inter',sans-serif;font-size:11px;letter-spacing:.16em;text-transform:uppercase;background:var(--paper-2)}
+  .code-tabs button{flex:1;padding:10px 14px;border:0;background:transparent;border-right:1px solid var(--rule);cursor:pointer;font:inherit;letter-spacing:.16em;color:var(--muted);font-weight:600}
+  .code-tabs button:last-child{border-right:0}
+  .code-tabs button.on{background:#16181c;color:var(--paper);border-right-color:#16181c}
+
+  /* signal trace */
+  .trace{padding:24px 28px;background:#fafafa}
+  .trace-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px;font-family:'Inter',sans-serif;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+  .trace-head b{color:var(--ink);font-weight:600}
+  .trace svg{width:100%;height:340px}
+  .trace .label{font-family:'JetBrains Mono',monospace;font-size:10px;fill:var(--muted)}
+
+  /* combined signal + montage card pair */
+  .signal-pair{display:grid;grid-template-columns:1.55fr 1fr;gap:18px;margin:0}
+  .signal-card{background:#faf9f6;border:1px solid var(--rule);border-radius:14px;padding:26px 30px;box-shadow:inset 0 1px 0 rgba(255,255,255,.6)}
+  .signal-card h5{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.22em;color:var(--muted);text-transform:uppercase;margin-bottom:18px;font-weight:500}
+  .signal-card h5 b{color:var(--ink);font-weight:500}
+  .signal-card .live-trace{height:380px;position:relative}
+  .signal-card .live-trace svg{width:100%;height:100%;display:block}
+  .signal-card .footer{display:flex;justify-content:space-between;margin-top:14px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)}
+  .montage-svg{width:100%;height:380px;display:block}
+  .montage-caption{margin-top:14px;font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--ink-2);line-height:1.5;text-align:center}
+
+  /* footnotes */
+  .footnotes{margin-top:96px;padding-top:24px;border-top:3px double var(--ink);font-size:13px;color:var(--ink-2);line-height:1.6;display:grid;grid-template-columns:1fr 1fr 1fr;gap:40px;font-family:'Inter',sans-serif}
+  .footnotes h5{font-family:'Spectral',serif;font-size:14px;color:var(--ink);font-weight:500;margin-bottom:8px;letter-spacing:0}
+  .footnotes .note-num{font-family:'JetBrains Mono',monospace;color:var(--accent);margin-right:6px}
+  .footnotes p{margin-bottom:10px}
+  .footnotes code{font-family:'JetBrains Mono',monospace;background:var(--paper-2);padding:1px 4px;font-size:12px}
+
+  /* table */
+  .files{margin-top:24px;border:1px solid var(--ink);font-family:'Inter',sans-serif;font-size:12px}
+  .files-head{display:grid;grid-template-columns:1fr 80px 100px 90px;padding:10px 14px;background:var(--ink);color:var(--paper);font-size:10px;letter-spacing:.18em;text-transform:uppercase;font-weight:600}
+  .files-row{display:grid;grid-template-columns:1fr 80px 100px 90px;padding:10px 14px;border-bottom:1px dotted var(--rule);color:var(--ink-2);font-family:'JetBrains Mono',monospace;font-size:12px}
+  .files-row:last-child{border-bottom:0}
+  .files-row:nth-child(even){background:rgba(255,255,255,.3)}
+  .files-row span:nth-child(2),.files-row span:nth-child(3),.files-row span:nth-child(4){text-align:right;color:var(--muted)}
+  .files-row .ind{display:inline-block;margin-right:6px;color:var(--muted)}
+
+  /* colophon footer */
+  .colophon{margin-top:72px;padding-top:24px;border-top:1.5px solid var(--ink);display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:32px;font-family:'Inter',sans-serif;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+  .colophon b{color:var(--ink);font-weight:600}
+
+  /* condition pills */
+  .pills{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+  .pill{font-family:'Inter',sans-serif;font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:5px 10px;border:1px solid var(--ink);background:transparent;color:var(--ink);font-weight:500}
+  .pill.fa{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .pill.fv{background:var(--accent-2);color:#fff;border-color:var(--accent-2)}
+  .pill.sf{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+
+  /* ===== new components ===== */
+  /* three-layer rail */
+  .layers{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin:36px 0 56px;border:1px solid var(--ink);background:#fafafa}
+  .layers > div{padding:18px 22px;border-right:1px solid var(--ink);position:relative}
+  .layers > div:last-child{border-right:0}
+  .layers .ly-lbl{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;display:flex;justify-content:space-between}
+  .layers .ly-lbl b{color:var(--accent);font-weight:600}
+  .layers .ly-tit{font-family:'Spectral',serif;font-size:20px;font-weight:500;color:var(--ink);margin-bottom:6px;letter-spacing:-.005em}
+  .layers .ly-dsc{font-size:13px;color:var(--ink-2);line-height:1.5;font-family:'Inter',sans-serif;text-wrap:pretty}
+  .layers > div::after{content:"→";position:absolute;right:-10px;top:50%;transform:translateY(-50%);background:#fafafa;color:var(--ink);font-family:'Inter',sans-serif;font-weight:300;font-size:14px;width:18px;height:18px;display:flex;align-items:center;justify-content:center;border:1px solid var(--ink);border-radius:50%;z-index:1}
+  .layers > div:last-child::after{display:none}
+
+  /* sidecar cards */
+  .sidecar{margin-top:18px;border:1px solid var(--ink);background:#fafafa}
+  .sidecar-hdr{padding:10px 16px;background:var(--ink);color:var(--paper);display:flex;justify-content:space-between;align-items:baseline;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.06em}
+  .sidecar-hdr b{font-weight:600}
+  .sidecar-hdr .right{font-size:10px;color:rgba(241,241,239,.7);letter-spacing:.14em;text-transform:uppercase}
+  .sidecar table{width:100%;border-collapse:collapse;font-family:'JetBrains Mono',monospace;font-size:12px}
+  .sidecar th{padding:8px 14px;text-align:left;font-weight:500;color:var(--muted);background:var(--paper-2);font-family:'Inter',sans-serif;font-size:10px;letter-spacing:.14em;text-transform:uppercase;border-bottom:1px solid var(--rule);border-right:1px dotted var(--rule)}
+  .sidecar th:last-child{border-right:0}
+  .sidecar td{padding:7px 14px;color:var(--ink-2);border-top:1px dotted var(--rule);border-right:1px dotted var(--rule);vertical-align:top}
+  .sidecar td:last-child{border-right:0}
+  .sidecar td b{color:var(--ink);font-weight:500}
+  .sidecar pre{margin:0;padding:14px 16px;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.65;color:var(--ink-2);background:#fafafa;overflow-x:auto;white-space:pre}
+  .sidecar pre .k{color:var(--accent)}
+  .sidecar pre .s{color:var(--accent-2)}
+  .sidecar pre .n{color:var(--ink);font-weight:600}
+  .hed-chip{font-family:'JetBrains Mono',monospace;font-size:10.5px;background:rgba(0,108,163,.08);color:var(--accent);padding:1px 5px;border-radius:2px;border:1px solid rgba(0,108,163,.2);margin-right:3px;display:inline-block;line-height:1.55;white-space:nowrap}
+
+  /* caveat callout */
+  .caveat{margin:36px 0;padding:22px 28px;background:linear-gradient(90deg,rgba(247,148,29,.07),transparent 70%);border-left:3px solid var(--accent-2);font-family:'Spectral',serif}
+  .caveat .c-lbl{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent-2);font-weight:600;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+  .caveat .c-lbl::before{content:"⚠";font-family:'Inter',sans-serif;font-size:13px}
+  .caveat h4{font-size:21px;font-weight:500;color:var(--ink);margin-bottom:10px;letter-spacing:-.005em;font-family:'Spectral',serif}
+  .caveat p{font-size:15.5px;color:var(--ink-2);line-height:1.55;text-wrap:pretty;max-width:820px}
+  .caveat p + p{margin-top:8px}
+  .caveat code{font-family:'JetBrains Mono',monospace;background:rgba(0,0,0,.04);padding:1px 5px;font-size:12.5px;color:var(--ink)}
+
+  /* quality / PSD */
+  .quality{display:grid;grid-template-columns:1fr 1.1fr;gap:18px;margin-top:18px}
+  .q-card{background:#fafafa;border:1px solid var(--ink);padding:22px 26px}
+  .q-card h5{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.22em;color:var(--muted);text-transform:uppercase;margin-bottom:18px;font-weight:600;display:flex;justify-content:space-between}
+  .q-card h5 b{color:var(--ink);font-weight:600}
+  .q-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px 22px}
+  .q-stat .top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
+  .q-stat .lab{font-family:'Inter',sans-serif;font-size:10.5px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;font-weight:500}
+  .q-stat .v{font-family:'Spectral',serif;font-size:28px;color:var(--ink);font-weight:400;line-height:1;letter-spacing:-.02em}
+  .q-stat .v .u{font-family:'Inter',sans-serif;font-size:11px;color:var(--muted);margin-left:4px;letter-spacing:0}
+  .q-stat .barwrap{height:4px;background:var(--paper-2)}
+  .q-stat .barwrap div{height:100%;background:var(--accent)}
+  .q-stat .barwrap.amber div{background:var(--accent-2)}
+  .q-stat .sub{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);margin-top:6px}
+  .psd-card{background:#fafafa;border:1px solid var(--ink);padding:22px 26px;display:flex;flex-direction:column}
+  .psd-card h5{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.22em;color:var(--muted);text-transform:uppercase;margin-bottom:14px;font-weight:600;display:flex;justify-content:space-between}
+  .psd-card h5 b{color:var(--ink)}
+  .psd-card .canvas{flex:1;background:#fff;border:1px solid var(--rule);position:relative;min-height:200px}
+  .psd-card .canvas svg{width:100%;height:100%;display:block}
+  .psd-cap{margin-top:10px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);display:flex;justify-content:space-between}
+  .psd-cap b{color:var(--ink);font-weight:500}
+
+  /* model readiness */
+  .ready{display:grid;grid-template-columns:1.1fr 1fr;gap:18px;margin-top:8px}
+  .ready-card{background:#fafafa;border:1px solid var(--ink);padding:22px 26px}
+  .ready-card h5{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.22em;color:var(--muted);text-transform:uppercase;margin-bottom:14px;font-weight:600}
+  .ready-card h5 b{color:var(--ink)}
+  .target-row{display:grid;grid-template-columns:160px 1fr auto;gap:14px;align-items:baseline;padding:11px 0;border-top:1px dotted var(--rule);font-size:13.5px;font-family:'Inter',sans-serif;color:var(--ink-2)}
+  .target-row:first-of-type{border-top:0;padding-top:2px}
+  .target-row code{font-family:'JetBrains Mono',monospace;color:var(--ink);background:var(--paper-2);padding:2px 6px;font-size:11.5px;border-radius:2px}
+  .target-row .tag{font-family:'JetBrains Mono',monospace;font-size:9.5px;padding:2px 7px;border-radius:2px;letter-spacing:.08em;font-weight:600;text-transform:uppercase;flex-shrink:0}
+  .target-row .tag.off{background:var(--accent);color:#fff}
+  .target-row .tag.drv{background:transparent;color:var(--accent);border:1px solid var(--accent)}
+  .target-row .tag.cau{background:transparent;color:var(--accent-2);border:1px solid var(--accent-2)}
+  .am-row{display:grid;grid-template-columns:150px 1fr auto;gap:14px;padding:9px 0;border-top:1px dotted var(--rule);align-items:baseline}
+  .am-row:first-of-type{border-top:0}
+  .am-row .name{font-family:'JetBrains Mono',monospace;color:var(--ink);font-weight:500;font-size:12px}
+  .am-row .what{color:var(--ink-2);font-family:'Inter',sans-serif;font-size:13px}
+  .am-row .badge{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--accent);background:rgba(0,108,163,.08);padding:1px 6px;border-radius:2px;border:1px solid rgba(0,108,163,.2);letter-spacing:.04em}
+  .leakage{background:var(--paper-2);border:1px solid var(--rule);border-left:3px solid var(--accent);padding:14px 18px;margin-top:18px;font-family:'Inter',sans-serif;font-size:13px;color:var(--ink-2);line-height:1.55}
+  .leakage b{color:var(--ink);font-weight:600}
+  .leakage code{font-family:'JetBrains Mono',monospace;background:#fff;padding:1px 5px;font-size:12px;border:1px solid var(--rule);border-radius:2px}
+
+  /* provenance strip */
+  .prov-strip{display:grid;grid-template-columns:repeat(5,1fr);gap:0;margin-top:36px;border:1px solid var(--ink);background:var(--paper-2);font-family:'Inter',sans-serif}
+  .prov-strip > div{padding:14px 18px;border-right:1px solid var(--rule)}
+  .prov-strip > div:last-child{border-right:0}
+  .prov-strip .lbl{color:var(--muted);font-size:10px;letter-spacing:.18em;text-transform:uppercase;margin-bottom:6px;font-weight:600}
+  .prov-strip .v{font-family:'JetBrains Mono',monospace;color:var(--ink);font-size:12px;line-height:1.4;word-break:break-word}
+  .prov-strip .v.ok{color:#2a6f3a;font-weight:600;display:flex;align-items:center;gap:5px}
+  .prov-strip .v.ok::before{content:"✓"}
+
+  /* field card section divider */
+  .rail dt.hdr{font-family:'Inter',sans-serif;font-size:9px;letter-spacing:.22em;color:var(--accent);font-weight:700;text-transform:uppercase;background:var(--paper-2);padding:8px 18px 6px;grid-column:1/-1;border-bottom:1px solid var(--rule);border-top:1px solid var(--ink)}
+  .rail dd.hdrpad{display:none}
+
+  /* stim diagram */
+  .stim{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-top:8px;border:1px solid var(--ink)}
+  .stim-col{padding:18px 22px;font-family:'Inter',sans-serif;font-size:13px;color:var(--ink-2)}
+  .stim-col:first-child{border-right:1px solid var(--ink)}
+  .stim-col h4{font-family:'Spectral',serif;font-size:18px;font-weight:500;color:var(--ink);margin-bottom:10px;display:flex;align-items:center;gap:10px}
+  .stim-col h4 i{width:14px;height:14px;display:inline-block;background:var(--accent)}
+  .stim-col:last-child h4 i{background:var(--accent-2);border-radius:50%}
+  .stim-rate{display:flex;gap:0;height:36px;margin-top:14px;font-family:'JetBrains Mono',monospace;font-size:11px;color:#fff;align-items:center}
+  .stim-rate .frq{background:#b8bcc6;color:var(--ink);flex:9;padding:0 10px;display:flex;align-items:center}
+  .stim-rate .tgt{flex:1;display:flex;align-items:center;padding:0 8px;justify-content:center}
+  .stim-rate .tgt.v{background:var(--accent)}
+  .stim-rate .tgt.a{background:var(--accent-2)}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header class="masthead">
+    <div class="brand">
+      <svg class="mark" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="16" cy="16" r="14" fill="none" stroke="#1a2532" stroke-width="1.4"/>
+        <!-- left: blue waveform -->
+        <path d="M2.5 16 Q4.5 12 6.5 16 Q8.5 20 10.5 14 Q12 12 13.5 18" stroke="#006ca3" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <!-- center divider -->
+        <line x1="16" y1="2.5" x2="16" y2="29.5" stroke="#d0d6dc" stroke-width=".6" stroke-dasharray="1 2"/>
+        <!-- right: orange node graph -->
+        <g stroke="#f7941d" stroke-width=".8" fill="none" opacity=".8">
+          <path d="M19.5 10.5 L24.5 13 L21.5 19 L27 21.5 L19.5 10.5 L21.5 19 M24.5 13 L27 21.5"/>
+        </g>
+        <g fill="#f7941d">
+          <circle cx="19.5" cy="10.5" r="1.6"/>
+          <circle cx="24.5" cy="13" r="1.6"/>
+          <circle cx="21.5" cy="19" r="1.6"/>
+          <circle cx="27" cy="21.5" r="1.6"/>
+        </g>
+      </svg>
+      <span class="wm"><span class="eeg">EEG</span><span class="dash">dash</span></span>
+      <span class="brand-sub">The Dataset Brief</span>
+    </div>
+    <nav class="mast-nav">
+      <a href="#" class="cur">Datasets</a>
+      <a href="#">Quickstart</a>
+      <a href="#">Examples</a>
+      <a href="#">Concepts</a>
+      <a href="#">Docs</a>
+    </nav>
+  </header>
+
+  <div class="issue">
+    <div class="crumb">EEGDash <b>›</b> Openneuro <b>›</b> <b>DS002893</b></div>
+    <div>Vol. 02 · Iss. 893 · 49 subjects · 52 recordings · CC0</div>
+  </div>
+
+  <section class="hero">
+    <div>
+      <div class="kicker">Dataset Brief · Auditory–Visual Attention</div>
+      <h1 class="title">Auditory–Visual <em>Shift</em> Study</h1>
+      <p class="deck">A 49-participant EEG investigation of how aging modulates selective attention across modalities, using an interleaved dual-oddball task with cued shifts between auditory and visual focus.</p>
+      <div class="byline">
+        <span class="role">Data &amp; curation</span> <strong>Marissa Westerfield</strong> · <strong>Scott Makeig</strong> · Dung Truong · Kay Robbins · Arno Delorme<br/>
+        <span class="role">Year</span> 2020 · UC San Diego, Dept. of Psychiatry · Originally collected 2007–2008
+      </div>
+      <div class="pills">
+        <span class="pill">EEG · 36 ch</span>
+        <span class="pill">250 Hz</span>
+        <span class="pill" style="background:var(--mark);border-color:var(--accent);color:var(--accent)">BIDS</span>
+        <span class="pill" style="background:var(--mark-2);border-color:var(--accent-2);color:#9c5505">HED 8.0.0</span>
+        <span class="pill">OpenNeuro</span>
+      </div>
+    </div>
+    <aside class="rail">
+      <h4>Field card</h4>
+      <dl>
+        <dt class="hdr">Identity</dt><dd class="hdrpad"></dd>
+        <dt>Dataset</dt><dd>DS002893</dd>
+        <dt>Version</dt><dd>v2.0.0</dd>
+        <dt>Source</dt><dd>OpenNeuro</dd>
+        <dt>License</dt><dd>CC0</dd>
+        <dt class="hdr">Signal</dt><dd class="hdrpad"></dd>
+        <dt>Subjects</dt><dd>49</dd>
+        <dt>Recordings</dt><dd>52</dd>
+        <dt>Modality</dt><dd>EEG</dd>
+        <dt>Channels</dt><dd>33 + 2 EOG</dd>
+        <dt>Sample rate</dt><dd>250 Hz</dd>
+        <dt>Duration</dt><dd>37.78 h</dd>
+        <dt>Size on disk</dt><dd>7.7 GB</dd>
+        <dt class="hdr">BIDS</dt><dd class="hdrpad"></dd>
+        <dt>BIDSVersion</dt><dd>1.8.0</dd>
+        <dt>Validity</dt><dd style="color:#2a6f3a;font-weight:600">✓ passes</dd>
+        <dt>Sidecars</dt><dd>events · channels · electrodes · coordsystem</dd>
+        <dt>Events ann.</dt><dd>HED 8.0.0</dd>
+        <dt>Derivatives</dt><dd>0</dd>
+        <dt>Metadata</dt><dd>100%</dd>
+        <dt class="hdr">ML</dt><dd class="hdrpad"></dd>
+        <dt>Targets</dt><dd>3 official · 4 derived</dd>
+        <dt>Split</dt><dd>subject-disjoint</dd>
+        <dt>HF mirror</dt><dd>EEGDash/ds002893</dd>
+        <dt>Citations</dt><dd>1</dd>
+      </dl>
+      <div class="doi">
+        <span>Persistent identifier</span>
+        10.18112/openneuro.ds002893.v2.0.0
+      </div>
+      <div class="actions">
+        <a href="#">Download</a>
+        <a href="#">Cite</a>
+        <a href="#">Open in Python</a>
+      </div>
+    </aside>
+  </section>
+
+  <div class="lede">
+    <p>The Auditory–Visual Shift Study is a small, carefully-curated EEG corpus collected at the Townsend laboratory at UC San Diego between 2007 and 2008, and contributed to OpenNeuro in BIDS format following annotation with HED 8.0.0. Its 49 participants — 19 younger adults and 30 older adults — performed an interleaved dual-oddball task in which they alternated between responding to infrequent visual targets, infrequent auditory targets, and cued shifts between the two.</p>
+    <p>What makes the dataset useful is not its size but its structure: every trial is anchored to a stimulus stream (visual, auditory, or cue), a stream identity (target or standard), and a task condition (FA, FV, SF), all encoded in a way that downstream analyses can lift without re-annotation. ERP results for the FA and FV conditions were reported in <em>Ceponiene et al., 2008</em>; the shift condition remains largely unpublished and is, in the authors' words, available on request.</p>
+  </div>
+
+  <!-- Three-layer architecture rail -->
+  <div class="layers">
+    <div>
+      <div class="ly-lbl"><span>Layer 01</span><b>Study</b></div>
+      <div class="ly-tit">What was asked</div>
+      <div class="ly-dsc">Hypothesis, independent &amp; dependent variables, paradigm, cohort, and the editorial caveats around what the recordings can and cannot answer.</div>
+    </div>
+    <div>
+      <div class="ly-lbl"><span>Layer 02</span><b>Signal · BIDS</b></div>
+      <div class="ly-tit">What was recorded</div>
+      <div class="ly-dsc">Sidecars, channels &amp; electrodes, coordinate system, event semantics with HED tags, quality stats from the NEMAR pipeline.</div>
+    </div>
+    <div>
+      <div class="ly-lbl"><span>Layer 03</span><b>Training · ML</b></div>
+      <div class="ly-tit">What you can train on</div>
+      <div class="ly-dsc">Official and derived targets, recommended splits, feature-first vs. deep-learning baselines, access modes from MNE Raw to PyTorch DataLoader.</div>
+    </div>
+  </div>
+
+  <!-- §01 About the dataset (structured README, mirroring source page) -->
+  <div class="section">
+    <div class="section-num">§ 01<b>About this dataset</b></div>
+    <div>
+      <h2>The README, as written by the data authors.</h2>
+      <p class="lead">A faithful rendering of the curator-supplied fields from <code style="font-family:'JetBrains Mono',monospace;font-size:.85em;background:var(--mark);padding:1px 5px">README.md</code>, in their original order. Each row is one structured field.</p>
+    </div>
+  </div>
+
+  <style>
+    .rd{display:grid;grid-template-columns:160px 1fr;gap:0;margin-bottom:8px;border-top:1.5px solid var(--ink)}
+    .rd > .lbl{padding:18px 24px 18px 0;font-family:'Inter',sans-serif;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);font-weight:600;border-right:1px solid var(--rule)}
+    .rd > .lbl b{display:block;color:var(--ink);font-family:'Spectral',serif;font-weight:500;font-size:18px;letter-spacing:-.005em;margin-top:6px;text-transform:none}
+    .rd > .val{padding:18px 0 18px 28px;font-family:'Spectral',serif;font-size:16px;color:var(--ink-2);line-height:1.6;max-width:780px;text-wrap:pretty}
+    .rd > .val p + p{margin-top:10px}
+    .rd > .val strong{color:var(--ink);font-weight:500}
+    .rd > .val em{color:var(--ink);font-style:italic}
+    .rd > .val .sub{display:grid;grid-template-columns:100px 1fr;gap:6px 18px;margin:8px 0 0;font-family:'Inter',sans-serif;font-size:13px;line-height:1.55;color:var(--ink-2)}
+    .rd > .val .sub dt{color:var(--accent);text-transform:uppercase;font-size:11px;letter-spacing:.14em;font-weight:600;padding-top:2px}
+    .rd > .val .sub dd{padding:0}
+    .rd.last{border-bottom:1.5px solid var(--ink)}
+    .rd .mono{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--ink)}
+  </style>
+
+  <div class="rd">
+    <div class="lbl">Field 01<b>Project name</b></div>
+    <div class="val"><strong>Auditory–Visual Shift Study</strong> · contributed to OpenNeuro and NEMAR in BIDS format in April 2022, following annotation with HED 8.0.0.</div>
+  </div>
+  <div class="rd">
+    <div class="lbl">Field 02<b>Years</b></div>
+    <div class="val">Data collection: <strong>2007–2008</strong>. Curation &amp; deposit: <strong>2022</strong>.</div>
+  </div>
+  <div class="rd">
+    <div class="lbl">Field 03<b>Brief overview</b></div>
+    <div class="val">An EEG investigation of <em>selective attention</em> across modalities in younger and older adults, using an interleaved dual-oddball task with cued shifts between auditory and visual focus.</div>
+  </div>
+  <div class="rd">
+    <div class="lbl">Field 04<b>Data collection</b></div>
+    <div class="val">Collected at the Townsend laboratory, <strong>UC San Diego, Department of Psychiatry</strong>. Acquisition system: SA Instrumentation, San Diego.</div>
+  </div>
+  <div class="rd">
+    <div class="lbl">Field 05<b>Contact</b></div>
+    <div class="val"><strong>Marissa Westerfield</strong>, mwesterf<span style="color:var(--muted)">@</span>ucsd.edu &nbsp;·&nbsp; Some unpublished SH-condition results available from C. Kothe and S. Makeig.</div>
+  </div>
+  <div class="rd">
+    <div class="lbl">Field 06<b>Access</b></div>
+    <div class="val">Open. <span class="mono">CC0 1.0 Universal</span> · OpenNeuro accession <span class="mono">ds002893</span> · DOI <span class="mono">10.18112/openneuro.ds002893.v2.0.0</span>.</div>
+  </div>
+  <div class="rd">
+    <div class="lbl">Field 07<b>Independent variables</b></div>
+    <div class="val">
+      <dl class="sub">
+        <dt>Group</dt><dd>Younger adults (n = 19) vs older adults (n = 30).</dd>
+        <dt>Condition</dt><dd>Focus Auditory (FA) · Focus Visual (FV) · Shift Focus (SF).</dd>
+        <dt>Modality</dt><dd>Visual stream · auditory stream · spoken/printed cue.</dd>
+        <dt>Stream</dt><dd>Target (10%) vs standard (90%).</dd>
+      </dl>
+    </div>
+  </div>
+  <div class="rd">
+    <div class="lbl">Field 08<b>Dependent variables</b></div>
+    <div class="val">Button-press response (latency and presence) to target stimuli, and continuous scalp EEG across 33 channels referenced to right mastoid, 250 Hz, 0.01–60 Hz analogue passband.</div>
+  </div>
+  <div class="rd">
+    <div class="lbl">Field 09<b>Participant pool</b></div>
+    <div class="val">49 cognitively-intact participants with normal or corrected-to-normal vision and hearing. <strong>Younger:</strong> 8 male / 11 female, 20–40 yr. <strong>Older:</strong> 11 male / 19 female, 49–73 yr. Older group screened with MMSE, Mattis DRS, and Wechsler Memory Scale.</div>
+  </div>
+  <div class="rd">
+    <div class="lbl">Field 10<b>Initial setup</b></div>
+    <div class="val">Participants seated 100 cm from a 17-inch CRT monitor in a sound-attenuated booth. 33 scalp electrodes applied in 10-20 placement; impedances brought under <span class="marker">5 kΩ</span> by scalp preparation. Two EOG channels recorded.</div>
+  </div>
+  <div class="rd">
+    <div class="lbl">Field 11<b>Task conditions</b></div>
+    <div class="val">
+      <dl class="sub">
+        <dt>FV</dt><dd><strong>Focus Visual.</strong> Press the response button only for target visual stimuli.</dd>
+        <dt>FA</dt><dd><strong>Focus Auditory.</strong> Press the response button only for target auditory stimuli.</dd>
+        <dt>SF</dt><dd><strong>Shift Focus.</strong> Switch between FV and FA on each (Look / Hear) cue.</dd>
+      </dl>
+    </div>
+  </div>
+  <div class="rd">
+    <div class="lbl">Field 12<b>Task organization</b></div>
+    <div class="val"><strong>20 blocks · 264 stimuli per block.</strong> Two opening non-shift blocks (one FA, one FV; counterbalanced), 12 SF blocks, then a closing FA group (3 blocks) and FV group (3 blocks). The order of the closing groups was counterbalanced across experiments. Brief verbal cues during rest periods.</div>
+  </div>
+  <div class="rd">
+    <div class="lbl">Field 13<b>Task details</b></div>
+    <div class="val">Stimuli were presented in randomly interleaved order with stimulus-onset asynchronies (SOAs) varying randomly between <strong>200 and 800 ms</strong>. Cue stimuli ("Look" / "Hear") appeared at mean 5-second intervals, simultaneously spoken and printed for 200 ms.
+      <div class="stim" style="margin-top:18px">
+        <div class="stim-col">
+          <h4><i></i>Visual stimuli</h4>
+          <p>Dark-blue target or light-blue standard 8.4 cm² squares, presented for 100 ms.</p>
+          <div class="stim-rate">
+            <div class="frq">light blue · standard · 90%</div>
+            <div class="tgt v">10%</div>
+          </div>
+        </div>
+        <div class="stim-col">
+          <h4><i></i>Auditory stimuli</h4>
+          <p>550-Hz target or 500-Hz standard tones, 100 ms duration, 63 dB SPL.</p>
+          <div class="stim-rate">
+            <div class="frq">500 Hz · standard · 90%</div>
+            <div class="tgt a">10%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="rd">
+    <div class="lbl">Field 14<b>Additional data acquired</b></div>
+    <div class="val">Two EOG channels (vertical, horizontal). Left mastoid (LM) recorded alongside right mastoid (RM, primary reference). Behavioural responses logged with each trial.</div>
+  </div>
+  <div class="rd">
+    <div class="lbl">Field 15<b>Experiment location</b></div>
+    <div class="val">Townsend Laboratory, UC San Diego, La Jolla CA, USA.</div>
+  </div>
+  <div class="rd last">
+    <div class="lbl">Notes<b>Caveats</b></div>
+    <div class="val">
+      <p><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);margin-right:6px">¹</span>ERP results for FA and FV reported in Ceponiene <em>et al.</em> (2008), <em>Brain Research</em> 1215, 53–68.</p>
+      <p><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);margin-right:6px">²</span>The SF (shift) condition is largely unpublished and available on request from the data authors.</p>
+    </div>
+  </div>
+
+  <!-- Figure 1 — signal + montage pair -->
+  <figure style="display:block;margin:48px 0">
+    <div class="fig-meta" style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px;border-bottom:1px solid var(--rule);padding-bottom:10px"><b style="display:inline;color:var(--accent);margin-right:8px">Fig. 01</b><span style="flex:1">Signal &amp; montage · sub-021 · run-02</span><span style="font-family:'JetBrains Mono',monospace;letter-spacing:.06em;text-transform:none;font-size:11px;color:var(--muted)">33 EEG · 2 EOG · 1 ref · 250 Hz</span></div>
+    <div class="signal-pair">
+      <div class="signal-card">
+        <h5>Live trace · <b>sub-021</b> · <b>run-02</b></h5>
+        <div class="live-trace"><svg id="liveTraceSvg" preserveAspectRatio="none"></svg></div>
+        <div class="footer"><span>10 of 36 channels shown · 4-second window</span><span>amplitude in µV</span></div>
+      </div>
+      <div class="signal-card">
+        <h5>10-20 montage</h5>
+        <svg class="montage-svg" viewBox="-100 -100 200 200" xmlns="http://www.w3.org/2000/svg">
+          <!-- head -->
+          <circle cx="0" cy="0" r="82" fill="none" stroke="#16181c" stroke-width="1.3"/>
+          <!-- nose triangle -->
+          <path d="M -10 -82 L 0 -96 L 10 -82" fill="none" stroke="#16181c" stroke-width="1.3" stroke-linejoin="round"/>
+          <!-- ears -->
+          <path d="M -82 -10 q -6 10 0 20" fill="none" stroke="#16181c" stroke-width="1.3"/>
+          <path d="M  82 -10 q  6 10 0 20" fill="none" stroke="#16181c" stroke-width="1.3"/>
+          <!-- electrodes (10-20) -->
+          <g fill="none" stroke="#16181c" stroke-width="1.1">
+            <circle cx="-22" cy="-66" r="4.5"/><circle cx="22" cy="-66" r="4.5"/>
+            <circle cx="-50" cy="-42" r="4.5"/><circle cx="-22" cy="-42" r="4.5"/><circle cx="0" cy="-42" r="4.5"/><circle cx="22" cy="-42" r="4.5"/><circle cx="50" cy="-42" r="4.5"/>
+            <circle cx="-70" cy="-16" r="4.5"/><circle cx="-44" cy="-16" r="4.5"/><circle cx="-22" cy="-16" r="4.5"/><circle cx="22" cy="-16" r="4.5"/><circle cx="44" cy="-16" r="4.5"/><circle cx="70" cy="-16" r="4.5"/>
+            <circle cx="-70" cy="6" r="4.5"/><circle cx="-44" cy="6" r="4.5"/><circle cx="-22" cy="6" r="4.5"/><circle cx="22" cy="6" r="4.5"/><circle cx="44" cy="6" r="4.5"/><circle cx="70" cy="6" r="4.5"/>
+            <circle cx="-50" cy="28" r="4.5"/><circle cx="-22" cy="28" r="4.5"/><circle cx="0" cy="28" r="4.5"/><circle cx="22" cy="28" r="4.5"/><circle cx="50" cy="28" r="4.5"/>
+            <circle cx="-22" cy="52" r="4.5"/><circle cx="0" cy="58" r="4.5"/><circle cx="22" cy="52" r="4.5"/>
+            <circle cx="-44" cy="-58" r="4"/><circle cx="44" cy="-58" r="4"/>
+          </g>
+          <!-- selected Cz (filled accent) -->
+          <circle cx="0" cy="-8" r="5" fill="#f7941d" stroke="#16181c" stroke-width="1.1"/>
+        </svg>
+        <div class="montage-caption">33 scalp EEG + 2 EOG + left mastoid<br/>referenced to right mastoid · 0.01–60 Hz</div>
+      </div>
+    </div>
+    <figcaption style="margin-top:14px;font-family:'Inter',sans-serif;font-size:13px;color:var(--ink-2);line-height:1.5;padding-left:0"><b style="font-weight:600;color:var(--ink);margin-right:6px;text-transform:uppercase;letter-spacing:.08em;font-size:11px">Fig. 01</b>A representative 4-second window from sub-021's second run (left) and the 10-20 electrode placement used for the entire cohort (right). Cz highlighted on both. Two EOG channels are recorded but not shown.</figcaption>
+  </figure>
+
+  <!-- §02 Cohort -->
+  <div class="section">
+    <div class="section-num">§ 02<b>Cohort</b></div>
+    <div>
+      <h2>Nineteen younger, thirty older. None impaired.</h2>
+      <p class="lead">All 49 participants were cognitively intact, with normal or corrected-to-normal vision and hearing. The older group was additionally screened with the MMSE, the Mattis DRS, and the Wechsler Memory Scale.</p>
+    </div>
+  </div>
+
+  <!-- Figure 2 — demographics -->
+  <figure>
+    <div class="fig-meta"><b>Fig. 02</b>Cohort<br/>n = 49<br/>(ages 20–78)</div>
+    <div class="fig-body">
+      <div class="demo">
+        <div>
+          <h5>Age distribution (years)</h5>
+          <div class="age-strip" id="ageStrip"></div>
+          <div class="age-axis"><span>20</span><span>30</span><span>40</span><span>50</span><span>60</span><span>70</span><span>78</span></div>
+          <div class="legend"><span><i style="background:#006ca3"></i>Younger · 19</span><span><i style="background:#f7941d"></i>Older · 30</span></div>
+        </div>
+        <div>
+          <h5>Sex composition</h5>
+          <div class="sex-wrap">
+            <svg class="sex-donut" viewBox="0 0 42 42">
+              <circle cx="21" cy="21" r="15.9" fill="none" stroke="#d0d6dc" stroke-width="5"/>
+              <circle cx="21" cy="21" r="15.9" fill="none" stroke="#006ca3" stroke-width="5" stroke-dasharray="61.2 38.8" stroke-dashoffset="25" transform="rotate(-90 21 21)" stroke-linecap="butt"/>
+              <foreignObject x="0" y="0" width="42" height="42"><div xmlns="http://www.w3.org/1999/xhtml" class="center" style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:'Spectral',serif"><div style="font-size:13px;line-height:1;letter-spacing:-.02em">49</div><div style="font-family:'JetBrains Mono',monospace;font-size:2.8px;letter-spacing:.18em;color:#6a6e75;margin-top:1.5px;text-transform:uppercase">subjects</div></div></foreignObject>
+            </svg>
+            <div class="sex-legend">
+              <div class="row"><span class="sw" style="background:#006ca3"></span><span class="lbl">Female</span><span class="v">30</span></div>
+              <div class="row"><span class="sw" style="background:#f7941d"></span><span class="lbl">Male</span><span class="v">19</span></div>
+              <div class="row ratio"><span class="sw" style="visibility:hidden"></span><span class="lbl">F : M ratio</span><span class="v">1.58 : 1</span></div>
+            </div>
+          </div>
+          <div class="sex-note">61% female, well-balanced across both age groups. No hearing-aid wearers; impedances under 5 kΩ at every scalp site.</div>
+        </div>
+      </div>
+      <figcaption><b>Fig. 02</b>Younger adults: 8 male, 11 female, ages 20–40 yr. Older adults: 11 male, 19 female, ages 49–73 yr. No significant differences in IQ or years of education between groups.</figcaption>
+    </div>
+  </figure>
+
+  <!-- §03 BIDS sidecars -->
+  <div class="section">
+    <div class="section-num">§ 03<b>Signal · BIDS</b></div>
+    <div>
+      <h2>What's in the sidecars.</h2>
+      <p class="lead">A BIDS-valid EEG dataset is more than <code style="font-family:'JetBrains Mono',monospace">.set</code> files; the sidecars are where channel types, coordinates, and event semantics live. EEGDash detects each of these automatically and surfaces them here for inspection.</p>
+    </div>
+  </div>
+
+  <div class="method">
+    <div class="method-meta">Sidecar<b>channels.tsv</b></div>
+    <div class="method-body" style="max-width:none">
+      <div class="sidecar">
+        <div class="sidecar-hdr"><span><b>sub-021/eeg/sub-021_task-AuditoryVisualShift_run-01_channels.tsv</b></span><span class="right">36 rows · 6 columns · first 6 shown</span></div>
+        <table>
+          <thead><tr><th>name</th><th>type</th><th>units</th><th>sampling_frequency</th><th>reference</th><th>description</th></tr></thead>
+          <tbody>
+            <tr><td><b>Fp1</b></td><td>EEG</td><td>µV</td><td>250</td><td>RM</td><td>Frontopolar left</td></tr>
+            <tr><td><b>Fz</b></td><td>EEG</td><td>µV</td><td>250</td><td>RM</td><td>Midline frontal</td></tr>
+            <tr><td><b>Cz</b></td><td>EEG</td><td>µV</td><td>250</td><td>RM</td><td>Midline central</td></tr>
+            <tr><td><b>Pz</b></td><td>EEG</td><td>µV</td><td>250</td><td>RM</td><td>Midline parietal</td></tr>
+            <tr><td><b>VEOG</b></td><td>EOG</td><td>µV</td><td>250</td><td>RM</td><td>Vertical EOG · bipolar</td></tr>
+            <tr><td><b>LM</b></td><td>MISC</td><td>µV</td><td>250</td><td>RM</td><td>Left mastoid (recorded)</td></tr>
+            <tr><td colspan="6" style="text-align:center;color:var(--muted);font-style:italic;font-family:'Spectral',serif">… 30 more rows · F7 F3 F4 F8 FT7 FC3 FCz FC4 FT8 T7 C3 C4 T8 P7 P3 P4 P8 O1 Oz O2 …</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="method">
+    <div class="method-meta">Sidecar<b>coordsystem.json</b></div>
+    <div class="method-body" style="max-width:none">
+      <div class="sidecar">
+        <div class="sidecar-hdr"><span><b>sub-021/eeg/sub-021_coordsystem.json</b></span><span class="right">spatial alignment</span></div>
+<pre>{
+  <span class="k">"EEGCoordinateSystem"</span>: <span class="s">"CapTrak"</span>,
+  <span class="k">"EEGCoordinateUnits"</span>: <span class="s">"mm"</span>,
+  <span class="k">"EEGCoordinateSystemDescription"</span>:
+    <span class="s">"10-20 nominal positions, NAS / LPA / RPA fiducials recorded."</span>,
+  <span class="k">"FiducialsDescription"</span>: <span class="s">"NAS, LPA, RPA captured pre-experiment."</span>,
+  <span class="k">"IntendedFor"</span>: [
+    <span class="s">"sub-021_task-AuditoryVisualShift_run-01_eeg.set"</span>,
+    <span class="s">"sub-021_task-AuditoryVisualShift_run-02_eeg.set"</span>
+  ]
+}</pre>
+      </div>
+      <div class="leakage" style="margin-top:14px"><b>Why this matters.</b> Cross-dataset training requires consistent spatial alignment. To project onto a standard 10-20 template use <code>mne.channels.make_standard_montage("standard_1020")</code> before stacking with another corpus.</div>
+    </div>
+  </div>
+
+  <div class="method">
+    <div class="method-meta">Sidecar<b>events.tsv + HED</b></div>
+    <div class="method-body" style="max-width:none">
+      <div class="sidecar">
+        <div class="sidecar-hdr"><span><b>sub-021_task-AuditoryVisualShift_run-02_events.tsv</b></span><span class="right">1,284 events · 7 columns · HED-annotated</span></div>
+        <table>
+          <thead><tr><th>onset</th><th>duration</th><th>trial_type</th><th>stim_type</th><th>response_time</th><th>condition</th><th style="width:34%">HED</th></tr></thead>
+          <tbody>
+            <tr><td>0.000</td><td>0.200</td><td><b>cue</b></td><td>look</td><td>—</td><td>SF</td><td><span class="hed-chip">Sensory-event</span><span class="hed-chip">Cue/Look</span></td></tr>
+            <tr><td>0.456</td><td>0.100</td><td>standard</td><td>visual</td><td>—</td><td>SF</td><td><span class="hed-chip">Visual</span><span class="hed-chip">Blue/Light</span></td></tr>
+            <tr><td>0.912</td><td>0.100</td><td>standard</td><td>auditory</td><td>—</td><td>SF</td><td><span class="hed-chip">Auditory</span><span class="hed-chip">500-Hz</span></td></tr>
+            <tr><td>1.484</td><td>0.100</td><td><b>target</b></td><td>visual</td><td><b>0.412</b></td><td>SF</td><td><span class="hed-chip">Visual</span><span class="hed-chip">Blue/Dark</span><span class="hed-chip">Target</span></td></tr>
+            <tr><td>2.087</td><td>0.100</td><td><b>target</b></td><td>auditory</td><td>—</td><td>SF</td><td><span class="hed-chip">Auditory</span><span class="hed-chip">550-Hz</span><span class="hed-chip">Target</span><span class="hed-chip">Miss</span></td></tr>
+            <tr><td>2.711</td><td>0.200</td><td><b>cue</b></td><td>hear</td><td>—</td><td>SF</td><td><span class="hed-chip">Sensory-event</span><span class="hed-chip">Cue/Hear</span></td></tr>
+            <tr><td colspan="7" style="text-align:center;color:var(--muted);font-style:italic;font-family:'Spectral',serif">… 1,278 more rows · per-run · all HED-tagged</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="margin-top:14px;font-family:'Inter',sans-serif;font-size:13px;color:var(--ink-2);line-height:1.55;display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:18px">
+        <div><div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.18em;color:var(--muted);text-transform:uppercase;margin-bottom:5px">events / run</div><div style="font-family:'Spectral',serif;font-size:24px;color:var(--ink);font-weight:400">1,284</div></div>
+        <div><div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.18em;color:var(--muted);text-transform:uppercase;margin-bottom:5px">unique trial types</div><div style="font-family:'Spectral',serif;font-size:24px;color:var(--ink);font-weight:400">4 <span style="font-size:13px;color:var(--muted)">cue · target · standard · response</span></div></div>
+        <div><div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.18em;color:var(--muted);text-transform:uppercase;margin-bottom:5px">HED coverage</div><div style="font-family:'Spectral',serif;font-size:24px;color:var(--ink);font-weight:400">100% <span style="font-size:13px;color:#2a6f3a">✓ validated</span></div></div>
+        <div><div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.18em;color:var(--muted);text-transform:uppercase;margin-bottom:5px">behavioural</div><div style="font-family:'Spectral',serif;font-size:24px;color:var(--ink);font-weight:400">RT, hit, miss</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Caveat callout -->
+  <div class="caveat">
+    <div class="c-lbl">Editorial caveat · scientific reading</div>
+    <h4>The shift-focus condition is the largest, but the least published.</h4>
+    <p>ERP results for the <b>FA</b> and <b>FV</b> single-modality conditions are reported in Ceponiene <em>et al.</em>, 2008. The <b>SF (shift-focus)</b> condition — 12 of 20 blocks per session — is largely unpublished and available on request from the data authors. If you train on SF without reading the cue-locked vs. stimulus-locked distinction, you risk learning the cue stream instead of the attention shift itself.</p>
+    <p>Equally: with <b>n = 49</b> and a strong subject-specific structure, this is not a corpus where a deep network trained from scratch is likely to beat a well-tuned feature pipeline. Treat it as a <code>features-first</code> dataset and read the model-readiness panel in §07.</p>
+  </div>
+
+  <!-- §04 Quality -->
+  <div class="section">
+    <div class="section-num">§ 04<b>Quality</b></div>
+    <div>
+      <h2>What the NEMAR pipeline saw.</h2>
+      <p class="lead">An automated cleaning &amp; ICA decomposition run on all 52 recordings. Frame retention, channel retention, ICA components, and a representative power spectrum from Cz.</p>
+    </div>
+  </div>
+
+  <div class="quality">
+    <div class="q-card">
+      <h5><span>NEMAR pipeline</span><b>52 / 52 passed</b></h5>
+      <div class="q-grid">
+        <div class="q-stat">
+          <div class="top"><span class="lab">Frames retained</span><span class="v">94.3<span class="u">%</span></span></div>
+          <div class="barwrap"><div style="width:94.3%"></div></div>
+          <div class="sub">σ = 2.1 · range 88–98%</div>
+        </div>
+        <div class="q-stat">
+          <div class="top"><span class="lab">Channels retained</span><span class="v">97.1<span class="u">%</span></span></div>
+          <div class="barwrap"><div style="width:97.1%"></div></div>
+          <div class="sub">avg 32 of 33 EEG channels</div>
+        </div>
+        <div class="q-stat">
+          <div class="top"><span class="lab">ICA components</span><span class="v">32.4<span class="u">avg</span></span></div>
+          <div class="barwrap amber"><div style="width:85%"></div></div>
+          <div class="sub">σ = 2.1 · range 27–35</div>
+        </div>
+        <div class="q-stat">
+          <div class="top"><span class="lab">Line-noise RMS</span><span class="v">−21.6<span class="u">dB</span></span></div>
+          <div class="barwrap amber"><div style="width:62%"></div></div>
+          <div class="sub">60 Hz US grid · within spec</div>
+        </div>
+      </div>
+    </div>
+    <div class="psd-card">
+      <h5><span>Power spectrum · Cz</span><b>Welch · 4 s win · 50% overlap</b></h5>
+      <div class="canvas">
+        <svg viewBox="0 0 480 220" preserveAspectRatio="none">
+          <defs>
+            <linearGradient id="psdfill" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#006ca3" stop-opacity=".25"/>
+              <stop offset="1" stop-color="#006ca3" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <!-- frequency band shading -->
+          <rect x="32" y="14" width="34" height="170" fill="#006ca3" opacity=".05"/>
+          <rect x="66" y="14" width="40" height="170" fill="#006ca3" opacity=".07"/>
+          <rect x="106" y="14" width="80" height="170" fill="#f7941d" opacity=".10"/>
+          <rect x="186" y="14" width="100" height="170" fill="#006ca3" opacity=".05"/>
+          <!-- band labels -->
+          <text x="49" y="26" text-anchor="middle" fill="#006ca3" font-family="JetBrains Mono" font-size="9">δ</text>
+          <text x="86" y="26" text-anchor="middle" fill="#006ca3" font-family="JetBrains Mono" font-size="9">θ</text>
+          <text x="146" y="26" text-anchor="middle" fill="#f7941d" font-family="JetBrains Mono" font-size="9">α</text>
+          <text x="236" y="26" text-anchor="middle" fill="#006ca3" font-family="JetBrains Mono" font-size="9">β</text>
+          <text x="380" y="26" text-anchor="middle" fill="#6a6e75" font-family="JetBrains Mono" font-size="9">γ</text>
+          <!-- y-axis ticks -->
+          <g font-family="JetBrains Mono" font-size="9" fill="#6a6e75">
+            <text x="28" y="40" text-anchor="end">+20</text>
+            <text x="28" y="80" text-anchor="end">0</text>
+            <text x="28" y="120" text-anchor="end">−20</text>
+            <text x="28" y="160" text-anchor="end">−40</text>
+            <text x="28" y="200" text-anchor="end">−60</text>
+          </g>
+          <line x1="32" y1="14" x2="32" y2="200" stroke="#cdcfd1" stroke-width=".7"/>
+          <line x1="32" y1="200" x2="476" y2="200" stroke="#cdcfd1" stroke-width=".7"/>
+          <!-- 1/f spectrum curve -->
+          <path d="M32 28 C 60 36, 95 65, 120 80 C 142 88, 152 65, 158 56 C 168 78, 178 102, 200 116 C 240 132, 280 148, 340 168 L 476 178 L 476 200 L 32 200 Z" fill="url(#psdfill)"/>
+          <path d="M32 28 C 60 36, 95 65, 120 80 C 142 88, 152 65, 158 56 C 168 78, 178 102, 200 116 C 240 132, 280 148, 340 168 L 476 178" stroke="#006ca3" stroke-width="1.4" fill="none"/>
+          <!-- 60Hz line noise marker -->
+          <line x1="300" y1="14" x2="300" y2="200" stroke="#f7941d" stroke-dasharray="2 3" stroke-width=".9" opacity=".7"/>
+          <text x="304" y="34" fill="#f7941d" font-family="JetBrains Mono" font-size="9">60 Hz · notch</text>
+          <!-- alpha bump marker -->
+          <circle cx="158" cy="56" r="3.5" fill="#f7941d"/>
+          <text x="164" y="52" fill="#f7941d" font-family="JetBrains Mono" font-size="9.5">10.2 Hz · α peak</text>
+          <!-- x-axis -->
+          <g font-family="JetBrains Mono" font-size="9" fill="#6a6e75">
+            <text x="32" y="214">0</text>
+            <text x="120" y="214">10</text>
+            <text x="200" y="214">20</text>
+            <text x="280" y="214">40</text>
+            <text x="380" y="214">80</text>
+            <text x="476" y="214" text-anchor="end">125 Hz</text>
+          </g>
+        </svg>
+      </div>
+      <div class="psd-cap"><span>log dB / Hz · single recording</span><span><b>α peak</b> 10.2 Hz &nbsp;·&nbsp; <b>line</b> 60 Hz suppressed</span></div>
+    </div>
+  </div>
+
+  <!-- §05 Access -->
+  <div class="section">
+    <div class="section-num">§ 05<b>Access</b></div>
+    <div>
+      <h2>Three lines to a <code style="font-family:'JetBrains Mono',monospace;background:var(--mark);padding:2px 6px;font-size:.78em;font-weight:500">braindecode</code>-compatible dataset.</h2>
+      <p class="lead">The dataset can be lazily loaded by ID, subject, or any MongoDB-style query. Recordings stream from S3 and cache locally; the first call to <code style="font-family:'JetBrains Mono',monospace">.raw</code> materializes an MNE <code style="font-family:'JetBrains Mono',monospace">Raw</code> object.</p>
+    </div>
+  </div>
+
+  <div class="method">
+    <div class="method-meta">Signature<b>eegdash.dataset</b></div>
+    <div class="method-body" style="padding-bottom:0">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.7;color:var(--ink);border-left:2px solid var(--accent);padding:4px 0 4px 16px;margin-bottom:18px">
+        <div style="color:var(--muted);font-size:11px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px">class</div>
+        <div><span style="color:var(--muted)">eegdash.dataset.</span><b style="color:var(--accent);font-weight:600">DS002893</b>(<span style="color:var(--ink-2)">cache_dir</span>, <span style="color:var(--ink-2)">query</span>=<span style="color:var(--accent-2)">None</span>, <span style="color:var(--ink-2)">s3_bucket</span>=<span style="color:var(--accent-2)">None</span>, <span style="color:var(--ink-2)">**kwargs</span>)</div>
+        <div style="color:var(--muted);font-size:12px;margin-top:6px">Bases: <code style="background:var(--mark);padding:1px 5px;color:var(--ink)">EEGDashDataset</code></div>
+      </div>
+
+      <!-- Identifiers (Author / Canonical / Importable as) -->
+      <div style="display:grid;grid-template-columns:130px 1fr;gap:8px 18px;font-family:'Inter',sans-serif;font-size:12.5px;margin-bottom:18px;padding:14px 16px;background:var(--paper-2);border-radius:3px">
+        <div style="color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.04em">Author (year)</div>
+        <div style="color:var(--ink);font-family:'JetBrains Mono',monospace;font-size:12px"><b style="font-weight:600">Westerfield2022</b></div>
+        <div style="color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.04em">Canonical</div>
+        <div style="color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:12px">—</div>
+        <div style="color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.04em">Importable as</div>
+        <div style="color:var(--ink);font-family:'JetBrains Mono',monospace;font-size:12px"><code style="background:#fff;padding:1px 6px;border:1px solid var(--rule);border-radius:2px">DS002893</code> &nbsp;·&nbsp; <code style="background:#fff;padding:1px 6px;border:1px solid var(--rule);border-radius:2px">Westerfield2022</code></div>
+        <div style="color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.04em">Source</div>
+        <div style="color:var(--ink-2);font-family:'JetBrains Mono',monospace;font-size:12px">eegdash/dataset/registry.py · <a href="#" style="color:var(--accent-2);text-decoration:none">[source ↗]</a></div>
+      </div>
+
+      <table style="width:100%;border-collapse:collapse;font-family:'Inter',sans-serif;font-size:12.5px;margin-bottom:14px">
+        <thead><tr><td colspan="3" style="padding:0 0 6px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)">Parameters</td></tr></thead>
+        <tbody>
+          <tr style="border-top:1px solid var(--rule)"><td style="padding:8px 16px 8px 0;width:130px;color:var(--ink);font-family:'JetBrains Mono',monospace;font-size:12px;vertical-align:top"><b>cache_dir</b></td><td style="padding:8px 0;color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:11px;width:90px;vertical-align:top">str | Path</td><td style="padding:8px 0;color:var(--ink-2);vertical-align:top">Directory where data are cached locally.</td></tr>
+          <tr style="border-top:1px solid var(--rule)"><td style="padding:8px 16px 8px 0;color:var(--ink);font-family:'JetBrains Mono',monospace;font-size:12px;vertical-align:top"><b>query</b></td><td style="padding:8px 0;color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:11px;vertical-align:top">dict | None</td><td style="padding:8px 0;color:var(--ink-2);vertical-align:top">MongoDB-style filters AND-ed with the dataset selection. Must not contain the key <code style="font-family:'JetBrains Mono',monospace">dataset</code>.</td></tr>
+          <tr style="border-top:1px solid var(--rule)"><td style="padding:8px 16px 8px 0;color:var(--ink);font-family:'JetBrains Mono',monospace;font-size:12px;vertical-align:top"><b>s3_bucket</b></td><td style="padding:8px 0;color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:11px;vertical-align:top">str | None</td><td style="padding:8px 0;color:var(--ink-2);vertical-align:top">Base S3 bucket used to locate the data.</td></tr>
+          <tr style="border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)"><td style="padding:8px 16px 8px 0;color:var(--ink);font-family:'JetBrains Mono',monospace;font-size:12px;vertical-align:top"><b>**kwargs</b></td><td style="padding:8px 0;color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:11px;vertical-align:top">dict</td><td style="padding:8px 0;color:var(--ink-2);vertical-align:top">Forwarded to <code style="font-family:'JetBrains Mono',monospace">EEGDashDataset</code>.</td></tr>
+        </tbody>
+      </table>
+
+      <!-- Attributes & Methods -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;font-family:'Inter',sans-serif;font-size:12.5px;margin-bottom:18px">
+        <div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:8px">Attributes</div>
+          <div style="border-top:1px solid var(--rule);padding:7px 0;display:grid;grid-template-columns:90px 1fr;gap:12px"><code style="font-family:'JetBrains Mono',monospace;color:var(--ink);font-weight:600">data_dir</code><span style="color:var(--ink-2)"><code style="color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:11px">Path</code> — local cache dir (<code style="font-family:'JetBrains Mono',monospace">cache_dir / dataset_id</code>)</span></div>
+          <div style="border-top:1px solid var(--rule);padding:7px 0;display:grid;grid-template-columns:90px 1fr;gap:12px"><code style="font-family:'JetBrains Mono',monospace;color:var(--ink);font-weight:600">query</code><span style="color:var(--ink-2)"><code style="color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:11px">dict</code> — merged query with dataset filter.</span></div>
+          <div style="border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);padding:7px 0;display:grid;grid-template-columns:90px 1fr;gap:12px"><code style="font-family:'JetBrains Mono',monospace;color:var(--ink);font-weight:600">records</code><span style="color:var(--ink-2)"><code style="color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:11px">list[dict] | None</code> — pre-fetched manifest.</span></div>
+        </div>
+        <div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:8px">Methods</div>
+          <div style="border-top:1px solid var(--rule);padding:7px 0"><code style="font-family:'JetBrains Mono',monospace;color:var(--ink);font-weight:600">__init__(cache_dir, query=None, …)</code><div style="color:var(--ink-2);margin-top:3px">Build the lazy concat dataset.</div></div>
+          <div style="border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);padding:7px 0"><code style="font-family:'JetBrains Mono',monospace;color:var(--ink);font-weight:600">save(path, overwrite=False, offset=0)</code><div style="color:var(--ink-2);margin-top:3px">Write each record to <code style="font-family:'JetBrains Mono',monospace">path/<i>i</i>/<i>i</i>-raw.fif</code> with sidecar JSON.</div></div>
+        </div>
+      </div>
+
+      <div style="font-family:'Inter',sans-serif;font-size:11.5px;color:var(--muted);display:flex;gap:18px;flex-wrap:wrap;border-top:1px dashed var(--rule);padding-top:14px">
+        <span><b style="color:var(--ink-2);font-weight:500">See also</b> &nbsp;<code style="font-family:'JetBrains Mono',monospace">eegdash.dataset.EEGDashDataset</code> &nbsp;·&nbsp; <code style="font-family:'JetBrains Mono',monospace">eegdash.dataset</code></span>
+        <span><a href="https://openneuro.org/datasets/ds002893" style="color:var(--accent-2);text-decoration:none">OpenNeuro ↗</a> &nbsp;·&nbsp; <a href="https://nemar.org/dataexplorer/detail?dataset_id=ds002893" style="color:var(--accent-2);text-decoration:none">NeMAR ↗</a></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="method">
+    <div class="method-meta">Snippet<b>Python / EEGDash</b></div>
+    <div class="method-body">
+      <div class="code-tabs">
+        <button class="on">Install &amp; Load</button>
+        <button>Filter by subject</button>
+        <button>Mongo query</button>
+        <button>BibTeX</button>
+      </div>
+<pre class="code"><span class="c"># pip install eegdash</span>
+<span class="k">from</span> eegdash.dataset <span class="k">import</span> DS002893
+
+dataset = <span class="v">DS002893</span>(cache_dir=<span class="s">"./data"</span>)
+
+<span class="c"># first recording, lazily materialised as an MNE Raw</span>
+raw = dataset.datasets[<span class="v">0</span>].raw
+<span class="k">print</span>(raw.info)
+
+<span class="c"># subset by subject(s)</span>
+ds_pair = <span class="v">DS002893</span>(
+    cache_dir=<span class="s">"./data"</span>,
+    query={<span class="s">"subject"</span>: {<span class="s">"$in"</span>: [<span class="s">"01"</span>, <span class="s">"02"</span>]}},
+)
+
+<span class="k">for</span> rec <span class="k">in</span> ds_pair:
+    <span class="k">print</span>(rec.subject, rec.raw.info[<span class="s">'sfreq'</span>])</pre>
+    </div>
+  </div>
+
+  <div class="method">
+    <div class="method-meta">Preprocess<b>Suggested pipeline</b></div>
+    <div class="method-body">
+<pre class="code"><span class="c"># A sane baseline for DS002893 — 250 Hz is already manageable,</span>
+<span class="c"># so we filter and re-reference but do not downsample.</span>
+<span class="k">from</span> braindecode.preprocessing <span class="k">import</span> Preprocessor, preprocess
+
+preprocessors = [
+    <span class="v">Preprocessor</span>(<span class="s">'pick'</span>, picks=<span class="s">'eeg'</span>),                              <span class="c"># drop EOG / refs from training</span>
+    <span class="v">Preprocessor</span>(<span class="s">'set_eeg_reference'</span>, ref_channels=<span class="s">'average'</span>),
+    <span class="v">Preprocessor</span>(<span class="s">'filter'</span>, l_freq=<span class="v">1.0</span>, h_freq=<span class="v">40.0</span>),               <span class="c"># cognitive bands</span>
+    <span class="v">Preprocessor</span>(<span class="s">'notch_filter'</span>, freqs=[<span class="v">60</span>]),                       <span class="c"># US grid</span>
+]
+preprocess(dataset, preprocessors)</pre>
+    </div>
+  </div>
+
+  <!-- (Fig 03 removed — live trace now combined with montage in Fig 01) -->
+
+  <!-- §06 Files -->
+  <div class="section">
+    <div class="section-num">§ 06<b>Manifest</b></div>
+    <div>
+      <h2>BIDS, 52 recordings, 7.7 GB on disk.</h2>
+      <p class="lead">The dataset is distributed in standard BIDS format. The <code style="font-family:'JetBrains Mono',monospace">code/</code> subdirectory contains the Jupyter curation notebooks and HEDLogger output used to produce the annotations.</p>
+    </div>
+  </div>
+
+  <div class="method">
+    <div class="method-meta">Tree<b>Top of dataset</b></div>
+    <div class="method-body" style="max-width:none">
+      <div class="files">
+        <div class="files-head"><span>Path</span><span>Subjects</span><span>Type</span><span>Size</span></div>
+        <div class="files-row"><span><span class="ind">▸</span>dataset_description.json</span><span>—</span><span>BIDS</span><span>1.2 kB</span></div>
+        <div class="files-row"><span><span class="ind">▸</span>CITATION.cff</span><span>—</span><span>meta</span><span>0.6 kB</span></div>
+        <div class="files-row"><span><span class="ind">▸</span>CHANGES</span><span>—</span><span>log</span><span>0.4 kB</span></div>
+        <div class="files-row"><span><span class="ind">▸</span>README</span><span>—</span><span>md</span><span>12 kB</span></div>
+        <div class="files-row"><span><span class="ind">▸</span>LICENSE</span><span>—</span><span>CC0</span><span>0.2 kB</span></div>
+        <div class="files-row"><span><span class="ind">▸</span>participants.tsv &nbsp;<i style="color:var(--accent);font-style:normal;font-size:10px;letter-spacing:.1em">+ .json</i></span><span>49</span><span>tsv</span><span>3.8 kB</span></div>
+        <div class="files-row"><span><span class="ind">▸</span>task-AuditoryVisualShift_events.json</span><span>—</span><span>HED</span><span>14 kB</span></div>
+        <div class="files-row"><span><span class="ind">▾</span>sub-001/eeg/</span><span>1</span><span>BIDS</span><span>158 MB</span></div>
+        <div class="files-row" style="padding-left:36px"><span><span class="ind">·</span>sub-001_..._run-01_eeg.set &nbsp;<i style="color:var(--accent);font-style:normal;font-size:10px;letter-spacing:.1em">+ .fdt</i></span><span>—</span><span>EEGLab</span><span>74 MB</span></div>
+        <div class="files-row" style="padding-left:36px"><span><span class="ind">·</span>sub-001_..._run-02_eeg.set &nbsp;<i style="color:var(--accent);font-style:normal;font-size:10px;letter-spacing:.1em">+ .fdt</i></span><span>—</span><span>EEGLab</span><span>81 MB</span></div>
+        <div class="files-row" style="padding-left:36px"><span><span class="ind">·</span>sub-001_..._channels.tsv</span><span>—</span><span>tsv</span><span>2.1 kB</span></div>
+        <div class="files-row" style="padding-left:36px"><span><span class="ind">·</span>sub-001_..._electrodes.tsv</span><span>—</span><span>tsv</span><span>1.6 kB</span></div>
+        <div class="files-row" style="padding-left:36px"><span><span class="ind">·</span>sub-001_..._events.tsv</span><span>—</span><span>tsv</span><span>88 kB</span></div>
+        <div class="files-row" style="padding-left:36px"><span><span class="ind">·</span>sub-001_coordsystem.json</span><span>—</span><span>json</span><span>0.5 kB</span></div>
+        <div class="files-row"><span><span class="ind">▸</span>sub-002 … sub-049</span><span>48</span><span>BIDS</span><span>7.4 GB</span></div>
+        <div class="files-row"><span><span class="ind">▸</span>code/curation_notebooks/</span><span>—</span><span>ipynb</span><span>2.1 MB</span></div>
+        <div class="files-row"><span><span class="ind">▸</span>code/curation_logs/</span><span>—</span><span>log</span><span>6.4 MB</span></div>
+        <div class="files-row" style="opacity:.6"><span><span class="ind">▸</span>derivatives/</span><span>—</span><span>—</span><span>none</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- §07 Model readiness -->
+  <div class="section">
+    <div class="section-num">§ 07<b>Model readiness</b></div>
+    <div>
+      <h2>What you can actually train on.</h2>
+      <p class="lead">A short guide for the ML engineer landing on this page: which labels exist natively, which are derivable, which splits respect the cohort structure, and how to plug into MNE → braindecode → PyTorch without leakage.</p>
+    </div>
+  </div>
+
+  <div class="ready">
+    <div class="ready-card">
+      <h5>Targets &middot; <b>3 official, 4 derived</b></h5>
+      <div class="target-row"><div>Condition <code>FA / FV / SF</code></div><div>Block-level label from <code>events.tsv → condition</code>.</div><span class="tag off">Official</span></div>
+      <div class="target-row"><div>Modality <code>visual / auditory / cue</code></div><div>Trial-level stream tag, HED-validated.</div><span class="tag off">Official</span></div>
+      <div class="target-row"><div>Trial type <code>target / standard</code></div><div>Per-event oddball label — a clean binary problem at 10/90 base rate.</div><span class="tag off">Official</span></div>
+      <div class="target-row"><div>Age group <code>younger / older</code></div><div>From <code>participants.tsv</code>; the canonical aging contrast.</div><span class="tag drv">Derived</span></div>
+      <div class="target-row"><div>Attention shift <code>pre / post cue</code></div><div>Window the SF blocks relative to cue onset — see caveat in §03.</div><span class="tag drv">Derived</span></div>
+      <div class="target-row"><div>Hit / miss</div><div>Behavioural — join target events with <code>response_time</code>.</div><span class="tag drv">Derived</span></div>
+      <div class="target-row"><div>Modality × group</div><div>Interaction; the experiment's actual scientific contrast.</div><span class="tag cau">Caveat</span></div>
+    </div>
+    <div class="ready-card">
+      <h5>Recommended approach &middot; <b>feature-first, subject-disjoint</b></h5>
+      <div class="target-row"><div>Cohort size</div><div>49 subjects — below the ~50 threshold where deep nets trained from scratch typically pay off.</div><span class="tag drv">n &lt; 50</span></div>
+      <div class="target-row"><div>Baseline strategy</div><div>Band-power features → Riemannian + linear SVM. Use deep nets only with transfer / pre-training.</div><span class="tag off">features-first</span></div>
+      <div class="target-row"><div>Split policy</div><div>Subject-disjoint by default. Stratify by age group so younger/older balance is preserved.</div><span class="tag off">subject-disjoint</span></div>
+      <div class="target-row"><div>Epoching</div><div>−200 → +800 ms around each event; reject ±100 µV; baseline-correct on the pre-stim window.</div><span class="tag drv">erp-style</span></div>
+      <div class="target-row"><div>Sampling rate</div><div>250 Hz is already efficient — no downsampling needed.</div><span class="tag off">as-is</span></div>
+      <div class="target-row"><div>Pre-trained baselines</div><div>None reported on this dataset — candidate for the EEGDash benchmark suite.</div><span class="tag cau">none</span></div>
+      <div class="leakage"><b>Leakage check.</b> Never split by random window or by recording; recordings are paired per subject (run-01 + run-02). Use <code>GroupShuffleSplit</code> with <code>groups=subject_id</code>.</div>
+    </div>
+  </div>
+
+  <div style="margin-top:20px">
+    <div class="sidecar">
+      <div class="sidecar-hdr"><span><b>Access modes</b></span><span class="right">MNE → braindecode → PyTorch</span></div>
+      <div style="padding:14px 18px">
+        <div class="am-row"><span class="name">.raw</span><span class="what">MNE <code style="font-family:'JetBrains Mono',monospace;font-size:11.5px;background:var(--paper-2);padding:1px 5px">Raw</code> object — standard tools (filter, epoch, ICA, plot_psd).</span><span class="badge">mne</span></div>
+          <div class="am-row"><span class="name">BaseConcatDataset</span><span class="what">Each record is a lazy <code style="font-family:'JetBrains Mono',monospace;font-size:11.5px;background:var(--paper-2);padding:1px 5px">BaseDataset</code> from braindecode — windowed via <code style="font-family:'JetBrains Mono',monospace;font-size:11.5px;background:var(--paper-2);padding:1px 5px">create_windows_from_events</code>.</span><span class="badge">braindecode</span></div>
+        <div class="am-row"><span class="name">DataLoader</span><span class="what">Wraps the windowed dataset into a PyTorch loader; supports parallel workers and on-the-fly augmentations.</span><span class="badge">pytorch</span></div>
+        <div class="am-row"><span class="name">Zarr cache</span><span class="what">Optional braindecode Zarr mirror for fast resume; persisted to <code style="font-family:'JetBrains Mono',monospace;font-size:11.5px;background:var(--paper-2);padding:1px 5px">cache_dir</code>.</span><span class="badge">zarr</span></div>
+        <div class="am-row"><span class="name">Hugging Face</span><span class="what">Pre-windowed mirror at <code style="font-family:'JetBrains Mono',monospace;font-size:11.5px;background:var(--paper-2);padding:1px 5px">EEGDash/ds002893</code>; pull with <code style="font-family:'JetBrains Mono',monospace;font-size:11.5px;background:var(--paper-2);padding:1px 5px">datasets.load_dataset</code>.</span><span class="badge">huggingface</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Provenance strip -->
+  <div class="prov-strip">
+    <div>
+      <div class="lbl">BIDS validity</div>
+      <div class="v ok">passes 1.8.0</div>
+    </div>
+    <div>
+      <div class="lbl">Provenance</div>
+      <div class="v">CITATION.cff · CHANGES · LICENSE</div>
+    </div>
+    <div>
+      <div class="lbl">Derivatives</div>
+      <div class="v">— <span style="color:var(--muted)">none on file</span></div>
+    </div>
+    <div>
+      <div class="lbl">Machine-readable</div>
+      <div class="v"><a href="#" style="color:var(--accent);text-decoration:none">schema.org/Dataset</a> &middot; <a href="#" style="color:var(--accent);text-decoration:none">Croissant</a></div>
+    </div>
+    <div>
+      <div class="lbl">Mirrors</div>
+      <div class="v"><a href="#" style="color:var(--accent);text-decoration:none">OpenNeuro</a> &middot; <a href="#" style="color:var(--accent);text-decoration:none">NEMAR</a> &middot; <a href="#" style="color:var(--accent);text-decoration:none">Hugging Face</a></div>
+    </div>
+  </div>
+
+  <!-- Footnotes -->
+  <div class="footnotes">
+    <div>
+      <h5>Citation</h5>
+      <p>Westerfield, M., Makeig, S., Truong, D., Robbins, K., Delorme, A. (2020). <em>Auditory–Visual Shift Study</em>. <code>10.18112/openneuro.ds002893.v2.0.0</code></p>
+      <p><span class="note-num">¹</span>ERP results for FA and FV in Ceponiene, R., Westerfield, M., Torki, M. &amp; Townsend, J. (2008). Modality-specificity of sensory aging in vision and audition. <em>Brain Research</em> 1215, 53–68.</p>
+    </div>
+    <div>
+      <h5>Provenance</h5>
+      <p><span class="note-num">²</span>Contributed to OpenNeuro and NEMAR in BIDS format in April 2022, following annotation with HED 8.0.0.</p>
+      <p><span class="note-num">³</span>Curation: notebooks at <code>hed-standard/hed-examples</code>, run via HEDLogger.</p>
+      <p><span class="note-num">⁴</span>Some unpublished SH-condition results available from C. Kothe and S. Makeig.</p>
+    </div>
+    <div>
+      <h5>Related &amp; sibling datasets</h5>
+      <p>DS002885 · MEG, 2 subj. · sibling lab<br/>
+      DS002908 · MEG, 13 subj. · same year<br/>
+      DS003004 · EEG, 34 subj. · oddball variant<br/>
+      DS003039 · EEG, 19 subj. · auditory aging<br/>
+      DS003522 · EEG, 96 subj. · attention task<br/>
+      <em>Filter all 426 datasets by paradigm →</em></p>
+    </div>
+  </div>
+
+  <footer class="colophon">
+    <div>EEGDash &middot; <b>The Dataset Brief</b></div>
+    <div>Set in <b>Spectral</b> &amp; <b>JetBrains Mono</b></div>
+    <div>FAIR exports · <a href="#" style="color:var(--ink);text-decoration:none;border-bottom:1px dotted var(--ink)">JSON-LD</a> · <a href="#" style="color:var(--ink);text-decoration:none;border-bottom:1px dotted var(--ink)">Croissant</a> · <a href="#" style="color:var(--ink);text-decoration:none;border-bottom:1px dotted var(--ink)">CITATION.cff</a></div>
+    <div>CC0 1.0 Universal &middot; <b>DOI 10.18112/openneuro.ds002893.v2.0.0</b></div>
+  </footer>
+
+</div>
+
+<script>
+// ---- age histogram --------------------------------------------------------
+(function(){
+  // 12 bins from 20..78
+  const bins = [
+    // young
+    {y:5,o:0}, {y:7,o:0}, {y:4,o:0}, {y:3,o:0},
+    {y:0,o:2}, {y:0,o:5}, {y:0,o:8}, {y:0,o:7}, {y:0,o:5}, {y:0,o:2}, {y:0,o:1}, {y:0,o:0}
+  ];
+  const strip = document.getElementById('ageStrip');
+  const max = Math.max(...bins.map(b=>b.y+b.o));
+  bins.forEach(b=>{
+    const col = document.createElement('div');
+    col.style.flex='1';col.style.display='flex';col.style.flexDirection='column-reverse';col.style.gap='1px';col.style.height='100%';
+    if(b.y){ const e=document.createElement('div'); e.className='bar young'; e.style.height=(b.y/max*100)+'%'; col.appendChild(e);}
+    if(b.o){ const e=document.createElement('div'); e.className='bar older'; e.style.height=(b.o/max*100)+'%'; col.appendChild(e);}
+    strip.appendChild(col);
+  });
+})();
+
+// ---- live trace (Fig 01 left) --------------------------------------------
+(function(){
+  const svg = document.getElementById('liveTraceSvg');
+  if(!svg) return;
+  const W=900,H=380,pad=44,top=20,bot=H-30;
+  svg.setAttribute('viewBox','0 0 '+W+' '+H);
+  const labels = ['Fp1','Fz','Cz','Pz','Oz','C3','C4','P3','P4','T8'];
+  const N = labels.length;
+  const rowH = (bot-top)/N;
+  // vertical dashed gridlines
+  for(let g=1;g<5;g++){
+    const x = pad + (W-pad-12)*(g/5);
+    const ln = document.createElementNS('http://www.w3.org/2000/svg','line');
+    ln.setAttribute('x1',x);ln.setAttribute('x2',x);ln.setAttribute('y1',top-6);ln.setAttribute('y2',bot+4);
+    ln.setAttribute('stroke','#d0c8b8');ln.setAttribute('stroke-width','.6');ln.setAttribute('stroke-dasharray','3 4');
+    svg.appendChild(ln);
+  }
+  for(let i=0;i<N;i++){
+    const y = top + rowH*(i+0.5);
+    const t = document.createElementNS('http://www.w3.org/2000/svg','text');
+    t.setAttribute('x',pad-10);t.setAttribute('y',y+4);t.setAttribute('text-anchor','end');
+    t.setAttribute('font-family','JetBrains Mono, monospace');t.setAttribute('font-size','11');t.setAttribute('fill','#6a6e75');
+    t.textContent=labels[i];svg.appendChild(t);
+    let d='M '+pad+' '+y;
+    const samples = 380;
+    const seed = i*1.7;
+    for(let k=0;k<samples;k++){
+      const x = pad + (W-pad-12)*(k/(samples-1));
+      let a = Math.sin(k*0.07+seed)*4 + Math.sin(k*0.21+seed*2)*3 + Math.sin(k*0.55+seed*3.4)*2 + (Math.random()-0.5)*2.2;
+      if(i>=3 && i<=4) a *= 1.6;
+      d += ' L '+x.toFixed(1)+' '+(y+a).toFixed(1);
+    }
+    const p = document.createElementNS('http://www.w3.org/2000/svg','path');
+    p.setAttribute('d',d);p.setAttribute('fill','none');
+    p.setAttribute('stroke', i===2 ? '#f7941d' : '#16181c');
+    p.setAttribute('stroke-width', i===2 ? '1.3' : '.7');
+    p.setAttribute('stroke-linecap','round');p.setAttribute('stroke-linejoin','round');
+    svg.appendChild(p);
+  }
+})();
+
+// ---- signal trace ---------------------------------------------------------
+(function(){
+  const svg = document.getElementById('traceSvg');
+  if(!svg) return;
+  const W=1100,H=340,N=10,pad=60,top=14,bot=H-30;
+  const labels = ['Fp1','Fz','Cz','Pz','Oz','C3','C4','P3','P4','T8'];
+  const rowH = (bot-top)/N;
+  for(let i=0;i<N;i++){
+    const y = top + rowH*(i+0.5);
+    // label
+    const t = document.createElementNS('http://www.w3.org/2000/svg','text');
+    t.setAttribute('x',pad-8);t.setAttribute('y',y+4);t.setAttribute('text-anchor','end');
+    t.setAttribute('class','label');t.textContent=labels[i];svg.appendChild(t);
+    // wave
+    let d='M '+pad+' '+y;
+    const samples = 400;
+    const seed = i*1.7;
+    for(let k=0;k<samples;k++){
+      const x = pad + (W-pad-20)*(k/(samples-1));
+      const a = Math.sin(k*0.07+seed)*4 + Math.sin(k*0.21+seed*2)*3 + Math.sin(k*0.55+seed*3.4)*2 + (Math.random()-0.5)*2;
+      // alpha bursts on Pz/Oz
+      const amp = (i>=3 && i<=4) ? a*1.6 : a;
+      d += ' L '+x.toFixed(1)+' '+(y+amp).toFixed(1);
+    }
+    const p = document.createElementNS('http://www.w3.org/2000/svg','path');
+    p.setAttribute('d',d);p.setAttribute('fill','none');
+    p.setAttribute('stroke', i===2 ? '#8c2b14' : '#1c1a16');
+    p.setAttribute('stroke-width', i===2 ? '1' : '0.8');
+    svg.appendChild(p);
+  }
+  // event marks
+  const evt = [{x:180,t:'V'},{x:340,t:'A'},{x:540,t:'cue'},{x:720,t:'V'},{x:860,t:'A·target'},{x:1010,t:'V·target'}];
+  evt.forEach(e=>{
+    const line = document.createElementNS('http://www.w3.org/2000/svg','line');
+    line.setAttribute('x1',e.x);line.setAttribute('x2',e.x);line.setAttribute('y1',top-4);line.setAttribute('y2',bot);
+    line.setAttribute('stroke', e.t.includes('target')?'#8c2b14':'#6b6253');
+    line.setAttribute('stroke-width',e.t.includes('target')?'1':'.5');
+    line.setAttribute('stroke-dasharray','2 3');
+    svg.appendChild(line);
+    const tx = document.createElementNS('http://www.w3.org/2000/svg','text');
+    tx.setAttribute('x',e.x+4);tx.setAttribute('y',H-14);tx.setAttribute('class','label');tx.textContent=e.t;
+    svg.appendChild(tx);
+  });
+  // time axis
+  const ax = document.createElementNS('http://www.w3.org/2000/svg','text');
+  ax.setAttribute('x',pad);ax.setAttribute('y',H-2);ax.setAttribute('class','label');ax.textContent='0 s';svg.appendChild(ax);
+  const ax2 = document.createElementNS('http://www.w3.org/2000/svg','text');
+  ax2.setAttribute('x',W-20);ax2.setAttribute('y',H-2);ax2.setAttribute('text-anchor','end');ax2.setAttribute('class','label');ax2.textContent='4 s';svg.appendChild(ax2);
+})();
+</script>
+</body>
+</html>

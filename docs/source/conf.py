@@ -146,6 +146,13 @@ html_css_files = [
     "css/treemap.css",
     "css/custom.css",
 ]
+# Per-page stylesheets are gated in `_templates/layout.html` so they only
+# load on the routes that need them:
+#   - css/dataset-explorer.css → /api/dataset/eegdash.dataset.* pages
+#   - css/dataset-editorial.css → /api/dataset/eegdash.dataset.* pages
+#     (Editorial Brief layout — see _extensions/dataset_page/)
+# Keep that gating in layout.html rather than html_css_files so the bytes
+# don't ride along on every site page.
 # Only truly-global JS is loaded here; page-specific scripts (homepage hero
 # search, dataset-summary DataTables stack) are gated in `_templates/layout.html`
 # by `pagename`. The DataTables stack that dataset_summary depends on is

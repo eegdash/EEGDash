@@ -206,6 +206,81 @@
     }
   }
 
+  /* --- Rubric sections (Notes / References / Examples) -------------- */
+
+  // Numpy-style docstring rubrics that we want to lift into editorial
+  // cards. Map: lowercased label → { variant class, gutter label }.
+  const RUBRIC_VARIANTS = {
+    notes: { kind: "is-notes", label: "Notes" },
+    note: { kind: "is-notes", label: "Notes" },
+    references: { kind: "is-refs", label: "References" },
+    reference: { kind: "is-refs", label: "References" },
+    examples: { kind: "is-examples", label: "Examples" },
+    example: { kind: "is-examples", label: "Examples" },
+    "see also": { kind: "is-seealso", label: "See also" },
+  };
+
+  function buildRubricCard(dd, rubric) {
+    const label = (rubric.textContent || "").trim().toLowerCase();
+    const variant = RUBRIC_VARIANTS[label];
+    if (!variant) return;
+
+    // Collect siblings AFTER the rubric until the next rubric or until
+    // a non-prose block (dl.py.*) starts a new section group.
+    const content = [];
+    let node = rubric.nextElementSibling;
+    while (node) {
+      // Stop when we hit another rubric.
+      if (
+        node.tagName === "P" &&
+        node.classList.contains("rubric")
+      )
+        break;
+      // Stop when we hit autodoc structural blocks the section JS
+      // already handles (attribute / method / class).
+      if (
+        node.tagName === "DL" &&
+        (node.classList.contains("attribute") ||
+          node.classList.contains("method") ||
+          node.classList.contains("classmethod") ||
+          node.classList.contains("staticmethod") ||
+          node.classList.contains("class") ||
+          node.classList.contains("function") ||
+          (node.classList.contains("field-list") &&
+            /^(parameters?|returns?|yields?|raises?)/i.test(
+              node.querySelector(":scope > dt")?.textContent?.trim() || ""
+            )))
+      )
+        break;
+      content.push(node);
+      node = node.nextElementSibling;
+    }
+    if (!content.length) {
+      // Empty rubric — remove and move on.
+      rubric.remove();
+      return;
+    }
+
+    const { card, body } = buildCardShell(variant.kind, variant.label, "");
+
+    const wrap = document.createElement("div");
+    wrap.className = "apicard-rubric";
+    body.appendChild(wrap);
+
+    rubric.parentNode.insertBefore(card, rubric);
+    rubric.remove();
+    for (const n of content) wrap.appendChild(n);
+  }
+
+  function buildRubricCards(dd) {
+    // Process in DOM order. Capture the live list first because
+    // buildRubricCard mutates the tree.
+    const rubrics = [
+      ...dd.querySelectorAll(":scope > p.rubric"),
+    ];
+    for (const r of rubrics) buildRubricCard(dd, r);
+  }
+
   /* --- Entry point -------------------------------------------------- */
 
   function groupOneClass(dd) {
@@ -220,14 +295,19 @@
     const params = findParamsFieldList(dd);
     if (params) buildParamsCard(dd, params);
 
-    // (b) Attributes card — collect AFTER parameters mutation so we
-    // don't pick up nested field-lists inside attribute dd's.
+    // (b) Rubric cards (Notes / References / Examples / See also) —
+    // BEFORE attrs/methods so the rubric's sibling-walk doesn't
+    // accidentally vacuum up an attribute block as 'content after
+    // Examples'.
+    buildRubricCards(dd);
+
+    // (c) Attributes card
     const attrs = [
       ...dd.querySelectorAll(":scope > dl.py.attribute, :scope > dl.py.property"),
     ];
     if (attrs.length) buildAttrsCard(dd, attrs);
 
-    // (c) Methods card
+    // (d) Methods card
     const methods = [
       ...dd.querySelectorAll(
         ":scope > dl.py.method, :scope > dl.py.classmethod, :scope > dl.py.staticmethod"

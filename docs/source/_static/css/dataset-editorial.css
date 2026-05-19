@@ -104,23 +104,12 @@ body {
   color: var(--ed-ink);
 }
 
-/* paper-grain texture under the article — matches the dot pattern in the
-   design. Fixed-position so it doesn't scroll-jitter. */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  background-image: radial-gradient(rgba(28, 26, 22, 0.04) 1px, transparent 1px);
-  background-size: 3px 3px;
-  mix-blend-mode: multiply;
-  z-index: 0;
-}
-
-html[data-theme="dark"] body::before {
-  background-image: radial-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-  mix-blend-mode: screen;
-}
+/* Paper-grain dot texture removed per the latest audit — it competed
+   with body copy and chart marks for visual hierarchy, and per the
+   data-viz "decoration that serves no informational function"
+   anti-pattern. Keep the rule shell here as documentation in case we
+   want to reintroduce a much-lower-opacity version scoped to hero
+   blocks only. */
 
 .bd-container,
 .bd-main,
@@ -426,28 +415,33 @@ aside.eegdash-ed-rail .actions {
   display: flex;
   border-top: 1px solid var(--ed-ink);
 }
+/* All three action links share the same calm treatment — the previous
+   inverted last-child chip ("Croissant" on dark navy) introduced an
+   off-system font weight and competed visually with the heading. Use
+   one family + two weights as a hard rule. */
 aside.eegdash-ed-rail .actions a {
   flex: 1;
   text-align: center;
   padding: 12px 8px;
+  font-family: var(--ed-font-sans);
   font-size: 11px;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  font-weight: 600;
+  font-weight: 500;
   color: var(--ed-ink);
+  background: transparent;
   text-decoration: none;
-  border-right: 1px solid var(--ed-ink);
+  border: 0;
+  border-right: 1px solid var(--ed-rule);
   border-bottom: 0;
 }
 aside.eegdash-ed-rail .actions a:last-child {
   border-right: 0;
-  background: var(--ed-ink);
-  color: var(--ed-paper);
 }
-aside.eegdash-ed-rail .actions a:hover { background: var(--ed-mark); }
-aside.eegdash-ed-rail .actions a:last-child:hover {
-  background: var(--ed-accent);
-  color: #fff;
+aside.eegdash-ed-rail .actions a:hover,
+aside.eegdash-ed-rail .actions a:focus-visible {
+  background: var(--ed-paper-2);
+  color: var(--ed-accent);
 }
 
 /* On narrow viewports stop the float so the rail sits below the hero. */
@@ -729,60 +723,76 @@ section:has(> .eegdash-ed-secnum:last-child) + section > h2 {
 /* =========================================================================
    About This Dataset — editorial 2-column flow
    ---------------------------------------------------------------------------
-   The README body sits below the field-card rail, so the full article
-   column is available. Single-column at 1100+ px gives ~150ch lines
-   which is hostile to read; capping at 720 px wastes the right half.
-   The editorial answer is 2-column flow: each column lands around
-   ~62ch and the section fills the column naturally. Headings and
-   wide blocks (blockquotes, dropdown panels) span both columns.
+   The README body lives inside `.eegdash-ed-readme` (emitted by the
+   generator). On wide viewports it flows as 2 columns at ~62ch each;
+   on narrow viewports it falls back to single column with a
+   comfortable measure. Path-style sub-headings (`func/`, `meg/`,
+   `stimuli/meg/`) get a compact mono treatment.
    ========================================================================= */
+.eegdash-ed-readme {
+  margin: 0;
+}
+
 @media (min-width: 1100px) {
-  article.bd-article #about-this-dataset {
+  article.bd-article .eegdash-ed-readme {
     column-count: 2;
     column-gap: 48px;
     column-rule: 1px solid var(--ed-rule);
   }
-  /* Section heading + closing secnum span both columns */
-  article.bd-article #about-this-dataset > h2,
-  article.bd-article #about-this-dataset > .eegdash-ed-secnum {
-    column-span: all;
-  }
-  /* The lede flows naturally inside columns; its drop-cap is fine in
-     the first column. Override the article-wide 780px prose cap so
-     paragraphs use the full column width inside the multi-column flow. */
-  article.bd-article #about-this-dataset p,
-  article.bd-article #about-this-dataset ul,
-  article.bd-article #about-this-dataset ol {
+  /* Lede sits at the top of column 1 — keep the drop-cap. */
+  article.bd-article .eegdash-ed-readme p,
+  article.bd-article .eegdash-ed-readme ul,
+  article.bd-article .eegdash-ed-readme ol {
     max-width: none;
   }
-  article.bd-article #about-this-dataset .eegdash-ed-lede,
-  article.bd-article #about-this-dataset .eegdash-ed-lede p {
+  article.bd-article .eegdash-ed-readme .eegdash-ed-lede,
+  article.bd-article .eegdash-ed-readme .eegdash-ed-lede p {
     max-width: none;
     margin-top: 0;
   }
-  /* Citations and the full-README dropdown break out — they look wrong
-     when split mid-quote across columns. */
-  article.bd-article #about-this-dataset blockquote,
-  article.bd-article #about-this-dataset details.sd-dropdown,
-  article.bd-article #about-this-dataset div.sd-dropdown {
+  /* Citations and the full-README dropdown break out — they look
+     wrong when split mid-quote across columns. */
+  article.bd-article .eegdash-ed-readme blockquote,
+  article.bd-article .eegdash-ed-readme details.sd-dropdown,
+  article.bd-article .eegdash-ed-readme div.sd-dropdown,
+  article.bd-article .eegdash-ed-readme .eegdash-readme-pathhead {
     column-span: all;
     break-inside: avoid;
     max-width: none;
   }
   /* Avoid orphaning a single line at the bottom of column 1. */
-  article.bd-article #about-this-dataset p {
+  article.bd-article .eegdash-ed-readme p {
     break-inside: avoid-column;
     orphans: 3;
     widows: 3;
   }
 }
-/* Below 1100px the field-card rail has wrapped under the hero anyway,
-   so single-column with a comfortable measure is fine. */
 @media (max-width: 1099px) {
-  article.bd-article #about-this-dataset .eegdash-ed-lede,
-  article.bd-article #about-this-dataset .eegdash-ed-lede p {
+  article.bd-article .eegdash-ed-readme .eegdash-ed-lede,
+  article.bd-article .eegdash-ed-readme .eegdash-ed-lede p {
     max-width: 780px;
   }
+}
+
+/* Path-style README sub-headings ("func/", "meg/", "stimuli/meg/").
+   These are directory markers, not prose — render compact mono with
+   a top rule so they read as quiet section breaks. */
+article.bd-article .eegdash-readme-pathhead {
+  margin: 24px 0 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--ed-rule);
+  font-family: var(--ed-font-mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ed-muted);
+}
+article.bd-article .eegdash-readme-pathhead > p {
+  margin: 0;
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+  max-width: none;
 }
 article.bd-article .eegdash-ed-lede p {
   margin-bottom: 14px;

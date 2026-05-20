@@ -112,6 +112,6 @@ def test_drift_in_one_field_doesnt_silently_pass_via_alias():
     """
     data = deepcopy(_load_fixture("valid_record_eeg"))
     # codespell-ignore-line: deliberate misspelling, used as drift signal
-    data["dataaset"] = data.pop("dataset")  # noqa: misspelled on purpose
+    data["dataaset"] = data.pop("dataset")  # misspelled on purpose — drift signal
     with pytest.raises(ValidationError, match="dataset"):
         RecordModel.model_validate(data)

@@ -44,7 +44,7 @@ def _get_record_metadata(win_ds: EEGWindowsDataset) -> dict:
     Parameters
     ----------
     win_ds : EEGWindowsDataset
-        A braindecode wimdowed EEG dataset.
+        A braindecode windowed EEG dataset.
 
     Returns
     -------
@@ -69,7 +69,7 @@ def _get_batch_metadata(
     Parameters
     ----------
     win_ds : EEGWindowsDataset
-        A braindecode wimdowed EEG dataset.
+        A braindecode windowed EEG dataset.
     X : ndarray
         A batch of EEG windows.
     crop_inds : list of tuples

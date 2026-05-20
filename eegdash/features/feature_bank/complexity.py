@@ -265,7 +265,8 @@ def complexity_lempel_ziv(x, /, threshold=None, normalize=True):
     threshold : float, optional
         Value used to binarize the signal. If None, the median is used.
     normalize : bool, optional
-        If True, normalizes the result by:
+        If True, normalizes the result by :math:`\log_2(n) / n`, where ``n``
+        is the signal length.
 
     Returns
     -------

@@ -511,9 +511,9 @@ channels.
 """
 
 channel_pairer_directed = channel_pairer(directed=True)
-r"""Decorator to mark a feature preprocessor as an undirected channel pairer.
+r"""Decorator to mark a feature preprocessor as a directed channel pairer.
 
-Specifies that the feature preprocessor operates on undirected pairs of
+Specifies that the feature preprocessor operates on directed pairs of
 channels.
 
 """

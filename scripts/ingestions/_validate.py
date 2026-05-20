@@ -330,7 +330,11 @@ def validate_digestion_output(
 
             except json.JSONDecodeError as e:
                 result.add_error(dataset_id, f"Invalid JSON in dataset file: {e}")
-            except Exception as e:
+            except (OSError, KeyError, ValueError, TypeError) as e:
+                # OSError: file disappeared / permission. KeyError: missing
+                # 'datasets' or other expected fields. ValueError/TypeError:
+                # validate_dataset received an unexpected shape. All
+                # accumulate into result.errors rather than crashing.
                 result.add_error(dataset_id, f"Error reading dataset: {e}")
 
         # Validate records
@@ -385,7 +389,9 @@ def validate_digestion_output(
 
             except json.JSONDecodeError as e:
                 result.add_error(dataset_id, f"Invalid JSON in records file: {e}")
-            except Exception as e:
+            except (OSError, KeyError, ValueError, TypeError) as e:
+                # Same rationale as the dataset-file handler above. Bad
+                # records accumulate; we don't crash the whole digest.
                 result.add_error(dataset_id, f"Error reading records: {e}")
 
         # Flag empty datasets

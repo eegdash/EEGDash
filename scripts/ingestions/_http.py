@@ -23,7 +23,7 @@ except ImportError:  # pragma: no cover - optional dependency
 
 try:
     import hishel
-except Exception:  # pragma: no cover - optional dependency
+except ImportError:  # pragma: no cover - optional dependency
     hishel = None
 
 DEFAULT_USER_AGENT = "EEGDash-DataHarvester/1.0"
@@ -68,10 +68,15 @@ def _build_transport() -> httpx.BaseTransport:
             try:
                 storage = hishel.FileStorage(base_path=cache_dir)
                 return hishel.CacheTransport(storage=storage)
-            except Exception:
+            except (OSError, PermissionError, ValueError):
+                # OSError covers ENOENT/EACCES on the cache dir; ValueError
+                # covers hishel's "invalid base_path" check. Cache disabled
+                # but the request path still works → silent fall-through.
                 pass
         return hishel.CacheTransport()
-    except Exception:
+    except (OSError, ImportError, AttributeError):
+        # ImportError if hishel is half-installed; AttributeError if its
+        # API changed between releases. Fall back to plain HTTPTransport.
         return httpx.HTTPTransport(retries=0)
 
 

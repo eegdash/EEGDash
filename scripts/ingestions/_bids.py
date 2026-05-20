@@ -186,7 +186,10 @@ def count_bad_channels(channels_tsv_path: Path) -> int | None:
             return sum(
                 1 for row in reader if str(row.get(col, "")).strip().lower() == "bad"
             )
-    except Exception:
+    except (OSError, csv.Error, UnicodeDecodeError):
+        # OSError: file disappeared. csv.Error: malformed TSV with
+        # encoding/quote issues. UnicodeDecodeError: TSV with non-UTF-8
+        # bytes (occasionally seen in legacy datasets).
         return None
 
 

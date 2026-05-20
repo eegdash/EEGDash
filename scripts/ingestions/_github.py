@@ -7,7 +7,11 @@ REST API via our `_http` helper to keep scripts runnable in minimal environments
 from __future__ import annotations
 
 import json
+import logging
 import os
+
+logger = logging.getLogger(__name__)
+
 from collections.abc import Iterator
 from datetime import datetime, timezone
 from typing import Any
@@ -45,7 +49,7 @@ def _pygithub_client(
 ) -> Any | None:
     try:
         from github import Github  # type: ignore[import-not-found]
-    except Exception:
+    except ImportError:
         return None
     return Github(
         login_or_token=token or None,
@@ -83,8 +87,15 @@ def iter_org_repos(
                     "watchers_count": getattr(repo, "watchers_count", None),
                 }
             return
-        except Exception:
-            pass
+        except Exception as e:  # noqa: BLE001 — PyGithub raises arbitrary base classes; see note
+            # PyGithub raises a stable set of named exceptions
+            # (GithubException, RateLimitExceededException, BadCredentialsException,
+            # UnknownObjectException, etc.) but ALSO wraps urllib3 / ssl /
+            # socket errors without normalising them. The safe approach
+            # is a broad catch with a logged context — the alternative
+            # (listing every wrapped class) is fragile across pygithub
+            # versions. The noqa documents the deliberate exception.
+            logger.debug("PyGithub fast-path failed, falling back to REST: %s", e)
 
     headers_extra = {"Authorization": f"Bearer {token}"} if token else None
     headers = build_headers(
@@ -163,8 +174,8 @@ def fetch_repo_file_text(
             if not decoded:
                 return None
             return decoded.decode("utf-8", errors="replace")
-        except Exception:
-            pass
+        except Exception as e:  # noqa: BLE001 — PyGithub wraps urllib3/socket errors heterogeneously
+            logger.debug("PyGithub file-fetch failed, falling back to raw HTTP: %s", e)
 
     url = f"{GITHUB_RAW_URL}/{organization}/{repo}/{ref}/{path}"
     text, response = request_text(
@@ -233,6 +244,6 @@ def fetch_repo_file_json(
         return None
     try:
         payload = json.loads(text)
-    except Exception:
+    except (json.JSONDecodeError, ValueError):
         return None
     return payload if isinstance(payload, dict) else None

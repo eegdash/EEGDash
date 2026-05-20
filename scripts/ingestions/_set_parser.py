@@ -18,6 +18,17 @@ from typing import Any
 
 logger = logging.getLogger(__name__)
 
+# scipy's MatReadError isn't in the public io namespace, but it's the
+# canonical class raised for truncated/corrupt MAT files. Importing it
+# lazily so an environment without scipy still loads this module —
+# falling back to a no-op base class so the `except` below is harmless.
+try:
+    from scipy.io.matlab._miobase import MatReadError as _MatReadError
+except ImportError:  # pragma: no cover — scipy unavailable
+
+    class _MatReadError(Exception):
+        pass
+
 
 def parse_set_metadata(set_path: Path | str) -> dict[str, Any] | None:
     """Parse metadata from EEGLAB .set file.
@@ -123,7 +134,12 @@ def parse_set_metadata(set_path: Path | str) -> dict[str, Any] | None:
                         # Update nchans if not set
                         if "nchans" not in result:
                             result["nchans"] = len(ch_names)
-                except Exception as e:
+                except (AttributeError, IndexError, TypeError, ValueError) as e:
+                    # .chanlocs is an arbitrary MATLAB structure — any of
+                    # these mean the labels field isn't shaped like we
+                    # expect. Recoverable: we just skip channel-name
+                    # extraction and let downstream callers fall back to
+                    # synthesised names.
                     logger.debug("Could not extract channel names: %s", e)
 
             # Check for external data file reference
@@ -144,8 +160,24 @@ def parse_set_metadata(set_path: Path | str) -> dict[str, Any] | None:
 
     except ImportError:
         logger.debug("scipy not available for .set parsing")
-    except Exception as e:
+    except (
+        OSError,
+        ValueError,
+        KeyError,
+        TypeError,
+        IndexError,
+        NotImplementedError,
+    ) as e:
+        # `scipy.io.loadmat` raises NotImplementedError on MAT-v7.3 (HDF5)
+        # files, which is the trigger for our h5py fallback below. The
+        # other classes cover: OSError (file not found / unreadable),
+        # ValueError (truncated or wrong magic), KeyError (missing 'EEG'
+        # struct in the .set), TypeError (unexpected MATLAB field shape).
         logger.debug("scipy.io.loadmat failed: %s", e)
+    except _MatReadError as e:
+        # MatReadError is scipy's own class. Imported lazily below the
+        # try so the import isn't required when scipy is missing.
+        logger.debug("scipy.io.loadmat: corrupted MAT file: %s", e)
 
     # Try h5py for HDF5-based .set files (newer EEGLAB format)
     try:
@@ -183,7 +215,12 @@ def parse_set_metadata(set_path: Path | str) -> dict[str, Any] | None:
 
     except ImportError:
         logger.debug("h5py not available for .set parsing")
-    except Exception as e:
+    except (OSError, ValueError, KeyError) as e:
+        # h5py raises OSError for "not an HDF5 file" (which happens on
+        # every MAT-v5 .set), ValueError for malformed datasets, and
+        # KeyError when navigating an unexpected struct layout. None
+        # of these are programmer bugs — log and fall through to the
+        # 'return None or partial result' tail.
         logger.debug("h5py parsing failed: %s", e)
 
     return None if not result else result

@@ -8,10 +8,13 @@ Reference: https://github.com/fNIRS/snirf
 
 from __future__ import annotations
 
+import logging
 from pathlib import Path
 from typing import Any
 
 from _parser_utils import validate_file_path
+
+logger = logging.getLogger(__name__)
 
 
 def parse_snirf_metadata(snirf_path: Path | str) -> dict[str, Any] | None:
@@ -67,14 +70,21 @@ def parse_snirf_metadata(snirf_path: Path | str) -> dict[str, Any] | None:
         finally:
             try:
                 raw.close()
-            except Exception:
+            except (OSError, AttributeError):
+                # OSError from already-closed file; AttributeError if `raw`
+                # wasn't a real MNE object (unlikely but defensive).
                 pass
 
     except ImportError:
         # MNE not available, try fallback h5py parser
         return _parse_snirf_with_h5py(snirf_path)
-    except Exception:
-        # MNE failed, try fallback
+    except (OSError, ValueError, KeyError, RuntimeError) as e:
+        # MNE's SNIRF reader raises RuntimeError on unsupported variants,
+        # OSError on file-system issues, ValueError on schema mismatch,
+        # KeyError on missing fields. All recoverable; the h5py fallback
+        # catches a different subset, so retrying via the fallback is
+        # cheap and worth doing.
+        logger.debug("MNE SNIRF parse failed for %s: %s — trying h5py", snirf_path, e)
         return _parse_snirf_with_h5py(snirf_path)
 
 
@@ -176,7 +186,11 @@ def _parse_snirf_with_h5py(snirf_path: Path) -> dict[str, Any] | None:
             if ch_names:
                 result["ch_names"] = ch_names
 
-    except Exception:
+    except (OSError, ValueError, KeyError, AttributeError) as e:
+        # OSError = not a valid HDF5; KeyError = expected dataset path
+        # missing (different SNIRF version); ValueError/AttributeError =
+        # unexpected element shape. All are recoverable parse failures.
+        logger.debug("h5py SNIRF parse failed for %s: %s", snirf_path, e)
         return None
 
     if not result:

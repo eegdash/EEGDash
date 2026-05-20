@@ -116,7 +116,14 @@ def test_parse_set_is_deterministic(buf: bytes, tmp_path_factory):
 # return *something* (dict, possibly with `nchans=None`) on well-formed
 # INI even if the keys are wrong.
 ini_value = st.text(
-    alphabet=st.characters(blacklist_characters="\n\r=[]"),
+    # ``blacklist_categories=("Cs",)`` excludes Unicode surrogates
+    # (\ud800-\udfff) which are valid str codepoints but unencodable as
+    # UTF-8 and would crash ``f.write_text``. The newline/=[] exclusions
+    # keep the value within a single INI value cell.
+    alphabet=st.characters(
+        blacklist_characters="\n\r=[]",
+        blacklist_categories=("Cs",),
+    ),
     min_size=0,
     max_size=64,
 )
@@ -124,6 +131,7 @@ ini_key = st.text(
     alphabet=st.characters(
         whitelist_categories=("L", "Nd"),
         whitelist_characters="_",
+        blacklist_categories=("Cs",),
     ),
     min_size=1,
     max_size=32,

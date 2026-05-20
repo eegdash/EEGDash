@@ -208,7 +208,7 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
         auth_token: str | None = None,
         on_error: str = "raise",
         max_concurrency: int = 20,
-        description_precedence: str = "record",
+        description_precedence: str = "participant_tsv",
         **kwargs,
     ):
         # Internal-only kwargs

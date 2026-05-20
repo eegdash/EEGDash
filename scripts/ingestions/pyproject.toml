@@ -160,3 +160,18 @@ exclude_lines = [
 ]
 show_missing = true
 skip_covered = false
+
+# [tool.mutmut] config is intentionally absent.
+#
+# Mutmut 3.x parses its config differently from the way mutmut 2.x docs
+# describe; the keys (paths_to_mutate / tests_dir / runner) get split
+# letter-by-letter into pytest arguments and fail.  See
+# ROBUSTNESS/findings-phase-4.md for the full diagnosis.
+#
+# Recommended invocation for now (run interactively, not via config):
+#
+#   cd scripts/ingestions
+#   mutmut run --paths-to-mutate=_vhdr_parser.py
+#
+# When mutmut 3.x's config format stabilises, restore this block. The
+# target kill ratio is >= 60% on _vhdr_parser.py before expanding scope.

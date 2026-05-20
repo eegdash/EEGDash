@@ -104,6 +104,38 @@
   <script defer src="{{ pathto('_static/js/hero-search.js', 1) }}"></script>
   {%- endif %}
 
+  {# Per-dataset doc pages embed a file-tree widget via the
+     `dataset-explorer` directive. The CSS + JS live in `_static/` and
+     are loaded only here so other pages don't pay the ~12 KB cost. #}
+  {%- if pagename.startswith("api/dataset/eegdash.dataset.") %}
+  <link rel="stylesheet" href="{{ pathto('_static/css/dataset-explorer.css', 1) }}">
+  <script defer src="{{ pathto('_static/js/dataset-explorer.js', 1) }}"></script>
+
+  {# Editorial Brief skin — per-dataset only. Pairs Spectral (serif) with
+     Inter (UI sans) and JetBrains Mono (code), keyed to the EEGdash
+     brand pair #006ca3 / #f7941d. Site-wide fonts (IBM Plex Mono /
+     Source Sans 3 / Space Grotesk / Fraunces) are loaded in the global
+     preload above; the three editorial families ride a second preload
+     so the rest of the site doesn't pay the bytes. #}
+  <link
+    rel="preload"
+    as="style"
+    href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap"
+    onload="this.onload=null;this.rel='stylesheet'">
+  <noscript>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap">
+  </noscript>
+  <link rel="stylesheet" href="{{ pathto('_static/css/dataset-editorial.css', 1) }}">
+  {# Tag <html> so dataset-editorial.css rules can scope themselves with
+     `html.editorial-dataset …` for higher specificity without needing
+     to `!important` everything to win over pydata-sphinx-theme. The
+     class is added inline (no FOUC) and removed if the page reloads
+     into a non-dataset section. #}
+  <script>document.documentElement.classList.add('editorial-dataset');</script>
+  {%- endif %}
+
   <!-- Google Tag Manager — deferred to DOMContentLoaded so the GTM
        bootstrap no longer blocks first-paint or the Sphinx search-index
        load. Functionally equivalent to the inline snippet below but

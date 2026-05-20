@@ -176,14 +176,15 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
 
         Skipped recordings are flagged via ``ds._skipped`` so callers can
         filter them out with a list comprehension after iteration.
-    description_precedence : str, default "record"
+    description_precedence : str, default "participant_tsv"
         Which source wins when the same field appears in both the record and
         the embedded ``participant_tsv`` data:
 
-        - ``"record"`` (default): the record-level value is kept.
-        - ``"participant_tsv"``: the ``participant_tsv`` value overwrites the
-          record value, including ``None`` values. Raises ``ValueError`` if
-          not one of the above.
+        - ``"participant_tsv"`` (default): the ``participant_tsv`` value
+          overwrites the record value, including ``None`` values.
+        - ``"record"``: the record-level value is kept.
+
+        Raises ``ValueError`` if not one of the above.
     **kwargs : dict
         Additional keyword arguments serving two purposes:
 

@@ -117,9 +117,9 @@ def test_dataset_initialization_path_parity(tmp_path, parity_record):
 @pytest.mark.parametrize(
     "precedence,record_val,tsv_val,expected",
     [
-        ("record", 30, 99, 30),
         ("participant_tsv", 30, 99, 99),
         ("participant_tsv", 30, None, None),
+        ("record", 30, 99, 30),
     ],
 )
 def test_build_description_precedence(precedence, record_val, tsv_val, expected):

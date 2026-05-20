@@ -1,0 +1,58 @@
+name: Ingestions — Lint + Test
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/ingestions/**'
+      - '.github/workflows/ingestions-lint-and-test.yml'
+  push:
+    branches: [main, master]
+    paths:
+      - 'scripts/ingestions/**'
+  workflow_dispatch: {}
+
+concurrency:
+  group: ingestions-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: Lint (ruff)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+      - name: Install ruff
+        run: pip install ruff>=0.4
+      - name: Ruff check
+        run: ruff check scripts/ingestions/
+      - name: Ruff format --check
+        run: ruff format --check scripts/ingestions/
+
+  test:
+    name: Pytest (unit + property + smoke)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: lint
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+      - name: Install ingestion package + dev deps
+        run: pip install -e "scripts/ingestions[dev]"
+      - name: Run tests (offline, no -m network)
+        working-directory: scripts/ingestions
+        run: pytest -ra --tb=short -m "not network and not slow"
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ingestions-coverage
+          path: scripts/ingestions/htmlcov/
+          retention-days: 14

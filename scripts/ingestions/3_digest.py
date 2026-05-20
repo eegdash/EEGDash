@@ -39,6 +39,17 @@ os.environ.setdefault("NUMBA_CACHE_DIR", str(Path(".cache") / "numba"))
 import mne
 import numpy as np
 import pandas as pd
+from eegdash.dataset.bids_dataset import _COMPANION_FILES, EEGBIDSDataset
+from eegdash.dataset.io import _repair_participants_tsv_ids
+from eegdash.schemas import (
+    NEMAR_ROOT_METADATA_FILES,
+    Storage,
+    create_dataset,
+    create_record,
+)
+from mne_bids.config import ALLOWED_DATATYPE_EXTENSIONS
+from tqdm import tqdm
+
 from _constants import (
     CTF_INTERNAL_EXTENSIONS,
     MEF3_INTERNAL_DIRS,
@@ -58,17 +69,6 @@ from _montage import extract_layout
 from _set_parser import parse_set_metadata
 from _snirf_parser import parse_snirf_metadata
 from _vhdr_parser import parse_vhdr_metadata
-from mne_bids.config import ALLOWED_DATATYPE_EXTENSIONS  # noqa: E402
-from tqdm import tqdm
-
-from eegdash.dataset.bids_dataset import _COMPANION_FILES, EEGBIDSDataset
-from eegdash.dataset.io import _repair_participants_tsv_ids
-from eegdash.schemas import (
-    NEMAR_ROOT_METADATA_FILES,
-    Storage,
-    create_dataset,
-    create_record,
-)
 
 # Storage configuration per source. Keep aligned with
 # ``eegdash/dataset/_source_inference.py::STORAGE_CONFIGS``. NEMAR uses a
@@ -2539,7 +2539,7 @@ def digest_dataset(
                 layout_result = extract_layout(
                     Path(str(bids_file)), dataset_dir, datatype=record_datatype
                 )
-            except Exception as layout_exc:  # noqa: BLE001
+            except Exception as layout_exc:
                 # best-effort; missing sidecars are fine
                 layout_result = None
                 errors.append(
@@ -2747,7 +2747,7 @@ def _dataset_boundary_profile(dataset_id: str, input_dir: Path) -> str:
                     f"zip_contents={zip_contents_count}",
                 ]
             )
-        except Exception as exc:  # noqa: BLE001
+        except Exception as exc:
             parts.append(f"manifest_error={exc}")
 
     try:
@@ -2755,7 +2755,7 @@ def _dataset_boundary_profile(dataset_id: str, input_dir: Path) -> str:
         root_dirs = sum(1 for p in root_entries if p.is_dir())
         root_files = sum(1 for p in root_entries if p.is_file() or p.is_symlink())
         parts.extend([f"root_dirs={root_dirs}", f"root_files={root_files}"])
-    except Exception as exc:  # noqa: BLE001
+    except Exception as exc:
         parts.append(f"root_scan_error={exc}")
 
     return " ".join(parts)
@@ -2809,7 +2809,7 @@ def _digest_dataset_worker(
                     dataset_id,
                     f"digest_dataset returned {type(result).__name__}, expected dict",
                 )
-        except BaseException as exc:  # noqa: BLE001
+        except BaseException as exc:
             result = _worker_error_result(
                 dataset_id,
                 f"{type(exc).__name__}: {exc}",
@@ -2897,7 +2897,7 @@ def _collect_finished_process(active: dict[str, Any]) -> dict[str, Any]:
             f"worker exited without returning a result (exitcode={process.exitcode})",
             elapsed_seconds=elapsed,
         )
-    except Exception as exc:  # noqa: BLE001
+    except Exception as exc:
         result = _worker_error_result(
             dataset_id,
             f"failed to collect worker result: {type(exc).__name__}: {exc}",

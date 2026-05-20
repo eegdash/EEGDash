@@ -168,7 +168,7 @@ def main() -> int:
                 print(f"Updated dataset {dsid}")
             else:
                 print(f"Unchanged {dsid} (already nemar?)")
-        except Exception as e:  # noqa: BLE001 — surface any HTTP/transport error
+        except Exception as e:
             dataset_failed.append((dsid, str(e)))
             print(f"ERROR dataset {dsid}: {e}", file=sys.stderr)
 

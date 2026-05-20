@@ -1,0 +1,27 @@
+Brain Vision Data Exchange Marker File, Version 1.0
+
+[Common Infos]
+Codepage=UTF-8
+DataFile=sub-01_ses-iemu_task-film_acq-clinical_run-1_ieeg.eeg
+
+[Marker Infos]
+; Each entry: Mk<Marker number>=<Type>,<Description>,<Position in data points>,
+; <Size in data points>, <Channel number (0 = marker is related to all channels)>
+; Fields are delimited by commas, some fields might be omitted (empty).
+; Commas in type or description are coded as "\1".
+Mk1=New Segment,,1,1,0,19000101000000000000
+Mk2=Stimulus,start task,43634,0,0
+Mk3=Stimulus,music,43673,61440,0
+Mk4=Stimulus,speech,105113,61440,0
+Mk5=Stimulus,music,166553,61440,0
+Mk6=Stimulus,speech,227993,61440,0
+Mk7=Stimulus,music,289433,61440,0
+Mk8=Stimulus,speech,350873,61442,0
+Mk9=Stimulus,music,412315,61440,0
+Mk10=Stimulus,speech,473755,61446,0
+Mk11=Stimulus,music,535201,61433,0
+Mk12=Stimulus,speech,596635,61440,0
+Mk13=Stimulus,music,658075,61442,0
+Mk14=Stimulus,speech,719517,61440,0
+Mk15=Stimulus,music,780957,61544,0
+Mk16=Stimulus,end task,842502,0,0

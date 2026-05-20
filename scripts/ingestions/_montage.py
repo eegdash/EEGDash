@@ -66,8 +66,9 @@ import json
 import logging
 import re
 import threading
+from collections.abc import Iterable
 from pathlib import Path
-from typing import Any, Iterable
+from typing import Any
 
 import numpy as np
 import pandas as pd
@@ -83,7 +84,7 @@ _COORDSYS_PREFIXES = ("EEG", "iEEG", "MEG", "EMG", "NIRS")
 
 
 def _round_mm(v: float) -> int:
-    return int(round(v * 1000))
+    return round(v * 1000)
 
 
 def _hash_sensors(modality: str, sensors: list[dict[str, Any]]) -> str:
@@ -93,16 +94,19 @@ def _hash_sensors(modality: str, sensors: list[dict[str, Any]]) -> str:
     cap from aliasing on name + position (vanishingly unlikely, but free
     to prevent).
     """
-    canonical = [modality] + sorted(
-        (
-            s.get("name", ""),
-            _round_mm(s.get("x", 0.0)),
-            _round_mm(s.get("y", 0.0)),
-            _round_mm(s.get("z", 0.0)),
-            s.get("type", ""),
-        )
-        for s in sensors
-    )
+    canonical = [
+        modality,
+        *sorted(
+            (
+                s.get("name", ""),
+                _round_mm(s.get("x", 0.0)),
+                _round_mm(s.get("y", 0.0)),
+                _round_mm(s.get("z", 0.0)),
+                s.get("type", ""),
+            )
+            for s in sensors
+        ),
+    ]
     payload = repr(canonical).encode("utf-8")
     return hashlib.sha1(payload).hexdigest()[:16]
 
@@ -235,7 +239,7 @@ def _extract_tsv_layout(
         return None
     try:
         sensors = _parse_sensor_tsv(tsv, extras=extras)
-    except Exception as exc:  # noqa: BLE001
+    except Exception as exc:
         LOGGER.warning("[layout.%s] parse error on %s: %s", modality, tsv, exc)
         return None
     if len(sensors) < min_sensors:
@@ -355,9 +359,9 @@ def _load_mne_templates() -> dict[str, dict[str, tuple[float, float, float]]]:
                         k.upper(): (float(v[0]), float(v[1]), float(v[2]))
                         for k, v in m.get_positions()["ch_pos"].items()
                     }
-                except Exception:  # noqa: BLE001 — skip anything MNE can't build here
+                except Exception:
                     continue
-        except Exception as exc:  # noqa: BLE001
+        except Exception as exc:
             LOGGER.warning("[template] MNE import failed (%s); pool 1 empty", exc)
 
         # Pool 2 — the electrode-explorer extras. montages.json stores each
@@ -632,10 +636,10 @@ def _fetch_fif_metadata_streaming(data_file: Path, url: str, total: int) -> str 
     populate just the metadata prefix, and let MNE seek-but-not-read
     the raw-data tail (it's zeros, which MNE skips).
     """
-    import struct  # noqa: PLC0415
-    import tempfile  # noqa: PLC0415
+    import struct
+    import tempfile
 
-    from _parser_utils import fetch_bytes_from_s3  # noqa: PLC0415
+    from _parser_utils import fetch_bytes_from_s3
 
     # Try progressively larger buffers. 306-channel Neuromag files end
     # their MEAS_INFO around 3-8 MB; 4 MB covers most, 16 MB is a safe
@@ -697,7 +701,7 @@ def _fetch_fif_metadata_streaming(data_file: Path, url: str, total: int) -> str 
                 total / (1024 * 1024),
             )
             return tmp.name
-        except Exception as exc:  # noqa: BLE001
+        except Exception as exc:
             LOGGER.debug("[layout.meg] streaming stitch %s failed: %s", url, exc)
             try:
                 Path(tmp.name).unlink()
@@ -748,10 +752,10 @@ def _fetch_fif_metadata_via_directory(data_file: Path, url: str) -> str | None:
     Returns ``None`` when the file lacks a usable directory (streaming-
     only FIF) or the fetch fails.
     """
-    import struct  # noqa: PLC0415
-    import tempfile  # noqa: PLC0415
+    import struct
+    import tempfile
 
-    from _parser_utils import fetch_bytes_from_s3, head_content_length  # noqa: PLC0415
+    from _parser_utils import fetch_bytes_from_s3, head_content_length
 
     # 1. Total size
     total = head_content_length(url, timeout=30.0)
@@ -847,7 +851,7 @@ def _fetch_fif_metadata_via_directory(data_file: Path, url: str) -> str | None:
             len(merged),
         )
         return tmp.name
-    except Exception as exc:  # noqa: BLE001
+    except Exception as exc:
         LOGGER.debug("[layout.meg] range stitch %s failed: %s", url, exc)
         try:
             Path(tmp.name).unlink()
@@ -906,7 +910,7 @@ def extract_meg_layout(
             else:
                 LOGGER.info("[layout.meg] unrecognized MEG format: %s", data_file)
                 return None
-        except Exception as direct_exc:  # noqa: BLE001
+        except Exception as direct_exc:
             LOGGER.debug(
                 "[layout.meg] direct read %s failed: %s", data_file, direct_exc
             )
@@ -916,7 +920,7 @@ def extract_meg_layout(
             # investigated yet.
             if suffix != ".fif":
                 return None
-            from _parser_utils import (  # noqa: PLC0415
+            from _parser_utils import (
                 build_s3_url,
                 extract_dataset_info,
                 is_broken_symlink,
@@ -943,7 +947,7 @@ def extract_meg_layout(
                 return None
             try:
                 info = mne.io.read_info(tmp_path, verbose="error")
-            except Exception as partial_exc:  # noqa: BLE001
+            except Exception as partial_exc:
                 LOGGER.info(
                     "[layout.meg] %s: directory-reconstructed FIF still "
                     "unparsable (%s)",

@@ -501,15 +501,15 @@ def export_sankey(registry: dict, out_dir: Path) -> None:
         return
     fig = copy.deepcopy(fig_orig)
     fig = clean_for_print(fig)
-    # Fix Sankey for print: smaller font, clean text rendering
+    # Print font: reviewer P3 asked for larger Sankey labels (>=12pt).
     for trace in fig.data:
         if hasattr(trace, "node") and trace.node:
             trace.node.label = [l if l else "" for l in (trace.node.label or [])]
-            trace.textfont = dict(size=8, family=PUB_FONT, color="black")
+            trace.textfont = dict(size=12, family=PUB_FONT, color="black")
         if hasattr(trace, "link") and trace.link:
             trace.link.label = [""] * len(trace.link.label or [])
     fig.update_layout(
-        font=dict(size=8, family=PUB_FONT),
+        font=dict(size=12, family=PUB_FONT),
         margin=dict(l=5, r=5, t=30, b=30),
     )
     # Use SVG->PDF pipeline to bypass Chromium text duplication bug
@@ -706,7 +706,7 @@ def _annotate_bar_totals(fig: go.Figure) -> None:
                 y=total,
                 text=str(int(total)),
                 showarrow=False,
-                font=dict(size=14, family=PUB_FONT, color="black"),
+                font=dict(size=18, family=PUB_FONT, color="black"),
                 yshift=10,
                 xanchor="center",
             )
@@ -776,28 +776,33 @@ def _split_clinical_panels(
     return fig_eeg, fig_noneeg
 
 
-_CLIN_FONT = dict(size=18, family=PUB_FONT)
+_CLIN_FONT = dict(size=24, family=PUB_FONT)  # P11: bumped ~30% for 89mm subfigure
 
 
 def _style_clinical(figure, y_title):
-    """Style clinical chart for subfigure display."""
+    """Style clinical chart for subfigure display.
+
+    P11: text sizes increased ~30% per reviewer request. clinical_studies.pdf
+    is rendered at half-width (~89mm) in the paper, so per the Schwabish/Cairo
+    rule subfigures need ~2x larger fonts than full-width figures.
+    """
     figure = _collapse_clinical_categories(figure)
     figure.update_layout(
-        yaxis_title=dict(text=y_title, font=dict(size=20, family=PUB_FONT)),
-        xaxis_title=dict(font=dict(size=20, family=PUB_FONT)),
+        yaxis_title=dict(text=y_title, font=dict(size=26, family=PUB_FONT)),
+        xaxis_title=dict(font=dict(size=26, family=PUB_FONT)),
         font=_CLIN_FONT,
         legend=dict(
             orientation="h",
             yanchor="top",
-            y=-0.25,
+            y=-0.28,
             xanchor="center",
             x=0.5,
-            font=dict(size=14, family=PUB_FONT),
+            font=dict(size=18, family=PUB_FONT),
         ),
-        margin=dict(l=70, r=20, t=30, b=110),
+        margin=dict(l=80, r=20, t=30, b=130),
     )
-    figure.update_xaxes(tickfont=dict(size=16, family=PUB_FONT))
-    figure.update_yaxes(tickfont=dict(size=16, family=PUB_FONT))
+    figure.update_xaxes(tickfont=dict(size=21, family=PUB_FONT))
+    figure.update_yaxes(tickfont=dict(size=21, family=PUB_FONT))
     return figure
 
 
@@ -835,21 +840,21 @@ def export_clinical(registry: dict, out_dir: Path) -> None:
         fig_eeg, fig_noneeg = _split_clinical_panels(fig)
         for panel in [fig_eeg, fig_noneeg]:
             panel.update_layout(
-                yaxis_title=dict(text=y_title, font=dict(size=20, family=PUB_FONT)),
-                xaxis_title=dict(font=dict(size=20, family=PUB_FONT)),
+                yaxis_title=dict(text=y_title, font=dict(size=26, family=PUB_FONT)),
+                xaxis_title=dict(font=dict(size=26, family=PUB_FONT)),
                 font=_CLIN_FONT,
                 legend=dict(
                     orientation="h",
                     yanchor="top",
-                    y=-0.25,
+                    y=-0.28,
                     xanchor="center",
                     x=0.5,
-                    font=dict(size=14, family=PUB_FONT),
+                    font=dict(size=18, family=PUB_FONT),
                 ),
-                margin=dict(l=70, r=20, t=30, b=110),
+                margin=dict(l=80, r=20, t=30, b=130),
             )
-            panel.update_xaxes(tickfont=dict(size=16, family=PUB_FONT))
-            panel.update_yaxes(tickfont=dict(size=16, family=PUB_FONT))
+            panel.update_xaxes(tickfont=dict(size=21, family=PUB_FONT))
+            panel.update_yaxes(tickfont=dict(size=21, family=PUB_FONT))
             _annotate_bar_totals(panel)
 
         export_pdf(
@@ -1041,8 +1046,10 @@ def export_ridgeline(df_raw: pd.DataFrame, out_dir: Path) -> None:
                 tickvals=[idx * row_spacing for idx in range(len(order))],
                 ticktext=order,
                 showgrid=False,
+                # Extra headroom below 0 to fit the raincloud box trace
+                # added under each ridge (centred at baseline - 0.16).
                 range=[
-                    -0.25,
+                    -0.4,
                     max(0.35, (len(order) - 1) * row_spacing + amplitude + 0.25),
                 ],
                 tickfont=dict(size=10),

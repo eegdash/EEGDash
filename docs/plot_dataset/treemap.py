@@ -12,6 +12,7 @@ import plotly.graph_objects as go
 try:  # Allow import both as a package and as a script
     from .colours import (
         CANONICAL_MAP,
+        EXPERIMENTAL_MODALITY_COLORS,
         MODALITY_COLOR_MAP,
         MODALITY_EMOJI,
         PATHOLOGY_COLOR_MAP,
@@ -22,6 +23,7 @@ try:  # Allow import both as a package and as a script
 except ImportError:  # pragma: no cover - fallback for direct script execution
     from colours import (  # type: ignore
         CANONICAL_MAP,
+        EXPERIMENTAL_MODALITY_COLORS,
         MODALITY_COLOR_MAP,
         MODALITY_EMOJI,
         PATHOLOGY_COLOR_MAP,
@@ -343,7 +345,11 @@ def _build_nodes(
             row["hours_from_records"],
             font_px=16,
         )
-        color = MODALITY_COLOR_MAP.get(modality, _DEFAULT_COLOR)
+        # P7: colour modality cells with the same EXPERIMENTAL_MODALITY_COLORS
+        # palette used by the bubble chart, so Figs. 2 and 3 are harmonised.
+        color = EXPERIMENTAL_MODALITY_COLORS.get(
+            modality, MODALITY_COLOR_MAP.get(modality, _DEFAULT_COLOR)
+        )
         legend_label = (
             f"{(emoji_symbol + ' ') if emoji_symbol else ''}{modality}".strip()
         )
@@ -385,7 +391,10 @@ def _build_nodes(
         if dataset_name == "Unknown":
             color = _DEFAULT_COLOR
         else:
-            color = MODALITY_COLOR_MAP.get(modality, _DEFAULT_COLOR)
+            # P7: keep dataset tiles in the same modality palette as the bubble chart
+            color = EXPERIMENTAL_MODALITY_COLORS.get(
+                modality, MODALITY_COLOR_MAP.get(modality, _DEFAULT_COLOR)
+            )
         nodes.append(
             {
                 "id": node_id,

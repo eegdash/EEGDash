@@ -44,7 +44,7 @@ def run_step(step_name, command, cwd):
 
     end_time = time.time()
     duration = end_time - start_time
-    print(f"\n{step_name} completed in {str(timedelta(seconds=int(duration)))}")
+    print(f"\n{step_name} completed in {timedelta(seconds=int(duration))!s}")
     return duration
 
 
@@ -111,7 +111,7 @@ def main():
     if args.limit:
         cmd_1.extend(["--limit", str(args.limit)])
     if args.dataset_id:
-        cmd_1.extend(["--dataset-ids"] + args.dataset_id)
+        cmd_1.extend(["--dataset-ids", *args.dataset_id])
 
     timings["fetch"] = run_step("Fetch Sources", cmd_1, scripts_dir)
 
@@ -129,7 +129,7 @@ def main():
     if args.limit:
         cmd_2.extend(["--limit", str(args.limit)])
     if args.dataset_id:
-        cmd_2.extend(["--datasets"] + args.dataset_id)
+        cmd_2.extend(["--datasets", *args.dataset_id])
 
     # Note: 2_clone.py handles its own connection pooling
     timings["clone"] = run_step("Clone Datasets", cmd_2, scripts_dir)
@@ -146,7 +146,7 @@ def main():
     if args.limit:
         cmd_3.extend(["--limit", str(args.limit)])
     if args.dataset_id:
-        cmd_3.extend(["--datasets"] + args.dataset_id)
+        cmd_3.extend(["--datasets", *args.dataset_id])
 
     timings["digest"] = run_step("Digest Datasets", cmd_3, scripts_dir)
 
@@ -176,12 +176,12 @@ def main():
     print(f"\n{'=' * 60}")
     print("TIMING REPORT")
     print(f"{'=' * 60}")
-    print(f"Total Time:     {str(timedelta(seconds=int(total_duration)))}")
-    print(f"1. Fetch:       {str(timedelta(seconds=int(timings['fetch'])))}")
-    print(f"2. Clone:       {str(timedelta(seconds=int(timings['clone'])))}")
-    print(f"3. Digest:      {str(timedelta(seconds=int(timings['digest'])))}")
-    print(f"4. Validate:    {str(timedelta(seconds=int(timings['validate'])))}")
-    print(f"5. Inject:      {str(timedelta(seconds=int(timings['inject'])))}")
+    print(f"Total Time:     {timedelta(seconds=int(total_duration))!s}")
+    print(f"1. Fetch:       {timedelta(seconds=int(timings['fetch']))!s}")
+    print(f"2. Clone:       {timedelta(seconds=int(timings['clone']))!s}")
+    print(f"3. Digest:      {timedelta(seconds=int(timings['digest']))!s}")
+    print(f"4. Validate:    {timedelta(seconds=int(timings['validate']))!s}")
+    print(f"5. Inject:      {timedelta(seconds=int(timings['inject']))!s}")
     print(f"{'=' * 60}")
 
 

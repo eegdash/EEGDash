@@ -42,7 +42,7 @@ def parse_snirf_metadata(snirf_path: Path | str) -> dict[str, Any] | None:
         return None
 
     try:
-        from mne.io import read_raw_snirf  # noqa: PLC0415 (optional dependency)
+        from mne.io import read_raw_snirf
 
         # Read SNIRF file with MNE (preload=False to avoid loading data)
         raw = read_raw_snirf(str(snirf_path), preload=False, verbose=False)
@@ -58,7 +58,7 @@ def parse_snirf_metadata(snirf_path: Path | str) -> dict[str, Any] | None:
             ch_names = raw.info.get("ch_names")
             if ch_names:
                 result["ch_names"] = list(ch_names)
-                result["nchans"] = int(len(ch_names))
+                result["nchans"] = len(ch_names)
 
             if not result:
                 return None
@@ -93,7 +93,7 @@ def _parse_snirf_with_h5py(snirf_path: Path) -> dict[str, Any] | None:
 
     """
     try:
-        import h5py  # noqa: PLC0415 (optional dependency)
+        import h5py
     except ImportError:
         return None
 

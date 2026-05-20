@@ -48,6 +48,8 @@ import sys
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
+from tqdm import tqdm
+
 from _fingerprint import fingerprint_from_records
 from _http import (
     HTTPStatusError,
@@ -56,7 +58,6 @@ from _http import (
     make_retry_client,
     request_json,
 )
-from tqdm import tqdm
 
 # Datasets to explicitly ignore during ingestion
 EXCLUDED_DATASETS = {
@@ -907,7 +908,7 @@ def main():
                     datasets_param = ",".join(affected_datasets)
                     url = f"{args.api_url}/admin/{args.database}/datasets/compute-stats?datasets={datasets_param}"
                     with _make_session(admin_token) as client:
-                        result, response = request_json(
+                        result, _response = request_json(
                             "post",
                             url,
                             timeout=120,

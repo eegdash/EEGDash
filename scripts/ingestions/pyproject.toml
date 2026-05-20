@@ -1,0 +1,160 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "eegdash-ingestions"
+version = "0.1.0"
+description = "BIDS-dataset ingestion pipeline for the eegdash MongoDB"
+requires-python = ">=3.10"
+readme = "ROBUSTNESS/README.md"
+license = {text = "BSD-3-Clause"}
+authors = [{name = "Bruno Aristimunha", email = "b.aristimunha@gmail.com"}]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+]
+dependencies = [
+    "httpx>=0.27",
+    "tenacity>=8",
+    "pydantic>=2.5",
+    "mne-bids>=0.14",
+    "python-dotenv>=1",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8",
+    "pytest-cov>=4",
+    "pytest-benchmark>=4",
+    "hypothesis>=6.100",
+    "respx>=0.20",
+    "mutmut>=2.4",
+    "ruff>=0.4",
+    "mypy>=1.10",
+]
+
+# ─── Tooling ────────────────────────────────────────────────────────────────
+
+[tool.ruff]
+line-length = 88
+target-version = "py310"
+extend-exclude = ["1_fetch_sources", "data", "__pycache__", ".cache"]
+
+[tool.ruff.lint]
+# Initial selection — keep tight from day 1 so quality only ratchets up.
+# BLE (blind-except) is the headline rule for Phase 3 of the robustness
+# programme: every except: / except Exception: gets reviewed individually.
+select = [
+    "E", "F", "W",   # pycodestyle + pyflakes
+    "I",             # isort
+    "B",             # bugbear
+    "BLE",           # blind-except — Phase 3 target
+    "UP",            # pyupgrade
+    "PT",            # pytest-style
+    "RUF",           # ruff-specific
+    "N",             # pep8-naming
+]
+# D (pydocstyle / numpydoc) is selected per-file once the legacy code has
+# been touched up; turning it on globally on day 1 would generate ~1000
+# warnings on existing code we haven't reviewed yet.
+ignore = [
+    "E501",  # line-too-long — ruff format handles wrap
+    "E402",  # module-level imports after code — used by `# noqa: E402` in mne_bids
+]
+
+[tool.ruff.lint.per-file-ignores]
+# The numbered script files are CLI entrypoints; relax the naming rule
+# (N999: invalid-module-name fires on the leading digit).
+"[0-9]*_*.py" = ["N999"]
+"tests/*.py" = ["D"]  # tests don't need NumPy docstrings
+
+# Legacy-file baseline — these rules will be enforced PHASE BY PHASE as the
+# files are touched. Removing an ignore from this list is part of the
+# evaluation hook for the relevant phase (see ROBUSTNESS/05-EVALUATION.md).
+#
+# BLE001 — bare-except / broad-except. 72 violations across 17 files. Phase 3
+# of the robustness programme sweeps these; the per-file ignore is removed
+# as each file is cleaned.
+#
+# Other rules are smaller categories (RUF002/003/005/013, B007, N806, etc.)
+# that we'll tidy mechanically when their owning file is next touched.
+"2_clone.py"                    = ["BLE001"]
+"3_digest.py"                   = ["BLE001", "E741", "RUF003", "RUF005", "RUF013", "RUF046", "B007"]
+"4_validate_output.py"          = ["BLE001"]
+"5_inject.py"                   = ["BLE001"]
+"_bids.py"                      = ["BLE001"]
+"_file_utils.py"                = ["BLE001", "E741", "RUF003", "RUF005"]
+"_github.py"                    = ["BLE001"]
+"_http.py"                      = ["BLE001"]
+"_mef3_parser.py"               = ["BLE001"]
+"_montage.py"                   = ["BLE001", "N806", "RUF002", "RUF003", "RUF013", "RUF059"]
+"_set_parser.py"                = ["BLE001"]
+"_snirf_parser.py"              = ["BLE001"]
+"_validate.py"                  = ["BLE001"]
+"api_helper.py"                 = ["BLE001"]
+"inject_nemar_citations.py"     = ["BLE001"]
+"patch_nemar_records_storage.py"= ["BLE001"]
+"patch_nemar_source.py"         = ["BLE001"]
+"time_openneuro_pipeline.py"    = ["BLE001"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"
+
+[tool.mypy]
+python_version = "3.10"
+# Permissive baseline. Tighten per-module as legacy files are refactored
+# under their own characterisation tests (see ROBUSTNESS/04-ROADMAP.md
+# Phase 8). Goal: --strict on new files; existing files raised
+# incrementally as they're touched.
+ignore_missing_imports = true
+warn_unused_ignores = true
+warn_redundant_casts = true
+
+[[tool.mypy.overrides]]
+# Aspirational `--strict` per file — start with parsers (Phase 1 target).
+module = [
+    "_set_parser",
+    "_vhdr_parser",
+    "_snirf_parser",
+    "_mef3_parser",
+]
+disallow_untyped_defs = true
+warn_return_any = true
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+testpaths = ["tests"]
+addopts = "-ra --strict-markers --tb=short"
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "network: marks tests that require network access (deselect with '-m \"not network\"')",
+]
+# Hypothesis: cap example count for CI speed; raise locally for deep fuzz.
+filterwarnings = [
+    "ignore::DeprecationWarning:hypothesis.*",
+]
+
+[tool.coverage.run]
+source = ["."]
+omit = [
+    "tests/*",
+    "1_fetch_sources/*",
+    "*/conftest.py",
+    "__init__.py",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "raise NotImplementedError",
+    'if __name__ == "__main__":',
+    "if TYPE_CHECKING:",
+]
+show_missing = true
+skip_covered = false

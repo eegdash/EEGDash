@@ -26,9 +26,8 @@ import sys
 from collections import Counter
 from pathlib import Path
 
-from pydantic import ValidationError
-
 from eegdash.schemas import DatasetModel, ManifestFileModel, ManifestModel, RecordModel
+from pydantic import ValidationError
 
 # Valid storage URL patterns per source
 VALID_STORAGE_PATTERNS = {
@@ -108,7 +107,7 @@ class ValidationResult:
         self.zip_placeholder_datasets = []
         self.data_quality_issues = []  # Datasets with missing nchans/sampling_frequency
 
-    def add_error(self, dataset: str, message: str, field: str = None):
+    def add_error(self, dataset: str, message: str, field: str | None = None):
         self.errors.append(
             {
                 "dataset": dataset,
@@ -117,7 +116,7 @@ class ValidationResult:
             }
         )
 
-    def add_warning(self, dataset: str, message: str, field: str = None):
+    def add_warning(self, dataset: str, message: str, field: str | None = None):
         self.warnings.append(
             {
                 "dataset": dataset,
@@ -308,7 +307,8 @@ def validate_digestion_output(
         verbose: Print progress information
         strict: Treat warnings as errors
 
-    Returns:
+    Returns
+    -------
         ValidationResult with all findings
 
     """
@@ -433,7 +433,8 @@ def validate_pre_digestion(input_dir: Path, verbose: bool = False) -> Validation
         input_dir: Directory containing cloned datasets with manifest.json files
         verbose: Print progress information
 
-    Returns:
+    Returns
+    -------
         ValidationResult with findings
 
     """

@@ -168,7 +168,7 @@ def main() -> int:
     for dsid in ids:
         try:
             matched, modified = patch_dataset_records(client, dsid, apply=args.apply)
-        except Exception as e:  # noqa: BLE001
+        except Exception as e:
             print(f"ERROR {dsid}: {e}", file=sys.stderr)
             continue
 

@@ -10,6 +10,7 @@ import httpx
 
 try:
     from tenacity import (
+        RetryError,
         retry,
         retry_if_exception_type,
         retry_if_result,
@@ -20,6 +21,10 @@ try:
     _TENACITY_AVAILABLE = True
 except ImportError:  # pragma: no cover - optional dependency
     _TENACITY_AVAILABLE = False
+
+    class RetryError(Exception):  # type: ignore[no-redef]
+        """Fallback when tenacity is missing; never raised in that case."""
+
 
 try:
     import hishel
@@ -201,6 +206,7 @@ def request_json(
     retry_set = set(retry_statuses or DEFAULT_RETRY_STATUSES)
     http_client = client or get_client()
 
+    response: httpx.Response | None = None
     try:
         response = _request_with_retry(
             http_client,
@@ -223,6 +229,19 @@ def request_json(
             return response.json(), response
         except ValueError:
             return None, response
+    except RetryError as e:
+        # tenacity raises this when retries exhaust on a RETRY_RESULT
+        # condition (e.g., persistent 5xx — no exception, just a bad
+        # status). The last_attempt's result IS an httpx.Response that
+        # the caller may want to inspect for the final status code.
+        # (Bug found by tests/test_http.py: persistent 503 used to leak
+        # tenacity.RetryError to callers, breaking the documented
+        # "(payload, response)" contract.)
+        try:
+            last_response = e.last_attempt.result()
+        except Exception:  # noqa: BLE001 — last_attempt internals are tenacity-private
+            last_response = None
+        return None, last_response
     except httpx.RequestError:
         if raise_for_request:
             raise

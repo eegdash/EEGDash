@@ -627,6 +627,32 @@ def generate_dataset_bubble(
             font=dict(size=14, color="#6b7280"),
         )
 
+    # ---------- Legend entry for the 1:1 reference line ----------
+    # Reviewer feedback: the dashed diagonal labelled "One record per subject"
+    # is hard to spot without context. Surface it explicitly in the legend
+    # as a dashed-line swatch (Plotly draws this as a tiny dashed segment).
+    _ref_legend_map = {
+        "records": "One record per subject",
+        "subjects": "One record per subject",
+        "duration_h": "One hour per subject",
+        "size_gb": "One GB per subject",
+        "tasks": "One task per subject",
+    }
+    ref_legend_text = _ref_legend_map.get(x_field)
+    if ref_legend_text:
+        fig.add_trace(
+            go.Scatter(
+                x=[None],
+                y=[None],
+                mode="lines",
+                name=ref_legend_text,
+                line=dict(color="#9ca3af", width=1.2, dash="dash"),
+                showlegend=True,
+                hoverinfo="skip",
+                legendgroup="reference-line",
+            )
+        )
+
     # ---------- Build visibility arrays for toggle buttons ----------
     # Must be AFTER all traces are added (OLS line + size legend traces)
     n_total_traces = len(fig.data)

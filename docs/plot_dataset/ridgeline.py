@@ -183,6 +183,29 @@ def _build_ridgeline_traces(
                 )
             )
 
+        # P10: raincloud-style horizontal box plot below the ridge baseline.
+        # Reviewer requested better distribution readability (a la PtitPrince).
+        # The box sits in the strip just below the scatter dots, sharing the
+        # row colour so cloud + rain + box read as one unit per modality.
+        box_y_center = baseline - 0.16
+        traces.append(
+            go.Box(
+                x=values.tolist(),
+                y=[box_y_center] * len(values),
+                name=label,
+                orientation="h",
+                marker=dict(color=color, opacity=0.0, size=2),
+                line=dict(color=color, width=1.4),
+                fillcolor=hex_to_rgba(color, 0.35),
+                width=0.18,
+                boxpoints=False,
+                hoverinfo="skip",
+                showlegend=False,
+                visible=True,
+                meta={"group": trace_group},
+            )
+        )
+
     return traces, order, dict(median_participants)
 
 

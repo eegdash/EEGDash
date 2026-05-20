@@ -140,13 +140,13 @@ This dataset contains behavioral events and intracranial electrophysiological re
     <span class="right">126 (87), 112 (32), 108 (32), 110 (31), 88 (29), 120 (28), 128 (28), 127 (24), 116 (22), 124 (21), 196 (20), 109 (19), 111 (18), 100 (17), 106 (17), 113 (16), 125 (15), 86 (14), 64 (13), 107 (13), 60 (13), 118 (12), 158 (12), 104 (11), 68 (11), 121 (10), 180 (10), 178 (10), 76 (10), 122 (10), 142 (9), 56 (9), 80 (9), 102 (9), 153 (8), 140 (8), 75 (8), 97 (8), 146 (7), 85 (7), 188 (7), 83 (7), 62 (7), 114 (7), 90 (7), 130 (7), 148 (7), 172 (7), 139 (6), 72 (6), 78 (6), 173 (6), 92 (6), 70 (6), 168 (6), 134 (6), 162 (6), 160 (5), 96 (5), 93 (5), 74 (5), 165 (5), 141 (5), 206 (5), 84 (4), 123 (4), 200 (4), 224 (4), 177 (4), 136 (4), 46 (4), 161 (4), 54 (4), 203 (4), 119 (4), 59 (3), 37 (3), 69 (3), 50 (3), 94 (3), 186 (3), 103 (3), 212 (3), 138 (3), 133 (3), 99 (3), 166 (3), 154 (3), 152 (3), 208 (3), 176 (3), 218 (2), 87 (2), 52 (2), 184 (2), 179 (2), 105 (2), 149 (2), 213 (2), 151 (2), 26 (2), 170 (2), 55 (2), 67 (2), 156 (2), 43 (2), 182 (2), 95 (2), 36 (2), 58 (2), 63, 215, 38, 190, 73, 16, 98, 202, 216, 209, 65, 131, 77, 195, 229, 48, 101, 129, 175, 53, 14 ch · iEEG · 500, 512, 999, 1000, 1024, 1600, 2000 Hz · 273 subjects, 983 recordings</span>
   </div>
   <div class="figpair-grid"><div class="figpair-cell figpair-montage"><details class="electrode-explorer">
-  <summary>Electrode layout — iEEG · 126 sensors — 126 channels</summary>
+  <summary>Electrode layout — iEEG · 88 sensors — 88 channels</summary>
   <iframe
-    data-src="https://electrodes.eegdash.org/?montage=023e9a85f1d0e9b9&embed=1"
+    data-src="https://electrodes.eegdash.org/?montage=b48c2e8cfcd284af&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
-    title="Topomap of iEEG · 126 sensors"
+    title="Topomap of iEEG · 88 sensors"
     referrerpolicy="no-referrer">
   </iframe>
 </details></div></div></div>

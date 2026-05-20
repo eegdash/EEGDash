@@ -18,6 +18,12 @@ Attach extra participant data to a raw object and its description.
 
 <!-- !! processed by numpydoc !! -->
 
+### eegdash.bids_metadata.build_description(record: [dict](https://docs.python.org/3/library/stdtypes.html#dict)[[str](https://docs.python.org/3/library/stdtypes.html#str), [Any](https://docs.python.org/3/library/typing.html#typing.Any)], description_fields: [list](https://docs.python.org/3/library/stdtypes.html#list)[[str](https://docs.python.org/3/library/stdtypes.html#str)], description_precedence: [str](https://docs.python.org/3/library/stdtypes.html#str) = 'record', participants_row: [dict](https://docs.python.org/3/library/stdtypes.html#dict)[[str](https://docs.python.org/3/library/stdtypes.html#str), [Any](https://docs.python.org/3/library/typing.html#typing.Any)] | [None](https://docs.python.org/3/library/constants.html#None) = None) → [dict](https://docs.python.org/3/library/stdtypes.html#dict)[[str](https://docs.python.org/3/library/stdtypes.html#str), [Any](https://docs.python.org/3/library/typing.html#typing.Any)]
+
+Build a description dict for one record, merging participant metadata.
+
+<!-- !! processed by numpydoc !! -->
+
 ### eegdash.bids_metadata.build_query_from_kwargs(, allowed_fields: [AbstractSet](https://docs.python.org/3/library/typing.html#typing.AbstractSet)[[str](https://docs.python.org/3/library/stdtypes.html#str)] | [None](https://docs.python.org/3/library/constants.html#None) = None, field_spec: [Mapping](https://docs.python.org/3/library/collections.abc.html#collections.abc.Mapping)[[str](https://docs.python.org/3/library/stdtypes.html#str), [Mapping](https://docs.python.org/3/library/collections.abc.html#collections.abc.Mapping)[[str](https://docs.python.org/3/library/stdtypes.html#str), [Any](https://docs.python.org/3/library/typing.html#typing.Any)]] | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs: [Any](https://docs.python.org/3/library/typing.html#typing.Any)) → [dict](https://docs.python.org/3/library/stdtypes.html#dict)[[str](https://docs.python.org/3/library/stdtypes.html#str), [Any](https://docs.python.org/3/library/typing.html#typing.Any)]
 
 Build and validate a MongoDB query from keyword arguments.
@@ -74,6 +80,12 @@ Read participants.tsv and attach extra info for the subject.
   The extras that were attached.
 * **Return type:**
   [dict](https://docs.python.org/3/library/stdtypes.html#dict)
+
+<!-- !! processed by numpydoc !! -->
+
+### eegdash.bids_metadata.find_key_in_nested_dict(data: [Any](https://docs.python.org/3/library/typing.html#typing.Any), target_key: [str](https://docs.python.org/3/library/stdtypes.html#str)) → [Any](https://docs.python.org/3/library/typing.html#typing.Any)
+
+Recursively search nested dicts/lists for target_key (case- and separator-insensitive).
 
 <!-- !! processed by numpydoc !! -->
 

@@ -142,7 +142,7 @@ The EEG preprocessing, which was performed using the `wh_extracteeg_BIDS.m` loca
   <div class="figpair-grid"><div class="figpair-cell figpair-montage"><details class="electrode-explorer">
   <summary>Electrode layout — EEG · 70 sensors — 70 channels</summary>
   <iframe
-    data-src="https://electrodes.eegdash.org/?montage=019f1ce348f43b1e&embed=1"
+    data-src="https://electrodes.eegdash.org/?montage=62a7397b73de3018&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"

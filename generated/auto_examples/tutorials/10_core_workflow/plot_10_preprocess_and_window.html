@@ -37,8 +37,8 @@
   </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../../../_static/styles/theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
-<link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+  <link href="../../../../_static/styles/theme.css?digest=0790524f97105ba85085" rel="stylesheet" />
+<link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=0790524f97105ba85085" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
@@ -53,10 +53,10 @@
     <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.d7808461.css?v=1ba63a31" />
   
   <!-- So that users can add custom icons -->
-  <script defer src="../../../../_static/scripts/fontawesome.js?digest=55c26ed414f5f8a31ebb"></script>
+  <script defer src="../../../../_static/scripts/fontawesome.js?digest=0790524f97105ba85085"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb" />
-<link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb" />
+  <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=0790524f97105ba85085" />
+<link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=0790524f97105ba85085" />
 
     <script src="../../../../_static/documentation_options.js?v=6dfdf7c3"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
@@ -323,11 +323,18 @@
       
         <div class="navbar-item">
 
-<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
-  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
-  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
-  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
-</button></div>
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
       
         <div class="navbar-item"><ul class="navbar-icon-links"
     aria-label="External Links">
@@ -479,11 +486,18 @@
         
           <div class="navbar-item">
 
-<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
-  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
-  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
-  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
-</button></div>
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
         
           <div class="navbar-item"><ul class="navbar-icon-links"
     aria-label="External Links">
@@ -1010,7 +1024,7 @@ alternative when ASR-style cleanup is needed.</p>
 <span class="n">raw</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[05/19/26 12:47:10] WARNING  File not found on S3, skipping:   downloader.py:163
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[05/20/26 09:56:47] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds002718/sub-0
                              02/eeg/sub-002_task-FaceRecogniti
                              on_eeg.fdt
@@ -1164,9 +1178,9 @@ this file apply (plus whatever default styling the IDE applies).
 
 
 
-<tr class="mne-repr-section-header general-61d0f607-d41e-4fc1-9fbb-4b159ce18f88"
+<tr class="mne-repr-section-header general-e12caf56-8ac0-4120-9927-74e1252d3917"
      title="Hide section"
-    onclick="toggleVisibility('general-61d0f607-d41e-4fc1-9fbb-4b159ce18f88')">
+    onclick="toggleVisibility('general-e12caf56-8ac0-4120-9927-74e1252d3917')">
     <th class="mne-repr-section-toggle">
         <button >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
@@ -1178,7 +1192,7 @@ this file apply (plus whatever default styling the IDE applies).
 </tr>
 
 
-<tr class="repr-element general-61d0f607-d41e-4fc1-9fbb-4b159ce18f88 ">
+<tr class="repr-element general-e12caf56-8ac0-4120-9927-74e1252d3917 ">
     <td class="mne-repr-section-toggle"></td>
     <td>Filename(s)</td>
     <td>
@@ -1189,26 +1203,26 @@ this file apply (plus whatever default styling the IDE applies).
     </td>
 </tr>
 
-<tr class="repr-element general-61d0f607-d41e-4fc1-9fbb-4b159ce18f88 ">
+<tr class="repr-element general-e12caf56-8ac0-4120-9927-74e1252d3917 ">
     <td class="mne-repr-section-toggle"></td>
     <td>MNE object type</td>
     <td>RawEEGLAB</td>
 </tr>
-<tr class="repr-element general-61d0f607-d41e-4fc1-9fbb-4b159ce18f88 ">
+<tr class="repr-element general-e12caf56-8ac0-4120-9927-74e1252d3917 ">
     <td class="mne-repr-section-toggle"></td>
     <td>Measurement date</td>
 
     <td>Unknown</td>
 
 </tr>
-<tr class="repr-element general-61d0f607-d41e-4fc1-9fbb-4b159ce18f88 ">
+<tr class="repr-element general-e12caf56-8ac0-4120-9927-74e1252d3917 ">
     <td class="mne-repr-section-toggle"></td>
     <td>Participant</td>
 
 
 
 </tr>
-<tr class="repr-element general-61d0f607-d41e-4fc1-9fbb-4b159ce18f88 ">
+<tr class="repr-element general-e12caf56-8ac0-4120-9927-74e1252d3917 ">
     <td class="mne-repr-section-toggle"></td>
     <td>Experimenter</td>
 
@@ -1223,9 +1237,9 @@ this file apply (plus whatever default styling the IDE applies).
 
 
 
-<tr class="mne-repr-section-header acquisition-f1cc3000-f7d6-487a-b20e-f2b64ee8e05c"
+<tr class="mne-repr-section-header acquisition-ee7c5b36-03df-49dd-b2b9-6383e16dcd1f"
      title="Hide section"
-    onclick="toggleVisibility('acquisition-f1cc3000-f7d6-487a-b20e-f2b64ee8e05c')">
+    onclick="toggleVisibility('acquisition-ee7c5b36-03df-49dd-b2b9-6383e16dcd1f')">
     <th class="mne-repr-section-toggle">
         <button >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
@@ -1237,7 +1251,7 @@ this file apply (plus whatever default styling the IDE applies).
 </tr>
 
 
-<tr class="repr-element acquisition-f1cc3000-f7d6-487a-b20e-f2b64ee8e05c ">
+<tr class="repr-element acquisition-ee7c5b36-03df-49dd-b2b9-6383e16dcd1f ">
     <td class="mne-repr-section-toggle"></td>
     <td>Duration</td>
     <td>00:49:51 (HH:MM:SS)</td>
@@ -1250,14 +1264,14 @@ this file apply (plus whatever default styling the IDE applies).
 
 
 
-<tr class="repr-element acquisition-f1cc3000-f7d6-487a-b20e-f2b64ee8e05c ">
+<tr class="repr-element acquisition-ee7c5b36-03df-49dd-b2b9-6383e16dcd1f ">
     <td class="mne-repr-section-toggle"></td>
     <td>Sampling frequency</td>
     <td>250.00 Hz</td>
 </tr>
 
 
-<tr class="repr-element acquisition-f1cc3000-f7d6-487a-b20e-f2b64ee8e05c ">
+<tr class="repr-element acquisition-ee7c5b36-03df-49dd-b2b9-6383e16dcd1f ">
     <td class="mne-repr-section-toggle"></td>
     <td>Time points</td>
     <td>747,750</td>
@@ -1272,9 +1286,9 @@ this file apply (plus whatever default styling the IDE applies).
 
 
 
-<tr class="mne-repr-section-header channels-64485632-d9db-4ef2-9f1f-4683d900eb31"
+<tr class="mne-repr-section-header channels-213d6e26-e25e-4da1-b22f-413fb678e746"
      title="Hide section"
-    onclick="toggleVisibility('channels-64485632-d9db-4ef2-9f1f-4683d900eb31')">
+    onclick="toggleVisibility('channels-213d6e26-e25e-4da1-b22f-413fb678e746')">
     <th class="mne-repr-section-toggle">
         <button >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
@@ -1287,7 +1301,7 @@ this file apply (plus whatever default styling the IDE applies).
 
 
 
-<tr class="repr-element channels-64485632-d9db-4ef2-9f1f-4683d900eb31 ">
+<tr class="repr-element channels-213d6e26-e25e-4da1-b22f-413fb678e746 ">
     <td class="mne-repr-section-toggle"></td>
     <td>EEG</td>
     <td>
@@ -1300,7 +1314,7 @@ this file apply (plus whatever default styling the IDE applies).
 </tr>
 
 
-<tr class="repr-element channels-64485632-d9db-4ef2-9f1f-4683d900eb31 ">
+<tr class="repr-element channels-213d6e26-e25e-4da1-b22f-413fb678e746 ">
     <td class="mne-repr-section-toggle"></td>
     <td>EOG</td>
     <td>
@@ -1313,7 +1327,7 @@ this file apply (plus whatever default styling the IDE applies).
 </tr>
 
 
-<tr class="repr-element channels-64485632-d9db-4ef2-9f1f-4683d900eb31 ">
+<tr class="repr-element channels-213d6e26-e25e-4da1-b22f-413fb678e746 ">
     <td class="mne-repr-section-toggle"></td>
     <td>misc</td>
     <td>
@@ -1326,7 +1340,7 @@ this file apply (plus whatever default styling the IDE applies).
 </tr>
 
 
-<tr class="repr-element channels-64485632-d9db-4ef2-9f1f-4683d900eb31 ">
+<tr class="repr-element channels-213d6e26-e25e-4da1-b22f-413fb678e746 ">
     <td class="mne-repr-section-toggle"></td>
     <td>Head & sensor digitization</td>
 
@@ -1341,9 +1355,9 @@ this file apply (plus whatever default styling the IDE applies).
 
 
 
-<tr class="mne-repr-section-header filters-8ba8190c-9cb0-42f4-8615-d3d7b12227ec"
+<tr class="mne-repr-section-header filters-6ed9b426-8ac0-4097-a9c6-d06d6a3b76f1"
      title="Hide section"
-    onclick="toggleVisibility('filters-8ba8190c-9cb0-42f4-8615-d3d7b12227ec')">
+    onclick="toggleVisibility('filters-6ed9b426-8ac0-4097-a9c6-d06d6a3b76f1')">
     <th class="mne-repr-section-toggle">
         <button >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
@@ -1355,14 +1369,14 @@ this file apply (plus whatever default styling the IDE applies).
 </tr>
 
 
-<tr class="repr-element filters-8ba8190c-9cb0-42f4-8615-d3d7b12227ec ">
+<tr class="repr-element filters-6ed9b426-8ac0-4097-a9c6-d06d6a3b76f1 ">
     <td class="mne-repr-section-toggle"></td>
     <td>Highpass</td>
     <td>0.00 Hz</td>
 </tr>
 
 
-<tr class="repr-element filters-8ba8190c-9cb0-42f4-8615-d3d7b12227ec ">
+<tr class="repr-element filters-6ed9b426-8ac0-4097-a9c6-d06d6a3b76f1 ">
     <td class="mne-repr-section-toggle"></td>
     <td>Lowpass</td>
     <td>125.00 Hz</td>
@@ -1697,11 +1711,11 @@ show.</p>
 <span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[05/19/26 12:47:28] WARNING  File not found on S3, skipping:   downloader.py:163
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[05/20/26 09:57:05] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds002718/sub-0
                              02/eeg/sub-002_task-FaceRecogniti
                              on_eeg.fdt
-/tmp/tmpngbeggkk.set
+/tmp/tmpvpdpoh_f.set
 Field &#39;subject&#39; is missing from the EEG dictionnary, adding it.
 Field &#39;group&#39; is missing from the EEG dictionnary, adding it.
 Field &#39;condition&#39; is missing from the EEG dictionnary, adding it.
@@ -1727,11 +1741,11 @@ Field &#39;etc&#39; is missing from the EEG dictionnary, adding it.
 Field &#39;datfile&#39; is missing from the EEG dictionnary, adding it.
 Field &#39;run&#39; is missing from the EEG dictionnary, adding it.
 Field &#39;roi&#39; is missing from the EEG dictionnary, adding it.
-[05/19/26 12:47:30] INFO     Detecting flat line          clean_artifacts.py:182
+[05/20/26 09:57:06] INFO     Detecting flat line          clean_artifacts.py:182
                              channels...
                     INFO     Applying high‑pass filter... clean_artifacts.py:191
                     INFO     Scanning for bad channels...   clean_channels.py:79
-                    WARNING  clean_channels failed (To    clean_artifacts.py:216
+[05/20/26 09:57:07] WARNING  clean_channels failed (To    clean_artifacts.py:216
                              use this function most of
                              your channels should have
                              X,Y,Z location
@@ -1742,7 +1756,7 @@ Field &#39;roi&#39; is missing from the EEG dictionnary, adding it.
                              data for calibration...
                     INFO     Determining time window        clean_windows.py:115
                              rejection thresholds...
-[05/19/26 12:47:32] INFO     done.                          clean_windows.py:147
+[05/20/26 09:57:09] INFO     done.                          clean_windows.py:147
                     INFO     Keeping 36.9% (11 seconds) of  clean_windows.py:179
                              the data.
                     ERROR    Could not select time windows  clean_windows.py:204
@@ -1758,7 +1772,7 @@ Field &#39;roi&#39; is missing from the EEG dictionnary, adding it.
                     INFO     Calculating robust geometric median      asr.py:207
                              covariance...
                     INFO     Determining per-component thresholds...  asr.py:227
-[05/19/26 12:47:34] INFO     Thresholds calculation complete.         asr.py:289
+[05/20/26 09:57:11] INFO     Thresholds calculation complete.         asr.py:289
                     INFO     Applying ASR processing...         clean_asr.py:177
                     INFO     Cleaning data in 32 blocks               asr.py:427
                     INFO     Finished cleaning.                       asr.py:546
@@ -1768,7 +1782,7 @@ Field &#39;roi&#39; is missing from the EEG dictionnary, adding it.
                              windows...
                     INFO     Determining time window        clean_windows.py:115
                              rejection thresholds...
-[05/19/26 12:47:36] INFO     done.                          clean_windows.py:147
+[05/20/26 09:57:14] INFO     done.                          clean_windows.py:147
                     INFO     Keeping 100.0% (30 seconds) of clean_windows.py:179
                              the data.
                     ERROR    Could not select time windows  clean_windows.py:204
@@ -1936,7 +1950,7 @@ session without re-running preprocessing (covered in
 <p>See <a class="reference internal" href="../../../../references.html"><span class="doc">References</span></a> for the centralized bibliography of papers
 cited above. Add or amend an entry once in
 <code class="file docutils literal notranslate"><span class="pre">docs/source/refs.bib</span></code>; every tutorial inherits the update.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 26.698 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 28.330 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-auto-examples-tutorials-10-core-workflow-plot-10-preprocess-and-window-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/eegdash/EEGDash/main?urlpath=lab/tree/notebooks/generated/auto_examples/tutorials/10_core_workflow/plot_10_preprocess_and_window.ipynb"><img alt="Launch binder" src="../../../../_images/binder_badge_logo6.svg" style="width: 150px;" />
@@ -2037,8 +2051,8 @@ cited above. Add or amend an entry once in
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="../../../../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb"></script>
-<script defer src="../../../../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb"></script>
+  <script defer src="../../../../_static/scripts/bootstrap.js?digest=0790524f97105ba85085"></script>
+<script defer src="../../../../_static/scripts/pydata-sphinx-theme.js?digest=0790524f97105ba85085"></script>
 
   <footer class="bd-footer">
 <div class="bd-footer__inner bd-page-width">
@@ -2064,7 +2078,7 @@ cited above. Add or amend an entry once in
         <div class="footer-item">
 <p class="theme-version">
   <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
-  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.17.1.
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.18.0.
 </p></div>
       
     </div>

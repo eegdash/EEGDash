@@ -146,13 +146,13 @@ This study contains open-loop electrical stimulation of the brain during encodin
     <span class="right">100 (12), 64 (10), 141 (9), 96 (8), 118 (8), 109 (7), 136 (7), 72 (6), 88 (6), 68 (6), 87 (4), 110 (4), 70 (4), 75 (4), 56 (4), 126 (4), 58 (3), 74 (3), 85 (3), 76 (3), 156 (3), 120 (3), 93 (3), 104 (2), 80 (2), 123 (2), 99 (2), 112 (2), 124 (2), 134 (2), 138 (2), 108 (2), 128 (2), 101, 16, 18, 83, 163, 114, 177, 14, 20, 97 ch · iEEG · 256, 500, 513, 1000, 1600 Hz · 37 subjects, 154 recordings</span>
   </div>
   <div class="figpair-grid"><div class="figpair-cell figpair-montage"><details class="electrode-explorer">
-  <summary>Electrode layout — iEEG · 118 sensors — 118 channels</summary>
+  <summary>Electrode layout — iEEG · 96 sensors — 96 channels</summary>
   <iframe
-    data-src="https://electrodes.eegdash.org/?montage=5dd7206f5c79fa12&embed=1"
+    data-src="https://electrodes.eegdash.org/?montage=931dc444d863b5e1&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
-    title="Topomap of iEEG · 118 sensors"
+    title="Topomap of iEEG · 96 sensors"
     referrerpolicy="no-referrer">
   </iframe>
 </details></div></div></div>

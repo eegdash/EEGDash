@@ -164,13 +164,13 @@ Each patient has their own folder (e.g., `sub-RESP0280`) which contains the iEEG
     <span class="right">133 (18), 68 (4) ch · iEEG · 2048 Hz · mixed · 6 subjects, 22 recordings</span>
   </div>
   <div class="figpair-grid"><div class="figpair-cell figpair-montage"><details class="electrode-explorer">
-  <summary>Electrode layout — iEEG · 88 sensors — 88 channels</summary>
+  <summary>Electrode layout — iEEG · 110 sensors — 110 channels</summary>
   <iframe
-    data-src="https://electrodes.eegdash.org/?montage=2f87306d6d106766&embed=1"
+    data-src="https://electrodes.eegdash.org/?montage=29fb4605584e921a&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
-    title="Topomap of iEEG · 88 sensors"
+    title="Topomap of iEEG · 110 sensors"
     referrerpolicy="no-referrer">
   </iframe>
 </details></div></div></div>

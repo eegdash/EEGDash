@@ -37,8 +37,8 @@
   </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../../../_static/styles/theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
-<link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+  <link href="../../../../_static/styles/theme.css?digest=0790524f97105ba85085" rel="stylesheet" />
+<link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=0790524f97105ba85085" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
@@ -53,10 +53,10 @@
     <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.d7808461.css?v=1ba63a31" />
   
   <!-- So that users can add custom icons -->
-  <script defer src="../../../../_static/scripts/fontawesome.js?digest=55c26ed414f5f8a31ebb"></script>
+  <script defer src="../../../../_static/scripts/fontawesome.js?digest=0790524f97105ba85085"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb" />
-<link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb" />
+  <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=0790524f97105ba85085" />
+<link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=0790524f97105ba85085" />
 
     <script src="../../../../_static/documentation_options.js?v=6dfdf7c3"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
@@ -323,11 +323,18 @@
       
         <div class="navbar-item">
 
-<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
-  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
-  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
-  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
-</button></div>
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
       
         <div class="navbar-item"><ul class="navbar-icon-links"
     aria-label="External Links">
@@ -479,11 +486,18 @@
         
           <div class="navbar-item">
 
-<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
-  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
-  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
-  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
-</button></div>
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
         
           <div class="navbar-item"><ul class="navbar-icon-links"
     aria-label="External Links">
@@ -787,7 +801,7 @@ splitter consumes.</p>
     </tr>
     <tr>
       <th>metadata cols</th>
-      <td>['subject', 'task']</td>
+      <td>['subject', 'task', 'session', 'run', 'age', '...</td>
     </tr>
     <tr>
       <th>subjects</th>
@@ -795,7 +809,7 @@ splitter consumes.</p>
     </tr>
     <tr>
       <th>first row</th>
-      <td>{'subject': '002', 'task': 'FaceRecognition'}</td>
+      <td>{'subject': '002', 'task': 'FaceRecognition', ...</td>
     </tr>
   </tbody>
 </table>
@@ -911,204 +925,191 @@ keep the cell under the tutorial budget.</p>
   warnings.warn(
 
   0%|                                              | 0.00/42.8M [00:00&lt;?, ?B/s]
-  0%|                                     | 8.19k/42.8M [00:00&lt;08:54, 80.1kB/s]
-  0%|                                      | 48.1k/42.8M [00:00&lt;02:44, 261kB/s]
-  0%|                                       | 128k/42.8M [00:00&lt;01:26, 494kB/s]
-  0%|▏                                      | 201k/42.8M [00:00&lt;01:13, 576kB/s]
-  1%|▏                                      | 272k/42.8M [00:00&lt;01:08, 618kB/s]
-  1%|▎                                      | 360k/42.8M [00:00&lt;01:00, 696kB/s]
-  1%|▍                                      | 440k/42.8M [00:00&lt;00:58, 721kB/s]
-  1%|▍                                      | 545k/42.8M [00:00&lt;00:52, 812kB/s]
-  1%|▌                                      | 640k/42.8M [00:00&lt;00:49, 845kB/s]
-  2%|▋                                     | 784k/42.8M [00:01&lt;00:41, 1.01MB/s]
-  2%|▊                                     | 904k/42.8M [00:01&lt;00:39, 1.06MB/s]
-  3%|▉                                    | 1.13M/42.8M [00:01&lt;00:29, 1.39MB/s]
-  3%|█▏                                   | 1.37M/42.8M [00:01&lt;00:24, 1.67MB/s]
-  4%|█▍                                   | 1.62M/42.8M [00:01&lt;00:21, 1.89MB/s]
-  5%|█▋                                   | 1.96M/42.8M [00:01&lt;00:17, 2.32MB/s]
-  5%|█▉                                   | 2.27M/42.8M [00:01&lt;00:16, 2.53MB/s]
-  6%|██▎                                  | 2.72M/42.8M [00:01&lt;00:13, 3.07MB/s]
-  8%|██▊                                  | 3.22M/42.8M [00:01&lt;00:10, 3.61MB/s]
-  9%|███▎                                 | 3.81M/42.8M [00:01&lt;00:09, 4.21MB/s]
- 11%|███▉                                 | 4.58M/42.8M [00:02&lt;00:07, 5.17MB/s]
- 13%|████▋                                | 5.41M/42.8M [00:02&lt;00:06, 6.03MB/s]
- 15%|█████▋                               | 6.57M/42.8M [00:02&lt;00:04, 7.58MB/s]
- 18%|██████▊                              | 7.90M/42.8M [00:02&lt;00:03, 9.15MB/s]
- 22%|████████▎                            | 9.61M/42.8M [00:02&lt;00:02, 11.4MB/s]
- 27%|██████████▏                          | 11.7M/42.8M [00:02&lt;00:02, 14.1MB/s]
- 34%|████████████▍                        | 14.4M/42.8M [00:02&lt;00:01, 17.6MB/s]
- 41%|███████████████▎                     | 17.7M/42.8M [00:02&lt;00:01, 21.9MB/s]
- 51%|███████████████████                  | 22.0M/42.8M [00:02&lt;00:00, 27.7MB/s]
- 62%|███████████████████████              | 26.7M/42.8M [00:03&lt;00:00, 33.0MB/s]
- 73%|███████████████████████████▏         | 31.4M/42.8M [00:03&lt;00:00, 36.6MB/s]
- 88%|████████████████████████████████▋    | 37.9M/42.8M [00:03&lt;00:00, 43.5MB/s]
+  0%|                                     | 8.19k/42.8M [00:00&lt;13:05, 54.5kB/s]
+  0%|                                      | 48.1k/42.8M [00:00&lt;04:00, 178kB/s]
+  0%|                                       | 121k/42.8M [00:00&lt;02:15, 316kB/s]
+  0%|▏                                      | 201k/42.8M [00:00&lt;01:46, 399kB/s]
+  1%|▎                                      | 329k/42.8M [00:00&lt;01:15, 560kB/s]
+  1%|▍                                      | 424k/42.8M [00:00&lt;01:12, 583kB/s]
+  1%|▌                                      | 616k/42.8M [00:01&lt;00:52, 808kB/s]
+  2%|▋                                     | 833k/42.8M [00:01&lt;00:41, 1.00MB/s]
+  3%|▉                                    | 1.13M/42.8M [00:01&lt;00:32, 1.30MB/s]
+  3%|█▎                                   | 1.46M/42.8M [00:01&lt;00:26, 1.58MB/s]
+  5%|█▋                                   | 1.98M/42.8M [00:01&lt;00:19, 2.13MB/s]
+  6%|██▏                                  | 2.54M/42.8M [00:01&lt;00:15, 2.61MB/s]
+  8%|███                                  | 3.48M/42.8M [00:01&lt;00:10, 3.70MB/s]
+ 11%|███▉                                 | 4.54M/42.8M [00:02&lt;00:08, 4.69MB/s]
+ 15%|█████▍                               | 6.31M/42.8M [00:02&lt;00:05, 6.80MB/s]
+ 19%|███████                              | 8.15M/42.8M [00:02&lt;00:04, 8.41MB/s]
+ 27%|█████████▉                           | 11.5M/42.8M [00:02&lt;00:02, 13.2MB/s]
+ 33%|████████████                         | 14.0M/42.8M [00:02&lt;00:01, 15.5MB/s]
+ 39%|██████████████▌                      | 16.8M/42.8M [00:02&lt;00:01, 18.1MB/s]
+ 48%|█████████████████▋                   | 20.5M/42.8M [00:02&lt;00:00, 22.3MB/s]
+ 62%|██████████████████████▊              | 26.4M/42.8M [00:03&lt;00:00, 27.7MB/s]
+ 73%|███████████████████████████          | 31.4M/42.8M [00:03&lt;00:00, 29.3MB/s]
+ 88%|████████████████████████████████▋    | 37.9M/42.8M [00:03&lt;00:00, 33.2MB/s]
   0%|                                              | 0.00/42.8M [00:00&lt;?, ?B/s]
-100%|██████████████████████████████████████| 42.8M/42.8M [00:00&lt;00:00, 187GB/s]
+100%|██████████████████████████████████████| 42.8M/42.8M [00:00&lt;00:00, 224GB/s]
 /home/runner/work/EEGDash/EEGDash/.venv/lib/python3.12/site-packages/urllib3/connectionpool.py:1110: InsecureRequestWarning: Unverified HTTPS request is being made to host &#39;lampx.tugraz.at&#39;. Adding certificate verification is strongly advised. See: https://urllib3.readthedocs.io/en/latest/advanced-usage.html#tls-warnings
   warnings.warn(
 
   0%|                                              | 0.00/43.8M [00:00&lt;?, ?B/s]
-  0%|                                     | 8.19k/43.8M [00:00&lt;09:01, 80.9kB/s]
-  0%|                                      | 48.1k/43.8M [00:00&lt;02:45, 263kB/s]
-  0%|                                       | 128k/43.8M [00:00&lt;01:27, 499kB/s]
-  0%|▏                                      | 184k/43.8M [00:00&lt;01:23, 520kB/s]
-  1%|▎                                      | 304k/43.8M [00:00&lt;00:57, 754kB/s]
-  1%|▎                                      | 400k/43.8M [00:00&lt;00:53, 817kB/s]
-  1%|▍                                      | 520k/43.8M [00:00&lt;00:46, 933kB/s]
-  2%|▌                                     | 665k/43.8M [00:00&lt;00:39, 1.08MB/s]
-  2%|▋                                     | 801k/43.8M [00:00&lt;00:36, 1.16MB/s]
-  2%|▊                                     | 992k/43.8M [00:01&lt;00:30, 1.38MB/s]
-  3%|█                                    | 1.19M/43.8M [00:01&lt;00:27, 1.55MB/s]
-  3%|█▎                                   | 1.51M/43.8M [00:01&lt;00:20, 2.03MB/s]
-  4%|█▌                                   | 1.78M/43.8M [00:01&lt;00:18, 2.22MB/s]
-  5%|█▉                                   | 2.33M/43.8M [00:01&lt;00:13, 3.16MB/s]
-  7%|██▍                                  | 2.85M/43.8M [00:01&lt;00:10, 3.74MB/s]
-  8%|███                                  | 3.69M/43.8M [00:01&lt;00:07, 5.08MB/s]
- 10%|███▉                                 | 4.59M/43.8M [00:01&lt;00:06, 6.21MB/s]
- 14%|█████                                | 5.98M/43.8M [00:01&lt;00:04, 8.43MB/s]
- 17%|██████▎                              | 7.50M/43.8M [00:01&lt;00:03, 10.4MB/s]
- 23%|████████▍                            | 10.0M/43.8M [00:02&lt;00:02, 14.6MB/s]
- 29%|██████████▋                          | 12.6M/43.8M [00:02&lt;00:01, 17.9MB/s]
- 39%|██████████████▍                      | 17.1M/43.8M [00:02&lt;00:01, 25.7MB/s]
- 50%|██████████████████▎                  | 21.7M/43.8M [00:02&lt;00:00, 31.5MB/s]
- 63%|███████████████████████▏             | 27.4M/43.8M [00:02&lt;00:00, 38.1MB/s]
- 77%|████████████████████████████▋        | 33.9M/43.8M [00:02&lt;00:00, 44.9MB/s]
- 92%|██████████████████████████████████▏  | 40.4M/43.8M [00:02&lt;00:00, 49.5MB/s]
+  0%|                                     | 8.19k/43.8M [00:00&lt;12:59, 56.1kB/s]
+  0%|                                      | 39.9k/43.8M [00:00&lt;04:50, 150kB/s]
+  0%|                                      | 96.3k/43.8M [00:00&lt;02:50, 257kB/s]
+  0%|                                       | 136k/43.8M [00:00&lt;02:46, 262kB/s]
+  0%|▏                                      | 209k/43.8M [00:00&lt;02:05, 346kB/s]
+  1%|▏                                      | 272k/43.8M [00:00&lt;01:56, 375kB/s]
+  1%|▎                                      | 384k/43.8M [00:01&lt;01:26, 500kB/s]
+  1%|▍                                      | 497k/43.8M [00:01&lt;01:14, 585kB/s]
+  1%|▌                                      | 656k/43.8M [00:01&lt;00:58, 741kB/s]
+  2%|▊                                      | 849k/43.8M [00:01&lt;00:46, 915kB/s]
+  3%|▉                                    | 1.13M/43.8M [00:01&lt;00:33, 1.28MB/s]
+  3%|█                                    | 1.33M/43.8M [00:01&lt;00:29, 1.43MB/s]
+  4%|█▎                                   | 1.56M/43.8M [00:01&lt;00:25, 1.63MB/s]
+  4%|█▋                                   | 1.95M/43.8M [00:01&lt;00:19, 2.18MB/s]
+  5%|██                                   | 2.40M/43.8M [00:02&lt;00:15, 2.64MB/s]
+  7%|██▌                                  | 3.08M/43.8M [00:02&lt;00:11, 3.69MB/s]
+  8%|███                                  | 3.55M/43.8M [00:02&lt;00:10, 3.89MB/s]
+ 10%|███▋                                 | 4.34M/43.8M [00:02&lt;00:08, 4.90MB/s]
+ 13%|████▉                                | 5.81M/43.8M [00:02&lt;00:05, 7.19MB/s]
+ 16%|█████▉                               | 6.96M/43.8M [00:02&lt;00:04, 8.22MB/s]
+ 20%|███████▎                             | 8.70M/43.8M [00:02&lt;00:03, 10.5MB/s]
+ 25%|█████████▍                           | 11.2M/43.8M [00:02&lt;00:02, 14.2MB/s]
+ 32%|███████████▋                         | 13.9M/43.8M [00:02&lt;00:01, 16.8MB/s]
+ 43%|███████████████▉                     | 18.8M/43.8M [00:03&lt;00:00, 25.3MB/s]
+ 50%|██████████████████▎                  | 21.7M/43.8M [00:03&lt;00:00, 25.8MB/s]
+ 58%|█████████████████████▍               | 25.3M/43.8M [00:03&lt;00:00, 27.7MB/s]
+ 70%|█████████████████████████▊           | 30.5M/43.8M [00:03&lt;00:00, 30.4MB/s]
+ 85%|███████████████████████████████▎     | 37.0M/43.8M [00:03&lt;00:00, 34.5MB/s]
+ 99%|████████████████████████████████████▊| 43.6M/43.8M [00:03&lt;00:00, 37.2MB/s]
   0%|                                              | 0.00/43.8M [00:00&lt;?, ?B/s]
-100%|██████████████████████████████████████| 43.8M/43.8M [00:00&lt;00:00, 187GB/s]
+100%|██████████████████████████████████████| 43.8M/43.8M [00:00&lt;00:00, 298GB/s]
 /home/runner/work/EEGDash/EEGDash/.venv/lib/python3.12/site-packages/urllib3/connectionpool.py:1110: InsecureRequestWarning: Unverified HTTPS request is being made to host &#39;lampx.tugraz.at&#39;. Adding certificate verification is strongly advised. See: https://urllib3.readthedocs.io/en/latest/advanced-usage.html#tls-warnings
   warnings.warn(
 
   0%|                                              | 0.00/43.1M [00:00&lt;?, ?B/s]
-  0%|                                     | 8.19k/43.1M [00:00&lt;08:55, 80.5kB/s]
-  0%|                                      | 48.1k/43.1M [00:00&lt;02:44, 261kB/s]
-  0%|                                       | 121k/43.1M [00:00&lt;01:32, 464kB/s]
-  0%|▏                                      | 201k/43.1M [00:00&lt;01:13, 586kB/s]
-  1%|▎                                      | 312k/43.1M [00:00&lt;00:55, 764kB/s]
-  1%|▍                                      | 457k/43.1M [00:00&lt;00:43, 979kB/s]
-  1%|▌                                     | 640k/43.1M [00:00&lt;00:34, 1.24MB/s]
-  2%|▊                                     | 856k/43.1M [00:00&lt;00:27, 1.51MB/s]
-  3%|▉                                    | 1.13M/43.1M [00:00&lt;00:22, 1.86MB/s]
-  3%|█▏                                   | 1.40M/43.1M [00:01&lt;00:19, 2.10MB/s]
-  4%|█▌                                   | 1.76M/43.1M [00:01&lt;00:16, 2.52MB/s]
-  5%|█▉                                   | 2.24M/43.1M [00:01&lt;00:12, 3.17MB/s]
-  7%|██▍                                  | 2.83M/43.1M [00:01&lt;00:10, 3.94MB/s]
-  8%|███                                  | 3.61M/43.1M [00:01&lt;00:07, 5.02MB/s]
- 11%|███▉                                 | 4.62M/43.1M [00:01&lt;00:05, 6.44MB/s]
- 14%|█████                                | 5.96M/43.1M [00:01&lt;00:04, 8.42MB/s]
- 18%|██████▌                              | 7.66M/43.1M [00:01&lt;00:03, 10.8MB/s]
- 23%|████████▋                            | 10.1M/43.1M [00:01&lt;00:02, 14.6MB/s]
- 30%|███████████▏                         | 13.0M/43.1M [00:01&lt;00:01, 18.6MB/s]
- 40%|██████████████▊                      | 17.3M/43.1M [00:02&lt;00:01, 25.6MB/s]
- 50%|██████████████████▋                  | 21.7M/43.1M [00:02&lt;00:00, 30.8MB/s]
- 64%|███████████████████████▋             | 27.6M/43.1M [00:02&lt;00:00, 38.9MB/s]
- 77%|████████████████████████████▍        | 33.1M/43.1M [00:02&lt;00:00, 43.7MB/s]
- 90%|█████████████████████████████████▏   | 38.6M/43.1M [00:02&lt;00:00, 46.9MB/s]
+  0%|                                     | 8.19k/43.1M [00:00&lt;13:08, 54.6kB/s]
+  0%|                                      | 56.3k/43.1M [00:00&lt;03:24, 210kB/s]
+  0%|                                       | 113k/43.1M [00:00&lt;02:31, 284kB/s]
+  0%|▏                                      | 176k/43.1M [00:00&lt;02:07, 337kB/s]
+  1%|▏                                      | 232k/43.1M [00:00&lt;02:02, 350kB/s]
+  1%|▎                                      | 296k/43.1M [00:00&lt;01:54, 373kB/s]
+  1%|▎                                      | 400k/43.1M [00:01&lt;01:29, 476kB/s]
+  1%|▍                                      | 497k/43.1M [00:01&lt;01:20, 527kB/s]
+  2%|▌                                      | 673k/43.1M [00:01&lt;00:58, 726kB/s]
+  2%|▊                                      | 841k/43.1M [00:01&lt;00:50, 843kB/s]
+  3%|▉                                    | 1.10M/43.1M [00:01&lt;00:38, 1.10MB/s]
+  3%|█▏                                   | 1.39M/43.1M [00:01&lt;00:30, 1.36MB/s]
+  4%|█▌                                   | 1.84M/43.1M [00:01&lt;00:22, 1.84MB/s]
+  6%|██                                   | 2.38M/43.1M [00:02&lt;00:17, 2.36MB/s]
+  7%|██▋                                  | 3.19M/43.1M [00:02&lt;00:12, 3.27MB/s]
+ 10%|███▌                                 | 4.14M/43.1M [00:02&lt;00:09, 4.16MB/s]
+ 13%|████▊                                | 5.58M/43.1M [00:02&lt;00:06, 5.77MB/s]
+ 17%|██████▏                              | 7.25M/43.1M [00:02&lt;00:04, 7.35MB/s]
+ 23%|████████▍                            | 9.89M/43.1M [00:02&lt;00:03, 10.4MB/s]
+ 30%|███████████                          | 12.8M/43.1M [00:03&lt;00:02, 13.1MB/s]
+ 41%|███████████████▏                     | 17.6M/43.1M [00:03&lt;00:01, 18.6MB/s]
+ 51%|███████████████████                  | 22.1M/43.1M [00:03&lt;00:00, 21.9MB/s]
+ 65%|████████████████████████             | 28.1M/43.1M [00:03&lt;00:00, 30.1MB/s]
+ 76%|████████████████████████████         | 32.7M/43.1M [00:03&lt;00:00, 34.0MB/s]
+ 84%|███████████████████████████████▎     | 36.4M/43.1M [00:03&lt;00:00, 32.3MB/s]
+ 97%|███████████████████████████████████▊ | 41.6M/43.1M [00:03&lt;00:00, 33.8MB/s]
   0%|                                              | 0.00/43.1M [00:00&lt;?, ?B/s]
-100%|██████████████████████████████████████| 43.1M/43.1M [00:00&lt;00:00, 184GB/s]
+100%|██████████████████████████████████████| 43.1M/43.1M [00:00&lt;00:00, 264GB/s]
 /home/runner/work/EEGDash/EEGDash/.venv/lib/python3.12/site-packages/urllib3/connectionpool.py:1110: InsecureRequestWarning: Unverified HTTPS request is being made to host &#39;lampx.tugraz.at&#39;. Adding certificate verification is strongly advised. See: https://urllib3.readthedocs.io/en/latest/advanced-usage.html#tls-warnings
   warnings.warn(
 
   0%|                                              | 0.00/44.2M [00:00&lt;?, ?B/s]
-  0%|                                     | 8.19k/44.2M [00:00&lt;09:12, 80.1kB/s]
-  0%|                                      | 48.1k/44.2M [00:00&lt;02:49, 261kB/s]
-  0%|                                       | 104k/44.2M [00:00&lt;01:53, 390kB/s]
-  0%|▏                                      | 153k/44.2M [00:00&lt;01:45, 419kB/s]
-  0%|▏                                      | 216k/44.2M [00:00&lt;01:29, 489kB/s]
-  1%|▏                                      | 265k/44.2M [00:00&lt;01:30, 484kB/s]
-  1%|▎                                      | 314k/44.2M [00:00&lt;01:31, 481kB/s]
-  1%|▎                                      | 362k/44.2M [00:00&lt;01:32, 475kB/s]
-  1%|▎                                      | 411k/44.2M [00:00&lt;01:32, 472kB/s]
-  1%|▍                                      | 488k/44.2M [00:01&lt;01:18, 558kB/s]
-  1%|▍                                      | 545k/44.2M [00:01&lt;01:18, 554kB/s]
-  2%|▌                                      | 673k/44.2M [00:01&lt;00:57, 761kB/s]
-  2%|▋                                      | 808k/44.2M [00:01&lt;00:46, 926kB/s]
-  2%|▊                                     | 992k/44.2M [00:01&lt;00:36, 1.18MB/s]
-  3%|█                                    | 1.20M/44.2M [00:01&lt;00:30, 1.43MB/s]
-  3%|█▏                                   | 1.46M/44.2M [00:01&lt;00:24, 1.74MB/s]
-  4%|█▍                                   | 1.79M/44.2M [00:01&lt;00:19, 2.19MB/s]
-  5%|█▊                                   | 2.18M/44.2M [00:01&lt;00:15, 2.67MB/s]
-  6%|██▎                                  | 2.74M/44.2M [00:01&lt;00:11, 3.47MB/s]
-  8%|██▊                                  | 3.35M/44.2M [00:02&lt;00:09, 4.21MB/s]
- 10%|███▌                                 | 4.31M/44.2M [00:02&lt;00:06, 5.73MB/s]
- 12%|████▍                                | 5.27M/44.2M [00:02&lt;00:05, 6.79MB/s]
- 16%|█████▊                               | 6.98M/44.2M [00:02&lt;00:03, 9.69MB/s]
- 19%|███████▏                             | 8.54M/44.2M [00:02&lt;00:03, 11.3MB/s]
- 26%|█████████▊                           | 11.7M/44.2M [00:02&lt;00:01, 17.0MB/s]
- 33%|████████████▏                        | 14.5M/44.2M [00:02&lt;00:01, 20.1MB/s]
- 45%|████████████████▊                    | 20.1M/44.2M [00:02&lt;00:00, 30.2MB/s]
- 57%|████████████████████▉                | 25.1M/44.2M [00:02&lt;00:00, 36.0MB/s]
- 69%|█████████████████████████▌           | 30.6M/44.2M [00:02&lt;00:00, 41.6MB/s]
- 82%|██████████████████████████████▍      | 36.3M/44.2M [00:03&lt;00:00, 46.1MB/s]
- 96%|███████████████████████████████████▍ | 42.4M/44.2M [00:03&lt;00:00, 50.4MB/s]
+  0%|                                     | 8.19k/44.2M [00:00&lt;13:24, 54.9kB/s]
+  0%|                                      | 39.9k/44.2M [00:00&lt;05:00, 147kB/s]
+  0%|                                       | 113k/44.2M [00:00&lt;02:26, 301kB/s]
+  0%|▏                                      | 168k/44.2M [00:00&lt;02:14, 328kB/s]
+  1%|▏                                      | 272k/44.2M [00:00&lt;01:35, 460kB/s]
+  1%|▎                                      | 369k/44.2M [00:00&lt;01:24, 522kB/s]
+  1%|▍                                      | 537k/44.2M [00:01&lt;01:00, 717kB/s]
+  2%|▌                                      | 688k/44.2M [00:01&lt;00:53, 810kB/s]
+  2%|▊                                     | 984k/44.2M [00:01&lt;00:34, 1.24MB/s]
+  3%|▉                                    | 1.18M/44.2M [00:01&lt;00:31, 1.38MB/s]
+  3%|█▏                                   | 1.41M/44.2M [00:01&lt;00:27, 1.57MB/s]
+  4%|█▌                                   | 1.91M/44.2M [00:01&lt;00:17, 2.42MB/s]
+  5%|█▉                                   | 2.37M/44.2M [00:01&lt;00:14, 2.82MB/s]
+  7%|██▌                                  | 3.10M/44.2M [00:01&lt;00:10, 3.92MB/s]
+  8%|███                                  | 3.68M/44.2M [00:01&lt;00:09, 4.31MB/s]
+ 10%|███▊                                 | 4.55M/44.2M [00:02&lt;00:07, 5.38MB/s]
+ 14%|█████▏                               | 6.19M/44.2M [00:02&lt;00:04, 7.91MB/s]
+ 17%|██████▏                              | 7.42M/44.2M [00:02&lt;00:04, 8.85MB/s]
+ 21%|███████▉                             | 9.47M/44.2M [00:02&lt;00:02, 11.8MB/s]
+ 27%|██████████                           | 12.0M/44.2M [00:02&lt;00:02, 15.1MB/s]
+ 34%|████████████▍                        | 14.8M/44.2M [00:02&lt;00:01, 17.7MB/s]
+ 46%|████████████████▉                    | 20.2M/44.2M [00:02&lt;00:00, 27.4MB/s]
+ 52%|███████████████████▎                 | 23.0M/44.2M [00:02&lt;00:00, 27.1MB/s]
+ 60%|██████████████████████▎              | 26.7M/44.2M [00:03&lt;00:00, 27.7MB/s]
+ 73%|███████████████████████████          | 32.4M/44.2M [00:03&lt;00:00, 31.0MB/s]
+ 88%|████████████████████████████████▌    | 38.9M/44.2M [00:03&lt;00:00, 34.7MB/s]
   0%|                                              | 0.00/44.2M [00:00&lt;?, ?B/s]
-100%|██████████████████████████████████████| 44.2M/44.2M [00:00&lt;00:00, 249GB/s]
+100%|██████████████████████████████████████| 44.2M/44.2M [00:00&lt;00:00, 256GB/s]
 /home/runner/work/EEGDash/EEGDash/.venv/lib/python3.12/site-packages/urllib3/connectionpool.py:1110: InsecureRequestWarning: Unverified HTTPS request is being made to host &#39;lampx.tugraz.at&#39;. Adding certificate verification is strongly advised. See: https://urllib3.readthedocs.io/en/latest/advanced-usage.html#tls-warnings
   warnings.warn(
 
   0%|                                              | 0.00/44.1M [00:00&lt;?, ?B/s]
-  0%|                                     | 8.19k/44.1M [00:00&lt;09:04, 80.9kB/s]
-  0%|                                      | 48.1k/44.1M [00:00&lt;02:47, 263kB/s]
-  0%|                                       | 128k/44.1M [00:00&lt;01:27, 500kB/s]
-  0%|▏                                      | 201k/44.1M [00:00&lt;01:15, 583kB/s]
-  1%|▎                                      | 329k/44.1M [00:00&lt;00:53, 824kB/s]
-  1%|▍                                      | 457k/44.1M [00:00&lt;00:45, 969kB/s]
-  1%|▌                                     | 640k/44.1M [00:00&lt;00:35, 1.24MB/s]
-  2%|▋                                     | 849k/44.1M [00:00&lt;00:28, 1.49MB/s]
-  3%|▉                                    | 1.15M/44.1M [00:00&lt;00:21, 1.95MB/s]
-  3%|█▏                                   | 1.45M/44.1M [00:01&lt;00:19, 2.24MB/s]
-  5%|█▋                                   | 2.01M/44.1M [00:01&lt;00:13, 3.23MB/s]
-  6%|██                                   | 2.53M/44.1M [00:01&lt;00:10, 3.79MB/s]
-  8%|██▉                                  | 3.54M/44.1M [00:01&lt;00:07, 5.65MB/s]
- 10%|███▋                                 | 4.41M/44.1M [00:01&lt;00:06, 6.49MB/s]
- 14%|█████                                | 6.09M/44.1M [00:01&lt;00:04, 9.48MB/s]
- 18%|██████▍                              | 7.74M/44.1M [00:01&lt;00:03, 11.5MB/s]
- 23%|████████▋                            | 10.3M/44.1M [00:01&lt;00:02, 15.6MB/s]
- 30%|███████████▏                         | 13.3M/44.1M [00:01&lt;00:01, 19.6MB/s]
- 39%|██████████████▎                      | 17.0M/44.1M [00:01&lt;00:01, 24.7MB/s]
- 50%|██████████████████▋                  | 22.2M/44.1M [00:02&lt;00:00, 32.4MB/s]
- 63%|███████████████████████▏             | 27.6M/44.1M [00:02&lt;00:00, 38.5MB/s]
- 77%|████████████████████████████▋        | 34.1M/44.1M [00:02&lt;00:00, 44.6MB/s]
- 92%|██████████████████████████████████   | 40.6M/44.1M [00:02&lt;00:00, 49.4MB/s]
+  0%|                                     | 8.19k/44.1M [00:00&lt;13:28, 54.5kB/s]
+  0%|                                      | 48.1k/44.1M [00:00&lt;04:07, 178kB/s]
+  0%|                                       | 128k/44.1M [00:00&lt;02:10, 337kB/s]
+  0%|▏                                      | 184k/44.1M [00:00&lt;02:04, 351kB/s]
+  1%|▎                                      | 312k/44.1M [00:00&lt;01:22, 529kB/s]
+  1%|▍                                      | 432k/44.1M [00:00&lt;01:10, 618kB/s]
+  1%|▌                                      | 633k/44.1M [00:01&lt;00:51, 849kB/s]
+  2%|▋                                      | 833k/44.1M [00:01&lt;00:43, 998kB/s]
+  3%|▉                                    | 1.14M/44.1M [00:01&lt;00:32, 1.31MB/s]
+  3%|█▏                                   | 1.47M/44.1M [00:01&lt;00:26, 1.59MB/s]
+  5%|█▋                                   | 2.01M/44.1M [00:01&lt;00:19, 2.19MB/s]
+  6%|██▏                                  | 2.56M/44.1M [00:01&lt;00:15, 2.63MB/s]
+  8%|██▉                                  | 3.55M/44.1M [00:01&lt;00:10, 3.82MB/s]
+ 10%|███▊                                 | 4.49M/44.1M [00:02&lt;00:08, 4.53MB/s]
+ 14%|█████▎                               | 6.34M/44.1M [00:02&lt;00:05, 6.84MB/s]
+ 18%|██████▋                              | 7.94M/44.1M [00:02&lt;00:04, 7.97MB/s]
+ 26%|█████████▌                           | 11.3M/44.1M [00:02&lt;00:02, 12.3MB/s]
+ 33%|████████████▏                        | 14.5M/44.1M [00:02&lt;00:01, 14.9MB/s]
+ 45%|████████████████▊                    | 20.0M/44.1M [00:02&lt;00:01, 21.2MB/s]
+ 58%|█████████████████████▎               | 25.4M/44.1M [00:02&lt;00:00, 28.5MB/s]
+ 65%|███████████████████████▉             | 28.5M/44.1M [00:03&lt;00:00, 28.0MB/s]
+ 74%|███████████████████████████▍         | 32.7M/44.1M [00:03&lt;00:00, 28.9MB/s]
+ 89%|████████████████████████████████▉    | 39.2M/44.1M [00:03&lt;00:00, 33.1MB/s]
   0%|                                              | 0.00/44.1M [00:00&lt;?, ?B/s]
-100%|██████████████████████████████████████| 44.1M/44.1M [00:00&lt;00:00, 221GB/s]
+100%|██████████████████████████████████████| 44.1M/44.1M [00:00&lt;00:00, 237GB/s]
 /home/runner/work/EEGDash/EEGDash/.venv/lib/python3.12/site-packages/urllib3/connectionpool.py:1110: InsecureRequestWarning: Unverified HTTPS request is being made to host &#39;lampx.tugraz.at&#39;. Adding certificate verification is strongly advised. See: https://urllib3.readthedocs.io/en/latest/advanced-usage.html#tls-warnings
   warnings.warn(
 
   0%|                                              | 0.00/42.3M [00:00&lt;?, ?B/s]
-  0%|                                      | 16.4k/42.3M [00:00&lt;04:22, 161kB/s]
-  0%|                                      | 64.5k/42.3M [00:00&lt;02:02, 344kB/s]
-  0%|                                       | 121k/42.3M [00:00&lt;01:36, 438kB/s]
-  0%|▏                                      | 193k/42.3M [00:00&lt;01:18, 540kB/s]
-  1%|▎                                      | 272k/42.3M [00:00&lt;01:07, 626kB/s]
-  1%|▎                                      | 352k/42.3M [00:00&lt;01:02, 676kB/s]
-  1%|▍                                      | 440k/42.3M [00:00&lt;00:56, 735kB/s]
-  1%|▌                                      | 545k/42.3M [00:00&lt;00:50, 825kB/s]
-  1%|▌                                      | 628k/42.3M [00:00&lt;00:50, 820kB/s]
-  2%|▋                                     | 784k/42.3M [00:01&lt;00:40, 1.04MB/s]
-  2%|▊                                     | 929k/42.3M [00:01&lt;00:35, 1.15MB/s]
-  3%|▉                                    | 1.10M/42.3M [00:01&lt;00:31, 1.32MB/s]
-  3%|█                                    | 1.25M/42.3M [00:01&lt;00:30, 1.34MB/s]
-  3%|█▎                                   | 1.45M/42.3M [00:01&lt;00:26, 1.53MB/s]
-  4%|█▌                                   | 1.73M/42.3M [00:01&lt;00:21, 1.89MB/s]
-  5%|█▋                                   | 1.97M/42.3M [00:01&lt;00:19, 2.02MB/s]
-  6%|██                                   | 2.36M/42.3M [00:01&lt;00:15, 2.56MB/s]
-  7%|██▍                                  | 2.78M/42.3M [00:01&lt;00:13, 3.01MB/s]
-  8%|██▉                                  | 3.37M/42.3M [00:01&lt;00:10, 3.84MB/s]
- 10%|███▌                                 | 4.03M/42.3M [00:02&lt;00:08, 4.63MB/s]
- 12%|████▎                                | 4.94M/42.3M [00:02&lt;00:06, 5.91MB/s]
- 14%|█████▏                               | 5.99M/42.3M [00:02&lt;00:05, 7.20MB/s]
- 18%|██████▌                              | 7.50M/42.3M [00:02&lt;00:03, 9.43MB/s]
- 22%|████████                             | 9.24M/42.3M [00:02&lt;00:02, 11.7MB/s]
- 28%|██████████▏                          | 11.7M/42.3M [00:02&lt;00:02, 15.3MB/s]
- 34%|████████████▋                        | 14.6M/42.3M [00:02&lt;00:01, 19.1MB/s]
- 44%|████████████████▎                    | 18.6M/42.3M [00:02&lt;00:00, 25.2MB/s]
- 55%|████████████████████▍                | 23.4M/42.3M [00:02&lt;00:00, 31.7MB/s]
- 71%|██████████████████████████▏          | 29.9M/42.3M [00:02&lt;00:00, 40.3MB/s]
- 86%|███████████████████████████████▊     | 36.4M/42.3M [00:03&lt;00:00, 46.3MB/s]
+  0%|                                     | 8.19k/42.3M [00:00&lt;12:48, 55.0kB/s]
+  0%|                                      | 56.3k/42.3M [00:00&lt;03:19, 212kB/s]
+  0%|                                       | 113k/42.3M [00:00&lt;02:27, 286kB/s]
+  0%|▏                                      | 176k/42.3M [00:00&lt;02:03, 340kB/s]
+  1%|▏                                      | 249k/42.3M [00:00&lt;01:47, 392kB/s]
+  1%|▎                                      | 337k/42.3M [00:00&lt;01:31, 458kB/s]
+  1%|▍                                      | 417k/42.3M [00:01&lt;01:26, 482kB/s]
+  1%|▌                                      | 577k/42.3M [00:01&lt;01:02, 667kB/s]
+  2%|▋                                      | 736k/42.3M [00:01&lt;00:52, 791kB/s]
+  2%|▉                                    | 1.02M/42.3M [00:01&lt;00:36, 1.14MB/s]
+  3%|█                                    | 1.27M/42.3M [00:01&lt;00:31, 1.30MB/s]
+  4%|█▌                                   | 1.78M/42.3M [00:01&lt;00:21, 1.92MB/s]
+  5%|██                                   | 2.30M/42.3M [00:01&lt;00:16, 2.39MB/s]
+  8%|██▊                                  | 3.19M/42.3M [00:02&lt;00:11, 3.47MB/s]
+ 10%|███▌                                 | 4.06M/42.3M [00:02&lt;00:09, 4.16MB/s]
+ 14%|████▉                                | 5.71M/42.3M [00:02&lt;00:05, 6.23MB/s]
+ 17%|██████▎                              | 7.25M/42.3M [00:02&lt;00:04, 7.43MB/s]
+ 25%|█████████                            | 10.4M/42.3M [00:02&lt;00:02, 11.4MB/s]
+ 31%|███████████▌                         | 13.2M/42.3M [00:02&lt;00:02, 13.8MB/s]
+ 45%|████████████████▋                    | 19.0M/42.3M [00:03&lt;00:01, 21.2MB/s]
+ 57%|█████████████████████▏               | 24.2M/42.3M [00:03&lt;00:00, 28.0MB/s]
+ 64%|███████████████████████▊             | 27.2M/42.3M [00:03&lt;00:00, 27.7MB/s]
+ 71%|██████████████████████████▍          | 30.2M/42.3M [00:03&lt;00:00, 28.1MB/s]
+ 84%|███████████████████████████████      | 35.6M/42.3M [00:03&lt;00:00, 31.3MB/s]
+ 99%|████████████████████████████████████▊| 42.1M/42.3M [00:03&lt;00:00, 34.9MB/s]
   0%|                                              | 0.00/42.3M [00:00&lt;?, ?B/s]
-100%|██████████████████████████████████████| 42.3M/42.3M [00:00&lt;00:00, 175GB/s]
-[05/19/26 12:49:17] INFO     CSP+LDA | BNCI2014-001 | 1 | 0train:   base.py:1067
+100%|██████████████████████████████████████| 42.3M/42.3M [00:00&lt;00:00, 269GB/s]
+[05/20/26 09:59:15] INFO     CSP+LDA | BNCI2014-001 | 1 | 0train:   base.py:1067
                              Score 0.937
                     INFO     CSP+LR | BNCI2014-001 | 1 | 0train:    base.py:1067
                              Score 0.955
@@ -1348,7 +1349,7 @@ per window, not one per record.</p></li>
 <p>See <a class="reference internal" href="../../../../references.html"><span class="doc">References</span></a> for the centralized bibliography of papers
 cited above. Add or amend an entry once in
 <code class="file docutils literal notranslate"><span class="pre">docs/source/refs.bib</span></code>; every tutorial inherits the update.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 30.997 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 35.661 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-auto-examples-tutorials-50-evaluation-plot-55-moabb-interop-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/eegdash/EEGDash/main?urlpath=lab/tree/notebooks/generated/auto_examples/tutorials/50_evaluation/plot_55_moabb_interop.ipynb"><img alt="Launch binder" src="../../../../_images/binder_badge_logo10.svg" style="width: 150px;" />
@@ -1446,8 +1447,8 @@ cited above. Add or amend an entry once in
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="../../../../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb"></script>
-<script defer src="../../../../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb"></script>
+  <script defer src="../../../../_static/scripts/bootstrap.js?digest=0790524f97105ba85085"></script>
+<script defer src="../../../../_static/scripts/pydata-sphinx-theme.js?digest=0790524f97105ba85085"></script>
 
   <footer class="bd-footer">
 <div class="bd-footer__inner bd-page-width">
@@ -1473,7 +1474,7 @@ cited above. Add or amend an entry once in
         <div class="footer-item">
 <p class="theme-version">
   <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
-  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.17.1.
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.18.0.
 </p></div>
       
     </div>

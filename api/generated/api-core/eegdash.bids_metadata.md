@@ -9,18 +9,26 @@ and enriching metadata records with participant information from BIDS datasets.
 
 ### Functions
 
-| `build_query_from_kwargs`(\*[, allowed_fields, ...])   | Build and validate a MongoDB query from keyword arguments.                            |
-|--------------------------------------------------------|---------------------------------------------------------------------------------------|
-| `merge_query`([query, require_query])                  | Merge a raw query dict with keyword arguments into a final query.                     |
-| `normalize_key`(key)                                   | Normalize a string key for robust matching.                                           |
-| `merge_participants_fields`(description, ...)          | Merge fields from a participants.tsv row into a description dict.                     |
-| `participants_row_for_subject`(bids_root, subject)     | Load participants.tsv and return the row for a specific subject.                      |
-| `participants_extras_from_tsv`(bids_root, ...)         | Extract additional participant information from participants.tsv.                     |
-| `attach_participants_extras`(raw, description, ...)    | Attach extra participant data to a raw object and its description.                    |
-| `enrich_from_participants`(bids_root, ...)             | Read participants.tsv and attach extra info for the subject.                          |
-| `get_entity_from_record`(record, entity)               | Get an entity value from a record, supporting both v1 (flat) and v2 (nested) formats. |
-| `get_entities_from_record`(record[, entities])         | Get multiple entity values from a record.                                             |
-| `records_to_dataframe`(records, columns[, aliases])    | Project a list of MongoDB JSON records onto a fixed DataFrame layout.                 |
+| `build_description`(record, description_fields)      | Build a description dict for one record, merging participant metadata.                  |
+|------------------------------------------------------|-----------------------------------------------------------------------------------------|
+| `build_query_from_kwargs`(\*[, allowed_fields, ...]) | Build and validate a MongoDB query from keyword arguments.                              |
+| `find_key_in_nested_dict`(data, target_key)          | Recursively search nested dicts/lists for target_key (case- and separator-insensitive). |
+| `merge_query`([query, require_query])                | Merge a raw query dict with keyword arguments into a final query.                       |
+| `normalize_key`(key)                                 | Normalize a string key for robust matching.                                             |
+| `merge_participants_fields`(description, ...)        | Merge fields from a participants.tsv row into a description dict.                       |
+| `participants_row_for_subject`(bids_root, subject)   | Load participants.tsv and return the row for a specific subject.                        |
+| `participants_extras_from_tsv`(bids_root, ...)       | Extract additional participant information from participants.tsv.                       |
+| `attach_participants_extras`(raw, description, ...)  | Attach extra participant data to a raw object and its description.                      |
+| `enrich_from_participants`(bids_root, ...)           | Read participants.tsv and attach extra info for the subject.                            |
+| `get_entity_from_record`(record, entity)             | Get an entity value from a record, supporting both v1 (flat) and v2 (nested) formats.   |
+| `get_entities_from_record`(record[, entities])       | Get multiple entity values from a record.                                               |
+| `records_to_dataframe`(records, columns[, aliases])  | Project a list of MongoDB JSON records onto a fixed DataFrame layout.                   |
+
+### eegdash.bids_metadata.build_description(record: [dict](https://docs.python.org/3/library/stdtypes.html#dict)[[str](https://docs.python.org/3/library/stdtypes.html#str), [Any](https://docs.python.org/3/library/typing.html#typing.Any)], description_fields: [list](https://docs.python.org/3/library/stdtypes.html#list)[[str](https://docs.python.org/3/library/stdtypes.html#str)], description_precedence: [str](https://docs.python.org/3/library/stdtypes.html#str) = 'record', participants_row: [dict](https://docs.python.org/3/library/stdtypes.html#dict)[[str](https://docs.python.org/3/library/stdtypes.html#str), [Any](https://docs.python.org/3/library/typing.html#typing.Any)] | [None](https://docs.python.org/3/library/constants.html#None) = None) → [dict](https://docs.python.org/3/library/stdtypes.html#dict)[[str](https://docs.python.org/3/library/stdtypes.html#str), [Any](https://docs.python.org/3/library/typing.html#typing.Any)]
+
+Build a description dict for one record, merging participant metadata.
+
+<!-- !! processed by numpydoc !! -->
 
 ### eegdash.bids_metadata.build_query_from_kwargs(, allowed_fields: [AbstractSet](https://docs.python.org/3/library/typing.html#typing.AbstractSet)[[str](https://docs.python.org/3/library/stdtypes.html#str)] | [None](https://docs.python.org/3/library/constants.html#None) = None, field_spec: [Mapping](https://docs.python.org/3/library/collections.abc.html#collections.abc.Mapping)[[str](https://docs.python.org/3/library/stdtypes.html#str), [Mapping](https://docs.python.org/3/library/collections.abc.html#collections.abc.Mapping)[[str](https://docs.python.org/3/library/stdtypes.html#str), [Any](https://docs.python.org/3/library/typing.html#typing.Any)]] | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs: [Any](https://docs.python.org/3/library/typing.html#typing.Any)) → [dict](https://docs.python.org/3/library/stdtypes.html#dict)[[str](https://docs.python.org/3/library/stdtypes.html#str), [Any](https://docs.python.org/3/library/typing.html#typing.Any)]
 
@@ -62,6 +70,12 @@ level since the inject script flattens these from nested entities.
   [dict](https://docs.python.org/3/library/stdtypes.html#dict)
 * **Raises:**
   [**ValueError**](https://docs.python.org/3/library/exceptions.html#ValueError) – If an unsupported field is provided, or if a value is None/empty.
+
+<!-- !! processed by numpydoc !! -->
+
+### eegdash.bids_metadata.find_key_in_nested_dict(data: [Any](https://docs.python.org/3/library/typing.html#typing.Any), target_key: [str](https://docs.python.org/3/library/stdtypes.html#str)) → [Any](https://docs.python.org/3/library/typing.html#typing.Any)
+
+Recursively search nested dicts/lists for target_key (case- and separator-insensitive).
 
 <!-- !! processed by numpydoc !! -->
 

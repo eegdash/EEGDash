@@ -121,24 +121,7 @@ No README content is available for this dataset.
     <b>Fig. 01</b> Signal &amp; montage
     <span class="right">32 ch · EEG, fNIRS · 10, 250 Hz · 30 subjects, 1034 recordings</span>
   </div>
-  <div class="figpair-grid"><div class="figpair-cell figpair-trace"><details class="trace-viewer">
-  <summary>Live trace viewer — <strong>sub-021 · ses-02 · task-nbackarithmetic</strong></summary>
-  <p class="trace-viewer-caption">
-    Showing <strong>one</strong> representative recording out of
-    <strong>30 subjects and 1034 recordings</strong> in this dataset.
-    Browse the full set on <a href="https://openneuro.org/datasets/ds007554" target="_blank" rel="noopener">OpenNeuro</a>;
-    drop any other <code>_eeg.{set,edf,bdf,vhdr}</code> file onto the
-    viewer (or pass <code>?eeg=&lt;url&gt;</code>) to inspect it.
-  </p>
-  <iframe
-    data-src="https://eegdash.github.io/eegdash-viewer/?dataset=ds007554&sub=021&ses=02&task=nbackarithmetic&ext=edf&embed=1"
-    loading="lazy"
-    width="100%" height="640"
-    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 1200px; display: block; background: transparent;"
-    title="Live EEG trace viewer for ds007554 — sub-021 · ses-02 · task-nbackarithmetic"
-    referrerpolicy="no-referrer">
-  </iframe>
-</details></div><div class="figpair-cell figpair-montage"><details class="electrode-explorer">
+  <div class="figpair-grid"><div class="figpair-cell figpair-montage"><details class="electrode-explorer">
   <summary>Electrode layout — EEG · 32 sensors — 32 channels</summary>
   <iframe
     data-src="https://electrodes.eegdash.org/?montage=354483bf084ec493&embed=1"

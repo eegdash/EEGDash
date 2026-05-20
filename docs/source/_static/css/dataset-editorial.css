@@ -1,0 +1,2751 @@
+/* =========================================================================
+   Dataset · Editorial Brief
+   ---------------------------------------------------------------------------
+   Re-skin for per-dataset documentation pages (api/dataset/eegdash.dataset.*).
+   Lifted from the v1-editorial-v2 design package. Pairs Spectral (serif)
+   with Inter (UI sans) and JetBrains Mono (code), keyed to the EEGdash
+   brand pair: #006ca3 (blue) and #f7941d (orange).
+
+   Loaded conditionally from layout.html — only pages under
+   `api/dataset/eegdash.dataset.` receive this stylesheet, so we can use
+   broad selectors without worrying about leakage into the rest of the site.
+
+   Companion components emitted by conf.py's DATASET_PAGE_TEMPLATE live
+   under the `.eegdash-ed-*` namespace. Re-skins of upstream pydata /
+   sphinx-design components are addressed by their existing class names.
+   ========================================================================= */
+
+:root {
+  /* Match the dataset_summary index — pure white page surface. The
+     previous cream (#f7f7f5) created a visible mismatch when readers
+     navigated between the catalog index and a dataset detail page. */
+  --ed-paper: #ffffff;
+  --ed-paper-2: #f1f5f9;
+  --ed-ink: #222832;
+  --ed-ink-2: #34404e;
+  --ed-muted: #6b7785;
+  --ed-rule: #d0d6dc;
+  --ed-accent: #006ca3;   /* EEGdash blue */
+  --ed-accent-2: #f7941d; /* EEGdash orange */
+  --ed-mark: #d8e8f0;
+  --ed-mark-2: #fde6c8;
+  --ed-success: #2a6f3a;
+
+  --ed-font-serif: "Spectral", "Source Serif 4", Georgia, serif;
+  --ed-font-sans: "Inter", "Source Sans 3", "Noto Sans", "Helvetica Neue", sans-serif;
+  --ed-font-mono: "JetBrains Mono", "IBM Plex Mono", "SFMono-Regular", Menlo, Consolas, monospace;
+}
+
+html[data-theme="dark"] {
+  --ed-paper: #11161f;
+  --ed-paper-2: #1c2533;
+  --ed-ink: #e6e8ec;
+  --ed-ink-2: #b8c0cc;
+  --ed-muted: #8b95a3;
+  --ed-rule: #2a3343;
+  --ed-mark: rgba(58, 163, 217, 0.15);
+  --ed-mark-2: rgba(247, 148, 29, 0.18);
+  --ed-success: #6dbf83;
+}
+
+/* =========================================================================
+   0. Layout: narrow the left "Section Navigation" sidebar on dataset
+       pages so the article column + floated field-card rail have room.
+       Pydata-sphinx-theme's primary sidebar defaults to ~256px; on the
+       dataset page that's wasted space (the section toc is tiny — Core
+       API / Feature API / Datasets API / Developer Notes — and the
+       field-card already lives in the right column). 200px is enough
+       for the longest entry without wrapping. The right secondary
+       sidebar is already disabled via `:html_theme.sidebar_secondary.remove:`.
+   ========================================================================= */
+
+@media (min-width: 960px) {
+  /* Sidebar at 220px — enough for the longest dataset name on one line
+     ("DS002893: eeg dataset, 49 subjects" measures ~205px at our 13px
+     font), with a couple of px of breathing room. */
+  .bd-container .bd-sidebar-primary {
+    width: 220px;
+    min-width: 220px;
+    max-width: 220px;
+    padding-right: 14px;
+    flex-basis: 220px;
+  }
+  .bd-container .bd-sidebar-primary .sidebar-primary-items__start,
+  .bd-container .bd-sidebar-primary nav .nav-link {
+    font-size: 13px;
+    line-height: 1.35;
+    padding-top: 3px;
+    padding-bottom: 3px;
+  }
+  .bd-container .bd-sidebar-primary nav.bd-links p.bd-links__title {
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
+
+  /* Use the freed-up right margin: stretch the article container all
+     the way to the edge of the page-width grid. The right secondary
+     sidebar is already removed via `:html_theme.sidebar_secondary.remove:`,
+     so this just claims the space that was sitting empty next to the
+     field-card rail. */
+  .bd-container .bd-main,
+  .bd-container .bd-article-container {
+    max-width: none !important;
+    width: 100% !important;
+  }
+  .bd-container .bd-article-container {
+    padding-right: 24px;
+  }
+}
+
+/* =========================================================================
+   1. Page chrome — typography & paper texture
+   ========================================================================= */
+
+body {
+  font-family: var(--ed-font-serif);
+  background: var(--ed-paper);
+  color: var(--ed-ink);
+}
+
+/* Paper-grain dot texture removed per the latest audit — it competed
+   with body copy and chart marks for visual hierarchy, and per the
+   data-viz "decoration that serves no informational function"
+   anti-pattern. Keep the rule shell here as documentation in case we
+   want to reintroduce a much-lower-opacity version scoped to hero
+   blocks only. */
+
+.bd-container,
+.bd-main,
+article.bd-article,
+main.bd-main {
+  background: transparent;
+  position: relative;
+  z-index: 1;
+}
+
+/* Article container — let it fill the available column so the
+   field-card rail sits flush with the right page edge. The reading
+   measure is enforced on individual elements (`.eegdash-ed-deck`,
+   paragraphs, etc.) rather than the container, so prose still stops
+   at a comfortable line length even on wide viewports. */
+article.bd-article {
+  max-width: none;
+  width: 100%;
+  padding-top: 24px;
+  padding-bottom: 96px;
+}
+
+/* Comfortable reading width for prose */
+article.bd-article p,
+article.bd-article ul,
+article.bd-article ol,
+article.bd-article .eegdash-ed-deck,
+article.bd-article .eegdash-ed-byline {
+  max-width: 780px;
+}
+/* The lede deliberately fills the column. With the field-card rail
+   floating right, the natural column width gives the prose plenty of
+   room without sprawling past the rail. Setting `max-width: none`
+   keeps it from looking cramped while the right side stays empty. */
+article.bd-article .eegdash-ed-lede {
+  max-width: none;
+}
+/* But full-width chrome: figpair, layers rail, provenance, colophon,
+   apicard, etc. should still span the full column. */
+article.bd-article .eegdash-ed-layers,
+article.bd-article .eegdash-ed-prov,
+article.bd-article .eegdash-ed-colophon,
+article.bd-article .eegdash-ed-footnotes,
+article.bd-article .eegdash-ed-figpair,
+article.bd-article .eegdash-ed-apicard,
+article.bd-article .eegdash-ed-access,
+article.bd-article .eegdash-ed-examples,
+article.bd-article .eegdash-stats-section,
+article.bd-article .eegdash-ed-pills,
+article.bd-article .eegdash-ed-issue,
+article.bd-article .sd-tab-set,
+article.bd-article > section > .nemar-analysis-section,
+/* Autodoc tables (Parameters / Returns / etc.) and code Examples are
+   reference material that already self-paces its line lengths — the
+   780 px prose cap would otherwise leave the right third of the API
+   section empty. */
+article.bd-article #api-reference p,
+article.bd-article #api-reference ul,
+article.bd-article #api-reference ol,
+article.bd-article #api-reference dl.field-list,
+article.bd-article #api-reference dl.py,
+article.bd-article #dataset-information p,
+article.bd-article #dataset-information ul,
+article.bd-article #dataset-information ol {
+  max-width: none;
+}
+
+article.bd-article > section > h1,
+article.bd-article > section > h2,
+article.bd-article > section > h3,
+article.bd-article > section > h4 {
+  font-family: var(--ed-font-serif);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  color: var(--ed-ink);
+}
+
+article.bd-article h1 {
+  /* Responsive: stays generous on wide viewports, drops gracefully when
+     the field-card rail floats next to it on narrow ones. */
+  font-size: clamp(34px, 4.2vw, 52px);
+  line-height: 1.05;
+  margin-bottom: 16px;
+  text-wrap: balance;
+}
+
+article.bd-article h2 {
+  font-size: 38px;
+  line-height: 1.05;
+  margin-top: 12px;
+  margin-bottom: 18px;
+  border-top: 1.5px solid var(--ed-ink);
+  padding-top: 24px;
+  /* New block formatting context so the `border-top` stops at the
+     floated field-card rail's left edge instead of being drawn behind
+     it (the rail's translucent background otherwise lets the rule
+     bleed through the card body). Mirrors the same fix on
+     `.eegdash-ed-secnum`. */
+  display: flow-root;
+}
+
+article.bd-article h3 {
+  font-family: var(--ed-font-serif);
+  font-weight: 500;
+  font-size: 22px;
+  letter-spacing: -0.005em;
+  color: var(--ed-ink);
+  margin-top: 28px;
+  margin-bottom: 12px;
+}
+/* Tight rhythm inside the API reference — attribute groups should
+   read as a compact reference table, not airy editorial prose. */
+article.bd-article #api-reference h3 { margin-top: 20px; margin-bottom: 8px; }
+article.bd-article #api-reference h4 { margin-top: 14px; margin-bottom: 6px; }
+
+article.bd-article p,
+article.bd-article li {
+  font-family: var(--ed-font-serif);
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--ed-ink-2);
+  text-wrap: pretty;
+}
+
+article.bd-article strong { color: var(--ed-ink); font-weight: 500; }
+article.bd-article em { font-style: italic; color: var(--ed-ink-2); }
+
+article.bd-article code,
+article.bd-article kbd,
+article.bd-article tt {
+  font-family: var(--ed-font-mono);
+  font-size: 0.9em;
+  background: transparent;
+  color: var(--ed-ink);
+  padding: 0 2px;
+  border-radius: 2px;
+  border: 0;
+}
+/* Inline code in prose: soft tint, no chip outline. Keep the stronger
+   treatment only in actual code blocks (pre > code, highlight blocks). */
+article.bd-article p code,
+article.bd-article li code,
+article.bd-article dd code,
+article.bd-article td code {
+  background: rgba(15, 23, 42, 0.045);
+  padding: 1px 4px;
+}
+html[data-theme="dark"] article.bd-article p code,
+html[data-theme="dark"] article.bd-article li code,
+html[data-theme="dark"] article.bd-article dd code,
+html[data-theme="dark"] article.bd-article td code {
+  background: rgba(248, 250, 252, 0.06);
+}
+/* Code blocks keep their full styling — restore the paper-2 background
+   for highlighted pre blocks so they remain visually distinct. */
+article.bd-article div.highlight pre,
+article.bd-article pre.literal-block {
+  background: var(--ed-paper-2);
+}
+
+/* Anchor links — brand-blue with a subtle underline */
+article.bd-article a:not(.headerlink):not(.btn):not(.sd-btn) {
+  color: var(--ed-accent);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(0, 108, 163, 0.25);
+}
+article.bd-article a:not(.headerlink):not(.btn):not(.sd-btn):hover {
+  border-bottom-color: var(--ed-accent);
+}
+
+/* Hide the literal `#` Sphinx renders on headerlink anchors — it shows
+   up as "number sign link" to screen readers and as a sad hash to
+   sighted users. Reveal a chain-icon glyph on focus/hover only. */
+article.bd-article .headerlink {
+  color: var(--ed-rule);
+  text-decoration: none;
+  margin-left: 6px;
+  opacity: 0;
+  transition: opacity 120ms ease, color 120ms ease;
+}
+article.bd-article h1:hover .headerlink,
+article.bd-article h2:hover .headerlink,
+article.bd-article h3:hover .headerlink,
+article.bd-article h4:hover .headerlink,
+article.bd-article .headerlink:focus {
+  opacity: 1;
+  color: var(--ed-accent);
+}
+
+/* =========================================================================
+   1b. Field-card rail — floats next to the hero on wide viewports
+   ---------------------------------------------------------------------------
+   The conf.py template emits this aside immediately above the H1 so the
+   browser parses it before the hero text; CSS float-right then pulls it
+   into the top-right of the article column. On narrow viewports it drops
+   to the bottom of the hero like a card. Matches the v1-editorial-v2
+   `<aside class="rail">` block in proportions and rhythm.
+   ========================================================================= */
+
+aside.eegdash-ed-rail {
+  float: right;
+  width: 340px;
+  margin: 4px 0 28px 36px;
+  font-family: var(--ed-font-sans);
+  font-size: 12px;
+  border: 1px solid var(--ed-ink);
+  background: rgba(255, 255, 255, 0.6);
+  position: relative;
+  z-index: 2;
+}
+html[data-theme="dark"] aside.eegdash-ed-rail {
+  background: rgba(255, 255, 255, 0.03);
+}
+aside.eegdash-ed-rail h4 {
+  font-family: var(--ed-font-sans);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ed-muted);
+  font-weight: 600;
+  padding: 14px 18px 10px;
+  border-bottom: 1px solid var(--ed-rule);
+  margin: 0;
+}
+aside.eegdash-ed-rail dl {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0;
+  padding: 6px 0;
+  margin: 0;
+}
+aside.eegdash-ed-rail dt {
+  padding: 8px 18px;
+  color: var(--ed-muted);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-bottom: 1px dotted var(--ed-rule);
+  font-family: var(--ed-font-sans);
+  font-weight: 500;
+}
+aside.eegdash-ed-rail dd {
+  padding: 8px 18px 8px 0;
+  text-align: right;
+  font-weight: 500;
+  color: var(--ed-ink);
+  border-bottom: 1px dotted var(--ed-rule);
+  font-family: var(--ed-font-mono);
+  font-size: 12px;
+  margin: 0;
+}
+aside.eegdash-ed-rail dl > :nth-last-child(-n+2) { border-bottom: 0; }
+aside.eegdash-ed-rail dt.hdr {
+  font-family: var(--ed-font-sans);
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  color: var(--ed-accent);
+  font-weight: 700;
+  text-transform: uppercase;
+  background: var(--ed-paper-2);
+  padding: 10px 18px 6px;
+  grid-column: 1 / -1;
+  border-bottom: 1px solid var(--ed-rule);
+  border-top: 1px solid var(--ed-ink);
+  text-align: left;
+}
+aside.eegdash-ed-rail dd.hdrpad { display: none; }
+aside.eegdash-ed-rail dd a {
+  color: var(--ed-accent);
+  text-decoration: none;
+  border-bottom: 1px dotted rgba(0, 108, 163, 0.3);
+}
+aside.eegdash-ed-rail .dim {
+  color: var(--ed-muted);
+  font-style: italic;
+}
+aside.eegdash-ed-rail .doi {
+  padding: 14px 18px;
+  border-top: 1px solid var(--ed-ink);
+  background: var(--ed-paper-2);
+  font-family: var(--ed-font-mono);
+  font-size: 11px;
+  color: var(--ed-ink-2);
+  word-break: break-all;
+  line-height: 1.5;
+}
+aside.eegdash-ed-rail .doi span {
+  display: block;
+  font-family: var(--ed-font-sans);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ed-muted);
+  margin-bottom: 4px;
+  font-weight: 600;
+}
+aside.eegdash-ed-rail .doi a {
+  color: var(--ed-ink-2);
+  text-decoration: none;
+  border-bottom: 1px dotted var(--ed-rule);
+}
+aside.eegdash-ed-rail .actions {
+  display: flex;
+  border-top: 1px solid var(--ed-ink);
+}
+/* All three action links share the same calm treatment — the previous
+   inverted last-child chip ("Croissant" on dark navy) introduced an
+   off-system font weight and competed visually with the heading. Use
+   one family + two weights as a hard rule. */
+aside.eegdash-ed-rail .actions a {
+  flex: 1;
+  text-align: center;
+  padding: 12px 8px;
+  font-family: var(--ed-font-sans);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: var(--ed-ink);
+  background: transparent;
+  text-decoration: none;
+  border: 0;
+  border-right: 1px solid var(--ed-rule);
+  border-bottom: 0;
+}
+aside.eegdash-ed-rail .actions a:last-child {
+  border-right: 0;
+}
+aside.eegdash-ed-rail .actions a:hover,
+aside.eegdash-ed-rail .actions a:focus-visible {
+  background: var(--ed-paper-2);
+  color: var(--ed-accent);
+}
+
+/* On narrow viewports stop the float so the rail sits below the hero. */
+@media (max-width: 1100px) {
+  aside.eegdash-ed-rail {
+    float: none;
+    width: 100%;
+    max-width: 460px;
+    margin: 24px 0 32px;
+  }
+}
+
+/* Once the rail is in the float, the existing #dataset-information
+   list-table duplicates the same data — hide just the table, keeping
+   the surrounding "Copy-paste BibTeX" dropdown + Found-an-issue
+   admonition visible so the section is not empty. */
+.eegdash-ed-fieldcard table.docutils,
+.eegdash-ed-fieldcard > .table-wrapper,
+.eegdash-ed-fieldcard > table {
+  display: none;
+}
+
+/* =========================================================================
+   2. Editorial hero — kicker + serif title + deck + byline + pills
+   ---------------------------------------------------------------------------
+   The conf.py template emits these inside the existing H1 section. Pure
+   raw-HTML blocks; selectors below pin them into a grid layout.
+   ========================================================================= */
+
+.eegdash-ed-issue {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-family: var(--ed-font-sans);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ed-muted);
+  margin-bottom: 18px;
+  padding-bottom: 14px;
+  border-bottom: 1.5px solid var(--ed-ink);
+}
+.eegdash-ed-issue b { color: var(--ed-ink); font-weight: 600; }
+.eegdash-ed-issue .crumb-sep { margin: 0 6px; opacity: 0.5; }
+
+.eegdash-ed-kicker {
+  font-family: var(--ed-font-sans);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--ed-accent);
+  margin-bottom: 14px;
+  margin-top: 6px;
+}
+
+/* Italic title subtitle that sits directly below the H1 — sized
+   large enough to read as a proper subtitle rather than another body
+   paragraph. */
+article.bd-article p.eegdash-ed-tagline {
+  font-family: var(--ed-font-serif);
+  font-size: clamp(22px, 2.3vw, 32px);
+  font-weight: 400;
+  font-style: italic;
+  line-height: 1.3;
+  color: var(--ed-ink);
+  max-width: 820px;
+  text-wrap: pretty;
+  letter-spacing: -0.005em;
+  margin: 4px 0 18px;
+}
+article.bd-article p.eegdash-ed-tagline em {
+  font-style: italic;
+  color: inherit;
+}
+
+article.bd-article p.eegdash-ed-deck,
+.eegdash-ed-deck {
+  font-family: var(--ed-font-serif);
+  /* Sized to read as a proper subtitle next to the H1 (the H1 itself
+     is clamp(34px, 4.2vw, 52px)). The deck below it sits at ~58% of
+     the H1 cap, with a touch of weight so it doesn't look anemic. */
+  font-size: clamp(22px, 2.1vw, 30px);
+  font-weight: 400;
+  line-height: 1.35;
+  color: var(--ed-ink);
+  max-width: 820px;
+  text-wrap: pretty;
+  letter-spacing: -0.005em;
+  margin-top: 18px;
+  margin-bottom: 22px;
+}
+
+.eegdash-ed-byline {
+  font-family: var(--ed-font-sans);
+  font-size: 13px;
+  color: var(--ed-muted);
+  line-height: 1.7;
+  margin-bottom: 18px;
+}
+.eegdash-ed-byline .role {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ed-muted);
+  margin-right: 6px;
+}
+.eegdash-ed-byline strong { color: var(--ed-ink); font-weight: 600; }
+
+/* Defensive guard: if the sphinx-design badge row sneaks back into a
+   dataset page (e.g. an upstream override re-adds it), hide the bare
+   paragraph wrapper that holds it. The editorial pill row + field-card
+   rail already carry the same data. */
+article.bd-article p.sd-badges {
+  display: none;
+}
+
+/* Re-skin the editorial pill row (rendered after the byline). */
+.eegdash-ed-pills {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 10px 0 18px;
+  padding: 0;
+}
+
+.sd-badges .sd-badge,
+.eegdash-ed-pills .pill {
+  font-family: var(--ed-font-sans);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 5px 10px;
+  border: 1px solid var(--ed-ink);
+  background: transparent;
+  color: var(--ed-ink);
+  font-weight: 500;
+  border-radius: 0;
+  line-height: 1.4;
+}
+/* Tag-class colored pills inherit the dataset_summary palette via
+   tag-palette.js. Need !important on background since the generic
+   pill rule above sets `background: transparent`. */
+.eegdash-ed-pills .pill.tag {
+  text-transform: none;
+  letter-spacing: 0.02em;
+  font-weight: 600;
+  font-size: 11.5px;
+  border-radius: 3px;
+  padding: 4px 9px;
+  background: var(--pill-bg, #f1f5f9) !important;
+}
+.eegdash-ed-pills .pill.tag-pathology-healthy {
+  background: linear-gradient(135deg, #ddf6e6, #bcedce) !important;
+  color: #00750e !important;
+}
+.eegdash-ed-pills .pill.tag-pathology-clinical {
+  background: linear-gradient(135deg, #fbdcdc, #f6c2c2) !important;
+  color: #8c0000 !important;
+}
+.eegdash-ed-pills .pill.tag-modality-visual {
+  background: linear-gradient(135deg, #dee7fc, #bdd0f9) !important;
+  color: #00139b !important;
+}
+.eegdash-ed-pills .pill.tag-modality-auditory {
+  background: linear-gradient(135deg, #daf1fb, #b6e4f8) !important;
+  color: #005599 !important;
+}
+.eegdash-ed-pills .pill.tag-modality-somatosensory,
+.eegdash-ed-pills .pill.tag-modality-tactile {
+  background: linear-gradient(135deg, #dbf4f1, #b8e9e4) !important;
+  color: #006856 !important;
+}
+.eegdash-ed-pills .pill.tag-modality-multisensory {
+  background: linear-gradient(135deg, #fce3ef, #f9c8e0) !important;
+  color: #9c0049 !important;
+}
+.eegdash-ed-pills .pill.tag-modality-motor {
+  background: linear-gradient(135deg, #fdf0da, #fce1b5) !important;
+  color: #a54e00 !important;
+}
+.eegdash-ed-pills .pill.tag-modality-rest,
+.eegdash-ed-pills .pill.tag-modality-resting-state {
+  background: linear-gradient(135deg, #e7e8fc, #d0d1fa) !important;
+  color: #1316a1 !important;
+}
+.eegdash-ed-pills .pill.tag-modality-sleep {
+  background: linear-gradient(135deg, #ebe1fc, #d7c3f9) !important;
+  color: #2c009d !important;
+}
+.eegdash-ed-pills .pill.tag-type-perception {
+  background: linear-gradient(135deg, #e1ecfd, #c4d9fc) !important;
+  color: #0032a6 !important;
+}
+.eegdash-ed-pills .pill.tag-type-decision,
+.eegdash-ed-pills .pill.tag-type-decision-making {
+  background: linear-gradient(135deg, #fbf3d9, #f8e8b4) !important;
+  color: #9a6300 !important;
+}
+.eegdash-ed-pills .pill.tag-type-rest,
+.eegdash-ed-pills .pill.tag-type-resting-state {
+  background: linear-gradient(135deg, #dcf1e3, #b9e3c8) !important;
+  color: #005300 !important;
+}
+.eegdash-ed-pills .pill.tag-type-sleep {
+  background: linear-gradient(135deg, #ede6fd, #dccefc) !important;
+  color: #3b0ca6 !important;
+}
+.eegdash-ed-pills .pill.tag-type-cognitive {
+  background: linear-gradient(135deg, #e7e8fc, #d0d1fa) !important;
+  color: #1316a1 !important;
+}
+.eegdash-ed-pills .pill.tag-type-clinical {
+  background: linear-gradient(135deg, #fbdcdc, #f6c2c2) !important;
+  color: #8c0000 !important;
+}
+.sd-badges .sd-badge.sd-bg-primary,
+.eegdash-ed-pills .pill.is-primary {
+  background: var(--ed-accent);
+  color: #fff;
+  border-color: var(--ed-accent);
+}
+.sd-badges .sd-badge.sd-bg-success,
+.eegdash-ed-pills .pill.is-success {
+  background: var(--ed-success);
+  color: #fff;
+  border-color: var(--ed-success);
+}
+.sd-badges .sd-badge.sd-bg-warning,
+.eegdash-ed-pills .pill.is-warning {
+  background: var(--ed-mark-2);
+  border-color: var(--ed-accent-2);
+  color: #9c5505;
+}
+.sd-badges .sd-badge.sd-bg-info,
+.eegdash-ed-pills .pill.is-info {
+  background: var(--ed-mark);
+  border-color: var(--ed-accent);
+  color: var(--ed-accent);
+}
+
+/* =========================================================================
+   3. 3-layer architecture rail
+   ========================================================================= */
+
+.eegdash-ed-layers {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  margin: 20px 0 32px;
+  border: 1px solid var(--ed-ink);
+  background: var(--ed-paper);
+  position: relative;
+  z-index: 1;
+}
+.eegdash-ed-layers > div {
+  padding: 18px 22px;
+  border-right: 1px solid var(--ed-ink);
+  position: relative;
+  background: rgba(255, 255, 255, 0.4);
+}
+html[data-theme="dark"] .eegdash-ed-layers > div { background: rgba(0, 0, 0, 0.2); }
+.eegdash-ed-layers > div:last-child { border-right: 0; }
+.eegdash-ed-layers .ly-lbl {
+  font-family: var(--ed-font-mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ed-muted);
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+}
+.eegdash-ed-layers .ly-lbl b {
+  color: var(--ed-accent);
+  font-weight: 600;
+}
+.eegdash-ed-layers .ly-tit {
+  font-family: var(--ed-font-serif);
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--ed-ink);
+  margin-bottom: 6px;
+  letter-spacing: -0.005em;
+}
+.eegdash-ed-layers .ly-dsc {
+  font-size: 13px;
+  color: var(--ed-ink-2);
+  line-height: 1.5;
+  font-family: var(--ed-font-sans);
+  text-wrap: pretty;
+}
+.eegdash-ed-layers > div::after {
+  content: "→";
+  position: absolute;
+  right: -10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--ed-paper);
+  color: var(--ed-ink);
+  font-family: var(--ed-font-sans);
+  font-weight: 300;
+  font-size: 14px;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--ed-ink);
+  border-radius: 50%;
+  z-index: 2;
+}
+.eegdash-ed-layers > div:last-child::after { display: none; }
+
+/* =========================================================================
+   4. Section number markers — § 01, § 02 …
+   ========================================================================= */
+
+.eegdash-ed-secnum {
+  font-family: var(--ed-font-mono);
+  font-size: 11px;
+  color: var(--ed-accent);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  /* `display: flow-root` makes the secnum its own block formatting
+     context, so the rule above (`border-top`) stops at the floated
+     rail's left edge instead of being drawn behind the rail (the rail
+     uses a translucent background, so the line was bleeding through). */
+  display: flow-root;
+  /* Tightened from 80px / -8px / 24px so dense pages don't burn a
+     viewport-height of whitespace at every section boundary. */
+  margin-top: 48px;
+  margin-bottom: -6px;
+  padding-top: 16px;
+  border-top: 1.5px solid var(--ed-ink);
+  font-weight: 600;
+}
+.eegdash-ed-secnum b {
+  display: inline;
+  font-family: var(--ed-font-mono);
+  font-weight: 700;
+  color: var(--ed-ink);
+  letter-spacing: 0.22em;
+  margin-left: 14px;
+}
+.eegdash-ed-lead {
+  font-family: var(--ed-font-serif);
+  font-size: 17px;
+  color: var(--ed-ink-2);
+  font-style: italic;
+  max-width: 720px;
+  text-wrap: pretty;
+  margin-bottom: 28px;
+}
+
+/* When a section's H2 is preceded (via secnum) by a kicker in the
+   previous section, drop the H2's own top border so we don't get a
+   double horizontal rule. Sphinx renders the secnum at the END of the
+   preceding section (because RST heading boundaries close sections),
+   so we target via :has() + adjacent sibling. */
+section:has(> .eegdash-ed-secnum:last-child) + section > h2 {
+  border-top: 0;
+  padding-top: 8px;
+  margin-top: 8px;
+}
+
+/* =========================================================================
+   5. Dropcap on the first body paragraph of the "About this dataset"
+      section. Keyed by a wrapper class the generator adds.
+   ========================================================================= */
+
+.eegdash-ed-lede {
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--ed-ink-2);
+  max-width: none;
+  margin: 24px 0 36px;
+}
+
+/* =========================================================================
+   About This Dataset — editorial 2-column flow
+   ---------------------------------------------------------------------------
+   The README body lives inside `.eegdash-ed-readme` (emitted by the
+   generator). On wide viewports it flows as 2 columns at ~62ch each;
+   on narrow viewports it falls back to single column with a
+   comfortable measure. Path-style sub-headings (`func/`, `meg/`,
+   `stimuli/meg/`) get a compact mono treatment.
+   ========================================================================= */
+.eegdash-ed-readme {
+  margin: 0;
+}
+
+@media (min-width: 1100px) {
+  article.bd-article .eegdash-ed-readme {
+    column-count: 2;
+    column-gap: 48px;
+    column-rule: 1px solid var(--ed-rule);
+  }
+  /* Lede sits at the top of column 1 — keep the drop-cap. */
+  article.bd-article .eegdash-ed-readme p,
+  article.bd-article .eegdash-ed-readme ul,
+  article.bd-article .eegdash-ed-readme ol {
+    max-width: none;
+  }
+  article.bd-article .eegdash-ed-readme .eegdash-ed-lede,
+  article.bd-article .eegdash-ed-readme .eegdash-ed-lede p {
+    max-width: none;
+    margin-top: 0;
+  }
+  /* Citations and the full-README dropdown break out — they look
+     wrong when split mid-quote across columns. */
+  article.bd-article .eegdash-ed-readme blockquote,
+  article.bd-article .eegdash-ed-readme details.sd-dropdown,
+  article.bd-article .eegdash-ed-readme div.sd-dropdown,
+  article.bd-article .eegdash-ed-readme .eegdash-readme-pathhead {
+    column-span: all;
+    break-inside: avoid;
+    max-width: none;
+  }
+  /* Avoid orphaning a single line at the bottom of column 1. */
+  article.bd-article .eegdash-ed-readme p {
+    break-inside: avoid-column;
+    orphans: 3;
+    widows: 3;
+  }
+}
+@media (max-width: 1099px) {
+  article.bd-article .eegdash-ed-readme .eegdash-ed-lede,
+  article.bd-article .eegdash-ed-readme .eegdash-ed-lede p {
+    max-width: 780px;
+  }
+}
+
+/* Field-card rail tag chips — sit on the right-hand value column,
+   pick up the dataset_summary palette colors via tag-palette.js so
+   colors stay consistent across the catalog index and the per-dataset
+   pages. */
+aside.eegdash-ed-rail .rail-tag {
+  display: inline-block;
+  font-family: var(--ed-font-mono);
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 3px;
+  margin-left: 0;
+  line-height: 1.4;
+  vertical-align: middle;
+}
+aside.eegdash-ed-rail .rail-tag + .rail-tag {
+  margin-left: 4px;
+}
+
+/* Path-style README sub-headings ("func/", "meg/", "stimuli/meg/").
+   These are directory markers, not prose — render compact mono with
+   a top rule so they read as quiet section breaks. */
+article.bd-article .eegdash-readme-pathhead {
+  margin: 24px 0 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--ed-rule);
+  font-family: var(--ed-font-mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ed-muted);
+}
+article.bd-article .eegdash-readme-pathhead > p {
+  margin: 0;
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+  max-width: none;
+}
+article.bd-article .eegdash-ed-lede p {
+  margin-bottom: 14px;
+  text-wrap: pretty;
+  /* Override the article-wide 780px prose cap so the lede paragraphs
+     actually fill the column the user can see. The field-card rail
+     floats right and naturally limits the available width. */
+  max-width: none;
+}
+.eegdash-ed-lede p:first-child::first-letter {
+  font-family: var(--ed-font-serif);
+  font-weight: 500;
+  float: left;
+  font-size: 58px;
+  line-height: 0.9;
+  padding: 4px 8px 0 0;
+  color: var(--ed-accent);
+}
+@media (max-width: 960px) {
+  .eegdash-ed-lede p:first-child::first-letter {
+    float: none;
+    font-size: inherit;
+    line-height: inherit;
+    padding: 0;
+    color: inherit;
+  }
+}
+
+/* =========================================================================
+   6. Dataset Information table — field-card rail look
+   ---------------------------------------------------------------------------
+   The existing RST emits a list-table for the Dataset Information section.
+   We re-skin the rendered `<table class="docutils">` to read as a field card.
+   The new template also lets us add `.eegdash-ed-fieldcard` as a wrapping
+   class for stronger targeting.
+   ========================================================================= */
+
+#dataset-information .table-wrapper,
+.eegdash-ed-fieldcard {
+  border: 1px solid var(--ed-ink);
+  background: rgba(255, 255, 255, 0.4);
+  font-family: var(--ed-font-sans);
+  margin: 0 0 40px;
+  padding: 0;
+  overflow: visible;
+}
+html[data-theme="dark"] #dataset-information .table-wrapper,
+html[data-theme="dark"] .eegdash-ed-fieldcard {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+#dataset-information table.docutils,
+.eegdash-ed-fieldcard table.docutils {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+#dataset-information table.docutils tbody tr,
+.eegdash-ed-fieldcard table.docutils tbody tr {
+  background: transparent;
+  border: 0;
+}
+#dataset-information table.docutils tbody tr td,
+.eegdash-ed-fieldcard table.docutils tbody tr td {
+  padding: 9px 18px;
+  border: 0;
+  border-bottom: 1px dotted var(--ed-rule);
+  vertical-align: top;
+  font-family: var(--ed-font-mono);
+  font-size: 12.5px;
+  color: var(--ed-ink-2);
+  background: transparent !important;
+}
+#dataset-information table.docutils tbody tr td:first-child,
+.eegdash-ed-fieldcard table.docutils tbody tr td:first-child {
+  font-family: var(--ed-font-sans);
+  color: var(--ed-muted);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  width: 40%;
+  font-weight: 500;
+}
+#dataset-information table.docutils tbody tr:last-child td,
+.eegdash-ed-fieldcard table.docutils tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+/* =========================================================================
+   7. Technical Details grid — editorial cards
+   ---------------------------------------------------------------------------
+   Re-skin sphinx-design's grid-item-card so it reads as a calm editorial
+   tile rather than a Bootstrap-y panel.
+   ========================================================================= */
+
+#technical-details .sd-card,
+.eegdash-ed-techgrid .sd-card {
+  border: 1px solid var(--ed-ink) !important;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+html[data-theme="dark"] #technical-details .sd-card,
+html[data-theme="dark"] .eegdash-ed-techgrid .sd-card {
+  background: rgba(255, 255, 255, 0.02);
+}
+#technical-details .sd-card.highlight-primary {
+  border-left: 3px solid var(--ed-accent) !important;
+}
+#technical-details .sd-card.highlight-secondary {
+  border-left: 3px solid var(--ed-accent-2) !important;
+}
+#technical-details .sd-card .sd-card-header,
+.eegdash-ed-techgrid .sd-card .sd-card-header {
+  background: transparent;
+  border-bottom: 1px solid var(--ed-rule);
+  font-family: var(--ed-font-sans);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ed-muted);
+  font-weight: 600;
+}
+#technical-details .sd-card .sd-card-body,
+.eegdash-ed-techgrid .sd-card .sd-card-body {
+  font-family: var(--ed-font-mono);
+  font-size: 13px;
+  color: var(--ed-ink-2);
+}
+
+/* =========================================================================
+   8. Code blocks — editorial light slate
+   ---------------------------------------------------------------------------
+   Soft paper-tinted background instead of pitch-black. Applies to all
+   literal blocks on dataset pages, including the ones inside
+   sphinx-design tab-sets. Token colors preserved by the existing
+   pygments stylesheet — we only change the surface.
+   ========================================================================= */
+
+article.bd-article div.highlight,
+article.bd-article pre {
+  background: var(--ed-paper-2) !important;
+  border: 1px solid var(--ed-rule) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+article.bd-article div.highlight pre,
+article.bd-article pre {
+  font-family: var(--ed-font-mono);
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--ed-ink);
+  padding: 18px 22px;
+  background: var(--ed-paper-2) !important;
+}
+/* Brighten the pygments tokens for the light surface */
+article.bd-article div.highlight .k,
+article.bd-article div.highlight .kd,
+article.bd-article div.highlight .kn,
+article.bd-article div.highlight .kt { color: #7a3aa5 !important; }
+article.bd-article div.highlight .nf,
+article.bd-article div.highlight .nb,
+article.bd-article div.highlight .nc { color: #2a6f3a !important; }
+article.bd-article div.highlight .s,
+article.bd-article div.highlight .s1,
+article.bd-article div.highlight .s2,
+article.bd-article div.highlight .sa { color: #b66600 !important; }
+article.bd-article div.highlight .c,
+article.bd-article div.highlight .c1,
+article.bd-article div.highlight .cm { color: var(--ed-muted) !important; font-style: italic; }
+article.bd-article div.highlight .mi,
+article.bd-article div.highlight .mf,
+article.bd-article div.highlight .mh { color: #b66600 !important; }
+article.bd-article div.highlight .o { color: var(--ed-ink-2) !important; }
+article.bd-article div.highlight .gp { color: var(--ed-accent) !important; font-weight: 600; }
+
+/* Doctest blocks (>>> prompts in API examples) — same light surface */
+article.bd-article div.doctest,
+article.bd-article .docutils.container > pre {
+  background: var(--ed-paper-2) !important;
+  color: var(--ed-ink) !important;
+  border: 1px solid var(--ed-rule) !important;
+}
+
+/* The copy-to-clipboard button overlay (sphinx-copybutton) sits on top
+   of the code block. Make sure it reads against the light background. */
+article.bd-article div.highlight button.copybtn {
+  background: rgba(255, 255, 255, 0.85) !important;
+  border: 1px solid var(--ed-rule) !important;
+  color: var(--ed-ink) !important;
+}
+
+/* sphinx-design tab buttons — clean editorial set
+   Quickstart renders three tabs (Get Started · Query & Filter · Cite this
+   dataset). Default styling paints the active tab with a dark navy and
+   wraps the panel in a teal-blue rounded box; both clash with the
+   editorial palette. Override to a calm paper background, ink borders,
+   and an ink-on-paper "active" state. */
+article.bd-article .sd-tab-set { background: transparent; }
+article.bd-article .sd-tab-set > input[type="radio"]:checked + label.sd-tab-label {
+  background: var(--ed-paper);
+  color: var(--ed-ink) !important;
+  border-color: var(--ed-ink) !important;
+  border-bottom-color: var(--ed-paper) !important;
+  z-index: 2;
+}
+article.bd-article .sd-tab-set > label.sd-tab-label {
+  font-family: var(--ed-font-sans);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--ed-muted) !important;
+  border: 1px solid var(--ed-rule) !important;
+  border-radius: 0 !important;
+  padding: 10px 16px !important;
+  background: var(--ed-paper-2) !important;
+  margin-right: -1px;
+  margin-bottom: -1px;
+  transition: color 0.12s, background 0.12s, border-color 0.12s;
+}
+article.bd-article .sd-tab-set > label.sd-tab-label:hover {
+  background: var(--ed-paper) !important;
+  color: var(--ed-ink) !important;
+}
+article.bd-article .sd-tab-content {
+  border: 1px solid var(--ed-ink) !important;
+  border-top: 1px solid var(--ed-ink) !important;
+  padding: 24px 28px !important;
+  background: var(--ed-paper) !important;
+  border-radius: 0 !important;
+}
+/* Section heading inside Quickstart tab panels (Install / Access the data /
+   Filter by subject …) — make them feel like the cards' subhead. */
+article.bd-article .sd-tab-content > p:first-child > strong:only-child,
+article.bd-article .sd-tab-content > p > strong:first-child:only-child {
+  font-family: var(--ed-font-serif);
+  font-weight: 500;
+  font-size: 19px;
+  color: var(--ed-ink);
+  letter-spacing: -0.005em;
+  display: block;
+  margin: 4px 0 12px;
+}
+
+/* =========================================================================
+   9c. Fig. 01 — paired Signal & Montage figure
+   ---------------------------------------------------------------------------
+   The conf.py template emits an `.eegdash-ed-figpair` wrapper around the
+   live-trace iframe (left) and the electrode topomap iframe (right).
+   On wide viewports they sit side-by-side under a shared meta strip; on
+   narrow viewports they stack.
+   ========================================================================= */
+
+.eegdash-ed-figpair {
+  margin: 36px 0 28px;
+}
+.eegdash-ed-figpair .figpair-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  border-bottom: 1px solid var(--ed-rule);
+  padding: 0 0 10px;
+  margin-bottom: 14px;
+  font-family: var(--ed-font-sans);
+  font-size: 13px;
+  color: var(--ed-ink-2);
+}
+.eegdash-ed-figpair .figpair-meta b {
+  color: var(--ed-accent);
+  font-weight: 600;
+  margin-right: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 11px;
+}
+.eegdash-ed-figpair .figpair-meta .right {
+  font-family: var(--ed-font-mono);
+  color: var(--ed-muted);
+  letter-spacing: 0.04em;
+  font-size: 11.5px;
+}
+.eegdash-ed-figpair .figpair-grid {
+  display: grid;
+  grid-template-columns: 1.55fr 1fr;
+  gap: 18px;
+}
+@media (max-width: 1100px) {
+  .eegdash-ed-figpair .figpair-grid { grid-template-columns: 1fr; }
+}
+.eegdash-ed-figpair .figpair-cell {
+  border: 1px solid var(--ed-rule);
+  background: rgba(255, 255, 255, 0.5);
+  padding: 18px 20px;
+  position: relative;
+}
+html[data-theme="dark"] .eegdash-ed-figpair .figpair-cell {
+  background: rgba(255, 255, 255, 0.03);
+}
+/* Inside the figpair, the embedded iframe should fill its cell. The
+   wrapping <details>/<summary> already used by electrode-explorer and
+   trace-viewer keeps its own styling — we just want it to live cleanly
+   inside the cell. */
+.eegdash-ed-figpair .figpair-cell .electrode-explorer,
+.eegdash-ed-figpair .figpair-cell .trace-viewer {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  background: transparent;
+}
+.eegdash-ed-figpair .figpair-cell iframe {
+  width: 100%;
+  height: 380px;
+  border: 1px solid var(--ed-rule) !important;
+  border-radius: 0 !important;
+  background: #fff;
+}
+/* Closed-state summary acts as a "click to load" placeholder. The
+   iframe is lazy-loaded on first <details> toggle (lazy-embed.js), so
+   readers need a visible affordance that the viewer isn't broken — it
+   just hasn't been requested yet. When closed, the summary expands to
+   fill the cell with a play-icon + hint; when open, it shrinks back
+   to a quiet mono label above the iframe. */
+.eegdash-ed-figpair .figpair-cell > summary {
+  font-family: var(--ed-font-sans);
+  font-size: 13px;
+  color: var(--ed-ink);
+  padding: 0;
+  cursor: pointer;
+  list-style: none;
+}
+.eegdash-ed-figpair .figpair-cell > summary::-webkit-details-marker {
+  display: none;
+}
+.eegdash-ed-figpair .figpair-cell > summary strong {
+  color: var(--ed-accent);
+  font-weight: 600;
+}
+/* Closed: full-cell placeholder with icon. */
+.eegdash-ed-figpair .figpair-cell .trace-viewer:not([open]) > summary,
+.eegdash-ed-figpair .figpair-cell .electrode-explorer:not([open]) > summary {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 320px;
+  padding: 32px 24px;
+  background: var(--ed-paper-2);
+  border: 1px dashed var(--ed-rule);
+  border-radius: 3px;
+  text-align: center;
+  color: var(--ed-ink-2);
+  font-family: var(--ed-font-sans);
+  font-size: 13px;
+  line-height: 1.45;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+.eegdash-ed-figpair .figpair-cell .trace-viewer:not([open]) > summary:hover,
+.eegdash-ed-figpair .figpair-cell .electrode-explorer:not([open]) > summary:hover,
+.eegdash-ed-figpair .figpair-cell .trace-viewer:not([open]) > summary:focus-visible,
+.eegdash-ed-figpair .figpair-cell .electrode-explorer:not([open]) > summary:focus-visible {
+  background: var(--ed-mark);
+  border-color: var(--ed-accent);
+  outline: none;
+}
+/* Icon + label injected via ::before. The play glyph is a clean SVG
+   data-URL so we don't depend on any icon font. */
+.eegdash-ed-figpair .figpair-cell .trace-viewer:not([open]) > summary::before,
+.eegdash-ed-figpair .figpair-cell .electrode-explorer:not([open]) > summary::before {
+  content: "";
+  display: block;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--ed-accent)
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ffffff'><path d='M8 5v14l11-7z'/></svg>")
+    center / 24px 24px no-repeat;
+  flex-shrink: 0;
+}
+.eegdash-ed-figpair .figpair-cell .trace-viewer:not([open]) > summary::after,
+.eegdash-ed-figpair .figpair-cell .electrode-explorer:not([open]) > summary::after {
+  content: "Click to load the interactive viewer";
+  display: block;
+  font-family: var(--ed-font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ed-muted);
+  margin-top: 4px;
+}
+/* Open: compact mono header above the iframe. */
+.eegdash-ed-figpair .figpair-cell .trace-viewer[open] > summary,
+.eegdash-ed-figpair .figpair-cell .electrode-explorer[open] > summary {
+  font-family: var(--ed-font-mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ed-muted);
+  padding: 0 0 12px;
+  cursor: pointer;
+}
+.eegdash-ed-figpair .figpair-cell .trace-viewer-caption {
+  font-family: var(--ed-font-sans);
+  font-size: 11.5px;
+  color: var(--ed-muted);
+  line-height: 1.5;
+  padding: 0;
+  margin: 10px 0 0;
+}
+
+/* =========================================================================
+   9d. Manifest section — left-gutter label + file tree
+   ---------------------------------------------------------------------------
+   Mirrors the v1-editorial-v2 §06 Manifest layout: a left-gutter label
+   ("TREE / TOP OF DATASET") + the file-explorer widget on the right.
+   The widget itself keeps its own styling (it's a JS-rendered tree from
+   the dataset-explorer extension); the gutter is the editorial chrome.
+   ========================================================================= */
+
+article.bd-article > section[id$="manifest"] > p,
+article.bd-article > section[id$="manifest"] > .lead,
+article.bd-article > section[id$="manifest"] > .dataset-explorer-root,
+article.bd-article > section[id$="manifest"] > .eegdash-ed-info-dropdown {
+  margin-left: 130px;
+}
+article.bd-article > section[id$="manifest"] > h2 + p::before,
+article.bd-article > section[id$="manifest"] > h2 + .eegdash-ed-lead::before {
+  content: "Tree · top of dataset";
+  position: absolute;
+  margin-left: -130px;
+  font-family: var(--ed-font-sans);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ed-muted);
+  font-weight: 600;
+  display: block;
+  width: 110px;
+}
+
+/* The "Full dataset metadata table" dropdown lives at the bottom of the
+   Manifest section; visually downplay it so it reads as a footnote. */
+article.bd-article .eegdash-ed-info-dropdown {
+  margin-top: 28px;
+}
+article.bd-article .eegdash-ed-info-dropdown > summary,
+article.bd-article details.eegdash-ed-info-dropdown summary {
+  background: transparent !important;
+  font-size: 10px !important;
+  letter-spacing: 0.22em;
+  color: var(--ed-muted) !important;
+}
+
+/* =========================================================================
+   9. Caveat callout — orange accent, soft gradient, mono kicker
+   ========================================================================= */
+
+.eegdash-ed-caveat {
+  margin: 44px 0;
+  padding: 22px 28px;
+  background: linear-gradient(90deg, rgba(247, 148, 29, 0.07), transparent 70%);
+  border-left: 3px solid var(--ed-accent-2);
+  font-family: var(--ed-font-serif);
+  max-width: 820px;
+}
+html[data-theme="dark"] .eegdash-ed-caveat {
+  background: linear-gradient(90deg, rgba(247, 148, 29, 0.12), transparent 70%);
+}
+.eegdash-ed-caveat .c-lbl {
+  font-family: var(--ed-font-mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ed-accent-2);
+  font-weight: 600;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.eegdash-ed-caveat .c-lbl::before {
+  content: "⚠";
+  font-family: var(--ed-font-sans);
+  font-size: 13px;
+}
+.eegdash-ed-caveat h4 {
+  font-size: 21px;
+  font-weight: 500;
+  color: var(--ed-ink);
+  margin-bottom: 10px;
+  letter-spacing: -0.005em;
+  font-family: var(--ed-font-serif);
+}
+.eegdash-ed-caveat p {
+  font-size: 15.5px;
+  color: var(--ed-ink-2);
+  line-height: 1.55;
+  text-wrap: pretty;
+  max-width: 880px;
+}
+.eegdash-ed-caveat p + p { margin-top: 8px; }
+
+/* =========================================================================
+   9a. API Reference signature card (.eegdash-ed-apicard)
+   ---------------------------------------------------------------------------
+   Replaces the bare autoclass output with a left-gutter "SIGNATURE"
+   label, a code-styled class signature line, and an identifier card
+   (Author/year · Canonical · Importable as · Source). Sits BEFORE the
+   actual autoclass-rendered parameters / attributes / methods.
+   ========================================================================= */
+
+.eegdash-ed-apicard {
+  display: grid;
+  grid-template-columns: 130px 1fr;
+  gap: 0 36px;
+  margin: 24px 0 28px;
+}
+.eegdash-ed-apicard .apicard-gutter {
+  padding-top: 6px;
+}
+.eegdash-ed-apicard .apicard-gutter .lbl {
+  font-family: var(--ed-font-sans);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ed-muted);
+  font-weight: 600;
+}
+.eegdash-ed-apicard .apicard-gutter .cls {
+  margin-top: 4px;
+  font-family: var(--ed-font-mono);
+  font-size: 12px;
+  color: var(--ed-ink);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.eegdash-ed-apicard .apicard-body { min-width: 0; }
+.eegdash-ed-apicard .apicard-sig {
+  border-left: 2px solid var(--ed-accent);
+  padding: 4px 0 4px 16px;
+  margin-bottom: 18px;
+  font-family: var(--ed-font-mono);
+}
+.eegdash-ed-apicard .apicard-sig .sig-kind {
+  color: var(--ed-muted);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.eegdash-ed-apicard .apicard-sig .sig-line {
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--ed-ink);
+}
+.eegdash-ed-apicard .apicard-sig .ns { color: var(--ed-muted); }
+.eegdash-ed-apicard .apicard-sig .cls-name { color: var(--ed-accent); font-weight: 600; }
+.eegdash-ed-apicard .apicard-sig .arg { color: var(--ed-ink-2); }
+.eegdash-ed-apicard .apicard-sig .lit { color: var(--ed-accent-2); }
+.eegdash-ed-apicard .apicard-sig .paren { color: var(--ed-ink); }
+.eegdash-ed-apicard .apicard-sig .sig-base {
+  color: var(--ed-muted);
+  font-size: 12px;
+  margin-top: 8px;
+}
+.eegdash-ed-apicard .apicard-sig .sig-base code {
+  background: var(--ed-mark);
+  color: var(--ed-ink);
+}
+.eegdash-ed-apicard .apicard-ids {
+  background: var(--ed-paper-2);
+  padding: 14px 18px;
+  font-family: var(--ed-font-sans);
+  font-size: 12.5px;
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 8px 18px;
+  border-radius: 3px;
+}
+.eegdash-ed-apicard .apicard-ids .id-row {
+  display: contents;
+}
+.eegdash-ed-apicard .apicard-ids .id-row .k {
+  font-family: var(--ed-font-mono);
+  color: var(--ed-muted);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  padding-top: 2px;
+}
+.eegdash-ed-apicard .apicard-ids .id-row .v {
+  font-family: var(--ed-font-mono);
+  font-size: 12px;
+  color: var(--ed-ink);
+}
+.eegdash-ed-apicard .apicard-ids .id-row .v code {
+  background: #fff;
+  border: 1px solid var(--ed-rule);
+  padding: 1px 6px;
+  border-radius: 2px;
+  color: var(--ed-ink);
+  margin-right: 4px;
+}
+html[data-theme="dark"] .eegdash-ed-apicard .apicard-ids .id-row .v code {
+  background: var(--ed-paper);
+  color: var(--ed-ink);
+}
+.eegdash-ed-apicard .apicard-ids .id-row .v a {
+  color: var(--ed-accent-2);
+  border-bottom: 0;
+}
+
+/* =========================================================================
+   9a-bis. API Reference per-section cards (Parameters / Attributes / Methods)
+   ---------------------------------------------------------------------------
+   Mirrors the Signature apicard rhythm. JS in api-section-cards.js
+   wraps the autoclass output below the signature card in these
+   variants so the three blocks read as one editorial spread.
+   ========================================================================= */
+
+article.bd-article .eegdash-ed-apicard.is-section {
+  margin: 18px 0 22px;
+}
+
+/* ---- Parameters --------------------------------------------------- */
+
+article.bd-article .eegdash-ed-apicard.is-params .apicard-ids {
+  grid-template-columns: 160px 1fr;
+  row-gap: 10px;
+}
+article.bd-article .eegdash-ed-apicard.is-params .id-row.is-param .k {
+  padding-top: 2px;
+}
+article.bd-article .eegdash-ed-apicard.is-params .id-row.is-param .k code {
+  background: #fff;
+  border: 1px solid var(--ed-rule);
+  padding: 1px 7px;
+  border-radius: 2px;
+  font-family: var(--ed-font-mono);
+  font-size: 12px;
+  color: var(--ed-ink);
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+html[data-theme="dark"]
+  article.bd-article
+  .eegdash-ed-apicard.is-params
+  .id-row.is-param
+  .k
+  code {
+  background: var(--ed-paper);
+}
+article.bd-article .eegdash-ed-apicard.is-params .id-row.is-param .v {
+  font-family: var(--ed-font-sans);
+  font-size: 13px;
+  color: var(--ed-ink-2);
+  line-height: 1.55;
+}
+article.bd-article
+  .eegdash-ed-apicard.is-params
+  .id-row.is-param
+  .v
+  .param-type {
+  display: inline-block;
+  font-family: var(--ed-font-mono);
+  font-size: 11.5px;
+  color: var(--ed-muted);
+  margin-right: 8px;
+  letter-spacing: 0.02em;
+}
+article.bd-article
+  .eegdash-ed-apicard.is-params
+  .id-row.is-param
+  .v
+  .param-desc {
+  color: var(--ed-ink-2);
+}
+article.bd-article
+  .eegdash-ed-apicard.is-params
+  .id-row.is-param
+  .v
+  .param-desc
+  a {
+  color: var(--ed-accent);
+}
+/* Dotted divider between rows — same vocabulary as the signature card. */
+article.bd-article .eegdash-ed-apicard.is-params .id-row.is-param + .id-row.is-param .k,
+article.bd-article .eegdash-ed-apicard.is-params .id-row.is-param + .id-row.is-param .v {
+  border-top: 1px dotted var(--ed-rule);
+  padding-top: 10px;
+}
+
+/* ---- Attributes --------------------------------------------------- */
+
+article.bd-article .eegdash-ed-apicard.is-attrs .apicard-attrs {
+  background: var(--ed-paper-2);
+  padding: 4px 18px;
+  border-radius: 3px;
+}
+article.bd-article .eegdash-ed-apicard.is-attrs .apicard-attrs dl.py.attribute,
+article.bd-article .eegdash-ed-apicard.is-attrs .apicard-attrs dl.py.property {
+  margin: 0 !important;
+  padding: 10px 0;
+  border-top: 1px dotted var(--ed-rule);
+}
+article.bd-article
+  .eegdash-ed-apicard.is-attrs
+  .apicard-attrs
+  dl.py.attribute:first-of-type,
+article.bd-article
+  .eegdash-ed-apicard.is-attrs
+  .apicard-attrs
+  dl.py.property:first-of-type {
+  border-top: 0;
+}
+article.bd-article .eegdash-ed-apicard.is-attrs .apicard-attrs dl.py.attribute > dt,
+article.bd-article .eegdash-ed-apicard.is-attrs .apicard-attrs dl.py.property > dt {
+  border-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
+article.bd-article .eegdash-ed-apicard.is-attrs .apicard-attrs dl.py.attribute > dd,
+article.bd-article .eegdash-ed-apicard.is-attrs .apicard-attrs dl.py.property > dd {
+  font-family: var(--ed-font-sans);
+  color: var(--ed-ink-2);
+  font-size: 13px;
+  line-height: 1.55;
+  padding: 4px 0 0 !important;
+}
+
+/* ---- Methods ------------------------------------------------------ */
+
+article.bd-article .eegdash-ed-apicard.is-methods .apicard-methods {
+  border-left: 2px solid var(--ed-accent);
+  padding: 4px 0 4px 16px;
+}
+article.bd-article .eegdash-ed-apicard.is-methods .apicard-methods dl.py.method,
+article.bd-article .eegdash-ed-apicard.is-methods .apicard-methods dl.py.classmethod,
+article.bd-article .eegdash-ed-apicard.is-methods .apicard-methods dl.py.staticmethod {
+  margin: 0 !important;
+  padding: 12px 0;
+  border-top: 1px dotted var(--ed-rule);
+}
+article.bd-article
+  .eegdash-ed-apicard.is-methods
+  .apicard-methods
+  dl.py.method:first-of-type,
+article.bd-article
+  .eegdash-ed-apicard.is-methods
+  .apicard-methods
+  dl.py.classmethod:first-of-type,
+article.bd-article
+  .eegdash-ed-apicard.is-methods
+  .apicard-methods
+  dl.py.staticmethod:first-of-type {
+  border-top: 0;
+  padding-top: 4px;
+}
+article.bd-article .eegdash-ed-apicard.is-methods .apicard-methods > * > dt {
+  font-family: var(--ed-font-mono) !important;
+  font-size: 12.5px !important;
+  line-height: 1.7;
+  color: var(--ed-ink);
+  background: transparent !important;
+  border-bottom: 0 !important;
+  padding: 0 !important;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+article.bd-article .eegdash-ed-apicard.is-methods .apicard-methods .sig-kind {
+  display: inline-block;
+  color: var(--ed-muted);
+  font-family: var(--ed-font-sans);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-right: 10px;
+  vertical-align: 0.05em;
+}
+article.bd-article
+  .eegdash-ed-apicard.is-methods
+  .apicard-methods
+  .sig-name.descname {
+  color: var(--ed-accent);
+  font-weight: 600;
+}
+article.bd-article .eegdash-ed-apicard.is-methods .apicard-methods > * > dd {
+  margin-left: 0;
+  padding: 6px 0 0 !important;
+  font-family: var(--ed-font-sans);
+  color: var(--ed-ink-2);
+  font-size: 13px;
+  line-height: 1.55;
+}
+article.bd-article .eegdash-ed-apicard.is-methods .apicard-methods > * > dd > p {
+  margin-bottom: 8px;
+}
+article.bd-article
+  .eegdash-ed-apicard.is-methods
+  .apicard-methods
+  > *
+  > dd
+  > dl.field-list {
+  margin: 8px 0 0;
+}
+
+/* ---- Notes / References / Examples / See also -------------------- */
+
+/* Shared rubric-card body: a quiet panel with the same paper-2 tone
+   used by .id-row containers, so the four sub-cards (Notes, Refs,
+   Examples, See also) read as part of the same family without being
+   identical. Each variant only tweaks the gutter glyph / accent. */
+article.bd-article .eegdash-ed-apicard.is-notes .apicard-rubric,
+article.bd-article .eegdash-ed-apicard.is-refs .apicard-rubric,
+article.bd-article .eegdash-ed-apicard.is-examples .apicard-rubric,
+article.bd-article .eegdash-ed-apicard.is-seealso .apicard-rubric {
+  background: var(--ed-paper-2);
+  padding: 12px 18px;
+  border-radius: 3px;
+  font-family: var(--ed-font-sans);
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--ed-ink-2);
+}
+article.bd-article .eegdash-ed-apicard.is-notes .apicard-rubric > p,
+article.bd-article .eegdash-ed-apicard.is-refs .apicard-rubric > p,
+article.bd-article .eegdash-ed-apicard.is-examples .apicard-rubric > p,
+article.bd-article .eegdash-ed-apicard.is-seealso .apicard-rubric > p {
+  margin: 0 0 8px;
+  max-width: none;
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+}
+article.bd-article .eegdash-ed-apicard.is-notes .apicard-rubric > p:last-child,
+article.bd-article .eegdash-ed-apicard.is-refs .apicard-rubric > p:last-child,
+article.bd-article .eegdash-ed-apicard.is-examples .apicard-rubric > p:last-child,
+article.bd-article .eegdash-ed-apicard.is-seealso .apicard-rubric > p:last-child {
+  margin-bottom: 0;
+}
+article.bd-article .eegdash-ed-apicard.is-notes .apicard-rubric code,
+article.bd-article .eegdash-ed-apicard.is-refs .apicard-rubric code,
+article.bd-article .eegdash-ed-apicard.is-seealso .apicard-rubric code {
+  background: #fff;
+  border: 1px solid var(--ed-rule);
+  padding: 1px 5px;
+  border-radius: 2px;
+  font-size: 11.5px;
+}
+html[data-theme="dark"]
+  article.bd-article
+  .eegdash-ed-apicard.is-notes
+  .apicard-rubric
+  code,
+html[data-theme="dark"]
+  article.bd-article
+  .eegdash-ed-apicard.is-refs
+  .apicard-rubric
+  code,
+html[data-theme="dark"]
+  article.bd-article
+  .eegdash-ed-apicard.is-seealso
+  .apicard-rubric
+  code {
+  background: var(--ed-paper);
+}
+
+/* Notes — neutral accent. */
+article.bd-article .eegdash-ed-apicard.is-notes .apicard-rubric {
+  border-left: 2px solid var(--ed-muted);
+  padding-left: 16px;
+}
+
+/* References — accent blue rule, links keep the brand color. */
+article.bd-article .eegdash-ed-apicard.is-refs .apicard-rubric {
+  border-left: 2px solid var(--ed-accent);
+  padding-left: 16px;
+}
+article.bd-article .eegdash-ed-apicard.is-refs .apicard-rubric a {
+  color: var(--ed-accent);
+  text-decoration: none;
+  border-bottom: 1px dotted rgba(0, 108, 163, 0.35);
+}
+article.bd-article .eegdash-ed-apicard.is-refs .apicard-rubric a:hover {
+  border-bottom-color: var(--ed-accent);
+}
+
+/* Examples — code-first. Keep the rubric panel transparent so the
+   doctest highlight block sits naturally on the white surface, and
+   restyle pre/highlight to match the existing editorial code chrome. */
+article.bd-article .eegdash-ed-apicard.is-examples .apicard-rubric {
+  background: transparent;
+  padding: 0;
+  border-left: 2px solid var(--ed-accent-2);
+  padding-left: 16px;
+}
+article.bd-article .eegdash-ed-apicard.is-examples .apicard-rubric div.highlight,
+article.bd-article .eegdash-ed-apicard.is-examples .apicard-rubric div.doctest {
+  margin: 0 0 12px;
+}
+article.bd-article .eegdash-ed-apicard.is-examples .apicard-rubric div.highlight pre,
+article.bd-article .eegdash-ed-apicard.is-examples .apicard-rubric div.doctest pre {
+  background: var(--ed-paper-2);
+  border: 1px solid var(--ed-rule);
+  border-radius: 3px;
+  padding: 12px 14px;
+  font-family: var(--ed-font-mono);
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--ed-ink);
+}
+article.bd-article .eegdash-ed-apicard.is-examples .apicard-rubric > p {
+  /* Captions / interleaved prose between code blocks. */
+  margin-bottom: 8px;
+  color: var(--ed-ink-2);
+}
+
+/* See also — compact list look. */
+article.bd-article .eegdash-ed-apicard.is-seealso .apicard-rubric ul,
+article.bd-article .eegdash-ed-apicard.is-seealso .apicard-rubric ol {
+  margin: 0;
+  padding-left: 18px;
+}
+article.bd-article .eegdash-ed-apicard.is-seealso .apicard-rubric li {
+  margin-bottom: 4px;
+}
+
+/* ---- Mobile collapse (inherits from .eegdash-ed-apicard parent) --- */
+
+@media (max-width: 760px) {
+  article.bd-article .eegdash-ed-apicard.is-section {
+    grid-template-columns: 1fr;
+    gap: 6px 0;
+  }
+  article.bd-article .eegdash-ed-apicard.is-section .apicard-gutter {
+    display: flex;
+    gap: 12px;
+    align-items: baseline;
+  }
+  article.bd-article .eegdash-ed-apicard.is-params .apicard-ids {
+    grid-template-columns: 1fr;
+  }
+  article.bd-article .eegdash-ed-apicard.is-params .id-row.is-param .k {
+    padding-bottom: 0;
+  }
+}
+
+/* Restyle the autoclass output that follows the signature card. The
+   parameters list, dl tables, and admonitions look dated by default —
+   tighten them into the editorial type system.
+   The apicard above already shows class signature + bases + identity
+   fields; suppress them inside the dl.py.class to avoid the
+   triplication that was happening before. */
+article.bd-article section dl.py.class > dt.sig-object {
+  display: none;
+}
+/* Hide the leading docstring paragraphs the autoclass emits — they all
+   duplicate the apicard above:
+     P #1  "Bases: …"  OR  the docstring summary line
+     P #2  "Also importable as: …"
+     P #3  "Modality: …; Subjects: …; recordings: …; tasks: …"
+   The next P sibling is a numpydoc `.rubric` heading ("Notes" /
+   "References" / "Examples"), which we KEEP — those carry data the
+   apicard doesn't show. */
+article.bd-article section dl.py.class > dd > p:nth-of-type(-n+3) {
+  display: none;
+}
+/* Hide identity-style field-list rows (STUDY, AUTHOR (YEAR), CANONICAL)
+   that the eegdash dataset class docstring emits — the apicard
+   already shows them in its identifier card. We KEEP the Parameters /
+   Returns / Type / Notes / Examples rows since those carry data the
+   apicard does NOT duplicate.
+
+   Field-list rows are rendered as <dl class="field-list">. We hide
+   only the docstring identity block via dt text matching using
+   :has() (Chromium/Safari ≥ 105, Firefox ≥ 121). */
+article.bd-article dl.field-list:has(> dt:first-of-type) > dt:is(:nth-child(1), :nth-child(3), :nth-child(5)) {
+  /* fall-through: handled by per-label rules below */
+}
+article.bd-article dl.field-list > dt:has(.colon),
+article.bd-article dl.field-list > dt {
+  /* keep the styled look — actual hiding is by label */
+}
+/* For docstring identity rows: their text is "Study", "Author (year)",
+   "Canonical". Use attribute selector on the class autoclass attaches
+   ("field-odd"/"field-even") + first-letter heuristic via :is(). Since
+   :has() with text matching isn't possible in CSS, we instead hide
+   the entire block via a wrapper class added by autoclass: the docstring
+   field-list lives inside dl.py.class > dd. The Parameters list is a
+   separate dl.field-list immediately after the docstring's <p>'s. We
+   only want to hide the FIRST field-list (the identity block). */
+article.bd-article section dl.py.class > dd > dl.field-list:first-of-type {
+  display: none;
+}
+article.bd-article dl.field-list > dt {
+  font-family: var(--ed-font-mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ed-muted);
+  font-weight: 600;
+  background: transparent !important;
+  border: 0 !important;
+  padding: 6px 0 !important;
+}
+article.bd-article dl.field-list > dd {
+  font-family: var(--ed-font-sans);
+  color: var(--ed-ink-2);
+  margin-left: 0 !important;
+  padding: 0 0 12px !important;
+  border-bottom: 1px dotted var(--ed-rule);
+}
+article.bd-article dl.py.attribute,
+article.bd-article dl.py.method {
+  margin: 8px 0 !important;
+}
+article.bd-article dl.py.attribute + dl.py.attribute,
+article.bd-article dl.py.method + dl.py.method,
+article.bd-article dl.py.attribute + dl.py.method,
+article.bd-article dl.py.method + dl.py.attribute {
+  margin-top: 0 !important;
+}
+article.bd-article dl.py.attribute > dt,
+article.bd-article dl.py.method > dt {
+  font-family: var(--ed-font-mono);
+  font-size: 13px;
+  color: var(--ed-ink);
+  background: transparent !important;
+  border: 0 !important;
+  border-bottom: 1px dotted var(--ed-rule) !important;
+  padding: 6px 0 !important;
+  font-weight: 600;
+}
+article.bd-article dl.py.attribute > dd,
+article.bd-article dl.py.method > dd {
+  margin-left: 0 !important;
+  padding: 6px 0 4px !important;
+}
+article.bd-article dl.py.attribute > dd > p,
+article.bd-article dl.py.method > dd > p {
+  margin-bottom: 6px;
+}
+article.bd-article dl.py.attribute > dd > p:last-child,
+article.bd-article dl.py.method > dd > p:last-child {
+  margin-bottom: 0;
+}
+/* Inlined Type annotation injected by api-attribute-compact.js. The JS
+   pulls the "Type:" field value into the signature row as
+   ".eegdash-attr-type" so each attribute reads as a single line. */
+article.bd-article dl.py.attribute .eegdash-attr-type,
+article.bd-article dl.py.property .eegdash-attr-type {
+  color: var(--ed-muted);
+  font-weight: 400;
+  font-family: var(--ed-font-mono);
+}
+article.bd-article dl.py.attribute .eegdash-attr-type a,
+article.bd-article dl.py.property .eegdash-attr-type a {
+  color: inherit;
+  border-bottom: 0;
+}
+article.bd-article dl.py.attribute .eegdash-attr-type em,
+article.bd-article dl.py.property .eegdash-attr-type em {
+  font-style: normal;
+}
+
+/* =========================================================================
+   9b. Access modes sidecar (.eegdash-ed-access)
+   ---------------------------------------------------------------------------
+   The card that lists how to load this dataset across MNE / braindecode /
+   PyTorch / Zarr / Croissant. Lifted from the v1-editorial-v2 §07 panel.
+   ========================================================================= */
+
+.eegdash-ed-access {
+  margin: 24px 0 40px;
+  border: 1px solid var(--ed-ink);
+  background: rgba(255, 255, 255, 0.5);
+  font-family: var(--ed-font-sans);
+}
+html[data-theme="dark"] .eegdash-ed-access {
+  background: rgba(255, 255, 255, 0.02);
+}
+.eegdash-ed-access .sidecar-hdr {
+  padding: 10px 16px;
+  background: var(--ed-ink);
+  color: var(--ed-paper);
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-family: var(--ed-font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+}
+.eegdash-ed-access .sidecar-hdr b { font-weight: 600; }
+.eegdash-ed-access .sidecar-hdr .right {
+  font-size: 10px;
+  color: rgba(241, 241, 239, 0.7);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.eegdash-ed-access .am-list { padding: 8px 16px; }
+.eegdash-ed-access .am-row {
+  display: grid;
+  grid-template-columns: 170px 1fr auto;
+  gap: 14px;
+  padding: 10px 0;
+  border-top: 1px dotted var(--ed-rule);
+  align-items: baseline;
+}
+.eegdash-ed-access .am-row:first-of-type { border-top: 0; }
+.eegdash-ed-access .am-row .name {
+  font-family: var(--ed-font-mono);
+  color: var(--ed-ink);
+  font-weight: 500;
+  font-size: 12px;
+}
+.eegdash-ed-access .am-row .name a {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px dotted var(--ed-rule);
+}
+.eegdash-ed-access .am-row .name a:hover,
+.eegdash-ed-access .am-row .name a:focus-visible {
+  color: var(--ed-accent);
+  border-bottom-color: var(--ed-accent);
+}
+.eegdash-ed-access .am-row .what {
+  color: var(--ed-ink-2);
+  font-family: var(--ed-font-sans);
+  font-size: 13px;
+}
+.eegdash-ed-access .am-row .what code {
+  font-family: var(--ed-font-mono);
+  font-size: 11.5px;
+  background: var(--ed-paper-2);
+  padding: 1px 5px;
+  border-radius: 2px;
+  color: var(--ed-ink);
+}
+.eegdash-ed-access .am-row .what a {
+  color: var(--ed-accent);
+  text-decoration: none;
+  border-bottom: 1px dotted rgba(0, 108, 163, 0.35);
+}
+.eegdash-ed-access .am-row .what a:hover,
+.eegdash-ed-access .am-row .what a:focus-visible {
+  border-bottom-color: var(--ed-accent);
+}
+.eegdash-ed-access .am-row .what a code {
+  /* Inline code inside a link inherits the link color so the chip
+     reads as one clickable token. */
+  color: inherit;
+  background: rgba(0, 108, 163, 0.06);
+}
+.eegdash-ed-access .am-row .badge {
+  font-family: var(--ed-font-mono);
+  font-size: 10px;
+  color: var(--ed-accent);
+  background: rgba(0, 108, 163, 0.08);
+  padding: 2px 6px;
+  border-radius: 2px;
+  border: 1px solid rgba(0, 108, 163, 0.2);
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  transition: background 0.12s ease, color 0.12s ease;
+}
+.eegdash-ed-access .am-row a.badge:hover,
+.eegdash-ed-access .am-row a.badge:focus-visible {
+  background: var(--ed-accent);
+  color: #fff;
+  border-color: var(--ed-accent);
+}
+
+/* =========================================================================
+   9c. Examples gallery (.eegdash-ed-examples) — curated start-here tutorials.
+       MOABB-inspired: a few concrete entry points after the API block.
+   ========================================================================= */
+
+.eegdash-ed-examples {
+  margin: 24px 0 0;
+  border: 1px solid var(--ed-ink);
+  background: var(--ed-paper-2);
+  font-family: var(--ed-font-sans);
+}
+html[data-theme="dark"] .eegdash-ed-examples { background: var(--ed-paper); }
+
+.eegdash-ed-examples .sidecar-hdr {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--ed-rule);
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ed-muted);
+}
+.eegdash-ed-examples .sidecar-hdr b { font-weight: 600; }
+.eegdash-ed-examples .sidecar-hdr .right {
+  font-family: var(--ed-font-mono);
+  letter-spacing: 0.06em;
+  color: var(--ed-accent);
+}
+
+.eegdash-ed-examples .ex-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+}
+.eegdash-ed-examples .ex-card {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: inherit;
+  border-right: 1px solid var(--ed-rule);
+  border-bottom: 1px solid var(--ed-rule);
+  background: var(--ed-paper);
+  transition: background-color 120ms ease, transform 120ms ease;
+}
+.eegdash-ed-examples .ex-card:hover {
+  background: rgba(0, 108, 163, 0.05);
+}
+.eegdash-ed-examples .ex-card:nth-child(3n) { border-right: 0; }
+.eegdash-ed-examples .ex-card:nth-last-child(-n+3) { border-bottom: 0; }
+
+.eegdash-ed-examples .ex-thumb {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: var(--ed-paper-2);
+  border-bottom: 1px solid var(--ed-rule);
+}
+.eegdash-ed-examples .ex-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+.eegdash-ed-examples .ex-body {
+  display: block;
+  padding: 12px 14px 14px;
+}
+.eegdash-ed-examples .ex-title {
+  display: block;
+  font-family: var(--ed-font-serif);
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 1.25;
+  color: var(--ed-ink);
+  margin-bottom: 4px;
+}
+.eegdash-ed-examples .ex-blurb {
+  display: block;
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: var(--ed-muted);
+}
+.eegdash-ed-examples .ex-hint {
+  margin: 0;
+  padding: 10px 16px;
+  border-top: 1px solid var(--ed-rule);
+  font-size: 12px;
+  color: var(--ed-muted);
+}
+.eegdash-ed-examples .ex-hint code {
+  font-family: var(--ed-font-mono);
+  background: rgba(0, 108, 163, 0.08);
+  color: var(--ed-accent);
+  padding: 1px 4px;
+  border-radius: 2px;
+}
+
+@media (max-width: 900px) {
+  .eegdash-ed-examples .ex-grid { grid-template-columns: repeat(2, 1fr); }
+  .eegdash-ed-examples .ex-card:nth-child(3n) { border-right: 1px solid var(--ed-rule); }
+  .eegdash-ed-examples .ex-card:nth-child(2n) { border-right: 0; }
+  .eegdash-ed-examples .ex-card:nth-last-child(-n+3) { border-bottom: 1px solid var(--ed-rule); }
+  .eegdash-ed-examples .ex-card:nth-last-child(-n+2) { border-bottom: 0; }
+}
+@media (max-width: 600px) {
+  .eegdash-ed-examples .ex-grid { grid-template-columns: 1fr; }
+  .eegdash-ed-examples .ex-card { border-right: 0 !important; border-bottom: 1px solid var(--ed-rule) !important; }
+  .eegdash-ed-examples .ex-card:last-child { border-bottom: 0 !important; }
+}
+
+/* =========================================================================
+   10. Provenance strip — 5-column band at the bottom
+   ========================================================================= */
+
+.eegdash-ed-prov {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0;
+  margin: 56px 0 0;
+  border: 1px solid var(--ed-ink);
+  background: var(--ed-paper-2);
+  font-family: var(--ed-font-sans);
+}
+.eegdash-ed-prov > div {
+  padding: 14px 18px;
+  border-right: 1px solid var(--ed-rule);
+}
+.eegdash-ed-prov > div:last-child { border-right: 0; }
+.eegdash-ed-prov .lbl {
+  color: var(--ed-muted);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+.eegdash-ed-prov .v {
+  font-family: var(--ed-font-mono);
+  color: var(--ed-ink);
+  font-size: 12px;
+  line-height: 1.4;
+  word-break: break-word;
+}
+.eegdash-ed-prov .v.ok {
+  color: var(--ed-success);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.eegdash-ed-prov .v.ok::before { content: "✓"; }
+.eegdash-ed-prov .v.todo {
+  color: var(--ed-muted);
+  font-style: italic;
+}
+.eegdash-ed-prov a {
+  color: var(--ed-accent);
+  text-decoration: none;
+  border-bottom: 1px dotted rgba(0, 108, 163, 0.3);
+}
+
+@media (max-width: 900px) {
+  .eegdash-ed-prov { grid-template-columns: 1fr 1fr; }
+  .eegdash-ed-prov > div { border-bottom: 1px solid var(--ed-rule); }
+}
+
+/* =========================================================================
+   11. Colophon footer — masthead-echoing footer band
+   ========================================================================= */
+
+.eegdash-ed-colophon {
+  margin-top: 56px;
+  padding-top: 24px;
+  border-top: 1.5px solid var(--ed-ink);
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 32px;
+  font-family: var(--ed-font-sans);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ed-muted);
+}
+.eegdash-ed-colophon b { color: var(--ed-ink); font-weight: 600; }
+.eegdash-ed-colophon a {
+  color: var(--ed-ink);
+  text-decoration: none;
+  border-bottom: 1px dotted var(--ed-ink);
+}
+
+.eegdash-ed-colophon { grid-template-columns: 1fr 2fr 1fr; }
+
+@media (max-width: 900px) {
+  .eegdash-ed-colophon { grid-template-columns: 1fr 1fr; }
+}
+
+/* =========================================================================
+   12. Footnotes — three-column footer block before the colophon
+   ========================================================================= */
+
+.eegdash-ed-footnotes {
+  margin-top: 64px;
+  padding-top: 24px;
+  border-top: 3px double var(--ed-ink);
+  font-size: 13px;
+  color: var(--ed-ink-2);
+  line-height: 1.6;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 40px;
+  font-family: var(--ed-font-sans);
+}
+.eegdash-ed-footnotes h5 {
+  font-family: var(--ed-font-serif);
+  font-size: 14px;
+  color: var(--ed-ink);
+  font-weight: 500;
+  margin-bottom: 8px;
+  letter-spacing: 0;
+}
+.eegdash-ed-footnotes .note-num {
+  font-family: var(--ed-font-mono);
+  color: var(--ed-accent);
+  margin-right: 6px;
+}
+.eegdash-ed-footnotes p { margin-bottom: 10px; }
+.eegdash-ed-footnotes code {
+  font-family: var(--ed-font-mono);
+  background: var(--ed-paper-2);
+  padding: 1px 4px;
+  font-size: 12px;
+}
+
+/* Compact related-dataset chips inside the footnotes block.
+   Each chip carries dataset id + modality + subject count, with a
+   "Same authors" tag when the surnames overlap. Stays a vertical list
+   so the three-column footnotes layout doesn't reflow. */
+.eegdash-ed-footnotes .rel-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 4px;
+}
+.eegdash-ed-footnotes .rel-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  column-gap: 10px;
+  padding: 6px 10px;
+  border: 1px solid var(--ed-rule);
+  border-radius: 2px;
+  background: var(--ed-paper);
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 120ms ease, background-color 120ms ease;
+}
+.eegdash-ed-footnotes .rel-card:hover {
+  border-color: var(--ed-accent);
+  background: rgba(0, 108, 163, 0.04);
+}
+.eegdash-ed-footnotes .rel-card .rel-id {
+  font-family: var(--ed-font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ed-accent);
+  letter-spacing: 0.02em;
+}
+.eegdash-ed-footnotes .rel-card .rel-meta {
+  font-family: var(--ed-font-sans);
+  font-size: 11px;
+  color: var(--ed-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  text-align: right;
+}
+.eegdash-ed-footnotes .rel-card .rel-tag {
+  grid-column: 1 / -1;
+  font-family: var(--ed-font-mono);
+  font-size: 10px;
+  color: var(--ed-accent);
+  background: rgba(0, 108, 163, 0.08);
+  padding: 1px 6px;
+  border-radius: 2px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  justify-self: start;
+  margin-top: 2px;
+}
+.eegdash-ed-footnotes .rel-more {
+  margin: 8px 0 0;
+  font-size: 12px;
+  color: var(--ed-muted);
+  font-style: italic;
+}
+
+@media (max-width: 900px) {
+  .eegdash-ed-footnotes { grid-template-columns: 1fr; gap: 20px; }
+}
+
+/* =========================================================================
+   13. Brand glyph + masthead echo
+   ---------------------------------------------------------------------------
+   The masthead lives in the pydata theme's header bar — we don't replace it.
+   These styles are for the smaller brand glyph the template emits inline
+   above the title (next to the breadcrumb "Vol. XX · Iss. YYY" line).
+   ========================================================================= */
+
+.eegdash-ed-brandmark {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-right: 14px;
+  font-family: var(--ed-font-sans);
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.005em;
+  text-transform: lowercase;
+  color: var(--ed-ink);
+}
+.eegdash-ed-brandmark svg { width: 20px; height: 20px; flex-shrink: 0; }
+.eegdash-ed-brandmark .eeg { color: var(--ed-accent); }
+.eegdash-ed-brandmark .dash { color: var(--ed-accent-2); }
+
+/* =========================================================================
+   14. Stat charts (existing inline divs) — pin to brand palette
+   ---------------------------------------------------------------------------
+   Channel and sampling-frequency charts still emit `#4472c4` / `#D55E00`
+   inline backgrounds; tint them to the brand pair. The age stacked bars
+   and the sex donut already paint themselves with brand colors so they
+   don't need overrides.
+   ========================================================================= */
+
+.eegdash-stats-section .eeg-chart-row > div[style*="#4472c4"] {
+  background: var(--ed-accent) !important;
+}
+.eegdash-stats-section div[style*="background:#D55E00"] {
+  background: var(--ed-accent-2) !important;
+}
+.eegdash-stats-section p strong {
+  font-family: var(--ed-font-sans);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ed-muted);
+  font-weight: 600;
+}
+
+/* =========================================================================
+   Cohort section — 2-column grid (age histogram | sex donut)
+   ---------------------------------------------------------------------------
+   Wraps the existing `.eegdash-stats-section` blocks emitted by
+   `_format_recording_stats_section` so the age + sex visualisations
+   sit side-by-side instead of stacking vertically. Channel counts,
+   sampling frequencies, and total recording duration flow back into
+   the article body after the grid closes.
+   ========================================================================= */
+
+.eegdash-ed-cohort-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 28px;
+  align-items: stretch;
+  margin: 18px 0 28px;
+}
+.eegdash-ed-cohort-grid > .eegdash-stats-section:nth-of-type(1),
+.eegdash-ed-cohort-grid > .eegdash-stats-section:nth-of-type(2) {
+  min-height: 320px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+/* Editorial polish for the inline-styled age-histogram bars. The
+   generator (conf.py) ships pixel dimensions; this rule just adds
+   spacing/typography so the chart reads as part of the editorial
+   layer rather than a debug widget. */
+.eegdash-ed-cohort-grid > .eegdash-stats-section:nth-of-type(1) .eeg-chart-row {
+  gap: 8px !important;
+  margin-top: 8px;
+}
+.eegdash-ed-cohort-grid > .eegdash-stats-section:nth-of-type(1) .eeg-chart-labels {
+  gap: 8px !important;
+  font-size: 11px !important;
+  margin-top: 6px;
+}
+.eegdash-ed-cohort-grid > .eegdash-stats-section:nth-of-type(1) .eeg-chart-labels span {
+  font-family: var(--ed-font-mono);
+  color: var(--ed-muted);
+  letter-spacing: 0.04em;
+}
+/* Wide layout: 2-column grid with explicit cell placement. Below
+   1100px the grid collapses to a single column AND the explicit
+   `grid-column: <n>` placement is cleared so auto-flow stacks
+   cleanly instead of forcing phantom second columns that overflow
+   the viewport (which is what produced horizontal scroll on mobile).
+   Pattern: ship the desktop placement inside `@media (min-width)`. */
+@media (min-width: 1101px) {
+  .eegdash-ed-cohort-grid > .eegdash-stats-section:nth-of-type(1) {
+    grid-column: 1;
+    margin-bottom: 0 !important;
+  }
+  .eegdash-ed-cohort-grid > .eegdash-stats-section:nth-of-type(2) {
+    grid-column: 2;
+    margin-bottom: 0 !important;
+  }
+  /* Channel counts (3rd) + sampling frequencies (4th) each occupy
+     one column so the row reads as a horizontal stats strip. Any
+     further section falls back to full width on a new row. */
+  .eegdash-ed-cohort-grid > .eegdash-stats-section:nth-of-type(3),
+  .eegdash-ed-cohort-grid > .eegdash-stats-section:nth-of-type(4) {
+    grid-column: span 1;
+    margin-top: 12px;
+    min-width: 0;
+  }
+  .eegdash-ed-cohort-grid > .eegdash-stats-section:nth-of-type(n+5) {
+    grid-column: 1 / -1;
+    margin-top: 12px;
+  }
+}
+@media (max-width: 1100px) {
+  .eegdash-ed-cohort-grid {
+    grid-template-columns: 1fr;
+  }
+  .eegdash-ed-cohort-grid > .eegdash-stats-section {
+    grid-column: 1 / -1;
+    min-width: 0;
+    margin-top: 12px;
+  }
+  /* Cancel the desktop min-height parity on mobile/tablet — the
+     histogram + donut don't need 320px when stacked. */
+  .eegdash-ed-cohort-grid > .eegdash-stats-section:nth-of-type(1),
+  .eegdash-ed-cohort-grid > .eegdash-stats-section:nth-of-type(2) {
+    min-height: 0;
+  }
+}
+
+/* Sex donut — light polish so the SVG sits on a paper background and
+   uses the editorial type system. The SVG itself is self-styled via
+   inline attributes so it survives even when this CSS isn't loaded.
+   The .lbl explicitly has `min-width:0` so flex shrinking works and
+   the .v stays inline on the right; without it, the label can blow
+   out the row and force .v to wrap onto a second line. */
+.eegdash-ed-sex .sex-wrap { padding: 14px 0; min-width: 320px; }
+.eegdash-ed-sex .sex-donut circle {
+  transition: stroke-opacity 0.15s ease-out;
+}
+.eegdash-ed-sex .sex-legend {
+  display: flex;
+  flex-direction: column;
+}
+/* Use CSS Grid for the row with EXPLICIT column assignments. The host
+   theme attaches a `::before` pseudo-element to many list-row classes
+   (it becomes the first grid item and shifts every real child one
+   column right). Two defences:
+     1. Force the pseudo-element to `display: none` so it leaves the
+        grid alone.
+     2. Pin each real child to its target column with `grid-column`
+        so auto-placement quirks can't reshuffle them.
+   Also constrain the legend's max-width so values don't sprawl to the
+   right edge of the article column. */
+.eegdash-ed-sex .sex-legend {
+  max-width: 360px;
+  flex: 0 0 auto !important;
+}
+.eegdash-ed-sex .sex-legend .row {
+  display: grid !important;
+  grid-template-columns: 14px 1fr auto;
+  column-gap: 12px;
+  align-items: center;
+  padding: 10px 0 !important;
+  border-bottom: 1px solid var(--ed-rule);
+  min-width: 0;
+  position: static !important;
+}
+.eegdash-ed-sex .sex-legend .row::before,
+.eegdash-ed-sex .sex-legend .row::after {
+  display: none !important;
+  content: none !important;
+}
+.eegdash-ed-sex .sex-legend .row:last-child { border-bottom: 0; }
+.eegdash-ed-sex .sex-legend .row .sw {
+  grid-column: 1;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: block;
+  padding: 0 !important;
+  margin: 0 !important;
+  position: static !important;
+  justify-self: center;
+}
+.eegdash-ed-sex .sex-legend .row .lbl {
+  grid-column: 2;
+  color: var(--ed-ink-2);
+  font-family: var(--ed-font-sans);
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  padding: 0 !important;
+  margin: 0 !important;
+  position: static !important;
+  min-width: 0;
+  text-align: left;
+}
+.eegdash-ed-sex .sex-legend .row .v {
+  grid-column: 3;
+  font-family: var(--ed-font-serif);
+  font-size: 22px;
+  color: var(--ed-ink);
+  font-weight: 400;
+  line-height: 1;
+  white-space: nowrap;
+  padding: 0 !important;
+  margin: 0 !important;
+  position: static !important;
+  text-align: right;
+  justify-self: end;
+}
+.eegdash-ed-sex .sex-legend .row.ratio .lbl {
+  color: var(--ed-muted);
+  font-size: 12px;
+}
+.eegdash-ed-sex .sex-legend .row.ratio .v {
+  font-family: var(--ed-font-mono);
+  font-size: 14px;
+}
+
+/* Age chart — stacked bar axis line + tighter type for buckets/legend. */
+.eegdash-stats-section .eeg-chart-row[style*="border-bottom"] {
+  border-bottom-color: var(--ed-ink-2) !important;
+}
+.eegdash-stats-section .eeg-chart-labels span {
+  font-family: var(--ed-font-mono);
+  color: var(--ed-muted);
+}
+
+/* =========================================================================
+   15. File explorer / electrode iframe — editorial chrome
+   ========================================================================= */
+
+.electrode-explorer,
+.trace-viewer,
+.nemar-wordcloud-details {
+  border: 1px solid var(--ed-ink);
+  background: rgba(255, 255, 255, 0.4);
+  padding: 0 14px;
+  margin: 18px 0;
+}
+.electrode-explorer > summary,
+.trace-viewer > summary,
+.nemar-wordcloud-details > summary {
+  font-family: var(--ed-font-sans);
+  font-size: 11.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ed-ink);
+  padding: 12px 4px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.electrode-explorer iframe,
+.trace-viewer iframe {
+  border: 1px solid var(--ed-rule) !important;
+  border-radius: 0 !important;
+}
+.trace-viewer-caption {
+  font-family: var(--ed-font-sans);
+  font-size: 12.5px;
+  color: var(--ed-muted);
+  line-height: 1.5;
+  padding: 0 4px 14px;
+}
+
+/* =========================================================================
+   16. Admonition (Found an issue?) — calm editorial tip
+   ========================================================================= */
+
+article.bd-article div.admonition.tip,
+article.bd-article div.admonition.note {
+  background: rgba(0, 108, 163, 0.04);
+  border: 1px solid var(--ed-rule);
+  border-left: 3px solid var(--ed-accent);
+  border-radius: 0;
+  font-family: var(--ed-font-sans);
+  max-width: 820px;
+}
+article.bd-article div.admonition.tip > .admonition-title,
+article.bd-article div.admonition.note > .admonition-title {
+  background: transparent;
+  font-family: var(--ed-font-mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ed-accent);
+  font-weight: 700;
+}
+
+/* =========================================================================
+   17. Dropdown (View full README, BibTeX, etc.) — editorial fold
+   ========================================================================= */
+
+article.bd-article details.sd-dropdown,
+article.bd-article .sd-dropdown {
+  border: 1px solid var(--ed-rule) !important;
+  border-radius: 0 !important;
+  background: rgba(255, 255, 255, 0.35);
+  box-shadow: none !important;
+}
+article.bd-article details.sd-dropdown summary,
+article.bd-article .sd-dropdown summary,
+article.bd-article details.sd-dropdown .sd-summary-title {
+  background: var(--ed-paper-2) !important;
+  font-family: var(--ed-font-sans);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ed-ink) !important;
+  font-weight: 600;
+  padding: 12px 16px;
+  border-radius: 0;
+}
+
+/* =========================================================================
+   18. Secondary sidebar (TOC) — tighter rhythm, brand caret
+   ========================================================================= */
+
+.bd-toc-link.nav-link,
+.toc-h2 .nav-link,
+.bd-toc-link {
+  font-family: var(--ed-font-sans);
+  font-size: 12.5px;
+  letter-spacing: 0.01em;
+  color: var(--ed-ink-2);
+}
+.bd-toc-link.nav-link.active,
+.bd-toc-link.active {
+  color: var(--ed-accent) !important;
+  border-left-color: var(--ed-accent) !important;
+  font-weight: 600;
+}
+
+/* =========================================================================
+   19. Print pass — strip dark code surface and decorative grain
+   ========================================================================= */
+
+@media print {
+  body::before { display: none; }
+  article.bd-article div.highlight,
+  article.bd-article pre {
+    background: #fff !important;
+    color: #000 !important;
+    border: 1px solid #000 !important;
+  }
+  .eegdash-ed-layers > div::after { display: none; }
+}

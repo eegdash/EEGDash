@@ -172,7 +172,7 @@ def spectral_hjorth_activity(f, p, /):
     Parameters
     ----------
     f : ndarray
-            Frequency vector.
+        Frequency vector.
     p : ndarray
         Power Spectral Density.
 
@@ -261,7 +261,7 @@ def spectral_hjorth_complexity(f, p, /):
 @feature_predecessor(spectral_normalized_preprocessor)
 @univariate_feature
 def spectral_entropy(f, p, /):
-    r"""Calculate Spectral Entropy of thepower spectrum.
+    r"""Calculate Spectral Entropy of the power spectrum.
 
     Spectral Entropy (SE) measures the complexity or "disorder" of a signal.
     A high SE indicates a flat, broad spectrum (e.g., white noise), while a

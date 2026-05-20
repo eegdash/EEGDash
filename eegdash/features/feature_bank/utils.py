@@ -277,7 +277,7 @@ def slice_freq_band(f, *x, f_min=None, f_max=None):
     >>> f_s, d_s = slice_freq_band(freqs, data, f_min=4, f_max=8)
 
     >>> f_s
-    array([4, 6, 8])~
+    array([4, 6, 8])
     >>> d_s
     array([[30, 40, 50],
            [35, 45, 55]])

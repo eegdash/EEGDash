@@ -211,7 +211,7 @@ class CommonSpatialPattern(TrainableFeature):
     def fit(self):
         r"""Solve the generalized eigenvalue problem to find spatial filters.
 
-        Calculates the filters $W$ such that the ratio of variances between
+        Calculates the filters :math:`W` such that the ratio of variances between
         the two classes is maximized. Filters are sorted by their
         discriminative power (distance from 0.5 eigenvalue).
 
@@ -250,7 +250,7 @@ class CommonSpatialPattern(TrainableFeature):
             Number of top filters to select.
         crit_select : float, optional
             Threshold for selecting filters based on eigenvalue distance
-            from 0.5. Filters with $\left| \lambda - 0.5 \right| > {crit}_{select}$
+            from 0.5. Filters with :math:`\left| \lambda - 0.5 \right| > \text{crit\_select}`
             are kept.
 
         Returns

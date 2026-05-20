@@ -96,10 +96,10 @@ def get_feature_predecessors(feature_or_extractor: Callable | None) -> list:
     --------
     >>> # Example: Linear dependency with a branching dependency
     >>> print(get_feature_predecessors(feature_bank.spectral_entropy))
-        [<function spectral_entropy at 0x...>,
-        <function spectral_normalized_preprocessor at 0x...>,
-        <function spectral_preprocessor at 0x...>,
-        (None, [<function signal_hilbert_preprocessor at 0x...>, None])]
+    [<function spectral_entropy at 0x...>,
+    <function spectral_normalized_preprocessor at 0x...>,
+    <function spectral_preprocessor at 0x...>,
+    (None, [<function signal_hilbert_preprocessor at 0x...>, None])]
 
     """
     current = feature_or_extractor

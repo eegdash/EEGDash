@@ -44,7 +44,7 @@ dev = [
 [tool.ruff]
 line-length = 88
 target-version = "py310"
-extend-exclude = ["1_fetch_sources", "data", "__pycache__", ".cache"]
+extend-exclude = ["1_fetch_sources", "data", "__pycache__", ".cache", "mutants"]
 
 [tool.ruff.lint]
 # Initial selection — keep tight from day 1 so quality only ratchets up.

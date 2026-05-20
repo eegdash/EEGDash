@@ -632,11 +632,11 @@ def generate_dataset_bubble(
     # is hard to spot without context. Surface it explicitly in the legend
     # as a dashed-line swatch (Plotly draws this as a tiny dashed segment).
     _ref_legend_map = {
-        "records": "One record per subject",
-        "subjects": "One record per subject",
-        "duration_h": "One hour per subject",
-        "size_gb": "One GB per subject",
-        "tasks": "One task per subject",
+        "records": "Dashed diagonal: one record per subject",
+        "subjects": "Dashed diagonal: one record per subject",
+        "duration_h": "Dashed diagonal: one hour per subject",
+        "size_gb": "Dashed diagonal: one GB per subject",
+        "tasks": "Dashed diagonal: one task per subject",
     }
     ref_legend_text = _ref_legend_map.get(x_field)
     if ref_legend_text:

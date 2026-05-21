@@ -1902,67 +1902,50 @@ def is_eeg_data_file(filepath: str) -> bool:
     return is_neuro_data_file(filepath)
 
 
-def digest_from_manifest(
+def _enumerate_via_manifest(
     dataset_id: str,
-    input_dir: Path,
-    output_dir: Path,
-) -> dict[str, Any]:
-    """Digest a dataset from its manifest.json without requiring actual files.
+    manifest: dict,
+    digested_at: str,
+) -> tuple[EnumerationResult, int]:
+    """Build an :class:`EnumerationResult` from a parsed manifest.json.
 
-    This is used for API-only sources (OSF, Figshare, Zenodo) where we have
-    file listings but no actual files on disk.
+    Phase 8 Stage 3B extraction: this body used to live inline inside
+    :func:`digest_from_manifest`. It owns the manifest-only algorithm —
+    storage-base reconstruction, BIDS entity inference from paths,
+    HTTP-fallback subject counting, fingerprint, per-file Record
+    creation (including CTF .ds + ZIP-contents handling).
 
     Parameters
     ----------
     dataset_id : str
-        Dataset identifier
-    input_dir : Path
-        Directory containing cloned datasets (with manifest.json)
-    output_dir : Path
-        Directory for output JSON files
+        Dataset accession.
+    manifest : dict
+        Parsed ``manifest.json`` content.
+    digested_at : str
+        ISO 8601 timestamp stamped into every Record + the Dataset.
 
     Returns
     -------
-    dict
-        Summary of digestion results
-
+    (EnumerationResult, total_files)
+        The result carries the Dataset metadata + Records + per-file
+        errors (no montages — the manifest path produces none). The
+        ``total_files`` count is the raw ``len(manifest["files"])``
+        before any per-file filtering; it's surfaced in the summary
+        for operational observability.
     """
-    dataset_dir = input_dir / dataset_id
-    dataset_output_dir = output_dir / dataset_id
-    manifest_path = dataset_dir / "manifest.json"
-
-    if not manifest_path.exists():
-        return {
-            "status": "skipped",
-            "dataset_id": dataset_id,
-            "reason": "manifest.json not found",
-        }
-
-    # Load manifest
-    try:
-        with open(manifest_path) as f:
-            manifest = json.load(f)
-    except (OSError, json.JSONDecodeError, ValueError) as e:
-        return {
-            "status": "error",
-            "dataset_id": dataset_id,
-            "error": f"Failed to load manifest: {e}",
-        }
-
     source = _reconcile_source(
         manifest.get("source"), dataset_id, context="digest_from_manifest"
     )
-    digested_at = datetime.now(timezone.utc).isoformat()
 
-    # Get file list from manifest
     files = manifest.get("files", [])
-
     if not files:
-        return {
-            "status": "empty",
-            "dataset_id": dataset_id,
-            "reason": "no files in manifest",
-        }
+        return (
+            EnumerationResult(
+                dataset_meta={"dataset_id": dataset_id, "source": source},
+                digest_method="manifest_only",
+            ),
+            0,
+        )
 
     # Check for ZIP contents (files extracted from subject ZIPs)
     zip_contents = manifest.get("zip_contents", [])
@@ -2511,24 +2494,86 @@ def digest_from_manifest(
         except (KeyError, ValueError, TypeError) as e:
             errors.append({"file": filepath, "error": str(e)})
 
-    # Hand off to the shared writer (Stage 2B — replaces the inline
-    # JSON-write block that used to live here). Behaviour change:
-    # `_montages.json` is now written (empty) for the manifest path —
-    # see write_dataset_outputs's docstring + STAGE-2-PLAN.md.
-    result = EnumerationResult(
-        dataset_meta=dict(dataset_doc),
-        records=records,
-        errors=errors,
-        montages={},  # manifest path produces no montages
-        digest_method="manifest_only",
+    return (
+        EnumerationResult(
+            dataset_meta=dict(dataset_doc),
+            records=records,
+            errors=errors,
+            montages={},  # manifest path produces no montages
+            digest_method="manifest_only",
+        ),
+        len(files),
     )
+
+
+def digest_from_manifest(
+    dataset_id: str,
+    input_dir: Path,
+    output_dir: Path,
+) -> dict[str, Any]:
+    """Digest a dataset from its manifest.json without requiring actual files.
+
+    Used for API-only sources (OSF, Figshare, Zenodo) where we have
+    file listings but no actual files on disk. Also reached as the
+    fallback path from :func:`digest_dataset` when the BIDS clone is
+    unparseable.
+
+    Phase 8 Stage 3B: orchestrator only — skip-check, load manifest,
+    delegate to :func:`_enumerate_via_manifest`, write outputs.
+
+    Parameters
+    ----------
+    dataset_id : str
+    input_dir : Path
+        Directory containing cloned datasets (with manifest.json).
+    output_dir : Path
+        Directory for output JSON files.
+
+    Returns
+    -------
+    dict
+        Summary of digestion results.
+    """
+    dataset_dir = input_dir / dataset_id
+    dataset_output_dir = output_dir / dataset_id
+    manifest_path = dataset_dir / "manifest.json"
+
+    if not manifest_path.exists():
+        return {
+            "status": "skipped",
+            "dataset_id": dataset_id,
+            "reason": "manifest.json not found",
+        }
+
+    try:
+        with open(manifest_path) as f:
+            manifest = json.load(f)
+    except (OSError, json.JSONDecodeError, ValueError) as e:
+        return {
+            "status": "error",
+            "dataset_id": dataset_id,
+            "error": f"Failed to load manifest: {e}",
+        }
+
+    digested_at = datetime.now(timezone.utc).isoformat()
+    result, total_files = _enumerate_via_manifest(dataset_id, manifest, digested_at)
+
+    if not result.records:
+        return {
+            "status": "empty",
+            "dataset_id": dataset_id,
+            "reason": "no files in manifest"
+            if total_files == 0
+            else "no records extracted",
+        }
+
     return write_dataset_outputs(
         dataset_output_dir,
         result,
         dataset_id=dataset_id,
-        source=source,
+        source=result.dataset_meta.get("source", "unknown"),
         digested_at=digested_at,
-        total_files=len(files),
+        total_files=total_files,
     )
 
 

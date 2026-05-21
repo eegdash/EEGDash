@@ -1870,7 +1870,7 @@ def digest_from_manifest(
     try:
         with open(manifest_path) as f:
             manifest = json.load(f)
-    except Exception as e:
+    except (OSError, json.JSONDecodeError, ValueError) as e:
         return {
             "status": "error",
             "dataset_id": dataset_id,
@@ -2017,7 +2017,14 @@ def digest_from_manifest(
                     # Some datasets put subject count here
                     if "Subjects" in desc_data:  # heuristic
                         subjects_count = int(desc_data["Subjects"])
-            except Exception as e:
+            except (
+                urllib.error.URLError,
+                OSError,
+                json.JSONDecodeError,
+                UnicodeDecodeError,
+                ValueError,
+                KeyError,
+            ) as e:
                 print(f"Failed to fetch/parse dataset_description.json: {e}")
 
         # Try participants.tsv if still 0
@@ -2029,7 +2036,12 @@ def digest_from_manifest(
                     # Subtract header
                     if len(lines) > 1:
                         subjects_count = len(lines) - 1
-            except Exception as e:
+            except (
+                urllib.error.URLError,
+                OSError,
+                UnicodeDecodeError,
+                ValueError,
+            ) as e:
                 print(f"Failed to fetch/parse participants.tsv: {e}")
     ages = demographics.get("ages", [])
 
@@ -2138,7 +2150,11 @@ def digest_from_manifest(
                 digested_at=digested_at,
             )
             records.append(dict(record))
-        except Exception as e:
+        except (KeyError, ValueError, TypeError) as e:
+            # create_record is pure: validation/conversion errors on a
+            # particular file go into the errors list; programmer
+            # errors (e.g., a misshapen storage_backend table)
+            # propagate per Phase 9 F1.
             errors.append({"file": ds_path, "error": str(e)})
 
     for file_info in files:
@@ -2199,7 +2215,8 @@ def digest_from_manifest(
                         record["file_size"] = zf_size
 
                     records.append(dict(record))
-                except Exception as e:
+                except (KeyError, ValueError, TypeError) as e:
+                    # create_record validation; same contract as above.
                     errors.append({"file": zf_path, "error": str(e)})
             continue  # Skip to next file (we've processed the ZIP contents)
 
@@ -2243,7 +2260,7 @@ def digest_from_manifest(
                         record["container_size"] = file_size
 
                     records.append(dict(record))
-                except Exception as e:
+                except (KeyError, ValueError, TypeError) as e:
                     errors.append({"file": filepath, "error": str(e)})
                 continue
 
@@ -2312,7 +2329,7 @@ def digest_from_manifest(
                                 record["container_size"] = file_size
 
                             records.append(dict(record))
-                        except Exception as e:
+                        except (KeyError, ValueError, TypeError) as e:
                             errors.append({"file": f"sub-{sub_id}", "error": str(e)})
                 else:
                     # No subject count - create single placeholder record
@@ -2342,7 +2359,7 @@ def digest_from_manifest(
                             record["container_size"] = file_size
 
                         records.append(dict(record))
-                    except Exception as e:
+                    except (KeyError, ValueError, TypeError) as e:
                         errors.append({"file": filepath, "error": str(e)})
                 continue
 
@@ -2379,7 +2396,7 @@ def digest_from_manifest(
                 record["file_size"] = file_size
 
             records.append(dict(record))
-        except Exception as e:
+        except (KeyError, ValueError, TypeError) as e:
             errors.append({"file": filepath, "error": str(e)})
 
     # Also process standalone zip_contents (from clone script)
@@ -2419,7 +2436,7 @@ def digest_from_manifest(
                 record["file_size"] = file_size
 
             records.append(dict(record))
-        except Exception as e:
+        except (KeyError, ValueError, TypeError) as e:
             errors.append({"file": filepath, "error": str(e)})
 
     # Create output directory

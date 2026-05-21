@@ -40,7 +40,6 @@ Usage:
     python 5_inject.py --input digestion_output --database eegdash_dev --skip-validation
 """
 
-import argparse
 import json
 import math
 import os
@@ -556,122 +555,29 @@ def filter_changed_datasets(
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        description="Inject digested datasets and records into MongoDB via API Gateway."
-    )
-    parser.add_argument(
-        "--input",
-        type=Path,
-        default=Path("digestion_output"),
-        help="Directory containing digested datasets (default: digestion_output/)",
-    )
-    parser.add_argument(
-        "--database",
-        type=str,
-        required=True,
-        choices=[
-            "eegdash",
-            "eegdash_dev",
-            "eegdash_archive",
-            "eegdash_staging",
-            "eegdash_v1",
-        ],
-        help=(
-            "Target MongoDB database (eegdash=production, "
-            "eegdash_dev=development, eegdash_archive=old data, "
-            "eegdash_staging=staging, eegdash_v1=legacy)"
-        ),
-    )
-    parser.add_argument(
-        "--api-url",
-        type=str,
-        default=DEFAULT_API_URL,
-        help=f"EEGDash API URL (default: {DEFAULT_API_URL})",
-    )
-    parser.add_argument(
-        "--token",
-        type=str,
-        default=None,
-        help="Admin token (default: from EEGDASH_ADMIN_TOKEN env var)",
-    )
-    parser.add_argument(
-        "--datasets",
-        nargs="+",
-        default=None,
-        help="Specific dataset IDs to inject (default: all)",
-    )
-    parser.add_argument(
-        "--dry-run",
-        action="store_true",
-        help="Validate files without uploading",
-    )
-    parser.add_argument(
-        "--batch-size",
-        type=int,
-        default=1000,
-        help="Maximum records per API request (default: 1000)",
-    )
-    parser.add_argument(
-        "--only-datasets",
-        action="store_true",
-        help="Only inject Dataset documents (skip Records and Montages)",
-    )
-    parser.add_argument(
-        "--only-records",
-        action="store_true",
-        help="Only inject Record documents (skip Datasets and Montages)",
-    )
-    parser.add_argument(
-        "--only-montages",
-        action="store_true",
-        help="Only inject Montage documents (skip Datasets and Records)",
-    )
-    parser.add_argument(
-        "--skip-montages",
-        action="store_true",
-        help="Skip the montage-registry injection leg",
-    )
-    parser.add_argument(
-        "--force",
-        action="store_true",
-        help="Inject even if ingestion_fingerprint matches existing dataset",
-    )
-    parser.add_argument(
-        "--skip-validation",
-        action="store_true",
-        help="Skip validation before injection (not recommended)",
-    )
-    parser.add_argument(
-        "--data-quality-threshold",
-        type=float,
-        default=10.0,
-        help="Max percentage of records with missing nchans/sampling_frequency before warning (default: 10%%)",
-    )
-    parser.add_argument(
-        "--compute-stats",
-        action="store_true",
-        help="Automatically recompute dataset stats (nchans_counts, sfreq_counts) after injection",
-    )
+    # CLI + env var parsing + validation, all in one place (C6.5).
+    # The 95 lines of argparse boilerplate + 25 lines of mutually-
+    # exclusive-flag checks that used to live here are now declarative
+    # fields + @model_validator hooks on InjectConfig. Tests construct
+    # InjectConfig directly; this function stays the only argv-bound
+    # entry point.
+    from pydantic import ValidationError
 
-    args = parser.parse_args()
+    from _inject_config import load_inject_config_from_argv
 
-    # Validate args — the three "only-*" flags are mutually exclusive.
-    only_flags = [args.only_datasets, args.only_records, args.only_montages]
-    if sum(only_flags) > 1:
-        print(
-            "Error: --only-datasets, --only-records, and --only-montages are mutually exclusive",
-            file=sys.stderr,
-        )
-        return 1
-    if args.only_montages and args.skip_montages:
-        print(
-            "Error: --only-montages and --skip-montages are contradictory",
-            file=sys.stderr,
-        )
+    try:
+        args = load_inject_config_from_argv()
+    except ValidationError as exc:
+        # Render validation errors as a clean per-field list rather than
+        # pydantic's verbose default. Preserves the "exit 1 on bad
+        # config" contract the previous argparse layer had.
+        print("Config error(s):", file=sys.stderr)
+        for err in exc.errors():
+            field = ".".join(str(p) for p in err.get("loc", []))
+            print(f"  {field}: {err.get('msg')}", file=sys.stderr)
         return 1
 
-    # Get admin token (validated later if injection is needed)
-    admin_token = args.token or os.environ.get("EEGDASH_ADMIN_TOKEN")
+    admin_token = args.token  # already env-fallback'd via AliasChoices
 
     # Run validation first (unless explicitly skipped)
     if not args.skip_validation:

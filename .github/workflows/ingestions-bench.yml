@@ -1,0 +1,81 @@
+name: Ingestions — Benchmark + Memory
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/ingestions/**'
+      - '.github/workflows/ingestions-bench.yml'
+  push:
+    branches: [main, master]
+    paths:
+      - 'scripts/ingestions/**'
+  workflow_dispatch: {}
+
+concurrency:
+  group: ingestions-bench-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write       # github-action-benchmark needs to push gh-pages history
+  deployments: write
+  pull-requests: write  # to leave PR comments on regression
+
+jobs:
+  benchmark:
+    name: pytest-benchmark + memory gates
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install ingestion + dev deps
+        run: pip install -e "scripts/ingestions[dev]"
+
+      - name: Run memory + bench tests (saves pytest-benchmark JSON)
+        working-directory: scripts/ingestions
+        # The `-m "slow or not slow"` selector includes both the
+        # @pytest.mark.slow memory tests AND the benchmark-decorated
+        # throughput tests in tests/test_perf.py.
+        run: |
+          pytest tests/test_perf.py \
+            -m "slow or not slow" \
+            --benchmark-json=.benchmarks/output.json \
+            --benchmark-warmup=on \
+            --benchmark-warmup-iterations=2 \
+            -ra --tb=short
+
+      - name: Upload benchmark JSON as workflow artefact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ingestions-bench-${{ github.sha }}
+          path: scripts/ingestions/.benchmarks/output.json
+          retention-days: 30
+
+      # github-action-benchmark stores results in a gh-pages branch and
+      # leaves a PR comment if the new run regresses by > the threshold.
+      # Only enabled on push to main; PRs see the upload artefact +
+      # the inline assertions in test_perf.py (which already gate
+      # absolute ceilings independently of historic trend).
+      - name: Trend tracking (push to main only)
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: benchmark-action/github-action-benchmark@v1
+        with:
+          tool: 'pytest'
+          output-file-path: scripts/ingestions/.benchmarks/output.json
+          # Push the historical chart to a parallel gh-pages branch.
+          gh-pages-branch: gh-pages
+          benchmark-data-dir-path: ingestions-bench
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          auto-push: true
+          # Alert if the mean of any single benchmark gets > 1.5x slower
+          # than its historic best on this branch.
+          alert-threshold: '150%'
+          comment-on-alert: true
+          fail-on-alert: false  # don't block merge; the test_perf.py
+                                # absolute-ceiling assertions are the
+                                # blocking gate.
+          alert-comment-cc-users: '@bruAristimunha'

@@ -155,18 +155,24 @@ def test_megafunction_line_counts_are_known_baseline(digest: ModuleType) -> None
     """
     import inspect
 
-    # Baselines updated 2026-05-21 across two sessions:
+    # Baselines updated 2026-05-21 across multiple sessions:
     # - Session 1: Phase 3 narrow-except sweep added ~20 LOC each from
     #   tuple-formatting (logic shrank).
     # - Session 2 / Phase 8 round 2: extract_record dropped by 92 LOC
     #   after extracting the BIDS sidecar + channels.tsv walks into
     #   helpers. Real shrinkage starts here.
-    # The remaining 3 mega-functions still have decomposition pending.
+    # - Session 5 / Phase 8 Stage 3: digest_from_manifest dropped from
+    #   670 → 69 LOC (extracted to _enumerate_via_manifest helper);
+    #   digest_dataset dropped from 330 → 137 LOC (extracted to
+    #   _enumerate_via_bids helper). Both are now below the 100 LOC
+    #   ceiling so they're REMOVED from this dict; the extracted
+    #   helpers replace them as the megafunctions-still-pending.
     big_functions = {
-        "digest_from_manifest": 670,
+        # Still big — pending further decomposition.
+        "_enumerate_via_manifest": 670,
+        "_enumerate_via_bids": 200,
         "extract_record": 440,
         "extract_dataset_metadata": 380,
-        "digest_dataset": 330,
     }
     for name, baseline_loc in big_functions.items():
         fn = getattr(digest, name, None)
@@ -187,4 +193,16 @@ def test_megafunction_line_counts_are_known_baseline(digest: ModuleType) -> None
         assert actual_loc <= baseline_loc + 20, (
             f"{name} grew from {baseline_loc} → {actual_loc} LOC. "
             "Mega-functions should only shrink."
+        )
+
+    # Sanity-check the wrappers stayed thin — both were close to 800
+    # LOC before Stage 3; both should now be under 150.
+    for thin_wrapper in ("digest_dataset", "digest_from_manifest"):
+        fn = getattr(digest, thin_wrapper, None)
+        if fn is None:  # pragma: no cover
+            continue
+        actual_loc = len(inspect.getsourcelines(fn)[0])
+        assert actual_loc < 200, (
+            f"{thin_wrapper} grew to {actual_loc} LOC — it should stay "
+            "a thin orchestrator; the algorithm lives in the helper."
         )

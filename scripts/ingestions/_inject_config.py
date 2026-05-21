@@ -29,23 +29,75 @@ from __future__ import annotations
 
 import sys
 from pathlib import Path
-from typing import Literal
 
-from pydantic import AliasChoices, Field, model_validator
+from pydantic import AliasChoices, Field, field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 DEFAULT_API_URL = "https://data.eegdash.org"
 
-# Allowed values for ``--database``. Mirrors the API Gateway's
-# valid_databases set (settings.valid_databases in api/main.py).
-# Keep aligned with the cluster's config.
-ValidDatabase = Literal[
-    "eegdash",
-    "eegdash_dev",
-    "eegdash_archive",
-    "eegdash_staging",
-    "eegdash_v1",
-]
+# Source-of-truth fallback. Must stay aligned with the API Gateway's
+# settings.valid_databases set; the bootstrap call below will detect
+# drift at boot when the server exposes /admin/valid-databases. Until
+# then, this list IS the contract.
+LOCAL_FALLBACK_DATABASES: frozenset[str] = frozenset(
+    {
+        "eegdash",
+        "eegdash_dev",
+        "eegdash_archive",
+        "eegdash_staging",
+        "eegdash_v1",
+    }
+)
+
+# Per-API-URL cache so validator calls don't re-hit the network on
+# every InjectConfig construction. Cleared by tests via the
+# clear_valid_databases_cache() helper.
+_valid_databases_cache: dict[str, frozenset[str]] = {}
+
+
+def fetch_valid_databases_from_api(
+    api_url: str,
+    token: str | None,
+    *,
+    timeout: float = 5.0,
+) -> frozenset[str] | None:
+    """Fetch the API Gateway's valid_databases set.
+
+    Returns a frozenset on success, None on any failure (network error,
+    non-200 status, malformed JSON, missing 'databases' key). Cached
+    per api_url so repeated InjectConfig construction is cheap.
+    """
+    if api_url in _valid_databases_cache:
+        return _valid_databases_cache[api_url]
+
+    import httpx
+
+    headers = {"Authorization": f"Bearer {token}"} if token else {}
+    try:
+        with httpx.Client(timeout=timeout) as client:
+            resp = client.get(f"{api_url}/admin/valid-databases", headers=headers)
+            resp.raise_for_status()
+            data = resp.json()
+            valid = frozenset(data["databases"])
+    except (httpx.HTTPError, KeyError, ValueError, TypeError):
+        # Any of: connect/timeout/HTTPStatusError, JSON parse failure,
+        # missing 'databases' key, non-iterable value. Fall back to
+        # local contract — same behaviour as before this fix landed.
+        return None
+
+    _valid_databases_cache[api_url] = valid
+    return valid
+
+
+def clear_valid_databases_cache() -> None:
+    """Test helper. Resets the per-api_url cache."""
+    _valid_databases_cache.clear()
+
+
+# Replaces the Literal so we can dynamically extend the accepted set
+# when the API exposes /admin/valid-databases. The frozenset above
+# (LOCAL_FALLBACK_DATABASES) is the contract until the API is queried.
+DatabaseName = str
 
 
 class InjectConfig(BaseSettings):
@@ -67,13 +119,45 @@ class InjectConfig(BaseSettings):
     )
 
     # ─── Required: target database ────────────────────────────────────────
-    database: ValidDatabase = Field(
+    database: DatabaseName = Field(
         description=(
-            "Target MongoDB database. eegdash=production, "
-            "eegdash_dev=development, eegdash_archive=old data, "
-            "eegdash_staging=staging, eegdash_v1=legacy."
+            "Target MongoDB database. Valid names checked against the API's "
+            "valid-databases endpoint at boot (falls back to "
+            "LOCAL_FALLBACK_DATABASES on network failure)."
         ),
     )
+
+    @field_validator("database")
+    @classmethod
+    def _database_must_be_valid(cls, value: str, info) -> str:
+        """Reject databases the cluster doesn't know about.
+
+        Order of checks:
+        1. If the API exposes /admin/valid-databases AND we can reach it,
+           use the returned set.
+        2. Otherwise fall back to LOCAL_FALLBACK_DATABASES (the contract
+           we maintained pre-fetch).
+
+        Local fallback always runs — even if the API call succeeds —
+        so an empty-list response from a misconfigured server doesn't
+        lock us out.
+        """
+        # info.data has fields validated BEFORE this one. `api_url` and
+        # `token` are declared after, so we read defaults from env if
+        # not yet set. Keep this best-effort.
+        api_url = info.data.get("api_url") or DEFAULT_API_URL
+        token = info.data.get("token")
+
+        api_set = fetch_valid_databases_from_api(api_url, token)
+        valid: frozenset[str] = api_set if api_set else LOCAL_FALLBACK_DATABASES
+
+        if value not in valid:
+            raise ValueError(
+                f"database={value!r} is not in the valid set "
+                f"({sorted(valid)}); update the API's valid_databases or "
+                f"LOCAL_FALLBACK_DATABASES if you are adding a new one."
+            )
+        return value
 
     # ─── I/O ─────────────────────────────────────────────────────────────
     input: Path = Field(

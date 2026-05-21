@@ -10,7 +10,9 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
+import httpx
 import pytest
+import respx
 from pydantic import ValidationError
 
 _INGEST_DIR = Path(__file__).resolve().parent.parent
@@ -19,9 +21,32 @@ if str(_INGEST_DIR) not in sys.path:
 
 from _inject_config import (
     DEFAULT_API_URL,
+    LOCAL_FALLBACK_DATABASES,
     InjectConfig,
+    _valid_databases_cache,
+    clear_valid_databases_cache,
+    fetch_valid_databases_from_api,
     load_inject_config_from_argv,
 )
+
+# ─── Autouse fixture: prime the cache so non-respx tests don't hit network ─
+
+
+@pytest.fixture(autouse=True)
+def _prime_valid_databases_cache():
+    """Most existing tests don't mock the network. Pre-seed the cache
+    for DEFAULT_API_URL with the local fallback so the database
+    field_validator doesn't fire a real HTTP call (and time out)
+    against a domain we can't reach in CI.
+
+    Tests that exercise the network path explicitly (respx-decorated)
+    call clear_valid_databases_cache() themselves at the start.
+    """
+    clear_valid_databases_cache()
+    _valid_databases_cache[DEFAULT_API_URL] = LOCAL_FALLBACK_DATABASES
+    yield
+    clear_valid_databases_cache()
+
 
 # ─── Defaults + required fields ───────────────────────────────────────────
 
@@ -322,3 +347,124 @@ def test_argv_unknown_flag_rejected_by_argparse():
         load_inject_config_from_argv(
             ["--database", "eegdash_dev", "--bogus-flag", "--dry-run"]
         )
+
+
+# ─── fetch_valid_databases_from_api ────────────────────────────────────────
+
+
+@respx.mock
+def test_fetch_valid_databases_returns_api_list_on_200():
+    """Happy path: API returns {"databases": [...]} → frozenset of names."""
+    api_url = "https://api.example.test"
+    respx.get(f"{api_url}/admin/valid-databases").mock(
+        return_value=httpx.Response(
+            200, json={"databases": ["eegdash", "eegdash_dev", "eegdash_v2"]}
+        )
+    )
+
+    result = fetch_valid_databases_from_api(api_url, token="dummy")
+
+    assert result == frozenset({"eegdash", "eegdash_dev", "eegdash_v2"})
+
+
+@respx.mock
+def test_fetch_valid_databases_is_cached_per_api_url():
+    """Second call to the same api_url should NOT re-hit the server."""
+    from _inject_config import clear_valid_databases_cache
+
+    clear_valid_databases_cache()
+    api_url = "https://cache-test.example"
+    route = respx.get(f"{api_url}/admin/valid-databases").mock(
+        return_value=httpx.Response(200, json={"databases": ["eegdash"]})
+    )
+
+    fetch_valid_databases_from_api(api_url, token=None)
+    fetch_valid_databases_from_api(api_url, token=None)
+    fetch_valid_databases_from_api(api_url, token=None)
+
+    assert route.call_count == 1
+
+
+@respx.mock
+def test_fetch_valid_databases_returns_none_on_404():
+    """Endpoint doesn't exist on this server -> None (caller falls back)."""
+    from _inject_config import clear_valid_databases_cache
+
+    clear_valid_databases_cache()
+    api_url = "https://no-endpoint.example"
+    respx.get(f"{api_url}/admin/valid-databases").mock(
+        return_value=httpx.Response(404, json={"detail": "not found"})
+    )
+    assert fetch_valid_databases_from_api(api_url, token="x") is None
+
+
+@respx.mock
+def test_fetch_valid_databases_returns_none_on_network_error():
+    """Connection error -> None."""
+    from _inject_config import clear_valid_databases_cache
+
+    clear_valid_databases_cache()
+    api_url = "https://network-fail.example"
+    respx.get(f"{api_url}/admin/valid-databases").mock(
+        side_effect=httpx.ConnectError("boom")
+    )
+    assert fetch_valid_databases_from_api(api_url, token="x") is None
+
+
+@respx.mock
+def test_fetch_valid_databases_returns_none_on_missing_key():
+    """Server returns 200 but payload shape is wrong -> None."""
+    from _inject_config import clear_valid_databases_cache
+
+    clear_valid_databases_cache()
+    api_url = "https://bad-shape.example"
+    respx.get(f"{api_url}/admin/valid-databases").mock(
+        return_value=httpx.Response(200, json={"unexpected": "shape"})
+    )
+    assert fetch_valid_databases_from_api(api_url, token="x") is None
+
+
+# ─── InjectConfig integration with the API-fetch field validator ──────────
+
+
+@respx.mock
+def test_inject_config_rejects_unknown_database_via_local_fallback(tmp_path):
+    """Without network access, an unknown database is rejected by
+    LOCAL_FALLBACK_DATABASES."""
+    from _inject_config import clear_valid_databases_cache
+
+    clear_valid_databases_cache()
+    # Simulate the API endpoint being absent (the planned follow-up state)
+    # so the validator falls back to LOCAL_FALLBACK_DATABASES.
+    respx.get(f"{DEFAULT_API_URL}/admin/valid-databases").mock(
+        return_value=httpx.Response(404, json={"detail": "not found"})
+    )
+    with pytest.raises(ValidationError) as exc:
+        InjectConfig(
+            database="eegdash_does_not_exist",
+            input=tmp_path,
+            dry_run=True,
+        )
+    assert "valid set" in str(exc.value)
+
+
+@respx.mock
+def test_inject_config_accepts_database_only_in_api_set(tmp_path):
+    """An API that knows about a new database lets us inject to it
+    even when LOCAL_FALLBACK_DATABASES does not."""
+    from _inject_config import clear_valid_databases_cache
+
+    clear_valid_databases_cache()
+    respx.get(f"{DEFAULT_API_URL}/admin/valid-databases").mock(
+        return_value=httpx.Response(
+            200,
+            json={"databases": ["eegdash", "eegdash_dev", "eegdash_v99_future"]},
+        )
+    )
+
+    c = InjectConfig(
+        database="eegdash_v99_future",
+        input=tmp_path,
+        dry_run=True,
+    )
+    assert c.database == "eegdash_v99_future"

@@ -5,6 +5,7 @@ import html
 import json
 import math
 from collections import Counter
+from functools import partial
 from pathlib import Path
 from typing import Any
 
@@ -361,6 +362,18 @@ def _axis_label(value: float) -> str:
     return f"{value:.2g}"
 
 
+def _log_axis_forward(
+    value: float, *, log_min: float, log_max: float, base: float, span: float
+) -> float:
+    return base + (math.log10(value) - log_min) / (log_max - log_min) * span
+
+
+def _log_axis_inverse(
+    value: float, *, log_min: float, log_max: float, base: float, span: float
+) -> float:
+    return base + (log_max - math.log10(value)) / (log_max - log_min) * span
+
+
 def _scatter_svg(records: list[dict[str, Any]]) -> str:
     points = [
         record
@@ -388,11 +401,20 @@ def _scatter_svg(records: list[dict[str, Any]]) -> str:
     log_x_min, log_x_max = math.log10(x_min), math.log10(x_max)
     log_y_min, log_y_max = math.log10(y_min), math.log10(y_max)
 
-    def x_pos(value: float) -> float:
-        return left + (math.log10(value) - log_x_min) / (log_x_max - log_x_min) * plot_w
-
-    def y_pos(value: float) -> float:
-        return top + (log_y_max - math.log10(value)) / (log_y_max - log_y_min) * plot_h
+    x_pos = partial(
+        _log_axis_forward,
+        log_min=log_x_min,
+        log_max=log_x_max,
+        base=left,
+        span=plot_w,
+    )
+    y_pos = partial(
+        _log_axis_inverse,
+        log_min=log_y_min,
+        log_max=log_y_max,
+        base=top,
+        span=plot_h,
+    )
 
     max_hours = max((p["hours"] or 0) for p in points) or 1
     lines: list[str] = [
@@ -555,9 +577,9 @@ def _matrix_html(records: list[dict[str, Any]], selected: dict[str, list[str]]) 
             (
                 '<th class="api-study-col api-study-name">'
                 f'<a href="{html.escape(record["url"], quote=True)}">'
-                f'{html.escape(record["id"])}</a></th>'
+                f"{html.escape(record['id'])}</a></th>"
             ),
-            f'<td>{html.escape(record["source"])}</td>',
+            f"<td>{html.escape(record['source'])}</td>",
             f"<td>{html.escape(recording)}</td>",
             f'<td class="num">{record["subjects"]:,}</td>',
             f'<td class="num">{record["records"]:,}</td>',
@@ -626,7 +648,7 @@ def _build_html(
   <div class="api-study-tooltip" hidden></div>
   <div class="api-contract-rail">
     <span>API source</span>
-    <code>{html.escape(api_url.rstrip('/'))}/{html.escape(database)}/datasets/chart-data</code>
+    <code>{html.escape(api_url.rstrip("/"))}/{html.escape(database)}/datasets/chart-data</code>
     <span>{len(records):,} datasets</span>
     <span>{duration_count:,} with duration metadata</span>
   </div>
@@ -649,7 +671,7 @@ def _build_html(
     <div><strong class="api-summary-hours">{_format_number(known_hours)}</strong><span>known hours</span></div>
     <div><strong>{source_count:,}</strong><span>sources</span></div>
   </div>
-{''.join(panels)}
+{"".join(panels)}
 </div>
 """
 

@@ -113,8 +113,32 @@ def close_client() -> None:
         _client = None
 
 
-def make_retry_client(auth_token: str) -> httpx.Client:
-    """Create an HTTP client with auth headers for ingestion injection."""
+def make_authed_client(auth_token: str) -> httpx.Client:
+    """Create an httpx.Client with Bearer auth headers and no retries.
+
+    Retries are injected at the call site by ``request_json`` /
+    ``request_text`` via tenacity (see ``_request_with_retry``). This
+    function only configures the auth header and timeout — the name
+    reflects that.
+
+    Parameters
+    ----------
+    auth_token : str
+        Bearer token to attach as ``Authorization: Bearer <token>``.
+
+    Returns
+    -------
+    httpx.Client
+        Configured client. The caller is responsible for closing it,
+        either explicitly or via the ``with`` statement.
+
+    Notes
+    -----
+    Renamed from ``make_retry_client`` (Phase 9 audit-2 F3 — the old
+    name implied that retries were baked into the client itself, which
+    they are not). The old name remains as a deprecated alias for one
+    release.
+    """
     headers = build_headers(
         extra={
             "Authorization": f"Bearer {auth_token}",
@@ -126,6 +150,28 @@ def make_retry_client(auth_token: str) -> httpx.Client:
         headers=headers,
         timeout=DEFAULT_TIMEOUT,
     )
+
+
+def make_retry_client(auth_token: str) -> httpx.Client:
+    """Deprecated alias for :func:`make_authed_client`.
+
+    .. deprecated:: 0.1
+        ``make_retry_client`` is misleadingly named — the client it
+        returns has ``retries=0``; retries happen at call sites via
+        tenacity. Use :func:`make_authed_client` instead. Will be
+        removed in 0.2.
+    """
+    import warnings
+
+    warnings.warn(
+        "make_retry_client is deprecated; use make_authed_client. "
+        "The returned client does NOT have retries baked in; retries "
+        "are injected by request_json / request_text. "
+        "Will be removed in v0.2.",
+        DeprecationWarning,
+        stacklevel=2,
+    )
+    return make_authed_client(auth_token)
 
 
 def _should_retry_response(

@@ -2074,6 +2074,348 @@ def _fetch_subject_count_via_http(files: list, fallback: int) -> int:
     return subjects_count
 
 
+def _build_zip_extracted_records(
+    file_info: dict,
+    dataset_id: str,
+    storage_base: str,
+    digested_at: str,
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    """Synthesize Records for the neuro files inside a peeked ZIP.
+
+    When the fetch step peeks into a ZIP and lists its contents in
+    ``_zip_contents``, we emit one Record per neuro file inside, with
+    the parent ZIP's URL stamped as ``container_url`` so the runtime
+    knows to fetch the ZIP and extract on demand.
+
+    Pure function (no side effects). Returns ``(records, errors)``.
+    Phase 8 follow-up — was inline inside ``_enumerate_via_manifest``.
+    """
+    records: list[dict[str, Any]] = []
+    errors: list[dict[str, Any]] = []
+    zip_name = file_info.get("name", "")
+    zip_download_url = file_info.get("download_url", "")
+
+    for zf in file_info.get("_zip_contents", []):
+        zf_path = zf.get("path", "") if isinstance(zf, dict) else zf
+        zf_size = zf.get("size", 0) if isinstance(zf, dict) else 0
+
+        if not is_neuro_data_file(zf_path):
+            continue
+        try:
+            entities = parse_bids_entities_from_path(zf_path)
+            detected_modality = detect_modality_from_path(zf_path)
+            record = create_record(
+                dataset=dataset_id,
+                storage_base=storage_base,
+                bids_relpath=zf_path,
+                subject=entities.get("subject"),
+                session=entities.get("session"),
+                task=entities.get("task"),
+                run=entities.get("run"),
+                acquisition=entities.get("acquisition"),
+                dep_keys=[],
+                datatype=entities.get("datatype", detected_modality),
+                suffix=entities.get("suffix", detected_modality),
+                storage_backend="https",
+                recording_modality=[detected_modality],
+                digested_at=digested_at,
+            )
+            if zip_download_url:
+                record["container_url"] = zip_download_url
+                record["container_type"] = "zip"
+                record["container_name"] = zip_name
+            if zf_size:
+                record["file_size"] = zf_size
+            records.append(dict(record))
+        except (KeyError, ValueError, TypeError) as e:
+            errors.append({"file": zf_path, "error": str(e)})
+
+    return records, errors
+
+
+def _build_subject_zip_record(
+    file_info: dict,
+    dataset_id: str,
+    storage_base: str,
+    primary_mod: str,
+    recording_modality_val: list[str],
+    digested_at: str,
+) -> tuple[dict[str, Any] | None, list[dict[str, Any]]]:
+    """Synthesize one Record for a ``sub-<id>.zip`` archive in the manifest.
+
+    Subject-ZIP archives (one ZIP per subject) carry the whole subject's
+    data inside. We emit a placeholder Record with a guessed BIDS path;
+    the runtime downloads and extracts on demand. Marked with
+    ``zip_contains_bids = True`` so consumers know to peek inside.
+
+    Returns ``(record_or_None, errors)``. ``record`` is None when
+    ``create_record`` failed (the error is captured).
+    """
+    filepath = file_info.get("path", "")
+    download_url = file_info.get("download_url")
+    file_size = file_info.get("size", 0)
+
+    subject_match = re.match(r"^(sub-[a-zA-Z0-9]+)\.zip$", filepath, re.IGNORECASE)
+    if not subject_match:
+        return None, []
+    subject_id = subject_match.group(1)
+    try:
+        record = create_record(
+            dataset=dataset_id,
+            storage_base=storage_base,
+            bids_relpath=(f"{subject_id}/{primary_mod}/{subject_id}_{primary_mod}.set"),
+            subject=subject_id.replace("sub-", ""),
+            session=None,
+            task=None,
+            run=None,
+            dep_keys=[],
+            datatype=primary_mod,
+            suffix=primary_mod,
+            storage_backend="https",
+            recording_modality=recording_modality_val,
+            digested_at=digested_at,
+        )
+        if download_url:
+            record["container_url"] = download_url
+            record["container_type"] = "zip"
+            record["container_name"] = filepath
+            record["zip_contains_bids"] = True
+        if file_size:
+            record["container_size"] = file_size
+        return dict(record), []
+    except (KeyError, ValueError, TypeError) as e:
+        return None, [{"file": filepath, "error": str(e)}]
+
+
+_BIDS_DATA_ZIP_PATTERNS: tuple[str, ...] = (
+    r".*bids.*\.zip$",
+    r".*_eeg\.zip$",
+    r".*_meg\.zip$",
+    r".*_ieeg\.zip$",
+    r".*dataset.*\.zip$",
+    r".*rawdata.*\.zip$",
+    r".*data\.zip$",
+    r".*eeg.*\.zip$",
+    r".*meg.*\.zip$",
+    r".*nirs.*\.zip$",
+    r".*fnirs.*\.zip$",
+)
+
+
+def _is_bids_data_zip(filepath: str) -> bool:
+    """Whether the filename matches one of the known BIDS-bundle ZIP shapes.
+
+    BIDS-data ZIPs (``data_bids.zip``, ``*_eeg.zip``, ...) bundle the
+    whole dataset; we emit inferred per-subject Records based on the
+    manifest's demographics counts.
+    """
+    fp_lower = filepath.lower()
+    return any(re.match(p, fp_lower) for p in _BIDS_DATA_ZIP_PATTERNS)
+
+
+def _build_bids_data_zip_records(
+    file_info: dict,
+    manifest: dict,
+    dataset_id: str,
+    storage_base: str,
+    source: str,
+    primary_mod: str,
+    recording_modality_val: list[str],
+    digested_at: str,
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    """Synthesize Records for a BIDS-bundled ZIP using manifest demographics.
+
+    Two sub-cases:
+    1. ``demographics.subjects_count`` is known: emit one Record per
+       inferred subject (capped at 200) with placeholder BIDS paths
+       and ``needs_extraction = True``.
+    2. Subject count unknown: emit a single placeholder Record with
+       ``bids_relpath = __ZIP__/<filename>``.
+
+    Both stamp ``container_url`` so the runtime can fetch + extract.
+    """
+    records: list[dict[str, Any]] = []
+    errors: list[dict[str, Any]] = []
+    filepath = file_info.get("path", "")
+    download_url = file_info.get("download_url")
+    file_size = file_info.get("size", 0)
+
+    demographics = manifest.get("demographics", {})
+    inferred_subjects = demographics.get("subjects_count", 0)
+
+    if inferred_subjects and inferred_subjects > 0:
+        # Cap at 200 subjects to prevent runaway record creation.
+        for sub_idx in range(1, min(inferred_subjects + 1, 201)):
+            sub_id = f"{sub_idx:02d}" if inferred_subjects < 100 else f"{sub_idx:03d}"
+            try:
+                record = create_record(
+                    dataset=dataset_id,
+                    storage_base=storage_base,
+                    bids_relpath=(
+                        f"sub-{sub_id}/{primary_mod}/sub-{sub_id}_{primary_mod}.set"
+                    ),
+                    subject=sub_id,
+                    session=None,
+                    task=manifest.get("tasks", [None])[0]
+                    if manifest.get("tasks")
+                    else None,
+                    run=None,
+                    dep_keys=[],
+                    datatype=primary_mod,
+                    suffix=primary_mod,
+                    storage_backend="https",
+                    recording_modality=recording_modality_val,
+                    digested_at=digested_at,
+                )
+                if download_url:
+                    record["container_url"] = download_url
+                    record["container_type"] = "zip"
+                    record["container_name"] = filepath
+                    record["needs_extraction"] = True
+                    record["inferred_from_metadata"] = True
+                if file_size:
+                    record["container_size"] = file_size
+                records.append(dict(record))
+            except (KeyError, ValueError, TypeError) as e:
+                errors.append({"file": f"sub-{sub_id}", "error": str(e)})
+        return records, errors
+
+    # Subject count unknown — emit a single placeholder Record.
+    try:
+        record = create_record(
+            dataset=dataset_id,
+            storage_base=storage_base,
+            bids_relpath=f"__ZIP__/{filepath}",
+            subject=None,
+            session=None,
+            task=None,
+            run=None,
+            dep_keys=[],
+            datatype=primary_mod,
+            suffix=primary_mod,
+            storage_backend=get_storage_backend(source),
+            recording_modality=recording_modality_val,
+            digested_at=digested_at,
+        )
+        if download_url:
+            record["container_url"] = download_url
+            record["container_type"] = "zip"
+            record["container_name"] = filepath
+            record["needs_extraction"] = True
+        if file_size:
+            record["container_size"] = file_size
+        records.append(dict(record))
+    except (KeyError, ValueError, TypeError) as e:
+        errors.append({"file": filepath, "error": str(e)})
+
+    return records, errors
+
+
+def _build_regular_manifest_record(
+    file_info: dict | str,
+    dataset_id: str,
+    storage_base: str,
+    source: str,
+    digested_at: str,
+) -> tuple[dict[str, Any] | None, list[dict[str, Any]]]:
+    """Synthesize one Record for a regular (non-ZIP) neuro file in the manifest.
+
+    Returns ``(record_or_None, errors)``. The record's
+    ``storage_backend`` comes from the per-Source table (unlike the
+    ZIP branches, which hard-code ``"https"``).
+    """
+    if isinstance(file_info, dict):
+        filepath = file_info.get("path", "")
+        download_url = file_info.get("download_url")
+        file_size = file_info.get("size", 0)
+    else:
+        filepath = file_info
+        download_url = None
+        file_size = 0
+
+    if not is_neuro_data_file(filepath):
+        return None, []
+
+    try:
+        entities = parse_bids_entities_from_path(filepath)
+        detected_modality = detect_modality_from_path(filepath)
+        record = create_record(
+            dataset=dataset_id,
+            storage_base=storage_base,
+            bids_relpath=filepath,
+            subject=entities.get("subject"),
+            session=entities.get("session"),
+            task=entities.get("task"),
+            run=entities.get("run"),
+            acquisition=entities.get("acquisition"),
+            dep_keys=[],
+            datatype=entities.get("datatype", detected_modality),
+            suffix=entities.get("suffix", detected_modality),
+            storage_backend=get_storage_backend(source),
+            recording_modality=[detected_modality],
+            digested_at=digested_at,
+        )
+        if download_url:
+            record["download_url"] = download_url
+        if file_size:
+            record["file_size"] = file_size
+        return dict(record), []
+    except (KeyError, ValueError, TypeError) as e:
+        return None, [{"file": filepath, "error": str(e)}]
+
+
+def _build_standalone_zip_content_records(
+    zip_contents: list,
+    dataset_id: str,
+    storage_base: str,
+    digested_at: str,
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    """Synthesize Records from the manifest's top-level ``zip_contents`` array.
+
+    Some clone scripts (notably the OSF enhanced fetch) write extracted
+    ZIP contents into a separate ``manifest["zip_contents"]`` array
+    rather than embedding them under each file's ``_zip_contents``.
+    This helper handles that shape.
+    """
+    records: list[dict[str, Any]] = []
+    errors: list[dict[str, Any]] = []
+    for zpath in zip_contents:
+        if isinstance(zpath, dict):
+            filepath = zpath.get("path", "")
+            file_size = zpath.get("size", 0)
+        else:
+            filepath = zpath
+            file_size = 0
+
+        if not is_neuro_data_file(filepath):
+            continue
+        try:
+            entities = parse_bids_entities_from_path(filepath)
+            detected_modality = detect_modality_from_path(filepath)
+            record = create_record(
+                dataset=dataset_id,
+                storage_base=storage_base,
+                bids_relpath=filepath,
+                subject=entities.get("subject"),
+                session=entities.get("session"),
+                task=entities.get("task"),
+                run=entities.get("run"),
+                acquisition=entities.get("acquisition"),
+                dep_keys=[],
+                datatype=entities.get("datatype", detected_modality),
+                suffix=entities.get("suffix", detected_modality),
+                storage_backend="https",
+                recording_modality=[detected_modality],
+                digested_at=digested_at,
+            )
+            if file_size:
+                record["file_size"] = file_size
+            records.append(dict(record))
+        except (KeyError, ValueError, TypeError) as e:
+            errors.append({"file": filepath, "error": str(e)})
+    return records, errors
+
+
 def _build_ctf_ds_records(
     files: list,
     dataset_id: str,
@@ -2284,287 +2626,69 @@ def _enumerate_via_manifest(
     records.extend(ctf_records)
     errors.extend(ctf_errors)
 
+    # Dispatch each manifest entry to the right per-case helper.
+    # The 4 cases (ZIP-with-contents / subject-ZIP / BIDS-data-ZIP /
+    # regular file) used to be ~240 LOC of nested branches; each now
+    # lives in its own helper above.
     for file_info in files:
-        if isinstance(file_info, dict):
-            filepath = file_info.get("path", "")
-            download_url = file_info.get("download_url")
-            file_size = file_info.get("size", 0)
-        else:
-            filepath = file_info
-            download_url = None
-            file_size = 0
-
-        # Check if this is a ZIP file with extracted contents
-        zip_file_contents = None
-        if isinstance(file_info, dict):
-            zip_file_contents = file_info.get("_zip_contents", [])
-
-        # If this is a ZIP with contents, create records from ZIP contents instead
-        if zip_file_contents:
-            zip_name = file_info.get("name", "")
-            zip_download_url = file_info.get("download_url", "")
-
-            for zf in zip_file_contents:
-                zf_path = zf.get("path", "") if isinstance(zf, dict) else zf
-                zf_size = zf.get("size", 0) if isinstance(zf, dict) else 0
-
-                # Only create records for neurophysiology data files inside ZIPs
-                if not is_neuro_data_file(zf_path):
-                    continue
-
-                try:
-                    entities = parse_bids_entities_from_path(zf_path)
-                    detected_modality = detect_modality_from_path(zf_path)
-
-                    record = create_record(
-                        dataset=dataset_id,
-                        storage_base=storage_base,
-                        bids_relpath=zf_path,
-                        subject=entities.get("subject"),
-                        session=entities.get("session"),
-                        task=entities.get("task"),
-                        run=entities.get("run"),
-                        acquisition=entities.get("acquisition"),
-                        dep_keys=[],
-                        datatype=entities.get("datatype", detected_modality),
-                        suffix=entities.get("suffix", detected_modality),
-                        storage_backend="https",
-                        recording_modality=[detected_modality],
-                        digested_at=digested_at,
-                    )
-
-                    # Store ZIP info for download
-                    if zip_download_url:
-                        record["container_url"] = zip_download_url
-                        record["container_type"] = "zip"
-                        record["container_name"] = zip_name
-                    if zf_size:
-                        record["file_size"] = zf_size
-
-                    records.append(dict(record))
-                except (KeyError, ValueError, TypeError) as e:
-                    # create_record validation; same contract as above.
-                    errors.append({"file": zf_path, "error": str(e)})
-            continue  # Skip to next file (we've processed the ZIP contents)
-
-        # Handle ZIP files without extracted contents
-        if filepath.lower().endswith(".zip"):
-            # Pattern 1: Subject ZIP files like sub-01.zip
-            subject_match = re.match(
-                r"^(sub-[a-zA-Z0-9]+)\.zip$", filepath, re.IGNORECASE
+        # Case 1: ZIP with peeked contents from the fetch step.
+        if isinstance(file_info, dict) and file_info.get("_zip_contents"):
+            sub_records, sub_errors = _build_zip_extracted_records(
+                file_info, dataset_id, storage_base, digested_at
             )
-            if subject_match:
-                subject_id = subject_match.group(1)
-                # Infer recording modality from dataset modalities (already in recording_modality_val)
-
-                try:
-                    # Create a placeholder record for this subject
-                    record = create_record(
-                        dataset=dataset_id,
-                        storage_base=storage_base,
-                        bids_relpath=f"{subject_id}/{primary_mod}/{subject_id}_{primary_mod}.set",  # Placeholder path
-                        subject=subject_id.replace("sub-", ""),
-                        session=None,
-                        task=None,
-                        run=None,
-                        dep_keys=[],
-                        datatype=primary_mod,
-                        suffix=primary_mod,
-                        storage_backend="https",
-                        recording_modality=recording_modality_val,
-                        digested_at=digested_at,
-                    )
-
-                    # Store ZIP info
-                    if download_url:
-                        record["container_url"] = download_url
-                        record["container_type"] = "zip"
-                        record["container_name"] = filepath
-                        record["zip_contains_bids"] = (
-                            True  # Flag that this ZIP contains BIDS data
-                        )
-                    if file_size:
-                        record["container_size"] = file_size
-
-                    records.append(dict(record))
-                except (KeyError, ValueError, TypeError) as e:
-                    errors.append({"file": filepath, "error": str(e)})
-                continue
-
-            # Pattern 2: BIDS data ZIPs (e.g., data_bids.zip, *_bids_EEG.zip, bids_data.zip)
-            # These commonly contain BIDS-formatted data but we can't peek inside
-            bids_zip_patterns = [
-                r".*bids.*\.zip$",  # Contains 'bids' anywhere
-                r".*_eeg\.zip$",  # Ends with _eeg.zip
-                r".*_meg\.zip$",  # Ends with _meg.zip
-                r".*_ieeg\.zip$",  # Ends with _ieeg.zip
-                r".*dataset.*\.zip$",  # Contains 'dataset'
-                r".*rawdata.*\.zip$",  # Contains 'rawdata'
-                r".*data\.zip$",  # Simple data.zip
-                r".*eeg.*\.zip$",  # Contains 'eeg' anywhere
-                r".*meg.*\.zip$",  # Contains 'meg' anywhere
-                r".*nirs.*\.zip$",  # Contains 'nirs' anywhere
-                r".*fnirs.*\.zip$",  # Contains 'fnirs' anywhere
-            ]
-
-            filepath_lower = filepath.lower()
-            is_bids_zip = any(re.match(p, filepath_lower) for p in bids_zip_patterns)
-
-            if is_bids_zip:
-                # Try to infer subject count from manifest demographics
-                demographics = manifest.get("demographics", {})
-                inferred_subjects = demographics.get("subjects_count", 0)
-
-                # If we have subject count, create individual subject records
-                if inferred_subjects and inferred_subjects > 0:
-                    for sub_idx in range(
-                        1, min(inferred_subjects + 1, 201)
-                    ):  # Cap at 200 subjects
-                        sub_id = (
-                            f"{sub_idx:02d}"
-                            if inferred_subjects < 100
-                            else f"{sub_idx:03d}"
-                        )
-
-                        try:
-                            record = create_record(
-                                dataset=dataset_id,
-                                storage_base=storage_base,
-                                bids_relpath=f"sub-{sub_id}/{primary_mod}/sub-{sub_id}_{primary_mod}.set",
-                                subject=sub_id,
-                                session=None,
-                                task=manifest.get("tasks", [None])[0]
-                                if manifest.get("tasks")
-                                else None,
-                                run=None,
-                                dep_keys=[],
-                                datatype=primary_mod,
-                                suffix=primary_mod,
-                                storage_backend="https",
-                                recording_modality=recording_modality_val,
-                                digested_at=digested_at,
-                            )
-
-                            # Store ZIP info for download
-                            if download_url:
-                                record["container_url"] = download_url
-                                record["container_type"] = "zip"
-                                record["container_name"] = filepath
-                                record["needs_extraction"] = True
-                                record["inferred_from_metadata"] = True
-                            if file_size:
-                                record["container_size"] = file_size
-
-                            records.append(dict(record))
-                        except (KeyError, ValueError, TypeError) as e:
-                            errors.append({"file": f"sub-{sub_id}", "error": str(e)})
-                else:
-                    # No subject count - create single placeholder record
-                    try:
-                        record = create_record(
-                            dataset=dataset_id,
-                            storage_base=storage_base,
-                            bids_relpath=f"__ZIP__/{filepath}",
-                            subject=None,
-                            session=None,
-                            task=None,
-                            run=None,
-                            dep_keys=[],
-                            datatype=primary_mod,
-                            suffix=primary_mod,
-                            storage_backend=get_storage_backend(source),
-                            recording_modality=recording_modality_val,
-                            digested_at=digested_at,
-                        )
-
-                        if download_url:
-                            record["container_url"] = download_url
-                            record["container_type"] = "zip"
-                            record["container_name"] = filepath
-                            record["needs_extraction"] = True
-                        if file_size:
-                            record["container_size"] = file_size
-
-                        records.append(dict(record))
-                    except (KeyError, ValueError, TypeError) as e:
-                        errors.append({"file": filepath, "error": str(e)})
-                continue
-
-        # Check if this is a neurophysiology data file (treat symlinks as files)
-        if not is_neuro_data_file(filepath):
+            records.extend(sub_records)
+            errors.extend(sub_errors)
             continue
 
-        try:
-            entities = parse_bids_entities_from_path(filepath)
-            detected_modality = detect_modality_from_path(filepath)
+        filepath = (
+            file_info.get("path", "") if isinstance(file_info, dict) else file_info
+        )
 
-            # Build the record
-            record = create_record(
-                dataset=dataset_id,
-                storage_base=storage_base,
-                bids_relpath=filepath,
-                subject=entities.get("subject"),
-                session=entities.get("session"),
-                task=entities.get("task"),
-                run=entities.get("run"),
-                acquisition=entities.get("acquisition"),
-                dep_keys=[],
-                datatype=entities.get("datatype", detected_modality),
-                suffix=entities.get("suffix", detected_modality),
-                storage_backend=get_storage_backend(source),
-                recording_modality=[detected_modality],
-                digested_at=digested_at,
-            )
+        # Case 2 + 3: ZIP files without peeked contents.
+        if filepath.lower().endswith(".zip") and isinstance(file_info, dict):
+            if re.match(r"^(sub-[a-zA-Z0-9]+)\.zip$", filepath, re.IGNORECASE):
+                rec, errs = _build_subject_zip_record(
+                    file_info,
+                    dataset_id,
+                    storage_base,
+                    primary_mod,
+                    recording_modality_val,
+                    digested_at,
+                )
+                if rec is not None:
+                    records.append(rec)
+                errors.extend(errs)
+                continue
 
-            # Add download URL if available
-            if download_url:
-                record["download_url"] = download_url
-            if file_size:
-                record["file_size"] = file_size
+            if _is_bids_data_zip(filepath):
+                sub_records, sub_errors = _build_bids_data_zip_records(
+                    file_info,
+                    manifest,
+                    dataset_id,
+                    storage_base,
+                    source,
+                    primary_mod,
+                    recording_modality_val,
+                    digested_at,
+                )
+                records.extend(sub_records)
+                errors.extend(sub_errors)
+                continue
 
-            records.append(dict(record))
-        except (KeyError, ValueError, TypeError) as e:
-            errors.append({"file": filepath, "error": str(e)})
+        # Case 4: regular neuro data file (the common case).
+        rec, errs = _build_regular_manifest_record(
+            file_info, dataset_id, storage_base, source, digested_at
+        )
+        if rec is not None:
+            records.append(rec)
+        errors.extend(errs)
 
-    # Also process standalone zip_contents (from clone script)
-    for zpath in zip_contents:
-        if isinstance(zpath, dict):
-            filepath = zpath.get("path", "")
-            file_size = zpath.get("size", 0)
-        else:
-            filepath = zpath
-            file_size = 0
-
-        if not is_neuro_data_file(filepath):
-            continue
-
-        try:
-            entities = parse_bids_entities_from_path(filepath)
-            detected_modality = detect_modality_from_path(filepath)
-
-            record = create_record(
-                dataset=dataset_id,
-                storage_base=storage_base,
-                bids_relpath=filepath,
-                subject=entities.get("subject"),
-                session=entities.get("session"),
-                task=entities.get("task"),
-                run=entities.get("run"),
-                acquisition=entities.get("acquisition"),
-                dep_keys=[],
-                datatype=entities.get("datatype", detected_modality),
-                suffix=entities.get("suffix", detected_modality),
-                storage_backend="https",
-                recording_modality=[detected_modality],
-                digested_at=digested_at,
-            )
-
-            if file_size:
-                record["file_size"] = file_size
-
-            records.append(dict(record))
-        except (KeyError, ValueError, TypeError) as e:
-            errors.append({"file": filepath, "error": str(e)})
+    # Also process standalone zip_contents (from clone script).
+    extra_records, extra_errors = _build_standalone_zip_content_records(
+        zip_contents, dataset_id, storage_base, digested_at
+    )
+    records.extend(extra_records)
+    errors.extend(extra_errors)
 
     return (
         EnumerationResult(

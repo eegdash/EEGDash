@@ -155,15 +155,16 @@ def test_megafunction_line_counts_are_known_baseline(digest: ModuleType) -> None
     """
     import inspect
 
-    # Baselines updated 2026-05-21 after the Phase 3 narrow-except sweep:
-    # multi-line `except (A, B, C):` tuples grew several functions by
-    # 10-25 lines without changing logic. The CONTRACT is "only shrink
-    # via real refactoring", not "never grow under any circumstance".
-    # The next Phase 8 commits will start the actual decomposition and
-    # this dict will shrink rapidly.
+    # Baselines updated 2026-05-21 across two sessions:
+    # - Session 1: Phase 3 narrow-except sweep added ~20 LOC each from
+    #   tuple-formatting (logic shrank).
+    # - Session 2 / Phase 8 round 2: extract_record dropped by 92 LOC
+    #   after extracting the BIDS sidecar + channels.tsv walks into
+    #   helpers. Real shrinkage starts here.
+    # The remaining 3 mega-functions still have decomposition pending.
     big_functions = {
         "digest_from_manifest": 670,
-        "extract_record": 535,
+        "extract_record": 440,
         "extract_dataset_metadata": 380,
         "digest_dataset": 330,
     }

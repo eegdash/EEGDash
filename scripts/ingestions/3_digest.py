@@ -967,109 +967,17 @@ def extract_record(
     # ===========================================================
     bids_file_path = Path(bids_file)
 
-    # Try to find and read the modality-specific JSON sidecar (e.g., _meg.json, _eeg.json)
+    # Try to fill missing values from the modality JSON sidecar and
+    # then from channels.tsv (BIDS inheritance — both helpers walk the
+    # directory tree). Extracted in Phase 8 from a 100-line nested-loop
+    # block.
     bids_root = Path(bids_dataset.bidsdir)
-    if not sampling_frequency or not nchans:
-        base_names_to_try, dirs_to_try = _build_bids_search_paths(
-            bids_file_path, bids_root
-        )
-
-        # Try modality-specific sidecars
-        for search_dir in dirs_to_try:
-            if sampling_frequency and nchans:
-                break
-            for base_name in base_names_to_try:
-                if sampling_frequency and nchans:
-                    break
-                for sidecar_suffix in [
-                    "_meg.json",
-                    "_eeg.json",
-                    "_ieeg.json",
-                    "_nirs.json",
-                ]:
-                    sidecar_path = search_dir / f"{base_name}{sidecar_suffix}"
-                    if sidecar_path.exists():
-                        try:
-                            with open(sidecar_path) as f:
-                                sidecar_data = json.load(f)
-
-                            # Extract SamplingFrequency
-                            if (
-                                not sampling_frequency
-                                and "SamplingFrequency" in sidecar_data
-                            ):
-                                sampling_frequency = float(
-                                    sidecar_data["SamplingFrequency"]
-                                )
-
-                            # Extract channel count from BIDS sidecar fields.
-                            # Extracted in Phase 8 to sum_bids_channel_counts.
-                            if not nchans:
-                                summed = sum_bids_channel_counts(sidecar_data)
-                                if summed is not None:
-                                    nchans = summed
-                            break  # Found a valid sidecar in this dir
-                        except (
-                            OSError,
-                            json.JSONDecodeError,
-                            ValueError,
-                            TypeError,
-                        ):
-                            # Sidecar unreadable or malformed; try the next
-                            # candidate path in the BIDS inheritance search.
-                            pass
-
-    # Try to read from channels.tsv if still missing
-    if not sampling_frequency or not nchans:
-        base_names_to_try, dirs_to_try = _build_bids_search_paths(
-            bids_file_path, bids_root
-        )
-
-        for search_dir in dirs_to_try:
-            if sampling_frequency and nchans:
-                break
-            for base_name in base_names_to_try:
-                if sampling_frequency and nchans:
-                    break
-                channels_path = search_dir / f"{base_name}_channels.tsv"
-                if channels_path.exists():
-                    try:
-                        channels_df = pd.read_csv(
-                            channels_path,
-                            sep="\t",
-                            dtype="string",
-                            keep_default_na=False,
-                        )
-
-                        # Get nchans from row count
-                        if not nchans:
-                            nchans = len(channels_df)
-
-                        # Get sampling_frequency from the first valid row
-                        if not sampling_frequency:
-                            for col in ["sampling_frequency", "SamplingFrequency"]:
-                                if col in channels_df.columns:
-                                    for val in channels_df[col]:
-                                        try:
-                                            sfreq_val = float(val)
-                                            if sfreq_val > 0:
-                                                sampling_frequency = sfreq_val
-                                                break
-                                        except (ValueError, TypeError):
-                                            pass
-                                    if sampling_frequency:
-                                        break
-                        break  # Found a valid channels file
-                    except (
-                        pd.errors.ParserError,
-                        pd.errors.EmptyDataError,
-                        OSError,
-                        UnicodeDecodeError,
-                        ValueError,
-                        KeyError,
-                    ):
-                        # channels.tsv malformed; try next search dir.
-                        pass
+    sampling_frequency, nchans = extract_sfreq_nchans_from_modality_sidecar(
+        bids_file_path, bids_root, sampling_frequency, nchans
+    )
+    sampling_frequency, nchans = extract_sfreq_nchans_from_channels_tsv(
+        bids_file_path, bids_root, sampling_frequency, nchans
+    )
 
     # ===========================================================
     # FALLBACK 3: Parse data files directly when sidecars missing
@@ -1599,6 +1507,163 @@ def strip_dataset_prefix(bids_relpath: str, dataset_id: str) -> str:
     if bids_relpath.startswith(prefix):
         return bids_relpath[len(prefix) :]
     return bids_relpath
+
+
+# Modality-specific JSON sidecar suffixes. Order matters: MEG before
+# EEG so a co-recorded MEG+EEG study finds the MEG sidecar first
+# (the MEG one is the authoritative source for n_megchans there).
+_MODALITY_SIDECAR_SUFFIXES = ("_meg.json", "_eeg.json", "_ieeg.json", "_nirs.json")
+
+
+def extract_sfreq_nchans_from_modality_sidecar(
+    bids_file_path: Path,
+    bids_root: Path,
+    sampling_frequency: float | None,
+    nchans: int | None,
+) -> tuple[float | None, int | None]:
+    """Walk the BIDS inheritance tree for a modality JSON sidecar.
+
+    Looks for ``*_meg.json`` / ``*_eeg.json`` / ``*_ieeg.json`` /
+    ``*_nirs.json`` adjacent to ``bids_file_path`` and walks up to
+    ``bids_root`` following BIDS inheritance, returning the first
+    ``(SamplingFrequency, sum of *ChannelCount fields)`` found.
+
+    Returns the inputs untouched if the caller already has both values
+    (short-circuit) or if no sidecar surfaces a value.
+
+    Parameters
+    ----------
+    bids_file_path : Path
+        Absolute path to the BIDS data file we're describing.
+    bids_root : Path
+        Root of the BIDS dataset; the inheritance walk stops here.
+    sampling_frequency, nchans : float | None, int | None
+        Caller's current best values. Used as both inputs (so we can
+        skip the walk if both are populated) and defaults.
+
+    Returns
+    -------
+    tuple[float | None, int | None]
+        ``(sampling_frequency, nchans)``, possibly filled in from a
+        sidecar.
+
+    Notes
+    -----
+    Extracted from ``extract_record`` (Phase 8 — 2026-05). Was inlined
+    as a 3-level-nested for-loop block.
+    """
+    if sampling_frequency and nchans:
+        return sampling_frequency, nchans
+
+    base_names_to_try, dirs_to_try = _build_bids_search_paths(bids_file_path, bids_root)
+
+    for search_dir in dirs_to_try:
+        if sampling_frequency and nchans:
+            break
+        for base_name in base_names_to_try:
+            if sampling_frequency and nchans:
+                break
+            for sidecar_suffix in _MODALITY_SIDECAR_SUFFIXES:
+                sidecar_path = search_dir / f"{base_name}{sidecar_suffix}"
+                if not sidecar_path.exists():
+                    continue
+                try:
+                    with open(sidecar_path) as f:
+                        sidecar_data = json.load(f)
+                except (OSError, json.JSONDecodeError, ValueError, TypeError):
+                    # Unreadable or malformed sidecar — try next candidate.
+                    continue
+                if not sampling_frequency and "SamplingFrequency" in sidecar_data:
+                    try:
+                        sampling_frequency = float(sidecar_data["SamplingFrequency"])
+                    except (TypeError, ValueError):
+                        pass
+                if not nchans:
+                    summed = sum_bids_channel_counts(sidecar_data)
+                    if summed is not None:
+                        nchans = summed
+                break  # only consult one sidecar variant per (dir, base)
+
+    return sampling_frequency, nchans
+
+
+def extract_sfreq_nchans_from_channels_tsv(
+    bids_file_path: Path,
+    bids_root: Path,
+    sampling_frequency: float | None,
+    nchans: int | None,
+) -> tuple[float | None, int | None]:
+    """Fill in missing sfreq/nchans from a BIDS ``*_channels.tsv``.
+
+    Walks the BIDS inheritance tree like
+    :func:`extract_sfreq_nchans_from_modality_sidecar`, but reads a
+    ``_channels.tsv`` instead of a JSON sidecar. ``nchans`` is the row
+    count; ``sampling_frequency`` is read from the
+    ``sampling_frequency`` / ``SamplingFrequency`` column if present.
+
+    Parameters
+    ----------
+    bids_file_path : Path
+        Absolute path to the BIDS data file we're describing.
+    bids_root : Path
+        Root of the BIDS dataset.
+    sampling_frequency, nchans : float | None, int | None
+        Caller's current best values. Short-circuits when both populated.
+
+    Returns
+    -------
+    tuple[float | None, int | None]
+    """
+    if sampling_frequency and nchans:
+        return sampling_frequency, nchans
+
+    base_names_to_try, dirs_to_try = _build_bids_search_paths(bids_file_path, bids_root)
+
+    for search_dir in dirs_to_try:
+        if sampling_frequency and nchans:
+            break
+        for base_name in base_names_to_try:
+            if sampling_frequency and nchans:
+                break
+            channels_path = search_dir / f"{base_name}_channels.tsv"
+            if not channels_path.exists():
+                continue
+            try:
+                channels_df = pd.read_csv(
+                    channels_path,
+                    sep="\t",
+                    dtype="string",
+                    keep_default_na=False,
+                )
+            except (
+                pd.errors.ParserError,
+                pd.errors.EmptyDataError,
+                OSError,
+                UnicodeDecodeError,
+                ValueError,
+                KeyError,
+            ):
+                # channels.tsv malformed; try next search dir.
+                continue
+            if not nchans:
+                nchans = len(channels_df)
+            if not sampling_frequency:
+                for col in ("sampling_frequency", "SamplingFrequency"):
+                    if col not in channels_df.columns:
+                        continue
+                    for val in channels_df[col]:
+                        try:
+                            sfreq_val = float(val)
+                        except (TypeError, ValueError):
+                            continue
+                        if sfreq_val > 0:
+                            sampling_frequency = sfreq_val
+                            break
+                    if sampling_frequency:
+                        break
+            break  # one channels.tsv per (dir, base) is authoritative
+
+    return sampling_frequency, nchans
 
 
 def _build_bids_search_paths(

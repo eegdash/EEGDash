@@ -239,7 +239,10 @@ def _extract_tsv_layout(
         return None
     try:
         sensors = _parse_sensor_tsv(tsv, extras=extras)
-    except Exception as exc:
+    except (OSError, ValueError, KeyError, UnicodeDecodeError) as exc:
+        # _parse_sensor_tsv hits filesystem and pandas. ValueError covers
+        # NaN/Inf coord rejection; KeyError covers missing required
+        # columns; UnicodeDecodeError covers non-UTF8 TSV files.
         LOGGER.warning("[layout.%s] parse error on %s: %s", modality, tsv, exc)
         return None
     if len(sensors) < min_sensors:
@@ -359,9 +362,14 @@ def _load_mne_templates() -> dict[str, dict[str, tuple[float, float, float]]]:
                         k.upper(): (float(v[0]), float(v[1]), float(v[2]))
                         for k, v in m.get_positions()["ch_pos"].items()
                     }
-                except Exception:
+                except (ValueError, KeyError, TypeError, AttributeError):
+                    # MNE can raise on a misnamed standard montage or
+                    # an unexpected positions dict shape. Skip that
+                    # template; the other 50+ will still populate.
                     continue
-        except Exception as exc:
+        except (ImportError, AttributeError) as exc:
+            # ImportError: MNE not installed. AttributeError: a future
+            # MNE refactor removed get_builtin_montages.
             LOGGER.warning("[template] MNE import failed (%s); pool 1 empty", exc)
 
         # Pool 2 — the electrode-explorer extras. montages.json stores each
@@ -442,7 +450,16 @@ def _parse_channels_tsv_for_eeg(path: Path) -> list[str]:
     """
     try:
         df = pd.read_csv(path, sep="\t", dtype=str, na_values=["n/a", "N/A", ""])
-    except Exception:
+    except (
+        OSError,
+        pd.errors.ParserError,
+        pd.errors.EmptyDataError,
+        UnicodeDecodeError,
+        ValueError,
+    ):
+        # channels.tsv absent, malformed, non-UTF8, or empty. Empty
+        # channel list lets the caller fall back to inferring from the
+        # binary header.
         return []
     if "name" not in df.columns:
         return []
@@ -701,7 +718,9 @@ def _fetch_fif_metadata_streaming(data_file: Path, url: str, total: int) -> str 
                 total / (1024 * 1024),
             )
             return tmp.name
-        except Exception as exc:
+        except (OSError, ValueError) as exc:
+            # Filesystem failure on the tempfile write, or malformed
+            # input bytes triggering the truncation logic.
             LOGGER.debug("[layout.meg] streaming stitch %s failed: %s", url, exc)
             try:
                 Path(tmp.name).unlink()
@@ -851,7 +870,9 @@ def _fetch_fif_metadata_via_directory(data_file: Path, url: str) -> str | None:
             len(merged),
         )
         return tmp.name
-    except Exception as exc:
+    except (OSError, ValueError, KeyError) as exc:
+        # Range-request stitch: OSError on tempfile write, ValueError on
+        # truncation arithmetic, KeyError on malformed range metadata.
         LOGGER.debug("[layout.meg] range stitch %s failed: %s", url, exc)
         try:
             Path(tmp.name).unlink()
@@ -910,7 +931,16 @@ def extract_meg_layout(
             else:
                 LOGGER.info("[layout.meg] unrecognized MEG format: %s", data_file)
                 return None
-        except Exception as direct_exc:
+        except (
+            OSError,
+            ValueError,
+            RuntimeError,
+            KeyError,
+            AttributeError,
+        ) as direct_exc:
+            # MNE raises RuntimeError on unsupported format variant,
+            # ValueError on truncated/malformed header, OSError on file
+            # not found / permission, KeyError on missing required field.
             LOGGER.debug(
                 "[layout.meg] direct read %s failed: %s", data_file, direct_exc
             )
@@ -947,7 +977,9 @@ def extract_meg_layout(
                 return None
             try:
                 info = mne.io.read_info(tmp_path, verbose="error")
-            except Exception as partial_exc:
+            except (OSError, ValueError, RuntimeError, KeyError) as partial_exc:
+                # Same MNE failure classes; the reconstructed FIF stub
+                # may still be malformed for various reasons.
                 LOGGER.info(
                     "[layout.meg] %s: directory-reconstructed FIF still "
                     "unparsable (%s)",
@@ -959,7 +991,9 @@ def extract_meg_layout(
         if raw is not None:
             try:
                 raw.close()
-            except Exception:
+            except (OSError, AttributeError):
+                # OSError: already-closed. AttributeError: not an MNE
+                # Raw (defensive guard).
                 pass
         if tmp_path:
             try:

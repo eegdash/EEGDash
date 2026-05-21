@@ -1,0 +1,14 @@
+{
+  "status": "success",
+  "dataset_id": "ds_snapshot_manifest",
+  "source": "zenodo",
+  "record_count": 3,
+  "error_count": 0,
+  "integrity_issues_count": 0,
+  "montage_count": 0,
+  "dataset_file": "tests/fixtures/digest_snapshots/outputs/ds_snapshot_manifest/ds_snapshot_manifest_dataset.json",
+  "records_file": "tests/fixtures/digest_snapshots/outputs/ds_snapshot_manifest/ds_snapshot_manifest_records.json",
+  "montages_file": "tests/fixtures/digest_snapshots/outputs/ds_snapshot_manifest/ds_snapshot_manifest_montages.json",
+  "digest_method": "manifest_only",
+  "total_files": 5
+}

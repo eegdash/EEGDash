@@ -1,0 +1,55 @@
+{
+  "dataset_id": "ds_snapshot_manifest",
+  "name": "Synthetic Zenodo manifest snapshot fixture",
+  "canonical_name": null,
+  "source": "zenodo",
+  "readme": null,
+  "recording_modality": [
+    "eeg"
+  ],
+  "datatypes": [
+    "eeg"
+  ],
+  "experimental_modalities": null,
+  "bids_version": null,
+  "license": "CC0",
+  "authors": [
+    "Test User"
+  ],
+  "funding": [],
+  "dataset_doi": null,
+  "associated_paper_doi": null,
+  "tasks": [
+    "motor",
+    "rest"
+  ],
+  "sessions": [
+    "01"
+  ],
+  "total_files": 5,
+  "size_bytes": null,
+  "data_processed": null,
+  "study_domain": null,
+  "study_design": null,
+  "contributing_labs": null,
+  "n_contributing_labs": null,
+  "demographics": {
+    "subjects_count": 2,
+    "ages": [],
+    "age_min": null,
+    "age_max": null,
+    "age_mean": null,
+    "species": null,
+    "sex_distribution": null,
+    "handedness_distribution": null
+  },
+  "senior_author": null,
+  "contact_info": null,
+  "timestamps": {
+    "digested_at": "2026-05-21T12:09:51.416461+00:00",
+    "dataset_created_at": null,
+    "dataset_modified_at": null
+  },
+  "storage": null,
+  "ingestion_fingerprint": "273d5003298bda87550d5d2be1aff600ca475dc6ca17a47efb53f342d0c65289"
+}

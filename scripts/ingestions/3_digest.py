@@ -1903,6 +1903,177 @@ def is_eeg_data_file(filepath: str) -> bool:
     return is_neuro_data_file(filepath)
 
 
+def _determine_manifest_storage_base(
+    source: str,
+    dataset_id: str,
+    manifest: dict,
+) -> str:
+    """Resolve the canonical ``storage.base`` for a manifest-only ingest.
+
+    Three input modes:
+
+    1. Manifest has explicit ``storage_base`` set (from the fetch
+       step). We sanity-check it against the resolved source's config
+       prefix and rebuild if it doesn't match — defends against the
+       pre-PR-#327 bug where ``s3://openneuro.org/<id>`` was written
+       for NEMAR datasets.
+    2. Source has a per-Source URL builder (figshare / zenodo / osf /
+       gin) that uses extra manifest fields beyond ``dataset_id``.
+    3. Default: ``<source_base>/<dataset_id>``.
+
+    Phase 8 follow-up: extracted from the inline body of
+    :func:`_enumerate_via_manifest`. Pure function (no side effects);
+    easy to unit-test.
+    """
+    storage_base = manifest.get("storage_base")
+
+    if not storage_base:
+        config = get_storage_config(source)
+        base = config["base"]
+
+        if source == "figshare":
+            # Figshare: use source_url from external_links if available.
+            source_url = manifest.get("external_links", {}).get("source_url", "")
+            return source_url if source_url else f"{base}/{dataset_id}"
+        if source == "zenodo":
+            zenodo_id = manifest.get("zenodo_id", dataset_id)
+            return f"{base}/{zenodo_id}"
+        if source == "osf":
+            osf_id = manifest.get("osf_id", dataset_id)
+            return f"{base}/{osf_id}"
+        if source == "gin":
+            # GIN: include organization in path.
+            org = manifest.get("organization", "EEGManyLabs")
+            return f"{base}/{org}/{dataset_id}"
+        # Default: use base/dataset_id pattern.
+        return f"{base}/{dataset_id}"
+
+    # Sanity-check explicit storage_base against the resolved source.
+    # 2_clone.py used to write ``s3://openneuro.org/<id>`` for any
+    # git-cloned dataset, including NEMAR — that value reached MongoDB
+    # as ``storage.base`` and we'd 404 on download. Reject the mismatch
+    # here so the bad value never gets written again.
+    expected_prefix = get_storage_config(source).get("base", "")
+    if expected_prefix and not str(storage_base).startswith(expected_prefix):
+        print(
+            f"WARNING [digest]: {dataset_id} manifest storage_base="
+            f"{storage_base!r} does not start with {expected_prefix!r} "
+            f"for source={source!r}; rebuilding from source config.",
+            file=sys.stderr,
+        )
+        return f"{expected_prefix}/{dataset_id}"
+
+    return storage_base
+
+
+def _collect_bids_entities_from_paths(
+    files: list, zip_contents: list
+) -> tuple[set[str], set[str], set[str], set[str]]:
+    """Walk all file paths (direct + ZIP contents) and parse BIDS entities.
+
+    Phase 8 follow-up extraction. Pure function — given the manifest's
+    ``files`` + the separately-stored ``zip_contents`` array, returns
+    four sets:
+    - subjects, sessions, tasks: only counted for paths whose modality
+      matches :data:`NEURO_MODALITIES` (filters out non-EEG sidecars).
+    - modalities: any modality encountered in the paths.
+    """
+    subjects: set[str] = set()
+    sessions: set[str] = set()
+    tasks: set[str] = set()
+    modalities: set[str] = set()
+
+    all_paths: list[str] = []
+    for f in files:
+        filepath = f.get("path", "") if isinstance(f, dict) else f
+        all_paths.append(filepath)
+        # Check if this file has extracted ZIP contents
+        if isinstance(f, dict) and f.get("_zip_contents"):
+            for zf in f["_zip_contents"]:
+                zpath = zf.get("path", "") if isinstance(zf, dict) else zf
+                all_paths.append(zpath)
+
+    # Also add any separately stored zip_contents.
+    for zpath in zip_contents:
+        all_paths.append(zpath.get("path", "") if isinstance(zpath, dict) else zpath)
+
+    for filepath in all_paths:
+        entities = parse_bids_entities_from_path(filepath)
+        if entities.get("modality"):
+            modalities.add(entities["modality"])
+        # Only count subjects/sessions/tasks for supported neuro modalities.
+        if entities.get("modality") in NEURO_MODALITIES:
+            if entities.get("subject"):
+                subjects.add(entities["subject"])
+            if entities.get("session"):
+                sessions.add(entities["session"])
+            if entities.get("task"):
+                tasks.add(entities["task"])
+
+    return subjects, sessions, tasks, modalities
+
+
+def _fetch_subject_count_via_http(files: list, fallback: int) -> int:
+    """Try to fetch dataset_description.json / participants.tsv over HTTP.
+
+    Last-resort fallback used by the manifest path when the BIDS-entity
+    walk and the manifest's own ``demographics.subjects_count`` /
+    ``bids_subject_count`` both came up empty. Searches the manifest's
+    file list for the canonical metadata filenames and attempts a 10s
+    HTTP fetch of each.
+
+    Returns the discovered count, or ``fallback`` if nothing worked.
+    Errors are logged via ``print`` (preserves the pre-extraction
+    behaviour exactly).
+
+    Phase 8 follow-up extraction. NOT a pure function — does network I/O.
+    """
+    desc_url = None
+    participants_url = None
+    for f in files:
+        if isinstance(f, dict):
+            path = f.get("path", "").lower()
+            url = f.get("download_url")
+            if path.endswith("dataset_description.json"):
+                desc_url = url
+            elif path.endswith("participants.tsv"):
+                participants_url = url
+
+    subjects_count = fallback
+    if desc_url:
+        try:
+            with urllib.request.urlopen(desc_url, timeout=10) as response:
+                desc_data = json.loads(response.read().decode("utf-8"))
+                if "Subjects" in desc_data:  # heuristic
+                    subjects_count = int(desc_data["Subjects"])
+        except (
+            urllib.error.URLError,
+            OSError,
+            json.JSONDecodeError,
+            UnicodeDecodeError,
+            ValueError,
+            KeyError,
+        ) as e:
+            print(f"Failed to fetch/parse dataset_description.json: {e}")
+
+    if subjects_count == 0 and participants_url:
+        try:
+            with urllib.request.urlopen(participants_url, timeout=10) as response:
+                content = response.read().decode("utf-8")
+                lines = [line for line in content.splitlines() if line.strip()]
+                if len(lines) > 1:  # subtract the header
+                    subjects_count = len(lines) - 1
+        except (
+            urllib.error.URLError,
+            OSError,
+            UnicodeDecodeError,
+            ValueError,
+        ) as e:
+            print(f"Failed to fetch/parse participants.tsv: {e}")
+
+    return subjects_count
+
+
 def _enumerate_via_manifest(
     dataset_id: str,
     manifest: dict,
@@ -1951,90 +2122,11 @@ def _enumerate_via_manifest(
     # Check for ZIP contents (files extracted from subject ZIPs)
     zip_contents = manifest.get("zip_contents", [])
 
-    # Determine storage base based on source
-    # First check if manifest has explicit storage_base (from fetch step)
-    storage_base = manifest.get("storage_base")
+    storage_base = _determine_manifest_storage_base(source, dataset_id, manifest)
 
-    if not storage_base:
-        # Build storage base from source configuration
-        config = get_storage_config(source)
-        base = config["base"]
-
-        if source == "figshare":
-            # Figshare: use source_url from external_links if available
-            source_url = manifest.get("external_links", {}).get("source_url", "")
-            storage_base = source_url if source_url else f"{base}/{dataset_id}"
-        elif source == "zenodo":
-            # Zenodo: use zenodo_id if available
-            zenodo_id = manifest.get("zenodo_id", dataset_id)
-            storage_base = f"{base}/{zenodo_id}"
-        elif source == "osf":
-            # OSF: use osf_id if available
-            osf_id = manifest.get("osf_id", dataset_id)
-            storage_base = f"{base}/{osf_id}"
-        elif source == "gin":
-            # GIN: include organization in path
-            org = manifest.get("organization", "EEGManyLabs")
-            storage_base = f"{base}/{org}/{dataset_id}"
-        else:
-            # Default: use base/dataset_id pattern
-            storage_base = f"{base}/{dataset_id}"
-    else:
-        # Sanity-check explicit storage_base against the resolved source.
-        # 2_clone.py used to write ``s3://openneuro.org/<id>`` for any
-        # git-cloned dataset, including NEMAR — that value reached MongoDB
-        # as ``storage.base`` and we'd 404 on download. Reject the mismatch
-        # here so the bad value never gets written again.
-        expected_prefix = get_storage_config(source).get("base", "")
-        if expected_prefix and not str(storage_base).startswith(expected_prefix):
-            print(
-                f"WARNING [digest]: {dataset_id} manifest storage_base="
-                f"{storage_base!r} does not start with {expected_prefix!r} "
-                f"for source={source!r}; rebuilding from source config.",
-                file=sys.stderr,
-            )
-            storage_base = f"{expected_prefix}/{dataset_id}"
-
-    # Collect BIDS entities from file paths (both direct files and ZIP contents)
-    subjects = set()
-    sessions = set()
-    tasks = set()
-    modalities = set()
-
-    all_paths = []
-    for f in files:
-        filepath = f.get("path", "") if isinstance(f, dict) else f
-        all_paths.append(filepath)
-
-        # Check if this file has extracted ZIP contents
-        if isinstance(f, dict) and f.get("_zip_contents"):
-            for zf in f["_zip_contents"]:
-                zpath = zf.get("path", "") if isinstance(zf, dict) else zf
-                all_paths.append(zpath)
-
-    # Also add any separately stored zip_contents
-    for zpath in zip_contents:
-        if isinstance(zpath, dict):
-            all_paths.append(zpath.get("path", ""))
-        else:
-            all_paths.append(zpath)
-
-    # Extract BIDS entities from all paths
-    for filepath in all_paths:
-        entities = parse_bids_entities_from_path(filepath)
-
-        # Always track modalities found
-        if entities.get("modality"):
-            modalities.add(entities["modality"])
-
-        # Only count subjects/sessions/tasks for supported neuro modalities
-        if entities.get("modality") in NEURO_MODALITIES:
-            if entities.get("subject"):
-                subjects.add(entities["subject"])
-            if entities.get("session"):
-                sessions.add(entities["session"])
-            if entities.get("task"):
-                tasks.add(entities["task"])
+    subjects, sessions, tasks, modalities = _collect_bids_entities_from_paths(
+        files, zip_contents
+    )
 
     # Get demographics from manifest
     demographics = manifest.get("demographics", {})
@@ -2050,55 +2142,10 @@ def _enumerate_via_manifest(
         )
     )
 
-    # Fallback: Try to fetch metadata files if counts/tasks are missing
+    # Fallback: try to fetch dataset_description.json / participants.tsv
+    # over HTTP if counts are still missing.
     if subjects_count == 0 or not tasks:
-        # Look for key metadata files in the file list
-        desc_url = None
-        participants_url = None
-
-        for f in files:
-            if isinstance(f, dict):
-                path = f.get("path", "").lower()
-                url = f.get("download_url")
-                if path.endswith("dataset_description.json"):
-                    desc_url = url
-                elif path.endswith("participants.tsv"):
-                    participants_url = url
-
-        # Try dataset_description.json first
-        if desc_url:
-            try:
-                with urllib.request.urlopen(desc_url, timeout=10) as response:
-                    desc_data = json.loads(response.read().decode("utf-8"))
-                    # Some datasets put subject count here
-                    if "Subjects" in desc_data:  # heuristic
-                        subjects_count = int(desc_data["Subjects"])
-            except (
-                urllib.error.URLError,
-                OSError,
-                json.JSONDecodeError,
-                UnicodeDecodeError,
-                ValueError,
-                KeyError,
-            ) as e:
-                print(f"Failed to fetch/parse dataset_description.json: {e}")
-
-        # Try participants.tsv if still 0
-        if subjects_count == 0 and participants_url:
-            try:
-                with urllib.request.urlopen(participants_url, timeout=10) as response:
-                    content = response.read().decode("utf-8")
-                    lines = [l for l in content.splitlines() if l.strip()]
-                    # Subtract header
-                    if len(lines) > 1:
-                        subjects_count = len(lines) - 1
-            except (
-                urllib.error.URLError,
-                OSError,
-                UnicodeDecodeError,
-                ValueError,
-            ) as e:
-                print(f"Failed to fetch/parse participants.tsv: {e}")
+        subjects_count = _fetch_subject_count_via_http(files, fallback=subjects_count)
     ages = demographics.get("ages", [])
 
     # Get DOI from manifest (OSF enhanced clone provides this)

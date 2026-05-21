@@ -164,9 +164,6 @@ def update_wrapper(
     are updated with the corresponding attribute from the wrapped
     function (defaults to functools.WRAPPER_UPDATES)
     """
-    if SPHINX_BUILD:  # fool sphinx
-        wrapped = _add_params(wrapped, wrapped, new_args)
-        return wrapped
     wrapped_f = get_underlying_func(wrapped)
     for attr in assigned:
         try:

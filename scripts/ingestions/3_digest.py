@@ -28,7 +28,6 @@ import time
 import traceback
 import urllib.error
 import urllib.request
-import warnings
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -36,7 +35,6 @@ from typing import Any
 # Avoid numba cache issues by setting cache dir before importing MNE.
 os.environ.setdefault("NUMBA_CACHE_DIR", str(Path(".cache") / "numba"))
 
-import mne
 import numpy as np
 import pandas as pd
 
@@ -74,11 +72,21 @@ from _file_utils import (
 )
 from _fingerprint import fingerprint_from_files, fingerprint_from_manifest
 
-# Format-parser registry (ROADMAP P2.2). Maps file extension to a
-# FormatParser callable. FIF stays special-cased in _parse_fif_with_mne
-# below — its parser returns (dict, is_split) which doesn't fit the
-# shared shape.
-from _format_parser_registry import get_parser_for_extension
+# Technical-metadata cascade (SPRINT-2026-05-22 Task 3). The 5-step
+# cascade (mne_bids → modality_sidecar → channels_tsv → binary_parser →
+# mne_fallback) lives in ``_metadata_cascade.py``; this file's
+# ``_extract_technical_metadata`` is a thin delegator below. The
+# helpers and FIF parser are re-exported from here for back-compat
+# with ``tests/test_digest_extractions.py`` and other call sites that
+# imported them via ``3_digest``. (The per-extension binary parser
+# registry lives in ``_format_parser_registry``; the cascade imports
+# it directly — see ``_metadata_cascade.py``.)
+from _metadata_cascade import (  # noqa: F401 — re-export for back-compat
+    _parse_fif_with_mne,
+    extract_sfreq_nchans_from_channels_tsv,
+    extract_sfreq_nchans_from_modality_sidecar,
+    sum_bids_channel_counts,
+)
 from _montage import extract_layout
 
 # Telemetry (ROADMAP P1.1). Default emitter is NullEmitter so digest
@@ -236,72 +244,11 @@ def detect_source(dataset_dir: Path) -> str:
 # canonical home for all single-dict format parsers.
 
 
-def _parse_fif_with_mne(fif_path: Path) -> tuple[dict[str, Any] | None, bool]:
-    """Parse metadata from FIF file using MNE.
-
-    Uses ``on_split_missing="warn"`` so that git-annex datasets where
-    content-hash filenames break MNE's split-file linkage can still
-    have their header metadata extracted.
-
-    Parameters
-    ----------
-    fif_path : Path
-        Path to the FIF file.
-
-    Returns
-    -------
-    tuple[dict[str, Any] | None, bool]
-        A tuple of (metadata dict or None, is_split flag).
-        The is_split flag is True when MNE detects a split raw file.
-
-    """
-    # Check if file exists and is readable (not a broken git-annex symlink)
-    if not fif_path.exists():
-        return None, False
-    try:
-        resolved = fif_path.resolve()
-        if not resolved.exists():
-            return None, False
-    except (OSError, RuntimeError):
-        return None, False
-
-    try:
-        is_split = False
-        with warnings.catch_warnings(record=True) as caught:
-            warnings.simplefilter("always")
-            raw = mne.io.read_raw_fif(
-                str(fif_path), preload=False, on_split_missing="warn", verbose=False
-            )
-        for w in caught:
-            if "split" in str(w.message).lower():
-                is_split = True
-                break
-
-        try:
-            result: dict[str, Any] = {}
-
-            sfreq = raw.info.get("sfreq")
-            if sfreq:
-                result["sampling_frequency"] = float(sfreq)
-
-            ch_names = raw.info.get("ch_names")
-            if ch_names:
-                result["ch_names"] = list(ch_names)
-                result["nchans"] = len(ch_names)
-
-            if raw.n_times and raw.n_times > 0:
-                result["n_times"] = int(raw.n_times)
-
-            return (result if result else None), is_split
-        finally:
-            try:
-                raw.close()
-            except (OSError, AttributeError):
-                pass
-
-    except (OSError, ValueError, RuntimeError, KeyError, TypeError):
-        # Same recoverable parse-failure set as _parse_edf_with_mne.
-        return None, False
+# ``_parse_fif_with_mne`` moved to ``_metadata_cascade.py`` (SPRINT-2026-05-22
+# Task 3). Re-exported at the top of this module via the
+# ``from _metadata_cascade import ...`` block so existing call sites
+# (``_extract_technical_metadata`` delegator + tests/test_digest_*) keep
+# working unchanged.
 
 
 # Companion files required for different formats
@@ -1109,8 +1056,7 @@ def _extract_dataset_description_extras(
 
 
 def _extract_technical_metadata(
-    bids_dataset: Any,
-    bids_file: str,
+    bids_dataset: Any, bids_file: str
 ) -> tuple[
     float | None,
     int | None,
@@ -1122,220 +1068,23 @@ def _extract_technical_metadata(
 ]:
     """Resolve sfreq / nchans / ntimes / ch_names + their provenance.
 
-    Runs the 4-step cascade:
-    1. ``EEGBIDSDataset`` attribute getters (via mne_bids).
-    2. Modality JSON sidecar (with BIDS inheritance walk).
-    3. ``channels.tsv`` (with BIDS inheritance walk).
-    4. Direct binary header read for the file's extension
-       (.vhdr / .snirf / .mefd / .edf / .bdf / .set / .fif), plus an
-       MNE n_times fallback for VHDR and FIF.
-
-    Each step only fills fields the previous step left None. As it
-    fills a field, the step's source name is stamped into the
-    ``provenance`` dict — first writer wins.
-
-    Returns
-    -------
-    sampling_frequency, nchans, ntimes, ch_names
-        The metadata values (possibly None if no step filled them).
-    fif_is_split, fif_continuations_ok
-        Pass-through flags for the caller's split-FIF integrity check.
-    provenance
-        Mapping ``{field_name -> source_name | None}`` where source_name
-        is one of :data:`_PROV_MNE_BIDS`, :data:`_PROV_MODALITY_SIDECAR`,
-        :data:`_PROV_CHANNELS_TSV`, :data:`_PROV_BINARY_PARSER`,
-        :data:`_PROV_MNE_FALLBACK`. ``None`` means the field stayed
-        unresolved through the cascade.
-
-    Phase 8 follow-up + P0.1 cascade-with-provenance.
+    Thin delegator to :class:`_metadata_cascade.MetadataCascade` — see
+    that module for the 5-step cascade (mne_bids → modality_sidecar →
+    channels_tsv → binary_parser → mne_fallback) and provenance
+    semantics. SPRINT-2026-05-22 Task 3.
     """
-    sampling_frequency: float | None = None
-    nchans: int | None = None
-    ntimes: int | None = None
-    ch_names: list[str] | None = None
-    provenance = _empty_provenance()
+    from _metadata_cascade import CascadeContext, MetadataCascade
 
-    # ── Step 1: ``EEGBIDSDataset`` attribute getters (mne_bids) ──────
-    try:
-        sampling_frequency = bids_dataset.get_bids_file_attribute("sfreq", bids_file)
-        nchans = bids_dataset.get_bids_file_attribute("nchans", bids_file)
-        ntimes = bids_dataset.get_bids_file_attribute("ntimes", bids_file)
-    except (FileNotFoundError, OSError):
-        # BIDS sidecar JSON may be a broken git-annex symlink.
-        # Fallback code below will attempt to extract from data files.
-        pass
-
-    # Cast to numeric types (the attribute getters return strings).
-    if sampling_frequency:
-        sampling_frequency = float(sampling_frequency)
-        provenance["sampling_frequency"] = _PROV_MNE_BIDS
-    if nchans:
-        nchans = int(nchans)
-        provenance["nchans"] = _PROV_MNE_BIDS
-    if ntimes:
-        ntimes = int(ntimes)
-        provenance["ntimes"] = _PROV_MNE_BIDS
-
-    # ``channel_labels`` reads channels.tsv via mne_bids — same library,
-    # same source category for provenance purposes.
-    try:
-        ch_names = bids_dataset.channel_labels(bids_file)
-    except (FileNotFoundError, OSError, ValueError, KeyError, AttributeError):
-        # channels.tsv may be absent, a broken git-annex symlink, or
-        # malformed. Downstream fallback infers channels from the
-        # binary header.
-        pass
-    if ch_names:
-        provenance["ch_names"] = _PROV_MNE_BIDS
-        # Prefer channel_labels count over sidecar nchans (sidecar
-        # JSON may only have partial counts, e.g. EEGChannelCount).
-        # The nchans provenance stays as whatever step filled it first
-        # if it's already set; we only overwrite the VALUE.
-        if provenance["nchans"] is None:
-            provenance["nchans"] = _PROV_MNE_BIDS
-        nchans = len(ch_names)
-
-    # ── Step 2: modality JSON sidecar (BIDS inheritance walk) ────────
-    bids_file_path = Path(bids_file)
-    bids_root = Path(bids_dataset.bidsdir)
-    sf_before, n_before = sampling_frequency, nchans
-    sampling_frequency, nchans = extract_sfreq_nchans_from_modality_sidecar(
-        bids_file_path, bids_root, sampling_frequency, nchans
-    )
-    _stamp_provenance(
-        provenance,
-        _PROV_MODALITY_SIDECAR,
-        field="sampling_frequency",
-        old_value=sf_before,
-        new_value=sampling_frequency,
-    )
-    _stamp_provenance(
-        provenance,
-        _PROV_MODALITY_SIDECAR,
-        field="nchans",
-        old_value=n_before,
-        new_value=nchans,
-    )
-
-    # ── Step 3: channels.tsv (BIDS inheritance walk) ─────────────────
-    sf_before, n_before = sampling_frequency, nchans
-    sampling_frequency, nchans = extract_sfreq_nchans_from_channels_tsv(
-        bids_file_path, bids_root, sampling_frequency, nchans
-    )
-    _stamp_provenance(
-        provenance,
-        _PROV_CHANNELS_TSV,
-        field="sampling_frequency",
-        old_value=sf_before,
-        new_value=sampling_frequency,
-    )
-    _stamp_provenance(
-        provenance,
-        _PROV_CHANNELS_TSV,
-        field="nchans",
-        old_value=n_before,
-        new_value=nchans,
-    )
-
-    # ── Step 4: parse binary headers directly when sidecars missing ──
-    # Per-format parsers live in _format_parser_registry.py (ROADMAP
-    # P2.2). The registry maps extension → parser callable; FIF stays
-    # special-cased below because its parser returns (dict, is_split)
-    # rather than just dict.
-    ext = bids_file_path.suffix.lower()
-    parser = get_parser_for_extension(ext)
-    if parser is not None and (
-        not sampling_frequency or not nchans or not ntimes or not ch_names
-    ):
-        md = parser(bids_file_path)
-        if md:
-            sf_before, n_before, nt_before, ch_before = (
-                sampling_frequency,
-                nchans,
-                ntimes,
-                ch_names,
-            )
-            sampling_frequency = sampling_frequency or md.get("sampling_frequency")
-            nchans = nchans or md.get("nchans")
-            ntimes = ntimes or md.get("n_times") or md.get("n_samples")
-            ch_names = ch_names or md.get("ch_names")
-            for field, old, new in (
-                ("sampling_frequency", sf_before, sampling_frequency),
-                ("nchans", n_before, nchans),
-                ("ntimes", nt_before, ntimes),
-                ("ch_names", ch_before, ch_names),
-            ):
-                _stamp_provenance(
-                    provenance,
-                    _PROV_BINARY_PARSER,
-                    field=field,
-                    old_value=old,
-                    new_value=new,
-                )
-
-    # VHDR: try MNE for n_times specifically (requires binary companion).
-    if ext == ".vhdr" and not ntimes:
-        raw = None
-        try:
-            raw = mne.io.read_raw_brainvision(
-                str(bids_file_path), preload=False, verbose=False
-            )
-            if raw.n_times and raw.n_times > 0:
-                ntimes = int(raw.n_times)
-                if provenance["ntimes"] is None:
-                    provenance["ntimes"] = _PROV_MNE_FALLBACK
-        except (OSError, ValueError, RuntimeError, KeyError):
-            # MNE brainvision reader: OSError on missing companion
-            # files, ValueError on malformed header, RuntimeError on
-            # unsupported variant. n_times stays unset.
-            pass
-        finally:
-            if raw is not None:
-                try:
-                    raw.close()
-                except (OSError, AttributeError):
-                    pass
-
-    # FIF fallback using MNE.
-    fif_is_split = False
-    fif_continuations_ok = True
-    if ext == ".fif" and (not sampling_frequency or not nchans or not ntimes):
-        fif_metadata, fif_is_split = _parse_fif_with_mne(bids_file_path)
-        if fif_metadata:
-            sf_before, n_before, nt_before, ch_before = (
-                sampling_frequency,
-                nchans,
-                ntimes,
-                ch_names,
-            )
-            sampling_frequency = sampling_frequency or fif_metadata.get(
-                "sampling_frequency"
-            )
-            nchans = nchans or fif_metadata.get("nchans")
-            ntimes = ntimes or fif_metadata.get("n_times")
-            ch_names = ch_names or fif_metadata.get("ch_names")
-            for field, old, new in (
-                ("sampling_frequency", sf_before, sampling_frequency),
-                ("nchans", n_before, nchans),
-                ("ntimes", nt_before, ntimes),
-                ("ch_names", ch_before, ch_names),
-            ):
-                _stamp_provenance(
-                    provenance,
-                    _PROV_MNE_FALLBACK,
-                    field=field,
-                    old_value=old,
-                    new_value=new,
-                )
-
+    ctx = CascadeContext(bids_dataset=bids_dataset, bids_file=bids_file)
+    result = MetadataCascade().run(ctx)
     return (
-        sampling_frequency,
-        nchans,
-        ntimes,
-        ch_names,
-        fif_is_split,
-        fif_continuations_ok,
-        provenance,
+        result.sampling_frequency,
+        result.nchans,
+        result.ntimes,
+        result.ch_names,
+        result.fif_is_split,
+        result.fif_continuations_ok,
+        result.provenance,
     )
 
 
@@ -1864,48 +1613,12 @@ def parse_bids_entities_from_path(filepath: str) -> dict[str, Any]:
     return entities
 
 
-_BIDS_CHANNEL_COUNT_FIELDS: tuple[str, ...] = (
-    "MEGChannelCount",
-    "EEGChannelCount",
-    "EOGChannelCount",
-    "ECGChannelCount",
-    "EMGChannelCount",
-    "MiscChannelCount",
-    "TriggerChannelCount",
-    "iEEGChannelCount",
-    "SEEGChannelCount",
-    "ECOGChannelCount",
-    "NIRSChannelCount",
-    "ACCELChannelCount",
-)
-
-
-def sum_bids_channel_counts(sidecar_data: dict[str, Any]) -> int | None:
-    """Sum every BIDS *ChannelCount field present in a sidecar.
-
-    BIDS sidecars report channel counts per type (EEG, MEG, EOG, etc.)
-    rather than a single total. This helper sums all known per-type
-    fields and returns the total, or ``None`` if the sum is zero (so the
-    caller can distinguish "no info" from "zero channels").
-
-    Parameters
-    ----------
-    sidecar_data : dict
-        Parsed JSON sidecar contents. Unknown fields are ignored.
-
-    Returns
-    -------
-    int or None
-        Total channel count summed across every documented BIDS
-        ``*ChannelCount`` field, or ``None`` if all are absent/zero.
-
-    Notes
-    -----
-    Extracted from ``extract_record`` (Phase 8 decomposition, 2026-05).
-    Repeated in 3 places in the original function; consolidated here.
-    """
-    total = sum(sidecar_data.get(field, 0) or 0 for field in _BIDS_CHANNEL_COUNT_FIELDS)
-    return total if total > 0 else None
+# ``_BIDS_CHANNEL_COUNT_FIELDS`` and ``sum_bids_channel_counts`` moved
+# to ``_metadata_cascade.py`` (SPRINT-2026-05-22 Task 3) together with
+# the modality-sidecar / channels.tsv inheritance-walk helpers — they
+# all serve the technical-metadata cascade and nothing else. The name
+# ``sum_bids_channel_counts`` is re-exported at the top of this module
+# for back-compat with ``tests/test_digest_extractions.py``.
 
 
 def strip_dataset_prefix(bids_relpath: str, dataset_id: str) -> str:
@@ -1941,236 +1654,9 @@ def strip_dataset_prefix(bids_relpath: str, dataset_id: str) -> str:
     return bids_relpath
 
 
-# Modality-specific JSON sidecar suffixes. Order matters: MEG before
-# EEG so a co-recorded MEG+EEG study finds the MEG sidecar first
-# (the MEG one is the authoritative source for n_megchans there).
-_MODALITY_SIDECAR_SUFFIXES = ("_meg.json", "_eeg.json", "_ieeg.json", "_nirs.json")
-
-
-def extract_sfreq_nchans_from_modality_sidecar(
-    bids_file_path: Path,
-    bids_root: Path,
-    sampling_frequency: float | None,
-    nchans: int | None,
-) -> tuple[float | None, int | None]:
-    """Walk the BIDS inheritance tree for a modality JSON sidecar.
-
-    Looks for ``*_meg.json`` / ``*_eeg.json`` / ``*_ieeg.json`` /
-    ``*_nirs.json`` adjacent to ``bids_file_path`` and walks up to
-    ``bids_root`` following BIDS inheritance, returning the first
-    ``(SamplingFrequency, sum of *ChannelCount fields)`` found.
-
-    Returns the inputs untouched if the caller already has both values
-    (short-circuit) or if no sidecar surfaces a value.
-
-    Parameters
-    ----------
-    bids_file_path : Path
-        Absolute path to the BIDS data file we're describing.
-    bids_root : Path
-        Root of the BIDS dataset; the inheritance walk stops here.
-    sampling_frequency, nchans : float | None, int | None
-        Caller's current best values. Used as both inputs (so we can
-        skip the walk if both are populated) and defaults.
-
-    Returns
-    -------
-    tuple[float | None, int | None]
-        ``(sampling_frequency, nchans)``, possibly filled in from a
-        sidecar.
-
-    Notes
-    -----
-    Extracted from ``extract_record`` (Phase 8 — 2026-05). Was inlined
-    as a 3-level-nested for-loop block.
-    """
-    if sampling_frequency and nchans:
-        return sampling_frequency, nchans
-
-    base_names_to_try, dirs_to_try = _build_bids_search_paths(bids_file_path, bids_root)
-
-    for search_dir in dirs_to_try:
-        if sampling_frequency and nchans:
-            break
-        for base_name in base_names_to_try:
-            if sampling_frequency and nchans:
-                break
-            for sidecar_suffix in _MODALITY_SIDECAR_SUFFIXES:
-                sidecar_path = search_dir / f"{base_name}{sidecar_suffix}"
-                if not sidecar_path.exists():
-                    continue
-                try:
-                    with open(sidecar_path) as f:
-                        sidecar_data = json.load(f)
-                except (OSError, json.JSONDecodeError, ValueError, TypeError):
-                    # Unreadable or malformed sidecar — try next candidate.
-                    continue
-                if not sampling_frequency and "SamplingFrequency" in sidecar_data:
-                    try:
-                        sampling_frequency = float(sidecar_data["SamplingFrequency"])
-                    except (TypeError, ValueError):
-                        pass
-                if not nchans:
-                    summed = sum_bids_channel_counts(sidecar_data)
-                    if summed is not None:
-                        nchans = summed
-                break  # only consult one sidecar variant per (dir, base)
-
-    return sampling_frequency, nchans
-
-
-def extract_sfreq_nchans_from_channels_tsv(
-    bids_file_path: Path,
-    bids_root: Path,
-    sampling_frequency: float | None,
-    nchans: int | None,
-) -> tuple[float | None, int | None]:
-    """Fill in missing sfreq/nchans from a BIDS ``*_channels.tsv``.
-
-    Walks the BIDS inheritance tree like
-    :func:`extract_sfreq_nchans_from_modality_sidecar`, but reads a
-    ``_channels.tsv`` instead of a JSON sidecar. ``nchans`` is the row
-    count; ``sampling_frequency`` is read from the
-    ``sampling_frequency`` / ``SamplingFrequency`` column if present.
-
-    Parameters
-    ----------
-    bids_file_path : Path
-        Absolute path to the BIDS data file we're describing.
-    bids_root : Path
-        Root of the BIDS dataset.
-    sampling_frequency, nchans : float | None, int | None
-        Caller's current best values. Short-circuits when both populated.
-
-    Returns
-    -------
-    tuple[float | None, int | None]
-    """
-    if sampling_frequency and nchans:
-        return sampling_frequency, nchans
-
-    base_names_to_try, dirs_to_try = _build_bids_search_paths(bids_file_path, bids_root)
-
-    for search_dir in dirs_to_try:
-        if sampling_frequency and nchans:
-            break
-        for base_name in base_names_to_try:
-            if sampling_frequency and nchans:
-                break
-            channels_path = search_dir / f"{base_name}_channels.tsv"
-            if not channels_path.exists():
-                continue
-            try:
-                channels_df = pd.read_csv(
-                    channels_path,
-                    sep="\t",
-                    dtype="string",
-                    keep_default_na=False,
-                )
-            except (
-                pd.errors.ParserError,
-                pd.errors.EmptyDataError,
-                OSError,
-                UnicodeDecodeError,
-                ValueError,
-                KeyError,
-            ):
-                # channels.tsv malformed; try next search dir.
-                continue
-            if not nchans:
-                nchans = len(channels_df)
-            if not sampling_frequency:
-                for col in ("sampling_frequency", "SamplingFrequency"):
-                    if col not in channels_df.columns:
-                        continue
-                    for val in channels_df[col]:
-                        try:
-                            sfreq_val = float(val)
-                        except (TypeError, ValueError):
-                            continue
-                        if sfreq_val > 0:
-                            sampling_frequency = sfreq_val
-                            break
-                    if sampling_frequency:
-                        break
-            break  # one channels.tsv per (dir, base) is authoritative
-
-    return sampling_frequency, nchans
-
-
-def _build_bids_search_paths(
-    bids_file_path: Path, bids_root: Path
-) -> tuple[list[str], list[Path]]:
-    """Build base names and directories for BIDS inheritance sidecar search.
-
-    BIDS uses inheritance - sidecars can be in parent directories and may not
-    include run/acquisition entities. This function generates the various base
-    name variants and directories to search when looking for sidecars.
-
-    Parameters
-    ----------
-    bids_file_path : Path
-        Path to the BIDS data file
-    bids_root : Path
-        Root directory of the BIDS dataset
-
-    Returns
-    -------
-    tuple[list[str], list[Path]]
-        A tuple of (base_names_to_try, dirs_to_try) where:
-        - base_names_to_try: List of base name variants to search for
-        - dirs_to_try: List of directories from file's parent up to BIDS root
-
-    """
-    # Parse entities from the file name
-    # e.g., "sub-13_ses-meg_task-facerecognition_run-05_meg.fif"
-    stem = bids_file_path.stem  # "sub-13_ses-meg_task-facerecognition_run-05_meg"
-    parts = stem.split("_")
-
-    # Build different base name variants for BIDS inheritance
-    # Full base: sub-13_ses-meg_task-facerecognition_run-05
-    # Without run: sub-13_ses-meg_task-facerecognition
-    # Without run and acq: sub-13_ses-meg_task-facerecognition
-    base_names_to_try: list[str] = []
-
-    # Get base without the modality suffix (last part)
-    full_base = "_".join(parts[:-1]) if len(parts) > 1 else stem
-
-    # Add full base first
-    base_names_to_try.append(full_base)
-
-    # Try without run-XX
-    if "_run-" in full_base:
-        without_run = "_".join(p for p in parts[:-1] if not p.startswith("run-"))
-        base_names_to_try.append(without_run)
-
-    # Try without acquisition too
-    if "_acq-" in full_base:
-        without_acq_run = "_".join(
-            p
-            for p in parts[:-1]
-            if not p.startswith("run-") and not p.startswith("acq-")
-        )
-        base_names_to_try.append(without_acq_run)
-
-    # Build task-only base name for BIDS inheritance
-    # e.g., task-MIpost from sub-xp108_task-MIpost_eeg
-    task_part = next((p for p in parts if p.startswith("task-")), None)
-    if task_part and task_part not in base_names_to_try:
-        base_names_to_try.append(task_part)
-
-    # Directories to search - walk up to BIDS root for proper inheritance
-    # BIDS inheritance: sidecars can be at any level from root to file's directory
-    parent_dir = bids_file_path.parent
-    dirs_to_try: list[Path] = [parent_dir]
-    current = parent_dir
-    while current != bids_root and current.parent != current:
-        current = current.parent
-        dirs_to_try.append(current)
-        if current == bids_root:
-            break
-
-    return base_names_to_try, dirs_to_try
+# Modality-sidecar + channels.tsv inheritance-walk helpers moved to
+# _metadata_cascade.py (SPRINT-2026-05-22 Task 3). Re-exported at
+# the top of this module for back-compat.
 
 
 def normalize_modality(modality: str | None) -> str | None:

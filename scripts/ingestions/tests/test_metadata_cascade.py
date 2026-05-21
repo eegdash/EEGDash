@@ -61,6 +61,38 @@ def test_cascade_result_defaults_are_none():
     assert all(v is None for v in result.provenance.values())
 
 
+def test_cascade_result_stamp_only_fires_on_none_to_non_none_transition():
+    """``stamp`` must match the legacy ``_stamp_provenance`` semantics:
+    stamps iff (old is None AND new is not None AND prov was None).
+
+    Specifically, ``(old=0, new=500)`` MUST NOT stamp — the old value
+    was already a non-None falsy assignment and provenance should
+    remain whatever first source claimed it (or None).
+    """
+    r = CascadeResult()
+
+    # Case 1: legitimate first-writer transition (None -> 500).
+    r.stamp("first_source", "sampling_frequency", old=None, new=500.0)
+    assert r.provenance["sampling_frequency"] == "first_source"
+
+    # Case 2: second writer must NOT overwrite (first-writer-wins).
+    r.stamp("second_source", "sampling_frequency", old=500.0, new=750.0)
+    assert r.provenance["sampling_frequency"] == "first_source"
+
+    # Case 3: (old=0, new=500) — legacy SKIPS this case; new must too.
+    r2 = CascadeResult()
+    r2.stamp("any_source", "nchans", old=0, new=500)
+    assert r2.provenance["nchans"] is None, (
+        "stamp must not fire when old is a non-None falsy value "
+        "(legacy _stamp_provenance used `old is None` check)"
+    )
+
+    # Case 4: (old=None, new=None) — no stamp.
+    r3 = CascadeResult()
+    r3.stamp("any_source", "ntimes", old=None, new=None)
+    assert r3.provenance["ntimes"] is None
+
+
 # ─── MneBidsStep ──────────────────────────────────────────────────────────
 
 

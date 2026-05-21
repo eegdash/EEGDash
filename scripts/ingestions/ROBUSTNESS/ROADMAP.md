@@ -183,7 +183,7 @@ PROGRESS-7:
 | `extract_dataset_metadata` | 205 | ⚠️ above ceiling |
 | `_enumerate_via_bids` | 109 | ⚠️ marginally above |
 | `_enumerate_via_manifest` | 222 | ⚠️ above ceiling |
-| `_extract_technical_metadata` | 25 | ✅ (cascade extracted to `_metadata_cascade.py` — SPRINT-2026-05-22 Task 3) |
+| `_extract_technical_metadata` | 31 | ✅ (cascade extracted to `_metadata_cascade.py` — SPRINT-2026-05-22 Task 3; 232→31 LOC, 86% reduction) |
 | `_read_participants_demographics` | 102 | ⚠️ marginally above (P3.1) |
 | `_build_dep_keys` | 98 | ✅ |
 | **All other helpers** | < 100 | ✅ |

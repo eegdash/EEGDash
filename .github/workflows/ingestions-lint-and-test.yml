@@ -83,3 +83,34 @@ jobs:
             scripts/ingestions/htmlcov/
             scripts/ingestions/coverage.xml
           retention-days: 14
+
+  e2e_smoke:
+    name: Pipeline E2E (stage 3 → 4 → 5 against snapshot fixtures)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: lint
+    # E2E runs in parallel with the unit test job — both depend on
+    # lint. The smoke is small (the snapshot fixture is ~50 KB) so
+    # the cost is minimal.
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+      - name: Install ingestion package + dev deps
+        run: pip install -e "scripts/ingestions[dev]"
+      - name: Run E2E smoke tests (Stage 3 → 4 → 5)
+        # Per ROADMAP-C1.md C1.3. The e2e tests run the snapshot
+        # fixtures through 4_validate_output.py and 5_inject.py
+        # --dry-run as subprocess invocations. Offline (no API calls
+        # in dry-run mode). Verifies the inter-stage contract
+        # documented in PIPELINE-CONTRACT.md.
+        working-directory: scripts/ingestions
+        run: pytest tests/test_pipeline_e2e.py -ra --tb=short
+      - name: Run snapshot tests separately (verbose)
+        # Re-run the snapshot tests with verbose output. They're also
+        # in the main test suite, but isolating them in CI logs makes
+        # byte-drift failures easier to diagnose.
+        working-directory: scripts/ingestions
+        run: pytest tests/test_digest_snapshot.py -v --tb=long

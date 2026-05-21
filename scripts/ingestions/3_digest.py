@@ -51,7 +51,7 @@ from eegdash.dataset._source_inference import (
     get_storage_base,
     get_storage_config,
 )
-from eegdash.dataset.bids_dataset import _COMPANION_FILES, EEGBIDSDataset
+from eegdash.dataset.bids_dataset import _COMPANION_FILES
 from eegdash.dataset.io import _repair_participants_tsv_ids
 from eegdash.schemas import (
     Storage,
@@ -87,7 +87,8 @@ from _vhdr_parser import parse_vhdr_metadata
 # fixture-based verification approach.
 from record_enumerator import (
     EnumerationResult,
-    _has_actual_recording_files,
+    ManifestEnumerator,
+    get_record_enumerator,
     write_dataset_outputs,
 )
 
@@ -2751,11 +2752,14 @@ def digest_dataset(
 ) -> dict[str, Any]:
     """Digest a single dataset and generate JSON output.
 
-    Phase 8 Stage 3: the body that used to live here moved to
-    :func:`_enumerate_via_bids` (the BIDS algorithm) and
-    :func:`write_dataset_outputs` (the JSON writes). What's left is
-    the orchestrator: skip-check, source detection, dispatch between
-    BIDS-fs and manifest paths.
+    Phase 8 Stage 3D: orchestrator only. Skip-check, setup, dispatch
+    via :func:`get_record_enumerator`, run the Adapter, fall back to
+    manifest if the BIDS path produces nothing, write outputs.
+
+    The algorithms themselves live in:
+      - :func:`_enumerate_via_bids` — BIDS-filesystem walk
+      - :func:`_enumerate_via_manifest` — manifest-only walk
+      - :func:`write_dataset_outputs` — the 4-file JSON writes
 
     Produces:
     - {dataset_id}_dataset.json: Dataset-level metadata
@@ -2776,7 +2780,6 @@ def digest_dataset(
     dict
         Summary of digestion results.
     """
-    # **SKIP CHECK**: If output already exists, skip reprocessing
     output_dir_path = output_dir / dataset_id
     if output_dir_path.exists():
         return {
@@ -2794,29 +2797,24 @@ def digest_dataset(
             "reason": "directory not found",
         }
 
-    # Check if this is an API-only source (has manifest.json but no actual files)
-    manifest_path = dataset_dir / "manifest.json"
-    has_manifest = manifest_path.exists()
-    has_actual_files = _has_actual_recording_files(dataset_dir)
-
-    # For API-only sources, use manifest-based digestion
-    if has_manifest and not has_actual_files:
-        return digest_from_manifest(dataset_id, input_dir, output_dir)
-
-    # Detect source, build the per-Dataset state shared with the helper.
+    # Build per-Dataset state shared with the Adapter.
     source = detect_source(dataset_dir)
     digested_at = datetime.now(timezone.utc).isoformat()
     _repair_participants_tsv_ids(dataset_dir)
+    source_adapter = get_source_adapter(source, dataset_id, dataset_dir)
 
-    # Load BIDS dataset; the helper assumes it's already loaded so the
-    # fallback decision lives here (one place, mirrors the factory's
-    # rule 1 in record_enumerator.get_record_enumerator).
+    # Pick the Adapter via the factory. The factory's fallback rules
+    # mirror what used to live as if-ladders inside this function:
+    # no actual files -> ManifestEnumerator; otherwise BIDS path.
+    has_manifest = (dataset_dir / "manifest.json").exists()
+    enumerator = get_record_enumerator(
+        dataset_id, dataset_dir, source, source_adapter, digested_at
+    )
+
+    # Run it. The BIDS Adapter raises on EEGBIDSDataset load failure
+    # (per Stage 3C contract); fall back to manifest if available.
     try:
-        bids_dataset = EEGBIDSDataset(
-            data_dir=str(dataset_dir),
-            dataset=dataset_id,
-            allow_symlinks=True,
-        )
+        result = enumerator.enumerate()
     except (
         OSError,
         ValueError,
@@ -2824,7 +2822,7 @@ def digest_dataset(
         FileNotFoundError,
         PermissionError,
     ) as e:
-        if has_manifest:
+        if has_manifest and not isinstance(enumerator, ManifestEnumerator):
             return digest_from_manifest(dataset_id, input_dir, output_dir)
         return {
             "status": "error",
@@ -2832,35 +2830,11 @@ def digest_dataset(
             "error": f"Failed to load BIDS dataset: {e}",
         }
 
-    manifest_data = None
-    if has_manifest:
-        try:
-            with open(manifest_path) as f:
-                manifest_data = json.load(f)
-        except (OSError, json.JSONDecodeError, ValueError):
-            # Manifest optional; absent or malformed is fine.
-            pass
-
-    source_adapter = get_source_adapter(source, dataset_id, bids_dataset.bidsdir)
-
-    result = _enumerate_via_bids(
-        dataset_dir,
-        dataset_id,
-        source,
-        source_adapter,
-        digested_at,
-        bids_dataset,
-        manifest_data=manifest_data,
-    )
-
     if not result.records:
-        # Fallback to manifest-based digestion if no records extracted.
-        # Two paths get folded here: the "no files matched" and the
-        # "all extractions failed" cases that used to be two separate
-        # if-blocks in the pre-Stage-3 orchestrator.
-        if has_manifest:
+        # No records — fall back to manifest if we haven't tried it yet,
+        # else surface the right "empty / error" status.
+        if has_manifest and not isinstance(enumerator, ManifestEnumerator):
             return digest_from_manifest(dataset_id, input_dir, output_dir)
-        # Distinguish "no neuro files" from "all extractions failed":
         if result.errors:
             return {
                 "status": "error",

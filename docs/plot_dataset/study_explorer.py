@@ -12,10 +12,22 @@ import pandas as pd
 
 try:  # Allow execution as a script or module
     from .colours import RECORDING_MODALITY_COLORS
-    from .utils import build_and_export_html, get_dataset_url
+    from .utils import (
+        RECORDING_MODALITY_MAP,
+        build_and_export_html,
+        get_dataset_url,
+        read_dataset_csv,
+        safe_int,
+    )
 except ImportError:  # pragma: no cover - fallback for direct script execution
     from colours import RECORDING_MODALITY_COLORS  # type: ignore
-    from utils import build_and_export_html, get_dataset_url  # type: ignore
+    from utils import (  # type: ignore
+        RECORDING_MODALITY_MAP,
+        build_and_export_html,
+        get_dataset_url,
+        read_dataset_csv,
+        safe_int,
+    )
 
 __all__ = ["generate_api_study_explorer"]
 
@@ -28,6 +40,8 @@ _FACET_GROUPS = (
     ("pathology", "Population"),
 )
 _RECORDING_ORDER = ["EEG", "MEG", "iEEG", "fNIRS", "EMG", "fMRI", "MRI", "ECG"]
+_VIEWS = ("volume", "matrix", "both")
+_FACET_SEPARATOR = "::"
 
 
 def _clean_text(value: Any) -> str:
@@ -50,11 +64,6 @@ def _to_float(value: Any) -> float | None:
     except (TypeError, ValueError):
         return None
     return number if math.isfinite(number) else None
-
-
-def _to_int(value: Any) -> int:
-    number = _to_float(value)
-    return int(round(number)) if number is not None else 0
 
 
 def _as_mapping(value: Any) -> dict[str, Any]:
@@ -96,20 +105,10 @@ def _first_nonempty(*values: Any) -> Any:
 
 def _normalize_recording(value: str) -> str:
     lowered = value.strip().lower()
-    mapping = {
-        "eeg": "EEG",
-        "meg": "MEG",
-        "ieeg": "iEEG",
-        "seeg": "iEEG",
-        "ecog": "iEEG",
-        "fnirs": "fNIRS",
-        "nirs": "fNIRS",
-        "emg": "EMG",
-        "fmri": "fMRI",
-        "mri": "MRI",
-        "ecg": "ECG",
-    }
-    return mapping.get(lowered, value.strip().upper() if len(value) <= 4 else value)
+    canonical = RECORDING_MODALITY_MAP.get(lowered)
+    if canonical:
+        return canonical
+    return value.strip().upper() if len(value) <= 4 else value
 
 
 def _normalize_label(value: str) -> str:
@@ -196,16 +195,20 @@ def _record_from_row(row: pd.Series) -> dict[str, Any] | None:
     clinical = _as_mapping(row.get("clinical"))
     paradigm = _as_mapping(row.get("paradigm"))
 
-    subjects = _to_int(row.get("n_subjects")) or _to_int(
-        demographics.get("subjects_count")
+    subjects = safe_int(row.get("n_subjects"), default=0) or safe_int(
+        demographics.get("subjects_count"), default=0
     )
-    records = _to_int(row.get("n_records")) or _to_int(row.get("total_files"))
-    tasks = _to_int(row.get("n_tasks")) or _count_items(row.get("tasks"))
-    sessions = _to_int(row.get("n_sessions")) or _count_items(row.get("sessions"))
+    records = safe_int(row.get("n_records"), default=0) or safe_int(
+        row.get("total_files"), default=0
+    )
+    tasks = safe_int(row.get("n_tasks"), default=0) or _count_items(row.get("tasks"))
+    sessions = safe_int(row.get("n_sessions"), default=0) or _count_items(
+        row.get("sessions")
+    )
     hours = _to_float(row.get("duration_hours_total"))
     if hours is None and _to_float(row.get("total_duration_s")) is not None:
         hours = (_to_float(row.get("total_duration_s")) or 0) / 3600
-    size_bytes = _to_int(row.get("size_bytes"))
+    size_bytes = safe_int(row.get("size_bytes"), default=0)
 
     recording_raw = _first_nonempty(
         row.get("record_modality"),
@@ -232,10 +235,12 @@ def _record_from_row(row: pd.Series) -> dict[str, Any] | None:
     exp_type = [_normalize_label(v) for v in _split_values(type_raw)]
 
     pathology_raw = _first_nonempty(row.get("Type Subject"), tags.get("pathology"))
-    if not _split_values(pathology_raw) and clinical.get("is_clinical"):
-        pathology_raw = clinical.get("purpose") or "Clinical"
-    elif not _split_values(pathology_raw) and clinical.get("is_clinical") is False:
-        pathology_raw = "Healthy"
+    if not _split_values(pathology_raw):
+        is_clinical = clinical.get("is_clinical")
+        if is_clinical:
+            pathology_raw = clinical.get("purpose") or "Clinical"
+        elif is_clinical is False:
+            pathology_raw = "Healthy"
     pathology = [_normalize_label(v) for v in _split_values(pathology_raw)]
 
     source = _clean_text(row.get("source")) or "unknown"
@@ -253,7 +258,7 @@ def _record_from_row(row: pd.Series) -> dict[str, Any] | None:
         "source": [source],
     }
     facet_tokens = [
-        f"{group}::{label}"
+        f"{group}{_FACET_SEPARATOR}{label}"
         for group, labels in facets.items()
         for label in labels
         if label
@@ -316,15 +321,18 @@ def _facet_counts(records: list[dict[str, Any]]) -> dict[str, Counter]:
     return counts
 
 
-def _selected_columns(records: list[dict[str, Any]]) -> dict[str, list[str]]:
-    counts = _facet_counts(records)
+def _order_recording(labels: Counter) -> list[str]:
+    ordered = [label for label in _RECORDING_ORDER if label in labels]
+    ordered.extend(sorted(set(labels) - set(ordered)))
+    return ordered
+
+
+def _selected_columns(counts: dict[str, Counter]) -> dict[str, list[str]]:
     selected: dict[str, list[str]] = {}
     for group, _ in _FACET_GROUPS:
         group_counts = counts.get(group, Counter())
         if group == "recording":
-            ordered = [label for label in _RECORDING_ORDER if label in group_counts]
-            ordered.extend(sorted(set(group_counts) - set(ordered)))
-            selected[group] = ordered[:10]
+            selected[group] = _order_recording(group_counts)[:10]
             continue
         ordered = sorted(group_counts, key=lambda label: (-group_counts[label], label))
         selected[group] = ordered[:12]
@@ -467,8 +475,7 @@ def _data_attrs(record: dict[str, Any]) -> str:
     )
 
 
-def _option_html(records: list[dict[str, Any]]) -> str:
-    counts = _facet_counts(records)
+def _option_html(counts: dict[str, Counter]) -> str:
     groups = [("source", "Source"), *_FACET_GROUPS]
     chunks = ['<option value="">Choose an API facet...</option>']
     for group, label in groups:
@@ -478,7 +485,7 @@ def _option_html(records: list[dict[str, Any]]) -> str:
         chunks.append(f'<optgroup label="{html.escape(label)}">')
         ordered = sorted(group_counts, key=lambda value: (-group_counts[value], value))
         for value in ordered:
-            token = f"{group}::{value}"
+            token = f"{group}{_FACET_SEPARATOR}{value}"
             text = f"{value} ({group_counts[value]:,})"
             chunks.append(
                 f'<option value="{html.escape(token, quote=True)}">'
@@ -488,27 +495,24 @@ def _option_html(records: list[dict[str, Any]]) -> str:
     return "\n".join(chunks)
 
 
-def _legend_html(records: list[dict[str, Any]]) -> str:
-    counts = _facet_counts(records).get("recording", Counter())
-    labels = [label for label in _RECORDING_ORDER if label in counts]
-    labels.extend(sorted(set(counts) - set(labels)))
+def _legend_html(counts: dict[str, Counter]) -> str:
+    recording_counts = counts.get("recording", Counter())
     parts = []
-    for label in labels:
+    for label in _order_recording(recording_counts):
         color = RECORDING_MODALITY_COLORS.get(label, "#64748b")
-        token = f"recording::{label}"
+        token = f"recording{_FACET_SEPARATOR}{label}"
         parts.append(
             '<button class="api-legend-chip" type="button" '
             f'data-filter-token="{html.escape(token, quote=True)}">'
             f'<i style="background:{html.escape(color)}"></i>'
             f"<span>{html.escape(label)}</span>"
-            f"<b>{counts[label]:,}</b>"
+            f"<b>{recording_counts[label]:,}</b>"
             "</button>"
         )
     return "\n".join(parts)
 
 
-def _matrix_html(records: list[dict[str, Any]]) -> str:
-    selected = _selected_columns(records)
+def _matrix_html(records: list[dict[str, Any]], selected: dict[str, list[str]]) -> str:
     facet_columns = [
         (group, label, group_label)
         for group, group_label in _FACET_GROUPS
@@ -530,7 +534,7 @@ def _matrix_html(records: list[dict[str, Any]]) -> str:
     head_1 += "</tr>"
     head_2 = "<tr>"
     for group, label, group_label in facet_columns:
-        token = f"{group}::{label}"
+        token = f"{group}{_FACET_SEPARATOR}{label}"
         head_2 += (
             f'<th class="api-facet-col api-{html.escape(group)}-col" '
             f'data-filter-token="{html.escape(token, quote=True)}">'
@@ -589,6 +593,8 @@ def _build_html(
     duration_count = sum(1 for record in records if record["hours_per_subject"])
     source_count = len({record["source"] for record in records})
     fields = "dataset_id, demographics, recording_modality, tags, tasks, total_files, total_duration_s"
+    counts = _facet_counts(records)
+    selected = _selected_columns(counts)
 
     panels = []
     if view in {"volume", "both"}:
@@ -599,7 +605,7 @@ def _build_html(
       <h4>Dataset Volume From API Metadata</h4>
       <p>Scatter points use API summary fields only: {html.escape(fields)}.</p>
     </header>
-    <div class="api-legend" aria-label="Recording modality legend">{_legend_html(records)}</div>
+    <div class="api-legend" aria-label="Recording modality legend">{_legend_html(counts)}</div>
     <div class="api-scatter-wrap">{_scatter_svg(records)}</div>
   </section>"""
         )
@@ -611,12 +617,12 @@ def _build_html(
       <h4>Metadata Coverage Matrix</h4>
       <p>Columns are API facets, not inferred event classes. Click a column header or legend chip to filter.</p>
     </header>
-    {_matrix_html(records)}
+    {_matrix_html(records, selected)}
   </section>"""
         )
 
     return f"""
-<div id="{html.escape(root_id, quote=True)}" class="eegdash-api-volume-explorer" data-api-view="{html.escape(view, quote=True)}" data-api-url="{html.escape(api_url, quote=True)}" data-api-database="{html.escape(database, quote=True)}">
+<div id="{html.escape(root_id, quote=True)}" class="eegdash-api-volume-explorer">
   <div class="api-study-tooltip" hidden></div>
   <div class="api-contract-rail">
     <span>API source</span>
@@ -627,7 +633,7 @@ def _build_html(
   <div class="api-controls" aria-label="Dataset volume filters">
     <label class="api-select-field">
       <span>Facet</span>
-      <select class="api-facet-filter">{_option_html(records)}</select>
+      <select class="api-facet-filter">{_option_html(counts)}</select>
     </label>
     <label class="api-search-field">
       <span>Search</span>
@@ -970,6 +976,14 @@ _SCRIPT = """
   const clearButton = root.querySelector(".api-clear-filters");
   const status = root.querySelector(".api-filter-status");
   const tooltip = root.querySelector(".api-study-tooltip");
+  const studyRows = root.querySelectorAll(".api-study-row");
+  const studyPoints = root.querySelectorAll(".api-study-point");
+  const summaryItems = studyRows.length ? studyRows : studyPoints;
+  const filterables = [...studyRows, ...studyPoints];
+  const summaryDatasets = root.querySelector(".api-summary-datasets");
+  const summarySubjects = root.querySelector(".api-summary-subjects");
+  const summaryRecords = root.querySelector(".api-summary-records");
+  const summaryHours = root.querySelector(".api-summary-hours");
   const active = new Set();
   let tooltipTimer = null;
 
@@ -1000,9 +1014,7 @@ _SCRIPT = """
     let subjects = 0;
     let records = 0;
     let hours = 0;
-    const rows = root.querySelectorAll(".api-study-row");
-    const items = rows.length ? rows : root.querySelectorAll(".api-study-point");
-    items.forEach((row) => {
+    summaryItems.forEach((row) => {
       if (row.hasAttribute("hidden")) return;
       datasets += 1;
       subjects += Number(row.dataset.subjects || 0);
@@ -1010,10 +1022,6 @@ _SCRIPT = """
       const h = Number(row.dataset.hours || 0);
       if (Number.isFinite(h)) hours += h;
     });
-    const summaryDatasets = root.querySelector(".api-summary-datasets");
-    const summarySubjects = root.querySelector(".api-summary-subjects");
-    const summaryRecords = root.querySelector(".api-summary-records");
-    const summaryHours = root.querySelector(".api-summary-hours");
     if (summaryDatasets) summaryDatasets.textContent = datasets.toLocaleString();
     if (summarySubjects) summarySubjects.textContent = subjects.toLocaleString();
     if (summaryRecords) summaryRecords.textContent = records.toLocaleString();
@@ -1038,7 +1046,7 @@ _SCRIPT = """
   }
 
   function applyFilters() {
-    root.querySelectorAll(".api-study-row, .api-study-point").forEach((el) => {
+    filterables.forEach((el) => {
       if (matches(el)) el.removeAttribute("hidden");
       else el.setAttribute("hidden", "");
     });
@@ -1165,8 +1173,8 @@ def generate_api_study_explorer(
     view: str = "both",
 ) -> Path:
     """Generate the API-oriented dataset volume explorer."""
-    if view not in {"volume", "matrix", "both"}:
-        raise ValueError("view must be one of: 'volume', 'matrix', 'both'")
+    if view not in _VIEWS:
+        raise ValueError(f"view must be one of: {_VIEWS}")
     records = _prepare_records(df)
     out_path = Path(out_html)
     out_path.parent.mkdir(parents=True, exist_ok=True)
@@ -1203,10 +1211,6 @@ def generate_api_study_explorer(
     )
 
 
-def _read_dataset(path: Path) -> pd.DataFrame:
-    return pd.read_csv(path, index_col=False, header=0, skipinitialspace=True)
-
-
 def main() -> None:
     parser = argparse.ArgumentParser(description="Generate the API study explorer.")
     parser.add_argument("source", type=Path, help="Path to dataset summary CSV")
@@ -1220,14 +1224,14 @@ def main() -> None:
     parser.add_argument("--database", default="eegdash")
     parser.add_argument(
         "--view",
-        choices=["volume", "matrix", "both"],
+        choices=list(_VIEWS),
         default="both",
         help="Which API explorer panel to render.",
     )
     args = parser.parse_args()
 
     output_path = generate_api_study_explorer(
-        _read_dataset(args.source),
+        read_dataset_csv(args.source),
         args.output,
         api_url=args.api_url,
         database=args.database,

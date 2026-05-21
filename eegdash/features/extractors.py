@@ -496,16 +496,16 @@ class FeatureExtractor(TrainableFeature):
         z, _metadata = self.preprocess(*x, _metadata=_metadata)
         preprocessor_f_und = get_underlying_func(self.preprocessor)
         for fname, f in self.feature_extractors_dict.items():
-            r, _ = _call_with_metadata(f, *z, _metadata=_metadata)
+            r, tmp_metadata = _call_with_metadata(f, *z, _metadata=_metadata)
             assert len(r) == 1
             r = r[0]
             f_und = get_underlying_func(f)
             if hasattr(f_und, "feature_kind"):
-                r = f_und.feature_kind(r, _metadata=_metadata)
+                r = f_und.feature_kind(r, _metadata=tmp_metadata)
             elif hasattr(preprocessor_f_und, "feature_kind") and not isinstance(
                 f_und, FeatureExtractor
             ):
-                r = preprocessor_f_und.feature_kind(r, _metadata=_metadata)
+                r = preprocessor_f_und.feature_kind(r, _metadata=tmp_metadata)
             if (not isinstance(fname, str) or not fname) and not isinstance(
                 f, FeatureExtractor
             ):
@@ -514,11 +514,11 @@ class FeatureExtractor(TrainableFeature):
                 prefix = f"{fname}_" if isinstance(fname, str) and fname else ""
                 for k, v in r.items():
                     self._add_feature_to_dict(
-                        results_dict, prefix + k, v, _metadata["batch_size"]
+                        results_dict, prefix + k, v, tmp_metadata["batch_size"]
                     )
             else:
                 self._add_feature_to_dict(
-                    results_dict, fname, r, _metadata["batch_size"]
+                    results_dict, fname, r, tmp_metadata["batch_size"]
                 )
         return results_dict
 

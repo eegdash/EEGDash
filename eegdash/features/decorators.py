@@ -58,9 +58,10 @@ __all__ = [
 
 _WRAPPER_ASSIGNMENTS = [
     *functools.WRAPPER_ASSIGNMENTS,
-    "parent_extractor_type",
     "feature_kind",
     "metadata_preprocessor",
+    "output_type",
+    "parent_extractor_type",
 ]
 SPHINX_BUILD = bool(os.environ.get("SPHINX_BUILD", ""))
 
@@ -163,9 +164,6 @@ def update_wrapper(
     are updated with the corresponding attribute from the wrapped
     function (defaults to functools.WRAPPER_UPDATES)
     """
-    if SPHINX_BUILD:  # fool sphinx
-        wrapped = _add_params(wrapped, wrapped, new_args)
-        return wrapped
     wrapped_f = get_underlying_func(wrapped)
     for attr in assigned:
         try:
@@ -396,18 +394,8 @@ def _preprocessor_output_type_wrap(
             "`output_type` must inherit from `BasePreprocessorOutputType`, "
             + f"got `{output_type}`."
         )
-    preprocessor_class = type(
-        preprocessor.__name__,
-        (output_type,),
-        {
-            "__call__": output_type._call_metadata
-            if "_metadata" in inspect.signature(preprocessor).parameters
-            else output_type._call,
-        },
-    )
-    preprocessor_instance = preprocessor_class(preprocessor)
-    preprocessor_instance = update_wrapper(preprocessor_instance, preprocessor)
-    return preprocessor_instance
+    preprocessor.output_type = output_type
+    return preprocessor
 
 
 def preprocessor_output_type(output_type: Type) -> Callable:

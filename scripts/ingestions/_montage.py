@@ -67,6 +67,7 @@ import logging
 import re
 import threading
 from collections.abc import Iterable
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
@@ -272,22 +273,91 @@ def _extract_tsv_layout(
 # ---------------------------------------------------------------------------
 
 
-def extract_eeg_layout(
-    data_file: Path, bids_root: Path
-) -> tuple[str, dict[str, Any]] | None:
-    """Scalp EEG: parse ``*_electrodes.tsv`` → hash-identified doc.
+# extract_eeg_layout removed (Phase 8 P2.1). EEG's "TSV first, then
+# template-match fallback" logic is now expressed by
+# ``_TSV_MODALITY_CONFIGS["eeg"]`` having ``template_fallback=True``;
+# :func:`_extract_layout_for_config` runs the cascade.
 
-    When no ``*_electrodes.tsv`` sidecar was published for the dataset,
-    fall back to matching ``*_channels.tsv`` names against MNE's
-    built-in standard montages and emit a template-derived layout. The
-    fallback doc is tagged ``source: "template-matched"`` so downstream
-    consumers can tell subject-specific positions apart from canonical
-    vendor-cap positions.
+
+@dataclass(frozen=True)
+class _ModalityConfig:
+    """Per-modality parametrization of :func:`_extract_tsv_layout`.
+
+    The 4 TSV-based modalities (EEG, iEEG, EMG, fNIRS) differ only in
+    these knobs; collecting them as a dataclass makes "what varies per
+    modality" a single named place instead of 4 functions with bespoke
+    kwarg patterns.
+
+    Per ROADMAP P2.1 — the implicit Seam between the 4 TSV-based
+    extractors becomes explicit: each modality is a named config, the
+    dispatcher reads from a dict, ``_extract_tsv_layout`` is called once.
     """
-    direct = _extract_tsv_layout(data_file, bids_root, modality="eeg")
+
+    modality: str
+    tsv_pattern: str = "*_electrodes.tsv"
+    extras: tuple[str, ...] = ("type", "material", "impedance")
+    min_sensors: int = 4
+    coord_suffix: str = "_electrodes.tsv"
+    # EEG-only: when *_electrodes.tsv is absent, fall back to
+    # matching channel-name list against MNE's standard montages.
+    template_fallback: bool = False
+
+
+_TSV_MODALITY_CONFIGS: dict[str, _ModalityConfig] = {
+    "eeg": _ModalityConfig(
+        modality="eeg",
+        template_fallback=True,
+    ),
+    "ieeg": _ModalityConfig(
+        modality="ieeg",
+        extras=("type", "hemisphere", "material", "impedance", "group", "size"),
+        min_sensors=1,
+    ),
+    "emg": _ModalityConfig(
+        modality="emg",
+        extras=("type", "material", "impedance", "coordinate_system", "group"),
+        min_sensors=2,
+    ),
+    "nirs": _ModalityConfig(
+        modality="nirs",
+        tsv_pattern="*_optodes.tsv",
+        extras=("type", "template_x", "template_y", "template_z"),
+        min_sensors=2,
+        coord_suffix="_optodes.tsv",
+    ),
+}
+
+
+def _extract_layout_for_config(
+    data_file: Path, bids_root: Path, config: _ModalityConfig
+) -> tuple[str, dict[str, Any]] | None:
+    """Run the TSV-based pipeline for one ``_ModalityConfig``.
+
+    Phase 8 P2.1 — replaces 4 thin ``extract_<modality>_layout``
+    wrapper functions with one config-driven helper. The dispatcher
+    in :func:`extract_layout` selects the right config by datatype
+    name and calls this helper.
+
+    For configs with ``template_fallback=True`` (EEG only today), the
+    helper tries ``_extract_tsv_layout`` first, then falls back to
+    template-matching when no ``*_electrodes.tsv`` is published.
+    """
+    direct = _extract_tsv_layout(
+        data_file,
+        bids_root,
+        modality=config.modality,
+        tsv_pattern=config.tsv_pattern,
+        extras=config.extras,
+        min_sensors=config.min_sensors,
+        coord_suffix=config.coord_suffix,
+    )
     if direct is not None:
         return direct
-    return _extract_template_from_channels(data_file, bids_root, modality="eeg")
+    if config.template_fallback:
+        return _extract_template_from_channels(
+            data_file, bids_root, modality=config.modality
+        )
+    return None
 
 
 # ---------------------------------------------------------------------------
@@ -589,22 +659,10 @@ def _extract_template_from_channels(
 # ---------------------------------------------------------------------------
 
 
-def extract_ieeg_layout(
-    data_file: Path, bids_root: Path
-) -> tuple[str, dict[str, Any]] | None:
-    """Intracranial EEG: positions in brain space (no radius sanity).
-
-    The 2D sphere viewer can't render these today, but cataloguing the
-    hash still deduplicates identical grids across subjects for future
-    glass-brain viewers.
-    """
-    return _extract_tsv_layout(
-        data_file,
-        bids_root,
-        modality="ieeg",
-        extras=("type", "hemisphere", "material", "impedance", "group", "size"),
-        min_sensors=1,
-    )
+# extract_ieeg_layout removed (Phase 8 P2.1) — its body was a thin
+# wrapper over ``_extract_tsv_layout``. The kwargs now live in
+# ``_TSV_MODALITY_CONFIGS["ieeg"]`` and the dispatcher in
+# :func:`extract_layout` invokes ``_extract_layout_for_config``.
 
 
 # ---------------------------------------------------------------------------
@@ -1070,31 +1128,11 @@ def extract_meg_layout(
 # ---------------------------------------------------------------------------
 
 
-def extract_emg_layout(
-    data_file: Path, bids_root: Path
-) -> tuple[str, dict[str, Any]] | None:
-    """Surface EMG: parse ``*_electrodes.tsv`` with body-landmark frames.
-
-    EMG differs from the scalp modalities in three ways worth knowing:
-
-    1. **Anatomical coordinate systems** — positions live in body-part
-       frames (e.g. HySER's ``ExtensorDistal`` / ``forearm``), not on a
-       head sphere. Hash dedupes across subjects; the 2D sphere viewer
-       can't render.
-    2. **Non-length units** — ``EMGCoordinateUnits`` is often
-       ``"percent"`` (normalised to anatomical landmarks). Preserved
-       verbatim; viewers that need mm must supply calibration.
-    3. **Per-row coordinate system** — one TSV can mix frames via the
-       optional ``coordinate_system`` column (HySER: 4 muscles × 64
-       electrodes in one file). Preserved on each sensor.
-    """
-    return _extract_tsv_layout(
-        data_file,
-        bids_root,
-        modality="emg",
-        extras=("type", "material", "impedance", "coordinate_system", "group"),
-        min_sensors=2,
-    )
+# extract_emg_layout removed (Phase 8 P2.1). EMG kwargs documented:
+# anatomical coord systems (HySER ExtensorDistal etc.), per-row
+# coordinate_system column, often percent units. All preserved in
+# ``_TSV_MODALITY_CONFIGS["emg"]``. See the config above for the
+# extras tuple including ``coordinate_system`` and ``group``.
 
 
 # ---------------------------------------------------------------------------
@@ -1102,39 +1140,15 @@ def extract_emg_layout(
 # ---------------------------------------------------------------------------
 
 
-def extract_fnirs_layout(
-    data_file: Path, bids_root: Path
-) -> tuple[str, dict[str, Any]] | None:
-    """fNIRS: parse ``*_optodes.tsv`` for source/detector positions.
-
-    ``*_channels.tsv`` declares source+detector pairings per measurement
-    channel; we don't decode the pairing here (keeps hash stable across
-    upstream channel-name churn). The optode ``type`` column is kept so
-    the viewer can distinguish sources from detectors.
-    """
-    return _extract_tsv_layout(
-        data_file,
-        bids_root,
-        modality="nirs",
-        tsv_pattern="*_optodes.tsv",
-        extras=("type", "template_x", "template_y", "template_z"),
-        min_sensors=2,
-        coord_suffix="_optodes.tsv",
-    )
+# extract_fnirs_layout removed (Phase 8 P2.1). fNIRS reads
+# ``*_optodes.tsv`` (not _electrodes.tsv) — that's the only thing
+# that distinguishes it from the other TSV modalities. See
+# ``_TSV_MODALITY_CONFIGS["nirs"]`` for the per-modality kwargs.
 
 
 # ---------------------------------------------------------------------------
 # Dispatcher
 # ---------------------------------------------------------------------------
-
-_DISPATCH = {
-    "eeg": extract_eeg_layout,
-    "ieeg": extract_ieeg_layout,
-    "meg": extract_meg_layout,
-    "emg": extract_emg_layout,
-    "nirs": extract_fnirs_layout,
-    "fnirs": extract_fnirs_layout,  # some older datasets use this token
-}
 
 
 def extract_layout(
@@ -1144,10 +1158,24 @@ def extract_layout(
 ) -> tuple[str, dict[str, Any]] | None:
     """Dispatch to the right per-modality extractor.
 
-    Returns ``None`` for unsupported datatypes (EMG, beh, etc.) so the
+    Phase 8 P2.1 — the dispatch now reads from
+    :data:`_TSV_MODALITY_CONFIGS` for the 4 TSV-based modalities
+    (EEG, iEEG, EMG, fNIRS). MEG remains a special case (sensor
+    positions in the FIF header, not a sidecar — ~190 LOC of header
+    streaming logic in :func:`extract_meg_layout`).
+
+    Returns ``None`` for unsupported datatypes (beh, etc.) so the
     caller can simply record ``layout_hash = None`` and move on.
+
+    Note: ``"fnirs"`` is accepted as an alias for ``"nirs"`` — some
+    older datasets use it as the datatype name.
     """
-    fn = _DISPATCH.get((datatype or "").lower())
-    if fn is None:
+    dt = (datatype or "").lower()
+    if dt == "meg":
+        return extract_meg_layout(data_file, bids_root)
+    if dt == "fnirs":  # alias for nirs in some older datasets
+        dt = "nirs"
+    config = _TSV_MODALITY_CONFIGS.get(dt)
+    if config is None:
         return None
-    return fn(data_file, bids_root)
+    return _extract_layout_for_config(data_file, bids_root, config)

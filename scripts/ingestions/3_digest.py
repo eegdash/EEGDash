@@ -1105,13 +1105,17 @@ def extract_record(
             )
             if raw.n_times and raw.n_times > 0:
                 ntimes = int(raw.n_times)
-        except Exception:
+        except (OSError, ValueError, RuntimeError, KeyError):
+            # MNE's brainvision reader: OSError on missing companion
+            # files, ValueError on malformed header, RuntimeError on
+            # unsupported variant. n_times stays unset; downstream
+            # code falls back to other sources.
             pass
         finally:
             if raw is not None:
                 try:
                     raw.close()
-                except Exception:
+                except (OSError, AttributeError):
                     pass
 
     # FIF fallback using MNE
@@ -2559,8 +2563,15 @@ def digest_dataset(
             dataset=dataset_id,
             allow_symlinks=True,
         )
-    except Exception as e:
-        # Fallback to manifest-based digestion if BIDS parsing fails
+    except (
+        OSError,
+        ValueError,
+        KeyError,
+        FileNotFoundError,
+        PermissionError,
+    ) as e:
+        # EEGBIDSDataset can raise on missing required structure or
+        # broken symlinks. Programmer errors propagate per Phase 9 F1.
         if has_manifest:
             return digest_from_manifest(dataset_id, input_dir, output_dir)
         return {
@@ -2585,15 +2596,17 @@ def digest_dataset(
         try:
             with open(manifest_path) as f:
                 manifest_data = json.load(f)
-        except Exception:
+        except (OSError, json.JSONDecodeError, ValueError):
+            # Manifest optional; absent or malformed is fine.
             pass
 
-    # Extract Dataset metadata
+    # Extract Dataset metadata. Recoverable failures become an error
+    # dataset record so the rest of the pipeline can continue.
     try:
         dataset_meta = extract_dataset_metadata(
             bids_dataset, dataset_id, source, digested_at, metadata=manifest_data
         )
-    except Exception as e:
+    except (OSError, ValueError, KeyError, TypeError, AttributeError) as e:
         dataset_meta = {
             "dataset_id": dataset_id,
             "source": source,
@@ -2606,7 +2619,8 @@ def digest_dataset(
             dataset_id, source, file_paths, dataset_dir
         )
         dataset_meta["ingestion_fingerprint"] = fingerprint
-    except Exception:
+    except (OSError, ValueError, KeyError):
+        # Fingerprint is an optimisation; failures don't block ingest.
         pass
 
     # Extract Record metadata for each file
@@ -2657,8 +2671,18 @@ def digest_dataset(
                 layout_result = extract_layout(
                     Path(str(bids_file)), dataset_dir, datatype=record_datatype
                 )
-            except Exception as layout_exc:
-                # best-effort; missing sidecars are fine
+            except (
+                OSError,
+                ValueError,
+                KeyError,
+                TypeError,
+                AttributeError,
+            ) as layout_exc:
+                # extract_layout (electrode-coords pipeline) can fail on
+                # missing electrodes.tsv / coordsystem.json, malformed
+                # numeric fields, or unsupported montage variants.
+                # Best-effort; we still emit the Record without a
+                # montage hash.
                 layout_result = None
                 errors.append(
                     {
@@ -2684,7 +2708,10 @@ def digest_dataset(
             else:
                 record["montage_hash"] = None
             records.append(record)
-        except Exception as e:
+        except (OSError, ValueError, KeyError, TypeError, AttributeError) as e:
+            # extract_record can raise on missing sidecars / malformed
+            # data. Per-file failure goes into errors[]; programmer
+            # errors propagate per Phase 9 F1.
             errors.append({"file": str(bids_file), "error": str(e)})
 
     if not records:
@@ -2865,7 +2892,7 @@ def _dataset_boundary_profile(dataset_id: str, input_dir: Path) -> str:
                     f"zip_contents={zip_contents_count}",
                 ]
             )
-        except Exception as exc:
+        except (OSError, json.JSONDecodeError, ValueError) as exc:
             parts.append(f"manifest_error={exc}")
 
     try:
@@ -2873,7 +2900,7 @@ def _dataset_boundary_profile(dataset_id: str, input_dir: Path) -> str:
         root_dirs = sum(1 for p in root_entries if p.is_dir())
         root_files = sum(1 for p in root_entries if p.is_file() or p.is_symlink())
         parts.extend([f"root_dirs={root_dirs}", f"root_files={root_files}"])
-    except Exception as exc:
+    except (OSError, PermissionError) as exc:
         parts.append(f"root_scan_error={exc}")
 
     return " ".join(parts)
@@ -2927,7 +2954,13 @@ def _digest_dataset_worker(
                     dataset_id,
                     f"digest_dataset returned {type(result).__name__}, expected dict",
                 )
-        except BaseException as exc:
+        except BaseException as exc:  # noqa: BLE001
+            # Worker-process boundary: catch BaseException so the parent
+            # process learns about KeyboardInterrupt / SystemExit /
+            # MemoryError via the result_queue rather than silently
+            # losing the worker. Re-raising would not help — the parent
+            # is the one that needs to decide whether to retry, escalate,
+            # or shut down. Deliberate broad catch.
             result = _worker_error_result(
                 dataset_id,
                 f"{type(exc).__name__}: {exc}",
@@ -2971,14 +3004,17 @@ def _close_active_resources(active: dict[str, Any]) -> None:
     if result_queue is not None:
         try:
             result_queue.close()
-        except Exception:
+        except (OSError, ValueError, AttributeError):
+            # OSError: already closed. ValueError: queue in invalid
+            # state. AttributeError: not a real Queue. All best-effort.
             pass
 
     process = active.get("process")
     if process is not None:
         try:
             process.close()
-        except Exception:
+        except (OSError, ValueError, AttributeError):
+            # Same best-effort contract as the queue close above.
             pass
 
 
@@ -3015,7 +3051,10 @@ def _collect_finished_process(active: dict[str, Any]) -> dict[str, Any]:
             f"worker exited without returning a result (exitcode={process.exitcode})",
             elapsed_seconds=elapsed,
         )
-    except Exception as exc:
+    except (OSError, EOFError, ValueError) as exc:
+        # OSError: pipe closed mid-read. EOFError: worker died before
+        # sending. ValueError: queue in invalid state. All map to a
+        # generic "could not collect" error record.
         result = _worker_error_result(
             dataset_id,
             f"failed to collect worker result: {type(exc).__name__}: {exc}",
@@ -3114,7 +3153,10 @@ def process_datasets_with_watchdog(
                         finished.append((key, result))
                         process.join(timeout=PROCESS_SHUTDOWN_TIMEOUT_SECONDS)
                         continue
-                    except Exception as e:
+                    except (queue.Empty, OSError, EOFError, ValueError) as e:
+                        # queue.Empty is the common case (no result yet).
+                        # OSError/EOFError: pipe / process gone.
+                        # ValueError: queue in invalid state.
                         print(
                             f"[QUEUE] No result yet for {dataset_id}: {type(e).__name__}",
                             flush=True,

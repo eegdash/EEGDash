@@ -154,13 +154,13 @@ For questions or further information, contact:
     <span class="right">168 (15), 175 (10), 181 (5), 82 (5), 43 (5), 68 (5) ch · iEEG · 500 Hz · 7 subjects, 45 recordings</span>
   </div>
   <div class="figpair-grid"><div class="figpair-cell figpair-montage"><details class="electrode-explorer">
-  <summary>Electrode layout — iEEG · 168 sensors — 168 channels</summary>
+  <summary>Electrode layout — iEEG · 175 sensors — 175 channels</summary>
   <iframe
-    data-src="https://electrodes.eegdash.org/?montage=93aadeb3de407cb4&embed=1"
+    data-src="https://electrodes.eegdash.org/?montage=2c6595d282768743&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
-    title="Topomap of iEEG · 168 sensors"
+    title="Topomap of iEEG · 175 sensors"
     referrerpolicy="no-referrer">
   </iframe>
 </details></div></div></div>

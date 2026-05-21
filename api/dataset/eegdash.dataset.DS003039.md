@@ -121,24 +121,7 @@ Each route was walked twice. Once while pressing buttons in a self-paced manner.
     <b>Fig. 01</b> Signal &amp; montage
     <span class="right">67 ch · EEG · 500 Hz · 19 subjects, 19 recordings</span>
   </div>
-  <div class="figpair-grid"><div class="figpair-cell figpair-trace"><details class="trace-viewer">
-  <summary>Live trace viewer — <strong>sub-019 · task-neurCorrYoung</strong></summary>
-  <p class="trace-viewer-caption">
-    Showing <strong>one</strong> representative recording out of
-    <strong>19 subjects and 19 recordings</strong> in this dataset.
-    Browse the full set on <a href="https://openneuro.org/datasets/ds003039" target="_blank" rel="noopener">OpenNeuro</a>;
-    drop any other <code>_eeg.{set,edf,bdf,vhdr}</code> file onto the
-    viewer (or pass <code>?eeg=&lt;url&gt;</code>) to inspect it.
-  </p>
-  <iframe
-    data-src="https://eegdash.github.io/eegdash-viewer/?dataset=ds003039&sub=019&task=neurCorrYoung&ext=set&embed=1"
-    loading="lazy"
-    width="100%" height="640"
-    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 1200px; display: block; background: transparent;"
-    title="Live EEG trace viewer for ds003039 — sub-019 · task-neurCorrYoung"
-    referrerpolicy="no-referrer">
-  </iframe>
-</details></div><div class="figpair-cell figpair-montage"><details class="electrode-explorer">
+  <div class="figpair-grid"><div class="figpair-cell figpair-montage"><details class="electrode-explorer">
   <summary>Electrode layout — EEG · 67 sensors — 67 channels</summary>
   <iframe
     data-src="https://electrodes.eegdash.org/?montage=13035a10e609db54&embed=1"

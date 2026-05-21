@@ -2,7 +2,7 @@
 
 # Computation times
 
-**00:27.025** total execution time for 3 files **from generated/auto_examples/tutorials/00_start_here**:
+**00:23.685** total execution time for 3 files **from generated/auto_examples/tutorials/00_start_here**:
 
 <style scoped>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet" />
@@ -19,6 +19,6 @@ $(document).ready( function () {
 
 | Example                                                                                                                                                                                                | Time      |   Mem (MB) |
 |--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------|------------|
-| [EEG recording to PyTorch DataLoader](plot_02_dataset_to_dataloader.md#sphx-glr-generated-auto-examples-tutorials-00-start-here-plot-02-dataset-to-dataloader-py) (`plot_02_dataset_to_dataloader.py`) | 00:11.730 |          0 |
-| [Find datasets with the EEGDash API](plot_00_first_search.md#sphx-glr-generated-auto-examples-tutorials-00-start-here-plot-00-first-search-py) (`plot_00_first_search.py`)                             | 00:09.282 |          0 |
-| [Load one EEG recording](plot_01_first_recording.md#sphx-glr-generated-auto-examples-tutorials-00-start-here-plot-01-first-recording-py) (`plot_01_first_recording.py`)                                | 00:06.013 |          0 |
+| [EEG recording to PyTorch DataLoader](plot_02_dataset_to_dataloader.md#sphx-glr-generated-auto-examples-tutorials-00-start-here-plot-02-dataset-to-dataloader-py) (`plot_02_dataset_to_dataloader.py`) | 00:10.404 |          0 |
+| [Find datasets with the EEGDash API](plot_00_first_search.md#sphx-glr-generated-auto-examples-tutorials-00-start-here-plot-00-first-search-py) (`plot_00_first_search.py`)                             | 00:09.375 |          0 |
+| [Load one EEG recording](plot_01_first_recording.md#sphx-glr-generated-auto-examples-tutorials-00-start-here-plot-01-first-recording-py) (`plot_01_first_recording.py`)                                | 00:03.906 |          0 |

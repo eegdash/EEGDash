@@ -107,8 +107,7 @@
   "identifier": "doi:10.82901/nemar.nm000103",
   "sameAs": [
     "https://doi.org/10.82901/nemar.nm000103",
-    "https://openneuro.org/datasets/nm000103",
-    "https://huggingface.co/datasets/EEGDash/nm000103"
+    "https://openneuro.org/datasets/nm000103"
   ],
   "citeAs": "Seyed Yahya Shirazi, Alexandre Franco, Maurício Scopel Hoffmann, Nathalia B. Esper, Dung Truong (20). Healthy Brain Network EEG - Not for Commercial Use. doi:10.82901/nemar.nm000103",
   "version": "1.9.0",
@@ -158,14 +157,6 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=nm000103",
       "encodingFormat": "text/html"
-    },
-    {
-      "@type": "cr:FileObject",
-      "@id": "nm000103-huggingface",
-      "name": "EEGDash/nm000103 on Hugging Face",
-      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
-      "contentUrl": "https://huggingface.co/datasets/EEGDash/nm000103",
-      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

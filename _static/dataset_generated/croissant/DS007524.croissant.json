@@ -89,8 +89,7 @@
   "identifier": "doi:10.18112/openneuro.ds007524.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds007524.v1.0.1",
-    "https://openneuro.org/datasets/ds007524",
-    "https://huggingface.co/datasets/EEGDash/ds007524"
+    "https://openneuro.org/datasets/ds007524"
   ],
   "citeAs": "Corentin Bel, Julie Bonnaire, Jean-Rémi King, Christophe Pallier (2026). LittlePrince_MEG_French_Read_Pallier2025. doi:10.18112/openneuro.ds007524.v1.0.1",
   "version": "1.6.0",
@@ -138,14 +137,6 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=ds007524",
       "encodingFormat": "text/html"
-    },
-    {
-      "@type": "cr:FileObject",
-      "@id": "ds007524-huggingface",
-      "name": "EEGDash/ds007524 on Hugging Face",
-      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
-      "contentUrl": "https://huggingface.co/datasets/EEGDash/ds007524",
-      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

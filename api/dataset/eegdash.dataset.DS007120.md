@@ -129,13 +129,13 @@ Japan Society for the Promotion of Science (JP22J23281, JP22KJ0323, and 20256057
     <span class="right">128 (13), 112 (10), 104 (5), 132 (4), 110 (4), 118 (3), 56 (2), 100 (2), 130 (2), 150 (2), 126 (2), 106 (2), 140 (2), 108 (2), 138 (2), 120 (2), 122, 144, 134, 84, 164, 116, 34, 156, 124, 98, 136 ch · iEEG · 1000 Hz · 65 subjects, 70 recordings</span>
   </div>
   <div class="figpair-grid"><div class="figpair-cell figpair-montage"><details class="electrode-explorer">
-  <summary>Electrode layout — iEEG · 56 sensors — 56 channels</summary>
+  <summary>Electrode layout — iEEG · 128 sensors — 128 channels</summary>
   <iframe
-    data-src="https://electrodes.eegdash.org/?montage=42f842de49580492&embed=1"
+    data-src="https://electrodes.eegdash.org/?montage=0039c793b7d72bb3&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
-    title="Topomap of iEEG · 56 sensors"
+    title="Topomap of iEEG · 128 sensors"
     referrerpolicy="no-referrer">
   </iframe>
 </details></div></div></div>

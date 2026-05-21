@@ -119,24 +119,7 @@ The database consists of a total of 382 electroencephalographic files from 19 pa
     <b>Fig. 01</b> Signal &amp; montage
     <span class="right">9 (382), 10 (2) ch · EEG · 256 Hz · 19 subjects, 384 recordings</span>
   </div>
-  <div class="figpair-grid"><div class="figpair-cell figpair-trace"><details class="trace-viewer">
-  <summary>Live trace viewer — <strong>sub-019 · ses-03 · task-cnos · run-6</strong></summary>
-  <p class="trace-viewer-caption">
-    Showing <strong>one</strong> representative recording out of
-    <strong>19 subjects and 384 recordings</strong> in this dataset.
-    Browse the full set on <a href="https://openneuro.org/datasets/ds003190" target="_blank" rel="noopener">OpenNeuro</a>;
-    drop any other <code>_eeg.{set,edf,bdf,vhdr}</code> file onto the
-    viewer (or pass <code>?eeg=&lt;url&gt;</code>) to inspect it.
-  </p>
-  <iframe
-    data-src="https://eegdash.github.io/eegdash-viewer/?dataset=ds003190&sub=019&ses=03&task=cnos&run=6&ext=vhdr&embed=1"
-    loading="lazy"
-    width="100%" height="640"
-    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 1200px; display: block; background: transparent;"
-    title="Live EEG trace viewer for ds003190 — sub-019 · ses-03 · task-cnos · run-6"
-    referrerpolicy="no-referrer">
-  </iframe>
-</details></div><div class="figpair-cell figpair-montage">
+  <div class="figpair-grid"><div class="figpair-cell figpair-montage">
 
 No scalp electrode layout is currently indexed for this
 dataset. Once the eegdash montage registry ingests it,

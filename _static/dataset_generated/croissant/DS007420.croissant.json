@@ -102,8 +102,7 @@
   "identifier": "doi:10.18112/openneuro.ds007420.v1.0.2",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds007420.v1.0.2",
-    "https://openneuro.org/datasets/ds007420",
-    "https://huggingface.co/datasets/EEGDash/ds007420"
+    "https://openneuro.org/datasets/ds007420"
   ],
   "citeAs": "Gao, Yuanyuan, Rogers, De’Ja, von Lühmann, Alexander, Ortega-Martinez, Antonio, Boas, David (2026). A Light Weight Multi-Distance fNIRS Dataset for Ball-Squeezing Task and Purposeful Motion Artifact Creation Task. doi:10.18112/openneuro.ds007420.v1.0.2",
   "version": "1.7.1",
@@ -154,14 +153,6 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=ds007420",
       "encodingFormat": "text/html"
-    },
-    {
-      "@type": "cr:FileObject",
-      "@id": "ds007420-huggingface",
-      "name": "EEGDash/ds007420 on Hugging Face",
-      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
-      "contentUrl": "https://huggingface.co/datasets/EEGDash/ds007420",
-      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

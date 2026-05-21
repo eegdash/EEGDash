@@ -84,8 +84,7 @@
   "identifier": "doi:10.18112/openneuro.ds007137.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds007137.v1.0.0",
-    "https://openneuro.org/datasets/ds007137",
-    "https://huggingface.co/datasets/EEGDash/ds007137"
+    "https://openneuro.org/datasets/ds007137"
   ],
   "citeAs": "Couperus, J.W., Bukach, C.M., Reed, C.L. (2025). PURSUE N2pc Visual Search. doi:10.18112/openneuro.ds007137.v1.0.0",
   "version": "1.8.0",
@@ -133,14 +132,6 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=ds007137",
       "encodingFormat": "text/html"
-    },
-    {
-      "@type": "cr:FileObject",
-      "@id": "ds007137-huggingface",
-      "name": "EEGDash/ds007137 on Hugging Face",
-      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
-      "contentUrl": "https://huggingface.co/datasets/EEGDash/ds007137",
-      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

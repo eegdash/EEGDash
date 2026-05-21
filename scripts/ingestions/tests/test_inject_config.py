@@ -468,3 +468,46 @@ def test_inject_config_accepts_database_only_in_api_set(tmp_path):
         dry_run=True,
     )
     assert c.database == "eegdash_v99_future"
+
+
+@respx.mock
+def test_inject_config_accepts_local_name_when_api_set_omits_it(tmp_path):
+    """Union semantics: a name in LOCAL_FALLBACK_DATABASES is accepted
+    even when the API set doesn't list it (API-side deprecation does
+    not break long-running scripts at config-construction time)."""
+    from _inject_config import clear_valid_databases_cache
+
+    clear_valid_databases_cache()
+    # API only returns 2 databases; eegdash_archive is in LOCAL_FALLBACK
+    # but NOT in the API response.
+    respx.get(f"{DEFAULT_API_URL}/admin/valid-databases").mock(
+        return_value=httpx.Response(200, json={"databases": ["eegdash", "eegdash_dev"]})
+    )
+
+    c = InjectConfig(
+        database="eegdash_archive",  # in LOCAL_FALLBACK, not in api_set
+        input=tmp_path,
+        dry_run=True,
+    )
+    assert c.database == "eegdash_archive"
+
+
+@respx.mock
+def test_fetch_valid_databases_caches_failure_to_avoid_repeated_network_hits():
+    """After a network failure, subsequent calls must return None
+    WITHOUT re-hitting the network."""
+    from _inject_config import clear_valid_databases_cache
+
+    clear_valid_databases_cache()
+    api_url = "https://failure-cache.example"
+    route = respx.get(f"{api_url}/admin/valid-databases").mock(
+        side_effect=httpx.ConnectError("boom")
+    )
+
+    # First call — hits the network, fails, caches the failure
+    assert fetch_valid_databases_from_api(api_url, token=None) is None
+    # Second + third calls — must be cached, route call_count stays 1
+    assert fetch_valid_databases_from_api(api_url, token=None) is None
+    assert fetch_valid_databases_from_api(api_url, token=None) is None
+
+    assert route.call_count == 1

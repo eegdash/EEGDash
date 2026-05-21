@@ -19,7 +19,6 @@ Usage:
     python validate_output.py --input digestion_output --strict
 """
 
-import argparse
 import json
 import re
 import sys
@@ -534,50 +533,34 @@ def validate_pre_digestion(input_dir: Path, verbose: bool = False) -> Validation
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        description="Validate digestion output for eegdash compatibility"
-    )
-    parser.add_argument(
-        "--input",
-        "-i",
-        type=Path,
-        default=Path("digestion_output"),
-        help="Input directory (digestion_output or data/cloned for --pre-check)",
-    )
-    parser.add_argument(
-        "--pre-check",
-        action="store_true",
-        help="Pre-digestion validation: check manifests have valid data files",
-    )
-    parser.add_argument(
-        "--verbose",
-        "-v",
-        action="store_true",
-        help="Print verbose output",
-    )
-    parser.add_argument(
-        "--strict",
-        action="store_true",
-        help="Treat warnings as errors (empty datasets become errors)",
-    )
-    parser.add_argument(
-        "--json",
-        action="store_true",
-        help="Output results as JSON",
-    )
+    # CLI + env var parsing + validation in one place (C7.1). The
+    # 30 lines of argparse boilerplate that used to live here are now
+    # declarative fields + validators on ValidateConfig. Tests construct
+    # ValidateConfig directly; this function stays the only argv-bound
+    # entry point.
+    from pydantic import ValidationError
 
-    args = parser.parse_args()
+    from _validate_config import load_validate_config_from_argv
 
-    if args.pre_check:
-        result = validate_pre_digestion(args.input, verbose=args.verbose)
+    try:
+        cfg = load_validate_config_from_argv()
+    except ValidationError as exc:
+        print("Config error(s):", file=sys.stderr)
+        for err in exc.errors():
+            field = ".".join(str(p) for p in err.get("loc", []))
+            print(f"  {field}: {err.get('msg')}", file=sys.stderr)
+        return 1
+
+    if cfg.pre_check:
+        result = validate_pre_digestion(cfg.input, verbose=cfg.verbose)
     else:
         result = validate_digestion_output(
-            args.input,
-            verbose=args.verbose,
-            strict=args.strict,
+            cfg.input,
+            verbose=cfg.verbose,
+            strict=cfg.strict,
         )
 
-    if args.json:
+    if cfg.json_output:
         output = {
             "valid": result.is_valid(),
             "stats": result.stats,
@@ -607,7 +590,7 @@ def main():
 
     # Exit with error code if validation failed
     # In strict mode, warnings also cause failure
-    if args.strict and result.warnings:
+    if cfg.strict and result.warnings:
         sys.exit(1)
     sys.exit(0 if result.is_valid() else 1)
 

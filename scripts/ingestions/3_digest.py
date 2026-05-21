@@ -3987,73 +3987,45 @@ def process_datasets_with_watchdog(
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        description="Digest BIDS datasets and generate Dataset + Record JSON for MongoDB."
-    )
-    parser.add_argument(
-        "--input",
-        type=Path,
-        default=Path("data/cloned"),
-        help="Directory containing cloned datasets (default: data/cloned/)",
-    )
-    parser.add_argument(
-        "--output",
-        type=Path,
-        default=Path("digestion_output"),
-        help="Output directory for JSON files (default: digestion_output/)",
-    )
-    parser.add_argument(
-        "--datasets",
-        nargs="+",
-        default=None,
-        help="Specific dataset IDs to digest (default: all)",
-    )
-    parser.add_argument(
-        "--workers",
-        type=int,
-        default=1,
-        help="Number of parallel workers (default: 1)",
-    )
-    parser.add_argument(
-        "--limit",
-        type=int,
-        default=None,
-        help="Maximum number of datasets to process (for testing)",
-    )
-    parser.add_argument(
-        "--dataset-timeout",
-        type=_positive_float,
-        default=DEFAULT_DATASET_TIMEOUT_SECONDS,
-        help=(
-            "Seconds to allow one dataset before killing its worker "
-            f"(default: {DEFAULT_DATASET_TIMEOUT_SECONDS:g})"
-        ),
-    )
+    # CLI + env var parsing + validation via Pydantic-settings (C7.2 —
+    # same pattern as _inject_config + _validate_config). Replaces the
+    # 40 lines of argparse + ``_positive_float`` custom-type boilerplate
+    # with declarative Field(gt=0, le=...) bounds.
+    from pydantic import ValidationError
 
-    args = parser.parse_args()
+    from _digest_config import load_digest_config_from_argv
+
+    try:
+        cfg = load_digest_config_from_argv()
+    except ValidationError as exc:
+        print("Config error(s):", file=sys.stderr)
+        for err in exc.errors():
+            field = ".".join(str(p) for p in err.get("loc", []))
+            print(f"  {field}: {err.get('msg')}", file=sys.stderr)
+        return 1
 
     # Find datasets
-    dataset_ids = find_datasets(args.input, args.datasets)
-    if args.limit:
-        dataset_ids = dataset_ids[: args.limit]
+    dataset_ids = find_datasets(cfg.input, cfg.datasets)
+    if cfg.limit:
+        dataset_ids = dataset_ids[: cfg.limit]
 
     print(f"Found {len(dataset_ids)} datasets to digest")
-    print(f"Workers: {args.workers}")
-    print(f"Dataset timeout: {args.dataset_timeout:g}s")
-    print_stall_boundary_diagnostics(dataset_ids, args.input)
+    print(f"Workers: {cfg.workers}")
+    print(f"Dataset timeout: {cfg.dataset_timeout:g}s")
+    print_stall_boundary_diagnostics(dataset_ids, cfg.input)
     print("=" * 60)
 
     # Create output directory
-    args.output.mkdir(parents=True, exist_ok=True)
+    cfg.output.mkdir(parents=True, exist_ok=True)
 
     # Process datasets under a watchdog even with one worker. This keeps
     # dataset-specific parser or filesystem stalls from freezing the batch.
     results, stats = process_datasets_with_watchdog(
         dataset_ids,
-        args.input,
-        args.output,
-        workers=args.workers,
-        dataset_timeout=args.dataset_timeout,
+        cfg.input,
+        cfg.output,
+        workers=cfg.workers,
+        dataset_timeout=cfg.dataset_timeout,
     )
 
     # Save batch summary
@@ -4066,7 +4038,7 @@ def main():
         ),
     }
 
-    batch_summary_path = args.output / "BATCH_SUMMARY.json"
+    batch_summary_path = cfg.output / "BATCH_SUMMARY.json"
     with open(batch_summary_path, "w") as f:
         json.dump(batch_summary, f, indent=2)
 

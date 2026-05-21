@@ -879,6 +879,14 @@ def extract_dataset_metadata(
         clinical_purpose=clinical_purpose,
     )
 
+    # C6.1 — extra BIDS-spec dataset_description.json fields beyond the
+    # basic name / license / authors set already passed to create_dataset.
+    # Covers Acknowledgements, HowToAcknowledge, EthicsApprovals,
+    # ReferencesAndLinks, GeneratedBy, SourceDatasets. See
+    # ROBUSTNESS/BIDS-GAP-AUDIT.md for the rationale.
+    description_extras = _extract_dataset_description_extras(description)
+    dataset.update(description_extras)
+
     return dict(dataset)
 
 
@@ -921,6 +929,183 @@ def _stamp_provenance(
     """
     if old_value is None and new_value is not None and provenance[field] is None:
         provenance[field] = source
+
+
+# ─── BIDS sidecar enrichment (C6.1 — BIDS-GAP-AUDIT.md) ────────────────────
+
+
+# Per-modality sidecar fields we surface on each Record (BIDS spec).
+# Mapping is camelCase-in-sidecar → snake_case-in-Record. Kept narrow
+# (highest-leverage fields per BIDS-GAP-AUDIT.md); easy to extend
+# without breaking older Records because RecordModel uses extra="allow".
+_BIDS_SIDECAR_RECORD_FIELDS: dict[str, str] = {
+    "PowerLineFrequency": "power_line_frequency",
+    "EEGReference": "eeg_reference",
+    "iEEGReference": "ieeg_reference",
+    "SoftwareFilters": "software_filters",
+    "HardwareFilters": "hardware_filters",
+    "Manufacturer": "manufacturer",
+    "ManufacturersModelName": "manufacturers_model_name",
+    "EEGPlacementScheme": "eeg_placement_scheme",
+    "CapManufacturer": "cap_manufacturer",
+    "CapManufacturersModelName": "cap_manufacturers_model_name",
+    "InstitutionName": "institution_name",
+    "RecordingType": "recording_type",
+    "RecordingDuration": "recording_duration",
+    "EEGGround": "eeg_ground",
+}
+
+
+def _extract_bids_sidecar_fields(bids_dataset: Any, bids_file: str) -> dict[str, Any]:
+    """Pull BIDS-spec sidecar fields beyond the technical-metadata cascade.
+
+    The cascade in ``_extract_technical_metadata`` only reads
+    sampling_frequency / nchans / ntimes / ch_names. This helper picks
+    up the OTHER required + recommended fields from the modality
+    sidecar (e.g. PowerLineFrequency, EEGReference, SoftwareFilters)
+    so they're queryable in MongoDB rather than just embedded as bytes
+    in ``sidecar_inline``.
+
+    Reads the modality JSON sidecar directly (BIDS inheritance: data
+    dir → session dir → subject dir → root) because
+    ``get_bids_file_attribute`` only handles a hardcoded list of keys
+    (sfreq / nchans / ntimes / subject / etc.) — arbitrary BIDS
+    fields like PowerLineFrequency aren't surfaced through that API.
+
+    Returns a dict of {snake_case_field: value}. Empty dict if no
+    sidecar found / nothing extractable. None values are NOT included
+    (so callers can ``record.update(...)`` without overwriting).
+
+    See ``BIDS-GAP-AUDIT.md`` for the full field list + rationale.
+    """
+    out: dict[str, Any] = {}
+
+    # Resolve the BIDS root + modality
+    try:
+        bids_root = Path(bids_dataset.bidsdir)
+        data_file = Path(bids_file)
+        modality = bids_dataset.get_bids_file_attribute("modality", bids_file) or "eeg"
+    except (AttributeError, TypeError):
+        return {}
+
+    # BIDS sidecar naming: ``<entities>_<modality>.json``. Walk up from
+    # the data file's parent to bids_root looking for the first match.
+    try:
+        from _montage import _walk_up_find as _walk
+    except ImportError:
+        return {}
+
+    json_pattern = f"*_{modality}.json"
+    sidecar = _walk(data_file, bids_root, json_pattern)
+    if sidecar is None or not sidecar.exists():
+        return {}
+
+    try:
+        data = json.loads(sidecar.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError, ValueError):
+        return {}
+
+    if not isinstance(data, dict):
+        return {}
+
+    for sidecar_key, record_key in _BIDS_SIDECAR_RECORD_FIELDS.items():
+        val = data.get(sidecar_key)
+        if val is None or val == "" or val == [] or val == {}:
+            continue
+        out[record_key] = val
+    return out
+
+
+def _extract_channel_status_counts(bids_dataset: Any, bids_file: str) -> dict[str, Any]:
+    """Pull per-channel status counts from channels.tsv (good / bad).
+
+    Returns ``{}`` when channels.tsv is absent or has no status column.
+    Otherwise returns ``{"bad_channels": [...], "bad_channels_count": N}``.
+
+    This is the structured counterpart to the raw bytes already inlined
+    via ``sidecar_inline``: instead of forcing every consumer to re-parse
+    the TSV, we surface the count + names at digest time.
+    """
+    import csv as _csv
+
+    # Walk up from the data file to find channels.tsv (BIDS inheritance).
+    try:
+        bids_root = Path(bids_dataset.bidsdir)
+        data_file = Path(bids_file)
+    except (AttributeError, TypeError):
+        return {}
+
+    # Reuse _montage.py's _walk_up_find — same BIDS-inheritance semantics.
+    try:
+        from _montage import _walk_up_find as _walk
+    except ImportError:
+        return {}
+
+    tsv = _walk(data_file, bids_root, "*_channels.tsv")
+    if tsv is None:
+        tsv = _walk(data_file, bids_root, "channels.tsv")
+    if tsv is None or not tsv.exists():
+        return {}
+
+    bad_channels: list[str] = []
+    try:
+        with open(tsv, encoding="utf-8") as f:
+            reader = _csv.DictReader(f, delimiter="\t")
+            if reader.fieldnames is None:
+                return {}
+            # Locate the status column case-insensitively
+            status_col = next(
+                (c for c in reader.fieldnames if c.lower() == "status"), None
+            )
+            name_col = next((c for c in reader.fieldnames if c.lower() == "name"), None)
+            if status_col is None or name_col is None:
+                return {}
+            for row in reader:
+                status = str(row.get(status_col, "")).strip().lower()
+                if status == "bad":
+                    name = str(row.get(name_col, "")).strip()
+                    if name:
+                        bad_channels.append(name)
+    except (OSError, _csv.Error, UnicodeDecodeError):
+        return {}
+
+    if not bad_channels:
+        # status column exists but no bad channels → still report 0
+        return {"bad_channels": [], "bad_channels_count": 0}
+    return {"bad_channels": bad_channels, "bad_channels_count": len(bad_channels)}
+
+
+# Dataset-level fields we surface from dataset_description.json beyond
+# the basic name / license / authors set already captured.
+_BIDS_DESCRIPTION_DATASET_FIELDS: dict[str, str] = {
+    "Acknowledgements": "acknowledgements",
+    "HowToAcknowledge": "how_to_acknowledge",
+    "EthicsApprovals": "ethics_approvals",
+    "ReferencesAndLinks": "references_and_links",
+    "GeneratedBy": "generated_by",
+    "SourceDatasets": "source_datasets",
+}
+
+
+def _extract_dataset_description_extras(
+    description: dict[str, Any],
+) -> dict[str, Any]:
+    """Pull extra BIDS-spec fields from dataset_description.json.
+
+    Returns a dict of {snake_case_field: value} for fields beyond the
+    basic name / license / authors / funding set already captured by
+    ``extract_dataset_metadata``. Empty values omitted.
+
+    See ``BIDS-GAP-AUDIT.md`` for the rationale (attribution +
+    regulatory metadata).
+    """
+    out: dict[str, Any] = {}
+    for desc_key, ds_key in _BIDS_DESCRIPTION_DATASET_FIELDS.items():
+        val = description.get(desc_key)
+        if val is None or val == "" or val == []:
+            continue
+        out[ds_key] = val
+    return out
 
 
 def _extract_technical_metadata(
@@ -1525,6 +1710,21 @@ def extract_record(
     # Records that fell through the cascade entirely).
     if any(v is not None for v in metadata_provenance.values()):
         record["_metadata_provenance"] = metadata_provenance
+
+    # C6.1 — capture the BIDS-spec sidecar fields beyond the technical-
+    # metadata cascade (PowerLineFrequency, EEGReference, SoftwareFilters,
+    # Manufacturer, EEGPlacementScheme, etc.). Surfaces them as
+    # structured Record fields so they're MongoDB-queryable rather
+    # than just embedded as bytes in sidecar_inline. See
+    # ROBUSTNESS/BIDS-GAP-AUDIT.md for the rationale.
+    sidecar_extras = _extract_bids_sidecar_fields(bids_dataset, bids_file)
+    record.update(sidecar_extras)
+
+    # Per-channel status counts from channels.tsv (good / bad).
+    # ``_bids.py:count_bad_channels`` exists but wasn't being called
+    # from extract_record — fixed in C6.1.
+    channel_status = _extract_channel_status_counts(bids_dataset, bids_file)
+    record.update(channel_status)
 
     return dict(record)
 

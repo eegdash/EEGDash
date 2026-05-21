@@ -15,6 +15,7 @@ from .complexity import (
 )
 from .connectivity import (
     connectivity_coherency_preprocessor,
+    connectivity_correlation,
     connectivity_imaginary_coherence,
     connectivity_lagged_coherence,
     connectivity_magnitude_square_coherence,
@@ -76,6 +77,7 @@ __all__ = [
     "complexity_lempel_ziv",
     # Connectivity
     "connectivity_coherency_preprocessor",
+    "connectivity_correlation",
     "connectivity_magnitude_square_coherence",
     "connectivity_imaginary_coherence",
     "connectivity_lagged_coherence",

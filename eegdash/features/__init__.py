@@ -29,6 +29,7 @@ from .feature_bank import (  # Complexity; Connectivity; CSP; Dimensionality; Si
     complexity_sample_entropy,
     complexity_svd_entropy,
     connectivity_coherency_preprocessor,
+    connectivity_correlation,
     connectivity_imaginary_coherence,
     connectivity_lagged_coherence,
     connectivity_magnitude_square_coherence,
@@ -143,6 +144,7 @@ __all__ = [
     "complexity_lempel_ziv",
     # Connectivity
     "connectivity_coherency_preprocessor",
+    "connectivity_correlation",
     "connectivity_magnitude_square_coherence",
     "connectivity_imaginary_coherence",
     "connectivity_lagged_coherence",

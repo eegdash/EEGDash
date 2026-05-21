@@ -29,10 +29,23 @@ from . import utils
 
 __all__ = [
     "connectivity_coherency_preprocessor",
+    "connectivity_correlation",
     "connectivity_magnitude_square_coherence",
     "connectivity_imaginary_coherence",
     "connectivity_lagged_coherence",
 ]
+
+
+@feature_predecessor()
+@channel_pairer_undirected
+@bivariate_feature
+def connectivity_correlation(x, /, *, _metadata, eps: float = 1e-15):
+    idx_x, idx_y = _metadata["ch_pair_iterator"].get_pair_iterators()
+    corr = np.empty((*x.shape[:-2], len(idx_x)))
+    for i in np.ndindex(x.shape[:-2]):
+        c = np.corrcoef(x[i])
+        corr[i, :] = c[idx_x, idx_y]
+    return corr
 
 
 @feature_predecessor()

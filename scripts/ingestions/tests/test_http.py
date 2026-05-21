@@ -187,6 +187,25 @@ def test_request_json_retry_disabled_with_retries_zero():
 
 @respx.mock
 @pytest.mark.usefixtures("_no_cache_env")
+def test_request_json_408_request_timeout_is_retried_by_default():
+    """408 Request Timeout is in DEFAULT_RETRY_STATUSES per Phase 9 audit-2 F2.
+
+    Some upstreams return 408 instead of 504 for the same case; the
+    client should treat both the same way.
+    """
+    route = respx.get(API).mock(
+        side_effect=[
+            httpx.Response(408),
+            httpx.Response(200, json={"ok": True}),
+        ]
+    )
+    payload, _ = request_json("GET", API, retries=2, backoff_factor=0.0)
+    assert payload == {"ok": True}
+    assert route.call_count == 2, "408 must be in DEFAULT_RETRY_STATUSES"
+
+
+@respx.mock
+@pytest.mark.usefixtures("_no_cache_env")
 def test_request_json_custom_retry_statuses():
     """Caller can supply a different retry-status set (e.g. add 418)."""
     route = respx.get(API).mock(

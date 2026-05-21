@@ -32,7 +32,12 @@ except ImportError:  # pragma: no cover - optional dependency
     hishel = None
 
 DEFAULT_USER_AGENT = "EEGDash-DataHarvester/1.0"
-DEFAULT_RETRY_STATUSES = {429, 500, 502, 503, 504}
+# RFC 9110 § 15.5.9: 408 Request Timeout SHOULD be retried by clients
+# (server saw the connection open but did not receive a complete request
+# in time — same root cause as a 504, just observed from the upstream
+# side). Most servers return 504 instead, but including 408 is hygiene
+# and survives upstreams that don't. Added in Phase 9 audit-2 F2.
+DEFAULT_RETRY_STATUSES = {408, 429, 500, 502, 503, 504}
 DEFAULT_TIMEOUT = 30.0
 
 RequestError = httpx.RequestError

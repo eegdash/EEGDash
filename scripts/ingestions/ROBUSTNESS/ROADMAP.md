@@ -115,24 +115,24 @@ TSV-based modality is now one config entry. MEG remains special-
 cased (its 190 LOC of FIF header streaming doesn't fit the TSV
 pattern). Snapshot tests passed byte-identically.
 
-### P2.2 — Format metadata parser Seam
+### P2.2 — Format metadata parser Seam ✅ DONE (commit per 2026-05-22)
 
-**Driver**: 6 parsers (`_set`, `_vhdr`, `_snirf`, `_mef3` + 2
-inlined). Implicit shared contract; smaller drift than P2.1.
+Closed by extracting `FormatParserResult` TypedDict, `FormatParser`
+Protocol, `get_parser_for_extension(ext)` factory, and moving the
+inline `_parse_edf_with_mne` into `_format_parser_registry.py`.
+FIF stays special-cased because its parser returns
+`(dict, is_split_bool)`. Snapshots stayed byte-identical.
 
-**Real driver**: lower urgency. Pick up after P2.1.
+### P2.3 — Pipeline orchestration ⏸️ DEFERRED per ADR 0002
 
-**Estimated effort**: 4 hours.
+The full orchestrator (`PipelineStage` Protocol + registry) is
+deferred — no driver yet (no new stage planned; the 9 CI workflows
+are stable). Partial-close in this round:
 
-### P2.3 — Pipeline orchestration
-
-**Driver**: 5 numbered stages share an implicit JSON contract;
-9 CI workflows duplicate the stage order.
-
-**Real driver**: planned new stage (e.g., `4.5_anonymise.py`).
-Until then: speculative.
-
-**Estimated effort**: 8-12 hours.
+- The implicit contract is documented in
+  `ROBUSTNESS/PIPELINE-CONTRACT.md` — a contributor can now read
+  the stage flow without tracing 5 scripts.
+- ADR 0002 records the deferral with anti-recommendations.
 
 ### P2.4 — Source-listing Seam — DEFERRED per ADR 0001
 

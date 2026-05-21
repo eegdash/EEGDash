@@ -60,6 +60,7 @@ jobs:
         #   2026-05-22 C3.1:      48  (_file_utils 40→54%, _github 31→54%)
         #   2026-05-22 C3.3:      49  (_snirf 28→78% via synthetic HDF5 fixture)
         #   2026-05-22 C3.4:      50  (_set 36→65% via synthetic MAT v5 fixture)
+        #   2026-05-22 C4.1:      51  (_http 64→84%, _parser_utils 48→80%)
         # Every PR that raises coverage MUST bump this floor in the
         # same commit so subsequent PRs can't regress.
         run: |
@@ -69,7 +70,7 @@ jobs:
             --cov-report=term-missing \
             --cov-report=html \
             --cov-report=xml \
-            --cov-fail-under=50
+            --cov-fail-under=51
       - name: Append coverage summary to job summary
         if: always()
         working-directory: scripts/ingestions

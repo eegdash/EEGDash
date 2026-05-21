@@ -2074,6 +2074,70 @@ def _fetch_subject_count_via_http(files: list, fallback: int) -> int:
     return subjects_count
 
 
+def _build_ctf_ds_records(
+    files: list,
+    dataset_id: str,
+    storage_base: str,
+    source: str,
+    digested_at: str,
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    """Synthesize one Record per CTF ``.ds`` directory referenced in the manifest.
+
+    CTF MEG datasets store one recording as a *directory* (``run-01_meg.ds``)
+    containing many small files. The manifest enumerates the inner files
+    individually, but downstream Records are per-recording, so we
+    de-duplicate to the containing ``.ds`` paths and emit one Record each.
+
+    Returns ``(records, errors)``. ``errors`` is the list of per-file
+    diagnostics from ``create_record`` failures.
+
+    Phase 8 follow-up extraction. Was an inline two-pass loop inside
+    :func:`_enumerate_via_manifest`.
+    """
+    ctf_ds_dirs: set[str] = set()
+    for file_info in files:
+        filepath = (
+            file_info.get("path", "") if isinstance(file_info, dict) else file_info
+        )
+        filepath_lower = filepath.lower()
+        if ".ds/" in filepath_lower:
+            # Extract the .ds directory path (everything up to and including ".ds")
+            ds_idx = filepath_lower.index(".ds/") + 3  # +3 to include ".ds"
+            ctf_ds_dirs.add(filepath[:ds_idx])  # use original case
+
+    records: list[dict[str, Any]] = []
+    errors: list[dict[str, Any]] = []
+    for ds_path in ctf_ds_dirs:
+        try:
+            entities = parse_bids_entities_from_path(ds_path)
+            detected_modality = detect_modality_from_path(ds_path)
+            record = create_record(
+                dataset=dataset_id,
+                storage_base=storage_base,
+                bids_relpath=ds_path,
+                subject=entities.get("subject"),
+                session=entities.get("session"),
+                task=entities.get("task"),
+                run=entities.get("run"),
+                acquisition=entities.get("acquisition"),
+                dep_keys=[],
+                datatype=entities.get("datatype", detected_modality),
+                suffix=entities.get("suffix", detected_modality),
+                storage_backend=get_storage_backend(source),
+                recording_modality=[detected_modality],
+                digested_at=digested_at,
+            )
+            records.append(dict(record))
+        except (KeyError, ValueError, TypeError) as e:
+            # create_record is pure: validation/conversion errors on a
+            # particular file go into the errors list; programmer
+            # errors (e.g., a misshapen storage_backend table)
+            # propagate per Phase 9 F1.
+            errors.append({"file": ds_path, "error": str(e)})
+
+    return records, errors
+
+
 def _enumerate_via_manifest(
     dataset_id: str,
     manifest: dict,
@@ -2214,51 +2278,11 @@ def _enumerate_via_manifest(
     records = []
     errors = []
 
-    # First pass: Extract unique CTF .ds directory paths from files inside them
-    # CTF MEG stores data in .ds directories, but manifests list individual files
-    ctf_ds_dirs = set()
-    for file_info in files:
-        if isinstance(file_info, dict):
-            filepath = file_info.get("path", "")
-        else:
-            filepath = file_info
-
-        filepath_lower = filepath.lower()
-        if ".ds/" in filepath_lower:
-            # Extract the .ds directory path (everything up to and including .ds)
-            ds_idx = filepath_lower.index(".ds/") + 3  # +3 to include ".ds"
-            ds_path = filepath[:ds_idx]  # Use original case
-            ctf_ds_dirs.add(ds_path)
-
-    # Create records for CTF .ds directories
-    for ds_path in ctf_ds_dirs:
-        try:
-            entities = parse_bids_entities_from_path(ds_path)
-            detected_modality = detect_modality_from_path(ds_path)
-
-            record = create_record(
-                dataset=dataset_id,
-                storage_base=storage_base,
-                bids_relpath=ds_path,
-                subject=entities.get("subject"),
-                session=entities.get("session"),
-                task=entities.get("task"),
-                run=entities.get("run"),
-                acquisition=entities.get("acquisition"),
-                dep_keys=[],
-                datatype=entities.get("datatype", detected_modality),
-                suffix=entities.get("suffix", detected_modality),
-                storage_backend=get_storage_backend(source),
-                recording_modality=[detected_modality],
-                digested_at=digested_at,
-            )
-            records.append(dict(record))
-        except (KeyError, ValueError, TypeError) as e:
-            # create_record is pure: validation/conversion errors on a
-            # particular file go into the errors list; programmer
-            # errors (e.g., a misshapen storage_backend table)
-            # propagate per Phase 9 F1.
-            errors.append({"file": ds_path, "error": str(e)})
+    ctf_records, ctf_errors = _build_ctf_ds_records(
+        files, dataset_id, storage_base, source, digested_at
+    )
+    records.extend(ctf_records)
+    errors.extend(ctf_errors)
 
     for file_info in files:
         if isinstance(file_info, dict):

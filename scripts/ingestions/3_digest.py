@@ -211,7 +211,9 @@ def detect_source(dataset_dir: Path) -> str:
             with open(manifest_path) as f:
                 manifest = json.load(f)
             manifest_src = manifest.get("source")
-        except Exception:
+        except (OSError, json.JSONDecodeError, ValueError, KeyError):
+            # Manifest is optional; absent or malformed -> fall back to
+            # heuristic source detection in _reconcile_source.
             manifest_src = None
 
     return _reconcile_source(manifest_src, dataset_id, context="detect_source")
@@ -268,10 +270,13 @@ def _parse_edf_with_mne(edf_path: Path) -> dict[str, Any] | None:
         finally:
             try:
                 raw.close()
-            except Exception:
+            except (OSError, AttributeError):
                 pass
 
-    except Exception:
+    except (OSError, ValueError, RuntimeError, KeyError, TypeError):
+        # MNE raises RuntimeError on unsupported variants, OSError on
+        # filesystem issues, ValueError on truncated header, KeyError on
+        # missing required fields. All recoverable parse failures.
         return None
 
 
@@ -335,10 +340,11 @@ def _parse_fif_with_mne(fif_path: Path) -> tuple[dict[str, Any] | None, bool]:
         finally:
             try:
                 raw.close()
-            except Exception:
+            except (OSError, AttributeError):
                 pass
 
-    except Exception:
+    except (OSError, ValueError, RuntimeError, KeyError, TypeError):
+        # Same recoverable parse-failure set as _parse_edf_with_mne.
         return None, False
 
 
@@ -477,7 +483,10 @@ def validate_companion_files(
                 result["errors"].append(
                     f"VHDR references missing data file: {data_file}"
                 )
-        except Exception:
+        except (OSError, ValueError, UnicodeDecodeError, KeyError):
+            # .vhdr is a permissive INI; extract_vhdr_references already
+            # tolerates malformed input. Anything escaping is
+            # filesystem-level and not worth blocking on.
             pass
 
     return result
@@ -520,7 +529,9 @@ def extract_dataset_metadata(
         try:
             with open(desc_path) as f:
                 description = json.load(f)
-        except Exception:
+        except (OSError, json.JSONDecodeError, ValueError):
+            # dataset_description.json missing or malformed → empty
+            # description dict; downstream code defaults each field.
             pass
 
     # Read README file
@@ -535,7 +546,9 @@ def extract_dataset_metadata(
                     [line.rstrip() for line in raw_readme.splitlines() if line.strip()]
                 )
                 break
-            except Exception:
+            except (OSError, UnicodeDecodeError):
+                # README absent / unreadable / non-UTF8. Try the next
+                # candidate filename in the list.
                 pass
 
     # Extract basic metadata
@@ -653,7 +666,17 @@ def extract_dataset_metadata(
                             handedness_distribution.get("a", 0) + 1
                         )
 
-        except Exception:
+        except (
+            pd.errors.ParserError,
+            pd.errors.EmptyDataError,
+            OSError,
+            UnicodeDecodeError,
+            ValueError,
+            KeyError,
+        ):
+            # participants.tsv malformed / unreadable / non-UTF8 / wrong
+            # encoding. Demographics stay empty; the rest of dataset
+            # metadata still gets emitted.
             pass
 
     # Warn when participants.tsv row count differs from sub-* folder count
@@ -921,7 +944,10 @@ def extract_record(
     ch_names = None
     try:
         ch_names = bids_dataset.channel_labels(bids_file)
-    except Exception:
+    except (FileNotFoundError, OSError, ValueError, KeyError, AttributeError):
+        # channels.tsv may be absent, a broken git-annex symlink, or
+        # malformed. Downstream code falls back to inferring channels
+        # from the binary header.
         pass
 
     # Prefer channel_labels count over sidecar nchans
@@ -1034,7 +1060,15 @@ def extract_record(
                                     if sampling_frequency:
                                         break
                         break  # Found a valid channels file
-                    except Exception:
+                    except (
+                        pd.errors.ParserError,
+                        pd.errors.EmptyDataError,
+                        OSError,
+                        UnicodeDecodeError,
+                        ValueError,
+                        KeyError,
+                    ):
+                        # channels.tsv malformed; try next search dir.
                         pass
 
     # ===========================================================

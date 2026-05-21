@@ -19,6 +19,8 @@ from functools import wraps
 from pathlib import Path
 from urllib.parse import unquote, urljoin, urlparse
 
+import httpx
+
 from _http import HTTPStatusError, RequestError, request_response
 
 logger = logging.getLogger(__name__)
@@ -86,7 +88,15 @@ def _fetch_scidb_path(
 
         return files
 
-    except Exception:
+    except (
+        httpx.RequestError,
+        httpx.HTTPStatusError,
+        KeyError,
+        ValueError,
+        json.JSONDecodeError,
+    ):
+        # External-service listing failure: network blip, HTTP error,
+        # or malformed JSON response. Treat the source as empty.
         return []
 
 
@@ -139,7 +149,15 @@ def _propfind_datarn(url: str, result: list, visited: set, depth: int = 0):
                     }
                 )
 
-    except Exception:
+    except (
+        httpx.RequestError,
+        httpx.HTTPStatusError,
+        KeyError,
+        ValueError,
+        json.JSONDecodeError,
+    ):
+        # Recoverable external-service failure; we already have partial
+        # `result`/`webdav_url` accumulated. Continue with what we have.
         pass
 
 
@@ -252,7 +270,8 @@ def peek_zip_contents(url: str, timeout: int = 30) -> list[dict] | None:
         url: Direct download URL for the ZIP file
         timeout: Request timeout in seconds
 
-    Returns:
+    Returns
+    -------
         List of {name, size, compressed_size} dicts, or None on error
 
     """
@@ -350,7 +369,12 @@ def peek_zip_contents(url: str, timeout: int = 30) -> list[dict] | None:
 
         return files if files else None
 
-    except Exception:
+    except (struct.error, UnicodeDecodeError, ValueError, IndexError) as e:
+        # ZIP central-directory parser. struct.error fires on truncated /
+        # garbage bytes; UnicodeDecodeError on filenames in unexpected
+        # encodings; IndexError on offsets past EOF. All recoverable —
+        # caller treats "no peek possible" as "skip the optimisation".
+        logger.debug("peek_zip_contents failed: %s", e)
         return None
 
 
@@ -391,7 +415,15 @@ def list_figshare_files(article_id: int | str, api_key: str = "") -> list[dict]:
 
         return result
 
-    except Exception:
+    except (
+        httpx.RequestError,
+        httpx.HTTPStatusError,
+        KeyError,
+        ValueError,
+        json.JSONDecodeError,
+    ):
+        # External-service listing failure: network blip, HTTP error,
+        # or malformed JSON response. Treat the source as empty.
         return []
 
 
@@ -446,7 +478,15 @@ def list_zenodo_files(record_id: int | str, api_key: str = "") -> list[dict]:
 
         return result
 
-    except Exception:
+    except (
+        httpx.RequestError,
+        httpx.HTTPStatusError,
+        KeyError,
+        ValueError,
+        json.JSONDecodeError,
+    ):
+        # External-service listing failure: network blip, HTTP error,
+        # or malformed JSON response. Treat the source as empty.
         return []
 
 
@@ -500,7 +540,15 @@ def list_osf_files(node_id: str, path: str = "/") -> list[dict]:
                 # Extract path from next URL and recurse
                 pass  # Simplified - OSF pagination rarely needed for single datasets
 
-    except Exception:
+    except (
+        httpx.RequestError,
+        httpx.HTTPStatusError,
+        KeyError,
+        ValueError,
+        json.JSONDecodeError,
+    ):
+        # Recoverable external-service failure; we already have partial
+        # `result`/`webdav_url` accumulated. Continue with what we have.
         pass
 
     return result
@@ -516,7 +564,8 @@ def list_scidb_files(
         version: Dataset version (default: V1)
         max_depth: Maximum recursion depth to prevent infinite loops
 
-    Returns:
+    Returns
+    -------
         List of file info dicts
 
     """
@@ -549,7 +598,15 @@ def list_datarn_files(source_url: str) -> list[dict]:
                 dist = ld_data.get("distribution", {})
                 if isinstance(dist, dict):
                     webdav_url = dist.get("contentUrl")
-    except Exception:
+    except (
+        httpx.RequestError,
+        httpx.HTTPStatusError,
+        KeyError,
+        ValueError,
+        json.JSONDecodeError,
+    ):
+        # Recoverable external-service failure; we already have partial
+        # `result`/`webdav_url` accumulated. Continue with what we have.
         pass
 
     if not webdav_url:
@@ -759,7 +816,8 @@ def build_manifest(
         metadata: Optional additional metadata from consolidated files.
                   ALL metadata is preserved to ensure no information loss.
 
-    Returns:
+    Returns
+    -------
         Manifest dict ready to be saved
 
     Note:
@@ -844,7 +902,8 @@ def list_local_bids_files(local_path: str | Path) -> list[dict]:
     Args:
         local_path: Path to local BIDS dataset directory
 
-    Returns:
+    Returns
+    -------
         List of file dicts with {name, size} for each file
 
     """

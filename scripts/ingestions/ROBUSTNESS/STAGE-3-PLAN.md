@@ -83,14 +83,26 @@ Not a quick win.
 
 To execute Stage 3 safely, the next session should:
 
-### Pre-flight (15 min)
+### Pre-flight (DONE — landed in this branch)
 
-1. Pick a real CC0 fixture dataset (e.g. one of the
-   `tests/fixtures/eeg/` triples — they're small enough to run digest
-   on in CI).
-2. Run the current `digest_dataset` against it; snapshot the 4 JSON
-   files into `tests/fixtures/digest_snapshots/`.
-3. Repeat for a manifest-only dataset (or construct a minimal one).
+1. ~~Pick a real CC0 fixture dataset~~ ✓ `ds_snapshot_vhdr` constructed
+   from the existing CC0 VHDR triple, wrapped in a minimal BIDS root
+   (`dataset_description.json` + `participants.tsv` + `sub-xp101/eeg/*`).
+2. ~~Run the current `digest_dataset` against it~~ ✓ produced 4 JSON
+   files in `tests/fixtures/digest_snapshots/outputs/ds_snapshot_vhdr/`.
+   Snapshot committed (force-added against `*.json` gitignore).
+3. ~~Snapshot comparison test~~ ✓ `tests/test_digest_snapshot.py` runs
+   `digest_dataset` against the fixture, sanitizes non-deterministic
+   fields (timestamps, absolute paths), and compares the 4 JSON files
+   field-by-field to the committed snapshot. 6 assertions across the
+   4 files + record count + fingerprint stability.
+
+**Manifest-only snapshot is NOT done yet** — the manifest path is
+exercised only via the Stage 2D bridge in tests. A future Stage 3
+should add a parallel `ds_snapshot_manifest` fixture (a synthetic
+`manifest.json` describing a few files) to cover the second algorithm.
+The BIDS path is the production hot path; the snapshot we have
+guards the right thing first.
 
 ### Extract bodies (60-90 min)
 

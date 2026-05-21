@@ -54,7 +54,6 @@ from eegdash.dataset._source_inference import (
 from eegdash.dataset.bids_dataset import _COMPANION_FILES, EEGBIDSDataset
 from eegdash.dataset.io import _repair_participants_tsv_ids
 from eegdash.schemas import (
-    NEMAR_ROOT_METADATA_FILES,
     Storage,
     create_dataset,
     create_record,
@@ -71,9 +70,7 @@ from _constants import (
     NEURO_MODALITIES,
 )
 from _file_utils import (
-    get_annex_file_key,
     get_annex_file_size,
-    read_inline_sidecar,
 )
 from _fingerprint import fingerprint_from_files, fingerprint_from_manifest
 from _mef3_parser import parse_mef3_metadata
@@ -81,6 +78,14 @@ from _montage import extract_layout
 from _set_parser import parse_set_metadata
 from _snirf_parser import parse_snirf_metadata
 from _vhdr_parser import parse_vhdr_metadata
+
+# Per-Source ingest behaviour (Phase 8 S1.thick). The orchestrator builds
+# one Adapter per Dataset; extract_dataset_metadata + extract_record
+# consume it via the optional ``source_adapter`` kwarg. The old
+# ``source: str`` / ``apex_sidecar_inline`` parameters remain for
+# back-compat; when ``source_adapter`` is provided it wins and the 4
+# if-ladders that used to live in this file go through the Adapter.
+from source_adapter import SourceAdapter, get_source_adapter
 
 DEFAULT_DATASET_TIMEOUT_SECONDS = 2 * 60
 WORKER_POLL_INTERVAL_SECONDS = 1.0
@@ -479,6 +484,7 @@ def extract_dataset_metadata(
     source: str,
     digested_at: str,
     metadata: dict | None = None,
+    source_adapter: "SourceAdapter | None" = None,
 ) -> dict[str, Any]:
     """Extract Dataset-level metadata from a BIDS dataset.
 
@@ -687,13 +693,16 @@ def extract_dataset_metadata(
     # Check for derivatives (processed data)
     data_processed = (bids_root / "derivatives").exists()
 
-    # Build source URL
-    source_url = None
-    if source == "openneuro":
-        source_url = f"https://openneuro.org/datasets/{dataset_id}"
-    elif source == "nemar":
-        source_url = f"https://nemar.org/dataexplorer/detail/{dataset_id}"
-    elif source == "gin":
+    # Build source URL via the SourceAdapter. OpenNeuro and NEMAR each
+    # return their canonical landing page; gin still has no Adapter
+    # override (ADR 0001) so the fallback handles its EEGManyLabs sub-path.
+    if source_adapter is not None:
+        source_url = source_adapter.dataset_url()
+    else:
+        source_url = None
+    if source_url is None and source == "gin":
+        # gin's project-sub-path doesn't fit the generic <base>/<id>
+        # shape; keep the inline builder until gin gets an Adapter.
         source_url = f"https://gin.g-node.org/EEGManyLabs/{dataset_id}"
 
     # Extract timestamps from metadata if available
@@ -855,6 +864,7 @@ def extract_record(
     source: str,
     digested_at: str,
     apex_sidecar_inline: dict[str, str] | None = None,
+    source_adapter: "SourceAdapter | None" = None,
 ) -> dict[str, Any]:
     """Extract Record metadata for a single BIDS file.
 
@@ -1203,24 +1213,24 @@ def extract_record(
     # (dataset_id, relpath)) referenced by record. Trigger to revisit:
     # >100 MB inline payload for a single dataset, OR an HBN/M3CV-style
     # ingest with a >500 KB participants.tsv.
-    annex_keys: dict[str, str] = {}
-    sidecar_inline: dict[str, str] = dict(apex_sidecar_inline or {})
-    if source == "nemar":
-        bids_root_path = bids_dataset.bidsdir  # already a Path
-        raw_annex_key = get_annex_file_key(Path(bids_file))
-        if raw_annex_key:
-            annex_keys[bids_relpath] = raw_annex_key
-        for dep in dep_keys:
-            dep_path = bids_root_path / dep
-            dep_annex_key = get_annex_file_key(dep_path)
-            if dep_annex_key:
-                annex_keys[dep] = dep_annex_key
-                continue
-            if dep in sidecar_inline:
-                continue
-            inline = read_inline_sidecar(dep_path)
-            if inline is not None:
-                sidecar_inline[dep] = inline
+    # Per-Source annex-key + inline-sidecar resolution via the
+    # SourceAdapter (Phase 8 S1.thick — was a NEMAR if-ladder here).
+    # OpenNeuro/Default return ({}, {}); NEMAR populates from its apex
+    # cache + per-file annex-key resolution.
+    if source_adapter is None:
+        # Lazy-build for callers that haven't migrated. Should be
+        # unreachable in production (digest_dataset always passes one).
+        source_adapter = get_source_adapter(source, dataset_id, bids_dataset.bidsdir)
+    bids_root_path = bids_dataset.bidsdir
+    dep_paths = [bids_root_path / dep for dep in dep_keys]
+    annex_keys, sidecar_inline = source_adapter.resolve_storage_extensions(
+        Path(bids_file), dep_paths
+    )
+    # ``apex_sidecar_inline`` is the legacy parameter; merge any caller-
+    # supplied entries that the Adapter didn't already provide.
+    if apex_sidecar_inline:
+        for k, v in apex_sidecar_inline.items():
+            sidecar_inline.setdefault(k, v)
 
     # Create record using the schema
     record = create_record(
@@ -2646,11 +2656,21 @@ def digest_dataset(
             # Manifest optional; absent or malformed is fine.
             pass
 
+    # Build the SourceAdapter once per Dataset; passed to both
+    # extract_dataset_metadata and extract_record. Owns NEMAR's apex
+    # cache + annex-key resolution as instance state (Phase 8 S1.thick).
+    source_adapter = get_source_adapter(source, dataset_id, bids_dataset.bidsdir)
+
     # Extract Dataset metadata. Recoverable failures become an error
     # dataset record so the rest of the pipeline can continue.
     try:
         dataset_meta = extract_dataset_metadata(
-            bids_dataset, dataset_id, source, digested_at, metadata=manifest_data
+            bids_dataset,
+            dataset_id,
+            source,
+            digested_at,
+            metadata=manifest_data,
+            source_adapter=source_adapter,
         )
     except (OSError, ValueError, KeyError, TypeError, AttributeError) as e:
         dataset_meta = {
@@ -2674,17 +2694,10 @@ def digest_dataset(
     errors = []
     montages: dict[str, dict[str, Any]] = {}
 
-    # NEMAR-only: read apex BIDS files once per dataset and reuse the
-    # decoded text across every record (Python str is immutable so the
-    # values are shared by reference). Cuts ~N × len(NEMAR_ROOT_METADATA_FILES)
-    # stat+read+decode calls per dataset.
-    apex_sidecar_inline: dict[str, str] = {}
-    if source == "nemar":
-        bids_root_path = bids_dataset.bidsdir
-        for root_name in NEMAR_ROOT_METADATA_FILES:
-            inline = read_inline_sidecar(bids_root_path / root_name)
-            if inline is not None:
-                apex_sidecar_inline[root_name] = inline
+    # Apex sidecar inline-prefetch is now owned by the SourceAdapter
+    # (NEMARAdapter builds the cache lazily on first
+    # resolve_storage_extensions call). The if-ladder that used to
+    # live here moved into source_adapter.NEMARAdapter._ensure_apex_cache.
 
     for bids_file in files:
         # Filter out non-neuro data files (sidecars, etc.)
@@ -2698,7 +2711,7 @@ def digest_dataset(
                 dataset_id,
                 source,
                 digested_at,
-                apex_sidecar_inline=apex_sidecar_inline,
+                source_adapter=source_adapter,
             )
             # Skip records for split FIF files with missing continuations
             if any(

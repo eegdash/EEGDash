@@ -65,6 +65,7 @@ jobs:
         #   2026-05-22 C5.1:      53  (_mef3 58→79% via real OpenNeuro .tmet fixture)
         #   2026-05-22 C6.2:      55  (BIDS sidecar enrichment + inject API tests)
         #   2026-05-22 C6.2+:     57  (5_inject helpers: load_*, _flatten, _sanitize, filter)
+        #   2026-05-22 C6.5:      58  (_inject_config Pydantic-settings + main() refactor)
         # Every PR that raises coverage MUST bump this floor in the
         # same commit so subsequent PRs can't regress.
         run: |
@@ -74,7 +75,7 @@ jobs:
             --cov-report=term-missing \
             --cov-report=html \
             --cov-report=xml \
-            --cov-fail-under=57
+            --cov-fail-under=58
       - name: Append coverage summary to job summary
         if: always()
         working-directory: scripts/ingestions

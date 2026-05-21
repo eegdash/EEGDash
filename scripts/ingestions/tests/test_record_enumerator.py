@@ -247,3 +247,223 @@ def test_stub_enumerate_raises_not_implemented(tmp_path: Path) -> None:
         bids.enumerate()
     with pytest.raises(NotImplementedError):
         manifest.enumerate()
+
+
+# ─── write_dataset_outputs — shared JSON writer (stage 2A) ────────────────
+
+
+def _make_minimal_result(
+    digest_method: str = "bids_filesystem",
+) -> EnumerationResult:
+    """Build a minimal but well-formed EnumerationResult for write tests."""
+    return EnumerationResult(
+        dataset_meta={
+            "dataset_id": "ds002893",
+            "source": "openneuro",
+            "name": "Test Dataset",
+            "ingestion_fingerprint": "abc123",
+        },
+        records=[
+            {
+                "dataset": "ds002893",
+                "bids_relpath": "sub-001/eeg/sub-001_eeg.set",
+                "storage": {"backend": "s3", "base": "s3://openneuro.org/ds002893"},
+                "recording_modality": ["eeg"],
+            }
+        ],
+        errors=[],
+        montages={},
+        digest_method=digest_method,
+    )
+
+
+def test_write_outputs_creates_all_four_json_files(tmp_path: Path) -> None:
+    """The helper writes _dataset / _records / _montages / _summary JSONs."""
+    from record_enumerator import write_dataset_outputs
+
+    result = _make_minimal_result()
+    summary = write_dataset_outputs(
+        tmp_path,
+        result,
+        dataset_id="ds002893",
+        source="openneuro",
+        digested_at="2026-05-21T12:00:00Z",
+    )
+
+    assert (tmp_path / "ds002893_dataset.json").exists()
+    assert (tmp_path / "ds002893_records.json").exists()
+    assert (tmp_path / "ds002893_montages.json").exists()
+    assert (tmp_path / "ds002893_summary.json").exists()
+    assert summary["status"] == "success"
+    assert summary["record_count"] == 1
+
+
+def test_write_outputs_montages_file_written_when_empty(tmp_path: Path) -> None:
+    """Behaviour change documented in STAGE-2-PLAN.md: _montages.json now
+    always written, even with no montages — downstream tooling can assume it."""
+    import json as json_mod
+
+    from record_enumerator import write_dataset_outputs
+
+    result = _make_minimal_result(digest_method="manifest_only")
+    write_dataset_outputs(
+        tmp_path,
+        result,
+        dataset_id="zenodo-999",
+        source="zenodo",
+        digested_at="2026-05-21T12:00:00Z",
+    )
+
+    montages_path = tmp_path / "zenodo-999_montages.json"
+    assert montages_path.exists()
+    payload = json_mod.loads(montages_path.read_text())
+    assert payload["montage_count"] == 0
+    assert payload["montages"] == []
+
+
+def test_write_outputs_summary_carries_digest_method(tmp_path: Path) -> None:
+    """Summary always includes digest_method (was only set on manifest path)."""
+    import json as json_mod
+
+    from record_enumerator import write_dataset_outputs
+
+    for method in ("bids_filesystem", "manifest_only"):
+        result = _make_minimal_result(digest_method=method)
+        write_dataset_outputs(
+            tmp_path,
+            result,
+            dataset_id=f"ds_{method}",
+            source="openneuro",
+            digested_at="2026-05-21T12:00:00Z",
+        )
+        summary = json_mod.loads((tmp_path / f"ds_{method}_summary.json").read_text())
+        assert summary["digest_method"] == method
+
+
+def test_write_outputs_status_no_neuro_files_when_records_empty(
+    tmp_path: Path,
+) -> None:
+    """Empty record list flips status to 'no_neuro_files'."""
+    import json as json_mod
+
+    from record_enumerator import write_dataset_outputs
+
+    result = EnumerationResult(
+        dataset_meta={"dataset_id": "ds_empty"},
+        records=[],
+        errors=[],
+        montages={},
+        digest_method="bids_filesystem",
+    )
+    write_dataset_outputs(
+        tmp_path,
+        result,
+        dataset_id="ds_empty",
+        source="openneuro",
+        digested_at="2026-05-21T12:00:00Z",
+    )
+    summary = json_mod.loads((tmp_path / "ds_empty_summary.json").read_text())
+    assert summary["status"] == "no_neuro_files"
+    assert summary["record_count"] == 0
+
+
+def test_write_outputs_total_files_kwarg_surfaces_in_summary(
+    tmp_path: Path,
+) -> None:
+    """``total_files`` (manifest path) preserved in summary; absent when
+    caller doesn't pass it (BIDS path)."""
+    import json as json_mod
+
+    from record_enumerator import write_dataset_outputs
+
+    write_dataset_outputs(
+        tmp_path,
+        _make_minimal_result(),
+        dataset_id="ds_with",
+        source="zenodo",
+        digested_at="now",
+        total_files=42,
+    )
+    s = json_mod.loads((tmp_path / "ds_with_summary.json").read_text())
+    assert s["total_files"] == 42
+
+    write_dataset_outputs(
+        tmp_path,
+        _make_minimal_result(),
+        dataset_id="ds_without",
+        source="openneuro",
+        digested_at="now",
+    )
+    s = json_mod.loads((tmp_path / "ds_without_summary.json").read_text())
+    assert "total_files" not in s
+
+
+def test_write_outputs_integrity_issue_enrichment(tmp_path: Path) -> None:
+    """Records with _has_missing_files get author/contact stamped from
+    Dataset meta (was inline in digest_dataset)."""
+    import json as json_mod
+
+    from record_enumerator import write_dataset_outputs
+
+    result = EnumerationResult(
+        dataset_meta={
+            "dataset_id": "ds_iss",
+            "authors": ["Curie M."],
+            "contact_info": "curie@radium.org",
+            "external_links": {"source_url": "https://example.org/ds_iss"},
+        },
+        records=[
+            {
+                "dataset": "ds_iss",
+                "bids_relpath": "sub-01/eeg/sub-01_eeg.edf",
+                "_has_missing_files": True,
+                "_data_integrity_issues": ["channels.tsv missing"],
+            }
+        ],
+        errors=[],
+        montages={},
+        digest_method="bids_filesystem",
+    )
+    summary = write_dataset_outputs(
+        tmp_path,
+        result,
+        dataset_id="ds_iss",
+        source="openneuro",
+        digested_at="now",
+    )
+    assert summary["integrity_issues_count"] == 1
+
+    records = json_mod.loads((tmp_path / "ds_iss_records.json").read_text())
+    rec = records["records"][0]
+    assert rec["_dataset_authors"] == ["Curie M."]
+    assert rec["_dataset_contact"] == "curie@radium.org"
+    assert rec["_source_url"] == "https://example.org/ds_iss"
+
+
+def test_write_outputs_uses_json_default_serializer(tmp_path: Path) -> None:
+    """Path / datetime objects in metadata don't crash the writer."""
+    import json as json_mod
+    from datetime import datetime
+
+    from record_enumerator import write_dataset_outputs
+
+    result = EnumerationResult(
+        dataset_meta={
+            "dataset_id": "ds_paths",
+            "weird_path_field": Path("/tmp/somewhere"),
+            "weird_time_field": datetime(2026, 5, 21, 12, 0, 0),
+        },
+        records=[],
+        montages={},
+        digest_method="bids_filesystem",
+    )
+    write_dataset_outputs(
+        tmp_path,
+        result,
+        dataset_id="ds_paths",
+        source="openneuro",
+        digested_at="now",
+    )
+    dataset_payload = json_mod.loads((tmp_path / "ds_paths_dataset.json").read_text())
+    assert dataset_payload["weird_path_field"] == "/tmp/somewhere"
+    assert dataset_payload["weird_time_field"] == "2026-05-21T12:00:00"

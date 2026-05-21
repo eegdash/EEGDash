@@ -2578,6 +2578,117 @@ def digest_from_manifest(
     )
 
 
+def _attach_montage_to_record(
+    record: dict[str, Any],
+    bids_file: Any,
+    dataset_dir: Path,
+    montages: dict[str, dict[str, Any]],
+    dataset_id: str,
+    digested_at: str,
+) -> list[dict[str, Any]]:
+    """Run ``extract_layout`` for ``bids_file``; stamp the result on ``record``.
+
+    Side effects (intentional): mutates ``record`` (sets
+    ``montage_hash``) and ``montages`` (adds the layout doc on first
+    sighting of a hash). Returns a list of per-file errors (empty on
+    the happy path; one entry if ``extract_layout`` raises).
+
+    Phase 8 Stage-3 follow-up: extracted from the inline body of
+    :func:`_enumerate_via_bids`'s for-loop to drop it under 100 LOC.
+    """
+    record_datatype = (record.get("datatype") or "").lower()
+    errors: list[dict[str, Any]] = []
+    try:
+        layout_result = extract_layout(
+            Path(str(bids_file)), dataset_dir, datatype=record_datatype
+        )
+    except (OSError, ValueError, KeyError, TypeError, AttributeError) as exc:
+        # extract_layout (electrode-coords pipeline) can fail on missing
+        # electrodes.tsv / coordsystem.json, malformed numeric fields,
+        # or unsupported montage variants. Best-effort; we still emit
+        # the Record without a montage hash.
+        record["montage_hash"] = None
+        errors.append(
+            {"file": str(bids_file), "error": f"layout extraction failed: {exc}"}
+        )
+        return errors
+
+    if layout_result is None:
+        record["montage_hash"] = None
+        return errors
+
+    h, doc = layout_result
+    record["montage_hash"] = h
+    if h not in montages:
+        # First time we see this hash in this dataset — stamp the
+        # provenance fields that live outside the hashed content. The
+        # API upsert layer uses $setOnInsert so these don't get
+        # overwritten when the same hash appears in a later dataset.
+        doc["first_seen"] = digested_at
+        doc["representative_dataset"] = dataset_id
+        subject_entity = record.get("entities", {}).get("subject")
+        if subject_entity:
+            doc["representative_subject"] = f"sub-{subject_entity}"
+        montages[h] = doc
+    return errors
+
+
+def _build_one_record_from_bids(
+    bids_dataset: Any,
+    bids_file: Any,
+    dataset_id: str,
+    source: str,
+    source_adapter: SourceAdapter,
+    digested_at: str,
+    dataset_dir: Path,
+    montages: dict[str, dict[str, Any]],
+) -> tuple[dict[str, Any] | None, list[dict[str, Any]]]:
+    """Build one Record for one BIDS file; attach montage + dedup.
+
+    Returns ``(record, errors)``. ``record`` is ``None`` when the file
+    failed extraction entirely OR was skipped because it's a split-FIF
+    continuation without its companions. ``errors`` is the list of
+    per-file diagnostics to append to the caller's running errors list.
+
+    Phase 8 Stage-3 follow-up: extracted from the inline body of
+    :func:`_enumerate_via_bids`'s for-loop. Brings the helper under
+    the 100-LOC ceiling for the loop's orchestration.
+    """
+    errors: list[dict[str, Any]] = []
+    try:
+        record = extract_record(
+            bids_dataset,
+            bids_file,
+            dataset_id,
+            source,
+            digested_at,
+            source_adapter=source_adapter,
+        )
+    except (OSError, ValueError, KeyError, TypeError, AttributeError) as e:
+        # extract_record can raise on missing sidecars / malformed
+        # data. Per-file failure goes into errors[]; programmer
+        # errors propagate per Phase 9 F1.
+        errors.append({"file": str(bids_file), "error": str(e)})
+        return None, errors
+
+    # Skip records for split FIF files with missing continuations.
+    if any("Split FIF" in issue for issue in record.get("_data_integrity_issues", [])):
+        errors.append(
+            {
+                "file": str(bids_file),
+                "error": "Split FIF without continuation files — skipped",
+            }
+        )
+        return None, errors
+
+    errors.extend(
+        _attach_montage_to_record(
+            record, bids_file, dataset_dir, montages, dataset_id, digested_at
+        )
+    )
+    return record, errors
+
+
 def _enumerate_via_bids(
     dataset_dir: Path,
     dataset_id: str,
@@ -2657,84 +2768,28 @@ def _enumerate_via_bids(
         # Fingerprint is an optimisation; failures don't block ingest.
         pass
 
-    # Per-file extraction loop.
+    # Per-file extraction loop. Each iteration delegates to
+    # _build_one_record_from_bids which returns ``(record, errors)``.
     records: list[dict[str, Any]] = []
     errors: list[dict[str, Any]] = []
     montages: dict[str, dict[str, Any]] = {}
 
     for bids_file in files:
-        # Filter out non-neuro data files (sidecars, etc.)
         if not is_neuro_data_file(str(bids_file)):
             continue
-
-        try:
-            record = extract_record(
-                bids_dataset,
-                bids_file,
-                dataset_id,
-                source,
-                digested_at,
-                source_adapter=source_adapter,
-            )
-            # Skip records for split FIF files with missing continuations
-            if any(
-                "Split FIF" in issue
-                for issue in record.get("_data_integrity_issues", [])
-            ):
-                errors.append(
-                    {
-                        "file": str(bids_file),
-                        "error": "Split FIF without continuation files — skipped",
-                    }
-                )
-                continue
-            record_datatype = (record.get("datatype") or "").lower()
-            try:
-                layout_result = extract_layout(
-                    Path(str(bids_file)), dataset_dir, datatype=record_datatype
-                )
-            except (
-                OSError,
-                ValueError,
-                KeyError,
-                TypeError,
-                AttributeError,
-            ) as layout_exc:
-                # extract_layout (electrode-coords pipeline) can fail on
-                # missing electrodes.tsv / coordsystem.json, malformed
-                # numeric fields, or unsupported montage variants.
-                # Best-effort; we still emit the Record without a
-                # montage hash.
-                layout_result = None
-                errors.append(
-                    {
-                        "file": str(bids_file),
-                        "error": f"layout extraction failed: {layout_exc}",
-                    }
-                )
-            if layout_result is not None:
-                h, doc = layout_result
-                record["montage_hash"] = h
-                if h not in montages:
-                    # First time we see this hash in this dataset — stamp
-                    # the provenance fields that live outside the hashed
-                    # content. The API upsert layer uses $setOnInsert so
-                    # these don't get overwritten when the same hash
-                    # appears in a later dataset.
-                    doc["first_seen"] = digested_at
-                    doc["representative_dataset"] = dataset_id
-                    subject_entity = record.get("entities", {}).get("subject")
-                    if subject_entity:
-                        doc["representative_subject"] = f"sub-{subject_entity}"
-                    montages[h] = doc
-            else:
-                record["montage_hash"] = None
+        record, per_file_errors = _build_one_record_from_bids(
+            bids_dataset=bids_dataset,
+            bids_file=bids_file,
+            dataset_id=dataset_id,
+            source=source,
+            source_adapter=source_adapter,
+            digested_at=digested_at,
+            dataset_dir=dataset_dir,
+            montages=montages,
+        )
+        errors.extend(per_file_errors)
+        if record is not None:
             records.append(record)
-        except (OSError, ValueError, KeyError, TypeError, AttributeError) as e:
-            # extract_record can raise on missing sidecars / malformed
-            # data. Per-file failure goes into errors[]; programmer
-            # errors propagate per Phase 9 F1.
-            errors.append({"file": str(bids_file), "error": str(e)})
 
     return EnumerationResult(
         dataset_meta=dataset_meta,

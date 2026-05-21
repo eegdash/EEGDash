@@ -347,7 +347,10 @@ def validate_digestion_output(
 
             except json.JSONDecodeError as e:
                 result.add_error(dataset_id, f"Invalid JSON in dataset file: {e}")
-            except Exception as e:
+            except (OSError, KeyError, ValueError, TypeError) as e:
+                # OSError: file unreadable. KeyError: missing required
+                # field. ValueError/TypeError: malformed structure
+                # bubbled from validate_dataset. Recoverable per-dataset.
                 result.add_error(dataset_id, f"Error reading dataset: {e}")
 
         # Validate records
@@ -402,7 +405,9 @@ def validate_digestion_output(
 
             except json.JSONDecodeError as e:
                 result.add_error(dataset_id, f"Invalid JSON in records file: {e}")
-            except Exception as e:
+            except (OSError, KeyError, ValueError, TypeError) as e:
+                # Same accumulate-and-continue contract as the dataset
+                # branch above.
                 result.add_error(dataset_id, f"Error reading records: {e}")
 
         # Flag empty datasets
@@ -519,7 +524,8 @@ def validate_pre_digestion(input_dir: Path, verbose: bool = False) -> Validation
 
         except json.JSONDecodeError as e:
             result.add_error(dataset_id, f"Invalid JSON in manifest: {e}")
-        except Exception as e:
+        except (OSError, KeyError, ValueError, TypeError) as e:
+            # Manifest parse path: same accumulate-and-continue contract.
             result.add_error(dataset_id, f"Error reading manifest: {e}")
 
     result.source_distribution = dict(sources)

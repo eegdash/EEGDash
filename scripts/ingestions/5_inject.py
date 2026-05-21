@@ -48,6 +48,7 @@ import sys
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
+import httpx
 from tqdm import tqdm
 
 from _fingerprint import fingerprint_from_records
@@ -743,7 +744,9 @@ def main():
                         all_montages_by_hash[h] = m
                     montage_dataset_sources.setdefault(h, set()).add(dataset_id)
 
-        except Exception as e:
+        except (OSError, json.JSONDecodeError, KeyError, ValueError, TypeError) as e:
+            # Per-dataset load failure: file missing, JSON malformed, or
+            # expected structure absent. Continue with the rest.
             errors.append({"dataset": dataset_id, "error": str(e)})
             print(f"  Error loading {dataset_id}: {e}", file=sys.stderr)
 
@@ -845,7 +848,14 @@ def main():
                         print(
                             f"  Batch {i // ds_batch_size + 1}: {result.get('inserted_count', 0)} datasets"
                         )
-                    except Exception as e:
+                    except (
+                        httpx.RequestError,
+                        httpx.HTTPStatusError,
+                        ValueError,
+                        KeyError,
+                    ) as e:
+                        # Network failure or malformed batch. Record the
+                        # error; do not abort the entire injection.
                         stats["errors"] += 1
                         errors.append({"dataset": "datasets_batch", "error": str(e)})
                         print(
@@ -869,7 +879,12 @@ def main():
                     stats["records_injected"] += result.get("inserted_count", 0)
                     stats["records_updated"] += result.get("updated_count", 0)
 
-            except Exception as e:
+            except (
+                httpx.RequestError,
+                httpx.HTTPStatusError,
+                ValueError,
+                KeyError,
+            ) as e:
                 stats["errors"] += 1
                 errors.append({"dataset": "records_collection", "error": str(e)})
                 print(f"  Error injecting records: {e}", file=sys.stderr)
@@ -891,7 +906,12 @@ def main():
                     for err in result.get("errors", []):
                         errors.append({"dataset": "montages_collection", "error": err})
                         stats["errors"] += 1
-            except Exception as e:
+            except (
+                httpx.RequestError,
+                httpx.HTTPStatusError,
+                ValueError,
+                KeyError,
+            ) as e:
                 stats["errors"] += 1
                 errors.append({"dataset": "montages_collection", "error": str(e)})
                 print(f"  Error injecting montages: {e}", file=sys.stderr)
@@ -922,7 +942,14 @@ def main():
                         print(
                             f"  Stats computed for {stats['stats_computed']} datasets"
                         )
-                except Exception as e:
+                except (
+                    httpx.RequestError,
+                    httpx.HTTPStatusError,
+                    ValueError,
+                    KeyError,
+                ) as e:
+                    # Stats-compute step is optional — log a warning and
+                    # continue. The records / datasets are already written.
                     print(f"  Warning: Failed to compute stats: {e}", file=sys.stderr)
 
     # Print summary

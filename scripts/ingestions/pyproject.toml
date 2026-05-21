@@ -86,8 +86,8 @@ ignore = [
 # that we'll tidy mechanically when their owning file is next touched.
 # "2_clone.py"                  — bare-excepts swept in Phase 9 F1 fix (commit 14)
 "3_digest.py"                   = ["BLE001", "E741", "RUF003", "RUF005", "RUF013", "RUF046", "B007"]
-"4_validate_output.py"          = ["BLE001"]
-"5_inject.py"                   = ["BLE001"]
+# "4_validate_output.py"        — bare-excepts swept Phase 3 (commit 17)
+# "5_inject.py"                 — bare-excepts swept Phase 3 (commit 17)
 # "_bids.py"                    — bare-excepts swept in Phase 3 (commit 2)
 "_file_utils.py"                = ["E741", "RUF003", "RUF005"]  # bare-excepts swept Phase 3 (commit 16)
 # "_github.py"                  — bare-excepts swept in Phase 3 (commit 2). 2 deliberate broad

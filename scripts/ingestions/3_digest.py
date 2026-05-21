@@ -85,7 +85,11 @@ from _vhdr_parser import parse_vhdr_metadata
 # Stage 3 will collapse digest_dataset + digest_from_manifest into a
 # single orchestrator — see ROBUSTNESS/STAGE-3-PLAN.md for the
 # fixture-based verification approach.
-from record_enumerator import EnumerationResult, write_dataset_outputs
+from record_enumerator import (
+    EnumerationResult,
+    _has_actual_recording_files,
+    write_dataset_outputs,
+)
 
 # Per-Source ingest behaviour (Phase 8 S1.thick). The orchestrator builds
 # one Adapter per Dataset; extract_dataset_metadata + extract_record
@@ -2528,127 +2532,56 @@ def digest_from_manifest(
     )
 
 
-def digest_dataset(
+def _enumerate_via_bids(
+    dataset_dir: Path,
     dataset_id: str,
-    input_dir: Path,
-    output_dir: Path,
-) -> dict[str, Any]:
-    """Digest a single dataset and generate JSON output.
+    source: str,
+    source_adapter: SourceAdapter,
+    digested_at: str,
+    bids_dataset,
+    manifest_data: dict | None = None,
+) -> EnumerationResult:
+    """Build an :class:`EnumerationResult` by walking a BIDS filesystem.
 
-    Produces:
-    - {dataset_id}_dataset.json: Dataset-level metadata
-    - {dataset_id}_records.json: Per-file Record metadata
+    Phase 8 Stage 3 extraction: this body used to live inline inside
+    :func:`digest_dataset` (lines ~2596-2763 pre-extraction). It owns
+    the BIDS-filesystem algorithm — extract_dataset_metadata,
+    fingerprint, the per-file loop over ``extract_record`` +
+    ``extract_layout``, montage deduplication.
 
     Parameters
     ----------
+    dataset_dir : Path
+        Filesystem root of the cloned dataset.
     dataset_id : str
-        Dataset identifier
-    input_dir : Path
-        Directory containing cloned datasets
-    output_dir : Path
-        Directory for output JSON files
+        Dataset accession.
+    source : str
+        Source identifier (``"openneuro"``, ``"nemar"``, ...).
+    source_adapter : SourceAdapter
+        Per-Source ingest behaviour (already built by caller).
+    digested_at : str
+        ISO 8601 timestamp; stamped into every Record and the Dataset.
+    bids_dataset : EEGBIDSDataset
+        Already-loaded BIDS dataset object. The caller handles
+        construction failures and the manifest fallback decision.
+    manifest_data : dict, optional
+        Parsed ``manifest.json`` content for metadata enrichment.
 
     Returns
     -------
-    dict
-        Summary of digestion results
-
+    EnumerationResult
+        Dataset metadata, Records list, accumulated per-file errors,
+        deduplicated montages. ``records`` may be empty if every file
+        failed extraction or no files matched ``is_neuro_data_file``;
+        the orchestrator decides whether to fall back to the manifest
+        path or surface an "empty" status.
     """
-    # **SKIP CHECK**: If output already exists, skip reprocessing
-    output_dir_path = output_dir / dataset_id
-    if output_dir_path.exists():
-        return {
-            "status": "skipped",
-            "dataset_id": dataset_id,
-            "reason": "already digested",
-        }
-    dataset_dir = input_dir / dataset_id
-    dataset_output_dir = output_dir / dataset_id
-
-    if not dataset_dir.exists():
-        return {
-            "status": "skipped",
-            "dataset_id": dataset_id,
-            "reason": "directory not found",
-        }
-
-    # Check if this is an API-only source (has manifest.json but no actual files)
-    manifest_path = dataset_dir / "manifest.json"
-    has_manifest = manifest_path.exists()
-
-    # Check if there are actual EEG/MEG/fNIRS/iEEG files or symlinks (git-annex uses broken symlinks)
-    # We accept both real files and symlinks for metadata extraction
-    # Include .ds directories for CTF MEG format and .mefd directories for MEF3
-    has_actual_files = any(
-        f.suffix in [".set", ".edf", ".bdf", ".vhdr", ".fif", ".cnt", ".snirf", ".mefd"]
-        for f in dataset_dir.rglob("*")
-        if f.is_file() or f.is_symlink()  # Include symlinks for git-annex
-    ) or any(
-        (f.suffix == ".ds" and f.is_dir()) or (f.suffix == ".mefd" and f.is_dir())
-        for f in dataset_dir.rglob("*")
-    )
-
-    # For API-only sources, use manifest-based digestion
-    if has_manifest and not has_actual_files:
-        return digest_from_manifest(dataset_id, input_dir, output_dir)
-
-    # Detect source
-    source = detect_source(dataset_dir)
-
-    # Generate timestamp
-    digested_at = datetime.now(timezone.utc).isoformat()
-
-    # Repair participants.tsv ID mismatches before BIDS parsing
-    _repair_participants_tsv_ids(dataset_dir)
-
-    # Load BIDS dataset
-    try:
-        bids_dataset = EEGBIDSDataset(
-            data_dir=str(dataset_dir),
-            dataset=dataset_id,
-            allow_symlinks=True,
-        )
-    except (
-        OSError,
-        ValueError,
-        KeyError,
-        FileNotFoundError,
-        PermissionError,
-    ) as e:
-        # EEGBIDSDataset can raise on missing required structure or
-        # broken symlinks. Programmer errors propagate per Phase 9 F1.
-        if has_manifest:
-            return digest_from_manifest(dataset_id, input_dir, output_dir)
-        return {
-            "status": "error",
-            "dataset_id": dataset_id,
-            "error": f"Failed to load BIDS dataset: {e}",
-        }
-
     files = bids_dataset.get_files()
     if not files:
-        # Fallback to manifest-based digestion if no files found
-        if has_manifest:
-            return digest_from_manifest(dataset_id, input_dir, output_dir)
-        return {
-            "status": "empty",
-            "dataset_id": dataset_id,
-            "reason": "no neurophysiology files found",
-        }
-
-    manifest_data = None
-    if has_manifest:
-        try:
-            with open(manifest_path) as f:
-                manifest_data = json.load(f)
-        except (OSError, json.JSONDecodeError, ValueError):
-            # Manifest optional; absent or malformed is fine.
-            pass
-
-    # Build the SourceAdapter once per Dataset; passed to both
-    # extract_dataset_metadata and extract_record. Owns NEMAR's apex
-    # cache + annex-key resolution as instance state (Phase 8 S1.thick).
-    source_adapter = get_source_adapter(source, dataset_id, bids_dataset.bidsdir)
+        return EnumerationResult(
+            dataset_meta={"dataset_id": dataset_id, "source": source},
+            digest_method="bids_filesystem",
+        )
 
     # Extract Dataset metadata. Recoverable failures become an error
     # dataset record so the rest of the pipeline can continue.
@@ -2678,15 +2611,10 @@ def digest_dataset(
         # Fingerprint is an optimisation; failures don't block ingest.
         pass
 
-    # Extract Record metadata for each file
-    records = []
-    errors = []
+    # Per-file extraction loop.
+    records: list[dict[str, Any]] = []
+    errors: list[dict[str, Any]] = []
     montages: dict[str, dict[str, Any]] = {}
-
-    # Apex sidecar inline-prefetch is now owned by the SourceAdapter
-    # (NEMARAdapter builds the cache lazily on first
-    # resolve_storage_extensions call). The if-ladder that used to
-    # live here moved into source_adapter.NEMARAdapter._ensure_apex_cache.
 
     for bids_file in files:
         # Filter out non-neuro data files (sidecars, etc.)
@@ -2762,27 +2690,145 @@ def digest_dataset(
             # errors propagate per Phase 9 F1.
             errors.append({"file": str(bids_file), "error": str(e)})
 
-    if not records:
-        # Fallback to manifest-based digestion if no records extracted
-        if has_manifest:
-            return digest_from_manifest(dataset_id, input_dir, output_dir)
-        return {
-            "status": "error",
-            "dataset_id": dataset_id,
-            "error": "No records extracted",
-            "errors": errors,
-        }
-
-    # Hand off to the shared writer (Stage 2C — replaces the inline
-    # JSON-write block + integrity-issue enrichment + per-issue logging
-    # that used to live here. The helper owns all of it now.)
-    result = EnumerationResult(
+    return EnumerationResult(
         dataset_meta=dataset_meta,
         records=records,
         errors=errors,
         montages=montages,
         digest_method="bids_filesystem",
     )
+
+
+def digest_dataset(
+    dataset_id: str,
+    input_dir: Path,
+    output_dir: Path,
+) -> dict[str, Any]:
+    """Digest a single dataset and generate JSON output.
+
+    Phase 8 Stage 3: the body that used to live here moved to
+    :func:`_enumerate_via_bids` (the BIDS algorithm) and
+    :func:`write_dataset_outputs` (the JSON writes). What's left is
+    the orchestrator: skip-check, source detection, dispatch between
+    BIDS-fs and manifest paths.
+
+    Produces:
+    - {dataset_id}_dataset.json: Dataset-level metadata
+    - {dataset_id}_records.json: Per-file Record metadata
+    - {dataset_id}_montages.json: Deduplicated montage hashes
+    - {dataset_id}_summary.json: Per-Dataset summary
+
+    Parameters
+    ----------
+    dataset_id : str
+    input_dir : Path
+        Directory containing cloned datasets.
+    output_dir : Path
+        Directory for output JSON files.
+
+    Returns
+    -------
+    dict
+        Summary of digestion results.
+    """
+    # **SKIP CHECK**: If output already exists, skip reprocessing
+    output_dir_path = output_dir / dataset_id
+    if output_dir_path.exists():
+        return {
+            "status": "skipped",
+            "dataset_id": dataset_id,
+            "reason": "already digested",
+        }
+    dataset_dir = input_dir / dataset_id
+    dataset_output_dir = output_dir / dataset_id
+
+    if not dataset_dir.exists():
+        return {
+            "status": "skipped",
+            "dataset_id": dataset_id,
+            "reason": "directory not found",
+        }
+
+    # Check if this is an API-only source (has manifest.json but no actual files)
+    manifest_path = dataset_dir / "manifest.json"
+    has_manifest = manifest_path.exists()
+    has_actual_files = _has_actual_recording_files(dataset_dir)
+
+    # For API-only sources, use manifest-based digestion
+    if has_manifest and not has_actual_files:
+        return digest_from_manifest(dataset_id, input_dir, output_dir)
+
+    # Detect source, build the per-Dataset state shared with the helper.
+    source = detect_source(dataset_dir)
+    digested_at = datetime.now(timezone.utc).isoformat()
+    _repair_participants_tsv_ids(dataset_dir)
+
+    # Load BIDS dataset; the helper assumes it's already loaded so the
+    # fallback decision lives here (one place, mirrors the factory's
+    # rule 1 in record_enumerator.get_record_enumerator).
+    try:
+        bids_dataset = EEGBIDSDataset(
+            data_dir=str(dataset_dir),
+            dataset=dataset_id,
+            allow_symlinks=True,
+        )
+    except (
+        OSError,
+        ValueError,
+        KeyError,
+        FileNotFoundError,
+        PermissionError,
+    ) as e:
+        if has_manifest:
+            return digest_from_manifest(dataset_id, input_dir, output_dir)
+        return {
+            "status": "error",
+            "dataset_id": dataset_id,
+            "error": f"Failed to load BIDS dataset: {e}",
+        }
+
+    manifest_data = None
+    if has_manifest:
+        try:
+            with open(manifest_path) as f:
+                manifest_data = json.load(f)
+        except (OSError, json.JSONDecodeError, ValueError):
+            # Manifest optional; absent or malformed is fine.
+            pass
+
+    source_adapter = get_source_adapter(source, dataset_id, bids_dataset.bidsdir)
+
+    result = _enumerate_via_bids(
+        dataset_dir,
+        dataset_id,
+        source,
+        source_adapter,
+        digested_at,
+        bids_dataset,
+        manifest_data=manifest_data,
+    )
+
+    if not result.records:
+        # Fallback to manifest-based digestion if no records extracted.
+        # Two paths get folded here: the "no files matched" and the
+        # "all extractions failed" cases that used to be two separate
+        # if-blocks in the pre-Stage-3 orchestrator.
+        if has_manifest:
+            return digest_from_manifest(dataset_id, input_dir, output_dir)
+        # Distinguish "no neuro files" from "all extractions failed":
+        if result.errors:
+            return {
+                "status": "error",
+                "dataset_id": dataset_id,
+                "error": "No records extracted",
+                "errors": result.errors,
+            }
+        return {
+            "status": "empty",
+            "dataset_id": dataset_id,
+            "reason": "no neurophysiology files found",
+        }
+
     return write_dataset_outputs(
         dataset_output_dir,
         result,

@@ -89,7 +89,7 @@ ignore = [
 "4_validate_output.py"          = ["BLE001"]
 "5_inject.py"                   = ["BLE001"]
 # "_bids.py"                    — bare-excepts swept in Phase 3 (commit 2)
-"_file_utils.py"                = ["BLE001", "E741", "RUF003", "RUF005"]
+"_file_utils.py"                = ["E741", "RUF003", "RUF005"]  # bare-excepts swept Phase 3 (commit 16)
 # "_github.py"                  — bare-excepts swept in Phase 3 (commit 2). 2 deliberate broad
 #                                  catches remain around PyGithub's heterogeneous wrappings, each
 #                                  marked with an inline noqa: BLE001 + rationale.
@@ -99,7 +99,7 @@ ignore = [
 # "_set_parser.py"              — bare-excepts swept in Phase 3 (commit 1)
 # "_snirf_parser.py"            — bare-excepts swept in Phase 3 (commit 1)
 # "_validate.py"                — bare-excepts swept in Phase 3 (commit 2)
-"api_helper.py"                 = ["BLE001"]
+# "api_helper.py"               — bare-excepts swept Phase 3 (commit 16)
 # "inject_nemar_citations.py"   — swept Phase 3 (commit 15)
 # "patch_nemar_records_storage.py" — swept Phase 3 (commit 15)
 # "patch_nemar_source.py"       — swept Phase 3 (commit 15)

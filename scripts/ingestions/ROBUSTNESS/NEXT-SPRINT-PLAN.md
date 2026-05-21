@@ -118,6 +118,31 @@ ADR 0001 and 0002 share a shape that works:
 **Apply forward**: when deferring substantial work, write the ADR. The
 anti-recommendations are the load-bearing part — they prevent re-litigation.
 
+### 8. LOC drift goes the wrong way during enrichment
+
+The old `ROADMAP.md` (lines 173-194) said: *"the next round of leverage
+is in observability, not LOC reduction"*. That call was correct for
+the observability outcomes (provenance + telemetry shipped). But the
+LOC table at the bottom of that doc was never re-checked. Between
+C5 and C8 the over-ceiling functions grew:
+
+| Function | Roadmap stated | Today | Δ |
+|---|---:|---:|---:|
+| `_extract_technical_metadata` | 140 | **244** | **+74%** |
+| `extract_dataset_metadata` | 205 | **232** | +13% |
+| `extract_record` | 189 | **223** | +18% |
+| `digest_dataset` | 110 | **135** | +23% |
+
+C6's BIDS-sidecar enrichment added `_extract_bids_sidecar_fields`,
+`_extract_channel_status_counts`, `_extract_dataset_description_extras`
+as standalone helpers (good — those are deep). But the orchestration
+in `_extract_technical_metadata` absorbed +104 LOC of conditional
+wiring (cascade ordering, provenance stamping per step, VHDR/FIF
+special cases). The next sprint's Tier-1 #4 addresses this.
+
+**Apply forward**: every cycle that adds depth to leaves must
+re-check the root-function LOC table at close.
+
 ---
 
 ## Cluster integration details (for next sprint)
@@ -180,6 +205,15 @@ ssh sccn 'docker exec mongodb-production mongosh \
    Concrete fix: API exposes `GET /admin/valid-databases`; `InjectConfig`
    fetches at boot (with 5s cache). Real driver: production safety.
 
+4. **`_extract_technical_metadata` depth refactor.** The cascade
+   function grew 140 → 244 LOC across C5/C6 (BIDS-sidecar enrichment
+   absorbed orchestration logic). Refactor extracts a
+   `_metadata_cascade.py` module — small interface (`run(ctx) → result`),
+   five cascade-step adapters behind it. Real driver: cascade test
+   isolation (Lesson #3) + future "add 6th source" is one file.
+   Snapshot tests are the gate (byte-stable required). See
+   `SPRINT-2026-05-22-PLAN.md` Task 3.
+
 ### Tier 2 — Strong leverage if a driver appears
 
 4. **Real SNIRF fixture from OpenNeuro** (when fNIRS BIDS publishes one).
@@ -194,13 +228,16 @@ ssh sccn 'docker exec mongodb-production mongosh \
    code in `api/main.py`. Out-of-scope here (different repo) but worth
    tracking.
 
+7. **Cross-package `eegdash.dataset` lazy-load** (C2.5). Every cold
+   import pays a 3.6 s braindecode chain (`PERFORMANCE.md`). Out of
+   this repo's ingestions/ tree, but in scope for a follow-up PR.
+   Real driver: every user pays this on every cold import. Tier 2
+   (not 3) because the driver is universal, not hypothetical.
+
 ### Tier 3 — Speculative
 
-7. **Pipeline `ConfigBase`** (CONFIG-PATTERN.md caveat 3). DRY 4 configs.
+8. **Pipeline `ConfigBase`** (CONFIG-PATTERN.md caveat 3). DRY 4 configs.
    Payoff too small unless a 5th stage joins.
-
-8. **Cross-package eegdash.dataset lazy-load** (C2.5). Documented in
-   `PERFORMANCE.md`. 4s cold-import; out of scope for ingestions/.
 
 ---
 

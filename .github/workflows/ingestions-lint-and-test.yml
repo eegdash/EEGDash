@@ -46,13 +46,40 @@ jobs:
           cache: 'pip'
       - name: Install ingestion package + dev deps
         run: pip install -e "scripts/ingestions[dev]"
-      - name: Run tests (offline, no -m network)
+      - name: Run tests with coverage (offline)
         working-directory: scripts/ingestions
-        run: pytest -ra --tb=short -m "not network and not slow"
+        # Coverage gate per ROADMAP-C1.md C1.1. The floor (35%) is set
+        # just below the current baseline (36%) so any drop fails CI.
+        # Every PR that adds tests RATCHETS the floor up — never down.
+        # When a PR raises the actual coverage, bump --cov-fail-under
+        # in the same commit so subsequent PRs can't regress.
+        run: |
+          pytest -ra --tb=short \
+            -m "not network and not slow" \
+            --cov=. \
+            --cov-report=term-missing \
+            --cov-report=html \
+            --cov-report=xml \
+            --cov-fail-under=35
+      - name: Append coverage summary to job summary
+        if: always()
+        working-directory: scripts/ingestions
+        run: |
+          {
+            echo "## Coverage summary"
+            echo
+            echo "Floor: 35% (ratchets up per PR; see ROADMAP-C1.md C1.1)"
+            echo
+            echo '```'
+            python -m coverage report --skip-covered 2>/dev/null | tail -40 || echo "no coverage data"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
       - name: Upload coverage report
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: ingestions-coverage
-          path: scripts/ingestions/htmlcov/
+          path: |
+            scripts/ingestions/htmlcov/
+            scripts/ingestions/coverage.xml
           retention-days: 14

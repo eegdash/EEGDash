@@ -110,6 +110,27 @@ EXCLUDED_DATASETS = {
 DEFAULT_API_URL = "https://data.eegdash.org"
 
 
+def _default_workers() -> int:
+    """Pick a worker pool size from the CPU count, capped at 8.
+
+    Returns
+    -------
+    int
+        ``min(8, max(2, (os.cpu_count() or 2) * 2))``.
+
+    Notes
+    -----
+    Replaces the hard-coded ``max_workers=8`` flagged in
+    ``ROBUSTNESS/audit-1.md`` F4. CI workers run on anything from 2
+    vCPUs (GitHub free tier) to 16+ vCPUs (self-hosted runners); a
+    single magic constant is wrong for both extremes. The cap at 8
+    matches the previous behaviour for hosts with >= 4 vCPUs so this
+    is a non-regression on the original CI; smaller hosts now get a
+    sensible smaller pool.
+    """
+    return min(8, max(2, (os.cpu_count() or 2) * 2))
+
+
 def _sanitize_for_json(obj):
     """Sanitize object for JSON serialization, handling NaN/Inf floats."""
     if isinstance(obj, float):
@@ -395,7 +416,7 @@ def inject_records(
     # deadlock the main thread indefinitely. Per ROBUSTNESS/audit-1 F3.
     per_batch_timeout_s = 60.0
     wall_clock_budget_s = max(120.0, len(batches) * per_batch_timeout_s + 30.0)
-    with ThreadPoolExecutor(max_workers=8) as executor:
+    with ThreadPoolExecutor(max_workers=_default_workers()) as executor:
         futures = {
             executor.submit(
                 _bulk_upsert_batch,
@@ -456,7 +477,7 @@ def inject_montages(
     # Same timeout discipline as inject_records — see audit-1 F3.
     per_batch_timeout_s = 120.0
     wall_clock_budget_s = max(180.0, len(batches) * per_batch_timeout_s + 30.0)
-    with ThreadPoolExecutor(max_workers=8) as executor:
+    with ThreadPoolExecutor(max_workers=_default_workers()) as executor:
         futures = {
             executor.submit(
                 _bulk_upsert_batch,

@@ -388,7 +388,7 @@ def test_stress_parallel_inject_no_race_on_distinct_ids():
     """4 parallel inject_datasets calls with DISTINCT ids. Each should
     succeed without errors; rate-limiting shouldn't kick in for this
     volume (100 req/min limit per docker-compose; we're sending 4)."""
-    global _PARALLEL_PREFIX  # noqa: PLW0603 — module-level worker config
+    global _PARALLEL_PREFIX
     _PARALLEL_PREFIX = _stress_id("parallel")
 
     try:
@@ -408,7 +408,7 @@ def test_stress_parallel_upsert_same_record_no_duplicate():
     """4 parallel inject_records calls upserting the SAME composite key.
     After all settle, exactly 1 record should exist (composite-key upsert
     is the safety net for digest re-runs)."""
-    global _RACE_TEST_ID  # noqa: PLW0603 — module-level worker config
+    global _RACE_TEST_ID
     inject_mod = _load_inject()
     _RACE_TEST_ID = _stress_id("race")
 

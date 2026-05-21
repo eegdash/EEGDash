@@ -62,6 +62,7 @@ jobs:
         #   2026-05-22 C3.4:      50  (_set 36→65% via synthetic MAT v5 fixture)
         #   2026-05-22 C4.1:      51  (_http 64→84%, _parser_utils 48→80%)
         #   2026-05-22 C4.2:      52  (_github 54→85% via PyGithub fast-path mock)
+        #   2026-05-22 C5.1:      53  (_mef3 58→79% via real OpenNeuro .tmet fixture)
         # Every PR that raises coverage MUST bump this floor in the
         # same commit so subsequent PRs can't regress.
         run: |
@@ -71,7 +72,7 @@ jobs:
             --cov-report=term-missing \
             --cov-report=html \
             --cov-report=xml \
-            --cov-fail-under=52
+            --cov-fail-under=53
       - name: Append coverage summary to job summary
         if: always()
         working-directory: scripts/ingestions

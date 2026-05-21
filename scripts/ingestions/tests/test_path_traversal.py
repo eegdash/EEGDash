@@ -112,22 +112,48 @@ def test_extract_vhdr_references_accepts_in_tree_sibling(tmp_path: Path) -> None
 
 def test_extract_vhdr_references_rejects_dotdot_path(tmp_path: Path) -> None:
     """A DataFile= that escapes the parent dir is recorded but NOT
-    marked exists, even if the target happens to exist on disk."""
-    # Create a file outside the .vhdr's parent.
-    outside_file = tmp_path.parent / "evil_target.eeg"
-    outside_file.write_bytes(b"\x00")
+    marked exists, even when the target file ACTUALLY EXISTS where the
+    traversal resolves.
+
+    This is the critical test for the security check at the heart of
+    audit-3 F2: ``path_is_within_root(...) AND data_path.exists()``.
+    The naive bug (``or`` instead of ``and``, surfaced as mutmut
+    mutant 80) only manifests when BOTH:
+        - the path traversal puts the resolved target outside parent
+        - the target file actually exists on disk
+
+    The earlier version of this test had the outside file at the wrong
+    path, so ``data_path.exists()`` was also False — both ``and`` and
+    ``or`` returned False, and the test couldn't distinguish them.
+    """
+    inner = tmp_path / "dataset_root"
+    inner.mkdir()
+    # CRITICAL: place the target where ``../evil_target.eeg`` resolves
+    # from inside ``inner``, i.e. at ``tmp_path/evil_target.eeg``.
+    # If this file isn't created at that exact path, ``data_path.exists()``
+    # returns False and the test passes by accident even with a broken
+    # security check.
+    outside_target = tmp_path / "evil_target.eeg"
+    outside_target.write_bytes(b"\x00")
     try:
-        inner = tmp_path / "dataset_root"
-        inner.mkdir()
         vhdr = _write_vhdr(inner, "../evil_target.eeg")
-        refs = extract_vhdr_references(vhdr)
+        # Sanity: the target really does exist where the traversal points
+        from _vhdr_parser import extract_vhdr_references as _refs
+
+        assert (vhdr.parent / "../evil_target.eeg").resolve().exists(), (
+            "fixture bug: target file not at the resolved-traversal path"
+        )
+        refs = _refs(vhdr)
         # Field is still surfaced (we don't lie about what's in the file)
         assert refs["datafile"] == "../evil_target.eeg"
         # ... but it MUST NOT be treated as a valid sibling.
+        # If a code change weakens this (e.g., ``or`` instead of ``and``
+        # — mutmut mutant 80), the existence check overrides the
+        # containment check and this assertion fails.
         assert refs["datafile_exists"] is False
     finally:
-        if outside_file.exists():
-            outside_file.unlink()
+        if outside_target.exists():
+            outside_target.unlink()
 
 
 def test_extract_vhdr_references_rejects_absolute_path(tmp_path: Path) -> None:
@@ -139,12 +165,18 @@ def test_extract_vhdr_references_rejects_absolute_path(tmp_path: Path) -> None:
 
 
 def test_extract_vhdr_references_rejects_dotdot_markerfile(tmp_path: Path) -> None:
-    """MarkerFile= gets the same containment treatment as DataFile=."""
-    outside_marker = tmp_path.parent / "evil.vmrk"
+    """MarkerFile= gets the same containment treatment as DataFile=.
+
+    Same fixture shape as ``test_extract_vhdr_references_rejects_dotdot_path``:
+    the marker file is placed AT the path where the ``../`` traversal
+    resolves, so ``data_path.exists()`` is True and the test
+    distinguishes ``AND`` (correct) from ``OR`` (mutant 80 analog).
+    """
+    inner = tmp_path / "dataset_root"
+    inner.mkdir()
+    outside_marker = tmp_path / "evil.vmrk"  # where ../evil.vmrk resolves
     outside_marker.write_bytes(b"\x00")
     try:
-        inner = tmp_path / "dataset_root"
-        inner.mkdir()
         vhdr = _write_vhdr(inner, "sub-01_eeg.eeg", markerfile="../evil.vmrk")
         refs = extract_vhdr_references(vhdr)
         assert refs["markerfile"] == "../evil.vmrk"

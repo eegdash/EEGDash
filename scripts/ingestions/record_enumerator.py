@@ -309,10 +309,22 @@ class BIDSFilesystemEnumerator(RecordEnumerator):
         super().__init__(dataset_id, dataset_dir, source, source_adapter, digested_at)
 
     def enumerate(self) -> EnumerationResult:
-        # Wired in stage 2.
-        raise NotImplementedError(
-            "BIDSFilesystemEnumerator.enumerate is wired in stage 2"
+        """Delegate to the legacy BIDS algorithm body in ``3_digest.py``.
+
+        Stage 2D shim — runs ``digest_dataset`` against a temp output
+        dir and reads back the JSON files it writes. The extra
+        round-trip goes away in Stage 3 when the body moves in here.
+        """
+        from importlib.util import module_from_spec, spec_from_file_location
+
+        spec = spec_from_file_location(
+            "_legacy_digest", Path(__file__).parent / "3_digest.py"
         )
+        if spec is None or spec.loader is None:  # pragma: no cover
+            raise ImportError("could not load 3_digest.py for delegation")
+        digest_mod = module_from_spec(spec)
+        spec.loader.exec_module(digest_mod)
+        return _delegate_via_legacy(self, digest_mod.digest_dataset, "bids_filesystem")
 
 
 class ManifestEnumerator(RecordEnumerator):
@@ -328,8 +340,95 @@ class ManifestEnumerator(RecordEnumerator):
     """
 
     def enumerate(self) -> EnumerationResult:
-        # Wired in stage 2.
-        raise NotImplementedError("ManifestEnumerator.enumerate is wired in stage 2")
+        """Delegate to the legacy ``digest_from_manifest`` body (Stage 2D shim)."""
+        from importlib.util import module_from_spec, spec_from_file_location
+
+        spec = spec_from_file_location(
+            "_legacy_digest", Path(__file__).parent / "3_digest.py"
+        )
+        if spec is None or spec.loader is None:  # pragma: no cover
+            raise ImportError("could not load 3_digest.py for delegation")
+        digest_mod = module_from_spec(spec)
+        spec.loader.exec_module(digest_mod)
+        return _delegate_via_legacy(
+            self, digest_mod.digest_from_manifest, "manifest_only"
+        )
+
+
+def _delegate_via_legacy(
+    enumerator: RecordEnumerator,
+    legacy_fn: Any,
+    digest_method: str,
+) -> EnumerationResult:
+    """Stage-2D bridge: run a legacy digest function, read its output back.
+
+    Runs the legacy function against a fresh temp output dir, then loads
+    the four JSON files it writes and assembles an
+    :class:`EnumerationResult`. Stage 3 will eliminate this round-trip
+    by moving the algorithm body into the Adapter directly.
+
+    Parameters
+    ----------
+    enumerator : RecordEnumerator
+        The Adapter instance (provides dataset_id, dataset_dir).
+    legacy_fn : callable
+        Either ``digest_dataset`` or ``digest_from_manifest`` —
+        same ``(dataset_id, input_dir, output_dir) -> summary_dict`` shape.
+    digest_method : str
+        Either ``"bids_filesystem"`` or ``"manifest_only"``.
+
+    Returns
+    -------
+    EnumerationResult
+    """
+    import tempfile
+
+    with tempfile.TemporaryDirectory() as tmpd:
+        tmp_output = Path(tmpd)
+        input_dir = enumerator.dataset_dir.parent
+        summary = legacy_fn(enumerator.dataset_id, input_dir, tmp_output)
+
+        if summary.get("status") in ("skipped", "error", "empty"):
+            # Couldn't produce a full result — return a result that
+            # carries diagnostic info in errors[].
+            return EnumerationResult(
+                dataset_meta={"dataset_id": enumerator.dataset_id},
+                records=[],
+                errors=[
+                    {
+                        "file": enumerator.dataset_id,
+                        "error": summary.get("error") or summary.get("reason", ""),
+                        "status": summary.get("status"),
+                    }
+                ],
+                montages={},
+                digest_method=digest_method,
+            )
+
+        ds_dir = tmp_output / enumerator.dataset_id
+        dataset_meta = json.loads(
+            (ds_dir / f"{enumerator.dataset_id}_dataset.json").read_text()
+        )
+        records_doc = json.loads(
+            (ds_dir / f"{enumerator.dataset_id}_records.json").read_text()
+        )
+        montages_path = ds_dir / f"{enumerator.dataset_id}_montages.json"
+        montages_doc = (
+            json.loads(montages_path.read_text())
+            if montages_path.exists()
+            else {"montages": []}
+        )
+        montages_dict = {
+            m.get("hash", f"_anon_{i}"): m
+            for i, m in enumerate(montages_doc.get("montages", []))
+        }
+        return EnumerationResult(
+            dataset_meta=dataset_meta,
+            records=records_doc.get("records", []),
+            errors=[],
+            montages=montages_dict,
+            digest_method=digest_method,
+        )
 
 
 # ─── Shared output writer ─────────────────────────────────────────────

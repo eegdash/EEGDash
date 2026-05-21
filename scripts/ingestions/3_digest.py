@@ -79,6 +79,12 @@ from _set_parser import parse_set_metadata
 from _snirf_parser import parse_snirf_metadata
 from _vhdr_parser import parse_vhdr_metadata
 
+# Telemetry (ROADMAP P1.1). Default emitter is NullEmitter so digest
+# behaviour is unchanged when telemetry is disabled. Configure by
+# setting $EEGDASH_TELEMETRY_PATH or calling configure_telemetry() in
+# the caller.
+from digest_telemetry import TelemetryEvent, auto_configure_from_env, get_emitter
+
 # Record-enumeration Seam (Phase 8 S1.thick stage 2). Both legacy
 # functions in this file write their JSON outputs via this shared
 # helper, so the per-Dataset JSON shapes are documented in ONE place.
@@ -91,6 +97,10 @@ from record_enumerator import (
     get_record_enumerator,
     write_dataset_outputs,
 )
+
+# Install the env-driven emitter at module import time. Cheap if
+# $EEGDASH_TELEMETRY_PATH isn't set (returns the NullEmitter).
+auto_configure_from_env()
 
 # Per-Source ingest behaviour (Phase 8 S1.thick). The orchestrator builds
 # one Adapter per Dataset; extract_dataset_metadata + extract_record
@@ -3138,6 +3148,14 @@ def _build_one_record_from_bids(
         # data. Per-file failure goes into errors[]; programmer
         # errors propagate per Phase 9 F1.
         errors.append({"file": str(bids_file), "error": str(e)})
+        get_emitter().emit(
+            TelemetryEvent(
+                event_kind="record_failed",
+                dataset_id=dataset_id,
+                record_id=str(bids_file),
+                payload={"bids_file": str(bids_file), "error": str(e)},
+            )
+        )
         return None, errors
 
     # Skip records for split FIF files with missing continuations.
@@ -3148,11 +3166,39 @@ def _build_one_record_from_bids(
                 "error": "Split FIF without continuation files — skipped",
             }
         )
+        get_emitter().emit(
+            TelemetryEvent(
+                event_kind="record_failed",
+                dataset_id=dataset_id,
+                record_id=str(bids_file),
+                payload={
+                    "bids_file": str(bids_file),
+                    "error": "Split FIF without continuation files — skipped",
+                },
+            )
+        )
         return None, errors
 
     errors.extend(
         _attach_montage_to_record(
             record, bids_file, dataset_dir, montages, dataset_id, digested_at
+        )
+    )
+
+    # Emit successful record_built event with provenance payload (P1.1).
+    get_emitter().emit(
+        TelemetryEvent(
+            event_kind="record_built",
+            dataset_id=dataset_id,
+            record_id=record.get("bids_relpath"),
+            payload={
+                "bids_relpath": record.get("bids_relpath"),
+                "datatype": record.get("datatype"),
+                "sampling_frequency": record.get("sampling_frequency"),
+                "nchans": record.get("nchans"),
+                "ntimes": record.get("ntimes"),
+                "metadata_provenance": record.get("_metadata_provenance"),
+            },
         )
     )
     return record, errors
@@ -3327,6 +3373,15 @@ def digest_dataset(
     _repair_participants_tsv_ids(dataset_dir)
     source_adapter = get_source_adapter(source, dataset_id, dataset_dir)
 
+    # Telemetry: open the per-Dataset event stream.
+    get_emitter().emit(
+        TelemetryEvent(
+            event_kind="dataset_started",
+            dataset_id=dataset_id,
+            payload={"source": source, "dataset_dir": str(dataset_dir)},
+        )
+    )
+
     # Pick the Adapter via the factory. The factory's fallback rules
     # mirror what used to live as if-ladders inside this function:
     # no actual files -> ManifestEnumerator; otherwise BIDS path.
@@ -3372,13 +3427,28 @@ def digest_dataset(
             "reason": "no neurophysiology files found",
         }
 
-    return write_dataset_outputs(
+    summary = write_dataset_outputs(
         dataset_output_dir,
         result,
         dataset_id=dataset_id,
         source=source,
         digested_at=digested_at,
     )
+    get_emitter().emit(
+        TelemetryEvent(
+            event_kind="dataset_finished",
+            dataset_id=dataset_id,
+            payload={
+                "status": summary.get("status"),
+                "record_count": summary.get("record_count"),
+                "error_count": summary.get("error_count"),
+                "digest_method": summary.get("digest_method"),
+                "integrity_issues_count": summary.get("integrity_issues_count"),
+                "montage_count": summary.get("montage_count"),
+            },
+        )
+    )
+    return summary
 
 
 def _json_serializer(obj):

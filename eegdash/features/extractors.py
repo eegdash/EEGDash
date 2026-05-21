@@ -662,7 +662,7 @@ class FeatureExtractor(TrainableFeature):
             ):
                 fname = _get_func_name(get_underlying_func(f))
             if isinstance(f, FeatureExtractor):
-                prefix = f"{fname}_" if fname else ""
+                prefix = f"{fname}_" if isinstance(fname, str) and fname else ""
                 fnames.extend([prefix + fn for fn in f.feature_names])
             else:
                 fnames.append(fname)

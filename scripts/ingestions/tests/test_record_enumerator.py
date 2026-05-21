@@ -237,16 +237,47 @@ def test_record_enumerator_is_abstract():
         )
 
 
-def test_stub_enumerate_raises_not_implemented(tmp_path: Path) -> None:
-    """Stage-1 stub: enumerate() raises NotImplementedError on both Adapters."""
-    bids = BIDSFilesystemEnumerator(
-        "ds001", tmp_path, "openneuro", _make_adapter(), "now"
+def test_enumerate_returns_diagnostic_result_when_dataset_missing(
+    tmp_path: Path,
+) -> None:
+    """Stage 2D: enumerate() delegates to the legacy fn. When the dataset
+    doesn't exist, the legacy returns ``status='skipped'``; the Adapter
+    converts that into a result with the diagnostic in errors[].
+
+    Stage-1 used to assert NotImplementedError here; that's no longer
+    accurate now that the Adapters delegate to the real bodies.
+    """
+    # No dataset_dir/ds001/ tree exists, so digest_dataset returns
+    # ``status='skipped', reason='directory not found'``.
+    parent = tmp_path / "input"
+    parent.mkdir()
+    enumerator = BIDSFilesystemEnumerator(
+        "ds001", parent / "ds001", "openneuro", _make_adapter(), "now"
     )
-    manifest = ManifestEnumerator("z-001", tmp_path, "zenodo", _make_adapter(), "now")
-    with pytest.raises(NotImplementedError):
-        bids.enumerate()
-    with pytest.raises(NotImplementedError):
-        manifest.enumerate()
+    result = enumerator.enumerate()
+    assert isinstance(result, EnumerationResult)
+    assert result.records == []
+    assert len(result.errors) == 1
+    assert result.errors[0].get("status") == "skipped"
+
+
+def test_manifest_enumerate_returns_diagnostic_when_manifest_missing(
+    tmp_path: Path,
+) -> None:
+    """ManifestEnumerator: legacy fn returns ``status='skipped'`` when no
+    manifest.json. Adapter surfaces that as a diagnostic-only result."""
+    parent = tmp_path / "input"
+    (parent / "z-001").mkdir(parents=True)
+    enumerator = ManifestEnumerator(
+        "z-001", parent / "z-001", "zenodo", _make_adapter(), "now"
+    )
+    result = enumerator.enumerate()
+    assert isinstance(result, EnumerationResult)
+    assert result.records == []
+    assert len(result.errors) == 1
+    # Either "manifest.json not found" or empty-dir status — both
+    # come back via the diagnostic path.
+    assert result.errors[0].get("status") in ("skipped", "error", "empty")
 
 
 # ─── write_dataset_outputs — shared JSON writer (stage 2A) ────────────────

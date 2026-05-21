@@ -38,7 +38,12 @@ def run_step(step_name, command, cwd):
             print(f"\nError: {step_name} failed with return code {return_code}")
             sys.exit(return_code)
 
-    except Exception as e:
+    except (OSError, subprocess.SubprocessError) as e:
+        # OSError covers the child process failing to spawn (missing
+        # binary, permission). subprocess.SubprocessError is the parent
+        # class for TimeoutExpired / CalledProcessError if a future code
+        # path adds run-with-timeout. Programmer errors (KeyboardInterrupt
+        # excluded — those re-raise as BaseException).
         print(f"\nError running {step_name}: {e}")
         sys.exit(1)
 

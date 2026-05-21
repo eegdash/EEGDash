@@ -49,6 +49,7 @@ import os
 import re
 import sys
 
+import httpx
 from eegdash.http_api_client import get_client
 
 NM_PATTERN = re.compile(r"^nm\d+$")
@@ -168,7 +169,10 @@ def main() -> int:
     for dsid in ids:
         try:
             matched, modified = patch_dataset_records(client, dsid, apply=args.apply)
-        except Exception as e:
+        except (httpx.RequestError, httpx.HTTPStatusError, KeyError, ValueError) as e:
+            # Network/HTTP failures and malformed API responses are
+            # recoverable per-dataset — skip this one and continue.
+            # Programmer errors (TypeError, AttributeError) propagate.
             print(f"ERROR {dsid}: {e}", file=sys.stderr)
             continue
 

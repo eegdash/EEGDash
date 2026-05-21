@@ -100,10 +100,10 @@ ignore = [
 # "_snirf_parser.py"            — bare-excepts swept in Phase 3 (commit 1)
 # "_validate.py"                — bare-excepts swept in Phase 3 (commit 2)
 "api_helper.py"                 = ["BLE001"]
-"inject_nemar_citations.py"     = ["BLE001"]
-"patch_nemar_records_storage.py"= ["BLE001"]
-"patch_nemar_source.py"         = ["BLE001"]
-"time_openneuro_pipeline.py"    = ["BLE001"]
+# "inject_nemar_citations.py"   — swept Phase 3 (commit 15)
+# "patch_nemar_records_storage.py" — swept Phase 3 (commit 15)
+# "patch_nemar_source.py"       — swept Phase 3 (commit 15)
+# "time_openneuro_pipeline.py"  — swept Phase 3 (commit 15)
 
 [tool.ruff.lint.pydocstyle]
 convention = "numpy"

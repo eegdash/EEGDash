@@ -216,9 +216,12 @@ ssh sccn 'docker exec mongodb-production mongosh \
 
 ### Tier 2 — Strong leverage if a driver appears
 
-4. **Real SNIRF fixture from OpenNeuro** (when fNIRS BIDS publishes one).
-   Same C5.1 pattern. Currently no real .snirf on OpenNeuro; revisit when
-   one lands.
+4. **Real SNIRF fixture from OpenNeuro** — ✅ **DONE 2026-05-22** in
+   commit `998a28d1d`. OpenNeuro now publishes 26 fNIRS BIDS datasets;
+   landed `ds007554` (CC0, 731 KB, 10 Hz, 32 ch). The probe caught a
+   real bug (`_snirf_parser` never extracted `n_times`) — exactly the
+   C5.1 yield pattern. See `tests/test_snirf_real_fixture.py` and
+   `tests/fixtures/fnirs/LICENSE-ATTRIBUTION.md`.
 
 5. **Stage 1 fetch consolidation** (CONFIG-PATTERN.md caveat 2). 9 per-source
    scripts with their own argparse. Worth doing when a 10th source is added.

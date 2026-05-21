@@ -54,6 +54,7 @@ jobs:
         #   2026-05-22 C1.2:      38  (_serialize 0→93%, _validate 0→20%)
         #   2026-05-22 C1.5:      40  (_file_utils 24→40% via source-listing)
         #   2026-05-22 C2.1:      42  (_validate 20→76% via validator tests)
+        #   2026-05-22 C2.2:      44  (_bids 0→99%, _github 0→31%)
         # Every PR that raises coverage MUST bump this floor in the
         # same commit so subsequent PRs can't regress.
         run: |
@@ -63,7 +64,7 @@ jobs:
             --cov-report=term-missing \
             --cov-report=html \
             --cov-report=xml \
-            --cov-fail-under=42
+            --cov-fail-under=44
       - name: Append coverage summary to job summary
         if: always()
         working-directory: scripts/ingestions

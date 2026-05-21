@@ -376,12 +376,12 @@ class CascadeResult:
     def stamp(self, source: str, field_name: str, old: Any, new: Any) -> None:
         """Mark ``provenance[field_name] = source`` iff this step filled it.
 
-        "Filled" means: ``new`` differs from ``old`` AND ``new`` is not
-        None AND the field was previously unattributed. The first source
-        to fill a field wins — later sources don't overwrite. This
-        mirrors the legacy ``_stamp_provenance`` helper byte-for-byte.
+        First-writer-wins per field. Mirrors legacy
+        ``3_digest.py:_stamp_provenance``: only stamps when the field's prior
+        value was ``None`` AND the new value is non-None AND no source has
+        yet claimed the field.
         """
-        if old != new and new is not None and self.provenance[field_name] is None:
+        if old is None and new is not None and self.provenance[field_name] is None:
             self.provenance[field_name] = source
 
 

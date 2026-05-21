@@ -33,8 +33,8 @@ from .pick import (
 )
 from .signal import (
     signal_decorrelation_time,
+    signal_envelope_preprocessor,
     signal_filter_preprocessor,
-    signal_hilbert_preprocessor,
     signal_hjorth_activity,
     signal_hjorth_complexity,
     signal_hjorth_mobility,
@@ -92,7 +92,7 @@ __all__ = [
     "pick_channels_preprocessor",
     # Signal
     "signal_filter_preprocessor",
-    "signal_hilbert_preprocessor",
+    "signal_envelope_preprocessor",
     "signal_mean",
     "signal_variance",
     "signal_skewness",

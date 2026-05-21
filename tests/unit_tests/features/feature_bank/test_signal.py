@@ -32,14 +32,14 @@ def test_signal_hjorth_mobility():
     assert result.shape == (2,)
 
 
-def test_signal_hilbert_preprocessor():
-    """Test signal_hilbert_preprocessor (line 30)."""
+def test_signal_envelope_preprocessor():
+    """Test signal_envelope_preprocessor (line 30)."""
     import numpy as np
 
-    from eegdash.features.feature_bank.signal import signal_hilbert_preprocessor
+    from eegdash.features.feature_bank.signal import signal_envelope_preprocessor
 
     x = np.random.randn(2, 3, 256)
-    result = signal_hilbert_preprocessor(x)
+    result = signal_envelope_preprocessor(x)
     assert result.shape == x.shape
     # Hilbert envelope should be non-negative
     assert np.all(result >= 0)

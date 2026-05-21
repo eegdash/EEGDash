@@ -98,18 +98,13 @@ The cluster API has the same list in `api/main.py:Settings.valid_databases`.
 `InjectConfig` rejects it. If we add a database in our config, the API
 rejects requests to it.
 
-Mitigation options (future work):
-1. Fetch valid databases from the API at boot (1 extra HTTP call;
-   makes config construction async or blocking-network).
-2. Generate the Literal from a shared YAML / JSON in the deploy repo
-   that both sides read at build time.
-3. Accept the drift and rely on the C6.3 / C6.4 integration tests
-   to catch it (current state — works but takes one full PR-fast +
-   integration cycle to detect).
-
-The C6.4 stress tests would catch a database-add drift on the cluster
-side; the PR-fast tests would catch a database-remove drift on our
-side. So drift IS observable; just not at config-construction time.
+**Status: option 1 implemented (2026-05-22).** `_inject_config.py:
+fetch_valid_databases_from_api()` hits `GET <api_url>/admin/valid-databases`
+with the Bearer token at config-construction time (5s timeout, per-api_url
+cached). On any failure (network, 404, JSON shape) the field validator
+falls back to `LOCAL_FALLBACK_DATABASES` — same contract as before the
+fix landed. The API-side endpoint is documented as a server follow-up
+but not required for the consumer-side guard to work.
 
 ### Stage 1 fetch scripts (open)
 

@@ -107,15 +107,13 @@ the offending helper, not the orchestrator.
 
 These have leverage but need a real driver to commit to.
 
-### P2.1 — Modality layout Seam
+### P2.1 — Modality layout Seam ✅ DONE (commit d5db5b233)
 
-**Driver**: 4 modality extractors in `_montage.py` (EEG/iEEG/MEG/fNIRS)
-+ a stubbed EMG. Each is bespoke; adding a new modality is a fork
-inside a 1077-LOC file. The Seam is implicit.
-
-**Real driver**: EMG stub completion + future modalities.
-
-**Estimated effort**: 6-8 hours.
+Closed by extracting the 4 TSV-based extractors (EEG, iEEG, EMG,
+fNIRS) into a `_ModalityConfig` dataclass + dict. Adding a new
+TSV-based modality is now one config entry. MEG remains special-
+cased (its 190 LOC of FIF header streaming doesn't fit the TSV
+pattern). Snapshot tests passed byte-identically.
 
 ### P2.2 — Format metadata parser Seam
 

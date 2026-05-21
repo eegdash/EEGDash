@@ -83,7 +83,8 @@ from _vhdr_parser import parse_vhdr_metadata
 # functions in this file write their JSON outputs via this shared
 # helper, so the per-Dataset JSON shapes are documented in ONE place.
 # Stage 3 will collapse digest_dataset + digest_from_manifest into a
-# single orchestrator that uses the Enumerator factory.
+# single orchestrator — see ROBUSTNESS/STAGE-3-PLAN.md for the
+# fixture-based verification approach.
 from record_enumerator import EnumerationResult, write_dataset_outputs
 
 # Per-Source ingest behaviour (Phase 8 S1.thick). The orchestrator builds

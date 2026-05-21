@@ -237,35 +237,34 @@ def test_record_enumerator_is_abstract():
         )
 
 
-def test_enumerate_returns_diagnostic_result_when_dataset_missing(
-    tmp_path: Path,
-) -> None:
-    """Stage 2D: enumerate() delegates to the legacy fn. When the dataset
-    doesn't exist, the legacy returns ``status='skipped'``; the Adapter
-    converts that into a result with the diagnostic in errors[].
+def test_bids_enumerate_raises_when_bids_load_fails(tmp_path: Path) -> None:
+    """Stage 3C: ``enumerate()`` calls EEGBIDSDataset directly.
 
-    Stage-1 used to assert NotImplementedError here; that's no longer
-    accurate now that the Adapters delegate to the real bodies.
+    When the dataset_dir doesn't contain a valid BIDS structure, the
+    constructor raises (OSError / ValueError / KeyError). The caller
+    in ``3_digest.py:digest_dataset`` catches and falls back to the
+    manifest path; the Adapter itself doesn't synthesize a diagnostic.
+
+    Stages 1+2 used to assert NotImplementedError; Stage 2D used to
+    swallow the failure and return a diagnostic EnumerationResult.
+    Stage 3C's contract is "raise — let the caller decide".
     """
-    # No dataset_dir/ds001/ tree exists, so digest_dataset returns
-    # ``status='skipped', reason='directory not found'``.
     parent = tmp_path / "input"
     parent.mkdir()
     enumerator = BIDSFilesystemEnumerator(
         "ds001", parent / "ds001", "openneuro", _make_adapter(), "now"
     )
-    result = enumerator.enumerate()
-    assert isinstance(result, EnumerationResult)
-    assert result.records == []
-    assert len(result.errors) == 1
-    assert result.errors[0].get("status") == "skipped"
+    with pytest.raises((OSError, ValueError, KeyError, FileNotFoundError)):
+        enumerator.enumerate()
 
 
-def test_manifest_enumerate_returns_diagnostic_when_manifest_missing(
+def test_manifest_enumerate_returns_empty_when_manifest_missing(
     tmp_path: Path,
 ) -> None:
-    """ManifestEnumerator: legacy fn returns ``status='skipped'`` when no
-    manifest.json. Adapter surfaces that as a diagnostic-only result."""
+    """ManifestEnumerator: missing manifest.json → empty EnumerationResult
+    with a diagnostic error entry. No raise (so the caller can write the
+    summary as ``status='empty'`` rather than crash).
+    """
     parent = tmp_path / "input"
     (parent / "z-001").mkdir(parents=True)
     enumerator = ManifestEnumerator(
@@ -275,9 +274,7 @@ def test_manifest_enumerate_returns_diagnostic_when_manifest_missing(
     assert isinstance(result, EnumerationResult)
     assert result.records == []
     assert len(result.errors) == 1
-    # Either "manifest.json not found" or empty-dir status — both
-    # come back via the diagnostic path.
-    assert result.errors[0].get("status") in ("skipped", "error", "empty")
+    assert "manifest.json" in result.errors[0].get("error", "")
 
 
 # ─── write_dataset_outputs — shared JSON writer (stage 2A) ────────────────

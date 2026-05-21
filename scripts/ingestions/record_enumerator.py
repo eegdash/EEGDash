@@ -288,43 +288,46 @@ def _has_actual_recording_files(dataset_dir: Path) -> bool:
 class BIDSFilesystemEnumerator(RecordEnumerator):
     """Walk a BIDS filesystem via ``mne_bids.EEGBIDSDataset``.
 
-    The production path for OpenNeuro and NEMAR. The constructor loads
-    the EEGBIDSDataset (may raise; the factory catches and falls back
-    to :class:`ManifestEnumerator` when ``manifest.json`` exists).
+    The production path for OpenNeuro and NEMAR. The constructor is a
+    no-op data holder; the EEGBIDSDataset load and the algorithm
+    happen in :meth:`enumerate`. The factory catches construction
+    failures from the BIDS load there and falls back to
+    :class:`ManifestEnumerator` when ``manifest.json`` exists.
 
-    Implementation note (stage-1 stub): the actual ``enumerate()`` body
-    is wired in stage 2 — it delegates to the body that used to live
-    in ``3_digest.py:digest_dataset``. This class exists in stage 1 so
-    the factory + tests can be built first.
+    Stage 3C: ``enumerate()`` calls ``_enumerate_via_bids`` directly
+    (was a tempfile-bridge round-trip via ``digest_dataset`` in stage
+    2D — see ``ROBUSTNESS/STAGE-3-PLAN.md``).
     """
 
-    def __init__(
-        self,
-        dataset_id: str,
-        dataset_dir: Path,
-        source: str,
-        source_adapter: SourceAdapter,
-        digested_at: str,
-    ) -> None:
-        super().__init__(dataset_id, dataset_dir, source, source_adapter, digested_at)
-
     def enumerate(self) -> EnumerationResult:
-        """Delegate to the legacy BIDS algorithm body in ``3_digest.py``.
+        """Load EEGBIDSDataset, then run the BIDS-filesystem algorithm.
 
-        Stage 2D shim — runs ``digest_dataset`` against a temp output
-        dir and reads back the JSON files it writes. The extra
-        round-trip goes away in Stage 3 when the body moves in here.
+        Raises
+        ------
+        OSError, ValueError, KeyError, FileNotFoundError, PermissionError
+            ``EEGBIDSDataset`` construction failed (the dataset_dir
+            isn't a viable BIDS root). The caller in
+            ``3_digest.py:digest_dataset`` catches and falls back.
         """
-        from importlib.util import module_from_spec, spec_from_file_location
+        # Late imports: mne_bids is heavy, and 3_digest.py's
+        # digit-prefixed filename forces importlib.
+        from eegdash.dataset.bids_dataset import EEGBIDSDataset
 
-        spec = spec_from_file_location(
-            "_legacy_digest", Path(__file__).parent / "3_digest.py"
+        bids_dataset = EEGBIDSDataset(
+            data_dir=str(self.dataset_dir),
+            dataset=self.dataset_id,
+            allow_symlinks=True,
         )
-        if spec is None or spec.loader is None:  # pragma: no cover
-            raise ImportError("could not load 3_digest.py for delegation")
-        digest_mod = module_from_spec(spec)
-        spec.loader.exec_module(digest_mod)
-        return _delegate_via_legacy(self, digest_mod.digest_dataset, "bids_filesystem")
+        digest_mod = _load_digest_module()
+        return digest_mod._enumerate_via_bids(
+            self.dataset_dir,
+            self.dataset_id,
+            self.source,
+            self.source_adapter,
+            self.digested_at,
+            bids_dataset,
+            manifest_data=_load_manifest_data(self.dataset_dir),
+        )
 
 
 class ManifestEnumerator(RecordEnumerator):
@@ -334,101 +337,76 @@ class ManifestEnumerator(RecordEnumerator):
     - the Source is API-only (Zenodo, Figshare, OSF, SciDB, DataRN), or
     - the BIDS clone is malformed / empty and ``manifest.json`` exists.
 
-    Implementation note (stage-1 stub): the actual ``enumerate()`` body
-    is wired in stage 2 — it delegates to the body that used to live
-    in ``3_digest.py:digest_from_manifest``.
+    Stage 3C: ``enumerate()`` calls ``_enumerate_via_manifest`` directly.
     """
 
     def enumerate(self) -> EnumerationResult:
-        """Delegate to the legacy ``digest_from_manifest`` body (Stage 2D shim)."""
-        from importlib.util import module_from_spec, spec_from_file_location
-
-        spec = spec_from_file_location(
-            "_legacy_digest", Path(__file__).parent / "3_digest.py"
-        )
-        if spec is None or spec.loader is None:  # pragma: no cover
-            raise ImportError("could not load 3_digest.py for delegation")
-        digest_mod = module_from_spec(spec)
-        spec.loader.exec_module(digest_mod)
-        return _delegate_via_legacy(
-            self, digest_mod.digest_from_manifest, "manifest_only"
-        )
-
-
-def _delegate_via_legacy(
-    enumerator: RecordEnumerator,
-    legacy_fn: Any,
-    digest_method: str,
-) -> EnumerationResult:
-    """Stage-2D bridge: run a legacy digest function, read its output back.
-
-    Runs the legacy function against a fresh temp output dir, then loads
-    the four JSON files it writes and assembles an
-    :class:`EnumerationResult`. Stage 3 will eliminate this round-trip
-    by moving the algorithm body into the Adapter directly.
-
-    Parameters
-    ----------
-    enumerator : RecordEnumerator
-        The Adapter instance (provides dataset_id, dataset_dir).
-    legacy_fn : callable
-        Either ``digest_dataset`` or ``digest_from_manifest`` —
-        same ``(dataset_id, input_dir, output_dir) -> summary_dict`` shape.
-    digest_method : str
-        Either ``"bids_filesystem"`` or ``"manifest_only"``.
-
-    Returns
-    -------
-    EnumerationResult
-    """
-    import tempfile
-
-    with tempfile.TemporaryDirectory() as tmpd:
-        tmp_output = Path(tmpd)
-        input_dir = enumerator.dataset_dir.parent
-        summary = legacy_fn(enumerator.dataset_id, input_dir, tmp_output)
-
-        if summary.get("status") in ("skipped", "error", "empty"):
-            # Couldn't produce a full result — return a result that
-            # carries diagnostic info in errors[].
+        """Run the manifest-only algorithm via the shared helper."""
+        manifest = _load_manifest_data(self.dataset_dir)
+        if manifest is None:
             return EnumerationResult(
-                dataset_meta={"dataset_id": enumerator.dataset_id},
-                records=[],
+                dataset_meta={"dataset_id": self.dataset_id, "source": self.source},
                 errors=[
                     {
-                        "file": enumerator.dataset_id,
-                        "error": summary.get("error") or summary.get("reason", ""),
-                        "status": summary.get("status"),
+                        "file": self.dataset_id,
+                        "error": "manifest.json not found or unreadable",
+                        "status": "skipped",
                     }
                 ],
-                montages={},
-                digest_method=digest_method,
+                digest_method="manifest_only",
             )
+        digest_mod = _load_digest_module()
+        result, _total_files = digest_mod._enumerate_via_manifest(
+            self.dataset_id, manifest, self.digested_at
+        )
+        return result
 
-        ds_dir = tmp_output / enumerator.dataset_id
-        dataset_meta = json.loads(
-            (ds_dir / f"{enumerator.dataset_id}_dataset.json").read_text()
-        )
-        records_doc = json.loads(
-            (ds_dir / f"{enumerator.dataset_id}_records.json").read_text()
-        )
-        montages_path = ds_dir / f"{enumerator.dataset_id}_montages.json"
-        montages_doc = (
-            json.loads(montages_path.read_text())
-            if montages_path.exists()
-            else {"montages": []}
-        )
-        montages_dict = {
-            m.get("hash", f"_anon_{i}"): m
-            for i, m in enumerate(montages_doc.get("montages", []))
-        }
-        return EnumerationResult(
-            dataset_meta=dataset_meta,
-            records=records_doc.get("records", []),
-            errors=[],
-            montages=montages_dict,
-            digest_method=digest_method,
-        )
+
+# ─── Stage 3C helpers: avoid circular imports with 3_digest.py ────────
+
+
+_DIGEST_MODULE_CACHE: Any = None
+
+
+def _load_digest_module() -> Any:
+    """Lazy-load ``3_digest.py`` (digit-prefixed filename forces this).
+
+    Cached after first call so subsequent ``enumerate()`` calls don't
+    pay the importlib cost. The cache survives across Enumerator
+    instances within the same Python process.
+    """
+    global _DIGEST_MODULE_CACHE
+    if _DIGEST_MODULE_CACHE is not None:
+        return _DIGEST_MODULE_CACHE
+    from importlib.util import module_from_spec, spec_from_file_location
+
+    spec = spec_from_file_location(
+        "_record_enumerator_digest_target",
+        Path(__file__).parent / "3_digest.py",
+    )
+    if spec is None or spec.loader is None:  # pragma: no cover
+        raise ImportError("could not load 3_digest.py")
+    mod = module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    _DIGEST_MODULE_CACHE = mod
+    return mod
+
+
+def _load_manifest_data(dataset_dir: Path) -> dict | None:
+    """Read ``<dataset_dir>/manifest.json`` if present and parseable.
+
+    Returns ``None`` if the file is absent or malformed (both are
+    treated as "no manifest data"). Used by both Adapter classes to
+    surface manifest_data into their respective helpers.
+    """
+    manifest_path = dataset_dir / "manifest.json"
+    if not manifest_path.exists():
+        return None
+    try:
+        with open(manifest_path) as fh:
+            return json.load(fh)
+    except (OSError, json.JSONDecodeError, ValueError):
+        return None
 
 
 # ─── Shared output writer ─────────────────────────────────────────────

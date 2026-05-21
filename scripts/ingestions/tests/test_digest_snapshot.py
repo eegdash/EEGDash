@@ -99,7 +99,7 @@ def _read_snapshot(dataset_id: str, suffix: str) -> dict:
 
 @pytest.fixture(scope="module")
 def fresh_digest_output(tmp_path_factory) -> Path:
-    """Run ``digest_dataset`` against the snapshot fixture in a temp dir.
+    """Run ``digest_dataset`` against the BIDS-fs snapshot fixture in a temp dir.
 
     Returns the output directory (which contains ``ds_snapshot_vhdr/``).
     Module-scoped so the (expensive) digest runs ONCE per test session.
@@ -118,7 +118,28 @@ def fresh_digest_output(tmp_path_factory) -> Path:
     return tmp_output
 
 
-# ─── Per-file snapshot comparisons ────────────────────────────────────────
+@pytest.fixture(scope="module")
+def fresh_manifest_digest_output(tmp_path_factory) -> Path:
+    """Run ``digest_from_manifest`` against the manifest-only snapshot fixture.
+
+    Covers the manifest path (Zenodo / Figshare / OSF / SciDB / DataRN
+    via _enumerate_via_manifest). Module-scoped so the digest runs
+    ONCE per test session.
+    """
+    digest_mod = _load_digest_module()
+    tmp_output = tmp_path_factory.mktemp("manifest_snapshot_run")
+    summary = digest_mod.digest_from_manifest(
+        "ds_snapshot_manifest",
+        INPUTS_DIR,
+        tmp_output,
+    )
+    assert summary["status"] == "success", (
+        f"manifest snapshot fixture digestion failed: {summary}"
+    )
+    return tmp_output
+
+
+# ─── BIDS-fs path: per-file snapshot comparisons ──────────────────────────
 
 
 @pytest.mark.parametrize(
@@ -191,3 +212,80 @@ def test_snapshot_fingerprint_stable(fresh_digest_output: Path) -> None:
         "different content hash. This is a deeper drift than a field "
         "rename; investigate before updating the snapshot."
     )
+
+
+# ─── Manifest path: per-file snapshot comparisons ─────────────────────────
+
+
+@pytest.mark.parametrize(
+    "suffix",
+    ["dataset", "records", "montages", "summary"],
+)
+def test_manifest_digest_output_matches_snapshot(
+    fresh_manifest_digest_output: Path,
+    suffix: str,
+) -> None:
+    """The manifest-only digest produces 4 byte-stable JSON files.
+
+    Mirrors :func:`test_digest_output_matches_snapshot` but for the
+    manifest path (``_enumerate_via_manifest``). The empty
+    ``_montages.json`` is part of the contract (downstream tooling
+    assumes the file exists; see Stage 2A in
+    ``ROBUSTNESS/STAGE-2-PLAN.md``).
+    """
+    dataset_id = "ds_snapshot_manifest"
+    fresh_path = (
+        fresh_manifest_digest_output / dataset_id / f"{dataset_id}_{suffix}.json"
+    )
+    assert fresh_path.exists(), f"manifest digest didn't produce {fresh_path.name}"
+
+    fresh = json.loads(fresh_path.read_text())
+    snapshot = _read_snapshot(dataset_id, suffix)
+
+    fresh_sanitized = _sanitize_for_snapshot(fresh, dataset_id=dataset_id)
+    snapshot_sanitized = _sanitize_for_snapshot(snapshot, dataset_id=dataset_id)
+
+    assert fresh_sanitized == snapshot_sanitized, (
+        f"\nmanifest {suffix}.json drifted from the committed snapshot. "
+        f"If this is INTENTIONAL, update the snapshot file:\n"
+        f"  cp {fresh_path} {SNAPSHOT_OUTPUTS_DIR / dataset_id / fresh_path.name}\n"
+    )
+
+
+def test_manifest_snapshot_record_count_stable(
+    fresh_manifest_digest_output: Path,
+) -> None:
+    """Manifest path produces the expected number of Records."""
+    dataset_id = "ds_snapshot_manifest"
+    fresh = json.loads(
+        (
+            fresh_manifest_digest_output / dataset_id / f"{dataset_id}_records.json"
+        ).read_text()
+    )
+    snapshot = _read_snapshot(dataset_id, "records")
+    assert len(fresh["records"]) == len(snapshot["records"]), (
+        f"manifest record count drifted: {len(fresh['records'])} vs "
+        f"snapshot's {len(snapshot['records'])}"
+    )
+
+
+def test_manifest_snapshot_total_files_in_summary(
+    fresh_manifest_digest_output: Path,
+) -> None:
+    """The manifest path's summary carries ``total_files`` (BIDS path doesn't).
+
+    Pins the divergence — if a future refactor accidentally drops
+    ``total_files`` from the manifest summary, this test fires.
+    """
+    dataset_id = "ds_snapshot_manifest"
+    summary = json.loads(
+        (
+            fresh_manifest_digest_output / dataset_id / f"{dataset_id}_summary.json"
+        ).read_text()
+    )
+    assert "total_files" in summary, (
+        "manifest summary should carry total_files for operational "
+        "observability — see write_dataset_outputs docstring"
+    )
+    snapshot_summary = _read_snapshot(dataset_id, "summary")
+    assert summary["total_files"] == snapshot_summary["total_files"]

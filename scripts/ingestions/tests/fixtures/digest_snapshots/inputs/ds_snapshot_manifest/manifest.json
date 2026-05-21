@@ -1,0 +1,38 @@
+{
+  "dataset_id": "ds_snapshot_manifest",
+  "source": "zenodo",
+  "name": "Synthetic Zenodo manifest snapshot fixture",
+  "license": "CC0",
+  "authors": ["Test User"],
+  "bids_subject_count": 2,
+  "tasks": ["rest", "motor"],
+  "sessions": ["01"],
+  "modalities": ["eeg"],
+  "recording_modality": "eeg",
+  "storage_base": "https://zenodo.org/records/snapshot-manifest-12345",
+  "files": [
+    {
+      "path": "sub-01/ses-01/eeg/sub-01_ses-01_task-rest_eeg.edf",
+      "size": 1048576,
+      "download_url": "https://zenodo.org/records/snapshot-manifest-12345/files/sub-01_ses-01_task-rest_eeg.edf"
+    },
+    {
+      "path": "sub-01/ses-01/eeg/sub-01_ses-01_task-motor_eeg.edf",
+      "size": 1048576,
+      "download_url": "https://zenodo.org/records/snapshot-manifest-12345/files/sub-01_ses-01_task-motor_eeg.edf"
+    },
+    {
+      "path": "sub-02/ses-01/eeg/sub-02_ses-01_task-rest_eeg.edf",
+      "size": 1048576,
+      "download_url": "https://zenodo.org/records/snapshot-manifest-12345/files/sub-02_ses-01_task-rest_eeg.edf"
+    },
+    {
+      "path": "dataset_description.json",
+      "size": 256
+    },
+    {
+      "path": "participants.tsv",
+      "size": 128
+    }
+  ]
+}

@@ -28,7 +28,7 @@ from ..decorators import (
 from ..output_types import SignalOutputType
 
 __all__ = [
-    "signal_hilbert_preprocessor",
+    "signal_envelope_preprocessor",
     "signal_filter_preprocessor",
     "signal_decorrelation_time",
     "signal_hjorth_activity",
@@ -49,8 +49,8 @@ __all__ = [
 
 @feature_predecessor()
 @preprocessor_output_type(SignalOutputType)
-def signal_hilbert_preprocessor(x, /):
-    r"""Compute the amplitude envelope of the analytic signal.
+def signal_envelope_preprocessor(x, /):
+    r"""Compute the amplitude envelope of the signal using Hilbert transform.
 
     Parameters
     ----------

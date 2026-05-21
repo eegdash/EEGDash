@@ -68,7 +68,11 @@ def fetch_valid_databases_from_api(
     per api_url so repeated InjectConfig construction is cheap.
     """
     if api_url in _valid_databases_cache:
-        return _valid_databases_cache[api_url]
+        cached = _valid_databases_cache[api_url]
+        # Empty frozenset is the sentinel for "API previously failed";
+        # return None so the validator falls back instead of treating
+        # an empty set as "no valid databases".
+        return cached if cached else None
 
     import httpx
 
@@ -81,8 +85,10 @@ def fetch_valid_databases_from_api(
             valid = frozenset(data["databases"])
     except (httpx.HTTPError, KeyError, ValueError, TypeError):
         # Any of: connect/timeout/HTTPStatusError, JSON parse failure,
-        # missing 'databases' key, non-iterable value. Fall back to
-        # local contract — same behaviour as before this fix landed.
+        # missing 'databases' key, non-iterable value. Cache None so
+        # repeated InjectConfig constructions don't each pay a fresh
+        # timeout; the validator handles None as "use fallback".
+        _valid_databases_cache[api_url] = frozenset()  # sentinel "no api data"
         return None
 
     _valid_databases_cache[api_url] = valid
@@ -130,17 +136,24 @@ class InjectConfig(BaseSettings):
     @field_validator("database")
     @classmethod
     def _database_must_be_valid(cls, value: str, info) -> str:
-        """Reject databases the cluster doesn't know about.
+        """Reject databases neither the API nor the local fallback know about.
 
-        Order of checks:
-        1. If the API exposes /admin/valid-databases AND we can reach it,
-           use the returned set.
-        2. Otherwise fall back to LOCAL_FALLBACK_DATABASES (the contract
-           we maintained pre-fetch).
+        ``valid`` is the UNION of:
+          1. ``fetch_valid_databases_from_api(api_url, token)`` — if reachable,
+             this is the cluster's current ``valid_databases`` set.
+          2. ``LOCAL_FALLBACK_DATABASES`` — the contract we maintained pre-fetch.
 
-        Local fallback always runs — even if the API call succeeds —
-        so an empty-list response from a misconfigured server doesn't
-        lock us out.
+        Union semantics (not XOR) are intentional:
+        - An API-side deprecation does not lock out a long-running script
+          at config-construction time. The actual write to a deprecated
+          DB is the real gate.
+        - An API-side addition extends our acceptance set without a code
+          change here.
+        - Empty API responses (misconfigured server) don't replace the
+          local set; the fallback still applies.
+
+        Network failures fall back to LOCAL_FALLBACK_DATABASES alone and
+        emit a single WARN log so ops can see the probe failed.
         """
         # info.data has fields validated BEFORE this one. `api_url` and
         # `token` are declared after, so we read defaults from env if
@@ -149,7 +162,21 @@ class InjectConfig(BaseSettings):
         token = info.data.get("token")
 
         api_set = fetch_valid_databases_from_api(api_url, token)
-        valid: frozenset[str] = api_set if api_set else LOCAL_FALLBACK_DATABASES
+        if api_set is None:
+            import logging
+
+            logging.getLogger(__name__).warning(
+                "Could not reach %s/admin/valid-databases; using "
+                "LOCAL_FALLBACK_DATABASES alone. Database-list drift "
+                "will not be detected this run.",
+                api_url,
+            )
+        # Union of API-known + local-known. A name accepted by EITHER side
+        # stays accepted. This is defensive: an API-side deprecation does
+        # not break long-running scripts at config-construction time (the
+        # actual write to that DB is the real gate). An API-side ADDITION
+        # extends our acceptance set without a code change.
+        valid: frozenset[str] = (api_set or frozenset()) | LOCAL_FALLBACK_DATABASES
 
         if value not in valid:
             raise ValueError(

@@ -95,7 +95,7 @@ ignore = [
 #                                  marked with an inline noqa: BLE001 + rationale.
 # "_http.py"                    — bare-excepts swept in Phase 3 (commit 2)
 # "_mef3_parser.py"             — bare-excepts swept in Phase 3 (commit 1)
-"_montage.py"                   = ["BLE001", "N806", "RUF002", "RUF003", "RUF013", "RUF059"]
+"_montage.py"                   = ["N806", "RUF002", "RUF003", "RUF013", "RUF059"]  # BLE001 swept Phase 3 (final)
 # "_set_parser.py"              — bare-excepts swept in Phase 3 (commit 1)
 # "_snirf_parser.py"            — bare-excepts swept in Phase 3 (commit 1)
 # "_validate.py"                — bare-excepts swept in Phase 3 (commit 2)

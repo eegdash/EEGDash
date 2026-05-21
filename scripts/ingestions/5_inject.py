@@ -389,18 +389,30 @@ def inject_records(
     for i in range(0, len(records), batch_size):
         batches.append((i // batch_size, records[i : i + batch_size]))
 
-    # Parallel execution
+    # Parallel execution. Each batch has a 60s per-request timeout via the
+    # inner _bulk_upsert_batch; as_completed gets a generous wall-clock
+    # safety margin so a *hung* worker (TCP keepalive never trips) doesn't
+    # deadlock the main thread indefinitely. Per ROBUSTNESS/audit-1 F3.
+    per_batch_timeout_s = 60.0
+    wall_clock_budget_s = max(120.0, len(batches) * per_batch_timeout_s + 30.0)
     with ThreadPoolExecutor(max_workers=8) as executor:
         futures = {
             executor.submit(
-                _bulk_upsert_batch, idx, batch, url, session, timeout=60.0
+                _bulk_upsert_batch,
+                idx,
+                batch,
+                url,
+                session,
+                timeout=per_batch_timeout_s,
             ): idx
             for idx, batch in batches
         }
         for future in tqdm(
-            as_completed(futures), total=len(batches), desc="Injecting batches"
+            as_completed(futures, timeout=wall_clock_budget_s),
+            total=len(batches),
+            desc="Injecting batches",
         ):
-            res = future.result()
+            res = future.result(timeout=per_batch_timeout_s)
             if res["error"]:
                 errors.append(res["error"])
             else:
@@ -441,19 +453,27 @@ def inject_montages(
     for i in range(0, len(montages), batch_size):
         batches.append((i // batch_size, montages[i : i + batch_size]))
 
+    # Same timeout discipline as inject_records — see audit-1 F3.
+    per_batch_timeout_s = 120.0
+    wall_clock_budget_s = max(180.0, len(batches) * per_batch_timeout_s + 30.0)
     with ThreadPoolExecutor(max_workers=8) as executor:
         futures = {
             executor.submit(
-                _bulk_upsert_batch, idx, batch, url, session, timeout=120.0
+                _bulk_upsert_batch,
+                idx,
+                batch,
+                url,
+                session,
+                timeout=per_batch_timeout_s,
             ): idx
             for idx, batch in batches
         }
         for future in tqdm(
-            as_completed(futures),
+            as_completed(futures, timeout=wall_clock_budget_s),
             total=len(batches),
             desc="Injecting montages",
         ):
-            res = future.result()
+            res = future.result(timeout=per_batch_timeout_s)
             if res["error"]:
                 errors.append(res["error"])
             else:

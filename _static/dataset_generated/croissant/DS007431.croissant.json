@@ -92,7 +92,8 @@
   "identifier": "doi:10.18112/openneuro.ds007431.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds007431.v1.0.0",
-    "https://openneuro.org/datasets/ds007431"
+    "https://openneuro.org/datasets/ds007431",
+    "https://huggingface.co/datasets/EEGDash/ds007431"
   ],
   "citeAs": "Nursena Ataseven, Sahcan Ozdemir, Wouter Kruijne, Daniel Schneider, Elkan G. Akyurek (2026). Diffuse predictions stabilize and reshape neural code during memory encoding. doi:10.18112/openneuro.ds007431.v1.0.0",
   "version": "v1.2.1",
@@ -140,6 +141,14 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=ds007431",
       "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007431-huggingface",
+      "name": "EEGDash/ds007431 on Hugging Face",
+      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
+      "contentUrl": "https://huggingface.co/datasets/EEGDash/ds007431",
+      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

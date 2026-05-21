@@ -92,7 +92,8 @@
   "identifier": "doi:10.18112/openneuro.ds007471.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds007471.v1.0.0",
-    "https://openneuro.org/datasets/ds007471"
+    "https://openneuro.org/datasets/ds007471",
+    "https://huggingface.co/datasets/EEGDash/ds007471"
   ],
   "citeAs": "Zijun Zhou, Anna Zamm, Justin Christensen, Vinesh Rao, Janeen Loehr (2026). Joint agency EEG dataset. doi:10.18112/openneuro.ds007471.v1.0.0",
   "version": "1.8.0",
@@ -140,6 +141,14 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=ds007471",
       "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007471-huggingface",
+      "name": "EEGDash/ds007471 on Hugging Face",
+      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
+      "contentUrl": "https://huggingface.co/datasets/EEGDash/ds007471",
+      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

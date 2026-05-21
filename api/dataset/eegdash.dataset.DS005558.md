@@ -152,13 +152,13 @@ This study contains closed-loop electrical stimulation of the brain during encod
     <span class="right">126 (3), 124 (2), 128 (2), 156 (2), 114 (2), 78 (2), 113 (2), 68 (2), 110, 64, 90, 56, 122 ch · iEEG · 1000 Hz · 7 subjects, 22 recordings</span>
   </div>
   <div class="figpair-grid"><div class="figpair-cell figpair-montage"><details class="electrode-explorer">
-  <summary>Electrode layout — iEEG · 126 sensors — 126 channels</summary>
+  <summary>Electrode layout — iEEG · 78 sensors — 78 channels</summary>
   <iframe
-    data-src="https://electrodes.eegdash.org/?montage=cc151e239b33fb27&embed=1"
+    data-src="https://electrodes.eegdash.org/?montage=618f80cbf91e4ad2&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
-    title="Topomap of iEEG · 126 sensors"
+    title="Topomap of iEEG · 78 sensors"
     referrerpolicy="no-referrer">
   </iframe>
 </details></div></div></div>

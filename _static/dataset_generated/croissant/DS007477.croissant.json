@@ -84,7 +84,8 @@
   "identifier": "doi:10.18112/openneuro.ds007477.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds007477.v1.0.1",
-    "https://openneuro.org/datasets/ds007477"
+    "https://openneuro.org/datasets/ds007477",
+    "https://huggingface.co/datasets/EEGDash/ds007477"
   ],
   "citeAs": "Niu，Haijing, Zheng, Sha, Yuan, Haodong (2026). TimeSeries BIDS converted. doi:10.18112/openneuro.ds007477.v1.0.1",
   "version": "1.7.0",
@@ -132,6 +133,14 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=ds007477",
       "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007477-huggingface",
+      "name": "EEGDash/ds007477 on Hugging Face",
+      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
+      "contentUrl": "https://huggingface.co/datasets/EEGDash/ds007477",
+      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

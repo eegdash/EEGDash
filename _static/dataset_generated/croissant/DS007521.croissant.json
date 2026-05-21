@@ -94,7 +94,8 @@
   "identifier": "doi:10.18112/openneuro.ds007521.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds007521.v1.0.1",
-    "https://openneuro.org/datasets/ds007521"
+    "https://openneuro.org/datasets/ds007521",
+    "https://huggingface.co/datasets/EEGDash/ds007521"
   ],
   "citeAs": "Moerel, Denise, Chenh, Cecilia, Bowman, Sophie, Carlson, Thomas (2026). The effect of hunger and state preferences on the neural processing of food images. doi:10.18112/openneuro.ds007521.v1.0.1",
   "version": "1.0.2",
@@ -142,6 +143,14 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=ds007521",
       "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007521-huggingface",
+      "name": "EEGDash/ds007521 on Hugging Face",
+      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
+      "contentUrl": "https://huggingface.co/datasets/EEGDash/ds007521",
+      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

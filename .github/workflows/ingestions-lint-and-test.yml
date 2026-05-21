@@ -49,10 +49,12 @@ jobs:
       - name: Run tests with coverage (offline)
         working-directory: scripts/ingestions
         # Coverage gate per ROADMAP-C1.md C1.1. Floor RATCHETS up per PR.
-        # 2026-05-22: bumped 35 → 38 after C1.2 covered _serialize.py
-        # (0%→93%) + _validate.py (0%→20%). Current actual: 39%.
-        # Every PR that adds tests must bump this floor in the same
-        # commit so subsequent PRs can't regress.
+        # History:
+        #   2026-05-22 baseline:  35  (one-off scripts excluded, 36% actual)
+        #   2026-05-22 C1.2:      38  (_serialize 0→93%, _validate 0→20%)
+        #   2026-05-22 C1.5:      40  (_file_utils 24→40% via source-listing tests)
+        # Every PR that raises coverage MUST bump this floor in the
+        # same commit so subsequent PRs can't regress.
         run: |
           pytest -ra --tb=short \
             -m "not network and not slow" \
@@ -60,7 +62,7 @@ jobs:
             --cov-report=term-missing \
             --cov-report=html \
             --cov-report=xml \
-            --cov-fail-under=38
+            --cov-fail-under=40
       - name: Append coverage summary to job summary
         if: always()
         working-directory: scripts/ingestions

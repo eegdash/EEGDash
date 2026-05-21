@@ -17,6 +17,7 @@ import time
 import xml.etree.ElementTree as ET
 from functools import wraps
 from pathlib import Path
+from typing import Any
 from urllib.parse import unquote, urljoin, urlparse
 
 import httpx
@@ -221,34 +222,85 @@ def is_bids_root_file(filename: str) -> bool:
 # =============================================================================
 
 
+def _is_rate_limited_retryable(exc: BaseException) -> bool:
+    """Retry-predicate for ``rate_limited``: 429 + network errors only.
+
+    Used as a tenacity ``retry_if_exception`` callback; defined at
+    module level (rather than nested in ``rate_limited``) to satisfy
+    the no-nested-functions lint rule. Programmer errors
+    (AttributeError, TypeError, etc.) return False and propagate.
+    """
+    if isinstance(exc, HTTPStatusError):
+        return exc.response is not None and exc.response.status_code == 429
+    return isinstance(exc, RequestError)
+
+
 def rate_limited(min_interval: float = 0.5, max_retries: int = 3):
-    """Decorator for rate-limited HTTP requests with retry."""
+    """Decorator for rate-limited HTTP requests with retry on 429/network errors.
+
+    Wraps ``func`` so that:
+    - Calls are spaced at least ``min_interval`` seconds apart.
+    - HTTP 429 (Too Many Requests) and httpx network errors are retried
+      with exponential backoff (factor of 2 between attempts), up to
+      ``max_retries`` total attempts.
+    - Non-429 HTTPStatusError surfaces immediately on the first attempt
+      (404/5xx surface; tenacity-backed callers handle retry themselves
+      via the ``_http`` helper).
+
+    Parameters
+    ----------
+    min_interval : float
+        Minimum seconds between consecutive calls (rate limit). Also
+        used as the base for the exponential backoff between retries.
+    max_retries : int
+        Maximum total attempts (not delta — so ``max_retries=3`` makes
+        up to 3 attempts).
+
+    Notes
+    -----
+    Phase 9 audit-2 F1 consolidation: the previous version used a
+    hand-rolled try/except retry loop. This rewrite uses ``tenacity``
+    via ``stop_after_attempt`` / ``wait_exponential`` so it shares
+    semantics with ``_http.request_json``. The behaviour change is
+    documented in the test suite.
+    """
     last_call = [0.0]
 
     def decorator(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
-            # Enforce minimum interval between calls
+            from tenacity import (
+                RetryError,
+                Retrying,
+                retry_if_exception,
+                stop_after_attempt,
+                wait_exponential,
+            )
+
+            # Enforce minimum interval between calls.
             elapsed = time.time() - last_call[0]
             if elapsed < min_interval:
                 time.sleep(min_interval - elapsed)
 
-            for attempt in range(max_retries):
-                try:
-                    result = func(*args, **kwargs)
-                    last_call[0] = time.time()
-                    return result
-                except HTTPStatusError as e:
-                    if e.response is not None and e.response.status_code == 429:
-                        wait = min_interval * (2**attempt)
-                        time.sleep(wait)
-                    elif attempt == max_retries - 1:
-                        raise
-                except RequestError:
-                    if attempt == max_retries - 1:
-                        raise
-                    time.sleep(min_interval * (attempt + 1))
-            return None
+            retrying = Retrying(
+                stop=stop_after_attempt(max_retries),
+                wait=wait_exponential(
+                    multiplier=min_interval, min=min_interval, max=60
+                ),
+                retry=retry_if_exception(_is_rate_limited_retryable),
+            )
+            result: Any = None
+            try:
+                for attempt in retrying:
+                    with attempt:
+                        result = func(*args, **kwargs)
+            except RetryError:
+                # Exhausted retries on a retryable exception path.
+                # Preserve the legacy contract: return None rather than
+                # propagating tenacity's RetryError wrapper.
+                return None
+            last_call[0] = time.time()
+            return result
 
         return wrapper
 

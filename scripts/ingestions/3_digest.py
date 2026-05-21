@@ -2772,88 +2772,23 @@ def digest_dataset(
             "errors": errors,
         }
 
-    # Create output directory
-    dataset_output_dir.mkdir(parents=True, exist_ok=True)
-
-    # Save Dataset document
-    dataset_path = dataset_output_dir / f"{dataset_id}_dataset.json"
-    with open(dataset_path, "w") as f:
-        json.dump(dataset_meta, f, indent=2, default=_json_serializer)
-
-    # Count records with data integrity issues and add author contact info
-    records_with_issues = [r for r in records if r.get("_has_missing_files", False)]
-    integrity_issues_count = len(records_with_issues)
-
-    # Enrich records with integrity issues with dataset author/contact info
-    # This allows the error message to include who to contact about the issue
-    if records_with_issues:
-        authors = dataset_meta.get("authors", [])
-        contact_info = dataset_meta.get("contact_info")
-        source_url = dataset_meta.get("external_links", {}).get("source_url")
-
-        for rec in records_with_issues:
-            if authors:
-                rec["_dataset_authors"] = authors
-            if contact_info:
-                rec["_dataset_contact"] = contact_info
-            if source_url:
-                rec["_source_url"] = source_url
-
-    # Save Records document
-    records_path = dataset_output_dir / f"{dataset_id}_records.json"
-    records_data = {
-        "dataset": dataset_id,
-        "source": source,
-        "digested_at": digested_at,
-        "record_count": len(records),
-        "records_with_integrity_issues": integrity_issues_count,
-        "records": records,
-    }
-    with open(records_path, "w") as f:
-        json.dump(records_data, f, indent=2, default=_json_serializer)
-
-    # Always written (even when empty) so downstream tooling can assume it exists.
-    montages_path = dataset_output_dir / f"{dataset_id}_montages.json"
-    montages_data = {
-        "dataset": dataset_id,
-        "source": source,
-        "digested_at": digested_at,
-        "montage_count": len(montages),
-        "montages": list(montages.values()),
-    }
-    with open(montages_path, "w") as f:
-        json.dump(montages_data, f, indent=2, default=_json_serializer)
-
-    # Save summary
-    summary = {
-        "status": "success",
-        "dataset_id": dataset_id,
-        "source": source,
-        "record_count": len(records),
-        "error_count": len(errors),
-        "integrity_issues_count": integrity_issues_count,
-        "montage_count": len(montages),
-        "dataset_file": str(dataset_path),
-        "records_file": str(records_path),
-        "montages_file": str(montages_path),
-    }
-
-    # Log warnings for datasets with integrity issues
-    if integrity_issues_count > 0:
-        logging.warning(
-            "Dataset %s has %d record(s) with missing companion files",
-            dataset_id,
-            integrity_issues_count,
-        )
-        for rec in records_with_issues:
-            issues = rec.get("_data_integrity_issues", [])
-            logging.warning("  - %s: %s", rec.get("bids_relpath"), "; ".join(issues))
-
-    summary_path = dataset_output_dir / f"{dataset_id}_summary.json"
-    with open(summary_path, "w") as f:
-        json.dump(summary, f, indent=2)
-
-    return summary
+    # Hand off to the shared writer (Stage 2C — replaces the inline
+    # JSON-write block + integrity-issue enrichment + per-issue logging
+    # that used to live here. The helper owns all of it now.)
+    result = EnumerationResult(
+        dataset_meta=dataset_meta,
+        records=records,
+        errors=errors,
+        montages=montages,
+        digest_method="bids_filesystem",
+    )
+    return write_dataset_outputs(
+        dataset_output_dir,
+        result,
+        dataset_id=dataset_id,
+        source=source,
+        digested_at=digested_at,
+    )
 
 
 def _json_serializer(obj):

@@ -491,6 +491,233 @@ def validate_companion_files(
     return result
 
 
+def _read_bids_readme(bids_root: Path) -> str | None:
+    """Return cleaned README text, or None if absent / unreadable.
+
+    Tries the standard BIDS README filenames in order:
+    ``README``, ``README.md``, ``README.txt``, ``readme``, ``readme.md``.
+
+    Pure I/O. Phase 8 follow-up — was inline at the top of
+    :func:`extract_dataset_metadata`.
+    """
+    for readme_name in ("README", "README.md", "README.txt", "readme", "readme.md"):
+        readme_path = bids_root / readme_name
+        if not readme_path.exists():
+            continue
+        try:
+            raw_readme = readme_path.read_text(encoding="utf-8")
+            return "\n".join(
+                [line.rstrip() for line in raw_readme.splitlines() if line.strip()]
+            )
+        except (OSError, UnicodeDecodeError):
+            # README absent / unreadable / non-UTF8. Try the next
+            # candidate filename in the list.
+            continue
+    return None
+
+
+def _read_participants_demographics(
+    bids_root: Path,
+) -> tuple[int, list[int], dict[str, int], dict[str, int]]:
+    """Read ``participants.tsv``; return ``(count, ages, sex, handedness)``.
+
+    Demographics aggregation from BIDS ``participants.tsv``:
+    - ``subjects_count``: row count (0 if absent / malformed)
+    - ``ages``: list of valid integer ages (0 < age < 120)
+    - ``sex_distribution``: ``{"m": N, "f": N, "o": N}`` (only keys
+      with > 0 entries appear)
+    - ``handedness_distribution``: ``{"r": N, "l": N, "a": N}``
+      (right / left / ambidextrous)
+
+    Tolerant of malformed files: any pandas / encoding error yields
+    empty demographics (the dataset metadata still gets emitted).
+
+    Phase 8 follow-up — was inline in :func:`extract_dataset_metadata`.
+    """
+    subjects_count = 0
+    ages: list[int] = []
+    sex_distribution: dict[str, int] = {}
+    handedness_distribution: dict[str, int] = {}
+
+    participants_path = bids_root / "participants.tsv"
+    if not participants_path.exists():
+        return subjects_count, ages, sex_distribution, handedness_distribution
+
+    try:
+        df = pd.read_csv(
+            participants_path, sep="\t", dtype="string", keep_default_na=False
+        )
+        subjects_count = len(df)
+
+        age_col = next(
+            (col for col in ("age", "Age", "AGE") if col in df.columns), None
+        )
+        if age_col:
+            for val in df[age_col]:
+                try:
+                    age = int(float(val))
+                    if 0 < age < 120:
+                        ages.append(age)
+                except (ValueError, TypeError):
+                    pass
+
+        sex_col = next(
+            (
+                col
+                for col in ("sex", "Sex", "SEX", "gender", "Gender")
+                if col in df.columns
+            ),
+            None,
+        )
+        if sex_col:
+            for val in df[sex_col]:
+                val_lower = str(val).lower().strip()
+                if val_lower in ("m", "male"):
+                    sex_distribution["m"] = sex_distribution.get("m", 0) + 1
+                elif val_lower in ("f", "female"):
+                    sex_distribution["f"] = sex_distribution.get("f", 0) + 1
+                elif val_lower and val_lower not in (
+                    "n/a",
+                    "na",
+                    "nan",
+                    "unknown",
+                    "",
+                ):
+                    sex_distribution["o"] = sex_distribution.get("o", 0) + 1
+
+        hand_col = next(
+            (
+                col
+                for col in ("handedness", "Handedness", "hand", "Hand")
+                if col in df.columns
+            ),
+            None,
+        )
+        if hand_col:
+            for val in df[hand_col]:
+                val_lower = str(val).lower().strip()
+                if val_lower in ("r", "right"):
+                    handedness_distribution["r"] = (
+                        handedness_distribution.get("r", 0) + 1
+                    )
+                elif val_lower in ("l", "left"):
+                    handedness_distribution["l"] = (
+                        handedness_distribution.get("l", 0) + 1
+                    )
+                elif val_lower in ("a", "ambidextrous"):
+                    handedness_distribution["a"] = (
+                        handedness_distribution.get("a", 0) + 1
+                    )
+    except (
+        pd.errors.ParserError,
+        pd.errors.EmptyDataError,
+        OSError,
+        UnicodeDecodeError,
+        ValueError,
+        KeyError,
+    ):
+        # participants.tsv malformed / unreadable / non-UTF8 / wrong
+        # encoding. Demographics stay empty; the rest of dataset
+        # metadata still gets emitted.
+        pass
+
+    return subjects_count, ages, sex_distribution, handedness_distribution
+
+
+_BIDS_GLOBAL_FILES: tuple[str, ...] = (
+    "participants.tsv",
+    "participants.json",
+    "samples.tsv",
+    "samples.json",
+    "README",
+    "README.md",
+    "README.txt",
+    "CHANGES",
+    "CHANGES.md",
+    "LICENSE",
+    "authors.tsv",
+    "dataset_description.json",
+)
+
+
+def _build_global_storage_info(
+    dataset_id: str, source: str, bids_root: Path
+) -> "Storage | None":
+    """Build the Dataset-level ``storage`` doc.
+
+    Walks the BIDS root looking for canonical global files (the
+    explicit ordered list in :data:`_BIDS_GLOBAL_FILES`) + any other
+    root-level BIDS metadata files (sidecars, TSVs, JSONs). Returns a
+    :class:`Storage` dict with:
+    - ``backend``: per-Source storage backend marker
+    - ``base``: per-Source storage base URL
+    - ``raw_key``: ``"dataset_description.json"`` (the "main" file)
+    - ``dep_keys``: sorted list of other root-level metadata files
+
+    Returns ``None`` if the source has no storage config — keeps the
+    pre-extraction behaviour.
+
+    Phase 8 follow-up — was inline in :func:`extract_dataset_metadata`.
+    """
+    if source not in ("openneuro", "nemar", "gin") and source not in STORAGE_CONFIGS:
+        return None
+
+    storage_base = get_storage_base(dataset_id, source)
+    storage_backend = get_storage_backend(source)
+
+    dep_keys: list[str] = []
+    raw_key = "dataset_description.json"  # default "main" file
+    found_files: set[str] = set()
+
+    # 1. Check explicit list (case-sensitive then case-insensitive).
+    for fname in _BIDS_GLOBAL_FILES:
+        fpath = bids_root / fname
+        if fpath.exists():
+            found_files.add(fname)
+            if fname == "dataset_description.json":
+                raw_key = fname
+            else:
+                dep_keys.append(fname)
+            continue
+        # Case-insensitive fallback
+        try:
+            found = next(
+                x.name for x in bids_root.iterdir() if x.name.lower() == fname.lower()
+            )
+            found_files.add(found)
+            if found.lower() == "dataset_description.json":
+                raw_key = found
+            else:
+                dep_keys.append(found)
+        except StopIteration:
+            pass
+
+    # 2. Scan for other root-level BIDS files (sidecars, etc.).
+    ignored_files = {"manifest.json", ".ds_store"}
+    for item in bids_root.iterdir():
+        if not item.is_file():
+            continue
+        item_name = item.name
+        if (
+            item_name in found_files
+            or item_name.lower() in ignored_files
+            or item_name.startswith(".")
+        ):
+            continue
+        if item_name.lower().endswith(
+            (".json", ".tsv", ".txt", ".md", ".yaml", ".yml")
+        ):
+            dep_keys.append(item_name)
+            found_files.add(item_name)
+
+    return {
+        "backend": storage_backend,  # type: ignore[typeddict-item]
+        "base": storage_base,
+        "raw_key": raw_key,
+        "dep_keys": sorted(set(dep_keys)),
+    }
+
+
 def extract_dataset_metadata(
     bids_dataset,
     dataset_id: str,
@@ -534,22 +761,7 @@ def extract_dataset_metadata(
             # description dict; downstream code defaults each field.
             pass
 
-    # Read README file
-    readme = None
-    for readme_name in ["README", "README.md", "README.txt", "readme", "readme.md"]:
-        readme_path = bids_root / readme_name
-        if readme_path.exists():
-            try:
-                raw_readme = readme_path.read_text(encoding="utf-8")
-                # Clean up readme: strip lines and join
-                readme = "\n".join(
-                    [line.rstrip() for line in raw_readme.splitlines() if line.strip()]
-                )
-                break
-            except (OSError, UnicodeDecodeError):
-                # README absent / unreadable / non-UTF8. Try the next
-                # candidate filename in the list.
-                pass
+    readme = _read_bids_readme(bids_root)
 
     # Extract basic metadata
     name = description.get("Name", dataset_id)
@@ -593,98 +805,22 @@ def extract_dataset_metadata(
     if not recording_modalities:
         recording_modalities = ["eeg"]
 
-    # Read participants.tsv for demographics
-    subjects_count = 0
-    ages = []
-    sex_distribution = {}
-    handedness_distribution = {}
-
+    (
+        subjects_count,
+        ages,
+        sex_distribution,
+        handedness_distribution,
+    ) = _read_participants_demographics(bids_root)
     participants_path = bids_root / "participants.tsv"
-    if participants_path.exists():
-        try:
-            df = pd.read_csv(
-                participants_path, sep="\t", dtype="string", keep_default_na=False
-            )
-            subjects_count = len(df)
 
-            # Extract ages
-            age_col = None
-            for col in ["age", "Age", "AGE"]:
-                if col in df.columns:
-                    age_col = col
-                    break
-            if age_col:
-                for val in df[age_col]:
-                    try:
-                        age = int(float(val))
-                        if 0 < age < 120:
-                            ages.append(age)
-                    except (ValueError, TypeError):
-                        pass
-
-            # Extract sex distribution
-            sex_col = None
-            for col in ["sex", "Sex", "SEX", "gender", "Gender"]:
-                if col in df.columns:
-                    sex_col = col
-                    break
-            if sex_col:
-                for val in df[sex_col]:
-                    val_lower = str(val).lower().strip()
-                    if val_lower in ("m", "male"):
-                        sex_distribution["m"] = sex_distribution.get("m", 0) + 1
-                    elif val_lower in ("f", "female"):
-                        sex_distribution["f"] = sex_distribution.get("f", 0) + 1
-                    elif val_lower and val_lower not in (
-                        "n/a",
-                        "na",
-                        "nan",
-                        "unknown",
-                        "",
-                    ):
-                        sex_distribution["o"] = sex_distribution.get("o", 0) + 1
-
-            # Extract handedness distribution
-            hand_col = None
-            for col in ["handedness", "Handedness", "hand", "Hand"]:
-                if col in df.columns:
-                    hand_col = col
-                    break
-            if hand_col:
-                for val in df[hand_col]:
-                    val_lower = str(val).lower().strip()
-                    if val_lower in ("r", "right"):
-                        handedness_distribution["r"] = (
-                            handedness_distribution.get("r", 0) + 1
-                        )
-                    elif val_lower in ("l", "left"):
-                        handedness_distribution["l"] = (
-                            handedness_distribution.get("l", 0) + 1
-                        )
-                    elif val_lower in ("a", "ambidextrous"):
-                        handedness_distribution["a"] = (
-                            handedness_distribution.get("a", 0) + 1
-                        )
-
-        except (
-            pd.errors.ParserError,
-            pd.errors.EmptyDataError,
-            OSError,
-            UnicodeDecodeError,
-            ValueError,
-            KeyError,
-        ):
-            # participants.tsv malformed / unreadable / non-UTF8 / wrong
-            # encoding. Demographics stay empty; the rest of dataset
-            # metadata still gets emitted.
-            pass
-
-    # Warn when participants.tsv row count differs from sub-* folder count
-    folder_subjects = {
-        d.name for d in bids_root.iterdir() if d.is_dir() and d.name.startswith("sub-")
-    }
-    if participants_path.exists() and subjects_count > 0 and folder_subjects:
-        if subjects_count != len(folder_subjects):
+    # Warn when participants.tsv row count differs from sub-* folder count.
+    if participants_path.exists() and subjects_count > 0:
+        folder_subjects = {
+            d.name
+            for d in bids_root.iterdir()
+            if d.is_dir() and d.name.startswith("sub-")
+        }
+        if folder_subjects and subjects_count != len(folder_subjects):
             logging.warning(
                 "%s: participants.tsv has %d rows but found %d sub-* folders "
                 "(possible naming convention mismatch)",
@@ -747,88 +883,7 @@ def extract_dataset_metadata(
             if f.is_file() or f.is_symlink()
         )
 
-    # Build Storage info for global files
-    storage_info: Storage | None = None
-    if source in ("openneuro", "nemar", "gin") or source in STORAGE_CONFIGS:
-        storage_base = get_storage_base(dataset_id, source)
-        storage_backend = get_storage_backend(source)
-
-        # Core global files to look for (explicit list for ordering/priority)
-        explicit_global_files = [
-            "participants.tsv",
-            "participants.json",
-            "samples.tsv",
-            "samples.json",
-            "README",
-            "README.md",
-            "README.txt",
-            "CHANGES",
-            "CHANGES.md",
-            "LICENSE",
-            "authors.tsv",
-            "dataset_description.json",
-        ]
-
-        dep_keys = []
-        raw_key = "dataset_description.json"  # Default "main" file
-        found_files = set()
-
-        # 1. Check explicit list
-        for fname in explicit_global_files:
-            fpath = bids_root / fname
-            if fpath.exists():
-                found_files.add(fname)
-                if fname == "dataset_description.json":
-                    raw_key = fname
-                else:
-                    dep_keys.append(fname)
-            else:
-                # Case-insensitive fallback
-                try:
-                    found = next(
-                        x.name
-                        for x in bids_root.iterdir()
-                        if x.name.lower() == fname.lower()
-                    )
-                    found_files.add(found)
-                    if found.lower() == "dataset_description.json":
-                        raw_key = found
-                    else:
-                        dep_keys.append(found)
-                except StopIteration:
-                    pass
-
-        # 2. Scan for other root-level BIDS files (sidecars, etc.)
-        # Exclude directories, manifest.json, and files we already found
-        ignored_files = {"manifest.json", ".ds_store"}
-        for item in bids_root.iterdir():
-            if not item.is_file():
-                continue
-
-            item_name = item.name
-            if (
-                item_name in found_files
-                or item_name.lower() in ignored_files
-                or item_name.startswith(".")
-            ):
-                continue
-
-            # Include typical BIDS metadata extensions
-            if item_name.lower().endswith(
-                (".json", ".tsv", ".txt", ".md", ".yaml", ".yml")
-            ):
-                dep_keys.append(item_name)
-                found_files.add(item_name)
-
-        # Deduplicate keys and sort
-        dep_keys = sorted(list(set(dep_keys)))
-
-        storage_info = {
-            "backend": storage_backend,  # type: ignore
-            "base": storage_base,
-            "raw_key": raw_key,
-            "dep_keys": dep_keys,
-        }
+    storage_info = _build_global_storage_info(dataset_id, source, bids_root)
 
     # Create Dataset document
     dataset = create_dataset(

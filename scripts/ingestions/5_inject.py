@@ -56,7 +56,7 @@ from _http import (
     HTTPStatusError,
     RequestError,
     get_client,
-    make_retry_client,
+    make_authed_client,
     request_json,
 )
 
@@ -190,8 +190,8 @@ def fetch_existing_dataset(
 
 
 def _make_session(auth_token: str):
-    """Create session with retry strategy and auth."""
-    return make_retry_client(auth_token)
+    """Create an authed HTTP client. Retries inject at the request site."""
+    return make_authed_client(auth_token)
 
 
 def find_digested_datasets(

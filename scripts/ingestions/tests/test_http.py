@@ -223,3 +223,45 @@ def test_request_json_custom_retry_statuses():
     )
     assert payload == {"ok": True}
     assert route.call_count == 2
+
+
+# ─── make_retry_client deprecation (audit-2 F3) ────────────────────────────
+
+
+def test_make_retry_client_emits_deprecation_warning():
+    """Old callers see a DeprecationWarning pointing to make_authed_client."""
+    import warnings
+
+    from _http import make_retry_client
+
+    with warnings.catch_warnings(record=True) as captured:
+        warnings.simplefilter("always")
+        client = make_retry_client("dummy_token")
+        client.close()
+
+    deprecation = [w for w in captured if issubclass(w.category, DeprecationWarning)]
+    assert deprecation, "expected DeprecationWarning"
+    assert "make_authed_client" in str(deprecation[0].message)
+
+
+def test_make_retry_client_returns_same_shape_as_authed_client():
+    """The deprecation alias must behave identically to the new name."""
+    import warnings
+
+    from _http import make_authed_client, make_retry_client
+
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", DeprecationWarning)
+        deprecated_client = make_retry_client("dummy_token")
+        new_client = make_authed_client("dummy_token")
+
+    try:
+        # Same auth header on both clients.
+        assert deprecated_client.headers.get("Authorization") == new_client.headers.get(
+            "Authorization"
+        )
+        # Same timeout on both clients.
+        assert deprecated_client.timeout == new_client.timeout
+    finally:
+        deprecated_client.close()
+        new_client.close()

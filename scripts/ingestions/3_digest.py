@@ -883,9 +883,9 @@ def extract_record(
     mod_canon = normalize_modality(modality) or "eeg"
 
     # Get BIDS relative path (without dataset prefix)
-    bids_relpath = str(bids_dataset.get_relative_bidspath(bids_file))
-    if bids_relpath.startswith(f"{dataset_id}/"):
-        bids_relpath = bids_relpath[len(dataset_id) + 1 :]
+    bids_relpath = strip_dataset_prefix(
+        str(bids_dataset.get_relative_bidspath(bids_file)), dataset_id
+    )
 
     # Determine datatype and suffix
     datatype = mod_canon
@@ -976,31 +976,21 @@ def extract_record(
                                     sidecar_data["SamplingFrequency"]
                                 )
 
-                            # Extract channel count from various BIDS fields
+                            # Extract channel count from BIDS sidecar fields.
+                            # Extracted in Phase 8 to sum_bids_channel_counts.
                             if not nchans:
-                                # Sum all channel type counts if available
-                                channel_count_fields = [
-                                    "MEGChannelCount",
-                                    "EEGChannelCount",
-                                    "EOGChannelCount",
-                                    "ECGChannelCount",
-                                    "EMGChannelCount",
-                                    "MiscChannelCount",
-                                    "TriggerChannelCount",
-                                    "iEEGChannelCount",
-                                    "SEEGChannelCount",
-                                    "ECOGChannelCount",
-                                    "NIRSChannelCount",
-                                    "ACCELChannelCount",
-                                ]
-                                total_channels = sum(
-                                    sidecar_data.get(field, 0) or 0
-                                    for field in channel_count_fields
-                                )
-                                if total_channels > 0:
-                                    nchans = total_channels
+                                summed = sum_bids_channel_counts(sidecar_data)
+                                if summed is not None:
+                                    nchans = summed
                             break  # Found a valid sidecar in this dir
-                        except Exception:
+                        except (
+                            OSError,
+                            json.JSONDecodeError,
+                            ValueError,
+                            TypeError,
+                        ):
+                            # Sidecar unreadable or malformed; try the next
+                            # candidate path in the BIDS inheritance search.
                             pass
 
     # Try to read from channels.tsv if still missing
@@ -1494,6 +1484,83 @@ def parse_bids_entities_from_path(filepath: str) -> dict[str, Any]:
         entities["suffix"] = suffix_match.group(1)
 
     return entities
+
+
+_BIDS_CHANNEL_COUNT_FIELDS: tuple[str, ...] = (
+    "MEGChannelCount",
+    "EEGChannelCount",
+    "EOGChannelCount",
+    "ECGChannelCount",
+    "EMGChannelCount",
+    "MiscChannelCount",
+    "TriggerChannelCount",
+    "iEEGChannelCount",
+    "SEEGChannelCount",
+    "ECOGChannelCount",
+    "NIRSChannelCount",
+    "ACCELChannelCount",
+)
+
+
+def sum_bids_channel_counts(sidecar_data: dict[str, Any]) -> int | None:
+    """Sum every BIDS *ChannelCount field present in a sidecar.
+
+    BIDS sidecars report channel counts per type (EEG, MEG, EOG, etc.)
+    rather than a single total. This helper sums all known per-type
+    fields and returns the total, or ``None`` if the sum is zero (so the
+    caller can distinguish "no info" from "zero channels").
+
+    Parameters
+    ----------
+    sidecar_data : dict
+        Parsed JSON sidecar contents. Unknown fields are ignored.
+
+    Returns
+    -------
+    int or None
+        Total channel count summed across every documented BIDS
+        ``*ChannelCount`` field, or ``None`` if all are absent/zero.
+
+    Notes
+    -----
+    Extracted from ``extract_record`` (Phase 8 decomposition, 2026-05).
+    Repeated in 3 places in the original function; consolidated here.
+    """
+    total = sum(sidecar_data.get(field, 0) or 0 for field in _BIDS_CHANNEL_COUNT_FIELDS)
+    return total if total > 0 else None
+
+
+def strip_dataset_prefix(bids_relpath: str, dataset_id: str) -> str:
+    """Strip the dataset_id leading directory from a BIDS relative path.
+
+    BIDS files are normally stored as ``<dataset_id>/sub-XX/...``. The
+    ``Record.bids_relpath`` field is normalised to omit the dataset
+    prefix (the dataset is already known from ``Record.dataset``).
+
+    Parameters
+    ----------
+    bids_relpath : str
+        Path possibly prefixed by ``<dataset_id>/``.
+    dataset_id : str
+        Dataset accession (e.g. ``"ds002893"``).
+
+    Returns
+    -------
+    str
+        Path with the leading ``<dataset_id>/`` removed if present;
+        unchanged otherwise.
+
+    Examples
+    --------
+    >>> strip_dataset_prefix("ds002893/sub-001/eeg/x.set", "ds002893")
+    'sub-001/eeg/x.set'
+    >>> strip_dataset_prefix("sub-001/eeg/x.set", "ds002893")
+    'sub-001/eeg/x.set'
+    """
+    prefix = f"{dataset_id}/"
+    if bids_relpath.startswith(prefix):
+        return bids_relpath[len(prefix) :]
+    return bids_relpath
 
 
 def _build_bids_search_paths(

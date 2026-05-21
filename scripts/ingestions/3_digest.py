@@ -73,11 +73,13 @@ from _file_utils import (
     get_annex_file_size,
 )
 from _fingerprint import fingerprint_from_files, fingerprint_from_manifest
-from _mef3_parser import parse_mef3_metadata
+
+# Format-parser registry (ROADMAP P2.2). Maps file extension to a
+# FormatParser callable. FIF stays special-cased in _parse_fif_with_mne
+# below — its parser returns (dict, is_split) which doesn't fit the
+# shared shape.
+from _format_parser_registry import get_parser_for_extension
 from _montage import extract_layout
-from _set_parser import parse_set_metadata
-from _snirf_parser import parse_snirf_metadata
-from _vhdr_parser import parse_vhdr_metadata
 
 # Telemetry (ROADMAP P1.1). Default emitter is NullEmitter so digest
 # behaviour is unchanged when telemetry is disabled. Configure by
@@ -228,65 +230,10 @@ def detect_source(dataset_dir: Path) -> str:
     return _reconcile_source(manifest_src, dataset_id, context="detect_source")
 
 
-def _parse_edf_with_mne(edf_path: Path) -> dict[str, Any] | None:
-    """Parse metadata from EDF/BDF file using MNE.
-
-    Parameters
-    ----------
-    edf_path : Path
-        Path to the EDF or BDF file.
-
-    Returns
-    -------
-    dict[str, Any] | None
-        Dictionary with sampling_frequency, nchans, ch_names,
-        or None if parsing fails.
-
-    """
-    # Check if file exists and is readable (not a broken git-annex symlink)
-    if not edf_path.exists():
-        return None
-    try:
-        resolved = edf_path.resolve()
-        if not resolved.exists():
-            return None
-    except (OSError, RuntimeError):
-        return None
-
-    try:
-        # Read with preload=False to avoid loading data into memory
-        # verbose=False to suppress MNE's logging
-        raw = mne.io.read_raw_edf(str(edf_path), preload=False, verbose=False)
-        try:
-            result: dict[str, Any] = {}
-
-            # Extract sampling frequency
-            sfreq = raw.info.get("sfreq")
-            if sfreq:
-                result["sampling_frequency"] = float(sfreq)
-
-            # Extract channel info
-            ch_names = raw.info.get("ch_names")
-            if ch_names:
-                result["ch_names"] = list(ch_names)
-                result["nchans"] = len(ch_names)
-
-            # Extract n_times (available from header without loading data)
-            if raw.n_times and raw.n_times > 0:
-                result["n_times"] = int(raw.n_times)
-
-            return result if result else None
-        finally:
-            try:
-                raw.close()
-            except (OSError, AttributeError):
-                pass
-
-    except (OSError, ValueError, RuntimeError, KeyError, TypeError):
-        # MNE raises RuntimeError on unsupported variants, OSError on
-        # filesystem issues, ValueError on truncated header, KeyError on
-        # missing required fields. All recoverable parse failures.
-        return None
+# _parse_edf_with_mne moved to _format_parser_registry.py (ROADMAP
+# P2.2). The cascade reaches it via get_parser_for_extension(".edf")
+# and get_parser_for_extension(".bdf") — same MNE-based reader, one
+# canonical home for all single-dict format parsers.
 
 
 def _parse_fif_with_mne(fif_path: Path) -> tuple[dict[str, Any] | None, bool]:
@@ -1106,19 +1053,16 @@ def _extract_technical_metadata(
     )
 
     # ── Step 4: parse binary headers directly when sidecars missing ──
+    # Per-format parsers live in _format_parser_registry.py (ROADMAP
+    # P2.2). The registry maps extension → parser callable; FIF stays
+    # special-cased below because its parser returns (dict, is_split)
+    # rather than just dict.
     ext = bids_file_path.suffix.lower()
-    _parsers = {
-        ".vhdr": parse_vhdr_metadata,
-        ".snirf": parse_snirf_metadata,
-        ".mefd": parse_mef3_metadata,
-        ".edf": _parse_edf_with_mne,
-        ".bdf": _parse_edf_with_mne,
-        ".set": parse_set_metadata,
-    }
-    if ext in _parsers and (
+    parser = get_parser_for_extension(ext)
+    if parser is not None and (
         not sampling_frequency or not nchans or not ntimes or not ch_names
     ):
-        md = _parsers[ext](bids_file_path)
+        md = parser(bids_file_path)
         if md:
             sf_before, n_before, nt_before, ch_before = (
                 sampling_frequency,

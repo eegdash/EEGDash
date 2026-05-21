@@ -67,6 +67,7 @@ jobs:
         #   2026-05-22 C6.2+:     57  (5_inject helpers: load_*, _flatten, _sanitize, filter)
         #   2026-05-22 C6.5:      58  (_inject_config Pydantic-settings + main() refactor)
         #   2026-05-22 C7:        59  (_digest_config + _validate_config, same pattern)
+        #   2026-05-22 C8:        60  (_clone_config, completes the 4-stage pattern)
         # Every PR that raises coverage MUST bump this floor in the
         # same commit so subsequent PRs can't regress.
         run: |
@@ -76,7 +77,7 @@ jobs:
             --cov-report=term-missing \
             --cov-report=html \
             --cov-report=xml \
-            --cov-fail-under=59
+            --cov-fail-under=60
       - name: Append coverage summary to job summary
         if: always()
         working-directory: scripts/ingestions

@@ -28,6 +28,7 @@ __all__ = [
     "spectral_root_total_power",
     "spectral_moment",
     "spectral_entropy",
+    "spectral_peak_frequency",
     "spectral_edge",
     "spectral_slope",
     "spectral_bands_power",

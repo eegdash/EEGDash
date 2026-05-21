@@ -16,6 +16,8 @@ import logging
 from pathlib import Path
 from typing import Any
 
+from _parser_utils import validate_file_path
+
 logger = logging.getLogger(__name__)
 
 # scipy's MatReadError isn't in the public io namespace, but it's the
@@ -62,7 +64,11 @@ def parse_set_metadata(set_path: Path | str) -> dict[str, Any] | None:
     """
     set_path = Path(set_path)
 
-    if not set_path.exists():
+    # Phase 9 audit-3 F3: use the shared validate_file_path so .set
+    # files behind broken git-annex symlinks are handled consistently
+    # with the other parsers (previously this just called .exists()
+    # which returns True for broken symlinks pointing into git-annex).
+    if not validate_file_path(set_path):
         return None
 
     result: dict[str, Any] = {}

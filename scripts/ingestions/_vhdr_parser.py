@@ -19,7 +19,11 @@ import sys
 from pathlib import Path
 from typing import Any
 
-from _parser_utils import is_broken_symlink, read_with_encoding_fallback
+from _parser_utils import (
+    is_broken_symlink,
+    path_is_within_root,
+    read_with_encoding_fallback,
+)
 
 # Add eegdash to path if not already importable
 _project_root = Path(__file__).parent.parent.parent
@@ -184,7 +188,11 @@ def extract_vhdr_references(vhdr_path: Path | str) -> dict[str, str | None]:
     if content is None:
         return result
 
-    # Extract DataFile reference
+    # Extract DataFile reference. Phase 9 audit-3 F2 hardening: a
+    # malicious .vhdr could set DataFile=../../../etc/passwd. We accept
+    # the field but only mark *_exists=True if the resolved sibling
+    # stays inside the .vhdr's parent directory.
+    parent_dir = vhdr_path.parent
     datafile_match = re.search(
         r"^\s*DataFile\s*=\s*(.+?)\s*$",
         content,
@@ -192,10 +200,12 @@ def extract_vhdr_references(vhdr_path: Path | str) -> dict[str, str | None]:
     )
     if datafile_match:
         result["datafile"] = datafile_match.group(1).strip()
-        data_path = vhdr_path.parent / result["datafile"]
-        result["datafile_exists"] = data_path.exists()
+        data_path = parent_dir / result["datafile"]
+        result["datafile_exists"] = (
+            path_is_within_root(data_path, parent_dir) and data_path.exists()
+        )
 
-    # Extract MarkerFile reference
+    # Extract MarkerFile reference (same containment check)
     markerfile_match = re.search(
         r"^\s*MarkerFile\s*=\s*(.+?)\s*$",
         content,
@@ -203,8 +213,10 @@ def extract_vhdr_references(vhdr_path: Path | str) -> dict[str, str | None]:
     )
     if markerfile_match:
         result["markerfile"] = markerfile_match.group(1).strip()
-        marker_path = vhdr_path.parent / result["markerfile"]
-        result["markerfile_exists"] = marker_path.exists()
+        marker_path = parent_dir / result["markerfile"]
+        result["markerfile_exists"] = (
+            path_is_within_root(marker_path, parent_dir) and marker_path.exists()
+        )
 
     return result
 

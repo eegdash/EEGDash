@@ -601,7 +601,18 @@ def main():
     print(f"Processing {len(datasets)} datasets with {args.workers} workers")
     args.output.mkdir(parents=True, exist_ok=True)
 
-    # Process datasets
+    # Process datasets. Wall-clock budget across all workers protects
+    # against a hung worker indefinitely blocking the main loop — even
+    # though `args.timeout` already caps each individual handler, the
+    # as_completed iterator itself blocks on the GIL waiting for
+    # futures, so a stuck thread that never times out internally would
+    # still deadlock. See ROBUSTNESS/audit-1 F3.
+    per_dataset_timeout_s = float(args.timeout)
+    wall_clock_budget_s = max(
+        per_dataset_timeout_s * 2,
+        len(datasets) * per_dataset_timeout_s / max(1, args.workers) + 60.0,
+    )
+
     results = []
     with ThreadPoolExecutor(max_workers=args.workers) as executor:
         futures = {
@@ -616,7 +627,7 @@ def main():
         }
 
         pbar = tqdm(
-            as_completed(futures),
+            as_completed(futures, timeout=wall_clock_budget_s),
             total=len(futures),
             desc="Processing",
             postfix=_stats,

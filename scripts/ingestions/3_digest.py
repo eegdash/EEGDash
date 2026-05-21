@@ -925,6 +925,47 @@ def extract_dataset_metadata(
     return dict(dataset)
 
 
+# Provenance source names. These are the values that show up in a
+# Record's ``_metadata_provenance`` field. See ROBUSTNESS/ROADMAP.md
+# P0.1 for the motivation and PROGRESS-8 for the implementation
+# narrative.
+_PROV_MNE_BIDS = "mne_bids"
+_PROV_MODALITY_SIDECAR = "modality_sidecar"
+_PROV_CHANNELS_TSV = "channels_tsv"
+_PROV_BINARY_PARSER = "binary_parser"
+_PROV_MNE_FALLBACK = "mne_fallback"
+
+_METADATA_FIELDS: tuple[str, ...] = (
+    "sampling_frequency",
+    "nchans",
+    "ntimes",
+    "ch_names",
+)
+
+
+def _empty_provenance() -> dict[str, str | None]:
+    """A fresh provenance dict — all fields unattributed."""
+    return {field: None for field in _METADATA_FIELDS}
+
+
+def _stamp_provenance(
+    provenance: dict[str, str | None],
+    source: str,
+    *,
+    field: str,
+    old_value: Any,
+    new_value: Any,
+) -> None:
+    """Record ``source`` as the provenance of ``field`` if this step filled it.
+
+    "Filled" means: the field was None before this step and is not
+    None after. The first source to fill a field wins — later sources
+    don't overwrite (mirrors the cascade's ``X = X or new_X`` pattern).
+    """
+    if old_value is None and new_value is not None and provenance[field] is None:
+        provenance[field] = source
+
+
 def _extract_technical_metadata(
     bids_dataset: Any,
     bids_file: str,
@@ -935,32 +976,44 @@ def _extract_technical_metadata(
     list[str] | None,
     bool,
     bool,
+    dict[str, str | None],
 ]:
-    """Resolve sfreq / nchans / ntimes / ch_names for a single BIDS file.
+    """Resolve sfreq / nchans / ntimes / ch_names + their provenance.
 
     Runs the 4-step cascade:
     1. ``EEGBIDSDataset`` attribute getters (via mne_bids).
     2. Modality JSON sidecar (with BIDS inheritance walk).
     3. ``channels.tsv`` (with BIDS inheritance walk).
     4. Direct binary header read for the file's extension
-       (.vhdr / .snirf / .mefd / .edf / .bdf / .set / .fif).
+       (.vhdr / .snirf / .mefd / .edf / .bdf / .set / .fif), plus an
+       MNE n_times fallback for VHDR and FIF.
 
-    Each step only fills fields the previous step left None. The fourth
-    step also pulls n_times from MNE for VHDR and FIF (which need the
-    binary companion to compute).
+    Each step only fills fields the previous step left None. As it
+    fills a field, the step's source name is stamped into the
+    ``provenance`` dict — first writer wins.
 
-    Returns ``(sfreq, nchans, ntimes, ch_names, fif_is_split,
-    fif_continuations_ok)``. The two FIF flags are passed back to the
-    caller so it can decide on split-FIF integrity.
+    Returns
+    -------
+    sampling_frequency, nchans, ntimes, ch_names
+        The metadata values (possibly None if no step filled them).
+    fif_is_split, fif_continuations_ok
+        Pass-through flags for the caller's split-FIF integrity check.
+    provenance
+        Mapping ``{field_name -> source_name | None}`` where source_name
+        is one of :data:`_PROV_MNE_BIDS`, :data:`_PROV_MODALITY_SIDECAR`,
+        :data:`_PROV_CHANNELS_TSV`, :data:`_PROV_BINARY_PARSER`,
+        :data:`_PROV_MNE_FALLBACK`. ``None`` means the field stayed
+        unresolved through the cascade.
 
-    Phase 8 follow-up — was 120 LOC inline at the top of
-    :func:`extract_record`.
+    Phase 8 follow-up + P0.1 cascade-with-provenance.
     """
     sampling_frequency: float | None = None
     nchans: int | None = None
     ntimes: int | None = None
+    ch_names: list[str] | None = None
+    provenance = _empty_provenance()
 
-    # Step 1: ``EEGBIDSDataset`` (mne_bids attribute getters).
+    # ── Step 1: ``EEGBIDSDataset`` attribute getters (mne_bids) ──────
     try:
         sampling_frequency = bids_dataset.get_bids_file_attribute("sfreq", bids_file)
         nchans = bids_dataset.get_bids_file_attribute("nchans", bids_file)
@@ -973,13 +1026,16 @@ def _extract_technical_metadata(
     # Cast to numeric types (the attribute getters return strings).
     if sampling_frequency:
         sampling_frequency = float(sampling_frequency)
+        provenance["sampling_frequency"] = _PROV_MNE_BIDS
     if nchans:
         nchans = int(nchans)
+        provenance["nchans"] = _PROV_MNE_BIDS
     if ntimes:
         ntimes = int(ntimes)
+        provenance["ntimes"] = _PROV_MNE_BIDS
 
-    # channels.tsv (authoritative for channel info).
-    ch_names: list[str] | None = None
+    # ``channel_labels`` reads channels.tsv via mne_bids — same library,
+    # same source category for provenance purposes.
     try:
         ch_names = bids_dataset.channel_labels(bids_file)
     except (FileNotFoundError, OSError, ValueError, KeyError, AttributeError):
@@ -987,23 +1043,59 @@ def _extract_technical_metadata(
         # malformed. Downstream fallback infers channels from the
         # binary header.
         pass
-
-    # Prefer channel_labels count over sidecar nchans (sidecar JSON may
-    # only have partial counts, e.g. only EEGChannelCount).
     if ch_names:
+        provenance["ch_names"] = _PROV_MNE_BIDS
+        # Prefer channel_labels count over sidecar nchans (sidecar
+        # JSON may only have partial counts, e.g. EEGChannelCount).
+        # The nchans provenance stays as whatever step filled it first
+        # if it's already set; we only overwrite the VALUE.
+        if provenance["nchans"] is None:
+            provenance["nchans"] = _PROV_MNE_BIDS
         nchans = len(ch_names)
 
-    # Step 2-3: BIDS sidecar inheritance — modality JSON, then channels.tsv.
+    # ── Step 2: modality JSON sidecar (BIDS inheritance walk) ────────
     bids_file_path = Path(bids_file)
     bids_root = Path(bids_dataset.bidsdir)
+    sf_before, n_before = sampling_frequency, nchans
     sampling_frequency, nchans = extract_sfreq_nchans_from_modality_sidecar(
         bids_file_path, bids_root, sampling_frequency, nchans
     )
+    _stamp_provenance(
+        provenance,
+        _PROV_MODALITY_SIDECAR,
+        field="sampling_frequency",
+        old_value=sf_before,
+        new_value=sampling_frequency,
+    )
+    _stamp_provenance(
+        provenance,
+        _PROV_MODALITY_SIDECAR,
+        field="nchans",
+        old_value=n_before,
+        new_value=nchans,
+    )
+
+    # ── Step 3: channels.tsv (BIDS inheritance walk) ─────────────────
+    sf_before, n_before = sampling_frequency, nchans
     sampling_frequency, nchans = extract_sfreq_nchans_from_channels_tsv(
         bids_file_path, bids_root, sampling_frequency, nchans
     )
+    _stamp_provenance(
+        provenance,
+        _PROV_CHANNELS_TSV,
+        field="sampling_frequency",
+        old_value=sf_before,
+        new_value=sampling_frequency,
+    )
+    _stamp_provenance(
+        provenance,
+        _PROV_CHANNELS_TSV,
+        field="nchans",
+        old_value=n_before,
+        new_value=nchans,
+    )
 
-    # Step 4: parse binary headers directly when sidecars are missing.
+    # ── Step 4: parse binary headers directly when sidecars missing ──
     ext = bids_file_path.suffix.lower()
     _parsers = {
         ".vhdr": parse_vhdr_metadata,
@@ -1018,10 +1110,29 @@ def _extract_technical_metadata(
     ):
         md = _parsers[ext](bids_file_path)
         if md:
+            sf_before, n_before, nt_before, ch_before = (
+                sampling_frequency,
+                nchans,
+                ntimes,
+                ch_names,
+            )
             sampling_frequency = sampling_frequency or md.get("sampling_frequency")
             nchans = nchans or md.get("nchans")
             ntimes = ntimes or md.get("n_times") or md.get("n_samples")
             ch_names = ch_names or md.get("ch_names")
+            for field, old, new in (
+                ("sampling_frequency", sf_before, sampling_frequency),
+                ("nchans", n_before, nchans),
+                ("ntimes", nt_before, ntimes),
+                ("ch_names", ch_before, ch_names),
+            ):
+                _stamp_provenance(
+                    provenance,
+                    _PROV_BINARY_PARSER,
+                    field=field,
+                    old_value=old,
+                    new_value=new,
+                )
 
     # VHDR: try MNE for n_times specifically (requires binary companion).
     if ext == ".vhdr" and not ntimes:
@@ -1032,6 +1143,8 @@ def _extract_technical_metadata(
             )
             if raw.n_times and raw.n_times > 0:
                 ntimes = int(raw.n_times)
+                if provenance["ntimes"] is None:
+                    provenance["ntimes"] = _PROV_MNE_FALLBACK
         except (OSError, ValueError, RuntimeError, KeyError):
             # MNE brainvision reader: OSError on missing companion
             # files, ValueError on malformed header, RuntimeError on
@@ -1050,12 +1163,31 @@ def _extract_technical_metadata(
     if ext == ".fif" and (not sampling_frequency or not nchans or not ntimes):
         fif_metadata, fif_is_split = _parse_fif_with_mne(bids_file_path)
         if fif_metadata:
+            sf_before, n_before, nt_before, ch_before = (
+                sampling_frequency,
+                nchans,
+                ntimes,
+                ch_names,
+            )
             sampling_frequency = sampling_frequency or fif_metadata.get(
                 "sampling_frequency"
             )
             nchans = nchans or fif_metadata.get("nchans")
             ntimes = ntimes or fif_metadata.get("n_times")
             ch_names = ch_names or fif_metadata.get("ch_names")
+            for field, old, new in (
+                ("sampling_frequency", sf_before, sampling_frequency),
+                ("nchans", n_before, nchans),
+                ("ntimes", nt_before, ntimes),
+                ("ch_names", ch_before, ch_names),
+            ):
+                _stamp_provenance(
+                    provenance,
+                    _PROV_MNE_FALLBACK,
+                    field=field,
+                    old_value=old,
+                    new_value=new,
+                )
 
     return (
         sampling_frequency,
@@ -1064,6 +1196,7 @@ def _extract_technical_metadata(
         ch_names,
         fif_is_split,
         fif_continuations_ok,
+        provenance,
     )
 
 
@@ -1184,6 +1317,7 @@ def _clamp_metadata_extremes(
     nchans: int | None,
     ch_names: list[str] | None,
     bids_relpath: str,
+    provenance: dict[str, str | None] | None = None,
 ) -> tuple[float | None, int | None]:
     """Sanity-check sfreq + nchans; reject impossible values, warn on suspicious.
 
@@ -1192,6 +1326,10 @@ def _clamp_metadata_extremes(
     - ``ch_names`` count vs ``nchans``: debug-log on mismatch.
 
     Returns ``(sfreq, nchans)`` with rejected values replaced by None.
+    When ``provenance`` is supplied, the rejected field's provenance
+    entry is also cleared — maintains the invariant
+    "provenance is None iff value is None" for the final Record.
+
     Phase 8 follow-up — was inline in :func:`extract_record`.
     """
     if sampling_frequency is not None:
@@ -1202,6 +1340,8 @@ def _clamp_metadata_extremes(
                 sampling_frequency,
             )
             sampling_frequency = None
+            if provenance is not None:
+                provenance["sampling_frequency"] = None
         elif sampling_frequency > 1_000_000:
             logging.warning(
                 "Suspicious sampling_frequency > 1MHz for %s: %s",
@@ -1213,6 +1353,8 @@ def _clamp_metadata_extremes(
         if nchans <= 0:
             logging.warning("Invalid nchans <= 0 for %s: %s", bids_relpath, nchans)
             nchans = None
+            if provenance is not None:
+                provenance["nchans"] = None
         elif nchans > 10000:
             logging.warning(
                 "Suspicious nchans > 10000 for %s: %s", bids_relpath, nchans
@@ -1282,8 +1424,8 @@ def extract_record(
     storage_backend = get_storage_backend(source)
 
     # Run the 4-step technical-metadata cascade (sidecar / channels.tsv /
-    # binary parser / MNE). The two FIF flags are returned for the
-    # split-FIF integrity logic below.
+    # binary parser / MNE). Returns the 4 metadata values + 2 FIF flags +
+    # the provenance dict (P0.1 — cascade-with-provenance).
     (
         sampling_frequency,
         nchans,
@@ -1291,6 +1433,7 @@ def extract_record(
         ch_names,
         fif_is_split,
         fif_continuations_ok,
+        metadata_provenance,
     ) = _extract_technical_metadata(bids_dataset, bids_file)
     bids_file_path = Path(bids_file)
 
@@ -1321,7 +1464,11 @@ def extract_record(
         )
 
     sampling_frequency, nchans = _clamp_metadata_extremes(
-        sampling_frequency, nchans, ch_names, bids_relpath
+        sampling_frequency,
+        nchans,
+        ch_names,
+        bids_relpath,
+        provenance=metadata_provenance,
     )
 
     # NEMAR fast-path enrichment for the runtime; see Storage TypedDict
@@ -1416,6 +1563,14 @@ def extract_record(
         record["_has_missing_files"] = True
     else:
         record["_has_missing_files"] = False
+
+    # Stamp cascade provenance (P0.1). Surfaces WHICH extractor filled
+    # each technical-metadata field — debuggability win for support
+    # tickets where a Record has the wrong sampling_frequency. Only
+    # attached when at least one field was resolved (avoids polluting
+    # Records that fell through the cascade entirely).
+    if any(v is not None for v in metadata_provenance.values()):
+        record["_metadata_provenance"] = metadata_provenance
 
     return dict(record)
 

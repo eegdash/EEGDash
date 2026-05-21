@@ -67,4 +67,4 @@ repos:
         entry: bash scripts/ingestions/scripts/find_leaked_creds.sh
         language: system
         pass_filenames: false
-        stages: [pre-commit, commit-msg]
+        stages: [pre-commit]

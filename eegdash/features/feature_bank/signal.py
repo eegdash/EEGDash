@@ -63,7 +63,7 @@ def signal_envelope_preprocessor(x, /):
         The signal envelope, with the same shape as the input.
 
     """
-    return np.abs(signal.hilbert(x - x.mean(axis=-1, keepdims=True), axis=-1))
+    return signal.envelope(x, axis=-1)
 
 
 @feature_predecessor()

@@ -1,0 +1,13 @@
+{
+  "status": "success",
+  "dataset_id": "ds_snapshot_vhdr",
+  "source": "unknown",
+  "record_count": 1,
+  "error_count": 0,
+  "integrity_issues_count": 0,
+  "montage_count": 0,
+  "dataset_file": "tests/fixtures/digest_snapshots/outputs/ds_snapshot_vhdr/ds_snapshot_vhdr_dataset.json",
+  "records_file": "tests/fixtures/digest_snapshots/outputs/ds_snapshot_vhdr/ds_snapshot_vhdr_records.json",
+  "montages_file": "tests/fixtures/digest_snapshots/outputs/ds_snapshot_vhdr/ds_snapshot_vhdr_montages.json",
+  "digest_method": "bids_filesystem"
+}

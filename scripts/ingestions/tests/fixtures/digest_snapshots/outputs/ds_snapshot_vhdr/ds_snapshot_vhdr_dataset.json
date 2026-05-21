@@ -1,0 +1,56 @@
+{
+  "dataset_id": "ds_snapshot_vhdr",
+  "name": "Digest snapshot fixture (motorloc)",
+  "canonical_name": null,
+  "source": "unknown",
+  "readme": null,
+  "recording_modality": [
+    "eeg"
+  ],
+  "datatypes": [
+    "eeg"
+  ],
+  "experimental_modalities": null,
+  "bids_version": "1.7.0",
+  "license": "CC0",
+  "authors": [
+    "Test User"
+  ],
+  "funding": [],
+  "dataset_doi": null,
+  "associated_paper_doi": null,
+  "tasks": [
+    "motorloc"
+  ],
+  "sessions": [],
+  "total_files": 1,
+  "size_bytes": 50755,
+  "data_processed": false,
+  "study_domain": null,
+  "study_design": null,
+  "contributing_labs": null,
+  "n_contributing_labs": null,
+  "demographics": {
+    "subjects_count": 1,
+    "ages": [
+      25
+    ],
+    "age_min": 25,
+    "age_max": 25,
+    "age_mean": 25.0,
+    "species": null,
+    "sex_distribution": {
+      "m": 1
+    },
+    "handedness_distribution": null
+  },
+  "senior_author": null,
+  "contact_info": null,
+  "timestamps": {
+    "digested_at": "2026-05-21T11:44:15.623505+00:00",
+    "dataset_created_at": null,
+    "dataset_modified_at": null
+  },
+  "storage": null,
+  "ingestion_fingerprint": "4c4051fe1a0a5a3107c4821b8d074173ccb5b781be8591663b66a555fe791b73"
+}

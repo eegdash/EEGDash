@@ -136,6 +136,7 @@ addopts = "-ra --strict-markers --tb=short"
 markers = [
     "slow: marks tests as slow (deselect with '-m \"not slow\"')",
     "network: marks tests that require network access (deselect with '-m \"not network\"')",
+    "integration: marks tests that hit the live cluster (opt-in via EEGDASH_INTEGRATION_API_URL + EEGDASH_INTEGRATION_ADMIN_TOKEN; deselect with '-m \"not integration\"')",
 ]
 # Hypothesis: cap example count for CI speed; raise locally for deep fuzz.
 filterwarnings = [

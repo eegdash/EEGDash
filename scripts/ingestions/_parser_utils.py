@@ -234,6 +234,60 @@ def fetch_from_s3(
         return None
 
 
+def path_is_within_root(path: Path | str, root: Path | str) -> bool:
+    """Return True if ``path`` resolves inside ``root``.
+
+    Defense-in-depth helper for path-traversal containment. Resolves
+    both arguments to absolute paths and tests that the result of
+    ``path`` is a sub-path of ``root``. Symlinks are followed, so a
+    symlink-out-of-tree fails the check.
+
+    Parameters
+    ----------
+    path : Path or str
+        Candidate file or directory path.
+    root : Path or str
+        Trusted root directory that ``path`` must remain inside.
+
+    Returns
+    -------
+    bool
+        True if ``path`` is structurally contained in ``root`` AND both
+        resolve without OS-level error. False otherwise — including
+        when either side cannot be resolved (e.g. permission denied on
+        an ancestor directory).
+
+    Notes
+    -----
+    Phase 9 audit-3 F1+F2 fix. Internal trust model: paths from a
+    manifest the pipeline itself built are already trusted; this helper
+    exists so a future code path that accepts a user-supplied sidecar
+    reference (BIDS ``IntendedFor``, ``.vhdr`` ``DataFile=``, etc.) can
+    cheaply gate it.
+
+    Examples
+    --------
+    >>> from pathlib import Path
+    >>> root = Path("/data/ds002893").resolve()
+    >>> path_is_within_root(root / "sub-01" / "eeg" / "x.set", root)
+    True
+    >>> path_is_within_root(root / ".." / "ds_other" / "x.set", root)
+    False
+    """
+    try:
+        p = Path(path).resolve()
+        r = Path(root).resolve()
+    except (OSError, RuntimeError):
+        return False
+    try:
+        # is_relative_to landed in 3.9 — we target 3.10+ per pyproject.
+        return p.is_relative_to(r)
+    except (AttributeError, ValueError):
+        # AttributeError: not reachable under py3.9+; defensive.
+        # ValueError: shouldn't fire here but matches the docs contract.
+        return False
+
+
 def validate_file_path(path: Path) -> bool:
     """Check if a file path exists and is readable.
 

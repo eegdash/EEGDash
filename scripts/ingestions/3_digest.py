@@ -39,6 +39,18 @@ os.environ.setdefault("NUMBA_CACHE_DIR", str(Path(".cache") / "numba"))
 import mne
 import numpy as np
 import pandas as pd
+
+# Storage configuration: imported from the canonical home in eegdash.
+# Was previously duplicated as ``STORAGE_CONFIGS`` here with a "Keep
+# aligned" comment — see Phase 8 S1.thick (2026-05) for the consolidation.
+# The eegdash side documents NEMAR's "nemar" backend marker (filenames
+# SHA-resolved by git-annex; not directly fetchable).
+from eegdash.dataset._source_inference import (
+    STORAGE_CONFIGS,
+    get_storage_backend,
+    get_storage_base,
+    get_storage_config,
+)
 from eegdash.dataset.bids_dataset import _COMPANION_FILES, EEGBIDSDataset
 from eegdash.dataset.io import _repair_participants_tsv_ids
 from eegdash.schemas import (
@@ -69,25 +81,6 @@ from _montage import extract_layout
 from _set_parser import parse_set_metadata
 from _snirf_parser import parse_snirf_metadata
 from _vhdr_parser import parse_vhdr_metadata
-
-# Storage configuration per source. Keep aligned with
-# ``eegdash/dataset/_source_inference.py::STORAGE_CONFIGS``. NEMAR uses a
-# dedicated ``"nemar"`` backend because direct fetches against
-# ``s3://nemar/<id>/<bidspath>`` don't work (filenames are SHA-resolved by
-# git-annex); the runtime resolves BIDS paths to SHA keys at fetch time.
-STORAGE_CONFIGS = {
-    "openneuro": {"backend": "s3", "base": "s3://openneuro.org"},
-    "nemar": {"backend": "nemar", "base": "s3://nemar"},
-    "gin": {"backend": "https", "base": "https://gin.g-node.org"},
-    "figshare": {"backend": "https", "base": "https://figshare.com/ndownloader/files"},
-    "zenodo": {"backend": "https", "base": "https://zenodo.org/records"},
-    "osf": {"backend": "https", "base": "https://files.osf.io"},
-    "scidb": {"backend": "https", "base": "https://www.scidb.cn"},
-    "datarn": {"backend": "webdav", "base": "https://webdav.data.ru.nl"},
-}
-
-# Default config for unknown sources
-DEFAULT_STORAGE_CONFIG = {"backend": "https", "base": "https://unknown"}
 
 DEFAULT_DATASET_TIMEOUT_SECONDS = 2 * 60
 WORKER_POLL_INTERVAL_SECONDS = 1.0
@@ -139,21 +132,9 @@ EXCLUDED_DATASETS = {
 }
 
 
-def get_storage_config(source: str) -> dict:
-    """Get storage configuration for a source."""
-    return STORAGE_CONFIGS.get(source, DEFAULT_STORAGE_CONFIG)
-
-
-def get_storage_base(dataset_id: str, source: str) -> str:
-    """Get storage base URL for a dataset."""
-    config = get_storage_config(source)
-    return f"{config['base']}/{dataset_id}"
-
-
-def get_storage_backend(source: str) -> str:
-    """Get storage backend type for a source."""
-    config = get_storage_config(source)
-    return config["backend"]
+# get_storage_config / get_storage_base / get_storage_backend now live in
+# eegdash.dataset._source_inference and are imported above. The duplicated
+# definitions that used to live here were removed in Phase 8 S1.thick.
 
 
 def _source_from_dataset_id(dataset_id: str) -> str:

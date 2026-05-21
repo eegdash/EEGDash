@@ -17,14 +17,17 @@ never directly fetchable. EEGDash treats ``backend="nemar"`` as a marker
 that means "do not attempt a public S3 fetch; surface an actionable
 ``StorageAccessError`` if the file is not already in cache."
 
-Keep ``STORAGE_CONFIGS`` aligned with ``scripts/ingestions/3_digest.py``.
+**Single source of truth** for ``STORAGE_CONFIGS``. The ingestion
+pipeline (``scripts/ingestions/3_digest.py``) imports from here rather
+than maintaining its own copy. This was promoted in Phase 8 / S1.thick
+(2026-05) — see ``scripts/ingestions/source_adapter.py`` for the
+ingest-side SourceAdapter Module that consumes this table.
 """
 
 from __future__ import annotations
 
-# Source -> remote storage prefix. Mirrors STORAGE_CONFIGS in
-# scripts/ingestions/3_digest.py and the patterns in
-# scripts/ingestions/_validate.py::SOURCE_STORAGE_PATTERNS.
+# Source -> remote storage prefix. Canonical home; ingestion imports
+# from here (was previously duplicated in 3_digest.py).
 STORAGE_CONFIGS: dict[str, dict[str, str]] = {
     "openneuro": {"backend": "s3", "base": "s3://openneuro.org"},
     # NEMAR uses a dedicated, non-fetchable backend tag. The ``base`` is
@@ -87,6 +90,52 @@ def expected_backend(dataset_id: str) -> str | None:
     if source is None:
         return None
     return STORAGE_CONFIGS[source]["backend"]
+
+
+# ─── Source-explicit helpers (ingestion-side; was duplicated in 3_digest) ──
+
+
+DEFAULT_STORAGE_CONFIG: dict[str, str] = {"backend": "https", "base": "https://unknown"}
+
+
+def get_storage_config(source: str) -> dict[str, str]:
+    """Return the storage config for ``source`` (or DEFAULT_STORAGE_CONFIG).
+
+    Unlike :func:`expected_storage_base` (which infers ``source`` from
+    a dataset_id pattern), this accepts an explicit ``source`` argument.
+    Used by the ingestion pipeline where the source is already known.
+    """
+    return STORAGE_CONFIGS.get(source, DEFAULT_STORAGE_CONFIG)
+
+
+def get_storage_base(dataset_id: str, source: str) -> str:
+    """Return ``<base>/<dataset_id>`` for an explicit source.
+
+    Parameters
+    ----------
+    dataset_id : str
+        Dataset accession (e.g. ``"ds002893"``).
+    source : str
+        Source identifier (e.g. ``"openneuro"``).
+
+    Returns
+    -------
+    str
+        Canonical storage base URI. Falls back to
+        :data:`DEFAULT_STORAGE_CONFIG` for unknown sources.
+
+    """
+    return f"{get_storage_config(source)['base']}/{dataset_id}"
+
+
+def get_storage_backend(source: str) -> str:
+    """Return the canonical backend marker for an explicit ``source``.
+
+    Unlike :func:`expected_backend` (which takes a dataset_id), this
+    accepts an explicit source and is the entry point used by the
+    ingestion pipeline.
+    """
+    return get_storage_config(source)["backend"]
 
 
 def correct_storage_inplace(

@@ -436,7 +436,16 @@ def peek_zip_contents(url: str, timeout: int = 30) -> list[dict] | None:
 
 
 def list_figshare_files(article_id: int | str, api_key: str = "") -> list[dict]:
-    """List files from a Figshare article."""
+    """List files from a Figshare article.
+
+    .. warning::
+        **Secondary Source.** CI exercises only OpenNeuro and NEMAR;
+        this Adapter is best-effort and may silently drop fields
+        not in the shared schema. Fix opportunistically when
+        exercised; do not invest in depth until promoted in a
+        future sprint. See
+        ``ROBUSTNESS/ADRs/0001-secondary-source-deferral.md``.
+    """
     headers = {"User-Agent": "EEGDash/1.0"}
     if api_key:
         headers["Authorization"] = f"token {api_key}"
@@ -480,7 +489,15 @@ def list_figshare_files(article_id: int | str, api_key: str = "") -> list[dict]:
 
 
 def list_zenodo_files(record_id: int | str, api_key: str = "") -> list[dict]:
-    """List files from a Zenodo record."""
+    """List files from a Zenodo record.
+
+    .. warning::
+        **Secondary Source.** Same caveats as
+        :func:`list_figshare_files`. Zenodo's per-file ``checksum``
+        field is now picked up by :func:`build_manifest` (was silently
+        dropped before — see
+        ``ROBUSTNESS/ADRs/0001-secondary-source-deferral.md``).
+    """
     headers = {"User-Agent": "EEGDash/1.0"}
     if api_key:
         headers["Authorization"] = f"Bearer {api_key}"
@@ -543,7 +560,16 @@ def list_zenodo_files(record_id: int | str, api_key: str = "") -> list[dict]:
 
 
 def list_osf_files(node_id: str, path: str = "/") -> list[dict]:
-    """Recursively list files from an OSF node."""
+    """Recursively list files from an OSF node.
+
+    .. warning::
+        **Secondary Source.** Same caveats as
+        :func:`list_figshare_files`. Pagination is currently stubbed
+        (line ~593): the helper recurses but does not chase ``next``
+        page links, so OSF nodes with > 100 files may return a
+        partial listing. See
+        ``ROBUSTNESS/ADRs/0001-secondary-source-deferral.md``.
+    """
     url = f"https://api.osf.io/v2/nodes/{node_id}/files/osfstorage{path}"
     headers = {"User-Agent": "EEGDash/1.0"}
 
@@ -611,6 +637,13 @@ def list_scidb_files(
 ) -> list[dict]:
     """List files from SciDB using the public file tree API.
 
+    .. warning::
+        **Secondary Source.** Same caveats as
+        :func:`list_figshare_files`. SciDB emits ``md5`` directly and
+        is one of the few Adapters whose checksum survives the
+        manifest pipeline. See
+        ``ROBUSTNESS/ADRs/0001-secondary-source-deferral.md``.
+
     Args:
         dataset_id: The SciDB dataSetId (UUID format)
         version: Dataset version (default: V1)
@@ -635,7 +668,15 @@ def list_scidb_files(
 
 
 def list_datarn_files(source_url: str) -> list[dict]:
-    """List files from data.ru.nl using WebDAV PROPFIND."""
+    """List files from data.ru.nl using WebDAV PROPFIND.
+
+    .. warning::
+        **Secondary Source.** Same caveats as
+        :func:`list_figshare_files`. The WebDAV PROPFIND path emits
+        only ``name`` and ``size`` — no checksum, no download URL
+        (constructed by the consumer from the source URL). See
+        ``ROBUSTNESS/ADRs/0001-secondary-source-deferral.md``.
+    """
     # Try to get WebDAV URL from page JSON-LD
     webdav_url = None
 
@@ -889,8 +930,12 @@ def build_manifest(
         }
         if download_url := f.get("download_url"):
             nf["download_url"] = download_url
-        if md5 := f.get("md5"):
-            nf["md5"] = md5
+        # Some Adapters (Zenodo) emit ``checksum`` instead of ``md5``;
+        # accept either. Without this, Zenodo content hashes were
+        # silently dropped at manifest time. See
+        # ROBUSTNESS/ADRs/0001-secondary-source-deferral.md.
+        if checksum := f.get("md5") or f.get("checksum"):
+            nf["md5"] = checksum
 
         # Normalize zip_contents to _zip_contents (expected by digest)
         if zip_contents := f.get("zip_contents"):

@@ -90,22 +90,27 @@ def test_fingerprint_1000_files_peak_memory_under_5mb():
 # ─── Throughput floors (pytest-benchmark integration) ─────────────────────
 
 
-def test_parse_vhdr_p99_under_10ms(benchmark):
-    """The 64-channel VHDR parser must process under 10 ms p99.
+def test_parse_vhdr_median_under_5ms(benchmark):
+    """The 64-channel VHDR parser must process under 5 ms at the median.
+
+    Gates the *typical* per-call cost — the one the nightly fuzz layer
+    pays thousands of times. Median (not max) is the right metric: a
+    single GC-pause / IO-interrupt outlier shouldn't fail the gate
+    because it's not a real regression. github-action-benchmark
+    captures the full distribution for trend tracking.
 
     The viewer-side fuzz layer triggers thousands of header parses per
-    nightly run; doubling this time cascades. The benchmark plugin
-    runs the function repeatedly and reports mean / stddev / percentiles
-    that `github-action-benchmark` can ingest.
+    nightly run; doubling the median time cascades.
     """
     meta = benchmark(parse_vhdr_metadata, EEG_VHDR)
     assert meta is not None
-    # pytest-benchmark stats are stored on `benchmark.stats.stats` —
-    # the .max field is a reasonable proxy for p99 on small samples
-    # (the benchmark runs ~100 rounds by default).
-    assert benchmark.stats.stats.max < 0.010, (
-        f"parse_vhdr_metadata p99 = {benchmark.stats.stats.max * 1000:.2f} ms; "
-        f"ceiling is 10 ms."
+    # Median across all rounds. Resistant to single-round outliers from
+    # GC / IO interrupts. A *systemic* slowdown moves the median; a
+    # one-off pause doesn't. Earlier version used .max which is
+    # dominated by outliers and was flaky on local + CI runs.
+    median_s = benchmark.stats.stats.median
+    assert median_s < 0.005, (
+        f"parse_vhdr_metadata median = {median_s * 1000:.2f} ms; ceiling is 5 ms."
     )
 
 

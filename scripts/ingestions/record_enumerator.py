@@ -61,6 +61,7 @@ See Also
 
 from __future__ import annotations
 
+import json
 import logging
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
@@ -331,10 +332,193 @@ class ManifestEnumerator(RecordEnumerator):
         raise NotImplementedError("ManifestEnumerator.enumerate is wired in stage 2")
 
 
+# ─── Shared output writer ─────────────────────────────────────────────
+
+
+def _json_default_serializer(obj: Any) -> Any:
+    """JSON ``default=`` for values that the stdlib encoder doesn't handle.
+
+    Handles the small set of types that show up in Dataset / Record
+    documents: ``Path`` (stringified), ``datetime`` (isoformat), and
+    numpy scalars (Python primitive). Anything else falls through to
+    a ``str()`` representation rather than crashing — the digest
+    pipeline must finish even if one Record carries an unexpected
+    type from a third-party extension.
+
+    Mirrors the inline ``_json_serializer`` that used to live in
+    ``3_digest.py``. Hoisted here so both Adapter writes use the same
+    rule.
+    """
+    from datetime import date, datetime
+    from pathlib import PurePath
+
+    if isinstance(obj, PurePath):
+        return str(obj)
+    if isinstance(obj, (datetime, date)):
+        return obj.isoformat()
+    # numpy scalars / common third-party types
+    if hasattr(obj, "item"):
+        try:
+            return obj.item()  # numpy scalar -> Python primitive
+        except (ValueError, TypeError):
+            pass
+    return str(obj)
+
+
+def write_dataset_outputs(
+    dataset_output_dir: Path,
+    result: EnumerationResult,
+    dataset_id: str,
+    source: str,
+    digested_at: str,
+    *,
+    total_files: int | None = None,
+) -> dict[str, Any]:
+    """Write the 4 per-Dataset JSON files; return the summary dict.
+
+    Shared between both Adapter paths. Before this helper existed, the
+    JSON-write block was duplicated inline in ``digest_dataset`` and
+    ``digest_from_manifest`` with subtle drift between them — see
+    ``ROBUSTNESS/STAGE-2-PLAN.md`` for the catalogue.
+
+    Files written:
+      - ``<dataset_id>_dataset.json``   the Dataset document
+      - ``<dataset_id>_records.json``   the Records list + count
+      - ``<dataset_id>_montages.json``  deduplicated montage hashes
+      - ``<dataset_id>_summary.json``   the per-Dataset summary
+
+    Parameters
+    ----------
+    dataset_output_dir : Path
+        Directory to write the four JSON files into. Created if missing.
+    result : EnumerationResult
+        Output of :meth:`RecordEnumerator.enumerate`.
+    dataset_id, source, digested_at : str
+        Identity fields stamped into every output file.
+    total_files : int, optional
+        Total file count from the input (e.g. the manifest's full
+        ``files`` length) — surfaced in the summary. Only the manifest
+        Adapter populates this; the BIDS Adapter leaves it as None.
+
+    Returns
+    -------
+    dict
+        The summary dictionary (also persisted to ``_summary.json``).
+        Same shape as both legacy functions used to return.
+
+    Notes
+    -----
+    Behaviour changes vs the previous duplicated code:
+
+    1. ``_montages.json`` is now written for **every** Adapter path,
+       even when the montages dict is empty. Previously the manifest
+       path skipped this file; downstream tooling could no longer
+       assume it exists. The empty file format is
+       ``{"montage_count": 0, "montages": [], ...}``.
+    2. The summary now always carries ``digest_method``, surfaced from
+       :attr:`EnumerationResult.digest_method`. Previously only the
+       manifest path set it ("manifest_only"); the BIDS path silently
+       omitted the field. Now both populate it.
+    3. The summary's ``integrity_issues_count`` and ``montage_count``
+       are always present (zero for the manifest path). Previously
+       only the BIDS path included them.
+
+    These are minor additions to existing fields — not type changes —
+    so downstream consumers that read by key name will continue to work.
+    """
+    dataset_output_dir.mkdir(parents=True, exist_ok=True)
+
+    # ── Dataset document ──────────────────────────────────────────────
+    dataset_path = dataset_output_dir / f"{dataset_id}_dataset.json"
+    with open(dataset_path, "w") as fh:
+        json.dump(
+            dict(result.dataset_meta),
+            fh,
+            indent=2,
+            default=_json_default_serializer,
+        )
+
+    # ── Integrity-issue enrichment (BIDS path uses this; manifest
+    # path will simply find no records with the marker flag).
+    records_with_issues = [
+        r for r in result.records if r.get("_has_missing_files", False)
+    ]
+    integrity_issues_count = len(records_with_issues)
+    if records_with_issues:
+        authors = result.dataset_meta.get("authors", [])
+        contact_info = result.dataset_meta.get("contact_info")
+        source_url = result.dataset_meta.get("external_links", {}).get("source_url")
+        for rec in records_with_issues:
+            if authors:
+                rec["_dataset_authors"] = authors
+            if contact_info:
+                rec["_dataset_contact"] = contact_info
+            if source_url:
+                rec["_source_url"] = source_url
+        # Log per-issue warning (was inlined in digest_dataset)
+        logger.warning(
+            "Dataset %s has %d record(s) with missing companion files",
+            dataset_id,
+            integrity_issues_count,
+        )
+        for rec in records_with_issues:
+            issues = rec.get("_data_integrity_issues", [])
+            logger.warning("  - %s: %s", rec.get("bids_relpath"), "; ".join(issues))
+
+    # ── Records document ──────────────────────────────────────────────
+    records_path = dataset_output_dir / f"{dataset_id}_records.json"
+    records_data = {
+        "dataset": dataset_id,
+        "source": source,
+        "digested_at": digested_at,
+        "record_count": len(result.records),
+        "records_with_integrity_issues": integrity_issues_count,
+        "records": result.records,
+    }
+    with open(records_path, "w") as fh:
+        json.dump(records_data, fh, indent=2, default=_json_default_serializer)
+
+    # ── Montages document (always written, even when empty) ───────────
+    montages_path = dataset_output_dir / f"{dataset_id}_montages.json"
+    montages_data = {
+        "dataset": dataset_id,
+        "source": source,
+        "digested_at": digested_at,
+        "montage_count": len(result.montages),
+        "montages": list(result.montages.values()),
+    }
+    with open(montages_path, "w") as fh:
+        json.dump(montages_data, fh, indent=2, default=_json_default_serializer)
+
+    # ── Summary ───────────────────────────────────────────────────────
+    summary: dict[str, Any] = {
+        "status": "success" if result.records else "no_neuro_files",
+        "dataset_id": dataset_id,
+        "source": source,
+        "record_count": len(result.records),
+        "error_count": len(result.errors),
+        "integrity_issues_count": integrity_issues_count,
+        "montage_count": len(result.montages),
+        "dataset_file": str(dataset_path),
+        "records_file": str(records_path),
+        "montages_file": str(montages_path),
+        "digest_method": result.digest_method,
+    }
+    if total_files is not None:
+        summary["total_files"] = total_files
+
+    summary_path = dataset_output_dir / f"{dataset_id}_summary.json"
+    with open(summary_path, "w") as fh:
+        json.dump(summary, fh, indent=2)
+
+    return summary
+
+
 __all__ = [
     "BIDSFilesystemEnumerator",
     "EnumerationResult",
     "ManifestEnumerator",
     "RecordEnumerator",
     "get_record_enumerator",
+    "write_dataset_outputs",
 ]

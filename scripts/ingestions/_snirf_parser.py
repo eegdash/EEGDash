@@ -20,8 +20,8 @@ logger = logging.getLogger(__name__)
 def parse_snirf_metadata(snirf_path: Path | str) -> dict[str, Any] | None:
     """Parse metadata from SNIRF file using MNE.
 
-    Extracts sampling frequency, number of channels, and channel names
-    from a SNIRF file.
+    Extracts sampling frequency, number of channels, channel names,
+    and recording length from a SNIRF file.
 
     Parameters
     ----------
@@ -35,8 +35,16 @@ def parse_snirf_metadata(snirf_path: Path | str) -> dict[str, Any] | None:
         - sampling_frequency: float (in Hz)
         - nchans: int
         - ch_names: list[str]
+        - n_times: int (sample count along the time axis)
         Returns None if file cannot be parsed.
 
+    Notes
+    -----
+    SPRINT-2026-05-22 Task 4 (C5.1 pattern): ``n_times`` was added after
+    a real OpenNeuro fixture (ds007554) surfaced the gap. The synthetic
+    h5py fixture validated the parser against itself; the real one
+    revealed that ``raw.n_times`` (MNE) / ``len(time)`` (h5py fallback)
+    were never read.
     """
     snirf_path = Path(snirf_path)
 
@@ -62,6 +70,14 @@ def parse_snirf_metadata(snirf_path: Path | str) -> dict[str, Any] | None:
             if ch_names:
                 result["ch_names"] = list(ch_names)
                 result["nchans"] = len(ch_names)
+
+            # Extract recording length (SPRINT-2026-05-22 Task 4: C5.1 fix).
+            # ``raw.n_times`` is always populated on a successfully-read
+            # MNE Raw — but defensive-guard against subclasses where it
+            # could be 0 or missing (e.g. truncated SNIRF stubs).
+            n_times = getattr(raw, "n_times", None)
+            if n_times and n_times > 0:
+                result["n_times"] = int(n_times)
 
             if not result:
                 return None
@@ -121,13 +137,18 @@ def _parse_snirf_with_h5py(snirf_path: Path) -> dict[str, Any] | None:
             if nirs_group is None:
                 return None
 
-            # Extract sampling frequency from time vector
+            # Extract sampling frequency from time vector. Also record
+            # ``n_times`` (SPRINT-2026-05-22 Task 4: C5.1 fix) — the
+            # time vector length IS the sample count along the time axis.
             for data_key in nirs_group.keys():
                 if data_key.startswith("data"):
                     data_group = nirs_group[data_key]
                     if "time" in data_group:
                         time_data = data_group["time"][:]
-                        if len(time_data) > 1:
+                        n_time_points = len(time_data)
+                        if n_time_points > 0:
+                            result["n_times"] = int(n_time_points)
+                        if n_time_points > 1:
                             dt = float(time_data[1] - time_data[0])
                             if dt > 0:
                                 result["sampling_frequency"] = float(1.0 / dt)

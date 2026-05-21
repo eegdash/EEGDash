@@ -40,6 +40,21 @@ __all__ = [
 @channel_pairer_undirected
 @bivariate_feature
 def connectivity_correlation(x, /, *, _metadata, eps: float = 1e-15):
+    """Compute the correlation between channel pairs.
+
+    Parameters
+    ----------
+    x : numpy.ndarray
+        The input signal of shape (n_trials, n_channels, n_times).
+    eps : float, optional
+        A small constant to prevent log of zero (default: 1e-15).
+
+    Returns
+    -------
+    numpy.ndarray
+        The channel pairwise correlation of shape (n_trials, n_pairs).
+
+    """
     idx_x, idx_y = _metadata["ch_pair_iterator"].get_pair_iterators()
     corr = np.empty((*x.shape[:-2], len(idx_x)))
     for i in np.ndindex(x.shape[:-2]):

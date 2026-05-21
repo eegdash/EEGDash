@@ -87,6 +87,7 @@ def test_figshare_http_error_returns_empty():
     assert list_figshare_files(404) == []
 
 
+@pytest.mark.slow
 @respx.mock
 def test_figshare_5xx_triggers_retries_then_propagates():
     """5xx responses trigger tenacity-driven retries inside
@@ -324,11 +325,20 @@ def test_all_adapters_return_empty_list_on_http_404():
     assert list_osf_files("404") == []
 
 
+@pytest.mark.slow
 @respx.mock
 def test_all_adapters_tolerate_network_failure():
     """A complete network failure (httpx ConnectError) → empty list.
 
     Mocked here as an httpx exception bubbling from respx.
+
+    Slow because the production adapters use ``backoff_factor=1.0`` —
+    3 retries x 3 adapters x ~1 sec backoff = ~9 sec. Marked slow so
+    PR-fast CI skips it; the nightly bench / slow-test job picks it up.
+    The behaviour-pinning value is real (empty-list-on-failure for all
+    3 adapters); the production timing is real too. Don't change the
+    backoff in the test to make it faster — that would test a different
+    config than production runs.
     """
     routes = [
         "https://api.figshare.com/v2/articles/dead/files",

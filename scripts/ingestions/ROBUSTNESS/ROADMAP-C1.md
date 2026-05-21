@@ -187,7 +187,17 @@ asked "check what we can transfer for our source".
 
 **Definition of done**: 30+ new parametrized tests; respx-mocked HTTP.
 
-### C1.6 — Lighten where possible
+### C1.6 — Lighten where possible ✅ DONE
+
+PR suite time **28 s → 16 s (-43%)** by marking 2 source-listing
+tests `@pytest.mark.slow` (they exercise tenacity backoff with
+production `backoff_factor=1.0`; the wait is real). Added
+`test_digest_dataset_e2e_under_10s_on_snapshot` perf budget. Cold-
+import cost (4 s for braindecode → PyTorch chain) documented in
+`PERFORMANCE.md`; fix is out-of-scope (lives in `eegdash.dataset.
+__init__`) but logged for a future cross-package PR.
+
+
 
 **Driver**: user explicitly asked. Audit for code that can be
 deleted or made lazier:

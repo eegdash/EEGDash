@@ -79,6 +79,13 @@ from _set_parser import parse_set_metadata
 from _snirf_parser import parse_snirf_metadata
 from _vhdr_parser import parse_vhdr_metadata
 
+# Record-enumeration Seam (Phase 8 S1.thick stage 2). Both legacy
+# functions in this file write their JSON outputs via this shared
+# helper, so the per-Dataset JSON shapes are documented in ONE place.
+# Stage 3 will collapse digest_dataset + digest_from_manifest into a
+# single orchestrator that uses the Enumerator factory.
+from record_enumerator import EnumerationResult, write_dataset_outputs
+
 # Per-Source ingest behaviour (Phase 8 S1.thick). The orchestrator builds
 # one Adapter per Dataset; extract_dataset_metadata + extract_record
 # consume it via the optional ``source_adapter`` kwarg. The old
@@ -2499,44 +2506,25 @@ def digest_from_manifest(
         except (KeyError, ValueError, TypeError) as e:
             errors.append({"file": filepath, "error": str(e)})
 
-    # Create output directory
-    dataset_output_dir.mkdir(parents=True, exist_ok=True)
-
-    # Save Dataset document
-    dataset_path = dataset_output_dir / f"{dataset_id}_dataset.json"
-    with open(dataset_path, "w") as f:
-        json.dump(dict(dataset_doc), f, indent=2)
-
-    # Save Records document
-    records_path = dataset_output_dir / f"{dataset_id}_records.json"
-    records_data = {
-        "dataset": dataset_id,
-        "source": source,
-        "digested_at": digested_at,
-        "record_count": len(records),
-        "records": records,
-    }
-    with open(records_path, "w") as f:
-        json.dump(records_data, f, indent=2)
-
-    # Save summary
-    summary = {
-        "status": "success" if records else "no_neuro_files",
-        "dataset_id": dataset_id,
-        "source": source,
-        "record_count": len(records),
-        "total_files": len(files),
-        "error_count": len(errors),
-        "dataset_file": str(dataset_path),
-        "records_file": str(records_path),
-        "digest_method": "manifest_only",
-    }
-
-    summary_path = dataset_output_dir / f"{dataset_id}_summary.json"
-    with open(summary_path, "w") as f:
-        json.dump(summary, f, indent=2)
-
-    return summary
+    # Hand off to the shared writer (Stage 2B — replaces the inline
+    # JSON-write block that used to live here). Behaviour change:
+    # `_montages.json` is now written (empty) for the manifest path —
+    # see write_dataset_outputs's docstring + STAGE-2-PLAN.md.
+    result = EnumerationResult(
+        dataset_meta=dict(dataset_doc),
+        records=records,
+        errors=errors,
+        montages={},  # manifest path produces no montages
+        digest_method="manifest_only",
+    )
+    return write_dataset_outputs(
+        dataset_output_dir,
+        result,
+        dataset_id=dataset_id,
+        source=source,
+        digested_at=digested_at,
+        total_files=len(files),
+    )
 
 
 def digest_dataset(

@@ -143,7 +143,7 @@ def _iterdir_raises_for_target(self: Path):
 
 def test_mef3_handles_unreadable_directory(tmp_path: Path, monkeypatch):
     """An iterdir() OSError → None (tolerated, not raised)."""
-    global _MEF3_RAISING_TARGET  # noqa: PLW0603 — test-scoped fixture flag
+    global _MEF3_RAISING_TARGET
     mefd = tmp_path / "broken.mefd"
     mefd.mkdir()
     _MEF3_RAISING_TARGET = mefd

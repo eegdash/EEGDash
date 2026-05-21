@@ -24,11 +24,12 @@ We attribute even where the license does not require it.
 | BrainVision (.vhdr) | iEEG | `ieeg/sub-01_ses-iemu_task-film_acq-clinical_run-1_ieeg.vhdr` | 2.6 KB | [ds003688](https://openneuro.org/datasets/ds003688) | CC0 |
 | BrainVision (.vmrk) | iEEG | `ieeg/sub-01_ses-iemu_task-film_acq-clinical_run-1_ieeg.vmrk` | 1.0 KB | [ds003688](https://openneuro.org/datasets/ds003688) | CC0 |
 | BrainVision (.eeg)  | iEEG | `ieeg/sub-01_ses-iemu_task-film_acq-clinical_run-1_ieeg.eeg` | 32 KB | [ds003688](https://openneuro.org/datasets/ds003688) | CC0 |
+| MEF3 (.tmet) | iEEG | `ieeg/EKG-000000.tmet` | 16 KB | [ds003708](https://openneuro.org/datasets/ds003708) | CC0 |
 | FIFF (projection vectors) | MEG | `meg/test-proj.fif` | 4.5 KB | [mne-tools/mne-python](https://github.com/mne-tools/mne-python) | BSD-3 |
 | FIFF (annotations) | MEG | `meg/test_raw-annot.fif` | 273 B | [mne-tools/mne-python](https://github.com/mne-tools/mne-python) | BSD-3 |
 | FIFF (events) | MEG | `meg/test-eve.fif` | 543 B | [mne-tools/mne-python](https://github.com/mne-tools/mne-python) | BSD-3 |
 
-**Total committed:** ~220 KB across 12 files spanning 4 formats × 3 modalities.
+**Total committed:** ~236 KB across 13 files spanning 5 formats × 3 modalities.
 
 ## Dataset citations
 
@@ -56,6 +57,15 @@ We attribute even where the license does not require it.
   *Open multimodal iEEG-fMRI dataset from naturalistic stimulation
   with a short audiovisual film.*
   Accession: doi:10.18112/openneuro.ds003688
+
+- **ds003708** — Mayo Foundation / OpenNeuro.
+  *Cortico-cortical evoked potentials (CCEP) iEEG dataset, MEF 3.0 format.*
+  Accession: doi:10.18112/openneuro.ds003708.
+  The committed `EKG-000000.tmet` is the time-series metadata file
+  (universal header + metadata sections) for a single EKG channel of
+  one subject's clinical recording. Surfaced a real production bug
+  in `_mef3_parser.py` (parser used wrong sampling-frequency offset)
+  — see commit message of `fix(ingestions): C5.1`.
 
 - **MNE-Python test data** — Gramfort et al., MNE-Python project,
   BSD-3-Clause. Original files from

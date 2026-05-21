@@ -925,6 +925,310 @@ def extract_dataset_metadata(
     return dict(dataset)
 
 
+def _extract_technical_metadata(
+    bids_dataset: Any,
+    bids_file: str,
+) -> tuple[
+    float | None,
+    int | None,
+    int | None,
+    list[str] | None,
+    bool,
+    bool,
+]:
+    """Resolve sfreq / nchans / ntimes / ch_names for a single BIDS file.
+
+    Runs the 4-step cascade:
+    1. ``EEGBIDSDataset`` attribute getters (via mne_bids).
+    2. Modality JSON sidecar (with BIDS inheritance walk).
+    3. ``channels.tsv`` (with BIDS inheritance walk).
+    4. Direct binary header read for the file's extension
+       (.vhdr / .snirf / .mefd / .edf / .bdf / .set / .fif).
+
+    Each step only fills fields the previous step left None. The fourth
+    step also pulls n_times from MNE for VHDR and FIF (which need the
+    binary companion to compute).
+
+    Returns ``(sfreq, nchans, ntimes, ch_names, fif_is_split,
+    fif_continuations_ok)``. The two FIF flags are passed back to the
+    caller so it can decide on split-FIF integrity.
+
+    Phase 8 follow-up — was 120 LOC inline at the top of
+    :func:`extract_record`.
+    """
+    sampling_frequency: float | None = None
+    nchans: int | None = None
+    ntimes: int | None = None
+
+    # Step 1: ``EEGBIDSDataset`` (mne_bids attribute getters).
+    try:
+        sampling_frequency = bids_dataset.get_bids_file_attribute("sfreq", bids_file)
+        nchans = bids_dataset.get_bids_file_attribute("nchans", bids_file)
+        ntimes = bids_dataset.get_bids_file_attribute("ntimes", bids_file)
+    except (FileNotFoundError, OSError):
+        # BIDS sidecar JSON may be a broken git-annex symlink.
+        # Fallback code below will attempt to extract from data files.
+        pass
+
+    # Cast to numeric types (the attribute getters return strings).
+    if sampling_frequency:
+        sampling_frequency = float(sampling_frequency)
+    if nchans:
+        nchans = int(nchans)
+    if ntimes:
+        ntimes = int(ntimes)
+
+    # channels.tsv (authoritative for channel info).
+    ch_names: list[str] | None = None
+    try:
+        ch_names = bids_dataset.channel_labels(bids_file)
+    except (FileNotFoundError, OSError, ValueError, KeyError, AttributeError):
+        # channels.tsv may be absent, a broken git-annex symlink, or
+        # malformed. Downstream fallback infers channels from the
+        # binary header.
+        pass
+
+    # Prefer channel_labels count over sidecar nchans (sidecar JSON may
+    # only have partial counts, e.g. only EEGChannelCount).
+    if ch_names:
+        nchans = len(ch_names)
+
+    # Step 2-3: BIDS sidecar inheritance — modality JSON, then channels.tsv.
+    bids_file_path = Path(bids_file)
+    bids_root = Path(bids_dataset.bidsdir)
+    sampling_frequency, nchans = extract_sfreq_nchans_from_modality_sidecar(
+        bids_file_path, bids_root, sampling_frequency, nchans
+    )
+    sampling_frequency, nchans = extract_sfreq_nchans_from_channels_tsv(
+        bids_file_path, bids_root, sampling_frequency, nchans
+    )
+
+    # Step 4: parse binary headers directly when sidecars are missing.
+    ext = bids_file_path.suffix.lower()
+    _parsers = {
+        ".vhdr": parse_vhdr_metadata,
+        ".snirf": parse_snirf_metadata,
+        ".mefd": parse_mef3_metadata,
+        ".edf": _parse_edf_with_mne,
+        ".bdf": _parse_edf_with_mne,
+        ".set": parse_set_metadata,
+    }
+    if ext in _parsers and (
+        not sampling_frequency or not nchans or not ntimes or not ch_names
+    ):
+        md = _parsers[ext](bids_file_path)
+        if md:
+            sampling_frequency = sampling_frequency or md.get("sampling_frequency")
+            nchans = nchans or md.get("nchans")
+            ntimes = ntimes or md.get("n_times") or md.get("n_samples")
+            ch_names = ch_names or md.get("ch_names")
+
+    # VHDR: try MNE for n_times specifically (requires binary companion).
+    if ext == ".vhdr" and not ntimes:
+        raw = None
+        try:
+            raw = mne.io.read_raw_brainvision(
+                str(bids_file_path), preload=False, verbose=False
+            )
+            if raw.n_times and raw.n_times > 0:
+                ntimes = int(raw.n_times)
+        except (OSError, ValueError, RuntimeError, KeyError):
+            # MNE brainvision reader: OSError on missing companion
+            # files, ValueError on malformed header, RuntimeError on
+            # unsupported variant. n_times stays unset.
+            pass
+        finally:
+            if raw is not None:
+                try:
+                    raw.close()
+                except (OSError, AttributeError):
+                    pass
+
+    # FIF fallback using MNE.
+    fif_is_split = False
+    fif_continuations_ok = True
+    if ext == ".fif" and (not sampling_frequency or not nchans or not ntimes):
+        fif_metadata, fif_is_split = _parse_fif_with_mne(bids_file_path)
+        if fif_metadata:
+            sampling_frequency = sampling_frequency or fif_metadata.get(
+                "sampling_frequency"
+            )
+            nchans = nchans or fif_metadata.get("nchans")
+            ntimes = ntimes or fif_metadata.get("n_times")
+            ch_names = ch_names or fif_metadata.get("ch_names")
+
+    return (
+        sampling_frequency,
+        nchans,
+        ntimes,
+        ch_names,
+        fif_is_split,
+        fif_continuations_ok,
+    )
+
+
+_DEP_SUFFIXES: tuple[str, ...] = (
+    "_channels.tsv",
+    "_events.tsv",
+    "_events.json",
+    "_electrodes.tsv",
+    "_coordsystem.json",
+    "_eeg.json",
+    # NIRS-specific sidecars
+    "_optodes.tsv",
+    "_optodes.json",
+    "_nirs.json",
+)
+
+
+def _build_dep_keys(
+    bids_file_path: Path,
+    bids_root: Path,
+    fif_is_split: bool,
+    fif_continuations_ok: bool,
+) -> tuple[list[str], bool, bool]:
+    """Return ``(dep_keys, fif_is_split, fif_continuations_ok)`` for one BIDS file.
+
+    Searches for three classes of companion files relative to
+    ``bids_file_path`` and resolves them to relpaths under ``bids_root``:
+
+    1. **BIDS sidecars** (``_channels.tsv``, ``_events.tsv``,
+       ``_electrodes.tsv``, ``_coordsystem.json``, ``_eeg.json``,
+       NIRS optodes, …) — checked under the file's parent directory
+       AND under the next-level-up (BIDS inheritance). Two base-name
+       variants are tried: the full filename's base and a
+       session-level base (with task / run / acq entities stripped).
+
+    2. **Format-specific companions** (``.fdt`` for ``.set`` files,
+       ``.eeg`` / ``.vmrk`` for ``.vhdr`` files, …) — sourced from
+       :data:`_COMPANION_FILES`. Always added regardless of disk
+       presence so the runtime download manifest can fetch them even
+       when the local clone is incomplete.
+
+    3. **Split FIF continuations** (``filename-1.fif``,
+       ``filename-2.fif``, …) — detected by checking the filesystem;
+       if ``filename-1.fif`` exists, walk continuations up to 99.
+       Sets ``fif_continuations_ok=False`` if any continuation is a
+       broken git-annex symlink.
+
+    Phase 8 follow-up — was ~100 LOC inline in :func:`extract_record`.
+    """
+    dep_keys: list[str] = []
+    parent_dir = bids_file_path.parent
+    base_name = bids_file_path.stem.rsplit("_", 1)[0]
+
+    # BIDS sidecars: search the file's dir AND one level up (for inheritance)
+    search_dirs = [parent_dir]
+    if parent_dir.name in NEURO_MODALITIES or parent_dir.name in {
+        "eeg",
+        "meg",
+        "ieeg",
+        "beh",
+        "nirs",
+    }:
+        search_dirs.append(parent_dir.parent)
+
+    # Two base-name variants: the full one, and a session-level one
+    # (with task / run / acq entities stripped). Session-level sidecars
+    # like optodes apply to all runs in a session.
+    base_names_to_search = [base_name]
+    session_base = re.sub(r"_task-[^_]+", "", base_name)
+    session_base = re.sub(r"_run-[^_]+", "", session_base)
+    session_base = re.sub(r"_acq-[^_]+", "", session_base)
+    if session_base != base_name:
+        base_names_to_search.append(session_base)
+
+    for search_dir in search_dirs:
+        for dep_suffix in _DEP_SUFFIXES:
+            for search_base in base_names_to_search:
+                dep_file = search_dir / f"{search_base}{dep_suffix}"
+                if dep_file.exists() or dep_file.is_symlink():
+                    try:
+                        dep_keys.append(str(dep_file.relative_to(bids_root)))
+                    except ValueError:
+                        pass
+
+    # Format-specific companions (always added — runtime needs them).
+    ext = bids_file_path.suffix.lower()
+    for comp_ext in _COMPANION_FILES.get(ext, []):
+        comp_file = bids_file_path.with_suffix(comp_ext)
+        try:
+            dep_keys.append(str(comp_file.relative_to(bids_root)))
+        except ValueError:
+            pass
+
+    # Split-FIF continuations.
+    if ext == ".fif":
+        if not fif_is_split:
+            cont_check = bids_file_path.parent / f"{bids_file_path.stem}-1{ext}"
+            if cont_check.exists() or cont_check.is_symlink():
+                fif_is_split = True
+        if fif_is_split:
+            fif_continuations_ok = True
+            for i in range(1, 100):
+                cont = bids_file_path.parent / f"{bids_file_path.stem}-{i}{ext}"
+                if not cont.exists() and not cont.is_symlink():
+                    break
+                if cont.is_symlink() and not cont.resolve().exists():
+                    fif_continuations_ok = False
+                try:
+                    dep_keys.append(str(cont.relative_to(bids_root)))
+                except ValueError:
+                    pass
+
+    return dep_keys, fif_is_split, fif_continuations_ok
+
+
+def _clamp_metadata_extremes(
+    sampling_frequency: float | None,
+    nchans: int | None,
+    ch_names: list[str] | None,
+    bids_relpath: str,
+) -> tuple[float | None, int | None]:
+    """Sanity-check sfreq + nchans; reject impossible values, warn on suspicious.
+
+    - ``sampling_frequency``: must be > 0 (reject); warn if > 1 MHz.
+    - ``nchans``: must be > 0 (reject); warn if > 10 000.
+    - ``ch_names`` count vs ``nchans``: debug-log on mismatch.
+
+    Returns ``(sfreq, nchans)`` with rejected values replaced by None.
+    Phase 8 follow-up — was inline in :func:`extract_record`.
+    """
+    if sampling_frequency is not None:
+        if sampling_frequency <= 0:
+            logging.warning(
+                "Invalid sampling_frequency <= 0 for %s: %s",
+                bids_relpath,
+                sampling_frequency,
+            )
+            sampling_frequency = None
+        elif sampling_frequency > 1_000_000:
+            logging.warning(
+                "Suspicious sampling_frequency > 1MHz for %s: %s",
+                bids_relpath,
+                sampling_frequency,
+            )
+
+    if nchans is not None:
+        if nchans <= 0:
+            logging.warning("Invalid nchans <= 0 for %s: %s", bids_relpath, nchans)
+            nchans = None
+        elif nchans > 10000:
+            logging.warning(
+                "Suspicious nchans > 10000 for %s: %s", bids_relpath, nchans
+            )
+
+    if ch_names and nchans and len(ch_names) != nchans:
+        logging.debug(
+            "ch_names count (%d) != nchans (%d) for %s",
+            len(ch_names),
+            nchans,
+            bids_relpath,
+        )
+
+    return sampling_frequency, nchans
+
+
 def extract_record(
     bids_dataset,
     bids_file: str,
@@ -977,227 +1281,26 @@ def extract_record(
     storage_base = get_storage_base(dataset_id, source)
     storage_backend = get_storage_backend(source)
 
-    # Extract technical metadata from BIDS sidecars via EEGBIDSDataset
-    # Wrap in try/except to handle broken git-annex symlinks (FileNotFoundError)
-    sampling_frequency = None
-    nchans = None
-    ntimes = None
-    try:
-        sampling_frequency = bids_dataset.get_bids_file_attribute("sfreq", bids_file)
-        nchans = bids_dataset.get_bids_file_attribute("nchans", bids_file)
-        ntimes = bids_dataset.get_bids_file_attribute("ntimes", bids_file)
-    except (FileNotFoundError, OSError):
-        # BIDS sidecar JSON may be a broken git-annex symlink
-        # Fallback code below will attempt to extract from data files directly
-        pass
-
-    # Convert sfreq to float and nchans to int if found
-    if sampling_frequency:
-        sampling_frequency = float(sampling_frequency)
-    if nchans:
-        nchans = int(nchans)
-    if ntimes:
-        ntimes = int(ntimes)
-
-    # Extract channel names if channels.tsv exists
-    ch_names = None
-    try:
-        ch_names = bids_dataset.channel_labels(bids_file)
-    except (FileNotFoundError, OSError, ValueError, KeyError, AttributeError):
-        # channels.tsv may be absent, a broken git-annex symlink, or
-        # malformed. Downstream code falls back to inferring channels
-        # from the binary header.
-        pass
-
-    # Prefer channel_labels count over sidecar nchans
-    # channels.tsv is the authoritative source for channel information
-    # Sidecar JSON may only have partial counts (e.g., only EEGChannelCount)
-    if ch_names:
-        nchans = len(ch_names)
-    elif not nchans:
-        # Fallback: no channels.tsv and no sidecar nchans
-        nchans = None
-
-    # ===========================================================
-    # FALLBACK: Read from BIDS sidecar files directly
-    # This handles MEG/iEEG datasets where primary extraction fails
-    # BIDS uses inheritance - sidecars can be in parent directories
-    # and may not include run/acquisition entities
-    # ===========================================================
+    # Run the 4-step technical-metadata cascade (sidecar / channels.tsv /
+    # binary parser / MNE). The two FIF flags are returned for the
+    # split-FIF integrity logic below.
+    (
+        sampling_frequency,
+        nchans,
+        ntimes,
+        ch_names,
+        fif_is_split,
+        fif_continuations_ok,
+    ) = _extract_technical_metadata(bids_dataset, bids_file)
     bids_file_path = Path(bids_file)
 
-    # Try to fill missing values from the modality JSON sidecar and
-    # then from channels.tsv (BIDS inheritance — both helpers walk the
-    # directory tree). Extracted in Phase 8 from a 100-line nested-loop
-    # block.
-    bids_root = Path(bids_dataset.bidsdir)
-    sampling_frequency, nchans = extract_sfreq_nchans_from_modality_sidecar(
-        bids_file_path, bids_root, sampling_frequency, nchans
+    dep_keys, fif_is_split, fif_continuations_ok = _build_dep_keys(
+        bids_file_path,
+        Path(bids_dataset.bidsdir),
+        fif_is_split,
+        fif_continuations_ok,
     )
-    sampling_frequency, nchans = extract_sfreq_nchans_from_channels_tsv(
-        bids_file_path, bids_root, sampling_frequency, nchans
-    )
-
-    # ===========================================================
-    # FALLBACK 3: Parse data files directly when sidecars missing
-    # ===========================================================
     ext = bids_file_path.suffix.lower()
-
-    # Parser fallback helpers
-    _parsers = {
-        ".vhdr": lambda p: parse_vhdr_metadata(p),
-        ".snirf": lambda p: parse_snirf_metadata(p),
-        ".mefd": lambda p: parse_mef3_metadata(p),
-        ".edf": lambda p: _parse_edf_with_mne(p),
-        ".bdf": lambda p: _parse_edf_with_mne(p),
-        ".set": lambda p: parse_set_metadata(p),
-    }
-
-    if ext in _parsers and (
-        not sampling_frequency or not nchans or not ntimes or not ch_names
-    ):
-        md = _parsers[ext](bids_file_path)
-        if md:
-            sampling_frequency = sampling_frequency or md.get("sampling_frequency")
-            nchans = nchans or md.get("nchans")
-            ntimes = ntimes or md.get("n_times") or md.get("n_samples")
-            ch_names = ch_names or md.get("ch_names")
-
-    # VHDR: also try MNE for n_times (requires binary companion)
-    if ext == ".vhdr" and not ntimes:
-        raw = None
-        try:
-            raw = mne.io.read_raw_brainvision(
-                str(bids_file_path), preload=False, verbose=False
-            )
-            if raw.n_times and raw.n_times > 0:
-                ntimes = int(raw.n_times)
-        except (OSError, ValueError, RuntimeError, KeyError):
-            # MNE's brainvision reader: OSError on missing companion
-            # files, ValueError on malformed header, RuntimeError on
-            # unsupported variant. n_times stays unset; downstream
-            # code falls back to other sources.
-            pass
-        finally:
-            if raw is not None:
-                try:
-                    raw.close()
-                except (OSError, AttributeError):
-                    pass
-
-    # FIF fallback using MNE
-    fif_is_split = False
-    fif_continuations_ok = True
-    if ext == ".fif" and (not sampling_frequency or not nchans or not ntimes):
-        fif_metadata, fif_is_split = _parse_fif_with_mne(bids_file_path)
-        if fif_metadata:
-            sampling_frequency = sampling_frequency or fif_metadata.get(
-                "sampling_frequency"
-            )
-            nchans = nchans or fif_metadata.get("nchans")
-            ntimes = ntimes or fif_metadata.get("n_times")
-            ch_names = ch_names or fif_metadata.get("ch_names")
-
-    # Find dependency files (channels.tsv, events.tsv, etc.) for storage manifest
-    dep_keys = []
-    bids_file_path = Path(bids_file)
-    parent_dir = bids_file_path.parent
-    base_name = bids_file_path.stem.rsplit("_", 1)[0]
-
-    # BIDS sidecar files
-    # Check both the file's directory and the subject root directory (for inheritance)
-    search_dirs = [parent_dir]
-
-    # Try to find subject root
-    # Assumption: path is usually sub-XX/ses-YY/mod/ or sub-XX/mod/
-    # We want sub-XX/
-    parts = bids_file_path.parts
-    for i, part in enumerate(parts):
-        if part.startswith("sub-"):
-            # Subject root relative to where we are? No, relative to system.
-            # bids_file_path is absolute if passed from get_files()? No, let's check.
-            # get_files() returns absolute paths usually in MNE-BIDS context or from Path.rglob
-            # let's assume bids_file_path is absolute.
-
-            # Actually, extract_record receives `bids_file` as str. eegdash/dataset/dataset.py calls it with file path.
-            # let's use relative components logic safely.
-            pass
-
-    # Simplified approach: Look in parent, and if 'eeg'/'meg' etc is parent, look one up.
-    if parent_dir.name in NEURO_MODALITIES or parent_dir.name in [
-        "eeg",
-        "meg",
-        "ieeg",
-        "beh",
-        "nirs",
-    ]:
-        search_dirs.append(parent_dir.parent)
-
-    # Build list of base names to search: full base_name and session-level base_name
-    # Session-level sidecars (like optodes) don't have task/run entities
-    base_names_to_search = [base_name]
-    # Extract session-level base name by removing task/run entities
-    # e.g., "sub-6016_ses-1_task-MA_run-01" -> "sub-6016_ses-1"
-    session_base = re.sub(r"_task-[^_]+", "", base_name)
-    session_base = re.sub(r"_run-[^_]+", "", session_base)
-    session_base = re.sub(r"_acq-[^_]+", "", session_base)
-    if session_base != base_name:
-        base_names_to_search.append(session_base)
-
-    for search_dir in search_dirs:
-        for dep_suffix in [
-            "_channels.tsv",
-            "_events.tsv",
-            "_events.json",
-            "_electrodes.tsv",
-            "_coordsystem.json",
-            "_eeg.json",
-            # NIRS-specific sidecars
-            "_optodes.tsv",
-            "_optodes.json",
-            "_nirs.json",
-        ]:
-            for search_base in base_names_to_search:
-                dep_file = search_dir / f"{search_base}{dep_suffix}"
-                if dep_file.exists() or dep_file.is_symlink():
-                    try:
-                        dep_relpath = dep_file.relative_to(bids_dataset.bidsdir)
-                        dep_keys.append(str(dep_relpath))
-                    except ValueError:
-                        pass
-
-    # Format-specific companion files (e.g., .fdt for EEGLAB .set files)
-    # Always add BIDS-standard companions to dep_keys so the download
-    # pipeline fetches them even when the local git-annex clone is incomplete.
-    ext = bids_file_path.suffix.lower()
-    companion_exts = _COMPANION_FILES.get(ext, [])
-    for comp_ext in companion_exts:
-        comp_file = bids_file_path.with_suffix(comp_ext)
-        try:
-            comp_relpath = comp_file.relative_to(bids_dataset.bidsdir)
-            dep_keys.append(str(comp_relpath))
-        except ValueError:
-            pass
-
-    if ext == ".fif":
-        # Check filesystem for split FIF continuation files
-        if not fif_is_split:
-            cont_check = bids_file_path.parent / f"{bids_file_path.stem}-1{ext}"
-            if cont_check.exists() or cont_check.is_symlink():
-                fif_is_split = True
-
-        if fif_is_split:
-            fif_continuations_ok = True
-            for i in range(1, 100):
-                cont = bids_file_path.parent / f"{bids_file_path.stem}-{i}{ext}"
-                if not cont.exists() and not cont.is_symlink():
-                    break
-                if cont.is_symlink() and not cont.resolve().exists():
-                    fif_continuations_ok = False
-                try:
-                    dep_keys.append(str(cont.relative_to(bids_dataset.bidsdir)))
-                except ValueError:
-                    pass
 
     # Validate companion files exist
     companion_validation = validate_companion_files(bids_file_path, allow_symlinks=True)
@@ -1217,48 +1320,9 @@ def extract_record(
             "Split FIF: continuation files not available in source"
         )
 
-    # Validate extracted metadata
-    # Check sampling_frequency is in reasonable range (0.1 Hz to 1 MHz)
-    if sampling_frequency is not None:
-        if sampling_frequency <= 0:
-            logging.warning(
-                "Invalid sampling_frequency <= 0 for %s: %s",
-                bids_relpath,
-                sampling_frequency,
-            )
-            sampling_frequency = None
-        elif sampling_frequency > 1_000_000:
-            logging.warning(
-                "Suspicious sampling_frequency > 1MHz for %s: %s",
-                bids_relpath,
-                sampling_frequency,
-            )
-
-    # Check nchans is positive
-    if nchans is not None:
-        if nchans <= 0:
-            logging.warning(
-                "Invalid nchans <= 0 for %s: %s",
-                bids_relpath,
-                nchans,
-            )
-            nchans = None
-        elif nchans > 10000:
-            logging.warning(
-                "Suspicious nchans > 10000 for %s: %s",
-                bids_relpath,
-                nchans,
-            )
-
-    # Validate ch_names count matches nchans
-    if ch_names and nchans:
-        if len(ch_names) != nchans:
-            logging.debug(
-                "ch_names count (%d) != nchans (%d) for %s",
-                len(ch_names),
-                nchans,
-                bids_relpath,
-            )
+    sampling_frequency, nchans = _clamp_metadata_extremes(
+        sampling_frequency, nchans, ch_names, bids_relpath
+    )
 
     # NEMAR fast-path enrichment for the runtime; see Storage TypedDict
     # in eegdash/schemas.py for the contract.

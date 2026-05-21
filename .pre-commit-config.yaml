@@ -62,3 +62,9 @@ repos:
         types: [python]
         files: ^(eegdash|docs|scripts)/
         exclude: (\.ipynb$|docs/source/generated/|docs/_build/|docs/source/conf\.py)
+    -   id: find-leaked-creds
+        name: Block leaked credentials in staged changes
+        entry: bash scripts/ingestions/scripts/find_leaked_creds.sh
+        language: system
+        pass_filenames: false
+        stages: [pre-commit, commit-msg]

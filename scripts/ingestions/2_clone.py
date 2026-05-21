@@ -11,7 +11,6 @@ Usage:
     python 2_clone.py --manifest-only  # Skip git clones
 """
 
-import argparse
 import json
 import os
 import shutil
@@ -530,59 +529,27 @@ def load_datasets(
 
 
 def main():
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument(
-        "--input",
-        type=Path,
-        default=Path("consolidated"),
-        help="Input JSON file or directory",
-    )
-    parser.add_argument(
-        "--output",
-        type=Path,
-        default=Path("data/cloned"),
-        help="Output directory",
-    )
-    parser.add_argument(
-        "--sources",
-        nargs="+",
-        choices=list(HANDLERS.keys()),
-        help="Process only specific sources",
-    )
-    parser.add_argument(
-        "--timeout",
-        type=int,
-        default=300,
-        help="Timeout in seconds",
-    )
-    parser.add_argument(
-        "--workers",
-        type=int,
-        default=8,
-        help="Number of parallel workers",
-    )
-    parser.add_argument(
-        "--limit",
-        type=int,
-        help="Maximum datasets to process (total)",
-    )
-    parser.add_argument(
-        "--limit-per-source",
-        type=int,
-        help="Maximum datasets per source",
-    )
-    parser.add_argument(
-        "--datasets",
-        nargs="+",
-        help="Process only specific dataset IDs",
-    )
-    parser.add_argument(
-        "--manifest-only",
-        action="store_true",
-        help="Skip git clones, only create manifests",
-    )
+    # CLI + env vars + validation via Pydantic-settings (C8 — final
+    # stage in the C6.5 cross-stage pattern roll-out). 9 argparse flags
+    # become declarative fields; bounds on workers / timeout / limits
+    # prevent the "--workers 99999" misconfig that used to silently
+    # sail through argparse. Sources list cross-checked against
+    # KNOWN_SOURCES (kept aligned with HANDLERS).
+    from pydantic import ValidationError
 
-    args = parser.parse_args()
+    from _clone_config import load_clone_config_from_argv
+
+    try:
+        cfg = load_clone_config_from_argv()
+    except ValidationError as exc:
+        print("Config error(s):", file=sys.stderr)
+        for err in exc.errors():
+            field = ".".join(str(p) for p in err.get("loc", []))
+            print(f"  {field}: {err.get('msg')}", file=sys.stderr)
+        return 1
+
+    # Shim so the existing args.X access below works unchanged
+    args = cfg
 
     # Load datasets
     print(f"Loading datasets from: {args.input}")

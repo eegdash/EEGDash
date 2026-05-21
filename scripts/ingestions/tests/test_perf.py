@@ -114,6 +114,68 @@ def test_parse_vhdr_median_under_5ms(benchmark):
     )
 
 
+def _load_digest_for_perf():
+    """Module-level helper — avoids the no-nested-functions lint."""
+    import importlib.util as _il
+
+    ingest_dir = Path(__file__).resolve().parent.parent
+    spec = _il.spec_from_file_location(
+        "_perf_digest_target", ingest_dir / "3_digest.py"
+    )
+    assert spec is not None
+    assert spec.loader is not None
+    mod = _il.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod, ingest_dir
+
+
+def _run_digest_in_tempdir(digest_mod, inputs_dir):
+    """Module-level helper — runs one digest into a fresh tempdir.
+
+    Module-level (rather than nested in the test) so the project's
+    no-nested-functions lint stays clean.
+    """
+    import shutil
+    import tempfile
+
+    tmp = tempfile.mkdtemp(prefix="perf_digest_")
+    try:
+        return digest_mod.digest_dataset("ds_snapshot_vhdr", inputs_dir, Path(tmp))
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
+
+
+def test_digest_dataset_e2e_under_10s_on_snapshot(benchmark):
+    """Full ``digest_dataset`` run on the BIDS snapshot fixture, under 10s.
+
+    Closes ROADMAP-C1 C1.6 partial — pipeline perf budget. Catches
+    regressions where a refactor adds a stray network call, a
+    quadratic loop, or breaks MNE's metadata cache.
+
+    The fixture is small (VHDR triple ~50 KB). Real datasets are
+    100-1000x bigger but exercise the same code paths, so a budget
+    here gates the per-file overhead. Local: ~70 ms including MNE
+    setup; 10s ceiling gives 140x headroom for slower CI runners.
+    """
+    digest_mod, ingest_dir = _load_digest_for_perf()
+    inputs_dir = ingest_dir / "tests" / "fixtures" / "digest_snapshots" / "inputs"
+
+    # Run twice and take the median; the first call pays MNE-load
+    # cost so we don't want to fail on cold-start variance.
+    summary = benchmark.pedantic(
+        _run_digest_in_tempdir,
+        args=(digest_mod, inputs_dir),
+        rounds=2,
+        iterations=1,
+        warmup_rounds=0,
+    )
+    assert summary["status"] == "success"
+    assert benchmark.stats.stats.median < 10.0, (
+        f"digest_dataset median = {benchmark.stats.stats.median:.2f}s; "
+        f"ceiling is 10.0s. Run --durations=20 to find the new hot path."
+    )
+
+
 def test_fingerprint_throughput_1000_files(benchmark):
     """Fingerprinting 1000 files must run in under 5 ms (mean).
 

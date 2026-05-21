@@ -17,10 +17,16 @@ import os
 import shutil
 import subprocess
 import sys
-from concurrent.futures import ThreadPoolExecutor, as_completed
+from concurrent.futures import (
+    CancelledError,
+    ThreadPoolExecutor,
+    TimeoutError,
+    as_completed,
+)
 from pathlib import Path
 from threading import Lock
 
+import httpx
 from dotenv import load_dotenv
 from tqdm import tqdm
 
@@ -441,7 +447,22 @@ def process_dataset(
 
         return result
 
-    except Exception as e:
+    except (
+        httpx.RequestError,
+        httpx.HTTPStatusError,
+        FileNotFoundError,
+        PermissionError,
+        OSError,
+        subprocess.CalledProcessError,
+        subprocess.TimeoutExpired,
+        TimeoutError,
+        ValueError,
+        KeyError,
+    ) as e:
+        # Recoverable failures: network blip, missing file, malformed
+        # dataset metadata. Convert to a structured error record so the
+        # batch aggregate can continue. Programmer errors (AttributeError,
+        # TypeError, etc.) propagate — that's deliberate; see audit-1 F1.
         with _lock:
             _stats["error"] += 1
         return {
@@ -602,10 +623,25 @@ def main():
         )
         for future in pbar:
             try:
+                # process_dataset itself catches recoverable errors and
+                # returns {"status": "error", ...}, so future.result() should
+                # NOT normally raise. The outer except below catches only the
+                # documented "transport" failures (cancellation, futures-API)
+                # plus the network classes that COULD escape a handler that
+                # forgot to wrap a particular path. A programmer error like
+                # AttributeError or TypeError on a misshapen dataset dict will
+                # propagate — that's correct: silent error masking is the
+                # Phase 9 audit-1 F1 finding this fix addresses.
                 result = future.result()
                 results.append(result)
                 pbar.set_postfix(_stats)
-            except Exception as e:
+            except (
+                CancelledError,
+                TimeoutError,
+                httpx.RequestError,
+                httpx.HTTPStatusError,
+                OSError,
+            ) as e:
                 results.append({"status": "error", "error": str(e)})
 
     # Save results

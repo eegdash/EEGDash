@@ -84,7 +84,7 @@ ignore = [
 #
 # Other rules are smaller categories (RUF002/003/005/013, B007, N806, etc.)
 # that we'll tidy mechanically when their owning file is next touched.
-"2_clone.py"                    = ["BLE001"]
+# "2_clone.py"                  — bare-excepts swept in Phase 9 F1 fix (commit 14)
 "3_digest.py"                   = ["BLE001", "E741", "RUF003", "RUF005", "RUF013", "RUF046", "B007"]
 "4_validate_output.py"          = ["BLE001"]
 "5_inject.py"                   = ["BLE001"]

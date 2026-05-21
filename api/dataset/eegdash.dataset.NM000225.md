@@ -198,24 +198,7 @@ Challenge 2018 on automatic arousal detection.
     <b>Fig. 01</b> Signal &amp; montage
     <span class="right">13 ch · EEG · 200 Hz · 1983 subjects, 1983 recordings</span>
   </div>
-  <div class="figpair-grid"><div class="figpair-cell figpair-trace"><details class="trace-viewer">
-  <summary>Live trace viewer — <strong>sub-tr030187 · ses-training · task-sleep</strong></summary>
-  <p class="trace-viewer-caption">
-    Showing <strong>one</strong> representative recording out of
-    <strong>1983 subjects and 1983 recordings</strong> in this dataset.
-    Browse the full set on <a href="https://openneuro.org/datasets/nm000225" target="_blank" rel="noopener">OpenNeuro</a>;
-    drop any other <code>_eeg.{set,edf,bdf,vhdr}</code> file onto the
-    viewer (or pass <code>?eeg=&lt;url&gt;</code>) to inspect it.
-  </p>
-  <iframe
-    data-src="https://eegdash.github.io/eegdash-viewer/?dataset=nm000225&sub=tr030187&ses=training&task=sleep&ext=bdf&embed=1"
-    loading="lazy"
-    width="100%" height="640"
-    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 1200px; display: block; background: transparent;"
-    title="Live EEG trace viewer for nm000225 — sub-tr030187 · ses-training · task-sleep"
-    referrerpolicy="no-referrer">
-  </iframe>
-</details></div><div class="figpair-cell figpair-montage">
+  <div class="figpair-grid"><div class="figpair-cell figpair-montage">
 
 No scalp electrode layout is currently indexed for this
 dataset. Once the eegdash montage registry ingests it,

@@ -18,19 +18,20 @@ features corresponding to the leading dimensions (e.g., subjects, channels).
 
 ### Functions
 
-| `spectral_preprocessor`(x, /, \*, \_metadata[, ...])   | Compute the Power Spectral Density (PSD) using Welch's method.    |
-|--------------------------------------------------------|-------------------------------------------------------------------|
-| `spectral_normalized_preprocessor`(f, p, /)            | Normalize the PSD so that the total power equals 1.               |
-| `spectral_db_preprocessor`(f, p, /[, eps])             | Convert the PSD to decibels.                                      |
-| `spectral_root_total_power`(f, p, /)                   | Calculate the square root of the total spectral power.            |
-| `spectral_moment`(f, p, /)                             | Calculate the first spectral moment ('Weighted' Mean Frequency).  |
-| `spectral_entropy`(f, p, /)                            | Calculate Spectral Entropy of thepower spectrum.                  |
-| `spectral_edge`(f, p, /[, edge])                       | Calculate the Spectral Edge Frequency (SEF).                      |
-| `spectral_slope`(f, p, /)                              | Estimate the $1/f$ spectral slope using least-squares regression. |
-| `spectral_bands_power`(f, p, /[, bands])               | Calculate total power within specified frequency bands.           |
-| `spectral_hjorth_activity`(f, p, /)                    | Calculate Hjorth Activity in the frequency domain.                |
-| `spectral_hjorth_mobility`(f, p, /)                    | Calculate Hjorth Mobility in the frequency domain.                |
-| `spectral_hjorth_complexity`(f, p, /)                  | Calculate Hjorth Complexity in the frequency domain.              |
+| `spectral_preprocessor`(x, /, \*, \_metadata[, ...])   | Compute the Power Spectral Density (PSD) using Welch's method.                 |
+|--------------------------------------------------------|--------------------------------------------------------------------------------|
+| `spectral_normalized_preprocessor`(f, p, /)            | Normalize the PSD so that the total power equals 1.                            |
+| `spectral_db_preprocessor`(f, p, /[, eps])             | Convert the PSD to decibels.                                                   |
+| `spectral_root_total_power`(f, p, /)                   | Calculate the square root of the total spectral power.                         |
+| `spectral_moment`(f, p, /)                             | Calculate the first spectral moment ('Weighted' Mean Frequency).               |
+| `spectral_entropy`(f, p, /)                            | Calculate Spectral Entropy of thepower spectrum.                               |
+| `spectral_peak_frequency`(f, p, /, \*[, freq_range])   | Get the frequency with the largest power, optionally within a frequency range. |
+| `spectral_edge`(f, p, /[, edge])                       | Calculate the Spectral Edge Frequency (SEF).                                   |
+| `spectral_slope`(f, p, /)                              | Estimate the $1/f$ spectral slope using least-squares regression.              |
+| `spectral_bands_power`(f, p, /[, bands])               | Calculate total power within specified frequency bands.                        |
+| `spectral_hjorth_activity`(f, p, /)                    | Calculate Hjorth Activity in the frequency domain.                             |
+| `spectral_hjorth_mobility`(f, p, /)                    | Calculate Hjorth Mobility in the frequency domain.                             |
+| `spectral_hjorth_complexity`(f, p, /)                  | Calculate Hjorth Complexity in the frequency domain.                           |
 
 ### eegdash.features.feature_bank.spectral.spectral_preprocessor(x, , , \_metadata, f_min: [float](https://docs.python.org/3/library/functions.html#float) | [None](https://docs.python.org/3/library/constants.html#None) = None, f_max: [float](https://docs.python.org/3/library/functions.html#float) | [None](https://docs.python.org/3/library/constants.html#None) = None, fs: [int](https://docs.python.org/3/library/functions.html#int) | [None](https://docs.python.org/3/library/constants.html#None) = None, window_size_in_sec: [float](https://docs.python.org/3/library/functions.html#float) | [None](https://docs.python.org/3/library/constants.html#None) = 4, overlap_in_sec: [float](https://docs.python.org/3/library/functions.html#float) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
 
@@ -138,6 +139,21 @@ $$
   * **p** (*ndarray*) – Normalized Power Spectral Density (treated as a PDF).
 * **Returns:**
   The entropy values. Shape is `p.shape[:-1]`.
+* **Return type:**
+  ndarray
+
+<!-- !! processed by numpydoc !! -->
+
+### eegdash.features.feature_bank.spectral.spectral_peak_frequency(f, p, , , freq_range: [tuple](https://docs.python.org/3/library/stdtypes.html#tuple) | [list](https://docs.python.org/3/library/stdtypes.html#list) | [None](https://docs.python.org/3/library/constants.html#None) = None)
+
+Get the frequency with the largest power, optionally within a frequency range.
+
+* **Parameters:**
+  * **f** (*ndarray*) – Frequency vector.
+  * **p** (*ndarray*) – Power Spectral Density (PSD).
+  * **freq_range** ([*tuple*](https://docs.python.org/3/library/stdtypes.html#tuple) *|* [*list*](https://docs.python.org/3/library/stdtypes.html#list) *[**optional* *]*) – A (low, high) frequency range to find the peak frequency at.
+* **Returns:**
+  The peak frequency. Shape is `p.shape[:-1]`.
 * **Return type:**
   ndarray
 

@@ -84,7 +84,8 @@
   "identifier": "doi:10.82901/nemar.nm000151",
   "sameAs": [
     "https://doi.org/10.82901/nemar.nm000151",
-    "https://openneuro.org/datasets/nm000151"
+    "https://openneuro.org/datasets/nm000151",
+    "https://huggingface.co/datasets/EEGDash/nm000151"
   ],
   "citeAs": "Mojgan Tavakolan, Zack Frehlick, Xinyi Yong, Carlo Menon (2019). Motor imagery dataset for three imaginary states of the same upper extremity. doi:10.82901/nemar.nm000151",
   "version": "1.9.0",
@@ -125,6 +126,14 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=nm000151",
       "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000151-huggingface",
+      "name": "EEGDash/nm000151 on Hugging Face",
+      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
+      "contentUrl": "https://huggingface.co/datasets/EEGDash/nm000151",
+      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

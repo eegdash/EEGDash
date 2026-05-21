@@ -150,7 +150,7 @@ Ramon Martinez, Dung Truong, Scott Makeig, Arnaud Delorme (UCSD, La Jolla, CA, U
 </details></div><div class="figpair-cell figpair-montage"><details class="electrode-explorer">
   <summary>Electrode layout — EEG · 70 sensors — 70 channels</summary>
   <iframe
-    data-src="https://electrodes.eegdash.org/?montage=69f97d98842f8923&embed=1"
+    data-src="https://electrodes.eegdash.org/?montage=b98b4055ac259992&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"

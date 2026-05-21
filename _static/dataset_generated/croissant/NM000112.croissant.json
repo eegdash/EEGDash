@@ -77,7 +77,8 @@
   "identifier": "doi:10.82901/nemar.nm000112",
   "sameAs": [
     "https://doi.org/10.82901/nemar.nm000112",
-    "https://openneuro.org/datasets/nm000112"
+    "https://openneuro.org/datasets/nm000112",
+    "https://huggingface.co/datasets/EEGDash/nm000112"
   ],
   "citeAs": "Yisi Liu, Olga Sourina, Minh Khoa Nguyen (2023). FACED - Finer-grained Affective Computing EEG Dataset. doi:10.82901/nemar.nm000112",
   "version": "1.7.0",
@@ -118,6 +119,14 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=nm000112",
       "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000112-huggingface",
+      "name": "EEGDash/nm000112 on Hugging Face",
+      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
+      "contentUrl": "https://huggingface.co/datasets/EEGDash/nm000112",
+      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

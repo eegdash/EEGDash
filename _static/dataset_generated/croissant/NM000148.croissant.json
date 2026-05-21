@@ -80,7 +80,8 @@
   "identifier": "doi:10.82901/nemar.nm000148",
   "sameAs": [
     "https://doi.org/10.82901/nemar.nm000148",
-    "https://openneuro.org/datasets/nm000148"
+    "https://openneuro.org/datasets/nm000148",
+    "https://huggingface.co/datasets/EEGDash/nm000148"
   ],
   "citeAs": "David Rozado, Andreas Duenser, Ben Howell (2019). Motor imagery BCI dataset with pupillometry augmentation. doi:10.82901/nemar.nm000148",
   "version": "1.9.0",
@@ -121,6 +122,14 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=nm000148",
       "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000148-huggingface",
+      "name": "EEGDash/nm000148 on Hugging Face",
+      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
+      "contentUrl": "https://huggingface.co/datasets/EEGDash/nm000148",
+      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

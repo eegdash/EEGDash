@@ -140,7 +140,8 @@
   "identifier": "doi:10.82901/nemar.nm000139",
   "sameAs": [
     "https://doi.org/10.82901/nemar.nm000139",
-    "https://openneuro.org/datasets/nm000139"
+    "https://openneuro.org/datasets/nm000139",
+    "https://huggingface.co/datasets/EEGDash/nm000139"
   ],
   "citeAs": "Michael Tangermann, Klaus-Robert Müller, Ad Aertsen, Niels Birbaumer, Christoph Braun (2019). BNCI 2014-001 Motor Imagery dataset. doi:10.82901/nemar.nm000139",
   "version": "1.9.0",
@@ -181,6 +182,14 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=nm000139",
       "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000139-huggingface",
+      "name": "EEGDash/nm000139 on Hugging Face",
+      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
+      "contentUrl": "https://huggingface.co/datasets/EEGDash/nm000139",
+      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

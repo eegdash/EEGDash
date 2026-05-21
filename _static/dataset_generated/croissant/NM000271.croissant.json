@@ -103,7 +103,8 @@
   "identifier": "doi:10.1038/s41597-025-06147-6",
   "sameAs": [
     "https://doi.org/10.1038/s41597-025-06147-6",
-    "https://openneuro.org/datasets/nm000271"
+    "https://openneuro.org/datasets/nm000271",
+    "https://huggingface.co/datasets/EEGDash/nm000271"
   ],
   "citeAs": "Wenwen Chang, Weixuan Kong, Guanghui Yan, Renjie Lv, Kaiyue Du (n.d.). Chang et al. 2025 — A multi-paradigm EEG dataset for studying upper limb rehabilitation exercises (Lanzhou Jiaotong University). doi:10.1038/s41597-025-06147-6",
   "version": "1.9.0",
@@ -144,6 +145,14 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=nm000271",
       "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000271-huggingface",
+      "name": "EEGDash/nm000271 on Hugging Face",
+      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
+      "contentUrl": "https://huggingface.co/datasets/EEGDash/nm000271",
+      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

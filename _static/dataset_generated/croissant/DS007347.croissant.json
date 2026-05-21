@@ -96,7 +96,8 @@
   "identifier": "doi:10.18112/openneuro.ds007347.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds007347.v1.0.0",
-    "https://openneuro.org/datasets/ds007347"
+    "https://openneuro.org/datasets/ds007347",
+    "https://huggingface.co/datasets/EEGDash/ds007347"
   ],
   "citeAs": "W. Jeffrey Elias, Chang-Chia Liu, Divine Nwafor, Patrick H. Finan, Mark Quigg (2026). Sterotactic Focused Ultrasound Mesencephalotomy for the Treatment of Head and Neck Cancer Pain. doi:10.18112/openneuro.ds007347.v1.0.0",
   "version": "1.8.0",
@@ -144,6 +145,14 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=ds007347",
       "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007347-huggingface",
+      "name": "EEGDash/ds007347 on Hugging Face",
+      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
+      "contentUrl": "https://huggingface.co/datasets/EEGDash/ds007347",
+      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

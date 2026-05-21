@@ -24,27 +24,27 @@ features corresponding to the leading dimensions (e.g., subjects, channels).
 
 ### Functions
 
-| `signal_hilbert_preprocessor`(x, /)                | Compute the amplitude envelope of the analytic signal.      |
-|----------------------------------------------------|-------------------------------------------------------------|
-| `signal_filter_preprocessor`(x, /, \*, ...[, ...]) | Linear-phase FIR band-pass filter.                          |
-| `signal_decorrelation_time`(x, /, \*, \_metadata)  | Calculate the Decorrelation Time of the signal.             |
-| `signal_hjorth_activity`(x, /, \*\*kwargs)         | Calculate the Hjorth Activity of the signal.                |
-| `signal_hjorth_complexity`(x, /)                   | Calculate the Hjorth Complexity of the signal.              |
-| `signal_hjorth_mobility`(x, /)                     | Calculate the Hjorth Mobility of the signal.                |
-| `signal_kurtosis`(x, /, \*\*kwargs)                | Compute the temporal kurtosis of the signal.                |
-| `signal_line_length`(x, /)                         | Calculate the Mean Signal Line Length.                      |
-| `signal_mean`(x, /)                                | Compute the temporal mean of the signal.                    |
-| `signal_peak_to_peak`(x, /, \*\*kwargs)            | Calculate the peak-to-peak (maximum range) of the signal.   |
-| `signal_quantile`(x, /[, q])                       | Compute the q-th quantile of the signal.                    |
-| `signal_root_mean_square`(x, /)                    | Calculate the Root Mean Square (RMS) magnitude.             |
-| `signal_skewness`(x, /, \*\*kwargs)                | Compute the temporal skewness of the signal.                |
-| `signal_std`(x, /, \*\*kwargs)                     | Compute the temporal standard deviation of the signal.      |
-| `signal_variance`(x, /, \*\*kwargs)                | Compute the temporal variance of the signal.                |
-| `signal_zero_crossings`(x, /[, threshold])         | Count the number of times the signal crosses the zero axis. |
+| `signal_envelope_preprocessor`(x, /)               | Compute the amplitude envelope of the signal using Hilbert transform.   |
+|----------------------------------------------------|-------------------------------------------------------------------------|
+| `signal_filter_preprocessor`(x, /, \*, ...[, ...]) | Linear-phase FIR band-pass filter.                                      |
+| `signal_decorrelation_time`(x, /, \*, \_metadata)  | Calculate the Decorrelation Time of the signal.                         |
+| `signal_hjorth_activity`(x, /, \*\*kwargs)         | Calculate the Hjorth Activity of the signal.                            |
+| `signal_hjorth_complexity`(x, /)                   | Calculate the Hjorth Complexity of the signal.                          |
+| `signal_hjorth_mobility`(x, /)                     | Calculate the Hjorth Mobility of the signal.                            |
+| `signal_kurtosis`(x, /, \*\*kwargs)                | Compute the temporal kurtosis of the signal.                            |
+| `signal_line_length`(x, /)                         | Calculate the Mean Signal Line Length.                                  |
+| `signal_mean`(x, /)                                | Compute the temporal mean of the signal.                                |
+| `signal_peak_to_peak`(x, /, \*\*kwargs)            | Calculate the peak-to-peak (maximum range) of the signal.               |
+| `signal_quantile`(x, /[, q])                       | Compute the q-th quantile of the signal.                                |
+| `signal_root_mean_square`(x, /)                    | Calculate the Root Mean Square (RMS) magnitude.                         |
+| `signal_skewness`(x, /, \*\*kwargs)                | Compute the temporal skewness of the signal.                            |
+| `signal_std`(x, /, \*\*kwargs)                     | Compute the temporal standard deviation of the signal.                  |
+| `signal_variance`(x, /, \*\*kwargs)                | Compute the temporal variance of the signal.                            |
+| `signal_zero_crossings`(x, /[, threshold])         | Count the number of times the signal crosses the zero axis.             |
 
-### eegdash.features.feature_bank.signal.signal_hilbert_preprocessor(x,)
+### eegdash.features.feature_bank.signal.signal_envelope_preprocessor(x,)
 
-Compute the amplitude envelope of the analytic signal.
+Compute the amplitude envelope of the signal using Hilbert transform.
 
 * **Parameters:**
   **x** (*ndarray*) – Input signal

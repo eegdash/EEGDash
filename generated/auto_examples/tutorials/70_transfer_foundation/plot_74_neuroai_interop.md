@@ -299,7 +299,7 @@ pd.Series(
 ```
 
 ```none
-[05/21/26 17:24:54] WARNING  File not found on S3, skipping:   downloader.py:163
+[05/21/26 18:22:44] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds002718/sub-0
                              02/eeg/sub-002_task-FaceRecogniti
                              on_eeg.fdt
@@ -718,17 +718,17 @@ seg_card
 ```
 
 ```none
-2026-05-21 17:24:56 - WARNING - neuralset.segments:665 - 403 segments out of 1495 did not contain valid events for event type <class 'neuralset.events.etypes.Stimulus'>
-[05/21/26 17:24:56] WARNING  403 segments out of 1495 did not    segments.py:665
+2026-05-21 18:22:46 - WARNING - neuralset.segments:665 - 403 segments out of 1495 did not contain valid events for event type <class 'neuralset.events.etypes.Stimulus'>
+[05/21/26 18:22:46] WARNING  403 segments out of 1495 did not    segments.py:665
                              contain valid events for event type
                              <class
                              'neuralset.events.etypes.Stimulus'>
-2026-05-21 17:24:56 - INFO - neuralset.dataloader:618 - 403 segments are missing events of type Stimulus. They will be populated with default missing values through prepare.
+2026-05-21 18:22:46 - INFO - neuralset.dataloader:618 - 403 segments are missing events of type Stimulus. They will be populated with default missing values through prepare.
                     INFO     403 segments are missing events   dataloader.py:618
                              of type Stimulus. They will be
                              populated with default missing
                              values through prepare.
-2026-05-21 17:24:56 - INFO - neuralset.dataloader:625 - Removing 403 segments out of 1495
+2026-05-21 18:22:46 - INFO - neuralset.dataloader:625 - Removing 403 segments out of 1495
                     INFO     Removing 403 segments out of 1495 dataloader.py:625
 ```
 
@@ -1128,6 +1128,6 @@ See [References](../../../../references.md) for the centralized bibliography of 
 cited above. Add or amend an entry once in
 `docs/source/refs.bib`; every tutorial inherits the update.
 
-**Total running time of the script:** (0 minutes 3.392 seconds)
+**Total running time of the script:** (0 minutes 3.811 seconds)
 
 <a id="sphx-glr-download-generated-auto-examples-tutorials-70-transfer-foundation-plot-74-neuroai-interop-py"></a>

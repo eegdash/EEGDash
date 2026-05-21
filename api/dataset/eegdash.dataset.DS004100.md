@@ -139,13 +139,13 @@ MNE-BIDS was used to convert the dataset into BIDS format.
     <span class="right">122 (21), 128 (18), 118 (17), 172 (15), 126 (14), 104 (13), 96 (12), 127 (12), 180 (12), 82 (12), 174 (7), 108 (7), 190 (7), 136 (7), 109 (7), 80 (7), 92 (7), 120 (7), 121 (7), 117 (7), 74 (7), 102 (7), 149 (7), 98 (6), 163 (6), 52 (5), 164 (5), 88 (5), 71 (5), 116 (5), 59 (5), 63 (5), 186 (5), 162 (5), 100 (5), 105 (4), 90 (4), 61 (4), 85 (3), 192 (2), 94 (2), 232 ch · iEEG · 256, 500, 512, 1024 Hz · 57 subjects, 319 recordings</span>
   </div>
   <div class="figpair-grid"><div class="figpair-cell figpair-montage"><details class="electrode-explorer">
-  <summary>Electrode layout — iEEG · 72 sensors — 72 channels</summary>
+  <summary>Electrode layout — iEEG · 78 sensors — 78 channels</summary>
   <iframe
-    data-src="https://electrodes.eegdash.org/?montage=114e5f361a1fee00&embed=1"
+    data-src="https://electrodes.eegdash.org/?montage=832306ad18a7b77c&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
-    title="Topomap of iEEG · 72 sensors"
+    title="Topomap of iEEG · 78 sensors"
     referrerpolicy="no-referrer">
   </iframe>
 </details></div></div></div>

@@ -102,7 +102,8 @@
   "identifier": "doi:10.18112/openneuro.ds007216.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds007216.v1.0.0",
-    "https://openneuro.org/datasets/ds007216"
+    "https://openneuro.org/datasets/ds007216",
+    "https://huggingface.co/datasets/EEGDash/ds007216"
   ],
   "citeAs": "Aaron Kucyi, Lotus Shareef-Trudeau, David Braun, Huiling Peng, Tiara Bounyarith (2026). A multi-session simultaneous EEG-fMRI dataset with online experience sampling. doi:10.18112/openneuro.ds007216.v1.0.0",
   "version": "1.7.0",
@@ -155,6 +156,14 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=ds007216",
       "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007216-huggingface",
+      "name": "EEGDash/ds007216 on Hugging Face",
+      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
+      "contentUrl": "https://huggingface.co/datasets/EEGDash/ds007216",
+      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

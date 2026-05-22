@@ -104,6 +104,7 @@ from digest_telemetry import TelemetryEvent, auto_configure_from_env, get_emitte
 from record_enumerator import (
     EnumerationResult,
     ManifestEnumerator,
+    RecordEnumerator,
     get_record_enumerator,
     write_dataset_outputs,
 )
@@ -2945,6 +2946,95 @@ def _enumerate_via_bids(
     )
 
 
+def _emit_dataset_finished(dataset_id: str, summary: dict[str, Any]) -> None:
+    """Emit the ``dataset_finished`` telemetry event for the orchestrator.
+
+    Surface the same payload digest_dataset used to inline. Kept as a
+    helper so the orchestrator body stays at the "one screen" length.
+
+    Phase 8 Stage 3D: extracted from ``digest_dataset``.
+    """
+    get_emitter().emit(
+        TelemetryEvent(
+            event_kind="dataset_finished",
+            dataset_id=dataset_id,
+            payload={
+                "status": summary.get("status"),
+                "record_count": summary.get("record_count"),
+                "error_count": summary.get("error_count"),
+                "digest_method": summary.get("digest_method"),
+                "integrity_issues_count": summary.get("integrity_issues_count"),
+                "montage_count": summary.get("montage_count"),
+            },
+        )
+    )
+
+
+def _run_enumerator_with_manifest_fallback(
+    enumerator: RecordEnumerator,
+    *,
+    dataset_id: str,
+    dataset_dir: Path,
+    source: str,
+    source_adapter: SourceAdapter,
+    digested_at: str,
+    has_manifest: bool,
+) -> tuple[EnumerationResult | None, dict[str, Any] | None]:
+    """Run ``enumerator.enumerate()`` with the legacy BIDS→manifest fallback.
+
+    Returns ``(result, None)`` on success — the caller proceeds to
+    write outputs. Returns ``(None, summary)`` on terminal failure
+    (no manifest fallback available); the caller propagates the
+    summary back to its caller.
+
+    Two fallback triggers, both pre-Stage-3D behaviours preserved:
+
+    1. ``enumerate()`` raises one of the documented load-failure
+       exceptions — the BIDS load couldn't even start.
+    2. ``enumerate()`` returns an empty result — the BIDS walk
+       completed but surfaced no records.
+
+    Both routes re-run with a fresh :class:`ManifestEnumerator` when
+    a ``manifest.json`` exists and we haven't already tried the
+    manifest path. Without that, surface a structured error.
+
+    Phase 8 Stage 3D: replaces the two ``digest_from_manifest``
+    fallback callsites in ``digest_dataset`` (and lets that legacy
+    wrapper get deleted in the next commit).
+    """
+    try:
+        result = enumerator.enumerate()
+    except (
+        OSError,
+        ValueError,
+        KeyError,
+        FileNotFoundError,
+        PermissionError,
+    ) as exc:
+        if has_manifest and not isinstance(enumerator, ManifestEnumerator):
+            fallback = ManifestEnumerator(
+                dataset_id, dataset_dir, source, source_adapter, digested_at
+            )
+            return fallback.enumerate(), None
+        return None, {
+            "status": "error",
+            "dataset_id": dataset_id,
+            "error": f"Failed to load BIDS dataset: {exc}",
+        }
+
+    if (
+        not result.records
+        and has_manifest
+        and not isinstance(enumerator, ManifestEnumerator)
+    ):
+        fallback = ManifestEnumerator(
+            dataset_id, dataset_dir, source, source_adapter, digested_at
+        )
+        return fallback.enumerate(), None
+
+    return result, None
+
+
 def _summarise_empty_or_error(
     dataset_id: str,
     result: EnumerationResult,
@@ -3074,30 +3164,19 @@ def digest_dataset(
         dataset_id, dataset_dir, source, source_adapter, digested_at
     )
 
-    # Run it. The BIDS Adapter raises on EEGBIDSDataset load failure
-    # (per Stage 3C contract); fall back to manifest if available.
-    try:
-        result = enumerator.enumerate()
-    except (
-        OSError,
-        ValueError,
-        KeyError,
-        FileNotFoundError,
-        PermissionError,
-    ) as e:
-        if has_manifest and not isinstance(enumerator, ManifestEnumerator):
-            return digest_from_manifest(dataset_id, input_dir, output_dir)
-        return {
-            "status": "error",
-            "dataset_id": dataset_id,
-            "error": f"Failed to load BIDS dataset: {e}",
-        }
+    result, fallback_summary = _run_enumerator_with_manifest_fallback(
+        enumerator,
+        dataset_id=dataset_id,
+        dataset_dir=dataset_dir,
+        source=source,
+        source_adapter=source_adapter,
+        digested_at=digested_at,
+        has_manifest=has_manifest,
+    )
+    if fallback_summary is not None:
+        return fallback_summary
 
     if not result.records:
-        # No records — fall back to manifest if we haven't tried it yet,
-        # else surface the right "empty / error" status.
-        if has_manifest and not isinstance(enumerator, ManifestEnumerator):
-            return digest_from_manifest(dataset_id, input_dir, output_dir)
         return _summarise_empty_or_error(dataset_id, result)
 
     summary = write_dataset_outputs(
@@ -3106,21 +3185,9 @@ def digest_dataset(
         dataset_id=dataset_id,
         source=source,
         digested_at=digested_at,
+        total_files=result.total_files,
     )
-    get_emitter().emit(
-        TelemetryEvent(
-            event_kind="dataset_finished",
-            dataset_id=dataset_id,
-            payload={
-                "status": summary.get("status"),
-                "record_count": summary.get("record_count"),
-                "error_count": summary.get("error_count"),
-                "digest_method": summary.get("digest_method"),
-                "integrity_issues_count": summary.get("integrity_issues_count"),
-                "montage_count": summary.get("montage_count"),
-            },
-        )
-    )
+    _emit_dataset_finished(dataset_id, summary)
     return summary
 
 

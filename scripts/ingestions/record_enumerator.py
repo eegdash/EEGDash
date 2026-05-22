@@ -100,6 +100,13 @@ class EnumerationResult:
     digest_method : str
         Either ``"bids_filesystem"`` or ``"manifest_only"`` — surfaced
         in the summary for operational observability.
+    total_files : int | None
+        Raw input file count (the manifest's full ``files`` length for
+        :class:`ManifestEnumerator`, ``None`` for the BIDS-fs path).
+        Surfaced in the summary by :func:`write_dataset_outputs`. The
+        BIDS path keeps it ``None`` so the field is omitted — that
+        matches the pre-Stage-3D summary shape (no ``total_files`` for
+        BIDS).
     """
 
     dataset_meta: dict[str, Any]
@@ -107,6 +114,7 @@ class EnumerationResult:
     errors: list[dict[str, Any]] = field(default_factory=list)
     montages: dict[str, dict[str, Any]] = field(default_factory=dict)
     digest_method: str = "bids_filesystem"
+    total_files: int | None = None
 
 
 class RecordEnumerator(ABC):
@@ -356,9 +364,13 @@ class ManifestEnumerator(RecordEnumerator):
                 digest_method="manifest_only",
             )
         digest_mod = _load_digest_module()
-        result, _total_files = digest_mod._enumerate_via_manifest(
+        result, total_files = digest_mod._enumerate_via_manifest(
             self.dataset_id, manifest, self.digested_at
         )
+        # Surface total_files via the result so the orchestrator can
+        # forward it to write_dataset_outputs without owning a
+        # manifest-specific branch (Stage 3D — orchestrator collapse).
+        result.total_files = total_files
         return result
 
 

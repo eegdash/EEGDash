@@ -3,18 +3,96 @@
 This module provides shared functionality for validating file paths,
 reading files with encoding fallback, and fetching from S3 for
 git-annex symlinks.
+
+HTTP path note (2026-05-22)
+---------------------------
+The three S3 helpers (``fetch_bytes_from_s3``, ``head_content_length``,
+``fetch_from_s3``) used to call ``urllib.request.urlopen`` directly.
+The Stage-3 profile run of 2026-05-22 showed that the MEG montage
+extractor calls ``head_content_length`` ~100x per dataset, and that
+91% of the digest wall-clock went to TLS handshake / connect / read
+for those serialised, unpooled requests.
+
+This module now lazy-initialises a single shared :class:`httpx.Client`
+per process (``_http_client()``), keeping connections alive across
+calls to the same host. S3 is one host for every MEG montage URL, so
+all subsequent HEAD requests reuse the first handshake. Expected
+speedup on MEG-heavy datasets is ~5x (per the profile report).
+
+The signature + return type + exception behaviour of the three public
+functions are unchanged. Tests use ``respx`` to mock the httpx
+transport (same pattern as ``_inject_config.py``).
 """
 
 from __future__ import annotations
 
+import atexit
 import logging
 import re
-import urllib.request
+import threading
 from pathlib import Path
-from urllib.error import HTTPError, URLError
 from urllib.parse import quote
 
+import httpx
+
 logger = logging.getLogger(__name__)
+
+
+# ─── Pooled httpx client (shared across all S3 helpers) ───────────────────
+
+# httpx.Client is thread-safe for synchronous use (per docs). The
+# Stage-2 clone uses ThreadPoolExecutor → one client is fine. The
+# Stage-3 digest uses multiprocessing spawn → each worker process
+# gets its own client (re-import = new module-level state). No
+# inter-process state to manage.
+
+_HTTP_CLIENT: httpx.Client | None = None
+_HTTP_CLIENT_LOCK = threading.Lock()
+
+
+def _http_client() -> httpx.Client:
+    """Return the lazily-initialised shared HTTP client.
+
+    Pooled keep-alive connections (default httpx settings) eliminate the
+    per-request TLS handshake overhead. Closed at interpreter exit via
+    ``atexit`` so we don't leak sockets.
+    """
+    global _HTTP_CLIENT
+    if _HTTP_CLIENT is None:
+        with _HTTP_CLIENT_LOCK:
+            if _HTTP_CLIENT is None:  # double-checked locking
+                _HTTP_CLIENT = httpx.Client(
+                    timeout=httpx.Timeout(30.0),
+                    limits=httpx.Limits(
+                        max_keepalive_connections=20,
+                        max_connections=40,
+                        keepalive_expiry=60.0,
+                    ),
+                    follow_redirects=True,
+                )
+                atexit.register(_close_http_client)
+    return _HTTP_CLIENT
+
+
+def _close_http_client() -> None:
+    """Test helper + atexit hook to release the pooled client."""
+    global _HTTP_CLIENT
+    client = _HTTP_CLIENT
+    _HTTP_CLIENT = None
+    if client is not None:
+        try:
+            client.close()
+        except Exception as exc:  # noqa: BLE001
+            logger.debug("Error closing httpx client at shutdown: %s", exc)
+
+
+def reset_http_client_for_testing() -> None:
+    """Drop the cached client so the next call rebuilds it.
+
+    Tests that use respx may want to inspect call counts on a fresh
+    transport; this resets the singleton so respx hooks land cleanly.
+    """
+    _close_http_client()
 
 
 def is_broken_symlink(path: Path) -> bool:
@@ -130,55 +208,52 @@ def fetch_bytes_from_s3(
     → ``FIFFB_MEAS_INFO`` → channel info blocks, usually well under
     256 KB even for 500-channel recordings.
 
-    Returns the raw byte slice on success, ``None`` on any network or
-    protocol failure (caller decides whether to retry with a larger
-    ``max_bytes``).
+    Uses the shared :func:`_http_client` (pooled keep-alive). Returns
+    the raw byte slice on success, ``None`` on any network or protocol
+    failure (caller decides whether to retry with a larger ``max_bytes``).
     """
     end = int(start) + int(max_bytes) - 1
-    req = urllib.request.Request(
-        url,
-        headers={
-            "Range": f"bytes={int(start)}-{end}",
-            "Accept": "*/*",
-        },
-    )
+    headers = {
+        "Range": f"bytes={int(start)}-{end}",
+        "Accept": "*/*",
+    }
     logger.debug("Range-fetching bytes=%d-%d from %s", start, end, url)
     try:
-        with urllib.request.urlopen(req, timeout=timeout) as resp:
-            # Servers that don't honour Range return 200 with the full
-            # body; accept both but log when we got more than asked.
-            data = resp.read()
-            if len(data) > max_bytes:
-                logger.debug(
-                    "server ignored Range; got %d bytes (asked %d) from %s",
-                    len(data),
-                    max_bytes,
-                    url,
-                )
-            return data
-    except HTTPError as e:
-        logger.debug("HTTP error range-fetching %s: %s", url, e)
-        return None
-    except URLError as e:
-        logger.debug("URL error range-fetching %s: %s", url, e)
-        return None
-    except (TimeoutError, OSError) as e:
-        logger.debug("Network error range-fetching %s: %s", url, e)
+        resp = _http_client().get(url, headers=headers, timeout=timeout)
+        resp.raise_for_status()
+        # Servers that don't honour Range return 200 with the full
+        # body; accept both but log when we got more than asked.
+        data = resp.content
+        if len(data) > max_bytes:
+            logger.debug(
+                "server ignored Range; got %d bytes (asked %d) from %s",
+                len(data),
+                max_bytes,
+                url,
+            )
+        return data
+    except httpx.HTTPError as e:
+        logger.debug("HTTP/network error range-fetching %s: %s", url, e)
         return None
 
 
 def head_content_length(url: str, *, timeout: float = 30.0) -> int | None:
     """Issue a HEAD request and return ``Content-Length`` as int.
 
+    Uses the shared :func:`_http_client` (pooled keep-alive). The
+    Stage-3 profile of 2026-05-22 showed this function is called ~100×
+    per MEG dataset (one per FIF montage source); each call previously
+    opened a fresh TLS connection. Sharing one client across calls
+    yields the ~5x speedup the profile report quotes.
+
     Returns ``None`` on any network failure or when the header is absent.
     """
     try:
-        with urllib.request.urlopen(
-            urllib.request.Request(url, method="HEAD"), timeout=timeout
-        ) as resp:
-            raw = resp.headers.get("Content-Length")
-            return int(raw) if raw is not None else None
-    except (HTTPError, URLError, TimeoutError, OSError, ValueError) as exc:
+        resp = _http_client().head(url, timeout=timeout)
+        resp.raise_for_status()
+        raw = resp.headers.get("Content-Length")
+        return int(raw) if raw is not None else None
+    except (httpx.HTTPError, ValueError) as exc:
         logger.debug("HEAD %s failed: %s", url, exc)
         return None
 
@@ -189,6 +264,9 @@ def fetch_from_s3(
     encodings: tuple[str, ...] = ("utf-8", "latin-1", "cp1252"),
 ) -> str | None:
     """Fetch text content from an S3 URL.
+
+    Uses the shared :func:`_http_client` (pooled keep-alive). Tries each
+    encoding in order; returns the first that decodes the body cleanly.
 
     Parameters
     ----------
@@ -202,36 +280,27 @@ def fetch_from_s3(
     Returns
     -------
     str | None
-        File content as string, or None if fetch fails.
-
+        File content as string, or None if fetch or decode fails.
     """
     logger.debug("Fetching from S3: %s", url)
     try:
-        with urllib.request.urlopen(url, timeout=timeout) as response:
-            content_bytes = response.read()
+        resp = _http_client().get(url, timeout=timeout)
+        resp.raise_for_status()
+        content_bytes = resp.content
+    except httpx.HTTPError as e:
+        logger.debug("HTTP/network error fetching from S3: %s - %s", url, e)
+        return None
 
-            # Try each encoding
-            for encoding in encodings:
-                try:
-                    content = content_bytes.decode(encoding)
-                    logger.debug(
-                        "Successfully fetched %d bytes from S3", len(content_bytes)
-                    )
-                    return content
-                except UnicodeDecodeError:
-                    continue
+    for encoding in encodings:
+        try:
+            content = content_bytes.decode(encoding)
+            logger.debug("Successfully fetched %d bytes from S3", len(content_bytes))
+            return content
+        except UnicodeDecodeError:
+            continue
 
-            logger.warning("Failed to decode S3 content with any encoding: %s", url)
-            return None
-    except HTTPError as e:
-        logger.debug("HTTP error fetching from S3: %s - %s", url, e)
-        return None
-    except URLError as e:
-        logger.debug("URL error fetching from S3: %s - %s", url, e)
-        return None
-    except (TimeoutError, OSError) as e:
-        logger.debug("Network error fetching from S3: %s - %s", url, e)
-        return None
+    logger.warning("Failed to decode S3 content with any encoding: %s", url)
+    return None
 
 
 def path_is_within_root(path: Path | str, root: Path | str) -> bool:

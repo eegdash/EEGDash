@@ -2,14 +2,13 @@
 
 Phase 8 of the robustness programme. These tests pin the CURRENT
 behaviour of the small, pure-function helpers inside ``3_digest.py``
-so we can refactor the file's mega-functions
-(``digest_from_manifest`` = 631 LOC, ``extract_record`` = 521 LOC, ...)
-under a safety net.
+so we can refactor the file's mega-functions under a safety net.
 
-The bias here is intentional: we DON'T test the mega-functions yet.
-We test the leaves first — entity parsing, neuro-file detection — and
-in later commits the mega-functions are decomposed under the same
-safety pattern.
+The bias here is intentional: we DON'T test the mega-functions
+directly — we test the leaves first (entity parsing, neuro-file
+detection) and let the snapshot test in ``test_digest_snapshot.py``
+cover the orchestrator end-to-end. The LOC canary below tracks the
+remaining big helpers and surfaces growth or unexpected shrinkage.
 
 The module is loaded via ``importlib`` because its filename starts
 with a digit (``3_digest.py`` is not a legal Python identifier).
@@ -147,32 +146,35 @@ def test_is_neuro_data_file_is_case_sensitive_on_extension(
 
 
 def test_megafunction_line_counts_are_known_baseline(digest: ModuleType) -> None:
-    """Document the current LOC of the mega-functions as the Phase 8 baseline.
+    """Track LOC drift of the remaining big helpers in ``3_digest.py``.
 
-    These are the targets for decomposition. The test asserts each is
-    BIG, which is *deliberately* the opposite of normal — when the
-    decomposition lands, this test gets REMOVED in that PR.
+    The Phase 8 robustness programme keeps a per-function LOC budget
+    so growth (or unexpected shrinkage that hides a missing branch)
+    gets surfaced in CI. Each baseline is set ~20 LOC above the
+    current LOC; an upward drift past that ceiling fails the test.
+
+    The dict is sized to match the post-Stage-3D shape of the file:
+    the four remaining big helpers, plus the orchestrator wrapper
+    bounded by its own much-tighter budget.
     """
     import inspect
 
-    # Baselines updated 2026-05-21 across multiple sessions:
-    # - Session 1: Phase 3 narrow-except sweep added ~20 LOC each from
-    #   tuple-formatting (logic shrank).
-    # - Session 2 / Phase 8 round 2: extract_record dropped by 92 LOC
-    #   after extracting the BIDS sidecar + channels.tsv walks into
-    #   helpers. Real shrinkage starts here.
+    # Baselines updated 2026-05-22 (Phase 8 Stage 3D — orchestrator
+    # collapse). Previous session notes:
     # - Session 5 / Phase 8 Stage 3: digest_from_manifest dropped from
-    #   670 → 69 LOC (extracted to _enumerate_via_manifest helper);
-    #   digest_dataset dropped from 330 → 137 LOC (extracted to
-    #   _enumerate_via_bids helper). Both are now below the 100 LOC
-    #   ceiling so they're REMOVED from this dict; the extracted
-    #   helpers replace them as the megafunctions-still-pending.
+    #   670 → 69 LOC after extracting _enumerate_via_manifest; then
+    #   was DELETED in Stage 3D (the orchestrator routes via
+    #   ManifestEnumerator from record_enumerator.py).
+    # - Stage 3D also dropped digest_dataset from 137 → 90 LOC by
+    #   extracting _check_dataset_skip_conditions,
+    #   _summarise_empty_or_error, _run_enumerator_with_manifest_fallback,
+    #   and _emit_dataset_finished.
     big_functions = {
-        # Still big — pending further decomposition.
-        "_enumerate_via_manifest": 670,
-        "_enumerate_via_bids": 200,
-        "extract_record": 440,
-        "extract_dataset_metadata": 380,
+        # Still big — pending further decomposition. Budget = actual + 20.
+        "_enumerate_via_manifest": 240,
+        "_enumerate_via_bids": 130,
+        "extract_record": 240,
+        "extract_dataset_metadata": 235,
     }
     for name, baseline_loc in big_functions.items():
         fn = getattr(digest, name, None)
@@ -180,29 +182,26 @@ def test_megafunction_line_counts_are_known_baseline(digest: ModuleType) -> None
             pytest.skip(f"{name} not found — function may have been split already")
         source_lines = inspect.getsourcelines(fn)[0]
         actual_loc = len(source_lines)
-        # Phase 8 LOC ceiling is 80 (per ROBUSTNESS/02-STYLE_GUIDE § 6).
-        # Once a function drops below 100, the baseline assertion below
-        # FAILS — that's the signal that decomposition has landed.
-        assert actual_loc > 100, (
-            f"{name} dropped below 100 LOC ({actual_loc}). Phase 8 "
-            "decomposition appears complete — REMOVE this test in "
-            "the decomposition PR, replace with per-helper unit tests."
-        )
-        # Track drift downward — if a refactor accidentally GROWS a
-        # mega-function, that's a problem worth noticing.
-        assert actual_loc <= baseline_loc + 20, (
-            f"{name} grew from {baseline_loc} → {actual_loc} LOC. "
-            "Mega-functions should only shrink."
+        # Drift upward = a regression worth investigating.
+        assert actual_loc <= baseline_loc, (
+            f"{name} grew to {actual_loc} LOC (budget {baseline_loc}). "
+            "Mega-functions should only shrink. If a legitimate growth "
+            "happened, bump the baseline in the same commit."
         )
 
-    # Sanity-check the wrappers stayed thin — both were close to 800
-    # LOC before Stage 3; both should now be under 150.
-    for thin_wrapper in ("digest_dataset", "digest_from_manifest"):
-        fn = getattr(digest, thin_wrapper, None)
-        if fn is None:  # pragma: no cover
-            continue
-        actual_loc = len(inspect.getsourcelines(fn)[0])
-        assert actual_loc < 200, (
-            f"{thin_wrapper} grew to {actual_loc} LOC — it should stay "
-            "a thin orchestrator; the algorithm lives in the helper."
-        )
+    # Sanity-check the orchestrator stayed thin — digest_dataset was
+    # 330 LOC before Phase 8 Stage 3 and 90 LOC after Stage 3D. The
+    # 120 LOC budget leaves a little headroom for a future log line
+    # but fails fast if a chunk of algorithm leaks back in.
+    wrapper_loc = len(inspect.getsourcelines(digest.digest_dataset)[0])
+    assert wrapper_loc <= 120, (
+        f"digest_dataset grew to {wrapper_loc} LOC — it should stay "
+        "a thin orchestrator; the algorithm lives in the helpers."
+    )
+
+    # digest_from_manifest was removed in Phase 8 Stage 3D; if it
+    # ever comes back as a public entry point we want to know.
+    assert not hasattr(digest, "digest_from_manifest"), (
+        "digest_from_manifest reappeared in 3_digest.py. Stage 3D "
+        "removed it; the orchestrator now routes via ManifestEnumerator."
+    )

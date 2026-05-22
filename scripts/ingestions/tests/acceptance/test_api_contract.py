@@ -58,7 +58,12 @@ def api_module():
         spec.loader.exec_module(mod)
     except ImportError as exc:
         pytest.skip(f"API module has unmet imports (likely beanie/motor): {exc}")
-    except Exception as exc:  # pragma: no cover - defensive
+    except Exception as exc:
+        # Real-world failure mode: api/main.py constructs Settings() at
+        # import time, which raises pydantic.ValidationError if the
+        # MongoDB credentials env vars aren't set. Catching broad Exception
+        # lets the import-only assertions skip cleanly in CI / dev shells
+        # without the cluster creds available.
         pytest.skip(f"API module raised at import time: {exc!r}")
     return mod
 
@@ -67,8 +72,15 @@ def api_module():
 
 
 def test_every_record_validates_against_api_RecordModel(snapshot_outputs, api_module):
-    """The API's ``RecordModel`` (api/main.py:138) is the response-shape
-    Pydantic model. Producer output must round-trip through it."""
+    """The API's ``RecordModel`` (response-shape Pydantic model in
+    ``mongodb-eegdash-server/api/main.py``, if exposed) — producer
+    output must round-trip through it.
+
+    Today the API ships only ``Record(Document)`` (Beanie) + various
+    ``*Response`` wrapper models; no ``RecordModel`` symbol exists.
+    The ``getattr(..., None)`` + skip pattern degrades cleanly until
+    the API exposes the class. Tests #3-#5 below cover the structural
+    invariants in the meantime."""
     RecordModel = getattr(api_module, "RecordModel", None)
     if RecordModel is None:
         pytest.skip(
@@ -90,8 +102,13 @@ def test_every_record_validates_against_api_RecordModel(snapshot_outputs, api_mo
 
 
 def test_every_dataset_validates_against_api_DatasetModel(snapshot_outputs, api_module):
-    """The API's ``DatasetModel`` (api/main.py:158) is the response-shape
-    Pydantic model for Dataset queries. Producer output must validate."""
+    """The API's ``DatasetModel`` (response-shape Pydantic model, if
+    exposed) — producer output must validate against it.
+
+    Today the API ships only ``DatasetListResponse`` and similar
+    wrapper models; no bare ``DatasetModel`` symbol exists. Tests
+    skip cleanly when the symbol is absent (defensive ``getattr``
+    fallback)."""
     DatasetModel = getattr(api_module, "DatasetModel", None)
     if DatasetModel is None:
         pytest.skip(

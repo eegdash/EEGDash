@@ -57,7 +57,7 @@ def connectivity_correlation(x, /, *, _metadata):
     Returns
     -------
     numpy.ndarray
-        The channel pairwise correlation of shape (n_trials, n_pairs).
+        The channel pairwise Pearson correlation of shape (n_trials, n_pairs).
 
     """
     idx_x, idx_y = _metadata["ch_pair_iterator"].get_pair_iterators()
@@ -211,7 +211,18 @@ def connectivity_lagged_coherence(f, c, /, bands=utils.DEFAULT_FREQ_BANDS):
 @feature_predecessor(signal_filter_preprocessor)
 @channel_pairer_undirected
 def connectivity_phase_diff_preprocessor(x, /, *, _metadata):
-    r"""TODO.
+    r"""Compute complex exponent of phase difference for all unique channel pairs.
+
+    For each pair of channels :math:`l, m`, calculate:
+
+    .. math::
+        e^{i\left(\varphi_l\left(t\right) - \varphi_m\left(t\right)\right)}.
+
+    The instantanous phases are calculated via Hilbert transform.
+
+    .. note::
+        This preprocessor should follow a narrow-band filter, otherwise the
+        Hilbert transform cannot yield meaningful phases.
 
     Parameters
     ----------
@@ -234,7 +245,11 @@ def connectivity_phase_diff_preprocessor(x, /, *, _metadata):
 @feature_predecessor(connectivity_phase_diff_preprocessor)
 @bivariate_feature
 def connectivity_phase_locking_value(exp_dphi, /):
-    """TODO.
+    r"""Compute the Phase Locking Value (PLV) of each channel pair.
+
+    .. math::
+        PLV_{lm} = \left|\left\langle e^{i\left(\varphi_l\left(t\right)
+                   - \varphi_m\left(t\right)\right)}\right\rangle_t\right|
 
     Parameters
     ----------
@@ -246,6 +261,11 @@ def connectivity_phase_locking_value(exp_dphi, /):
     ndarray :
         The PLV of each channel pair.
 
+    References
+    ----------
+    - Lachaux, JP. et al. (1999). Measuring phase synchrony in brain signals.
+      Hum Brain Mapp, 8(4), 194-208.
+
     """
     return np.abs(exp_dphi.mean(axis=-1))
 
@@ -253,7 +273,16 @@ def connectivity_phase_locking_value(exp_dphi, /):
 @feature_predecessor(connectivity_phase_diff_preprocessor)
 @bivariate_feature
 def connectivity_corrected_imaginary_phase_locking_value(exp_dphi, /):
-    """TODO.
+    r"""Compute the corrected imaginary Phase Locking Value (ciPLV) of each channel pair.
+
+    .. math::
+
+        ciPLV_{lm} = \frac{\Im{\left(\left\langle e^{i\left(
+                     \varphi_l\left(t\right) - \varphi_m\left(t\right)\right)}
+                     \right\rangle_t\right)}}{\sqrt{1 - \left(\Re{\left(
+                     \left\langle e^{i\left(\varphi_l\left(t\right)
+                     - \varphi_m\left(t\right)\right)}\right\rangle_t\right)}
+                     \right)^2}}
 
     Parameters
     ----------
@@ -265,6 +294,11 @@ def connectivity_corrected_imaginary_phase_locking_value(exp_dphi, /):
     ndarray :
         The ciPLV of each channel pair.
 
+    References
+    ----------
+    - Bruña, R. et al. (2018). Phase locking value revisited: teaching new
+      tricks to an old dog. Journal of Neural Engineering, 15(5), 056011.
+
     """
     mean_exp_dphi = exp_dphi.mean(axis=-1)
     return mean_exp_dphi.imag / np.sqrt(1 - mean_exp_dphi.real**2)
@@ -273,7 +307,13 @@ def connectivity_corrected_imaginary_phase_locking_value(exp_dphi, /):
 @feature_predecessor(connectivity_phase_diff_preprocessor)
 @bivariate_feature
 def connectivity_phase_lag_index(exp_dphi, /):
-    """TODO.
+    r"""Compute the Phase Lag Index (PLI) of each channel pair.
+
+    .. math::
+
+        PLI_{lm} = \left|\left\langle\operatorname{sign}{\left(\Im{\left(
+                   e^{i\left(\varphi_l\left(t\right) - \varphi_m\left(t\right)
+                   \right)}\right)}\right)}\right\rangle_t\right|
 
     Parameters
     ----------
@@ -285,6 +325,12 @@ def connectivity_phase_lag_index(exp_dphi, /):
     ndarray :
         The PLI of each channel pair.
 
+    References
+    ----------
+    - Stam, CJ. et al. (2007). A. Phase lag index: assessment of functional
+      connectivity from multi channel EEG and MEG with diminished bias from
+      common sources. Hum Brain Mapp, 28(11), 1178-93.
+
     """
     return np.abs(np.mean(np.sign(exp_dphi.imag), axis=-1))
 
@@ -292,7 +338,16 @@ def connectivity_phase_lag_index(exp_dphi, /):
 @feature_predecessor(connectivity_phase_diff_preprocessor)
 @bivariate_feature
 def connectivity_weighted_phase_lag_index(exp_dphi, /):
-    """TODO.
+    r"""Compute the weighted Phase Lag Index (wPLI) of each channel pair.
+
+    .. math::
+
+        wPLI_{lm} = \frac{\left|\left\langle\Im{\left(e^{i\left(
+                    \varphi_l\left(t\right) - \varphi_m\left(t\right)\right)}
+                    \right)}\right\rangle_t\right|}{\left\langle\left|
+                    \Im{\left(e^{i\left(\varphi_l\left(t\right)
+                    - \varphi_m\left(t\right)\right)}\right)}\right|
+                    \right\rangle_t}
 
     Parameters
     ----------
@@ -304,6 +359,12 @@ def connectivity_weighted_phase_lag_index(exp_dphi, /):
     ndarray :
         The wPLI of each channel pair.
 
+    References
+    ----------
+    - Vinck, M. et al. (2011). An improved index of phase-synchronization for
+      electrophysiological data in the presence of volume-conduction, noise
+      and sample-size bias. NeuroImage, 55(4), 1548-1565.
+
     """
     return np.abs(exp_dphi.imag.mean(axis=-1)) / np.abs(exp_dphi.imag).mean(axis=-1)
 
@@ -311,7 +372,15 @@ def connectivity_weighted_phase_lag_index(exp_dphi, /):
 @feature_predecessor(connectivity_phase_diff_preprocessor)
 @bivariate_feature
 def connectivity_directed_phase_lag_index(exp_dphi, /):
-    """TODO.
+    r"""Compute the directed Phase Lag Index (dPLI) of each channel pair.
+
+    .. math::
+
+        dPLI_{lm} = \left|\left\langle\Theta{\left(\Im{\left(e^{i\left(
+                    \varphi_l\left(t\right) - \varphi_m\left(t\right)\right)}
+                    \right)}\right)}\right\rangle_t\right|,
+
+    where :math:`\Theta\left(\cdot\right)` is Heaviside's step function.
 
     Parameters
     ----------
@@ -322,6 +391,12 @@ def connectivity_directed_phase_lag_index(exp_dphi, /):
     -------
     ndarray :
         The dPLI of each channel pair.
+
+    References
+    ----------
+    - Stam, CJ. et al. (2012). Go with the flow: Use of a directed phase lag
+      index (dPLI) to characterize patterns of phase relations in a
+      large-scale model of brain dynamics. NeuroImage, 62(3), 1415-1428.
 
     """
     return np.mean(exp_dphi.imag > 0, axis=-1)

@@ -205,3 +205,218 @@ def test_megafunction_line_counts_are_known_baseline(digest: ModuleType) -> None
         "digest_from_manifest reappeared in 3_digest.py. Stage 3D "
         "removed it; the orchestrator now routes via ManifestEnumerator."
     )
+
+    # Post-review lower-bound canary: surprise shrinkage of the
+    # mega-functions can also hide a deleted branch. If any of these
+    # drops below the floor, a chunk of algorithm has vanished and
+    # the bound below should be revisited.
+    big_function_floors = {
+        "_enumerate_via_manifest": 120,
+        "_enumerate_via_bids": 60,
+        "extract_record": 120,
+        "extract_dataset_metadata": 120,
+    }
+    for name, floor_loc in big_function_floors.items():
+        fn = getattr(digest, name, None)
+        if fn is None:
+            continue
+        actual_loc = len(inspect.getsourcelines(fn)[0])
+        assert actual_loc >= floor_loc, (
+            f"{name} shrank to {actual_loc} LOC (floor {floor_loc}). "
+            "A whole branch may have been deleted by mistake; if the "
+            "shrinkage is intentional, lower the floor in this commit."
+        )
+
+
+# ─── Direct unit tests for the Stage 3D helpers ───────────────────────────
+# Post-review (2026-05-22): the four helpers below were only exercised
+# end-to-end via digest_dataset's snapshot fixtures, which only cover
+# the happy path. These tests pin each branch directly so a regression
+# in (e.g.) `_run_enumerator_with_manifest_fallback`'s try/except is
+# caught without needing a malformed-manifest snapshot fixture.
+
+
+def _make_dummy_result(records=(), errors=(), total_files=None):
+    """Build an EnumerationResult with controlled fields for helper tests."""
+    from record_enumerator import EnumerationResult
+
+    return EnumerationResult(
+        dataset_meta={"dataset_id": "ds-X", "source": "openneuro"},
+        records=list(records),
+        errors=list(errors),
+        total_files=total_files,
+        digest_method="bids_filesystem",
+    )
+
+
+def test_check_skip_conditions_already_digested(
+    digest: ModuleType, tmp_path: Path
+) -> None:
+    """Already-digested output dir → skipped/already digested."""
+    (tmp_path / "ds-001").mkdir()
+    (tmp_path / "out-ds-001").mkdir()
+    skip = digest._check_dataset_skip_conditions(
+        "ds-001", tmp_path / "ds-001", tmp_path / "out-ds-001"
+    )
+    assert skip == {
+        "status": "skipped",
+        "dataset_id": "ds-001",
+        "reason": "already digested",
+    }
+
+
+def test_check_skip_conditions_missing_input_dir(
+    digest: ModuleType, tmp_path: Path
+) -> None:
+    """Input dataset dir missing → skipped/directory not found."""
+    skip = digest._check_dataset_skip_conditions(
+        "ds-002", tmp_path / "absent", tmp_path / "out"
+    )
+    assert skip == {
+        "status": "skipped",
+        "dataset_id": "ds-002",
+        "reason": "directory not found",
+    }
+
+
+def test_check_skip_conditions_returns_none_when_both_ok(
+    digest: ModuleType, tmp_path: Path
+) -> None:
+    """Input present and output absent → None (proceed with digest)."""
+    (tmp_path / "ds-003").mkdir()
+    assert (
+        digest._check_dataset_skip_conditions(
+            "ds-003", tmp_path / "ds-003", tmp_path / "out-ds-003"
+        )
+        is None
+    )
+
+
+def test_summarise_empty_or_error_picks_no_files_in_manifest_for_zero(
+    digest: ModuleType,
+) -> None:
+    """total_files == 0 → legacy 'no files in manifest' reason."""
+    res = _make_dummy_result(records=[], errors=[], total_files=0)
+    out = digest._summarise_empty_or_error("ds-X", res)
+    assert out["status"] == "empty"
+    assert out["reason"] == "no files in manifest"
+
+
+def test_summarise_empty_or_error_picks_no_records_extracted_for_positive(
+    digest: ModuleType,
+) -> None:
+    """total_files > 0, records empty, no structural errors → 'no records extracted'."""
+    res = _make_dummy_result(records=[], errors=[], total_files=12)
+    out = digest._summarise_empty_or_error("ds-X", res)
+    assert out["status"] == "empty"
+    assert out["reason"] == "no records extracted"
+
+
+def test_summarise_empty_or_error_picks_bids_message_when_total_unknown(
+    digest: ModuleType,
+) -> None:
+    """BIDS path has total_files=None → legacy generic 'no neurophysiology files found'."""
+    res = _make_dummy_result(records=[], errors=[], total_files=None)
+    out = digest._summarise_empty_or_error("ds-X", res)
+    assert out["status"] == "empty"
+    assert out["reason"] == "no neurophysiology files found"
+
+
+def test_summarise_empty_or_error_keeps_status_empty_for_soft_warnings_only(
+    digest: ModuleType,
+) -> None:
+    """Per-file warnings ('skipped' / 'warning' / no status) must NOT flip
+    the result to status='error' — old digest_from_manifest always
+    returned 'empty' regardless of soft entries.
+    """
+    res = _make_dummy_result(
+        records=[],
+        errors=[
+            {"file": "a.fif", "status": "skipped", "reason": "broken symlink"},
+            {"file": "b.fif", "status": "warning", "error": "no sidecar"},
+            {"file": "c.fif", "error": "incomplete"},  # no status key
+        ],
+        total_files=5,
+    )
+    out = digest._summarise_empty_or_error("ds-X", res)
+    assert out["status"] == "empty"
+    assert out["reason"] == "no records extracted"
+    # errors are forwarded so operators can still see them.
+    assert len(out.get("errors", [])) == 3
+
+
+def test_summarise_empty_or_error_flips_to_error_when_structural_error_present(
+    digest: ModuleType,
+) -> None:
+    """Any error entry with status='error' is a structural failure ->
+    the summary flips to status='error' so CI gates can distinguish it
+    from a benign 'no records extracted' skip.
+    """
+    res = _make_dummy_result(
+        records=[],
+        errors=[
+            {"file": "a.fif", "status": "warning", "error": "soft"},
+            {"file": "b.fif", "status": "error", "error": "structural"},
+        ],
+        total_files=5,
+    )
+    out = digest._summarise_empty_or_error("ds-X", res)
+    assert out["status"] == "error"
+    assert out["error"] == "No records extracted"
+    assert len(out["errors"]) == 2
+
+
+class _RecordingEmitter:
+    """Test double for the digest_telemetry emitter."""
+
+    def __init__(self) -> None:
+        self.events: list = []
+
+    def emit(self, event) -> None:
+        self.events.append(event)
+
+    def flush(self) -> None:
+        return None
+
+
+def test_emit_dataset_finished_payload_round_trips_summary_fields(
+    digest: ModuleType,
+) -> None:
+    """_emit_dataset_finished forwards the documented 6 summary fields
+    to the telemetry payload. Pins the contract so a future summary
+    addition can't silently break dashboards that read the event.
+    """
+    import digest_telemetry
+
+    recorder = _RecordingEmitter()
+    saved = digest_telemetry._EMITTER
+    digest_telemetry._EMITTER = recorder
+    try:
+        digest._emit_dataset_finished(
+            "ds-Y",
+            {
+                "status": "success",
+                "record_count": 12,
+                "error_count": 1,
+                "digest_method": "bids_filesystem",
+                "integrity_issues_count": 0,
+                "montage_count": 2,
+                "ignored_field": "should not leak",
+            },
+        )
+    finally:
+        digest_telemetry._EMITTER = saved
+
+    assert len(recorder.events) == 1
+    ev = recorder.events[0]
+    assert ev.event_kind == "dataset_finished"
+    assert ev.dataset_id == "ds-Y"
+    payload = ev.payload
+    assert payload["status"] == "success"
+    assert payload["record_count"] == 12
+    assert payload["error_count"] == 1
+    assert payload["digest_method"] == "bids_filesystem"
+    assert payload["integrity_issues_count"] == 0
+    assert payload["montage_count"] == 2
+    # Defence: fields the summary didn't request must NOT leak through.
+    assert "ignored_field" not in payload

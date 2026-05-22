@@ -90,16 +90,23 @@ def test_fetch_bytes_from_s3_timeout_returns_none():
 
 
 @respx.mock
-def test_fetch_bytes_handles_server_returning_more_than_requested():
-    """Some servers ignore Range and return the full body. The fetcher
-    accepts whatever it gets (caller can re-slice if needed)."""
+def test_fetch_bytes_caps_response_at_max_bytes_when_server_ignores_range():
+    """Some servers ignore Range and return the full body. Post-review
+    hardening caps the read at ``max_bytes`` so a multi-GB FIF can't
+    OOM the worker or hog the pooled connection.
+
+    The OLD behaviour was to return the full body; callers were
+    expected to re-slice. The NEW contract is: at most ``max_bytes``
+    bytes come back. This test pins the cap.
+    """
     big_payload = b"x" * 100_000  # server returned 100 KB
     respx.get("https://lazy-server.example.com/file").mock(
         return_value=httpx.Response(200, content=big_payload)
     )
     out = fetch_bytes_from_s3("https://lazy-server.example.com/file", max_bytes=1024)
     assert out is not None
-    assert len(out) == 100_000
+    # NEW: capped at max_bytes regardless of what the server sent.
+    assert len(out) == 1024
 
 
 @respx.mock

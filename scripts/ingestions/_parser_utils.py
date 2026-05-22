@@ -4,8 +4,8 @@ This module provides shared functionality for validating file paths,
 reading files with encoding fallback, and fetching from S3 for
 git-annex symlinks.
 
-HTTP path note (2026-05-22)
----------------------------
+HTTP path note (2026-05-22, hardened post-review)
+-------------------------------------------------
 The three S3 helpers (``fetch_bytes_from_s3``, ``head_content_length``,
 ``fetch_from_s3``) used to call ``urllib.request.urlopen`` directly.
 The Stage-3 profile run of 2026-05-22 showed that the MEG montage
@@ -13,21 +13,38 @@ extractor calls ``head_content_length`` ~100x per dataset, and that
 91% of the digest wall-clock went to TLS handshake / connect / read
 for those serialised, unpooled requests.
 
-This module now lazy-initialises a single shared :class:`httpx.Client`
+This module lazy-initialises a single shared :class:`httpx.Client`
 per process (``_http_client()``), keeping connections alive across
-calls to the same host. S3 is one host for every MEG montage URL, so
-all subsequent HEAD requests reuse the first handshake. Expected
-speedup on MEG-heavy datasets is ~5x (per the profile report).
+calls to the same host. After the post-perf code-review the
+implementation also:
 
-The signature + return type + exception behaviour of the three public
-functions are unchanged. Tests use ``respx`` to mock the httpx
-transport (same pattern as ``_inject_config.py``).
+* Acquires the same lock for read/return AND for close, so concurrent
+  ``reset_http_client_for_testing()`` callers cannot return a freshly-
+  closed client to a sibling thread.
+* Catches ``RuntimeError`` (httpx raises it on use-after-close) in
+  addition to ``httpx.HTTPError`` — keeps the documented
+  "returns None on any network or protocol failure" contract.
+* Registers the atexit hook exactly once per interpreter via a
+  module-level flag — avoids unbounded handler accumulation when
+  tests call ``reset_http_client_for_testing()`` between rounds.
+* Registers an ``os.register_at_fork`` child-side reset so a Linux
+  fork (default mp start-method) cannot inherit live sockets from
+  the parent.
+* Uses ``client.stream("GET", ...)`` for the byte-range path so a
+  server that ignores ``Range`` (returning 200 with the full body)
+  is bounded to ``max_bytes`` and the pool slot is released
+  immediately.
+
+Tests use ``respx`` to mock the httpx transport at the transport
+layer (same library + decorator as ``_inject_config.py``; pooling
+semantics differ — that module uses per-call ``with httpx.Client(...)``).
 """
 
 from __future__ import annotations
 
 import atexit
 import logging
+import os
 import re
 import threading
 from pathlib import Path
@@ -42,48 +59,80 @@ logger = logging.getLogger(__name__)
 
 # httpx.Client is thread-safe for synchronous use (per docs). The
 # Stage-2 clone uses ThreadPoolExecutor → one client is fine. The
-# Stage-3 digest uses multiprocessing spawn → each worker process
-# gets its own client (re-import = new module-level state). No
-# inter-process state to manage.
+# Stage-3 digest uses ``mp.get_context()`` (which defaults to fork on
+# Linux) → child processes inherit the parent's client; we register
+# an at-fork hook that resets the child-side client to None so a
+# warmed parent pool doesn't share sockets across fork.
 
 _HTTP_CLIENT: httpx.Client | None = None
 _HTTP_CLIENT_LOCK = threading.Lock()
+_ATEXIT_REGISTERED = False  # register the atexit hook exactly once
 
 
 def _http_client() -> httpx.Client:
     """Return the lazily-initialised shared HTTP client.
 
     Pooled keep-alive connections (default httpx settings) eliminate the
-    per-request TLS handshake overhead. Closed at interpreter exit via
-    ``atexit`` so we don't leak sockets.
+    per-request TLS handshake overhead. The full body of the function
+    runs under ``_HTTP_CLIENT_LOCK`` so a concurrent
+    ``reset_http_client_for_testing()`` cannot null/close the cached
+    instance between the read and the return.
     """
-    global _HTTP_CLIENT
-    if _HTTP_CLIENT is None:
-        with _HTTP_CLIENT_LOCK:
-            if _HTTP_CLIENT is None:  # double-checked locking
-                _HTTP_CLIENT = httpx.Client(
-                    timeout=httpx.Timeout(30.0),
-                    limits=httpx.Limits(
-                        max_keepalive_connections=20,
-                        max_connections=40,
-                        keepalive_expiry=60.0,
-                    ),
-                    follow_redirects=True,
-                )
+    global _HTTP_CLIENT, _ATEXIT_REGISTERED
+    with _HTTP_CLIENT_LOCK:
+        if _HTTP_CLIENT is None:
+            _HTTP_CLIENT = httpx.Client(
+                timeout=httpx.Timeout(30.0),
+                limits=httpx.Limits(
+                    max_keepalive_connections=20,
+                    max_connections=40,
+                    keepalive_expiry=60.0,
+                ),
+                follow_redirects=True,
+            )
+            if not _ATEXIT_REGISTERED:
                 atexit.register(_close_http_client)
-    return _HTTP_CLIENT
+                _ATEXIT_REGISTERED = True
+        return _HTTP_CLIENT
 
 
 def _close_http_client() -> None:
-    """Test helper + atexit hook to release the pooled client."""
+    """Test helper + atexit hook to release the pooled client.
+
+    Acquires the same lock the readers use so a concurrent
+    ``_http_client()`` caller cannot observe a half-state where
+    ``_HTTP_CLIENT`` is non-None but ``client.close()`` has run.
+    """
     global _HTTP_CLIENT
-    client = _HTTP_CLIENT
-    _HTTP_CLIENT = None
+    with _HTTP_CLIENT_LOCK:
+        client = _HTTP_CLIENT
+        _HTTP_CLIENT = None
     if client is not None:
         try:
             client.close()
         except Exception as exc:  # noqa: BLE001
             logger.debug("Error closing httpx client at shutdown: %s", exc)
+
+
+def _reset_http_client_after_fork_child() -> None:
+    """``os.register_at_fork`` child-side hook.
+
+    A forked child inherits the parent's ``_HTTP_CLIENT`` reference
+    but the underlying TCP / TLS sockets are also shared (file
+    descriptors). If both parent and child use the same socket the
+    HTTP frame stream interleaves. We drop the inherited client
+    reference WITHOUT calling ``close()`` (closing in the child
+    would tear down the parent's sockets too).
+    """
+    global _HTTP_CLIENT, _ATEXIT_REGISTERED
+    _HTTP_CLIENT = None
+    _ATEXIT_REGISTERED = False
+
+
+try:  # ``os.register_at_fork`` only exists on POSIX
+    os.register_at_fork(after_in_child=_reset_http_client_after_fork_child)
+except AttributeError:  # pragma: no cover — Windows
+    pass
 
 
 def reset_http_client_for_testing() -> None:
@@ -199,7 +248,7 @@ def fetch_bytes_from_s3(
     max_bytes: int = 262144,
     timeout: float = 30.0,
 ) -> bytes | None:
-    """Range-fetch ``max_bytes`` starting at ``start`` from an S3 object.
+    """Range-fetch up to ``max_bytes`` starting at ``start`` from an S3 object.
 
     Used to pull MEG FIF / KIT SQD headers without downloading the full
     multi-GB recording. S3 always supports ``Range: bytes=start-end`` —
@@ -208,9 +257,16 @@ def fetch_bytes_from_s3(
     → ``FIFFB_MEAS_INFO`` → channel info blocks, usually well under
     256 KB even for 500-channel recordings.
 
-    Uses the shared :func:`_http_client` (pooled keep-alive). Returns
-    the raw byte slice on success, ``None`` on any network or protocol
-    failure (caller decides whether to retry with a larger ``max_bytes``).
+    Uses the shared :func:`_http_client` and ``client.stream`` so a
+    server that ignores ``Range`` and returns 200 with the full body
+    is bounded — the returned slice is at most ``max_bytes`` and the
+    pooled connection is released as soon as we hit the cap. (Older
+    revisions returned the full body and held the pool slot for the
+    duration; the post-review hardening caps the read.)
+
+    Returns the raw byte slice on success, ``None`` on any network or
+    protocol failure (caller decides whether to retry with a larger
+    ``max_bytes``).
     """
     end = int(start) + int(max_bytes) - 1
     headers = {
@@ -218,21 +274,38 @@ def fetch_bytes_from_s3(
         "Accept": "*/*",
     }
     logger.debug("Range-fetching bytes=%d-%d from %s", start, end, url)
+    # Stream the response so a server that ignores Range and returns
+    # 200 with the full body cannot OOM the worker or hold the pooled
+    # connection for an arbitrarily large download — we cap at
+    # ``max_bytes`` and release the slot immediately.
     try:
-        resp = _http_client().get(url, headers=headers, timeout=timeout)
-        resp.raise_for_status()
-        # Servers that don't honour Range return 200 with the full
-        # body; accept both but log when we got more than asked.
-        data = resp.content
+        with _http_client().stream(
+            "GET", url, headers=headers, timeout=timeout
+        ) as resp:
+            resp.raise_for_status()
+            chunks: list[bytes] = []
+            received = 0
+            cap = int(max_bytes) + 1  # +1 so we can detect over-cap reads
+            for chunk in resp.iter_bytes():
+                if not chunk:
+                    continue
+                chunks.append(chunk)
+                received += len(chunk)
+                if received >= cap:
+                    logger.debug(
+                        "server ignored Range; truncating at %d bytes from %s",
+                        max_bytes,
+                        url,
+                    )
+                    break
+            data = b"".join(chunks)
         if len(data) > max_bytes:
-            logger.debug(
-                "server ignored Range; got %d bytes (asked %d) from %s",
-                len(data),
-                max_bytes,
-                url,
-            )
+            data = data[:max_bytes]
         return data
-    except httpx.HTTPError as e:
+    except (httpx.HTTPError, RuntimeError) as e:
+        # RuntimeError covers httpx's "client has been closed" race
+        # (see _close_http_client). HTTPError covers transport,
+        # timeout, status, and decode errors.
         logger.debug("HTTP/network error range-fetching %s: %s", url, e)
         return None
 
@@ -241,7 +314,7 @@ def head_content_length(url: str, *, timeout: float = 30.0) -> int | None:
     """Issue a HEAD request and return ``Content-Length`` as int.
 
     Uses the shared :func:`_http_client` (pooled keep-alive). The
-    Stage-3 profile of 2026-05-22 showed this function is called ~100×
+    Stage-3 profile of 2026-05-22 showed this function is called ~100x
     per MEG dataset (one per FIF montage source); each call previously
     opened a fresh TLS connection. Sharing one client across calls
     yields the ~5x speedup the profile report quotes.
@@ -253,7 +326,10 @@ def head_content_length(url: str, *, timeout: float = 30.0) -> int | None:
         resp.raise_for_status()
         raw = resp.headers.get("Content-Length")
         return int(raw) if raw is not None else None
-    except (httpx.HTTPError, ValueError) as exc:
+    except (httpx.HTTPError, RuntimeError, ValueError) as exc:
+        # RuntimeError covers httpx's "client has been closed" race
+        # (see _close_http_client). HTTPError covers transport,
+        # timeout, status. ValueError covers the int() parse.
         logger.debug("HEAD %s failed: %s", url, exc)
         return None
 
@@ -287,7 +363,9 @@ def fetch_from_s3(
         resp = _http_client().get(url, timeout=timeout)
         resp.raise_for_status()
         content_bytes = resp.content
-    except httpx.HTTPError as e:
+    except (httpx.HTTPError, RuntimeError) as e:
+        # RuntimeError covers httpx's "client has been closed" race
+        # (see _close_http_client).
         logger.debug("HTTP/network error fetching from S3: %s - %s", url, e)
         return None
 

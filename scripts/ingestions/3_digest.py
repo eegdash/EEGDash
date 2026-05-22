@@ -2637,6 +2637,7 @@ def _attach_montage_to_record(
     montages: dict[str, dict[str, Any]],
     dataset_id: str,
     digested_at: str,
+    montage_cache: dict[tuple[str, int], tuple[str, dict[str, Any]]] | None = None,
 ) -> list[dict[str, Any]]:
     """Run ``extract_layout`` for ``bids_file``; stamp the result on ``record``.
 
@@ -2645,11 +2646,48 @@ def _attach_montage_to_record(
     sighting of a hash). Returns a list of per-file errors (empty on
     the happy path; one entry if ``extract_layout`` raises).
 
+    Within-dataset cache (perf-2026-05-22)
+    --------------------------------------
+    For MEG records, the device is fixed per-dataset by physical
+    install — Neuromag-306 or CTF-275 etc. Two records in the same
+    dataset with the same ``nchans`` therefore share device and
+    therefore share montage. The optional ``montage_cache`` argument
+    (caller-owned dict keyed by ``(dataset_id, nchans)``) lets the
+    second-through-Nth record reuse the first record's extraction
+    result without re-fetching the FIF metadata or re-hashing the
+    layout. Non-MEG records bypass the cache (their layouts come from
+    sidecar TSVs, which are cheap to read). Records without
+    ``nchans`` are not cached (no safe key). ``extract_layout``
+    returning None is not cached either — next record still tries.
+
     Phase 8 Stage-3 follow-up: extracted from the inline body of
     :func:`_enumerate_via_bids`'s for-loop to drop it under 100 LOC.
     """
     record_datatype = (record.get("datatype") or "").lower()
     errors: list[dict[str, Any]] = []
+
+    # Within-dataset MEG cache lookup — only when the caller passed a
+    # cache, the record is MEG, and nchans is a positive int.
+    cache_key: tuple[str, int] | None = None
+    record_nchans = record.get("nchans")
+    if (
+        montage_cache is not None
+        and record_datatype == "meg"
+        and isinstance(record_nchans, int)
+        and record_nchans > 0
+    ):
+        cache_key = (dataset_id, record_nchans)
+        cached = montage_cache.get(cache_key)
+        if cached is not None:
+            cached_hash, cached_doc = cached
+            record["montage_hash"] = cached_hash
+            # Mirror the first-seen / representative-dataset stamping
+            # so the per-dataset montages map carries the doc for this
+            # hash (uploader uses $setOnInsert; safe to re-set).
+            if cached_hash not in montages:
+                montages[cached_hash] = cached_doc
+            return errors
+
     try:
         layout_result = extract_layout(
             Path(str(bids_file)), dataset_dir, datatype=record_datatype
@@ -2682,6 +2720,13 @@ def _attach_montage_to_record(
         if subject_entity:
             doc["representative_subject"] = f"sub-{subject_entity}"
         montages[h] = doc
+
+    # Memoize positive results for the next MEG record with this
+    # (dataset, nchans). Use the doc we just stamped (with first_seen +
+    # representative_dataset) so cache reuse produces identical state.
+    if cache_key is not None:
+        montage_cache[cache_key] = (h, montages[h])
+
     return errors
 
 
@@ -2694,6 +2739,7 @@ def _build_one_record_from_bids(
     digested_at: str,
     dataset_dir: Path,
     montages: dict[str, dict[str, Any]],
+    montage_cache: dict[tuple[str, int], tuple[str, dict[str, Any]]] | None = None,
 ) -> tuple[dict[str, Any] | None, list[dict[str, Any]]]:
     """Build one Record for one BIDS file; attach montage + dedup.
 
@@ -2754,7 +2800,13 @@ def _build_one_record_from_bids(
 
     errors.extend(
         _attach_montage_to_record(
-            record, bids_file, dataset_dir, montages, dataset_id, digested_at
+            record,
+            bids_file,
+            dataset_dir,
+            montages,
+            dataset_id,
+            digested_at,
+            montage_cache=montage_cache,
         )
     )
 
@@ -2862,6 +2914,12 @@ def _enumerate_via_bids(
     errors: list[dict[str, Any]] = []
     montages: dict[str, dict[str, Any]] = {}
 
+    # Within-dataset MEG montage cache (perf-2026-05-22). Lives for
+    # the duration of this dataset's enumeration; the first MEG record
+    # with a given nchans extracts the device-defined layout,
+    # subsequent same-nchans records reuse the cached (hash, doc).
+    meg_montage_cache: dict[tuple[str, int], tuple[str, dict[str, Any]]] = {}
+
     for bids_file in files:
         if not is_neuro_data_file(str(bids_file)):
             continue
@@ -2874,6 +2932,7 @@ def _enumerate_via_bids(
             digested_at=digested_at,
             dataset_dir=dataset_dir,
             montages=montages,
+            montage_cache=meg_montage_cache,
         )
         errors.extend(per_file_errors)
         if record is not None:

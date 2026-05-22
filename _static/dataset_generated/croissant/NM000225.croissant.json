@@ -115,8 +115,7 @@
   "identifier": "doi:10.13026/6phb-r450",
   "sameAs": [
     "https://doi.org/10.13026/6phb-r450",
-    "https://openneuro.org/datasets/nm000225",
-    "https://huggingface.co/datasets/EEGDash/nm000225"
+    "https://openneuro.org/datasets/nm000225"
   ],
   "citeAs": "Mohammad M. Ghassemi, Benjamin E. Moody, Li-wei H. Lehman, Christopher Song, Qiao Li (2018). PhysioNet 2018 Challenge: Sleep Arousal Detection PSG (Training). doi:10.13026/6phb-r450",
   "version": "1.9.0",
@@ -157,14 +156,6 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=nm000225",
       "encodingFormat": "text/html"
-    },
-    {
-      "@type": "cr:FileObject",
-      "@id": "nm000225-huggingface",
-      "name": "EEGDash/nm000225 on Hugging Face",
-      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
-      "contentUrl": "https://huggingface.co/datasets/EEGDash/nm000225",
-      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

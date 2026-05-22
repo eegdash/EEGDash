@@ -69,8 +69,7 @@
   "identifier": "doi:10.5281/zenodo.10909103",
   "sameAs": [
     "https://doi.org/10.5281/zenodo.10909103",
-    "https://openneuro.org/datasets/nm000181",
-    "https://huggingface.co/datasets/EEGDash/nm000181"
+    "https://openneuro.org/datasets/nm000181"
   ],
   "citeAs": "Hussain A. Khan (2019). NMT: Neurodiagnostic Montage Template Scalp EEG. doi:10.5281/zenodo.10909103",
   "version": "1.9.0",
@@ -111,14 +110,6 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=nm000181",
       "encodingFormat": "text/html"
-    },
-    {
-      "@type": "cr:FileObject",
-      "@id": "nm000181-huggingface",
-      "name": "EEGDash/nm000181 on Hugging Face",
-      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
-      "contentUrl": "https://huggingface.co/datasets/EEGDash/nm000181",
-      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

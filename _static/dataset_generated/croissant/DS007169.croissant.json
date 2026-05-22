@@ -80,8 +80,7 @@
   "identifier": "doi:10.18112/openneuro.ds007169.v1.0.5",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds007169.v1.0.5",
-    "https://openneuro.org/datasets/ds007169",
-    "https://huggingface.co/datasets/EEGDash/ds007169"
+    "https://openneuro.org/datasets/ds007169"
   ],
   "citeAs": "Matthew Barras, Liam Booth (2026). Multimodal Cognitive Workload n-back Task, 4 Difficulties. doi:10.18112/openneuro.ds007169.v1.0.5",
   "version": "1.9.0",
@@ -129,14 +128,6 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=ds007169",
       "encodingFormat": "text/html"
-    },
-    {
-      "@type": "cr:FileObject",
-      "@id": "ds007169-huggingface",
-      "name": "EEGDash/ds007169 on Hugging Face",
-      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
-      "contentUrl": "https://huggingface.co/datasets/EEGDash/ds007169",
-      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

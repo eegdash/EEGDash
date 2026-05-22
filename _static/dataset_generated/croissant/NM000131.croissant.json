@@ -92,8 +92,7 @@
   "identifier": "doi:10.82901/nemar.nm000131",
   "sameAs": [
     "https://doi.org/10.82901/nemar.nm000131",
-    "https://openneuro.org/datasets/nm000131",
-    "https://huggingface.co/datasets/EEGDash/nm000131"
+    "https://openneuro.org/datasets/nm000131"
   ],
   "citeAs": "Lu Wang, Zhenhao Zhang, Dan Han, Zhijun Zhang, Zhifang Liu (2019). Wang2021 – Combined SSVEP dataset with single stimulus location for two inputs. doi:10.82901/nemar.nm000131",
   "version": "1.9.0",
@@ -134,14 +133,6 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=nm000131",
       "encodingFormat": "text/html"
-    },
-    {
-      "@type": "cr:FileObject",
-      "@id": "nm000131-huggingface",
-      "name": "EEGDash/nm000131 on Hugging Face",
-      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
-      "contentUrl": "https://huggingface.co/datasets/EEGDash/nm000131",
-      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

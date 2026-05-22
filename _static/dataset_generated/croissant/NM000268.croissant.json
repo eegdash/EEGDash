@@ -118,8 +118,7 @@
   "identifier": "doi:10.1109/TNSRE.2016.2628057",
   "sameAs": [
     "https://doi.org/10.1109/TNSRE.2016.2628057",
-    "https://openneuro.org/datasets/nm000268",
-    "https://huggingface.co/datasets/EEGDash/nm000268"
+    "https://openneuro.org/datasets/nm000268"
   ],
   "citeAs": "Jaeyoung Shin, Alexander von Lühmann, Benjamin Blankertz, Do-Won Kim, Jichai Jeong (2019). Shin et al. 2017 (Experiment B) — Open Access Dataset for EEG+NIRS Single-Trial Classification. doi:10.1109/TNSRE.2016.2628057",
   "version": "1.9.0",
@@ -160,14 +159,6 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=nm000268",
       "encodingFormat": "text/html"
-    },
-    {
-      "@type": "cr:FileObject",
-      "@id": "nm000268-huggingface",
-      "name": "EEGDash/nm000268 on Hugging Face",
-      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
-      "contentUrl": "https://huggingface.co/datasets/EEGDash/nm000268",
-      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

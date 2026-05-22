@@ -84,8 +84,7 @@
   "identifier": "doi:10.1371/journal.pone.0175382",
   "sameAs": [
     "https://doi.org/10.1371/journal.pone.0175382",
-    "https://openneuro.org/datasets/nm000259",
-    "https://huggingface.co/datasets/EEGDash/nm000259"
+    "https://openneuro.org/datasets/nm000259"
   ],
   "citeAs": "William Speier, Corey Arnold, Aniket Deshpande, Nader Pouratian (2017). Speier et al. 2017 — A comparison of stimulus types in online classification of the P300 speller using language models. doi:10.1371/journal.pone.0175382",
   "version": "1.9.0",
@@ -126,14 +125,6 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=nm000259",
       "encodingFormat": "text/html"
-    },
-    {
-      "@type": "cr:FileObject",
-      "@id": "nm000259-huggingface",
-      "name": "EEGDash/nm000259 on Hugging Face",
-      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
-      "contentUrl": "https://huggingface.co/datasets/EEGDash/nm000259",
-      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

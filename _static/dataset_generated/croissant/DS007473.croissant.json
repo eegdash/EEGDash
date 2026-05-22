@@ -145,8 +145,7 @@
   "identifier": "doi:10.18112/openneuro.ds007473.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds007473.v1.0.0",
-    "https://openneuro.org/datasets/ds007473",
-    "https://huggingface.co/datasets/EEGDash/ds007473"
+    "https://openneuro.org/datasets/ds007473"
   ],
   "citeAs": "Morgan Fogarty, Kalyan Tripathy, Alexandra M Svoboda, Mariel L Schroeder, Sean M Rafferty (2026). High-Density Diffuse Optical Tomography Audiovisual Movie Viewing Dataset. doi:10.18112/openneuro.ds007473.v1.0.0",
   "dateCreated": "2026-03-05",
@@ -211,14 +210,6 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=ds007473",
       "encodingFormat": "text/html"
-    },
-    {
-      "@type": "cr:FileObject",
-      "@id": "ds007473-huggingface",
-      "name": "EEGDash/ds007473 on Hugging Face",
-      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
-      "contentUrl": "https://huggingface.co/datasets/EEGDash/ds007473",
-      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

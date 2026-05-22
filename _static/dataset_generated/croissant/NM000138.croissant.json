@@ -72,8 +72,7 @@
   "identifier": "doi:10.82901/nemar.nm000138",
   "sameAs": [
     "https://doi.org/10.82901/nemar.nm000138",
-    "https://openneuro.org/datasets/nm000138",
-    "https://huggingface.co/datasets/EEGDash/nm000138"
+    "https://openneuro.org/datasets/nm000138"
   ],
   "citeAs": "Alexandre Barachant (2019). Alex Motor Imagery dataset. doi:10.82901/nemar.nm000138",
   "version": "1.9.0",
@@ -114,14 +113,6 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=nm000138",
       "encodingFormat": "text/html"
-    },
-    {
-      "@type": "cr:FileObject",
-      "@id": "nm000138-huggingface",
-      "name": "EEGDash/nm000138 on Hugging Face",
-      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
-      "contentUrl": "https://huggingface.co/datasets/EEGDash/nm000138",
-      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

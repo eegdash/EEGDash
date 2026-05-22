@@ -95,8 +95,7 @@
   "identifier": "doi:10.17605/OSF.IO/3JK45",
   "sameAs": [
     "https://doi.org/10.17605/OSF.IO/3JK45",
-    "https://openneuro.org/datasets/nm000232",
-    "https://huggingface.co/datasets/EEGDash/nm000232"
+    "https://openneuro.org/datasets/nm000232"
   ],
   "citeAs": "Alessandro T. Gifford, Kshitij Dwivedi, Gemma Roig, Radoslaw M. Cichy (2022). THINGS-EEG2: A large and rich EEG dataset for modeling human visual object recognition. doi:10.17605/OSF.IO/3JK45",
   "version": "1.9.0",
@@ -141,14 +140,6 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=nm000232",
       "encodingFormat": "text/html"
-    },
-    {
-      "@type": "cr:FileObject",
-      "@id": "nm000232-huggingface",
-      "name": "EEGDash/nm000232 on Hugging Face",
-      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
-      "contentUrl": "https://huggingface.co/datasets/EEGDash/nm000232",
-      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

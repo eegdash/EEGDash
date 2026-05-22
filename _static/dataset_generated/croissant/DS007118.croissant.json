@@ -146,8 +146,7 @@
   "identifier": "doi:10.18112/openneuro.ds007118.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds007118.v1.0.0",
-    "https://openneuro.org/datasets/ds007118",
-    "https://huggingface.co/datasets/EEGDash/ds007118"
+    "https://openneuro.org/datasets/ds007118"
   ],
   "citeAs": "Keisuke Hatano, Naoto Kuroda, Hiroshi Uda, Kazuki Sakakura, Michael J. Cools (2025). iEEG_comprehensive_HFA_model_part1. doi:10.18112/openneuro.ds007118.v1.0.0",
   "version": "1.7.0",
@@ -195,14 +194,6 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=ds007118",
       "encodingFormat": "text/html"
-    },
-    {
-      "@type": "cr:FileObject",
-      "@id": "ds007118-huggingface",
-      "name": "EEGDash/ds007118 on Hugging Face",
-      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
-      "contentUrl": "https://huggingface.co/datasets/EEGDash/ds007118",
-      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

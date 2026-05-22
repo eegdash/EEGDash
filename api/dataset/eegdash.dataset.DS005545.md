@@ -128,13 +128,13 @@ Reference:
     <span class="right">128 (237), 138 (14), 134 (11), 136 (11), 140 (8), 110 (6), 112 (6), 150 (5), 156 (5), 142 (5), 132 (4), 144 (4), 164 (4), 148 (4), 84 (3), 118 (3), 96 (3), 116 (3) ch · iEEG · 1000 Hz · 106 subjects, 336 recordings</span>
   </div>
   <div class="figpair-grid"><div class="figpair-cell figpair-montage"><details class="electrode-explorer">
-  <summary>Electrode layout — iEEG · 150 sensors — 150 channels</summary>
+  <summary>Electrode layout — iEEG · 127 sensors — 127 channels</summary>
   <iframe
-    data-src="https://electrodes.eegdash.org/?montage=b231812da1c14e8f&embed=1"
+    data-src="https://electrodes.eegdash.org/?montage=7bc5a31d15e5fd18&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
-    title="Topomap of iEEG · 150 sensors"
+    title="Topomap of iEEG · 127 sensors"
     referrerpolicy="no-referrer">
   </iframe>
 </details></div></div></div>

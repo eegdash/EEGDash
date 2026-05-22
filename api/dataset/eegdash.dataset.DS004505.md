@@ -127,7 +127,7 @@ Please refer to our publication for more details.
   <div class="figpair-grid"><div class="figpair-cell figpair-montage"><details class="electrode-explorer">
   <summary>Electrode layout — EEG · 120 sensors — 120 channels</summary>
   <iframe
-    data-src="https://electrodes.eegdash.org/?montage=054afed11ccfeaef&embed=1"
+    data-src="https://electrodes.eegdash.org/?montage=de0f9913485fcb76&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"

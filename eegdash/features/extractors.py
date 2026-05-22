@@ -369,20 +369,29 @@ class FeatureExtractor(TrainableFeature):
             current preprocessor.
 
         """
+        preprocessor = (
+            None
+            if self.preprocessor is None
+            else get_underlying_func(self.preprocessor)
+        )
+        is_parent_type_output_type = True
         if parent_type is None:
             if self.preprocessor is None:
                 parent_type = SignalOutputType
-                is_parent_type_output_type = True
             else:
-                preprocessor = get_underlying_func(self.preprocessor)
                 if hasattr(preprocessor, "output_type"):
                     if issubclass(preprocessor.output_type, AsInputOutputType):
                         return
                     parent_type = preprocessor.output_type
-                    is_parent_type_output_type = True
                 else:
                     parent_type = preprocessor
                     is_parent_type_output_type = False
+        else:
+            is_parent_type_output_type = (
+                inspect.isclass(parent_type)
+                and issubclass(parent_type, BasePreprocessorOutputType)
+                and parent_type is not BasePreprocessorOutputType
+            )
 
         for fname, f in self.feature_extractors_dict.items():
             fe = None
@@ -394,12 +403,22 @@ class FeatureExtractor(TrainableFeature):
                 f.output_type, AsInputOutputType
             ):
                 if fe is not None:
-                    fe._validate_execution_tree(parent_type)
+                    if not is_parent_type_output_type and preprocessor is not None:
+                        try:
+                            fe._validate_execution_tree(preprocessor)
+                        except TypeError:
+                            fe._validate_execution_tree(parent_type)
+                    else:
+                        fe._validate_execution_tree(parent_type)
                     continue
-                elif hasattr(parent_type, "feature_kind"):
+                elif hasattr(preprocessor, "feature_kind") or hasattr(
+                    parent_type, "feature_kind"
+                ):
                     continue
             pe_type = getattr(f, "parent_extractor_type", [SignalOutputType])
-            if parent_type in pe_type:
+            if (
+                preprocessor is not None and preprocessor in pe_type
+            ) or parent_type in pe_type:
                 continue
             is_valid_by_output_type = False
             if is_parent_type_output_type:

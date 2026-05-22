@@ -33,8 +33,8 @@ from .pick import (
 )
 from .signal import (
     signal_decorrelation_time,
+    signal_envelope_preprocessor,
     signal_filter_preprocessor,
-    signal_hilbert_preprocessor,
     signal_hjorth_activity,
     signal_hjorth_complexity,
     signal_hjorth_mobility,
@@ -59,6 +59,7 @@ from .spectral import (
     spectral_hjorth_mobility,
     spectral_moment,
     spectral_normalized_preprocessor,
+    spectral_peak_frequency,
     spectral_preprocessor,
     spectral_root_total_power,
     spectral_slope,
@@ -91,7 +92,7 @@ __all__ = [
     "pick_channels_preprocessor",
     # Signal
     "signal_filter_preprocessor",
-    "signal_hilbert_preprocessor",
+    "signal_envelope_preprocessor",
     "signal_mean",
     "signal_variance",
     "signal_skewness",
@@ -113,6 +114,7 @@ __all__ = [
     "spectral_root_total_power",
     "spectral_moment",
     "spectral_entropy",
+    "spectral_peak_frequency",
     "spectral_edge",
     "spectral_slope",
     "spectral_bands_power",

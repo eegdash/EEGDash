@@ -28,6 +28,7 @@ __all__ = [
     "spectral_root_total_power",
     "spectral_moment",
     "spectral_entropy",
+    "spectral_peak_frequency",
     "spectral_edge",
     "spectral_slope",
     "spectral_bands_power",
@@ -288,6 +289,35 @@ def spectral_entropy(f, p, /):
     plogp = np.zeros_like(p)
     plogp[idx] = p[idx] * np.log(p[idx])
     return -np.sum(plogp, axis=-1)
+
+
+@feature_predecessor(
+    spectral_preprocessor,
+    spectral_normalized_preprocessor,
+    spectral_db_preprocessor,
+)
+@univariate_feature
+def spectral_peak_frequency(f, p, /, *, freq_range: tuple | list | None = None):
+    r"""Get the frequency with the largest power, optionally within a frequency range.
+
+    Parameters
+    ----------
+    f : ndarray
+        Frequency vector.
+    p : ndarray
+        Power Spectral Density (PSD).
+    freq_range : tuple | list [optional]
+        A (low, high) frequency range to find the peak frequency at.
+
+    Returns
+    -------
+    ndarray
+        The peak frequency. Shape is ``p.shape[:-1]``.
+
+    """
+    if freq_range is not None:
+        f, p = utils.slice_freq_band(f, p, f_min=freq_range[0], f_max=freq_range[1])
+    return f[np.argmax(p, axis=-1)]
 
 
 @feature_predecessor(spectral_normalized_preprocessor)

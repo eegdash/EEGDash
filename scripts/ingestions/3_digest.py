@@ -2966,6 +2966,9 @@ def _emit_dataset_finished(dataset_id: str, summary: dict[str, Any]) -> None:
                 "digest_method": summary.get("digest_method"),
                 "integrity_issues_count": summary.get("integrity_issues_count"),
                 "montage_count": summary.get("montage_count"),
+                "total_files": summary.get(
+                    "total_files"
+                ),  # NEW: manifest-path input count
             },
         )
     )

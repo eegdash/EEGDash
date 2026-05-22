@@ -420,3 +420,35 @@ def test_emit_dataset_finished_payload_round_trips_summary_fields(
     assert payload["montage_count"] == 2
     # Defence: fields the summary didn't request must NOT leak through.
     assert "ignored_field" not in payload
+
+
+def test_emit_dataset_finished_payload_includes_total_files(
+    digest: ModuleType,
+) -> None:
+    """The summary now carries total_files (for the manifest path).
+    The event payload MUST forward it so dashboards can see the raw
+    input count. Pins the drift trap from the post-review sweep.
+    """
+    import digest_telemetry
+
+    recorder = _RecordingEmitter()
+    saved = digest_telemetry._EMITTER
+    digest_telemetry._EMITTER = recorder
+    try:
+        digest._emit_dataset_finished(
+            "ds-Z",
+            {
+                "status": "success",
+                "record_count": 5,
+                "error_count": 0,
+                "digest_method": "manifest_only",
+                "integrity_issues_count": 0,
+                "montage_count": 0,
+                "total_files": 5,  # NEW summary field — must propagate
+            },
+        )
+    finally:
+        digest_telemetry._EMITTER = saved
+
+    assert len(recorder.events) == 1
+    assert recorder.events[0].payload.get("total_files") == 5

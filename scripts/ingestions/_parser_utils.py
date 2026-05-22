@@ -89,6 +89,7 @@ def _http_client() -> httpx.Client:
                     keepalive_expiry=60.0,
                 ),
                 follow_redirects=True,
+                http2=True,  # multiplex concurrent HEADs over one connection
             )
             if not _ATEXIT_REGISTERED:
                 atexit.register(_close_http_client)

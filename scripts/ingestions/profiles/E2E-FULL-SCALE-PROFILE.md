@@ -202,12 +202,35 @@ HEAD requests, each ~270 ms.
 
 ### Stage 3 — performance-improvement candidates (ranked by ROI)
 
-| # | Change | Expected gain | Effort | Risk |
-|---|---|---|---|---|
-| 1 | Replace `urlopen` in `head_content_length` + `_fetch_fif_metadata_via_directory` with a module-level pooled `httpx.Client` | ~80% Stage 3 speedup on MEG-heavy datasets | 30 min | Snapshot tests as gate; signature stays |
-| 2 | Concurrent HEAD requests per MEG record (asyncio or thread pool) | Further 3-5× on heavy MEG | 1-2 h | Need to preserve order of MEG channels in result |
-| 3 | Cache montage HEAD responses by URL within a digest run | Modest (only helps datasets with shared sources) | 30 min | None — pure caching |
-| 4 | Stage 2 manifest walk via `os.scandir` instead of `Path.rglob` | ~20% Stage 2 speedup | 1 h | Behavioural drift risk → snapshot test before |
+| # | Change | Expected gain | Effort | Risk | Status |
+|---|---|---|---|---|---|
+| 1 | Replace `urlopen` in `head_content_length` / `fetch_*_from_s3` with a module-level pooled `httpx.Client` | ~80% Stage 3 speedup on MEG-heavy datasets | 30 min | Snapshot tests as gate; signature stays | **✅ LANDED** in `54e2ceab3`. Measured **2.37× speedup** (30.67 s → 12.94 s on the 3-dataset sample). Per-HEAD: 270 ms → 96 ms. Residual 10 s is TLS read per unique URL. |
+| 2 | Concurrent HEAD requests per MEG record (asyncio or thread pool) | Further 3-5× on heavy MEG | 1-2 h | Need to preserve order of MEG channels in result | pending |
+| 3 | Cache montage HEAD responses by URL within a digest run | Modest (only helps datasets with shared sources) | 30 min | None — pure caching | pending |
+| 4 | Stage 2 manifest walk via `os.scandir` instead of `Path.rglob` | ~20% Stage 2 speedup | 1 h | Behavioural drift risk → snapshot test before | pending |
+
+### Stage 3 — proven speedup from candidate #1
+
+After `54e2ceab3` (pooled httpx.Client), the same 3-dataset inline
+profile (ds000117 + ds001785 + ds001787, 198 records, 104 HEAD
+requests, same machine, same network):
+
+| Metric | Before (urllib) | After (pooled httpx) | Delta |
+|---|---:|---:|---:|
+| Wall-clock | 30.67 s | **12.94 s** | **−58%** |
+| `time -l` real | 37.85 s | **17.22 s** | **−55%** |
+| `_attach_montage_to_record` cum | 28.35 s (92.5%) | **10.49 s (81.0%)** | −63% |
+| `head_content_length` cum | 28.03 s | **10.09 s** | −64% |
+| Per-HEAD average | 270 ms | **96 ms** | −64% |
+| Peak RSS | 693 MB | 702 MB | +1.3% (negligible) |
+
+The 2.37× vs. the predicted ~5× shortfall is explained: each FIF URL
+is unique, so the pool reuses **sockets** but not **request bodies**.
+With `max_keepalive_connections=20`, after the first ~20 unique URLs
+subsequent requests cycle through warm sockets — that eliminates the
+TLS handshake + TCP setup overhead but not the per-request
+`SSL.read`. The remaining ~10 s is real RTT × bytes-read. To get to
+5×, concurrent HEAD (candidate #2) is the next step.
 
 ### Stage 4: Validate (full)
 

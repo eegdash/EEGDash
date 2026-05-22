@@ -26,8 +26,6 @@ sys.path.insert(0, os.path.abspath(".."))
 # Local Sphinx extensions live under ``docs/source/_extensions``; make them
 # importable before the ``extensions`` list below references them.
 sys.path.insert(0, os.path.abspath("_extensions"))
-if os.environ.get("SPHINX_BUILD", "") == "":
-    os.environ["SPHINX_BUILD"] = "1"
 
 import eegdash
 import eegdash.dataset as dataset_module
@@ -2393,7 +2391,9 @@ def _convert_readme_to_rst(text: str) -> str:
             # Must run BEFORE individual image/link handlers to avoid mangling.
             line = re.sub(
                 r"\[!\[([^\]]*)\]\([^)]+\)\]\(([^)]+)\)",
-                lambda m: f"`{m.group(1).strip() or m.group(2).strip()} <{m.group(2).strip()}>`__",
+                lambda m: (
+                    f"`{m.group(1).strip() or m.group(2).strip()} <{m.group(2).strip()}>`__"
+                ),
                 line,
             )
 

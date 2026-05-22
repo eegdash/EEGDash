@@ -15,7 +15,7 @@ from collections.abc import Callable
 from functools import partial
 from pathlib import Path
 from types import FunctionType
-from typing import Dict, Tuple
+from typing import Dict, Tuple, Type
 
 import numpy as np
 
@@ -203,17 +203,22 @@ def _call_with_metadata(func: Callable, *x, _metadata: dict) -> Tuple[tuple, dic
         metadata preprocessor.
 
     """
+    f = get_underlying_func(func)
     if (
         isinstance(func, FeatureExtractor)
         or "_metadata" in inspect.signature(func).parameters
     ):
-        if hasattr(get_underlying_func(func), "metadata_preprocessor"):
+        if hasattr(f, "metadata_preprocessor"):
             *z, _metadata = func(*x, _metadata=_metadata.copy())
             z = (*z,)
         else:
             z = func(*x, _metadata=_metadata)
     else:
         z = func(*x)
+    if not isinstance(z, tuple):
+        z = (z,)
+    if hasattr(f, "output_type"):
+        f.output_type.validate_output(*z, _metadata=_metadata)
     return z, _metadata
 
 
@@ -238,13 +243,15 @@ def _concat_calls(funcs: list[Callable], *x, _metadata: dict) -> tuple:
         in `funcs` is a metadata preprocessor.
 
     """
-    z = x
+    z = (*x,)
     for func in funcs:
         z, _metadata = _call_with_metadata(func, *z, _metadata=_metadata)
     if "_metadata" in inspect.signature(funcs[-1]).parameters and hasattr(
         get_underlying_func(funcs[-1]), "metadata_preprocessor"
     ):
         return *z, _metadata
+    if len(z) == 1:
+        return z[0]
     return z
 
 
@@ -340,14 +347,14 @@ class FeatureExtractor(TrainableFeature):
 
         self.features_kwargs = self.to_dict()
 
-    def _validate_execution_tree(self, parent_type: Callable | None = None):
+    def _validate_execution_tree(self, parent_type: Type | Callable | None = None):
         r"""Validate the consistency of the feature dependency graph.
 
         Parameters
         ----------
         feature_extractors : dict
             The dictionary of extractors to validate.
-        parent_type :
+        parent_type : Type | Callable | None
             Parent preprocessor type (optional).
 
         Returns
@@ -363,14 +370,19 @@ class FeatureExtractor(TrainableFeature):
 
         """
         if parent_type is None:
-            preprocessor = (
-                SignalOutputType
-                if self.preprocessor is None
-                else get_underlying_func(self.preprocessor)
-            )
-            if isinstance(preprocessor, AsInputOutputType):
-                return
-            parent_type = preprocessor
+            if self.preprocessor is None:
+                parent_type = SignalOutputType
+                is_parent_type_output_type = True
+            else:
+                preprocessor = get_underlying_func(self.preprocessor)
+                if hasattr(preprocessor, "output_type"):
+                    if issubclass(preprocessor.output_type, AsInputOutputType):
+                        return
+                    parent_type = preprocessor.output_type
+                    is_parent_type_output_type = True
+                else:
+                    parent_type = preprocessor
+                    is_parent_type_output_type = False
 
         for fname, f in self.feature_extractors_dict.items():
             fe = None
@@ -378,7 +390,9 @@ class FeatureExtractor(TrainableFeature):
                 fe = f
                 f = f.preprocessor
             f = get_underlying_func(f)
-            if isinstance(f, AsInputOutputType):
+            if hasattr(f, "output_type") and issubclass(
+                f.output_type, AsInputOutputType
+            ):
                 if fe is not None:
                     fe._validate_execution_tree(parent_type)
                     continue
@@ -388,15 +402,16 @@ class FeatureExtractor(TrainableFeature):
             if parent_type in pe_type:
                 continue
             is_valid_by_output_type = False
-            for pet in pe_type:
-                if (
-                    inspect.isclass(pet)
-                    and issubclass(pet, BasePreprocessorOutputType)
-                    and pet is not BasePreprocessorOutputType
-                ):
-                    if isinstance(parent_type, pet):
-                        is_valid_by_output_type = True
-                        break
+            if is_parent_type_output_type:
+                for pet in pe_type:
+                    if (
+                        inspect.isclass(pet)
+                        and issubclass(pet, BasePreprocessorOutputType)
+                        and pet is not BasePreprocessorOutputType
+                    ):
+                        if issubclass(parent_type, pet):
+                            is_valid_by_output_type = True
+                            break
             if not is_valid_by_output_type:
                 parent = _get_func_name(parent_type)
                 child = _get_func_name(f)
@@ -446,8 +461,6 @@ class FeatureExtractor(TrainableFeature):
             z, _metadata = _call_with_metadata(
                 self.preprocessor, *x, _metadata=_metadata
             )
-        if not isinstance(z, tuple):
-            z = (z,)
         return z, _metadata
 
     def __call__(self, *x, _metadata: dict) -> dict:
@@ -484,6 +497,8 @@ class FeatureExtractor(TrainableFeature):
         preprocessor_f_und = get_underlying_func(self.preprocessor)
         for fname, f in self.feature_extractors_dict.items():
             r, _ = _call_with_metadata(f, *z, _metadata=_metadata)
+            assert len(r) == 1
+            r = r[0]
             f_und = get_underlying_func(f)
             if hasattr(f_und, "feature_kind"):
                 r = f_und.feature_kind(r, _metadata=_metadata)
@@ -496,7 +511,7 @@ class FeatureExtractor(TrainableFeature):
             ):
                 fname = _get_func_name(f_und)
             if isinstance(r, dict):
-                prefix = f"{fname}_" if fname else ""
+                prefix = f"{fname}_" if isinstance(fname, str) and fname else ""
                 for k, v in r.items():
                     self._add_feature_to_dict(
                         results_dict, prefix + k, v, _metadata["batch_size"]
@@ -662,7 +677,7 @@ class FeatureExtractor(TrainableFeature):
             ):
                 fname = _get_func_name(get_underlying_func(f))
             if isinstance(f, FeatureExtractor):
-                prefix = f"{fname}_" if fname else ""
+                prefix = f"{fname}_" if isinstance(fname, str) and fname else ""
                 fnames.extend([prefix + fn for fn in f.feature_names])
             else:
                 fnames.append(fname)

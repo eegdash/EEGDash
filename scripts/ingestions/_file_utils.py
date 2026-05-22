@@ -869,11 +869,19 @@ def list_git_files(clone_dir: Path) -> list[dict]:
     iterative pass and classifies each entry from the cached dirent
     flags (``DT_REG`` / ``DT_LNK`` / ``DT_DIR``) instead of via
     ``Path.rglob`` + repeated ``is_file`` / ``is_symlink`` ``stat``
-    syscalls. Stage 2 profiling on the 566-dataset corpus showed
-    ``rglob`` + per-path classification accounted for ~5 000 stat-like
-    calls per dataset; the scandir-based walk cuts that to one stat
-    per file. See ``tests/test_manifest_walk_perf.py`` for the
-    regression guard.
+    syscalls.
+
+    The walker's classification (is_dir / is_file / is_symlink) uses
+    the cached dirent flags from scandir — zero stat syscalls. Per-
+    emitted-file stat cost is unchanged from the prior code:
+    ``get_annex_file_size`` (called once per emitted entry) still does
+    its own Path-based stat probes to disambiguate git-annex pointer
+    files from regular files. The Stage-2 speedup comes from cutting
+    classification syscalls for the (much larger) population of
+    non-emitted intermediate directory entries, not from changing the
+    per-emitted-file cost.
+
+    See ``tests/test_manifest_walk_perf.py`` for the regression guard.
     """
     result: list[dict] = []
     # Pre-resolve to absolute path once so ``os.path.relpath`` is purely

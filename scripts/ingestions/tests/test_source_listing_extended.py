@@ -235,3 +235,38 @@ def test_list_git_files_handles_nonexistent_directory():
     result = list_git_files(Path("/totally/no/such/path"))
     # Tolerant either way: empty list or no crash
     assert isinstance(result, list)
+
+
+def test_list_git_files_emits_broken_symlinks(tmp_path: Path):
+    """Broken git-annex pointer symlinks must be emitted (size=0), not dropped.
+
+    Pinned post-perf-review (2026-05-22) — the walker's dirent-driven
+    classification calls is_symlink() before is_file() so dangling
+    annex pointers (the common OpenNeuro/NEMAR case after a shallow
+    clone with GIT_LFS_SKIP_SMUDGE=1) are still surfaced.
+    """
+    real = tmp_path / "real.edf"
+    real.write_bytes(b"x" * 10)
+    (tmp_path / "alive.edf").symlink_to(real)
+    (tmp_path / "dead.edf").symlink_to(tmp_path / "no_such_target")
+
+    names = {f["name"] for f in list_git_files(tmp_path)}
+    assert "real.edf" in names
+    assert "alive.edf" in names
+    assert "dead.edf" in names  # broken symlink → emitted, not silently dropped
+
+
+def test_list_git_files_skips_dot_git_without_descending(tmp_path: Path):
+    """`.git` directory is pruned at dirent level — not descended into.
+
+    Pinned post-perf-review: a regression that walked `.git` would
+    inflate the manifest with thousands of blob filenames and slow
+    Stage 2 by an order of magnitude.
+    """
+    git_dir = tmp_path / ".git" / "objects" / "ab"
+    git_dir.mkdir(parents=True)
+    (git_dir / "deadbeef").write_text("blob")
+    (tmp_path / "real.tsv").write_text("x")
+
+    names = {f["name"] for f in list_git_files(tmp_path)}
+    assert names == {"real.tsv"}  # only the real BIDS file, no `.git` contents

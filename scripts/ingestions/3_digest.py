@@ -2945,6 +2945,40 @@ def _enumerate_via_bids(
     )
 
 
+def _check_dataset_skip_conditions(
+    dataset_id: str,
+    dataset_dir: Path,
+    dataset_output_dir: Path,
+) -> dict[str, Any] | None:
+    """Return a "skipped" summary if this Dataset should not be digested.
+
+    Two conditions:
+      1. Output dir already exists — already-digested guard (the
+         pipeline runner relies on this to be idempotent).
+      2. Input dataset dir doesn't exist — caller passed an id we
+         never cloned. Surface a clear "directory not found".
+
+    Returns ``None`` when neither skip condition fires; the caller
+    proceeds with normal digestion.
+
+    Phase 8 Stage 3D: extracted from ``digest_dataset`` so its body
+    drops to an orchestrator-only shape.
+    """
+    if dataset_output_dir.exists():
+        return {
+            "status": "skipped",
+            "dataset_id": dataset_id,
+            "reason": "already digested",
+        }
+    if not dataset_dir.exists():
+        return {
+            "status": "skipped",
+            "dataset_id": dataset_id,
+            "reason": "directory not found",
+        }
+    return None
+
+
 def digest_dataset(
     dataset_id: str,
     input_dir: Path,
@@ -2980,22 +3014,12 @@ def digest_dataset(
     dict
         Summary of digestion results.
     """
-    output_dir_path = output_dir / dataset_id
-    if output_dir_path.exists():
-        return {
-            "status": "skipped",
-            "dataset_id": dataset_id,
-            "reason": "already digested",
-        }
     dataset_dir = input_dir / dataset_id
     dataset_output_dir = output_dir / dataset_id
 
-    if not dataset_dir.exists():
-        return {
-            "status": "skipped",
-            "dataset_id": dataset_id,
-            "reason": "directory not found",
-        }
+    skip = _check_dataset_skip_conditions(dataset_id, dataset_dir, dataset_output_dir)
+    if skip is not None:
+        return skip
 
     # Build per-Dataset state shared with the Adapter.
     source = detect_source(dataset_dir)

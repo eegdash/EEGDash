@@ -95,12 +95,13 @@ from _montage import extract_layout
 # the caller.
 from digest_telemetry import TelemetryEvent, auto_configure_from_env, get_emitter
 
-# Record-enumeration Seam (Phase 8 S1.thick stage 2). Both legacy
-# functions in this file write their JSON outputs via this shared
-# helper, so the per-Dataset JSON shapes are documented in ONE place.
-# Stage 3 will collapse digest_dataset + digest_from_manifest into a
-# single orchestrator — see ROBUSTNESS/STAGE-3-PLAN.md for the
-# fixture-based verification approach.
+# Record-enumeration Seam (Phase 8 S1.thick stage 2, collapsed in
+# stage 3D). ``digest_dataset`` is now the single orchestrator
+# entry-point; it routes via :func:`get_record_enumerator` between
+# BIDS-filesystem and manifest-only paths. Both paths write their
+# JSON outputs through ``write_dataset_outputs`` so the per-Dataset
+# JSON shapes are documented in ONE place — see
+# ROBUSTNESS/STAGE-3-PLAN.md.
 from record_enumerator import (
     EnumerationResult,
     ManifestEnumerator,
@@ -2614,77 +2615,6 @@ def _enumerate_via_manifest(
             digest_method="manifest_only",
         ),
         len(files),
-    )
-
-
-def digest_from_manifest(
-    dataset_id: str,
-    input_dir: Path,
-    output_dir: Path,
-) -> dict[str, Any]:
-    """Digest a dataset from its manifest.json without requiring actual files.
-
-    Used for API-only sources (OSF, Figshare, Zenodo) where we have
-    file listings but no actual files on disk. Also reached as the
-    fallback path from :func:`digest_dataset` when the BIDS clone is
-    unparseable.
-
-    Phase 8 Stage 3B: orchestrator only — skip-check, load manifest,
-    delegate to :func:`_enumerate_via_manifest`, write outputs.
-
-    Parameters
-    ----------
-    dataset_id : str
-    input_dir : Path
-        Directory containing cloned datasets (with manifest.json).
-    output_dir : Path
-        Directory for output JSON files.
-
-    Returns
-    -------
-    dict
-        Summary of digestion results.
-    """
-    dataset_dir = input_dir / dataset_id
-    dataset_output_dir = output_dir / dataset_id
-    manifest_path = dataset_dir / "manifest.json"
-
-    if not manifest_path.exists():
-        return {
-            "status": "skipped",
-            "dataset_id": dataset_id,
-            "reason": "manifest.json not found",
-        }
-
-    try:
-        with open(manifest_path) as f:
-            manifest = json.load(f)
-    except (OSError, json.JSONDecodeError, ValueError) as e:
-        return {
-            "status": "error",
-            "dataset_id": dataset_id,
-            "error": f"Failed to load manifest: {e}",
-        }
-
-    digested_at = datetime.now(timezone.utc).isoformat()
-    result, total_files = _enumerate_via_manifest(dataset_id, manifest, digested_at)
-
-    if not result.records:
-        return {
-            "status": "empty",
-            "dataset_id": dataset_id,
-            "reason": "no files in manifest"
-            if total_files == 0
-            else "no records extracted",
-        }
-
-    return write_dataset_outputs(
-        dataset_output_dir,
-        result,
-        dataset_id=dataset_id,
-        source=result.dataset_meta.get("source", "unknown"),
-        digested_at=digested_at,
-        total_files=total_files,
     )
 
 

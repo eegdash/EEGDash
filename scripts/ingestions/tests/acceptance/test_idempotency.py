@@ -92,11 +92,16 @@ def _run_digest_against(
 # (absolute path to each emitted file). Idempotency is a property of
 # the *content* the digester produces — pointing at run_a vs run_b is
 # expected and isn't what this layer is testing.
+#
+# Producer (``record_enumerator.write_dataset_outputs``) currently emits
+# only the first 3 keys; ``summary_file`` is included defensively in
+# case the producer ever surfaces its own location, so the strip stays
+# correct without a follow-up patch.
 _SUMMARY_LOCATION_KEYS: tuple[str, ...] = (
     "dataset_file",
     "records_file",
     "montages_file",
-    "summary_file",
+    "summary_file",  # defensive: not currently emitted, future-proof
 )
 
 

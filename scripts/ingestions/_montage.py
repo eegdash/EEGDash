@@ -74,6 +74,8 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
+from _parser_utils import head_content_length  # noqa: F401 — patch target
+
 LOGGER = logging.getLogger("digest.montage")
 
 
@@ -795,6 +797,33 @@ def _fetch_fif_metadata_streaming(data_file: Path, url: str, total: int) -> str 
     return None
 
 
+def _resolve_fif_total_size(data_file: Path, url: str) -> int | None:
+    """Discover the FIF total size, preferring the annex symlink over a HEAD.
+
+    OpenNeuro / NEMAR FIF files are git-annex-managed; the size is
+    encoded in the symlink target (``MD5E-s{size}--{hash}.fif``).
+    Reading the symlink avoids the HTTPS HEAD round-trip that
+    dominated the MEG digest profile before pooling landed.
+
+    Falls back to :func:`head_content_length` when:
+      - the file isn't an annex symlink (Zenodo / Figshare raw URLs);
+      - the annex key doesn't follow the MD5E/SHA256E size convention;
+      - the parsed size is zero (impossible for a real FIF — treat
+        as malformed key and probe the wire).
+
+    Returns ``None`` if both paths fail; caller treats that as a
+    transient network failure.
+    """
+    from _file_utils import _read_annex_pointer_text, parse_annex_size
+
+    text = _read_annex_pointer_text(data_file)
+    if text is not None and "/annex/" in text:
+        annex_size = parse_annex_size(text)
+        if annex_size is not None and annex_size > 0:
+            return annex_size
+    return head_content_length(url, timeout=30.0)
+
+
 def _fetch_fif_metadata_via_directory(data_file: Path, url: str) -> str | None:
     """Reconstruct a parseable FIF from S3 by fetching only metadata tags.
 
@@ -832,10 +861,10 @@ def _fetch_fif_metadata_via_directory(data_file: Path, url: str) -> str | None:
     import struct
     import tempfile
 
-    from _parser_utils import fetch_bytes_from_s3, head_content_length
+    from _parser_utils import fetch_bytes_from_s3
 
-    # 1. Total size
-    total = head_content_length(url, timeout=30.0)
+    # 1. Total size — prefer the annex symlink key over a HEAD round-trip.
+    total = _resolve_fif_total_size(data_file, url)
     if total is None or total <= 0:
         return None
 

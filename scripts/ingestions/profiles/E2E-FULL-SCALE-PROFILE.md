@@ -205,9 +205,9 @@ HEAD requests, each ~270 ms.
 | # | Change | Expected gain | Effort | Risk | Status |
 |---|---|---|---|---|---|
 | 1 | Replace `urlopen` in `head_content_length` / `fetch_*_from_s3` with a module-level pooled `httpx.Client` | ~80% Stage 3 speedup on MEG-heavy datasets | 30 min | Snapshot tests as gate; signature stays | **✅ LANDED** in `54e2ceab3`. Measured **2.37× speedup** (30.67 s → 12.94 s on the 3-dataset sample). Per-HEAD: 270 ms → 96 ms. Residual 10 s is TLS read per unique URL. |
-| 2 | Concurrent HEAD requests per MEG record (asyncio or thread pool) | Further 3-5× on heavy MEG | 1-2 h | Need to preserve order of MEG channels in result | pending |
-| 3 | Cache montage HEAD responses by URL within a digest run | Modest (only helps datasets with shared sources) | 30 min | None — pure caching | pending |
-| 4 | Stage 2 manifest walk via `os.scandir` instead of `Path.rglob` | ~20% Stage 2 speedup | 1 h | Behavioural drift risk → snapshot test before | pending |
+| 2 | Concurrent HEAD requests per MEG record (asyncio or thread pool) | Further 3-5× on heavy MEG | 1-2 h | Need to preserve order of MEG channels in result | **✅ LANDED (different mechanism)** via `04b126f1b` HTTP/2 multiplexing (shared client now negotiates h2 with cooperating endpoints) + `7f5355a79` annex-key shortcut which eliminates the HEAD entirely on OpenNeuro/NEMAR. True async-HEAD remains an option for non-annex hosts that don't speak HTTP/2; deferred until a profile shows it's still on the hot path. |
+| 3 | Cache montage HEAD responses by URL within a digest run | Modest (only helps datasets with shared sources) | 30 min | None — pure caching | **✅ LANDED (different scope)** in `b62c29e95` — per-`(dataset_id, nchans)` cache caches the full extracted montage `(hash, doc)`, not just HEAD responses. Domain insight: within a dataset, MEG records with same nchans share device → share layout. Eliminates ~50× re-extraction on typical OpenNeuro MEG datasets. |
+| 4 | Stage 2 manifest walk via `os.scandir` instead of `Path.rglob` | ~20% Stage 2 speedup | 1 h | Behavioural drift risk → snapshot test before | **✅ LANDED** in `f37f0864b`. Measured **1.81× speedup** (159.7 ms → 88.3 ms on a 2 204-file synthetic BIDS tree). Plus +2 review-gap tests in `fb93f72d6` (broken-symlink emission + `.git` skip without descending). |
 
 ### Stage 3 — proven speedup from candidate #1
 

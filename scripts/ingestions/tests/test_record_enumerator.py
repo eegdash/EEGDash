@@ -262,8 +262,13 @@ def test_manifest_enumerate_returns_empty_when_manifest_missing(
     tmp_path: Path,
 ) -> None:
     """ManifestEnumerator: missing manifest.json → empty EnumerationResult
-    with a diagnostic error entry. No raise (so the caller can write the
+    with a structured diagnostic. No raise (so the caller can write the
     summary as ``status='empty'`` rather than crash).
+
+    Post-review (2026-05-22) the diagnostic dict now carries the legacy
+    summary keys (``status``, ``reason``, ``dataset_id``) so log
+    scrapers can distinguish "manifest.json not found" from
+    "manifest.json corrupt" from "manifest.json permission denied".
     """
     parent = tmp_path / "input"
     (parent / "z-001").mkdir(parents=True)
@@ -273,8 +278,16 @@ def test_manifest_enumerate_returns_empty_when_manifest_missing(
     result = enumerator.enumerate()
     assert isinstance(result, EnumerationResult)
     assert result.records == []
+    # Post-review: pinned (not the dataclass default) so a future
+    # caller can rely on the manifest path always carrying a non-None
+    # total_files.
+    assert result.total_files == 0
     assert len(result.errors) == 1
-    assert "manifest.json" in result.errors[0].get("error", "")
+    entry = result.errors[0]
+    # New structured-summary shape: assert on the legacy keys.
+    assert entry.get("status") == "skipped"
+    assert "manifest.json not found" in entry.get("reason", "")
+    assert entry.get("dataset_id") == "z-001"
 
 
 # ─── write_dataset_outputs — shared JSON writer (stage 2A) ────────────────

@@ -26,8 +26,6 @@ import re
 import sys
 import time
 import traceback
-import urllib.error
-import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -58,6 +56,8 @@ from eegdash.schemas import (
 )
 from mne_bids.config import ALLOWED_DATATYPE_EXTENSIONS
 from tqdm import tqdm
+
+logger = logging.getLogger(__name__)
 
 from _constants import (
     CTF_INTERNAL_EXTENSIONS,
@@ -1938,12 +1938,20 @@ def _fetch_subject_count_via_http(files: list, fallback: int) -> int:
     file list for the canonical metadata filenames and attempts a 10s
     HTTP fetch of each.
 
+    Routes through the shared pooled :func:`_parser_utils._http_client`
+    (migrated from raw ``urllib.request.urlopen`` 2026-05-22 post-perf
+    review) — keep-alive across the two calls eliminates a duplicate
+    TLS handshake and matches the speedup contract documented in
+    ``_parser_utils.py``.
+
     Returns the discovered count, or ``fallback`` if nothing worked.
     Errors are logged via ``print`` (preserves the pre-extraction
     behaviour exactly).
-
-    Phase 8 follow-up extraction. NOT a pure function — does network I/O.
     """
+    import httpx
+
+    from _parser_utils import _http_client
+
     desc_url = None
     participants_url = None
     for f in files:
@@ -1958,12 +1966,14 @@ def _fetch_subject_count_via_http(files: list, fallback: int) -> int:
     subjects_count = fallback
     if desc_url:
         try:
-            with urllib.request.urlopen(desc_url, timeout=10) as response:
-                desc_data = json.loads(response.read().decode("utf-8"))
-                if "Subjects" in desc_data:  # heuristic
-                    subjects_count = int(desc_data["Subjects"])
+            resp = _http_client().get(desc_url, timeout=10)
+            resp.raise_for_status()
+            desc_data = json.loads(resp.content.decode("utf-8"))
+            if "Subjects" in desc_data:  # heuristic
+                subjects_count = int(desc_data["Subjects"])
         except (
-            urllib.error.URLError,
+            httpx.HTTPError,
+            RuntimeError,
             OSError,
             json.JSONDecodeError,
             UnicodeDecodeError,
@@ -1974,13 +1984,15 @@ def _fetch_subject_count_via_http(files: list, fallback: int) -> int:
 
     if subjects_count == 0 and participants_url:
         try:
-            with urllib.request.urlopen(participants_url, timeout=10) as response:
-                content = response.read().decode("utf-8")
-                lines = [line for line in content.splitlines() if line.strip()]
-                if len(lines) > 1:  # subtract the header
-                    subjects_count = len(lines) - 1
+            resp = _http_client().get(participants_url, timeout=10)
+            resp.raise_for_status()
+            content = resp.content.decode("utf-8")
+            lines = [line for line in content.splitlines() if line.strip()]
+            if len(lines) > 1:  # subtract the header
+                subjects_count = len(lines) - 1
         except (
-            urllib.error.URLError,
+            httpx.HTTPError,
+            RuntimeError,
             OSError,
             UnicodeDecodeError,
             ValueError,
@@ -2942,10 +2954,41 @@ def _run_enumerator_with_manifest_fallback(
         PermissionError,
     ) as exc:
         if has_manifest and not isinstance(enumerator, ManifestEnumerator):
+            # Surface the BIDS failure before it's overwritten by the
+            # fallback — operators auditing "why did this dataset use
+            # the manifest path" otherwise have no breadcrumb.
+            logger.info(
+                "BIDS load failed for %s (%s: %s); falling back to manifest path",
+                dataset_id,
+                type(exc).__name__,
+                exc,
+            )
             fallback = ManifestEnumerator(
                 dataset_id, dataset_dir, source, source_adapter, digested_at
             )
-            return fallback.enumerate(), None
+            # Wrap the fallback enumeration so a malformed manifest
+            # schema (e.g. ``files`` is a dict not a list →
+            # AttributeError / TypeError outside the documented BIDS
+            # exception set) cannot escape and crash the worker.
+            try:
+                return fallback.enumerate(), None
+            except Exception as fb_exc:  # noqa: BLE001
+                logger.warning(
+                    "Manifest fallback raised %s for %s after BIDS %s: %s",
+                    type(fb_exc).__name__,
+                    dataset_id,
+                    type(exc).__name__,
+                    fb_exc,
+                )
+                return None, {
+                    "status": "error",
+                    "dataset_id": dataset_id,
+                    "error": (
+                        f"BIDS path raised {type(exc).__name__}: {exc}; "
+                        f"manifest fallback also raised "
+                        f"{type(fb_exc).__name__}: {fb_exc}"
+                    ),
+                }
         return None, {
             "status": "error",
             "dataset_id": dataset_id,
@@ -2957,10 +3000,40 @@ def _run_enumerator_with_manifest_fallback(
         and has_manifest
         and not isinstance(enumerator, ManifestEnumerator)
     ):
+        logger.info(
+            "BIDS path produced 0 records for %s (errors=%d); "
+            "falling back to manifest path",
+            dataset_id,
+            len(result.errors),
+        )
         fallback = ManifestEnumerator(
             dataset_id, dataset_dir, source, source_adapter, digested_at
         )
-        return fallback.enumerate(), None
+        try:
+            fb_result = fallback.enumerate()
+        except Exception as fb_exc:  # noqa: BLE001
+            logger.warning(
+                "Manifest fallback raised %s for %s (BIDS produced 0 records): %s",
+                type(fb_exc).__name__,
+                dataset_id,
+                fb_exc,
+            )
+            return None, {
+                "status": "error",
+                "dataset_id": dataset_id,
+                "error": (
+                    f"BIDS path returned no records; manifest fallback "
+                    f"raised {type(fb_exc).__name__}: {fb_exc}"
+                ),
+                "errors": result.errors,
+            }
+        # Preserve BIDS per-file errors (e.g. 50 broken git-annex
+        # symlinks) by merging them into the fallback's errors so the
+        # caller can see WHY BIDS produced 0 records. Without this,
+        # the manifest result silently masks the real failure.
+        if result.errors:
+            fb_result.errors = list(fb_result.errors or []) + list(result.errors)
+        return fb_result, None
 
     return result, None
 
@@ -2981,18 +3054,46 @@ def _summarise_empty_or_error(
     drops to an orchestrator-only shape. The error case carries the
     full ``errors`` list so the caller can see WHY nothing landed.
     """
-    if result.errors:
+    # Post-review hardening: distinguish "soft" per-file warnings
+    # (status=='skipped', 'warning', or absent) from "true" structural
+    # errors. Old digest_from_manifest always reported empty here
+    # regardless of per-file noise; the new code surfaces real errors
+    # but must not flip status='error' just because a few per-file
+    # warnings landed in result.errors.
+    structural_errors = [
+        e for e in result.errors if e.get("status") not in (None, "skipped", "warning")
+    ]
+    if structural_errors:
         return {
             "status": "error",
             "dataset_id": dataset_id,
             "error": "No records extracted",
             "errors": result.errors,
         }
-    return {
+
+    # Empty path — pick the legacy reason string that log scrapers grep
+    # for. Old digest_from_manifest distinguished total_files == 0
+    # ("no files in manifest") from total_files > 0 ("no records
+    # extracted"); the BIDS path leaves total_files as None and uses
+    # the more generic message.
+    total_files = result.total_files
+    if total_files == 0:
+        reason = "no files in manifest"
+    elif total_files is not None:
+        reason = "no records extracted"
+    else:
+        reason = "no neurophysiology files found"
+    empty_summary: dict[str, Any] = {
         "status": "empty",
         "dataset_id": dataset_id,
-        "reason": "no neurophysiology files found",
+        "reason": reason,
     }
+    # Forward soft warnings into the summary so operators can still
+    # see them without changing status — they're informational, not
+    # gating.
+    if result.errors:
+        empty_summary["errors"] = result.errors
+    return empty_summary
 
 
 def _check_dataset_skip_conditions(
@@ -3086,39 +3187,66 @@ def digest_dataset(
         )
     )
 
-    # Pick the Adapter via the factory. The factory's fallback rules
-    # mirror what used to live as if-ladders inside this function:
-    # no actual files -> ManifestEnumerator; otherwise BIDS path.
-    has_manifest = (dataset_dir / "manifest.json").exists()
-    enumerator = get_record_enumerator(
-        dataset_id, dataset_dir, source, source_adapter, digested_at
-    )
+    # Post-review hardening: every ``dataset_started`` MUST be paired
+    # with a ``dataset_finished``. Track the outgoing summary so the
+    # ``finally`` block can emit it on every exit path — including the
+    # fallback / empty / error / unhandled-exception paths that
+    # otherwise return without emitting.
+    summary: dict[str, Any] | None = None
+    try:
+        # Pick the Adapter via the factory. The factory's fallback rules
+        # mirror what used to live as if-ladders inside this function:
+        # no actual files -> ManifestEnumerator; otherwise BIDS path.
+        has_manifest = (dataset_dir / "manifest.json").exists()
+        enumerator = get_record_enumerator(
+            dataset_id, dataset_dir, source, source_adapter, digested_at
+        )
 
-    result, fallback_summary = _run_enumerator_with_manifest_fallback(
-        enumerator,
-        dataset_id=dataset_id,
-        dataset_dir=dataset_dir,
-        source=source,
-        source_adapter=source_adapter,
-        digested_at=digested_at,
-        has_manifest=has_manifest,
-    )
-    if fallback_summary is not None:
-        return fallback_summary
+        result, fallback_summary = _run_enumerator_with_manifest_fallback(
+            enumerator,
+            dataset_id=dataset_id,
+            dataset_dir=dataset_dir,
+            source=source,
+            source_adapter=source_adapter,
+            digested_at=digested_at,
+            has_manifest=has_manifest,
+        )
+        if fallback_summary is not None:
+            summary = fallback_summary
+            return fallback_summary
 
-    if not result.records:
-        return _summarise_empty_or_error(dataset_id, result)
+        # Invariant of ``_run_enumerator_with_manifest_fallback``:
+        # exactly one of ``result`` / ``fallback_summary`` is non-None.
+        # Pin it here so a future refactor that violates the tuple
+        # contract (post-review finding C-tuple-of-Optionals) fails
+        # loudly instead of dereferencing None.
+        assert result is not None
 
-    summary = write_dataset_outputs(
-        dataset_output_dir,
-        result,
-        dataset_id=dataset_id,
-        source=source,
-        digested_at=digested_at,
-        total_files=result.total_files,
-    )
-    _emit_dataset_finished(dataset_id, summary)
-    return summary
+        if not result.records:
+            summary = _summarise_empty_or_error(dataset_id, result)
+            return summary
+
+        summary = write_dataset_outputs(
+            dataset_output_dir,
+            result,
+            dataset_id=dataset_id,
+            source=source,
+            digested_at=digested_at,
+            total_files=result.total_files,
+        )
+        return summary
+    finally:
+        # Always emit ``dataset_finished`` so the telemetry stream
+        # pairs cleanly. If an unhandled exception escapes the try
+        # body, synthesise an error summary so downstream consumers
+        # don't see an unmatched ``dataset_started``.
+        if summary is None:
+            summary = {
+                "status": "error",
+                "dataset_id": dataset_id,
+                "error": "digest_dataset raised an unhandled exception",
+            }
+        _emit_dataset_finished(dataset_id, summary)
 
 
 def _json_serializer(obj):

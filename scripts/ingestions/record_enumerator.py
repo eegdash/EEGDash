@@ -349,16 +349,31 @@ class ManifestEnumerator(RecordEnumerator):
     """
 
     def enumerate(self) -> EnumerationResult:
-        """Run the manifest-only algorithm via the shared helper."""
-        manifest = _load_manifest_data(self.dataset_dir)
+        """Run the manifest-only algorithm via the shared helper.
+
+        On a load failure the orchestrator inspects ``result.errors``
+        (with the structured-summary ``status`` / ``reason`` /
+        ``error`` keys forwarded) so it can distinguish
+        ``manifest.json missing`` from ``manifest.json corrupt`` from
+        ``manifest.json permission denied``. The summary keys mirror
+        the legacy ``digest_from_manifest`` shape so downstream log
+        scrapers don't break.
+        """
+        manifest, load_summary = load_manifest_or_summary(
+            self.dataset_dir, self.dataset_id
+        )
         if manifest is None:
+            assert load_summary is not None  # invariant of load_manifest_or_summary
             return EnumerationResult(
                 dataset_meta={"dataset_id": self.dataset_id, "source": self.source},
+                # total_files=0 is explicit (not the dataclass default) — pinned
+                # by the post-review hardening so a future caller can rely on
+                # the manifest-path always carrying a non-None total_files.
+                total_files=0,
                 errors=[
                     {
                         "file": self.dataset_id,
-                        "error": "manifest.json not found or unreadable",
-                        "status": "skipped",
+                        **load_summary,
                     }
                 ],
                 digest_method="manifest_only",
@@ -404,21 +419,56 @@ def _load_digest_module() -> Any:
     return mod
 
 
-def _load_manifest_data(dataset_dir: Path) -> dict | None:
-    """Read ``<dataset_dir>/manifest.json`` if present and parseable.
+def load_manifest_or_summary(
+    dataset_dir: Path, dataset_id: str
+) -> tuple[dict | None, dict | None]:
+    """Read ``<dataset_dir>/manifest.json``, surfacing diagnostics.
 
-    Returns ``None`` if the file is absent or malformed (both are
-    treated as "no manifest data"). Used by both Adapter classes to
-    surface manifest_data into their respective helpers.
+    Returns ``(manifest_dict, None)`` on success and ``(None, summary)``
+    on a load failure where ``summary`` is the structured failure dict
+    callers can return directly. The summary uses distinct ``reason``
+    fields so operators can tell ``manifest.json missing`` apart from
+    ``manifest.json corrupt`` apart from ``manifest.json permission
+    denied`` — a diagnostic regression flagged by the post-perf review
+    (the prior helper folded all three into a generic
+    ``manifest.json not found or unreadable``).
     """
     manifest_path = dataset_dir / "manifest.json"
     if not manifest_path.exists():
-        return None
+        return None, {
+            "status": "skipped",
+            "dataset_id": dataset_id,
+            "reason": "manifest.json not found",
+        }
     try:
         with open(manifest_path) as fh:
-            return json.load(fh)
-    except (OSError, json.JSONDecodeError, ValueError):
-        return None
+            return json.load(fh), None
+    except json.JSONDecodeError as exc:
+        logger.warning("Manifest at %s is corrupt: %s", manifest_path, exc)
+        return None, {
+            "status": "error",
+            "dataset_id": dataset_id,
+            "error": f"Failed to load manifest: {exc}",
+        }
+    except (OSError, ValueError) as exc:
+        logger.warning("Manifest at %s could not be read: %s", manifest_path, exc)
+        return None, {
+            "status": "error",
+            "dataset_id": dataset_id,
+            "error": f"Failed to read manifest: {exc}",
+        }
+
+
+def _load_manifest_data(dataset_dir: Path) -> dict | None:
+    """Backward-compatible shim around :func:`load_manifest_or_summary`.
+
+    Some callers want only the dict (BIDS enrichment); they don't care
+    about the structured summary. Returns ``None`` on absence or
+    failure but logs the exception so the regression flagged by the
+    post-perf review (silent JSONDecodeError swallow) cannot recur.
+    """
+    manifest, _summary = load_manifest_or_summary(dataset_dir, dataset_dir.name)
+    return manifest
 
 
 # ─── Shared output writer ─────────────────────────────────────────────

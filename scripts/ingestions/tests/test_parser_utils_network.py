@@ -203,6 +203,7 @@ def test_fetch_from_s3_returns_none_on_connect_error():
 # ─── Pooled-client behaviour (the WHOLE POINT of the migration) ──────────
 
 
+@respx.mock
 def test_http_client_is_a_singleton():
     """Repeated calls to ``_http_client`` return the same client instance.
 
@@ -216,6 +217,7 @@ def test_http_client_is_a_singleton():
     assert c1 is c2 is c3
 
 
+@respx.mock
 def test_reset_http_client_for_testing_actually_rebuilds():
     """``reset_http_client_for_testing`` drops the cached client so the
     next call rebuilds it. Required for respx-based tests."""

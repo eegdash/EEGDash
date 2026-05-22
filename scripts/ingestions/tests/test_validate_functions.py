@@ -301,9 +301,14 @@ def test_validate_digestion_output_accepts_snapshot_fixture():
     """
     snapshot_root = _INGEST_DIR / "tests" / "fixtures" / "digest_snapshots" / "outputs"
     out = validate_digestion_output(snapshot_root)
-    # Snapshot has 2 datasets, 4 records (1 BIDS + 3 manifest)
-    assert out.stats["datasets_checked"] == 2
-    assert out.stats["records_checked"] == 4
+    # Snapshot has 3 datasets, 5 records:
+    #   - ds_snapshot_vhdr           1 record  (BIDS-fs, no montage)
+    #   - ds_snapshot_manifest       3 records (manifest-only)
+    #   - ds_snapshot_eeg_montage    1 record  (BIDS-fs, +1 montage — added
+    #                                          2026-05-22 to engage Layer-2
+    #                                          acceptance montage tests)
+    assert out.stats["datasets_checked"] == 3
+    assert out.stats["records_checked"] == 5
     # No schema errors. (May have warnings for unknown source on
     # ds_snapshot_vhdr; that's fine in non-strict mode.)
     assert out.errors == [], f"snapshot has errors: {out.errors}"

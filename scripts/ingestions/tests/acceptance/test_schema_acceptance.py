@@ -89,10 +89,19 @@ def test_every_dataset_validates_against_DatasetModel(snapshot_outputs):
 # ─── Montages (no Pydantic model — JSON-shape acceptance) ─────────────────
 
 
+# Verified against the producer (_montage.py:_extract_tsv_layout) and
+# the live ds_snapshot_eeg_montage fixture. The doc carries `hash`
+# (content-derived; this is what Record.montage_hash REFERENCES — the
+# `montage_hash` name only appears on the Record side), `n_sensors`,
+# and `sensors` (electrode array). Provenance fields stamped by
+# `_attach_montage_to_record`: `first_seen`, `representative_dataset`.
+# Modality identifier (`eeg` / `meg` / `ieeg` / `fnirs`) lets the
+# consumer pick the right downstream renderer.
 _REQUIRED_MONTAGE_FIELDS: tuple[str, ...] = (
-    "montage_hash",
-    "n_channels",
-    "channels",
+    "hash",
+    "n_sensors",
+    "sensors",
+    "modality",
     "first_seen",
     "representative_dataset",
 )
@@ -101,11 +110,11 @@ _REQUIRED_MONTAGE_FIELDS: tuple[str, ...] = (
 def _skip_if_no_montages(snapshot_outputs: dict[str, Any]) -> None:
     """Skip-guard for the montage tests so vacuous passes are visible.
 
-    Today both snapshot fixtures (`ds_snapshot_vhdr`, `ds_snapshot_manifest`)
-    emit zero montages, so the iteration body of these tests never
-    executes — silent vacuous pass. The skip converts that into a
-    visible SKIPPED in pytest output, surfacing the coverage gap so
-    a future fixture-bearing-montages task can replace it.
+    The ``ds_snapshot_eeg_montage`` fixture produces a 19-electrode
+    10-20 layout montage, so this skip should NOT fire today — kept
+    as a defence so a future fixture cleanup that accidentally
+    removes the electrodes.tsv would surface as SKIPPED rather than
+    silent vacuous pass.
     """
     import pytest
 
@@ -124,9 +133,12 @@ def test_every_montage_has_required_fields(snapshot_outputs):
     """Montages don't yet have a Pydantic model; assert the JSON keys
     we know the API consumer indexes on are present.
 
-    Note: ``_montages.json`` serialises the in-memory ``dict[hash, doc]``
-    as a flat list of docs (see ``record_enumerator.write_dataset_outputs``);
-    the hash key is preserved inside each doc as ``montage_hash``.
+    ``_montages.json`` serialises the in-memory ``dict[hash, doc]`` as
+    a flat list via ``record_enumerator.write_dataset_outputs``. Field
+    names below match the producer in ``_montage.py``: ``hash`` (NOT
+    ``montage_hash`` — that's the REFERENCING field on Records),
+    ``n_sensors``, ``sensors``, ``modality``, plus the provenance
+    stamps from ``_attach_montage_to_record``.
     """
     _skip_if_no_montages(snapshot_outputs)
     failures: list[str] = []
@@ -139,29 +151,60 @@ def test_every_montage_has_required_fields(snapshot_outputs):
     assert not failures, "Montage shape check failed:\n" + "\n".join(failures)
 
 
-def test_every_montage_hash_keys_its_own_doc(snapshot_outputs):
+def test_every_montage_hash_is_present_and_unique(snapshot_outputs):
     """The in-memory montages structure is ``dict[hash, doc]`` (the hash
-    is the key); the JSON serialisation flattens that to a list of docs
-    via ``list(result.montages.values())``. The dict→list-preserving
-    invariant is that every doc carries a non-empty ``montage_hash``
-    and all hashes within a dataset are unique (no key collisions on
-    the original dict)."""
+    is the dict key); the JSON serialisation flattens that to a list of
+    docs via ``list(result.montages.values())``. The dict → list-
+    preserving invariant: every doc carries a non-empty ``hash`` and
+    all hashes within a dataset are unique (no key collisions on the
+    original dict — Python dicts can't have duplicate keys, so a
+    duplicate in the list means the producer is bypassing the dict).
+    """
     _skip_if_no_montages(snapshot_outputs)
     failures: list[str] = []
     for fixture_name, payload in snapshot_outputs.items():
         montages: list[dict[str, Any]] = payload["montages"]["montages"]
         seen: set[str] = set()
         for idx, doc in enumerate(montages):
-            embedded = doc.get("montage_hash")
+            embedded = doc.get("hash")
             if not embedded:
                 failures.append(
-                    f"{fixture_name}.montages[{idx}]: empty montage_hash={embedded!r}"
+                    f"{fixture_name}.montages[{idx}]: empty hash={embedded!r}"
                 )
                 continue
             if embedded in seen:
                 failures.append(
                     f"{fixture_name}.montages[{idx}]: duplicate "
-                    f"montage_hash={embedded!r} — original dict invariant broken"
+                    f"hash={embedded!r} — original dict invariant broken"
                 )
             seen.add(embedded)
-    assert not failures, "Montage hash-key drift:\n" + "\n".join(failures)
+    assert not failures, "Montage hash drift:\n" + "\n".join(failures)
+
+
+def test_every_record_montage_hash_references_an_existing_montage(
+    snapshot_outputs,
+) -> None:
+    """The producer/consumer join: every Record's ``montage_hash`` (when
+    set) must reference an existing ``montages[i].hash`` in the same
+    dataset. A drift in either side breaks the API's montage-detail
+    lookup endpoint.
+
+    Skipped when no montages exist in any fixture — same gate as the
+    other montage acceptance tests.
+    """
+    _skip_if_no_montages(snapshot_outputs)
+    failures: list[str] = []
+    for fixture_name, payload in snapshot_outputs.items():
+        montages: list[dict[str, Any]] = payload["montages"]["montages"]
+        known_hashes = {doc.get("hash") for doc in montages if doc.get("hash")}
+        for idx, record in enumerate(payload["records"]["records"]):
+            ref = record.get("montage_hash")
+            if ref is None:
+                continue  # not every record has a montage (e.g. behavioural)
+            if ref not in known_hashes:
+                failures.append(
+                    f"{fixture_name}[{idx}] ({record.get('bids_relpath', '?')}): "
+                    f"montage_hash={ref!r} not in known hashes "
+                    f"{sorted(known_hashes)}"
+                )
+    assert not failures, "Record→Montage join drift:\n" + "\n".join(failures)

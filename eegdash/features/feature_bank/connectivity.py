@@ -39,6 +39,7 @@ __all__ = [
     "connectivity_corrected_imaginary_phase_locking_value",
     "connectivity_phase_lag_index",
     "connectivity_weighted_phase_lag_index",
+    "connectivity_directed_phase_lag_index",
 ]
 
 
@@ -305,3 +306,22 @@ def connectivity_weighted_phase_lag_index(exp_dphi, /):
 
     """
     return np.abs(exp_dphi.imag.mean(axis=-1)) / np.abs(exp_dphi.imag).mean(axis=-1)
+
+
+@feature_predecessor(connectivity_phase_diff_preprocessor)
+@bivariate_feature
+def connectivity_directed_phase_lag_index(exp_dphi, /):
+    """TODO.
+
+    Parameters
+    ----------
+    exp_dphi : ndarray
+        Complex exponents of phase diffs.
+
+    Returns
+    -------
+    ndarray :
+        The dPLI of each channel pair.
+
+    """
+    return np.mean(exp_dphi.imag > 0, axis=-1)

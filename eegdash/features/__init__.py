@@ -31,6 +31,7 @@ from .feature_bank import (  # Complexity; Connectivity; CSP; Dimensionality; Si
     connectivity_coherency_preprocessor,
     connectivity_corrected_imaginary_phase_locking_value,
     connectivity_correlation,
+    connectivity_directed_phase_lag_index,
     connectivity_imaginary_coherence,
     connectivity_lagged_coherence,
     connectivity_magnitude_square_coherence,
@@ -158,6 +159,7 @@ __all__ = [
     "connectivity_corrected_imaginary_phase_locking_value",
     "connectivity_phase_lag_index",
     "connectivity_weighted_phase_lag_index",
+    "connectivity_directed_phase_lag_index",
     # CSP
     "CommonSpatialPattern",
     # Dimensionality

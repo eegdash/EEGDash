@@ -1,0 +1,16 @@
+# Profile artifacts — large binaries / logs that don't belong in git.
+# The deliverable is E2E-FULL-SCALE-PROFILE.md, which summarises and
+# cross-references everything else.
+#
+# Recreate via the reproducibility section at the bottom of the .md.
+
+*.log
+*.pstats
+*.dot
+*.svg
+stage1/
+stage2/
+stage3/
+stage3-sample/
+stage4/
+nemar-fetch.log

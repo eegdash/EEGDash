@@ -98,6 +98,28 @@ _REQUIRED_MONTAGE_FIELDS: tuple[str, ...] = (
 )
 
 
+def _skip_if_no_montages(snapshot_outputs: dict[str, Any]) -> None:
+    """Skip-guard for the montage tests so vacuous passes are visible.
+
+    Today both snapshot fixtures (`ds_snapshot_vhdr`, `ds_snapshot_manifest`)
+    emit zero montages, so the iteration body of these tests never
+    executes — silent vacuous pass. The skip converts that into a
+    visible SKIPPED in pytest output, surfacing the coverage gap so
+    a future fixture-bearing-montages task can replace it.
+    """
+    import pytest
+
+    total = sum(
+        len(payload["montages"]["montages"]) for payload in snapshot_outputs.values()
+    )
+    if total == 0:
+        pytest.skip(
+            "All snapshot fixtures emit zero montages — montage acceptance "
+            "is not exercised. Add a fixture with a non-empty montage set "
+            "(e.g. a real EEG dataset with electrodes.tsv) to re-engage."
+        )
+
+
 def test_every_montage_has_required_fields(snapshot_outputs):
     """Montages don't yet have a Pydantic model; assert the JSON keys
     we know the API consumer indexes on are present.
@@ -106,6 +128,7 @@ def test_every_montage_has_required_fields(snapshot_outputs):
     as a flat list of docs (see ``record_enumerator.write_dataset_outputs``);
     the hash key is preserved inside each doc as ``montage_hash``.
     """
+    _skip_if_no_montages(snapshot_outputs)
     failures: list[str] = []
     for fixture_name, payload in snapshot_outputs.items():
         montages: list[dict[str, Any]] = payload["montages"]["montages"]
@@ -123,6 +146,7 @@ def test_every_montage_hash_keys_its_own_doc(snapshot_outputs):
     invariant is that every doc carries a non-empty ``montage_hash``
     and all hashes within a dataset are unique (no key collisions on
     the original dict)."""
+    _skip_if_no_montages(snapshot_outputs)
     failures: list[str] = []
     for fixture_name, payload in snapshot_outputs.items():
         montages: list[dict[str, Any]] = payload["montages"]["montages"]

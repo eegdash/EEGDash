@@ -1,10 +1,10 @@
 """Snapshot test for ``digest_dataset`` — byte-level output stability.
 
-Phase 8 Stage-3 safety net. Stage 3 will extract the bodies of
-``digest_dataset`` and ``digest_from_manifest`` into private helpers
-that return :class:`EnumerationResult` instead of writing JSON. The
-LOC canary catches function-existence drift but **not** byte-level
-output drift. This test catches that.
+Phase 8 Stage-3 safety net. Stage 3 extracted the bodies of
+``digest_dataset`` (and the now-removed ``digest_from_manifest``)
+into private helpers that return :class:`EnumerationResult` instead
+of writing JSON. The LOC canary catches function-existence drift but
+**not** byte-level output drift. This test catches that.
 
 How it works
 ------------
@@ -120,15 +120,21 @@ def fresh_digest_output(tmp_path_factory) -> Path:
 
 @pytest.fixture(scope="module")
 def fresh_manifest_digest_output(tmp_path_factory) -> Path:
-    """Run ``digest_from_manifest`` against the manifest-only snapshot fixture.
+    """Run ``digest_dataset`` against the manifest-only snapshot fixture.
 
     Covers the manifest path (Zenodo / Figshare / OSF / SciDB / DataRN
     via _enumerate_via_manifest). Module-scoped so the digest runs
     ONCE per test session.
+
+    Phase 8 Stage 3D: the legacy ``digest_from_manifest`` entry was
+    deleted in favour of routing via the unified ``digest_dataset``
+    orchestrator. The fixture has no actual recording files on disk,
+    so ``get_record_enumerator`` picks ManifestEnumerator directly
+    (the same path the legacy wrapper followed).
     """
     digest_mod = _load_digest_module()
     tmp_output = tmp_path_factory.mktemp("manifest_snapshot_run")
-    summary = digest_mod.digest_from_manifest(
+    summary = digest_mod.digest_dataset(
         "ds_snapshot_manifest",
         INPUTS_DIR,
         tmp_output,

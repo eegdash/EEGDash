@@ -5,27 +5,31 @@ import html
 import json
 import math
 from collections import Counter
-from functools import partial
 from pathlib import Path
 from typing import Any
 
 import pandas as pd
+import plotly.graph_objects as go
 
 try:  # Allow execution as a script or module
-    from .colours import RECORDING_MODALITY_COLORS
+    from .colours import CANONICAL_MAP, RECORDING_MODALITY_COLORS
     from .utils import (
-        RECORDING_MODALITY_MAP,
         build_and_export_html,
         get_dataset_url,
+        human_readable_size,
+        primary_modality,
+        primary_recording_modality,
         read_dataset_csv,
         safe_int,
     )
 except ImportError:  # pragma: no cover - fallback for direct script execution
-    from colours import RECORDING_MODALITY_COLORS  # type: ignore
+    from colours import CANONICAL_MAP, RECORDING_MODALITY_COLORS  # type: ignore
     from utils import (  # type: ignore
-        RECORDING_MODALITY_MAP,
         build_and_export_html,
         get_dataset_url,
+        human_readable_size,
+        primary_modality,
+        primary_recording_modality,
         read_dataset_csv,
         safe_int,
     )
@@ -104,17 +108,13 @@ def _first_nonempty(*values: Any) -> Any:
     return ""
 
 
-def _normalize_recording(value: str) -> str:
-    lowered = value.strip().lower()
-    canonical = RECORDING_MODALITY_MAP.get(lowered)
-    if canonical:
-        return canonical
-    return value.strip().upper() if len(value) <= 4 else value
-
-
-def _normalize_label(value: str) -> str:
+def _normalize_label(value: str, column_key: str | None = None) -> str:
     cleaned = " ".join(value.replace("_", " ").split())
     lowered = cleaned.lower()
+    if column_key:
+        canonical = CANONICAL_MAP.get(column_key, {})
+        if lowered in canonical:
+            return canonical[lowered]
     aliases = {
         "rest": "Resting State",
         "resting state": "Resting State",
@@ -216,7 +216,7 @@ def _record_from_row(row: pd.Series) -> dict[str, Any] | None:
         row.get("recording_modality"),
         row.get("datatypes"),
     )
-    recording = [_normalize_recording(v) for v in _split_values(recording_raw)]
+    recording = [primary_recording_modality(v) for v in _split_values(recording_raw)]
     if not recording:
         recording = ["Unknown"]
 
@@ -226,14 +226,14 @@ def _record_from_row(row: pd.Series) -> dict[str, Any] | None:
         row.get("experimental_modalities"),
         paradigm.get("modality"),
     )
-    modality = [_normalize_label(v) for v in _split_values(modality_raw)]
+    modality = [primary_modality(v) for v in _split_values(modality_raw)]
 
     type_raw = _first_nonempty(
         row.get("type of exp"),
         tags.get("type"),
         paradigm.get("cognitive_domain"),
     )
-    exp_type = [_normalize_label(v) for v in _split_values(type_raw)]
+    exp_type = [_normalize_label(v, "type of exp") for v in _split_values(type_raw)]
 
     pathology_raw = _first_nonempty(row.get("Type Subject"), tags.get("pathology"))
     if not _split_values(pathology_raw):
@@ -242,7 +242,9 @@ def _record_from_row(row: pd.Series) -> dict[str, Any] | None:
             pathology_raw = clinical.get("purpose") or "Clinical"
         elif is_clinical is False:
             pathology_raw = "Healthy"
-    pathology = [_normalize_label(v) for v in _split_values(pathology_raw)]
+    pathology = [
+        _normalize_label(v, "Type Subject") for v in _split_values(pathology_raw)
+    ]
 
     source = _clean_text(row.get("source")) or "unknown"
     license_text = _clean_text(row.get("license"))
@@ -340,141 +342,152 @@ def _selected_columns(counts: dict[str, Counter]) -> dict[str, list[str]]:
     return selected
 
 
-def _log_ticks(min_value: float, max_value: float) -> list[float]:
-    if min_value <= 0 or max_value <= 0:
-        return []
-    start = math.floor(math.log10(min_value))
-    stop = math.ceil(math.log10(max_value))
-    ticks: list[float] = []
-    for power in range(start, stop + 1):
-        for mantissa in (1, 2, 5):
-            value = mantissa * 10**power
-            if min_value <= value <= max_value:
-                ticks.append(value)
-    return ticks
-
-
-def _axis_label(value: float) -> str:
-    if value >= 1000:
-        return f"{value / 1000:g}K"
-    if value >= 1:
-        return f"{value:g}"
-    return f"{value:.2g}"
-
-
-def _log_axis_forward(
-    value: float, *, log_min: float, log_max: float, base: float, span: float
-) -> float:
-    return base + (math.log10(value) - log_min) / (log_max - log_min) * span
-
-
-def _log_axis_inverse(
-    value: float, *, log_min: float, log_max: float, base: float, span: float
-) -> float:
-    return base + (log_max - math.log10(value)) / (log_max - log_min) * span
-
-
-def _scatter_svg(records: list[dict[str, Any]]) -> str:
+def _build_volume_figure(
+    records: list[dict[str, Any]], *, height: int = 720
+) -> go.Figure:
     points = [
         record
         for record in records
-        if record["hours_per_subject"] is not None and record["subjects"] > 0
+        if record["hours_per_subject"] is not None
+        and record["hours_per_subject"] > 0
+        and record["subjects"] > 0
     ]
+    fig = go.Figure()
+
     if not points:
-        return (
-            '<div class="api-empty" role="status">'
-            "No duration metadata is available for the current API payload."
-            "</div>"
+        fig.add_annotation(
+            text="No duration metadata is available for the current API payload.",
+            x=0.5,
+            y=0.5,
+            xref="paper",
+            yref="paper",
+            showarrow=False,
+            font=dict(size=15, color="#64748b"),
         )
+        fig.update_layout(
+            height=height,
+            template="plotly_white",
+            xaxis=dict(visible=False),
+            yaxis=dict(visible=False),
+        )
+        return fig
 
-    width, height = 1460, 760
-    left, right, top, bottom = 92, 38, 42, 82
-    plot_w = width - left - right
-    plot_h = height - top - bottom
-
-    x_values = [p["hours_per_subject"] for p in points if p["hours_per_subject"]]
-    y_values = [p["subjects"] for p in points if p["subjects"] > 0]
-    x_min = max(min(x_values) * 0.75, 0.01)
-    x_max = max(x_values) * 1.35
-    y_min = max(min(y_values) * 0.75, 1)
-    y_max = max(y_values) * 1.35
-    log_x_min, log_x_max = math.log10(x_min), math.log10(x_max)
-    log_y_min, log_y_max = math.log10(y_min), math.log10(y_max)
-
-    x_pos = partial(
-        _log_axis_forward,
-        log_min=log_x_min,
-        log_max=log_x_max,
-        base=left,
-        span=plot_w,
+    recording_counts = Counter(
+        record["facets"]["recording"][0]
+        for record in points
+        if record["facets"]["recording"]
     )
-    y_pos = partial(
-        _log_axis_inverse,
-        log_min=log_y_min,
-        log_max=log_y_max,
-        base=top,
-        span=plot_h,
-    )
+    size_values = [max(math.log1p(record["hours"] or 0), 0.5) for record in points]
+    sizeref = (2.0 * max(size_values)) / (36.0**2)
 
-    max_hours = max((p["hours"] or 0) for p in points) or 1
-    lines: list[str] = [
-        (
-            f'<svg viewBox="0 0 {width} {height}" role="img" '
-            'aria-label="Dataset volume scatterplot">'
-        ),
-        f'<rect x="0" y="0" width="{width}" height="{height}" class="api-svg-bg"/>',
-    ]
-    for tick in _log_ticks(x_min, x_max):
-        x = x_pos(tick)
-        lines.append(
-            f'<line class="api-grid" x1="{x:.1f}" y1="{top}" '
-            f'x2="{x:.1f}" y2="{height - bottom}"/>'
-        )
-        lines.append(
-            f'<text class="api-axis-tick" x="{x:.1f}" y="{height - 42}" '
-            f'text-anchor="middle">{html.escape(_axis_label(tick))}</text>'
-        )
-    for tick in _log_ticks(y_min, y_max):
-        y = y_pos(tick)
-        lines.append(
-            f'<line class="api-grid" x1="{left}" y1="{y:.1f}" '
-            f'x2="{width - right}" y2="{y:.1f}"/>'
-        )
-        lines.append(
-            f'<text class="api-axis-tick" x="{left - 16}" y="{y + 4:.1f}" '
-            f'text-anchor="end">{html.escape(_axis_label(tick))}</text>'
-        )
-
-    lines.extend(
-        [
-            f'<line class="api-axis" x1="{left}" y1="{height - bottom}" '
-            f'x2="{width - right}" y2="{height - bottom}"/>',
-            f'<line class="api-axis" x1="{left}" y1="{top}" x2="{left}" '
-            f'y2="{height - bottom}"/>',
-            f'<text class="api-axis-label" x="{width / 2:.1f}" y="{height - 12}" '
-            'text-anchor="middle">Known recording hours per subject</text>',
-            (
-                f'<text class="api-axis-label" transform="translate(24 '
-                f'{height / 2:.1f}) rotate(-90)" text-anchor="middle">Subjects</text>'
-            ),
+    for recording in _order_recording(recording_counts):
+        group = [
+            record
+            for record in points
+            if record["facets"]["recording"]
+            and record["facets"]["recording"][0] == recording
         ]
-    )
-
-    for record in points:
-        hours = record["hours"] or 0
-        radius = 4 + 15 * math.log1p(hours) / math.log1p(max_hours)
-        recording = record["facets"]["recording"][0]
-        color = RECORDING_MODALITY_COLORS.get(recording, "#64748b")
-        attrs = _data_attrs(record)
-        lines.append(
-            f'<circle class="api-study-point rec-{_slug(recording)}" '
-            f'cx="{x_pos(record["hours_per_subject"]):.1f}" '
-            f'cy="{y_pos(record["subjects"]):.1f}" r="{radius:.1f}" '
-            f'fill="{html.escape(color)}" {attrs} tabindex="0"/>'
+        if not group:
+            continue
+        marker_sizes = [max(math.log1p(record["hours"] or 0), 0.5) for record in group]
+        customdata = [
+            [
+                record["id"],
+                record["title"],
+                recording,
+                record["records"],
+                _format_hours(record["hours"]),
+                _format_number(record["hours_per_subject"]),
+                record["source"],
+                record["url"],
+                human_readable_size(record["size_bytes"]),
+                ", ".join(record["aliases"]),
+            ]
+            for record in group
+        ]
+        fig.add_trace(
+            go.Scatter(
+                x=[record["hours_per_subject"] for record in group],
+                y=[record["subjects"] for record in group],
+                mode="markers",
+                name=recording,
+                marker=dict(
+                    color=RECORDING_MODALITY_COLORS.get(recording, "#64748b"),
+                    line=dict(width=1, color="rgba(255,255,255,0.82)"),
+                    opacity=0.72,
+                    size=marker_sizes,
+                    sizemode="area",
+                    sizeref=sizeref,
+                    sizemin=7,
+                ),
+                customdata=customdata,
+                hovertemplate=(
+                    "<b>%{customdata[0]}</b><br>"
+                    "%{customdata[1]}<br>"
+                    "Recording: %{customdata[2]}<br>"
+                    "Subjects: %{y:,}<br>"
+                    "Records: %{customdata[3]:,}<br>"
+                    "Known hours: %{customdata[4]}<br>"
+                    "Hours / subject: %{customdata[5]}<br>"
+                    "Source: %{customdata[6]}<br>"
+                    "Size: %{customdata[8]}<br>"
+                    "<i>Click point to open dataset page</i>"
+                    "<extra></extra>"
+                ),
+            )
         )
 
-    lines.append("</svg>")
-    return "\n".join(lines)
+    fig.update_xaxes(
+        title_text="Hours per subject",
+        type="log",
+        tickvals=[0.001, 0.01, 0.1, 1, 10, 100],
+        ticktext=["0.001", "0.01", "0.1", "1", "10", "100"],
+        automargin=True,
+        showgrid=True,
+        gridcolor="rgba(15, 23, 42, 0.08)",
+        zeroline=False,
+    )
+    fig.update_yaxes(
+        title_text="Subjects",
+        type="log",
+        tickvals=[1, 10, 100, 1000],
+        ticktext=["1", "10", "100", "1000"],
+        automargin=True,
+        showgrid=True,
+        gridcolor="rgba(15, 23, 42, 0.08)",
+        zeroline=False,
+    )
+    fig.update_layout(
+        height=height,
+        autosize=True,
+        template="plotly_white",
+        margin=dict(l=64, r=28, t=32, b=62),
+        legend=dict(
+            title=None,
+            orientation="v",
+            yanchor="top",
+            y=0.99,
+            xanchor="left",
+            x=0.01,
+            itemclick="toggle",
+            itemdoubleclick="toggleothers",
+            bgcolor="rgba(255,255,255,0.88)",
+            bordercolor="rgba(15, 23, 42, 0.08)",
+            borderwidth=1,
+            font=dict(size=12),
+        ),
+        font=dict(
+            family="Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif",
+            size=14,
+            color="#0f172a",
+        ),
+        hoverlabel=dict(
+            bgcolor="#ffffff",
+            bordercolor="rgba(15, 23, 42, 0.2)",
+            font=dict(size=12),
+        ),
+    )
+    return fig
 
 
 def _data_attrs(record: dict[str, Any]) -> str:
@@ -515,23 +528,6 @@ def _option_html(counts: dict[str, Counter]) -> str:
             )
         chunks.append("</optgroup>")
     return "\n".join(chunks)
-
-
-def _legend_html(counts: dict[str, Counter]) -> str:
-    recording_counts = counts.get("recording", Counter())
-    parts = []
-    for label in _order_recording(recording_counts):
-        color = RECORDING_MODALITY_COLORS.get(label, "#64748b")
-        token = f"recording{_FACET_SEPARATOR}{label}"
-        parts.append(
-            '<button class="api-legend-chip" type="button" '
-            f'data-filter-token="{html.escape(token, quote=True)}">'
-            f'<i style="background:{html.escape(color)}"></i>'
-            f"<span>{html.escape(label)}</span>"
-            f"<b>{recording_counts[label]:,}</b>"
-            "</button>"
-        )
-    return "\n".join(parts)
 
 
 def _matrix_html(records: list[dict[str, Any]], selected: dict[str, list[str]]) -> str:
@@ -608,13 +604,13 @@ def _build_html(
     database: str,
     view: str,
     root_id: str,
+    volume_html: str = "",
 ) -> str:
     total_subjects = sum(record["subjects"] for record in records)
     total_records = sum(record["records"] for record in records)
     known_hours = sum(record["hours"] or 0 for record in records)
     duration_count = sum(1 for record in records if record["hours_per_subject"])
     source_count = len({record["source"] for record in records})
-    fields = "dataset_id, demographics, recording_modality, tags, tasks, total_files, total_duration_s"
     counts = _facet_counts(records)
     selected = _selected_columns(counts)
 
@@ -625,10 +621,9 @@ def _build_html(
   <section class="api-panel">
     <header>
       <h4>Dataset Volume From API Metadata</h4>
-      <p>Scatter points use API summary fields only: {html.escape(fields)}.</p>
+      <p>Scatter points use API summary fields only; use the Plotly legend to toggle recording modalities.</p>
     </header>
-    <div class="api-legend" aria-label="Recording modality legend">{_legend_html(counts)}</div>
-    <div class="api-scatter-wrap">{_scatter_svg(records)}</div>
+    <div class="api-plot-wrap">{volume_html}</div>
   </section>"""
         )
     if view in {"matrix", "both"}:
@@ -645,7 +640,6 @@ def _build_html(
 
     return f"""
 <div id="{html.escape(root_id, quote=True)}" class="eegdash-api-volume-explorer">
-  <div class="api-study-tooltip" hidden></div>
   <div class="api-contract-rail">
     <span>API source</span>
     <code>{html.escape(api_url.rstrip("/"))}/{html.escape(database)}/datasets/chart-data</code>
@@ -674,6 +668,117 @@ def _build_html(
 {"".join(panels)}
 </div>
 """
+
+
+_VOLUME_STYLE = """
+.eegdash-api-volume-meta {
+  align-items: center;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+  color: #64748b;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  font-family: Inter, system-ui, -apple-system, Segoe UI, sans-serif;
+  font-size: 12px;
+  margin: 0 0 12px;
+  padding: 0 0 10px;
+}
+.eegdash-api-volume-meta code {
+  color: #2563eb;
+  font-size: 12px;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+html[data-theme="dark"] .eegdash-api-volume-meta {
+  border-color: rgba(148, 163, 184, 0.18);
+  color: #94a3b8;
+}
+html[data-theme="dark"] .eegdash-api-volume-meta code {
+  color: #93c5fd;
+}
+"""
+
+
+def _volume_pre_html(
+    records: list[dict[str, Any]],
+    *,
+    api_url: str,
+    database: str,
+) -> str:
+    duration_count = sum(1 for record in records if record["hours_per_subject"])
+    return (
+        '<div class="eegdash-api-volume-meta">'
+        "<span>API source</span>"
+        f"<code>{html.escape(api_url.rstrip('/'))}/"
+        f"{html.escape(database)}/datasets/chart-data</code>"
+        f"<span>{len(records):,} datasets</span>"
+        f"<span>{duration_count:,} with duration metadata</span>"
+        "</div>"
+    )
+
+
+def _plotly_click_script(div_id: str) -> str:
+    return f"""
+<script>
+document.addEventListener('DOMContentLoaded', function() {{
+  const plot = document.getElementById({json.dumps(div_id)});
+  function resizeSoon() {{
+    [0, 60, 250].forEach(function(delay) {{
+      window.setTimeout(function() {{
+        if (plot && plot.offsetWidth > 0 && typeof Plotly !== 'undefined') {{
+          Plotly.Plots.resize(plot);
+        }}
+      }}, delay);
+    }});
+  }}
+  function hook(attempts) {{
+    if (!plot || typeof plot.on !== 'function') {{
+      if (attempts < 40) {{
+        window.setTimeout(function() {{ hook(attempts + 1); }}, 60);
+      }}
+      return;
+    }}
+    plot.on('plotly_click', function(evt) {{
+      const point = evt && evt.points && evt.points[0];
+      const url = point && point.customdata && point.customdata[7];
+      if (url) {{
+        window.open(url, '_blank', 'noopener');
+      }}
+    }});
+    resizeSoon();
+  }}
+  document.querySelectorAll('.sd-tab-set label, .sd-tab-set input').forEach(function(el) {{
+    el.addEventListener('click', resizeSoon);
+    el.addEventListener('change', resizeSoon);
+  }});
+  window.addEventListener('resize', resizeSoon);
+  if (typeof IntersectionObserver !== 'undefined' && plot) {{
+    new IntersectionObserver(function(entries) {{
+      if (entries[0] && entries[0].isIntersecting) {{
+        resizeSoon();
+      }}
+    }}).observe(plot);
+  }}
+  hook(0);
+  resizeSoon();
+}});
+</script>
+"""
+
+
+def _plotly_config(filename: str) -> dict[str, Any]:
+    return {
+        "responsive": True,
+        "displaylogo": False,
+        "modeBarButtonsToRemove": ["lasso2d", "select2d"],
+        "toImageButtonOptions": {
+            "format": "png",
+            "filename": filename,
+            "height": 720,
+            "width": 1260,
+            "scale": 2,
+        },
+    }
 
 
 _STYLE = """
@@ -812,71 +917,13 @@ html[data-theme="dark"] .eegdash-api-volume-explorer {
   font-size: 13px;
   margin: 0;
 }
-.eegdash-api-volume-explorer .api-legend {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  padding: 12px 0;
-}
-.eegdash-api-volume-explorer .api-legend-chip {
-  align-items: center;
-  display: inline-flex;
-  gap: 7px;
-  min-height: 30px;
-}
-.eegdash-api-volume-explorer .api-legend-chip i {
-  border: 1px solid rgba(15, 23, 42, 0.28);
-  border-radius: 999px;
-  display: inline-block;
-  height: 11px;
-  width: 11px;
-}
-.eegdash-api-volume-explorer .api-legend-chip b {
-  color: var(--api-muted);
-  font-size: 11px;
-  font-weight: 600;
-}
-.eegdash-api-volume-explorer .api-scatter-wrap,
+.eegdash-api-volume-explorer .api-plot-wrap,
 .eegdash-api-volume-explorer .api-table-wrap {
   border: 1px solid var(--api-rule);
   overflow: auto;
 }
-.eegdash-api-volume-explorer svg {
-  display: block;
-  min-width: 980px;
-  width: 100%;
-}
-.eegdash-api-volume-explorer .api-svg-bg {
-  fill: var(--api-paper);
-}
-.eegdash-api-volume-explorer .api-grid {
-  stroke: var(--api-rule);
-  stroke-width: 1;
-}
-.eegdash-api-volume-explorer .api-axis {
-  stroke: var(--api-ink);
-  stroke-width: 1.4;
-}
-.eegdash-api-volume-explorer .api-axis-label {
-  fill: var(--api-ink);
-  font-size: 15px;
-  font-weight: 700;
-}
-.eegdash-api-volume-explorer .api-axis-tick {
-  fill: var(--api-muted);
-  font-size: 12px;
-}
-.eegdash-api-volume-explorer .api-study-point {
-  cursor: pointer;
-  opacity: 0.72;
-  stroke: rgba(255, 255, 255, 0.82);
-  stroke-width: 1.1;
-}
-.eegdash-api-volume-explorer .api-study-point:hover,
-.eegdash-api-volume-explorer .api-study-point:focus {
-  opacity: 1;
-  stroke: var(--api-ink);
-  stroke-width: 1.5;
+.eegdash-api-volume-explorer .api-plot-wrap {
+  margin-top: 12px;
 }
 .eegdash-api-volume-explorer .api-matrix-table {
   border-collapse: separate;
@@ -948,29 +995,6 @@ html[data-theme="dark"] .eegdash-api-volume-explorer .api-facet-col.active butto
 .eegdash-api-volume-explorer [hidden] {
   display: none !important;
 }
-.eegdash-api-volume-explorer .api-study-tooltip {
-  background: #111827;
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  border-radius: 7px;
-  color: #fff;
-  font-size: 13px;
-  line-height: 1.4;
-  max-width: 420px;
-  padding: 10px 12px;
-  pointer-events: auto;
-  position: fixed;
-  z-index: 1000;
-}
-.eegdash-api-volume-explorer .api-study-tooltip .tt-title {
-  font-size: 15px;
-  font-weight: 800;
-  margin-bottom: 5px;
-}
-.eegdash-api-volume-explorer .api-study-tooltip a {
-  color: #93c5fd;
-  display: inline-block;
-  margin-top: 7px;
-}
 @media (max-width: 760px) {
   .eegdash-api-volume-explorer .api-summary {
     grid-template-columns: repeat(2, minmax(120px, 1fr));
@@ -997,17 +1021,14 @@ _SCRIPT = """
   const textFilter = root.querySelector(".api-text-filter");
   const clearButton = root.querySelector(".api-clear-filters");
   const status = root.querySelector(".api-filter-status");
-  const tooltip = root.querySelector(".api-study-tooltip");
   const studyRows = root.querySelectorAll(".api-study-row");
-  const studyPoints = root.querySelectorAll(".api-study-point");
-  const summaryItems = studyRows.length ? studyRows : studyPoints;
-  const filterables = [...studyRows, ...studyPoints];
+  const summaryItems = studyRows;
+  const filterables = [...studyRows];
   const summaryDatasets = root.querySelector(".api-summary-datasets");
   const summarySubjects = root.querySelector(".api-summary-subjects");
   const summaryRecords = root.querySelector(".api-summary-records");
   const summaryHours = root.querySelector(".api-summary-hours");
   const active = new Set();
-  let tooltipTimer = null;
 
   function hasFacet(el, token) {
     return (el.dataset.facets || "").split("|").includes(token);
@@ -1076,60 +1097,6 @@ _SCRIPT = """
     updateSummary();
   }
 
-  function moveTooltip(event) {
-    if (!tooltip || tooltip.hasAttribute("hidden")) return;
-    if (typeof event.clientX !== "number" || typeof event.clientY !== "number") {
-      tooltip.style.left = "18px";
-      tooltip.style.top = "18px";
-      return;
-    }
-    const margin = 14;
-    const rect = tooltip.getBoundingClientRect();
-    let left = event.clientX + margin;
-    let top = event.clientY + margin;
-    if (left + rect.width > window.innerWidth) left = event.clientX - rect.width - margin;
-    if (top + rect.height > window.innerHeight) top = event.clientY - rect.height - margin;
-    tooltip.style.left = `${Math.max(margin, left)}px`;
-    tooltip.style.top = `${Math.max(margin, top)}px`;
-  }
-
-  function showTooltip(event) {
-    if (!tooltip) return;
-    const el = event.currentTarget;
-    clearTimeout(tooltipTimer);
-    tooltip.innerHTML = "";
-    const title = document.createElement("div");
-    title.className = "tt-title";
-    title.textContent = el.dataset.name || "";
-    tooltip.appendChild(title);
-    const desc = document.createElement("div");
-    desc.textContent = el.dataset.description || "No description available.";
-    tooltip.appendChild(desc);
-    if (el.dataset.aliases) {
-      const aliases = document.createElement("div");
-      aliases.textContent = `Aliases: ${el.dataset.aliases}`;
-      tooltip.appendChild(aliases);
-    }
-    const stats = document.createElement("div");
-    const hours = el.dataset.hours ? Number(el.dataset.hours).toLocaleString(undefined, { maximumFractionDigits: 1 }) : "not reported";
-    stats.textContent = `${Number(el.dataset.subjects || 0).toLocaleString()} subjects | ${Number(el.dataset.records || 0).toLocaleString()} records | ${hours} h`;
-    tooltip.appendChild(stats);
-    if (el.dataset.url) {
-      const link = document.createElement("a");
-      link.href = el.dataset.url;
-      link.textContent = "Open dataset page";
-      tooltip.appendChild(link);
-    }
-    tooltip.removeAttribute("hidden");
-    moveTooltip(event);
-  }
-
-  function hideTooltip() {
-    tooltipTimer = setTimeout(() => {
-      if (tooltip) tooltip.setAttribute("hidden", "");
-    }, 120);
-  }
-
   root.querySelectorAll("[data-filter-token]").forEach((el) => {
     el.addEventListener("click", () => {
       const token = el.dataset.filterToken || "";
@@ -1157,23 +1124,6 @@ _SCRIPT = """
       if (textFilter) textFilter.value = "";
       applyFilters();
     });
-  }
-
-  root.querySelectorAll("[data-description]").forEach((el) => {
-    el.addEventListener("mouseenter", showTooltip);
-    el.addEventListener("mousemove", moveTooltip);
-    el.addEventListener("mouseleave", hideTooltip);
-    el.addEventListener("focus", showTooltip);
-    el.addEventListener("blur", hideTooltip);
-  });
-  root.querySelectorAll(".api-study-point").forEach((el) => {
-    el.addEventListener("click", () => {
-      if (el.dataset.url) window.open(el.dataset.url, "_self");
-    });
-  });
-  if (tooltip) {
-    tooltip.addEventListener("mouseenter", () => clearTimeout(tooltipTimer));
-    tooltip.addEventListener("mouseleave", hideTooltip);
   }
   applyFilters();
   }
@@ -1205,6 +1155,20 @@ def generate_api_study_explorer(
         "matrix": "eegdash-api-coverage-matrix",
         "both": "eegdash-api-volume-explorer",
     }[view]
+    config = _plotly_config("api_dataset_volume")
+
+    if view == "volume":
+        fig = _build_volume_figure(records)
+        return build_and_export_html(
+            fig,
+            out_path=out_path,
+            div_id=root_id,
+            height=720,
+            extra_style=_VOLUME_STYLE,
+            pre_html=_volume_pre_html(records, api_url=api_url, database=database),
+            extra_html=_plotly_click_script(root_id),
+            config=config,
+        )
 
     if not records:
         html_content = (
@@ -1212,22 +1176,38 @@ def generate_api_study_explorer(
             '<div class="api-empty">No API dataset records available.</div>'
             "</div>"
         )
+        fig = None
+        extra_html = _SCRIPT
     else:
+        fig = None
+        volume_html = ""
+        extra_html = _SCRIPT
+        if view == "both":
+            fig = _build_volume_figure(records)
+            volume_div_id = f"{root_id}-plot"
+            volume_html = fig.to_html(
+                full_html=False,
+                include_plotlyjs=False,
+                config=config,
+                div_id=volume_div_id,
+            )
+            extra_html = _plotly_click_script(volume_div_id) + _SCRIPT
         html_content = _build_html(
             records,
             api_url=api_url,
             database=database,
             view=view,
             root_id=root_id,
+            volume_html=volume_html,
         )
 
     return build_and_export_html(
-        fig=None,
+        fig=fig,
         out_path=out_path,
         div_id=root_id,
         height=900,
         extra_style=_STYLE,
-        extra_html=_SCRIPT,
+        extra_html=extra_html,
         include_default_style=False,
         html_content=html_content,
     )

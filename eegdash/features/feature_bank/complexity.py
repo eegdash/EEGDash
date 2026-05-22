@@ -30,37 +30,6 @@ __all__ = [
 ]
 
 
-@nb.njit(cache=True, fastmath=True)
-def _create_embedding(x, dim, lag):
-    r"""Create a delay-coordinate embedding of the signal.
-
-    Parameters
-    ----------
-    x : ndarray
-        1D signal array.
-    dim : int
-        Embedding dimension.
-    lag : int
-        Time lag.
-
-    Returns
-    -------
-    ndarray
-        Embedded signal of shape ((x.shape[-1] - dim + 1) // lag, dim).
-
-    Notes
-    -----
-    Optimized with Numba.
-
-    """
-    n_epochs = (x.shape[-1] - dim + 1) // lag
-    y = np.empty((n_epochs, dim))
-    for i in range(n_epochs):
-        curr = i * lag
-        y[i] = x[curr : curr + dim]
-    return y
-
-
 def _channel_app_samp_entropy_counts(x, m, r, l):
     r"""Helper to compute neighbor counts for a single channel using KDTree.
 
@@ -81,7 +50,7 @@ def _channel_app_samp_entropy_counts(x, m, r, l):
         Neighbor counts for the given embedding dimension.
 
     """
-    x_emb = _create_embedding(x, m, l)
+    x_emb = np.lib.stride_tricks.sliding_window_view(x, window_shape=m, axis=-1)[::l]
     kdtree = KDTree(x_emb, metric="chebyshev")
     return kdtree.query_radius(x_emb, r, count_only=True)
 
@@ -241,9 +210,7 @@ def complexity_svd_entropy(x, /, m=10, tau=1):
         SVD Entropy values. Shape is ``x.shape[:-1]``.
 
     """
-    x_emb = np.empty((*x.shape[:-1], (x.shape[-1] - m + 1) // tau, m))
-    for i in np.ndindex(x.shape[:-1]):
-        x_emb[i + (slice(None), slice(None))] = _create_embedding(x[i], m, tau)
+    x_emb = np.lib.stride_tricks.sliding_window_view(x, window_shape=m, axis=-1)[::tau]
     s = np.linalg.svd(x_emb, compute_uv=False)
     s /= s.sum(axis=-1, keepdims=True)
     return -np.sum(s * np.log(s), axis=-1)

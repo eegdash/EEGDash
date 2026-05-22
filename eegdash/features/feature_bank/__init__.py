@@ -15,9 +15,18 @@ from .complexity import (
 )
 from .connectivity import (
     connectivity_coherency_preprocessor,
+    connectivity_corrected_imaginary_phase_locking_value,
+    connectivity_directed_phase_lag_index,
     connectivity_imaginary_coherence,
     connectivity_lagged_coherence,
     connectivity_magnitude_square_coherence,
+    connectivity_max_cross_correlation,
+    connectivity_phase_diff_preprocessor,
+    connectivity_phase_lag_index,
+    connectivity_phase_locking_value,
+    connectivity_spectral_correlation,
+    connectivity_temporal_correlation,
+    connectivity_weighted_phase_lag_index,
 )
 from .csp import CommonSpatialPattern
 from .dimensionality import (
@@ -76,9 +85,18 @@ __all__ = [
     "complexity_lempel_ziv",
     # Connectivity
     "connectivity_coherency_preprocessor",
+    "connectivity_phase_diff_preprocessor",
+    "connectivity_temporal_correlation",
+    "connectivity_spectral_correlation",
+    "connectivity_max_cross_correlation",
     "connectivity_magnitude_square_coherence",
     "connectivity_imaginary_coherence",
     "connectivity_lagged_coherence",
+    "connectivity_phase_locking_value",
+    "connectivity_corrected_imaginary_phase_locking_value",
+    "connectivity_phase_lag_index",
+    "connectivity_weighted_phase_lag_index",
+    "connectivity_directed_phase_lag_index",
     # CSP
     "CommonSpatialPattern",
     # Dimensionality

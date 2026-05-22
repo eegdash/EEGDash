@@ -17,7 +17,7 @@
      Figure: API dataset volume explorer. The view is generated from the
      <code>/api/eegdash/datasets/chart-data</code> summary endpoint and does
      not download signal files. The scatter uses known duration, subject, and
-     recording-modality metadata, with filters using the same API facet fields
-     as the table tab.
+     recording-modality metadata, with Plotly legend controls for toggling
+     recording modalities.
    </figcaption>
    </figure>

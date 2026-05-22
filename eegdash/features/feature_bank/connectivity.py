@@ -39,6 +39,7 @@ __all__ = [
     "connectivity_phase_diff_preprocessor",
     "connectivity_temporal_correlation",
     "connectivity_spectral_correlation",
+    "connectivity_max_cross_correlation",
     "connectivity_magnitude_square_coherence",
     "connectivity_imaginary_coherence",
     "connectivity_lagged_coherence",

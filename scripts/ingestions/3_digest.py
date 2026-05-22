@@ -2945,6 +2945,36 @@ def _enumerate_via_bids(
     )
 
 
+def _summarise_empty_or_error(
+    dataset_id: str,
+    result: EnumerationResult,
+) -> dict[str, Any]:
+    """Build the terminal "no records" summary for the orchestrator.
+
+    When the Adapter finishes but returns ``result.records == []`` we
+    can't write the per-Dataset JSON files (record_count would be zero
+    and downstream tooling treats those as failures). This helper
+    picks the right "empty" vs "error" status based on whether any
+    per-file errors got accumulated.
+
+    Phase 8 Stage 3D: extracted from ``digest_dataset`` so its body
+    drops to an orchestrator-only shape. The error case carries the
+    full ``errors`` list so the caller can see WHY nothing landed.
+    """
+    if result.errors:
+        return {
+            "status": "error",
+            "dataset_id": dataset_id,
+            "error": "No records extracted",
+            "errors": result.errors,
+        }
+    return {
+        "status": "empty",
+        "dataset_id": dataset_id,
+        "reason": "no neurophysiology files found",
+    }
+
+
 def _check_dataset_skip_conditions(
     dataset_id: str,
     dataset_dir: Path,
@@ -3068,18 +3098,7 @@ def digest_dataset(
         # else surface the right "empty / error" status.
         if has_manifest and not isinstance(enumerator, ManifestEnumerator):
             return digest_from_manifest(dataset_id, input_dir, output_dir)
-        if result.errors:
-            return {
-                "status": "error",
-                "dataset_id": dataset_id,
-                "error": "No records extracted",
-                "errors": result.errors,
-            }
-        return {
-            "status": "empty",
-            "dataset_id": dataset_id,
-            "reason": "no neurophysiology files found",
-        }
+        return _summarise_empty_or_error(dataset_id, result)
 
     summary = write_dataset_outputs(
         dataset_output_dir,

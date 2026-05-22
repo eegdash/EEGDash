@@ -277,3 +277,20 @@ def test_mixed_helpers_share_one_client():
     c1 = _parser_utils._http_client()
 
     assert c0 is c1
+
+
+def test_http_client_enables_http2():
+    """Shared client uses HTTP/2 so multiple HEADs over the same host
+    multiplex on a single connection (Task 3 — perf sprint).
+    """
+    client = _parser_utils._http_client()
+    transport = client._transport
+    pool = getattr(transport, "_pool", None)
+    assert pool is not None, (
+        "client._transport._pool not found — httpx internal layout may "
+        "have changed; update the test"
+    )
+    assert getattr(pool, "_http2", False) is True, (
+        "Shared httpx.Client must be constructed with http2=True so "
+        "concurrent HEAD requests multiplex over one connection"
+    )

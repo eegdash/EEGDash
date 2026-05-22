@@ -20,7 +20,7 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Bio-Informatics",
 ]
 dependencies = [
-    "httpx>=0.27",
+    "httpx[http2]>=0.27",
     "tenacity>=8",
     "pydantic>=2.5",
     "mne-bids>=0.14",

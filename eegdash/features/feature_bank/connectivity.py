@@ -17,6 +17,7 @@ features corresponding to the leading dimensions (e.g., subjects, channels).
 
 from itertools import chain
 
+import numba as nb
 import numpy as np
 from scipy.signal import csd, hilbert
 
@@ -27,11 +28,17 @@ from ..decorators import (
 )
 from . import utils
 from .signal import signal_filter_preprocessor
+from .spectral import (
+    spectral_db_preprocessor,
+    spectral_normalized_preprocessor,
+    spectral_preprocessor,
+)
 
 __all__ = [
     "connectivity_coherency_preprocessor",
     "connectivity_phase_diff_preprocessor",
-    "connectivity_correlation",
+    "connectivity_temporal_correlation",
+    "connectivity_spectral_correlation",
     "connectivity_magnitude_square_coherence",
     "connectivity_imaginary_coherence",
     "connectivity_lagged_coherence",
@@ -43,11 +50,34 @@ __all__ = [
 ]
 
 
+@nb.njit(cache=True, fastmath=True)
+def _channel_pairs_correlations(x, idx_x, idx_y):
+    """Compute the correlation between channel pairs.
+
+    Parameters
+    ----------
+    x : numpy.ndarray
+        The input of shape (n_trials, n_channels, n_samples).
+
+    Returns
+    -------
+    numpy.ndarray
+        The channel pairwise Pearson correlation of shape (n_trials, n_pairs).
+
+    """
+    corr = np.empty((*x.shape[:-2], len(idx_x)))
+    for i in np.ndindex(x.shape[:-2]):
+        c = np.corrcoef(x[i])
+        for j, (l, m) in enumerate(zip(idx_x, idx_y)):
+            corr[i][j] = c[l, m]
+    return corr
+
+
 @feature_predecessor()
 @channel_pairer_undirected
 @bivariate_feature
-def connectivity_correlation(x, /, *, _metadata):
-    """Compute the correlation between channel pairs.
+def connectivity_temporal_correlation(x, /, *, _metadata):
+    """Compute the temporal correlation between channel pairs.
 
     Parameters
     ----------
@@ -57,15 +87,40 @@ def connectivity_correlation(x, /, *, _metadata):
     Returns
     -------
     numpy.ndarray
-        The channel pairwise Pearson correlation of shape (n_trials, n_pairs).
+        The channel pairwise temporal Pearson correlation of shape
+        (n_trials, n_pairs).
 
     """
     idx_x, idx_y = _metadata["ch_pair_iterator"].get_pair_iterators()
-    corr = np.empty((*x.shape[:-2], len(idx_x)))
-    for i in np.ndindex(x.shape[:-2]):
-        c = np.corrcoef(x[i])
-        corr[i, :] = c[idx_x, idx_y]
-    return corr
+    return _channel_pairs_correlations(x, idx_x, idx_y)
+
+
+@feature_predecessor(
+    spectral_preprocessor,
+    spectral_normalized_preprocessor,
+    spectral_db_preprocessor,
+)
+@channel_pairer_undirected
+@bivariate_feature
+def connectivity_spectral_correlation(f, p, /, *, _metadata):
+    """Compute the spectral correlation between channel pairs.
+
+    Parameters
+    ----------
+    f : ndarray
+        Frequency vector.
+    p : ndarray
+        Power Spectral Density (PSD).
+
+    Returns
+    -------
+    numpy.ndarray
+        The channel pairwise Pearson correlation between power spectra of shape
+        (n_trials, n_pairs).
+
+    """
+    idx_x, idx_y = _metadata["ch_pair_iterator"].get_pair_iterators()
+    return _channel_pairs_correlations(p, idx_x, idx_y)
 
 
 @feature_predecessor()

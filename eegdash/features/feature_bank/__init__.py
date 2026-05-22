@@ -16,7 +16,6 @@ from .complexity import (
 from .connectivity import (
     connectivity_coherency_preprocessor,
     connectivity_corrected_imaginary_phase_locking_value,
-    connectivity_correlation,
     connectivity_directed_phase_lag_index,
     connectivity_imaginary_coherence,
     connectivity_lagged_coherence,
@@ -24,6 +23,8 @@ from .connectivity import (
     connectivity_phase_diff_preprocessor,
     connectivity_phase_lag_index,
     connectivity_phase_locking_value,
+    connectivity_spectral_correlation,
+    connectivity_temporal_correlation,
     connectivity_weighted_phase_lag_index,
 )
 from .csp import CommonSpatialPattern
@@ -84,7 +85,8 @@ __all__ = [
     # Connectivity
     "connectivity_coherency_preprocessor",
     "connectivity_phase_diff_preprocessor",
-    "connectivity_correlation",
+    "connectivity_temporal_correlation",
+    "connectivity_spectral_correlation",
     "connectivity_magnitude_square_coherence",
     "connectivity_imaginary_coherence",
     "connectivity_lagged_coherence",

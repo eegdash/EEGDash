@@ -18,7 +18,7 @@ features corresponding to the leading dimensions (e.g., subjects, channels).
 from itertools import chain
 
 import numpy as np
-from scipy.signal import csd
+from scipy.signal import csd, hilbert
 
 from ..decorators import (
     bivariate_feature,
@@ -26,28 +26,32 @@ from ..decorators import (
     feature_predecessor,
 )
 from . import utils
+from .signal import signal_filter_preprocessor
 
 __all__ = [
     "connectivity_coherency_preprocessor",
+    "connectivity_phase_diff_preprocessor",
     "connectivity_correlation",
     "connectivity_magnitude_square_coherence",
     "connectivity_imaginary_coherence",
     "connectivity_lagged_coherence",
+    "connectivity_phase_locking_value",
+    "connectivity_corrected_imaginary_phase_locking_value",
+    "connectivity_phase_lag_index",
+    "connectivity_weighted_phase_lag_index",
 ]
 
 
 @feature_predecessor()
 @channel_pairer_undirected
 @bivariate_feature
-def connectivity_correlation(x, /, *, _metadata, eps: float = 1e-15):
+def connectivity_correlation(x, /, *, _metadata):
     """Compute the correlation between channel pairs.
 
     Parameters
     ----------
     x : numpy.ndarray
         The input signal of shape (n_trials, n_channels, n_times).
-    eps : float, optional
-        A small constant to prevent log of zero (default: 1e-15).
 
     Returns
     -------
@@ -201,3 +205,103 @@ def connectivity_lagged_coherence(f, c, /, bands=utils.DEFAULT_FREQ_BANDS):
     """
     coher = c.imag / np.sqrt(1 - c.real**2)
     return utils.reduce_freq_bands(f, coher, bands, np.mean)
+
+
+@feature_predecessor(signal_filter_preprocessor)
+@channel_pairer_undirected
+def connectivity_phase_diff_preprocessor(x, /, *, _metadata):
+    r"""TODO.
+
+    Parameters
+    ----------
+    x : ndarray
+        The input signal of shape (n_trials, n_channels, n_times).
+
+    Returns
+    -------
+    ndarray
+        Complex exponents of phase diffs.
+
+    """
+    a = hilbert(x, axis=-1)
+    exp_phi = a / np.abs(a)
+    idx_x, idx_y = _metadata["ch_pair_iterator"].get_pair_iterators()
+    exp_dphi = exp_phi[..., idx_x, :] * exp_phi[..., idx_y, :].conj()
+    return exp_dphi
+
+
+@feature_predecessor(connectivity_phase_diff_preprocessor)
+@bivariate_feature
+def connectivity_phase_locking_value(exp_dphi, /):
+    """TODO.
+
+    Parameters
+    ----------
+    exp_dphi : ndarray
+        Complex exponents of phase diffs.
+
+    Returns
+    -------
+    ndarray :
+        The PLV of each channel pair.
+
+    """
+    return np.abs(exp_dphi.mean(axis=-1))
+
+
+@feature_predecessor(connectivity_phase_diff_preprocessor)
+@bivariate_feature
+def connectivity_corrected_imaginary_phase_locking_value(exp_dphi, /):
+    """TODO.
+
+    Parameters
+    ----------
+    exp_dphi : ndarray
+        Complex exponents of phase diffs.
+
+    Returns
+    -------
+    ndarray :
+        The ciPLV of each channel pair.
+
+    """
+    mean_exp_dphi = exp_dphi.mean(axis=-1)
+    return mean_exp_dphi.imag / np.sqrt(1 - mean_exp_dphi.real**2)
+
+
+@feature_predecessor(connectivity_phase_diff_preprocessor)
+@bivariate_feature
+def connectivity_phase_lag_index(exp_dphi, /):
+    """TODO.
+
+    Parameters
+    ----------
+    exp_dphi : ndarray
+        Complex exponents of phase diffs.
+
+    Returns
+    -------
+    ndarray :
+        The PLI of each channel pair.
+
+    """
+    return np.abs(np.mean(np.sign(exp_dphi.imag), axis=-1))
+
+
+@feature_predecessor(connectivity_phase_diff_preprocessor)
+@bivariate_feature
+def connectivity_weighted_phase_lag_index(exp_dphi, /):
+    """TODO.
+
+    Parameters
+    ----------
+    exp_dphi : ndarray
+        Complex exponents of phase diffs.
+
+    Returns
+    -------
+    ndarray :
+        The wPLI of each channel pair.
+
+    """
+    return np.abs(exp_dphi.imag.mean(axis=-1)) / np.abs(exp_dphi.imag).mean(axis=-1)

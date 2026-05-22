@@ -125,6 +125,50 @@ def connectivity_spectral_correlation(f, p, /, *, _metadata):
 
 @feature_predecessor()
 @channel_pairer_undirected
+@bivariate_feature
+def connectivity_max_cross_correlation(x, /, *, _metadata, eps=1e-15):
+    """Compute the maximum cross correlation between channel pairs.
+
+    Parameters
+    ----------
+    x : numpy.ndarray
+        The input signal of shape (n_trials, n_channels, n_times).
+    eps : float, optional
+        A small constant to prevent log of zero (default: 1e-15).
+
+    Returns
+    -------
+    numpy.ndarray
+        The channel pairs maximum cross correlation of shape
+        (n_trials, n_pairs).
+
+    Notes
+    -----
+    This function computes the cross correlation via multiplication of the
+    Fourier transformed signals.
+
+    References
+    ----------
+    For more details, see the `Wikipedia entry
+    <https://en.wikipedia.org/wiki/Cross-correlation#Normalization>`__.
+
+    """
+    z = (x - x.mean(axis=-1, keepdims=True)) / (x.std(axis=-1, keepdims=True) + eps)
+    n = z.shape[-1]
+    tau_max = np.minimum(n // 2, int(_metadata["info"]["sfreq"]) // 2)
+    idx_x, idx_y = _metadata["ch_pair_iterator"].get_pair_iterators()
+    f = np.fft.fft(z, n=2 * n, axis=-1)
+    xc = np.roll(
+        np.fft.ifft(f[..., idx_x, :].conj() * f[..., idx_y, :], axis=-1).real,
+        tau_max,
+        axis=-1,
+    )[..., : 2 * tau_max]
+    xc[:] = np.abs(xc) / (n - np.abs(np.arange(-tau_max, tau_max)))
+    return xc.max(axis=-1)
+
+
+@feature_predecessor()
+@channel_pairer_undirected
 @utils.spectral_kwargs
 def connectivity_coherency_preprocessor(x, /, *, _metadata, f_min, f_max, **kwargs):
     r"""Compute Complex Coherency for all unique channel pairs.

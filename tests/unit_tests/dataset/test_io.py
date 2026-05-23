@@ -786,6 +786,68 @@ def test_repair_tsv_decimal_separators_preserves_tab_commas(tmp_path):
     assert _repair_tsv_decimal_separators(tmp_path) is False
 
 
+def test_repair_tsv_decimal_separators_preserves_stim_code_value_column(tmp_path):
+    """Free-form text cells (e.g. EEGLAB ``B2,4,8,16(240)`` stim codes) must
+    not be rewritten — only whole-cell numeric scalars are decimal candidates.
+    """
+    tsv_path = tmp_path / "sub-001_task-PY_events.tsv"
+    original = (
+        "onset\tduration\tsample\tvalue\n"
+        "0.1015625000\t0.0000000000\t26\tB2,4,8,16(240)\n"
+        "1.0039062500\t0.0000000000\t257\tB18,20,24,32(241)\n"
+    )
+    tsv_path.write_text(original)
+
+    assert _repair_tsv_decimal_separators(tmp_path) is False
+    assert tsv_path.read_text() == original
+
+
+def test_repair_tsv_decimal_separators_mixed_numeric_and_text(tmp_path):
+    """Numeric decimal-comma cells are still repaired even when the same row
+    carries a free-form text cell containing interior commas.
+    """
+    tsv_path = tmp_path / "sub-01_task-mix_events.tsv"
+    tsv_path.write_text(
+        "onset\tduration\tsample\tvalue\n"
+        "4,988\t0,5\t1247\tB2,4,8,16(240)\n"
+    )
+
+    assert _repair_tsv_decimal_separators(tmp_path) is True
+
+    content = tsv_path.read_text()
+    assert "4.988\t0.5\t1247\tB2,4,8,16(240)" in content
+
+
+def test_repair_tsv_decimal_separators_is_idempotent_across_repeated_calls(tmp_path):
+    """Repeated invocations on the same file must not cascade.
+
+    Regression for the ds004771 corruption: the file-level regex used to
+    rewrite ``B2,4,8,16(240)`` to ``B2,4.8,16(240)`` on the first pass, then
+    to ``B2,4.8.16(240)`` on the second pass (the ``.`` introduced by the
+    first pass exposed a new match).
+    """
+    tsv_path = tmp_path / "sub-001_task-PY_events.tsv"
+    original = (
+        "onset\tduration\tsample\tvalue\n"
+        "0.10\t0.0\t26\tB2,4,8,16(240)\n"
+    )
+    tsv_path.write_text(original)
+
+    for _ in range(3):
+        _repair_tsv_decimal_separators(tmp_path)
+    assert tsv_path.read_text() == original
+
+
+def test_repair_tsv_decimal_separators_negative_decimal(tmp_path):
+    """Signed European-decimal cells (``-0,5``) are rewritten."""
+    tsv_path = tmp_path / "sub-01_electrodes.tsv"
+    tsv_path.write_text("name\tx\ty\tz\nFp1\t-5,004\t-3,2\t1,001\n")
+
+    assert _repair_tsv_decimal_separators(tmp_path) is True
+    content = tsv_path.read_text()
+    assert "-5.004\t-3.2\t1.001" in content
+
+
 # ── _repair_tsv_na_whitespace ──
 
 

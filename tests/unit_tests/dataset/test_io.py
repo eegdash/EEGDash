@@ -808,8 +808,7 @@ def test_repair_tsv_decimal_separators_mixed_numeric_and_text(tmp_path):
     """
     tsv_path = tmp_path / "sub-01_task-mix_events.tsv"
     tsv_path.write_text(
-        "onset\tduration\tsample\tvalue\n"
-        "4,988\t0,5\t1247\tB2,4,8,16(240)\n"
+        "onset\tduration\tsample\tvalue\n4,988\t0,5\t1247\tB2,4,8,16(240)\n"
     )
 
     assert _repair_tsv_decimal_separators(tmp_path) is True
@@ -827,10 +826,7 @@ def test_repair_tsv_decimal_separators_is_idempotent_across_repeated_calls(tmp_p
     first pass exposed a new match).
     """
     tsv_path = tmp_path / "sub-001_task-PY_events.tsv"
-    original = (
-        "onset\tduration\tsample\tvalue\n"
-        "0.10\t0.0\t26\tB2,4,8,16(240)\n"
-    )
+    original = "onset\tduration\tsample\tvalue\n0.10\t0.0\t26\tB2,4,8,16(240)\n"
     tsv_path.write_text(original)
 
     for _ in range(3):

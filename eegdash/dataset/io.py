@@ -1046,7 +1046,20 @@ def _repair_scans_tsv_timestamps(data_dir: Path) -> bool:
                             # and 6-digit microseconds — mne-bids uses
                             # strptime('%Y-%m-%dT%H:%M:%S.%f') which
                             # requires 'T' and fractional seconds.
-                            normalized = dt.strftime("%Y-%m-%dT%H:%M:%S.%f")
+                            # For tz-aware inputs, preserve the tz: a
+                            # plain "%Y-%m-%dT%H:%M:%S.%f" silently
+                            # strips trailing 'Z' / '+HH:MM' offsets.
+                            if dt.tzinfo is not None:
+                                normalized = dt.strftime("%Y-%m-%dT%H:%M:%S.%f%z")
+                                # %z emits +HHMM; restore RFC 3339 'Z'
+                                # for UTC, otherwise insert the ISO
+                                # 8601 extended-form colon.
+                                if normalized.endswith("+0000"):
+                                    normalized = normalized[:-5] + "Z"
+                                else:
+                                    normalized = normalized[:-2] + ":" + normalized[-2:]
+                            else:
+                                normalized = dt.strftime("%Y-%m-%dT%H:%M:%S.%f")
                             if normalized != ts:
                                 cols[acq_idx] = normalized
                                 changed = True

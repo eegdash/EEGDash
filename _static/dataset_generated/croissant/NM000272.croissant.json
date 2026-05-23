@@ -83,7 +83,8 @@
   "identifier": "doi:10.48550/arXiv.2510.10169",
   "sameAs": [
     "https://doi.org/10.48550/arXiv.2510.10169",
-    "https://openneuro.org/datasets/nm000272"
+    "https://openneuro.org/datasets/nm000272",
+    "https://huggingface.co/datasets/EEGDash/nm000272"
   ],
   "citeAs": "Michele Romani, Devis Zanoni, Elisabetta Farella, Luca Turchet (n.d.). Romani et al. 2025 — BrainForm: a Serious Game for BCI Training and Data Collection (P300 ERP, University of Trento). doi:10.48550/arXiv.2510.10169",
   "version": "1.9.0",
@@ -124,6 +125,14 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=nm000272",
       "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000272-huggingface",
+      "name": "EEGDash/nm000272 on Hugging Face",
+      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
+      "contentUrl": "https://huggingface.co/datasets/EEGDash/nm000272",
+      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

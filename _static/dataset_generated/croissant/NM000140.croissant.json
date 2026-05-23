@@ -94,7 +94,8 @@
   "identifier": "doi:10.82901/nemar.nm000140",
   "sameAs": [
     "https://doi.org/10.82901/nemar.nm000140",
-    "https://openneuro.org/datasets/nm000140"
+    "https://openneuro.org/datasets/nm000140",
+    "https://huggingface.co/datasets/EEGDash/nm000140"
   ],
   "citeAs": "Josef Faller, Carmen Vidaurre, Teodoro Solis-Escalante, Christa Neuper, Reinhold Scherer (2012). BNCI 2015-001 Motor Imagery dataset. doi:10.82901/nemar.nm000140",
   "version": "1.9.0",
@@ -135,6 +136,14 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=nm000140",
       "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000140-huggingface",
+      "name": "EEGDash/nm000140 on Hugging Face",
+      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
+      "contentUrl": "https://huggingface.co/datasets/EEGDash/nm000140",
+      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

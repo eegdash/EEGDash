@@ -131,7 +131,24 @@ If you use this dataset in your research, please cite the original authors.
     <b>Fig. 01</b> Signal &amp; montage
     <span class="right">32 ch · EEG · 500 Hz · 292 subjects, 292 recordings</span>
   </div>
-  <div class="figpair-grid"><div class="figpair-cell figpair-montage">
+  <div class="figpair-grid"><div class="figpair-cell figpair-trace"><details class="trace-viewer">
+  <summary>Live trace viewer — <strong>sub-2005 · task-FacePerception</strong></summary>
+  <p class="trace-viewer-caption">
+    Showing <strong>one</strong> representative recording out of
+    <strong>292 subjects and 292 recordings</strong> in this dataset.
+    Browse the full set on <a href="https://openneuro.org/datasets/ds007096" target="_blank" rel="noopener">OpenNeuro</a>;
+    drop any other <code>_eeg.{set,edf,bdf,vhdr}</code> file onto the
+    viewer (or pass <code>?eeg=&lt;url&gt;</code>) to inspect it.
+  </p>
+  <iframe
+    data-src="https://eegdash.github.io/eegdash-viewer/?dataset=ds007096&sub=2005&task=FacePerception&ext=set&embed=1"
+    loading="lazy"
+    width="100%" height="640"
+    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 1200px; display: block; background: transparent;"
+    title="Live EEG trace viewer for ds007096 — sub-2005 · task-FacePerception"
+    referrerpolicy="no-referrer">
+  </iframe>
+</details></div><div class="figpair-cell figpair-montage">
 
 No scalp electrode layout is currently indexed for this
 dataset. Once the eegdash montage registry ingests it,

@@ -108,7 +108,8 @@
   "identifier": "doi:10.82901/nemar.nm000238",
   "sameAs": [
     "https://doi.org/10.82901/nemar.nm000238",
-    "https://openneuro.org/datasets/nm000238"
+    "https://openneuro.org/datasets/nm000238",
+    "https://huggingface.co/datasets/EEGDash/nm000238"
   ],
   "citeAs": "Bernd Accou, Lies Bollens, Marlies Gillis, Wendy Verheijen, Hugo Van hamme (2024). SparrKULee: A Speech-Evoked Auditory Response Repository from KU Leuven, Containing the EEG of 85 Participants. doi:10.82901/nemar.nm000238",
   "measurementTechnique": [
@@ -504,6 +505,14 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=nm000238",
       "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000238-huggingface",
+      "name": "EEGDash/nm000238 on Hugging Face",
+      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
+      "contentUrl": "https://huggingface.co/datasets/EEGDash/nm000238",
+      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

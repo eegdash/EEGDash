@@ -232,7 +232,8 @@
   "identifier": "doi:10.18112/openneuro.ds007358.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds007358.v1.0.0",
-    "https://openneuro.org/datasets/ds007358"
+    "https://openneuro.org/datasets/ds007358",
+    "https://huggingface.co/datasets/EEGDash/ds007358"
   ],
   "citeAs": "John Mary Vianney, Shailender Swaminathan, Jennifer Jane Newson, Dhanya Parameshwaran, Narayan Puthanmadam Subramaniyam (2026). A subset of large-scale EEG dataset (India + Tanzania). doi:10.18112/openneuro.ds007358.v1.0.0",
   "version": "1.8.0",
@@ -282,6 +283,14 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=ds007358",
       "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007358-huggingface",
+      "name": "EEGDash/ds007358 on Hugging Face",
+      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
+      "contentUrl": "https://huggingface.co/datasets/EEGDash/ds007358",
+      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

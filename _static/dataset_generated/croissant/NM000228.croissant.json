@@ -171,7 +171,8 @@
   "identifier": "doi:10.7554/eLife.33468",
   "sameAs": [
     "https://doi.org/10.7554/eLife.33468",
-    "https://openneuro.org/datasets/nm000228"
+    "https://openneuro.org/datasets/nm000228",
+    "https://huggingface.co/datasets/EEGDash/nm000228"
   ],
   "citeAs": "Mante S. Nieuwland, Stephen Politzer-Ahles, Evelien Heyselaar, Katrien Segaert, Emily Darley (2005). Nieuwland et al. 2018: Multi-site N400 Replication Study. doi:10.7554/eLife.33468",
   "version": "1.9.0",
@@ -213,6 +214,14 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=nm000228",
       "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000228-huggingface",
+      "name": "EEGDash/nm000228 on Hugging Face",
+      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
+      "contentUrl": "https://huggingface.co/datasets/EEGDash/nm000228",
+      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

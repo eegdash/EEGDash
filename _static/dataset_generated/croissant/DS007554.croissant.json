@@ -111,7 +111,8 @@
   "identifier": "doi:10.18112/openneuro.ds007554.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds007554.v1.0.0",
-    "https://openneuro.org/datasets/ds007554"
+    "https://openneuro.org/datasets/ds007554",
+    "https://huggingface.co/datasets/EEGDash/ds007554"
   ],
   "citeAs": "Zaineb Ajra, Grégoire Vergotte, Stéphane Perrey, Lilian Evra, Simon Pla (2026). Multimodal dataset from the CMx7-MM Experiment. doi:10.18112/openneuro.ds007554.v1.0.0",
   "version": "1.8.0",
@@ -165,6 +166,14 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=ds007554",
       "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007554-huggingface",
+      "name": "EEGDash/ds007554 on Hugging Face",
+      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
+      "contentUrl": "https://huggingface.co/datasets/EEGDash/ds007554",
+      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

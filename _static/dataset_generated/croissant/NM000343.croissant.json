@@ -102,7 +102,8 @@
   "identifier": "doi:10.1038/s41597-022-01898-y",
   "sameAs": [
     "https://doi.org/10.1038/s41597-022-01898-y",
-    "https://openneuro.org/datasets/nm000343"
+    "https://openneuro.org/datasets/nm000343",
+    "https://huggingface.co/datasets/EEGDash/nm000343"
   ],
   "citeAs": "Marcel F. Hinss, Emilie S. Jahanpour, Bertille Somon, Lou Pluchon, Frédéric Dehais (2023). Hinss et al. 2021 — Open multi-session and multi-task EEG cognitive Dataset for passive brain-computer Interface Applications. doi:10.1038/s41597-022-01898-y",
   "version": "1.9.0",
@@ -143,6 +144,14 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=nm000343",
       "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000343-huggingface",
+      "name": "EEGDash/nm000343 on Hugging Face",
+      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
+      "contentUrl": "https://huggingface.co/datasets/EEGDash/nm000343",
+      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

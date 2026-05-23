@@ -385,8 +385,30 @@ def test_read_bids_channels_tsv_parametrized(tmp_path, rows, expected):
         ("2024-01-02 03:04:05", "2024-01-02T03:04:05.000000", True),
         ("2024-01-02T03:04:99", "n/a", True),
         ("2024-01-02T03:04:05.000000", "2024-01-02T03:04:05.000000", False),
+        (
+            "2024-01-02T03:04:05.000000Z",
+            "2024-01-02T03:04:05.000000Z",
+            False,
+        ),
+        (
+            "2024-01-02T03:04:05.000000+00:00",
+            "2024-01-02T03:04:05.000000Z",
+            True,
+        ),
+        (
+            "2024-01-02T03:04:05.000000-05:00",
+            "2024-01-02T03:04:05.000000-05:00",
+            False,
+        ),
     ],
-    ids=["normalize_space_separator", "invalid_timestamp_to_na", "already_normalized"],
+    ids=[
+        "normalize_space_separator",
+        "invalid_timestamp_to_na",
+        "already_normalized",
+        "preserve_z_suffix_utc",
+        "normalize_plus_zero_offset_to_z",
+        "preserve_negative_offset",
+    ],
 )
 def test_repair_scans_tsv_timestamps_parametrized(
     tmp_path, acq_time, expected_time, expected_repaired

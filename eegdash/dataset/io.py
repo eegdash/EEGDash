@@ -543,12 +543,19 @@ DataFile={vhdr_name.replace(".vhdr", ".eeg")}
         return False
 
 
-# Match digits separated by a comma that looks like a European decimal separator,
-# e.g. "4,988" → "4.988".  This intentionally treats ALL digit,digit patterns as
-# decimals.  Thousands separators like "10,000" would also be rewritten, but in
-# practice European-locale datasets that use comma-as-decimal use dot or space for
+# Match a TSV cell whose entire content is a European-decimal numeric scalar,
+# e.g. "4,988" → "4.988" (or "-0,5" → "-0.5").  Anchored to cell boundaries
+# (start-of-line or tab on the left; tab, newline, or end-of-string on the
+# right) so interior commas of free-form text cells are never touched —
+# notably EEGLAB stim codes like "B2,4,8,16(240)" in BIDS event ``value``
+# columns, which are categorical labels per the BIDS-EEG spec.  Thousands
+# separators like "10,000" would still be rewritten, but in practice
+# European-locale datasets that use comma-as-decimal use dot or space for
 # thousands grouping, so the ambiguity does not arise in real BIDS TSV files.
-_DECIMAL_COMMA_RE = re.compile(r"(?<!\w)(\d+),(\d+)(?!\w)")
+_DECIMAL_COMMA_RE = re.compile(
+    r"(?:^|(?<=\t))(-?\d+),(\d+)(?=\t|\r?\n|$)",
+    re.MULTILINE,
+)
 
 
 def _repair_tsv_decimal_separators(data_dir: Path) -> bool:

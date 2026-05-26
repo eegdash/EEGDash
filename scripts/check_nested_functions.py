@@ -6,6 +6,8 @@ which violates the project's style guide. Factory functions that return
 callables are allowed (detected by checking if the inner function is returned).
 """
 
+from __future__ import annotations
+
 import ast
 import sys
 from pathlib import Path

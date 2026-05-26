@@ -92,6 +92,7 @@ features = [
   "numba<0.61; sys_platform == 'darwin' and platform_machine == 'x86_64'",
   "numba;      sys_platform != 'darwin' or platform_machine != 'x86_64'",
   "safetensors",
+  "PyWavelets>=1.4",
 ]
 tests = [
     'pytest',

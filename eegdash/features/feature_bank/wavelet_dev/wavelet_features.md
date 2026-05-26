@@ -33,7 +33,7 @@ $$E(s) = \int |W(s, t)|^2 \, dt \approx \sum_{t} |w(s, t)|^2$$
 
 ### 1.2 Relative Energy (Energy Ratio)
 
-**Explanation**
+**Explanation** **[in progress — `wavelet_relative_power`]**
 The fraction of total signal energy carried by each scale or level. Normalises coefficient energy by the sum across all scales, making the feature invariant to the absolute amplitude of the signal. This is critical for cross-subject comparisons where electrode impedance, skull thickness, or amplifier gain can create large inter-subject amplitude differences. A subject-level normalisation is implicit in the ratio, so the feature characterises the *shape* of the energy distribution across scales rather than its magnitude.
 
 **Formula**
@@ -97,7 +97,7 @@ $$\sigma_j^2 = \frac{1}{N_j} \sum_{n} \left(w_j[n] - \mu_j\right)^2$$
 
 ### 2.2 Skewness of Coefficients
 
-**Explanation**
+**Explanation** **[in progress — `wavelet_skewness`]**
 The third standardised central moment of the coefficient distribution. Measures asymmetry: positive skewness means a long tail of large positive coefficients (sharp positive peaks in the band), negative skewness means large negative deviations. In EEG, pathological events like epileptic spikes consistently produce asymmetric coefficient distributions at the scale corresponding to their dominant frequency. Resting healthy EEG tends to have near-zero skewness at most scales.
 
 **Formula**
@@ -115,7 +115,7 @@ $$\gamma_j = \frac{1}{N_j \sigma_j^3} \sum_{n} \left(w_j[n] - \mu_j\right)^3$$
 
 ### 2.3 Kurtosis of Coefficients
 
-**Explanation**
+**Explanation** **[in progress — `wavelet_kurtosis`]**
 The fourth standardised central moment, measuring the "tailedness" of the coefficient distribution. High kurtosis (leptokurtic) means many near-zero coefficients punctuated by occasional very large ones — the signature of a sparse, transient oscillatory event. Low kurtosis (platykurtic) indicates a more uniform distribution, consistent with sustained broadband noise. Wavelet coefficient distributions in EEG are typically super-Gaussian (heavy-tailed) due to the sparse, burst-like nature of neural oscillations; kurtosis quantifies how far this departs from Gaussianity.
 
 **Formula**
@@ -174,7 +174,7 @@ $$H_{Sh,j} = -\sum_{n} p_n \log p_n$$
 
 ### 3.2 Wavelet Entropy (Rosso)
 
-**Explanation**
+**Explanation** **[in progress — `wavelet_entropy`]**
 Proposed by Rosso et al. (2001) specifically for EEG analysis. Rather than treating the time axis as a probability distribution within one scale, it treats the *relative energy distribution across scales* as a probability distribution and computes its Shannon entropy. A flat distribution (equal energy at all scales = broad-spectrum noise) gives maximum wavelet entropy. A peaked distribution (all energy at one scale = narrow-band oscillation) gives low wavelet entropy. This makes it a single scalar summary of how "complex" or "disordered" the overall spectral structure of a segment is.
 
 **Formula**
@@ -331,7 +331,7 @@ $$\bar{A}(f) = \frac{1}{T} \int A(f, t) \, dt$$
 
 ### 6.2 Instantaneous Phase per Band
 
-**Explanation**
+**Explanation** **[in progress — available as `np.angle(W)` from `wavelet_preprocessor` output]**
 From a complex CWT, the phase $\angle W(s, t) = \arctan\left(\text{Im}(W) / \text{Re}(W)\right)$ gives the instantaneous phase of the signal at each scale and time point. This is more accurate than bandpass filtering followed by the Hilbert transform, because the wavelet acts as a Gaussian-windowed bandpass filter with smooth spectral edges, avoiding the frequency leakage and ringing artifacts that sharp FIR/IIR filters introduce. Instantaneous phase is the input to phase locking value, phase-amplitude coupling, and inter-trial phase coherence calculations.
 
 **Formula**
@@ -439,7 +439,7 @@ where $H$ is the chosen cost function (entropy) and $(j,k)$ indexes level $j$, n
 
 ### 8.1 Wavelet Coherence
 
-**Explanation**
+**Explanation** **[in progress — `wavelet_coherence`]**
 The wavelet analog of spectral coherence. Measures the degree of linear correlation between two channels in the time-frequency plane, giving a coherence value at each scale and time point. Unlike Fourier coherence (which averages over the entire analysis window), wavelet coherence is local in time and can detect transient synchronisation episodes between channels. The time-averaged wavelet coherence at each scale is the wavelet equivalent of EEGDash's `connectivity_magnitude_square_coherence`, but more robust to non-stationary EEG.
 
 **Formula**
@@ -467,7 +467,7 @@ where $\mathcal{S}$ denotes a smoothing operator applied in both scale and time.
 
 ### 8.2 Wavelet Phase Locking Value (wPLV)
 
-**Explanation**
+**Explanation** **[in progress — `wavelet_plv`]**
 The phase locking value computed from instantaneous phases extracted via CWT rather than the Hilbert transform. For each frequency band, the instantaneous phase of two channels is extracted from the complex CWT at the corresponding scale. The phase difference is then averaged over time in complex exponential form. This gives a measure of phase synchrony between channels that is more accurate than filter + Hilbert PLV, particularly at low frequencies where bandpass filter ringing is most problematic.
 
 **Formula**
@@ -488,7 +488,7 @@ $$wPLV(f) = \left| \frac{1}{T} \sum_{t} e^{i(\phi_x(f,t) - \phi_y(f,t))} \right|
 
 ### 8.3 Wavelet-Based Phase-Amplitude Coupling (wPAC)
 
-**Explanation**
+**Explanation** **[in progress — `wavelet_pac`]**
 Phase-Amplitude Coupling measures whether the amplitude of high-frequency oscillations is modulated by the phase of low-frequency oscillations. The wavelet-based version replaces the filter + Hilbert pipeline used in `braindecode-features` with CWT-derived instantaneous phase and amplitude. This avoids the two main failure modes of the Hilbert approach: (1) the ringing of the bandpass filter contaminates the phase signal, and (2) the Hilbert transform's implicit assumption of a narrow-band signal is violated at EEG band boundaries. With a complex CWT using a Morlet wavelet, both phase and amplitude are extracted from the analytic signal directly at the target frequency.
 
 **Formula**
@@ -529,25 +529,25 @@ where $H$ is the Shannon entropy and $H_{max} = \log K$.
 | Feature | Family | Transform | Importance | In any codebase? |
 |---|---|---|---|---|
 | Coefficient Energy | Energy | DWT / CWT / WPD | ★★★★★ | ✓ braindecode-features, brainfeatures |
-| Relative Energy Ratio | Energy | DWT / CWT / WPD | ★★★★☆ | ✗ |
+| Relative Energy Ratio | Energy | DWT / CWT / WPD | ★★★★☆ | ✓ EEGDash (in progress) |
 | Teager-Kaiser Energy | Energy | DWT / CWT | ★★★☆☆ | ✓ brainfeatures (mne) |
 | Variance of Coefficients | Statistical | DWT / CWT / WPD | ★★★★☆ | ✓ braindecode-features, brainfeatures |
-| Skewness of Coefficients | Statistical | DWT / CWT / WPD | ★★★☆☆ | ✗ |
-| Kurtosis of Coefficients | Statistical | DWT / CWT / WPD | ★★★★☆ | ✗ |
+| Skewness of Coefficients | Statistical | DWT / CWT / WPD | ★★★☆☆ | ✓ EEGDash (in progress) |
+| Kurtosis of Coefficients | Statistical | DWT / CWT / WPD | ★★★★☆ | ✓ EEGDash (in progress) |
 | IQR of Coefficients | Statistical | DWT / CWT / WPD | ★★★☆☆ | ✗ |
 | Shannon Entropy of Coefficients | Entropy | DWT / CWT / WPD | ★★★☆☆ | ✗ |
-| Wavelet Entropy (Rosso) | Entropy | DWT / WPD | ★★★★★ | ✗ |
+| Wavelet Entropy (Rosso) | Entropy | DWT / WPD | ★★★★★ | ✓ EEGDash (in progress) |
 | Permutation Entropy of Coefficients | Entropy | DWT / CWT / WPD | ★★★☆☆ | ✗ |
 | Hölder Regularity Exponent | Regularity | CWT | ★★★★☆ | ✗ |
 | Wavelet Fractal Dimension | Regularity | DWT / CWT | ★★★☆☆ | ✗ |
 | Peak-to-Peak of Coefficients | Morphology | DWT / CWT / WPD | ★★★☆☆ | ✓ braindecode-features |
 | Zero Crossings of Coefficients | Morphology | DWT / CWT / WPD | ★★★☆☆ | ✗ |
 | Instantaneous Amplitude Envelope | Time-Frequency | CWT | ★★★★☆ | ✗ |
-| Instantaneous Phase | Time-Frequency | CWT | ★★★★★ | ✗ |
+| Instantaneous Phase | Time-Frequency | CWT | ★★★★★ | ✓ EEGDash (in progress) |
 | Scalogram Entropy | Time-Frequency | CWT | ★★★☆☆ | ✗ |
 | Cone of Influence Masking | Time-Frequency | CWT | ★★★☆☆ | ✗ (quality filter) |
 | Inter-Scale Correlation | Cross-Scale | DWT / CWT | ★★★☆☆ | ✗ |
 | WPD Best-Basis Energy Distribution | Cross-Scale | WPD | ★★★☆☆ | ✗ |
-| Wavelet Coherence | Cross-Channel | CWT | ★★★★★ | ✗ |
-| Wavelet PLV (wPLV) | Cross-Channel | CWT | ★★★★☆ | ✗ |
-| Wavelet PAC (wPAC) | Cross-Channel | CWT | ★★★★★ | ✗ |
+| Wavelet Coherence | Cross-Channel | CWT | ★★★★★ | ✓ EEGDash (in progress) |
+| Wavelet PLV (wPLV) | Cross-Channel | CWT | ★★★★☆ | ✓ EEGDash (in progress) |
+| Wavelet PAC (wPAC) | Cross-Channel | CWT | ★★★★★ | ✓ EEGDash (in progress) |

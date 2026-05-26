@@ -28,7 +28,7 @@ from ..decorators import (
 from ..output_types import SignalOutputType
 
 __all__ = [
-    "signal_hilbert_preprocessor",
+    "signal_envelope_preprocessor",
     "signal_filter_preprocessor",
     "signal_decorrelation_time",
     "signal_hjorth_activity",
@@ -49,8 +49,8 @@ __all__ = [
 
 @feature_predecessor()
 @preprocessor_output_type(SignalOutputType)
-def signal_hilbert_preprocessor(x, /):
-    r"""Compute the amplitude envelope of the analytic signal.
+def signal_envelope_preprocessor(x, /):
+    r"""Compute the amplitude envelope of the signal using Hilbert transform.
 
     Parameters
     ----------
@@ -63,7 +63,7 @@ def signal_hilbert_preprocessor(x, /):
         The signal envelope, with the same shape as the input.
 
     """
-    return np.abs(signal.hilbert(x - x.mean(axis=-1, keepdims=True), axis=-1))
+    return signal.envelope(x, residual=None, axis=-1)
 
 
 @feature_predecessor()
@@ -465,7 +465,7 @@ def signal_decorrelation_time(x, /, *, _metadata):
     compute the autocorrelation via the inverse FFT of the power spectrum.
 
     """
-    f = np.fft.fft(x - x.mean(axis=-1, keepdims=True), axis=-1)
+    f = np.fft.fft(x - x.mean(axis=-1, keepdims=True), n=2 * x.shape[-1], axis=-1)
     ac = np.fft.ifft(f.real**2 + f.imag**2, axis=-1)[..., : x.shape[-1] // 2].real
     dct = np.argmax(np.signbit(ac), axis=-1)
     return dct / _metadata["info"]["sfreq"]

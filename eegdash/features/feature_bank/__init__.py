@@ -15,9 +15,18 @@ from .complexity import (
 )
 from .connectivity import (
     connectivity_coherency_preprocessor,
+    connectivity_corrected_imaginary_phase_locking_value,
+    connectivity_directed_phase_lag_index,
     connectivity_imaginary_coherence,
     connectivity_lagged_coherence,
     connectivity_magnitude_square_coherence,
+    connectivity_max_cross_correlation,
+    connectivity_phase_diff_preprocessor,
+    connectivity_phase_lag_index,
+    connectivity_phase_locking_value,
+    connectivity_spectral_correlation,
+    connectivity_temporal_correlation,
+    connectivity_weighted_phase_lag_index,
 )
 from .csp import CommonSpatialPattern
 from .dimensionality import (
@@ -33,8 +42,8 @@ from .pick import (
 )
 from .signal import (
     signal_decorrelation_time,
+    signal_envelope_preprocessor,
     signal_filter_preprocessor,
-    signal_hilbert_preprocessor,
     signal_hjorth_activity,
     signal_hjorth_complexity,
     signal_hjorth_mobility,
@@ -59,6 +68,7 @@ from .spectral import (
     spectral_hjorth_mobility,
     spectral_moment,
     spectral_normalized_preprocessor,
+    spectral_peak_frequency,
     spectral_preprocessor,
     spectral_root_total_power,
     spectral_slope,
@@ -86,9 +96,18 @@ __all__ = [
     "complexity_lempel_ziv",
     # Connectivity
     "connectivity_coherency_preprocessor",
+    "connectivity_phase_diff_preprocessor",
+    "connectivity_temporal_correlation",
+    "connectivity_spectral_correlation",
+    "connectivity_max_cross_correlation",
     "connectivity_magnitude_square_coherence",
     "connectivity_imaginary_coherence",
     "connectivity_lagged_coherence",
+    "connectivity_phase_locking_value",
+    "connectivity_corrected_imaginary_phase_locking_value",
+    "connectivity_phase_lag_index",
+    "connectivity_weighted_phase_lag_index",
+    "connectivity_directed_phase_lag_index",
     # CSP
     "CommonSpatialPattern",
     # Dimensionality
@@ -102,7 +121,7 @@ __all__ = [
     "pick_channels_preprocessor",
     # Signal
     "signal_filter_preprocessor",
-    "signal_hilbert_preprocessor",
+    "signal_envelope_preprocessor",
     "signal_mean",
     "signal_variance",
     "signal_skewness",
@@ -124,6 +143,7 @@ __all__ = [
     "spectral_root_total_power",
     "spectral_moment",
     "spectral_entropy",
+    "spectral_peak_frequency",
     "spectral_edge",
     "spectral_slope",
     "spectral_bands_power",

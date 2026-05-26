@@ -18,7 +18,9 @@ import pandas as pd
 from .const import ALLOWED_QUERY_FIELDS
 
 __all__ = [
+    "build_description",
     "build_query_from_kwargs",
+    "find_key_in_nested_dict",
     "merge_query",
     "normalize_key",
     "merge_participants_fields",
@@ -576,3 +578,52 @@ def enrich_from_participants(
     extras = participants_extras_from_tsv(bids_root, subject)
     attach_participants_extras(raw, description, extras)
     return extras
+
+
+def find_key_in_nested_dict(data: Any, target_key: str) -> Any:
+    """Recursively search nested dicts/lists for target_key (case- and separator-insensitive)."""
+    norm_target = normalize_key(target_key)
+    if isinstance(data, dict):
+        for k, v in data.items():
+            if normalize_key(k) == norm_target:
+                return v
+            if (res := find_key_in_nested_dict(v, target_key)) is not None:
+                return res
+    elif isinstance(data, list):
+        for item in data:
+            if (res := find_key_in_nested_dict(item, target_key)) is not None:
+                return res
+    return None
+
+
+def build_description(
+    record: dict[str, Any],
+    description_fields: list[str],
+    description_precedence: str = "record",
+    participants_row: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    """Build a description dict for one record, merging participant metadata."""
+    desc = {
+        f: v
+        for f in description_fields
+        if (v := find_key_in_nested_dict(record, f)) is not None
+    }
+    part = participants_row
+    if part is None:
+        embedded = find_key_in_nested_dict(record, "participant_tsv")
+        if isinstance(embedded, dict):
+            part = embedded
+    if isinstance(part, dict):
+        if description_precedence == "participant_tsv":
+            norm = {normalize_key(k): k for k, v in desc.items() if v is not None}
+            for part_key, part_val in part.items():
+                if field := norm.get(normalize_key(part_key)):
+                    desc[field] = part_val
+        desc = merge_participants_fields(
+            description=desc,
+            participants_row=part,
+            description_fields=description_fields,
+        )
+    for field in description_fields:
+        desc.setdefault(field, None)
+    return desc

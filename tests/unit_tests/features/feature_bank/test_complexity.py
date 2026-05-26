@@ -2,29 +2,12 @@ import numpy as np
 import pytest
 
 from eegdash.features.feature_bank.complexity import (
-    _create_embedding,
     complexity_approx_entropy,
     complexity_entropy_preprocessor,
     complexity_lempel_ziv,
     complexity_sample_entropy,
     complexity_svd_entropy,
 )
-
-
-def test_create_embedding():
-    x = np.array([1, 2, 3, 4, 5])
-    dim = 2
-    lag = 1
-    # Expected: [[1, 2], [2, 3], [3, 4], [4, 5]]
-    embedding = _create_embedding(x, dim, lag)
-    expected = np.array([[1, 2], [2, 3], [3, 4], [4, 5]])
-    np.testing.assert_array_equal(embedding, expected)
-
-    lag = 2
-    # Expected: [[1, 2], [3, 4]]
-    embedding = _create_embedding(x, dim, lag)
-    expected = np.array([[1, 2], [3, 4]])
-    np.testing.assert_array_equal(embedding, expected)
 
 
 @pytest.fixture

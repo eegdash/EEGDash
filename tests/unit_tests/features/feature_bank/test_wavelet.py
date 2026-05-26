@@ -62,7 +62,7 @@ def test_wavelet_preprocessor_batched():
     bands, W, _ = wavelet_preprocessor(
         x, frequency_bands=BANDS, _metadata=METADATA.copy()
     )
-    assert W.shape == (len(BANDS), 4, N_CHANNELS, N_TIMES)
+    assert W.shape == (4, len(BANDS), N_CHANNELS, N_TIMES)
 
 
 def test_wavelet_preprocessor_returns_complex_for_cmor():

@@ -23,6 +23,7 @@ coherence). Real wavelets (``'mexh'``, ``'db4'``, ``'sym4'``) work for
 energy-only features; phase features raise a ``ValueError``.
 """
 
+import numba as nb
 import numpy as np
 import pywt
 from scipy.stats import kurtosis as scipy_kurtosis
@@ -57,17 +58,25 @@ def _band_center_freq(f_low, f_high):
     return np.sqrt(f_low * f_high)
 
 
-def _compute_cwt(x, frequency_bands, wavelet, sfreq):
-    fc = pywt.central_frequency(wavelet)
-    scales = np.array(
-        [
-            fc * sfreq / _band_center_freq(f_low, f_high)
-            for f_low, f_high in frequency_bands.values()
-        ]
-    )
-    coefs, _ = pywt.cwt(x, scales, wavelet, sampling_period=1.0 / sfreq, axis=-1)
-    # coefs: (n_bands, *x.shape[:-1], n_times)
-    return coefs
+@nb.njit(cache=True, fastmath=True)
+def _pac_bin_accumulate(phi_flat, A_flat, bin_edges, K):
+    n_leading, n_times = phi_flat.shape
+    mean_A = np.zeros((n_leading, K))
+    counts = np.zeros((n_leading, K))
+    for s in range(n_leading):
+        for t in range(n_times):
+            k = np.searchsorted(bin_edges, phi_flat[s, t]) - 1
+            if k < 0:
+                k = 0
+            if k >= K:
+                k = K - 1
+            mean_A[s, k] += A_flat[s, t]
+            counts[s, k] += 1
+    for s in range(n_leading):
+        for k in range(K):
+            if counts[s, k] > 0:
+                mean_A[s, k] /= counts[s, k]
+    return mean_A
 
 
 # ---------------------------------------------------------------------------
@@ -112,54 +121,60 @@ def wavelet_preprocessor(
 
     """
     sfreq = _metadata["info"]["sfreq"]
-    coefs = _compute_cwt(x, frequency_bands, wavelet, sfreq)
+    fc = pywt.central_frequency(wavelet)
+    scales = np.array(
+        [
+            fc * sfreq / _band_center_freq(f_low, f_high)
+            for f_low, f_high in frequency_bands.values()
+        ]
+    )
+    coefs, _ = pywt.cwt(x, scales, wavelet, sampling_period=1.0 / sfreq, axis=-1)
+    if x.ndim > 2:  # batched: pywt puts n_bands first; move it behind n_batches
+        coefs = np.moveaxis(coefs, 0, 1)  # (n_batches, n_bands, n_ch, n_t)
     _metadata["wavelet_is_complex"] = np.iscomplexobj(coefs)
     return frequency_bands, coefs, _metadata
 
 
-@feature_predecessor()
+@feature_predecessor(wavelet_preprocessor)
 @channel_pairer_undirected
 def wavelet_connectivity_preprocessor(
-    x,
+    bands,
+    W,
     /,
-    frequency_bands=utils.DEFAULT_FREQ_BANDS,
-    wavelet=_DEFAULT_WAVELET,
     *,
     _metadata,
 ):
     r"""Compute per-band CWT coefficients for all unique channel pairs.
 
+    Receives output of :func:`wavelet_preprocessor` and splits the channel
+    axis into pairs.
+
     Parameters
     ----------
-    x : ndarray
-        Input signal of shape ``(n_trials, n_channels, n_times)``.
-    frequency_bands : dict
-        Mapping of band name → ``(f_low, f_high)`` in Hz.
-    wavelet : str
-        PyWavelets wavelet name. Defaults to ``'cmor1.5-1.0'``.
+    bands : dict
+        Band names → frequency ranges, passed through from ``wavelet_preprocessor``.
+    W : ndarray
+        CWT coefficients, shape ``(n_bands, n_ch, n_t)`` (unbatched) or
+        ``(n_batches, n_bands, n_ch, n_t)`` (batched).
     _metadata : dict
-        Must contain ``_metadata["info"]["sfreq"]`` and
-        ``_metadata["ch_pair_iterator"]``.
+        Must contain ``_metadata["ch_pair_iterator"]``.
 
     Returns
     -------
     bands : dict
-        The ``frequency_bands`` argument, passed through.
+        The ``bands`` argument, passed through.
     Wx : ndarray
-        Coefficients for the first channel of each pair,
-        shape ``(n_bands, n_trials, n_pairs, n_times)``.
+        Coefficients for the first channel of each pair.
+        Shape matches W with the channel axis replaced by n_pairs.
     Wy : ndarray
         Coefficients for the second channel of each pair, same shape as ``Wx``.
 
     """
-    sfreq = _metadata["info"]["sfreq"]
-    coefs = _compute_cwt(x, frequency_bands, wavelet, sfreq)
-    _metadata["wavelet_is_complex"] = np.iscomplexobj(coefs)
-    # coefs: (n_bands, n_trials, n_channels, n_times)
     idx_x, idx_y = _metadata["ch_pair_iterator"].get_pair_iterators()
-    Wx = coefs[:, :, idx_x, :]
-    Wy = coefs[:, :, idx_y, :]
-    return frequency_bands, Wx, Wy
+    # channel axis is always -2 in both batched and unbatched W
+    Wx = W[..., idx_x, :]
+    Wy = W[..., idx_y, :]
+    return bands, Wx, Wy
 
 
 # ---------------------------------------------------------------------------
@@ -190,10 +205,11 @@ def wavelet_entropy(bands, W, /):
         Shape ``(*leading_dims,)`` — one scalar per channel.
 
     """
-    E = (np.abs(W) ** 2).mean(axis=-1)  # (n_bands, *leading)
-    p = E / E.sum(axis=0, keepdims=True)
+    bands_axis = 0 if W.ndim == 3 else 1
+    E = (W.real**2 + W.imag**2).mean(axis=-1)
+    p = E / E.sum(axis=bands_axis, keepdims=True)
     safe_log = np.where(p > 0, np.log(p), 0.0)
-    return -(p * safe_log).sum(axis=0)
+    return -(p * safe_log).sum(axis=bands_axis)
 
 
 @feature_predecessor(wavelet_preprocessor)
@@ -215,9 +231,13 @@ def wavelet_relative_power(bands, W, /):
         ``(*leading_dims,)``.
 
     """
-    E = (np.abs(W) ** 2).mean(axis=-1)  # (n_bands, *leading)
-    total = E.sum(axis=0, keepdims=True)  # (1, *leading)
-    return {name: E[i] / total[0] for i, name in enumerate(bands)}
+    bands_axis = 0 if W.ndim == 3 else 1
+    E = (W.real**2 + W.imag**2).mean(axis=-1)
+    total = E.sum(axis=bands_axis, keepdims=True)
+    return {
+        name: np.take(E, i, axis=bands_axis) / np.squeeze(total, axis=bands_axis)
+        for i, name in enumerate(bands)
+    }
 
 
 @feature_predecessor(wavelet_preprocessor)
@@ -239,7 +259,11 @@ def wavelet_skewness(bands, W, /):
         ``(*leading_dims,)``.
 
     """
-    return {name: scipy_skew(np.abs(W[i]), axis=-1) for i, name in enumerate(bands)}
+    bands_axis = 0 if W.ndim == 3 else 1
+    return {
+        name: scipy_skew(np.abs(np.take(W, i, axis=bands_axis)), axis=-1)
+        for i, name in enumerate(bands)
+    }
 
 
 @feature_predecessor(wavelet_preprocessor)
@@ -261,7 +285,11 @@ def wavelet_kurtosis(bands, W, /):
         ``(*leading_dims,)``.
 
     """
-    return {name: scipy_kurtosis(np.abs(W[i]), axis=-1) for i, name in enumerate(bands)}
+    bands_axis = 0 if W.ndim == 3 else 1
+    return {
+        name: scipy_kurtosis(np.abs(np.take(W, i, axis=bands_axis)), axis=-1)
+        for i, name in enumerate(bands)
+    }
 
 
 @feature_predecessor(wavelet_preprocessor)
@@ -299,24 +327,24 @@ def wavelet_pac(bands, W, /, *, _metadata=None):
 
     """
     band_names = list(bands.keys())
+    bands_axis = 0 if W.ndim == 3 else 1
     K = 18
     bin_edges = np.linspace(-np.pi, np.pi, K + 1)
-    leading_shape = W.shape[1:-1]
+    # leading shape: everything except bands_axis and time
+    leading_shape = tuple(
+        s for ax, s in enumerate(W.shape) if ax != bands_axis and ax != W.ndim - 1
+    )
     result = {}
     for i, phase_name in enumerate(band_names):
-        phi = np.angle(W[i])  # (*leading, n_times)
+        phi = np.angle(np.take(W, i, axis=bands_axis))  # (*leading, n_times)
         for j, amp_name in enumerate(band_names):
             if j <= i:
                 continue
-            A = np.abs(W[j])  # (*leading, n_times)
-            bin_idx = np.clip(np.digitize(phi, bin_edges) - 1, 0, K - 1)
-            mean_A = np.zeros((*leading_shape, K))
-            counts = np.zeros((*leading_shape, K))
-            for k in range(K):
-                mask = bin_idx == k  # (*leading, n_times)
-                mean_A[..., k] = np.where(mask, A, 0.0).sum(axis=-1)
-                counts[..., k] = mask.sum(axis=-1)
-            mean_A /= np.maximum(counts, 1)
+            A = np.abs(np.take(W, j, axis=bands_axis))  # (*leading, n_times)
+            phi_flat = phi.reshape(-1, W.shape[-1])
+            A_flat = A.reshape(-1, W.shape[-1])
+            mean_A_flat = _pac_bin_accumulate(phi_flat, A_flat, bin_edges, K)
+            mean_A = mean_A_flat.reshape(*leading_shape, K)
             p_bin = mean_A / np.maximum(mean_A.sum(axis=-1, keepdims=True), 1e-15)
             safe_log = np.where(p_bin > 0, np.log(p_bin), 0.0)
             H = -(p_bin * safe_log).sum(axis=-1)  # (*leading)
@@ -329,6 +357,8 @@ def wavelet_pac(bands, W, /, *, _metadata=None):
 # ---------------------------------------------------------------------------
 
 
+# TODO: add analytic_signal_connectivity_preprocessor as a second predecessor once
+# that module is pulled from GitHub (see gal_notes.md item 1).
 @feature_predecessor(wavelet_connectivity_preprocessor)
 @bivariate_feature
 @requires_complex_wavelet
@@ -361,11 +391,13 @@ def wavelet_plv(bands, Wx, Wy, /, *, _metadata=None):
         ``(n_trials, n_pairs)``.
 
     """
-    phi_diff = np.angle(Wx) - np.angle(Wy)
-    plv = np.abs(
-        np.mean(np.exp(1j * phi_diff), axis=-1)
-    )  # (n_bands, n_trials, n_pairs)
-    return {name: plv[i] for i, name in enumerate(bands)}
+    bands_axis = 0 if Wx.ndim == 3 else 1
+    mag_x = np.sqrt(Wx.real**2 + Wx.imag**2)
+    mag_y = np.sqrt(Wy.real**2 + Wy.imag**2)
+    wx_n = Wx / np.maximum(mag_x, 1e-15)
+    wy_n = Wy / np.maximum(mag_y, 1e-15)
+    plv = np.abs(np.mean(wx_n * np.conj(wy_n), axis=-1))
+    return {name: np.take(plv, i, axis=bands_axis) for i, name in enumerate(bands)}
 
 
 @feature_predecessor(wavelet_connectivity_preprocessor)
@@ -401,8 +433,13 @@ def wavelet_coherence(bands, Wx, Wy, /, *, _metadata=None):
         ``(n_trials, n_pairs)``.
 
     """
+    bands_axis = 0 if Wx.ndim == 3 else 1
     cross = Wx * np.conj(Wy)
     num = np.abs(cross.mean(axis=-1)) ** 2
-    denom = (np.abs(Wx) ** 2).mean(axis=-1) * (np.abs(Wy) ** 2).mean(axis=-1)
+    denom = (Wx.real**2 + Wx.imag**2).mean(axis=-1) * (Wy.real**2 + Wy.imag**2).mean(
+        axis=-1
+    )
     coherence = num / np.maximum(denom, 1e-15)
-    return {name: coherence[i] for i, name in enumerate(bands)}
+    return {
+        name: np.take(coherence, i, axis=bands_axis) for i, name in enumerate(bands)
+    }

@@ -12,6 +12,8 @@ from collections.abc import Callable
 
 import numpy as np
 
+from eegdash.features.base_utils import get_underlying_func
+
 from ..decorators import preprocessor_output_type, wraps
 from ..output_types import AsInputOutputType
 
@@ -20,6 +22,7 @@ __all__ = [
     "get_valid_freq_band",
     "preprocessor_as_feature",
     "reduce_freq_bands",
+    "requires_complex_wavelet",
     "set_spectral_default_kwargs",
     "slice_freq_band",
     "spectral_kwargs",
@@ -55,6 +58,27 @@ def preprocessor_as_feature(*x):
     if len(x) == 1:
         return x[0]
     return x
+
+
+def requires_complex_wavelet(func):
+    """Decorator: raise ValueError if metadata indicates a non-complex wavelet."""
+
+    @wraps(func)
+    def wrapper(*args, _metadata, **kwargs):
+        if (
+            not _metadata.hasattr("wavelet_is_complex")
+            or not _metadata["wavelet_is_complex"]
+        ):
+            raise ValueError(
+                f"{func.__name__} requires complex wavelet coefficients. "
+                "Use a complex wavelet such as 'cmor1.5-1.0'."
+            )
+        f = get_underlying_func(func)
+        if "_metadata" in inspect.signature(f).parameters:
+            kwargs["_metadata"] = _metadata
+        return func(*args, **kwargs)
+
+    return wrapper
 
 
 def set_spectral_default_kwargs(kwargs, metadata):

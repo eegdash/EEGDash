@@ -64,6 +64,17 @@ from .spectral import (
     spectral_slope,
 )
 from .utils import preprocessor_as_feature
+from .wavelet import (
+    wavelet_coherence,
+    wavelet_connectivity_preprocessor,
+    wavelet_entropy,
+    wavelet_kurtosis,
+    wavelet_pac,
+    wavelet_plv,
+    wavelet_preprocessor,
+    wavelet_relative_power,
+    wavelet_skewness,
+)
 
 __all__ = [
     # Complexity
@@ -121,4 +132,14 @@ __all__ = [
     "spectral_hjorth_complexity",
     # Utils
     "preprocessor_as_feature",
+    # Wavelet
+    "wavelet_preprocessor",
+    "wavelet_connectivity_preprocessor",
+    "wavelet_entropy",
+    "wavelet_relative_power",
+    "wavelet_skewness",
+    "wavelet_kurtosis",
+    "wavelet_pac",
+    "wavelet_plv",
+    "wavelet_coherence",
 ]

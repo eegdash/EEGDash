@@ -64,11 +64,11 @@ def requires_complex_wavelet(func):
     """Decorator: raise ValueError if metadata indicates a non-complex wavelet."""
 
     @wraps(func)
-    def wrapper(*args, _metadata, **kwargs):
-        if (
-            not _metadata.hasattr("wavelet_is_complex")
-            or not _metadata["wavelet_is_complex"]
-        ):
+    def wrapper(*args, _metadata=None, **kwargs):
+        is_complex = (
+            _metadata is not None and _metadata.get("wavelet_is_complex", False)
+        ) or (_metadata is None and len(args) > 1 and np.iscomplexobj(args[1]))
+        if not is_complex:
             raise ValueError(
                 f"{func.__name__} requires complex wavelet coefficients. "
                 "Use a complex wavelet such as 'cmor1.5-1.0'."

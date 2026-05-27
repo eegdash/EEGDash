@@ -30,6 +30,11 @@ jobs:
         run: |
           pip install -e .
           pip install -e "scripts/ingestions[dev]"
+      - name: Cache eegdash-testing-data
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/eegdash/testing-data
+          key: eegdash-testing-data-v0.1.0
       - name: Run schema-preflight tests
         working-directory: scripts/ingestions
         run: pytest tests/test_schema_preflight.py -ra --tb=short

@@ -53,6 +53,7 @@ dependencies = [
     "pandas",
     "mne-bids>=0.14",
     "python-dotenv>=1",
+    "pooch>=1.7",  # eegdash.testing.data_path() lazy-fetches test corpus
 ]
 
 [project.optional-dependencies]

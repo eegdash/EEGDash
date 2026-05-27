@@ -1,8 +1,9 @@
 """Direct tests for ``_set_parser.py`` (ROADMAP-C2 C2.3).
 
-Was at 36% before this commit. Uses the committed CC0 .set fixture
-at ``tests/fixtures/eeg/sub-001_task-AuditoryVisualShift_run-01_eeg.set``
-to exercise the happy path through scipy.io / h5py.
+Was at 36% before this commit. Uses the CC0 .set fixture from the
+``eegdash-testing-data`` corpus
+(``eeg/sub-001_task-AuditoryVisualShift_run-01_eeg.set``) to exercise
+the happy path through scipy.io / h5py.
 
 Complements ``test_parsers_property.py`` (which covers the
 "doesn't crash on garbage" invariants via Hypothesis) and
@@ -18,14 +19,11 @@ _INGEST_DIR = Path(__file__).resolve().parent.parent
 if str(_INGEST_DIR) not in sys.path:
     sys.path.insert(0, str(_INGEST_DIR))
 
+from eegdash.testing import data_file
+
 from _set_parser import parse_set_metadata
 
-EEG_SET = (
-    Path(__file__).parent
-    / "fixtures"
-    / "eeg"
-    / "sub-001_task-AuditoryVisualShift_run-01_eeg.set"
-)
+EEG_SET = data_file("eeg/sub-001_task-AuditoryVisualShift_run-01_eeg.set")
 
 
 # ─── Happy-path against the real fixture ──────────────────────────────────
@@ -40,7 +38,7 @@ def test_parse_set_returns_dict():
 
 def test_parse_set_extracts_sampling_frequency_when_struct_present():
     """When the fixture has a complete EEGLAB struct, sampling_frequency
-    is extracted. The CC0 fixture in tests/fixtures/eeg is metadata-light
+    is extracted. The CC0 fixture in eegdash-testing-data/eeg is metadata-light
     so this test is conditional — pins the contract without requiring
     every fixture to be feature-complete."""
     out = parse_set_metadata(EEG_SET)

@@ -48,6 +48,13 @@ jobs:
         run: |
           pip install -e .
           pip install -e "scripts/ingestions[dev]"
+      - name: Cache eegdash-testing-data
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/eegdash/testing-data
+          key: eegdash-testing-data-v0.1.0
+      - name: Pre-fetch eegdash-testing-data
+        run: python -m eegdash.testing
       - name: Run tests with coverage (offline)
         working-directory: scripts/ingestions
         # Coverage gate per ROADMAP-C1.md C1.1. Floor RATCHETS up per PR.
@@ -122,6 +129,13 @@ jobs:
         run: |
           pip install -e .
           pip install -e "scripts/ingestions[dev]"
+      - name: Cache eegdash-testing-data
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/eegdash/testing-data
+          key: eegdash-testing-data-v0.1.0
+      - name: Pre-fetch eegdash-testing-data
+        run: python -m eegdash.testing
       - name: Run E2E smoke tests (Stage 3 → 4 → 5)
         # Per ROADMAP-C1.md C1.3. The e2e tests run the snapshot
         # fixtures through 4_validate_output.py and 5_inject.py

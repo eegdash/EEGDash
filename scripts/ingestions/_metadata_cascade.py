@@ -323,8 +323,10 @@ def _parse_fif_with_mne(fif_path: Path) -> tuple[dict[str, Any] | None, bool]:
             except (OSError, AttributeError):
                 pass
 
-    except (OSError, ValueError, RuntimeError, KeyError, TypeError):
+    except (OSError, ValueError, RuntimeError, KeyError, TypeError, AttributeError):
         # Same recoverable parse-failure set as _parse_edf_with_mne.
+        # AttributeError: mne >=1.12 raises this from _fiff/open.py:151
+        # when reading a malformed FIF (tag is None → tag.kind crashes).
         return None, False
 
 

@@ -7,9 +7,11 @@ Per-dataset:  GET /{id}/metadata.json  (neuroschema v0.3 dataset doc)
 from __future__ import annotations
 
 import argparse
+import math
 import sys
 from collections.abc import Iterator
 from pathlib import Path
+from urllib.parse import urljoin
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
@@ -37,6 +39,10 @@ def _get(url: str, *, timeout: float = 30.0, retries: int = 3):
         return None
     if resp is None or resp.status_code != 200:
         raise NemarApiError(f"{url} -> {resp.status_code if resp else 'no-response'}")
+    # A 200 with an unparseable body returns payload=None from request_json.
+    # Distinguish that from a 404 so callers don't log it as "no metadata.json".
+    if payload is None:
+        raise NemarApiError(f"{url} -> 200 with malformed JSON body")
     return payload
 
 
@@ -103,17 +109,28 @@ def _funding_lines(funding) -> list[str]:
         funder = (f.get("funder_name") or "").strip()
         if not funder:
             continue
-        pieces = [funder, f.get("award_number") or "", f.get("award_title") or ""]
+        # str() coerce — DataCite carries award_number as int often enough.
+        pieces = [
+            funder,
+            str(f.get("award_number") or "").strip(),
+            str(f.get("award_title") or "").strip(),
+        ]
         out.append(" - ".join(p for p in pieces if p))
     return out
 
 
+_PAPER_RELATIONS = {"IsSupplementTo", "IsDescribedBy", "References"}
+
+
 def _paper_doi(related) -> str | None:
+    """Return the first paper-DOI entry. Requires an explicit relation_type
+    in the paper set — entries with no relation_type (often the dataset's
+    own DOI) are skipped so we don't conflate dataset and paper DOIs."""
     for r in related or []:
         if not isinstance(r, dict) or (r.get("identifier_type") or "").upper() != "DOI":
             continue
         rel = (r.get("relation_type") or "").strip()
-        if rel and rel not in {"IsSupplementTo", "IsDescribedBy", "References"}:
+        if rel not in _PAPER_RELATIONS:
             continue
         doi = (r.get("identifier") or "").strip()
         if doi:
@@ -122,26 +139,82 @@ def _paper_doi(related) -> str | None:
 
 
 def _ages(demographics) -> list[int]:
+    """Synthesise an ages list from the dataset-level bounds.
+
+    Caveat: metadata.json currently exposes only age_min/age_max, so the
+    returned list is the 2-bound shape, not per-subject ages. Histograms
+    that count len(ages) will misrepresent cohort size; tracked upstream.
+
+    Defensive: drop booleans (which subclass int) and non-finite floats,
+    both of which crash int() or yield garbage downstream.
+    """
     d = demographics or {}
-    return [
-        int(x) for x in (d.get("age_min"), d.get("age_max")) if isinstance(x, (int, float))
-    ]
+    out: list[int] = []
+    for x in (d.get("age_min"), d.get("age_max")):
+        if isinstance(x, bool):
+            continue
+        if not isinstance(x, (int, float)):
+            continue
+        if isinstance(x, float) and not math.isfinite(x):
+            continue
+        out.append(int(x))
+    return out
 
 
-def build_dataset_document(metadata: dict, *, catalogue_entry: dict) -> Dataset:
+def _normalize_modality(modality) -> list[str]:
+    """neuroschema requires recording_modality to be a list, but defensive
+    against upstream payloads that send a bare string (which would
+    iterate character-by-character in the comprehension below)."""
+    if modality is None or modality == []:
+        return ["eeg"]
+    if isinstance(modality, str):
+        modality = [modality]
+    return [str(m).lower() for m in modality]
+
+
+def _normalize_sex_distribution(sex_dist) -> dict | None:
+    """Match the {'M','F'} convention used by other adapters. Upstream
+    may return {'male','female'} or mixed case."""
+    if not isinstance(sex_dist, dict) or not sex_dist:
+        return None
+    out: dict[str, int] = {}
+    for raw_key, raw_val in sex_dist.items():
+        try:
+            count = int(raw_val)
+        except (TypeError, ValueError):
+            continue
+        key = str(raw_key).strip().upper()
+        if key in ("M", "MALE"):
+            out["M"] = out.get("M", 0) + count
+        elif key in ("F", "FEMALE"):
+            out["F"] = out.get("F", 0) + count
+        else:
+            out[key] = out.get(key, 0) + count
+    return out or None
+
+
+def build_dataset_document(
+    metadata: dict, *, catalogue_entry: dict, base_url: str = BASE_URL
+) -> Dataset:
     dataset_id = str(metadata.get("dataset_id") or catalogue_entry.get("id") or "")
     ext = metadata.get("external_links") or {}
     prov = metadata.get("provenance") or {}
     demo = metadata.get("demographics") or {}
     summary = metadata.get("data_summary") or {}
     authors = metadata.get("authors") or []
-    modality = metadata.get("recording_modality") or ["EEG"]
+
+    # urljoin handles both relative ('/nm00103/') and absolute browse_urls
+    # without producing a double-prefix.
+    browse = catalogue_entry.get("browse_url") or f"/{dataset_id}/"
+    source_url = urljoin(base_url + "/", browse.lstrip("/"))
+
+    senior = _person_name(authors[-1]) if authors else ""
 
     return create_dataset(
         dataset_id=dataset_id,
         name=metadata.get("name") or catalogue_entry.get("title") or dataset_id,
         source="nemar",
-        recording_modality=[str(m).lower() for m in modality],
+        recording_modality=_normalize_modality(metadata.get("recording_modality")),
         bids_version=metadata.get("bids_version"),
         license=metadata.get("license"),
         authors=[n for n in (_person_name(a) for a in authors) if n],
@@ -154,11 +227,11 @@ def build_dataset_document(metadata: dict, *, catalogue_entry: dict) -> Dataset:
         size_bytes=summary.get("size_bytes"),
         subjects_count=demo.get("subjects_count"),
         ages=_ages(demo),
-        sex_distribution=demo.get("sex_distribution"),
+        sex_distribution=_normalize_sex_distribution(demo.get("sex_distribution")),
         species=demo.get("species") or "Human",
-        source_url=f"https://data.nemar.org{catalogue_entry.get('browse_url') or '/' + dataset_id + '/'}",
+        source_url=source_url,
         github_url=ext.get("github_url"),
-        senior_author=_person_name(authors[-1]) if authors else None,
+        senior_author=senior or None,
         dataset_modified_at=prov.get("publish_date"),
     )
 
@@ -197,7 +270,7 @@ def fetch_datasets(
             print(f"  [skip] {dataset_id}: no metadata.json", file=sys.stderr)
             continue
         fetched += 1
-        yield build_dataset_document(metadata, catalogue_entry=entry)
+        yield build_dataset_document(metadata, catalogue_entry=entry, base_url=base_url)
         if fetched % 20 == 0:
             print(f"  Processed {fetched} datasets...")
 

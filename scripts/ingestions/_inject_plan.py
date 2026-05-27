@@ -8,54 +8,9 @@ from collections.abc import Callable, Iterable
 from dataclasses import dataclass, field
 from pathlib import Path
 
+from _constants import EXCLUDED_DATASETS
 from _fingerprint import fingerprint_from_records
 from _http import get_client, request_json
-
-# Datasets to explicitly ignore during ingestion.
-EXCLUDED_DATASETS = {
-    "test",
-    "ds003380",
-    # OpenNeuro IDs that now redirect to other datasets on openneuro.org.
-    # ds004929 and ds005930 are fNIRS-only (no EEG); ds005407 redirects.
-    "ds004929",
-    "ds005407",
-    "ds005930",
-    "ABUDUKADI",
-    "ABUDUKADI_2",
-    "ABUDUKADI_3",
-    "ABUDUKADI_4",
-    "AILIJIANG",
-    "AILIJIANG_3",
-    "AILIJIANG_4",
-    "AILIJIANG_5",
-    "AILIJIANG_7",
-    "AILIJIANG_8",
-    "BAIHETI",
-    "BAIHETI_2",
-    "BAIHETI_3",
-    "BIAN_3",
-    "BIN_27",
-    "BLIX",
-    "BOJIN",
-    "BOUSSAGOL",
-    "AISHENG",
-    "ACHOLA",
-    "ANASHKIN",
-    "ANJUM",
-    "BARBIERI",
-    "BIN_8",
-    "BIN_9",
-    "BING_4",
-    "BING_8",
-    "BOWEN_4",
-    "AZIZAH",
-    "BAO",
-    "BAO-YOU",
-    "BAO_2",
-    "BENABBOU",
-    "BING",
-    "BOXIN",
-}
 
 
 @dataclass
@@ -120,33 +75,44 @@ def load_records(dataset_dir: Path) -> list[dict]:
 
     Supports both new schema (``_records.json``) and legacy formats.
     Flattens entities to top-level fields for compatibility with EEGDash API.
+
+    Stamps ``record['dataset']`` from the directory name when missing so
+    downstream grouping in build_injection_plan cannot lose records.
     """
     dataset_id = dataset_dir.name
+
+    def _prepare(records: list) -> list[dict]:
+        out = []
+        for r in records:
+            r = _flatten_entities(r)
+            r.setdefault("dataset", dataset_id)
+            out.append(r)
+        return out
 
     records_file = dataset_dir / f"{dataset_id}_records.json"
     if records_file.exists():
         with open(records_file) as f:
             data = json.load(f)
-            if isinstance(data, dict) and "records" in data:
-                records = data["records"]
-            elif isinstance(data, list):
-                records = data
-            else:
-                records = []
-            return [_flatten_entities(r) for r in records]
+        if isinstance(data, dict) and "records" in data:
+            records = data["records"]
+        elif isinstance(data, list):
+            records = data
+        else:
+            records = []
+        return _prepare(records)
 
     for legacy_name in [f"{dataset_id}_core.json", f"{dataset_id}_minimal.json"]:
         legacy_file = dataset_dir / legacy_name
         if legacy_file.exists():
             with open(legacy_file) as f:
                 data = json.load(f)
-                if isinstance(data, list):
-                    records = data
-                elif isinstance(data, dict) and "records" in data:
-                    records = data["records"]
-                else:
-                    records = []
-                return [_flatten_entities(r) for r in records]
+            if isinstance(data, list):
+                records = data
+            elif isinstance(data, dict) and "records" in data:
+                records = data["records"]
+            else:
+                records = []
+            return _prepare(records)
 
     return []
 
@@ -184,7 +150,13 @@ def fetch_existing_dataset(
     database: str,
     dataset_id: str,
 ):
-    """Fetch existing dataset metadata from the API, if present."""
+    """Fetch existing dataset metadata from the API, if present.
+
+    Returns the dataset dict on success, or None when the dataset is
+    missing/ambiguous. A 200 OK with an empty body is treated as
+    ambiguous (not 'new') so we don't force a redundant reinjection
+    on transient API hiccups.
+    """
     url = f"{api_url}/api/{database}/datasets/{dataset_id}"
     data, response = request_json("get", url, timeout=30, client=get_client())
     if response is None:
@@ -193,11 +165,21 @@ def fetch_existing_dataset(
         return None
     if response.status_code != 200 or data is None:
         return None
-    return data.get("data", {})
+    payload = data.get("data")
+    if not payload:
+        # 200 with missing/empty data is ambiguous; don't claim 'new'.
+        return None
+    return payload
 
 
 def _ensure_fingerprint(dataset_id: str, dataset: dict | None, records: list[dict]):
-    """Ensure ingestion_fingerprint is set on dataset or derived from records."""
+    """Ensure ingestion_fingerprint is set on dataset or derived from records.
+
+    Honour any fingerprint the digest stage already stamped onto the
+    dataset doc — required for --only-datasets runs where records aren't
+    loaded; without this the change-detection short-circuit would always
+    declare every dataset 'changed'.
+    """
     if dataset is None:
         dataset = {"dataset_id": dataset_id}
     if dataset.get("ingestion_fingerprint"):
@@ -270,13 +252,12 @@ def build_injection_plan(
 
         try:
             records = load_records(dataset_dir)
-
-            if not records and want_records:
-                continue
-
-            if want_records:
+            if want_records and records:
                 all_records.extend(records)
 
+            # NB: never skip the dataset doc just because records is empty
+            # — a metadata-only seed (or an --only-datasets run that pulls
+            # no records by design) should still emit the Dataset document.
             dataset = load_dataset(dataset_dir)
             if dataset:
                 dataset_docs[dataset_id] = dataset

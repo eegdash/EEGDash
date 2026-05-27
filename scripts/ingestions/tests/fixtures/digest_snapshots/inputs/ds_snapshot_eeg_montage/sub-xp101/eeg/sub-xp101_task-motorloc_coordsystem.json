@@ -1,5 +1,0 @@
-{
-  "EEGCoordinateSystem": "CapTrak",
-  "EEGCoordinateUnits": "m",
-  "EEGCoordinateSystemDescription": "Captured with CapTrak photogrammetry; standard 10-20 international system positions, normalized to a unit head sphere."
-}

@@ -15,6 +15,8 @@ import json
 import sys
 from pathlib import Path
 
+from eegdash.testing import data_file
+
 _INGEST_DIR = Path(__file__).resolve().parent.parent
 if str(_INGEST_DIR) not in sys.path:
     sys.path.insert(0, str(_INGEST_DIR))
@@ -351,14 +353,7 @@ def test_extract_record_includes_new_bids_fields_in_synthetic_bids(
     digest = _load_digest()
 
     # Build a tiny BIDS root via the existing snapshot fixture
-    inputs_root = (
-        _INGEST_DIR
-        / "tests"
-        / "fixtures"
-        / "digest_snapshots"
-        / "inputs"
-        / "ds_snapshot_vhdr"
-    )
+    inputs_root = data_file("digest_snapshots/inputs/ds_snapshot_vhdr")
     if not inputs_root.exists():
         # No fixture → skip (e2e is conditional on the snapshot tree)
         import pytest

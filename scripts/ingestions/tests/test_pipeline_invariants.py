@@ -26,6 +26,7 @@ import json
 import sys
 from pathlib import Path
 
+from eegdash.testing import data_file
 from hypothesis import HealthCheck, given, settings
 from hypothesis import strategies as st
 
@@ -200,7 +201,7 @@ def test_every_snapshot_record_has_canonical_fields():
     digest path (BIDS-fs vs manifest) produced the Record, the schema
     invariants hold.
     """
-    snapshot_root = _INGEST_DIR / "tests" / "fixtures" / "digest_snapshots" / "outputs"
+    snapshot_root = data_file("digest_snapshots/outputs")
     for ds_dir in snapshot_root.iterdir():
         records_path = ds_dir / f"{ds_dir.name}_records.json"
         if not records_path.exists():
@@ -220,7 +221,7 @@ def test_every_snapshot_record_has_canonical_fields():
 def test_every_snapshot_dataset_carries_ingestion_fingerprint():
     """The Dataset doc always has an ingestion_fingerprint — required for
     de-dup checks in stage 5."""
-    snapshot_root = _INGEST_DIR / "tests" / "fixtures" / "digest_snapshots" / "outputs"
+    snapshot_root = data_file("digest_snapshots/outputs")
     for ds_dir in snapshot_root.iterdir():
         ds_path = ds_dir / f"{ds_dir.name}_dataset.json"
         if not ds_path.exists():
@@ -234,7 +235,7 @@ def test_every_snapshot_dataset_carries_ingestion_fingerprint():
 def test_records_dataset_id_matches_container_directory():
     """Cross-Record invariant: every Record's ``dataset`` field equals the
     enclosing directory name (the dataset_id)."""
-    snapshot_root = _INGEST_DIR / "tests" / "fixtures" / "digest_snapshots" / "outputs"
+    snapshot_root = data_file("digest_snapshots/outputs")
     for ds_dir in snapshot_root.iterdir():
         records_path = ds_dir / f"{ds_dir.name}_records.json"
         if not records_path.exists():
@@ -247,7 +248,7 @@ def test_records_dataset_id_matches_container_directory():
 def test_provenance_values_only_in_documented_enum():
     """Every record's _metadata_provenance values come from the documented
     5-element enum (or None). No surprise sources leak through."""
-    snapshot_root = _INGEST_DIR / "tests" / "fixtures" / "digest_snapshots" / "outputs"
+    snapshot_root = data_file("digest_snapshots/outputs")
     valid = {
         "mne_bids",
         "modality_sidecar",

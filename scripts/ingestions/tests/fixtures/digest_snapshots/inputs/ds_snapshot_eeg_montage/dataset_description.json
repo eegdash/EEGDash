@@ -1,6 +1,0 @@
-{
-  "Name": "Digest snapshot fixture (EEG with electrodes — montage acceptance gate)",
-  "BIDSVersion": "1.7.0",
-  "License": "CC0",
-  "Authors": ["Test User"]
-}

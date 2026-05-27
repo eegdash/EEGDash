@@ -157,7 +157,7 @@ def test_digest_dataset_e2e_under_10s_on_snapshot(benchmark):
     setup; 10s ceiling gives 140x headroom for slower CI runners.
     """
     digest_mod, ingest_dir = _load_digest_for_perf()
-    inputs_dir = ingest_dir / "tests" / "fixtures" / "digest_snapshots" / "inputs"
+    inputs_dir = data_file("digest_snapshots/inputs")
 
     # Run twice and take the median; the first call pays MNE-load
     # cost so we don't want to fail on cold-start variance.

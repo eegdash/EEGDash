@@ -23,6 +23,7 @@ from pathlib import Path
 from typing import Any
 
 import pytest
+from eegdash.testing import data_file
 
 # Module-level "pinned now" used by ``_FixedDatetime`` below. Set by
 # ``_run_digest_against`` before patching the digest module; the class
@@ -119,9 +120,7 @@ def test_digest_dataset_is_byte_idempotent(
     fixture_name: str, ingest_dir: Path, tmp_path: Path
 ):
     """Run ``digest_dataset`` twice on the same input. Byte-identical."""
-    fixture_input = (
-        ingest_dir / "tests" / "fixtures" / "digest_snapshots" / "inputs" / fixture_name
-    )
+    fixture_input = data_file("digest_snapshots/inputs") / fixture_name
     if not fixture_input.exists():
         pytest.skip(f"Fixture missing: {fixture_input}")
 
@@ -173,9 +172,7 @@ def test_record_count_is_stable_across_runs(
 
     Catches missing files (records dropped between runs) or duplicates
     (records added between runs) even if some field varies."""
-    fixture_input = (
-        ingest_dir / "tests" / "fixtures" / "digest_snapshots" / "inputs" / fixture_name
-    )
+    fixture_input = data_file("digest_snapshots/inputs") / fixture_name
     if not fixture_input.exists():
         pytest.skip(f"Fixture missing: {fixture_input}")
 
@@ -199,14 +196,7 @@ def test_record_count_is_stable_across_runs(
 def test_ingestion_fingerprint_is_stable_across_runs(ingest_dir: Path, tmp_path: Path):
     """The dataset's ``ingestion_fingerprint`` is content-derived and
     must NOT change across two runs of the same input."""
-    fixture_input = (
-        ingest_dir
-        / "tests"
-        / "fixtures"
-        / "digest_snapshots"
-        / "inputs"
-        / "ds_snapshot_vhdr"
-    )
+    fixture_input = data_file("digest_snapshots/inputs/ds_snapshot_vhdr")
     if not fixture_input.exists():
         pytest.skip(f"Fixture missing: {fixture_input}")
 

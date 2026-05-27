@@ -21,6 +21,7 @@ from pathlib import Path
 from typing import Any
 
 import pytest
+from eegdash.testing import data_file
 
 # Path layout:
 #   scripts/ingestions/tests/acceptance/conftest.py  ← this file
@@ -30,7 +31,7 @@ _INGEST_DIR = Path(__file__).resolve().parent.parent.parent
 if str(_INGEST_DIR) not in sys.path:
     sys.path.insert(0, str(_INGEST_DIR))
 
-_SNAPSHOT_OUTPUTS = _INGEST_DIR / "tests" / "fixtures" / "digest_snapshots" / "outputs"
+_SNAPSHOT_OUTPUTS = data_file("digest_snapshots/outputs")
 
 
 def _load_dataset_outputs(dataset_dir: Path) -> dict[str, Any] | None:

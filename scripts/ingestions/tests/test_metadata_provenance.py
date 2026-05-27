@@ -19,6 +19,8 @@ import importlib.util
 import sys
 from pathlib import Path
 
+from eegdash.testing import data_file
+
 _INGEST_DIR = Path(__file__).resolve().parent.parent
 if str(_INGEST_DIR) not in sys.path:
     sys.path.insert(0, str(_INGEST_DIR))
@@ -212,14 +214,8 @@ def test_bids_snapshot_record_has_metadata_provenance():
     """
     import json as json_mod
 
-    snapshot_path = (
-        _INGEST_DIR
-        / "tests"
-        / "fixtures"
-        / "digest_snapshots"
-        / "outputs"
-        / "ds_snapshot_vhdr"
-        / "ds_snapshot_vhdr_records.json"
+    snapshot_path = data_file(
+        "digest_snapshots/outputs/ds_snapshot_vhdr/ds_snapshot_vhdr_records.json"
     )
     payload = json_mod.loads(snapshot_path.read_text())
     record = payload["records"][0]
@@ -260,14 +256,8 @@ def test_bids_snapshot_provenance_matches_expected_cascade():
     """
     import json as json_mod
 
-    snapshot_path = (
-        _INGEST_DIR
-        / "tests"
-        / "fixtures"
-        / "digest_snapshots"
-        / "outputs"
-        / "ds_snapshot_vhdr"
-        / "ds_snapshot_vhdr_records.json"
+    snapshot_path = data_file(
+        "digest_snapshots/outputs/ds_snapshot_vhdr/ds_snapshot_vhdr_records.json"
     )
     payload = json_mod.loads(snapshot_path.read_text())
     provenance = payload["records"][0]["_metadata_provenance"]
@@ -287,14 +277,8 @@ def test_manifest_snapshot_records_have_no_provenance():
     """
     import json as json_mod
 
-    snapshot_path = (
-        _INGEST_DIR
-        / "tests"
-        / "fixtures"
-        / "digest_snapshots"
-        / "outputs"
-        / "ds_snapshot_manifest"
-        / "ds_snapshot_manifest_records.json"
+    snapshot_path = data_file(
+        "digest_snapshots/outputs/ds_snapshot_manifest/ds_snapshot_manifest_records.json"
     )
     payload = json_mod.loads(snapshot_path.read_text())
     for record in payload["records"]:

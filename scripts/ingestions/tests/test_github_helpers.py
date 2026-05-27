@@ -28,14 +28,14 @@ def test_token_from_explicit_arg_wins_over_env(monkeypatch):
     assert get_github_token("explicit") == "explicit"
 
 
-def test_token_from_GITHUB_TOKEN_env(monkeypatch):  # noqa: N802
+def test_token_from_GITHUB_TOKEN_env(monkeypatch):
     """GITHUB_TOKEN is the canonical name; preferred over GH_TOKEN."""
     monkeypatch.setenv("GITHUB_TOKEN", "from_github_token")
     monkeypatch.delenv("GH_TOKEN", raising=False)
     assert get_github_token() == "from_github_token"
 
 
-def test_token_falls_back_to_GH_TOKEN_env(monkeypatch):  # noqa: N802
+def test_token_falls_back_to_GH_TOKEN_env(monkeypatch):
     """If GITHUB_TOKEN unset, fall back to GH_TOKEN (gh-cli convention)."""
     monkeypatch.delenv("GITHUB_TOKEN", raising=False)
     monkeypatch.setenv("GH_TOKEN", "from_gh_token")
@@ -63,7 +63,7 @@ def test_to_iso_returns_none_for_none():
     assert _to_iso(None) is None
 
 
-def test_to_iso_formats_utc_datetime_with_Z_suffix():  # noqa: N802
+def test_to_iso_formats_utc_datetime_with_Z_suffix():
     """tz-aware UTC datetimes use 'Z' suffix (canonical GitHub timestamp)."""
     dt = datetime(2026, 5, 22, 12, 0, 0, tzinfo=timezone.utc)
     out = _to_iso(dt)

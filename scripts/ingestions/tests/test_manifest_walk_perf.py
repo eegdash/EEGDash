@@ -136,8 +136,10 @@ def test_list_git_files_benchmark_synthetic_tree(benchmark, tmp_path):
     paths = {f["name"] for f in result}
     assert len(paths) == expected, "walker emitted duplicate paths"
     for f in result:
-        assert "name" in f and "size" in f
-        assert isinstance(f["size"], int) and f["size"] >= 0
+        assert "name" in f
+        assert "size" in f
+        assert isinstance(f["size"], int)
+        assert f["size"] >= 0
         # Relative paths only — no absolute paths leak.
         assert not f["name"].startswith("/")
 

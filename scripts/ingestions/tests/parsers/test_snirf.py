@@ -120,22 +120,38 @@ def _build_synthetic_snirf(
     return path
 
 
-def test_snirf_h5py_extracts_sampling_frequency(tmp_path: Path):
-    """``data1/time`` deltas give the sampling frequency."""
-    snirf = _build_synthetic_snirf(tmp_path / "test.snirf", sampling_frequency=100.0)
+@pytest.mark.parametrize(
+    ("kwargs", "field", "expected", "tolerance"),
+    [
+        pytest.param(
+            {"sampling_frequency": 100.0},
+            "sampling_frequency",
+            100.0,
+            1.0,  # 1% tolerance for linspace rounding
+            id="time_deltas_give_sampling_frequency",
+        ),
+        pytest.param(
+            {"n_channels": 5},
+            "nchans",
+            5,
+            0,  # exact
+            id="measurementList_count_gives_nchans",
+        ),
+    ],
+)
+def test_snirf_h5py_extracts_field(
+    tmp_path: Path, kwargs: dict, field: str, expected, tolerance
+):
+    """Synthetic HDF5 builds: time-deltas → sampling_frequency and
+    measurementListN count → nchans."""
+    snirf = _build_synthetic_snirf(tmp_path / "test.snirf", **kwargs)
     out = _parse_snirf_with_h5py(snirf)
     assert out is not None
-    assert "sampling_frequency" in out
-    # Allow 1% tolerance for linspace rounding
-    assert abs(out["sampling_frequency"] - 100.0) < 1.0
-
-
-def test_snirf_h5py_extracts_nchans(tmp_path: Path):
-    """``measurementListN`` count gives nchans."""
-    snirf = _build_synthetic_snirf(tmp_path / "test.snirf", n_channels=5)
-    out = _parse_snirf_with_h5py(snirf)
-    assert out is not None
-    assert out.get("nchans") == 5
+    assert field in out
+    if tolerance:
+        assert abs(out[field] - expected) < tolerance
+    else:
+        assert out[field] == expected
 
 
 def test_snirf_h5py_builds_ch_names_from_probe_labels(tmp_path: Path):

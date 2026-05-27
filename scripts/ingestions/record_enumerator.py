@@ -18,8 +18,8 @@ The two functions were 327 + 647 = 974 LOC of *parallel* implementation
 with an implicit fallback graph between them (3 separate places in
 ``digest_dataset`` would call ``digest_from_manifest`` when something
 went wrong with the BIDS path). Cross-function bug fixes routinely
-missed one of the two paths — Phase 9 audit-1 F1 was originally fixed
-in `digest_dataset` only.
+missed one of the two paths — silent-error-masking bugs were originally
+fixed in ``digest_dataset`` only.
 
 This Module names the Seam they were both at: **how do we enumerate
 Records for a Dataset?** Two Adapters implement it
@@ -56,7 +56,6 @@ The factory's fallback rules are documented inline; they mirror the
 See Also
 --------
 - ``source_adapter.py`` — per-Source ingest behaviour (storage, URLs)
-- ``ROBUSTNESS/PROGRESS-4.md`` — the design grill that produced this
 """
 
 from __future__ import annotations
@@ -171,7 +170,7 @@ class RecordEnumerator(ABC):
         Implementations may emit logger warnings but must NOT raise on
         recoverable per-file failures (those go in
         :attr:`EnumerationResult.errors`). Programmer errors propagate
-        per ROBUSTNESS/PROGRESS-3 (Phase 9 F1).
+        per  (Phase 9 F1).
         """
 
 
@@ -304,7 +303,7 @@ class BIDSFilesystemEnumerator(RecordEnumerator):
 
     Stage 3C: ``enumerate()`` calls ``_enumerate_via_bids`` directly
     (was a tempfile-bridge round-trip via ``digest_dataset`` in stage
-    2D — see ``ROBUSTNESS/STAGE-3-PLAN.md``).
+    2D — see STAGE-3-PLAN.md``).
     """
 
     def enumerate(self) -> EnumerationResult:
@@ -518,7 +517,7 @@ def write_dataset_outputs(
     Shared between both Adapter paths. Before this helper existed, the
     JSON-write block was duplicated inline in ``digest_dataset`` and
     ``digest_from_manifest`` with subtle drift between them — see
-    ``ROBUSTNESS/STAGE-2-PLAN.md`` for the catalogue.
+    STAGE-2-PLAN.md`` for the catalogue.
 
     Files written:
       - ``<dataset_id>_dataset.json``   the Dataset document

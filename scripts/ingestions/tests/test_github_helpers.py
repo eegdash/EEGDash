@@ -1,4 +1,4 @@
-"""Tests for ``_github.py`` — GitHub API helpers (ROADMAP-C2 C2.2).
+"""Tests for ``_github.py`` — GitHub API helpers .
 
 Was at 0% coverage. The full PyGithub-driven repo iterator is hard to
 test without mocking the entire pygithub object graph, so this focuses

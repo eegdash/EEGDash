@@ -1,4 +1,4 @@
-"""End-to-end pipeline smoke test (ROADMAP-C1 C1.3).
+"""End-to-end pipeline smoke test .
 
 Runs the 3 → 4 → 5 stages against the committed snapshot fixtures
 and verifies the inter-stage contract documented in

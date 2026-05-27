@@ -188,7 +188,7 @@ def test_request_json_retry_disabled_with_retries_zero():
 @respx.mock
 @pytest.mark.usefixtures("_no_cache_env")
 def test_request_json_408_request_timeout_is_retried_by_default():
-    """408 Request Timeout is in DEFAULT_RETRY_STATUSES per Phase 9 audit-2 F2.
+    """408 Request Timeout is in DEFAULT_RETRY_STATUSES .
 
     Some upstreams return 408 instead of 504 for the same case; the
     client should treat both the same way.
@@ -225,7 +225,7 @@ def test_request_json_custom_retry_statuses():
     assert route.call_count == 2
 
 
-# ─── make_retry_client deprecation (audit-2 F3) ────────────────────────────
+# ─── make_retry_client deprecation ────────────────────────────
 
 
 def test_make_retry_client_emits_deprecation_warning():

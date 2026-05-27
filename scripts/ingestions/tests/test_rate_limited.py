@@ -1,6 +1,6 @@
 """Regression tests for the tenacity-backed ``rate_limited`` decorator.
 
-Phase 9 audit-2 F1 consolidation. The decorator in ``_file_utils.py``
+The decorator in ``_file_utils.py``
 previously used a hand-rolled try/except retry loop. The rewrite uses
 ``tenacity`` to share semantics with ``_http.request_json``.
 

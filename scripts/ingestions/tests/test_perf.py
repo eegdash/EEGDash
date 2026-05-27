@@ -53,7 +53,7 @@ def test_parse_vhdr_peak_memory_under_2mb():
     assert peak_mb < 2.0, (
         f"parse_vhdr_metadata peaked at {peak_mb:.2f} MB on a 64-channel "
         f"fixture; ceiling is 2 MB. Suspect a quadratic accumulator or "
-        f"forgotten copy. See ROBUSTNESS/05-EVALUATION.md § Phase 7."
+        f"forgotten copy.md § Phase 7."
     )
 
 
@@ -148,7 +148,7 @@ def _run_digest_in_tempdir(digest_mod, inputs_dir):
 def test_digest_dataset_e2e_under_10s_on_snapshot(benchmark):
     """Full ``digest_dataset`` run on the BIDS snapshot fixture, under 10s.
 
-    Closes ROADMAP-C1 C1.6 partial — pipeline perf budget. Catches
+    Closes pipeline perf budget. Catches
     regressions where a refactor adds a stray network call, a
     quadratic loop, or breaks MNE's metadata cache.
 

@@ -1,4 +1,4 @@
-"""Tests for ``_parser_utils.py`` — pure helpers (ROADMAP-C2 C2.3).
+"""Tests for ``_parser_utils.py`` — pure helpers .
 
 Was at 32% before this commit. Network-dependent helpers
 (``fetch_bytes_from_s3`` / ``head_content_length`` / ``fetch_from_s3``)

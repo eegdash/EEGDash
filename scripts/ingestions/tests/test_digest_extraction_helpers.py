@@ -1,6 +1,6 @@
-"""Per-helper unit tests for the PROGRESS-7 decomposition helpers.
+"""Per-helper unit tests for the  decomposition helpers.
 
-ROADMAP P1.2. The 17 helpers introduced in PROGRESS-6 + PROGRESS-7
+. The 17 helpers introduced in  +
 are currently covered transitively by the snapshot tests — when
 something breaks, the failure points at the orchestrator
 (extract_record / extract_dataset_metadata / _enumerate_via_manifest)

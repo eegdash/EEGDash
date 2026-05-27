@@ -1,6 +1,6 @@
 """Happy-path tests for _snirf_parser via a synthetic HDF5 fixture.
 
-ROADMAP-C3 follow-up. C3.2 covered the fail paths. This file
+C3.2 covered the fail paths. This file
 constructs a minimal valid SNIRF HDF5 file in-memory and feeds it
 to the parser to exercise the success branches.
 

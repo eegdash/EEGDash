@@ -64,8 +64,8 @@ def parse_set_metadata(set_path: Path | str) -> dict[str, Any] | None:
     """
     set_path = Path(set_path)
 
-    # Phase 9 audit-3 F3: use the shared validate_file_path so .set
-    # files behind broken git-annex symlinks are handled consistently
+    # Use the shared validate_file_path so .set files behind broken
+    # git-annex symlinks are handled consistently
     # with the other parsers (previously this just called .exists()
     # which returns True for broken symlinks pointing into git-annex).
     if not validate_file_path(set_path):

@@ -5,7 +5,6 @@ and 5 (inject). Its ``VALID_STORAGE_PATTERNS`` dict is the only thing
 between MongoDB and a misrouted record's storage URL. Despite this it
 had ZERO tests before this commit.
 
-Per ROADMAP-C1.md C1.2.
 """
 
 from __future__ import annotations

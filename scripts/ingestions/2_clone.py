@@ -461,7 +461,7 @@ def process_dataset(
         # Recoverable failures: network blip, missing file, malformed
         # dataset metadata. Convert to a structured error record so the
         # batch aggregate can continue. Programmer errors (AttributeError,
-        # TypeError, etc.) propagate — that's deliberate; see audit-1 F1.
+        # TypeError, etc.) propagate — that's deliberate.
         with _lock:
             _stats["error"] += 1
         return {
@@ -573,7 +573,7 @@ def main():
     # though `args.timeout` already caps each individual handler, the
     # as_completed iterator itself blocks on the GIL waiting for
     # futures, so a stuck thread that never times out internally would
-    # still deadlock. See ROBUSTNESS/audit-1 F3.
+    # still deadlock. See  F3.
     per_dataset_timeout_s = float(args.timeout)
     wall_clock_budget_s = max(
         per_dataset_timeout_s * 2,
@@ -609,7 +609,7 @@ def main():
                 # forgot to wrap a particular path. A programmer error like
                 # AttributeError or TypeError on a misshapen dataset dict will
                 # propagate — that's correct: silent error masking is the
-                # Phase 9 audit-1 F1 finding this fix addresses.
+                # bug this fix addresses.
                 result = future.result()
                 results.append(result)
                 pbar.set_postfix(_stats)

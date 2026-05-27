@@ -1,4 +1,4 @@
-"""Unit tests for the format-parser registry (ROADMAP P2.2)."""
+"""Unit tests for the format-parser registry ."""
 
 from __future__ import annotations
 

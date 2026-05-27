@@ -1,4 +1,4 @@
-"""Property-based invariant tests (ROADMAP-C1 C1.4).
+"""Property-based invariant tests .
 
 The example-based tests in test_digest_extraction_helpers and
 test_metadata_provenance assert "given fixture X, output Y" — they

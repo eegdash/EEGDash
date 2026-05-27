@@ -10,7 +10,7 @@ The pattern from _inject_config.py:
    preserves --help / short-flag ergonomics.
 3. ``main()`` in the stage calls the loader, gets a typed config.
 
-See ``ROBUSTNESS/CONFIG-PATTERN.md`` (C7 wrap-up) for the principle.
+
 """
 
 from __future__ import annotations

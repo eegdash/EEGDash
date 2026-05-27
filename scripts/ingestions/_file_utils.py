@@ -258,8 +258,7 @@ def rate_limited(min_interval: float = 0.5, max_retries: int = 3):
 
     Notes
     -----
-    Phase 9 audit-2 F1 consolidation: the previous version used a
-    hand-rolled try/except retry loop. This rewrite uses ``tenacity``
+    Consolidates a hand-rolled try/except retry loop. Uses ``tenacity``
     via ``stop_after_attempt`` / ``wait_exponential`` so it shares
     semantics with ``_http.request_json``. The behaviour change is
     documented in the test suite.
@@ -444,7 +443,7 @@ def list_figshare_files(article_id: int | str, api_key: str = "") -> list[dict]:
         not in the shared schema. Fix opportunistically when
         exercised; do not invest in depth until promoted in a
         future sprint. See
-        ``ROBUSTNESS/ADRs/0001-secondary-source-deferral.md``.
+        ADRs/0001-secondary-source-deferral.md``.
     """
     headers = {"User-Agent": "EEGDash/1.0"}
     if api_key:
@@ -496,7 +495,7 @@ def list_zenodo_files(record_id: int | str, api_key: str = "") -> list[dict]:
         :func:`list_figshare_files`. Zenodo's per-file ``checksum``
         field is now picked up by :func:`build_manifest` (was silently
         dropped before — see
-        ``ROBUSTNESS/ADRs/0001-secondary-source-deferral.md``).
+        ADRs/0001-secondary-source-deferral.md``).
     """
     headers = {"User-Agent": "EEGDash/1.0"}
     if api_key:
@@ -568,7 +567,7 @@ def list_osf_files(node_id: str, path: str = "/") -> list[dict]:
         (line ~593): the helper recurses but does not chase ``next``
         page links, so OSF nodes with > 100 files may return a
         partial listing. See
-        ``ROBUSTNESS/ADRs/0001-secondary-source-deferral.md``.
+        ADRs/0001-secondary-source-deferral.md``.
     """
     url = f"https://api.osf.io/v2/nodes/{node_id}/files/osfstorage{path}"
     headers = {"User-Agent": "EEGDash/1.0"}
@@ -642,7 +641,7 @@ def list_scidb_files(
         :func:`list_figshare_files`. SciDB emits ``md5`` directly and
         is one of the few Adapters whose checksum survives the
         manifest pipeline. See
-        ``ROBUSTNESS/ADRs/0001-secondary-source-deferral.md``.
+        ADRs/0001-secondary-source-deferral.md``.
 
     Args:
         dataset_id: The SciDB dataSetId (UUID format)
@@ -675,7 +674,7 @@ def list_datarn_files(source_url: str) -> list[dict]:
         :func:`list_figshare_files`. The WebDAV PROPFIND path emits
         only ``name`` and ``size`` — no checksum, no download URL
         (constructed by the consumer from the source URL). See
-        ``ROBUSTNESS/ADRs/0001-secondary-source-deferral.md``.
+        ADRs/0001-secondary-source-deferral.md``.
     """
     # Try to get WebDAV URL from page JSON-LD
     webdav_url = None
@@ -988,7 +987,6 @@ def build_manifest(
         # Some Adapters (Zenodo) emit ``checksum`` instead of ``md5``;
         # accept either. Without this, Zenodo content hashes were
         # silently dropped at manifest time. See
-        # ROBUSTNESS/ADRs/0001-secondary-source-deferral.md.
         if checksum := f.get("md5") or f.get("checksum"):
             nf["md5"] = checksum
 

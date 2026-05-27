@@ -6,7 +6,7 @@ Background
 The ingestion pipeline distinguishes between several *Sources* —
 OpenNeuro, NEMAR, GIN/EEGManyLabs, and a handful of "secondary"
 providers (Figshare / Zenodo / OSF / SciDB / DataRN) that are
-best-effort per ``ROBUSTNESS/ADRs/0001-secondary-source-deferral.md``.
+best-effort per ADRs/0001-secondary-source-deferral.md``.
 
 In production, only **OpenNeuro** and **NEMAR** are exercised on every
 CI run. Their ingest behaviour diverges in four places:
@@ -51,7 +51,6 @@ See Also
 - ``eegdash.dataset._source_inference`` — the shared table
   (``STORAGE_CONFIGS``) + the runtime self-heal counterpart
   (``correct_storage_inplace``).
-- ``ROBUSTNESS/ADRs/0001-secondary-source-deferral.md`` — why the
   secondary sources don't get their own Adapter classes.
 """
 
@@ -290,7 +289,7 @@ class DefaultAdapter(SourceAdapter):
     dedicated Adapter class (because they have no special behaviour to
     encapsulate — yet).
 
-    See :doc:`ROBUSTNESS/ADRs/0001-secondary-source-deferral` for the
+    See  for the
     rationale (1 production Adapter + 6 secondary = no leverage for a
     7-Adapter shared Protocol today).
     """

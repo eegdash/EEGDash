@@ -5,7 +5,7 @@ the 7 source-fetch scripts in ``1_fetch_sources/``. Despite being a
 critical reproducibility path (deterministic JSON, dataset_id
 generation, deduplication), it had NO tests before this commit.
 
-Per ROADMAP-C1.md C1.2 — close the dead zone by exercising every
+close the dead zone by exercising every
 public helper.
 """
 

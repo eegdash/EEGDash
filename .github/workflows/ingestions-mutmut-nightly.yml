@@ -4,7 +4,7 @@ name: Ingestions — Mutmut nightly
 # 10-20 minutes to mutate end-to-end). Tracks kill-ratio over time;
 # alerts when it drops below the configured floor.
 #
-# Per ROADMAP.md P0.2. See ROBUSTNESS/findings-phase-4.md for the
+# Per  P0.2.md for the
 # baseline taken in session 4 (69.5% on _vhdr_parser.py with a
 # 10-minute budget).
 
@@ -106,7 +106,6 @@ jobs:
           # Compute kill ratio from ``mutmut results`` text output.
           # More robust across mutmut versions than reading the SQLite
           # cache schema (which changed between 2.x point releases).
-          # See ROBUSTNESS/findings-phase-4.md for the 60% floor.
           import re
           import subprocess
           import sys

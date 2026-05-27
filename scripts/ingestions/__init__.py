@@ -30,7 +30,7 @@ Shared helpers live in the underscore-prefixed modules:
 - ``_validate``       Pydantic validation re-exports
 - ``_vhdr_parser``    BrainVision ``.vhdr`` parser
 
-See ``ROBUSTNESS/`` for the on-going test-coverage / robustness programme.
+See  for the on-going test-coverage / robustness programme.
 """
 
 from __future__ import annotations

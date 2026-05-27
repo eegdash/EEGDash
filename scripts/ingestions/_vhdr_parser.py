@@ -188,8 +188,8 @@ def extract_vhdr_references(vhdr_path: Path | str) -> dict[str, str | None]:
     if content is None:
         return result
 
-    # Extract DataFile reference. Phase 9 audit-3 F2 hardening: a
-    # malicious .vhdr could set DataFile=../../../etc/passwd. We accept
+    # Extract DataFile reference. Path-traversal hardening: a malicious
+    # .vhdr could set DataFile=../../../etc/passwd. We accept
     # the field but only mark *_exists=True if the resolved sibling
     # stays inside the .vhdr's parent directory.
     parent_dir = vhdr_path.parent

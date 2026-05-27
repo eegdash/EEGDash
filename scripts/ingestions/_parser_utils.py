@@ -407,8 +407,8 @@ def path_is_within_root(path: Path | str, root: Path | str) -> bool:
 
     Notes
     -----
-    Phase 9 audit-3 F1+F2 fix. Internal trust model: paths from a
-    manifest the pipeline itself built are already trusted; this helper
+    Internal trust model: paths from a manifest the pipeline itself
+    built are already trusted; this helper
     exists so a future code path that accepts a user-supplied sidecar
     reference (BIDS ``IntendedFor``, ``.vhdr`` ``DataFile=``, etc.) can
     cheaply gate it.

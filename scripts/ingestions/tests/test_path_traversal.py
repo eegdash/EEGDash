@@ -1,4 +1,4 @@
-"""Regression tests for the Phase 9 audit-3 path-traversal hardening.
+"""Regression tests for path-traversal hardening.
 
 Three findings are addressed in the same commit:
 
@@ -67,7 +67,7 @@ def test_within_root_nonexistent_path_still_evaluated(tmp_path: Path) -> None:
 def test_within_root_symlink_out_of_tree_is_rejected(tmp_path: Path) -> None:
     """A symlink that points OUT of the tree fails the check.
 
-    Phase 9 audit-3 F2: the threat model includes symlinks that look
+    The threat model includes symlinks that look
     inside-tree by name but resolve outside (e.g., a malicious dataset
     archive that ships ``sub-01/data.set -> /etc/passwd``).
     """
@@ -116,7 +116,7 @@ def test_extract_vhdr_references_rejects_dotdot_path(tmp_path: Path) -> None:
     traversal resolves.
 
     This is the critical test for the security check at the heart of
-    audit-3 F2: ``path_is_within_root(...) AND data_path.exists()``.
+    ``path_is_within_root(...) AND data_path.exists()``.
     The naive bug (``or`` instead of ``and``, surfaced as mutmut
     mutant 80) only manifests when BOTH:
         - the path traversal puts the resolved target outside parent

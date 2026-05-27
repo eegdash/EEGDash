@@ -1,5 +1,4 @@
-"""Direct tests for _snirf_parser and _mef3_parser (ROADMAP-C3.2).
-
+"""Direct tests for _snirf_parser and _mef3_parser.
 Both parsers are at ~28-30% coverage. The HDF5/SNIRF format is too
 complex to fixture from scratch in a small test, so SNIRF tests
 focus on the fail paths (missing file, garbage bytes).

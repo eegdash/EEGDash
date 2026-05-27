@@ -41,7 +41,7 @@ pytestmark = [
         reason=(
             "Stress tests skipped. Set EEGDASH_INTEGRATION_API_URL + "
             "EEGDASH_INTEGRATION_ADMIN_TOKEN. See "
-            "ROBUSTNESS/INTEGRATION-TESTING.md."
+            "."
         ),
     ),
 ]

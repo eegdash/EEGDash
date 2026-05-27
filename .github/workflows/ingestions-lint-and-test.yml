@@ -57,7 +57,7 @@ jobs:
         run: python -m eegdash.testing
       - name: Run tests with coverage (offline)
         working-directory: scripts/ingestions
-        # Coverage gate per ROADMAP-C1.md C1.1. Floor RATCHETS up per PR.
+        # Coverage gate per . Floor RATCHETS up per PR.
         # History:
         #   2026-05-22 baseline:  35  (one-off scripts excluded, 36% actual)
         #   2026-05-22 C1.2:      38  (_serialize 0→93%, _validate 0→20%)
@@ -95,7 +95,7 @@ jobs:
           {
             echo "## Coverage summary"
             echo
-            echo "Floor: 35% (ratchets up per PR; see ROADMAP-C1.md C1.1)"
+            echo "Floor: 35% (ratchets up per PR; see )"
             echo
             echo '```'
             python -m coverage report --skip-covered 2>/dev/null | tail -40 || echo "no coverage data"
@@ -137,7 +137,7 @@ jobs:
       - name: Pre-fetch eegdash-testing-data
         run: python -m eegdash.testing
       - name: Run E2E smoke tests (Stage 3 → 4 → 5)
-        # Per ROADMAP-C1.md C1.3. The e2e tests run the snapshot
+        # Per . The e2e tests run the snapshot
         # fixtures through 4_validate_output.py and 5_inject.py
         # --dry-run as subprocess invocations. Offline (no API calls
         # in dry-run mode). Verifies the inter-stage contract

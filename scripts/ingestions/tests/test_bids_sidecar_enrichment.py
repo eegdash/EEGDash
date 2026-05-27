@@ -1,8 +1,6 @@
 """Tests for BIDS sidecar enrichment in extract_record / extract_dataset.
 
-ROADMAP C6.1 — closes the gap surfaced by BIDS-GAP-AUDIT.md.
-
-Before C6.1, the only BIDS-spec fields surfaced as structured Record
+Before sidecar enrichment landed, the only BIDS-spec fields surfaced as structured Record
 columns were the technical metadata (sfreq / nchans / ntimes / ch_names).
 PowerLineFrequency, EEGReference, SoftwareFilters, Manufacturer,
 EEGPlacementScheme — all required or recommended by BIDS — were either

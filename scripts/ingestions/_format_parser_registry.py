@@ -1,6 +1,6 @@
 """Format metadata parser registry — explicit Seam for binary-header readers.
 
-ROADMAP P2.2. Each neuroimaging file format (``.edf`` / ``.bdf`` /
+. Each neuroimaging file format (``.edf`` / ``.bdf`` /
 ``.set`` / ``.vhdr`` / ``.snirf`` / ``.mefd``) needs its own binary
 header reader because sidecar JSON may be absent. Before this module
 the 5 parsers shared an implicit contract — same return shape, same
@@ -24,9 +24,7 @@ it into this registry without changing the downstream check.
 
 See Also
 --------
-- ``ROBUSTNESS/findings-phase-4.md`` — mutmut results for the
   individual parsers (``_vhdr_parser.py`` at 69.5% kill ratio).
-- ``ROADMAP.md`` P2.2 — driver + definition-of-done.
 """
 
 from __future__ import annotations

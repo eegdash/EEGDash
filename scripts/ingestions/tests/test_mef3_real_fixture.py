@@ -1,85 +1,30 @@
 """Happy-path tests for _mef3_parser using a real MEF3 .tmet fixture.
 
-C3.2 covered the fail paths via synthetic
-.mefd directories. This file uses a real ``.tmet`` binary header
-extracted from OpenNeuro ds003708 (CC0) to exercise the
-``_parse_tmet_sampling_frequency`` byte-offset reader.
+Uses a real ``.tmet`` binary header from OpenNeuro ds003708 (CC0,
+16,384 bytes, real MEF3 v3.0 metadata structure) to exercise the
+``_parse_tmet_sampling_frequency`` byte-offset reader. The parser
+walks offsets 1272/1280/1288 for sampling frequency stored as
+little-endian double.
 
-The fixture comes from:
-  ``s3://openneuro.org/ds003708/sub-01/ses-ieeg01/ieeg/
-    sub-01_ses-ieeg01_task-ccep_run-01_ieeg.mefd/
-    EKG.timd/EKG-000000.segd/EKG-000000.tmet``
-
-License: CC0 (OpenNeuro standard). Size: 16,384 bytes. Real MEF3 v3.0
-metadata structure; the parser walks it at offsets 1272/1280/1288 for
-sampling frequency stored as little-endian double.
-
-If the fixture file is missing (e.g., on a fresh checkout), the
-whole module skips via ``pytestmark = pytest.mark.skipif(...)``.
-This is the same pattern test_snirf_happy_path.py uses for h5py
-absence, but here it's the fixture rather than the library.
+The fixture is loaded from the eegdash-testing-data corpus via
+``data_file`` — runs that lack the cache + are offline will fail
+at collection time (set ``EEGDASH_SKIP_TESTING_DATA=true`` to bypass).
 """
 
 from __future__ import annotations
 
-import shutil
-import sys
+import struct
 from pathlib import Path
 
-import pytest
-
-_INGEST_DIR = Path(__file__).resolve().parent.parent
-if str(_INGEST_DIR) not in sys.path:
-    sys.path.insert(0, str(_INGEST_DIR))
-
-# Real .tmet from OpenNeuro ds003708 (CC0), shipped in the
-# ``eegdash-testing-data`` corpus. Skip the module if the corpus is
-# unavailable (offline + no cache hit).
-try:
-    from eegdash.testing import data_file
-
-    _TMET_FIXTURE = data_file("ieeg/EKG-000000.tmet")
-    _SKIP_REASON: str | None = None
-except Exception as exc:  # fetch failure = skip
-    _TMET_FIXTURE = Path(__file__).parent / "_unreachable_.tmet"
-    _SKIP_REASON = f"eegdash-testing-data unavailable: {exc}"
-
-pytestmark = pytest.mark.skipif(
-    _SKIP_REASON is not None,
-    reason=_SKIP_REASON or "",
-)
+from _helpers.builders import build_mefd_around_real_tmet
+from eegdash.testing import data_file
 
 from _mef3_parser import (
     _parse_tmet_sampling_frequency,
     parse_mef3_metadata,
 )
 
-
-def _build_mefd_around_real_tmet(
-    tmp_path: Path, *, channels: list[str] | None = None
-) -> Path:
-    """Construct a .mefd directory using the real .tmet fixture.
-
-    Per the MEF 3.0 directory layout, each channel needs its own
-    ``<channel>.timd/<channel>-000000.segd/<channel>-000000.tmet``
-    path. We copy the same real .tmet into each channel's location
-    so every channel "loads" the canonical fixture.
-
-    Returns the .mefd path so callers can pass it to
-    ``parse_mef3_metadata``.
-    """
-    if channels is None:
-        channels = ["EKG", "LAD1", "LAD2"]
-
-    mefd = tmp_path / "sub-test_ieeg.mefd"
-    mefd.mkdir()
-    for ch in channels:
-        segd = mefd / f"{ch}.timd" / f"{ch}-000000.segd"
-        segd.mkdir(parents=True)
-        # Copy the real fixture's bytes into each channel's .tmet
-        shutil.copy(_TMET_FIXTURE, segd / f"{ch}-000000.tmet")
-
-    return mefd
+_TMET_FIXTURE = data_file("ieeg/EKG-000000.tmet")
 
 
 # ─── _parse_tmet_sampling_frequency on the real fixture ───────────────────
@@ -114,8 +59,8 @@ def test_real_tmet_bytes_are_long_enough_for_parser():
 def test_parse_mef3_metadata_with_real_tmet(tmp_path: Path):
     """End-to-end: build a real .mefd directory, run the public entry
     point, assert all three canonical fields populated."""
-    mefd = _build_mefd_around_real_tmet(
-        tmp_path, channels=["EKG", "LAD1", "LAD2", "LAD3"]
+    mefd = build_mefd_around_real_tmet(
+        tmp_path, _TMET_FIXTURE, channels=["EKG", "LAD1", "LAD2", "LAD3"]
     )
     out = parse_mef3_metadata(mefd)
     assert out is not None
@@ -134,7 +79,9 @@ def test_parse_mef3_metadata_channel_order_from_directory_listing(
     """The parser sorts .timd dirs alphabetically. Pinning so a future
     refactor that uses os.listdir (unsorted) is caught."""
     # Channels in a deliberately non-alphabetic input order
-    mefd = _build_mefd_around_real_tmet(tmp_path, channels=["ZZZ", "AAA", "MMM"])
+    mefd = build_mefd_around_real_tmet(
+        tmp_path, _TMET_FIXTURE, channels=["ZZZ", "AAA", "MMM"]
+    )
     out = parse_mef3_metadata(mefd)
     assert out is not None
     # Output channel list is sorted alphabetically
@@ -143,7 +90,7 @@ def test_parse_mef3_metadata_channel_order_from_directory_listing(
 
 def test_parse_mef3_metadata_single_channel_dataset(tmp_path: Path):
     """A .mefd with a single channel works (smallest valid case)."""
-    mefd = _build_mefd_around_real_tmet(tmp_path, channels=["solo"])
+    mefd = build_mefd_around_real_tmet(tmp_path, _TMET_FIXTURE, channels=["solo"])
     out = parse_mef3_metadata(mefd)
     assert out is not None
     assert out["nchans"] == 1
@@ -175,8 +122,6 @@ def test_parse_tmet_with_zeroed_offset_falls_back_to_none(tmp_path: Path):
 def test_parse_tmet_with_pathological_double_returns_none(tmp_path: Path):
     """A .tmet whose sfreq offset holds a value outside the sanity
     range (e.g. 1e10) is rejected."""
-    import struct
-
     # Build a 16KB file with all zeroes, then plant 1e10 (out of range)
     # at the canonical MEF 3.0 offset 1272.
     bad = tmp_path / "bad.tmet"

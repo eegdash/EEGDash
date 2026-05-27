@@ -1,19 +1,16 @@
-"""End-to-end pipeline test against real MEF3 fixture (C5.2 — Option 2).
+"""End-to-end pipeline test against real MEF3 fixture.
 
-C1.3 covered the inter-stage contract for the VHDR + manifest snapshot
-fixtures. This file extends that to MEF3 — runs the full
-``digest_dataset`` → ``4_validate_output`` → ``5_inject --dry-run`` chain
-against a minimal BIDS root wrapping the real ds003708 ``.tmet``.
-
-Why this matters: the C5.1 bug-fix made the parser extract sampling
-frequency correctly. But the parser sits inside a cascade in
+Runs the full ``digest_dataset`` → ``4_validate_output`` →
+``5_inject --dry-run`` chain against a minimal BIDS root wrapping the
+real ds003708 ``.tmet``. The parser sits inside a cascade in
 ``3_digest.py:_extract_technical_metadata`` that prefers
-``channels.tsv`` over the binary parser. If the cascade has a bug
-that drops the parser's output, we'd silently keep the old (wrong)
-behaviour. This test exercises the full path end-to-end.
+``channels.tsv`` over the binary parser; if the cascade has a bug
+that drops the parser's output, we'd silently keep wrong behaviour.
+This test exercises the full path end-to-end.
 
-If the .tmet fixture is missing, the whole module skips with a
-curl-recovery command in the message.
+The fixture is loaded from the eegdash-testing-data corpus via
+``data_file`` — runs that lack the cache + are offline will fail
+at collection (set ``EEGDASH_SKIP_TESTING_DATA=true`` to bypass).
 """
 
 from __future__ import annotations
@@ -24,25 +21,10 @@ import subprocess
 import sys
 from pathlib import Path
 
-import pytest
+from eegdash.testing import data_file
 
 _INGEST_DIR = Path(__file__).resolve().parent.parent
-if str(_INGEST_DIR) not in sys.path:
-    sys.path.insert(0, str(_INGEST_DIR))
-
-try:
-    from eegdash.testing import data_file
-
-    _TMET_FIXTURE = data_file("ieeg/EKG-000000.tmet")
-    _SKIP_REASON: str | None = None
-except Exception as exc:  # fetch failure = skip
-    _TMET_FIXTURE = Path(__file__).parent / "_unreachable_.tmet"
-    _SKIP_REASON = f"eegdash-testing-data unavailable: {exc}"
-
-pytestmark = pytest.mark.skipif(
-    _SKIP_REASON is not None,
-    reason=_SKIP_REASON or "",
-)
+_TMET_FIXTURE = data_file("ieeg/EKG-000000.tmet")
 
 
 def _build_minimal_mef3_bids_root(

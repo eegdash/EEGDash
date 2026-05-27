@@ -24,58 +24,22 @@ if str(_INGEST_DIR) not in sys.path:
 scipy_io = pytest.importorskip("scipy.io")
 
 import numpy as np
+from _helpers.builders import build_synthetic_set_v5
 
 from _set_parser import parse_set_metadata
-
-
-def _build_synthetic_set_v5(
-    path: Path,
-    *,
-    srate: float = 250.0,
-    nbchan: int = 32,
-    pnts: int = 5000,
-    ch_names: list[str] | None = None,
-) -> Path:
-    """Construct a minimal EEGLAB .set file in MAT v5 format.
-
-    EEGLAB's struct shape (from the .set parser's reading code):
-        EEG.srate         — sampling rate in Hz
-        EEG.nbchan        — channel count
-        EEG.pnts          — number of samples
-        EEG.chanlocs      — struct array with .labels (channel names)
-    """
-    if ch_names is None:
-        ch_names = [f"Ch{i + 1}" for i in range(nbchan)]
-
-    # chanlocs is a struct array; scipy.io.savemat takes a numpy structured array
-    chanlocs_dtype = np.dtype([("labels", "O")])
-    chanlocs = np.zeros(nbchan, dtype=chanlocs_dtype)
-    for i, name in enumerate(ch_names):
-        chanlocs[i] = (name,)
-
-    eeg_struct = {
-        "srate": np.array([[srate]]),
-        "nbchan": np.array([[nbchan]]),
-        "pnts": np.array([[pnts]]),
-        "chanlocs": chanlocs,
-    }
-
-    scipy_io.savemat(str(path), {"EEG": eeg_struct}, do_compression=False)
-    return path
-
 
 # ─── Happy path ───────────────────────────────────────────────────────────
 
 
 def test_set_extracts_sampling_frequency(tmp_path: Path):
-    set_path = _build_synthetic_set_v5(tmp_path / "test.set", srate=500.0)
+    set_path = build_synthetic_set_v5(tmp_path / "test.set", srate=500.0)
     out = parse_set_metadata(set_path)
     assert out is not None
     assert out.get("sampling_frequency") == 500.0
 
 
 def test_set_extracts_nchans(tmp_path: Path):
-    set_path = _build_synthetic_set_v5(tmp_path / "test.set", nbchan=64)
+    set_path = build_synthetic_set_v5(tmp_path / "test.set", nbchan=64)
     out = parse_set_metadata(set_path)
     assert out is not None
     assert out.get("nchans") == 64
@@ -83,7 +47,7 @@ def test_set_extracts_nchans(tmp_path: Path):
 
 def test_set_extracts_pnts_as_n_samples(tmp_path: Path):
     """``EEG.pnts`` should land in the ``n_samples`` field."""
-    set_path = _build_synthetic_set_v5(tmp_path / "test.set", pnts=10000)
+    set_path = build_synthetic_set_v5(tmp_path / "test.set", pnts=10000)
     out = parse_set_metadata(set_path)
     assert out is not None
     # Some parsers emit n_samples, others emit n_times — accept either.
@@ -92,7 +56,7 @@ def test_set_extracts_pnts_as_n_samples(tmp_path: Path):
 
 def test_set_extracts_ch_names_from_chanlocs(tmp_path: Path):
     """``EEG.chanlocs.labels`` becomes ch_names."""
-    set_path = _build_synthetic_set_v5(
+    set_path = build_synthetic_set_v5(
         tmp_path / "test.set",
         nbchan=3,
         ch_names=["Cz", "Fz", "Pz"],
@@ -105,7 +69,7 @@ def test_set_extracts_ch_names_from_chanlocs(tmp_path: Path):
 
 def test_set_reports_has_fdt_false_when_companion_missing(tmp_path: Path):
     """Without a sibling .fdt file, has_fdt is False."""
-    set_path = _build_synthetic_set_v5(tmp_path / "test.set")
+    set_path = build_synthetic_set_v5(tmp_path / "test.set")
     out = parse_set_metadata(set_path)
     assert out is not None
     assert out.get("has_fdt") is False
@@ -113,7 +77,7 @@ def test_set_reports_has_fdt_false_when_companion_missing(tmp_path: Path):
 
 def test_set_reports_has_fdt_true_when_companion_present(tmp_path: Path):
     """When ``.set`` has a sibling ``.fdt``, has_fdt is True."""
-    set_path = _build_synthetic_set_v5(tmp_path / "test.set")
+    set_path = build_synthetic_set_v5(tmp_path / "test.set")
     # Drop a placeholder .fdt next to it
     (tmp_path / "test.fdt").write_bytes(b"placeholder")
     out = parse_set_metadata(set_path)

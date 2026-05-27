@@ -18,6 +18,7 @@ from pathlib import Path
 import httpx
 import pytest
 import respx
+from eegdash.testing import data_file
 
 _INGEST_DIR = Path(__file__).resolve().parent.parent
 if str(_INGEST_DIR) not in sys.path:
@@ -287,7 +288,7 @@ def test_inject_runs_against_snapshot_with_mocked_api():
     )
 
     # Load the snapshot Records + Datasets + Montages
-    snapshot_root = _INGEST_DIR / "tests" / "fixtures" / "digest_snapshots" / "outputs"
+    snapshot_root = data_file("digest_snapshots/outputs")
     if not snapshot_root.exists():
         pytest.skip("snapshot fixture not available")
 

@@ -23,6 +23,8 @@ _INGEST_DIR = Path(__file__).resolve().parent.parent
 if str(_INGEST_DIR) not in sys.path:
     sys.path.insert(0, str(_INGEST_DIR))
 
+from eegdash.testing import data_file
+
 from _validate import (
     ValidationResult,
     validate_dataset,
@@ -299,7 +301,7 @@ def test_validate_digestion_output_accepts_snapshot_fixture():
     Stage 3 must pass the validator. If a Stage-3 refactor changes
     a field, this fires.
     """
-    snapshot_root = _INGEST_DIR / "tests" / "fixtures" / "digest_snapshots" / "outputs"
+    snapshot_root = data_file("digest_snapshots/outputs")
     out = validate_digestion_output(snapshot_root)
     # Snapshot has 3 datasets, 5 records:
     #   - ds_snapshot_vhdr           1 record  (BIDS-fs, no montage)

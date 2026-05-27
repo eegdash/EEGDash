@@ -23,6 +23,8 @@ _INGEST_DIR = Path(__file__).resolve().parent.parent
 if str(_INGEST_DIR) not in sys.path:
     sys.path.insert(0, str(_INGEST_DIR))
 
+from eegdash.testing import data_file
+
 from digest_telemetry import (
     NDJSONEmitter,
     NullEmitter,
@@ -248,7 +250,7 @@ def test_digest_dataset_emits_event_stream(tmp_path_factory, monkeypatch):
         tmp_output = tmp_path_factory.mktemp("digest_run_telemetry")
         summary = digest.digest_dataset(
             "ds_snapshot_vhdr",
-            _INGEST_DIR / "tests" / "fixtures" / "digest_snapshots" / "inputs",
+            data_file("digest_snapshots/inputs"),
             tmp_output,
         )
         assert summary["status"] == "success"

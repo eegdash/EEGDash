@@ -27,9 +27,10 @@ import sys
 from pathlib import Path
 
 import pytest
+from eegdash.testing import data_file
 
 _INGEST_DIR = Path(__file__).resolve().parent.parent
-_SNAPSHOT_OUTPUTS = _INGEST_DIR / "tests" / "fixtures" / "digest_snapshots" / "outputs"
+_SNAPSHOT_OUTPUTS = data_file("digest_snapshots/outputs")
 
 
 def _python_run(script: str, *args: str) -> subprocess.CompletedProcess:

@@ -143,10 +143,10 @@ jobs:
         # in dry-run mode). Verifies the inter-stage contract
         # documented in PIPELINE-CONTRACT.md.
         working-directory: scripts/ingestions
-        run: pytest tests/test_pipeline_e2e.py -ra --tb=short
+        run: pytest tests/pipeline/test_e2e.py -ra --tb=short
       - name: Run snapshot tests separately (verbose)
         # Re-run the snapshot tests with verbose output. They're also
         # in the main test suite, but isolating them in CI logs makes
         # byte-drift failures easier to diagnose.
         working-directory: scripts/ingestions
-        run: pytest tests/test_digest_snapshot.py -v --tb=long
+        run: pytest tests/digest/test_snapshot.py -v --tb=long

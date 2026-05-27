@@ -68,13 +68,17 @@ jobs:
           TARGET: ${{ github.event_name == 'schedule' && matrix.parser || github.event.inputs.target_file }}
         run: |
           # Map parser filename to its parser-specific test file.
-          # Naming convention: _vhdr_parser.py → tests/test_vhdr_parser.py
-          PARSER_TEST="tests/test_$(echo "$TARGET" | sed -e 's|^_||' -e 's|\.py$||').py"
+          # Naming convention after the tests-subfolder reorg:
+          #   _vhdr_parser.py → tests/parsers/test_vhdr.py
+          # Strip the leading underscore, the trailing _parser, and ``.py``,
+          # then prefix with ``tests/parsers/test_``.
+          STEM="$(echo "$TARGET" | sed -e 's|^_||' -e 's|_parser\.py$||' -e 's|\.py$||')"
+          PARSER_TEST="tests/parsers/test_${STEM}.py"
           if [ ! -f "$PARSER_TEST" ]; then
             echo "FAIL: parser-specific test file not found: $PARSER_TEST"
             exit 1
           fi
-          NEW_RUNNER="python -m pytest $PARSER_TEST tests/test_parsers_property.py -x -q --tb=no --no-header -p no:cacheprovider"
+          NEW_RUNNER="python -m pytest $PARSER_TEST tests/parsers/test_property.py -x -q --tb=no --no-header -p no:cacheprovider"
           sed -i "s|paths_to_mutate = .*|paths_to_mutate = \"$TARGET\"|" pyproject.toml
           sed -i "s|runner = .*|runner = \"$NEW_RUNNER\"|" pyproject.toml
           echo "Effective mutmut config:"

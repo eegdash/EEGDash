@@ -16,6 +16,7 @@ import json
 from pathlib import Path
 
 import httpx
+import pytest
 import respx
 from _helpers import INGEST_DIR as _INGEST_DIR
 
@@ -206,26 +207,19 @@ def test_flatten_entities_does_not_mutate_input():
 # ─── _sanitize_for_json (NaN/Inf handling) ────────────────────────────────
 
 
-def test_sanitize_for_json_replaces_nan_with_none():
-    """NaN is not valid JSON; the digest can produce it via failed
-    floats. Sanitiser swaps it for None."""
-    import math
-
+@pytest.mark.parametrize(
+    "bad_float",
+    [
+        pytest.param(float("nan"), id="nan"),
+        pytest.param(float("inf"), id="positive_inf"),
+        pytest.param(float("-inf"), id="negative_inf"),
+    ],
+)
+def test_sanitize_for_json_replaces_non_finite_float_with_none(bad_float):
+    """NaN / ±Inf are not valid JSON; the sanitiser swaps each for None."""
     inject = _load_inject()
-    out = inject._sanitize_for_json({"sampling_frequency": math.nan})
-    assert out["sampling_frequency"] is None
-
-
-def test_sanitize_for_json_replaces_positive_inf_with_none():
-    inject = _load_inject()
-    out = inject._sanitize_for_json({"duration": float("inf")})
-    assert out["duration"] is None
-
-
-def test_sanitize_for_json_replaces_negative_inf_with_none():
-    inject = _load_inject()
-    out = inject._sanitize_for_json({"value": float("-inf")})
-    assert out["value"] is None
+    out = inject._sanitize_for_json({"field": bad_float})
+    assert out["field"] is None
 
 
 def test_sanitize_for_json_preserves_finite_floats():

@@ -1,8 +1,9 @@
-"""Smoke tests — Phase 0 evaluation canary.
+"""Smoke tests for fixture-corpus presence + license attribution.
 
-These tests verify that the package layout works at all. They are
-deliberately minimal: if any of them fails, Phase 0 has not landed,
-and no further phase can proceed.
+A handful of canary checks proving (a) the eegdash-testing-data corpus
+landed in the local cache and (b) every modality/format pair the
+parsers expect is represented. The "does pytest collect at all" test
+that used to live here was a pure tautology and was removed.
 """
 
 from __future__ import annotations
@@ -10,14 +11,6 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
-
-
-def test_package_layout_collects():
-    """`pytest --collect-only` must succeed from the ingestion root."""
-    # If pytest is running this test, collection has already succeeded.
-    # The assertion is the test's existence; we use a trivial check
-    # so the function body is not empty.
-    assert True
 
 
 def test_fixtures_directory_exists(eeg_fixtures_dir: Path) -> None:

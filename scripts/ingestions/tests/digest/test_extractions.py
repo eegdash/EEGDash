@@ -107,57 +107,48 @@ def test_sum_channel_counts_ignores_unknown_fields(digest: ModuleType) -> None:
 # ─── strip_dataset_prefix ──────────────────────────────────────────────────
 
 
-def test_strip_dataset_prefix_basic(digest: ModuleType) -> None:
-    """Standard case: path begins with <dataset_id>/."""
-    assert (
-        digest.strip_dataset_prefix(
-            "ds002893/sub-001/eeg/sub-001_task-rest_eeg.set", "ds002893"
-        )
-        == "sub-001/eeg/sub-001_task-rest_eeg.set"
-    )
-
-
-def test_strip_dataset_prefix_no_prefix(digest: ModuleType) -> None:
-    """Path without the dataset prefix passes through unchanged."""
-    assert (
-        digest.strip_dataset_prefix("sub-001/eeg/sub-001_eeg.set", "ds002893")
-        == "sub-001/eeg/sub-001_eeg.set"
-    )
-
-
-def test_strip_dataset_prefix_partial_match_not_stripped(digest: ModuleType) -> None:
-    """Partial dataset-id match (no trailing slash) is NOT stripped."""
-    # 'ds00' is a prefix of 'ds002893' but isn't followed by /.
-    assert (
-        digest.strip_dataset_prefix("ds002893/sub-01/eeg/x.edf", "ds00")
-        == "ds002893/sub-01/eeg/x.edf"
-    )
-
-
-def test_strip_dataset_prefix_dataset_id_in_middle_of_path(
-    digest: ModuleType,
+@pytest.mark.parametrize(
+    ("path", "dataset_id", "expected"),
+    [
+        pytest.param(
+            "ds002893/sub-001/eeg/sub-001_task-rest_eeg.set",
+            "ds002893",
+            "sub-001/eeg/sub-001_task-rest_eeg.set",
+            id="leading_prefix_stripped",
+        ),
+        pytest.param(
+            "sub-001/eeg/sub-001_eeg.set",
+            "ds002893",
+            "sub-001/eeg/sub-001_eeg.set",
+            id="no_prefix_passthrough",
+        ),
+        # 'ds00' is a prefix of 'ds002893' but isn't followed by /.
+        pytest.param(
+            "ds002893/sub-01/eeg/x.edf",
+            "ds00",
+            "ds002893/sub-01/eeg/x.edf",
+            id="partial_prefix_not_stripped",
+        ),
+        # Dataset id appearing mid-path is NOT stripped (only leading prefix).
+        pytest.param(
+            "sub-01/ds002893/eeg/x.edf",
+            "ds002893",
+            "sub-01/ds002893/eeg/x.edf",
+            id="mid_path_id_not_stripped",
+        ),
+        pytest.param("", "ds002893", "", id="empty_path"),
+        # 'ds002893' alone doesn't match the 'ds002893/' prefix.
+        pytest.param("ds002893", "ds002893", "ds002893", id="exact_id_no_slash"),
+        pytest.param("ds002893/", "ds002893", "", id="exact_id_with_trailing_slash"),
+    ],
+)
+def test_strip_dataset_prefix(
+    digest: ModuleType, path: str, dataset_id: str, expected: str
 ) -> None:
-    """Dataset id appearing mid-path is NOT stripped (only leading prefix)."""
-    assert (
-        digest.strip_dataset_prefix("sub-01/ds002893/eeg/x.edf", "ds002893")
-        == "sub-01/ds002893/eeg/x.edf"
-    )
-
-
-def test_strip_dataset_prefix_empty_path(digest: ModuleType) -> None:
-    """Empty path returns empty (no crash)."""
-    assert digest.strip_dataset_prefix("", "ds002893") == ""
-
-
-def test_strip_dataset_prefix_only_dataset_id(digest: ModuleType) -> None:
-    """A path that IS the dataset id (no trailing /) is unchanged."""
-    # 'ds002893' alone doesn't match the 'ds002893/' prefix.
-    assert digest.strip_dataset_prefix("ds002893", "ds002893") == "ds002893"
-
-
-def test_strip_dataset_prefix_with_trailing_slash_only(digest: ModuleType) -> None:
-    """``<dataset_id>/`` with nothing after returns empty string."""
-    assert digest.strip_dataset_prefix("ds002893/", "ds002893") == ""
+    """``strip_dataset_prefix`` removes ``<dataset_id>/`` ONLY as a
+    leading-path prefix; partial matches, mid-path occurrences, and
+    empty inputs pass through unchanged."""
+    assert digest.strip_dataset_prefix(path, dataset_id) == expected
 
 
 # ─── extract_sfreq_nchans_from_modality_sidecar ───────────────────────────

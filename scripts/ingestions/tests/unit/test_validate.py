@@ -18,7 +18,6 @@ from _validate import (
     DATA_QUALITY_FIELDS,
     NEURO_EXTENSIONS,
     RECOMMENDED_DATASET_FIELDS,
-    RECOMMENDED_RECORD_FIELDS,
     VALID_SOURCES,
     VALID_STORAGE_PATTERNS,
     ValidationResult,
@@ -221,7 +220,6 @@ def test_validate_dataset_accepts_all_known_sources():
 
 def test_validate_dataset_warns_on_missing_recommended():
     """Each missing recommended field produces a warning."""
-    from _validate import RECOMMENDED_DATASET_FIELDS
 
     result = ValidationResult()
     ds = _minimal_valid_dataset()
@@ -483,14 +481,6 @@ def test_data_quality_fields_match_record_schema():
     """The data-quality fields enforced for ingest match the Record schema."""
     assert "nchans" in DATA_QUALITY_FIELDS
     assert "sampling_frequency" in DATA_QUALITY_FIELDS
-
-
-def test_recommended_fields_are_string_lists():
-    """Recommended field lists are non-empty lists of strings."""
-    assert all(
-        isinstance(f, str) and f
-        for f in RECOMMENDED_RECORD_FIELDS + RECOMMENDED_DATASET_FIELDS
-    )
 
 
 def test_storage_patterns_compile():

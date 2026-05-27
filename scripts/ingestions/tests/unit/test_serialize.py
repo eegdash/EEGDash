@@ -15,6 +15,8 @@ import json
 import sys
 from pathlib import Path
 
+import pytest
+
 from _serialize import (
     SUBJECT_COUNT_PATTERNS,
     deduplicate_dataset_ids,
@@ -48,46 +50,36 @@ def test_setup_paths_is_idempotent():
 # ─── extract_subjects_count ────────────────────────────────────────────────
 
 
-def test_subjects_count_empty_input_returns_zero():
-    assert extract_subjects_count(None) == 0
-    assert extract_subjects_count("") == 0
-
-
-def test_subjects_count_finds_simple_phrasing():
-    assert extract_subjects_count("This study had 42 subjects") == 42
-    assert extract_subjects_count("Data from 17 participants") == 17
-    assert extract_subjects_count("N = 25 healthy controls") == 25
-
-
-def test_subjects_count_handles_n_equals_pattern():
-    assert extract_subjects_count("n = 30") == 30
-    assert extract_subjects_count("N=8 patients") == 8
-
-
-def test_subjects_count_rejects_unreasonable_counts():
-    """Values outside (0, 10000) are sanity-rejected (likely false matches)."""
-    assert extract_subjects_count("ID 99999 subjects") == 0
-    # Note: the regex matches digits before keywords, so the value is
-    # tested against the < 10000 sanity bound.
-
-
-def test_subjects_count_handles_multiple_phrasings():
-    """Several common phrasings — all should match."""
-    cases = {
-        "5 individuals": 5,
-        "12 volunteers": 12,
-        "8 children": 8,
-        "15 adults": 15,
-        "recorded from 20 subjects": 20,
-        "data from 7 patients": 7,
-    }
-    for text, expected in cases.items():
-        assert extract_subjects_count(text) == expected, f"{text=}"
-
-
-def test_subjects_count_returns_zero_when_no_pattern_matches():
-    assert extract_subjects_count("This is just a description") == 0
-    assert extract_subjects_count("Music perception study") == 0
+@pytest.mark.parametrize(
+    ("text", "expected"),
+    [
+        # Empty / None → 0
+        pytest.param(None, 0, id="empty_none"),
+        pytest.param("", 0, id="empty_string"),
+        # Simple "<N> <noun>" phrasings → N
+        pytest.param("This study had 42 subjects", 42, id="had_N_subjects"),
+        pytest.param("Data from 17 participants", 17, id="from_N_participants"),
+        pytest.param("N = 25 healthy controls", 25, id="N_equals_with_qualifier"),
+        # "N = <N>" / "N=<N>" patterns
+        pytest.param("n = 30", 30, id="n_lowercase_equals_space"),
+        pytest.param("N=8 patients", 8, id="N_uppercase_no_space"),
+        # Many alternative nouns
+        pytest.param("5 individuals", 5, id="individuals"),
+        pytest.param("12 volunteers", 12, id="volunteers"),
+        pytest.param("8 children", 8, id="children"),
+        pytest.param("15 adults", 15, id="adults"),
+        pytest.param("recorded from 20 subjects", 20, id="recorded_from"),
+        pytest.param("data from 7 patients", 7, id="data_from_patients"),
+        # Sanity rejection (out of range / unmatched)
+        pytest.param("ID 99999 subjects", 0, id="value_above_10000_rejected"),
+        pytest.param("This is just a description", 0, id="no_keyword"),
+        pytest.param("Music perception study", 0, id="unrelated_text"),
+    ],
+)
+def test_subjects_count_extracts(text, expected: int):
+    """``extract_subjects_count`` matrix: empty / pattern variants /
+    sanity-rejection rows in a single body."""
+    assert extract_subjects_count(text) == expected
 
 
 # ─── extract_surname ──────────────────────────────────────────────────────

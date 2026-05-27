@@ -54,24 +54,35 @@ def test_is_broken_symlink_missing_path_returns_false(tmp_path: Path):
 # ─── extract_dataset_info ─────────────────────────────────────────────────
 
 
-def test_extract_dataset_info_openneuro_path():
-    """Path containing ``/ds<digits>/`` → openneuro."""
-    out = extract_dataset_info(Path("/clones/ds002893/sub-01/eeg/file.vhdr"))
+@pytest.mark.parametrize(
+    ("path", "expected_source", "expected_id", "expected_rel"),
+    [
+        pytest.param(
+            "/clones/ds002893/sub-01/eeg/file.vhdr",
+            "openneuro",
+            "ds002893",
+            "sub-01/eeg/file.vhdr",
+            id="openneuro_ds_prefix",
+        ),
+        pytest.param(
+            "/clones/nm000176/sub-01/meg/file.fif",
+            "nemar",
+            "nm000176",
+            "sub-01/meg/file.fif",
+            id="nemar_nm_prefix",
+        ),
+    ],
+)
+def test_extract_dataset_info_recognised_source(
+    path: str, expected_source: str, expected_id: str, expected_rel: str
+):
+    """Recognised source-id prefixes resolve to (source, dataset_id, relpath)."""
+    out = extract_dataset_info(Path(path))
     assert out is not None
     source, ds_id, rel = out
-    assert source == "openneuro"
-    assert ds_id == "ds002893"
-    assert rel == "sub-01/eeg/file.vhdr"
-
-
-def test_extract_dataset_info_nemar_path():
-    """Path containing ``/nm<digits>/`` → nemar."""
-    out = extract_dataset_info(Path("/clones/nm000176/sub-01/meg/file.fif"))
-    assert out is not None
-    source, ds_id, rel = out
-    assert source == "nemar"
-    assert ds_id == "nm000176"
-    assert rel == "sub-01/meg/file.fif"
+    assert source == expected_source
+    assert ds_id == expected_id
+    assert rel == expected_rel
 
 
 def test_extract_dataset_info_unrecognised_returns_none():

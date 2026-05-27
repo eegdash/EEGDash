@@ -31,8 +31,8 @@ import os
 from functools import lru_cache
 from pathlib import Path
 
-VERSION = "0.1.0"
-SHA256 = "bf7303148bf4acab2b51ad69adc76574360ac096bf29b5a76b510ad77981bbae"
+VERSION = "0.2.0"
+SHA256 = "8669d60b052b4d7fcc5f929f79f600cec35f8b7c8bdffc1785bc6d09667cd8ca"
 URL = (
     "https://codeload.github.com/eegdash/eegdash-testing-data/"
     f"tar.gz/refs/tags/v{VERSION}"

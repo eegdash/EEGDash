@@ -3,11 +3,10 @@
 from __future__ import annotations
 
 import subprocess
-from pathlib import Path
 
 import pytest
+from _helpers import INGEST_DIR as _INGEST_DIR
 
-_INGEST_DIR = Path(__file__).resolve().parent.parent
 SCANNER = _INGEST_DIR / "scripts" / "find_leaked_creds.sh"
 
 

@@ -19,7 +19,6 @@ from pathlib import Path
 import httpx
 import respx
 
-_INGEST_DIR = Path(__file__).resolve().parent.parent
 from _file_utils import (
     list_datarn_files,
     list_git_files,

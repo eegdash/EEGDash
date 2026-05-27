@@ -14,9 +14,8 @@ import importlib.util
 import json
 from pathlib import Path
 
+from _helpers import INGEST_DIR as _INGEST_DIR
 from eegdash.testing import data_file
-
-_INGEST_DIR = Path(__file__).resolve().parent.parent
 
 
 def _load_digest():

@@ -15,11 +15,8 @@ from __future__ import annotations
 
 import sys
 from datetime import datetime, timezone
-from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import MagicMock
-
-_INGEST_DIR = Path(__file__).resolve().parent.parent
 
 
 def _install_fake_github(monkeypatch, github_class):

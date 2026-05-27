@@ -15,7 +15,6 @@ import json
 import sys
 from pathlib import Path
 
-_INGEST_DIR = Path(__file__).resolve().parent.parent
 from _serialize import (
     SUBJECT_COUNT_PATTERNS,
     deduplicate_dataset_ids,

@@ -9,11 +9,8 @@ had ZERO tests before this commit.
 
 from __future__ import annotations
 
-from pathlib import Path
-
 import pytest
 
-_INGEST_DIR = Path(__file__).resolve().parent.parent
 from _validate import (
     DATA_QUALITY_FIELDS,
     NEURO_EXTENSIONS,

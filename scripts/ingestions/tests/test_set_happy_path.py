@@ -15,7 +15,6 @@ from pathlib import Path
 
 import pytest
 
-_INGEST_DIR = Path(__file__).resolve().parent.parent
 # Try scipy.io.savemat; skip the whole module if scipy isn't installed.
 scipy_io = pytest.importorskip("scipy.io")
 

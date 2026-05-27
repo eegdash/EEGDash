@@ -22,10 +22,11 @@ from pathlib import Path
 from types import ModuleType
 
 import pytest
+from _helpers import INGEST_DIR as _INGEST_DIR
 
 # ─── Module loader ──────────────────────────────────────────────────────────
 
-_DIGEST_PATH = Path(__file__).parent.parent / "3_digest.py"
+_DIGEST_PATH = _INGEST_DIR / "3_digest.py"
 
 
 @pytest.fixture(scope="module")

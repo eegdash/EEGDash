@@ -19,8 +19,7 @@ from types import ModuleType
 from unittest.mock import patch
 
 import pytest
-
-_INGEST_DIR = Path(__file__).resolve().parent.parent
+from _helpers import INGEST_DIR as _INGEST_DIR
 
 
 @pytest.fixture(scope="module")

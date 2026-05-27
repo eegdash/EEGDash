@@ -18,7 +18,7 @@ import importlib.util
 import json
 from pathlib import Path
 
-_INGEST_DIR = Path(__file__).resolve().parent.parent
+from _helpers import INGEST_DIR as _INGEST_DIR
 from eegdash.testing import data_file
 
 from digest_telemetry import (

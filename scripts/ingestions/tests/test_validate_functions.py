@@ -17,8 +17,6 @@ import json
 from pathlib import Path
 
 import pytest
-
-_INGEST_DIR = Path(__file__).resolve().parent.parent
 from eegdash.testing import data_file
 
 from _validate import (

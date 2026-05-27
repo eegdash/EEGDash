@@ -14,7 +14,6 @@ from __future__ import annotations
 
 from pathlib import Path
 
-_INGEST_DIR = Path(__file__).resolve().parent.parent
 from eegdash.testing import data_file
 
 from _set_parser import parse_set_metadata

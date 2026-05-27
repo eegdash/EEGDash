@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from pathlib import Path
 
-_INGEST_DIR = Path(__file__).resolve().parent.parent
 from _format_parser_registry import (
     FormatParserResult,
     _parse_edf_with_mne,

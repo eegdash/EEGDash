@@ -12,7 +12,6 @@ from pathlib import Path
 
 import pytest
 
-_INGEST_DIR = Path(__file__).resolve().parent.parent
 from source_adapter import (
     DefaultAdapter,
     NEMARAdapter,

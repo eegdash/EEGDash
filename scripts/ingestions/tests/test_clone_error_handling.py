@@ -25,8 +25,9 @@ from unittest.mock import patch
 
 import httpx
 import pytest
+from _helpers import INGEST_DIR as _INGEST_DIR
 
-_CLONE_PATH = Path(__file__).parent.parent / "2_clone.py"
+_CLONE_PATH = _INGEST_DIR / "2_clone.py"
 
 
 @pytest.fixture(scope="module")

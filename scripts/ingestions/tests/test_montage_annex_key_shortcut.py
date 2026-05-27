@@ -12,7 +12,6 @@ from __future__ import annotations
 from pathlib import Path
 from unittest.mock import patch
 
-_INGEST_DIR = Path(__file__).resolve().parent.parent
 from _montage import _resolve_fif_total_size
 
 

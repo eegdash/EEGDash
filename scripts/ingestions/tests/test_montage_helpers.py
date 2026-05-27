@@ -17,7 +17,6 @@ from pathlib import Path
 
 import pytest
 
-_INGEST_DIR = Path(__file__).resolve().parent.parent
 from _montage import (
     _companion_coords_for,
     _hash_sensors,

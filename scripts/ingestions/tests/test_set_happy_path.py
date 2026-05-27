@@ -4,9 +4,9 @@ ROADMAP-C3.4. Builds a minimal EEGLAB .set struct using scipy.io.savemat,
 matching the field shapes the parser reads (EEG.srate, EEG.nbchan,
 EEG.pnts, EEG.chanlocs.labels).
 
-The committed CC0 .set fixture in tests/fixtures/eeg/ is metadata-
+The CC0 .set fixture in ``eegdash-testing-data/eeg/`` is metadata-
 light (only has_fdt extracted). This file constructs a richer
-fixture that exercises every extraction branch.
+synthetic fixture in-memory that exercises every extraction branch.
 """
 
 from __future__ import annotations

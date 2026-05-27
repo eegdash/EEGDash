@@ -2,8 +2,9 @@
 
 Targets ``_set_parser.parse_set_metadata`` and ``diagnose_set_issues``.
 
-The committed fixture is a 64 KB **truncated** prefix of the original
-67 MB ds002893 .set file (see ``tests/fixtures/eeg/LICENSE-ATTRIBUTION.md``).
+The fixture is a 64 KB **truncated** prefix of the original 67 MB ds002893
+.set file, fetched from ``eegdash-testing-data``
+(see ``eeg/LICENSE-ATTRIBUTION.md`` in that corpus).
 The truncation captures the MAT-v5 header but not the full structure,
 so the parser's robust path returns the minimal ``{'has_fdt': False}``
 report. This is intentional — golden-test the behaviour, not what we
@@ -15,15 +16,11 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
+from eegdash.testing import data_file
 
 from _set_parser import diagnose_set_issues, parse_set_metadata
 
-SET_FIXTURE = (
-    Path(__file__).parent
-    / "fixtures"
-    / "eeg"
-    / ("sub-001_task-AuditoryVisualShift_run-01_eeg.set")
-)
+SET_FIXTURE = data_file("eeg/sub-001_task-AuditoryVisualShift_run-01_eeg.set")
 
 
 # ─── parse_set_metadata — golden return on the truncated fixture ───────────
@@ -69,7 +66,7 @@ def test_diagnose_set_embeds_metadata():
 
 def test_parse_set_nonexistent_path_returns_none_or_raises():
     """Missing files must not crash. None or FileNotFoundError both acceptable."""
-    missing = Path(__file__).parent / "fixtures" / "_nonexistent_.set"
+    missing = Path(__file__).parent / "_nonexistent_.set"
     try:
         result = parse_set_metadata(missing)
         assert result is None or isinstance(result, dict)

@@ -30,17 +30,18 @@ _INGEST_DIR = Path(__file__).resolve().parent.parent
 if str(_INGEST_DIR) not in sys.path:
     sys.path.insert(0, str(_INGEST_DIR))
 
-_TMET_FIXTURE = Path(__file__).parent / "fixtures" / "ieeg" / "EKG-000000.tmet"
+try:
+    from eegdash.testing import data_file
+
+    _TMET_FIXTURE = data_file("ieeg/EKG-000000.tmet")
+    _SKIP_REASON: str | None = None
+except Exception as exc:  # noqa: BLE001 — fetch failure = skip
+    _TMET_FIXTURE = Path(__file__).parent / "_unreachable_.tmet"
+    _SKIP_REASON = f"eegdash-testing-data unavailable: {exc}"
 
 pytestmark = pytest.mark.skipif(
-    not _TMET_FIXTURE.exists(),
-    reason=(
-        "MEF3 .tmet fixture missing. Download with: "
-        "curl -o scripts/ingestions/tests/fixtures/ieeg/EKG-000000.tmet "
-        "'https://s3.amazonaws.com/openneuro.org/ds003708/sub-01/ses-ieeg01/ieeg/"
-        "sub-01_ses-ieeg01_task-ccep_run-01_ieeg.mefd/EKG.timd/EKG-000000.segd/"
-        "EKG-000000.tmet'"
-    ),
+    _SKIP_REASON is not None,
+    reason=_SKIP_REASON or "",
 )
 
 

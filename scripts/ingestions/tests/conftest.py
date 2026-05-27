@@ -22,36 +22,37 @@ if str(_INGEST_DIR) not in sys.path:
     sys.path.insert(0, str(_INGEST_DIR))
 
 
-# ─── Paths ──────────────────────────────────────────────────────────────────
+# ─── Binary fixture paths (fetched lazily from eegdash-testing-data) ───────
 
-FIXTURES_DIR = Path(__file__).parent / "fixtures"
-EEG_FIXTURES = FIXTURES_DIR / "eeg"
-IEEG_FIXTURES = FIXTURES_DIR / "ieeg"
-MEG_FIXTURES = FIXTURES_DIR / "meg"
+FIXTURES_DIR = Path(__file__).parent / "fixtures"  # JSON snapshots stay inline
+
+
+def _testing_data_root() -> Path:
+    """Resolve the testing-data corpus root, skipping the test on failure."""
+    from eegdash.testing import data_path
+
+    try:
+        return data_path()
+    except Exception as exc:  # noqa: BLE001 — fetch failure = skip cleanly
+        pytest.skip(f"eegdash-testing-data unavailable: {exc}")
 
 
 @pytest.fixture(scope="session")
 def eeg_fixtures_dir() -> Path:
-    """Path to EEG-modality fixtures (EDF/BDF/BV/SET).
-
-    Returns
-    -------
-    Path
-        Directory containing the small CC0 EEG samples used by parser tests.
-    """
-    return EEG_FIXTURES
+    """Path to EEG-modality fixtures (EDF/BDF/BV/SET) inside the testing-data corpus."""
+    return _testing_data_root() / "eeg"
 
 
 @pytest.fixture(scope="session")
 def ieeg_fixtures_dir() -> Path:
-    """Path to iEEG-modality fixtures (BrainVision triple)."""
-    return IEEG_FIXTURES
+    """Path to iEEG-modality fixtures (BrainVision triple, MEF3 header)."""
+    return _testing_data_root() / "ieeg"
 
 
 @pytest.fixture(scope="session")
 def meg_fixtures_dir() -> Path:
     """Path to MEG-modality fixtures (FIFF samples from MNE-Python BSD-3)."""
-    return MEG_FIXTURES
+    return _testing_data_root() / "meg"
 
 
 # ─── Smoke test fixture (used by test_smoke.py) ─────────────────────────────

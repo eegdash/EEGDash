@@ -4,8 +4,8 @@ Targets ``_vhdr_parser.parse_vhdr_metadata``, ``extract_vhdr_references``,
 ``diagnose_vhdr_issues``, and ``parse_vhdr_metadata_robust``.
 
 Fixtures are CC0 BrainVision triples (``.vhdr`` + ``.vmrk`` + ``.eeg``)
-from OpenNeuro ds002336 (EEG) and ds003688 (iEEG). See
-``tests/fixtures/eeg/LICENSE-ATTRIBUTION.md``.
+from OpenNeuro ds002336 (EEG) and ds003688 (iEEG), fetched lazily from
+the ``eegdash-testing-data`` corpus by ``eegdash.testing.data_path``.
 
 The tests are golden-value: every documented return field is pinned
 to a measured value. A change to the parser that alters output will
@@ -17,6 +17,7 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
+from eegdash.testing import data_file
 
 from _vhdr_parser import (
     diagnose_vhdr_issues,
@@ -27,22 +28,13 @@ from _vhdr_parser import (
 
 # ── EEG fixture (ds002336 sub-xp101) ────────────────────────────────────────
 
-EEG_VHDR = (
-    Path(__file__).parent / "fixtures" / "eeg" / "sub-xp101_task-motorloc_eeg.vhdr"
-)
-EEG_EEG = Path(__file__).parent / "fixtures" / "eeg" / "sub-xp101_task-motorloc_eeg.eeg"
-EEG_VMRK = (
-    Path(__file__).parent / "fixtures" / "eeg" / "sub-xp101_task-motorloc_eeg.vmrk"
-)
+EEG_VHDR = data_file("eeg/sub-xp101_task-motorloc_eeg.vhdr")
+EEG_EEG = data_file("eeg/sub-xp101_task-motorloc_eeg.eeg")
+EEG_VMRK = data_file("eeg/sub-xp101_task-motorloc_eeg.vmrk")
 
 # ── iEEG fixture (ds003688 sub-01) ──────────────────────────────────────────
 
-IEEG_VHDR = (
-    Path(__file__).parent
-    / "fixtures"
-    / "ieeg"
-    / "sub-01_ses-iemu_task-film_acq-clinical_run-1_ieeg.vhdr"
-)
+IEEG_VHDR = data_file("ieeg/sub-01_ses-iemu_task-film_acq-clinical_run-1_ieeg.vhdr")
 
 
 # ─── parse_vhdr_metadata — golden values on EEG fixture ────────────────────
@@ -192,7 +184,7 @@ def test_parse_vhdr_nonexistent_path_returns_none_or_raises():
     """A missing file must NOT crash the process. It may return None or
     raise FileNotFoundError. Either is acceptable — both are recoverable
     by the caller; what isn't acceptable is a SegFault or hang."""
-    missing = Path(__file__).parent / "fixtures" / "_nonexistent_.vhdr"
+    missing = Path(__file__).parent / "_nonexistent_.vhdr"
     try:
         result = parse_vhdr_metadata(missing)
         assert result is None or isinstance(result, dict)

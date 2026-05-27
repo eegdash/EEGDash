@@ -120,13 +120,6 @@ def test_parse_set_with_directory_path_does_not_crash(tmp_path: Path):
 # ─── 2. Direct extraction on the same fixture ──────────────────────────────
 
 
-def test_parse_set_returns_dict():
-    """Parsing the real .set fixture yields a non-empty dict."""
-    out = parse_set_metadata(SET_FIXTURE)
-    assert out is not None
-    assert isinstance(out, dict)
-
-
 def test_parse_set_extracts_sampling_frequency_when_struct_present():
     """When the fixture has a complete EEGLAB struct, sampling_frequency
     is extracted. The CC0 fixture in eegdash-testing-data/eeg is metadata-light

@@ -53,29 +53,23 @@ def test_fetch_bytes_from_s3_returns_requested_range():
 
 
 @respx.mock
-def test_fetch_bytes_from_s3_http_error_returns_none():
-    """A 404 / 500 → httpx.HTTPStatusError (via raise_for_status) → None."""
-    respx.get("https://s3.example.com/missing").mock(return_value=httpx.Response(404))
-    assert fetch_bytes_from_s3("https://s3.example.com/missing", max_bytes=1024) is None
-
-
-@respx.mock
-def test_fetch_bytes_from_s3_connect_error_returns_none():
-    """DNS / connection failure → httpx.ConnectError → None."""
-    respx.get("https://nowhere.example.com/file").mock(
-        side_effect=httpx.ConnectError("DNS lookup failed")
-    )
-    assert (
-        fetch_bytes_from_s3("https://nowhere.example.com/file", max_bytes=1024) is None
-    )
-
-
-@respx.mock
-def test_fetch_bytes_from_s3_timeout_returns_none():
-    """Network timeout → httpx.TimeoutException → None."""
-    respx.get("https://s3.example.com/file").mock(
-        side_effect=httpx.TimeoutException("slow")
-    )
+@pytest.mark.parametrize(
+    "mock_kwargs",
+    [
+        pytest.param({"return_value": httpx.Response(404)}, id="http_error_404"),
+        pytest.param(
+            {"side_effect": httpx.ConnectError("DNS lookup failed")},
+            id="connect_error",
+        ),
+        pytest.param(
+            {"side_effect": httpx.TimeoutException("slow")},
+            id="timeout",
+        ),
+    ],
+)
+def test_fetch_bytes_from_s3_failure_returns_none(mock_kwargs):
+    """Any HTTP / network failure surfaces as ``None`` rather than a raise."""
+    respx.get("https://s3.example.com/file").mock(**mock_kwargs)
     assert (
         fetch_bytes_from_s3("https://s3.example.com/file", max_bytes=1024, timeout=0.1)
         is None
@@ -128,27 +122,33 @@ def test_head_content_length_parses_int():
 
 
 @respx.mock
-def test_head_content_length_returns_none_when_header_missing():
-    """A response without Content-Length → None."""
-    respx.head("https://s3.example.com/file").mock(
-        return_value=httpx.Response(200, headers={})
-    )
-    assert head_content_length("https://s3.example.com/file") is None
-
-
-@respx.mock
-def test_head_content_length_http_error_returns_none():
-    """A 404 / 5xx → None."""
-    respx.head("https://s3.example.com/missing").mock(return_value=httpx.Response(404))
-    assert head_content_length("https://s3.example.com/missing") is None
-
-
-@respx.mock
-def test_head_content_length_non_numeric_returns_none():
-    """A Content-Length value that's not an integer → None (ValueError caught)."""
-    respx.head("https://s3.example.com/file").mock(
-        return_value=httpx.Response(200, headers={"Content-Length": "not_a_number"})
-    )
+@pytest.mark.parametrize(
+    "mock_kwargs",
+    [
+        # No Content-Length header
+        pytest.param(
+            {"return_value": httpx.Response(200, headers={})},
+            id="header_missing",
+        ),
+        # 4xx response
+        pytest.param(
+            {"return_value": httpx.Response(404)},
+            id="http_error",
+        ),
+        # Non-numeric Content-Length
+        pytest.param(
+            {
+                "return_value": httpx.Response(
+                    200, headers={"Content-Length": "not_a_number"}
+                )
+            },
+            id="non_numeric_value",
+        ),
+    ],
+)
+def test_head_content_length_returns_none_on_unparseable(mock_kwargs):
+    """Missing header, HTTP error, and non-numeric value all surface as None."""
+    respx.head("https://s3.example.com/file").mock(**mock_kwargs)
     assert head_content_length("https://s3.example.com/file") is None
 
 
@@ -180,17 +180,20 @@ def test_fetch_from_s3_falls_back_to_latin1():
 
 
 @respx.mock
-def test_fetch_from_s3_returns_none_on_http_error():
-    respx.get("https://s3.example.com/missing").mock(return_value=httpx.Response(404))
+@pytest.mark.parametrize(
+    "mock_kwargs",
+    [
+        pytest.param({"return_value": httpx.Response(404)}, id="http_error"),
+        pytest.param(
+            {"side_effect": httpx.ConnectError("DNS lookup failed")},
+            id="connect_error",
+        ),
+    ],
+)
+def test_fetch_from_s3_returns_none_on_failure(mock_kwargs):
+    """HTTP error and network error both surface as ``None``."""
+    respx.get("https://s3.example.com/missing").mock(**mock_kwargs)
     assert fetch_from_s3("https://s3.example.com/missing") is None
-
-
-@respx.mock
-def test_fetch_from_s3_returns_none_on_connect_error():
-    respx.get("https://nowhere.example.com/file").mock(
-        side_effect=httpx.ConnectError("DNS lookup failed")
-    )
-    assert fetch_from_s3("https://nowhere.example.com/file") is None
 
 
 # ─── Pooled-client behaviour (the WHOLE POINT of the migration) ──────────

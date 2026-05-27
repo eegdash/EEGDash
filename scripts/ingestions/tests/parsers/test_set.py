@@ -204,27 +204,33 @@ def test_parse_set_garbage_bytes_returns_none(tmp_path: Path):
 # ─── 3. Synthetic MAT v5 — every extraction branch ─────────────────────────
 
 
-def test_set_extracts_sampling_frequency(tmp_path: Path):
-    set_path = build_synthetic_set_v5(tmp_path / "test.set", srate=500.0)
+@pytest.mark.parametrize(
+    ("kwargs", "assertion"),
+    [
+        pytest.param(
+            {"srate": 500.0},
+            lambda o: o.get("sampling_frequency") == 500.0,
+            id="srate_to_sampling_frequency",
+        ),
+        pytest.param(
+            {"nbchan": 64},
+            lambda o: o.get("nchans") == 64,
+            id="nbchan_to_nchans",
+        ),
+        pytest.param(
+            {"pnts": 10000},
+            # Some parsers emit n_samples, others emit n_times — accept either.
+            lambda o: o.get("n_samples") == 10000 or o.get("n_times") == 10000,
+            id="pnts_to_n_samples_or_n_times",
+        ),
+    ],
+)
+def test_set_synthetic_extracts_field(tmp_path: Path, kwargs, assertion):
+    """Synthetic MAT v5 builds: EEG.srate/nbchan/pnts → extracted fields."""
+    set_path = build_synthetic_set_v5(tmp_path / "test.set", **kwargs)
     out = parse_set_metadata(set_path)
     assert out is not None
-    assert out.get("sampling_frequency") == 500.0
-
-
-def test_set_extracts_nchans(tmp_path: Path):
-    set_path = build_synthetic_set_v5(tmp_path / "test.set", nbchan=64)
-    out = parse_set_metadata(set_path)
-    assert out is not None
-    assert out.get("nchans") == 64
-
-
-def test_set_extracts_pnts_as_n_samples(tmp_path: Path):
-    """``EEG.pnts`` should land in the ``n_samples`` field."""
-    set_path = build_synthetic_set_v5(tmp_path / "test.set", pnts=10000)
-    out = parse_set_metadata(set_path)
-    assert out is not None
-    # Some parsers emit n_samples, others emit n_times — accept either.
-    assert out.get("n_samples") == 10000 or out.get("n_times") == 10000
+    assert assertion(out), f"assertion failed on output {out!r}"
 
 
 def test_set_extracts_ch_names_from_chanlocs(tmp_path: Path):
@@ -240,22 +246,23 @@ def test_set_extracts_ch_names_from_chanlocs(tmp_path: Path):
         assert sorted(out["ch_names"]) == ["Cz", "Fz", "Pz"]
 
 
-def test_set_reports_has_fdt_false_when_companion_missing(tmp_path: Path):
-    """Without a sibling .fdt file, has_fdt is False."""
+@pytest.mark.parametrize(
+    ("companion_present", "expected_has_fdt"),
+    [
+        pytest.param(False, False, id="no_companion_fdt_false"),
+        pytest.param(True, True, id="companion_present_fdt_true"),
+    ],
+)
+def test_set_reports_has_fdt(
+    tmp_path: Path, companion_present: bool, expected_has_fdt: bool
+):
+    """``has_fdt`` reflects sibling .fdt file presence."""
     set_path = build_synthetic_set_v5(tmp_path / "test.set")
+    if companion_present:
+        (tmp_path / "test.fdt").write_bytes(b"placeholder")
     out = parse_set_metadata(set_path)
     assert out is not None
-    assert out.get("has_fdt") is False
-
-
-def test_set_reports_has_fdt_true_when_companion_present(tmp_path: Path):
-    """When ``.set`` has a sibling ``.fdt``, has_fdt is True."""
-    set_path = build_synthetic_set_v5(tmp_path / "test.set")
-    # Drop a placeholder .fdt next to it
-    (tmp_path / "test.fdt").write_bytes(b"placeholder")
-    out = parse_set_metadata(set_path)
-    assert out is not None
-    assert out.get("has_fdt") is True
+    assert out.get("has_fdt") is expected_has_fdt
 
 
 def test_set_handles_struct_without_chanlocs(tmp_path: Path):

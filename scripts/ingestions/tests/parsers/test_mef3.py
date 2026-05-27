@@ -102,46 +102,41 @@ def test_real_tmet_bytes_are_long_enough_for_parser():
     assert size >= 1300
 
 
-def test_parse_mef3_metadata_with_real_tmet(tmp_path: Path):
-    """End-to-end: build a real .mefd directory, run the public entry
-    point, assert all three canonical fields populated."""
-    mefd = build_mefd_around_real_tmet(
-        tmp_path, _TMET_FIXTURE, channels=["EKG", "LAD1", "LAD2", "LAD3"]
-    )
+@pytest.mark.parametrize(
+    ("channels", "expected_sorted"),
+    [
+        pytest.param(
+            ["EKG", "LAD1", "LAD2", "LAD3"],
+            ["EKG", "LAD1", "LAD2", "LAD3"],
+            id="alphabetic_in_alphabetic_out",
+        ),
+        # Channels passed in a deliberately non-alphabetic input order;
+        # parser sorts the .timd dir listing alphabetically — pin so a
+        # future refactor that uses unsorted os.listdir is caught.
+        pytest.param(
+            ["ZZZ", "AAA", "MMM"],
+            ["AAA", "MMM", "ZZZ"],
+            id="non_alphabetic_input_sorted_output",
+        ),
+        pytest.param(["solo"], ["solo"], id="single_channel"),
+    ],
+)
+def test_parse_mef3_metadata_channel_layout(
+    tmp_path: Path, channels: list[str], expected_sorted: list[str]
+):
+    """End-to-end: build a .mefd dir, run the public parser, assert
+    canonical (nchans, sorted ch_names, sampling_frequency) shape.
+
+    Replaces three near-identical tests that varied only the channel
+    set and expected ordering.
+    """
+    mefd = build_mefd_around_real_tmet(tmp_path, _TMET_FIXTURE, channels=channels)
     out = parse_mef3_metadata(mefd)
     assert out is not None
-    # Sampling frequency from real .tmet
+    assert out["nchans"] == len(expected_sorted)
+    assert out["ch_names"] == expected_sorted
     assert "sampling_frequency" in out
     assert 0.1 < out["sampling_frequency"] < 1_000_000
-    # Channel names from .timd directory names (preserves order)
-    assert "ch_names" in out
-    assert set(out["ch_names"]) == {"EKG", "LAD1", "LAD2", "LAD3"}
-    assert out["nchans"] == 4
-
-
-def test_parse_mef3_metadata_channel_order_from_directory_listing(
-    tmp_path: Path,
-):
-    """The parser sorts .timd dirs alphabetically. Pinning so a future
-    refactor that uses os.listdir (unsorted) is caught."""
-    # Channels in a deliberately non-alphabetic input order
-    mefd = build_mefd_around_real_tmet(
-        tmp_path, _TMET_FIXTURE, channels=["ZZZ", "AAA", "MMM"]
-    )
-    out = parse_mef3_metadata(mefd)
-    assert out is not None
-    # Output channel list is sorted alphabetically
-    assert out["ch_names"] == ["AAA", "MMM", "ZZZ"]
-
-
-def test_parse_mef3_metadata_single_channel_dataset(tmp_path: Path):
-    """A .mefd with a single channel works (smallest valid case)."""
-    mefd = build_mefd_around_real_tmet(tmp_path, _TMET_FIXTURE, channels=["solo"])
-    out = parse_mef3_metadata(mefd)
-    assert out is not None
-    assert out["nchans"] == 1
-    assert out["ch_names"] == ["solo"]
-    assert "sampling_frequency" in out
 
 
 def test_parse_tmet_truncated_file_returns_none(tmp_path: Path):

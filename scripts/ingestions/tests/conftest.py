@@ -21,10 +21,17 @@ _INGEST_DIR = Path(__file__).resolve().parent.parent
 if str(_INGEST_DIR) not in sys.path:
     sys.path.insert(0, str(_INGEST_DIR))
 
+# Also make tests/ itself importable so subfolder tests can write
+# `from _helpers.builders import …` without having to spell out
+# `tests._helpers.builders` everywhere.
+_TESTS_DIR = Path(__file__).resolve().parent
+if str(_TESTS_DIR) not in sys.path:
+    sys.path.insert(0, str(_TESTS_DIR))
 
-# ─── Binary fixture paths (fetched lazily from eegdash-testing-data) ───────
 
-FIXTURES_DIR = Path(__file__).parent / "fixtures"  # JSON snapshots stay inline
+# ─── Fixture paths (lazily fetched from eegdash-testing-data) ──────────────
+
+FIXTURES_DIR = Path(__file__).parent / "fixtures"  # only inline: records/
 
 
 def _testing_data_root() -> Path:
@@ -55,6 +62,12 @@ def ieeg_fixtures_dir() -> Path:
 def meg_fixtures_dir() -> Path:
     """Path to MEG-modality fixtures (FIFF samples from MNE-Python BSD-3)."""
     return _testing_data_root() / "meg"
+
+
+@pytest.fixture(scope="session")
+def digest_snapshots_dir() -> Path:
+    """Directory containing ``digest_snapshots/{inputs,outputs}/ds_snapshot_*``."""
+    return _testing_data_root() / "digest_snapshots"
 
 
 # ─── Smoke test fixture (used by test_smoke.py) ─────────────────────────────

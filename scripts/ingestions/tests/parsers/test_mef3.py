@@ -1,14 +1,14 @@
-"""Happy-path tests for _mef3_parser using a real MEF3 .tmet fixture.
+"""Tests for the MEF3 (Multiscale Electrophysiology Format v3) parser.
 
-Uses a real ``.tmet`` binary header from OpenNeuro ds003708 (CC0,
-16,384 bytes, real MEF3 v3.0 metadata structure) to exercise the
-``_parse_tmet_sampling_frequency`` byte-offset reader. The parser
-walks offsets 1272/1280/1288 for sampling frequency stored as
-little-endian double.
+Two angles:
 
-The fixture is loaded from the eegdash-testing-data corpus via
-``data_file`` — runs that lack the cache + are offline will fail
-at collection time (set ``EEGDASH_SKIP_TESTING_DATA=true`` to bypass).
+- **Parser unit** — defensive paths (missing input, empty directory,
+  garbage sub-files). Was test_mef3_parser.py.
+- **Real fixture** — golden values + tolerance tests using the real
+  ``.tmet`` binary header from OpenNeuro ds003708 (CC0, 16,384 bytes,
+  real MEF3 v3.0 metadata structure). Exercises the
+  ``_parse_tmet_sampling_frequency`` byte-offset reader. Was
+  test_mef3_real_fixture.py.
 """
 
 from __future__ import annotations
@@ -16,18 +16,67 @@ from __future__ import annotations
 import struct
 from pathlib import Path
 
+import pytest
 from _helpers.builders import build_mefd_around_real_tmet
 from eegdash.testing import data_file
 
-from _mef3_parser import (
-    _parse_tmet_sampling_frequency,
-    parse_mef3_metadata,
-)
+from _mef3_parser import _parse_tmet_sampling_frequency, parse_mef3_metadata
 
 _TMET_FIXTURE = data_file("ieeg/EKG-000000.tmet")
 
 
-# ─── _parse_tmet_sampling_frequency on the real fixture ───────────────────
+# ─── 1. Defensive paths ────────────────────────────────────────────────────
+
+
+def test_parse_mef3_nonexistent_path_returns_none():
+    """Missing MEF3 directory returns None, no crash."""
+    missing = Path("/tmp/_nonexistent_.mefd")
+    result = parse_mef3_metadata(missing)
+    assert result is None
+
+
+def test_parse_mef3_empty_directory_does_not_crash(tmp_path: Path):
+    """A directory with no MEF3 sub-structure returns None, no crash."""
+    empty_mefd = tmp_path / "empty.mefd"
+    empty_mefd.mkdir()
+    try:
+        result = parse_mef3_metadata(empty_mefd)
+        assert result is None or isinstance(result, dict)
+    except (FileNotFoundError, ValueError, KeyError):
+        pass  # acceptable failure modes
+
+
+def test_parse_mef3_file_instead_of_directory(tmp_path: Path):
+    """If a file is passed where a directory is expected, no crash."""
+    f = tmp_path / "fake.mefd"
+    f.write_bytes(b"not a directory")
+    try:
+        result = parse_mef3_metadata(f)
+        assert result is None or isinstance(result, dict)
+    except (NotADirectoryError, OSError):
+        pass
+
+
+@pytest.mark.parametrize(
+    "subdir_with_garbage",
+    ["timd_0001", "tmet_0001"],
+)
+def test_parse_mef3_directory_with_garbage_subfiles(
+    tmp_path: Path, subdir_with_garbage: str
+):
+    """A MEF3 directory with structurally-wrong sub-files must not crash."""
+    mefd = tmp_path / "data.mefd"
+    sub = mefd / subdir_with_garbage
+    sub.mkdir(parents=True)
+    (sub / "00001.tdat").write_bytes(b"\x00" * 32)
+    try:
+        result = parse_mef3_metadata(mefd)
+        assert result is None or isinstance(result, dict)
+    except (ValueError, KeyError, OSError):
+        pass
+
+
+# ─── 2. Real fixture — golden values + tolerance ───────────────────────────
 
 
 def test_real_tmet_extracts_sampling_frequency():
@@ -51,9 +100,6 @@ def test_real_tmet_bytes_are_long_enough_for_parser():
     extraction. Pin the real fixture size as a regression check."""
     size = _TMET_FIXTURE.stat().st_size
     assert size >= 1300
-
-
-# ─── parse_mef3_metadata against a real .mefd structure ───────────────────
 
 
 def test_parse_mef3_metadata_with_real_tmet(tmp_path: Path):
@@ -96,9 +142,6 @@ def test_parse_mef3_metadata_single_channel_dataset(tmp_path: Path):
     assert out["nchans"] == 1
     assert out["ch_names"] == ["solo"]
     assert "sampling_frequency" in out
-
-
-# ─── Truncation / corruption tolerance ───────────────────────────────────
 
 
 def test_parse_tmet_truncated_file_returns_none(tmp_path: Path):

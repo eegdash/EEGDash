@@ -1,21 +1,22 @@
-"""Tests for ``_montage.py`` pure helpers .
+"""Tests for ``_montage.py`` — montage detection and caching.
 
-Was at 17% before this commit. Targets the testable-without-MNE-fixtures
-helpers: hash building, JSON parsing, BIDS-inheritance file walks,
-sensor TSV parsing, channels.tsv filtering, template-matching logic.
+Three angles:
 
-Heavy paths (MEG FIF header streaming ~190 LOC, MNE template loading
-~110 LOC) need real MNE + fixture data and are out of scope for this
-round — they'd be a follow-up if MEG ingest becomes a production
-driver.
+- **Pure helpers** — hash building, JSON parsing, BIDS-inheritance walks, channels.tsv filtering, template matching (was test_montage_helpers.py).
+- **Cache layer** — montage cache + invalidation (was test_montage_cache.py).
+- **git-annex key shortcut** — _resolve_fif_total_size fast path (was test_montage_annex_key_shortcut.py).
 """
 
 from __future__ import annotations
 
+import importlib.util
 import json
 from pathlib import Path
+from types import ModuleType
+from unittest.mock import patch
 
 import pytest
+from _helpers import INGEST_DIR as _INGEST_DIR
 
 from _montage import (
     _companion_coords_for,
@@ -23,11 +24,14 @@ from _montage import (
     _parse_channels_tsv_for_eeg,
     _parse_coordsystem_json,
     _parse_sensor_tsv,
+    _resolve_fif_total_size,
     _round_mm,
     _score_template_match,
     _walk_up_find,
     extract_layout,
 )
+
+# ─── 1. Pure helpers ──────────────────────────────────────────────
 
 # ─── _round_mm ─────────────────────────────────────────────────────────────
 
@@ -448,3 +452,361 @@ def test_extract_layout_fnirs_alias_to_nirs(tmp_path: Path):
     out = extract_layout(data, tmp_path, datatype="fnirs")
     # No optodes.tsv → expected None, but the dispatcher recognised fnirs
     assert out is None
+
+
+# ─── 2. Cache layer ──────────────────────────────────────────────
+
+
+@pytest.fixture(scope="module")
+def digest() -> ModuleType:
+    """Load 3_digest.py via importlib (numeric filename)."""
+    spec = importlib.util.spec_from_file_location(
+        "digest_under_test", _INGEST_DIR / "3_digest.py"
+    )
+    assert spec is not None
+    assert spec.loader is not None
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+def _meg_record(nchans: int, name: str = "sub-01_run-01_meg.fif") -> dict:
+    return {
+        "datatype": "meg",
+        "nchans": nchans,
+        "bids_relpath": name,
+    }
+
+
+def test_first_meg_record_calls_extract_layout(
+    digest: ModuleType, tmp_path: Path
+) -> None:
+    """First MEG record with a given nchans triggers extract_layout."""
+    record = _meg_record(306)
+    montages: dict = {}
+    cache: dict = {}
+
+    with patch.object(
+        digest,
+        "extract_layout",
+        return_value=("hash-306-A", {"system": "neuromag306"}),
+    ) as mocked:
+        errors = digest._attach_montage_to_record(
+            record,
+            tmp_path / "sub-01_meg.fif",
+            tmp_path,
+            montages,
+            "ds-meg-001",
+            "2026-05-22T00:00:00+00:00",
+            montage_cache=cache,
+        )
+
+    assert errors == []
+    assert mocked.call_count == 1
+    assert record["montage_hash"] == "hash-306-A"
+    assert "hash-306-A" in montages
+    assert cache[("ds-meg-001", 306)] == (
+        "hash-306-A",
+        {
+            "system": "neuromag306",
+            "first_seen": "2026-05-22T00:00:00+00:00",
+            "representative_dataset": "ds-meg-001",
+        },
+    )
+
+
+def test_second_meg_record_same_nchans_reuses_cache(
+    digest: ModuleType, tmp_path: Path
+) -> None:
+    """Second record with same (dataset, nchans) MUST NOT call extract_layout."""
+    record_a = _meg_record(306, "sub-01_run-01_meg.fif")
+    record_b = _meg_record(306, "sub-01_run-02_meg.fif")
+    montages: dict = {}
+    cache: dict = {}
+
+    with patch.object(
+        digest,
+        "extract_layout",
+        return_value=("hash-306-A", {"system": "neuromag306"}),
+    ) as mocked:
+        digest._attach_montage_to_record(
+            record_a,
+            tmp_path / "a.fif",
+            tmp_path,
+            montages,
+            "ds-meg-001",
+            "2026-05-22T00:00:00+00:00",
+            montage_cache=cache,
+        )
+        digest._attach_montage_to_record(
+            record_b,
+            tmp_path / "b.fif",
+            tmp_path,
+            montages,
+            "ds-meg-001",
+            "2026-05-22T00:00:00+00:00",
+            montage_cache=cache,
+        )
+
+    # extract_layout called ONCE despite two records.
+    assert mocked.call_count == 1
+    assert record_a["montage_hash"] == "hash-306-A"
+    assert record_b["montage_hash"] == "hash-306-A"
+
+
+def test_different_nchans_skips_cache(digest: ModuleType, tmp_path: Path) -> None:
+    """Two records with different nchans → two extract_layout calls."""
+    record_a = _meg_record(306)
+    record_b = _meg_record(204)  # different device / channel count
+    montages: dict = {}
+    cache: dict = {}
+
+    with patch.object(
+        digest,
+        "extract_layout",
+        side_effect=[
+            ("hash-306-A", {"system": "neuromag306"}),
+            ("hash-204-B", {"system": "ctf204"}),
+        ],
+    ) as mocked:
+        digest._attach_montage_to_record(
+            record_a,
+            tmp_path / "a.fif",
+            tmp_path,
+            montages,
+            "ds-meg-001",
+            "now",
+            montage_cache=cache,
+        )
+        digest._attach_montage_to_record(
+            record_b,
+            tmp_path / "b.fif",
+            tmp_path,
+            montages,
+            "ds-meg-001",
+            "now",
+            montage_cache=cache,
+        )
+
+    assert mocked.call_count == 2
+    assert record_a["montage_hash"] == "hash-306-A"
+    assert record_b["montage_hash"] == "hash-204-B"
+
+
+def test_cache_does_not_leak_across_datasets(
+    digest: ModuleType, tmp_path: Path
+) -> None:
+    """Same nchans, different dataset_id → cache miss (different cache keys)."""
+    record_a = _meg_record(306)
+    record_b = _meg_record(306)
+    montages: dict = {}
+    cache: dict = {}
+
+    with patch.object(
+        digest,
+        "extract_layout",
+        side_effect=[
+            ("hash-306-A", {"system": "neuromag306"}),
+            (
+                "hash-306-A",
+                {"system": "neuromag306"},
+            ),  # different doc still hashes same
+        ],
+    ) as mocked:
+        digest._attach_montage_to_record(
+            record_a,
+            tmp_path / "a.fif",
+            tmp_path,
+            montages,
+            "ds-meg-001",
+            "now",
+            montage_cache=cache,
+        )
+        digest._attach_montage_to_record(
+            record_b,
+            tmp_path / "b.fif",
+            tmp_path,
+            montages,
+            "ds-meg-002",
+            "now",
+            montage_cache=cache,
+        )
+
+    # extract_layout called once per dataset_id, even with same nchans.
+    assert mocked.call_count == 2
+
+
+def test_non_meg_record_bypasses_cache(digest: ModuleType, tmp_path: Path) -> None:
+    """EEG records still call extract_layout per-file — the cache only
+    helps MEG where the device check is well-defined."""
+    record_a = {"datatype": "eeg", "nchans": 64, "bids_relpath": "a.vhdr"}
+    record_b = {"datatype": "eeg", "nchans": 64, "bids_relpath": "b.vhdr"}
+    montages: dict = {}
+    cache: dict = {}
+
+    with patch.object(
+        digest,
+        "extract_layout",
+        side_effect=[
+            ("hash-eeg-a", {"layout": "ten-twenty"}),
+            ("hash-eeg-b", {"layout": "ten-twenty"}),
+        ],
+    ) as mocked:
+        digest._attach_montage_to_record(
+            record_a,
+            tmp_path / "a.vhdr",
+            tmp_path,
+            montages,
+            "ds-eeg-001",
+            "now",
+            montage_cache=cache,
+        )
+        digest._attach_montage_to_record(
+            record_b,
+            tmp_path / "b.vhdr",
+            tmp_path,
+            montages,
+            "ds-eeg-001",
+            "now",
+            montage_cache=cache,
+        )
+
+    # Per-file extraction — cache MUST NOT have hijacked the EEG path.
+    assert mocked.call_count == 2
+    assert cache == {}  # no MEG entries; EEG bypasses
+
+
+def test_missing_nchans_skips_cache(digest: ModuleType, tmp_path: Path) -> None:
+    """A MEG record with no nchans (missing metadata) must NOT be cached
+    — without a channel count there's no safe key."""
+    record = {"datatype": "meg", "bids_relpath": "broken.fif"}  # no nchans
+    montages: dict = {}
+    cache: dict = {}
+
+    with patch.object(
+        digest,
+        "extract_layout",
+        return_value=("hash-x", {"layout": "x"}),
+    ) as mocked:
+        digest._attach_montage_to_record(
+            record,
+            tmp_path / "broken.fif",
+            tmp_path,
+            montages,
+            "ds-x",
+            "now",
+            montage_cache=cache,
+        )
+
+    assert mocked.call_count == 1
+    assert cache == {}  # no key without nchans
+    assert record["montage_hash"] == "hash-x"
+
+
+def test_extract_layout_returning_none_is_not_cached(
+    digest: ModuleType, tmp_path: Path
+) -> None:
+    """If extract_layout returns None (no montage available), don't
+    cache the absence — next record gets another chance."""
+    record_a = _meg_record(306)
+    record_b = _meg_record(306)
+    montages: dict = {}
+    cache: dict = {}
+
+    with patch.object(
+        digest,
+        "extract_layout",
+        side_effect=[None, ("hash-306-A", {"system": "neuromag306"})],
+    ) as mocked:
+        digest._attach_montage_to_record(
+            record_a,
+            tmp_path / "a.fif",
+            tmp_path,
+            montages,
+            "ds-meg-001",
+            "now",
+            montage_cache=cache,
+        )
+        digest._attach_montage_to_record(
+            record_b,
+            tmp_path / "b.fif",
+            tmp_path,
+            montages,
+            "ds-meg-001",
+            "now",
+            montage_cache=cache,
+        )
+
+    # Second call still went through extract_layout because the first
+    # returned None (cache only stores positive results).
+    assert mocked.call_count == 2
+    assert record_a["montage_hash"] is None
+    assert record_b["montage_hash"] == "hash-306-A"
+
+
+# ─── 3. git-annex key shortcut ──────────────────────────────────────────────
+
+
+def test_returns_annex_size_when_symlink_present(tmp_path: Path) -> None:
+    """Broken git-annex symlink → size parsed from symlink target."""
+    fif = tmp_path / "sub-01_run-01_meg.fif"
+    # Annex key format: MD5E-s{size}--{hash}.{ext}
+    target = "../.git/annex/objects/aa/bb/MD5E-s4194304--abc123def.fif/MD5E-s4194304--abc123def.fif"
+    fif.symlink_to(target)
+    assert not fif.exists()  # broken — annex content not fetched
+
+    with patch("_montage.head_content_length") as mock_head:
+        size = _resolve_fif_total_size(fif, "https://s3.example.com/sub-01.fif")
+
+    assert size == 4_194_304
+    mock_head.assert_not_called()  # No HEAD round-trip
+
+
+def test_falls_back_to_head_when_no_annex_symlink(tmp_path: Path) -> None:
+    """Plain file (no annex) → HEAD round-trip."""
+    fif = tmp_path / "sub-01_run-01_meg.fif"
+    fif.write_bytes(b"\x00" * 1024)  # 1 KB regular file
+
+    with patch("_montage.head_content_length", return_value=8_192) as mock_head:
+        size = _resolve_fif_total_size(fif, "https://s3.example.com/sub-01.fif")
+
+    # Annex size returns 0 for non-annex, falls through to HEAD.
+    assert size == 8_192
+    mock_head.assert_called_once()
+
+
+def test_falls_back_to_head_on_malformed_annex_key(tmp_path: Path) -> None:
+    """Symlink target doesn't match MD5E-s{size}-- pattern → HEAD fallback."""
+    fif = tmp_path / "sub-01_run-01_meg.fif"
+    fif.symlink_to("not-an-annex-key.fif")
+
+    with patch("_montage.head_content_length", return_value=2_048) as mock_head:
+        size = _resolve_fif_total_size(fif, "https://s3.example.com/sub-01.fif")
+
+    assert size == 2_048
+    mock_head.assert_called_once()
+
+
+def test_returns_none_when_neither_annex_nor_head_succeeds(
+    tmp_path: Path,
+) -> None:
+    """All paths exhausted → None (caller treats as transient failure)."""
+    fif = tmp_path / "sub-01_run-01_meg.fif"
+    fif.write_bytes(b"")
+
+    with patch("_montage.head_content_length", return_value=None):
+        size = _resolve_fif_total_size(fif, "https://s3.example.com/sub-01.fif")
+
+    assert size is None
+
+
+def test_zero_byte_annex_key_falls_back_to_head(tmp_path: Path) -> None:
+    """An annex key reporting size=0 is nonsensical for FIF — fall back."""
+    fif = tmp_path / "sub-01_run-01_meg.fif"
+    fif.symlink_to("../.git/annex/objects/aa/bb/MD5E-s0--abc.fif/MD5E-s0--abc.fif")
+
+    with patch("_montage.head_content_length", return_value=5_000) as mock_head:
+        size = _resolve_fif_total_size(fif, "https://s3.example.com/sub-01.fif")
+
+    assert size == 5_000
+    mock_head.assert_called_once()

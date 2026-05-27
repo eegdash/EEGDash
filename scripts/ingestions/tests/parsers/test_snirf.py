@@ -1,17 +1,14 @@
-"""Happy-path tests for _snirf_parser via a synthetic HDF5 fixture.
+"""Tests for the SNIRF (HDF5-based) fNIRS parser.
 
-C3.2 covered the fail paths. This file
-constructs a minimal valid SNIRF HDF5 file in-memory and feeds it
-to the parser to exercise the success branches.
+Three angles:
 
-SNIRF spec (minimal):
-- root has a ``nirs`` group
-- nirs has ``data1`` (per snirf v1.0 spec) with a ``time`` dataset
-  and ``measurementListN`` groups
-- nirs has ``probe`` with ``sourceLabels`` + ``detectorLabels``
-
-We build that with h5py directly so the test doesn't need a real
-SNIRF dataset on disk.
+- **Parser unit** — defensive paths (missing input, garbage, wrong file
+  type). Was test_snirf_parser.py.
+- **Synthetic HDF5 happy-path** — builds a minimal valid SNIRF v1.0
+  HDF5 file in-memory and exercises every extraction branch. Was
+  test_snirf_happy_path.py.
+- **Real fixture** — golden values on the CC0 ds007554 ``.snirf`` from
+  the ``eegdash-testing-data`` corpus. Was test_snirf_real_fixture.py.
 """
 
 from __future__ import annotations
@@ -19,13 +16,56 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
+from eegdash.testing import data_file
 
-# Try to import h5py; if absent, skip the whole module
+# h5py needed for the synthetic + real sections; missing → skip all three.
 h5py = pytest.importorskip("h5py")
 
 import numpy as np
 
-from _snirf_parser import _parse_snirf_with_h5py
+from _snirf_parser import _parse_snirf_with_h5py, parse_snirf_metadata
+
+REAL_FIXTURE = data_file("fnirs/openneuro_real.snirf")
+
+
+# ─── 1. Defensive paths (missing input, garbage, wrong file type) ──────────
+
+
+def test_parse_snirf_nonexistent_path_returns_none():
+    """Missing files return None, do not crash."""
+    missing = Path("/tmp/_nonexistent_.snirf")
+    result = parse_snirf_metadata(missing)
+    assert result is None
+
+
+@pytest.mark.parametrize(
+    "garbage",
+    [b"", b"\x00" * 16, b"NOT HDF5", b"\xff\xfe\xfd\xfc" * 64],
+)
+def test_parse_snirf_garbage_input_does_not_crash(tmp_path: Path, garbage: bytes):
+    """Various malformed inputs must not crash the process.
+
+    SNIRF is an HDF5 container; non-HDF5 input must be rejected gracefully.
+    """
+    f = tmp_path / "garbage.snirf"
+    f.write_bytes(garbage)
+    try:
+        result = parse_snirf_metadata(f)
+        assert result is None or isinstance(result, dict)
+    except (ValueError, KeyError, OSError, RuntimeError):
+        pass  # documented failure modes
+
+
+def test_parse_snirf_directory_path_does_not_crash(tmp_path: Path):
+    """Passing a directory must not crash."""
+    try:
+        result = parse_snirf_metadata(tmp_path)
+        assert result is None or isinstance(result, dict)
+    except (IsADirectoryError, OSError, PermissionError):
+        pass
+
+
+# ─── 2. Synthetic HDF5 happy-path ──────────────────────────────────────────
 
 
 def _build_synthetic_snirf(
@@ -38,6 +78,12 @@ def _build_synthetic_snirf(
     """Construct a minimal valid SNIRF v1.0 HDF5 file.
 
     Returns the path so the caller can compose assertions against it.
+
+    SNIRF spec (minimal):
+    - root has a ``nirs`` group
+    - nirs has ``data1`` (per snirf v1.0 spec) with a ``time`` dataset
+      and ``measurementListN`` groups
+    - nirs has ``probe`` with ``sourceLabels`` + ``detectorLabels``
     """
     duration_s = 2.0
     n_samples = int(sampling_frequency * duration_s)
@@ -72,9 +118,6 @@ def _build_synthetic_snirf(
             ml.create_dataset("detectorIndex", data=i + 1)
 
     return path
-
-
-# ─── Happy path ───────────────────────────────────────────────────────────
 
 
 def test_snirf_h5py_extracts_sampling_frequency(tmp_path: Path):
@@ -120,9 +163,6 @@ def test_snirf_h5py_falls_back_to_indices_when_no_labels(tmp_path: Path):
     assert all("-" in c for c in ch_names)
 
 
-# ─── Error tolerance ──────────────────────────────────────────────────────
-
-
 def test_snirf_h5py_returns_none_for_hdf5_without_nirs_group(tmp_path: Path):
     """An HDF5 file without a ``nirs`` group → None."""
     bad_snirf = tmp_path / "no_nirs.snirf"
@@ -155,20 +195,77 @@ def test_snirf_h5py_handles_empty_time_dataset(tmp_path: Path):
     assert out.get("nchans") == 1
 
 
-# ─── Public entry point integration ───────────────────────────────────────
-
-
 def test_parse_snirf_metadata_uses_h5py_fallback(tmp_path: Path):
     """The public ``parse_snirf_metadata`` falls through to h5py when
     MNE can't read the file.
 
     Pins the fallback chain — MNE first, then h5py.
     """
-    from _snirf_parser import parse_snirf_metadata
-
     snirf = _build_synthetic_snirf(tmp_path / "via_public.snirf", n_channels=4)
     out = parse_snirf_metadata(snirf)
     assert out is not None
     # Either MNE or h5py succeeded; we just need the canonical fields.
     assert "nchans" in out
     assert out["nchans"] >= 1
+
+
+# ─── 3. Real fixture (ds007554, CC0, ~10 Hz × 32 channels) ──────────────────
+
+
+def test_real_snirf_returns_sampling_frequency():
+    """The real ds007554 fNIRS recording yields a non-zero sfreq.
+
+    fNIRS typical: 5–50 Hz (slow hemodynamic signal). The fixture is
+    ~10 Hz. We don't lock to a single value — just assert reasonable
+    range so a different fixture or parser tweak doesn't bite.
+    """
+    md = parse_snirf_metadata(REAL_FIXTURE)
+    assert md is not None, "parser returned None on real .snirf"
+    assert md.get("sampling_frequency"), (
+        "real .snirf must yield non-zero sampling_frequency"
+    )
+    sf = md["sampling_frequency"]
+    assert sf > 0
+    # fNIRS sampling rates are slower than EEG; ds007554 is ~10 Hz.
+    # Allow 1–200 Hz so a different fixture won't break this test.
+    assert 1.0 < sf < 200.0, f"sfreq={sf} outside expected fNIRS range"
+
+
+def test_real_snirf_returns_nchans():
+    """The real .snirf has 32 channels (16 sources × 2 wavelengths)."""
+    md = parse_snirf_metadata(REAL_FIXTURE)
+    assert md is not None
+    assert md.get("nchans"), "real .snirf must yield nchans"
+    assert md["nchans"] >= 1
+
+
+def test_real_snirf_returns_n_times():
+    """The real .snirf yields the recording length in samples.
+
+    The synthetic h5py fixture didn't catch that ``raw.n_times`` (MNE) /
+    ``len(time)`` (h5py fallback) were never read. This test pins the fix.
+    """
+    md = parse_snirf_metadata(REAL_FIXTURE)
+    assert md is not None
+    n_times = md.get("n_times")
+    assert n_times is not None, (
+        f"real .snirf must surface n_times; got keys={sorted(md.keys())}"
+    )
+    assert n_times > 0
+
+
+def test_real_snirf_returns_ch_names_matching_nchans():
+    """ch_names length must equal nchans on the real recording.
+
+    Real-data cross-check the synthetic fixture can't enforce: if the
+    parser silently truncates ch_names (e.g. a buggy index), nchans
+    and len(ch_names) drift apart.
+    """
+    md = parse_snirf_metadata(REAL_FIXTURE)
+    assert md is not None
+    ch_names = md.get("ch_names")
+    assert ch_names, "real .snirf must yield ch_names"
+    assert isinstance(ch_names, list)
+    assert len(ch_names) == md["nchans"], (
+        f"ch_names ({len(ch_names)}) != nchans ({md['nchans']})"
+    )

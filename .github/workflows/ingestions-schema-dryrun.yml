@@ -27,7 +27,9 @@ jobs:
           python-version: '3.11'
           cache: 'pip'
       - name: Install ingestion + eegdash
-        run: pip install -e "scripts/ingestions[dev]"
+        run: |
+          pip install -e .
+          pip install -e "scripts/ingestions[dev]"
       - name: Run schema-preflight tests
         working-directory: scripts/ingestions
         run: pytest tests/test_schema_preflight.py -ra --tb=short

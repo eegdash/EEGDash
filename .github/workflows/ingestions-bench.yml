@@ -32,8 +32,10 @@ jobs:
           python-version: '3.11'
           cache: 'pip'
 
-      - name: Install ingestion + dev deps
-        run: pip install -e "scripts/ingestions[dev]"
+      - name: Install ingestion + dev deps (and root eegdash)
+        run: |
+          pip install -e .
+          pip install -e "scripts/ingestions[dev]"
 
       - name: Run memory + bench tests (saves pytest-benchmark JSON)
         working-directory: scripts/ingestions
@@ -41,6 +43,7 @@ jobs:
         # @pytest.mark.slow memory tests AND the benchmark-decorated
         # throughput tests in tests/test_perf.py.
         run: |
+          mkdir -p .benchmarks
           pytest tests/test_perf.py \
             -m "slow or not slow" \
             --benchmark-json=.benchmarks/output.json \

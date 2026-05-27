@@ -32,7 +32,8 @@ def digest() -> ModuleType:
     spec = importlib.util.spec_from_file_location(
         "digest_under_test", _INGEST_DIR / "3_digest.py"
     )
-    assert spec is not None and spec.loader is not None
+    assert spec is not None
+    assert spec.loader is not None
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)
     return mod

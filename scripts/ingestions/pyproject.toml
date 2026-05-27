@@ -72,7 +72,15 @@ ignore = [
 # The numbered script files are CLI entrypoints; relax the naming rule
 # (N999: invalid-module-name fires on the leading digit).
 "[0-9]*_*.py" = ["N999"]
-"tests/*.py" = ["D"]  # tests don't need NumPy docstrings
+# Test files: relaxed naming + Unicode rules.
+#   D                — tests don't need NumPy docstrings.
+#   N802/N806        — pydantic model class names (DatasetModel, RecordModel)
+#                      are referenced in test names + assigned to local vars.
+#   RUF002/RUF003    — docstrings/comments use × (multiply) and – (en-dash)
+#                      in performance/fixture annotations.
+#   BLE001           — broad except in negative-path test scaffolding.
+"tests/*.py" = ["D", "N802", "N806", "RUF002", "RUF003", "BLE001"]
+"tests/acceptance/*.py" = ["D", "N802", "N806", "RUF002", "RUF003", "BLE001"]
 
 # Legacy-file baseline — these rules will be enforced PHASE BY PHASE as the
 # files are touched. Removing an ignore from this list is part of the

@@ -68,7 +68,7 @@ def test_readme_finds_uppercase_readme_file(tmp_path: Path):
     assert text == "First line\nThird line"  # blank lines stripped
 
 
-def test_readme_finds_readme_md_if_no_README(tmp_path: Path):  # noqa: N802
+def test_readme_finds_readme_md_if_no_README(tmp_path: Path):
     digest = _load_digest()
     (tmp_path / "README.md").write_text("# Title\n\nBody")
     assert digest._read_bids_readme(tmp_path) == "# Title\nBody"

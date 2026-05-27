@@ -43,7 +43,7 @@ class _FixedDatetime(_dt.datetime):
     """
 
     @classmethod
-    def now(cls, tz=None):  # noqa: ARG003
+    def now(cls, tz=None):
         return _dt.datetime.fromisoformat(_PINNED_NOW_ISO.replace("Z", "+00:00"))
 
 
@@ -52,7 +52,8 @@ def _load_digest_module(ingest_dir: Path):
     spec = importlib.util.spec_from_file_location(
         "digest_under_test_idempotency", ingest_dir / "3_digest.py"
     )
-    assert spec is not None and spec.loader is not None
+    assert spec is not None
+    assert spec.loader is not None
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)
     return mod

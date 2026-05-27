@@ -74,7 +74,7 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
-from _parser_utils import head_content_length  # noqa: F401 — patch target
+from _parser_utils import head_content_length
 
 LOGGER = logging.getLogger("digest.montage")
 

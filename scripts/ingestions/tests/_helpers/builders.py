@@ -76,6 +76,6 @@ def build_mefd_around_real_tmet(
 
 
 __all__ = [
-    "build_synthetic_set_v5",
     "build_mefd_around_real_tmet",
+    "build_synthetic_set_v5",
 ]

@@ -24,15 +24,11 @@ The parser fix lands in the same commit.
 
 from __future__ import annotations
 
-import sys
 from pathlib import Path
 
 import pytest
 
 _INGEST_DIR = Path(__file__).resolve().parent.parent
-if str(_INGEST_DIR) not in sys.path:
-    sys.path.insert(0, str(_INGEST_DIR))
-
 # The real fixture lives at this path (downloaded from OpenNeuro
 # ds007554, CC0). The whole module skips if it's absent.
 FIXTURE = Path(__file__).parent / "fixtures" / "fnirs" / "openneuro_real.snirf"

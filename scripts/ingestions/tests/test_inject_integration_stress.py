@@ -18,7 +18,6 @@ import concurrent.futures as cf
 import importlib.util
 import json
 import os
-import sys
 import time
 import uuid
 from pathlib import Path
@@ -27,9 +26,6 @@ import httpx
 import pytest
 
 _INGEST_DIR = Path(__file__).resolve().parent.parent
-if str(_INGEST_DIR) not in sys.path:
-    sys.path.insert(0, str(_INGEST_DIR))
-
 _API_URL = os.environ.get("EEGDASH_INTEGRATION_API_URL")
 _ADMIN_TOKEN = os.environ.get("EEGDASH_INTEGRATION_ADMIN_TOKEN")
 _DATABASE = os.environ.get("EEGDASH_INTEGRATION_DATABASE", "eegdash_dev")

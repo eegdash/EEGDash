@@ -12,7 +12,6 @@ the EEGdash API Gateway which writes to MongoDB on its behalf.
 from __future__ import annotations
 
 import importlib.util
-import sys
 from pathlib import Path
 
 import httpx
@@ -21,8 +20,6 @@ import respx
 from eegdash.testing import data_file
 
 _INGEST_DIR = Path(__file__).resolve().parent.parent
-if str(_INGEST_DIR) not in sys.path:
-    sys.path.insert(0, str(_INGEST_DIR))
 
 
 def _load_inject():

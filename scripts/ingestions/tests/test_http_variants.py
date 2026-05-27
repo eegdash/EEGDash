@@ -7,7 +7,6 @@ the client-construction helpers that were uncovered.
 
 from __future__ import annotations
 
-import sys
 from pathlib import Path
 
 import httpx
@@ -15,9 +14,6 @@ import pytest
 import respx
 
 _INGEST_DIR = Path(__file__).resolve().parent.parent
-if str(_INGEST_DIR) not in sys.path:
-    sys.path.insert(0, str(_INGEST_DIR))
-
 from _http import (
     build_headers,
     close_client,

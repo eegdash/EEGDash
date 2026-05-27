@@ -156,7 +156,7 @@ def test_digest_dataset_e2e_under_10s_on_snapshot(benchmark):
     here gates the per-file overhead. Local: ~70 ms including MNE
     setup; 10s ceiling gives 140x headroom for slower CI runners.
     """
-    digest_mod, ingest_dir = _load_digest_for_perf()
+    digest_mod, _ingest_dir = _load_digest_for_perf()
     inputs_dir = data_file("digest_snapshots/inputs")
 
     # Run twice and take the median; the first call pays MNE-load

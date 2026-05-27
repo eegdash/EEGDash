@@ -16,9 +16,6 @@ import sys
 from pathlib import Path
 
 _INGEST_DIR = Path(__file__).resolve().parent.parent
-if str(_INGEST_DIR) not in sys.path:
-    sys.path.insert(0, str(_INGEST_DIR))
-
 from _serialize import (
     SUBJECT_COUNT_PATTERNS,
     deduplicate_dataset_ids,

@@ -20,8 +20,6 @@ from types import SimpleNamespace
 from unittest.mock import MagicMock
 
 _INGEST_DIR = Path(__file__).resolve().parent.parent
-if str(_INGEST_DIR) not in sys.path:
-    sys.path.insert(0, str(_INGEST_DIR))
 
 
 def _install_fake_github(monkeypatch, github_class):

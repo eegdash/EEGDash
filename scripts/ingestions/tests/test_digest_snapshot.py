@@ -33,7 +33,6 @@ from __future__ import annotations
 
 import importlib.util
 import json
-import sys
 from pathlib import Path
 from typing import Any
 
@@ -41,9 +40,6 @@ import pytest
 from eegdash.testing import data_file
 
 _INGEST_DIR = Path(__file__).resolve().parent.parent
-if str(_INGEST_DIR) not in sys.path:
-    sys.path.insert(0, str(_INGEST_DIR))
-
 
 SNAPSHOT_DIR = data_file("digest_snapshots")
 INPUTS_DIR = SNAPSHOT_DIR / "inputs"

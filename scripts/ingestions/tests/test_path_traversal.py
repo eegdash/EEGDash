@@ -15,14 +15,10 @@ Three findings are addressed in the same commit:
 
 from __future__ import annotations
 
-import sys
 from pathlib import Path
 
 # Allow tests to import the parser modules without installing the package.
 _INGEST_DIR = Path(__file__).resolve().parent.parent
-if str(_INGEST_DIR) not in sys.path:
-    sys.path.insert(0, str(_INGEST_DIR))
-
 from _parser_utils import path_is_within_root
 from _vhdr_parser import extract_vhdr_references
 

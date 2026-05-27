@@ -8,15 +8,11 @@ algorithm bodies, and stage 2's tests use real fixtures.
 
 from __future__ import annotations
 
-import sys
 from pathlib import Path
 
 import pytest
 
 _INGEST_DIR = Path(__file__).resolve().parent.parent
-if str(_INGEST_DIR) not in sys.path:
-    sys.path.insert(0, str(_INGEST_DIR))
-
 from record_enumerator import (
     BIDSFilesystemEnumerator,
     EnumerationResult,

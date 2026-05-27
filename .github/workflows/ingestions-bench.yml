@@ -49,10 +49,10 @@ jobs:
         working-directory: scripts/ingestions
         # The `-m "slow or not slow"` selector includes both the
         # @pytest.mark.slow memory tests AND the benchmark-decorated
-        # throughput tests in tests/test_perf.py.
+        # throughput tests in tests/perf/.
         run: |
           mkdir -p .benchmarks
-          pytest tests/test_perf.py \
+          pytest tests/perf/ \
             -m "slow or not slow" \
             --benchmark-json=.benchmarks/output.json \
             --benchmark-warmup=on \

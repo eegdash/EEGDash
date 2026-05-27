@@ -15,11 +15,11 @@ from urllib.parse import urljoin
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from _http import get_client, request_json  # noqa: E402
-from _serialize import save_datasets_deterministically, setup_paths  # noqa: E402
+from _http import get_client, request_json
+from _serialize import save_datasets_deterministically, setup_paths
 
 setup_paths()
-from eegdash.schemas import Dataset, create_dataset  # noqa: E402
+from eegdash.schemas import Dataset, create_dataset
 
 BASE_URL = "https://data.nemar.org"
 

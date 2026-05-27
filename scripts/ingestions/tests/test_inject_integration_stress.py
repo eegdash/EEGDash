@@ -20,12 +20,11 @@ import json
 import os
 import time
 import uuid
-from pathlib import Path
 
 import httpx
 import pytest
+from _helpers import INGEST_DIR as _INGEST_DIR
 
-_INGEST_DIR = Path(__file__).resolve().parent.parent
 _API_URL = os.environ.get("EEGDASH_INTEGRATION_API_URL")
 _ADMIN_TOKEN = os.environ.get("EEGDASH_INTEGRATION_ADMIN_TOKEN")
 _DATABASE = os.environ.get("EEGDASH_INTEGRATION_DATABASE", "eegdash_dev")

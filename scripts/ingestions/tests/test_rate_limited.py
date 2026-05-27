@@ -20,13 +20,11 @@ from __future__ import annotations
 
 import time
 from collections.abc import Callable
-from pathlib import Path
 from typing import Any
 
 import httpx
 import pytest
 
-_INGEST_DIR = Path(__file__).resolve().parent.parent
 from _file_utils import rate_limited
 
 

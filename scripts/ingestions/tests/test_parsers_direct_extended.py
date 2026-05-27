@@ -12,7 +12,6 @@ from __future__ import annotations
 
 from pathlib import Path
 
-_INGEST_DIR = Path(__file__).resolve().parent.parent
 from _mef3_parser import parse_mef3_metadata
 from _snirf_parser import _parse_snirf_with_h5py, parse_snirf_metadata
 

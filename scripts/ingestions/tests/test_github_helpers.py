@@ -9,9 +9,7 @@ error path) — the parts where regressions are most likely.
 from __future__ import annotations
 
 from datetime import datetime, timezone
-from pathlib import Path
 
-_INGEST_DIR = Path(__file__).resolve().parent.parent
 from _github import _to_iso, get_github_token
 
 # ─── get_github_token ──────────────────────────────────────────────────────

@@ -17,13 +17,10 @@ Why respx vs the previous urllib monkeypatch:
 
 from __future__ import annotations
 
-from pathlib import Path
-
 import httpx
 import pytest
 import respx
 
-_INGEST_DIR = Path(__file__).resolve().parent.parent
 import _parser_utils
 from _parser_utils import (
     fetch_bytes_from_s3,

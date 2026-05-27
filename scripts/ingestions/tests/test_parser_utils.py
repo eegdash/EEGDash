@@ -13,7 +13,6 @@ from pathlib import Path
 
 import pytest
 
-_INGEST_DIR = Path(__file__).resolve().parent.parent
 from _parser_utils import (
     build_s3_url,
     extract_dataset_info,

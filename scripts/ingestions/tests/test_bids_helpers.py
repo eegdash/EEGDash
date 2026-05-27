@@ -10,7 +10,6 @@ from __future__ import annotations
 
 from pathlib import Path
 
-_INGEST_DIR = Path(__file__).resolve().parent.parent
 from _bids import (
     BIDS_DATASET_ZIP_PATTERN,
     BIDS_OPTIONAL_FILES,

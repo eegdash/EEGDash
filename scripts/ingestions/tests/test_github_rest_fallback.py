@@ -13,12 +13,9 @@ that the fallback code path uses.
 from __future__ import annotations
 
 import sys
-from pathlib import Path
 
 import httpx
 import respx
-
-_INGEST_DIR = Path(__file__).resolve().parent.parent
 
 
 def _hide_pygithub(monkeypatch) -> None:

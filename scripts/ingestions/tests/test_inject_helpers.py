@@ -17,8 +17,7 @@ from pathlib import Path
 
 import httpx
 import respx
-
-_INGEST_DIR = Path(__file__).resolve().parent.parent
+from _helpers import INGEST_DIR as _INGEST_DIR
 
 
 def _load_inject():

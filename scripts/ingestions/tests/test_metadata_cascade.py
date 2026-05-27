@@ -17,7 +17,6 @@ from unittest.mock import MagicMock
 
 import pytest  # noqa: F401 — kept for `monkeypatch` discovery
 
-_INGEST_DIR = Path(__file__).resolve().parent.parent
 from _metadata_cascade import (
     CascadeContext,
     CascadeResult,

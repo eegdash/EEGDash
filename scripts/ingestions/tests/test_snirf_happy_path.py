@@ -20,7 +20,6 @@ from pathlib import Path
 
 import pytest
 
-_INGEST_DIR = Path(__file__).resolve().parent.parent
 # Try to import h5py; if absent, skip the whole module
 h5py = pytest.importorskip("h5py")
 

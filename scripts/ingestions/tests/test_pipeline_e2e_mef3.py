@@ -21,9 +21,9 @@ import subprocess
 import sys
 from pathlib import Path
 
+from _helpers import INGEST_DIR as _INGEST_DIR
 from eegdash.testing import data_file
 
-_INGEST_DIR = Path(__file__).resolve().parent.parent
 _TMET_FIXTURE = data_file("ieeg/EKG-000000.tmet")
 
 

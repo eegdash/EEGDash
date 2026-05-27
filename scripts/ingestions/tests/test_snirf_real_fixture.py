@@ -28,7 +28,6 @@ from pathlib import Path
 
 import pytest
 
-_INGEST_DIR = Path(__file__).resolve().parent.parent
 # The real fixture lives at this path (downloaded from OpenNeuro
 # ds007554, CC0). The whole module skips if it's absent.
 FIXTURE = Path(__file__).parent / "fixtures" / "fnirs" / "openneuro_real.snirf"

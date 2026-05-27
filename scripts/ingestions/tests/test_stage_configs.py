@@ -11,7 +11,6 @@ from pathlib import Path
 import pytest
 from pydantic import ValidationError
 
-_INGEST_DIR = Path(__file__).resolve().parent.parent
 from _digest_config import (
     DEFAULT_DATASET_TIMEOUT_SECONDS,
     DigestConfig,

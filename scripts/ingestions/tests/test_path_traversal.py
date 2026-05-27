@@ -18,7 +18,6 @@ from __future__ import annotations
 from pathlib import Path
 
 # Allow tests to import the parser modules without installing the package.
-_INGEST_DIR = Path(__file__).resolve().parent.parent
 from _parser_utils import path_is_within_root
 from _vhdr_parser import extract_vhdr_references
 

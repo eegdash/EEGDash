@@ -14,7 +14,6 @@ import pytest
 import respx
 from pydantic import ValidationError
 
-_INGEST_DIR = Path(__file__).resolve().parent.parent
 from _inject_config import (
     DEFAULT_API_URL,
     LOCAL_FALLBACK_DATABASES,

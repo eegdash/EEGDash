@@ -11,7 +11,6 @@ from pathlib import Path
 import pytest
 from pydantic import ValidationError
 
-_INGEST_DIR = Path(__file__).resolve().parent.parent
 from _clone_config import (
     KNOWN_SOURCES,
     CloneConfig,

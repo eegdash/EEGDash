@@ -34,7 +34,6 @@ name = "eegdash-ingestions"
 version = "0.1.0"
 description = "BIDS-dataset ingestion pipeline for the eegdash MongoDB"
 requires-python = ">=3.10"
-readme = "ROBUSTNESS/README.md"
 license = {text = "BSD-3-Clause"}
 authors = [{name = "Bruno Aristimunha", email = "b.aristimunha@gmail.com"}]
 classifiers = [

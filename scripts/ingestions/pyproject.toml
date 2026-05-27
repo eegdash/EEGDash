@@ -50,6 +50,8 @@ dependencies = [
     "httpx[http2]>=0.27",
     "tenacity>=8",
     "pydantic>=2.5",
+    "pydantic-settings>=2",
+    "pandas",
     "mne-bids>=0.14",
     "python-dotenv>=1",
 ]

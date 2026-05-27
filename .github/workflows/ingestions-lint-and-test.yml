@@ -44,8 +44,10 @@ jobs:
         with:
           python-version: '3.11'
           cache: 'pip'
-      - name: Install ingestion package + dev deps
-        run: pip install -e "scripts/ingestions[dev]"
+      - name: Install ingestion package + dev deps (and root eegdash)
+        run: |
+          pip install -e .
+          pip install -e "scripts/ingestions[dev]"
       - name: Run tests with coverage (offline)
         working-directory: scripts/ingestions
         # Coverage gate per ROADMAP-C1.md C1.1. Floor RATCHETS up per PR.
@@ -116,8 +118,10 @@ jobs:
         with:
           python-version: '3.11'
           cache: 'pip'
-      - name: Install ingestion package + dev deps
-        run: pip install -e "scripts/ingestions[dev]"
+      - name: Install ingestion package + dev deps (and root eegdash)
+        run: |
+          pip install -e .
+          pip install -e "scripts/ingestions[dev]"
       - name: Run E2E smoke tests (Stage 3 → 4 → 5)
         # Per ROADMAP-C1.md C1.3. The e2e tests run the snapshot
         # fixtures through 4_validate_output.py and 5_inject.py

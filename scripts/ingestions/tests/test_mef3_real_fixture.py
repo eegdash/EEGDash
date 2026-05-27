@@ -40,7 +40,7 @@ try:
 
     _TMET_FIXTURE = data_file("ieeg/EKG-000000.tmet")
     _SKIP_REASON: str | None = None
-except Exception as exc:  # noqa: BLE001 — fetch failure = skip
+except Exception as exc:  # fetch failure = skip
     _TMET_FIXTURE = Path(__file__).parent / "_unreachable_.tmet"
     _SKIP_REASON = f"eegdash-testing-data unavailable: {exc}"
 

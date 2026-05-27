@@ -33,7 +33,9 @@ def _testing_data_root() -> Path:
 
     try:
         return data_path()
-    except Exception as exc:  # noqa: BLE001 — fetch failure = skip cleanly
+    except (
+        Exception
+    ) as exc:  # fetch failure → skip cleanly (BLE001 ignored repo-wide for tests/)
         pytest.skip(f"eegdash-testing-data unavailable: {exc}")
 
 

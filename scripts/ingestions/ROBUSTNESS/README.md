@@ -25,9 +25,6 @@ different**, and the order of operations matters.
 | [`06-PARALLELIZATION.md`](06-PARALLELIZATION.md) | The DAG of phases: what blocks what, what can run concurrently, where the critical-path sits. The map for dispatching multiple agents safely. |
 | [`07-DETAILS.md`](07-DETAILS.md) | Concrete deepening per phase: code snippets, fixture choices, threshold-setting heuristics, anti-patterns to refuse. |
 | [`AGENT_PROMPT.md`](AGENT_PROMPT.md) | Copy-paste prompt for the autonomous agent or human contributor who actually executes this plan. |
-| [`ADRs/`](ADRs/) | Accepted and proposed architecture decisions. ADR 0003 covers the separate-repository move and daily CI control-plane design. |
-
-The ingestion domain vocabulary lives in [`../CONTEXT.md`](../CONTEXT.md).
 
 ## How to use
 

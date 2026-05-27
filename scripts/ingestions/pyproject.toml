@@ -2,6 +2,33 @@
 requires = ["setuptools>=68", "wheel"]
 build-backend = "setuptools.build_meta"
 
+# Flat layout with non-package directories alongside the bare modules
+# (profiles/, ROBUSTNESS/, data/, ...). Disable setuptools auto-discovery
+# and ship the bare modules explicitly so `pip install -e .` works.
+[tool.setuptools]
+py-modules = [
+    "_bids",
+    "_clone_config",
+    "_constants",
+    "_digest_config",
+    "_file_utils",
+    "_fingerprint",
+    "_format_parser_registry",
+    "_github",
+    "_http",
+    "_inject_config",
+    "_inject_plan",
+    "_keywords",
+    "_mef3_parser",
+    "_metadata_cascade",
+    "_montage",
+    "_parser_utils",
+    "_serialize",
+    "_set_parser",
+    "_snirf_parser",
+    "_validate",
+]
+
 [project]
 name = "eegdash-ingestions"
 version = "0.1.0"

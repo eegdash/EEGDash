@@ -36,16 +36,25 @@ from _montage import (
 # ─── _round_mm ─────────────────────────────────────────────────────────────
 
 
-def test_round_mm_scales_metres_to_integer_mm():
-    """``_round_mm`` converts a value in metres to an integer millimetre."""
-    assert _round_mm(0.001) == 1
-    assert _round_mm(0.0015) == 2  # banker's rounding (closest even)
-    assert _round_mm(0.05) == 50
-    assert _round_mm(-0.0123) == -12
+@pytest.mark.parametrize(
+    ("metres", "expected_mm"),
+    [
+        pytest.param(0.001, 1, id="one_mm"),
+        pytest.param(0.0015, 2, id="bankers_rounding_to_even"),
+        pytest.param(0.05, 50, id="fifty_mm"),
+        pytest.param(-0.0123, -12, id="negative_value"),
+        pytest.param(0.0, 0, id="zero"),
+    ],
+)
+def test_round_mm_scales_metres_to_integer_mm(metres: float, expected_mm: int):
+    """``_round_mm`` converts a value in metres to an integer millimetre.
 
-
-def test_round_mm_handles_zero():
-    assert _round_mm(0.0) == 0
+    Behavioural quirks pinned:
+    - banker's rounding (closest even) for half-mm values;
+    - signs are preserved for negative inputs;
+    - zero maps to zero.
+    """
+    assert _round_mm(metres) == expected_mm
 
 
 # ─── _hash_sensors ─────────────────────────────────────────────────────────

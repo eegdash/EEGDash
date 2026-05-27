@@ -40,22 +40,22 @@ IEEG_VHDR = data_file("ieeg/sub-01_ses-iemu_task-film_acq-clinical_run-1_ieeg.vh
 # ─── parse_vhdr_metadata — golden values on EEG fixture ────────────────────
 
 
-def test_parse_vhdr_eeg_returns_expected_channel_count():
-    """ds002336 sub-xp101 is a 64-channel EEG recording."""
+@pytest.mark.parametrize(
+    ("field", "expected"),
+    [
+        pytest.param("nchans", 64, id="nchans=64"),
+        pytest.param("sampling_frequency", 5000.0, id="sfreq=5000Hz"),
+    ],
+)
+def test_parse_vhdr_eeg_returns_expected_field(field: str, expected):
+    """ds002336 sub-xp101: 64 channels recorded at 5000 Hz (200 µs)."""
     meta = parse_vhdr_metadata(EEG_VHDR)
     assert meta is not None
-    assert meta["nchans"] == 64
-
-
-def test_parse_vhdr_eeg_returns_expected_sampling_frequency():
-    """ds002336 sub-xp101 is recorded at 5000 Hz (200 µs sampling interval)."""
-    meta = parse_vhdr_metadata(EEG_VHDR)
-    assert meta is not None
-    assert meta["sampling_frequency"] == 5000.0
+    assert meta[field] == expected
 
 
 def test_parse_vhdr_eeg_returns_correct_channel_label_count():
-    """The ch_names list length matches nchans."""
+    """The ch_names list length matches nchans (64)."""
     meta = parse_vhdr_metadata(EEG_VHDR)
     assert meta is not None
     assert len(meta["ch_names"]) == meta["nchans"] == 64
@@ -83,33 +83,38 @@ def test_parse_vhdr_eeg_channel_names_at_known_positions(
 # ─── parse_vhdr_metadata — golden values on iEEG fixture ───────────────────
 
 
-def test_parse_vhdr_ieeg_returns_expected_channel_count():
-    """ds003688 sub-01 is a 111-channel intracranial recording."""
+@pytest.mark.parametrize(
+    ("field", "expected"),
+    [
+        pytest.param("nchans", 111, id="nchans=111"),
+        pytest.param("sampling_frequency", 2048.0, id="sfreq=2048Hz"),
+    ],
+)
+def test_parse_vhdr_ieeg_returns_expected_field(field: str, expected):
+    """ds003688 sub-01: 111-channel intracranial recording at 2048 Hz."""
     meta = parse_vhdr_metadata(IEEG_VHDR)
     assert meta is not None
-    assert meta["nchans"] == 111
+    assert meta[field] == expected
 
 
-def test_parse_vhdr_ieeg_returns_expected_sampling_frequency():
-    """ds003688 sub-01 is recorded at 2048 Hz."""
+@pytest.mark.parametrize(
+    ("ch_name_or_idx", "expected"),
+    [
+        # Intracranial channels follow the AR/AHR/PHR strip convention.
+        pytest.param(0, "AR1", id="idx_0_is_AR1"),
+        pytest.param(1, "AR2", id="idx_1_is_AR2"),
+        # iEEG implantations often co-record EMG; verify it's present.
+        pytest.param("EMG+", "EMG+", id="EMG+_present_anywhere"),
+    ],
+)
+def test_parse_vhdr_ieeg_channel_layout(ch_name_or_idx, expected: str):
+    """Pin specific channel positions/membership in the iEEG montage."""
     meta = parse_vhdr_metadata(IEEG_VHDR)
     assert meta is not None
-    assert meta["sampling_frequency"] == 2048.0
-
-
-def test_parse_vhdr_ieeg_first_channel_is_intracranial():
-    """Intracranial channels follow the AR/AHR/PHR strip convention."""
-    meta = parse_vhdr_metadata(IEEG_VHDR)
-    assert meta is not None
-    assert meta["ch_names"][0] == "AR1"
-    assert meta["ch_names"][1] == "AR2"
-
-
-def test_parse_vhdr_ieeg_includes_emg_channel():
-    """iEEG implantations often co-record EMG; verify it's present."""
-    meta = parse_vhdr_metadata(IEEG_VHDR)
-    assert meta is not None
-    assert "EMG+" in meta["ch_names"]
+    if isinstance(ch_name_or_idx, int):
+        assert meta["ch_names"][ch_name_or_idx] == expected
+    else:
+        assert expected in meta["ch_names"]
 
 
 # ─── extract_vhdr_references — sibling file resolution ─────────────────────

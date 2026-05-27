@@ -176,7 +176,7 @@ def test_rate_limited_surfaces_non_retryable_http_error(status_code):
 
 
 @pytest.mark.parametrize(
-    ("factory_builder",),
+    "factory_builder",
     [
         pytest.param(lambda c: make_always_raises_http(429, c), id="persistent_429"),
         pytest.param(make_always_raises_network, id="persistent_network_error"),

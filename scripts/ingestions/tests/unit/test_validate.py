@@ -103,41 +103,43 @@ def test_validate_record_missing_mandatory_field_raises_pydantic_error():
     assert any("record" in str(e) for e in result.errors)
 
 
-def test_validate_record_counts_missing_nchans():
-    """nchans missing increments the missing_nchans counter."""
+@pytest.mark.parametrize(
+    ("override", "counter", "expected"),
+    [
+        # Missing (or zero) → counter == 1
+        pytest.param({}, "missing_nchans", 1, id="nchans_missing"),
+        pytest.param({}, "missing_sampling_frequency", 1, id="sfreq_missing"),
+        pytest.param(
+            {"nchans": 0}, "missing_nchans", 1, id="nchans_zero_treated_missing"
+        ),
+        # Present + non-degenerate → counter stays 0
+        pytest.param(
+            {"nchans": 64, "sampling_frequency": 250.0},
+            "missing_nchans",
+            0,
+            id="nchans_present_not_counted",
+        ),
+        pytest.param(
+            {"nchans": 64, "sampling_frequency": 250.0},
+            "missing_sampling_frequency",
+            0,
+            id="sfreq_present_not_counted",
+        ),
+    ],
+)
+def test_validate_record_missing_field_counters(
+    override: dict, counter: str, expected: int
+):
+    """missing_nchans / missing_sampling_frequency counter behaviour.
+
+    Each row exercises one (record_override, counter_key, expected_value)
+    combination so missing/present/zero degenerate cases share one body.
+    """
     result = ValidationResult()
     rec = _minimal_valid_record()
-    # nchans is None by default in our minimal record
+    rec.update(override)
     validate_record(rec, "ds002893", "openneuro", result)
-    assert result.stats["missing_nchans"] == 1
-
-
-def test_validate_record_counts_missing_sampling_frequency():
-    """sampling_frequency missing → counter increment."""
-    result = ValidationResult()
-    rec = _minimal_valid_record()
-    validate_record(rec, "ds002893", "openneuro", result)
-    assert result.stats["missing_sampling_frequency"] == 1
-
-
-def test_validate_record_does_not_count_present_nchans():
-    """When nchans is present + nonzero, counter does NOT increment."""
-    result = ValidationResult()
-    rec = _minimal_valid_record()
-    rec["nchans"] = 64
-    rec["sampling_frequency"] = 250.0
-    validate_record(rec, "ds002893", "openneuro", result)
-    assert result.stats["missing_nchans"] == 0
-    assert result.stats["missing_sampling_frequency"] == 0
-
-
-def test_validate_record_treats_zero_nchans_as_missing():
-    """nchans == 0 is treated as missing (degenerate value)."""
-    result = ValidationResult()
-    rec = _minimal_valid_record()
-    rec["nchans"] = 0
-    validate_record(rec, "ds002893", "openneuro", result)
-    assert result.stats["missing_nchans"] == 1
+    assert result.stats[counter] == expected
 
 
 def test_validate_record_first_record_only_emits_recommended_warnings():

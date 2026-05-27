@@ -67,31 +67,29 @@ def test_clone_config_rejects_missing_input(tmp_path: Path):
 # ─── Bounds ───────────────────────────────────────────────────────────────
 
 
-def test_clone_config_workers_bounds(tmp_path: Path):
-    """--workers must be in [1, 128]."""
+@pytest.mark.parametrize(
+    ("field", "invalid_value"),
+    [
+        pytest.param("workers", 0, id="workers_below_min"),
+        pytest.param("workers", 9999, id="workers_above_max"),
+        pytest.param("timeout", 0, id="timeout_below_min"),
+        pytest.param("timeout", 60 * 60 * 24, id="timeout_above_6h"),
+        pytest.param("limit", 0, id="limit_below_min"),
+        pytest.param("limit_per_source", 0, id="limit_per_source_below_min"),
+    ],
+)
+def test_clone_config_field_bounds_reject_invalid(
+    tmp_path: Path, field: str, invalid_value: int
+):
+    """Out-of-range numeric fields raise ValidationError on construction."""
     with pytest.raises(ValidationError):
-        CloneConfig(input=tmp_path, workers=0)
-    with pytest.raises(ValidationError):
-        CloneConfig(input=tmp_path, workers=9999)
+        CloneConfig(input=tmp_path, **{field: invalid_value})
+
+
+def test_clone_config_workers_in_range_accepted(tmp_path: Path):
+    """A workers value inside [1, 128] is accepted unchanged."""
     c = CloneConfig(input=tmp_path, workers=64)
     assert c.workers == 64
-
-
-def test_clone_config_timeout_bounds(tmp_path: Path):
-    """--timeout must be in [1, 21600] (6h)."""
-    with pytest.raises(ValidationError):
-        CloneConfig(input=tmp_path, timeout=0)
-    with pytest.raises(ValidationError):
-        # > 6 hours = misconfig
-        CloneConfig(input=tmp_path, timeout=60 * 60 * 24)
-
-
-def test_clone_config_limit_bounds(tmp_path: Path):
-    """--limit and --limit-per-source must be >= 1 when set."""
-    with pytest.raises(ValidationError):
-        CloneConfig(input=tmp_path, limit=0)
-    with pytest.raises(ValidationError):
-        CloneConfig(input=tmp_path, limit_per_source=0)
 
 
 # ─── Sources validation ───────────────────────────────────────────────────
@@ -114,11 +112,11 @@ def test_clone_config_rejects_unknown_source(tmp_path: Path):
     assert "made_up_source" in msg
 
 
-def test_clone_config_accepts_every_known_source_individually(tmp_path: Path):
-    """Every entry in KNOWN_SOURCES is accepted."""
-    for s in KNOWN_SOURCES:
-        c = CloneConfig(input=tmp_path, sources=[s])
-        assert c.sources == [s]
+@pytest.mark.parametrize("source", sorted(KNOWN_SOURCES))
+def test_clone_config_accepts_known_source(tmp_path: Path, source: str):
+    """Every entry in KNOWN_SOURCES is accepted as a single-source list."""
+    c = CloneConfig(input=tmp_path, sources=[source])
+    assert c.sources == [source]
 
 
 # ─── CLI parsing ──────────────────────────────────────────────────────────
@@ -221,17 +219,20 @@ def test_config_rejects_invalid_database():
     assert "database" in msg.lower()
 
 
-def test_config_accepts_each_valid_database():
-    """All 5 documented database names accepted."""
-    for db in (
+@pytest.mark.parametrize(
+    "database",
+    [
         "eegdash",
         "eegdash_dev",
         "eegdash_archive",
         "eegdash_staging",
         "eegdash_v1",
-    ):
-        c = InjectConfig(database=db, dry_run=True)
-        assert c.database == db
+    ],
+)
+def test_config_accepts_each_valid_database(database: str):
+    """All 5 documented database names accepted."""
+    c = InjectConfig(database=database, dry_run=True)
+    assert c.database == database
 
 
 def test_config_defaults():
@@ -255,35 +256,28 @@ def test_config_defaults():
 # ─── Bounds ───────────────────────────────────────────────────────────────
 
 
-def test_batch_size_lower_bound():
-    """``batch_size`` must be ≥ 1."""
+@pytest.mark.parametrize(
+    ("field", "invalid_value"),
+    [
+        pytest.param("batch_size", 0, id="batch_size_lower"),
+        pytest.param("batch_size", 20_000, id="batch_size_upper"),
+        pytest.param("data_quality_threshold", -1.0, id="dqt_below_zero"),
+        pytest.param("data_quality_threshold", 101.0, id="dqt_above_100"),
+    ],
+)
+def test_inject_config_field_bounds_reject_invalid(field: str, invalid_value):
+    """Out-of-range numeric fields raise ValidationError on construction."""
     with pytest.raises(ValidationError):
-        InjectConfig(database="eegdash_dev", batch_size=0, dry_run=True)
+        InjectConfig(database="eegdash_dev", dry_run=True, **{field: invalid_value})
 
 
-def test_batch_size_upper_bound():
-    """``batch_size`` must be ≤ 10_000 (avoids accidentally trying to
-    upload a 100k-record batch that the Gateway would reject)."""
-    with pytest.raises(ValidationError):
-        InjectConfig(database="eegdash_dev", batch_size=20_000, dry_run=True)
-
-
-def test_data_quality_threshold_bounds():
-    """``data_quality_threshold`` is a percentage 0-100."""
-    InjectConfig(database="eegdash_dev", data_quality_threshold=0.0, dry_run=True)
-    InjectConfig(database="eegdash_dev", data_quality_threshold=100.0, dry_run=True)
-    with pytest.raises(ValidationError):
-        InjectConfig(
-            database="eegdash_dev",
-            data_quality_threshold=-1.0,
-            dry_run=True,
-        )
-    with pytest.raises(ValidationError):
-        InjectConfig(
-            database="eegdash_dev",
-            data_quality_threshold=101.0,
-            dry_run=True,
-        )
+@pytest.mark.parametrize("threshold", [0.0, 50.0, 100.0])
+def test_inject_data_quality_threshold_in_range_accepted(threshold: float):
+    """data_quality_threshold inside [0, 100] is accepted."""
+    c = InjectConfig(
+        database="eegdash_dev", data_quality_threshold=threshold, dry_run=True
+    )
+    assert c.data_quality_threshold == threshold
 
 
 # ─── Mutually-exclusive only-* flags ──────────────────────────────────────

@@ -37,4 +37,4 @@ jobs:
           key: eegdash-testing-data-v0.1.0
       - name: Run schema-preflight tests
         working-directory: scripts/ingestions
-        run: pytest tests/test_schema_preflight.py -ra --tb=short
+        run: pytest tests/pipeline/test_schema_preflight.py -ra --tb=short

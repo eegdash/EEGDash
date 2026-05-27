@@ -1,4 +1,4 @@
-"""Unit tests for cascade-with-provenance (P0.1 from ROADMAP).
+"""Unit tests for cascade-with-provenance .
 
 The technical-metadata cascade in :func:`_extract_technical_metadata`
 has 4 ordered steps:

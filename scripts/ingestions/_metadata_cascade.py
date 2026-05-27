@@ -21,7 +21,7 @@ is now a thin delegator that wraps this module. The byte-level
 guarantee against the legacy behaviour is enforced by
 ``tests/test_digest_snapshot.py``.
 
-See ``ROBUSTNESS/SPRINT-2026-05-22-PLAN.md`` Task 3 for the design
+See -PLAN.md`` Task 3 for the design
 rationale.
 """
 

@@ -237,7 +237,7 @@ def test_manifest_digest_output_matches_snapshot(
     manifest path (``_enumerate_via_manifest``). The empty
     ``_montages.json`` is part of the contract (downstream tooling
     assumes the file exists; see Stage 2A in
-    ``ROBUSTNESS/STAGE-2-PLAN.md``).
+    STAGE-2-PLAN.md``).
     """
     dataset_id = "ds_snapshot_manifest"
     fresh_path = (

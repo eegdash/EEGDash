@@ -36,7 +36,7 @@ DEFAULT_USER_AGENT = "EEGDash-DataHarvester/1.0"
 # (server saw the connection open but did not receive a complete request
 # in time — same root cause as a 504, just observed from the upstream
 # side). Most servers return 504 instead, but including 408 is hygiene
-# and survives upstreams that don't. Added in Phase 9 audit-2 F2.
+# and survives upstreams that don't.
 DEFAULT_RETRY_STATUSES = {408, 429, 500, 502, 503, 504}
 DEFAULT_TIMEOUT = 30.0
 
@@ -134,10 +134,9 @@ def make_authed_client(auth_token: str) -> httpx.Client:
 
     Notes
     -----
-    Renamed from ``make_retry_client`` (Phase 9 audit-2 F3 — the old
-    name implied that retries were baked into the client itself, which
-    they are not). The old name remains as a deprecated alias for one
-    release.
+    Renamed from ``make_retry_client`` — the old name implied that
+    retries were baked into the client itself, which they are not.
+    The old name remains as a deprecated alias for one release.
     """
     headers = build_headers(
         extra={

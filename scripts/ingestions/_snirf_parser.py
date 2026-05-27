@@ -40,7 +40,7 @@ def parse_snirf_metadata(snirf_path: Path | str) -> dict[str, Any] | None:
 
     Notes
     -----
-    SPRINT-2026-05-22 Task 4 (C5.1 pattern): ``n_times`` was added after
+     (C5.1 pattern): ``n_times`` was added after
     a real OpenNeuro fixture (ds007554) surfaced the gap. The synthetic
     h5py fixture validated the parser against itself; the real one
     revealed that ``raw.n_times`` (MNE) / ``len(time)`` (h5py fallback)
@@ -71,7 +71,7 @@ def parse_snirf_metadata(snirf_path: Path | str) -> dict[str, Any] | None:
                 result["ch_names"] = list(ch_names)
                 result["nchans"] = len(ch_names)
 
-            # Extract recording length (SPRINT-2026-05-22 Task 4: C5.1 fix).
+            # Extract recording length.
             # ``raw.n_times`` is always populated on a successfully-read
             # MNE Raw — but defensive-guard against subclasses where it
             # could be 0 or missing (e.g. truncated SNIRF stubs).
@@ -138,7 +138,7 @@ def _parse_snirf_with_h5py(snirf_path: Path) -> dict[str, Any] | None:
                 return None
 
             # Extract sampling frequency from time vector. Also record
-            # ``n_times`` (SPRINT-2026-05-22 Task 4: C5.1 fix) — the
+            # ``n_times`` — the
             # time vector length IS the sample count along the time axis.
             for data_key in nirs_group.keys():
                 if data_key.startswith("data"):

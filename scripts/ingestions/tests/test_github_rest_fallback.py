@@ -1,4 +1,4 @@
-"""GitHub adapter tests via the REST fallback path (ROADMAP-C3).
+"""GitHub adapter tests via the REST fallback path .
 
 C2.2 covered the pure helpers (token, _to_iso, _pygithub_client
 import-error path). This file covers the **REST fallback** that

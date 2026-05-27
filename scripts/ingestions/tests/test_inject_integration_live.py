@@ -53,7 +53,7 @@ pytestmark = [
         reason=(
             "Live integration tests skipped. Set "
             "EEGDASH_INTEGRATION_API_URL and EEGDASH_INTEGRATION_ADMIN_TOKEN "
-            "to opt in. See ROBUSTNESS/INTEGRATION-TESTING.md."
+            "to opt in."
         ),
     ),
 ]

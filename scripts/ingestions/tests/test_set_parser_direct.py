@@ -1,4 +1,4 @@
-"""Direct tests for ``_set_parser.py`` (ROADMAP-C2 C2.3).
+"""Direct tests for ``_set_parser.py`` .
 
 Was at 36% before this commit. Uses the CC0 .set fixture from the
 ``eegdash-testing-data`` corpus
@@ -89,7 +89,7 @@ def test_parse_set_missing_file_returns_none(tmp_path: Path):
 
 
 def test_parse_set_broken_symlink_returns_none(tmp_path: Path):
-    """git-annex broken symlink → None (per Phase 9 audit-3 F3 fix)."""
+    """git-annex broken symlink → None."""
     broken = tmp_path / "broken.set"
     broken.symlink_to(tmp_path / ".no_target")
     assert parse_set_metadata(broken) is None

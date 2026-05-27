@@ -1,7 +1,7 @@
 """Regression tests for 2_clone.py error-handling contracts.
 
-Phase 9 of the robustness programme. Addresses audit-1.md F1: silent
-error masking around `future.result()` in the main thread pool. Before
+Addresses silent error masking around `future.result()` in the main
+thread pool. Before
 this fix, any exception escaping `process_dataset` was caught by a
 broad `except Exception` and reported as `{"status": "error", "error":
 "<str>"}`. Recoverable failures and programmer errors were

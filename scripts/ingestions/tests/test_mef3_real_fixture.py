@@ -1,6 +1,6 @@
 """Happy-path tests for _mef3_parser using a real MEF3 .tmet fixture.
 
-ROADMAP-C4 follow-up. C3.2 covered the fail paths via synthetic
+C3.2 covered the fail paths via synthetic
 .mefd directories. This file uses a real ``.tmet`` binary header
 extracted from OpenNeuro ds003708 (CC0) to exercise the
 ``_parse_tmet_sampling_frequency`` byte-offset reader.

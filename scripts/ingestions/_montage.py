@@ -290,7 +290,7 @@ class _ModalityConfig:
     modality" a single named place instead of 4 functions with bespoke
     kwarg patterns.
 
-    Per ROADMAP P2.1 — the implicit Seam between the 4 TSV-based
+    Per the implicit Seam between the 4 TSV-based
     extractors becomes explicit: each modality is a named config, the
     dispatcher reads from a dict, ``_extract_tsv_layout`` is called once.
     """

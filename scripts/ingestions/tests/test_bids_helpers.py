@@ -1,4 +1,4 @@
-"""Tests for ``_bids.py`` — BIDS structure validation (ROADMAP-C2 C2.2).
+"""Tests for ``_bids.py`` — BIDS structure validation .
 
 Was at 0% coverage. These helpers are used by the source-listing
 adapters (figshare, zenodo, osf, etc.) to detect "is this dataset

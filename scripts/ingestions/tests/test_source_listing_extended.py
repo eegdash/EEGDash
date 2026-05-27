@@ -1,7 +1,7 @@
-"""Extended source-listing tests (ROADMAP-C3 follow-up to C1.5).
+"""Extended source-listing tests.
 
-C1.5 covered the 3 HTTP-based adapters (Figshare/Zenodo/OSF). This
-file adds:
+A prior pass covered the 3 HTTP-based adapters (Figshare/Zenodo/OSF).
+This file adds:
 - list_local_bids_files (filesystem-based, no network)
 - list_scidb_files (the SciDB tree-recursing API with respx mocks)
 - list_datarn_files (WebDAV PROPFIND via respx)

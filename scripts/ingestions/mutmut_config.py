@@ -17,7 +17,7 @@ To see surviving mutants::
     mutmut show <id>
 
 To stress one specific file (recommended starting point — establish
-floor before expanding scope, per ROBUSTNESS/04-ROADMAP.md § Phase 4)::
+floor before expanding scope, per  § Phase 4)::
 
     mutmut run --paths-to-mutate _vhdr_parser.py
 

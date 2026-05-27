@@ -93,9 +93,8 @@ def _default_workers() -> int:
 
     Notes
     -----
-    Replaces the hard-coded ``max_workers=8`` flagged in
-    ``ROBUSTNESS/audit-1.md`` F4. CI workers run on anything from 2
-    vCPUs (GitHub free tier) to 16+ vCPUs (self-hosted runners); a
+    Replaces the hard-coded ``max_workers=8``. CI workers run on anything
+    from 2 vCPUs (GitHub free tier) to 16+ vCPUs (self-hosted runners); a
     single magic constant is wrong for both extremes. The cap at 8
     matches the previous behaviour for hosts with >= 4 vCPUs so this
     is a non-regression on the original CI; smaller hosts now get a
@@ -226,7 +225,7 @@ def inject_records(
     # Parallel execution. Each batch has a 60s per-request timeout via the
     # inner _bulk_upsert_batch; as_completed gets a generous wall-clock
     # safety margin so a *hung* worker (TCP keepalive never trips) doesn't
-    # deadlock the main thread indefinitely. Per ROBUSTNESS/audit-1 F3.
+    # deadlock the main thread indefinitely.
     per_batch_timeout_s = 60.0
     wall_clock_budget_s = max(120.0, len(batches) * per_batch_timeout_s + 30.0)
     with ThreadPoolExecutor(max_workers=_default_workers()) as executor:
@@ -287,7 +286,7 @@ def inject_montages(
     for i in range(0, len(montages), batch_size):
         batches.append((i // batch_size, montages[i : i + batch_size]))
 
-    # Same timeout discipline as inject_records — see audit-1 F3.
+    # Same timeout discipline as inject_records.
     per_batch_timeout_s = 120.0
     wall_clock_budget_s = max(180.0, len(batches) * per_batch_timeout_s + 30.0)
     with ThreadPoolExecutor(max_workers=_default_workers()) as executor:

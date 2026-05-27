@@ -3,7 +3,7 @@ requires = ["setuptools>=68", "wheel"]
 build-backend = "setuptools.build_meta"
 
 # Flat layout with non-package directories alongside the bare modules
-# (profiles/, ROBUSTNESS/, data/, ...). Disable setuptools auto-discovery
+# (profiles/, data/, ...). Disable setuptools auto-discovery
 # and ship the bare modules explicitly so `pip install -e .` works.
 [tool.setuptools]
 py-modules = [
@@ -113,7 +113,7 @@ ignore = [
 
 # Legacy-file baseline — these rules will be enforced PHASE BY PHASE as the
 # files are touched. Removing an ignore from this list is part of the
-# evaluation hook for the relevant phase (see ROBUSTNESS/05-EVALUATION.md).
+# evaluation hook for the relevant phase.
 #
 # BLE001 — bare-except / broad-except. 72 violations across 17 files. Phase 3
 # of the robustness programme sweeps these; the per-file ignore is removed
@@ -148,7 +148,7 @@ convention = "numpy"
 [tool.mypy]
 python_version = "3.10"
 # Permissive baseline. Tighten per-module as legacy files are refactored
-# under their own characterisation tests (see ROBUSTNESS/04-ROADMAP.md
+# under their own characterisation tests (see
 # Phase 8). Goal: --strict on new files; existing files raised
 # incrementally as they're touched.
 ignore_missing_imports = true
@@ -210,7 +210,7 @@ exclude_lines = [
 show_missing = true
 skip_covered = false
 
-# Mutation testing config (mutmut 2.x — see ROBUSTNESS/findings-phase-4.md
+# Mutation testing config (mutmut 2.x — see
 # for why we pinned to 2.x rather than 3.x).
 #
 # Run interactively:

@@ -1,4 +1,4 @@
-"""Parametrized tests for the 7 source-listing adapters (ROADMAP-C1 C1.5).
+"""Parametrized tests for the 7 source-listing adapters .
 
 Per ADR 0001, OpenNeuro and NEMAR are the production sources; the
 other 5 (Figshare, Zenodo, OSF, SciDB, DataRN) are "best-effort,

@@ -73,7 +73,7 @@ from _file_utils import (
 )
 from _fingerprint import fingerprint_from_files, fingerprint_from_manifest
 
-# Technical-metadata cascade (SPRINT-2026-05-22 Task 3). The 5-step
+# Technical-metadata cascade. The 5-step
 # cascade (mne_bids → modality_sidecar → channels_tsv → binary_parser →
 # mne_fallback) lives in ``_metadata_cascade.py``; this file's
 # ``_extract_technical_metadata`` is a thin delegator below. The
@@ -90,7 +90,7 @@ from _metadata_cascade import (  # noqa: F401 — re-export for back-compat
 )
 from _montage import extract_layout
 
-# Telemetry (ROADMAP P1.1). Default emitter is NullEmitter so digest
+# Telemetry . Default emitter is NullEmitter so digest
 # behaviour is unchanged when telemetry is disabled. Configure by
 # setting $EEGDASH_TELEMETRY_PATH or calling configure_telemetry() in
 # the caller.
@@ -102,7 +102,6 @@ from digest_telemetry import TelemetryEvent, auto_configure_from_env, get_emitte
 # BIDS-filesystem and manifest-only paths. Both paths write their
 # JSON outputs through ``write_dataset_outputs`` so the per-Dataset
 # JSON shapes are documented in ONE place — see
-# ROBUSTNESS/STAGE-3-PLAN.md.
 from record_enumerator import (
     EnumerationResult,
     ManifestEnumerator,
@@ -200,14 +199,14 @@ def detect_source(dataset_dir: Path) -> str:
     return _reconcile_source(manifest_src, dataset_id, context="detect_source")
 
 
-# _parse_edf_with_mne moved to _format_parser_registry.py (ROADMAP
-# P2.2). The cascade reaches it via get_parser_for_extension(".edf")
+# _parse_edf_with_mne moved to _format_parser_registry.py.
+# The cascade reaches it via get_parser_for_extension(".edf")
 # and get_parser_for_extension(".bdf") — same MNE-based reader, one
 # canonical home for all single-dict format parsers.
 
 
-# ``_parse_fif_with_mne`` moved to ``_metadata_cascade.py`` (SPRINT-2026-05-22
-# Task 3). Re-exported at the top of this module via the
+# ``_parse_fif_with_mne`` moved to ``_metadata_cascade.py``.
+# Re-exported at the top of this module via the
 # ``from _metadata_cascade import ...`` block so existing call sites
 # (``_extract_technical_metadata`` delegator + tests/test_digest_*) keep
 # working unchanged.
@@ -792,7 +791,6 @@ def extract_dataset_metadata(
     # basic name / license / authors set already passed to create_dataset.
     # Covers Acknowledgements, HowToAcknowledge, EthicsApprovals,
     # ReferencesAndLinks, GeneratedBy, SourceDatasets. See
-    # ROBUSTNESS/BIDS-GAP-AUDIT.md for the rationale.
     description_extras = _extract_dataset_description_extras(description)
     dataset.update(description_extras)
 
@@ -800,8 +798,8 @@ def extract_dataset_metadata(
 
 
 # Provenance source names. These are the values that show up in a
-# Record's ``_metadata_provenance`` field. See ROBUSTNESS/ROADMAP.md
-# P0.1 for the motivation and PROGRESS-8 for the implementation
+# Record's ``_metadata_provenance`` field.md
+# P0.1 for the motivation and  for the implementation
 # narrative.
 _PROV_MNE_BIDS = "mne_bids"
 _PROV_MODALITY_SIDECAR = "modality_sidecar"
@@ -840,12 +838,12 @@ def _stamp_provenance(
         provenance[field] = source
 
 
-# ─── BIDS sidecar enrichment (C6.1 — BIDS-GAP-AUDIT.md) ────────────────────
+# ─── BIDS sidecar enrichment ──────────────────────────────────────────────
 
 
 # Per-modality sidecar fields we surface on each Record (BIDS spec).
 # Mapping is camelCase-in-sidecar → snake_case-in-Record. Kept narrow
-# (highest-leverage fields per BIDS-GAP-AUDIT.md); easy to extend
+# (highest-leverage fields only); easy to extend
 # without breaking older Records because RecordModel uses extra="allow".
 _BIDS_SIDECAR_RECORD_FIELDS: dict[str, str] = {
     "PowerLineFrequency": "power_line_frequency",
@@ -884,8 +882,6 @@ def _extract_bids_sidecar_fields(bids_dataset: Any, bids_file: str) -> dict[str,
     Returns a dict of {snake_case_field: value}. Empty dict if no
     sidecar found / nothing extractable. None values are NOT included
     (so callers can ``record.update(...)`` without overwriting).
-
-    See ``BIDS-GAP-AUDIT.md`` for the full field list + rationale.
     """
     out: dict[str, Any] = {}
 
@@ -1004,9 +1000,6 @@ def _extract_dataset_description_extras(
     Returns a dict of {snake_case_field: value} for fields beyond the
     basic name / license / authors / funding set already captured by
     ``extract_dataset_metadata``. Empty values omitted.
-
-    See ``BIDS-GAP-AUDIT.md`` for the rationale (attribution +
-    regulatory metadata).
     """
     out: dict[str, Any] = {}
     for desc_key, ds_key in _BIDS_DESCRIPTION_DATASET_FIELDS.items():
@@ -1033,7 +1026,7 @@ def _extract_technical_metadata(
     Thin delegator to :class:`_metadata_cascade.MetadataCascade` — see
     that module for the 5-step cascade (mne_bids → modality_sidecar →
     channels_tsv → binary_parser → mne_fallback) and provenance
-    semantics. SPRINT-2026-05-22 Task 3.
+    semantics..
     """
     from _metadata_cascade import CascadeContext, MetadataCascade
 
@@ -1427,7 +1420,6 @@ def extract_record(
     # Manufacturer, EEGPlacementScheme, etc.). Surfaces them as
     # structured Record fields so they're MongoDB-queryable rather
     # than just embedded as bytes in sidecar_inline. See
-    # ROBUSTNESS/BIDS-GAP-AUDIT.md for the rationale.
     sidecar_extras = _extract_bids_sidecar_fields(bids_dataset, bids_file)
     record.update(sidecar_extras)
 
@@ -1576,7 +1568,7 @@ def parse_bids_entities_from_path(filepath: str) -> dict[str, Any]:
 
 
 # ``_BIDS_CHANNEL_COUNT_FIELDS`` and ``sum_bids_channel_counts`` moved
-# to ``_metadata_cascade.py`` (SPRINT-2026-05-22 Task 3) together with
+# to ``_metadata_cascade.py`` together with
 # the modality-sidecar / channels.tsv inheritance-walk helpers — they
 # all serve the technical-metadata cascade and nothing else. The name
 # ``sum_bids_channel_counts`` is re-exported at the top of this module
@@ -1617,7 +1609,7 @@ def strip_dataset_prefix(bids_relpath: str, dataset_id: str) -> str:
 
 
 # Modality-sidecar + channels.tsv inheritance-walk helpers moved to
-# _metadata_cascade.py (SPRINT-2026-05-22 Task 3). Re-exported at
+# _metadata_cascade.py. Re-exported at
 # the top of this module for back-compat.
 
 

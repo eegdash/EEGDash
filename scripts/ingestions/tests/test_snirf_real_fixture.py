@@ -1,4 +1,4 @@
-"""Real-data SNIRF parser test (SPRINT-2026-05-22 Task 4).
+"""Real-data SNIRF parser test.
 
 Mirrors ``test_mef3_real_fixture.py``: validates ``_snirf_parser`` against
 a real BIDS ``.snirf`` file from OpenNeuro instead of a synthetic h5py
@@ -83,7 +83,7 @@ def test_real_snirf_returns_nchans():
 def test_real_snirf_returns_n_times():
     """The real .snirf yields the recording length in samples.
 
-    SPRINT-2026-05-22 Task 4 (C5.1 fix): the synthetic h5py fixture
+    the synthetic h5py fixture
     didn't catch that ``raw.n_times`` (MNE) / ``len(time)`` (h5py
     fallback) were never read. This test pins the fix.
     """

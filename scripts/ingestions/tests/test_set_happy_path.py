@@ -1,6 +1,6 @@
 """Happy-path tests for _set_parser via a synthetic .set (MAT v5).
 
-ROADMAP-C3.4. Builds a minimal EEGLAB .set struct using scipy.io.savemat,
+Builds a minimal EEGLAB .set struct using scipy.io.savemat,
 matching the field shapes the parser reads (EEG.srate, EEG.nbchan,
 EEG.pnts, EEG.chanlocs.labels).
 

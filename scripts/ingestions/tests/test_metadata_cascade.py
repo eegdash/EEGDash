@@ -1,4 +1,4 @@
-"""Tests for the MetadataCascade module (Task 3 — SPRINT-2026-05-22).
+"""Tests for the MetadataCascade module .
 
 The cascade extracts technical metadata (sampling_frequency / nchans /
 ntimes / ch_names) from up to 5 sources, in order, with first-writer-wins

@@ -1,4 +1,4 @@
-"""Tests for _validate.py's 3 main validators (ROADMAP-C2 C2.1).
+"""Tests for _validate.py's 3 main validators .
 
 C1.2 covered the URL patterns + constants + ValidationResult shell.
 This file covers the actual validation logic:

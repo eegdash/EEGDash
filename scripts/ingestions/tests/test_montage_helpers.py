@@ -1,4 +1,4 @@
-"""Tests for ``_montage.py`` pure helpers (ROADMAP-C2 C2.4).
+"""Tests for ``_montage.py`` pure helpers .
 
 Was at 17% before this commit. Targets the testable-without-MNE-fixtures
 helpers: hash building, JSON parsing, BIDS-inheritance file walks,

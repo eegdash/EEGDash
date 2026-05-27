@@ -1,6 +1,6 @@
 """Structured per-Record / per-Dataset event stream for the digest pipeline.
 
-ROADMAP P1.1 — closes the operational-visibility gap.
+closes the operational-visibility gap.
 
 Before this Module the only forensic tool for a 1000-dataset ingest run
 was grep through stdout. Questions like "Which datasets had Records
@@ -55,8 +55,8 @@ schema migration — consumers should branch on ``event_kind``.
 
 See Also
 --------
-- ROADMAP.md P1.1 — driver + definition-of-done
-- PROGRESS-8.md — provenance (the payload for ``record_built``)
+-  P1.1 — driver + definition-of-done
+-  — provenance (the payload for ``record_built``)
 """
 
 from __future__ import annotations

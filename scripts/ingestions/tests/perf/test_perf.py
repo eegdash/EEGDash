@@ -117,15 +117,16 @@ def _load_digest_for_perf():
     """Module-level helper — avoids the no-nested-functions lint."""
     import importlib.util as _il
 
-    ingest_dir = Path(__file__).resolve().parent.parent
+    from _helpers import INGEST_DIR
+
     spec = _il.spec_from_file_location(
-        "_perf_digest_target", ingest_dir / "3_digest.py"
+        "_perf_digest_target", INGEST_DIR / "3_digest.py"
     )
     assert spec is not None
     assert spec.loader is not None
     mod = _il.module_from_spec(spec)
     spec.loader.exec_module(mod)
-    return mod, ingest_dir
+    return mod, INGEST_DIR
 
 
 def _run_digest_in_tempdir(digest_mod, inputs_dir):

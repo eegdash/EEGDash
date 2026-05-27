@@ -20,13 +20,13 @@ from __future__ import annotations
 
 import json
 from copy import deepcopy
-from pathlib import Path
 
 import pytest
+from _helpers import TESTS_DIR
 from eegdash.schemas import RecordModel
 from pydantic import ValidationError
 
-FIXTURES = Path(__file__).parent / "fixtures" / "records"
+FIXTURES = TESTS_DIR / "fixtures" / "records"
 
 
 def _load_fixture(name: str) -> dict:

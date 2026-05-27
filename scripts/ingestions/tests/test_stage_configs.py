@@ -6,16 +6,12 @@ parsing, no subprocess harness needed.
 
 from __future__ import annotations
 
-import sys
 from pathlib import Path
 
 import pytest
 from pydantic import ValidationError
 
 _INGEST_DIR = Path(__file__).resolve().parent.parent
-if str(_INGEST_DIR) not in sys.path:
-    sys.path.insert(0, str(_INGEST_DIR))
-
 from _digest_config import (
     DEFAULT_DATASET_TIMEOUT_SECONDS,
     DigestConfig,

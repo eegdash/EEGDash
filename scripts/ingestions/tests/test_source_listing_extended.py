@@ -14,16 +14,12 @@ the shape will fail CI.
 
 from __future__ import annotations
 
-import sys
 from pathlib import Path
 
 import httpx
 import respx
 
 _INGEST_DIR = Path(__file__).resolve().parent.parent
-if str(_INGEST_DIR) not in sys.path:
-    sys.path.insert(0, str(_INGEST_DIR))
-
 from _file_utils import (
     list_datarn_files,
     list_git_files,

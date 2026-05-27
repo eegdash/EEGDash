@@ -17,7 +17,6 @@ Why respx vs the previous urllib monkeypatch:
 
 from __future__ import annotations
 
-import sys
 from pathlib import Path
 
 import httpx
@@ -25,9 +24,6 @@ import pytest
 import respx
 
 _INGEST_DIR = Path(__file__).resolve().parent.parent
-if str(_INGEST_DIR) not in sys.path:
-    sys.path.insert(0, str(_INGEST_DIR))
-
 import _parser_utils
 from _parser_utils import (
     fetch_bytes_from_s3,

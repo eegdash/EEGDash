@@ -19,8 +19,6 @@ import httpx
 import respx
 
 _INGEST_DIR = Path(__file__).resolve().parent.parent
-if str(_INGEST_DIR) not in sys.path:
-    sys.path.insert(0, str(_INGEST_DIR))
 
 
 def _hide_pygithub(monkeypatch) -> None:

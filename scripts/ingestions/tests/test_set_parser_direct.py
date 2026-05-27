@@ -12,13 +12,9 @@ Complements ``test_parsers_property.py`` (which covers the
 
 from __future__ import annotations
 
-import sys
 from pathlib import Path
 
 _INGEST_DIR = Path(__file__).resolve().parent.parent
-if str(_INGEST_DIR) not in sys.path:
-    sys.path.insert(0, str(_INGEST_DIR))
-
 from eegdash.testing import data_file
 
 from _set_parser import parse_set_metadata

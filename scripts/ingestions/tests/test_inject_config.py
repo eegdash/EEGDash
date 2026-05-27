@@ -7,7 +7,6 @@ faster, no monkey-patching.
 
 from __future__ import annotations
 
-import sys
 from pathlib import Path
 
 import httpx
@@ -16,9 +15,6 @@ import respx
 from pydantic import ValidationError
 
 _INGEST_DIR = Path(__file__).resolve().parent.parent
-if str(_INGEST_DIR) not in sys.path:
-    sys.path.insert(0, str(_INGEST_DIR))
-
 from _inject_config import (
     DEFAULT_API_URL,
     LOCAL_FALLBACK_DATABASES,

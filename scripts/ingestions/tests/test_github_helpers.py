@@ -8,14 +8,10 @@ error path) — the parts where regressions are most likely.
 
 from __future__ import annotations
 
-import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
 _INGEST_DIR = Path(__file__).resolve().parent.parent
-if str(_INGEST_DIR) not in sys.path:
-    sys.path.insert(0, str(_INGEST_DIR))
-
 from _github import _to_iso, get_github_token
 
 # ─── get_github_token ──────────────────────────────────────────────────────

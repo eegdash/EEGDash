@@ -16,15 +16,11 @@ SNIRF dataset on disk.
 
 from __future__ import annotations
 
-import sys
 from pathlib import Path
 
 import pytest
 
 _INGEST_DIR = Path(__file__).resolve().parent.parent
-if str(_INGEST_DIR) not in sys.path:
-    sys.path.insert(0, str(_INGEST_DIR))
-
 # Try to import h5py; if absent, skip the whole module
 h5py = pytest.importorskip("h5py")
 

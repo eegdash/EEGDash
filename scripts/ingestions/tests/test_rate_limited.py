@@ -18,7 +18,6 @@ the factory pattern when the inner function is returned).
 
 from __future__ import annotations
 
-import sys
 import time
 from collections.abc import Callable
 from pathlib import Path
@@ -28,9 +27,6 @@ import httpx
 import pytest
 
 _INGEST_DIR = Path(__file__).resolve().parent.parent
-if str(_INGEST_DIR) not in sys.path:
-    sys.path.insert(0, str(_INGEST_DIR))
-
 from _file_utils import rate_limited
 
 

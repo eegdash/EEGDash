@@ -10,13 +10,9 @@ real MEF3 to the parser's structural checks.
 
 from __future__ import annotations
 
-import sys
 from pathlib import Path
 
 _INGEST_DIR = Path(__file__).resolve().parent.parent
-if str(_INGEST_DIR) not in sys.path:
-    sys.path.insert(0, str(_INGEST_DIR))
-
 from _mef3_parser import parse_mef3_metadata
 from _snirf_parser import _parse_snirf_with_h5py, parse_snirf_metadata
 

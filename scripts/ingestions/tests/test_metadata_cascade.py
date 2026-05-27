@@ -12,16 +12,12 @@ here pin down the public contract of the module itself.
 
 from __future__ import annotations
 
-import sys
 from pathlib import Path
 from unittest.mock import MagicMock
 
 import pytest  # noqa: F401 — kept for `monkeypatch` discovery
 
 _INGEST_DIR = Path(__file__).resolve().parent.parent
-if str(_INGEST_DIR) not in sys.path:
-    sys.path.insert(0, str(_INGEST_DIR))
-
 from _metadata_cascade import (
     CascadeContext,
     CascadeResult,

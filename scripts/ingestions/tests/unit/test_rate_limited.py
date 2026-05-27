@@ -1,8 +1,8 @@
 """Regression tests for the tenacity-backed ``rate_limited`` decorator.
 
-The decorator in ``_file_utils.py``
-previously used a hand-rolled try/except retry loop. The rewrite uses
-``tenacity`` to share semantics with ``_http.request_json``.
+The decorator in ``_file_utils.py`` previously used a hand-rolled
+try/except retry loop. The rewrite uses ``tenacity`` to share semantics
+with ``_http.request_json``.
 
 Contract preserved:
 
@@ -133,84 +133,65 @@ def make_timestamp_fn() -> Callable[[], float]:
     return fn
 
 
-# ─── Happy path ────────────────────────────────────────────────────────────
+# ─── Happy paths: pass-through + retry-then-recover ─────────────────────────
 
 
-def test_rate_limited_passes_through_on_success():
-    """If the wrapped function returns normally, the result passes through."""
+@pytest.mark.parametrize(
+    ("factory", "expected_result", "expected_calls"),
+    [
+        pytest.param(make_always_succeeds, "ok", 1, id="passthrough_on_success"),
+        pytest.param(make_429_then_success, "recovered", 2, id="retry_on_429"),
+        pytest.param(
+            make_network_error_then_success,
+            "recovered",
+            2,
+            id="retry_on_network_error",
+        ),
+    ],
+)
+def test_rate_limited_recovers(factory, expected_result, expected_calls):
+    """Pass-through on success, retry-then-succeed on 429 / RequestError."""
     counter = _Counter()
-    fn = rate_limited(min_interval=0.0, max_retries=3)(make_always_succeeds(counter))
-    assert fn() == "ok"
-    assert counter.n == 1
+    fn = rate_limited(min_interval=0.0, max_retries=3)(factory(counter))
+    assert fn() == expected_result
+    assert counter.n == expected_calls
 
 
-def test_rate_limited_retries_on_429_then_succeeds():
-    """HTTP 429 is retried; success on the 2nd attempt is returned."""
-    counter = _Counter()
-    fn = rate_limited(min_interval=0.0, max_retries=3)(make_429_then_success(counter))
-    assert fn() == "recovered"
-    assert counter.n == 2
+# ─── Non-retryable HTTP statuses: surface on the first attempt ──────────────
 
 
-def test_rate_limited_retries_on_network_error_then_succeeds():
-    """httpx.RequestError is retried; success on the 2nd attempt returned."""
-    counter = _Counter()
-    fn = rate_limited(min_interval=0.0, max_retries=3)(
-        make_network_error_then_success(counter)
-    )
-    assert fn() == "recovered"
-    assert counter.n == 2
-
-
-# ─── Non-retryable: surface immediately ──────────────────────────────────
-
-
-def test_rate_limited_surfaces_404_without_retry():
-    """A 404 (non-retryable) must not be retried; the exception escapes."""
+@pytest.mark.parametrize("status_code", [404, 500], ids=["404", "500"])
+def test_rate_limited_surfaces_non_retryable_http_error(status_code):
+    """4xx (other than 429) and 5xx must not be retried by this decorator."""
     counter = _Counter()
     fn = rate_limited(min_interval=0.0, max_retries=3)(
-        make_always_raises_http(404, counter)
+        make_always_raises_http(status_code, counter)
     )
     with pytest.raises(httpx.HTTPStatusError):
         fn()
-    assert counter.n == 1, "404 must be raised on the first attempt"
+    assert counter.n == 1, f"{status_code} must be raised on the first attempt"
 
 
-def test_rate_limited_surfaces_500_without_retry():
-    """5xx is non-retryable by this decorator (the _http helper handles those)."""
+# ─── Exhausted retries: legacy contract returns None ────────────────────────
+
+
+@pytest.mark.parametrize(
+    ("factory_builder",),
+    [
+        pytest.param(lambda c: make_always_raises_http(429, c), id="persistent_429"),
+        pytest.param(make_always_raises_network, id="persistent_network_error"),
+    ],
+)
+def test_rate_limited_returns_none_after_exhausted_retries(factory_builder):
+    """When retries exhaust on a retryable failure class, the decorator
+    returns None per the legacy contract."""
     counter = _Counter()
-    fn = rate_limited(min_interval=0.0, max_retries=3)(
-        make_always_raises_http(500, counter)
-    )
-    with pytest.raises(httpx.HTTPStatusError):
-        fn()
-    assert counter.n == 1
-
-
-# ─── Exhausted retries: legacy contract returns None ──────────────────────
-
-
-def test_rate_limited_returns_none_after_persistent_429():
-    """When all retries fail on 429, the decorator returns None."""
-    counter = _Counter()
-    fn = rate_limited(min_interval=0.0, max_retries=2)(
-        make_always_raises_http(429, counter)
-    )
+    fn = rate_limited(min_interval=0.0, max_retries=2)(factory_builder(counter))
     assert fn() is None
     assert counter.n == 2
 
 
-def test_rate_limited_returns_none_after_persistent_network_error():
-    """Persistent network errors return None per legacy contract."""
-    counter = _Counter()
-    fn = rate_limited(min_interval=0.0, max_retries=2)(
-        make_always_raises_network(counter)
-    )
-    assert fn() is None
-    assert counter.n == 2
-
-
-# ─── Rate-limit spacing ──────────────────────────────────────────────────
+# ─── Rate-limit spacing ─────────────────────────────────────────────────────
 
 
 def test_rate_limited_enforces_min_interval():
@@ -222,7 +203,7 @@ def test_rate_limited_enforces_min_interval():
     assert (t2 - t1) >= 0.095, f"second call too soon ({t2 - t1:.3f}s)"
 
 
-# ─── Programmer errors propagate (Phase 9 F1 contract) ───────────────────
+# ─── Programmer errors propagate (no retry, no swallow) ─────────────────────
 
 
 def test_rate_limited_propagates_attribute_error():

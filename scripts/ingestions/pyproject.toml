@@ -108,8 +108,7 @@ ignore = [
 #   RUF002/RUF003    — docstrings/comments use × (multiply) and – (en-dash)
 #                      in performance/fixture annotations.
 #   BLE001           — broad except in negative-path test scaffolding.
-"tests/*.py" = ["D", "N802", "N806", "RUF002", "RUF003", "BLE001"]
-"tests/acceptance/*.py" = ["D", "N802", "N806", "RUF002", "RUF003", "BLE001"]
+"tests/**/*.py" = ["D", "N802", "N806", "RUF002", "RUF003", "BLE001"]
 
 # Legacy-file baseline — these rules will be enforced PHASE BY PHASE as the
 # files are touched. Removing an ignore from this list is part of the
@@ -224,4 +223,4 @@ skip_covered = false
 [tool.mutmut]
 paths_to_mutate = "_vhdr_parser.py"
 tests_dir = "tests/"
-runner = "python -m pytest tests/test_vhdr_parser.py tests/test_parsers_property.py -x -q --tb=no --no-header -p no:cacheprovider"
+runner = "python -m pytest tests/parsers/test_vhdr.py tests/parsers/test_property.py -x -q --tb=no --no-header -p no:cacheprovider"

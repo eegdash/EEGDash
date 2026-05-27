@@ -20,13 +20,12 @@ import tracemalloc
 from pathlib import Path
 
 import pytest
+from eegdash.testing import data_file
 
 from _fingerprint import fingerprint_from_manifest
 from _vhdr_parser import parse_vhdr_metadata
 
-EEG_VHDR = (
-    Path(__file__).parent / "fixtures" / "eeg" / "sub-xp101_task-motorloc_eeg.vhdr"
-)
+EEG_VHDR = data_file("eeg/sub-xp101_task-motorloc_eeg.vhdr")
 
 
 # ─── Memory ceilings ───────────────────────────────────────────────────────
@@ -53,7 +52,7 @@ def test_parse_vhdr_peak_memory_under_2mb():
     assert peak_mb < 2.0, (
         f"parse_vhdr_metadata peaked at {peak_mb:.2f} MB on a 64-channel "
         f"fixture; ceiling is 2 MB. Suspect a quadratic accumulator or "
-        f"forgotten copy.md § Phase 7."
+        f"forgotten copy."
     )
 
 

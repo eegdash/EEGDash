@@ -1,16 +1,17 @@
 """Regression tests for 2_clone.py error-handling contracts.
 
 Addresses silent error masking around `future.result()` in the main
-thread pool. Before
-this fix, any exception escaping `process_dataset` was caught by a
-broad `except Exception` and reported as `{"status": "error", "error":
-"<str>"}`. Recoverable failures and programmer errors were
-indistinguishable.
+thread pool. Before this fix, any exception escaping `process_dataset`
+was caught by a broad ``except Exception`` and reported as
+``{"status": "error", "error": "<str>"}``. Recoverable failures and
+programmer errors were indistinguishable.
 
 These tests pin the new contract:
 
-- Recoverable failures (network, OS) → status="error" record (continue).
-- Programmer errors (AttributeError, TypeError, etc.) → propagate.
+- **Recoverable failures** (network, OS, malformed metadata) →
+  ``{"status": "error", ...}`` record; the batch continues.
+- **Programmer errors** (AttributeError, TypeError, RuntimeError) →
+  propagate so CI fails loudly with a stack trace.
 
 The module is loaded via importlib because 2_clone.py starts with a
 digit.
@@ -70,85 +71,86 @@ def _handler_raise_runtime_error(*args, **kwargs):
     raise RuntimeError("BUG: state should be 'idle' here")
 
 
-# ─── process_dataset: recoverable failures become structured errors ──────
+# ─── Recoverable failures → structured error record (batch continues) ──────
 
 
-def test_process_dataset_network_error_returns_error_record(
-    clone: ModuleType, tmp_path: Path
+@pytest.mark.parametrize(
+    ("handler", "dataset_id", "expected_in_error_msg"),
+    [
+        pytest.param(
+            _handler_raise_request_error,
+            "ds999999",
+            "upstream down",
+            id="network",
+        ),
+        pytest.param(
+            _handler_raise_oserror_enospc,
+            "ds999999",
+            "No space left on device",
+            id="oserror_enospc",
+        ),
+        pytest.param(
+            _handler_raise_value_error,
+            "ds_malformed",
+            "manifest missing",
+            id="value_error",
+        ),
+    ],
+)
+def test_process_dataset_recoverable_failure_returns_error_record(
+    clone: ModuleType,
+    tmp_path: Path,
+    handler,
+    dataset_id: str,
+    expected_in_error_msg: str,
 ) -> None:
-    """httpx.RequestError from a handler becomes {'status': 'error', ...}."""
-    dataset = {"dataset_id": "ds999999", "source": "openneuro"}
-    with patch.dict(clone.HANDLERS, {"openneuro": _handler_raise_request_error}):
+    """Handler-raised RequestError / OSError / ValueError becomes a
+    ``{'status': 'error', ...}`` record so the batch continues to the
+    next dataset rather than crashing the whole run."""
+    dataset = {"dataset_id": dataset_id, "source": "openneuro"}
+    with patch.dict(clone.HANDLERS, {"openneuro": handler}):
         result = clone.process_dataset(dataset, tmp_path)
     assert result["status"] == "error"
-    assert result["dataset_id"] == "ds999999"
-    assert "upstream down" in result["error"]
+    assert result["dataset_id"] == dataset_id
+    assert expected_in_error_msg in result["error"]
 
 
-def test_process_dataset_oserror_returns_error_record(
-    clone: ModuleType, tmp_path: Path
+# ─── Programmer errors → propagate (CI fails loudly with a stack trace) ────
+
+
+@pytest.mark.parametrize(
+    ("handler", "exc_type", "match"),
+    [
+        pytest.param(
+            _handler_raise_attribute_error,
+            AttributeError,
+            "NoneType",
+            id="attribute_error",
+        ),
+        pytest.param(
+            _handler_raise_type_error, TypeError, "expected str", id="type_error"
+        ),
+        pytest.param(
+            _handler_raise_runtime_error, RuntimeError, "BUG", id="runtime_error"
+        ),
+    ],
+)
+def test_process_dataset_programmer_error_propagates(
+    clone: ModuleType,
+    tmp_path: Path,
+    handler,
+    exc_type,
+    match: str,
 ) -> None:
-    """OSError (disk full / permission) becomes a structured error, not a crash."""
-    dataset = {"dataset_id": "ds999999", "source": "openneuro"}
-    with patch.dict(clone.HANDLERS, {"openneuro": _handler_raise_oserror_enospc}):
-        result = clone.process_dataset(dataset, tmp_path)
-    assert result["status"] == "error"
-    assert "No space left on device" in result["error"]
+    """Programmer-bug exception classes are NOT swallowed.
 
-
-def test_process_dataset_value_error_is_treated_as_recoverable(
-    clone: ModuleType, tmp_path: Path
-) -> None:
-    """ValueError (malformed dataset metadata) is recoverable.
-
-    The handler might raise ValueError on, e.g., a missing dataset_id
-    field. The pipeline records the failure and continues to the next
-    dataset rather than crashing the whole batch.
+    Pre-fix this would have returned a generic ``{"status": "error",
+    ...}`` and the operator would see a generic error in the batch
+    report without knowing the pipeline code itself was broken.
+    Post-fix the exception propagates, CI fails loudly, the operator
+    gets the stack trace.
     """
-    dataset = {"dataset_id": "ds_malformed", "source": "openneuro"}
-    with patch.dict(clone.HANDLERS, {"openneuro": _handler_raise_value_error}):
-        result = clone.process_dataset(dataset, tmp_path)
-    assert result["status"] == "error"
-    assert "manifest missing" in result["error"]
-
-
-# ─── process_dataset: programmer errors PROPAGATE (Phase 9 F1 fix) ───────
-
-
-def test_process_dataset_attribute_error_propagates(
-    clone: ModuleType, tmp_path: Path
-) -> None:
-    """AttributeError is a programmer bug; it must NOT be swallowed.
-
-    Pre-Phase-9: this would have returned ``{"status": "error", "error":
-    "'NoneType' has no attribute 'X'"}`` and the operator would have
-    seen a generic "error" in the batch report without knowing the
-    pipeline code itself was broken.
-
-    Post-Phase-9: the AttributeError propagates, CI fails loudly, the
-    operator gets the stack trace.
-    """
     dataset = {"dataset_id": "ds_buggy", "source": "openneuro"}
-    with patch.dict(clone.HANDLERS, {"openneuro": _handler_raise_attribute_error}):
-        with pytest.raises(AttributeError, match="NoneType"):
-            clone.process_dataset(dataset, tmp_path)
-
-
-def test_process_dataset_type_error_propagates(
-    clone: ModuleType, tmp_path: Path
-) -> None:
-    """TypeError (e.g. passing wrong arg type) is a programmer bug."""
-    dataset = {"dataset_id": "ds_buggy", "source": "openneuro"}
-    with patch.dict(clone.HANDLERS, {"openneuro": _handler_raise_type_error}):
-        with pytest.raises(TypeError, match="expected str"):
-            clone.process_dataset(dataset, tmp_path)
-
-
-def test_process_dataset_runtime_error_propagates(
-    clone: ModuleType, tmp_path: Path
-) -> None:
-    """RuntimeError indicates internal invariant violation; propagate."""
-    dataset = {"dataset_id": "ds_buggy", "source": "openneuro"}
-    with patch.dict(clone.HANDLERS, {"openneuro": _handler_raise_runtime_error}):
-        with pytest.raises(RuntimeError, match="BUG"):
+    with patch.dict(clone.HANDLERS, {"openneuro": handler}):
+        with pytest.raises(exc_type, match=match):
             clone.process_dataset(dataset, tmp_path)

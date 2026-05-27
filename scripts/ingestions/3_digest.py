@@ -61,6 +61,7 @@ logger = logging.getLogger(__name__)
 
 from _constants import (
     CTF_INTERNAL_EXTENSIONS,
+    EXCLUDED_DATASETS,
     MEF3_INTERNAL_DIRS,
     MEF3_INTERNAL_EXTENSIONS,
     MODALITY_CANONICAL_MAP,
@@ -127,49 +128,8 @@ WORKER_POLL_INTERVAL_SECONDS = 1.0
 PROCESS_SHUTDOWN_TIMEOUT_SECONDS = 5.0
 RESULT_QUEUE_TIMEOUT_SECONDS = 5.0
 
-# Datasets to explicitly ignore during ingestion
-EXCLUDED_DATASETS = {
-    "ABUDUKADI",
-    "ABUDUKADI_2",
-    "ABUDUKADI_3",
-    "ABUDUKADI_4",
-    "AILIJIANG",
-    "AILIJIANG_3",
-    "AILIJIANG_4",
-    "AILIJIANG_5",
-    "AILIJIANG_7",
-    "AILIJIANG_8",
-    "BAIHETI",
-    "BAIHETI_2",
-    "BAIHETI_3",
-    "BIAN_3",
-    "BIN_27",
-    "BLIX",
-    "BOJIN",
-    "BOUSSAGOL",
-    "AISHENG",
-    "ACHOLA",
-    "ANASHKIN",
-    "ANJUM",
-    "BARBIERI",
-    "BIN_8",
-    "BIN_9",
-    "BING_4",
-    "BING_8",
-    "BOWEN_4",
-    "AZIZAH",
-    "BAO",
-    "BAO-YOU",
-    "BAO_2",
-    "BENABBOU",
-    "BING",
-    "BOXIN",
-    # OpenNeuro IDs that now redirect to other datasets on openneuro.org.
-    # ds004929 and ds005930 are fNIRS-only (no EEG); ds005407 redirects.
-    "ds004929",
-    "ds005407",
-    "ds005930",
-}
+# EXCLUDED_DATASETS now lives in _constants.py (imported above) so Stage 3
+# and Stage 5 (_inject_plan.py) cannot drift out of sync.
 
 
 # get_storage_config / get_storage_base / get_storage_backend now live in

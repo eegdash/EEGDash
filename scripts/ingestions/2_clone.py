@@ -11,21 +11,30 @@ Usage:
     python 2_clone.py --manifest-only  # Skip git clones
 """
 
-import argparse
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
-from concurrent.futures import ThreadPoolExecutor, as_completed
+from collections import defaultdict
+from concurrent.futures import (
+    CancelledError,
+    ThreadPoolExecutor,
+    TimeoutError,
+    as_completed,
+)
 from pathlib import Path
 from threading import Lock
 
+import httpx
 from dotenv import load_dotenv
+from pydantic import ValidationError
 from tqdm import tqdm
 
 # Add parent to path for imports
 sys.path.insert(0, str(Path(__file__).parent))
+from _clone_config import load_clone_config_from_argv
 from _file_utils import (
     build_manifest,
     list_datarn_files,
@@ -204,8 +213,6 @@ def fetch_figshare(dataset: dict, output_dir: Path, **_kwargs) -> dict:
     if not figshare_id:
         ext_links = dataset.get("external_links", {})
         source_url = ext_links.get("source_url", "")
-        import re
-
         match = re.search(r"/articles?/(\d+)", source_url)
         if match:
             figshare_id = match.group(1)
@@ -250,8 +257,6 @@ def fetch_zenodo(dataset: dict, output_dir: Path, **_kwargs) -> dict:
     if not zenodo_id:
         ext_links = dataset.get("external_links", {})
         source_url = ext_links.get("source_url", "")
-        import re
-
         match = re.search(r"/records?/(\d+)", source_url)
         if match:
             zenodo_id = match.group(1)
@@ -278,8 +283,6 @@ def fetch_osf(dataset: dict, output_dir: Path, **_kwargs) -> dict:
     if not osf_id:
         ext_links = dataset.get("external_links", {})
         source_url = ext_links.get("source_url", "")
-        import re
-
         match = re.search(r"osf\.io/([a-z0-9]+)", source_url, re.I)
         if match:
             osf_id = match.group(1)
@@ -441,7 +444,22 @@ def process_dataset(
 
         return result
 
-    except Exception as e:
+    except (
+        httpx.RequestError,
+        httpx.HTTPStatusError,
+        FileNotFoundError,
+        PermissionError,
+        OSError,
+        subprocess.CalledProcessError,
+        subprocess.TimeoutExpired,
+        TimeoutError,
+        ValueError,
+        KeyError,
+    ) as e:
+        # Recoverable failures: network blip, missing file, malformed
+        # dataset metadata. Convert to a structured error record so the
+        # batch aggregate can continue. Programmer errors (AttributeError,
+        # TypeError, etc.) propagate — that's deliberate.
         with _lock:
             _stats["error"] += 1
         return {
@@ -493,8 +511,6 @@ def load_datasets(
 
     # Apply per-source limit if specified
     if limit_per_source:
-        from collections import defaultdict
-
         by_source: dict[str, list] = defaultdict(list)
         for d in datasets:
             src = detect_source(d)
@@ -509,59 +525,23 @@ def load_datasets(
 
 
 def main():
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument(
-        "--input",
-        type=Path,
-        default=Path("consolidated"),
-        help="Input JSON file or directory",
-    )
-    parser.add_argument(
-        "--output",
-        type=Path,
-        default=Path("data/cloned"),
-        help="Output directory",
-    )
-    parser.add_argument(
-        "--sources",
-        nargs="+",
-        choices=list(HANDLERS.keys()),
-        help="Process only specific sources",
-    )
-    parser.add_argument(
-        "--timeout",
-        type=int,
-        default=300,
-        help="Timeout in seconds",
-    )
-    parser.add_argument(
-        "--workers",
-        type=int,
-        default=8,
-        help="Number of parallel workers",
-    )
-    parser.add_argument(
-        "--limit",
-        type=int,
-        help="Maximum datasets to process (total)",
-    )
-    parser.add_argument(
-        "--limit-per-source",
-        type=int,
-        help="Maximum datasets per source",
-    )
-    parser.add_argument(
-        "--datasets",
-        nargs="+",
-        help="Process only specific dataset IDs",
-    )
-    parser.add_argument(
-        "--manifest-only",
-        action="store_true",
-        help="Skip git clones, only create manifests",
-    )
+    # CLI + env vars + validation via Pydantic-settings (C8 — final
+    # stage in the C6.5 cross-stage pattern roll-out). 9 argparse flags
+    # become declarative fields; bounds on workers / timeout / limits
+    # prevent the "--workers 99999" misconfig that used to silently
+    # sail through argparse. Sources list cross-checked against
+    # KNOWN_SOURCES (kept aligned with HANDLERS).
+    try:
+        cfg = load_clone_config_from_argv()
+    except ValidationError as exc:
+        print("Config error(s):", file=sys.stderr)
+        for err in exc.errors():
+            field = ".".join(str(p) for p in err.get("loc", []))
+            print(f"  {field}: {err.get('msg')}", file=sys.stderr)
+        return 1
 
-    args = parser.parse_args()
+    # Shim so the existing args.X access below works unchanged
+    args = cfg
 
     # Load datasets
     print(f"Loading datasets from: {args.input}")
@@ -580,7 +560,18 @@ def main():
     print(f"Processing {len(datasets)} datasets with {args.workers} workers")
     args.output.mkdir(parents=True, exist_ok=True)
 
-    # Process datasets
+    # Process datasets. Wall-clock budget across all workers protects
+    # against a hung worker indefinitely blocking the main loop — even
+    # though `args.timeout` already caps each individual handler, the
+    # as_completed iterator itself blocks on the GIL waiting for
+    # futures, so a stuck thread that never times out internally would
+    # still deadlock. See  F3.
+    per_dataset_timeout_s = float(args.timeout)
+    wall_clock_budget_s = max(
+        per_dataset_timeout_s * 2,
+        len(datasets) * per_dataset_timeout_s / max(1, args.workers) + 60.0,
+    )
+
     results = []
     with ThreadPoolExecutor(max_workers=args.workers) as executor:
         futures = {
@@ -595,17 +586,32 @@ def main():
         }
 
         pbar = tqdm(
-            as_completed(futures),
+            as_completed(futures, timeout=wall_clock_budget_s),
             total=len(futures),
             desc="Processing",
             postfix=_stats,
         )
         for future in pbar:
             try:
+                # process_dataset itself catches recoverable errors and
+                # returns {"status": "error", ...}, so future.result() should
+                # NOT normally raise. The outer except below catches only the
+                # documented "transport" failures (cancellation, futures-API)
+                # plus the network classes that COULD escape a handler that
+                # forgot to wrap a particular path. A programmer error like
+                # AttributeError or TypeError on a misshapen dataset dict will
+                # propagate — that's correct: silent error masking is the
+                # bug this fix addresses.
                 result = future.result()
                 results.append(result)
                 pbar.set_postfix(_stats)
-            except Exception as e:
+            except (
+                CancelledError,
+                TimeoutError,
+                httpx.RequestError,
+                httpx.HTTPStatusError,
+                OSError,
+            ) as e:
                 results.append({"status": "error", "error": str(e)})
 
     # Save results

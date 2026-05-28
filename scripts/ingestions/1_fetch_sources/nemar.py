@@ -1,359 +1,315 @@
-"""Fetch NEMAR datasets from GitHub organization with BIDS metadata.
+"""Fetch NEMAR datasets via data.nemar.org (replaces GitHub org scan).
 
-NEMAR datasets are hosted on GitHub under the nemardatasets organization.
-This script fetches repository info and tries to extract BIDS metadata
-from dataset_description.json and participants.tsv files.
+Catalogue:    GET /?format=json
+Per-dataset:  GET /{id}/metadata.json  (neuroschema v0.3 dataset doc)
 """
 
+from __future__ import annotations
+
 import argparse
+import math
 import sys
 from collections.abc import Iterator
-from io import StringIO
 from pathlib import Path
+from urllib.parse import urljoin
 
-# Add ingestion paths before importing local modules
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-import pandas as pd
-from _github import (
-    fetch_first_repo_file_text,
-    fetch_repo_file_json,
-    fetch_repo_file_text,
-    iter_org_repos,
-)
+from _http import get_client, request_json
 from _serialize import save_datasets_deterministically, setup_paths
 
 setup_paths()
 from eegdash.schemas import Dataset, create_dataset
 
+BASE_URL = "https://data.nemar.org"
 
-def fetch_bids_description(
-    org: str, repo: str, branch: str, timeout: float = 10.0
+
+# ---- data.nemar.org client ---------------------------------------------
+
+
+class NemarApiError(RuntimeError):
+    pass
+
+
+def _get(url: str, *, timeout: float = 30.0, retries: int = 3):
+    payload, resp = request_json(
+        "get", url, timeout=timeout, retries=retries, client=get_client()
+    )
+    if resp is not None and resp.status_code == 404:
+        return None
+    if resp is None or resp.status_code != 200:
+        raise NemarApiError(f"{url} -> {resp.status_code if resp else 'no-response'}")
+    # A 200 with an unparseable body returns payload=None from request_json.
+    # Distinguish that from a 404 so callers don't log it as "no metadata.json".
+    if payload is None:
+        raise NemarApiError(f"{url} -> 200 with malformed JSON body")
+    return payload
+
+
+def iter_catalogue(
+    *,
+    base_url: str = BASE_URL,
+    id_prefixes: tuple[str, ...] = ("nm", "on"),
+    skip_unpublished: bool = True,
+    timeout: float = 30.0,
+    retries: int = 3,
+) -> Iterator[dict]:
+    payload = _get(
+        f"{base_url.rstrip('/')}/?format=json", timeout=timeout, retries=retries
+    )
+    if not isinstance(payload, dict) or "datasets" not in payload:
+        raise NemarApiError("catalogue missing 'datasets' key")
+    for entry in payload["datasets"] or []:
+        dataset_id = str(entry.get("id") or "")
+        if not dataset_id or (id_prefixes and not dataset_id.startswith(id_prefixes)):
+            continue
+        if skip_unpublished and not entry.get("latest"):
+            continue
+        yield entry
+
+
+def fetch_metadata(
+    dataset_id: str,
+    *,
+    base_url: str = BASE_URL,
+    timeout: float = 30.0,
+    retries: int = 3,
 ) -> dict | None:
-    """Fetch dataset_description.json from a repository."""
-    return fetch_repo_file_json(
-        org,
-        repo,
-        "dataset_description.json",
-        ref=branch,
+    return _get(
+        f"{base_url.rstrip('/')}/{dataset_id}/metadata.json",
         timeout=timeout,
+        retries=retries,
     )
 
 
-def fetch_participants_tsv(
-    org: str, repo: str, branch: str, timeout: float = 10.0
-) -> list[dict] | None:
-    """Fetch and parse participants.tsv from a repository."""
-    text = fetch_repo_file_text(
-        org,
-        repo,
-        "participants.tsv",
-        ref=branch,
-        timeout=timeout,
-    )
-    if not text:
-        return None
-    try:
-        df = pd.read_csv(StringIO(text), sep="\t", dtype="string")
-    except Exception:
-        return None
-    return df.to_dict(orient="records") if not df.empty else None
+# ---- neuroschema -> EEGDash Dataset mapping ----------------------------
 
 
-def extract_ages_from_participants(participants: list[dict] | None) -> list[int]:
-    """Extract ages from participants data."""
-    if not participants:
-        return []
-
-    df = pd.DataFrame(participants)
-    if df.empty:
-        return []
-
-    age_cols = [c for c in df.columns if str(c).strip().lower() == "age"]
-    if not age_cols:
-        return []
-
-    ages = pd.to_numeric(df[age_cols[0]], errors="coerce")
-    ages = ages[(ages > 0) & (ages < 150)].dropna()
-    return [int(a) for a in ages.astype(float).tolist()]
+def _person_name(a) -> str:
+    if isinstance(a, str):
+        return a.strip()
+    if not isinstance(a, dict):
+        return ""
+    name = (a.get("name") or "").strip()
+    if name:
+        return name
+    return " ".join(
+        p for p in (a.get("given_name", ""), a.get("family_name", "")) if p
+    ).strip()
 
 
-def extract_sex_distribution(participants: list[dict] | None) -> dict[str, int] | None:
-    """Extract sex distribution from participants data."""
-    if not participants:
-        return None
-    df = pd.DataFrame(participants)
-    if df.empty:
-        return None
-    sex_cols = [c for c in df.columns if str(c).strip().lower() == "sex"]
-    if not sex_cols:
-        return None
-    counts = df[sex_cols[0]].str.strip().str.upper().value_counts().to_dict()
-    if not counts:
-        return None
-    # Normalize keys
-    normalized = {}
-    for k, v in counts.items():
-        key = str(k).strip().upper()
-        if key in ("M", "MALE"):
-            normalized["M"] = normalized.get("M", 0) + int(v)
-        elif key in ("F", "FEMALE"):
-            normalized["F"] = normalized.get("F", 0) + int(v)
-        else:
-            normalized[key] = int(v)
-    return normalized if normalized else None
+def _funding_lines(funding) -> list[str]:
+    out = []
+    for f in funding or []:
+        if isinstance(f, str):
+            out.append(f.strip())
+            continue
+        if not isinstance(f, dict):
+            continue
+        funder = (f.get("funder_name") or "").strip()
+        if not funder:
+            continue
+        # str() coerce because DataCite frequently sends award_number as int.
+        pieces = [
+            funder,
+            str(f.get("award_number") or "").strip(),
+            str(f.get("award_title") or "").strip(),
+        ]
+        out.append(" - ".join(p for p in pieces if p))
+    return out
 
 
-def extract_paper_doi(bids_desc: dict | None) -> str | None:
-    """Extract associated paper DOI from ReferencesAndLinks."""
-    if not bids_desc:
-        return None
-    refs = bids_desc.get("ReferencesAndLinks") or []
-    for ref in refs:
-        ref = str(ref).strip()
-        if "doi.org/" in ref:
-            return ref.split("doi.org/")[-1]
-        if ref.startswith("10."):
-            return ref
+_PAPER_RELATIONS = {"IsSupplementTo", "IsDescribedBy", "References"}
+
+
+def _paper_doi(related) -> str | None:
+    """Return the first paper DOI; skips entries without an explicit relation_type to avoid conflating dataset and paper DOIs."""
+    for r in related or []:
+        if not isinstance(r, dict) or (r.get("identifier_type") or "").upper() != "DOI":
+            continue
+        rel = (r.get("relation_type") or "").strip()
+        if rel not in _PAPER_RELATIONS:
+            continue
+        doi = (r.get("identifier") or "").strip()
+        if doi:
+            return doi.replace("https://doi.org/", "").replace("http://doi.org/", "")
     return None
 
 
-def fetch_readme(org: str, repo: str, branch: str, timeout: float = 10.0) -> str | None:
-    """Fetch README from a repository."""
-    readme_names = ["README.md", "README", "README.txt", "readme.md", "readme"]
-    return fetch_first_repo_file_text(
-        org,
-        repo,
-        readme_names,
-        ref=branch,
-        timeout=timeout,
+def _ages(demographics) -> list[int]:
+    """Synthesise an [age_min, age_max] list from dataset-level bounds.
+
+    Note: metadata.json exposes only age_min/age_max, not per-subject ages.
+    Booleans (int subclass) and non-finite floats are dropped defensively.
+    """
+    d = demographics or {}
+    out: list[int] = []
+    for x in (d.get("age_min"), d.get("age_max")):
+        if isinstance(x, bool):
+            continue
+        if not isinstance(x, (int, float)):
+            continue
+        if isinstance(x, float) and not math.isfinite(x):
+            continue
+        out.append(int(x))
+    return out
+
+
+def _normalize_modality(modality) -> list[str]:
+    """Return recording_modality as a list; coerces bare strings to avoid character-by-character iteration."""
+    if modality is None or modality == []:
+        return ["eeg"]
+    if isinstance(modality, str):
+        modality = [modality]
+    return [str(m).lower() for m in modality]
+
+
+def _normalize_sex_distribution(sex_dist) -> dict | None:
+    """Normalise sex_distribution to {'M','F'} keys; handles upstream {'male','female'} and mixed case."""
+    if not isinstance(sex_dist, dict) or not sex_dist:
+        return None
+    out: dict[str, int] = {}
+    for raw_key, raw_val in sex_dist.items():
+        try:
+            count = int(raw_val)
+        except (TypeError, ValueError):
+            continue
+        key = str(raw_key).strip().upper()
+        if key in ("M", "MALE"):
+            out["M"] = out.get("M", 0) + count
+        elif key in ("F", "FEMALE"):
+            out["F"] = out.get("F", 0) + count
+        else:
+            out[key] = out.get(key, 0) + count
+    return out or None
+
+
+def build_dataset_document(
+    metadata: dict, *, catalogue_entry: dict, base_url: str = BASE_URL
+) -> Dataset:
+    dataset_id = str(metadata.get("dataset_id") or catalogue_entry.get("id") or "")
+    ext = metadata.get("external_links") or {}
+    prov = metadata.get("provenance") or {}
+    demo = metadata.get("demographics") or {}
+    summary = metadata.get("data_summary") or {}
+    authors = metadata.get("authors") or []
+
+    # urljoin handles both relative ('/nm00103/') and absolute browse_urls safely.
+    browse = catalogue_entry.get("browse_url") or f"/{dataset_id}/"
+    source_url = urljoin(base_url + "/", browse.lstrip("/"))
+
+    senior = _person_name(authors[-1]) if authors else ""
+
+    return create_dataset(
+        dataset_id=dataset_id,
+        name=metadata.get("name") or catalogue_entry.get("title") or dataset_id,
+        source="nemar",
+        recording_modality=_normalize_modality(metadata.get("recording_modality")),
+        bids_version=metadata.get("bids_version"),
+        license=metadata.get("license"),
+        authors=[n for n in (_person_name(a) for a in authors) if n],
+        funding=_funding_lines(metadata.get("funding")),
+        dataset_doi=ext.get("dataset_doi") or catalogue_entry.get("doi"),
+        associated_paper_doi=_paper_doi(metadata.get("related_identifiers")),
+        tasks=metadata.get("tasks") or None,
+        sessions=metadata.get("sessions") or None,
+        total_files=summary.get("total_files"),
+        size_bytes=summary.get("size_bytes"),
+        subjects_count=demo.get("subjects_count"),
+        ages=_ages(demo),
+        sex_distribution=_normalize_sex_distribution(demo.get("sex_distribution")),
+        species=demo.get("species") or "Human",
+        source_url=source_url,
+        github_url=ext.get("github_url"),
+        senior_author=senior or None,
+        dataset_modified_at=prov.get("publish_date"),
     )
 
 
-def fetch_repositories(
-    organization: str = "nemardatasets",
-    page_size: int = 100,
-    timeout: float = 30.0,
-    retries: int = 5,
-    fetch_bids: bool = True,
+# ---- Stage 1 driver ----------------------------------------------------
+
+
+def fetch_datasets(
+    *,
+    base_url: str = BASE_URL,
     limit: int | None = None,
+    id_prefixes: tuple[str, ...] = ("nm", "on"),
+    skip_unpublished: bool = True,
+    timeout: float = 30.0,
+    retries: int = 3,
 ) -> Iterator[Dataset]:
-    """Fetch all repositories from a GitHub organization.
-
-    Args:
-        organization: GitHub organization name
-        page_size: Number of repositories per page (max 100)
-        timeout: Request timeout in seconds
-        retries: Number of retry attempts
-        fetch_bids: Whether to fetch BIDS metadata from repos
-        limit: Maximum number of datasets to fetch
-
-    Yields:
-        Dataset documents
-
-    """
-    total_fetched = 0
-
-    for repo in iter_org_repos(
-        organization,
-        per_page=page_size,
+    fetched = 0
+    for entry in iter_catalogue(
+        base_url=base_url,
+        id_prefixes=id_prefixes,
+        skip_unpublished=skip_unpublished,
         timeout=timeout,
         retries=retries,
     ):
-        if limit and total_fetched >= limit:
+        if limit and fetched >= limit:
             break
-
-        repo_name = str(repo.get("name") or "")
-        if not repo_name:
+        dataset_id = entry.get("id")
+        try:
+            metadata = fetch_metadata(
+                dataset_id, base_url=base_url, timeout=timeout, retries=retries
+            )
+        except NemarApiError as exc:
+            print(f"  [skip] {dataset_id}: {exc}", file=sys.stderr)
             continue
-
-        # Skip special GitHub repositories
-        if repo_name in {".github", ".gitignore", "README"}:
+        if not metadata:
+            print(f"  [skip] {dataset_id}: no metadata.json", file=sys.stderr)
             continue
-
-        # NEMAR datasets start with "nm" prefix
-        if not repo_name.startswith("nm"):
-            continue
-
-        total_fetched += 1
-
-        # Fetch BIDS metadata
-        bids_desc = None
-        participants = None
-        readme = None
-        branch = str(repo.get("default_branch") or "main")
-        if fetch_bids:
-            bids_desc = fetch_bids_description(organization, repo_name, branch)
-            participants = fetch_participants_tsv(organization, repo_name, branch)
-            readme = fetch_readme(organization, repo_name, branch)
-
-        # Extract metadata from BIDS description
-        authors = []
-        funding = []
-        license_str = None
-        bids_version = None
-        dataset_doi = None
-        associated_paper_doi = None
-        name = repo.get("description") or repo_name
-
-        if bids_desc:
-            name = bids_desc.get("Name") or name
-            authors = bids_desc.get("Authors") or []
-            funding = bids_desc.get("Funding") or []
-            license_str = bids_desc.get("License")
-            bids_version = bids_desc.get("BIDSVersion")
-            dataset_doi = bids_desc.get("DatasetDOI")
-            associated_paper_doi = extract_paper_doi(bids_desc)
-
-        # Extract demographics from participants
-        ages = extract_ages_from_participants(participants)
-        subjects_count = len(participants) if participants else 0
-        sex_distribution = extract_sex_distribution(participants)
-
-        # Build NEMAR GitHub URL
-        nemar_url = (
-            repo.get("html_url") or f"https://github.com/nemardatasets/{repo_name}"
-        )
-
-        # Create Dataset document
-        yield create_dataset(
-            dataset_id=repo_name,
-            name=name,
-            source="nemar",
-            readme=readme,
-            recording_modality=["eeg"],
-            bids_version=bids_version,
-            license=license_str,
-            authors=authors
-            if isinstance(authors, list)
-            else [authors]
-            if authors
-            else [],
-            funding=funding
-            if isinstance(funding, list)
-            else [funding]
-            if funding
-            else [],
-            dataset_doi=dataset_doi,
-            associated_paper_doi=associated_paper_doi,
-            subjects_count=subjects_count,
-            ages=ages,
-            sex_distribution=sex_distribution,
-            species="Human",
-            source_url=nemar_url,
-            stars=repo.get("stargazers_count"),
-            forks=repo.get("forks_count"),
-            watchers=repo.get("watchers_count"),
-            dataset_modified_at=repo.get("pushed_at"),
-        )
-
-        if total_fetched % 20 == 0:
-            print(f"  Processed {total_fetched} repositories...")
+        fetched += 1
+        yield build_dataset_document(metadata, catalogue_entry=entry, base_url=base_url)
+        if fetched % 20 == 0:
+            print(f"  Processed {fetched} datasets...")
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(
-        description="Fetch NEMAR datasets from GitHub organization with BIDS metadata."
-    )
-    parser.add_argument(
-        "--organization",
-        type=str,
-        default="nemardatasets",
-        help="GitHub organization name (default: nemardatasets)",
-    )
-    parser.add_argument(
+    p = argparse.ArgumentParser(description="Fetch NEMAR datasets via data.nemar.org.")
+    p.add_argument("--base-url", default=BASE_URL)
+    p.add_argument(
         "--output",
         type=Path,
         default=Path("consolidated/nemar_datasets.json"),
-        help="Output JSON file.",
     )
-    parser.add_argument(
-        "--page-size",
-        type=int,
-        default=100,
-        help="Repositories per page (max 100, default: 100)",
+    p.add_argument(
+        "--id-prefixes",
+        default="nm,on",
+        help="Comma-separated id prefixes (default: nm,on).",
     )
-    parser.add_argument(
-        "--timeout",
-        type=float,
-        default=30.0,
-        help="Request timeout in seconds (default: 30.0)",
-    )
-    parser.add_argument(
-        "--retries",
-        type=int,
-        default=5,
-        help="Number of retry attempts (default: 5)",
-    )
-    parser.add_argument(
-        "--skip-bids",
+    p.add_argument(
+        "--include-unpublished",
         action="store_true",
-        help="Skip fetching BIDS metadata (faster but less info)",
+        help="Include datasets with no 'latest' version.",
     )
-    parser.add_argument(
-        "--digested-at",
-        type=str,
-        default=None,
-        help="ISO 8601 timestamp for digested_at field (for deterministic output, default: omitted for determinism)",
-    )
-    parser.add_argument(
-        "--limit",
-        type=int,
-        help="Maximum number of datasets to fetch (default: all)",
-    )
-    args = parser.parse_args()
+    p.add_argument("--timeout", type=float, default=30.0)
+    p.add_argument("--retries", type=int, default=5)
+    p.add_argument("--digested-at", default=None)
+    p.add_argument("--limit", type=int)
+    args = p.parse_args()
 
-    print(f"Fetching NEMAR datasets from: {args.organization}")
-    print(f"Fetching BIDS metadata: {not args.skip_bids}")
+    prefixes = tuple(s.strip() for s in args.id_prefixes.split(",") if s.strip())
+    print(f"Fetching NEMAR datasets from: {args.base_url}  (prefixes={prefixes})")
 
     datasets = list(
-        fetch_repositories(
-            organization=args.organization,
-            page_size=args.page_size,
+        fetch_datasets(
+            base_url=args.base_url,
+            limit=args.limit,
+            id_prefixes=prefixes,
+            skip_unpublished=not args.include_unpublished,
             timeout=args.timeout,
             retries=args.retries,
-            fetch_bids=not args.skip_bids,
-            limit=args.limit,
         )
     )
 
-    # Add digested_at timestamp if provided
     if args.digested_at:
         for ds in datasets:
             if "timestamps" in ds:
                 ds["timestamps"]["digested_at"] = args.digested_at
 
-    # Save deterministically
     save_datasets_deterministically(datasets, args.output)
-
-    print(f"\nSaved {len(datasets)} dataset entries to {args.output}")
-
-    # Print summary
-    if datasets:
-        print("\nSummary:")
-        print(f"  Total datasets: {len(datasets)}")
-
-        # Count with BIDS info
-        with_bids = sum(1 for d in datasets if d.get("bids_version"))
-        print(f"  With BIDS version: {with_bids}")
-
-        # Count with participants
-        with_subjects = sum(
-            1
-            for d in datasets
-            if d.get("demographics", {}).get("subjects_count", 0) > 0
-        )
-        print(f"  With subject count: {with_subjects}")
-
-        # Total subjects
-        total_subjects = sum(
-            d.get("demographics", {}).get("subjects_count", 0) for d in datasets
-        )
-        print(f"  Total subjects: {total_subjects}")
-
-        # With ages
-        with_ages = sum(1 for d in datasets if d.get("demographics", {}).get("ages"))
-        print(f"  With age info: {with_ages}")
+    print(f"\nSaved {len(datasets)} datasets to {args.output}")
 
 
 if __name__ == "__main__":

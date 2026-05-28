@@ -144,54 +144,26 @@ def _parse_edf_with_mne(path: Path) -> FormatParserResult | None:
             pass
 
 
-def _build_registry() -> dict[str, FormatParser]:
-    """Construct the extension → parser map."""
-    return {
-        ".edf": _parse_edf_with_mne,
-        ".bdf": _parse_edf_with_mne,
-        ".set": parse_set_metadata,
-        ".vhdr": parse_vhdr_metadata,
-        ".snirf": parse_snirf_metadata,
-        ".mefd": parse_mef3_metadata,
-    }
-
-
-_REGISTRY: dict[str, FormatParser] | None = None
+_REGISTRY: dict[str, FormatParser] = {
+    ".edf": _parse_edf_with_mne,
+    ".bdf": _parse_edf_with_mne,
+    ".set": parse_set_metadata,
+    ".vhdr": parse_vhdr_metadata,
+    ".snirf": parse_snirf_metadata,
+    ".mefd": parse_mef3_metadata,
+}
 
 
 def get_parser_for_extension(ext: str) -> FormatParser | None:
-    """Return the registered :class:`FormatParser` for ``ext``, or None.
-
-    Parameters
-    ----------
-    ext : str
-        File extension *with* the leading dot, lower-cased
-        (e.g., ``".edf"``). The cascade in
-        ``3_digest.py:_extract_technical_metadata`` reads
-        ``bids_file_path.suffix.lower()`` and passes it directly.
-
-    Returns
-    -------
-    FormatParser or None
-        ``None`` for any extension this Module doesn't handle (the
-        caller falls through to MNE-only paths for FIF, or skips).
+    """Return the registered :class:`FormatParser` for ``ext`` (lower-cased,
+    leading dot — e.g. ``".edf"``) or ``None`` for unhandled extensions.
     """
-    global _REGISTRY
-    if _REGISTRY is None:
-        _REGISTRY = _build_registry()
     return _REGISTRY.get(ext)
 
 
 def registered_extensions() -> tuple[str, ...]:
-    """The set of extensions this Module knows how to parse.
-
-    Returns extensions sorted for stable ordering — used by tests
-    that need to enumerate all registered formats.
-    """
-    global _REGISTRY
-    if _REGISTRY is None:
-        _REGISTRY = _build_registry()
-    return tuple(sorted(_REGISTRY.keys()))
+    """Sorted tuple of registered extensions."""
+    return tuple(sorted(_REGISTRY))
 
 
 __all__ = [

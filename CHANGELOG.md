@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.0] - 2026-05-28
+
 ### Added
 - New public APIs: `eegdash.splits` (subject-aware split utilities) and `EEGDashDataset.summary` / `preview` / `filter` / `search_datasets` for in-memory query and inspection
 - 22-tutorial sphinx-gallery rewrite plus HPC how-tos and concept pages

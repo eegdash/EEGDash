@@ -94,8 +94,7 @@
   "identifier": "doi:10.18112/openneuro.ds007338.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds007338.v1.0.0",
-    "https://openneuro.org/datasets/ds007338",
-    "https://huggingface.co/datasets/EEGDash/ds007338"
+    "https://openneuro.org/datasets/ds007338"
   ],
   "citeAs": "Martyna Beata Płomecka, Ard Kastrati, Nicolas Langer (2026). EEGEyeNet Dataset. doi:10.18112/openneuro.ds007338.v1.0.0",
   "version": "1.7.0",
@@ -143,14 +142,6 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=ds007338",
       "encodingFormat": "text/html"
-    },
-    {
-      "@type": "cr:FileObject",
-      "@id": "ds007338-huggingface",
-      "name": "EEGDash/ds007338 on Hugging Face",
-      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
-      "contentUrl": "https://huggingface.co/datasets/EEGDash/ds007338",
-      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

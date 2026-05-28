@@ -141,13 +141,13 @@ This dataset contains intracranial EEG recordings from five patients during sing
     <span class="right">206, 178, 194, 135, 192 ch · iEEG · 2048 Hz · 5 subjects, 5 recordings</span>
   </div>
   <div class="figpair-grid"><div class="figpair-cell figpair-montage"><details class="electrode-explorer">
-  <summary>Electrode layout — iEEG · 147 sensors — 147 channels</summary>
+  <summary>Electrode layout — iEEG · 166 sensors — 166 channels</summary>
   <iframe
-    data-src="https://electrodes.eegdash.org/?montage=e8c5b27b9de33e2e&embed=1"
+    data-src="https://electrodes.eegdash.org/?montage=c063a8cfcb6dd514&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
-    title="Topomap of iEEG · 147 sensors"
+    title="Topomap of iEEG · 166 sensors"
     referrerpolicy="no-referrer">
   </iframe>
 </details></div></div></div>

@@ -89,8 +89,7 @@
   "identifier": "doi:10.82901/nemar.nm000110",
   "sameAs": [
     "https://doi.org/10.82901/nemar.nm000110",
-    "https://openneuro.org/datasets/nm000110",
-    "https://huggingface.co/datasets/EEGDash/nm000110"
+    "https://openneuro.org/datasets/nm000110"
   ],
   "citeAs": "Jack Connolly, Herman Edwards, Blaise Bourgeois, S. Ted Treves, Ali Shoeb (2010). CHB-MIT. doi:10.82901/nemar.nm000110",
   "version": "1.7.0",
@@ -131,14 +130,6 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=nm000110",
       "encodingFormat": "text/html"
-    },
-    {
-      "@type": "cr:FileObject",
-      "@id": "nm000110-huggingface",
-      "name": "EEGDash/nm000110 on Hugging Face",
-      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
-      "contentUrl": "https://huggingface.co/datasets/EEGDash/nm000110",
-      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

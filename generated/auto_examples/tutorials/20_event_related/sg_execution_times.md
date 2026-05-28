@@ -2,7 +2,7 @@
 
 # Computation times
 
-**00:16.868** total execution time for 2 files **from generated/auto_examples/tutorials/20_event_related**:
+**00:24.173** total execution time for 2 files **from generated/auto_examples/tutorials/20_event_related**:
 
 <style scoped>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet" />
@@ -19,5 +19,5 @@ $(document).ready( function () {
 
 | Example                                                                                                                                                                                      | Time      |   Mem (MB) |
 |----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------|------------|
-| [Auditory P300 oddball decoding](plot_21_auditory_oddball.md#sphx-glr-generated-auto-examples-tutorials-20-event-related-plot-21-auditory-oddball-py) (`plot_21_auditory_oddball.py`)        | 00:09.415 |          0 |
-| [Visual P300 oddball decoding](plot_20_visual_p300_oddball.md#sphx-glr-generated-auto-examples-tutorials-20-event-related-plot-20-visual-p300-oddball-py) (`plot_20_visual_p300_oddball.py`) | 00:07.453 |          0 |
+| [Auditory P300 oddball decoding](plot_21_auditory_oddball.md#sphx-glr-generated-auto-examples-tutorials-20-event-related-plot-21-auditory-oddball-py) (`plot_21_auditory_oddball.py`)        | 00:13.930 |          0 |
+| [Visual P300 oddball decoding](plot_20_visual_p300_oddball.md#sphx-glr-generated-auto-examples-tutorials-20-event-related-plot-20-visual-p300-oddball-py) (`plot_20_visual_p300_oddball.py`) | 00:10.243 |          0 |

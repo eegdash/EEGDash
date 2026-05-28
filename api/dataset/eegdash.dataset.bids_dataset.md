@@ -84,7 +84,7 @@ The modality of the first file found (e.g., ‘eeg’, ‘meg’).
 
 <!-- !! processed by numpydoc !! -->
 
-#### RAW_EXTENSIONS *= {'.CNT': ['.CNT'], '.EDF': ['.EDF'], '.EEG': ['.EEG'], '.bdf': ['.bdf'], '.bin': ['.bin'], '.cdt': ['.cdt'], '.cnt': ['.cnt'], '.con': ['.con'], '.ds': ['.ds'], '.edf': ['.edf'], '.fif': ['.fif'], '.lay': ['.lay'], '.pdf': ['.pdf'], '.set': ['.set', '.fdt'], '.snirf': ['.snirf'], '.sqd': ['.sqd'], '.vhdr': ['.vhdr', '.eeg', '.vmrk', '.dat']}*
+#### RAW_EXTENSIONS *= {'.CNT': ['.CNT'], '.EDF': ['.EDF'], '.EEG': ['.EEG'], '.bdf': ['.bdf'], '.bin': ['.bin'], '.cdt': ['.cdt'], '.cnt': ['.cnt'], '.con': ['.con'], '.ds': ['.ds'], '.edf': ['.edf'], '.fif': ['.fif'], '.lay': ['.lay'], '.mefd': ['.mefd'], '.pdf': ['.pdf'], '.set': ['.set', '.fdt'], '.snirf': ['.snirf'], '.sqd': ['.sqd'], '.vhdr': ['.vhdr', '.eeg', '.vmrk', '.dat']}*
 
 #### channel_labels(data_filepath: [str](https://docs.python.org/3/library/stdtypes.html#str)) → [list](https://docs.python.org/3/library/stdtypes.html#list)[[str](https://docs.python.org/3/library/stdtypes.html#str)]
 

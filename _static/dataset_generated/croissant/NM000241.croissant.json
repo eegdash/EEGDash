@@ -70,8 +70,7 @@
   "identifier": "doi:10.5281/zenodo.13332808",
   "sameAs": [
     "https://doi.org/10.5281/zenodo.13332808",
-    "https://openneuro.org/datasets/nm000241",
-    "https://huggingface.co/datasets/EEGDash/nm000241"
+    "https://openneuro.org/datasets/nm000241"
   ],
   "citeAs": "Xueyi Zhang (2019). CerebroVoice: Bilingual sEEG Speech Dataset. doi:10.5281/zenodo.13332808",
   "version": "1.9.0",
@@ -120,14 +119,6 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=nm000241",
       "encodingFormat": "text/html"
-    },
-    {
-      "@type": "cr:FileObject",
-      "@id": "nm000241-huggingface",
-      "name": "EEGDash/nm000241 on Hugging Face",
-      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
-      "contentUrl": "https://huggingface.co/datasets/EEGDash/nm000241",
-      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

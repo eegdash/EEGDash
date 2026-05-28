@@ -92,8 +92,7 @@
   "identifier": "doi:10.18112/openneuro.ds007221.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds007221.v1.0.1",
-    "https://openneuro.org/datasets/ds007221",
-    "https://huggingface.co/datasets/EEGDash/ds007221"
+    "https://openneuro.org/datasets/ds007221"
   ],
   "citeAs": "Sun Xinwei, Wang Kun, Pan Lincong, Cao Yupei, Meng Lin (2026). Cross-Environment Multi-Paradigm Motor Imagery EEG Dataset. doi:10.18112/openneuro.ds007221.v1.0.1",
   "version": "1.0.0",
@@ -144,14 +143,6 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=ds007221",
       "encodingFormat": "text/html"
-    },
-    {
-      "@type": "cr:FileObject",
-      "@id": "ds007221-huggingface",
-      "name": "EEGDash/ds007221 on Hugging Face",
-      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
-      "contentUrl": "https://huggingface.co/datasets/EEGDash/ds007221",
-      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

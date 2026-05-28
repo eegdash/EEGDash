@@ -99,7 +99,7 @@ torch.manual_seed(SEED)
 ```
 
 ```none
-<torch._C.Generator object at 0x7f0db8545950>
+<torch._C.Generator object at 0x7f4f7bb55c70>
 ```
 
 <!-- GENERATED FROM PYTHON SOURCE LINES 86-107 -->
@@ -611,7 +611,5 @@ and call `model.reset_head(n_outputs=K)`.
 See [References](../../../../references.md) for the centralized bibliography of papers
 cited above. Add or amend an entry once in
 `docs/source/refs.bib`; every tutorial inherits the update.
-
-**Total running time of the script:** (0 minutes 1.944 seconds)
 
 <a id="sphx-glr-download-generated-auto-examples-tutorials-70-transfer-foundation-plot-73-finetune-pretrained-model-py"></a>

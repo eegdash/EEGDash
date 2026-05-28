@@ -97,8 +97,7 @@
   "identifier": "doi:10.82901/nemar.nm000134",
   "sameAs": [
     "https://doi.org/10.82901/nemar.nm000134",
-    "https://openneuro.org/datasets/nm000134",
-    "https://huggingface.co/datasets/EEGDash/nm000134"
+    "https://openneuro.org/datasets/nm000134"
   ],
   "citeAs": "Jonathan Xu, Ugo Bruzadin Nunes, Wangshu Jiang, Samuel Ryther, Jordan Pringle (2025). Alljoined-1.6M. doi:10.82901/nemar.nm000134",
   "version": "1.9.0",
@@ -139,14 +138,6 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=nm000134",
       "encodingFormat": "text/html"
-    },
-    {
-      "@type": "cr:FileObject",
-      "@id": "nm000134-huggingface",
-      "name": "EEGDash/nm000134 on Hugging Face",
-      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
-      "contentUrl": "https://huggingface.co/datasets/EEGDash/nm000134",
-      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

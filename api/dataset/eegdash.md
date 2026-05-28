@@ -35,6 +35,8 @@
   * [EEGDash Data Schemas](eegdash.schemas.md#eegdash-data-schemas)
     * [Core Concepts](eegdash.schemas.md#core-concepts)
     * [Usage](eegdash.schemas.md#usage)
+* [eegdash.testing module](eegdash.testing.md)
+  * [Environment overrides](eegdash.testing.md#environment-overrides)
 
 ## Module contents
 

@@ -118,8 +118,7 @@
   "identifier": "doi:10.48550/arXiv.2411.08343",
   "sameAs": [
     "https://doi.org/10.48550/arXiv.2411.08343",
-    "https://openneuro.org/datasets/nm000253",
-    "https://huggingface.co/datasets/EEGDash/nm000253"
+    "https://openneuro.org/datasets/nm000253"
   ],
   "citeAs": "Christopher Wang, Adam Yaari, Aaditya K Singh, Vighnesh Subramaniam, Dana Rosenfarb (2019). Wang et al. 2024 — Brain Treebank: Large-scale intracranial recordings from naturalistic language stimuli. doi:10.48550/arXiv.2411.08343",
   "version": "1.9.0",
@@ -160,14 +159,6 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=nm000253",
       "encodingFormat": "text/html"
-    },
-    {
-      "@type": "cr:FileObject",
-      "@id": "nm000253-huggingface",
-      "name": "EEGDash/nm000253 on Hugging Face",
-      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
-      "contentUrl": "https://huggingface.co/datasets/EEGDash/nm000253",
-      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

@@ -92,8 +92,7 @@
   "identifier": "doi:10.5281/zenodo.1494163",
   "sameAs": [
     "https://doi.org/10.5281/zenodo.1494163",
-    "https://openneuro.org/datasets/nm000264",
-    "https://huggingface.co/datasets/EEGDash/nm000264"
+    "https://openneuro.org/datasets/nm000264"
   ],
   "citeAs": "E. Vaineau, A. Barachant, A. Andreev, P. Rodrigues, G. Cattan (2019). Vaineau, Barachant & Andreev 2013 — Brain Invaders Adaptive versus Non-Adaptive P300 Brain-Computer Interface dataset (BI2013a). doi:10.5281/zenodo.1494163",
   "version": "1.9.0",
@@ -134,14 +133,6 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=nm000264",
       "encodingFormat": "text/html"
-    },
-    {
-      "@type": "cr:FileObject",
-      "@id": "nm000264-huggingface",
-      "name": "EEGDash/nm000264 on Hugging Face",
-      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
-      "contentUrl": "https://huggingface.co/datasets/EEGDash/nm000264",
-      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

@@ -98,8 +98,7 @@
   "identifier": "doi:10.48550/arXiv.2109.06011",
   "sameAs": [
     "https://doi.org/10.48550/arXiv.2109.06011",
-    "https://openneuro.org/datasets/nm000266",
-    "https://huggingface.co/datasets/EEGDash/nm000266"
+    "https://openneuro.org/datasets/nm000266"
   ],
   "citeAs": "Jan Sosulski, David Hübner, Aaron Klein, Michael Tangermann (2019). Sosulski et al. 2019 — Online Optimization of Stimulation Speed in an Auditory Brain-Computer Interface under Time Constraints. doi:10.48550/arXiv.2109.06011",
   "version": "1.9.0",
@@ -140,14 +139,6 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=nm000266",
       "encodingFormat": "text/html"
-    },
-    {
-      "@type": "cr:FileObject",
-      "@id": "nm000266-huggingface",
-      "name": "EEGDash/nm000266 on Hugging Face",
-      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
-      "contentUrl": "https://huggingface.co/datasets/EEGDash/nm000266",
-      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

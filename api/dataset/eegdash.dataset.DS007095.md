@@ -122,24 +122,7 @@ The iEEG data were saved in EDF format, stored as the Brain Imaging Data Structu
     <b>Fig. 01</b> Signal &amp; montage
     <span class="right">2 ch · iEEG · 200 Hz · 8 subjects, 6019 recordings</span>
   </div>
-  <div class="figpair-grid"><div class="figpair-cell figpair-trace"><details class="trace-viewer">
-  <summary>Live trace viewer — <strong>sub-08 · ses-21 · task-seizure · run-01</strong></summary>
-  <p class="trace-viewer-caption">
-    Showing <strong>one</strong> representative recording out of
-    <strong>8 subjects and 6019 recordings</strong> in this dataset.
-    Browse the full set on <a href="https://openneuro.org/datasets/ds007095" target="_blank" rel="noopener">OpenNeuro</a>;
-    drop any other <code>_ieeg.{set,edf,bdf,vhdr}</code> file onto the
-    viewer (or pass <code>?ieeg=&lt;url&gt;</code>) to inspect it.
-  </p>
-  <iframe
-    data-src="https://eegdash.github.io/eegdash-viewer/?dataset=ds007095&sub=08&ses=21&task=seizure&run=01&ext=edf&suffix=ieeg&embed=1"
-    loading="lazy"
-    width="100%" height="640"
-    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 1200px; display: block; background: transparent;"
-    title="Live iEEG trace viewer for ds007095 — sub-08 · ses-21 · task-seizure · run-01"
-    referrerpolicy="no-referrer">
-  </iframe>
-</details></div><div class="figpair-cell figpair-montage"><details class="electrode-explorer">
+  <div class="figpair-grid"><div class="figpair-cell figpair-montage"><details class="electrode-explorer">
   <summary>Electrode layout — iEEG · 2 sensors — 2 channels</summary>
   <iframe
     data-src="https://electrodes.eegdash.org/?montage=9391aee8d98da192&embed=1"

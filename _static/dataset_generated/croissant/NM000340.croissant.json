@@ -88,8 +88,7 @@
   "identifier": "doi:10.13026/0byy-ry86",
   "sameAs": [
     "https://doi.org/10.13026/0byy-ry86",
-    "https://openneuro.org/datasets/nm000340",
-    "https://huggingface.co/datasets/EEGDash/nm000340"
+    "https://openneuro.org/datasets/nm000340"
   ],
   "citeAs": "Boyla Mainsah, Chance Fleeting, Thomas Balmat, Eric Sellers, Leslie Collins (2019). Mainsah et al. 2025 — bigP3BCI: An Open, Diverse and Machine Learning Ready P300-based Brain-Computer Interface Dataset (Study J). doi:10.13026/0byy-ry86",
   "version": "1.9.0",
@@ -130,14 +129,6 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=nm000340",
       "encodingFormat": "text/html"
-    },
-    {
-      "@type": "cr:FileObject",
-      "@id": "nm000340-huggingface",
-      "name": "EEGDash/nm000340 on Hugging Face",
-      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
-      "contentUrl": "https://huggingface.co/datasets/EEGDash/nm000340",
-      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

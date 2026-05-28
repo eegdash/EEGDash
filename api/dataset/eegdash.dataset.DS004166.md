@@ -141,7 +141,24 @@ a distractor version of the change detection task, which included three conditio
     <b>Fig. 01</b> Signal &amp; montage
     <span class="right">— ch · EEG · Varies · 71 subjects, 213 recordings</span>
   </div>
-  <div class="figpair-grid"><div class="figpair-cell figpair-montage">
+  <div class="figpair-grid"><div class="figpair-cell figpair-trace"><details class="trace-viewer">
+  <summary>Live trace viewer — <strong>sub-213 · ses-02 · task-WM · run-1</strong></summary>
+  <p class="trace-viewer-caption">
+    Showing <strong>one</strong> representative recording out of
+    <strong>71 subjects and 213 recordings</strong> in this dataset.
+    Browse the full set on <a href="https://openneuro.org/datasets/ds004166" target="_blank" rel="noopener">OpenNeuro</a>;
+    drop any other <code>_eeg.{set,edf,bdf,vhdr}</code> file onto the
+    viewer (or pass <code>?eeg=&lt;url&gt;</code>) to inspect it.
+  </p>
+  <iframe
+    data-src="https://eegdash.github.io/eegdash-viewer/?dataset=ds004166&sub=213&ses=02&task=WM&run=1&ext=set&embed=1"
+    loading="lazy"
+    width="100%" height="640"
+    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 1200px; display: block; background: transparent;"
+    title="Live EEG trace viewer for ds004166 — sub-213 · ses-02 · task-WM · run-1"
+    referrerpolicy="no-referrer">
+  </iframe>
+</details></div><div class="figpair-cell figpair-montage">
 
 No scalp electrode layout is currently indexed for this
 dataset. Once the eegdash montage registry ingests it,

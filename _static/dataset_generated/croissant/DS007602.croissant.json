@@ -114,7 +114,8 @@
   "identifier": "doi:10.18112/openneuro.ds007602.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds007602.v1.0.1",
-    "https://openneuro.org/datasets/ds007602"
+    "https://openneuro.org/datasets/ds007602",
+    "https://huggingface.co/datasets/EEGDash/ds007602"
   ],
   "citeAs": "Motoshige Sato, Masakazu Inoue, Kenichi Tomeoka, Ilya Horiguchi, Eri Hatakeyama (2026). EEG-Speech Brain Decoding Dataset. doi:10.18112/openneuro.ds007602.v1.0.1",
   "version": "1.9.0",
@@ -162,6 +163,14 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=ds007602",
       "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007602-huggingface",
+      "name": "EEGDash/ds007602 on Hugging Face",
+      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
+      "contentUrl": "https://huggingface.co/datasets/EEGDash/ds007602",
+      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

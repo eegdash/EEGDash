@@ -144,13 +144,13 @@ During the study, participants listen to 15 voice recordings that each suggest i
     referrerpolicy="no-referrer">
   </iframe>
 </details></div><div class="figpair-cell figpair-montage"><details class="electrode-explorer">
-  <summary>Electrode layout — EEG · 212 sensors — 212 channels</summary>
+  <summary>Electrode layout — EEG · 189 sensors — 189 channels</summary>
   <iframe
-    data-src="https://electrodes.eegdash.org/?montage=ae05bbc89e70cd4b&embed=1"
+    data-src="https://electrodes.eegdash.org/?montage=9020cae45bff711d&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
-    title="Topomap of EEG · 212 sensors"
+    title="Topomap of EEG · 189 sensors"
     referrerpolicy="no-referrer">
   </iframe>
 </details></div></div></div>

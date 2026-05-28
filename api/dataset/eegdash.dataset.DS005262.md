@@ -100,7 +100,24 @@ Go to [GitHub Repository](https://github.com/Eslam21/ArEEG-an-Open-Access-Arabic
     <b>Fig. 01</b> Signal &amp; montage
     <span class="right">8 ch · EEG · 250 Hz · 12 subjects, 186 recordings</span>
   </div>
-  <div class="figpair-grid"><div class="figpair-cell figpair-montage">
+  <div class="figpair-grid"><div class="figpair-cell figpair-trace"><details class="trace-viewer">
+  <summary>Live trace viewer — <strong>sub-6 · ses-10 · task-innerspeech</strong></summary>
+  <p class="trace-viewer-caption">
+    Showing <strong>one</strong> representative recording out of
+    <strong>12 subjects and 186 recordings</strong> in this dataset.
+    Browse the full set on <a href="https://openneuro.org/datasets/ds005262" target="_blank" rel="noopener">OpenNeuro</a>;
+    drop any other <code>_eeg.{set,edf,bdf,vhdr}</code> file onto the
+    viewer (or pass <code>?eeg=&lt;url&gt;</code>) to inspect it.
+  </p>
+  <iframe
+    data-src="https://eegdash.github.io/eegdash-viewer/?dataset=ds005262&sub=6&ses=10&task=innerspeech&ext=vhdr&embed=1"
+    loading="lazy"
+    width="100%" height="640"
+    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 1200px; display: block; background: transparent;"
+    title="Live EEG trace viewer for ds005262 — sub-6 · ses-10 · task-innerspeech"
+    referrerpolicy="no-referrer">
+  </iframe>
+</details></div><div class="figpair-cell figpair-montage">
 
 No scalp electrode layout is currently indexed for this
 dataset. Once the eegdash montage registry ingests it,

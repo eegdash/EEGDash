@@ -178,7 +178,7 @@ Concatenate the metadata and description of the wrapped Epochs.
 
 <!-- !! processed by numpydoc !! -->
 
-#### *classmethod* pull_from_hub(repo_id: [str](https://docs.python.org/3/library/stdtypes.html#str), preload: [bool](https://docs.python.org/3/library/functions.html#bool) = True, token: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str) | [Path](https://docs.python.org/3/library/pathlib.html#pathlib.Path) | [None](https://docs.python.org/3/library/constants.html#None) = None, force_download: [bool](https://docs.python.org/3/library/functions.html#bool) = False, \*\*kwargs)
+#### *classmethod* pull_from_hub(repo_id: [str](https://docs.python.org/3/library/stdtypes.html#str), preload: [bool](https://docs.python.org/3/library/functions.html#bool) = True, token: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str) | [Path](https://docs.python.org/3/library/pathlib.html#pathlib.Path) | [None](https://docs.python.org/3/library/constants.html#None) = None, force_download: [bool](https://docs.python.org/3/library/functions.html#bool) = False, revision: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
 
 Load a dataset from the Hugging Face Hub.
 
@@ -190,6 +190,8 @@ Load a dataset from the Hugging Face Hub.
   * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *Path* *|* *None*) – Directory to cache the downloaded dataset. If None, uses default
     cache directory (~/.cache/huggingface/datasets).
   * **force_download** ([*bool*](https://docs.python.org/3/library/functions.html#bool) *,* *default=False*) – Whether to force re-download even if cached.
+  * **revision** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *None* *,* *default=None*) – Specific branch, tag, or commit to download. If None, uses the
+    repository’s default revision.
   * **\*\*kwargs** – Additional arguments (currently unused).
 * **Returns:**
   The loaded dataset.

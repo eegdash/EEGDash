@@ -109,7 +109,7 @@ _spec.welch = _counting_welch
 ```
 
 ```none
-eegdash 0.7.2
+eegdash 0.8.0
 ```
 
 <!-- GENERATED FROM PYTHON SOURCE LINES 100-142 -->
@@ -314,7 +314,7 @@ psds_flat = PSD_CALLS["flat"]
 
 ```none
 Extracting features:   0%|          | 0/2 [00:00<?, ?it/s]
-Extracting features: 100%|██████████| 2/2 [00:00<00:00, 338.54it/s]
+Extracting features: 100%|██████████| 2/2 [00:00<00:00, 270.78it/s]
 ```
 
 <!-- GENERATED FROM PYTHON SOURCE LINES 244-248 -->
@@ -332,7 +332,7 @@ print(
 ```
 
 ```none
-flat: shape=(16, 17) | runtime=0.0074 s | PSDs=8
+flat: shape=(16, 17) | runtime=0.0093 s | PSDs=8
 ```
 
 <!-- GENERATED FROM PYTHON SOURCE LINES 255-260 -->
@@ -366,7 +366,7 @@ spectral_preprocessor
 ╚═ beta_pow: spectral_bands_power
 
 Extracting features:   0%|          | 0/2 [00:00<?, ?it/s]
-Extracting features: 100%|██████████| 2/2 [00:00<00:00, 603.15it/s]
+Extracting features: 100%|██████████| 2/2 [00:00<00:00, 467.28it/s]
 ```
 
 <!-- GENERATED FROM PYTHON SOURCE LINES 275-281 -->
@@ -395,7 +395,7 @@ finally:
 ```
 
 ```none
-tree: shape=(16, 17) | runtime=0.0046 s | PSDs=2 | speedup=1.61x
+tree: shape=(16, 17) | runtime=0.0059 s | PSDs=2 | speedup=1.57x
 welch restored
 ```
 
@@ -478,7 +478,7 @@ print(f"markers table shape: {markers_table.shape}")
 
 ```none
 Extracting features:   0%|          | 0/2 [00:00<?, ?it/s]
-Extracting features: 100%|██████████| 2/2 [00:00<00:00, 536.66it/s]
+Extracting features: 100%|██████████| 2/2 [00:00<00:00, 411.57it/s]
 marker columns (first 10): ['alpha_pow_O1', 'alpha_pow_Oz', 'alpha_pow_O2', 'alpha_pow_Cz', 'alpha_peak_O1', 'alpha_peak_Oz', 'alpha_peak_O2', 'alpha_peak_Cz', 'norm_spec_ent_O1', 'norm_spec_ent_Oz']
 markers table shape: (16, 21)
 ```
@@ -699,7 +699,7 @@ print(f"extended (with gamma): n_cols={ext_table.shape[1]}")
 
 ```none
 Extracting features:   0%|          | 0/2 [00:00<?, ?it/s]
-Extracting features: 100%|██████████| 2/2 [00:00<00:00, 418.63it/s]
+Extracting features: 100%|██████████| 2/2 [00:00<00:00, 357.77it/s]
 extended (with gamma): n_cols=21
 ```
 
@@ -741,7 +741,7 @@ print(
 
 ```none
 Extracting features:   0%|          | 0/2 [00:00<?, ?it/s]
-Extracting features: 100%|██████████| 2/2 [00:00<00:00, 560.02it/s]
+Extracting features: 100%|██████████| 2/2 [00:00<00:00, 452.44it/s]
 custom rel_alpha columns: ['rel_alpha_O1', 'rel_alpha_Oz', 'rel_alpha_O2', 'rel_alpha_Cz']
 ```
 
@@ -773,8 +773,8 @@ assert speedup >= 1.0
 
 ```none
                    n_features  runtime_s  psds_computed  speedup_vs_flat
-flat (no tree)             16     0.0074              8           1.0000
-tree (shared PSD)          16     0.0046              2           1.6103
+flat (no tree)             16     0.0093              8           1.0000
+tree (shared PSD)          16     0.0059              2           1.5697
 ```
 
 <!-- GENERATED FROM PYTHON SOURCE LINES 565-573 -->

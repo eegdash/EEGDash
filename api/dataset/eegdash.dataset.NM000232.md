@@ -212,7 +212,24 @@ test images (each repeated ~80 times) using rapid serial visual presentation
     <b>Fig. 01</b> Signal &amp; montage
     <span class="right">63 ch · EEG · 1000 Hz · 10 subjects, 638 recordings</span>
   </div>
-  <div class="figpair-grid"><div class="figpair-cell figpair-montage"><details class="electrode-explorer">
+  <div class="figpair-grid"><div class="figpair-cell figpair-trace"><details class="trace-viewer">
+  <summary>Live trace viewer — <strong>sub-08 · ses-02 · task-train</strong></summary>
+  <p class="trace-viewer-caption">
+    Showing <strong>one</strong> representative recording out of
+    <strong>10 subjects and 638 recordings</strong> in this dataset.
+    Browse the full set on <a href="https://openneuro.org/datasets/nm000232" target="_blank" rel="noopener">OpenNeuro</a>;
+    drop any other <code>_eeg.{set,edf,bdf,vhdr}</code> file onto the
+    viewer (or pass <code>?eeg=&lt;url&gt;</code>) to inspect it.
+  </p>
+  <iframe
+    data-src="https://eegdash.github.io/eegdash-viewer/?dataset=nm000232&sub=08&ses=02&task=train&ext=vhdr&embed=1"
+    loading="lazy"
+    width="100%" height="640"
+    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 1200px; display: block; background: transparent;"
+    title="Live EEG trace viewer for nm000232 — sub-08 · ses-02 · task-train"
+    referrerpolicy="no-referrer">
+  </iframe>
+</details></div><div class="figpair-cell figpair-montage"><details class="electrode-explorer">
   <summary>Electrode layout — EEG · 63 sensors — 63 channels</summary>
   <iframe
     data-src="https://electrodes.eegdash.org/?montage=df714c2065914d08&embed=1"

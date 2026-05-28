@@ -91,7 +91,7 @@ print(f"eegdash {eegdash.__version__}; cache_dir={cache_dir}")
 ```
 
 ```none
-eegdash 0.7.2; cache_dir=/home/runner/eegdash_cache
+eegdash 0.8.0; cache_dir=/home/runner/eegdash_cache
 ```
 
 <!-- GENERATED FROM PYTHON SOURCE LINES 80-123 -->
@@ -361,7 +361,7 @@ pd.Series(
 
 ```none
 Extracting features:   0%|          | 0/2 [00:00<?, ?it/s]
-Extracting features: 100%|██████████| 2/2 [00:00<00:00, 199.54it/s]
+Extracting features: 100%|██████████| 2/2 [00:00<00:00, 157.70it/s]
 ```
 
 <div class="output_subarea output_html rendered_html output_result">
@@ -601,7 +601,7 @@ print(f"extended n_cols={extended.shape[1]} (was {n_cols - 1})")
 
 ```none
 Extracting features:   0%|          | 0/2 [00:00<?, ?it/s]
-Extracting features: 100%|██████████| 2/2 [00:00<00:00, 192.02it/s]
+Extracting features: 100%|██████████| 2/2 [00:00<00:00, 153.05it/s]
 extended n_cols=168 (was 144)
 ```
 

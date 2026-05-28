@@ -58,7 +58,7 @@
   <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=0790524f97105ba85085" />
 <link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=0790524f97105ba85085" />
 
-    <script src="../../../../_static/documentation_options.js?v=6dfdf7c3"></script>
+    <script src="../../../../_static/documentation_options.js?v=486e5634"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/sg-tags.js?v=d80f6fa4"></script>
@@ -79,7 +79,7 @@
     <link rel="next" title="How-To Guides" href="../../how_to/index.html" />
     <link rel="prev" title="How do I adapt a pretrained EEG model to a new task?" href="plot_73_finetune_pretrained_model.html" />
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.7" />
+  <meta name="docsearch:version" content="0.8" />
 
   
   <meta name="google-site-verification" content="REPLACE_WITH_GSC_TOKEN">
@@ -682,7 +682,7 @@ each NeuroAI module.</p></li>
 <span class="kn">from</span><span class="w"> </span><span class="nn">neuralset.extractors</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pulse</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>eegdash version: 0.7.2
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>eegdash version: 0.8.0
 cache directory: /home/runner/eegdash_cache
 </pre></div>
 </div>
@@ -873,7 +873,7 @@ entities forward to every later stage <span class="bibtex-citation" id="id4">[<a
 <span class="p">)</span><span class="o">.</span><span class="n">to_frame</span><span class="p">()</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[05/28/26 16:39:24] WARNING  File not found on S3, skipping:   downloader.py:163
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[05/28/26 22:11:56] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds002718/sub-0
                              02/eeg/sub-002_task-FaceRecogniti
                              on_eeg.fdt
@@ -1267,17 +1267,17 @@ specific events) or <code class="docutils literal notranslate"><span class="pre"
 <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">seg_card</span></a>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2026-05-28 16:39:25 - WARNING - neuralset.segments:665 - 403 segments out of 1495 did not contain valid events for event type &lt;class &#39;neuralset.events.etypes.Stimulus&#39;&gt;
-[05/28/26 16:39:25] WARNING  403 segments out of 1495 did not    segments.py:665
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2026-05-28 22:11:58 - WARNING - neuralset.segments:665 - 403 segments out of 1495 did not contain valid events for event type &lt;class &#39;neuralset.events.etypes.Stimulus&#39;&gt;
+[05/28/26 22:11:58] WARNING  403 segments out of 1495 did not    segments.py:665
                              contain valid events for event type
                              &lt;class
                              &#39;neuralset.events.etypes.Stimulus&#39;&gt;
-2026-05-28 16:39:25 - INFO - neuralset.dataloader:618 - 403 segments are missing events of type Stimulus. They will be populated with default missing values through prepare.
+2026-05-28 22:11:58 - INFO - neuralset.dataloader:618 - 403 segments are missing events of type Stimulus. They will be populated with default missing values through prepare.
                     INFO     403 segments are missing events   dataloader.py:618
                              of type Stimulus. They will be
                              populated with default missing
                              values through prepare.
-2026-05-28 16:39:25 - INFO - neuralset.dataloader:625 - Removing 403 segments out of 1495
+2026-05-28 22:11:58 - INFO - neuralset.dataloader:625 - Removing 403 segments out of 1495
                     INFO     Removing 403 segments out of 1495 dataloader.py:625
 </pre></div>
 </div>
@@ -1641,7 +1641,7 @@ EEG) and re-run. The events schema is unchanged.</p></li>
 <p>See <a class="reference internal" href="../../../../references.html"><span class="doc">References</span></a> for the centralized bibliography of papers
 cited above. Add or amend an entry once in
 <code class="file docutils literal notranslate"><span class="pre">docs/source/refs.bib</span></code>; every tutorial inherits the update.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 3.176 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 3.193 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-auto-examples-tutorials-70-transfer-foundation-plot-74-neuroai-interop-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/eegdash/EEGDash/main?urlpath=lab/tree/notebooks/generated/auto_examples/tutorials/70_transfer_foundation/plot_74_neuroai_interop.ipynb"><img alt="Launch binder" src="../../../../_images/binder_badge_logo11.svg" style="width: 150px;" />

@@ -244,6 +244,62 @@ def test_validate_digestion_output_accepts_snapshot_fixture():
     assert out.errors == [], f"snapshot has errors: {out.errors}"
 
 
+def test_validate_digestion_output_full_report_golden():
+    """Freeze the COMPLETE validation report against the committed corpus.
+
+    The count-only pin above lets the warnings list, every stats counter, the
+    source/modality distributions, and the data-quality issues drift silently.
+    This freezes all of them so any change in validation behavior fails here.
+    """
+    out = validate_digestion_output(data_file("digest_snapshots/outputs"))
+    report = {
+        "errors": out.errors,
+        "warnings": sorted(
+            out.warnings, key=lambda w: (w["dataset"], w["field"] or "", w["message"])
+        ),
+        "stats": out.stats,
+        "source_distribution": out.source_distribution,
+        "modality_distribution": out.modality_distribution,
+        "empty_datasets": sorted(out.empty_datasets),
+        "zip_placeholder_datasets": sorted(out.zip_placeholder_datasets),
+        "data_quality_issues": sorted(out.data_quality_issues),
+    }
+    assert report == {
+        "errors": [],
+        "warnings": [
+            {
+                "dataset": "ds_snapshot_eeg_montage",
+                "field": "source",
+                "message": "Unknown source: unknown",
+            },
+            {
+                "dataset": "ds_snapshot_vhdr",
+                "field": "source",
+                "message": "Unknown source: unknown",
+            },
+        ],
+        "stats": {
+            "datasets_checked": 3,
+            "records_checked": 5,
+            "storage_errors": 0,
+            "missing_mandatory": 0,
+            "missing_recommended": 0,
+            "empty_datasets": 0,
+            "invalid_source": 2,
+            "zip_placeholders": 0,
+            "missing_nchans": 3,
+            "missing_sampling_frequency": 3,
+        },
+        "source_distribution": {"unknown": 2, "zenodo": 1},
+        "modality_distribution": {"eeg": 5},
+        "empty_datasets": [],
+        "zip_placeholder_datasets": [],
+        "data_quality_issues": [
+            "ds_snapshot_manifest (zenodo): missing nchans, sampling_frequency"
+        ],
+    }
+
+
 def test_validate_digestion_output_strict_promotes_warnings(tmp_path: Path):
     """Unknown-source triggers a warning in non-strict mode."""
     ds_dir = tmp_path / "ds_synth"

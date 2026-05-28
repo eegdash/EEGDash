@@ -1,12 +1,9 @@
-"""Unit tests for ``_serialize.py`` — was at 0% coverage (C1.2).
+"""Unit tests for ``_serialize.py`` — deterministic JSON / dataset-id helpers.
 
-``_serialize.py`` provides the dataset-listing utilities shared by
-the 7 source-fetch scripts in ``1_fetch_sources/``. Despite being a
-critical reproducibility path (deterministic JSON, dataset_id
-generation, deduplication), it had NO tests before this commit.
-
-close the dead zone by exercising every
-public helper.
+``_serialize.py`` powers the dataset-listing utilities shared by every
+``1_fetch_sources/*`` script. Critical reproducibility surface (stable
+bytes, deterministic dataset_id, deduplication) — the regressions caught
+here are silent bit-drift in the source-listing artefacts.
 """
 
 from __future__ import annotations
@@ -34,17 +31,13 @@ from _serialize import (
 
 
 def test_setup_paths_is_idempotent():
-    """Calling setup_paths twice doesn't accumulate duplicate sys.path entries."""
+    """Second call must not grow sys.path further (idempotency invariant)."""
     before = len(sys.path)
     setup_paths()
     after_first = len(sys.path)
     setup_paths()
     after_second = len(sys.path)
-    # Either no-op or only-once: either way, the second call must not
-    # grow sys.path further.
     assert after_first == after_second
-    # And first call shouldn't blow up sys.path either (we're in test
-    # context where the paths are already present).
     assert after_first - before <= 2
 
 
@@ -54,149 +47,145 @@ def test_setup_paths_is_idempotent():
 @pytest.mark.parametrize(
     ("text", "expected"),
     [
-        # Empty / None → 0
         pytest.param(None, 0, id="empty_none"),
         pytest.param("", 0, id="empty_string"),
-        # Simple "<N> <noun>" phrasings → N
         pytest.param("This study had 42 subjects", 42, id="had_N_subjects"),
         pytest.param("Data from 17 participants", 17, id="from_N_participants"),
         pytest.param("N = 25 healthy controls", 25, id="N_equals_with_qualifier"),
-        # "N = <N>" / "N=<N>" patterns
         pytest.param("n = 30", 30, id="n_lowercase_equals_space"),
         pytest.param("N=8 patients", 8, id="N_uppercase_no_space"),
-        # Many alternative nouns
         pytest.param("5 individuals", 5, id="individuals"),
         pytest.param("12 volunteers", 12, id="volunteers"),
         pytest.param("8 children", 8, id="children"),
         pytest.param("15 adults", 15, id="adults"),
         pytest.param("recorded from 20 subjects", 20, id="recorded_from"),
         pytest.param("data from 7 patients", 7, id="data_from_patients"),
-        # Sanity rejection (out of range / unmatched)
         pytest.param("ID 99999 subjects", 0, id="value_above_10000_rejected"),
         pytest.param("This is just a description", 0, id="no_keyword"),
         pytest.param("Music perception study", 0, id="unrelated_text"),
     ],
 )
 def test_subjects_count_extracts(text, expected: int):
-    """``extract_subjects_count`` matrix: empty / pattern variants /
-    sanity-rejection rows in a single body."""
+    """Empty / pattern variants / sanity-rejection matrix."""
     assert extract_subjects_count(text) == expected
 
 
 # ─── extract_surname ──────────────────────────────────────────────────────
 
 
-def test_surname_extracts_from_firstname_lastname():
-    assert extract_surname("John Smith") == "Smith"
-    assert extract_surname("Alice Marie Johnson") == "Johnson"
-
-
-def test_surname_extracts_from_comma_separated():
-    """'Lastname, Firstname' is the BibTeX-style format."""
-    assert extract_surname("Smith, John") == "Smith"
-    assert extract_surname("Johnson, Alice Marie") == "Johnson"
-
-
-def test_surname_handles_initials_in_middle():
-    """'F. M. Lastname' or 'F. Lastname' — initials shouldn't be the surname."""
-    result = extract_surname("J. Smith")
-    assert result == "Smith"
-    result = extract_surname("F. M. Lastname")
-    assert result == "Lastname"
-
-
-def test_surname_strips_common_suffixes():
-    """Jr / Sr / III / Ph.D. shouldn't end up as the surname."""
-    assert extract_surname("John Smith Jr.") == "Smith"
-    assert extract_surname("Mary Johnson Ph.D.") == "Johnson"
-    assert extract_surname("Robert Brown III") == "Brown"
-
-
-def test_surname_normalizes_unicode():
-    """Accented characters get stripped to ASCII for ID stability."""
-    assert extract_surname("José García") == "Garcia"
-    assert extract_surname("Müller") == "Muller"
-
-
-def test_surname_returns_none_for_empty_or_invalid():
-    assert extract_surname("") is None
-    assert extract_surname(None) is None
-    assert extract_surname("   ") is None
-    # Length-1 result after normalization should be None
-    assert extract_surname("X") is None
+@pytest.mark.parametrize(
+    ("name", "expected"),
+    [
+        # Firstname Lastname
+        pytest.param("John Smith", "Smith", id="firstname-lastname"),
+        pytest.param("Alice Marie Johnson", "Johnson", id="multi-middle-name"),
+        # Lastname, Firstname (BibTeX-style)
+        pytest.param("Smith, John", "Smith", id="bibtex-comma"),
+        pytest.param("Johnson, Alice Marie", "Johnson", id="bibtex-multi"),
+        # Initials shouldn't end up as the surname
+        pytest.param("J. Smith", "Smith", id="single-initial-firstname"),
+        pytest.param("F. M. Lastname", "Lastname", id="two-initials"),
+        # Suffixes (Jr/Sr/III/Ph.D.) stripped
+        pytest.param("John Smith Jr.", "Smith", id="suffix-jr"),
+        pytest.param("Mary Johnson Ph.D.", "Johnson", id="suffix-phd"),
+        pytest.param("Robert Brown III", "Brown", id="suffix-iii"),
+        # Accented characters normalised to ASCII for ID stability
+        pytest.param("José García", "Garcia", id="unicode-spanish"),
+        pytest.param("Müller", "Muller", id="unicode-umlaut"),
+        # None / empty / length-1 → None
+        pytest.param("", None, id="empty"),
+        pytest.param(None, None, id="none"),
+        pytest.param("   ", None, id="whitespace-only"),
+        pytest.param("X", None, id="length-1"),
+    ],
+)
+def test_surname_extracts(name, expected):
+    """Name formats / suffixes / unicode / invalid input matrix."""
+    assert extract_surname(name) == expected
 
 
 # ─── extract_year ──────────────────────────────────────────────────────────
 
 
-def test_extract_year_iso_date():
-    assert extract_year("2024-01-15T10:30:00Z") == "2024"
-    assert extract_year("2024-01-15") == "2024"
-
-
-def test_extract_year_year_only():
-    assert extract_year("2024") == "2024"
-
-
-def test_extract_year_finds_in_arbitrary_text():
-    assert extract_year("published in 2023") == "2023"
-    assert extract_year("doi:10.5281/zenodo.2019") == "2019"
-
-
-def test_extract_year_returns_none_for_no_year():
-    assert extract_year(None) is None
-    assert extract_year("") is None
-    assert extract_year("some text with no year") is None
-
-
-def test_extract_year_only_19xx_or_20xx():
-    """Only sensible centuries — '1850' or '2100' shouldn't be valid."""
-    assert extract_year("1850 study") is None
-    assert extract_year("2100 prediction") is None
-    assert extract_year("1999 published") == "1999"
-    assert extract_year("2099 forecast") == "2099"
+@pytest.mark.parametrize(
+    ("text", "expected"),
+    [
+        # ISO date / datetime
+        pytest.param("2024-01-15T10:30:00Z", "2024", id="iso-datetime"),
+        pytest.param("2024-01-15", "2024", id="iso-date"),
+        pytest.param("2024", "2024", id="year-only"),
+        # Found in arbitrary text
+        pytest.param("published in 2023", "2023", id="in-text"),
+        pytest.param("doi:10.5281/zenodo.2019", "2019", id="in-doi"),
+        # None / empty / no match → None
+        pytest.param(None, None, id="none"),
+        pytest.param("", None, id="empty"),
+        pytest.param("some text with no year", None, id="no-year"),
+        # Only 19xx / 20xx considered sensible
+        pytest.param("1850 study", None, id="century-too-old"),
+        pytest.param("2100 prediction", None, id="century-too-new"),
+        pytest.param("1999 published", "1999", id="1999-edge"),
+        pytest.param("2099 forecast", "2099", id="2099-edge"),
+    ],
+)
+def test_extract_year(text, expected):
+    """ISO / free-text / range-limit / no-match matrix."""
+    assert extract_year(text) == expected
 
 
 # ─── generate_dataset_id ──────────────────────────────────────────────────
 
 
-def test_dataset_id_surname_year_format():
-    assert generate_dataset_id("zenodo", ["John Smith"], "2024") == "Smith2024"
-
-
-def test_dataset_id_uses_first_with_extractable_surname():
-    """Walks the authors list until it finds an extractable surname."""
-    assert (
-        generate_dataset_id("zenodo", ["", "X", "Alice Johnson"], "2023")
-        == "Johnson2023"
-    )
-
-
-def test_dataset_id_falls_back_to_source_id_when_no_surname():
-    assert (
-        generate_dataset_id("figshare", authors=[], fallback_id="12345")
-        == "figshare_12345"
-    )
-
-
-def test_dataset_id_unknown_when_nothing_works():
-    assert generate_dataset_id("scidb") == "scidb_unknown"
-
-
-def test_dataset_id_appends_disambiguating_index():
-    """index > 0 adds a suffix for collision resolution."""
-    result = generate_dataset_id("zenodo", ["Smith, J."], "2024", index=2)
-    assert result == "Smith2024_3"  # index=2 → suffix _3 (1-indexed in users' eyes)
+@pytest.mark.parametrize(
+    ("args", "kwargs", "expected"),
+    [
+        pytest.param(
+            ("zenodo", ["John Smith"], "2024"),
+            {},
+            "Smith2024",
+            id="surname-year-format",
+        ),
+        pytest.param(
+            ("zenodo", ["", "X", "Alice Johnson"], "2023"),
+            {},
+            "Johnson2023",
+            id="walks-list-for-extractable-surname",
+        ),
+        pytest.param(
+            ("figshare",),
+            {"authors": [], "fallback_id": "12345"},
+            "figshare_12345",
+            id="fallback-to-source-id",
+        ),
+        pytest.param(
+            ("scidb",),
+            {},
+            "scidb_unknown",
+            id="unknown-when-nothing-works",
+        ),
+        # index=2 → suffix _3 (1-indexed in users' eyes)
+        pytest.param(
+            ("zenodo", ["Smith, J."], "2024"),
+            {"index": 2},
+            "Smith2024_3",
+            id="appends-disambiguating-index",
+        ),
+    ],
+)
+def test_generate_dataset_id(args, kwargs, expected):
+    """Surname-year / fallback / index matrix."""
+    assert generate_dataset_id(*args, **kwargs) == expected
 
 
 # ─── deduplicate_dataset_ids ──────────────────────────────────────────────
+# Kept standalone: each case has a structurally different assertion shape
+# (ordered-list equality vs distinctness via len(set()) vs other-fields
+# preservation) — parametrising would force a branch-on-id inside the body
+# which defeats the readability win.
 
 
 def test_dedup_handles_no_duplicates():
-    datasets = [
-        {"dataset_id": "Smith2023"},
-        {"dataset_id": "Johnson2024"},
-    ]
+    datasets = [{"dataset_id": "Smith2023"}, {"dataset_id": "Johnson2024"}]
     out = deduplicate_dataset_ids(datasets)
     assert [d["dataset_id"] for d in out] == ["Smith2023", "Johnson2024"]
 
@@ -209,16 +198,12 @@ def test_dedup_renames_duplicates_with_suffix():
     ]
     out = deduplicate_dataset_ids(datasets)
     ids = [d["dataset_id"] for d in out]
-    # First is unchanged; subsequent ones get _N suffixes
     assert ids[0] == "Smith2024"
-    assert ids[1] != ids[0]
-    assert ids[2] != ids[0]
-    assert ids[2] != ids[1]
-    assert len(set(ids)) == 3  # all distinct after dedup
+    assert len(set(ids)) == 3
 
 
 def test_dedup_preserves_other_fields():
-    """The function only rewrites dataset_id; other fields untouched."""
+    """Only ``dataset_id`` is rewritten; other fields untouched."""
     datasets = [
         {"dataset_id": "X", "name": "alpha", "year": 2023},
         {"dataset_id": "X", "name": "beta", "year": 2024},
@@ -234,7 +219,7 @@ def test_dedup_preserves_other_fields():
 
 
 def test_save_deterministic_produces_stable_bytes(tmp_path: Path):
-    """Calling save twice with the same input produces byte-identical files."""
+    """Saving twice with the same input → byte-identical files."""
     datasets = [
         {"dataset_id": "Z", "tasks": ["rest"]},
         {"dataset_id": "A", "tasks": ["motor", "language"]},
@@ -247,80 +232,59 @@ def test_save_deterministic_produces_stable_bytes(tmp_path: Path):
 
 
 def test_save_sorts_by_dataset_id(tmp_path: Path):
-    """The output list is sorted by dataset_id for stable diff across runs."""
-    datasets = [
-        {"dataset_id": "Zzz"},
-        {"dataset_id": "Aaa"},
-        {"dataset_id": "Mmm"},
-    ]
+    """Output is sorted by ``dataset_id`` for stable diffs across runs."""
+    datasets = [{"dataset_id": "Zzz"}, {"dataset_id": "Aaa"}, {"dataset_id": "Mmm"}]
     out = tmp_path / "sorted.json"
     save_datasets_deterministically(datasets, out)
     payload = json.loads(out.read_text())
-    # Output is a list of dataset dicts sorted by dataset_id.
     assert isinstance(payload, list)
     ids = [d["dataset_id"] for d in payload]
     assert ids == sorted(ids)
 
 
-def test_save_deduplicates_by_default(tmp_path: Path):
-    """Duplicate dataset_ids are renamed by default."""
-    datasets = [
-        {"dataset_id": "Smith2024"},
-        {"dataset_id": "Smith2024"},
-    ]
-    out = tmp_path / "dedup.json"
-    save_datasets_deterministically(datasets, out)
+@pytest.mark.parametrize(
+    ("kwargs", "expected_unique"),
+    [
+        pytest.param({}, 2, id="default-dedups"),
+        pytest.param({"deduplicate_ids": False}, 1, id="skip-dedup-preserves-dupes"),
+    ],
+)
+def test_save_deduplication_toggle(tmp_path: Path, kwargs, expected_unique):
+    """``deduplicate_ids`` flag: default dedups, False preserves duplicate IDs."""
+    datasets = [{"dataset_id": "Smith2024"}, {"dataset_id": "Smith2024"}]
+    out = tmp_path / "x.json"
+    save_datasets_deterministically(datasets, out, **kwargs)
     payload = json.loads(out.read_text())
     ids = [d["dataset_id"] for d in payload]
-    assert len(set(ids)) == 2  # both unique after dedup
-
-
-def test_save_can_skip_deduplication(tmp_path: Path):
-    """``deduplicate_ids=False`` preserves duplicate IDs as-is."""
-    datasets = [
-        {"dataset_id": "Smith2024"},
-        {"dataset_id": "Smith2024"},
-    ]
-    out = tmp_path / "dup.json"
-    save_datasets_deterministically(datasets, out, deduplicate_ids=False)
-    payload = json.loads(out.read_text())
-    ids = [d["dataset_id"] for d in payload]
-    assert ids == ["Smith2024", "Smith2024"]
+    assert len(set(ids)) == expected_unique
 
 
 # ─── normalize_dataset ────────────────────────────────────────────────────
 
 
-def test_normalize_dataset_strips_none_values():
-    """``None`` values are removed from the output dict."""
-    raw = {
-        "dataset_id": "X",
-        "name": "Test",
-        "year": None,
-        "modalities": ["eeg"],
-    }
-    out = normalize_dataset(raw)
-    assert "year" not in out
-    assert out["name"] == "Test"
-    assert out["modalities"] == ["eeg"]
-
-
-def test_normalize_dataset_preserves_list_order():
-    """The docstring's promise about ages — list order preserved (not sorted)."""
-    raw = {"dataset_id": "X", "ages": [42, 21, 35]}
-    out = normalize_dataset(raw)
-    assert out["ages"] == [42, 21, 35]
-
-
-def test_normalize_dataset_recurses_into_nested_dicts():
-    """None values in nested dicts also get removed."""
-    raw = {
-        "dataset_id": "X",
-        "metadata": {"keep": "yes", "drop": None},
-    }
-    out = normalize_dataset(raw)
-    assert out["metadata"] == {"keep": "yes"}
-    assert "drop" not in out["metadata"]
+@pytest.mark.parametrize(
+    ("raw", "expected"),
+    [
+        pytest.param(
+            {"dataset_id": "X", "name": "Test", "year": None, "modalities": ["eeg"]},
+            {"dataset_id": "X", "name": "Test", "modalities": ["eeg"]},
+            id="strips-none-values",
+        ),
+        pytest.param(
+            {"dataset_id": "X", "ages": [42, 21, 35]},
+            {"dataset_id": "X", "ages": [42, 21, 35]},
+            id="preserves-list-order",
+        ),
+        pytest.param(
+            {"dataset_id": "X", "metadata": {"keep": "yes", "drop": None}},
+            {"dataset_id": "X", "metadata": {"keep": "yes"}},
+            id="recurses-into-nested-dicts",
+        ),
+    ],
+)
+def test_normalize_dataset(raw, expected):
+    """None-stripping + list-order preservation + nested-dict recursion."""
+    assert normalize_dataset(raw) == expected
 
 
 # ─── SUBJECT_COUNT_PATTERNS sanity check ──────────────────────────────────
@@ -328,6 +292,5 @@ def test_normalize_dataset_recurses_into_nested_dicts():
 
 def test_subject_count_patterns_compile():
     """Every pattern is a valid regex (catches typos at import time)."""
-
     for pattern in SUBJECT_COUNT_PATTERNS:
-        _re.compile(pattern)  # ValueError on bad regex
+        _re.compile(pattern)

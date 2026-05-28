@@ -76,6 +76,97 @@ def test_eegdashraw_len_with_sfreq_ntimes(tmp_path):
     assert len(raw_obj) == 2688
 
 
+def test_nemar_download_required_files_uses_annex_object_uri(tmp_path):
+    from eegdash.dataset.base import EEGDashRaw
+    from eegdash.schemas import create_record
+
+    annex_key = "MD5E-s117384448--3f1620cf0484cce641d500a406630b89.edf"
+    bids_relpath = "sub-70495563/emg/sub-70495563_task-typing_emg.edf"
+    record = create_record(
+        dataset="nm000104",
+        storage_base="s3://nemar/nm000104",
+        storage_backend="nemar",
+        bids_relpath=bids_relpath,
+        subject="70495563",
+        task="typing",
+        datatype="emg",
+        suffix="emg",
+        sampling_frequency=1000.0,
+        ntimes=1000,
+    )
+    record["storage"]["annex_keys"] = {bids_relpath: annex_key}
+
+    ds = EEGDashRaw(record=record, cache_dir=tmp_path)
+
+    with (
+        patch("eegdash.dataset.base.downloader.get_s3_filesystem"),
+        patch("eegdash.dataset.base.downloader.download_files") as mock_deps,
+        patch("eegdash.dataset.base.downloader.download_s3_file") as mock_download,
+        patch.object(ds, "_fetch_nemar_root_metadata"),
+    ):
+        ds._download_required_files()
+
+    mock_deps.assert_called_once()
+    mock_download.assert_called_once_with(
+        f"s3://nemar/nm000104/objects/{annex_key}",
+        tmp_path / "nm000104" / bids_relpath,
+        filesystem=mock_deps.call_args.kwargs["filesystem"],
+    )
+
+
+def test_nemar_download_required_files_falls_back_to_data_portal(tmp_path):
+    """After an S3 403 on the original URI, eegdash must delegate to
+    ``nemar-py`` (NEMARClient + download_one) for the recovery path.
+    """
+    from eegdash.dataset.base import EEGDashRaw
+    from eegdash.schemas import create_record
+
+    annex_key = "MD5E-s117384448--3f1620cf0484cce641d500a406630b89.edf"
+    bids_relpath = "sub-70495563/emg/sub-70495563_task-typing_emg.edf"
+    record = create_record(
+        dataset="nm000104",
+        storage_base="s3://nemar/nm000104",
+        storage_backend="nemar",
+        bids_relpath=bids_relpath,
+        subject="70495563",
+        task="typing",
+        datatype="emg",
+        suffix="emg",
+        sampling_frequency=1000.0,
+        ntimes=1000,
+    )
+    record["storage"]["annex_keys"] = {bids_relpath: annex_key}
+
+    ds = EEGDashRaw(record=record, cache_dir=tmp_path)
+
+    fake_file = MagicMock(path=bids_relpath, size=117384448)
+    fake_manifest = MagicMock()
+    fake_manifest.__contains__ = lambda self, key: key == bids_relpath
+    fake_manifest.file = MagicMock(return_value=fake_file)
+
+    with (
+        patch("eegdash.dataset.base.downloader.get_s3_filesystem"),
+        patch("eegdash.dataset.base.downloader.download_files"),
+        patch(
+            "eegdash.dataset.base.downloader.download_s3_file",
+            side_effect=PermissionError("Forbidden"),
+        ),
+        patch(
+            "eegdash.dataset.base._fetch_nemar_manifest",
+            return_value=fake_manifest,
+        ) as mock_fetch,
+        patch("nemar.download_one") as mock_download_one,
+        patch.object(ds, "_fetch_nemar_root_metadata"),
+    ):
+        ds._download_required_files()
+
+    mock_fetch.assert_called_once_with("nm000104")
+    fake_manifest.file.assert_called_once_with(bids_relpath)
+    mock_download_one.assert_called_once_with(
+        fake_file, tmp_path / "nm000104" / bids_relpath
+    )
+
+
 def test_base_ensure_raw_failure(tmp_path):
     from unittest.mock import patch
 

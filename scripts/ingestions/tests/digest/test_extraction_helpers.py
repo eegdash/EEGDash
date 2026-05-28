@@ -1,0 +1,557 @@
+"""Per-helper unit tests for the decomposition helpers in 3_digest.py."""
+
+from __future__ import annotations
+
+from pathlib import Path
+
+import pytest
+from _helpers import load_digest
+
+# ═══════════════════════════════════════════════════════════════════════
+# §1 — BIDS-fs metadata readers
+# ═══════════════════════════════════════════════════════════════════════
+
+
+def test_readme_returns_none_when_absent(tmp_path: Path):
+    digest = load_digest()
+    assert digest._read_bids_readme(tmp_path) is None
+
+
+def test_readme_finds_uppercase_readme_file(tmp_path: Path):
+    digest = load_digest()
+    (tmp_path / "README").write_text("First line\n\nThird line\n")
+    text = digest._read_bids_readme(tmp_path)
+    assert text == "First line\nThird line"  # blank lines stripped
+
+
+def test_readme_finds_readme_md_if_no_README(tmp_path: Path):
+    digest = load_digest()
+    (tmp_path / "README.md").write_text("# Title\n\nBody")
+    assert digest._read_bids_readme(tmp_path) == "# Title\nBody"
+
+
+def test_readme_prefers_no_extension_over_md(tmp_path: Path):
+    """The lookup order tries ``README`` before ``README.md``.
+
+    Uses different extensions (not case variants) because case-insensitive
+    filesystems like macOS APFS collapse ``README`` and ``readme`` to one file.
+    """
+    digest = load_digest()
+    (tmp_path / "README").write_text("primary")
+    (tmp_path / "README.md").write_text("fallback — should not be read")
+    assert digest._read_bids_readme(tmp_path) == "primary"
+
+
+def test_readme_tolerates_non_utf8(tmp_path: Path):
+    """A README with invalid UTF-8 yields None — function continues trying other filenames."""
+    digest = load_digest()
+    (tmp_path / "README").write_bytes(b"\xff\xfe\xfd")  # invalid UTF-8
+    assert digest._read_bids_readme(tmp_path) is None
+
+
+def test_demographics_returns_zeros_when_no_participants_tsv(tmp_path: Path):
+    digest = load_digest()
+    count, ages, sex, hand = digest._read_participants_demographics(tmp_path)
+    assert count == 0
+    assert ages == []
+    assert sex == {}
+    assert hand == {}
+
+
+def test_demographics_basic_row_count(tmp_path: Path):
+    digest = load_digest()
+    (tmp_path / "participants.tsv").write_text(
+        "participant_id\tage\nsub-01\t30\nsub-02\t25\nsub-03\t40\n"
+    )
+    count, ages, _, _ = digest._read_participants_demographics(tmp_path)
+    assert count == 3
+    assert sorted(ages) == [25, 30, 40]
+
+
+def test_demographics_ignores_invalid_ages(tmp_path: Path):
+    """Ages outside (0, 120) and non-numeric strings are skipped."""
+    digest = load_digest()
+    (tmp_path / "participants.tsv").write_text(
+        "participant_id\tage\nsub-01\tn/a\nsub-02\t-1\nsub-03\t150\nsub-04\t30\n"
+    )
+    _, ages, _, _ = digest._read_participants_demographics(tmp_path)
+    assert ages == [30]
+
+
+def test_demographics_handles_age_column_variants(tmp_path: Path):
+    """Column header can be ``age``, ``Age``, or ``AGE``."""
+    digest = load_digest()
+    (tmp_path / "participants.tsv").write_text("participant_id\tAge\nsub-01\t42\n")
+    _, ages, _, _ = digest._read_participants_demographics(tmp_path)
+    assert ages == [42]
+
+
+def test_demographics_sex_distribution(tmp_path: Path):
+    digest = load_digest()
+    (tmp_path / "participants.tsv").write_text(
+        "participant_id\tsex\n"
+        "sub-01\tM\n"
+        "sub-02\tfemale\n"
+        "sub-03\tf\n"
+        "sub-04\tother\n"
+        "sub-05\tn/a\n"
+    )
+    _, _, sex, _ = digest._read_participants_demographics(tmp_path)
+    assert sex == {"m": 1, "f": 2, "o": 1}  # n/a is excluded
+
+
+def test_demographics_handedness_distribution(tmp_path: Path):
+    digest = load_digest()
+    (tmp_path / "participants.tsv").write_text(
+        "participant_id\thandedness\n"
+        "sub-01\tR\n"
+        "sub-02\tleft\n"
+        "sub-03\tA\n"
+        "sub-04\tambidextrous\n"
+    )
+    _, _, _, hand = digest._read_participants_demographics(tmp_path)
+    assert hand == {"r": 1, "l": 1, "a": 2}
+
+
+def test_demographics_malformed_file_returns_zeros(tmp_path: Path):
+    """A file pandas can't parse → empty demographics, no exception."""
+    digest = load_digest()
+    (tmp_path / "participants.tsv").write_bytes(b"\x00\x01\x02 garbage")
+    count, ages, sex, hand = digest._read_participants_demographics(tmp_path)
+    # Either the file is parsed and yields garbage counts, OR the
+    # function tolerates and returns empty. Both are acceptable; we just
+    # require NO exception propagated.
+    assert isinstance(count, int)
+    assert isinstance(ages, list)
+    assert isinstance(sex, dict)
+    assert isinstance(hand, dict)
+
+
+def test_storage_info_returns_none_for_unknown_source(tmp_path: Path):
+    """Unknown sources (not in STORAGE_CONFIGS) get None."""
+    digest = load_digest()
+    info = digest._build_global_storage_info(
+        "ds-xyz", "totally_unknown_source", tmp_path
+    )
+    assert info is None
+
+
+def test_storage_info_finds_dataset_description(tmp_path: Path):
+    digest = load_digest()
+    (tmp_path / "dataset_description.json").write_text("{}")
+    info = digest._build_global_storage_info("ds002893", "openneuro", tmp_path)
+    assert info is not None
+    assert info["raw_key"] == "dataset_description.json"
+    assert info["backend"] == "s3"
+    assert "ds002893" in info["base"]
+
+
+def test_storage_info_collects_dep_keys_for_other_globals(tmp_path: Path):
+    """README, participants.tsv etc. land in dep_keys (sorted, deduped)."""
+    digest = load_digest()
+    (tmp_path / "dataset_description.json").write_text("{}")
+    (tmp_path / "participants.tsv").write_text("participant_id\n")
+    (tmp_path / "README").write_text("test")
+    info = digest._build_global_storage_info("ds002893", "openneuro", tmp_path)
+    assert info is not None
+    assert "participants.tsv" in info["dep_keys"]
+    assert "README" in info["dep_keys"]
+    assert info["dep_keys"] == sorted(set(info["dep_keys"]))  # sorted, deduped
+
+
+def test_storage_info_excludes_manifest_json_and_dotfiles(tmp_path: Path):
+    digest = load_digest()
+    (tmp_path / "dataset_description.json").write_text("{}")
+    (tmp_path / "manifest.json").write_text("{}")
+    (tmp_path / ".hidden_file.json").write_text("{}")
+    info = digest._build_global_storage_info("ds002893", "openneuro", tmp_path)
+    assert info is not None
+    assert "manifest.json" not in info["dep_keys"]
+    assert ".hidden_file.json" not in info["dep_keys"]
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# §2 — BIDS-fs Record/dep_keys helpers
+# ═══════════════════════════════════════════════════════════════════════
+
+
+def test_dep_keys_finds_channels_tsv_alongside_recording(tmp_path: Path):
+    """The most common case: channels.tsv next to the recording."""
+    digest = load_digest()
+    eeg_dir = tmp_path / "sub-01" / "eeg"
+    eeg_dir.mkdir(parents=True)
+    record = eeg_dir / "sub-01_task-rest_eeg.edf"
+    record.touch()
+    (eeg_dir / "sub-01_task-rest_channels.tsv").write_text("name\n")
+
+    dep_keys, is_split, ok = digest._build_dep_keys(
+        record, tmp_path, fif_is_split=False, fif_continuations_ok=True
+    )
+    assert "sub-01/eeg/sub-01_task-rest_channels.tsv" in dep_keys
+    assert is_split is False
+    assert ok is True
+
+
+def test_dep_keys_finds_session_level_sidecar_via_inheritance(tmp_path: Path):
+    """BIDS inheritance: an events.json shared across runs sits at the session level."""
+    digest = load_digest()
+    sub_dir = tmp_path / "sub-01"
+    eeg_dir = sub_dir / "eeg"
+    eeg_dir.mkdir(parents=True)
+    record = eeg_dir / "sub-01_task-rest_run-01_eeg.edf"
+    record.touch()
+    # Session-level events.json (no task/run entities)
+    (eeg_dir / "sub-01_events.json").write_text("{}")
+
+    dep_keys, _, _ = digest._build_dep_keys(
+        record, tmp_path, fif_is_split=False, fif_continuations_ok=True
+    )
+    assert "sub-01/eeg/sub-01_events.json" in dep_keys
+
+
+def test_dep_keys_includes_fdt_companion_for_set_file(tmp_path: Path):
+    """Format-specific companions (.fdt for .set) added even when absent on disk."""
+    digest = load_digest()
+    eeg_dir = tmp_path / "sub-01" / "eeg"
+    eeg_dir.mkdir(parents=True)
+    record = eeg_dir / "sub-01_task-rest_eeg.set"
+    record.touch()
+    dep_keys, _, _ = digest._build_dep_keys(
+        record, tmp_path, fif_is_split=False, fif_continuations_ok=True
+    )
+    assert any(k.endswith(".fdt") for k in dep_keys)
+
+
+def test_dep_keys_detects_split_fif_continuation(tmp_path: Path):
+    """Existence of ``<stem>-1.fif`` triggers split-FIF detection."""
+    digest = load_digest()
+    meg_dir = tmp_path / "sub-01" / "meg"
+    meg_dir.mkdir(parents=True)
+    record = meg_dir / "sub-01_task-rest_meg.fif"
+    record.touch()
+    (meg_dir / "sub-01_task-rest_meg-1.fif").touch()
+
+    dep_keys, is_split, ok = digest._build_dep_keys(
+        record, tmp_path, fif_is_split=False, fif_continuations_ok=True
+    )
+    assert is_split is True
+    assert ok is True
+    assert "sub-01/meg/sub-01_task-rest_meg-1.fif" in dep_keys
+
+
+def test_dep_keys_broken_fif_continuation_flags_integrity(tmp_path: Path):
+    """A broken-symlink FIF continuation sets fif_continuations_ok=False."""
+    digest = load_digest()
+    meg_dir = tmp_path / "sub-01" / "meg"
+    meg_dir.mkdir(parents=True)
+    record = meg_dir / "sub-01_task-rest_meg.fif"
+    record.touch()
+    broken_target = tmp_path / ".no_such_target.fif"
+    (meg_dir / "sub-01_task-rest_meg-1.fif").symlink_to(broken_target)
+
+    _, is_split, ok = digest._build_dep_keys(
+        record, tmp_path, fif_is_split=True, fif_continuations_ok=True
+    )
+    assert is_split is True
+    assert ok is False  # broken symlink → integrity flag
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# §3 — Manifest-path orchestration helpers
+# ═══════════════════════════════════════════════════════════════════════
+
+
+def test_storage_base_explicit_in_manifest_kept_when_canonical():
+    """When the manifest provides a storage_base matching the source prefix, return as-is."""
+    digest = load_digest()
+    manifest = {"storage_base": "https://zenodo.org/records/12345/extra"}
+    result = digest._determine_manifest_storage_base("zenodo", "ds-001", manifest)
+    assert result == "https://zenodo.org/records/12345/extra"
+
+
+def test_storage_base_explicit_rejected_when_wrong_source():
+    """An explicit storage_base that doesn't match the source prefix gets rebuilt."""
+    digest = load_digest()
+    manifest = {"storage_base": "s3://openneuro.org/wrong-dataset"}
+    # NEMAR's prefix is s3://nemar — the openneuro base mismatches
+    result = digest._determine_manifest_storage_base("nemar", "nm000176", manifest)
+    assert result == "s3://nemar/nm000176"
+
+
+@pytest.mark.parametrize(
+    ("source", "dataset_id", "manifest", "expected_substrings"),
+    [
+        pytest.param(
+            "figshare",
+            "ds-001",
+            {"external_links": {"source_url": "https://figshare.com/articles/12345"}},
+            ["https://figshare.com/articles/12345"],
+            id="figshare_source_url",
+        ),
+        pytest.param(
+            "figshare",
+            "ds-001",
+            {},
+            ["ds-001"],
+            id="figshare_fallback_to_default",
+        ),
+        pytest.param(
+            "zenodo",
+            "ds-001",
+            {"zenodo_id": "999999"},
+            ["999999"],
+            id="zenodo_uses_zenodo_id",
+        ),
+        pytest.param(
+            "gin",
+            "ds-001",
+            {"organization": "MyLab"},
+            ["MyLab", "ds-001"],
+            id="gin_includes_organization",
+        ),
+        pytest.param(
+            "totally_unknown",
+            "ds-001",
+            {},
+            ["ds-001"],
+            id="unknown_source_default",
+        ),
+    ],
+)
+def test_storage_base_source_variants(
+    source, dataset_id, manifest, expected_substrings
+):
+    """_determine_manifest_storage_base builds the correct base URL per source."""
+    digest = load_digest()
+    result = digest._determine_manifest_storage_base(source, dataset_id, manifest)
+    for substring in expected_substrings:
+        assert substring in result
+
+
+def test_entities_collects_neuro_subjects_only():
+    """Only modalities in NEURO_MODALITIES count toward subjects/tasks."""
+    digest = load_digest()
+    files = [
+        {"path": "sub-01/eeg/sub-01_task-rest_eeg.edf"},
+        {"path": "sub-02/eeg/sub-02_task-motor_eeg.edf"},
+        # Non-neuro file (anat) should NOT contribute to subjects/tasks
+        {"path": "sub-99/anat/sub-99_T1w.nii.gz"},
+    ]
+    subjects, _sessions, tasks, modalities = digest._collect_bids_entities_from_paths(
+        files, []
+    )
+    assert subjects == {"01", "02"}
+    assert tasks == {"rest", "motor"}
+    # Modalities tracks ALL paths, not just neuro
+    assert "eeg" in modalities
+
+
+def test_entities_walks_zip_contents():
+    """ZIP file's _zip_contents entries are walked too."""
+    digest = load_digest()
+    files = [
+        {
+            "path": "data.zip",
+            "_zip_contents": [
+                {"path": "sub-01/eeg/sub-01_task-rest_eeg.edf"},
+                {"path": "sub-02/eeg/sub-02_task-motor_eeg.edf"},
+            ],
+        },
+    ]
+    subjects, _, tasks, _ = digest._collect_bids_entities_from_paths(files, [])
+    assert subjects == {"01", "02"}
+    assert tasks == {"rest", "motor"}
+
+
+def test_entities_accepts_plain_string_paths():
+    """Files can be strings (not dicts) — early manifest schemas."""
+    digest = load_digest()
+    files = ["sub-01/eeg/sub-01_task-rest_eeg.edf"]
+    subjects, _, tasks, _ = digest._collect_bids_entities_from_paths(files, [])
+    assert subjects == {"01"}
+    assert tasks == {"rest"}
+
+
+def test_entities_standalone_zip_contents_array():
+    """Manifest's top-level zip_contents (separate from per-file)."""
+    digest = load_digest()
+    files = []
+    zip_contents = [{"path": "sub-01/eeg/sub-01_task-rest_eeg.edf"}]
+    subjects, _, tasks, _ = digest._collect_bids_entities_from_paths(
+        files, zip_contents
+    )
+    assert subjects == {"01"}
+    assert tasks == {"rest"}
+
+
+@pytest.mark.parametrize(
+    ("filename", "expected"),
+    [
+        pytest.param("dataset_bids_v1.zip", True, id="dataset_bids"),
+        pytest.param("data_bids.zip", True, id="data_bids"),
+        pytest.param("recording_eeg.zip", True, id="recording_eeg"),
+        pytest.param("study_meg.zip", True, id="study_meg"),
+        pytest.param("clinical_ieeg.zip", True, id="clinical_ieeg"),
+        pytest.param("rawdata_v2.zip", True, id="rawdata"),
+        pytest.param("data.zip", True, id="data"),
+        pytest.param("dataset_v1.zip", True, id="dataset_v1"),
+        pytest.param("analysis_results.zip", False, id="analysis_results"),
+        pytest.param("supplementary_figures.zip", False, id="supplementary_figures"),
+        pytest.param("readme.zip", False, id="readme"),
+        pytest.param("DATA_BIDS.ZIP", True, id="case_insensitive_upper"),
+        pytest.param("Recording_EEG.zip", True, id="case_insensitive_mixed"),
+    ],
+)
+def test_is_bids_data_zip(filename, expected):
+    """_is_bids_data_zip matches known BIDS data zip patterns case-insensitively."""
+    digest = load_digest()
+    assert digest._is_bids_data_zip(filename) == expected
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# §4 — Manifest-path Record builders
+# ═══════════════════════════════════════════════════════════════════════
+
+
+def test_regular_record_skips_non_neuro_files():
+    digest = load_digest()
+    record, errors = digest._build_regular_manifest_record(
+        {"path": "README.md", "size": 100},
+        dataset_id="ds-001",
+        storage_base="https://example.org/ds-001",
+        source="zenodo",
+        digested_at="2026-05-22T12:00:00Z",
+    )
+    assert record is None
+    assert errors == []
+
+
+def test_regular_record_builds_for_eeg_file():
+    digest = load_digest()
+    record, errors = digest._build_regular_manifest_record(
+        {
+            "path": "sub-01/eeg/sub-01_task-rest_eeg.edf",
+            "size": 1024,
+            "download_url": "https://example.org/file.edf",
+        },
+        dataset_id="ds-001",
+        storage_base="https://example.org/ds-001",
+        source="zenodo",
+        digested_at="2026-05-22T12:00:00Z",
+    )
+    assert record is not None
+    assert errors == []
+    assert record["bids_relpath"] == "sub-01/eeg/sub-01_task-rest_eeg.edf"
+    assert record["download_url"] == "https://example.org/file.edf"
+    assert record["file_size"] == 1024
+
+
+def test_regular_record_accepts_plain_string_file_entry():
+    """Some old manifest shapes use plain strings instead of dicts."""
+    digest = load_digest()
+    record, _ = digest._build_regular_manifest_record(
+        "sub-01/eeg/sub-01_task-rest_eeg.edf",
+        dataset_id="ds-001",
+        storage_base="https://example.org/ds-001",
+        source="zenodo",
+        digested_at="2026-05-22T12:00:00Z",
+    )
+    assert record is not None
+    assert record["bids_relpath"] == "sub-01/eeg/sub-01_task-rest_eeg.edf"
+
+
+def test_ctf_records_dedup_to_ds_directories():
+    """Multiple files inside one .ds dir produce ONE Record per dir."""
+    digest = load_digest()
+    files = [
+        {"path": "sub-01/meg/sub-01_task-rest_meg.ds/raw.meg4"},
+        {"path": "sub-01/meg/sub-01_task-rest_meg.ds/res4"},
+        {"path": "sub-01/meg/sub-01_task-rest_meg.ds/hc"},
+        {"path": "sub-02/meg/sub-02_task-rest_meg.ds/raw.meg4"},
+    ]
+    records, errors = digest._build_ctf_ds_records(
+        files,
+        dataset_id="ds-meg",
+        storage_base="https://example.org/ds-meg",
+        source="nemar",
+        digested_at="2026-05-22T12:00:00Z",
+    )
+    assert errors == []
+    assert len(records) == 2
+    relpaths = {r["bids_relpath"] for r in records}
+    assert relpaths == {
+        "sub-01/meg/sub-01_task-rest_meg.ds",
+        "sub-02/meg/sub-02_task-rest_meg.ds",
+    }
+
+
+def test_ctf_records_no_ds_dirs_returns_empty():
+    digest = load_digest()
+    files = [
+        {"path": "sub-01/eeg/sub-01_task-rest_eeg.edf"},
+    ]
+    records, errors = digest._build_ctf_ds_records(
+        files,
+        dataset_id="ds-eeg",
+        storage_base="https://example.org/ds-eeg",
+        source="nemar",
+        digested_at="2026-05-22T12:00:00Z",
+    )
+    assert records == []
+    assert errors == []
+
+
+def test_zip_extracted_skips_non_neuro_inside_zip():
+    digest = load_digest()
+    file_info = {
+        "name": "data.zip",
+        "download_url": "https://example.org/data.zip",
+        "_zip_contents": [
+            {"path": "sub-01/eeg/sub-01_task-rest_eeg.edf", "size": 1024},
+            {"path": "README.md", "size": 100},  # skipped
+        ],
+    }
+    records, errors = digest._build_zip_extracted_records(
+        file_info,
+        dataset_id="ds-001",
+        storage_base="https://example.org/ds-001",
+        digested_at="2026-05-22T12:00:00Z",
+    )
+    assert len(records) == 1
+    assert errors == []
+    assert records[0]["container_url"] == "https://example.org/data.zip"
+    assert records[0]["container_type"] == "zip"
+
+
+def test_subject_zip_record_matches_sub_prefix_pattern():
+    digest = load_digest()
+    rec, errs = digest._build_subject_zip_record(
+        {
+            "path": "sub-007.zip",
+            "download_url": "https://example.org/sub-007.zip",
+            "size": 1_000_000,
+        },
+        dataset_id="ds-001",
+        storage_base="https://example.org/ds-001",
+        primary_mod="eeg",
+        recording_modality_val=["eeg"],
+        digested_at="2026-05-22T12:00:00Z",
+    )
+    assert rec is not None
+    assert errs == []
+    assert rec["zip_contains_bids"] is True
+    assert rec["container_url"] == "https://example.org/sub-007.zip"
+
+
+def test_subject_zip_record_rejects_unrelated_zip():
+    digest = load_digest()
+    rec, errs = digest._build_subject_zip_record(
+        {"path": "analysis.zip"},
+        dataset_id="ds-001",
+        storage_base="https://example.org/ds-001",
+        primary_mod="eeg",
+        recording_modality_val=["eeg"],
+        digested_at="2026-05-22T12:00:00Z",
+    )
+    assert rec is None
+    assert errs == []

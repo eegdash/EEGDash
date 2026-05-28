@@ -1,0 +1,40 @@
+name: Ingestions — Schema dry-run gate
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/ingestions/5_inject.py'
+      - 'scripts/ingestions/4_validate_output.py'
+      - 'scripts/ingestions/_validate.py'
+      - 'scripts/ingestions/tests/fixtures/records/**'
+      - '.github/workflows/ingestions-schema-dryrun.yml'
+      # Anything that changes the Pydantic schemas referenced by ingest:
+      - 'eegdash/schemas.py'
+
+concurrency:
+  group: ingestions-schema-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  schema:
+    name: Validate fixture records
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+      - name: Install ingestion + eegdash
+        run: |
+          pip install -e .
+          pip install -e "scripts/ingestions[dev]"
+      - name: Cache eegdash-testing-data
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/eegdash/testing-data
+          key: eegdash-testing-data-v0.1.0
+      - name: Run schema-preflight tests
+        working-directory: scripts/ingestions
+        run: pytest tests/pipeline/test_schema_preflight.py -ra --tb=short

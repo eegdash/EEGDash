@@ -65,12 +65,30 @@ import hashlib
 import json
 import logging
 import re
+import struct
+import tempfile
 import threading
+from collections.abc import Iterable
+from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Iterable
+from typing import Any
 
 import numpy as np
 import pandas as pd
+
+try:
+    import mne
+except ImportError:  # pragma: no cover - optional dependency
+    mne = None  # type: ignore[assignment]
+
+from _file_utils import _read_annex_pointer_text, parse_annex_size
+from _parser_utils import (
+    build_s3_url,
+    extract_dataset_info,
+    fetch_bytes_from_s3,
+    head_content_length,
+    is_broken_symlink,
+)
 
 LOGGER = logging.getLogger("digest.montage")
 
@@ -83,7 +101,7 @@ _COORDSYS_PREFIXES = ("EEG", "iEEG", "MEG", "EMG", "NIRS")
 
 
 def _round_mm(v: float) -> int:
-    return int(round(v * 1000))
+    return round(v * 1000)
 
 
 def _hash_sensors(modality: str, sensors: list[dict[str, Any]]) -> str:
@@ -93,16 +111,19 @@ def _hash_sensors(modality: str, sensors: list[dict[str, Any]]) -> str:
     cap from aliasing on name + position (vanishingly unlikely, but free
     to prevent).
     """
-    canonical = [modality] + sorted(
-        (
-            s.get("name", ""),
-            _round_mm(s.get("x", 0.0)),
-            _round_mm(s.get("y", 0.0)),
-            _round_mm(s.get("z", 0.0)),
-            s.get("type", ""),
-        )
-        for s in sensors
-    )
+    canonical = [
+        modality,
+        *sorted(
+            (
+                s.get("name", ""),
+                _round_mm(s.get("x", 0.0)),
+                _round_mm(s.get("y", 0.0)),
+                _round_mm(s.get("z", 0.0)),
+                s.get("type", ""),
+            )
+            for s in sensors
+        ),
+    ]
     payload = repr(canonical).encode("utf-8")
     return hashlib.sha1(payload).hexdigest()[:16]
 
@@ -235,7 +256,10 @@ def _extract_tsv_layout(
         return None
     try:
         sensors = _parse_sensor_tsv(tsv, extras=extras)
-    except Exception as exc:  # noqa: BLE001
+    except (OSError, ValueError, KeyError, UnicodeDecodeError) as exc:
+        # _parse_sensor_tsv hits filesystem and pandas. ValueError covers
+        # NaN/Inf coord rejection; KeyError covers missing required
+        # columns; UnicodeDecodeError covers non-UTF8 TSV files.
         LOGGER.warning("[layout.%s] parse error on %s: %s", modality, tsv, exc)
         return None
     if len(sensors) < min_sensors:
@@ -265,22 +289,91 @@ def _extract_tsv_layout(
 # ---------------------------------------------------------------------------
 
 
-def extract_eeg_layout(
-    data_file: Path, bids_root: Path
-) -> tuple[str, dict[str, Any]] | None:
-    """Scalp EEG: parse ``*_electrodes.tsv`` → hash-identified doc.
+# extract_eeg_layout removed (Phase 8 P2.1). EEG's "TSV first, then
+# template-match fallback" logic is now expressed by
+# ``_TSV_MODALITY_CONFIGS["eeg"]`` having ``template_fallback=True``;
+# :func:`_extract_layout_for_config` runs the cascade.
 
-    When no ``*_electrodes.tsv`` sidecar was published for the dataset,
-    fall back to matching ``*_channels.tsv`` names against MNE's
-    built-in standard montages and emit a template-derived layout. The
-    fallback doc is tagged ``source: "template-matched"`` so downstream
-    consumers can tell subject-specific positions apart from canonical
-    vendor-cap positions.
+
+@dataclass(frozen=True)
+class _ModalityConfig:
+    """Per-modality parametrization of :func:`_extract_tsv_layout`.
+
+    The 4 TSV-based modalities (EEG, iEEG, EMG, fNIRS) differ only in
+    these knobs; collecting them as a dataclass makes "what varies per
+    modality" a single named place instead of 4 functions with bespoke
+    kwarg patterns.
+
+    Per the implicit Seam between the 4 TSV-based
+    extractors becomes explicit: each modality is a named config, the
+    dispatcher reads from a dict, ``_extract_tsv_layout`` is called once.
     """
-    direct = _extract_tsv_layout(data_file, bids_root, modality="eeg")
+
+    modality: str
+    tsv_pattern: str = "*_electrodes.tsv"
+    extras: tuple[str, ...] = ("type", "material", "impedance")
+    min_sensors: int = 4
+    coord_suffix: str = "_electrodes.tsv"
+    # EEG-only: when *_electrodes.tsv is absent, fall back to
+    # matching channel-name list against MNE's standard montages.
+    template_fallback: bool = False
+
+
+_TSV_MODALITY_CONFIGS: dict[str, _ModalityConfig] = {
+    "eeg": _ModalityConfig(
+        modality="eeg",
+        template_fallback=True,
+    ),
+    "ieeg": _ModalityConfig(
+        modality="ieeg",
+        extras=("type", "hemisphere", "material", "impedance", "group", "size"),
+        min_sensors=1,
+    ),
+    "emg": _ModalityConfig(
+        modality="emg",
+        extras=("type", "material", "impedance", "coordinate_system", "group"),
+        min_sensors=2,
+    ),
+    "nirs": _ModalityConfig(
+        modality="nirs",
+        tsv_pattern="*_optodes.tsv",
+        extras=("type", "template_x", "template_y", "template_z"),
+        min_sensors=2,
+        coord_suffix="_optodes.tsv",
+    ),
+}
+
+
+def _extract_layout_for_config(
+    data_file: Path, bids_root: Path, config: _ModalityConfig
+) -> tuple[str, dict[str, Any]] | None:
+    """Run the TSV-based pipeline for one ``_ModalityConfig``.
+
+    Phase 8 P2.1 — replaces 4 thin ``extract_<modality>_layout``
+    wrapper functions with one config-driven helper. The dispatcher
+    in :func:`extract_layout` selects the right config by datatype
+    name and calls this helper.
+
+    For configs with ``template_fallback=True`` (EEG only today), the
+    helper tries ``_extract_tsv_layout`` first, then falls back to
+    template-matching when no ``*_electrodes.tsv`` is published.
+    """
+    direct = _extract_tsv_layout(
+        data_file,
+        bids_root,
+        modality=config.modality,
+        tsv_pattern=config.tsv_pattern,
+        extras=config.extras,
+        min_sensors=config.min_sensors,
+        coord_suffix=config.coord_suffix,
+    )
     if direct is not None:
         return direct
-    return _extract_template_from_channels(data_file, bids_root, modality="eeg")
+    if config.template_fallback:
+        return _extract_template_from_channels(
+            data_file, bids_root, modality=config.modality
+        )
+    return None
 
 
 # ---------------------------------------------------------------------------
@@ -345,20 +438,28 @@ def _load_mne_templates() -> dict[str, dict[str, tuple[float, float, float]]]:
         cache: dict[str, dict[str, tuple[float, float, float]]] = {}
 
         # Pool 1 — MNE built-ins. These land keyed by MNE's canonical name.
-        try:
-            import mne  # type: ignore
-
-            for name in mne.channels.get_builtin_montages():
+        if mne is None:
+            LOGGER.warning("[template] mne not installed; pool 1 empty")
+        else:
+            try:
+                builtin_names = mne.channels.get_builtin_montages()
+            except AttributeError as exc:
+                # AttributeError: a future MNE refactor removed
+                # get_builtin_montages.
+                LOGGER.warning("[template] MNE API change (%s); pool 1 empty", exc)
+                builtin_names = []
+            for name in builtin_names:
                 try:
                     m = mne.channels.make_standard_montage(name)
                     cache[name] = {
                         k.upper(): (float(v[0]), float(v[1]), float(v[2]))
                         for k, v in m.get_positions()["ch_pos"].items()
                     }
-                except Exception:  # noqa: BLE001 — skip anything MNE can't build here
+                except (ValueError, KeyError, TypeError, AttributeError):
+                    # MNE can raise on a misnamed standard montage or an
+                    # unexpected positions dict shape. Skip that template;
+                    # the other 50+ will still populate.
                     continue
-        except Exception as exc:  # noqa: BLE001
-            LOGGER.warning("[template] MNE import failed (%s); pool 1 empty", exc)
 
         # Pool 2 — the electrode-explorer extras. montages.json stores each
         # position in meters already (xyz is centred on the fitted head
@@ -438,7 +539,16 @@ def _parse_channels_tsv_for_eeg(path: Path) -> list[str]:
     """
     try:
         df = pd.read_csv(path, sep="\t", dtype=str, na_values=["n/a", "N/A", ""])
-    except Exception:
+    except (
+        OSError,
+        pd.errors.ParserError,
+        pd.errors.EmptyDataError,
+        UnicodeDecodeError,
+        ValueError,
+    ):
+        # channels.tsv absent, malformed, non-UTF8, or empty. Empty
+        # channel list lets the caller fall back to inferring from the
+        # binary header.
         return []
     if "name" not in df.columns:
         return []
@@ -568,22 +678,10 @@ def _extract_template_from_channels(
 # ---------------------------------------------------------------------------
 
 
-def extract_ieeg_layout(
-    data_file: Path, bids_root: Path
-) -> tuple[str, dict[str, Any]] | None:
-    """Intracranial EEG: positions in brain space (no radius sanity).
-
-    The 2D sphere viewer can't render these today, but cataloguing the
-    hash still deduplicates identical grids across subjects for future
-    glass-brain viewers.
-    """
-    return _extract_tsv_layout(
-        data_file,
-        bids_root,
-        modality="ieeg",
-        extras=("type", "hemisphere", "material", "impedance", "group", "size"),
-        min_sensors=1,
-    )
+# extract_ieeg_layout removed (Phase 8 P2.1) — its body was a thin
+# wrapper over ``_extract_tsv_layout``. The kwargs now live in
+# ``_TSV_MODALITY_CONFIGS["ieeg"]`` and the dispatcher in
+# :func:`extract_layout` invokes ``_extract_layout_for_config``.
 
 
 # ---------------------------------------------------------------------------
@@ -632,11 +730,6 @@ def _fetch_fif_metadata_streaming(data_file: Path, url: str, total: int) -> str 
     populate just the metadata prefix, and let MNE seek-but-not-read
     the raw-data tail (it's zeros, which MNE skips).
     """
-    import struct  # noqa: PLC0415
-    import tempfile  # noqa: PLC0415
-
-    from _parser_utils import fetch_bytes_from_s3  # noqa: PLC0415
-
     # Try progressively larger buffers. 306-channel Neuromag files end
     # their MEAS_INFO around 3-8 MB; 4 MB covers most, 16 MB is a safe
     # backstop for dense HPI + isotrak + long comments.
@@ -697,7 +790,9 @@ def _fetch_fif_metadata_streaming(data_file: Path, url: str, total: int) -> str 
                 total / (1024 * 1024),
             )
             return tmp.name
-        except Exception as exc:  # noqa: BLE001
+        except (OSError, ValueError) as exc:
+            # Filesystem failure on the tempfile write, or malformed
+            # input bytes triggering the truncation logic.
             LOGGER.debug("[layout.meg] streaming stitch %s failed: %s", url, exc)
             try:
                 Path(tmp.name).unlink()
@@ -712,6 +807,31 @@ def _fetch_fif_metadata_streaming(data_file: Path, url: str, total: int) -> str 
         url,
     )
     return None
+
+
+def _resolve_fif_total_size(data_file: Path, url: str) -> int | None:
+    """Discover the FIF total size, preferring the annex symlink over a HEAD.
+
+    OpenNeuro / NEMAR FIF files are git-annex-managed; the size is
+    encoded in the symlink target (``MD5E-s{size}--{hash}.fif``).
+    Reading the symlink avoids the HTTPS HEAD round-trip that
+    dominated the MEG digest profile before pooling landed.
+
+    Falls back to :func:`head_content_length` when:
+      - the file isn't an annex symlink (Zenodo / Figshare raw URLs);
+      - the annex key doesn't follow the MD5E/SHA256E size convention;
+      - the parsed size is zero (impossible for a real FIF — treat
+        as malformed key and probe the wire).
+
+    Returns ``None`` if both paths fail; caller treats that as a
+    transient network failure.
+    """
+    text = _read_annex_pointer_text(data_file)
+    if text is not None and "/annex/" in text:
+        annex_size = parse_annex_size(text)
+        if annex_size is not None and annex_size > 0:
+            return annex_size
+    return head_content_length(url, timeout=30.0)
 
 
 def _fetch_fif_metadata_via_directory(data_file: Path, url: str) -> str | None:
@@ -748,13 +868,8 @@ def _fetch_fif_metadata_via_directory(data_file: Path, url: str) -> str | None:
     Returns ``None`` when the file lacks a usable directory (streaming-
     only FIF) or the fetch fails.
     """
-    import struct  # noqa: PLC0415
-    import tempfile  # noqa: PLC0415
-
-    from _parser_utils import fetch_bytes_from_s3, head_content_length  # noqa: PLC0415
-
-    # 1. Total size
-    total = head_content_length(url, timeout=30.0)
+    # 1. Total size — prefer the annex symlink key over a HEAD round-trip.
+    total = _resolve_fif_total_size(data_file, url)
     if total is None or total <= 0:
         return None
 
@@ -847,7 +962,9 @@ def _fetch_fif_metadata_via_directory(data_file: Path, url: str) -> str | None:
             len(merged),
         )
         return tmp.name
-    except Exception as exc:  # noqa: BLE001
+    except (OSError, ValueError, KeyError) as exc:
+        # Range-request stitch: OSError on tempfile write, ValueError on
+        # truncation arithmetic, KeyError on malformed range metadata.
         LOGGER.debug("[layout.meg] range stitch %s failed: %s", url, exc)
         try:
             Path(tmp.name).unlink()
@@ -874,11 +991,7 @@ def extract_meg_layout(
     ``_fetch_fif_metadata_via_directory``: only metadata tags come
     over the wire (~7 MB for a 2 GB recording).
     """
-    # Import MNE lazily so this module's other entry points keep working
-    # even when MNE isn't installed (rare, but possible in minimal envs).
-    try:
-        import mne
-    except ImportError:
+    if mne is None:
         LOGGER.warning("[layout.meg] mne not available; skipping %s", data_file)
         return None
 
@@ -906,7 +1019,16 @@ def extract_meg_layout(
             else:
                 LOGGER.info("[layout.meg] unrecognized MEG format: %s", data_file)
                 return None
-        except Exception as direct_exc:  # noqa: BLE001
+        except (
+            OSError,
+            ValueError,
+            RuntimeError,
+            KeyError,
+            AttributeError,
+        ) as direct_exc:
+            # MNE raises RuntimeError on unsupported format variant,
+            # ValueError on truncated/malformed header, OSError on file
+            # not found / permission, KeyError on missing required field.
             LOGGER.debug(
                 "[layout.meg] direct read %s failed: %s", data_file, direct_exc
             )
@@ -916,11 +1038,6 @@ def extract_meg_layout(
             # investigated yet.
             if suffix != ".fif":
                 return None
-            from _parser_utils import (  # noqa: PLC0415
-                build_s3_url,
-                extract_dataset_info,
-                is_broken_symlink,
-            )
 
             # Only chase S3 for files that really are broken annex pointers.
             if not is_broken_symlink(data_file) and data_file.exists():
@@ -943,7 +1060,9 @@ def extract_meg_layout(
                 return None
             try:
                 info = mne.io.read_info(tmp_path, verbose="error")
-            except Exception as partial_exc:  # noqa: BLE001
+            except (OSError, ValueError, RuntimeError, KeyError) as partial_exc:
+                # Same MNE failure classes; the reconstructed FIF stub
+                # may still be malformed for various reasons.
                 LOGGER.info(
                     "[layout.meg] %s: directory-reconstructed FIF still "
                     "unparsable (%s)",
@@ -955,7 +1074,9 @@ def extract_meg_layout(
         if raw is not None:
             try:
                 raw.close()
-            except Exception:
+            except (OSError, AttributeError):
+                # OSError: already-closed. AttributeError: not an MNE
+                # Raw (defensive guard).
                 pass
         if tmp_path:
             try:
@@ -1032,31 +1153,11 @@ def extract_meg_layout(
 # ---------------------------------------------------------------------------
 
 
-def extract_emg_layout(
-    data_file: Path, bids_root: Path
-) -> tuple[str, dict[str, Any]] | None:
-    """Surface EMG: parse ``*_electrodes.tsv`` with body-landmark frames.
-
-    EMG differs from the scalp modalities in three ways worth knowing:
-
-    1. **Anatomical coordinate systems** — positions live in body-part
-       frames (e.g. HySER's ``ExtensorDistal`` / ``forearm``), not on a
-       head sphere. Hash dedupes across subjects; the 2D sphere viewer
-       can't render.
-    2. **Non-length units** — ``EMGCoordinateUnits`` is often
-       ``"percent"`` (normalised to anatomical landmarks). Preserved
-       verbatim; viewers that need mm must supply calibration.
-    3. **Per-row coordinate system** — one TSV can mix frames via the
-       optional ``coordinate_system`` column (HySER: 4 muscles × 64
-       electrodes in one file). Preserved on each sensor.
-    """
-    return _extract_tsv_layout(
-        data_file,
-        bids_root,
-        modality="emg",
-        extras=("type", "material", "impedance", "coordinate_system", "group"),
-        min_sensors=2,
-    )
+# extract_emg_layout removed (Phase 8 P2.1). EMG kwargs documented:
+# anatomical coord systems (HySER ExtensorDistal etc.), per-row
+# coordinate_system column, often percent units. All preserved in
+# ``_TSV_MODALITY_CONFIGS["emg"]``. See the config above for the
+# extras tuple including ``coordinate_system`` and ``group``.
 
 
 # ---------------------------------------------------------------------------
@@ -1064,39 +1165,15 @@ def extract_emg_layout(
 # ---------------------------------------------------------------------------
 
 
-def extract_fnirs_layout(
-    data_file: Path, bids_root: Path
-) -> tuple[str, dict[str, Any]] | None:
-    """fNIRS: parse ``*_optodes.tsv`` for source/detector positions.
-
-    ``*_channels.tsv`` declares source+detector pairings per measurement
-    channel; we don't decode the pairing here (keeps hash stable across
-    upstream channel-name churn). The optode ``type`` column is kept so
-    the viewer can distinguish sources from detectors.
-    """
-    return _extract_tsv_layout(
-        data_file,
-        bids_root,
-        modality="nirs",
-        tsv_pattern="*_optodes.tsv",
-        extras=("type", "template_x", "template_y", "template_z"),
-        min_sensors=2,
-        coord_suffix="_optodes.tsv",
-    )
+# extract_fnirs_layout removed (Phase 8 P2.1). fNIRS reads
+# ``*_optodes.tsv`` (not _electrodes.tsv) — that's the only thing
+# that distinguishes it from the other TSV modalities. See
+# ``_TSV_MODALITY_CONFIGS["nirs"]`` for the per-modality kwargs.
 
 
 # ---------------------------------------------------------------------------
 # Dispatcher
 # ---------------------------------------------------------------------------
-
-_DISPATCH = {
-    "eeg": extract_eeg_layout,
-    "ieeg": extract_ieeg_layout,
-    "meg": extract_meg_layout,
-    "emg": extract_emg_layout,
-    "nirs": extract_fnirs_layout,
-    "fnirs": extract_fnirs_layout,  # some older datasets use this token
-}
 
 
 def extract_layout(
@@ -1106,10 +1183,24 @@ def extract_layout(
 ) -> tuple[str, dict[str, Any]] | None:
     """Dispatch to the right per-modality extractor.
 
-    Returns ``None`` for unsupported datatypes (EMG, beh, etc.) so the
+    Phase 8 P2.1 — the dispatch now reads from
+    :data:`_TSV_MODALITY_CONFIGS` for the 4 TSV-based modalities
+    (EEG, iEEG, EMG, fNIRS). MEG remains a special case (sensor
+    positions in the FIF header, not a sidecar — ~190 LOC of header
+    streaming logic in :func:`extract_meg_layout`).
+
+    Returns ``None`` for unsupported datatypes (beh, etc.) so the
     caller can simply record ``layout_hash = None`` and move on.
+
+    Note: ``"fnirs"`` is accepted as an alias for ``"nirs"`` — some
+    older datasets use it as the datatype name.
     """
-    fn = _DISPATCH.get((datatype or "").lower())
-    if fn is None:
+    dt = (datatype or "").lower()
+    if dt == "meg":
+        return extract_meg_layout(data_file, bids_root)
+    if dt == "fnirs":  # alias for nirs in some older datasets
+        dt = "nirs"
+    config = _TSV_MODALITY_CONFIGS.get(dt)
+    if config is None:
         return None
-    return fn(data_file, bids_root)
+    return _extract_layout_for_config(data_file, bids_root, config)

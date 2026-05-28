@@ -22,6 +22,7 @@ import io
 import sys
 from typing import TYPE_CHECKING
 
+import httpx
 import requests
 
 if TYPE_CHECKING:
@@ -123,7 +124,14 @@ def inject_citations(
                     updated += 1
                 else:
                     skipped += 1
-            except Exception as e:
+            except (
+                httpx.RequestError,
+                httpx.HTTPStatusError,
+                KeyError,
+                ValueError,
+            ) as e:
+                # Recoverable: API failure or malformed citation count for
+                # this dataset. Programmer errors propagate per Phase 9 F1.
                 print(f"Error updating {dataset_id}: {e}")
 
     return updated, skipped, not_found

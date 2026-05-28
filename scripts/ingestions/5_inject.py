@@ -40,72 +40,55 @@ Usage:
     python 5_inject.py --input digestion_output --database eegdash_dev --skip-validation
 """
 
-import argparse
-import json
 import math
 import os
 import sys
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from pathlib import Path
 
-from _fingerprint import fingerprint_from_records
+import httpx
+from pydantic import ValidationError
+from tqdm import tqdm
+
 from _http import (
     HTTPStatusError,
     RequestError,
-    get_client,
-    make_retry_client,
+    make_authed_client,
     request_json,
 )
-from tqdm import tqdm
-
-# Datasets to explicitly ignore during ingestion
-EXCLUDED_DATASETS = {
-    "test",
-    "ds003380",
-    # OpenNeuro IDs that now redirect to other datasets on openneuro.org.
-    # ds004929 and ds005930 are fNIRS-only (no EEG); ds005407 redirects.
-    "ds004929",
-    "ds005407",
-    "ds005930",
-    "ABUDUKADI",
-    "ABUDUKADI_2",
-    "ABUDUKADI_3",
-    "ABUDUKADI_4",
-    "AILIJIANG",
-    "AILIJIANG_3",
-    "AILIJIANG_4",
-    "AILIJIANG_5",
-    "AILIJIANG_7",
-    "AILIJIANG_8",
-    "BAIHETI",
-    "BAIHETI_2",
-    "BAIHETI_3",
-    "BIAN_3",
-    "BIN_27",
-    "BLIX",
-    "BOJIN",
-    "BOUSSAGOL",
-    "AISHENG",
-    "ACHOLA",
-    "ANASHKIN",
-    "ANJUM",
-    "BARBIERI",
-    "BIN_8",
-    "BIN_9",
-    "BING_4",
-    "BING_8",
-    "BOWEN_4",
-    "AZIZAH",
-    "BAO",
-    "BAO-YOU",
-    "BAO_2",
-    "BENABBOU",
-    "BING",
-    "BOXIN",
-}
+from _inject_config import load_inject_config_from_argv
+from _inject_plan import (
+    EXCLUDED_DATASETS,
+    _ensure_fingerprint,
+    _flatten_entities,
+    build_injection_plan,
+    fetch_existing_dataset,
+    filter_changed_datasets,
+    find_digested_datasets,
+    load_dataset,
+    load_montages,
+    load_records,
+)
+from _validate import validate_digestion_output
 
 # Default API configuration
 DEFAULT_API_URL = "https://data.eegdash.org"
+
+__all__ = [
+    "EXCLUDED_DATASETS",
+    "_ensure_fingerprint",
+    "_flatten_entities",
+    "fetch_existing_dataset",
+    "filter_changed_datasets",
+    "find_digested_datasets",
+    "load_dataset",
+    "load_montages",
+    "load_records",
+]
+
+
+# CI workers run on 2-16+ vCPUs; cap at 8 matches the prior magic
+# constant for >= 4 vCPU hosts and gives smaller hosts a sensible pool.
+DEFAULT_WORKERS = min(8, max(2, (os.cpu_count() or 2) * 2))
 
 
 def _sanitize_for_json(obj):
@@ -149,171 +132,6 @@ def _bulk_upsert_batch(
         return {"inserted": 0, "updated": 0, "error": f"Batch {batch_idx}: {e}"}
 
 
-def fetch_existing_dataset(
-    api_url: str,
-    database: str,
-    dataset_id: str,
-):
-    """Fetch existing dataset metadata from the API (if present)."""
-    url = f"{api_url}/api/{database}/datasets/{dataset_id}"
-    data, response = request_json("get", url, timeout=30, client=get_client())
-    if response is None:
-        return None
-    if response.status_code == 404:
-        return None
-    if response.status_code != 200 or data is None:
-        return None
-    return data.get("data", {})
-
-
-def _make_session(auth_token: str):
-    """Create session with retry strategy and auth."""
-    return make_retry_client(auth_token)
-
-
-def find_digested_datasets(
-    input_dir: Path, datasets: list[str] | None = None
-) -> list[Path]:
-    """Find all dataset directories in the digestion output.
-
-    Returns
-    -------
-    list[Path]
-        List of dataset directories containing _dataset.json and _records.json files
-
-    """
-    dataset_dirs = []
-
-    for dataset_dir in sorted(input_dir.iterdir()):
-        if not dataset_dir.is_dir():
-            continue
-
-        dataset_id = dataset_dir.name
-
-        # Skip special files/dirs or excluded datasets
-        if (
-            dataset_id.startswith(".")
-            or dataset_id.startswith("_")
-            or dataset_id in EXCLUDED_DATASETS
-        ):
-            continue
-
-        # Filter by specific datasets if provided
-        if datasets and dataset_id not in datasets:
-            continue
-
-        # Check for either dataset or records file (new schema)
-        dataset_file = dataset_dir / f"{dataset_id}_dataset.json"
-        records_file = dataset_dir / f"{dataset_id}_records.json"
-
-        if dataset_file.exists() or records_file.exists():
-            dataset_dirs.append(dataset_dir)
-
-    return dataset_dirs
-
-
-def load_dataset(dataset_dir: Path) -> dict | None:
-    """Load a Dataset document from a directory."""
-    dataset_id = dataset_dir.name
-    dataset_file = dataset_dir / f"{dataset_id}_dataset.json"
-
-    if not dataset_file.exists():
-        return None
-
-    with open(dataset_file) as f:
-        return json.load(f)
-
-
-def load_records(dataset_dir: Path) -> list[dict]:
-    """Load Records from a directory.
-
-    Supports both new schema (_records.json) and legacy formats.
-    Flattens entities to top-level fields for compatibility with EEGDash API.
-    """
-    dataset_id = dataset_dir.name
-
-    # Try new schema first
-    records_file = dataset_dir / f"{dataset_id}_records.json"
-    if records_file.exists():
-        with open(records_file) as f:
-            data = json.load(f)
-            if isinstance(data, dict) and "records" in data:
-                records = data["records"]
-            elif isinstance(data, list):
-                records = data
-            else:
-                records = []
-            return [_flatten_entities(r) for r in records]
-
-    # Try legacy formats
-    for legacy_name in [f"{dataset_id}_core.json", f"{dataset_id}_minimal.json"]:
-        legacy_file = dataset_dir / legacy_name
-        if legacy_file.exists():
-            with open(legacy_file) as f:
-                data = json.load(f)
-                if isinstance(data, list):
-                    records = data
-                elif isinstance(data, dict) and "records" in data:
-                    records = data["records"]
-                else:
-                    records = []
-                return [_flatten_entities(r) for r in records]
-
-    return []
-
-
-def load_montages(dataset_dir: Path) -> list[dict]:
-    """Load Montage documents from a dataset's digest directory."""
-    dataset_id = dataset_dir.name
-    montages_file = dataset_dir / f"{dataset_id}_montages.json"
-    try:
-        with open(montages_file) as f:
-            data = json.load(f)
-    except FileNotFoundError:
-        return []
-
-    if isinstance(data, dict) and "montages" in data:
-        return data.get("montages") or []
-    if isinstance(data, list):
-        return data
-    return []
-
-
-def _flatten_entities(record: dict) -> dict:
-    """Flatten entities dict to top-level fields for EEGDash API compatibility.
-
-    The EEGDash API expects subject, task, session, run at the top level,
-    not nested in an entities dict.
-
-    Conflict Resolution:
-    -------------------
-    If a key exists both at the top level AND in the entities dict, the
-    top-level value takes precedence (the entity value is NOT overwritten).
-    This ensures that explicitly set values from the digestion pipeline
-    are preserved, while nested entities serve as fallback values.
-
-    Example:
-        record = {
-            "subject": "01",           # Explicit top-level value
-            "entities": {"subject": "1", "task": "rest"}  # Nested values
-        }
-        Result: {"subject": "01", "task": "rest"}  # top-level "subject" preserved
-
-    """
-    result = record.copy()
-
-    # Extract entities to top level if present
-    # Only copy if key doesn't already exist at top level (no overwrite)
-    entities = result.pop("entities", {})
-    if entities:
-        for key in ("subject", "task", "session", "run"):
-            if key in entities and key not in result:
-                result[key] = entities[key]
-
-    # Keep entities_mne as-is for reference
-    return result
-
-
 def inject_datasets(
     datasets: list[dict],
     api_url: str,
@@ -330,7 +148,7 @@ def inject_datasets(
         Result with inserted_count
 
     """
-    session = client or _make_session(admin_token)
+    session = client or make_authed_client(admin_token)
     url = f"{api_url}/admin/{database}/datasets/bulk"
 
     inserted_count = 0
@@ -374,7 +192,7 @@ def inject_records(
         Result with inserted_count
 
     """
-    session = client or _make_session(admin_token)
+    session = client or make_authed_client(admin_token)
     # Use the new upsert endpoint
     url = f"{api_url}/admin/{database}/records/upsert"
 
@@ -387,18 +205,30 @@ def inject_records(
     for i in range(0, len(records), batch_size):
         batches.append((i // batch_size, records[i : i + batch_size]))
 
-    # Parallel execution
-    with ThreadPoolExecutor(max_workers=8) as executor:
+    # Parallel execution. Each batch has a 60s per-request timeout via the
+    # inner _bulk_upsert_batch; as_completed gets a generous wall-clock
+    # safety margin so a *hung* worker (TCP keepalive never trips) doesn't
+    # deadlock the main thread indefinitely.
+    per_batch_timeout_s = 60.0
+    wall_clock_budget_s = max(120.0, len(batches) * per_batch_timeout_s + 30.0)
+    with ThreadPoolExecutor(max_workers=DEFAULT_WORKERS) as executor:
         futures = {
             executor.submit(
-                _bulk_upsert_batch, idx, batch, url, session, timeout=60.0
+                _bulk_upsert_batch,
+                idx,
+                batch,
+                url,
+                session,
+                timeout=per_batch_timeout_s,
             ): idx
             for idx, batch in batches
         }
         for future in tqdm(
-            as_completed(futures), total=len(batches), desc="Injecting batches"
+            as_completed(futures, timeout=wall_clock_budget_s),
+            total=len(batches),
+            desc="Injecting batches",
         ):
-            res = future.result()
+            res = future.result(timeout=per_batch_timeout_s)
             if res["error"]:
                 errors.append(res["error"])
             else:
@@ -428,7 +258,7 @@ def inject_montages(
     Payloads are capped at 500 per the server's validator; ``batch_size``
     defaults to 100 to keep request bodies under a few MB.
     """
-    session = client or _make_session(admin_token)
+    session = client or make_authed_client(admin_token)
     url = f"{api_url}/admin/{database}/montages/bulk"
 
     inserted_count = 0
@@ -439,19 +269,27 @@ def inject_montages(
     for i in range(0, len(montages), batch_size):
         batches.append((i // batch_size, montages[i : i + batch_size]))
 
-    with ThreadPoolExecutor(max_workers=8) as executor:
+    # Same timeout discipline as inject_records.
+    per_batch_timeout_s = 120.0
+    wall_clock_budget_s = max(180.0, len(batches) * per_batch_timeout_s + 30.0)
+    with ThreadPoolExecutor(max_workers=DEFAULT_WORKERS) as executor:
         futures = {
             executor.submit(
-                _bulk_upsert_batch, idx, batch, url, session, timeout=120.0
+                _bulk_upsert_batch,
+                idx,
+                batch,
+                url,
+                session,
+                timeout=per_batch_timeout_s,
             ): idx
             for idx, batch in batches
         }
         for future in tqdm(
-            as_completed(futures),
+            as_completed(futures, timeout=wall_clock_budget_s),
             total=len(batches),
             desc="Injecting montages",
         ):
-            res = future.result()
+            res = future.result(timeout=per_batch_timeout_s)
             if res["error"]:
                 errors.append(res["error"])
             else:
@@ -465,177 +303,29 @@ def inject_montages(
     }
 
 
-def _ensure_fingerprint(dataset_id: str, dataset: dict | None, records: list[dict]):
-    """Ensure ingestion_fingerprint is set on dataset or derived from records."""
-    if dataset is None:
-        dataset = {"dataset_id": dataset_id}
-    if dataset.get("ingestion_fingerprint"):
-        return dataset
-    if records:
-        dataset["ingestion_fingerprint"] = fingerprint_from_records(
-            dataset_id,
-            dataset.get("source", "unknown"),
-            records,
-        )
-    return dataset
-
-
-def filter_changed_datasets(
-    dataset_ids: list[str],
-    datasets_by_id: dict[str, dict],
-    records_by_id: dict[str, list[dict]],
-    api_url: str,
-    database: str,
-):
-    """Return dataset IDs that are new or updated, plus skipped IDs."""
-    changed_ids: list[str] = []
-    skipped_ids: list[str] = []
-
-    for dataset_id in dataset_ids:
-        dataset = datasets_by_id.get(dataset_id)
-        records = records_by_id.get(dataset_id, [])
-        dataset = _ensure_fingerprint(dataset_id, dataset, records)
-        datasets_by_id[dataset_id] = dataset
-
-        existing = fetch_existing_dataset(api_url, database, dataset_id)
-        existing_fp = (existing or {}).get("ingestion_fingerprint")
-        current_fp = dataset.get("ingestion_fingerprint")
-
-        if not existing:
-            changed_ids.append(dataset_id)
-            continue
-        if existing_fp and current_fp and existing_fp == current_fp:
-            skipped_ids.append(dataset_id)
-            continue
-        changed_ids.append(dataset_id)
-
-    return changed_ids, skipped_ids
-
-
 def main():
-    parser = argparse.ArgumentParser(
-        description="Inject digested datasets and records into MongoDB via API Gateway."
-    )
-    parser.add_argument(
-        "--input",
-        type=Path,
-        default=Path("digestion_output"),
-        help="Directory containing digested datasets (default: digestion_output/)",
-    )
-    parser.add_argument(
-        "--database",
-        type=str,
-        required=True,
-        choices=[
-            "eegdash",
-            "eegdash_dev",
-            "eegdash_archive",
-            "eegdash_staging",
-            "eegdash_v1",
-        ],
-        help=(
-            "Target MongoDB database (eegdash=production, "
-            "eegdash_dev=development, eegdash_archive=old data, "
-            "eegdash_staging=staging, eegdash_v1=legacy)"
-        ),
-    )
-    parser.add_argument(
-        "--api-url",
-        type=str,
-        default=DEFAULT_API_URL,
-        help=f"EEGDash API URL (default: {DEFAULT_API_URL})",
-    )
-    parser.add_argument(
-        "--token",
-        type=str,
-        default=None,
-        help="Admin token (default: from EEGDASH_ADMIN_TOKEN env var)",
-    )
-    parser.add_argument(
-        "--datasets",
-        nargs="+",
-        default=None,
-        help="Specific dataset IDs to inject (default: all)",
-    )
-    parser.add_argument(
-        "--dry-run",
-        action="store_true",
-        help="Validate files without uploading",
-    )
-    parser.add_argument(
-        "--batch-size",
-        type=int,
-        default=1000,
-        help="Maximum records per API request (default: 1000)",
-    )
-    parser.add_argument(
-        "--only-datasets",
-        action="store_true",
-        help="Only inject Dataset documents (skip Records and Montages)",
-    )
-    parser.add_argument(
-        "--only-records",
-        action="store_true",
-        help="Only inject Record documents (skip Datasets and Montages)",
-    )
-    parser.add_argument(
-        "--only-montages",
-        action="store_true",
-        help="Only inject Montage documents (skip Datasets and Records)",
-    )
-    parser.add_argument(
-        "--skip-montages",
-        action="store_true",
-        help="Skip the montage-registry injection leg",
-    )
-    parser.add_argument(
-        "--force",
-        action="store_true",
-        help="Inject even if ingestion_fingerprint matches existing dataset",
-    )
-    parser.add_argument(
-        "--skip-validation",
-        action="store_true",
-        help="Skip validation before injection (not recommended)",
-    )
-    parser.add_argument(
-        "--data-quality-threshold",
-        type=float,
-        default=10.0,
-        help="Max percentage of records with missing nchans/sampling_frequency before warning (default: 10%%)",
-    )
-    parser.add_argument(
-        "--compute-stats",
-        action="store_true",
-        help="Automatically recompute dataset stats (nchans_counts, sfreq_counts) after injection",
-    )
-
-    args = parser.parse_args()
-
-    # Validate args — the three "only-*" flags are mutually exclusive.
-    only_flags = [args.only_datasets, args.only_records, args.only_montages]
-    if sum(only_flags) > 1:
-        print(
-            "Error: --only-datasets, --only-records, and --only-montages are mutually exclusive",
-            file=sys.stderr,
-        )
-        return 1
-    if args.only_montages and args.skip_montages:
-        print(
-            "Error: --only-montages and --skip-montages are contradictory",
-            file=sys.stderr,
-        )
+    # CLI + env var parsing + validation, all in one place (C6.5).
+    # The 95 lines of argparse boilerplate + 25 lines of mutually-
+    # exclusive-flag checks that used to live here are now declarative
+    # fields + @model_validator hooks on InjectConfig. Tests construct
+    # InjectConfig directly; this function stays the only argv-bound
+    # entry point.
+    try:
+        args = load_inject_config_from_argv()
+    except ValidationError as exc:
+        # Render validation errors as a clean per-field list rather than
+        # pydantic's verbose default. Preserves the "exit 1 on bad
+        # config" contract the previous argparse layer had.
+        print("Config error(s):", file=sys.stderr)
+        for err in exc.errors():
+            field = ".".join(str(p) for p in err.get("loc", []))
+            print(f"  {field}: {err.get('msg')}", file=sys.stderr)
         return 1
 
-    # Get admin token (validated later if injection is needed)
-    admin_token = args.token or os.environ.get("EEGDASH_ADMIN_TOKEN")
+    admin_token = args.token  # already env-fallback'd via AliasChoices
 
     # Run validation first (unless explicitly skipped)
     if not args.skip_validation:
-        # Lazy import: pulls eegdash.schemas transitively, which we don't
-        # want to require on inject-only hosts.
-        from _validate import validate_digestion_output
-
         print("Running validation...")
         validation_result = validate_digestion_output(args.input, verbose=False)
         print(validation_result.summary())
@@ -695,14 +385,6 @@ def main():
         print("No digested datasets found.")
         return 0
 
-    # Collect all documents
-    all_datasets = []
-    all_records = []
-    all_montages_by_hash: dict[str, dict] = {}
-    montage_dataset_sources: dict[str, set[str]] = {}
-    dataset_docs: dict[str, dict] = {}
-    errors = []
-
     want_datasets = not args.only_records and not args.only_montages
     want_records = not args.only_datasets and not args.only_montages
     want_montages = (
@@ -710,90 +392,35 @@ def main():
     ) or args.only_montages
 
     print("\nLoading documents...")
-    for dataset_dir in tqdm(dataset_dirs, desc="Loading"):
-        dataset_id = dataset_dir.name
-
-        try:
-            # Load record documents
-            records = load_records(dataset_dir)
-
-            # --only-montages still needs every dataset_dir visited so it
-            # can pick up its _montages.json; other paths can skip empty.
-            if not records and want_records:
-                continue
-
-            if want_records:
-                all_records.extend(records)
-
-            dataset = load_dataset(dataset_dir)
-            if dataset:
-                dataset_docs[dataset_id] = dataset
-                if want_datasets:
-                    all_datasets.append(dataset)
-
-            # server's $setOnInsert owns provenance; client-side dedup
-            # here is cosmetic — first occurrence wins.
-            if want_montages:
-                for m in load_montages(dataset_dir):
-                    h = m.get("hash")
-                    if not h:
-                        continue
-                    if h not in all_montages_by_hash:
-                        all_montages_by_hash[h] = m
-                    montage_dataset_sources.setdefault(h, set()).add(dataset_id)
-
-        except Exception as e:
-            errors.append({"dataset": dataset_id, "error": str(e)})
-            print(f"  Error loading {dataset_id}: {e}", file=sys.stderr)
-
-    all_montages = list(all_montages_by_hash.values())
-    duplicate_sightings = sum(
-        max(0, len(s) - 1) for s in montage_dataset_sources.values()
+    plan = build_injection_plan(
+        dataset_dirs,
+        want_datasets=want_datasets,
+        want_records=want_records,
+        want_montages=want_montages,
+        force=args.force,
+        only_montages=args.only_montages,
+        api_url=args.api_url,
+        database=args.database,
+        progress=lambda dirs: tqdm(dirs, desc="Loading"),
     )
+    all_datasets = plan.datasets
+    all_records = plan.records
+    all_montages = plan.montages
+    errors = list(plan.errors)
 
     print(
         f"\nLoaded {len(all_datasets)} datasets, {len(all_records)} records, "
-        f"{len(all_montages)} unique montages ({duplicate_sightings} cross-dataset duplicates collapsed)"
+        f"{len(all_montages)} unique montages "
+        f"({plan.duplicate_montage_sightings} cross-dataset duplicates collapsed)"
     )
 
-    datasets_by_id = {ds_id: ds for ds_id, ds in dataset_docs.items() if ds_id and ds}
-    records_by_id: dict[str, list[dict]] = {}
-    for record in all_records:
-        dataset_id = record.get("dataset")
-        if not dataset_id:
-            continue
-        records_by_id.setdefault(dataset_id, []).append(record)
-
-    dataset_ids = sorted(set(datasets_by_id) | set(records_by_id))
-
-    for dataset_id in dataset_ids:
-        dataset = datasets_by_id.get(dataset_id)
-        records = records_by_id.get(dataset_id, [])
-        datasets_by_id[dataset_id] = _ensure_fingerprint(dataset_id, dataset, records)
-
-    skipped_ids: list[str] = []
-    # Skip fingerprint comparison when the user has narrowed to just the
-    # montage leg — montages live in their own collection, so there are
-    # no dataset/record fingerprints to compare.
     if not args.force and not args.only_montages:
-        changed_ids, skipped_ids = filter_changed_datasets(
-            dataset_ids,
-            datasets_by_id,
-            records_by_id,
-            args.api_url,
-            args.database,
-        )
-        changed_set = set(changed_ids)
-        all_datasets = [
-            datasets_by_id[ds_id] for ds_id in changed_ids if ds_id in datasets_by_id
-        ]
-        all_records = [r for r in all_records if r.get("dataset") in changed_set]
         print(
-            f"Filtered to {len(changed_ids)} changed/new datasets "
-            f"(skipped {len(skipped_ids)} unchanged)"
+            f"Filtered to {len(plan.changed_ids)} changed/new datasets "
+            f"(skipped {len(plan.skipped_ids)} unchanged)"
         )
 
-        if not changed_ids and not all_montages:
+        if not plan.changed_ids and not all_montages:
             print("No updated datasets detected. Skipping injection.")
             return 0
 
@@ -805,7 +432,7 @@ def main():
         "montages_injected": 0,
         "montages_updated": 0,
         "errors": len(errors),
-        "datasets_skipped": len(skipped_ids),
+        "datasets_skipped": len(plan.skipped_ids),
     }
 
     if args.dry_run:
@@ -827,7 +454,7 @@ def main():
         # Inject datasets
         if all_datasets and not args.only_records:
             print(f"\nInjecting {len(all_datasets)} datasets...")
-            with _make_session(admin_token) as client:
+            with make_authed_client(admin_token) as client:
                 # Use smaller batch size for datasets to avoid timeouts
                 ds_batch_size = 20
                 for i in range(0, len(all_datasets), ds_batch_size):
@@ -844,7 +471,14 @@ def main():
                         print(
                             f"  Batch {i // ds_batch_size + 1}: {result.get('inserted_count', 0)} datasets"
                         )
-                    except Exception as e:
+                    except (
+                        httpx.RequestError,
+                        httpx.HTTPStatusError,
+                        ValueError,
+                        KeyError,
+                    ) as e:
+                        # Network failure or malformed batch. Record the
+                        # error; do not abort the entire injection.
                         stats["errors"] += 1
                         errors.append({"dataset": "datasets_batch", "error": str(e)})
                         print(
@@ -856,7 +490,7 @@ def main():
         if all_records and not args.only_datasets:
             print(f"\nInjecting {len(all_records)} records...")
             try:
-                with _make_session(admin_token) as client:
+                with make_authed_client(admin_token) as client:
                     result = inject_records(
                         all_records,
                         args.api_url,
@@ -868,7 +502,12 @@ def main():
                     stats["records_injected"] += result.get("inserted_count", 0)
                     stats["records_updated"] += result.get("updated_count", 0)
 
-            except Exception as e:
+            except (
+                httpx.RequestError,
+                httpx.HTTPStatusError,
+                ValueError,
+                KeyError,
+            ) as e:
                 stats["errors"] += 1
                 errors.append({"dataset": "records_collection", "error": str(e)})
                 print(f"  Error injecting records: {e}", file=sys.stderr)
@@ -877,7 +516,7 @@ def main():
         if all_montages and want_montages:
             print(f"\nInjecting {len(all_montages)} unique montages...")
             try:
-                with _make_session(admin_token) as client:
+                with make_authed_client(admin_token) as client:
                     result = inject_montages(
                         all_montages,
                         args.api_url,
@@ -890,7 +529,12 @@ def main():
                     for err in result.get("errors", []):
                         errors.append({"dataset": "montages_collection", "error": err})
                         stats["errors"] += 1
-            except Exception as e:
+            except (
+                httpx.RequestError,
+                httpx.HTTPStatusError,
+                ValueError,
+                KeyError,
+            ) as e:
                 stats["errors"] += 1
                 errors.append({"dataset": "montages_collection", "error": str(e)})
                 print(f"  Error injecting montages: {e}", file=sys.stderr)
@@ -906,8 +550,8 @@ def main():
                 try:
                     datasets_param = ",".join(affected_datasets)
                     url = f"{args.api_url}/admin/{args.database}/datasets/compute-stats?datasets={datasets_param}"
-                    with _make_session(admin_token) as client:
-                        result, response = request_json(
+                    with make_authed_client(admin_token) as client:
+                        result, _response = request_json(
                             "post",
                             url,
                             timeout=120,
@@ -921,7 +565,14 @@ def main():
                         print(
                             f"  Stats computed for {stats['stats_computed']} datasets"
                         )
-                except Exception as e:
+                except (
+                    httpx.RequestError,
+                    httpx.HTTPStatusError,
+                    ValueError,
+                    KeyError,
+                ) as e:
+                    # Stats-compute step is optional — log a warning and
+                    # continue. The records / datasets are already written.
                     print(f"  Warning: Failed to compute stats: {e}", file=sys.stderr)
 
     # Print summary

@@ -1,22 +1,12 @@
 #!/usr/bin/env python3
 """Digest BIDS datasets and generate JSON records for MongoDB.
 
-This script produces two types of documents:
-- **Dataset**: One per dataset (metadata for discovery/filtering)
-- **Record**: One per file (metadata for loading data)
-
-Usage:
-    # Digest all cloned datasets
-    python 3_digest.py --input data/cloned --output digestion_output
-
-    # Digest specific datasets
-    python 3_digest.py --input data/cloned --output digestion_output --datasets ds002718 ds005506
-
-    # Digest with parallel processing
-    python 3_digest.py --input data/cloned --output digestion_output --workers 4
+Produces one Dataset doc (discovery/filtering) and one Record doc per file (loading metadata).
+See ``python 3_digest.py --help``.
 """
 
 import argparse
+import csv as _csv
 import json
 import logging
 import multiprocessing as mp
@@ -26,142 +16,78 @@ import re
 import sys
 import time
 import traceback
-import urllib.error
-import urllib.request
-import warnings
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+import httpx
+from pydantic import ValidationError
+
 # Avoid numba cache issues by setting cache dir before importing MNE.
 os.environ.setdefault("NUMBA_CACHE_DIR", str(Path(".cache") / "numba"))
 
-import mne
 import numpy as np
 import pandas as pd
+from tqdm import tqdm
+
+from eegdash.dataset._source_inference import DEFAULT_STORAGE_CONFIG, STORAGE_CONFIGS
+from eegdash.dataset.bids_dataset import _COMPANION_FILES
+from eegdash.dataset.io import _repair_participants_tsv_ids
+from eegdash.schemas import (
+    Storage,
+    create_dataset,
+    create_record,
+)
+from mne_bids.config import ALLOWED_DATATYPE_EXTENSIONS
+
+logger = logging.getLogger(__name__)
+
 from _constants import (
     CTF_INTERNAL_EXTENSIONS,
+    EXCLUDED_DATASETS,
     MEF3_INTERNAL_DIRS,
     MEF3_INTERNAL_EXTENSIONS,
     MODALITY_CANONICAL_MAP,
     MODALITY_DETECTION_TARGETS,
     NEURO_MODALITIES,
 )
+from _digest_config import load_digest_config_from_argv
 from _file_utils import (
-    get_annex_file_key,
     get_annex_file_size,
-    read_inline_sidecar,
 )
 from _fingerprint import fingerprint_from_files, fingerprint_from_manifest
-from _mef3_parser import parse_mef3_metadata
+from _metadata_cascade import (  # noqa: F401 — re-export for back-compat
+    CascadeContext,
+    MetadataCascade,
+    _parse_fif_with_mne,
+    extract_sfreq_nchans_from_channels_tsv,
+    extract_sfreq_nchans_from_modality_sidecar,
+    sum_bids_channel_counts,
+)
+from _montage import _walk_up_find as _walk
 from _montage import extract_layout
-from _set_parser import parse_set_metadata
-from _snirf_parser import parse_snirf_metadata
-from _vhdr_parser import parse_vhdr_metadata
-from mne_bids.config import ALLOWED_DATATYPE_EXTENSIONS  # noqa: E402
-from tqdm import tqdm
-
-from eegdash.dataset.bids_dataset import _COMPANION_FILES, EEGBIDSDataset
-from eegdash.dataset.io import _repair_participants_tsv_ids
-from eegdash.schemas import (
-    NEMAR_ROOT_METADATA_FILES,
-    Storage,
-    create_dataset,
-    create_record,
+from _parser_utils import _http_client
+from digest_telemetry import TelemetryEvent, auto_configure_from_env, get_emitter
+from record_enumerator import (
+    EnumerationResult,
+    ManifestEnumerator,
+    RecordEnumerator,
+    get_record_enumerator,
+    write_dataset_outputs,
 )
 
-# Storage configuration per source. Keep aligned with
-# ``eegdash/dataset/_source_inference.py::STORAGE_CONFIGS``. NEMAR uses a
-# dedicated ``"nemar"`` backend because direct fetches against
-# ``s3://nemar/<id>/<bidspath>`` don't work (filenames are SHA-resolved by
-# git-annex); the runtime resolves BIDS paths to SHA keys at fetch time.
-STORAGE_CONFIGS = {
-    "openneuro": {"backend": "s3", "base": "s3://openneuro.org"},
-    "nemar": {"backend": "nemar", "base": "s3://nemar"},
-    "gin": {"backend": "https", "base": "https://gin.g-node.org"},
-    "figshare": {"backend": "https", "base": "https://figshare.com/ndownloader/files"},
-    "zenodo": {"backend": "https", "base": "https://zenodo.org/records"},
-    "osf": {"backend": "https", "base": "https://files.osf.io"},
-    "scidb": {"backend": "https", "base": "https://www.scidb.cn"},
-    "datarn": {"backend": "webdav", "base": "https://webdav.data.ru.nl"},
-}
+auto_configure_from_env()
 
-# Default config for unknown sources
-DEFAULT_STORAGE_CONFIG = {"backend": "https", "base": "https://unknown"}
+from source_adapter import SourceAdapter, get_source_adapter
 
 DEFAULT_DATASET_TIMEOUT_SECONDS = 2 * 60
 WORKER_POLL_INTERVAL_SECONDS = 1.0
 PROCESS_SHUTDOWN_TIMEOUT_SECONDS = 5.0
 RESULT_QUEUE_TIMEOUT_SECONDS = 5.0
 
-# Datasets to explicitly ignore during ingestion
-EXCLUDED_DATASETS = {
-    "ABUDUKADI",
-    "ABUDUKADI_2",
-    "ABUDUKADI_3",
-    "ABUDUKADI_4",
-    "AILIJIANG",
-    "AILIJIANG_3",
-    "AILIJIANG_4",
-    "AILIJIANG_5",
-    "AILIJIANG_7",
-    "AILIJIANG_8",
-    "BAIHETI",
-    "BAIHETI_2",
-    "BAIHETI_3",
-    "BIAN_3",
-    "BIN_27",
-    "BLIX",
-    "BOJIN",
-    "BOUSSAGOL",
-    "AISHENG",
-    "ACHOLA",
-    "ANASHKIN",
-    "ANJUM",
-    "BARBIERI",
-    "BIN_8",
-    "BIN_9",
-    "BING_4",
-    "BING_8",
-    "BOWEN_4",
-    "AZIZAH",
-    "BAO",
-    "BAO-YOU",
-    "BAO_2",
-    "BENABBOU",
-    "BING",
-    "BOXIN",
-    # OpenNeuro IDs that now redirect to other datasets on openneuro.org.
-    # ds004929 and ds005930 are fNIRS-only (no EEG); ds005407 redirects.
-    "ds004929",
-    "ds005407",
-    "ds005930",
-}
-
-
-def get_storage_config(source: str) -> dict:
-    """Get storage configuration for a source."""
-    return STORAGE_CONFIGS.get(source, DEFAULT_STORAGE_CONFIG)
-
-
-def get_storage_base(dataset_id: str, source: str) -> str:
-    """Get storage base URL for a dataset."""
-    config = get_storage_config(source)
-    return f"{config['base']}/{dataset_id}"
-
-
-def get_storage_backend(source: str) -> str:
-    """Get storage backend type for a source."""
-    config = get_storage_config(source)
-    return config["backend"]
-
 
 def _source_from_dataset_id(dataset_id: str) -> str:
-    """Infer source from a dataset_id pattern.
-
-    Mirrors the pattern-based detection used in ``2_clone.py`` so the two
-    stages stay aligned (OpenNeuro ``dsNNNNNN``, NEMAR ``nmNNNNNN``).
-    """
+    """Infer source from dataset_id prefix pattern (ds* → openneuro, nm* → nemar)."""
     if dataset_id.startswith("ds") and dataset_id[2:].isdigit():
         return "openneuro"
     if dataset_id.startswith("nm") and dataset_id[2:].isdigit():
@@ -176,14 +102,7 @@ def _source_from_dataset_id(dataset_id: str) -> str:
 def _reconcile_source(
     manifest_src: str | None, dataset_id: str, *, context: str
 ) -> str:
-    """Resolve the authoritative source for a dataset.
-
-    When the manifest carries a source but the dataset_id pattern implies
-    a different one (the bug behind the NEMAR mislabel — manifests said
-    ``openneuro`` for ``nm*`` ids), trust the pattern and warn loudly.
-    Without this guardrail the bad value flows straight into Mongo and we
-    get records pointing at the wrong S3 bucket.
-    """
+    """Trust dataset_id pattern over manifest source to prevent S3 bucket misrouting."""
     pattern_src = _source_from_dataset_id(dataset_id)
     if (
         manifest_src
@@ -211,139 +130,13 @@ def detect_source(dataset_dir: Path) -> str:
             with open(manifest_path) as f:
                 manifest = json.load(f)
             manifest_src = manifest.get("source")
-        except Exception:
+        except (OSError, json.JSONDecodeError, ValueError, KeyError):
             manifest_src = None
 
     return _reconcile_source(manifest_src, dataset_id, context="detect_source")
 
 
-def _parse_edf_with_mne(edf_path: Path) -> dict[str, Any] | None:
-    """Parse metadata from EDF/BDF file using MNE.
-
-    Parameters
-    ----------
-    edf_path : Path
-        Path to the EDF or BDF file.
-
-    Returns
-    -------
-    dict[str, Any] | None
-        Dictionary with sampling_frequency, nchans, ch_names,
-        or None if parsing fails.
-
-    """
-    # Check if file exists and is readable (not a broken git-annex symlink)
-    if not edf_path.exists():
-        return None
-    try:
-        resolved = edf_path.resolve()
-        if not resolved.exists():
-            return None
-    except (OSError, RuntimeError):
-        return None
-
-    try:
-        # Read with preload=False to avoid loading data into memory
-        # verbose=False to suppress MNE's logging
-        raw = mne.io.read_raw_edf(str(edf_path), preload=False, verbose=False)
-        try:
-            result: dict[str, Any] = {}
-
-            # Extract sampling frequency
-            sfreq = raw.info.get("sfreq")
-            if sfreq:
-                result["sampling_frequency"] = float(sfreq)
-
-            # Extract channel info
-            ch_names = raw.info.get("ch_names")
-            if ch_names:
-                result["ch_names"] = list(ch_names)
-                result["nchans"] = len(ch_names)
-
-            # Extract n_times (available from header without loading data)
-            if raw.n_times and raw.n_times > 0:
-                result["n_times"] = int(raw.n_times)
-
-            return result if result else None
-        finally:
-            try:
-                raw.close()
-            except Exception:
-                pass
-
-    except Exception:
-        return None
-
-
-def _parse_fif_with_mne(fif_path: Path) -> tuple[dict[str, Any] | None, bool]:
-    """Parse metadata from FIF file using MNE.
-
-    Uses ``on_split_missing="warn"`` so that git-annex datasets where
-    content-hash filenames break MNE's split-file linkage can still
-    have their header metadata extracted.
-
-    Parameters
-    ----------
-    fif_path : Path
-        Path to the FIF file.
-
-    Returns
-    -------
-    tuple[dict[str, Any] | None, bool]
-        A tuple of (metadata dict or None, is_split flag).
-        The is_split flag is True when MNE detects a split raw file.
-
-    """
-    # Check if file exists and is readable (not a broken git-annex symlink)
-    if not fif_path.exists():
-        return None, False
-    try:
-        resolved = fif_path.resolve()
-        if not resolved.exists():
-            return None, False
-    except (OSError, RuntimeError):
-        return None, False
-
-    try:
-        is_split = False
-        with warnings.catch_warnings(record=True) as caught:
-            warnings.simplefilter("always")
-            raw = mne.io.read_raw_fif(
-                str(fif_path), preload=False, on_split_missing="warn", verbose=False
-            )
-        for w in caught:
-            if "split" in str(w.message).lower():
-                is_split = True
-                break
-
-        try:
-            result: dict[str, Any] = {}
-
-            sfreq = raw.info.get("sfreq")
-            if sfreq:
-                result["sampling_frequency"] = float(sfreq)
-
-            ch_names = raw.info.get("ch_names")
-            if ch_names:
-                result["ch_names"] = list(ch_names)
-                result["nchans"] = len(ch_names)
-
-            if raw.n_times and raw.n_times > 0:
-                result["n_times"] = int(raw.n_times)
-
-            return (result if result else None), is_split
-        finally:
-            try:
-                raw.close()
-            except Exception:
-                pass
-
-    except Exception:
-        return None, False
-
-
 # Companion files required for different formats
-# These are critical files without which the data cannot be loaded
 COMPANION_FILE_REQUIREMENTS = {
     ".vhdr": {
         "required": [".eeg", ".dat"],  # Need at least one of these
@@ -359,21 +152,7 @@ COMPANION_FILE_REQUIREMENTS = {
 
 
 def _file_exists_or_symlink(path: Path, allow_symlinks: bool = True) -> bool:
-    """Check if file exists, considering symlinks.
-
-    Parameters
-    ----------
-    path : Path
-        Path to check.
-    allow_symlinks : bool
-        If True, accept broken symlinks (git-annex) as "existing".
-
-    Returns
-    -------
-    bool
-        True if file exists or is a symlink (when allow_symlinks is True).
-
-    """
+    """Return True if the path exists, or if it is a broken git-annex symlink."""
     if path.exists():
         return True
     if allow_symlinks and path.is_symlink():
@@ -384,27 +163,7 @@ def _file_exists_or_symlink(path: Path, allow_symlinks: bool = True) -> bool:
 def validate_companion_files(
     file_path: Path, allow_symlinks: bool = True
 ) -> dict[str, Any]:
-    """Validate that required companion files exist for a data file.
-
-    Parameters
-    ----------
-    file_path : Path
-        Path to the primary data file (e.g., .vhdr, .set)
-    allow_symlinks : bool
-        If True, accept broken symlinks (git-annex) as "existing"
-
-    Returns
-    -------
-    dict
-        Validation result with keys:
-        - valid: bool - True if file can be processed
-        - missing_required: list[str] - Missing required companion files
-        - missing_optional: list[str] - Missing optional companion files
-        - found: list[str] - Found companion files
-        - warnings: list[str] - Warning messages
-        - errors: list[str] - Error messages
-
-    """
+    """Check that required companion files exist for a data file (e.g. .eeg for .vhdr)."""
     result = {
         "valid": True,
         "missing_required": [],
@@ -477,10 +236,197 @@ def validate_companion_files(
                 result["errors"].append(
                     f"VHDR references missing data file: {data_file}"
                 )
-        except Exception:
+        except (OSError, ValueError, UnicodeDecodeError, KeyError):
             pass
 
     return result
+
+
+def _read_bids_readme(bids_root: Path) -> str | None:
+    """Return cleaned README text, or None if absent / unreadable."""
+    for readme_name in ("README", "README.md", "README.txt", "readme", "readme.md"):
+        readme_path = bids_root / readme_name
+        if not readme_path.exists():
+            continue
+        try:
+            raw_readme = readme_path.read_text(encoding="utf-8")
+            return "\n".join(
+                [line.rstrip() for line in raw_readme.splitlines() if line.strip()]
+            )
+        except (OSError, UnicodeDecodeError):
+            continue
+    return None
+
+
+def _read_participants_demographics(
+    bids_root: Path,
+) -> tuple[int, list[int], dict[str, int], dict[str, int]]:
+    """Read participants.tsv and return (subjects_count, ages, sex_distribution, handedness_distribution)."""
+    subjects_count = 0
+    ages: list[int] = []
+    sex_distribution: dict[str, int] = {}
+    handedness_distribution: dict[str, int] = {}
+
+    participants_path = bids_root / "participants.tsv"
+    if not participants_path.exists():
+        return subjects_count, ages, sex_distribution, handedness_distribution
+
+    try:
+        df = pd.read_csv(
+            participants_path, sep="\t", dtype="string", keep_default_na=False
+        )
+        subjects_count = len(df)
+
+        age_col = next(
+            (col for col in ("age", "Age", "AGE") if col in df.columns), None
+        )
+        if age_col:
+            for val in df[age_col]:
+                try:
+                    age = int(float(val))
+                    if 0 < age < 120:
+                        ages.append(age)
+                except (ValueError, TypeError):
+                    pass
+
+        sex_col = next(
+            (
+                col
+                for col in ("sex", "Sex", "SEX", "gender", "Gender")
+                if col in df.columns
+            ),
+            None,
+        )
+        if sex_col:
+            for val in df[sex_col]:
+                val_lower = str(val).lower().strip()
+                if val_lower in ("m", "male"):
+                    sex_distribution["m"] = sex_distribution.get("m", 0) + 1
+                elif val_lower in ("f", "female"):
+                    sex_distribution["f"] = sex_distribution.get("f", 0) + 1
+                elif val_lower and val_lower not in (
+                    "n/a",
+                    "na",
+                    "nan",
+                    "unknown",
+                    "",
+                ):
+                    sex_distribution["o"] = sex_distribution.get("o", 0) + 1
+
+        hand_col = next(
+            (
+                col
+                for col in ("handedness", "Handedness", "hand", "Hand")
+                if col in df.columns
+            ),
+            None,
+        )
+        if hand_col:
+            for val in df[hand_col]:
+                val_lower = str(val).lower().strip()
+                if val_lower in ("r", "right"):
+                    handedness_distribution["r"] = (
+                        handedness_distribution.get("r", 0) + 1
+                    )
+                elif val_lower in ("l", "left"):
+                    handedness_distribution["l"] = (
+                        handedness_distribution.get("l", 0) + 1
+                    )
+                elif val_lower in ("a", "ambidextrous"):
+                    handedness_distribution["a"] = (
+                        handedness_distribution.get("a", 0) + 1
+                    )
+    except (
+        pd.errors.ParserError,
+        pd.errors.EmptyDataError,
+        OSError,
+        UnicodeDecodeError,
+        ValueError,
+        KeyError,
+    ):
+        pass
+
+    return subjects_count, ages, sex_distribution, handedness_distribution
+
+
+_BIDS_GLOBAL_FILES: tuple[str, ...] = (
+    "participants.tsv",
+    "participants.json",
+    "samples.tsv",
+    "samples.json",
+    "README",
+    "README.md",
+    "README.txt",
+    "CHANGES",
+    "CHANGES.md",
+    "LICENSE",
+    "authors.tsv",
+    "dataset_description.json",
+)
+
+
+def _build_global_storage_info(
+    dataset_id: str, source: str, bids_root: Path
+) -> "Storage | None":
+    """Build the Dataset-level storage doc with backend, base URL, and root-level dep_keys."""
+    if source not in ("openneuro", "nemar", "gin") and source not in STORAGE_CONFIGS:
+        return None
+
+    cfg = STORAGE_CONFIGS.get(source, DEFAULT_STORAGE_CONFIG)
+    storage_base = f"{cfg['base']}/{dataset_id}"
+    storage_backend = cfg["backend"]
+
+    dep_keys: list[str] = []
+    raw_key = "dataset_description.json"  # default "main" file
+    found_files: set[str] = set()
+
+    # 1. Check explicit list (case-sensitive then case-insensitive).
+    for fname in _BIDS_GLOBAL_FILES:
+        fpath = bids_root / fname
+        if fpath.exists():
+            found_files.add(fname)
+            if fname == "dataset_description.json":
+                raw_key = fname
+            else:
+                dep_keys.append(fname)
+            continue
+        # Case-insensitive fallback
+        try:
+            found = next(
+                x.name for x in bids_root.iterdir() if x.name.lower() == fname.lower()
+            )
+            found_files.add(found)
+            if found.lower() == "dataset_description.json":
+                raw_key = found
+            else:
+                dep_keys.append(found)
+        except StopIteration:
+            pass
+
+    # 2. Scan for other root-level BIDS files (sidecars, etc.).
+    ignored_files = {"manifest.json", ".ds_store"}
+    for item in bids_root.iterdir():
+        if not item.is_file():
+            continue
+        item_name = item.name
+        if (
+            item_name in found_files
+            or item_name.lower() in ignored_files
+            or item_name.startswith(".")
+        ):
+            continue
+        if item_name.lower().endswith(
+            (".json", ".tsv", ".txt", ".md", ".yaml", ".yml")
+        ):
+            dep_keys.append(item_name)
+            found_files.add(item_name)
+
+    return {
+        "backend": storage_backend,  # type: ignore[typeddict-item]
+        "base": storage_base,
+        "raw_key": raw_key,
+        "dep_keys": sorted(set(dep_keys)),
+    }
 
 
 def extract_dataset_metadata(
@@ -489,28 +435,9 @@ def extract_dataset_metadata(
     source: str,
     digested_at: str,
     metadata: dict | None = None,
+    source_adapter: "SourceAdapter | None" = None,
 ) -> dict[str, Any]:
-    """Extract Dataset-level metadata from a BIDS dataset.
-
-    Parameters
-    ----------
-    bids_dataset : EEGBIDSDataset
-        The BIDS dataset object
-    dataset_id : str
-        Dataset identifier
-    source : str
-        Source name (openneuro, nemar, etc.)
-    digested_at : str
-        ISO 8601 timestamp
-    metadata : dict | None
-        Optional metadata from source (e.g. from GraphQL/API)
-
-    Returns
-    -------
-    dict
-        Dataset schema compliant metadata
-
-    """
+    """Extract Dataset-level metadata from a BIDS dataset."""
     metadata = metadata or {}
     bids_root = Path(bids_dataset.bidsdir)
     # Read dataset_description.json
@@ -520,25 +447,11 @@ def extract_dataset_metadata(
         try:
             with open(desc_path) as f:
                 description = json.load(f)
-        except Exception:
+        except (OSError, json.JSONDecodeError, ValueError):
             pass
 
-    # Read README file
-    readme = None
-    for readme_name in ["README", "README.md", "README.txt", "readme", "readme.md"]:
-        readme_path = bids_root / readme_name
-        if readme_path.exists():
-            try:
-                raw_readme = readme_path.read_text(encoding="utf-8")
-                # Clean up readme: strip lines and join
-                readme = "\n".join(
-                    [line.rstrip() for line in raw_readme.splitlines() if line.strip()]
-                )
-                break
-            except Exception:
-                pass
+    readme = _read_bids_readme(bids_root)
 
-    # Extract basic metadata
     name = description.get("Name", dataset_id)
     bids_version = description.get("BIDSVersion")
     license_info = description.get("License")
@@ -546,10 +459,8 @@ def extract_dataset_metadata(
     funding = description.get("Funding", [])
     dataset_doi = description.get("DatasetDOI")
 
-    # Get files and detect modalities
     files = bids_dataset.get_files()
     modalities = set()
-    tasks = set()
     tasks = set()
     sessions = set()
     subjects = set()
@@ -560,7 +471,6 @@ def extract_dataset_metadata(
         if mod_canon:
             modalities.add(mod_canon)
 
-        # Only collect subjects/tasks/sessions if file belongs to a neuro modality
         if mod_canon in NEURO_MODALITIES:
             task = bids_dataset.get_bids_file_attribute("task", bids_file)
             if task:
@@ -572,96 +482,27 @@ def extract_dataset_metadata(
             if subject:
                 subjects.add(subject)
 
-    # Determine recording modalities (list of canonical names)
-    # Filter to only include NEURO_MODALITIES for the summary field
     recording_modalities = sorted(
         list({m for m in modalities if m in NEURO_MODALITIES})
     )
     if not recording_modalities:
         recording_modalities = ["eeg"]
 
-    # Read participants.tsv for demographics
-    subjects_count = 0
-    ages = []
-    sex_distribution = {}
-    handedness_distribution = {}
-
+    (
+        subjects_count,
+        ages,
+        sex_distribution,
+        handedness_distribution,
+    ) = _read_participants_demographics(bids_root)
     participants_path = bids_root / "participants.tsv"
-    if participants_path.exists():
-        try:
-            df = pd.read_csv(
-                participants_path, sep="\t", dtype="string", keep_default_na=False
-            )
-            subjects_count = len(df)
 
-            # Extract ages
-            age_col = None
-            for col in ["age", "Age", "AGE"]:
-                if col in df.columns:
-                    age_col = col
-                    break
-            if age_col:
-                for val in df[age_col]:
-                    try:
-                        age = int(float(val))
-                        if 0 < age < 120:
-                            ages.append(age)
-                    except (ValueError, TypeError):
-                        pass
-
-            # Extract sex distribution
-            sex_col = None
-            for col in ["sex", "Sex", "SEX", "gender", "Gender"]:
-                if col in df.columns:
-                    sex_col = col
-                    break
-            if sex_col:
-                for val in df[sex_col]:
-                    val_lower = str(val).lower().strip()
-                    if val_lower in ("m", "male"):
-                        sex_distribution["m"] = sex_distribution.get("m", 0) + 1
-                    elif val_lower in ("f", "female"):
-                        sex_distribution["f"] = sex_distribution.get("f", 0) + 1
-                    elif val_lower and val_lower not in (
-                        "n/a",
-                        "na",
-                        "nan",
-                        "unknown",
-                        "",
-                    ):
-                        sex_distribution["o"] = sex_distribution.get("o", 0) + 1
-
-            # Extract handedness distribution
-            hand_col = None
-            for col in ["handedness", "Handedness", "hand", "Hand"]:
-                if col in df.columns:
-                    hand_col = col
-                    break
-            if hand_col:
-                for val in df[hand_col]:
-                    val_lower = str(val).lower().strip()
-                    if val_lower in ("r", "right"):
-                        handedness_distribution["r"] = (
-                            handedness_distribution.get("r", 0) + 1
-                        )
-                    elif val_lower in ("l", "left"):
-                        handedness_distribution["l"] = (
-                            handedness_distribution.get("l", 0) + 1
-                        )
-                    elif val_lower in ("a", "ambidextrous"):
-                        handedness_distribution["a"] = (
-                            handedness_distribution.get("a", 0) + 1
-                        )
-
-        except Exception:
-            pass
-
-    # Warn when participants.tsv row count differs from sub-* folder count
-    folder_subjects = {
-        d.name for d in bids_root.iterdir() if d.is_dir() and d.name.startswith("sub-")
-    }
-    if participants_path.exists() and subjects_count > 0 and folder_subjects:
-        if subjects_count != len(folder_subjects):
+    if participants_path.exists() and subjects_count > 0:
+        folder_subjects = {
+            d.name
+            for d in bids_root.iterdir()
+            if d.is_dir() and d.name.startswith("sub-")
+        }
+        if folder_subjects and subjects_count != len(folder_subjects):
             logging.warning(
                 "%s: participants.tsv has %d rows but found %d sub-* folders "
                 "(possible naming convention mismatch)",
@@ -670,9 +511,7 @@ def extract_dataset_metadata(
                 len(folder_subjects),
             )
 
-    # Count subjects from directories if participants.tsv based count is inconsistent or we prefer file based
-    # User request: "count only subject from the modalities that are validated"
-    # So we should prioritize the count derived from valid files (len(subjects))
+    # Prefer subject count from validated neuro files over participants.tsv row count.
     if subjects:
         subjects_count = len(subjects)
     elif subjects_count == 0:
@@ -680,25 +519,20 @@ def extract_dataset_metadata(
             [d for d in bids_root.iterdir() if d.is_dir() and d.name.startswith("sub-")]
         )
 
-    # Check for derivatives (processed data)
     data_processed = (bids_root / "derivatives").exists()
 
-    # Build source URL
-    source_url = None
-    if source == "openneuro":
-        source_url = f"https://openneuro.org/datasets/{dataset_id}"
-    elif source == "nemar":
-        source_url = f"https://nemar.org/dataexplorer/detail/{dataset_id}"
-    elif source == "gin":
+    if source_adapter is not None:
+        source_url = source_adapter.dataset_url()
+    else:
+        source_url = None
+    if source_url is None and source == "gin":
         source_url = f"https://gin.g-node.org/EEGManyLabs/{dataset_id}"
 
-    # Extract timestamps from metadata if available
     dataset_created_at = metadata.get("dataset_created_at")
     dataset_modified_at = metadata.get("dataset_modified_at")
     senior_author = metadata.get("senior_author")
     contact_info = metadata.get("contact_info")
 
-    # Extract clinical classification fields
     is_clinical = metadata.get("is_clinical")
     clinical_purpose = metadata.get("clinical_purpose")
 
@@ -709,10 +543,7 @@ def extract_dataset_metadata(
             dataset_modified_at = ts.get("dataset_modified_at")
             dataset_created_at = ts.get("dataset_created_at") or dataset_created_at
 
-    # Extract size_bytes — prefer source API value (e.g. OpenNeuro sets this
-    # during fetch), otherwise compute from local files resolving git-annex
-    # pointers.  Do NOT trust manifest "total_size" — it was computed from
-    # clone pointer files and is wrong for git-annex datasets.
+    # Prefer API-supplied size_bytes; don't trust manifest total_size (wrong for git-annex).
     size_bytes = metadata.get("size_bytes")
     if size_bytes is None and bids_root.exists():
         size_bytes = sum(
@@ -721,90 +552,8 @@ def extract_dataset_metadata(
             if f.is_file() or f.is_symlink()
         )
 
-    # Build Storage info for global files
-    storage_info: Storage | None = None
-    if source in ("openneuro", "nemar", "gin") or source in STORAGE_CONFIGS:
-        storage_base = get_storage_base(dataset_id, source)
-        storage_backend = get_storage_backend(source)
+    storage_info = _build_global_storage_info(dataset_id, source, bids_root)
 
-        # Core global files to look for (explicit list for ordering/priority)
-        explicit_global_files = [
-            "participants.tsv",
-            "participants.json",
-            "samples.tsv",
-            "samples.json",
-            "README",
-            "README.md",
-            "README.txt",
-            "CHANGES",
-            "CHANGES.md",
-            "LICENSE",
-            "authors.tsv",
-            "dataset_description.json",
-        ]
-
-        dep_keys = []
-        raw_key = "dataset_description.json"  # Default "main" file
-        found_files = set()
-
-        # 1. Check explicit list
-        for fname in explicit_global_files:
-            fpath = bids_root / fname
-            if fpath.exists():
-                found_files.add(fname)
-                if fname == "dataset_description.json":
-                    raw_key = fname
-                else:
-                    dep_keys.append(fname)
-            else:
-                # Case-insensitive fallback
-                try:
-                    found = next(
-                        x.name
-                        for x in bids_root.iterdir()
-                        if x.name.lower() == fname.lower()
-                    )
-                    found_files.add(found)
-                    if found.lower() == "dataset_description.json":
-                        raw_key = found
-                    else:
-                        dep_keys.append(found)
-                except StopIteration:
-                    pass
-
-        # 2. Scan for other root-level BIDS files (sidecars, etc.)
-        # Exclude directories, manifest.json, and files we already found
-        ignored_files = {"manifest.json", ".ds_store"}
-        for item in bids_root.iterdir():
-            if not item.is_file():
-                continue
-
-            item_name = item.name
-            if (
-                item_name in found_files
-                or item_name.lower() in ignored_files
-                or item_name.startswith(".")
-            ):
-                continue
-
-            # Include typical BIDS metadata extensions
-            if item_name.lower().endswith(
-                (".json", ".tsv", ".txt", ".md", ".yaml", ".yml")
-            ):
-                dep_keys.append(item_name)
-                found_files.add(item_name)
-
-        # Deduplicate keys and sort
-        dep_keys = sorted(list(set(dep_keys)))
-
-        storage_info = {
-            "backend": storage_backend,  # type: ignore
-            "base": storage_base,
-            "raw_key": raw_key,
-            "dep_keys": dep_keys,
-        }
-
-    # Create Dataset document
     dataset = create_dataset(
         dataset_id=dataset_id,
         name=name,
@@ -841,308 +590,223 @@ def extract_dataset_metadata(
         clinical_purpose=clinical_purpose,
     )
 
+    description_extras = _extract_dataset_description_extras(description)
+    dataset.update(description_extras)
+
     return dict(dataset)
 
 
-def extract_record(
-    bids_dataset,
-    bids_file: str,
-    dataset_id: str,
+_PROV_MNE_BIDS = "mne_bids"
+_PROV_MODALITY_SIDECAR = "modality_sidecar"
+_PROV_CHANNELS_TSV = "channels_tsv"
+_PROV_BINARY_PARSER = "binary_parser"
+_PROV_MNE_FALLBACK = "mne_fallback"
+
+_METADATA_FIELDS: tuple[str, ...] = (
+    "sampling_frequency",
+    "nchans",
+    "ntimes",
+    "ch_names",
+)
+
+
+def _empty_provenance() -> dict[str, str | None]:
+    """A fresh provenance dict — all fields unattributed."""
+    return {field: None for field in _METADATA_FIELDS}
+
+
+def _stamp_provenance(
+    provenance: dict[str, str | None],
     source: str,
-    digested_at: str,
-    apex_sidecar_inline: dict[str, str] | None = None,
+    *,
+    field: str,
+    old_value: Any,
+    new_value: Any,
+) -> None:
+    """Record source as provenance for field if this step filled it (first writer wins)."""
+    if old_value is None and new_value is not None and provenance[field] is None:
+        provenance[field] = source
+
+
+# camelCase sidecar key → snake_case Record field (highest-leverage BIDS fields only).
+_BIDS_SIDECAR_RECORD_FIELDS: dict[str, str] = {
+    "PowerLineFrequency": "power_line_frequency",
+    "EEGReference": "eeg_reference",
+    "iEEGReference": "ieeg_reference",
+    "SoftwareFilters": "software_filters",
+    "HardwareFilters": "hardware_filters",
+    "Manufacturer": "manufacturer",
+    "ManufacturersModelName": "manufacturers_model_name",
+    "EEGPlacementScheme": "eeg_placement_scheme",
+    "CapManufacturer": "cap_manufacturer",
+    "CapManufacturersModelName": "cap_manufacturers_model_name",
+    "InstitutionName": "institution_name",
+    "RecordingType": "recording_type",
+    "RecordingDuration": "recording_duration",
+    "EEGGround": "eeg_ground",
+}
+
+
+def _extract_bids_sidecar_fields(bids_dataset: Any, bids_file: str) -> dict[str, Any]:
+    """Pull BIDS-spec sidecar fields (PowerLineFrequency, EEGReference, etc.) as structured Record fields."""
+    out: dict[str, Any] = {}
+
+    try:
+        bids_root = Path(bids_dataset.bidsdir)
+        data_file = Path(bids_file)
+        modality = bids_dataset.get_bids_file_attribute("modality", bids_file) or "eeg"
+    except (AttributeError, TypeError):
+        return {}
+
+    json_pattern = f"*_{modality}.json"
+    sidecar = _walk(data_file, bids_root, json_pattern)
+    if sidecar is None or not sidecar.exists():
+        return {}
+
+    try:
+        data = json.loads(sidecar.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError, ValueError):
+        return {}
+
+    if not isinstance(data, dict):
+        return {}
+
+    for sidecar_key, record_key in _BIDS_SIDECAR_RECORD_FIELDS.items():
+        val = data.get(sidecar_key)
+        if val is None or val == "" or val == [] or val == {}:
+            continue
+        out[record_key] = val
+    return out
+
+
+def _extract_channel_status_counts(bids_dataset: Any, bids_file: str) -> dict[str, Any]:
+    """Return bad channel names and count from channels.tsv, or {} if absent."""
+    try:
+        bids_root = Path(bids_dataset.bidsdir)
+        data_file = Path(bids_file)
+    except (AttributeError, TypeError):
+        return {}
+
+    tsv = _walk(data_file, bids_root, "*_channels.tsv")
+    if tsv is None:
+        tsv = _walk(data_file, bids_root, "channels.tsv")
+    if tsv is None or not tsv.exists():
+        return {}
+
+    bad_channels: list[str] = []
+    try:
+        with open(tsv, encoding="utf-8") as f:
+            reader = _csv.DictReader(f, delimiter="\t")
+            if reader.fieldnames is None:
+                return {}
+            status_col = next(
+                (c for c in reader.fieldnames if c.lower() == "status"), None
+            )
+            name_col = next((c for c in reader.fieldnames if c.lower() == "name"), None)
+            if status_col is None or name_col is None:
+                return {}
+            for row in reader:
+                status = str(row.get(status_col, "")).strip().lower()
+                if status == "bad":
+                    name = str(row.get(name_col, "")).strip()
+                    if name:
+                        bad_channels.append(name)
+    except (OSError, _csv.Error, UnicodeDecodeError):
+        return {}
+
+    if not bad_channels:
+        return {"bad_channels": [], "bad_channels_count": 0}
+    return {"bad_channels": bad_channels, "bad_channels_count": len(bad_channels)}
+
+
+_BIDS_DESCRIPTION_DATASET_FIELDS: dict[str, str] = {
+    "Acknowledgements": "acknowledgements",
+    "HowToAcknowledge": "how_to_acknowledge",
+    "EthicsApprovals": "ethics_approvals",
+    "ReferencesAndLinks": "references_and_links",
+    "GeneratedBy": "generated_by",
+    "SourceDatasets": "source_datasets",
+}
+
+
+def _extract_dataset_description_extras(
+    description: dict[str, Any],
 ) -> dict[str, Any]:
-    """Extract Record metadata for a single BIDS file.
+    """Pull extra dataset_description.json fields not already captured by extract_dataset_metadata."""
+    out: dict[str, Any] = {}
+    for desc_key, ds_key in _BIDS_DESCRIPTION_DATASET_FIELDS.items():
+        val = description.get(desc_key)
+        if val is None or val == "" or val == []:
+            continue
+        out[ds_key] = val
+    return out
 
-    Parameters
-    ----------
-    bids_dataset : EEGBIDSDataset
-        The BIDS dataset object
-    bids_file : str
-        Path to the BIDS file
-    dataset_id : str
-        Dataset identifier
-    source : str
-        Source name (openneuro, nemar, etc.)
-    digested_at : str
-        ISO 8601 timestamp
 
-    Returns
-    -------
-    dict
-        Record schema compliant metadata
+def _extract_technical_metadata(
+    bids_dataset: Any, bids_file: str
+) -> tuple[
+    float | None,
+    int | None,
+    int | None,
+    list[str] | None,
+    bool,
+    bool,
+    dict[str, str | None],
+]:
+    """Thin delegator to MetadataCascade — see _metadata_cascade.py for the 5-step cascade."""
+    ctx = CascadeContext(bids_dataset=bids_dataset, bids_file=bids_file)
+    result = MetadataCascade().run(ctx)
+    return (
+        result.sampling_frequency,
+        result.nchans,
+        result.ntimes,
+        result.ch_names,
+        result.fif_is_split,
+        result.fif_continuations_ok,
+        result.provenance,
+    )
 
+
+_DEP_SUFFIXES: tuple[str, ...] = (
+    "_channels.tsv",
+    "_events.tsv",
+    "_events.json",
+    "_electrodes.tsv",
+    "_coordsystem.json",
+    "_eeg.json",
+    # NIRS-specific sidecars
+    "_optodes.tsv",
+    "_optodes.json",
+    "_nirs.json",
+)
+
+
+def _build_dep_keys(
+    bids_file_path: Path,
+    bids_root: Path,
+    fif_is_split: bool,
+    fif_continuations_ok: bool,
+) -> tuple[list[str], bool, bool]:
+    """Return (dep_keys, fif_is_split, fif_continuations_ok) for one BIDS file.
+
+    Collects BIDS sidecars (channels.tsv, events.tsv, …), format-specific companions
+    (.fdt, .eeg, .vmrk), and split-FIF continuations (-1.fif, -2.fif, …).
     """
-    # Get BIDS entities
-    subject = bids_dataset.get_bids_file_attribute("subject", bids_file)
-    session = bids_dataset.get_bids_file_attribute("session", bids_file)
-    task = bids_dataset.get_bids_file_attribute("task", bids_file)
-    run = bids_dataset.get_bids_file_attribute("run", bids_file)
-    acquisition = bids_dataset.get_bids_file_attribute("acquisition", bids_file)
-    modality = bids_dataset.get_bids_file_attribute("modality", bids_file) or "eeg"
-    mod_canon = normalize_modality(modality) or "eeg"
-
-    # Get BIDS relative path (without dataset prefix)
-    bids_relpath = str(bids_dataset.get_relative_bidspath(bids_file))
-    if bids_relpath.startswith(f"{dataset_id}/"):
-        bids_relpath = bids_relpath[len(dataset_id) + 1 :]
-
-    # Determine datatype and suffix
-    datatype = mod_canon
-    suffix = mod_canon
-
-    # Get storage info
-    storage_base = get_storage_base(dataset_id, source)
-    storage_backend = get_storage_backend(source)
-
-    # Extract technical metadata from BIDS sidecars via EEGBIDSDataset
-    # Wrap in try/except to handle broken git-annex symlinks (FileNotFoundError)
-    sampling_frequency = None
-    nchans = None
-    ntimes = None
-    try:
-        sampling_frequency = bids_dataset.get_bids_file_attribute("sfreq", bids_file)
-        nchans = bids_dataset.get_bids_file_attribute("nchans", bids_file)
-        ntimes = bids_dataset.get_bids_file_attribute("ntimes", bids_file)
-    except (FileNotFoundError, OSError):
-        # BIDS sidecar JSON may be a broken git-annex symlink
-        # Fallback code below will attempt to extract from data files directly
-        pass
-
-    # Convert sfreq to float and nchans to int if found
-    if sampling_frequency:
-        sampling_frequency = float(sampling_frequency)
-    if nchans:
-        nchans = int(nchans)
-    if ntimes:
-        ntimes = int(ntimes)
-
-    # Extract channel names if channels.tsv exists
-    ch_names = None
-    try:
-        ch_names = bids_dataset.channel_labels(bids_file)
-    except Exception:
-        pass
-
-    # Prefer channel_labels count over sidecar nchans
-    # channels.tsv is the authoritative source for channel information
-    # Sidecar JSON may only have partial counts (e.g., only EEGChannelCount)
-    if ch_names:
-        nchans = len(ch_names)
-    elif not nchans:
-        # Fallback: no channels.tsv and no sidecar nchans
-        nchans = None
-
-    # ===========================================================
-    # FALLBACK: Read from BIDS sidecar files directly
-    # This handles MEG/iEEG datasets where primary extraction fails
-    # BIDS uses inheritance - sidecars can be in parent directories
-    # and may not include run/acquisition entities
-    # ===========================================================
-    bids_file_path = Path(bids_file)
-
-    # Try to find and read the modality-specific JSON sidecar (e.g., _meg.json, _eeg.json)
-    bids_root = Path(bids_dataset.bidsdir)
-    if not sampling_frequency or not nchans:
-        base_names_to_try, dirs_to_try = _build_bids_search_paths(
-            bids_file_path, bids_root
-        )
-
-        # Try modality-specific sidecars
-        for search_dir in dirs_to_try:
-            if sampling_frequency and nchans:
-                break
-            for base_name in base_names_to_try:
-                if sampling_frequency and nchans:
-                    break
-                for sidecar_suffix in [
-                    "_meg.json",
-                    "_eeg.json",
-                    "_ieeg.json",
-                    "_nirs.json",
-                ]:
-                    sidecar_path = search_dir / f"{base_name}{sidecar_suffix}"
-                    if sidecar_path.exists():
-                        try:
-                            with open(sidecar_path) as f:
-                                sidecar_data = json.load(f)
-
-                            # Extract SamplingFrequency
-                            if (
-                                not sampling_frequency
-                                and "SamplingFrequency" in sidecar_data
-                            ):
-                                sampling_frequency = float(
-                                    sidecar_data["SamplingFrequency"]
-                                )
-
-                            # Extract channel count from various BIDS fields
-                            if not nchans:
-                                # Sum all channel type counts if available
-                                channel_count_fields = [
-                                    "MEGChannelCount",
-                                    "EEGChannelCount",
-                                    "EOGChannelCount",
-                                    "ECGChannelCount",
-                                    "EMGChannelCount",
-                                    "MiscChannelCount",
-                                    "TriggerChannelCount",
-                                    "iEEGChannelCount",
-                                    "SEEGChannelCount",
-                                    "ECOGChannelCount",
-                                    "NIRSChannelCount",
-                                    "ACCELChannelCount",
-                                ]
-                                total_channels = sum(
-                                    sidecar_data.get(field, 0) or 0
-                                    for field in channel_count_fields
-                                )
-                                if total_channels > 0:
-                                    nchans = total_channels
-                            break  # Found a valid sidecar in this dir
-                        except Exception:
-                            pass
-
-    # Try to read from channels.tsv if still missing
-    if not sampling_frequency or not nchans:
-        base_names_to_try, dirs_to_try = _build_bids_search_paths(
-            bids_file_path, bids_root
-        )
-
-        for search_dir in dirs_to_try:
-            if sampling_frequency and nchans:
-                break
-            for base_name in base_names_to_try:
-                if sampling_frequency and nchans:
-                    break
-                channels_path = search_dir / f"{base_name}_channels.tsv"
-                if channels_path.exists():
-                    try:
-                        channels_df = pd.read_csv(
-                            channels_path,
-                            sep="\t",
-                            dtype="string",
-                            keep_default_na=False,
-                        )
-
-                        # Get nchans from row count
-                        if not nchans:
-                            nchans = len(channels_df)
-
-                        # Get sampling_frequency from the first valid row
-                        if not sampling_frequency:
-                            for col in ["sampling_frequency", "SamplingFrequency"]:
-                                if col in channels_df.columns:
-                                    for val in channels_df[col]:
-                                        try:
-                                            sfreq_val = float(val)
-                                            if sfreq_val > 0:
-                                                sampling_frequency = sfreq_val
-                                                break
-                                        except (ValueError, TypeError):
-                                            pass
-                                    if sampling_frequency:
-                                        break
-                        break  # Found a valid channels file
-                    except Exception:
-                        pass
-
-    # ===========================================================
-    # FALLBACK 3: Parse data files directly when sidecars missing
-    # ===========================================================
-    ext = bids_file_path.suffix.lower()
-
-    # Parser fallback helpers
-    _parsers = {
-        ".vhdr": lambda p: parse_vhdr_metadata(p),
-        ".snirf": lambda p: parse_snirf_metadata(p),
-        ".mefd": lambda p: parse_mef3_metadata(p),
-        ".edf": lambda p: _parse_edf_with_mne(p),
-        ".bdf": lambda p: _parse_edf_with_mne(p),
-        ".set": lambda p: parse_set_metadata(p),
-    }
-
-    if ext in _parsers and (
-        not sampling_frequency or not nchans or not ntimes or not ch_names
-    ):
-        md = _parsers[ext](bids_file_path)
-        if md:
-            sampling_frequency = sampling_frequency or md.get("sampling_frequency")
-            nchans = nchans or md.get("nchans")
-            ntimes = ntimes or md.get("n_times") or md.get("n_samples")
-            ch_names = ch_names or md.get("ch_names")
-
-    # VHDR: also try MNE for n_times (requires binary companion)
-    if ext == ".vhdr" and not ntimes:
-        raw = None
-        try:
-            raw = mne.io.read_raw_brainvision(
-                str(bids_file_path), preload=False, verbose=False
-            )
-            if raw.n_times and raw.n_times > 0:
-                ntimes = int(raw.n_times)
-        except Exception:
-            pass
-        finally:
-            if raw is not None:
-                try:
-                    raw.close()
-                except Exception:
-                    pass
-
-    # FIF fallback using MNE
-    fif_is_split = False
-    fif_continuations_ok = True
-    if ext == ".fif" and (not sampling_frequency or not nchans or not ntimes):
-        fif_metadata, fif_is_split = _parse_fif_with_mne(bids_file_path)
-        if fif_metadata:
-            sampling_frequency = sampling_frequency or fif_metadata.get(
-                "sampling_frequency"
-            )
-            nchans = nchans or fif_metadata.get("nchans")
-            ntimes = ntimes or fif_metadata.get("n_times")
-            ch_names = ch_names or fif_metadata.get("ch_names")
-
-    # Find dependency files (channels.tsv, events.tsv, etc.) for storage manifest
-    dep_keys = []
-    bids_file_path = Path(bids_file)
+    dep_keys: list[str] = []
     parent_dir = bids_file_path.parent
     base_name = bids_file_path.stem.rsplit("_", 1)[0]
 
-    # BIDS sidecar files
-    # Check both the file's directory and the subject root directory (for inheritance)
     search_dirs = [parent_dir]
-
-    # Try to find subject root
-    # Assumption: path is usually sub-XX/ses-YY/mod/ or sub-XX/mod/
-    # We want sub-XX/
-    parts = bids_file_path.parts
-    for i, part in enumerate(parts):
-        if part.startswith("sub-"):
-            # Subject root relative to where we are? No, relative to system.
-            # bids_file_path is absolute if passed from get_files()? No, let's check.
-            # get_files() returns absolute paths usually in MNE-BIDS context or from Path.rglob
-            # let's assume bids_file_path is absolute.
-
-            # Actually, extract_record receives `bids_file` as str. eegdash/dataset/dataset.py calls it with file path.
-            # let's use relative components logic safely.
-            pass
-
-    # Simplified approach: Look in parent, and if 'eeg'/'meg' etc is parent, look one up.
-    if parent_dir.name in NEURO_MODALITIES or parent_dir.name in [
+    if parent_dir.name in NEURO_MODALITIES or parent_dir.name in {
         "eeg",
         "meg",
         "ieeg",
         "beh",
         "nirs",
-    ]:
+    }:
         search_dirs.append(parent_dir.parent)
 
-    # Build list of base names to search: full base_name and session-level base_name
-    # Session-level sidecars (like optodes) don't have task/run entities
     base_names_to_search = [base_name]
-    # Extract session-level base name by removing task/run entities
-    # e.g., "sub-6016_ses-1_task-MA_run-01" -> "sub-6016_ses-1"
     session_base = re.sub(r"_task-[^_]+", "", base_name)
     session_base = re.sub(r"_run-[^_]+", "", session_base)
     session_base = re.sub(r"_acq-[^_]+", "", session_base)
@@ -1150,47 +814,28 @@ def extract_record(
         base_names_to_search.append(session_base)
 
     for search_dir in search_dirs:
-        for dep_suffix in [
-            "_channels.tsv",
-            "_events.tsv",
-            "_events.json",
-            "_electrodes.tsv",
-            "_coordsystem.json",
-            "_eeg.json",
-            # NIRS-specific sidecars
-            "_optodes.tsv",
-            "_optodes.json",
-            "_nirs.json",
-        ]:
+        for dep_suffix in _DEP_SUFFIXES:
             for search_base in base_names_to_search:
                 dep_file = search_dir / f"{search_base}{dep_suffix}"
                 if dep_file.exists() or dep_file.is_symlink():
                     try:
-                        dep_relpath = dep_file.relative_to(bids_dataset.bidsdir)
-                        dep_keys.append(str(dep_relpath))
+                        dep_keys.append(str(dep_file.relative_to(bids_root)))
                     except ValueError:
                         pass
 
-    # Format-specific companion files (e.g., .fdt for EEGLAB .set files)
-    # Always add BIDS-standard companions to dep_keys so the download
-    # pipeline fetches them even when the local git-annex clone is incomplete.
     ext = bids_file_path.suffix.lower()
-    companion_exts = _COMPANION_FILES.get(ext, [])
-    for comp_ext in companion_exts:
+    for comp_ext in _COMPANION_FILES.get(ext, []):
         comp_file = bids_file_path.with_suffix(comp_ext)
         try:
-            comp_relpath = comp_file.relative_to(bids_dataset.bidsdir)
-            dep_keys.append(str(comp_relpath))
+            dep_keys.append(str(comp_file.relative_to(bids_root)))
         except ValueError:
             pass
 
     if ext == ".fif":
-        # Check filesystem for split FIF continuation files
         if not fif_is_split:
             cont_check = bids_file_path.parent / f"{bids_file_path.stem}-1{ext}"
             if cont_check.exists() or cont_check.is_symlink():
                 fif_is_split = True
-
         if fif_is_split:
             fif_continuations_ok = True
             for i in range(1, 100):
@@ -1200,11 +845,108 @@ def extract_record(
                 if cont.is_symlink() and not cont.resolve().exists():
                     fif_continuations_ok = False
                 try:
-                    dep_keys.append(str(cont.relative_to(bids_dataset.bidsdir)))
+                    dep_keys.append(str(cont.relative_to(bids_root)))
                 except ValueError:
                     pass
 
-    # Validate companion files exist
+    return dep_keys, fif_is_split, fif_continuations_ok
+
+
+def _clamp_metadata_extremes(
+    sampling_frequency: float | None,
+    nchans: int | None,
+    ch_names: list[str] | None,
+    bids_relpath: str,
+    provenance: dict[str, str | None] | None = None,
+) -> tuple[float | None, int | None]:
+    """Reject impossible sfreq/nchans values (≤0) and warn on suspicious ones (>1MHz, >10000)."""
+    if sampling_frequency is not None:
+        if sampling_frequency <= 0:
+            logging.warning(
+                "Invalid sampling_frequency <= 0 for %s: %s",
+                bids_relpath,
+                sampling_frequency,
+            )
+            sampling_frequency = None
+            if provenance is not None:
+                provenance["sampling_frequency"] = None
+        elif sampling_frequency > 1_000_000:
+            logging.warning(
+                "Suspicious sampling_frequency > 1MHz for %s: %s",
+                bids_relpath,
+                sampling_frequency,
+            )
+
+    if nchans is not None:
+        if nchans <= 0:
+            logging.warning("Invalid nchans <= 0 for %s: %s", bids_relpath, nchans)
+            nchans = None
+            if provenance is not None:
+                provenance["nchans"] = None
+        elif nchans > 10000:
+            logging.warning(
+                "Suspicious nchans > 10000 for %s: %s", bids_relpath, nchans
+            )
+
+    if ch_names and nchans and len(ch_names) != nchans:
+        logging.debug(
+            "ch_names count (%d) != nchans (%d) for %s",
+            len(ch_names),
+            nchans,
+            bids_relpath,
+        )
+
+    return sampling_frequency, nchans
+
+
+def extract_record(
+    bids_dataset,
+    bids_file: str,
+    dataset_id: str,
+    source: str,
+    digested_at: str,
+    apex_sidecar_inline: dict[str, str] | None = None,
+    source_adapter: "SourceAdapter | None" = None,
+) -> dict[str, Any]:
+    """Extract Record metadata for a single BIDS file."""
+    subject = bids_dataset.get_bids_file_attribute("subject", bids_file)
+    session = bids_dataset.get_bids_file_attribute("session", bids_file)
+    task = bids_dataset.get_bids_file_attribute("task", bids_file)
+    run = bids_dataset.get_bids_file_attribute("run", bids_file)
+    acquisition = bids_dataset.get_bids_file_attribute("acquisition", bids_file)
+    modality = bids_dataset.get_bids_file_attribute("modality", bids_file) or "eeg"
+    mod_canon = normalize_modality(modality) or "eeg"
+
+    bids_relpath = strip_dataset_prefix(
+        str(bids_dataset.get_relative_bidspath(bids_file)), dataset_id
+    )
+
+    datatype = mod_canon
+    suffix = mod_canon
+
+    cfg = STORAGE_CONFIGS.get(source, DEFAULT_STORAGE_CONFIG)
+    storage_base = f"{cfg['base']}/{dataset_id}"
+    storage_backend = cfg["backend"]
+
+    (
+        sampling_frequency,
+        nchans,
+        ntimes,
+        ch_names,
+        fif_is_split,
+        fif_continuations_ok,
+        metadata_provenance,
+    ) = _extract_technical_metadata(bids_dataset, bids_file)
+    bids_file_path = Path(bids_file)
+
+    dep_keys, fif_is_split, fif_continuations_ok = _build_dep_keys(
+        bids_file_path,
+        Path(bids_dataset.bidsdir),
+        fif_is_split,
+        fif_continuations_ok,
+    )
+    ext = bids_file_path.suffix.lower()
+
     companion_validation = validate_companion_files(bids_file_path, allow_symlinks=True)
     data_integrity_issues = []
 
@@ -1216,96 +958,33 @@ def extract_record(
     for warning in companion_validation.get("warnings", []):
         logging.info("Companion file note for %s: %s", bids_relpath, warning)
 
-    # Flag split FIF files with missing continuation files
     if ext == ".fif" and fif_is_split and not fif_continuations_ok:
         data_integrity_issues.append(
             "Split FIF: continuation files not available in source"
         )
 
-    # Validate extracted metadata
-    # Check sampling_frequency is in reasonable range (0.1 Hz to 1 MHz)
-    if sampling_frequency is not None:
-        if sampling_frequency <= 0:
-            logging.warning(
-                "Invalid sampling_frequency <= 0 for %s: %s",
-                bids_relpath,
-                sampling_frequency,
-            )
-            sampling_frequency = None
-        elif sampling_frequency > 1_000_000:
-            logging.warning(
-                "Suspicious sampling_frequency > 1MHz for %s: %s",
-                bids_relpath,
-                sampling_frequency,
-            )
+    sampling_frequency, nchans = _clamp_metadata_extremes(
+        sampling_frequency,
+        nchans,
+        ch_names,
+        bids_relpath,
+        provenance=metadata_provenance,
+    )
 
-    # Check nchans is positive
-    if nchans is not None:
-        if nchans <= 0:
-            logging.warning(
-                "Invalid nchans <= 0 for %s: %s",
-                bids_relpath,
-                nchans,
-            )
-            nchans = None
-        elif nchans > 10000:
-            logging.warning(
-                "Suspicious nchans > 10000 for %s: %s",
-                bids_relpath,
-                nchans,
-            )
+    # TODO(scale): apex sidecars (dataset_description.json, README, etc.) are duplicated
+    # across every record. Move into a per-dataset side-collection when >100 MB inline
+    # payload or >500 KB participants.tsv is encountered.
+    if source_adapter is None:
+        source_adapter = get_source_adapter(source, dataset_id, bids_dataset.bidsdir)
+    bids_root_path = bids_dataset.bidsdir
+    dep_paths = [bids_root_path / dep for dep in dep_keys]
+    annex_keys, sidecar_inline = source_adapter.resolve_storage_extensions(
+        Path(bids_file), dep_paths
+    )
+    if apex_sidecar_inline:
+        for k, v in apex_sidecar_inline.items():
+            sidecar_inline.setdefault(k, v)
 
-    # Validate ch_names count matches nchans
-    if ch_names and nchans:
-        if len(ch_names) != nchans:
-            logging.debug(
-                "ch_names count (%d) != nchans (%d) for %s",
-                len(ch_names),
-                nchans,
-                bids_relpath,
-            )
-
-    # NEMAR fast-path enrichment for the runtime; see Storage TypedDict
-    # in eegdash/schemas.py for the contract.
-    #
-    # Apex BIDS files (participants.tsv, dataset_description.json, README,
-    # …) live once per dataset but mne-bids/braindecode expects them on
-    # disk per recording. We get them via the caller-provided
-    # apex_sidecar_inline (computed once per dataset; see digest_dataset)
-    # rather than re-reading from disk per record. They're stored on every
-    # record so each load is self-contained, at the cost of duplicated
-    # bytes in MongoDB.
-    #
-    # TODO(scale): two known sources of byte duplication in MongoDB:
-    #   (1) session-level sidecars (events.json shared across runs in a
-    #       session) — multi-KB × N runs in same session;
-    #   (2) apex sidecars (dataset_description.json, README, etc.)
-    #       duplicated across every record in a dataset.
-    # The structurally-correct fix is to move both classes into a per-
-    # dataset side-collection (`nemar_dataset_sidecars` keyed by
-    # (dataset_id, relpath)) referenced by record. Trigger to revisit:
-    # >100 MB inline payload for a single dataset, OR an HBN/M3CV-style
-    # ingest with a >500 KB participants.tsv.
-    annex_keys: dict[str, str] = {}
-    sidecar_inline: dict[str, str] = dict(apex_sidecar_inline or {})
-    if source == "nemar":
-        bids_root_path = bids_dataset.bidsdir  # already a Path
-        raw_annex_key = get_annex_file_key(Path(bids_file))
-        if raw_annex_key:
-            annex_keys[bids_relpath] = raw_annex_key
-        for dep in dep_keys:
-            dep_path = bids_root_path / dep
-            dep_annex_key = get_annex_file_key(dep_path)
-            if dep_annex_key:
-                annex_keys[dep] = dep_annex_key
-                continue
-            if dep in sidecar_inline:
-                continue
-            inline = read_inline_sidecar(dep_path)
-            if inline is not None:
-                sidecar_inline[dep] = inline
-
-    # Create record using the schema
     record = create_record(
         dataset=dataset_id,
         storage_base=storage_base,
@@ -1329,7 +1008,6 @@ def extract_record(
         sidecar_inline=sidecar_inline or None,
     )
 
-    # Restore participant_tsv metadata if available
     participant_tsv = bids_dataset.subject_participant_tsv(bids_file)
     if participant_tsv:
         has_real_data = any(v not in (None, "n/a") for v in participant_tsv.values())
@@ -1337,26 +1015,31 @@ def extract_record(
             logging.debug(
                 "No participant match for %s, storing column skeleton", bids_relpath
             )
-        # Convert numeric strings to floats for better API/Client compatibility
-        # but preserve participant_id as string
         for k, v in participant_tsv.items():
             if k == "participant_id":
                 continue
             if isinstance(v, str):
                 try:
-                    # Only convert if it's a simple number
                     if v.strip():
                         participant_tsv[k] = float(v)
                 except (ValueError, TypeError):
                     pass
         record["participant_tsv"] = participant_tsv
 
-    # Add data integrity information if there are issues
     if data_integrity_issues:
         record["_data_integrity_issues"] = data_integrity_issues
         record["_has_missing_files"] = True
     else:
         record["_has_missing_files"] = False
+
+    if any(v is not None for v in metadata_provenance.values()):
+        record["_metadata_provenance"] = metadata_provenance
+
+    sidecar_extras = _extract_bids_sidecar_fields(bids_dataset, bids_file)
+    record.update(sidecar_extras)
+
+    channel_status = _extract_channel_status_counts(bids_dataset, bids_file)
+    record.update(channel_status)
 
     return dict(record)
 
@@ -1367,38 +1050,20 @@ def extract_record(
 
 
 def parse_bids_entities_from_path(filepath: str) -> dict[str, Any]:
-    """Extract BIDS entities from a file path without needing actual files.
-
-    Parameters
-    ----------
-    filepath : str
-        BIDS-style file path (e.g., "sub-01/ses-01/eeg/sub-01_ses-01_task-rest_eeg.set")
-
-    Returns
-    -------
-    dict
-        Extracted BIDS entities (subject, session, task, run, modality, etc.)
-
-    """
+    """Extract BIDS entities (subject, session, task, run, modality, …) from a file path."""
     entities = {}
     filename = Path(filepath).name
     filepath_lower = filepath.lower()
     filename_lower = filename.lower()
 
-    # Extract entities from filename using BIDS naming convention
-    # Format: sub-<label>[_ses-<label>][_task-<label>][_run-<index>][_<suffix>].<extension>
-
-    # Subject
     sub_match = re.search(r"sub-([^_/.]+)", filepath)
     if sub_match:
         entities["subject"] = sub_match.group(1)
 
-    # Session
     ses_match = re.search(r"ses-([^_/.]+)", filepath)
     if ses_match:
         entities["session"] = ses_match.group(1)
 
-    # Task
     task_match = re.search(r"task-([^_/.]+)", filepath)
     if task_match:
         val = task_match.group(1)
@@ -1407,23 +1072,18 @@ def parse_bids_entities_from_path(filepath: str) -> dict[str, Any]:
         #    val = val.split("run-")[0]
         entities["task"] = val
 
-    # Run
     run_match = re.search(r"run-([^_/.]+)", filepath)
     if run_match:
         entities["run"] = run_match.group(1)
 
-    # Acquisition
     acq_match = re.search(r"acq-([^_/]+)", filepath)
     if acq_match:
         entities["acquisition"] = acq_match.group(1)
 
-    # --- Fallback for non-BIDS datasets ---
-    # If no subject or task was found using BIDS convention, use folder/filename as fallback
+    # Fallback for non-BIDS datasets: use folder/filename as subject/task when not found.
     if "subject" not in entities:
-        # Take the parent directory name if it's not the root or a standard bids folder
         parts = Path(filepath).parts
         if len(parts) > 1:
-            # Avoid using standard modality folders as subject names
             possible_sub = parts[0]
             if (
                 possible_sub.lower() not in MODALITY_DETECTION_TARGETS
@@ -1442,7 +1102,6 @@ def parse_bids_entities_from_path(filepath: str) -> dict[str, Any]:
 
     if "task" not in entities:
         stem = Path(filepath).stem
-        # Clean up common suffixes
         for mod in MODALITY_DETECTION_TARGETS:
             if stem.lower().endswith(f"_{mod}"):
                 stem = stem[: -(len(mod) + 1)]
@@ -1460,7 +1119,6 @@ def parse_bids_entities_from_path(filepath: str) -> dict[str, Any]:
         ) and not stem.lower().startswith(("sub-", "ses-")):
             entities["task"] = stem
 
-    # Determine modality/datatype from path or filename
     for mod_target in MODALITY_DETECTION_TARGETS:
         if f"/{mod_target}/" in filepath_lower or f"_{mod_target}." in filename_lower:
             ent_mod = normalize_modality(mod_target)
@@ -1483,12 +1141,10 @@ def parse_bids_entities_from_path(filepath: str) -> dict[str, Any]:
             entities["modality"] = "beh"
             entities["datatype"] = "beh"
 
-    # If no modality found via indicators, use detect_modality_from_path as fallback
     if "modality" not in entities:
         entities["modality"] = detect_modality_from_path(filepath)
         entities["datatype"] = entities["modality"]
 
-    # Extract suffix (last part before extension)
     suffix_match = re.search(r"_([^_]+)\.[^.]+$", filename)
     if suffix_match:
         entities["suffix"] = suffix_match.group(1)
@@ -1496,79 +1152,20 @@ def parse_bids_entities_from_path(filepath: str) -> dict[str, Any]:
     return entities
 
 
-def _build_bids_search_paths(
-    bids_file_path: Path, bids_root: Path
-) -> tuple[list[str], list[Path]]:
-    """Build base names and directories for BIDS inheritance sidecar search.
+def strip_dataset_prefix(bids_relpath: str, dataset_id: str) -> str:
+    """Strip the leading ``<dataset_id>/`` from a BIDS relative path if present.
 
-    BIDS uses inheritance - sidecars can be in parent directories and may not
-    include run/acquisition entities. This function generates the various base
-    name variants and directories to search when looking for sidecars.
-
-    Parameters
-    ----------
-    bids_file_path : Path
-        Path to the BIDS data file
-    bids_root : Path
-        Root directory of the BIDS dataset
-
-    Returns
-    -------
-    tuple[list[str], list[Path]]
-        A tuple of (base_names_to_try, dirs_to_try) where:
-        - base_names_to_try: List of base name variants to search for
-        - dirs_to_try: List of directories from file's parent up to BIDS root
-
+    Examples
+    --------
+    >>> strip_dataset_prefix("ds002893/sub-001/eeg/x.set", "ds002893")
+    'sub-001/eeg/x.set'
+    >>> strip_dataset_prefix("sub-001/eeg/x.set", "ds002893")
+    'sub-001/eeg/x.set'
     """
-    # Parse entities from the file name
-    # e.g., "sub-13_ses-meg_task-facerecognition_run-05_meg.fif"
-    stem = bids_file_path.stem  # "sub-13_ses-meg_task-facerecognition_run-05_meg"
-    parts = stem.split("_")
-
-    # Build different base name variants for BIDS inheritance
-    # Full base: sub-13_ses-meg_task-facerecognition_run-05
-    # Without run: sub-13_ses-meg_task-facerecognition
-    # Without run and acq: sub-13_ses-meg_task-facerecognition
-    base_names_to_try: list[str] = []
-
-    # Get base without the modality suffix (last part)
-    full_base = "_".join(parts[:-1]) if len(parts) > 1 else stem
-
-    # Add full base first
-    base_names_to_try.append(full_base)
-
-    # Try without run-XX
-    if "_run-" in full_base:
-        without_run = "_".join(p for p in parts[:-1] if not p.startswith("run-"))
-        base_names_to_try.append(without_run)
-
-    # Try without acquisition too
-    if "_acq-" in full_base:
-        without_acq_run = "_".join(
-            p
-            for p in parts[:-1]
-            if not p.startswith("run-") and not p.startswith("acq-")
-        )
-        base_names_to_try.append(without_acq_run)
-
-    # Build task-only base name for BIDS inheritance
-    # e.g., task-MIpost from sub-xp108_task-MIpost_eeg
-    task_part = next((p for p in parts if p.startswith("task-")), None)
-    if task_part and task_part not in base_names_to_try:
-        base_names_to_try.append(task_part)
-
-    # Directories to search - walk up to BIDS root for proper inheritance
-    # BIDS inheritance: sidecars can be at any level from root to file's directory
-    parent_dir = bids_file_path.parent
-    dirs_to_try: list[Path] = [parent_dir]
-    current = parent_dir
-    while current != bids_root and current.parent != current:
-        current = current.parent
-        dirs_to_try.append(current)
-        if current == bids_root:
-            break
-
-    return base_names_to_try, dirs_to_try
+    prefix = f"{dataset_id}/"
+    if bids_relpath.startswith(prefix):
+        return bids_relpath[len(prefix) :]
+    return bids_relpath
 
 
 def normalize_modality(modality: str | None) -> str | None:
@@ -1600,32 +1197,12 @@ def _load_neuro_data_extensions() -> set[str]:
 
 
 def is_neuro_data_file(filepath: str) -> bool:
-    """Check if file is a neurophysiology data file (EEG, MEG, iEEG, EMG, fNIRS).
-
-    Uses MNE-BIDS ALLOWED_DATATYPE_EXTENSIONS for extension detection.
-    Handles CTF MEG .ds directories specially - only matches the .ds path,
-    not internal files like .meg4, .res4, etc.
-
-    Parameters
-    ----------
-    filepath : str
-        Path to check (BIDS-style relative path)
-
-    Returns
-    -------
-    bool
-        True if file appears to be neurophysiology data
-
-    """
+    """Return True if the path is a neurophysiology data file (EEG, MEG, iEEG, EMG, fNIRS)."""
     filepath_lower = filepath.lower()
 
-    # Skip files in derivatives folders - these are processed data, not raw recordings
-    # Common patterns: /derivatives/, /derivative/, derivatives at root level
     if "/derivatives/" in filepath_lower or filepath_lower.startswith("derivatives/"):
         return False
 
-    # Skip BIDS sidecar/metadata files - these are never data files
-    # even when located in modality folders
     sidecar_extensions = {
         ".json",
         ".tsv",
@@ -1639,28 +1216,20 @@ def is_neuro_data_file(filepath: str) -> bool:
         if filepath_lower.endswith(ext):
             return False
 
-    # Skip files inside CTF .ds directories (we want the .ds directory itself)
-    # e.g., skip "sub-01_meg.ds/sub-01_meg.meg4" but keep "sub-01_meg.ds"
     if ".ds/" in filepath_lower:
         return False
 
-    # Also skip CTF internal files by extension
     for ext in CTF_INTERNAL_EXTENSIONS:
         if filepath_lower.endswith(ext):
             return False
 
-    # Skip files inside MEF3 .mefd directories (we want the .mefd directory itself)
-    # e.g., skip "sub-01_ieeg.mefd/LTG9.timd/LTG9-000000.segd/LTG9-000000.tdat"
-    # but keep "sub-01_ieeg.mefd"
     if ".mefd/" in filepath_lower:
         return False
 
-    # Also skip MEF3 internal files by extension
     for ext in MEF3_INTERNAL_EXTENSIONS:
         if filepath_lower.endswith(ext):
             return False
 
-    # Skip MEF3 internal directories that may appear in archive listings
     for internal_dir in MEF3_INTERNAL_DIRS:
         if (
             filepath_lower.endswith(internal_dir)
@@ -1668,22 +1237,16 @@ def is_neuro_data_file(filepath: str) -> bool:
         ):
             return False
 
-    # Check for modality indicators (makes detection more robust for non-BIDS)
     for modality in MODALITY_DETECTION_TARGETS:
         if f"/{modality}/" in filepath_lower or f"_{modality}." in filepath_lower:
             return True
 
-    # Check for data file extensions from MNE-BIDS
     data_exts = _load_neuro_data_extensions()
     is_data_ext = any(filepath_lower.endswith(ext) for ext in data_exts)
 
-    # If NO modality indicator, RELAX:
-    # Still count it if it's a known data extension (typical for Zenodo/SciDB/etc.)
     if is_data_ext:
         return True
 
-    # Also allow .zip files if they seem to be subject/session zips (common on Zenodo)
-    # OR if it's a generic "Dataset.zip" or variants which often hold the raw data
     if filepath_lower.endswith(".zip"):
         if (
             "sub-" in filepath_lower
@@ -1697,180 +1260,90 @@ def is_neuro_data_file(filepath: str) -> bool:
 
 
 def detect_modality_from_path(filepath: str) -> str:
-    """Detect the recording modality from a file path.
-
-    Parameters
-    ----------
-    filepath : str
-        BIDS-style file path
-
-    Returns
-    -------
-    str
-        Detected modality (eeg, meg, ieeg, emg, nirs) or 'eeg' as default
-
-    """
+    """Detect the recording modality from a BIDS-style file path; defaults to 'eeg'."""
     filepath_lower = filepath.lower()
 
     for modality in MODALITY_DETECTION_TARGETS:
-        # Check folder pattern first (more reliable)
         if f"/{modality}/" in filepath_lower:
             return normalize_modality(modality) or "eeg"
         # Check suffix pattern
         if f"_{modality}." in filepath_lower:
             return normalize_modality(modality) or "eeg"
 
-    return "eeg"  # Default fallback
+    return "eeg"
 
 
-# Keep old function name as alias for backward compatibility
-def is_eeg_data_file(filepath: str) -> bool:
-    """Check if file is a neurophysiology data file. Alias for is_neuro_data_file."""
-    return is_neuro_data_file(filepath)
-
-
-def digest_from_manifest(
+def _determine_manifest_storage_base(
+    source: str,
     dataset_id: str,
-    input_dir: Path,
-    output_dir: Path,
-) -> dict[str, Any]:
-    """Digest a dataset from its manifest.json without requiring actual files.
+    manifest: dict,
+) -> str:
+    """Resolve the canonical storage.base for a manifest-only ingest.
 
-    This is used for API-only sources (OSF, Figshare, Zenodo) where we have
-    file listings but no actual files on disk.
-
-    Parameters
-    ----------
-    dataset_id : str
-        Dataset identifier
-    input_dir : Path
-        Directory containing cloned datasets (with manifest.json)
-    output_dir : Path
-        Directory for output JSON files
-
-    Returns
-    -------
-    dict
-        Summary of digestion results
-
+    Sanity-checks any explicit manifest storage_base against the source config to prevent
+    misrouted downloads (e.g. s3://openneuro.org written for NEMAR datasets).
     """
-    dataset_dir = input_dir / dataset_id
-    dataset_output_dir = output_dir / dataset_id
-    manifest_path = dataset_dir / "manifest.json"
-
-    if not manifest_path.exists():
-        return {
-            "status": "skipped",
-            "dataset_id": dataset_id,
-            "reason": "manifest.json not found",
-        }
-
-    # Load manifest
-    try:
-        with open(manifest_path) as f:
-            manifest = json.load(f)
-    except Exception as e:
-        return {
-            "status": "error",
-            "dataset_id": dataset_id,
-            "error": f"Failed to load manifest: {e}",
-        }
-
-    source = _reconcile_source(
-        manifest.get("source"), dataset_id, context="digest_from_manifest"
-    )
-    digested_at = datetime.now(timezone.utc).isoformat()
-
-    # Get file list from manifest
-    files = manifest.get("files", [])
-
-    if not files:
-        return {
-            "status": "empty",
-            "dataset_id": dataset_id,
-            "reason": "no files in manifest",
-        }
-
-    # Check for ZIP contents (files extracted from subject ZIPs)
-    zip_contents = manifest.get("zip_contents", [])
-
-    # Determine storage base based on source
-    # First check if manifest has explicit storage_base (from fetch step)
     storage_base = manifest.get("storage_base")
 
     if not storage_base:
-        # Build storage base from source configuration
-        config = get_storage_config(source)
-        base = config["base"]
+        base = STORAGE_CONFIGS.get(source, DEFAULT_STORAGE_CONFIG)["base"]
 
         if source == "figshare":
-            # Figshare: use source_url from external_links if available
+            # Figshare: use source_url from external_links if available.
             source_url = manifest.get("external_links", {}).get("source_url", "")
-            storage_base = source_url if source_url else f"{base}/{dataset_id}"
-        elif source == "zenodo":
-            # Zenodo: use zenodo_id if available
+            return source_url if source_url else f"{base}/{dataset_id}"
+        if source == "zenodo":
             zenodo_id = manifest.get("zenodo_id", dataset_id)
-            storage_base = f"{base}/{zenodo_id}"
-        elif source == "osf":
-            # OSF: use osf_id if available
+            return f"{base}/{zenodo_id}"
+        if source == "osf":
             osf_id = manifest.get("osf_id", dataset_id)
-            storage_base = f"{base}/{osf_id}"
-        elif source == "gin":
-            # GIN: include organization in path
+            return f"{base}/{osf_id}"
+        if source == "gin":
             org = manifest.get("organization", "EEGManyLabs")
-            storage_base = f"{base}/{org}/{dataset_id}"
-        else:
-            # Default: use base/dataset_id pattern
-            storage_base = f"{base}/{dataset_id}"
-    else:
-        # Sanity-check explicit storage_base against the resolved source.
-        # 2_clone.py used to write ``s3://openneuro.org/<id>`` for any
-        # git-cloned dataset, including NEMAR — that value reached MongoDB
-        # as ``storage.base`` and we'd 404 on download. Reject the mismatch
-        # here so the bad value never gets written again.
-        expected_prefix = get_storage_config(source).get("base", "")
-        if expected_prefix and not str(storage_base).startswith(expected_prefix):
-            print(
-                f"WARNING [digest]: {dataset_id} manifest storage_base="
-                f"{storage_base!r} does not start with {expected_prefix!r} "
-                f"for source={source!r}; rebuilding from source config.",
-                file=sys.stderr,
-            )
-            storage_base = f"{expected_prefix}/{dataset_id}"
+            return f"{base}/{org}/{dataset_id}"
+        return f"{base}/{dataset_id}"
 
-    # Collect BIDS entities from file paths (both direct files and ZIP contents)
-    subjects = set()
-    sessions = set()
-    tasks = set()
-    modalities = set()
+    expected_prefix = STORAGE_CONFIGS.get(source, DEFAULT_STORAGE_CONFIG).get(
+        "base", ""
+    )
+    if expected_prefix and not str(storage_base).startswith(expected_prefix):
+        print(
+            f"WARNING [digest]: {dataset_id} manifest storage_base="
+            f"{storage_base!r} does not start with {expected_prefix!r} "
+            f"for source={source!r}; rebuilding from source config.",
+            file=sys.stderr,
+        )
+        return f"{expected_prefix}/{dataset_id}"
 
-    all_paths = []
+    return storage_base
+
+
+def _collect_bids_entities_from_paths(
+    files: list, zip_contents: list
+) -> tuple[set[str], set[str], set[str], set[str]]:
+    """Parse BIDS entities from all file paths (including ZIP contents); return (subjects, sessions, tasks, modalities)."""
+    subjects: set[str] = set()
+    sessions: set[str] = set()
+    tasks: set[str] = set()
+    modalities: set[str] = set()
+
+    all_paths: list[str] = []
     for f in files:
         filepath = f.get("path", "") if isinstance(f, dict) else f
         all_paths.append(filepath)
-
         # Check if this file has extracted ZIP contents
         if isinstance(f, dict) and f.get("_zip_contents"):
             for zf in f["_zip_contents"]:
                 zpath = zf.get("path", "") if isinstance(zf, dict) else zf
                 all_paths.append(zpath)
 
-    # Also add any separately stored zip_contents
     for zpath in zip_contents:
-        if isinstance(zpath, dict):
-            all_paths.append(zpath.get("path", ""))
-        else:
-            all_paths.append(zpath)
+        all_paths.append(zpath.get("path", "") if isinstance(zpath, dict) else zpath)
 
-    # Extract BIDS entities from all paths
     for filepath in all_paths:
         entities = parse_bids_entities_from_path(filepath)
-
-        # Always track modalities found
         if entities.get("modality"):
             modalities.add(entities["modality"])
-
-        # Only count subjects/sessions/tasks for supported neuro modalities
         if entities.get("modality") in NEURO_MODALITIES:
             if entities.get("subject"):
                 subjects.add(entities["subject"])
@@ -1879,11 +1352,446 @@ def digest_from_manifest(
             if entities.get("task"):
                 tasks.add(entities["task"])
 
-    # Get demographics from manifest
+    return subjects, sessions, tasks, modalities
+
+
+def _fetch_subject_count_via_http(files: list, fallback: int) -> int:
+    """Last-resort HTTP fetch of dataset_description.json or participants.tsv to determine subject count."""
+    desc_url = None
+    participants_url = None
+    for f in files:
+        if isinstance(f, dict):
+            path = f.get("path", "").lower()
+            url = f.get("download_url")
+            if path.endswith("dataset_description.json"):
+                desc_url = url
+            elif path.endswith("participants.tsv"):
+                participants_url = url
+
+    subjects_count = fallback
+    if desc_url:
+        try:
+            resp = _http_client().get(desc_url, timeout=10)
+            resp.raise_for_status()
+            desc_data = json.loads(resp.content.decode("utf-8"))
+            if "Subjects" in desc_data:  # heuristic
+                subjects_count = int(desc_data["Subjects"])
+        except (
+            httpx.HTTPError,
+            RuntimeError,
+            OSError,
+            json.JSONDecodeError,
+            UnicodeDecodeError,
+            ValueError,
+            KeyError,
+        ) as e:
+            print(f"Failed to fetch/parse dataset_description.json: {e}")
+
+    if subjects_count == 0 and participants_url:
+        try:
+            resp = _http_client().get(participants_url, timeout=10)
+            resp.raise_for_status()
+            content = resp.content.decode("utf-8")
+            lines = [line for line in content.splitlines() if line.strip()]
+            if len(lines) > 1:  # subtract the header
+                subjects_count = len(lines) - 1
+        except (
+            httpx.HTTPError,
+            RuntimeError,
+            OSError,
+            UnicodeDecodeError,
+            ValueError,
+        ) as e:
+            print(f"Failed to fetch/parse participants.tsv: {e}")
+
+    return subjects_count
+
+
+def _build_zip_extracted_records(
+    file_info: dict,
+    dataset_id: str,
+    storage_base: str,
+    digested_at: str,
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    """Synthesize Records for neuro files inside a peeked ZIP (_zip_contents), stamping container_url."""
+    records: list[dict[str, Any]] = []
+    errors: list[dict[str, Any]] = []
+    zip_name = file_info.get("name", "")
+    zip_download_url = file_info.get("download_url", "")
+
+    for zf in file_info.get("_zip_contents", []):
+        zf_path = zf.get("path", "") if isinstance(zf, dict) else zf
+        zf_size = zf.get("size", 0) if isinstance(zf, dict) else 0
+
+        if not is_neuro_data_file(zf_path):
+            continue
+        try:
+            entities = parse_bids_entities_from_path(zf_path)
+            detected_modality = detect_modality_from_path(zf_path)
+            record = create_record(
+                dataset=dataset_id,
+                storage_base=storage_base,
+                bids_relpath=zf_path,
+                subject=entities.get("subject"),
+                session=entities.get("session"),
+                task=entities.get("task"),
+                run=entities.get("run"),
+                acquisition=entities.get("acquisition"),
+                dep_keys=[],
+                datatype=entities.get("datatype", detected_modality),
+                suffix=entities.get("suffix", detected_modality),
+                storage_backend="https",
+                recording_modality=[detected_modality],
+                digested_at=digested_at,
+            )
+            if zip_download_url:
+                record["container_url"] = zip_download_url
+                record["container_type"] = "zip"
+                record["container_name"] = zip_name
+            if zf_size:
+                record["file_size"] = zf_size
+            records.append(dict(record))
+        except (KeyError, ValueError, TypeError) as e:
+            errors.append({"file": zf_path, "error": str(e)})
+
+    return records, errors
+
+
+def _build_subject_zip_record(
+    file_info: dict,
+    dataset_id: str,
+    storage_base: str,
+    primary_mod: str,
+    recording_modality_val: list[str],
+    digested_at: str,
+) -> tuple[dict[str, Any] | None, list[dict[str, Any]]]:
+    """Synthesize a placeholder Record for a sub-<id>.zip archive (runtime downloads and extracts)."""
+    filepath = file_info.get("path", "")
+    download_url = file_info.get("download_url")
+    file_size = file_info.get("size", 0)
+
+    subject_match = re.match(r"^(sub-[a-zA-Z0-9]+)\.zip$", filepath, re.IGNORECASE)
+    if not subject_match:
+        return None, []
+    subject_id = subject_match.group(1)
+    try:
+        record = create_record(
+            dataset=dataset_id,
+            storage_base=storage_base,
+            bids_relpath=(f"{subject_id}/{primary_mod}/{subject_id}_{primary_mod}.set"),
+            subject=subject_id.replace("sub-", ""),
+            session=None,
+            task=None,
+            run=None,
+            dep_keys=[],
+            datatype=primary_mod,
+            suffix=primary_mod,
+            storage_backend="https",
+            recording_modality=recording_modality_val,
+            digested_at=digested_at,
+        )
+        if download_url:
+            record["container_url"] = download_url
+            record["container_type"] = "zip"
+            record["container_name"] = filepath
+            record["zip_contains_bids"] = True
+        if file_size:
+            record["container_size"] = file_size
+        return dict(record), []
+    except (KeyError, ValueError, TypeError) as e:
+        return None, [{"file": filepath, "error": str(e)}]
+
+
+_BIDS_DATA_ZIP_PATTERNS: tuple[str, ...] = (
+    r".*bids.*\.zip$",
+    r".*_eeg\.zip$",
+    r".*_meg\.zip$",
+    r".*_ieeg\.zip$",
+    r".*dataset.*\.zip$",
+    r".*rawdata.*\.zip$",
+    r".*data\.zip$",
+    r".*eeg.*\.zip$",
+    r".*meg.*\.zip$",
+    r".*nirs.*\.zip$",
+    r".*fnirs.*\.zip$",
+)
+
+
+def _is_bids_data_zip(filepath: str) -> bool:
+    """Whether the filename matches one of the known BIDS-bundle ZIP shapes.
+
+    BIDS-data ZIPs (``data_bids.zip``, ``*_eeg.zip``, ...) bundle the
+    whole dataset; we emit inferred per-subject Records based on the
+    manifest's demographics counts.
+    """
+    fp_lower = filepath.lower()
+    return any(re.match(p, fp_lower) for p in _BIDS_DATA_ZIP_PATTERNS)
+
+
+def _build_bids_data_zip_records(
+    file_info: dict,
+    manifest: dict,
+    dataset_id: str,
+    storage_base: str,
+    source: str,
+    primary_mod: str,
+    recording_modality_val: list[str],
+    digested_at: str,
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    """Synthesize Records for a BIDS-bundled ZIP: one per inferred subject (capped at 200), or a single placeholder."""
+    records: list[dict[str, Any]] = []
+    errors: list[dict[str, Any]] = []
+    filepath = file_info.get("path", "")
+    download_url = file_info.get("download_url")
+    file_size = file_info.get("size", 0)
+
     demographics = manifest.get("demographics", {})
-    # User request: "count only subject from the modalities that are validated"
-    # So we prefer the count from valid files (len(subjects)) if available.
-    # If not found from files, check manifest's demographic subjects_count or bids_subject_count.
+    inferred_subjects = demographics.get("subjects_count", 0)
+
+    if inferred_subjects and inferred_subjects > 0:
+        for sub_idx in range(1, min(inferred_subjects + 1, 201)):
+            sub_id = f"{sub_idx:02d}" if inferred_subjects < 100 else f"{sub_idx:03d}"
+            try:
+                record = create_record(
+                    dataset=dataset_id,
+                    storage_base=storage_base,
+                    bids_relpath=(
+                        f"sub-{sub_id}/{primary_mod}/sub-{sub_id}_{primary_mod}.set"
+                    ),
+                    subject=sub_id,
+                    session=None,
+                    task=manifest.get("tasks", [None])[0]
+                    if manifest.get("tasks")
+                    else None,
+                    run=None,
+                    dep_keys=[],
+                    datatype=primary_mod,
+                    suffix=primary_mod,
+                    storage_backend="https",
+                    recording_modality=recording_modality_val,
+                    digested_at=digested_at,
+                )
+                if download_url:
+                    record["container_url"] = download_url
+                    record["container_type"] = "zip"
+                    record["container_name"] = filepath
+                    record["needs_extraction"] = True
+                    record["inferred_from_metadata"] = True
+                if file_size:
+                    record["container_size"] = file_size
+                records.append(dict(record))
+            except (KeyError, ValueError, TypeError) as e:
+                errors.append({"file": f"sub-{sub_id}", "error": str(e)})
+        return records, errors
+
+    try:
+        record = create_record(
+            dataset=dataset_id,
+            storage_base=storage_base,
+            bids_relpath=f"__ZIP__/{filepath}",
+            subject=None,
+            session=None,
+            task=None,
+            run=None,
+            dep_keys=[],
+            datatype=primary_mod,
+            suffix=primary_mod,
+            storage_backend=STORAGE_CONFIGS.get(source, DEFAULT_STORAGE_CONFIG)[
+                "backend"
+            ],
+            recording_modality=recording_modality_val,
+            digested_at=digested_at,
+        )
+        if download_url:
+            record["container_url"] = download_url
+            record["container_type"] = "zip"
+            record["container_name"] = filepath
+            record["needs_extraction"] = True
+        if file_size:
+            record["container_size"] = file_size
+        records.append(dict(record))
+    except (KeyError, ValueError, TypeError) as e:
+        errors.append({"file": filepath, "error": str(e)})
+
+    return records, errors
+
+
+def _build_regular_manifest_record(
+    file_info: dict | str,
+    dataset_id: str,
+    storage_base: str,
+    source: str,
+    digested_at: str,
+) -> tuple[dict[str, Any] | None, list[dict[str, Any]]]:
+    """Synthesize a Record for a regular (non-ZIP) neuro file in the manifest."""
+    if isinstance(file_info, dict):
+        filepath = file_info.get("path", "")
+        download_url = file_info.get("download_url")
+        file_size = file_info.get("size", 0)
+    else:
+        filepath = file_info
+        download_url = None
+        file_size = 0
+
+    if not is_neuro_data_file(filepath):
+        return None, []
+
+    try:
+        entities = parse_bids_entities_from_path(filepath)
+        detected_modality = detect_modality_from_path(filepath)
+        record = create_record(
+            dataset=dataset_id,
+            storage_base=storage_base,
+            bids_relpath=filepath,
+            subject=entities.get("subject"),
+            session=entities.get("session"),
+            task=entities.get("task"),
+            run=entities.get("run"),
+            acquisition=entities.get("acquisition"),
+            dep_keys=[],
+            datatype=entities.get("datatype", detected_modality),
+            suffix=entities.get("suffix", detected_modality),
+            storage_backend=STORAGE_CONFIGS.get(source, DEFAULT_STORAGE_CONFIG)[
+                "backend"
+            ],
+            recording_modality=[detected_modality],
+            digested_at=digested_at,
+        )
+        if download_url:
+            record["download_url"] = download_url
+        if file_size:
+            record["file_size"] = file_size
+        return dict(record), []
+    except (KeyError, ValueError, TypeError) as e:
+        return None, [{"file": filepath, "error": str(e)}]
+
+
+def _build_standalone_zip_content_records(
+    zip_contents: list,
+    dataset_id: str,
+    storage_base: str,
+    digested_at: str,
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    """Synthesize Records from the manifest's top-level zip_contents array (OSF enhanced fetch shape)."""
+    records: list[dict[str, Any]] = []
+    errors: list[dict[str, Any]] = []
+    for zpath in zip_contents:
+        if isinstance(zpath, dict):
+            filepath = zpath.get("path", "")
+            file_size = zpath.get("size", 0)
+        else:
+            filepath = zpath
+            file_size = 0
+
+        if not is_neuro_data_file(filepath):
+            continue
+        try:
+            entities = parse_bids_entities_from_path(filepath)
+            detected_modality = detect_modality_from_path(filepath)
+            record = create_record(
+                dataset=dataset_id,
+                storage_base=storage_base,
+                bids_relpath=filepath,
+                subject=entities.get("subject"),
+                session=entities.get("session"),
+                task=entities.get("task"),
+                run=entities.get("run"),
+                acquisition=entities.get("acquisition"),
+                dep_keys=[],
+                datatype=entities.get("datatype", detected_modality),
+                suffix=entities.get("suffix", detected_modality),
+                storage_backend="https",
+                recording_modality=[detected_modality],
+                digested_at=digested_at,
+            )
+            if file_size:
+                record["file_size"] = file_size
+            records.append(dict(record))
+        except (KeyError, ValueError, TypeError) as e:
+            errors.append({"file": filepath, "error": str(e)})
+    return records, errors
+
+
+def _build_ctf_ds_records(
+    files: list,
+    dataset_id: str,
+    storage_base: str,
+    source: str,
+    digested_at: str,
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    """De-duplicate inner CTF .ds file entries to one Record per .ds directory."""
+    ctf_ds_dirs: set[str] = set()
+    for file_info in files:
+        filepath = (
+            file_info.get("path", "") if isinstance(file_info, dict) else file_info
+        )
+        filepath_lower = filepath.lower()
+        if ".ds/" in filepath_lower:
+            # Extract the .ds directory path (everything up to and including ".ds")
+            ds_idx = filepath_lower.index(".ds/") + 3  # +3 to include ".ds"
+            ctf_ds_dirs.add(filepath[:ds_idx])  # use original case
+
+    records: list[dict[str, Any]] = []
+    errors: list[dict[str, Any]] = []
+    for ds_path in ctf_ds_dirs:
+        try:
+            entities = parse_bids_entities_from_path(ds_path)
+            detected_modality = detect_modality_from_path(ds_path)
+            record = create_record(
+                dataset=dataset_id,
+                storage_base=storage_base,
+                bids_relpath=ds_path,
+                subject=entities.get("subject"),
+                session=entities.get("session"),
+                task=entities.get("task"),
+                run=entities.get("run"),
+                acquisition=entities.get("acquisition"),
+                dep_keys=[],
+                datatype=entities.get("datatype", detected_modality),
+                suffix=entities.get("suffix", detected_modality),
+                storage_backend=STORAGE_CONFIGS.get(source, DEFAULT_STORAGE_CONFIG)[
+                    "backend"
+                ],
+                recording_modality=[detected_modality],
+                digested_at=digested_at,
+            )
+            records.append(dict(record))
+        except (KeyError, ValueError, TypeError) as e:
+            errors.append({"file": ds_path, "error": str(e)})
+
+    return records, errors
+
+
+def _enumerate_via_manifest(
+    dataset_id: str,
+    manifest: dict,
+    digested_at: str,
+) -> tuple[EnumerationResult, int]:
+    """Build an EnumerationResult from a parsed manifest.json; returns (result, total_files)."""
+    source = _reconcile_source(
+        manifest.get("source"), dataset_id, context="digest_from_manifest"
+    )
+
+    files = manifest.get("files", [])
+    if not files:
+        return (
+            EnumerationResult(
+                dataset_meta={"dataset_id": dataset_id, "source": source},
+                digest_method="manifest_only",
+            ),
+            0,
+        )
+
+    zip_contents = manifest.get("zip_contents", [])
+
+    storage_base = _determine_manifest_storage_base(source, dataset_id, manifest)
+
+    subjects, sessions, tasks, modalities = _collect_bids_entities_from_paths(
+        files, zip_contents
+    )
+
+    demographics = manifest.get("demographics", {})
+    # Prefer subject count from validated neuro files over manifest demographics.
     subjects_count = (
         len(subjects)
         if subjects
@@ -1893,62 +1801,23 @@ def digest_from_manifest(
         )
     )
 
-    # Fallback: Try to fetch metadata files if counts/tasks are missing
     if subjects_count == 0 or not tasks:
-        # Look for key metadata files in the file list
-        desc_url = None
-        participants_url = None
-
-        for f in files:
-            if isinstance(f, dict):
-                path = f.get("path", "").lower()
-                url = f.get("download_url")
-                if path.endswith("dataset_description.json"):
-                    desc_url = url
-                elif path.endswith("participants.tsv"):
-                    participants_url = url
-
-        # Try dataset_description.json first
-        if desc_url:
-            try:
-                with urllib.request.urlopen(desc_url, timeout=10) as response:
-                    desc_data = json.loads(response.read().decode("utf-8"))
-                    # Some datasets put subject count here
-                    if "Subjects" in desc_data:  # heuristic
-                        subjects_count = int(desc_data["Subjects"])
-            except Exception as e:
-                print(f"Failed to fetch/parse dataset_description.json: {e}")
-
-        # Try participants.tsv if still 0
-        if subjects_count == 0 and participants_url:
-            try:
-                with urllib.request.urlopen(participants_url, timeout=10) as response:
-                    content = response.read().decode("utf-8")
-                    lines = [l for l in content.splitlines() if l.strip()]
-                    # Subtract header
-                    if len(lines) > 1:
-                        subjects_count = len(lines) - 1
-            except Exception as e:
-                print(f"Failed to fetch/parse participants.tsv: {e}")
+        subjects_count = _fetch_subject_count_via_http(files, fallback=subjects_count)
     ages = demographics.get("ages", [])
 
-    # Get DOI from manifest (OSF enhanced clone provides this)
     dataset_doi = manifest.get("dataset_doi")
     if not dataset_doi:
         identifiers = manifest.get("identifiers", {})
         dataset_doi = identifiers.get("doi")
 
-    # Get source URL (prefer explicit URL, fallback to OSF URL)
     source_url = manifest.get("external_links", {}).get("source_url")
     if not source_url:
         source_url = manifest.get("external_links", {}).get("osf_url")
 
     fingerprint = fingerprint_from_manifest(dataset_id, source, manifest)
 
-    # Determine recording modalities
     recording_modality_val = manifest.get("recording_modality")
     if isinstance(recording_modality_val, str):
-        # Support both + and , as separators and wrap in list
         recording_modality_val = [
             m.strip()
             for m in recording_modality_val.replace("+", ",").split(",")
@@ -1956,7 +1825,6 @@ def digest_from_manifest(
         ]
 
     if recording_modality_val:
-        # Normalize and filter
         recording_modality_val = [normalize_modality(m) for m in recording_modality_val]
         recording_modality_val = sorted(
             list({m for m in recording_modality_val if m in NEURO_MODALITIES})
@@ -1966,10 +1834,8 @@ def digest_from_manifest(
             list({m for m in modalities if m in NEURO_MODALITIES})
         ) or ["eeg"]
 
-    # Use first neuro modality for BIDS path construction in placeholders
     primary_mod = recording_modality_val[0] if recording_modality_val else "eeg"
 
-    # Build Dataset document
     dataset_doc = create_dataset(
         dataset_id=dataset_id,
         name=manifest.get("name"),
@@ -1994,488 +1860,259 @@ def digest_from_manifest(
     )
     dataset_doc["ingestion_fingerprint"] = fingerprint
 
-    # Generate Records for EEG data files
     records = []
     errors = []
 
-    # First pass: Extract unique CTF .ds directory paths from files inside them
-    # CTF MEG stores data in .ds directories, but manifests list individual files
-    ctf_ds_dirs = set()
-    for file_info in files:
-        if isinstance(file_info, dict):
-            filepath = file_info.get("path", "")
-        else:
-            filepath = file_info
-
-        filepath_lower = filepath.lower()
-        if ".ds/" in filepath_lower:
-            # Extract the .ds directory path (everything up to and including .ds)
-            ds_idx = filepath_lower.index(".ds/") + 3  # +3 to include ".ds"
-            ds_path = filepath[:ds_idx]  # Use original case
-            ctf_ds_dirs.add(ds_path)
-
-    # Create records for CTF .ds directories
-    for ds_path in ctf_ds_dirs:
-        try:
-            entities = parse_bids_entities_from_path(ds_path)
-            detected_modality = detect_modality_from_path(ds_path)
-
-            record = create_record(
-                dataset=dataset_id,
-                storage_base=storage_base,
-                bids_relpath=ds_path,
-                subject=entities.get("subject"),
-                session=entities.get("session"),
-                task=entities.get("task"),
-                run=entities.get("run"),
-                acquisition=entities.get("acquisition"),
-                dep_keys=[],
-                datatype=entities.get("datatype", detected_modality),
-                suffix=entities.get("suffix", detected_modality),
-                storage_backend=get_storage_backend(source),
-                recording_modality=[detected_modality],
-                digested_at=digested_at,
-            )
-            records.append(dict(record))
-        except Exception as e:
-            errors.append({"file": ds_path, "error": str(e)})
+    ctf_records, ctf_errors = _build_ctf_ds_records(
+        files, dataset_id, storage_base, source, digested_at
+    )
+    records.extend(ctf_records)
+    errors.extend(ctf_errors)
 
     for file_info in files:
-        if isinstance(file_info, dict):
-            filepath = file_info.get("path", "")
-            download_url = file_info.get("download_url")
-            file_size = file_info.get("size", 0)
-        else:
-            filepath = file_info
-            download_url = None
-            file_size = 0
-
-        # Check if this is a ZIP file with extracted contents
-        zip_file_contents = None
-        if isinstance(file_info, dict):
-            zip_file_contents = file_info.get("_zip_contents", [])
-
-        # If this is a ZIP with contents, create records from ZIP contents instead
-        if zip_file_contents:
-            zip_name = file_info.get("name", "")
-            zip_download_url = file_info.get("download_url", "")
-
-            for zf in zip_file_contents:
-                zf_path = zf.get("path", "") if isinstance(zf, dict) else zf
-                zf_size = zf.get("size", 0) if isinstance(zf, dict) else 0
-
-                # Only create records for neurophysiology data files inside ZIPs
-                if not is_neuro_data_file(zf_path):
-                    continue
-
-                try:
-                    entities = parse_bids_entities_from_path(zf_path)
-                    detected_modality = detect_modality_from_path(zf_path)
-
-                    record = create_record(
-                        dataset=dataset_id,
-                        storage_base=storage_base,
-                        bids_relpath=zf_path,
-                        subject=entities.get("subject"),
-                        session=entities.get("session"),
-                        task=entities.get("task"),
-                        run=entities.get("run"),
-                        acquisition=entities.get("acquisition"),
-                        dep_keys=[],
-                        datatype=entities.get("datatype", detected_modality),
-                        suffix=entities.get("suffix", detected_modality),
-                        storage_backend="https",
-                        recording_modality=[detected_modality],
-                        digested_at=digested_at,
-                    )
-
-                    # Store ZIP info for download
-                    if zip_download_url:
-                        record["container_url"] = zip_download_url
-                        record["container_type"] = "zip"
-                        record["container_name"] = zip_name
-                    if zf_size:
-                        record["file_size"] = zf_size
-
-                    records.append(dict(record))
-                except Exception as e:
-                    errors.append({"file": zf_path, "error": str(e)})
-            continue  # Skip to next file (we've processed the ZIP contents)
-
-        # Handle ZIP files without extracted contents
-        if filepath.lower().endswith(".zip"):
-            # Pattern 1: Subject ZIP files like sub-01.zip
-            subject_match = re.match(
-                r"^(sub-[a-zA-Z0-9]+)\.zip$", filepath, re.IGNORECASE
+        if isinstance(file_info, dict) and file_info.get("_zip_contents"):
+            sub_records, sub_errors = _build_zip_extracted_records(
+                file_info, dataset_id, storage_base, digested_at
             )
-            if subject_match:
-                subject_id = subject_match.group(1)
-                # Infer recording modality from dataset modalities (already in recording_modality_val)
-
-                try:
-                    # Create a placeholder record for this subject
-                    record = create_record(
-                        dataset=dataset_id,
-                        storage_base=storage_base,
-                        bids_relpath=f"{subject_id}/{primary_mod}/{subject_id}_{primary_mod}.set",  # Placeholder path
-                        subject=subject_id.replace("sub-", ""),
-                        session=None,
-                        task=None,
-                        run=None,
-                        dep_keys=[],
-                        datatype=primary_mod,
-                        suffix=primary_mod,
-                        storage_backend="https",
-                        recording_modality=recording_modality_val,
-                        digested_at=digested_at,
-                    )
-
-                    # Store ZIP info
-                    if download_url:
-                        record["container_url"] = download_url
-                        record["container_type"] = "zip"
-                        record["container_name"] = filepath
-                        record["zip_contains_bids"] = (
-                            True  # Flag that this ZIP contains BIDS data
-                        )
-                    if file_size:
-                        record["container_size"] = file_size
-
-                    records.append(dict(record))
-                except Exception as e:
-                    errors.append({"file": filepath, "error": str(e)})
-                continue
-
-            # Pattern 2: BIDS data ZIPs (e.g., data_bids.zip, *_bids_EEG.zip, bids_data.zip)
-            # These commonly contain BIDS-formatted data but we can't peek inside
-            bids_zip_patterns = [
-                r".*bids.*\.zip$",  # Contains 'bids' anywhere
-                r".*_eeg\.zip$",  # Ends with _eeg.zip
-                r".*_meg\.zip$",  # Ends with _meg.zip
-                r".*_ieeg\.zip$",  # Ends with _ieeg.zip
-                r".*dataset.*\.zip$",  # Contains 'dataset'
-                r".*rawdata.*\.zip$",  # Contains 'rawdata'
-                r".*data\.zip$",  # Simple data.zip
-                r".*eeg.*\.zip$",  # Contains 'eeg' anywhere
-                r".*meg.*\.zip$",  # Contains 'meg' anywhere
-                r".*nirs.*\.zip$",  # Contains 'nirs' anywhere
-                r".*fnirs.*\.zip$",  # Contains 'fnirs' anywhere
-            ]
-
-            filepath_lower = filepath.lower()
-            is_bids_zip = any(re.match(p, filepath_lower) for p in bids_zip_patterns)
-
-            if is_bids_zip:
-                # Try to infer subject count from manifest demographics
-                demographics = manifest.get("demographics", {})
-                inferred_subjects = demographics.get("subjects_count", 0)
-
-                # If we have subject count, create individual subject records
-                if inferred_subjects and inferred_subjects > 0:
-                    for sub_idx in range(
-                        1, min(inferred_subjects + 1, 201)
-                    ):  # Cap at 200 subjects
-                        sub_id = (
-                            f"{sub_idx:02d}"
-                            if inferred_subjects < 100
-                            else f"{sub_idx:03d}"
-                        )
-
-                        try:
-                            record = create_record(
-                                dataset=dataset_id,
-                                storage_base=storage_base,
-                                bids_relpath=f"sub-{sub_id}/{primary_mod}/sub-{sub_id}_{primary_mod}.set",
-                                subject=sub_id,
-                                session=None,
-                                task=manifest.get("tasks", [None])[0]
-                                if manifest.get("tasks")
-                                else None,
-                                run=None,
-                                dep_keys=[],
-                                datatype=primary_mod,
-                                suffix=primary_mod,
-                                storage_backend="https",
-                                recording_modality=recording_modality_val,
-                                digested_at=digested_at,
-                            )
-
-                            # Store ZIP info for download
-                            if download_url:
-                                record["container_url"] = download_url
-                                record["container_type"] = "zip"
-                                record["container_name"] = filepath
-                                record["needs_extraction"] = True
-                                record["inferred_from_metadata"] = True
-                            if file_size:
-                                record["container_size"] = file_size
-
-                            records.append(dict(record))
-                        except Exception as e:
-                            errors.append({"file": f"sub-{sub_id}", "error": str(e)})
-                else:
-                    # No subject count - create single placeholder record
-                    try:
-                        record = create_record(
-                            dataset=dataset_id,
-                            storage_base=storage_base,
-                            bids_relpath=f"__ZIP__/{filepath}",
-                            subject=None,
-                            session=None,
-                            task=None,
-                            run=None,
-                            dep_keys=[],
-                            datatype=primary_mod,
-                            suffix=primary_mod,
-                            storage_backend=get_storage_backend(source),
-                            recording_modality=recording_modality_val,
-                            digested_at=digested_at,
-                        )
-
-                        if download_url:
-                            record["container_url"] = download_url
-                            record["container_type"] = "zip"
-                            record["container_name"] = filepath
-                            record["needs_extraction"] = True
-                        if file_size:
-                            record["container_size"] = file_size
-
-                        records.append(dict(record))
-                    except Exception as e:
-                        errors.append({"file": filepath, "error": str(e)})
-                continue
-
-        # Check if this is a neurophysiology data file (treat symlinks as files)
-        if not is_neuro_data_file(filepath):
+            records.extend(sub_records)
+            errors.extend(sub_errors)
             continue
 
-        try:
-            entities = parse_bids_entities_from_path(filepath)
-            detected_modality = detect_modality_from_path(filepath)
+        filepath = (
+            file_info.get("path", "") if isinstance(file_info, dict) else file_info
+        )
 
-            # Build the record
-            record = create_record(
-                dataset=dataset_id,
-                storage_base=storage_base,
-                bids_relpath=filepath,
-                subject=entities.get("subject"),
-                session=entities.get("session"),
-                task=entities.get("task"),
-                run=entities.get("run"),
-                acquisition=entities.get("acquisition"),
-                dep_keys=[],
-                datatype=entities.get("datatype", detected_modality),
-                suffix=entities.get("suffix", detected_modality),
-                storage_backend=get_storage_backend(source),
-                recording_modality=[detected_modality],
-                digested_at=digested_at,
-            )
+        if filepath.lower().endswith(".zip") and isinstance(file_info, dict):
+            if re.match(r"^(sub-[a-zA-Z0-9]+)\.zip$", filepath, re.IGNORECASE):
+                rec, errs = _build_subject_zip_record(
+                    file_info,
+                    dataset_id,
+                    storage_base,
+                    primary_mod,
+                    recording_modality_val,
+                    digested_at,
+                )
+                if rec is not None:
+                    records.append(rec)
+                errors.extend(errs)
+                continue
 
-            # Add download URL if available
-            if download_url:
-                record["download_url"] = download_url
-            if file_size:
-                record["file_size"] = file_size
+            if _is_bids_data_zip(filepath):
+                sub_records, sub_errors = _build_bids_data_zip_records(
+                    file_info,
+                    manifest,
+                    dataset_id,
+                    storage_base,
+                    source,
+                    primary_mod,
+                    recording_modality_val,
+                    digested_at,
+                )
+                records.extend(sub_records)
+                errors.extend(sub_errors)
+                continue
 
-            records.append(dict(record))
-        except Exception as e:
-            errors.append({"file": filepath, "error": str(e)})
+        rec, errs = _build_regular_manifest_record(
+            file_info, dataset_id, storage_base, source, digested_at
+        )
+        if rec is not None:
+            records.append(rec)
+        errors.extend(errs)
 
-    # Also process standalone zip_contents (from clone script)
-    for zpath in zip_contents:
-        if isinstance(zpath, dict):
-            filepath = zpath.get("path", "")
-            file_size = zpath.get("size", 0)
-        else:
-            filepath = zpath
-            file_size = 0
+    extra_records, extra_errors = _build_standalone_zip_content_records(
+        zip_contents, dataset_id, storage_base, digested_at
+    )
+    records.extend(extra_records)
+    errors.extend(extra_errors)
 
-        if not is_neuro_data_file(filepath):
-            continue
-
-        try:
-            entities = parse_bids_entities_from_path(filepath)
-            detected_modality = detect_modality_from_path(filepath)
-
-            record = create_record(
-                dataset=dataset_id,
-                storage_base=storage_base,
-                bids_relpath=filepath,
-                subject=entities.get("subject"),
-                session=entities.get("session"),
-                task=entities.get("task"),
-                run=entities.get("run"),
-                acquisition=entities.get("acquisition"),
-                dep_keys=[],
-                datatype=entities.get("datatype", detected_modality),
-                suffix=entities.get("suffix", detected_modality),
-                storage_backend="https",
-                recording_modality=[detected_modality],
-                digested_at=digested_at,
-            )
-
-            if file_size:
-                record["file_size"] = file_size
-
-            records.append(dict(record))
-        except Exception as e:
-            errors.append({"file": filepath, "error": str(e)})
-
-    # Create output directory
-    dataset_output_dir.mkdir(parents=True, exist_ok=True)
-
-    # Save Dataset document
-    dataset_path = dataset_output_dir / f"{dataset_id}_dataset.json"
-    with open(dataset_path, "w") as f:
-        json.dump(dict(dataset_doc), f, indent=2)
-
-    # Save Records document
-    records_path = dataset_output_dir / f"{dataset_id}_records.json"
-    records_data = {
-        "dataset": dataset_id,
-        "source": source,
-        "digested_at": digested_at,
-        "record_count": len(records),
-        "records": records,
-    }
-    with open(records_path, "w") as f:
-        json.dump(records_data, f, indent=2)
-
-    # Save summary
-    summary = {
-        "status": "success" if records else "no_neuro_files",
-        "dataset_id": dataset_id,
-        "source": source,
-        "record_count": len(records),
-        "total_files": len(files),
-        "error_count": len(errors),
-        "dataset_file": str(dataset_path),
-        "records_file": str(records_path),
-        "digest_method": "manifest_only",
-    }
-
-    summary_path = dataset_output_dir / f"{dataset_id}_summary.json"
-    with open(summary_path, "w") as f:
-        json.dump(summary, f, indent=2)
-
-    return summary
-
-
-def digest_dataset(
-    dataset_id: str,
-    input_dir: Path,
-    output_dir: Path,
-) -> dict[str, Any]:
-    """Digest a single dataset and generate JSON output.
-
-    Produces:
-    - {dataset_id}_dataset.json: Dataset-level metadata
-    - {dataset_id}_records.json: Per-file Record metadata
-
-    Parameters
-    ----------
-    dataset_id : str
-        Dataset identifier
-    input_dir : Path
-        Directory containing cloned datasets
-    output_dir : Path
-        Directory for output JSON files
-
-    Returns
-    -------
-    dict
-        Summary of digestion results
-
-    """
-    # **SKIP CHECK**: If output already exists, skip reprocessing
-    output_dir_path = output_dir / dataset_id
-    if output_dir_path.exists():
-        return {
-            "status": "skipped",
-            "dataset_id": dataset_id,
-            "reason": "already digested",
-        }
-    dataset_dir = input_dir / dataset_id
-    dataset_output_dir = output_dir / dataset_id
-
-    if not dataset_dir.exists():
-        return {
-            "status": "skipped",
-            "dataset_id": dataset_id,
-            "reason": "directory not found",
-        }
-
-    # Check if this is an API-only source (has manifest.json but no actual files)
-    manifest_path = dataset_dir / "manifest.json"
-    has_manifest = manifest_path.exists()
-
-    # Check if there are actual EEG/MEG/fNIRS/iEEG files or symlinks (git-annex uses broken symlinks)
-    # We accept both real files and symlinks for metadata extraction
-    # Include .ds directories for CTF MEG format and .mefd directories for MEF3
-    has_actual_files = any(
-        f.suffix in [".set", ".edf", ".bdf", ".vhdr", ".fif", ".cnt", ".snirf", ".mefd"]
-        for f in dataset_dir.rglob("*")
-        if f.is_file() or f.is_symlink()  # Include symlinks for git-annex
-    ) or any(
-        (f.suffix == ".ds" and f.is_dir()) or (f.suffix == ".mefd" and f.is_dir())
-        for f in dataset_dir.rglob("*")
+    return (
+        EnumerationResult(
+            dataset_meta=dict(dataset_doc),
+            records=records,
+            errors=errors,
+            montages={},  # manifest path produces no montages
+            digest_method="manifest_only",
+        ),
+        len(files),
     )
 
-    # For API-only sources, use manifest-based digestion
-    if has_manifest and not has_actual_files:
-        return digest_from_manifest(dataset_id, input_dir, output_dir)
 
-    # Detect source
-    source = detect_source(dataset_dir)
+def _attach_montage_to_record(
+    record: dict[str, Any],
+    bids_file: Any,
+    dataset_dir: Path,
+    montages: dict[str, dict[str, Any]],
+    dataset_id: str,
+    digested_at: str,
+    montage_cache: dict[tuple[str, int], tuple[str, dict[str, Any]]] | None = None,
+) -> list[dict[str, Any]]:
+    """Run extract_layout for bids_file and stamp montage_hash on record.
 
-    # Generate timestamp
-    digested_at = datetime.now(timezone.utc).isoformat()
+    Mutates record and montages. MEG records with the same nchans share a device-defined
+    layout and are cached via montage_cache keyed by (dataset_id, nchans).
+    """
+    record_datatype = (record.get("datatype") or "").lower()
+    errors: list[dict[str, Any]] = []
 
-    # Repair participants.tsv ID mismatches before BIDS parsing
-    _repair_participants_tsv_ids(dataset_dir)
+    cache_key: tuple[str, int] | None = None
+    record_nchans = record.get("nchans")
+    if (
+        montage_cache is not None
+        and record_datatype == "meg"
+        and isinstance(record_nchans, int)
+        and record_nchans > 0
+    ):
+        cache_key = (dataset_id, record_nchans)
+        cached = montage_cache.get(cache_key)
+        if cached is not None:
+            cached_hash, cached_doc = cached
+            record["montage_hash"] = cached_hash
+            if cached_hash not in montages:
+                montages[cached_hash] = cached_doc
+            return errors
 
-    # Load BIDS dataset
     try:
-        bids_dataset = EEGBIDSDataset(
-            data_dir=str(dataset_dir),
-            dataset=dataset_id,
-            allow_symlinks=True,
+        layout_result = extract_layout(
+            Path(str(bids_file)), dataset_dir, datatype=record_datatype
         )
-    except Exception as e:
-        # Fallback to manifest-based digestion if BIDS parsing fails
-        if has_manifest:
-            return digest_from_manifest(dataset_id, input_dir, output_dir)
-        return {
-            "status": "error",
-            "dataset_id": dataset_id,
-            "error": f"Failed to load BIDS dataset: {e}",
-        }
+    except (OSError, ValueError, KeyError, TypeError, AttributeError) as exc:
+        record["montage_hash"] = None
+        errors.append(
+            {"file": str(bids_file), "error": f"layout extraction failed: {exc}"}
+        )
+        return errors
 
+    if layout_result is None:
+        record["montage_hash"] = None
+        return errors
+
+    h, doc = layout_result
+    record["montage_hash"] = h
+    if h not in montages:
+        doc["first_seen"] = digested_at
+        doc["representative_dataset"] = dataset_id
+        subject_entity = record.get("entities", {}).get("subject")
+        if subject_entity:
+            doc["representative_subject"] = f"sub-{subject_entity}"
+        montages[h] = doc
+
+    if cache_key is not None:
+        montage_cache[cache_key] = (h, montages[h])
+
+    return errors
+
+
+def _build_one_record_from_bids(
+    bids_dataset: Any,
+    bids_file: Any,
+    dataset_id: str,
+    source: str,
+    source_adapter: SourceAdapter,
+    digested_at: str,
+    dataset_dir: Path,
+    montages: dict[str, dict[str, Any]],
+    montage_cache: dict[tuple[str, int], tuple[str, dict[str, Any]]] | None = None,
+) -> tuple[dict[str, Any] | None, list[dict[str, Any]]]:
+    """Extract one Record and attach its montage. Returns (record_or_None, errors)."""
+    errors: list[dict[str, Any]] = []
+    try:
+        record = extract_record(
+            bids_dataset,
+            bids_file,
+            dataset_id,
+            source,
+            digested_at,
+            source_adapter=source_adapter,
+        )
+    except (OSError, ValueError, KeyError, TypeError, AttributeError) as e:
+        errors.append({"file": str(bids_file), "error": str(e)})
+        get_emitter().emit(
+            TelemetryEvent(
+                event_kind="record_failed",
+                dataset_id=dataset_id,
+                record_id=str(bids_file),
+                payload={"bids_file": str(bids_file), "error": str(e)},
+            )
+        )
+        return None, errors
+
+    if any("Split FIF" in issue for issue in record.get("_data_integrity_issues", [])):
+        errors.append(
+            {
+                "file": str(bids_file),
+                "error": "Split FIF without continuation files — skipped",
+            }
+        )
+        get_emitter().emit(
+            TelemetryEvent(
+                event_kind="record_failed",
+                dataset_id=dataset_id,
+                record_id=str(bids_file),
+                payload={
+                    "bids_file": str(bids_file),
+                    "error": "Split FIF without continuation files — skipped",
+                },
+            )
+        )
+        return None, errors
+
+    errors.extend(
+        _attach_montage_to_record(
+            record,
+            bids_file,
+            dataset_dir,
+            montages,
+            dataset_id,
+            digested_at,
+            montage_cache=montage_cache,
+        )
+    )
+
+    get_emitter().emit(
+        TelemetryEvent(
+            event_kind="record_built",
+            dataset_id=dataset_id,
+            record_id=record.get("bids_relpath"),
+            payload={
+                "bids_relpath": record.get("bids_relpath"),
+                "datatype": record.get("datatype"),
+                "sampling_frequency": record.get("sampling_frequency"),
+                "nchans": record.get("nchans"),
+                "ntimes": record.get("ntimes"),
+                "metadata_provenance": record.get("_metadata_provenance"),
+            },
+        )
+    )
+    return record, errors
+
+
+def _enumerate_via_bids(
+    dataset_dir: Path,
+    dataset_id: str,
+    source: str,
+    source_adapter: SourceAdapter,
+    digested_at: str,
+    bids_dataset,
+    manifest_data: dict | None = None,
+) -> EnumerationResult:
+    """Build an EnumerationResult by walking the BIDS filesystem."""
     files = bids_dataset.get_files()
     if not files:
-        # Fallback to manifest-based digestion if no files found
-        if has_manifest:
-            return digest_from_manifest(dataset_id, input_dir, output_dir)
-        return {
-            "status": "empty",
-            "dataset_id": dataset_id,
-            "reason": "no neurophysiology files found",
-        }
+        return EnumerationResult(
+            dataset_meta={"dataset_id": dataset_id, "source": source},
+            digest_method="bids_filesystem",
+        )
 
-    manifest_data = None
-    if has_manifest:
-        try:
-            with open(manifest_path) as f:
-                manifest_data = json.load(f)
-        except Exception:
-            pass
-
-    # Extract Dataset metadata
     try:
         dataset_meta = extract_dataset_metadata(
-            bids_dataset, dataset_id, source, digested_at, metadata=manifest_data
+            bids_dataset,
+            dataset_id,
+            source,
+            digested_at,
+            metadata=manifest_data,
+            source_adapter=source_adapter,
         )
-    except Exception as e:
+    except (OSError, ValueError, KeyError, TypeError, AttributeError) as e:
         dataset_meta = {
             "dataset_id": dataset_id,
             "source": source,
@@ -2488,180 +2125,286 @@ def digest_dataset(
             dataset_id, source, file_paths, dataset_dir
         )
         dataset_meta["ingestion_fingerprint"] = fingerprint
-    except Exception:
+    except (OSError, ValueError, KeyError):
         pass
 
-    # Extract Record metadata for each file
-    records = []
-    errors = []
+    records: list[dict[str, Any]] = []
+    errors: list[dict[str, Any]] = []
     montages: dict[str, dict[str, Any]] = {}
 
-    # NEMAR-only: read apex BIDS files once per dataset and reuse the
-    # decoded text across every record (Python str is immutable so the
-    # values are shared by reference). Cuts ~N × len(NEMAR_ROOT_METADATA_FILES)
-    # stat+read+decode calls per dataset.
-    apex_sidecar_inline: dict[str, str] = {}
-    if source == "nemar":
-        bids_root_path = bids_dataset.bidsdir
-        for root_name in NEMAR_ROOT_METADATA_FILES:
-            inline = read_inline_sidecar(bids_root_path / root_name)
-            if inline is not None:
-                apex_sidecar_inline[root_name] = inline
+    # MEG records with the same nchans share a device-defined layout; cache to avoid re-extraction.
+    meg_montage_cache: dict[tuple[str, int], tuple[str, dict[str, Any]]] = {}
 
     for bids_file in files:
-        # Filter out non-neuro data files (sidecars, etc.)
         if not is_neuro_data_file(str(bids_file)):
             continue
-
-        try:
-            record = extract_record(
-                bids_dataset,
-                bids_file,
-                dataset_id,
-                source,
-                digested_at,
-                apex_sidecar_inline=apex_sidecar_inline,
-            )
-            # Skip records for split FIF files with missing continuations
-            if any(
-                "Split FIF" in issue
-                for issue in record.get("_data_integrity_issues", [])
-            ):
-                errors.append(
-                    {
-                        "file": str(bids_file),
-                        "error": "Split FIF without continuation files — skipped",
-                    }
-                )
-                continue
-            record_datatype = (record.get("datatype") or "").lower()
-            try:
-                layout_result = extract_layout(
-                    Path(str(bids_file)), dataset_dir, datatype=record_datatype
-                )
-            except Exception as layout_exc:  # noqa: BLE001
-                # best-effort; missing sidecars are fine
-                layout_result = None
-                errors.append(
-                    {
-                        "file": str(bids_file),
-                        "error": f"layout extraction failed: {layout_exc}",
-                    }
-                )
-            if layout_result is not None:
-                h, doc = layout_result
-                record["montage_hash"] = h
-                if h not in montages:
-                    # First time we see this hash in this dataset — stamp
-                    # the provenance fields that live outside the hashed
-                    # content. The API upsert layer uses $setOnInsert so
-                    # these don't get overwritten when the same hash
-                    # appears in a later dataset.
-                    doc["first_seen"] = digested_at
-                    doc["representative_dataset"] = dataset_id
-                    subject_entity = record.get("entities", {}).get("subject")
-                    if subject_entity:
-                        doc["representative_subject"] = f"sub-{subject_entity}"
-                    montages[h] = doc
-            else:
-                record["montage_hash"] = None
+        record, per_file_errors = _build_one_record_from_bids(
+            bids_dataset=bids_dataset,
+            bids_file=bids_file,
+            dataset_id=dataset_id,
+            source=source,
+            source_adapter=source_adapter,
+            digested_at=digested_at,
+            dataset_dir=dataset_dir,
+            montages=montages,
+            montage_cache=meg_montage_cache,
+        )
+        errors.extend(per_file_errors)
+        if record is not None:
             records.append(record)
-        except Exception as e:
-            errors.append({"file": str(bids_file), "error": str(e)})
 
-    if not records:
-        # Fallback to manifest-based digestion if no records extracted
-        if has_manifest:
-            return digest_from_manifest(dataset_id, input_dir, output_dir)
+    return EnumerationResult(
+        dataset_meta=dataset_meta,
+        records=records,
+        errors=errors,
+        montages=montages,
+        digest_method="bids_filesystem",
+    )
+
+
+def _emit_dataset_finished(dataset_id: str, summary: dict[str, Any]) -> None:
+    """Emit the dataset_finished telemetry event."""
+    get_emitter().emit(
+        TelemetryEvent(
+            event_kind="dataset_finished",
+            dataset_id=dataset_id,
+            payload={
+                "status": summary.get("status"),
+                "record_count": summary.get("record_count"),
+                "error_count": summary.get("error_count"),
+                "digest_method": summary.get("digest_method"),
+                "integrity_issues_count": summary.get("integrity_issues_count"),
+                "montage_count": summary.get("montage_count"),
+                "total_files": summary.get(
+                    "total_files"
+                ),  # NEW: manifest-path input count
+            },
+        )
+    )
+
+
+def _run_enumerator_with_manifest_fallback(
+    enumerator: RecordEnumerator,
+    *,
+    dataset_id: str,
+    dataset_dir: Path,
+    source: str,
+    source_adapter: SourceAdapter,
+    digested_at: str,
+    has_manifest: bool,
+) -> tuple[EnumerationResult | None, dict[str, Any] | None]:
+    """Run enumerator.enumerate() and fall back to ManifestEnumerator on BIDS load failure or empty result.
+
+    Returns (result, None) on success or (None, summary) on terminal failure.
+    """
+    try:
+        result = enumerator.enumerate()
+    except (
+        OSError,
+        ValueError,
+        KeyError,
+        FileNotFoundError,
+        PermissionError,
+    ) as exc:
+        if has_manifest and not isinstance(enumerator, ManifestEnumerator):
+            logger.info(
+                "BIDS load failed for %s (%s: %s); falling back to manifest path",
+                dataset_id,
+                type(exc).__name__,
+                exc,
+            )
+            fallback = ManifestEnumerator(
+                dataset_id, dataset_dir, source, source_adapter, digested_at
+            )
+            try:
+                return fallback.enumerate(), None
+            except Exception as fb_exc:  # noqa: BLE001
+                logger.warning(
+                    "Manifest fallback raised %s for %s after BIDS %s: %s",
+                    type(fb_exc).__name__,
+                    dataset_id,
+                    type(exc).__name__,
+                    fb_exc,
+                )
+                return None, {
+                    "status": "error",
+                    "dataset_id": dataset_id,
+                    "error": (
+                        f"BIDS path raised {type(exc).__name__}: {exc}; "
+                        f"manifest fallback also raised "
+                        f"{type(fb_exc).__name__}: {fb_exc}"
+                    ),
+                }
+        return None, {
+            "status": "error",
+            "dataset_id": dataset_id,
+            "error": f"Failed to load BIDS dataset: {exc}",
+        }
+
+    if (
+        not result.records
+        and has_manifest
+        and not isinstance(enumerator, ManifestEnumerator)
+    ):
+        logger.info(
+            "BIDS path produced 0 records for %s (errors=%d); "
+            "falling back to manifest path",
+            dataset_id,
+            len(result.errors),
+        )
+        fallback = ManifestEnumerator(
+            dataset_id, dataset_dir, source, source_adapter, digested_at
+        )
+        try:
+            fb_result = fallback.enumerate()
+        except Exception as fb_exc:  # noqa: BLE001
+            logger.warning(
+                "Manifest fallback raised %s for %s (BIDS produced 0 records): %s",
+                type(fb_exc).__name__,
+                dataset_id,
+                fb_exc,
+            )
+            return None, {
+                "status": "error",
+                "dataset_id": dataset_id,
+                "error": (
+                    f"BIDS path returned no records; manifest fallback "
+                    f"raised {type(fb_exc).__name__}: {fb_exc}"
+                ),
+                "errors": result.errors,
+            }
+        if result.errors:
+            fb_result.errors = list(fb_result.errors or []) + list(result.errors)
+        return fb_result, None
+
+    return result, None
+
+
+def _summarise_empty_or_error(
+    dataset_id: str,
+    result: EnumerationResult,
+) -> dict[str, Any]:
+    """Return the terminal "empty" or "error" summary when no records were produced."""
+    structural_errors = [
+        e for e in result.errors if e.get("status") not in (None, "skipped", "warning")
+    ]
+    if structural_errors:
         return {
             "status": "error",
             "dataset_id": dataset_id,
             "error": "No records extracted",
-            "errors": errors,
+            "errors": result.errors,
         }
 
-    # Create output directory
-    dataset_output_dir.mkdir(parents=True, exist_ok=True)
-
-    # Save Dataset document
-    dataset_path = dataset_output_dir / f"{dataset_id}_dataset.json"
-    with open(dataset_path, "w") as f:
-        json.dump(dataset_meta, f, indent=2, default=_json_serializer)
-
-    # Count records with data integrity issues and add author contact info
-    records_with_issues = [r for r in records if r.get("_has_missing_files", False)]
-    integrity_issues_count = len(records_with_issues)
-
-    # Enrich records with integrity issues with dataset author/contact info
-    # This allows the error message to include who to contact about the issue
-    if records_with_issues:
-        authors = dataset_meta.get("authors", [])
-        contact_info = dataset_meta.get("contact_info")
-        source_url = dataset_meta.get("external_links", {}).get("source_url")
-
-        for rec in records_with_issues:
-            if authors:
-                rec["_dataset_authors"] = authors
-            if contact_info:
-                rec["_dataset_contact"] = contact_info
-            if source_url:
-                rec["_source_url"] = source_url
-
-    # Save Records document
-    records_path = dataset_output_dir / f"{dataset_id}_records.json"
-    records_data = {
-        "dataset": dataset_id,
-        "source": source,
-        "digested_at": digested_at,
-        "record_count": len(records),
-        "records_with_integrity_issues": integrity_issues_count,
-        "records": records,
-    }
-    with open(records_path, "w") as f:
-        json.dump(records_data, f, indent=2, default=_json_serializer)
-
-    # Always written (even when empty) so downstream tooling can assume it exists.
-    montages_path = dataset_output_dir / f"{dataset_id}_montages.json"
-    montages_data = {
-        "dataset": dataset_id,
-        "source": source,
-        "digested_at": digested_at,
-        "montage_count": len(montages),
-        "montages": list(montages.values()),
-    }
-    with open(montages_path, "w") as f:
-        json.dump(montages_data, f, indent=2, default=_json_serializer)
-
-    # Save summary
-    summary = {
-        "status": "success",
+    total_files = result.total_files
+    if total_files == 0:
+        reason = "no files in manifest"
+    elif total_files is not None:
+        reason = "no records extracted"
+    else:
+        reason = "no neurophysiology files found"
+    empty_summary: dict[str, Any] = {
+        "status": "empty",
         "dataset_id": dataset_id,
-        "source": source,
-        "record_count": len(records),
-        "error_count": len(errors),
-        "integrity_issues_count": integrity_issues_count,
-        "montage_count": len(montages),
-        "dataset_file": str(dataset_path),
-        "records_file": str(records_path),
-        "montages_file": str(montages_path),
+        "reason": reason,
     }
+    if result.errors:
+        empty_summary["errors"] = result.errors
+    return empty_summary
 
-    # Log warnings for datasets with integrity issues
-    if integrity_issues_count > 0:
-        logging.warning(
-            "Dataset %s has %d record(s) with missing companion files",
-            dataset_id,
-            integrity_issues_count,
+
+def _check_dataset_skip_conditions(
+    dataset_id: str,
+    dataset_dir: Path,
+    dataset_output_dir: Path,
+) -> dict[str, Any] | None:
+    """Return a skipped summary if output already exists or input dir is missing; else None."""
+    if dataset_output_dir.exists():
+        return {
+            "status": "skipped",
+            "dataset_id": dataset_id,
+            "reason": "already digested",
+        }
+    if not dataset_dir.exists():
+        return {
+            "status": "skipped",
+            "dataset_id": dataset_id,
+            "reason": "directory not found",
+        }
+    return None
+
+
+def digest_dataset(
+    dataset_id: str,
+    input_dir: Path,
+    output_dir: Path,
+) -> dict[str, Any]:
+    """Digest a single dataset; write dataset/records/montages/summary JSON and return the summary."""
+    dataset_dir = input_dir / dataset_id
+    dataset_output_dir = output_dir / dataset_id
+
+    skip = _check_dataset_skip_conditions(dataset_id, dataset_dir, dataset_output_dir)
+    if skip is not None:
+        return skip
+
+    source = detect_source(dataset_dir)
+    digested_at = datetime.now(timezone.utc).isoformat()
+    _repair_participants_tsv_ids(dataset_dir)
+    source_adapter = get_source_adapter(source, dataset_id, dataset_dir)
+
+    get_emitter().emit(
+        TelemetryEvent(
+            event_kind="dataset_started",
+            dataset_id=dataset_id,
+            payload={"source": source, "dataset_dir": str(dataset_dir)},
         )
-        for rec in records_with_issues:
-            issues = rec.get("_data_integrity_issues", [])
-            logging.warning("  - %s: %s", rec.get("bids_relpath"), "; ".join(issues))
+    )
 
-    summary_path = dataset_output_dir / f"{dataset_id}_summary.json"
-    with open(summary_path, "w") as f:
-        json.dump(summary, f, indent=2)
+    summary: dict[str, Any] | None = None
+    try:
+        has_manifest = (dataset_dir / "manifest.json").exists()
+        enumerator = get_record_enumerator(
+            dataset_id, dataset_dir, source, source_adapter, digested_at
+        )
 
-    return summary
+        result, fallback_summary = _run_enumerator_with_manifest_fallback(
+            enumerator,
+            dataset_id=dataset_id,
+            dataset_dir=dataset_dir,
+            source=source,
+            source_adapter=source_adapter,
+            digested_at=digested_at,
+            has_manifest=has_manifest,
+        )
+        if fallback_summary is not None:
+            summary = fallback_summary
+            return fallback_summary
+
+        assert (
+            result is not None
+        )  # exactly one of (result, fallback_summary) is non-None
+
+        if not result.records:
+            summary = _summarise_empty_or_error(dataset_id, result)
+            return summary
+
+        summary = write_dataset_outputs(
+            dataset_output_dir,
+            result,
+            dataset_id=dataset_id,
+            source=source,
+            digested_at=digested_at,
+            total_files=result.total_files,
+        )
+        return summary
+    finally:
+        if summary is None:
+            summary = {
+                "status": "error",
+                "dataset_id": dataset_id,
+                "error": "digest_dataset raised an unhandled exception",
+            }
+        _emit_dataset_finished(dataset_id, summary)
 
 
 def _json_serializer(obj):
@@ -2693,8 +2436,6 @@ def find_datasets(input_dir: Path, datasets: list[str] | None = None) -> list[st
             and d.name not in ("__pycache__", ".git")
             and d.name not in EXCLUDED_DATASETS
         ):
-            # Check if it has a manifest.json (API-based sources)
-            # or dataset_description.json (git-cloned BIDS datasets)
             if (d / "manifest.json").exists() or (
                 d / "dataset_description.json"
             ).exists():
@@ -2747,7 +2488,7 @@ def _dataset_boundary_profile(dataset_id: str, input_dir: Path) -> str:
                     f"zip_contents={zip_contents_count}",
                 ]
             )
-        except Exception as exc:  # noqa: BLE001
+        except (OSError, json.JSONDecodeError, ValueError) as exc:
             parts.append(f"manifest_error={exc}")
 
     try:
@@ -2755,7 +2496,7 @@ def _dataset_boundary_profile(dataset_id: str, input_dir: Path) -> str:
         root_dirs = sum(1 for p in root_entries if p.is_dir())
         root_files = sum(1 for p in root_entries if p.is_file() or p.is_symlink())
         parts.extend([f"root_dirs={root_dirs}", f"root_files={root_files}"])
-    except Exception as exc:  # noqa: BLE001
+    except (OSError, PermissionError) as exc:
         parts.append(f"root_scan_error={exc}")
 
     return " ".join(parts)
@@ -2809,7 +2550,7 @@ def _digest_dataset_worker(
                     dataset_id,
                     f"digest_dataset returned {type(result).__name__}, expected dict",
                 )
-        except BaseException as exc:  # noqa: BLE001
+        except BaseException as exc:  # noqa: BLE001 — worker boundary: parent decides retry/shutdown
             result = _worker_error_result(
                 dataset_id,
                 f"{type(exc).__name__}: {exc}",
@@ -2848,19 +2589,19 @@ def _start_digest_process(
 
 
 def _close_active_resources(active: dict[str, Any]) -> None:
-    """Release local process and queue handles without blocking indefinitely."""
+    """Release process and queue handles; best-effort, does not block."""
     result_queue = active.get("queue")
     if result_queue is not None:
         try:
             result_queue.close()
-        except Exception:
+        except (OSError, ValueError, AttributeError):
             pass
 
     process = active.get("process")
     if process is not None:
         try:
             process.close()
-        except Exception:
+        except (OSError, ValueError, AttributeError):
             pass
 
 
@@ -2897,7 +2638,7 @@ def _collect_finished_process(active: dict[str, Any]) -> dict[str, Any]:
             f"worker exited without returning a result (exitcode={process.exitcode})",
             elapsed_seconds=elapsed,
         )
-    except Exception as exc:  # noqa: BLE001
+    except (OSError, EOFError, ValueError) as exc:
         result = _worker_error_result(
             dataset_id,
             f"failed to collect worker result: {type(exc).__name__}: {exc}",
@@ -2983,9 +2724,7 @@ def process_datasets_with_watchdog(
                     process = active_job["process"]
                     elapsed = now - active_job["started_at"]
 
-                    # **CRITICAL FIX**: Try to drain queue FIRST (non-blocking)
-                    # to prevent deadlock on full queue with blocking worker.
-                    # Worker may be alive but stuck on queue.put() if main never reads.
+                    # Drain queue first (non-blocking) to prevent deadlock on full queue.
                     result_queue = active_job["queue"]
                     try:
                         result = result_queue.get_nowait()
@@ -2996,12 +2735,11 @@ def process_datasets_with_watchdog(
                         finished.append((key, result))
                         process.join(timeout=PROCESS_SHUTDOWN_TIMEOUT_SECONDS)
                         continue
-                    except Exception as e:
+                    except (queue.Empty, OSError, EOFError, ValueError) as e:
                         print(
                             f"[QUEUE] No result yet for {dataset_id}: {type(e).__name__}",
                             flush=True,
                         )
-                        pass  # No result yet or queue error, continue checking
 
                     if process.is_alive():
                         if elapsed > dataset_timeout:
@@ -3041,76 +2779,35 @@ def process_datasets_with_watchdog(
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        description="Digest BIDS datasets and generate Dataset + Record JSON for MongoDB."
-    )
-    parser.add_argument(
-        "--input",
-        type=Path,
-        default=Path("data/cloned"),
-        help="Directory containing cloned datasets (default: data/cloned/)",
-    )
-    parser.add_argument(
-        "--output",
-        type=Path,
-        default=Path("digestion_output"),
-        help="Output directory for JSON files (default: digestion_output/)",
-    )
-    parser.add_argument(
-        "--datasets",
-        nargs="+",
-        default=None,
-        help="Specific dataset IDs to digest (default: all)",
-    )
-    parser.add_argument(
-        "--workers",
-        type=int,
-        default=1,
-        help="Number of parallel workers (default: 1)",
-    )
-    parser.add_argument(
-        "--limit",
-        type=int,
-        default=None,
-        help="Maximum number of datasets to process (for testing)",
-    )
-    parser.add_argument(
-        "--dataset-timeout",
-        type=_positive_float,
-        default=DEFAULT_DATASET_TIMEOUT_SECONDS,
-        help=(
-            "Seconds to allow one dataset before killing its worker "
-            f"(default: {DEFAULT_DATASET_TIMEOUT_SECONDS:g})"
-        ),
-    )
+    try:
+        cfg = load_digest_config_from_argv()
+    except ValidationError as exc:
+        print("Config error(s):", file=sys.stderr)
+        for err in exc.errors():
+            field = ".".join(str(p) for p in err.get("loc", []))
+            print(f"  {field}: {err.get('msg')}", file=sys.stderr)
+        return 1
 
-    args = parser.parse_args()
-
-    # Find datasets
-    dataset_ids = find_datasets(args.input, args.datasets)
-    if args.limit:
-        dataset_ids = dataset_ids[: args.limit]
+    dataset_ids = find_datasets(cfg.input, cfg.datasets)
+    if cfg.limit:
+        dataset_ids = dataset_ids[: cfg.limit]
 
     print(f"Found {len(dataset_ids)} datasets to digest")
-    print(f"Workers: {args.workers}")
-    print(f"Dataset timeout: {args.dataset_timeout:g}s")
-    print_stall_boundary_diagnostics(dataset_ids, args.input)
+    print(f"Workers: {cfg.workers}")
+    print(f"Dataset timeout: {cfg.dataset_timeout:g}s")
+    print_stall_boundary_diagnostics(dataset_ids, cfg.input)
     print("=" * 60)
 
-    # Create output directory
-    args.output.mkdir(parents=True, exist_ok=True)
+    cfg.output.mkdir(parents=True, exist_ok=True)
 
-    # Process datasets under a watchdog even with one worker. This keeps
-    # dataset-specific parser or filesystem stalls from freezing the batch.
     results, stats = process_datasets_with_watchdog(
         dataset_ids,
-        args.input,
-        args.output,
-        workers=args.workers,
-        dataset_timeout=args.dataset_timeout,
+        cfg.input,
+        cfg.output,
+        workers=cfg.workers,
+        dataset_timeout=cfg.dataset_timeout,
     )
 
-    # Save batch summary
     batch_summary = {
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "total_datasets": len(dataset_ids),
@@ -3120,11 +2817,10 @@ def main():
         ),
     }
 
-    batch_summary_path = args.output / "BATCH_SUMMARY.json"
+    batch_summary_path = cfg.output / "BATCH_SUMMARY.json"
     with open(batch_summary_path, "w") as f:
         json.dump(batch_summary, f, indent=2)
 
-    # Print summary
     print("\n" + "=" * 60)
     print("DIGESTION SUMMARY")
     print("=" * 60)

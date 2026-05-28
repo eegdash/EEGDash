@@ -1,18 +1,9 @@
 """Characterisation tests for the pure helpers inside ``3_digest.py``.
 
-Phase 8 of the robustness programme. These tests pin the CURRENT
-behaviour of the small, pure-function helpers inside ``3_digest.py``
-so we can refactor the file's mega-functions under a safety net.
-
-The bias here is intentional: we DON'T test the mega-functions
-directly — we test the leaves first (entity parsing, neuro-file
-detection) and let the snapshot test in ``test_digest_snapshot.py``
-cover the orchestrator end-to-end. The LOC canary below tracks the
-remaining big helpers and surfaces growth or unexpected shrinkage.
-
-The module is loaded via ``importlib`` because its filename starts
-with a digit (``3_digest.py`` is not a legal Python identifier).
-This is a known pattern for CLI-style script files.
+Pins the current behaviour of the small, pure-function helpers so we can
+refactor the file's mega-functions under a safety net. The module is loaded
+via ``importlib`` because its filename starts with a digit (``3_digest.py``
+is not a legal Python identifier).
 """
 
 from __future__ import annotations
@@ -153,26 +144,13 @@ def test_is_neuro_data_file_is_case_sensitive_on_extension(
 def test_megafunction_line_counts_are_known_baseline(digest: ModuleType) -> None:
     """Track LOC drift of the remaining big helpers in ``3_digest.py``.
 
-    The Phase 8 robustness programme keeps a per-function LOC budget
-    so growth (or unexpected shrinkage that hides a missing branch)
-    gets surfaced in CI. Each baseline is set ~20 LOC above the
-    current LOC; an upward drift past that ceiling fails the test.
-
-    The dict is sized to match the post-Stage-3D shape of the file:
-    the four remaining big helpers, plus the orchestrator wrapper
-    bounded by its own much-tighter budget.
+    Each budget = actual LOC + 20; upward drift past the ceiling fails CI.
+    Lower-bound canaries catch surprise shrinkage that could hide deleted branches.
     """
 
-    # Baselines updated 2026-05-22 (Phase 8 Stage 3D — orchestrator
-    # collapse). Previous session notes:
-    # - Session 5 / Phase 8 Stage 3: digest_from_manifest dropped from
-    #   670 → 69 LOC after extracting _enumerate_via_manifest; then
-    #   was DELETED in Stage 3D (the orchestrator routes via
-    #   ManifestEnumerator from record_enumerator.py).
-    # - Stage 3D also dropped digest_dataset from 137 → 90 LOC by
-    #   extracting _check_dataset_skip_conditions,
-    #   _summarise_empty_or_error, _run_enumerator_with_manifest_fallback,
-    #   and _emit_dataset_finished.
+    # Baselines updated 2026-05-22 (post-Stage-3D shape).
+    # digest_from_manifest was removed; orchestrator now routes via ManifestEnumerator.
+    # digest_dataset shrank from 137 → 90 LOC after extracting four helpers.
     big_functions = {
         # Still big — pending further decomposition. Budget = actual + 20.
         "_enumerate_via_manifest": 240,
@@ -193,27 +171,20 @@ def test_megafunction_line_counts_are_known_baseline(digest: ModuleType) -> None
             "happened, bump the baseline in the same commit."
         )
 
-    # Sanity-check the orchestrator stayed thin — digest_dataset was
-    # 330 LOC before Phase 8 Stage 3 and 90 LOC after Stage 3D. The
-    # 120 LOC budget leaves a little headroom for a future log line
-    # but fails fast if a chunk of algorithm leaks back in.
+    # digest_dataset must stay a thin orchestrator; algorithm lives in helpers.
     wrapper_loc = len(inspect.getsourcelines(digest.digest_dataset)[0])
     assert wrapper_loc <= 120, (
         f"digest_dataset grew to {wrapper_loc} LOC — it should stay "
         "a thin orchestrator; the algorithm lives in the helpers."
     )
 
-    # digest_from_manifest was removed in Phase 8 Stage 3D; if it
-    # ever comes back as a public entry point we want to know.
+    # digest_from_manifest was removed; orchestrator routes via ManifestEnumerator.
     assert not hasattr(digest, "digest_from_manifest"), (
-        "digest_from_manifest reappeared in 3_digest.py. Stage 3D "
-        "removed it; the orchestrator now routes via ManifestEnumerator."
+        "digest_from_manifest reappeared in 3_digest.py. "
+        "The orchestrator routes via ManifestEnumerator from record_enumerator.py."
     )
 
-    # Post-review lower-bound canary: surprise shrinkage of the
-    # mega-functions can also hide a deleted branch. If any of these
-    # drops below the floor, a chunk of algorithm has vanished and
-    # the bound below should be revisited.
+    # Lower-bound canary: surprise shrinkage can hide a deleted branch.
     big_function_floors = {
         "_enumerate_via_manifest": 120,
         "_enumerate_via_bids": 60,
@@ -233,11 +204,7 @@ def test_megafunction_line_counts_are_known_baseline(digest: ModuleType) -> None
 
 
 # ─── Direct unit tests for the Stage 3D helpers ───────────────────────────
-# Post-review (2026-05-22): the four helpers below were only exercised
-# end-to-end via digest_dataset's snapshot fixtures, which only cover
-# the happy path. These tests pin each branch directly so a regression
-# in (e.g.) `_run_enumerator_with_manifest_fallback`'s try/except is
-# caught without needing a malformed-manifest snapshot fixture.
+# Pins each branch directly; snapshot fixtures only cover the happy path.
 
 
 def _make_dummy_result(records=(), errors=(), total_files=None):
@@ -252,86 +219,88 @@ def _make_dummy_result(records=(), errors=(), total_files=None):
     )
 
 
-def test_check_skip_conditions_already_digested(
-    digest: ModuleType, tmp_path: Path
-) -> None:
-    """Already-digested output dir → skipped/already digested."""
-    (tmp_path / "ds-001").mkdir()
-    (tmp_path / "out-ds-001").mkdir()
-    skip = digest._check_dataset_skip_conditions(
-        "ds-001", tmp_path / "ds-001", tmp_path / "out-ds-001"
-    )
-    assert skip == {
-        "status": "skipped",
-        "dataset_id": "ds-001",
-        "reason": "already digested",
-    }
-
-
-def test_check_skip_conditions_missing_input_dir(
-    digest: ModuleType, tmp_path: Path
-) -> None:
-    """Input dataset dir missing → skipped/directory not found."""
-    skip = digest._check_dataset_skip_conditions(
-        "ds-002", tmp_path / "absent", tmp_path / "out"
-    )
-    assert skip == {
-        "status": "skipped",
-        "dataset_id": "ds-002",
-        "reason": "directory not found",
-    }
-
-
-def test_check_skip_conditions_returns_none_when_both_ok(
-    digest: ModuleType, tmp_path: Path
-) -> None:
-    """Input present and output absent → None (proceed with digest)."""
-    (tmp_path / "ds-003").mkdir()
-    assert (
-        digest._check_dataset_skip_conditions(
-            "ds-003", tmp_path / "ds-003", tmp_path / "out-ds-003"
-        )
-        is None
-    )
-
-
-def test_summarise_empty_or_error_picks_no_files_in_manifest_for_zero(
+@pytest.mark.parametrize(
+    ("ds_id", "make_input", "make_output", "expected"),
+    [
+        pytest.param(
+            "ds-001",
+            True,
+            True,
+            {"status": "skipped", "dataset_id": "ds-001", "reason": "already digested"},
+            id="already_digested",
+        ),
+        pytest.param(
+            "ds-002",
+            False,
+            False,
+            {
+                "status": "skipped",
+                "dataset_id": "ds-002",
+                "reason": "directory not found",
+            },
+            id="missing_input_dir",
+        ),
+        pytest.param(
+            "ds-003",
+            True,
+            False,
+            None,
+            id="returns_none_when_both_ok",
+        ),
+    ],
+)
+def test_check_skip_conditions(
     digest: ModuleType,
+    tmp_path: Path,
+    ds_id: str,
+    make_input: bool,
+    make_output: bool,
+    expected,
 ) -> None:
-    """total_files == 0 → legacy 'no files in manifest' reason."""
-    res = _make_dummy_result(records=[], errors=[], total_files=0)
+    """_check_dataset_skip_conditions returns the correct skip dict or None."""
+    in_dir = tmp_path / ds_id
+    out_dir = tmp_path / f"out-{ds_id}"
+    if make_input:
+        in_dir.mkdir()
+    if make_output:
+        out_dir.mkdir()
+    result = digest._check_dataset_skip_conditions(ds_id, in_dir, out_dir)
+    assert result == expected
+
+
+@pytest.mark.parametrize(
+    ("total_files", "expected_reason"),
+    [
+        pytest.param(0, "no files in manifest", id="no_files_in_manifest_for_zero"),
+        pytest.param(
+            12, "no records extracted", id="no_records_extracted_for_positive"
+        ),
+        pytest.param(
+            None, "no neurophysiology files found", id="bids_message_when_total_unknown"
+        ),
+    ],
+)
+def test_summarise_empty_or_error_empty_status_reason(
+    digest: ModuleType,
+    total_files,
+    expected_reason: str,
+) -> None:
+    """Empty result with no errors → status='empty' with the correct reason.
+
+    - total_files=0 uses the legacy manifest reason.
+    - total_files>0 uses 'no records extracted'.
+    - total_files=None (BIDS path) uses the generic neurophysiology reason.
+    """
+    res = _make_dummy_result(records=[], errors=[], total_files=total_files)
     out = digest._summarise_empty_or_error("ds-X", res)
     assert out["status"] == "empty"
-    assert out["reason"] == "no files in manifest"
-
-
-def test_summarise_empty_or_error_picks_no_records_extracted_for_positive(
-    digest: ModuleType,
-) -> None:
-    """total_files > 0, records empty, no structural errors → 'no records extracted'."""
-    res = _make_dummy_result(records=[], errors=[], total_files=12)
-    out = digest._summarise_empty_or_error("ds-X", res)
-    assert out["status"] == "empty"
-    assert out["reason"] == "no records extracted"
-
-
-def test_summarise_empty_or_error_picks_bids_message_when_total_unknown(
-    digest: ModuleType,
-) -> None:
-    """BIDS path has total_files=None → legacy generic 'no neurophysiology files found'."""
-    res = _make_dummy_result(records=[], errors=[], total_files=None)
-    out = digest._summarise_empty_or_error("ds-X", res)
-    assert out["status"] == "empty"
-    assert out["reason"] == "no neurophysiology files found"
+    assert out["reason"] == expected_reason
 
 
 def test_summarise_empty_or_error_keeps_status_empty_for_soft_warnings_only(
     digest: ModuleType,
 ) -> None:
-    """Per-file warnings ('skipped' / 'warning' / no status) must NOT flip
-    the result to status='error' — old digest_from_manifest always
-    returned 'empty' regardless of soft entries.
-    """
+    """Soft per-file warnings ('skipped'/'warning'/no status) must NOT flip result to 'error'."""
     res = _make_dummy_result(
         records=[],
         errors=[
@@ -351,10 +320,7 @@ def test_summarise_empty_or_error_keeps_status_empty_for_soft_warnings_only(
 def test_summarise_empty_or_error_flips_to_error_when_structural_error_present(
     digest: ModuleType,
 ) -> None:
-    """Any error entry with status='error' is a structural failure ->
-    the summary flips to status='error' so CI gates can distinguish it
-    from a benign 'no records extracted' skip.
-    """
+    """Any error entry with status='error' flips the summary to status='error' for CI gates."""
     res = _make_dummy_result(
         records=[],
         errors=[
@@ -385,10 +351,7 @@ class _RecordingEmitter:
 def test_emit_dataset_finished_payload_round_trips_summary_fields(
     digest: ModuleType,
 ) -> None:
-    """_emit_dataset_finished forwards the documented 6 summary fields
-    to the telemetry payload. Pins the contract so a future summary
-    addition can't silently break dashboards that read the event.
-    """
+    """_emit_dataset_finished forwards the 6 documented summary fields; unknown fields must not leak."""
 
     recorder = _RecordingEmitter()
     saved = digest_telemetry._EMITTER
@@ -427,10 +390,7 @@ def test_emit_dataset_finished_payload_round_trips_summary_fields(
 def test_emit_dataset_finished_payload_includes_total_files(
     digest: ModuleType,
 ) -> None:
-    """The summary now carries total_files (for the manifest path).
-    The event payload MUST forward it so dashboards can see the raw
-    input count. Pins the drift trap from the post-review sweep.
-    """
+    """total_files from the manifest path must propagate to the telemetry event payload."""
 
     recorder = _RecordingEmitter()
     saved = digest_telemetry._EMITTER

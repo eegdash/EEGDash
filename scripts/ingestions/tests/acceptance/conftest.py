@@ -21,6 +21,7 @@ from pathlib import Path
 from typing import Any
 
 import pytest
+
 from eegdash.testing import data_file
 
 # Path layout:

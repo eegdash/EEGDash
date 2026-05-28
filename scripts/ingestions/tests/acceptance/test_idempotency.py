@@ -23,6 +23,7 @@ from pathlib import Path
 from typing import Any
 
 import pytest
+
 from eegdash.testing import data_file
 
 # Module-level "pinned now" used by ``_FixedDatetime`` below. Set by

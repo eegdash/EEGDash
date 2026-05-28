@@ -23,8 +23,9 @@ from copy import deepcopy
 
 import pytest
 from _helpers import TESTS_DIR
-from eegdash.schemas import RecordModel
 from pydantic import ValidationError
+
+from eegdash.schemas import RecordModel
 
 FIXTURES = TESTS_DIR / "fixtures" / "records"
 

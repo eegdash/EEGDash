@@ -24,10 +24,10 @@ from pathlib import Path
 
 import pytest
 from _helpers import INGEST_DIR
-from eegdash.testing import data_file
 
 from _fingerprint import fingerprint_from_manifest
 from _vhdr_parser import parse_vhdr_metadata
+from eegdash.testing import data_file
 
 EEG_VHDR = data_file("eeg/sub-xp101_task-motorloc_eeg.vhdr")
 

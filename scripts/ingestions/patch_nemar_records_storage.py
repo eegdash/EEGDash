@@ -50,6 +50,7 @@ import re
 import sys
 
 import httpx
+
 from eegdash.http_api_client import get_client
 
 NM_PATTERN = re.compile(r"^nm\d+$")

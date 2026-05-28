@@ -33,7 +33,6 @@ from pathlib import Path
 from typing import Protocol, TypedDict
 
 import mne
-
 from _mef3_parser import parse_mef3_metadata
 from _set_parser import parse_set_metadata
 from _snirf_parser import parse_snirf_metadata

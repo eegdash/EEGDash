@@ -24,6 +24,7 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
+
 from eegdash.testing import data_file
 
 # scipy.io is only needed for the synthetic-MAT v5 section. importorskip

@@ -18,9 +18,9 @@ from pathlib import Path
 
 import pytest
 from _helpers.builders import build_mefd_around_real_tmet
-from eegdash.testing import data_file
 
 from _mef3_parser import _parse_tmet_sampling_frequency, parse_mef3_metadata
+from eegdash.testing import data_file
 
 _TMET_FIXTURE = data_file("ieeg/EKG-000000.tmet")
 

@@ -17,7 +17,6 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
-from eegdash.testing import data_file
 
 from _vhdr_parser import (
     diagnose_vhdr_issues,
@@ -25,6 +24,7 @@ from _vhdr_parser import (
     parse_vhdr_metadata,
     parse_vhdr_metadata_robust,
 )
+from eegdash.testing import data_file
 
 # ── EEG fixture (ds002336 sub-xp101) ────────────────────────────────────────
 

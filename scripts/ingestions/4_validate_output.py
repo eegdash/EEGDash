@@ -25,10 +25,10 @@ import sys
 from collections import Counter
 from pathlib import Path
 
-from eegdash.schemas import DatasetModel, ManifestFileModel, ManifestModel, RecordModel
 from pydantic import ValidationError
 
 from _validate_config import load_validate_config_from_argv
+from eegdash.schemas import DatasetModel, ManifestFileModel, ManifestModel, RecordModel
 
 # Valid storage URL patterns per source
 VALID_STORAGE_PATTERNS = {

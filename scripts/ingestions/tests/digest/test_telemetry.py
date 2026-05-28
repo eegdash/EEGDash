@@ -19,7 +19,6 @@ import json
 from pathlib import Path
 
 from _helpers import INGEST_DIR as _INGEST_DIR
-from eegdash.testing import data_file
 
 from digest_telemetry import (
     NDJSONEmitter,
@@ -30,6 +29,7 @@ from digest_telemetry import (
     get_emitter,
     reset_telemetry,
 )
+from eegdash.testing import data_file
 
 
 def _load_digest():

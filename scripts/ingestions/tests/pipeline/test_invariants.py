@@ -26,12 +26,12 @@ import json
 from pathlib import Path
 
 from _helpers import INGEST_DIR as _INGEST_DIR
-from eegdash.testing import data_file
 from hypothesis import HealthCheck, given, settings
 from hypothesis import strategies as st
 
 from _file_utils import list_local_bids_files
 from _format_parser_registry import get_parser_for_extension, registered_extensions
+from eegdash.testing import data_file
 from record_enumerator import EnumerationResult
 
 

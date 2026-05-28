@@ -17,7 +17,17 @@ import time
 import xml.etree.ElementTree as ET
 from functools import wraps
 from pathlib import Path
+from typing import Any
 from urllib.parse import unquote, urljoin, urlparse
+
+import httpx
+from tenacity import (
+    RetryError,
+    Retrying,
+    retry_if_exception,
+    stop_after_attempt,
+    wait_exponential,
+)
 
 from _http import HTTPStatusError, RequestError, request_response
 
@@ -86,7 +96,15 @@ def _fetch_scidb_path(
 
         return files
 
-    except Exception:
+    except (
+        httpx.RequestError,
+        httpx.HTTPStatusError,
+        KeyError,
+        ValueError,
+        json.JSONDecodeError,
+    ):
+        # External-service listing failure: network blip, HTTP error,
+        # or malformed JSON response. Treat the source as empty.
         return []
 
 
@@ -139,7 +157,15 @@ def _propfind_datarn(url: str, result: list, visited: set, depth: int = 0):
                     }
                 )
 
-    except Exception:
+    except (
+        httpx.RequestError,
+        httpx.HTTPStatusError,
+        KeyError,
+        ValueError,
+        json.JSONDecodeError,
+    ):
+        # Recoverable external-service failure; we already have partial
+        # `result`/`webdav_url` accumulated. Continue with what we have.
         pass
 
 
@@ -203,34 +229,76 @@ def is_bids_root_file(filename: str) -> bool:
 # =============================================================================
 
 
+def _is_rate_limited_retryable(exc: BaseException) -> bool:
+    """Retry-predicate for ``rate_limited``: 429 + network errors only.
+
+    Used as a tenacity ``retry_if_exception`` callback; defined at
+    module level (rather than nested in ``rate_limited``) to satisfy
+    the no-nested-functions lint rule. Programmer errors
+    (AttributeError, TypeError, etc.) return False and propagate.
+    """
+    if isinstance(exc, HTTPStatusError):
+        return exc.response is not None and exc.response.status_code == 429
+    return isinstance(exc, RequestError)
+
+
 def rate_limited(min_interval: float = 0.5, max_retries: int = 3):
-    """Decorator for rate-limited HTTP requests with retry."""
+    """Decorator for rate-limited HTTP requests with retry on 429/network errors.
+
+    Wraps ``func`` so that:
+    - Calls are spaced at least ``min_interval`` seconds apart.
+    - HTTP 429 (Too Many Requests) and httpx network errors are retried
+      with exponential backoff (factor of 2 between attempts), up to
+      ``max_retries`` total attempts.
+    - Non-429 HTTPStatusError surfaces immediately on the first attempt
+      (404/5xx surface; tenacity-backed callers handle retry themselves
+      via the ``_http`` helper).
+
+    Parameters
+    ----------
+    min_interval : float
+        Minimum seconds between consecutive calls (rate limit). Also
+        used as the base for the exponential backoff between retries.
+    max_retries : int
+        Maximum total attempts (not delta — so ``max_retries=3`` makes
+        up to 3 attempts).
+
+    Notes
+    -----
+    Consolidates a hand-rolled try/except retry loop. Uses ``tenacity``
+    via ``stop_after_attempt`` / ``wait_exponential`` so it shares
+    semantics with ``_http.request_json``. The behaviour change is
+    documented in the test suite.
+    """
     last_call = [0.0]
 
     def decorator(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
-            # Enforce minimum interval between calls
+            # Enforce minimum interval between calls.
             elapsed = time.time() - last_call[0]
             if elapsed < min_interval:
                 time.sleep(min_interval - elapsed)
 
-            for attempt in range(max_retries):
-                try:
-                    result = func(*args, **kwargs)
-                    last_call[0] = time.time()
-                    return result
-                except HTTPStatusError as e:
-                    if e.response is not None and e.response.status_code == 429:
-                        wait = min_interval * (2**attempt)
-                        time.sleep(wait)
-                    elif attempt == max_retries - 1:
-                        raise
-                except RequestError:
-                    if attempt == max_retries - 1:
-                        raise
-                    time.sleep(min_interval * (attempt + 1))
-            return None
+            retrying = Retrying(
+                stop=stop_after_attempt(max_retries),
+                wait=wait_exponential(
+                    multiplier=min_interval, min=min_interval, max=60
+                ),
+                retry=retry_if_exception(_is_rate_limited_retryable),
+            )
+            result: Any = None
+            try:
+                for attempt in retrying:
+                    with attempt:
+                        result = func(*args, **kwargs)
+            except RetryError:
+                # Exhausted retries on a retryable exception path.
+                # Preserve the legacy contract: return None rather than
+                # propagating tenacity's RetryError wrapper.
+                return None
+            last_call[0] = time.time()
+            return result
 
         return wrapper
 
@@ -252,7 +320,8 @@ def peek_zip_contents(url: str, timeout: int = 30) -> list[dict] | None:
         url: Direct download URL for the ZIP file
         timeout: Request timeout in seconds
 
-    Returns:
+    Returns
+    -------
         List of {name, size, compressed_size} dicts, or None on error
 
     """
@@ -350,7 +419,12 @@ def peek_zip_contents(url: str, timeout: int = 30) -> list[dict] | None:
 
         return files if files else None
 
-    except Exception:
+    except (struct.error, UnicodeDecodeError, ValueError, IndexError) as e:
+        # ZIP central-directory parser. struct.error fires on truncated /
+        # garbage bytes; UnicodeDecodeError on filenames in unexpected
+        # encodings; IndexError on offsets past EOF. All recoverable —
+        # caller treats "no peek possible" as "skip the optimisation".
+        logger.debug("peek_zip_contents failed: %s", e)
         return None
 
 
@@ -360,7 +434,16 @@ def peek_zip_contents(url: str, timeout: int = 30) -> list[dict] | None:
 
 
 def list_figshare_files(article_id: int | str, api_key: str = "") -> list[dict]:
-    """List files from a Figshare article."""
+    """List files from a Figshare article.
+
+    .. warning::
+        **Secondary Source.** CI exercises only OpenNeuro and NEMAR;
+        this Adapter is best-effort and may silently drop fields
+        not in the shared schema. Fix opportunistically when
+        exercised; do not invest in depth until promoted in a
+        future sprint. See
+        ADRs/0001-secondary-source-deferral.md``.
+    """
     headers = {"User-Agent": "EEGDash/1.0"}
     if api_key:
         headers["Authorization"] = f"token {api_key}"
@@ -391,12 +474,28 @@ def list_figshare_files(article_id: int | str, api_key: str = "") -> list[dict]:
 
         return result
 
-    except Exception:
+    except (
+        httpx.RequestError,
+        httpx.HTTPStatusError,
+        KeyError,
+        ValueError,
+        json.JSONDecodeError,
+    ):
+        # External-service listing failure: network blip, HTTP error,
+        # or malformed JSON response. Treat the source as empty.
         return []
 
 
 def list_zenodo_files(record_id: int | str, api_key: str = "") -> list[dict]:
-    """List files from a Zenodo record."""
+    """List files from a Zenodo record.
+
+    .. warning::
+        **Secondary Source.** Same caveats as
+        :func:`list_figshare_files`. Zenodo's per-file ``checksum``
+        field is now picked up by :func:`build_manifest` (was silently
+        dropped before — see
+        ADRs/0001-secondary-source-deferral.md``).
+    """
     headers = {"User-Agent": "EEGDash/1.0"}
     if api_key:
         headers["Authorization"] = f"Bearer {api_key}"
@@ -446,12 +545,29 @@ def list_zenodo_files(record_id: int | str, api_key: str = "") -> list[dict]:
 
         return result
 
-    except Exception:
+    except (
+        httpx.RequestError,
+        httpx.HTTPStatusError,
+        KeyError,
+        ValueError,
+        json.JSONDecodeError,
+    ):
+        # External-service listing failure: network blip, HTTP error,
+        # or malformed JSON response. Treat the source as empty.
         return []
 
 
 def list_osf_files(node_id: str, path: str = "/") -> list[dict]:
-    """Recursively list files from an OSF node."""
+    """Recursively list files from an OSF node.
+
+    .. warning::
+        **Secondary Source.** Same caveats as
+        :func:`list_figshare_files`. Pagination is currently stubbed
+        (line ~593): the helper recurses but does not chase ``next``
+        page links, so OSF nodes with > 100 files may return a
+        partial listing. See
+        ADRs/0001-secondary-source-deferral.md``.
+    """
     url = f"https://api.osf.io/v2/nodes/{node_id}/files/osfstorage{path}"
     headers = {"User-Agent": "EEGDash/1.0"}
 
@@ -500,7 +616,15 @@ def list_osf_files(node_id: str, path: str = "/") -> list[dict]:
                 # Extract path from next URL and recurse
                 pass  # Simplified - OSF pagination rarely needed for single datasets
 
-    except Exception:
+    except (
+        httpx.RequestError,
+        httpx.HTTPStatusError,
+        KeyError,
+        ValueError,
+        json.JSONDecodeError,
+    ):
+        # Recoverable external-service failure; we already have partial
+        # `result`/`webdav_url` accumulated. Continue with what we have.
         pass
 
     return result
@@ -511,12 +635,20 @@ def list_scidb_files(
 ) -> list[dict]:
     """List files from SciDB using the public file tree API.
 
+    .. warning::
+        **Secondary Source.** Same caveats as
+        :func:`list_figshare_files`. SciDB emits ``md5`` directly and
+        is one of the few Adapters whose checksum survives the
+        manifest pipeline. See
+        ADRs/0001-secondary-source-deferral.md``.
+
     Args:
         dataset_id: The SciDB dataSetId (UUID format)
         version: Dataset version (default: V1)
         max_depth: Maximum recursion depth to prevent infinite loops
 
-    Returns:
+    Returns
+    -------
         List of file info dicts
 
     """
@@ -534,7 +666,15 @@ def list_scidb_files(
 
 
 def list_datarn_files(source_url: str) -> list[dict]:
-    """List files from data.ru.nl using WebDAV PROPFIND."""
+    """List files from data.ru.nl using WebDAV PROPFIND.
+
+    .. warning::
+        **Secondary Source.** Same caveats as
+        :func:`list_figshare_files`. The WebDAV PROPFIND path emits
+        only ``name`` and ``size`` — no checksum, no download URL
+        (constructed by the consumer from the source URL). See
+        ADRs/0001-secondary-source-deferral.md``.
+    """
     # Try to get WebDAV URL from page JSON-LD
     webdav_url = None
 
@@ -549,7 +689,15 @@ def list_datarn_files(source_url: str) -> list[dict]:
                 dist = ld_data.get("distribution", {})
                 if isinstance(dist, dict):
                     webdav_url = dist.get("contentUrl")
-    except Exception:
+    except (
+        httpx.RequestError,
+        httpx.HTTPStatusError,
+        KeyError,
+        ValueError,
+        json.JSONDecodeError,
+    ):
+        # Recoverable external-service failure; we already have partial
+        # `result`/`webdav_url` accumulated. Continue with what we have.
         pass
 
     if not webdav_url:
@@ -714,27 +862,82 @@ def list_git_files(clone_dir: Path) -> list[dict]:
     Includes both regular files and symlinks (even broken ones like git-annex
     pointers).  Resolves git-annex pointer files and symlinks to their real
     data size.
-    """
-    result = []
 
-    for path in clone_dir.rglob("*"):
-        if ".git" in path.parts:
+    Implementation note (perf): walks via :func:`os.scandir` in a single
+    iterative pass and classifies each entry from the cached dirent
+    flags (``DT_REG`` / ``DT_LNK`` / ``DT_DIR``) instead of via
+    ``Path.rglob`` + repeated ``is_file`` / ``is_symlink`` ``stat``
+    syscalls.
+
+    The walker's classification (is_dir / is_file / is_symlink) uses
+    the cached dirent flags from scandir — zero stat syscalls. Per-
+    emitted-file stat cost is unchanged from the prior code:
+    ``get_annex_file_size`` (called once per emitted entry) still does
+    its own Path-based stat probes to disambiguate git-annex pointer
+    files from regular files. The Stage-2 speedup comes from cutting
+    classification syscalls for the (much larger) population of
+    non-emitted intermediate directory entries, not from changing the
+    per-emitted-file cost.
+
+    See ``tests/test_manifest_walk_perf.py`` for the regression guard.
+    """
+    result: list[dict] = []
+    # Pre-resolve to absolute path once so ``os.path.relpath`` is purely
+    # a string operation per entry, avoiding ``Path.__init__`` per file.
+    clone_dir_str = os.fspath(clone_dir)
+    stack: list[str] = [clone_dir_str]
+
+    while stack:
+        cur = stack.pop()
+        try:
+            scanner = os.scandir(cur)
+        except (PermissionError, OSError, FileNotFoundError):
             continue
 
-        if path.is_file():
-            result.append(
-                {
-                    "name": str(path.relative_to(clone_dir)),
-                    "size": get_annex_file_size(path),
-                }
-            )
-        elif path.is_symlink():
-            result.append(
-                {
-                    "name": str(path.relative_to(clone_dir)),
-                    "size": get_annex_file_size(path),
-                }
-            )
+        with scanner:
+            for entry in scanner:
+                # Skip the top-level ".git" tree without ever stat-ing
+                # its contents. Matches the prior ``".git" in path.parts``
+                # guard for any path under the .git subtree, because we
+                # never descend into it.
+                name = entry.name
+                if name == ".git":
+                    continue
+
+                try:
+                    is_symlink = entry.is_symlink()
+                    # ``follow_symlinks=False`` keeps broken symlinks
+                    # classified as non-dir, matching the prior
+                    # ``path.is_file()`` (which followed symlinks but
+                    # would return False for broken pointers).
+                    is_dir = entry.is_dir(follow_symlinks=False)
+                except OSError:
+                    # Dirent went away between readdir and stat. Skip.
+                    continue
+
+                if is_dir and not is_symlink:
+                    stack.append(entry.path)
+                    continue
+
+                # Mirror the prior classifier exactly: emit an entry
+                # when the dirent is a regular file (``is_file`` after
+                # following symlinks) OR when it's a symlink (broken or
+                # otherwise — git-annex pointers).
+                try:
+                    is_file = entry.is_file()
+                except OSError:
+                    is_file = False
+
+                if not (is_file or is_symlink):
+                    continue
+
+                # Size resolution preserves the exact semantics of
+                # ``get_annex_file_size``: annex-keyed pointers → size
+                # parsed from the key, broken symlinks → 0, regular
+                # files → ``stat.st_size``.
+                size = get_annex_file_size(Path(entry.path))
+                rel = os.path.relpath(entry.path, clone_dir_str)
+                result.append({"name": rel, "size": size})
 
     return result
 
@@ -759,7 +962,8 @@ def build_manifest(
         metadata: Optional additional metadata from consolidated files.
                   ALL metadata is preserved to ensure no information loss.
 
-    Returns:
+    Returns
+    -------
         Manifest dict ready to be saved
 
     Note:
@@ -779,8 +983,11 @@ def build_manifest(
         }
         if download_url := f.get("download_url"):
             nf["download_url"] = download_url
-        if md5 := f.get("md5"):
-            nf["md5"] = md5
+        # Some Adapters (Zenodo) emit ``checksum`` instead of ``md5``;
+        # accept either. Without this, Zenodo content hashes were
+        # silently dropped at manifest time. See
+        if checksum := f.get("md5") or f.get("checksum"):
+            nf["md5"] = checksum
 
         # Normalize zip_contents to _zip_contents (expected by digest)
         if zip_contents := f.get("zip_contents"):
@@ -844,7 +1051,8 @@ def list_local_bids_files(local_path: str | Path) -> list[dict]:
     Args:
         local_path: Path to local BIDS dataset directory
 
-    Returns:
+    Returns
+    -------
         List of file dicts with {name, size} for each file
 
     """

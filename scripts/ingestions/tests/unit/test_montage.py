@@ -2,14 +2,12 @@
 
 from __future__ import annotations
 
-import importlib.util
 import json
 from pathlib import Path
 from types import ModuleType
 from unittest.mock import patch
 
 import pytest
-from _helpers import INGEST_DIR as _INGEST_DIR
 
 import _montage
 from _montage import (
@@ -444,15 +442,11 @@ def test_extract_layout_fnirs_alias_to_nirs(tmp_path: Path):
 
 @pytest.fixture(scope="module")
 def digest() -> ModuleType:
-    """Load 3_digest.py via importlib (numeric filename)."""
-    spec = importlib.util.spec_from_file_location(
-        "digest_under_test", _INGEST_DIR / "3_digest.py"
-    )
-    assert spec is not None
-    assert spec.loader is not None
-    mod = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(mod)
-    return mod
+    """The montage-cache logic (``_attach_montage_to_record`` + its ``extract_layout``
+    dependency) lives in ``_bids_digest`` after the BIDS-path extraction."""
+    import _bids_digest  # noqa: PLC0415
+
+    return _bids_digest
 
 
 def _meg_record(nchans: int, name: str = "sub-01_run-01_meg.fif") -> dict:

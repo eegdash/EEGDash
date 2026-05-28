@@ -58,10 +58,6 @@ class SourceAdapter(ABC):
 
     # ─── Behaviour hooks ─────────────────────────────────────────────
 
-    def address_file(self, bids_relpath: str) -> str:
-        """Return the storage address for a BIDS file (``<base>/<relpath>``)."""
-        return f"{self.storage_base}/{bids_relpath}"
-
     def dataset_url(self) -> str | None:
         """User-facing landing-page URL. Returns ``None`` for secondary Sources."""
         return None

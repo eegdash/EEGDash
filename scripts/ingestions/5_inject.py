@@ -86,24 +86,9 @@ __all__ = [
 ]
 
 
-def _default_workers() -> int:
-    """Pick a worker pool size from the CPU count, capped at 8.
-
-    Returns
-    -------
-    int
-        ``min(8, max(2, (os.cpu_count() or 2) * 2))``.
-
-    Notes
-    -----
-    Replaces the hard-coded ``max_workers=8``. CI workers run on anything
-    from 2 vCPUs (GitHub free tier) to 16+ vCPUs (self-hosted runners); a
-    single magic constant is wrong for both extremes. The cap at 8
-    matches the previous behaviour for hosts with >= 4 vCPUs so this
-    is a non-regression on the original CI; smaller hosts now get a
-    sensible smaller pool.
-    """
-    return min(8, max(2, (os.cpu_count() or 2) * 2))
+# CI workers run on 2-16+ vCPUs; cap at 8 matches the prior magic
+# constant for >= 4 vCPU hosts and gives smaller hosts a sensible pool.
+DEFAULT_WORKERS = min(8, max(2, (os.cpu_count() or 2) * 2))
 
 
 def _sanitize_for_json(obj):
@@ -147,11 +132,6 @@ def _bulk_upsert_batch(
         return {"inserted": 0, "updated": 0, "error": f"Batch {batch_idx}: {e}"}
 
 
-def _make_session(auth_token: str):
-    """Create an authed HTTP client. Retries inject at the request site."""
-    return make_authed_client(auth_token)
-
-
 def inject_datasets(
     datasets: list[dict],
     api_url: str,
@@ -168,7 +148,7 @@ def inject_datasets(
         Result with inserted_count
 
     """
-    session = client or _make_session(admin_token)
+    session = client or make_authed_client(admin_token)
     url = f"{api_url}/admin/{database}/datasets/bulk"
 
     inserted_count = 0
@@ -212,7 +192,7 @@ def inject_records(
         Result with inserted_count
 
     """
-    session = client or _make_session(admin_token)
+    session = client or make_authed_client(admin_token)
     # Use the new upsert endpoint
     url = f"{api_url}/admin/{database}/records/upsert"
 
@@ -231,7 +211,7 @@ def inject_records(
     # deadlock the main thread indefinitely.
     per_batch_timeout_s = 60.0
     wall_clock_budget_s = max(120.0, len(batches) * per_batch_timeout_s + 30.0)
-    with ThreadPoolExecutor(max_workers=_default_workers()) as executor:
+    with ThreadPoolExecutor(max_workers=DEFAULT_WORKERS) as executor:
         futures = {
             executor.submit(
                 _bulk_upsert_batch,
@@ -278,7 +258,7 @@ def inject_montages(
     Payloads are capped at 500 per the server's validator; ``batch_size``
     defaults to 100 to keep request bodies under a few MB.
     """
-    session = client or _make_session(admin_token)
+    session = client or make_authed_client(admin_token)
     url = f"{api_url}/admin/{database}/montages/bulk"
 
     inserted_count = 0
@@ -292,7 +272,7 @@ def inject_montages(
     # Same timeout discipline as inject_records.
     per_batch_timeout_s = 120.0
     wall_clock_budget_s = max(180.0, len(batches) * per_batch_timeout_s + 30.0)
-    with ThreadPoolExecutor(max_workers=_default_workers()) as executor:
+    with ThreadPoolExecutor(max_workers=DEFAULT_WORKERS) as executor:
         futures = {
             executor.submit(
                 _bulk_upsert_batch,
@@ -474,7 +454,7 @@ def main():
         # Inject datasets
         if all_datasets and not args.only_records:
             print(f"\nInjecting {len(all_datasets)} datasets...")
-            with _make_session(admin_token) as client:
+            with make_authed_client(admin_token) as client:
                 # Use smaller batch size for datasets to avoid timeouts
                 ds_batch_size = 20
                 for i in range(0, len(all_datasets), ds_batch_size):
@@ -510,7 +490,7 @@ def main():
         if all_records and not args.only_datasets:
             print(f"\nInjecting {len(all_records)} records...")
             try:
-                with _make_session(admin_token) as client:
+                with make_authed_client(admin_token) as client:
                     result = inject_records(
                         all_records,
                         args.api_url,
@@ -536,7 +516,7 @@ def main():
         if all_montages and want_montages:
             print(f"\nInjecting {len(all_montages)} unique montages...")
             try:
-                with _make_session(admin_token) as client:
+                with make_authed_client(admin_token) as client:
                     result = inject_montages(
                         all_montages,
                         args.api_url,
@@ -570,7 +550,7 @@ def main():
                 try:
                     datasets_param = ",".join(affected_datasets)
                     url = f"{args.api_url}/admin/{args.database}/datasets/compute-stats?datasets={datasets_param}"
-                    with _make_session(admin_token) as client:
+                    with make_authed_client(admin_token) as client:
                         result, _response = request_json(
                             "post",
                             url,

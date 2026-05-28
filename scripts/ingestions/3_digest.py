@@ -1273,12 +1273,6 @@ def detect_modality_from_path(filepath: str) -> str:
     return "eeg"
 
 
-# Backward-compatibility alias.
-def is_eeg_data_file(filepath: str) -> bool:
-    """Alias for is_neuro_data_file."""
-    return is_neuro_data_file(filepath)
-
-
 def _determine_manifest_storage_base(
     source: str,
     dataset_id: str,

@@ -2,11 +2,10 @@
 
 from __future__ import annotations
 
-import importlib.util
 import json
 from pathlib import Path
 
-from _helpers import INGEST_DIR as _INGEST_DIR
+from _helpers import load_digest
 from hypothesis import HealthCheck, given, settings
 from hypothesis import strategies as st
 
@@ -16,19 +15,8 @@ from eegdash.testing import data_file
 from record_enumerator import EnumerationResult
 
 
-def _load_digest():
-    spec = importlib.util.spec_from_file_location(
-        "_invariants_digest_target", _INGEST_DIR / "3_digest.py"
-    )
-    assert spec is not None
-    assert spec.loader is not None
-    mod = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(mod)
-    return mod
-
-
 def test_provenance_sources_are_a_closed_set():
-    digest = _load_digest()
+    digest = load_digest()
     valid = {
         digest._PROV_MNE_BIDS,
         digest._PROV_MODALITY_SIDECAR,
@@ -62,7 +50,7 @@ def test_clamp_preserves_value_provenance_invariant(
     sfreq: float | None, nchans: int | None
 ):
     # _clamp_metadata_extremes invariant: provenance is None iff value is None
-    digest = _load_digest()
+    digest = load_digest()
     prov = {
         "sampling_frequency": "mne_bids" if sfreq is not None else None,
         "nchans": "channels_tsv" if nchans is not None else None,
@@ -104,7 +92,7 @@ def test_all_registered_parsers_return_none_or_dict(tmp_path: Path):
     )
 )
 def test_stamp_provenance_idempotent_under_first_writer_wins(sources):
-    digest = _load_digest()
+    digest = load_digest()
     prov = digest._empty_provenance()
     field = "sampling_frequency"
     digest._stamp_provenance(

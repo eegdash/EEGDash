@@ -27,7 +27,6 @@ another bug here.
 
 from __future__ import annotations
 
-import importlib.util
 import json
 import os
 import subprocess
@@ -36,7 +35,7 @@ import uuid
 
 import httpx
 import pytest
-from _helpers import INGEST_DIR as _INGEST_DIR
+from _helpers import load_inject
 
 _API_URL = os.environ.get("EEGDASH_INTEGRATION_API_URL")
 _ADMIN_TOKEN = os.environ.get("EEGDASH_INTEGRATION_ADMIN_TOKEN")
@@ -53,17 +52,6 @@ pytestmark = [
         ),
     ),
 ]
-
-
-def _load_inject():
-    spec = importlib.util.spec_from_file_location(
-        "_inject_live_target", _INGEST_DIR / "5_inject.py"
-    )
-    assert spec is not None
-    assert spec.loader is not None
-    mod = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(mod)
-    return mod
 
 
 def _unique_test_id() -> str:
@@ -142,7 +130,7 @@ def test_live_inject_dataset_round_trip():
     digest produces, this test catches it; the respx mocks in C6.2
     only catch our own assumptions.
     """
-    inject_mod = _load_inject()
+    inject_mod = load_inject()
     test_id = _unique_test_id()
 
     try:
@@ -182,7 +170,7 @@ def test_live_inject_dataset_round_trip():
 
 def test_live_inject_record_round_trip():
     """Round-trip a single Record through the upsert endpoint."""
-    inject_mod = _load_inject()
+    inject_mod = load_inject()
     test_id = _unique_test_id()
     test_bids_relpath = "sub-01/eeg/sub-01_task-test_eeg.edf"
 
@@ -262,7 +250,7 @@ def test_live_idempotent_upsert():
     Pins the Stage 5 idempotency contract (re-running digest must not
     duplicate records — the dataset_id + bids_relpath composite key
     is the upsert key)."""
-    inject_mod = _load_inject()
+    inject_mod = load_inject()
     test_id = _unique_test_id()
 
     # Insert dataset

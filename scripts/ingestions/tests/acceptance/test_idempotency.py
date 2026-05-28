@@ -17,12 +17,12 @@ in the same process and diffs.
 from __future__ import annotations
 
 import datetime as _dt
-import importlib.util
 import json
 from pathlib import Path
 from typing import Any
 
 import pytest
+from _helpers import load_digest
 
 from eegdash.testing import data_file
 
@@ -47,18 +47,6 @@ class _FixedDatetime(_dt.datetime):
     @classmethod
     def now(cls, tz=None):
         return _dt.datetime.fromisoformat(_PINNED_NOW_ISO.replace("Z", "+00:00"))
-
-
-def _load_digest_module(ingest_dir: Path):
-    """Load ``3_digest.py`` via importlib (digit prefix forbids regular import)."""
-    spec = importlib.util.spec_from_file_location(
-        "digest_under_test_idempotency", ingest_dir / "3_digest.py"
-    )
-    assert spec is not None
-    assert spec.loader is not None
-    mod = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(mod)
-    return mod
 
 
 def _run_digest_against(
@@ -125,7 +113,7 @@ def test_digest_dataset_is_byte_idempotent(
     if not fixture_input.exists():
         pytest.skip(f"Fixture missing: {fixture_input}")
 
-    digest_mod = _load_digest_module(ingest_dir)
+    digest_mod = load_digest()
 
     out_a = tmp_path / "run_a"
     out_b = tmp_path / "run_b"
@@ -177,7 +165,7 @@ def test_record_count_is_stable_across_runs(
     if not fixture_input.exists():
         pytest.skip(f"Fixture missing: {fixture_input}")
 
-    digest_mod = _load_digest_module(ingest_dir)
+    digest_mod = load_digest()
     digested_at = "2026-05-22T12:00:00+00:00"
 
     out_a = tmp_path / "run_a"
@@ -201,7 +189,7 @@ def test_ingestion_fingerprint_is_stable_across_runs(ingest_dir: Path, tmp_path:
     if not fixture_input.exists():
         pytest.skip(f"Fixture missing: {fixture_input}")
 
-    digest_mod = _load_digest_module(ingest_dir)
+    digest_mod = load_digest()
     digested_at = "2026-05-22T12:00:00+00:00"
 
     out_a = tmp_path / "run_a"

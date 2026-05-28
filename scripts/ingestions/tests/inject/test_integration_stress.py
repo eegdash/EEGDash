@@ -6,7 +6,6 @@ Opt-in via the same env vars as test_inject_integration_live.py.
 from __future__ import annotations
 
 import concurrent.futures as cf
-import importlib.util
 import json
 import os
 import subprocess
@@ -15,7 +14,7 @@ import uuid
 
 import httpx
 import pytest
-from _helpers import INGEST_DIR as _INGEST_DIR
+from _helpers import load_inject
 
 _API_URL = os.environ.get("EEGDASH_INTEGRATION_API_URL")
 _ADMIN_TOKEN = os.environ.get("EEGDASH_INTEGRATION_ADMIN_TOKEN")
@@ -32,17 +31,6 @@ pytestmark = [
         ),
     ),
 ]
-
-
-def _load_inject():
-    spec = importlib.util.spec_from_file_location(
-        "_inject_stress_target", _INGEST_DIR / "5_inject.py"
-    )
-    assert spec is not None
-    assert spec.loader is not None
-    mod = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(mod)
-    return mod
 
 
 def _stress_id(tag: str = "stress") -> str:
@@ -69,7 +57,7 @@ def _cleanup(dataset_id: str) -> None:
 
 def test_stress_record_with_all_c6_1_fields_round_trips():
     """BIDS-spec fields must survive the Gateway → MongoDB → read-back round-trip."""
-    inject_mod = _load_inject()
+    inject_mod = load_inject()
     test_id = _stress_id("c6_1_fields")
 
     inject_mod.inject_datasets(
@@ -239,7 +227,7 @@ def test_stress_inject_to_invalid_database_rejected():
 
 def test_stress_bulk_insert_100_datasets():
     """100-dataset bulk insert completes under 10 s with all records present."""
-    inject_mod = _load_inject()
+    inject_mod = load_inject()
     prefix = _stress_id("bulk100")
     datasets = [
         {
@@ -296,7 +284,7 @@ _PARALLEL_PREFIX: str | None = None
 def _parallel_inject_worker(idx: int) -> dict:
     """Module-level inject worker (one dataset per call)."""
     assert _PARALLEL_PREFIX is not None
-    inject_mod = _load_inject()
+    inject_mod = load_inject()
     return inject_mod.inject_datasets(
         [
             {
@@ -318,7 +306,7 @@ _RACE_TEST_ID: str | None = None
 def _race_upsert_worker(_idx: int) -> dict:
     """Module-level upsert worker — same composite key on every call."""
     assert _RACE_TEST_ID is not None
-    inject_mod = _load_inject()
+    inject_mod = load_inject()
     return inject_mod.inject_records(
         [
             {
@@ -359,7 +347,7 @@ def test_stress_parallel_inject_no_race_on_distinct_ids():
 def test_stress_parallel_upsert_same_record_no_duplicate():
     """4 parallel upserts on the same composite key produce exactly 1 record."""
     global _RACE_TEST_ID
-    inject_mod = _load_inject()
+    inject_mod = load_inject()
     _RACE_TEST_ID = _stress_id("race")
 
     inject_mod.inject_datasets(
@@ -410,7 +398,7 @@ def test_stress_parallel_upsert_same_record_no_duplicate():
 
 def test_stress_dataset_with_unicode_name():
     """Unicode in name field (Greek, Chinese, emoji) survives round-trip."""
-    inject_mod = _load_inject()
+    inject_mod = load_inject()
     test_id = _stress_id("unicode")
     unicode_name = "Étude EEG · 脑电图研究 · ⚡ test"
 
@@ -439,7 +427,7 @@ def test_stress_dataset_with_unicode_name():
 
 def test_stress_dataset_with_very_long_authors_list():
     """A 50-author list is not truncated by the Gateway."""
-    inject_mod = _load_inject()
+    inject_mod = load_inject()
     test_id = _stress_id("long_authors")
     authors = [f"Author {i:02d}" for i in range(50)]
 
@@ -469,7 +457,7 @@ def test_stress_dataset_with_very_long_authors_list():
 
 def test_stress_record_with_large_inline_sidecar():
     """A ~100 KB sidecar_inline blob survives the round-trip."""
-    inject_mod = _load_inject()
+    inject_mod = load_inject()
     test_id = _stress_id("large_inline")
 
     # 100KB participants.tsv-like blob
@@ -537,7 +525,7 @@ def test_stress_record_with_large_inline_sidecar():
 
 def test_stress_inject_record_latency_under_500ms():
     """Single-record upsert completes under 2 s on a healthy cluster."""
-    inject_mod = _load_inject()
+    inject_mod = load_inject()
     test_id = _stress_id("latency")
 
     inject_mod.inject_datasets(

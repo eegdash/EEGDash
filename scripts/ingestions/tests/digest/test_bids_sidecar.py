@@ -2,26 +2,14 @@
 
 from __future__ import annotations
 
-import importlib.util
 import json
 import shutil
 from pathlib import Path
 
 import pytest
-from _helpers import INGEST_DIR as _INGEST_DIR
+from _helpers import load_digest
 
 from eegdash.testing import data_file
-
-
-def _load_digest():
-    spec = importlib.util.spec_from_file_location(
-        "_c6_digest_target", _INGEST_DIR / "3_digest.py"
-    )
-    assert spec is not None
-    assert spec.loader is not None
-    mod = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(mod)
-    return mod
 
 
 class _FakeBIDSDataset:
@@ -87,7 +75,7 @@ def _build_bids_root_with_sidecar(
 )
 def test_sidecar_extracts_fields(tmp_path: Path, sidecar_payload: dict, expected: dict):
     """_extract_bids_sidecar_fields surfaces each BIDS-spec field correctly."""
-    digest = _load_digest()
+    digest = load_digest()
     fake, data = _build_bids_root_with_sidecar(tmp_path, sidecar_payload)
     out = digest._extract_bids_sidecar_fields(fake, data)
     for key, value in expected.items():
@@ -96,7 +84,7 @@ def test_sidecar_extracts_fields(tmp_path: Path, sidecar_payload: dict, expected
 
 def test_sidecar_skips_missing_fields(tmp_path: Path):
     """Fields not in the sidecar are omitted from the output."""
-    digest = _load_digest()
+    digest = load_digest()
     fake, data = _build_bids_root_with_sidecar(
         tmp_path,
         {"PowerLineFrequency": 50},  # only one set
@@ -109,7 +97,7 @@ def test_sidecar_skips_missing_fields(tmp_path: Path):
 
 def test_sidecar_skips_empty_string_values(tmp_path: Path):
     """Empty strings count as "not specified" — same as None."""
-    digest = _load_digest()
+    digest = load_digest()
     fake, data = _build_bids_root_with_sidecar(
         tmp_path,
         {"Manufacturer": "", "ManufacturersModelName": "BrainAmp"},
@@ -121,7 +109,7 @@ def test_sidecar_skips_empty_string_values(tmp_path: Path):
 
 def test_sidecar_handles_missing_sidecar(tmp_path: Path):
     """If no modality sidecar exists at any level, return empty dict."""
-    digest = _load_digest()
+    digest = load_digest()
     sub_dir = tmp_path / "sub-01" / "eeg"
     sub_dir.mkdir(parents=True)
     data = sub_dir / "sub-01_task-rest_eeg.edf"
@@ -134,7 +122,7 @@ def test_sidecar_handles_missing_sidecar(tmp_path: Path):
 
 def test_sidecar_handles_malformed_json(tmp_path: Path):
     """A malformed sidecar JSON → empty dict, no exception."""
-    digest = _load_digest()
+    digest = load_digest()
     sub_dir = tmp_path / "sub-01" / "eeg"
     sub_dir.mkdir(parents=True)
     data = sub_dir / "sub-01_task-rest_eeg.edf"
@@ -147,14 +135,14 @@ def test_sidecar_handles_malformed_json(tmp_path: Path):
 
 def test_sidecar_handles_dataset_without_required_attrs():
     """Dataset object lacking bidsdir / get_bids_file_attribute → empty dict, no crash."""
-    digest = _load_digest()
+    digest = load_digest()
     out = digest._extract_bids_sidecar_fields(object(), "x.edf")
     assert out == {}
 
 
 def test_sidecar_inheritance_walks_up_to_subject_level(tmp_path: Path):
     """BIDS inheritance: subject-level sidecar applies to all recordings in that subject."""
-    digest = _load_digest()
+    digest = load_digest()
     sub_dir = tmp_path / "sub-01"
     eeg_dir = sub_dir / "eeg"
     eeg_dir.mkdir(parents=True)
@@ -200,7 +188,7 @@ def test_sidecar_inheritance_walks_up_to_subject_level(tmp_path: Path):
 )
 def test_channel_status_counts(tmp_path: Path, tsv_content: str, expected: dict):
     """_extract_channel_status_counts reads channels.tsv; missing status column → empty dict."""
-    digest = _load_digest()
+    digest = load_digest()
     sub_dir = tmp_path / "sub-01" / "eeg"
     sub_dir.mkdir(parents=True)
     data = sub_dir / "sub-01_task-rest_eeg.edf"
@@ -222,7 +210,7 @@ def test_channel_status_counts_returns_empty_when_no_channels_tsv(
     tmp_path: Path,
 ):
     """No channels.tsv anywhere in the BIDS tree → empty dict."""
-    digest = _load_digest()
+    digest = load_digest()
     sub_dir = tmp_path / "sub-01" / "eeg"
     sub_dir.mkdir(parents=True)
     data = sub_dir / "sub-01_task-rest_eeg.edf"
@@ -259,14 +247,14 @@ def test_channel_status_counts_returns_empty_when_no_channels_tsv(
 )
 def test_dataset_extras_extracts_field(desc_payload, expected_key, expected_value):
     """_extract_dataset_description_extras surfaces each BIDS dataset field."""
-    digest = _load_digest()
+    digest = load_digest()
     out = digest._extract_dataset_description_extras(desc_payload)
     assert out[expected_key] == expected_value
 
 
 def test_dataset_extras_skips_empty_lists():
     """Empty list = "not specified" — omit."""
-    digest = _load_digest()
+    digest = load_digest()
     desc = {
         "Acknowledgements": "real value",
         "EthicsApprovals": [],
@@ -280,7 +268,7 @@ def test_dataset_extras_skips_empty_lists():
 
 def test_dataset_extras_extracts_generated_by():
     """GeneratedBy is a list of {Name, Version, ...} dicts — preserved as-is."""
-    digest = _load_digest()
+    digest = load_digest()
     desc = {
         "GeneratedBy": [
             {"Name": "fMRIPrep", "Version": "20.2.0"},
@@ -299,7 +287,7 @@ def test_extract_record_includes_new_bids_fields_in_synthetic_bids(
     tmp_path: Path,
 ):
     """End-to-end: rich sidecar JSON fields land on the digested record and dataset doc."""
-    digest = _load_digest()
+    digest = load_digest()
 
     inputs_root = data_file("digest_snapshots/inputs/ds_snapshot_vhdr")
     if not inputs_root.exists():

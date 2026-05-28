@@ -31,31 +31,18 @@ both the code change AND the snapshot diff together.
 
 from __future__ import annotations
 
-import importlib.util
 import json
 from pathlib import Path
 from typing import Any
 
 import pytest
-from _helpers import INGEST_DIR as _INGEST_DIR
+from _helpers import load_digest
 
 from eegdash.testing import data_file
 
 SNAPSHOT_DIR = data_file("digest_snapshots")
 INPUTS_DIR = SNAPSHOT_DIR / "inputs"
 SNAPSHOT_OUTPUTS_DIR = SNAPSHOT_DIR / "outputs"
-
-
-def _load_digest_module():
-    """Lazy-load 3_digest.py despite its digit-prefixed filename."""
-    spec = importlib.util.spec_from_file_location(
-        "_digest_snapshot_target", _INGEST_DIR / "3_digest.py"
-    )
-    assert spec is not None
-    assert spec.loader is not None
-    mod = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(mod)
-    return mod
 
 
 def _sanitize_for_snapshot(obj: Any, *, dataset_id: str) -> Any:
@@ -101,7 +88,7 @@ def fresh_digest_output(tmp_path_factory) -> Path:
     Returns the output directory (which contains ``ds_snapshot_vhdr/``).
     Module-scoped so the (expensive) digest runs ONCE per test session.
     """
-    digest_mod = _load_digest_module()
+    digest_mod = load_digest()
 
     tmp_output = tmp_path_factory.mktemp("digest_snapshot_run")
     summary = digest_mod.digest_dataset(
@@ -129,7 +116,7 @@ def fresh_manifest_digest_output(tmp_path_factory) -> Path:
     so ``get_record_enumerator`` picks ManifestEnumerator directly
     (the same path the legacy wrapper followed).
     """
-    digest_mod = _load_digest_module()
+    digest_mod = load_digest()
     tmp_output = tmp_path_factory.mktemp("manifest_snapshot_run")
     summary = digest_mod.digest_dataset(
         "ds_snapshot_manifest",

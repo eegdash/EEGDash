@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import importlib.util
 import json
 import math
 from pathlib import Path
@@ -10,19 +9,7 @@ from pathlib import Path
 import httpx
 import pytest
 import respx
-from _helpers import INGEST_DIR as _INGEST_DIR
-
-
-def _load_inject():
-    spec = importlib.util.spec_from_file_location(
-        "_inject_helpers_target", _INGEST_DIR / "5_inject.py"
-    )
-    assert spec is not None
-    assert spec.loader is not None
-    mod = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(mod)
-    return mod
-
+from _helpers import load_inject
 
 # ─── load_dataset / load_records / load_montages ──────────────────────────
 
@@ -30,7 +17,7 @@ def _load_inject():
 def test_load_dataset_returns_none_for_missing_file(tmp_path: Path):
     ds_dir = tmp_path / "ds-001"
     ds_dir.mkdir()
-    inject = _load_inject()
+    inject = load_inject()
     assert inject.load_dataset(ds_dir) is None
 
 
@@ -40,7 +27,7 @@ def test_load_dataset_reads_json(tmp_path: Path):
     (ds_dir / "ds-001_dataset.json").write_text(
         json.dumps({"dataset_id": "ds-001", "name": "Test"})
     )
-    inject = _load_inject()
+    inject = load_inject()
     out = inject.load_dataset(ds_dir)
     assert out["dataset_id"] == "ds-001"
     assert out["name"] == "Test"
@@ -92,7 +79,7 @@ def test_load_records(tmp_path: Path, file_name, content, expected_len):
     ds_dir.mkdir()
     if file_name is not None:
         (ds_dir / file_name).write_text(json.dumps(content))
-    inject = _load_inject()
+    inject = load_inject()
     records = inject.load_records(ds_dir)
     assert len(records) == expected_len
 
@@ -127,7 +114,7 @@ def test_load_montages(tmp_path: Path, content, expected_len):
     ds_dir.mkdir()
     if expected_len != 0 or content == {"montages": None}:
         (ds_dir / "ds-001_montages.json").write_text(json.dumps(content))
-    inject = _load_inject()
+    inject = load_inject()
     montages = inject.load_montages(ds_dir)
     assert len(montages) == expected_len
 
@@ -136,7 +123,7 @@ def test_load_montages(tmp_path: Path, content, expected_len):
 
 
 def test_flatten_entities_lifts_nested_keys():
-    inject = _load_inject()
+    inject = load_inject()
     rec = {
         "dataset": "ds-001",
         "entities": {"subject": "01", "task": "rest", "session": "01", "run": "1"},
@@ -151,7 +138,7 @@ def test_flatten_entities_lifts_nested_keys():
 
 def test_flatten_entities_top_level_wins_over_entity():
     """Top-level subject wins over entities dict — pins conflict-resolution contract."""
-    inject = _load_inject()
+    inject = load_inject()
     rec = {
         "dataset": "ds-001",
         "subject": "01",  # top-level
@@ -163,14 +150,14 @@ def test_flatten_entities_top_level_wins_over_entity():
 
 
 def test_flatten_entities_no_entities_passes_through():
-    inject = _load_inject()
+    inject = load_inject()
     rec = {"dataset": "ds-001", "subject": "01"}
     out = inject._flatten_entities(rec)
     assert out == rec
 
 
 def test_flatten_entities_does_not_mutate_input():
-    inject = _load_inject()
+    inject = load_inject()
     rec = {
         "dataset": "ds-001",
         "entities": {"subject": "01"},
@@ -192,20 +179,20 @@ def test_flatten_entities_does_not_mutate_input():
     ],
 )
 def test_sanitize_for_json_replaces_non_finite_float_with_none(bad_float):
-    inject = _load_inject()
+    inject = load_inject()
     out = inject._sanitize_for_json({"field": bad_float})
     assert out["field"] is None
 
 
 def test_sanitize_for_json_preserves_finite_floats():
-    inject = _load_inject()
+    inject = load_inject()
     out = inject._sanitize_for_json({"sfreq": 500.0, "x": -3.14})
     assert out["sfreq"] == 500.0
     assert out["x"] == -3.14
 
 
 def test_sanitize_for_json_recurses_into_nested_dicts():
-    inject = _load_inject()
+    inject = load_inject()
     out = inject._sanitize_for_json(
         {"outer": {"inner_nan": math.nan, "inner_str": "shallow"}}
     )
@@ -214,13 +201,13 @@ def test_sanitize_for_json_recurses_into_nested_dicts():
 
 
 def test_sanitize_for_json_recurses_into_lists():
-    inject = _load_inject()
+    inject = load_inject()
     out = inject._sanitize_for_json([1.0, math.nan, 3.0, float("inf")])
     assert out == [1.0, None, 3.0, None]
 
 
 def test_sanitize_for_json_passes_through_non_float_primitives():
-    inject = _load_inject()
+    inject = load_inject()
     assert inject._sanitize_for_json(42) == 42
     assert inject._sanitize_for_json("hello") == "hello"
     assert inject._sanitize_for_json(None) is None
@@ -234,14 +221,14 @@ def test_sanitize_for_json_passes_through_non_float_primitives():
 
 
 def test_ensure_fingerprint_preserves_existing():
-    inject = _load_inject()
+    inject = load_inject()
     ds = {"dataset_id": "ds-001", "ingestion_fingerprint": "existing-hash"}
     out = inject._ensure_fingerprint("ds-001", ds, [])
     assert out["ingestion_fingerprint"] == "existing-hash"
 
 
 def test_ensure_fingerprint_creates_from_records():
-    inject = _load_inject()
+    inject = load_inject()
     ds = {"dataset_id": "ds-001", "source": "openneuro"}
     records = [
         {"dataset": "ds-001", "bids_relpath": "f1.edf"},
@@ -254,7 +241,7 @@ def test_ensure_fingerprint_creates_from_records():
 
 
 def test_ensure_fingerprint_synthesises_dataset_when_none():
-    inject = _load_inject()
+    inject = load_inject()
     out = inject._ensure_fingerprint(
         "ds-001",
         None,
@@ -265,7 +252,7 @@ def test_ensure_fingerprint_synthesises_dataset_when_none():
 
 
 def test_ensure_fingerprint_idempotent():
-    inject = _load_inject()
+    inject = load_inject()
     ds = {"dataset_id": "ds-001", "source": "openneuro"}
     records = [{"dataset": "ds-001", "bids_relpath": "f1.edf"}]
     out1 = inject._ensure_fingerprint("ds-001", ds.copy(), records)
@@ -278,7 +265,7 @@ def test_ensure_fingerprint_idempotent():
 
 @respx.mock
 def test_fetch_existing_returns_dict_on_200():
-    inject = _load_inject()
+    inject = load_inject()
     respx.get("https://api.example.com/api/eegdash_dev/datasets/ds-001").mock(
         return_value=httpx.Response(
             200,
@@ -300,7 +287,7 @@ def test_fetch_existing_returns_dict_on_200():
 
 @respx.mock
 def test_fetch_existing_returns_none_on_404():
-    inject = _load_inject()
+    inject = load_inject()
     respx.get("https://api.example.com/api/eegdash_dev/datasets/ds-missing").mock(
         return_value=httpx.Response(404)
     )
@@ -312,7 +299,7 @@ def test_fetch_existing_returns_none_on_404():
 
 @respx.mock
 def test_fetch_existing_returns_none_on_network_error():
-    inject = _load_inject()
+    inject = load_inject()
     respx.get("https://api.example.com/api/eegdash_dev/datasets/ds-001").mock(
         side_effect=httpx.ConnectError("network down")
     )
@@ -327,7 +314,7 @@ def test_fetch_existing_returns_none_on_network_error():
 
 @respx.mock
 def test_filter_skips_unchanged_by_fingerprint():
-    inject = _load_inject()
+    inject = load_inject()
 
     fp = "abc123def456"
     respx.get("https://api.example.com/api/eegdash_dev/datasets/ds-001").mock(
@@ -356,7 +343,7 @@ def test_filter_skips_unchanged_by_fingerprint():
 
 @respx.mock
 def test_filter_marks_changed_when_fingerprint_differs():
-    inject = _load_inject()
+    inject = load_inject()
 
     respx.get("https://api.example.com/api/eegdash_dev/datasets/ds-001").mock(
         return_value=httpx.Response(
@@ -386,7 +373,7 @@ def test_filter_marks_changed_when_fingerprint_differs():
 
 @respx.mock
 def test_filter_marks_new_dataset_as_changed():
-    inject = _load_inject()
+    inject = load_inject()
 
     respx.get("https://api.example.com/api/eegdash_dev/datasets/ds-new").mock(
         return_value=httpx.Response(404)
@@ -445,6 +432,6 @@ def test_filter_marks_new_dataset_as_changed():
 )
 def test_find_digested_datasets(tmp_path: Path, setup_fn, expected_names):
     setup_fn(tmp_path)
-    inject = _load_inject()
+    inject = load_inject()
     found = inject.find_digested_datasets(tmp_path)
     assert sorted(d.name for d in found) == sorted(expected_names)

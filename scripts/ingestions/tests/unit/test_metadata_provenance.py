@@ -15,30 +15,17 @@ provenance.
 
 from __future__ import annotations
 
-import importlib.util
 import json as json_mod
 
-from _helpers import INGEST_DIR as _INGEST_DIR
+from _helpers import load_digest
 
 from eegdash.testing import data_file
-
-
-def _load_digest():
-    spec = importlib.util.spec_from_file_location(
-        "_provenance_target", _INGEST_DIR / "3_digest.py"
-    )
-    assert spec is not None
-    assert spec.loader is not None
-    mod = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(mod)
-    return mod
-
 
 # ─── _empty_provenance / _stamp_provenance ────────────────────────────────
 
 
 def test_empty_provenance_has_all_four_fields():
-    digest = _load_digest()
+    digest = load_digest()
     p = digest._empty_provenance()
     assert set(p.keys()) == {
         "sampling_frequency",
@@ -51,7 +38,7 @@ def test_empty_provenance_has_all_four_fields():
 
 def test_stamp_provenance_records_source_when_value_filled():
     """None → not-None at a step records the step's source name."""
-    digest = _load_digest()
+    digest = load_digest()
     p = digest._empty_provenance()
     digest._stamp_provenance(
         p,
@@ -69,7 +56,7 @@ def test_stamp_provenance_first_writer_wins():
     Mirrors the cascade's ``X = X or new_X`` pattern: the second step
     sees ``X`` as already set and never overwrites.
     """
-    digest = _load_digest()
+    digest = load_digest()
     p = digest._empty_provenance()
     digest._stamp_provenance(
         p,
@@ -91,7 +78,7 @@ def test_stamp_provenance_first_writer_wins():
 
 def test_stamp_provenance_skips_when_value_unchanged():
     """A step that found the field already set leaves provenance untouched."""
-    digest = _load_digest()
+    digest = load_digest()
     p = digest._empty_provenance()
     p["ntimes"] = "channels_tsv"
     digest._stamp_provenance(
@@ -106,7 +93,7 @@ def test_stamp_provenance_skips_when_value_unchanged():
 
 def test_stamp_provenance_skips_when_new_value_still_none():
     """A step that returned None for the field doesn't record provenance."""
-    digest = _load_digest()
+    digest = load_digest()
     p = digest._empty_provenance()
     digest._stamp_provenance(
         p,
@@ -123,7 +110,7 @@ def test_stamp_provenance_skips_when_new_value_still_none():
 
 def test_clamp_clears_provenance_when_sfreq_rejected_zero():
     """sfreq <= 0 is rejected; its provenance entry is cleared."""
-    digest = _load_digest()
+    digest = load_digest()
     provenance = {
         "sampling_frequency": "mne_bids",
         "nchans": "mne_bids",
@@ -146,7 +133,7 @@ def test_clamp_clears_provenance_when_sfreq_rejected_zero():
 
 def test_clamp_clears_provenance_when_nchans_rejected_zero():
     """nchans <= 0 is rejected; its provenance entry is cleared."""
-    digest = _load_digest()
+    digest = load_digest()
     provenance = {
         "sampling_frequency": "mne_bids",
         "nchans": "modality_sidecar",
@@ -166,7 +153,7 @@ def test_clamp_clears_provenance_when_nchans_rejected_zero():
 
 def test_clamp_does_not_clear_when_just_suspicious_not_rejected():
     """sfreq > 1MHz is warned about but kept; provenance stays."""
-    digest = _load_digest()
+    digest = load_digest()
     provenance = {
         "sampling_frequency": "binary_parser",
         "nchans": None,
@@ -186,7 +173,7 @@ def test_clamp_does_not_clear_when_just_suspicious_not_rejected():
 
 def test_clamp_provenance_kwarg_optional():
     """``provenance=None`` keeps backward-compatible behaviour."""
-    digest = _load_digest()
+    digest = load_digest()
     sf, n = digest._clamp_metadata_extremes(
         sampling_frequency=-1.0,
         nchans=64,

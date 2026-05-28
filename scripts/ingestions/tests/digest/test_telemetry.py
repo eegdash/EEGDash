@@ -2,11 +2,10 @@
 
 from __future__ import annotations
 
-import importlib.util
 import json
 from pathlib import Path
 
-from _helpers import INGEST_DIR as _INGEST_DIR
+from _helpers import load_digest
 
 from digest_telemetry import (
     NDJSONEmitter,
@@ -18,19 +17,6 @@ from digest_telemetry import (
     reset_telemetry,
 )
 from eegdash.testing import data_file
-
-
-def _load_digest():
-    """Lazy-load 3_digest.py (digit-prefixed filename)."""
-    spec = importlib.util.spec_from_file_location(
-        "_digest_telemetry_target", _INGEST_DIR / "3_digest.py"
-    )
-    assert spec is not None
-    assert spec.loader is not None
-    mod = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(mod)
-    return mod
-
 
 # ─── TelemetryEvent ────────────────────────────────────────────────────────
 
@@ -212,7 +198,7 @@ def test_digest_dataset_emits_event_stream(tmp_path_factory, monkeypatch):
     events_path = tmp_path_factory.mktemp("telemetry_run") / "events.ndjson"
     monkeypatch.setenv("EEGDASH_TELEMETRY_PATH", str(events_path))
 
-    digest = _load_digest()
+    digest = load_digest()
     # Re-install the env-driven emitter (module was loaded before monkeypatch).
     auto_configure_from_env()
     try:

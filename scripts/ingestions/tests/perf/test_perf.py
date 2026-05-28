@@ -16,14 +16,13 @@ artifact when the bench CI workflow lands.
 from __future__ import annotations
 
 import gc
-import importlib.util as _il
 import shutil
 import tempfile
 import tracemalloc
 from pathlib import Path
 
 import pytest
-from _helpers import INGEST_DIR
+from _helpers import load_digest
 
 from _fingerprint import fingerprint_from_manifest
 from _vhdr_parser import parse_vhdr_metadata
@@ -117,19 +116,6 @@ def test_parse_vhdr_median_under_5ms(benchmark):
     )
 
 
-def _load_digest_for_perf():
-    """Module-level helper — avoids the no-nested-functions lint."""
-
-    spec = _il.spec_from_file_location(
-        "_perf_digest_target", INGEST_DIR / "3_digest.py"
-    )
-    assert spec is not None
-    assert spec.loader is not None
-    mod = _il.module_from_spec(spec)
-    spec.loader.exec_module(mod)
-    return mod, INGEST_DIR
-
-
 def _run_digest_in_tempdir(digest_mod, inputs_dir):
     """Module-level helper — runs one digest into a fresh tempdir.
 
@@ -156,7 +142,7 @@ def test_digest_dataset_e2e_under_10s_on_snapshot(benchmark):
     here gates the per-file overhead. Local: ~70 ms including MNE
     setup; 10s ceiling gives 140x headroom for slower CI runners.
     """
-    digest_mod, _ingest_dir = _load_digest_for_perf()
+    digest_mod = load_digest()
     inputs_dir = data_file("digest_snapshots/inputs")
 
     # Run twice and take the median; the first call pays MNE-load

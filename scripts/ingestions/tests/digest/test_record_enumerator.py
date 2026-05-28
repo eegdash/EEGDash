@@ -1,10 +1,4 @@
-"""Unit tests for the RecordEnumerator factory dispatch.
-
-Stage-1 scope: the factory's fallback rules (3 cases mirrored from the
-old ``digest_dataset`` orchestrator). The Adapter ``enumerate()`` bodies
-are stubbed in stage 1; stage 2 wires them to the existing digest
-algorithm bodies, and stage 2's tests use real fixtures.
-"""
+"""Unit tests for the RecordEnumerator factory dispatch."""
 
 from __future__ import annotations
 
@@ -62,39 +56,54 @@ def test_enumeration_result_carries_all_fields():
 # ─── _has_actual_recording_files ───────────────────────────────────────────
 
 
-def test_has_actual_files_detects_edf(tmp_path: Path) -> None:
-    """A canonical .edf file means the BIDS path is viable."""
-    (tmp_path / "sub-01" / "eeg").mkdir(parents=True)
-    (tmp_path / "sub-01" / "eeg" / "sub-01_eeg.edf").write_bytes(b"\x00")
-    assert _has_actual_recording_files(tmp_path) is True
+def _arrange_has_actual_files(tmp_path: Path, case: str) -> None:
+    """Set up tmp_path for a given _has_actual_recording_files scenario."""
+    if case == "edf":
+        (tmp_path / "sub-01" / "eeg").mkdir(parents=True)
+        (tmp_path / "sub-01" / "eeg" / "sub-01_eeg.edf").write_bytes(b"\x00")
+    elif case == "ctf_ds_dir":
+        (tmp_path / "sub-01" / "meg").mkdir(parents=True)
+        (tmp_path / "sub-01" / "meg" / "sub-01_meg.ds").mkdir()
+    elif case == "symlink_pointer":
+        (tmp_path / "sub-01" / "eeg").mkdir(parents=True)
+        pointer = tmp_path / "sub-01" / "eeg" / "sub-01_eeg.edf"
+        pointer.symlink_to(tmp_path / ".does_not_exist")  # broken on purpose
+    elif case == "empty_dir":
+        (tmp_path / "sub-01").mkdir()
+    elif case == "unrelated_files":
+        (tmp_path / "README").write_text("hi")
+        (tmp_path / "dataset_description.json").write_text("{}")
 
 
-def test_has_actual_files_detects_ctf_ds_dir(tmp_path: Path) -> None:
-    """A CTF .ds directory counts as a real recording."""
-    (tmp_path / "sub-01" / "meg").mkdir(parents=True)
-    (tmp_path / "sub-01" / "meg" / "sub-01_meg.ds").mkdir()
-    assert _has_actual_recording_files(tmp_path) is True
+@pytest.mark.parametrize(
+    ("case", "expected"),
+    [
+        pytest.param("edf", True, id="test_has_actual_files_detects_edf"),
+        pytest.param("ctf_ds_dir", True, id="test_has_actual_files_detects_ctf_ds_dir"),
+        pytest.param(
+            "symlink_pointer",
+            True,
+            id="test_has_actual_files_detects_symlink_pointer",
+        ),
+        pytest.param(
+            "empty_dir", False, id="test_has_actual_files_returns_false_on_empty_dir"
+        ),
+        pytest.param(
+            "unrelated_files",
+            False,
+            id="test_has_actual_files_ignores_unrelated_files",
+        ),
+    ],
+)
+def test_has_actual_recording_files(tmp_path: Path, case: str, expected: bool) -> None:
+    """_has_actual_recording_files detects recordings correctly.
 
-
-def test_has_actual_files_detects_symlink_pointer(tmp_path: Path) -> None:
-    """A git-annex broken symlink still counts (pointer, not the binary)."""
-    (tmp_path / "sub-01" / "eeg").mkdir(parents=True)
-    pointer = tmp_path / "sub-01" / "eeg" / "sub-01_eeg.edf"
-    pointer.symlink_to(tmp_path / ".does_not_exist")  # broken on purpose
-    assert _has_actual_recording_files(tmp_path) is True
-
-
-def test_has_actual_files_returns_false_on_empty_dir(tmp_path: Path) -> None:
-    """No recordings → False."""
-    (tmp_path / "sub-01").mkdir()
-    assert _has_actual_recording_files(tmp_path) is False
-
-
-def test_has_actual_files_ignores_unrelated_files(tmp_path: Path) -> None:
-    """README / dataset_description.json don't count as recordings."""
-    (tmp_path / "README").write_text("hi")
-    (tmp_path / "dataset_description.json").write_text("{}")
-    assert _has_actual_recording_files(tmp_path) is False
+    Covers: canonical EDF, CTF .ds directory, git-annex broken symlink
+    (all → True); empty sub-directory and non-recording sidecar files
+    (both → False).
+    """
+    _arrange_has_actual_files(tmp_path, case)
+    assert _has_actual_recording_files(tmp_path) is expected
 
 
 # ─── Factory dispatch ──────────────────────────────────────────────────────
@@ -132,12 +141,7 @@ def test_factory_picks_manifest_when_only_manifest_present(
 
 
 def _bids_init_that_raises(*args, **kwargs):
-    """Module-level stub: a __init__ that always raises OSError.
-
-    Used to monkey-patch BIDSFilesystemEnumerator's constructor and
-    simulate a BIDS-load failure. Kept at module level so the project's
-    no-nested-functions lint stays clean.
-    """
+    """Module-level stub: __init__ that always raises OSError to simulate a BIDS-load failure."""
     raise OSError("simulated BIDS load failure")
 
 
@@ -145,12 +149,7 @@ def test_factory_falls_back_to_manifest_when_bids_load_fails_with_manifest(
     tmp_path: Path,
     monkeypatch,
 ) -> None:
-    """Case 2 fallback: BIDS load raises → fall back to manifest.
-
-    Simulates the BIDS-construction failure by monkey-patching the
-    BIDSFilesystemEnumerator constructor to raise. The factory should
-    catch and return ManifestEnumerator since manifest.json exists.
-    """
+    """Case 2 fallback: BIDS load raises → fall back to manifest when manifest.json exists."""
     (tmp_path / "sub-01" / "eeg").mkdir(parents=True)
     (tmp_path / "sub-01" / "eeg" / "sub-01_eeg.edf").write_bytes(b"\x00")
     (tmp_path / "manifest.json").write_text('{"files": []}')
@@ -201,12 +200,7 @@ def test_factory_propagates_bids_failure_when_no_manifest(
 def test_factory_returns_bids_enumerator_when_empty_no_manifest(
     tmp_path: Path,
 ) -> None:
-    """Case 3 — empty dir, no manifest: return BIDSFilesystemEnumerator
-    (its .enumerate() will produce an empty result with status='empty').
-
-    The factory doesn't refuse to return; the orchestrator inspects the
-    EnumerationResult to decide the status.
-    """
+    """Case 3 — empty dir, no manifest: factory returns an Enumerator; orchestrator decides status."""
     # Empty directory; no manifest, no files.
     enumerator = get_record_enumerator(
         dataset_id="ds_empty",
@@ -233,17 +227,7 @@ def test_record_enumerator_is_abstract():
 
 
 def test_bids_enumerate_raises_when_bids_load_fails(tmp_path: Path) -> None:
-    """Stage 3C: ``enumerate()`` calls EEGBIDSDataset directly.
-
-    When the dataset_dir doesn't contain a valid BIDS structure, the
-    constructor raises (OSError / ValueError / KeyError). The caller
-    in ``3_digest.py:digest_dataset`` catches and falls back to the
-    manifest path; the Adapter itself doesn't synthesize a diagnostic.
-
-    Stages 1+2 used to assert NotImplementedError; Stage 2D used to
-    swallow the failure and return a diagnostic EnumerationResult.
-    Stage 3C's contract is "raise — let the caller decide".
-    """
+    """``enumerate()`` raises on invalid BIDS structure; caller (3_digest.py) catches and falls back."""
     parent = tmp_path / "input"
     parent.mkdir()
     enumerator = BIDSFilesystemEnumerator(
@@ -256,14 +240,10 @@ def test_bids_enumerate_raises_when_bids_load_fails(tmp_path: Path) -> None:
 def test_manifest_enumerate_returns_empty_when_manifest_missing(
     tmp_path: Path,
 ) -> None:
-    """ManifestEnumerator: missing manifest.json → empty EnumerationResult
-    with a structured diagnostic. No raise (so the caller can write the
-    summary as ``status='empty'`` rather than crash).
+    """ManifestEnumerator: missing manifest.json → empty EnumerationResult with structured diagnostic.
 
-    Post-review (2026-05-22) the diagnostic dict now carries the legacy
-    summary keys (``status``, ``reason``, ``dataset_id``) so log
-    scrapers can distinguish "manifest.json not found" from
-    "manifest.json corrupt" from "manifest.json permission denied".
+    No raise — caller writes summary as status='empty'. Diagnostic carries legacy keys
+    (status, reason, dataset_id) so log scrapers can distinguish missing vs corrupt vs denied.
     """
     parent = tmp_path / "input"
     (parent / "z-001").mkdir(parents=True)
@@ -273,13 +253,10 @@ def test_manifest_enumerate_returns_empty_when_manifest_missing(
     result = enumerator.enumerate()
     assert isinstance(result, EnumerationResult)
     assert result.records == []
-    # Post-review: pinned (not the dataclass default) so a future
-    # caller can rely on the manifest path always carrying a non-None
-    # total_files.
+    # Manifest path always carries a non-None total_files.
     assert result.total_files == 0
     assert len(result.errors) == 1
     entry = result.errors[0]
-    # New structured-summary shape: assert on the legacy keys.
     assert entry.get("status") == "skipped"
     assert "manifest.json not found" in entry.get("reason", "")
     assert entry.get("dataset_id") == "z-001"
@@ -334,8 +311,7 @@ def test_write_outputs_creates_all_four_json_files(tmp_path: Path) -> None:
 
 
 def test_write_outputs_montages_file_written_when_empty(tmp_path: Path) -> None:
-    """Behaviour change documented in STAGE-2-PLAN.md: _montages.json now
-    always written, even with no montages — downstream tooling can assume it."""
+    """_montages.json always written even with no montages — downstream tooling can assume it."""
 
     result = _make_minimal_result(digest_method="manifest_only")
     write_dataset_outputs(
@@ -396,8 +372,7 @@ def test_write_outputs_status_no_neuro_files_when_records_empty(
 def test_write_outputs_total_files_kwarg_surfaces_in_summary(
     tmp_path: Path,
 ) -> None:
-    """``total_files`` (manifest path) preserved in summary; absent when
-    caller doesn't pass it (BIDS path)."""
+    """``total_files`` preserved in summary when passed (manifest path); absent when omitted (BIDS path)."""
 
     write_dataset_outputs(
         tmp_path,
@@ -422,8 +397,7 @@ def test_write_outputs_total_files_kwarg_surfaces_in_summary(
 
 
 def test_write_outputs_integrity_issue_enrichment(tmp_path: Path) -> None:
-    """Records with _has_missing_files get author/contact stamped from
-    Dataset meta (was inline in digest_dataset)."""
+    """Records with _has_missing_files get author/contact stamped from dataset meta."""
 
     result = EnumerationResult(
         dataset_meta={

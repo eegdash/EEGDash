@@ -299,14 +299,12 @@ def test_companion_coords_for_handles_no_matching_suffix():
         ),
         pytest.param(
             "name\tx\ty\tz\nCz\t0.0\t0.0\t0.1\nBad\tn/a\t0.0\t0.0\nFz\t0.0\t0.05\t0.08\n",
-            lambda rows: (len(rows) == 2 and {r["name"] for r in rows} == {"Cz", "Fz"}),
+            lambda rows: len(rows) == 2 and {r["name"] for r in rows} == {"Cz", "Fz"},
             id="drops_n_a_rows",
         ),
         pytest.param(
             "name\tx\ty\tz\ttype\tmaterial\nCz\t0.0\t0.0\t0.1\tEEG\tAg/AgCl\n",
-            lambda rows: (
-                rows[0]["type"] == "EEG" and rows[0]["material"] == "Ag/AgCl"
-            ),
+            lambda rows: rows[0]["type"] == "EEG" and rows[0]["material"] == "Ag/AgCl",
             id="preserves_extras",
         ),
         pytest.param(

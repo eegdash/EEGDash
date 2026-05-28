@@ -15,6 +15,7 @@ The pattern from _inject_config.py:
 
 from __future__ import annotations
 
+import argparse
 import sys
 from pathlib import Path
 
@@ -79,8 +80,6 @@ def load_validate_config_from_argv(
     argv: list[str] | None = None,
 ) -> ValidateConfig:
     """Parse argv (or sys.argv) into a validated :class:`ValidateConfig`."""
-    import argparse
-
     parser = argparse.ArgumentParser(
         description="Validate digestion output for eegdash compatibility"
     )

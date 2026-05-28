@@ -88,6 +88,7 @@ select = [
     "PT",            # pytest-style
     "RUF",           # ruff-specific
     "N",             # pep8-naming
+    "PLC0415",       # import-outside-top-level (PEP 8 — lift lazy imports)
 ]
 # D (pydocstyle / numpydoc) is selected per-file once the legacy code has
 # been touched up; turning it on globally on day 1 would generate ~1000
@@ -121,7 +122,10 @@ ignore = [
 # Other rules are smaller categories (RUF002/003/005/013, B007, N806, etc.)
 # that we'll tidy mechanically when their owning file is next touched.
 # "2_clone.py"                  — bare-excepts swept in Phase 9 F1 fix (commit 14)
-"3_digest.py"                   = ["E741", "RUF003", "RUF005", "RUF013", "RUF046", "B007"]  # BLE001 swept Phase 3 (commit ?)
+"3_digest.py"                   = ["E741", "RUF003", "RUF005", "RUF013", "RUF046", "B007", "PLC0415"]  # one pre-existing _vhdr_parser lazy import; sweep when file is next touched
+"_github.py"                    = ["PLC0415"]  # PyGithub lazy import inside try/ImportError
+"_set_parser.py"                = ["PLC0415"]  # scipy.io + h5py lazy optional-dep imports
+"inject_nemar_citations.py"     = ["PLC0415"]  # legacy lazy import — sweep with Phase 3
 # "4_validate_output.py"        — bare-excepts swept Phase 3 (commit 17)
 # "5_inject.py"                 — bare-excepts swept Phase 3 (commit 17)
 # "_bids.py"                    — bare-excepts swept in Phase 3 (commit 2)

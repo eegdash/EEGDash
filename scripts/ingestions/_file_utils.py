@@ -21,6 +21,13 @@ from typing import Any
 from urllib.parse import unquote, urljoin, urlparse
 
 import httpx
+from tenacity import (
+    RetryError,
+    Retrying,
+    retry_if_exception,
+    stop_after_attempt,
+    wait_exponential,
+)
 
 from _http import HTTPStatusError, RequestError, request_response
 
@@ -268,14 +275,6 @@ def rate_limited(min_interval: float = 0.5, max_retries: int = 3):
     def decorator(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
-            from tenacity import (
-                RetryError,
-                Retrying,
-                retry_if_exception,
-                stop_after_attempt,
-                wait_exponential,
-            )
-
             # Enforce minimum interval between calls.
             elapsed = time.time() - last_call[0]
             if elapsed < min_interval:

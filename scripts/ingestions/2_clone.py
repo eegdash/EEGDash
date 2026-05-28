@@ -13,9 +13,11 @@ Usage:
 
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
+from collections import defaultdict
 from concurrent.futures import (
     CancelledError,
     ThreadPoolExecutor,
@@ -27,10 +29,12 @@ from threading import Lock
 
 import httpx
 from dotenv import load_dotenv
+from pydantic import ValidationError
 from tqdm import tqdm
 
 # Add parent to path for imports
 sys.path.insert(0, str(Path(__file__).parent))
+from _clone_config import load_clone_config_from_argv
 from _file_utils import (
     build_manifest,
     list_datarn_files,
@@ -209,8 +213,6 @@ def fetch_figshare(dataset: dict, output_dir: Path, **_kwargs) -> dict:
     if not figshare_id:
         ext_links = dataset.get("external_links", {})
         source_url = ext_links.get("source_url", "")
-        import re
-
         match = re.search(r"/articles?/(\d+)", source_url)
         if match:
             figshare_id = match.group(1)
@@ -255,8 +257,6 @@ def fetch_zenodo(dataset: dict, output_dir: Path, **_kwargs) -> dict:
     if not zenodo_id:
         ext_links = dataset.get("external_links", {})
         source_url = ext_links.get("source_url", "")
-        import re
-
         match = re.search(r"/records?/(\d+)", source_url)
         if match:
             zenodo_id = match.group(1)
@@ -283,8 +283,6 @@ def fetch_osf(dataset: dict, output_dir: Path, **_kwargs) -> dict:
     if not osf_id:
         ext_links = dataset.get("external_links", {})
         source_url = ext_links.get("source_url", "")
-        import re
-
         match = re.search(r"osf\.io/([a-z0-9]+)", source_url, re.I)
         if match:
             osf_id = match.group(1)
@@ -513,8 +511,6 @@ def load_datasets(
 
     # Apply per-source limit if specified
     if limit_per_source:
-        from collections import defaultdict
-
         by_source: dict[str, list] = defaultdict(list)
         for d in datasets:
             src = detect_source(d)
@@ -535,10 +531,6 @@ def main():
     # prevent the "--workers 99999" misconfig that used to silently
     # sail through argparse. Sources list cross-checked against
     # KNOWN_SOURCES (kept aligned with HANDLERS).
-    from pydantic import ValidationError
-
-    from _clone_config import load_clone_config_from_argv
-
     try:
         cfg = load_clone_config_from_argv()
     except ValidationError as exc:

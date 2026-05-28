@@ -31,6 +31,9 @@ import os
 from functools import lru_cache
 from pathlib import Path
 
+import pooch
+import pytest
+
 VERSION = "0.2.0"
 SHA256 = "8669d60b052b4d7fcc5f929f79f600cec35f8b7c8bdffc1785bc6d09667cd8ca"
 URL = (
@@ -39,15 +42,13 @@ URL = (
 )
 
 _DEFAULT_CACHE = Path.home() / ".cache" / "eegdash" / "testing-data"
+# GitHub's codeload tarball unpacks into ``<name>-<tag>/`` at the top.
+_ROOT_NAME = f"eegdash-testing-data-{VERSION}"
+_TARBALL_NAME = f"{_ROOT_NAME}.tar.gz"
 
 
 def _cache_dir() -> Path:
     return Path(os.environ.get("EEGDASH_TESTING_DATA_DIR", _DEFAULT_CACHE))
-
-
-def _root_dir() -> Path:
-    # GitHub's codeload tarball unpacks into ``<name>-<tag>/`` at the top.
-    return _cache_dir() / f"eegdash-testing-data-{VERSION}"
 
 
 def _skip_requested() -> bool:
@@ -60,7 +61,8 @@ def _skip_requested() -> bool:
 
 def has_testing_data() -> bool:
     """Return True if the corpus is already unpacked in the cache."""
-    return _root_dir().is_dir() and any(_root_dir().iterdir())
+    root = _cache_dir() / _ROOT_NAME
+    return root.is_dir() and any(root.iterdir())
 
 
 @lru_cache(maxsize=1)
@@ -79,29 +81,28 @@ def data_path() -> Path:
         is set, or if pooch fails to retrieve the tarball.
 
     """
-    if has_testing_data():
-        return _root_dir()
+    cache = _cache_dir()
+    root = cache / _ROOT_NAME
+    if root.is_dir() and any(root.iterdir()):
+        return root
 
     if _skip_requested():
         raise RuntimeError("EEGDASH_SKIP_TESTING_DATA=true — refusing to fetch corpus")
 
-    import pooch
-
-    cache = _cache_dir()
     cache.mkdir(parents=True, exist_ok=True)
     pooch.retrieve(
         url=URL,
         known_hash=f"sha256:{SHA256}",
-        fname=f"eegdash-testing-data-{VERSION}.tar.gz",
+        fname=_TARBALL_NAME,
         path=str(cache),
         processor=pooch.Untar(extract_dir=str(cache)),
     )
-    if not has_testing_data():
+    if not (root.is_dir() and any(root.iterdir())):
         raise RuntimeError(
-            f"pooch reported success but {_root_dir()} is empty; "
+            f"pooch reported success but {root} is empty; "
             "tarball layout may have changed upstream"
         )
-    return _root_dir()
+    return root
 
 
 def data_file(relpath: str) -> Path:
@@ -117,8 +118,6 @@ def requires_testing_data(func):
     triggers the fetch at collection time so tests that depend on the
     corpus all share a single download.
     """
-    import pytest
-
     reason: str | None
     if _skip_requested():
         reason = "EEGDASH_SKIP_TESTING_DATA=true"

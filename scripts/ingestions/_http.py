@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import warnings
 from collections.abc import Iterable
 from typing import Any
 
@@ -160,8 +161,6 @@ def make_retry_client(auth_token: str) -> httpx.Client:
         tenacity. Use :func:`make_authed_client` instead. Will be
         removed in 0.2.
     """
-    import warnings
-
     warnings.warn(
         "make_retry_client is deprecated; use make_authed_client. "
         "The returned client does NOT have retries baked in; retries "

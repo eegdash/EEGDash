@@ -10,6 +10,7 @@ validators that consume it.
 
 from __future__ import annotations
 
+import argparse
 import sys
 from pathlib import Path
 
@@ -120,8 +121,6 @@ def load_clone_config_from_argv(
     argv: list[str] | None = None,
 ) -> CloneConfig:
     """Parse argv (or sys.argv) into a validated :class:`CloneConfig`."""
-    import argparse
-
     parser = argparse.ArgumentParser(
         description=(
             "Clone or fetch datasets per consolidated source listings "

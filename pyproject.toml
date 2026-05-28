@@ -168,11 +168,24 @@ target-version = "py311"
 
 [tool.ruff.lint]
 ignore-init-module-imports = true
-select = ["E", "W", "F", "D", "I", "NPY201"]
+select = ["E", "W", "F", "D", "I", "NPY201", "PLC0415"]
 ignore = ["E402", "E501", "D100", "D101", "D102", "D103", "D104", "D105", "D107", "D205", "D400", "D415", "D417", "F403", "D401", "E741", "E722", "D419"]
 
 [tool.ruff.lint.per-file-ignores]
 "examples/*" = ["I"]
+# PLC0415 grace list — legacy lazy imports for optional deps + circular-
+# import guards. Each entry is a candidate for cleanup in a follow-up; the
+# rule still fires on any NEW function-scoped import in untouched files.
+"eegdash/__init__.py" = ["PLC0415"]
+"eegdash/api.py" = ["PLC0415"]
+"eegdash/dataset/base.py" = ["PLC0415"]
+"eegdash/dataset/dataset.py" = ["PLC0415"]
+"eegdash/dataset/io.py" = ["PLC0415"]
+"eegdash/dataset/registry.py" = ["PLC0415"]
+"eegdash/features/extractors.py" = ["PLC0415"]
+"eegdash/features/serialization.py" = ["PLC0415"]
+"eegdash/local_bids.py" = ["PLC0415"]
+"eegdash/viz/identity.py" = ["PLC0415"]
 
 [tool.ruff.lint.isort]
 known-first-party = ["eegdash", "braindecode"]

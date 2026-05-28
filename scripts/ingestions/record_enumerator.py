@@ -64,8 +64,12 @@ import json
 import logging
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
-from pathlib import Path
+from datetime import date, datetime
+from importlib.util import module_from_spec, spec_from_file_location
+from pathlib import Path, PurePath
 from typing import Any
+
+from eegdash.dataset.bids_dataset import EEGBIDSDataset
 
 from source_adapter import SourceAdapter
 
@@ -316,10 +320,8 @@ class BIDSFilesystemEnumerator(RecordEnumerator):
             isn't a viable BIDS root). The caller in
             ``3_digest.py:digest_dataset`` catches and falls back.
         """
-        # Late imports: mne_bids is heavy, and 3_digest.py's
-        # digit-prefixed filename forces importlib.
-        from eegdash.dataset.bids_dataset import EEGBIDSDataset
-
+        # 3_digest.py uses a digit-prefixed filename which makes it
+        # un-importable via ``import``; load it through importlib once.
         bids_dataset = EEGBIDSDataset(
             data_dir=str(self.dataset_dir),
             dataset=self.dataset_id,
@@ -404,8 +406,6 @@ def _load_digest_module() -> Any:
     global _DIGEST_MODULE_CACHE
     if _DIGEST_MODULE_CACHE is not None:
         return _DIGEST_MODULE_CACHE
-    from importlib.util import module_from_spec, spec_from_file_location
-
     spec = spec_from_file_location(
         "_record_enumerator_digest_target",
         Path(__file__).parent / "3_digest.py",
@@ -487,9 +487,6 @@ def _json_default_serializer(obj: Any) -> Any:
     ``3_digest.py``. Hoisted here so both Adapter writes use the same
     rule.
     """
-    from datetime import date, datetime
-    from pathlib import PurePath
-
     if isinstance(obj, PurePath):
         return str(obj)
     if isinstance(obj, (datetime, date)):

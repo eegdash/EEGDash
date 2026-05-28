@@ -17,6 +17,7 @@ Usage:
 """
 
 import argparse
+import csv as _csv
 import json
 import logging
 import multiprocessing as mp
@@ -29,6 +30,9 @@ import traceback
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
+
+import httpx
+from pydantic import ValidationError
 
 # Avoid numba cache issues by setting cache dir before importing MNE.
 os.environ.setdefault("NUMBA_CACHE_DIR", str(Path(".cache") / "numba"))
@@ -68,10 +72,6 @@ from _constants import (
     MODALITY_DETECTION_TARGETS,
     NEURO_MODALITIES,
 )
-from _file_utils import (
-    get_annex_file_size,
-)
-from _fingerprint import fingerprint_from_files, fingerprint_from_manifest
 
 # Technical-metadata cascade. The 5-step
 # cascade (mne_bids → modality_sidecar → channels_tsv → binary_parser →
@@ -82,13 +82,22 @@ from _fingerprint import fingerprint_from_files, fingerprint_from_manifest
 # imported them via ``3_digest``. (The per-extension binary parser
 # registry lives in ``_format_parser_registry``; the cascade imports
 # it directly — see ``_metadata_cascade.py``.)
+from _digest_config import load_digest_config_from_argv
+from _file_utils import (
+    get_annex_file_size,
+)
+from _fingerprint import fingerprint_from_files, fingerprint_from_manifest
 from _metadata_cascade import (  # noqa: F401 — re-export for back-compat
+    CascadeContext,
+    MetadataCascade,
     _parse_fif_with_mne,
     extract_sfreq_nchans_from_channels_tsv,
     extract_sfreq_nchans_from_modality_sidecar,
     sum_bids_channel_counts,
 )
+from _montage import _walk_up_find as _walk
 from _montage import extract_layout
+from _parser_utils import _http_client
 
 # Telemetry . Default emitter is NullEmitter so digest
 # behaviour is unchanged when telemetry is disabled. Configure by
@@ -895,11 +904,6 @@ def _extract_bids_sidecar_fields(bids_dataset: Any, bids_file: str) -> dict[str,
 
     # BIDS sidecar naming: ``<entities>_<modality>.json``. Walk up from
     # the data file's parent to bids_root looking for the first match.
-    try:
-        from _montage import _walk_up_find as _walk
-    except ImportError:
-        return {}
-
     json_pattern = f"*_{modality}.json"
     sidecar = _walk(data_file, bids_root, json_pattern)
     if sidecar is None or not sidecar.exists():
@@ -931,8 +935,6 @@ def _extract_channel_status_counts(bids_dataset: Any, bids_file: str) -> dict[st
     via ``sidecar_inline``: instead of forcing every consumer to re-parse
     the TSV, we surface the count + names at digest time.
     """
-    import csv as _csv
-
     # Walk up from the data file to find channels.tsv (BIDS inheritance).
     try:
         bids_root = Path(bids_dataset.bidsdir)
@@ -940,12 +942,8 @@ def _extract_channel_status_counts(bids_dataset: Any, bids_file: str) -> dict[st
     except (AttributeError, TypeError):
         return {}
 
-    # Reuse _montage.py's _walk_up_find — same BIDS-inheritance semantics.
-    try:
-        from _montage import _walk_up_find as _walk
-    except ImportError:
-        return {}
-
+    # _walk_up_find provides the same BIDS-inheritance semantics used in
+    # _montage.py.
     tsv = _walk(data_file, bids_root, "*_channels.tsv")
     if tsv is None:
         tsv = _walk(data_file, bids_root, "channels.tsv")
@@ -1028,8 +1026,6 @@ def _extract_technical_metadata(
     channels_tsv → binary_parser → mne_fallback) and provenance
     semantics..
     """
-    from _metadata_cascade import CascadeContext, MetadataCascade
-
     ctx = CascadeContext(bids_dataset=bids_dataset, bids_file=bids_file)
     result = MetadataCascade().run(ctx)
     return (
@@ -1900,10 +1896,6 @@ def _fetch_subject_count_via_http(files: list, fallback: int) -> int:
     Errors are logged via ``print`` (preserves the pre-extraction
     behaviour exactly).
     """
-    import httpx
-
-    from _parser_utils import _http_client
-
     desc_url = None
     participants_url = None
     for f in files:
@@ -3659,10 +3651,6 @@ def main():
     # same pattern as _inject_config + _validate_config). Replaces the
     # 40 lines of argparse + ``_positive_float`` custom-type boilerplate
     # with declarative Field(gt=0, le=...) bounds.
-    from pydantic import ValidationError
-
-    from _digest_config import load_digest_config_from_argv
-
     try:
         cfg = load_digest_config_from_argv()
     except ValidationError as exc:

@@ -65,6 +65,8 @@ import hashlib
 import json
 import logging
 import re
+import struct
+import tempfile
 import threading
 from collections.abc import Iterable
 from dataclasses import dataclass
@@ -74,7 +76,19 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
-from _parser_utils import head_content_length
+try:
+    import mne
+except ImportError:  # pragma: no cover - optional dependency
+    mne = None  # type: ignore[assignment]
+
+from _file_utils import _read_annex_pointer_text, parse_annex_size
+from _parser_utils import (
+    build_s3_url,
+    extract_dataset_info,
+    fetch_bytes_from_s3,
+    head_content_length,
+    is_broken_symlink,
+)
 
 LOGGER = logging.getLogger("digest.montage")
 
@@ -424,10 +438,17 @@ def _load_mne_templates() -> dict[str, dict[str, tuple[float, float, float]]]:
         cache: dict[str, dict[str, tuple[float, float, float]]] = {}
 
         # Pool 1 — MNE built-ins. These land keyed by MNE's canonical name.
-        try:
-            import mne  # type: ignore
-
-            for name in mne.channels.get_builtin_montages():
+        if mne is None:
+            LOGGER.warning("[template] mne not installed; pool 1 empty")
+        else:
+            try:
+                builtin_names = mne.channels.get_builtin_montages()
+            except AttributeError as exc:
+                # AttributeError: a future MNE refactor removed
+                # get_builtin_montages.
+                LOGGER.warning("[template] MNE API change (%s); pool 1 empty", exc)
+                builtin_names = []
+            for name in builtin_names:
                 try:
                     m = mne.channels.make_standard_montage(name)
                     cache[name] = {
@@ -435,14 +456,10 @@ def _load_mne_templates() -> dict[str, dict[str, tuple[float, float, float]]]:
                         for k, v in m.get_positions()["ch_pos"].items()
                     }
                 except (ValueError, KeyError, TypeError, AttributeError):
-                    # MNE can raise on a misnamed standard montage or
-                    # an unexpected positions dict shape. Skip that
-                    # template; the other 50+ will still populate.
+                    # MNE can raise on a misnamed standard montage or an
+                    # unexpected positions dict shape. Skip that template;
+                    # the other 50+ will still populate.
                     continue
-        except (ImportError, AttributeError) as exc:
-            # ImportError: MNE not installed. AttributeError: a future
-            # MNE refactor removed get_builtin_montages.
-            LOGGER.warning("[template] MNE import failed (%s); pool 1 empty", exc)
 
         # Pool 2 — the electrode-explorer extras. montages.json stores each
         # position in meters already (xyz is centred on the fitted head
@@ -713,11 +730,6 @@ def _fetch_fif_metadata_streaming(data_file: Path, url: str, total: int) -> str 
     populate just the metadata prefix, and let MNE seek-but-not-read
     the raw-data tail (it's zeros, which MNE skips).
     """
-    import struct
-    import tempfile
-
-    from _parser_utils import fetch_bytes_from_s3
-
     # Try progressively larger buffers. 306-channel Neuromag files end
     # their MEAS_INFO around 3-8 MB; 4 MB covers most, 16 MB is a safe
     # backstop for dense HPI + isotrak + long comments.
@@ -814,8 +826,6 @@ def _resolve_fif_total_size(data_file: Path, url: str) -> int | None:
     Returns ``None`` if both paths fail; caller treats that as a
     transient network failure.
     """
-    from _file_utils import _read_annex_pointer_text, parse_annex_size
-
     text = _read_annex_pointer_text(data_file)
     if text is not None and "/annex/" in text:
         annex_size = parse_annex_size(text)
@@ -858,11 +868,6 @@ def _fetch_fif_metadata_via_directory(data_file: Path, url: str) -> str | None:
     Returns ``None`` when the file lacks a usable directory (streaming-
     only FIF) or the fetch fails.
     """
-    import struct
-    import tempfile
-
-    from _parser_utils import fetch_bytes_from_s3
-
     # 1. Total size — prefer the annex symlink key over a HEAD round-trip.
     total = _resolve_fif_total_size(data_file, url)
     if total is None or total <= 0:
@@ -986,11 +991,7 @@ def extract_meg_layout(
     ``_fetch_fif_metadata_via_directory``: only metadata tags come
     over the wire (~7 MB for a 2 GB recording).
     """
-    # Import MNE lazily so this module's other entry points keep working
-    # even when MNE isn't installed (rare, but possible in minimal envs).
-    try:
-        import mne
-    except ImportError:
+    if mne is None:
         LOGGER.warning("[layout.meg] mne not available; skipping %s", data_file)
         return None
 
@@ -1037,11 +1038,6 @@ def extract_meg_layout(
             # investigated yet.
             if suffix != ".fif":
                 return None
-            from _parser_utils import (
-                build_s3_url,
-                extract_dataset_info,
-                is_broken_symlink,
-            )
 
             # Only chase S3 for files that really are broken annex pointers.
             if not is_broken_symlink(data_file) and data_file.exists():

@@ -46,6 +46,7 @@ import sys
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 import httpx
+from pydantic import ValidationError
 from tqdm import tqdm
 
 from _http import (
@@ -54,6 +55,7 @@ from _http import (
     make_authed_client,
     request_json,
 )
+from _inject_config import load_inject_config_from_argv
 from _inject_plan import (
     EXCLUDED_DATASETS,
     _ensure_fingerprint,
@@ -66,6 +68,7 @@ from _inject_plan import (
     load_montages,
     load_records,
 )
+from _validate import validate_digestion_output
 
 # Default API configuration
 DEFAULT_API_URL = "https://data.eegdash.org"
@@ -327,10 +330,6 @@ def main():
     # fields + @model_validator hooks on InjectConfig. Tests construct
     # InjectConfig directly; this function stays the only argv-bound
     # entry point.
-    from pydantic import ValidationError
-
-    from _inject_config import load_inject_config_from_argv
-
     try:
         args = load_inject_config_from_argv()
     except ValidationError as exc:
@@ -347,10 +346,6 @@ def main():
 
     # Run validation first (unless explicitly skipped)
     if not args.skip_validation:
-        # Lazy import: pulls eegdash.schemas transitively, which we don't
-        # want to require on inject-only hosts.
-        from _validate import validate_digestion_output
-
         print("Running validation...")
         validation_result = validate_digestion_output(args.input, verbose=False)
         print(validation_result.summary())

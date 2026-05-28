@@ -1,11 +1,5 @@
 """Per-helper unit tests for the  decomposition helpers.
 
-. The 17 helpers introduced in  +
-are currently covered transitively by the snapshot tests — when
-something breaks, the failure points at the orchestrator
-(extract_record / extract_dataset_metadata / _enumerate_via_manifest)
-rather than the helper.
-
 Direct tests give:
 - Faster diagnosis (the failing helper is named in the test)
 - Coverage of edge cases the snapshot fixtures don't exercise
@@ -30,6 +24,7 @@ from __future__ import annotations
 import importlib.util
 from pathlib import Path
 
+import pytest
 from _helpers import INGEST_DIR as _INGEST_DIR
 
 
@@ -339,39 +334,54 @@ def test_storage_base_explicit_rejected_when_wrong_source():
     assert result == "s3://nemar/nm000176"
 
 
-def test_storage_base_figshare_uses_source_url():
+@pytest.mark.parametrize(
+    ("source", "dataset_id", "manifest", "expected_substrings"),
+    [
+        pytest.param(
+            "figshare",
+            "ds-001",
+            {"external_links": {"source_url": "https://figshare.com/articles/12345"}},
+            ["https://figshare.com/articles/12345"],
+            id="test_storage_base_figshare_uses_source_url",
+        ),
+        pytest.param(
+            "figshare",
+            "ds-001",
+            {},
+            ["ds-001"],
+            id="test_storage_base_figshare_falls_back_to_default",
+        ),
+        pytest.param(
+            "zenodo",
+            "ds-001",
+            {"zenodo_id": "999999"},
+            ["999999"],
+            id="test_storage_base_zenodo_uses_zenodo_id",
+        ),
+        pytest.param(
+            "gin",
+            "ds-001",
+            {"organization": "MyLab"},
+            ["MyLab", "ds-001"],
+            id="test_storage_base_gin_includes_organization",
+        ),
+        pytest.param(
+            "totally_unknown",
+            "ds-001",
+            {},
+            ["ds-001"],
+            id="test_storage_base_default_for_unknown_source",
+        ),
+    ],
+)
+def test_storage_base_source_variants(
+    source, dataset_id, manifest, expected_substrings
+):
+    """_determine_manifest_storage_base builds the correct base URL per source."""
     digest = _load_digest()
-    manifest = {"external_links": {"source_url": "https://figshare.com/articles/12345"}}
-    result = digest._determine_manifest_storage_base("figshare", "ds-001", manifest)
-    assert result == "https://figshare.com/articles/12345"
-
-
-def test_storage_base_figshare_falls_back_to_default():
-    digest = _load_digest()
-    result = digest._determine_manifest_storage_base("figshare", "ds-001", {})
-    assert "ds-001" in result
-
-
-def test_storage_base_zenodo_uses_zenodo_id():
-    digest = _load_digest()
-    manifest = {"zenodo_id": "999999"}
-    result = digest._determine_manifest_storage_base("zenodo", "ds-001", manifest)
-    assert "999999" in result
-    assert "ds-001" not in result  # zenodo_id wins
-
-
-def test_storage_base_gin_includes_organization():
-    digest = _load_digest()
-    manifest = {"organization": "MyLab"}
-    result = digest._determine_manifest_storage_base("gin", "ds-001", manifest)
-    assert "MyLab" in result
-    assert "ds-001" in result
-
-
-def test_storage_base_default_for_unknown_source():
-    digest = _load_digest()
-    result = digest._determine_manifest_storage_base("totally_unknown", "ds-001", {})
-    assert "ds-001" in result
+    result = digest._determine_manifest_storage_base(source, dataset_id, manifest)
+    for substring in expected_substrings:
+        assert substring in result
 
 
 # ─── _collect_bids_entities_from_paths ────────────────────────────────────
@@ -436,30 +446,74 @@ def test_entities_standalone_zip_contents_array():
 # ─── _is_bids_data_zip ────────────────────────────────────────────────────
 
 
-def test_is_bids_data_zip_matches_known_patterns():
+@pytest.mark.parametrize(
+    ("filename", "expected"),
+    [
+        pytest.param(
+            "dataset_bids_v1.zip",
+            True,
+            id="test_is_bids_data_zip_matches_known_patterns_dataset_bids",
+        ),
+        pytest.param(
+            "data_bids.zip",
+            True,
+            id="test_is_bids_data_zip_matches_known_patterns_data_bids",
+        ),
+        pytest.param(
+            "recording_eeg.zip",
+            True,
+            id="test_is_bids_data_zip_matches_known_patterns_recording_eeg",
+        ),
+        pytest.param(
+            "study_meg.zip",
+            True,
+            id="test_is_bids_data_zip_matches_known_patterns_study_meg",
+        ),
+        pytest.param(
+            "clinical_ieeg.zip",
+            True,
+            id="test_is_bids_data_zip_matches_known_patterns_clinical_ieeg",
+        ),
+        pytest.param(
+            "rawdata_v2.zip",
+            True,
+            id="test_is_bids_data_zip_matches_known_patterns_rawdata",
+        ),
+        pytest.param(
+            "data.zip", True, id="test_is_bids_data_zip_matches_known_patterns_data"
+        ),
+        pytest.param(
+            "dataset_v1.zip",
+            True,
+            id="test_is_bids_data_zip_matches_known_patterns_dataset_v1",
+        ),
+        pytest.param(
+            "analysis_results.zip",
+            False,
+            id="test_is_bids_data_zip_rejects_unrelated_zips_analysis",
+        ),
+        pytest.param(
+            "supplementary_figures.zip",
+            False,
+            id="test_is_bids_data_zip_rejects_unrelated_zips_supplementary",
+        ),
+        pytest.param(
+            "readme.zip",
+            False,
+            id="test_is_bids_data_zip_rejects_unrelated_zips_readme",
+        ),
+        pytest.param(
+            "DATA_BIDS.ZIP", True, id="test_is_bids_data_zip_case_insensitive_upper"
+        ),
+        pytest.param(
+            "Recording_EEG.zip", True, id="test_is_bids_data_zip_case_insensitive_mixed"
+        ),
+    ],
+)
+def test_is_bids_data_zip(filename, expected):
+    """_is_bids_data_zip matches known BIDS data zip patterns case-insensitively."""
     digest = _load_digest()
-    assert digest._is_bids_data_zip("dataset_bids_v1.zip")
-    assert digest._is_bids_data_zip("data_bids.zip")
-    assert digest._is_bids_data_zip("recording_eeg.zip")
-    assert digest._is_bids_data_zip("study_meg.zip")
-    assert digest._is_bids_data_zip("clinical_ieeg.zip")
-    assert digest._is_bids_data_zip("rawdata_v2.zip")
-    assert digest._is_bids_data_zip("data.zip")
-    assert digest._is_bids_data_zip("dataset_v1.zip")
-
-
-def test_is_bids_data_zip_rejects_unrelated_zips():
-    digest = _load_digest()
-    assert not digest._is_bids_data_zip("analysis_results.zip")
-    assert not digest._is_bids_data_zip("supplementary_figures.zip")
-    assert not digest._is_bids_data_zip("readme.zip")
-
-
-def test_is_bids_data_zip_case_insensitive():
-    """The patterns match against lowercased input."""
-    digest = _load_digest()
-    assert digest._is_bids_data_zip("DATA_BIDS.ZIP")
-    assert digest._is_bids_data_zip("Recording_EEG.zip")
+    assert digest._is_bids_data_zip(filename) == expected
 
 
 # ═══════════════════════════════════════════════════════════════════════

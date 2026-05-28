@@ -28,6 +28,7 @@ import sys
 
 import pytest
 from _helpers import INGEST_DIR as _INGEST_DIR
+
 from eegdash.testing import data_file
 
 _SNAPSHOT_OUTPUTS = data_file("digest_snapshots/outputs")

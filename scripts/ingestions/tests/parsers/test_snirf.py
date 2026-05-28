@@ -16,6 +16,7 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
+
 from eegdash.testing import data_file
 
 # h5py needed for the synthetic + real sections; missing → skip all three.

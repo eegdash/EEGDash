@@ -13,7 +13,6 @@ import re
 from pathlib import Path
 
 import pytest
-from eegdash.testing import data_file
 
 from _validate import (
     DATA_QUALITY_FIELDS,
@@ -27,6 +26,7 @@ from _validate import (
     validate_record,
     validate_storage_url,
 )
+from eegdash.testing import data_file
 
 # ─── 1. Functions ──────────────────────────────────────────────
 

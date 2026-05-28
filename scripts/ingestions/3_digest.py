@@ -39,6 +39,7 @@ os.environ.setdefault("NUMBA_CACHE_DIR", str(Path(".cache") / "numba"))
 
 import numpy as np
 import pandas as pd
+from tqdm import tqdm
 
 # Storage configuration: imported from the canonical home in eegdash.
 # Was previously duplicated as ``STORAGE_CONFIGS`` here with a "Keep
@@ -59,7 +60,6 @@ from eegdash.schemas import (
     create_record,
 )
 from mne_bids.config import ALLOWED_DATATYPE_EXTENSIONS
-from tqdm import tqdm
 
 logger = logging.getLogger(__name__)
 

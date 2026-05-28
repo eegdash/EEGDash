@@ -11,6 +11,7 @@ import sys
 from pathlib import Path
 
 import pytest
+
 from eegdash.testing import data_path
 
 # Make the ingestion package importable without `pip install -e .` —

@@ -60,13 +60,12 @@ import logging
 from abc import ABC, abstractmethod
 from pathlib import Path
 
+from _file_utils import get_annex_file_key, read_inline_sidecar
 from eegdash.dataset._source_inference import (
     get_storage_backend,
     get_storage_base,
 )
 from eegdash.schemas import NEMAR_ROOT_METADATA_FILES
-
-from _file_utils import get_annex_file_key, read_inline_sidecar
 
 logger = logging.getLogger(__name__)
 

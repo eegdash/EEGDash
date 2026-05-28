@@ -70,7 +70,6 @@ from pathlib import Path, PurePath
 from typing import Any
 
 from eegdash.dataset.bids_dataset import EEGBIDSDataset
-
 from source_adapter import SourceAdapter
 
 logger = logging.getLogger(__name__)

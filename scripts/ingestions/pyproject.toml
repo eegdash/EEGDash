@@ -145,6 +145,39 @@ ignore = [
 # "patch_nemar_source.py"       — swept Phase 3 (commit 15)
 # "time_openneuro_pipeline.py"  — swept Phase 3 (commit 15)
 
+[tool.ruff.lint.isort]
+known-first-party = [
+    "mne",
+    "mne_bids",
+    "eegdash",
+    # Local ingestion modules — bare ``_*.py`` files siblings to this
+    # config. Explicitly listed so isort groups them in the first-party
+    # block instead of guessing.
+    "_bids",
+    "_clone_config",
+    "_constants",
+    "_digest_config",
+    "_file_utils",
+    "_fingerprint",
+    "_format_parser_registry",
+    "_github",
+    "_http",
+    "_inject_config",
+    "_inject_plan",
+    "_keywords",
+    "_mef3_parser",
+    "_metadata_cascade",
+    "_montage",
+    "_parser_utils",
+    "_serialize",
+    "_set_parser",
+    "_snirf_parser",
+    "_validate",
+    "_validate_config",
+    "_vhdr_parser",
+]
+section-order = ["future", "standard-library", "third-party", "first-party", "local-folder"]
+
 [tool.ruff.lint.pydocstyle]
 convention = "numpy"
 

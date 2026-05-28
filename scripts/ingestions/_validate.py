@@ -9,8 +9,9 @@ import re
 from collections import Counter
 from pathlib import Path
 
-from eegdash.schemas import DatasetModel, RecordModel
 from pydantic import ValidationError
+
+from eegdash.schemas import DatasetModel, RecordModel
 
 # Valid storage URL patterns per source
 VALID_STORAGE_PATTERNS = {

@@ -33,9 +33,9 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Protocol
 
-import mne
 import pandas as pd
 
+import mne
 from _format_parser_registry import get_parser_for_extension
 
 # Provenance source names. Re-exported from ``3_digest.py`` (with a

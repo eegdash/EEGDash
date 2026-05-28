@@ -1,7 +1,6 @@
-"""Unit tests for 5_inject.py helpers (C6.2 follow-up).
+"""Unit tests for 5_inject.py helpers.
 
-C6.2 covered the network-facing inject functions. This file covers
-the pure helpers + filtering layer: load_dataset / load_records /
+Covers the pure helpers + filtering layer: load_dataset / load_records /
 load_montages, _flatten_entities, _sanitize_for_json,
 _ensure_fingerprint, filter_changed_datasets, find_digested_datasets.
 
@@ -55,99 +54,95 @@ def test_load_dataset_reads_json(tmp_path: Path):
     assert out["name"] == "Test"
 
 
-def test_load_records_reads_new_schema_records_key(tmp_path: Path):
-    """New schema: ``{records: [...]}`` envelope."""
+@pytest.mark.parametrize(
+    ("file_name", "content", "expected_len"),
+    [
+        pytest.param(
+            "ds-001_records.json",
+            {
+                "dataset_id": "ds-001",
+                "records": [
+                    {"dataset": "ds-001", "bids_relpath": "f1.edf"},
+                    {"dataset": "ds-001", "bids_relpath": "f2.edf"},
+                ],
+            },
+            2,
+            id="new_schema_envelope",
+        ),
+        pytest.param(
+            "ds-001_records.json",
+            [{"dataset": "ds-001", "bids_relpath": "f1.edf"}],
+            1,
+            id="bare_list",
+        ),
+        pytest.param(
+            None,
+            None,
+            0,
+            id="no_file",
+        ),
+        pytest.param(
+            "ds-001_core.json",
+            [{"dataset": "ds-001", "bids_relpath": "f1.edf"}],
+            1,
+            id="legacy_core_json_fallback",
+        ),
+        pytest.param(
+            "ds-001_records.json",
+            {"dataset_id": "ds-001", "garbage": True},
+            0,
+            id="malformed_returns_empty",
+        ),
+    ],
+)
+def test_load_records(tmp_path: Path, file_name, content, expected_len):
+    """load_records handles envelope / bare-list / missing / legacy / malformed files."""
     ds_dir = tmp_path / "ds-001"
     ds_dir.mkdir()
-    payload = {
-        "dataset_id": "ds-001",
-        "records": [
-            {"dataset": "ds-001", "bids_relpath": "f1.edf"},
-            {"dataset": "ds-001", "bids_relpath": "f2.edf"},
-        ],
-    }
-    (ds_dir / "ds-001_records.json").write_text(json.dumps(payload))
+    if file_name is not None:
+        (ds_dir / file_name).write_text(json.dumps(content))
     inject = _load_inject()
     records = inject.load_records(ds_dir)
-    assert len(records) == 2
+    assert len(records) == expected_len
 
 
-def test_load_records_reads_bare_list(tmp_path: Path):
-    """Some pipelines write a bare JSON list (no envelope)."""
+@pytest.mark.parametrize(
+    ("content", "expected_len"),
+    [
+        pytest.param(
+            {"montages": [{"hash": "abc"}, {"hash": "def"}]},
+            2,
+            id="envelope",
+        ),
+        pytest.param(
+            [{"hash": "abc"}],
+            1,
+            id="bare_list",
+        ),
+        pytest.param(
+            None,
+            0,
+            id="missing_file",
+        ),
+        pytest.param(
+            {"montages": None},
+            0,
+            id="null_payload",
+        ),
+    ],
+)
+def test_load_montages(tmp_path: Path, content, expected_len):
+    """load_montages handles envelope / bare-list / missing / null-payload."""
     ds_dir = tmp_path / "ds-001"
     ds_dir.mkdir()
-    (ds_dir / "ds-001_records.json").write_text(
-        json.dumps([{"dataset": "ds-001", "bids_relpath": "f1.edf"}])
-    )
-    inject = _load_inject()
-    records = inject.load_records(ds_dir)
-    assert len(records) == 1
-
-
-def test_load_records_returns_empty_for_no_file(tmp_path: Path):
-    ds_dir = tmp_path / "ds-001"
-    ds_dir.mkdir()
-    inject = _load_inject()
-    assert inject.load_records(ds_dir) == []
-
-
-def test_load_records_legacy_core_json_fallback(tmp_path: Path):
-    """Falls back to ``<id>_core.json`` if ``_records.json`` is missing."""
-    ds_dir = tmp_path / "ds-001"
-    ds_dir.mkdir()
-    (ds_dir / "ds-001_core.json").write_text(
-        json.dumps([{"dataset": "ds-001", "bids_relpath": "f1.edf"}])
-    )
-    inject = _load_inject()
-    records = inject.load_records(ds_dir)
-    assert len(records) == 1
-
-
-def test_load_records_malformed_returns_empty(tmp_path: Path):
-    """A JSON object without ``records`` and not a list → empty result."""
-    ds_dir = tmp_path / "ds-001"
-    ds_dir.mkdir()
-    (ds_dir / "ds-001_records.json").write_text(
-        json.dumps({"dataset_id": "ds-001", "garbage": True})
-    )
-    inject = _load_inject()
-    assert inject.load_records(ds_dir) == []
-
-
-def test_load_montages_envelope(tmp_path: Path):
-    ds_dir = tmp_path / "ds-001"
-    ds_dir.mkdir()
-    (ds_dir / "ds-001_montages.json").write_text(
-        json.dumps({"montages": [{"hash": "abc"}, {"hash": "def"}]})
-    )
+    if content is not None or expected_len != 0:
+        # Only write file for non-missing cases; missing_file skips writing
+        pass
+    if expected_len != 0 or content == {"montages": None}:
+        (ds_dir / "ds-001_montages.json").write_text(json.dumps(content))
     inject = _load_inject()
     montages = inject.load_montages(ds_dir)
-    assert len(montages) == 2
-
-
-def test_load_montages_bare_list(tmp_path: Path):
-    ds_dir = tmp_path / "ds-001"
-    ds_dir.mkdir()
-    (ds_dir / "ds-001_montages.json").write_text(json.dumps([{"hash": "abc"}]))
-    inject = _load_inject()
-    montages = inject.load_montages(ds_dir)
-    assert len(montages) == 1
-
-
-def test_load_montages_missing_file_returns_empty(tmp_path: Path):
-    ds_dir = tmp_path / "ds-001"
-    ds_dir.mkdir()
-    inject = _load_inject()
-    assert inject.load_montages(ds_dir) == []
-
-
-def test_load_montages_envelope_with_null_montages(tmp_path: Path):
-    """``{"montages": null}`` → empty list (not None)."""
-    ds_dir = tmp_path / "ds-001"
-    ds_dir.mkdir()
-    (ds_dir / "ds-001_montages.json").write_text(json.dumps({"montages": None}))
-    inject = _load_inject()
-    assert inject.load_montages(ds_dir) == []
+    assert len(montages) == expected_len
 
 
 # ─── _flatten_entities ─────────────────────────────────────────────────────
@@ -233,7 +228,6 @@ def test_sanitize_for_json_preserves_finite_floats():
 
 def test_sanitize_for_json_recurses_into_nested_dicts():
     """A NaN deeply nested in a sub-dict still gets replaced."""
-
     inject = _load_inject()
     out = inject._sanitize_for_json(
         {"outer": {"inner_nan": math.nan, "inner_str": "shallow"}}
@@ -244,7 +238,6 @@ def test_sanitize_for_json_recurses_into_nested_dicts():
 
 def test_sanitize_for_json_recurses_into_lists():
     """A NaN inside a list is replaced; other items pass through."""
-
     inject = _load_inject()
     out = inject._sanitize_for_json([1.0, math.nan, 3.0, float("inf")])
     assert out == [1.0, None, 3.0, None]
@@ -455,32 +448,37 @@ def test_filter_marks_new_dataset_as_changed():
 # ─── find_digested_datasets ───────────────────────────────────────────────
 
 
-def test_find_digested_datasets_walks_input_dir(tmp_path: Path):
-    """Each sub-directory containing ``<id>_dataset.json`` is one
-    dataset directory."""
+@pytest.mark.parametrize(
+    ("setup_fn", "expected_names"),
+    [
+        pytest.param(
+            lambda tmp: [
+                (tmp / ds_id).mkdir()
+                or (tmp / ds_id / f"{ds_id}_dataset.json").write_text("{}")
+                for ds_id in ("ds-001", "ds-002", "ds-003")
+            ],
+            ["ds-001", "ds-002", "ds-003"],
+            id="walks_input_dir",
+        ),
+        pytest.param(
+            lambda tmp: [
+                (tmp / "real").mkdir()
+                or (tmp / "real" / "real_dataset.json").write_text("{}"),
+                (tmp / "incomplete").mkdir(),
+            ],
+            ["real"],
+            id="ignores_subdirs_without_dataset_json",
+        ),
+        pytest.param(
+            lambda tmp: None,
+            [],
+            id="empty_input",
+        ),
+    ],
+)
+def test_find_digested_datasets(tmp_path: Path, setup_fn, expected_names):
+    """find_digested_datasets walks dirs, filtering by presence of _dataset.json."""
+    setup_fn(tmp_path)
     inject = _load_inject()
-    for ds_id in ("ds-001", "ds-002", "ds-003"):
-        sub = tmp_path / ds_id
-        sub.mkdir()
-        (sub / f"{ds_id}_dataset.json").write_text("{}")
-
     found = inject.find_digested_datasets(tmp_path)
-    found_names = sorted(d.name for d in found)
-    assert found_names == ["ds-001", "ds-002", "ds-003"]
-
-
-def test_find_digested_datasets_ignores_subdirs_without_dataset_json(
-    tmp_path: Path,
-):
-    """A subdirectory without the marker file is skipped."""
-    inject = _load_inject()
-    (tmp_path / "real").mkdir()
-    (tmp_path / "real" / "real_dataset.json").write_text("{}")
-    (tmp_path / "incomplete").mkdir()  # no _dataset.json
-    found = inject.find_digested_datasets(tmp_path)
-    assert sorted(d.name for d in found) == ["real"]
-
-
-def test_find_digested_datasets_empty_input(tmp_path: Path):
-    inject = _load_inject()
-    assert inject.find_digested_datasets(tmp_path) == []
+    assert sorted(d.name for d in found) == sorted(expected_names)

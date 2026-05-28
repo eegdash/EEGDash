@@ -118,8 +118,6 @@ def test_nemar_download_required_files_falls_back_to_data_portal(tmp_path):
     """After an S3 403 on the original URI, eegdash must delegate to
     ``nemar-py`` (NEMARClient + download_one) for the recovery path.
     """
-    from unittest.mock import MagicMock
-
     from eegdash.dataset.base import EEGDashRaw
     from eegdash.schemas import create_record
 

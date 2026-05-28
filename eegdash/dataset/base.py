@@ -22,6 +22,7 @@ from typing import Any
 import filelock
 import mne.io.ctf.info as ctf_info
 import mne_bids
+import nemar
 from mne.io import BaseRaw
 from mne_bids import BIDSPath
 
@@ -298,8 +299,6 @@ def _fetch_nemar_manifest(dataset_id: str):
     know the URL layout, the auth posture, or the index → version → manifest
     chain — those are nemar-py's job. Returns ``None`` on any error.
     """
-    import nemar
-
     try:
         with nemar.NEMARClient() as client:
             index = client.fetch_index(dataset_id)
@@ -647,14 +646,11 @@ class EEGDashRaw(RawDataset):
                     self._raw_uri, self.filecache, filesystem=filesystem
                 )
             except FileNotFoundError:
+                raw_key = (self.record.get("storage") or {}).get("raw_key", "")
                 if self._storage_backend == "nemar" and self._download_nemar_data_file(
-                    (self.record.get("storage") or {}).get("raw_key", ""),
-                    self.filecache,
-                    filesystem=filesystem,
+                    raw_key, self.filecache
                 ):
-                    # Manifest fallback succeeded; let post-except companion
-                    # discovery (below) run as usual.
-                    pass
+                    pass  # manifest fallback succeeded
                 # If the URI contains a git-annex key, try the BIDS-named
                 # alternative before giving up.
                 elif resolved_uri := self._resolve_annex_key_uri(self._raw_uri):
@@ -689,14 +685,11 @@ class EEGDashRaw(RawDataset):
                         issues=[f"Missing S3 file: {self._raw_uri}"],
                     )
             except PermissionError as exc:
+                raw_key = (self.record.get("storage") or {}).get("raw_key", "")
                 if self._storage_backend == "nemar" and self._download_nemar_data_file(
-                    (self.record.get("storage") or {}).get("raw_key", ""),
-                    self.filecache,
-                    filesystem=filesystem,
+                    raw_key, self.filecache
                 ):
-                    # Manifest fallback succeeded; let post-except companion
-                    # discovery (below) run as usual.
-                    pass
+                    pass  # manifest fallback succeeded
                 # NEMAR S3 returns 403 on GetObject when the blob isn't on
                 # the public bucket yet — common for private-repo datasets
                 # whose git-annex pointer lives on GitHub but whose binary
@@ -733,23 +726,15 @@ class EEGDashRaw(RawDataset):
         # Always set filenames (important for local datasets)
         self.filenames = [self.filecache]
 
-    def _download_nemar_data_file(
-        self,
-        relpath: str,
-        local_path: Path,
-        *,
-        filesystem=None,
-    ) -> bool:
+    def _download_nemar_data_file(self, relpath: str, local_path: Path) -> bool:
         """Resolve *relpath* via ``nemar-py`` and stream its bytes.
 
         Safety net for records whose pre-computed ``annex_keys`` don't
         cover *relpath*. ``nemar-py`` handles ID validation, manifest
         parsing, the BIDS-path → file mapping, and the actual transfer
         (with retries + checksum verification). Returns ``True`` on
-        success. *filesystem* is ignored; nemar-py owns its transport.
+        success.
         """
-        import nemar
-
         dataset_id = self.record.get("dataset", "")
         if not (dataset_id and relpath):
             return False
@@ -923,9 +908,7 @@ class EEGDashRaw(RawDataset):
                     companion_uri, local_path, filesystem=filesystem
                 )
             except (FileNotFoundError, PermissionError):
-                self._download_nemar_data_file(
-                    companion_relpath, local_path, filesystem=filesystem
-                )
+                self._download_nemar_data_file(companion_relpath, local_path)
 
     def _download_embedded_fdt(self, filesystem) -> None:
         """Download a non-BIDS-named ``.fdt`` referenced inside a ``.set`` header.

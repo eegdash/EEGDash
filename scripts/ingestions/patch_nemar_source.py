@@ -47,6 +47,8 @@ import re
 import sys
 from typing import Any
 
+import httpx
+
 from eegdash.http_api_client import get_client
 
 NM_PATTERN = re.compile(r"^nm\d+$")
@@ -168,7 +170,9 @@ def main() -> int:
                 print(f"Updated dataset {dsid}")
             else:
                 print(f"Unchanged {dsid} (already nemar?)")
-        except Exception as e:  # noqa: BLE001 — surface any HTTP/transport error
+        except (httpx.RequestError, httpx.HTTPStatusError, KeyError, ValueError) as e:
+            # Recoverable: API/network failure or malformed response on
+            # this specific dataset. Programmer errors propagate.
             dataset_failed.append((dsid, str(e)))
             print(f"ERROR dataset {dsid}: {e}", file=sys.stderr)
 

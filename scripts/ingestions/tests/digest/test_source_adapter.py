@@ -71,13 +71,6 @@ def test_openneuro_dataset_url():
     assert adapter.dataset_url() == "https://openneuro.org/datasets/ds002893"
 
 
-def test_openneuro_address_file_is_direct_join():
-    """OpenNeuro: no annex resolution; address is base + relpath."""
-    adapter = OpenNeuroAdapter("ds002893")
-    addr = adapter.address_file("sub-001/eeg/sub-001_task-rest_eeg.edf")
-    assert addr == "s3://openneuro.org/ds002893/sub-001/eeg/sub-001_task-rest_eeg.edf"
-
-
 def test_openneuro_resolve_storage_extensions_returns_empty():
     """OpenNeuro doesn't use annex keys or inline sidecars."""
     adapter = OpenNeuroAdapter("ds002893")

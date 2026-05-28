@@ -290,6 +290,26 @@ def _fetch_nemar_pointer(dataset_id: str, relpath: str) -> bytes:
         return resp.read()
 
 
+@lru_cache(maxsize=64)
+def _fetch_nemar_manifest(dataset_id: str):
+    """Fetch and cache the data.nemar.org ``VersionManifest`` for *dataset_id*.
+
+    Delegates to the official ``nemar-py`` client so eegdash never has to
+    know the URL layout, the auth posture, or the index → version → manifest
+    chain — those are nemar-py's job. Returns ``None`` on any error.
+    """
+    import nemar
+
+    try:
+        with nemar.NEMARClient() as client:
+            index = client.fetch_index(dataset_id)
+            version = index.resolve_version("latest")
+            return client.fetch_manifest(index, version)
+    except Exception as exc:
+        logger.warning("Could not fetch NEMAR manifest for %s: %s", dataset_id, exc)
+        return None
+
+
 @lru_cache(maxsize=4096)
 def _resolve_nemar_pointer(dataset_id: str, relpath: str) -> tuple[str | None, bytes]:
     """Return ``(annex_key, raw_bytes)`` for a NEMAR-tracked file.
@@ -627,10 +647,17 @@ class EEGDashRaw(RawDataset):
                     self._raw_uri, self.filecache, filesystem=filesystem
                 )
             except FileNotFoundError:
+                if self._storage_backend == "nemar" and self._download_nemar_data_file(
+                    (self.record.get("storage") or {}).get("raw_key", ""),
+                    self.filecache,
+                    filesystem=filesystem,
+                ):
+                    # Manifest fallback succeeded; let post-except companion
+                    # discovery (below) run as usual.
+                    pass
                 # If the URI contains a git-annex key, try the BIDS-named
                 # alternative before giving up.
-                resolved_uri = self._resolve_annex_key_uri(self._raw_uri)
-                if resolved_uri:
+                elif resolved_uri := self._resolve_annex_key_uri(self._raw_uri):
                     logger.info(
                         "Raw URI %s contains git-annex key; trying BIDS name: %s",
                         self._raw_uri,
@@ -662,12 +689,20 @@ class EEGDashRaw(RawDataset):
                         issues=[f"Missing S3 file: {self._raw_uri}"],
                     )
             except PermissionError as exc:
+                if self._storage_backend == "nemar" and self._download_nemar_data_file(
+                    (self.record.get("storage") or {}).get("raw_key", ""),
+                    self.filecache,
+                    filesystem=filesystem,
+                ):
+                    # Manifest fallback succeeded; let post-except companion
+                    # discovery (below) run as usual.
+                    pass
                 # NEMAR S3 returns 403 on GetObject when the blob isn't on
                 # the public bucket yet — common for private-repo datasets
                 # whose git-annex pointer lives on GitHub but whose binary
                 # NEMAR hasn't mirrored. Re-raise with a message that names
                 # the cause instead of leaking the raw AccessDenied.
-                if self._storage_backend == "nemar":
+                elif self._storage_backend == "nemar":
                     raise DataIntegrityError(
                         message=(
                             "NEMAR has not yet published this recording's binary "
@@ -682,7 +717,8 @@ class EEGDashRaw(RawDataset):
                             f"Underlying error: {exc}",
                         ],
                     ) from exc
-                raise
+                else:
+                    raise
 
             # Auto-discover and download companion files (.fdt, .eeg, .vmrk)
             # that may not have been included in dep_keys.
@@ -696,6 +732,41 @@ class EEGDashRaw(RawDataset):
 
         # Always set filenames (important for local datasets)
         self.filenames = [self.filecache]
+
+    def _download_nemar_data_file(
+        self,
+        relpath: str,
+        local_path: Path,
+        *,
+        filesystem=None,
+    ) -> bool:
+        """Resolve *relpath* via ``nemar-py`` and stream its bytes.
+
+        Safety net for records whose pre-computed ``annex_keys`` don't
+        cover *relpath*. ``nemar-py`` handles ID validation, manifest
+        parsing, the BIDS-path → file mapping, and the actual transfer
+        (with retries + checksum verification). Returns ``True`` on
+        success. *filesystem* is ignored; nemar-py owns its transport.
+        """
+        import nemar
+
+        dataset_id = self.record.get("dataset", "")
+        if not (dataset_id and relpath):
+            return False
+        manifest = _fetch_nemar_manifest(dataset_id)
+        if manifest is None:
+            return False
+        target = relpath.lstrip("/")
+        if target not in manifest:
+            return False
+        try:
+            nemar.download_one(manifest.file(target), local_path)
+        except Exception as exc:
+            logger.warning(
+                "NEMAR fallback failed for %s/%s: %s", dataset_id, relpath, exc
+            )
+            return False
+        return True
 
     # BIDS root files not enumerated in dep_keys but expected by mne-bids /
     # braindecode. All are direct-git on NEMAR (excluded from annex).
@@ -847,9 +918,14 @@ class EEGDashRaw(RawDataset):
             )
             return
         if companion_uri:
-            downloader.download_s3_file(
-                companion_uri, local_path, filesystem=filesystem
-            )
+            try:
+                downloader.download_s3_file(
+                    companion_uri, local_path, filesystem=filesystem
+                )
+            except (FileNotFoundError, PermissionError):
+                self._download_nemar_data_file(
+                    companion_relpath, local_path, filesystem=filesystem
+                )
 
     def _download_embedded_fdt(self, filesystem) -> None:
         """Download a non-BIDS-named ``.fdt`` referenced inside a ``.set`` header.

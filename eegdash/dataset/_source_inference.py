@@ -50,7 +50,9 @@ _FOREIGN_PREFIXES: frozenset[str] = frozenset(
 def infer_source_from_dataset_id(dataset_id: str) -> str | None:
     """Return the source implied by ``dataset_id``, or ``None`` if unknown.
 
-    OpenNeuro IDs are ``dsNNNNNN``; NEMAR IDs are ``nmNNNNNN``. The
+    OpenNeuro IDs are ``dsNNNNNN``; NEMAR IDs are ``nmNNNNNN``;
+    OpenNeuro-imported NEMAR mirrors are ``onNNNNNN`` (produced by
+    ``nemar-cli``'s ``mapDatasetId``: ``dsNNNNNN -> onNNNNNN``). The
     ``EEGManyLabs`` projects live on GIN, and the HBN ``EEG2025*``
     releases are mirrored on NEMAR.
     """
@@ -59,6 +61,8 @@ def infer_source_from_dataset_id(dataset_id: str) -> str | None:
     if dataset_id.startswith("ds") and dataset_id[2:].isdigit():
         return "openneuro"
     if dataset_id.startswith("nm") and dataset_id[2:].isdigit():
+        return "nemar"
+    if dataset_id.startswith("on") and dataset_id[2:].isdigit():
         return "nemar"
     if "EEGManyLabs" in dataset_id:
         return "gin"

@@ -139,11 +139,6 @@ def _stamp_provenance(
         provenance[field] = source
 
 
-# =============================================================================
-# API-Only Digest (for OSF, Figshare, Zenodo - no actual files on disk)
-# =============================================================================
-
-
 def _emit_dataset_finished(dataset_id: str, summary: dict[str, Any]) -> None:
     """Emit a dataset_finished telemetry event."""
     get_emitter().emit(

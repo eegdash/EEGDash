@@ -1,12 +1,4 @@
-"""Unit tests for 5_inject.py helpers.
-
-Covers the pure helpers + filtering layer: load_dataset / load_records /
-load_montages, _flatten_entities, _sanitize_for_json,
-_ensure_fingerprint, filter_changed_datasets, find_digested_datasets.
-
-No live cluster needed — uses tmp_path + respx for the
-filter_changed_datasets fetch.
-"""
+"""Unit tests for 5_inject.py pure helpers and filtering layer."""
 
 from __future__ import annotations
 
@@ -96,7 +88,6 @@ def test_load_dataset_reads_json(tmp_path: Path):
     ],
 )
 def test_load_records(tmp_path: Path, file_name, content, expected_len):
-    """load_records handles envelope / bare-list / missing / legacy / malformed files."""
     ds_dir = tmp_path / "ds-001"
     ds_dir.mkdir()
     if file_name is not None:
@@ -132,12 +123,8 @@ def test_load_records(tmp_path: Path, file_name, content, expected_len):
     ],
 )
 def test_load_montages(tmp_path: Path, content, expected_len):
-    """load_montages handles envelope / bare-list / missing / null-payload."""
     ds_dir = tmp_path / "ds-001"
     ds_dir.mkdir()
-    if content is not None or expected_len != 0:
-        # Only write file for non-missing cases; missing_file skips writing
-        pass
     if expected_len != 0 or content == {"montages": None}:
         (ds_dir / "ds-001_montages.json").write_text(json.dumps(content))
     inject = _load_inject()
@@ -149,7 +136,6 @@ def test_load_montages(tmp_path: Path, content, expected_len):
 
 
 def test_flatten_entities_lifts_nested_keys():
-    """Subject/task/session/run lifted from entities dict to top level."""
     inject = _load_inject()
     rec = {
         "dataset": "ds-001",
@@ -160,15 +146,11 @@ def test_flatten_entities_lifts_nested_keys():
     assert out["task"] == "rest"
     assert out["session"] == "01"
     assert out["run"] == "1"
-    # entities dict removed
     assert "entities" not in out
 
 
 def test_flatten_entities_top_level_wins_over_entity():
-    """If subject exists at top level AND in entities, top-level wins.
-
-    Pins the documented conflict-resolution contract — preserves
-    explicitly-set digester output."""
+    """Top-level subject wins over entities dict — pins conflict-resolution contract."""
     inject = _load_inject()
     rec = {
         "dataset": "ds-001",
@@ -181,7 +163,6 @@ def test_flatten_entities_top_level_wins_over_entity():
 
 
 def test_flatten_entities_no_entities_passes_through():
-    """A record without ``entities`` is returned unchanged."""
     inject = _load_inject()
     rec = {"dataset": "ds-001", "subject": "01"}
     out = inject._flatten_entities(rec)
@@ -189,7 +170,6 @@ def test_flatten_entities_no_entities_passes_through():
 
 
 def test_flatten_entities_does_not_mutate_input():
-    """The input dict is NOT mutated; flatten returns a new dict."""
     inject = _load_inject()
     rec = {
         "dataset": "ds-001",
@@ -212,14 +192,12 @@ def test_flatten_entities_does_not_mutate_input():
     ],
 )
 def test_sanitize_for_json_replaces_non_finite_float_with_none(bad_float):
-    """NaN / ±Inf are not valid JSON; the sanitiser swaps each for None."""
     inject = _load_inject()
     out = inject._sanitize_for_json({"field": bad_float})
     assert out["field"] is None
 
 
 def test_sanitize_for_json_preserves_finite_floats():
-    """Real numbers pass through untouched (no precision loss)."""
     inject = _load_inject()
     out = inject._sanitize_for_json({"sfreq": 500.0, "x": -3.14})
     assert out["sfreq"] == 500.0
@@ -227,7 +205,6 @@ def test_sanitize_for_json_preserves_finite_floats():
 
 
 def test_sanitize_for_json_recurses_into_nested_dicts():
-    """A NaN deeply nested in a sub-dict still gets replaced."""
     inject = _load_inject()
     out = inject._sanitize_for_json(
         {"outer": {"inner_nan": math.nan, "inner_str": "shallow"}}
@@ -237,29 +214,26 @@ def test_sanitize_for_json_recurses_into_nested_dicts():
 
 
 def test_sanitize_for_json_recurses_into_lists():
-    """A NaN inside a list is replaced; other items pass through."""
     inject = _load_inject()
     out = inject._sanitize_for_json([1.0, math.nan, 3.0, float("inf")])
     assert out == [1.0, None, 3.0, None]
 
 
 def test_sanitize_for_json_passes_through_non_float_primitives():
-    """Strings, ints, bools, None — all unchanged. Bytes pass through
-    too (the sanitiser doesn't decode them — that's caller's job)."""
     inject = _load_inject()
     assert inject._sanitize_for_json(42) == 42
     assert inject._sanitize_for_json("hello") == "hello"
     assert inject._sanitize_for_json(None) is None
     assert inject._sanitize_for_json(True) is True
-    # bytes pass through — pin the actual behaviour (not decoded here)
-    assert inject._sanitize_for_json(b"raw") == b"raw"
+    assert (
+        inject._sanitize_for_json(b"raw") == b"raw"
+    )  # bytes not decoded — caller's job
 
 
 # ─── _ensure_fingerprint ──────────────────────────────────────────────────
 
 
 def test_ensure_fingerprint_preserves_existing():
-    """If dataset already has ingestion_fingerprint, leave it."""
     inject = _load_inject()
     ds = {"dataset_id": "ds-001", "ingestion_fingerprint": "existing-hash"}
     out = inject._ensure_fingerprint("ds-001", ds, [])
@@ -267,7 +241,6 @@ def test_ensure_fingerprint_preserves_existing():
 
 
 def test_ensure_fingerprint_creates_from_records():
-    """Missing fingerprint + non-empty records → derive."""
     inject = _load_inject()
     ds = {"dataset_id": "ds-001", "source": "openneuro"}
     records = [
@@ -281,7 +254,6 @@ def test_ensure_fingerprint_creates_from_records():
 
 
 def test_ensure_fingerprint_synthesises_dataset_when_none():
-    """If dataset is None, build a stub with dataset_id."""
     inject = _load_inject()
     out = inject._ensure_fingerprint(
         "ds-001",
@@ -293,7 +265,6 @@ def test_ensure_fingerprint_synthesises_dataset_when_none():
 
 
 def test_ensure_fingerprint_idempotent():
-    """Re-running ensure_fingerprint twice → same hash."""
     inject = _load_inject()
     ds = {"dataset_id": "ds-001", "source": "openneuro"}
     records = [{"dataset": "ds-001", "bids_relpath": "f1.edf"}]
@@ -341,7 +312,6 @@ def test_fetch_existing_returns_none_on_404():
 
 @respx.mock
 def test_fetch_existing_returns_none_on_network_error():
-    """A network exception → None (not a crash)."""
     inject = _load_inject()
     respx.get("https://api.example.com/api/eegdash_dev/datasets/ds-001").mock(
         side_effect=httpx.ConnectError("network down")
@@ -357,7 +327,6 @@ def test_fetch_existing_returns_none_on_network_error():
 
 @respx.mock
 def test_filter_skips_unchanged_by_fingerprint():
-    """If the API returns the same fingerprint, the dataset is skipped."""
     inject = _load_inject()
 
     fp = "abc123def456"
@@ -387,7 +356,6 @@ def test_filter_skips_unchanged_by_fingerprint():
 
 @respx.mock
 def test_filter_marks_changed_when_fingerprint_differs():
-    """Different fingerprints → dataset is changed → injected."""
     inject = _load_inject()
 
     respx.get("https://api.example.com/api/eegdash_dev/datasets/ds-001").mock(
@@ -418,7 +386,6 @@ def test_filter_marks_changed_when_fingerprint_differs():
 
 @respx.mock
 def test_filter_marks_new_dataset_as_changed():
-    """Dataset not yet in API → always changed (inject it)."""
     inject = _load_inject()
 
     respx.get("https://api.example.com/api/eegdash_dev/datasets/ds-new").mock(
@@ -477,7 +444,6 @@ def test_filter_marks_new_dataset_as_changed():
     ],
 )
 def test_find_digested_datasets(tmp_path: Path, setup_fn, expected_names):
-    """find_digested_datasets walks dirs, filtering by presence of _dataset.json."""
     setup_fn(tmp_path)
     inject = _load_inject()
     found = inject.find_digested_datasets(tmp_path)

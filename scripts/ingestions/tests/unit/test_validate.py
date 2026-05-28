@@ -1,10 +1,4 @@
-"""Tests for ``_validate.py`` — schema gate (validators + helpers).
-
-Two angles:
-
-- **Functions** — validate_record / validate_dataset / validate_digestion_output (was test_validate_functions.py).
-- **Helpers** — VALID_STORAGE_PATTERNS / VALID_SOURCES / RECOMMENDED_* / validate_storage_url (was test_validate_helpers.py).
-"""
+"""Tests for ``_validate.py`` — schema gate (validators + helpers)."""
 
 from __future__ import annotations
 
@@ -30,14 +24,9 @@ from eegdash.testing import data_file
 
 # ─── 1. Functions ──────────────────────────────────────────────
 
-# ─── Fixtures (minimal valid + invalid documents) ─────────────────────────
-
 
 def _minimal_valid_record() -> dict:
-    """Minimal Record that should pass RecordModel.model_validate.
-
-    Keys here are the ones declared mandatory by eegdash.schemas.RecordModel.
-    """
+    """Minimal Record that passes RecordModel.model_validate."""
     return {
         "dataset": "ds002893",
         "bids_relpath": "sub-01/eeg/sub-01_task-rest_eeg.edf",
@@ -71,8 +60,6 @@ def test_validate_record_accepts_minimal_valid_record():
     result = ValidationResult()
     rec = _minimal_valid_record()
     validate_record(rec, "ds002893", "openneuro", result)
-    # The record has no recommended fields beyond mandatory; that
-    # surfaces warnings but no errors.
     assert result.errors == []
     assert result.stats["storage_errors"] == 0
 
@@ -91,28 +78,24 @@ def test_validate_record_flags_storage_url_mismatch():
 
 
 def test_validate_record_missing_mandatory_field_raises_pydantic_error():
-    """Removing a mandatory field surfaces a pydantic ValidationError
-    in result.errors (not raised)."""
+    """Removing a mandatory field surfaces a pydantic ValidationError in result.errors."""
     result = ValidationResult()
     rec = _minimal_valid_record()
     del rec["bids_relpath"]
 
     validate_record(rec, "ds002893", "openneuro", result)
     assert len(result.errors) >= 1
-    # Pydantic errors are prefixed with 'record'
     assert any("record" in str(e) for e in result.errors)
 
 
 @pytest.mark.parametrize(
     ("override", "counter", "expected"),
     [
-        # Missing (or zero) → counter == 1
         pytest.param({}, "missing_nchans", 1, id="nchans_missing"),
         pytest.param({}, "missing_sampling_frequency", 1, id="sfreq_missing"),
         pytest.param(
             {"nchans": 0}, "missing_nchans", 1, id="nchans_zero_treated_missing"
         ),
-        # Present + non-degenerate → counter stays 0
         pytest.param(
             {"nchans": 64, "sampling_frequency": 250.0},
             "missing_nchans",
@@ -139,39 +122,31 @@ def test_validate_record_missing_field_counters(
 
 
 def test_validate_record_first_record_only_emits_recommended_warnings():
-    """``record_idx == 0`` triggers recommended-field warnings;
-    subsequent records reuse the same warnings (don't accumulate)."""
+    """record_idx == 0 emits recommended-field warnings; subsequent records don't accumulate more."""
     result = ValidationResult()
     rec = _minimal_valid_record()
-    # First record (idx=0) — warnings emitted for each missing
-    # recommended field
     validate_record(rec, "ds002893", "openneuro", result, record_idx=0)
     first_warning_count = len(result.warnings)
     assert first_warning_count > 0
 
-    # Second record — no new warnings should be added
     validate_record(rec, "ds002893", "openneuro", result, record_idx=1)
     assert len(result.warnings) == first_warning_count
 
 
 def test_validate_record_unknown_source_passes_storage_check():
-    """Unknown source: storage URL check is skipped (per
-    validate_storage_url's pass-through)."""
+    """Unknown source: storage URL check is skipped."""
     result = ValidationResult()
     rec = _minimal_valid_record()
-    # Use a totally unknown source
     validate_record(rec, "ds-xxx", "brand_new_source", result)
     assert result.stats["storage_errors"] == 0
 
 
 def test_validate_record_handles_missing_storage_dict():
-    """If storage is missing/empty, no storage error (it's a schema
-    error caught by pydantic, separately)."""
+    """Empty storage dict: no storage error (schema error caught separately by pydantic)."""
     result = ValidationResult()
     rec = _minimal_valid_record()
     rec["storage"] = {}
     validate_record(rec, "ds002893", "openneuro", result)
-    # Storage-check is skipped when storage dict is empty
     assert result.stats["storage_errors"] == 0
 
 
@@ -183,8 +158,6 @@ def test_validate_dataset_accepts_minimal_valid_dataset():
     result = ValidationResult()
     ds = _minimal_valid_dataset()
     validate_dataset(ds, result)
-    # The minimum doc is missing some recommended fields (warnings)
-    # but no errors.
     assert result.errors == []
     assert result.stats["invalid_source"] == 0
 
@@ -219,20 +192,17 @@ def test_validate_dataset_warns_on_missing_recommended():
 
     result = ValidationResult()
     ds = _minimal_valid_dataset()
-    # Remove all recommended fields
     for field in RECOMMENDED_DATASET_FIELDS:
         ds.pop(field, None)
     validate_dataset(ds, result)
-    # Expect one warning per missing recommended field
     assert len(result.warnings) >= len(RECOMMENDED_DATASET_FIELDS)
 
 
 def test_validate_dataset_handles_no_dataset_id():
-    """A dataset without dataset_id still validates (default 'unknown')."""
+    """A dataset without dataset_id still validates (pydantic surfaces the error)."""
     result = ValidationResult()
     ds = _minimal_valid_dataset()
     del ds["dataset_id"]
-    # Should not crash; pydantic surfaces the error via _add_pydantic_errors
     validate_dataset(ds, result)
     assert len(result.errors) >= 1
 
@@ -259,11 +229,9 @@ def test_validate_digestion_output_walks_dataset_dirs(tmp_path: Path):
     for ds_id in ("ds001", "ds002"):
         ds_dir = tmp_path / ds_id
         ds_dir.mkdir()
-        # Write a minimal valid dataset.json
         dataset = _minimal_valid_dataset()
         dataset["dataset_id"] = ds_id
         (ds_dir / f"{ds_id}_dataset.json").write_text(json.dumps(dataset))
-        # And a minimal records.json
         records_doc = {
             "dataset_id": ds_id,
             "records": [_minimal_valid_record() | {"dataset": ds_id}],
@@ -282,38 +250,22 @@ def test_validate_digestion_output_surfaces_malformed_json(tmp_path: Path):
     (ds_dir / "ds_bad_dataset.json").write_text("{ this is not json")
 
     out = validate_digestion_output(tmp_path)
-    # The malformed JSON triggers a JSONDecodeError → result.add_error
     assert any("Invalid JSON" in str(e) for e in out.errors), (
         f"expected 'Invalid JSON' error, got {out.errors}"
     )
 
 
 def test_validate_digestion_output_accepts_snapshot_fixture():
-    """The committed snapshot fixture validates cleanly.
-
-    End-to-end pin: the BIDS + manifest snapshot output produced by
-    Stage 3 must pass the validator. If a Stage-3 refactor changes
-    a field, this fires.
-    """
+    """The committed snapshot fixture validates cleanly (end-to-end pin)."""
     snapshot_root = data_file("digest_snapshots/outputs")
     out = validate_digestion_output(snapshot_root)
-    # Snapshot has 3 datasets, 5 records:
-    #   - ds_snapshot_vhdr           1 record  (BIDS-fs, no montage)
-    #   - ds_snapshot_manifest       3 records (manifest-only)
-    #   - ds_snapshot_eeg_montage    1 record  (BIDS-fs, +1 montage — added
-    #                                          2026-05-22 to engage Layer-2
-    #                                          acceptance montage tests)
     assert out.stats["datasets_checked"] == 3
     assert out.stats["records_checked"] == 5
-    # No schema errors. (May have warnings for unknown source on
-    # ds_snapshot_vhdr; that's fine in non-strict mode.)
     assert out.errors == [], f"snapshot has errors: {out.errors}"
 
 
 def test_validate_digestion_output_strict_promotes_warnings(tmp_path: Path):
-    """In strict mode, the snapshot's unknown-source warning becomes
-    an error — pinning the documented promotion."""
-    # Build a synthetic dataset with unknown source (warning trigger)
+    """In non-strict mode, unknown-source triggers a warning (not an error)."""
     ds_dir = tmp_path / "ds_synth"
     ds_dir.mkdir()
     dataset = _minimal_valid_dataset()
@@ -321,15 +273,9 @@ def test_validate_digestion_output_strict_promotes_warnings(tmp_path: Path):
     dataset["source"] = "made_up_source"  # triggers unknown-source warning
     (ds_dir / "ds_synth_dataset.json").write_text(json.dumps(dataset))
 
-    # Non-strict: warning, no error.
     non_strict = validate_digestion_output(tmp_path, strict=False)
     assert non_strict.stats["invalid_source"] == 1
-    # Errors may exist for missing records.json but no source-related error.
-
-    # The "strict promotes warnings" mechanic happens at the CLI layer
-    # (4_validate_output.py) rather than inside validate_digestion_output.
-    # The library function returns warnings either way; the caller decides
-    # how to interpret them. So we just verify the warning was emitted.
+    # The library returns warnings either way; the CLI layer decides how to promote them.
     assert any(w.get("field") == "source" for w in non_strict.warnings)
 
 
@@ -350,11 +296,7 @@ def test_validate_digestion_output_strict_promotes_warnings(tmp_path: Path):
     ],
 )
 def test_validate_record_rejects_cross_source_storage_urls(source: str, wrong_url: str):
-    """Cross-source rejection across all 8 known sources.
-
-    This is the schema gate that prevented the pre-PR-#327 misrouting
-    bug from re-occurring across the 8 active sources.
-    """
+    """Cross-source storage URL is rejected for all 8 known sources."""
     result = ValidationResult()
     rec = _minimal_valid_record()
     rec["storage"]["base"] = wrong_url
@@ -366,8 +308,6 @@ def test_validate_record_rejects_cross_source_storage_urls(source: str, wrong_ur
 
 
 # ─── 2. Helpers ──────────────────────────────────────────────
-
-# ─── VALID_STORAGE_PATTERNS — happy paths per source ──────────────────────
 
 
 @pytest.mark.parametrize(
@@ -396,23 +336,14 @@ def test_storage_url_accepts_canonical_per_source(source: str, url: str):
     assert msg == ""
 
 
-# ─── VALID_STORAGE_PATTERNS — cross-source mismatches rejected ────────────
-
-
 @pytest.mark.parametrize(
     ("source", "wrong_url"),
     [
-        # OpenNeuro URL on NEMAR dataset (the pre-PR-#327 misrouting bug)
         ("nemar", "s3://openneuro.org/nm000176"),
-        # NEMAR URL on OpenNeuro
         ("openneuro", "s3://nemar/ds002893"),
-        # Zenodo URL on Figshare
         ("figshare", "https://zenodo.org/record/12345"),
-        # OSF URL on Zenodo
         ("zenodo", "https://files.osf.io/v1/abc"),
-        # Random URL on OpenNeuro
         ("openneuro", "https://example.com/ds002893"),
-        # NEMAR URL on Zenodo
         ("zenodo", "s3://nemar/12345"),
     ],
 )
@@ -441,7 +372,7 @@ def test_storage_url_must_match_at_start():
 
 
 def test_valid_sources_includes_canonical():
-    """Every Source mentioned in ADR 0001 / cycle 1 must be in VALID_SOURCES."""
+    """Every canonical source must be in VALID_SOURCES."""
     expected = {
         "openneuro",
         "nemar",
@@ -456,14 +387,9 @@ def test_valid_sources_includes_canonical():
 
 
 def test_valid_storage_patterns_cover_all_valid_sources_except_hbn():
-    """``hbn`` is in VALID_SOURCES but doesn't have a storage pattern —
-    that's intentional (HBN is a logical grouping, not a Source per se).
-
-    Every OTHER valid source should have a storage pattern.
-    """
+    """``hbn`` is intentionally absent from storage patterns; every other source must have one."""
     sources_with_patterns = set(VALID_STORAGE_PATTERNS.keys())
     sources_without_patterns = VALID_SOURCES - sources_with_patterns
-    # Only ``hbn`` is allowed to lack a pattern.
     assert sources_without_patterns <= {"hbn"}
 
 

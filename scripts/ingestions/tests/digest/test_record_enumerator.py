@@ -22,7 +22,6 @@ from source_adapter import OpenNeuroAdapter
 
 
 def _make_adapter(dataset_id: str = "ds002893") -> OpenNeuroAdapter:
-    """Make a minimal SourceAdapter; bids_root unused by the factory."""
     return OpenNeuroAdapter(dataset_id)
 
 
@@ -30,7 +29,7 @@ def _make_adapter(dataset_id: str = "ds002893") -> OpenNeuroAdapter:
 
 
 def test_enumeration_result_defaults():
-    """Empty fields default sensibly (empty lists / dict)."""
+    """Empty fields default sensibly."""
     result = EnumerationResult(dataset_meta={"dataset_id": "ds001"})
     assert result.records == []
     assert result.errors == []
@@ -39,7 +38,7 @@ def test_enumeration_result_defaults():
 
 
 def test_enumeration_result_carries_all_fields():
-    """All four collections + method label round-trip through the dataclass."""
+    """All four collections and method label round-trip through the dataclass."""
     result = EnumerationResult(
         dataset_meta={"dataset_id": "ds001"},
         records=[{"path": "a"}],
@@ -96,12 +95,7 @@ def _arrange_has_actual_files(tmp_path: Path, case: str) -> None:
     ],
 )
 def test_has_actual_recording_files(tmp_path: Path, case: str, expected: bool) -> None:
-    """_has_actual_recording_files detects recordings correctly.
-
-    Covers: canonical EDF, CTF .ds directory, git-annex broken symlink
-    (all → True); empty sub-directory and non-recording sidecar files
-    (both → False).
-    """
+    """Detects EDF, CTF .ds dir, and broken git-annex symlinks as True; empty dir and sidecars as False."""
     _arrange_has_actual_files(tmp_path, case)
     assert _has_actual_recording_files(tmp_path) is expected
 
@@ -110,7 +104,7 @@ def test_has_actual_recording_files(tmp_path: Path, case: str, expected: bool) -
 
 
 def test_factory_picks_bids_when_real_files_present(tmp_path: Path) -> None:
-    """Case 1 of the factory: real files on disk → BIDS path."""
+    """Real files on disk → factory selects BIDS path."""
     (tmp_path / "sub-01" / "eeg").mkdir(parents=True)
     (tmp_path / "sub-01" / "eeg" / "sub-01_eeg.edf").write_bytes(b"\x00")
 
@@ -127,7 +121,7 @@ def test_factory_picks_bids_when_real_files_present(tmp_path: Path) -> None:
 def test_factory_picks_manifest_when_only_manifest_present(
     tmp_path: Path,
 ) -> None:
-    """Case 2: manifest.json but no actual files → Manifest path."""
+    """manifest.json but no actual files → factory selects Manifest path."""
     (tmp_path / "manifest.json").write_text('{"files": []}')
 
     enumerator = get_record_enumerator(
@@ -141,7 +135,6 @@ def test_factory_picks_manifest_when_only_manifest_present(
 
 
 def _bids_init_that_raises(*args, **kwargs):
-    """Module-level stub: __init__ that always raises OSError to simulate a BIDS-load failure."""
     raise OSError("simulated BIDS load failure")
 
 
@@ -149,7 +142,7 @@ def test_factory_falls_back_to_manifest_when_bids_load_fails_with_manifest(
     tmp_path: Path,
     monkeypatch,
 ) -> None:
-    """Case 2 fallback: BIDS load raises → fall back to manifest when manifest.json exists."""
+    """BIDS load raises + manifest.json present → factory falls back to ManifestEnumerator."""
     (tmp_path / "sub-01" / "eeg").mkdir(parents=True)
     (tmp_path / "sub-01" / "eeg" / "sub-01_eeg.edf").write_bytes(b"\x00")
     (tmp_path / "manifest.json").write_text('{"files": []}')
@@ -175,10 +168,9 @@ def test_factory_propagates_bids_failure_when_no_manifest(
     tmp_path: Path,
     monkeypatch,
 ) -> None:
-    """BIDS load fails AND no manifest → re-raise (no fallback possible)."""
+    """BIDS load fails and no manifest → exception re-raised (no fallback possible)."""
     (tmp_path / "sub-01" / "eeg").mkdir(parents=True)
     (tmp_path / "sub-01" / "eeg" / "sub-01_eeg.edf").write_bytes(b"\x00")
-    # No manifest.json on purpose.
 
     real_init = re_mod.BIDSFilesystemEnumerator.__init__
     monkeypatch.setattr(
@@ -200,8 +192,7 @@ def test_factory_propagates_bids_failure_when_no_manifest(
 def test_factory_returns_bids_enumerator_when_empty_no_manifest(
     tmp_path: Path,
 ) -> None:
-    """Case 3 — empty dir, no manifest: factory returns an Enumerator; orchestrator decides status."""
-    # Empty directory; no manifest, no files.
+    """Empty dir with no manifest → factory returns an Enumerator; orchestrator decides status."""
     enumerator = get_record_enumerator(
         dataset_id="ds_empty",
         dataset_dir=tmp_path,
@@ -209,8 +200,6 @@ def test_factory_returns_bids_enumerator_when_empty_no_manifest(
         source_adapter=_make_adapter(),
         digested_at="2026-05-21T12:00:00Z",
     )
-    # Either is acceptable here; the orchestrator surfaces the empty
-    # status. We assert the type belongs to the Enumerator hierarchy.
     assert isinstance(enumerator, BIDSFilesystemEnumerator | ManifestEnumerator)
 
 
@@ -219,7 +208,6 @@ def test_factory_returns_bids_enumerator_when_empty_no_manifest(
 
 def test_record_enumerator_is_abstract():
     """RecordEnumerator can't be instantiated directly."""
-
     with pytest.raises(TypeError):
         RecordEnumerator(  # type: ignore[abstract]
             "ds001", Path("/tmp"), "openneuro", _make_adapter(), "now"
@@ -227,7 +215,7 @@ def test_record_enumerator_is_abstract():
 
 
 def test_bids_enumerate_raises_when_bids_load_fails(tmp_path: Path) -> None:
-    """``enumerate()`` raises on invalid BIDS structure; caller (3_digest.py) catches and falls back."""
+    """enumerate() raises on invalid BIDS structure; caller catches and falls back."""
     parent = tmp_path / "input"
     parent.mkdir()
     enumerator = BIDSFilesystemEnumerator(
@@ -240,10 +228,10 @@ def test_bids_enumerate_raises_when_bids_load_fails(tmp_path: Path) -> None:
 def test_manifest_enumerate_returns_empty_when_manifest_missing(
     tmp_path: Path,
 ) -> None:
-    """ManifestEnumerator: missing manifest.json → empty EnumerationResult with structured diagnostic.
+    """Missing manifest.json → empty EnumerationResult with structured diagnostic; no raise.
 
-    No raise — caller writes summary as status='empty'. Diagnostic carries legacy keys
-    (status, reason, dataset_id) so log scrapers can distinguish missing vs corrupt vs denied.
+    Diagnostic carries legacy keys (status, reason, dataset_id) so log scrapers can
+    distinguish missing vs corrupt vs denied.
     """
     parent = tmp_path / "input"
     (parent / "z-001").mkdir(parents=True)
@@ -253,7 +241,6 @@ def test_manifest_enumerate_returns_empty_when_manifest_missing(
     result = enumerator.enumerate()
     assert isinstance(result, EnumerationResult)
     assert result.records == []
-    # Manifest path always carries a non-None total_files.
     assert result.total_files == 0
     assert len(result.errors) == 1
     entry = result.errors[0]
@@ -262,13 +249,12 @@ def test_manifest_enumerate_returns_empty_when_manifest_missing(
     assert entry.get("dataset_id") == "z-001"
 
 
-# ─── write_dataset_outputs — shared JSON writer (stage 2A) ────────────────
+# ─── write_dataset_outputs ────────────────────────────────────────────────
 
 
 def _make_minimal_result(
     digest_method: str = "bids_filesystem",
 ) -> EnumerationResult:
-    """Build a minimal but well-formed EnumerationResult for write tests."""
     return EnumerationResult(
         dataset_meta={
             "dataset_id": "ds002893",
@@ -291,8 +277,7 @@ def _make_minimal_result(
 
 
 def test_write_outputs_creates_all_four_json_files(tmp_path: Path) -> None:
-    """The helper writes _dataset / _records / _montages / _summary JSONs."""
-
+    """Writes _dataset / _records / _montages / _summary JSONs."""
     result = _make_minimal_result()
     summary = write_dataset_outputs(
         tmp_path,
@@ -312,7 +297,6 @@ def test_write_outputs_creates_all_four_json_files(tmp_path: Path) -> None:
 
 def test_write_outputs_montages_file_written_when_empty(tmp_path: Path) -> None:
     """_montages.json always written even with no montages — downstream tooling can assume it."""
-
     result = _make_minimal_result(digest_method="manifest_only")
     write_dataset_outputs(
         tmp_path,
@@ -330,8 +314,7 @@ def test_write_outputs_montages_file_written_when_empty(tmp_path: Path) -> None:
 
 
 def test_write_outputs_summary_carries_digest_method(tmp_path: Path) -> None:
-    """Summary always includes digest_method (was only set on manifest path)."""
-
+    """Summary always includes digest_method for both BIDS and manifest paths."""
     for method in ("bids_filesystem", "manifest_only"):
         result = _make_minimal_result(digest_method=method)
         write_dataset_outputs(
@@ -349,7 +332,6 @@ def test_write_outputs_status_no_neuro_files_when_records_empty(
     tmp_path: Path,
 ) -> None:
     """Empty record list flips status to 'no_neuro_files'."""
-
     result = EnumerationResult(
         dataset_meta={"dataset_id": "ds_empty"},
         records=[],
@@ -372,8 +354,7 @@ def test_write_outputs_status_no_neuro_files_when_records_empty(
 def test_write_outputs_total_files_kwarg_surfaces_in_summary(
     tmp_path: Path,
 ) -> None:
-    """``total_files`` preserved in summary when passed (manifest path); absent when omitted (BIDS path)."""
-
+    """total_files preserved in summary when passed (manifest path); absent when omitted (BIDS path)."""
     write_dataset_outputs(
         tmp_path,
         _make_minimal_result(),
@@ -398,7 +379,6 @@ def test_write_outputs_total_files_kwarg_surfaces_in_summary(
 
 def test_write_outputs_integrity_issue_enrichment(tmp_path: Path) -> None:
     """Records with _has_missing_files get author/contact stamped from dataset meta."""
-
     result = EnumerationResult(
         dataset_meta={
             "dataset_id": "ds_iss",
@@ -436,7 +416,6 @@ def test_write_outputs_integrity_issue_enrichment(tmp_path: Path) -> None:
 
 def test_write_outputs_uses_json_default_serializer(tmp_path: Path) -> None:
     """Path / datetime objects in metadata don't crash the writer."""
-
     result = EnumerationResult(
         dataset_meta={
             "dataset_id": "ds_paths",

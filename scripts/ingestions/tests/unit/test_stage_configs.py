@@ -1,12 +1,4 @@
-"""Tests for the Pydantic-settings stage configs (clone / inject /
-cross-stage invariants).
-
-Three angles:
-
-- **Clone config** — was test_clone_config.py.
-- **Inject config** — was test_inject_config.py.
-- **Cross-stage invariants** — was test_stage_configs.py.
-"""
+"""Tests for the Pydantic-settings stage configs (clone / inject / cross-stage invariants)."""
 
 from __future__ import annotations
 
@@ -42,8 +34,6 @@ from _validate_config import (
 )
 
 # ─── 1. Clone config ──────────────────────────────────────────────
-
-# ─── Defaults + required fields ───────────────────────────────────────────
 
 
 def test_clone_config_defaults(tmp_path: Path):
@@ -81,13 +71,11 @@ def test_clone_config_rejects_missing_input(tmp_path: Path):
 def test_clone_config_field_bounds_reject_invalid(
     tmp_path: Path, field: str, invalid_value: int
 ):
-    """Out-of-range numeric fields raise ValidationError on construction."""
     with pytest.raises(ValidationError):
         CloneConfig(input=tmp_path, **{field: invalid_value})
 
 
 def test_clone_config_workers_in_range_accepted(tmp_path: Path):
-    """A workers value inside [1, 128] is accepted unchanged."""
     c = CloneConfig(input=tmp_path, workers=64)
     assert c.workers == 64
 
@@ -96,7 +84,6 @@ def test_clone_config_workers_in_range_accepted(tmp_path: Path):
 
 
 def test_clone_config_accepts_known_sources(tmp_path: Path):
-    """All HANDLERS keys are valid source names."""
     c = CloneConfig(
         input=tmp_path,
         sources=["openneuro", "nemar", "zenodo"],
@@ -105,7 +92,6 @@ def test_clone_config_accepts_known_sources(tmp_path: Path):
 
 
 def test_clone_config_rejects_unknown_source(tmp_path: Path):
-    """A typo in --sources is caught before any handler runs."""
     with pytest.raises(ValidationError) as exc:
         CloneConfig(input=tmp_path, sources=["openneuro", "made_up_source"])
     msg = str(exc.value)
@@ -114,7 +100,6 @@ def test_clone_config_rejects_unknown_source(tmp_path: Path):
 
 @pytest.mark.parametrize("source", sorted(KNOWN_SOURCES))
 def test_clone_config_accepts_known_source(tmp_path: Path, source: str):
-    """Every entry in KNOWN_SOURCES is accepted as a single-source list."""
     c = CloneConfig(input=tmp_path, sources=[source])
     assert c.sources == [source]
 
@@ -182,18 +167,13 @@ def test_clone_argv_validation_error_for_unknown_source_via_argparse(
 
 # ─── 2. Inject config ──────────────────────────────────────────────
 
-# ─── Autouse fixture: prime the cache so non-respx tests don't hit network ─
-
 
 @pytest.fixture(autouse=True)
 def _prime_valid_databases_cache():
-    """Most existing tests don't mock the network. Pre-seed the cache
-    for DEFAULT_API_URL with the local fallback so the database
-    field_validator doesn't fire a real HTTP call (and time out)
-    against a domain we can't reach in CI.
-
-    Tests that exercise the network path explicitly (respx-decorated)
-    call clear_valid_databases_cache() themselves at the start.
+    """Pre-seed the cache for DEFAULT_API_URL with LOCAL_FALLBACK_DATABASES so
+    the database field_validator doesn't fire a real HTTP call in CI.
+    Tests that exercise the network path explicitly call
+    clear_valid_databases_cache() themselves at the start.
     """
     clear_valid_databases_cache()
     _valid_databases_cache[DEFAULT_API_URL] = LOCAL_FALLBACK_DATABASES
@@ -205,14 +185,12 @@ def _prime_valid_databases_cache():
 
 
 def test_config_requires_database():
-    """``database`` has no default — must be supplied."""
     with pytest.raises(ValidationError) as exc:
         InjectConfig(dry_run=True)
     assert "database" in str(exc.value).lower()
 
 
 def test_config_rejects_invalid_database():
-    """``database`` must match the ValidDatabase Literal set."""
     with pytest.raises(ValidationError) as exc:
         InjectConfig(database="not_a_real_db", dry_run=True)
     msg = str(exc.value)
@@ -230,13 +208,11 @@ def test_config_rejects_invalid_database():
     ],
 )
 def test_config_accepts_each_valid_database(database: str):
-    """All 5 documented database names accepted."""
     c = InjectConfig(database=database, dry_run=True)
     assert c.database == database
 
 
 def test_config_defaults():
-    """Field defaults match the documented behaviour."""
     c = InjectConfig(database="eegdash_dev", dry_run=True)
     assert c.api_url == DEFAULT_API_URL
     assert c.input == Path("digestion_output")
@@ -266,14 +242,12 @@ def test_config_defaults():
     ],
 )
 def test_inject_config_field_bounds_reject_invalid(field: str, invalid_value):
-    """Out-of-range numeric fields raise ValidationError on construction."""
     with pytest.raises(ValidationError):
         InjectConfig(database="eegdash_dev", dry_run=True, **{field: invalid_value})
 
 
 @pytest.mark.parametrize("threshold", [0.0, 50.0, 100.0])
 def test_inject_data_quality_threshold_in_range_accepted(threshold: float):
-    """data_quality_threshold inside [0, 100] is accepted."""
     c = InjectConfig(
         database="eegdash_dev", data_quality_threshold=threshold, dry_run=True
     )
@@ -284,7 +258,6 @@ def test_inject_data_quality_threshold_in_range_accepted(threshold: float):
 
 
 def test_two_only_flags_rejected():
-    """Any pair of --only-* flags raises."""
     with pytest.raises(ValidationError) as exc:
         InjectConfig(
             database="eegdash_dev",
@@ -296,7 +269,6 @@ def test_two_only_flags_rejected():
 
 
 def test_three_only_flags_rejected():
-    """All 3 --only-* set is the worst case → rejected."""
     with pytest.raises(ValidationError):
         InjectConfig(
             database="eegdash_dev",
@@ -308,7 +280,6 @@ def test_three_only_flags_rejected():
 
 
 def test_each_single_only_flag_accepted():
-    """Exactly one --only-* flag at a time is fine."""
     for flag in ("only_datasets", "only_records", "only_montages"):
         kw = {"database": "eegdash_dev", "dry_run": True, flag: True}
         c = InjectConfig(**kw)
@@ -333,7 +304,6 @@ def test_only_and_skip_montages_contradict():
 
 
 def test_missing_input_dir_rejected_when_not_dry_run(tmp_path: Path):
-    """A real run needs a real --input dir."""
     with pytest.raises(ValidationError) as exc:
         InjectConfig(
             database="eegdash_dev",
@@ -353,7 +323,6 @@ def test_missing_input_dir_allowed_in_dry_run(tmp_path: Path):
 
 
 def test_existing_input_dir_accepted(tmp_path: Path):
-    """Normal real-run case."""
     real_dir = tmp_path / "real"
     real_dir.mkdir()
     c = InjectConfig(database="eegdash_dev", input=real_dir, dry_run=False)
@@ -369,8 +338,7 @@ def test_token_explicit_arg_used_when_provided():
 
 
 def test_token_reads_from_eegdash_admin_token_env(monkeypatch):
-    """When --token is missing, read EEGDASH_ADMIN_TOKEN env var
-    (matches the legacy ops-script convention)."""
+    """When --token is missing, read EEGDASH_ADMIN_TOKEN (legacy ops-script convention)."""
     monkeypatch.setenv("EEGDASH_ADMIN_TOKEN", "from_env")
     c = InjectConfig(database="eegdash_dev", dry_run=True)
     assert c.token == "from_env"
@@ -386,7 +354,6 @@ def test_token_none_when_neither_arg_nor_env(monkeypatch):
 
 
 def test_want_accessors_default_true():
-    """Default config injects everything."""
     c = InjectConfig(database="eegdash_dev", dry_run=True)
     assert c.want_datasets is True
     assert c.want_records is True
@@ -415,8 +382,7 @@ def test_only_flag_filters_other_paths(
 
 
 def test_skip_montages_disables_montage_only():
-    """``--skip-montages`` only affects the montage leg; datasets +
-    records still inject."""
+    """``--skip-montages`` only affects the montage leg; datasets + records still inject."""
     c = InjectConfig(database="eegdash_dev", skip_montages=True, dry_run=True)
     assert c.want_datasets is True
     assert c.want_records is True
@@ -475,8 +441,7 @@ def test_argv_parses_dataset_filter_list():
 
 
 def test_argv_validation_surfaces_via_validation_error():
-    """An argparse-parsed config that fails validation raises
-    ``pydantic.ValidationError`` (cleaner than argparse's stderr noise)."""
+    """Argparse-parsed config that fails validation raises ValidationError, not stderr noise."""
     with pytest.raises(ValidationError):
         load_inject_config_from_argv(
             [
@@ -490,8 +455,6 @@ def test_argv_validation_surfaces_via_validation_error():
 
 
 def test_argv_unknown_flag_rejected_by_argparse():
-    """Unknown flags still produce argparse's SystemExit (preserves the
-    CLI ergonomics)."""
     with pytest.raises(SystemExit):
         load_inject_config_from_argv(
             ["--database", "eegdash_dev", "--bogus-flag", "--dry-run"]
@@ -503,7 +466,6 @@ def test_argv_unknown_flag_rejected_by_argparse():
 
 @respx.mock
 def test_fetch_valid_databases_returns_api_list_on_200():
-    """Happy path: API returns {"databases": [...]} → frozenset of names."""
     api_url = "https://api.example.test"
     respx.get(f"{api_url}/admin/valid-databases").mock(
         return_value=httpx.Response(
@@ -518,8 +480,7 @@ def test_fetch_valid_databases_returns_api_list_on_200():
 
 @respx.mock
 def test_fetch_valid_databases_is_cached_per_api_url():
-    """Second call to the same api_url should NOT re-hit the server."""
-
+    """Second call to the same api_url must NOT re-hit the server."""
     clear_valid_databases_cache()
     api_url = "https://cache-test.example"
     route = respx.get(f"{api_url}/admin/valid-databases").mock(
@@ -567,12 +528,8 @@ def test_fetch_valid_databases_returns_none_on_error(mock_kwargs, expected):
 
 @respx.mock
 def test_inject_config_rejects_unknown_database_via_local_fallback(tmp_path):
-    """Without network access, an unknown database is rejected by
-    LOCAL_FALLBACK_DATABASES."""
-
+    """Unknown database is rejected by LOCAL_FALLBACK_DATABASES when the API returns 404."""
     clear_valid_databases_cache()
-    # Simulate the API endpoint being absent (the planned follow-up state)
-    # so the validator falls back to LOCAL_FALLBACK_DATABASES.
     respx.get(f"{DEFAULT_API_URL}/admin/valid-databases").mock(
         return_value=httpx.Response(404, json={"detail": "not found"})
     )
@@ -587,9 +544,7 @@ def test_inject_config_rejects_unknown_database_via_local_fallback(tmp_path):
 
 @respx.mock
 def test_inject_config_accepts_database_only_in_api_set(tmp_path):
-    """An API that knows about a new database lets us inject to it
-    even when LOCAL_FALLBACK_DATABASES does not."""
-
+    """An API that knows about a new database lets us inject even when LOCAL_FALLBACK_DATABASES does not."""
     clear_valid_databases_cache()
     respx.get(f"{DEFAULT_API_URL}/admin/valid-databases").mock(
         return_value=httpx.Response(
@@ -608,13 +563,9 @@ def test_inject_config_accepts_database_only_in_api_set(tmp_path):
 
 @respx.mock
 def test_inject_config_accepts_local_name_when_api_set_omits_it(tmp_path):
-    """Union semantics: a name in LOCAL_FALLBACK_DATABASES is accepted
-    even when the API set doesn't list it (API-side deprecation does
-    not break long-running scripts at config-construction time)."""
-
+    """Union semantics: a name in LOCAL_FALLBACK_DATABASES is accepted even when
+    the API set doesn't list it (API-side deprecation does not break long-running scripts)."""
     clear_valid_databases_cache()
-    # API only returns 2 databases; eegdash_archive is in LOCAL_FALLBACK
-    # but NOT in the API response.
     respx.get(f"{DEFAULT_API_URL}/admin/valid-databases").mock(
         return_value=httpx.Response(200, json={"databases": ["eegdash", "eegdash_dev"]})
     )
@@ -629,18 +580,14 @@ def test_inject_config_accepts_local_name_when_api_set_omits_it(tmp_path):
 
 @respx.mock
 def test_fetch_valid_databases_caches_failure_to_avoid_repeated_network_hits():
-    """After a network failure, subsequent calls must return None
-    WITHOUT re-hitting the network."""
-
+    """After a network failure, subsequent calls return None without re-hitting the network."""
     clear_valid_databases_cache()
     api_url = "https://failure-cache.example"
     route = respx.get(f"{api_url}/admin/valid-databases").mock(
         side_effect=httpx.ConnectError("boom")
     )
 
-    # First call — hits the network, fails, caches the failure
     assert fetch_valid_databases_from_api(api_url, token=None) is None
-    # Second + third calls — must be cached, route call_count stays 1
     assert fetch_valid_databases_from_api(api_url, token=None) is None
     assert fetch_valid_databases_from_api(api_url, token=None) is None
 
@@ -655,7 +602,6 @@ def test_fetch_valid_databases_caches_failure_to_avoid_repeated_network_hits():
 
 
 def test_validate_config_defaults(tmp_path: Path):
-    """Defaults match the documented behaviour."""
     c = ValidateConfig(input=tmp_path)
     assert c.input == tmp_path
     assert c.pre_check is False
@@ -665,7 +611,6 @@ def test_validate_config_defaults(tmp_path: Path):
 
 
 def test_validate_config_rejects_missing_input(tmp_path: Path):
-    """The stage IS the validation — input dir must exist."""
     with pytest.raises(ValidationError) as exc:
         ValidateConfig(input=tmp_path / "does_not_exist")
     assert "input" in str(exc.value).lower()
@@ -695,13 +640,13 @@ def test_validate_argv_parses_all_flags(tmp_path: Path):
 
 
 def test_validate_argv_short_flag_for_input(tmp_path: Path):
-    """``-i`` is an alias for ``--input`` (preserved from the original)."""
+    """-i is an alias for --input."""
     c = load_validate_config_from_argv(["-i", str(tmp_path)])
     assert c.input == tmp_path
 
 
 def test_validate_argv_short_flag_for_verbose(tmp_path: Path):
-    """``-v`` is an alias for ``--verbose``."""
+    """-v is an alias for --verbose."""
     c = load_validate_config_from_argv(["-i", str(tmp_path), "-v"])
     assert c.verbose is True
 
@@ -719,7 +664,6 @@ def test_validate_argv_env_var_picked_up(tmp_path: Path, monkeypatch):
 
 
 def test_digest_config_defaults(tmp_path: Path):
-    """Defaults match the original argparse layout."""
     c = DigestConfig(input=tmp_path)
     assert c.input == tmp_path
     assert c.output == Path("digestion_output")
@@ -752,17 +696,12 @@ def test_digest_config_rejects_missing_input(tmp_path: Path):
 def test_digest_config_field_bounds_reject_invalid(
     tmp_path: Path, field: str, invalid_value
 ):
-    """Out-of-range or nonsensical numeric fields raise ValidationError.
-
-    ``dataset_timeout=0`` or negative means infinite wait / nonsense.
-    Anything > 4 hours is almost certainly a misconfig.
-    """
+    """dataset_timeout=0 or negative means infinite wait / nonsense; >4 hours is almost certainly a misconfig."""
     with pytest.raises(ValidationError):
         DigestConfig(input=tmp_path, **{field: invalid_value})
 
 
 def test_digest_config_datasets_filter(tmp_path: Path):
-    """``--datasets ds-001 ds-002`` becomes a list."""
     c = DigestConfig(input=tmp_path, datasets=["ds-001", "ds-002"])
     assert c.datasets == ["ds-001", "ds-002"]
 

@@ -1,10 +1,4 @@
-"""Characterisation tests for the pure helpers inside ``3_digest.py``.
-
-Pins the current behaviour of the small, pure-function helpers so we can
-refactor the file's mega-functions under a safety net. The module is loaded
-via ``importlib`` because its filename starts with a digit (``3_digest.py``
-is not a legal Python identifier).
-"""
+"""Characterisation tests for the pure helpers inside ``3_digest.py``."""
 
 from __future__ import annotations
 
@@ -18,8 +12,6 @@ from _helpers import INGEST_DIR as _INGEST_DIR
 
 import digest_telemetry
 from record_enumerator import EnumerationResult
-
-# ─── Module loader ──────────────────────────────────────────────────────────
 
 _DIGEST_PATH = _INGEST_DIR / "3_digest.py"
 
@@ -35,11 +27,11 @@ def digest() -> ModuleType:
     return mod
 
 
-# ─── parse_bids_entities_from_path — characterisation ──────────────────────
+# ─── parse_bids_entities_from_path ──────────────────────────────────────────
 
 
 def test_parse_entities_full_path_with_ses_and_run(digest: ModuleType) -> None:
-    """The fully-entity-typed BIDS path returns every field populated."""
+    """Fully-entity-typed BIDS path returns every field populated."""
     path = "ds002893/sub-001/ses-01/eeg/sub-001_ses-01_task-rest_run-01_eeg.edf"
     result = digest.parse_bids_entities_from_path(path)
     assert result["subject"] == "001"
@@ -52,13 +44,12 @@ def test_parse_entities_full_path_with_ses_and_run(digest: ModuleType) -> None:
 
 
 def test_parse_entities_minimal_path_no_session_no_run(digest: ModuleType) -> None:
-    """The minimal BIDS path (sub + task only) omits session/run gracefully."""
+    """Minimal BIDS path omits session/run; missing keys must be absent, not None."""
     path = "ds002336/sub-xp101/eeg/sub-xp101_task-motorloc_eeg.vhdr"
     result = digest.parse_bids_entities_from_path(path)
     assert result["subject"] == "xp101"
     assert result["task"] == "motorloc"
     assert result["modality"] == "eeg"
-    # Missing keys must be absent (not None / not "")
     assert "session" not in result
     assert "run" not in result
 
@@ -99,7 +90,7 @@ def test_parse_entities_recovers_modality_from_path(
     assert result["datatype"] == modality
 
 
-# ─── is_neuro_data_file — characterisation ────────────────────────────────
+# ─── is_neuro_data_file ───────────────────────────────────────────────────────
 
 
 @pytest.mark.parametrize(
@@ -130,29 +121,17 @@ def test_is_neuro_data_file_classifies_correctly(
 def test_is_neuro_data_file_is_case_sensitive_on_extension(
     digest: ModuleType,
 ) -> None:
-    """An ``.EDF`` uppercase extension follows the same classification."""
-    # The function's documented behaviour: it normalises to lowercase
-    # internally, so both pass. Pinning that here.
+    """Extension is normalised to lowercase internally; ``.EDF`` and ``.Edf`` both pass."""
     assert digest.is_neuro_data_file("sub-001_eeg.EDF") is True
     assert digest.is_neuro_data_file("sub-001_eeg.Edf") is True
 
 
-# ─── A deliberate canary: the mega-functions exist with documented sizes ───
-# ─── (informational; not a regression — refactor lands in later commits) ──
+# ─── Mega-function canary ─────────────────────────────────────────────────────
 
 
 def test_megafunction_line_counts_are_known_baseline(digest: ModuleType) -> None:
-    """Track LOC drift of the remaining big helpers in ``3_digest.py``.
-
-    Each budget = actual LOC + 20; upward drift past the ceiling fails CI.
-    Lower-bound canaries catch surprise shrinkage that could hide deleted branches.
-    """
-
-    # Baselines updated 2026-05-22 (post-Stage-3D shape).
-    # digest_from_manifest was removed; orchestrator now routes via ManifestEnumerator.
-    # digest_dataset shrank from 137 → 90 LOC after extracting four helpers.
+    """LOC for big helpers must stay within budget (actual + 20) and above floor."""
     big_functions = {
-        # Still big — pending further decomposition. Budget = actual + 20.
         "_enumerate_via_manifest": 240,
         "_enumerate_via_bids": 130,
         "extract_record": 240,
@@ -164,21 +143,18 @@ def test_megafunction_line_counts_are_known_baseline(digest: ModuleType) -> None
             pytest.skip(f"{name} not found — function may have been split already")
         source_lines = inspect.getsourcelines(fn)[0]
         actual_loc = len(source_lines)
-        # Drift upward = a regression worth investigating.
         assert actual_loc <= baseline_loc, (
             f"{name} grew to {actual_loc} LOC (budget {baseline_loc}). "
             "Mega-functions should only shrink. If a legitimate growth "
             "happened, bump the baseline in the same commit."
         )
 
-    # digest_dataset must stay a thin orchestrator; algorithm lives in helpers.
     wrapper_loc = len(inspect.getsourcelines(digest.digest_dataset)[0])
     assert wrapper_loc <= 120, (
         f"digest_dataset grew to {wrapper_loc} LOC — it should stay "
         "a thin orchestrator; the algorithm lives in the helpers."
     )
 
-    # digest_from_manifest was removed; orchestrator routes via ManifestEnumerator.
     assert not hasattr(digest, "digest_from_manifest"), (
         "digest_from_manifest reappeared in 3_digest.py. "
         "The orchestrator routes via ManifestEnumerator from record_enumerator.py."
@@ -203,13 +179,11 @@ def test_megafunction_line_counts_are_known_baseline(digest: ModuleType) -> None
         )
 
 
-# ─── Direct unit tests for the Stage 3D helpers ───────────────────────────
-# Pins each branch directly; snapshot fixtures only cover the happy path.
+# ─── Stage-3D helper unit tests ───────────────────────────────────────────────
 
 
 def _make_dummy_result(records=(), errors=(), total_files=None):
     """Build an EnumerationResult with controlled fields for helper tests."""
-
     return EnumerationResult(
         dataset_meta={"dataset_id": "ds-X", "source": "openneuro"},
         records=list(records),
@@ -285,12 +259,7 @@ def test_summarise_empty_or_error_empty_status_reason(
     total_files,
     expected_reason: str,
 ) -> None:
-    """Empty result with no errors → status='empty' with the correct reason.
-
-    - total_files=0 uses the legacy manifest reason.
-    - total_files>0 uses 'no records extracted'.
-    - total_files=None (BIDS path) uses the generic neurophysiology reason.
-    """
+    """Empty result with no errors → status='empty' with the correct reason."""
     res = _make_dummy_result(records=[], errors=[], total_files=total_files)
     out = digest._summarise_empty_or_error("ds-X", res)
     assert out["status"] == "empty"
@@ -352,7 +321,6 @@ def test_emit_dataset_finished_payload_round_trips_summary_fields(
     digest: ModuleType,
 ) -> None:
     """_emit_dataset_finished forwards the 6 documented summary fields; unknown fields must not leak."""
-
     recorder = _RecordingEmitter()
     saved = digest_telemetry._EMITTER
     digest_telemetry._EMITTER = recorder
@@ -391,7 +359,6 @@ def test_emit_dataset_finished_payload_includes_total_files(
     digest: ModuleType,
 ) -> None:
     """total_files from the manifest path must propagate to the telemetry event payload."""
-
     recorder = _RecordingEmitter()
     saved = digest_telemetry._EMITTER
     digest_telemetry._EMITTER = recorder
@@ -405,7 +372,7 @@ def test_emit_dataset_finished_payload_includes_total_files(
                 "digest_method": "manifest_only",
                 "integrity_issues_count": 0,
                 "montage_count": 0,
-                "total_files": 5,  # NEW summary field — must propagate
+                "total_files": 5,
             },
         )
     finally:

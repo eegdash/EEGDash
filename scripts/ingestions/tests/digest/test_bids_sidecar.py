@@ -1,11 +1,10 @@
 """Tests for BIDS sidecar enrichment in extract_record / extract_dataset.
 
-Before sidecar enrichment landed, the only BIDS-spec fields surfaced as structured Record
-columns were the technical metadata (sfreq / nchans / ntimes / ch_names).
-PowerLineFrequency, EEGReference, SoftwareFilters, Manufacturer,
-EEGPlacementScheme — all required or recommended by BIDS — were either
-unread or buried as raw bytes in sidecar_inline. This file pins the
-new enrichment.
+Before sidecar enrichment landed, the only BIDS-spec fields surfaced as
+structured Record columns were the technical metadata (sfreq / nchans /
+ntimes / ch_names). PowerLineFrequency, EEGReference, SoftwareFilters,
+Manufacturer, EEGPlacementScheme — all required or recommended by BIDS —
+were either unread or buried as raw bytes in sidecar_inline.
 """
 
 from __future__ import annotations
@@ -13,7 +12,6 @@ from __future__ import annotations
 import importlib.util
 import json
 import shutil
-import tempfile
 from pathlib import Path
 
 import pytest
@@ -70,55 +68,50 @@ def _build_bids_root_with_sidecar(
     return _FakeBIDSDataset(modality=modality, bids_root=tmp_path), str(data)
 
 
-def test_sidecar_extracts_power_line_frequency(tmp_path: Path):
+@pytest.mark.parametrize(
+    ("sidecar_payload", "expected"),
+    [
+        pytest.param(
+            {"PowerLineFrequency": 60},
+            {"power_line_frequency": 60},
+            id="power_line_frequency",
+        ),
+        pytest.param(
+            {"EEGReference": "linked mastoids"},
+            {"eeg_reference": "linked mastoids"},
+            id="eeg_reference",
+        ),
+        pytest.param(
+            {"SoftwareFilters": {"HighPass": 0.1, "LowPass": 60}},
+            {"software_filters": {"HighPass": 0.1, "LowPass": 60}},
+            id="software_filters_dict",
+        ),
+        pytest.param(
+            {"Manufacturer": "Brain Products", "ManufacturersModelName": "BrainAmp DC"},
+            {
+                "manufacturer": "Brain Products",
+                "manufacturers_model_name": "BrainAmp DC",
+            },
+            id="manufacturer_and_model",
+        ),
+        pytest.param(
+            {"EEGPlacementScheme": "10-20"},
+            {"eeg_placement_scheme": "10-20"},
+            id="eeg_placement_scheme",
+        ),
+    ],
+)
+def test_sidecar_extracts_fields(tmp_path: Path, sidecar_payload: dict, expected: dict):
+    """_extract_bids_sidecar_fields surfaces each BIDS-spec field correctly.
+
+    SoftwareFilters is a nested dict in the BIDS spec — preserved as-is.
+    EEGPlacementScheme feeds the _montage.py template matcher.
+    """
     digest = _load_digest()
-    fake, data = _build_bids_root_with_sidecar(tmp_path, {"PowerLineFrequency": 60})
+    fake, data = _build_bids_root_with_sidecar(tmp_path, sidecar_payload)
     out = digest._extract_bids_sidecar_fields(fake, data)
-    assert out["power_line_frequency"] == 60
-
-
-def test_sidecar_extracts_eeg_reference(tmp_path: Path):
-    digest = _load_digest()
-    fake, data = _build_bids_root_with_sidecar(
-        tmp_path, {"EEGReference": "linked mastoids"}
-    )
-    out = digest._extract_bids_sidecar_fields(fake, data)
-    assert out["eeg_reference"] == "linked mastoids"
-
-
-def test_sidecar_extracts_software_filters_dict(tmp_path: Path):
-    """SoftwareFilters is a nested dict in the BIDS spec
-    ({"HighPass": 0.1, "LowPass": 60}); preserved as-is."""
-    digest = _load_digest()
-    fake, data = _build_bids_root_with_sidecar(
-        tmp_path, {"SoftwareFilters": {"HighPass": 0.1, "LowPass": 60}}
-    )
-    out = digest._extract_bids_sidecar_fields(fake, data)
-    assert out["software_filters"] == {"HighPass": 0.1, "LowPass": 60}
-
-
-def test_sidecar_extracts_manufacturer_and_model(tmp_path: Path):
-    digest = _load_digest()
-    fake, data = _build_bids_root_with_sidecar(
-        tmp_path,
-        {
-            "Manufacturer": "Brain Products",
-            "ManufacturersModelName": "BrainAmp DC",
-        },
-    )
-    out = digest._extract_bids_sidecar_fields(fake, data)
-    assert out["manufacturer"] == "Brain Products"
-    assert out["manufacturers_model_name"] == "BrainAmp DC"
-
-
-def test_sidecar_extracts_eeg_placement_scheme(tmp_path: Path):
-    """Feeds the _montage.py template matcher — direct integration."""
-    digest = _load_digest()
-    fake, data = _build_bids_root_with_sidecar(
-        tmp_path, {"EEGPlacementScheme": "10-20"}
-    )
-    out = digest._extract_bids_sidecar_fields(fake, data)
-    assert out["eeg_placement_scheme"] == "10-20"
+    for key, value in expected.items():
+        assert out[key] == value
 
 
 def test_sidecar_skips_missing_fields(tmp_path: Path):
@@ -203,53 +196,52 @@ def test_sidecar_inheritance_walks_up_to_subject_level(tmp_path: Path):
 # ─── _extract_channel_status_counts ───────────────────────────────────────
 
 
-def test_channel_status_counts_finds_bad_channels(tmp_path: Path):
-    """A channels.tsv with status column → bad_channels list + count."""
+@pytest.mark.parametrize(
+    ("tsv_content", "expected"),
+    [
+        pytest.param(
+            "name\ttype\tstatus\nCz\tEEG\tgood\nFz\tEEG\tbad\nOz\tEEG\tbad\nPz\tEEG\tgood\n",
+            {"bad_channels": ["Fz", "Oz"], "bad_channels_count": 2},
+            id="counts_bad_channels",
+        ),
+        pytest.param(
+            "name\tstatus\nCz\tgood\nFz\tgood\n",
+            {"bad_channels_count": 0, "bad_channels": []},
+            id="no_bad_channels",
+        ),
+        pytest.param(
+            "name\ttype\nCz\tEEG\nFz\tEEG\n",
+            {},
+            id="no_status_column",
+        ),
+        pytest.param(
+            "name\tstatus\nCz\tBAD\nFz\tBad\nOz\tbad\nPz\tgood\n",
+            {"bad_channels_count": 3},
+            id="case_insensitive_bad",
+        ),
+    ],
+)
+def test_channel_status_counts(tmp_path: Path, tsv_content: str, expected: dict):
+    """_extract_channel_status_counts reads channels.tsv correctly.
+
+    'BAD' / 'Bad' / 'bad' all count; missing status column → empty dict.
+    """
     digest = _load_digest()
     sub_dir = tmp_path / "sub-01" / "eeg"
     sub_dir.mkdir(parents=True)
     data = sub_dir / "sub-01_task-rest_eeg.edf"
     data.touch()
-    (sub_dir / "sub-01_task-rest_channels.tsv").write_text(
-        "name\ttype\tstatus\nCz\tEEG\tgood\nFz\tEEG\tbad\nOz\tEEG\tbad\nPz\tEEG\tgood\n"
-    )
+    (sub_dir / "sub-01_task-rest_channels.tsv").write_text(tsv_content)
     fake = _FakeBIDSDataset(bids_root=tmp_path)
     out = digest._extract_channel_status_counts(fake, str(data))
-    assert sorted(out["bad_channels"]) == ["Fz", "Oz"]
-    assert out["bad_channels_count"] == 2
-
-
-def test_channel_status_counts_reports_zero_when_all_good(tmp_path: Path):
-    """status column exists; all channels good → bad_channels_count = 0."""
-    digest = _load_digest()
-    sub_dir = tmp_path / "sub-01" / "eeg"
-    sub_dir.mkdir(parents=True)
-    data = sub_dir / "sub-01_task-rest_eeg.edf"
-    data.touch()
-    (sub_dir / "sub-01_task-rest_channels.tsv").write_text(
-        "name\tstatus\nCz\tgood\nFz\tgood\n"
-    )
-    fake = _FakeBIDSDataset(bids_root=tmp_path)
-    out = digest._extract_channel_status_counts(fake, str(data))
-    assert out["bad_channels_count"] == 0
-    assert out["bad_channels"] == []
-
-
-def test_channel_status_counts_returns_empty_when_no_status_column(
-    tmp_path: Path,
-):
-    """channels.tsv without a 'status' column → empty dict."""
-    digest = _load_digest()
-    sub_dir = tmp_path / "sub-01" / "eeg"
-    sub_dir.mkdir(parents=True)
-    data = sub_dir / "sub-01_task-rest_eeg.edf"
-    data.touch()
-    (sub_dir / "sub-01_task-rest_channels.tsv").write_text(
-        "name\ttype\nCz\tEEG\nFz\tEEG\n"
-    )
-    fake = _FakeBIDSDataset(bids_root=tmp_path)
-    out = digest._extract_channel_status_counts(fake, str(data))
-    assert out == {}
+    if expected == {}:
+        assert out == {}
+    else:
+        for key, value in expected.items():
+            if key == "bad_channels":
+                assert sorted(out[key]) == sorted(value)
+            else:
+                assert out[key] == value
 
 
 def test_channel_status_counts_returns_empty_when_no_channels_tsv(
@@ -265,46 +257,37 @@ def test_channel_status_counts_returns_empty_when_no_channels_tsv(
     assert digest._extract_channel_status_counts(fake, str(data)) == {}
 
 
-def test_channel_status_counts_case_insensitive_bad():
-    """'BAD' / 'Bad' / 'bad' all count."""
-    digest = _load_digest()
-
-    with tempfile.TemporaryDirectory() as td:
-        td = Path(td)
-        sub_dir = td / "sub-01" / "eeg"
-        sub_dir.mkdir(parents=True)
-        data = sub_dir / "sub-01_task-rest_eeg.edf"
-        data.touch()
-        (sub_dir / "sub-01_task-rest_channels.tsv").write_text(
-            "name\tstatus\nCz\tBAD\nFz\tBad\nOz\tbad\nPz\tgood\n"
-        )
-        fake = _FakeBIDSDataset(bids_root=td)
-        out = digest._extract_channel_status_counts(fake, str(data))
-        assert out["bad_channels_count"] == 3
-
-
 # ─── _extract_dataset_description_extras ──────────────────────────────────
 
 
-def test_dataset_extras_extracts_acknowledgements():
+@pytest.mark.parametrize(
+    ("desc_payload", "expected_key", "expected_value"),
+    [
+        pytest.param(
+            {"Acknowledgements": "Funded by grant XYZ"},
+            "acknowledgements",
+            "Funded by grant XYZ",
+            id="acknowledgements",
+        ),
+        pytest.param(
+            {"HowToAcknowledge": "Please cite our paper"},
+            "how_to_acknowledge",
+            "Please cite our paper",
+            id="how_to_acknowledge",
+        ),
+        pytest.param(
+            {"EthicsApprovals": ["IRB-12345", "IRB-67890"]},
+            "ethics_approvals",
+            ["IRB-12345", "IRB-67890"],
+            id="ethics_approvals",
+        ),
+    ],
+)
+def test_dataset_extras_extracts_field(desc_payload, expected_key, expected_value):
+    """_extract_dataset_description_extras surfaces each BIDS dataset field."""
     digest = _load_digest()
-    desc = {"Acknowledgements": "Funded by grant XYZ"}
-    out = digest._extract_dataset_description_extras(desc)
-    assert out["acknowledgements"] == "Funded by grant XYZ"
-
-
-def test_dataset_extras_extracts_how_to_acknowledge():
-    digest = _load_digest()
-    desc = {"HowToAcknowledge": "Please cite our paper"}
-    out = digest._extract_dataset_description_extras(desc)
-    assert out["how_to_acknowledge"] == "Please cite our paper"
-
-
-def test_dataset_extras_extracts_ethics_approvals():
-    digest = _load_digest()
-    desc = {"EthicsApprovals": ["IRB-12345", "IRB-67890"]}
-    out = digest._extract_dataset_description_extras(desc)
-    assert out["ethics_approvals"] == ["IRB-12345", "IRB-67890"]
+    out = digest._extract_dataset_description_extras(desc_payload)
+    assert out[expected_key] == expected_value
 
 
 def test_dataset_extras_skips_empty_lists():

@@ -19,10 +19,7 @@ from abc import ABC, abstractmethod
 from pathlib import Path
 
 from _file_utils import get_annex_file_key, read_inline_sidecar
-from eegdash.dataset._source_inference import (
-    get_storage_backend,
-    get_storage_base,
-)
+from eegdash.dataset._source_inference import DEFAULT_STORAGE_CONFIG, STORAGE_CONFIGS
 from eegdash.schemas import NEMAR_ROOT_METADATA_FILES
 
 logger = logging.getLogger(__name__)
@@ -51,12 +48,13 @@ class SourceAdapter(ABC):
     @property
     def storage_backend(self) -> str:
         """The ``Record.storage.backend`` marker for this Source."""
-        return get_storage_backend(self.source_name)
+        return STORAGE_CONFIGS.get(self.source_name, DEFAULT_STORAGE_CONFIG)["backend"]
 
     @property
     def storage_base(self) -> str:
         """The ``Record.storage.base`` URI prefix for this Dataset."""
-        return get_storage_base(self.dataset_id, self.source_name)
+        base = STORAGE_CONFIGS.get(self.source_name, DEFAULT_STORAGE_CONFIG)["base"]
+        return f"{base}/{self.dataset_id}"
 
     # ─── Behaviour hooks ─────────────────────────────────────────────
 

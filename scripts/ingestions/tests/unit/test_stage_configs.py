@@ -393,25 +393,25 @@ def test_want_accessors_default_true():
     assert c.want_montages is True
 
 
-def test_only_datasets_filters_other_paths():
-    c = InjectConfig(database="eegdash_dev", only_datasets=True, dry_run=True)
-    assert c.want_datasets is True
-    assert c.want_records is False
-    assert c.want_montages is False
-
-
-def test_only_records_filters_other_paths():
-    c = InjectConfig(database="eegdash_dev", only_records=True, dry_run=True)
-    assert c.want_datasets is False
-    assert c.want_records is True
-    assert c.want_montages is False
-
-
-def test_only_montages_filters_other_paths():
-    c = InjectConfig(database="eegdash_dev", only_montages=True, dry_run=True)
-    assert c.want_datasets is False
-    assert c.want_records is False
-    assert c.want_montages is True
+@pytest.mark.parametrize(
+    ("flag", "want_datasets", "want_records", "want_montages"),
+    [
+        pytest.param("only_datasets", True, False, False, id="only_datasets"),
+        pytest.param("only_records", False, True, False, id="only_records"),
+        pytest.param("only_montages", False, False, True, id="only_montages"),
+    ],
+)
+def test_only_flag_filters_other_paths(
+    flag: str,
+    want_datasets: bool,
+    want_records: bool,
+    want_montages: bool,
+):
+    """Each only_* flag enables exactly its own accessor and disables the others."""
+    c = InjectConfig(database="eegdash_dev", dry_run=True, **{flag: True})
+    assert c.want_datasets is want_datasets
+    assert c.want_records is want_records
+    assert c.want_montages is want_montages
 
 
 def test_skip_montages_disables_montage_only():
@@ -533,40 +533,33 @@ def test_fetch_valid_databases_is_cached_per_api_url():
     assert route.call_count == 1
 
 
+@pytest.mark.parametrize(
+    ("mock_kwargs", "expected"),
+    [
+        pytest.param(
+            {"return_value": httpx.Response(404, json={"detail": "not found"})},
+            None,
+            id="returns_none_on_404",
+        ),
+        pytest.param(
+            {"side_effect": httpx.ConnectError("boom")},
+            None,
+            id="returns_none_on_network_error",
+        ),
+        pytest.param(
+            {"return_value": httpx.Response(200, json={"unexpected": "shape"})},
+            None,
+            id="returns_none_on_missing_key",
+        ),
+    ],
+)
 @respx.mock
-def test_fetch_valid_databases_returns_none_on_404():
-    """Endpoint doesn't exist on this server -> None (caller falls back)."""
-
+def test_fetch_valid_databases_returns_none_on_error(mock_kwargs, expected):
+    """Non-200, network failure, or wrong payload shape all return None."""
     clear_valid_databases_cache()
-    api_url = "https://no-endpoint.example"
-    respx.get(f"{api_url}/admin/valid-databases").mock(
-        return_value=httpx.Response(404, json={"detail": "not found"})
-    )
-    assert fetch_valid_databases_from_api(api_url, token="x") is None
-
-
-@respx.mock
-def test_fetch_valid_databases_returns_none_on_network_error():
-    """Connection error -> None."""
-
-    clear_valid_databases_cache()
-    api_url = "https://network-fail.example"
-    respx.get(f"{api_url}/admin/valid-databases").mock(
-        side_effect=httpx.ConnectError("boom")
-    )
-    assert fetch_valid_databases_from_api(api_url, token="x") is None
-
-
-@respx.mock
-def test_fetch_valid_databases_returns_none_on_missing_key():
-    """Server returns 200 but payload shape is wrong -> None."""
-
-    clear_valid_databases_cache()
-    api_url = "https://bad-shape.example"
-    respx.get(f"{api_url}/admin/valid-databases").mock(
-        return_value=httpx.Response(200, json={"unexpected": "shape"})
-    )
-    assert fetch_valid_databases_from_api(api_url, token="x") is None
+    api_url = "https://error-case.example"
+    respx.get(f"{api_url}/admin/valid-databases").mock(**mock_kwargs)
+    assert fetch_valid_databases_from_api(api_url, token="x") is expected
 
 
 # ─── InjectConfig integration with the API-fetch field validator ──────────
@@ -741,39 +734,31 @@ def test_digest_config_rejects_missing_input(tmp_path: Path):
         DigestConfig(input=tmp_path / "does_not_exist")
 
 
-def test_digest_config_workers_lower_bound(tmp_path: Path):
-    """``--workers 0`` is rejected (replaces the ad-hoc default-of-1)."""
-    with pytest.raises(ValidationError) as exc:
-        DigestConfig(input=tmp_path, workers=0)
-    assert "workers" in str(exc.value).lower()
+@pytest.mark.parametrize(
+    ("field", "invalid_value"),
+    [
+        pytest.param("workers", 0, id="workers_lower_bound"),
+        pytest.param("workers", 9999, id="workers_upper_bound"),
+        pytest.param("limit", 0, id="limit_lower_bound"),
+        pytest.param("dataset_timeout", 0.0, id="dataset_timeout_zero"),
+        pytest.param("dataset_timeout", -1.0, id="dataset_timeout_negative"),
+        pytest.param(
+            "dataset_timeout",
+            float(60 * 60 * 24),
+            id="dataset_timeout_upper_bound",
+        ),
+    ],
+)
+def test_digest_config_field_bounds_reject_invalid(
+    tmp_path: Path, field: str, invalid_value
+):
+    """Out-of-range or nonsensical numeric fields raise ValidationError.
 
-
-def test_digest_config_workers_upper_bound(tmp_path: Path):
-    """Sanity cap: ``--workers 9999`` is a misconfig."""
+    ``dataset_timeout=0`` or negative means infinite wait / nonsense.
+    Anything > 4 hours is almost certainly a misconfig.
+    """
     with pytest.raises(ValidationError):
-        DigestConfig(input=tmp_path, workers=9999)
-
-
-def test_digest_config_limit_lower_bound(tmp_path: Path):
-    """``--limit 0`` makes no sense (no datasets to process)."""
-    with pytest.raises(ValidationError):
-        DigestConfig(input=tmp_path, limit=0)
-
-
-def test_digest_config_dataset_timeout_must_be_positive(tmp_path: Path):
-    """Replaces the ``_positive_float`` custom argparse type. ``0`` or
-    negative timeout means infinite wait / nonsense — rejected."""
-    with pytest.raises(ValidationError):
-        DigestConfig(input=tmp_path, dataset_timeout=0.0)
-    with pytest.raises(ValidationError):
-        DigestConfig(input=tmp_path, dataset_timeout=-1.0)
-
-
-def test_digest_config_dataset_timeout_upper_bound(tmp_path: Path):
-    """Anything > 4 hours is almost certainly a misconfig (a worker
-    that legitimately needs 4h should be debugged, not waited for)."""
-    with pytest.raises(ValidationError):
-        DigestConfig(input=tmp_path, dataset_timeout=60 * 60 * 24)  # 24h
+        DigestConfig(input=tmp_path, **{field: invalid_value})
 
 
 def test_digest_config_datasets_filter(tmp_path: Path):

@@ -1,0 +1,152 @@
+name: Ingestions — Lint + Test
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/ingestions/**'
+      - '.github/workflows/ingestions-lint-and-test.yml'
+  push:
+    branches: [main, master]
+    paths:
+      - 'scripts/ingestions/**'
+  workflow_dispatch: {}
+
+concurrency:
+  group: ingestions-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: Lint (ruff)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+      - name: Install ruff
+        run: pip install ruff>=0.4
+      - name: Ruff check
+        run: ruff check scripts/ingestions/
+      - name: Ruff format --check
+        run: ruff format --check scripts/ingestions/
+
+  test:
+    name: Pytest (unit + property + smoke)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: lint
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+      - name: Install ingestion package + dev deps (and root eegdash)
+        run: |
+          pip install -e .
+          pip install -e "scripts/ingestions[dev]"
+      - name: Cache eegdash-testing-data
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/eegdash/testing-data
+          key: eegdash-testing-data-v0.1.0
+      - name: Pre-fetch eegdash-testing-data
+        run: python -m eegdash.testing
+      - name: Run tests with coverage (offline)
+        working-directory: scripts/ingestions
+        # Coverage gate per . Floor RATCHETS up per PR.
+        # History:
+        #   2026-05-22 baseline:  35  (one-off scripts excluded, 36% actual)
+        #   2026-05-22 C1.2:      38  (_serialize 0→93%, _validate 0→20%)
+        #   2026-05-22 C1.5:      40  (_file_utils 24→40% via source-listing)
+        #   2026-05-22 C2.1:      42  (_validate 20→76% via validator tests)
+        #   2026-05-22 C2.2:      44  (_bids 0→99%, _github 0→31%)
+        #   2026-05-22 C2.3:      45  (_parser_utils 32→48%, set parser tests)
+        #   2026-05-22 C2.4:      46  (_montage 17→38% via 37 helper tests)
+        #   2026-05-22 C3.1:      48  (_file_utils 40→54%, _github 31→54%)
+        #   2026-05-22 C3.3:      49  (_snirf 28→78% via synthetic HDF5 fixture)
+        #   2026-05-22 C3.4:      50  (_set 36→65% via synthetic MAT v5 fixture)
+        #   2026-05-22 C4.1:      51  (_http 64→84%, _parser_utils 48→80%)
+        #   2026-05-22 C4.2:      52  (_github 54→85% via PyGithub fast-path mock)
+        #   2026-05-22 C5.1:      53  (_mef3 58→79% via real OpenNeuro .tmet fixture)
+        #   2026-05-22 C6.2:      55  (BIDS sidecar enrichment + inject API tests)
+        #   2026-05-22 C6.2+:     57  (5_inject helpers: load_*, _flatten, _sanitize, filter)
+        #   2026-05-22 C6.5:      58  (_inject_config Pydantic-settings + main() refactor)
+        #   2026-05-22 C7:        59  (_digest_config + _validate_config, same pattern)
+        #   2026-05-22 C8:        60  (_clone_config, completes the 4-stage pattern)
+        #   2026-05-22 Task3:     61  (_metadata_cascade extraction + 13 cascade tests)
+        # Every PR that raises coverage MUST bump this floor in the
+        # same commit so subsequent PRs can't regress.
+        run: |
+          pytest -ra --tb=short \
+            -m "not network and not slow" \
+            --cov=. \
+            --cov-report=term-missing \
+            --cov-report=html \
+            --cov-report=xml \
+            --cov-fail-under=61
+      - name: Append coverage summary to job summary
+        if: always()
+        working-directory: scripts/ingestions
+        run: |
+          {
+            echo "## Coverage summary"
+            echo
+            echo "Floor: 35% (ratchets up per PR; see )"
+            echo
+            echo '```'
+            python -m coverage report --skip-covered 2>/dev/null | tail -40 || echo "no coverage data"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ingestions-coverage
+          path: |
+            scripts/ingestions/htmlcov/
+            scripts/ingestions/coverage.xml
+          retention-days: 14
+
+  e2e_smoke:
+    name: Pipeline E2E (stage 3 → 4 → 5 against snapshot fixtures)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: lint
+    # E2E runs in parallel with the unit test job — both depend on
+    # lint. The smoke is small (the snapshot fixture is ~50 KB) so
+    # the cost is minimal.
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+      - name: Install ingestion package + dev deps (and root eegdash)
+        run: |
+          pip install -e .
+          pip install -e "scripts/ingestions[dev]"
+      - name: Cache eegdash-testing-data
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/eegdash/testing-data
+          key: eegdash-testing-data-v0.1.0
+      - name: Pre-fetch eegdash-testing-data
+        run: python -m eegdash.testing
+      - name: Run E2E smoke tests (Stage 3 → 4 → 5)
+        # Per . The e2e tests run the snapshot
+        # fixtures through 4_validate_output.py and 5_inject.py
+        # --dry-run as subprocess invocations. Offline (no API calls
+        # in dry-run mode). Verifies the inter-stage contract
+        # documented in PIPELINE-CONTRACT.md.
+        working-directory: scripts/ingestions
+        run: pytest tests/pipeline/test_e2e.py -ra --tb=short
+      - name: Run snapshot tests separately (verbose)
+        # Re-run the snapshot tests with verbose output. They're also
+        # in the main test suite, but isolating them in CI logs makes
+        # byte-drift failures easier to diagnose.
+        working-directory: scripts/ingestions
+        run: pytest tests/digest/test_snapshot.py -v --tb=long

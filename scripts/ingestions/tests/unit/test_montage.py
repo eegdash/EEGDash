@@ -114,98 +114,134 @@ def test_hash_sensors_insensitive_to_sub_mm_jitter():
 # ─── _parse_coordsystem_json ──────────────────────────────────────────────
 
 
-def test_parse_coordsystem_missing_returns_none_pair(tmp_path: Path):
-    """Missing file → (None, None)."""
-    space, units = _parse_coordsystem_json(tmp_path / "missing.json")
-    assert space is None
-    assert units is None
+def _write_coordsystem_file(tmp_path: Path, filename: str, content: str | None) -> Path:
+    """Write *content* to *filename* inside *tmp_path*, or return a missing path."""
+    p = tmp_path / filename
+    if content is not None:
+        p.write_text(content)
+    return p
 
 
-def test_parse_coordsystem_finds_eeg_block(tmp_path: Path):
-    """An EEG coordsystem.json fills (space, units)."""
-    f = tmp_path / "coords.json"
-    f.write_text(
-        json.dumps(
-            {
-                "EEGCoordinateSystem": "CTF",
-                "EEGCoordinateUnits": "mm",
-            }
-        )
-    )
-    space, units = _parse_coordsystem_json(f)
-    assert space == "CTF"
-    assert units == "mm"  # lowercased per the docstring
+@pytest.mark.parametrize(
+    ("filename", "content", "expected_space", "expected_units"),
+    [
+        pytest.param(
+            "missing.json",
+            None,  # file not created
+            None,
+            None,
+            id="missing_file",
+        ),
+        pytest.param(
+            "coords.json",
+            json.dumps({"EEGCoordinateSystem": "CTF", "EEGCoordinateUnits": "mm"}),
+            "CTF",
+            "mm",
+            id="eeg_block",
+        ),
+        pytest.param(
+            "coords.json",
+            json.dumps({"MEGCoordinateSystem": "Neuromag", "MEGCoordinateUnits": "M"}),
+            "Neuromag",
+            "m",  # lowercased
+            id="meg_block_when_no_eeg",
+        ),
+        pytest.param(
+            "coords.json",
+            "{ this is not json",
+            None,
+            None,
+            id="malformed_json",
+        ),
+        pytest.param(
+            "coords.json",
+            "{}",
+            None,
+            None,
+            id="empty_doc",
+        ),
+    ],
+)
+def test_parse_coordsystem_json(
+    tmp_path: Path,
+    filename: str,
+    content: str | None,
+    expected_space: str | None,
+    expected_units: str | None,
+):
+    """``_parse_coordsystem_json`` handles missing / EEG / MEG / malformed / empty inputs.
 
-
-def test_parse_coordsystem_finds_meg_block_when_no_eeg(tmp_path: Path):
-    """The walker tries EEG / iEEG / MEG / EMG / NIRS in order. MEG works
-    when EEG block is absent."""
-    f = tmp_path / "coords.json"
-    f.write_text(
-        json.dumps(
-            {
-                "MEGCoordinateSystem": "Neuromag",
-                "MEGCoordinateUnits": "M",  # uppercase
-            }
-        )
-    )
-    space, units = _parse_coordsystem_json(f)
-    assert space == "Neuromag"
-    assert units == "m"  # lowercased
-
-
-def test_parse_coordsystem_tolerates_malformed_json(tmp_path: Path):
-    """A non-JSON file → (None, None), no exception."""
-    f = tmp_path / "coords.json"
-    f.write_text("{ this is not json")
-    space, units = _parse_coordsystem_json(f)
-    assert space is None
-    assert units is None
-
-
-def test_parse_coordsystem_returns_none_for_empty_doc(tmp_path: Path):
-    """An empty JSON object → (None, None)."""
-    f = tmp_path / "coords.json"
-    f.write_text("{}")
-    assert _parse_coordsystem_json(f) == (None, None)
+    The walker tries EEG / iEEG / MEG / EMG / NIRS blocks in order; units are
+    lowercased; non-JSON or missing files return (None, None) without raising.
+    """
+    path = _write_coordsystem_file(tmp_path, filename, content)
+    space, units = _parse_coordsystem_json(path)
+    assert space == expected_space
+    assert units == expected_units
 
 
 # ─── _walk_up_find (BIDS inheritance) ─────────────────────────────────────
 
 
-def test_walk_up_find_finds_file_in_data_directory(tmp_path: Path):
-    """File next to the data file is returned."""
-    sub_dir = tmp_path / "sub-01" / "eeg"
-    sub_dir.mkdir(parents=True)
-    data = sub_dir / "sub-01_eeg.edf"
+@pytest.mark.parametrize(
+    ("description", "setup", "expected_rel"),
+    [
+        pytest.param(
+            "file_in_data_dir",
+            {
+                "dirs": ["sub-01/eeg"],
+                "data_rel": "sub-01/eeg/sub-01_eeg.edf",
+                "sidecar_rel": "sub-01/eeg/sub-01_coordsystem.json",
+            },
+            "sub-01/eeg/sub-01_coordsystem.json",
+            id="finds_file_in_data_directory",
+        ),
+        pytest.param(
+            "session_level",
+            {
+                "dirs": ["sub-01/ses-01/eeg"],
+                "data_rel": "sub-01/ses-01/eeg/sub-01_ses-01_eeg.edf",
+                "sidecar_rel": "sub-01/ses-01/sub-01_ses-01_coordsystem.json",
+            },
+            "sub-01/ses-01/sub-01_ses-01_coordsystem.json",
+            id="walks_up_to_session",
+        ),
+        pytest.param(
+            "not_found",
+            {
+                "dirs": ["sub-01/eeg"],
+                "data_rel": "sub-01/eeg/sub-01_eeg.edf",
+                "sidecar_rel": None,  # file not created
+            },
+            None,
+            id="stops_at_root",
+        ),
+    ],
+)
+def test_walk_up_find(
+    tmp_path: Path,
+    description: str,
+    setup: dict,
+    expected_rel: str | None,
+):
+    """``_walk_up_find`` follows BIDS inheritance up to the dataset root.
+
+    Returns the first matching sidecar found while walking toward the root;
+    returns None when the file is absent; stops at the BIDS root boundary.
+    """
+    for d in setup["dirs"]:
+        (tmp_path / d).mkdir(parents=True, exist_ok=True)
+    data = tmp_path / setup["data_rel"]
     data.touch()
-    coords = sub_dir / "sub-01_coordsystem.json"
-    coords.touch()
+    if setup["sidecar_rel"] is not None:
+        (tmp_path / setup["sidecar_rel"]).touch()
+
     found = _walk_up_find(data, tmp_path, "*_coordsystem.json")
-    assert found == coords
 
-
-def test_walk_up_find_walks_up_to_session(tmp_path: Path):
-    """File at the session level is found via BIDS inheritance."""
-    eeg_dir = tmp_path / "sub-01" / "ses-01" / "eeg"
-    eeg_dir.mkdir(parents=True)
-    data = eeg_dir / "sub-01_ses-01_eeg.edf"
-    data.touch()
-    # Place coords one level up (session-level)
-    ses_coords = eeg_dir.parent / "sub-01_ses-01_coordsystem.json"
-    ses_coords.touch()
-    found = _walk_up_find(data, tmp_path, "*_coordsystem.json")
-    assert found == ses_coords
-
-
-def test_walk_up_find_stops_at_root(tmp_path: Path):
-    """When the file isn't found anywhere on the walk → None."""
-    sub_dir = tmp_path / "sub-01" / "eeg"
-    sub_dir.mkdir(parents=True)
-    data = sub_dir / "sub-01_eeg.edf"
-    data.touch()
-    found = _walk_up_find(data, tmp_path, "*_coordsystem.json")
-    assert found is None
+    if expected_rel is None:
+        assert found is None
+    else:
+        assert found == tmp_path / expected_rel
 
 
 def test_walk_up_find_rejects_data_outside_root(tmp_path: Path):
@@ -247,38 +283,47 @@ def test_companion_coords_for_handles_no_matching_suffix():
 # ─── _parse_sensor_tsv ────────────────────────────────────────────────────
 
 
-def test_parse_sensor_tsv_basic_x_y_z(tmp_path: Path):
-    """3-channel TSV with x/y/z floats → 3 dicts."""
+@pytest.mark.parametrize(
+    ("tsv_content", "check"),
+    [
+        pytest.param(
+            "name\tx\ty\tz\nCz\t0.0\t0.0\t0.1\nFz\t0.0\t0.05\t0.08\nPz\t0.0\t-0.05\t0.08\n",
+            lambda rows: (
+                len(rows) == 3
+                and rows[0]["name"] == "Cz"
+                and rows[0]["x"] == 0.0
+                and rows[0]["z"] == 0.1
+                and isinstance(rows[0]["z"], float)
+            ),
+            id="basic_x_y_z",
+        ),
+        pytest.param(
+            "name\tx\ty\tz\nCz\t0.0\t0.0\t0.1\nBad\tn/a\t0.0\t0.0\nFz\t0.0\t0.05\t0.08\n",
+            lambda rows: (len(rows) == 2 and {r["name"] for r in rows} == {"Cz", "Fz"}),
+            id="drops_n_a_rows",
+        ),
+        pytest.param(
+            "name\tx\ty\tz\ttype\tmaterial\nCz\t0.0\t0.0\t0.1\tEEG\tAg/AgCl\n",
+            lambda rows: (
+                rows[0]["type"] == "EEG" and rows[0]["material"] == "Ag/AgCl"
+            ),
+            id="preserves_extras",
+        ),
+        pytest.param(
+            "name\tx\ty\tz\n\t0\t0\t0\nCz\t0\t0\t0.1\n",
+            lambda rows: "" not in [r["name"] for r in rows],
+            id="drops_empty_name_rows",
+        ),
+    ],
+)
+def test_parse_sensor_tsv(tmp_path: Path, tsv_content: str, check):
+    """``_parse_sensor_tsv`` parses TSV rows; n/a and empty-name rows are dropped;
+    extra columns are preserved.
+    """
     tsv = tmp_path / "electrodes.tsv"
-    tsv.write_text(
-        "name\tx\ty\tz\nCz\t0.0\t0.0\t0.1\nFz\t0.0\t0.05\t0.08\nPz\t0.0\t-0.05\t0.08\n"
-    )
+    tsv.write_text(tsv_content)
     rows = _parse_sensor_tsv(tsv)
-    assert len(rows) == 3
-    assert rows[0]["name"] == "Cz"
-    assert rows[0]["x"] == 0.0
-    assert rows[0]["z"] == 0.1
-    assert isinstance(rows[0]["z"], float)
-
-
-def test_parse_sensor_tsv_drops_n_a_rows(tmp_path: Path):
-    """Rows with n/a in required columns are dropped."""
-    tsv = tmp_path / "electrodes.tsv"
-    tsv.write_text(
-        "name\tx\ty\tz\nCz\t0.0\t0.0\t0.1\nBad\tn/a\t0.0\t0.0\nFz\t0.0\t0.05\t0.08\n"
-    )
-    rows = _parse_sensor_tsv(tsv)
-    assert len(rows) == 2
-    assert {r["name"] for r in rows} == {"Cz", "Fz"}
-
-
-def test_parse_sensor_tsv_preserves_extras(tmp_path: Path):
-    """Extra columns (type, material) are kept when present."""
-    tsv = tmp_path / "electrodes.tsv"
-    tsv.write_text("name\tx\ty\tz\ttype\tmaterial\nCz\t0.0\t0.0\t0.1\tEEG\tAg/AgCl\n")
-    rows = _parse_sensor_tsv(tsv)
-    assert rows[0]["type"] == "EEG"
-    assert rows[0]["material"] == "Ag/AgCl"
+    assert check(rows)
 
 
 def test_parse_sensor_tsv_raises_on_missing_required_column(tmp_path: Path):
@@ -289,33 +334,32 @@ def test_parse_sensor_tsv_raises_on_missing_required_column(tmp_path: Path):
         _parse_sensor_tsv(tsv)
 
 
-def test_parse_sensor_tsv_drops_empty_name_rows(tmp_path: Path):
-    """Rows with empty name → dropped silently."""
-    tsv = tmp_path / "electrodes.tsv"
-    tsv.write_text("name\tx\ty\tz\n\t0\t0\t0\nCz\t0\t0\t0.1\n")
-    rows = _parse_sensor_tsv(tsv)
-    # The empty-name row should be filtered out
-    names = [r["name"] for r in rows]
-    assert "" not in names
-
-
 # ─── _parse_channels_tsv_for_eeg ──────────────────────────────────────────
 
 
-def test_parse_channels_tsv_keeps_eeg_rows(tmp_path: Path):
-    """Rows with type EEG are kept; non-EEG (EOG/TRIG) are dropped."""
+@pytest.mark.parametrize(
+    ("tsv_content", "expected"),
+    [
+        pytest.param(
+            "name\ttype\nCz\tEEG\nFz\tEEG\nHEOG\tEOG\nTrigger\tTRIG\nPz\tEEG\n",
+            ["Cz", "Fz", "Pz"],
+            id="keeps_eeg_rows",
+        ),
+        pytest.param(
+            "name\nCz\nFz\nHEOG\n",
+            ["Cz", "Fz", "HEOG"],
+            id="no_type_column_keeps_all",
+        ),
+    ],
+)
+def test_parse_channels_tsv_for_eeg_returns_list(
+    tmp_path: Path, tsv_content: str, expected: list[str]
+):
+    """EEG rows are kept; non-EEG (EOG/TRIG) are dropped; missing type keeps all."""
     tsv = tmp_path / "channels.tsv"
-    tsv.write_text("name\ttype\nCz\tEEG\nFz\tEEG\nHEOG\tEOG\nTrigger\tTRIG\nPz\tEEG\n")
+    tsv.write_text(tsv_content)
     out = _parse_channels_tsv_for_eeg(tsv)
-    assert sorted(out) == ["Cz", "Fz", "Pz"]
-
-
-def test_parse_channels_tsv_no_type_column_keeps_all(tmp_path: Path):
-    """If 'type' is missing, keep every row (caller filters later)."""
-    tsv = tmp_path / "channels.tsv"
-    tsv.write_text("name\nCz\nFz\nHEOG\n")
-    out = _parse_channels_tsv_for_eeg(tsv)
-    assert sorted(out) == ["Cz", "Fz", "HEOG"]
+    assert sorted(out) == sorted(expected)
 
 
 def test_parse_channels_tsv_pandas_nan_handled_for_missing_type(tmp_path: Path):
@@ -334,16 +378,21 @@ def test_parse_channels_tsv_pandas_nan_handled_for_missing_type(tmp_path: Path):
     assert "Cz" in out
 
 
-def test_parse_channels_tsv_missing_file_returns_empty(tmp_path: Path):
-    """Missing channels.tsv → []."""
-    assert _parse_channels_tsv_for_eeg(tmp_path / "missing.tsv") == []
-
-
-def test_parse_channels_tsv_no_name_column_returns_empty(tmp_path: Path):
-    """Without a 'name' column → []."""
-    tsv = tmp_path / "channels.tsv"
-    tsv.write_text("type\tdescription\nEEG\tfoo\n")
-    assert _parse_channels_tsv_for_eeg(tsv) == []
+@pytest.mark.parametrize(
+    "tsv_content",
+    [
+        pytest.param(None, id="missing_file"),
+        pytest.param("type\tdescription\nEEG\tfoo\n", id="no_name_column"),
+    ],
+)
+def test_parse_channels_tsv_returns_empty(tmp_path: Path, tsv_content: str | None):
+    """Missing file or absent 'name' column → []."""
+    if tsv_content is None:
+        path = tmp_path / "missing.tsv"
+    else:
+        path = tmp_path / "channels.tsv"
+        path.write_text(tsv_content)
+    assert _parse_channels_tsv_for_eeg(path) == []
 
 
 # ─── _score_template_match ────────────────────────────────────────────────
@@ -366,36 +415,39 @@ def test_score_template_match_picks_best_overlap():
     assert len(positions) == 4
 
 
-def test_score_template_match_returns_none_for_empty_channels():
-    """No channels to match → None."""
-    assert _score_template_match([], {"x": {"CZ": (0, 0, 0)}}) is None
-
-
-def test_score_template_match_returns_none_when_below_min_hits():
-    """Channels match too few template positions → None."""
-
+@pytest.mark.parametrize(
+    ("channels", "templates", "kwargs"),
+    [
+        pytest.param(
+            [],
+            {"x": {"CZ": (0, 0, 0)}},
+            {},
+            id="empty_channels",
+        ),
+        pytest.param(
+            ["Cz", "X1", "X2", "X3"],
+            {"big": {"CZ": (0, 0, 0)}},  # only 1 channel in template
+            {"min_hits": 4},
+            id="below_min_hits",
+        ),
+        pytest.param(
+            ["Cz", "Fz", "Pz", "Oz"] + [f"X{i}" for i in range(96)],
+            {
+                "big": {f"CH{i}": (0, 0, 0) for i in range(100)}
+                | {"CZ": (0, 0, 0), "FZ": (0, 0, 0), "PZ": (0, 0, 0), "OZ": (0, 0, 0)}
+            },
+            # 4 hits but dataset has 100 channels → ratio 4/100 = 0.04 < min_ratio=0.8
+            {"min_ratio": 0.8},
+            id="below_min_ratio",
+        ),
+    ],
+)
+def test_score_template_match_returns_none(channels, templates, kwargs):
+    """``_score_template_match`` returns None when channels are empty,
+    too few hits, or hit ratio is below threshold.
+    """
     _montage._MNE_TEMPLATE_KEYSETS = None
-    templates = {"big": {"CZ": (0, 0, 0)}}  # only 1 channel
-    out = _score_template_match(["Cz", "X1", "X2", "X3"], templates, min_hits=4)
-    assert out is None  # only 1 hit < min_hits=4
-
-
-def test_score_template_match_returns_none_when_below_min_ratio():
-    """Hit count meets min_hits but ratio is too low → None."""
-
-    _montage._MNE_TEMPLATE_KEYSETS = None
-    templates = {
-        "big": {f"CH{i}": (0, 0, 0) for i in range(100)}
-        | {
-            "CZ": (0, 0, 0),
-            "FZ": (0, 0, 0),
-            "PZ": (0, 0, 0),
-            "OZ": (0, 0, 0),
-        }
-    }
-    # 4 hits but dataset has 100 channels → ratio 4/100 = 0.04 < min_ratio=0.8
-    huge_channels = ["Cz", "Fz", "Pz", "Oz"] + [f"X{i}" for i in range(96)]
-    out = _score_template_match(huge_channels, templates, min_ratio=0.8)
+    out = _score_template_match(channels, templates, **kwargs)
     assert out is None
 
 

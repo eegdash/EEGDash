@@ -1,15 +1,4 @@
-"""Tests for the shared HTTP client (``_http``).
-
-Two angles in one file:
-
-- **Core API** — ``request_json`` happy path, 404, 5xx retry, network
-  errors, malformed JSON, configurable retry policy.
-- **Variants** — ``request_text`` / ``request_response`` /
-  ``build_headers`` / ``make_authed_client`` / ``make_retry_client``
-  + client-singleton lifecycle.
-
-All tests use respx to intercept HTTP calls; no real network required.
-"""
+"""Tests for the shared HTTP client (``_http``). All calls intercepted via respx."""
 
 from __future__ import annotations
 
@@ -38,11 +27,7 @@ API = "https://example.invalid/api"
 
 @pytest.fixture
 def _no_cache_env(monkeypatch):
-    """Disable HTTP caching for tests so each call hits the mock.
-
-    Sets both env vars the module honours, then resets the cached
-    module-level client so the next get_client() sees the new env.
-    """
+    """Disable caching and reset the module-level client singleton."""
     monkeypatch.setenv("EEGDASH_HTTP_CACHE", "0")
     monkeypatch.setenv("EEGDASH_HTTP_CACHE_DISABLED", "1")
     close_client()
@@ -53,13 +38,9 @@ def _no_cache_env(monkeypatch):
     close_client()
 
 
-# ─── 1. Core API: request_json (happy path) ────────────────────────────────
-
-
 @respx.mock
 @pytest.mark.usefixtures("_no_cache_env")
 def test_request_json_200_returns_payload_and_response():
-    """200 OK with valid JSON returns (payload_dict, response)."""
     route = respx.get(API).mock(
         return_value=httpx.Response(200, json={"key": "value", "n": 42})
     )
@@ -70,17 +51,10 @@ def test_request_json_200_returns_payload_and_response():
     assert route.call_count == 1
 
 
-# ─── 1. Core API: 404 — terminal, no retry ─────────────────────────────────
-
-
 @respx.mock
 @pytest.mark.usefixtures("_no_cache_env")
 def test_request_json_404_returns_none_payload_with_response():
-    """404 is NOT a retryable status (not in DEFAULT_RETRY_STATUSES).
-
-    Contract: returns (None, response_with_status_404). The 404 itself
-    is not raised — callers inspect the response.
-    """
+    """404 is not in DEFAULT_RETRY_STATUSES; returns (None, response) without raising."""
     route = respx.get(API).mock(return_value=httpx.Response(404))
     payload, response = request_json("GET", API)
     assert payload is None
@@ -89,13 +63,9 @@ def test_request_json_404_returns_none_payload_with_response():
     assert route.call_count == 1, "404 must not be retried"
 
 
-# ─── 1. Core API: 5xx — retried then surfaced ──────────────────────────────
-
-
 @respx.mock
 @pytest.mark.usefixtures("_no_cache_env")
 def test_request_json_502_retries_then_succeeds_on_3rd_attempt():
-    """Default retry policy: 5xx retried up to ``retries`` times."""
     route = respx.get(API).mock(
         side_effect=[
             httpx.Response(502),
@@ -111,36 +81,28 @@ def test_request_json_502_retries_then_succeeds_on_3rd_attempt():
 @respx.mock
 @pytest.mark.usefixtures("_no_cache_env")
 def test_request_json_persistent_500_returns_none_payload():
-    """When all retries return 5xx, the helper returns (None, response).
-
-    The response carries the last 5xx so the caller can log it.
-    """
+    """Exhausted retries return (None, last_5xx_response)."""
     route = respx.get(API).mock(return_value=httpx.Response(503))
     payload, response = request_json("GET", API, retries=2, backoff_factor=0.0)
     assert payload is None
     assert response is not None
     assert response.status_code == 503
-    # 2 retries means up to 2 attempts total (tenacity counts attempts).
-    assert route.call_count == 2
-
-
-# ─── 1. Core API: network errors ───────────────────────────────────────────
+    assert route.call_count == 2  # tenacity counts attempts, not retries
 
 
 @respx.mock
 @pytest.mark.usefixtures("_no_cache_env")
 def test_request_json_timeout_returns_none_payload():
-    """Persistent timeouts return (None, None) (no response object)."""
+    """Persistent timeouts return (None, None); no response object is available."""
     respx.get(API).mock(side_effect=httpx.TimeoutException("upstream"))
     payload, response = request_json("GET", API, retries=2, backoff_factor=0.0)
     assert payload is None
-    assert response is None  # never got a response
+    assert response is None
 
 
 @respx.mock
 @pytest.mark.usefixtures("_no_cache_env")
 def test_request_json_raise_for_request_surfaces_network_error():
-    """When raise_for_request=True, network errors propagate."""
     respx.get(API).mock(side_effect=httpx.TimeoutException("upstream"))
     with pytest.raises(httpx.TimeoutException):
         request_json(
@@ -152,13 +114,9 @@ def test_request_json_raise_for_request_surfaces_network_error():
         )
 
 
-# ─── 1. Core API: malformed JSON — graceful decode failure ─────────────────
-
-
 @respx.mock
 @pytest.mark.usefixtures("_no_cache_env")
 def test_request_json_malformed_json_returns_none_payload():
-    """A 200 with non-JSON body decodes to None payload but keeps response."""
     route = respx.get(API).mock(
         return_value=httpx.Response(
             200,
@@ -173,13 +131,9 @@ def test_request_json_malformed_json_returns_none_payload():
     assert route.call_count == 1
 
 
-# ─── 1. Core API: retry policy configurability ─────────────────────────────
-
-
 @respx.mock
 @pytest.mark.usefixtures("_no_cache_env")
 def test_request_json_retry_disabled_with_retries_zero():
-    """``retries=0`` (or 1) means at most one attempt."""
     route = respx.get(API).mock(return_value=httpx.Response(503))
     payload, _ = request_json("GET", API, retries=1, backoff_factor=0.0)
     assert payload is None
@@ -189,11 +143,7 @@ def test_request_json_retry_disabled_with_retries_zero():
 @respx.mock
 @pytest.mark.usefixtures("_no_cache_env")
 def test_request_json_408_request_timeout_is_retried_by_default():
-    """408 Request Timeout is in DEFAULT_RETRY_STATUSES.
-
-    Some upstreams return 408 instead of 504 for the same case; the
-    client should treat both the same way.
-    """
+    """408 is in DEFAULT_RETRY_STATUSES — some upstreams use it instead of 504."""
     route = respx.get(API).mock(
         side_effect=[
             httpx.Response(408),
@@ -208,7 +158,6 @@ def test_request_json_408_request_timeout_is_retried_by_default():
 @respx.mock
 @pytest.mark.usefixtures("_no_cache_env")
 def test_request_json_custom_retry_statuses():
-    """Caller can supply a different retry-status set (e.g. add 418)."""
     route = respx.get(API).mock(
         side_effect=[
             httpx.Response(418),
@@ -226,12 +175,7 @@ def test_request_json_custom_retry_statuses():
     assert route.call_count == 2
 
 
-# ─── 1. Core API: make_retry_client deprecation ────────────────────────────
-
-
 def test_make_retry_client_emits_deprecation_warning():
-    """Old callers see a DeprecationWarning pointing to make_authed_client."""
-
     with warnings.catch_warnings(record=True) as captured:
         warnings.simplefilter("always")
         client = make_retry_client("dummy_token")
@@ -243,26 +187,20 @@ def test_make_retry_client_emits_deprecation_warning():
 
 
 def test_make_retry_client_returns_same_shape_as_authed_client():
-    """The deprecation alias must behave identically to the new name."""
-
+    """Deprecation alias produces identical headers and timeout to make_authed_client."""
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", DeprecationWarning)
         deprecated_client = make_retry_client("dummy_token")
         new_client = make_authed_client("dummy_token")
 
     try:
-        # Same auth header on both clients.
         assert deprecated_client.headers.get("Authorization") == new_client.headers.get(
             "Authorization"
         )
-        # Same timeout on both clients.
         assert deprecated_client.timeout == new_client.timeout
     finally:
         deprecated_client.close()
         new_client.close()
-
-
-# ─── 2. Variants: build_headers ────────────────────────────────────────────
 
 
 @pytest.mark.parametrize(
@@ -275,7 +213,7 @@ def test_make_retry_client_returns_same_shape_as_authed_client():
         ),
         pytest.param(
             {},
-            {"User-Agent": True},  # True means "key present and non-empty"
+            {"User-Agent": True},  # sentinel: key present and non-empty
             id="includes_user_agent_by_default",
         ),
         pytest.param(
@@ -293,21 +231,14 @@ def test_make_retry_client_returns_same_shape_as_authed_client():
     ],
 )
 def test_build_headers_matrix(kwargs, expected_key_values):
-    """build_headers returns a dict with the expected keys and values.
-
-    Extra headers override the defaults; User-Agent is always set.
-    """
+    """Extra headers merge into defaults; User-Agent is always present."""
     out = build_headers(**kwargs)
     for key, value in expected_key_values.items():
         if value is True:
-            # Sentinel: assert key is present and non-empty.
             assert key in out
             assert out[key]
         else:
             assert out[key] == value
-
-
-# ─── 2. Variants: request_text ─────────────────────────────────────────────
 
 
 @respx.mock
@@ -348,11 +279,7 @@ def test_build_headers_matrix(kwargs, expected_key_values):
 def test_request_text_status_matrix(
     mock_kwargs, call_kwargs, expected_text, expected_status
 ):
-    """request_text returns (text, response) or (None, None) on network failure.
-
-    A 4xx returns (text, response) — caller decides how to handle the status.
-    Persistent timeout returns (None, None).
-    """
+    """4xx returns (text, response); persistent network failure returns (None, None)."""
     respx.get(API).mock(**mock_kwargs)
     text, response = request_text("GET", API, **call_kwargs)
     if expected_status is None:
@@ -368,7 +295,6 @@ def test_request_text_status_matrix(
 @respx.mock
 @pytest.mark.usefixtures("_no_cache_env")
 def test_request_text_raise_for_status_propagates_4xx():
-    """raise_for_status=True surfaces httpx.HTTPStatusError on 4xx."""
     respx.get(API).mock(return_value=httpx.Response(404))
     with pytest.raises(httpx.HTTPStatusError):
         request_text("GET", API, retries=1, backoff_factor=0.0, raise_for_status=True)
@@ -377,19 +303,14 @@ def test_request_text_raise_for_status_propagates_4xx():
 @respx.mock
 @pytest.mark.usefixtures("_no_cache_env")
 def test_request_text_raise_for_request_propagates_network():
-    """raise_for_request=True surfaces httpx.RequestError on network failure."""
     respx.get(API).mock(side_effect=httpx.ConnectError("down"))
     with pytest.raises(httpx.ConnectError):
         request_text("GET", API, retries=1, backoff_factor=0.0, raise_for_request=True)
 
 
-# ─── 2. Variants: request_response ─────────────────────────────────────────
-
-
 @respx.mock
 @pytest.mark.usefixtures("_no_cache_env")
 def test_request_response_returns_raw_response():
-    """request_response returns the httpx.Response, not (data, response)."""
     respx.get(API).mock(return_value=httpx.Response(200, text="body"))
     response = request_response("GET", API, retries=1, backoff_factor=0.0)
     assert response is not None
@@ -408,7 +329,6 @@ def test_request_response_returns_none_on_timeout():
 @respx.mock
 @pytest.mark.usefixtures("_no_cache_env")
 def test_request_response_post_with_json_body():
-    """POST requests with json_body are encoded correctly."""
     route = respx.post(API).mock(return_value=httpx.Response(200, text="ok"))
     response = request_response(
         "POST",
@@ -419,15 +339,10 @@ def test_request_response_post_with_json_body():
     )
     assert response is not None
     assert response.status_code == 200
-    # The mock saw a request with the json body
     assert route.call_count == 1
 
 
-# ─── 2. Variants: client-singleton lifecycle ───────────────────────────────
-
-
 def test_get_client_returns_singleton():
-    """Repeated get_client() returns the same instance until close_client()."""
     close_client()
     c1 = get_client()
     c2 = get_client()
@@ -436,18 +351,15 @@ def test_get_client_returns_singleton():
 
 
 def test_get_client_recreates_after_close():
-    """close_client() invalidates the singleton; next get_client makes a new one."""
     close_client()
     c1 = get_client()
     close_client()
     c2 = get_client()
-    # Different objects (the old singleton was discarded)
     assert c1 is not c2
     close_client()
 
 
 def test_make_authed_client_sets_authorization_header():
-    """make_authed_client attaches the Bearer token to every request."""
     client = make_authed_client("my_token_abc")
     try:
         assert "Authorization" in client.headers
@@ -458,8 +370,6 @@ def test_make_authed_client_sets_authorization_header():
 
 
 def test_make_retry_client_includes_authorization():
-    """make_retry_client also includes the Bearer token."""
-
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", DeprecationWarning)
         client = make_retry_client("retry_token_xyz")
@@ -471,14 +381,11 @@ def test_make_retry_client_includes_authorization():
 
 
 def test_make_retry_client_has_transport_with_retries():
-    """make_retry_client configures a transport — non-default httpx setup."""
-
+    """make_retry_client sets a non-default transport on the httpx.Client."""
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", DeprecationWarning)
         client = make_retry_client("token")
     try:
-        # The httpx.Client has a _transport attribute; just confirm it's
-        # configured (non-default identity).
         assert client._transport is not None
     finally:
         client.close()

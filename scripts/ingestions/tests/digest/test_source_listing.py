@@ -1,10 +1,4 @@
-"""Parametrized tests for the source-listing adapters.
-
-Two angles:
-
-- **Core listing** — the 7 HTTP-based adapters (Figshare/Zenodo/OSF/...). Was test_source_listing.py.
-- **Extended adapters** — filesystem-based + non-HTTP listers. Was test_source_listing_extended.py.
-"""
+"""Parametrized tests for the source-listing adapters (HTTP-based + filesystem)."""
 
 from __future__ import annotations
 
@@ -24,8 +18,6 @@ from _file_utils import (
     list_scidb_files,
     list_zenodo_files,
 )
-
-# ─── 1. Core listing ──────────────────────────────────────────────
 
 # ─── Figshare ─────────────────────────────────────────────────────────────
 
@@ -68,8 +60,7 @@ def test_figshare_empty_response():
 
 @respx.mock
 def test_figshare_http_error_returns_empty():
-    """Per the adapter banner: secondary sources never raise — they
-    return empty on HTTP errors. The caller decides whether to retry."""
+    """Secondary sources never raise on HTTP errors — they return empty; caller decides whether to retry."""
     respx.get("https://api.figshare.com/v2/articles/404/files").mock(
         return_value=httpx.Response(404, json={"error": "not found"})
     )
@@ -79,10 +70,9 @@ def test_figshare_http_error_returns_empty():
 @pytest.mark.slow
 @respx.mock
 def test_figshare_5xx_triggers_retries_then_propagates():
-    """5xx responses trigger tenacity-driven retries; after exhausting retries raises tenacity.RetryError.
+    """5xx responses trigger tenacity retries; after exhausting retries raises tenacity.RetryError.
 
-    Contrast with 4xx (e.g. 404), which is "not found, definitive" and
-    returns empty cleanly (see ``test_figshare_http_error_returns_empty``).
+    Contrast with 4xx, which returns empty cleanly (see ``test_figshare_http_error_returns_empty``).
     """
     respx.get("https://api.figshare.com/v2/articles/500/files").mock(
         return_value=httpx.Response(500, text="server error")
@@ -119,8 +109,7 @@ def test_figshare_uses_api_key_header():
 def test_zenodo_happy_path_uses_checksum_field():
     """Zenodo emits `checksum` (md5:abc...) — adapter must surface it.
 
-    Regression test for the bug fixed in housekeeping commit 987855bfd:
-    Zenodo's checksum was previously dropped at manifest time.
+    Regression test: Zenodo's checksum was previously dropped at manifest time.
     """
     respx.get("https://zenodo.org/api/records/12345").mock(
         return_value=httpx.Response(
@@ -144,14 +133,12 @@ def test_zenodo_happy_path_uses_checksum_field():
     assert len(files) == 1
     assert files[0]["name"] == "sub-01_eeg.edf"
     assert files[0]["size"] == 1024
-    # The bug fix: checksum is surfaced.
     assert files[0].get("checksum") == "md5:abcdef123"
 
 
 @respx.mock
 def test_zenodo_falls_back_to_bucket_url_when_no_links_self():
-    """Old Zenodo API shape: file lacks `links.self`; adapter builds URL
-    from `links.bucket` at the record level."""
+    """Old Zenodo API shape: file lacks `links.self`; adapter builds URL from record-level `links.bucket`."""
     respx.get("https://zenodo.org/api/records/12345").mock(
         return_value=httpx.Response(
             200,
@@ -192,10 +179,7 @@ def test_zenodo_no_files_field_returns_empty():
 
 @respx.mock
 def test_osf_walks_files_recursively():
-    """OSF's API returns a tree per call; adapter walks folders recursively.
-
-    Tests the simple shape: one file at the root, no nested folders.
-    """
+    """OSF adapter walks folders recursively; simple shape: one file at the root."""
     respx.get("https://api.osf.io/v2/nodes/abc123/files/osfstorage/").mock(
         return_value=httpx.Response(
             200,
@@ -234,9 +218,7 @@ def test_osf_404_returns_empty():
 
 @respx.mock
 def test_all_adapters_emit_name_and_size_for_basic_responses():
-    """Cross-source contract: every adapter emits at least name + size
-    on a happy-path response. ADR 0001 documents this as the
-    "secondary Source" minimum shape."""
+    """ADR 0001 contract: every adapter emits at least name + size on a happy-path response."""
     # Figshare
     respx.get("https://api.figshare.com/v2/articles/1/files").mock(
         return_value=httpx.Response(200, json=[{"name": "f.edf", "size": 1}])
@@ -288,12 +270,7 @@ def test_all_adapters_emit_name_and_size_for_basic_responses():
 
 @respx.mock
 def test_all_adapters_return_empty_list_on_http_404():
-    """ADR 0001 contract: HTTP errors yield empty list, not exception.
-
-    The 4 HTTP-based adapters (figshare, zenodo, osf, scidb-via-API)
-    all share this contract — caller treats empty as "no files,
-    move on" rather than "retry the API".
-    """
+    """ADR 0001 contract: HTTP errors yield empty list, not exception."""
     routes = [
         ("https://api.figshare.com/v2/articles/404/files", 404),
         ("https://zenodo.org/api/records/404", 404),
@@ -312,9 +289,8 @@ def test_all_adapters_tolerate_network_failure():
     """A complete network failure (httpx ConnectError) → empty list for all adapters.
 
     Slow because production adapters use ``backoff_factor=1.0`` — 3 retries x 3
-    adapters x ~1 sec backoff ≈ 9 sec. Marked slow so PR-fast CI skips it.
-    Don't change the backoff in the test — that would test a different config than
-    production runs.
+    adapters x ~1 sec backoff ≈ 9 sec. Don't change the backoff in the test —
+    that would test a different config than production runs.
     """
     routes = [
         "https://api.figshare.com/v2/articles/dead/files",
@@ -324,13 +300,10 @@ def test_all_adapters_tolerate_network_failure():
     for url in routes:
         respx.get(url).mock(side_effect=httpx.ConnectError("simulated network down"))
 
-    # Each call should return [] rather than propagating ConnectError.
     assert list_figshare_files("dead") == []
     assert list_zenodo_files("dead") == []
     assert list_osf_files("dead") == []
 
-
-# ─── 2. Extended adapters ──────────────────────────────────────────────
 
 # ─── list_local_bids_files ────────────────────────────────────────────────
 
@@ -341,7 +314,6 @@ def test_local_bids_missing_path_returns_empty():
 
 
 def test_local_bids_empty_directory_returns_empty(tmp_path: Path):
-    """An empty directory → empty list."""
     assert list_local_bids_files(tmp_path) == []
 
 
@@ -372,14 +344,13 @@ def test_local_bids_skips_hidden_files_and_dirs(tmp_path: Path):
     names = {f["name"] for f in files}
     assert "real.txt" in names
     assert ".hidden_file" not in names
-    # No file paths starting with .git/
     assert not any(n.startswith(".git/") for n in names)
 
 
 def test_local_bids_reports_file_sizes(tmp_path: Path):
     """Each file entry includes its real size in bytes."""
-    (tmp_path / "small.txt").write_bytes(b"abc")  # 3 bytes
-    (tmp_path / "larger.bin").write_bytes(b"x" * 1024)  # 1024 bytes
+    (tmp_path / "small.txt").write_bytes(b"abc")
+    (tmp_path / "larger.bin").write_bytes(b"x" * 1024)
 
     files = list_local_bids_files(tmp_path)
     by_name = {f["name"]: f["size"] for f in files}
@@ -405,11 +376,7 @@ _SCIDB_URL = (
 
 @respx.mock
 def test_scidb_happy_path_flat_directory():
-    """SciDB API returns a flat list of files at a single path level.
-
-    The real API uses `code: 20000` as the success marker and `dir`
-    (not isDirectory) for the type flag. Paths are stripped of the version prefix.
-    """
+    """SciDB API: `code: 20000` is the success marker; `dir` (not isDirectory) is the type flag."""
     respx.post(_SCIDB_URL).mock(
         return_value=httpx.Response(
             200,
@@ -433,8 +400,7 @@ def test_scidb_happy_path_flat_directory():
     )
     files = list_scidb_files("test-dataset-uuid")
     assert len(files) == 2
-    # Each file has name + size + md5 (per ADR 0001 — md5 is one of
-    # the few secondary sources that survives the manifest pipeline)
+    # md5 survives the manifest pipeline (ADR 0001)
     for f in files:
         assert "name" in f
         assert "size" in f
@@ -443,14 +409,12 @@ def test_scidb_happy_path_flat_directory():
 
 @respx.mock
 def test_scidb_404_returns_empty():
-    """SciDB API 404 → empty list, no exception."""
     respx.post(_SCIDB_URL).mock(return_value=httpx.Response(404))
     assert list_scidb_files("missing-uuid") == []
 
 
 @respx.mock
 def test_scidb_empty_response_returns_empty():
-    """SciDB returning an empty data array → empty list."""
     respx.post(_SCIDB_URL).mock(
         return_value=httpx.Response(200, json={"code": 20000, "data": []})
     )
@@ -510,7 +474,6 @@ def test_datarn_returns_empty(url: str, mock_response: httpx.Response):
 
 
 def test_list_git_files_empty_directory(tmp_path: Path):
-    """A directory with no files → empty list."""
     assert list_git_files(tmp_path) == []
 
 
@@ -524,26 +487,22 @@ def test_list_git_files_walks_bids_tree(tmp_path: Path):
 
     files = list_git_files(tmp_path)
     assert len(files) >= 3
-    # Each entry has 'path' and 'size' (and possibly more)
     for f in files:
         assert "path" in f or "name" in f
 
 
 def test_list_git_files_handles_nonexistent_directory():
-    """Per the adapter contract, a missing dir → either [] or doesn't crash."""
-    # Use a path that definitely doesn't exist
+    """Missing dir → either [] or doesn't crash (adapter contract)."""
     result = list_git_files(Path("/totally/no/such/path"))
-    # Tolerant either way: empty list or no crash
     assert isinstance(result, list)
 
 
 def test_list_git_files_emits_broken_symlinks(tmp_path: Path):
     """Broken git-annex pointer symlinks must be emitted (size=0), not dropped.
 
-    Pinned post-perf-review (2026-05-22) — the walker's dirent-driven
-    classification calls is_symlink() before is_file() so dangling
-    annex pointers (the common OpenNeuro/NEMAR case after a shallow
-    clone with GIT_LFS_SKIP_SMUDGE=1) are still surfaced.
+    The walker's dirent-driven classification calls is_symlink() before is_file()
+    so dangling annex pointers (common after a shallow clone with
+    GIT_LFS_SKIP_SMUDGE=1) are still surfaced.
     """
     real = tmp_path / "real.edf"
     real.write_bytes(b"x" * 10)
@@ -559,9 +518,8 @@ def test_list_git_files_emits_broken_symlinks(tmp_path: Path):
 def test_list_git_files_skips_dot_git_without_descending(tmp_path: Path):
     """`.git` directory is pruned at dirent level — not descended into.
 
-    Pinned post-perf-review: a regression that walked `.git` would
-    inflate the manifest with thousands of blob filenames and slow
-    Stage 2 by an order of magnitude.
+    A regression that walked `.git` would inflate the manifest with thousands
+    of blob filenames and slow Stage 2 by an order of magnitude.
     """
     git_dir = tmp_path / ".git" / "objects" / "ab"
     git_dir.mkdir(parents=True)

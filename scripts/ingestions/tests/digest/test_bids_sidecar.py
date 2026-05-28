@@ -1,11 +1,4 @@
-"""Tests for BIDS sidecar enrichment in extract_record / extract_dataset.
-
-Before sidecar enrichment landed, the only BIDS-spec fields surfaced as
-structured Record columns were the technical metadata (sfreq / nchans /
-ntimes / ch_names). PowerLineFrequency, EEGReference, SoftwareFilters,
-Manufacturer, EEGPlacementScheme — all required or recommended by BIDS —
-were either unread or buried as raw bytes in sidecar_inline.
-"""
+"""Tests for BIDS sidecar enrichment in extract_record / extract_dataset."""
 
 from __future__ import annotations
 
@@ -31,14 +24,8 @@ def _load_digest():
     return mod
 
 
-# ─── _extract_bids_sidecar_fields ─────────────────────────────────────────
-
-
 class _FakeBIDSDataset:
-    """Minimal stand-in. ``bidsdir`` + ``get_bids_file_attribute('modality',
-    ...)`` are the only attributes the helper needs. Sidecar values are
-    discovered on disk via BIDS inheritance — write them as real files
-    in tmp_path."""
+    """Minimal stand-in for ``bidsdir`` + ``get_bids_file_attribute``."""
 
     def __init__(self, modality: str = "eeg", bids_root: Path | None = None):
         self._modality = modality
@@ -55,11 +42,7 @@ def _build_bids_root_with_sidecar(
     sidecar_payload: dict,
     modality: str = "eeg",
 ) -> tuple[_FakeBIDSDataset, str]:
-    """Build a minimal BIDS root that contains a single recording +
-    a custom modality JSON sidecar holding ``sidecar_payload``.
-
-    Returns (fake_bids_dataset, data_filepath_str).
-    """
+    """Build a minimal BIDS root with one recording and a modality JSON sidecar."""
     sub_dir = tmp_path / "sub-01" / modality
     sub_dir.mkdir(parents=True)
     data = sub_dir / f"sub-01_task-rest_{modality}.edf"
@@ -103,11 +86,7 @@ def _build_bids_root_with_sidecar(
     ],
 )
 def test_sidecar_extracts_fields(tmp_path: Path, sidecar_payload: dict, expected: dict):
-    """_extract_bids_sidecar_fields surfaces each BIDS-spec field correctly.
-
-    SoftwareFilters is a nested dict in the BIDS spec — preserved as-is.
-    EEGPlacementScheme feeds the _montage.py template matcher.
-    """
+    """_extract_bids_sidecar_fields surfaces each BIDS-spec field correctly."""
     digest = _load_digest()
     fake, data = _build_bids_root_with_sidecar(tmp_path, sidecar_payload)
     out = digest._extract_bids_sidecar_fields(fake, data)
@@ -167,17 +146,14 @@ def test_sidecar_handles_malformed_json(tmp_path: Path):
 
 
 def test_sidecar_handles_dataset_without_required_attrs():
-    """If the dataset object lacks bidsdir / get_bids_file_attribute,
-    return empty dict (no crash)."""
+    """Dataset object lacking bidsdir / get_bids_file_attribute → empty dict, no crash."""
     digest = _load_digest()
     out = digest._extract_bids_sidecar_fields(object(), "x.edf")
     assert out == {}
 
 
 def test_sidecar_inheritance_walks_up_to_subject_level(tmp_path: Path):
-    """BIDS inheritance: a sidecar at the subject level applies to all
-    recordings within that subject. Pinned so a refactor that breaks
-    the walk-up is caught."""
+    """BIDS inheritance: subject-level sidecar applies to all recordings in that subject."""
     digest = _load_digest()
     sub_dir = tmp_path / "sub-01"
     eeg_dir = sub_dir / "eeg"
@@ -223,10 +199,7 @@ def test_sidecar_inheritance_walks_up_to_subject_level(tmp_path: Path):
     ],
 )
 def test_channel_status_counts(tmp_path: Path, tsv_content: str, expected: dict):
-    """_extract_channel_status_counts reads channels.tsv correctly.
-
-    'BAD' / 'Bad' / 'bad' all count; missing status column → empty dict.
-    """
+    """_extract_channel_status_counts reads channels.tsv; missing status column → empty dict."""
     digest = _load_digest()
     sub_dir = tmp_path / "sub-01" / "eeg"
     sub_dir.mkdir(parents=True)
@@ -306,8 +279,7 @@ def test_dataset_extras_skips_empty_lists():
 
 
 def test_dataset_extras_extracts_generated_by():
-    """GeneratedBy is a list of {Name, Version, ...} dicts for processed
-    datasets — preserved as-is."""
+    """GeneratedBy is a list of {Name, Version, ...} dicts — preserved as-is."""
     digest = _load_digest()
     desc = {
         "GeneratedBy": [
@@ -326,27 +298,16 @@ def test_dataset_extras_extracts_generated_by():
 def test_extract_record_includes_new_bids_fields_in_synthetic_bids(
     tmp_path: Path,
 ):
-    """End-to-end: build a tiny BIDS root with rich sidecar JSON,
-    run digest_dataset, assert the new fields land on the record.
-
-    Uses a VHDR fixture (existing CC0) plus a custom *_eeg.json that
-    declares the BIDS-spec fields.
-    """
+    """End-to-end: rich sidecar JSON fields land on the digested record and dataset doc."""
     digest = _load_digest()
 
-    # Build a tiny BIDS root via the existing snapshot fixture
     inputs_root = data_file("digest_snapshots/inputs/ds_snapshot_vhdr")
     if not inputs_root.exists():
-        # No fixture → skip (e2e is conditional on the snapshot tree)
-
         pytest.skip("snapshot fixture not available")
-
-    # Copy the snapshot to a tmp_path so we can mutate
 
     work_inputs = tmp_path / "inputs"
     shutil.copytree(inputs_root.parent, work_inputs)
 
-    # Write a richer modality sidecar with the C6.1 fields
     ds_dir = work_inputs / "ds_snapshot_vhdr"
     sub_files = list(ds_dir.rglob("*_eeg.vhdr"))
     if not sub_files:
@@ -370,7 +331,6 @@ def test_extract_record_includes_new_bids_fields_in_synthetic_bids(
         )
     )
 
-    # dataset_description.json with extras
     desc_path = ds_dir / "dataset_description.json"
     desc = json.loads(desc_path.read_text()) if desc_path.exists() else {}
     desc.update(
@@ -388,7 +348,6 @@ def test_extract_record_includes_new_bids_fields_in_synthetic_bids(
     summary = digest.digest_dataset("ds_snapshot_vhdr", work_inputs, output_dir)
     assert summary["status"] == "success", summary
 
-    # Assert the dataset doc carries the extras
     dataset_doc = json.loads(
         (output_dir / "ds_snapshot_vhdr" / "ds_snapshot_vhdr_dataset.json").read_text()
     )
@@ -396,7 +355,6 @@ def test_extract_record_includes_new_bids_fields_in_synthetic_bids(
     assert dataset_doc.get("how_to_acknowledge") == "Cite our paper"
     assert dataset_doc.get("ethics_approvals") == ["IRB-001"]
 
-    # Assert the record carries the new fields
     records_doc = json.loads(
         (output_dir / "ds_snapshot_vhdr" / "ds_snapshot_vhdr_records.json").read_text()
     )

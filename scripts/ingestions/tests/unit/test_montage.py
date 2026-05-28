@@ -1,10 +1,6 @@
 """Tests for ``_montage.py`` — montage detection and caching.
 
-Three angles:
-
-- **Pure helpers** — hash building, JSON parsing, BIDS-inheritance walks, channels.tsv filtering, template matching (was test_montage_helpers.py).
-- **Cache layer** — montage cache + invalidation (was test_montage_cache.py).
-- **git-annex key shortcut** — _resolve_fif_total_size fast path (was test_montage_annex_key_shortcut.py).
+Covers pure helpers, the cache layer, and the git-annex key shortcut.
 """
 
 from __future__ import annotations
@@ -48,13 +44,7 @@ from _montage import (
     ],
 )
 def test_round_mm_scales_metres_to_integer_mm(metres: float, expected_mm: int):
-    """``_round_mm`` converts a value in metres to an integer millimetre.
-
-    Behavioural quirks pinned:
-    - banker's rounding (closest even) for half-mm values;
-    - signs are preserved for negative inputs;
-    - zero maps to zero.
-    """
+    """Converts metres to integer mm; banker's rounding; sign-preserving."""
     assert _round_mm(metres) == expected_mm
 
 
@@ -62,7 +52,7 @@ def test_round_mm_scales_metres_to_integer_mm(metres: float, expected_mm: int):
 
 
 def test_hash_sensors_deterministic_for_same_input():
-    """Same modality + same sensors → same hash."""
+    """Same modality + same sensors → same 16-char hash."""
     sensors = [
         {"name": "Cz", "x": 0.0, "y": 0.0, "z": 0.1},
         {"name": "Fz", "x": 0.0, "y": 0.05, "z": 0.08},
@@ -85,27 +75,20 @@ def test_hash_sensors_order_invariant():
 
 
 def test_hash_sensors_modality_in_input():
-    """Different modality → different hash even for same sensor list.
-
-    Prevents an EEG cap from colliding with a MEG helmet hash.
-    """
+    """Different modality → different hash; prevents EEG/MEG hash collision."""
     sensors = [{"name": "X", "x": 0.0, "y": 0.0, "z": 0.0}]
     assert _hash_sensors("eeg", sensors) != _hash_sensors("meg", sensors)
 
 
 def test_hash_sensors_sensitive_to_position_change():
-    """A 1mm position shift produces a different hash."""
+    """A 1 mm position shift produces a different hash."""
     s1 = [{"name": "Cz", "x": 0.0, "y": 0.0, "z": 0.100}]
     s2 = [{"name": "Cz", "x": 0.0, "y": 0.0, "z": 0.101}]
     assert _hash_sensors("eeg", s1) != _hash_sensors("eeg", s2)
 
 
 def test_hash_sensors_insensitive_to_sub_mm_jitter():
-    """Sub-mm position jitter (< 0.5 mm) → same hash.
-
-    Pins the documented mm-rounding behaviour. Real BIDS datasets
-    have sub-mm float jitter; hashing should be stable across that.
-    """
+    """Sub-mm float jitter (< 0.5 mm) → same hash; real BIDS datasets have this."""
     s1 = [{"name": "Cz", "x": 0.0, "y": 0.0, "z": 0.10000001}]
     s2 = [{"name": "Cz", "x": 0.0, "y": 0.0, "z": 0.10000005}]
     assert _hash_sensors("eeg", s1) == _hash_sensors("eeg", s2)
@@ -127,7 +110,7 @@ def _write_coordsystem_file(tmp_path: Path, filename: str, content: str | None) 
     [
         pytest.param(
             "missing.json",
-            None,  # file not created
+            None,
             None,
             None,
             id="missing_file",
@@ -169,11 +152,7 @@ def test_parse_coordsystem_json(
     expected_space: str | None,
     expected_units: str | None,
 ):
-    """``_parse_coordsystem_json`` handles missing / EEG / MEG / malformed / empty inputs.
-
-    The walker tries EEG / iEEG / MEG / EMG / NIRS blocks in order; units are
-    lowercased; non-JSON or missing files return (None, None) without raising.
-    """
+    """Handles missing / EEG / MEG / malformed / empty inputs without raising."""
     path = _write_coordsystem_file(tmp_path, filename, content)
     space, units = _parse_coordsystem_json(path)
     assert space == expected_space
@@ -211,7 +190,7 @@ def test_parse_coordsystem_json(
             {
                 "dirs": ["sub-01/eeg"],
                 "data_rel": "sub-01/eeg/sub-01_eeg.edf",
-                "sidecar_rel": None,  # file not created
+                "sidecar_rel": None,
             },
             None,
             id="stops_at_root",
@@ -224,11 +203,7 @@ def test_walk_up_find(
     setup: dict,
     expected_rel: str | None,
 ):
-    """``_walk_up_find`` follows BIDS inheritance up to the dataset root.
-
-    Returns the first matching sidecar found while walking toward the root;
-    returns None when the file is absent; stops at the BIDS root boundary.
-    """
+    """Follows BIDS inheritance toward root; returns None when absent."""
     for d in setup["dirs"]:
         (tmp_path / d).mkdir(parents=True, exist_ok=True)
     data = tmp_path / setup["data_rel"]
@@ -245,7 +220,7 @@ def test_walk_up_find(
 
 
 def test_walk_up_find_rejects_data_outside_root(tmp_path: Path):
-    """If the data file is OUTSIDE the BIDS root, return None — security check."""
+    """Data file outside the BIDS root → None (security boundary)."""
     outside = tmp_path / "outside.edf"
     outside.touch()
     bids_root = tmp_path / "bids"
@@ -272,11 +247,9 @@ def test_companion_coords_for_optodes_tsv():
 
 
 def test_companion_coords_for_handles_no_matching_suffix():
-    """If the suffix doesn't match, return path with regex substitution."""
+    """Non-matching suffix → regex substitution still stays in the same parent."""
     tsv = Path("/data/random_file.tsv")
-    # No suffix match — function falls back to regex replacement
     out = _companion_coords_for(tsv)
-    # Output is still in same parent
     assert out.parent == tsv.parent
 
 
@@ -315,9 +288,7 @@ def test_companion_coords_for_handles_no_matching_suffix():
     ],
 )
 def test_parse_sensor_tsv(tmp_path: Path, tsv_content: str, check):
-    """``_parse_sensor_tsv`` parses TSV rows; n/a and empty-name rows are dropped;
-    extra columns are preserved.
-    """
+    """Parses TSV rows; n/a and empty-name rows are dropped; extra columns preserved."""
     tsv = tmp_path / "electrodes.tsv"
     tsv.write_text(tsv_content)
     rows = _parse_sensor_tsv(tsv)
@@ -325,7 +296,7 @@ def test_parse_sensor_tsv(tmp_path: Path, tsv_content: str, check):
 
 
 def test_parse_sensor_tsv_raises_on_missing_required_column(tmp_path: Path):
-    """A TSV without the required ``z`` column → ValueError."""
+    """TSV without the required ``z`` column → ValueError."""
     tsv = tmp_path / "electrodes.tsv"
     tsv.write_text("name\tx\ty\nCz\t0\t0\n")
     with pytest.raises(ValueError, match="missing required columns"):
@@ -361,18 +332,14 @@ def test_parse_channels_tsv_for_eeg_returns_list(
 
 
 def test_parse_channels_tsv_pandas_nan_handled_for_missing_type(tmp_path: Path):
-    """Pandas reads empty TSV cells as NaN; the parser stringifies to 'nan'
-    and treats it as a non-EEG type. Pinning this surprising behaviour
-    so a refactor that 'fixes' it surfaces in CI.
+    """Pandas reads empty TSV cells as NaN, treated as non-EEG → row dropped.
 
-    The docstring says 'empty type is accepted' but the pandas-NaN path
-    actually drops the row. If we want truly-empty types accepted, that's
-    a follow-up fix — for now, document the observed behaviour.
+    Pinned to surface any refactor that changes this behaviour — if truly-empty
+    types should be accepted, that requires a follow-up fix.
     """
     tsv = tmp_path / "channels.tsv"
     tsv.write_text("name\ttype\nCz\tEEG\nFz\t\n")
     out = _parse_channels_tsv_for_eeg(tsv)
-    # Cz with explicit EEG type — kept. Fz with empty cell (→ NaN) — dropped.
     assert "Cz" in out
 
 
@@ -397,14 +364,11 @@ def test_parse_channels_tsv_returns_empty(tmp_path: Path, tsv_content: str | Non
 
 
 def test_score_template_match_picks_best_overlap():
-    """Among 2 templates, picks the one with most channel overlap."""
+    """Among two templates, picks the one with most channel overlap."""
     templates = {
-        "tiny": {"CZ": (0, 0, 0)},  # only 1 channel
+        "tiny": {"CZ": (0, 0, 0)},
         "medium": {"CZ": (0, 0, 0), "FZ": (0, 0, 0), "PZ": (0, 0, 0), "OZ": (0, 0, 0)},
     }
-    # Force _MNE_TEMPLATE_KEYSETS to None so the function uses the
-    # template keys directly.
-
     _montage._MNE_TEMPLATE_KEYSETS = None
     out = _score_template_match(["Cz", "Fz", "Pz", "Oz"], templates, min_hits=2)
     assert out is not None
@@ -424,7 +388,7 @@ def test_score_template_match_picks_best_overlap():
         ),
         pytest.param(
             ["Cz", "X1", "X2", "X3"],
-            {"big": {"CZ": (0, 0, 0)}},  # only 1 channel in template
+            {"big": {"CZ": (0, 0, 0)}},
             {"min_hits": 4},
             id="below_min_hits",
         ),
@@ -441,21 +405,18 @@ def test_score_template_match_picks_best_overlap():
     ],
 )
 def test_score_template_match_returns_none(channels, templates, kwargs):
-    """``_score_template_match`` returns None when channels are empty,
-    too few hits, or hit ratio is below threshold.
-    """
+    """Returns None when channels are empty, below min_hits, or below min_ratio."""
     _montage._MNE_TEMPLATE_KEYSETS = None
     out = _score_template_match(channels, templates, **kwargs)
     assert out is None
 
 
 def test_score_template_match_tiebreaker_prefers_smaller_template():
-    """When two templates match all channels, pick the smaller one.
+    """Equal hit count → smaller template wins (more specific fit).
 
-    A 64-channel dataset should map to biosemi64 (64 positions),
-    not standard_1005 (343 positions) — more specific fit.
+    A 64-channel dataset should map to biosemi64 (64 positions) not
+    standard_1005 (343 positions).
     """
-
     _montage._MNE_TEMPLATE_KEYSETS = None
     channels = ["CZ", "FZ", "PZ", "OZ"]
     templates = {
@@ -498,15 +459,13 @@ def test_extract_layout_returns_none_for_empty_datatype(tmp_path: Path):
 
 
 def test_extract_layout_fnirs_alias_to_nirs(tmp_path: Path):
-    """Older datasets call it 'fnirs'; the dispatcher aliases to 'nirs'."""
+    """'fnirs' datatype is aliased to 'nirs'; must not raise on the alias step."""
     nirs_dir = tmp_path / "sub-01" / "nirs"
     nirs_dir.mkdir(parents=True)
     data = nirs_dir / "sub-01_nirs.snirf"
     data.touch()
-    # No sidecar files → returns None, but should NOT raise on the
-    # alias-handling step.
+    # No optodes.tsv → None, but the alias is handled before that check.
     out = extract_layout(data, tmp_path, datatype="fnirs")
-    # No optodes.tsv → expected None, but the dispatcher recognised fnirs
     assert out is None
 
 
@@ -613,7 +572,7 @@ def test_second_meg_record_same_nchans_reuses_cache(
 def test_different_nchans_skips_cache(digest: ModuleType, tmp_path: Path) -> None:
     """Two records with different nchans → two extract_layout calls."""
     record_a = _meg_record(306)
-    record_b = _meg_record(204)  # different device / channel count
+    record_b = _meg_record(204)
     montages: dict = {}
     cache: dict = {}
 
@@ -693,8 +652,7 @@ def test_cache_does_not_leak_across_datasets(
 
 
 def test_non_meg_record_bypasses_cache(digest: ModuleType, tmp_path: Path) -> None:
-    """EEG records still call extract_layout per-file — the cache only
-    helps MEG where the device check is well-defined."""
+    """EEG records call extract_layout per-file — the cache only applies to MEG."""
     record_a = {"datatype": "eeg", "nchans": 64, "bids_relpath": "a.vhdr"}
     record_b = {"datatype": "eeg", "nchans": 64, "bids_relpath": "b.vhdr"}
     montages: dict = {}
@@ -733,8 +691,7 @@ def test_non_meg_record_bypasses_cache(digest: ModuleType, tmp_path: Path) -> No
 
 
 def test_missing_nchans_skips_cache(digest: ModuleType, tmp_path: Path) -> None:
-    """A MEG record with no nchans (missing metadata) must NOT be cached
-    — without a channel count there's no safe key."""
+    """MEG record with no nchans → not cached (no safe key without channel count)."""
     record = {"datatype": "meg", "bids_relpath": "broken.fif"}  # no nchans
     montages: dict = {}
     cache: dict = {}
@@ -762,8 +719,7 @@ def test_missing_nchans_skips_cache(digest: ModuleType, tmp_path: Path) -> None:
 def test_extract_layout_returning_none_is_not_cached(
     digest: ModuleType, tmp_path: Path
 ) -> None:
-    """If extract_layout returns None (no montage available), don't
-    cache the absence — next record gets another chance."""
+    """extract_layout returning None is not cached; the next record gets another attempt."""
     record_a = _meg_record(306)
     record_b = _meg_record(306)
     montages: dict = {}
@@ -821,12 +777,11 @@ def test_returns_annex_size_when_symlink_present(tmp_path: Path) -> None:
 def test_falls_back_to_head_when_no_annex_symlink(tmp_path: Path) -> None:
     """Plain file (no annex) → HEAD round-trip."""
     fif = tmp_path / "sub-01_run-01_meg.fif"
-    fif.write_bytes(b"\x00" * 1024)  # 1 KB regular file
+    fif.write_bytes(b"\x00" * 1024)
 
     with patch("_montage.head_content_length", return_value=8_192) as mock_head:
         size = _resolve_fif_total_size(fif, "https://s3.example.com/sub-01.fif")
 
-    # Annex size returns 0 for non-annex, falls through to HEAD.
     assert size == 8_192
     mock_head.assert_called_once()
 
@@ -857,7 +812,7 @@ def test_returns_none_when_neither_annex_nor_head_succeeds(
 
 
 def test_zero_byte_annex_key_falls_back_to_head(tmp_path: Path) -> None:
-    """An annex key reporting size=0 is nonsensical for FIF — fall back."""
+    """Annex key reporting size=0 is nonsensical for FIF — fall back to HEAD."""
     fif = tmp_path / "sub-01_run-01_meg.fif"
     fif.symlink_to("../.git/annex/objects/aa/bb/MD5E-s0--abc.fif/MD5E-s0--abc.fif")
 

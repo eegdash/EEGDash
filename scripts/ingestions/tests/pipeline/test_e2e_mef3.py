@@ -15,6 +15,7 @@ at collection (set ``EEGDASH_SKIP_TESTING_DATA=true`` to bypass).
 
 from __future__ import annotations
 
+import importlib.util as _il
 import json
 import shutil
 import subprocess
@@ -100,7 +101,6 @@ def test_digest_dataset_extracts_real_mef3_sfreq(tmp_path: Path):
     pins the integration: parser fix flows through the cascade and
     lands on the Record.
     """
-    import importlib.util as _il
 
     inputs_dir, _ = _build_minimal_mef3_bids_root(tmp_path)
     output_dir = tmp_path / "outputs"
@@ -144,7 +144,6 @@ def test_digest_dataset_extracts_real_mef3_sfreq(tmp_path: Path):
 def test_stage4_validates_mef3_digest_output(tmp_path: Path):
     """Run digest, then validate. Stage 4 should accept the Records
     produced from the real .mefd."""
-    import importlib.util as _il
 
     inputs_dir, _ = _build_minimal_mef3_bids_root(tmp_path)
     output_dir = tmp_path / "outputs"
@@ -184,7 +183,6 @@ def test_stage4_validates_mef3_digest_output(tmp_path: Path):
 def test_stage5_dry_run_accepts_mef3_digest_output(tmp_path: Path):
     """Run digest, then inject --dry-run. Stage 5's Pydantic validation
     should accept the .mefd Records (catches schema drift)."""
-    import importlib.util as _il
 
     inputs_dir, _ = _build_minimal_mef3_bids_root(tmp_path)
     output_dir = tmp_path / "outputs"
@@ -229,7 +227,6 @@ def test_mef3_record_provenance_marks_binary_parser(tmp_path: Path):
 
     Pins the P0.1 cascade integration with the C5.1 parser fix.
     """
-    import importlib.util as _il
 
     inputs_dir, _ = _build_minimal_mef3_bids_root(tmp_path)
     output_dir = tmp_path / "outputs"

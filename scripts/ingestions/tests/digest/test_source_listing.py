@@ -13,6 +13,7 @@ from pathlib import Path
 import httpx
 import pytest
 import respx
+import tenacity
 
 from _file_utils import (
     list_datarn_files,
@@ -89,7 +90,6 @@ def test_figshare_5xx_triggers_retries_then_propagates():
     Contrast with 4xx (e.g. 404), which is "not found, definitive" and
     returns empty cleanly (see ``test_figshare_http_error_returns_empty``).
     """
-    import tenacity
 
     respx.get("https://api.figshare.com/v2/articles/500/files").mock(
         return_value=httpx.Response(500, text="server error")

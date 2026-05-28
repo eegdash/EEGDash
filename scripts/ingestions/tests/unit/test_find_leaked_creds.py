@@ -91,7 +91,6 @@ def test_scanner_detects_yaml_form_token(tmp_path):
     credentials in YAML form, not env-shell form. A scanner that only
     matches ``=`` would miss them.
     """
-    import subprocess
 
     subprocess.run(["git", "init", "-q", str(tmp_path)], check=True)
     f = tmp_path / "compose-like.yml"
@@ -124,7 +123,6 @@ def test_scanner_detects_yaml_form_token(tmp_path):
 
 def test_scanner_outside_git_repo_exits_2(tmp_path):
     """In a non-git directory, scanner must refuse to claim clean."""
-    import subprocess
 
     # tmp_path is NOT a git repo. Confirm:
     result = subprocess.run(

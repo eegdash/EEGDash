@@ -12,6 +12,7 @@ the EEGdash API Gateway which writes to MongoDB on its behalf.
 from __future__ import annotations
 
 import importlib.util
+import json as _json
 
 import httpx
 import pytest
@@ -126,7 +127,6 @@ def test_inject_datasets_sends_authorization_header():
 def test_inject_datasets_request_body_is_the_list_payload():
     """The POST body is a JSON list with the dataset documents
     (after _sanitize_for_json)."""
-    import json as _json
 
     inject_mod = _load_inject()
     route = respx.post("https://api.example.com/admin/eegdash_dev/datasets/bulk").mock(
@@ -286,8 +286,6 @@ def test_inject_runs_against_snapshot_with_mocked_api():
     snapshot_root = data_file("digest_snapshots/outputs")
     if not snapshot_root.exists():
         pytest.skip("snapshot fixture not available")
-
-    import json as _json
 
     datasets, records, montages = [], [], []
     for ds_dir in snapshot_root.iterdir():

@@ -8,16 +8,21 @@ algorithm bodies, and stage 2's tests use real fixtures.
 
 from __future__ import annotations
 
+import json as json_mod
+from datetime import datetime
 from pathlib import Path
 
 import pytest
 
+import record_enumerator as re_mod
 from record_enumerator import (
     BIDSFilesystemEnumerator,
     EnumerationResult,
     ManifestEnumerator,
+    RecordEnumerator,
     _has_actual_recording_files,
     get_record_enumerator,
+    write_dataset_outputs,
 )
 from source_adapter import OpenNeuroAdapter
 
@@ -150,8 +155,6 @@ def test_factory_falls_back_to_manifest_when_bids_load_fails_with_manifest(
     (tmp_path / "sub-01" / "eeg" / "sub-01_eeg.edf").write_bytes(b"\x00")
     (tmp_path / "manifest.json").write_text('{"files": []}')
 
-    import record_enumerator as re_mod
-
     real_init = re_mod.BIDSFilesystemEnumerator.__init__
     monkeypatch.setattr(
         re_mod.BIDSFilesystemEnumerator, "__init__", _bids_init_that_raises
@@ -177,8 +180,6 @@ def test_factory_propagates_bids_failure_when_no_manifest(
     (tmp_path / "sub-01" / "eeg").mkdir(parents=True)
     (tmp_path / "sub-01" / "eeg" / "sub-01_eeg.edf").write_bytes(b"\x00")
     # No manifest.json on purpose.
-
-    import record_enumerator as re_mod
 
     real_init = re_mod.BIDSFilesystemEnumerator.__init__
     monkeypatch.setattr(
@@ -224,7 +225,6 @@ def test_factory_returns_bids_enumerator_when_empty_no_manifest(
 
 def test_record_enumerator_is_abstract():
     """RecordEnumerator can't be instantiated directly."""
-    from record_enumerator import RecordEnumerator
 
     with pytest.raises(TypeError):
         RecordEnumerator(  # type: ignore[abstract]
@@ -315,7 +315,6 @@ def _make_minimal_result(
 
 def test_write_outputs_creates_all_four_json_files(tmp_path: Path) -> None:
     """The helper writes _dataset / _records / _montages / _summary JSONs."""
-    from record_enumerator import write_dataset_outputs
 
     result = _make_minimal_result()
     summary = write_dataset_outputs(
@@ -337,9 +336,6 @@ def test_write_outputs_creates_all_four_json_files(tmp_path: Path) -> None:
 def test_write_outputs_montages_file_written_when_empty(tmp_path: Path) -> None:
     """Behaviour change documented in STAGE-2-PLAN.md: _montages.json now
     always written, even with no montages — downstream tooling can assume it."""
-    import json as json_mod
-
-    from record_enumerator import write_dataset_outputs
 
     result = _make_minimal_result(digest_method="manifest_only")
     write_dataset_outputs(
@@ -359,9 +355,6 @@ def test_write_outputs_montages_file_written_when_empty(tmp_path: Path) -> None:
 
 def test_write_outputs_summary_carries_digest_method(tmp_path: Path) -> None:
     """Summary always includes digest_method (was only set on manifest path)."""
-    import json as json_mod
-
-    from record_enumerator import write_dataset_outputs
 
     for method in ("bids_filesystem", "manifest_only"):
         result = _make_minimal_result(digest_method=method)
@@ -380,9 +373,6 @@ def test_write_outputs_status_no_neuro_files_when_records_empty(
     tmp_path: Path,
 ) -> None:
     """Empty record list flips status to 'no_neuro_files'."""
-    import json as json_mod
-
-    from record_enumerator import write_dataset_outputs
 
     result = EnumerationResult(
         dataset_meta={"dataset_id": "ds_empty"},
@@ -408,9 +398,6 @@ def test_write_outputs_total_files_kwarg_surfaces_in_summary(
 ) -> None:
     """``total_files`` (manifest path) preserved in summary; absent when
     caller doesn't pass it (BIDS path)."""
-    import json as json_mod
-
-    from record_enumerator import write_dataset_outputs
 
     write_dataset_outputs(
         tmp_path,
@@ -437,9 +424,6 @@ def test_write_outputs_total_files_kwarg_surfaces_in_summary(
 def test_write_outputs_integrity_issue_enrichment(tmp_path: Path) -> None:
     """Records with _has_missing_files get author/contact stamped from
     Dataset meta (was inline in digest_dataset)."""
-    import json as json_mod
-
-    from record_enumerator import write_dataset_outputs
 
     result = EnumerationResult(
         dataset_meta={
@@ -478,10 +462,6 @@ def test_write_outputs_integrity_issue_enrichment(tmp_path: Path) -> None:
 
 def test_write_outputs_uses_json_default_serializer(tmp_path: Path) -> None:
     """Path / datetime objects in metadata don't crash the writer."""
-    import json as json_mod
-    from datetime import datetime
-
-    from record_enumerator import write_dataset_outputs
 
     result = EnumerationResult(
         dataset_meta={

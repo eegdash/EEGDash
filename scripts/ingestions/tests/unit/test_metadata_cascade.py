@@ -17,6 +17,7 @@ from unittest.mock import MagicMock
 
 import pytest  # noqa: F401 — kept for `monkeypatch` discovery
 
+import _metadata_cascade as mc
 from _metadata_cascade import (
     CascadeContext,
     CascadeResult,
@@ -142,7 +143,6 @@ def test_mne_bids_step_handles_missing_sidecar_gracefully():
 
 def test_modality_sidecar_step_only_fills_unset_fields(monkeypatch):
     """Step 2: fills sfreq/nchans from modality sidecar IFF still None."""
-    import _metadata_cascade as mc
 
     # Behaves like the real helper: returns (sf, nchans), defaulting if None.
     monkeypatch.setattr(
@@ -167,7 +167,6 @@ def test_modality_sidecar_step_only_fills_unset_fields(monkeypatch):
 
 def test_modality_sidecar_step_does_not_overwrite_filled_fields(monkeypatch):
     """If Step 1 filled sampling_frequency, Step 2 must not overwrite."""
-    import _metadata_cascade as mc
 
     monkeypatch.setattr(
         mc,
@@ -195,8 +194,6 @@ def test_modality_sidecar_step_does_not_overwrite_filled_fields(monkeypatch):
 
 
 def test_channels_tsv_step_fills_from_helper(monkeypatch):
-    import _metadata_cascade as mc
-
     monkeypatch.setattr(
         mc,
         "extract_sfreq_nchans_from_channels_tsv",
@@ -220,7 +217,6 @@ def test_channels_tsv_step_fills_from_helper(monkeypatch):
 
 def test_binary_parser_step_uses_registry(monkeypatch):
     """Step 4: dispatches to _format_parser_registry per file extension."""
-    import _metadata_cascade as mc
 
     monkeypatch.setattr(
         mc,
@@ -253,7 +249,6 @@ def test_binary_parser_step_uses_registry(monkeypatch):
 
 def test_binary_parser_step_skipped_when_all_fields_filled(monkeypatch):
     """If Steps 1-3 already filled everything, Step 4 must be a no-op."""
-    import _metadata_cascade as mc
 
     # MagicMock tracks call counts without needing a nested function.
     fake_parser = MagicMock(return_value={"sampling_frequency": 999.0, "nchans": 1})
@@ -279,7 +274,6 @@ def test_binary_parser_step_skipped_when_all_fields_filled(monkeypatch):
 
 def test_mne_fallback_step_fills_vhdr_ntimes(monkeypatch):
     """Step 5: VHDR ntimes via MNE when binary parser couldn't get it."""
-    import _metadata_cascade as mc
 
     fake_raw = MagicMock()
     fake_raw.n_times = 200000
@@ -304,7 +298,6 @@ def test_mne_fallback_step_fills_vhdr_ntimes(monkeypatch):
 
 def test_mne_fallback_step_fif_split_metadata(monkeypatch):
     """Step 5: FIF split detection populates fif_is_split."""
-    import _metadata_cascade as mc
 
     monkeypatch.setattr(
         mc,
@@ -343,8 +336,6 @@ def test_metadata_cascade_runs_all_steps_in_order(monkeypatch):
         "500" if key == "sfreq" else None
     )
     bids_dataset.channel_labels.return_value = None
-
-    import _metadata_cascade as mc
 
     # Step 2 contributes nchans
     monkeypatch.setattr(

@@ -10,6 +10,7 @@ from __future__ import annotations
 
 from typing import Any
 
+import pytest
 from eegdash.schemas import (
     DatasetModel,
     EntitiesModel,
@@ -116,7 +117,6 @@ def _skip_if_no_montages(snapshot_outputs: dict[str, Any]) -> None:
     removes the electrodes.tsv would surface as SKIPPED rather than
     silent vacuous pass.
     """
-    import pytest
 
     total = sum(
         len(payload["montages"]["montages"]) for payload in snapshot_outputs.values()

@@ -9,6 +9,7 @@ Two angles:
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
 
 import pytest
@@ -206,7 +207,6 @@ def test_validate_dataset_warns_on_unknown_source():
 
 def test_validate_dataset_accepts_all_known_sources():
     """Each VALID_SOURCES entry should not trigger an invalid_source warning."""
-    from _validate import VALID_SOURCES
 
     for source in VALID_SOURCES:
         result = ValidationResult()
@@ -485,7 +485,6 @@ def test_data_quality_fields_match_record_schema():
 
 def test_storage_patterns_compile():
     """Every regex pattern compiles (catches typos at import time)."""
-    import re
 
     for source, pattern in VALID_STORAGE_PATTERNS.items():
         try:

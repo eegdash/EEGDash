@@ -18,6 +18,11 @@ from datetime import datetime, timezone
 from types import SimpleNamespace
 from unittest.mock import MagicMock
 
+import httpx
+import respx
+
+from _github import fetch_repo_file_text, iter_org_repos
+
 
 def _install_fake_github(monkeypatch, github_class):
     """Install a synthetic ``github`` module so ``from github import Github``
@@ -66,7 +71,6 @@ def test_iter_org_repos_yields_dicts_from_pygithub(monkeypatch):
     fake_github_class = MagicMock(return_value=fake_gh)
 
     _install_fake_github(monkeypatch, fake_github_class)
-    from _github import iter_org_repos
 
     repos = list(iter_org_repos("eegdash", token="fake_token"))
     assert len(repos) == 2
@@ -95,10 +99,6 @@ def test_iter_org_repos_falls_back_to_rest_on_pygithub_exception(monkeypatch):
     # The adapter catches PyGithub exceptions broadly and falls back
     # to REST. Stub the REST path with a 404 so the call ends
     # cleanly without real network.
-    import httpx
-    import respx
-
-    from _github import iter_org_repos
 
     with respx.mock(assert_all_called=False) as mock:
         mock.get(
@@ -131,7 +131,6 @@ def test_fetch_repo_file_text_uses_pygithub_when_available(monkeypatch):
 
     fake_github_class = MagicMock(return_value=fake_gh)
     _install_fake_github(monkeypatch, fake_github_class)
-    from _github import fetch_repo_file_text
 
     text = fetch_repo_file_text(
         "eegdash", "test-repo", "README.md", ref="main", token="x"
@@ -152,7 +151,6 @@ def test_fetch_repo_file_text_returns_none_when_content_is_list(monkeypatch):
 
     fake_github_class = MagicMock(return_value=fake_gh)
     _install_fake_github(monkeypatch, fake_github_class)
-    from _github import fetch_repo_file_text
 
     # When PyGithub returns a list (directory), adapter SHOULD return None
     # WITHOUT falling back to REST. So no respx mocks needed.

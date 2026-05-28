@@ -16,10 +16,14 @@ artifact when the bench CI workflow lands.
 from __future__ import annotations
 
 import gc
+import importlib.util as _il
+import shutil
+import tempfile
 import tracemalloc
 from pathlib import Path
 
 import pytest
+from _helpers import INGEST_DIR
 from eegdash.testing import data_file
 
 from _fingerprint import fingerprint_from_manifest
@@ -115,9 +119,6 @@ def test_parse_vhdr_median_under_5ms(benchmark):
 
 def _load_digest_for_perf():
     """Module-level helper — avoids the no-nested-functions lint."""
-    import importlib.util as _il
-
-    from _helpers import INGEST_DIR
 
     spec = _il.spec_from_file_location(
         "_perf_digest_target", INGEST_DIR / "3_digest.py"
@@ -135,8 +136,6 @@ def _run_digest_in_tempdir(digest_mod, inputs_dir):
     Module-level (rather than nested in the test) so the project's
     no-nested-functions lint stays clean.
     """
-    import shutil
-    import tempfile
 
     tmp = tempfile.mkdtemp(prefix="perf_digest_")
     try:

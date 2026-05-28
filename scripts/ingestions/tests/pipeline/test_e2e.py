@@ -22,6 +22,7 @@ The test is offline — Stage 5's `--dry-run` mode doesn't call the API.
 from __future__ import annotations
 
 import json
+import re as _re
 import subprocess
 import sys
 
@@ -149,7 +150,6 @@ def test_stage5_dry_run_accepts_snapshot():
     # Extract the counts from the summary block. The format is
     # "Records Ins:4" (no space after colon — see Stage 5's print
     # statement), so we split on ":" rather than whitespace.
-    import re as _re
 
     for line in out.splitlines():
         stripped = line.strip()
@@ -176,7 +176,6 @@ def test_stage5_dry_run_no_errors():
     assert result.returncode == 0
     # The "Errors: 0" line in the summary block. Format varies — be
     # tolerant: any whitespace after the colon.
-    import re as _re
 
     for line in result.stdout.splitlines():
         stripped = line.strip()

@@ -16,6 +16,7 @@ provenance.
 from __future__ import annotations
 
 import importlib.util
+import json as json_mod
 
 from _helpers import INGEST_DIR as _INGEST_DIR
 from eegdash.testing import data_file
@@ -207,7 +208,6 @@ def test_bids_snapshot_record_has_metadata_provenance():
     at least one field was resolved). The VHDR fixture has no sidecar
     JSONs, so the cascade falls through to the binary parser.
     """
-    import json as json_mod
 
     snapshot_path = data_file(
         "digest_snapshots/outputs/ds_snapshot_vhdr/ds_snapshot_vhdr_records.json"
@@ -249,7 +249,6 @@ def test_bids_snapshot_provenance_matches_expected_cascade():
     - ntimes → mne_fallback (VHDR doesn't include n_times in the header;
       MNE computes it from the binary companion)
     """
-    import json as json_mod
 
     snapshot_path = data_file(
         "digest_snapshots/outputs/ds_snapshot_vhdr/ds_snapshot_vhdr_records.json"
@@ -270,7 +269,6 @@ def test_manifest_snapshot_records_have_no_provenance():
     Pins the contract so a future refactor that accidentally adds
     provenance to the manifest path triggers this test.
     """
-    import json as json_mod
 
     snapshot_path = data_file(
         "digest_snapshots/outputs/ds_snapshot_manifest/ds_snapshot_manifest_records.json"

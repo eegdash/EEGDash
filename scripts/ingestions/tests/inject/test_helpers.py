@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import math
 from pathlib import Path
 
 import httpx
@@ -232,7 +233,6 @@ def test_sanitize_for_json_preserves_finite_floats():
 
 def test_sanitize_for_json_recurses_into_nested_dicts():
     """A NaN deeply nested in a sub-dict still gets replaced."""
-    import math
 
     inject = _load_inject()
     out = inject._sanitize_for_json(
@@ -244,7 +244,6 @@ def test_sanitize_for_json_recurses_into_nested_dicts():
 
 def test_sanitize_for_json_recurses_into_lists():
     """A NaN inside a list is replaced; other items pass through."""
-    import math
 
     inject = _load_inject()
     out = inject._sanitize_for_json([1.0, math.nan, 3.0, float("inf")])

@@ -12,6 +12,7 @@ import shutil
 from pathlib import Path
 
 import numpy as np
+import scipy.io as scipy_io
 
 
 def build_synthetic_set_v5(
@@ -30,8 +31,6 @@ def build_synthetic_set_v5(
         EEG.pnts          — number of samples
         EEG.chanlocs      — struct array with .labels (channel names)
     """
-    import scipy.io as scipy_io
-
     if ch_names is None:
         ch_names = [f"Ch{i + 1}" for i in range(nbchan)]
 

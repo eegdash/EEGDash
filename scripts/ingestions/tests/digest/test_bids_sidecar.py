@@ -12,8 +12,11 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import shutil
+import tempfile
 from pathlib import Path
 
+import pytest
 from _helpers import INGEST_DIR as _INGEST_DIR
 from eegdash.testing import data_file
 
@@ -265,7 +268,6 @@ def test_channel_status_counts_returns_empty_when_no_channels_tsv(
 def test_channel_status_counts_case_insensitive_bad():
     """'BAD' / 'Bad' / 'bad' all count."""
     digest = _load_digest()
-    import tempfile
 
     with tempfile.TemporaryDirectory() as td:
         td = Path(td)
@@ -352,12 +354,10 @@ def test_extract_record_includes_new_bids_fields_in_synthetic_bids(
     inputs_root = data_file("digest_snapshots/inputs/ds_snapshot_vhdr")
     if not inputs_root.exists():
         # No fixture → skip (e2e is conditional on the snapshot tree)
-        import pytest
 
         pytest.skip("snapshot fixture not available")
 
     # Copy the snapshot to a tmp_path so we can mutate
-    import shutil
 
     work_inputs = tmp_path / "inputs"
     shutil.copytree(inputs_root.parent, work_inputs)
@@ -366,8 +366,6 @@ def test_extract_record_includes_new_bids_fields_in_synthetic_bids(
     ds_dir = work_inputs / "ds_snapshot_vhdr"
     sub_files = list(ds_dir.rglob("*_eeg.vhdr"))
     if not sub_files:
-        import pytest
-
         pytest.skip("VHDR file missing in snapshot")
 
     vhdr_path = sub_files[0]

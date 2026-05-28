@@ -1,28 +1,9 @@
 """Pydantic-settings config for 5_inject.py CLI + env vars.
 
-C6.5 — replaces 95 lines of argparse boilerplate + 25 lines of ad-hoc
-post-parse validation with a single Pydantic model. Benefits:
-
-- **Type-safe at boot**. Wrong int / bool / path errors at config
-  construction, not deep in main() where they cascade into stack
-  traces.
-- **Validators are first-class**. The 'mutually-exclusive --only-*
-  flags' check that lived as a stray ``if sum(only_flags) > 1`` is
-  now a ``@model_validator`` — close to where the fields live and
-  exercised by tests.
-- **Env vars are native**. ``EEGDASH_ADMIN_TOKEN`` fallback used to
-  be a ``args.token or os.environ.get(...)`` line in main(); now it's
-  the ``env`` argument on the Field.
-- **Auto-tested**. Constructing ``InjectConfig(database=..., ...)``
-  in a unit test is one line; the same args via argparse needed
-  subprocess + monkeypatch.
-- **Reusable**. The same pattern applies to stage 4 / stage 3
-  configs — consolidating CLI layouts pays interest.
-
-The argparse layer in ``5_inject.py:main()`` becomes a 30-line thin
-wrapper that calls :func:`load_inject_config_from_argv` and hands the
-typed config to the rest of the orchestration. The 200 lines of
-injection logic don't change.
+Replaces argparse boilerplate and ad-hoc post-parse validation with a
+single Pydantic model. Wrong types and mutual-exclusion errors are caught
+at config construction rather than deep in main(). Env vars (e.g.
+``EEGDASH_ADMIN_TOKEN``) and CLI args are reconciled automatically.
 """
 
 from __future__ import annotations
@@ -64,11 +45,10 @@ def fetch_valid_databases_from_api(
     *,
     timeout: float = 5.0,
 ) -> frozenset[str] | None:
-    """Fetch the API Gateway's valid_databases set.
+    """Return the API Gateway's valid_databases set, or None on any failure.
 
-    Returns a frozenset on success, None on any failure (network error,
-    non-200 status, malformed JSON, missing 'databases' key). Cached
-    per api_url so repeated InjectConfig construction is cheap.
+    Cached per api_url; falls back to LOCAL_FALLBACK_DATABASES on network
+    error, non-200 status, malformed JSON, or missing 'databases' key.
     """
     if api_url in _valid_databases_cache:
         cached = _valid_databases_cache[api_url]
@@ -85,10 +65,6 @@ def fetch_valid_databases_from_api(
             data = resp.json()
             valid = frozenset(data["databases"])
     except (httpx.HTTPError, KeyError, ValueError, TypeError):
-        # Any of: connect/timeout/HTTPStatusError, JSON parse failure,
-        # missing 'databases' key, non-iterable value. Cache None so
-        # repeated InjectConfig constructions don't each pay a fresh
-        # timeout; the validator handles None as "use fallback".
         _valid_databases_cache[api_url] = frozenset()  # sentinel "no api data"
         return None
 
@@ -110,14 +86,9 @@ DatabaseName = str
 class InjectConfig(BaseSettings):
     """Validated injection-pipeline config.
 
-    Sources, in precedence order:
-    1. Constructor kwargs (e.g. tests: ``InjectConfig(database="eegdash_dev")``)
-    2. CLI args (via :func:`load_inject_config_from_argv` — argparse-shaped)
-    3. Env vars (e.g. ``EEGDASH_ADMIN_TOKEN``)
-    4. Defaults declared on each Field
-
-    Use :func:`load_inject_config_from_argv` in main(); construct
-    directly in tests.
+    Precedence: constructor kwargs > CLI args > env vars > Field defaults.
+    Use :func:`load_inject_config_from_argv` in main(); construct directly
+    in tests.
     """
 
     model_config = SettingsConfigDict(
@@ -137,28 +108,14 @@ class InjectConfig(BaseSettings):
     @field_validator("database")
     @classmethod
     def _database_must_be_valid(cls, value: str, info) -> str:
-        """Reject databases neither the API nor the local fallback know about.
+        """Reject databases not known to either the API or LOCAL_FALLBACK_DATABASES.
 
-        ``valid`` is the UNION of:
-          1. ``fetch_valid_databases_from_api(api_url, token)`` — if reachable,
-             this is the cluster's current ``valid_databases`` set.
-          2. ``LOCAL_FALLBACK_DATABASES`` — the contract we maintained pre-fetch.
-
-        Union semantics (not XOR) are intentional:
-        - An API-side deprecation does not lock out a long-running script
-          at config-construction time. The actual write to a deprecated
-          DB is the real gate.
-        - An API-side addition extends our acceptance set without a code
-          change here.
-        - Empty API responses (misconfigured server) don't replace the
-          local set; the fallback still applies.
-
-        Network failures fall back to LOCAL_FALLBACK_DATABASES alone and
-        emit a single WARN log so ops can see the probe failed.
+        Valid set is the union of the API response and the local fallback so
+        that an API-side deprecation or network failure never locks out a
+        running script at config-construction time.
         """
-        # info.data has fields validated BEFORE this one. `api_url` and
-        # `token` are declared after, so we read defaults from env if
-        # not yet set. Keep this best-effort.
+        # api_url / token may not yet be validated (declared after this field);
+        # fall back to defaults so the probe is still best-effort.
         api_url = info.data.get("api_url") or DEFAULT_API_URL
         token = info.data.get("token")
 
@@ -170,11 +127,6 @@ class InjectConfig(BaseSettings):
                 "will not be detected this run.",
                 api_url,
             )
-        # Union of API-known + local-known. A name accepted by EITHER side
-        # stays accepted. This is defensive: an API-side deprecation does
-        # not break long-running scripts at config-construction time (the
-        # actual write to that DB is the real gate). An API-side ADDITION
-        # extends our acceptance set without a code change.
         valid: frozenset[str] = (api_set or frozenset()) | LOCAL_FALLBACK_DATABASES
 
         if value not in valid:
@@ -196,16 +148,11 @@ class InjectConfig(BaseSettings):
     )
 
     # ─── Auth (env-var fallback: EEGDASH_ADMIN_TOKEN) ────────────────────
-    # `token` reads from the legacy env var name (EEGDASH_ADMIN_TOKEN), so
-    # ops scripts that already export it work without changes. Configure
-    # validation_alias to make BOTH ``token=`` constructor + the env var
-    # populate this field.
+    # AliasChoices lets both ``token=`` constructor kwarg and the legacy
+    # EEGDASH_ADMIN_TOKEN env var populate this field.
     token: str | None = Field(
         default=None,
         description="Admin Bearer token (env fallback: EEGDASH_ADMIN_TOKEN).",
-        # Accept both ``token=`` (kwarg / CLI) AND the canonical legacy
-        # env var ``EEGDASH_ADMIN_TOKEN``. ``AliasChoices`` lets us list
-        # multiple input names that populate the same field.
         validation_alias=AliasChoices("token", "EEGDASH_ADMIN_TOKEN"),
     )
 
@@ -274,12 +221,7 @@ class InjectConfig(BaseSettings):
 
     @model_validator(mode="after")
     def _input_dir_must_exist_unless_dry_run(self) -> InjectConfig:
-        """A run that's actually going to inject needs a real input dir.
-
-        Allowing missing-dir in dry-run mode helps with --help-style
-        exploration (e.g. someone running with all flags to see the
-        summary against an empty plan).
-        """
+        """Require the input directory to exist, unless dry_run skips actual I/O."""
         if not self.dry_run and not self.input.exists():
             raise ValueError(f"--input directory does not exist: {self.input}")
         return self
@@ -306,13 +248,8 @@ class InjectConfig(BaseSettings):
 def load_inject_config_from_argv(argv: list[str] | None = None) -> InjectConfig:
     """Parse argv (or sys.argv) into a validated :class:`InjectConfig`.
 
-    Thin wrapper around argparse. Argparse handles the ``--help`` /
-    short-name / usage-message ergonomics that pydantic-settings can't
-    do alone; the parsed namespace becomes constructor kwargs.
-
-    Pydantic-settings reads env vars + applies validators. Errors are
-    surfaced as :class:`pydantic.ValidationError` (caller can render
-    them nicely) instead of vague argparse errors.
+    Argparse handles ``--help`` and usage-message ergonomics; the parsed
+    namespace becomes constructor kwargs for :class:`InjectConfig`.
     """
     parser = argparse.ArgumentParser(
         description=(

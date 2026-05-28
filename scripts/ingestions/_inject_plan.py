@@ -71,14 +71,7 @@ def load_dataset(dataset_dir: Path) -> dict | None:
 
 
 def load_records(dataset_dir: Path) -> list[dict]:
-    """Load Records from a directory.
-
-    Supports both new schema (``_records.json``) and legacy formats.
-    Flattens entities to top-level fields for compatibility with EEGDash API.
-
-    Stamps ``record['dataset']`` from the directory name when missing so
-    downstream grouping in build_injection_plan cannot lose records.
-    """
+    """Load records from a directory; supports new schema and legacy formats."""
     dataset_id = dataset_dir.name
 
     def _prepare(records: list) -> list[dict]:
@@ -150,13 +143,7 @@ def fetch_existing_dataset(
     database: str,
     dataset_id: str,
 ):
-    """Fetch existing dataset metadata from the API, if present.
-
-    Returns the dataset dict on success, or None when the dataset is
-    missing/ambiguous. A 200 OK with an empty body is treated as
-    ambiguous (not 'new') so we don't force a redundant reinjection
-    on transient API hiccups.
-    """
+    """Fetch existing dataset metadata from the API; returns None if missing or ambiguous."""
     url = f"{api_url}/api/{database}/datasets/{dataset_id}"
     data, response = request_json("get", url, timeout=30, client=get_client())
     if response is None:
@@ -173,13 +160,7 @@ def fetch_existing_dataset(
 
 
 def _ensure_fingerprint(dataset_id: str, dataset: dict | None, records: list[dict]):
-    """Ensure ingestion_fingerprint is set on dataset or derived from records.
-
-    Honour any fingerprint the digest stage already stamped onto the
-    dataset doc — required for --only-datasets runs where records aren't
-    loaded; without this the change-detection short-circuit would always
-    declare every dataset 'changed'.
-    """
+    """Ensure ingestion_fingerprint is set; honours any fingerprint already stamped by digest stage."""
     if dataset is None:
         dataset = {"dataset_id": dataset_id}
     if dataset.get("ingestion_fingerprint"):
@@ -255,9 +236,7 @@ def build_injection_plan(
             if want_records and records:
                 all_records.extend(records)
 
-            # NB: never skip the dataset doc just because records is empty
-            # — a metadata-only seed (or an --only-datasets run that pulls
-            # no records by design) should still emit the Dataset document.
+            # Always load dataset doc even when records is empty (metadata-only seeds).
             dataset = load_dataset(dataset_dir)
             if dataset:
                 dataset_docs[dataset_id] = dataset

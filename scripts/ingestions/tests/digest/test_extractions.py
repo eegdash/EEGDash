@@ -1,21 +1,3 @@
-"""Unit tests for the Phase-8 helper extractions from ``3_digest.py``.
-
-Tests two helpers extracted as the first pass of the digest mega-
-function decomposition:
-
-- ``sum_bids_channel_counts(sidecar_data)`` — sum every BIDS
-  ``*ChannelCount`` field present.
-- ``strip_dataset_prefix(bids_relpath, dataset_id)`` — strip the
-  ``<dataset_id>/`` leading directory.
-
-Both helpers were inlined inside the 521-LOC ``extract_record``
-before Phase 8.
-
-The characterisation tests in ``test_digest_helpers.py`` continue to
-pass through the same module — together they confirm the
-decomposition didn't drift observable behaviour.
-"""
-
 from __future__ import annotations
 
 import importlib.util
@@ -43,12 +25,10 @@ def digest() -> ModuleType:
 
 
 def test_sum_channel_counts_eeg_only(digest: ModuleType) -> None:
-    """Single-type sidecar (just EEGChannelCount)."""
     assert digest.sum_bids_channel_counts({"EEGChannelCount": 64}) == 64
 
 
 def test_sum_channel_counts_meg_with_misc(digest: ModuleType) -> None:
-    """MEG + miscellaneous channels — both contribute."""
     sidecar = {
         "MEGChannelCount": 306,
         "MiscChannelCount": 8,
@@ -58,13 +38,11 @@ def test_sum_channel_counts_meg_with_misc(digest: ModuleType) -> None:
 
 
 def test_sum_channel_counts_ieeg_seeg(digest: ModuleType) -> None:
-    """iEEG sidecars use iEEGChannelCount + SEEGChannelCount."""
     sidecar = {"iEEGChannelCount": 80, "SEEGChannelCount": 30, "EOGChannelCount": 1}
     assert digest.sum_bids_channel_counts(sidecar) == 111
 
 
 def test_sum_channel_counts_all_fields(digest: ModuleType) -> None:
-    """All 12 known fields contribute to the sum if present."""
     every_field = {
         "MEGChannelCount": 1,
         "EEGChannelCount": 2,
@@ -83,23 +61,17 @@ def test_sum_channel_counts_all_fields(digest: ModuleType) -> None:
 
 
 def test_sum_channel_counts_returns_none_when_all_zero(digest: ModuleType) -> None:
-    """All-zero / all-absent sidecar returns None, not 0.
-
-    Distinguishing 'no info' from '0 channels' lets the caller decide
-    whether to fall back to channels.tsv.
-    """
+    """Returns None (not 0) so the caller can distinguish 'no info' from '0 channels'."""
     assert digest.sum_bids_channel_counts({}) is None
     assert digest.sum_bids_channel_counts({"EEGChannelCount": 0}) is None
 
 
 def test_sum_channel_counts_handles_none_values(digest: ModuleType) -> None:
-    """A field explicitly set to None is treated as 0 (not a crash)."""
     sidecar = {"EEGChannelCount": 32, "MEGChannelCount": None}
     assert digest.sum_bids_channel_counts(sidecar) == 32
 
 
 def test_sum_channel_counts_ignores_unknown_fields(digest: ModuleType) -> None:
-    """Unknown BIDS fields do not affect the sum."""
     sidecar = {"EEGChannelCount": 16, "SomeUnknownChannelCount": 999}
     assert digest.sum_bids_channel_counts(sidecar) == 16
 
@@ -145,9 +117,6 @@ def test_sum_channel_counts_ignores_unknown_fields(digest: ModuleType) -> None:
 def test_strip_dataset_prefix(
     digest: ModuleType, path: str, dataset_id: str, expected: str
 ) -> None:
-    """``strip_dataset_prefix`` removes ``<dataset_id>/`` ONLY as a
-    leading-path prefix; partial matches, mid-path occurrences, and
-    empty inputs pass through unchanged."""
     assert digest.strip_dataset_prefix(path, dataset_id) == expected
 
 
@@ -165,11 +134,10 @@ def _make_bids_tree(tmp_path: Path) -> Path:
 def test_modality_sidecar_short_circuits_when_both_populated(
     digest: ModuleType, tmp_path: Path
 ) -> None:
-    """If caller already has sfreq and nchans, no filesystem walk happens."""
+    """No filesystem walk when caller already supplies both values."""
     root = _make_bids_tree(tmp_path)
     bids_file = root / "sub-01" / "eeg" / "sub-01_task-rest_eeg.set"
     bids_file.touch()
-    # No sidecar exists, so a walk would return (None, None).
     sfreq, nchans = digest.extract_sfreq_nchans_from_modality_sidecar(
         bids_file, root, sampling_frequency=250.0, nchans=32
     )
@@ -178,7 +146,7 @@ def test_modality_sidecar_short_circuits_when_both_populated(
 
 
 def test_modality_sidecar_reads_eeg_json(digest: ModuleType, tmp_path: Path) -> None:
-    """Walks finds adjacent ``*_eeg.json`` and reads SamplingFrequency + counts."""
+    """Reads SamplingFrequency and channel counts from an adjacent ``*_eeg.json``."""
     root = _make_bids_tree(tmp_path)
     bids_file = root / "sub-01" / "eeg" / "sub-01_task-rest_eeg.set"
     bids_file.touch()
@@ -213,7 +181,6 @@ def test_modality_sidecar_inheritance_walks_up(
 def test_modality_sidecar_returns_none_when_no_sidecar(
     digest: ModuleType, tmp_path: Path
 ) -> None:
-    """No sidecar anywhere → return caller's (None, None) unchanged."""
     root = _make_bids_tree(tmp_path)
     bids_file = root / "sub-01" / "eeg" / "sub-01_task-rest_eeg.set"
     bids_file.touch()
@@ -227,7 +194,7 @@ def test_modality_sidecar_returns_none_when_no_sidecar(
 def test_modality_sidecar_skips_malformed_json(
     digest: ModuleType, tmp_path: Path
 ) -> None:
-    """A malformed sidecar must not crash — caller gets None back."""
+    """A malformed sidecar must not crash."""
     root = _make_bids_tree(tmp_path)
     bids_file = root / "sub-01" / "eeg" / "sub-01_task-rest_eeg.set"
     bids_file.touch()
@@ -243,7 +210,7 @@ def test_modality_sidecar_skips_malformed_json(
 def test_modality_sidecar_preserves_existing_sfreq(
     digest: ModuleType, tmp_path: Path
 ) -> None:
-    """If caller already has sfreq but not nchans, only nchans is filled."""
+    """Caller's sfreq is preserved; only missing nchans is filled from the sidecar."""
     root = _make_bids_tree(tmp_path)
     bids_file = root / "sub-01" / "eeg" / "sub-01_task-rest_eeg.set"
     bids_file.touch()
@@ -252,7 +219,6 @@ def test_modality_sidecar_preserves_existing_sfreq(
     sfreq, nchans = digest.extract_sfreq_nchans_from_modality_sidecar(
         bids_file, root, sampling_frequency=250.0, nchans=None
     )
-    # Caller's sfreq was preserved; sidecar's value was NOT overwritten.
     assert sfreq == 250.0
     assert nchans == 64
 
@@ -261,7 +227,6 @@ def test_modality_sidecar_preserves_existing_sfreq(
 
 
 def test_channels_tsv_reads_row_count(digest: ModuleType, tmp_path: Path) -> None:
-    """nchans is derived from the TSV's row count when caller has none."""
     root = _make_bids_tree(tmp_path)
     bids_file = root / "sub-01" / "eeg" / "sub-01_task-rest_eeg.set"
     bids_file.touch()
@@ -277,8 +242,7 @@ def test_channels_tsv_reads_row_count(digest: ModuleType, tmp_path: Path) -> Non
 def test_channels_tsv_reads_sampling_frequency_column(
     digest: ModuleType, tmp_path: Path
 ) -> None:
-    """When the TSV has a ``sampling_frequency`` column, first positive
-    value is picked."""
+    """First positive value in the ``sampling_frequency`` column is used."""
     root = _make_bids_tree(tmp_path)
     bids_file = root / "sub-01" / "eeg" / "sub-01_task-rest_eeg.set"
     bids_file.touch()
@@ -318,7 +282,6 @@ def test_channels_tsv_skips_malformed(digest: ModuleType, tmp_path: Path) -> Non
     sfreq, nchans = digest.extract_sfreq_nchans_from_channels_tsv(
         bids_file, root, sampling_frequency=None, nchans=None
     )
-    # The function should return None, None on garbage rather than raise.
     assert sfreq is None
     assert nchans is None
 
@@ -326,11 +289,10 @@ def test_channels_tsv_skips_malformed(digest: ModuleType, tmp_path: Path) -> Non
 def test_channels_tsv_short_circuits_when_both_populated(
     digest: ModuleType, tmp_path: Path
 ) -> None:
-    """Caller-supplied values pass through untouched."""
     root = _make_bids_tree(tmp_path)
     bids_file = root / "sub-01" / "eeg" / "sub-01_task-rest_eeg.set"
     bids_file.touch()
-    # Even if a TSV would exist, the function shouldn't look.
+    # Even if a TSV exists, the function shouldn't look when both values are already set.
     channels_tsv = bids_file.with_suffix("").with_name("sub-01_task-rest_channels.tsv")
     channels_tsv.write_text("name\nFp1\nFp2\n")  # would give nchans=2
     sfreq, nchans = digest.extract_sfreq_nchans_from_channels_tsv(

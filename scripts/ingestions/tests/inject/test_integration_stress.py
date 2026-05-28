@@ -1,13 +1,4 @@
-"""Stress + edge-case tests against the live EEGdash cluster (C6.4).
-
-Goes beyond the C6.3 round-trip smoke. Hunts for:
-- Schema drift: do the C6.1 BIDS-spec fields (PowerLineFrequency,
-  EEGReference, SoftwareFilters, etc.) round-trip through MongoDB?
-- Auth failures: missing/wrong token, wrong database name.
-- Bulk throughput: 100-dataset batch insert, latency budget.
-- Concurrency: parallel batches racing for the same composite key.
-- Edge cases: unicode in name fields, very long strings, special
-  characters in dataset_id, large records (~MB-class sidecar_inline).
+"""Stress + edge-case tests against the live EEGdash cluster.
 
 Opt-in via the same env vars as test_inject_integration_live.py.
 """
@@ -55,13 +46,10 @@ def _load_inject():
 
 
 def _stress_id(tag: str = "stress") -> str:
-    """Stress-tagged ID (separate prefix from c6_smoke_ so orphan
-    sweep can target each set independently)."""
     return f"c6_stress_{tag}_{int(time.time())}_{uuid.uuid4().hex[:8]}"
 
 
 def _cleanup(dataset_id: str) -> None:
-    """Same best-effort hook as C6.3."""
     cleanup_cmd = os.environ.get("EEGDASH_INTEGRATION_CLEANUP_CMD")
     if cleanup_cmd:
         try:
@@ -76,19 +64,11 @@ def _cleanup(dataset_id: str) -> None:
             pass
 
 
-# ─── Schema drift: do the C6.1 BIDS fields round-trip? ────────────────────
+# ─── Schema drift: do BIDS fields round-trip? ─────────────────────────────
 
 
 def test_stress_record_with_all_c6_1_fields_round_trips():
-    """The new BIDS-spec fields from C6.1 (PowerLineFrequency,
-    EEGReference, SoftwareFilters, Manufacturer, etc.) must survive
-    the round-trip through the Gateway → MongoDB → read-back.
-
-    If the Gateway has a stricter schema than RecordModel (extra="allow"
-    or not), unknown fields might be silently stripped. This test fails
-    loudly if that happens. THE HIGHEST-PRIORITY STRESS TEST — if it
-    catches drift, the C6.1 enrichment is invisible to consumers.
-    """
+    """BIDS-spec fields must survive the Gateway → MongoDB → read-back round-trip."""
     inject_mod = _load_inject()
     test_id = _stress_id("c6_1_fields")
 
@@ -99,7 +79,7 @@ def test_stress_record_with_all_c6_1_fields_round_trips():
                 "source": "openneuro",
                 "name": "C6.1 field round-trip test",
                 "recording_modality": ["eeg"],
-                # C6.1 dataset-level extras
+                # dataset-level extras
                 "acknowledgements": "Funded by Lab X",
                 "how_to_acknowledge": "Cite our paper",
                 "ethics_approvals": ["IRB-001", "IRB-002"],
@@ -111,7 +91,6 @@ def test_stress_record_with_all_c6_1_fields_round_trips():
     )
 
     try:
-        # Inject a Record with all the C6.1 sidecar-extracted fields
         record = {
             "dataset": test_id,
             "bids_relpath": "sub-01/eeg/sub-01_task-rest_eeg.edf",
@@ -125,7 +104,6 @@ def test_stress_record_with_all_c6_1_fields_round_trips():
                 "raw_key": "sub-01/eeg/sub-01_task-rest_eeg.edf",
                 "dep_keys": [],
             },
-            # C6.1 fields — the things we just started capturing
             "power_line_frequency": 60,
             "eeg_reference": "linked mastoids",
             "software_filters": {"HighPass": 0.1, "LowPass": 100.0},
@@ -150,7 +128,6 @@ def test_stress_record_with_all_c6_1_fields_round_trips():
         )
         assert result["errors"] == []
 
-        # Read back via filter
         resp = httpx.get(
             f"{_API_URL}/api/{_DATABASE}/records",
             params={"filter": json.dumps({"dataset": test_id}), "limit": 5},
@@ -161,8 +138,6 @@ def test_stress_record_with_all_c6_1_fields_round_trips():
         assert len(records) >= 1
         rec = records[0]
 
-        # Each C6.1 field must survive — failure here means the Gateway
-        # silently stripped a field, masking our C6.1 enrichment.
         assert rec.get("power_line_frequency") == 60, (
             "PowerLineFrequency lost in round-trip"
         )
@@ -173,7 +148,6 @@ def test_stress_record_with_all_c6_1_fields_round_trips():
         assert rec.get("eeg_placement_scheme") == "10-20"
         assert rec.get("bad_channels") == ["F7", "T3"]
         assert rec.get("bad_channels_count") == 2
-        # Provenance dict round-trips too
         assert rec.get("_metadata_provenance") == {
             "sampling_frequency": "modality_sidecar",
             "nchans": "channels_tsv",
@@ -181,7 +155,6 @@ def test_stress_record_with_all_c6_1_fields_round_trips():
             "ch_names": "channels_tsv",
         }
 
-        # Read the dataset back too — its C6.1 extras
         resp = httpx.get(f"{_API_URL}/api/{_DATABASE}/datasets/{test_id}", timeout=10)
         ds = resp.json()["data"]
         assert ds.get("acknowledgements") == "Funded by Lab X"
@@ -239,7 +212,7 @@ def test_stress_inject_without_token_rejected():
 
 
 def test_stress_inject_to_invalid_database_rejected():
-    """A database name not in valid_databases (config) → 400."""
+    """A database name not in valid_databases → 400 or 404."""
     test_id = _stress_id("bad_db")
     resp = httpx.post(
         f"{_API_URL}/admin/eegdash_does_not_exist/datasets/bulk",
@@ -265,10 +238,7 @@ def test_stress_inject_to_invalid_database_rejected():
 
 
 def test_stress_bulk_insert_100_datasets():
-    """100-dataset bulk insert. Asserts:
-    - All 100 land in the database (count matches)
-    - The whole operation completes under a generous time budget
-    """
+    """100-dataset bulk insert completes under 10 s with all records present."""
     inject_mod = _load_inject()
     prefix = _stress_id("bulk100")
     datasets = [
@@ -294,13 +264,11 @@ def test_stress_bulk_insert_100_datasets():
 
         assert result["errors"] == [], f"errors: {result['errors']}"
         assert result["inserted_count"] >= 100
-        # 100 inserts in one batch should land in under 10s on a healthy cluster
         assert elapsed < 10.0, (
             f"bulk insert took {elapsed:.2f}s; expected < 10s. "
             f"Network slow OR cluster under load?"
         )
 
-        # Verify via count endpoint
         resp = httpx.get(
             f"{_API_URL}/api/{_DATABASE}/datasets",
             params={
@@ -310,24 +278,17 @@ def test_stress_bulk_insert_100_datasets():
             timeout=15,
         )
         body = resp.json()
-        # The dataset endpoint may paginate; just check at least 100 present
-        # in the database (verified via separate query if list-API caps)
         assert body.get("count", 0) >= 100, (
             f"expected ≥100 datasets with prefix, got {body.get('count')}"
         )
     finally:
-        # Cleanup all 100 via the cleanup hook
         for i in range(100):
             _cleanup(f"{prefix}_{i:03d}")
 
 
 # ─── Concurrency: parallel inserts ─────────────────────────────────────────
 
-
-# Module-level workers — keep the nested-function lint happy. Each
-# closure pulls config from globals + the inject_mod cached by the
-# test's first call. The prefix is passed via a mutable holder
-# because ThreadPoolExecutor.map only accepts one positional arg.
+# Module-level workers avoid nested-function lint issues with ThreadPoolExecutor.
 
 _PARALLEL_PREFIX: str | None = None
 
@@ -379,16 +340,13 @@ def _race_upsert_worker(_idx: int) -> dict:
 
 
 def test_stress_parallel_inject_no_race_on_distinct_ids():
-    """4 parallel inject_datasets calls with DISTINCT ids. Each should
-    succeed without errors; rate-limiting shouldn't kick in for this
-    volume (100 req/min limit per docker-compose; we're sending 4)."""
+    """4 parallel inject_datasets calls with distinct IDs all succeed without errors."""
     global _PARALLEL_PREFIX
     _PARALLEL_PREFIX = _stress_id("parallel")
 
     try:
         with cf.ThreadPoolExecutor(max_workers=4) as exe:
             results = list(exe.map(_parallel_inject_worker, range(4)))
-        # All 4 succeeded
         for i, r in enumerate(results):
             assert r["errors"] == [], f"worker {i} had errors: {r['errors']}"
             assert r["inserted_count"] >= 1
@@ -399,9 +357,7 @@ def test_stress_parallel_inject_no_race_on_distinct_ids():
 
 
 def test_stress_parallel_upsert_same_record_no_duplicate():
-    """4 parallel inject_records calls upserting the SAME composite key.
-    After all settle, exactly 1 record should exist (composite-key upsert
-    is the safety net for digest re-runs)."""
+    """4 parallel upserts on the same composite key produce exactly 1 record."""
     global _RACE_TEST_ID
     inject_mod = _load_inject()
     _RACE_TEST_ID = _stress_id("race")
@@ -426,7 +382,6 @@ def test_stress_parallel_upsert_same_record_no_duplicate():
         for r in results:
             assert r["errors"] == []
 
-        # Read back: exactly 1 record with this composite key
         resp = httpx.get(
             f"{_API_URL}/api/{_DATABASE}/records",
             params={
@@ -483,8 +438,7 @@ def test_stress_dataset_with_unicode_name():
 
 
 def test_stress_dataset_with_very_long_authors_list():
-    """A dataset with 50 authors — checks the Gateway doesn't truncate
-    list fields silently."""
+    """A 50-author list is not truncated by the Gateway."""
     inject_mod = _load_inject()
     test_id = _stress_id("long_authors")
     authors = [f"Author {i:02d}" for i in range(50)]
@@ -514,8 +468,7 @@ def test_stress_dataset_with_very_long_authors_list():
 
 
 def test_stress_record_with_large_inline_sidecar():
-    """A Record with a ~100 KB sidecar_inline blob (real-world NEMAR
-    enrichment carries multi-KB participants.tsv inline)."""
+    """A ~100 KB sidecar_inline blob survives the round-trip."""
     inject_mod = _load_inject()
     test_id = _stress_id("large_inline")
 
@@ -564,7 +517,6 @@ def test_stress_record_with_large_inline_sidecar():
         )
         assert result["errors"] == [], f"large-inline upsert failed: {result['errors']}"
 
-        # Read back + verify the blob survived
         resp = httpx.get(
             f"{_API_URL}/api/{_DATABASE}/records",
             params={"filter": json.dumps({"dataset": test_id}), "limit": 5},
@@ -574,7 +526,6 @@ def test_stress_record_with_large_inline_sidecar():
         assert len(records) >= 1
         round_trip = records[0]["storage"]["sidecar_inline"]
         assert "participants.tsv" in round_trip
-        # Spot-check the content
         assert "sub-0001" in round_trip["participants.tsv"]
         assert "sub-1999" in round_trip["participants.tsv"]
     finally:
@@ -585,9 +536,7 @@ def test_stress_record_with_large_inline_sidecar():
 
 
 def test_stress_inject_record_latency_under_500ms():
-    """Single-record upsert latency budget. The cluster's typical
-    response time should be well under 500 ms for a single record;
-    if this fires, something operational degraded."""
+    """Single-record upsert completes under 2 s on a healthy cluster."""
     inject_mod = _load_inject()
     test_id = _stress_id("latency")
 

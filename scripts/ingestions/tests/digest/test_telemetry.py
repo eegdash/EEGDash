@@ -1,16 +1,4 @@
-"""Unit + integration tests for the DigestTelemetry Module (P1.1).
-
-The Module emits structured per-Dataset and per-Record events to a
-pluggable backend. Default emitter is :class:`NullEmitter` so digest
-behaviour is unchanged when telemetry is disabled.
-
-These tests cover:
-- :class:`TelemetryEvent` shape + dict round-trip
-- :class:`NullEmitter` / :class:`NDJSONEmitter` behaviour
-- ``get_emitter`` / ``configure_telemetry`` / ``reset_telemetry`` semantics
-- ``auto_configure_from_env`` opt-in via ``$EEGDASH_TELEMETRY_PATH``
-- Integration: BIDS-fs digest run emits the expected event stream
-"""
+"""Unit + integration tests for the DigestTelemetry module."""
 
 from __future__ import annotations
 
@@ -49,15 +37,12 @@ def _load_digest():
 
 def test_event_required_fields():
     e = TelemetryEvent(
-        event_kind="record_built",
-        dataset_id="ds-1",
-        payload={"foo": "bar"},
+        event_kind="record_built", dataset_id="ds-1", payload={"foo": "bar"}
     )
     assert e.event_kind == "record_built"
     assert e.dataset_id == "ds-1"
     assert e.payload == {"foo": "bar"}
     assert e.record_id is None
-    # Default timestamp is set on construction.
     assert isinstance(e.timestamp, str)
     assert "T" in e.timestamp  # ISO 8601
 
@@ -86,10 +71,9 @@ def test_event_to_dict_has_stable_field_order():
 
 
 def test_null_emitter_is_noop():
-    """NullEmitter.emit returns None without side effects."""
     e = NullEmitter()
     result = e.emit(TelemetryEvent(event_kind="x", dataset_id="ds-1", payload={}))
-    assert result is None  # explicitly None
+    assert result is None
 
 
 # ─── NDJSONEmitter ─────────────────────────────────────────────────────────
@@ -139,22 +123,16 @@ def test_ndjson_emitter_appends_not_truncates(tmp_path: Path):
 
 
 def test_ndjson_emitter_tolerates_unserializable_payload(tmp_path: Path):
-    """A non-JSON-serializable payload is logged and dropped, not raised."""
+    """Non-JSON-serializable payload is logged and dropped, not raised."""
     out = tmp_path / "events.ndjson"
     emitter = NDJSONEmitter(out)
-
-    # Set is not JSON-serializable by default; the emitter should warn
-    # and continue rather than crash the caller.
+    # set is not JSON-serializable; the emitter should warn and continue
     emitter.emit(
         TelemetryEvent(
-            event_kind="record_built",
-            dataset_id="ds-1",
-            payload={"weird": {1, 2, 3}},
+            event_kind="record_built", dataset_id="ds-1", payload={"weird": {1, 2, 3}}
         )
     )
     emitter.close()
-
-    # File exists (header line is fine even if event was dropped).
     assert out.exists()
 
 
@@ -171,14 +149,12 @@ def test_ndjson_emitter_creates_parent_directory(tmp_path: Path):
 
 
 def test_default_emitter_is_null():
-    """Before any configure_telemetry call, get_emitter() returns NullEmitter."""
     reset_telemetry()
     assert isinstance(get_emitter(), NullEmitter)
 
 
 def test_configure_telemetry_replaces_emitter(tmp_path: Path):
-    out = tmp_path / "events.ndjson"
-    configure_telemetry(NDJSONEmitter(out))
+    configure_telemetry(NDJSONEmitter(tmp_path / "events.ndjson"))
     assert isinstance(get_emitter(), NDJSONEmitter)
     reset_telemetry()
     assert isinstance(get_emitter(), NullEmitter)
@@ -213,8 +189,7 @@ def test_auto_configure_installs_ndjson_when_env_set(tmp_path: Path, monkeypatch
 
 
 def test_auto_configure_idempotent_for_same_path(tmp_path: Path, monkeypatch):
-    """Calling auto_configure_from_env twice for the same path doesn't
-    re-open the file."""
+    """Calling auto_configure_from_env twice for the same path doesn't re-open the file."""
     out = tmp_path / "events.ndjson"
     monkeypatch.setenv("EEGDASH_TELEMETRY_PATH", str(out))
     reset_telemetry()
@@ -232,15 +207,13 @@ def test_auto_configure_idempotent_for_same_path(tmp_path: Path, monkeypatch):
 
 
 def test_digest_dataset_emits_event_stream(tmp_path_factory, monkeypatch):
-    """Running digest_dataset against the BIDS-fs snapshot fixture
-    produces dataset_started + record_built + dataset_finished events
-    in that order."""
+    """digest_dataset against the BIDS-fs snapshot produces dataset_started,
+    record_built, and dataset_finished events in that order."""
     events_path = tmp_path_factory.mktemp("telemetry_run") / "events.ndjson"
     monkeypatch.setenv("EEGDASH_TELEMETRY_PATH", str(events_path))
 
     digest = _load_digest()
-    # Re-install the env-driven emitter (the module was loaded once at
-    # import; the monkeypatched env var was set after).
+    # Re-install the env-driven emitter (module was loaded before monkeypatch).
     auto_configure_from_env()
     try:
         tmp_output = tmp_path_factory.mktemp("digest_run_telemetry")
@@ -250,7 +223,6 @@ def test_digest_dataset_emits_event_stream(tmp_path_factory, monkeypatch):
             tmp_output,
         )
         assert summary["status"] == "success"
-        # Flush — close the emitter so all lines are on disk.
         get_emitter().close()
 
         lines = events_path.read_text().strip().split("\n")
@@ -262,7 +234,6 @@ def test_digest_dataset_emits_event_stream(tmp_path_factory, monkeypatch):
         assert "record_built" in kinds
         # ds_snapshot_vhdr has 1 successful record → exactly one record_built
         assert sum(1 for k in kinds if k == "record_built") == 1
-        # Provenance was passed through to the event payload.
         record_event = next(e for e in events if e["event_kind"] == "record_built")
         assert "metadata_provenance" in record_event["payload"]
         prov = record_event["payload"]["metadata_provenance"]
@@ -272,7 +243,6 @@ def test_digest_dataset_emits_event_stream(tmp_path_factory, monkeypatch):
             "ntimes",
             "ch_names",
         }
-        # dataset_finished carries the summary totals.
         finished_event = events[-1]
         assert finished_event["payload"]["status"] == "success"
         assert finished_event["payload"]["record_count"] == 1

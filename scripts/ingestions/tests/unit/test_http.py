@@ -3,10 +3,10 @@
 Two angles in one file:
 
 - **Core API** — ``request_json`` happy path, 404, 5xx retry, network
-  errors, malformed JSON, configurable retry policy. Was test_http.py.
+  errors, malformed JSON, configurable retry policy.
 - **Variants** — ``request_text`` / ``request_response`` /
   ``build_headers`` / ``make_authed_client`` / ``make_retry_client``
-  + client-singleton lifecycle. Was test_http_variants.py.
+  + client-singleton lifecycle.
 
 All tests use respx to intercept HTTP calls; no real network required.
 """
@@ -65,18 +65,6 @@ def test_request_json_200_returns_payload_and_response():
     )
     payload, response = request_json("GET", API)
     assert payload == {"key": "value", "n": 42}
-    assert response is not None
-    assert response.status_code == 200
-    assert route.call_count == 1
-
-
-@respx.mock
-@pytest.mark.usefixtures("_no_cache_env")
-def test_request_text_200_returns_text():
-    """200 OK with text/plain returns (text, response)."""
-    route = respx.get(API).mock(return_value=httpx.Response(200, text="hello"))
-    text, response = request_text("GET", API)
-    assert text == "hello"
     assert response is not None
     assert response.status_code == 200
     assert route.call_count == 1
@@ -277,62 +265,104 @@ def test_make_retry_client_returns_same_shape_as_authed_client():
 # ─── 2. Variants: build_headers ────────────────────────────────────────────
 
 
-def test_build_headers_includes_accept():
-    out = build_headers(accept="application/json")
-    assert out["Accept"] == "application/json"
+@pytest.mark.parametrize(
+    ("kwargs", "expected_key_values"),
+    [
+        pytest.param(
+            {"accept": "application/json"},
+            {"Accept": "application/json"},
+            id="includes_accept",
+        ),
+        pytest.param(
+            {},
+            {"User-Agent": True},  # True means "key present and non-empty"
+            id="includes_user_agent_by_default",
+        ),
+        pytest.param(
+            {
+                "accept": "application/json",
+                "extra": {"Authorization": "Bearer token", "X-Custom": "value"},
+            },
+            {
+                "Authorization": "Bearer token",
+                "X-Custom": "value",
+                "Accept": "application/json",
+            },
+            id="merges_extra",
+        ),
+    ],
+)
+def test_build_headers_matrix(kwargs, expected_key_values):
+    """build_headers returns a dict with the expected keys and values.
+
+    Extra headers override the defaults; User-Agent is always set.
+    """
+    out = build_headers(**kwargs)
+    for key, value in expected_key_values.items():
+        if value is True:
+            # Sentinel: assert key is present and non-empty.
+            assert key in out
+            assert out[key]
+        else:
+            assert out[key] == value
 
 
-def test_build_headers_includes_user_agent_by_default():
-    """A User-Agent is always set so anonymous requests look like a real client."""
-    out = build_headers()
-    assert "User-Agent" in out
-    assert out["User-Agent"]  # non-empty
-
-
-def test_build_headers_merges_extra():
-    """Extra headers override the defaults."""
-    out = build_headers(
-        accept="application/json",
-        extra={"Authorization": "Bearer token", "X-Custom": "value"},
-    )
-    assert out["Authorization"] == "Bearer token"
-    assert out["X-Custom"] == "value"
-    assert out["Accept"] == "application/json"
-
-
-# ─── 2. Variants: request_text — additional variants beyond section 1 ──────
-
-
-@respx.mock
-@pytest.mark.usefixtures("_no_cache_env")
-def test_request_text_returns_text_and_response():
-    """Successful response → (text, response_object)."""
-    respx.get(API).mock(return_value=httpx.Response(200, text="hello world"))
-    text, response = request_text("GET", API, retries=1, backoff_factor=0.0)
-    assert text == "hello world"
-    assert response is not None
-    assert response.status_code == 200
-
-
-@respx.mock
-@pytest.mark.usefixtures("_no_cache_env")
-def test_request_text_404_returns_text_with_response():
-    """A 4xx returns (text, response) — caller decides how to handle the status."""
-    respx.get(API).mock(return_value=httpx.Response(404, text="not found"))
-    _text, response = request_text("GET", API, retries=1, backoff_factor=0.0)
-    # The text comes through; status_code carried by response.
-    assert response is not None
-    assert response.status_code == 404
+# ─── 2. Variants: request_text ─────────────────────────────────────────────
 
 
 @respx.mock
 @pytest.mark.usefixtures("_no_cache_env")
-def test_request_text_timeout_returns_none_pair():
-    """Persistent timeout → (None, None)."""
-    respx.get(API).mock(side_effect=httpx.TimeoutException("upstream"))
-    text, response = request_text("GET", API, retries=1, backoff_factor=0.0)
-    assert text is None
-    assert response is None
+@pytest.mark.parametrize(
+    ("mock_kwargs", "call_kwargs", "expected_text", "expected_status"),
+    [
+        pytest.param(
+            {"return_value": httpx.Response(200, text="hello")},
+            {},
+            "hello",
+            200,
+            id="200_returns_text",
+        ),
+        pytest.param(
+            {"return_value": httpx.Response(200, text="hello world")},
+            {"retries": 1, "backoff_factor": 0.0},
+            "hello world",
+            200,
+            id="returns_text_and_response",
+        ),
+        pytest.param(
+            {"return_value": httpx.Response(404, text="not found")},
+            {"retries": 1, "backoff_factor": 0.0},
+            None,  # caller inspects response, text not asserted
+            404,
+            id="404_returns_text_with_response",
+        ),
+        pytest.param(
+            {"side_effect": httpx.TimeoutException("upstream")},
+            {"retries": 1, "backoff_factor": 0.0},
+            None,
+            None,  # no response on timeout
+            id="timeout_returns_none_pair",
+        ),
+    ],
+)
+def test_request_text_status_matrix(
+    mock_kwargs, call_kwargs, expected_text, expected_status
+):
+    """request_text returns (text, response) or (None, None) on network failure.
+
+    A 4xx returns (text, response) — caller decides how to handle the status.
+    Persistent timeout returns (None, None).
+    """
+    respx.get(API).mock(**mock_kwargs)
+    text, response = request_text("GET", API, **call_kwargs)
+    if expected_status is None:
+        assert text is None
+        assert response is None
+    else:
+        assert response is not None
+        assert response.status_code == expected_status
+        if expected_text is not None:
+            assert text == expected_text
 
 
 @respx.mock

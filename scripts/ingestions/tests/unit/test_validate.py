@@ -130,11 +130,7 @@ def test_validate_record_missing_mandatory_field_raises_pydantic_error():
 def test_validate_record_missing_field_counters(
     override: dict, counter: str, expected: int
 ):
-    """missing_nchans / missing_sampling_frequency counter behaviour.
-
-    Each row exercises one (record_override, counter_key, expected_value)
-    combination so missing/present/zero degenerate cases share one body.
-    """
+    """missing_nchans / missing_sampling_frequency counter behaviour."""
     result = ValidationResult()
     rec = _minimal_valid_record()
     rec.update(override)

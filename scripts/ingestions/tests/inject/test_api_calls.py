@@ -11,28 +11,14 @@ the EEGdash API Gateway which writes to MongoDB on its behalf.
 
 from __future__ import annotations
 
-import importlib.util
 import json as _json
 
 import httpx
 import pytest
 import respx
-from _helpers import INGEST_DIR as _INGEST_DIR
+from _helpers import load_inject
 
 from eegdash.testing import data_file
-
-
-def _load_inject():
-    """Lazy-load 5_inject.py (digit-prefixed filename forces this)."""
-    spec = importlib.util.spec_from_file_location(
-        "_inject_target", _INGEST_DIR / "5_inject.py"
-    )
-    assert spec is not None
-    assert spec.loader is not None
-    mod = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(mod)
-    return mod
-
 
 # ─── inject_datasets ──────────────────────────────────────────────────────
 
@@ -41,7 +27,7 @@ def _load_inject():
 def test_inject_datasets_posts_to_bulk_endpoint():
     """A single-dataset call hits /admin/<database>/datasets/bulk with
     the dataset list as the JSON body."""
-    inject_mod = _load_inject()
+    inject_mod = load_inject()
     route = respx.post("https://api.example.com/admin/eegdash_dev/datasets/bulk").mock(
         return_value=httpx.Response(200, json={"inserted_count": 1})
     )
@@ -69,7 +55,7 @@ def test_inject_datasets_posts_to_bulk_endpoint():
 @respx.mock
 def test_inject_datasets_batches_at_batch_size_boundary():
     """A list larger than batch_size produces multiple POSTs."""
-    inject_mod = _load_inject()
+    inject_mod = load_inject()
     route = respx.post("https://api.example.com/admin/eegdash_dev/datasets/bulk").mock(
         return_value=httpx.Response(200, json={"inserted_count": 50})
     )
@@ -99,7 +85,7 @@ def test_inject_datasets_batches_at_batch_size_boundary():
 @respx.mock
 def test_inject_datasets_sends_authorization_header():
     """The admin_token shows up as Bearer in the Authorization header."""
-    inject_mod = _load_inject()
+    inject_mod = load_inject()
     route = respx.post("https://api.example.com/admin/eegdash_dev/datasets/bulk").mock(
         return_value=httpx.Response(200, json={"inserted_count": 1})
     )
@@ -129,7 +115,7 @@ def test_inject_datasets_request_body_is_the_list_payload():
     """The POST body is a JSON list with the dataset documents
     (after _sanitize_for_json)."""
 
-    inject_mod = _load_inject()
+    inject_mod = load_inject()
     route = respx.post("https://api.example.com/admin/eegdash_dev/datasets/bulk").mock(
         return_value=httpx.Response(200, json={"inserted_count": 1})
     )
@@ -163,7 +149,7 @@ def test_inject_datasets_request_body_is_the_list_payload():
 def test_inject_records_uses_upsert_endpoint():
     """Records use /admin/<database>/records/upsert (different endpoint
     from datasets/bulk, because Records are upserted by composite key)."""
-    inject_mod = _load_inject()
+    inject_mod = load_inject()
     route = respx.post("https://api.example.com/admin/eegdash_dev/records/upsert").mock(
         return_value=httpx.Response(200, json={"inserted_count": 1, "updated_count": 0})
     )
@@ -197,7 +183,7 @@ def test_inject_records_uses_upsert_endpoint():
 def test_inject_records_reports_both_inserted_and_updated():
     """The upsert response distinguishes new from existing — both
     counts propagate to the summary."""
-    inject_mod = _load_inject()
+    inject_mod = load_inject()
     respx.post("https://api.example.com/admin/eegdash_dev/records/upsert").mock(
         return_value=httpx.Response(200, json={"inserted_count": 7, "updated_count": 3})
     )
@@ -233,7 +219,7 @@ def test_inject_records_reports_both_inserted_and_updated():
 @respx.mock
 def test_inject_montages_posts_to_bulk_endpoint():
     """Montages use /admin/<database>/montages/bulk."""
-    inject_mod = _load_inject()
+    inject_mod = load_inject()
     route = respx.post("https://api.example.com/admin/eegdash_dev/montages/bulk").mock(
         return_value=httpx.Response(200, json={"inserted_count": 1})
     )
@@ -264,7 +250,7 @@ def test_inject_runs_against_snapshot_with_mocked_api():
     """End-to-end against the committed snapshot fixture, with all 3
     inject endpoints mocked. Verifies that running 5_inject.py without
     --dry-run actually exercises the full request pipeline."""
-    inject_mod = _load_inject()
+    inject_mod = load_inject()
 
     # Mock all 3 endpoints
     respx.post("https://api.example.com/admin/eegdash_dev/datasets/bulk").mock(

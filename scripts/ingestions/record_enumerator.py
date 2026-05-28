@@ -170,7 +170,9 @@ class BIDSFilesystemEnumerator(RecordEnumerator):
             self.source_adapter,
             self.digested_at,
             bids_dataset,
-            manifest_data=_load_manifest_data(self.dataset_dir),
+            manifest_data=load_manifest_or_summary(
+                self.dataset_dir, self.dataset_dir.name
+            )[0],
         )
 
 
@@ -260,12 +262,6 @@ def load_manifest_or_summary(
             "dataset_id": dataset_id,
             "error": f"Failed to read manifest: {exc}",
         }
-
-
-def _load_manifest_data(dataset_dir: Path) -> dict | None:
-    """Return the manifest dict, or ``None`` on absence or failure (failures are logged)."""
-    manifest, _summary = load_manifest_or_summary(dataset_dir, dataset_dir.name)
-    return manifest
 
 
 def _json_default_serializer(obj: Any) -> Any:

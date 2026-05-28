@@ -18,6 +18,7 @@ from unittest.mock import patch
 import pytest
 from _helpers import INGEST_DIR as _INGEST_DIR
 
+import _montage
 from _montage import (
     _companion_coords_for,
     _hash_sensors,
@@ -356,7 +357,6 @@ def test_score_template_match_picks_best_overlap():
     }
     # Force _MNE_TEMPLATE_KEYSETS to None so the function uses the
     # template keys directly.
-    import _montage
 
     _montage._MNE_TEMPLATE_KEYSETS = None
     out = _score_template_match(["Cz", "Fz", "Pz", "Oz"], templates, min_hits=2)
@@ -373,7 +373,6 @@ def test_score_template_match_returns_none_for_empty_channels():
 
 def test_score_template_match_returns_none_when_below_min_hits():
     """Channels match too few template positions → None."""
-    import _montage
 
     _montage._MNE_TEMPLATE_KEYSETS = None
     templates = {"big": {"CZ": (0, 0, 0)}}  # only 1 channel
@@ -383,7 +382,6 @@ def test_score_template_match_returns_none_when_below_min_hits():
 
 def test_score_template_match_returns_none_when_below_min_ratio():
     """Hit count meets min_hits but ratio is too low → None."""
-    import _montage
 
     _montage._MNE_TEMPLATE_KEYSETS = None
     templates = {
@@ -407,7 +405,6 @@ def test_score_template_match_tiebreaker_prefers_smaller_template():
     A 64-channel dataset should map to biosemi64 (64 positions),
     not standard_1005 (343 positions) — more specific fit.
     """
-    import _montage
 
     _montage._MNE_TEMPLATE_KEYSETS = None
     channels = ["CZ", "FZ", "PZ", "OZ"]

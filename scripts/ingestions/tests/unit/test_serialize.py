@@ -12,6 +12,7 @@ public helper.
 from __future__ import annotations
 
 import json
+import re as _re
 import sys
 from pathlib import Path
 
@@ -327,7 +328,6 @@ def test_normalize_dataset_recurses_into_nested_dicts():
 
 def test_subject_count_patterns_compile():
     """Every pattern is a valid regex (catches typos at import time)."""
-    import re as _re
 
     for pattern in SUBJECT_COUNT_PATTERNS:
         _re.compile(pattern)  # ValueError on bad regex

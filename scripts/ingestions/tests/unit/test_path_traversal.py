@@ -19,7 +19,9 @@ from pathlib import Path
 
 # Allow tests to import the parser modules without installing the package.
 from _parser_utils import path_is_within_root
+from _set_parser import parse_set_metadata
 from _vhdr_parser import extract_vhdr_references
+from _vhdr_parser import extract_vhdr_references as _refs
 
 # ─── path_is_within_root ──────────────────────────────────────────────────
 
@@ -133,7 +135,6 @@ def test_extract_vhdr_references_rejects_dotdot_path(tmp_path: Path) -> None:
     try:
         vhdr = _write_vhdr(inner, "../evil_target.eeg")
         # Sanity: the target really does exist where the traversal points
-        from _vhdr_parser import extract_vhdr_references as _refs
 
         assert (vhdr.parent / "../evil_target.eeg").resolve().exists(), (
             "fixture bug: target file not at the resolved-traversal path"
@@ -203,7 +204,6 @@ def test_set_parser_handles_broken_symlink(tmp_path: Path) -> None:
     for broken symlinks (the symlink itself exists; its target doesn't).
     scipy.io.loadmat would then crash on the dangling target.
     """
-    from _set_parser import parse_set_metadata
 
     broken_link = tmp_path / "broken.set"
     broken_link.symlink_to(tmp_path / ".does_not_exist")

@@ -17,6 +17,12 @@ import sys
 import httpx
 import respx
 
+from _github import (
+    fetch_first_repo_file_text,
+    fetch_repo_file_json,
+    fetch_repo_file_text,
+)
+
 
 def _hide_pygithub(monkeypatch) -> None:
     """Force ``from github import Github`` to raise ImportError.
@@ -34,7 +40,6 @@ def _hide_pygithub(monkeypatch) -> None:
 def test_fetch_repo_file_text_rest_fallback_success(monkeypatch):
     """When PyGithub is unavailable, falls back to raw.githubusercontent.com."""
     _hide_pygithub(monkeypatch)
-    from _github import fetch_repo_file_text
 
     url = "https://raw.githubusercontent.com/eegdash/test-repo/main/README.md"
     respx.get(url).mock(
@@ -49,7 +54,6 @@ def test_fetch_repo_file_text_rest_fallback_success(monkeypatch):
 def test_fetch_repo_file_text_rest_fallback_404_returns_none(monkeypatch):
     """A 404 from raw.githubusercontent.com → None."""
     _hide_pygithub(monkeypatch)
-    from _github import fetch_repo_file_text
 
     url = "https://raw.githubusercontent.com/eegdash/test-repo/main/missing.txt"
     respx.get(url).mock(return_value=httpx.Response(404))
@@ -63,7 +67,6 @@ def test_fetch_repo_file_text_rejects_html_doctype(monkeypatch):
     """If GitHub returns a 200 with an HTML page (login redirect etc.),
     the adapter must NOT treat that as a real file's content."""
     _hide_pygithub(monkeypatch)
-    from _github import fetch_repo_file_text
 
     url = "https://raw.githubusercontent.com/eegdash/test-repo/main/file.txt"
     respx.get(url).mock(
@@ -83,7 +86,6 @@ def test_fetch_first_returns_earliest_match(monkeypatch):
     """The adapter walks candidate paths in order and returns the first
     one with content."""
     _hide_pygithub(monkeypatch)
-    from _github import fetch_first_repo_file_text
 
     # First candidate 404s; second succeeds.
     respx.get(
@@ -103,7 +105,6 @@ def test_fetch_first_returns_earliest_match(monkeypatch):
 def test_fetch_first_returns_none_when_all_404(monkeypatch):
     """All candidate paths 404 → None."""
     _hide_pygithub(monkeypatch)
-    from _github import fetch_first_repo_file_text
 
     for cand in ("a.txt", "b.txt", "c.txt"):
         respx.get(
@@ -123,7 +124,6 @@ def test_fetch_first_returns_none_when_all_404(monkeypatch):
 def test_fetch_repo_file_json_decodes_response(monkeypatch):
     """A valid JSON file response → parsed dict."""
     _hide_pygithub(monkeypatch)
-    from _github import fetch_repo_file_json
 
     url = "https://raw.githubusercontent.com/eegdash/test-repo/main/config.json"
     respx.get(url).mock(
@@ -137,7 +137,6 @@ def test_fetch_repo_file_json_decodes_response(monkeypatch):
 def test_fetch_repo_file_json_returns_none_on_404(monkeypatch):
     """A 404 → None (consistent with the text variant)."""
     _hide_pygithub(monkeypatch)
-    from _github import fetch_repo_file_json
 
     url = "https://raw.githubusercontent.com/eegdash/test-repo/main/missing.json"
     respx.get(url).mock(return_value=httpx.Response(404))
@@ -150,7 +149,6 @@ def test_fetch_repo_file_json_returns_none_on_404(monkeypatch):
 def test_fetch_repo_file_json_returns_none_on_malformed_json(monkeypatch):
     """Malformed JSON in the response body → None, no exception."""
     _hide_pygithub(monkeypatch)
-    from _github import fetch_repo_file_json
 
     url = "https://raw.githubusercontent.com/eegdash/test-repo/main/bad.json"
     respx.get(url).mock(return_value=httpx.Response(200, text="not actually json"))

@@ -18,11 +18,15 @@ This is a known pattern for CLI-style script files.
 from __future__ import annotations
 
 import importlib.util
+import inspect
 from pathlib import Path
 from types import ModuleType
 
 import pytest
 from _helpers import INGEST_DIR as _INGEST_DIR
+
+import digest_telemetry
+from record_enumerator import EnumerationResult
 
 # ─── Module loader ──────────────────────────────────────────────────────────
 
@@ -158,7 +162,6 @@ def test_megafunction_line_counts_are_known_baseline(digest: ModuleType) -> None
     the four remaining big helpers, plus the orchestrator wrapper
     bounded by its own much-tighter budget.
     """
-    import inspect
 
     # Baselines updated 2026-05-22 (Phase 8 Stage 3D — orchestrator
     # collapse). Previous session notes:
@@ -239,7 +242,6 @@ def test_megafunction_line_counts_are_known_baseline(digest: ModuleType) -> None
 
 def _make_dummy_result(records=(), errors=(), total_files=None):
     """Build an EnumerationResult with controlled fields for helper tests."""
-    from record_enumerator import EnumerationResult
 
     return EnumerationResult(
         dataset_meta={"dataset_id": "ds-X", "source": "openneuro"},
@@ -387,7 +389,6 @@ def test_emit_dataset_finished_payload_round_trips_summary_fields(
     to the telemetry payload. Pins the contract so a future summary
     addition can't silently break dashboards that read the event.
     """
-    import digest_telemetry
 
     recorder = _RecordingEmitter()
     saved = digest_telemetry._EMITTER
@@ -430,7 +431,6 @@ def test_emit_dataset_finished_payload_includes_total_files(
     The event payload MUST forward it so dashboards can see the raw
     input count. Pins the drift trap from the post-review sweep.
     """
-    import digest_telemetry
 
     recorder = _RecordingEmitter()
     saved = digest_telemetry._EMITTER

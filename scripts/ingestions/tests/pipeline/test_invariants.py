@@ -30,6 +30,10 @@ from eegdash.testing import data_file
 from hypothesis import HealthCheck, given, settings
 from hypothesis import strategies as st
 
+from _file_utils import list_local_bids_files
+from _format_parser_registry import get_parser_for_extension, registered_extensions
+from record_enumerator import EnumerationResult
+
 
 def _load_digest():
     spec = importlib.util.spec_from_file_location(
@@ -119,9 +123,6 @@ def test_secondary_source_adapters_return_lists():
     not None. Production code can safely iterate the result without
     a None guard.
     """
-    from _file_utils import (
-        list_local_bids_files,
-    )
 
     # All "missing input" cases: each adapter should return [] (or a
     # list anyway). Using respx-less paths here — figshare/zenodo/osf
@@ -140,10 +141,6 @@ def test_all_registered_parsers_return_none_or_dict(tmp_path: Path):
     Property over the parser registry: regardless of which extension
     you pick, calling with a missing file always returns None.
     """
-    from _format_parser_registry import (
-        get_parser_for_extension,
-        registered_extensions,
-    )
 
     for ext in registered_extensions():
         parser = get_parser_for_extension(ext)
@@ -275,7 +272,6 @@ def test_provenance_values_only_in_documented_enum():
 def test_enumeration_result_with_empty_records_has_no_montages():
     """Cross-component invariant: a Result with no Records also has no
     montages (montages are derived from records' layouts)."""
-    from record_enumerator import EnumerationResult
 
     result = EnumerationResult(
         dataset_meta={"dataset_id": "ds_test"},

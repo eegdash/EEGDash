@@ -23,6 +23,7 @@ from pathlib import Path
 from hypothesis import given, settings
 from hypothesis import strategies as st
 
+from _fingerprint import fingerprint_from_manifest
 from _set_parser import parse_set_metadata
 from _snirf_parser import parse_snirf_metadata
 from _vhdr_parser import parse_vhdr_metadata
@@ -172,7 +173,6 @@ def test_fingerprint_property_deterministic(
     dataset_id: str, source: str, n_files: int
 ) -> None:
     """For any (dataset_id, source, manifest), the fingerprint is stable."""
-    from _fingerprint import fingerprint_from_manifest
 
     manifest = {
         "files": [{"path": f"f{i}.edf", "size": i * 100} for i in range(n_files)],

@@ -8,6 +8,7 @@ either mis-ingest non-BIDS datasets or skip valid BIDS ones.
 
 from __future__ import annotations
 
+import tempfile
 from pathlib import Path
 
 from _bids import (
@@ -248,7 +249,6 @@ def test_count_bad_channels_counts_bad_status(tmp_path: Path):
 def test_count_bad_channels_case_insensitive():
     """status values 'BAD' / 'Bad' / 'bad' all count."""
     # Use a tmp file
-    import tempfile
 
     with tempfile.NamedTemporaryFile(
         mode="w", suffix=".tsv", delete=False, encoding="utf-8"

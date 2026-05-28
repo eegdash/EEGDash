@@ -519,7 +519,6 @@ def test_fetch_valid_databases_returns_api_list_on_200():
 @respx.mock
 def test_fetch_valid_databases_is_cached_per_api_url():
     """Second call to the same api_url should NOT re-hit the server."""
-    from _inject_config import clear_valid_databases_cache
 
     clear_valid_databases_cache()
     api_url = "https://cache-test.example"
@@ -537,7 +536,6 @@ def test_fetch_valid_databases_is_cached_per_api_url():
 @respx.mock
 def test_fetch_valid_databases_returns_none_on_404():
     """Endpoint doesn't exist on this server -> None (caller falls back)."""
-    from _inject_config import clear_valid_databases_cache
 
     clear_valid_databases_cache()
     api_url = "https://no-endpoint.example"
@@ -550,7 +548,6 @@ def test_fetch_valid_databases_returns_none_on_404():
 @respx.mock
 def test_fetch_valid_databases_returns_none_on_network_error():
     """Connection error -> None."""
-    from _inject_config import clear_valid_databases_cache
 
     clear_valid_databases_cache()
     api_url = "https://network-fail.example"
@@ -563,7 +560,6 @@ def test_fetch_valid_databases_returns_none_on_network_error():
 @respx.mock
 def test_fetch_valid_databases_returns_none_on_missing_key():
     """Server returns 200 but payload shape is wrong -> None."""
-    from _inject_config import clear_valid_databases_cache
 
     clear_valid_databases_cache()
     api_url = "https://bad-shape.example"
@@ -580,7 +576,6 @@ def test_fetch_valid_databases_returns_none_on_missing_key():
 def test_inject_config_rejects_unknown_database_via_local_fallback(tmp_path):
     """Without network access, an unknown database is rejected by
     LOCAL_FALLBACK_DATABASES."""
-    from _inject_config import clear_valid_databases_cache
 
     clear_valid_databases_cache()
     # Simulate the API endpoint being absent (the planned follow-up state)
@@ -601,7 +596,6 @@ def test_inject_config_rejects_unknown_database_via_local_fallback(tmp_path):
 def test_inject_config_accepts_database_only_in_api_set(tmp_path):
     """An API that knows about a new database lets us inject to it
     even when LOCAL_FALLBACK_DATABASES does not."""
-    from _inject_config import clear_valid_databases_cache
 
     clear_valid_databases_cache()
     respx.get(f"{DEFAULT_API_URL}/admin/valid-databases").mock(
@@ -624,7 +618,6 @@ def test_inject_config_accepts_local_name_when_api_set_omits_it(tmp_path):
     """Union semantics: a name in LOCAL_FALLBACK_DATABASES is accepted
     even when the API set doesn't list it (API-side deprecation does
     not break long-running scripts at config-construction time)."""
-    from _inject_config import clear_valid_databases_cache
 
     clear_valid_databases_cache()
     # API only returns 2 databases; eegdash_archive is in LOCAL_FALLBACK
@@ -645,7 +638,6 @@ def test_inject_config_accepts_local_name_when_api_set_omits_it(tmp_path):
 def test_fetch_valid_databases_caches_failure_to_avoid_repeated_network_hits():
     """After a network failure, subsequent calls must return None
     WITHOUT re-hitting the network."""
-    from _inject_config import clear_valid_databases_cache
 
     clear_valid_databases_cache()
     api_url = "https://failure-cache.example"

@@ -13,10 +13,13 @@ All tests use respx to intercept HTTP calls; no real network required.
 
 from __future__ import annotations
 
+import warnings
+
 import httpx
 import pytest
 import respx
 
+import _http
 from _http import (
     build_headers,
     close_client,
@@ -43,7 +46,6 @@ def _no_cache_env(monkeypatch):
     monkeypatch.setenv("EEGDASH_HTTP_CACHE", "0")
     monkeypatch.setenv("EEGDASH_HTTP_CACHE_DISABLED", "1")
     close_client()
-    import _http
 
     _http._client = None
     yield
@@ -241,7 +243,6 @@ def test_request_json_custom_retry_statuses():
 
 def test_make_retry_client_emits_deprecation_warning():
     """Old callers see a DeprecationWarning pointing to make_authed_client."""
-    import warnings
 
     with warnings.catch_warnings(record=True) as captured:
         warnings.simplefilter("always")
@@ -255,7 +256,6 @@ def test_make_retry_client_emits_deprecation_warning():
 
 def test_make_retry_client_returns_same_shape_as_authed_client():
     """The deprecation alias must behave identically to the new name."""
-    import warnings
 
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", DeprecationWarning)
@@ -429,7 +429,6 @@ def test_make_authed_client_sets_authorization_header():
 
 def test_make_retry_client_includes_authorization():
     """make_retry_client also includes the Bearer token."""
-    import warnings
 
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", DeprecationWarning)
@@ -443,7 +442,6 @@ def test_make_retry_client_includes_authorization():
 
 def test_make_retry_client_has_transport_with_retries():
     """make_retry_client configures a transport — non-default httpx setup."""
-    import warnings
 
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", DeprecationWarning)

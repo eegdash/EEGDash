@@ -8,9 +8,10 @@ error path) — the parts where regressions are most likely.
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
+import sys as _sys
+from datetime import datetime, timedelta, timezone
 
-from _github import _to_iso, get_github_token
+from _github import _pygithub_client, _to_iso, get_github_token
 
 # ─── get_github_token ──────────────────────────────────────────────────────
 
@@ -76,7 +77,6 @@ def test_to_iso_assigns_utc_when_naive():
 
 def test_to_iso_preserves_non_utc_offsets():
     """If a non-UTC offset is supplied, it's preserved verbatim."""
-    from datetime import timedelta
 
     tz_offset = timezone(timedelta(hours=5, minutes=30))  # India Std Time
     dt = datetime(2026, 5, 22, 12, 0, 0, tzinfo=tz_offset)
@@ -106,9 +106,6 @@ def test_pygithub_client_returns_none_when_pygithub_missing(monkeypatch):
     *and* monkey-patching the module attribute (handles the case
     where pygithub is already imported in the venv).
     """
-    import sys as _sys
-
-    from _github import _pygithub_client
 
     # Hide an already-imported 'github' module to force ImportError on
     # re-import inside _pygithub_client. Save + restore around the call.

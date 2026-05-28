@@ -11,6 +11,7 @@ import sys
 from pathlib import Path
 
 import pytest
+from eegdash.testing import data_path
 
 # Make the ingestion package importable without `pip install -e .` —
 # this is the smallest layer that lets `from _set_parser import …` work
@@ -36,13 +37,9 @@ FIXTURES_DIR = Path(__file__).parent / "fixtures"  # only inline: records/
 
 def _testing_data_root() -> Path:
     """Resolve the testing-data corpus root, skipping the test on failure."""
-    from eegdash.testing import data_path
-
     try:
         return data_path()
-    except (
-        Exception
-    ) as exc:  # fetch failure → skip cleanly (BLE001 ignored repo-wide for tests/)
+    except Exception as exc:  # fetch failure → skip cleanly
         pytest.skip(f"eegdash-testing-data unavailable: {exc}")
 
 
@@ -68,31 +65,3 @@ def meg_fixtures_dir() -> Path:
 def digest_snapshots_dir() -> Path:
     """Directory containing ``digest_snapshots/{inputs,outputs}/ds_snapshot_*``."""
     return _testing_data_root() / "digest_snapshots"
-
-
-# ─── Smoke test fixture (used by test_smoke.py) ─────────────────────────────
-
-
-@pytest.fixture
-def ingest_package_importable():
-    """Verify ``ingestions`` package can be imported (Phase 0 smoke).
-
-    Yields
-    ------
-    bool
-        True if import succeeded; the test asserts on this directly.
-
-    Notes
-    -----
-    This is the canary for the Phase 0 evaluation hook:
-    "`pytest --collect-only` exits 0 from outside the ingestions dir".
-    """
-    try:
-        # The package is in sys.path via the prelude above; under the
-        # installed-package layout it will be importable as
-        # ``import ingestions``. Both should work.
-        from pathlib import Path  # noqa: F401 — proxy import
-
-        yield True
-    except ImportError as exc:  # pragma: no cover — would crash the fixture
-        pytest.fail(f"ingestions package not importable: {exc}")

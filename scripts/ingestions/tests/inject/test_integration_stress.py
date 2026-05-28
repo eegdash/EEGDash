@@ -18,6 +18,7 @@ import concurrent.futures as cf
 import importlib.util
 import json
 import os
+import subprocess
 import time
 import uuid
 
@@ -63,8 +64,6 @@ def _cleanup(dataset_id: str) -> None:
     """Same best-effort hook as C6.3."""
     cleanup_cmd = os.environ.get("EEGDASH_INTEGRATION_CLEANUP_CMD")
     if cleanup_cmd:
-        import subprocess
-
         try:
             subprocess.run(
                 cleanup_cmd.format(dataset_id=dataset_id),

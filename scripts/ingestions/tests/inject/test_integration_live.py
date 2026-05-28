@@ -30,6 +30,7 @@ from __future__ import annotations
 import importlib.util
 import json
 import os
+import subprocess
 import time
 import uuid
 
@@ -91,8 +92,6 @@ def _cleanup_dataset(dataset_id: str) -> None:
     """
     cleanup_cmd = os.environ.get("EEGDASH_INTEGRATION_CLEANUP_CMD")
     if cleanup_cmd:
-        import subprocess
-
         try:
             subprocess.run(
                 cleanup_cmd.format(dataset_id=dataset_id),

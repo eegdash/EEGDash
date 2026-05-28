@@ -8,8 +8,9 @@ either mis-ingest non-BIDS datasets or skip valid BIDS ones.
 
 from __future__ import annotations
 
-import tempfile
 from pathlib import Path
+
+import pytest
 
 from _bids import (
     BIDS_DATASET_ZIP_PATTERN,
@@ -103,93 +104,117 @@ def test_collect_dataset_zip_matcher_search_finds_pattern_anywhere():
 # ─── validate_bids_structure_from_names ────────────────────────────────────
 
 
-def test_validate_structure_recognises_bids_root():
-    """A directory with dataset_description.json + sub-XX entries is BIDS."""
-    out = validate_bids_structure_from_names(
-        ["dataset_description.json", "sub-01", "sub-02", "README"]
-    )
-    assert out["is_bids"] is True
-    assert out["subject_count"] == 2
-    assert "dataset_description.json" in out["bids_files_found"]
-
-
-def test_validate_structure_rejects_non_bids_layout():
-    """A flat directory of CSVs with no BIDS indicators → not BIDS."""
-    out = validate_bids_structure_from_names(["data1.csv", "data2.csv", "README.txt"])
-    assert out["is_bids"] is False
-    assert out["subject_count"] == 0
-
-
-def test_validate_structure_accepts_subject_zips_alone():
-    """Multiple ``sub-XX.zip`` files at root → BIDS (no dataset_description
-    required if subjects are clearly present)."""
-    out = validate_bids_structure_from_names(["sub-01.zip", "sub-02.zip", "sub-03.zip"])
-    assert out["is_bids"] is True
-    assert out["subject_count"] == 3
-    assert out["has_subject_zips"] is True
-
-
-def test_validate_structure_requires_min_subjects():
-    """A single subject doesn't meet ``subject_min_count=2`` default."""
-    out = validate_bids_structure_from_names(["sub-01"])
-    # No required files, only 1 subject → not BIDS
-    assert out["is_bids"] is False
-
-
-def test_validate_structure_accepts_dataset_zip():
-    """A ``data_bids.zip`` file alone passes the BIDS check."""
-    out = validate_bids_structure_from_names(
-        ["data_bids.zip"],
-        dataset_zip_pattern=BIDS_DATASET_ZIP_PATTERN,
-    )
-    assert out["is_bids"] is True
-    assert out["has_bids_zip"] is True
-
-
-def test_validate_structure_include_subject_files_returns_list():
-    """When ``include_subject_files=True``, the response includes the list."""
-    out = validate_bids_structure_from_names(
-        ["sub-01", "sub-02"],
-        include_subject_files=True,
-    )
-    assert sorted(out["subject_files"]) == ["sub-01", "sub-02"]
-
-
-def test_validate_structure_subject_files_limit_respected():
-    """Subject list is capped at ``subject_files_limit``."""
-    many = [f"sub-{i:03d}" for i in range(50)]
-    out = validate_bids_structure_from_names(
-        many, include_subject_files=True, subject_files_limit=5
-    )
-    assert len(out["subject_files"]) == 5
+@pytest.mark.parametrize(
+    ("names", "kwargs", "checks"),
+    [
+        pytest.param(
+            ["dataset_description.json", "sub-01", "sub-02", "README"],
+            {},
+            {
+                "is_bids": True,
+                "subject_count": 2,
+                "bids_files_found_includes": "dataset_description.json",
+            },
+            id="test_validate_structure_recognises_bids_root",
+        ),
+        pytest.param(
+            ["data1.csv", "data2.csv", "README.txt"],
+            {},
+            {"is_bids": False, "subject_count": 0},
+            id="test_validate_structure_rejects_non_bids_layout",
+        ),
+        pytest.param(
+            ["sub-01.zip", "sub-02.zip", "sub-03.zip"],
+            {},
+            {"is_bids": True, "subject_count": 3, "has_subject_zips": True},
+            id="test_validate_structure_accepts_subject_zips_alone",
+        ),
+        pytest.param(
+            ["sub-01"],
+            {},
+            {"is_bids": False},
+            id="test_validate_structure_requires_min_subjects",
+        ),
+        pytest.param(
+            ["data_bids.zip"],
+            {"dataset_zip_pattern": BIDS_DATASET_ZIP_PATTERN},
+            {"is_bids": True, "has_bids_zip": True},
+            id="test_validate_structure_accepts_dataset_zip",
+        ),
+        pytest.param(
+            ["sub-01", "sub-02"],
+            {"include_subject_files": True},
+            {"subject_files_sorted": ["sub-01", "sub-02"]},
+            id="test_validate_structure_include_subject_files_returns_list",
+        ),
+        pytest.param(
+            [f"sub-{i:03d}" for i in range(50)],
+            {"include_subject_files": True, "subject_files_limit": 5},
+            {"subject_files_len": 5},
+            id="test_validate_structure_subject_files_limit_respected",
+        ),
+    ],
+)
+def test_validate_structure_from_names(names, kwargs, checks):
+    """validate_bids_structure_from_names behaves correctly across layouts."""
+    out = validate_bids_structure_from_names(names, **kwargs)
+    if "is_bids" in checks:
+        assert out["is_bids"] is checks["is_bids"]
+    if "subject_count" in checks:
+        assert out["subject_count"] == checks["subject_count"]
+    if "bids_files_found_includes" in checks:
+        assert checks["bids_files_found_includes"] in out["bids_files_found"]
+    if "has_subject_zips" in checks:
+        assert out["has_subject_zips"] is checks["has_subject_zips"]
+    if "has_bids_zip" in checks:
+        assert out["has_bids_zip"] is checks["has_bids_zip"]
+    if "subject_files_sorted" in checks:
+        assert sorted(out["subject_files"]) == checks["subject_files_sorted"]
+    if "subject_files_len" in checks:
+        assert len(out["subject_files"]) == checks["subject_files_len"]
 
 
 # ─── validate_bids_structure_from_files ────────────────────────────────────
 
 
-def test_validate_from_files_extracts_name_key():
-    """``files`` is a list of dicts; pull each file's name by ``name_key``."""
-    files = [
-        {"name": "dataset_description.json"},
-        {"name": "sub-01"},
-        {"name": "sub-02"},
-    ]
-    out = validate_bids_structure_from_files(files, name_key="name")
-    assert out["is_bids"] is True
-    assert out["subject_count"] == 2
+@pytest.mark.parametrize(
+    ("files", "name_key", "checks"),
+    [
+        pytest.param(
+            [
+                {"name": "dataset_description.json"},
+                {"name": "sub-01"},
+                {"name": "sub-02"},
+            ],
+            "name",
+            {"is_bids": True, "subject_count": 2},
+            id="test_validate_from_files_extracts_name_key",
+        ),
+        pytest.param(
+            [],
+            "name",
+            {"is_bids": False, "subject_count": 0},
+            id="test_validate_from_files_handles_empty_list",
+        ),
+        pytest.param(
+            [{"size": 100}, {"size": 200}],
+            "name",
+            {"is_bids": False},
+            id="test_validate_from_files_tolerates_missing_name_key",
+        ),
+    ],
+)
+def test_validate_from_files(files, name_key, checks):
+    """validate_bids_structure_from_files handles dict-list inputs correctly.
 
-
-def test_validate_from_files_handles_empty_list():
-    out = validate_bids_structure_from_files([], name_key="name")
-    assert out["is_bids"] is False
-    assert out["subject_count"] == 0
-
-
-def test_validate_from_files_tolerates_missing_name_key():
-    """Files dicts without the name key get treated as empty names."""
-    files = [{"size": 100}, {"size": 200}]
-    out = validate_bids_structure_from_files(files, name_key="name")
-    assert out["is_bids"] is False
+    ``files`` is a list of dicts; pull each file's name by ``name_key``.
+    Files dicts without the name key get treated as empty names.
+    """
+    out = validate_bids_structure_from_files(files, name_key=name_key)
+    if "is_bids" in checks:
+        assert out["is_bids"] is checks["is_bids"]
+    if "subject_count" in checks:
+        assert out["subject_count"] == checks["subject_count"]
 
 
 # ─── find_channels_tsv ─────────────────────────────────────────────────────
@@ -228,45 +253,46 @@ def test_find_channels_tsv_falls_back_to_prefix_match(tmp_path: Path):
 # ─── count_bad_channels ────────────────────────────────────────────────────
 
 
+@pytest.mark.parametrize(
+    ("content", "expected"),
+    [
+        pytest.param(
+            "name\ttype\tstatus\nCz\teeg\tgood\nFz\teeg\tgood\n",
+            0,
+            id="test_count_bad_channels_returns_zero_when_no_bad",
+        ),
+        pytest.param(
+            "name\ttype\tstatus\nCz\teeg\tgood\nFz\teeg\tbad\nOz\teeg\tbad\n",
+            2,
+            id="test_count_bad_channels_counts_bad_status",
+        ),
+        pytest.param(
+            "name\tstatus\nCz\tBAD\nFz\tBad\nOz\tbad\nPz\tgood\n",
+            3,
+            id="test_count_bad_channels_case_insensitive",
+        ),
+        pytest.param(
+            "name\ttype\nCz\teeg\nFz\teeg\n",
+            None,
+            id="test_count_bad_channels_returns_none_for_no_status_column",
+        ),
+    ],
+)
+def test_count_bad_channels_tsv_content(tmp_path: Path, content, expected):
+    """count_bad_channels correctly counts bad-status rows from TSV content.
+
+    status values 'BAD' / 'Bad' / 'bad' all count (case-insensitive).
+    A TSV without a 'status' column returns None (no annotation).
+    A channels.tsv with status='good' entries returns 0 bad.
+    """
+    tsv = tmp_path / "channels.tsv"
+    tsv.write_text(content, encoding="utf-8")
+    assert count_bad_channels(tsv) == expected
+
+
 def test_count_bad_channels_returns_none_for_missing_file(tmp_path: Path):
     """Missing file → None (distinguish from 'zero bad channels' which is 0)."""
     assert count_bad_channels(tmp_path / "missing.tsv") is None
-
-
-def test_count_bad_channels_returns_zero_when_no_bad(tmp_path: Path):
-    """A channels.tsv with status='good' entries → 0 bad."""
-    tsv = tmp_path / "channels.tsv"
-    tsv.write_text("name\ttype\tstatus\nCz\teeg\tgood\nFz\teeg\tgood\n")
-    assert count_bad_channels(tsv) == 0
-
-
-def test_count_bad_channels_counts_bad_status(tmp_path: Path):
-    tsv = tmp_path / "channels.tsv"
-    tsv.write_text("name\ttype\tstatus\nCz\teeg\tgood\nFz\teeg\tbad\nOz\teeg\tbad\n")
-    assert count_bad_channels(tsv) == 2
-
-
-def test_count_bad_channels_case_insensitive():
-    """status values 'BAD' / 'Bad' / 'bad' all count."""
-    # Use a tmp file
-
-    with tempfile.NamedTemporaryFile(
-        mode="w", suffix=".tsv", delete=False, encoding="utf-8"
-    ) as f:
-        f.write("name\tstatus\nCz\tBAD\nFz\tBad\nOz\tbad\nPz\tgood\n")
-        tsv_path = Path(f.name)
-
-    try:
-        assert count_bad_channels(tsv_path) == 3
-    finally:
-        tsv_path.unlink()
-
-
-def test_count_bad_channels_returns_none_for_no_status_column(tmp_path: Path):
-    """A TSV without a 'status' column → None (no annotation)."""
-    tsv = tmp_path / "channels.tsv"
-    tsv.write_text("name\ttype\nCz\teeg\nFz\teeg\n")
-    assert count_bad_channels(tsv) is None
 
 
 def test_count_bad_channels_tolerates_malformed_tsv(tmp_path: Path):

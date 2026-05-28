@@ -1,61 +1,9 @@
-"""RecordEnumerator Module — unify the two digest algorithms behind one Seam.
+"""RecordEnumerator — unify the two digest algorithms behind one Seam.
 
-Background
-----------
-
-The ingestion pipeline used to have two top-level functions that produced
-the same output shape (Dataset doc + Records list + montages) from two
-very different inputs:
-
-* ``digest_dataset`` (3_digest.py) — walks a BIDS filesystem via
-  ``mne_bids.EEGBIDSDataset``. Used by OpenNeuro and NEMAR (the
-  production paths).
-* ``digest_from_manifest`` (3_digest.py) — walks a flat
-  ``manifest["files"]`` list. Used for API-only sources (Zenodo,
-  Figshare, OSF, SciDB) where the files don't exist on local disk.
-
-The two functions were 327 + 647 = 974 LOC of *parallel* implementation
-with an implicit fallback graph between them (3 separate places in
-``digest_dataset`` would call ``digest_from_manifest`` when something
-went wrong with the BIDS path). Cross-function bug fixes routinely
-missed one of the two paths — silent-error-masking bugs were originally
-fixed in ``digest_dataset`` only.
-
-This Module names the Seam they were both at: **how do we enumerate
-Records for a Dataset?** Two Adapters implement it
-(:class:`BIDSFilesystemEnumerator`, :class:`ManifestEnumerator`); a
-factory (:func:`get_record_enumerator`) handles the fallback graph.
-The orchestrator picks the algorithm in one place via the factory.
-
-Design
-------
-
-- :class:`EnumerationResult` is the shared return type. Both Adapters
-  produce ``(dataset_meta, records, errors, montages)`` plus a
-  ``digest_method`` string for the summary.
-- :class:`RecordEnumerator` is the abstract base. ``__init__`` takes
-  per-Dataset state; ``enumerate()`` returns the result.
-- :class:`BIDSFilesystemEnumerator` wraps the BIDS-filesystem
-  algorithm (the production path for OpenNeuro and NEMAR).
-- :class:`ManifestEnumerator` wraps the manifest-only algorithm
-  (Zenodo, Figshare, OSF, SciDB, and the fallback path for any BIDS
-  clone that can't be parsed).
-- :func:`get_record_enumerator` is the factory: tries BIDSFilesystem
-  first when ``has_actual_files`` is True, falls back to Manifest when
-  that fails or when no files are present at all.
-
-The factory's fallback rules are documented inline; they mirror the
-3 fallback sites that used to live in ``digest_dataset``:
-
-1. No actual binary files on disk → Manifest
-2. ``EEGBIDSDataset`` construction fails → Manifest (if manifest.json
-   exists; else surface the error)
-3. ``bids_dataset.get_files()`` returns empty → Manifest (if manifest
-   exists; else "empty" status)
-
-See Also
---------
-- ``source_adapter.py`` — per-Source ingest behaviour (storage, URLs)
+Two Adapters (:class:`BIDSFilesystemEnumerator`, :class:`ManifestEnumerator`)
+share a common abstract base and return type. The factory
+:func:`get_record_enumerator` selects the right one and manages the
+BIDS-to-manifest fallback so the orchestrator never branches on algorithm.
 """
 
 from __future__ import annotations
@@ -77,38 +25,12 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class EnumerationResult:
-    """Output of :meth:`RecordEnumerator.enumerate`.
+    """Shared return type for both :class:`BIDSFilesystemEnumerator` and
+    :class:`ManifestEnumerator`.
 
-    Carries everything the orchestrator needs to write the per-Dataset
-    JSON files (``_dataset.json`` / ``_records.json`` /
-    ``_montages.json`` / ``_summary.json``). Both Adapters produce this
-    shape; the orchestrator never branches on which one was used.
-
-    Attributes
-    ----------
-    dataset_meta : dict
-        Dataset document (``create_dataset`` output, with
-        ``ingestion_fingerprint`` already attached).
-    records : list[dict]
-        Per-file Record documents (``create_record`` output, each with
-        the per-Source storage + any annotation_events).
-    errors : list[dict]
-        Recoverable per-file failures. Each entry has at least
-        ``{"file": str, "error": str}``.
-    montages : dict[str, dict]
-        Mapping of ``montage_hash -> montage_doc`` for layout
-        deduplication across datasets. Empty for ManifestEnumerator
-        (no filesystem to read electrodes.tsv from).
-    digest_method : str
-        Either ``"bids_filesystem"`` or ``"manifest_only"`` — surfaced
-        in the summary for operational observability.
-    total_files : int | None
-        Raw input file count (the manifest's full ``files`` length for
-        :class:`ManifestEnumerator`, ``None`` for the BIDS-fs path).
-        Surfaced in the summary by :func:`write_dataset_outputs`. The
-        BIDS path keeps it ``None`` so the field is omitted — that
-        matches the pre-Stage-3D summary shape (no ``total_files`` for
-        BIDS).
+    ``montages`` is empty for the manifest path (no filesystem to read
+    ``electrodes.tsv`` from). ``total_files`` is ``None`` for the BIDS
+    path so the summary field is omitted there.
     """
 
     dataset_meta: dict[str, Any]
@@ -120,29 +42,7 @@ class EnumerationResult:
 
 
 class RecordEnumerator(ABC):
-    """Abstract base class — produce all Records for one Dataset.
-
-    Each concrete Adapter encapsulates one algorithm (BIDS-fs or
-    manifest-only). The per-Dataset state lives as instance attributes;
-    each Adapter is instantiated once per ``digest_dataset`` call.
-
-    Parameters
-    ----------
-    dataset_id : str
-        Dataset accession (e.g. ``"ds002893"``).
-    dataset_dir : Path
-        Absolute path to the cloned dataset's root (the directory that
-        contains ``sub-*/`` and optionally ``manifest.json``).
-    source : str
-        Source identifier (``"openneuro"``, ``"nemar"``, etc.).
-    source_adapter : SourceAdapter
-        Per-Source ingest behaviour (storage addressing, URL builders,
-        annex / inline prefetch). Same instance threaded into
-        ``extract_record`` and ``extract_dataset_metadata``.
-    digested_at : str
-        ISO 8601 timestamp; identical across the dataset_meta and every
-        Record produced by this Enumerator.
-    """
+    """Abstract base — produce all Records for one Dataset (one instance per dataset)."""
 
     def __init__(
         self,
@@ -160,24 +60,11 @@ class RecordEnumerator(ABC):
 
     @abstractmethod
     def enumerate(self) -> EnumerationResult:
-        """Build the Dataset doc + Records + montages for this Dataset.
+        """Build the Dataset doc + Records + montages.
 
-        Returns
-        -------
-        EnumerationResult
-            The Dataset metadata, the list of Records, accumulated
-            errors, deduplicated montages, and the digest_method label.
-
-        Notes
-        -----
-        Implementations may emit logger warnings but must NOT raise on
-        recoverable per-file failures (those go in
-        :attr:`EnumerationResult.errors`). Programmer errors propagate
-        per  (Phase 9 F1).
+        Per-file failures go in :attr:`EnumerationResult.errors`; programmer
+        errors propagate normally.
         """
-
-
-# ─── Factory ──────────────────────────────────────────────────────────
 
 
 def get_record_enumerator(
@@ -187,36 +74,11 @@ def get_record_enumerator(
     source_adapter: SourceAdapter,
     digested_at: str,
 ) -> RecordEnumerator:
-    """Pick a :class:`RecordEnumerator` for this Dataset.
+    """Return the appropriate :class:`RecordEnumerator` for this Dataset.
 
-    Fallback rules (mirror the 3 sites that used to be in
-    ``digest_dataset``):
-
-    1. If the dataset directory contains real binary recording files,
-       try :class:`BIDSFilesystemEnumerator` first. If its constructor
-       raises (BIDS structure malformed, ``EEGBIDSDataset`` rejects it,
-       no files surfaced by mne_bids), fall back to
-       :class:`ManifestEnumerator` when ``manifest.json`` exists.
-    2. If the dataset directory contains only a ``manifest.json`` and
-       no actual recording files (the API-only Source path), go
-       straight to :class:`ManifestEnumerator`.
-    3. If neither path is viable, return whichever Enumerator best
-       represents what's on disk and let its ``enumerate`` produce an
-       empty result with errors — the orchestrator decides the status.
-
-    Parameters
-    ----------
-    dataset_id : str
-    dataset_dir : Path
-    source : str
-    source_adapter : SourceAdapter
-    digested_at : str
-
-    Returns
-    -------
-    RecordEnumerator
-        Either a :class:`BIDSFilesystemEnumerator` or a
-        :class:`ManifestEnumerator`, ready to call ``enumerate()``.
+    Tries :class:`BIDSFilesystemEnumerator` when recording files are present;
+    falls back to :class:`ManifestEnumerator` on BIDS construction failure or
+    when only a ``manifest.json`` exists.
     """
     has_manifest = (dataset_dir / "manifest.json").exists()
     has_actual_files = _has_actual_recording_files(dataset_dir)
@@ -251,9 +113,8 @@ def get_record_enumerator(
                 )
             raise
 
-    # Case 3: nothing viable. Return manifest enumerator if possible
-    # (its enumerate() will produce an empty + error result); else
-    # let BIDSFilesystemEnumerator try and fail.
+    # Case 3: nothing viable — return manifest if present so enumerate() produces
+    # an empty+error result; else let BIDSFilesystemEnumerator try and surface the error.
     if has_manifest:
         return ManifestEnumerator(
             dataset_id, dataset_dir, source, source_adapter, digested_at
@@ -264,14 +125,9 @@ def get_record_enumerator(
 
 
 def _has_actual_recording_files(dataset_dir: Path) -> bool:
-    """Detect any real recording files (binaries or annex symlinks) under root.
+    """Return True if any recording file or directory exists under ``dataset_dir``.
 
-    Looks for canonical extensions (``.set``, ``.edf``, ``.bdf``,
-    ``.vhdr``, ``.fif``, ``.cnt``, ``.snirf``, ``.mefd``) anywhere in
-    the tree, plus CTF ``.ds`` and MEF3 ``.mefd`` directories. Symlinks
-    count as real files (git-annex pointers are still "present" from
-    the digest pipeline's perspective; the actual binary fetch happens
-    later in the runtime).
+    Symlinks count — git-annex pointers are present from the pipeline's perspective.
     """
     canonical_exts = {
         ".set",
@@ -292,35 +148,15 @@ def _has_actual_recording_files(dataset_dir: Path) -> bool:
     return False
 
 
-# ─── Concrete Adapters (implementations land in stage 2) ──────────────
-
-
 class BIDSFilesystemEnumerator(RecordEnumerator):
-    """Walk a BIDS filesystem via ``mne_bids.EEGBIDSDataset``.
-
-    The production path for OpenNeuro and NEMAR. The constructor is a
-    no-op data holder; the EEGBIDSDataset load and the algorithm
-    happen in :meth:`enumerate`. The factory catches construction
-    failures from the BIDS load there and falls back to
-    :class:`ManifestEnumerator` when ``manifest.json`` exists.
-
-    Stage 3C: ``enumerate()`` calls ``_enumerate_via_bids`` directly
-    (was a tempfile-bridge round-trip via ``digest_dataset`` in stage
-    2D — see STAGE-3-PLAN.md``).
-    """
+    """Walk a BIDS filesystem via ``EEGBIDSDataset`` (OpenNeuro, NEMAR path)."""
 
     def enumerate(self) -> EnumerationResult:
-        """Load EEGBIDSDataset, then run the BIDS-filesystem algorithm.
+        """Load ``EEGBIDSDataset`` and run the BIDS-filesystem algorithm.
 
-        Raises
-        ------
-        OSError, ValueError, KeyError, FileNotFoundError, PermissionError
-            ``EEGBIDSDataset`` construction failed (the dataset_dir
-            isn't a viable BIDS root). The caller in
-            ``3_digest.py:digest_dataset`` catches and falls back.
+        Raises ``OSError`` / ``ValueError`` / ``KeyError`` / ``FileNotFoundError`` /
+        ``PermissionError`` on a non-viable BIDS root; the factory catches and falls back.
         """
-        # 3_digest.py uses a digit-prefixed filename which makes it
-        # un-importable via ``import``; load it through importlib once.
         bids_dataset = EEGBIDSDataset(
             data_dir=str(self.dataset_dir),
             dataset=self.dataset_id,
@@ -339,26 +175,14 @@ class BIDSFilesystemEnumerator(RecordEnumerator):
 
 
 class ManifestEnumerator(RecordEnumerator):
-    """Walk a flat ``manifest["files"]`` list (API-only Sources).
+    """Walk a flat ``manifest["files"]`` list (API-only Sources or BIDS fallback).
 
-    The fallback path. Used when:
-    - the Source is API-only (Zenodo, Figshare, OSF, SciDB, DataRN), or
-    - the BIDS clone is malformed / empty and ``manifest.json`` exists.
-
-    Stage 3C: ``enumerate()`` calls ``_enumerate_via_manifest`` directly.
+    Used for Zenodo, Figshare, OSF, SciDB, DataRN, and any BIDS clone
+    that is malformed or empty but has a ``manifest.json``.
     """
 
     def enumerate(self) -> EnumerationResult:
-        """Run the manifest-only algorithm via the shared helper.
-
-        On a load failure the orchestrator inspects ``result.errors``
-        (with the structured-summary ``status`` / ``reason`` /
-        ``error`` keys forwarded) so it can distinguish
-        ``manifest.json missing`` from ``manifest.json corrupt`` from
-        ``manifest.json permission denied``. The summary keys mirror
-        the legacy ``digest_from_manifest`` shape so downstream log
-        scrapers don't break.
-        """
+        """Run the manifest-only algorithm via the shared helper."""
         manifest, load_summary = load_manifest_or_summary(
             self.dataset_dir, self.dataset_id
         )
@@ -366,9 +190,8 @@ class ManifestEnumerator(RecordEnumerator):
             assert load_summary is not None  # invariant of load_manifest_or_summary
             return EnumerationResult(
                 dataset_meta={"dataset_id": self.dataset_id, "source": self.source},
-                # total_files=0 is explicit (not the dataclass default) — pinned
-                # by the post-review hardening so a future caller can rely on
-                # the manifest-path always carrying a non-None total_files.
+                # Explicit 0 (not None) so callers can rely on manifest path
+                # always carrying a non-None total_files.
                 total_files=0,
                 errors=[
                     {
@@ -382,26 +205,15 @@ class ManifestEnumerator(RecordEnumerator):
         result, total_files = digest_mod._enumerate_via_manifest(
             self.dataset_id, manifest, self.digested_at
         )
-        # Surface total_files via the result so the orchestrator can
-        # forward it to write_dataset_outputs without owning a
-        # manifest-specific branch (Stage 3D — orchestrator collapse).
         result.total_files = total_files
         return result
-
-
-# ─── Stage 3C helpers: avoid circular imports with 3_digest.py ────────
 
 
 _DIGEST_MODULE_CACHE: Any = None
 
 
 def _load_digest_module() -> Any:
-    """Lazy-load ``3_digest.py`` (digit-prefixed filename forces this).
-
-    Cached after first call so subsequent ``enumerate()`` calls don't
-    pay the importlib cost. The cache survives across Enumerator
-    instances within the same Python process.
-    """
+    """Lazy-load ``3_digest.py`` via importlib (digit prefix blocks normal import), cached."""
     global _DIGEST_MODULE_CACHE
     if _DIGEST_MODULE_CACHE is not None:
         return _DIGEST_MODULE_CACHE
@@ -420,16 +232,9 @@ def _load_digest_module() -> Any:
 def load_manifest_or_summary(
     dataset_dir: Path, dataset_id: str
 ) -> tuple[dict | None, dict | None]:
-    """Read ``<dataset_dir>/manifest.json``, surfacing diagnostics.
-
-    Returns ``(manifest_dict, None)`` on success and ``(None, summary)``
-    on a load failure where ``summary`` is the structured failure dict
-    callers can return directly. The summary uses distinct ``reason``
-    fields so operators can tell ``manifest.json missing`` apart from
-    ``manifest.json corrupt`` apart from ``manifest.json permission
-    denied`` — a diagnostic regression flagged by the post-perf review
-    (the prior helper folded all three into a generic
-    ``manifest.json not found or unreadable``).
+    """Read ``manifest.json`` and return ``(manifest, None)`` on success or
+    ``(None, summary)`` on failure with distinct ``reason`` fields for missing,
+    corrupt, and permission-denied cases.
     """
     manifest_path = dataset_dir / "manifest.json"
     if not manifest_path.exists():
@@ -458,33 +263,15 @@ def load_manifest_or_summary(
 
 
 def _load_manifest_data(dataset_dir: Path) -> dict | None:
-    """Backward-compatible shim around :func:`load_manifest_or_summary`.
-
-    Some callers want only the dict (BIDS enrichment); they don't care
-    about the structured summary. Returns ``None`` on absence or
-    failure but logs the exception so the regression flagged by the
-    post-perf review (silent JSONDecodeError swallow) cannot recur.
-    """
+    """Return the manifest dict, or ``None`` on absence or failure (failures are logged)."""
     manifest, _summary = load_manifest_or_summary(dataset_dir, dataset_dir.name)
     return manifest
 
 
-# ─── Shared output writer ─────────────────────────────────────────────
-
-
 def _json_default_serializer(obj: Any) -> Any:
-    """JSON ``default=`` for values that the stdlib encoder doesn't handle.
+    """JSON ``default=`` for ``Path``, ``datetime``/``date``, and numpy scalars.
 
-    Handles the small set of types that show up in Dataset / Record
-    documents: ``Path`` (stringified), ``datetime`` (isoformat), and
-    numpy scalars (Python primitive). Anything else falls through to
-    a ``str()`` representation rather than crashing — the digest
-    pipeline must finish even if one Record carries an unexpected
-    type from a third-party extension.
-
-    Mirrors the inline ``_json_serializer`` that used to live in
-    ``3_digest.py``. Hoisted here so both Adapter writes use the same
-    rule.
+    Falls through to ``str()`` so an unexpected type never crashes the pipeline.
     """
     if isinstance(obj, PurePath):
         return str(obj)
@@ -508,61 +295,15 @@ def write_dataset_outputs(
     *,
     total_files: int | None = None,
 ) -> dict[str, Any]:
-    """Write the 4 per-Dataset JSON files; return the summary dict.
+    """Write ``_dataset.json``, ``_records.json``, ``_montages.json``, and
+    ``_summary.json`` into ``dataset_output_dir``; return the summary dict.
 
-    Shared between both Adapter paths. Before this helper existed, the
-    JSON-write block was duplicated inline in ``digest_dataset`` and
-    ``digest_from_manifest`` with subtle drift between them — see
-    STAGE-2-PLAN.md`` for the catalogue.
-
-    Files written:
-      - ``<dataset_id>_dataset.json``   the Dataset document
-      - ``<dataset_id>_records.json``   the Records list + count
-      - ``<dataset_id>_montages.json``  deduplicated montage hashes
-      - ``<dataset_id>_summary.json``   the per-Dataset summary
-
-    Parameters
-    ----------
-    dataset_output_dir : Path
-        Directory to write the four JSON files into. Created if missing.
-    result : EnumerationResult
-        Output of :meth:`RecordEnumerator.enumerate`.
-    dataset_id, source, digested_at : str
-        Identity fields stamped into every output file.
-    total_files : int, optional
-        Total file count from the input (e.g. the manifest's full
-        ``files`` length) — surfaced in the summary. Only the manifest
-        Adapter populates this; the BIDS Adapter leaves it as None.
-
-    Returns
-    -------
-    dict
-        The summary dictionary (also persisted to ``_summary.json``).
-        Same shape as both legacy functions used to return.
-
-    Notes
-    -----
-    Behaviour changes vs the previous duplicated code:
-
-    1. ``_montages.json`` is now written for **every** Adapter path,
-       even when the montages dict is empty. Previously the manifest
-       path skipped this file; downstream tooling could no longer
-       assume it exists. The empty file format is
-       ``{"montage_count": 0, "montages": [], ...}``.
-    2. The summary now always carries ``digest_method``, surfaced from
-       :attr:`EnumerationResult.digest_method`. Previously only the
-       manifest path set it ("manifest_only"); the BIDS path silently
-       omitted the field. Now both populate it.
-    3. The summary's ``integrity_issues_count`` and ``montage_count``
-       are always present (zero for the manifest path). Previously
-       only the BIDS path included them.
-
-    These are minor additions to existing fields — not type changes —
-    so downstream consumers that read by key name will continue to work.
+    ``_montages.json`` is written for every Adapter path (empty dict included).
+    The summary always carries ``digest_method``, ``integrity_issues_count``,
+    and ``montage_count``.
     """
     dataset_output_dir.mkdir(parents=True, exist_ok=True)
 
-    # ── Dataset document ──────────────────────────────────────────────
     dataset_path = dataset_output_dir / f"{dataset_id}_dataset.json"
     with open(dataset_path, "w") as fh:
         json.dump(
@@ -572,8 +313,6 @@ def write_dataset_outputs(
             default=_json_default_serializer,
         )
 
-    # ── Integrity-issue enrichment (BIDS path uses this; manifest
-    # path will simply find no records with the marker flag).
     records_with_issues = [
         r for r in result.records if r.get("_has_missing_files", False)
     ]
@@ -589,7 +328,6 @@ def write_dataset_outputs(
                 rec["_dataset_contact"] = contact_info
             if source_url:
                 rec["_source_url"] = source_url
-        # Log per-issue warning (was inlined in digest_dataset)
         logger.warning(
             "Dataset %s has %d record(s) with missing companion files",
             dataset_id,
@@ -599,7 +337,6 @@ def write_dataset_outputs(
             issues = rec.get("_data_integrity_issues", [])
             logger.warning("  - %s: %s", rec.get("bids_relpath"), "; ".join(issues))
 
-    # ── Records document ──────────────────────────────────────────────
     records_path = dataset_output_dir / f"{dataset_id}_records.json"
     records_data = {
         "dataset": dataset_id,
@@ -612,7 +349,6 @@ def write_dataset_outputs(
     with open(records_path, "w") as fh:
         json.dump(records_data, fh, indent=2, default=_json_default_serializer)
 
-    # ── Montages document (always written, even when empty) ───────────
     montages_path = dataset_output_dir / f"{dataset_id}_montages.json"
     montages_data = {
         "dataset": dataset_id,
@@ -624,7 +360,6 @@ def write_dataset_outputs(
     with open(montages_path, "w") as fh:
         json.dump(montages_data, fh, indent=2, default=_json_default_serializer)
 
-    # ── Summary ───────────────────────────────────────────────────────
     summary: dict[str, Any] = {
         "status": "success" if result.records else "no_neuro_files",
         "dataset_id": dataset_id,

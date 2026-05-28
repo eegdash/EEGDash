@@ -1,57 +1,15 @@
 """Per-Source ingest behaviour — SourceAdapter Seam.
 
-Background
-----------
+One Adapter class per Source, instantiated per Dataset so per-Dataset state
+(apex sidecar cache, annex-key cache) lives as instance attributes. OpenNeuro
+and NEMAR have dedicated subclasses; everything else falls through to
+:class:`DefaultAdapter`. The factory :func:`get_source_adapter` is the sole
+entry point.
 
-The ingestion pipeline distinguishes between several *Sources* —
-OpenNeuro, NEMAR, GIN/EEGManyLabs, and a handful of "secondary"
-providers (Figshare / Zenodo / OSF / SciDB / DataRN) that are
-best-effort per ADRs/0001-secondary-source-deferral.md``.
-
-In production, only **OpenNeuro** and **NEMAR** are exercised on every
-CI run. Their ingest behaviour diverges in four places:
-
-1. **Storage backend tag.** ``openneuro`` -> ``"s3"``, ``nemar`` ->
-   ``"nemar"`` (a marker; the bucket is not directly fetchable, see
-   :mod:`eegdash.dataset._source_inference`).
-2. **Storage base URL.** ``s3://openneuro.org`` vs ``s3://nemar``.
-3. **Per-file addressing.** OpenNeuro: ``<base>/<dataset>/<bids_relpath>``
-   straight. NEMAR: BIDS path must be resolved to a git-annex SHA key
-   before download is possible.
-4. **Apex sidecar inline-prefetch.** NEMAR datasets carry per-dataset
-   metadata files (``participants.tsv``, ``dataset_description.json``,
-   ...) that are read once per Dataset and inlined into every Record so
-   the runtime never has to re-resolve them.
-5. **User-facing landing URL.** ``https://openneuro.org/datasets/<id>``
-   vs ``https://nemar.org/dataexplorer/detail/<id>``.
-
-Before this Module these five divergences lived as
-``if source == "nemar"`` ladders in four different places inside
-``3_digest.py``. Each new Source-specific tweak meant editing all four.
-
-Design
-------
-
-One Adapter class per Source. Instances are created per Dataset (in
-``digest_dataset``) so per-Dataset state — the apex sidecar inline
-cache, the annex-key cache — lives as instance attributes rather than
-parameters threaded through ``extract_record``'s signature.
-
-The base class :class:`SourceAdapter` implements the dominant case
-(straight S3 / HTTPS addressing, no prefetch, no annex resolution).
-:class:`OpenNeuroAdapter` adds only the public landing URL.
-:class:`NEMARAdapter` adds the annex-key + apex-prefetch overrides.
-:class:`DefaultAdapter` is the fallback for GIN and the five secondary
-sources — table-driven, no overrides.
-
-The factory :func:`get_source_adapter` is the only entry point.
-
-See Also
---------
-- ``eegdash.dataset._source_inference`` — the shared table
-  (``STORAGE_CONFIGS``) + the runtime self-heal counterpart
-  (``correct_storage_inplace``).
-  secondary sources don't get their own Adapter classes.
+The four divergences between OpenNeuro and NEMAR — storage backend tag, base
+URL, per-file addressing (NEMAR requires git-annex SHA resolution), and apex
+sidecar prefetch — are encapsulated here rather than scattered as
+``if source == "nemar"`` ladders across the pipeline.
 """
 
 from __future__ import annotations
@@ -75,21 +33,8 @@ class SourceAdapter(ABC):
 
     Subclasses override only the methods that differ from the default
     (straight S3/HTTPS addressing, no prefetch, no annex resolution).
-
-    Parameters
-    ----------
-    dataset_id : str
-        Dataset accession (e.g. ``"ds002893"``).
-    bids_root : Path, optional
-        Filesystem root of the BIDS layout for this dataset. Required
-        for any Adapter that does on-disk reads (NEMAR apex prefetch,
-        annex-key resolution). Can be ``None`` for callers that only
-        need URL / backend information.
-
-    Attributes
-    ----------
-    dataset_id : str
-    bids_root : Path or None
+    ``bids_root`` is required for any Adapter that does on-disk reads
+    (NEMAR apex prefetch, annex-key resolution).
     """
 
     def __init__(self, dataset_id: str, bids_root: Path | None = None) -> None:
@@ -116,20 +61,11 @@ class SourceAdapter(ABC):
     # ─── Behaviour hooks ─────────────────────────────────────────────
 
     def address_file(self, bids_relpath: str) -> str:
-        """Return the storage address for a specific BIDS file.
-
-        Default: ``<storage_base>/<bids_relpath>``. NEMAR overrides
-        because BIDS paths must be resolved through git-annex first.
-        """
+        """Return the storage address for a BIDS file (``<base>/<relpath>``)."""
         return f"{self.storage_base}/{bids_relpath}"
 
     def dataset_url(self) -> str | None:
-        """User-facing landing-page URL for this Dataset.
-
-        Default ``None`` — most secondary Sources don't have a public
-        landing page that's discoverable from the ``dataset_id`` alone.
-        OpenNeuro and NEMAR override.
-        """
+        """User-facing landing-page URL. Returns ``None`` for secondary Sources."""
         return None
 
     def resolve_storage_extensions(
@@ -139,27 +75,8 @@ class SourceAdapter(ABC):
     ) -> tuple[dict[str, str], dict[str, str]]:
         """Return ``(annex_keys, sidecar_inline)`` for a single Record.
 
-        The default returns two empty dicts — most Sources don't use
-        git-annex addressing or per-Record sidecar inlining. NEMAR
-        overrides to populate both.
-
-        Parameters
-        ----------
-        record_path : Path
-            Absolute path to the recording's data file.
-        dep_paths : list[Path]
-            Absolute paths to every dependency sidecar (channels.tsv,
-            electrodes.tsv, etc.) that the Record's ``dep_keys`` lists.
-
-        Returns
-        -------
-        annex_keys : dict[str, str]
-            Mapping of ``bids_relpath -> annex SHA key`` for files
-            tracked by git-annex. Empty for OpenNeuro.
-        sidecar_inline : dict[str, str]
-            Mapping of ``bids_relpath -> file content (str)`` for the
-            sidecars that are inlined into the Record's storage entry
-            so the runtime doesn't need to re-resolve them.
+        Default returns two empty dicts. NEMAR overrides to resolve
+        git-annex SHA keys and inline apex sidecar content.
         """
         return {}, {}
 
@@ -183,21 +100,12 @@ class OpenNeuroAdapter(SourceAdapter):
 class NEMARAdapter(SourceAdapter):
     """NEMAR Source — git-annex SHA addressing + apex sidecar prefetch.
 
-    NEMAR's S3 bucket has ``s3:ListBucket`` closed by design; filenames
-    are SHA-resolved by git-annex on the cloned filesystem. The
-    ``backend="nemar"`` marker tells downstream consumers "do not
-    attempt a public S3 fetch".
-
-    The apex inline-prefetch optimisation reads
-    :data:`NEMAR_ROOT_METADATA_FILES` once at Adapter init and reuses
-    the decoded content across every Record (Python string immutability
-    means the values are shared by reference). Avoids
-    ``N x len(NEMAR_ROOT_METADATA_FILES)`` filesystem reads per Dataset.
-
-    State (per Adapter / per Dataset):
-
-    - ``_apex_cache`` — populated lazily on first
-      :meth:`resolve_storage_extensions` call, then reused.
+    NEMAR's S3 bucket has ``s3:ListBucket`` closed by design; all file
+    addresses are SHA-resolved via git-annex on the cloned filesystem.
+    The ``backend="nemar"`` marker signals downstream consumers not to
+    attempt a public S3 fetch.  :data:`NEMAR_ROOT_METADATA_FILES` are
+    read once (lazily, into ``_apex_cache``) and reused across every
+    Record to avoid repeated filesystem round-trips.
     """
 
     def __init__(self, dataset_id: str, bids_root: Path | None = None) -> None:
@@ -232,14 +140,7 @@ class NEMARAdapter(SourceAdapter):
         record_path: Path,
         dep_paths: list[Path],
     ) -> tuple[dict[str, str], dict[str, str]]:
-        """Resolve annex keys + inline sidecars for one Record (NEMAR-specific).
-
-        - The recording's own annex key (if it's an annex-tracked file).
-        - Each dependency's annex key, OR its inlined content if it's
-          a small enough sidecar (see :func:`read_inline_sidecar`).
-        - The apex cache (built once per Dataset) is merged into the
-          returned ``sidecar_inline`` dict.
-        """
+        """Resolve annex keys and inline sidecars for one Record."""
         annex_keys: dict[str, str] = {}
         sidecar_inline: dict[str, str] = dict(self._ensure_apex_cache())
 
@@ -281,17 +182,7 @@ class NEMARAdapter(SourceAdapter):
 
 
 class DefaultAdapter(SourceAdapter):
-    """Fallback Adapter for GIN + the 5 secondary Sources.
-
-    Table-driven addressing only; no per-Source overrides. Used for
-    sources that exist in :data:`STORAGE_CONFIGS` but don't have a
-    dedicated Adapter class (because they have no special behaviour to
-    encapsulate — yet).
-
-    See  for the
-    rationale (1 production Adapter + 6 secondary = no leverage for a
-    7-Adapter shared Protocol today).
-    """
+    """Fallback Adapter for GIN and secondary Sources (table-driven, no overrides)."""
 
     def __init__(
         self,
@@ -323,24 +214,8 @@ def get_source_adapter(
 ) -> SourceAdapter:
     """Return the :class:`SourceAdapter` for a ``(source, dataset_id)`` pair.
 
-    Parameters
-    ----------
-    source : str
-        Source identifier (``"openneuro"``, ``"nemar"``, ``"gin"``,
-        ``"zenodo"``, etc.). Must be a key in :data:`STORAGE_CONFIGS`
-        or a :class:`DefaultAdapter` is returned that uses
-        :data:`DEFAULT_STORAGE_CONFIG`.
-    dataset_id : str
-        Dataset accession.
-    bids_root : Path, optional
-        Filesystem root of the BIDS layout. Required for NEMAR (apex
-        prefetch + annex resolution); optional for the others.
-
-    Returns
-    -------
-    SourceAdapter
-        An :class:`OpenNeuroAdapter`, :class:`NEMARAdapter`, or
-        :class:`DefaultAdapter` instance bound to the given dataset.
+    Unknown sources fall through to :class:`DefaultAdapter`.
+    ``bids_root`` is required for NEMAR (apex prefetch + annex resolution).
     """
     adapter_cls = _ADAPTER_CLASSES.get(source)
     if adapter_cls is None:

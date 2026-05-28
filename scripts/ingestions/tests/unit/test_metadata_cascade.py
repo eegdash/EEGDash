@@ -1,14 +1,4 @@
-"""Tests for the MetadataCascade module .
-
-The cascade extracts technical metadata (sampling_frequency / nchans /
-ntimes / ch_names) from up to 5 sources, in order, with first-writer-wins
-provenance stamping. This module exercises each step in isolation plus
-the integration of the full chain.
-
-The snapshot gate (``tests/test_digest_snapshot.py``) provides the
-byte-identical guarantee against the legacy implementation; the tests
-here pin down the public contract of the module itself.
-"""
+"""Tests for MetadataCascade: each step in isolation plus full-chain integration."""
 
 from __future__ import annotations
 
@@ -58,24 +48,17 @@ def test_cascade_result_defaults_are_none():
 
 
 def test_cascade_result_stamp_only_fires_on_none_to_non_none_transition():
-    """``stamp`` must match the legacy ``_stamp_provenance`` semantics:
-    stamps iff (old is None AND new is not None AND prov was None).
-
-    Specifically, ``(old=0, new=500)`` MUST NOT stamp — the old value
-    was already a non-None falsy assignment and provenance should
-    remain whatever first source claimed it (or None).
-    """
+    """stamp must match legacy _stamp_provenance: fires only on None->non-None with prov==None."""
     r = CascadeResult()
 
-    # Case 1: legitimate first-writer transition (None -> 500).
     r.stamp("first_source", "sampling_frequency", old=None, new=500.0)
     assert r.provenance["sampling_frequency"] == "first_source"
 
-    # Case 2: second writer must NOT overwrite (first-writer-wins).
+    # first-writer-wins: second writer must not overwrite
     r.stamp("second_source", "sampling_frequency", old=500.0, new=750.0)
     assert r.provenance["sampling_frequency"] == "first_source"
 
-    # Case 3: (old=0, new=500) — legacy SKIPS this case; new must too.
+    # (old=0, new=500): legacy _stamp_provenance used `old is None`, so no stamp
     r2 = CascadeResult()
     r2.stamp("any_source", "nchans", old=0, new=500)
     assert r2.provenance["nchans"] is None, (
@@ -83,7 +66,7 @@ def test_cascade_result_stamp_only_fires_on_none_to_non_none_transition():
         "(legacy _stamp_provenance used `old is None` check)"
     )
 
-    # Case 4: (old=None, new=None) — no stamp.
+    # (old=None, new=None): no stamp
     r3 = CascadeResult()
     r3.stamp("any_source", "ntimes", old=None, new=None)
     assert r3.provenance["ntimes"] is None
@@ -178,7 +161,6 @@ def test_modality_sidecar_step_does_not_overwrite_filled_fields(monkeypatch):
     bids_dataset.bidsdir = "/tmp/bids"
     ctx = CascadeContext(bids_dataset, "sub-01_eeg.vhdr")
 
-    # Step 1 already filled sampling_frequency.
     result = CascadeResult(sampling_frequency=500.0, nchans=None)
     result.provenance["sampling_frequency"] = "mne_bids"
 
@@ -237,7 +219,7 @@ def test_binary_parser_step_uses_registry(monkeypatch):
     bids_dataset = MagicMock()
     bids_dataset.bidsdir = "/tmp/bids"
     ctx = CascadeContext(bids_dataset, "sub-01_eeg.edf")
-    result = CascadeResult()  # all fields None
+    result = CascadeResult()
 
     mc.BinaryParserStep().fill(ctx, result)
 
@@ -250,7 +232,6 @@ def test_binary_parser_step_uses_registry(monkeypatch):
 def test_binary_parser_step_skipped_when_all_fields_filled(monkeypatch):
     """If Steps 1-3 already filled everything, Step 4 must be a no-op."""
 
-    # MagicMock tracks call counts without needing a nested function.
     fake_parser = MagicMock(return_value={"sampling_frequency": 999.0, "nchans": 1})
     monkeypatch.setattr(
         mc, "get_parser_for_extension", MagicMock(return_value=fake_parser)
@@ -265,8 +246,8 @@ def test_binary_parser_step_skipped_when_all_fields_filled(monkeypatch):
 
     mc.BinaryParserStep().fill(ctx, result)
 
-    fake_parser.assert_not_called()  # parser never invoked
-    assert result.sampling_frequency == 500.0  # unchanged
+    fake_parser.assert_not_called()
+    assert result.sampling_frequency == 500.0
 
 
 # ─── MneFallbackStep ──────────────────────────────────────────────────────
@@ -337,19 +318,16 @@ def test_metadata_cascade_runs_all_steps_in_order(monkeypatch):
     )
     bids_dataset.channel_labels.return_value = None
 
-    # Step 2 contributes nchans
     monkeypatch.setattr(
         mc,
         "extract_sfreq_nchans_from_modality_sidecar",
         lambda _p, _r, sf, nc: (sf, nc or 32),
     )
-    # Step 3 contributes nothing extra
     monkeypatch.setattr(
         mc,
         "extract_sfreq_nchans_from_channels_tsv",
         lambda _p, _r, sf, nc: (sf, nc),
     )
-    # Step 4 contributes ntimes + ch_names
     monkeypatch.setattr(
         mc,
         "get_parser_for_extension",

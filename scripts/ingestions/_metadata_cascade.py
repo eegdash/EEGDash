@@ -1,28 +1,12 @@
 """Technical-metadata cascade for the BIDS digest pipeline.
 
 Resolves ``(sampling_frequency, nchans, ntimes, ch_names)`` plus a
-per-field provenance dict by trying up to five sources, in order, with
-**first-writer-wins** semantics:
+per-field provenance dict by trying up to five sources in order with
+first-writer-wins semantics: MneBidsStep → ModalitySidecarStep →
+ChannelsTsvStep → BinaryParserStep → MneFallbackStep.
 
-1. :class:`MneBidsStep`         — ``EEGBIDSDataset`` attribute getters.
-2. :class:`ModalitySidecarStep` — Modality JSON sidecar (BIDS inheritance walk).
-3. :class:`ChannelsTsvStep`     — ``channels.tsv`` (BIDS inheritance walk).
-4. :class:`BinaryParserStep`    — Per-extension parser via the format registry.
-5. :class:`MneFallbackStep`     — MNE fallback for VHDR ntimes + FIF metadata.
-
-Deep-module promise: the only public surface is
-:class:`MetadataCascade.run`, which takes a :class:`CascadeContext` and
-returns a :class:`CascadeResult`. Adding a 6th cascade source is one new
-:class:`CascadeStep` subclass plus one entry in the default tuple — no
-changes are required in ``3_digest.py``.
-
-The legacy ``_extract_technical_metadata`` function in ``3_digest.py``
-is now a thin delegator that wraps this module. The byte-level
-guarantee against the legacy behaviour is enforced by
-``tests/test_digest_snapshot.py``.
-
-See -PLAN.md`` Task 3 for the design
-rationale.
+Public surface: :class:`MetadataCascade.run` takes a
+:class:`CascadeContext` and returns a :class:`CascadeResult`.
 """
 
 from __future__ import annotations
@@ -38,11 +22,8 @@ import pandas as pd
 import mne
 from _format_parser_registry import get_parser_for_extension
 
-# Provenance source names. Re-exported from ``3_digest.py`` (with a
-# leading underscore in the legacy module) for back-compat. The
-# values must stay byte-identical — they are persisted into every
-# Record's ``_metadata_provenance`` field, and snapshot tests assert
-# byte-level stability.
+# Provenance source names persisted into ``_metadata_provenance``; values are
+# snapshot-tested for byte-level stability — do not rename.
 PROV_MNE_BIDS = "mne_bids"
 PROV_MODALITY_SIDECAR = "modality_sidecar"
 PROV_CHANNELS_TSV = "channels_tsv"
@@ -57,12 +38,11 @@ _METADATA_FIELDS: tuple[str, ...] = (
 )
 
 
-# ─── BIDS sidecar helpers (moved here from 3_digest.py) ───────────────────
+# ─── BIDS sidecar helpers ─────────────────────────────────────────────────
 
 
-# Per-modality JSON sidecar suffixes. Order matters: MEG before EEG so a
-# co-recorded MEG+EEG study finds the MEG sidecar first (the MEG one is
-# the authoritative source for n_megchans there).
+# Per-modality JSON sidecar suffixes. MEG before EEG so a co-recorded
+# MEG+EEG study finds the MEG sidecar first (authoritative for n_megchans).
 _MODALITY_SIDECAR_SUFFIXES = (
     "_meg.json",
     "_eeg.json",
@@ -87,13 +67,7 @@ _BIDS_CHANNEL_COUNT_FIELDS: tuple[str, ...] = (
 
 
 def sum_bids_channel_counts(sidecar_data: dict[str, Any]) -> int | None:
-    """Sum every BIDS ``*ChannelCount`` field present in a sidecar.
-
-    BIDS sidecars report channel counts per type (EEG, MEG, EOG, etc.)
-    rather than a single total. This helper sums all known per-type
-    fields and returns the total, or ``None`` if the sum is zero (so the
-    caller can distinguish "no info" from "zero channels").
-    """
+    """Sum all known BIDS ``*ChannelCount`` fields; return ``None`` when zero."""
     total = sum(sidecar_data.get(field, 0) or 0 for field in _BIDS_CHANNEL_COUNT_FIELDS)
     return total if total > 0 else None
 
@@ -101,13 +75,7 @@ def sum_bids_channel_counts(sidecar_data: dict[str, Any]) -> int | None:
 def _build_bids_search_paths(
     bids_file_path: Path, bids_root: Path
 ) -> tuple[list[str], list[Path]]:
-    """Build base names and directories for a BIDS-inheritance sidecar walk.
-
-    BIDS sidecars can live in parent directories and may omit run /
-    acquisition entities (inheritance). Returns a list of base-name
-    variants to try (full, run-stripped, acq-stripped, task-only) and a
-    list of directories from the file's parent up to ``bids_root``.
-    """
+    """Return base-name variants and ancestor directories for a BIDS inheritance walk."""
     stem = bids_file_path.stem
     parts = stem.split("_")
 
@@ -149,16 +117,7 @@ def extract_sfreq_nchans_from_modality_sidecar(
     sampling_frequency: float | None,
     nchans: int | None,
 ) -> tuple[float | None, int | None]:
-    """Walk the BIDS inheritance tree for a modality JSON sidecar.
-
-    Looks for ``*_meg.json`` / ``*_eeg.json`` / ``*_ieeg.json`` /
-    ``*_nirs.json`` adjacent to ``bids_file_path`` and walks up to
-    ``bids_root`` following BIDS inheritance, returning the first
-    ``(SamplingFrequency, sum of *ChannelCount fields)`` found.
-
-    Returns the inputs untouched if the caller already has both values
-    (short-circuit) or if no sidecar surfaces a value.
-    """
+    """Fill missing sfreq/nchans from a modality JSON sidecar using BIDS inheritance."""
     if sampling_frequency and nchans:
         return sampling_frequency, nchans
 
@@ -200,14 +159,7 @@ def extract_sfreq_nchans_from_channels_tsv(
     sampling_frequency: float | None,
     nchans: int | None,
 ) -> tuple[float | None, int | None]:
-    """Fill in missing sfreq/nchans from a BIDS ``*_channels.tsv``.
-
-    Walks the BIDS inheritance tree like
-    :func:`extract_sfreq_nchans_from_modality_sidecar`, but reads a
-    ``_channels.tsv`` instead of a JSON sidecar. ``nchans`` is the row
-    count; ``sampling_frequency`` is read from the
-    ``sampling_frequency`` / ``SamplingFrequency`` column if present.
-    """
+    """Fill missing sfreq/nchans from a ``*_channels.tsv`` using BIDS inheritance."""
     if sampling_frequency and nchans:
         return sampling_frequency, nchans
 
@@ -260,23 +212,12 @@ def extract_sfreq_nchans_from_channels_tsv(
     return sampling_frequency, nchans
 
 
-# ─── FIF metadata helper (moved here from 3_digest.py) ────────────────────
+# ─── FIF metadata helper ──────────────────────────────────────────────────
 
 
 def _parse_fif_with_mne(fif_path: Path) -> tuple[dict[str, Any] | None, bool]:
-    """Parse metadata from a FIF file using MNE.
-
-    Uses ``on_split_missing="warn"`` so that git-annex datasets where
-    content-hash filenames break MNE's split-file linkage can still
-    have their header metadata extracted.
-
-    Returns
-    -------
-    tuple[dict[str, Any] | None, bool]
-        ``(metadata or None, is_split flag)``. ``is_split`` is True when
-        MNE detects a split raw file.
-    """
-    # Check if file exists and is readable (not a broken git-annex symlink).
+    """Parse FIF metadata via MNE; ``on_split_missing="warn"`` lets git-annex hash-named files yield header data."""
+    # Broken git-annex symlinks resolve to non-existent targets.
     if not fif_path.exists():
         return None, False
     try:
@@ -324,7 +265,6 @@ def _parse_fif_with_mne(fif_path: Path) -> tuple[dict[str, Any] | None, bool]:
                 pass
 
     except (OSError, ValueError, RuntimeError, KeyError, TypeError, AttributeError):
-        # Same recoverable parse-failure set as _parse_edf_with_mne.
         # AttributeError: mne >=1.12 raises this from _fiff/open.py:151
         # when reading a malformed FIF (tag is None → tag.kind crashes).
         return None, False
@@ -335,7 +275,7 @@ def _parse_fif_with_mne(fif_path: Path) -> tuple[dict[str, Any] | None, bool]:
 
 @dataclass
 class CascadeContext:
-    """Input context for the cascade. Derived fields computed in ``__post_init__``."""
+    """Input bundle for one cascade run; derived fields populated in ``__post_init__``."""
 
     bids_dataset: Any
     bids_file: str
@@ -353,17 +293,7 @@ class CascadeContext:
 
 @dataclass
 class CascadeResult:
-    """Accumulated cascade output. Steps mutate this in-place.
-
-    Provenance is a flat ``{field_name -> source_name | None}`` dict
-    matching the legacy ``_extract_technical_metadata`` return shape;
-    ``None`` means the field was never filled by any step.
-
-    The :meth:`stamp` helper implements first-writer-wins semantics —
-    a later step that picks up the *same* value as the previous one
-    does not overwrite the provenance (mirrors the original
-    ``_stamp_provenance`` guard in ``3_digest.py``).
-    """
+    """Accumulated output of one cascade run; ``provenance[field]`` is the first source that filled it, or ``None``."""
 
     sampling_frequency: float | None = None
     nchans: int | None = None
@@ -376,13 +306,7 @@ class CascadeResult:
     )
 
     def stamp(self, source: str, field_name: str, old: Any, new: Any) -> None:
-        """Mark ``provenance[field_name] = source`` iff this step filled it.
-
-        First-writer-wins per field. Mirrors legacy
-        ``3_digest.py:_stamp_provenance``: only stamps when the field's prior
-        value was ``None`` AND the new value is non-None AND no source has
-        yet claimed the field.
-        """
+        """Record ``source`` as the provenance for ``field_name`` on first write."""
         if old is None and new is not None and self.provenance[field_name] is None:
             self.provenance[field_name] = source
 
@@ -391,12 +315,7 @@ class CascadeResult:
 
 
 class CascadeStep(Protocol):
-    """Protocol every cascade step implements.
-
-    Each step mutates the ``result`` in-place — typically by filling
-    fields that were previously ``None`` and stamping provenance via
-    ``result.stamp(...)``.
-    """
+    """Protocol for cascade steps; each mutates ``result`` in-place."""
 
     def fill(self, ctx: CascadeContext, result: CascadeResult) -> None: ...
 
@@ -411,8 +330,7 @@ class MneBidsStep:
             nc = bd.get_bids_file_attribute("nchans", ctx.bids_file)
             nt = bd.get_bids_file_attribute("ntimes", ctx.bids_file)
         except (FileNotFoundError, OSError):
-            # BIDS sidecar JSON may be a broken git-annex symlink.
-            # Fallback steps below will attempt to extract from data files.
+            # Broken git-annex symlink on the BIDS sidecar JSON.
             sf = nc = nt = None
 
         if sf:
@@ -425,22 +343,16 @@ class MneBidsStep:
             result.ntimes = int(nt)
             result.provenance["ntimes"] = PROV_MNE_BIDS
 
-        # ``channel_labels`` reads channels.tsv via mne_bids — same library,
-        # same source category for provenance purposes.
+        # channel_labels reads channels.tsv via mne_bids — same provenance bucket.
         try:
             ch_names = bd.channel_labels(ctx.bids_file)
         except (FileNotFoundError, OSError, ValueError, KeyError, AttributeError):
-            # channels.tsv may be absent, a broken git-annex symlink, or
-            # malformed. Downstream fallback infers channels from the
-            # binary header.
             ch_names = None
         if ch_names:
             result.ch_names = ch_names
             result.provenance["ch_names"] = PROV_MNE_BIDS
-            # Prefer channel_labels count over sidecar nchans (sidecar
-            # JSON may only have partial counts, e.g. EEGChannelCount).
-            # nchans provenance stays at whatever step filled it first if
-            # already set; we only overwrite the VALUE.
+            # channel_labels count is more complete than sidecar *ChannelCount sums;
+            # overwrite the value but only claim provenance if not yet stamped.
             if result.provenance["nchans"] is None:
                 result.provenance["nchans"] = PROV_MNE_BIDS
             result.nchans = len(ch_names)
@@ -484,7 +396,7 @@ class BinaryParserStep:
         if parser is None:
             return
 
-        # Short-circuit: skip if all four fields are already populated.
+        # Skip when all four fields are already populated.
         if (
             result.sampling_frequency
             and result.nchans
@@ -532,9 +444,7 @@ class MneFallbackStep:
                     if result.provenance["ntimes"] is None:
                         result.provenance["ntimes"] = PROV_MNE_FALLBACK
             except (OSError, ValueError, RuntimeError, KeyError):
-                # MNE brainvision reader: OSError on missing companion
-                # files, ValueError on malformed header, RuntimeError on
-                # unsupported variant. n_times stays unset.
+                # Missing companion file, malformed header, or unsupported variant.
                 pass
             finally:
                 if raw is not None:
@@ -575,12 +485,7 @@ class MneFallbackStep:
 
 
 class MetadataCascade:
-    """Runs cascade steps in order. First writer for each field wins.
-
-    The default step order matches the legacy
-    ``_extract_technical_metadata`` (preserves snapshot bytes). Tests
-    can inject alternate orderings via the ``steps`` argument.
-    """
+    """Runs cascade steps in order; first writer per field wins. Inject ``steps`` in tests."""
 
     def __init__(self, steps: tuple[CascadeStep, ...] | None = None) -> None:
         self.steps = steps or (

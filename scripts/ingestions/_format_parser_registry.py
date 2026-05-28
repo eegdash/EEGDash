@@ -32,6 +32,13 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Protocol, TypedDict
 
+import mne
+
+from _mef3_parser import parse_mef3_metadata
+from _set_parser import parse_set_metadata
+from _snirf_parser import parse_snirf_metadata
+from _vhdr_parser import parse_vhdr_metadata
+
 
 class FormatParserResult(TypedDict, total=False):
     """The shape returned by every :class:`FormatParser`.
@@ -114,10 +121,6 @@ def _parse_edf_with_mne(path: Path) -> FormatParserResult | None:
     except (OSError, RuntimeError):
         return None
 
-    # mne is heavy — import lazily so callers that don't hit this
-    # parser don't pay the cost.
-    import mne
-
     try:
         raw = mne.io.read_raw_edf(str(path), preload=False, verbose=False)
     except (OSError, ValueError, RuntimeError, KeyError, TypeError):
@@ -143,17 +146,7 @@ def _parse_edf_with_mne(path: Path) -> FormatParserResult | None:
 
 
 def _build_registry() -> dict[str, FormatParser]:
-    """Construct the extension → parser map.
-
-    Lazy because the per-format parser modules pull MNE for some
-    formats; lazy-import keeps cold-start cheap when a digest run
-    doesn't actually hit a given format.
-    """
-    from _mef3_parser import parse_mef3_metadata
-    from _set_parser import parse_set_metadata
-    from _snirf_parser import parse_snirf_metadata
-    from _vhdr_parser import parse_vhdr_metadata
-
+    """Construct the extension → parser map."""
     return {
         ".edf": _parse_edf_with_mne,
         ".bdf": _parse_edf_with_mne,

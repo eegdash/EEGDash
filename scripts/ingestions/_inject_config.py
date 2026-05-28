@@ -27,9 +27,12 @@ injection logic don't change.
 
 from __future__ import annotations
 
+import argparse
+import logging
 import sys
 from pathlib import Path
 
+import httpx
 from pydantic import AliasChoices, Field, field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -73,8 +76,6 @@ def fetch_valid_databases_from_api(
         # return None so the validator falls back instead of treating
         # an empty set as "no valid databases".
         return cached if cached else None
-
-    import httpx
 
     headers = {"Authorization": f"Bearer {token}"} if token else {}
     try:
@@ -163,8 +164,6 @@ class InjectConfig(BaseSettings):
 
         api_set = fetch_valid_databases_from_api(api_url, token)
         if api_set is None:
-            import logging
-
             logging.getLogger(__name__).warning(
                 "Could not reach %s/admin/valid-databases; using "
                 "LOCAL_FALLBACK_DATABASES alone. Database-list drift "
@@ -315,8 +314,6 @@ def load_inject_config_from_argv(argv: list[str] | None = None) -> InjectConfig:
     surfaced as :class:`pydantic.ValidationError` (caller can render
     them nicely) instead of vague argparse errors.
     """
-    import argparse
-
     parser = argparse.ArgumentParser(
         description=(
             "Inject digested datasets and records into MongoDB via "

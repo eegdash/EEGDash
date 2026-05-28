@@ -12,6 +12,16 @@ import logging
 from pathlib import Path
 from typing import Any
 
+try:
+    import h5py
+except ImportError:  # pragma: no cover - optional dependency
+    h5py = None  # type: ignore[assignment]
+
+try:
+    from mne.io import read_raw_snirf
+except ImportError:  # pragma: no cover - optional dependency
+    read_raw_snirf = None  # type: ignore[assignment]
+
 from _parser_utils import validate_file_path
 
 logger = logging.getLogger(__name__)
@@ -52,9 +62,10 @@ def parse_snirf_metadata(snirf_path: Path | str) -> dict[str, Any] | None:
     if not validate_file_path(snirf_path):
         return None
 
-    try:
-        from mne.io import read_raw_snirf
+    if read_raw_snirf is None:
+        return _parse_snirf_with_h5py(snirf_path)
 
+    try:
         # Read SNIRF file with MNE (preload=False to avoid loading data)
         raw = read_raw_snirf(str(snirf_path), preload=False, verbose=False)
         try:
@@ -91,9 +102,6 @@ def parse_snirf_metadata(snirf_path: Path | str) -> dict[str, Any] | None:
                 # wasn't a real MNE object (unlikely but defensive).
                 pass
 
-    except ImportError:
-        # MNE not available, try fallback h5py parser
-        return _parse_snirf_with_h5py(snirf_path)
     except (OSError, ValueError, KeyError, RuntimeError) as e:
         # MNE's SNIRF reader raises RuntimeError on unsupported variants,
         # OSError on file-system issues, ValueError on schema mismatch,
@@ -118,9 +126,7 @@ def _parse_snirf_with_h5py(snirf_path: Path) -> dict[str, Any] | None:
         Parsed metadata or None.
 
     """
-    try:
-        import h5py
-    except ImportError:
+    if h5py is None:
         return None
 
     result: dict[str, Any] = {}

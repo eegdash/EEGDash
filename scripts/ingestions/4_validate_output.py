@@ -28,6 +28,8 @@ from pathlib import Path
 from eegdash.schemas import DatasetModel, ManifestFileModel, ManifestModel, RecordModel
 from pydantic import ValidationError
 
+from _validate_config import load_validate_config_from_argv
+
 # Valid storage URL patterns per source
 VALID_STORAGE_PATTERNS = {
     "openneuro": r"^s3://openneuro\.org/ds\d+",
@@ -538,10 +540,6 @@ def main():
     # declarative fields + validators on ValidateConfig. Tests construct
     # ValidateConfig directly; this function stays the only argv-bound
     # entry point.
-    from pydantic import ValidationError
-
-    from _validate_config import load_validate_config_from_argv
-
     try:
         cfg = load_validate_config_from_argv()
     except ValidationError as exc:

@@ -13,7 +13,6 @@ import logging
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from datetime import date, datetime
-from importlib.util import module_from_spec, spec_from_file_location
 from pathlib import Path, PurePath
 from typing import Any
 
@@ -162,8 +161,11 @@ class BIDSFilesystemEnumerator(RecordEnumerator):
             dataset=self.dataset_id,
             allow_symlinks=True,
         )
-        digest_mod = _load_digest_module()
-        return digest_mod._enumerate_via_bids(
+        # Lazy import keeps this acyclic: _bids_digest imports EnumerationResult
+        # from this module, so it must load after record_enumerator is defined.
+        from _bids_digest import _enumerate_via_bids  # noqa: PLC0415
+
+        return _enumerate_via_bids(
             self.dataset_dir,
             self.dataset_id,
             self.source,
@@ -203,32 +205,15 @@ class ManifestEnumerator(RecordEnumerator):
                 ],
                 digest_method="manifest_only",
             )
-        digest_mod = _load_digest_module()
-        result, total_files = digest_mod._enumerate_via_manifest(
+        # Lazy import keeps this acyclic: _manifest_digest imports EnumerationResult
+        # from this module, so it must load after record_enumerator is defined.
+        from _manifest_digest import _enumerate_via_manifest  # noqa: PLC0415
+
+        result, total_files = _enumerate_via_manifest(
             self.dataset_id, manifest, self.digested_at
         )
         result.total_files = total_files
         return result
-
-
-_DIGEST_MODULE_CACHE: Any = None
-
-
-def _load_digest_module() -> Any:
-    """Lazy-load ``3_digest.py`` via importlib (digit prefix blocks normal import), cached."""
-    global _DIGEST_MODULE_CACHE
-    if _DIGEST_MODULE_CACHE is not None:
-        return _DIGEST_MODULE_CACHE
-    spec = spec_from_file_location(
-        "_record_enumerator_digest_target",
-        Path(__file__).parent / "3_digest.py",
-    )
-    if spec is None or spec.loader is None:  # pragma: no cover
-        raise ImportError("could not load 3_digest.py")
-    mod = module_from_spec(spec)
-    spec.loader.exec_module(mod)
-    _DIGEST_MODULE_CACHE = mod
-    return mod
 
 
 def load_manifest_or_summary(

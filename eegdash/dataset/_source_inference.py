@@ -17,14 +17,17 @@ never directly fetchable. EEGDash treats ``backend="nemar"`` as a marker
 that means "do not attempt a public S3 fetch; surface an actionable
 ``StorageAccessError`` if the file is not already in cache."
 
-Keep ``STORAGE_CONFIGS`` aligned with ``scripts/ingestions/3_digest.py``.
+**Single source of truth** for ``STORAGE_CONFIGS``. The ingestion
+pipeline (``scripts/ingestions/3_digest.py``) imports from here rather
+than maintaining its own copy. This was promoted in Phase 8 / S1.thick
+(2026-05) — see ``scripts/ingestions/source_adapter.py`` for the
+ingest-side SourceAdapter Module that consumes this table.
 """
 
 from __future__ import annotations
 
-# Source -> remote storage prefix. Mirrors STORAGE_CONFIGS in
-# scripts/ingestions/3_digest.py and the patterns in
-# scripts/ingestions/_validate.py::SOURCE_STORAGE_PATTERNS.
+# Source -> remote storage prefix. Canonical home; ingestion imports
+# from here (was previously duplicated in 3_digest.py).
 STORAGE_CONFIGS: dict[str, dict[str, str]] = {
     "openneuro": {"backend": "s3", "base": "s3://openneuro.org"},
     # NEMAR uses a dedicated, non-fetchable backend tag. The ``base`` is
@@ -70,10 +73,10 @@ def infer_source_from_dataset_id(dataset_id: str) -> str | None:
 def expected_storage_base(dataset_id: str) -> str | None:
     """Return the canonical ``storage.base`` for ``dataset_id``.
 
-    Only returns a value for dataset IDs whose pattern unambiguously
-    determines the source (OpenNeuro and NEMAR). Returns ``None`` for
-    sources that need extra metadata to build the URL (figshare/zenodo/
-    osf use per-record IDs that aren't derivable from ``dataset_id``).
+    Only returns a value for IDs whose pattern unambiguously determines
+    the source (OpenNeuro and NEMAR). Returns ``None`` for sources that
+    need extra metadata to build the URL (figshare/zenodo/osf use per-
+    record IDs that aren't derivable from ``dataset_id``).
     """
     source = infer_source_from_dataset_id(dataset_id)
     if source not in {"openneuro", "nemar"}:
@@ -87,6 +90,12 @@ def expected_backend(dataset_id: str) -> str | None:
     if source is None:
         return None
     return STORAGE_CONFIGS[source]["backend"]
+
+
+# Fallback when ``source`` isn't in STORAGE_CONFIGS — kept tiny so call
+# sites can spell ``STORAGE_CONFIGS.get(source, DEFAULT_STORAGE_CONFIG)``
+# inline without a wrapper.
+DEFAULT_STORAGE_CONFIG: dict[str, str] = {"backend": "https", "base": "https://unknown"}
 
 
 def correct_storage_inplace(

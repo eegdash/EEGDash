@@ -465,7 +465,7 @@ def signal_decorrelation_time(x, /, *, _metadata):
     compute the autocorrelation via the inverse FFT of the power spectrum.
 
     """
-    f = np.fft.fft(x - x.mean(axis=-1, keepdims=True), n=2 * x.shape[-1], axis=-1)
+    f = np.fft.fft(x - x.mean(axis=-1, keepdims=True), axis=-1)
     ac = np.fft.ifft(f.real**2 + f.imag**2, axis=-1)[..., : x.shape[-1] // 2].real
     dct = np.argmax(np.signbit(ac), axis=-1)
     return dct / _metadata["info"]["sfreq"]

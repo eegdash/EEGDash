@@ -79,18 +79,11 @@ def test_figshare_http_error_returns_empty():
 @pytest.mark.slow
 @respx.mock
 def test_figshare_5xx_triggers_retries_then_propagates():
-    """5xx responses trigger tenacity-driven retries inside
-    request_response; after exhausting retries the call raises
-    tenacity.RetryError (NOT returning empty).
-
-    This is intentional: 5xx is "the server may recover" — the
-    pipeline should know about persistent server errors rather than
-    silently treating them as "no files".
+    """5xx responses trigger tenacity-driven retries; after exhausting retries raises tenacity.RetryError.
 
     Contrast with 4xx (e.g. 404), which is "not found, definitive" and
     returns empty cleanly (see ``test_figshare_http_error_returns_empty``).
     """
-
     respx.get("https://api.figshare.com/v2/articles/500/files").mock(
         return_value=httpx.Response(500, text="server error")
     )
@@ -316,17 +309,12 @@ def test_all_adapters_return_empty_list_on_http_404():
 @pytest.mark.slow
 @respx.mock
 def test_all_adapters_tolerate_network_failure():
-    """A complete network failure (httpx ConnectError) → empty list.
+    """A complete network failure (httpx ConnectError) → empty list for all adapters.
 
-    Mocked here as an httpx exception bubbling from respx.
-
-    Slow because the production adapters use ``backoff_factor=1.0`` —
-    3 retries x 3 adapters x ~1 sec backoff = ~9 sec. Marked slow so
-    PR-fast CI skips it; the nightly bench / slow-test job picks it up.
-    The behaviour-pinning value is real (empty-list-on-failure for all
-    3 adapters); the production timing is real too. Don't change the
-    backoff in the test to make it faster — that would test a different
-    config than production runs.
+    Slow because production adapters use ``backoff_factor=1.0`` — 3 retries x 3
+    adapters x ~1 sec backoff ≈ 9 sec. Marked slow so PR-fast CI skips it.
+    Don't change the backoff in the test — that would test a different config than
+    production runs.
     """
     routes = [
         "https://api.figshare.com/v2/articles/dead/files",
@@ -420,8 +408,7 @@ def test_scidb_happy_path_flat_directory():
     """SciDB API returns a flat list of files at a single path level.
 
     The real API uses `code: 20000` as the success marker and `dir`
-    (not isDirectory) for the type flag. Paths are stripped of the
-    version prefix.
+    (not isDirectory) for the type flag. Paths are stripped of the version prefix.
     """
     respx.post(_SCIDB_URL).mock(
         return_value=httpx.Response(
@@ -485,38 +472,38 @@ def test_scidb_non_success_code_returns_empty():
 # ─── list_datarn_files (WebDAV PROPFIND) ──────────────────────────────────
 
 
+@pytest.mark.parametrize(
+    ("url", "mock_response"),
+    [
+        pytest.param(
+            "https://data.ru.nl/study/12345",
+            httpx.Response(200, text="<html><body>no json-ld here</body></html>"),
+            id="no_ld_json",
+        ),
+        pytest.param(
+            "https://data.ru.nl/study/missing",
+            httpx.Response(404),
+            id="source_url_404",
+        ),
+        pytest.param(
+            "https://data.ru.nl/study/55555",
+            httpx.Response(
+                200,
+                text=(
+                    '<html><script type="application/ld+json">'
+                    '{"distribution": {"@type": "DataDownload"}}'
+                    "</script></html>"
+                ),
+            ),
+            id="no_webdav_url_in_distribution",
+        ),
+    ],
+)
 @respx.mock
-def test_datarn_returns_empty_when_no_ld_json():
-    """If the source URL has no JSON-LD distribution, return empty."""
-    respx.get("https://data.ru.nl/study/12345").mock(
-        return_value=httpx.Response(
-            200,
-            text="<html><body>no json-ld here</body></html>",
-        )
-    )
-    assert list_datarn_files("https://data.ru.nl/study/12345") == []
-
-
-@respx.mock
-def test_datarn_returns_empty_when_source_url_404():
-    """A 404 on the source URL → empty list."""
-    respx.get("https://data.ru.nl/study/missing").mock(return_value=httpx.Response(404))
-    assert list_datarn_files("https://data.ru.nl/study/missing") == []
-
-
-@respx.mock
-def test_datarn_returns_empty_when_no_webdav_url_in_distribution():
-    """The page parses, but the distribution dict has no ``contentUrl`` →
-    empty list (no fallback)."""
-    html = (
-        '<html><script type="application/ld+json">'
-        '{"distribution": {"@type": "DataDownload"}}'
-        "</script></html>"
-    )
-    respx.get("https://data.ru.nl/study/55555").mock(
-        return_value=httpx.Response(200, text=html)
-    )
-    assert list_datarn_files("https://data.ru.nl/study/55555") == []
+def test_datarn_returns_empty(url: str, mock_response: httpx.Response):
+    """list_datarn_files returns [] when the source is unreachable or has no usable distribution."""
+    respx.get(url).mock(return_value=mock_response)
+    assert list_datarn_files(url) == []
 
 
 # ─── list_git_files (filesystem walk) ─────────────────────────────────────

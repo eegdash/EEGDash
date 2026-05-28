@@ -3,12 +3,8 @@
 from __future__ import annotations
 
 import hashlib
+from collections.abc import Iterable
 from pathlib import Path
-from typing import Iterable
-
-
-def _stable_str(value: str) -> str:
-    return value.replace("\0", "")
 
 
 def _hash_entries(entries: Iterable[tuple[str, int]], seed: str = "") -> str:
@@ -17,7 +13,9 @@ def _hash_entries(entries: Iterable[tuple[str, int]], seed: str = "") -> str:
         hasher.update(seed.encode("utf-8", errors="replace"))
         hasher.update(b"\0")
     for path, size in sorted(entries):
-        hasher.update(_stable_str(path).encode("utf-8", errors="replace"))
+        # path.replace("\0", "") strips embedded NULs that would split the
+        # hash domain (NULs are our entry separator).
+        hasher.update(path.replace("\0", "").encode("utf-8", errors="replace"))
         hasher.update(b"\0")
         hasher.update(str(int(size)).encode("ascii", errors="ignore"))
         hasher.update(b"\0")

@@ -1,0 +1,163 @@
+name: Ingestions — Mutmut nightly
+
+# Mutation testing as a nightly job (NOT per-PR — each parser takes
+# 10-20 minutes to mutate end-to-end). Tracks kill-ratio over time;
+# alerts when it drops below the configured floor.
+#
+# Per  P0.2.md for the
+# baseline taken in session 4 (69.5% on _vhdr_parser.py with a
+# 10-minute budget).
+
+on:
+  schedule:
+    # 02:17 UTC daily — off the :00/:30 marks to avoid the herd.
+    - cron: '17 2 * * *'
+  workflow_dispatch:
+    inputs:
+      target_file:
+        description: 'Parser to mutate (default: _vhdr_parser.py)'
+        required: false
+        default: '_vhdr_parser.py'
+
+concurrency:
+  group: ingestions-mutmut-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  mutmut:
+    name: Mutation testing — ${{ matrix.parser }}
+    runs-on: ubuntu-latest
+    # Long timeout because each parser is 10-25 minutes single-threaded.
+    # With ``--simultaneous-mutants 4`` (set in the step below), each
+    # parser should finish in 5-8 minutes.
+    timeout-minutes: 45
+    strategy:
+      # Don't fail-fast — each parser is independent; we want all kill
+      # ratios reported even if one fails.
+      fail-fast: false
+      matrix:
+        parser:
+          - _vhdr_parser.py
+          - _set_parser.py
+          - _snirf_parser.py
+          - _mef3_parser.py
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install ingestion + dev deps
+        run: pip install -e "scripts/ingestions[dev]"
+
+      - name: Pin mutmut to 2.x (3.x has a config-parsing bug)
+        # mutmut 3.x splits ``tests_dir = "tests/"`` letter-by-letter
+        # into pytest args. Documented in findings-phase-4.md.
+        run: pip install 'mutmut<3'
+
+      - name: Override mutmut target + runner
+        working-directory: scripts/ingestions
+        env:
+          # On scheduled runs use the matrix's parser; on
+          # workflow_dispatch use the user-supplied input.
+          TARGET: ${{ github.event_name == 'schedule' && matrix.parser || github.event.inputs.target_file }}
+        run: |
+          # Map parser filename to its parser-specific test file.
+          # Naming convention after the tests-subfolder reorg:
+          #   _vhdr_parser.py → tests/parsers/test_vhdr.py
+          # Strip the leading underscore, the trailing _parser, and ``.py``,
+          # then prefix with ``tests/parsers/test_``.
+          STEM="$(echo "$TARGET" | sed -e 's|^_||' -e 's|_parser\.py$||' -e 's|\.py$||')"
+          PARSER_TEST="tests/parsers/test_${STEM}.py"
+          if [ ! -f "$PARSER_TEST" ]; then
+            echo "FAIL: parser-specific test file not found: $PARSER_TEST"
+            exit 1
+          fi
+          NEW_RUNNER="python -m pytest $PARSER_TEST tests/parsers/test_property.py -x -q --tb=no --no-header -p no:cacheprovider"
+          sed -i "s|paths_to_mutate = .*|paths_to_mutate = \"$TARGET\"|" pyproject.toml
+          sed -i "s|runner = .*|runner = \"$NEW_RUNNER\"|" pyproject.toml
+          echo "Effective mutmut config:"
+          grep -A2 "tool.mutmut" pyproject.toml
+
+      - name: Run mutmut (parallel; ~5-8 min per parser)
+        working-directory: scripts/ingestions
+        # Bounded run with cache enabled (mutmut 2.x caches in
+        # .mutmut-cache and skips already-tested mutants on re-runs).
+        run: |
+          set +e
+          timeout 1800 mutmut run --simultaneous-mutants 4 || true
+          set -e
+          echo "Mutmut run finished."
+
+      - name: Report results
+        working-directory: scripts/ingestions
+        run: |
+          echo "═══════════════════════════════════════════════════════"
+          echo "Mutmut results for ${{ matrix.parser }}"
+          echo "═══════════════════════════════════════════════════════"
+          mutmut results || true
+          echo "═══════════════════════════════════════════════════════"
+
+      - name: Compute kill ratio + check floor (60%)
+        working-directory: scripts/ingestions
+        run: |
+          python <<'PY'
+          # Compute kill ratio from ``mutmut results`` text output.
+          # More robust across mutmut versions than reading the SQLite
+          # cache schema (which changed between 2.x point releases).
+          import re
+          import subprocess
+          import sys
+
+          try:
+              out = subprocess.run(
+                  ["mutmut", "results"],
+                  capture_output=True,
+                  text=True,
+                  check=False,
+                  timeout=60,
+              )
+          except subprocess.TimeoutExpired:
+              print("WARN: mutmut results timed out — skipping ratio check")
+              sys.exit(0)
+
+          text = (out.stdout or "") + (out.stderr or "")
+          # Headings look like ``Survived 🙁 (29)`` / ``Killed (66)``.
+          def _count(label: str) -> int:
+              m = re.search(rf"{label}.*?\((\d+)\)", text, re.IGNORECASE)
+              return int(m.group(1)) if m else 0
+
+          killed = _count("Killed")
+          survived = _count("Survived")
+          tested = killed + survived
+          ratio = (killed / tested * 100) if tested > 0 else 0.0
+
+          print(f"Killed:    {killed}")
+          print(f"Survived:  {survived}")
+          print(f"Tested:    {tested}")
+          print(f"Ratio:     {ratio:.1f}%")
+          print()
+
+          if tested == 0:
+              print("WARN: no mutants tested; mutmut may have errored")
+              sys.exit(0)
+
+          FLOOR = 60.0
+          if ratio < FLOOR:
+              print(f"FAIL: kill ratio {ratio:.1f}% below floor {FLOOR}%")
+              sys.exit(1)
+          print(f"OK: kill ratio {ratio:.1f}% >= floor {FLOOR}%")
+          PY
+
+      - name: Upload mutmut cache as workflow artefact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mutmut-cache-${{ matrix.parser }}-${{ github.run_id }}
+          path: scripts/ingestions/.mutmut-cache
+          retention-days: 30

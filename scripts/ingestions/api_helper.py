@@ -27,6 +27,7 @@ import os
 import sys
 from typing import Any
 
+import httpx
 import requests
 
 
@@ -377,7 +378,15 @@ Environment Variables:
             print(f"\nTotal: {len(datasets)} datasets")
             return 0
 
-    except Exception as e:
+    except (
+        httpx.RequestError,
+        httpx.HTTPStatusError,
+        KeyError,
+        ValueError,
+        OSError,
+    ) as e:
+        # CLI top-level: recoverable failures become a 1-exit with a
+        # printed error. Programmer errors propagate (no traceback hiding).
         print(f"Error: {e}", file=sys.stderr)
         return 1
 

@@ -99,6 +99,11 @@ tests = [
     'pytest-benchmark',
     'plotly',
     'moabb',
+    # tests/unit_tests/test_annex_key_utils.py + tests/unit_tests/test_digest_parsers.py
+    # import from scripts/ingestions/_file_utils.py + 3_digest.py, which require
+    # these at module top after the PEP-8 import-lift sweep.
+    'tenacity>=8',
+    'pydantic-settings>=2',
 ]
 dev = [
   "pre-commit",

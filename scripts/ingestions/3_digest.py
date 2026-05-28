@@ -30,12 +30,7 @@ import numpy as np
 import pandas as pd
 from tqdm import tqdm
 
-from eegdash.dataset._source_inference import (
-    STORAGE_CONFIGS,
-    get_storage_backend,
-    get_storage_base,
-    get_storage_config,
-)
+from eegdash.dataset._source_inference import DEFAULT_STORAGE_CONFIG, STORAGE_CONFIGS
 from eegdash.dataset.bids_dataset import _COMPANION_FILES
 from eegdash.dataset.io import _repair_participants_tsv_ids
 from eegdash.schemas import (
@@ -377,8 +372,9 @@ def _build_global_storage_info(
     if source not in ("openneuro", "nemar", "gin") and source not in STORAGE_CONFIGS:
         return None
 
-    storage_base = get_storage_base(dataset_id, source)
-    storage_backend = get_storage_backend(source)
+    cfg = STORAGE_CONFIGS.get(source, DEFAULT_STORAGE_CONFIG)
+    storage_base = f"{cfg['base']}/{dataset_id}"
+    storage_backend = cfg["backend"]
 
     dep_keys: list[str] = []
     raw_key = "dataset_description.json"  # default "main" file
@@ -928,8 +924,9 @@ def extract_record(
     datatype = mod_canon
     suffix = mod_canon
 
-    storage_base = get_storage_base(dataset_id, source)
-    storage_backend = get_storage_backend(source)
+    cfg = STORAGE_CONFIGS.get(source, DEFAULT_STORAGE_CONFIG)
+    storage_base = f"{cfg['base']}/{dataset_id}"
+    storage_backend = cfg["backend"]
 
     (
         sampling_frequency,
@@ -1295,8 +1292,7 @@ def _determine_manifest_storage_base(
     storage_base = manifest.get("storage_base")
 
     if not storage_base:
-        config = get_storage_config(source)
-        base = config["base"]
+        base = STORAGE_CONFIGS.get(source, DEFAULT_STORAGE_CONFIG)["base"]
 
         if source == "figshare":
             # Figshare: use source_url from external_links if available.
@@ -1313,7 +1309,9 @@ def _determine_manifest_storage_base(
             return f"{base}/{org}/{dataset_id}"
         return f"{base}/{dataset_id}"
 
-    expected_prefix = get_storage_config(source).get("base", "")
+    expected_prefix = STORAGE_CONFIGS.get(source, DEFAULT_STORAGE_CONFIG).get(
+        "base", ""
+    )
     if expected_prefix and not str(storage_base).startswith(expected_prefix):
         print(
             f"WARNING [digest]: {dataset_id} manifest storage_base="
@@ -1604,7 +1602,9 @@ def _build_bids_data_zip_records(
             dep_keys=[],
             datatype=primary_mod,
             suffix=primary_mod,
-            storage_backend=get_storage_backend(source),
+            storage_backend=STORAGE_CONFIGS.get(source, DEFAULT_STORAGE_CONFIG)[
+                "backend"
+            ],
             recording_modality=recording_modality_val,
             digested_at=digested_at,
         )
@@ -1657,7 +1657,9 @@ def _build_regular_manifest_record(
             dep_keys=[],
             datatype=entities.get("datatype", detected_modality),
             suffix=entities.get("suffix", detected_modality),
-            storage_backend=get_storage_backend(source),
+            storage_backend=STORAGE_CONFIGS.get(source, DEFAULT_STORAGE_CONFIG)[
+                "backend"
+            ],
             recording_modality=[detected_modality],
             digested_at=digested_at,
         )
@@ -1753,7 +1755,9 @@ def _build_ctf_ds_records(
                 dep_keys=[],
                 datatype=entities.get("datatype", detected_modality),
                 suffix=entities.get("suffix", detected_modality),
-                storage_backend=get_storage_backend(source),
+                storage_backend=STORAGE_CONFIGS.get(source, DEFAULT_STORAGE_CONFIG)[
+                    "backend"
+                ],
                 recording_modality=[detected_modality],
                 digested_at=digested_at,
             )

@@ -135,7 +135,7 @@ _PLACEHOLDER_MAX_SIZE = 256
 
 # BIDS datatype → coordinate-system JSON key prefix (used by coordsystem
 # generation/validation helpers).
-_COORD_PREFIX = {"eeg": "EEG", "ieeg": "iEEG", "meg": "MEG"}
+_COORD_PREFIX = {"eeg": "EEG", "ieeg": "iEEG", "meg": "MEG", "emg": "EMG"}
 
 
 def _is_annex_placeholder(path: Path) -> bool:

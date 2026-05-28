@@ -56,7 +56,14 @@ dependencies = [
   "braindecode[hub]>=1.4.0",
   "eeglabio",
   "mne>=1.11.0",
-  "mne_bids>=0.18.0",
+  "mne_bids>=0.19.0",
+  # Official NEMAR client: owns dataset-id validation (nm*/on*),
+  # manifest fetching, BIDS-path → annex-key mapping, and streaming
+  # downloads. eegdash delegates the data.nemar.org safety net to it
+  # instead of duplicating those primitives. >=0.2.0 keeps datalad and
+  # git-annex as opt-in extras (``nemar-py[datalad]``) so the runtime
+  # install stays lean.
+  "nemar-py>=0.2.0",
   "pandas",
   "pydantic",
   "pymatreader",

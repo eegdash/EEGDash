@@ -18,6 +18,8 @@ from eegdash.dataset._source_inference import (
         ("nm000001", "nemar"),
         ("ds005505", "openneuro"),
         ("ds002718", "openneuro"),
+        ("on002181", "nemar"),
+        ("on007315", "nemar"),
         ("EEG2025r1mini", "nemar"),
         ("EEGManyLabs_MMN", "gin"),
         ("totally-custom-id", None),
@@ -31,6 +33,9 @@ def test_infer_source_from_dataset_id(dataset_id, expected):
 def test_expected_storage_base_only_resolves_pattern_sources():
     assert expected_storage_base("nm000237") == "s3://nemar/nm000237"
     assert expected_storage_base("ds005505") == "s3://openneuro.org/ds005505"
+    # OpenNeuro-imported NEMAR mirrors live under the same bucket as native
+    # NEMAR uploads, just under their renamed ``on*`` ID.
+    assert expected_storage_base("on002181") == "s3://nemar/on002181"
     # GIN and unknown patterns require extra metadata, so we don't fabricate one.
     assert expected_storage_base("EEGManyLabs_MMN") is None
     assert expected_storage_base("totally-custom-id") is None
@@ -55,6 +60,26 @@ def test_correct_storage_reroutes_misrouted_nemar_record():
     # paths to SHA-keyed objects via the dataset's git-annex pointers.
     assert rec["storage"]["backend"] == "nemar"
     # Idempotent: a second call leaves the record untouched.
+    assert correct_storage_inplace(rec) == (False, None)
+
+
+def test_correct_storage_reroutes_misrouted_openneuro_mirror():
+    # ``on*`` IDs are NEMAR mirrors of OpenNeuro datasets (see
+    # nemar-cli's ``mapDatasetId``). Records ingested before the ``on*``
+    # pattern was recognised may still carry the OpenNeuro base.
+    rec = {
+        "dataset": "on002181",
+        "storage": {
+            "backend": "s3",
+            "base": "s3://openneuro.org/on002181",
+            "raw_key": "sub-1473/eeg/sub-1473_task-Baseline_eeg.set",
+        },
+    }
+    corrected, old = correct_storage_inplace(rec)
+    assert corrected is True
+    assert old == "s3://openneuro.org/on002181"
+    assert rec["storage"]["base"] == "s3://nemar/on002181"
+    assert rec["storage"]["backend"] == "nemar"
     assert correct_storage_inplace(rec) == (False, None)
 
 

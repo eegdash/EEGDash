@@ -606,8 +606,8 @@ def test_repair_tsv_encoding_edge_cases(tmp_path):
 
 @pytest.mark.parametrize(
     "datatype,expected_prefix",
-    [("eeg", "EEG"), ("ieeg", "iEEG"), ("meg", "MEG")],
-    ids=["eeg", "ieeg", "meg"],
+    [("eeg", "EEG"), ("ieeg", "iEEG"), ("meg", "MEG"), ("emg", "EMG")],
+    ids=["eeg", "ieeg", "meg", "emg"],
 )
 def test_generate_coordsystem_json_datatype_keys(tmp_path, datatype, expected_prefix):
     """Generated coordsystem.json uses correct keys per BIDS datatype."""

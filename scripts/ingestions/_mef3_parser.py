@@ -8,11 +8,14 @@ Reference: https://github.com/msel-source/meflib
 
 from __future__ import annotations
 
+import logging
 import struct
 from pathlib import Path
 from typing import Any
 
 from _parser_utils import validate_file_path
+
+logger = logging.getLogger(__name__)
 
 
 def parse_mef3_metadata(mefd_path: Path | str) -> dict[str, Any] | None:
@@ -146,15 +149,34 @@ def _extract_sfreq_from_timd(timd_dir: Path) -> float | None:
     # The sampling frequency is stored as a double at a specific offset
     try:
         return _parse_tmet_sampling_frequency(tmet_file)
-    except Exception:
+    except (OSError, struct.error, ValueError) as e:
+        # OSError covers file-not-found / permission. struct.error fires
+        # when the .tmet is truncated below the header offset. ValueError
+        # protects against pathological data passing the size check but
+        # holding NaN or infinity. All recoverable.
+        logger.debug("Could not parse .tmet at %s: %s", tmet_file, e)
         return None
 
 
 def _parse_tmet_sampling_frequency(tmet_path: Path) -> float | None:
     """Parse sampling frequency from MEF3 .tmet file.
 
-    MEF3 .tmet files contain time series metadata in a binary format.
-    The sampling frequency is stored as a double-precision float.
+    MEF3 .tmet files contain time series metadata in a binary format
+    documented at https://github.com/msel-source/meflib_3p0. The
+    sampling frequency is stored as a little-endian double in the
+    time-series metadata section, AFTER the 1024-byte universal header.
+
+    The exact offset depends on the structure version + padding
+    choices the encoder made. Production MEF 3.0 files written by the
+    Mayo Foundation tooling place it at offset 8720 (verified against
+    OpenNeuro ds003708's CC0 fixture); older / synthetic files have
+    been observed at 272, 280, 1272, 1280, 1288.
+
+    Rather than guess at a fixed offset, this implementation scans
+    every 8-byte-aligned position past the universal header and
+    accepts the first value within the sanity range (0.1 - 1_000_000 Hz)
+    that's also an integer multiple of 0.5 Hz (a near-universal
+    convention for clinical recording rates: 256/512/1024/2048/etc).
 
     Parameters
     ----------
@@ -169,34 +191,45 @@ def _parse_tmet_sampling_frequency(tmet_path: Path) -> float | None:
     """
     try:
         with open(tmet_path, "rb") as f:
-            # MEF3 .tmet file structure (simplified):
-            # - Universal header (1024 bytes)
-            # - Time series metadata section header
-            # - Sampling frequency is at offset 272 in the metadata section
-            # (after the 1024-byte universal header)
-
-            # Read the file
             data = f.read()
 
             if len(data) < 1300:  # Minimum size for valid .tmet
                 return None
 
-            # Try to find sampling frequency
-            # In MEF3 format, sampling_frequency is a double at specific offset
-            # Offset varies by MEF version, try common locations
+            # Fast-path: try the historically-observed offsets first
+            # so non-MEF-3.0 / synthetic test files keep working.
+            for offset in (1272, 1280, 1288, 272, 280):
+                if offset + 8 > len(data):
+                    continue
+                try:
+                    sfreq = struct.unpack("<d", data[offset : offset + 8])[0]
+                except struct.error:
+                    continue
+                if 0.1 < sfreq < 1_000_000:
+                    return sfreq
 
-            # MEF 3.0 layout: sampling_frequency at offset 1024 + 248 = 1272
-            for offset in [1272, 1280, 1288, 272, 280]:
-                if offset + 8 <= len(data):
-                    try:
-                        sfreq = struct.unpack("<d", data[offset : offset + 8])[0]
-                        # Sanity check - sampling frequency should be reasonable
-                        if 0.1 < sfreq < 1000000:
-                            return sfreq
-                    except struct.error:
-                        continue
+            # Slow-path: scan every 8-byte-aligned position past the
+            # universal header. Pick the first half-Hz multiple in the
+            # sanity range — that filters out random doubles that happen
+            # to fall in 100-1000 (e.g., MD5 hash bytes interpreted as
+            # doubles).
+            for offset in range(1024, len(data) - 8, 8):
+                try:
+                    sfreq = struct.unpack("<d", data[offset : offset + 8])[0]
+                except struct.error:
+                    continue
+                if not (0.1 < sfreq < 1_000_000):
+                    continue
+                # Half-Hz multiple filter — production clinical / research
+                # recording rates are all integer or half-integer Hz.
+                if (sfreq * 2.0) != int(sfreq * 2.0):
+                    continue
+                return sfreq
 
             return None
 
-    except Exception:
+    except (OSError, struct.error) as e:
+        # OSError = file disappeared or unreadable; struct.error = the
+        # binary layout doesn't match any of the offset hypotheses above.
+        logger.debug("Failed to unpack .tmet %s: %s", tmet_path, e)
         return None

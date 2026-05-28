@@ -369,29 +369,20 @@ class FeatureExtractor(TrainableFeature):
             current preprocessor.
 
         """
-        preprocessor = (
-            None
-            if self.preprocessor is None
-            else get_underlying_func(self.preprocessor)
-        )
-        is_parent_type_output_type = True
         if parent_type is None:
             if self.preprocessor is None:
                 parent_type = SignalOutputType
+                is_parent_type_output_type = True
             else:
+                preprocessor = get_underlying_func(self.preprocessor)
                 if hasattr(preprocessor, "output_type"):
                     if issubclass(preprocessor.output_type, AsInputOutputType):
                         return
                     parent_type = preprocessor.output_type
+                    is_parent_type_output_type = True
                 else:
                     parent_type = preprocessor
                     is_parent_type_output_type = False
-        else:
-            is_parent_type_output_type = (
-                inspect.isclass(parent_type)
-                and issubclass(parent_type, BasePreprocessorOutputType)
-                and parent_type is not BasePreprocessorOutputType
-            )
 
         for fname, f in self.feature_extractors_dict.items():
             fe = None
@@ -403,22 +394,12 @@ class FeatureExtractor(TrainableFeature):
                 f.output_type, AsInputOutputType
             ):
                 if fe is not None:
-                    if not is_parent_type_output_type and preprocessor is not None:
-                        try:
-                            fe._validate_execution_tree(preprocessor)
-                        except TypeError:
-                            fe._validate_execution_tree(parent_type)
-                    else:
-                        fe._validate_execution_tree(parent_type)
+                    fe._validate_execution_tree(parent_type)
                     continue
-                elif hasattr(preprocessor, "feature_kind") or hasattr(
-                    parent_type, "feature_kind"
-                ):
+                elif hasattr(parent_type, "feature_kind"):
                     continue
             pe_type = getattr(f, "parent_extractor_type", [SignalOutputType])
-            if (
-                preprocessor is not None and preprocessor in pe_type
-            ) or parent_type in pe_type:
+            if parent_type in pe_type:
                 continue
             is_valid_by_output_type = False
             if is_parent_type_output_type:
@@ -515,16 +496,16 @@ class FeatureExtractor(TrainableFeature):
         z, _metadata = self.preprocess(*x, _metadata=_metadata)
         preprocessor_f_und = get_underlying_func(self.preprocessor)
         for fname, f in self.feature_extractors_dict.items():
-            r, tmp_metadata = _call_with_metadata(f, *z, _metadata=_metadata)
+            r, _ = _call_with_metadata(f, *z, _metadata=_metadata)
             assert len(r) == 1
             r = r[0]
             f_und = get_underlying_func(f)
             if hasattr(f_und, "feature_kind"):
-                r = f_und.feature_kind(r, _metadata=tmp_metadata)
+                r = f_und.feature_kind(r, _metadata=_metadata)
             elif hasattr(preprocessor_f_und, "feature_kind") and not isinstance(
                 f_und, FeatureExtractor
             ):
-                r = preprocessor_f_und.feature_kind(r, _metadata=tmp_metadata)
+                r = preprocessor_f_und.feature_kind(r, _metadata=_metadata)
             if (not isinstance(fname, str) or not fname) and not isinstance(
                 f, FeatureExtractor
             ):
@@ -533,11 +514,11 @@ class FeatureExtractor(TrainableFeature):
                 prefix = f"{fname}_" if isinstance(fname, str) and fname else ""
                 for k, v in r.items():
                     self._add_feature_to_dict(
-                        results_dict, prefix + k, v, tmp_metadata["batch_size"]
+                        results_dict, prefix + k, v, _metadata["batch_size"]
                     )
             else:
                 self._add_feature_to_dict(
-                    results_dict, fname, r, tmp_metadata["batch_size"]
+                    results_dict, fname, r, _metadata["batch_size"]
                 )
         return results_dict
 

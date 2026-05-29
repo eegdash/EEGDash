@@ -116,13 +116,17 @@ No README content is available for this dataset.
     <b>Fig. 01</b> Signal &amp; montage
     <span class="right">8340 (2), 6498 (2), 6708 (2), 3678 (2), 12180 (2), 6180 (2), 4308, 4614, 14820, 15354, 7932, 3630, 4098, 14142, 9966, 3570, 5082, 4764, 6696, 8250, 5676, 7800, 4116, 4122, 8082, 14592, 5280, 8730, 3900, 4866, 4170, 6060, 8874, 14520, 12300, 5862, 7596, 7524, 5568, 6282, 5400, 9012, 9426, 16122, 8646, 9558, 4530, 10224, 9180, 5256, 3552, 6522, 15288, 7794, 8832, 11142, 7044, 7464, 5130, 6744, 16464, 4278, 16086, 12738, 9276, 6930, 11682, 16266, 5766, 5076, 5640, 12468, 6126, 4062, 7890, 4986, 4752, 13494, 3792, 13014, 6768, 10458, 4194, 6432, 5190, 4626, 8592, 6990, 11094, 7332, 10254, 4734 ch · fNIRS · 4 Hz · 49 subjects, 98 recordings</span>
   </div>
-  <div class="figpair-grid"><div class="figpair-cell figpair-montage">
-
-No scalp electrode layout is currently indexed for this
-dataset. Once the eegdash montage registry ingests it,
-the interactive viewer will appear here automatically.
-
-</div></div></div>
+  <div class="figpair-grid"><div class="figpair-cell figpair-montage"><details class="electrode-explorer">
+  <summary>Electrode layout — fNIRS · 315 sensors — 315 channels</summary>
+  <iframe
+    data-src="https://electrodes.eegdash.org/?montage=fe388083c11250c8&embed=1"
+    loading="lazy"
+    width="100%" height="640"
+    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
+    title="Topomap of fNIRS · 315 sensors"
+    referrerpolicy="no-referrer">
+  </iframe>
+</details></div></div></div>
 
 ## NEMAR Processing Statistics
 

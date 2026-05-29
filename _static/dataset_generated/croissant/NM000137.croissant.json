@@ -88,8 +88,7 @@
   "identifier": "doi:10.82901/nemar.nm000137",
   "sameAs": [
     "https://doi.org/10.82901/nemar.nm000137",
-    "https://openneuro.org/datasets/nm000137",
-    "https://huggingface.co/datasets/EEGDash/nm000137"
+    "https://openneuro.org/datasets/nm000137"
   ],
   "citeAs": "Murat Kaya, Mustafa Kemal Binli, Erkan Ozbay, Hilmi Yanar, Yuriy Mishchenko (2019). Classical motor imagery dataset with left hand, right hand, and rest. doi:10.82901/nemar.nm000137",
   "version": "1.9.0",
@@ -130,14 +129,6 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=nm000137",
       "encodingFormat": "text/html"
-    },
-    {
-      "@type": "cr:FileObject",
-      "@id": "nm000137-huggingface",
-      "name": "EEGDash/nm000137 on Hugging Face",
-      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
-      "contentUrl": "https://huggingface.co/datasets/EEGDash/nm000137",
-      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

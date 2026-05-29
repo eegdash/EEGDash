@@ -128,13 +128,17 @@ The EEG dataset from the different stages of processing can be requested to the 
     title="Live EEG trace viewer for ds003195 — sub-PLAC08 · ses-placebo6m · task-taskplacebo6m"
     referrerpolicy="no-referrer">
   </iframe>
-</details></div><div class="figpair-cell figpair-montage">
-
-No scalp electrode layout is currently indexed for this
-dataset. Once the eegdash montage registry ingests it,
-the interactive viewer will appear here automatically.
-
-</div></div></div>
+</details></div><div class="figpair-cell figpair-montage"><details class="electrode-explorer">
+  <summary>Electrode layout — EEG · 19 sensors — 19 channels</summary>
+  <iframe
+    data-src="https://electrodes.eegdash.org/?montage=22a2bf85635c6452&embed=1"
+    loading="lazy"
+    width="100%" height="640"
+    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
+    title="Topomap of EEG · 19 sensors"
+    referrerpolicy="no-referrer">
+  </iframe>
+</details></div></div></div>
 
 ## NEMAR Processing Statistics
 

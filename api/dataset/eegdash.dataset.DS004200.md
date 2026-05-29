@@ -136,13 +136,17 @@ Preprint: [https://doi.org/10.1101/2020.12.11.421180](https://doi.org/10.1101/20
     title="Live EEG trace viewer for ds004200 — sub-13 · task-temporalscaling"
     referrerpolicy="no-referrer">
   </iframe>
-</details></div><div class="figpair-cell figpair-montage">
-
-No scalp electrode layout is currently indexed for this
-dataset. Once the eegdash montage registry ingests it,
-the interactive viewer will appear here automatically.
-
-</div></div></div>
+</details></div><div class="figpair-cell figpair-montage"><details class="electrode-explorer">
+  <summary>Electrode layout — EEG · 37 sensors — 37 channels</summary>
+  <iframe
+    data-src="https://electrodes.eegdash.org/?montage=357b6bfa13e3ebfd&embed=1"
+    loading="lazy"
+    width="100%" height="640"
+    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
+    title="Topomap of EEG · 37 sensors"
+    referrerpolicy="no-referrer">
+  </iframe>
+</details></div></div></div>
 
 ## NEMAR Processing Statistics
 

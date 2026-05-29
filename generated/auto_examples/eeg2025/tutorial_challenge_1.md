@@ -749,6 +749,6 @@ See [References](../../../references.md) for the centralized bibliography of pap
 cited above. Add or amend an entry once in
 `docs/source/refs.bib`; every tutorial inherits the update.
 
-**Total running time of the script:** (7 minutes 47.329 seconds)
+**Total running time of the script:** (7 minutes 40.918 seconds)
 
 <a id="sphx-glr-download-generated-auto-examples-eeg2025-tutorial-challenge-1-py"></a>

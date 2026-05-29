@@ -80,8 +80,7 @@
   "identifier": "doi:10.82901/nemar.nm000136",
   "sameAs": [
     "https://doi.org/10.82901/nemar.nm000136",
-    "https://openneuro.org/datasets/nm000136",
-    "https://huggingface.co/datasets/EEGDash/nm000136"
+    "https://openneuro.org/datasets/nm000136"
   ],
   "citeAs": "Eva Guttmann-Flury, Xinjun Sheng, Xiangyang Zhu (2025). Guttmann-Flury et al. 2025 (P300) — Dataset combining EEG, eye-tracking, and high-speed video for ocular activity analysis across BCI paradigms. doi:10.82901/nemar.nm000136",
   "version": "1.9.0",
@@ -122,14 +121,6 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=nm000136",
       "encodingFormat": "text/html"
-    },
-    {
-      "@type": "cr:FileObject",
-      "@id": "nm000136-huggingface",
-      "name": "EEGDash/nm000136 on Hugging Face",
-      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
-      "contentUrl": "https://huggingface.co/datasets/EEGDash/nm000136",
-      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

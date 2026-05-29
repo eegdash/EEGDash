@@ -110,8 +110,7 @@
   "identifier": "doi:10.18112/openneuro.ds007315.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds007315.v1.0.1",
-    "https://openneuro.org/datasets/ds007315",
-    "https://huggingface.co/datasets/EEGDash/ds007315"
+    "https://openneuro.org/datasets/ds007315"
   ],
   "citeAs": "Maria Martzoukou, Nefeli K. Dimitriou, Binbin Xu, Malo Renaud-d’Ambra, Anastasia Nousia (2026). tACS for Patients with Post-Stroke Anomia. doi:10.18112/openneuro.ds007315.v1.0.1",
   "version": "1.8.0",
@@ -159,14 +158,6 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=ds007315",
       "encodingFormat": "text/html"
-    },
-    {
-      "@type": "cr:FileObject",
-      "@id": "ds007315-huggingface",
-      "name": "EEGDash/ds007315 on Hugging Face",
-      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
-      "contentUrl": "https://huggingface.co/datasets/EEGDash/ds007315",
-      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

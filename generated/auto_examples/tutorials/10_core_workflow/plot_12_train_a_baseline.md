@@ -166,7 +166,7 @@ records_summary
 ```
 
 ```none
-[05/29/26 07:40:57] WARNING  File not found on S3, skipping:   downloader.py:163
+[05/29/26 14:39:41] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds002718/sub-0
                              02/eeg/sub-002_task-FaceRecogniti
                              on_eeg.fdt
@@ -242,50 +242,50 @@ event_counts.head(12)
 
 ```none
 Downloading sub-003_task-FaceRecognition_channels.tsv:   0%|          | 0.00/1.31k [00:00<?, ?B/s]
-Downloading sub-003_task-FaceRecognition_channels.tsv: 100%|██████████| 1.31k/1.31k [00:00<00:00, 4.01MB/s]
+Downloading sub-003_task-FaceRecognition_channels.tsv: 100%|██████████| 1.31k/1.31k [00:00<00:00, 6.47MB/s]
 
 Downloading sub-003_task-FaceRecognition_events.tsv:   0%|          | 0.00/122k [00:00<?, ?B/s]
-Downloading sub-003_task-FaceRecognition_events.tsv: 100%|██████████| 122k/122k [00:00<00:00, 11.7MB/s]
+Downloading sub-003_task-FaceRecognition_events.tsv: 100%|██████████| 122k/122k [00:00<00:00, 1.82MB/s]
 
 Downloading sub-003_task-FaceRecognition_electrodes.tsv:   0%|          | 0.00/1.67k [00:00<?, ?B/s]
-Downloading sub-003_task-FaceRecognition_electrodes.tsv: 100%|██████████| 1.67k/1.67k [00:00<00:00, 5.00MB/s]
+Downloading sub-003_task-FaceRecognition_electrodes.tsv: 100%|██████████| 1.67k/1.67k [00:00<00:00, 8.23MB/s]
 
 Downloading sub-003_task-FaceRecognition_eeg.json:   0%|          | 0.00/1.28k [00:00<?, ?B/s]
-Downloading sub-003_task-FaceRecognition_eeg.json: 100%|██████████| 1.28k/1.28k [00:00<00:00, 4.01MB/s]
+Downloading sub-003_task-FaceRecognition_eeg.json: 100%|██████████| 1.28k/1.28k [00:00<00:00, 6.10MB/s]
 
 Downloading sub-003_task-FaceRecognition_coordsystem.json:   0%|          | 0.00/281 [00:00<?, ?B/s]
-Downloading sub-003_task-FaceRecognition_coordsystem.json: 100%|██████████| 281/281 [00:00<00:00, 981kB/s]
-[05/29/26 07:40:59] WARNING  File not found on S3, skipping:   downloader.py:163
+Downloading sub-003_task-FaceRecognition_coordsystem.json: 100%|██████████| 281/281 [00:00<00:00, 1.42MB/s]
+[05/29/26 14:39:43] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds002718/sub-0
                              03/eeg/sub-003_task-FaceRecogniti
                              on_eeg.fdt
 
 Downloading sub-003_task-FaceRecognition_eeg.set:   0%|          | 0.00/221M [00:00<?, ?B/s]
-Downloading sub-003_task-FaceRecognition_eeg.set:  23%|██▎       | 50.0M/221M [00:01<00:05, 32.4MB/s]
-Downloading sub-003_task-FaceRecognition_eeg.set: 100%|██████████| 221M/221M [00:01<00:00, 139MB/s]
+Downloading sub-003_task-FaceRecognition_eeg.set:  23%|██▎       | 50.0M/221M [00:01<00:05, 35.2MB/s]
+Downloading sub-003_task-FaceRecognition_eeg.set: 100%|██████████| 221M/221M [00:01<00:00, 151MB/s]
 
 Downloading sub-004_task-FaceRecognition_channels.tsv:   0%|          | 0.00/1.31k [00:00<?, ?B/s]
-Downloading sub-004_task-FaceRecognition_channels.tsv: 100%|██████████| 1.31k/1.31k [00:00<00:00, 4.89MB/s]
+Downloading sub-004_task-FaceRecognition_channels.tsv: 100%|██████████| 1.31k/1.31k [00:00<00:00, 6.01MB/s]
 
 Downloading sub-004_task-FaceRecognition_events.tsv:   0%|          | 0.00/119k [00:00<?, ?B/s]
-Downloading sub-004_task-FaceRecognition_events.tsv: 100%|██████████| 119k/119k [00:00<00:00, 119MB/s]
+Downloading sub-004_task-FaceRecognition_events.tsv: 100%|██████████| 119k/119k [00:00<00:00, 56.8MB/s]
 
 Downloading sub-004_task-FaceRecognition_electrodes.tsv:   0%|          | 0.00/1.67k [00:00<?, ?B/s]
-Downloading sub-004_task-FaceRecognition_electrodes.tsv: 100%|██████████| 1.67k/1.67k [00:00<00:00, 5.75MB/s]
+Downloading sub-004_task-FaceRecognition_electrodes.tsv: 100%|██████████| 1.67k/1.67k [00:00<00:00, 9.17MB/s]
 
 Downloading sub-004_task-FaceRecognition_eeg.json:   0%|          | 0.00/1.28k [00:00<?, ?B/s]
-Downloading sub-004_task-FaceRecognition_eeg.json: 100%|██████████| 1.28k/1.28k [00:00<00:00, 4.50MB/s]
+Downloading sub-004_task-FaceRecognition_eeg.json: 100%|██████████| 1.28k/1.28k [00:00<00:00, 5.61MB/s]
 
 Downloading sub-004_task-FaceRecognition_coordsystem.json:   0%|          | 0.00/278 [00:00<?, ?B/s]
-Downloading sub-004_task-FaceRecognition_coordsystem.json: 100%|██████████| 278/278 [00:00<00:00, 934kB/s]
-[05/29/26 07:41:02] WARNING  File not found on S3, skipping:   downloader.py:163
+Downloading sub-004_task-FaceRecognition_coordsystem.json: 100%|██████████| 278/278 [00:00<00:00, 1.39MB/s]
+[05/29/26 14:39:47] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds002718/sub-0
                              04/eeg/sub-004_task-FaceRecogniti
                              on_eeg.fdt
 
 Downloading sub-004_task-FaceRecognition_eeg.set:   0%|          | 0.00/223M [00:00<?, ?B/s]
-Downloading sub-004_task-FaceRecognition_eeg.set:  22%|██▏       | 50.0M/223M [00:01<00:04, 38.4MB/s]
-Downloading sub-004_task-FaceRecognition_eeg.set: 100%|██████████| 223M/223M [00:01<00:00, 165MB/s]
+Downloading sub-004_task-FaceRecognition_eeg.set:  22%|██▏       | 50.0M/223M [00:01<00:04, 40.7MB/s]
+Downloading sub-004_task-FaceRecognition_eeg.set: 100%|██████████| 223M/223M [00:01<00:00, 176MB/s]
 ```
 
 <div class="output_subarea output_html rendered_html output_result">
@@ -1063,6 +1063,6 @@ See [References](../../../../references.md) for the centralized bibliography of 
 cited above. Add or amend an entry once in
 `docs/source/refs.bib`; every tutorial inherits the update.
 
-**Total running time of the script:** (0 minutes 29.443 seconds)
+**Total running time of the script:** (0 minutes 28.941 seconds)
 
 <a id="sphx-glr-download-generated-auto-examples-tutorials-10-core-workflow-plot-12-train-a-baseline-py"></a>

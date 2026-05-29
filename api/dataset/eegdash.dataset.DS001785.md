@@ -133,7 +133,7 @@ Participants:
     <span class="right">71 ch · EEG · 1024 Hz · mixed · 18 subjects, 54 recordings</span>
   </div>
   <div class="figpair-grid"><div class="figpair-cell figpair-trace"><details class="trace-viewer">
-  <summary>Live trace viewer — <strong>sub-01 · ses-01 · task-adapt · run-01</strong></summary>
+  <summary>Live trace viewer — <strong>sub-13 · ses-01 · task-thrdown · run-01</strong></summary>
   <p class="trace-viewer-caption">
     Showing <strong>one</strong> representative recording out of
     <strong>18 subjects and 54 recordings</strong> in this dataset.
@@ -142,20 +142,24 @@ Participants:
     viewer (or pass <code>?eeg=&lt;url&gt;</code>) to inspect it.
   </p>
   <iframe
-    data-src="https://eegdash.github.io/eegdash-viewer/?dataset=ds001785&sub=01&ses=01&task=adapt&run=01&ext=set&embed=1"
+    data-src="https://eegdash.github.io/eegdash-viewer/?dataset=ds001785&sub=13&ses=01&task=thrdown&run=01&ext=set&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 1200px; display: block; background: transparent;"
-    title="Live EEG trace viewer for ds001785 — sub-01 · ses-01 · task-adapt · run-01"
+    title="Live EEG trace viewer for ds001785 — sub-13 · ses-01 · task-thrdown · run-01"
     referrerpolicy="no-referrer">
   </iframe>
-</details></div><div class="figpair-cell figpair-montage">
-
-No scalp electrode layout is currently indexed for this
-dataset. Once the eegdash montage registry ingests it,
-the interactive viewer will appear here automatically.
-
-</div></div></div>
+</details></div><div class="figpair-cell figpair-montage"><details class="electrode-explorer">
+  <summary>Electrode layout — EEG · 63 sensors — 63 channels</summary>
+  <iframe
+    data-src="https://electrodes.eegdash.org/?montage=42b9e8daf4ff0e6d&embed=1"
+    loading="lazy"
+    width="100%" height="640"
+    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
+    title="Topomap of EEG · 63 sensors"
+    referrerpolicy="no-referrer">
+  </iframe>
+</details></div></div></div>
 
 ## NEMAR Processing Statistics
 

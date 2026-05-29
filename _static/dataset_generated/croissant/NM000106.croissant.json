@@ -84,8 +84,7 @@
   "identifier": "doi:10.82901/nemar.nm000106",
   "sameAs": [
     "https://doi.org/10.82901/nemar.nm000106",
-    "https://openneuro.org/datasets/nm000106",
-    "https://huggingface.co/datasets/EEGDash/nm000106"
+    "https://openneuro.org/datasets/nm000106"
   ],
   "citeAs": "Patrick Kaifosh, Thomas R. Reardon, CTRL-labs at Reality Labs (2025). FRL Handwriting: Handwriting Decoding from Surface Electromyography. doi:10.82901/nemar.nm000106",
   "version": "1.11.0",
@@ -126,14 +125,6 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=nm000106",
       "encodingFormat": "text/html"
-    },
-    {
-      "@type": "cr:FileObject",
-      "@id": "nm000106-huggingface",
-      "name": "EEGDash/nm000106 on Hugging Face",
-      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
-      "contentUrl": "https://huggingface.co/datasets/EEGDash/nm000106",
-      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

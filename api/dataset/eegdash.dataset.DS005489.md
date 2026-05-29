@@ -162,13 +162,17 @@ This study contains open-loop electrical stimulation of the brain during encodin
     title="Live iEEG trace viewer for ds005489 — sub-R1074M · ses-0 · task-FR2"
     referrerpolicy="no-referrer">
   </iframe>
-</details></div><div class="figpair-cell figpair-montage">
-
-No scalp electrode layout is currently indexed for this
-dataset. Once the eegdash montage registry ingests it,
-the interactive viewer will appear here automatically.
-
-</div></div></div>
+</details></div><div class="figpair-cell figpair-montage"><details class="electrode-explorer">
+  <summary>Electrode layout — iEEG · 118 sensors — 118 channels</summary>
+  <iframe
+    data-src="https://electrodes.eegdash.org/?montage=5dd7206f5c79fa12&embed=1"
+    loading="lazy"
+    width="100%" height="640"
+    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
+    title="Topomap of iEEG · 118 sensors"
+    referrerpolicy="no-referrer">
+  </iframe>
+</details></div></div></div>
 
 ## NEMAR Processing Statistics
 

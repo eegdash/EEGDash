@@ -84,8 +84,7 @@
   "identifier": "doi:10.18112/openneuro.ds007526.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds007526.v1.0.1",
-    "https://openneuro.org/datasets/ds007526",
-    "https://huggingface.co/datasets/EEGDash/ds007526"
+    "https://openneuro.org/datasets/ds007526"
   ],
   "citeAs": "Zoya Katzir, Daniel Vered, Inbal Maidan (inbalm@tlvmc.gov.il) (2026). PD-EEG: Resting-State & Walking EEG in Parkinson's Disease. doi:10.18112/openneuro.ds007526.v1.0.1",
   "version": "1.10.0",
@@ -134,14 +133,6 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=ds007526",
       "encodingFormat": "text/html"
-    },
-    {
-      "@type": "cr:FileObject",
-      "@id": "ds007526-huggingface",
-      "name": "EEGDash/ds007526 on Hugging Face",
-      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
-      "contentUrl": "https://huggingface.co/datasets/EEGDash/ds007526",
-      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

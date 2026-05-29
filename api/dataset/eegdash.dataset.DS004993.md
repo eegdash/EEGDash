@@ -174,13 +174,17 @@ This is a sample BIDS dataset for the WIRED ICM course in Paris, France in March
     title="Live iEEG trace viewer for ds004993 — sub-W1 · ses-iemu · task-movietrailers · run-01"
     referrerpolicy="no-referrer">
   </iframe>
-</details></div><div class="figpair-cell figpair-montage">
-
-No scalp electrode layout is currently indexed for this
-dataset. Once the eegdash montage registry ingests it,
-the interactive viewer will appear here automatically.
-
-</div></div></div>
+</details></div><div class="figpair-cell figpair-montage"><details class="electrode-explorer">
+  <summary>Electrode layout — iEEG · 148 sensors — 148 channels</summary>
+  <iframe
+    data-src="https://electrodes.eegdash.org/?montage=5dead218978f8c7b&embed=1"
+    loading="lazy"
+    width="100%" height="640"
+    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
+    title="Topomap of iEEG · 148 sensors"
+    referrerpolicy="no-referrer">
+  </iframe>
+</details></div></div></div>
 
 ## NEMAR Processing Statistics
 

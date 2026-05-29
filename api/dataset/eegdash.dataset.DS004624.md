@@ -117,13 +117,17 @@ Funding: NIH U01NS128612
     <b>Fig. 01</b> Signal &amp; montage
     <span class="right">36 (363), 34 (234), 39 (17) ch · iEEG · 1000 Hz · 3 subjects, 614 recordings</span>
   </div>
-  <div class="figpair-grid"><div class="figpair-cell figpair-montage">
-
-No scalp electrode layout is currently indexed for this
-dataset. Once the eegdash montage registry ingests it,
-the interactive viewer will appear here automatically.
-
-</div></div></div>
+  <div class="figpair-grid"><div class="figpair-cell figpair-montage"><details class="electrode-explorer">
+  <summary>Electrode layout — iEEG · 32 sensors — 32 channels</summary>
+  <iframe
+    data-src="https://electrodes.eegdash.org/?montage=0571a58d3a9355b5&embed=1"
+    loading="lazy"
+    width="100%" height="640"
+    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
+    title="Topomap of iEEG · 32 sensors"
+    referrerpolicy="no-referrer">
+  </iframe>
+</details></div></div></div>
 
 ## NEMAR Processing Statistics
 

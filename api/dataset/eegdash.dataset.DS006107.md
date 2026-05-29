@@ -136,13 +136,17 @@ No README content is available for this dataset.
     title="Live iEEG trace viewer for ds006107 — sub-13 · ses-01 · task-sws · run-01"
     referrerpolicy="no-referrer">
   </iframe>
-</details></div><div class="figpair-cell figpair-montage">
-
-No scalp electrode layout is currently indexed for this
-dataset. Once the eegdash montage registry ingests it,
-the interactive viewer will appear here automatically.
-
-</div></div></div>
+</details></div><div class="figpair-cell figpair-montage"><details class="electrode-explorer">
+  <summary>Electrode layout — iEEG · 130 sensors — 130 channels</summary>
+  <iframe
+    data-src="https://electrodes.eegdash.org/?montage=0202075408b1712a&embed=1"
+    loading="lazy"
+    width="100%" height="640"
+    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
+    title="Topomap of iEEG · 130 sensors"
+    referrerpolicy="no-referrer">
+  </iframe>
+</details></div></div></div>
 
 ## NEMAR Processing Statistics
 

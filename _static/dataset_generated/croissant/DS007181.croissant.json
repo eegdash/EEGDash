@@ -96,8 +96,7 @@
   "identifier": "doi:10.18112/openneuro.ds007181.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds007181.v1.0.1",
-    "https://openneuro.org/datasets/ds007181",
-    "https://huggingface.co/datasets/EEGDash/ds007181"
+    "https://openneuro.org/datasets/ds007181"
   ],
   "citeAs": "Li Li, Qi Han, Haolei Bai, Xiaolong Zhang, Yong Liu (2026). Structural MRI, Resting-state fMRI, and PSG/EEG Dataset of Zoster-associated Neuralgia. doi:10.18112/openneuro.ds007181.v1.0.1",
   "version": "1.8.0",
@@ -145,14 +144,6 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=ds007181",
       "encodingFormat": "text/html"
-    },
-    {
-      "@type": "cr:FileObject",
-      "@id": "ds007181-huggingface",
-      "name": "EEGDash/ds007181 on Hugging Face",
-      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
-      "contentUrl": "https://huggingface.co/datasets/EEGDash/ds007181",
-      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

@@ -161,13 +161,17 @@ For questions or inquiries, please contact [sas-kahana-sysadmin@sas.upenn.edu](m
     title="Live iEEG trace viewer for ds005411 — sub-R1566D · ses-4 · task-RepFR1"
     referrerpolicy="no-referrer">
   </iframe>
-</details></div><div class="figpair-cell figpair-montage">
-
-No scalp electrode layout is currently indexed for this
-dataset. Once the eegdash montage registry ingests it,
-the interactive viewer will appear here automatically.
-
-</div></div></div>
+</details></div><div class="figpair-cell figpair-montage"><details class="electrode-explorer">
+  <summary>Electrode layout — iEEG · 168 sensors — 168 channels</summary>
+  <iframe
+    data-src="https://electrodes.eegdash.org/?montage=69c6f7b840334a3a&embed=1"
+    loading="lazy"
+    width="100%" height="640"
+    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
+    title="Topomap of iEEG · 168 sensors"
+    referrerpolicy="no-referrer">
+  </iframe>
+</details></div></div></div>
 
 ## NEMAR Processing Statistics
 

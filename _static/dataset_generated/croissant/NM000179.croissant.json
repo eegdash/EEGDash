@@ -367,8 +367,7 @@
   "identifier": "doi:10.1038/sdata.2018.308",
   "sameAs": [
     "https://doi.org/10.1038/sdata.2018.308",
-    "https://openneuro.org/datasets/nm000179",
-    "https://huggingface.co/datasets/EEGDash/nm000179"
+    "https://openneuro.org/datasets/nm000179"
   ],
   "citeAs": "Anahit Babayan, Miray Erbey, Deniz Kumral, Janis D. Reinelt, Andrea M.F. Reiter (2019). LEMON: MPI Leipzig Mind-Brain-Body EEG (Resting State). doi:10.1038/sdata.2018.308",
   "version": "1.9.0",
@@ -409,14 +408,6 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=nm000179",
       "encodingFormat": "text/html"
-    },
-    {
-      "@type": "cr:FileObject",
-      "@id": "nm000179-huggingface",
-      "name": "EEGDash/nm000179 on Hugging Face",
-      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
-      "contentUrl": "https://huggingface.co/datasets/EEGDash/nm000179",
-      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

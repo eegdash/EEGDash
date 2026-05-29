@@ -175,13 +175,17 @@ Raw data is stored with the Brainvision data format. This can be read in to memo
     title="Live iEEG trace viewer for ds005953 — sub-01 · ses-01 · task-visual · run-01"
     referrerpolicy="no-referrer">
   </iframe>
-</details></div><div class="figpair-cell figpair-montage">
-
-No scalp electrode layout is currently indexed for this
-dataset. Once the eegdash montage registry ingests it,
-the interactive viewer will appear here automatically.
-
-</div></div></div>
+</details></div><div class="figpair-cell figpair-montage"><details class="electrode-explorer">
+  <summary>Electrode layout — iEEG · 96 sensors — 96 channels</summary>
+  <iframe
+    data-src="https://electrodes.eegdash.org/?montage=15f6903d20ede869&embed=1"
+    loading="lazy"
+    width="100%" height="640"
+    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
+    title="Topomap of iEEG · 96 sensors"
+    referrerpolicy="no-referrer">
+  </iframe>
+</details></div></div></div>
 
 ## NEMAR Processing Statistics
 

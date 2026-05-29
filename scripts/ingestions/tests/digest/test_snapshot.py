@@ -29,7 +29,7 @@ def _sanitize_for_snapshot(obj: Any, *, dataset_id: str) -> Any:
     if isinstance(obj, dict):
         out: dict[str, Any] = {}
         for k, v in obj.items():
-            if k == "digested_at":
+            if k in {"digested_at", "first_seen"}:
                 out[k] = "<TIMESTAMP>"
             elif k in {"dataset_file", "records_file", "montages_file"}:
                 # Keep just the basename for path stability across runs.
@@ -76,6 +76,27 @@ def fresh_manifest_digest_output(tmp_path_factory) -> Path:
     )
     assert summary["status"] == "success", (
         f"manifest snapshot fixture digestion failed: {summary}"
+    )
+    return tmp_output
+
+
+@pytest.fixture(scope="module")
+def fresh_eeg_montage_digest_output(tmp_path_factory) -> Path:
+    """Run ``digest_dataset`` against the montage-bearing BIDS-fs fixture; module-scoped.
+
+    ``ds_snapshot_eeg_montage`` is the only fixture that emits a non-empty
+    ``montages.json``, so it is the one that actually byte-freezes the montage
+    extraction path (electrodes/coordsystem -> sensors + hash).
+    """
+    digest_mod = load_digest()
+    tmp_output = tmp_path_factory.mktemp("eeg_montage_snapshot_run")
+    summary = digest_mod.digest_dataset(
+        "ds_snapshot_eeg_montage",
+        INPUTS_DIR,
+        tmp_output,
+    )
+    assert summary["status"] == "success", (
+        f"eeg-montage snapshot fixture digestion failed: {summary}"
     )
     return tmp_output
 
@@ -196,3 +217,50 @@ def test_manifest_snapshot_total_files_in_summary(
     assert "total_files" in summary
     snapshot_summary = _read_snapshot(dataset_id, "summary")
     assert summary["total_files"] == snapshot_summary["total_files"]
+
+
+# ─── Montage-bearing path: the only fixture that emits real montages ──────
+
+
+@pytest.mark.parametrize(
+    "suffix",
+    ["dataset", "records", "montages", "summary"],
+)
+def test_eeg_montage_digest_output_matches_snapshot(
+    fresh_eeg_montage_digest_output: Path,
+    suffix: str,
+) -> None:
+    """Byte-freeze the montage-bearing dataset (the only one with a non-empty
+    ``montages.json``); ``first_seen`` is redacted like ``digested_at``."""
+    dataset_id = "ds_snapshot_eeg_montage"
+    fresh_path = (
+        fresh_eeg_montage_digest_output / dataset_id / f"{dataset_id}_{suffix}.json"
+    )
+    assert fresh_path.exists(), f"digest didn't produce {fresh_path.name}"
+
+    fresh = json.loads(fresh_path.read_text())
+    snapshot = _read_snapshot(dataset_id, suffix)
+
+    fresh_sanitized = _sanitize_for_snapshot(fresh, dataset_id=dataset_id)
+    snapshot_sanitized = _sanitize_for_snapshot(snapshot, dataset_id=dataset_id)
+
+    assert fresh_sanitized == snapshot_sanitized, (
+        f"\n{suffix}.json drifted from the committed snapshot. "
+        f"If this is INTENTIONAL, update the snapshot file in the same commit:\n"
+        f"  cp {fresh_path} {SNAPSHOT_OUTPUTS_DIR / dataset_id / fresh_path.name}\n"
+    )
+
+
+def test_eeg_montage_snapshot_has_nonempty_montages(
+    fresh_eeg_montage_digest_output: Path,
+) -> None:
+    """Guard the guard: this fixture MUST keep emitting a montage, else the
+    montage byte-freeze above silently degrades to comparing empty lists."""
+    dataset_id = "ds_snapshot_eeg_montage"
+    montages = json.loads(
+        (
+            fresh_eeg_montage_digest_output / dataset_id / f"{dataset_id}_montages.json"
+        ).read_text()
+    )
+    docs = montages["montages"] if isinstance(montages, dict) else montages
+    assert len(docs) >= 1, "eeg-montage fixture stopped emitting montages"

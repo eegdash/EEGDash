@@ -25,7 +25,7 @@ jobs:
     steps:
     ## Install Braindecode
     - name: Checking Out Repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
     - name: Configure dataset cache paths
       id: cache-paths
       shell: python
@@ -57,7 +57,7 @@ jobs:
     - name: Restore EEGDash Cache (pull_request)
       if: github.event_name == 'pull_request'
       id: cache-mne_data-restore
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       with:
         path: |
           ${{ steps.cache-paths.outputs.primary }}
@@ -79,7 +79,7 @@ jobs:
     - name: Create/Restore EEGDash Cache (push)
       if: github.event_name != 'pull_request'
       id: cache-mne_data
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       with:
         path: |
           ${{ steps.cache-paths.outputs.primary }}

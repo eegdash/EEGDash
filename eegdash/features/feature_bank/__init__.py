@@ -7,7 +7,9 @@ feature functions so users can import them directly from
 
 from .complexity import (
     complexity_approx_entropy,
+    complexity_detrended_fluctuation_analysis,
     complexity_entropy_preprocessor,
+    complexity_hurst_exp,
     complexity_lempel_ziv,
     complexity_multiscale_entropy,
     complexity_sample_entropy,
@@ -30,9 +32,7 @@ from .connectivity import (
 )
 from .csp import CommonSpatialPattern
 from .dimensionality import (
-    dimensionality_detrended_fluctuation_analysis,
     dimensionality_higuchi_fractal_dim,
-    dimensionality_hurst_exp,
     dimensionality_katz_fractal_dim,
     dimensionality_petrosian_fractal_dim,
 )
@@ -41,9 +41,9 @@ from .pick import (
     pick_channels_preprocessor,
 )
 from .signal import (
+    signal_bandpass_filter_preprocessor,
     signal_decorrelation_time,
     signal_envelope_preprocessor,
-    signal_filter_preprocessor,
     signal_hjorth_activity,
     signal_hjorth_complexity,
     signal_hjorth_mobility,
@@ -83,6 +83,8 @@ __all__ = [
     "complexity_sample_entropy",
     "complexity_svd_entropy",
     "complexity_lempel_ziv",
+    "complexity_hurst_exp",
+    "complexity_detrended_fluctuation_analysis",
     # Connectivity
     "connectivity_coherency_preprocessor",
     "connectivity_phase_diff_preprocessor",
@@ -103,13 +105,11 @@ __all__ = [
     "dimensionality_higuchi_fractal_dim",
     "dimensionality_petrosian_fractal_dim",
     "dimensionality_katz_fractal_dim",
-    "dimensionality_hurst_exp",
-    "dimensionality_detrended_fluctuation_analysis",
     # Pick
     "pick_channel_pairs_preprocessor",
     "pick_channels_preprocessor",
     # Signal
-    "signal_filter_preprocessor",
+    "signal_bandpass_filter_preprocessor",
     "signal_envelope_preprocessor",
     "signal_mean",
     "signal_variance",

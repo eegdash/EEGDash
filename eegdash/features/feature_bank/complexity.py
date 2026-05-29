@@ -16,6 +16,7 @@ features corresponding to the leading dimensions (e.g., subjects, channels).
 
 import numba as nb
 import numpy as np
+from scipy import special
 from sklearn.neighbors import KDTree
 
 from ..decorators import feature_predecessor, univariate_feature
@@ -27,6 +28,8 @@ __all__ = [
     "complexity_sample_entropy",
     "complexity_svd_entropy",
     "complexity_lempel_ziv",
+    "complexity_hurst_exp",
+    "complexity_detrended_fluctuation_analysis",
 ]
 
 
@@ -50,7 +53,9 @@ def _channel_app_samp_entropy_counts(x, m, r, l):
         Neighbor counts for the given embedding dimension.
 
     """
-    x_emb = np.lib.stride_tricks.sliding_window_view(x, window_shape=m, axis=-1)[::l]
+    x_emb = np.lib.stride_tricks.sliding_window_view(x, window_shape=m, axis=-1)[
+        ..., ::l
+    ]
     kdtree = KDTree(x_emb, metric="chebyshev")
     return kdtree.query_radius(x_emb, r, count_only=True)
 
@@ -210,7 +215,9 @@ def complexity_svd_entropy(x, /, m=10, tau=1):
         SVD Entropy values. Shape is ``x.shape[:-1]``.
 
     """
-    x_emb = np.lib.stride_tricks.sliding_window_view(x, window_shape=m, axis=-1)[::tau]
+    x_emb = np.lib.stride_tricks.sliding_window_view(x, window_shape=m, axis=-1)[
+        ..., ::tau
+    ]
     s = np.linalg.svd(x_emb, compute_uv=False)
     s /= s.sum(axis=-1, keepdims=True)
     return -np.sum(s * np.log(s), axis=-1)
@@ -279,3 +286,155 @@ def complexity_lempel_ziv(x, /, threshold=None, normalize=True):
         if normalize:
             lzc[i] *= np.log2(n) / n
     return lzc
+
+
+@nb.njit(cache=True, fastmath=True)
+def _hurst_exp(x, ns, a, gamma_ratios, log_n):
+    r"""Internal helper to calculate the Hurst Exponent.
+
+    The Hurst Exponent is calculated using the Rescaled range (R/S) analysis
+    method, expanded with Anis-Lloyd correction.
+
+    Parameters
+    ----------
+    x : ndarray
+        The input signal.
+    ns : ndarray
+        The array of window sizes (time scales).
+    a : ndarray
+        Precomputed bias correction factors for the Anis-Lloyd correction.
+    gamma_ratios : ndarray
+        Precomputed Gamma function ratios for the Anis-Lloyd correction.
+    log_n : ndarray
+        The natural logarithm of the window sizes (ns).
+
+    Returns
+    -------
+    ndarray
+        The estimated Hurst exponent for each channel/trial.
+        Shape is ``x.shape[:-1]``.
+
+    Notes
+    -----
+    Optimized with Numba.
+
+    References
+    ----------
+    For more details on the Hurst Exponent and R/S analysis, visit the
+    `Wikipedia entry <https://en.wikipedia.org/wiki/Hurst_exponent#Rescaled_range_(R/S)_analysis>`__.
+
+    """
+    h = np.empty(x.shape[:-1])
+    rs = np.empty((ns.shape[0], x.shape[-1] // ns[0]))
+    log_rs = np.empty(ns.shape[0])
+    for i in np.ndindex(x.shape[:-1]):
+        t0 = 0
+        for j, n in enumerate(ns):
+            for k, t0 in enumerate(range(0, x.shape[-1], n)):
+                xj = x[i][t0 : t0 + n]
+                m = np.mean(xj)
+                y = xj - m
+                z = np.cumsum(y)
+                r = np.ptp(z)
+                s = np.sqrt(np.mean(y**2))
+                if s == 0.0:
+                    rs[j, k] = np.nan
+                else:
+                    rs[j, k] = r / s
+            log_rs[j] = np.log(np.nanmean(rs[j, : x.shape[-1] // n]))
+            log_rs[j] -= np.log(np.sum(np.sqrt((n - a[:n]) / a[:n])) * gamma_ratios[j])
+        h[i] = 0.5 + np.linalg.lstsq(log_n, log_rs)[0][0]
+    return h
+
+
+@feature_predecessor()
+@univariate_feature
+def complexity_hurst_exp(x, /):
+    r"""Estimate the Hurst Exponent.
+
+    The Hurst exponent quantifies the long-term memory and predictability of
+    a time series. It indicates whether a process is purely random, tends to
+    trend in the same direction (persistent), or tends to reverse its direction
+    (anti-persistent).
+
+    Parameters
+    ----------
+    x : ndarray
+        The input signal.
+
+    Returns
+    -------
+    ndarray
+        The estimated Hurst Exponents.
+        Shape is ``x.shape[:-1]``.
+
+    Notes
+    -----
+    This function calculate the Gamma Function Ratios and Bias Correction Factors
+    to apply the Anis-Lloyd correction for small sample sizes.
+
+    For more details on the Hurst Exponent and R/S analysis, visit the
+    `Wikipedia entry <https://en.wikipedia.org/wiki/Hurst_exponent#Rescaled_range_(R/S)_analysis>`__.
+
+    """
+    ns = np.unique(np.power(2, np.arange(2, np.log2(x.shape[-1]) - 1)).astype(int))
+    idx = ns > 340
+    gamma_ratios = np.empty(ns.shape[0])
+    gamma_ratios[idx] = 1 / np.sqrt(ns[idx] / 2)
+    gamma_ratios[~idx] = special.gamma((ns[~idx] - 1) / 2) / special.gamma(ns[~idx] / 2)
+    gamma_ratios /= np.sqrt(np.pi)
+    log_n = np.vstack((np.log(ns), np.ones(ns.shape[0]))).T
+    a = np.arange(1, ns[-1], dtype=float)
+    return _hurst_exp(x, ns, a, gamma_ratios, log_n)
+
+
+@feature_predecessor()
+@univariate_feature
+@nb.njit(cache=True, fastmath=True)
+def complexity_detrended_fluctuation_analysis(x, /):
+    r"""Calculate the Scaling Exponent via DFA.
+
+    Detrended Fluctuation Analysis (DFA) is a method used to detect long-range
+    temporal correlations (LRTC) in non-stationary signals. It is a more robust
+    way to estimate the Hurst exponent when the data is noisy or has shifting trends.
+
+    Parameters
+    ----------
+    x : ndarray
+        The input signal.
+
+    Returns
+    -------
+    ndarray
+        The DFA scaling exponents ($\alpha$).
+        Shape is ``x.shape[:-1]``.
+
+    Notes
+    -----
+    Optimized with Numba.
+
+    For a theoretical overview of Detrended Fluctuation Analysis, see the
+    `Wikipedia entry <https://en.wikipedia.org/wiki/Detrended_fluctuation_analysis>`__.
+
+    """
+    ns = np.unique(np.floor(np.power(2, np.arange(2, np.log2(x.shape[-1]) - 1))))
+    a = np.vstack((np.arange(ns[-1]), np.ones(int(ns[-1])))).T
+    log_n = np.vstack((np.log(ns), np.ones(ns.shape[0]))).T
+    Fn = np.empty(ns.shape[0])
+    alpha = np.empty(x.shape[:-1])
+    for i in np.ndindex(x.shape[:-1]):
+        X = np.cumsum(x[i] - np.mean(x[i]))
+        for j, n in enumerate(ns):
+            n = int(n)
+            # Correct reshape to get windows as columns
+            # Take truncation
+            limit = n * (X.shape[0] // n)
+            # reshape(-1, n).T ensures [0..n-1] is col 0, [n..2n-1] is col 1
+            Z = np.reshape(X[:limit], (-1, n)).T
+            # a[:n] is (n, 2)
+            # Z is (n, num_windows)
+            # lstsq returns residuals sum of squares for each column
+            Fni2 = np.linalg.lstsq(a[:n], Z)[1] / n
+            Fn[j] = np.sqrt(np.mean(Fni2))
+        alpha[i] = np.linalg.lstsq(log_n, np.log(Fn))[0][0]
+    return alpha

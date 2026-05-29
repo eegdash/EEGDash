@@ -27,7 +27,7 @@ from ..decorators import (
     feature_predecessor,
 )
 from . import utils
-from .signal import signal_filter_preprocessor
+from .signal import signal_bandpass_filter_preprocessor
 from .spectral import (
     spectral_db_preprocessor,
     spectral_normalized_preprocessor,
@@ -308,7 +308,7 @@ def connectivity_lagged_coherence(f, c, /, bands=utils.DEFAULT_FREQ_BANDS):
     return utils.reduce_freq_bands(f, coher, bands, np.mean)
 
 
-@feature_predecessor(signal_filter_preprocessor)
+@feature_predecessor(signal_bandpass_filter_preprocessor)
 @channel_pairer_undirected
 def connectivity_phase_diff_preprocessor(x, /, *, _metadata):
     r"""Compute complex exponent of phase difference for all unique channel pairs.

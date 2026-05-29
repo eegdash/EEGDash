@@ -147,6 +147,14 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=nm000208",
       "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000208-huggingface",
+      "name": "EEGDash/nm000208 on Hugging Face",
+      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
+      "contentUrl": "https://huggingface.co/datasets/EEGDash/nm000208",
+      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

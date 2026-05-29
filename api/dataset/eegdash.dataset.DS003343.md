@@ -149,17 +149,13 @@ Participants:
     title="Live EEG trace viewer for ds003343 — sub-13 · ses-01 · task-fps · run-01"
     referrerpolicy="no-referrer">
   </iframe>
-</details></div><div class="figpair-cell figpair-montage"><details class="electrode-explorer">
-  <summary>Electrode layout — EEG · 16 sensors — 16 channels</summary>
-  <iframe
-    data-src="https://electrodes.eegdash.org/?montage=f53b083b23215e2e&embed=1"
-    loading="lazy"
-    width="100%" height="640"
-    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
-    title="Topomap of EEG · 16 sensors"
-    referrerpolicy="no-referrer">
-  </iframe>
-</details></div></div></div>
+</details></div><div class="figpair-cell figpair-montage">
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
+</div></div></div>
 
 ## NEMAR Processing Statistics
 

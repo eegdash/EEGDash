@@ -201,17 +201,13 @@ This dataset consists of 74 patients age 4-51 years old where Cortico-Cortical E
     title="Live iEEG trace viewer for ds004080 — sub-ccepAgeUMCU33 · ses-1 · task-SPESclin · run-021231"
     referrerpolicy="no-referrer">
   </iframe>
-</details></div><div class="figpair-cell figpair-montage"><details class="electrode-explorer">
-  <summary>Electrode layout — iEEG · 104 sensors — 104 channels</summary>
-  <iframe
-    data-src="https://electrodes.eegdash.org/?montage=76089bdd23a3e748&embed=1"
-    loading="lazy"
-    width="100%" height="640"
-    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
-    title="Topomap of iEEG · 104 sensors"
-    referrerpolicy="no-referrer">
-  </iframe>
-</details></div></div></div>
+</details></div><div class="figpair-cell figpair-montage">
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
+</div></div></div>
 
 ## NEMAR Processing Statistics
 

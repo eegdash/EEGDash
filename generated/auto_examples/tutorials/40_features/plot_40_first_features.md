@@ -361,7 +361,7 @@ pd.Series(
 
 ```none
 Extracting features:   0%|          | 0/2 [00:00<?, ?it/s]
-Extracting features: 100%|██████████| 2/2 [00:00<00:00, 157.70it/s]
+Extracting features: 100%|██████████| 2/2 [00:00<00:00, 131.92it/s]
 ```
 
 <div class="output_subarea output_html rendered_html output_result">
@@ -601,7 +601,7 @@ print(f"extended n_cols={extended.shape[1]} (was {n_cols - 1})")
 
 ```none
 Extracting features:   0%|          | 0/2 [00:00<?, ?it/s]
-Extracting features: 100%|██████████| 2/2 [00:00<00:00, 153.05it/s]
+Extracting features: 100%|██████████| 2/2 [00:00<00:00, 141.12it/s]
 extended n_cols=168 (was 144)
 ```
 

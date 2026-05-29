@@ -110,17 +110,13 @@ Kalyan Tripathy, Zachary E. Markow, Morgan Fogarty, Mariel L. Schroeder, Alexa M
     <b>Fig. 01</b> Signal &amp; montage
     <span class="right">6782 (71), 6928 (43), 6880 (38), 6750 (31), 7030 (6) ch · fNIRS · 10 Hz · 5 subjects, 189 recordings</span>
   </div>
-  <div class="figpair-grid"><div class="figpair-cell figpair-montage"><details class="electrode-explorer">
-  <summary>Electrode layout — fNIRS · 253 sensors — 253 channels</summary>
-  <iframe
-    data-src="https://electrodes.eegdash.org/?montage=7d8ae20f10dca301&embed=1"
-    loading="lazy"
-    width="100%" height="640"
-    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
-    title="Topomap of fNIRS · 253 sensors"
-    referrerpolicy="no-referrer">
-  </iframe>
-</details></div></div></div>
+  <div class="figpair-grid"><div class="figpair-cell figpair-montage">
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
+</div></div></div>
 
 ## NEMAR Processing Statistics
 

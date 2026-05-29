@@ -117,17 +117,13 @@ The preprocessed version of this dataset can be found here: [https://figshare.co
     title="Live EEG trace viewer for ds004588 — sub-S38 · task-unnamed"
     referrerpolicy="no-referrer">
   </iframe>
-</details></div><div class="figpair-cell figpair-montage"><details class="electrode-explorer">
-  <summary>Electrode layout — EEG · 20 sensors — 20 channels</summary>
-  <iframe
-    data-src="https://electrodes.eegdash.org/?montage=600c00edfb0baf51&embed=1"
-    loading="lazy"
-    width="100%" height="640"
-    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
-    title="Topomap of EEG · 20 sensors"
-    referrerpolicy="no-referrer">
-  </iframe>
-</details></div></div></div>
+</details></div><div class="figpair-cell figpair-montage">
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
+</div></div></div>
 
 ## NEMAR Processing Statistics
 

@@ -110,17 +110,13 @@ Please cite the paper if you use this dataset for your publication.
     <b>Fig. 01</b> Signal &amp; montage
     <span class="right">72 (27), 84 (6) ch · fNIRS · 50 Hz · 12 subjects, 14 recordings</span>
   </div>
-  <div class="figpair-grid"><div class="figpair-cell figpair-montage"><details class="electrode-explorer">
-  <summary>Electrode layout — fNIRS · 35 sensors — 35 channels</summary>
-  <iframe
-    data-src="https://electrodes.eegdash.org/?montage=d6f3ddb9de1066f3&embed=1"
-    loading="lazy"
-    width="100%" height="640"
-    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
-    title="Topomap of fNIRS · 35 sensors"
-    referrerpolicy="no-referrer">
-  </iframe>
-</details></div></div></div>
+  <div class="figpair-grid"><div class="figpair-cell figpair-montage">
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
+</div></div></div>
 
 ## NEMAR Processing Statistics
 

@@ -117,17 +117,13 @@ Due to incorrect settings specific to OpenBCI GUI v5.0.1, indicated EEG values a
     title="Live EEG trace viewer for ds006394 — sub-13 · task-SiD"
     referrerpolicy="no-referrer">
   </iframe>
-</details></div><div class="figpair-cell figpair-montage"><details class="electrode-explorer">
-  <summary>Electrode layout — EEG · 16 sensors — 16 channels</summary>
-  <iframe
-    data-src="https://electrodes.eegdash.org/?montage=ab642e2fbb44a0a5&embed=1"
-    loading="lazy"
-    width="100%" height="640"
-    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
-    title="Topomap of EEG · 16 sensors"
-    referrerpolicy="no-referrer">
-  </iframe>
-</details></div></div></div>
+</details></div><div class="figpair-cell figpair-montage">
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
+</div></div></div>
 
 ## NEMAR Processing Statistics
 

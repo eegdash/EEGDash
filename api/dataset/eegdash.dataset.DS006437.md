@@ -194,17 +194,13 @@ sessions were performed virtually. For sessions 1,
     title="Live EEG trace viewer for ds006437 — sub-002 · ses-4 · task-baseline4"
     referrerpolicy="no-referrer">
   </iframe>
-</details></div><div class="figpair-cell figpair-montage"><details class="electrode-explorer">
-  <summary>Electrode layout — EEG · 64 sensors — 64 channels</summary>
-  <iframe
-    data-src="https://electrodes.eegdash.org/?montage=3b2b44ed963b932d&embed=1"
-    loading="lazy"
-    width="100%" height="640"
-    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
-    title="Topomap of EEG · 64 sensors"
-    referrerpolicy="no-referrer">
-  </iframe>
-</details></div></div></div>
+</details></div><div class="figpair-cell figpair-montage">
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
+</div></div></div>
 
 ## NEMAR Processing Statistics
 

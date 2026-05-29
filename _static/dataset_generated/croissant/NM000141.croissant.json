@@ -80,7 +80,8 @@
   "identifier": "doi:10.82901/nemar.nm000141",
   "sameAs": [
     "https://doi.org/10.82901/nemar.nm000141",
-    "https://openneuro.org/datasets/nm000141"
+    "https://openneuro.org/datasets/nm000141",
+    "https://huggingface.co/datasets/EEGDash/nm000141"
   ],
   "citeAs": "Maitreyee Wairagkar, Yoshikatsu Hayashi, Slawomir J. Nasuto (2018). Motor execution dataset from Wairagkar et al 2018. doi:10.82901/nemar.nm000141",
   "version": "1.9.0",
@@ -121,6 +122,14 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=nm000141",
       "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000141-huggingface",
+      "name": "EEGDash/nm000141 on Hugging Face",
+      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
+      "contentUrl": "https://huggingface.co/datasets/EEGDash/nm000141",
+      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

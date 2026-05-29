@@ -163,17 +163,13 @@ This study was registered under the name “conneXion” and the agreement numbe
     title="Live EEG trace viewer for ds003420 — sub-13 · ses-spelling · run-1"
     referrerpolicy="no-referrer">
   </iframe>
-</details></div><div class="figpair-cell figpair-montage"><details class="electrode-explorer">
-  <summary>Electrode layout — EEG · 256 sensors — 256 channels</summary>
-  <iframe
-    data-src="https://electrodes.eegdash.org/?montage=7b17a20192fb185c&embed=1"
-    loading="lazy"
-    width="100%" height="640"
-    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
-    title="Topomap of EEG · 256 sensors"
-    referrerpolicy="no-referrer">
-  </iframe>
-</details></div></div></div>
+</details></div><div class="figpair-cell figpair-montage">
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
+</div></div></div>
 
 ## NEMAR Processing Statistics
 

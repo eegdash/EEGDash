@@ -141,17 +141,13 @@ This dataset contains intracranial EEG recordings from four patients during sing
     <b>Fig. 01</b> Signal &amp; montage
     <span class="right">273 (4), 232, 152 ch · iEEG · 4800 Hz · 4 subjects, 6 recordings</span>
   </div>
-  <div class="figpair-grid"><div class="figpair-cell figpair-montage"><details class="electrode-explorer">
-  <summary>Electrode layout — iEEG · 228 sensors — 228 channels</summary>
-  <iframe
-    data-src="https://electrodes.eegdash.org/?montage=47e70aaefff830ee&embed=1"
-    loading="lazy"
-    width="100%" height="640"
-    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
-    title="Topomap of iEEG · 228 sensors"
-    referrerpolicy="no-referrer">
-  </iframe>
-</details></div></div></div>
+  <div class="figpair-grid"><div class="figpair-cell figpair-montage">
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
+</div></div></div>
 
 ## NEMAR Processing Statistics
 

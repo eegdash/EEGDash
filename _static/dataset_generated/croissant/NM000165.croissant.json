@@ -124,7 +124,8 @@
   "identifier": "doi:https://doi.org/10.7910/DVN/ID1WNQ",
   "sameAs": [
     "https://doi.org/https://doi.org/10.7910/DVN/ID1WNQ",
-    "https://openneuro.org/datasets/nm000165"
+    "https://openneuro.org/datasets/nm000165",
+    "https://huggingface.co/datasets/EEGDash/nm000165"
   ],
   "citeAs": "Agnese Grison, Irene Mendez Guerra, Alexander Kenneth Clarke, Silvia Muceli, Jaime Ibanez Pereda (20). MUniverse Grison et al 2025. doi:https://doi.org/10.7910/DVN/ID1WNQ",
   "version": "1.11.1",
@@ -174,6 +175,14 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=nm000165",
       "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000165-huggingface",
+      "name": "EEGDash/nm000165 on Hugging Face",
+      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
+      "contentUrl": "https://huggingface.co/datasets/EEGDash/nm000165",
+      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

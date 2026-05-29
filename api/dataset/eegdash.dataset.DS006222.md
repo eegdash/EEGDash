@@ -131,17 +131,13 @@ We recorded scalp EEG activity of healthy adults during one hour of either 40 Hz
     title="Live EEG trace viewer for ds006222 — sub-S074 · ses-1 · task-PVT"
     referrerpolicy="no-referrer">
   </iframe>
-</details></div><div class="figpair-cell figpair-montage"><details class="electrode-explorer">
-  <summary>Electrode layout — EEG · 32 sensors — 32 channels</summary>
-  <iframe
-    data-src="https://electrodes.eegdash.org/?montage=2d95686dad78e611&embed=1"
-    loading="lazy"
-    width="100%" height="640"
-    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
-    title="Topomap of EEG · 32 sensors"
-    referrerpolicy="no-referrer">
-  </iframe>
-</details></div></div></div>
+</details></div><div class="figpair-cell figpair-montage">
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
+</div></div></div>
 
 ## NEMAR Processing Statistics
 

@@ -150,17 +150,13 @@ Participants were instructed to either attend to the left or right audio book.
     title="Live EEG trace viewer for ds004015 — sub-021 · task-AttendedSpeakerParadigmcEEGridAttention"
     referrerpolicy="no-referrer">
   </iframe>
-</details></div><div class="figpair-cell figpair-montage"><details class="electrode-explorer">
-  <summary>Electrode layout — EEG · 18 sensors — 18 channels</summary>
-  <iframe
-    data-src="https://electrodes.eegdash.org/?montage=d1523d0110ce8333&embed=1"
-    loading="lazy"
-    width="100%" height="640"
-    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
-    title="Topomap of EEG · 18 sensors"
-    referrerpolicy="no-referrer">
-  </iframe>
-</details></div></div></div>
+</details></div><div class="figpair-cell figpair-montage">
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
+</div></div></div>
 
 ## NEMAR Processing Statistics
 

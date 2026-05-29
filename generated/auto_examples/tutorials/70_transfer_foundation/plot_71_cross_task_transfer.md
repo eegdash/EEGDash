@@ -284,7 +284,7 @@ print(f"pretrain losses (RestingState): {[round(x, 3) for x in pretrain_losses]}
 ```
 
 ```none
-pretrain losses (RestingState): [0.057, 0.001, 0.0, 0.001, 0.0]
+pretrain losses (RestingState): [0.051, 0.004, 0.0, 0.003, 0.0]
 ```
 
 <!-- GENERATED FROM PYTHON SOURCE LINES 263-269 -->
@@ -309,7 +309,7 @@ print(f"finetune losses (CCD): {[round(x, 3) for x in finetune_losses]}")
 ```
 
 ```none
-finetune losses (CCD): [0.584, 0.487, 0.428, 0.352, 0.321]
+finetune losses (CCD): [0.569, 0.485, 0.434, 0.358, 0.316]
 ```
 
 <!-- GENERATED FROM PYTHON SOURCE LINES 282-288 -->
@@ -348,7 +348,7 @@ print(
 ```
 
 ```none
-finetune=0.550 | scratch=0.533 | chance=0.533 | metric=accuracy | gap=+0.017
+finetune=0.567 | scratch=0.450 | chance=0.567 | metric=accuracy | gap=+0.117
 ```
 
 <!-- GENERATED FROM PYTHON SOURCE LINES 313-322 -->
@@ -411,9 +411,9 @@ print(pd.DataFrame(transfer_matrix, index=SOURCE_TASKS, columns=TARGET_TASKS).ro
 ```none
 transfer matrix Δacc (rows=source, cols=target):
               contrastChangeDetection  symbolSearch  surroundSupp
-RestingState                    0.167         0.167         0.000
-surroundSupp                    0.533         0.167         0.000
-symbolSearch                    0.283         0.100        -0.017
+RestingState                    0.167         0.067           0.0
+surroundSupp                    0.483         0.067           0.0
+symbolSearch                    0.283        -0.050           0.0
 ```
 
 <!-- GENERATED FROM PYTHON SOURCE LINES 368-378 -->
@@ -487,10 +487,10 @@ print(
 ```none
 | condition           | accuracy |
 |---------------------|----------|
-| pretrain -> finetune| 0.550   |
-| from scratch        | 0.533   |
-| chance (majority)   | 0.533   |
-{"encoder_weights_path": "plot_71_pretrained_encoder.pt", "pretext_subjects": 8, "target_subjects": 8, "transfer_gap": 0.0167, "transfer_matrix_mean_delta": 0.1556}
+| pretrain -> finetune| 0.567   |
+| from scratch        | 0.450   |
+| chance (majority)   | 0.567   |
+{"encoder_weights_path": "plot_71_pretrained_encoder.pt", "pretext_subjects": 8, "target_subjects": 8, "transfer_gap": 0.1167, "transfer_matrix_mean_delta": 0.113}
 ```
 
 <!-- GENERATED FROM PYTHON SOURCE LINES 432-438 -->
@@ -593,6 +593,6 @@ doi:10.1038/s41597-019-0104-8). The single-seed lift must be hedged.
 - EEG2025 Challenge 1 (doi:10.48550/arXiv.2506.19141), cross-task
   transfer [[Aristimunha *et al.*, 2025](../../../../references.md#id36)].
 
-**Total running time of the script:** (0 minutes 5.749 seconds)
+**Total running time of the script:** (0 minutes 5.788 seconds)
 
 <a id="sphx-glr-download-generated-auto-examples-tutorials-70-transfer-foundation-plot-71-cross-task-transfer-py"></a>

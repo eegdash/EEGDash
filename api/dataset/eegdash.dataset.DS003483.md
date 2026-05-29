@@ -115,17 +115,13 @@ No README content is available for this dataset.
     title="Live MEG trace viewer for ds003483 — sub-021 · ses-1 · task-induction · run-1"
     referrerpolicy="no-referrer">
   </iframe>
-</details></div><div class="figpair-cell figpair-montage"><details class="electrode-explorer">
-  <summary>Electrode layout — MEG · 306 sensors — 306 channels</summary>
-  <iframe
-    data-src="https://electrodes.eegdash.org/?montage=b4060e396a31cee5&embed=1"
-    loading="lazy"
-    width="100%" height="640"
-    style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
-    title="Topomap of MEG · 306 sensors"
-    referrerpolicy="no-referrer">
-  </iframe>
-</details></div></div></div>
+</details></div><div class="figpair-cell figpair-montage">
+
+No scalp electrode layout is currently indexed for this
+dataset. Once the eegdash montage registry ingests it,
+the interactive viewer will appear here automatically.
+
+</div></div></div>
 
 ## NEMAR Processing Statistics
 

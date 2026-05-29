@@ -73,7 +73,8 @@
   "identifier": "doi:10.1371/journal.pone.0207741",
   "sameAs": [
     "https://doi.org/10.1371/journal.pone.0207741",
-    "https://openneuro.org/datasets/nm000180"
+    "https://openneuro.org/datasets/nm000180",
+    "https://huggingface.co/datasets/EEGDash/nm000180"
   ],
   "citeAs": "Jonathan R. Brennan, John T. Hale (2019). Brennan2019: EEG during Alice in Wonderland Listening. doi:10.1371/journal.pone.0207741",
   "version": "1.9.0",
@@ -114,6 +115,14 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=nm000180",
       "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000180-huggingface",
+      "name": "EEGDash/nm000180 on Hugging Face",
+      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
+      "contentUrl": "https://huggingface.co/datasets/EEGDash/nm000180",
+      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.1] - 2026-05-29
+
+### Fixed
+- Restored feature-extraction and dataset-IO work unintentionally removed by #359: feature decorators/extractors, the complexity/connectivity/signal feature banks, and `eegdash.dataset.io` (#365)
+
+### Added
+- Ingestion pipeline: golden-test safety net (InjectionPlan / ValidationReport / montage snapshots) plus a DDD-lite glossary and ADRs documenting the typed-pipeline design (#364)
+
 ## [0.8.0] - 2026-05-28
 
 ### Added

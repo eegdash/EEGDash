@@ -676,6 +676,12 @@ features corresponding to the leading dimensions (e.g., subjects, channels).</p>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">complexity_lempel_ziv</span></code>(x, /[, threshold, ...])</p></td>
 <td><p>Calculate Lempel-Ziv Complexity (LZC).</p></td>
 </tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">complexity_hurst_exp</span></code>(x, /)</p></td>
+<td><p>Estimate the Hurst Exponent.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">complexity_detrended_fluctuation_analysis</span></code>(x, /)</p></td>
+<td><p>Calculate the Scaling Exponent via DFA.</p></td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -683,7 +689,7 @@ features corresponding to the leading dimensions (e.g., subjects, channels).</p>
 </section>
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.complexity.</span></span><span class="sig-name descname"><span class="pre">complexity_entropy_preprocessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">l</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/complexity.py#L58-L96"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.complexity.</span></span><span class="sig-name descname"><span class="pre">complexity_entropy_preprocessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">l</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/complexity.py#L63-L101"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Precompute neighbor counts for Approximate and Sample Entropy.</p>
 <p>This function creates a delay-embedding of the signal and uses a KDTree
 to count how many vectors are within a distance ‘r’ of each other.
@@ -710,7 +716,7 @@ standard deviation.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.complexity.</span></span><span class="sig-name descname"><span class="pre">complexity_approx_entropy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">counts_m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">counts_mp1</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/complexity.py#L99-L123"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.complexity.</span></span><span class="sig-name descname"><span class="pre">complexity_approx_entropy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">counts_m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">counts_mp1</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/complexity.py#L104-L128"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Calculate Approximate Entropy (ApEn).</p>
 <p>Approximate Entropy quantifies the amount of regularity and the
 unpredictability of fluctuations over time-series data. Smaller values
@@ -733,7 +739,7 @@ indicate more regular signals.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.complexity.</span></span><span class="sig-name descname"><span class="pre">complexity_multiscale_entropy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">l_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">16</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/complexity.py#L153-L186"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.complexity.</span></span><span class="sig-name descname"><span class="pre">complexity_multiscale_entropy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">l_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">16</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/complexity.py#L158-L191"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Calculate Multiscale Entropy (MSE).</p>
 <p>Computes the sample entropy (SampEn) for multiple timescales (from 1
 to <code class="docutils literal notranslate"><span class="pre">l_max</span></code>), then calculate the integral of the SampEn as a function
@@ -759,7 +765,7 @@ standard deviation.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.complexity.</span></span><span class="sig-name descname"><span class="pre">complexity_sample_entropy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">counts_m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">counts_mp1</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/complexity.py#L126-L150"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.complexity.</span></span><span class="sig-name descname"><span class="pre">complexity_sample_entropy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">counts_m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">counts_mp1</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/complexity.py#L131-L155"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Calculate Sample Entropy (SampEn).</p>
 <p>A refinement of Approximate Entropy that is more consistent and less
 dependent on signal length. It measures the likelihood that similar
@@ -782,7 +788,7 @@ patterns of data will remain similar when the window size increases.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.complexity.</span></span><span class="sig-name descname"><span class="pre">complexity_svd_entropy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/complexity.py#L189-L216"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.complexity.</span></span><span class="sig-name descname"><span class="pre">complexity_svd_entropy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/complexity.py#L194-L223"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Calculate Singular Value Decomposition (SVD) Entropy.</p>
 <p>SVD Entropy measures the complexity of the signal’s embedding space.
 It indicates the number of independent components required to
@@ -806,7 +812,7 @@ reconstruct the signal. Higher values suggest a more complex signal.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.complexity.</span></span><span class="sig-name descname"><span class="pre">complexity_lempel_ziv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/complexity.py#L219-L281"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.complexity.</span></span><span class="sig-name descname"><span class="pre">complexity_lempel_ziv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/complexity.py#L226-L288"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Calculate Lempel-Ziv Complexity (LZC).</p>
 <p>LZC evaluates the randomness of a sequence by counting the number
 of distinct patterns it contains.</p>
@@ -839,6 +845,58 @@ production complexity as described by Kaspar and Schuster <a class="reference in
 complexity of spatiotemporal patterns. Physical Review A, 36(2), 842.</p>
 </div>
 </div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.complexity.</span></span><span class="sig-name descname"><span class="pre">complexity_hurst_exp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/complexity.py#L350-L388"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Estimate the Hurst Exponent.</p>
+<p>The Hurst exponent quantifies the long-term memory and predictability of
+a time series. It indicates whether a process is purely random, tends to
+trend in the same direction (persistent), or tends to reverse its direction
+(anti-persistent).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>ndarray</em>) – The input signal.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The estimated Hurst Exponents.
+Shape is <code class="docutils literal notranslate"><span class="pre">x.shape[:-1]</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>This function calculate the Gamma Function Ratios and Bias Correction Factors
+to apply the Anis-Lloyd correction for small sample sizes.</p>
+<p>For more details on the Hurst Exponent and R/S analysis, visit the
+<a class="reference external" href="https://en.wikipedia.org/wiki/Hurst_exponent#Rescaled_range_(R/S)_analysis">Wikipedia entry</a>.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.complexity.</span></span><span class="sig-name descname"><span class="pre">complexity_detrended_fluctuation_analysis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/complexity.py#L391-L440"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Calculate the Scaling Exponent via DFA.</p>
+<p>Detrended Fluctuation Analysis (DFA) is a method used to detect long-range
+temporal correlations (LRTC) in non-stationary signals. It is a more robust
+way to estimate the Hurst exponent when the data is noisy or has shifting trends.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>ndarray</em>) – The input signal.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The DFA scaling exponents ($alpha$).
+Shape is <code class="docutils literal notranslate"><span class="pre">x.shape[:-1]</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Optimized with Numba.</p>
+<p>For a theoretical overview of Detrended Fluctuation Analysis, see the
+<a class="reference external" href="https://en.wikipedia.org/wiki/Detrended_fluctuation_analysis">Wikipedia entry</a>.</p>
 </dd></dl>
 
 </section>

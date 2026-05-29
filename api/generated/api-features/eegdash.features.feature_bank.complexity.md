@@ -25,6 +25,8 @@ features corresponding to the leading dimensions (e.g., subjects, channels).
 | `complexity_sample_entropy`(counts_m, ...)           | Calculate Sample Entropy (SampEn).                               |
 | `complexity_svd_entropy`(x, /[, m, tau])             | Calculate Singular Value Decomposition (SVD) Entropy.            |
 | `complexity_lempel_ziv`(x, /[, threshold, ...])      | Calculate Lempel-Ziv Complexity (LZC).                           |
+| `complexity_hurst_exp`(x, /)                         | Estimate the Hurst Exponent.                                     |
+| `complexity_detrended_fluctuation_analysis`(x, /)    | Calculate the Scaling Exponent via DFA.                          |
 
 ### eegdash.features.feature_bank.complexity.complexity_entropy_preprocessor(x, , m=2, r=0.2, l=1)
 
@@ -145,5 +147,57 @@ of distinct patterns it contains.
 - Optimized with Numba.
 
 ### References
+
+<!-- !! processed by numpydoc !! -->
+
+### eegdash.features.feature_bank.complexity.complexity_hurst_exp(x,)
+
+Estimate the Hurst Exponent.
+
+The Hurst exponent quantifies the long-term memory and predictability of
+a time series. It indicates whether a process is purely random, tends to
+trend in the same direction (persistent), or tends to reverse its direction
+(anti-persistent).
+
+* **Parameters:**
+  **x** (*ndarray*) – The input signal.
+* **Returns:**
+  The estimated Hurst Exponents.
+  Shape is `x.shape[:-1]`.
+* **Return type:**
+  ndarray
+
+### Notes
+
+This function calculate the Gamma Function Ratios and Bias Correction Factors
+to apply the Anis-Lloyd correction for small sample sizes.
+
+For more details on the Hurst Exponent and R/S analysis, visit the
+[Wikipedia entry](https://en.wikipedia.org/wiki/Hurst_exponent#Rescaled_range_(R/S)_analysis).
+
+<!-- !! processed by numpydoc !! -->
+
+### eegdash.features.feature_bank.complexity.complexity_detrended_fluctuation_analysis(x,)
+
+Calculate the Scaling Exponent via DFA.
+
+Detrended Fluctuation Analysis (DFA) is a method used to detect long-range
+temporal correlations (LRTC) in non-stationary signals. It is a more robust
+way to estimate the Hurst exponent when the data is noisy or has shifting trends.
+
+* **Parameters:**
+  **x** (*ndarray*) – The input signal.
+* **Returns:**
+  The DFA scaling exponents ($alpha$).
+  Shape is `x.shape[:-1]`.
+* **Return type:**
+  ndarray
+
+### Notes
+
+Optimized with Numba.
+
+For a theoretical overview of Detrended Fluctuation Analysis, see the
+[Wikipedia entry](https://en.wikipedia.org/wiki/Detrended_fluctuation_analysis).
 
 <!-- !! processed by numpydoc !! -->

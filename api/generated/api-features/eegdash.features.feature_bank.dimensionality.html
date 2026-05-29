@@ -668,12 +668,6 @@ features corresponding to the leading dimensions (e.g., subjects, channels).</p>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">dimensionality_katz_fractal_dim</span></code>(x, /)</p></td>
 <td><p>Calculate Katz Fractal Dimension (KFD).</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">dimensionality_hurst_exp</span></code>(x, /)</p></td>
-<td><p>Estimate the Hurst Exponent.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">dimensionality_detrended_fluctuation_analysis</span></code>(x, /)</p></td>
-<td><p>Calculate the Scaling Exponent via DFA.</p></td>
-</tr>
 </tbody>
 </table>
 </div>
@@ -681,7 +675,7 @@ features corresponding to the leading dimensions (e.g., subjects, channels).</p>
 </section>
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.dimensionality.</span></span><span class="sig-name descname"><span class="pre">dimensionality_higuchi_fractal_dim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-07</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/dimensionality.py#L34-L103"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.dimensionality.</span></span><span class="sig-name descname"><span class="pre">dimensionality_higuchi_fractal_dim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-07</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/dimensionality.py#L31-L100"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Calculate Higuchi’s Fractal Dimension (HFD).</p>
 <p>Higuchi’s Fractal Dimension <a class="reference internal" href="#r81c8ba91077a-1" id="id1">[1]</a> <a class="reference internal" href="#r81c8ba91077a-2" id="id2">[2]</a> estimates the complexity of a time series
 by measuring the mean length of the curve at different time scales $k$. It is
@@ -724,7 +718,7 @@ on Circuits and Systems I: Fundamental Theory and Applications, 48(2), pp.177-18
 
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.dimensionality.</span></span><span class="sig-name descname"><span class="pre">dimensionality_petrosian_fractal_dim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/dimensionality.py#L106-L138"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.dimensionality.</span></span><span class="sig-name descname"><span class="pre">dimensionality_petrosian_fractal_dim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/dimensionality.py#L103-L135"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Calculate Petrosian Fractal Dimension (PFD).</p>
 <p>Petrosian Fractal Dimension <a class="reference internal" href="#r3e02912f8ce5-1" id="id3">[1]</a> <a class="reference internal" href="#r3e02912f8ce5-2" id="id4">[2]</a> provides a fast estimate of fractal
 dimension by analyzing the number of sign changes in the signal’s
@@ -760,7 +754,7 @@ on Circuits and Systems I: Fundamental Theory and Applications, 48(2), pp.177-18
 
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.dimensionality.</span></span><span class="sig-name descname"><span class="pre">dimensionality_katz_fractal_dim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/dimensionality.py#L141-L175"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.dimensionality.</span></span><span class="sig-name descname"><span class="pre">dimensionality_katz_fractal_dim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/dimensionality.py#L138-L172"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Calculate Katz Fractal Dimension (KFD).</p>
 <p>Katz Fractal Dimension <a class="reference internal" href="#re99721b5c64b-1" id="id5">[1]</a> <a class="reference internal" href="#re99721b5c64b-2" id="id6">[2]</a> is calculated as the ratio between the total
 path length and the maximum planar distance from the first point to any other
@@ -791,58 +785,6 @@ A comparison of waveform fractal dimension algorithms. IEEE Transactions
 on Circuits and Systems I: Fundamental Theory and Applications, 48(2), pp.177-183.</p>
 </div>
 </div>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.dimensionality.</span></span><span class="sig-name descname"><span class="pre">dimensionality_hurst_exp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/dimensionality.py#L237-L275"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Estimate the Hurst Exponent.</p>
-<p>The Hurst exponent quantifies the long-term memory and predictability of
-a time series. It indicates whether a process is purely random, tends to
-trend in the same direction (persistent), or tends to reverse its direction
-(anti-persistent).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>x</strong> (<em>ndarray</em>) – The input signal.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The estimated Hurst Exponents.
-Shape is <code class="docutils literal notranslate"><span class="pre">x.shape[:-1]</span></code>.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>ndarray</p>
-</dd>
-</dl>
-<p class="rubric">Notes</p>
-<p>This function calculate the Gamma Function Ratios and Bias Correction Factors
-to apply the Anis-Lloyd correction for small sample sizes.</p>
-<p>For more details on the Hurst Exponent and R/S analysis, visit the
-<a class="reference external" href="https://en.wikipedia.org/wiki/Hurst_exponent#Rescaled_range_(R/S)_analysis">Wikipedia entry</a>.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">eegdash.features.feature_bank.dimensionality.</span></span><span class="sig-name descname"><span class="pre">dimensionality_detrended_fluctuation_analysis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/eegdash/EEGDash/blob/develop/eegdash/features/feature_bank/dimensionality.py#L278-L327"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Calculate the Scaling Exponent via DFA.</p>
-<p>Detrended Fluctuation Analysis (DFA) is a method used to detect long-range
-temporal correlations (LRTC) in non-stationary signals. It is a more robust
-way to estimate the Hurst exponent when the data is noisy or has shifting trends.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>x</strong> (<em>ndarray</em>) – The input signal.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The DFA scaling exponents ($alpha$).
-Shape is <code class="docutils literal notranslate"><span class="pre">x.shape[:-1]</span></code>.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>ndarray</p>
-</dd>
-</dl>
-<p class="rubric">Notes</p>
-<p>Optimized with Numba.</p>
-<p>For a theoretical overview of Detrended Fluctuation Analysis, see the
-<a class="reference external" href="https://en.wikipedia.org/wiki/Detrended_fluctuation_analysis">Wikipedia entry</a>.</p>
 </dd></dl>
 
 </section>

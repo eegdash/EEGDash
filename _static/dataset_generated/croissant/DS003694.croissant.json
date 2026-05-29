@@ -88,7 +88,8 @@
   "identifier": "doi:10.18112/openneuro.ds003694.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds003694.v1.0.0",
-    "https://openneuro.org/datasets/ds003694"
+    "https://openneuro.org/datasets/ds003694",
+    "https://huggingface.co/datasets/EEGDash/ds003694"
   ],
   "citeAs": "Benjamin J. Griffiths, María Carmen Martín-Buro, Bernhard Staresina, Simon Hanslmayr (2021). MEGMEM. doi:10.18112/openneuro.ds003694.v1.0.0",
   "version": "1.0.2",
@@ -136,6 +137,14 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=ds003694",
       "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds003694-huggingface",
+      "name": "EEGDash/ds003694 on Hugging Face",
+      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
+      "contentUrl": "https://huggingface.co/datasets/EEGDash/ds003694",
+      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

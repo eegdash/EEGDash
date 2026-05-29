@@ -19,12 +19,10 @@ features corresponding to the leading dimensions (e.g., subjects, channels).
 
 ### Functions
 
-| `dimensionality_higuchi_fractal_dim`(x, /[, ...])     | Calculate Higuchi's Fractal Dimension (HFD).   |
-|-------------------------------------------------------|------------------------------------------------|
-| `dimensionality_petrosian_fractal_dim`(x, /)          | Calculate Petrosian Fractal Dimension (PFD).   |
-| `dimensionality_katz_fractal_dim`(x, /)               | Calculate Katz Fractal Dimension (KFD).        |
-| `dimensionality_hurst_exp`(x, /)                      | Estimate the Hurst Exponent.                   |
-| `dimensionality_detrended_fluctuation_analysis`(x, /) | Calculate the Scaling Exponent via DFA.        |
+| `dimensionality_higuchi_fractal_dim`(x, /[, ...])   | Calculate Higuchi's Fractal Dimension (HFD).   |
+|-----------------------------------------------------|------------------------------------------------|
+| `dimensionality_petrosian_fractal_dim`(x, /)        | Calculate Petrosian Fractal Dimension (PFD).   |
+| `dimensionality_katz_fractal_dim`(x, /)             | Calculate Katz Fractal Dimension (KFD).        |
 
 ### eegdash.features.feature_bank.dimensionality.dimensionality_higuchi_fractal_dim(x, , k_max=10, eps=1e-07)
 
@@ -92,57 +90,5 @@ point.
   ndarray
 
 ### References
-
-<!-- !! processed by numpydoc !! -->
-
-### eegdash.features.feature_bank.dimensionality.dimensionality_hurst_exp(x,)
-
-Estimate the Hurst Exponent.
-
-The Hurst exponent quantifies the long-term memory and predictability of
-a time series. It indicates whether a process is purely random, tends to
-trend in the same direction (persistent), or tends to reverse its direction
-(anti-persistent).
-
-* **Parameters:**
-  **x** (*ndarray*) – The input signal.
-* **Returns:**
-  The estimated Hurst Exponents.
-  Shape is `x.shape[:-1]`.
-* **Return type:**
-  ndarray
-
-### Notes
-
-This function calculate the Gamma Function Ratios and Bias Correction Factors
-to apply the Anis-Lloyd correction for small sample sizes.
-
-For more details on the Hurst Exponent and R/S analysis, visit the
-[Wikipedia entry](https://en.wikipedia.org/wiki/Hurst_exponent#Rescaled_range_(R/S)_analysis).
-
-<!-- !! processed by numpydoc !! -->
-
-### eegdash.features.feature_bank.dimensionality.dimensionality_detrended_fluctuation_analysis(x,)
-
-Calculate the Scaling Exponent via DFA.
-
-Detrended Fluctuation Analysis (DFA) is a method used to detect long-range
-temporal correlations (LRTC) in non-stationary signals. It is a more robust
-way to estimate the Hurst exponent when the data is noisy or has shifting trends.
-
-* **Parameters:**
-  **x** (*ndarray*) – The input signal.
-* **Returns:**
-  The DFA scaling exponents ($alpha$).
-  Shape is `x.shape[:-1]`.
-* **Return type:**
-  ndarray
-
-### Notes
-
-Optimized with Numba.
-
-For a theoretical overview of Detrended Fluctuation Analysis, see the
-[Wikipedia entry](https://en.wikipedia.org/wiki/Detrended_fluctuation_analysis).
 
 <!-- !! processed by numpydoc !! -->

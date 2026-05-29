@@ -28,8 +28,8 @@ from ..decorators import (
 from ..output_types import SignalOutputType
 
 __all__ = [
+    "signal_bandpass_filter_preprocessor",
     "signal_envelope_preprocessor",
-    "signal_filter_preprocessor",
     "signal_decorrelation_time",
     "signal_hjorth_activity",
     "signal_hjorth_complexity",
@@ -68,7 +68,9 @@ def signal_envelope_preprocessor(x, /):
 
 @feature_predecessor()
 @preprocessor_output_type(SignalOutputType)
-def signal_filter_preprocessor(x, /, *, _metadata, f_min, f_max, num_taps=None):
+def signal_bandpass_filter_preprocessor(
+    x, /, *, _metadata, f_min, f_max, num_taps=None
+):
     """Linear-phase FIR band-pass filter.
 
     Parameters

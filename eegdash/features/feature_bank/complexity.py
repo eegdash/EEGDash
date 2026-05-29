@@ -53,7 +53,9 @@ def _channel_app_samp_entropy_counts(x, m, r, l):
         Neighbor counts for the given embedding dimension.
 
     """
-    x_emb = np.lib.stride_tricks.sliding_window_view(x, window_shape=m, axis=-1)[::l]
+    x_emb = np.lib.stride_tricks.sliding_window_view(x, window_shape=m, axis=-1)[
+        ..., ::l
+    ]
     kdtree = KDTree(x_emb, metric="chebyshev")
     return kdtree.query_radius(x_emb, r, count_only=True)
 
@@ -213,7 +215,9 @@ def complexity_svd_entropy(x, /, m=10, tau=1):
         SVD Entropy values. Shape is ``x.shape[:-1]``.
 
     """
-    x_emb = np.lib.stride_tricks.sliding_window_view(x, window_shape=m, axis=-1)[::tau]
+    x_emb = np.lib.stride_tricks.sliding_window_view(x, window_shape=m, axis=-1)[
+        ..., ::tau
+    ]
     s = np.linalg.svd(x_emb, compute_uv=False)
     s /= s.sum(axis=-1, keepdims=True)
     return -np.sum(s * np.log(s), axis=-1)

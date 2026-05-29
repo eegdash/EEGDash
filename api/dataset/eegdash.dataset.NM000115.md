@@ -151,7 +151,7 @@ Data curator for NEMAR version: Arnaud Delorme (UCSD, La Jolla, CA, USA)
     <span class="right">14 ch · EEG · 250 Hz · 4 subjects, 24 recordings</span>
   </div>
   <div class="figpair-grid"><div class="figpair-cell figpair-trace"><details class="trace-viewer">
-  <summary>Live trace viewer — <strong>sub-1 · ses-0 · task-imagery · run-0</strong></summary>
+  <summary>Live trace viewer — <strong>sub-1 · ses-2 · task-imagery · run-1</strong></summary>
   <p class="trace-viewer-caption">
     Showing <strong>one</strong> representative recording out of
     <strong>4 subjects and 24 recordings</strong> in this dataset.
@@ -160,11 +160,11 @@ Data curator for NEMAR version: Arnaud Delorme (UCSD, La Jolla, CA, USA)
     viewer (or pass <code>?eeg=&lt;url&gt;</code>) to inspect it.
   </p>
   <iframe
-    data-src="https://eegdash.github.io/eegdash-viewer/?dataset=nm000115&sub=1&ses=0&task=imagery&run=0&ext=edf&embed=1"
+    data-src="https://eegdash.github.io/eegdash-viewer/?dataset=nm000115&sub=1&ses=2&task=imagery&run=1&ext=edf&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 1200px; display: block; background: transparent;"
-    title="Live EEG trace viewer for nm000115 — sub-1 · ses-0 · task-imagery · run-0"
+    title="Live EEG trace viewer for nm000115 — sub-1 · ses-2 · task-imagery · run-1"
     referrerpolicy="no-referrer">
   </iframe>
 </details></div><div class="figpair-cell figpair-montage"><details class="electrode-explorer">

@@ -54,7 +54,8 @@
     "MEG",
     "Visual",
     "Healthy",
-    "Perception"
+    "Perception",
+    "HED"
   ],
   "isAccessibleForFree": true,
   "includedInDataCatalog": {

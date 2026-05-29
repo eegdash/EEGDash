@@ -128,7 +128,7 @@ Niso, G., Gorgolewski, K. J., Bock, E., Brooks, T. L., Flandin, G., Gramfort, A.
     <span class="right">376, 315 ch · MEG · 601 Hz · 2 subjects, 3 recordings</span>
   </div>
   <div class="figpair-grid"><div class="figpair-cell figpair-trace"><details class="trace-viewer">
-  <summary>Live trace viewer — <strong>sub-01 · task-audiovisual · run-01</strong></summary>
+  <summary>Live trace viewer — <strong>sub-01</strong></summary>
   <p class="trace-viewer-caption">
     Showing <strong>one</strong> representative recording out of
     <strong>2 subjects and 3 recordings</strong> in this dataset.
@@ -137,11 +137,11 @@ Niso, G., Gorgolewski, K. J., Bock, E., Brooks, T. L., Flandin, G., Gramfort, A.
     viewer (or pass <code>?meg=&lt;url&gt;</code>) to inspect it.
   </p>
   <iframe
-    data-src="https://eegdash.github.io/eegdash-viewer/?dataset=ds000248&sub=01&task=audiovisual&run=01&ext=fif&suffix=meg&embed=1"
+    data-src="https://eegdash.github.io/eegdash-viewer/?dataset=ds000248&sub=01&ext=fif&suffix=meg&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 1200px; display: block; background: transparent;"
-    title="Live MEG trace viewer for ds000248 — sub-01 · task-audiovisual · run-01"
+    title="Live MEG trace viewer for ds000248 — sub-01"
     referrerpolicy="no-referrer">
   </iframe>
 </details></div><div class="figpair-cell figpair-montage"><details class="electrode-explorer">

@@ -168,13 +168,13 @@ Please contact Dora Hermes ([hermes.dora@mayo.edu](mailto:hermes.dora@mayo.edu))
     <span class="right">192, 194, 201, 178, 256, 226, 244, 207 ch · iEEG · 2048 Hz · 8 subjects, 8 recordings</span>
   </div>
   <div class="figpair-grid"><div class="figpair-cell figpair-montage"><details class="electrode-explorer">
-  <summary>Electrode layout — iEEG · 166 sensors — 166 channels</summary>
+  <summary>Electrode layout — iEEG · 189 sensors — 189 channels</summary>
   <iframe
-    data-src="https://electrodes.eegdash.org/?montage=c063a8cfcb6dd514&embed=1"
+    data-src="https://electrodes.eegdash.org/?montage=788db7e8009fcbb3&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
-    title="Topomap of iEEG · 166 sensors"
+    title="Topomap of iEEG · 189 sensors"
     referrerpolicy="no-referrer">
   </iframe>
 </details></div></div></div>

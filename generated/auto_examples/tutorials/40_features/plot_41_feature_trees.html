@@ -58,7 +58,7 @@
   <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=0790524f97105ba85085" />
 <link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=0790524f97105ba85085" />
 
-    <script src="../../../../_static/documentation_options.js?v=486e5634"></script>
+    <script src="../../../../_static/documentation_options.js?v=ec16d22d"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/sg-tags.js?v=d80f6fa4"></script>
@@ -693,7 +693,7 @@ so subsequent tutorials in the same sphinx-gallery process see a clean
 <span class="n">_spec</span><span class="o">.</span><span class="n">welch</span> <span class="o">=</span> <span class="n">_counting_welch</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>eegdash 0.8.0
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>eegdash 0.8.1
 </pre></div>
 </div>
 </section>
@@ -885,7 +885,7 @@ Welch counter records the redundant calls.</p>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Extracting features:   0%|          | 0/2 [00:00&lt;?, ?it/s]
-Extracting features: 100%|██████████| 2/2 [00:00&lt;00:00, 267.21it/s]
+Extracting features: 100%|██████████| 2/2 [00:00&lt;00:00, 244.72it/s]
 </pre></div>
 </div>
 </section>
@@ -898,7 +898,7 @@ equals <code class="docutils literal notranslate"><span class="pre">n_bands</spa
 <span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>flat: shape=(16, 17) | runtime=0.0094 s | PSDs=8
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>flat: shape=(16, 17) | runtime=0.0104 s | PSDs=8
 </pre></div>
 </div>
 </section>
@@ -927,7 +927,7 @@ below. Printing the extractor renders the dependency tree exactly as
 ╚═ beta_pow: spectral_bands_power
 
 Extracting features:   0%|          | 0/2 [00:00&lt;?, ?it/s]
-Extracting features: 100%|██████████| 2/2 [00:00&lt;00:00, 450.56it/s]
+Extracting features: 100%|██████████| 2/2 [00:00&lt;00:00, 416.58it/s]
 </pre></div>
 </div>
 </section>
@@ -951,7 +951,7 @@ the same sphinx-gallery process sees the original Welch.</p>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;welch restored&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>tree: shape=(16, 17) | runtime=0.0061 s | PSDs=2 | speedup=1.53x
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>tree: shape=(16, 17) | runtime=0.0067 s | PSDs=2 | speedup=1.55x
 welch restored
 </pre></div>
 </div>
@@ -1026,7 +1026,7 @@ one column per key (<code class="docutils literal notranslate"><span class="pre"
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Extracting features:   0%|          | 0/2 [00:00&lt;?, ?it/s]
-Extracting features: 100%|██████████| 2/2 [00:00&lt;00:00, 398.24it/s]
+Extracting features: 100%|██████████| 2/2 [00:00&lt;00:00, 382.78it/s]
 marker columns (first 10): [&#39;alpha_pow_O1&#39;, &#39;alpha_pow_Oz&#39;, &#39;alpha_pow_O2&#39;, &#39;alpha_pow_Cz&#39;, &#39;alpha_peak_O1&#39;, &#39;alpha_peak_Oz&#39;, &#39;alpha_peak_O2&#39;, &#39;alpha_peak_Cz&#39;, &#39;norm_spec_ent_O1&#39;, &#39;norm_spec_ent_Oz&#39;]
 markers table shape: (16, 21)
 </pre></div>
@@ -1220,7 +1220,7 @@ tree. Runtime barely budges; the flat version would pay a fifth PSD.</p>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Extracting features:   0%|          | 0/2 [00:00&lt;?, ?it/s]
-Extracting features: 100%|██████████| 2/2 [00:00&lt;00:00, 355.30it/s]
+Extracting features: 100%|██████████| 2/2 [00:00&lt;00:00, 334.03it/s]
 extended (with gamma): n_cols=21
 </pre></div>
 </div>
@@ -1257,7 +1257,7 @@ and Chicco 2024 Tip 5).</p>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Extracting features:   0%|          | 0/2 [00:00&lt;?, ?it/s]
-Extracting features: 100%|██████████| 2/2 [00:00&lt;00:00, 433.61it/s]
+Extracting features: 100%|██████████| 2/2 [00:00&lt;00:00, 412.56it/s]
 custom rel_alpha columns: [&#39;rel_alpha_O1&#39;, &#39;rel_alpha_Oz&#39;, &#39;rel_alpha_O2&#39;, &#39;rel_alpha_Cz&#39;]
 </pre></div>
 </div>
@@ -1284,8 +1284,8 @@ still open questions <span class="bibtex-citation" id="id4">[<a class="reference
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>                   n_features  runtime_s  psds_computed  speedup_vs_flat
-flat (no tree)             16     0.0094              8           1.0000
-tree (shared PSD)          16     0.0061              2           1.5328
+flat (no tree)             16     0.0104              8           1.0000
+tree (shared PSD)          16     0.0067              2           1.5511
 </pre></div>
 </div>
 </section>

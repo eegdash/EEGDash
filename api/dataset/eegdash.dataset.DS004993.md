@@ -175,13 +175,13 @@ This is a sample BIDS dataset for the WIRED ICM course in Paris, France in March
     referrerpolicy="no-referrer">
   </iframe>
 </details></div><div class="figpair-cell figpair-montage"><details class="electrode-explorer">
-  <summary>Electrode layout — iEEG · 148 sensors — 148 channels</summary>
+  <summary>Electrode layout — iEEG · 160 sensors — 160 channels</summary>
   <iframe
-    data-src="https://electrodes.eegdash.org/?montage=5dead218978f8c7b&embed=1"
+    data-src="https://electrodes.eegdash.org/?montage=6b40f3d1006ad556&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
-    title="Topomap of iEEG · 148 sensors"
+    title="Topomap of iEEG · 160 sensors"
     referrerpolicy="no-referrer">
   </iframe>
 </details></div></div></div>

@@ -253,7 +253,7 @@ The dataset was designed to evaluate whether deep neural network-based brain-com
     <span class="right">32 ch · EEG · 256 Hz · 20 subjects, 1525 recordings</span>
   </div>
   <div class="figpair-grid"><div class="figpair-cell figpair-trace"><details class="trace-viewer">
-  <summary>Live trace viewer — <strong>sub-01 · ses-01 · task-images · run-01</strong></summary>
+  <summary>Live trace viewer — <strong>sub-13 · ses-02 · task-images · run-11</strong></summary>
   <p class="trace-viewer-caption">
     Showing <strong>one</strong> representative recording out of
     <strong>20 subjects and 1525 recordings</strong> in this dataset.
@@ -262,11 +262,11 @@ The dataset was designed to evaluate whether deep neural network-based brain-com
     viewer (or pass <code>?eeg=&lt;url&gt;</code>) to inspect it.
   </p>
   <iframe
-    data-src="https://eegdash.github.io/eegdash-viewer/?dataset=nm000134&sub=01&ses=01&task=images&run=01&ext=edf&embed=1"
+    data-src="https://eegdash.github.io/eegdash-viewer/?dataset=nm000134&sub=13&ses=02&task=images&run=11&ext=edf&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 1200px; display: block; background: transparent;"
-    title="Live EEG trace viewer for nm000134 — sub-01 · ses-01 · task-images · run-01"
+    title="Live EEG trace viewer for nm000134 — sub-13 · ses-02 · task-images · run-11"
     referrerpolicy="no-referrer">
   </iframe>
 </details></div><div class="figpair-cell figpair-montage"><details class="electrode-explorer">

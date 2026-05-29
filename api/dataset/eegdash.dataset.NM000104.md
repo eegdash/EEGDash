@@ -394,7 +394,7 @@ If you use this dataset in your research, please cite the original authors.
     <span class="right">32 ch · EMG · 2000 Hz · 108 subjects, 1136 recordings</span>
   </div>
   <div class="figpair-grid"><div class="figpair-cell figpair-trace"><details class="trace-viewer">
-  <summary>Live trace viewer — <strong>sub-01438774 · ses-1625258895 · task-typing</strong></summary>
+  <summary>Live trace viewer — <strong>sub-70495563 · task-typing</strong></summary>
   <p class="trace-viewer-caption">
     Showing <strong>one</strong> representative recording out of
     <strong>108 subjects and 1136 recordings</strong> in this dataset.
@@ -403,11 +403,11 @@ If you use this dataset in your research, please cite the original authors.
     viewer (or pass <code>?emg=&lt;url&gt;</code>) to inspect it.
   </p>
   <iframe
-    data-src="https://eegdash.github.io/eegdash-viewer/?dataset=nm000104&sub=01438774&ses=1625258895&task=typing&ext=bdf&suffix=emg&embed=1"
+    data-src="https://eegdash.github.io/eegdash-viewer/?dataset=nm000104&sub=70495563&task=typing&ext=edf&suffix=emg&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 1200px; display: block; background: transparent;"
-    title="Live EMG trace viewer for nm000104 — sub-01438774 · ses-1625258895 · task-typing"
+    title="Live EMG trace viewer for nm000104 — sub-70495563 · task-typing"
     referrerpolicy="no-referrer">
   </iframe>
 </details></div><div class="figpair-cell figpair-montage"><details class="electrode-explorer">

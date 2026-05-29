@@ -207,7 +207,7 @@ The dataset includes 28 video clips designed to elicit nine emotion categories (
     <span class="right">32 ch · EEG · 250, 1000 Hz · 123 subjects, 123 recordings</span>
   </div>
   <div class="figpair-grid"><div class="figpair-cell figpair-trace"><details class="trace-viewer">
-  <summary>Live trace viewer — <strong>sub-000 · task-watchingVideoClips</strong></summary>
+  <summary>Live trace viewer — <strong>sub-021 · task-watchingVideoClips</strong></summary>
   <p class="trace-viewer-caption">
     Showing <strong>one</strong> representative recording out of
     <strong>123 subjects and 123 recordings</strong> in this dataset.
@@ -216,11 +216,11 @@ The dataset includes 28 video clips designed to elicit nine emotion categories (
     viewer (or pass <code>?eeg=&lt;url&gt;</code>) to inspect it.
   </p>
   <iframe
-    data-src="https://eegdash.github.io/eegdash-viewer/?dataset=nm000112&sub=000&task=watchingVideoClips&ext=bdf&embed=1"
+    data-src="https://eegdash.github.io/eegdash-viewer/?dataset=nm000112&sub=021&task=watchingVideoClips&ext=bdf&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 1200px; display: block; background: transparent;"
-    title="Live EEG trace viewer for nm000112 — sub-000 · task-watchingVideoClips"
+    title="Live EEG trace viewer for nm000112 — sub-021 · task-watchingVideoClips"
     referrerpolicy="no-referrer">
   </iframe>
 </details></div><div class="figpair-cell figpair-montage"><details class="electrode-explorer">

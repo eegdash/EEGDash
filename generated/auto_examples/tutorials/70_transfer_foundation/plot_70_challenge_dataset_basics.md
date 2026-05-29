@@ -106,7 +106,7 @@ print(f"cache directory: {cache_dir}")
 ```
 
 ```none
-eegdash version: 0.8.0
+eegdash version: 0.8.1
 cache directory: /home/runner/eegdash_cache
 ```
 
@@ -294,7 +294,7 @@ pd.Series(
 │ If you are participating in the competition, always use                      │
 │ `EEGChallengeDataset` to ensure consistency with the challenge data.         │
 ╰──────────────────────── Source: EEGChallengeDataset ─────────────────────────╯
-[05/29/26 14:41:36] INFO     Auto-corrected misrouted             dataset.py:413
+[05/29/26 15:16:16] INFO     Auto-corrected misrouted             dataset.py:413
                              storage.base for dataset
                              EEG2025r5mini: None ->
                              s3://nemar/EEG2025r5mini
@@ -973,7 +973,7 @@ pd.Series(
 │ If you are participating in the competition, always use                      │
 │ `EEGChallengeDataset` to ensure consistency with the challenge data.         │
 ╰──────────────────────── Source: EEGChallengeDataset ─────────────────────────╯
-[05/29/26 14:41:37] INFO     Auto-corrected misrouted             dataset.py:413
+[05/29/26 15:16:18] INFO     Auto-corrected misrouted             dataset.py:413
                              storage.base for dataset EEG2025r5:
                              None -> s3://nemar/EEG2025r5
 ```
@@ -1197,7 +1197,7 @@ pd.Series(
 │ If you are participating in the competition, always use                      │
 │ `EEGChallengeDataset` to ensure consistency with the challenge data.         │
 ╰──────────────────────── Source: EEGChallengeDataset ─────────────────────────╯
-[05/29/26 14:41:44] INFO     Auto-corrected misrouted             dataset.py:413
+[05/29/26 15:16:25] INFO     Auto-corrected misrouted             dataset.py:413
                              storage.base for dataset
                              EEG2025r2mini: None ->
                              s3://nemar/EEG2025r2mini
@@ -1420,6 +1420,6 @@ See [References](../../../../references.md) for the centralized bibliography of 
 cited above. Add or amend an entry once in
 `docs/source/refs.bib`; every tutorial inherits the update.
 
-**Total running time of the script:** (0 minutes 8.921 seconds)
+**Total running time of the script:** (0 minutes 9.800 seconds)
 
 <a id="sphx-glr-download-generated-auto-examples-tutorials-70-transfer-foundation-plot-70-challenge-dataset-basics-py"></a>

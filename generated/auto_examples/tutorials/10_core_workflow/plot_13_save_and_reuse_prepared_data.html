@@ -58,7 +58,7 @@
   <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=0790524f97105ba85085" />
 <link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=0790524f97105ba85085" />
 
-    <script src="../../../../_static/documentation_options.js?v=486e5634"></script>
+    <script src="../../../../_static/documentation_options.js?v=ec16d22d"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/sg-tags.js?v=d80f6fa4"></script>
@@ -695,7 +695,7 @@ across runs (E3.21).</p>
 <span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>eegdash 0.8.0 | braindecode 1.5.2 | numpy 2.4.6
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>eegdash 0.8.1 | braindecode 1.5.2 | numpy 2.4.6
 </pre></div>
 </div>
 </section>
@@ -842,7 +842,7 @@ window kwargs).</p>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;FIF write_s=</span><span class="si">{</span><a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">fif_write_s</span></a><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> s, size_mb=</span><span class="si">{</span><a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">fif_size_mb</span></a><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>saved: /tmp/eegdash_save_rt5n_lbi/windows
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>saved: /tmp/eegdash_save_zfo2krol/windows
 artifact tree (first 6): [&#39;windows/0&#39;, &#39;windows/0/0-raw.fif&#39;, &#39;windows/0/description.json&#39;, &#39;windows/0/metadata_df.pkl&#39;, &#39;windows/0/raw_preproc_kwargs.json&#39;, &#39;windows/0/window_kwargs.json&#39;]
 FIF write_s=0.0053 s, size_mb=0.0055
 </pre></div>
@@ -864,7 +864,7 @@ array in RAM, which is what every downstream tutorial expects.</p>
 <span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>reload OK: type=BaseConcatDataset, n=2, read_s=0.0062
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>reload OK: type=BaseConcatDataset, n=2, read_s=0.0063
 </pre></div>
 </div>
 <p><strong>Investigate.</strong> Shape and sample-level parity. The spec asserts
@@ -941,7 +941,7 @@ on-disk MB into the same ledger.</p>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Zarr extra not installed (pip install braindecode[hub]); skipping.&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Zarr write_s=0.0170, read_s=0.0059, size_mb=0.0080
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Zarr write_s=0.0168, read_s=0.0060, size_mb=0.0080
 </pre></div>
 </div>
 </section>
@@ -986,7 +986,7 @@ relies on.</p>
 Cz_mean       float64
 Pz_mean       float64
 window_idx      int64
-Parquet write_s=0.0150, read_s=0.0115, size_mb=0.0024
+Parquet write_s=0.0160, read_s=0.0120, size_mb=0.0024
 </pre></div>
 </div>
 <div class="output_subarea output_html rendered_html output_result">
@@ -1090,22 +1090,22 @@ the Zarr row.</p>
     <tr>
       <th>0</th>
       <td>windows/ (FIF)</td>
-      <td>5.27</td>
-      <td>6.19</td>
+      <td>5.32</td>
+      <td>6.32</td>
       <td>0.005461</td>
     </tr>
     <tr>
       <th>1</th>
       <td>windows.zarr (Zarr)</td>
-      <td>16.97</td>
-      <td>5.91</td>
+      <td>16.78</td>
+      <td>5.96</td>
       <td>0.007955</td>
     </tr>
     <tr>
       <th>2</th>
       <td>features.parquet</td>
-      <td>15.02</td>
-      <td>11.52</td>
+      <td>16.02</td>
+      <td>12.00</td>
       <td>0.002384</td>
     </tr>
   </tbody>
@@ -1173,7 +1173,7 @@ git is unavailable (CI sandbox, source archive without <code class="docutils lit
   <tbody>
     <tr>
       <th>eegdash</th>
-      <td>0.8.0</td>
+      <td>0.8.1</td>
     </tr>
     <tr>
       <th>braindecode</th>
@@ -1197,7 +1197,7 @@ git is unavailable (CI sandbox, source archive without <code class="docutils lit
     </tr>
     <tr>
       <th>git</th>
-      <td>0a924c3</td>
+      <td>309d6fe</td>
     </tr>
   </tbody>
 </table>
@@ -1233,7 +1233,7 @@ returning a corrupt dataset.</p>
     <span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Caught FileExistsError: Subdirectory /tmp/eegdash_save_rt5n_lbi/windows/0 already exists. Please select
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Caught FileExistsError: Subdirectory /tmp/eegdash_save_zfo2krol/windows/0 already exists. Please select
 Recovery: rmtree + save without overwrite=True succeeded.
 Recovery: load_concat_dataset rejected broken layout (IndexError: list index out of range).
 </pre></div>

@@ -161,7 +161,7 @@ analysis).
     <span class="right">64 ch · EEG · 256 Hz · 15 subjects, 45 recordings</span>
   </div>
   <div class="figpair-grid"><div class="figpair-cell figpair-trace"><details class="trace-viewer">
-  <summary>Live trace viewer — <strong>sub-01 · task-imaginedSpeech · run-00</strong></summary>
+  <summary>Live trace viewer — <strong>sub-13 · task-imaginedSpeech · run-02</strong></summary>
   <p class="trace-viewer-caption">
     Showing <strong>one</strong> representative recording out of
     <strong>15 subjects and 45 recordings</strong> in this dataset.
@@ -170,11 +170,11 @@ analysis).
     viewer (or pass <code>?eeg=&lt;url&gt;</code>) to inspect it.
   </p>
   <iframe
-    data-src="https://eegdash.github.io/eegdash-viewer/?dataset=nm000113&sub=01&task=imaginedSpeech&run=00&ext=edf&embed=1"
+    data-src="https://eegdash.github.io/eegdash-viewer/?dataset=nm000113&sub=13&task=imaginedSpeech&run=02&ext=edf&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 1200px; display: block; background: transparent;"
-    title="Live EEG trace viewer for nm000113 — sub-01 · task-imaginedSpeech · run-00"
+    title="Live EEG trace viewer for nm000113 — sub-13 · task-imaginedSpeech · run-02"
     referrerpolicy="no-referrer">
   </iframe>
 </details></div><div class="figpair-cell figpair-montage"><details class="electrode-explorer">

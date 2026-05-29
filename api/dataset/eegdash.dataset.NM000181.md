@@ -117,7 +117,7 @@ normal/abnormal classification tasks.
     <span class="right">21 ch · EEG · 200 Hz · 2417 subjects, 2417 recordings</span>
   </div>
   <div class="figpair-grid"><div class="figpair-cell figpair-trace"><details class="trace-viewer">
-  <summary>Live trace viewer — <strong>sub-0001 · task-clinical</strong></summary>
+  <summary>Live trace viewer — <strong>sub-2461 · task-clinical</strong></summary>
   <p class="trace-viewer-caption">
     Showing <strong>one</strong> representative recording out of
     <strong>2417 subjects and 2417 recordings</strong> in this dataset.
@@ -126,11 +126,11 @@ normal/abnormal classification tasks.
     viewer (or pass <code>?eeg=&lt;url&gt;</code>) to inspect it.
   </p>
   <iframe
-    data-src="https://eegdash.github.io/eegdash-viewer/?dataset=nm000181&sub=0001&task=clinical&ext=edf&embed=1"
+    data-src="https://eegdash.github.io/eegdash-viewer/?dataset=nm000181&sub=2461&task=clinical&ext=edf&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 1200px; display: block; background: transparent;"
-    title="Live EEG trace viewer for nm000181 — sub-0001 · task-clinical"
+    title="Live EEG trace viewer for nm000181 — sub-2461 · task-clinical"
     referrerpolicy="no-referrer">
   </iframe>
 </details></div><div class="figpair-cell figpair-montage"><details class="electrode-explorer">

@@ -56,7 +56,7 @@ print(f"eegdash {eegdash.__version__}")
 ```
 
 ```none
-eegdash 0.8.0
+eegdash 0.8.1
 ```
 
 <!-- GENERATED FROM PYTHON SOURCE LINES 46-54 -->
@@ -739,6 +739,6 @@ See [References](../../../../references.md) for the centralized bibliography of 
 cited above. Add or amend an entry once in
 `docs/source/refs.bib`; every tutorial inherits the update.
 
-**Total running time of the script:** (0 minutes 17.213 seconds)
+**Total running time of the script:** (0 minutes 10.287 seconds)
 
 <a id="sphx-glr-download-generated-auto-examples-tutorials-00-start-here-plot-00-first-search-py"></a>

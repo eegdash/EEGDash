@@ -172,7 +172,7 @@ on average 21.24 (std = 0.97) recording channels per scan, out of which 21.24
     <span class="right">22 (112), 20 (69) ch · EEG · 256 Hz · 64 subjects, 181 recordings</span>
   </div>
   <div class="figpair-grid"><div class="figpair-cell figpair-trace"><details class="trace-viewer">
-  <summary>Live trace viewer — <strong>sub-HS1 · task-P300</strong></summary>
+  <summary>Live trace viewer — <strong>sub-HS21 · task-eyesOpen</strong></summary>
   <p class="trace-viewer-caption">
     Showing <strong>one</strong> representative recording out of
     <strong>64 subjects and 181 recordings</strong> in this dataset.
@@ -181,11 +181,11 @@ on average 21.24 (std = 0.97) recording channels per scan, out of which 21.24
     viewer (or pass <code>?eeg=&lt;url&gt;</code>) to inspect it.
   </p>
   <iframe
-    data-src="https://eegdash.github.io/eegdash-viewer/?dataset=nm000114&sub=HS1&task=P300&ext=edf&embed=1"
+    data-src="https://eegdash.github.io/eegdash-viewer/?dataset=nm000114&sub=HS21&task=eyesOpen&ext=edf&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 1200px; display: block; background: transparent;"
-    title="Live EEG trace viewer for nm000114 — sub-HS1 · task-P300"
+    title="Live EEG trace viewer for nm000114 — sub-HS21 · task-eyesOpen"
     referrerpolicy="no-referrer">
   </iframe>
 </details></div><div class="figpair-cell figpair-montage"><details class="electrode-explorer">

@@ -212,7 +212,7 @@ Trial interval: [0, 1.0] s
     <span class="right">16 ch · EEG · 256 Hz · 19 subjects, 544 recordings</span>
   </div>
   <div class="figpair-grid"><div class="figpair-cell figpair-trace"><details class="trace-viewer">
-  <summary>Live trace viewer — <strong>sub-1 · ses-0 · task-p300 · run-0</strong></summary>
+  <summary>Live trace viewer — <strong>sub-13 · ses-2 · task-p300 · run-4</strong></summary>
   <p class="trace-viewer-caption">
     Showing <strong>one</strong> representative recording out of
     <strong>19 subjects and 544 recordings</strong> in this dataset.
@@ -221,11 +221,11 @@ Trial interval: [0, 1.0] s
     viewer (or pass <code>?eeg=&lt;url&gt;</code>) to inspect it.
   </p>
   <iframe
-    data-src="https://eegdash.github.io/eegdash-viewer/?dataset=nm000157&sub=1&ses=0&task=p300&run=0&ext=bdf&embed=1"
+    data-src="https://eegdash.github.io/eegdash-viewer/?dataset=nm000157&sub=13&ses=2&task=p300&run=4&ext=bdf&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 1200px; display: block; background: transparent;"
-    title="Live EEG trace viewer for nm000157 — sub-1 · ses-0 · task-p300 · run-0"
+    title="Live EEG trace viewer for nm000157 — sub-13 · ses-2 · task-p300 · run-4"
     referrerpolicy="no-referrer">
   </iframe>
 </details></div><div class="figpair-cell figpair-montage"><details class="electrode-explorer">

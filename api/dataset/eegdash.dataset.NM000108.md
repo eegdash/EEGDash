@@ -179,7 +179,7 @@ Converted using EMG-2-BIDS (EEGLAB + bids-matlab-tools). Data integrity verified
     <span class="right">256 ch · EMG · Varies · 20 subjects, 1514 recordings</span>
   </div>
   <div class="figpair-grid"><div class="figpair-cell figpair-trace"><details class="trace-viewer">
-  <summary>Live trace viewer — <strong>sub-01 · ses-1 · task-gesture01</strong></summary>
+  <summary>Live trace viewer — <strong>sub-13 · ses-2 · task-gesture10</strong></summary>
   <p class="trace-viewer-caption">
     Showing <strong>one</strong> representative recording out of
     <strong>20 subjects and 1514 recordings</strong> in this dataset.
@@ -188,11 +188,11 @@ Converted using EMG-2-BIDS (EEGLAB + bids-matlab-tools). Data integrity verified
     viewer (or pass <code>?emg=&lt;url&gt;</code>) to inspect it.
   </p>
   <iframe
-    data-src="https://eegdash.github.io/eegdash-viewer/?dataset=nm000108&sub=01&ses=1&task=gesture01&ext=bdf&suffix=emg&embed=1"
+    data-src="https://eegdash.github.io/eegdash-viewer/?dataset=nm000108&sub=13&ses=2&task=gesture10&ext=bdf&suffix=emg&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 1200px; display: block; background: transparent;"
-    title="Live EMG trace viewer for nm000108 — sub-01 · ses-1 · task-gesture01"
+    title="Live EMG trace viewer for nm000108 — sub-13 · ses-2 · task-gesture10"
     referrerpolicy="no-referrer">
   </iframe>
 </details></div><div class="figpair-cell figpair-montage"><details class="electrode-explorer">

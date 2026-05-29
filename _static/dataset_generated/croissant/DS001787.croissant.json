@@ -80,8 +80,7 @@
   "identifier": "doi:10.18112/openneuro.ds001787.v1.1.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds001787.v1.1.1",
-    "https://openneuro.org/datasets/ds001787",
-    "https://huggingface.co/datasets/EEGDash/ds001787"
+    "https://openneuro.org/datasets/ds001787"
   ],
   "citeAs": "Arnaud Delorme, Tracy Brandmeyer (2019). EEG meditation study. doi:10.18112/openneuro.ds001787.v1.1.1",
   "version": "1.1.1",
@@ -133,14 +132,6 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=ds001787",
       "encodingFormat": "text/html"
-    },
-    {
-      "@type": "cr:FileObject",
-      "@id": "ds001787-huggingface",
-      "name": "EEGDash/ds001787 on Hugging Face",
-      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
-      "contentUrl": "https://huggingface.co/datasets/EEGDash/ds001787",
-      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

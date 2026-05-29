@@ -155,7 +155,7 @@ The order of the active tasks was counterbalanced across participants and were a
 </details></div><div class="figpair-cell figpair-montage"><details class="electrode-explorer">
   <summary>Electrode layout — EEG · 64 sensors — 64 channels</summary>
   <iframe
-    data-src="https://electrodes.eegdash.org/?montage=b143ae249cc81e07&embed=1"
+    data-src="https://electrodes.eegdash.org/?montage=f789336da498b81f&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"

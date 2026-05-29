@@ -376,7 +376,7 @@ If you use this dataset in your research, please cite the original authors.
     <span class="right">16 ch · EMG · 2000 Hz · 100 subjects, 100 recordings</span>
   </div>
   <div class="figpair-grid"><div class="figpair-cell figpair-trace"><details class="trace-viewer">
-  <summary>Live trace viewer — <strong>sub-000 · ses-000 · task-discretegestures</strong></summary>
+  <summary>Live trace viewer — <strong>sub-021 · ses-000 · task-discretegestures</strong></summary>
   <p class="trace-viewer-caption">
     Showing <strong>one</strong> representative recording out of
     <strong>100 subjects and 100 recordings</strong> in this dataset.
@@ -385,11 +385,11 @@ If you use this dataset in your research, please cite the original authors.
     viewer (or pass <code>?emg=&lt;url&gt;</code>) to inspect it.
   </p>
   <iframe
-    data-src="https://eegdash.github.io/eegdash-viewer/?dataset=nm000105&sub=000&ses=000&task=discretegestures&ext=bdf&suffix=emg&embed=1"
+    data-src="https://eegdash.github.io/eegdash-viewer/?dataset=nm000105&sub=021&ses=000&task=discretegestures&ext=bdf&suffix=emg&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 1200px; display: block; background: transparent;"
-    title="Live EMG trace viewer for nm000105 — sub-000 · ses-000 · task-discretegestures"
+    title="Live EMG trace viewer for nm000105 — sub-021 · ses-000 · task-discretegestures"
     referrerpolicy="no-referrer">
   </iframe>
 </details></div><div class="figpair-cell figpair-montage"><details class="electrode-explorer">

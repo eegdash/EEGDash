@@ -139,7 +139,7 @@ We would like to express our gratitude to all participants and their families, w
     <span class="right">129 ch · EEG · 500 Hz · 447 subjects, 3522 recordings</span>
   </div>
   <div class="figpair-grid"><div class="figpair-cell figpair-trace"><details class="trace-viewer">
-  <summary>Live trace viewer — <strong>sub-NDARAA075AMK · task-DespicableMe</strong></summary>
+  <summary>Live trace viewer — <strong>sub-NDARAJ807UYR · task-RestingState</strong></summary>
   <p class="trace-viewer-caption">
     Showing <strong>one</strong> representative recording out of
     <strong>447 subjects and 3522 recordings</strong> in this dataset.
@@ -148,11 +148,11 @@ We would like to express our gratitude to all participants and their families, w
     viewer (or pass <code>?eeg=&lt;url&gt;</code>) to inspect it.
   </p>
   <iframe
-    data-src="https://eegdash.github.io/eegdash-viewer/?dataset=nm000103&sub=NDARAA075AMK&task=DespicableMe&ext=set&embed=1"
+    data-src="https://eegdash.github.io/eegdash-viewer/?dataset=nm000103&sub=NDARAJ807UYR&task=RestingState&ext=set&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 1200px; display: block; background: transparent;"
-    title="Live EEG trace viewer for nm000103 — sub-NDARAA075AMK · task-DespicableMe"
+    title="Live EEG trace viewer for nm000103 — sub-NDARAJ807UYR · task-RestingState"
     referrerpolicy="no-referrer">
   </iframe>
 </details></div><div class="figpair-cell figpair-montage"><details class="electrode-explorer">

@@ -136,7 +136,7 @@ Sleep staging: Expert-annotated 30-second epochs in \_events.tsv files.
     <span class="right">7 (153), 5 (44) ch · EEG · 100 Hz · 100 subjects, 197 recordings</span>
   </div>
   <div class="figpair-grid"><div class="figpair-cell figpair-trace"><details class="trace-viewer">
-  <summary>Live trace viewer — <strong>sub-cassette00 · ses-night1 · task-sleep</strong></summary>
+  <summary>Live trace viewer — <strong>sub-cassette63 · ses-night1 · task-sleep</strong></summary>
   <p class="trace-viewer-caption">
     Showing <strong>one</strong> representative recording out of
     <strong>100 subjects and 197 recordings</strong> in this dataset.
@@ -145,11 +145,11 @@ Sleep staging: Expert-annotated 30-second epochs in \_events.tsv files.
     viewer (or pass <code>?eeg=&lt;url&gt;</code>) to inspect it.
   </p>
   <iframe
-    data-src="https://eegdash.github.io/eegdash-viewer/?dataset=nm000185&sub=cassette00&ses=night1&task=sleep&ext=edf&embed=1"
+    data-src="https://eegdash.github.io/eegdash-viewer/?dataset=nm000185&sub=cassette63&ses=night1&task=sleep&ext=edf&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 1200px; display: block; background: transparent;"
-    title="Live EEG trace viewer for nm000185 — sub-cassette00 · ses-night1 · task-sleep"
+    title="Live EEG trace viewer for nm000185 — sub-cassette63 · ses-night1 · task-sleep"
     referrerpolicy="no-referrer">
   </iframe>
 </details></div><div class="figpair-cell figpair-montage">

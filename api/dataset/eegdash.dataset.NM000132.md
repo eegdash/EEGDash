@@ -199,7 +199,7 @@ Emily S. Kappenman(1,2), Jaclyn L. Farrens(1), Wendy Zhang(1,2), Andrew X. Stewa
     <span class="right">33 ch · EEG · 1024 Hz · 40 subjects, 240 recordings</span>
   </div>
   <div class="figpair-grid"><div class="figpair-cell figpair-trace"><details class="trace-viewer">
-  <summary>Live trace viewer — <strong>sub-001 · task-MMN</strong></summary>
+  <summary>Live trace viewer — <strong>sub-021 · task-P3</strong></summary>
   <p class="trace-viewer-caption">
     Showing <strong>one</strong> representative recording out of
     <strong>40 subjects and 240 recordings</strong> in this dataset.
@@ -208,11 +208,11 @@ Emily S. Kappenman(1,2), Jaclyn L. Farrens(1), Wendy Zhang(1,2), Andrew X. Stewa
     viewer (or pass <code>?eeg=&lt;url&gt;</code>) to inspect it.
   </p>
   <iframe
-    data-src="https://eegdash.github.io/eegdash-viewer/?dataset=nm000132&sub=001&task=MMN&ext=set&embed=1"
+    data-src="https://eegdash.github.io/eegdash-viewer/?dataset=nm000132&sub=021&task=P3&ext=set&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 1200px; display: block; background: transparent;"
-    title="Live EEG trace viewer for nm000132 — sub-001 · task-MMN"
+    title="Live EEG trace viewer for nm000132 — sub-021 · task-P3"
     referrerpolicy="no-referrer">
   </iframe>
 </details></div><div class="figpair-cell figpair-montage"><details class="electrode-explorer">

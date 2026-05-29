@@ -194,13 +194,13 @@ We also provide a more extended version of the dataset that includes neuronal sp
     referrerpolicy="no-referrer">
   </iframe>
 </details></div><div class="figpair-cell figpair-montage"><details class="electrode-explorer">
-  <summary>Electrode layout — iEEG · 4 sensors — 4 channels</summary>
+  <summary>Electrode layout — iEEG · 2 sensors — 2 channels</summary>
   <iframe
-    data-src="https://electrodes.eegdash.org/?montage=da8e482045db874e&embed=1"
+    data-src="https://electrodes.eegdash.org/?montage=c0632ee228744069&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
-    title="Topomap of iEEG · 4 sensors"
+    title="Topomap of iEEG · 2 sensors"
     referrerpolicy="no-referrer">
   </iframe>
 </details></div></div></div>

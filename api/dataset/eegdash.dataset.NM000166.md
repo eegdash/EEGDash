@@ -237,7 +237,7 @@ with Letswave7 (letswave.cn), then distributed as individual 4-second epoched
     <span class="right">64 ch · EEG · 250 Hz · 95 subjects, 2469 recordings</span>
   </div>
   <div class="figpair-grid"><div class="figpair-cell figpair-trace"><details class="trace-viewer">
-  <summary>Live trace viewer — <strong>sub-001 · ses-01 · task-aep</strong></summary>
+  <summary>Live trace viewer — <strong>sub-021 · ses-02 · task-ssvepSA</strong></summary>
   <p class="trace-viewer-caption">
     Showing <strong>one</strong> representative recording out of
     <strong>95 subjects and 2469 recordings</strong> in this dataset.
@@ -246,11 +246,11 @@ with Letswave7 (letswave.cn), then distributed as individual 4-second epoched
     viewer (or pass <code>?eeg=&lt;url&gt;</code>) to inspect it.
   </p>
   <iframe
-    data-src="https://eegdash.github.io/eegdash-viewer/?dataset=nm000166&sub=001&ses=01&task=aep&ext=vhdr&embed=1"
+    data-src="https://eegdash.github.io/eegdash-viewer/?dataset=nm000166&sub=021&ses=02&task=ssvepSA&ext=vhdr&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 1200px; display: block; background: transparent;"
-    title="Live EEG trace viewer for nm000166 — sub-001 · ses-01 · task-aep"
+    title="Live EEG trace viewer for nm000166 — sub-021 · ses-02 · task-ssvepSA"
     referrerpolicy="no-referrer">
   </iframe>
 </details></div><div class="figpair-cell figpair-montage"><details class="electrode-explorer">

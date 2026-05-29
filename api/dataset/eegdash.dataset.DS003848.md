@@ -181,13 +181,13 @@ Each patient has their own folder (e.g., `sub-RESP0280`) which contains the iEEG
     referrerpolicy="no-referrer">
   </iframe>
 </details></div><div class="figpair-cell figpair-montage"><details class="electrode-explorer">
-  <summary>Electrode layout — iEEG · 44 sensors — 44 channels</summary>
+  <summary>Electrode layout — iEEG · 67 sensors — 67 channels</summary>
   <iframe
-    data-src="https://electrodes.eegdash.org/?montage=46264be5a300b258&embed=1"
+    data-src="https://electrodes.eegdash.org/?montage=3c3edb568361ce1d&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
-    title="Topomap of iEEG · 44 sensors"
+    title="Topomap of iEEG · 67 sensors"
     referrerpolicy="no-referrer">
   </iframe>
 </details></div></div></div>

@@ -45,9 +45,9 @@ jobs:
           - _snirf_parser.py
           - _mef3_parser.py
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: '3.11'
           cache: 'pip'
@@ -156,7 +156,7 @@ jobs:
 
       - name: Upload mutmut cache as workflow artefact
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: mutmut-cache-${{ matrix.parser }}-${{ github.run_id }}
           path: scripts/ingestions/.mutmut-cache

@@ -341,7 +341,7 @@ def _hurst_exp(x, ns, a, gamma_ratios, log_n):
                     rs[j, k] = np.nan
                 else:
                     rs[j, k] = r / s
-            log_rs[j] = np.log(np.nanmean(rs[j, : x.shape[1] // n]))
+            log_rs[j] = np.log(np.nanmean(rs[j, : x.shape[-1] // n]))
             log_rs[j] -= np.log(np.sum(np.sqrt((n - a[:n]) / a[:n])) * gamma_ratios[j])
         h[i] = 0.5 + np.linalg.lstsq(log_n, log_rs)[0][0]
     return h

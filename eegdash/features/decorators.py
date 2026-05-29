@@ -394,7 +394,8 @@ def _preprocessor_output_type_wrap(
             "`output_type` must inherit from `BasePreprocessorOutputType`, "
             + f"got `{output_type}`."
         )
-    preprocessor.output_type = output_type
+    f = get_underlying_func(preprocessor)
+    f.output_type = output_type
     return preprocessor
 
 
@@ -464,9 +465,12 @@ def _channel_pairer_wrap(func: Callable, *, directed: bool = False) -> Callable:
         if "_metadata" in inspect.signature(f).parameters:
             kwargs["_metadata"] = _metadata
         if hasattr(f, "metadata_preprocessor") and f.metadata_preprocessor:
-            return (*func(*args, **kwargs),)
+            return func(*args, **kwargs)
         else:
-            return (*func(*args, **kwargs), _metadata)
+            r = func(*args, **kwargs)
+            if isinstance(r, tuple):
+                return (*r, _metadata)
+            return (r, _metadata)
 
     return func_wrapper
 

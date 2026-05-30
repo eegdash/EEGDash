@@ -645,6 +645,17 @@ class EEGDashRaw(RawDataset):
         bids_filename = PurePosixPath(self.record["bids_relpath"]).name
         return uri.rsplit("/", 1)[0] + "/" + bids_filename
 
+    @property
+    def _is_remote(self) -> bool:
+        """Whether the recording must be fetched from a remote source.
+
+        ``s3``/``https`` set ``_raw_uri`` up front; ``nemar`` leaves it
+        ``None`` until it is resolved lazily in :meth:`_download_required_files`
+        (its BIDS path is a git-annex symlink, not a fetchable object);
+        ``local`` needs no download.
+        """
+        return self._raw_uri is not None or self._storage_backend == "nemar"
+
     def _download_required_files(self) -> None:
         # NEMAR records carry a logical ``s3://nemar/<id>/<bids_relpath>``
         # base, but actual fetching has to go through the SHA-keyed

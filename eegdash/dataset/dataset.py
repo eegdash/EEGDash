@@ -463,7 +463,7 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
 
         targets: list[EEGDashRaw] = []
         for ds in self.datasets:
-            if getattr(ds, "_raw_uri", None) is None:
+            if not ds._is_remote:
                 continue
             if not ds.filecache.exists() or any(
                 not path.exists() for path in getattr(ds, "_dep_paths", [])

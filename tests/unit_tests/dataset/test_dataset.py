@@ -625,6 +625,41 @@ def test_dataset_download_all_njobs(tmp_path):
                 assert mock_dl.call_count == 1
 
 
+def test_dataset_download_all_includes_nemar(tmp_path):
+    """download_all must fetch NEMAR recordings.
+
+    Regression: NEMAR records carry ``_raw_uri = None`` until it is resolved
+    lazily inside ``_download_required_files`` (the BIDS-named path is a
+    git-annex symlink, not a fetchable object), so they were wrongly skipped
+    by the ``_raw_uri is None`` guard and ``download_all`` never fetched them.
+    """
+    from unittest.mock import patch
+
+    from eegdash.dataset.dataset import EEGDashDataset, EEGDashRaw
+
+    record = {
+        "dataset": "nm000999",
+        "data_name": "nm000999_sub-01_task-x_eeg.edf",
+        "bidspath": "nm000999/sub-01/eeg/sub-01_task-x_eeg.edf",
+        "bids_relpath": "sub-01/eeg/sub-01_task-x_eeg.edf",
+        "storage": {
+            "base": "s3://nemar/nm000999",
+            "backend": "nemar",
+            "raw_key": "sub-01/eeg/sub-01_task-x_eeg.edf",
+            "annex_keys": {"sub-01/eeg/sub-01_task-x_eeg.edf": "MD5E-s1--abc.edf"},
+        },
+    }
+
+    ds = EEGDashDataset(cache_dir=str(tmp_path), records=[record], download=True)
+    # Precondition: NEMAR raw URI is unset until resolution.
+    assert ds.datasets[0]._raw_uri is None
+    assert ds.datasets[0]._storage_backend == "nemar"
+
+    with patch.object(EEGDashRaw, "_download_required_files") as mock_dl:
+        ds.download_all(n_jobs=1)
+        assert mock_dl.call_count == 1
+
+
 def test_dataset_offline_enrichment(tmp_path):
     # Coverage for lines 284-298 in dataset.py (Offline mode enrichment)
     from unittest.mock import patch

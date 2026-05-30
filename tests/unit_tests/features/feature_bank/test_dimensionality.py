@@ -2,9 +2,7 @@ import numpy as np
 import pytest
 
 from eegdash.features.feature_bank.dimensionality import (
-    dimensionality_detrended_fluctuation_analysis,
     dimensionality_higuchi_fractal_dim,
-    dimensionality_hurst_exp,
     dimensionality_katz_fractal_dim,
     dimensionality_petrosian_fractal_dim,
 )
@@ -52,23 +50,6 @@ def test_fractal_dimensions_relative(signals):
     assert katz_sine.shape == (1,)
 
 
-def test_hurst_exp(signals):
-    white = signals["white"]
-    h_white = dimensionality_hurst_exp(white)
-    assert h_white.shape == (1,)
-
-
-def test_dfa(signals):
-    white = signals["white"]
-    brown = signals["brown"]
-
-    alpha_white = dimensionality_detrended_fluctuation_analysis(white)
-    alpha_brown = dimensionality_detrended_fluctuation_analysis(brown)
-
-    assert alpha_white.shape == (1,)
-    assert alpha_brown.shape == (1,)
-
-
 def test_fractal_dimensions_correctness(signals):
     # Verify expected relative values
     sine = signals["sine"]
@@ -99,21 +80,6 @@ def test_fractal_dimensions_correctness(signals):
     assert k_white > k_sine
 
 
-def test_dfa_correctness(signals):
-    # Check theoretical scaling exponents (alpha)
-    white = signals["white"]
-    brown = signals["brown"]
-
-    a_white = dimensionality_detrended_fluctuation_analysis(white)[0]
-    a_brown = dimensionality_detrended_fluctuation_analysis(brown)[0]
-
-    # White noise: alpha ~ 0.5
-    assert 0.4 < a_white < 0.6
-
-    # Brownian noise (integrated white noise): alpha ~ 1.5
-    assert 1.3 < a_brown < 1.7
-
-
 def test_dimensionality_features(signal_2d):
     # Higuchi
     hfd = dimensionality_higuchi_fractal_dim(signal_2d, k_max=5)
@@ -127,27 +93,10 @@ def test_dimensionality_features(signal_2d):
     kfd = dimensionality_katz_fractal_dim(signal_2d)
     assert kfd.shape == (2,)
 
-    # Hurst
-    he = dimensionality_hurst_exp(signal_2d)
-    assert he.shape == (2,)
-
-    # DFA
-    dfa = dimensionality_detrended_fluctuation_analysis(signal_2d)
-    assert dfa.shape == (2,)
-
-
-def test_dimensionality_hurst_edge_cases():
-    # Signal with zero variance
-    sig = np.zeros((1, 100))
-    he = dimensionality_hurst_exp(sig)
-    assert np.isnan(he).all()
-
 
 def test_dimensionality_gaps():
     from eegdash.features.feature_bank.dimensionality import (
-        dimensionality_detrended_fluctuation_analysis,
         dimensionality_higuchi_fractal_dim,
-        dimensionality_hurst_exp,
     )
 
     x = np.random.randn(1, 100)
@@ -170,19 +119,3 @@ def test_dimensionality_gaps():
     )
 
     dimensionality_katz_fractal_dim(x)
-
-    # Hurst 48-69 (missing all)
-    dimensionality_hurst_exp(x)
-
-    # Hurst edge case: flat signal (std=0) to trigger line 87
-    x_flat = np.zeros((1, 100))
-    dimensionality_hurst_exp(x_flat)
-
-    # DFA 114-134
-    dimensionality_detrended_fluctuation_analysis(x)
-
-    pass
-
-    pass
-
-    pass

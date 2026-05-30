@@ -100,37 +100,36 @@ def test_nemar_dataset_url_points_at_dataexplorer():
     assert adapter.dataset_url() == "https://nemar.org/dataexplorer/detail/nm000176"
 
 
-def test_nemar_apex_cache_built_lazily_from_bids_root(tmp_path: Path):
-    """First call to resolve_storage_extensions reads NEMAR_ROOT_METADATA_FILES."""
-    # Create a small NEMAR-shaped tree with one apex sidecar
+def test_nemar_does_not_inline_apex_sidecars(tmp_path: Path):
+    """Apex sidecars (dataset_description, participants, ...) are NOT inlined.
+
+    They bloated every record and drifted as datasets evolved; the runtime
+    now fetches them from the NEMAR GitHub mirror on demand.
+    """
     bids_root = tmp_path / "nm000176"
     bids_root.mkdir()
-    participants = bids_root / "participants.tsv"
-    participants.write_text("participant_id\tage\nsub-01\t30\n")
-    dataset_desc = bids_root / "dataset_description.json"
-    dataset_desc.write_text('{"Name": "Test Dataset", "BIDSVersion": "1.7.0"}\n')
+    (bids_root / "participants.tsv").write_text("participant_id\tage\nsub-01\t30\n")
+    (bids_root / "dataset_description.json").write_text(
+        '{"Name": "Test Dataset", "BIDSVersion": "1.7.0"}\n'
+    )
 
     adapter = NEMARAdapter("nm000176", bids_root=bids_root)
-    # Trigger cache build with a no-op call
     _annex, inline = adapter.resolve_storage_extensions(
         bids_root / "sub-01/eeg/sub-01_eeg.edf", []
     )
-    # Apex files should be inlined
-    assert "participants.tsv" in inline
-    assert "sub-01\t30" in inline["participants.tsv"]
-    assert "dataset_description.json" in inline
+    assert inline == {}
 
 
-def test_nemar_apex_cache_returns_empty_when_bids_root_is_none():
-    """No bids_root means no filesystem reads; cache stays empty."""
+def test_nemar_resolve_returns_empty_inline_when_bids_root_is_none():
+    """No bids_root, no inlining; annex resolution yields an empty map."""
     adapter = NEMARAdapter("nm000176", bids_root=None)
     annex, inline = adapter.resolve_storage_extensions(Path("/tmp/x.edf"), [])
     assert annex == {}
     assert inline == {}
 
 
-def test_nemar_resolve_dep_inlines_small_sidecars(tmp_path: Path):
-    """Sidecar files that aren't annex-tracked get inlined."""
+def test_nemar_does_not_inline_dep_sidecars(tmp_path: Path):
+    """Non-annex dep sidecars are not inlined (fetched from GitHub at runtime)."""
     bids_root = tmp_path / "nm000176"
     eeg_dir = bids_root / "sub-01" / "eeg"
     eeg_dir.mkdir(parents=True)
@@ -141,9 +140,8 @@ def test_nemar_resolve_dep_inlines_small_sidecars(tmp_path: Path):
     record_path = eeg_dir / "sub-01_task-rest_eeg.edf"
     record_path.touch()
 
-    _, inline = adapter.resolve_storage_extensions(record_path, [channels_tsv])
-    assert "sub-01/eeg/sub-01_task-rest_channels.tsv" in inline
-    assert "Fp1\tEEG" in inline["sub-01/eeg/sub-01_task-rest_channels.tsv"]
+    _annex, inline = adapter.resolve_storage_extensions(record_path, [channels_tsv])
+    assert inline == {}
 
 
 # ─── DefaultAdapter — table-driven fallback ───────────────────────────────

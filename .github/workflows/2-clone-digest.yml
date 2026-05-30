@@ -43,7 +43,7 @@ jobs:
 
     steps:
       - name: Checkout EEGDash
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           ref: ${{ github.head_ref }}
@@ -51,7 +51,7 @@ jobs:
           path: eegdash
 
       - name: Checkout dataset listings repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           repository: eegdash/eegdash-dataset-listings
           token: ${{ secrets.DATASET_LISTINGS_TOKEN }}
@@ -60,7 +60,7 @@ jobs:
           path: eegdash-dataset-listings
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.11'
           cache: 'pip'
@@ -165,7 +165,7 @@ jobs:
           echo "- Records created: $RECORDS" >> $GITHUB_STEP_SUMMARY
 
       - name: Upload digested artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         if: steps.changed.outputs.changed == 'true'
         with:
           name: digested-${{ inputs.source_name }}

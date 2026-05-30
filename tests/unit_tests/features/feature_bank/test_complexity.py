@@ -3,7 +3,9 @@ import pytest
 
 from eegdash.features.feature_bank.complexity import (
     complexity_approx_entropy,
+    complexity_detrended_fluctuation_analysis,
     complexity_entropy_preprocessor,
+    complexity_hurst_exp,
     complexity_lempel_ziv,
     complexity_sample_entropy,
     complexity_svd_entropy,
@@ -20,6 +22,25 @@ def sine_wave():
 def random_noise():
     np.random.seed(42)
     return np.random.rand(100)
+
+
+@pytest.fixture
+def signals():
+    np.random.seed(42)
+    n = 2000  # Enough samples for stable estimation
+    t = np.linspace(0, 10, n)
+
+    # Sine wave (smooth, low complexity)
+    sine = np.sin(2 * np.pi * 5 * t)
+
+    # White noise (high complexity, H~0.5 for R/S, alpha~0.5 for DFA)
+    white = np.random.randn(n)
+
+    # Brownian noise (random walk, alpha~1.5 for DFA)
+    brown = np.cumsum(white)
+
+    # Pre-shape (1, n)
+    return {"sine": sine[None, :], "white": white[None, :], "brown": brown[None, :]}
 
 
 def test_complexity_approx_entropy(sine_wave, random_noise):
@@ -125,6 +146,14 @@ def test_complexity_features(signal_2d):
     lz_t = complexity_lempel_ziv(signal_2d, threshold=0.5, normalize=False)
     assert lz_t.shape == (2,)
 
+    # Hurst
+    he = complexity_hurst_exp(signal_2d)
+    assert he.shape == (2,)
+
+    # DFA
+    dfa = complexity_detrended_fluctuation_analysis(signal_2d)
+    assert dfa.shape == (2,)
+
 
 def test_complexity_lempel_ziv_gap():
     from eegdash.features.feature_bank.complexity import complexity_lempel_ziv
@@ -148,10 +177,51 @@ def test_complexity_lempel_ziv_gap():
     complexity_lempel_ziv(x_complex)
 
 
+def test_hurst_exp(signals):
+    white = signals["white"]
+    h_white = complexity_hurst_exp(white)
+    assert h_white.shape == (1,)
+
+
+def test_dimensionality_hurst_edge_cases():
+    # Signal with zero variance
+    sig = np.zeros((1, 100))
+    he = complexity_hurst_exp(sig)
+    assert np.isnan(he).all()
+
+
+def test_dfa(signals):
+    white = signals["white"]
+    brown = signals["brown"]
+
+    alpha_white = complexity_detrended_fluctuation_analysis(white)
+    alpha_brown = complexity_detrended_fluctuation_analysis(brown)
+
+    assert alpha_white.shape == (1,)
+    assert alpha_brown.shape == (1,)
+
+
+def test_dfa_correctness(signals):
+    # Check theoretical scaling exponents (alpha)
+    white = signals["white"]
+    brown = signals["brown"]
+
+    a_white = complexity_detrended_fluctuation_analysis(white)[0]
+    a_brown = complexity_detrended_fluctuation_analysis(brown)[0]
+
+    # White noise: alpha ~ 0.5
+    assert 0.4 < a_white < 0.6
+
+    # Brownian noise (integrated white noise): alpha ~ 1.5
+    assert 1.3 < a_brown < 1.7
+
+
 def test_complexity_other_functions_gap():
     from eegdash.features.feature_bank.complexity import (
         complexity_approx_entropy,
+        complexity_detrended_fluctuation_analysis,
         complexity_entropy_preprocessor,
+        complexity_hurst_exp,
         complexity_sample_entropy,
         complexity_svd_entropy,
     )
@@ -170,3 +240,13 @@ def test_complexity_other_functions_gap():
 
     # SVD Entropy
     complexity_svd_entropy(x, m=2, tau=1)
+
+    # Hurst 48-69 (missing all)
+    complexity_hurst_exp(x)
+
+    # Hurst edge case: flat signal (std=0) to trigger line 87
+    x_flat = np.zeros((1, 100))
+    complexity_hurst_exp(x_flat)
+
+    # DFA 114-134
+    complexity_detrended_fluctuation_analysis(x)

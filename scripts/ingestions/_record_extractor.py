@@ -386,7 +386,6 @@ def extract_record(
     dataset_id: str,
     source: str,
     digested_at: str,
-    apex_sidecar_inline: dict[str, str] | None = None,
     source_adapter: SourceAdapter | None = None,
 ) -> dict[str, Any]:
     """Extract Record metadata for a single BIDS file."""
@@ -452,19 +451,17 @@ def extract_record(
         provenance=metadata_provenance,
     )
 
-    # TODO(scale): apex sidecars (dataset_description.json, README, etc.) are duplicated
-    # across every record. Move into a per-dataset side-collection when >100 MB inline
-    # payload or >500 KB participants.tsv is encountered.
     if source_adapter is None:
         source_adapter = get_source_adapter(source, dataset_id, bids_dataset.bidsdir)
     bids_root_path = bids_dataset.bidsdir
     dep_paths = [bids_root_path / dep for dep in dep_keys]
-    annex_keys, sidecar_inline = source_adapter.resolve_storage_extensions(
+    # Sidecar contents are no longer inlined: a digest-time copy bloated every
+    # record (typing events.tsv ~230 KB; dataset-level files duplicated across
+    # records) and drifted as NEMAR datasets evolve. The runtime fetches them
+    # from the NEMAR GitHub mirror on demand, so only annex SHA keys are kept.
+    annex_keys, _ = source_adapter.resolve_storage_extensions(
         Path(bids_file), dep_paths
     )
-    if apex_sidecar_inline:
-        for k, v in apex_sidecar_inline.items():
-            sidecar_inline.setdefault(k, v)
 
     record = create_record(
         dataset=dataset_id,
@@ -486,7 +483,7 @@ def extract_record(
         ntimes=ntimes,
         digested_at=digested_at,
         annex_keys=annex_keys or None,
-        sidecar_inline=sidecar_inline or None,
+        sidecar_inline=None,
     )
 
     participant_tsv = bids_dataset.subject_participant_tsv(bids_file)

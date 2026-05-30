@@ -144,13 +144,13 @@ The Paper repository ([https://github.com/V-Marco/FT-bursting-WM](https://github
     referrerpolicy="no-referrer">
   </iframe>
 </details></div><div class="figpair-cell figpair-montage"><details class="electrode-explorer">
-  <summary>Electrode layout — iEEG · 8 sensors — 8 channels</summary>
+  <summary>Electrode layout — iEEG · 9 sensors — 9 channels</summary>
   <iframe
-    data-src="https://electrodes.eegdash.org/?montage=835f191f2f47fed2&embed=1"
+    data-src="https://electrodes.eegdash.org/?montage=c2eeef39a7a5cdea&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
-    title="Topomap of iEEG · 8 sensors"
+    title="Topomap of iEEG · 9 sensors"
     referrerpolicy="no-referrer">
   </iframe>
 </details></div></div></div>

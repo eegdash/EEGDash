@@ -82,7 +82,7 @@ print(f"eegdash {eegdash.__version__}; numpy {np.__version__}")
 ```
 
 ```none
-eegdash 0.8.1; numpy 2.4.6
+eegdash 0.8.2; numpy 2.4.6
 ```
 
 <!-- GENERATED FROM PYTHON SOURCE LINES 75-110 -->

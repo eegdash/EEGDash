@@ -102,7 +102,8 @@
   "identifier": "doi:10.1038/s41597-025-04618-4",
   "sameAs": [
     "https://doi.org/10.1038/s41597-025-04618-4",
-    "https://openneuro.org/datasets/nm000270"
+    "https://openneuro.org/datasets/nm000270",
+    "https://huggingface.co/datasets/EEGDash/nm000270"
   ],
   "citeAs": "Yuan Liu, Zhuolan Gui, De Yan, Zhuang Wang, Ruisi Gao (n.d.). Liu et al. 2025 — Lower limb motor imagery EEG dataset based on the multi-paradigm and longitudinal-training of stroke patients (Tianjin University). doi:10.1038/s41597-025-04618-4",
   "version": "1.9.0",
@@ -143,6 +144,14 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=nm000270",
       "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000270-huggingface",
+      "name": "EEGDash/nm000270 on Hugging Face",
+      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
+      "contentUrl": "https://huggingface.co/datasets/EEGDash/nm000270",
+      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

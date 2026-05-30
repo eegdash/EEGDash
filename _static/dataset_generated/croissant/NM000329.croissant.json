@@ -86,7 +86,8 @@
   "identifier": "doi:10.3389/fnins.2020.566147",
   "sameAs": [
     "https://doi.org/10.3389/fnins.2020.566147",
-    "https://openneuro.org/datasets/nm000329"
+    "https://openneuro.org/datasets/nm000329",
+    "https://huggingface.co/datasets/EEGDash/nm000329"
   ],
   "citeAs": "Stephanie Brandl, Benjamin Blankertz, Tobias Dahne (2020). Brandl et al. 2020 — Motor Imagery Under Distraction: An Open Access BCI Dataset. doi:10.3389/fnins.2020.566147",
   "version": "1.9.0",
@@ -127,6 +128,14 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=nm000329",
       "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000329-huggingface",
+      "name": "EEGDash/nm000329 on Hugging Face",
+      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
+      "contentUrl": "https://huggingface.co/datasets/EEGDash/nm000329",
+      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

@@ -110,7 +110,8 @@
   "identifier": "doi:10.18112/openneuro.ds005508.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005508.v1.0.1",
-    "https://openneuro.org/datasets/eeg2025r4"
+    "https://openneuro.org/datasets/eeg2025r4",
+    "https://huggingface.co/datasets/EEGDash/eeg2025r4"
   ],
   "citeAs": "Seyed Yahya Shirazi, Alexandre Franco, Maurício Scopel Hoffmann, Nathalia B. Esper, Dung Truong (2024). Healthy Brain Network (HBN) EEG - Release 4 (BDF Converted). doi:10.18112/openneuro.ds005508.v1.0.1",
   "version": "1.9.0",
@@ -152,6 +153,14 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=eeg2025r4",
       "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "eeg2025r4-huggingface",
+      "name": "EEGDash/eeg2025r4 on Hugging Face",
+      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
+      "contentUrl": "https://huggingface.co/datasets/EEGDash/eeg2025r4",
+      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

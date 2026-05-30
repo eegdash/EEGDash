@@ -118,7 +118,8 @@
   "identifier": "doi:10.82901/nemar.nm000146",
   "sameAs": [
     "https://doi.org/10.82901/nemar.nm000146",
-    "https://openneuro.org/datasets/nm000146"
+    "https://openneuro.org/datasets/nm000146",
+    "https://huggingface.co/datasets/EEGDash/nm000146"
   ],
   "citeAs": "Weibo Yi, Shuang Qiu, Kun Wang, Hongzhi Qi, Lixin Zhang (2014). Motor Imagery dataset from Weibo et al 2014. doi:10.82901/nemar.nm000146",
   "version": "1.9.0",
@@ -159,6 +160,14 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=nm000146",
       "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000146-huggingface",
+      "name": "EEGDash/nm000146 on Hugging Face",
+      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
+      "contentUrl": "https://huggingface.co/datasets/EEGDash/nm000146",
+      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

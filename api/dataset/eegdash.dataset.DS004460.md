@@ -316,7 +316,7 @@ the eeg markers).
 </details></div><div class="figpair-cell figpair-montage"><details class="electrode-explorer">
   <summary>Electrode layout — EEG · 157 sensors — 157 channels</summary>
   <iframe
-    data-src="https://electrodes.eegdash.org/?montage=39de8f874c5af099&embed=1"
+    data-src="https://electrodes.eegdash.org/?montage=54c7121ba36a0312&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"

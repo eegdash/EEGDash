@@ -127,7 +127,7 @@ print(f"eegdash {eegdash.__version__} | cache_dir={CACHE_DIR}")
 ```
 
 ```none
-eegdash 0.8.1 | cache_dir=/home/runner/eegdash_cache
+eegdash 0.8.2 | cache_dir=/home/runner/eegdash_cache
 ```
 
 <!-- GENERATED FROM PYTHON SOURCE LINES 115-125 -->

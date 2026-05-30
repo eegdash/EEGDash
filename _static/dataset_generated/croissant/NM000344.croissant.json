@@ -98,7 +98,8 @@
   "identifier": "doi:10.1016/j.neuroimage.2023.120446",
   "sameAs": [
     "https://doi.org/10.1016/j.neuroimage.2023.120446",
-    "https://openneuro.org/datasets/nm000344"
+    "https://openneuro.org/datasets/nm000344",
+    "https://huggingface.co/datasets/EEGDash/nm000344"
   ],
   "citeAs": "Kalou Cabrera Castillos, Simon Ladouce, Ludovic Darmet, Frédéric Dehais (2023). CastillosBurstVEP100. doi:10.1016/j.neuroimage.2023.120446",
   "version": "1.9.0",
@@ -139,6 +140,14 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=nm000344",
       "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000344-huggingface",
+      "name": "EEGDash/nm000344 on Hugging Face",
+      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
+      "contentUrl": "https://huggingface.co/datasets/EEGDash/nm000344",
+      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

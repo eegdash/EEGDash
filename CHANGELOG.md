@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.2] - 2026-05-30
+
+### Changed
+- NEMAR records no longer embed sidecar file contents in `storage.sidecar_inline`. Sidecars/companions are fetched on demand from data.nemar.org via `nemar-py` (version-pinned manifest, checksum-verified), with the GitHub-raw pointer kept as a legacy fallback. Shrinks records ~250 KB → ~1.5 KB (a 1000-record API page dropped from ~258 MB to ~1.7 MB) and avoids serving stale digest-time snapshots (#369)
+
+### Fixed
+- `EEGDashDataset.download_all()` now fetches NEMAR recordings, which were previously skipped because their `_raw_uri` is resolved lazily (#369)
+
 ## [0.8.1] - 2026-05-29
 
 ### Fixed

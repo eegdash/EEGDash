@@ -400,6 +400,35 @@ def _resolve_nemar_uris(
     return raw_uri, dep_uris
 
 
+def _download_via_nemar(dataset_id: str, relpath: str, local_path: Path) -> bool:
+    """Download *relpath* from data.nemar.org via ``nemar-py``.
+
+    nemar-py resolves the dataset index → version manifest → file mapping
+    and streams the bytes (version-pinned, with retries and checksum
+    verification), so this is the canonical NEMAR sidecar/companion path.
+    Returns ``True`` once the file is on disk (including already-present),
+    ``False`` when the dataset/file isn't served by data.nemar.org (callers
+    then fall back to the GitHub-raw pointer).
+    """
+    if not (dataset_id and relpath):
+        return False
+    if local_path.exists():
+        return True
+    manifest = _fetch_nemar_manifest(dataset_id)
+    if manifest is None:
+        return False
+    target = relpath.lstrip("/")
+    if target not in manifest:
+        return False
+    try:
+        local_path.parent.mkdir(parents=True, exist_ok=True)
+        nemar.download_one(manifest.file(target), local_path)
+    except Exception as exc:
+        logger.warning("NEMAR download failed for %s/%s: %s", dataset_id, relpath, exc)
+        return False
+    return True
+
+
 def _resolve_one_nemar_entry(
     *,
     dataset_id: str,
@@ -432,6 +461,15 @@ def _resolve_one_nemar_entry(
             tmp.replace(dest)
         return None
 
+    # No digest-time fast path: fetch from data.nemar.org via nemar-py
+    # (version-pinned manifest, retries + checksum verification) — the
+    # canonical NEMAR path — rather than a raw GitHub ``HEAD`` read that
+    # drifts as the dataset evolves.
+    if _download_via_nemar(dataset_id, relpath, dest):
+        return None
+
+    # Legacy fallback for datasets not yet served by data.nemar.org:
+    # resolve the git-annex pointer from GitHub raw.
     try:
         annex_key, payload = _resolve_nemar_pointer(dataset_id, relpath)
     except urllib.error.URLError as e:
@@ -727,31 +765,14 @@ class EEGDashRaw(RawDataset):
         self.filenames = [self.filecache]
 
     def _download_nemar_data_file(self, relpath: str, local_path: Path) -> bool:
-        """Resolve *relpath* via ``nemar-py`` and stream its bytes.
+        """Resolve *relpath* via ``nemar-py`` (data.nemar.org) and stream it.
 
         Safety net for records whose pre-computed ``annex_keys`` don't
-        cover *relpath*. ``nemar-py`` handles ID validation, manifest
-        parsing, the BIDS-path → file mapping, and the actual transfer
-        (with retries + checksum verification). Returns ``True`` on
-        success.
+        cover *relpath*. Delegates to :func:`_download_via_nemar`, which
+        handles ID/version resolution, the BIDS-path → file mapping, and
+        the transfer (retries + checksum verification).
         """
-        dataset_id = self.record.get("dataset", "")
-        if not (dataset_id and relpath):
-            return False
-        manifest = _fetch_nemar_manifest(dataset_id)
-        if manifest is None:
-            return False
-        target = relpath.lstrip("/")
-        if target not in manifest:
-            return False
-        try:
-            nemar.download_one(manifest.file(target), local_path)
-        except Exception as exc:
-            logger.warning(
-                "NEMAR fallback failed for %s/%s: %s", dataset_id, relpath, exc
-            )
-            return False
-        return True
+        return _download_via_nemar(self.record.get("dataset", ""), relpath, local_path)
 
     # BIDS root files not enumerated in dep_keys but expected by mne-bids /
     # braindecode. All are direct-git on NEMAR (excluded from annex).

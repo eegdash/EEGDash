@@ -18,9 +18,8 @@ import logging
 from abc import ABC, abstractmethod
 from pathlib import Path
 
-from _file_utils import get_annex_file_key, read_inline_sidecar
+from _file_utils import get_annex_file_key
 from eegdash.dataset._source_inference import DEFAULT_STORAGE_CONFIG, STORAGE_CONFIGS
-from eegdash.schemas import NEMAR_ROOT_METADATA_FILES
 
 logger = logging.getLogger(__name__)
 
@@ -92,19 +91,21 @@ class OpenNeuroAdapter(SourceAdapter):
 
 
 class NEMARAdapter(SourceAdapter):
-    """NEMAR Source — git-annex SHA addressing + apex sidecar prefetch.
+    """NEMAR Source — git-annex SHA addressing.
 
     NEMAR's S3 bucket has ``s3:ListBucket`` closed by design; all file
     addresses are SHA-resolved via git-annex on the cloned filesystem.
     The ``backend="nemar"`` marker signals downstream consumers not to
-    attempt a public S3 fetch.  :data:`NEMAR_ROOT_METADATA_FILES` are
-    read once (lazily, into ``_apex_cache``) and reused across every
-    Record to avoid repeated filesystem round-trips.
-    """
+    attempt a public S3 fetch.
 
-    def __init__(self, dataset_id: str, bids_root: Path | None = None) -> None:
-        super().__init__(dataset_id, bids_root)
-        self._apex_cache: dict[str, str] | None = None
+    Sidecar *contents* are intentionally NOT inlined into records. A
+    digest-time inline copy bloats every record (a single typing
+    ``events.tsv`` is ~230 KB, and dataset-level apex files duplicate
+    across every record) and goes stale as the dataset evolves. The
+    runtime fetches sidecars on demand from the NEMAR GitHub mirror
+    (``HEAD``, always current) instead, so only annex SHA keys — the
+    binary recordings on S3 — are resolved here.
+    """
 
     @property
     def source_name(self) -> str:
@@ -114,65 +115,33 @@ class NEMARAdapter(SourceAdapter):
         """NEMAR DataExplorer landing page."""
         return f"https://nemar.org/dataexplorer/detail/{self.dataset_id}"
 
-    def _ensure_apex_cache(self) -> dict[str, str]:
-        """Lazy-build the apex sidecar inline cache (once per Adapter)."""
-        if self._apex_cache is not None:
-            return self._apex_cache
-        cache: dict[str, str] = {}
-        if self.bids_root is None:
-            self._apex_cache = cache
-            return cache
-        for root_name in NEMAR_ROOT_METADATA_FILES:
-            inline = read_inline_sidecar(self.bids_root / root_name)
-            if inline is not None:
-                cache[root_name] = inline
-        self._apex_cache = cache
-        return cache
+    def _annex_relpath(self, path: Path) -> str:
+        """BIDS-relative key for *path* (annex keys are stored by relpath)."""
+        if self.bids_root is not None:
+            try:
+                return str(path.relative_to(self.bids_root))
+            except ValueError:
+                pass
+        return str(path)
 
     def resolve_storage_extensions(
         self,
         record_path: Path,
         dep_paths: list[Path],
     ) -> tuple[dict[str, str], dict[str, str]]:
-        """Resolve annex keys and inline sidecars for one Record."""
+        """Resolve git-annex SHA keys for one Record (no sidecar inlining)."""
         annex_keys: dict[str, str] = {}
-        sidecar_inline: dict[str, str] = dict(self._ensure_apex_cache())
 
-        # The recording itself
         raw_key = get_annex_file_key(record_path)
         if raw_key is not None:
-            # NEMAR annex keys are stored against the BIDS relative path
-            # — preserve the convention 3_digest used before this refactor.
-            if self.bids_root is not None:
-                try:
-                    rel = str(record_path.relative_to(self.bids_root))
-                except ValueError:
-                    rel = str(record_path)
-            else:
-                rel = str(record_path)
-            annex_keys[rel] = raw_key
+            annex_keys[self._annex_relpath(record_path)] = raw_key
 
-        # Each dep file: annex key OR inlined text
         for dep_path in dep_paths:
-            if self.bids_root is not None:
-                try:
-                    dep_relpath = str(dep_path.relative_to(self.bids_root))
-                except ValueError:
-                    dep_relpath = str(dep_path)
-            else:
-                dep_relpath = str(dep_path)
-
             dep_key = get_annex_file_key(dep_path)
             if dep_key is not None:
-                annex_keys[dep_relpath] = dep_key
-                continue
-            if dep_relpath in sidecar_inline:
-                continue  # already covered by apex cache
-            inline = read_inline_sidecar(dep_path)
-            if inline is not None:
-                sidecar_inline[dep_relpath] = inline
+                annex_keys[self._annex_relpath(dep_path)] = dep_key
 
-        return annex_keys, sidecar_inline
+        return annex_keys, {}
 
 
 class DefaultAdapter(SourceAdapter):

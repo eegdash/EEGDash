@@ -23,8 +23,11 @@ import pandas as pd
 # Imported as modules (not symbols) so the cheap-tier helpers stay
 # monkeypatchable in tests and so a single seam carries the wiring.
 import _edf_header
+import _mef3_parser
+import _parser_utils
 import _remote_header
 import _set_parser
+import _snirf_parser
 import mne
 from _format_parser_registry import get_parser_for_extension
 
@@ -43,6 +46,11 @@ PROV_DERIVED = "derived"
 # the opt-in ranged remote header read (EDF 256-byte main header).
 PROV_SIZE_ARITHMETIC = "size_arithmetic"
 PROV_REMOTE_HEADER = "remote_header"
+
+# HDF5 object headers in a SNIRF can sit deep in the file, so the ranged h5py
+# read needs a larger budget than the 256-byte EDF header — but the metadata
+# actually fetched is tiny (~0.2% of an 80 MB file). Cap keeps it bounded.
+_SNIRF_RANGE_BUDGET = 4 * 1024 * 1024  # 4 MB
 
 _METADATA_FIELDS: tuple[str, ...] = (
     "sampling_frequency",
@@ -639,6 +647,11 @@ class RemoteHeaderStep:
     sidecar-arithmetic approximation) so any exact/local source still wins.
     Never raises (FormatParser contract) — any locate/fetch/parse failure
     degrades silently to the next tier.
+
+    Three ranged paths are wired, each fetching only header bytes:
+    EDF/BDF (256-byte main header), MEF3 ``.mefd`` (the ≤16-KB ``.tmet``),
+    and SNIRF (HDF5 metadata via a :class:`_remote_header.RangeReader`
+    file-like). All other extensions are skipped.
     """
 
     def fill(self, ctx: CascadeContext, result: CascadeResult) -> None:
@@ -646,35 +659,93 @@ class RemoteHeaderStep:
             return  # opt-in only; default OFF keeps snapshots byte-identical
         if result.ntimes is not None:
             return
-        if ctx.ext not in (".edf", ".bdf"):
-            return  # only the EDF/BDF main-header path is wired for now
         try:
-            # The dataset id is the BIDS root dir name; bids_relpath is the file's
-            # path RELATIVE to that root (ctx.bids_file is an absolute local path).
-            try:
-                relpath = str(ctx.bids_file_path.relative_to(ctx.bids_root))
-            except ValueError:
-                relpath = ctx.bids_file_path.name
-            record = {
-                "dataset": ctx.bids_root.name,
-                "bids_relpath": relpath,
-            }
-            _size, url = _remote_header.locate(record)
-            if not url:
-                return  # NEMAR S3 closed / no derivable URL → drop to T3
-            # block == the 256-byte main header → fetch EXACTLY 256 bytes (the
-            # whole point: few bytes). The annotation-safe record-count formula
-            # needs only the main header, not the per-signal headers.
-            reader = _remote_header.RangeReader(url, block=_edf_header.EDF_HEADER_LEN)
-            buf = reader.read(0, _edf_header.EDF_HEADER_LEN)
-            if not buf:
-                return
-            n_times = _edf_header.edf_n_times_from_main_header(
-                buf, result.sampling_frequency
-            )
+            if ctx.ext in (".edf", ".bdf"):
+                self._fill_edf(ctx, result)
+            elif ctx.ext == ".mefd":
+                self._fill_mefd(ctx, result)
+            elif ctx.ext == ".snirf":
+                self._fill_snirf(ctx, result)
         except Exception:
             # Any transport/parse failure → next tier; never raise on a record.
             return
+
+    # ── per-format ranged readers ────────────────────────────────────────
+
+    def _fill_edf(self, ctx: CascadeContext, result: CascadeResult) -> None:
+        # The dataset id is the BIDS root dir name; bids_relpath is the file's
+        # path RELATIVE to that root (ctx.bids_file is an absolute local path).
+        try:
+            relpath = str(ctx.bids_file_path.relative_to(ctx.bids_root))
+        except ValueError:
+            relpath = ctx.bids_file_path.name
+        record = {
+            "dataset": ctx.bids_root.name,
+            "bids_relpath": relpath,
+        }
+        _size, url = _remote_header.locate(record)
+        if not url:
+            return  # NEMAR S3 closed / no derivable URL → drop to T3
+        # block == the 256-byte main header → fetch EXACTLY 256 bytes (the
+        # whole point: few bytes). The annotation-safe record-count formula
+        # needs only the main header, not the per-signal headers.
+        reader = _remote_header.RangeReader(url, block=_edf_header.EDF_HEADER_LEN)
+        buf = reader.read(0, _edf_header.EDF_HEADER_LEN)
+        if not buf:
+            return
+        n_times = _edf_header.edf_n_times_from_main_header(
+            buf, result.sampling_frequency
+        )
+        if n_times is not None and n_times > 0:
+            nt_before = result.ntimes
+            result.ntimes = int(n_times)
+            result.stamp(PROV_REMOTE_HEADER, "ntimes", nt_before, result.ntimes)
+
+    def _fill_mefd(self, ctx: CascadeContext, result: CascadeResult) -> None:
+        # ctx.bids_file_path is the ``.mefd`` directory; the n_times count lives
+        # in the first ``.tmet`` inside it. Located by name only (no read), so a
+        # not-present git-annex pointer still resolves.
+        tmet = _mef3_parser.find_first_tmet(ctx.bids_file_path)
+        if tmet is None:
+            return
+        try:
+            relpath = tmet.relative_to(ctx.bids_root)
+        except ValueError:
+            relpath = Path(tmet.name)
+        _size, url = _remote_header.locate(
+            {"dataset": ctx.bids_root.name, "bids_relpath": str(relpath)}
+        )
+        if not url:
+            return  # NEMAR S3 closed / no derivable URL → drop to T3
+        # The ``.tmet`` header is ~16 KB; one ranged GET of 20 KB covers it.
+        data = _parser_utils.fetch_bytes_from_s3(url, max_bytes=20000)
+        if not data:
+            return
+        sfreq = result.sampling_frequency or _mef3_parser.tmet_sfreq_from_bytes(data)
+        n_times = _mef3_parser.tmet_n_times_from_bytes(data, sfreq)
+        if n_times is not None and n_times > 0:
+            nt_before = result.ntimes
+            result.ntimes = int(n_times)
+            result.stamp(PROV_REMOTE_HEADER, "ntimes", nt_before, result.ntimes)
+
+    def _fill_snirf(self, ctx: CascadeContext, result: CascadeResult) -> None:
+        try:
+            relpath = str(ctx.bids_file_path.relative_to(ctx.bids_root))
+        except ValueError:
+            relpath = ctx.bids_file_path.name
+        _size, url = _remote_header.locate(
+            {"dataset": ctx.bids_root.name, "bids_relpath": relpath}
+        )
+        if not url:
+            return  # NEMAR S3 closed / no derivable URL → drop to T3
+        # RangeReader is the seekable HDF5-over-Range file-like; reading
+        # ``.shape`` fetches only HDF5 metadata blocks (zero signal). HDF5 object
+        # headers are NOT guaranteed near the start (a real 80 MB SNIRF needed a
+        # metadata block ~31 MB in), so a larger budget than the EDF default is
+        # required — but the actual fetch is still tiny (~0.2% of the file). A
+        # blown budget / h5py error is caught by the outer guard in ``fill``.
+        reader = _remote_header.RangeReader(url, budget=_SNIRF_RANGE_BUDGET)
+        n_times = _snirf_parser.snirf_n_times_from_fileobj(reader)
         if n_times is not None and n_times > 0:
             nt_before = result.ntimes
             result.ntimes = int(n_times)

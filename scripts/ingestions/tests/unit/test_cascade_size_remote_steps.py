@@ -161,6 +161,31 @@ def _rangereader_boom(url, **_kw):
     raise RuntimeError("network exploded")
 
 
+def _fetch_boom(_url, **_kw):
+    raise RuntimeError("network exploded")
+
+
+def _rangereader_budget_boom(url, **_kw):
+    raise mc._remote_header.ByteBudgetExceeded("budget blown reading h5 metadata")
+
+
+class _RecordSfreqNTimes:
+    """Module-level fake for ``tmet_n_times_from_bytes`` that records sfreq.
+
+    A callable class (not a nested function) so the no-nested-functions
+    pre-commit hook is satisfied while still capturing the sfreq the step
+    forwards into the parser.
+    """
+
+    def __init__(self, n_times: int) -> None:
+        self.n_times = n_times
+        self.seen_sfreq = None
+
+    def __call__(self, _data, sfreq):
+        self.seen_sfreq = sfreq
+        return self.n_times
+
+
 def test_remote_header_step_never_raises_on_reader_failure(monkeypatch):
     monkeypatch.setenv("EEGDASH_REMOTE_HEADERS", "1")
     monkeypatch.setattr(
@@ -179,16 +204,230 @@ def test_remote_header_step_never_raises_on_reader_failure(monkeypatch):
 
 def test_remote_header_step_noop_for_non_edf_when_flag_on(monkeypatch):
     monkeypatch.setenv("EEGDASH_REMOTE_HEADERS", "1")
-    sentinel = MagicMock(side_effect=AssertionError("locate called for .set"))
+    sentinel = MagicMock(side_effect=AssertionError("locate called for .vhdr"))
     monkeypatch.setattr(mc._remote_header, "locate", sentinel)
 
-    ctx = _ctx("sub-01/eeg/sub-01_eeg.set")
+    ctx = _ctx("sub-01/eeg/sub-01_eeg.vhdr")
     result = CascadeResult(sampling_frequency=250.0, nchans=4, ntimes=None)
 
     RemoteHeaderStep().fill(ctx, result)
 
     assert result.ntimes is None
     sentinel.assert_not_called()
+
+
+# ─── RemoteHeaderStep: MEF3 .mefd branch (mocked) ─────────────────────────
+
+
+def _fake_tmet_path(tmp_root: str = "/tmp/bids/ds000001"):
+    # A .tmet inside a .mefd dir tree (path only — never opened in these tests).
+    return mc.Path(f"{tmp_root}/sub-01/ieeg/sub-01_ieeg.mefd/ch.timd/seg.segd/seg.tmet")
+
+
+def test_remote_header_step_fills_mefd_ntimes_when_flag_on(monkeypatch):
+    monkeypatch.setenv("EEGDASH_REMOTE_HEADERS", "1")
+
+    tmet_path = _fake_tmet_path()
+    monkeypatch.setattr(mc._mef3_parser, "find_first_tmet", lambda _d: tmet_path)
+    monkeypatch.setattr(
+        mc._remote_header, "locate", lambda _rec: (16384, "s3://openneuro.org/x.tmet")
+    )
+    fetch_spy = MagicMock(return_value=b"\x01" * 16384)
+    monkeypatch.setattr(mc._parser_utils, "fetch_bytes_from_s3", fetch_spy)
+    monkeypatch.setattr(mc._mef3_parser, "tmet_sfreq_from_bytes", lambda _data: 8720.0)
+    monkeypatch.setattr(
+        mc._mef3_parser,
+        "tmet_n_times_from_bytes",
+        lambda _data, _sfreq: 123456,
+    )
+
+    ctx = _ctx("sub-01/ieeg/sub-01_ieeg.mefd")
+    # sfreq known from sidecar -> should be reused, not re-derived from bytes.
+    result = CascadeResult(sampling_frequency=8720.0, nchans=32, ntimes=None)
+
+    RemoteHeaderStep().fill(ctx, result)
+
+    assert result.ntimes == 123456
+    assert result.provenance["ntimes"] == "remote_header"
+    # the .tmet is ~16 KB — fetched with max_bytes=20000.
+    _args, kwargs = fetch_spy.call_args
+    assert kwargs.get("max_bytes") == 20000
+
+
+def test_remote_header_step_mefd_derives_sfreq_from_bytes_when_missing(monkeypatch):
+    monkeypatch.setenv("EEGDASH_REMOTE_HEADERS", "1")
+
+    tmet_path = _fake_tmet_path()
+    monkeypatch.setattr(mc._mef3_parser, "find_first_tmet", lambda _d: tmet_path)
+    monkeypatch.setattr(
+        mc._remote_header, "locate", lambda _rec: (16384, "s3://openneuro.org/x.tmet")
+    )
+    monkeypatch.setattr(
+        mc._parser_utils, "fetch_bytes_from_s3", lambda _u, **_k: b"\x01" * 16384
+    )
+    sfreq_spy = MagicMock(return_value=5000.0)
+    monkeypatch.setattr(mc._mef3_parser, "tmet_sfreq_from_bytes", sfreq_spy)
+
+    n_times_recorder = _RecordSfreqNTimes(999)
+    monkeypatch.setattr(mc._mef3_parser, "tmet_n_times_from_bytes", n_times_recorder)
+
+    ctx = _ctx("sub-01/ieeg/sub-01_ieeg.mefd")
+    result = CascadeResult(sampling_frequency=None, nchans=32, ntimes=None)
+
+    RemoteHeaderStep().fill(ctx, result)
+
+    assert result.ntimes == 999
+    sfreq_spy.assert_called_once()  # had to derive sfreq from bytes
+    assert n_times_recorder.seen_sfreq == 5000.0
+
+
+def test_remote_header_step_mefd_noop_when_no_tmet(monkeypatch):
+    monkeypatch.setenv("EEGDASH_REMOTE_HEADERS", "1")
+    monkeypatch.setattr(mc._mef3_parser, "find_first_tmet", lambda _d: None)
+    sentinel = MagicMock(side_effect=AssertionError("locate called without a tmet"))
+    monkeypatch.setattr(mc._remote_header, "locate", sentinel)
+
+    ctx = _ctx("sub-01/ieeg/sub-01_ieeg.mefd")
+    result = CascadeResult(sampling_frequency=8720.0, nchans=32, ntimes=None)
+
+    RemoteHeaderStep().fill(ctx, result)
+
+    assert result.ntimes is None
+    sentinel.assert_not_called()
+
+
+def test_remote_header_step_mefd_noop_when_no_url(monkeypatch):
+    monkeypatch.setenv("EEGDASH_REMOTE_HEADERS", "1")
+    monkeypatch.setattr(
+        mc._mef3_parser, "find_first_tmet", lambda _d: _fake_tmet_path()
+    )
+    monkeypatch.setattr(mc._remote_header, "locate", lambda _rec: (None, None))
+    fetch_spy = MagicMock(side_effect=AssertionError("fetch called without a url"))
+    monkeypatch.setattr(mc._parser_utils, "fetch_bytes_from_s3", fetch_spy)
+
+    ctx = _ctx("sub-01/ieeg/sub-01_ieeg.mefd")
+    result = CascadeResult(sampling_frequency=8720.0, nchans=32, ntimes=None)
+
+    RemoteHeaderStep().fill(ctx, result)
+
+    assert result.ntimes is None
+    fetch_spy.assert_not_called()
+
+
+def test_remote_header_step_mefd_noop_when_fetch_returns_none(monkeypatch):
+    monkeypatch.setenv("EEGDASH_REMOTE_HEADERS", "1")
+    monkeypatch.setattr(
+        mc._mef3_parser, "find_first_tmet", lambda _d: _fake_tmet_path()
+    )
+    monkeypatch.setattr(
+        mc._remote_header, "locate", lambda _rec: (16384, "s3://openneuro.org/x.tmet")
+    )
+    monkeypatch.setattr(mc._parser_utils, "fetch_bytes_from_s3", lambda _u, **_k: None)
+    tmet_spy = MagicMock(side_effect=AssertionError("parsed bytes that were None"))
+    monkeypatch.setattr(mc._mef3_parser, "tmet_n_times_from_bytes", tmet_spy)
+
+    ctx = _ctx("sub-01/ieeg/sub-01_ieeg.mefd")
+    result = CascadeResult(sampling_frequency=8720.0, nchans=32, ntimes=None)
+
+    RemoteHeaderStep().fill(ctx, result)
+
+    assert result.ntimes is None
+    tmet_spy.assert_not_called()
+
+
+def test_remote_header_step_mefd_never_raises(monkeypatch):
+    monkeypatch.setenv("EEGDASH_REMOTE_HEADERS", "1")
+    monkeypatch.setattr(
+        mc._mef3_parser, "find_first_tmet", lambda _d: _fake_tmet_path()
+    )
+    monkeypatch.setattr(
+        mc._remote_header, "locate", lambda _rec: (16384, "s3://openneuro.org/x.tmet")
+    )
+    monkeypatch.setattr(mc._parser_utils, "fetch_bytes_from_s3", _fetch_boom)
+
+    ctx = _ctx("sub-01/ieeg/sub-01_ieeg.mefd")
+    result = CascadeResult(sampling_frequency=8720.0, nchans=32, ntimes=None)
+
+    RemoteHeaderStep().fill(ctx, result)  # must not raise
+
+    assert result.ntimes is None
+
+
+# ─── RemoteHeaderStep: SNIRF .snirf branch (mocked) ───────────────────────
+
+
+def test_remote_header_step_fills_snirf_ntimes_when_flag_on(monkeypatch):
+    monkeypatch.setenv("EEGDASH_REMOTE_HEADERS", "1")
+
+    fake_reader = MagicMock()
+    monkeypatch.setattr(
+        mc._remote_header, "locate", lambda _rec: (50000, "s3://openneuro.org/x.snirf")
+    )
+    reader_spy = MagicMock(return_value=fake_reader)
+    monkeypatch.setattr(mc._remote_header, "RangeReader", reader_spy)
+    monkeypatch.setattr(
+        mc._snirf_parser,
+        "snirf_n_times_from_fileobj",
+        lambda _fileobj: 8000,
+    )
+
+    ctx = _ctx("sub-01/nirs/sub-01_nirs.snirf")
+    result = CascadeResult(sampling_frequency=10.0, nchans=40, ntimes=None)
+
+    RemoteHeaderStep().fill(ctx, result)
+
+    assert result.ntimes == 8000
+    assert result.provenance["ntimes"] == "remote_header"
+    reader_spy.assert_called_once()  # RangeReader is the file-like
+
+
+def test_remote_header_step_snirf_noop_when_no_url(monkeypatch):
+    monkeypatch.setenv("EEGDASH_REMOTE_HEADERS", "1")
+    monkeypatch.setattr(mc._remote_header, "locate", lambda _rec: (None, None))
+    reader_spy = MagicMock(side_effect=AssertionError("RangeReader without a url"))
+    monkeypatch.setattr(mc._remote_header, "RangeReader", reader_spy)
+
+    ctx = _ctx("sub-01/nirs/sub-01_nirs.snirf")
+    result = CascadeResult(sampling_frequency=10.0, nchans=40, ntimes=None)
+
+    RemoteHeaderStep().fill(ctx, result)
+
+    assert result.ntimes is None
+    reader_spy.assert_not_called()
+
+
+def test_remote_header_step_snirf_noop_when_parser_returns_none(monkeypatch):
+    monkeypatch.setenv("EEGDASH_REMOTE_HEADERS", "1")
+    monkeypatch.setattr(
+        mc._remote_header, "locate", lambda _rec: (50000, "s3://openneuro.org/x.snirf")
+    )
+    monkeypatch.setattr(mc._remote_header, "RangeReader", lambda url, **kw: MagicMock())
+    monkeypatch.setattr(
+        mc._snirf_parser, "snirf_n_times_from_fileobj", lambda _fileobj: None
+    )
+
+    ctx = _ctx("sub-01/nirs/sub-01_nirs.snirf")
+    result = CascadeResult(sampling_frequency=10.0, nchans=40, ntimes=None)
+
+    RemoteHeaderStep().fill(ctx, result)
+
+    assert result.ntimes is None
+    assert result.provenance["ntimes"] is None
+
+
+def test_remote_header_step_snirf_never_raises(monkeypatch):
+    monkeypatch.setenv("EEGDASH_REMOTE_HEADERS", "1")
+    monkeypatch.setattr(
+        mc._remote_header, "locate", lambda _rec: (50000, "s3://openneuro.org/x.snirf")
+    )
+    monkeypatch.setattr(mc._remote_header, "RangeReader", _rangereader_budget_boom)
+
+    ctx = _ctx("sub-01/nirs/sub-01_nirs.snirf")
+    result = CascadeResult(sampling_frequency=10.0, nchans=40, ntimes=None)
+
+    RemoteHeaderStep().fill(ctx, result)  # must not raise
+
+    assert result.ntimes is None
 
 
 # ─── default step ordering ────────────────────────────────────────────────

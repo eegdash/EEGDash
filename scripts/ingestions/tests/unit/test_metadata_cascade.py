@@ -342,6 +342,8 @@ def test_metadata_cascade_default_steps_in_correct_order():
         "ModalitySidecarStep",
         "ChannelsTsvStep",
         "BinaryParserStep",
+        "SizeArithmeticStep",
         "MneFallbackStep",
+        "RemoteHeaderStep",
         "SidecarArithmeticStep",
     ]

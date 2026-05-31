@@ -116,6 +116,10 @@ _PROV_MNE_FALLBACK = "mne_fallback"
 # Phase 1 cheap tiers: ntimes from sidecar arithmetic, duration_seconds derived.
 _PROV_SIDECAR_ARITHMETIC = "sidecar_arithmetic"
 _PROV_DERIVED = "derived"
+# Remote-header tiers (RH5): zero-byte size arithmetic (SET external .fdt) and
+# the opt-in ranged remote header read (EDF 256-byte main header).
+_PROV_SIZE_ARITHMETIC = "size_arithmetic"
+_PROV_REMOTE_HEADER = "remote_header"
 
 # _METADATA_FIELDS is imported from _metadata_cascade (single source of truth) so
 # the legacy _empty_provenance helper can never diverge from the cascade's field

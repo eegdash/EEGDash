@@ -208,6 +208,8 @@ def test_bids_snapshot_record_has_metadata_provenance():
         "mne_fallback",
         "sidecar_arithmetic",
         "derived",
+        "size_arithmetic",
+        "remote_header",
         None,
     }
     for field, source in provenance.items():

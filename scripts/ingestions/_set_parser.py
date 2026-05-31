@@ -46,6 +46,59 @@ except ImportError:  # pragma: no cover — scipy unavailable
         pass
 
 
+def _fdt_n_times(fdt_path: Path, nchans: int | None) -> int | None:
+    """``n_times`` for an external EEGLAB ``.fdt`` from its SIZE alone — 0 bytes read.
+
+    The external ``.fdt`` is a raw ``float32`` ``[nchans × n_times]`` block with no
+    header, so ``n_times = fdt_size / (nchans × 4)``. The size comes from the
+    git-annex key on a shallow clone (``_sizing.data_file_size`` reads the pointer,
+    never the signal). Returns ``None`` when *nchans* is falsy/non-positive, the
+    size is unavailable, or the size is not a whole multiple of ``nchans × 4`` —
+    never a guessed value. Never raises (FormatParser contract).
+    """
+    try:
+        if not nchans or nchans <= 0:
+            return None
+        from _sizing import data_file_size
+
+        size = data_file_size(fdt_path)
+        if not size or size % (nchans * 4) != 0:
+            return None
+        return size // (nchans * 4)
+    except Exception as e:  # never raise on a recoverable parse failure
+        logger.debug("_fdt_n_times failed: %s", e)
+        return None
+
+
+def _maybe_fill_ntimes_from_fdt(
+    result: dict[str, Any], set_path: Path, trials: int | None
+) -> None:
+    """Set ``result['n_times']`` from the companion ``.fdt`` size when safe.
+
+    Only fires for CONTINUOUS data: if the parsed EEG struct exposes
+    ``trials > 1`` (epoched, 3-D), the flat ``size / (nchans × 4)`` divide would
+    be wrong, so we skip it. When *trials* is unknown (``None``) we allow it —
+    continuous is EEGLAB's default. No-op unless ``has_fdt`` is True, an
+    ``n_times``/``n_samples`` is still absent, and ``nchans`` is known. Mutates
+    *result* in place; never raises.
+    """
+    try:
+        # A 0 (EEG.pnts==0 on a header-only external .set) counts as absent —
+        # zero samples is not a real recording; the .fdt size is the truth.
+        if result.get("n_times") or result.get("n_samples"):
+            return
+        if not result.get("has_fdt"):
+            return
+        if trials is not None and trials > 1:
+            return  # epoched -> flat divide unsafe
+        nchans = result.get("nchans")
+        n_times = _fdt_n_times(set_path.with_suffix(".fdt"), nchans)
+        if n_times is not None:
+            result["n_times"] = n_times
+    except Exception as e:  # never raise on a recoverable parse failure
+        logger.debug("_maybe_fill_ntimes_from_fdt failed: %s", e)
+
+
 def parse_set_metadata(set_path: Path | str) -> dict[str, Any] | None:
     """Parse metadata from EEGLAB .set file.
 
@@ -183,6 +236,22 @@ def parse_set_metadata(set_path: Path | str) -> dict[str, Any] | None:
                     datfile = datfile.item()
                 result["external_datafile"] = str(datfile)
 
+            # Epoched .set are 3-D (EEG.trials > 1); the flat .fdt divide is
+            # only valid for continuous data. Capture trials to gate it below.
+            trials: int | None = None
+            if hasattr(eeg, "trials"):
+                try:
+                    t = eeg.trials
+                    if hasattr(t, "item"):
+                        t = t.item()
+                    trials = int(t)
+                except (TypeError, ValueError):
+                    trials = None
+
+            # External-.fdt zero-fetch n_times: only when n_times/n_samples is
+            # still absent and the data is continuous (trials <= 1 or unknown).
+            _maybe_fill_ntimes_from_fdt(result, set_path, trials)
+
             if result:
                 logger.debug(
                     "Extracted from .set: sfreq=%s, nchans=%s, has_fdt=%s",
@@ -243,6 +312,16 @@ def parse_set_metadata(set_path: Path | str) -> dict[str, Any] | None:
                         result["duration"] = (
                             result["n_samples"] / result["sampling_frequency"]
                         )
+
+                # Epoched-vs-continuous gate for the external-.fdt arithmetic.
+                trials_h5: int | None = None
+                if "trials" in eeg:
+                    try:
+                        trials_h5 = int(eeg["trials"][0, 0])
+                    except (TypeError, ValueError, IndexError, KeyError):
+                        trials_h5 = None
+
+                _maybe_fill_ntimes_from_fdt(result, set_path, trials_h5)
 
                 if result:
                     return result

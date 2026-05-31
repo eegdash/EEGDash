@@ -12,6 +12,7 @@ Public surface: :class:`MetadataCascade.run` takes a
 from __future__ import annotations
 
 import json
+import os
 import warnings
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -19,6 +20,11 @@ from typing import Any, Protocol
 
 import pandas as pd
 
+# Imported as modules (not symbols) so the cheap-tier helpers stay
+# monkeypatchable in tests and so a single seam carries the wiring.
+import _edf_header
+import _remote_header
+import _set_parser
 import mne
 from _format_parser_registry import get_parser_for_extension
 
@@ -33,6 +39,10 @@ PROV_MNE_FALLBACK = "mne_fallback"
 # pure derivation (ntimes / sfreq) for duration_seconds.
 PROV_SIDECAR_ARITHMETIC = "sidecar_arithmetic"
 PROV_DERIVED = "derived"
+# Remote-header tier (RH5): zero-byte size arithmetic (SET external .fdt) and
+# the opt-in ranged remote header read (EDF 256-byte main header).
+PROV_SIZE_ARITHMETIC = "size_arithmetic"
+PROV_REMOTE_HEADER = "remote_header"
 
 _METADATA_FIELDS: tuple[str, ...] = (
     "sampling_frequency",
@@ -528,6 +538,40 @@ class BinaryParserStep:
             result.stamp(PROV_BINARY_PARSER, fname, old, new)
 
 
+class SizeArithmeticStep:
+    """Zero-byte ntimes from file SIZE alone (annex key / os.stat — no signal read).
+
+    Currently handles the EEGLAB external ``.set`` case: when ``ntimes`` is still
+    missing, ``nchans`` is known, and a companion ``.fdt`` (or its annex pointer)
+    is resolvable, ``n_times = fdt_size / (nchans × 4)`` via
+    :func:`_set_parser._fdt_n_times`. EDF/BDF size-arithmetic is intentionally
+    NOT done here — it is unsafe without the 256-byte main header (EDF+
+    annotations channel), so it lives behind the ranged :class:`RemoteHeaderStep`.
+
+    Placed AFTER the local binary parsers (which are exact) and BEFORE the MNE
+    fallback. Fetches 0 bytes. Never raises (FormatParser contract).
+    """
+
+    def fill(self, ctx: CascadeContext, result: CascadeResult) -> None:
+        if result.ntimes is not None:
+            return
+        if ctx.ext != ".set":
+            return
+        if not result.nchans:
+            return
+        try:
+            fdt_path = ctx.bids_file_path.with_suffix(".fdt")
+            n_times = _set_parser._fdt_n_times(fdt_path, result.nchans)
+        except Exception:
+            # Defensive: the helper already swallows recoverable failures, but
+            # the cascade must never raise on a single record.
+            return
+        if n_times is not None:
+            nt_before = result.ntimes
+            result.ntimes = n_times
+            result.stamp(PROV_SIZE_ARITHMETIC, "ntimes", nt_before, result.ntimes)
+
+
 class MneFallbackStep:
     """Step 5: MNE fallbacks for VHDR ntimes and FIF metadata + split detection."""
 
@@ -581,6 +625,53 @@ class MneFallbackStep:
                     result.stamp(PROV_MNE_FALLBACK, fname, old, new)
 
 
+class RemoteHeaderStep:
+    """Opt-in ranged remote header read — gated by ``EEGDASH_REMOTE_HEADERS=1``.
+
+    Default OFF → a complete no-op, so the local/shallow path and the digest
+    golden masters are byte-for-byte unchanged. When ON, it resolves a missing
+    EDF/BDF ``ntimes`` by fetching ONLY the 256-byte main header over an HTTP
+    Range read (:class:`_remote_header.RangeReader`) and computing the
+    annotation-safe record-count formula
+    (:func:`_edf_header.edf_n_times_from_main_header`).
+
+    Placed as a last-resort step (after the MNE fallback, before the
+    sidecar-arithmetic approximation) so any exact/local source still wins.
+    Never raises (FormatParser contract) — any locate/fetch/parse failure
+    degrades silently to the next tier.
+    """
+
+    def fill(self, ctx: CascadeContext, result: CascadeResult) -> None:
+        if os.environ.get("EEGDASH_REMOTE_HEADERS") != "1":
+            return  # opt-in only; default OFF keeps snapshots byte-identical
+        if result.ntimes is not None:
+            return
+        if ctx.ext not in (".edf", ".bdf"):
+            return  # only the EDF/BDF main-header path is wired for now
+        try:
+            record = {
+                "dataset": getattr(ctx.bids_dataset, "dataset", None),
+                "bids_relpath": ctx.bids_file,
+            }
+            _size, url = _remote_header.locate(record)
+            if not url:
+                return  # NEMAR S3 closed / no derivable URL → drop to T3
+            reader = _remote_header.RangeReader(url)
+            buf = reader.read(0, _edf_header.EDF_HEADER_LEN)
+            if not buf:
+                return
+            n_times = _edf_header.edf_n_times_from_main_header(
+                buf, result.sampling_frequency
+            )
+        except Exception:
+            # Any transport/parse failure → next tier; never raise on a record.
+            return
+        if n_times is not None and n_times > 0:
+            nt_before = result.ntimes
+            result.ntimes = int(n_times)
+            result.stamp(PROV_REMOTE_HEADER, "ntimes", nt_before, result.ntimes)
+
+
 class SidecarArithmeticStep:
     """Last resort: ``ntimes = round(sfreq * RecordingDuration)`` when no EXACT source produced it.
 
@@ -622,7 +713,9 @@ class MetadataCascade:
             ModalitySidecarStep(),
             ChannelsTsvStep(),
             BinaryParserStep(),
+            SizeArithmeticStep(),
             MneFallbackStep(),
+            RemoteHeaderStep(),
             SidecarArithmeticStep(),
         )
 

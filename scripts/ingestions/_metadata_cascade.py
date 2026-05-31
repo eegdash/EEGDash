@@ -352,25 +352,45 @@ class CascadeResult:
             self.provenance[field_name] = source
 
 
-def derive_duration_seconds(result: CascadeResult) -> None:
-    """Fill ``duration_seconds`` from sidecar RecordingDuration, else ntimes/sfreq. Provenance-stamped.
+# ntimes sources that are byte-exact (not arithmetic), so ntimes/sfreq is the
+# ground-truth duration and should beat the rounded sidecar RecordingDuration.
+_EXACT_NTIMES_SOURCES: frozenset[str] = frozenset(
+    {PROV_BINARY_PARSER, PROV_MNE_FALLBACK}
+)
 
-    Pure arithmetic — never reads signal. ``recording_duration`` (from the
-    sidecar) is authoritative; otherwise ``ntimes / sfreq`` is derived.
+
+def derive_duration_seconds(result: CascadeResult) -> None:
+    """Fill ``duration_seconds``, keeping it consistent with ntimes. Provenance-stamped.
+
+    Pure arithmetic — never reads signal. Order:
+    1. When ``ntimes`` came from an EXACT source (binary header / file-size / MNE),
+       ``ntimes / sfreq`` is the true duration — prefer it so duration_seconds and
+       ntimes agree.
+    2. Otherwise the sidecar ``RecordingDuration`` is authoritative.
+    3. Otherwise derive from an approximate ``ntimes / sfreq``.
     """
     if result.duration_seconds is not None:
         return
+
+    has_sfreq = bool(result.sampling_frequency and result.sampling_frequency > 0)
+    has_ntimes = bool(result.ntimes and result.ntimes > 0)
+    ntimes_is_exact = result.provenance.get("ntimes") in _EXACT_NTIMES_SOURCES
+
+    if has_sfreq and has_ntimes and ntimes_is_exact:
+        result.duration_seconds = float(result.ntimes) / float(
+            result.sampling_frequency
+        )
+        if result.provenance.get("duration_seconds") is None:
+            result.provenance["duration_seconds"] = PROV_DERIVED
+        return
+
     if result.recording_duration is not None and result.recording_duration > 0:
         result.duration_seconds = float(result.recording_duration)
         if result.provenance.get("duration_seconds") is None:
             result.provenance["duration_seconds"] = PROV_SIDECAR_ARITHMETIC
         return
-    if (
-        result.sampling_frequency
-        and result.sampling_frequency > 0
-        and result.ntimes
-        and result.ntimes > 0
-    ):
+
+    if has_sfreq and has_ntimes:
         result.duration_seconds = float(result.ntimes) / float(
             result.sampling_frequency
         )

@@ -83,6 +83,16 @@ def test_derive_duration_noop_without_inputs():
     assert r.provenance["duration_seconds"] is None
 
 
+def test_derive_duration_prefers_exact_ntimes_over_recording_duration():
+    # When ntimes is byte-exact, ntimes/sfreq is the ground truth and must beat the
+    # rounded sidecar RecordingDuration so duration_seconds and ntimes stay consistent.
+    r = CascadeResult(sampling_frequency=500.0, ntimes=12345, recording_duration=24.7)
+    r.provenance["ntimes"] = "binary_parser"  # exact source
+    derive_duration_seconds(r)
+    assert r.duration_seconds == 24.69  # 12345 / 500, NOT the rounded 24.7
+    assert r.provenance["duration_seconds"] == PROV_DERIVED
+
+
 # ─── Task 1.4: ModalitySidecarStep arithmetic ntimes ──────────────────────
 
 

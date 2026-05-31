@@ -150,12 +150,16 @@ def _parse_snirf_with_h5py(snirf_path: Path) -> dict[str, Any] | None:
                 if data_key.startswith("data"):
                     data_group = nirs_group[data_key]
                     if "time" in data_group:
-                        time_data = data_group["time"][:]
-                        n_time_points = len(time_data)
+                        time_ds = data_group["time"]
+                        # ``.shape`` is HDF5 metadata — reads ZERO elements,
+                        # unlike the previous ``[:]`` which loaded the whole vector.
+                        n_time_points = int(time_ds.shape[0]) if time_ds.shape else 0
                         if n_time_points > 0:
-                            result["n_times"] = int(n_time_points)
+                            result["n_times"] = n_time_points
                         if n_time_points > 1:
-                            dt = float(time_data[1] - time_data[0])
+                            # Only the first two samples are needed for the rate.
+                            first_two = time_ds[:2]
+                            dt = float(first_two[1] - first_two[0])
                             if dt > 0:
                                 result["sampling_frequency"] = float(1.0 / dt)
                     break

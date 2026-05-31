@@ -20,6 +20,11 @@ from _parser_utils import validate_file_path
 
 logger = logging.getLogger(__name__)
 
+# Above this size, an embedded-data .set (no .fdt) is NOT loadmat-ed: scipy
+# would materialize the whole EEG.data array. The sidecar-arithmetic tier
+# supplies n_times for those instead. Bounds worst-case memory/time.
+_SET_EMBEDDED_LOADMAT_CEILING = 50 * 1024 * 1024  # 50 MB
+
 # scipy's MatReadError isn't in the public io namespace, but it's the
 # canonical class raised for truncated/corrupt MAT files. Importing it
 # lazily so an environment without scipy still loads this module —
@@ -81,7 +86,23 @@ def parse_set_metadata(set_path: Path | str) -> dict[str, Any] | None:
     try:
         import scipy.io
 
-        mat = scipy.io.loadmat(str(set_path), struct_as_record=False, squeeze_me=True)
+        # Header-only discipline: for embedded-data .set (no .fdt companion),
+        # loadmat materializes EEG.data. Skip oversized embedded files — the
+        # sidecar-arithmetic tier supplies n_times for those.
+        if not result["has_fdt"]:
+            try:
+                if set_path.stat().st_size > _SET_EMBEDDED_LOADMAT_CEILING:
+                    return result if result else None
+            except OSError:
+                pass
+
+        # variable_names=['EEG'] avoids loading unrelated top-level MAT variables.
+        mat = scipy.io.loadmat(
+            str(set_path),
+            struct_as_record=False,
+            squeeze_me=True,
+            variable_names=["EEG"],
+        )
 
         if "EEG" in mat:
             eeg = mat["EEG"]

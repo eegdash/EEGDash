@@ -34,6 +34,62 @@ from eegdash.dataset.io import _find_best_matching_file
 
 logger = logging.getLogger(__name__)
 
+# BrainVision BinaryFormat -> bytes per sample (multiplexed/vectorized binary).
+_VHDR_BINARY_FORMAT_BYTES: dict[str, int] = {
+    "INT_16": 2,
+    "UINT_16": 2,
+    "INT_32": 4,
+    "UINT_32": 4,
+    "IEEE_FLOAT_32": 4,
+    "IEEE_FLOAT_64": 8,
+}
+
+
+def _vhdr_n_times(content: str, vhdr_path: Path, nchans: int | None) -> int | None:
+    """Cheap n_times for BrainVision — header ``DataPoints`` and/or ``.eeg`` file size.
+
+    Never reads signal: file-size comes from :func:`_sizing.data_file_size`, which
+    uses the git-annex key on a shallow clone (zero bytes fetched). When both the
+    text ``DataPoints`` and the binary size are available they cross-check each
+    other (DataPoints may be per-channel or total across channels depending on the
+    exporter); the file size is the tie-breaker. Returns ``None`` rather than a
+    guessed value when nothing reliable is available.
+    """
+    # Binary size in samples (total across channels), if reachable cheaply.
+    total_samples: int | None = None
+    fmt = re.search(
+        r"^\s*BinaryFormat\s*=\s*(\w+)", content, re.MULTILINE | re.IGNORECASE
+    )
+    dtype_bytes = _VHDR_BINARY_FORMAT_BYTES.get(fmt.group(1).upper()) if fmt else None
+    if dtype_bytes and nchans:
+        refs = extract_vhdr_references(vhdr_path)
+        datafile = refs.get("datafile") or vhdr_path.with_suffix(".eeg").name
+        from _sizing import data_file_size
+
+        size = data_file_size(vhdr_path.parent / datafile)
+        if size and size % dtype_bytes == 0:
+            total_samples = size // dtype_bytes
+
+    dp_match = re.search(
+        r"^\s*DataPoints\s*=\s*(\d+)", content, re.MULTILINE | re.IGNORECASE
+    )
+    if dp_match:
+        dp = int(dp_match.group(1))
+        if total_samples is not None and nchans:
+            if dp * nchans == total_samples:
+                return dp  # DataPoints is per-channel
+            if dp == total_samples and dp % nchans == 0:
+                return dp // nchans  # DataPoints is total across channels
+            # Mismatch: trust the binary size when it divides evenly.
+            if total_samples % nchans == 0:
+                return total_samples // nchans
+        return dp  # no cross-check available; DataPoints is per-channel per spec
+
+    # No DataPoints -> pure file-size arithmetic.
+    if total_samples is not None and nchans and total_samples % nchans == 0:
+        return total_samples // nchans
+    return None
+
 
 def parse_vhdr_metadata(vhdr_path: Path | str) -> dict[str, Any] | None:
     r"""Parse metadata from BrainVision VHDR header file.
@@ -149,6 +205,11 @@ def parse_vhdr_metadata(vhdr_path: Path | str) -> dict[str, Any] | None:
         # If we found channel names but not nchans, derive it
         if "nchans" not in result:
             result["nchans"] = len(ch_names)
+
+    # Cheap n_times: DataPoints / file-size arithmetic (no signal read).
+    n_times = _vhdr_n_times(content, vhdr_path, result.get("nchans"))
+    if n_times is not None and n_times > 0:
+        result["n_times"] = n_times
 
     # Return None if we couldn't extract any useful metadata
     if not result:

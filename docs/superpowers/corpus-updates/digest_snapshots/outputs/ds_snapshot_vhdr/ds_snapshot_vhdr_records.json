@@ -1,7 +1,7 @@
 {
   "dataset": "ds_snapshot_vhdr",
   "source": "unknown",
-  "digested_at": "2026-05-30T23:54:49.096981+00:00",
+  "digested_at": "2026-05-31T00:07:44.734957+00:00",
   "record_count": 1,
   "records_with_integrity_issues": 0,
   "records": [
@@ -110,7 +110,7 @@
       "nchans": 64,
       "ntimes": 256,
       "duration_seconds": 0.0512,
-      "digested_at": "2026-05-30T23:54:49.096981+00:00",
+      "digested_at": "2026-05-31T00:07:44.734957+00:00",
       "participant_tsv": {
         "age": 25.0,
         "sex": "M"
@@ -119,7 +119,7 @@
       "_metadata_provenance": {
         "sampling_frequency": "binary_parser",
         "nchans": "binary_parser",
-        "ntimes": "mne_fallback",
+        "ntimes": "binary_parser",
         "ch_names": "binary_parser",
         "duration_seconds": "derived"
       },

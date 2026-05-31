@@ -43,6 +43,7 @@ def test_cascade_result_defaults_are_none():
         "nchans",
         "ntimes",
         "ch_names",
+        "duration_seconds",
     }
     assert all(v is None for v in result.provenance.values())
 
@@ -96,6 +97,7 @@ def test_mne_bids_step_fills_from_attribute_getters():
         "nchans": "mne_bids",
         "ntimes": "mne_bids",
         "ch_names": "mne_bids",
+        "duration_seconds": None,
     }
 
 
@@ -327,6 +329,7 @@ def test_metadata_cascade_runs_all_steps_in_order(monkeypatch):
         "nchans": "modality_sidecar",
         "ntimes": "binary_parser",
         "ch_names": "binary_parser",
+        "duration_seconds": "derived",
     }
 
 

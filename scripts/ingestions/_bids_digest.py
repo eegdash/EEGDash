@@ -166,6 +166,7 @@ def _build_one_record_from_bids(
                 "sampling_frequency": record.get("sampling_frequency"),
                 "nchans": record.get("nchans"),
                 "ntimes": record.get("ntimes"),
+                "duration_seconds": record.get("duration_seconds"),
                 "metadata_provenance": record.get("_metadata_provenance"),
             },
         )

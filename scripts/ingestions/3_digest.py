@@ -112,6 +112,9 @@ _PROV_MODALITY_SIDECAR = "modality_sidecar"
 _PROV_CHANNELS_TSV = "channels_tsv"
 _PROV_BINARY_PARSER = "binary_parser"
 _PROV_MNE_FALLBACK = "mne_fallback"
+# Phase 1 cheap tiers: ntimes from sidecar arithmetic, duration_seconds derived.
+_PROV_SIDECAR_ARITHMETIC = "sidecar_arithmetic"
+_PROV_DERIVED = "derived"
 
 _METADATA_FIELDS: tuple[str, ...] = (
     "sampling_frequency",

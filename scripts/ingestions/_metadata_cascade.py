@@ -29,12 +29,17 @@ PROV_MODALITY_SIDECAR = "modality_sidecar"
 PROV_CHANNELS_TSV = "channels_tsv"
 PROV_BINARY_PARSER = "binary_parser"
 PROV_MNE_FALLBACK = "mne_fallback"
+# New cheap-tier sources (Phase 1): sidecar arithmetic for ntimes, and
+# pure derivation (ntimes / sfreq) for duration_seconds.
+PROV_SIDECAR_ARITHMETIC = "sidecar_arithmetic"
+PROV_DERIVED = "derived"
 
 _METADATA_FIELDS: tuple[str, ...] = (
     "sampling_frequency",
     "nchans",
     "ntimes",
     "ch_names",
+    "duration_seconds",
 )
 
 
@@ -212,6 +217,40 @@ def extract_sfreq_nchans_from_channels_tsv(
     return sampling_frequency, nchans
 
 
+def extract_recording_duration_from_sidecar(
+    bids_file_path: Path,
+    bids_root: Path,
+) -> float | None:
+    """Return ``RecordingDuration`` (seconds) from a modality JSON sidecar via BIDS inheritance, or ``None``.
+
+    Pure sidecar read — no signal access. Feeds the cheap ``ntimes =
+    round(sfreq * duration)`` arithmetic in :class:`ModalitySidecarStep`.
+    """
+    base_names_to_try, dirs_to_try = _build_bids_search_paths(bids_file_path, bids_root)
+
+    for search_dir in dirs_to_try:
+        for base_name in base_names_to_try:
+            for sidecar_suffix in _MODALITY_SIDECAR_SUFFIXES:
+                sidecar_path = search_dir / f"{base_name}{sidecar_suffix}"
+                if not sidecar_path.exists():
+                    continue
+                try:
+                    with open(sidecar_path) as f:
+                        sidecar_data = json.load(f)
+                except (OSError, json.JSONDecodeError, ValueError, TypeError):
+                    # Unreadable or malformed sidecar — try next candidate.
+                    continue
+                raw = sidecar_data.get("RecordingDuration")
+                if raw is not None:
+                    try:
+                        dur = float(raw)
+                    except (TypeError, ValueError):
+                        return None
+                    return dur if dur > 0 else None
+                break  # only consult one sidecar variant per (dir, base)
+    return None
+
+
 # ─── FIF metadata helper ──────────────────────────────────────────────────
 
 
@@ -299,6 +338,8 @@ class CascadeResult:
     nchans: int | None = None
     ntimes: int | None = None
     ch_names: list[str] | None = None
+    recording_duration: float | None = None
+    duration_seconds: float | None = None
     fif_is_split: bool = False
     fif_continuations_ok: bool = True
     provenance: dict[str, str | None] = field(
@@ -309,6 +350,32 @@ class CascadeResult:
         """Record ``source`` as the provenance for ``field_name`` on first write."""
         if old is None and new is not None and self.provenance[field_name] is None:
             self.provenance[field_name] = source
+
+
+def derive_duration_seconds(result: CascadeResult) -> None:
+    """Fill ``duration_seconds`` from sidecar RecordingDuration, else ntimes/sfreq. Provenance-stamped.
+
+    Pure arithmetic — never reads signal. ``recording_duration`` (from the
+    sidecar) is authoritative; otherwise ``ntimes / sfreq`` is derived.
+    """
+    if result.duration_seconds is not None:
+        return
+    if result.recording_duration is not None and result.recording_duration > 0:
+        result.duration_seconds = float(result.recording_duration)
+        if result.provenance.get("duration_seconds") is None:
+            result.provenance["duration_seconds"] = PROV_SIDECAR_ARITHMETIC
+        return
+    if (
+        result.sampling_frequency
+        and result.sampling_frequency > 0
+        and result.ntimes
+        and result.ntimes > 0
+    ):
+        result.duration_seconds = float(result.ntimes) / float(
+            result.sampling_frequency
+        )
+        if result.provenance.get("duration_seconds") is None:
+            result.provenance["duration_seconds"] = PROV_DERIVED
 
 
 # ─── Step Protocol + concrete implementations ─────────────────────────────
@@ -371,6 +438,25 @@ class ModalitySidecarStep:
         result.nchans = nc
         result.stamp(PROV_MODALITY_SIDECAR, "sampling_frequency", sf_before, sf)
         result.stamp(PROV_MODALITY_SIDECAR, "nchans", n_before, nc)
+
+        # Cheap sidecar arithmetic for ntimes: round(sfreq * RecordingDuration).
+        # Pure sidecar read — works for EVERY format, so the binary/MNE tiers
+        # rarely need to run just for ntimes.
+        if result.recording_duration is None:
+            result.recording_duration = extract_recording_duration_from_sidecar(
+                ctx.bids_file_path, ctx.bids_root
+            )
+        if (
+            result.ntimes is None
+            and result.sampling_frequency
+            and result.recording_duration
+            and result.recording_duration > 0
+        ):
+            nt_before = result.ntimes
+            result.ntimes = round(
+                float(result.sampling_frequency) * float(result.recording_duration)
+            )
+            result.stamp(PROV_SIDECAR_ARITHMETIC, "ntimes", nt_before, result.ntimes)
 
 
 class ChannelsTsvStep:
@@ -500,4 +586,5 @@ class MetadataCascade:
         result = CascadeResult()
         for step in self.steps:
             step.fill(ctx, result)
+        derive_duration_seconds(result)
         return result

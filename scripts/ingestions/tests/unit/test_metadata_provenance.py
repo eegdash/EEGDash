@@ -195,6 +195,7 @@ def test_bids_snapshot_record_has_metadata_provenance():
         "nchans",
         "ntimes",
         "ch_names",
+        "duration_seconds",
     }
     valid_sources = {
         "mne_bids",
@@ -202,6 +203,8 @@ def test_bids_snapshot_record_has_metadata_provenance():
         "channels_tsv",
         "binary_parser",
         "mne_fallback",
+        "sidecar_arithmetic",
+        "derived",
         None,
     }
     for field, source in provenance.items():

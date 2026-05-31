@@ -43,6 +43,7 @@ def test_cascade_result_defaults_are_none():
         "nchans",
         "ntimes",
         "ch_names",
+        "duration_seconds",
     }
     assert all(v is None for v in result.provenance.values())
 
@@ -78,7 +79,7 @@ def test_mne_bids_step_fills_from_attribute_getters():
     bids_dataset.get_bids_file_attribute.side_effect = lambda key, _file: {
         "sfreq": "500",
         "nchans": "64",
-        "ntimes": "1000",
+        "duration": None,
     }[key]
     bids_dataset.channel_labels.return_value = ["F1", "F2", "Cz"]
 
@@ -89,13 +90,16 @@ def test_mne_bids_step_fills_from_attribute_getters():
 
     assert result.sampling_frequency == 500.0
     assert result.nchans == 3  # channel_labels count overrides sidecar nchans
-    assert result.ntimes == 1000
+    # ntimes is no longer taken here — it is approximate arithmetic, deferred to
+    # SidecarArithmeticStep so exact header/file-size counts win.
+    assert result.ntimes is None
     assert result.ch_names == ["F1", "F2", "Cz"]
     assert result.provenance == {
         "sampling_frequency": "mne_bids",
         "nchans": "mne_bids",
-        "ntimes": "mne_bids",
+        "ntimes": None,
         "ch_names": "mne_bids",
+        "duration_seconds": None,
     }
 
 
@@ -327,6 +331,7 @@ def test_metadata_cascade_runs_all_steps_in_order(monkeypatch):
         "nchans": "modality_sidecar",
         "ntimes": "binary_parser",
         "ch_names": "binary_parser",
+        "duration_seconds": "derived",
     }
 
 
@@ -337,5 +342,8 @@ def test_metadata_cascade_default_steps_in_correct_order():
         "ModalitySidecarStep",
         "ChannelsTsvStep",
         "BinaryParserStep",
+        "SizeArithmeticStep",
         "MneFallbackStep",
+        "RemoteHeaderStep",
+        "SidecarArithmeticStep",
     ]

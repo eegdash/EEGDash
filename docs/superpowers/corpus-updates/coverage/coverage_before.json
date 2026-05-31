@@ -1,0 +1,673 @@
+{
+  "by_format": {
+    ".bdf": {
+      "ch_names": {
+        "by_source": {
+          "": 261,
+          "mne_bids": 2498
+        },
+        "coverage": 0.9054,
+        "missing": 261,
+        "resolved": 2498
+      },
+      "duration_seconds": {
+        "by_source": {
+          "": 2759
+        },
+        "coverage": 0.0,
+        "missing": 2759,
+        "resolved": 0
+      },
+      "nchans": {
+        "by_source": {
+          "": 71,
+          "mne_bids": 2688
+        },
+        "coverage": 0.9743,
+        "missing": 71,
+        "resolved": 2688
+      },
+      "ntimes": {
+        "by_source": {
+          "": 306,
+          "mne_bids": 2453
+        },
+        "coverage": 0.8891,
+        "missing": 306,
+        "resolved": 2453
+      },
+      "sampling_frequency": {
+        "by_source": {
+          "": 71,
+          "mne_bids": 2640,
+          "modality_sidecar": 48
+        },
+        "coverage": 0.9743,
+        "missing": 71,
+        "resolved": 2688
+      }
+    },
+    ".con": {
+      "ch_names": {
+        "by_source": {
+          "mne_bids": 12
+        },
+        "coverage": 1.0,
+        "missing": 0,
+        "resolved": 12
+      },
+      "duration_seconds": {
+        "by_source": {
+          "": 12
+        },
+        "coverage": 0.0,
+        "missing": 12,
+        "resolved": 0
+      },
+      "nchans": {
+        "by_source": {
+          "mne_bids": 12
+        },
+        "coverage": 1.0,
+        "missing": 0,
+        "resolved": 12
+      },
+      "ntimes": {
+        "by_source": {
+          "mne_bids": 12
+        },
+        "coverage": 1.0,
+        "missing": 0,
+        "resolved": 12
+      },
+      "sampling_frequency": {
+        "by_source": {
+          "mne_bids": 12
+        },
+        "coverage": 1.0,
+        "missing": 0,
+        "resolved": 12
+      }
+    },
+    ".ds": {
+      "ch_names": {
+        "by_source": {
+          "": 402,
+          "mne_bids": 1518
+        },
+        "coverage": 0.7906,
+        "missing": 402,
+        "resolved": 1518
+      },
+      "duration_seconds": {
+        "by_source": {
+          "": 1920
+        },
+        "coverage": 0.0,
+        "missing": 1920,
+        "resolved": 0
+      },
+      "nchans": {
+        "by_source": {
+          "": 99,
+          "mne_bids": 1821
+        },
+        "coverage": 0.9484,
+        "missing": 99,
+        "resolved": 1821
+      },
+      "ntimes": {
+        "by_source": {
+          "": 354,
+          "mne_bids": 1566
+        },
+        "coverage": 0.8156,
+        "missing": 354,
+        "resolved": 1566
+      },
+      "sampling_frequency": {
+        "by_source": {
+          "": 33,
+          "channels_tsv": 2,
+          "mne_bids": 1885
+        },
+        "coverage": 0.9828,
+        "missing": 33,
+        "resolved": 1887
+      }
+    },
+    ".edf": {
+      "ch_names": {
+        "by_source": {
+          "": 419,
+          "mne_bids": 11477
+        },
+        "coverage": 0.9648,
+        "missing": 419,
+        "resolved": 11477
+      },
+      "duration_seconds": {
+        "by_source": {
+          "": 11896
+        },
+        "coverage": 0.0,
+        "missing": 11896,
+        "resolved": 0
+      },
+      "nchans": {
+        "by_source": {
+          "": 330,
+          "mne_bids": 11566
+        },
+        "coverage": 0.9723,
+        "missing": 330,
+        "resolved": 11566
+      },
+      "ntimes": {
+        "by_source": {
+          "": 1385,
+          "mne_bids": 10511
+        },
+        "coverage": 0.8836,
+        "missing": 1385,
+        "resolved": 10511
+      },
+      "sampling_frequency": {
+        "by_source": {
+          "": 331,
+          "channels_tsv": 8,
+          "mne_bids": 11524,
+          "modality_sidecar": 33
+        },
+        "coverage": 0.9722,
+        "missing": 331,
+        "resolved": 11565
+      }
+    },
+    ".fif": {
+      "ch_names": {
+        "by_source": {
+          "": 118,
+          "mne_bids": 299
+        },
+        "coverage": 0.717,
+        "missing": 118,
+        "resolved": 299
+      },
+      "duration_seconds": {
+        "by_source": {
+          "": 417
+        },
+        "coverage": 0.0,
+        "missing": 417,
+        "resolved": 0
+      },
+      "nchans": {
+        "by_source": {
+          "": 22,
+          "mne_bids": 299,
+          "modality_sidecar": 96
+        },
+        "coverage": 0.9472,
+        "missing": 22,
+        "resolved": 395
+      },
+      "ntimes": {
+        "by_source": {
+          "": 126,
+          "mne_bids": 291
+        },
+        "coverage": 0.6978,
+        "missing": 126,
+        "resolved": 291
+      },
+      "sampling_frequency": {
+        "by_source": {
+          "": 30,
+          "mne_bids": 291,
+          "modality_sidecar": 96
+        },
+        "coverage": 0.9281,
+        "missing": 30,
+        "resolved": 387
+      }
+    },
+    ".mefd": {
+      "ch_names": {
+        "by_source": {
+          "binary_parser": 614,
+          "mne_bids": 25
+        },
+        "coverage": 1.0,
+        "missing": 0,
+        "resolved": 639
+      },
+      "duration_seconds": {
+        "by_source": {
+          "": 639
+        },
+        "coverage": 0.0,
+        "missing": 639,
+        "resolved": 0
+      },
+      "nchans": {
+        "by_source": {
+          "binary_parser": 614,
+          "mne_bids": 25
+        },
+        "coverage": 1.0,
+        "missing": 0,
+        "resolved": 639
+      },
+      "ntimes": {
+        "by_source": {
+          "": 614,
+          "mne_bids": 25
+        },
+        "coverage": 0.0391,
+        "missing": 614,
+        "resolved": 25
+      },
+      "sampling_frequency": {
+        "by_source": {
+          "mne_bids": 639
+        },
+        "coverage": 1.0,
+        "missing": 0,
+        "resolved": 639
+      }
+    },
+    ".set": {
+      "ch_names": {
+        "by_source": {
+          "": 1017,
+          "mne_bids": 12768
+        },
+        "coverage": 0.9262,
+        "missing": 1017,
+        "resolved": 12768
+      },
+      "duration_seconds": {
+        "by_source": {
+          "": 13785
+        },
+        "coverage": 0.0,
+        "missing": 13785,
+        "resolved": 0
+      },
+      "nchans": {
+        "by_source": {
+          "": 494,
+          "mne_bids": 12925,
+          "modality_sidecar": 366
+        },
+        "coverage": 0.9642,
+        "missing": 494,
+        "resolved": 13291
+      },
+      "ntimes": {
+        "by_source": {
+          "": 1827,
+          "mne_bids": 11958
+        },
+        "coverage": 0.8675,
+        "missing": 1827,
+        "resolved": 11958
+      },
+      "sampling_frequency": {
+        "by_source": {
+          "": 495,
+          "mne_bids": 12512,
+          "modality_sidecar": 778
+        },
+        "coverage": 0.9641,
+        "missing": 495,
+        "resolved": 13290
+      }
+    },
+    ".snirf": {
+      "ch_names": {
+        "by_source": {
+          "mne_bids": 257
+        },
+        "coverage": 1.0,
+        "missing": 0,
+        "resolved": 257
+      },
+      "duration_seconds": {
+        "by_source": {
+          "": 257
+        },
+        "coverage": 0.0,
+        "missing": 257,
+        "resolved": 0
+      },
+      "nchans": {
+        "by_source": {
+          "mne_bids": 257
+        },
+        "coverage": 1.0,
+        "missing": 0,
+        "resolved": 257
+      },
+      "ntimes": {
+        "by_source": {
+          "": 14,
+          "mne_bids": 243
+        },
+        "coverage": 0.9455,
+        "missing": 14,
+        "resolved": 243
+      },
+      "sampling_frequency": {
+        "by_source": {
+          "mne_bids": 257
+        },
+        "coverage": 1.0,
+        "missing": 0,
+        "resolved": 257
+      }
+    },
+    ".vhdr": {
+      "ch_names": {
+        "by_source": {
+          "": 36,
+          "binary_parser": 1331,
+          "mne_bids": 5970
+        },
+        "coverage": 0.9951,
+        "missing": 36,
+        "resolved": 7301
+      },
+      "duration_seconds": {
+        "by_source": {
+          "": 7337
+        },
+        "coverage": 0.0,
+        "missing": 7337,
+        "resolved": 0
+      },
+      "nchans": {
+        "by_source": {
+          "": 4,
+          "binary_parser": 897,
+          "channels_tsv": 54,
+          "mne_bids": 6106,
+          "modality_sidecar": 276
+        },
+        "coverage": 0.9995,
+        "missing": 4,
+        "resolved": 7333
+      },
+      "ntimes": {
+        "by_source": {
+          "": 1704,
+          "mne_bids": 5633
+        },
+        "coverage": 0.7678,
+        "missing": 1704,
+        "resolved": 5633
+      },
+      "sampling_frequency": {
+        "by_source": {
+          "binary_parser": 574,
+          "mne_bids": 6007,
+          "modality_sidecar": 756
+        },
+        "coverage": 1.0,
+        "missing": 0,
+        "resolved": 7337
+      }
+    }
+  },
+  "by_modality": {
+    "eeg": {
+      "ch_names": {
+        "by_source": {
+          "": 1661,
+          "binary_parser": 1258,
+          "mne_bids": 28526
+        },
+        "coverage": 0.9472,
+        "missing": 1661,
+        "resolved": 29784
+      },
+      "duration_seconds": {
+        "by_source": {
+          "": 31445
+        },
+        "coverage": 0.0,
+        "missing": 31445,
+        "resolved": 0
+      },
+      "nchans": {
+        "by_source": {
+          "": 827,
+          "binary_parser": 824,
+          "channels_tsv": 54,
+          "mne_bids": 29098,
+          "modality_sidecar": 642
+        },
+        "coverage": 0.9737,
+        "missing": 827,
+        "resolved": 30618
+      },
+      "ntimes": {
+        "by_source": {
+          "": 4871,
+          "mne_bids": 26574
+        },
+        "coverage": 0.8451,
+        "missing": 4871,
+        "resolved": 26574
+      },
+      "sampling_frequency": {
+        "by_source": {
+          "": 825,
+          "binary_parser": 501,
+          "mne_bids": 28504,
+          "modality_sidecar": 1615
+        },
+        "coverage": 0.9738,
+        "missing": 825,
+        "resolved": 30620
+      }
+    },
+    "fnirs": {
+      "ch_names": {
+        "by_source": {
+          "mne_bids": 257
+        },
+        "coverage": 1.0,
+        "missing": 0,
+        "resolved": 257
+      },
+      "duration_seconds": {
+        "by_source": {
+          "": 257
+        },
+        "coverage": 0.0,
+        "missing": 257,
+        "resolved": 0
+      },
+      "nchans": {
+        "by_source": {
+          "mne_bids": 257
+        },
+        "coverage": 1.0,
+        "missing": 0,
+        "resolved": 257
+      },
+      "ntimes": {
+        "by_source": {
+          "": 14,
+          "mne_bids": 243
+        },
+        "coverage": 0.9455,
+        "missing": 14,
+        "resolved": 243
+      },
+      "sampling_frequency": {
+        "by_source": {
+          "mne_bids": 257
+        },
+        "coverage": 1.0,
+        "missing": 0,
+        "resolved": 257
+      }
+    },
+    "ieeg": {
+      "ch_names": {
+        "by_source": {
+          "": 72,
+          "binary_parser": 687,
+          "mne_bids": 4212
+        },
+        "coverage": 0.9855,
+        "missing": 72,
+        "resolved": 4899
+      },
+      "duration_seconds": {
+        "by_source": {
+          "": 4971
+        },
+        "coverage": 0.0,
+        "missing": 4971,
+        "resolved": 0
+      },
+      "nchans": {
+        "by_source": {
+          "": 72,
+          "binary_parser": 687,
+          "mne_bids": 4212
+        },
+        "coverage": 0.9855,
+        "missing": 72,
+        "resolved": 4899
+      },
+      "ntimes": {
+        "by_source": {
+          "": 965,
+          "mne_bids": 4006
+        },
+        "coverage": 0.8059,
+        "missing": 965,
+        "resolved": 4006
+      },
+      "sampling_frequency": {
+        "by_source": {
+          "": 72,
+          "binary_parser": 73,
+          "channels_tsv": 8,
+          "mne_bids": 4818
+        },
+        "coverage": 0.9855,
+        "missing": 72,
+        "resolved": 4899
+      }
+    },
+    "meg": {
+      "ch_names": {
+        "by_source": {
+          "": 520,
+          "mne_bids": 1829
+        },
+        "coverage": 0.7786,
+        "missing": 520,
+        "resolved": 1829
+      },
+      "duration_seconds": {
+        "by_source": {
+          "": 2349
+        },
+        "coverage": 0.0,
+        "missing": 2349,
+        "resolved": 0
+      },
+      "nchans": {
+        "by_source": {
+          "": 121,
+          "mne_bids": 2132,
+          "modality_sidecar": 96
+        },
+        "coverage": 0.9485,
+        "missing": 121,
+        "resolved": 2228
+      },
+      "ntimes": {
+        "by_source": {
+          "": 480,
+          "mne_bids": 1869
+        },
+        "coverage": 0.7957,
+        "missing": 480,
+        "resolved": 1869
+      },
+      "sampling_frequency": {
+        "by_source": {
+          "": 63,
+          "channels_tsv": 2,
+          "mne_bids": 2188,
+          "modality_sidecar": 96
+        },
+        "coverage": 0.9732,
+        "missing": 63,
+        "resolved": 2286
+      }
+    }
+  },
+  "fields": {
+    "ch_names": {
+      "by_source": {
+        "": 2253,
+        "binary_parser": 1945,
+        "mne_bids": 34824
+      },
+      "coverage": 0.9423,
+      "missing": 2253,
+      "resolved": 36769
+    },
+    "duration_seconds": {
+      "by_source": {
+        "": 39022
+      },
+      "coverage": 0.0,
+      "missing": 39022,
+      "resolved": 0
+    },
+    "nchans": {
+      "by_source": {
+        "": 1020,
+        "binary_parser": 1511,
+        "channels_tsv": 54,
+        "mne_bids": 35699,
+        "modality_sidecar": 738
+      },
+      "coverage": 0.9739,
+      "missing": 1020,
+      "resolved": 38002
+    },
+    "ntimes": {
+      "by_source": {
+        "": 6330,
+        "mne_bids": 32692
+      },
+      "coverage": 0.8378,
+      "missing": 6330,
+      "resolved": 32692
+    },
+    "sampling_frequency": {
+      "by_source": {
+        "": 960,
+        "binary_parser": 574,
+        "channels_tsv": 10,
+        "mne_bids": 35767,
+        "modality_sidecar": 1711
+      },
+      "coverage": 0.9754,
+      "missing": 960,
+      "resolved": 38062
+    }
+  },
+  "total_records": 39022
+}

@@ -47,6 +47,16 @@ class DigestConfig(BaseSettings):
         le=128,
         description="Parallel worker processes (1 = sequential).",
     )
+    n_jobs: int = Field(
+        default=1,
+        ge=1,
+        le=64,
+        description=(
+            "Per-dataset threads for the I/O-bound per-record extraction "
+            "(1 = sequential). Overlaps S3 header/sidecar fetches; total "
+            "concurrency = workers x n_jobs. Output is identical to n_jobs=1."
+        ),
+    )
     limit: int | None = Field(
         default=None,
         ge=1,
@@ -82,6 +92,7 @@ def load_digest_config_from_argv(
     parser.add_argument("--output", type=Path, default=None)
     parser.add_argument("--datasets", nargs="+", default=None)
     parser.add_argument("--workers", type=int, default=None)
+    parser.add_argument("--n-jobs", type=int, default=None)
     parser.add_argument("--limit", type=int, default=None)
     parser.add_argument(
         "--dataset-timeout",

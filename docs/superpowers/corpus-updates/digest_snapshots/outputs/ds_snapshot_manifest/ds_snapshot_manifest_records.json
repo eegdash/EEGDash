@@ -1,0 +1,129 @@
+{
+  "dataset": "ds_snapshot_manifest",
+  "source": "zenodo",
+  "digested_at": "2026-05-30T23:54:49.186914+00:00",
+  "record_count": 3,
+  "records_with_integrity_issues": 0,
+  "records": [
+    {
+      "dataset": "ds_snapshot_manifest",
+      "data_name": "ds_snapshot_manifest_sub-01_ses-01_task-rest_eeg.edf",
+      "bidspath": "ds_snapshot_manifest/sub-01/ses-01/eeg/sub-01_ses-01_task-rest_eeg.edf",
+      "bids_relpath": "sub-01/ses-01/eeg/sub-01_ses-01_task-rest_eeg.edf",
+      "datatype": "eeg",
+      "suffix": "eeg",
+      "extension": ".edf",
+      "recording_modality": [
+        "eeg"
+      ],
+      "entities": {
+        "subject": "01",
+        "session": "01",
+        "task": "rest",
+        "run": null,
+        "acquisition": null
+      },
+      "entities_mne": {
+        "subject": "01",
+        "session": "01",
+        "task": "rest",
+        "run": null,
+        "acquisition": null
+      },
+      "storage": {
+        "backend": "https",
+        "base": "https://zenodo.org/records/snapshot-manifest-12345",
+        "raw_key": "sub-01/ses-01/eeg/sub-01_ses-01_task-rest_eeg.edf",
+        "dep_keys": []
+      },
+      "ch_names": null,
+      "sampling_frequency": null,
+      "nchans": null,
+      "ntimes": null,
+      "duration_seconds": null,
+      "digested_at": "2026-05-30T23:54:49.186914+00:00",
+      "download_url": "https://zenodo.org/records/snapshot-manifest-12345/files/sub-01_ses-01_task-rest_eeg.edf",
+      "file_size": 1048576
+    },
+    {
+      "dataset": "ds_snapshot_manifest",
+      "data_name": "ds_snapshot_manifest_sub-01_ses-01_task-motor_eeg.edf",
+      "bidspath": "ds_snapshot_manifest/sub-01/ses-01/eeg/sub-01_ses-01_task-motor_eeg.edf",
+      "bids_relpath": "sub-01/ses-01/eeg/sub-01_ses-01_task-motor_eeg.edf",
+      "datatype": "eeg",
+      "suffix": "eeg",
+      "extension": ".edf",
+      "recording_modality": [
+        "eeg"
+      ],
+      "entities": {
+        "subject": "01",
+        "session": "01",
+        "task": "motor",
+        "run": null,
+        "acquisition": null
+      },
+      "entities_mne": {
+        "subject": "01",
+        "session": "01",
+        "task": "motor",
+        "run": null,
+        "acquisition": null
+      },
+      "storage": {
+        "backend": "https",
+        "base": "https://zenodo.org/records/snapshot-manifest-12345",
+        "raw_key": "sub-01/ses-01/eeg/sub-01_ses-01_task-motor_eeg.edf",
+        "dep_keys": []
+      },
+      "ch_names": null,
+      "sampling_frequency": null,
+      "nchans": null,
+      "ntimes": null,
+      "duration_seconds": null,
+      "digested_at": "2026-05-30T23:54:49.186914+00:00",
+      "download_url": "https://zenodo.org/records/snapshot-manifest-12345/files/sub-01_ses-01_task-motor_eeg.edf",
+      "file_size": 1048576
+    },
+    {
+      "dataset": "ds_snapshot_manifest",
+      "data_name": "ds_snapshot_manifest_sub-02_ses-01_task-rest_eeg.edf",
+      "bidspath": "ds_snapshot_manifest/sub-02/ses-01/eeg/sub-02_ses-01_task-rest_eeg.edf",
+      "bids_relpath": "sub-02/ses-01/eeg/sub-02_ses-01_task-rest_eeg.edf",
+      "datatype": "eeg",
+      "suffix": "eeg",
+      "extension": ".edf",
+      "recording_modality": [
+        "eeg"
+      ],
+      "entities": {
+        "subject": "02",
+        "session": "01",
+        "task": "rest",
+        "run": null,
+        "acquisition": null
+      },
+      "entities_mne": {
+        "subject": "02",
+        "session": "01",
+        "task": "rest",
+        "run": null,
+        "acquisition": null
+      },
+      "storage": {
+        "backend": "https",
+        "base": "https://zenodo.org/records/snapshot-manifest-12345",
+        "raw_key": "sub-02/ses-01/eeg/sub-02_ses-01_task-rest_eeg.edf",
+        "dep_keys": []
+      },
+      "ch_names": null,
+      "sampling_frequency": null,
+      "nchans": null,
+      "ntimes": null,
+      "duration_seconds": null,
+      "digested_at": "2026-05-30T23:54:49.186914+00:00",
+      "download_url": "https://zenodo.org/records/snapshot-manifest-12345/files/sub-02_ses-01_task-rest_eeg.edf",
+      "file_size": 1048576
+    }
+  ]
+}

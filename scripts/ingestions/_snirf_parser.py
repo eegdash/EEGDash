@@ -112,6 +112,89 @@ def parse_snirf_metadata(snirf_path: Path | str) -> dict[str, Any] | None:
         return _parse_snirf_with_h5py(snirf_path)
 
 
+def snirf_n_times_from_fileobj(fileobj: Any) -> int | None:
+    """Read the SNIRF time-axis length from a seekable file-like object.
+
+    Remote-ready counterpart to the path-based discovery in
+    :func:`_parse_snirf_with_h5py`: it opens ``fileobj`` with h5py,
+    navigates the first ``nirs*`` group then the first ``data*`` subgroup,
+    and returns ``dataTimeSeries.shape[0]`` (preferred) or, when absent,
+    the ``time`` dataset's ``.shape[0]``. Only HDF5 metadata is read —
+    ``.shape`` fetches ZERO signal elements — so an HDF5-over-Range
+    file-like (e.g. ``_remote_header.RangeReader``) stays within budget.
+
+    Parameters
+    ----------
+    fileobj : Any
+        Any seekable, read-only file-like (``read``/``seek``/``tell``),
+        such as a :class:`_remote_header.RangeReader` or
+        :class:`io.BytesIO`.
+
+    Returns
+    -------
+    int | None
+        The time-axis length, or ``None`` on any failure (never raises).
+
+    """
+    if h5py is None:
+        return None
+
+    h5 = None
+    try:
+        h5 = h5py.File(fileobj, "r")
+
+        # First group whose name starts with "nirs".
+        nirs_group = None
+        for key in h5.keys():
+            if key.startswith("nirs"):
+                nirs_group = h5[key]
+                break
+        if nirs_group is None:
+            return None
+
+        # First subgroup whose name starts with "data".
+        data_group = None
+        for data_key in nirs_group.keys():
+            if data_key.startswith("data"):
+                data_group = nirs_group[data_key]
+                break
+        if data_group is None:
+            return None
+
+        # Preferred: dataTimeSeries.shape[0]. ``.shape`` is HDF5 metadata —
+        # reads zero signal elements.
+        if "dataTimeSeries" in data_group:
+            shape = data_group["dataTimeSeries"].shape
+            if shape:
+                n = int(shape[0])
+                if n > 0:
+                    return n
+
+        # Fallback: the /time dataset length.
+        if "time" in data_group:
+            shape = data_group["time"].shape
+            if shape:
+                n = int(shape[0])
+                if n > 0:
+                    return n
+
+        return None
+
+    except (OSError, ValueError, KeyError, AttributeError, TypeError) as e:
+        # OSError = not a valid HDF5 / unreadable stream; KeyError =
+        # expected dataset missing; ValueError/AttributeError/TypeError =
+        # unexpected shape or a file-like that h5py can't drive. All are
+        # recoverable parse failures → None.
+        logger.debug("h5py SNIRF file-like parse failed: %s", e)
+        return None
+    finally:
+        if h5 is not None:
+            try:
+                h5.close()
+            except (OSError, AttributeError):
+                pass
+
+
 def _parse_snirf_with_h5py(snirf_path: Path) -> dict[str, Any] | None:
     """Fallback SNIRF parser using h5py directly.
 
@@ -150,12 +233,16 @@ def _parse_snirf_with_h5py(snirf_path: Path) -> dict[str, Any] | None:
                 if data_key.startswith("data"):
                     data_group = nirs_group[data_key]
                     if "time" in data_group:
-                        time_data = data_group["time"][:]
-                        n_time_points = len(time_data)
+                        time_ds = data_group["time"]
+                        # ``.shape`` is HDF5 metadata — reads ZERO elements,
+                        # unlike the previous ``[:]`` which loaded the whole vector.
+                        n_time_points = int(time_ds.shape[0]) if time_ds.shape else 0
                         if n_time_points > 0:
-                            result["n_times"] = int(n_time_points)
+                            result["n_times"] = n_time_points
                         if n_time_points > 1:
-                            dt = float(time_data[1] - time_data[0])
+                            # Only the first two samples are needed for the rate.
+                            first_two = time_ds[:2]
+                            dt = float(first_two[1] - first_two[0])
                             if dt > 0:
                                 result["sampling_frequency"] = float(1.0 / dt)
                     break

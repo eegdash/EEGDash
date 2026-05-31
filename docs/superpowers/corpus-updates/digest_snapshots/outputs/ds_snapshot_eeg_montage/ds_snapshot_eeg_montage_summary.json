@@ -1,0 +1,13 @@
+{
+  "status": "success",
+  "dataset_id": "ds_snapshot_eeg_montage",
+  "source": "unknown",
+  "record_count": 1,
+  "error_count": 0,
+  "integrity_issues_count": 0,
+  "montage_count": 1,
+  "dataset_file": "/tmp/claude-501/tmp3dyu4o9y/ds_snapshot_eeg_montage/ds_snapshot_eeg_montage_dataset.json",
+  "records_file": "/tmp/claude-501/tmp3dyu4o9y/ds_snapshot_eeg_montage/ds_snapshot_eeg_montage_records.json",
+  "montages_file": "/tmp/claude-501/tmp3dyu4o9y/ds_snapshot_eeg_montage/ds_snapshot_eeg_montage_montages.json",
+  "digest_method": "bids_filesystem"
+}

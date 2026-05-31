@@ -1,0 +1,30 @@
+Records analyzed: 172432
+
+Per-field coverage (resolved / total):
+  sampling_frequency    166302/172432   96.44%
+  nchans                167798/172432   97.31%
+  ntimes                153204/172432   88.85%
+  ch_names              156510/172432   90.77%
+  duration_seconds      154718/172432   89.73%
+
+ntimes by source:
+  sidecar_arithmetic      137857
+  <missing>                19228
+  binary_parser            15347
+
+Worst formats for ntimes (lowest coverage first):
+  .apr       ntimes   0.00% (0/662)
+  .gz        ntimes   0.00% (0/863)
+  .apx       ntimes   0.00% (0/59)
+  .xml       ntimes   0.00% (0/15)
+  .mefd      ntimes   4.06% (26/640)
+  .snirf     ntimes  48.85% (1361/2786)
+  .bdf       ntimes  76.58% (8625/11263)
+  .fif       ntimes  79.84% (5477/6860)
+  .edf       ntimes  85.53% (39289/45934)
+  .vhdr      ntimes  89.42% (16964/18971)
+  .ds        ntimes  89.49% (3083/3445)
+  .set       ntimes  96.84% (78367/80922)
+  .con       ntimes 100.00% (12/12)
+
+Full report written to /tmp/scale_run/coverage_full.json

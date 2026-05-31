@@ -50,12 +50,15 @@ class RecordEnumerator(ABC):
         source: str,
         source_adapter: SourceAdapter,
         digested_at: str,
+        n_jobs: int = 1,
     ) -> None:
         self.dataset_id = dataset_id
         self.dataset_dir = dataset_dir
         self.source = source
         self.source_adapter = source_adapter
         self.digested_at = digested_at
+        # Per-dataset thread parallelism for the I/O-bound per-record extraction.
+        self.n_jobs = n_jobs
 
     @abstractmethod
     def enumerate(self) -> EnumerationResult:
@@ -72,6 +75,7 @@ def get_record_enumerator(
     source: str,
     source_adapter: SourceAdapter,
     digested_at: str,
+    n_jobs: int = 1,
 ) -> RecordEnumerator:
     """Return the appropriate :class:`RecordEnumerator` for this Dataset.
 
@@ -92,7 +96,7 @@ def get_record_enumerator(
     if has_actual_files:
         try:
             return BIDSFilesystemEnumerator(
-                dataset_id, dataset_dir, source, source_adapter, digested_at
+                dataset_id, dataset_dir, source, source_adapter, digested_at, n_jobs
             )
         except (
             OSError,
@@ -119,7 +123,7 @@ def get_record_enumerator(
             dataset_id, dataset_dir, source, source_adapter, digested_at
         )
     return BIDSFilesystemEnumerator(
-        dataset_id, dataset_dir, source, source_adapter, digested_at
+        dataset_id, dataset_dir, source, source_adapter, digested_at, n_jobs
     )
 
 
@@ -175,6 +179,7 @@ class BIDSFilesystemEnumerator(RecordEnumerator):
             manifest_data=load_manifest_or_summary(
                 self.dataset_dir, self.dataset_dir.name
             )[0],
+            n_jobs=self.n_jobs,
         )
 
 

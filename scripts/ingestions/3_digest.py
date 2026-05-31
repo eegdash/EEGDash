@@ -5,6 +5,7 @@ Produces one Dataset doc (discovery/filtering) and one Record doc per file (load
 See ``python 3_digest.py --help``.
 """
 
+import functools
 import json
 import logging
 import os
@@ -315,8 +316,14 @@ def digest_dataset(
     dataset_id: str,
     input_dir: Path,
     output_dir: Path,
+    *,
+    n_jobs: int = 1,
 ) -> dict[str, Any]:
-    """Digest a single dataset; write dataset/records/montages/summary JSON and return the summary."""
+    """Digest a single dataset; write dataset/records/montages/summary JSON and return the summary.
+
+    ``n_jobs`` is the per-dataset thread parallelism for the I/O-bound per-record
+    extraction (bound via ``functools.partial`` so it crosses the subprocess boundary).
+    """
     dataset_dir = input_dir / dataset_id
     dataset_output_dir = output_dir / dataset_id
 
@@ -341,7 +348,7 @@ def digest_dataset(
     try:
         has_manifest = (dataset_dir / "manifest.json").exists()
         enumerator = get_record_enumerator(
-            dataset_id, dataset_dir, source, source_adapter, digested_at
+            dataset_id, dataset_dir, source, source_adapter, digested_at, n_jobs=n_jobs
         )
 
         result, fallback_summary = _run_enumerator_with_manifest_fallback(
@@ -479,12 +486,16 @@ def main():
         dataset_ids = dataset_ids[: cfg.limit]
 
     print(f"Found {len(dataset_ids)} datasets to digest")
-    print(f"Workers: {cfg.workers}")
+    print(f"Workers: {cfg.workers}  (n_jobs per dataset: {cfg.n_jobs})")
     print(f"Dataset timeout: {cfg.dataset_timeout:g}s")
     print_stall_boundary_diagnostics(dataset_ids, cfg.input)
     print("=" * 60)
 
     cfg.output.mkdir(parents=True, exist_ok=True)
+
+    # Bind n_jobs so it crosses the subprocess boundary (the runner calls
+    # digest_fn(dataset_id, input, output) positionally).
+    digest_fn = functools.partial(digest_dataset, n_jobs=cfg.n_jobs)
 
     results, stats = process_datasets_with_watchdog(
         dataset_ids,
@@ -492,7 +503,7 @@ def main():
         cfg.output,
         workers=cfg.workers,
         dataset_timeout=cfg.dataset_timeout,
-        digest_fn=digest_dataset,
+        digest_fn=digest_fn,
     )
 
     batch_summary = {

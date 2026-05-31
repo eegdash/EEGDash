@@ -11,6 +11,7 @@ files, builds one record each (montage attach + telemetry), and assembles the
 from __future__ import annotations
 
 import logging
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from typing import Any
 
@@ -89,19 +90,20 @@ def _attach_montage_to_record(
     return errors
 
 
-def _build_one_record_from_bids(
+def _extract_record_safe(
     bids_dataset: Any,
     bids_file: Any,
     dataset_id: str,
     source: str,
     source_adapter: SourceAdapter,
     digested_at: str,
-    dataset_dir: Path,
-    montages: dict[str, dict[str, Any]],
-    montage_cache: dict[tuple[str, int], tuple[str, dict[str, Any]]] | None = None,
-) -> tuple[dict[str, Any] | None, list[dict[str, Any]]]:
-    """Extract one Record, attach its montage, emit telemetry; returns (record_or_None, errors)."""
-    errors: list[dict[str, Any]] = []
+) -> tuple[dict[str, Any] | None, Exception | None]:
+    """Run ``extract_record`` (the network-bound, per-file, side-effect-free step).
+
+    Returns ``(record, None)`` or ``(None, exception)``. Pure w.r.t. shared state
+    (no montage/telemetry mutation), so it is safe to call from many threads at
+    once — the I/O-bound cascade fetches then overlap instead of serialising.
+    """
     try:
         record = extract_record(
             bids_dataset,
@@ -111,14 +113,36 @@ def _build_one_record_from_bids(
             digested_at,
             source_adapter=source_adapter,
         )
+        return record, None
     except (OSError, ValueError, KeyError, TypeError, AttributeError) as e:
-        errors.append({"file": str(bids_file), "error": str(e)})
+        return None, e
+
+
+def _finish_record_from_bids(
+    record: dict[str, Any] | None,
+    extract_exc: Exception | None,
+    bids_file: Any,
+    dataset_id: str,
+    digested_at: str,
+    dataset_dir: Path,
+    montages: dict[str, dict[str, Any]],
+    montage_cache: dict[tuple[str, int], tuple[str, dict[str, Any]]] | None = None,
+) -> tuple[dict[str, Any] | None, list[dict[str, Any]]]:
+    """Post-extract steps that MUTATE shared state — must run sequentially in file order.
+
+    Split-FIF gate, montage attach (writes ``montages`` / ``montage_cache``) and
+    telemetry. Keeping this serial makes the parallel and serial paths produce
+    byte-identical output (same records, same montage "first_seen", same event order).
+    """
+    errors: list[dict[str, Any]] = []
+    if extract_exc is not None:
+        errors.append({"file": str(bids_file), "error": str(extract_exc)})
         get_emitter().emit(
             TelemetryEvent(
                 event_kind="record_failed",
                 dataset_id=dataset_id,
                 record_id=str(bids_file),
-                payload={"bids_file": str(bids_file), "error": str(e)},
+                payload={"bids_file": str(bids_file), "error": str(extract_exc)},
             )
         )
         return None, errors
@@ -174,6 +198,37 @@ def _build_one_record_from_bids(
     return record, errors
 
 
+def _build_one_record_from_bids(
+    bids_dataset: Any,
+    bids_file: Any,
+    dataset_id: str,
+    source: str,
+    source_adapter: SourceAdapter,
+    digested_at: str,
+    dataset_dir: Path,
+    montages: dict[str, dict[str, Any]],
+    montage_cache: dict[tuple[str, int], tuple[str, dict[str, Any]]] | None = None,
+) -> tuple[dict[str, Any] | None, list[dict[str, Any]]]:
+    """Extract one Record, attach its montage, emit telemetry; returns (record_or_None, errors).
+
+    Thin wrapper = :func:`_extract_record_safe` (parallelisable) then
+    :func:`_finish_record_from_bids` (sequential). The serial digest path.
+    """
+    record, exc = _extract_record_safe(
+        bids_dataset, bids_file, dataset_id, source, source_adapter, digested_at
+    )
+    return _finish_record_from_bids(
+        record,
+        exc,
+        bids_file,
+        dataset_id,
+        digested_at,
+        dataset_dir,
+        montages,
+        montage_cache=montage_cache,
+    )
+
+
 def _enumerate_via_bids(
     dataset_dir: Path,
     dataset_id: str,
@@ -182,8 +237,15 @@ def _enumerate_via_bids(
     digested_at: str,
     bids_dataset,
     manifest_data: dict | None = None,
+    n_jobs: int = 1,
 ) -> EnumerationResult:
-    """Walk the BIDS filesystem and build an EnumerationResult."""
+    """Walk the BIDS filesystem and build an EnumerationResult.
+
+    With ``n_jobs > 1`` the per-file ``extract_record`` (the network-bound cascade)
+    runs in a thread pool while the montage/telemetry post-step stays sequential in
+    file order — so the output is byte-identical to the serial path, just faster on
+    I/O-bound corpora. ``n_jobs`` multiplies the dataset-level ``--workers``.
+    """
     files = bids_dataset.get_files()
     if not files:
         return EnumerationResult(
@@ -223,23 +285,55 @@ def _enumerate_via_bids(
     # MEG layouts are device-defined and identical for the same nchans; cache to avoid re-extraction.
     meg_montage_cache: dict[tuple[str, int], tuple[str, dict[str, Any]]] = {}
 
-    for bids_file in files:
-        if not is_neuro_data_file(str(bids_file)):
-            continue
-        record, per_file_errors = _build_one_record_from_bids(
-            bids_dataset=bids_dataset,
-            bids_file=bids_file,
-            dataset_id=dataset_id,
-            source=source,
-            source_adapter=source_adapter,
-            digested_at=digested_at,
-            dataset_dir=dataset_dir,
-            montages=montages,
-            montage_cache=meg_montage_cache,
-        )
-        errors.extend(per_file_errors)
-        if record is not None:
-            records.append(record)
+    neuro_files = [f for f in files if is_neuro_data_file(str(f))]
+
+    if n_jobs and n_jobs > 1 and len(neuro_files) > 1:
+        # Parallel: overlap the network-bound extract_record across threads, then
+        # finish (montage/telemetry) SEQUENTIALLY in file order — output identical.
+        with ThreadPoolExecutor(max_workers=int(n_jobs)) as executor:
+            futures = [
+                executor.submit(
+                    _extract_record_safe,
+                    bids_dataset,
+                    bids_file,
+                    dataset_id,
+                    source,
+                    source_adapter,
+                    digested_at,
+                )
+                for bids_file in neuro_files
+            ]
+            extracted = [fut.result() for fut in futures]
+        for bids_file, (record, exc) in zip(neuro_files, extracted):
+            rec, per_file_errors = _finish_record_from_bids(
+                record,
+                exc,
+                bids_file,
+                dataset_id,
+                digested_at,
+                dataset_dir,
+                montages,
+                montage_cache=meg_montage_cache,
+            )
+            errors.extend(per_file_errors)
+            if rec is not None:
+                records.append(rec)
+    else:
+        for bids_file in neuro_files:
+            record, per_file_errors = _build_one_record_from_bids(
+                bids_dataset=bids_dataset,
+                bids_file=bids_file,
+                dataset_id=dataset_id,
+                source=source,
+                source_adapter=source_adapter,
+                digested_at=digested_at,
+                dataset_dir=dataset_dir,
+                montages=montages,
+                montage_cache=meg_montage_cache,
+            )
+            errors.extend(per_file_errors)
+            if record is not None:
+                records.append(record)
 
     return EnumerationResult(
         dataset_meta=dataset_meta,

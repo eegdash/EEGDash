@@ -1,0 +1,923 @@
+{
+  "by_format": {
+    ".apr": {
+      "ch_names": {
+        "by_source": {
+          "": 662
+        },
+        "coverage": 0.0,
+        "missing": 662,
+        "resolved": 0
+      },
+      "duration_seconds": {
+        "by_source": {
+          "": 662
+        },
+        "coverage": 0.0,
+        "missing": 662,
+        "resolved": 0
+      },
+      "nchans": {
+        "by_source": {
+          "": 662
+        },
+        "coverage": 0.0,
+        "missing": 662,
+        "resolved": 0
+      },
+      "ntimes": {
+        "by_source": {
+          "": 662
+        },
+        "coverage": 0.0,
+        "missing": 662,
+        "resolved": 0
+      },
+      "sampling_frequency": {
+        "by_source": {
+          "": 662
+        },
+        "coverage": 0.0,
+        "missing": 662,
+        "resolved": 0
+      }
+    },
+    ".apx": {
+      "ch_names": {
+        "by_source": {
+          "": 59
+        },
+        "coverage": 0.0,
+        "missing": 59,
+        "resolved": 0
+      },
+      "duration_seconds": {
+        "by_source": {
+          "": 59
+        },
+        "coverage": 0.0,
+        "missing": 59,
+        "resolved": 0
+      },
+      "nchans": {
+        "by_source": {
+          "": 59
+        },
+        "coverage": 0.0,
+        "missing": 59,
+        "resolved": 0
+      },
+      "ntimes": {
+        "by_source": {
+          "": 59
+        },
+        "coverage": 0.0,
+        "missing": 59,
+        "resolved": 0
+      },
+      "sampling_frequency": {
+        "by_source": {
+          "": 59
+        },
+        "coverage": 0.0,
+        "missing": 59,
+        "resolved": 0
+      }
+    },
+    ".bdf": {
+      "ch_names": {
+        "by_source": {
+          "": 937,
+          "mne_bids": 10326
+        },
+        "coverage": 0.9168,
+        "missing": 937,
+        "resolved": 10326
+      },
+      "duration_seconds": {
+        "by_source": {
+          "": 1124,
+          "sidecar_arithmetic": 10139
+        },
+        "coverage": 0.9002,
+        "missing": 1124,
+        "resolved": 10139
+      },
+      "nchans": {
+        "by_source": {
+          "": 359,
+          "mne_bids": 10648,
+          "modality_sidecar": 256
+        },
+        "coverage": 0.9681,
+        "missing": 359,
+        "resolved": 10904
+      },
+      "ntimes": {
+        "by_source": {
+          "": 2638,
+          "sidecar_arithmetic": 8625
+        },
+        "coverage": 0.7658,
+        "missing": 2638,
+        "resolved": 8625
+      },
+      "sampling_frequency": {
+        "by_source": {
+          "": 1585,
+          "mne_bids": 9374,
+          "modality_sidecar": 304
+        },
+        "coverage": 0.8593,
+        "missing": 1585,
+        "resolved": 9678
+      }
+    },
+    ".con": {
+      "ch_names": {
+        "by_source": {
+          "mne_bids": 12
+        },
+        "coverage": 1.0,
+        "missing": 0,
+        "resolved": 12
+      },
+      "duration_seconds": {
+        "by_source": {
+          "sidecar_arithmetic": 12
+        },
+        "coverage": 1.0,
+        "missing": 0,
+        "resolved": 12
+      },
+      "nchans": {
+        "by_source": {
+          "mne_bids": 12
+        },
+        "coverage": 1.0,
+        "missing": 0,
+        "resolved": 12
+      },
+      "ntimes": {
+        "by_source": {
+          "sidecar_arithmetic": 12
+        },
+        "coverage": 1.0,
+        "missing": 0,
+        "resolved": 12
+      },
+      "sampling_frequency": {
+        "by_source": {
+          "mne_bids": 12
+        },
+        "coverage": 1.0,
+        "missing": 0,
+        "resolved": 12
+      }
+    },
+    ".ds": {
+      "ch_names": {
+        "by_source": {
+          "": 500,
+          "mne_bids": 2945
+        },
+        "coverage": 0.8549,
+        "missing": 500,
+        "resolved": 2945
+      },
+      "duration_seconds": {
+        "by_source": {
+          "": 362,
+          "sidecar_arithmetic": 3083
+        },
+        "coverage": 0.8949,
+        "missing": 362,
+        "resolved": 3083
+      },
+      "nchans": {
+        "by_source": {
+          "": 197,
+          "mne_bids": 3248
+        },
+        "coverage": 0.9428,
+        "missing": 197,
+        "resolved": 3248
+      },
+      "ntimes": {
+        "by_source": {
+          "": 362,
+          "sidecar_arithmetic": 3083
+        },
+        "coverage": 0.8949,
+        "missing": 362,
+        "resolved": 3083
+      },
+      "sampling_frequency": {
+        "by_source": {
+          "": 41,
+          "channels_tsv": 2,
+          "mne_bids": 3312,
+          "modality_sidecar": 90
+        },
+        "coverage": 0.9881,
+        "missing": 41,
+        "resolved": 3404
+      }
+    },
+    ".edf": {
+      "ch_names": {
+        "by_source": {
+          "": 7551,
+          "mne_bids": 38383
+        },
+        "coverage": 0.8356,
+        "missing": 7551,
+        "resolved": 38383
+      },
+      "duration_seconds": {
+        "by_source": {
+          "": 6645,
+          "sidecar_arithmetic": 39289
+        },
+        "coverage": 0.8553,
+        "missing": 6645,
+        "resolved": 39289
+      },
+      "nchans": {
+        "by_source": {
+          "": 436,
+          "mne_bids": 45165,
+          "modality_sidecar": 333
+        },
+        "coverage": 0.9905,
+        "missing": 436,
+        "resolved": 45498
+      },
+      "ntimes": {
+        "by_source": {
+          "": 6645,
+          "sidecar_arithmetic": 39289
+        },
+        "coverage": 0.8553,
+        "missing": 6645,
+        "resolved": 39289
+      },
+      "sampling_frequency": {
+        "by_source": {
+          "": 436,
+          "channels_tsv": 9,
+          "mne_bids": 44976,
+          "modality_sidecar": 513
+        },
+        "coverage": 0.9905,
+        "missing": 436,
+        "resolved": 45498
+      }
+    },
+    ".fif": {
+      "ch_names": {
+        "by_source": {
+          "": 850,
+          "mne_bids": 6010
+        },
+        "coverage": 0.8761,
+        "missing": 850,
+        "resolved": 6010
+      },
+      "duration_seconds": {
+        "by_source": {
+          "": 1383,
+          "sidecar_arithmetic": 5477
+        },
+        "coverage": 0.7984,
+        "missing": 1383,
+        "resolved": 5477
+      },
+      "nchans": {
+        "by_source": {
+          "": 352,
+          "channels_tsv": 24,
+          "mne_bids": 6100,
+          "modality_sidecar": 384
+        },
+        "coverage": 0.9487,
+        "missing": 352,
+        "resolved": 6508
+      },
+      "ntimes": {
+        "by_source": {
+          "": 1383,
+          "sidecar_arithmetic": 5477
+        },
+        "coverage": 0.7984,
+        "missing": 1383,
+        "resolved": 5477
+      },
+      "sampling_frequency": {
+        "by_source": {
+          "": 711,
+          "channels_tsv": 24,
+          "mne_bids": 5741,
+          "modality_sidecar": 384
+        },
+        "coverage": 0.8964,
+        "missing": 711,
+        "resolved": 6149
+      }
+    },
+    ".gz": {
+      "ch_names": {
+        "by_source": {
+          "": 863
+        },
+        "coverage": 0.0,
+        "missing": 863,
+        "resolved": 0
+      },
+      "duration_seconds": {
+        "by_source": {
+          "": 863
+        },
+        "coverage": 0.0,
+        "missing": 863,
+        "resolved": 0
+      },
+      "nchans": {
+        "by_source": {
+          "": 863
+        },
+        "coverage": 0.0,
+        "missing": 863,
+        "resolved": 0
+      },
+      "ntimes": {
+        "by_source": {
+          "": 863
+        },
+        "coverage": 0.0,
+        "missing": 863,
+        "resolved": 0
+      },
+      "sampling_frequency": {
+        "by_source": {
+          "": 863
+        },
+        "coverage": 0.0,
+        "missing": 863,
+        "resolved": 0
+      }
+    },
+    ".mefd": {
+      "ch_names": {
+        "by_source": {
+          "binary_parser": 615,
+          "mne_bids": 25
+        },
+        "coverage": 1.0,
+        "missing": 0,
+        "resolved": 640
+      },
+      "duration_seconds": {
+        "by_source": {
+          "": 614,
+          "sidecar_arithmetic": 26
+        },
+        "coverage": 0.0406,
+        "missing": 614,
+        "resolved": 26
+      },
+      "nchans": {
+        "by_source": {
+          "binary_parser": 614,
+          "mne_bids": 25,
+          "modality_sidecar": 1
+        },
+        "coverage": 1.0,
+        "missing": 0,
+        "resolved": 640
+      },
+      "ntimes": {
+        "by_source": {
+          "": 614,
+          "sidecar_arithmetic": 26
+        },
+        "coverage": 0.0406,
+        "missing": 614,
+        "resolved": 26
+      },
+      "sampling_frequency": {
+        "by_source": {
+          "mne_bids": 640
+        },
+        "coverage": 1.0,
+        "missing": 0,
+        "resolved": 640
+      }
+    },
+    ".set": {
+      "ch_names": {
+        "by_source": {
+          "": 2944,
+          "mne_bids": 77978
+        },
+        "coverage": 0.9636,
+        "missing": 2944,
+        "resolved": 77978
+      },
+      "duration_seconds": {
+        "by_source": {
+          "": 2555,
+          "sidecar_arithmetic": 78367
+        },
+        "coverage": 0.9684,
+        "missing": 2555,
+        "resolved": 78367
+      },
+      "nchans": {
+        "by_source": {
+          "": 496,
+          "channels_tsv": 216,
+          "mne_bids": 78587,
+          "modality_sidecar": 1623
+        },
+        "coverage": 0.9939,
+        "missing": 496,
+        "resolved": 80426
+      },
+      "ntimes": {
+        "by_source": {
+          "": 2555,
+          "sidecar_arithmetic": 78367
+        },
+        "coverage": 0.9684,
+        "missing": 2555,
+        "resolved": 78367
+      },
+      "sampling_frequency": {
+        "by_source": {
+          "": 497,
+          "channels_tsv": 216,
+          "mne_bids": 78174,
+          "modality_sidecar": 2035
+        },
+        "coverage": 0.9939,
+        "missing": 497,
+        "resolved": 80425
+      }
+    },
+    ".snirf": {
+      "ch_names": {
+        "by_source": {
+          "": 234,
+          "mne_bids": 2552
+        },
+        "coverage": 0.916,
+        "missing": 234,
+        "resolved": 2552
+      },
+      "duration_seconds": {
+        "by_source": {
+          "": 1425,
+          "sidecar_arithmetic": 1361
+        },
+        "coverage": 0.4885,
+        "missing": 1425,
+        "resolved": 1361
+      },
+      "nchans": {
+        "by_source": {
+          "mne_bids": 2786
+        },
+        "coverage": 1.0,
+        "missing": 0,
+        "resolved": 2786
+      },
+      "ntimes": {
+        "by_source": {
+          "": 1425,
+          "sidecar_arithmetic": 1361
+        },
+        "coverage": 0.4885,
+        "missing": 1425,
+        "resolved": 1361
+      },
+      "sampling_frequency": {
+        "by_source": {
+          "": 67,
+          "mne_bids": 2719
+        },
+        "coverage": 0.976,
+        "missing": 67,
+        "resolved": 2719
+      }
+    },
+    ".vhdr": {
+      "ch_names": {
+        "by_source": {
+          "": 1307,
+          "binary_parser": 3155,
+          "mne_bids": 14509
+        },
+        "coverage": 0.9311,
+        "missing": 1307,
+        "resolved": 17664
+      },
+      "duration_seconds": {
+        "by_source": {
+          "": 2007,
+          "derived": 15347,
+          "sidecar_arithmetic": 1617
+        },
+        "coverage": 0.8942,
+        "missing": 2007,
+        "resolved": 16964
+      },
+      "nchans": {
+        "by_source": {
+          "": 1195,
+          "binary_parser": 1579,
+          "channels_tsv": 54,
+          "mne_bids": 15789,
+          "modality_sidecar": 354
+        },
+        "coverage": 0.937,
+        "missing": 1195,
+        "resolved": 17776
+      },
+      "ntimes": {
+        "by_source": {
+          "": 2007,
+          "binary_parser": 15347,
+          "sidecar_arithmetic": 1617
+        },
+        "coverage": 0.8942,
+        "missing": 2007,
+        "resolved": 16964
+      },
+      "sampling_frequency": {
+        "by_source": {
+          "": 1194,
+          "binary_parser": 774,
+          "mne_bids": 16169,
+          "modality_sidecar": 834
+        },
+        "coverage": 0.9371,
+        "missing": 1194,
+        "resolved": 17777
+      }
+    },
+    ".xml": {
+      "ch_names": {
+        "by_source": {
+          "": 15
+        },
+        "coverage": 0.0,
+        "missing": 15,
+        "resolved": 0
+      },
+      "duration_seconds": {
+        "by_source": {
+          "": 15
+        },
+        "coverage": 0.0,
+        "missing": 15,
+        "resolved": 0
+      },
+      "nchans": {
+        "by_source": {
+          "": 15
+        },
+        "coverage": 0.0,
+        "missing": 15,
+        "resolved": 0
+      },
+      "ntimes": {
+        "by_source": {
+          "": 15
+        },
+        "coverage": 0.0,
+        "missing": 15,
+        "resolved": 0
+      },
+      "sampling_frequency": {
+        "by_source": {
+          "": 15
+        },
+        "coverage": 0.0,
+        "missing": 15,
+        "resolved": 0
+      }
+    }
+  },
+  "by_modality": {
+    "eeg": {
+      "ch_names": {
+        "by_source": {
+          "": 11461,
+          "binary_parser": 3082,
+          "mne_bids": 122969
+        },
+        "coverage": 0.9167,
+        "missing": 11461,
+        "resolved": 126051
+      },
+      "duration_seconds": {
+        "by_source": {
+          "": 11413,
+          "derived": 14013,
+          "sidecar_arithmetic": 112086
+        },
+        "coverage": 0.917,
+        "missing": 11413,
+        "resolved": 126099
+      },
+      "nchans": {
+        "by_source": {
+          "": 4013,
+          "binary_parser": 1506,
+          "channels_tsv": 270,
+          "mne_bids": 129158,
+          "modality_sidecar": 2565
+        },
+        "coverage": 0.9708,
+        "missing": 4013,
+        "resolved": 133499
+      },
+      "ntimes": {
+        "by_source": {
+          "": 11413,
+          "binary_parser": 14013,
+          "sidecar_arithmetic": 112086
+        },
+        "coverage": 0.917,
+        "missing": 11413,
+        "resolved": 126099
+      },
+      "sampling_frequency": {
+        "by_source": {
+          "": 3725,
+          "binary_parser": 701,
+          "channels_tsv": 217,
+          "mne_bids": 129183,
+          "modality_sidecar": 3686
+        },
+        "coverage": 0.9729,
+        "missing": 3725,
+        "resolved": 133787
+      }
+    },
+    "emg": {
+      "ch_names": {
+        "by_source": {
+          "": 2804,
+          "mne_bids": 3739
+        },
+        "coverage": 0.5715,
+        "missing": 2804,
+        "resolved": 3739
+      },
+      "duration_seconds": {
+        "by_source": {
+          "sidecar_arithmetic": 6543
+        },
+        "coverage": 1.0,
+        "missing": 0,
+        "resolved": 6543
+      },
+      "nchans": {
+        "by_source": {
+          "mne_bids": 6543
+        },
+        "coverage": 1.0,
+        "missing": 0,
+        "resolved": 6543
+      },
+      "ntimes": {
+        "by_source": {
+          "": 1514,
+          "sidecar_arithmetic": 5029
+        },
+        "coverage": 0.7686,
+        "missing": 1514,
+        "resolved": 5029
+      },
+      "sampling_frequency": {
+        "by_source": {
+          "": 1514,
+          "mne_bids": 5029
+        },
+        "coverage": 0.7686,
+        "missing": 1514,
+        "resolved": 5029
+      }
+    },
+    "fnirs": {
+      "ch_names": {
+        "by_source": {
+          "": 234,
+          "mne_bids": 2552
+        },
+        "coverage": 0.916,
+        "missing": 234,
+        "resolved": 2552
+      },
+      "duration_seconds": {
+        "by_source": {
+          "": 1425,
+          "sidecar_arithmetic": 1361
+        },
+        "coverage": 0.4885,
+        "missing": 1425,
+        "resolved": 1361
+      },
+      "nchans": {
+        "by_source": {
+          "mne_bids": 2786
+        },
+        "coverage": 1.0,
+        "missing": 0,
+        "resolved": 2786
+      },
+      "ntimes": {
+        "by_source": {
+          "": 1425,
+          "sidecar_arithmetic": 1361
+        },
+        "coverage": 0.4885,
+        "missing": 1425,
+        "resolved": 1361
+      },
+      "sampling_frequency": {
+        "by_source": {
+          "": 67,
+          "mne_bids": 2719
+        },
+        "coverage": 0.976,
+        "missing": 67,
+        "resolved": 2719
+      }
+    },
+    "ieeg": {
+      "ch_names": {
+        "by_source": {
+          "": 73,
+          "binary_parser": 688,
+          "mne_bids": 14513
+        },
+        "coverage": 0.9952,
+        "missing": 73,
+        "resolved": 15201
+      },
+      "duration_seconds": {
+        "by_source": {
+          "": 3131,
+          "derived": 1334,
+          "sidecar_arithmetic": 10809
+        },
+        "coverage": 0.795,
+        "missing": 3131,
+        "resolved": 12143
+      },
+      "nchans": {
+        "by_source": {
+          "": 72,
+          "binary_parser": 687,
+          "mne_bids": 14513,
+          "modality_sidecar": 2
+        },
+        "coverage": 0.9953,
+        "missing": 72,
+        "resolved": 15202
+      },
+      "ntimes": {
+        "by_source": {
+          "": 3131,
+          "binary_parser": 1334,
+          "sidecar_arithmetic": 10809
+        },
+        "coverage": 0.795,
+        "missing": 3131,
+        "resolved": 12143
+      },
+      "sampling_frequency": {
+        "by_source": {
+          "": 72,
+          "binary_parser": 73,
+          "channels_tsv": 8,
+          "mne_bids": 15121
+        },
+        "coverage": 0.9953,
+        "missing": 72,
+        "resolved": 15202
+      }
+    },
+    "meg": {
+      "ch_names": {
+        "by_source": {
+          "": 1350,
+          "mne_bids": 8967
+        },
+        "coverage": 0.8691,
+        "missing": 1350,
+        "resolved": 8967
+      },
+      "duration_seconds": {
+        "by_source": {
+          "": 1745,
+          "sidecar_arithmetic": 8572
+        },
+        "coverage": 0.8309,
+        "missing": 1745,
+        "resolved": 8572
+      },
+      "nchans": {
+        "by_source": {
+          "": 549,
+          "channels_tsv": 24,
+          "mne_bids": 9360,
+          "modality_sidecar": 384
+        },
+        "coverage": 0.9468,
+        "missing": 549,
+        "resolved": 9768
+      },
+      "ntimes": {
+        "by_source": {
+          "": 1745,
+          "sidecar_arithmetic": 8572
+        },
+        "coverage": 0.8309,
+        "missing": 1745,
+        "resolved": 8572
+      },
+      "sampling_frequency": {
+        "by_source": {
+          "": 752,
+          "channels_tsv": 26,
+          "mne_bids": 9065,
+          "modality_sidecar": 474
+        },
+        "coverage": 0.9271,
+        "missing": 752,
+        "resolved": 9565
+      }
+    }
+  },
+  "fields": {
+    "ch_names": {
+      "by_source": {
+        "": 15922,
+        "binary_parser": 3770,
+        "mne_bids": 152740
+      },
+      "coverage": 0.9077,
+      "missing": 15922,
+      "resolved": 156510
+    },
+    "duration_seconds": {
+      "by_source": {
+        "": 17714,
+        "derived": 15347,
+        "sidecar_arithmetic": 139371
+      },
+      "coverage": 0.8973,
+      "missing": 17714,
+      "resolved": 154718
+    },
+    "nchans": {
+      "by_source": {
+        "": 4634,
+        "binary_parser": 2193,
+        "channels_tsv": 294,
+        "mne_bids": 162360,
+        "modality_sidecar": 2951
+      },
+      "coverage": 0.9731,
+      "missing": 4634,
+      "resolved": 167798
+    },
+    "ntimes": {
+      "by_source": {
+        "": 19228,
+        "binary_parser": 15347,
+        "sidecar_arithmetic": 137857
+      },
+      "coverage": 0.8885,
+      "missing": 19228,
+      "resolved": 153204
+    },
+    "sampling_frequency": {
+      "by_source": {
+        "": 6130,
+        "binary_parser": 774,
+        "channels_tsv": 251,
+        "mne_bids": 161117,
+        "modality_sidecar": 4160
+      },
+      "coverage": 0.9644,
+      "missing": 6130,
+      "resolved": 166302
+    }
+  },
+  "total_records": 172432
+}

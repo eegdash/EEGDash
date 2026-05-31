@@ -1,0 +1,25 @@
+Records analyzed: 39022
+
+Per-field coverage (resolved / total):
+  sampling_frequency     38062/39022    97.54%
+  nchans                 38002/39022    97.39%
+  ntimes                 32692/39022    83.78%
+  ch_names               36769/39022    94.23%
+  duration_seconds           0/39022     0.00%
+
+ntimes by source:
+  mne_bids                 32692
+  <missing>                 6330
+
+Worst formats for ntimes (lowest coverage first):
+  .mefd      ntimes   3.91% (25/639)
+  .fif       ntimes  69.78% (291/417)
+  .vhdr      ntimes  76.78% (5633/7337)
+  .ds        ntimes  81.56% (1566/1920)
+  .set       ntimes  86.75% (11958/13785)
+  .edf       ntimes  88.36% (10511/11896)
+  .bdf       ntimes  88.91% (2453/2759)
+  .snirf     ntimes  94.55% (243/257)
+  .con       ntimes 100.00% (12/12)
+
+Full report written to ../../docs/superpowers/corpus-updates/coverage/coverage_before.json

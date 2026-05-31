@@ -1,0 +1,18 @@
+Definitive corpus re-digest: remote headers ON + --workers 12 --n-jobs 6
+683/685 datasets, 171,644 records, ~28 min (timeout-free; serial-remote run lost 24k records to timeouts).
+
+Field                 no-flag baseline -> remote+n_jobs
+ntimes                88.85%  ->  93.30%
+duration_seconds      89.73%  ->  94.14%
+
+ntimes by source (after): sidecar_arithmetic 87,675 (51.1%) | remote_header 44,109 (25.7%)
+  | binary_parser 15,348 (8.9%) | size_arithmetic 13,015 (7.6%) | missing 11,497 (6.7%)
+
+ntimes by format (baseline -> after):
+  .edf    85.5% -> 94.3%      .bdf   76.6% -> 84.6%
+  .mefd    4.1% -> 100.0%     .snirf 48.9% -> 98.2%
+  .set    96.8% -> 97.9%      .vhdr  89.4% (already file-size)
+  .ds/.fif unchanged (not wired) ; .apr/.apx/.gz 0% (no parser)
+
+Per-file byte cost: EDF/BDF 256 B, MEF3 ~16 KB (.tmet), SNIRF ~196 KB (HDF5 metadata),
+SET/.fdt + VHDR/.eeg = 0 bytes (annex key). Zero signal bytes anywhere.

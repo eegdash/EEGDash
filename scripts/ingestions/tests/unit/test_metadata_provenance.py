@@ -16,14 +16,17 @@ from eegdash.testing import data_file
 # ─── _empty_provenance / _stamp_provenance ────────────────────────────────
 
 
-def test_empty_provenance_has_all_four_fields():
+def test_empty_provenance_has_all_metadata_fields():
     digest = load_digest()
     p = digest._empty_provenance()
+    # _METADATA_FIELDS is the single source of truth (imported from the cascade);
+    # it includes duration_seconds, so this can never diverge again.
     assert set(p.keys()) == {
         "sampling_frequency",
         "nchans",
         "ntimes",
         "ch_names",
+        "duration_seconds",
     }
     assert all(v is None for v in p.values())
 
@@ -195,6 +198,7 @@ def test_bids_snapshot_record_has_metadata_provenance():
         "nchans",
         "ntimes",
         "ch_names",
+        "duration_seconds",
     }
     valid_sources = {
         "mne_bids",
@@ -202,6 +206,10 @@ def test_bids_snapshot_record_has_metadata_provenance():
         "channels_tsv",
         "binary_parser",
         "mne_fallback",
+        "sidecar_arithmetic",
+        "derived",
+        "size_arithmetic",
+        "remote_header",
         None,
     }
     for field, source in provenance.items():
@@ -214,7 +222,10 @@ def test_bids_snapshot_provenance_matches_expected_cascade():
     """The VHDR fixture has no sidecars; cascade should fall through to binary_parser.
 
     - sampling_frequency, nchans, ch_names → binary_parser (.vhdr reader)
-    - ntimes → mne_fallback (VHDR header omits n_times; MNE computes it from the binary)
+    - ntimes → binary_parser (the .vhdr reader now derives n_times from the
+      ``.eeg`` file size, so the MNE ``read_raw_brainvision`` fallback no longer
+      fires — see Phase 2 cheap paths). Certified equal to MNE by
+      tests/validation/test_mne_equivalence.py.
     """
     snapshot_path = data_file(
         "digest_snapshots/outputs/ds_snapshot_vhdr/ds_snapshot_vhdr_records.json"
@@ -224,7 +235,7 @@ def test_bids_snapshot_provenance_matches_expected_cascade():
     assert provenance["sampling_frequency"] == "binary_parser"
     assert provenance["nchans"] == "binary_parser"
     assert provenance["ch_names"] == "binary_parser"
-    assert provenance["ntimes"] == "mne_fallback"
+    assert provenance["ntimes"] == "binary_parser"
 
 
 def test_manifest_snapshot_records_have_no_provenance():

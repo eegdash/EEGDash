@@ -876,6 +876,7 @@ class Record(TypedDict, total=False):
     sampling_frequency: float | None
     nchans: int | None
     ntimes: int | None
+    duration_seconds: float | None
     digested_at: str
     montage_hash: str | None
 
@@ -1024,6 +1025,7 @@ def create_record(
     sampling_frequency: float | None = None,
     nchans: int | None = None,
     ntimes: int | None = None,
+    duration_seconds: float | None = None,
     digested_at: str | None = None,
     annex_keys: dict[str, str] | None = None,
     sidecar_inline: dict[str, str] | None = None,
@@ -1144,6 +1146,7 @@ def create_record(
         sampling_frequency=sampling_frequency,
         nchans=nchans,
         ntimes=ntimes,
+        duration_seconds=duration_seconds,
         digested_at=digested_at
         or datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
     )

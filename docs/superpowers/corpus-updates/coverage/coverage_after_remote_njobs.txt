@@ -1,0 +1,32 @@
+Records analyzed: 171644
+
+Per-field coverage (resolved / total):
+  sampling_frequency    165514/171644   96.43%
+  nchans                167010/171644   97.30%
+  ntimes                160147/171644   93.30%
+  ch_names              155722/171644   90.72%
+  duration_seconds      161594/171644   94.14%
+
+ntimes by source:
+  sidecar_arithmetic       87675
+  remote_header            44109
+  binary_parser            15348
+  size_arithmetic          13015
+  <missing>                11497
+
+Worst formats for ntimes (lowest coverage first):
+  .apr       ntimes   0.00% (0/662)
+  .gz        ntimes   0.00% (0/863)
+  .apx       ntimes   0.00% (0/59)
+  .xml       ntimes   0.00% (0/15)
+  .fif       ntimes  79.84% (5477/6860)
+  .bdf       ntimes  84.60% (9529/11263)
+  .vhdr      ntimes  89.42% (16964/18971)
+  .ds        ntimes  89.49% (3083/3445)
+  .edf       ntimes  94.26% (43299/45934)
+  .set       ntimes  97.85% (79182/80922)
+  .snirf     ntimes  98.15% (1961/1998)
+  .mefd      ntimes 100.00% (640/640)
+  .con       ntimes 100.00% (12/12)
+
+Full report written to /tmp/scale_run/coverage_njobs.json

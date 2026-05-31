@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>EEGDash · Metadata Coverage · Full OpenNeuro + NEMAR</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,400..700&family=Spline+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --ok-blue:#0072B2; --ok-green:#009E73; --ok-vermillion:#D55E00;
+    --ok-pink:#CC79A7; --ok-orange:#E69F00; --ok-sky:#56B4E9; --ok-yellow:#F0E442;
+    --bg:#0b0f10; --bg-2:#0f1517; --panel:#121a1c; --panel-2:#0e1416;
+    --ink:#e7efe9; --ink-dim:#8ea29a; --ink-faint:#5b6e67; --line:#1d2a2c;
+    --signal:var(--ok-green); --gap:var(--ok-vermillion); --maxw:1180px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0; background:var(--bg); color:var(--ink);
+    font-family:"Spline Sans",system-ui,sans-serif; font-size:16px; line-height:1.55;
+    -webkit-font-smoothing:antialiased; overflow-x:hidden;}
+  body::before{content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
+    background:
+      linear-gradient(transparent 0 39px, rgba(0,158,115,.035) 39px 40px) 0 0/40px 40px,
+      linear-gradient(90deg, transparent 0 39px, rgba(0,158,115,.035) 39px 40px) 0 0/40px 40px,
+      radial-gradient(120% 90% at 50% -10%, rgba(86,180,233,.06), transparent 55%);
+    mask-image:radial-gradient(130% 100% at 50% 30%, #000 55%, transparent 100%);}
+  body::after{content:""; position:fixed; inset:0; pointer-events:none; z-index:0; opacity:.5;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E");
+    mix-blend-mode:overlay;}
+  .wrap{position:relative; z-index:1; max-width:var(--maxw); margin:0 auto; padding:0 28px;}
+  .mono,.num{font-family:"IBM Plex Mono",monospace; font-variant-numeric:tabular-nums;}
+
+  header.mast{padding:64px 0 40px; border-bottom:1px solid var(--line);}
+  .kicker{font-family:"IBM Plex Mono",monospace; font-size:12px; letter-spacing:.30em;
+    text-transform:uppercase; color:var(--signal); display:flex; gap:14px; align-items:center; flex-wrap:wrap;}
+  .kicker .dot{width:7px;height:7px;border-radius:50%;background:var(--signal);
+    box-shadow:0 0 12px 1px var(--signal); animation:pulse 2.4s ease-in-out infinite;}
+  @keyframes pulse{0%,100%{opacity:.5;transform:scale(.85)}50%{opacity:1;transform:scale(1.15)}}
+  h1{font-family:"Fraunces",serif; font-weight:600; font-optical-sizing:auto;
+    font-size:clamp(2.5rem,6vw,5rem); line-height:.97; letter-spacing:-.02em; margin:.32em 0 .1em; max-width:17ch;}
+  h1 em{font-style:italic; font-weight:500; color:var(--signal); text-shadow:0 0 34px rgba(0,158,115,.28);}
+  .dek{max-width:64ch; color:var(--ink-dim); font-size:1.06rem; margin:.4em 0 0;}
+  .dek b{color:var(--ink); font-weight:600;}
+  .mast-meta{display:flex; flex-wrap:wrap; gap:34px; margin-top:34px;}
+  .mast-meta .stat{display:flex; flex-direction:column; gap:2px;}
+  .mast-meta .stat .v{font-family:"IBM Plex Mono",monospace; font-size:1.7rem; font-weight:500;
+    color:var(--ink); letter-spacing:-.02em; line-height:1;}
+  .mast-meta .stat .l{font-size:11px; letter-spacing:.15em; text-transform:uppercase; color:var(--ink-faint);
+    font-family:"IBM Plex Mono",monospace;}
+
+  section{padding:56px 0; border-bottom:1px solid var(--line);}
+  .sec-head{display:flex; align-items:baseline; gap:18px; margin-bottom:30px; flex-wrap:wrap;}
+  .sec-no{font-family:"IBM Plex Mono",monospace; color:var(--signal); font-size:13px; letter-spacing:.2em;
+    border:1px solid var(--line); padding:5px 9px; border-radius:4px;}
+  h2{font-family:"Fraunces",serif; font-weight:600; font-size:clamp(1.5rem,3vw,2.15rem);
+    letter-spacing:-.015em; margin:0; line-height:1.05; max-width:26ch;}
+  h2 .q{color:var(--ink-dim); font-weight:400; font-style:italic;}
+  .sec-sub{color:var(--ink-dim); font-size:.98rem; max-width:64ch; margin:10px 0 0; flex-basis:100%;}
+
+  .fields{display:flex; flex-direction:column; gap:18px; margin-top:8px;}
+  .field-row{display:grid; grid-template-columns:182px 1fr auto; align-items:center; gap:20px;}
+  .field-name{font-family:"IBM Plex Mono",monospace; font-size:14px; color:var(--ink);}
+  .field-name .tag{display:block; font-size:10px; color:var(--ink-faint); letter-spacing:.1em; text-transform:uppercase; margin-top:3px;}
+  .track{position:relative; height:30px; background:var(--panel-2); border:1px solid var(--line); border-radius:6px; overflow:hidden;}
+  .fill{position:absolute; inset:0 auto 0 0; width:0; border-radius:5px 0 0 5px;
+    background:linear-gradient(90deg, color-mix(in srgb, var(--signal) 70%, #000), var(--signal));
+    box-shadow:inset 0 0 12px rgba(0,158,115,.5); animation:grow 1.25s cubic-bezier(.22,1,.36,1) forwards;}
+  .fill.warn{background:linear-gradient(90deg, color-mix(in srgb, var(--ok-orange) 65%, #000), var(--ok-orange)); box-shadow:inset 0 0 12px rgba(230,159,0,.45);}
+  .track .ticks{position:absolute; inset:0; pointer-events:none;
+    background-image:repeating-linear-gradient(90deg, transparent 0 calc(10% - 1px), rgba(255,255,255,.05) calc(10% - 1px) 10%);}
+  .pct{font-family:"IBM Plex Mono",monospace; font-size:1.05rem; min-width:128px; text-align:right; color:var(--ink);}
+  .pct small{color:var(--ink-faint); font-size:.72em; margin-left:6px;}
+  .pct .was{color:var(--gap); font-size:.7em; letter-spacing:.05em;}
+  @keyframes grow{from{width:0} to{width:var(--w)}}
+  @keyframes wgrow{from{width:0} to{width:var(--w)}}
+  .legend{display:flex; gap:22px; margin-top:26px; font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(--ink-dim); flex-wrap:wrap;}
+  .legend span{display:inline-flex; align-items:center; gap:8px;}
+  .swatch{width:12px;height:12px;border-radius:3px;}
+
+  /* source flow */
+  .sbar{display:flex; height:60px; border-radius:8px; overflow:hidden; border:1px solid var(--line); margin-top:6px;}
+  .sbar .seg{position:relative; display:flex; align-items:center; justify-content:center; min-width:0;
+    color:#06100d; font-family:"IBM Plex Mono",monospace; font-size:12px; font-weight:500;
+    width:0; animation:wgrow 1.5s cubic-bezier(.22,1,.36,1) forwards; overflow:hidden; white-space:nowrap; padding:0 6px;}
+  .sbar .seg.dim{color:var(--ink);}
+  .slabels{display:flex; gap:22px; margin-top:16px; flex-wrap:wrap; font-family:"IBM Plex Mono",monospace; font-size:12px;}
+  .slabels span{display:inline-flex; align-items:center; gap:8px; color:var(--ink-dim);}
+  .callout{margin-top:30px; border-left:2px solid var(--signal); padding:14px 0 14px 22px;
+    background:linear-gradient(90deg, rgba(0,158,115,.06), transparent 70%);}
+  .callout.warn{border-color:var(--ok-orange); background:linear-gradient(90deg, rgba(230,159,0,.06), transparent 70%);}
+  .callout p{margin:0; color:var(--ink-dim); max-width:78ch;}
+  .callout p b{color:var(--ink); font-weight:600;}
+  .callout .arrow{color:var(--signal); font-family:"IBM Plex Mono",monospace;}
+  .callout.warn .arrow{color:var(--ok-orange);}
+  code{font-family:"IBM Plex Mono",monospace; color:var(--ink); background:var(--panel); padding:2px 6px; border-radius:4px; font-size:.84em;}
+
+  /* format ranking */
+  .rank{display:flex; flex-direction:column; gap:12px;}
+  .rk{display:grid; grid-template-columns:78px 1fr 250px; align-items:center; gap:16px;}
+  .rk .ext{font-family:"IBM Plex Mono",monospace; font-size:1.02rem; color:var(--ink); text-align:right;}
+  .rk .bar{position:relative; height:36px; background:var(--panel-2); border:1px solid var(--line); border-radius:6px; overflow:hidden; display:flex;}
+  .rk .seg{height:100%; width:0; animation:wgrow 1.4s cubic-bezier(.22,1,.36,1) forwards;}
+  .rk .seg.sa{background:linear-gradient(90deg,color-mix(in srgb,var(--signal) 70%,#000),var(--signal));}
+  .rk .seg.bp{background:linear-gradient(90deg,color-mix(in srgb,var(--ok-sky) 75%,#000),var(--ok-sky));}
+  .rk .bv{position:absolute; right:12px; top:50%; transform:translateY(-50%);
+    font-family:"IBM Plex Mono",monospace; font-size:.86rem; color:var(--ink); text-shadow:0 1px 3px rgba(0,0,0,.8);}
+  .rk .note{font-size:12px; color:var(--ink-dim); font-family:"IBM Plex Mono",monospace;}
+  .rk .note b{color:var(--ok-sky); font-weight:500;}
+  .rk.gap .ext{color:var(--gap); font-weight:600;}
+  .rk.gap .bar{border-color:color-mix(in srgb,var(--gap) 40%,var(--line));}
+  .rk.gap .note b{color:var(--gap);}
+  .rk.zero .bar{border-color:color-mix(in srgb,var(--gap) 35%,var(--line));
+    background:repeating-linear-gradient(45deg,#161d1f,#161d1f 8px,#10171a 8px,#10171a 16px);}
+
+  .mods{display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:16px; margin-top:6px;}
+  .mod{background:linear-gradient(180deg,var(--panel),var(--panel-2)); border:1px solid var(--line); border-radius:10px; padding:18px;}
+  .mod h3{margin:0 0 2px; font-family:"IBM Plex Mono",monospace; font-size:1.15rem; color:var(--ink); letter-spacing:.04em; text-transform:uppercase;}
+  .mod .n{font-size:11.5px; color:var(--ink-faint); font-family:"IBM Plex Mono",monospace; margin-bottom:14px;}
+  .mini{display:flex; flex-direction:column; gap:9px;}
+  .mini .r{display:grid; grid-template-columns:62px 1fr 46px; gap:9px; align-items:center;}
+  .mini .k{font-size:11px; color:var(--ink-dim); font-family:"IBM Plex Mono",monospace;}
+  .mini .t{height:8px; background:var(--panel-2); border-radius:4px; overflow:hidden; border:1px solid var(--line);}
+  .mini .f{height:100%; width:0; border-radius:4px; animation:grow 1.3s cubic-bezier(.22,1,.36,1) forwards;}
+  .mini .p{font-size:11px; text-align:right; color:var(--ink); font-family:"IBM Plex Mono",monospace;}
+
+  footer{padding:54px 0 80px; color:var(--ink-faint);}
+  footer .grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:34px;}
+  footer h4{font-family:"IBM Plex Mono",monospace; font-size:11px; letter-spacing:.2em; text-transform:uppercase; color:var(--signal); margin:0 0 12px;}
+  footer p,footer li{font-size:13.5px; color:var(--ink-dim); line-height:1.6;}
+  footer ul{margin:0; padding-left:18px;}
+  .sig{margin-top:40px; padding-top:22px; border-top:1px solid var(--line); display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px;
+    font-family:"IBM Plex Mono",monospace; font-size:11.5px; letter-spacing:.05em;}
+  .reveal{opacity:0; transform:translateY(18px); animation:rise .9s cubic-bezier(.22,1,.36,1) forwards;}
+  @keyframes rise{to{opacity:1; transform:none;}}
+  @media (max-width:720px){
+    .field-row{grid-template-columns:1fr; gap:8px;} .pct{text-align:left; min-width:0;}
+    .rk{grid-template-columns:1fr; gap:8px;} .rk .ext{text-align:left;}
+  }
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms !important;} .fill,.seg,.f{width:var(--w) !important;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="mast">
+    <div class="kicker reveal"><span class="dot"></span> EEGDash · Cheap-Exact Resolver · Full OpenNeuro + NEMAR · Live Re-Digest</div>
+    <h1 class="reveal" style="animation-delay:.05s">Every dataset, <em>re-read</em> — without touching a byte of signal.</h1>
+    <p class="dek reveal" style="animation-delay:.12s">
+      The whole catalogue, freshly enumerated, shallow-cloned and digested with the new resolver:
+      <b>696 datasets</b> discovered, <b>685 digested</b>, <b>172,432 records</b>. The headline isn't just coverage —
+      it's <b>where</b> each value now comes from. <b>duration</b> went from a field that didn't exist to <b>89.7%</b>,
+      and <b>15,347</b> BrainVision sample-counts were recovered from the git-annex key alone — <b>zero signal fetched</b>.
+    </p>
+    <div class="mast-meta">
+      <div class="stat reveal" style="animation-delay:.18s"><span class="v num">696</span><span class="l">enumerated</span></div>
+      <div class="stat reveal" style="animation-delay:.22s"><span class="v num">685</span><span class="l">digested</span></div>
+      <div class="stat reveal" style="animation-delay:.26s"><span class="v num">172,432</span><span class="l">records</span></div>
+      <div class="stat reveal" style="animation-delay:.30s"><span class="v num">11</span><span class="l">file formats</span></div>
+      <div class="stat reveal" style="animation-delay:.34s"><span class="v num">5</span><span class="l">modalities</span></div>
+      <div class="stat reveal" style="animation-delay:.38s"><span class="v num">0&nbsp;B</span><span class="l">signal read</span></div>
+    </div>
+  </header>
+
+  <!-- 01 fields -->
+  <section>
+    <div class="sec-head">
+      <span class="sec-no">01</span>
+      <h2>Field coverage across the full corpus.</h2>
+      <p class="sec-sub">Share of all 172,432 records where each field resolves. Sorted best-to-worst. <code>duration_seconds</code> is brand-new — it had no value at all before.</p>
+    </div>
+    <div class="fields">
+      <div class="field-row"><div class="field-name">nchans<span class="tag">channel count</span></div>
+        <div class="track"><div class="fill" style="--w:97.31%;animation-delay:.10s"></div><div class="ticks"></div></div>
+        <div class="pct num">97.31%<small>167,798</small></div></div>
+      <div class="field-row"><div class="field-name">sampling_frequency<span class="tag">Hz</span></div>
+        <div class="track"><div class="fill" style="--w:96.44%;animation-delay:.18s"></div><div class="ticks"></div></div>
+        <div class="pct num">96.44%<small>166,302</small></div></div>
+      <div class="field-row"><div class="field-name">ch_names<span class="tag">channel labels</span></div>
+        <div class="track"><div class="fill" style="--w:90.77%;animation-delay:.26s"></div><div class="ticks"></div></div>
+        <div class="pct num">90.77%<small>156,510</small></div></div>
+      <div class="field-row"><div class="field-name">duration_seconds<span class="tag">new field</span></div>
+        <div class="track"><div class="fill" style="--w:89.73%;animation-delay:.34s"></div><div class="ticks"></div></div>
+        <div class="pct num">89.73%<small>154,718</small> <span class="was">↑ from 0%</span></div></div>
+      <div class="field-row"><div class="field-name">ntimes<span class="tag">sample count</span></div>
+        <div class="track"><div class="fill warn" style="--w:88.85%;animation-delay:.42s"></div><div class="ticks"></div></div>
+        <div class="pct num">88.85%<small>153,204</small></div></div>
+    </div>
+    <div class="legend">
+      <span><i class="swatch" style="background:var(--ok-green)"></i> resolved</span>
+      <span><i class="swatch" style="background:var(--ok-orange)"></i> the field still chased</span>
+      <span style="color:var(--ink-faint)">ticks = 10%</span>
+    </div>
+  </section>
+
+  <!-- 02 source flow -->
+  <section>
+    <div class="sec-head">
+      <span class="sec-no">02</span>
+      <h2>Where <code>ntimes</code> comes from now — <span class="q">and what it cost.</span></h2>
+      <p class="sec-sub">Before, every resolved n_times came from one source (the sidecar) and BrainVision needed a full <code>read_raw_brainvision</code>. Now the work fans out — and the new <b>binary_parser</b> band is pure git-annex-key arithmetic.</p>
+    </div>
+    <div class="sbar">
+      <div class="seg" style="--w:79.95%; background:linear-gradient(90deg,color-mix(in srgb,var(--ok-green) 70%,#000),var(--ok-green)); animation-delay:.10s">sidecar_arithmetic · 137,857 · 79.9%</div>
+      <div class="seg" style="--w:8.90%; background:linear-gradient(90deg,color-mix(in srgb,var(--ok-sky) 75%,#000),var(--ok-sky)); animation-delay:.55s">binary · 15,347 · 8.9%</div>
+      <div class="seg dim" style="--w:11.15%; background:repeating-linear-gradient(45deg,#1a2426,#1a2426 7px,#141b1d 7px,#141b1d 14px); animation-delay:.75s">unresolved · 19,228 · 11.1%</div>
+    </div>
+    <div class="slabels">
+      <span><i class="swatch" style="background:var(--ok-green)"></i> sidecar arithmetic — round(sfreq × RecordingDuration)</span>
+      <span><i class="swatch" style="background:var(--ok-sky)"></i> binary_parser — .eeg size from the annex key, 0 bytes fetched</span>
+      <span><i class="swatch" style="background:#1a2426"></i> no cheap path on a shallow clone</span>
+    </div>
+    <div class="callout">
+      <p><b>The 8.9% blue band is the whole point.</b> All <b>15,347</b> of those are BrainVision <code>.vhdr</code> recordings whose
+      sample count was computed as <span class="arrow">datafile_bytes ÷ (nchans × dtype_bytes)</span> — read straight from the
+      git-annex <code>MD5E-s&lt;size&gt;</code> key. The old pipeline would have <b>fetched each <code>.eeg</code> from S3</b> and run MNE; the new one
+      fetches <b>nothing</b> and gets the byte-exact answer (certified equal to MNE). Same recovery, zero signal I/O.</p>
+    </div>
+  </section>
+
+  <!-- 03 by format -->
+  <section>
+    <div class="sec-head">
+      <span class="sec-no">03</span>
+      <h2>By format — <span class="q">the honest frontier.</span></h2>
+      <p class="sec-sub">n_times coverage per format, volume-ordered. Green = sidecar arithmetic, blue = binary (annex-key). The low rows aren't bugs — they're the shallow-clone limit: a format whose binary is an annex pointer can't be header-read without fetching it. Only VHDR's size-from-key trick sidesteps that.</p>
+    </div>
+    <div class="rank">
+      <div class="rk"><div class="ext">.set</div>
+        <div class="bar"><div class="seg sa" style="--w:96.8%;animation-delay:.10s"></div><div class="bv num">96.8% · 80,922</div></div>
+        <div class="note">sidecar arithmetic</div></div>
+      <div class="rk"><div class="ext">.edf</div>
+        <div class="bar"><div class="seg sa" style="--w:85.5%;animation-delay:.16s"></div><div class="bv num">85.5% · 45,934</div></div>
+        <div class="note">sidecar arithmetic</div></div>
+      <div class="rk"><div class="ext">.vhdr</div>
+        <div class="bar"><div class="seg bp" style="--w:80.9%;animation-delay:.22s"></div><div class="seg sa" style="--w:8.5%;animation-delay:.34s"></div><div class="bv num" style="color:#06100d">89.4% · 18,971</div></div>
+        <div class="note"><b>binary 15,347</b> + sidecar</div></div>
+      <div class="rk"><div class="ext">.bdf</div>
+        <div class="bar"><div class="seg sa" style="--w:76.6%;animation-delay:.28s"></div><div class="bv num">76.6% · 11,263</div></div>
+        <div class="note">sidecar arithmetic</div></div>
+      <div class="rk"><div class="ext">.fif</div>
+        <div class="bar"><div class="seg sa" style="--w:79.8%;animation-delay:.34s"></div><div class="bv num">79.8% · 6,860</div></div>
+        <div class="note">sidecar arithmetic</div></div>
+      <div class="rk"><div class="ext">.ds</div>
+        <div class="bar"><div class="seg sa" style="--w:89.5%;animation-delay:.40s"></div><div class="bv num">89.5% · 3,445</div></div>
+        <div class="note">sidecar arithmetic</div></div>
+      <div class="rk gap"><div class="ext">.snirf</div>
+        <div class="bar"><div class="seg sa" style="--w:48.9%;animation-delay:.46s"></div><div class="bv num">48.9% · 2,786</div></div>
+        <div class="note"><b>annex'd HDF5</b> — header not local</div></div>
+      <div class="rk zero gap"><div class="ext">.gz</div>
+        <div class="bar"><div class="bv num">0% · 863</div></div>
+        <div class="note"><b>no parser</b> · .fif.gz / nirs</div></div>
+      <div class="rk zero gap"><div class="ext">.apr</div>
+        <div class="bar"><div class="bv num">0% · 662</div></div>
+        <div class="note"><b>no parser</b> · Curry/ANT</div></div>
+      <div class="rk gap"><div class="ext">.mefd</div>
+        <div class="bar"><div class="seg sa" style="--w:4.1%;animation-delay:.52s"></div><div class="bv num">4.1% · 640</div></div>
+        <div class="note"><b>annex'd .tmet</b> — header not local</div></div>
+    </div>
+    <div class="callout warn">
+      <p><b>Why MEF3 fell back to 4%.</b> The header reader I added <span class="arrow">does</span> extract <code>number_of_samples</code> —
+      but only when the <code>.tmet</code> is present. On a shallow clone it's a git-annex pointer, so MEF3 (and SNIRF, both binary-header
+      formats) drop to sidecar arithmetic, which most of these datasets lack. <b>VHDR is the exception</b> precisely because its count
+      needs only the companion's <i>size</i>, not its contents. Closing this means either a full clone, a ranged header fetch, or
+      enumerating the still-uncovered exotics (<code>.gz</code>, <code>.apr</code>, <code>.apx</code>).</p>
+    </div>
+  </section>
+
+  <!-- 04 modality -->
+  <section>
+    <div class="sec-head">
+      <span class="sec-no">04</span>
+      <h2>By modality.</h2>
+      <p class="sec-sub">n_times (green) and duration (blue) coverage. fNIRS trails because its SNIRF binary is annex'd; EMG has full duration but trailing n_times.</p>
+    </div>
+    <div class="mods">
+      <div class="mod"><h3>EEG</h3><div class="n num">137,512 records</div>
+        <div class="mini">
+          <div class="r"><span class="k">ntimes</span><div class="t"><div class="f" style="--w:91.7%;background:var(--ok-green);animation-delay:.05s"></div></div><span class="p">91.7</span></div>
+          <div class="r"><span class="k">duration</span><div class="t"><div class="f" style="--w:91.7%;background:var(--ok-sky);animation-delay:.1s"></div></div><span class="p">91.7</span></div>
+        </div></div>
+      <div class="mod"><h3>iEEG</h3><div class="n num">15,274 records</div>
+        <div class="mini">
+          <div class="r"><span class="k">ntimes</span><div class="t"><div class="f" style="--w:79.5%;background:var(--ok-orange);animation-delay:.05s"></div></div><span class="p">79.5</span></div>
+          <div class="r"><span class="k">duration</span><div class="t"><div class="f" style="--w:79.5%;background:var(--ok-sky);animation-delay:.1s"></div></div><span class="p">79.5</span></div>
+        </div></div>
+      <div class="mod"><h3>MEG</h3><div class="n num">10,317 records</div>
+        <div class="mini">
+          <div class="r"><span class="k">ntimes</span><div class="t"><div class="f" style="--w:83.1%;background:var(--ok-orange);animation-delay:.05s"></div></div><span class="p">83.1</span></div>
+          <div class="r"><span class="k">duration</span><div class="t"><div class="f" style="--w:83.1%;background:var(--ok-sky);animation-delay:.1s"></div></div><span class="p">83.1</span></div>
+        </div></div>
+      <div class="mod"><h3>EMG</h3><div class="n num">6,543 records</div>
+        <div class="mini">
+          <div class="r"><span class="k">ntimes</span><div class="t"><div class="f" style="--w:76.9%;background:var(--ok-orange);animation-delay:.05s"></div></div><span class="p">76.9</span></div>
+          <div class="r"><span class="k">duration</span><div class="t"><div class="f" style="--w:100%;background:var(--ok-green);animation-delay:.1s"></div></div><span class="p">100</span></div>
+        </div></div>
+      <div class="mod"><h3>fNIRS</h3><div class="n num">2,786 records</div>
+        <div class="mini">
+          <div class="r"><span class="k">ntimes</span><div class="t"><div class="f" style="--w:48.9%;background:var(--ok-vermillion);animation-delay:.05s"></div></div><span class="p">48.9</span></div>
+          <div class="r"><span class="k">duration</span><div class="t"><div class="f" style="--w:48.9%;background:var(--ok-vermillion);animation-delay:.1s"></div></div><span class="p">48.9</span></div>
+        </div></div>
+    </div>
+  </section>
+
+  <!-- 06 after: remote header tier -->
+  <section>
+    <div class="sec-head">
+      <span class="sec-no">06</span>
+      <h2>The remote tier — <span class="q">measured across the whole corpus.</span></h2>
+      <p class="sec-sub">With the ranged-header tier on, the formats whose binary is an annex pointer get a single read of just the header — never the signal. Re-digested over all 683 datasets / 171,644 records: <code>ntimes</code> <b>88.85% → 93.30%</b>, <code>duration</code> <b>89.73% → 94.14%</b>. Per-format lift + the byte cost:</p>
+    </div>
+    <table class="matrix" style="border-spacing:0 8px">
+      <thead><tr><th class="l">format</th><th class="l">records</th><th>before</th><th>after</th><th>tier</th><th>bytes / file</th></tr></thead>
+      <tbody>
+        <tr><td class="l fmt">.edf</td><td class="l nrec num">45,934</td><td><div class="cell" data-cov="85.5">85.5%</div></td><td><div class="cell" data-cov="94.3">94.3%</div></td><td class="nrec num">remote_header</td><td class="num" style="color:var(--ink)">256 B</td></tr>
+        <tr><td class="l fmt">.bdf</td><td class="l nrec num">11,263</td><td><div class="cell" data-cov="76.6">76.6%</div></td><td><div class="cell" data-cov="84.6">84.6%</div></td><td class="nrec num">remote_header</td><td class="num" style="color:var(--ink)">256 B</td></tr>
+        <tr><td class="l fmt">.mefd</td><td class="l nrec num">640</td><td><div class="cell" data-cov="4.1">4.1%</div></td><td><div class="cell" data-cov="100">100%</div></td><td class="nrec num">remote_header</td><td class="num" style="color:var(--ink)">16 KB</td></tr>
+        <tr><td class="l fmt">.snirf</td><td class="l nrec num">1,998</td><td><div class="cell" data-cov="48.9">48.9%</div></td><td><div class="cell" data-cov="98.2">98.2%</div></td><td class="nrec num">remote_header</td><td class="num" style="color:var(--ink)">~196 KB</td></tr>
+        <tr><td class="l fmt">.set</td><td class="l nrec num">80,922</td><td><div class="cell" data-cov="96.8">96.8%</div></td><td><div class="cell" data-cov="97.9">97.9%</div></td><td class="nrec num">size_arithmetic</td><td class="num" style="color:var(--ink)">0 B</td></tr>
+        <tr><td class="l fmt">.vhdr</td><td class="l nrec num">18,971</td><td><div class="cell" data-cov="89.4">89.4%</div></td><td><div class="cell" data-cov="89.4">89.4%</div></td><td class="nrec num">binary_parser</td><td class="num" style="color:var(--ink)">0 B</td></tr>
+      </tbody>
+    </table>
+    <div class="callout">
+      <p><b>EDF/BDF: 256 bytes</b> (annotation-safe record-count formula). <b>MEF3: one ~16 KB <code>.tmet</code></b>
+      (compressed <code>.tdat</code> untouched). <b>SNIRF: ~196 KB of HDF5 metadata</b> (0.24% of an 80 MB file). <b>SET <code>.fdt</code> /
+      VHDR <code>.eeg</code>: 0 bytes</b> — straight from the git-annex key. <code>remote_header</code> alone resolved <b>44,109</b> records;
+      every value byte-exact, provenance-stamped, <b>zero signal</b>. And a <code>--n-jobs</code> thread pool over the per-record fetches
+      ran the whole re-digest <span class="arrow">~3× faster per dataset</span>, recovering the records a serial run lost to timeouts.</p>
+    </div>
+  </section>
+
+  <footer>
+    <div class="grid">
+      <div><h4>How this was made</h4>
+        <p>Enumerated via OpenNeuro GraphQL (eeg/ieeg/meg/nirs) + NEMAR catalogue → <b>696</b> datasets. Each shallow-cloned
+        (<code>git clone --depth 1</code>, <code>GIT_LFS_SKIP_SMUDGE=1</code>) and digested with the cheap-exact resolver, then aggregated by
+        <code>coverage_report.py</code>. <b>685 digested</b> (11 clone/digest stragglers). No raw signal read at any point.</p></div>
+      <div><h4>The win, precisely</h4>
+        <ul>
+          <li><code>duration_seconds</code>: 0% → <b>89.7%</b></li>
+          <li><b>15,347</b> VHDR n_times from the annex key — 0 fetches</li>
+          <li>byte-exact, MNE-certified; provenance-stamped</li>
+          <li>VHDR resolution path ~14× faster</li>
+        </ul></div>
+      <div><h4>What's still open</h4>
+        <p>Shallow-clone binary-header formats (MEF3, SNIRF) need the file present — a full clone, a ranged header fetch, or
+        sidecar duration. Exotic <code>.gz / .apr / .apx</code> have no parser yet. All are tracked in the Phase-3 plan.</p></div>
+    </div>
+    <div class="sig">
+      <span style="color:var(--signal)">EEGDASH · CHEAP-EXACT METADATA RESOLVER · NEW CODE</span>
+      <span>FULL OPENNEURO + NEMAR · 685 DATASETS · 172,432 RECORDS</span>
+    </div>
+  </footer>
+
+</div>
+<script>
+  // Colour the coverage cells on a colourblind-safe red-orange to bluish-green scale.
+  const STOPS = [
+    {p:0,c:[176,58,0]},{p:55,c:[213,94,0]},{p:80,c:[230,159,0]},
+    {p:93,c:[90,158,120]},{p:100,c:[0,158,115]},
+  ];
+  const lerp=(a,b,t)=>Math.round(a+(b-a)*t);
+  function colorFor(v){
+    v=Math.max(0,Math.min(100,v));
+    for(let i=0;i<STOPS.length-1;i++){
+      const s=STOPS[i],e=STOPS[i+1];
+      if(v>=s.p&&v<=e.p){const t=(v-s.p)/((e.p-s.p)||1);
+        return [lerp(s.c[0],e.c[0],t),lerp(s.c[1],e.c[1],t),lerp(s.c[2],e.c[2],t)];}
+    }
+    return STOPS[STOPS.length-1].c;
+  }
+  document.querySelectorAll('.cell[data-cov]').forEach((cell,i)=>{
+    const [r,g,b]=colorFor(parseFloat(cell.dataset.cov));
+    cell.style.background=`rgb(${r},${g},${b})`;
+    if((0.299*r+0.587*g+0.114*b)<120) cell.classList.add('dim');
+    cell.style.opacity=0; cell.style.transition='opacity .5s ease';
+    setTimeout(()=>{cell.style.opacity=1;}, 150+i*30);
+  });
+</script>
+</body>
+</html>

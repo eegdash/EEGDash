@@ -23,6 +23,10 @@ def test_provenance_sources_are_a_closed_set():
         digest._PROV_CHANNELS_TSV,
         digest._PROV_BINARY_PARSER,
         digest._PROV_MNE_FALLBACK,
+        digest._PROV_SIDECAR_ARITHMETIC,
+        digest._PROV_DERIVED,
+        digest._PROV_SIZE_ARITHMETIC,
+        digest._PROV_REMOTE_HEADER,
     }
     assert valid == {
         "mne_bids",
@@ -30,6 +34,10 @@ def test_provenance_sources_are_a_closed_set():
         "channels_tsv",
         "binary_parser",
         "mne_fallback",
+        "sidecar_arithmetic",
+        "derived",
+        "size_arithmetic",
+        "remote_header",
     }
 
 
@@ -152,6 +160,10 @@ def test_provenance_values_only_in_documented_enum():
         "channels_tsv",
         "binary_parser",
         "mne_fallback",
+        "sidecar_arithmetic",
+        "derived",
+        "size_arithmetic",
+        "remote_header",
         None,
     }
     for ds_dir in snapshot_root.iterdir():

@@ -76,32 +76,15 @@
       "name": "Saurabh R. Gandhi"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Saurabh R. Gandhi"
-  },
-  "datePublished": "2026",
   "identifier": "doi:10.18112/openneuro.ds007322.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds007322.v1.0.1",
     "https://openneuro.org/datasets/ds007322"
   ],
-  "citeAs": "Prakash Mishra, Tapan K Gandhi, Saurabh R. Gandhi (2026). Personalized smartphone notifications bias auditory salience across processing stages. doi:10.18112/openneuro.ds007322.v1.0.1",
+  "citeAs": "Prakash Mishra, Tapan K Gandhi, Saurabh R. Gandhi (n.d.). Personalized smartphone notifications bias auditory salience across processing stages. doi:10.18112/openneuro.ds007322.v1.0.1",
   "version": "1.7.0",
-  "dateCreated": "2026-01-26",
-  "dateModified": "2026-02-19",
   "measurementTechnique": [
     "BIDS task: auditoryoddball"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Prakash Mishra"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Saurabh Rajendra Gandhi"
-    }
   ],
   "distribution": [
     {

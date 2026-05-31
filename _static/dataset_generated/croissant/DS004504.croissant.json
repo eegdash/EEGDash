@@ -108,29 +108,16 @@
       "name": "Alexandros T. Tzallas"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Alexandros T. Tzallas"
-  },
-  "datePublished": "2023",
-  "identifier": "doi:10.18112/openneuro.ds004504.v1.0.8",
+  "identifier": "doi:10.18112/openneuro.ds004504.v1.0.9",
   "sameAs": [
-    "https://doi.org/10.18112/openneuro.ds004504.v1.0.8",
+    "https://doi.org/10.18112/openneuro.ds004504.v1.0.9",
     "https://openneuro.org/datasets/ds004504",
     "https://huggingface.co/datasets/EEGDash/ds004504"
   ],
-  "citeAs": "Andreas Miltiadous, Katerina D. Tzimourta, Theodora Afrantou, Panagiotis Ioannidis, Nikolaos Grigoriadis (2023). A dataset of EEG recordings from: Alzheimer's disease, Frontotemporal dementia and Healthy subjects. doi:10.18112/openneuro.ds004504.v1.0.8",
+  "citeAs": "Andreas Miltiadous, Katerina D. Tzimourta, Theodora Afrantou, Panagiotis Ioannidis, Nikolaos Grigoriadis (n.d.). A dataset of EEG recordings from: Alzheimer's disease, Frontotemporal dementia and Healthy subjects. doi:10.18112/openneuro.ds004504.v1.0.9",
   "version": "v1.2.1",
-  "dateCreated": "2023-02-17",
-  "dateModified": "2024-10-30",
   "measurementTechnique": [
     "BIDS task: eyesclosed"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Andreas Miltiadous"
-    }
   ],
   "distribution": [
     {

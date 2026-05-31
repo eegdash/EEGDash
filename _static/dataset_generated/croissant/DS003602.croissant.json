@@ -72,10 +72,6 @@
       "name": "Andrey P. Anokhin"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Andrey P. Anokhin"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -86,17 +82,14 @@
       "name": "5R24MH120037"
     }
   ],
-  "datePublished": "2021",
   "identifier": "doi:10.18112/openneuro.ds003602.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds003602.v1.0.0",
     "https://openneuro.org/datasets/ds003602",
     "https://huggingface.co/datasets/EEGDash/ds003602"
   ],
-  "citeAs": "Ozlem Korucuoglu, Andrey P. Anokhin (2021). Childhood Sexual Abuse and problem drinking in women: Neurobehavioral mechanisms. doi:10.18112/openneuro.ds003602.v1.0.0",
+  "citeAs": "Ozlem Korucuoglu, Andrey P. Anokhin (n.d.). Childhood Sexual Abuse and problem drinking in women: Neurobehavioral mechanisms. doi:10.18112/openneuro.ds003602.v1.0.0",
   "version": "v5.1",
-  "dateCreated": "2021-04-02",
-  "dateModified": "2022-07-27",
   "measurementTechnique": [
     "BIDS task: APA1",
     "BIDS task: APA2",
@@ -104,20 +97,6 @@
     "BIDS task: REST",
     "BIDS task: VP1",
     "BIDS task: VP3"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "özlem Korucuoglu"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Arnaud Delorme"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Annalisa Salazar"
-    }
   ],
   "distribution": [
     {

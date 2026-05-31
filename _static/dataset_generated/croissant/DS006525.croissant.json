@@ -68,35 +68,22 @@
       "name": "Computational Neuroimaging and Neuroengineering Lab ar the University of Oklahoma"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Computational Neuroimaging and Neuroengineering Lab ar the University of Oklahoma"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "OPTIONAL. List of sources of funding (grant numbers)"
     }
   ],
-  "datePublished": "2025",
   "identifier": "doi:10.18112/openneuro.ds006525.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds006525.v1.0.0",
     "https://openneuro.org/datasets/ds006525",
     "https://huggingface.co/datasets/EEGDash/ds006525"
   ],
-  "citeAs": "Computational Neuroimaging and Neuroengineering Lab ar the University of Oklahoma (2025). Resting EEG. doi:10.18112/openneuro.ds006525.v1.0.0",
+  "citeAs": "Computational Neuroimaging and Neuroengineering Lab ar the University of Oklahoma (n.d.). Resting EEG. doi:10.18112/openneuro.ds006525.v1.0.0",
   "version": "1.8.0",
-  "dateCreated": "2025-08-01",
-  "dateModified": "2025-08-01",
   "measurementTechnique": [
     "BIDS task: resting"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Lei Ding"
-    }
   ],
   "distribution": [
     {

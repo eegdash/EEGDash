@@ -92,31 +92,19 @@
       "name": "Lindy Comstock"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Lindy Comstock"
-  },
-  "datePublished": "2025",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds006104.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds006104.v1.0.1",
     "https://openneuro.org/datasets/ds006104",
     "https://huggingface.co/datasets/EEGDash/ds006104"
   ],
-  "citeAs": "João Pedro Carvalho Moreira, Vinícius Rezende Carvalho, Eduardo Mazoni Andrade Marçal Mendes, Ariah Fallah, Terrence J. Sejnowski (2025). EEG dataset for speech decoding. doi:10.18112/openneuro.ds006104.v1.0.1",
+  "citeAs": "João Pedro Carvalho Moreira, Vinícius Rezende Carvalho, Eduardo Mazoni Andrade Marçal Mendes, Ariah Fallah, Terrence J. Sejnowski (20). EEG dataset for speech decoding. doi:10.18112/openneuro.ds006104.v1.0.1",
   "version": "1.6.0",
-  "dateCreated": "2025-04-08",
-  "dateModified": "2025-04-08",
   "measurementTechnique": [
     "BIDS task: Words",
     "BIDS task: phonemes",
     "BIDS task: singlephoneme"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "João Pedro Carvalho Moreira"
-    }
   ],
   "distribution": [
     {

@@ -124,10 +124,6 @@
       "name": "Eishi Asano"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Eishi Asano"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -142,24 +138,15 @@
       "name": "the Japan Society for the Promotion of Science (JP22J23281 and JP22KJ0323 to N.K.; 202560628 to H.U.; JP19K09494 and 22K09296 to M.I.)"
     }
   ],
-  "datePublished": "2025",
   "identifier": "doi:10.18112/openneuro.ds007119.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds007119.v1.0.0",
     "https://openneuro.org/datasets/ds007119"
   ],
-  "citeAs": "Keisuke Hatano, Naoto Kuroda, Hiroshi Uda, Kazuki Sakakura, Michael J. Cools (2025). iEEG_comprehensive_HFA_model_part3. doi:10.18112/openneuro.ds007119.v1.0.0",
+  "citeAs": "Keisuke Hatano, Naoto Kuroda, Hiroshi Uda, Kazuki Sakakura, Michael J. Cools (n.d.). iEEG_comprehensive_HFA_model_part3. doi:10.18112/openneuro.ds007119.v1.0.0",
   "version": "1.7.0",
-  "dateCreated": "2025-12-19",
-  "dateModified": "2025-12-22",
   "measurementTechnique": [
     "BIDS task: sleep"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Keisuke Hatano"
-    }
   ],
   "distribution": [
     {

@@ -66,29 +66,16 @@
       "name": "Yaner Su"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Yaner Su"
-  },
-  "datePublished": "2025",
   "identifier": "doi:10.18112/openneuro.ds006554.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds006554.v1.0.0",
     "https://openneuro.org/datasets/ds006554",
     "https://huggingface.co/datasets/EEGDash/ds006554"
   ],
-  "citeAs": "Yaner Su (2025). Social Observation EEG raw data. doi:10.18112/openneuro.ds006554.v1.0.0",
+  "citeAs": "Yaner Su (n.d.). Social Observation EEG raw data. doi:10.18112/openneuro.ds006554.v1.0.0",
   "version": "1.8.0",
-  "dateCreated": "2025-08-12",
-  "dateModified": "2025-08-12",
   "measurementTechnique": [
     "BIDS task: SocialObservation"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Yaner Su"
-    }
   ],
   "distribution": [
     {

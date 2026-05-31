@@ -73,29 +73,16 @@
       "name": "Ahmed M. Raslan"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Ahmed M. Raslan"
-  },
-  "datePublished": "2024",
   "identifier": "doi:10.18112/openneuro.ds005415.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005415.v1.0.0",
     "https://openneuro.org/datasets/ds005415",
     "https://huggingface.co/datasets/EEGDash/ds005415"
   ],
-  "citeAs": "Alexander P. Rockhill, Ahmed M. Raslan (2024). Numbers. doi:10.18112/openneuro.ds005415.v1.0.0",
+  "citeAs": "Alexander P. Rockhill, Ahmed M. Raslan (n.d.). Numbers. doi:10.18112/openneuro.ds005415.v1.0.0",
   "version": "1.9.9",
-  "dateCreated": "2024-08-17",
-  "dateModified": "2024-10-25",
   "measurementTechnique": [
     "BIDS task: numbers"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Alexander Rockhill"
-    }
   ],
   "distribution": [
     {

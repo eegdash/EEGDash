@@ -80,35 +80,22 @@
       "name": "Ruz, M."
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Ruz, M."
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "This research was supported by grant PID2022-138940NB-100 awarded to MR and grant PID2023-151911NA-I00 awarded to AFP, funded by MCIN/EI/10.13039/501100011033/ and FEDER, UE. PP was supported by scholarship PREP2023-002013 funded by MCIN/AEI/10.13039/501100011033 and FSE+. AFP was supported by Grant PAIDI21_00207 of the Andalusian Autonomic Government. CCGP was supported by Project PID2020-116342GA-I00 funded by MCIN/AEI/10.13039/501100011033, and Grant RYC2021-033536-I funded by MCIN/AEI/10.13039/501100011033 and by the European Union NextGeneration EU/PRTR. The Mind, Brain and Behavior Research Center receives funding from grants CEX2023-001312-M by MCIN/AEI /10.13039/501100011033 and UCE-PP2023-11 by the University of Granada."
     }
   ],
-  "datePublished": "2025",
   "identifier": "doi:10.18112/openneuro.ds005960.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005960.v1.0.0",
     "https://openneuro.org/datasets/ds005960",
     "https://huggingface.co/datasets/EEGDash/ds005960"
   ],
-  "citeAs": "Pena, P., Palenciano, A.F., González-García, C., Ruz, M. (2025). General Info: inst-comp-eeg. doi:10.18112/openneuro.ds005960.v1.0.0",
+  "citeAs": "Pena, P., Palenciano, A.F., González-García, C., Ruz, M. (n.d.). General Info: inst-comp-eeg. doi:10.18112/openneuro.ds005960.v1.0.0",
   "version": "v1.2.1",
-  "dateCreated": "2025-03-05",
-  "dateModified": "2025-03-13",
   "measurementTechnique": [
     "BIDS task: INSTCOMP"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Paula Pena"
-    }
   ],
   "distribution": [
     {

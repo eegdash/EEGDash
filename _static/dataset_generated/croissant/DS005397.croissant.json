@@ -88,29 +88,17 @@
       "name": "Klaus Gramann"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Klaus Gramann"
-  },
-  "datePublished": "2024",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds005397.v1.0.4",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005397.v1.0.4",
     "https://openneuro.org/datasets/ds005397",
     "https://huggingface.co/datasets/EEGDash/ds005397"
   ],
-  "citeAs": "Christopher Hilton, Lilian Befort, Ronja Brinkmann, Matthias Ballestrem, Joerg Fingerhut (2024). Affordances of stairs. doi:10.18112/openneuro.ds005397.v1.0.4",
+  "citeAs": "Christopher Hilton, Lilian Befort, Ronja Brinkmann, Matthias Ballestrem, Joerg Fingerhut (20). Affordances of stairs. doi:10.18112/openneuro.ds005397.v1.0.4",
   "version": "1.6.0",
-  "dateCreated": "2024-08-01",
-  "dateModified": "2025-11-10",
   "measurementTechnique": [
     "BIDS task: tectonic"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Christopher Hilton"
-    }
   ],
   "distribution": [
     {

@@ -73,35 +73,22 @@
       "name": "Eishi Asano"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Eishi Asano"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "N/A"
     }
   ],
-  "datePublished": "2025",
   "identifier": "doi:10.18112/openneuro.ds005931.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005931.v1.0.0",
     "https://openneuro.org/datasets/ds005931",
     "https://huggingface.co/datasets/EEGDash/ds005931"
   ],
-  "citeAs": "Riyo Ueda, Eishi Asano (2025). Visuomotor_task. doi:10.18112/openneuro.ds005931.v1.0.0",
+  "citeAs": "Riyo Ueda, Eishi Asano (n.d.). Visuomotor_task. doi:10.18112/openneuro.ds005931.v1.0.0",
   "version": "1.7.0",
-  "dateCreated": "2025-02-18",
-  "dateModified": "2025-03-06",
   "measurementTechnique": [
     "BIDS task: game"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "riyo ueda"
-    }
   ],
   "distribution": [
     {

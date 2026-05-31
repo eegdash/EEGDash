@@ -80,29 +80,17 @@
       "name": "Joshua Senior"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Joshua Senior"
-  },
-  "datePublished": "2025",
+  "datePublished": "2024",
   "identifier": "doi:10.18112/openneuro.ds006480.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds006480.v1.0.1",
     "https://openneuro.org/datasets/ds006480",
     "https://huggingface.co/datasets/EEGDash/ds006480"
   ],
-  "citeAs": "Andy Jeesu Kim, Mara Mather, Santiago Morales, Joshua Senior (2025). Young Adult Resting State and Auditory Oddball Task EEG Data. doi:10.18112/openneuro.ds006480.v1.0.1",
+  "citeAs": "Andy Jeesu Kim, Mara Mather, Santiago Morales, Joshua Senior (2024). Young Adult Resting State and Auditory Oddball Task EEG Data. doi:10.18112/openneuro.ds006480.v1.0.1",
   "version": "1.8.0",
-  "dateCreated": "2025-07-18",
-  "dateModified": "2025-10-06",
   "measurementTechnique": [
     "BIDS task: oddball"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Andy Jeesu Kim"
-    }
   ],
   "distribution": [
     {

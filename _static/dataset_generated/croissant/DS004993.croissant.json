@@ -77,37 +77,25 @@
       "name": "Alyssa Field"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Alyssa Field"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "National Institutes of Health - National Institute on Deafness and Other Communication Disorders (R01 DC018579, to LSH)"
     }
   ],
-  "datePublished": "2024",
+  "datePublished": "2019",
   "identifier": "doi:10.18112/openneuro.ds004993.v1.1.2",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004993.v1.1.2",
     "https://openneuro.org/datasets/ds004993",
     "https://huggingface.co/datasets/EEGDash/ds004993"
   ],
-  "citeAs": "Liberty S. Hamilton, Maansi Desai, Alyssa Field (2024). WIRED ICM Sample Dataset - Workshop on Intracranial Recordings in Humans, Epilepsy, DBS. doi:10.18112/openneuro.ds004993.v1.1.2",
+  "citeAs": "Liberty S. Hamilton, Maansi Desai, Alyssa Field (2019). WIRED ICM Sample Dataset - Workshop on Intracranial Recordings in Humans, Epilepsy, DBS. doi:10.18112/openneuro.ds004993.v1.1.2",
   "version": "1.7.0",
-  "dateCreated": "2024-02-25",
-  "dateModified": "2024-03-01",
   "measurementTechnique": [
     "BIDS task: movietrailers",
     "BIDS task: timit4",
     "BIDS task: timit5"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Liberty Hamilton"
-    }
   ],
   "distribution": [
     {

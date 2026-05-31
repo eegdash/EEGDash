@@ -72,28 +72,16 @@
       "name": "Liam Booth"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Liam Booth"
-  },
-  "datePublished": "2026",
+  "datePublished": "2019",
   "identifier": "doi:10.18112/openneuro.ds007169.v1.0.5",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds007169.v1.0.5",
     "https://openneuro.org/datasets/ds007169"
   ],
-  "citeAs": "Matthew Barras, Liam Booth (2026). Multimodal Cognitive Workload n-back Task, 4 Difficulties. doi:10.18112/openneuro.ds007169.v1.0.5",
+  "citeAs": "Matthew Barras, Liam Booth (2019). Multimodal Cognitive Workload n-back Task, 4 Difficulties. doi:10.18112/openneuro.ds007169.v1.0.5",
   "version": "1.9.0",
-  "dateCreated": "2026-01-04",
-  "dateModified": "2026-01-28",
   "measurementTechnique": [
     "BIDS task: nback"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Liam Booth"
-    }
   ],
   "distribution": [
     {

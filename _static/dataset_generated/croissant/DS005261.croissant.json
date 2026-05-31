@@ -81,36 +81,24 @@
       "name": "Jean-Michel Badier"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Jean-Michel Badier"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "This research has been supported by funding from the Institute of Convergence ILCB (France 2030, ANR-16-CONV-0002) and the Excellence Initiative of Aix-Marseille University A*MIDEX (ANR-11-IDEX-0001-02)"
     }
   ],
-  "datePublished": "2024",
+  "datePublished": "2019",
   "identifier": "doi:10.18112/openneuro.ds005261.v3.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005261.v3.0.0",
     "https://openneuro.org/datasets/ds005261",
     "https://huggingface.co/datasets/EEGDash/ds005261"
   ],
-  "citeAs": "Snezana Todorovic, Elin Runnqvist, Valerie Chanoine, Jean-Michel Badier (2024). Gloups_MEG. doi:10.18112/openneuro.ds005261.v3.0.0",
+  "citeAs": "Snezana Todorovic, Elin Runnqvist, Valerie Chanoine, Jean-Michel Badier (2019). Gloups_MEG. doi:10.18112/openneuro.ds005261.v3.0.0",
   "version": "1.7.0",
-  "dateCreated": "2024-06-17",
-  "dateModified": "2025-05-12",
   "measurementTechnique": [
     "BIDS task: gloups",
     "BIDS task: rest"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Valérie Chanoine"
-    }
   ],
   "distribution": [
     {

@@ -147,35 +147,22 @@
       "name": "Birgitte Rahbek Kornum"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Birgitte Rahbek Kornum"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "Lundbeck Foundation (R344-2020-749)"
     }
   ],
-  "datePublished": "2025",
   "identifier": "doi:10.18112/openneuro.ds006366.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds006366.v1.0.1",
     "https://openneuro.org/datasets/ds006366",
     "https://huggingface.co/datasets/EEGDash/ds006366"
   ],
-  "citeAs": "Laura Rose, Alexander Neergaard Zahid, Javier García Ciudad, Christine Egebjerg, Louise Piilgaard (2025). Mouse Sleep Staging Validation dataset (MSSV). doi:10.18112/openneuro.ds006366.v1.0.1",
+  "citeAs": "Laura Rose, Alexander Neergaard Zahid, Javier García Ciudad, Christine Egebjerg, Louise Piilgaard (n.d.). Mouse Sleep Staging Validation dataset (MSSV). doi:10.18112/openneuro.ds006366.v1.0.1",
   "version": "1.10.0",
-  "dateCreated": "2025-06-17",
-  "dateModified": "2025-09-05",
   "measurementTechnique": [
     "BIDS task: sleep"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Javier García Ciudad"
-    }
   ],
   "distribution": [
     {

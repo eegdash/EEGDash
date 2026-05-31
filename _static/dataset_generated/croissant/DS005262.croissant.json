@@ -96,29 +96,16 @@
       "name": "Sahar Selim"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Sahar Selim"
-  },
-  "datePublished": "2024",
   "identifier": "doi:10.18112/openneuro.ds005262.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005262.v1.0.1",
     "https://openneuro.org/datasets/ds005262",
     "https://huggingface.co/datasets/EEGDash/ds005262"
   ],
-  "citeAs": "Donia Metwalli, Eslam Ahmed, Antony Emil, Yousef A. Radwan, Mariam Barakat (2024). ArEEG: Arabic Inner Speech EEG dataset. doi:10.18112/openneuro.ds005262.v1.0.1",
+  "citeAs": "Donia Metwalli, Eslam Ahmed, Antony Emil, Yousef A. Radwan, Mariam Barakat (n.d.). ArEEG: Arabic Inner Speech EEG dataset. doi:10.18112/openneuro.ds005262.v1.0.1",
   "version": "1.9.0",
-  "dateCreated": "2024-06-17",
-  "dateModified": "2025-01-22",
   "measurementTechnique": [
     "BIDS task: innerspeech"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Antony Emil"
-    }
   ],
   "distribution": [
     {

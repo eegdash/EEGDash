@@ -72,35 +72,22 @@
       "name": "Decety, Jean"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Decety, Jean"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "Seed grant from Grossman Center for Quantitative Biology and Human Behavior (JD)"
     }
   ],
-  "datePublished": "2022",
   "identifier": "doi:10.18112/openneuro.ds004067.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004067.v1.0.1",
     "https://openneuro.org/datasets/ds004067",
     "https://huggingface.co/datasets/EEGDash/ds004067"
   ],
-  "citeAs": "Yoder, Keith J, Decety, Jean (2022). Moral conviction and metacognitive ability shape multiple stages of information processing. doi:10.18112/openneuro.ds004067.v1.0.1",
+  "citeAs": "Yoder, Keith J, Decety, Jean (n.d.). Moral conviction and metacognitive ability shape multiple stages of information processing. doi:10.18112/openneuro.ds004067.v1.0.1",
   "version": "1.0.2",
-  "dateCreated": "2022-03-13",
-  "dateModified": "2022-03-13",
   "measurementTechnique": [
     "BIDS task: sjt"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Keith Yoder"
-    }
   ],
   "distribution": [
     {

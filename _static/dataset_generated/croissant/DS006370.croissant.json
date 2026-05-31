@@ -68,29 +68,16 @@
       "name": "X"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "X"
-  },
-  "datePublished": "2025",
   "identifier": "doi:10.18112/openneuro.ds006370.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds006370.v1.0.1",
     "https://openneuro.org/datasets/ds006370",
     "https://huggingface.co/datasets/EEGDash/ds006370"
   ],
-  "citeAs": "X (2025). Memory Reactivation Levels Remain Unaffected by Anticipated Interference Experiment 2 Dataset. doi:10.18112/openneuro.ds006370.v1.0.1",
+  "citeAs": "X (n.d.). Memory Reactivation Levels Remain Unaffected by Anticipated Interference Experiment 2 Dataset. doi:10.18112/openneuro.ds006370.v1.0.1",
   "version": "v1.2.1",
-  "dateCreated": "2025-06-18",
-  "dateModified": "2025-06-25",
   "measurementTechnique": [
     "BIDS task: DelayedMatchtoSampleTask"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Nursena Ataseven"
-    }
   ],
   "distribution": [
     {

@@ -85,29 +85,16 @@
       "name": "Bevil R. Conway"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Bevil R. Conway"
-  },
-  "datePublished": "2020",
   "identifier": "doi:10.18112/openneuro.ds003352.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds003352.v1.0.0",
     "https://openneuro.org/datasets/ds003352",
     "https://huggingface.co/datasets/EEGDash/ds003352"
   ],
-  "citeAs": "Katherine Hermann, Isabelle Rosenthal, Shridhar R. Singh, Dimitrios Pantazis, Bevil R. Conway (2020). 1 - Light Pink Spiral. doi:10.18112/openneuro.ds003352.v1.0.0",
+  "citeAs": "Katherine Hermann, Isabelle Rosenthal, Shridhar R. Singh, Dimitrios Pantazis, Bevil R. Conway (n.d.). 1 - Light Pink Spiral. doi:10.18112/openneuro.ds003352.v1.0.0",
   "version": "1.2.2",
-  "dateCreated": "2020-11-03",
-  "dateModified": "2020-11-04",
   "measurementTechnique": [
     "BIDS task: ColorSpirals"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Conway Lab"
-    }
   ],
   "distribution": [
     {

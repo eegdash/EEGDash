@@ -85,36 +85,24 @@
       "name": "Virginie van Wassenhove"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Virginie van Wassenhove"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "This work was supported by a Marie Curie IRG-249222 and an ERC-StG-263584 to V.vW and an ANR Schubert ANR-0909-JCJC-071 to P.C."
     }
   ],
-  "datePublished": "2020",
+  "datePublished": "2014",
   "identifier": "doi:10.18112/openneuro.ds003392.v1.0.4",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds003392.v1.0.4",
     "https://openneuro.org/datasets/ds003392",
     "https://huggingface.co/datasets/EEGDash/ds003392"
   ],
-  "citeAs": "Nicolas Zilber, Philippe Ciuciu, Alexandre Gramfort, Leila Azizi, Virginie van Wassenhove (2020). NeuroSpin hMT+ Localizer DATA (MEG & aMRI). doi:10.18112/openneuro.ds003392.v1.0.4",
+  "citeAs": "Nicolas Zilber, Philippe Ciuciu, Alexandre Gramfort, Leila Azizi, Virginie van Wassenhove (2014). NeuroSpin hMT+ Localizer DATA (MEG & aMRI). doi:10.18112/openneuro.ds003392.v1.0.4",
   "version": "?",
-  "dateCreated": "2020-11-20",
-  "dateModified": "2021-05-18",
   "measurementTechnique": [
     "BIDS task: localizer",
     "BIDS task: noise"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Alexandre Gramfort"
-    }
   ],
   "distribution": [
     {

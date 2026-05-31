@@ -93,10 +93,6 @@
       "name": "Lars Buentjen"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Lars Buentjen"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -107,25 +103,16 @@
       "name": "M.-P.S. and E.A. received funding from a Deutsche Forschungsgemeinschaft Sonderforschungsbereich SFB-1436 TPC03 project-ID 425899996."
     }
   ],
-  "datePublished": "2024",
   "identifier": "doi:10.18112/openneuro.ds005691.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005691.v1.0.0",
     "https://openneuro.org/datasets/ds005691",
     "https://huggingface.co/datasets/EEGDash/ds005691"
   ],
-  "citeAs": "Max-Philipp Stenner, Cindy Marquez Nossa, Tino Zaehle, Elena Azanon, Hans-Jochen Heinze (2024). SpinalExpect_Invasive. doi:10.18112/openneuro.ds005691.v1.0.0",
+  "citeAs": "Max-Philipp Stenner, Cindy Marquez Nossa, Tino Zaehle, Elena Azanon, Hans-Jochen Heinze (n.d.). SpinalExpect_Invasive. doi:10.18112/openneuro.ds005691.v1.0.0",
   "version": "1.6",
-  "dateCreated": "2024-12-03",
-  "dateModified": "2024-12-03",
   "measurementTechnique": [
     "BIDS task: countingDeviants"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Max-Philipp Stenner"
-    }
   ],
   "distribution": [
     {

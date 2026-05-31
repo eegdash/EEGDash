@@ -84,28 +84,15 @@
       "name": "Janeen Loehr"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Janeen Loehr"
-  },
-  "datePublished": "2026",
   "identifier": "doi:10.18112/openneuro.ds007471.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds007471.v1.0.0",
     "https://openneuro.org/datasets/ds007471"
   ],
-  "citeAs": "Zijun Zhou, Anna Zamm, Justin Christensen, Vinesh Rao, Janeen Loehr (2026). Joint agency EEG dataset. doi:10.18112/openneuro.ds007471.v1.0.0",
+  "citeAs": "Zijun Zhou, Anna Zamm, Justin Christensen, Vinesh Rao, Janeen Loehr (n.d.). Joint agency EEG dataset. doi:10.18112/openneuro.ds007471.v1.0.0",
   "version": "1.8.0",
-  "dateCreated": "2026-03-04",
-  "dateModified": "2026-03-04",
   "measurementTechnique": [
     "BIDS task: jointaction"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Zijun Zhou"
-    }
   ],
   "distribution": [
     {

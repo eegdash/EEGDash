@@ -92,27 +92,15 @@
       "name": "Slawomir J. Nasuto"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Slawomir J. Nasuto"
-  },
-  "datePublished": "2020",
+  "datePublished": "2018",
   "identifier": "doi:10.18112/openneuro.ds002723.v1.1.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds002723.v1.1.0",
     "https://openneuro.org/datasets/ds002723",
     "https://huggingface.co/datasets/EEGDash/ds002723"
   ],
-  "citeAs": "Ian Daly, Nicoletta Nicolaou, Duncan Williams, Faustina Hwang, Alexis Kirke (2020). A dataset recorded during development of an affective brain-computer music interface: testing session. doi:10.18112/openneuro.ds002723.v1.1.0",
+  "citeAs": "Ian Daly, Nicoletta Nicolaou, Duncan Williams, Faustina Hwang, Alexis Kirke (2018). A dataset recorded during development of an affective brain-computer music interface: testing session. doi:10.18112/openneuro.ds002723.v1.1.0",
   "version": "1.0.2",
-  "dateCreated": "2020-04-22",
-  "dateModified": "2020-04-23",
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Ian Daly"
-    }
-  ],
   "distribution": [
     {
       "@type": "cr:FileObject",

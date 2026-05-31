@@ -76,10 +76,6 @@
       "name": "Paul Sajda"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Paul Sajda"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -90,29 +86,16 @@
       "name": "Army Research Laboratory under Cooperative Agreement Number W911NF-15-2-0074"
     }
   ],
-  "datePublished": "2021",
   "identifier": "doi:10.18112/openneuro.ds003570.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds003570.v1.0.0",
     "https://openneuro.org/datasets/ds003570",
     "https://huggingface.co/datasets/EEGDash/ds003570"
   ],
-  "citeAs": "Andrew Goldman, Tyreek Jackson, Paul Sajda (2021). EEG: Improvisation and Musical Structures. doi:10.18112/openneuro.ds003570.v1.0.0",
+  "citeAs": "Andrew Goldman, Tyreek Jackson, Paul Sajda (n.d.). EEG: Improvisation and Musical Structures. doi:10.18112/openneuro.ds003570.v1.0.0",
   "version": "1.1.1",
-  "dateCreated": "2021-03-19",
-  "dateModified": "2021-03-19",
   "measurementTechnique": [
     "BIDS task: AuditoryOddballChords"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Andrew Goldman"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Josef Faller"
-    }
   ],
   "distribution": [
     {

@@ -95,8 +95,13 @@
     }
   ],
   "datePublished": "2023",
+  "identifier": "doi:10.82901/nemar.nm000163",
+  "sameAs": [
+    "https://doi.org/10.82901/nemar.nm000163",
+    "https://openneuro.org/datasets/nm000163"
+  ],
+  "citeAs": "Kalou Cabrera Castillos, Simon Ladouce, Ludovic Darmet, Frédéric Dehais (2023). c-VEP and Burst-VEP dataset from Castillos et al. (2023). doi:10.82901/nemar.nm000163",
   "version": "1.9.0",
-  "dateModified": "2026-04-02",
   "measurementTechnique": [
     "BIDS task: cvep"
   ],
@@ -133,14 +138,6 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=nm000163",
       "encodingFormat": "text/html"
-    },
-    {
-      "@type": "cr:FileObject",
-      "@id": "nm000163-huggingface",
-      "name": "EEGDash/nm000163 on Hugging Face",
-      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
-      "contentUrl": "https://huggingface.co/datasets/EEGDash/nm000163",
-      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

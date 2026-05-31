@@ -72,29 +72,16 @@
       "name": "Paige Pytel"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Paige Pytel"
-  },
-  "datePublished": "2023",
   "identifier": "doi:10.18112/openneuro.ds004521.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004521.v1.0.1",
     "https://openneuro.org/datasets/ds004521",
     "https://huggingface.co/datasets/EEGDash/ds004521"
   ],
-  "citeAs": "Edward Ester, Paige Pytel (2023). Changes in behavioral priority influence the accessibility of working memory content - Experiment 1. doi:10.18112/openneuro.ds004521.v1.0.1",
+  "citeAs": "Edward Ester, Paige Pytel (n.d.). Changes in behavioral priority influence the accessibility of working memory content - Experiment 1. doi:10.18112/openneuro.ds004521.v1.0.1",
   "version": "1.8.0",
-  "dateCreated": "2023-03-05",
-  "dateModified": "2023-03-07",
   "measurementTechnique": [
     "BIDS task: Postcues"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Edward Ester"
-    }
   ],
   "distribution": [
     {

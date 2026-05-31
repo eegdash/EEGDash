@@ -78,29 +78,17 @@
       "name": "Patrick Johnston (dr.pat.johnston@icloud.com)"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Patrick Johnston (dr.pat.johnston@icloud.com)"
-  },
-  "datePublished": "2025",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds006817.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds006817.v1.0.0",
     "https://openneuro.org/datasets/ds006817",
     "https://huggingface.co/datasets/EEGDash/ds006817"
   ],
-  "citeAs": "Benjamin Lowe (ben.lowe@mq.edu.au), Naohide Yamamoto (naohide.yamamoto@qut.edu.au), Jonathan Robinson (jonathan.robinson@monash.edu), Patrick Johnston (dr.pat.johnston@icloud.com) (2025). Visual Attribute-Specific Contextual Trajectory Paradigm 2.0. doi:10.18112/openneuro.ds006817.v1.0.0",
+  "citeAs": "Benjamin Lowe (ben.lowe@mq.edu.au), Naohide Yamamoto (naohide.yamamoto@qut.edu.au), Jonathan Robinson (jonathan.robinson@monash.edu), Patrick Johnston (dr.pat.johnston@icloud.com) (20). Visual Attribute-Specific Contextual Trajectory Paradigm 2.0. doi:10.18112/openneuro.ds006817.v1.0.0",
   "version": "1.1.0",
-  "dateCreated": "2025-10-20",
-  "dateModified": "2025-10-28",
   "measurementTechnique": [
     "BIDS task: CTP"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Benjamin G. Lowe"
-    }
   ],
   "distribution": [
     {

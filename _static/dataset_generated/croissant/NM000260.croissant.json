@@ -92,8 +92,7 @@
   "identifier": "doi:10.5281/zenodo.2649006",
   "sameAs": [
     "https://doi.org/10.5281/zenodo.2649006",
-    "https://openneuro.org/datasets/nm000260",
-    "https://huggingface.co/datasets/EEGDash/nm000260"
+    "https://openneuro.org/datasets/nm000260"
   ],
   "citeAs": "G.F.P. Van Veen, A. Barachant, A. Andreev, G. Cattan, P. Rodrigues (2019). Van Veen, Barachant & Andreev 2012 — Building Brain Invaders: EEG data of an experimental validation (BI2012). doi:10.5281/zenodo.2649006",
   "version": "1.9.0",
@@ -134,14 +133,6 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=nm000260",
       "encodingFormat": "text/html"
-    },
-    {
-      "@type": "cr:FileObject",
-      "@id": "nm000260-huggingface",
-      "name": "EEGDash/nm000260 on Hugging Face",
-      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
-      "contentUrl": "https://huggingface.co/datasets/EEGDash/nm000260",
-      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

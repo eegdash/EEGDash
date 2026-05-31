@@ -72,35 +72,22 @@
       "name": "Michael S. Gaffrey"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Michael S. Gaffrey"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "Charles Lafitte Foundation"
     }
   ],
-  "datePublished": "2024",
   "identifier": "doi:10.18112/openneuro.ds005343.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005343.v1.0.0",
     "https://openneuro.org/datasets/ds005343",
     "https://huggingface.co/datasets/EEGDash/ds005343"
   ],
-  "citeAs": "Armen Bagdasarov, Michael S. Gaffrey (2024). Gaffrey Lab Infant Microstates and Attention. doi:10.18112/openneuro.ds005343.v1.0.0",
+  "citeAs": "Armen Bagdasarov, Michael S. Gaffrey (n.d.). Gaffrey Lab Infant Microstates and Attention. doi:10.18112/openneuro.ds005343.v1.0.0",
   "version": "1.8.0",
-  "dateCreated": "2024-07-16",
-  "dateModified": "2024-07-16",
   "measurementTechnique": [
     "BIDS task: resting"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Gaffrey Lab"
-    }
   ],
   "distribution": [
     {

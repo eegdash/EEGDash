@@ -84,53 +84,17 @@
       "name": "Jixing Li"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Jixing Li"
-  },
-  "datePublished": "2023",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds004718.v1.1.2",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004718.v1.1.2",
     "https://openneuro.org/datasets/ds004718",
     "https://huggingface.co/datasets/EEGDash/ds004718"
   ],
-  "citeAs": "Mohammad Momenian, Zhengwu Ma, Shuyi Wu, Chengcheng Wang, Jixing Li (2023). Le Petit Prince Hong Kong: Naturalistic fMRI and EEG dataset from older Cantonese speakers. doi:10.18112/openneuro.ds004718.v1.1.2",
+  "citeAs": "Mohammad Momenian, Zhengwu Ma, Shuyi Wu, Chengcheng Wang, Jixing Li (20). Le Petit Prince Hong Kong: Naturalistic fMRI and EEG dataset from older Cantonese speakers. doi:10.18112/openneuro.ds004718.v1.1.2",
   "version": "1.12.0",
-  "dateCreated": "2023-08-27",
-  "dateModified": "2025-10-14",
   "measurementTechnique": [
     "BIDS task: lppHK"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Zhengwu Ma"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Mohammad Momenian"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Shuyi Wu"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Chengcheng WANG"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Jixing Li"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Jixing Li"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Zhengwu Ma"
-    }
   ],
   "distribution": [
     {

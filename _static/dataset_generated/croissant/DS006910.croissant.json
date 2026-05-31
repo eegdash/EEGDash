@@ -105,10 +105,6 @@
       "name": "Eishi Asano"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Eishi Asano"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -124,16 +120,8 @@
   ],
   "citeAs": "Ryuzaburo Kochi, Aya Kanno, Hiroshi Uda, Keisuke Hatano, Masaki Sonoda (2025). Auditory Naming EC. doi:10.18112/openneuro.ds006910.v1.0.1",
   "version": "1.7.0",
-  "dateCreated": "2025-11-08",
-  "dateModified": "2025-11-09",
   "measurementTechnique": [
     "BIDS task: auditory"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Ryuzaburo Kochi"
-    }
   ],
   "distribution": [
     {

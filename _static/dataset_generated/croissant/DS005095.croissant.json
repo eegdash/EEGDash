@@ -96,33 +96,17 @@
       "name": "Yuri Pavlov"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Yuri Pavlov"
-  },
-  "datePublished": "2024",
+  "datePublished": "19",
   "identifier": "doi:10.18112/openneuro.ds005095.v1.0.2",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005095.v1.0.2",
     "https://openneuro.org/datasets/ds005095",
     "https://huggingface.co/datasets/EEGDash/ds005095"
   ],
-  "citeAs": "Natalia Zhozhikashvili, Maria Protopova, Tatiana Shkurenko, Marie Arsalidou, Ilya Zakharov (2024). STERNBERG DIFFICULT. doi:10.18112/openneuro.ds005095.v1.0.2",
+  "citeAs": "Natalia Zhozhikashvili, Maria Protopova, Tatiana Shkurenko, Marie Arsalidou, Ilya Zakharov (19). STERNBERG DIFFICULT. doi:10.18112/openneuro.ds005095.v1.0.2",
   "version": "1.7.0",
-  "dateCreated": "2024-04-18",
-  "dateModified": "2026-03-25",
   "measurementTechnique": [
     "BIDS task: STERNBERG"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Natalia Zhozhikashvili"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Yuri G. Pavlov"
-    }
   ],
   "distribution": [
     {

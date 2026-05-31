@@ -76,41 +76,17 @@
       "name": "Jixing Li"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Jixing Li"
-  },
-  "datePublished": "2024",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds005345.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005345.v1.0.1",
     "https://openneuro.org/datasets/ds005345",
     "https://huggingface.co/datasets/EEGDash/ds005345"
   ],
-  "citeAs": "Zhengwu Ma, Nan Wang, Jixing Li (2024). Le Petit Prince (LPP) Multi-talker: Naturalistic 7T fMRI and EEG Dataset. doi:10.18112/openneuro.ds005345.v1.0.1",
+  "citeAs": "Zhengwu Ma, Nan Wang, Jixing Li (20). Le Petit Prince (LPP) Multi-talker: Naturalistic 7T fMRI and EEG Dataset. doi:10.18112/openneuro.ds005345.v1.0.1",
   "version": "1.8.0",
-  "dateCreated": "2024-07-16",
-  "dateModified": "2025-04-17",
   "measurementTechnique": [
     "BIDS task: multitalker"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Zhengwu Ma"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Wang Nan"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Jixing Li"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Zhengwu Ma"
-    }
   ],
   "distribution": [
     {

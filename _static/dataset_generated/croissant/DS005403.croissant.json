@@ -80,35 +80,23 @@
       "name": "Nusbaum, H."
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Nusbaum, H."
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "NSF 1835181"
     }
   ],
-  "datePublished": "2024",
+  "datePublished": "2019",
   "identifier": "doi:10.18112/openneuro.ds005403.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005403.v1.0.1",
     "https://openneuro.org/datasets/ds005403",
     "https://huggingface.co/datasets/EEGDash/ds005403"
   ],
-  "citeAs": "Veillette, J., Rosen, J., Margoliash, D., Nusbaum, H. (2024). Delayed Auditory Feedback EEG/EGG. doi:10.18112/openneuro.ds005403.v1.0.1",
+  "citeAs": "Veillette, J., Rosen, J., Margoliash, D., Nusbaum, H. (2019). Delayed Auditory Feedback EEG/EGG. doi:10.18112/openneuro.ds005403.v1.0.1",
   "version": "1.6.0",
-  "dateCreated": "2024-08-06",
-  "dateModified": "2024-08-06",
   "measurementTechnique": [
     "BIDS task: daf"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "John Veillette"
-    }
   ],
   "distribution": [
     {

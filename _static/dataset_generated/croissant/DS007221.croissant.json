@@ -84,31 +84,18 @@
       "name": "Meng Lin"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Meng Lin"
-  },
-  "datePublished": "2026",
   "identifier": "doi:10.18112/openneuro.ds007221.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds007221.v1.0.1",
     "https://openneuro.org/datasets/ds007221"
   ],
-  "citeAs": "Sun Xinwei, Wang Kun, Pan Lincong, Cao Yupei, Meng Lin (2026). Cross-Environment Multi-Paradigm Motor Imagery EEG Dataset. doi:10.18112/openneuro.ds007221.v1.0.1",
+  "citeAs": "Sun Xinwei, Wang Kun, Pan Lincong, Cao Yupei, Meng Lin (n.d.). Cross-Environment Multi-Paradigm Motor Imagery EEG Dataset. doi:10.18112/openneuro.ds007221.v1.0.1",
   "version": "1.0.0",
-  "dateCreated": "2026-01-15",
-  "dateModified": "2026-04-04",
   "measurementTechnique": [
     "BIDS task: graz",
     "BIDS task: hybrid",
     "BIDS task: hybridonline",
     "BIDS task: ssmvepmi"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Xinwei Sun"
-    }
   ],
   "distribution": [
     {

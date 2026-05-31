@@ -76,29 +76,16 @@
       "name": "Tijl Grootswagers"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Tijl Grootswagers"
-  },
-  "datePublished": "2024",
   "identifier": "doi:10.18112/openneuro.ds005648.v1.0.3",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005648.v1.0.3",
     "https://openneuro.org/datasets/ds005648",
     "https://huggingface.co/datasets/EEGDash/ds005648"
   ],
-  "citeAs": "Alexis Kidder(*), Genevieve Quek, Tijl Grootswagers (2024). Mapping object space dimensions: new insights from temporal dynamics. doi:10.18112/openneuro.ds005648.v1.0.3",
+  "citeAs": "Alexis Kidder(*), Genevieve Quek, Tijl Grootswagers (n.d.). Mapping object space dimensions: new insights from temporal dynamics. doi:10.18112/openneuro.ds005648.v1.0.3",
   "version": "1.10.0",
-  "dateCreated": "2024-11-20",
-  "dateModified": "2026-03-30",
   "measurementTechnique": [
     "BIDS task: targets"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Alexis Kidder"
-    }
   ],
   "distribution": [
     {

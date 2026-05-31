@@ -87,36 +87,24 @@
       "name": "Esther Florin"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Esther Florin"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "Funded by the Deutsche Forschungsgemeinschaft (DFG, German Research Foundation), Project ID 424778381, TRR 295."
     }
   ],
-  "datePublished": "2023",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds004738.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004738.v1.0.1",
     "https://openneuro.org/datasets/ds004738",
     "https://huggingface.co/datasets/EEGDash/ds004738"
   ],
-  "citeAs": "Bahne H. Bahners, Roxanne Lofredi, Tilmann Sander, Alfons Schnitzler, Andrea A. Kuhn (2023). sfb_meg_phantom (B04/C01). doi:10.18112/openneuro.ds004738.v1.0.1",
+  "citeAs": "Bahne H. Bahners, Roxanne Lofredi, Tilmann Sander, Alfons Schnitzler, Andrea A. Kuhn (20). sfb_meg_phantom (B04/C01). doi:10.18112/openneuro.ds004738.v1.0.1",
   "version": "1.2.0",
-  "dateCreated": "2023-09-03",
-  "dateModified": "2023-09-03",
   "measurementTechnique": [
     "BIDS task: dip13",
     "BIDS task: dip13mov"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Bahne Bahners"
-    }
   ],
   "distribution": [
     {

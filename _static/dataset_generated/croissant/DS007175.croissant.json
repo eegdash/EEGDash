@@ -68,28 +68,15 @@
       "name": "[Unspecified]"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "[Unspecified]"
-  },
-  "datePublished": "2026",
   "identifier": "doi:10.18112/openneuro.ds007175.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds007175.v1.0.1",
     "https://openneuro.org/datasets/ds007175"
   ],
-  "citeAs": "[Unspecified] (2026). FFR-active-listening. doi:10.18112/openneuro.ds007175.v1.0.1",
+  "citeAs": "[Unspecified] (n.d.). FFR-active-listening. doi:10.18112/openneuro.ds007175.v1.0.1",
   "version": "1.6.0",
-  "dateCreated": "2026-01-06",
-  "dateModified": "2026-01-07",
   "measurementTechnique": [
     "BIDS task: pitch"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Letitia Ho"
-    }
   ],
   "distribution": [
     {

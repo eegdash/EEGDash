@@ -73,35 +73,22 @@
       "name": "Michael J. Kahana"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Michael J. Kahana"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "DARPA RAM: N66001-14-2-4032"
     }
   ],
-  "datePublished": "2024",
   "identifier": "doi:10.18112/openneuro.ds005558.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005558.v1.0.0",
     "https://openneuro.org/datasets/ds005558",
     "https://huggingface.co/datasets/EEGDash/ds005558"
   ],
-  "citeAs": "Haydn G. Herrema, Michael J. Kahana (2024). Categorized Free Recall with Closed-Loop Stimulation at Encoding (Encoding Classifier). doi:10.18112/openneuro.ds005558.v1.0.0",
+  "citeAs": "Haydn G. Herrema, Michael J. Kahana (n.d.). Categorized Free Recall with Closed-Loop Stimulation at Encoding (Encoding Classifier). doi:10.18112/openneuro.ds005558.v1.0.0",
   "version": "1.7.0",
-  "dateCreated": "2024-10-06",
-  "dateModified": "2024-10-06",
   "measurementTechnique": [
     "BIDS task: catFR3"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Haydn Herrema"
-    }
   ],
   "distribution": [
     {

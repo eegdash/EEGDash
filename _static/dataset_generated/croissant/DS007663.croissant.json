@@ -94,10 +94,6 @@
       "name": "Ali Mazaheri"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Ali Mazaheri"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -108,24 +104,16 @@
       "name": "BBSRC (BB/R018723/1)"
     }
   ],
-  "datePublished": "2026",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds007663.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds007663.v1.0.0",
     "https://openneuro.org/datasets/ds007663"
   ],
-  "citeAs": "Marion Brickwedde, Rupali Limachya, Roksana Markiewicz, Emma Sutton, Christopher Postzich (2026). CrossModal Study. doi:10.18112/openneuro.ds007663.v1.0.0",
+  "citeAs": "Marion Brickwedde, Rupali Limachya, Roksana Markiewicz, Emma Sutton, Christopher Postzich (20). CrossModal Study. doi:10.18112/openneuro.ds007663.v1.0.0",
   "version": "1.7.0",
-  "dateCreated": "2026-04-17",
-  "dateModified": "2026-04-19",
   "measurementTechnique": [
     "BIDS task: crossmodal"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Marion Brickwedde"
-    }
   ],
   "distribution": [
     {

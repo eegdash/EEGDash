@@ -129,10 +129,6 @@
       "name": "Uri Hasson"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Uri Hasson"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -143,25 +139,16 @@
       "name": "National Institutes of Health grant R01NS109367"
     }
   ],
-  "datePublished": "2024",
   "identifier": "doi:10.18112/openneuro.ds005574.v1.0.2",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005574.v1.0.2",
     "https://openneuro.org/datasets/ds005574",
     "https://huggingface.co/datasets/EEGDash/ds005574"
   ],
-  "citeAs": "Zaid Zada, Samuel A. Nastase, Bobbi Aubrey, Itamar Jalon, Ariel Goldstein (2024). The \"Podcast\" ECoG dataset. doi:10.18112/openneuro.ds005574.v1.0.2",
+  "citeAs": "Zaid Zada, Samuel A. Nastase, Bobbi Aubrey, Itamar Jalon, Ariel Goldstein (n.d.). The \"Podcast\" ECoG dataset. doi:10.18112/openneuro.ds005574.v1.0.2",
   "version": "1.10.0",
-  "dateCreated": "2024-10-15",
-  "dateModified": "2025-02-17",
   "measurementTechnique": [
     "BIDS task: podcast"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Zaid Zada"
-    }
   ],
   "distribution": [
     {

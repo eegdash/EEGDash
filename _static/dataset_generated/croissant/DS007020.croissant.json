@@ -80,29 +80,16 @@
       "name": "Nandakumar Narayanan"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Nandakumar Narayanan"
-  },
-  "datePublished": "2025",
   "identifier": "doi:10.18112/openneuro.ds007020.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds007020.v1.0.0",
     "https://openneuro.org/datasets/ds007020",
     "https://huggingface.co/datasets/EEGDash/ds007020"
   ],
-  "citeAs": "Simin Jamshidi, Arturo Espinoza, Soura Dasgupta, Nandakumar Narayanan (2025). EEG Mortality Dataset in Parkinson's Disease. doi:10.18112/openneuro.ds007020.v1.0.0",
+  "citeAs": "Simin Jamshidi, Arturo Espinoza, Soura Dasgupta, Nandakumar Narayanan (n.d.). EEG Mortality Dataset in Parkinson's Disease. doi:10.18112/openneuro.ds007020.v1.0.0",
   "version": "1.8.0",
-  "dateCreated": "2025-12-02",
-  "dateModified": "2025-12-02",
   "measurementTechnique": [
     "BIDS task: rest"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Simin Jamshidi"
-    }
   ],
   "distribution": [
     {

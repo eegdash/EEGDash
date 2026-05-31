@@ -83,33 +83,21 @@
       "name": "Xu Lei"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Xu Lei"
-  },
-  "datePublished": "2022",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds004148.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004148.v1.0.0",
     "https://openneuro.org/datasets/ds004148",
     "https://huggingface.co/datasets/EEGDash/ds004148"
   ],
-  "citeAs": "Yulin Wang, Wei Duan, Lihong Ding, Debo Dong, Xu Lei (2022). A test-retest resting and cognitive state EEG dataset. doi:10.18112/openneuro.ds004148.v1.0.0",
+  "citeAs": "Yulin Wang, Wei Duan, Lihong Ding, Debo Dong, Xu Lei (20). A test-retest resting and cognitive state EEG dataset. doi:10.18112/openneuro.ds004148.v1.0.0",
   "version": "1.2",
-  "dateCreated": "2022-06-08",
-  "dateModified": "2022-06-13",
   "measurementTechnique": [
     "BIDS task: eyesclosed",
     "BIDS task: eyesopen",
     "BIDS task: mathematic",
     "BIDS task: memory",
     "BIDS task: music"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Yulin Wang"
-    }
   ],
   "distribution": [
     {

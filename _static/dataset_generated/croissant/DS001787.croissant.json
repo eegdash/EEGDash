@@ -72,33 +72,17 @@
       "name": "Tracy Brandmeyer"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Tracy Brandmeyer"
-  },
-  "datePublished": "2019",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds001787.v1.1.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds001787.v1.1.1",
     "https://openneuro.org/datasets/ds001787",
     "https://huggingface.co/datasets/EEGDash/ds001787"
   ],
-  "citeAs": "Arnaud Delorme, Tracy Brandmeyer (2019). EEG meditation study. doi:10.18112/openneuro.ds001787.v1.1.1",
+  "citeAs": "Arnaud Delorme, Tracy Brandmeyer (20). EEG meditation study. doi:10.18112/openneuro.ds001787.v1.1.1",
   "version": "1.1.1",
-  "dateCreated": "2019-03-09",
-  "dateModified": "2024-06-17",
   "measurementTechnique": [
     "BIDS task: meditation"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Arnaud Delorme"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Annalisa Salazar"
-    }
   ],
   "distribution": [
     {

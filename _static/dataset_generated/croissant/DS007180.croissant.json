@@ -79,34 +79,21 @@
       "name": "Carlos González-García"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Carlos González-García"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "This work was supported by the Spanish Ministry of Science and Innovation and the State Research Agency [research Project PID2020-116342GA-I00 to EMA and CGG, PID2023-149428NB-I00 to CGG, and PID2024-157672NB-I00 to EMA, funded MICIU/AEI/10.13039/501100011033/FEDER, EU]. CGG was also supported by Grant Ramón y Cajal RYC2021-033536-I funded by MCIN/AEI/10.13039/501100011033 and by the European Union Next Generation EU/PRTR. FvE was supported by an ERC Starting Grant from the European Research Council (MEMTICIPATION, 850636) and an NWO Vidi Grant by the Dutch Research Council (grant number 14721). AFG was supported by Grant PRE2021-100351, funded by MCIN/AEI/10.13039/501100011033. Additionally, this publication was funded by the European Social Fund Plus ESF+, CEX2023-001312-M by MCIN/AEI/10.13039/501100011033 and by the UCE-PP2023-11 by the University of Granada as an Excellence Unit Program. This work is part of the doctoral thesis of AFG, under the supervision of EMA and CGG."
     }
   ],
-  "datePublished": "2026",
   "identifier": "doi:10.18112/openneuro.ds007180.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds007180.v1.0.0",
     "https://openneuro.org/datasets/ds007180"
   ],
-  "citeAs": "Águeda Fuentes-Guerra, Elisa Martín Arévalo, Freek van Ede, Carlos González-García (2026). Exo-EEG Experiment. doi:10.18112/openneuro.ds007180.v1.0.0",
+  "citeAs": "Águeda Fuentes-Guerra, Elisa Martín Arévalo, Freek van Ede, Carlos González-García (n.d.). Exo-EEG Experiment. doi:10.18112/openneuro.ds007180.v1.0.0",
   "version": "1.4.0",
-  "dateCreated": "2026-01-07",
-  "dateModified": "2026-01-07",
   "measurementTechnique": [
     "BIDS task: exo"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Águeda Fuentes-Guerra"
-    }
   ],
   "distribution": [
     {

@@ -73,10 +73,6 @@
       "name": "Coll LAB"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Coll LAB"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -87,24 +83,15 @@
       "name": "Fonds de recherche du Québec (FRQ)"
     }
   ],
-  "datePublished": "2025",
   "identifier": "doi:10.18112/openneuro.ds006897.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds006897.v1.0.0",
     "https://openneuro.org/datasets/ds006897"
   ],
-  "citeAs": "Roy, N., Coll, MP, Coll LAB (2025). No effect of rhythmic visual stimulation on experimental pain perception. doi:10.18112/openneuro.ds006897.v1.0.0",
+  "citeAs": "Roy, N., Coll, MP, Coll LAB (n.d.). No effect of rhythmic visual stimulation on experimental pain perception. doi:10.18112/openneuro.ds006897.v1.0.0",
   "version": "1.9.0",
-  "dateCreated": "2025-11-04",
-  "dateModified": "2026-04-10",
   "measurementTechnique": [
     "BIDS task: eegsvr"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Michel-Pierre Coll"
-    }
   ],
   "distribution": [
     {

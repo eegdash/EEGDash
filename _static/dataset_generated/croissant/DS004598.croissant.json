@@ -92,35 +92,22 @@
       "name": "Keliris A. Georgios"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Keliris A. Georgios"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "N/A"
     }
   ],
-  "datePublished": "2023",
   "identifier": "doi:10.18112/openneuro.ds004598.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004598.v1.0.0",
     "https://openneuro.org/datasets/ds004598",
     "https://huggingface.co/datasets/EEGDash/ds004598"
   ],
-  "citeAs": "Moradi Faraz, van den Berg Monica, Mirjebreili Morteza, Kosten Lauren, Verhoye Marleen (2023). LFP during linear track in 6-month old TgF344-AD rats. doi:10.18112/openneuro.ds004598.v1.0.0",
+  "citeAs": "Moradi Faraz, van den Berg Monica, Mirjebreili Morteza, Kosten Lauren, Verhoye Marleen (n.d.). LFP during linear track in 6-month old TgF344-AD rats. doi:10.18112/openneuro.ds004598.v1.0.0",
   "version": "1.2.0",
-  "dateCreated": "2023-06-12",
-  "dateModified": "2023-07-10",
   "measurementTechnique": [
     "BIDS task: LinearTrack"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Monica van den Berg"
-    }
   ],
   "distribution": [
     {

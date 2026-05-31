@@ -81,10 +81,6 @@
       "name": "Alec Marantz"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Alec Marantz"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -95,25 +91,16 @@
       "name": "Abu Dhabi Institute Grant G1001 (AM)"
     }
   ],
-  "datePublished": "2019",
   "identifier": "doi:10.18112/openneuro.ds002312.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds002312.v1.0.0",
     "https://openneuro.org/datasets/ds002312",
     "https://huggingface.co/datasets/EEGDash/ds002312"
   ],
-  "citeAs": "Teon L Brooks, Laura Gwilliams, Alexandre Gramfort, Alec Marantz (2019). OcularLDT. doi:10.18112/openneuro.ds002312.v1.0.0",
+  "citeAs": "Teon L Brooks, Laura Gwilliams, Alexandre Gramfort, Alec Marantz (n.d.). OcularLDT. doi:10.18112/openneuro.ds002312.v1.0.0",
   "version": "1.2.0",
-  "dateCreated": "2019-11-08",
-  "dateModified": "2019-11-08",
   "measurementTechnique": [
     "BIDS task: OcularLDT"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Teon L. Brooks"
-    }
   ],
   "distribution": [
     {

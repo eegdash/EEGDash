@@ -1,0 +1,125 @@
+{
+  "@context": {
+    "@language": "en",
+    "@vocab": "https://schema.org/",
+    "citeAs": "cr:citeAs",
+    "column": "cr:column",
+    "conformsTo": "dct:conformsTo",
+    "cr": "http://mlcommons.org/croissant/",
+    "data": {
+      "@id": "cr:data",
+      "@type": "@json"
+    },
+    "dataType": {
+      "@id": "cr:dataType",
+      "@type": "@vocab"
+    },
+    "dct": "http://purl.org/dc/terms/",
+    "extract": "cr:extract",
+    "field": "cr:field",
+    "fileObject": "cr:fileObject",
+    "fileProperty": "cr:fileProperty",
+    "fileSet": "cr:fileSet",
+    "format": "cr:format",
+    "includes": "cr:includes",
+    "isLiveDataset": "cr:isLiveDataset",
+    "jsonPath": "cr:jsonPath",
+    "key": "cr:key",
+    "md5": "cr:md5",
+    "parentField": "cr:parentField",
+    "path": "cr:path",
+    "recordSet": "cr:recordSet",
+    "references": "cr:references",
+    "regex": "cr:regex",
+    "repeated": "cr:repeated",
+    "replace": "cr:replace",
+    "sc": "https://schema.org/",
+    "separator": "cr:separator",
+    "source": "cr:source",
+    "subField": "cr:subField",
+    "transform": "cr:transform"
+  },
+  "@type": "sc:Dataset",
+  "conformsTo": "http://mlcommons.org/croissant/1.0",
+  "name": "on003810",
+  "alternateName": [
+    "ON003810"
+  ],
+  "description": "Motor Imagery vs Rest - Low-Cost EEG System. eeg dataset accessible via EEGDash as `ON003810` with standardized BIDS metadata.",
+  "url": "https://eegdash.org/api/dataset/eegdash.dataset.ON003810.html",
+  "keywords": [
+    "EEG",
+    "BIDS",
+    "neuroscience"
+  ],
+  "isAccessibleForFree": true,
+  "includedInDataCatalog": {
+    "@type": "sc:DataCatalog",
+    "name": "EEG Dash",
+    "url": "https://eegdash.org/"
+  },
+  "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "creator": [
+    {
+      "@type": "sc:Person",
+      "name": "Victoria Peterson"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Catalina Maria Galvan"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Hugo Sacha Hernadez"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Ruben Spies"
+    }
+  ],
+  "identifier": "doi:10.82901/nemar.on003810",
+  "sameAs": [
+    "https://doi.org/10.82901/nemar.on003810",
+    "https://openneuro.org/datasets/on003810"
+  ],
+  "citeAs": "Victoria Peterson, Catalina Maria Galvan, Hugo Sacha Hernadez, Ruben Spies (n.d.). Motor Imagery vs Rest - Low-Cost EEG System. doi:10.82901/nemar.on003810",
+  "version": "1.1.1",
+  "measurementTechnique": [
+    "BIDS task: MIvsRest"
+  ],
+  "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "on003810-bids-bucket",
+      "name": "on003810 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for ON003810.",
+      "contentUrl": "s3://nemar/on003810",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "on003810-openneuro",
+      "name": "on003810 on OpenNeuro",
+      "description": "OpenNeuro dataset landing page.",
+      "contentUrl": "https://openneuro.org/datasets/on003810",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "on003810-eegdash-records",
+      "name": "on003810 EEGDash records (live)",
+      "description": "Live JSON listing of every recording in this dataset, with BIDS metadata, channel counts, and S3 storage keys.",
+      "contentUrl": "https://data.eegdash.org/api/eegdash/records?filter=%7B%22dataset%22%3A%22on003810%22%7D",
+      "encodingFormat": "application/json",
+      "isLiveDataset": true
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "on003810-nemar",
+      "name": "on003810 on NeMAR",
+      "description": "NEMAR dataset landing page with pipeline plots.",
+      "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=on003810",
+      "encodingFormat": "text/html"
+    }
+  ]
+}

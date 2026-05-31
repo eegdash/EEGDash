@@ -116,35 +116,22 @@
       "name": "Jun Li (data and curation)"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Jun Li (data and curation)"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "This work was supported by grants from the National Natural Science Foundation of China (31771242). The authors declared that they have no conflict of interest."
     }
   ],
-  "datePublished": "2022",
   "identifier": "doi:10.18112/openneuro.ds004166.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004166.v1.0.0",
     "https://openneuro.org/datasets/ds004166",
     "https://huggingface.co/datasets/EEGDash/ds004166"
   ],
-  "citeAs": "Yang Li (data and curation), Wenjin Fu (data), Qiumei Zhang (data), Xiongying Chen (data), Xiaohong Li (data) (2022). Effects of Forward and Backward Span Trainings on Working Memory: Evidence from a Randomized, Controlled Trial. doi:10.18112/openneuro.ds004166.v1.0.0",
+  "citeAs": "Yang Li (data and curation), Wenjin Fu (data), Qiumei Zhang (data), Xiongying Chen (data), Xiaohong Li (data) (n.d.). Effects of Forward and Backward Span Trainings on Working Memory: Evidence from a Randomized, Controlled Trial. doi:10.18112/openneuro.ds004166.v1.0.0",
   "version": "1.7.0",
-  "dateCreated": "2022-06-17",
-  "dateModified": "2022-06-17",
   "measurementTechnique": [
     "BIDS task: WM"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Jun Li"
-    }
   ],
   "distribution": [
     {

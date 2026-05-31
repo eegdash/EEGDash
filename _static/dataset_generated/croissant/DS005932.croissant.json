@@ -80,37 +80,17 @@
       "name": "and Karen Emmorey"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "and Karen Emmorey"
-  },
-  "datePublished": "2025",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds005932.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005932.v1.0.0",
     "https://openneuro.org/datasets/ds005932",
     "https://huggingface.co/datasets/EEGDash/ds005932"
   ],
-  "citeAs": "Phillip J. Holcomb, Jacklyn Jardel, Katherine J. Midgley, and Karen Emmorey (2025). PWIe. doi:10.18112/openneuro.ds005932.v1.0.0",
+  "citeAs": "Phillip J. Holcomb, Jacklyn Jardel, Katherine J. Midgley, and Karen Emmorey (20). PWIe. doi:10.18112/openneuro.ds005932.v1.0.0",
   "version": "1.8.0",
-  "dateCreated": "2025-02-19",
-  "dateModified": "2025-11-05",
   "measurementTechnique": [
     "BIDS task: PictureWordInterference"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Jacklyn Jardel"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Phillip Holcomb"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Phillip Holcomb"
-    }
   ],
   "distribution": [
     {

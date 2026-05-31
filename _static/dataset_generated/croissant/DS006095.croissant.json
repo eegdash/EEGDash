@@ -119,27 +119,20 @@
       "name": "Daniel P. Ferris"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Daniel P. Ferris"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "This study was supported by the National Institute of Health (U01AG061389)."
     }
   ],
-  "datePublished": "2025",
   "identifier": "doi:10.18112/openneuro.ds006095.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds006095.v1.0.0",
     "https://openneuro.org/datasets/ds006095",
     "https://huggingface.co/datasets/EEGDash/ds006095"
   ],
-  "citeAs": "Chang Liu, Erika M. Pliner, Jacob S. Salminen, Ryan Downey, Jungyun Hwang (2025). Mind in Motion Older Adults Walking Over Uneven Terrain. doi:10.18112/openneuro.ds006095.v1.0.0",
+  "citeAs": "Chang Liu, Erika M. Pliner, Jacob S. Salminen, Ryan Downey, Jungyun Hwang (n.d.). Mind in Motion Older Adults Walking Over Uneven Terrain. doi:10.18112/openneuro.ds006095.v1.0.0",
   "version": "v1.0.0",
-  "dateCreated": "2025-04-06",
-  "dateModified": "2025-04-07",
   "measurementTechnique": [
     "BIDS task: 0p25",
     "BIDS task: 0p5",
@@ -150,12 +143,6 @@
     "BIDS task: high",
     "BIDS task: low",
     "BIDS task: med"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Chang Liu"
-    }
   ],
   "distribution": [
     {

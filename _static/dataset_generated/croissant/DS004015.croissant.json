@@ -84,29 +84,17 @@
       "name": "Bojana Mirkovic"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Bojana Mirkovic"
-  },
-  "datePublished": "2022",
+  "datePublished": "2020",
   "identifier": "doi:10.18112/openneuro.ds004015.v1.0.2",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004015.v1.0.2",
     "https://openneuro.org/datasets/ds004015",
     "https://huggingface.co/datasets/EEGDash/ds004015"
   ],
-  "citeAs": "Bjoern Holtze, Marc Rosenkranz, Manuela Jaeger, Stefan Debener, Bojana Mirkovic (2022). Attended speaker paradigm (cEEGrid data). doi:10.18112/openneuro.ds004015.v1.0.2",
+  "citeAs": "Bjoern Holtze, Marc Rosenkranz, Manuela Jaeger, Stefan Debener, Bojana Mirkovic (2020). Attended speaker paradigm (cEEGrid data). doi:10.18112/openneuro.ds004015.v1.0.2",
   "version": "v5.2",
-  "dateCreated": "2022-02-03",
-  "dateModified": "2022-10-04",
   "measurementTechnique": [
     "BIDS task: AttendedSpeakerParadigmcEEGridAttention"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Björn Holtze"
-    }
   ],
   "distribution": [
     {

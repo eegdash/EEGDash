@@ -72,37 +72,16 @@
       "name": "Scott Makeig"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Scott Makeig"
-  },
-  "datePublished": "2020",
   "identifier": "doi:10.18112/openneuro.ds003004.v1.1.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds003004.v1.1.1",
     "https://openneuro.org/datasets/ds003004",
     "https://huggingface.co/datasets/EEGDash/ds003004"
   ],
-  "citeAs": "Julie Onton, Scott Makeig (2020). Imagined Emotion Study. doi:10.18112/openneuro.ds003004.v1.1.1",
+  "citeAs": "Julie Onton, Scott Makeig (n.d.). Imagined Emotion Study. doi:10.18112/openneuro.ds003004.v1.1.1",
   "version": "1.1.1",
-  "dateCreated": "2020-07-09",
-  "dateModified": "2022-08-23",
   "measurementTechnique": [
     "BIDS task: ImaginedEmotion"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Dung Truong"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Arnaud Delorme"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Kay Robbins"
-    }
   ],
   "distribution": [
     {

@@ -84,42 +84,26 @@
       "name": "Kublik Ewa"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Kublik Ewa"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "Polish National Science Center (NCN) grant no. 2016/20/W/NZ4/00354"
     }
   ],
-  "datePublished": "2023",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds004621.v1.0.4",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004621.v1.0.4",
     "https://openneuro.org/datasets/ds004621",
     "https://huggingface.co/datasets/EEGDash/ds004621"
   ],
-  "citeAs": "Dzianok Patrycja, Antonova Ingrida, Wojciechowski Jakub, Dreszer Joanna, Kublik Ewa (2023). The Nencki-Symfonia EEG/ERP dataset. doi:10.18112/openneuro.ds004621.v1.0.4",
+  "citeAs": "Dzianok Patrycja, Antonova Ingrida, Wojciechowski Jakub, Dreszer Joanna, Kublik Ewa (20). The Nencki-Symfonia EEG/ERP dataset. doi:10.18112/openneuro.ds004621.v1.0.4",
   "version": "1.0.2",
-  "dateCreated": "2023-06-26",
-  "dateModified": "2025-06-21",
   "measurementTechnique": [
     "BIDS task: msit",
     "BIDS task: oddball",
     "BIDS task: rest",
     "BIDS task: srt"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Patrycja Dzianok"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Patrycja Dzianok"
-    }
   ],
   "distribution": [
     {

@@ -76,29 +76,17 @@
       "name": "Carlson, T.A."
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Carlson, T.A."
-  },
-  "datePublished": "2022",
+  "datePublished": "2019",
   "identifier": "doi:10.18112/openneuro.ds004018.v2.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004018.v2.0.0",
     "https://openneuro.org/datasets/ds004018",
     "https://huggingface.co/datasets/EEGDash/ds004018"
   ],
-  "citeAs": "Grootswagers, T., Robinson, A.K., Carlson, T.A. (2022). EEG recordings for 200 object images presented in RSVP sequences at 5Hz or 20Hz. doi:10.18112/openneuro.ds004018.v2.0.0",
+  "citeAs": "Grootswagers, T., Robinson, A.K., Carlson, T.A. (2019). EEG recordings for 200 object images presented in RSVP sequences at 5Hz or 20Hz. doi:10.18112/openneuro.ds004018.v2.0.0",
   "version": "1.0.0 + bep006",
-  "dateCreated": "2022-02-09",
-  "dateModified": "2022-02-01",
   "measurementTechnique": [
     "BIDS task: rsvp"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Tijl Grootswagers"
-    }
   ],
   "distribution": [
     {

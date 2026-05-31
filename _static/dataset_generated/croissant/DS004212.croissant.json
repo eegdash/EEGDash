@@ -101,33 +101,17 @@
       "name": "Chris I. Baker"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Chris I. Baker"
-  },
-  "datePublished": "2022",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds004212.v3.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004212.v3.0.0",
     "https://openneuro.org/datasets/ds004212",
     "https://huggingface.co/datasets/EEGDash/ds004212"
   ],
-  "citeAs": "Martin N. Hebart, Oliver Contier, Lina Teichmann, Adam H. Rockter, Charles Zheng (2022). THINGS-MEG. doi:10.18112/openneuro.ds004212.v3.0.0",
+  "citeAs": "Martin N. Hebart, Oliver Contier, Lina Teichmann, Adam H. Rockter, Charles Zheng (20). THINGS-MEG. doi:10.18112/openneuro.ds004212.v3.0.0",
   "version": "1.21",
-  "dateCreated": "2022-07-14",
-  "dateModified": "2025-05-29",
   "measurementTechnique": [
     "BIDS task: main"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Lina Teichmann"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Oliver Contier"
-    }
   ],
   "distribution": [
     {

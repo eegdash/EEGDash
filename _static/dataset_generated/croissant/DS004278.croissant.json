@@ -89,43 +89,23 @@
       "name": "[() = equal contribution]"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "[(*) = equal contribution]"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "Intramural Research Program of the National Institute of Mental Health (ZIAMH002909)"
     }
   ],
-  "datePublished": "2022",
+  "datePublished": "2019",
   "identifier": "doi:10.18112/openneuro.ds004278.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004278.v1.0.1",
     "https://openneuro.org/datasets/ds004278",
     "https://huggingface.co/datasets/EEGDash/ds004278"
   ],
-  "citeAs": "Alexis Kidder(*), Anna Corriveau(*), Lina Teichmann, Susan Wardle, Chris Baker (2022). Sustained Neural Representations of Personally Familiar People and Places During Cued Recall. doi:10.18112/openneuro.ds004278.v1.0.1",
+  "citeAs": "Alexis Kidder(*), Anna Corriveau(*), Lina Teichmann, Susan Wardle, Chris Baker (2019). Sustained Neural Representations of Personally Familiar People and Places During Cued Recall. doi:10.18112/openneuro.ds004278.v1.0.1",
   "version": "1.6.0",
-  "dateCreated": "2022-09-23",
-  "dateModified": "2022-10-11",
   "measurementTechnique": [
     "BIDS task: CuedRecall"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Lina Teichmann"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Anna Corriveau"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Alexis Kidder"
-    }
   ],
   "distribution": [
     {

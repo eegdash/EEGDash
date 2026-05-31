@@ -73,29 +73,16 @@
       "name": "Michael J. Kahana"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Michael J. Kahana"
-  },
-  "datePublished": "2024",
   "identifier": "doi:10.18112/openneuro.ds005411.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005411.v1.0.0",
     "https://openneuro.org/datasets/ds005411",
     "https://huggingface.co/datasets/EEGDash/ds005411"
   ],
-  "citeAs": "Haydn G. Herrema, Michael J. Kahana (2024). Free Recall of Word Lists with Repeated Items. doi:10.18112/openneuro.ds005411.v1.0.0",
+  "citeAs": "Haydn G. Herrema, Michael J. Kahana (n.d.). Free Recall of Word Lists with Repeated Items. doi:10.18112/openneuro.ds005411.v1.0.0",
   "version": "1.7.0",
-  "dateCreated": "2024-08-13",
-  "dateModified": "2024-08-14",
   "measurementTechnique": [
     "BIDS task: RepFR1"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Haydn Herrema"
-    }
   ],
   "distribution": [
     {

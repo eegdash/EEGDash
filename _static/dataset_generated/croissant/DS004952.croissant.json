@@ -128,29 +128,17 @@
       "name": "Haiyan Wu"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Haiyan Wu"
-  },
-  "datePublished": "2024",
+  "datePublished": "2019",
   "identifier": "doi:10.18112/openneuro.ds004952.v1.2.2",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004952.v1.2.2",
     "https://openneuro.org/datasets/ds004952",
     "https://huggingface.co/datasets/EEGDash/ds004952"
   ],
-  "citeAs": "Xinyu Mou, Cuilin He, Liwei Tan, Junjie Yu, Huadong Liang (2024). ChineseEEG: A Chinese Linguistic Corpora EEG Dataset for Semantic Alignment and Neural Decoding. doi:10.18112/openneuro.ds004952.v1.2.2",
+  "citeAs": "Xinyu Mou, Cuilin He, Liwei Tan, Junjie Yu, Huadong Liang (2019). ChineseEEG: A Chinese Linguistic Corpora EEG Dataset for Semantic Alignment and Neural Decoding. doi:10.18112/openneuro.ds004952.v1.2.2",
   "version": "1.7.0",
-  "dateCreated": "2024-02-07",
-  "dateModified": "2025-03-08",
   "measurementTechnique": [
     "BIDS task: reading"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Haiyan Wu"
-    }
   ],
   "distribution": [
     {

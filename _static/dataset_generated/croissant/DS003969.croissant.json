@@ -72,32 +72,19 @@
       "name": "Claire Braboszcz"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Claire Braboszcz"
-  },
-  "datePublished": "2021",
   "identifier": "doi:10.18112/openneuro.ds003969.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds003969.v1.0.0",
     "https://openneuro.org/datasets/ds003969",
     "https://huggingface.co/datasets/EEGDash/ds003969"
   ],
-  "citeAs": "Arnaud Delorme, Claire Braboszcz (2021). Meditation vs thinking task. doi:10.18112/openneuro.ds003969.v1.0.0",
+  "citeAs": "Arnaud Delorme, Claire Braboszcz (n.d.). Meditation vs thinking task. doi:10.18112/openneuro.ds003969.v1.0.0",
   "version": "v1.2.1",
-  "dateCreated": "2021-12-23",
-  "dateModified": "2021-12-10",
   "measurementTechnique": [
     "BIDS task: med1breath",
     "BIDS task: med2",
     "BIDS task: think1",
     "BIDS task: think2"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Arnaud Delorme"
-    }
   ],
   "distribution": [
     {

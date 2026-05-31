@@ -96,29 +96,16 @@
       "name": "Maria Ruz"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Maria Ruz"
-  },
-  "datePublished": "2024",
   "identifier": "doi:10.18112/openneuro.ds005089.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005089.v1.0.1",
     "https://openneuro.org/datasets/ds005089",
     "https://huggingface.co/datasets/EEGDash/ds005089"
   ],
-  "citeAs": "Blanca Aguado-Lopez, Ana F. Palenciano, Jose M. G. Penalver, Paloma Diaz-Gutierrez, David Lopez-Garcia (2024). Proactive selective attention across competition contexts. doi:10.18112/openneuro.ds005089.v1.0.1",
+  "citeAs": "Blanca Aguado-Lopez, Ana F. Palenciano, Jose M. G. Penalver, Paloma Diaz-Gutierrez, David Lopez-Garcia (n.d.). Proactive selective attention across competition contexts. doi:10.18112/openneuro.ds005089.v1.0.1",
   "version": "1.2",
-  "dateCreated": "2024-04-17",
-  "dateModified": "2024-04-18",
   "measurementTechnique": [
     "BIDS task: competition"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Blanca Aguado-López"
-    }
   ],
   "distribution": [
     {

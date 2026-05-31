@@ -72,33 +72,16 @@
       "name": "Dean Radin"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Dean Radin"
-  },
-  "datePublished": "2020",
   "identifier": "doi:10.18112/openneuro.ds002691.v1.1.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds002691.v1.1.0",
     "https://openneuro.org/datasets/ds002691",
     "https://huggingface.co/datasets/EEGDash/ds002691"
   ],
-  "citeAs": "Arnaud Delorme, Dean Radin (2020). Internal attention study. doi:10.18112/openneuro.ds002691.v1.1.0",
+  "citeAs": "Arnaud Delorme, Dean Radin (n.d.). Internal attention study. doi:10.18112/openneuro.ds002691.v1.1.0",
   "version": "v1.2.1",
-  "dateCreated": "2020-04-08",
-  "dateModified": "2021-10-19",
   "measurementTechnique": [
     "BIDS task: internalattention"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Arnaud Delorme"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Annalisa Salazar"
-    }
   ],
   "distribution": [
     {

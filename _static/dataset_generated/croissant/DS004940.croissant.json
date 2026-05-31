@@ -76,10 +76,6 @@
       "name": "John J. Foxe"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "John J. Foxe"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -99,17 +95,9 @@
   ],
   "citeAs": "Kathryn Toffolo, Edward G. Freedman, John J. Foxe (2024). Neurophysiological measures of covert semantic processing in neurotypical adolescents actively ignoring spoken sentence inputs: A high-density event-related potential (ERP) study.. doi:10.18112/openneuro.ds004940.v1.0.1",
   "version": "1.7.0",
-  "dateCreated": "2024-01-22",
-  "dateModified": "2025-08-11",
   "measurementTechnique": [
     "BIDS task: N400Active",
     "BIDS task: N400Passive"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Kathryn Toffolo"
-    }
   ],
   "distribution": [
     {

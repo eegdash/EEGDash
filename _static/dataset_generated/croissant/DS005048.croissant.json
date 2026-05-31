@@ -76,35 +76,22 @@
       "name": "Zahra Vahabi"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Zahra Vahabi"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "This work was partially funded by the Cognitive Sciences & Technologies Council of Iran and by the grant G970736 from Sharif University of Technology, which covered the cost of data collection. The funders had no role in the study conceptualization and design, data collection and analysis, decision to publish, or preparation of the manuscript."
     }
   ],
-  "datePublished": "2024",
   "identifier": "doi:10.18112/openneuro.ds005048.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005048.v1.0.1",
     "https://openneuro.org/datasets/ds005048",
     "https://huggingface.co/datasets/EEGDash/ds005048"
   ],
-  "citeAs": "Mojtaba Lahijanian, Hamid Aghajan, Zahra Vahabi (2024). 40Hz Auditory Entrainment. doi:10.18112/openneuro.ds005048.v1.0.1",
+  "citeAs": "Mojtaba Lahijanian, Hamid Aghajan, Zahra Vahabi (n.d.). 40Hz Auditory Entrainment. doi:10.18112/openneuro.ds005048.v1.0.1",
   "version": "1.8.0",
-  "dateCreated": "2024-03-19",
-  "dateModified": "2025-04-10",
   "measurementTechnique": [
     "BIDS task: 40HzAuditoryEntrainment"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Mojtaba Lahijanian"
-    }
   ],
   "distribution": [
     {

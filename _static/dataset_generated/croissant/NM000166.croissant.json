@@ -123,8 +123,7 @@
   "identifier": "doi:10.1016/j.neuroimage.2022.119666",
   "sameAs": [
     "https://doi.org/10.1016/j.neuroimage.2022.119666",
-    "https://openneuro.org/datasets/nm000166",
-    "https://huggingface.co/datasets/EEGDash/nm000166"
+    "https://openneuro.org/datasets/nm000166"
   ],
   "citeAs": "Gan Huang, Zhenxing Hu, Weize Chen, Shaorong Zhang, Zhen Liang (2022). M3CV: Multi-subject, Multi-session, Multi-task EEG Database. doi:10.1016/j.neuroimage.2022.119666",
   "version": "1.9.0",
@@ -177,14 +176,6 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=nm000166",
       "encodingFormat": "text/html"
-    },
-    {
-      "@type": "cr:FileObject",
-      "@id": "nm000166-huggingface",
-      "name": "EEGDash/nm000166 on Hugging Face",
-      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
-      "contentUrl": "https://huggingface.co/datasets/EEGDash/nm000166",
-      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

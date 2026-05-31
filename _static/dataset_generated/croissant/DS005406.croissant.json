@@ -80,29 +80,17 @@
       "name": "Emiel Cracco"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Emiel Cracco"
-  },
-  "datePublished": "2024",
+  "datePublished": "2019",
   "identifier": "doi:10.18112/openneuro.ds005406.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005406.v1.0.0",
     "https://openneuro.org/datasets/ds005406",
     "https://huggingface.co/datasets/EEGDash/ds005406"
   ],
-  "citeAs": "Silvia Formica, Anna Chaiken, Jan R. Wiersema, Emiel Cracco (2024). EEG frequency tagging reveals the integration of dissimilar observed actions. doi:10.18112/openneuro.ds005406.v1.0.0",
+  "citeAs": "Silvia Formica, Anna Chaiken, Jan R. Wiersema, Emiel Cracco (2019). EEG frequency tagging reveals the integration of dissimilar observed actions. doi:10.18112/openneuro.ds005406.v1.0.0",
   "version": "1.7.0",
-  "dateCreated": "2024-08-09",
-  "dateModified": "2024-08-12",
   "measurementTechnique": [
     "BIDS task: FTdiss"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Silvia Formica"
-    }
   ],
   "distribution": [
     {

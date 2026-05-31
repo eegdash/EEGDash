@@ -84,29 +84,17 @@
       "name": "Jared Young"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Jared Young"
-  },
-  "datePublished": "2022",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds003987.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds003987.v1.0.0",
     "https://openneuro.org/datasets/ds003987",
     "https://huggingface.co/datasets/EEGDash/ds003987"
   ],
-  "citeAs": "James F Cavanagh, Greg Light, Neal Swerdlow, Jonathan Brigman, Jared Young (2022). EEG: Amphetamine trials 5CCPT and Probabilistic Learning. doi:10.18112/openneuro.ds003987.v1.0.0",
+  "citeAs": "James F Cavanagh, Greg Light, Neal Swerdlow, Jonathan Brigman, Jared Young (20). EEG: Amphetamine trials 5CCPT and Probabilistic Learning. doi:10.18112/openneuro.ds003987.v1.0.0",
   "version": "1.1.1",
-  "dateCreated": "2022-01-10",
-  "dateModified": "2022-01-09",
   "measurementTechnique": [
     "BIDS task: 5CCPTxPSTxAmphetamine"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "James F Cavanagh"
-    }
   ],
   "distribution": [
     {

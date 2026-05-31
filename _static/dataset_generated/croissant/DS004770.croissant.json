@@ -113,35 +113,22 @@
       "name": "Eishi Asano"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Eishi Asano"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "N/A"
     }
   ],
-  "datePublished": "2023",
   "identifier": "doi:10.18112/openneuro.ds004770.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004770.v1.0.0",
     "https://openneuro.org/datasets/ds004770",
     "https://huggingface.co/datasets/EEGDash/ds004770"
   ],
-  "citeAs": "Riyo Ueda, Kazuki Sakakura, Takumi Mitsuhashi, Masaki Sonoda, Ethan Firestone (2023). iEEG on children during gameplay. doi:10.18112/openneuro.ds004770.v1.0.0",
+  "citeAs": "Riyo Ueda, Kazuki Sakakura, Takumi Mitsuhashi, Masaki Sonoda, Ethan Firestone (n.d.). iEEG on children during gameplay. doi:10.18112/openneuro.ds004770.v1.0.0",
   "version": "1.7.0",
-  "dateCreated": "2023-09-22",
-  "dateModified": "2023-09-22",
   "measurementTechnique": [
     "BIDS task: game"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "riyo ueda"
-    }
   ],
   "distribution": [
     {

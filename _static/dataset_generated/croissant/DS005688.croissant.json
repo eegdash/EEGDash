@@ -100,10 +100,6 @@
       "name": "Pierre Mourad"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Pierre Mourad"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -119,20 +115,12 @@
   ],
   "citeAs": "Henry Tan, Devon Griggs, Lucas Chen, Kahte Culevski, Kat Floerchinger (2024). visStim. doi:10.18112/openneuro.ds005688.v1.0.1",
   "version": "1.8.0",
-  "dateCreated": "2024-12-02",
-  "dateModified": "2024-12-03",
   "measurementTechnique": [
     "BIDS task: baseline",
     "BIDS task: trial1",
     "BIDS task: trial2",
     "BIDS task: trial3",
     "BIDS task: trial4"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Henry Tan"
-    }
   ],
   "distribution": [
     {

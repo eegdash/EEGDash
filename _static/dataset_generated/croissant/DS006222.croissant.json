@@ -72,33 +72,16 @@
       "name": "Annabelle Singer"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Annabelle Singer"
-  },
-  "datePublished": "2025",
   "identifier": "doi:10.18112/openneuro.ds006222.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds006222.v1.0.1",
     "https://openneuro.org/datasets/ds006222",
     "https://huggingface.co/datasets/EEGDash/ds006222"
   ],
-  "citeAs": "Matthew Attokaren, Annabelle Singer (2025). MultisensoryFlickerHealthyYoungAdults_AllSubjectsRawData. doi:10.18112/openneuro.ds006222.v1.0.1",
+  "citeAs": "Matthew Attokaren, Annabelle Singer (n.d.). MultisensoryFlickerHealthyYoungAdults_AllSubjectsRawData. doi:10.18112/openneuro.ds006222.v1.0.1",
   "version": "1.8.0",
-  "dateCreated": "2025-05-12",
-  "dateModified": "2026-03-11",
   "measurementTechnique": [
     "BIDS task: PVT"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Matthew Attokaren"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Annabelle C. Singer"
-    }
   ],
   "distribution": [
     {

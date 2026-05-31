@@ -88,28 +88,15 @@
       "name": "Shayan Moosa"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Shayan Moosa"
-  },
-  "datePublished": "2026",
   "identifier": "doi:10.18112/openneuro.ds007347.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds007347.v1.0.0",
     "https://openneuro.org/datasets/ds007347"
   ],
-  "citeAs": "W. Jeffrey Elias, Chang-Chia Liu, Divine Nwafor, Patrick H. Finan, Mark Quigg (2026). Sterotactic Focused Ultrasound Mesencephalotomy for the Treatment of Head and Neck Cancer Pain. doi:10.18112/openneuro.ds007347.v1.0.0",
+  "citeAs": "W. Jeffrey Elias, Chang-Chia Liu, Divine Nwafor, Patrick H. Finan, Mark Quigg (n.d.). Sterotactic Focused Ultrasound Mesencephalotomy for the Treatment of Head and Neck Cancer Pain. doi:10.18112/openneuro.ds007347.v1.0.0",
   "version": "1.8.0",
-  "dateCreated": "2026-01-29",
-  "dateModified": "2026-01-29",
   "measurementTechnique": [
     "BIDS task: resting"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "CHANG-CHIA LIU"
-    }
   ],
   "distribution": [
     {

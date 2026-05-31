@@ -1,0 +1,228 @@
+{
+  "@context": {
+    "@language": "en",
+    "@vocab": "https://schema.org/",
+    "citeAs": "cr:citeAs",
+    "column": "cr:column",
+    "conformsTo": "dct:conformsTo",
+    "cr": "http://mlcommons.org/croissant/",
+    "data": {
+      "@id": "cr:data",
+      "@type": "@json"
+    },
+    "dataType": {
+      "@id": "cr:dataType",
+      "@type": "@vocab"
+    },
+    "dct": "http://purl.org/dc/terms/",
+    "extract": "cr:extract",
+    "field": "cr:field",
+    "fileObject": "cr:fileObject",
+    "fileProperty": "cr:fileProperty",
+    "fileSet": "cr:fileSet",
+    "format": "cr:format",
+    "includes": "cr:includes",
+    "isLiveDataset": "cr:isLiveDataset",
+    "jsonPath": "cr:jsonPath",
+    "key": "cr:key",
+    "md5": "cr:md5",
+    "parentField": "cr:parentField",
+    "path": "cr:path",
+    "recordSet": "cr:recordSet",
+    "references": "cr:references",
+    "regex": "cr:regex",
+    "repeated": "cr:repeated",
+    "replace": "cr:replace",
+    "sc": "https://schema.org/",
+    "separator": "cr:separator",
+    "source": "cr:source",
+    "subField": "cr:subField",
+    "transform": "cr:transform"
+  },
+  "@type": "sc:Dataset",
+  "conformsTo": "http://mlcommons.org/croissant/1.0",
+  "name": "on007823",
+  "alternateName": [
+    "ON007823"
+  ],
+  "description": "A COVID-19 survivors and close contacts EEG dataset. eeg dataset accessible via EEGDash as `ON007823` with standardized BIDS metadata.",
+  "url": "https://eegdash.org/api/dataset/eegdash.dataset.ON007823.html",
+  "keywords": [
+    "EEG",
+    "BIDS",
+    "neuroscience"
+  ],
+  "isAccessibleForFree": true,
+  "includedInDataCatalog": {
+    "@type": "sc:DataCatalog",
+    "name": "EEG Dash",
+    "url": "https://eegdash.org/"
+  },
+  "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "creator": [
+    {
+      "@type": "sc:Person",
+      "name": "Ana Calzada-Reyes"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Eduardo Aubert-Vázquez"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Lidice Galán-García"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Maria Luisa Bringas-Vega"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Trinidad Virués-Alba"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Lidia Charroó-Ruiz"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Yanely Acosta-Imás"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Mitchell Valdés-Sosa"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Laura Perez-Mayo"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Joel Gutiérrez-Gil"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Antonio Caballero-Moreno"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Miguel Angel Alvarez"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Norge Santiesteban"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Javier Vicente Sánchez-Lopez"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Annette Valdés-Virués"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Elba Elvira Varona-Galindo"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Elizabeth Méndez-Parra"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Joviana Castro-Valiente"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Leyanis Ramos-Hernández"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Mabel Whilby-Santiesteban"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Thelma Luz Carrillo-Alfonso"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Shahwar Yasir"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Yu Kin"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Peng Ren"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Dezhong Yao"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Luo Cheng"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Roberto Rodriguez-Labrada"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Pedro Valdés-Sosa"
+    }
+  ],
+  "funder": [
+    {
+      "@type": "sc:Organization",
+      "name": "This work was supported by National Key R&D Program of China, (2024YFE0215100), and Chengdu Science and Technology Bureau Program of China under Grant (2022-GH02-00042-HZ)"
+    }
+  ],
+  "datePublished": "20",
+  "identifier": "doi:10.82901/nemar.on007823",
+  "sameAs": [
+    "https://doi.org/10.82901/nemar.on007823",
+    "https://openneuro.org/datasets/on007823"
+  ],
+  "citeAs": "Ana Calzada-Reyes, Eduardo Aubert-Vázquez, Lidice Galán-García, Maria Luisa Bringas-Vega, Trinidad Virués-Alba (20). A COVID-19 survivors and close contacts EEG dataset. doi:10.82901/nemar.on007823",
+  "version": "1.6.0",
+  "measurementTechnique": [
+    "BIDS task: COVID"
+  ],
+  "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "on007823-bids-bucket",
+      "name": "on007823 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for ON007823.",
+      "contentUrl": "s3://nemar/on007823",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "on007823-openneuro",
+      "name": "on007823 on OpenNeuro",
+      "description": "OpenNeuro dataset landing page.",
+      "contentUrl": "https://openneuro.org/datasets/on007823",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "on007823-eegdash-records",
+      "name": "on007823 EEGDash records (live)",
+      "description": "Live JSON listing of every recording in this dataset, with BIDS metadata, channel counts, and S3 storage keys.",
+      "contentUrl": "https://data.eegdash.org/api/eegdash/records?filter=%7B%22dataset%22%3A%22on007823%22%7D",
+      "encodingFormat": "application/json",
+      "isLiveDataset": true
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "on007823-nemar",
+      "name": "on007823 on NeMAR",
+      "description": "NEMAR dataset landing page with pipeline plots.",
+      "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=on007823",
+      "encodingFormat": "text/html"
+    }
+  ]
+}

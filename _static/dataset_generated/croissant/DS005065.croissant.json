@@ -85,29 +85,16 @@
       "name": "Quentin Huys"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Quentin Huys"
-  },
-  "datePublished": "2024",
   "identifier": "doi:10.18112/openneuro.ds005065.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005065.v1.0.0",
     "https://openneuro.org/datasets/ds005065",
     "https://huggingface.co/datasets/EEGDash/ds005065"
   ],
-  "citeAs": "Evan M. Russek, Rani Moran, Yunzhe Liu, Ray Dolan, Quentin Huys (2024). Heuristics in risky decision-making relate to preferential representation of information MEG data. doi:10.18112/openneuro.ds005065.v1.0.0",
+  "citeAs": "Evan M. Russek, Rani Moran, Yunzhe Liu, Ray Dolan, Quentin Huys (n.d.). Heuristics in risky decision-making relate to preferential representation of information MEG data. doi:10.18112/openneuro.ds005065.v1.0.0",
   "version": "v1.5.0",
-  "dateCreated": "2024-04-07",
-  "dateModified": "2024-04-09",
   "measurementTechnique": [
     "BIDS task: RiskyDecision"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Evan Russek"
-    }
   ],
   "distribution": [
     {

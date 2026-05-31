@@ -88,29 +88,16 @@
       "name": "Karen Emmorey"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Karen Emmorey"
-  },
-  "datePublished": "2025",
   "identifier": "doi:10.18112/openneuro.ds005866.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005866.v1.0.1",
     "https://openneuro.org/datasets/ds005866",
     "https://huggingface.co/datasets/EEGDash/ds005866"
   ],
-  "citeAs": "Brennan Terhune-Cotter, Phillip J. Holcomb, Katherine J. Midgley, Sofia E. Ortega, Emily M. Akers (2025). Flankers-NEAR. doi:10.18112/openneuro.ds005866.v1.0.1",
+  "citeAs": "Brennan Terhune-Cotter, Phillip J. Holcomb, Katherine J. Midgley, Sofia E. Ortega, Emily M. Akers (n.d.). Flankers-NEAR. doi:10.18112/openneuro.ds005866.v1.0.1",
   "version": "1.8.0",
-  "dateCreated": "2025-01-21",
-  "dateModified": "2025-01-21",
   "measurementTechnique": [
     "BIDS task: FlankerNEAR"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Emily M. Akers"
-    }
   ],
   "distribution": [
     {

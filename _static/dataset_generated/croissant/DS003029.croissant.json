@@ -125,10 +125,6 @@
       "name": "Sridevi Sarma"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Sridevi Sarma"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -171,25 +167,17 @@
       "name": "Burroughs Well CASI Award 1007274"
     }
   ],
-  "datePublished": "2020",
+  "datePublished": "2019",
   "identifier": "doi:10.18112/openneuro.ds003029.v1.0.5",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds003029.v1.0.5",
     "https://openneuro.org/datasets/ds003029",
     "https://huggingface.co/datasets/EEGDash/ds003029"
   ],
-  "citeAs": "Adam Li, Sara Inati, Kareem Zaghloul, Nathan Crone, William Anderson (2020). Epilepsy-iEEG-Multicenter-Dataset. doi:10.18112/openneuro.ds003029.v1.0.5",
+  "citeAs": "Adam Li, Sara Inati, Kareem Zaghloul, Nathan Crone, William Anderson (2019). Epilepsy-iEEG-Multicenter-Dataset. doi:10.18112/openneuro.ds003029.v1.0.5",
   "version": "1.4.0",
-  "dateCreated": "2020-07-26",
-  "dateModified": "2023-11-28",
   "measurementTechnique": [
     "BIDS task: ictal"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Adam Li"
-    }
   ],
   "distribution": [
     {

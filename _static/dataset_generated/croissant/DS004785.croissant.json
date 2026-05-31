@@ -95,29 +95,16 @@
       "name": "Lena Ting"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Lena Ting"
-  },
-  "datePublished": "2023",
   "identifier": "doi:10.18112/openneuro.ds004785.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004785.v1.0.1",
     "https://openneuro.org/datasets/ds004785",
     "https://huggingface.co/datasets/EEGDash/ds004785"
   ],
-  "citeAs": "Scott Boebinger, Aiden Payne, Giovanni Martino, Kennedy Kerr, Jasmine Mirdamadi (2023). EEG data for paper titled - Precise cortical contributions to feedback sensorimotor control during reactive balance. doi:10.18112/openneuro.ds004785.v1.0.1",
+  "citeAs": "Scott Boebinger, Aiden Payne, Giovanni Martino, Kennedy Kerr, Jasmine Mirdamadi (n.d.). EEG data for paper titled - Precise cortical contributions to feedback sensorimotor control during reactive balance. doi:10.18112/openneuro.ds004785.v1.0.1",
   "version": "1.8.0",
-  "dateCreated": "2023-09-29",
-  "dateModified": "2023-10-02",
   "measurementTechnique": [
     "BIDS task: unnamed"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Scott Boebinger"
-    }
   ],
   "distribution": [
     {

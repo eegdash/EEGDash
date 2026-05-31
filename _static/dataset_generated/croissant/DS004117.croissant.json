@@ -85,10 +85,6 @@
       "name": "Kay Robbins (curation)"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Kay Robbins (curation)"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -99,29 +95,17 @@
       "name": "Swartz Foundation"
     }
   ],
-  "datePublished": "2022",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds004117.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004117.v1.0.1",
     "https://openneuro.org/datasets/ds004117",
     "https://huggingface.co/datasets/EEGDash/ds004117"
   ],
-  "citeAs": "Julie Onton (data), Scott Makeig (data and curation), Arnaud Delorme (data and curation), Dung Truong (curation), Kay Robbins (curation) (2022). Sternberg Working Memory. doi:10.18112/openneuro.ds004117.v1.0.1",
+  "citeAs": "Julie Onton (data), Scott Makeig (data and curation), Arnaud Delorme (data and curation), Dung Truong (curation), Kay Robbins (curation) (20). Sternberg Working Memory. doi:10.18112/openneuro.ds004117.v1.0.1",
   "version": "1.7.0",
-  "dateCreated": "2022-05-01",
-  "dateModified": "2022-06-16",
   "measurementTechnique": [
     "BIDS task: WorkingMemory"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Dung Truong"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Kay Robbins"
-    }
   ],
   "distribution": [
     {

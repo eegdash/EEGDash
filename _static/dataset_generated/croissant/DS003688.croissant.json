@@ -93,10 +93,6 @@
       "name": "Nick F. Ramsey"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Nick F. Ramsey"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -107,26 +103,17 @@
       "name": "the Netherlands Organisation for Scientific Research (Language in Interaction Project Gravitation Grant 024.001.006)"
     }
   ],
-  "datePublished": "2021",
   "identifier": "doi:10.18112/openneuro.ds003688.v1.0.7",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds003688.v1.0.7",
     "https://openneuro.org/datasets/ds003688",
     "https://huggingface.co/datasets/EEGDash/ds003688"
   ],
-  "citeAs": "Julia Berezutskaya, Mariska J. Vansteensel, Erik J. Aarnoutse, Zachary V. Freudenburg, Giovanni Piantoni (2021). Open multimodal iEEG-fMRI dataset from naturalistic stimulation with a short audiovisual film. doi:10.18112/openneuro.ds003688.v1.0.7",
+  "citeAs": "Julia Berezutskaya, Mariska J. Vansteensel, Erik J. Aarnoutse, Zachary V. Freudenburg, Giovanni Piantoni (n.d.). Open multimodal iEEG-fMRI dataset from naturalistic stimulation with a short audiovisual film. doi:10.18112/openneuro.ds003688.v1.0.7",
   "version": "1.2.1",
-  "dateCreated": "2021-06-08",
-  "dateModified": "2022-06-18",
   "measurementTechnique": [
     "BIDS task: film",
     "BIDS task: rest"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Julia Berezutskaya"
-    }
   ],
   "distribution": [
     {

@@ -73,35 +73,22 @@
       "name": "Eishi Asano"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Eishi Asano"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "N/A"
     }
   ],
-  "datePublished": "2024",
   "identifier": "doi:10.18112/openneuro.ds005007.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005007.v1.0.0",
     "https://openneuro.org/datasets/ds005007",
     "https://huggingface.co/datasets/EEGDash/ds005007"
   ],
-  "citeAs": "Yu Kitazawa, Eishi Asano (2024). Auditory naming task with questions that begin or end with a wh-interrogative. doi:10.18112/openneuro.ds005007.v1.0.0",
+  "citeAs": "Yu Kitazawa, Eishi Asano (n.d.). Auditory naming task with questions that begin or end with a wh-interrogative. doi:10.18112/openneuro.ds005007.v1.0.0",
   "version": "1.7.0",
-  "dateCreated": "2024-03-05",
-  "dateModified": "2024-03-07",
   "measurementTechnique": [
     "BIDS task: namingtask"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Kitazawa Yu"
-    }
   ],
   "distribution": [
     {

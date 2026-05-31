@@ -73,35 +73,22 @@
       "name": "Michael J. Kahana"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Michael J. Kahana"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "DARPA RAM: N66001-14-2-4032"
     }
   ],
-  "datePublished": "2024",
   "identifier": "doi:10.18112/openneuro.ds005489.v1.0.3",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005489.v1.0.3",
     "https://openneuro.org/datasets/ds005489",
     "https://huggingface.co/datasets/EEGDash/ds005489"
   ],
-  "citeAs": "Haydn G. Herrema, Michael J. Kahana (2024). Free Recall with Open-Loop Stimulation at Encoding. doi:10.18112/openneuro.ds005489.v1.0.3",
+  "citeAs": "Haydn G. Herrema, Michael J. Kahana (n.d.). Free Recall with Open-Loop Stimulation at Encoding. doi:10.18112/openneuro.ds005489.v1.0.3",
   "version": "1.7.0",
-  "dateCreated": "2024-09-15",
-  "dateModified": "2024-09-17",
   "measurementTechnique": [
     "BIDS task: FR2"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Haydn Herrema"
-    }
   ],
   "distribution": [
     {

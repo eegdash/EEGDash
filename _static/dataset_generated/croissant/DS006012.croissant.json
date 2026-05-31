@@ -97,10 +97,6 @@
       "name": "Stanislas Dehaene"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Stanislas Dehaene"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -123,26 +119,18 @@
       "name": "FYSSEN to Mathias Sablé-Meyer"
     }
   ],
-  "datePublished": "2025",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds006012.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds006012.v1.0.1",
     "https://openneuro.org/datasets/ds006012",
     "https://huggingface.co/datasets/EEGDash/ds006012"
   ],
-  "citeAs": "Mathias Sablé-Meyer, Lucas Benjamin, Cassandra Potier Watkins, Chenxi He, Maxence Pajot (2025). A geometric shape regularity effect in the human brain: MEG dataset. doi:10.18112/openneuro.ds006012.v1.0.1",
+  "citeAs": "Mathias Sablé-Meyer, Lucas Benjamin, Cassandra Potier Watkins, Chenxi He, Maxence Pajot (20). A geometric shape regularity effect in the human brain: MEG dataset. doi:10.18112/openneuro.ds006012.v1.0.1",
   "version": "1.6.0",
-  "dateCreated": "2025-03-13",
-  "dateModified": "2025-03-14",
   "measurementTechnique": [
     "BIDS task: POGS",
     "BIDS task: noise"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Mathias Sablé-Meyer"
-    }
   ],
   "distribution": [
     {

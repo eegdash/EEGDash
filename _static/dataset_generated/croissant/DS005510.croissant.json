@@ -96,10 +96,6 @@
       "name": "Scott Makeig"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Scott Makeig"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -110,17 +106,15 @@
       "name": "NIH/NIMH R01MH125934 for BIDS data preparation"
     }
   ],
-  "datePublished": "2024",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds005510.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005510.v1.0.1",
     "https://openneuro.org/datasets/ds005510",
     "https://huggingface.co/datasets/EEGDash/ds005510"
   ],
-  "citeAs": "Seyed Yahya Shirazi, Alexandre Franco, Maurício Scopel Hoffmann, Nathalia B. Esper, Dung Truong (2024). Healthy Brain Network (HBN) EEG - Release 6. doi:10.18112/openneuro.ds005510.v1.0.1",
+  "citeAs": "Seyed Yahya Shirazi, Alexandre Franco, Maurício Scopel Hoffmann, Nathalia B. Esper, Dung Truong (20). Healthy Brain Network (HBN) EEG - Release 6. doi:10.18112/openneuro.ds005510.v1.0.1",
   "version": "1.9.0",
-  "dateCreated": "2024-09-21",
-  "dateModified": "2025-03-11",
   "measurementTechnique": [
     "BIDS task: DespicableMe",
     "BIDS task: DiaryOfAWimpyKid",
@@ -132,12 +126,6 @@
     "BIDS task: seqLearning8target",
     "BIDS task: surroundSupp",
     "BIDS task: symbolSearch"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Seyed Yahya Shirazi"
-    }
   ],
   "distribution": [
     {

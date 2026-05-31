@@ -72,35 +72,22 @@
       "name": "Chantel S. Prat"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Chantel S. Prat"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "Office of Naval Research, Cognitive Science of Learning program (N00014-20-1-2393)"
     }
   ],
-  "datePublished": "2023",
   "identifier": "doi:10.18112/openneuro.ds004771.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004771.v1.0.0",
     "https://openneuro.org/datasets/ds004771",
     "https://huggingface.co/datasets/EEGDash/ds004771"
   ],
-  "citeAs": "Chu-Hsuan Kuo, Chantel S. Prat (2023). EEG/ERP data from a Python Reading Task. doi:10.18112/openneuro.ds004771.v1.0.0",
+  "citeAs": "Chu-Hsuan Kuo, Chantel S. Prat (n.d.). EEG/ERP data from a Python Reading Task. doi:10.18112/openneuro.ds004771.v1.0.0",
   "version": "1.8.0",
-  "dateCreated": "2023-09-25",
-  "dateModified": "2023-09-25",
   "measurementTechnique": [
     "BIDS task: PY"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Iris Kuo"
-    }
   ],
   "distribution": [
     {

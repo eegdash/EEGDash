@@ -80,29 +80,17 @@
       "name": "Manuel Varlet"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Manuel Varlet"
-  },
-  "datePublished": "2024",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds005106.v1.5.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005106.v1.5.0",
     "https://openneuro.org/datasets/ds005106",
     "https://huggingface.co/datasets/EEGDash/ds005106"
   ],
-  "citeAs": "Tijl Grootswagers, Genevieve Quek, Zhen Zeng, Manuel Varlet (2024). 200 Objects Infants EEG. doi:10.18112/openneuro.ds005106.v1.5.0",
+  "citeAs": "Tijl Grootswagers, Genevieve Quek, Zhen Zeng, Manuel Varlet (20). 200 Objects Infants EEG. doi:10.18112/openneuro.ds005106.v1.5.0",
   "version": "1.10.0",
-  "dateCreated": "2024-04-24",
-  "dateModified": "2025-03-05",
   "measurementTechnique": [
     "BIDS task: fix"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Tijl Grootswagers"
-    }
   ],
   "distribution": [
     {

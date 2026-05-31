@@ -76,29 +76,16 @@
       "name": "Hamid Aghajan"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Hamid Aghajan"
-  },
-  "datePublished": "2021",
   "identifier": "doi:10.18112/openneuro.ds003805.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds003805.v1.0.0",
     "https://openneuro.org/datasets/ds003805",
     "https://huggingface.co/datasets/EEGDash/ds003805"
   ],
-  "citeAs": "Mojtaba Lahijanian, Mohammad Javad Sedghizadeh, Hamid Aghajan (2021). Multisensory Gamma Entrainment. doi:10.18112/openneuro.ds003805.v1.0.0",
+  "citeAs": "Mojtaba Lahijanian, Mohammad Javad Sedghizadeh, Hamid Aghajan (n.d.). Multisensory Gamma Entrainment. doi:10.18112/openneuro.ds003805.v1.0.0",
   "version": "1.0.0",
-  "dateCreated": "2021-09-15",
-  "dateModified": "2021-09-27",
   "measurementTechnique": [
     "BIDS task: MultisensoryGammaEntrainment"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Mojtaba Lahijanian"
-    }
   ],
   "distribution": [
     {

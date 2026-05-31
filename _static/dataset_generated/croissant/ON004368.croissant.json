@@ -1,0 +1,133 @@
+{
+  "@context": {
+    "@language": "en",
+    "@vocab": "https://schema.org/",
+    "citeAs": "cr:citeAs",
+    "column": "cr:column",
+    "conformsTo": "dct:conformsTo",
+    "cr": "http://mlcommons.org/croissant/",
+    "data": {
+      "@id": "cr:data",
+      "@type": "@json"
+    },
+    "dataType": {
+      "@id": "cr:dataType",
+      "@type": "@vocab"
+    },
+    "dct": "http://purl.org/dc/terms/",
+    "extract": "cr:extract",
+    "field": "cr:field",
+    "fileObject": "cr:fileObject",
+    "fileProperty": "cr:fileProperty",
+    "fileSet": "cr:fileSet",
+    "format": "cr:format",
+    "includes": "cr:includes",
+    "isLiveDataset": "cr:isLiveDataset",
+    "jsonPath": "cr:jsonPath",
+    "key": "cr:key",
+    "md5": "cr:md5",
+    "parentField": "cr:parentField",
+    "path": "cr:path",
+    "recordSet": "cr:recordSet",
+    "references": "cr:references",
+    "regex": "cr:regex",
+    "repeated": "cr:repeated",
+    "replace": "cr:replace",
+    "sc": "https://schema.org/",
+    "separator": "cr:separator",
+    "source": "cr:source",
+    "subField": "cr:subField",
+    "transform": "cr:transform"
+  },
+  "@type": "sc:Dataset",
+  "conformsTo": "http://mlcommons.org/croissant/1.0",
+  "name": "on004368",
+  "alternateName": [
+    "ON004368"
+  ],
+  "description": "Meta-rdk: Preprocessed EEG data. eeg dataset accessible via EEGDash as `ON004368` with standardized BIDS metadata.",
+  "url": "https://eegdash.org/api/dataset/eegdash.dataset.ON004368.html",
+  "keywords": [
+    "EEG",
+    "BIDS",
+    "neuroscience"
+  ],
+  "isAccessibleForFree": true,
+  "includedInDataCatalog": {
+    "@type": "sc:DataCatalog",
+    "name": "EEG Dash",
+    "url": "https://eegdash.org/"
+  },
+  "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "creator": [
+    {
+      "@type": "sc:Person",
+      "name": "Martin Rouy"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Matthieu Roger"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Dorian Goueytes"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Michael Pereira"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Paul Roux"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Nathan Faivre"
+    }
+  ],
+  "identifier": "doi:10.82901/nemar.on004368",
+  "sameAs": [
+    "https://doi.org/10.82901/nemar.on004368",
+    "https://openneuro.org/datasets/on004368"
+  ],
+  "citeAs": "Martin Rouy, Matthieu Roger, Dorian Goueytes, Michael Pereira, Paul Roux (n.d.). Meta-rdk: Preprocessed EEG data. doi:10.82901/nemar.on004368",
+  "version": "1.1.1",
+  "measurementTechnique": [
+    "BIDS task: task"
+  ],
+  "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "on004368-bids-bucket",
+      "name": "on004368 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for ON004368.",
+      "contentUrl": "s3://nemar/on004368",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "on004368-openneuro",
+      "name": "on004368 on OpenNeuro",
+      "description": "OpenNeuro dataset landing page.",
+      "contentUrl": "https://openneuro.org/datasets/on004368",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "on004368-eegdash-records",
+      "name": "on004368 EEGDash records (live)",
+      "description": "Live JSON listing of every recording in this dataset, with BIDS metadata, channel counts, and S3 storage keys.",
+      "contentUrl": "https://data.eegdash.org/api/eegdash/records?filter=%7B%22dataset%22%3A%22on004368%22%7D",
+      "encodingFormat": "application/json",
+      "isLiveDataset": true
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "on004368-nemar",
+      "name": "on004368 on NeMAR",
+      "description": "NEMAR dataset landing page with pipeline plots.",
+      "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=on004368",
+      "encodingFormat": "text/html"
+    }
+  ]
+}

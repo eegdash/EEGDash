@@ -84,29 +84,17 @@
       "name": "Ruben Spies"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Ruben Spies"
-  },
-  "datePublished": "2021",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds003626.v2.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds003626.v2.0.0",
     "https://openneuro.org/datasets/ds003626",
     "https://huggingface.co/datasets/EEGDash/ds003626"
   ],
-  "citeAs": "Nicolas Nieto, Victoria Peterson, Hugo Rufiner, Juan Kamienkowski, Ruben Spies (2021). Inner Speech. doi:10.18112/openneuro.ds003626.v2.0.0",
+  "citeAs": "Nicolas Nieto, Victoria Peterson, Hugo Rufiner, Juan Kamienkowski, Ruben Spies (20). Inner Speech. doi:10.18112/openneuro.ds003626.v2.0.0",
   "version": "1.4",
-  "dateCreated": "2021-04-17",
-  "dateModified": "2022-03-14",
   "measurementTechnique": [
     "BIDS task: innerspeech"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Nicolás Nieto"
-    }
   ],
   "distribution": [
     {

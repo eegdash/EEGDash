@@ -72,10 +72,6 @@
       "name": "Vladimir Litvak"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Vladimir Litvak"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -98,25 +94,16 @@
       "name": "MR/K005464/1"
     }
   ],
-  "datePublished": "2020",
   "identifier": "doi:10.18112/openneuro.ds002908.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds002908.v1.0.0",
     "https://openneuro.org/datasets/ds002908",
     "https://huggingface.co/datasets/EEGDash/ds002908"
   ],
-  "citeAs": "Rafal Bogacz, Vladimir Litvak (2020). Human MEG recordings during sequential conflict task. doi:10.18112/openneuro.ds002908.v1.0.0",
+  "citeAs": "Rafal Bogacz, Vladimir Litvak (n.d.). Human MEG recordings during sequential conflict task. doi:10.18112/openneuro.ds002908.v1.0.0",
   "version": "1.0.1",
-  "dateCreated": "2020-06-22",
-  "dateModified": "2020-08-04",
   "measurementTechnique": [
     "BIDS task: mouse"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Eva Zita Patai"
-    }
   ],
   "distribution": [
     {

@@ -84,34 +84,18 @@
       "name": "Xu Lei"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Xu Lei"
-  },
-  "datePublished": "2023",
+  "datePublished": "2024",
   "identifier": "doi:10.18112/openneuro.ds004902.v1.0.8",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004902.v1.0.8",
     "https://openneuro.org/datasets/ds004902",
     "https://huggingface.co/datasets/EEGDash/ds004902"
   ],
-  "citeAs": "Chuqin Xiang, Xinrui Fan, Duo Bai, Ke Lv, Xu Lei (2023). A Resting-state EEG Dataset for Sleep Deprivation. doi:10.18112/openneuro.ds004902.v1.0.8",
+  "citeAs": "Chuqin Xiang, Xinrui Fan, Duo Bai, Ke Lv, Xu Lei (2024). A Resting-state EEG Dataset for Sleep Deprivation. doi:10.18112/openneuro.ds004902.v1.0.8",
   "version": "1.8.0",
-  "dateCreated": "2023-12-20",
-  "dateModified": "2025-04-27",
   "measurementTechnique": [
     "BIDS task: eyesclosed",
     "BIDS task: eyesopen"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Chuqin Xiang"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "XINRUI FAN"
-    }
   ],
   "distribution": [
     {

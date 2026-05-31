@@ -84,10 +84,6 @@
       "name": "Carlson, Thomas"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Carlson, Thomas"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -102,25 +98,16 @@
       "name": "ARC DE200101159 (AKR)"
     }
   ],
-  "datePublished": "2021",
   "identifier": "doi:10.18112/openneuro.ds003825.v1.1.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds003825.v1.1.0",
     "https://openneuro.org/datasets/ds003825",
     "https://huggingface.co/datasets/EEGDash/ds003825"
   ],
-  "citeAs": "Grootswagers, Tijl, Zhou, Ivy, Robinson, Amanda, Hebart, Martin, Carlson, Thomas (2021). Human electroencephalography recordings from 50 subjects for 22,248 images from 1,854 object concepts. doi:10.18112/openneuro.ds003825.v1.1.0",
+  "citeAs": "Grootswagers, Tijl, Zhou, Ivy, Robinson, Amanda, Hebart, Martin, Carlson, Thomas (n.d.). Human electroencephalography recordings from 50 subjects for 22,248 images from 1,854 object concepts. doi:10.18112/openneuro.ds003825.v1.1.0",
   "version": "1.0.2",
-  "dateCreated": "2021-09-30",
-  "dateModified": "2022-10-10",
   "measurementTechnique": [
     "BIDS task: rsvp"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Tijl Grootswagers"
-    }
   ],
   "distribution": [
     {

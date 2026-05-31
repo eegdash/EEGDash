@@ -89,8 +89,13 @@
     }
   ],
   "datePublished": "2013",
+  "identifier": "doi:10.82901/nemar.nm000188",
+  "sameAs": [
+    "https://doi.org/10.82901/nemar.nm000188",
+    "https://openneuro.org/datasets/nm000188"
+  ],
+  "citeAs": "P Aricò, F Aloise, F Schettini, S Salinari, D Mattia (2013). BNCI 2014-009 P300 dataset. doi:10.82901/nemar.nm000188",
   "version": "1.9.0",
-  "dateModified": "2026-04-02",
   "measurementTechnique": [
     "BIDS task: p300"
   ],
@@ -127,14 +132,6 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=nm000188",
       "encodingFormat": "text/html"
-    },
-    {
-      "@type": "cr:FileObject",
-      "@id": "nm000188-huggingface",
-      "name": "EEGDash/nm000188 on Hugging Face",
-      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
-      "contentUrl": "https://huggingface.co/datasets/EEGDash/nm000188",
-      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

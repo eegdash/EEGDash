@@ -104,21 +104,14 @@
       "name": "Chris Fields"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Chris Fields"
-  },
-  "datePublished": "2024",
   "identifier": "doi:10.18112/openneuro.ds005079.v2.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005079.v2.0.0",
     "https://openneuro.org/datasets/ds005079",
     "https://huggingface.co/datasets/EEGDash/ds005079"
   ],
-  "citeAs": "Lorenzo Cohen, Arnaud Delorme, Peiying Yang, Andrew Cusimano, Sharmistha Chakraborty (2024). The Effects of Directed Therapeutic Intent on Live and Damaged Cells. doi:10.18112/openneuro.ds005079.v2.0.0",
+  "citeAs": "Lorenzo Cohen, Arnaud Delorme, Peiying Yang, Andrew Cusimano, Sharmistha Chakraborty (n.d.). The Effects of Directed Therapeutic Intent on Live and Damaged Cells. doi:10.18112/openneuro.ds005079.v2.0.0",
   "version": "v1.2.1",
-  "dateCreated": "2024-04-09",
-  "dateModified": "2024-07-01",
   "measurementTechnique": [
     "BIDS task: BaselinePostCellPresent",
     "BIDS task: BaselinePostControl1",
@@ -135,12 +128,6 @@
     "BIDS task: TreatmentMid5minCellPresent",
     "BIDS task: TreatmentMid5minControl1",
     "BIDS task: TreatmentMid5minControl2"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Arnaud Delorme"
-    }
   ],
   "distribution": [
     {

@@ -71,35 +71,22 @@
       "name": "Daniel P. Ferris"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Daniel P. Ferris"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "National Science Foundation Division of Behavioral and Cognitive Sciences (BCS-1835317)"
     }
   ],
-  "datePublished": "2023",
   "identifier": "doi:10.18112/openneuro.ds004505.v1.0.4",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004505.v1.0.4",
     "https://openneuro.org/datasets/ds004505",
     "https://huggingface.co/datasets/EEGDash/ds004505"
   ],
-  "citeAs": "Amanda Studnicki, Daniel P. Ferris (2023). Real World Table Tennis. doi:10.18112/openneuro.ds004505.v1.0.4",
+  "citeAs": "Amanda Studnicki, Daniel P. Ferris (n.d.). Real World Table Tennis. doi:10.18112/openneuro.ds004505.v1.0.4",
   "version": "1.1.1",
-  "dateCreated": "2023-02-17",
-  "dateModified": "2023-06-28",
   "measurementTechnique": [
     "BIDS task: TableTennis"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Amanda Studnicki"
-    }
   ],
   "distribution": [
     {

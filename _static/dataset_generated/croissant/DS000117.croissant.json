@@ -73,36 +73,24 @@
       "name": "Henson, RN"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Henson, RN"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "UK Medical Research Council (SUAG/010 RG91365), Elekta Ltd."
     }
   ],
-  "datePublished": "2018",
+  "datePublished": "2015",
   "identifier": "doi:10.18112/openneuro.ds000117.v1.1.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds000117.v1.1.0",
     "https://openneuro.org/datasets/ds000117",
     "https://huggingface.co/datasets/EEGDash/ds000117"
   ],
-  "citeAs": "Wakeman, DG, Henson, RN (2018). Multisubject, multimodal face processing. doi:10.18112/openneuro.ds000117.v1.1.0",
+  "citeAs": "Wakeman, DG, Henson, RN (2015). Multisubject, multimodal face processing. doi:10.18112/openneuro.ds000117.v1.1.0",
   "version": "1.0.2",
-  "dateCreated": "2018-03-30",
-  "dateModified": "2025-01-06",
   "measurementTechnique": [
     "BIDS task: facerecognition",
     "BIDS task: noise"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Richard Henson"
-    }
   ],
   "distribution": [
     {

@@ -80,29 +80,16 @@
       "name": "Simon Hanslmayr"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Simon Hanslmayr"
-  },
-  "datePublished": "2021",
   "identifier": "doi:10.18112/openneuro.ds003694.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds003694.v1.0.0",
     "https://openneuro.org/datasets/ds003694",
     "https://huggingface.co/datasets/EEGDash/ds003694"
   ],
-  "citeAs": "Benjamin J. Griffiths, María Carmen Martín-Buro, Bernhard Staresina, Simon Hanslmayr (2021). MEGMEM. doi:10.18112/openneuro.ds003694.v1.0.0",
+  "citeAs": "Benjamin J. Griffiths, María Carmen Martín-Buro, Bernhard Staresina, Simon Hanslmayr (n.d.). MEGMEM. doi:10.18112/openneuro.ds003694.v1.0.0",
   "version": "1.0.2",
-  "dateCreated": "2021-06-12",
-  "dateModified": "2021-06-14",
   "measurementTechnique": [
     "BIDS task: MEM"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Benjamin James Griffiths"
-    }
   ],
   "distribution": [
     {

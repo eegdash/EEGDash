@@ -1,0 +1,136 @@
+{
+  "@context": {
+    "@language": "en",
+    "@vocab": "https://schema.org/",
+    "citeAs": "cr:citeAs",
+    "column": "cr:column",
+    "conformsTo": "dct:conformsTo",
+    "cr": "http://mlcommons.org/croissant/",
+    "data": {
+      "@id": "cr:data",
+      "@type": "@json"
+    },
+    "dataType": {
+      "@id": "cr:dataType",
+      "@type": "@vocab"
+    },
+    "dct": "http://purl.org/dc/terms/",
+    "extract": "cr:extract",
+    "field": "cr:field",
+    "fileObject": "cr:fileObject",
+    "fileProperty": "cr:fileProperty",
+    "fileSet": "cr:fileSet",
+    "format": "cr:format",
+    "includes": "cr:includes",
+    "isLiveDataset": "cr:isLiveDataset",
+    "jsonPath": "cr:jsonPath",
+    "key": "cr:key",
+    "md5": "cr:md5",
+    "parentField": "cr:parentField",
+    "path": "cr:path",
+    "recordSet": "cr:recordSet",
+    "references": "cr:references",
+    "regex": "cr:regex",
+    "repeated": "cr:repeated",
+    "replace": "cr:replace",
+    "sc": "https://schema.org/",
+    "separator": "cr:separator",
+    "source": "cr:source",
+    "subField": "cr:subField",
+    "transform": "cr:transform"
+  },
+  "@type": "sc:Dataset",
+  "conformsTo": "http://mlcommons.org/croissant/1.0",
+  "name": "ds007012",
+  "alternateName": [
+    "DS007012"
+  ],
+  "description": "FOODEEG: An open dataset of human electroencephalographic and behavioural responses to food images. eeg dataset accessible via EEGDash as `DS007012` with standardized BIDS metadata.",
+  "url": "https://eegdash.org/api/dataset/eegdash.dataset.DS007012.html",
+  "keywords": [
+    "EEG",
+    "BIDS",
+    "neuroscience"
+  ],
+  "isAccessibleForFree": true,
+  "includedInDataCatalog": {
+    "@type": "sc:DataCatalog",
+    "name": "EEG Dash",
+    "url": "https://eegdash.org/"
+  },
+  "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "creator": [
+    {
+      "@type": "sc:Person",
+      "name": "Chae, Violet"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Grootswagers, Tijl"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Bode, Stefan"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Feuerriegel, Daniel"
+    }
+  ],
+  "funder": [
+    {
+      "@type": "sc:Organization",
+      "name": "ARC DE220101508 (DF)"
+    },
+    {
+      "@type": "sc:Organization",
+      "name": "ARC DE230100380 (TG)"
+    }
+  ],
+  "datePublished": "2025",
+  "identifier": "doi:10.18112/openneuro.ds007012.v1.1.0",
+  "sameAs": [
+    "https://doi.org/10.18112/openneuro.ds007012.v1.1.0",
+    "https://openneuro.org/datasets/ds007012"
+  ],
+  "citeAs": "Chae, Violet, Grootswagers, Tijl, Bode, Stefan, Feuerriegel, Daniel (2025). FOODEEG: An open dataset of human electroencephalographic and behavioural responses to food images. doi:10.18112/openneuro.ds007012.v1.1.0",
+  "version": "1.8.0",
+  "measurementTechnique": [
+    "BIDS task: categorisation"
+  ],
+  "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007012-bids-bucket",
+      "name": "ds007012 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS007012.",
+      "contentUrl": "s3://openneuro.org/ds007012",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007012-openneuro",
+      "name": "ds007012 on OpenNeuro",
+      "description": "OpenNeuro dataset landing page.",
+      "contentUrl": "https://openneuro.org/datasets/ds007012",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007012-eegdash-records",
+      "name": "ds007012 EEGDash records (live)",
+      "description": "Live JSON listing of every recording in this dataset, with BIDS metadata, channel counts, and S3 storage keys.",
+      "contentUrl": "https://data.eegdash.org/api/eegdash/records?filter=%7B%22dataset%22%3A%22ds007012%22%7D",
+      "encodingFormat": "application/json",
+      "isLiveDataset": true
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007012-nemar",
+      "name": "ds007012 on NeMAR",
+      "description": "NEMAR dataset landing page with pipeline plots.",
+      "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=ds007012",
+      "encodingFormat": "text/html"
+    }
+  ]
+}

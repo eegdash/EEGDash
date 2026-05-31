@@ -72,29 +72,17 @@
       "name": "James F Cavanagh"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "James F Cavanagh"
-  },
-  "datePublished": "2023",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds004515.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004515.v1.0.0",
     "https://openneuro.org/datasets/ds004515",
     "https://huggingface.co/datasets/EEGDash/ds004515"
   ],
-  "citeAs": "Garima Singh, James F Cavanagh (2023). EEG: Alcohol imagery reinforcement learning task with light and heavy drinker participants. doi:10.18112/openneuro.ds004515.v1.0.0",
+  "citeAs": "Garima Singh, James F Cavanagh (20). EEG: Alcohol imagery reinforcement learning task with light and heavy drinker participants. doi:10.18112/openneuro.ds004515.v1.0.0",
   "version": "1.1.1",
-  "dateCreated": "2023-03-01",
-  "dateModified": "2023-03-15",
   "measurementTechnique": [
     "BIDS task: ProbabilisticSelection"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "James F Cavanagh"
-    }
   ],
   "distribution": [
     {

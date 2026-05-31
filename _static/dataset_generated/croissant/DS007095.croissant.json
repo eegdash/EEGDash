@@ -101,10 +101,6 @@
       "name": "Junming Zhu"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Junming Zhu"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -123,24 +119,15 @@
       "name": "Outstanding Youth Program of Zhejiang Natural Science Foundation (LR23H180002)"
     }
   ],
-  "datePublished": "2025",
   "identifier": "doi:10.18112/openneuro.ds007095.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds007095.v1.0.0",
     "https://openneuro.org/datasets/ds007095"
   ],
-  "citeAs": "Chen Feng, Haoqi Ni, Zhoule Zhu, Hongjie Jiang, Zhe Zheng (2025). RNS_Epilepsy-iBIDS. doi:10.18112/openneuro.ds007095.v1.0.0",
+  "citeAs": "Chen Feng, Haoqi Ni, Zhoule Zhu, Hongjie Jiang, Zhe Zheng (n.d.). RNS_Epilepsy-iBIDS. doi:10.18112/openneuro.ds007095.v1.0.0",
   "version": "1.8.0",
-  "dateCreated": "2025-12-16",
-  "dateModified": "2025-12-16",
   "measurementTechnique": [
     "BIDS task: seizure"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Haoqi Ni"
-    }
   ],
   "distribution": [
     {

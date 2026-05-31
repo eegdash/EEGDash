@@ -165,10 +165,6 @@
       "name": "Sarma, Sridevi"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Sarma, Sridevi"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -212,22 +208,10 @@
   ],
   "citeAs": "Gunnarsdottir, Kristin, Li, Adam, Smith, Rachel, Kang, Joon, Korzeniewska, Anna (2021). Epilepsy-iEEG-Interictal-Multicenter-Dataset. doi:10.18112/openneuro.ds003876.v1.0.2",
   "version": "1.6.0",
-  "dateCreated": "2021-11-09",
-  "dateModified": "2023-01-24",
   "measurementTechnique": [
     "BIDS task: interictal",
     "BIDS task: interictalasleep",
     "BIDS task: interictalawake"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Adam Li"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Kristín María Gunnarsdóttir"
-    }
   ],
   "distribution": [
     {

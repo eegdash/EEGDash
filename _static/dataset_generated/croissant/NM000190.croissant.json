@@ -81,8 +81,13 @@
     }
   ],
   "datePublished": "2011",
+  "identifier": "doi:10.82901/nemar.nm000190",
+  "sameAs": [
+    "https://doi.org/10.82901/nemar.nm000190",
+    "https://openneuro.org/datasets/nm000190"
+  ],
+  "citeAs": "Johannes Höhne, Martijn Schreuder, Benjamin Blankertz, Michael Tangermann (2011). BNCI 2015-012 PASS2D P300 dataset. doi:10.82901/nemar.nm000190",
   "version": "1.9.0",
-  "dateModified": "2026-04-02",
   "measurementTechnique": [
     "BIDS task: p300"
   ],
@@ -119,14 +124,6 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=nm000190",
       "encodingFormat": "text/html"
-    },
-    {
-      "@type": "cr:FileObject",
-      "@id": "nm000190-huggingface",
-      "name": "EEGDash/nm000190 on Hugging Face",
-      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
-      "contentUrl": "https://huggingface.co/datasets/EEGDash/nm000190",
-      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

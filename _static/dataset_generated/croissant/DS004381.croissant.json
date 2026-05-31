@@ -83,10 +83,6 @@
       "name": "Johannes Sarnthein"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Johannes Sarnthein"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -97,29 +93,17 @@
       "name": "Alexander S. Onassis Public Benefit Foundation Scholarship"
     }
   ],
-  "datePublished": "2022",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds004381.v1.0.2",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004381.v1.0.2",
     "https://openneuro.org/datasets/ds004381",
     "https://huggingface.co/datasets/EEGDash/ds004381"
   ],
-  "citeAs": "Giorgio Selmin, Vasileios Dimakopoulos, Niklaus Krayenbühl, Luca Regli, Johannes Sarnthein (2022). Intraoperative EEG dataset during medianus-tibialis stimulation with 8 different rates. doi:10.18112/openneuro.ds004381.v1.0.2",
+  "citeAs": "Giorgio Selmin, Vasileios Dimakopoulos, Niklaus Krayenbühl, Luca Regli, Johannes Sarnthein (20). Intraoperative EEG dataset during medianus-tibialis stimulation with 8 different rates. doi:10.18112/openneuro.ds004381.v1.0.2",
   "version": "1.4.0",
-  "dateCreated": "2022-12-20",
-  "dateModified": "2024-10-29",
   "measurementTechnique": [
     "BIDS task: sepRate"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Vasileios S. Dimakopoulos"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Johannes Sarnthein"
-    }
   ],
   "distribution": [
     {

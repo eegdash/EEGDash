@@ -81,28 +81,16 @@
       "name": "Christophe Pallier"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Christophe Pallier"
-  },
-  "datePublished": "2026",
-  "identifier": "doi:10.18112/openneuro.ds007524.v1.0.1",
+  "datePublished": "2025",
+  "identifier": "doi:10.18112/openneuro.ds007524.v1.1.0",
   "sameAs": [
-    "https://doi.org/10.18112/openneuro.ds007524.v1.0.1",
+    "https://doi.org/10.18112/openneuro.ds007524.v1.1.0",
     "https://openneuro.org/datasets/ds007524"
   ],
-  "citeAs": "Corentin Bel, Julie Bonnaire, Jean-Rémi King, Christophe Pallier (2026). LittlePrince_MEG_French_Read_Pallier2025. doi:10.18112/openneuro.ds007524.v1.0.1",
+  "citeAs": "Corentin Bel, Julie Bonnaire, Jean-Rémi King, Christophe Pallier (2025). LittlePrince_MEG_French_Read_Pallier2025. doi:10.18112/openneuro.ds007524.v1.1.0",
   "version": "1.6.0",
-  "dateCreated": "2026-03-17",
-  "dateModified": "2026-04-03",
   "measurementTechnique": [
     "BIDS task: read"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Christophe Pallier"
-    }
   ],
   "distribution": [
     {

@@ -76,29 +76,17 @@
       "name": "Howard Nusbaum"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Howard Nusbaum"
-  },
-  "datePublished": "2023",
+  "datePublished": "2019",
   "identifier": "doi:10.18112/openneuro.ds004561.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004561.v1.0.0",
     "https://openneuro.org/datasets/ds004561",
     "https://huggingface.co/datasets/EEGDash/ds004561"
   ],
-  "citeAs": "John Veillette, Pedro Lopes, Howard Nusbaum (2023). Illusion of Agency over Electrically-Actuated Movements. doi:10.18112/openneuro.ds004561.v1.0.0",
+  "citeAs": "John Veillette, Pedro Lopes, Howard Nusbaum (2019). Illusion of Agency over Electrically-Actuated Movements. doi:10.18112/openneuro.ds004561.v1.0.0",
   "version": "1.6.0",
-  "dateCreated": "2023-05-03",
-  "dateModified": "2023-05-03",
   "measurementTechnique": [
     "BIDS task: agencyRT"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "John Veillette"
-    }
   ],
   "distribution": [
     {

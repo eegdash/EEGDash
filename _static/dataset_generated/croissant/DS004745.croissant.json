@@ -88,43 +88,23 @@
       "name": "Marco Buiatti"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Marco Buiatti"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "NeuroSoNew ERC PoC Grant 842243"
     }
   ],
-  "datePublished": "2023",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds004745.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004745.v1.0.1",
     "https://openneuro.org/datasets/ds004745",
     "https://huggingface.co/datasets/EEGDash/ds004745"
   ],
-  "citeAs": "Velu Prabhakar Kumaravel, Victor Kartsch, Simone Benatti, Giorgio Vallortigara, Elisabetta Farella (2023). 8-Channel SSVEP EEG Dataset with Artifact Trials. doi:10.18112/openneuro.ds004745.v1.0.1",
+  "citeAs": "Velu Prabhakar Kumaravel, Victor Kartsch, Simone Benatti, Giorgio Vallortigara, Elisabetta Farella (20). 8-Channel SSVEP EEG Dataset with Artifact Trials. doi:10.18112/openneuro.ds004745.v1.0.1",
   "version": "1.8.0",
-  "dateCreated": "2023-09-08",
-  "dateModified": "2023-09-08",
   "measurementTechnique": [
     "BIDS task: unnamed"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Velu Prabhakar Kumaravel"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Velu Prabhakar Kumaravel"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Velu Prabhakar Kumaravel"
-    }
   ],
   "distribution": [
     {

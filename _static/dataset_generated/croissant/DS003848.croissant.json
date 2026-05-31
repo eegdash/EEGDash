@@ -89,10 +89,6 @@
       "name": "Zijlmans M."
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Zijlmans M."
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -107,17 +103,15 @@
       "name": "EpilepsieNL #17-07"
     }
   ],
-  "datePublished": "2021",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds003848.v1.0.3",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds003848.v1.0.3",
     "https://openneuro.org/datasets/ds003848",
     "https://huggingface.co/datasets/EEGDash/ds003848"
   ],
-  "citeAs": "van Blooijs D., Demuru M., Zweiphenning W, Hermes D., Leijten F. (2021). Dataset Clinical Epilepsy iEEG to BIDS - RESPect_longterm_iEEG. doi:10.18112/openneuro.ds003848.v1.0.3",
+  "citeAs": "van Blooijs D., Demuru M., Zweiphenning W, Hermes D., Leijten F. (20). Dataset Clinical Epilepsy iEEG to BIDS - RESPect_longterm_iEEG. doi:10.18112/openneuro.ds003848.v1.0.3",
   "version": "Brain Imaging Data Structure Specification v1.6.0",
-  "dateCreated": "2021-10-21",
-  "dateModified": "2021-10-26",
   "measurementTechnique": [
     "BIDS task: CHOCS1",
     "BIDS task: Rest",
@@ -125,12 +119,6 @@
     "BIDS task: Sleep",
     "BIDS task: slawtrans",
     "BIDS task: sleep"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Epilab UMCU"
-    }
   ],
   "distribution": [
     {

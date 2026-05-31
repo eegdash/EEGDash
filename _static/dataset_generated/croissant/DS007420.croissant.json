@@ -88,37 +88,24 @@
       "name": "Yücel, Meryem"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Yücel, Meryem"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "NIH BRAIN Initiative (Grant No. 1U01EB029856-01)"
     }
   ],
-  "datePublished": "2026",
   "identifier": "doi:10.18112/openneuro.ds007420.v1.0.2",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds007420.v1.0.2",
     "https://openneuro.org/datasets/ds007420"
   ],
-  "citeAs": "Gao, Yuanyuan, Rogers, De’Ja, von Lühmann, Alexander, Ortega-Martinez, Antonio, Boas, David (2026). A Light Weight Multi-Distance fNIRS Dataset for Ball-Squeezing Task and Purposeful Motion Artifact Creation Task. doi:10.18112/openneuro.ds007420.v1.0.2",
+  "citeAs": "Gao, Yuanyuan, Rogers, De’Ja, von Lühmann, Alexander, Ortega-Martinez, Antonio, Boas, David (n.d.). A Light Weight Multi-Distance fNIRS Dataset for Ball-Squeezing Task and Purposeful Motion Artifact Creation Task. doi:10.18112/openneuro.ds007420.v1.0.2",
   "version": "1.7.1",
-  "dateCreated": "2026-02-14",
-  "dateModified": "2026-03-26",
   "measurementTechnique": [
     "BIDS task: BallSqueezing",
     "BIDS task: Motion",
     "BIDS task: Rest",
     "BIDS task: Resting"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Shibo Zhou"
-    }
   ],
   "distribution": [
     {

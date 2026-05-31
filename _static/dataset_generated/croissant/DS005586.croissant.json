@@ -72,29 +72,16 @@
       "name": "Alexander C. Schütz"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Alexander C. Schütz"
-  },
-  "datePublished": "2024",
   "identifier": "doi:10.18112/openneuro.ds005586.v2.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005586.v2.0.0",
     "https://openneuro.org/datasets/ds005586",
     "https://huggingface.co/datasets/EEGDash/ds005586"
   ],
-  "citeAs": "Cemre Baykan, Alexander C. Schütz (2024). Electroencephalographic responses to the number of objects in partially occluded and uncovered scenes. doi:10.18112/openneuro.ds005586.v2.0.0",
+  "citeAs": "Cemre Baykan, Alexander C. Schütz (n.d.). Electroencephalographic responses to the number of objects in partially occluded and uncovered scenes. doi:10.18112/openneuro.ds005586.v2.0.0",
   "version": "1.7.0",
-  "dateCreated": "2024-10-22",
-  "dateModified": "2024-10-24",
   "measurementTechnique": [
     "BIDS task: PassiveViewing"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Cemre Baykan"
-    }
   ],
   "distribution": [
     {

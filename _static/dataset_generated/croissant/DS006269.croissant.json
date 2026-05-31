@@ -84,36 +84,24 @@
       "name": "Alfredo Gonzalez-Sulser"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Alfredo Gonzalez-Sulser"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "The work performed here was funded by The Simons Initiative for the Developing Brain."
     }
   ],
-  "datePublished": "2025",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds006269.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds006269.v1.0.0",
     "https://openneuro.org/datasets/ds006269",
     "https://huggingface.co/datasets/EEGDash/ds006269"
   ],
-  "citeAs": "Lucy Pritchard, Ingrid Buller-Peralta, Sally M Till, Peter C Kind, Alfredo Gonzalez-Sulser (2025). Tethered EEG Recordings in Syngap1 rats. doi:10.18112/openneuro.ds006269.v1.0.0",
+  "citeAs": "Lucy Pritchard, Ingrid Buller-Peralta, Sally M Till, Peter C Kind, Alfredo Gonzalez-Sulser (20). Tethered EEG Recordings in Syngap1 rats. doi:10.18112/openneuro.ds006269.v1.0.0",
   "version": "1.8.0",
-  "dateCreated": "2025-05-30",
-  "dateModified": "2025-05-30",
   "measurementTechnique": [
     "BIDS task: rest",
     "BIDS task: test"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Lucy Pritchard"
-    }
   ],
   "distribution": [
     {

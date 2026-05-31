@@ -88,10 +88,6 @@
       "name": "Ross K Maddox"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Ross K Maddox"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -123,24 +119,12 @@
   ],
   "citeAs": "Thomas J Stoll, Nathan D Vandjelovic, Melissa J Polonenko, Nadja R S Li, Adrian K C Lee (2025). The auditory brainstem response to natural speech is not affected by selective attention. doi:10.18112/openneuro.ds006434.v1.2.0",
   "version": "1.7.0",
-  "dateCreated": "2025-07-01",
-  "dateModified": "2025-09-11",
   "measurementTechnique": [
     "BIDS task: exp1DioticCortex",
     "BIDS task: exp1DioticSubcortex",
     "BIDS task: exp2DichoticCortex",
     "BIDS task: exp2DichoticSubcortex",
     "BIDS task: exp3Passive"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Ross Maddox"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Thomas Stoll"
-    }
   ],
   "distribution": [
     {

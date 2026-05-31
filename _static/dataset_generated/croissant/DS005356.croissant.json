@@ -69,29 +69,17 @@
       "name": "[Unspecified]"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "[Unspecified]"
-  },
-  "datePublished": "2024",
+  "datePublished": "2025",
   "identifier": "doi:10.18112/openneuro.ds005356.v1.5.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005356.v1.5.0",
     "https://openneuro.org/datasets/ds005356",
     "https://huggingface.co/datasets/EEGDash/ds005356"
   ],
-  "citeAs": "[Unspecified] (2024). MEG: Major Depression & Probabilistic Learning Task. doi:10.18112/openneuro.ds005356.v1.5.0",
+  "citeAs": "[Unspecified] (2025). MEG: Major Depression & Probabilistic Learning Task. doi:10.18112/openneuro.ds005356.v1.5.0",
   "version": "1.7.0",
-  "dateCreated": "2024-07-17",
-  "dateModified": "2025-03-06",
   "measurementTechnique": [
     "BIDS task: pst"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "James F Cavanagh"
-    }
   ],
   "distribution": [
     {

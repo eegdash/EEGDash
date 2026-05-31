@@ -112,29 +112,17 @@
       "name": "Falk Eippert"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Falk Eippert"
-  },
-  "datePublished": "2024",
+  "datePublished": "2019",
   "identifier": "doi:10.18112/openneuro.ds005307.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005307.v1.0.1",
     "https://openneuro.org/datasets/ds005307",
     "https://huggingface.co/datasets/EEGDash/ds005307"
   ],
-  "citeAs": "Birgit Nierula, Tilman Stephani, Emma Bailey, Merve Kaptan, Lisa-Marie Pohle (2024). Laser-evoked potentials in the human spinal cord and cortex. doi:10.18112/openneuro.ds005307.v1.0.1",
+  "citeAs": "Birgit Nierula, Tilman Stephani, Emma Bailey, Merve Kaptan, Lisa-Marie Pohle (2019). Laser-evoked potentials in the human spinal cord and cortex. doi:10.18112/openneuro.ds005307.v1.0.1",
   "version": "1.7.0",
-  "dateCreated": "2024-07-04",
-  "dateModified": "2024-08-15",
   "measurementTechnique": [
     "BIDS task: pain"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Falk Eippert"
-    }
   ],
   "distribution": [
     {

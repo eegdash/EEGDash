@@ -80,38 +80,26 @@
       "name": "Nancy E. R. De León"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Nancy E. R. De León"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "research start-up funds awarded to Elif Isbell by University of California Merced."
     }
   ],
-  "datePublished": "2025",
+  "datePublished": "2024",
   "identifier": "doi:10.18112/openneuro.ds005863.v2.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005863.v2.0.0",
     "https://openneuro.org/datasets/ds005863",
     "https://huggingface.co/datasets/EEGDash/ds005863"
   ],
-  "citeAs": "Elif Isbell, Amanda N. Peters, Dylan M. Richardson, Nancy E. R. De León (2025). Cognitive Electrophysiology in Socioeconomic Context in Adulthood. doi:10.18112/openneuro.ds005863.v2.0.0",
+  "citeAs": "Elif Isbell, Amanda N. Peters, Dylan M. Richardson, Nancy E. R. De León (2024). Cognitive Electrophysiology in Socioeconomic Context in Adulthood. doi:10.18112/openneuro.ds005863.v2.0.0",
   "version": "1.9.0",
-  "dateCreated": "2025-01-20",
-  "dateModified": "2025-03-14",
   "measurementTechnique": [
     "BIDS task: auditoryoddball",
     "BIDS task: flanker",
     "BIDS task: visualoddball",
     "BIDS task: visualsearch"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Elif Isbell"
-    }
   ],
   "distribution": [
     {

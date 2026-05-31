@@ -81,29 +81,16 @@
       "name": "Chengqing Zong"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Chengqing Zong"
-  },
-  "datePublished": "2022",
   "identifier": "doi:10.18112/openneuro.ds004078.v1.0.4",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004078.v1.0.4",
     "https://openneuro.org/datasets/ds004078",
     "https://huggingface.co/datasets/EEGDash/ds004078"
   ],
-  "citeAs": "Shaonan Wang, Xiaohan Zhang, Jiajun Zhang, Chengqing Zong (2022). A synchronized multimodal neuroimaging dataset to study brain language processing. doi:10.18112/openneuro.ds004078.v1.0.4",
+  "citeAs": "Shaonan Wang, Xiaohan Zhang, Jiajun Zhang, Chengqing Zong (n.d.). A synchronized multimodal neuroimaging dataset to study brain language processing. doi:10.18112/openneuro.ds004078.v1.0.4",
   "version": "1.6.0",
-  "dateCreated": "2022-03-20",
-  "dateModified": "2023-10-16",
   "measurementTechnique": [
     "BIDS task: RDR"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Xiaohan Zhang"
-    }
   ],
   "distribution": [
     {

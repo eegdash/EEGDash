@@ -97,10 +97,6 @@
       "name": "Dora Hermes"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Dora Hermes"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -111,25 +107,17 @@
       "name": "T32 GM065841: Medical Scientist Training Program at Mayo Clinic"
     }
   ],
-  "datePublished": "2023",
+  "datePublished": "2022",
   "identifier": "doi:10.18112/openneuro.ds004457.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004457.v1.0.1",
     "https://openneuro.org/datasets/ds004457",
     "https://huggingface.co/datasets/EEGDash/ds004457"
   ],
-  "citeAs": "Harvey Huang, Nicholas M Gregg, Gabriela Ojeda Valencia, Benjamin H Brinkmann, Brian N Lundstrom (2023). Electrical stimulation of temporal and limbic circuitry produces distinct responses in human ventral temporal cortex. doi:10.18112/openneuro.ds004457.v1.0.1",
+  "citeAs": "Harvey Huang, Nicholas M Gregg, Gabriela Ojeda Valencia, Benjamin H Brinkmann, Brian N Lundstrom (2022). Electrical stimulation of temporal and limbic circuitry produces distinct responses in human ventral temporal cortex. doi:10.18112/openneuro.ds004457.v1.0.1",
   "version": "v 1.9.9",
-  "dateCreated": "2023-02-01",
-  "dateModified": "2023-06-02",
   "measurementTechnique": [
     "BIDS task: ccep"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Harvey Huang"
-    }
   ],
   "distribution": [
     {

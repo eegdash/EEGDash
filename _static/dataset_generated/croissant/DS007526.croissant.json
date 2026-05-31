@@ -76,29 +76,16 @@
       "name": "Inbal Maidan (inbalm@tlvmc.gov.il)"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Inbal Maidan (inbalm@tlvmc.gov.il)"
-  },
-  "datePublished": "2026",
   "identifier": "doi:10.18112/openneuro.ds007526.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds007526.v1.0.1",
     "https://openneuro.org/datasets/ds007526"
   ],
-  "citeAs": "Zoya Katzir, Daniel Vered, Inbal Maidan (inbalm@tlvmc.gov.il) (2026). PD-EEG: Resting-State & Walking EEG in Parkinson's Disease. doi:10.18112/openneuro.ds007526.v1.0.1",
+  "citeAs": "Zoya Katzir, Daniel Vered, Inbal Maidan (inbalm@tlvmc.gov.il) (n.d.). PD-EEG: Resting-State & Walking EEG in Parkinson's Disease. doi:10.18112/openneuro.ds007526.v1.0.1",
   "version": "1.10.0",
-  "dateCreated": "2026-03-17",
-  "dateModified": "2026-03-18",
   "measurementTechnique": [
     "BIDS task: rest",
     "BIDS task: walk"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Inbal Maidan"
-    }
   ],
   "distribution": [
     {

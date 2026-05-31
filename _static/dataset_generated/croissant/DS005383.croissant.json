@@ -112,21 +112,14 @@
       "name": "Dong Ming"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Dong Ming"
-  },
-  "datePublished": "2024",
   "identifier": "doi:10.18112/openneuro.ds005383.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005383.v1.0.0",
     "https://openneuro.org/datasets/ds005383",
     "https://huggingface.co/datasets/EEGDash/ds005383"
   ],
-  "citeAs": "Yanru Bai, Qi Tang, Ran Zhao, Hongxing Liu, Mingkun Guo (2024). TMNRED, A Chinese Language EEG Dataset for Fuzzy Semantic Target Identification in Natural Reading Environments. doi:10.18112/openneuro.ds005383.v1.0.0",
+  "citeAs": "Yanru Bai, Qi Tang, Ran Zhao, Hongxing Liu, Mingkun Guo (n.d.). TMNRED, A Chinese Language EEG Dataset for Fuzzy Semantic Target Identification in Natural Reading Environments. doi:10.18112/openneuro.ds005383.v1.0.0",
   "version": "1.7.0",
-  "dateCreated": "2024-07-28",
-  "dateModified": "2024-07-28",
   "measurementTechnique": [
     "BIDS task: fuzzysemanticrecognition"
   ],

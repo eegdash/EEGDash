@@ -80,29 +80,17 @@
       "name": "Kevin King"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Kevin King"
-  },
-  "datePublished": "2023",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds004661.v1.1.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004661.v1.1.0",
     "https://openneuro.org/datasets/ds004661",
     "https://huggingface.co/datasets/EEGDash/ds004661"
   ],
-  "citeAs": "Tony Johnson, Stephen Gordon, Jon Touryan, Kevin King (2023). ANDI. doi:10.18112/openneuro.ds004661.v1.1.0",
+  "citeAs": "Tony Johnson, Stephen Gordon, Jon Touryan, Kevin King (20). ANDI. doi:10.18112/openneuro.ds004661.v1.1.0",
   "version": "1.8.0",
-  "dateCreated": "2023-08-05",
-  "dateModified": "2024-09-06",
   "measurementTechnique": [
     "BIDS task: nback"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Kevin King"
-    }
   ],
   "distribution": [
     {

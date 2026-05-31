@@ -85,35 +85,22 @@
       "name": "Ioana Mindruta"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Ioana Mindruta"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "Romanian UEFISCDI PN-III-P4-ID-PCE-2020-0935"
     }
   ],
-  "datePublished": "2025",
   "identifier": "doi:10.18112/openneuro.ds006519.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds006519.v1.0.0",
     "https://openneuro.org/datasets/ds006519",
     "https://huggingface.co/datasets/EEGDash/ds006519"
   ],
-  "citeAs": "Andrei Barborica, Cristina Ghita, Laurentiu Tofan, Irina Oane, Ioana Mindruta (2025). Dataset of intracranial EEG during cortical stimulations evoking negative motor responses. doi:10.18112/openneuro.ds006519.v1.0.0",
+  "citeAs": "Andrei Barborica, Cristina Ghita, Laurentiu Tofan, Irina Oane, Ioana Mindruta (n.d.). Dataset of intracranial EEG during cortical stimulations evoking negative motor responses. doi:10.18112/openneuro.ds006519.v1.0.0",
   "version": "1.9.0",
-  "dateCreated": "2025-07-31",
-  "dateModified": "2025-07-31",
   "measurementTechnique": [
     "BIDS task: dcs"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Andrei Barborica"
-    }
   ],
   "distribution": [
     {

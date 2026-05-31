@@ -92,31 +92,19 @@
       "name": "Bjørn E. Juel1,2"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Bjørn E. Juel1,2"
-  },
-  "datePublished": "2024",
+  "datePublished": "2019",
   "identifier": "doi:10.18112/openneuro.ds005620.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005620.v1.0.0",
     "https://openneuro.org/datasets/ds005620",
     "https://huggingface.co/datasets/EEGDash/ds005620"
   ],
-  "citeAs": "Imad J. Bajwa1, Andre S. Nilsen1, René Skukies1,3, Arnfinn Aamodt1, Gernot Ernst2 (2024). A repeated awakening study exploring the capacity of complexity measures to capture dreaming during propofol sedation. doi:10.18112/openneuro.ds005620.v1.0.0",
+  "citeAs": "Imad J. Bajwa1, Andre S. Nilsen1, René Skukies1,3, Arnfinn Aamodt1, Gernot Ernst2 (2019). A repeated awakening study exploring the capacity of complexity measures to capture dreaming during propofol sedation. doi:10.18112/openneuro.ds005620.v1.0.0",
   "version": "1.7.0",
-  "dateCreated": "2024-11-06",
-  "dateModified": "2024-11-06",
   "measurementTechnique": [
     "BIDS task: awake",
     "BIDS task: sed",
     "BIDS task: sed2"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Imad J Bajwa"
-    }
   ],
   "distribution": [
     {

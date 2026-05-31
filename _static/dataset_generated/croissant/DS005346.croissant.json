@@ -81,47 +81,19 @@
       "name": "Zhengwu Ma"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Zhengwu Ma"
-  },
-  "datePublished": "2024",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds005346.v1.0.5",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005346.v1.0.5",
     "https://openneuro.org/datasets/ds005346",
     "https://huggingface.co/datasets/EEGDash/ds005346"
   ],
-  "citeAs": "Jixing Li, Yike Wang, Chengcheng Wang, Zhengwu Ma (2024). Naturalistic fMRI and MEG recordings during viewing of a reality TV show. doi:10.18112/openneuro.ds005346.v1.0.5",
+  "citeAs": "Jixing Li, Yike Wang, Chengcheng Wang, Zhengwu Ma (20). Naturalistic fMRI and MEG recordings during viewing of a reality TV show. doi:10.18112/openneuro.ds005346.v1.0.5",
   "version": "1.8.0",
-  "dateCreated": "2024-07-16",
-  "dateModified": "2025-12-18",
   "measurementTechnique": [
     "BIDS task: baba",
     "BIDS task: question",
     "BIDS task: replay"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Zhengwu Ma"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Jixing Li"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Chengcheng WANG"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Zhengwu Ma"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Jixing Li"
-    }
   ],
   "distribution": [
     {

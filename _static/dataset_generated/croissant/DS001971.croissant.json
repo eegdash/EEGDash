@@ -92,10 +92,6 @@
       "name": "Gernot Mueller-Putz"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Gernot Mueller-Putz"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -110,25 +106,17 @@
       "name": "Gift to University of California San Diego by the Swartz Foundation (Old Field, NY)."
     }
   ],
-  "datePublished": "2019",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds001971.v1.1.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds001971.v1.1.1",
     "https://openneuro.org/datasets/ds001971",
     "https://huggingface.co/datasets/EEGDash/ds001971"
   ],
-  "citeAs": "Johanna Wagner, Ramon Martinez-Cancino, Scott Makeig, Arnaud Delorme, Christa Neuper (2019). Audiocue walking study. doi:10.18112/openneuro.ds001971.v1.1.1",
+  "citeAs": "Johanna Wagner, Ramon Martinez-Cancino, Scott Makeig, Arnaud Delorme, Christa Neuper (20). Audiocue walking study. doi:10.18112/openneuro.ds001971.v1.1.1",
   "version": "v1.2.0",
-  "dateCreated": "2019-06-06",
-  "dateModified": "2019-06-12",
   "measurementTechnique": [
     "BIDS task: AudioCueWalkingStudy"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Johanna Wagner"
-    }
   ],
   "distribution": [
     {

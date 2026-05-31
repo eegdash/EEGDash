@@ -76,35 +76,22 @@
       "name": "Klaus Kessler"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Klaus Kessler"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "This work was supported by a Leverhulme Trust early career fellowship [ECF-2018-130] awarded to S.E.A. Gregory.)."
     }
   ],
-  "datePublished": "2021",
   "identifier": "doi:10.18112/openneuro.ds003702.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds003702.v1.0.1",
     "https://openneuro.org/datasets/ds003702",
     "https://huggingface.co/datasets/EEGDash/ds003702"
   ],
-  "citeAs": "Samantha Gregory, Hongfang Wang, Klaus Kessler (2021). Social Memory cuing. doi:10.18112/openneuro.ds003702.v1.0.1",
+  "citeAs": "Samantha Gregory, Hongfang Wang, Klaus Kessler (n.d.). Social Memory cuing. doi:10.18112/openneuro.ds003702.v1.0.1",
   "version": "1.6.0",
-  "dateCreated": "2021-06-15",
-  "dateModified": "2024-09-17",
   "measurementTechnique": [
     "BIDS task: SocialMemoryCuing"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Samantha Gregory"
-    }
   ],
   "distribution": [
     {

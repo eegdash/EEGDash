@@ -77,12 +77,10 @@
   "identifier": "doi:10.82901/nemar.nm000133",
   "sameAs": [
     "https://doi.org/10.82901/nemar.nm000133",
-    "https://openneuro.org/datasets/nm000133",
-    "https://huggingface.co/datasets/EEGDash/nm000133"
+    "https://openneuro.org/datasets/nm000133"
   ],
   "citeAs": "Jonathan Xu, Si Kai Lee, Wangshu Jiang (2024). Alljoined1. doi:10.82901/nemar.nm000133",
   "version": "1.9.0",
-  "dateModified": "2026-03-18",
   "measurementTechnique": [
     "BIDS task: images"
   ],
@@ -119,14 +117,6 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=nm000133",
       "encodingFormat": "text/html"
-    },
-    {
-      "@type": "cr:FileObject",
-      "@id": "nm000133-huggingface",
-      "name": "EEGDash/nm000133 on Hugging Face",
-      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
-      "contentUrl": "https://huggingface.co/datasets/EEGDash/nm000133",
-      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

@@ -73,35 +73,23 @@
       "name": "Michael J. Kahana"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Michael J. Kahana"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "DARPA RAM: N66001-14-2-4032"
     }
   ],
-  "datePublished": "2024",
+  "datePublished": "2019",
   "identifier": "doi:10.18112/openneuro.ds005494.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005494.v1.0.1",
     "https://openneuro.org/datasets/ds005494",
     "https://huggingface.co/datasets/EEGDash/ds005494"
   ],
-  "citeAs": "Haydn G. Herrema, Michael J. Kahana (2024). Cued Recall of Paired Associates with Open-Loop Stimulation at Encoding or Retrieval. doi:10.18112/openneuro.ds005494.v1.0.1",
+  "citeAs": "Haydn G. Herrema, Michael J. Kahana (2019). Cued Recall of Paired Associates with Open-Loop Stimulation at Encoding or Retrieval. doi:10.18112/openneuro.ds005494.v1.0.1",
   "version": "1.7.0",
-  "dateCreated": "2024-09-17",
-  "dateModified": "2024-09-25",
   "measurementTechnique": [
     "BIDS task: PAL2"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Haydn Herrema"
-    }
   ],
   "distribution": [
     {

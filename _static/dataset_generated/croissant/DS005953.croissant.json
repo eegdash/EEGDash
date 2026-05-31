@@ -73,35 +73,23 @@
       "name": "Dora Hermes"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Dora Hermes"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "This research has received funding from the National Institute Of Mental Health of the National Institutes of Health under Award Number R01MH111417"
     }
   ],
-  "datePublished": "2025",
+  "datePublished": "2015",
   "identifier": "doi:10.18112/openneuro.ds005953.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005953.v1.0.0",
     "https://openneuro.org/datasets/ds005953",
     "https://huggingface.co/datasets/EEGDash/ds005953"
   ],
-  "citeAs": "Jonathan Winawer, Dora Hermes (2025). iEEG_visual. doi:10.18112/openneuro.ds005953.v1.0.0",
+  "citeAs": "Jonathan Winawer, Dora Hermes (2015). iEEG_visual. doi:10.18112/openneuro.ds005953.v1.0.0",
   "version": "1.0.2",
-  "dateCreated": "2025-03-03",
-  "dateModified": "2025-03-03",
   "measurementTechnique": [
     "BIDS task: visual"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Dora Hermes"
-    }
   ],
   "distribution": [
     {

@@ -77,21 +77,15 @@
       "name": "David McAlpine"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "David McAlpine"
-  },
-  "datePublished": "2025",
+  "datePublished": "2019",
   "identifier": "doi:10.18112/openneuro.ds005964.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005964.v1.0.0",
     "https://openneuro.org/datasets/ds005964",
     "https://huggingface.co/datasets/EEGDash/ds005964"
   ],
-  "citeAs": "Robert Luke, Maureen Shader, David McAlpine (2025). FRESH Audio Dataset. doi:10.18112/openneuro.ds005964.v1.0.0",
+  "citeAs": "Robert Luke, Maureen Shader, David McAlpine (2019). FRESH Audio Dataset. doi:10.18112/openneuro.ds005964.v1.0.0",
   "version": "1.7.0",
-  "dateCreated": "2025-03-06",
-  "dateModified": "2025-03-06",
   "measurementTechnique": [
     "BIDS task: FRESHAUDIO"
   ],

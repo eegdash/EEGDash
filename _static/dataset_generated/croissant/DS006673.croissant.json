@@ -100,36 +100,23 @@
       "name": "David A. Boas"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "David A. Boas"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
-      "name": "Enter funding details here, if applicable."
+      "name": "This project was supported by the National Institutes of Health (Grant Nos. U01-EB 029856 and UG3-EB 036035) and by the resources and facilities made available by Boston University."
     }
   ],
-  "datePublished": "2025",
-  "identifier": "doi:10.18112/openneuro.ds006673.v1.0.2",
+  "identifier": "doi:10.18112/openneuro.ds006673.v1.0.4",
   "sameAs": [
-    "https://doi.org/10.18112/openneuro.ds006673.v1.0.2",
+    "https://doi.org/10.18112/openneuro.ds006673.v1.0.4",
     "https://openneuro.org/datasets/ds006673",
     "https://huggingface.co/datasets/EEGDash/ds006673"
   ],
-  "citeAs": "Laura B. Carlton, Miray Altinkaynak, Shannon Kelley, Bernhard Zimmerman, Sreekanth Kura (2025). ball_squeeze_Carlton_2025. doi:10.18112/openneuro.ds006673.v1.0.2",
+  "citeAs": "Laura B. Carlton, Miray Altinkaynak, Shannon Kelley, Bernhard Zimmerman, Sreekanth Kura (n.d.). ball_squeeze_Carlton_2025. doi:10.18112/openneuro.ds006673.v1.0.4",
   "version": "1.8.0",
-  "dateCreated": "2025-09-12",
-  "dateModified": "2025-09-17",
   "measurementTechnique": [
     "BIDS task: BS",
     "BIDS task: RS"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Laura Carlton"
-    }
   ],
   "distribution": [
     {

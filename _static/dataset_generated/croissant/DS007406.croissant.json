@@ -72,28 +72,15 @@
       "name": "Attila Pohlmann"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Attila Pohlmann"
-  },
-  "datePublished": "2026",
   "identifier": "doi:10.18112/openneuro.ds007406.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds007406.v1.0.0",
     "https://openneuro.org/datasets/ds007406"
   ],
-  "citeAs": "Allison Edit, Attila Pohlmann (2026). EEG dataset on consumer responses to extreme versus traditional marketing videos. doi:10.18112/openneuro.ds007406.v1.0.0",
+  "citeAs": "Allison Edit, Attila Pohlmann (n.d.). EEG dataset on consumer responses to extreme versus traditional marketing videos. doi:10.18112/openneuro.ds007406.v1.0.0",
   "version": "1.8.0",
-  "dateCreated": "2026-02-12",
-  "dateModified": "2026-02-12",
   "measurementTechnique": [
     "BIDS task: extremeversustraditionalvideos"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Attila Pohlmann"
-    }
   ],
   "distribution": [
     {

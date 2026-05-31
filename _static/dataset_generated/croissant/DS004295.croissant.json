@@ -76,29 +76,16 @@
       "name": "Erik M. Mueller"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Erik M. Mueller"
-  },
-  "datePublished": "2022",
   "identifier": "doi:10.18112/openneuro.ds004295.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004295.v1.0.0",
     "https://openneuro.org/datasets/ds004295",
     "https://huggingface.co/datasets/EEGDash/ds004295"
   ],
-  "citeAs": "Christopher Stolz, Alan Pickering, Erik M. Mueller (2022). Reward gain and punishment avoidance reversal learning. doi:10.18112/openneuro.ds004295.v1.0.0",
+  "citeAs": "Christopher Stolz, Alan Pickering, Erik M. Mueller (n.d.). Reward gain and punishment avoidance reversal learning. doi:10.18112/openneuro.ds004295.v1.0.0",
   "version": "1.1.1",
-  "dateCreated": "2022-10-15",
-  "dateModified": "2022-10-15",
   "measurementTechnique": [
     "BIDS task: task"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Christopher Stolz"
-    }
   ],
   "distribution": [
     {

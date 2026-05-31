@@ -80,29 +80,17 @@
       "name": "Anina N. Rich"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Anina N. Rich"
-  },
-  "datePublished": "2025",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds006768.v1.1.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds006768.v1.1.0",
     "https://openneuro.org/datasets/ds006768",
     "https://huggingface.co/datasets/EEGDash/ds006768"
   ],
-  "citeAs": "Benjamin G. Lowe, Alexandra Woolgar, Sophie Smit, Anina N. Rich (2025). Multiple Object Monitoring (EEG). doi:10.18112/openneuro.ds006768.v1.1.0",
+  "citeAs": "Benjamin G. Lowe, Alexandra Woolgar, Sophie Smit, Anina N. Rich (20). Multiple Object Monitoring (EEG). doi:10.18112/openneuro.ds006768.v1.1.0",
   "version": "1.11.0",
-  "dateCreated": "2025-10-09",
-  "dateModified": "2025-10-10",
   "measurementTechnique": [
     "BIDS task: MOM"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Benjamin G. Lowe"
-    }
   ],
   "distribution": [
     {

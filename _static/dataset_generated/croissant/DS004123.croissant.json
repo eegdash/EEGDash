@@ -101,39 +101,23 @@
       "name": "Kay Robbins (curation)"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Kay Robbins (curation)"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "This research was sponsored by the Army Research Laboratory and was accomplished under Cooperative Agreement Number W911NF-10-0-0002."
     }
   ],
-  "datePublished": "2022",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds004123.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004123.v1.0.0",
     "https://openneuro.org/datasets/ds004123",
     "https://huggingface.co/datasets/EEGDash/ds004123"
   ],
-  "citeAs": "Jonathan Touryan (data and curation), Greg Apker (data), Brent Lance (data), Scott Kerick (data), Anthony Ries (data) (2022). BCIT Traffic Complexity. doi:10.18112/openneuro.ds004123.v1.0.0",
+  "citeAs": "Jonathan Touryan (data and curation), Greg Apker (data), Brent Lance (data), Scott Kerick (data), Anthony Ries (data) (20). BCIT Traffic Complexity. doi:10.18112/openneuro.ds004123.v1.0.0",
   "version": "1.7.0",
-  "dateCreated": "2022-05-03",
-  "dateModified": "2022-05-04",
   "measurementTechnique": [
     "BIDS task: DriveWithComplexity"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Kay Robbins"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Jonathan Touryan"
-    }
   ],
   "distribution": [
     {

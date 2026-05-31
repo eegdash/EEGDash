@@ -92,30 +92,17 @@
       "name": "Jonas Richiardi"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Jonas Richiardi"
-  },
-  "datePublished": "2022",
   "identifier": "doi:10.18112/openneuro.ds004000.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004000.v1.0.0",
     "https://openneuro.org/datasets/ds004000",
     "https://huggingface.co/datasets/EEGDash/ds004000"
   ],
-  "citeAs": "Anna Padée, Pascal Missonnier, Anne Prévot, Grégoire Favre, Isabelle Gothuey (2022). Fribourg Ultimatum Game in Schizophrenia Study. doi:10.18112/openneuro.ds004000.v1.0.0",
+  "citeAs": "Anna Padée, Pascal Missonnier, Anne Prévot, Grégoire Favre, Isabelle Gothuey (n.d.). Fribourg Ultimatum Game in Schizophrenia Study. doi:10.18112/openneuro.ds004000.v1.0.0",
   "version": "v1.6.0",
-  "dateCreated": "2022-01-19",
-  "dateModified": "2022-01-11",
   "measurementTechnique": [
     "BIDS task: proposer",
     "BIDS task: responder"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Anna Padée"
-    }
   ],
   "distribution": [
     {

@@ -76,35 +76,22 @@
       "name": "Qi Li"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Qi Li"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "Jilin Scientific and Technology Development Program (grant no. 20240101358JC)"
     }
   ],
-  "datePublished": "2024",
   "identifier": "doi:10.18112/openneuro.ds005416.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005416.v1.0.1",
     "https://openneuro.org/datasets/ds005416",
     "https://huggingface.co/datasets/EEGDash/ds005416"
   ],
-  "citeAs": "Yan Wu, Chunguang Tao, Qi Li (2024). Fatigue Characterization of EEG under Mixed Reality Stereo Vision. doi:10.18112/openneuro.ds005416.v1.0.1",
+  "citeAs": "Yan Wu, Chunguang Tao, Qi Li (n.d.). Fatigue Characterization of EEG under Mixed Reality Stereo Vision. doi:10.18112/openneuro.ds005416.v1.0.1",
   "version": "1.1.1",
-  "dateCreated": "2024-08-19",
-  "dateModified": "2024-12-17",
   "measurementTechnique": [
     "BIDS task: WatchingTask"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "陶春光"
-    }
   ],
   "distribution": [
     {

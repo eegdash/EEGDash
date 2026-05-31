@@ -84,10 +84,6 @@
       "name": "Pablo Billeke"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Pablo Billeke"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -106,25 +102,16 @@
       "name": "ANID FONDEQUIP EQM150076"
     }
   ],
-  "datePublished": "2024",
   "identifier": "doi:10.18112/openneuro.ds004917.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004917.v1.0.1",
     "https://openneuro.org/datasets/ds004917",
     "https://huggingface.co/datasets/EEGDash/ds004917"
   ],
-  "citeAs": "Alejandra Figueroa-Vargas, Gabriela Valdebenito-Oyarzo, María Paz Martínez-Molina, Francisco Zamorano, Pablo Billeke (2024). Probability Decision-making Task with ambiguity. doi:10.18112/openneuro.ds004917.v1.0.1",
+  "citeAs": "Alejandra Figueroa-Vargas, Gabriela Valdebenito-Oyarzo, María Paz Martínez-Molina, Francisco Zamorano, Pablo Billeke (n.d.). Probability Decision-making Task with ambiguity. doi:10.18112/openneuro.ds004917.v1.0.1",
   "version": "1.9.0",
-  "dateCreated": "2024-01-04",
-  "dateModified": "2024-05-23",
   "measurementTechnique": [
     "BIDS task: pdm"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Alejandra Figueroa-Vargas"
-    }
   ],
   "distribution": [
     {

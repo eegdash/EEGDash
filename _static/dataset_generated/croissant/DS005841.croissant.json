@@ -76,21 +76,14 @@
       "name": "Michael Batterley"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Michael Batterley"
-  },
-  "datePublished": "2025",
   "identifier": "doi:10.18112/openneuro.ds005841.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005841.v1.0.0",
     "https://openneuro.org/datasets/ds005841",
     "https://huggingface.co/datasets/EEGDash/ds005841"
   ],
-  "citeAs": "Elena Karakashevska, Alexis Makin, Michael Batterley (2025). EEG Experiment measuring ERPs in VR. doi:10.18112/openneuro.ds005841.v1.0.0",
+  "citeAs": "Elena Karakashevska, Alexis Makin, Michael Batterley (n.d.). EEG Experiment measuring ERPs in VR. doi:10.18112/openneuro.ds005841.v1.0.0",
   "version": "1.6.0",
-  "dateCreated": "2025-01-14",
-  "dateModified": "2025-01-14",
   "measurementTechnique": [
     "BIDS task: lumfront",
     "BIDS task: lumperp",
@@ -98,12 +91,6 @@
     "BIDS task: regperp",
     "BIDS task: signalscreen",
     "BIDS task: signalvr"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Elena Karakashevska"
-    }
   ],
   "distribution": [
     {

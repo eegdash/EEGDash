@@ -96,35 +96,23 @@
       "name": "Karin Diserens"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Karin Diserens"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "This work was supported by the Fondation CHUV, Lausanne, Switzerland; the Loterie Romande, Lausanne, Switzerland; and Techno Concept, Mane, France."
     }
   ],
-  "datePublished": "2020",
+  "datePublished": "2003",
   "identifier": "doi:10.18112/openneuro.ds003343.v2.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds003343.v2.0.1",
     "https://openneuro.org/datasets/ds003343",
     "https://huggingface.co/datasets/EEGDash/ds003343"
   ],
-  "citeAs": "Christoph Schneider, Renaud Marquis, Jane Johr, Marina Da Silva Lopes, Philippe Ryvlin (2020). Disentangling the percepts of illusory movement and sensory stimulation during tendon vibration in the EEG. doi:10.18112/openneuro.ds003343.v2.0.1",
+  "citeAs": "Christoph Schneider, Renaud Marquis, Jane Johr, Marina Da Silva Lopes, Philippe Ryvlin (2003). Disentangling the percepts of illusory movement and sensory stimulation during tendon vibration in the EEG. doi:10.18112/openneuro.ds003343.v2.0.1",
   "version": "1.4.1",
-  "dateCreated": "2020-10-25",
-  "dateModified": "2021-05-05",
   "measurementTechnique": [
     "BIDS task: fps"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Christoph Schneider"
-    }
   ],
   "distribution": [
     {

@@ -95,8 +95,13 @@
     }
   ],
   "datePublished": "2019",
+  "identifier": "doi:10.82901/nemar.nm000125",
+  "sameAs": [
+    "https://doi.org/10.82901/nemar.nm000125",
+    "https://openneuro.org/datasets/nm000125"
+  ],
+  "citeAs": "Young-Eun Lee, Gi-Hwan Shin, Minji Lee, Seong-Whan Lee (2019). Lee2021 – SSVEP paradigm of the Mobile BCI dataset. doi:10.82901/nemar.nm000125",
   "version": "1.9.0",
-  "dateModified": "2026-04-29",
   "measurementTechnique": [
     "BIDS task: ssvep"
   ],
@@ -133,14 +138,6 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=nm000125",
       "encodingFormat": "text/html"
-    },
-    {
-      "@type": "cr:FileObject",
-      "@id": "nm000125-huggingface",
-      "name": "EEGDash/nm000125 on Hugging Face",
-      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
-      "contentUrl": "https://huggingface.co/datasets/EEGDash/nm000125",
-      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

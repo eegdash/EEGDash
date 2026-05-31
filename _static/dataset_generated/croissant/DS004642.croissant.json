@@ -76,10 +76,6 @@
       "name": "Johannes Sarnthein"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Johannes Sarnthein"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -90,29 +86,17 @@
       "name": "Alexander S. Onassis Public Benefit Foundation Scholarship"
     }
   ],
-  "datePublished": "2023",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds004642.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004642.v1.0.1",
     "https://openneuro.org/datasets/ds004642",
     "https://huggingface.co/datasets/EEGDash/ds004642"
   ],
-  "citeAs": "Vasileios Dimakopoulos, Marian Neidert, Johannes Sarnthein (2023). Intraoperative recordings of medianus stimulation with low and high impedance ECoG. doi:10.18112/openneuro.ds004642.v1.0.1",
+  "citeAs": "Vasileios Dimakopoulos, Marian Neidert, Johannes Sarnthein (20). Intraoperative recordings of medianus stimulation with low and high impedance ECoG. doi:10.18112/openneuro.ds004642.v1.0.1",
   "version": "1.4.0",
-  "dateCreated": "2023-07-17",
-  "dateModified": "2023-07-31",
   "measurementTechnique": [
     "BIDS task: lozHFO"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Vasileios S. Dimakopoulos"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Johannes Sarnthein"
-    }
   ],
   "distribution": [
     {

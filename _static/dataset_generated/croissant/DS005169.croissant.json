@@ -85,35 +85,23 @@
       "name": "Ioana Mindruta"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Ioana Mindruta"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "Romanian UEFISCDI PN-III-P4-ID-PCE-2020-0935"
     }
   ],
-  "datePublished": "2024",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds005169.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005169.v1.0.0",
     "https://openneuro.org/datasets/ds005169",
     "https://huggingface.co/datasets/EEGDash/ds005169"
   ],
-  "citeAs": "Andrei Barborica, Felicia Mihai, Laurentiu Tofan, Irina Oane, Ioana Mindruta (2024). Dataset of intracranial EEG during cortical stimulation evoking visual effects. doi:10.18112/openneuro.ds005169.v1.0.0",
+  "citeAs": "Andrei Barborica, Felicia Mihai, Laurentiu Tofan, Irina Oane, Ioana Mindruta (20). Dataset of intracranial EEG during cortical stimulation evoking visual effects. doi:10.18112/openneuro.ds005169.v1.0.0",
   "version": "1.9.0",
-  "dateCreated": "2024-05-22",
-  "dateModified": "2024-05-22",
   "measurementTechnique": [
     "BIDS task: dcs"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Andrei Barborica"
-    }
   ],
   "distribution": [
     {

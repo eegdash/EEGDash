@@ -84,27 +84,20 @@
       "name": "Yeganeh Farahzadi"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Yeganeh Farahzadi"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "Hungarian National Research, Development and Innovation Office (NKFIH, Grant No.: FK 132248)"
     }
   ],
-  "datePublished": "2023",
   "identifier": "doi:10.18112/openneuro.ds004572.v1.3.2",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004572.v1.3.2",
     "https://openneuro.org/datasets/ds004572",
     "https://huggingface.co/datasets/EEGDash/ds004572"
   ],
-  "citeAs": "Zoltan Kekecs, Kyra Girán, Vanda Vizkievicz, Anna Lutoskin, Yeganeh Farahzadi (2023). The effects of sham hypnosis techniques. doi:10.18112/openneuro.ds004572.v1.3.2",
+  "citeAs": "Zoltan Kekecs, Kyra Girán, Vanda Vizkievicz, Anna Lutoskin, Yeganeh Farahzadi (n.d.). The effects of sham hypnosis techniques. doi:10.18112/openneuro.ds004572.v1.3.2",
   "version": "1.6.0",
-  "dateCreated": "2023-05-20",
-  "dateModified": "2026-02-13",
   "measurementTechnique": [
     "BIDS task: baseline1",
     "BIDS task: baseline2",
@@ -116,16 +109,6 @@
     "BIDS task: induction2",
     "BIDS task: induction3",
     "BIDS task: induction4"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Yeganeh Farahzadi"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Zoltan Kekecs"
-    }
   ],
   "distribution": [
     {

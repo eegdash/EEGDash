@@ -93,10 +93,6 @@
       "name": "Leonardo Cohen"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Leonardo Cohen"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -111,26 +107,18 @@
       "name": "Bettencourt Schueller Foundation"
     }
   ],
-  "datePublished": "2020",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds002550.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds002550.v1.0.1",
     "https://openneuro.org/datasets/ds002550",
     "https://huggingface.co/datasets/EEGDash/ds002550"
   ],
-  "citeAs": "Romain Quentin, Jean-Remi King, Etienne Sallard, Nathan Fishman, Ryan Thompson (2020). Differential brain mechanisms of selection and maintenance of information during working memory (MEG data). doi:10.18112/openneuro.ds002550.v1.0.1",
+  "citeAs": "Romain Quentin, Jean-Remi King, Etienne Sallard, Nathan Fishman, Ryan Thompson (20). Differential brain mechanisms of selection and maintenance of information during working memory (MEG data). doi:10.18112/openneuro.ds002550.v1.0.1",
   "version": "1.1.1",
-  "dateCreated": "2020-02-12",
-  "dateModified": "2020-05-05",
   "measurementTechnique": [
     "BIDS task: LocalizerControl",
     "BIDS task: WorkingMemory"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "romain quentin"
-    }
   ],
   "distribution": [
     {

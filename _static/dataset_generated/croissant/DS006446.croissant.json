@@ -72,29 +72,17 @@
       "name": "Sue Becker"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Sue Becker"
-  },
-  "datePublished": "2025",
+  "datePublished": "2019",
   "identifier": "doi:10.18112/openneuro.ds006446.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds006446.v1.0.0",
     "https://openneuro.org/datasets/ds006446",
     "https://huggingface.co/datasets/EEGDash/ds006446"
   ],
-  "citeAs": "Isaac Kinley, Sue Becker (2025). Cueing the future to reduce temporal discounting. doi:10.18112/openneuro.ds006446.v1.0.0",
+  "citeAs": "Isaac Kinley, Sue Becker (2019). Cueing the future to reduce temporal discounting. doi:10.18112/openneuro.ds006446.v1.0.0",
   "version": "1.7.0",
-  "dateCreated": "2025-07-07",
-  "dateModified": "2025-07-07",
   "measurementTechnique": [
     "BIDS task: itc"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Isaac Kinley"
-    }
   ],
   "distribution": [
     {

@@ -80,35 +80,22 @@
       "name": "Xiao Ding"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Xiao Ding"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "National Natural Science Foundation of China under Grants 62176079"
     }
   ],
-  "datePublished": "2024",
   "identifier": "doi:10.18112/openneuro.ds005170.v1.1.2",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005170.v1.1.2",
     "https://openneuro.org/datasets/ds005170",
     "https://huggingface.co/datasets/EEGDash/ds005170"
   ],
-  "citeAs": "Zihan Zhang, Yi Zhao, Yu Bao, Xiao Ding (2024). Chisco. doi:10.18112/openneuro.ds005170.v1.1.2",
+  "citeAs": "Zihan Zhang, Yi Zhao, Yu Bao, Xiao Ding (n.d.). Chisco. doi:10.18112/openneuro.ds005170.v1.1.2",
   "version": "1.6.0",
-  "dateCreated": "2024-05-22",
-  "dateModified": "2024-12-12",
   "measurementTechnique": [
     "BIDS task: imagine"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Zihan Zhang"
-    }
   ],
   "distribution": [
     {

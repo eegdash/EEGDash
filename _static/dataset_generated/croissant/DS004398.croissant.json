@@ -80,10 +80,6 @@
       "name": "Raymond J. Dolan"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Raymond J. Dolan"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -110,24 +106,15 @@
       "name": "The Max Planck University College London Centre is a joint initiative supported by University College London and the Max Planck Society."
     }
   ],
-  "datePublished": "2023",
   "identifier": "doi:10.18112/openneuro.ds004398.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004398.v1.0.0",
     "https://openneuro.org/datasets/ds004398",
     "https://huggingface.co/datasets/EEGDash/ds004398"
   ],
-  "citeAs": "G. Elliott Wimmer, Yunzhe Liu, Daniel C. McNamee, Raymond J. Dolan (2023). planmemreplay. doi:10.18112/openneuro.ds004398.v1.0.0",
-  "dateCreated": "2023-01-11",
-  "dateModified": "2023-01-25",
+  "citeAs": "G. Elliott Wimmer, Yunzhe Liu, Daniel C. McNamee, Raymond J. Dolan (n.d.). planmemreplay. doi:10.18112/openneuro.ds004398.v1.0.0",
   "measurementTechnique": [
     "BIDS task: loc"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Elliott Wimmer"
-    }
   ],
   "distribution": [
     {

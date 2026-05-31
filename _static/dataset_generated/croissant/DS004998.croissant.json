@@ -92,10 +92,6 @@
       "name": "Jan Hirschmann"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Jan Hirschmann"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -111,8 +107,6 @@
   ],
   "citeAs": "Fayed Rassoulou, Alexandra Steina, Christian J. Hartmann, Jan Vesper, Markus Butz (2024). Exploring the electrophysiology of Parkinson's disease - magnetoencephalography combined with deep brain recordings from the subthalamic nucleus.. doi:10.18112/openneuro.ds004998.v1.2.2",
   "version": "1.6.0",
-  "dateCreated": "2024-03-04",
-  "dateModified": "2024-09-09",
   "measurementTechnique": [
     "BIDS task: HoldL",
     "BIDS task: HoldR",
@@ -120,12 +114,6 @@
     "BIDS task: MoveR",
     "BIDS task: Rest",
     "BIDS task: noise"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Fayed Rassoulou"
-    }
   ],
   "distribution": [
     {

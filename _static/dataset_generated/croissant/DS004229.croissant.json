@@ -85,30 +85,18 @@
       "name": "Patricia K. Kuhl"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Patricia K. Kuhl"
-  },
-  "datePublished": "2022",
+  "datePublished": "2021",
   "identifier": "doi:10.18112/openneuro.ds004229.v1.0.3",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004229.v1.0.3",
     "https://openneuro.org/datasets/ds004229",
     "https://huggingface.co/datasets/EEGDash/ds004229"
   ],
-  "citeAs": "Maria Mittag, Eric Larson, Maggie Clarke, Samu Taulu, Patricia K. Kuhl (2022). amnoise. doi:10.18112/openneuro.ds004229.v1.0.3",
+  "citeAs": "Maria Mittag, Eric Larson, Maggie Clarke, Samu Taulu, Patricia K. Kuhl (2021). amnoise. doi:10.18112/openneuro.ds004229.v1.0.3",
   "version": "1.7.0",
-  "dateCreated": "2022-08-01",
-  "dateModified": "2023-11-03",
   "measurementTechnique": [
     "BIDS task: amnoise",
     "BIDS task: noise"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Eric Larson"
-    }
   ],
   "distribution": [
     {

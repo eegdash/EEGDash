@@ -76,10 +76,6 @@
       "name": "Jeremy B. Caplan"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Jeremy B. Caplan"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -90,24 +86,16 @@
       "name": "Natural Sciences and Engineering Research Council of Canada (NSERC)"
     }
   ],
-  "datePublished": "2026",
+  "datePublished": "2025",
   "identifier": "doi:10.18112/openneuro.ds007609.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds007609.v1.0.0",
     "https://openneuro.org/datasets/ds007609"
   ],
-  "citeAs": "Tamari Shalamberidze, Kyle Nash, Jeremy B. Caplan (2026). Resting-State EEG and Trait Anxiety. doi:10.18112/openneuro.ds007609.v1.0.0",
+  "citeAs": "Tamari Shalamberidze, Kyle Nash, Jeremy B. Caplan (2025). Resting-State EEG and Trait Anxiety. doi:10.18112/openneuro.ds007609.v1.0.0",
   "version": "1.9.0",
-  "dateCreated": "2026-03-31",
-  "dateModified": "2026-03-31",
   "measurementTechnique": [
     "BIDS task: rest"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Tamari Shalamberidze"
-    }
   ],
   "distribution": [
     {

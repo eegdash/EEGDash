@@ -72,21 +72,15 @@
       "name": "Daniel P. Ferris"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Daniel P. Ferris"
-  },
-  "datePublished": "2023",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds004784.v1.0.4",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004784.v1.0.4",
     "https://openneuro.org/datasets/ds004784",
     "https://huggingface.co/datasets/EEGDash/ds004784"
   ],
-  "citeAs": "Ryan J. Downey, Daniel P. Ferris (2023). Phantom EEG Dataset with Motion, Muscle, and Eye Artifacts and Example Scripts. doi:10.18112/openneuro.ds004784.v1.0.4",
+  "citeAs": "Ryan J. Downey, Daniel P. Ferris (20). Phantom EEG Dataset with Motion, Muscle, and Eye Artifacts and Example Scripts. doi:10.18112/openneuro.ds004784.v1.0.4",
   "version": "1.8.0",
-  "dateCreated": "2023-09-29",
-  "dateModified": "2023-12-21",
   "measurementTechnique": [
     "BIDS task: All",
     "BIDS task: Brain",
@@ -94,20 +88,6 @@
     "BIDS task: Facial",
     "BIDS task: Neck",
     "BIDS task: Walking"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Annalisa Salazar"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Arnaud Delorme"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Ryan Downey"
-    }
   ],
   "distribution": [
     {

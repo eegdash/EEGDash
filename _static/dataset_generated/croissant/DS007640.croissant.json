@@ -82,31 +82,18 @@
       "name": "Sung-Phil Kim"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Sung-Phil Kim"
-  },
-  "datePublished": "2026",
-  "identifier": "doi:10.18112/openneuro.ds007640.v1.0.0",
+  "identifier": "doi:10.18112/openneuro.ds007640.v1.0.1",
   "sameAs": [
-    "https://doi.org/10.18112/openneuro.ds007640.v1.0.0",
+    "https://doi.org/10.18112/openneuro.ds007640.v1.0.1",
     "https://openneuro.org/datasets/ds007640"
   ],
-  "citeAs": "Moon-A Yoo, Dong-Uk Kim, Soo-In Choi, Min-Young Kim, Sung-Phil Kim (2026). Dataset of emotion recognition using validated video stimuli with large-scale behavioral survey and MEG recordings. doi:10.18112/openneuro.ds007640.v1.0.0",
+  "citeAs": "Moon-A Yoo, Dong-Uk Kim, Soo-In Choi, Min-Young Kim, Sung-Phil Kim (n.d.). Dataset of emotion recognition using validated video stimuli with large-scale behavioral survey and MEG recordings. doi:10.18112/openneuro.ds007640.v1.0.1",
   "version": "TBD",
-  "dateCreated": "2026-04-08",
-  "dateModified": "2026-04-09",
   "measurementTechnique": [
     "BIDS task: HAHV",
     "BIDS task: HALV",
     "BIDS task: LAHV",
     "BIDS task: LALV"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "MoonA Yoo"
-    }
   ],
   "distribution": [
     {

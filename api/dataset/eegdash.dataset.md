@@ -14316,7 +14316,7 @@ Dataset-specific caveats are not provided in the summary metadata.
 
 OpenNeuro dataset: [https://openneuro.org/datasets/ds004504](https://openneuro.org/datasets/ds004504)
 NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=ds004504](https://nemar.org/dataexplorer/detail?dataset_id=ds004504)
-DOI: [https://doi.org/10.18112/openneuro.ds004504.v1.0.8](https://doi.org/10.18112/openneuro.ds004504.v1.0.8)
+DOI: [https://doi.org/10.18112/openneuro.ds004504.v1.0.9](https://doi.org/10.18112/openneuro.ds004504.v1.0.9)
 NEMAR citation count: 55
 
 ### Examples
@@ -16145,7 +16145,7 @@ Registered Replication Report of ERN/Pe Psychometrics
 Also importable as: `DS004602`, `Clayson2023_Registered`.
 
 Modality: `eeg`.
-Subjects: 182; recordings: 546; tasks: 3.
+Subjects: 182; recordings: 545; tasks: 3.
 
 * **Parameters:**
   * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *Path*) – Directory where data are cached locally.
@@ -16185,7 +16185,7 @@ Dataset-specific caveats are not provided in the summary metadata.
 
 OpenNeuro dataset: [https://openneuro.org/datasets/ds004602](https://openneuro.org/datasets/ds004602)
 NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=ds004602](https://nemar.org/dataexplorer/detail?dataset_id=ds004602)
-DOI: [https://doi.org/10.18112/openneuro.ds004602.v1.0.1](https://doi.org/10.18112/openneuro.ds004602.v1.0.1)
+DOI: [https://doi.org/10.18112/openneuro.ds004602.v1.0.3](https://doi.org/10.18112/openneuro.ds004602.v1.0.3)
 NEMAR citation count: 5
 
 ### Examples
@@ -30609,6 +30609,77 @@ DOI: [https://doi.org/10.18112/openneuro.ds006107.v1.0.0](https://doi.org/10.181
 
 #### canonical_name *= []*
 
+### *class* eegdash.dataset.DS006110(cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), query: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, s3_bucket: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+PsiConnect
+
+* **Study:**
+  `ds006110` (OpenNeuro)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `DS006110`, `nan`.
+
+Modality: `eeg`.
+Subjects: 65; recordings: 124; tasks: 1.
+
+* **Parameters:**
+  * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *Path*) – Directory where data are cached locally.
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[dict](https://docs.python.org/3/library/stdtypes.html#dict)] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/ds006110](https://openneuro.org/datasets/ds006110)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=ds006110](https://nemar.org/dataexplorer/detail?dataset_id=ds006110)
+DOI: [https://doi.org/10.18112/openneuro.ds006110.v1.2.0](https://doi.org/10.18112/openneuro.ds006110.v1.2.0)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import DS006110
+>>> dataset = DS006110(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
 ### *class* eegdash.dataset.DS006126(cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), query: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, s3_bucket: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
 
 Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
@@ -33647,7 +33718,7 @@ Dataset-specific caveats are not provided in the summary metadata.
 
 OpenNeuro dataset: [https://openneuro.org/datasets/ds006673](https://openneuro.org/datasets/ds006673)
 NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=ds006673](https://nemar.org/dataexplorer/detail?dataset_id=ds006673)
-DOI: [https://doi.org/10.18112/openneuro.ds006673.v1.0.2](https://doi.org/10.18112/openneuro.ds006673.v1.0.2)
+DOI: [https://doi.org/10.18112/openneuro.ds006673.v1.0.4](https://doi.org/10.18112/openneuro.ds006673.v1.0.4)
 
 ### Examples
 
@@ -35650,6 +35721,77 @@ DOI: [https://doi.org/10.18112/openneuro.ds007006.v1.0.0](https://doi.org/10.181
 
 #### canonical_name *= []*
 
+### *class* eegdash.dataset.DS007012(cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), query: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, s3_bucket: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+FOODEEG: An open dataset of human electroencephalographic and behavioural responses to food images
+
+* **Study:**
+  `ds007012` (OpenNeuro)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `DS007012`, `nan`.
+
+Modality: `eeg`.
+Subjects: 117; recordings: 118; tasks: 1.
+
+* **Parameters:**
+  * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *Path*) – Directory where data are cached locally.
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[dict](https://docs.python.org/3/library/stdtypes.html#dict)] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/ds007012](https://openneuro.org/datasets/ds007012)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=ds007012](https://nemar.org/dataexplorer/detail?dataset_id=ds007012)
+DOI: [https://doi.org/10.18112/openneuro.ds007012.v1.1.0](https://doi.org/10.18112/openneuro.ds007012.v1.1.0)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import DS007012
+>>> dataset = DS007012(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
 ### *class* eegdash.dataset.DS007020(cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), query: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, s3_bucket: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
 
 Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
@@ -37212,6 +37354,77 @@ DOI: [https://doi.org/10.18112/openneuro.ds007221.v1.0.1](https://doi.org/10.181
 
 #### canonical_name *= []*
 
+### *class* eegdash.dataset.DS007222(cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), query: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, s3_bucket: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+Visual Occlusions with Treadmill Walking Speeds EEG
+
+* **Study:**
+  `ds007222` (OpenNeuro)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `DS007222`, `nan`.
+
+Modality: `eeg`.
+Subjects: 15; recordings: 75; tasks: 5.
+
+* **Parameters:**
+  * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *Path*) – Directory where data are cached locally.
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[dict](https://docs.python.org/3/library/stdtypes.html#dict)] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/ds007222](https://openneuro.org/datasets/ds007222)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=ds007222](https://nemar.org/dataexplorer/detail?dataset_id=ds007222)
+DOI: [https://doi.org/10.18112/openneuro.ds007222.v1.0.0](https://doi.org/10.18112/openneuro.ds007222.v1.0.0)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import DS007222
+>>> dataset = DS007222(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
 ### *class* eegdash.dataset.DS007262(cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), query: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, s3_bucket: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
 
 Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
@@ -38490,6 +38703,77 @@ DOI: [https://doi.org/10.18112/openneuro.ds007477.v1.0.1](https://doi.org/10.181
 
 #### canonical_name *= []*
 
+### *class* eegdash.dataset.DS007509(cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), query: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, s3_bucket: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+1hrPVTdataset_allSubjects
+
+* **Study:**
+  `ds007509` (OpenNeuro)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `DS007509`, `nan`.
+
+Modality: `eeg`.
+Subjects: 69; recordings: 70; tasks: 1.
+
+* **Parameters:**
+  * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *Path*) – Directory where data are cached locally.
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[dict](https://docs.python.org/3/library/stdtypes.html#dict)] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/ds007509](https://openneuro.org/datasets/ds007509)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=ds007509](https://nemar.org/dataexplorer/detail?dataset_id=ds007509)
+DOI: [https://doi.org/10.18112/openneuro.ds007509.v1.0.3](https://doi.org/10.18112/openneuro.ds007509.v1.0.3)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import DS007509
+>>> dataset = DS007509(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
 ### *class* eegdash.dataset.DS007521(cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), query: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, s3_bucket: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
 
 Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
@@ -38617,7 +38901,7 @@ Dataset-specific caveats are not provided in the summary metadata.
 
 OpenNeuro dataset: [https://openneuro.org/datasets/ds007523](https://openneuro.org/datasets/ds007523)
 NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=ds007523](https://nemar.org/dataexplorer/detail?dataset_id=ds007523)
-DOI: [https://doi.org/10.18112/openneuro.ds007523.v1.0.0](https://doi.org/10.18112/openneuro.ds007523.v1.0.0)
+DOI: [https://doi.org/10.18112/openneuro.ds007523.v1.0.1](https://doi.org/10.18112/openneuro.ds007523.v1.0.1)
 
 ### Examples
 
@@ -38688,7 +38972,7 @@ Dataset-specific caveats are not provided in the summary metadata.
 
 OpenNeuro dataset: [https://openneuro.org/datasets/ds007524](https://openneuro.org/datasets/ds007524)
 NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=ds007524](https://nemar.org/dataexplorer/detail?dataset_id=ds007524)
-DOI: [https://doi.org/10.18112/openneuro.ds007524.v1.0.1](https://doi.org/10.18112/openneuro.ds007524.v1.0.1)
+DOI: [https://doi.org/10.18112/openneuro.ds007524.v1.1.0](https://doi.org/10.18112/openneuro.ds007524.v1.1.0)
 
 ### Examples
 
@@ -38837,6 +39121,76 @@ DOI: [https://doi.org/10.18112/openneuro.ds007537.v1.0.0](https://doi.org/10.181
 ```pycon
 >>> from eegdash.dataset import DS007537
 >>> dataset = DS007537(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.DS007541(cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), query: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, s3_bucket: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+ds007541
+
+* **Study:**
+  `ds007541` (OpenNeuro)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `DS007541`, `nan`.
+
+Modality: `eeg`.
+Subjects: 32; recordings: 960; tasks: 3.
+
+* **Parameters:**
+  * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *Path*) – Directory where data are cached locally.
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[dict](https://docs.python.org/3/library/stdtypes.html#dict)] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/ds007541](https://openneuro.org/datasets/ds007541)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=ds007541](https://nemar.org/dataexplorer/detail?dataset_id=ds007541)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import DS007541
+>>> dataset = DS007541(cache_dir="./data")
 >>> recording = dataset[0]
 >>> raw = recording.load()
 ```
@@ -39398,7 +39752,7 @@ Dataset-specific caveats are not provided in the summary metadata.
 
 OpenNeuro dataset: [https://openneuro.org/datasets/ds007629](https://openneuro.org/datasets/ds007629)
 NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=ds007629](https://nemar.org/dataexplorer/detail?dataset_id=ds007629)
-DOI: [https://doi.org/10.18112/openneuro.ds007629.v1.0.2](https://doi.org/10.18112/openneuro.ds007629.v1.0.2)
+DOI: [https://doi.org/10.18112/openneuro.ds007629.v1.1.0](https://doi.org/10.18112/openneuro.ds007629.v1.1.0)
 
 ### Examples
 
@@ -39540,7 +39894,7 @@ Dataset-specific caveats are not provided in the summary metadata.
 
 OpenNeuro dataset: [https://openneuro.org/datasets/ds007640](https://openneuro.org/datasets/ds007640)
 NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=ds007640](https://nemar.org/dataexplorer/detail?dataset_id=ds007640)
-DOI: [https://doi.org/10.18112/openneuro.ds007640.v1.0.0](https://doi.org/10.18112/openneuro.ds007640.v1.0.0)
+DOI: [https://doi.org/10.18112/openneuro.ds007640.v1.0.1](https://doi.org/10.18112/openneuro.ds007640.v1.0.1)
 
 ### Examples
 
@@ -39611,7 +39965,7 @@ Dataset-specific caveats are not provided in the summary metadata.
 
 OpenNeuro dataset: [https://openneuro.org/datasets/ds007647](https://openneuro.org/datasets/ds007647)
 NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=ds007647](https://nemar.org/dataexplorer/detail?dataset_id=ds007647)
-DOI: [https://doi.org/10.18112/openneuro.ds007647.v1.0.0](https://doi.org/10.18112/openneuro.ds007647.v1.0.0)
+DOI: [https://doi.org/10.18112/openneuro.ds007647.v1.0.1](https://doi.org/10.18112/openneuro.ds007647.v1.0.1)
 
 ### Examples
 
@@ -39753,7 +40107,7 @@ Dataset-specific caveats are not provided in the summary metadata.
 
 OpenNeuro dataset: [https://openneuro.org/datasets/ds007655](https://openneuro.org/datasets/ds007655)
 NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=ds007655](https://nemar.org/dataexplorer/detail?dataset_id=ds007655)
-DOI: [https://doi.org/10.18112/openneuro.ds007655.v1.0.0](https://doi.org/10.18112/openneuro.ds007655.v1.0.0)
+DOI: [https://doi.org/10.18112/openneuro.ds007655.v1.0.1](https://doi.org/10.18112/openneuro.ds007655.v1.0.1)
 
 ### Examples
 
@@ -39973,6 +40327,929 @@ DOI: [https://doi.org/10.18112/openneuro.ds007667.v1.0.0](https://doi.org/10.181
 ```pycon
 >>> from eegdash.dataset import DS007667
 >>> dataset = DS007667(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.DS007688(cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), query: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, s3_bucket: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+The Temporal Sequence of Party Leader Incongruence
+
+* **Study:**
+  `ds007688` (OpenNeuro)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `DS007688`, `nan`.
+
+Modality: `eeg`.
+Subjects: 44; recordings: 88; tasks: 2.
+
+* **Parameters:**
+  * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *Path*) – Directory where data are cached locally.
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[dict](https://docs.python.org/3/library/stdtypes.html#dict)] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/ds007688](https://openneuro.org/datasets/ds007688)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=ds007688](https://nemar.org/dataexplorer/detail?dataset_id=ds007688)
+DOI: [https://doi.org/10.18112/openneuro.ds007688.v1.0.0](https://doi.org/10.18112/openneuro.ds007688.v1.0.0)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import DS007688
+>>> dataset = DS007688(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.DS007714(cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), query: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, s3_bucket: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+Cambridge_data
+
+* **Study:**
+  `ds007714` (OpenNeuro)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `DS007714`, `nan`.
+
+Modality: `fnirs`.
+Subjects: 64; recordings: 64; tasks: 1.
+
+* **Parameters:**
+  * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *Path*) – Directory where data are cached locally.
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[dict](https://docs.python.org/3/library/stdtypes.html#dict)] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/ds007714](https://openneuro.org/datasets/ds007714)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=ds007714](https://nemar.org/dataexplorer/detail?dataset_id=ds007714)
+DOI: [https://doi.org/10.18112/openneuro.ds007714.v1.0.0](https://doi.org/10.18112/openneuro.ds007714.v1.0.0)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import DS007714
+>>> dataset = DS007714(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.DS007719(cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), query: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, s3_bucket: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+Cambridge_data_resting
+
+* **Study:**
+  `ds007719` (OpenNeuro)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `DS007719`, `nan`.
+
+Modality: `fnirs`.
+Subjects: 65; recordings: 65; tasks: 1.
+
+* **Parameters:**
+  * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *Path*) – Directory where data are cached locally.
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[dict](https://docs.python.org/3/library/stdtypes.html#dict)] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/ds007719](https://openneuro.org/datasets/ds007719)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=ds007719](https://nemar.org/dataexplorer/detail?dataset_id=ds007719)
+DOI: [https://doi.org/10.18112/openneuro.ds007719.v1.0.0](https://doi.org/10.18112/openneuro.ds007719.v1.0.0)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import DS007719
+>>> dataset = DS007719(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.DS007720(cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), query: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, s3_bucket: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+BCI-FIT: A customization protocol for communication brain-computer interface systems.
+
+* **Study:**
+  `ds007720` (OpenNeuro)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `DS007720`, `nan`.
+
+Modality: `eeg`.
+Subjects: 5; recordings: 371; tasks: 4.
+
+* **Parameters:**
+  * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *Path*) – Directory where data are cached locally.
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[dict](https://docs.python.org/3/library/stdtypes.html#dict)] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/ds007720](https://openneuro.org/datasets/ds007720)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=ds007720](https://nemar.org/dataexplorer/detail?dataset_id=ds007720)
+DOI: [https://doi.org/10.18112/openneuro.ds007720.v1.0.1](https://doi.org/10.18112/openneuro.ds007720.v1.0.1)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import DS007720
+>>> dataset = DS007720(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.DS007721(cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), query: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, s3_bucket: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+Bone conducted responses using the parallel auditory brainstem response (pABR) paradigm
+
+* **Study:**
+  `ds007721` (OpenNeuro)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `DS007721`, `nan`.
+
+Modality: `eeg`.
+Subjects: 20; recordings: 40; tasks: 2.
+
+* **Parameters:**
+  * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *Path*) – Directory where data are cached locally.
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[dict](https://docs.python.org/3/library/stdtypes.html#dict)] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/ds007721](https://openneuro.org/datasets/ds007721)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=ds007721](https://nemar.org/dataexplorer/detail?dataset_id=ds007721)
+DOI: [https://doi.org/10.18112/openneuro.ds007721.v1.0.1](https://doi.org/10.18112/openneuro.ds007721.v1.0.1)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import DS007721
+>>> dataset = DS007721(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.DS007738(cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), query: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, s3_bucket: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+Whole-Head Cocktail Party fNIRS
+
+* **Study:**
+  `ds007738` (OpenNeuro)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `DS007738`, `nan`.
+
+Modality: `fnirs`.
+Subjects: 38; recordings: 223; tasks: 6.
+
+* **Parameters:**
+  * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *Path*) – Directory where data are cached locally.
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[dict](https://docs.python.org/3/library/stdtypes.html#dict)] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/ds007738](https://openneuro.org/datasets/ds007738)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=ds007738](https://nemar.org/dataexplorer/detail?dataset_id=ds007738)
+DOI: [https://doi.org/10.18112/openneuro.ds007738.v1.0.0](https://doi.org/10.18112/openneuro.ds007738.v1.0.0)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import DS007738
+>>> dataset = DS007738(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.DS007788(cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), query: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, s3_bucket: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+Dataset: EEG-Controlled Exoskeleton for Walking and Standing - A Longitudinal Study of Healthy Individuals
+
+* **Study:**
+  `ds007788` (OpenNeuro)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `DS007788`, `nan`.
+
+Modality: `eeg`.
+Subjects: 7; recordings: 935; tasks: 15.
+
+* **Parameters:**
+  * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *Path*) – Directory where data are cached locally.
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[dict](https://docs.python.org/3/library/stdtypes.html#dict)] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/ds007788](https://openneuro.org/datasets/ds007788)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=ds007788](https://nemar.org/dataexplorer/detail?dataset_id=ds007788)
+DOI: [https://doi.org/10.18112/openneuro.ds007788.v1.0.1](https://doi.org/10.18112/openneuro.ds007788.v1.0.1)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import DS007788
+>>> dataset = DS007788(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.DS007808(cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), query: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, s3_bucket: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+EEG-Speech Brain Decoding Dataset
+
+* **Study:**
+  `ds007808` (OpenNeuro)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `DS007808`, `nan`.
+
+Modality: `eeg`.
+Subjects: 3; recordings: 1974; tasks: 3.
+
+* **Parameters:**
+  * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *Path*) – Directory where data are cached locally.
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[dict](https://docs.python.org/3/library/stdtypes.html#dict)] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/ds007808](https://openneuro.org/datasets/ds007808)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=ds007808](https://nemar.org/dataexplorer/detail?dataset_id=ds007808)
+DOI: [https://doi.org/10.18112/openneuro.ds007808.v1.0.0](https://doi.org/10.18112/openneuro.ds007808.v1.0.0)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import DS007808
+>>> dataset = DS007808(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.DS007822(cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), query: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, s3_bucket: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+Prisoner’s Dilemma EEG Dataset
+
+* **Study:**
+  `ds007822` (OpenNeuro)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `DS007822`, `nan`.
+
+Modality: `eeg`.
+Subjects: 33; recordings: 99; tasks: 3.
+
+* **Parameters:**
+  * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *Path*) – Directory where data are cached locally.
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[dict](https://docs.python.org/3/library/stdtypes.html#dict)] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/ds007822](https://openneuro.org/datasets/ds007822)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=ds007822](https://nemar.org/dataexplorer/detail?dataset_id=ds007822)
+DOI: [https://doi.org/10.18112/openneuro.ds007822.v1.0.0](https://doi.org/10.18112/openneuro.ds007822.v1.0.0)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import DS007822
+>>> dataset = DS007822(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.DS007823(cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), query: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, s3_bucket: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+A COVID-19 survivors and close contacts EEG dataset
+
+* **Study:**
+  `ds007823` (OpenNeuro)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `DS007823`, `nan`.
+
+Modality: `eeg`.
+Subjects: 169; recordings: 169; tasks: 1.
+
+* **Parameters:**
+  * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *Path*) – Directory where data are cached locally.
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[dict](https://docs.python.org/3/library/stdtypes.html#dict)] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/ds007823](https://openneuro.org/datasets/ds007823)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=ds007823](https://nemar.org/dataexplorer/detail?dataset_id=ds007823)
+DOI: [https://doi.org/10.18112/openneuro.ds007823.v1.0.1](https://doi.org/10.18112/openneuro.ds007823.v1.0.1)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import DS007823
+>>> dataset = DS007823(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.DS007827(cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), query: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, s3_bucket: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+Loneliness EEG - Roving Oddball Task
+
+* **Study:**
+  `ds007827` (OpenNeuro)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `DS007827`, `nan`.
+
+Modality: `eeg`.
+Subjects: 99; recordings: 99; tasks: 1.
+
+* **Parameters:**
+  * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *Path*) – Directory where data are cached locally.
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[dict](https://docs.python.org/3/library/stdtypes.html#dict)] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/ds007827](https://openneuro.org/datasets/ds007827)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=ds007827](https://nemar.org/dataexplorer/detail?dataset_id=ds007827)
+DOI: [https://doi.org/10.18112/openneuro.ds007827.v1.0.0](https://doi.org/10.18112/openneuro.ds007827.v1.0.0)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import DS007827
+>>> dataset = DS007827(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.DS007864(cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), query: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, s3_bucket: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+Neuroepo multisession Phase II and III
+
+* **Study:**
+  `ds007864` (OpenNeuro)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `DS007864`, `nan`.
+
+Modality: `eeg`.
+Subjects: 45; recordings: 84; tasks: 1.
+
+* **Parameters:**
+  * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *Path*) – Directory where data are cached locally.
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[dict](https://docs.python.org/3/library/stdtypes.html#dict)] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/ds007864](https://openneuro.org/datasets/ds007864)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=ds007864](https://nemar.org/dataexplorer/detail?dataset_id=ds007864)
+DOI: [https://doi.org/10.18112/openneuro.ds007864.v1.0.0](https://doi.org/10.18112/openneuro.ds007864.v1.0.0)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import DS007864
+>>> dataset = DS007864(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.DS007865(cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), query: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, s3_bucket: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+Placebo Neuroepo multisession Phase II and III
+
+* **Study:**
+  `ds007865` (OpenNeuro)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `DS007865`, `nan`.
+
+Modality: `eeg`.
+Subjects: 24; recordings: 47; tasks: 1.
+
+* **Parameters:**
+  * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *Path*) – Directory where data are cached locally.
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[dict](https://docs.python.org/3/library/stdtypes.html#dict)] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/ds007865](https://openneuro.org/datasets/ds007865)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=ds007865](https://nemar.org/dataexplorer/detail?dataset_id=ds007865)
+DOI: [https://doi.org/10.18112/openneuro.ds007865.v1.0.0](https://doi.org/10.18112/openneuro.ds007865.v1.0.0)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import DS007865
+>>> dataset = DS007865(cache_dir="./data")
 >>> recording = dataset[0]
 >>> raw = recording.load()
 ```
@@ -42953,6 +44230,7 @@ Dataset-specific caveats are not provided in the summary metadata.
 
 OpenNeuro dataset: [https://openneuro.org/datasets/nm000118](https://openneuro.org/datasets/nm000118)
 NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000118](https://nemar.org/dataexplorer/detail?dataset_id=nm000118)
+DOI: [https://doi.org/10.82901/nemar.nm000118](https://doi.org/10.82901/nemar.nm000118)
 
 ### Examples
 
@@ -43023,6 +44301,7 @@ Dataset-specific caveats are not provided in the summary metadata.
 
 OpenNeuro dataset: [https://openneuro.org/datasets/nm000119](https://openneuro.org/datasets/nm000119)
 NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000119](https://nemar.org/dataexplorer/detail?dataset_id=nm000119)
+DOI: [https://doi.org/10.82901/nemar.nm000119](https://doi.org/10.82901/nemar.nm000119)
 
 ### Examples
 
@@ -43093,6 +44372,7 @@ Dataset-specific caveats are not provided in the summary metadata.
 
 OpenNeuro dataset: [https://openneuro.org/datasets/nm000120](https://openneuro.org/datasets/nm000120)
 NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000120](https://nemar.org/dataexplorer/detail?dataset_id=nm000120)
+DOI: [https://doi.org/10.82901/nemar.nm000120](https://doi.org/10.82901/nemar.nm000120)
 
 ### Examples
 
@@ -43163,6 +44443,7 @@ Dataset-specific caveats are not provided in the summary metadata.
 
 OpenNeuro dataset: [https://openneuro.org/datasets/nm000121](https://openneuro.org/datasets/nm000121)
 NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000121](https://nemar.org/dataexplorer/detail?dataset_id=nm000121)
+DOI: [https://doi.org/10.82901/nemar.nm000121](https://doi.org/10.82901/nemar.nm000121)
 
 ### Examples
 
@@ -43233,6 +44514,7 @@ Dataset-specific caveats are not provided in the summary metadata.
 
 OpenNeuro dataset: [https://openneuro.org/datasets/nm000122](https://openneuro.org/datasets/nm000122)
 NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000122](https://nemar.org/dataexplorer/detail?dataset_id=nm000122)
+DOI: [https://doi.org/10.82901/nemar.nm000122](https://doi.org/10.82901/nemar.nm000122)
 
 ### Examples
 
@@ -43303,6 +44585,7 @@ Dataset-specific caveats are not provided in the summary metadata.
 
 OpenNeuro dataset: [https://openneuro.org/datasets/nm000123](https://openneuro.org/datasets/nm000123)
 NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000123](https://nemar.org/dataexplorer/detail?dataset_id=nm000123)
+DOI: [https://doi.org/10.82901/nemar.nm000123](https://doi.org/10.82901/nemar.nm000123)
 
 ### Examples
 
@@ -43373,6 +44656,7 @@ Dataset-specific caveats are not provided in the summary metadata.
 
 OpenNeuro dataset: [https://openneuro.org/datasets/nm000124](https://openneuro.org/datasets/nm000124)
 NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000124](https://nemar.org/dataexplorer/detail?dataset_id=nm000124)
+DOI: [https://doi.org/10.82901/nemar.nm000124](https://doi.org/10.82901/nemar.nm000124)
 
 ### Examples
 
@@ -43443,6 +44727,7 @@ Dataset-specific caveats are not provided in the summary metadata.
 
 OpenNeuro dataset: [https://openneuro.org/datasets/nm000125](https://openneuro.org/datasets/nm000125)
 NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000125](https://nemar.org/dataexplorer/detail?dataset_id=nm000125)
+DOI: [https://doi.org/10.82901/nemar.nm000125](https://doi.org/10.82901/nemar.nm000125)
 
 ### Examples
 
@@ -43513,6 +44798,7 @@ Dataset-specific caveats are not provided in the summary metadata.
 
 OpenNeuro dataset: [https://openneuro.org/datasets/nm000126](https://openneuro.org/datasets/nm000126)
 NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000126](https://nemar.org/dataexplorer/detail?dataset_id=nm000126)
+DOI: [https://doi.org/10.82901/nemar.nm000126](https://doi.org/10.82901/nemar.nm000126)
 
 ### Examples
 
@@ -43583,6 +44869,7 @@ Dataset-specific caveats are not provided in the summary metadata.
 
 OpenNeuro dataset: [https://openneuro.org/datasets/nm000127](https://openneuro.org/datasets/nm000127)
 NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000127](https://nemar.org/dataexplorer/detail?dataset_id=nm000127)
+DOI: [https://doi.org/10.82901/nemar.nm000127](https://doi.org/10.82901/nemar.nm000127)
 
 ### Examples
 
@@ -43653,6 +44940,7 @@ Dataset-specific caveats are not provided in the summary metadata.
 
 OpenNeuro dataset: [https://openneuro.org/datasets/nm000128](https://openneuro.org/datasets/nm000128)
 NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000128](https://nemar.org/dataexplorer/detail?dataset_id=nm000128)
+DOI: [https://doi.org/10.82901/nemar.nm000128](https://doi.org/10.82901/nemar.nm000128)
 
 ### Examples
 
@@ -43723,6 +45011,7 @@ Dataset-specific caveats are not provided in the summary metadata.
 
 OpenNeuro dataset: [https://openneuro.org/datasets/nm000129](https://openneuro.org/datasets/nm000129)
 NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000129](https://nemar.org/dataexplorer/detail?dataset_id=nm000129)
+DOI: [https://doi.org/10.82901/nemar.nm000129](https://doi.org/10.82901/nemar.nm000129)
 
 ### Examples
 
@@ -45353,12 +46642,84 @@ Dataset-specific caveats are not provided in the summary metadata.
 
 OpenNeuro dataset: [https://openneuro.org/datasets/nm000152](https://openneuro.org/datasets/nm000152)
 NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000152](https://nemar.org/dataexplorer/detail?dataset_id=nm000152)
+DOI: [https://doi.org/10.82901/nemar.nm000152](https://doi.org/10.82901/nemar.nm000152)
 
 ### Examples
 
 ```pycon
 >>> from eegdash.dataset import NM000152
 >>> dataset = NM000152(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.NM000154(cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), query: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, s3_bucket: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+EEG meditation study
+
+* **Study:**
+  `nm000154` (NeMAR)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `NM000154`, `nan`.
+
+Modality: `eeg`.
+Subjects: 24; recordings: 40; tasks: 1.
+
+* **Parameters:**
+  * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *Path*) – Directory where data are cached locally.
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[dict](https://docs.python.org/3/library/stdtypes.html#dict)] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/nm000154](https://openneuro.org/datasets/nm000154)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000154](https://nemar.org/dataexplorer/detail?dataset_id=nm000154)
+DOI: [https://doi.org/10.82901/nemar.nm000154](https://doi.org/10.82901/nemar.nm000154)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import NM000154
+>>> dataset = NM000154(cache_dir="./data")
 >>> recording = dataset[0]
 >>> raw = recording.load()
 ```
@@ -45494,6 +46855,7 @@ Dataset-specific caveats are not provided in the summary metadata.
 
 OpenNeuro dataset: [https://openneuro.org/datasets/nm000156](https://openneuro.org/datasets/nm000156)
 NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000156](https://nemar.org/dataexplorer/detail?dataset_id=nm000156)
+DOI: [https://doi.org/10.82901/nemar.nm000156](https://doi.org/10.82901/nemar.nm000156)
 
 ### Examples
 
@@ -45635,6 +46997,7 @@ Dataset-specific caveats are not provided in the summary metadata.
 
 OpenNeuro dataset: [https://openneuro.org/datasets/nm000158](https://openneuro.org/datasets/nm000158)
 NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000158](https://nemar.org/dataexplorer/detail?dataset_id=nm000158)
+DOI: [https://doi.org/10.82901/nemar.nm000158](https://doi.org/10.82901/nemar.nm000158)
 
 ### Examples
 
@@ -45776,6 +47139,7 @@ Dataset-specific caveats are not provided in the summary metadata.
 
 OpenNeuro dataset: [https://openneuro.org/datasets/nm000160](https://openneuro.org/datasets/nm000160)
 NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000160](https://nemar.org/dataexplorer/detail?dataset_id=nm000160)
+DOI: [https://doi.org/10.82901/nemar.nm000160](https://doi.org/10.82901/nemar.nm000160)
 
 ### Examples
 
@@ -45846,6 +47210,7 @@ Dataset-specific caveats are not provided in the summary metadata.
 
 OpenNeuro dataset: [https://openneuro.org/datasets/nm000161](https://openneuro.org/datasets/nm000161)
 NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000161](https://nemar.org/dataexplorer/detail?dataset_id=nm000161)
+DOI: [https://doi.org/10.82901/nemar.nm000161](https://doi.org/10.82901/nemar.nm000161)
 
 ### Examples
 
@@ -45916,6 +47281,7 @@ Dataset-specific caveats are not provided in the summary metadata.
 
 OpenNeuro dataset: [https://openneuro.org/datasets/nm000162](https://openneuro.org/datasets/nm000162)
 NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000162](https://nemar.org/dataexplorer/detail?dataset_id=nm000162)
+DOI: [https://doi.org/10.82901/nemar.nm000162](https://doi.org/10.82901/nemar.nm000162)
 
 ### Examples
 
@@ -45986,6 +47352,7 @@ Dataset-specific caveats are not provided in the summary metadata.
 
 OpenNeuro dataset: [https://openneuro.org/datasets/nm000163](https://openneuro.org/datasets/nm000163)
 NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000163](https://nemar.org/dataexplorer/detail?dataset_id=nm000163)
+DOI: [https://doi.org/10.82901/nemar.nm000163](https://doi.org/10.82901/nemar.nm000163)
 
 ### Examples
 
@@ -46198,6 +47565,7 @@ Dataset-specific caveats are not provided in the summary metadata.
 
 OpenNeuro dataset: [https://openneuro.org/datasets/nm000167](https://openneuro.org/datasets/nm000167)
 NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000167](https://nemar.org/dataexplorer/detail?dataset_id=nm000167)
+DOI: [https://doi.org/10.82901/nemar.nm000167](https://doi.org/10.82901/nemar.nm000167)
 
 ### Examples
 
@@ -46268,6 +47636,7 @@ Dataset-specific caveats are not provided in the summary metadata.
 
 OpenNeuro dataset: [https://openneuro.org/datasets/nm000168](https://openneuro.org/datasets/nm000168)
 NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000168](https://nemar.org/dataexplorer/detail?dataset_id=nm000168)
+DOI: [https://doi.org/10.82901/nemar.nm000168](https://doi.org/10.82901/nemar.nm000168)
 
 ### Examples
 
@@ -46338,6 +47707,7 @@ Dataset-specific caveats are not provided in the summary metadata.
 
 OpenNeuro dataset: [https://openneuro.org/datasets/nm000169](https://openneuro.org/datasets/nm000169)
 NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000169](https://nemar.org/dataexplorer/detail?dataset_id=nm000169)
+DOI: [https://doi.org/10.82901/nemar.nm000169](https://doi.org/10.82901/nemar.nm000169)
 
 ### Examples
 
@@ -46408,6 +47778,7 @@ Dataset-specific caveats are not provided in the summary metadata.
 
 OpenNeuro dataset: [https://openneuro.org/datasets/nm000170](https://openneuro.org/datasets/nm000170)
 NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000170](https://nemar.org/dataexplorer/detail?dataset_id=nm000170)
+DOI: [https://doi.org/10.82901/nemar.nm000170](https://doi.org/10.82901/nemar.nm000170)
 
 ### Examples
 
@@ -46478,6 +47849,7 @@ Dataset-specific caveats are not provided in the summary metadata.
 
 OpenNeuro dataset: [https://openneuro.org/datasets/nm000171](https://openneuro.org/datasets/nm000171)
 NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000171](https://nemar.org/dataexplorer/detail?dataset_id=nm000171)
+DOI: [https://doi.org/10.82901/nemar.nm000171](https://doi.org/10.82901/nemar.nm000171)
 
 ### Examples
 
@@ -46548,6 +47920,7 @@ Dataset-specific caveats are not provided in the summary metadata.
 
 OpenNeuro dataset: [https://openneuro.org/datasets/nm000172](https://openneuro.org/datasets/nm000172)
 NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000172](https://nemar.org/dataexplorer/detail?dataset_id=nm000172)
+DOI: [https://doi.org/10.82901/nemar.nm000172](https://doi.org/10.82901/nemar.nm000172)
 
 ### Examples
 
@@ -46618,6 +47991,7 @@ Dataset-specific caveats are not provided in the summary metadata.
 
 OpenNeuro dataset: [https://openneuro.org/datasets/nm000173](https://openneuro.org/datasets/nm000173)
 NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000173](https://nemar.org/dataexplorer/detail?dataset_id=nm000173)
+DOI: [https://doi.org/10.82901/nemar.nm000173](https://doi.org/10.82901/nemar.nm000173)
 
 ### Examples
 
@@ -46758,6 +48132,7 @@ Dataset-specific caveats are not provided in the summary metadata.
 
 OpenNeuro dataset: [https://openneuro.org/datasets/nm000176](https://openneuro.org/datasets/nm000176)
 NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000176](https://nemar.org/dataexplorer/detail?dataset_id=nm000176)
+DOI: [https://doi.org/10.82901/nemar.nm000176](https://doi.org/10.82901/nemar.nm000176)
 
 ### Examples
 
@@ -47112,6 +48487,7 @@ Dataset-specific caveats are not provided in the summary metadata.
 
 OpenNeuro dataset: [https://openneuro.org/datasets/nm000186](https://openneuro.org/datasets/nm000186)
 NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000186](https://nemar.org/dataexplorer/detail?dataset_id=nm000186)
+DOI: [https://doi.org/10.82901/nemar.nm000186](https://doi.org/10.82901/nemar.nm000186)
 
 ### Examples
 
@@ -47182,6 +48558,7 @@ Dataset-specific caveats are not provided in the summary metadata.
 
 OpenNeuro dataset: [https://openneuro.org/datasets/nm000187](https://openneuro.org/datasets/nm000187)
 NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000187](https://nemar.org/dataexplorer/detail?dataset_id=nm000187)
+DOI: [https://doi.org/10.82901/nemar.nm000187](https://doi.org/10.82901/nemar.nm000187)
 
 ### Examples
 
@@ -47252,6 +48629,7 @@ Dataset-specific caveats are not provided in the summary metadata.
 
 OpenNeuro dataset: [https://openneuro.org/datasets/nm000188](https://openneuro.org/datasets/nm000188)
 NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000188](https://nemar.org/dataexplorer/detail?dataset_id=nm000188)
+DOI: [https://doi.org/10.82901/nemar.nm000188](https://doi.org/10.82901/nemar.nm000188)
 
 ### Examples
 
@@ -47322,6 +48700,7 @@ Dataset-specific caveats are not provided in the summary metadata.
 
 OpenNeuro dataset: [https://openneuro.org/datasets/nm000189](https://openneuro.org/datasets/nm000189)
 NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000189](https://nemar.org/dataexplorer/detail?dataset_id=nm000189)
+DOI: [https://doi.org/10.82901/nemar.nm000189](https://doi.org/10.82901/nemar.nm000189)
 
 ### Examples
 
@@ -47392,6 +48771,7 @@ Dataset-specific caveats are not provided in the summary metadata.
 
 OpenNeuro dataset: [https://openneuro.org/datasets/nm000190](https://openneuro.org/datasets/nm000190)
 NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000190](https://nemar.org/dataexplorer/detail?dataset_id=nm000190)
+DOI: [https://doi.org/10.82901/nemar.nm000190](https://doi.org/10.82901/nemar.nm000190)
 
 ### Examples
 
@@ -47462,6 +48842,7 @@ Dataset-specific caveats are not provided in the summary metadata.
 
 OpenNeuro dataset: [https://openneuro.org/datasets/nm000191](https://openneuro.org/datasets/nm000191)
 NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000191](https://nemar.org/dataexplorer/detail?dataset_id=nm000191)
+DOI: [https://doi.org/10.82901/nemar.nm000191](https://doi.org/10.82901/nemar.nm000191)
 
 ### Examples
 
@@ -50494,7 +51875,7 @@ NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000237](https
 
 Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
 
-SparrKULee: A Speech-Evoked Auditory Response Repository from KU Leuven, Containing the EEG of 85 Participants
+nm000238
 
 * **Study:**
   `nm000238` (NeMAR)
@@ -50506,7 +51887,7 @@ SparrKULee: A Speech-Evoked Auditory Response Repository from KU Leuven, Contain
 Also importable as: `NM000238`, `Accou2024`.
 
 Modality: `eeg`.
-Subjects: 87; recordings: 4088; tasks: 366.
+Subjects: 87; recordings: 4085; tasks: 363.
 
 * **Parameters:**
   * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *Path*) – Directory where data are cached locally.
@@ -50546,7 +51927,6 @@ Dataset-specific caveats are not provided in the summary metadata.
 
 OpenNeuro dataset: [https://openneuro.org/datasets/nm000238](https://openneuro.org/datasets/nm000238)
 NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=nm000238](https://nemar.org/dataexplorer/detail?dataset_id=nm000238)
-DOI: [https://doi.org/10.82901/nemar.nm000238](https://doi.org/10.82901/nemar.nm000238)
 
 ### Examples
 
@@ -54089,6 +55469,3840 @@ DOI: [https://doi.org/10.13026/0byy-ry86](https://doi.org/10.13026/0byy-ry86)
 ```pycon
 >>> from eegdash.dataset import NM000351
 >>> dataset = NM000351(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.ON000117(cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), query: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, s3_bucket: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+Multisubject, multimodal face processing
+
+* **Study:**
+  `on000117` (NeMAR)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `ON000117`, `nan`.
+
+Modality: `meg`.
+Subjects: 17; recordings: 104; tasks: 2.
+
+* **Parameters:**
+  * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *Path*) – Directory where data are cached locally.
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[dict](https://docs.python.org/3/library/stdtypes.html#dict)] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/on000117](https://openneuro.org/datasets/on000117)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=on000117](https://nemar.org/dataexplorer/detail?dataset_id=on000117)
+DOI: [https://doi.org/10.82901/nemar.on000117](https://doi.org/10.82901/nemar.on000117)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import ON000117
+>>> dataset = ON000117(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.ON001787(cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), query: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, s3_bucket: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+EEG meditation study
+
+* **Study:**
+  `on001787` (NeMAR)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `ON001787`, `nan`.
+
+Modality: `eeg`.
+Subjects: 24; recordings: 40; tasks: 1.
+
+* **Parameters:**
+  * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *Path*) – Directory where data are cached locally.
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[dict](https://docs.python.org/3/library/stdtypes.html#dict)] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/on001787](https://openneuro.org/datasets/on001787)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=on001787](https://nemar.org/dataexplorer/detail?dataset_id=on001787)
+DOI: [https://doi.org/10.82901/nemar.on001787](https://doi.org/10.82901/nemar.on001787)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import ON001787
+>>> dataset = ON001787(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.ON002181(cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), query: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, s3_bucket: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+CRYPTO and PROVIDE EEG Baseline Data
+
+* **Study:**
+  `on002181` (NeMAR)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `ON002181`, `nan`.
+
+Modality: `eeg`.
+Subjects: 226; recordings: 226; tasks: 1.
+
+* **Parameters:**
+  * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *Path*) – Directory where data are cached locally.
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[dict](https://docs.python.org/3/library/stdtypes.html#dict)] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/on002181](https://openneuro.org/datasets/on002181)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=on002181](https://nemar.org/dataexplorer/detail?dataset_id=on002181)
+DOI: [https://doi.org/10.82901/nemar.on002181](https://doi.org/10.82901/nemar.on002181)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import ON002181
+>>> dataset = ON002181(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.ON002578(cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), query: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, s3_bucket: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+Visual Oddball Task (256 channels)
+
+* **Study:**
+  `on002578` (NeMAR)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `ON002578`, `nan`.
+
+Modality: `eeg`.
+Subjects: 2; recordings: 2; tasks: 1.
+
+* **Parameters:**
+  * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *Path*) – Directory where data are cached locally.
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[dict](https://docs.python.org/3/library/stdtypes.html#dict)] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/on002578](https://openneuro.org/datasets/on002578)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=on002578](https://nemar.org/dataexplorer/detail?dataset_id=on002578)
+DOI: [https://doi.org/10.82901/nemar.on002578](https://doi.org/10.82901/nemar.on002578)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import ON002578
+>>> dataset = ON002578(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.ON002718(cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), query: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, s3_bucket: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+Face processing EEG dataset for EEGLAB
+
+* **Study:**
+  `on002718` (NeMAR)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `ON002718`, `nan`.
+
+Modality: `eeg`.
+Subjects: 18; recordings: 18; tasks: 1.
+
+* **Parameters:**
+  * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *Path*) – Directory where data are cached locally.
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[dict](https://docs.python.org/3/library/stdtypes.html#dict)] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/on002718](https://openneuro.org/datasets/on002718)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=on002718](https://nemar.org/dataexplorer/detail?dataset_id=on002718)
+DOI: [https://doi.org/10.82901/nemar.on002718](https://doi.org/10.82901/nemar.on002718)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import ON002718
+>>> dataset = ON002718(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.ON002778(cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), query: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, s3_bucket: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+UC San Diego Resting State EEG Data from Patients with Parkinson’s Disease
+
+* **Study:**
+  `on002778` (NeMAR)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `ON002778`, `nan`.
+
+Modality: `eeg`.
+Subjects: 31; recordings: 46; tasks: 1.
+
+* **Parameters:**
+  * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *Path*) – Directory where data are cached locally.
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[dict](https://docs.python.org/3/library/stdtypes.html#dict)] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/on002778](https://openneuro.org/datasets/on002778)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=on002778](https://nemar.org/dataexplorer/detail?dataset_id=on002778)
+DOI: [https://doi.org/10.82901/nemar.on002778](https://doi.org/10.82901/nemar.on002778)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import ON002778
+>>> dataset = ON002778(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.ON003190(cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), query: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, s3_bucket: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+Assesment of the visual stimuli properties in P300 paradigm
+
+* **Study:**
+  `on003190` (NeMAR)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `ON003190`, `nan`.
+
+Modality: `eeg`.
+Subjects: 19; recordings: 384; tasks: 2.
+
+* **Parameters:**
+  * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *Path*) – Directory where data are cached locally.
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[dict](https://docs.python.org/3/library/stdtypes.html#dict)] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/on003190](https://openneuro.org/datasets/on003190)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=on003190](https://nemar.org/dataexplorer/detail?dataset_id=on003190)
+DOI: [https://doi.org/10.82901/nemar.on003190](https://doi.org/10.82901/nemar.on003190)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import ON003190
+>>> dataset = ON003190(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.ON003194(cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), query: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, s3_bucket: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+Neuroepo multisession
+
+* **Study:**
+  `on003194` (NeMAR)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `ON003194`, `nan`.
+
+Modality: `eeg`.
+Subjects: 15; recordings: 29; tasks: 2.
+
+* **Parameters:**
+  * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *Path*) – Directory where data are cached locally.
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[dict](https://docs.python.org/3/library/stdtypes.html#dict)] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/on003194](https://openneuro.org/datasets/on003194)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=on003194](https://nemar.org/dataexplorer/detail?dataset_id=on003194)
+DOI: [https://doi.org/10.82901/nemar.on003194](https://doi.org/10.82901/nemar.on003194)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import ON003194
+>>> dataset = ON003194(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.ON003195(cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), query: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, s3_bucket: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+Placebo Neuroepo multisession
+
+* **Study:**
+  `on003195` (NeMAR)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `ON003195`, `nan`.
+
+Modality: `eeg`.
+Subjects: 10; recordings: 20; tasks: 2.
+
+* **Parameters:**
+  * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *Path*) – Directory where data are cached locally.
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[dict](https://docs.python.org/3/library/stdtypes.html#dict)] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/on003195](https://openneuro.org/datasets/on003195)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=on003195](https://nemar.org/dataexplorer/detail?dataset_id=on003195)
+DOI: [https://doi.org/10.82901/nemar.on003195](https://doi.org/10.82901/nemar.on003195)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import ON003195
+>>> dataset = ON003195(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.ON003343(cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), query: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, s3_bucket: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+Disentangling the percepts of illusory movement and sensory stimulation during tendon vibration in the EEG
+
+* **Study:**
+  `on003343` (NeMAR)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `ON003343`, `nan`.
+
+Modality: `eeg`.
+Subjects: 20; recordings: 59; tasks: 1.
+
+* **Parameters:**
+  * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *Path*) – Directory where data are cached locally.
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[dict](https://docs.python.org/3/library/stdtypes.html#dict)] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/on003343](https://openneuro.org/datasets/on003343)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=on003343](https://nemar.org/dataexplorer/detail?dataset_id=on003343)
+DOI: [https://doi.org/10.82901/nemar.on003343](https://doi.org/10.82901/nemar.on003343)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import ON003343
+>>> dataset = ON003343(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.ON003380(cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), query: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, s3_bucket: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+Corticothalamic communication under analgesia, sedation and gradual ischemia: a multimodal model of controlled gradual cerebral ischemia in pig
+
+* **Study:**
+  `on003380` (NeMAR)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `ON003380`, `nan`.
+
+Modality: `eeg`.
+Subjects: 1; recordings: 1; tasks: 0.
+
+* **Parameters:**
+  * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *Path*) – Directory where data are cached locally.
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[dict](https://docs.python.org/3/library/stdtypes.html#dict)] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/on003380](https://openneuro.org/datasets/on003380)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=on003380](https://nemar.org/dataexplorer/detail?dataset_id=on003380)
+DOI: [https://doi.org/10.82901/nemar.on003380](https://doi.org/10.82901/nemar.on003380)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import ON003380
+>>> dataset = ON003380(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.ON003645(cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), query: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, s3_bucket: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+Face processing MEEG dataset with HED annotation
+
+* **Study:**
+  `on003645` (NeMAR)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `ON003645`, `nan`.
+
+Modality: `eeg, meg`.
+Subjects: 19; recordings: 224; tasks: 2.
+
+* **Parameters:**
+  * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *Path*) – Directory where data are cached locally.
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[dict](https://docs.python.org/3/library/stdtypes.html#dict)] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/on003645](https://openneuro.org/datasets/on003645)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=on003645](https://nemar.org/dataexplorer/detail?dataset_id=on003645)
+DOI: [https://doi.org/10.82901/nemar.on003645](https://doi.org/10.82901/nemar.on003645)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import ON003645
+>>> dataset = ON003645(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.ON003800(cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), query: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, s3_bucket: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+Auditory Gamma Entrainment
+
+* **Study:**
+  `on003800` (NeMAR)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `ON003800`, `nan`.
+
+Modality: `eeg`.
+Subjects: 13; recordings: 24; tasks: 2.
+
+* **Parameters:**
+  * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *Path*) – Directory where data are cached locally.
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[dict](https://docs.python.org/3/library/stdtypes.html#dict)] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/on003800](https://openneuro.org/datasets/on003800)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=on003800](https://nemar.org/dataexplorer/detail?dataset_id=on003800)
+DOI: [https://doi.org/10.82901/nemar.on003800](https://doi.org/10.82901/nemar.on003800)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import ON003800
+>>> dataset = ON003800(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.ON003801(cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), query: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, s3_bucket: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+Neural Tracking to go
+
+* **Study:**
+  `on003801` (NeMAR)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `ON003801`, `nan`.
+
+Modality: `eeg`.
+Subjects: 20; recordings: 20; tasks: 1.
+
+* **Parameters:**
+  * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *Path*) – Directory where data are cached locally.
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[dict](https://docs.python.org/3/library/stdtypes.html#dict)] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/on003801](https://openneuro.org/datasets/on003801)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=on003801](https://nemar.org/dataexplorer/detail?dataset_id=on003801)
+DOI: [https://doi.org/10.82901/nemar.on003801](https://doi.org/10.82901/nemar.on003801)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import ON003801
+>>> dataset = ON003801(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.ON003810(cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), query: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, s3_bucket: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+Motor Imagery vs Rest - Low-Cost EEG System
+
+* **Study:**
+  `on003810` (NeMAR)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `ON003810`, `nan`.
+
+Modality: `eeg`.
+Subjects: 10; recordings: 50; tasks: 1.
+
+* **Parameters:**
+  * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *Path*) – Directory where data are cached locally.
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[dict](https://docs.python.org/3/library/stdtypes.html#dict)] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/on003810](https://openneuro.org/datasets/on003810)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=on003810](https://nemar.org/dataexplorer/detail?dataset_id=on003810)
+DOI: [https://doi.org/10.82901/nemar.on003810](https://doi.org/10.82901/nemar.on003810)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import ON003810
+>>> dataset = ON003810(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.ON003825(cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), query: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, s3_bucket: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+Human electroencephalography recordings from 50 subjects for 22,248 images from 1,854 object concepts
+
+* **Study:**
+  `on003825` (NeMAR)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `ON003825`, `nan`.
+
+Modality: `eeg`.
+Subjects: 50; recordings: 50; tasks: 1.
+
+* **Parameters:**
+  * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *Path*) – Directory where data are cached locally.
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[dict](https://docs.python.org/3/library/stdtypes.html#dict)] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/on003825](https://openneuro.org/datasets/on003825)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=on003825](https://nemar.org/dataexplorer/detail?dataset_id=on003825)
+DOI: [https://doi.org/10.82901/nemar.on003825](https://doi.org/10.82901/nemar.on003825)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import ON003825
+>>> dataset = ON003825(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.ON004018(cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), query: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, s3_bucket: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+EEG recordings for 200 object images presented in RSVP sequences at 5Hz or 20Hz
+
+* **Study:**
+  `on004018` (NeMAR)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `ON004018`, `nan`.
+
+Modality: `eeg`.
+Subjects: 16; recordings: 32; tasks: 1.
+
+* **Parameters:**
+  * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *Path*) – Directory where data are cached locally.
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[dict](https://docs.python.org/3/library/stdtypes.html#dict)] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/on004018](https://openneuro.org/datasets/on004018)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=on004018](https://nemar.org/dataexplorer/detail?dataset_id=on004018)
+DOI: [https://doi.org/10.82901/nemar.on004018](https://doi.org/10.82901/nemar.on004018)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import ON004018
+>>> dataset = ON004018(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.ON004022(cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), query: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, s3_bucket: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+Multimodal EEG and fNIRS Biosignal Acquisition during Motor Imagery Tasks in Patients with Orthopedic Impairment
+
+* **Study:**
+  `on004022` (NeMAR)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `ON004022`, `nan`.
+
+Modality: `eeg`.
+Subjects: 7; recordings: 21; tasks: 1.
+
+* **Parameters:**
+  * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *Path*) – Directory where data are cached locally.
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[dict](https://docs.python.org/3/library/stdtypes.html#dict)] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/on004022](https://openneuro.org/datasets/on004022)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=on004022](https://nemar.org/dataexplorer/detail?dataset_id=on004022)
+DOI: [https://doi.org/10.82901/nemar.on004022](https://doi.org/10.82901/nemar.on004022)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import ON004022
+>>> dataset = ON004022(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.ON004362(cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), query: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, s3_bucket: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+EEG Motor Movement/Imagery Dataset
+
+* **Study:**
+  `on004362` (NeMAR)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `ON004362`, `nan`.
+
+Modality: `eeg`.
+Subjects: 109; recordings: 1526; tasks: 1.
+
+* **Parameters:**
+  * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *Path*) – Directory where data are cached locally.
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[dict](https://docs.python.org/3/library/stdtypes.html#dict)] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/on004362](https://openneuro.org/datasets/on004362)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=on004362](https://nemar.org/dataexplorer/detail?dataset_id=on004362)
+DOI: [https://doi.org/10.82901/nemar.on004362](https://doi.org/10.82901/nemar.on004362)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import ON004362
+>>> dataset = ON004362(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.ON004368(cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), query: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, s3_bucket: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+Meta-rdk: Preprocessed EEG data
+
+* **Study:**
+  `on004368` (NeMAR)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `ON004368`, `nan`.
+
+Modality: `eeg`.
+Subjects: 39; recordings: 40; tasks: 1.
+
+* **Parameters:**
+  * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *Path*) – Directory where data are cached locally.
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[dict](https://docs.python.org/3/library/stdtypes.html#dict)] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/on004368](https://openneuro.org/datasets/on004368)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=on004368](https://nemar.org/dataexplorer/detail?dataset_id=on004368)
+DOI: [https://doi.org/10.82901/nemar.on004368](https://doi.org/10.82901/nemar.on004368)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import ON004368
+>>> dataset = ON004368(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.ON004588(cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), query: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, s3_bucket: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+Neuma
+
+* **Study:**
+  `on004588` (NeMAR)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `ON004588`, `nan`.
+
+Modality: `eeg`.
+Subjects: 42; recordings: 42; tasks: 1.
+
+* **Parameters:**
+  * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *Path*) – Directory where data are cached locally.
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[dict](https://docs.python.org/3/library/stdtypes.html#dict)] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/on004588](https://openneuro.org/datasets/on004588)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=on004588](https://nemar.org/dataexplorer/detail?dataset_id=on004588)
+DOI: [https://doi.org/10.82901/nemar.on004588](https://doi.org/10.82901/nemar.on004588)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import ON004588
+>>> dataset = ON004588(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.ON004661(cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), query: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, s3_bucket: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+ANDI
+
+* **Study:**
+  `on004661` (NeMAR)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `ON004661`, `nan`.
+
+Modality: `eeg`.
+Subjects: 17; recordings: 17; tasks: 1.
+
+* **Parameters:**
+  * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *Path*) – Directory where data are cached locally.
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[dict](https://docs.python.org/3/library/stdtypes.html#dict)] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/on004661](https://openneuro.org/datasets/on004661)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=on004661](https://nemar.org/dataexplorer/detail?dataset_id=on004661)
+DOI: [https://doi.org/10.82901/nemar.on004661](https://doi.org/10.82901/nemar.on004661)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import ON004661
+>>> dataset = ON004661(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.ON004745(cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), query: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, s3_bucket: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+8-Channel SSVEP EEG Dataset with Artifact Trials
+
+* **Study:**
+  `on004745` (NeMAR)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `ON004745`, `nan`.
+
+Modality: `eeg`.
+Subjects: 6; recordings: 6; tasks: 1.
+
+* **Parameters:**
+  * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *Path*) – Directory where data are cached locally.
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[dict](https://docs.python.org/3/library/stdtypes.html#dict)] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/on004745](https://openneuro.org/datasets/on004745)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=on004745](https://nemar.org/dataexplorer/detail?dataset_id=on004745)
+DOI: [https://doi.org/10.82901/nemar.on004745](https://doi.org/10.82901/nemar.on004745)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import ON004745
+>>> dataset = ON004745(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.ON004849(cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), query: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, s3_bucket: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+STRONG
+
+* **Study:**
+  `on004849` (NeMAR)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `ON004849`, `nan`.
+
+Modality: `eeg`.
+Subjects: 1; recordings: 1; tasks: 1.
+
+* **Parameters:**
+  * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *Path*) – Directory where data are cached locally.
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[dict](https://docs.python.org/3/library/stdtypes.html#dict)] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/on004849](https://openneuro.org/datasets/on004849)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=on004849](https://nemar.org/dataexplorer/detail?dataset_id=on004849)
+DOI: [https://doi.org/10.82901/nemar.on004849](https://doi.org/10.82901/nemar.on004849)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import ON004849
+>>> dataset = ON004849(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.ON004850(cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), query: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, s3_bucket: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+ODE
+
+* **Study:**
+  `on004850` (NeMAR)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `ON004850`, `nan`.
+
+Modality: `eeg`.
+Subjects: 1; recordings: 1; tasks: 1.
+
+* **Parameters:**
+  * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *Path*) – Directory where data are cached locally.
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[dict](https://docs.python.org/3/library/stdtypes.html#dict)] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/on004850](https://openneuro.org/datasets/on004850)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=on004850](https://nemar.org/dataexplorer/detail?dataset_id=on004850)
+DOI: [https://doi.org/10.82901/nemar.on004850](https://doi.org/10.82901/nemar.on004850)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import ON004850
+>>> dataset = ON004850(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.ON004852(cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), query: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, s3_bucket: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+InsurgentCivilian
+
+* **Study:**
+  `on004852` (NeMAR)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `ON004852`, `nan`.
+
+Modality: `eeg`.
+Subjects: 1; recordings: 1; tasks: 1.
+
+* **Parameters:**
+  * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *Path*) – Directory where data are cached locally.
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[dict](https://docs.python.org/3/library/stdtypes.html#dict)] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/on004852](https://openneuro.org/datasets/on004852)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=on004852](https://nemar.org/dataexplorer/detail?dataset_id=on004852)
+DOI: [https://doi.org/10.82901/nemar.on004852](https://doi.org/10.82901/nemar.on004852)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import ON004852
+>>> dataset = ON004852(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.ON004853(cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), query: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, s3_bucket: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+TX17
+
+* **Study:**
+  `on004853` (NeMAR)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `ON004853`, `nan`.
+
+Modality: `eeg`.
+Subjects: 1; recordings: 1; tasks: 1.
+
+* **Parameters:**
+  * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *Path*) – Directory where data are cached locally.
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[dict](https://docs.python.org/3/library/stdtypes.html#dict)] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/on004853](https://openneuro.org/datasets/on004853)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=on004853](https://nemar.org/dataexplorer/detail?dataset_id=on004853)
+DOI: [https://doi.org/10.82901/nemar.on004853](https://doi.org/10.82901/nemar.on004853)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import ON004853
+>>> dataset = ON004853(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.ON004854(cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), query: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, s3_bucket: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+TX18
+
+* **Study:**
+  `on004854` (NeMAR)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `ON004854`, `nan`.
+
+Modality: `eeg`.
+Subjects: 1; recordings: 1; tasks: 1.
+
+* **Parameters:**
+  * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *Path*) – Directory where data are cached locally.
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[dict](https://docs.python.org/3/library/stdtypes.html#dict)] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/on004854](https://openneuro.org/datasets/on004854)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=on004854](https://nemar.org/dataexplorer/detail?dataset_id=on004854)
+DOI: [https://doi.org/10.82901/nemar.on004854](https://doi.org/10.82901/nemar.on004854)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import ON004854
+>>> dataset = ON004854(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.ON004855(cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), query: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, s3_bucket: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+FT
+
+* **Study:**
+  `on004855` (NeMAR)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `ON004855`, `nan`.
+
+Modality: `eeg`.
+Subjects: 1; recordings: 1; tasks: 1.
+
+* **Parameters:**
+  * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *Path*) – Directory where data are cached locally.
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[dict](https://docs.python.org/3/library/stdtypes.html#dict)] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/on004855](https://openneuro.org/datasets/on004855)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=on004855](https://nemar.org/dataexplorer/detail?dataset_id=on004855)
+DOI: [https://doi.org/10.82901/nemar.on004855](https://doi.org/10.82901/nemar.on004855)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import ON004855
+>>> dataset = ON004855(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.ON005028(cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), query: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, s3_bucket: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+Comparing P300 Flashing paradigms in online typing with language models
+
+* **Study:**
+  `on005028` (NeMAR)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `ON005028`, `nan`.
+
+Modality: `eeg`.
+Subjects: 11; recordings: 105; tasks: 3.
+
+* **Parameters:**
+  * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *Path*) – Directory where data are cached locally.
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[dict](https://docs.python.org/3/library/stdtypes.html#dict)] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/on005028](https://openneuro.org/datasets/on005028)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=on005028](https://nemar.org/dataexplorer/detail?dataset_id=on005028)
+DOI: [https://doi.org/10.82901/nemar.on005028](https://doi.org/10.82901/nemar.on005028)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import ON005028
+>>> dataset = ON005028(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.ON005261(cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), query: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, s3_bucket: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+Gloups_MEG
+
+* **Study:**
+  `on005261` (NeMAR)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `ON005261`, `nan`.
+
+Modality: `meg`.
+Subjects: 17; recordings: 128; tasks: 2.
+
+* **Parameters:**
+  * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *Path*) – Directory where data are cached locally.
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[dict](https://docs.python.org/3/library/stdtypes.html#dict)] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/on005261](https://openneuro.org/datasets/on005261)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=on005261](https://nemar.org/dataexplorer/detail?dataset_id=on005261)
+DOI: [https://doi.org/10.82901/nemar.on005261](https://doi.org/10.82901/nemar.on005261)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import ON005261
+>>> dataset = ON005261(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.ON005262(cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), query: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, s3_bucket: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+ArEEG: Arabic Inner Speech EEG dataset
+
+* **Study:**
+  `on005262` (NeMAR)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `ON005262`, `nan`.
+
+Modality: `eeg`.
+Subjects: 12; recordings: 186; tasks: 1.
+
+* **Parameters:**
+  * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *Path*) – Directory where data are cached locally.
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[dict](https://docs.python.org/3/library/stdtypes.html#dict)] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/on005262](https://openneuro.org/datasets/on005262)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=on005262](https://nemar.org/dataexplorer/detail?dataset_id=on005262)
+DOI: [https://doi.org/10.82901/nemar.on005262](https://doi.org/10.82901/nemar.on005262)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import ON005262
+>>> dataset = ON005262(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.ON005420(cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), query: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, s3_bucket: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+Resting state EEG with closed eyes and open eyes in females from 60 to 80 years old
+
+* **Study:**
+  `on005420` (NeMAR)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `ON005420`, `nan`.
+
+Modality: `eeg`.
+Subjects: 37; recordings: 72; tasks: 2.
+
+* **Parameters:**
+  * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *Path*) – Directory where data are cached locally.
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[dict](https://docs.python.org/3/library/stdtypes.html#dict)] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/on005420](https://openneuro.org/datasets/on005420)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=on005420](https://nemar.org/dataexplorer/detail?dataset_id=on005420)
+DOI: [https://doi.org/10.82901/nemar.on005420](https://doi.org/10.82901/nemar.on005420)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import ON005420
+>>> dataset = ON005420(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.ON005505(cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), query: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, s3_bucket: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+Healthy Brain Network (HBN) EEG - Release 1
+
+* **Study:**
+  `on005505` (NeMAR)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `ON005505`, `nan`.
+
+Modality: `eeg`.
+Subjects: 136; recordings: 1342; tasks: 10.
+
+* **Parameters:**
+  * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *Path*) – Directory where data are cached locally.
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[dict](https://docs.python.org/3/library/stdtypes.html#dict)] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/on005505](https://openneuro.org/datasets/on005505)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=on005505](https://nemar.org/dataexplorer/detail?dataset_id=on005505)
+DOI: [https://doi.org/10.82901/nemar.on005505](https://doi.org/10.82901/nemar.on005505)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import ON005505
+>>> dataset = ON005505(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.ON005506(cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), query: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, s3_bucket: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+Healthy Brain Network (HBN) EEG - Release 2
+
+* **Study:**
+  `on005506` (NeMAR)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `ON005506`, `nan`.
+
+Modality: `eeg`.
+Subjects: 150; recordings: 1405; tasks: 10.
+
+* **Parameters:**
+  * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *Path*) – Directory where data are cached locally.
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[dict](https://docs.python.org/3/library/stdtypes.html#dict)] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/on005506](https://openneuro.org/datasets/on005506)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=on005506](https://nemar.org/dataexplorer/detail?dataset_id=on005506)
+DOI: [https://doi.org/10.82901/nemar.on005506](https://doi.org/10.82901/nemar.on005506)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import ON005506
+>>> dataset = ON005506(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.ON005507(cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), query: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, s3_bucket: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+Healthy Brain Network (HBN) EEG - Release 3
+
+* **Study:**
+  `on005507` (NeMAR)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `ON005507`, `nan`.
+
+Modality: `eeg`.
+Subjects: 184; recordings: 1812; tasks: 10.
+
+* **Parameters:**
+  * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *Path*) – Directory where data are cached locally.
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[dict](https://docs.python.org/3/library/stdtypes.html#dict)] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/on005507](https://openneuro.org/datasets/on005507)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=on005507](https://nemar.org/dataexplorer/detail?dataset_id=on005507)
+DOI: [https://doi.org/10.82901/nemar.on005507](https://doi.org/10.82901/nemar.on005507)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import ON005507
+>>> dataset = ON005507(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.ON005508(cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), query: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, s3_bucket: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+Healthy Brain Network (HBN) EEG - Release 4
+
+* **Study:**
+  `on005508` (NeMAR)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `ON005508`, `nan`.
+
+Modality: `eeg`.
+Subjects: 324; recordings: 3342; tasks: 10.
+
+* **Parameters:**
+  * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *Path*) – Directory where data are cached locally.
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[dict](https://docs.python.org/3/library/stdtypes.html#dict)] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/on005508](https://openneuro.org/datasets/on005508)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=on005508](https://nemar.org/dataexplorer/detail?dataset_id=on005508)
+DOI: [https://doi.org/10.82901/nemar.on005508](https://doi.org/10.82901/nemar.on005508)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import ON005508
+>>> dataset = ON005508(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.ON005509(cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), query: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, s3_bucket: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+Healthy Brain Network (HBN) EEG - Release 5
+
+* **Study:**
+  `on005509` (NeMAR)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `ON005509`, `nan`.
+
+Modality: `eeg`.
+Subjects: 330; recordings: 3326; tasks: 10.
+
+* **Parameters:**
+  * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *Path*) – Directory where data are cached locally.
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[dict](https://docs.python.org/3/library/stdtypes.html#dict)] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/on005509](https://openneuro.org/datasets/on005509)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=on005509](https://nemar.org/dataexplorer/detail?dataset_id=on005509)
+DOI: [https://doi.org/10.82901/nemar.on005509](https://doi.org/10.82901/nemar.on005509)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import ON005509
+>>> dataset = ON005509(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.ON005510(cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), query: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, s3_bucket: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+Healthy Brain Network (HBN) EEG - Release 6
+
+* **Study:**
+  `on005510` (NeMAR)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `ON005510`, `nan`.
+
+Modality: `eeg`.
+Subjects: 135; recordings: 1227; tasks: 10.
+
+* **Parameters:**
+  * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *Path*) – Directory where data are cached locally.
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[dict](https://docs.python.org/3/library/stdtypes.html#dict)] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/on005510](https://openneuro.org/datasets/on005510)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=on005510](https://nemar.org/dataexplorer/detail?dataset_id=on005510)
+DOI: [https://doi.org/10.82901/nemar.on005510](https://doi.org/10.82901/nemar.on005510)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import ON005510
+>>> dataset = ON005510(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.ON005511(cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), query: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, s3_bucket: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+Healthy Brain Network (HBN) EEG - Release 7
+
+* **Study:**
+  `on005511` (NeMAR)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `ON005511`, `nan`.
+
+Modality: `eeg`.
+Subjects: 381; recordings: 3100; tasks: 10.
+
+* **Parameters:**
+  * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *Path*) – Directory where data are cached locally.
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[dict](https://docs.python.org/3/library/stdtypes.html#dict)] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/on005511](https://openneuro.org/datasets/on005511)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=on005511](https://nemar.org/dataexplorer/detail?dataset_id=on005511)
+DOI: [https://doi.org/10.82901/nemar.on005511](https://doi.org/10.82901/nemar.on005511)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import ON005511
+>>> dataset = ON005511(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.ON005512(cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), query: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, s3_bucket: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+Healthy Brain Network (HBN) EEG - Release 8
+
+* **Study:**
+  `on005512` (NeMAR)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `ON005512`, `nan`.
+
+Modality: `eeg`.
+Subjects: 257; recordings: 2320; tasks: 10.
+
+* **Parameters:**
+  * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *Path*) – Directory where data are cached locally.
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[dict](https://docs.python.org/3/library/stdtypes.html#dict)] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/on005512](https://openneuro.org/datasets/on005512)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=on005512](https://nemar.org/dataexplorer/detail?dataset_id=on005512)
+DOI: [https://doi.org/10.82901/nemar.on005512](https://doi.org/10.82901/nemar.on005512)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import ON005512
+>>> dataset = ON005512(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.ON005514(cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), query: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, s3_bucket: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+Healthy Brain Network (HBN) EEG - Release 9
+
+* **Study:**
+  `on005514` (NeMAR)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `ON005514`, `nan`.
+
+Modality: `eeg`.
+Subjects: 295; recordings: 2885; tasks: 10.
+
+* **Parameters:**
+  * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *Path*) – Directory where data are cached locally.
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[dict](https://docs.python.org/3/library/stdtypes.html#dict)] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/on005514](https://openneuro.org/datasets/on005514)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=on005514](https://nemar.org/dataexplorer/detail?dataset_id=on005514)
+DOI: [https://doi.org/10.82901/nemar.on005514](https://doi.org/10.82901/nemar.on005514)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import ON005514
+>>> dataset = ON005514(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.ON005515(cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), query: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, s3_bucket: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+Healthy Brain Network (HBN) EEG - Release 10
+
+* **Study:**
+  `on005515` (NeMAR)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `ON005515`, `nan`.
+
+Modality: `eeg`.
+Subjects: 533; recordings: 2516; tasks: 8.
+
+* **Parameters:**
+  * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *Path*) – Directory where data are cached locally.
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[dict](https://docs.python.org/3/library/stdtypes.html#dict)] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/on005515](https://openneuro.org/datasets/on005515)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=on005515](https://nemar.org/dataexplorer/detail?dataset_id=on005515)
+DOI: [https://doi.org/10.82901/nemar.on005515](https://doi.org/10.82901/nemar.on005515)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import ON005515
+>>> dataset = ON005515(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.ON005516(cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), query: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, s3_bucket: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+Healthy Brain Network (HBN) EEG - Release 11
+
+* **Study:**
+  `on005516` (NeMAR)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `ON005516`, `nan`.
+
+Modality: `eeg`.
+Subjects: 430; recordings: 3397; tasks: 8.
+
+* **Parameters:**
+  * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *Path*) – Directory where data are cached locally.
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[dict](https://docs.python.org/3/library/stdtypes.html#dict)] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/on005516](https://openneuro.org/datasets/on005516)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=on005516](https://nemar.org/dataexplorer/detail?dataset_id=on005516)
+DOI: [https://doi.org/10.82901/nemar.on005516](https://doi.org/10.82901/nemar.on005516)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import ON005516
+>>> dataset = ON005516(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.ON005628(cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), query: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, s3_bucket: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+Dataset of Visual and Audiovisual Stimuli in Virtual Reality from the Edzna Archaeological Site
+
+* **Study:**
+  `on005628` (NeMAR)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `ON005628`, `nan`.
+
+Modality: `eeg`.
+Subjects: 102; recordings: 306; tasks: 1.
+
+* **Parameters:**
+  * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *Path*) – Directory where data are cached locally.
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[dict](https://docs.python.org/3/library/stdtypes.html#dict)] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/on005628](https://openneuro.org/datasets/on005628)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=on005628](https://nemar.org/dataexplorer/detail?dataset_id=on005628)
+DOI: [https://doi.org/10.82901/nemar.on005628](https://doi.org/10.82901/nemar.on005628)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import ON005628
+>>> dataset = ON005628(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.ON006126(cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), query: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, s3_bucket: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+TDCS Modulation of Visual Cortex in Motor Imagery
+
+* **Study:**
+  `on006126` (NeMAR)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `ON006126`, `nan`.
+
+Modality: `eeg`.
+Subjects: 5; recordings: 90; tasks: 6.
+
+* **Parameters:**
+  * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *Path*) – Directory where data are cached locally.
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[dict](https://docs.python.org/3/library/stdtypes.html#dict)] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/on006126](https://openneuro.org/datasets/on006126)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=on006126](https://nemar.org/dataexplorer/detail?dataset_id=on006126)
+DOI: [https://doi.org/10.82901/nemar.on006126](https://doi.org/10.82901/nemar.on006126)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import ON006126
+>>> dataset = ON006126(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.ON007175(cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), query: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, s3_bucket: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+FFR-active-listening
+
+* **Study:**
+  `on007175` (NeMAR)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `ON007175`, `nan`.
+
+Modality: `eeg`.
+Subjects: 41; recordings: 41; tasks: 1.
+
+* **Parameters:**
+  * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *Path*) – Directory where data are cached locally.
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[dict](https://docs.python.org/3/library/stdtypes.html#dict)] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/on007175](https://openneuro.org/datasets/on007175)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=on007175](https://nemar.org/dataexplorer/detail?dataset_id=on007175)
+DOI: [https://doi.org/10.82901/nemar.on007175](https://doi.org/10.82901/nemar.on007175)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import ON007175
+>>> dataset = ON007175(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.ON007176(cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), query: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, s3_bucket: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+Longitudinal EEG Test-Retest Reliability in Healthy Individuals
+
+* **Study:**
+  `on007176` (NeMAR)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `ON007176`, `nan`.
+
+Modality: `eeg`.
+Subjects: 45; recordings: 300; tasks: 2.
+
+* **Parameters:**
+  * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *Path*) – Directory where data are cached locally.
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[dict](https://docs.python.org/3/library/stdtypes.html#dict)] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/on007176](https://openneuro.org/datasets/on007176)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=on007176](https://nemar.org/dataexplorer/detail?dataset_id=on007176)
+DOI: [https://doi.org/10.82901/nemar.on007176](https://doi.org/10.82901/nemar.on007176)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import ON007176
+>>> dataset = ON007176(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.ON007180(cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), query: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, s3_bucket: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+Exo-EEG Experiment
+
+* **Study:**
+  `on007180` (NeMAR)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `ON007180`, `nan`.
+
+Modality: `eeg`.
+Subjects: 25; recordings: 25; tasks: 1.
+
+* **Parameters:**
+  * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *Path*) – Directory where data are cached locally.
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[dict](https://docs.python.org/3/library/stdtypes.html#dict)] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/on007180](https://openneuro.org/datasets/on007180)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=on007180](https://nemar.org/dataexplorer/detail?dataset_id=on007180)
+DOI: [https://doi.org/10.82901/nemar.on007180](https://doi.org/10.82901/nemar.on007180)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import ON007180
+>>> dataset = ON007180(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.ON007181(cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), query: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, s3_bucket: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+Structural MRI, Resting-state fMRI, and PSG/EEG Dataset of Zoster-associated Neuralgia
+
+* **Study:**
+  `on007181` (NeMAR)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `ON007181`, `nan`.
+
+Modality: `eeg`.
+Subjects: 59; recordings: 59; tasks: 1.
+
+* **Parameters:**
+  * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *Path*) – Directory where data are cached locally.
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[dict](https://docs.python.org/3/library/stdtypes.html#dict)] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/on007181](https://openneuro.org/datasets/on007181)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=on007181](https://nemar.org/dataexplorer/detail?dataset_id=on007181)
+DOI: [https://doi.org/10.82901/nemar.on007181](https://doi.org/10.82901/nemar.on007181)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import ON007181
+>>> dataset = ON007181(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.ON007262(cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), query: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, s3_bucket: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+Cognitive Workload 8-level arithmetic
+
+* **Study:**
+  `on007262` (NeMAR)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `ON007262`, `nan`.
+
+Modality: `eeg`.
+Subjects: 18; recordings: 18; tasks: 1.
+
+* **Parameters:**
+  * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *Path*) – Directory where data are cached locally.
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[dict](https://docs.python.org/3/library/stdtypes.html#dict)] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/on007262](https://openneuro.org/datasets/on007262)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=on007262](https://nemar.org/dataexplorer/detail?dataset_id=on007262)
+DOI: [https://doi.org/10.82901/nemar.on007262](https://doi.org/10.82901/nemar.on007262)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import ON007262
+>>> dataset = ON007262(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.ON007315(cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), query: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, s3_bucket: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+tACS for Patients with Post-Stroke Anomia
+
+* **Study:**
+  `on007315` (NeMAR)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `ON007315`, `nan`.
+
+Modality: `eeg`.
+Subjects: 2; recordings: 14; tasks: 1.
+
+* **Parameters:**
+  * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *Path*) – Directory where data are cached locally.
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[dict](https://docs.python.org/3/library/stdtypes.html#dict)] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/on007315](https://openneuro.org/datasets/on007315)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=on007315](https://nemar.org/dataexplorer/detail?dataset_id=on007315)
+DOI: [https://doi.org/10.82901/nemar.on007315](https://doi.org/10.82901/nemar.on007315)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import ON007315
+>>> dataset = ON007315(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.ON007823(cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), query: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, s3_bucket: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+A COVID-19 survivors and close contacts EEG dataset
+
+* **Study:**
+  `on007823` (NeMAR)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `ON007823`, `nan`.
+
+Modality: `eeg`.
+Subjects: 169; recordings: 169; tasks: 1.
+
+* **Parameters:**
+  * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *Path*) – Directory where data are cached locally.
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[dict](https://docs.python.org/3/library/stdtypes.html#dict)] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/on007823](https://openneuro.org/datasets/on007823)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=on007823](https://nemar.org/dataexplorer/detail?dataset_id=on007823)
+DOI: [https://doi.org/10.82901/nemar.on007823](https://doi.org/10.82901/nemar.on007823)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import ON007823
+>>> dataset = ON007823(cache_dir="./data")
+>>> recording = dataset[0]
+>>> raw = recording.load()
+```
+
+<!-- !! processed by numpydoc !! -->
+
+#### canonical_name *= []*
+
+### *class* eegdash.dataset.ON007827(cache_dir: [str](https://docs.python.org/3/library/stdtypes.html#str), query: [dict](https://docs.python.org/3/library/stdtypes.html#dict) | [None](https://docs.python.org/3/library/constants.html#None) = None, s3_bucket: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*kwargs)
+
+Bases: [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset)
+
+Loneliness EEG - Roving Oddball Task
+
+* **Study:**
+  `on007827` (NeMAR)
+* **Author (year):**
+  `nan`
+* **Canonical:**
+  —
+
+Also importable as: `ON007827`, `nan`.
+
+Modality: `eeg`.
+Subjects: 99; recordings: 99; tasks: 1.
+
+* **Parameters:**
+  * **cache_dir** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *Path*) – Directory where data are cached locally.
+  * **query** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict) *|* *None*) – Additional MongoDB-style filters to AND with the dataset selection.
+    Must not contain the key `dataset`.
+  * **s3_bucket** ([*str*](https://docs.python.org/3/library/stdtypes.html#str) *|* *None*) – Base S3 bucket used to locate the data.
+  * **\*\*kwargs** ([*dict*](https://docs.python.org/3/library/stdtypes.html#dict)) – Additional keyword arguments forwarded to [`EEGDashDataset`](eegdash.EEGDashDataset.md#eegdash.EEGDashDataset).
+
+#### data_dir
+
+Local dataset cache directory (`cache_dir / dataset_id`).
+
+* **Type:**
+  Path
+
+#### query
+
+Merged query with the dataset filter applied.
+
+* **Type:**
+  [dict](https://docs.python.org/3/library/stdtypes.html#dict)
+
+#### records
+
+Metadata records used to build the dataset, if pre-fetched.
+
+* **Type:**
+  [list](https://docs.python.org/3/library/stdtypes.html#list)[[dict](https://docs.python.org/3/library/stdtypes.html#dict)] | None
+
+### Notes
+
+Each item is a recording; recording-level metadata are available via `dataset.description`.
+`query` supports MongoDB-style filters on fields in `ALLOWED_QUERY_FIELDS` and is combined with the dataset filter.
+Dataset-specific caveats are not provided in the summary metadata.
+
+### References
+
+OpenNeuro dataset: [https://openneuro.org/datasets/on007827](https://openneuro.org/datasets/on007827)
+NeMAR dataset: [https://nemar.org/dataexplorer/detail?dataset_id=on007827](https://nemar.org/dataexplorer/detail?dataset_id=on007827)
+DOI: [https://doi.org/10.18112/openneuro.ds007827.v1.0.0](https://doi.org/10.18112/openneuro.ds007827.v1.0.0)
+
+### Examples
+
+```pycon
+>>> from eegdash.dataset import ON007827
+>>> dataset = ON007827(cache_dir="./data")
 >>> recording = dataset[0]
 >>> raw = recording.load()
 ```

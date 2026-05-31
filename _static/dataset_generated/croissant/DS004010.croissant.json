@@ -92,29 +92,16 @@
       "name": "Jonas Obleser"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Jonas Obleser"
-  },
-  "datePublished": "2022",
   "identifier": "doi:10.18112/openneuro.ds004010.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004010.v1.0.0",
     "https://openneuro.org/datasets/ds004010",
     "https://huggingface.co/datasets/EEGDash/ds004010"
   ],
-  "citeAs": "Leonhard Waschke, Thomas Donoghue, Lorenz Fiedler, Sydney Smith, Douglas Garrett (2022). MAVIS. doi:10.18112/openneuro.ds004010.v1.0.0",
+  "citeAs": "Leonhard Waschke, Thomas Donoghue, Lorenz Fiedler, Sydney Smith, Douglas Garrett (n.d.). MAVIS. doi:10.18112/openneuro.ds004010.v1.0.0",
   "version": "1.2.0",
-  "dateCreated": "2022-01-24",
-  "dateModified": "2022-01-11",
   "measurementTechnique": [
     "BIDS task: MAVIS"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Arnaud Delorme"
-    }
   ],
   "distribution": [
     {

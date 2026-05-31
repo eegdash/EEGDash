@@ -81,10 +81,6 @@
       "name": "Leijten FSS"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Leijten FSS"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -99,26 +95,17 @@
       "name": "NIH RO1MH122258"
     }
   ],
-  "datePublished": "2022",
   "identifier": "doi:10.18112/openneuro.ds004370.v1.0.2",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004370.v1.0.2",
     "https://openneuro.org/datasets/ds004370",
     "https://huggingface.co/datasets/EEGDash/ds004370"
   ],
-  "citeAs": "van Blooijs D, Blok S, Huiskamp GJM, Leijten FSS (2022). PRIOS. doi:10.18112/openneuro.ds004370.v1.0.2",
+  "citeAs": "van Blooijs D, Blok S, Huiskamp GJM, Leijten FSS (n.d.). PRIOS. doi:10.18112/openneuro.ds004370.v1.0.2",
   "version": "Brain Imaging Data Structure Specification v1.6.0",
-  "dateCreated": "2022-12-16",
-  "dateModified": "2023-12-16",
   "measurementTechnique": [
     "BIDS task: SPESclin",
     "BIDS task: SPESprop"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Epilab UMCU"
-    }
   ],
   "distribution": [
     {

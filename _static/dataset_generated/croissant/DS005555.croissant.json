@@ -95,10 +95,6 @@
       "name": "Jens G. Klinzing"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Jens G. Klinzing"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -133,25 +129,17 @@
       "name": "Programa red.es (2021/C005/00143341)."
     }
   ],
-  "datePublished": "2024",
+  "datePublished": "2015",
   "identifier": "doi:10.18112/openneuro.ds005555.v1.1.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005555.v1.1.1",
     "https://openneuro.org/datasets/ds005555",
     "https://huggingface.co/datasets/EEGDash/ds005555"
   ],
-  "citeAs": "Eduardo López-Larraz, María Sierra-Torralba, Sergio Clemente, Galit Fierro, David Oriol (2024). The Bitbrain Open Access Sleep (BOAS) dataset. doi:10.18112/openneuro.ds005555.v1.1.1",
+  "citeAs": "Eduardo López-Larraz, María Sierra-Torralba, Sergio Clemente, Galit Fierro, David Oriol (2015). The Bitbrain Open Access Sleep (BOAS) dataset. doi:10.18112/openneuro.ds005555.v1.1.1",
   "version": "1.8.0",
-  "dateCreated": "2024-10-03",
-  "dateModified": "2025-05-22",
   "measurementTechnique": [
     "BIDS task: Sleep"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Eduardo López-Larraz"
-    }
   ],
   "distribution": [
     {

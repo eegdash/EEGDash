@@ -84,30 +84,18 @@
       "name": "Yuri G. Pavlov"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Yuri G. Pavlov"
-  },
-  "datePublished": "2025",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds006848.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds006848.v1.0.0",
     "https://openneuro.org/datasets/ds006848",
     "https://huggingface.co/datasets/EEGDash/ds006848"
   ],
-  "citeAs": "Alexandra I. Kosachenko, Danil I. Syttykov, Dmitry A. Tarasov, Alexander I. Kotyusov, Yuri G. Pavlov (2025). AlphaDirection1: EEG, ECG, PPG in the resting state and working memory for sequentially and simultaneously presented digits. doi:10.18112/openneuro.ds006848.v1.0.0",
+  "citeAs": "Alexandra I. Kosachenko, Danil I. Syttykov, Dmitry A. Tarasov, Alexander I. Kotyusov, Yuri G. Pavlov (20). AlphaDirection1: EEG, ECG, PPG in the resting state and working memory for sequentially and simultaneously presented digits. doi:10.18112/openneuro.ds006848.v1.0.0",
   "version": "1.7.0",
-  "dateCreated": "2025-10-27",
-  "dateModified": "2025-10-28",
   "measurementTechnique": [
     "BIDS task: rest",
     "BIDS task: verbalwm"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Yuri G. Pavlov"
-    }
   ],
   "distribution": [
     {

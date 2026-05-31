@@ -72,29 +72,16 @@
       "name": "Ramesh Balasubramaniam"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Ramesh Balasubramaniam"
-  },
-  "datePublished": "2019",
   "identifier": "doi:mockDOI",
   "sameAs": [
     "https://doi.org/mockDOI",
     "https://openneuro.org/datasets/ds002218",
     "https://huggingface.co/datasets/EEGDash/ds002218"
   ],
-  "citeAs": "Daniel C Comstock, Ramesh Balasubramaniam (2019). Auditory and Visual Rhythm Omission EEG. doi:mockDOI",
+  "citeAs": "Daniel C Comstock, Ramesh Balasubramaniam (n.d.). Auditory and Visual Rhythm Omission EEG. doi:mockDOI",
   "version": "1.1.1",
-  "dateCreated": "2019-10-03",
-  "dateModified": "2019-10-03",
   "measurementTechnique": [
     "BIDS task: Experiment"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Daniel C Comstock"
-    }
   ],
   "distribution": [
     {

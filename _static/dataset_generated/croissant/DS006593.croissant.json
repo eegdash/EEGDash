@@ -84,43 +84,23 @@
       "name": "Deniz Erdogmus"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Deniz Erdogmus"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "This research was funded by the National Institutes of Health (DC009834)."
     }
   ],
-  "datePublished": "2025",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds006593.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds006593.v1.0.0",
     "https://openneuro.org/datasets/ds006593",
     "https://huggingface.co/datasets/EEGDash/ds006593"
   ],
-  "citeAs": "Basak Celik, Tab Memmott, Matthew Lawhead, Srikar Ananthoju, Deniz Erdogmus (2025). cBCI Matrix Multimodal Dataset. doi:10.18112/openneuro.ds006593.v1.0.0",
+  "citeAs": "Basak Celik, Tab Memmott, Matthew Lawhead, Srikar Ananthoju, Deniz Erdogmus (20). cBCI Matrix Multimodal Dataset. doi:10.18112/openneuro.ds006593.v1.0.0",
   "version": "1.7.0",
-  "dateCreated": "2025-08-23",
-  "dateModified": "2025-08-23",
   "measurementTechnique": [
     "BIDS task: MatrixCalibration"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Basak Celik"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Deniz Erdogmus"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Tab Memmott"
-    }
   ],
   "distribution": [
     {

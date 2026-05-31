@@ -75,31 +75,19 @@
       "name": "Yousef Rezaei Tabar"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Yousef Rezaei Tabar"
-  },
-  "datePublished": "2024",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds005185.v1.0.2",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005185.v1.0.2",
     "https://openneuro.org/datasets/ds005185",
     "https://huggingface.co/datasets/EEGDash/ds005185"
   ],
-  "citeAs": "Kaare B. Mikkelsen, Preben Kidmose, Yousef Rezaei Tabar (2024). Ear-EEG Sleep Monitoring 2019 (EESM19). doi:10.18112/openneuro.ds005185.v1.0.2",
+  "citeAs": "Kaare B. Mikkelsen, Preben Kidmose, Yousef Rezaei Tabar (20). Ear-EEG Sleep Monitoring 2019 (EESM19). doi:10.18112/openneuro.ds005185.v1.0.2",
   "version": "1.7.0",
-  "dateCreated": "2024-05-25",
-  "dateModified": "2024-11-09",
   "measurementTechnique": [
     "BIDS task: ASSR",
     "BIDS task: electrodeTestLab",
     "BIDS task: sleep"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "kaare mikkelsen"
-    }
   ],
   "distribution": [
     {

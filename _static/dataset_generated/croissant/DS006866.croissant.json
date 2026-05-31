@@ -76,39 +76,23 @@
       "name": "Łukasz Okruszek"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Łukasz Okruszek"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "National Science Centre, Poland (Grant No: 2019/35/B/HS6/00517)"
     }
   ],
-  "datePublished": "2025",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds006866.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds006866.v1.0.0",
     "https://openneuro.org/datasets/ds006866",
     "https://huggingface.co/datasets/EEGDash/ds006866"
   ],
-  "citeAs": "Szymon Mąka, Marta Chrustowicz, Łukasz Okruszek (2025). Discrepancy between self-report and neurophysiological markers of socio-affective responses in lonely individuals. doi:10.18112/openneuro.ds006866.v1.0.0",
+  "citeAs": "Szymon Mąka, Marta Chrustowicz, Łukasz Okruszek (20). Discrepancy between self-report and neurophysiological markers of socio-affective responses in lonely individuals. doi:10.18112/openneuro.ds006866.v1.0.0",
   "version": "1.8.0",
-  "dateCreated": "2025-10-29",
-  "dateModified": "2025-10-29",
   "measurementTechnique": [
     "BIDS task: EmotionProcessingandRegulationtask"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Szymon Mąka"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Łukasz Okruszek"
-    }
   ],
   "distribution": [
     {

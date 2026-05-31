@@ -111,8 +111,13 @@
     }
   ],
   "datePublished": "2017",
+  "identifier": "doi:10.82901/nemar.nm000172",
+  "sameAs": [
+    "https://doi.org/10.82901/nemar.nm000172",
+    "https://openneuro.org/datasets/nm000172"
+  ],
+  "citeAs": "Robin Tibor Schirrmeister, Jost Tobias Springenberg, Lukas Dominique Josef Fiederer, Martin Glasstetter, Katharina Eggensperger (2017). High-gamma dataset described in Schirrmeister et al. 2017. doi:10.82901/nemar.nm000172",
   "version": "1.9.0",
-  "dateModified": "2026-04-30",
   "measurementTechnique": [
     "BIDS task: imagery"
   ],
@@ -149,14 +154,6 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=nm000172",
       "encodingFormat": "text/html"
-    },
-    {
-      "@type": "cr:FileObject",
-      "@id": "nm000172-huggingface",
-      "name": "EEGDash/nm000172 on Hugging Face",
-      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
-      "contentUrl": "https://huggingface.co/datasets/EEGDash/nm000172",
-      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

@@ -62,20 +62,11 @@
     "url": "https://eegdash.org/"
   },
   "license": "https://creativecommons.org/publicdomain/zero/1.0/",
-  "datePublished": "2019",
   "version": "1.3.0",
-  "dateCreated": "2019-08-02",
-  "dateModified": "2019-08-02",
   "measurementTechnique": [
     "BIDS task: rest",
     "BIDS task: tmseeg1",
     "BIDS task: tmseeg2"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Sara J Hussain"
-    }
   ],
   "distribution": [
     {

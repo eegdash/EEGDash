@@ -81,29 +81,16 @@
       "name": "Manuel Carreiras"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Manuel Carreiras"
-  },
-  "datePublished": "2020",
   "identifier": "doi:10.18112/openneuro.ds002712.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds002712.v1.0.1",
     "https://openneuro.org/datasets/ds002712",
     "https://huggingface.co/datasets/EEGDash/ds002712"
   ],
-  "citeAs": "Sara Aurtenetxe, Nicola Molinaro, Doug Davidson, Manuel Carreiras (2020). Numbers and Letters. doi:10.18112/openneuro.ds002712.v1.0.1",
+  "citeAs": "Sara Aurtenetxe, Nicola Molinaro, Doug Davidson, Manuel Carreiras (n.d.). Numbers and Letters. doi:10.18112/openneuro.ds002712.v1.0.1",
   "version": "1.1.1",
-  "dateCreated": "2020-04-16",
-  "dateModified": "2020-05-11",
   "measurementTechnique": [
     "BIDS task: numbersletters"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Nicola Molinaro"
-    }
   ],
   "distribution": [
     {

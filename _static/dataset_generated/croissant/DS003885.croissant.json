@@ -80,10 +80,6 @@
       "name": "Carlson, Thomas A."
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Carlson, Thomas A."
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -94,25 +90,16 @@
       "name": "ARC DP200101787 (TAC)"
     }
   ],
-  "datePublished": "2021",
   "identifier": "doi:10.18112/openneuro.ds003885.v1.0.7",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds003885.v1.0.7",
     "https://openneuro.org/datasets/ds003885",
     "https://huggingface.co/datasets/EEGDash/ds003885"
   ],
-  "citeAs": "Shatek, Sophia M., Robinson, Amanda K., Grootswagers, Tijl, Carlson, Thomas A. (2021). Capacity for movement is an organisational principle in object representations: EEG data from Experiment 1. doi:10.18112/openneuro.ds003885.v1.0.7",
+  "citeAs": "Shatek, Sophia M., Robinson, Amanda K., Grootswagers, Tijl, Carlson, Thomas A. (n.d.). Capacity for movement is an organisational principle in object representations: EEG data from Experiment 1. doi:10.18112/openneuro.ds003885.v1.0.7",
   "version": "1.0.2",
-  "dateCreated": "2021-11-11",
-  "dateModified": "2023-05-24",
   "measurementTechnique": [
     "BIDS task: movement"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Sophia Shatek"
-    }
   ],
   "distribution": [
     {

@@ -85,8 +85,13 @@
     }
   ],
   "datePublished": "2019",
+  "identifier": "doi:10.82901/nemar.nm000191",
+  "sameAs": [
+    "https://doi.org/10.82901/nemar.nm000191",
+    "https://openneuro.org/datasets/nm000191"
+  ],
+  "citeAs": "Boyla Mainsah, Chance Fleeting, Thomas Balmat, Eric Sellers, Leslie Collins (2019). BigP3BCI Study F — 6x6 multi-paradigm, 3 sessions (10 healthy subjects). doi:10.82901/nemar.nm000191",
   "version": "1.9.0",
-  "dateModified": "2026-04-02",
   "measurementTechnique": [
     "BIDS task: p300"
   ],
@@ -123,14 +128,6 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=nm000191",
       "encodingFormat": "text/html"
-    },
-    {
-      "@type": "cr:FileObject",
-      "@id": "nm000191-huggingface",
-      "name": "EEGDash/nm000191 on Hugging Face",
-      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
-      "contentUrl": "https://huggingface.co/datasets/EEGDash/nm000191",
-      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

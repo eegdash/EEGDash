@@ -100,35 +100,19 @@
       "name": "Mark Ettenberger"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Mark Ettenberger"
-  },
-  "datePublished": "2023",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds004840.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004840.v1.0.1",
     "https://openneuro.org/datasets/ds004840",
     "https://huggingface.co/datasets/EEGDash/ds004840"
   ],
-  "citeAs": "Jose Cordoba-Silva, Rafael Maya, Mario Valderrama, Luis Felipe Giraldo, William Betancourt-Zapata (2023). Dataset of electrophysiological signals (EEG, ECG, EMG) during Music therapy with adult burn patients in the Intensive Care Unit.. doi:10.18112/openneuro.ds004840.v1.0.1",
+  "citeAs": "Jose Cordoba-Silva, Rafael Maya, Mario Valderrama, Luis Felipe Giraldo, William Betancourt-Zapata (20). Dataset of electrophysiological signals (EEG, ECG, EMG) during Music therapy with adult burn patients in the Intensive Care Unit.. doi:10.18112/openneuro.ds004840.v1.0.1",
   "version": "1.8.0",
-  "dateCreated": "2023-11-12",
-  "dateModified": "2023-11-12",
   "measurementTechnique": [
     "BIDS task: musicTherapy",
     "BIDS task: postMusicTherapy",
     "BIDS task: preMusicTherapy"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Jose Gabriel"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Mark Ettenberger"
-    }
   ],
   "distribution": [
     {

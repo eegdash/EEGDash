@@ -73,29 +73,16 @@
       "name": "et al."
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "et al."
-  },
-  "datePublished": "2024",
   "identifier": "doi:10.18112/openneuro.ds005107.v2.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005107.v2.0.0",
     "https://openneuro.org/datasets/ds005107",
     "https://huggingface.co/datasets/EEGDash/ds005107"
   ],
-  "citeAs": "Wei Xu, et al. (2024). FACE-DEC. doi:10.18112/openneuro.ds005107.v2.0.0",
+  "citeAs": "Wei Xu, et al. (n.d.). FACE-DEC. doi:10.18112/openneuro.ds005107.v2.0.0",
   "version": "1.7.0",
-  "dateCreated": "2024-04-24",
-  "dateModified": "2025-06-30",
   "measurementTechnique": [
     "BIDS task: face"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Wei Xu"
-    }
   ],
   "distribution": [
     {

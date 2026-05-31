@@ -92,29 +92,17 @@
       "name": "Mahmoud Hassan"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Mahmoud Hassan"
-  },
-  "datePublished": "2020",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds003421.v1.0.2",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds003421.v1.0.2",
     "https://openneuro.org/datasets/ds003421",
     "https://huggingface.co/datasets/EEGDash/ds003421"
   ],
-  "citeAs": "Ahmad Mheich, Olivier Dufor, Sahar Yassine, Aya Kabbara, Arnaud Biraben (2020). HD-EEGtask(Dataset 2). doi:10.18112/openneuro.ds003421.v1.0.2",
+  "citeAs": "Ahmad Mheich, Olivier Dufor, Sahar Yassine, Aya Kabbara, Arnaud Biraben (20). HD-EEGtask(Dataset 2). doi:10.18112/openneuro.ds003421.v1.0.2",
   "version": "1.2",
-  "dateCreated": "2020-12-04",
-  "dateModified": "2020-12-13",
   "measurementTechnique": [
     "BIDS task: PicturesNaming"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "EBN Lab"
-    }
   ],
   "distribution": [
     {

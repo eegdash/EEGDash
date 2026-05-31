@@ -73,27 +73,21 @@
       "name": "Joel Voss"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Joel Voss"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "This research was funded by the National Institute Of Neurological Disorders and Stroke under Award Number R01NS113804"
     }
   ],
-  "datePublished": "2025",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds006065.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds006065.v1.0.0",
     "https://openneuro.org/datasets/ds006065",
     "https://huggingface.co/datasets/EEGDash/ds006065"
   ],
-  "citeAs": "James Kragel, Joel Voss (2025). TSS_iEEG. doi:10.18112/openneuro.ds006065.v1.0.0",
+  "citeAs": "James Kragel, Joel Voss (20). TSS_iEEG. doi:10.18112/openneuro.ds006065.v1.0.0",
   "version": "1.8",
-  "dateCreated": "2025-03-27",
-  "dateModified": "2025-03-29",
   "measurementTechnique": [
     "BIDS task: cl",
     "BIDS task: clcontrol",
@@ -105,12 +99,6 @@
     "BIDS task: restcontrolpre",
     "BIDS task: restpost",
     "BIDS task: restpre"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "James Kragel"
-    }
   ],
   "distribution": [
     {

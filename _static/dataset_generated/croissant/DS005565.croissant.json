@@ -88,29 +88,16 @@
       "name": "Karen Emmorey"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Karen Emmorey"
-  },
-  "datePublished": "2024",
   "identifier": "doi:10.18112/openneuro.ds005565.v1.0.3",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005565.v1.0.3",
     "https://openneuro.org/datasets/ds005565",
     "https://huggingface.co/datasets/EEGDash/ds005565"
   ],
-  "citeAs": "Brittany Lee, Sofia E. Ortega, Priscilla M. Martinez, Katherine J. Midgley, Phillip J. Holcomb (2024). Neural associations between fingerspelling, print, and signs: An ERP priming study with deaf readers. doi:10.18112/openneuro.ds005565.v1.0.3",
+  "citeAs": "Brittany Lee, Sofia E. Ortega, Priscilla M. Martinez, Katherine J. Midgley, Phillip J. Holcomb (n.d.). Neural associations between fingerspelling, print, and signs: An ERP priming study with deaf readers. doi:10.18112/openneuro.ds005565.v1.0.3",
   "version": "1.8.0",
-  "dateCreated": "2024-10-10",
-  "dateModified": "2024-10-17",
   "measurementTechnique": [
     "BIDS task: SemanticCategorization"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Sofia E. Ortega"
-    }
   ],
   "distribution": [
     {

@@ -72,33 +72,17 @@
       "name": "Scott Makeig"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Scott Makeig"
-  },
-  "datePublished": "2020",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds002578.v1.1.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds002578.v1.1.0",
     "https://openneuro.org/datasets/ds002578",
     "https://huggingface.co/datasets/EEGDash/ds002578"
   ],
-  "citeAs": "Arnaud Delorme, Scott Makeig (2020). Visual Oddball Task (256 channels). doi:10.18112/openneuro.ds002578.v1.1.0",
+  "citeAs": "Arnaud Delorme, Scott Makeig (20). Visual Oddball Task (256 channels). doi:10.18112/openneuro.ds002578.v1.1.0",
   "version": "v1.2.1",
-  "dateCreated": "2020-02-19",
-  "dateModified": "2021-10-26",
   "measurementTechnique": [
     "BIDS task: attention"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Arnaud Delorme"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Annalisa Salazar"
-    }
   ],
   "distribution": [
     {

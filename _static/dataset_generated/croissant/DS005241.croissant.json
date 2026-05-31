@@ -89,36 +89,24 @@
       "name": "Alec Marantz"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Alec Marantz"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "New York University Abu Dhabi Institute Grant G1001"
     }
   ],
-  "datePublished": "2024",
+  "datePublished": "2019",
   "identifier": "doi:10.18112/openneuro.ds005241.v1.1.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005241.v1.1.0",
     "https://openneuro.org/datasets/ds005241",
     "https://huggingface.co/datasets/EEGDash/ds005241"
   ],
-  "citeAs": "Amilleah Rodriguez, Dan Zhao, Kyra Wilson, Ritika Saboo, Sergey V Samsonau (2024). NeuroMorph: A High-Temporal Resolution MEG Dataset for Morpheme-Based Linguistic Analysis. doi:10.18112/openneuro.ds005241.v1.1.0",
+  "citeAs": "Amilleah Rodriguez, Dan Zhao, Kyra Wilson, Ritika Saboo, Sergey V Samsonau (2019). NeuroMorph: A High-Temporal Resolution MEG Dataset for Morpheme-Based Linguistic Analysis. doi:10.18112/openneuro.ds005241.v1.1.0",
   "version": "1.7.0",
-  "dateCreated": "2024-06-12",
-  "dateModified": "2024-06-14",
   "measurementTechnique": [
     "BIDS task: lexicaldecision",
     "BIDS task: localizer"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Amilleah Rodriguez"
-    }
   ],
   "distribution": [
     {

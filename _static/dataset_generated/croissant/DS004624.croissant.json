@@ -109,27 +109,20 @@
       "name": "K. J. Miller"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "K. J. Miller"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "NIH U01NS128612"
     }
   ],
-  "datePublished": "2023",
   "identifier": "doi:10.18112/openneuro.ds004624.v2.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004624.v2.0.0",
     "https://openneuro.org/datasets/ds004624",
     "https://huggingface.co/datasets/EEGDash/ds004624"
   ],
-  "citeAs": "F. Mivalt, F. Lampert, M.A. van den Boom, P. Brunner, J. Kim (2023). Intracranial recordings using BCI2000 and the CorTec BrainInterchange. doi:10.18112/openneuro.ds004624.v2.0.0",
+  "citeAs": "F. Mivalt, F. Lampert, M.A. van den Boom, P. Brunner, J. Kim (n.d.). Intracranial recordings using BCI2000 and the CorTec BrainInterchange. doi:10.18112/openneuro.ds004624.v2.0.0",
   "version": "Brain Imaging Data Structure Specification v1.8.0",
-  "dateCreated": "2023-06-30",
-  "dateModified": "2025-06-14",
   "measurementTechnique": [
     "BIDS task: 39db",
     "BIDS task: 45db",
@@ -159,12 +152,6 @@
     "BIDS task: Stimulation",
     "BIDS task: Visual",
     "BIDS task: rec"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Filip Mivalt"
-    }
   ],
   "distribution": [
     {

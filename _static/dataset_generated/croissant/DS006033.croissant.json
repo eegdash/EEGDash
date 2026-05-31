@@ -68,10 +68,6 @@
       "name": "Foteini Simistira Liwicki"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Foteini Simistira Liwicki"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -86,25 +82,16 @@
       "name": "Kempe Foundation, Sweden [JCSMK23-0102]"
     }
   ],
-  "datePublished": "2025",
   "identifier": "doi:10.18112/openneuro.ds006033.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds006033.v1.0.1",
     "https://openneuro.org/datasets/ds006033",
     "https://huggingface.co/datasets/EEGDash/ds006033"
   ],
-  "citeAs": "Foteini Simistira Liwicki (2025). Synchronous EEG and fMRI dataset on inner speech. doi:10.18112/openneuro.ds006033.v1.0.1",
+  "citeAs": "Foteini Simistira Liwicki (n.d.). Synchronous EEG and fMRI dataset on inner speech. doi:10.18112/openneuro.ds006033.v1.0.1",
   "version": "1.7.0",
-  "dateCreated": "2025-03-19",
-  "dateModified": "2025-05-08",
   "measurementTechnique": [
     "BIDS task: innerspeech"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Foteini Simistira Liwicki"
-    }
   ],
   "distribution": [
     {

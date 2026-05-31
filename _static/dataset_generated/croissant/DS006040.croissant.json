@@ -104,10 +104,6 @@
       "name": "Joon-Young Moon"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Joon-Young Moon"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -118,17 +114,14 @@
       "name": "The National Research Foundation of Korea (NRF, RS-2023-00272652)"
     }
   ],
-  "datePublished": "2025",
   "identifier": "doi:10.18112/openneuro.ds006040.v1.0.2",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds006040.v1.0.2",
     "https://openneuro.org/datasets/ds006040",
     "https://huggingface.co/datasets/EEGDash/ds006040"
   ],
-  "citeAs": "Younghwa Cha, Yeji Lee, Eunhee Ji, SoHyun Han, Sunhyun Min (2025). Sustained Attention Task (gradCPT) Dataset using simultaneous EEG-fMRI and DTI. doi:10.18112/openneuro.ds006040.v1.0.2",
+  "citeAs": "Younghwa Cha, Yeji Lee, Eunhee Ji, SoHyun Han, Sunhyun Min (n.d.). Sustained Attention Task (gradCPT) Dataset using simultaneous EEG-fMRI and DTI. doi:10.18112/openneuro.ds006040.v1.0.2",
   "version": "1.4.0",
-  "dateCreated": "2025-03-24",
-  "dateModified": "2026-03-16",
   "measurementTechnique": [
     "BIDS task: CBOFF",
     "BIDS task: CBON",
@@ -140,12 +133,6 @@
     "BIDS task: GRADON",
     "BIDS task: IMAGON",
     "BIDS task: IMGRADON"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Younghwa Cha"
-    }
   ],
   "distribution": [
     {

@@ -97,39 +97,23 @@
       "name": "Kay Robbins (curation)"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Kay Robbins (curation)"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "This research was sponsored by the Army Research Laboratory and was accomplished under Cooperative Agreement Number W911NF-10-0-0002."
     }
   ],
-  "datePublished": "2022",
+  "datePublished": "19",
   "identifier": "doi:10.18112/openneuro.ds004120.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004120.v1.0.0",
     "https://openneuro.org/datasets/ds004120",
     "https://huggingface.co/datasets/EEGDash/ds004120"
   ],
-  "citeAs": "Jonathan Touryan (data and curation), Greg Apker (data), Brent Lance (data), Scott Kerick (data), Anthony Ries (data) (2022). BCIT Baseline Driving. doi:10.18112/openneuro.ds004120.v1.0.0",
+  "citeAs": "Jonathan Touryan (data and curation), Greg Apker (data), Brent Lance (data), Scott Kerick (data), Anthony Ries (data) (19). BCIT Baseline Driving. doi:10.18112/openneuro.ds004120.v1.0.0",
   "version": "1.7.0",
-  "dateCreated": "2022-05-03",
-  "dateModified": "2022-05-04",
   "measurementTechnique": [
     "BIDS task: DriveWithSpeedChange"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Jonathan Touryan"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Kay Robbins"
-    }
   ],
   "distribution": [
     {

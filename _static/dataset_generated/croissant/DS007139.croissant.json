@@ -76,28 +76,16 @@
       "name": "Reed, C.L."
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Reed, C.L."
-  },
-  "datePublished": "2025",
+  "datePublished": "2021",
   "identifier": "doi:10.18112/openneuro.ds007139.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds007139.v1.0.0",
     "https://openneuro.org/datasets/ds007139"
   ],
-  "citeAs": "Couperus, J.W., Bukach, C.M., Reed, C.L. (2025). PURSUE LRP/ERN Flanker. doi:10.18112/openneuro.ds007139.v1.0.0",
+  "citeAs": "Couperus, J.W., Bukach, C.M., Reed, C.L. (2021). PURSUE LRP/ERN Flanker. doi:10.18112/openneuro.ds007139.v1.0.0",
   "version": "1.8.0",
-  "dateCreated": "2025-12-27",
-  "dateModified": "2025-12-28",
   "measurementTechnique": [
     "BIDS task: Flanker"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Jane Couperus"
-    }
   ],
   "distribution": [
     {

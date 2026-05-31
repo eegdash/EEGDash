@@ -92,31 +92,18 @@
       "name": "Chun-Shu Wei"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Chun-Shu Wei"
-  },
-  "datePublished": "2025",
   "identifier": "doi:10.18112/openneuro.ds005815.v2.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005815.v2.0.1",
     "https://openneuro.org/datasets/ds005815",
     "https://huggingface.co/datasets/EEGDash/ds005815"
   ],
-  "citeAs": "Yan-Han Chang, Hsi-An Chen, Min-Jiun Tsai, Chun-Lung Tseng, Ching-Huei Lo (2025). A Human EEG Dataset for Multisensory Perception and Mental Imagery. doi:10.18112/openneuro.ds005815.v2.0.1",
+  "citeAs": "Yan-Han Chang, Hsi-An Chen, Min-Jiun Tsai, Chun-Lung Tseng, Ching-Huei Lo (n.d.). A Human EEG Dataset for Multisensory Perception and Mental Imagery. doi:10.18112/openneuro.ds005815.v2.0.1",
   "version": "1.10.0",
-  "dateCreated": "2025-01-12",
-  "dateModified": "2025-06-17",
   "measurementTechnique": [
     "BIDS task: rest1",
     "BIDS task: rest2",
     "BIDS task: task"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "cecnl lab"
-    }
   ],
   "distribution": [
     {

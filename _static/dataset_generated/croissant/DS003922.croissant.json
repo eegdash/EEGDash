@@ -81,10 +81,6 @@
       "name": "van Wassenhove, V."
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "van Wassenhove, V."
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -95,27 +91,19 @@
       "name": "ANR-16-CE37-0004-04"
     }
   ],
-  "datePublished": "2021",
+  "datePublished": "2022",
   "identifier": "doi:10.18112/openneuro.ds003922.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds003922.v1.0.1",
     "https://openneuro.org/datasets/ds003922",
     "https://huggingface.co/datasets/EEGDash/ds003922"
   ],
-  "citeAs": "Pesnot Lerousseau, J., Parise, C., Ernst, MO., van Wassenhove, V. (2021). Multisensory Correlation Detector. doi:10.18112/openneuro.ds003922.v1.0.1",
+  "citeAs": "Pesnot Lerousseau, J., Parise, C., Ernst, MO., van Wassenhove, V. (2022). Multisensory Correlation Detector. doi:10.18112/openneuro.ds003922.v1.0.1",
   "version": "1.6.0",
-  "dateCreated": "2021-11-19",
-  "dateModified": "2022-05-02",
   "measurementTechnique": [
     "BIDS task: mcd",
     "BIDS task: noise",
     "BIDS task: rest"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Jacques Pesnot Lerousseau"
-    }
   ],
   "distribution": [
     {

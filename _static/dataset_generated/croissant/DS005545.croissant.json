@@ -109,35 +109,23 @@
       "name": "Eishi Asano"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Eishi Asano"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "N/A"
     }
   ],
-  "datePublished": "2024",
+  "datePublished": "2025",
   "identifier": "doi:10.18112/openneuro.ds005545.v1.0.3",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005545.v1.0.3",
     "https://openneuro.org/datasets/ds005545",
     "https://huggingface.co/datasets/EEGDash/ds005545"
   ],
-  "citeAs": "Aya Kanno, Ryuzaburo Kochi, Kazuki Sakakura, Yu Kitazawa, Hiroshi Uda (2024). Auditory naming. doi:10.18112/openneuro.ds005545.v1.0.3",
+  "citeAs": "Aya Kanno, Ryuzaburo Kochi, Kazuki Sakakura, Yu Kitazawa, Hiroshi Uda (2025). Auditory naming. doi:10.18112/openneuro.ds005545.v1.0.3",
   "version": "1.7.0",
-  "dateCreated": "2024-09-30",
-  "dateModified": "2025-04-23",
   "measurementTechnique": [
     "BIDS task: auditory"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Aya Kanno"
-    }
   ],
   "distribution": [
     {

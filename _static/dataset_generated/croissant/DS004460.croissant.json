@@ -80,35 +80,23 @@
       "name": "Klug, M"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Klug, M"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "the German Research Foundation (DFG) Grant No. GR 2627/8-1, Open Access funding enabled and organized by Projekt DEAL."
     }
   ],
-  "datePublished": "2023",
+  "datePublished": "2021",
   "identifier": "doi:10.18112/openneuro.ds004460.v1.1.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004460.v1.1.0",
     "https://openneuro.org/datasets/ds004460",
     "https://huggingface.co/datasets/EEGDash/ds004460"
   ],
-  "citeAs": "Gramann, K., Hohlefeld, F.U., Gehrke, L., Klug, M (2023). EEG and motion capture data set for a full-body/joystick rotation task. doi:10.18112/openneuro.ds004460.v1.1.0",
+  "citeAs": "Gramann, K., Hohlefeld, F.U., Gehrke, L., Klug, M (2021). EEG and motion capture data set for a full-body/joystick rotation task. doi:10.18112/openneuro.ds004460.v1.1.0",
   "version": "n/a",
-  "dateCreated": "2023-02-02",
-  "dateModified": "2024-02-08",
   "measurementTechnique": [
     "BIDS task: Rotation"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Sein Jeung"
-    }
   ],
   "distribution": [
     {

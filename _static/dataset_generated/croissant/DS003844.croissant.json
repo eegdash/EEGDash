@@ -85,10 +85,6 @@
       "name": "Zijlmans M."
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Zijlmans M."
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -103,25 +99,16 @@
       "name": "Epilepsiefonds #17-07"
     }
   ],
-  "datePublished": "2021",
   "identifier": "doi:10.18112/openneuro.ds003844.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds003844.v1.0.1",
     "https://openneuro.org/datasets/ds003844",
     "https://huggingface.co/datasets/EEGDash/ds003844"
   ],
-  "citeAs": "Zweiphenning W., Demuru M., van Blooijs D., Leijten F, Zijlmans M. (2021). Dataset Clinical Epilepsy iEEG to BIDS -RESPect_intraoperative_iEEG. doi:10.18112/openneuro.ds003844.v1.0.1",
+  "citeAs": "Zweiphenning W., Demuru M., van Blooijs D., Leijten F, Zijlmans M. (n.d.). Dataset Clinical Epilepsy iEEG to BIDS -RESPect_intraoperative_iEEG. doi:10.18112/openneuro.ds003844.v1.0.1",
   "version": "BEP010",
-  "dateCreated": "2021-10-15",
-  "dateModified": "2021-10-26",
   "measurementTechnique": [
     "BIDS task: acute"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Epilab UMCU"
-    }
   ],
   "distribution": [
     {

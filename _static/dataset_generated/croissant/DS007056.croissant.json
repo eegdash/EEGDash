@@ -76,29 +76,16 @@
       "name": "Reed, C.L."
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Reed, C.L."
-  },
-  "datePublished": "2025",
+  "datePublished": "2021",
   "identifier": "doi:10.18112/openneuro.ds007056.v1.1.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds007056.v1.1.1",
-    "https://openneuro.org/datasets/ds007056",
-    "https://huggingface.co/datasets/EEGDash/ds007056"
+    "https://openneuro.org/datasets/ds007056"
   ],
-  "citeAs": "Couperus, J.W., Bukach, C.M., Reed, C.L. (2025). PURSUE P300 Visual Oddball. doi:10.18112/openneuro.ds007056.v1.1.1",
+  "citeAs": "Couperus, J.W., Bukach, C.M., Reed, C.L. (2021). PURSUE P300 Visual Oddball. doi:10.18112/openneuro.ds007056.v1.1.1",
   "version": "1.8.0",
-  "dateCreated": "2025-12-10",
-  "dateModified": "2025-12-11",
   "measurementTechnique": [
     "BIDS task: VisualOddball"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Jane Couperus"
-    }
   ],
   "distribution": [
     {
@@ -133,14 +120,6 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=ds007056",
       "encodingFormat": "text/html"
-    },
-    {
-      "@type": "cr:FileObject",
-      "@id": "ds007056-huggingface",
-      "name": "EEGDash/ds007056 on Hugging Face",
-      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
-      "contentUrl": "https://huggingface.co/datasets/EEGDash/ds007056",
-      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

@@ -84,10 +84,6 @@
       "name": "Radoslaw M. Cichy"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Radoslaw M. Cichy"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -106,25 +102,17 @@
       "name": "ERC-StG-2018-803370"
     }
   ],
-  "datePublished": "2024",
+  "datePublished": "2019",
   "identifier": "doi:10.18112/openneuro.ds004951.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004951.v1.0.0",
     "https://openneuro.org/datasets/ds004951",
     "https://huggingface.co/datasets/EEGDash/ds004951"
   ],
-  "citeAs": "Marleen Haupt, Monika Graumann, Santani Teng, Carina Kaltenbach, Radoslaw M. Cichy (2024). Braille letters - EEG. doi:10.18112/openneuro.ds004951.v1.0.0",
+  "citeAs": "Marleen Haupt, Monika Graumann, Santani Teng, Carina Kaltenbach, Radoslaw M. Cichy (2019). Braille letters - EEG. doi:10.18112/openneuro.ds004951.v1.0.0",
   "version": "1.7.0",
-  "dateCreated": "2024-02-06",
-  "dateModified": "2024-02-06",
   "measurementTechnique": [
     "BIDS task: letters"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Marleen Haupt"
-    }
   ],
   "distribution": [
     {

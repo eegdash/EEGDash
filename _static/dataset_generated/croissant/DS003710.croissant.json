@@ -72,29 +72,17 @@
       "name": "Meghan H. Puglia"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Meghan H. Puglia"
-  },
-  "datePublished": "2021",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds003710.v1.0.2",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds003710.v1.0.2",
     "https://openneuro.org/datasets/ds003710",
     "https://huggingface.co/datasets/EEGDash/ds003710"
   ],
-  "citeAs": "Cabell L. Williams, Meghan H. Puglia (2021). APPLESEED Example Dataset. doi:10.18112/openneuro.ds003710.v1.0.2",
+  "citeAs": "Cabell L. Williams, Meghan H. Puglia (20). APPLESEED Example Dataset. doi:10.18112/openneuro.ds003710.v1.0.2",
   "version": "v1.6.0",
-  "dateCreated": "2021-06-28",
-  "dateModified": "2022-10-20",
   "measurementTechnique": [
     "BIDS task: appleseedexample"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Meghan Puglia"
-    }
   ],
   "distribution": [
     {

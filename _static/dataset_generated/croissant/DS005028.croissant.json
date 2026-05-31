@@ -96,37 +96,25 @@
       "name": "William Speier"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "William Speier"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "National Science Foundation Graduate Research Fellowship Program under grant no. DGE-2034835"
     }
   ],
-  "datePublished": "2024",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds005028.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005028.v1.0.0",
     "https://openneuro.org/datasets/ds005028",
     "https://huggingface.co/datasets/EEGDash/ds005028"
   ],
-  "citeAs": "Nand Chandravadia, Shrita Pendekanti, Dustin Roberts, Robert Tran, Saarang Panchavati (2024). Comparing P300 Flashing paradigms in online typing with language models. doi:10.18112/openneuro.ds005028.v1.0.0",
+  "citeAs": "Nand Chandravadia, Shrita Pendekanti, Dustin Roberts, Robert Tran, Saarang Panchavati (20). Comparing P300 Flashing paradigms in online typing with language models. doi:10.18112/openneuro.ds005028.v1.0.0",
   "version": "1.8.0",
-  "dateCreated": "2024-03-11",
-  "dateModified": "2024-03-11",
   "measurementTechnique": [
     "BIDS task: cb",
     "BIDS task: comb",
     "BIDS task: rc"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Bill Speier"
-    }
   ],
   "distribution": [
     {

@@ -97,35 +97,23 @@
       "name": "Tommi Raij"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Tommi Raij"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "NIH P41RR014075, P41EB030006"
     }
   ],
-  "datePublished": "2025",
+  "datePublished": "2019",
   "identifier": "doi:10.18112/openneuro.ds006035.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds006035.v1.0.0",
     "https://openneuro.org/datasets/ds006035",
     "https://huggingface.co/datasets/EEGDash/ds006035"
   ],
-  "citeAs": "Fa-Hsuan Lin, Deirdre Foxe von Pechmann, Kaisu Lankinen, Seppo Ahlfors, Bruce Rosen (2025). somatomotor. doi:10.18112/openneuro.ds006035.v1.0.0",
+  "citeAs": "Fa-Hsuan Lin, Deirdre Foxe von Pechmann, Kaisu Lankinen, Seppo Ahlfors, Bruce Rosen (2019). somatomotor. doi:10.18112/openneuro.ds006035.v1.0.0",
   "version": "1.7.0",
-  "dateCreated": "2025-03-20",
-  "dateModified": "2025-03-21",
   "measurementTechnique": [
     "BIDS task: somatomotor"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Tommi Raij"
-    }
   ],
   "distribution": [
     {

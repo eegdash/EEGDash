@@ -84,29 +84,16 @@
       "name": "Bastien Tremoliere"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Bastien Tremoliere"
-  },
-  "datePublished": "2023",
   "identifier": "doi:10.18112/openneuro.ds004860.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004860.v1.0.0",
     "https://openneuro.org/datasets/ds004860",
     "https://huggingface.co/datasets/EEGDash/ds004860"
   ],
-  "citeAs": "Flora Schwartz, Radouane El-Yagoubi, Julie Cayron, Pierre-Vincent Paubel, Bastien Tremoliere (2023). Investigating the cognitive conflict triggered by moral judgment of accidental harm : an event-related potentials study. doi:10.18112/openneuro.ds004860.v1.0.0",
+  "citeAs": "Flora Schwartz, Radouane El-Yagoubi, Julie Cayron, Pierre-Vincent Paubel, Bastien Tremoliere (n.d.). Investigating the cognitive conflict triggered by moral judgment of accidental harm : an event-related potentials study. doi:10.18112/openneuro.ds004860.v1.0.0",
   "version": "1.8.0",
-  "dateCreated": "2023-11-23",
-  "dateModified": "2023-11-23",
   "measurementTechnique": [
     "BIDS task: HarmN400"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Flora Schwartz"
-    }
   ],
   "distribution": [
     {

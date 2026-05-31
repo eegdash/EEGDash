@@ -72,38 +72,26 @@
       "name": "Collaborators from the Experimental and Computational Neuroscience Group"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Collaborators from the Experimental and Computational Neuroscience Group"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "This work was supported by CONICET (Argentina) and Universidad Nacional de Entre Ríos."
     }
   ],
-  "datePublished": "2025",
+  "datePublished": "2019",
   "identifier": "doi:10.18112/openneuro.ds006839.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds006839.v1.0.0",
     "https://openneuro.org/datasets/ds006839",
     "https://huggingface.co/datasets/EEGDash/ds006839"
   ],
-  "citeAs": "C. Brigitte Aguilar Gonzales, Collaborators from the Experimental and Computational Neuroscience Group (2025). EEG recordings during sham neurofeedback in virtual reality. doi:10.18112/openneuro.ds006839.v1.0.0",
+  "citeAs": "C. Brigitte Aguilar Gonzales, Collaborators from the Experimental and Computational Neuroscience Group (2019). EEG recordings during sham neurofeedback in virtual reality. doi:10.18112/openneuro.ds006839.v1.0.0",
   "version": "1.9.0",
-  "dateCreated": "2025-10-24",
-  "dateModified": "2025-10-29",
   "measurementTechnique": [
     "BIDS task: control",
     "BIDS task: negative",
     "BIDS task: positive",
     "BIDS task: resting"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Carmen Brigitte Aguilar Gonzales"
-    }
   ],
   "distribution": [
     {

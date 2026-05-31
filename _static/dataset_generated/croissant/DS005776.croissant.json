@@ -93,10 +93,6 @@
       "name": "Becerra, Lino"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Becerra, Lino"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -111,29 +107,20 @@
       "name": "The Mayday Fund, New York"
     }
   ],
-  "datePublished": "2025",
   "identifier": "doi:10.18112/openneuro.ds005776.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005776.v1.0.1",
     "https://openneuro.org/datasets/ds005776",
     "https://huggingface.co/datasets/EEGDash/ds005776"
   ],
-  "citeAs": "Yücel, Meryem, Selb, Juliette, Aasted, Christopher, Petkov, Mihayl, Borsook, David (2025). Electrical_Thermal_FingerTapping_2015. doi:10.18112/openneuro.ds005776.v1.0.1",
+  "citeAs": "Yücel, Meryem, Selb, Juliette, Aasted, Christopher, Petkov, Mihayl, Borsook, David (n.d.). Electrical_Thermal_FingerTapping_2015. doi:10.18112/openneuro.ds005776.v1.0.1",
   "version": "1.7.1",
-  "dateCreated": "2025-01-02",
-  "dateModified": "2025-07-09",
   "measurementTechnique": [
     "BIDS task: Electrical",
     "BIDS task: FingerTapping",
     "BIDS task: Imagery",
     "BIDS task: Resting",
     "BIDS task: Thermal"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "MERYEM YUCEL"
-    }
   ],
   "distribution": [
     {

@@ -76,28 +76,16 @@
       "name": "Reed, C.L."
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Reed, C.L."
-  },
-  "datePublished": "2025",
+  "datePublished": "2021",
   "identifier": "doi:10.18112/openneuro.ds007052.v1.1.2",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds007052.v1.1.2",
     "https://openneuro.org/datasets/ds007052"
   ],
-  "citeAs": "Couperus, J.W., Bukach, C.M., Reed, C.L. (2025). PURSUE N400 Word Processing. doi:10.18112/openneuro.ds007052.v1.1.2",
+  "citeAs": "Couperus, J.W., Bukach, C.M., Reed, C.L. (2021). PURSUE N400 Word Processing. doi:10.18112/openneuro.ds007052.v1.1.2",
   "version": "1.8.0",
-  "dateCreated": "2025-12-09",
-  "dateModified": "2025-12-11",
   "measurementTechnique": [
     "BIDS task: WordPR"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Jane Couperus"
-    }
   ],
   "distribution": [
     {

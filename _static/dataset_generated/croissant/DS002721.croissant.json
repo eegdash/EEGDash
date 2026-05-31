@@ -92,27 +92,15 @@
       "name": "Slawomir J. Nasuto"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Slawomir J. Nasuto"
-  },
-  "datePublished": "2020",
+  "datePublished": "2018",
   "identifier": "doi:10.18112/openneuro.ds002721.v1.0.2",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds002721.v1.0.2",
     "https://openneuro.org/datasets/ds002721",
     "https://huggingface.co/datasets/EEGDash/ds002721"
   ],
-  "citeAs": "Ian Daly, Nicoletta Nicolaou, Duncan Williams, Faustina Hwang, Alexis Kirke (2020). An EEG dataset recorded during affective music listening. doi:10.18112/openneuro.ds002721.v1.0.2",
+  "citeAs": "Ian Daly, Nicoletta Nicolaou, Duncan Williams, Faustina Hwang, Alexis Kirke (2018). An EEG dataset recorded during affective music listening. doi:10.18112/openneuro.ds002721.v1.0.2",
   "version": "1.0.2",
-  "dateCreated": "2020-04-22",
-  "dateModified": "2024-02-19",
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Ian Daly"
-    }
-  ],
   "distribution": [
     {
       "@type": "cr:FileObject",

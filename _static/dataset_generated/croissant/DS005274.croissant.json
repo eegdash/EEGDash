@@ -67,29 +67,16 @@
       "name": "Yukako Ito"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Yukako Ito"
-  },
-  "datePublished": "2024",
   "identifier": "doi:10.18112/openneuro.ds005274.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005274.v1.0.0",
     "https://openneuro.org/datasets/ds005274",
     "https://huggingface.co/datasets/EEGDash/ds005274"
   ],
-  "citeAs": "Yukako Ito (2024). UV_EEG. doi:10.18112/openneuro.ds005274.v1.0.0",
+  "citeAs": "Yukako Ito (n.d.). UV_EEG. doi:10.18112/openneuro.ds005274.v1.0.0",
   "version": "1.6.0",
-  "dateCreated": "2024-06-21",
-  "dateModified": "2024-06-21",
   "measurementTechnique": [
     "BIDS task: 1"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Yukako Ito"
-    }
   ],
   "distribution": [
     {

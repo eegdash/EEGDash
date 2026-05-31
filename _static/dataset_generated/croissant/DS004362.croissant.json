@@ -85,33 +85,16 @@
       "name": "Jonathan R Wolpaw"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Jonathan R Wolpaw"
-  },
-  "datePublished": "2022",
   "identifier": "doi:10.18112/openneuro.ds004362.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004362.v1.0.0",
     "https://openneuro.org/datasets/ds004362",
     "https://huggingface.co/datasets/EEGDash/ds004362"
   ],
-  "citeAs": "Gerwin Schalk, Dennis J McFarland, Thilo Hinterberger, Niels Birbaumer, Jonathan R Wolpaw (2022). EEG Motor Movement/Imagery Dataset. doi:10.18112/openneuro.ds004362.v1.0.0",
+  "citeAs": "Gerwin Schalk, Dennis J McFarland, Thilo Hinterberger, Niels Birbaumer, Jonathan R Wolpaw (n.d.). EEG Motor Movement/Imagery Dataset. doi:10.18112/openneuro.ds004362.v1.0.0",
   "version": "1.8.0",
-  "dateCreated": "2022-12-12",
-  "dateModified": "2022-12-15",
   "measurementTechnique": [
     "BIDS task: motion"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Anonymous User"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Arnaud Delorme"
-    }
   ],
   "distribution": [
     {

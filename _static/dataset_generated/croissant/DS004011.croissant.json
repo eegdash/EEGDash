@@ -81,33 +81,17 @@
       "name": "Chris Baker"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Chris Baker"
-  },
-  "datePublished": "2022",
+  "datePublished": "2019",
   "identifier": "doi:10.18112/openneuro.ds004011.v1.0.3",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004011.v1.0.3",
     "https://openneuro.org/datasets/ds004011",
     "https://huggingface.co/datasets/EEGDash/ds004011"
   ],
-  "citeAs": "Lina Teichmann, Denise Moerel, Anina Rich, Chris Baker (2022). The nature of neural object representations during dynamic occlusion. doi:10.18112/openneuro.ds004011.v1.0.3",
+  "citeAs": "Lina Teichmann, Denise Moerel, Anina Rich, Chris Baker (2019). The nature of neural object representations during dynamic occlusion. doi:10.18112/openneuro.ds004011.v1.0.3",
   "version": "1.6.0",
-  "dateCreated": "2022-01-26",
-  "dateModified": "2022-04-08",
   "measurementTechnique": [
     "BIDS task: occlusion"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Lina Teichmann"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Denise Moerel"
-    }
   ],
   "distribution": [
     {

@@ -1,0 +1,133 @@
+{
+  "@context": {
+    "@language": "en",
+    "@vocab": "https://schema.org/",
+    "citeAs": "cr:citeAs",
+    "column": "cr:column",
+    "conformsTo": "dct:conformsTo",
+    "cr": "http://mlcommons.org/croissant/",
+    "data": {
+      "@id": "cr:data",
+      "@type": "@json"
+    },
+    "dataType": {
+      "@id": "cr:dataType",
+      "@type": "@vocab"
+    },
+    "dct": "http://purl.org/dc/terms/",
+    "extract": "cr:extract",
+    "field": "cr:field",
+    "fileObject": "cr:fileObject",
+    "fileProperty": "cr:fileProperty",
+    "fileSet": "cr:fileSet",
+    "format": "cr:format",
+    "includes": "cr:includes",
+    "isLiveDataset": "cr:isLiveDataset",
+    "jsonPath": "cr:jsonPath",
+    "key": "cr:key",
+    "md5": "cr:md5",
+    "parentField": "cr:parentField",
+    "path": "cr:path",
+    "recordSet": "cr:recordSet",
+    "references": "cr:references",
+    "regex": "cr:regex",
+    "repeated": "cr:repeated",
+    "replace": "cr:replace",
+    "sc": "https://schema.org/",
+    "separator": "cr:separator",
+    "source": "cr:source",
+    "subField": "cr:subField",
+    "transform": "cr:transform"
+  },
+  "@type": "sc:Dataset",
+  "conformsTo": "http://mlcommons.org/croissant/1.0",
+  "name": "on003800",
+  "alternateName": [
+    "ON003800"
+  ],
+  "description": "Auditory Gamma Entrainment. eeg dataset accessible via EEGDash as `ON003800` with standardized BIDS metadata.",
+  "url": "https://eegdash.org/api/dataset/eegdash.dataset.ON003800.html",
+  "keywords": [
+    "EEG",
+    "BIDS",
+    "neuroscience"
+  ],
+  "isAccessibleForFree": true,
+  "includedInDataCatalog": {
+    "@type": "sc:DataCatalog",
+    "name": "EEG Dash",
+    "url": "https://eegdash.org/"
+  },
+  "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "creator": [
+    {
+      "@type": "sc:Person",
+      "name": "Mojtaba Lahijanian"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Mohammad Javad Sedghizadeh"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Hamid Aghajan"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Zahra Vahabi"
+    }
+  ],
+  "funder": [
+    {
+      "@type": "sc:Organization",
+      "name": "This work was partially funded by the Cognitive Sciences & Technologies Council of Iran and by the grant G970736 from Sharif University of Technology, which covered the cost of data collection. The funders had no role in the study conceptualization and design, data collection and analysis, decision to publish, or preparation of the manuscript."
+    }
+  ],
+  "datePublished": "20",
+  "identifier": "doi:10.82901/nemar.on003800",
+  "sameAs": [
+    "https://doi.org/10.82901/nemar.on003800",
+    "https://openneuro.org/datasets/on003800"
+  ],
+  "citeAs": "Mojtaba Lahijanian, Mohammad Javad Sedghizadeh, Hamid Aghajan, Zahra Vahabi (20). Auditory Gamma Entrainment. doi:10.82901/nemar.on003800",
+  "version": "1.9.0",
+  "measurementTechnique": [
+    "BIDS task: AuditoryGammaEntrainment",
+    "BIDS task: Rest"
+  ],
+  "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "on003800-bids-bucket",
+      "name": "on003800 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for ON003800.",
+      "contentUrl": "s3://nemar/on003800",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "on003800-openneuro",
+      "name": "on003800 on OpenNeuro",
+      "description": "OpenNeuro dataset landing page.",
+      "contentUrl": "https://openneuro.org/datasets/on003800",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "on003800-eegdash-records",
+      "name": "on003800 EEGDash records (live)",
+      "description": "Live JSON listing of every recording in this dataset, with BIDS metadata, channel counts, and S3 storage keys.",
+      "contentUrl": "https://data.eegdash.org/api/eegdash/records?filter=%7B%22dataset%22%3A%22on003800%22%7D",
+      "encodingFormat": "application/json",
+      "isLiveDataset": true
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "on003800-nemar",
+      "name": "on003800 on NeMAR",
+      "description": "NEMAR dataset landing page with pipeline plots.",
+      "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=on003800",
+      "encodingFormat": "text/html"
+    }
+  ]
+}

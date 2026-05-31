@@ -76,28 +76,15 @@
       "name": "Yuan, Haodong"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Yuan, Haodong"
-  },
-  "datePublished": "2026",
   "identifier": "doi:10.18112/openneuro.ds007477.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds007477.v1.0.1",
     "https://openneuro.org/datasets/ds007477"
   ],
-  "citeAs": "Niu，Haijing, Zheng, Sha, Yuan, Haodong (2026). TimeSeries BIDS converted. doi:10.18112/openneuro.ds007477.v1.0.1",
+  "citeAs": "Niu，Haijing, Zheng, Sha, Yuan, Haodong (n.d.). TimeSeries BIDS converted. doi:10.18112/openneuro.ds007477.v1.0.1",
   "version": "1.7.0",
-  "dateCreated": "2026-03-06",
-  "dateModified": "2026-03-18",
   "measurementTechnique": [
     "BIDS task: ort"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "浩东 苑"
-    }
   ],
   "distribution": [
     {

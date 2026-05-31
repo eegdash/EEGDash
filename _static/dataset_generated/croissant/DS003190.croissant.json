@@ -72,30 +72,17 @@
       "name": "Javier M. Antelis"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Javier M. Antelis"
-  },
-  "datePublished": "2020",
   "identifier": "doi:10.18112/openneuro.ds003190.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds003190.v1.0.1",
     "https://openneuro.org/datasets/ds003190",
     "https://huggingface.co/datasets/EEGDash/ds003190"
   ],
-  "citeAs": "Omar Mendoza-Montoya, Javier M. Antelis (2020). Assesment of the visual stimuli properties in P300 paradigm. doi:10.18112/openneuro.ds003190.v1.0.1",
+  "citeAs": "Omar Mendoza-Montoya, Javier M. Antelis (n.d.). Assesment of the visual stimuli properties in P300 paradigm. doi:10.18112/openneuro.ds003190.v1.0.1",
   "version": "1.2",
-  "dateCreated": "2020-09-25",
-  "dateModified": "2020-10-06",
   "measurementTechnique": [
     "BIDS task: cnos",
     "BIDS task: ctos"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Juan David Chailloux Peguero"
-    }
   ],
   "distribution": [
     {

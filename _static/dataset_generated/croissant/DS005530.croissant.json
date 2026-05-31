@@ -92,10 +92,6 @@
       "name": "Penelope A. Lewis"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Penelope A. Lewis"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -106,29 +102,16 @@
       "name": "The Wellcome Trust [WT224267] to Murphy K"
     }
   ],
-  "datePublished": "2024",
   "identifier": "doi:10.18112/openneuro.ds005530.v1.0.9",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005530.v1.0.9",
     "https://openneuro.org/datasets/ds005530",
     "https://huggingface.co/datasets/EEGDash/ds005530"
   ],
-  "citeAs": "Viviana Greco, Tamas A. Foldes, Neil A. Harrison, Kevin Murphy, Marta Wawrzuta (2024). Depotentiation of emotional reactivity using TMR during REM sleep. doi:10.18112/openneuro.ds005530.v1.0.9",
+  "citeAs": "Viviana Greco, Tamas A. Foldes, Neil A. Harrison, Kevin Murphy, Marta Wawrzuta (n.d.). Depotentiation of emotional reactivity using TMR during REM sleep. doi:10.18112/openneuro.ds005530.v1.0.9",
   "version": "1.8.0",
-  "dateCreated": "2024-09-25",
-  "dateModified": "2025-02-24",
   "measurementTechnique": [
     "BIDS task: sleep"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Tamas Foldes"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "viviana greco"
-    }
   ],
   "distribution": [
     {

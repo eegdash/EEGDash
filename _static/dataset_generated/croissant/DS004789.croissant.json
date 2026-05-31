@@ -73,10 +73,6 @@
       "name": "Michael J. Kahana"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Michael J. Kahana"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -91,25 +87,16 @@
       "name": "NIH: U01-NS-113198"
     }
   ],
-  "datePublished": "2023",
   "identifier": "doi:10.18112/openneuro.ds004789.v3.1.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004789.v3.1.0",
     "https://openneuro.org/datasets/ds004789",
     "https://huggingface.co/datasets/EEGDash/ds004789"
   ],
-  "citeAs": "Haydn G. Herrema, Michael J. Kahana (2023). Delayed Free Recall of Word Lists. doi:10.18112/openneuro.ds004789.v3.1.0",
+  "citeAs": "Haydn G. Herrema, Michael J. Kahana (n.d.). Delayed Free Recall of Word Lists. doi:10.18112/openneuro.ds004789.v3.1.0",
   "version": "1.7.0",
-  "dateCreated": "2023-10-10",
-  "dateModified": "2024-04-22",
   "measurementTechnique": [
     "BIDS task: FR1"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Haydn Herrema"
-    }
   ],
   "distribution": [
     {

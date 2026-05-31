@@ -1,0 +1,131 @@
+{
+  "@context": {
+    "@language": "en",
+    "@vocab": "https://schema.org/",
+    "citeAs": "cr:citeAs",
+    "column": "cr:column",
+    "conformsTo": "dct:conformsTo",
+    "cr": "http://mlcommons.org/croissant/",
+    "data": {
+      "@id": "cr:data",
+      "@type": "@json"
+    },
+    "dataType": {
+      "@id": "cr:dataType",
+      "@type": "@vocab"
+    },
+    "dct": "http://purl.org/dc/terms/",
+    "extract": "cr:extract",
+    "field": "cr:field",
+    "fileObject": "cr:fileObject",
+    "fileProperty": "cr:fileProperty",
+    "fileSet": "cr:fileSet",
+    "format": "cr:format",
+    "includes": "cr:includes",
+    "isLiveDataset": "cr:isLiveDataset",
+    "jsonPath": "cr:jsonPath",
+    "key": "cr:key",
+    "md5": "cr:md5",
+    "parentField": "cr:parentField",
+    "path": "cr:path",
+    "recordSet": "cr:recordSet",
+    "references": "cr:references",
+    "regex": "cr:regex",
+    "repeated": "cr:repeated",
+    "replace": "cr:replace",
+    "sc": "https://schema.org/",
+    "separator": "cr:separator",
+    "source": "cr:source",
+    "subField": "cr:subField",
+    "transform": "cr:transform"
+  },
+  "@type": "sc:Dataset",
+  "conformsTo": "http://mlcommons.org/croissant/1.0",
+  "name": "on007180",
+  "alternateName": [
+    "ON007180"
+  ],
+  "description": "Exo-EEG Experiment. eeg dataset accessible via EEGDash as `ON007180` with standardized BIDS metadata.",
+  "url": "https://eegdash.org/api/dataset/eegdash.dataset.ON007180.html",
+  "keywords": [
+    "EEG",
+    "BIDS",
+    "neuroscience"
+  ],
+  "isAccessibleForFree": true,
+  "includedInDataCatalog": {
+    "@type": "sc:DataCatalog",
+    "name": "EEG Dash",
+    "url": "https://eegdash.org/"
+  },
+  "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "creator": [
+    {
+      "@type": "sc:Person",
+      "name": "Águeda Fuentes-Guerra"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Elisa Martín Arévalo"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Freek van Ede"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Carlos González-García"
+    }
+  ],
+  "funder": [
+    {
+      "@type": "sc:Organization",
+      "name": "This work was supported by the Spanish Ministry of Science and Innovation and the State Research Agency [research Project PID2020-116342GA-I00 to EMA and CGG, PID2023-149428NB-I00 to CGG, and PID2024-157672NB-I00 to EMA, funded MICIU/AEI/10.13039/501100011033/FEDER, EU]. CGG was also supported by Grant Ramón y Cajal RYC2021-033536-I funded by MCIN/AEI/10.13039/501100011033 and by the European Union Next Generation EU/PRTR. FvE was supported by an ERC Starting Grant from the European Research Council (MEMTICIPATION, 850636) and an NWO Vidi Grant by the Dutch Research Council (grant number 14721). AFG was supported by Grant PRE2021-100351, funded by MCIN/AEI/10.13039/501100011033. Additionally, this publication was funded by the European Social Fund Plus ESF+, CEX2023-001312-M by MCIN/AEI/10.13039/501100011033 and by the UCE-PP2023-11 by the University of Granada as an Excellence Unit Program. This work is part of the doctoral thesis of AFG, under the supervision of EMA and CGG."
+    }
+  ],
+  "identifier": "doi:10.82901/nemar.on007180",
+  "sameAs": [
+    "https://doi.org/10.82901/nemar.on007180",
+    "https://openneuro.org/datasets/on007180"
+  ],
+  "citeAs": "Águeda Fuentes-Guerra, Elisa Martín Arévalo, Freek van Ede, Carlos González-García (n.d.). Exo-EEG Experiment. doi:10.82901/nemar.on007180",
+  "version": "1.4.0",
+  "measurementTechnique": [
+    "BIDS task: exo"
+  ],
+  "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "on007180-bids-bucket",
+      "name": "on007180 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for ON007180.",
+      "contentUrl": "s3://nemar/on007180",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "on007180-openneuro",
+      "name": "on007180 on OpenNeuro",
+      "description": "OpenNeuro dataset landing page.",
+      "contentUrl": "https://openneuro.org/datasets/on007180",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "on007180-eegdash-records",
+      "name": "on007180 EEGDash records (live)",
+      "description": "Live JSON listing of every recording in this dataset, with BIDS metadata, channel counts, and S3 storage keys.",
+      "contentUrl": "https://data.eegdash.org/api/eegdash/records?filter=%7B%22dataset%22%3A%22on007180%22%7D",
+      "encodingFormat": "application/json",
+      "isLiveDataset": true
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "on007180-nemar",
+      "name": "on007180 on NeMAR",
+      "description": "NEMAR dataset landing page with pipeline plots.",
+      "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=on007180",
+      "encodingFormat": "text/html"
+    }
+  ]
+}

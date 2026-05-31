@@ -68,29 +68,17 @@
       "name": "Arnaud Delorme"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Arnaud Delorme"
-  },
-  "datePublished": "2020",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds002680.v1.2.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds002680.v1.2.0",
     "https://openneuro.org/datasets/ds002680",
     "https://huggingface.co/datasets/EEGDash/ds002680"
   ],
-  "citeAs": "Arnaud Delorme (2020). Go-nogo categorization and detection task. doi:10.18112/openneuro.ds002680.v1.2.0",
+  "citeAs": "Arnaud Delorme (20). Go-nogo categorization and detection task. doi:10.18112/openneuro.ds002680.v1.2.0",
   "version": "v1.2.1",
-  "dateCreated": "2020-04-02",
-  "dateModified": "2021-10-19",
   "measurementTechnique": [
     "BIDS task: gonogo"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Arnaud Delorme"
-    }
   ],
   "distribution": [
     {

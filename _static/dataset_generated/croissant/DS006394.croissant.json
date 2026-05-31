@@ -80,30 +80,17 @@
       "name": "Christopher L. Asplund"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Christopher L. Asplund"
-  },
-  "datePublished": "2025",
   "identifier": "doi:10.18112/openneuro.ds006394.v1.0.3",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds006394.v1.0.3",
     "https://openneuro.org/datasets/ds006394",
     "https://huggingface.co/datasets/EEGDash/ds006394"
   ],
-  "citeAs": "En-Lin Leong, Yun Da Chua, Takashi Obana, Christopher L. Asplund (2025). Electrophysiological markers of surprise-induced failures of visual and auditory awareness. doi:10.18112/openneuro.ds006394.v1.0.3",
+  "citeAs": "En-Lin Leong, Yun Da Chua, Takashi Obana, Christopher L. Asplund (n.d.). Electrophysiological markers of surprise-induced failures of visual and auditory awareness. doi:10.18112/openneuro.ds006394.v1.0.3",
   "version": "1.10.0",
-  "dateCreated": "2025-06-26",
-  "dateModified": "2025-06-27",
   "measurementTechnique": [
     "BIDS task: SiB",
     "BIDS task: SiD"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "En-Lin Leong"
-    }
   ],
   "distribution": [
     {

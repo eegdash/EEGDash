@@ -80,29 +80,17 @@
       "name": "Nusbaum, H."
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Nusbaum, H."
-  },
-  "datePublished": "2022",
+  "datePublished": "2019",
   "identifier": "doi:10.18112/openneuro.ds004284.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004284.v1.0.0",
     "https://openneuro.org/datasets/ds004284",
     "https://huggingface.co/datasets/EEGDash/ds004284"
   ],
-  "citeAs": "Veillette, J., Heald, S., Wittenbrink, B., Nusbaum, H. (2022). eeg-neuroforecasting. doi:10.18112/openneuro.ds004284.v1.0.0",
+  "citeAs": "Veillette, J., Heald, S., Wittenbrink, B., Nusbaum, H. (2019). eeg-neuroforecasting. doi:10.18112/openneuro.ds004284.v1.0.0",
   "version": "1.6.0",
-  "dateCreated": "2022-10-03",
-  "dateModified": "2022-10-03",
   "measurementTechnique": [
     "BIDS task: kickstarter"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "John Veillette"
-    }
   ],
   "distribution": [
     {

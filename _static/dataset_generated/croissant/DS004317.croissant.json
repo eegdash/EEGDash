@@ -72,33 +72,17 @@
       "name": "Trevor C J Jackson"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Trevor C J Jackson"
-  },
-  "datePublished": "2022",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds004317.v1.0.3",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004317.v1.0.3",
     "https://openneuro.org/datasets/ds004317",
     "https://huggingface.co/datasets/EEGDash/ds004317"
   ],
-  "citeAs": "James F Cavanagh, Trevor C J Jackson (2022). Mood Manipulation and PST, Experiment 2. doi:10.18112/openneuro.ds004317.v1.0.3",
+  "citeAs": "James F Cavanagh, Trevor C J Jackson (20). Mood Manipulation and PST, Experiment 2. doi:10.18112/openneuro.ds004317.v1.0.3",
   "version": "1.1.1",
-  "dateCreated": "2022-10-27",
-  "dateModified": "2022-10-27",
   "measurementTechnique": [
     "BIDS task: PST"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Trevor C. J. Jackson"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "James F Cavanagh"
-    }
   ],
   "distribution": [
     {

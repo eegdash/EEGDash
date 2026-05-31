@@ -72,10 +72,6 @@
       "name": "Daniel Ferris"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Daniel Ferris"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -90,28 +86,19 @@
       "name": "National Institutes of Health (R01 NS104772)"
     }
   ],
-  "datePublished": "2021",
   "identifier": "doi:10.18112/openneuro.ds003739.v1.0.2",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds003739.v1.0.2",
     "https://openneuro.org/datasets/ds003739",
     "https://huggingface.co/datasets/EEGDash/ds003739"
   ],
-  "citeAs": "Steven Peterson, Daniel Ferris (2021). Perturbed beam-walking task. doi:10.18112/openneuro.ds003739.v1.0.2",
+  "citeAs": "Steven Peterson, Daniel Ferris (n.d.). Perturbed beam-walking task. doi:10.18112/openneuro.ds003739.v1.0.2",
   "version": "v1.6.0",
-  "dateCreated": "2021-07-22",
-  "dateModified": "2021-11-26",
   "measurementTechnique": [
     "BIDS task: pullstand",
     "BIDS task: pullwalk",
     "BIDS task: rotatestand",
     "BIDS task: rotatewalk"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Steven Peterson"
-    }
   ],
   "distribution": [
     {

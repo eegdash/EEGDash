@@ -85,36 +85,24 @@
       "name": "Sylvain Baillet"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Sylvain Baillet"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "NIH (2R01EB009048-05)"
     }
   ],
-  "datePublished": "2018",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds000246.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds000246.v1.0.1",
     "https://openneuro.org/datasets/ds000246",
     "https://huggingface.co/datasets/EEGDash/ds000246"
   ],
-  "citeAs": "Elizabeth Bock, Peter Donhauser, Francois Tadel, Guiomar Niso, Sylvain Baillet (2018). MEG-BIDS Brainstorm data sample. doi:10.18112/openneuro.ds000246.v1.0.1",
+  "citeAs": "Elizabeth Bock, Peter Donhauser, Francois Tadel, Guiomar Niso, Sylvain Baillet (20). MEG-BIDS Brainstorm data sample. doi:10.18112/openneuro.ds000246.v1.0.1",
   "version": "1.4.1",
-  "dateCreated": "2018-03-30",
-  "dateModified": "2024-04-23",
   "measurementTechnique": [
     "BIDS task: AEF",
     "BIDS task: noise"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Julia Guiomar Niso Galán"
-    }
   ],
   "distribution": [
     {

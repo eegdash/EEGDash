@@ -104,39 +104,23 @@
       "name": "Ina Bornkessel-Schlesewsky"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Ina Bornkessel-Schlesewsky"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "FT160100437"
     }
   ],
-  "datePublished": "2021",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds003620.v1.1.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds003620.v1.1.1",
     "https://openneuro.org/datasets/ds003620",
     "https://huggingface.co/datasets/EEGDash/ds003620"
   ],
-  "citeAs": "Magnus Liebherr, Andrew W. Corcoran, Phillip M. Alday, Scott Coussens, Valeria Bellan (2021). Runabout: A mobile EEG study of auditory oddball processing in laboratory and real-world conditions. doi:10.18112/openneuro.ds003620.v1.1.1",
+  "citeAs": "Magnus Liebherr, Andrew W. Corcoran, Phillip M. Alday, Scott Coussens, Valeria Bellan (20). Runabout: A mobile EEG study of auditory oddball processing in laboratory and real-world conditions. doi:10.18112/openneuro.ds003620.v1.1.1",
   "version": "1.4",
-  "dateCreated": "2021-04-15",
-  "dateModified": "2021-11-09",
   "measurementTechnique": [
     "BIDS task: oddball"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Andrew W Corcoran"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Scott Coussens"
-    }
   ],
   "distribution": [
     {

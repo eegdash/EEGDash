@@ -81,10 +81,6 @@
       "name": "Talya Inbar"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Talya Inbar"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -100,17 +96,9 @@
   ],
   "citeAs": "Valerie Chanoine, Jean-Michel Badier, Mireille Besson, Talya Inbar (2025). SINGSING. doi:10.18112/openneuro.ds006629.v1.0.1",
   "version": "1.7.0",
-  "dateCreated": "2025-09-04",
-  "dateModified": "2025-09-29",
   "measurementTechnique": [
     "BIDS task: MMNHCS",
     "BIDS task: noise"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Valérie Chanoine"
-    }
   ],
   "distribution": [
     {

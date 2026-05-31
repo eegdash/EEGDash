@@ -157,10 +157,6 @@
       "name": "Joyce Chung"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Joyce Chung"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -179,17 +175,15 @@
       "name": "ZIDMH00291"
     }
   ],
-  "datePublished": "2024",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds005752.v2.1.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005752.v2.1.0",
     "https://openneuro.org/datasets/ds005752",
     "https://huggingface.co/datasets/EEGDash/ds005752"
   ],
-  "citeAs": "Allison C. Nugent, Adam G Thomas, Margaret Mahoney, Alison Gibbons, Jarrod Smith (2024). The NIMH Healthy Research Volunteer Dataset. doi:10.18112/openneuro.ds005752.v2.1.0",
+  "citeAs": "Allison C. Nugent, Adam G Thomas, Margaret Mahoney, Alison Gibbons, Jarrod Smith (20). The NIMH Healthy Research Volunteer Dataset. doi:10.18112/openneuro.ds005752.v2.1.0",
   "version": "1.9.0",
-  "dateCreated": "2024-12-20",
-  "dateModified": "2025-02-18",
   "measurementTechnique": [
     "BIDS task: airpuff",
     "BIDS task: airpuffAltVer",
@@ -201,52 +195,6 @@
     "BIDS task: oddball",
     "BIDS task: rest",
     "BIDS task: sternberg"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Arshitha Basavaraj"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Adam G. Thomas"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Eric Earl"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Allison Nugent"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Jeff Stout"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Anna Namyst"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Anna M. Namyst"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Allison Nugent"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Dustin Moraczewski"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Dustin Moraczewski"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Research Volunteer"
-    }
   ],
   "distribution": [
     {

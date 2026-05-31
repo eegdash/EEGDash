@@ -68,36 +68,23 @@
       "name": "Enter author names here"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Enter author names here"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "Enter funding details here, if applicable."
     }
   ],
-  "datePublished": "2025",
   "identifier": "doi:10.18112/openneuro.ds006903.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds006903.v1.0.0",
     "https://openneuro.org/datasets/ds006903",
     "https://huggingface.co/datasets/EEGDash/ds006903"
   ],
-  "citeAs": "Enter author names here (2025). ball_squeeze_2025. doi:10.18112/openneuro.ds006903.v1.0.0",
+  "citeAs": "Enter author names here (n.d.). ball_squeeze_2025. doi:10.18112/openneuro.ds006903.v1.0.0",
   "version": "1.8.0",
-  "dateCreated": "2025-11-05",
-  "dateModified": "2025-11-05",
   "measurementTechnique": [
     "BIDS task: BS",
     "BIDS task: RS"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Laura Carlton"
-    }
   ],
   "distribution": [
     {

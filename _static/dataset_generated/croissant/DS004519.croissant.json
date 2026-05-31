@@ -72,29 +72,17 @@
       "name": "Asal Nouri"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Asal Nouri"
-  },
-  "datePublished": "2023",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds004519.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004519.v1.0.1",
     "https://openneuro.org/datasets/ds004519",
     "https://huggingface.co/datasets/EEGDash/ds004519"
   ],
-  "citeAs": "Edward Ester, Asal Nouri (2023). Internal selective attention is delayed by competition between endogenous and exogenous factors. doi:10.18112/openneuro.ds004519.v1.0.1",
+  "citeAs": "Edward Ester, Asal Nouri (20). Internal selective attention is delayed by competition between endogenous and exogenous factors. doi:10.18112/openneuro.ds004519.v1.0.1",
   "version": "1.8.0",
-  "dateCreated": "2023-03-03",
-  "dateModified": "2023-03-04",
   "measurementTechnique": [
     "BIDS task: ProAntiCue"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Edward Ester"
-    }
   ],
   "distribution": [
     {

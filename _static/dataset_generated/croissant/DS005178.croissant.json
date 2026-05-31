@@ -115,29 +115,17 @@
       "name": "Preben Kidmose"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Preben Kidmose"
-  },
-  "datePublished": "2024",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds005178.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005178.v1.0.0",
     "https://openneuro.org/datasets/ds005178",
     "https://huggingface.co/datasets/EEGDash/ds005178"
   ],
-  "citeAs": "Yousef Rezaei Tabar, Kaare Mikkelsen, Laura Birch, Nelly Shenton, Simon L Kappel (2024). Ear-EEG Sleep Monitoring 2023 (EESM23). doi:10.18112/openneuro.ds005178.v1.0.0",
+  "citeAs": "Yousef Rezaei Tabar, Kaare Mikkelsen, Laura Birch, Nelly Shenton, Simon L Kappel (20). Ear-EEG Sleep Monitoring 2023 (EESM23). doi:10.18112/openneuro.ds005178.v1.0.0",
   "version": "1.9.0",
-  "dateCreated": "2024-05-24",
-  "dateModified": "2024-05-31",
   "measurementTechnique": [
     "BIDS task: sleep"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "kaare mikkelsen"
-    }
   ],
   "distribution": [
     {

@@ -76,29 +76,16 @@
       "name": "Laurence T. Hunt"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Laurence T. Hunt"
-  },
-  "datePublished": "2022",
   "identifier": "doi:10.18112/openneuro.ds004262.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004262.v1.0.0",
     "https://openneuro.org/datasets/ds004262",
     "https://huggingface.co/datasets/EEGDash/ds004262"
   ],
-  "citeAs": "Cameron D. Hassall, Yan Yan, Laurence T. Hunt (2022). Continuous Feedback Processing. doi:10.18112/openneuro.ds004262.v1.0.0",
+  "citeAs": "Cameron D. Hassall, Yan Yan, Laurence T. Hunt (n.d.). Continuous Feedback Processing. doi:10.18112/openneuro.ds004262.v1.0.0",
   "version": "1.2.1",
-  "dateCreated": "2022-09-07",
-  "dateModified": "2022-09-07",
   "measurementTechnique": [
     "BIDS task: gnomes"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Cameron Hassall"
-    }
   ],
   "distribution": [
     {

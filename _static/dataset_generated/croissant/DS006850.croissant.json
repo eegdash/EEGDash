@@ -76,35 +76,23 @@
       "name": "Klaus Gramann"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Klaus Gramann"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "This Study was realized by funding from the Berlin University Alliance."
     }
   ],
-  "datePublished": "2025",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds006850.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds006850.v1.0.0",
     "https://openneuro.org/datasets/ds006850",
     "https://huggingface.co/datasets/EEGDash/ds006850"
   ],
-  "citeAs": "Carolina Zaehme, Isabelle Sander, Klaus Gramann (2025). Urban Appraisal: Physiological Recording during Rating of Different Urban Environments. doi:10.18112/openneuro.ds006850.v1.0.0",
+  "citeAs": "Carolina Zaehme, Isabelle Sander, Klaus Gramann (20). Urban Appraisal: Physiological Recording during Rating of Different Urban Environments. doi:10.18112/openneuro.ds006850.v1.0.0",
   "version": "unofficial extension",
-  "dateCreated": "2025-10-27",
-  "dateModified": "2025-10-30",
   "measurementTechnique": [
     "BIDS task: UrbanAppraisal"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Isabelle Sander"
-    }
   ],
   "distribution": [
     {

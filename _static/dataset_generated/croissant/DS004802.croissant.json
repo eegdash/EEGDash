@@ -72,29 +72,16 @@
       "name": "Marte Otten"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Marte Otten"
-  },
-  "datePublished": "2023",
   "identifier": "doi:10.18112/openneuro.ds004802.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004802.v1.0.0",
     "https://openneuro.org/datasets/ds004802",
     "https://huggingface.co/datasets/EEGDash/ds004802"
   ],
-  "citeAs": "Joe Bathelt, Marte Otten (2023). Pilot data for Loneliness in the Brain: Distinguishing Between Hypersensitivity and Hyperalertness. doi:10.18112/openneuro.ds004802.v1.0.0",
+  "citeAs": "Joe Bathelt, Marte Otten (n.d.). Pilot data for Loneliness in the Brain: Distinguishing Between Hypersensitivity and Hyperalertness. doi:10.18112/openneuro.ds004802.v1.0.0",
   "version": "1.8.0",
-  "dateCreated": "2023-10-17",
-  "dateModified": "2023-10-17",
   "measurementTechnique": [
     "BIDS task: RovingOddball"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Joe Bathelt"
-    }
   ],
   "distribution": [
     {

@@ -71,29 +71,17 @@
       "name": "Sarah Mednick"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Sarah Mednick"
-  },
-  "datePublished": "2025",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds006695.v1.0.2",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds006695.v1.0.2",
     "https://openneuro.org/datasets/ds006695",
     "https://huggingface.co/datasets/EEGDash/ds006695"
   ],
-  "citeAs": "Julie Onton, Sarah Mednick (2025). Validation of Sleep Staging with Forehead EEG Patch. doi:10.18112/openneuro.ds006695.v1.0.2",
+  "citeAs": "Julie Onton, Sarah Mednick (20). Validation of Sleep Staging with Forehead EEG Patch. doi:10.18112/openneuro.ds006695.v1.0.2",
   "version": "1.8.0",
-  "dateCreated": "2025-09-20",
-  "dateModified": "2025-09-20",
   "measurementTechnique": [
     "BIDS task: sleep"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Arnaud Delorme"
-    }
   ],
   "distribution": [
     {

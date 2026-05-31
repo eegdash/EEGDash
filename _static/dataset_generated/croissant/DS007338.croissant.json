@@ -76,10 +76,6 @@
       "name": "Nicolas Langer"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Nicolas Langer"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -90,24 +86,16 @@
       "name": "Schweizerischer Nationalfonds zur Förderungder Wissenschaftlichen Forschung (SNF) Grant 100014175875"
     }
   ],
-  "datePublished": "2026",
+  "datePublished": "2019",
   "identifier": "doi:10.18112/openneuro.ds007338.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds007338.v1.0.0",
     "https://openneuro.org/datasets/ds007338"
   ],
-  "citeAs": "Martyna Beata Płomecka, Ard Kastrati, Nicolas Langer (2026). EEGEyeNet Dataset. doi:10.18112/openneuro.ds007338.v1.0.0",
+  "citeAs": "Martyna Beata Płomecka, Ard Kastrati, Nicolas Langer (2019). EEGEyeNet Dataset. doi:10.18112/openneuro.ds007338.v1.0.0",
   "version": "1.7.0",
-  "dateCreated": "2026-01-27",
-  "dateModified": "2026-01-27",
   "measurementTechnique": [
     "BIDS task: dots"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Scott Huberty"
-    }
   ],
   "distribution": [
     {

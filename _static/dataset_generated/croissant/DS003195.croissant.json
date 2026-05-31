@@ -76,10 +76,6 @@
       "name": "Ivonne Pedroso Ibanez"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Ivonne Pedroso Ibanez"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -90,26 +86,18 @@
       "name": "CNS Program of UESTC (No. Y0301902610100201)"
     }
   ],
-  "datePublished": "2020",
+  "datePublished": "2019",
   "identifier": "doi:10.18112/openneuro.ds003195.v1.0.3",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds003195.v1.0.3",
     "https://openneuro.org/datasets/ds003195",
     "https://huggingface.co/datasets/EEGDash/ds003195"
   ],
-  "citeAs": "Maria Luisa Bringas Vega, Lilia Morales Chacon, Ivonne Pedroso Ibanez (2020). Placebo Neuroepo multisession. doi:10.18112/openneuro.ds003195.v1.0.3",
+  "citeAs": "Maria Luisa Bringas Vega, Lilia Morales Chacon, Ivonne Pedroso Ibanez (2019). Placebo Neuroepo multisession. doi:10.18112/openneuro.ds003195.v1.0.3",
   "version": "1.2.0",
-  "dateCreated": "2020-09-28",
-  "dateModified": "2022-09-20",
   "measurementTechnique": [
     "BIDS task: taskplacebo6m",
     "BIDS task: taskplacebopre"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Carlos López"
-    }
   ],
   "distribution": [
     {

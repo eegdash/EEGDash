@@ -88,30 +88,18 @@
       "name": "José María De La Roca Chiapas"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "José María De La Roca Chiapas"
-  },
-  "datePublished": "2024",
+  "datePublished": "2019",
   "identifier": "doi:10.18112/openneuro.ds005420.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005420.v1.0.0",
     "https://openneuro.org/datasets/ds005420",
     "https://huggingface.co/datasets/EEGDash/ds005420"
   ],
-  "citeAs": "Miriam de Jesús Sánchez Gama, Luis Alberto Barradas Chacón, Leticia Chacón Gutiérrez, Thalía Fernández Harmony, Carlos Augusto Novo Olivas (2024). Resting state EEG with closed eyes and open eyes in females from 60 to 80 years old. doi:10.18112/openneuro.ds005420.v1.0.0",
+  "citeAs": "Miriam de Jesús Sánchez Gama, Luis Alberto Barradas Chacón, Leticia Chacón Gutiérrez, Thalía Fernández Harmony, Carlos Augusto Novo Olivas (2019). Resting state EEG with closed eyes and open eyes in females from 60 to 80 years old. doi:10.18112/openneuro.ds005420.v1.0.0",
   "version": "1.7.0",
-  "dateCreated": "2024-08-21",
-  "dateModified": "2024-08-21",
   "measurementTechnique": [
     "BIDS task: oa",
     "BIDS task: oc"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Miriam Sánchez Gama"
-    }
   ],
   "distribution": [
     {

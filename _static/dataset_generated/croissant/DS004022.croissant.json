@@ -88,29 +88,16 @@
       "name": "Dong-Joo Kim"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Dong-Joo Kim"
-  },
-  "datePublished": "2022",
   "identifier": "doi:10.18112/openneuro.ds004022.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004022.v1.0.0",
     "https://openneuro.org/datasets/ds004022",
     "https://huggingface.co/datasets/EEGDash/ds004022"
   ],
-  "citeAs": "Seho Lee, Hee Ra Jung, In-Nea Wang, Min-Kyung Jung, Hakseung Kim (2022). Multimodal EEG and fNIRS Biosignal Acquisition during Motor Imagery Tasks in Patients with Orthopedic Impairment. doi:10.18112/openneuro.ds004022.v1.0.0",
+  "citeAs": "Seho Lee, Hee Ra Jung, In-Nea Wang, Min-Kyung Jung, Hakseung Kim (n.d.). Multimodal EEG and fNIRS Biosignal Acquisition during Motor Imagery Tasks in Patients with Orthopedic Impairment. doi:10.18112/openneuro.ds004022.v1.0.0",
   "version": "1.0.2",
-  "dateCreated": "2022-02-11",
-  "dateModified": "2022-02-09",
   "measurementTechnique": [
     "BIDS task: motorimagery"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "‍김동주[ 부교수 / 뇌공학과 ]"
-    }
   ],
   "distribution": [
     {

@@ -92,33 +92,20 @@
       "name": "Cassandra Vieten"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Cassandra Vieten"
-  },
-  "datePublished": "2025",
   "identifier": "doi:10.18112/openneuro.ds007006.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds007006.v1.0.0",
     "https://openneuro.org/datasets/ds007006",
     "https://huggingface.co/datasets/EEGDash/ds007006"
   ],
-  "citeAs": "Ying Wu, Enrique Carrillosulub, Leon Lange, Chloe Tanega, Nicole Wells (2025). VR-Compassion Cultivation Training. doi:10.18112/openneuro.ds007006.v1.0.0",
+  "citeAs": "Ying Wu, Enrique Carrillosulub, Leon Lange, Chloe Tanega, Nicole Wells (n.d.). VR-Compassion Cultivation Training. doi:10.18112/openneuro.ds007006.v1.0.0",
   "version": "v1.10.0",
-  "dateCreated": "2025-12-01",
-  "dateModified": "2025-12-01",
   "measurementTechnique": [
     "BIDS task: compTree",
     "BIDS task: ivan",
     "BIDS task: medBall",
     "BIDS task: postbaseline",
     "BIDS task: prebaseline"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Enrique Carrillosulub"
-    }
   ],
   "distribution": [
     {

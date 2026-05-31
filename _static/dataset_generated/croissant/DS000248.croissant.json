@@ -73,10 +73,6 @@
       "name": "Matti S Hämäläinen"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Matti S Hämäläinen"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -123,30 +119,18 @@
       "name": "ANR-14-NEUC-0002-01"
     }
   ],
-  "datePublished": "2018",
+  "datePublished": "2019",
   "identifier": "doi:10.18112/openneuro.ds000248.v1.2.4",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds000248.v1.2.4",
     "https://openneuro.org/datasets/ds000248",
     "https://huggingface.co/datasets/EEGDash/ds000248"
   ],
-  "citeAs": "Alexandre Gramfort, Matti S Hämäläinen (2018). MNE-Sample-Data. doi:10.18112/openneuro.ds000248.v1.2.4",
+  "citeAs": "Alexandre Gramfort, Matti S Hämäläinen (2019). MNE-Sample-Data. doi:10.18112/openneuro.ds000248.v1.2.4",
   "version": "1.4.0",
-  "dateCreated": "2018-03-30",
-  "dateModified": "2020-12-11",
   "measurementTechnique": [
     "BIDS task: audiovisual",
     "BIDS task: noise"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Mainak Jas"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Alexandre Gramfort"
-    }
   ],
   "distribution": [
     {

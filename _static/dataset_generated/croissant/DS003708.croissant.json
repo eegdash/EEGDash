@@ -81,35 +81,23 @@
       "name": "Multimodal Neuroimaging Laboratory at Mayo Clinic"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Multimodal Neuroimaging Laboratory at Mayo Clinic"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "R01 MH122258 CRCNS: Processing speed in the human connectome across the lifespan"
     }
   ],
-  "datePublished": "2021",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds003708.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds003708.v1.0.0",
     "https://openneuro.org/datasets/ds003708",
     "https://huggingface.co/datasets/EEGDash/ds003708"
   ],
-  "citeAs": "Dora Hermes, Gabriella Ojeda, Kai J. Miller, Multimodal Neuroimaging Laboratory at Mayo Clinic (2021). Basis profile curve identification to understand electrical stimulation effects in human brain networks. doi:10.18112/openneuro.ds003708.v1.0.0",
+  "citeAs": "Dora Hermes, Gabriella Ojeda, Kai J. Miller, Multimodal Neuroimaging Laboratory at Mayo Clinic (20). Basis profile curve identification to understand electrical stimulation effects in human brain networks. doi:10.18112/openneuro.ds003708.v1.0.0",
   "version": "v 1.3.0",
-  "dateCreated": "2021-06-23",
-  "dateModified": "2023-08-10",
   "measurementTechnique": [
     "BIDS task: ccep"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Dora Hermes"
-    }
   ],
   "distribution": [
     {

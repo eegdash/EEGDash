@@ -72,29 +72,17 @@
       "name": "Michael J Frank"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Michael J Frank"
-  },
-  "datePublished": "2023",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds004532.v1.2.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004532.v1.2.0",
     "https://openneuro.org/datasets/ds004532",
     "https://huggingface.co/datasets/EEGDash/ds004532"
   ],
-  "citeAs": "James F Cavanagh, Michael J Frank (2023). EEG: Probabilistic Selection Task (PST) + PST with Cabergoline Challenge. doi:10.18112/openneuro.ds004532.v1.2.0",
+  "citeAs": "James F Cavanagh, Michael J Frank (20). EEG: Probabilistic Selection Task (PST) + PST with Cabergoline Challenge. doi:10.18112/openneuro.ds004532.v1.2.0",
   "version": "1.1.1",
-  "dateCreated": "2023-03-15",
-  "dateModified": "2023-05-18",
   "measurementTechnique": [
     "BIDS task: PST"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "James F Cavanagh"
-    }
   ],
   "distribution": [
     {

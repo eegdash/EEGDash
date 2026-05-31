@@ -80,29 +80,16 @@
       "name": "Ruben Spies"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Ruben Spies"
-  },
-  "datePublished": "2021",
   "identifier": "doi:10.18112/openneuro.ds003810.v2.0.2",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds003810.v2.0.2",
     "https://openneuro.org/datasets/ds003810",
     "https://huggingface.co/datasets/EEGDash/ds003810"
   ],
-  "citeAs": "Victoria Peterson, Catalina Maria Galvan, Hugo Sacha Hernadez, Ruben Spies (2021). Motor Imagery vs Rest - Low-Cost EEG System. doi:10.18112/openneuro.ds003810.v2.0.2",
+  "citeAs": "Victoria Peterson, Catalina Maria Galvan, Hugo Sacha Hernadez, Ruben Spies (n.d.). Motor Imagery vs Rest - Low-Cost EEG System. doi:10.18112/openneuro.ds003810.v2.0.2",
   "version": "1.1.1",
-  "dateCreated": "2021-09-20",
-  "dateModified": "2021-11-09",
   "measurementTechnique": [
     "BIDS task: MIvsRest"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "María Paula Saavedra"
-    }
   ],
   "distribution": [
     {

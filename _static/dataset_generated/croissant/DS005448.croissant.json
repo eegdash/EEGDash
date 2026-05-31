@@ -101,10 +101,6 @@
       "name": "van Klink N.E.C."
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "van Klink N.E.C."
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -119,25 +115,17 @@
       "name": "MING foundation"
     }
   ],
-  "datePublished": "2024",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds005448.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005448.v1.0.0",
     "https://openneuro.org/datasets/ds005448",
     "https://huggingface.co/datasets/EEGDash/ds005448"
   ],
-  "citeAs": "Jelsma S.B., Zijlmans M., Heijink I.B., Hoefnagels F.W.A., Raemakers M (2024). STReEF. doi:10.18112/openneuro.ds005448.v1.0.0",
+  "citeAs": "Jelsma S.B., Zijlmans M., Heijink I.B., Hoefnagels F.W.A., Raemakers M (20). STReEF. doi:10.18112/openneuro.ds005448.v1.0.0",
   "version": "Brain Imaging Data Structure Specification v1.6.0",
-  "dateCreated": "2024-09-03",
-  "dateModified": "2024-10-08",
   "measurementTechnique": [
     "BIDS task: SPESclin"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Epilab UMCU"
-    }
   ],
   "distribution": [
     {

@@ -80,29 +80,17 @@
       "name": "Carlson, Thomas"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Carlson, Thomas"
-  },
-  "datePublished": "2022",
+  "datePublished": "2024",
   "identifier": "doi:10.18112/openneuro.ds004357.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004357.v1.0.1",
     "https://openneuro.org/datasets/ds004357",
     "https://huggingface.co/datasets/EEGDash/ds004357"
   ],
-  "citeAs": "Grootswagers, Tijl, Robinson, Amanda, Shatek, Sofia, Carlson, Thomas (2022). Features-EEG. doi:10.18112/openneuro.ds004357.v1.0.1",
+  "citeAs": "Grootswagers, Tijl, Robinson, Amanda, Shatek, Sofia, Carlson, Thomas (2024). Features-EEG. doi:10.18112/openneuro.ds004357.v1.0.1",
   "version": "1.0.2",
-  "dateCreated": "2022-12-08",
-  "dateModified": "2024-01-10",
   "measurementTechnique": [
     "BIDS task: rsvp"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Tijl Grootswagers"
-    }
   ],
   "distribution": [
     {

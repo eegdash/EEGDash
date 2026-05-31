@@ -76,35 +76,23 @@
       "name": "Maria Rodriguez-Fernandez"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Maria Rodriguez-Fernandez"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "Doctoral scholarship N 21211883 (2021)383 by Agencia Nacional de Investigacion y Desarrollo (ANID Chile)"
     }
   ],
-  "datePublished": "2022",
+  "datePublished": "2024",
   "identifier": "doi:10.18112/openneuro.ds004279.v1.1.2",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004279.v1.1.2",
     "https://openneuro.org/datasets/ds004279",
     "https://huggingface.co/datasets/EEGDash/ds004279"
   ],
-  "citeAs": "Carlos Valle Araya, Carolina Mendez-Orellana, Maria Rodriguez-Fernandez (2022). Large Spanish EEG. doi:10.18112/openneuro.ds004279.v1.1.2",
+  "citeAs": "Carlos Valle Araya, Carolina Mendez-Orellana, Maria Rodriguez-Fernandez (2024). Large Spanish EEG. doi:10.18112/openneuro.ds004279.v1.1.2",
   "version": "1.6.0",
-  "dateCreated": "2022-09-26",
-  "dateModified": "2024-11-29",
   "measurementTechnique": [
     "BIDS task: sentences"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Carlos Valle Araya"
-    }
   ],
   "distribution": [
     {

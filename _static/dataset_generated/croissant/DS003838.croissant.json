@@ -80,30 +80,17 @@
       "name": "Alexander I. Kotyusov"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Alexander I. Kotyusov"
-  },
-  "datePublished": "2021",
   "identifier": "doi:10.18112/openneuro.ds003838.v1.0.6",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds003838.v1.0.6",
     "https://openneuro.org/datasets/ds003838",
     "https://huggingface.co/datasets/EEGDash/ds003838"
   ],
-  "citeAs": "Yuri G. Pavlov, Dauren Kasanov, Alexandra I. Kosachenko, Alexander I. Kotyusov (2021). EEG, pupillometry, ECG and photoplethysmography, and behavioral data in the digit span task and rest. doi:10.18112/openneuro.ds003838.v1.0.6",
+  "citeAs": "Yuri G. Pavlov, Dauren Kasanov, Alexandra I. Kosachenko, Alexander I. Kotyusov (n.d.). EEG, pupillometry, ECG and photoplethysmography, and behavioral data in the digit span task and rest. doi:10.18112/openneuro.ds003838.v1.0.6",
   "version": "1.1.1",
-  "dateCreated": "2021-10-15",
-  "dateModified": "2024-02-11",
   "measurementTechnique": [
     "BIDS task: memory",
     "BIDS task: rest"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Yuri G. Pavlov"
-    }
   ],
   "distribution": [
     {

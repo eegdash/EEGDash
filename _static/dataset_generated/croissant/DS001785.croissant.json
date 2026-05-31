@@ -112,10 +112,6 @@
       "name": "Nathan Faivre"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Nathan Faivre"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -130,31 +126,19 @@
       "name": "European Research Council (ERC)"
     }
   ],
-  "datePublished": "2019",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds001785.v1.1.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds001785.v1.1.1",
     "https://openneuro.org/datasets/ds001785",
     "https://huggingface.co/datasets/EEGDash/ds001785"
   ],
-  "citeAs": "Michael Pereira, Pierre Mégevand, Mi Xue Tan, Wenwen Chang, Shuo Wang (2019). Evidence accumulation relates to perceptual consciousness and monitoring. doi:10.18112/openneuro.ds001785.v1.1.1",
+  "citeAs": "Michael Pereira, Pierre Mégevand, Mi Xue Tan, Wenwen Chang, Shuo Wang (20). Evidence accumulation relates to perceptual consciousness and monitoring. doi:10.18112/openneuro.ds001785.v1.1.1",
   "version": "1.1.1",
-  "dateCreated": "2019-03-08",
-  "dateModified": "2021-04-28",
   "measurementTechnique": [
     "BIDS task: adapt",
     "BIDS task: thrdown",
     "BIDS task: thrup"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Nathan Faivre"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Michael Pereira"
-    }
   ],
   "distribution": [
     {

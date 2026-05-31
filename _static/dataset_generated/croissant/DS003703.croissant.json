@@ -77,36 +77,24 @@
       "name": "Nina Kazanina"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Nina Kazanina"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "The study has been funded by the International Laboratory for Social Neuroscience of the Institute for Cognitive Neuroscience HSE, RF Government grant # 075-15-2019-1930."
     }
   ],
-  "datePublished": "2021",
+  "datePublished": "2019",
   "identifier": "doi:10.18112/openneuro.ds003703.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds003703.v1.0.0",
     "https://openneuro.org/datasets/ds003703",
     "https://huggingface.co/datasets/EEGDash/ds003703"
   ],
-  "citeAs": "Evgenii Kalenkovich, Anna Shestakova, Nina Kazanina (2021). Frequency Tagging of Syntactic Structure or Lexical Properties. doi:10.18112/openneuro.ds003703.v1.0.0",
+  "citeAs": "Evgenii Kalenkovich, Anna Shestakova, Nina Kazanina (2019). Frequency Tagging of Syntactic Structure or Lexical Properties. doi:10.18112/openneuro.ds003703.v1.0.0",
   "version": "1.4.0",
-  "dateCreated": "2021-06-18",
-  "dateModified": "2021-06-23",
   "measurementTechnique": [
     "BIDS task: listeningToSpeech",
     "BIDS task: rest"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Zhenya Kalenkovich"
-    }
   ],
   "distribution": [
     {

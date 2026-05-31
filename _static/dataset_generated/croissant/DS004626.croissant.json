@@ -76,10 +76,6 @@
       "name": "Łukasz Okruszek"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Łukasz Okruszek"
-  },
   "datePublished": "2023",
   "identifier": "doi:10.18112/openneuro.ds004626.v1.0.2",
   "sameAs": [
@@ -89,20 +85,8 @@
   ],
   "citeAs": "Szymon Mąka, Marta Chrustowicz, Łukasz Okruszek (2023). Can we dissociate hypervigilance to social threats from altered perceptual decision-making processes in lonely individuals? An exploration with Drift Diffusion Modelling and event-related potentials.. doi:10.18112/openneuro.ds004626.v1.0.2",
   "version": "1.8.0",
-  "dateCreated": "2023-07-06",
-  "dateModified": "2023-08-07",
   "measurementTechnique": [
     "BIDS task: DotProbe"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Łukasz Okruszek"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Szymon Mąka"
-    }
   ],
   "distribution": [
     {

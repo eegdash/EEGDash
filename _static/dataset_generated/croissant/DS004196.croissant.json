@@ -104,39 +104,22 @@
       "name": "Johan Eriksson"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Johan Eriksson"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "This research was funded by the Grants for excellent research projects proposals of SRT.ai 2022."
     }
   ],
-  "datePublished": "2022",
   "identifier": "doi:10.18112/openneuro.ds004196.v2.0.2",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004196.v2.0.2",
     "https://openneuro.org/datasets/ds004196",
     "https://huggingface.co/datasets/EEGDash/ds004196"
   ],
-  "citeAs": "Foteini Liwicki, Vibha Gupta, Rajkumar Saini, Kanjar De, Nosheen Abid (2022). Bimodal dataset on Inner speech. doi:10.18112/openneuro.ds004196.v2.0.2",
+  "citeAs": "Foteini Liwicki, Vibha Gupta, Rajkumar Saini, Kanjar De, Nosheen Abid (n.d.). Bimodal dataset on Inner speech. doi:10.18112/openneuro.ds004196.v2.0.2",
   "version": "1.4",
-  "dateCreated": "2022-07-07",
-  "dateModified": "2023-06-16",
   "measurementTechnique": [
     "BIDS task: inner"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Foteini Simistira Liwicki"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Rajkumar Saini"
-    }
   ],
   "distribution": [
     {

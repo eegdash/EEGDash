@@ -92,10 +92,6 @@
       "name": "Christian Barillot"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Christian Barillot"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -111,8 +107,6 @@
   ],
   "citeAs": "Giulia Lioi, Claire Cury, Lorraine Perronnet, Marsel Mano, Elise Bannier (2019). A multi-modal human neuroimaging dataset for data integration: simultaneous EEG and fMRI acquisition during a motor imagery neurofeedback task: XP1. doi:10.18112/openneuro.ds002336.v2.0.2",
   "version": "1.2.0",
-  "dateCreated": "2019-12-02",
-  "dateModified": "2021-06-07",
   "measurementTechnique": [
     "BIDS task: MIpost",
     "BIDS task: MIpre",
@@ -120,12 +114,6 @@
     "BIDS task: eegfmriNF",
     "BIDS task: fmriNF",
     "BIDS task: motorloc"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Claire Cury"
-    }
   ],
   "distribution": [
     {

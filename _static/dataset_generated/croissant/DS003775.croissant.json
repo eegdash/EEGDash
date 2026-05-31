@@ -76,29 +76,17 @@
       "name": "Stein Andersson"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Stein Andersson"
-  },
-  "datePublished": "2021",
+  "datePublished": "2022",
   "identifier": "doi:10.18112/openneuro.ds003775.v1.2.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds003775.v1.2.1",
     "https://openneuro.org/datasets/ds003775",
     "https://huggingface.co/datasets/EEGDash/ds003775"
   ],
-  "citeAs": "Christoffer Hatlestad-Hall, Trine Waage Rygvold, Stein Andersson (2021). SRM Resting-state EEG. doi:10.18112/openneuro.ds003775.v1.2.1",
+  "citeAs": "Christoffer Hatlestad-Hall, Trine Waage Rygvold, Stein Andersson (2022). SRM Resting-state EEG. doi:10.18112/openneuro.ds003775.v1.2.1",
   "version": "1.6.0",
-  "dateCreated": "2021-08-25",
-  "dateModified": "2022-11-23",
   "measurementTechnique": [
     "BIDS task: resteyesc"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Christoffer Hatlestad-Hall"
-    }
   ],
   "distribution": [
     {

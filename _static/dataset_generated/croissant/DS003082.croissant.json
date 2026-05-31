@@ -73,36 +73,24 @@
       "name": "Etienne de Villers-Sidani"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Etienne de Villers-Sidani"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "This work was funded in part by grants from the Natural Sciences and Engineering Research Council of Canada (NSERC), the Centre for Research on Brain, Language and Music (CRBLM), and the Reseau quebecois de recherche sur le vieillissement (RQRV)."
     }
   ],
-  "datePublished": "2020",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds003082.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds003082.v1.0.0",
     "https://openneuro.org/datasets/ds003082",
     "https://huggingface.co/datasets/EEGDash/ds003082"
   ],
-  "citeAs": "Jonathan Cote, Etienne de Villers-Sidani (2020). Auditory Cortex Mapping Dataset. doi:10.18112/openneuro.ds003082.v1.0.0",
+  "citeAs": "Jonathan Cote, Etienne de Villers-Sidani (20). Auditory Cortex Mapping Dataset. doi:10.18112/openneuro.ds003082.v1.0.0",
   "version": "1.2.0",
-  "dateCreated": "2020-08-17",
-  "dateModified": "2021-11-17",
   "measurementTechnique": [
     "BIDS task: mapping",
     "BIDS task: noise"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Jonathan Cote"
-    }
   ],
   "distribution": [
     {

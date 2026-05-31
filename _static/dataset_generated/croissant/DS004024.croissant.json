@@ -84,37 +84,25 @@
       "name": "Tommi Raij"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Tommi Raij"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "Dr. Ralph and Marian Falk Medical Research Trust"
     }
   ],
-  "datePublished": "2022",
+  "datePublished": "2019",
   "identifier": "doi:10.18112/openneuro.ds004024.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004024.v1.0.1",
     "https://openneuro.org/datasets/ds004024",
     "https://huggingface.co/datasets/EEGDash/ds004024"
   ],
-  "citeAs": "Julio Cesar Hernandez Pavon, Nils Schneider Garces, John Patrick Begnoche, Lee Miller, Tommi Raij (2022). TMS-EEG-MRI-fMRI-DWI data on paired associative stimulation and connectivity (Shirley Ryan AbilityLab, Chicago, IL). doi:10.18112/openneuro.ds004024.v1.0.1",
+  "citeAs": "Julio Cesar Hernandez Pavon, Nils Schneider Garces, John Patrick Begnoche, Lee Miller, Tommi Raij (2019). TMS-EEG-MRI-fMRI-DWI data on paired associative stimulation and connectivity (Shirley Ryan AbilityLab, Chicago, IL). doi:10.18112/openneuro.ds004024.v1.0.1",
   "version": "1.6.0",
-  "dateCreated": "2022-02-11",
-  "dateModified": "2022-10-19",
   "measurementTechnique": [
     "BIDS task: ccPAS",
     "BIDS task: rest",
     "BIDS task: spTMS"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Tommi Raij"
-    }
   ],
   "distribution": [
     {

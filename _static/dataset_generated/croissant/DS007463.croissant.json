@@ -129,19 +129,13 @@
       "name": "Joseph P. Culver"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Joseph P. Culver"
-  },
-  "datePublished": "2026",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds007463.v1.1.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds007463.v1.1.1",
     "https://openneuro.org/datasets/ds007463"
   ],
-  "citeAs": "Morgan Fogarty, Sean M. Rafferty, Zachary E. Markow, Anthony C. O’Sullivan, Calamity F. Svoboda (2026). Very-High-Density Diffuse Optical Tomography System Validation Dataset. doi:10.18112/openneuro.ds007463.v1.1.1",
-  "dateCreated": "2026-03-02",
-  "dateModified": "2026-03-06",
+  "citeAs": "Morgan Fogarty, Sean M. Rafferty, Zachary E. Markow, Anthony C. O’Sullivan, Calamity F. Svoboda (20). Very-High-Density Diffuse Optical Tomography System Validation Dataset. doi:10.18112/openneuro.ds007463.v1.1.1",
   "measurementTechnique": [
     "BIDS task: AC001",
     "BIDS task: AC002",
@@ -157,12 +151,6 @@
     "BIDS task: MOV002",
     "BIDS task: MOV003",
     "BIDS task: MOV004"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Morgan Fogarty"
-    }
   ],
   "distribution": [
     {

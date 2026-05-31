@@ -76,10 +76,6 @@
       "name": "Daniel Schneider"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Daniel Schneider"
-  },
   "datePublished": "2025",
   "identifier": "doi:10.18112/openneuro.ds006963.v1.0.1",
   "sameAs": [
@@ -89,16 +85,8 @@
   ],
   "citeAs": "Şahcan Özdemir, Eren Günseli, Daniel Schneider (2025). Motor Control Processes Moderate Visual Working Memory Gating Dataset. doi:10.18112/openneuro.ds006963.v1.0.1",
   "version": "v1.10.1",
-  "dateCreated": "2025-11-28",
-  "dateModified": "2026-04-21",
   "measurementTechnique": [
     "BIDS task: VisuomotorDelayedMatchToSampleWithInterference"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Şahcan Özdemir"
-    }
   ],
   "distribution": [
     {

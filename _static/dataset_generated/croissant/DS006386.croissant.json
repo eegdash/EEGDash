@@ -72,29 +72,17 @@
       "name": "Aonan He"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Aonan He"
-  },
-  "datePublished": "2025",
+  "datePublished": "2019",
   "identifier": "doi:10.18112/openneuro.ds006386.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds006386.v1.0.1",
     "https://openneuro.org/datasets/ds006386",
     "https://huggingface.co/datasets/EEGDash/ds006386"
   ],
-  "citeAs": "Jiangwei Yu, Aonan He (2025). PhysioMotion_Artifact. doi:10.18112/openneuro.ds006386.v1.0.1",
+  "citeAs": "Jiangwei Yu, Aonan He (2019). PhysioMotion_Artifact. doi:10.18112/openneuro.ds006386.v1.0.1",
   "version": "1.7.0",
-  "dateCreated": "2025-06-25",
-  "dateModified": "2026-02-11",
   "measurementTechnique": [
     "BIDS task: artifact"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Jiangwei Yu"
-    }
   ],
   "distribution": [
     {

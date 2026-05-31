@@ -99,8 +99,13 @@
     }
   ],
   "datePublished": "2019",
+  "identifier": "doi:10.82901/nemar.nm000167",
+  "sameAs": [
+    "https://doi.org/10.82901/nemar.nm000167",
+    "https://openneuro.org/datasets/nm000167"
+  ],
+  "citeAs": "Xuelin Ma, Shuang Qiu, Changde Du, Junfeng Xing, Huiguang He (2019). Motor imagery dataset from Ma et al. 2020. doi:10.82901/nemar.nm000167",
   "version": "1.9.0",
-  "dateModified": "2026-04-02",
   "measurementTechnique": [
     "BIDS task: imagery"
   ],
@@ -137,14 +142,6 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=nm000167",
       "encodingFormat": "text/html"
-    },
-    {
-      "@type": "cr:FileObject",
-      "@id": "nm000167-huggingface",
-      "name": "EEGDash/nm000167 on Hugging Face",
-      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
-      "contentUrl": "https://huggingface.co/datasets/EEGDash/nm000167",
-      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

@@ -96,34 +96,21 @@
       "name": "Grigorios Nasios"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Grigorios Nasios"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "No formal funding reported."
     }
   ],
-  "datePublished": "2026",
   "identifier": "doi:10.18112/openneuro.ds007314.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds007314.v1.0.0",
     "https://openneuro.org/datasets/ds007314"
   ],
-  "citeAs": "Maria Martzoukou, Nefeli K. Dimitriou, Binbin Xu, Malo Renaud-d’Ambra, Anastasia Nousia (2026). tACS for Patients with Post-Stroke Anomia. doi:10.18112/openneuro.ds007314.v1.0.0",
+  "citeAs": "Maria Martzoukou, Nefeli K. Dimitriou, Binbin Xu, Malo Renaud-d’Ambra, Anastasia Nousia (n.d.). tACS for Patients with Post-Stroke Anomia. doi:10.18112/openneuro.ds007314.v1.0.0",
   "version": "1.8.0",
-  "dateCreated": "2026-01-23",
-  "dateModified": "2026-04-03",
   "measurementTechnique": [
     "BIDS task: PictureNaming"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Maria Martzoukou"
-    }
   ],
   "distribution": [
     {

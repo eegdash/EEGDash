@@ -105,10 +105,6 @@
       "name": "C.J. Aine"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "C.J. Aine"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -135,17 +131,15 @@
       "name": "for the NNSA of the U.S. DOE under contract DE-AC52-06NA25396."
     }
   ],
-  "datePublished": "2022",
+  "datePublished": "2007",
   "identifier": "doi:10.18112/openneuro.ds004107.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004107.v1.0.0",
     "https://openneuro.org/datasets/ds004107",
     "https://huggingface.co/datasets/EEGDash/ds004107"
   ],
-  "citeAs": "M.P. Weisend, F.M. Hanlon, R. Montano, S.P. Ahlfors, A.C. Leuthold (2022). MIND DATA. doi:10.18112/openneuro.ds004107.v1.0.0",
+  "citeAs": "M.P. Weisend, F.M. Hanlon, R. Montano, S.P. Ahlfors, A.C. Leuthold (2007). MIND DATA. doi:10.18112/openneuro.ds004107.v1.0.0",
   "version": "1.6.0",
-  "dateCreated": "2022-04-22",
-  "dateModified": "2022-04-22",
   "measurementTechnique": [
     "BIDS task: auditory",
     "BIDS task: index",
@@ -153,12 +147,6 @@
     "BIDS task: noise",
     "BIDS task: rest",
     "BIDS task: visual"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Alexandre Gramfort"
-    }
   ],
   "distribution": [
     {

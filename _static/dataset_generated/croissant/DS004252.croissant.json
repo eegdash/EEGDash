@@ -88,29 +88,17 @@
       "name": "Thomas A. Carlson"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Thomas A. Carlson"
-  },
-  "datePublished": "2022",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds004252.v1.1.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004252.v1.1.0",
     "https://openneuro.org/datasets/ds004252",
     "https://huggingface.co/datasets/EEGDash/ds004252"
   ],
-  "citeAs": "Denise Moerel, Tijl Grootswagers, Amanda K. Robinson, Patrick Engeler, Alex O. Holcombe (2022). Rotation-tolerant representations elucidate the time course of high-level object processing. doi:10.18112/openneuro.ds004252.v1.1.0",
+  "citeAs": "Denise Moerel, Tijl Grootswagers, Amanda K. Robinson, Patrick Engeler, Alex O. Holcombe (20). Rotation-tolerant representations elucidate the time course of high-level object processing. doi:10.18112/openneuro.ds004252.v1.1.0",
   "version": "1.6.0",
-  "dateCreated": "2022-08-16",
-  "dateModified": "2026-04-15",
   "measurementTechnique": [
     "BIDS task: rsvp"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Denise Moerel"
-    }
   ],
   "distribution": [
     {

@@ -77,10 +77,6 @@
       "name": "Dora Hermes"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Dora Hermes"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -91,25 +87,17 @@
       "name": "National Institute of Health Grant R01MH122258 (DH)"
     }
   ],
-  "datePublished": "2025",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds006392.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds006392.v1.0.1",
     "https://openneuro.org/datasets/ds006392",
     "https://huggingface.co/datasets/EEGDash/ds006392"
   ],
-  "citeAs": "Tal Pal Attia, Kay Robbins, Dora Hermes (2025). HED schema library for SCORE annotations example. doi:10.18112/openneuro.ds006392.v1.0.1",
+  "citeAs": "Tal Pal Attia, Kay Robbins, Dora Hermes (20). HED schema library for SCORE annotations example. doi:10.18112/openneuro.ds006392.v1.0.1",
   "version": "1.9.0",
-  "dateCreated": "2025-06-25",
-  "dateModified": "2025-06-25",
   "measurementTechnique": [
     "BIDS task: photicstim"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Dora Hermes"
-    }
   ],
   "distribution": [
     {

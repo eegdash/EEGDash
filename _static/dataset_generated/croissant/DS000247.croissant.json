@@ -85,36 +85,24 @@
       "name": "Sylvain Baillet"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Sylvain Baillet"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "Quebec Bioimaging Network Strategic Initiative (QBIN 5886)"
     }
   ],
-  "datePublished": "2018",
+  "datePublished": "2016",
   "identifier": "doi:10.18112/openneuro.ds000247.v1.0.2",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds000247.v1.0.2",
     "https://openneuro.org/datasets/ds000247",
     "https://huggingface.co/datasets/EEGDash/ds000247"
   ],
-  "citeAs": "Guiomar Niso, Jeremy Moreau, Elizabeth Bock, Francois Tadel, Sylvain Baillet (2018). MEG-BIDS OMEGA RestingState_sample. doi:10.18112/openneuro.ds000247.v1.0.2",
+  "citeAs": "Guiomar Niso, Jeremy Moreau, Elizabeth Bock, Francois Tadel, Sylvain Baillet (2016). MEG-BIDS OMEGA RestingState_sample. doi:10.18112/openneuro.ds000247.v1.0.2",
   "version": "1.0.2",
-  "dateCreated": "2018-03-30",
-  "dateModified": "2024-04-24",
   "measurementTechnique": [
     "BIDS task: noise",
     "BIDS task: rest"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Julia Guiomar Niso Galán"
-    }
   ],
   "distribution": [
     {

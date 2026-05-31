@@ -97,39 +97,23 @@
       "name": "Kay Robbins (curation)"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Kay Robbins (curation)"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "This research was sponsored by the Army Research Laboratory and was accomplished under Cooperative Agreement Number W911NF-10-0-0002."
     }
   ],
-  "datePublished": "2022",
+  "datePublished": "19",
   "identifier": "doi:10.18112/openneuro.ds004118.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004118.v1.0.1",
     "https://openneuro.org/datasets/ds004118",
     "https://huggingface.co/datasets/EEGDash/ds004118"
   ],
-  "citeAs": "Jonathan Touryan (data and curation), Greg Apker (data), Brent Lance (data), Scott Kerick (data), Anthony Ries (data) (2022). BCIT Calibration Driving. doi:10.18112/openneuro.ds004118.v1.0.1",
+  "citeAs": "Jonathan Touryan (data and curation), Greg Apker (data), Brent Lance (data), Scott Kerick (data), Anthony Ries (data) (19). BCIT Calibration Driving. doi:10.18112/openneuro.ds004118.v1.0.1",
   "version": "1.7.0",
-  "dateCreated": "2022-05-02",
-  "dateModified": "2022-05-04",
   "measurementTechnique": [
     "BIDS task: Drive"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Kay Robbins"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Jonathan Touryan"
-    }
   ],
   "distribution": [
     {

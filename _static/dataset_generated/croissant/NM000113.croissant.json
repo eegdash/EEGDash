@@ -77,12 +77,10 @@
   "identifier": "doi:10.82901/nemar.nm000113",
   "sameAs": [
     "https://doi.org/10.82901/nemar.nm000113",
-    "https://openneuro.org/datasets/nm000113",
-    "https://huggingface.co/datasets/EEGDash/nm000113"
+    "https://openneuro.org/datasets/nm000113"
   ],
   "citeAs": "Seong-Whan Lee, Klaus-Robert Müller, José del R. Millán (20). 2020 BCI competition, track 3. doi:10.82901/nemar.nm000113",
   "version": "1.7.0",
-  "dateModified": "2026-03-14",
   "measurementTechnique": [
     "BIDS task: imaginedSpeech"
   ],
@@ -119,14 +117,6 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=nm000113",
       "encodingFormat": "text/html"
-    },
-    {
-      "@type": "cr:FileObject",
-      "@id": "nm000113-huggingface",
-      "name": "EEGDash/nm000113 on Hugging Face",
-      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
-      "contentUrl": "https://huggingface.co/datasets/EEGDash/nm000113",
-      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

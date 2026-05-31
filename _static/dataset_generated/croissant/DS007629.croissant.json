@@ -77,28 +77,15 @@
       "name": "David C. Jangraw"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "David C. Jangraw"
-  },
-  "datePublished": "2026",
-  "identifier": "doi:10.18112/openneuro.ds007629.v1.0.2",
+  "identifier": "doi:10.18112/openneuro.ds007629.v1.1.0",
   "sameAs": [
-    "https://doi.org/10.18112/openneuro.ds007629.v1.0.2",
+    "https://doi.org/10.18112/openneuro.ds007629.v1.1.0",
     "https://openneuro.org/datasets/ds007629"
   ],
-  "citeAs": "Haorui Sun, Ardyn Vivienne Olszko, Niharika Singh, David C. Jangraw (2026). ROAMM. doi:10.18112/openneuro.ds007629.v1.0.2",
+  "citeAs": "Haorui Sun, Ardyn Vivienne Olszko, Niharika Singh, David C. Jangraw (n.d.). ROAMM. doi:10.18112/openneuro.ds007629.v1.1.0",
   "version": "1.9.0",
-  "dateCreated": "2026-04-03",
-  "dateModified": "2026-04-08",
   "measurementTechnique": [
     "BIDS task: ReMind"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Haorui Sun"
-    }
   ],
   "distribution": [
     {

@@ -76,10 +76,6 @@
       "name": "Seyed-Mahdi Khaligh-Razavi"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Seyed-Mahdi Khaligh-Razavi"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -94,29 +90,16 @@
       "name": "GRANT #2"
     }
   ],
-  "datePublished": "2020",
   "identifier": "doi:10.18112/openneuro.ds002814.v1.3.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds002814.v1.3.0",
     "https://openneuro.org/datasets/ds002814",
     "https://huggingface.co/datasets/EEGDash/ds002814"
   ],
-  "citeAs": "Fatemeh Ebrahiminia, Morteza Mahdiani, Seyed-Mahdi Khaligh-Razavi (2020). A Multimodal Neuroimaging Dataset to Study Spatiotemporal Dynamics of Visual Processing in Humans. doi:10.18112/openneuro.ds002814.v1.3.0",
+  "citeAs": "Fatemeh Ebrahiminia, Morteza Mahdiani, Seyed-Mahdi Khaligh-Razavi (n.d.). A Multimodal Neuroimaging Dataset to Study Spatiotemporal Dynamics of Visual Processing in Humans. doi:10.18112/openneuro.ds002814.v1.3.0",
   "version": "1.0.1",
-  "dateCreated": "2020-05-20",
-  "dateModified": "2021-12-10",
   "measurementTechnique": [
     "BIDS task: categorySelectivity"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "morteza mahdiani"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Seyed-Mahdi Khaligh-Razavi"
-    }
   ],
   "distribution": [
     {

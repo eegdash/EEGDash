@@ -74,10 +74,6 @@
       "name": "István Winkler"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "István Winkler"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -92,28 +88,19 @@
       "name": "National Research, Development and Innovation Office, Hungary, grant PD123790 (BT)"
     }
   ],
-  "datePublished": "2022",
   "identifier": "doi:10.18112/openneuro.ds004075.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004075.v1.0.0",
     "https://openneuro.org/datasets/ds004075",
     "https://huggingface.co/datasets/EEGDash/ds004075"
   ],
-  "citeAs": "Adam Boncz, Brigitta Toth, István Winkler (2022). what_are_we_talking_about. doi:10.18112/openneuro.ds004075.v1.0.0",
+  "citeAs": "Adam Boncz, Brigitta Toth, István Winkler (n.d.). what_are_we_talking_about. doi:10.18112/openneuro.ds004075.v1.0.0",
   "version": "v1.7.0",
-  "dateCreated": "2022-03-18",
-  "dateModified": "2022-03-18",
   "measurementTechnique": [
     "BIDS task: context03",
     "BIDS task: context09",
     "BIDS task: context10",
     "BIDS task: context11"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Adam Boncz"
-    }
   ],
   "distribution": [
     {

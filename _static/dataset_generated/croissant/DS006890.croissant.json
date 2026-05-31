@@ -117,39 +117,26 @@
       "name": "Takufumi Yanagisawa"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Takufumi Yanagisawa"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "Grant JPMJER1801 from JST, JPMJMS2012 (TY) from Moonshot R&D, JPMJCR18A5 (TY) from CREST, JPMJCR24U2 (TY) from AIP"
     }
   ],
-  "datePublished": "2025",
   "identifier": "doi:10.18112/openneuro.ds006890.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds006890.v1.0.0",
     "https://openneuro.org/datasets/ds006890",
     "https://huggingface.co/datasets/EEGDash/ds006890"
   ],
-  "citeAs": "Huixiang Yang, Ryohei Fukuma, Tomoyuki Namima, Kotaro Okuda, Asaya Nishi (2025). Longitudinal Multitask Wireless ECoG Data from Two Fully Implanted Macaca fuscata. doi:10.18112/openneuro.ds006890.v1.0.0",
+  "citeAs": "Huixiang Yang, Ryohei Fukuma, Tomoyuki Namima, Kotaro Okuda, Asaya Nishi (n.d.). Longitudinal Multitask Wireless ECoG Data from Two Fully Implanted Macaca fuscata. doi:10.18112/openneuro.ds006890.v1.0.0",
   "version": "1.9.0",
-  "dateCreated": "2025-11-03",
-  "dateModified": "2025-11-04",
   "measurementTechnique": [
     "BIDS task: listening",
     "BIDS task: pressing",
     "BIDS task: reaching",
     "BIDS task: rest",
     "BIDS task: sep"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Huixiang Yang"
-    }
   ],
   "distribution": [
     {

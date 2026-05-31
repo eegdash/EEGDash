@@ -68,33 +68,20 @@
       "name": "anonymous"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "anonymous"
-  },
-  "datePublished": "2025",
   "identifier": "doi:10.18112/openneuro.ds006437.v1.1.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds006437.v1.1.0",
     "https://openneuro.org/datasets/ds006437",
     "https://huggingface.co/datasets/EEGDash/ds006437"
   ],
-  "citeAs": "anonymous (2025). LIGHT Hypnotherapy. doi:10.18112/openneuro.ds006437.v1.1.0",
+  "citeAs": "anonymous (n.d.). LIGHT Hypnotherapy. doi:10.18112/openneuro.ds006437.v1.1.0",
   "version": "v1.10.0",
-  "dateCreated": "2025-07-02",
-  "dateModified": "2025-08-21",
   "measurementTechnique": [
     "BIDS task: baseline0",
     "BIDS task: baseline1",
     "BIDS task: baseline4",
     "BIDS task: baseline8",
     "BIDS task: hypnotherapy"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Enrique Carrillosulub"
-    }
   ],
   "distribution": [
     {

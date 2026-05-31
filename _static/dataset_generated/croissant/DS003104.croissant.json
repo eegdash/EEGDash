@@ -85,37 +85,16 @@
       "name": "Richard Höchenberger"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Richard Höchenberger"
-  },
-  "datePublished": "2020",
   "identifier": "doi:10.18112/openneuro.ds003104.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds003104.v1.0.1",
     "https://openneuro.org/datasets/ds003104",
     "https://huggingface.co/datasets/EEGDash/ds003104"
   ],
-  "citeAs": "Lauri Parkkonen, Stefan Appelhoff, Alexandre Gramfort, Mainak Jas, Richard Höchenberger (2020). MNE-somato-data-bids (anonymized). doi:10.18112/openneuro.ds003104.v1.0.1",
+  "citeAs": "Lauri Parkkonen, Stefan Appelhoff, Alexandre Gramfort, Mainak Jas, Richard Höchenberger (n.d.). MNE-somato-data-bids (anonymized). doi:10.18112/openneuro.ds003104.v1.0.1",
   "version": "1.4.0",
-  "dateCreated": "2020-08-31",
-  "dateModified": "2026-03-13",
   "measurementTechnique": [
     "BIDS task: somato"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Richard Höchenberger"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Alexandre Gramfort"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Daniel McCloy"
-    }
   ],
   "distribution": [
     {

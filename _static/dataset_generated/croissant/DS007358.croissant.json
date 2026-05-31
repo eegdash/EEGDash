@@ -224,30 +224,18 @@
       "name": "Tara C. Thiagarajan"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Tara C. Thiagarajan"
-  },
-  "datePublished": "2026",
+  "datePublished": "2019",
   "identifier": "doi:10.18112/openneuro.ds007358.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds007358.v1.0.0",
     "https://openneuro.org/datasets/ds007358"
   ],
-  "citeAs": "John Mary Vianney, Shailender Swaminathan, Jennifer Jane Newson, Dhanya Parameshwaran, Narayan Puthanmadam Subramaniyam (2026). A subset of large-scale EEG dataset (India + Tanzania). doi:10.18112/openneuro.ds007358.v1.0.0",
+  "citeAs": "John Mary Vianney, Shailender Swaminathan, Jennifer Jane Newson, Dhanya Parameshwaran, Narayan Puthanmadam Subramaniyam (2019). A subset of large-scale EEG dataset (India + Tanzania). doi:10.18112/openneuro.ds007358.v1.0.0",
   "version": "1.8.0",
-  "dateCreated": "2026-02-04",
-  "dateModified": "2026-02-04",
   "measurementTechnique": [
     "BIDS task: ec",
     "BIDS task: eo",
     "BIDS task: pc"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Narayan Puthanmadam Subramaniyam"
-    }
   ],
   "distribution": [
     {

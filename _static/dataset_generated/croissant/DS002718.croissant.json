@@ -72,43 +72,22 @@
       "name": "Richard N Henson"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Richard N Henson"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "This work was supported by the UK Medical Research Council (MC_A060_5PR10) and Elekta Ltd."
     }
   ],
-  "datePublished": "2020",
   "identifier": "doi:10.18112/openneuro.ds002718.v1.1.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds002718.v1.1.0",
     "https://openneuro.org/datasets/ds002718",
     "https://huggingface.co/datasets/EEGDash/ds002718"
   ],
-  "citeAs": "Daniel G. Wakeman, Richard N Henson (2020). Face processing EEG dataset for EEGLAB. doi:10.18112/openneuro.ds002718.v1.1.0",
+  "citeAs": "Daniel G. Wakeman, Richard N Henson (n.d.). Face processing EEG dataset for EEGLAB. doi:10.18112/openneuro.ds002718.v1.1.0",
   "version": "v1.2.0",
-  "dateCreated": "2020-04-21",
-  "dateModified": "2025-11-08",
   "measurementTechnique": [
     "BIDS task: FaceRecognition"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Dung Truong"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Arnaud Delorme"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Annalisa Salazar"
-    }
   ],
   "distribution": [
     {

@@ -76,29 +76,16 @@
       "name": "José A. González-López"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "José A. González-López"
-  },
-  "datePublished": "2024",
   "identifier": "doi:10.18112/openneuro.ds005273.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005273.v1.0.0",
     "https://openneuro.org/datasets/ds005273",
     "https://huggingface.co/datasets/EEGDash/ds005273"
   ],
-  "citeAs": "Pablo Rodríguez-San Esteban, Ana B. Chica, José A. González-López (2024). Neural representation of consciously seen and unseen information. doi:10.18112/openneuro.ds005273.v1.0.0",
+  "citeAs": "Pablo Rodríguez-San Esteban, Ana B. Chica, José A. González-López (n.d.). Neural representation of consciously seen and unseen information. doi:10.18112/openneuro.ds005273.v1.0.0",
   "version": "1.7.0",
-  "dateCreated": "2024-06-21",
-  "dateModified": "2024-06-22",
   "measurementTechnique": [
     "BIDS task: 1"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Pablo Rodríguez-San Esteban"
-    }
   ],
   "distribution": [
     {

@@ -1,0 +1,161 @@
+{
+  "@context": {
+    "@language": "en",
+    "@vocab": "https://schema.org/",
+    "citeAs": "cr:citeAs",
+    "column": "cr:column",
+    "conformsTo": "dct:conformsTo",
+    "cr": "http://mlcommons.org/croissant/",
+    "data": {
+      "@id": "cr:data",
+      "@type": "@json"
+    },
+    "dataType": {
+      "@id": "cr:dataType",
+      "@type": "@vocab"
+    },
+    "dct": "http://purl.org/dc/terms/",
+    "extract": "cr:extract",
+    "field": "cr:field",
+    "fileObject": "cr:fileObject",
+    "fileProperty": "cr:fileProperty",
+    "fileSet": "cr:fileSet",
+    "format": "cr:format",
+    "includes": "cr:includes",
+    "isLiveDataset": "cr:isLiveDataset",
+    "jsonPath": "cr:jsonPath",
+    "key": "cr:key",
+    "md5": "cr:md5",
+    "parentField": "cr:parentField",
+    "path": "cr:path",
+    "recordSet": "cr:recordSet",
+    "references": "cr:references",
+    "regex": "cr:regex",
+    "repeated": "cr:repeated",
+    "replace": "cr:replace",
+    "sc": "https://schema.org/",
+    "separator": "cr:separator",
+    "source": "cr:source",
+    "subField": "cr:subField",
+    "transform": "cr:transform"
+  },
+  "@type": "sc:Dataset",
+  "conformsTo": "http://mlcommons.org/croissant/1.0",
+  "name": "on005510",
+  "alternateName": [
+    "ON005510"
+  ],
+  "description": "Healthy Brain Network (HBN) EEG - Release 6. eeg dataset accessible via EEGDash as `ON005510` with standardized BIDS metadata.",
+  "url": "https://eegdash.org/api/dataset/eegdash.dataset.ON005510.html",
+  "keywords": [
+    "EEG",
+    "BIDS",
+    "neuroscience"
+  ],
+  "isAccessibleForFree": true,
+  "includedInDataCatalog": {
+    "@type": "sc:DataCatalog",
+    "name": "EEG Dash",
+    "url": "https://eegdash.org/"
+  },
+  "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+  "creator": [
+    {
+      "@type": "sc:Person",
+      "name": "Seyed Yahya Shirazi"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Alexandre Franco"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Maurício Scopel Hoffmann"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Nathalia B. Esper"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Dung Truong"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Arnaud Delorme"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Michael Milham"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Scott Makeig"
+    }
+  ],
+  "funder": [
+    {
+      "@type": "sc:Organization",
+      "name": "See https://childmind.org/science/global-open-science/healthy-brain-network/#donors"
+    },
+    {
+      "@type": "sc:Organization",
+      "name": "NIH/NIMH R01MH125934 for BIDS data preparation"
+    }
+  ],
+  "datePublished": "20",
+  "identifier": "doi:10.82901/nemar.on005510",
+  "sameAs": [
+    "https://doi.org/10.82901/nemar.on005510",
+    "https://openneuro.org/datasets/on005510"
+  ],
+  "citeAs": "Seyed Yahya Shirazi, Alexandre Franco, Maurício Scopel Hoffmann, Nathalia B. Esper, Dung Truong (20). Healthy Brain Network (HBN) EEG - Release 6. doi:10.82901/nemar.on005510",
+  "version": "1.9.0",
+  "measurementTechnique": [
+    "BIDS task: DespicableMe",
+    "BIDS task: DiaryOfAWimpyKid",
+    "BIDS task: FunwithFractals",
+    "BIDS task: RestingState",
+    "BIDS task: ThePresent",
+    "BIDS task: contrastChangeDetection",
+    "BIDS task: seqLearning6target",
+    "BIDS task: seqLearning8target",
+    "BIDS task: surroundSupp",
+    "BIDS task: symbolSearch"
+  ],
+  "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "on005510-bids-bucket",
+      "name": "on005510 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for ON005510.",
+      "contentUrl": "s3://nemar/on005510",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "on005510-openneuro",
+      "name": "on005510 on OpenNeuro",
+      "description": "OpenNeuro dataset landing page.",
+      "contentUrl": "https://openneuro.org/datasets/on005510",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "on005510-eegdash-records",
+      "name": "on005510 EEGDash records (live)",
+      "description": "Live JSON listing of every recording in this dataset, with BIDS metadata, channel counts, and S3 storage keys.",
+      "contentUrl": "https://data.eegdash.org/api/eegdash/records?filter=%7B%22dataset%22%3A%22on005510%22%7D",
+      "encodingFormat": "application/json",
+      "isLiveDataset": true
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "on005510-nemar",
+      "name": "on005510 on NeMAR",
+      "description": "NEMAR dataset landing page with pipeline plots.",
+      "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=on005510",
+      "encodingFormat": "text/html"
+    }
+  ]
+}

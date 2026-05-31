@@ -72,37 +72,25 @@
       "name": "Melissa Beck"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Melissa Beck"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "n/a"
     }
   ],
-  "datePublished": "2025",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds006979.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds006979.v1.0.1",
     "https://openneuro.org/datasets/ds006979",
     "https://huggingface.co/datasets/EEGDash/ds006979"
   ],
-  "citeAs": "Hanane Ramzaoui, Melissa Beck (2025). Examining Perceptual Grouping on Stages of Processing in Visual Working Memory: An ERP Study. doi:10.18112/openneuro.ds006979.v1.0.1",
+  "citeAs": "Hanane Ramzaoui, Melissa Beck (20). Examining Perceptual Grouping on Stages of Processing in Visual Working Memory: An ERP Study. doi:10.18112/openneuro.ds006979.v1.0.1",
   "version": "1.7.0",
-  "dateCreated": "2025-11-30",
-  "dateModified": "2026-03-05",
   "measurementTechnique": [
     "BIDS task: rest",
     "BIDS task: test",
     "BIDS task: visualworkingmemorytask"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Hanane Ramzaoui"
-    }
   ],
   "distribution": [
     {

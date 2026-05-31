@@ -108,29 +108,16 @@
       "name": "Ioannis Kompatsiaris"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Ioannis Kompatsiaris"
-  },
-  "datePublished": "2023",
   "identifier": "doi:10.18112/openneuro.ds004588.v1.2.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004588.v1.2.0",
     "https://openneuro.org/datasets/ds004588",
     "https://huggingface.co/datasets/EEGDash/ds004588"
   ],
-  "citeAs": "Kostas Georgiadis, Fotis P. Kalaganis, Kyriakos Riskos, Eleytheria Matta, Vangelis P. Oikonomou (2023). Neuma. doi:10.18112/openneuro.ds004588.v1.2.0",
+  "citeAs": "Kostas Georgiadis, Fotis P. Kalaganis, Kyriakos Riskos, Eleytheria Matta, Vangelis P. Oikonomou (n.d.). Neuma. doi:10.18112/openneuro.ds004588.v1.2.0",
   "version": "1.8.0",
-  "dateCreated": "2023-06-01",
-  "dateModified": "2023-06-01",
   "measurementTechnique": [
     "BIDS task: unnamed"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Kostas Georgiadis"
-    }
   ],
   "distribution": [
     {

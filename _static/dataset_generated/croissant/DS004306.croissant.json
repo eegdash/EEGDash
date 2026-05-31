@@ -80,35 +80,22 @@
       "name": "Eamonn O'Neill"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Eamonn O'Neill"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "EPSRC"
     }
   ],
-  "datePublished": "2022",
   "identifier": "doi:10.18112/openneuro.ds004306.v1.0.2",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004306.v1.0.2",
     "https://openneuro.org/datasets/ds004306",
     "https://huggingface.co/datasets/EEGDash/ds004306"
   ],
-  "citeAs": "Holly Wilson, Mohammad Golbabaee, Michael Proulx, Eamonn O'Neill (2022). EEG Semantic Imagination and Perception Dataset. doi:10.18112/openneuro.ds004306.v1.0.2",
+  "citeAs": "Holly Wilson, Mohammad Golbabaee, Michael Proulx, Eamonn O'Neill (n.d.). EEG Semantic Imagination and Perception Dataset. doi:10.18112/openneuro.ds004306.v1.0.2",
   "version": "1.7.0",
-  "dateCreated": "2022-10-25",
-  "dateModified": "2023-09-27",
   "measurementTechnique": [
     "BIDS task: experiment"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Holly Wilson"
-    }
   ],
   "distribution": [
     {

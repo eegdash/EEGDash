@@ -88,29 +88,16 @@
       "name": "Nandakumar Narayanan nandakumar-narayanan@uiowa.edu"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Nandakumar Narayanan nandakumar-narayanan@uiowa.edu"
-  },
-  "datePublished": "2023",
   "identifier": "doi:10.18112/openneuro.ds004579.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004579.v1.0.0",
     "https://openneuro.org/datasets/ds004579",
     "https://huggingface.co/datasets/EEGDash/ds004579"
   ],
-  "citeAs": "Arun Singh arun.singh@usd.edu, Rachel Cole rachel-cole@uiowa.edu, Arturo Espinoza arturo-espinoza@uiowa.edu, Jan R Wessel jan-wessel@uiowa.edu, Jim Cavanagh jcavanagh@unm.edu (2023). Interval Timing Task. doi:10.18112/openneuro.ds004579.v1.0.0",
+  "citeAs": "Arun Singh arun.singh@usd.edu, Rachel Cole rachel-cole@uiowa.edu, Arturo Espinoza arturo-espinoza@uiowa.edu, Jan R Wessel jan-wessel@uiowa.edu, Jim Cavanagh jcavanagh@unm.edu (n.d.). Interval Timing Task. doi:10.18112/openneuro.ds004579.v1.0.0",
   "version": "v1.2.1",
-  "dateCreated": "2023-05-25",
-  "dateModified": "2023-05-25",
   "measurementTechnique": [
     "BIDS task: IntervalTiming"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Nandakumar Narayanan"
-    }
   ],
   "distribution": [
     {

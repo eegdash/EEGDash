@@ -117,33 +117,17 @@
       "name": "Maarten De Vos"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Maarten De Vos"
-  },
-  "datePublished": "2025",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds005873.v1.1.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005873.v1.1.0",
     "https://openneuro.org/datasets/ds005873",
     "https://huggingface.co/datasets/EEGDash/ds005873"
   ],
-  "citeAs": "Miguel Bhagubai, Christos Chatzichristos, Lauren Swinnen, Jaiver Macea, Jingwei Zhang (2025). SeizeIT2. doi:10.18112/openneuro.ds005873.v1.1.0",
+  "citeAs": "Miguel Bhagubai, Christos Chatzichristos, Lauren Swinnen, Jaiver Macea, Jingwei Zhang (20). SeizeIT2. doi:10.18112/openneuro.ds005873.v1.1.0",
   "version": "1.8.0",
-  "dateCreated": "2025-01-23",
-  "dateModified": "2025-03-17",
   "measurementTechnique": [
     "BIDS task: szMonitoring"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Christos Chatzichristos"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Miguel Bhagubai"
-    }
   ],
   "distribution": [
     {

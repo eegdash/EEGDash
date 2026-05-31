@@ -69,29 +69,16 @@
       "name": "Prof. Pengfei Xu"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Prof. Pengfei Xu"
-  },
-  "datePublished": "2024",
   "identifier": "doi:10.18112/openneuro.ds005670.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005670.v1.0.0",
     "https://openneuro.org/datasets/ds005670",
     "https://huggingface.co/datasets/EEGDash/ds005670"
   ],
-  "citeAs": "Prof. Pengfei Xu (2024). SEEG Resting State Recording. doi:10.18112/openneuro.ds005670.v1.0.0",
+  "citeAs": "Prof. Pengfei Xu (n.d.). SEEG Resting State Recording. doi:10.18112/openneuro.ds005670.v1.0.0",
   "version": "1.10.0",
-  "dateCreated": "2024-11-29",
-  "dateModified": "2024-11-29",
   "measurementTechnique": [
     "BIDS task: rest"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "CCN Beijing"
-    }
   ],
   "distribution": [
     {

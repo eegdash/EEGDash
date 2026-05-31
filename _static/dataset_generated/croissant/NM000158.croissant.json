@@ -119,8 +119,13 @@
     }
   ],
   "datePublished": "2022",
+  "identifier": "doi:10.82901/nemar.nm000158",
+  "sameAs": [
+    "https://doi.org/10.82901/nemar.nm000158",
+    "https://openneuro.org/datasets/nm000158"
+  ],
+  "citeAs": "Haijie Liu, Penghu Wei, Haochong Wang, Xiaodong Lv, Wei Duan (2022). Liu, Lv et al. 2023 — EEG datasets of stroke patients (motor imagery). doi:10.82901/nemar.nm000158",
   "version": "1.9.0",
-  "dateModified": "2026-04-11",
   "measurementTechnique": [
     "BIDS task: imagery"
   ],
@@ -157,14 +162,6 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=nm000158",
       "encodingFormat": "text/html"
-    },
-    {
-      "@type": "cr:FileObject",
-      "@id": "nm000158-huggingface",
-      "name": "EEGDash/nm000158 on Hugging Face",
-      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
-      "contentUrl": "https://huggingface.co/datasets/EEGDash/nm000158",
-      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

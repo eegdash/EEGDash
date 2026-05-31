@@ -76,29 +76,16 @@
       "name": "Laurence T. Hunt"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Laurence T. Hunt"
-  },
-  "datePublished": "2022",
   "identifier": "doi:10.18112/openneuro.ds004152.v1.1.2",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004152.v1.1.2",
     "https://openneuro.org/datasets/ds004152",
     "https://huggingface.co/datasets/EEGDash/ds004152"
   ],
-  "citeAs": "Cameron D. Hassall, Yan Yan, Laurence T. Hunt (2022). Drum Trainer. doi:10.18112/openneuro.ds004152.v1.1.2",
+  "citeAs": "Cameron D. Hassall, Yan Yan, Laurence T. Hunt (n.d.). Drum Trainer. doi:10.18112/openneuro.ds004152.v1.1.2",
   "version": "1.2.1",
-  "dateCreated": "2022-06-14",
-  "dateModified": "2022-09-07",
   "measurementTechnique": [
     "BIDS task: drumtrainer"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Cameron Hassall"
-    }
   ],
   "distribution": [
     {

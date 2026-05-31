@@ -1,0 +1,145 @@
+{
+  "@context": {
+    "@language": "en",
+    "@vocab": "https://schema.org/",
+    "citeAs": "cr:citeAs",
+    "column": "cr:column",
+    "conformsTo": "dct:conformsTo",
+    "cr": "http://mlcommons.org/croissant/",
+    "data": {
+      "@id": "cr:data",
+      "@type": "@json"
+    },
+    "dataType": {
+      "@id": "cr:dataType",
+      "@type": "@vocab"
+    },
+    "dct": "http://purl.org/dc/terms/",
+    "extract": "cr:extract",
+    "field": "cr:field",
+    "fileObject": "cr:fileObject",
+    "fileProperty": "cr:fileProperty",
+    "fileSet": "cr:fileSet",
+    "format": "cr:format",
+    "includes": "cr:includes",
+    "isLiveDataset": "cr:isLiveDataset",
+    "jsonPath": "cr:jsonPath",
+    "key": "cr:key",
+    "md5": "cr:md5",
+    "parentField": "cr:parentField",
+    "path": "cr:path",
+    "recordSet": "cr:recordSet",
+    "references": "cr:references",
+    "regex": "cr:regex",
+    "repeated": "cr:repeated",
+    "replace": "cr:replace",
+    "sc": "https://schema.org/",
+    "separator": "cr:separator",
+    "source": "cr:source",
+    "subField": "cr:subField",
+    "transform": "cr:transform"
+  },
+  "@type": "sc:Dataset",
+  "conformsTo": "http://mlcommons.org/croissant/1.0",
+  "name": "ds007788",
+  "alternateName": [
+    "DS007788"
+  ],
+  "description": "Dataset: EEG-Controlled Exoskeleton for Walking and Standing - A Longitudinal Study of Healthy Individuals. eeg dataset accessible via EEGDash as `DS007788` with standardized BIDS metadata.",
+  "url": "https://eegdash.org/api/dataset/eegdash.dataset.DS007788.html",
+  "keywords": [
+    "EEG",
+    "BIDS",
+    "neuroscience"
+  ],
+  "isAccessibleForFree": true,
+  "includedInDataCatalog": {
+    "@type": "sc:DataCatalog",
+    "name": "EEG Dash",
+    "url": "https://eegdash.org/"
+  },
+  "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "creator": [
+    {
+      "@type": "sc:Person",
+      "name": "Shantanu Sarkar"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Kevin Nathan"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Jose L. Contreras-Vidal"
+    }
+  ],
+  "funder": [
+    {
+      "@type": "sc:Organization",
+      "name": "UH–Methodist Graduate Fellowship for Translational Research"
+    },
+    {
+      "@type": "sc:Organization",
+      "name": "NSF IUCRC BRAIN Center Award #2137255"
+    }
+  ],
+  "identifier": "doi:10.18112/openneuro.ds007788.v1.0.1",
+  "sameAs": [
+    "https://doi.org/10.18112/openneuro.ds007788.v1.0.1",
+    "https://openneuro.org/datasets/ds007788"
+  ],
+  "citeAs": "Shantanu Sarkar, Kevin Nathan, Jose L. Contreras-Vidal (n.d.). Dataset: EEG-Controlled Exoskeleton for Walking and Standing - A Longitudinal Study of Healthy Individuals. doi:10.18112/openneuro.ds007788.v1.0.1",
+  "version": "1.8.0",
+  "measurementTechnique": [
+    "BIDS task: stop6min",
+    "BIDS task: training",
+    "BIDS task: trial01",
+    "BIDS task: trial02",
+    "BIDS task: trial03",
+    "BIDS task: trial04",
+    "BIDS task: trial05",
+    "BIDS task: trial06",
+    "BIDS task: trial07",
+    "BIDS task: trial08",
+    "BIDS task: trial09",
+    "BIDS task: trial10",
+    "BIDS task: trial11",
+    "BIDS task: trial12",
+    "BIDS task: walk6min"
+  ],
+  "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007788-bids-bucket",
+      "name": "ds007788 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS007788.",
+      "contentUrl": "s3://openneuro.org/ds007788",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007788-openneuro",
+      "name": "ds007788 on OpenNeuro",
+      "description": "OpenNeuro dataset landing page.",
+      "contentUrl": "https://openneuro.org/datasets/ds007788",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007788-eegdash-records",
+      "name": "ds007788 EEGDash records (live)",
+      "description": "Live JSON listing of every recording in this dataset, with BIDS metadata, channel counts, and S3 storage keys.",
+      "contentUrl": "https://data.eegdash.org/api/eegdash/records?filter=%7B%22dataset%22%3A%22ds007788%22%7D",
+      "encodingFormat": "application/json",
+      "isLiveDataset": true
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007788-nemar",
+      "name": "ds007788 on NeMAR",
+      "description": "NEMAR dataset landing page with pipeline plots.",
+      "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=ds007788",
+      "encodingFormat": "text/html"
+    }
+  ]
+}

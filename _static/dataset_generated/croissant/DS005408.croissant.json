@@ -72,35 +72,23 @@
       "name": "Ross K. Maddox"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Ross K. Maddox"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "NIDCD R01DC017962"
     }
   ],
-  "datePublished": "2024",
+  "datePublished": "2025",
   "identifier": "doi:10.18112/openneuro.ds005408.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005408.v1.0.1",
     "https://openneuro.org/datasets/ds005408",
     "https://huggingface.co/datasets/EEGDash/ds005408"
   ],
-  "citeAs": "Melissa J. Polonenko, Ross K. Maddox (2024). The effect of speech masking on the human subcortical response to continuous speech. doi:10.18112/openneuro.ds005408.v1.0.1",
+  "citeAs": "Melissa J. Polonenko, Ross K. Maddox (2025). The effect of speech masking on the human subcortical response to continuous speech. doi:10.18112/openneuro.ds005408.v1.0.1",
   "version": "1.7.0",
-  "dateCreated": "2024-08-10",
-  "dateModified": "2026-04-07",
   "measurementTechnique": [
     "BIDS task: peakysnr"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Melissa Polonenko"
-    }
   ],
   "distribution": [
     {

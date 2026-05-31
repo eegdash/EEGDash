@@ -76,29 +76,17 @@
       "name": "Ian Daly"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Ian Daly"
-  },
-  "datePublished": "2023",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds004517.v1.0.2",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004517.v1.0.2",
     "https://openneuro.org/datasets/ds004517",
     "https://huggingface.co/datasets/EEGDash/ds004517"
   ],
-  "citeAs": "Milan Rybář, Riccardo Poli, Ian Daly (2023). EEG recordings for semantic decoding of imagined animals and tools during auditory imagery task. doi:10.18112/openneuro.ds004517.v1.0.2",
+  "citeAs": "Milan Rybář, Riccardo Poli, Ian Daly (20). EEG recordings for semantic decoding of imagined animals and tools during auditory imagery task. doi:10.18112/openneuro.ds004517.v1.0.2",
   "version": "1.7.0",
-  "dateCreated": "2023-03-03",
-  "dateModified": "2025-04-03",
   "measurementTechnique": [
     "BIDS task: eeg"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Milan Rybář"
-    }
   ],
   "distribution": [
     {

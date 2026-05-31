@@ -84,29 +84,17 @@
       "name": "Bojana Mirkovic"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Bojana Mirkovic"
-  },
-  "datePublished": "2021",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds003516.v1.1.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds003516.v1.1.1",
     "https://openneuro.org/datasets/ds003516",
     "https://huggingface.co/datasets/EEGDash/ds003516"
   ],
-  "citeAs": "Bjoern Holtze, Manuela Jaeger, Stefan Debener, Kamil Adiloglu, Bojana Mirkovic (2021). EEG: Attended Speaker Paradigm (Own Name in Ignored Stream). doi:10.18112/openneuro.ds003516.v1.1.1",
+  "citeAs": "Bjoern Holtze, Manuela Jaeger, Stefan Debener, Kamil Adiloglu, Bojana Mirkovic (20). EEG: Attended Speaker Paradigm (Own Name in Ignored Stream). doi:10.18112/openneuro.ds003516.v1.1.1",
   "version": "v5.2",
-  "dateCreated": "2021-02-12",
-  "dateModified": "2022-10-04",
   "measurementTechnique": [
     "BIDS task: AttendedSpeakerParadigmOwnName"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Björn Holtze"
-    }
   ],
   "distribution": [
     {

@@ -81,10 +81,6 @@
       "name": "Johannes Sarnthein"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Johannes Sarnthein"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -95,29 +91,17 @@
       "name": "Alexander S Onassis Foundation PhD Scholarship"
     }
   ],
-  "datePublished": "2023",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds004752.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004752.v1.0.1",
     "https://openneuro.org/datasets/ds004752",
     "https://huggingface.co/datasets/EEGDash/ds004752"
   ],
-  "citeAs": "Vasileios Dimakopoulos, Lennart Stieglitz, Lukas Imbach, Johannes Sarnthein (2023). Dataset of intracranial EEG, scalp EEG and beamforming sources from epilepsy patients performing a verbal working memory task. doi:10.18112/openneuro.ds004752.v1.0.1",
+  "citeAs": "Vasileios Dimakopoulos, Lennart Stieglitz, Lukas Imbach, Johannes Sarnthein (20). Dataset of intracranial EEG, scalp EEG and beamforming sources from epilepsy patients performing a verbal working memory task. doi:10.18112/openneuro.ds004752.v1.0.1",
   "version": "1.4.0",
-  "dateCreated": "2023-09-13",
-  "dateModified": "2023-09-20",
   "measurementTechnique": [
     "BIDS task: verbalWM"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Vasileios S. Dimakopoulos"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Johannes Sarnthein"
-    }
   ],
   "distribution": [
     {

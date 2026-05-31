@@ -68,29 +68,17 @@
       "name": "Yuri G. Pavlov"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Yuri G. Pavlov"
-  },
-  "datePublished": "2024",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds005410.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005410.v1.0.1",
     "https://openneuro.org/datasets/ds005410",
     "https://huggingface.co/datasets/EEGDash/ds005410"
   ],
-  "citeAs": "Yuri G. Pavlov (2024). Semantic_conditioning. doi:10.18112/openneuro.ds005410.v1.0.1",
+  "citeAs": "Yuri G. Pavlov (20). Semantic_conditioning. doi:10.18112/openneuro.ds005410.v1.0.1",
   "version": "1.8.0",
-  "dateCreated": "2024-08-13",
-  "dateModified": "2024-08-26",
   "measurementTechnique": [
     "BIDS task: conditioning"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Yuri G. Pavlov"
-    }
   ],
   "distribution": [
     {

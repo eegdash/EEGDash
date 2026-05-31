@@ -137,19 +137,13 @@
       "name": "Joseph P Culver"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Joseph P Culver"
-  },
-  "datePublished": "2026",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds007473.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds007473.v1.0.0",
     "https://openneuro.org/datasets/ds007473"
   ],
-  "citeAs": "Morgan Fogarty, Kalyan Tripathy, Alexandra M Svoboda, Mariel L Schroeder, Sean M Rafferty (2026). High-Density Diffuse Optical Tomography Audiovisual Movie Viewing Dataset. doi:10.18112/openneuro.ds007473.v1.0.0",
-  "dateCreated": "2026-03-05",
-  "dateModified": "2026-03-05",
+  "citeAs": "Morgan Fogarty, Kalyan Tripathy, Alexandra M Svoboda, Mariel L Schroeder, Sean M Rafferty (20). High-Density Diffuse Optical Tomography Audiovisual Movie Viewing Dataset. doi:10.18112/openneuro.ds007473.v1.0.0",
   "measurementTechnique": [
     "BIDS task: CCW001",
     "BIDS task: CCW002",
@@ -170,12 +164,6 @@
     "BIDS task: MOV007",
     "BIDS task: MOV008",
     "BIDS task: MOV009"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Morgan Fogarty"
-    }
   ],
   "distribution": [
     {

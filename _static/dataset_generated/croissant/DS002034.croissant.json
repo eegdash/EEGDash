@@ -80,10 +80,6 @@
       "name": "Jose del R. Millan"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Jose del R. Millan"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -99,23 +95,11 @@
   ],
   "citeAs": "Christoph Schneider, Michael Pereira, Luca Tonin, Jose del R. Millan (2019). Real-time EEG feedback on alpha power lateralization leads to behavioral improvements in a covert attention task. doi:10.18112/openneuro.ds002034.v1.0.3",
   "version": "1.1.1",
-  "dateCreated": "2019-07-13",
-  "dateModified": "2022-04-08",
   "measurementTechnique": [
     "BIDS task: offline",
     "BIDS task: offlinecatch",
     "BIDS task: onlinereal",
     "BIDS task: onlinesham"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Michael Pereira"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Christoph Schneider"
-    }
   ],
   "distribution": [
     {

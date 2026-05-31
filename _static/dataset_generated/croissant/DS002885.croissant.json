@@ -75,38 +75,26 @@
       "name": "Esther Florin"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Esther Florin"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "Volkswagen Foundation (Lichtenberg program 89387)"
     }
   ],
-  "datePublished": "2020",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds002885.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds002885.v1.0.1",
     "https://openneuro.org/datasets/ds002885",
     "https://huggingface.co/datasets/EEGDash/ds002885"
   ],
-  "citeAs": "Ahmet Levent Kandemir, Vladimir Litvak, Esther Florin (2020). DBS Phantom Recordings. doi:10.18112/openneuro.ds002885.v1.0.1",
+  "citeAs": "Ahmet Levent Kandemir, Vladimir Litvak, Esther Florin (20). DBS Phantom Recordings. doi:10.18112/openneuro.ds002885.v1.0.1",
   "version": "1.2",
-  "dateCreated": "2020-06-05",
-  "dateModified": "2020-06-24",
   "measurementTechnique": [
     "BIDS task: DMW",
     "BIDS task: DSMW",
     "BIDS task: EmptyRoom",
     "BIDS task: Reference"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Ahmet Levent Kandemir"
-    }
   ],
   "distribution": [
     {

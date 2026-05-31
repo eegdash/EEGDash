@@ -72,30 +72,17 @@
       "name": "Dauren Kasanov"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Dauren Kasanov"
-  },
-  "datePublished": "2024",
   "identifier": "doi:10.18112/openneuro.ds005034.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005034.v1.0.1",
     "https://openneuro.org/datasets/ds005034",
     "https://huggingface.co/datasets/EEGDash/ds005034"
   ],
-  "citeAs": "Yuri G. Pavlov, Dauren Kasanov (2024). The effect of theta tACS on working memory. doi:10.18112/openneuro.ds005034.v1.0.1",
+  "citeAs": "Yuri G. Pavlov, Dauren Kasanov (n.d.). The effect of theta tACS on working memory. doi:10.18112/openneuro.ds005034.v1.0.1",
   "version": "1.8.0",
-  "dateCreated": "2024-03-13",
-  "dateModified": "2024-03-21",
   "measurementTechnique": [
     "BIDS task: memory",
     "BIDS task: rest"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Yuri G. Pavlov"
-    }
   ],
   "distribution": [
     {

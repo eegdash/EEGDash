@@ -72,29 +72,17 @@
       "name": "[Michael Kahana]"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "[Michael Kahana]"
-  },
-  "datePublished": "2025",
+  "datePublished": "2019",
   "identifier": "doi:10.18112/openneuro.ds005857.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005857.v1.0.0",
     "https://openneuro.org/datasets/ds005857",
     "https://huggingface.co/datasets/EEGDash/ds005857"
   ],
-  "citeAs": "[Adam Broitman], [Michael Kahana] (2025). ltpDelayRepFRReadOnly. doi:10.18112/openneuro.ds005857.v1.0.0",
+  "citeAs": "[Adam Broitman], [Michael Kahana] (2019). ltpDelayRepFRReadOnly. doi:10.18112/openneuro.ds005857.v1.0.0",
   "version": "1.7.0",
-  "dateCreated": "2025-01-16",
-  "dateModified": "2025-04-02",
   "measurementTechnique": [
     "BIDS task: ltpDelayRepFRReadOnly"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Adam Broitman"
-    }
   ],
   "distribution": [
     {

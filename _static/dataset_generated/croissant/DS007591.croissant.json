@@ -96,36 +96,23 @@
       "name": "Shuntaro Sasai"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Shuntaro Sasai"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "JST, Moonshot R&D Grant Number JPMJMS2012"
     }
   ],
-  "datePublished": "2026",
   "identifier": "doi:10.18112/openneuro.ds007591.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds007591.v1.0.1",
     "https://openneuro.org/datasets/ds007591"
   ],
-  "citeAs": "Motoshige Sato, Yasuo Kabe, Sensho Nobe, Akito Yoshida, Masakazu Inoue (2026). Delineating neural contributions to EEG-based speech decoding. doi:10.18112/openneuro.ds007591.v1.0.1",
+  "citeAs": "Motoshige Sato, Yasuo Kabe, Sensho Nobe, Akito Yoshida, Masakazu Inoue (n.d.). Delineating neural contributions to EEG-based speech decoding. doi:10.18112/openneuro.ds007591.v1.0.1",
   "version": "1.9.0",
-  "dateCreated": "2026-03-28",
-  "dateModified": "2026-03-31",
   "measurementTechnique": [
     "BIDS task: covert",
     "BIDS task: minimallyovert",
     "BIDS task: overt"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Motoshige Sato"
-    }
   ],
   "distribution": [
     {

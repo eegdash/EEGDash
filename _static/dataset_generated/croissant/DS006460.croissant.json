@@ -105,35 +105,22 @@
       "name": "Meryem A. Yücel"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Meryem A. Yücel"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "This project was supported by NIH NEW grant U01-EB 029856 and Boston University research funds."
     }
   ],
-  "datePublished": "2025",
   "identifier": "doi:10.18112/openneuro.ds006460.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds006460.v1.0.0",
     "https://openneuro.org/datasets/ds006460",
     "https://huggingface.co/datasets/EEGDash/ds006460"
   ],
-  "citeAs": "Jessica E. Anderson, Laura Carlton, Sreekanth Kura, Walker J. O'Brien, De'Ja Rogers (2025). High-DensityvSparsefNIRS_WordColorStroop_HD_Anderson_2025. doi:10.18112/openneuro.ds006460.v1.0.0",
+  "citeAs": "Jessica E. Anderson, Laura Carlton, Sreekanth Kura, Walker J. O'Brien, De'Ja Rogers (n.d.). High-DensityvSparsefNIRS_WordColorStroop_HD_Anderson_2025. doi:10.18112/openneuro.ds006460.v1.0.0",
   "version": "1.8.0",
-  "dateCreated": "2025-07-08",
-  "dateModified": "2025-07-08",
   "measurementTechnique": [
     "BIDS task: WordStroop"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Jessica E Anderson"
-    }
   ],
   "distribution": [
     {

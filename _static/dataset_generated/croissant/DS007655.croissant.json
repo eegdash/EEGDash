@@ -69,29 +69,16 @@
       "name": "Research Team"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Research Team"
-  },
-  "datePublished": "2026",
-  "identifier": "doi:10.18112/openneuro.ds007655.v1.0.0",
+  "identifier": "doi:10.18112/openneuro.ds007655.v1.0.1",
   "sameAs": [
-    "https://doi.org/10.18112/openneuro.ds007655.v1.0.0",
+    "https://doi.org/10.18112/openneuro.ds007655.v1.0.1",
     "https://openneuro.org/datasets/ds007655"
   ],
-  "citeAs": "HZY, Research Team (2026). MorseEEG-ATP. doi:10.18112/openneuro.ds007655.v1.0.0",
+  "citeAs": "HZY, Research Team (n.d.). MorseEEG-ATP. doi:10.18112/openneuro.ds007655.v1.0.1",
   "version": "1.10.1",
-  "dateCreated": "2026-04-15",
-  "dateModified": "2026-04-20",
   "measurementTechnique": [
     "BIDS task: dotcount",
     "BIDS task: firstlast"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Zhongyang He"
-    }
   ],
   "distribution": [
     {

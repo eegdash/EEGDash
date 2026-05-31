@@ -81,38 +81,22 @@
       "name": "\"Julius Welzel\"]"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "\"Julius Welzel\"]"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "[\"COVIDOM and Neurogeriatrics\"]"
     }
   ],
-  "datePublished": "2026",
+  "datePublished": "1994",
   "identifier": "doi:10.18112/openneuro.ds007605.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds007605.v1.0.0",
     "https://openneuro.org/datasets/ds007605"
   ],
-  "citeAs": "[\"Christian Neumann\", \"Johanna Geritz\", \"Julian Keil\", \"Walter Maetzler\", \"Julius Welzel\"] (2026). EPOC. doi:10.18112/openneuro.ds007605.v1.0.0",
+  "citeAs": "[\"Christian Neumann\", \"Johanna Geritz\", \"Julian Keil\", \"Walter Maetzler\", \"Julius Welzel\"] (1994). EPOC. doi:10.18112/openneuro.ds007605.v1.0.0",
   "version": "1.8.0",
-  "dateCreated": "2026-03-31",
-  "dateModified": "2026-04-13",
   "measurementTechnique": [
     "BIDS task: pvt"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Christian Neumann"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Julius Welzel"
-    }
   ],
   "distribution": [
     {

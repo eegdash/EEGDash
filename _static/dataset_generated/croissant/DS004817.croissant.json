@@ -80,29 +80,17 @@
       "name": "Carlson, Thomas"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Carlson, Thomas"
-  },
-  "datePublished": "2023",
+  "datePublished": "2021",
   "identifier": "doi:10.18112/openneuro.ds004817.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004817.v1.0.0",
     "https://openneuro.org/datasets/ds004817",
     "https://huggingface.co/datasets/EEGDash/ds004817"
   ],
-  "citeAs": "Grootswagers, Tijl, Robinson, Amanda, Shatek, Sofia, Carlson, Thomas (2023). EEG-attention-rsvp-exp2. doi:10.18112/openneuro.ds004817.v1.0.0",
+  "citeAs": "Grootswagers, Tijl, Robinson, Amanda, Shatek, Sofia, Carlson, Thomas (2021). EEG-attention-rsvp-exp2. doi:10.18112/openneuro.ds004817.v1.0.0",
   "version": "1.0.2",
-  "dateCreated": "2023-10-24",
-  "dateModified": "2023-10-26",
   "measurementTechnique": [
     "BIDS task: rsvp"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Tijl Grootswagers"
-    }
   ],
   "distribution": [
     {

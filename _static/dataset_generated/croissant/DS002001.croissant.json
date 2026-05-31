@@ -73,30 +73,17 @@
       "name": "Elizabeth Bock"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Elizabeth Bock"
-  },
-  "datePublished": "2019",
   "identifier": "doi:10.18112/openneuro.ds002001.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds002001.v1.0.0",
     "https://openneuro.org/datasets/ds002001",
     "https://huggingface.co/datasets/EEGDash/ds002001"
   ],
-  "citeAs": "Janine Mendola, Elizabeth Bock (2019). Rivalry_Tagging. doi:10.18112/openneuro.ds002001.v1.0.0",
+  "citeAs": "Janine Mendola, Elizabeth Bock (n.d.). Rivalry_Tagging. doi:10.18112/openneuro.ds002001.v1.0.0",
   "version": "1.1.1",
-  "dateCreated": "2019-06-27",
-  "dateModified": "2019-06-28",
   "measurementTechnique": [
     "BIDS task: noise",
     "BIDS task: rivalry"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Beth Bock"
-    }
   ],
   "distribution": [
     {

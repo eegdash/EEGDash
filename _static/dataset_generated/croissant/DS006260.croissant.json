@@ -88,10 +88,6 @@
       "name": "Luz María Alonso-Valerdi"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Luz María Alonso-Valerdi"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -102,25 +98,17 @@
       "name": "CONAHCYT (894658)"
     }
   ],
-  "datePublished": "2025",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds006260.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds006260.v1.0.1",
     "https://openneuro.org/datasets/ds006260",
     "https://huggingface.co/datasets/EEGDash/ds006260"
   ],
-  "citeAs": "César E. Corona-González, Claudia Rebeca De Stefano-Ramos, Juan Pablo Rosado-Aíza, David I. Ibarra-Zarate, Fabiola R. Gómez-Velázquez (2025). Dataset of psychophysiological data from children with learning difficulties who strengthen reading and math skills through assistive technology. doi:10.18112/openneuro.ds006260.v1.0.1",
+  "citeAs": "César E. Corona-González, Claudia Rebeca De Stefano-Ramos, Juan Pablo Rosado-Aíza, David I. Ibarra-Zarate, Fabiola R. Gómez-Velázquez (20). Dataset of psychophysiological data from children with learning difficulties who strengthen reading and math skills through assistive technology. doi:10.18112/openneuro.ds006260.v1.0.1",
   "version": "1.8.0",
-  "dateCreated": "2025-05-23",
-  "dateModified": "2025-05-29",
   "measurementTechnique": [
     "BIDS task: SmartickDataset"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Corona-González, César E."
-    }
   ],
   "distribution": [
     {

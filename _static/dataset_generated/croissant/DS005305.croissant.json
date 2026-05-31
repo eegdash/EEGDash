@@ -88,29 +88,17 @@
       "name": "Scannella Sébastien"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Scannella Sébastien"
-  },
-  "datePublished": "2024",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds005305.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005305.v1.0.1",
     "https://openneuro.org/datasets/ds005305",
     "https://huggingface.co/datasets/EEGDash/ds005305"
   ],
-  "citeAs": "Chenot Quentin, Hamery Caroline, Truninger Moritz, De Boissezon Xavier, Langer Nicolas (2024). EEG Resting-state Microstates Correlates of Executive Functions. doi:10.18112/openneuro.ds005305.v1.0.1",
+  "citeAs": "Chenot Quentin, Hamery Caroline, Truninger Moritz, De Boissezon Xavier, Langer Nicolas (20). EEG Resting-state Microstates Correlates of Executive Functions. doi:10.18112/openneuro.ds005305.v1.0.1",
   "version": "1.8.0",
-  "dateCreated": "2024-07-03",
-  "dateModified": "2024-07-04",
   "measurementTechnique": [
     "BIDS task: restingstate"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Quentin Chenot"
-    }
   ],
   "distribution": [
     {

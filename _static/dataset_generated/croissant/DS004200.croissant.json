@@ -80,29 +80,17 @@
       "name": "Laurence T. Hunt"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Laurence T. Hunt"
-  },
-  "datePublished": "2022",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds004200.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004200.v1.0.1",
     "https://openneuro.org/datasets/ds004200",
     "https://huggingface.co/datasets/EEGDash/ds004200"
   ],
-  "citeAs": "Cameron D. Hassall, Jack Harley, Nils Kolling, Laurence T. Hunt (2022). Temporal Scaling. doi:10.18112/openneuro.ds004200.v1.0.1",
+  "citeAs": "Cameron D. Hassall, Jack Harley, Nils Kolling, Laurence T. Hunt (20). Temporal Scaling. doi:10.18112/openneuro.ds004200.v1.0.1",
   "version": "1.1.1",
-  "dateCreated": "2022-07-11",
-  "dateModified": "2022-10-06",
   "measurementTechnique": [
     "BIDS task: temporalscaling"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Cameron Hassall"
-    }
   ],
   "distribution": [
     {

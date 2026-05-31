@@ -76,10 +76,6 @@
       "name": "Ross K. Maddox"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Ross K. Maddox"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -90,25 +86,17 @@
       "name": "the Schmitt Program in Neuroscience"
     }
   ],
-  "datePublished": "2025",
+  "datePublished": "2024",
   "identifier": "doi:10.18112/openneuro.ds006735.v2.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds006735.v2.0.0",
     "https://openneuro.org/datasets/ds006735",
     "https://huggingface.co/datasets/EEGDash/ds006735"
   ],
-  "citeAs": "Tong Shan, Edmund C. Lalor, Ross K. Maddox (2025). Chimeric music reveals an interaction of pitch and time in electrophysiological signatures of music encoding. doi:10.18112/openneuro.ds006735.v2.0.0",
+  "citeAs": "Tong Shan, Edmund C. Lalor, Ross K. Maddox (2024). Chimeric music reveals an interaction of pitch and time in electrophysiological signatures of music encoding. doi:10.18112/openneuro.ds006735.v2.0.0",
   "version": "1.2.1",
-  "dateCreated": "2025-09-30",
-  "dateModified": "2026-01-15",
   "measurementTechnique": [
     "BIDS task: ChimericMusic"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Tong Shan"
-    }
   ],
   "distribution": [
     {

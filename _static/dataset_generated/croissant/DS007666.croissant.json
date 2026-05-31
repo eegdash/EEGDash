@@ -65,20 +65,13 @@
       "name": "MENGSHA QI"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "MENGSHA QI"
-  },
-  "datePublished": "2026",
   "identifier": "doi:10.18112/openneuro.ds007666.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds007666.v1.0.0",
     "https://openneuro.org/datasets/ds007666"
   ],
-  "citeAs": "MENGSHA QI (2026). Grupos Pre and Post bids. doi:10.18112/openneuro.ds007666.v1.0.0",
+  "citeAs": "MENGSHA QI (n.d.). Grupos Pre and Post bids. doi:10.18112/openneuro.ds007666.v1.0.0",
   "version": "1.6.0",
-  "dateCreated": "2026-04-18",
-  "dateModified": "2026-04-18",
   "measurementTechnique": [
     "BIDS task: 001",
     "BIDS task: 002",
@@ -100,12 +93,6 @@
     "BIDS task: NMpost",
     "BIDS task: group2postbids",
     "BIDS task: nm"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Mengsha Qi"
-    }
   ],
   "distribution": [
     {

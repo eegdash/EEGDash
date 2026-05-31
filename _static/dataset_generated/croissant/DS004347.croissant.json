@@ -80,29 +80,16 @@
       "name": "Bertamini, M."
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Bertamini, M."
-  },
-  "datePublished": "2022",
   "identifier": "doi:10.18112/openneuro.ds004347.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004347.v1.0.0",
     "https://openneuro.org/datasets/ds004347",
     "https://huggingface.co/datasets/EEGDash/ds004347"
   ],
-  "citeAs": "Makin, A. D. J, Wilton, M. M, Pecchinenda, A., Bertamini, M. (2022). Symmetry perception and affective responses: a combined EEG/EMG study. doi:10.18112/openneuro.ds004347.v1.0.0",
+  "citeAs": "Makin, A. D. J, Wilton, M. M, Pecchinenda, A., Bertamini, M. (n.d.). Symmetry perception and affective responses: a combined EEG/EMG study. doi:10.18112/openneuro.ds004347.v1.0.0",
   "version": "1.1.1",
-  "dateCreated": "2022-11-28",
-  "dateModified": "2022-11-28",
   "measurementTechnique": [
     "BIDS task: jacobsen"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "John Tyson-Carr"
-    }
   ],
   "distribution": [
     {

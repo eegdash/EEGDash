@@ -88,29 +88,16 @@
       "name": "Karen Emmorey"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Karen Emmorey"
-  },
-  "datePublished": "2025",
   "identifier": "doi:10.18112/openneuro.ds005868.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005868.v1.0.1",
     "https://openneuro.org/datasets/ds005868",
     "https://huggingface.co/datasets/EEGDash/ds005868"
   ],
-  "citeAs": "Brennan Terhune-Cotter, Phillip J. Holcomb, Katherine J. Midgley, Sofia E. Ortega, Emily M. Akers (2025). Flankers-FAR. doi:10.18112/openneuro.ds005868.v1.0.1",
+  "citeAs": "Brennan Terhune-Cotter, Phillip J. Holcomb, Katherine J. Midgley, Sofia E. Ortega, Emily M. Akers (n.d.). Flankers-FAR. doi:10.18112/openneuro.ds005868.v1.0.1",
   "version": "1.8.0",
-  "dateCreated": "2025-01-21",
-  "dateModified": "2025-01-22",
   "measurementTechnique": [
     "BIDS task: flankersFAR"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Emily M. Akers"
-    }
   ],
   "distribution": [
     {

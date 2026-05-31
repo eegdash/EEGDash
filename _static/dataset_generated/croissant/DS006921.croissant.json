@@ -84,30 +84,18 @@
       "name": "Lendaro, E."
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Lendaro, E."
-  },
-  "datePublished": "2025",
+  "datePublished": "2024",
   "identifier": "doi:10.18112/openneuro.ds006921.v1.1.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds006921.v1.1.1",
     "https://openneuro.org/datasets/ds006921",
     "https://huggingface.co/datasets/EEGDash/ds006921"
   ],
-  "citeAs": "Ramne, M., Damercheli, S., Apelgren, F., Pettersson, I., Lendaro, E. (2025). High Density Resting State EEG of Phantom Limb Pain and Controls. doi:10.18112/openneuro.ds006921.v1.1.1",
+  "citeAs": "Ramne, M., Damercheli, S., Apelgren, F., Pettersson, I., Lendaro, E. (2024). High Density Resting State EEG of Phantom Limb Pain and Controls. doi:10.18112/openneuro.ds006921.v1.1.1",
   "version": "1.9.0",
-  "dateCreated": "2025-11-10",
-  "dateModified": "2026-01-21",
   "measurementTechnique": [
     "BIDS task: EYESCLOSED",
     "BIDS task: EYESOPEN"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Malin Ramne"
-    }
   ],
   "distribution": [
     {

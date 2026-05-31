@@ -141,29 +141,17 @@
       "name": "Hiroki Nariai"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Hiroki Nariai"
-  },
-  "datePublished": "2024",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds005398.v1.1.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005398.v1.1.1",
     "https://openneuro.org/datasets/ds005398",
     "https://huggingface.co/datasets/EEGDash/ds005398"
   ],
-  "citeAs": "Yipeng Zhang, Atsuro Daida, Lawrence Liu, Naoto Kuroda, Yuanyi Ding (2024). Open iEEG Dataset (Pediatric iEEG, Wayne State University and UCLA). doi:10.18112/openneuro.ds005398.v1.1.1",
+  "citeAs": "Yipeng Zhang, Atsuro Daida, Lawrence Liu, Naoto Kuroda, Yuanyi Ding (20). Open iEEG Dataset (Pediatric iEEG, Wayne State University and UCLA). doi:10.18112/openneuro.ds005398.v1.1.1",
   "version": "1.7.0",
-  "dateCreated": "2024-08-04",
-  "dateModified": "2026-03-24",
   "measurementTechnique": [
     "BIDS task: sleep"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Hiroki Nariai"
-    }
   ],
   "distribution": [
     {

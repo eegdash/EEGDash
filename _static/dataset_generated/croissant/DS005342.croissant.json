@@ -84,35 +84,22 @@
       "name": "Javier M Antelis"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Javier M Antelis"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "This research was funded by Ministerio de Ciencia, Tecnología e Innovación of Colombia-Minciencias/Colciencias, contract 594-2019, project 80740-594-2019, and in part by the University of Illinois Chicago and Tecnologico de Monterrey (UIC-TEC) Seed funding Program 2021-2022"
     }
   ],
-  "datePublished": "2024",
   "identifier": "doi:10.18112/openneuro.ds005342.v1.0.3",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005342.v1.0.3",
     "https://openneuro.org/datasets/ds005342",
     "https://huggingface.co/datasets/EEGDash/ds005342"
   ],
-  "citeAs": "Nayid Triana-Guzman, Alvaro D Orjuela-Cañon, Andres L Jutinico, Omar Mendoza-Montoya, Javier M Antelis (2024). EEG data offline and online during motor imagery for standing and sitting. doi:10.18112/openneuro.ds005342.v1.0.3",
+  "citeAs": "Nayid Triana-Guzman, Alvaro D Orjuela-Cañon, Andres L Jutinico, Omar Mendoza-Montoya, Javier M Antelis (n.d.). EEG data offline and online during motor imagery for standing and sitting. doi:10.18112/openneuro.ds005342.v1.0.3",
   "version": "1.8.0",
-  "dateCreated": "2024-07-15",
-  "dateModified": "2024-07-15",
   "measurementTechnique": [
     "BIDS task: sitstand"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Nayid Triana Guzman"
-    }
   ],
   "distribution": [
     {

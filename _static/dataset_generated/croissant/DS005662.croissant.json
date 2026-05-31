@@ -88,39 +88,23 @@
       "name": "Tijl Grootswagers"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Tijl Grootswagers"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "This research was supported by Australian Research Council grants DP220103047 (MV) and DE230100380 (TG)."
     }
   ],
-  "datePublished": "2024",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds005662.v2.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005662.v2.0.1",
     "https://openneuro.org/datasets/ds005662",
     "https://huggingface.co/datasets/EEGDash/ds005662"
   ],
-  "citeAs": "Sophie Smit, Almudena Ramírez-Haro, Manuel Varlet, Denise Moerel, Genevieve L. Quek (2024). A comprehensive EEG dataset for investigating visual touch perception. doi:10.18112/openneuro.ds005662.v2.0.1",
+  "citeAs": "Sophie Smit, Almudena Ramírez-Haro, Manuel Varlet, Denise Moerel, Genevieve L. Quek (20). A comprehensive EEG dataset for investigating visual touch perception. doi:10.18112/openneuro.ds005662.v2.0.1",
   "version": "1.0.0",
-  "dateCreated": "2024-11-27",
-  "dateModified": "2026-02-06",
   "measurementTechnique": [
     "BIDS task: video"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Sophie Smit"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Tijl Grootswagers"
-    }
   ],
   "distribution": [
     {

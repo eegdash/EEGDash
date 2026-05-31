@@ -68,33 +68,16 @@
       "name": "Mateo Leganes-Fonteneau"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Mateo Leganes-Fonteneau"
-  },
-  "datePublished": "2025",
   "identifier": "doi:10.18112/openneuro.ds006159.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds006159.v1.0.0",
     "https://openneuro.org/datasets/ds006159",
     "https://huggingface.co/datasets/EEGDash/ds006159"
   ],
-  "citeAs": "Mateo Leganes-Fonteneau (2025). Implicit Learning EEG (BioSemi). doi:10.18112/openneuro.ds006159.v1.0.0",
+  "citeAs": "Mateo Leganes-Fonteneau (n.d.). Implicit Learning EEG (BioSemi). doi:10.18112/openneuro.ds006159.v1.0.0",
   "version": "1.7.0",
-  "dateCreated": "2025-04-23",
-  "dateModified": "2025-05-21",
   "measurementTechnique": [
     "BIDS task: implicitlearn"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Mateo Leganes Fonteneau"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Paradeisios Alexandros BOULAKIS"
-    }
   ],
   "distribution": [
     {

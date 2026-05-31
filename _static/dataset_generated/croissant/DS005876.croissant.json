@@ -76,29 +76,17 @@
       "name": "Cameron D. Hassall"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Cameron D. Hassall"
-  },
-  "datePublished": "2025",
+  "datePublished": "2009",
   "identifier": "doi:10.18112/openneuro.ds005876.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005876.v1.0.1",
     "https://openneuro.org/datasets/ds005876",
     "https://huggingface.co/datasets/EEGDash/ds005876"
   ],
-  "citeAs": "Jared R. Girard, Aaron M. Bishop, Cameron D. Hassall (2025). Song Familiarity. doi:10.18112/openneuro.ds005876.v1.0.1",
+  "citeAs": "Jared R. Girard, Aaron M. Bishop, Cameron D. Hassall (2009). Song Familiarity. doi:10.18112/openneuro.ds005876.v1.0.1",
   "version": "1.8.0",
-  "dateCreated": "2025-01-23",
-  "dateModified": "2025-01-23",
   "measurementTechnique": [
     "BIDS task: songfamiliarity"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Cameron Hassall"
-    }
   ],
   "distribution": [
     {

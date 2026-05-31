@@ -88,29 +88,17 @@
       "name": "Luz María Alonso-Valerdi"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Luz María Alonso-Valerdi"
-  },
-  "datePublished": "2025",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds006803.v1.1.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds006803.v1.1.1",
     "https://openneuro.org/datasets/ds006803",
     "https://huggingface.co/datasets/EEGDash/ds006803"
   ],
-  "citeAs": "Tania Yareni Pech-Canul, Roberto Guajardo, Luis Fernando Acosta-Soto, Mónica Sofía Margoya-Constantino, Juan Pablo Rosado-Aíza (2025). NeuroTechs Dataset for Stem Skills. doi:10.18112/openneuro.ds006803.v1.1.1",
+  "citeAs": "Tania Yareni Pech-Canul, Roberto Guajardo, Luis Fernando Acosta-Soto, Mónica Sofía Margoya-Constantino, Juan Pablo Rosado-Aíza (20). NeuroTechs Dataset for Stem Skills. doi:10.18112/openneuro.ds006803.v1.1.1",
   "version": "1.8.0",
-  "dateCreated": "2025-10-16",
-  "dateModified": "2026-01-27",
   "measurementTechnique": [
     "BIDS task: STEMSKILLS"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Juan Pablo Rosado-Aíza"
-    }
   ],
   "distribution": [
     {

@@ -76,30 +76,17 @@
       "name": "Burkhard Maess"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Burkhard Maess"
-  },
-  "datePublished": "2022",
   "identifier": "doi:10.18112/openneuro.ds004256.v1.0.5",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004256.v1.0.5",
     "https://openneuro.org/datasets/ds004256",
     "https://huggingface.co/datasets/EEGDash/ds004256"
   ],
-  "citeAs": "Ole Bialas, Marc Schoenwiesner, Burkhard Maess (2022). Encoding of Sound Source Elevation in Human Cortex. doi:10.18112/openneuro.ds004256.v1.0.5",
+  "citeAs": "Ole Bialas, Marc Schoenwiesner, Burkhard Maess (n.d.). Encoding of Sound Source Elevation in Human Cortex. doi:10.18112/openneuro.ds004256.v1.0.5",
   "version": "1.6.0",
-  "dateCreated": "2022-08-29",
-  "dateModified": "2022-09-24",
   "measurementTechnique": [
     "BIDS task: deviantdetection",
     "BIDS task: oneback"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Ole Bialas"
-    }
   ],
   "distribution": [
     {

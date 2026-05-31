@@ -72,10 +72,6 @@
       "name": "Ross K. Maddox"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Ross K. Maddox"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -91,16 +87,8 @@
   ],
   "citeAs": "Melissa J. Polonenko, Ross K. Maddox (2024). Fundamental frequency predominantly drives talker differences in auditory brainstem responses to continuous speech. doi:10.18112/openneuro.ds005340.v1.0.4",
   "version": "1.7.0",
-  "dateCreated": "2024-07-12",
-  "dateModified": "2024-11-22",
   "measurementTechnique": [
     "BIDS task: peakypitch"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Melissa Polonenko"
-    }
   ],
   "distribution": [
     {

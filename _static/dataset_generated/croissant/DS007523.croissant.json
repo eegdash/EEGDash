@@ -81,28 +81,16 @@
       "name": "Jean-Rémi King"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Jean-Rémi King"
-  },
-  "datePublished": "2026",
-  "identifier": "doi:10.18112/openneuro.ds007523.v1.0.0",
+  "datePublished": "2025",
+  "identifier": "doi:10.18112/openneuro.ds007523.v1.0.1",
   "sameAs": [
-    "https://doi.org/10.18112/openneuro.ds007523.v1.0.0",
+    "https://doi.org/10.18112/openneuro.ds007523.v1.0.1",
     "https://openneuro.org/datasets/ds007523"
   ],
-  "citeAs": "Corentin Bel, Julie Bonnaire, Christophe Pallier, Jean-Rémi King (2026). LPP MEG Listen. doi:10.18112/openneuro.ds007523.v1.0.0",
+  "citeAs": "Corentin Bel, Julie Bonnaire, Christophe Pallier, Jean-Rémi King (2025). LPP MEG Listen. doi:10.18112/openneuro.ds007523.v1.0.1",
   "version": "1.7.0",
-  "dateCreated": "2026-03-17",
-  "dateModified": "2026-03-30",
   "measurementTechnique": [
     "BIDS task: listen"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Christophe Pallier"
-    }
   ],
   "distribution": [
     {

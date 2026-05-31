@@ -92,29 +92,17 @@
       "name": "David I. Ibarra Zarate"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "David I. Ibarra Zarate"
-  },
-  "datePublished": "2024",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds005628.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005628.v1.0.0",
     "https://openneuro.org/datasets/ds005628",
     "https://huggingface.co/datasets/EEGDash/ds005628"
   ],
-  "citeAs": "Juan Pablo Rosado-Aíza, Fernando José Domínguez-Morales, Tania Yareni Pech-Canul, Paola Guadalupe Vázquez-Rodríguez, Gustavo Navas-Reascos (2024). Dataset of Visual and Audiovisual Stimuli in Virtual Reality from the Edzna Archaeological Site. doi:10.18112/openneuro.ds005628.v1.0.0",
+  "citeAs": "Juan Pablo Rosado-Aíza, Fernando José Domínguez-Morales, Tania Yareni Pech-Canul, Paola Guadalupe Vázquez-Rodríguez, Gustavo Navas-Reascos (20). Dataset of Visual and Audiovisual Stimuli in Virtual Reality from the Edzna Archaeological Site. doi:10.18112/openneuro.ds005628.v1.0.0",
   "version": "1.8.0",
-  "dateCreated": "2024-11-14",
-  "dateModified": "2024-11-14",
   "measurementTechnique": [
     "BIDS task: Edzna"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Gustavo Sebastián Navas-Reascos"
-    }
   ],
   "distribution": [
     {

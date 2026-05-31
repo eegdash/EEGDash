@@ -88,35 +88,23 @@
       "name": "Linda Larson-Prior"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Linda Larson-Prior"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "This research was supported by USDA/Agricultural Research Service Project 6026-51000-012-06S"
     }
   ],
-  "datePublished": "2022",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds004151.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004151.v1.0.0",
     "https://openneuro.org/datasets/ds004151",
     "https://huggingface.co/datasets/EEGDash/ds004151"
   ],
-  "citeAs": "Graciela C. Alatorre-Cruz, Heather Downs, Darcy Hagood, Seth T. Sorensen, D. Keith Williams (2022). Effect of obesity on inhibitory control in preadolescents during stop-signal task. An event-related potentials study. doi:10.18112/openneuro.ds004151.v1.0.0",
+  "citeAs": "Graciela C. Alatorre-Cruz, Heather Downs, Darcy Hagood, Seth T. Sorensen, D. Keith Williams (20). Effect of obesity on inhibitory control in preadolescents during stop-signal task. An event-related potentials study. doi:10.18112/openneuro.ds004151.v1.0.0",
   "version": "1",
-  "dateCreated": "2022-06-13",
-  "dateModified": "2022-06-14",
   "measurementTechnique": [
     "BIDS task: stop"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Graciela Catalina Alatorre Cruz"
-    }
   ],
   "distribution": [
     {

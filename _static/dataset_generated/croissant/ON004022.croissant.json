@@ -1,0 +1,133 @@
+{
+  "@context": {
+    "@language": "en",
+    "@vocab": "https://schema.org/",
+    "citeAs": "cr:citeAs",
+    "column": "cr:column",
+    "conformsTo": "dct:conformsTo",
+    "cr": "http://mlcommons.org/croissant/",
+    "data": {
+      "@id": "cr:data",
+      "@type": "@json"
+    },
+    "dataType": {
+      "@id": "cr:dataType",
+      "@type": "@vocab"
+    },
+    "dct": "http://purl.org/dc/terms/",
+    "extract": "cr:extract",
+    "field": "cr:field",
+    "fileObject": "cr:fileObject",
+    "fileProperty": "cr:fileProperty",
+    "fileSet": "cr:fileSet",
+    "format": "cr:format",
+    "includes": "cr:includes",
+    "isLiveDataset": "cr:isLiveDataset",
+    "jsonPath": "cr:jsonPath",
+    "key": "cr:key",
+    "md5": "cr:md5",
+    "parentField": "cr:parentField",
+    "path": "cr:path",
+    "recordSet": "cr:recordSet",
+    "references": "cr:references",
+    "regex": "cr:regex",
+    "repeated": "cr:repeated",
+    "replace": "cr:replace",
+    "sc": "https://schema.org/",
+    "separator": "cr:separator",
+    "source": "cr:source",
+    "subField": "cr:subField",
+    "transform": "cr:transform"
+  },
+  "@type": "sc:Dataset",
+  "conformsTo": "http://mlcommons.org/croissant/1.0",
+  "name": "on004022",
+  "alternateName": [
+    "ON004022"
+  ],
+  "description": "Multimodal EEG and fNIRS Biosignal Acquisition during Motor Imagery Tasks in Patients with Orthopedic Impairment. eeg dataset accessible via EEGDash as `ON004022` with standardized BIDS metadata.",
+  "url": "https://eegdash.org/api/dataset/eegdash.dataset.ON004022.html",
+  "keywords": [
+    "EEG",
+    "BIDS",
+    "neuroscience"
+  ],
+  "isAccessibleForFree": true,
+  "includedInDataCatalog": {
+    "@type": "sc:DataCatalog",
+    "name": "EEG Dash",
+    "url": "https://eegdash.org/"
+  },
+  "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "creator": [
+    {
+      "@type": "sc:Person",
+      "name": "Seho Lee"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Hee Ra Jung"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "In-Nea Wang"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Min-Kyung Jung"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Hakseung Kim"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Dong-Joo Kim"
+    }
+  ],
+  "identifier": "doi:10.82901/nemar.on004022",
+  "sameAs": [
+    "https://doi.org/10.82901/nemar.on004022",
+    "https://openneuro.org/datasets/on004022"
+  ],
+  "citeAs": "Seho Lee, Hee Ra Jung, In-Nea Wang, Min-Kyung Jung, Hakseung Kim (n.d.). Multimodal EEG and fNIRS Biosignal Acquisition during Motor Imagery Tasks in Patients with Orthopedic Impairment. doi:10.82901/nemar.on004022",
+  "version": "1.0.2",
+  "measurementTechnique": [
+    "BIDS task: motorimagery"
+  ],
+  "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "on004022-bids-bucket",
+      "name": "on004022 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for ON004022.",
+      "contentUrl": "s3://nemar/on004022",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "on004022-openneuro",
+      "name": "on004022 on OpenNeuro",
+      "description": "OpenNeuro dataset landing page.",
+      "contentUrl": "https://openneuro.org/datasets/on004022",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "on004022-eegdash-records",
+      "name": "on004022 EEGDash records (live)",
+      "description": "Live JSON listing of every recording in this dataset, with BIDS metadata, channel counts, and S3 storage keys.",
+      "contentUrl": "https://data.eegdash.org/api/eegdash/records?filter=%7B%22dataset%22%3A%22on004022%22%7D",
+      "encodingFormat": "application/json",
+      "isLiveDataset": true
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "on004022-nemar",
+      "name": "on004022 on NeMAR",
+      "description": "NEMAR dataset landing page with pipeline plots.",
+      "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=on004022",
+      "encodingFormat": "text/html"
+    }
+  ]
+}

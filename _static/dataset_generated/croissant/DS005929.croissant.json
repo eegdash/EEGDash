@@ -84,35 +84,22 @@
       "name": "Cooper, Robert"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Cooper, Robert"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "NIH grants P41-RR14075, R01-EB006385 and R90-DA023427"
     }
   ],
-  "datePublished": "2025",
   "identifier": "doi:10.18112/openneuro.ds005929.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005929.v1.0.1",
     "https://openneuro.org/datasets/ds005929",
     "https://huggingface.co/datasets/EEGDash/ds005929"
   ],
-  "citeAs": "Yücel, Meryem, Selb, Juliette, Boas, David, Cash, Sydney, Cooper, Robert (2025). Motion-Yucel2014. doi:10.18112/openneuro.ds005929.v1.0.1",
+  "citeAs": "Yücel, Meryem, Selb, Juliette, Boas, David, Cash, Sydney, Cooper, Robert (n.d.). Motion-Yucel2014. doi:10.18112/openneuro.ds005929.v1.0.1",
   "version": "1.7.1",
-  "dateCreated": "2025-02-17",
-  "dateModified": "2025-07-09",
   "measurementTechnique": [
     "BIDS task: MA"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "MERYEM YUCEL"
-    }
   ],
   "distribution": [
     {

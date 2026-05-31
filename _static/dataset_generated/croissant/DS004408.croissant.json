@@ -80,29 +80,17 @@
       "name": "Edmund C Lalor"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Edmund C Lalor"
-  },
-  "datePublished": "2023",
+  "datePublished": "2015",
   "identifier": "doi:10.18112/openneuro.ds004408.v1.0.8",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004408.v1.0.8",
     "https://openneuro.org/datasets/ds004408",
     "https://huggingface.co/datasets/EEGDash/ds004408"
   ],
-  "citeAs": "Giovanni M Di Liberto, Michael P Broderick, Ole Bialas, Edmund C Lalor (2023). EEG responses to continuous naturalistic speech. doi:10.18112/openneuro.ds004408.v1.0.8",
+  "citeAs": "Giovanni M Di Liberto, Michael P Broderick, Ole Bialas, Edmund C Lalor (2015). EEG responses to continuous naturalistic speech. doi:10.18112/openneuro.ds004408.v1.0.8",
   "version": "1.7.0",
-  "dateCreated": "2023-01-17",
-  "dateModified": "2023-08-01",
   "measurementTechnique": [
     "BIDS task: listening"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Ole Bialas"
-    }
   ],
   "distribution": [
     {

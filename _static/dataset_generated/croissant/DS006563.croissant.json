@@ -68,33 +68,17 @@
       "name": "Klaus Gramann, Thomas Töllner, Hermann J. Müller"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Klaus Gramann, Thomas Töllner, Hermann J. Müller"
-  },
-  "datePublished": "2025",
+  "datePublished": "2010",
   "identifier": "doi:10.18112/openneuro.ds006563.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds006563.v1.0.0",
     "https://openneuro.org/datasets/ds006563",
     "https://huggingface.co/datasets/EEGDash/ds006563"
   ],
-  "citeAs": "Klaus Gramann, Thomas Töllner, Hermann J. Müller (2025). Dimension-based attention modulates early visual processing. doi:10.18112/openneuro.ds006563.v1.0.0",
+  "citeAs": "Klaus Gramann, Thomas Töllner, Hermann J. Müller (2010). Dimension-based attention modulates early visual processing. doi:10.18112/openneuro.ds006563.v1.0.0",
   "version": "1.8.0",
-  "dateCreated": "2025-08-15",
-  "dateModified": "2025-08-15",
   "measurementTechnique": [
     "BIDS task: DimensionDiscrimination"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Carlos H. Mendoza-Cardenas"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Austin Jay Brockmeier"
-    }
   ],
   "distribution": [
     {

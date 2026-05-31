@@ -88,39 +88,23 @@
       "name": "Janet Z. Li"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Janet Z. Li"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "The National Institute of Mental Health (R21MH127384)"
     }
   ],
-  "datePublished": "2026",
+  "datePublished": "2019",
   "identifier": "doi:10.18112/openneuro.ds007216.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds007216.v1.0.0",
     "https://openneuro.org/datasets/ds007216"
   ],
-  "citeAs": "Aaron Kucyi, Lotus Shareef-Trudeau, David Braun, Huiling Peng, Tiara Bounyarith (2026). A multi-session simultaneous EEG-fMRI dataset with online experience sampling. doi:10.18112/openneuro.ds007216.v1.0.0",
+  "citeAs": "Aaron Kucyi, Lotus Shareef-Trudeau, David Braun, Huiling Peng, Tiara Bounyarith (2019). A multi-session simultaneous EEG-fMRI dataset with online experience sampling. doi:10.18112/openneuro.ds007216.v1.0.0",
   "version": "1.7.0",
-  "dateCreated": "2026-01-13",
-  "dateModified": "2026-02-04",
   "measurementTechnique": [
     "BIDS task: ExperienceSampling",
     "BIDS task: GradCPT"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Aaron Kucyi"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Lotus Shareef-Trudeau"
-    }
   ],
   "distribution": [
     {

@@ -72,29 +72,16 @@
       "name": "Makenna McGill"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Makenna McGill"
-  },
-  "datePublished": "2024",
   "identifier": "doi:10.18112/openneuro.ds004942.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004942.v1.0.0",
     "https://openneuro.org/datasets/ds004942",
     "https://huggingface.co/datasets/EEGDash/ds004942"
   ],
-  "citeAs": "Paul Kieffaber, Makenna McGill (2024). SpatialMemory. doi:10.18112/openneuro.ds004942.v1.0.0",
+  "citeAs": "Paul Kieffaber, Makenna McGill (n.d.). SpatialMemory. doi:10.18112/openneuro.ds004942.v1.0.0",
   "version": "1.8.0",
-  "dateCreated": "2024-01-23",
-  "dateModified": "2024-01-23",
   "measurementTechnique": [
     "BIDS task: SpatialMemory"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Paul Kieffaber"
-    }
   ],
   "distribution": [
     {

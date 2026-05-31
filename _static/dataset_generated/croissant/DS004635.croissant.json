@@ -72,35 +72,22 @@
       "name": "Michael S. Gaffrey"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Michael S. Gaffrey"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "Charles Lafitte Foundation"
     }
   ],
-  "datePublished": "2023",
   "identifier": "doi:10.18112/openneuro.ds004635.v3.1.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004635.v3.1.0",
     "https://openneuro.org/datasets/ds004635",
     "https://huggingface.co/datasets/EEGDash/ds004635"
   ],
-  "citeAs": "Armen Bagdasarov, Michael S. Gaffrey (2023). Gaffrey Lab Infant Microstates Reliability. doi:10.18112/openneuro.ds004635.v3.1.0",
+  "citeAs": "Armen Bagdasarov, Michael S. Gaffrey (n.d.). Gaffrey Lab Infant Microstates Reliability. doi:10.18112/openneuro.ds004635.v3.1.0",
   "version": "1.8.0",
-  "dateCreated": "2023-07-11",
-  "dateModified": "2024-07-16",
   "measurementTechnique": [
     "BIDS task: resting"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Gaffrey Lab"
-    }
   ],
   "distribution": [
     {

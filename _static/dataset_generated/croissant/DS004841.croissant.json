@@ -105,29 +105,16 @@
       "name": "Kevin King"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Kevin King"
-  },
-  "datePublished": "2023",
   "identifier": "doi:10.18112/openneuro.ds004841.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004841.v1.0.1",
     "https://openneuro.org/datasets/ds004841",
     "https://huggingface.co/datasets/EEGDash/ds004841"
   ],
-  "citeAs": "Gabriella Larkin, James A. Davis, Victor Paul, Marcel Cannon, Chris Manteuffel (2023). TX14. doi:10.18112/openneuro.ds004841.v1.0.1",
+  "citeAs": "Gabriella Larkin, James A. Davis, Victor Paul, Marcel Cannon, Chris Manteuffel (n.d.). TX14. doi:10.18112/openneuro.ds004841.v1.0.1",
   "version": "1.8.0",
-  "dateCreated": "2023-11-13",
-  "dateModified": "2023-11-13",
   "measurementTechnique": [
     "BIDS task: DriveOnMission"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Kevin King"
-    }
   ],
   "distribution": [
     {

@@ -140,35 +140,19 @@
       "name": "Christoph T. Weidemann"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Christoph T. Weidemann"
-  },
-  "datePublished": "2023",
+  "datePublished": "2019",
   "identifier": "doi:10.18112/openneuro.ds004395.v2.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004395.v2.0.0",
     "https://openneuro.org/datasets/ds004395",
     "https://huggingface.co/datasets/EEGDash/ds004395"
   ],
-  "citeAs": "Michael J. Kahana, Joseph H. Rudoler, Lynn J. Lohnas, Karl Healey, Ada Aka (2023). Penn Electrophysiology of Encoding and Retrieval Study (PEERS). doi:10.18112/openneuro.ds004395.v2.0.0",
+  "citeAs": "Michael J. Kahana, Joseph H. Rudoler, Lynn J. Lohnas, Karl Healey, Ada Aka (2019). Penn Electrophysiology of Encoding and Retrieval Study (PEERS). doi:10.18112/openneuro.ds004395.v2.0.0",
   "version": "1.6.0",
-  "dateCreated": "2023-01-10",
-  "dateModified": "2023-06-01",
   "measurementTechnique": [
     "BIDS task: VFFR",
     "BIDS task: ltpFR",
     "BIDS task: ltpFR2"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Joseph Rudoler"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Ryan Colyer"
-    }
   ],
   "distribution": [
     {

@@ -76,29 +76,17 @@
       "name": "Kumar Narayanan"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Kumar Narayanan"
-  },
-  "datePublished": "2021",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds003509.v1.1.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds003509.v1.1.0",
     "https://openneuro.org/datasets/ds003509",
     "https://huggingface.co/datasets/EEGDash/ds003509"
   ],
-  "citeAs": "James F Cavanagh, Arun Singh, Kumar Narayanan (2021). EEG: Simon Conflict in Parkinson's. doi:10.18112/openneuro.ds003509.v1.1.0",
+  "citeAs": "James F Cavanagh, Arun Singh, Kumar Narayanan (20). EEG: Simon Conflict in Parkinson's. doi:10.18112/openneuro.ds003509.v1.1.0",
   "version": "1.1.1",
-  "dateCreated": "2021-02-08",
-  "dateModified": "2021-02-08",
   "measurementTechnique": [
     "BIDS task: SimonConflict"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "James F Cavanagh"
-    }
   ],
   "distribution": [
     {

@@ -72,29 +72,15 @@
       "name": "Charles Schroeder"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Charles Schroeder"
-  },
-  "datePublished": "2025",
   "identifier": "doi:10.18112/openneuro.ds007028.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds007028.v1.0.0",
-    "https://openneuro.org/datasets/ds007028",
-    "https://huggingface.co/datasets/EEGDash/ds007028"
+    "https://openneuro.org/datasets/ds007028"
   ],
-  "citeAs": "Yoshinao Kajikawa, Charles Schroeder (2025). Auditory Cortex Macaque Monkey DISC Data. doi:10.18112/openneuro.ds007028.v1.0.0",
+  "citeAs": "Yoshinao Kajikawa, Charles Schroeder (n.d.). Auditory Cortex Macaque Monkey DISC Data. doi:10.18112/openneuro.ds007028.v1.0.0",
   "version": "1.1.1",
-  "dateCreated": "2025-12-04",
-  "dateModified": "2025-12-04",
   "measurementTechnique": [
     "BIDS task: tono14noconcat"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Yoshinao Kajikawa"
-    }
   ],
   "distribution": [
     {
@@ -129,14 +115,6 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=ds007028",
       "encodingFormat": "text/html"
-    },
-    {
-      "@type": "cr:FileObject",
-      "@id": "ds007028-huggingface",
-      "name": "EEGDash/ds007028 on Hugging Face",
-      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
-      "contentUrl": "https://huggingface.co/datasets/EEGDash/ds007028",
-      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

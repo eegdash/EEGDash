@@ -88,34 +88,18 @@
       "name": "Falk Eippert"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Falk Eippert"
-  },
-  "datePublished": "2025",
+  "datePublished": "2019",
   "identifier": "doi:10.18112/openneuro.ds006374.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds006374.v1.0.0",
     "https://openneuro.org/datasets/ds006374",
     "https://huggingface.co/datasets/EEGDash/ds006374"
   ],
-  "citeAs": "Lisa-Marie Pohle, Moritz Nickel, Birgit Nierula, Markus Ploner, Ulrike Horn (2025). Expectation effects on repetition suppression in nociception. doi:10.18112/openneuro.ds006374.v1.0.0",
+  "citeAs": "Lisa-Marie Pohle, Moritz Nickel, Birgit Nierula, Markus Ploner, Ulrike Horn (2019). Expectation effects on repetition suppression in nociception. doi:10.18112/openneuro.ds006374.v1.0.0",
   "version": "1.6.0",
-  "dateCreated": "2025-06-19",
-  "dateModified": "2025-07-10",
   "measurementTechnique": [
     "BIDS task: detection",
     "BIDS task: expsupp"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Lisa-Marie Geertje Pohle"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Falk Eippert"
-    }
   ],
   "distribution": [
     {

@@ -88,44 +88,23 @@
       "name": "Gijs Plomp"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Gijs Plomp"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "This research was supported by Swiss National Science Foundation grants PP00P1_183714, PP00P1_190065 and CRSII5-170873."
     }
   ],
-  "datePublished": "2021",
   "identifier": "doi:10.18112/openneuro.ds003505.v1.1.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds003505.v1.1.1",
     "https://openneuro.org/datasets/ds003505",
     "https://huggingface.co/datasets/EEGDash/ds003505"
   ],
-  "citeAs": "David Pascucci, Sebastien Tourbier, Joan Rue-Queralt, Margherita Carboni, Patric Hagmann (2021). VEPCON: Source imaging of high-density visual evoked potentials with multi-scale brain parcellations and connectomes. doi:10.18112/openneuro.ds003505.v1.1.1",
+  "citeAs": "David Pascucci, Sebastien Tourbier, Joan Rue-Queralt, Margherita Carboni, Patric Hagmann (n.d.). VEPCON: Source imaging of high-density visual evoked potentials with multi-scale brain parcellations and connectomes. doi:10.18112/openneuro.ds003505.v1.1.1",
   "version": "1.6.0",
-  "dateCreated": "2021-02-04",
-  "dateModified": "2022-11-02",
   "measurementTechnique": [
     "BIDS task: faces",
     "BIDS task: motion"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Sebastien TOURBIER, PhD"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Gijs Plomp"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Sinergia Consortium"
-    }
   ],
   "distribution": [
     {

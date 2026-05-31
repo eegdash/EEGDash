@@ -105,42 +105,18 @@
       "name": "Brian Litt"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Brian Litt"
-  },
-  "datePublished": "2022",
+  "datePublished": "2019",
   "identifier": "doi:10.18112/openneuro.ds004100.v1.1.3",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004100.v1.1.3",
     "https://openneuro.org/datasets/ds004100",
     "https://huggingface.co/datasets/EEGDash/ds004100"
   ],
-  "citeAs": "John M. Bernabei, Adam Li, Andrew Y. Revell, Rachel J. Smith, Kristin M. Gunnarsdottir (2022). HUP iEEG Epilepsy Dataset. doi:10.18112/openneuro.ds004100.v1.1.3",
+  "citeAs": "John M. Bernabei, Adam Li, Andrew Y. Revell, Rachel J. Smith, Kristin M. Gunnarsdottir (2019). HUP iEEG Epilepsy Dataset. doi:10.18112/openneuro.ds004100.v1.1.3",
   "version": "1.4.0",
-  "dateCreated": "2022-04-17",
-  "dateModified": "2023-03-22",
   "measurementTechnique": [
     "BIDS task: ictal",
     "BIDS task: interictal"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Adam Li"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Adam Li"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "John Bernabei"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Ian Ong"
-    }
   ],
   "distribution": [
     {

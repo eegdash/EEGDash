@@ -84,29 +84,17 @@
       "name": "Klaus Gramann"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Klaus Gramann"
-  },
-  "datePublished": "2021",
+  "datePublished": "19",
   "identifier": "doi:10.18112/openneuro.ds003846.v2.0.2",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds003846.v2.0.2",
     "https://openneuro.org/datasets/ds003846",
     "https://huggingface.co/datasets/EEGDash/ds003846"
   ],
-  "citeAs": "Lukas Gehrke, Sezen Akman, Albert Chen, Pedro Lopes, Klaus Gramann (2021). Prediction Error. doi:10.18112/openneuro.ds003846.v2.0.2",
+  "citeAs": "Lukas Gehrke, Sezen Akman, Albert Chen, Pedro Lopes, Klaus Gramann (19). Prediction Error. doi:10.18112/openneuro.ds003846.v2.0.2",
   "version": "1.8.0",
-  "dateCreated": "2021-10-18",
-  "dateModified": "2025-04-09",
   "measurementTechnique": [
     "BIDS task: PredictionError"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Lukas Gehrke"
-    }
   ],
   "distribution": [
     {

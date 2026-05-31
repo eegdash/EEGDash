@@ -69,29 +69,17 @@
       "name": "[Unspecified]"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "[Unspecified]"
-  },
-  "datePublished": "2024",
+  "datePublished": "2019",
   "identifier": "doi:10.18112/openneuro.ds005624.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005624.v1.0.0",
     "https://openneuro.org/datasets/ds005624",
     "https://huggingface.co/datasets/EEGDash/ds005624"
   ],
-  "citeAs": "[Unspecified] (2024). Color Change Detection Task. doi:10.18112/openneuro.ds005624.v1.0.0",
+  "citeAs": "[Unspecified] (2019). Color Change Detection Task. doi:10.18112/openneuro.ds005624.v1.0.0",
   "version": "1.7.0",
-  "dateCreated": "2024-11-07",
-  "dateModified": "2024-11-07",
   "measurementTechnique": [
     "BIDS task: CCDT"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Creence Lin"
-    }
   ],
   "distribution": [
     {

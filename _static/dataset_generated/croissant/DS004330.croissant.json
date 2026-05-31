@@ -77,10 +77,6 @@
       "name": "Martin N. Hebart"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Martin N. Hebart"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -103,25 +99,17 @@
       "name": "ERC-StG-2018-803370"
     }
   ],
-  "datePublished": "2022",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds004330.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004330.v1.0.0",
     "https://openneuro.org/datasets/ds004330",
     "https://huggingface.co/datasets/EEGDash/ds004330"
   ],
-  "citeAs": "Johannes J.D. Singer, Radoslaw M. Cichy, Martin N. Hebart (2022). The spatiotemporal neural dynamics of object recognition for natural images and line drawings (MEG). doi:10.18112/openneuro.ds004330.v1.0.0",
+  "citeAs": "Johannes J.D. Singer, Radoslaw M. Cichy, Martin N. Hebart (20). The spatiotemporal neural dynamics of object recognition for natural images and line drawings (MEG). doi:10.18112/openneuro.ds004330.v1.0.0",
   "version": "1.7.0",
-  "dateCreated": "2022-11-07",
-  "dateModified": "2022-11-08",
   "measurementTechnique": [
     "BIDS task: main"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Johannes Janek Daniel Singer"
-    }
   ],
   "distribution": [
     {

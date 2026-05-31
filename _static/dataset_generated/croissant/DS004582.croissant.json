@@ -80,33 +80,17 @@
       "name": "Ngoi, Zi Liang"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Ngoi, Zi Liang"
-  },
-  "datePublished": "2023",
+  "datePublished": "2019",
   "identifier": "doi:10.18112/openneuro.ds004582.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004582.v1.0.0",
     "https://openneuro.org/datasets/ds004582",
     "https://huggingface.co/datasets/EEGDash/ds004582"
   ],
-  "citeAs": "Makowski, Dominique, Te, An-Shu, Kirk, Stephanie, Ngoi, Zi Liang (2023). FakeFaceEmo_data. doi:10.18112/openneuro.ds004582.v1.0.0",
+  "citeAs": "Makowski, Dominique, Te, An-Shu, Kirk, Stephanie, Ngoi, Zi Liang (2019). FakeFaceEmo_data. doi:10.18112/openneuro.ds004582.v1.0.0",
   "version": "1.6.0",
-  "dateCreated": "2023-05-30",
-  "dateModified": "2023-06-01",
   "measurementTechnique": [
     "BIDS task: FF"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "An Shu Te"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Dominique Makowski"
-    }
   ],
   "distribution": [
     {

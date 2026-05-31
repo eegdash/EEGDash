@@ -80,30 +80,18 @@
       "name": "Stefan Debener"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Stefan Debener"
-  },
-  "datePublished": "2022",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds004033.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004033.v1.0.0",
     "https://openneuro.org/datasets/ds004033",
     "https://huggingface.co/datasets/EEGDash/ds004033"
   ],
-  "citeAs": "Joanna Scanlon, Nadine Jacobsen, Marike Maack, Stefan Debener (2022). Electrode walking study. doi:10.18112/openneuro.ds004033.v1.0.0",
+  "citeAs": "Joanna Scanlon, Nadine Jacobsen, Marike Maack, Stefan Debener (20). Electrode walking study. doi:10.18112/openneuro.ds004033.v1.0.0",
   "version": "v2.0",
-  "dateCreated": "2022-02-18",
-  "dateModified": "2022-02-09",
   "measurementTechnique": [
     "BIDS task: act",
     "BIDS task: pas"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Joanna Scanlon"
-    }
   ],
   "distribution": [
     {

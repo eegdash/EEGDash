@@ -72,41 +72,25 @@
       "name": "Kublik Ewa"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Kublik Ewa"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "Polish National Science Center (NCN) grant no. 2018/31/N/HS6/03551"
     }
   ],
-  "datePublished": "2023",
+  "datePublished": "2024",
   "identifier": "doi:10.18112/openneuro.ds004796.v1.1.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004796.v1.1.0",
     "https://openneuro.org/datasets/ds004796",
     "https://huggingface.co/datasets/EEGDash/ds004796"
   ],
-  "citeAs": "Dzianok Patrycja, Kublik Ewa (2023). A Polish Electroencephalography, Alzheimer’s Risk-genes, Lifestyle and Neuroimaging (PEARL-Neuro) Database. doi:10.18112/openneuro.ds004796.v1.1.0",
+  "citeAs": "Dzianok Patrycja, Kublik Ewa (2024). A Polish Electroencephalography, Alzheimer’s Risk-genes, Lifestyle and Neuroimaging (PEARL-Neuro) Database. doi:10.18112/openneuro.ds004796.v1.1.0",
   "version": "1.0.2",
-  "dateCreated": "2023-10-15",
-  "dateModified": "2025-06-22",
   "measurementTechnique": [
     "BIDS task: msit",
     "BIDS task: rest",
     "BIDS task: sternberg"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Patrycja Dzianok"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Patrycja Dzianok"
-    }
   ],
   "distribution": [
     {

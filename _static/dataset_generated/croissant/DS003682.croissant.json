@@ -81,29 +81,16 @@
       "name": "Raymond J. Dolan"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Raymond J. Dolan"
-  },
-  "datePublished": "2021",
   "identifier": "doi:10.18112/openneuro.ds003682.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds003682.v1.0.0",
     "https://openneuro.org/datasets/ds003682",
     "https://huggingface.co/datasets/EEGDash/ds003682"
   ],
-  "citeAs": "Toby Wise, Yunzhe Liu, Fatima Chowdhury, Raymond J. Dolan (2021). Model-based aversive learning in humans is supported by preferential task state reactivation. doi:10.18112/openneuro.ds003682.v1.0.0",
+  "citeAs": "Toby Wise, Yunzhe Liu, Fatima Chowdhury, Raymond J. Dolan (n.d.). Model-based aversive learning in humans is supported by preferential task state reactivation. doi:10.18112/openneuro.ds003682.v1.0.0",
   "version": "v1.5.0",
-  "dateCreated": "2021-06-05",
-  "dateModified": "2021-06-05",
   "measurementTechnique": [
     "BIDS task: AversiveLearningReplay"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Toby Wise"
-    }
   ],
   "distribution": [
     {

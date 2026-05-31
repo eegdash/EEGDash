@@ -88,10 +88,6 @@
       "name": "Anna C. Schapiro"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Anna C. Schapiro"
-  },
   "datePublished": "2024",
   "identifier": "doi:10.18112/openneuro.ds005121.v1.0.2",
   "sameAs": [
@@ -101,16 +97,8 @@
   ],
   "citeAs": "Elizabeth M. Siefert, Sindhuja Uppuluri, Jianing Mu, Marlie C. Tandoc, James W. Antony (2024). Siefert2024. doi:10.18112/openneuro.ds005121.v1.0.2",
   "version": "1.2",
-  "dateCreated": "2024-05-02",
-  "dateModified": "2024-05-03",
   "measurementTechnique": [
     "BIDS task: Siefert2024"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Elizabeth M. Siefert"
-    }
   ],
   "distribution": [
     {

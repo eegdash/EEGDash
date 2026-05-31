@@ -126,7 +126,7 @@ print(f"records in the index: {n_records:,}")
 ```
 
 ```none
-records in the index: 305,393
+records in the index: 342,784
 ```
 
 <!-- GENERATED FROM PYTHON SOURCE LINES 90-97 -->
@@ -156,8 +156,8 @@ print(f"extra columns when filtered: {extra}")
 
 ```none
 broad   : 200 rows x 16 cols
-focused : 200 rows x 22 cols
-extra columns when filtered: ['_has_missing_files', 'ch_names', 'montage_hash', 'nchans', 'ntimes', 'participant_tsv', 'sampling_frequency']
+focused : 200 rows x 35 cols
+extra columns when filtered: ['_has_missing_files', '_metadata_provenance', 'cap_manufacturer', 'ch_names', 'duration_seconds', 'eeg_ground', 'eeg_placement_scheme', 'eeg_reference', 'institution_name', 'manufacturer', 'manufacturers_model_name', 'montage_hash', 'nchans', 'ntimes', 'participant_tsv', 'power_line_frequency', 'recording_duration', 'recording_type', 'sampling_frequency', 'software_filters']
 ```
 
 <!-- GENERATED FROM PYTHON SOURCE LINES 112-120 -->
@@ -739,6 +739,6 @@ See [References](../../../../references.md) for the centralized bibliography of 
 cited above. Add or amend an entry once in
 `docs/source/refs.bib`; every tutorial inherits the update.
 
-**Total running time of the script:** (0 minutes 1.553 seconds)
+**Total running time of the script:** (0 minutes 1.834 seconds)
 
 <a id="sphx-glr-download-generated-auto-examples-tutorials-00-start-here-plot-00-first-search-py"></a>

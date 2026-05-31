@@ -96,37 +96,24 @@
       "name": "Falk Eippert"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Falk Eippert"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "n/a"
     }
   ],
-  "datePublished": "2023",
   "identifier": "doi:10.18112/openneuro.ds004388.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004388.v1.0.0",
     "https://openneuro.org/datasets/ds004388",
     "https://huggingface.co/datasets/EEGDash/ds004388"
   ],
-  "citeAs": "Birgit Nierula, Tilman Stephani, Merve Kaptan, André Moruaux, Burkhard Maess (2023). Somatosensory evoked potentials in the human spinal cord to mixed nerve stimulation. doi:10.18112/openneuro.ds004388.v1.0.0",
+  "citeAs": "Birgit Nierula, Tilman Stephani, Merve Kaptan, André Moruaux, Burkhard Maess (n.d.). Somatosensory evoked potentials in the human spinal cord to mixed nerve stimulation. doi:10.18112/openneuro.ds004388.v1.0.0",
   "version": "1.6.0",
-  "dateCreated": "2023-01-04",
-  "dateModified": "2023-07-06",
   "measurementTechnique": [
     "BIDS task: alternating",
     "BIDS task: median",
     "BIDS task: tibial"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Falk Eippert"
-    }
   ],
   "distribution": [
     {

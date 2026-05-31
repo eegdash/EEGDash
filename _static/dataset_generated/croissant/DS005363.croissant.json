@@ -76,10 +76,6 @@
       "name": "Radoslaw M. Cichy"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Radoslaw M. Cichy"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -102,25 +98,17 @@
       "name": "INST 272/297-1"
     }
   ],
-  "datePublished": "2024",
+  "datePublished": "2019",
   "identifier": "doi:10.18112/openneuro.ds005363.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005363.v1.0.0",
     "https://openneuro.org/datasets/ds005363",
     "https://huggingface.co/datasets/EEGDash/ds005363"
   ],
-  "citeAs": "Marleen Haupt, Douglas D. Garrett, Radoslaw M. Cichy (2024). Object recognition in healthy aging (ORHA) - EEG. doi:10.18112/openneuro.ds005363.v1.0.0",
+  "citeAs": "Marleen Haupt, Douglas D. Garrett, Radoslaw M. Cichy (2019). Object recognition in healthy aging (ORHA) - EEG. doi:10.18112/openneuro.ds005363.v1.0.0",
   "version": "1.7.0",
-  "dateCreated": "2024-07-23",
-  "dateModified": "2024-07-27",
   "measurementTechnique": [
     "BIDS task: objrecog"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Marleen Haupt"
-    }
   ],
   "distribution": [
     {

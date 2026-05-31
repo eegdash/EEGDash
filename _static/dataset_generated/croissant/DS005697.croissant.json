@@ -72,29 +72,16 @@
       "name": "Hua Fan"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Hua Fan"
-  },
-  "datePublished": "2024",
   "identifier": "doi:10.18112/openneuro.ds005697.v1.0.2",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005697.v1.0.2",
     "https://openneuro.org/datasets/ds005697",
     "https://huggingface.co/datasets/EEGDash/ds005697"
   ],
-  "citeAs": "Weilong Li, Hua Fan (2024). PerceiveImagine. doi:10.18112/openneuro.ds005697.v1.0.2",
+  "citeAs": "Weilong Li, Hua Fan (n.d.). PerceiveImagine. doi:10.18112/openneuro.ds005697.v1.0.2",
   "version": "1.8.0",
-  "dateCreated": "2024-12-05",
-  "dateModified": "2024-12-10",
   "measurementTechnique": [
     "BIDS task: PerceiveImagine"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Anonymous User"
-    }
   ],
   "distribution": [
     {

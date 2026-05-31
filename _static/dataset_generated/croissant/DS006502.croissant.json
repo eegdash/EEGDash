@@ -77,38 +77,25 @@
       "name": "Cohen, LG"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Cohen, LG"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "Intramural Research Program (IRP) of the National Institute of Neurological Disorders and Stroke (NINDS), National Institutes of Health (NIH), Bethesda, MD, USA."
     }
   ],
-  "datePublished": "2025",
   "identifier": "doi:10.18112/openneuro.ds006502.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds006502.v1.0.0",
     "https://openneuro.org/datasets/ds006502",
     "https://huggingface.co/datasets/EEGDash/ds006502"
   ],
-  "citeAs": "Bönstrup, M, Buch, ER, Cohen, LG (2025). Skill learning and consolidation in healthy humans. doi:10.18112/openneuro.ds006502.v1.0.0",
+  "citeAs": "Bönstrup, M, Buch, ER, Cohen, LG (n.d.). Skill learning and consolidation in healthy humans. doi:10.18112/openneuro.ds006502.v1.0.0",
   "version": "1.10.0",
-  "dateCreated": "2025-07-28",
-  "dateModified": "2025-08-12",
   "measurementTechnique": [
     "BIDS task: control",
     "BIDS task: rest",
     "BIDS task: retest",
     "BIDS task: training"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Ethan Buch"
-    }
   ],
   "distribution": [
     {

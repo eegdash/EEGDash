@@ -80,27 +80,21 @@
       "name": "Muzaimi Mustapha"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Muzaimi Mustapha"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "The study has been funded by the USM Research Grant for Fundamental Neuroscience–Neurobehaviour (BrainReward and Anti-Reward) (1002/CNEURO/910114) and USM Research University Grant (1001.PPSP.812189)"
     }
   ],
-  "datePublished": "2022",
+  "datePublished": "2019",
   "identifier": "doi:10.18112/openneuro.ds004012.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004012.v1.0.0",
     "https://openneuro.org/datasets/ds004012",
     "https://huggingface.co/datasets/EEGDash/ds004012"
   ],
-  "citeAs": "Nur Syairah Ab Rani, Nurfaizatul Aisyah Ab Aziz, Mohammed Farouq Reza, Muzaimi Mustapha (2022). BRAR_NQ. doi:10.18112/openneuro.ds004012.v1.0.0",
+  "citeAs": "Nur Syairah Ab Rani, Nurfaizatul Aisyah Ab Aziz, Mohammed Farouq Reza, Muzaimi Mustapha (2019). BRAR_NQ. doi:10.18112/openneuro.ds004012.v1.0.0",
   "version": "1.6.0",
-  "dateCreated": "2022-02-03",
-  "dateModified": "2022-02-01",
   "measurementTechnique": [
     "BIDS task: rest01",
     "BIDS task: rest02",
@@ -112,12 +106,6 @@
     "BIDS task: stim06",
     "BIDS task: stim07",
     "BIDS task: stim08"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "MUHAMMAD HAKIMI BIN MOHD. RASHID"
-    }
   ],
   "distribution": [
     {

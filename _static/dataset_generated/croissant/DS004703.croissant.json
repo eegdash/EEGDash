@@ -85,29 +85,17 @@
       "name": "Timothy Gentner"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Timothy Gentner"
-  },
-  "datePublished": "2023",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds004703.v1.1.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004703.v1.1.0",
     "https://openneuro.org/datasets/ds004703",
     "https://huggingface.co/datasets/EEGDash/ds004703"
   ],
-  "citeAs": "Anna Mai, Stephanie Ries, Sharona Ben-Haim, Jerry Shih, Timothy Gentner (2023). sEEG Passive listening to natural speech. doi:10.18112/openneuro.ds004703.v1.1.0",
+  "citeAs": "Anna Mai, Stephanie Ries, Sharona Ben-Haim, Jerry Shih, Timothy Gentner (20). sEEG Passive listening to natural speech. doi:10.18112/openneuro.ds004703.v1.1.0",
   "version": "1.6.0",
-  "dateCreated": "2023-08-16",
-  "dateModified": "2023-08-18",
   "measurementTechnique": [
     "BIDS task: PassiveListen"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Anna Mai"
-    }
   ],
   "distribution": [
     {

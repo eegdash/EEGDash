@@ -104,12 +104,10 @@
   "identifier": "doi:10.82901/nemar.nm000104",
   "sameAs": [
     "https://doi.org/10.82901/nemar.nm000104",
-    "https://openneuro.org/datasets/nm000104",
-    "https://huggingface.co/datasets/EEGDash/nm000104"
+    "https://openneuro.org/datasets/nm000104"
   ],
   "citeAs": "Viswanath Sivakumar, Jeffrey Seely, Alan Du, Sean R. Bittner, Adam Berenzweig (2024). emg2qwerty: A Large Dataset with Baselines for Touch Typing using Surface Electromyography. doi:10.82901/nemar.nm000104",
   "version": "1.11.0",
-  "dateModified": "2026-02-25",
   "measurementTechnique": [
     "BIDS task: typing"
   ],
@@ -146,14 +144,6 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=nm000104",
       "encodingFormat": "text/html"
-    },
-    {
-      "@type": "cr:FileObject",
-      "@id": "nm000104-huggingface",
-      "name": "EEGDash/nm000104 on Hugging Face",
-      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
-      "contentUrl": "https://huggingface.co/datasets/EEGDash/nm000104",
-      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

@@ -80,10 +80,6 @@
       "name": "Marom Bikson"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Marom Bikson"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -114,25 +110,17 @@
       "name": "NIH-G-RISE T32GM136499"
     }
   ],
-  "datePublished": "2021",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds003670.v1.1.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds003670.v1.1.0",
     "https://openneuro.org/datasets/ds003670",
     "https://huggingface.co/datasets/EEGDash/ds003670"
   ],
-  "citeAs": "Nigel Gebodh, Zeinab Esmaeilpour, Abhishek Datta, Marom Bikson (2021). Dataset of Concurrent EEG, ECG, and Behavior with Multiple Doses of transcranial Electrical Stimulation - BIDS. doi:10.18112/openneuro.ds003670.v1.1.0",
+  "citeAs": "Nigel Gebodh, Zeinab Esmaeilpour, Abhishek Datta, Marom Bikson (20). Dataset of Concurrent EEG, ECG, and Behavior with Multiple Doses of transcranial Electrical Stimulation - BIDS. doi:10.18112/openneuro.ds003670.v1.1.0",
   "version": "1.1.1",
-  "dateCreated": "2021-05-29",
-  "dateModified": "2021-06-17",
   "measurementTechnique": [
     "BIDS task: GXtESCTT"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Nigel Gebodh"
-    }
   ],
   "distribution": [
     {

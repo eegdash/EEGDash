@@ -85,51 +85,23 @@
       "name": "Arno Delorme (curation)"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Arno Delorme (curation)"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "National Institutes of Health National Institute on Aging (R01-AG18030)."
     }
   ],
-  "datePublished": "2020",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds002893.v2.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds002893.v2.0.0",
     "https://openneuro.org/datasets/ds002893",
     "https://huggingface.co/datasets/EEGDash/ds002893"
   ],
-  "citeAs": "Marissa Westerfield (data, curation), Scott Makeig (data, curation), Dung Truong (curation), Kay Robbins (curation), Arno Delorme (curation) (2020). Auditory-Visual Shift Study. doi:10.18112/openneuro.ds002893.v2.0.0",
+  "citeAs": "Marissa Westerfield (data, curation), Scott Makeig (data, curation), Dung Truong (curation), Kay Robbins (curation), Arno Delorme (curation) (20). Auditory-Visual Shift Study. doi:10.18112/openneuro.ds002893.v2.0.0",
   "version": "1.7.0",
-  "dateCreated": "2020-06-15",
-  "dateModified": "2022-06-18",
   "measurementTechnique": [
     "BIDS task: AuditoryVisualShift"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Dung Truong"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Arnaud Delorme"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Kay Robbins"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Clement Lee"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Annalisa Salazar"
-    }
   ],
   "distribution": [
     {

@@ -84,33 +84,17 @@
       "name": "Ngoi, Zi Liang"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Ngoi, Zi Liang"
-  },
-  "datePublished": "2023",
+  "datePublished": "2014",
   "identifier": "doi:10.18112/openneuro.ds004587.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004587.v1.0.0",
     "https://openneuro.org/datasets/ds004587",
     "https://huggingface.co/datasets/EEGDash/ds004587"
   ],
-  "citeAs": "Makowski, Dominique, Te, An-Shu, Jiayi, Zhang, Kirk, Stephanie, Ngoi, Zi Liang (2023). IllusionGameEEG_data. doi:10.18112/openneuro.ds004587.v1.0.0",
+  "citeAs": "Makowski, Dominique, Te, An-Shu, Jiayi, Zhang, Kirk, Stephanie, Ngoi, Zi Liang (2014). IllusionGameEEG_data. doi:10.18112/openneuro.ds004587.v1.0.0",
   "version": "1.6.0",
-  "dateCreated": "2023-06-01",
-  "dateModified": "2024-06-28",
   "measurementTechnique": [
     "BIDS task: IG"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "An Shu Te"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Dominique Makowski"
-    }
   ],
   "distribution": [
     {

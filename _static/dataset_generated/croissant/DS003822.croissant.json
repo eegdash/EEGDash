@@ -76,29 +76,17 @@
       "name": "James F Cavanagh"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "James F Cavanagh"
-  },
-  "datePublished": "2021",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds003822.v1.1.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds003822.v1.1.0",
     "https://openneuro.org/datasets/ds003822",
     "https://huggingface.co/datasets/EEGDash/ds003822"
   ],
-  "citeAs": "Darin R. Brown, Trevor Jackson, James F Cavanagh (2021). EEG: Probabilistic Learning with Affective Feedback: Exp #1. doi:10.18112/openneuro.ds003822.v1.1.0",
+  "citeAs": "Darin R. Brown, Trevor Jackson, James F Cavanagh (20). EEG: Probabilistic Learning with Affective Feedback: Exp #1. doi:10.18112/openneuro.ds003822.v1.1.0",
   "version": "1.1.1",
-  "dateCreated": "2021-09-29",
-  "dateModified": "2021-09-27",
   "measurementTechnique": [
     "BIDS task: ProbabilisticSelection"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "James F Cavanagh"
-    }
   ],
   "distribution": [
     {

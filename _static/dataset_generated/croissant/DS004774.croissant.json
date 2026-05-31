@@ -105,10 +105,6 @@
       "name": "D. Hermes"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "D. Hermes"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -119,26 +115,17 @@
       "name": "Epilepsy Foundation of the Netherlands/Dutch Epilepsy Foundation, NEF17-07"
     }
   ],
-  "datePublished": "2023",
   "identifier": "doi:10.18112/openneuro.ds004774.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004774.v1.0.0",
     "https://openneuro.org/datasets/ds004774",
     "https://huggingface.co/datasets/EEGDash/ds004774"
   ],
-  "citeAs": "M.A. van den Boom, N.M. Gregg, G.O. Valencia, B.N. Lundstrom, K.J. Miller (2023). Automatic Evoked Response Detection (ER-Detect) dataset. doi:10.18112/openneuro.ds004774.v1.0.0",
+  "citeAs": "M.A. van den Boom, N.M. Gregg, G.O. Valencia, B.N. Lundstrom, K.J. Miller (n.d.). Automatic Evoked Response Detection (ER-Detect) dataset. doi:10.18112/openneuro.ds004774.v1.0.0",
   "version": "Brain Imaging Data Structure Specification v1.8.0",
-  "dateCreated": "2023-09-25",
-  "dateModified": "2023-12-30",
   "measurementTechnique": [
     "BIDS task: SPESclin",
     "BIDS task: ccep"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Max van den Boom"
-    }
   ],
   "distribution": [
     {

@@ -81,8 +81,13 @@
     }
   ],
   "datePublished": "2019",
+  "identifier": "doi:10.82901/nemar.nm000127",
+  "sameAs": [
+    "https://doi.org/10.82901/nemar.nm000127",
+    "https://openneuro.org/datasets/nm000127"
+  ],
+  "citeAs": "Heegyu Kim, Kyungho Won, Minkyu Ahn, Sung Chan Jun (2019). Kim2025 – 40-class beta-range SSVEP speller dataset. doi:10.82901/nemar.nm000127",
   "version": "1.9.0",
-  "dateModified": "2026-04-29",
   "measurementTechnique": [
     "BIDS task: ssvep"
   ],
@@ -119,14 +124,6 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=nm000127",
       "encodingFormat": "text/html"
-    },
-    {
-      "@type": "cr:FileObject",
-      "@id": "nm000127-huggingface",
-      "name": "EEGDash/nm000127 on Hugging Face",
-      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
-      "contentUrl": "https://huggingface.co/datasets/EEGDash/nm000127",
-      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

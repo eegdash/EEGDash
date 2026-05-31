@@ -97,10 +97,6 @@
       "name": "Johannes Sarnthein"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Johannes Sarnthein"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -123,29 +119,16 @@
       "name": "Russian Federation for Basic Research, RFBR 20-015-00176 A"
     }
   ],
-  "datePublished": "2020",
   "identifier": "doi:10.18112/openneuro.ds003374.v1.1.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds003374.v1.1.1",
     "https://openneuro.org/datasets/ds003374",
     "https://huggingface.co/datasets/EEGDash/ds003374"
   ],
-  "citeAs": "Tommaso Fedele, Ece Boran, Valeri Chirkov, Peter Hilfiker, Thomas Grunwald (2020). Dataset of neurons and intracranial EEG from human amygdala during aversive dynamic visual stimulation. doi:10.18112/openneuro.ds003374.v1.1.1",
+  "citeAs": "Tommaso Fedele, Ece Boran, Valeri Chirkov, Peter Hilfiker, Thomas Grunwald (n.d.). Dataset of neurons and intracranial EEG from human amygdala during aversive dynamic visual stimulation. doi:10.18112/openneuro.ds003374.v1.1.1",
   "version": "1.4.0",
-  "dateCreated": "2020-11-11",
-  "dateModified": "2020-11-26",
   "measurementTechnique": [
     "BIDS task: jokeit"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Ece Boran"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Tommaso Fedele"
-    }
   ],
   "distribution": [
     {

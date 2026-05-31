@@ -89,35 +89,22 @@
       "name": "Meryem A. Yücel"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Meryem A. Yücel"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "National Institutes of Health (P41EB015896, P01-HD064653, NICHD-PO1 HD 64653)"
     }
   ],
-  "datePublished": "2025",
   "identifier": "doi:10.18112/openneuro.ds005935.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005935.v1.0.0",
     "https://openneuro.org/datasets/ds005935",
     "https://huggingface.co/datasets/EEGDash/ds005935"
   ],
-  "citeAs": "Xinge Li, Manon A. Krol, Sahar Jahani, David A. Boas, Helen Tager-Flusberg (2025). Mirror Neuron Study. doi:10.18112/openneuro.ds005935.v1.0.0",
+  "citeAs": "Xinge Li, Manon A. Krol, Sahar Jahani, David A. Boas, Helen Tager-Flusberg (n.d.). Mirror Neuron Study. doi:10.18112/openneuro.ds005935.v1.0.0",
   "version": "1.8.0",
-  "dateCreated": "2025-02-19",
-  "dateModified": "2025-02-19",
   "measurementTechnique": [
     "BIDS task: MirrorNeuron"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "MERYEM YUCEL"
-    }
   ],
   "distribution": [
     {

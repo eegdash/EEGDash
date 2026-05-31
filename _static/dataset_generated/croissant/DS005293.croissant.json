@@ -92,29 +92,16 @@
       "name": "Hu Li"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Hu Li"
-  },
-  "datePublished": "2024",
   "identifier": "doi:10.18112/openneuro.ds005293.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005293.v1.0.0",
     "https://openneuro.org/datasets/ds005293",
     "https://huggingface.co/datasets/EEGDash/ds005293"
   ],
-  "citeAs": "Zhao Xiangyue, Zhou Jingyao, Zhang Libo, Duan Haoqing, Wei Shiyu (2024). 95 By BP. doi:10.18112/openneuro.ds005293.v1.0.0",
+  "citeAs": "Zhao Xiangyue, Zhou Jingyao, Zhang Libo, Duan Haoqing, Wei Shiyu (n.d.). 95 By BP. doi:10.18112/openneuro.ds005293.v1.0.0",
   "version": "1.1.1",
-  "dateCreated": "2024-06-27",
-  "dateModified": "2024-07-29",
   "measurementTechnique": [
     "BIDS task: 95ByBP"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Xiangyue Zhao"
-    }
   ],
   "distribution": [
     {

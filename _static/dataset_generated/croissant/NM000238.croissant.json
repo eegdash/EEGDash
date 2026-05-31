@@ -45,7 +45,7 @@
   "alternateName": [
     "NM000238"
   ],
-  "description": "SparrKULee: A Speech-Evoked Auditory Response Repository from KU Leuven, Containing the EEG of 85 Participants. eeg dataset accessible via EEGDash as `NM000238` with standardized BIDS metadata.",
+  "description": "nm000238. eeg dataset accessible via EEGDash as `NM000238` with standardized BIDS metadata.",
   "url": "https://eegdash.org/api/dataset/eegdash.dataset.NM000238.html",
   "keywords": [
     "EEG",
@@ -59,59 +59,6 @@
     "name": "EEG Dash",
     "url": "https://eegdash.org/"
   },
-  "license": "Attribution-NonCommercial 4.0 International License (CC BY-NC 4.0) for the EEG data. Stimuli can only be used for non-commercial purposes.",
-  "creator": [
-    {
-      "@type": "sc:Person",
-      "name": "Bernd Accou"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Lies Bollens"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Marlies Gillis"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Wendy Verheijen"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Hugo Van hamme"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Tom Francart"
-    }
-  ],
-  "funder": [
-    {
-      "@type": "sc:Organization",
-      "name": "KU Leuven Special Research Fund C24/18/099 (C2 project to Tom Francart and Hugo Van hamme)"
-    },
-    {
-      "@type": "sc:Organization",
-      "name": "PhD grant 1S89622N of the Research Foundation Flanders (FWO)"
-    },
-    {
-      "@type": "sc:Organization",
-      "name": "PhD grant 1SB1421N of the Research Foundation Flanders (FWO)"
-    },
-    {
-      "@type": "sc:Organization",
-      "name": "European Research Council (ERC) grant under the European Union’s Horizon 2020 research and innovation program (grant agreement No 637424, ERC Starting Grant to Tom Francart)"
-    }
-  ],
-  "datePublished": "2024",
-  "identifier": "doi:10.82901/nemar.nm000238",
-  "sameAs": [
-    "https://doi.org/10.82901/nemar.nm000238",
-    "https://openneuro.org/datasets/nm000238",
-    "https://huggingface.co/datasets/EEGDash/nm000238"
-  ],
-  "citeAs": "Bernd Accou, Lies Bollens, Marlies Gillis, Wendy Verheijen, Hugo Van hamme (2024). SparrKULee: A Speech-Evoked Auditory Response Repository from KU Leuven, Containing the EEG of 85 Participants. doi:10.82901/nemar.nm000238",
   "measurementTechnique": [
     "BIDS task: .bids-validator-config",
     "BIDS task: .bidsignore",
@@ -229,9 +176,7 @@
     "BIDS task: audiogram",
     "BIDS task: bids-validation",
     "BIDS task: convert_accou2023",
-    "BIDS task: generate-archive",
     "BIDS task: listeningActive",
-    "BIDS task: llm-enrichment",
     "BIDS task: noise_audiobook_1.npz",
     "BIDS task: noise_audiobook_10_1.npz",
     "BIDS task: noise_audiobook_10_2.npz",
@@ -477,8 +422,7 @@
     "BIDS task: t_podcast_8.npz",
     "BIDS task: t_podcast_9.npz",
     "BIDS task: triggers.npz",
-    "BIDS task: version-check",
-    "BIDS task: version-doi"
+    "BIDS task: version-check"
   ],
   "distribution": [
     {
@@ -505,14 +449,6 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=nm000238",
       "encodingFormat": "text/html"
-    },
-    {
-      "@type": "cr:FileObject",
-      "@id": "nm000238-huggingface",
-      "name": "EEGDash/nm000238 on Hugging Face",
-      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
-      "contentUrl": "https://huggingface.co/datasets/EEGDash/nm000238",
-      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

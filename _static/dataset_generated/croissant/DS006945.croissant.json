@@ -76,10 +76,6 @@
       "name": "Jose L. Contreras-Vidal"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Jose L. Contreras-Vidal"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -90,27 +86,18 @@
       "name": "NSF IUCRC BRAIN Center Award #2137255"
     }
   ],
-  "datePublished": "2025",
   "identifier": "doi:10.18112/openneuro.ds006945.v1.2.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds006945.v1.2.1",
     "https://openneuro.org/datasets/ds006945",
     "https://huggingface.co/datasets/EEGDash/ds006945"
   ],
-  "citeAs": "Shantanu Sarkar, Kevin Nathan, Jose L. Contreras-Vidal (2025). Dataset: T1-Weighted Structural MRI and fMRI of Participants Viewing Self-Avatar Exoskeleton Walking (11 SWS Cycles). doi:10.18112/openneuro.ds006945.v1.2.1",
+  "citeAs": "Shantanu Sarkar, Kevin Nathan, Jose L. Contreras-Vidal (n.d.). Dataset: T1-Weighted Structural MRI and fMRI of Participants Viewing Self-Avatar Exoskeleton Walking (11 SWS Cycles). doi:10.18112/openneuro.ds006945.v1.2.1",
   "version": "1.8.0",
-  "dateCreated": "2025-11-19",
-  "dateModified": "2026-02-18",
   "measurementTechnique": [
     "BIDS task: baseline",
     "BIDS task: walking1",
     "BIDS task: walking2"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Shantanu Sarkar"
-    }
   ],
   "distribution": [
     {

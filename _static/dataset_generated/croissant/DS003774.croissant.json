@@ -96,29 +96,16 @@
       "name": "Derek Lomas"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Derek Lomas"
-  },
-  "datePublished": "2021",
   "identifier": "doi:10.18112/openneuro.ds003774.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds003774.v1.0.0",
     "https://openneuro.org/datasets/ds003774",
     "https://huggingface.co/datasets/EEGDash/ds003774"
   ],
-  "citeAs": "Krishna Prasad Miyapuram, Pankaj Pandey, Nashra Ahmad, Bharatesh R Shiraguppi, Esha Sharma (2021). Music Listening- Genre EEG dataset (MUSIN-G). doi:10.18112/openneuro.ds003774.v1.0.0",
+  "citeAs": "Krishna Prasad Miyapuram, Pankaj Pandey, Nashra Ahmad, Bharatesh R Shiraguppi, Esha Sharma (n.d.). Music Listening- Genre EEG dataset (MUSIN-G). doi:10.18112/openneuro.ds003774.v1.0.0",
   "version": "1.1.1",
-  "dateCreated": "2021-08-23",
-  "dateModified": "2022-08-25",
   "measurementTechnique": [
     "BIDS task: MusicListening"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Krishna Miyapuram"
-    }
   ],
   "distribution": [
     {

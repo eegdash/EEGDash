@@ -84,29 +84,16 @@
       "name": "Phillip J. Holcomb"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Phillip J. Holcomb"
-  },
-  "datePublished": "2024",
   "identifier": "doi:10.18112/openneuro.ds005296.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005296.v1.0.1",
     "https://openneuro.org/datasets/ds005296",
     "https://huggingface.co/datasets/EEGDash/ds005296"
   ],
-  "citeAs": "Karen Emmorey, Emily M. Akers, Priscilla Martinez, Katherine J. Midgley, Phillip J. Holcomb (2024). Assessing sensitivity to semantic and syntactic information in deaf readers: An ERP study. doi:10.18112/openneuro.ds005296.v1.0.1",
+  "citeAs": "Karen Emmorey, Emily M. Akers, Priscilla Martinez, Katherine J. Midgley, Phillip J. Holcomb (n.d.). Assessing sensitivity to semantic and syntactic information in deaf readers: An ERP study. doi:10.18112/openneuro.ds005296.v1.0.1",
   "version": "1.8.0",
-  "dateCreated": "2024-06-28",
-  "dateModified": "2026-03-11",
   "measurementTechnique": [
     "BIDS task: sentencesemanticandsyntacticviolations"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Emily M. Akers"
-    }
   ],
   "distribution": [
     {

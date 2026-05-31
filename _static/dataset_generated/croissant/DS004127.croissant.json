@@ -76,21 +76,15 @@
       "name": "John P Seymour"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "John P Seymour"
-  },
-  "datePublished": "2022",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds004127.v3.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004127.v3.0.0",
     "https://openneuro.org/datasets/ds004127",
     "https://huggingface.co/datasets/EEGDash/ds004127"
   ],
-  "citeAs": "Amada Abrego, Wasif Khan, John P Seymour (2022). Somatosensory Cortex Rat DISC Data. doi:10.18112/openneuro.ds004127.v3.0.0",
+  "citeAs": "Amada Abrego, Wasif Khan, John P Seymour (20). Somatosensory Cortex Rat DISC Data. doi:10.18112/openneuro.ds004127.v3.0.0",
   "version": "1.1.1",
-  "dateCreated": "2022-05-10",
-  "dateModified": "2022-08-23",
   "measurementTechnique": [
     "BIDS task: B1",
     "BIDS task: B2",
@@ -103,12 +97,6 @@
     "BIDS task: E1",
     "BIDS task: Gamma",
     "BIDS task: gamma"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Amada Abrego Mancilla"
-    }
   ],
   "distribution": [
     {

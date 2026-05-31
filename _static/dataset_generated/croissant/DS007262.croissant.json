@@ -72,28 +72,16 @@
       "name": "Liam Booth"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Liam Booth"
-  },
-  "datePublished": "2026",
+  "datePublished": "2019",
   "identifier": "doi:10.18112/openneuro.ds007262.v1.0.6",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds007262.v1.0.6",
     "https://openneuro.org/datasets/ds007262"
   ],
-  "citeAs": "Matthew Barras, Liam Booth (2026). Cognitive Workload 8-level arithmetic. doi:10.18112/openneuro.ds007262.v1.0.6",
+  "citeAs": "Matthew Barras, Liam Booth (2019). Cognitive Workload 8-level arithmetic. doi:10.18112/openneuro.ds007262.v1.0.6",
   "version": "1.9.0",
-  "dateCreated": "2026-01-18",
-  "dateModified": "2026-02-24",
   "measurementTechnique": [
     "BIDS task: arithmetic"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Liam Booth"
-    }
   ],
   "distribution": [
     {

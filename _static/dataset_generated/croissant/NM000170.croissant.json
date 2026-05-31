@@ -95,8 +95,13 @@
     }
   ],
   "datePublished": "2022",
+  "identifier": "doi:10.82901/nemar.nm000170",
+  "sameAs": [
+    "https://doi.org/10.82901/nemar.nm000170",
+    "https://openneuro.org/datasets/nm000170"
+  ],
+  "citeAs": "Hannah S Pulferer, Brynja Ásgeirsdóttir, Valeria Mondini, Andreea I Sburlea, Gernot R Müller-Putz (2022). BNCI 2025-002 Continuous 2D Trajectory Decoding dataset. doi:10.82901/nemar.nm000170",
   "version": "1.9.0",
-  "dateModified": "2026-04-30",
   "measurementTechnique": [
     "BIDS task: imagery"
   ],
@@ -133,14 +138,6 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=nm000170",
       "encodingFormat": "text/html"
-    },
-    {
-      "@type": "cr:FileObject",
-      "@id": "nm000170-huggingface",
-      "name": "EEGDash/nm000170 on Hugging Face",
-      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
-      "contentUrl": "https://huggingface.co/datasets/EEGDash/nm000170",
-      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

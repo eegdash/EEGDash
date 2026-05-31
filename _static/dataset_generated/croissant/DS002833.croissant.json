@@ -88,21 +88,14 @@
       "name": "Mahmoud Hassan"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Mahmoud Hassan"
-  },
-  "datePublished": "2020",
   "identifier": "doi:10.18112/openneuro.ds002833.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds002833.v1.0.0",
     "https://openneuro.org/datasets/ds002833",
     "https://huggingface.co/datasets/EEGDash/ds002833"
   ],
-  "citeAs": "Ahmad Mheich, Olivier Dufor, Sahar Yassine, Aya Kabbara, Fabrice Wendling (2020). DataSet2. doi:10.18112/openneuro.ds002833.v1.0.0",
+  "citeAs": "Ahmad Mheich, Olivier Dufor, Sahar Yassine, Aya Kabbara, Fabrice Wendling (n.d.). DataSet2. doi:10.18112/openneuro.ds002833.v1.0.0",
   "version": "2.1",
-  "dateCreated": "2020-05-21",
-  "dateModified": "2020-07-20",
   "measurementTechnique": [
     "BIDS task: PicturesNaming"
   ],

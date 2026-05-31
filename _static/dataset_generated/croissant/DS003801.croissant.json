@@ -84,29 +84,17 @@
       "name": "Bojana Mirkovic"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Bojana Mirkovic"
-  },
-  "datePublished": "2021",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds003801.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds003801.v1.0.0",
     "https://openneuro.org/datasets/ds003801",
     "https://huggingface.co/datasets/EEGDash/ds003801"
   ],
-  "citeAs": "Lisa Straetmans, Bjoern Holtze, Stefan Debener, Manuela Jaeger, Bojana Mirkovic (2021). Neural Tracking to go. doi:10.18112/openneuro.ds003801.v1.0.0",
+  "citeAs": "Lisa Straetmans, Bjoern Holtze, Stefan Debener, Manuela Jaeger, Bojana Mirkovic (20). Neural Tracking to go. doi:10.18112/openneuro.ds003801.v1.0.0",
   "version": "v2.0",
-  "dateCreated": "2021-09-13",
-  "dateModified": "2021-11-09",
   "measurementTechnique": [
     "BIDS task: NeuralTrackingToGo"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Lisa Straetmans"
-    }
   ],
   "distribution": [
     {

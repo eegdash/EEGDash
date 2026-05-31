@@ -88,10 +88,6 @@
       "name": "Zonglei Zhen"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Zonglei Zhen"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -106,25 +102,17 @@
       "name": "STI 2030-436 Major Projects of the Ministry of Science and Technology of China437 (#2021ZD0200407)"
     }
   ],
-  "datePublished": "2025",
+  "datePublished": "2019",
   "identifier": "doi:10.18112/openneuro.ds005811.v1.0.9",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005811.v1.0.9",
     "https://openneuro.org/datasets/ds005811",
     "https://huggingface.co/datasets/EEGDash/ds005811"
   ],
-  "citeAs": "Guohao Zhang, Ming Zhou, Shuyi Zhen, Shaohua Tang, Zheng Li (2025). NOD-EEG. doi:10.18112/openneuro.ds005811.v1.0.9",
+  "citeAs": "Guohao Zhang, Ming Zhou, Shuyi Zhen, Shaohua Tang, Zheng Li (2019). NOD-EEG. doi:10.18112/openneuro.ds005811.v1.0.9",
   "version": "1.10.1",
-  "dateCreated": "2025-01-10",
-  "dateModified": "2026-03-13",
   "measurementTechnique": [
     "BIDS task: ImageNet"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Guohao Zhang"
-    }
   ],
   "distribution": [
     {

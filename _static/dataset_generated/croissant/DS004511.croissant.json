@@ -76,35 +76,19 @@
       "name": "Lau, Zen Juen"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Lau, Zen Juen"
-  },
-  "datePublished": "2023",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds004511.v1.0.2",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004511.v1.0.2",
     "https://openneuro.org/datasets/ds004511",
     "https://huggingface.co/datasets/EEGDash/ds004511"
   ],
-  "citeAs": "Makowski, Dominique, Pham, Tam, Lau, Zen Juen (2023). Deception_data. doi:10.18112/openneuro.ds004511.v1.0.2",
+  "citeAs": "Makowski, Dominique, Pham, Tam, Lau, Zen Juen (20). Deception_data. doi:10.18112/openneuro.ds004511.v1.0.2",
   "version": "1.8.0",
-  "dateCreated": "2023-02-22",
-  "dateModified": "2023-06-05",
   "measurementTechnique": [
     "BIDS task: CC",
     "BIDS task: GG",
     "BIDS task: Rest"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Anshu Te"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Dominique Makowski"
-    }
   ],
   "distribution": [
     {

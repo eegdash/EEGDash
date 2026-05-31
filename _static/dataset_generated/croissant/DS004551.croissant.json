@@ -100,35 +100,22 @@
       "name": "Eishi Asano"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Eishi Asano"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "N/A"
     }
   ],
-  "datePublished": "2023",
   "identifier": "doi:10.18112/openneuro.ds004551.v1.0.6",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004551.v1.0.6",
     "https://openneuro.org/datasets/ds004551",
     "https://huggingface.co/datasets/EEGDash/ds004551"
   ],
-  "citeAs": "Kazuki Sakakura, Naoto Kuroda, Masaki Sonoda, Takumi Mitsuhashi, Ethan Firestone (2023). iEEG on children during slow wave sleep. doi:10.18112/openneuro.ds004551.v1.0.6",
+  "citeAs": "Kazuki Sakakura, Naoto Kuroda, Masaki Sonoda, Takumi Mitsuhashi, Ethan Firestone (n.d.). iEEG on children during slow wave sleep. doi:10.18112/openneuro.ds004551.v1.0.6",
   "version": "1.7.0",
-  "dateCreated": "2023-04-07",
-  "dateModified": "2023-05-30",
   "measurementTechnique": [
     "BIDS task: sleep"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Kaz Sakakura"
-    }
   ],
   "distribution": [
     {

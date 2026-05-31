@@ -85,29 +85,17 @@
       "name": "Nicole C. Swann"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Nicole C. Swann"
-  },
-  "datePublished": "2023",
+  "datePublished": "2022",
   "identifier": "doi:10.18112/openneuro.ds004473.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004473.v1.0.1",
     "https://openneuro.org/datasets/ds004473",
     "https://huggingface.co/datasets/EEGDash/ds004473"
   ],
-  "citeAs": "Alexander P. Rockhill, Alessandra Mantovani, Brittany Stedelin, Admed M. Raslan, Nicole C. Swann (2023). sEEG Forced Two-Choice Task. doi:10.18112/openneuro.ds004473.v1.0.1",
+  "citeAs": "Alexander P. Rockhill, Alessandra Mantovani, Brittany Stedelin, Admed M. Raslan, Nicole C. Swann (2022). sEEG Forced Two-Choice Task. doi:10.18112/openneuro.ds004473.v1.0.1",
   "version": "1.9.2",
-  "dateCreated": "2023-02-07",
-  "dateModified": "2023-02-09",
   "measurementTechnique": [
     "BIDS task: SlowFast"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Alexander Rockhill"
-    }
   ],
   "distribution": [
     {

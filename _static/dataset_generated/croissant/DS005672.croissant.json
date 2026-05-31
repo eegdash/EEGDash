@@ -72,29 +72,16 @@
       "name": "Zhao Jiaxin"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Zhao Jiaxin"
-  },
-  "datePublished": "2024",
   "identifier": "doi:10.18112/openneuro.ds005672.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005672.v1.0.0",
     "https://openneuro.org/datasets/ds005672",
     "https://huggingface.co/datasets/EEGDash/ds005672"
   ],
-  "citeAs": "Li Zhiyuan, Zhao Jiaxin (2024). PerceiveImagine. doi:10.18112/openneuro.ds005672.v1.0.0",
+  "citeAs": "Li Zhiyuan, Zhao Jiaxin (n.d.). PerceiveImagine. doi:10.18112/openneuro.ds005672.v1.0.0",
   "version": "1.8.0",
-  "dateCreated": "2024-11-30",
-  "dateModified": "2024-12-04",
   "measurementTechnique": [
     "BIDS task: PerceiveImagine"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Anonymous User"
-    }
   ],
   "distribution": [
     {

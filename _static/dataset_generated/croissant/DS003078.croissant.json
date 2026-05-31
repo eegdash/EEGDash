@@ -76,10 +76,6 @@
       "name": "Etienne KOECHLIN"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Etienne KOECHLIN"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -90,25 +86,16 @@
       "name": "IHU CESAME program “Investissements d’Avenir” ANR-10-IBHU-0003"
     }
   ],
-  "datePublished": "2020",
   "identifier": "doi:10.18112/openneuro.ds003078.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds003078.v1.0.0",
     "https://openneuro.org/datasets/ds003078",
     "https://huggingface.co/datasets/EEGDash/ds003078"
   ],
-  "citeAs": "Philippe DOMENECH, Sylvain RHEIMS, Etienne KOECHLIN (2020). PROBE iEEG. doi:10.18112/openneuro.ds003078.v1.0.0",
+  "citeAs": "Philippe DOMENECH, Sylvain RHEIMS, Etienne KOECHLIN (n.d.). PROBE iEEG. doi:10.18112/openneuro.ds003078.v1.0.0",
   "version": "1.0.0",
-  "dateCreated": "2020-08-16",
-  "dateModified": "2020-08-17",
   "measurementTechnique": [
     "BIDS task: PROBE"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "philippe Domenech"
-    }
   ],
   "distribution": [
     {

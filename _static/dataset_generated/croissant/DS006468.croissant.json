@@ -73,38 +73,26 @@
       "name": "Bernd T. Meyer"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Bernd T. Meyer"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "This work was funded by Deutsche Forschungsgemeinschaft (DFG, German Research Foundation) under Germany’s Excellence Strategy– EXC 2177/1- Project ID 390895286 and by Forschungspoolmittel Potentialbereich mHealth from the School VI Medicine and Health Sciences at Carl von Ossietzky University Oldenburg (PB mHealth 2020-13)."
     }
   ],
-  "datePublished": "2025",
+  "datePublished": "2019",
   "identifier": "doi:10.18112/openneuro.ds006468.v1.1.2",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds006468.v1.1.2",
     "https://openneuro.org/datasets/ds006468",
     "https://huggingface.co/datasets/EEGDash/ds006468"
   ],
-  "citeAs": "Till Habersetzer, Bernd T. Meyer (2025). MEG-SCANS - A comprehensive magnetoencephalography speech dataset with Stories, Chirps And Noisy Sentences.. doi:10.18112/openneuro.ds006468.v1.1.2",
+  "citeAs": "Till Habersetzer, Bernd T. Meyer (2019). MEG-SCANS - A comprehensive magnetoencephalography speech dataset with Stories, Chirps And Noisy Sentences.. doi:10.18112/openneuro.ds006468.v1.1.2",
   "version": "1.7.0",
-  "dateCreated": "2025-07-14",
-  "dateModified": "2025-12-10",
   "measurementTechnique": [
     "BIDS task: audiobook1",
     "BIDS task: audiobook2",
     "BIDS task: noise",
     "BIDS task: olsa"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Till Habersetzer"
-    }
   ],
   "distribution": [
     {

@@ -85,8 +85,7 @@
   "identifier": "doi:10.13026/C2X676",
   "sameAs": [
     "https://doi.org/10.13026/C2X676",
-    "https://openneuro.org/datasets/nm000185",
-    "https://huggingface.co/datasets/EEGDash/nm000185"
+    "https://openneuro.org/datasets/nm000185"
   ],
   "citeAs": "Bob Kemp, Aeilko H. Zwinderman, Bert Tuk, Hilbert A.C. Kamphuisen, Josefien J.L. Oberye (2000). Sleep-EDF Expanded: Whole-Night PSG Recordings. doi:10.13026/C2X676",
   "version": "1.9.0",
@@ -127,14 +126,6 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=nm000185",
       "encodingFormat": "text/html"
-    },
-    {
-      "@type": "cr:FileObject",
-      "@id": "nm000185-huggingface",
-      "name": "EEGDash/nm000185 on Hugging Face",
-      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
-      "contentUrl": "https://huggingface.co/datasets/EEGDash/nm000185",
-      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

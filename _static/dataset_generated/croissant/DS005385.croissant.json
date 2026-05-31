@@ -80,36 +80,24 @@
       "name": "Stephan Getzmann"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Stephan Getzmann"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "The Dortmund Vital Study is funded by the institute’s budget (no grant number). Thus, the study design, collection, management, analysis, interpretation of data, writing of the report, and the decision to submit the report for publication is not influenced or biased by any sponsor."
     }
   ],
-  "datePublished": "2024",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds005385.v1.0.3",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005385.v1.0.3",
     "https://openneuro.org/datasets/ds005385",
     "https://huggingface.co/datasets/EEGDash/ds005385"
   ],
-  "citeAs": "Edmund Wascher, Daniel Schneider, Patrick D. Gajewski, Stephan Getzmann (2024). Resting-state EEG data before and after cognitive activity across the adult lifespan and a 5-year follow-up. doi:10.18112/openneuro.ds005385.v1.0.3",
+  "citeAs": "Edmund Wascher, Daniel Schneider, Patrick D. Gajewski, Stephan Getzmann (20). Resting-state EEG data before and after cognitive activity across the adult lifespan and a 5-year follow-up. doi:10.18112/openneuro.ds005385.v1.0.3",
   "version": "1.9.0",
-  "dateCreated": "2024-07-30",
-  "dateModified": "2025-05-05",
   "measurementTechnique": [
     "BIDS task: EyesClosed",
     "BIDS task: EyesOpen"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Stephan Getzmann"
-    }
   ],
   "distribution": [
     {

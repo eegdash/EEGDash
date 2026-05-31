@@ -80,35 +80,22 @@
       "name": "Gramann, K."
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Gramann, K."
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "China Scholarship Council"
     }
   ],
-  "datePublished": "2024",
   "identifier": "doi:10.18112/openneuro.ds004980.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004980.v1.0.0",
     "https://openneuro.org/datasets/ds004980",
     "https://huggingface.co/datasets/EEGDash/ds004980"
   ],
-  "citeAs": "Wang,S., Oliveira,G.S., Djebbara,Z, Gramann, K. (2024). EEG data set for a architectural affordances task. doi:10.18112/openneuro.ds004980.v1.0.0",
+  "citeAs": "Wang,S., Oliveira,G.S., Djebbara,Z, Gramann, K. (n.d.). EEG data set for a architectural affordances task. doi:10.18112/openneuro.ds004980.v1.0.0",
   "version": "unofficial extension",
-  "dateCreated": "2024-02-20",
-  "dateModified": "2024-02-20",
   "measurementTechnique": [
     "BIDS task: DefaultTask"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "王圣"
-    }
   ],
   "distribution": [
     {

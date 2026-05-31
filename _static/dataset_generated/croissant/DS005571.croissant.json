@@ -80,10 +80,6 @@
       "name": "Pablo Billeke"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Pablo Billeke"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -102,26 +98,17 @@
       "name": "ANID FONDEQUIP EQM150076"
     }
   ],
-  "datePublished": "2024",
   "identifier": "doi:10.18112/openneuro.ds005571.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005571.v1.0.1",
     "https://openneuro.org/datasets/ds005571",
     "https://huggingface.co/datasets/EEGDash/ds005571"
   ],
-  "citeAs": "María Paz Martínez-Molina, Alejandra Figueroa-Vargas, Francisco Zamorano, Pablo Billeke (2024). Expectation of Conflict Stimuli. doi:10.18112/openneuro.ds005571.v1.0.1",
+  "citeAs": "María Paz Martínez-Molina, Alejandra Figueroa-Vargas, Francisco Zamorano, Pablo Billeke (n.d.). Expectation of Conflict Stimuli. doi:10.18112/openneuro.ds005571.v1.0.1",
   "version": "1.9.0",
-  "dateCreated": "2024-10-11",
-  "dateModified": "2024-11-11",
   "measurementTechnique": [
     "BIDS task: gnga",
     "BIDS task: gngb"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Pablo Billeke"
-    }
   ],
   "distribution": [
     {

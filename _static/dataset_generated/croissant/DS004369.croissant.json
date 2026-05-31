@@ -80,29 +80,16 @@
       "name": "Stefan Debener"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Stefan Debener"
-  },
-  "datePublished": "2022",
   "identifier": "doi:10.18112/openneuro.ds004369.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004369.v1.0.1",
     "https://openneuro.org/datasets/ds004369",
     "https://huggingface.co/datasets/EEGDash/ds004369"
   ],
-  "citeAs": "Bjoern Holtze, Marc Rosenkranz, Martin Bleichner, Stefan Debener (2022). Blink-Pause-Relation (Competing Speaker Paradigm). doi:10.18112/openneuro.ds004369.v1.0.1",
+  "citeAs": "Bjoern Holtze, Marc Rosenkranz, Martin Bleichner, Stefan Debener (n.d.). Blink-Pause-Relation (Competing Speaker Paradigm). doi:10.18112/openneuro.ds004369.v1.0.1",
   "version": "v5.2",
-  "dateCreated": "2022-12-16",
-  "dateModified": "2023-02-06",
   "measurementTechnique": [
     "BIDS task: attendedSpeakerParadigm"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Björn Holtze"
-    }
   ],
   "distribution": [
     {

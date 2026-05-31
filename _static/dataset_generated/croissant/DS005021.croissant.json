@@ -84,10 +84,6 @@
       "name": "Anthony M. Harris"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Anthony M. Harris"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -111,16 +107,8 @@
   ],
   "citeAs": "Jessica G. Williams, William J. Harrison, Henry A. Beale, Jason B. Mattingley, Anthony M. Harris (2024). Tilt Illusion by Phase. doi:10.18112/openneuro.ds005021.v1.2.1",
   "version": "1.2.1",
-  "dateCreated": "2024-03-09",
-  "dateModified": "2024-03-11",
   "measurementTechnique": [
     "BIDS task: tiltillusion"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Anthony Harris"
-    }
   ],
   "distribution": [
     {

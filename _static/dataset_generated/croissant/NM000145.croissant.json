@@ -84,12 +84,10 @@
   "identifier": "doi:10.82901/nemar.nm000145",
   "sameAs": [
     "https://doi.org/10.82901/nemar.nm000145",
-    "https://openneuro.org/datasets/nm000145",
-    "https://huggingface.co/datasets/EEGDash/nm000145"
+    "https://openneuro.org/datasets/nm000145"
   ],
   "citeAs": "Moritz Grosse-Wentrup, Christian Liefhold, Klaus Gramann, Martin Buss (2009). Munich Motor Imagery dataset. doi:10.82901/nemar.nm000145",
   "version": "1.9.0",
-  "dateModified": "2026-04-29",
   "measurementTechnique": [
     "BIDS task: imagery"
   ],
@@ -126,14 +124,6 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=nm000145",
       "encodingFormat": "text/html"
-    },
-    {
-      "@type": "cr:FileObject",
-      "@id": "nm000145-huggingface",
-      "name": "EEGDash/nm000145 on Hugging Face",
-      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
-      "contentUrl": "https://huggingface.co/datasets/EEGDash/nm000145",
-      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

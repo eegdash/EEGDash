@@ -76,10 +76,6 @@
       "name": "Thomas A. Carlson"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Thomas A. Carlson"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -90,25 +86,17 @@
       "name": "ARC DP200101787 (TAC)"
     }
   ],
-  "datePublished": "2024",
+  "datePublished": "2019",
   "identifier": "doi:10.18112/openneuro.ds004995.v1.0.2",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004995.v1.0.2",
     "https://openneuro.org/datasets/ds004995",
     "https://huggingface.co/datasets/EEGDash/ds004995"
   ],
-  "citeAs": "Denise Moerel, James Psihoyos, Thomas A. Carlson (2024). The Time-Course of Food Representation in the Human Brain. doi:10.18112/openneuro.ds004995.v1.0.2",
+  "citeAs": "Denise Moerel, James Psihoyos, Thomas A. Carlson (2019). The Time-Course of Food Representation in the Human Brain. doi:10.18112/openneuro.ds004995.v1.0.2",
   "version": "1.0.2",
-  "dateCreated": "2024-02-28",
-  "dateModified": "2024-03-24",
   "measurementTechnique": [
     "BIDS task: food"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Denise Moerel"
-    }
   ],
   "distribution": [
     {

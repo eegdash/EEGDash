@@ -80,34 +80,22 @@
       "name": "Carlson, Thomas"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Carlson, Thomas"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "ARC DP200101787 (TAC)"
     }
   ],
-  "datePublished": "2026",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds007521.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds007521.v1.0.1",
     "https://openneuro.org/datasets/ds007521"
   ],
-  "citeAs": "Moerel, Denise, Chenh, Cecilia, Bowman, Sophie, Carlson, Thomas (2026). The effect of hunger and state preferences on the neural processing of food images. doi:10.18112/openneuro.ds007521.v1.0.1",
+  "citeAs": "Moerel, Denise, Chenh, Cecilia, Bowman, Sophie, Carlson, Thomas (20). The effect of hunger and state preferences on the neural processing of food images. doi:10.18112/openneuro.ds007521.v1.0.1",
   "version": "1.0.2",
-  "dateCreated": "2026-03-16",
-  "dateModified": "2026-03-18",
   "measurementTechnique": [
     "BIDS task: food"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Denise Moerel"
-    }
   ],
   "distribution": [
     {

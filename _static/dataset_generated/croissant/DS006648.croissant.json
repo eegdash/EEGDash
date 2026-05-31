@@ -72,29 +72,16 @@
       "name": "Joydeep Bhattacharya"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Joydeep Bhattacharya"
-  },
-  "datePublished": "2025",
   "identifier": "doi:10.18112/openneuro.ds006648.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds006648.v1.0.0",
     "https://openneuro.org/datasets/ds006648",
     "https://huggingface.co/datasets/EEGDash/ds006648"
   ],
-  "citeAs": "Soma Chaudhuri, Joydeep Bhattacharya (2025). Poetry Assessment EEG Dataset 1. doi:10.18112/openneuro.ds006648.v1.0.0",
+  "citeAs": "Soma Chaudhuri, Joydeep Bhattacharya (n.d.). Poetry Assessment EEG Dataset 1. doi:10.18112/openneuro.ds006648.v1.0.0",
   "version": "1.8.0",
-  "dateCreated": "2025-09-10",
-  "dateModified": "2025-09-11",
   "measurementTechnique": [
     "BIDS task: readpoetry"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "SOMA CHAUDHURI"
-    }
   ],
   "distribution": [
     {

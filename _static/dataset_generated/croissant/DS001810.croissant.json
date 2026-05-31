@@ -80,35 +80,22 @@
       "name": "Heleen A. Slagter"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Heleen A. Slagter"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "NWO Research Talent Grant 406-12-079"
     }
   ],
-  "datePublished": "2019",
   "identifier": "doi:10.18112/openneuro.ds001810.v1.1.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds001810.v1.1.0",
     "https://openneuro.org/datasets/ds001810",
     "https://huggingface.co/datasets/EEGDash/ds001810"
   ],
-  "citeAs": "Leon C. Reteig, Lionel A. Newman, K. Richard Ridderinkhof, Heleen A. Slagter (2019). EEG study of the attentional blink; before, during, and after transcranial Direct Current Stimulation (tDCS). doi:10.18112/openneuro.ds001810.v1.1.0",
+  "citeAs": "Leon C. Reteig, Lionel A. Newman, K. Richard Ridderinkhof, Heleen A. Slagter (n.d.). EEG study of the attentional blink; before, during, and after transcranial Direct Current Stimulation (tDCS). doi:10.18112/openneuro.ds001810.v1.1.0",
   "version": "v1.2.0-dev",
-  "dateCreated": "2019-03-21",
-  "dateModified": "2019-05-28",
   "measurementTechnique": [
     "BIDS task: attentionalblink"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Leon Reteig"
-    }
   ],
   "distribution": [
     {

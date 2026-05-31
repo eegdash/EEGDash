@@ -68,21 +68,15 @@
       "name": "Rickson C. Mesquita"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Rickson C. Mesquita"
-  },
-  "datePublished": "2025",
+  "datePublished": "2019",
   "identifier": "doi:10.18112/openneuro.ds005963.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005963.v1.0.0",
     "https://openneuro.org/datasets/ds005963",
     "https://huggingface.co/datasets/EEGDash/ds005963"
   ],
-  "citeAs": "Rickson C. Mesquita (2025). FRESH Motor Dataset. doi:10.18112/openneuro.ds005963.v1.0.0",
+  "citeAs": "Rickson C. Mesquita (2019). FRESH Motor Dataset. doi:10.18112/openneuro.ds005963.v1.0.0",
   "version": "1.7.0",
-  "dateCreated": "2025-03-06",
-  "dateModified": "2025-03-06",
   "measurementTechnique": [
     "BIDS task: FRESHMOTOR"
   ],

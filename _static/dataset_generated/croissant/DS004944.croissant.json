@@ -89,39 +89,23 @@
       "name": "Johannes Sarnthein"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Johannes Sarnthein"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "Swiss National Science Foundation, SNSF 204651"
     }
   ],
-  "datePublished": "2024",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds004944.v1.1.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004944.v1.1.0",
     "https://openneuro.org/datasets/ds004944",
     "https://huggingface.co/datasets/EEGDash/ds004944"
   ],
-  "citeAs": "Filippo Costa, Niklaus Krayenbühl, Georgia Ramantani, Ece Boran, Kristina König (2024). Dataset of BCI2000-compatible intraoperative ECoG with neuromorphic encoding. doi:10.18112/openneuro.ds004944.v1.1.0",
+  "citeAs": "Filippo Costa, Niklaus Krayenbühl, Georgia Ramantani, Ece Boran, Kristina König (20). Dataset of BCI2000-compatible intraoperative ECoG with neuromorphic encoding. doi:10.18112/openneuro.ds004944.v1.1.0",
   "version": "1.4.0",
-  "dateCreated": "2024-01-30",
-  "dateModified": "2024-04-11",
   "measurementTechnique": [
     "BIDS task: acute"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Filippo Costa"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Johannes Sarnthein"
-    }
   ],
   "distribution": [
     {

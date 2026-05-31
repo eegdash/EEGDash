@@ -93,10 +93,6 @@
       "name": "Zonglei Zhen"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Zonglei Zhen"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -111,25 +107,16 @@
       "name": "STI 2030-436 Major Projects of the Ministry of Science and Technology of China437 (#2021ZD0200407)"
     }
   ],
-  "datePublished": "2026",
   "identifier": "doi:10.18112/openneuro.ds007353.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds007353.v1.0.0",
     "https://openneuro.org/datasets/ds007353"
   ],
-  "citeAs": "Guohao Zhang, Sai Ma, Ming Zhou, Shaohua Tang, Shuyi Zhen (2026). HAD-MEEG. doi:10.18112/openneuro.ds007353.v1.0.0",
+  "citeAs": "Guohao Zhang, Sai Ma, Ming Zhou, Shaohua Tang, Shuyi Zhen (n.d.). HAD-MEEG. doi:10.18112/openneuro.ds007353.v1.0.0",
   "version": "1.10.1",
-  "dateCreated": "2026-02-02",
-  "dateModified": "2026-02-03",
   "measurementTechnique": [
     "BIDS task: action",
     "BIDS task: noise"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Guohao Zhang"
-    }
   ],
   "distribution": [
     {

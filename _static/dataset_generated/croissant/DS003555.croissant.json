@@ -88,35 +88,22 @@
       "name": "Johannes Sarnthein"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Johannes Sarnthein"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "Swiss National Science Foundation (CRSK-3_190895 to G.R. and J.S.)."
     }
   ],
-  "datePublished": "2021",
   "identifier": "doi:10.18112/openneuro.ds003555.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds003555.v1.0.1",
     "https://openneuro.org/datasets/ds003555",
     "https://huggingface.co/datasets/EEGDash/ds003555"
   ],
-  "citeAs": "Dorottya Cserpan, Ece Boran, Richard Rosch, San Pietro Lo Biundo, Georgia Ramantani (2021). Dataset of EEG recordings of pediatric patients with epilepsy based on the 10-20 system. doi:10.18112/openneuro.ds003555.v1.0.1",
+  "citeAs": "Dorottya Cserpan, Ece Boran, Richard Rosch, San Pietro Lo Biundo, Georgia Ramantani (n.d.). Dataset of EEG recordings of pediatric patients with epilepsy based on the 10-20 system. doi:10.18112/openneuro.ds003555.v1.0.1",
   "version": "1.4.0",
-  "dateCreated": "2021-03-05",
-  "dateModified": "2021-03-08",
   "measurementTechnique": [
     "BIDS task: hfo"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Dorottya Cserpan"
-    }
   ],
   "distribution": [
     {

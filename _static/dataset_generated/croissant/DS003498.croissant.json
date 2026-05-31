@@ -85,31 +85,15 @@
       "name": "Sarnthein J."
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Sarnthein J."
-  },
-  "datePublished": "2021",
+  "datePublished": "2019",
   "identifier": "doi:10.18112/openneuro.ds003498.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds003498.v1.0.1",
     "https://openneuro.org/datasets/ds003498",
     "https://huggingface.co/datasets/EEGDash/ds003498"
   ],
-  "citeAs": "Fedele T, Krayenbühl N, Hilfiker P, Adam Li, Sarnthein J. (2021). interictal iEEG during slow-wave sleep with HFO markings. doi:10.18112/openneuro.ds003498.v1.0.1",
+  "citeAs": "Fedele T, Krayenbühl N, Hilfiker P, Adam Li, Sarnthein J. (2019). interictal iEEG during slow-wave sleep with HFO markings. doi:10.18112/openneuro.ds003498.v1.0.1",
   "version": "1.4.0",
-  "dateCreated": "2021-02-01",
-  "dateModified": "2023-09-26",
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Johannes Sarnthein"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Adam Li"
-    }
-  ],
   "distribution": [
     {
       "@type": "cr:FileObject",

@@ -80,10 +80,6 @@
       "name": "Almudena Capilla"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Almudena Capilla"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -94,27 +90,18 @@
       "name": "Ministerio de Ciencia e Innovación / Agencia Estatal de Investigación, Spain / FEDER, UE (MCIN/AEI/10.13039/501100011033 /FEDER,UE), Grant/Award Number: PID2021-125841NB-I00; Comunidad de Madrid"
     }
   ],
-  "datePublished": "2025",
   "identifier": "doi:10.18112/openneuro.ds006171.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds006171.v1.0.0",
     "https://openneuro.org/datasets/ds006171",
     "https://huggingface.co/datasets/EEGDash/ds006171"
   ],
-  "citeAs": "María Melcón, Enrique Stern, Lydia Arana, Almudena Capilla (2025). EEG data during three near-threshold visual detection tasks: a no-cue task, a noninformative cue task (50% validity), and an informative cue task (100% validity). doi:10.18112/openneuro.ds006171.v1.0.0",
+  "citeAs": "María Melcón, Enrique Stern, Lydia Arana, Almudena Capilla (n.d.). EEG data during three near-threshold visual detection tasks: a no-cue task, a noninformative cue task (50% validity), and an informative cue task (100% validity). doi:10.18112/openneuro.ds006171.v1.0.0",
   "version": "1.8.0",
-  "dateCreated": "2025-04-24",
-  "dateModified": "2025-04-24",
   "measurementTechnique": [
     "BIDS task: informative",
     "BIDS task: nocue",
     "BIDS task: noninformative"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "María Melcón"
-    }
   ],
   "distribution": [
     {

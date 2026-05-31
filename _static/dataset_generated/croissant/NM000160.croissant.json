@@ -97,8 +97,13 @@
     }
   ],
   "datePublished": "2025",
+  "identifier": "doi:10.82901/nemar.nm000160",
+  "sameAs": [
+    "https://doi.org/10.82901/nemar.nm000160",
+    "https://openneuro.org/datasets/nm000160"
+  ],
+  "citeAs": "Weibo Yi, Jiaming Chen, Dan Wang, Xinkang Hu, Meng Xu (2025). Multi-joint upper-limb MI dataset from Yi et al. 2025. doi:10.82901/nemar.nm000160",
   "version": "1.9.0",
-  "dateModified": "2026-04-02",
   "measurementTechnique": [
     "BIDS task: imagery"
   ],
@@ -135,14 +140,6 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=nm000160",
       "encodingFormat": "text/html"
-    },
-    {
-      "@type": "cr:FileObject",
-      "@id": "nm000160-huggingface",
-      "name": "EEGDash/nm000160 on Hugging Face",
-      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
-      "contentUrl": "https://huggingface.co/datasets/EEGDash/nm000160",
-      "encodingFormat": "application/vnd.huggingface-dataset+json"
     }
   ]
 }

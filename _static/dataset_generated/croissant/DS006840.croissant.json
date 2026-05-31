@@ -87,35 +87,23 @@
       "name": "Fangyao Xu"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Fangyao Xu"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "N/A"
     }
   ],
-  "datePublished": "2025",
+  "datePublished": "2019",
   "identifier": "doi:10.18112/openneuro.ds006840.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds006840.v1.0.0",
     "https://openneuro.org/datasets/ds006840",
     "https://huggingface.co/datasets/EEGDash/ds006840"
   ],
-  "citeAs": "Mengpu Cai, Rongrong Fu, Yaodong Wang, Bin Lu, Saiwei Guo (2025). IACKD: Intention Action Conflict EEG-Hand Kinematics Dataset. doi:10.18112/openneuro.ds006840.v1.0.0",
+  "citeAs": "Mengpu Cai, Rongrong Fu, Yaodong Wang, Bin Lu, Saiwei Guo (2019). IACKD: Intention Action Conflict EEG-Hand Kinematics Dataset. doi:10.18112/openneuro.ds006840.v1.0.0",
   "version": "1.7.0",
-  "dateCreated": "2025-10-25",
-  "dateModified": "2025-11-17",
   "measurementTechnique": [
     "BIDS task: ihc"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Mengpu Cai"
-    }
   ],
   "distribution": [
     {

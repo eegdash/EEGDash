@@ -81,35 +81,23 @@
       "name": "Stanislas Dehaene"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Stanislas Dehaene"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "European Research Council (ERC, https://erc.europa.eu/) grant to S.D. (NeuroSyntax, ID: 695403)."
     }
   ],
-  "datePublished": "2023",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds004483.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004483.v1.0.0",
     "https://openneuro.org/datasets/ds004483",
     "https://huggingface.co/datasets/EEGDash/ds004483"
   ],
-  "citeAs": "Samuel Planton*, Fosca Al Roumi*, Liping Wang, Stanislas Dehaene (2023). ABSeqMEG. doi:10.18112/openneuro.ds004483.v1.0.0",
+  "citeAs": "Samuel Planton*, Fosca Al Roumi*, Liping Wang, Stanislas Dehaene (20). ABSeqMEG. doi:10.18112/openneuro.ds004483.v1.0.0",
   "version": "1.6.0",
-  "dateCreated": "2023-02-08",
-  "dateModified": "2023-02-13",
   "measurementTechnique": [
     "BIDS task: abseq"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Fosca Al Roumi"
-    }
   ],
   "distribution": [
     {

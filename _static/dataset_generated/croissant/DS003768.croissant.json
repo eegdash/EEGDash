@@ -91,10 +91,6 @@
       "name": "Xiao Liu"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Xiao Liu"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -109,26 +105,18 @@
       "name": "National Institutes of Health R01 Award (1R01NS113889-01A1)"
     }
   ],
-  "datePublished": "2021",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds003768.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds003768.v1.0.0",
     "https://openneuro.org/datasets/ds003768",
     "https://huggingface.co/datasets/EEGDash/ds003768"
   ],
-  "citeAs": "Yameng Gu, Feng Han, Lucas E. Sainburg, Margeaux M. Schade, Orfeu M. Buxton (2021). Simultaneous EEG and fMRI signals during sleep from humans. doi:10.18112/openneuro.ds003768.v1.0.0",
+  "citeAs": "Yameng Gu, Feng Han, Lucas E. Sainburg, Margeaux M. Schade, Orfeu M. Buxton (20). Simultaneous EEG and fMRI signals during sleep from humans. doi:10.18112/openneuro.ds003768.v1.0.0",
   "version": "1.4.1",
-  "dateCreated": "2021-08-16",
-  "dateModified": "2026-01-06",
   "measurementTechnique": [
     "BIDS task: rest",
     "BIDS task: sleep"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Xiao Liu"
-    }
   ],
   "distribution": [
     {

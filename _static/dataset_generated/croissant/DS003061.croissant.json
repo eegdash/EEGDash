@@ -68,33 +68,16 @@
       "name": "Arnaud Delorme"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Arnaud Delorme"
-  },
-  "datePublished": "2020",
   "identifier": "doi:10.18112/openneuro.ds003061.v1.1.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds003061.v1.1.0",
     "https://openneuro.org/datasets/ds003061",
     "https://huggingface.co/datasets/EEGDash/ds003061"
   ],
-  "citeAs": "Arnaud Delorme (2020). EEG data from an auditory oddball task. doi:10.18112/openneuro.ds003061.v1.1.0",
+  "citeAs": "Arnaud Delorme (n.d.). EEG data from an auditory oddball task. doi:10.18112/openneuro.ds003061.v1.1.0",
   "version": "v1.2.1",
-  "dateCreated": "2020-08-08",
-  "dateModified": "2022-08-26",
   "measurementTechnique": [
     "BIDS task: P300"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Arnaud Delorme"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Dung Truong"
-    }
   ],
   "distribution": [
     {

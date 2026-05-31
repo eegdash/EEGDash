@@ -80,10 +80,6 @@
       "name": "Nancy E. R. De León"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Nancy E. R. De León"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -99,19 +95,11 @@
   ],
   "citeAs": "Elif Isbell, Amanda N. Peters, Dylan M. Richardson, Nancy E. R. De León (2025). Cognitive Electrophysiology in Socioeconomic Context in Adulthood: An EEG dataset. doi:10.18112/openneuro.ds006018.v1.2.2",
   "version": "1.9.0",
-  "dateCreated": "2025-03-14",
-  "dateModified": "2025-05-22",
   "measurementTechnique": [
     "BIDS task: auditoryoddball",
     "BIDS task: flanker",
     "BIDS task: visualoddball",
     "BIDS task: visualsearch"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Elif Isbell"
-    }
   ],
   "distribution": [
     {

@@ -84,35 +84,23 @@
       "name": "Valentina Bambini"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Valentina Bambini"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "This work received support from the European Research Council under the EU’s Horizon Europe program ERC Consolidator Grant “PROcessing MEtaphors: Neurochronometry Acquisition and Decay (PROMENADE)” [101045733]."
     }
   ],
-  "datePublished": "2025",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds005946.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005946.v1.0.1",
     "https://openneuro.org/datasets/ds005946",
     "https://huggingface.co/datasets/EEGDash/ds005946"
   ],
-  "citeAs": "Federico Frau, Paolo Canal, Maddalena Bressler, Chiara Pompei, Valentina Bambini (2025). ERC_CoG PROMENADE - WP2 - MetaImagery (Metaphor and Mental Imagery). doi:10.18112/openneuro.ds005946.v1.0.1",
+  "citeAs": "Federico Frau, Paolo Canal, Maddalena Bressler, Chiara Pompei, Valentina Bambini (20). ERC_CoG PROMENADE - WP2 - MetaImagery (Metaphor and Mental Imagery). doi:10.18112/openneuro.ds005946.v1.0.1",
   "version": "1.8.0",
-  "dateCreated": "2025-02-27",
-  "dateModified": "2025-02-27",
   "measurementTechnique": [
     "BIDS task: picturematching"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Federico Frau"
-    }
   ],
   "distribution": [
     {

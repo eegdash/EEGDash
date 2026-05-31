@@ -100,37 +100,17 @@
       "name": "Charles A Nelson"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Charles A Nelson"
-  },
-  "datePublished": "2019",
+  "datePublished": "20",
   "identifier": "doi:mockDOI",
   "sameAs": [
     "https://doi.org/mockDOI",
     "https://openneuro.org/datasets/ds002181",
     "https://huggingface.co/datasets/EEGDash/ds002181"
   ],
-  "citeAs": "Wanze Xie, Sarah Jensen, Mark Wade, Swapna Kumar, Alissa Westerlund (2019). CRYPTO and PROVIDE EEG Baseline Data. doi:mockDOI",
+  "citeAs": "Wanze Xie, Sarah Jensen, Mark Wade, Swapna Kumar, Alissa Westerlund (20). CRYPTO and PROVIDE EEG Baseline Data. doi:mockDOI",
   "version": "1.2",
-  "dateCreated": "2019-09-15",
-  "dateModified": "2019-09-27",
   "measurementTechnique": [
     "BIDS task: Baseline"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Wanze Xie"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Arnaud Delorme"
-    },
-    {
-      "@type": "sc:Person",
-      "name": "Annalisa Salazar"
-    }
   ],
   "distribution": [
     {

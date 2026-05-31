@@ -109,10 +109,6 @@
       "name": "D. Hermes"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "D. Hermes"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -127,25 +123,17 @@
       "name": "EpilepsieNL #17-07"
     }
   ],
-  "datePublished": "2022",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds004080.v1.2.4",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004080.v1.2.4",
     "https://openneuro.org/datasets/ds004080",
     "https://huggingface.co/datasets/EEGDash/ds004080"
   ],
-  "citeAs": "D. van Blooijs, M.A. van den Boom, J.F. van der Aar, G.J.M. Huiskamp, G. Castegnaro (2022). CCEP ECoG dataset across age 4-51. doi:10.18112/openneuro.ds004080.v1.2.4",
+  "citeAs": "D. van Blooijs, M.A. van den Boom, J.F. van der Aar, G.J.M. Huiskamp, G. Castegnaro (20). CCEP ECoG dataset across age 4-51. doi:10.18112/openneuro.ds004080.v1.2.4",
   "version": "Brain Imaging Data Structure Specification v1.6.0",
-  "dateCreated": "2022-07-21",
-  "dateModified": "2023-03-12",
   "measurementTechnique": [
     "BIDS task: SPESclin"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Epilab UMCU"
-    }
   ],
   "distribution": [
     {

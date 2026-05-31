@@ -88,29 +88,16 @@
       "name": "Nathan Faivre"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Nathan Faivre"
-  },
-  "datePublished": "2022",
   "identifier": "doi:10.18112/openneuro.ds004367.v1.0.2",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004367.v1.0.2",
     "https://openneuro.org/datasets/ds004367",
     "https://huggingface.co/datasets/EEGDash/ds004367"
   ],
-  "citeAs": "Martin Rouy, Matthieu Roger, Dorian Goueytes, Michael Pereira, Paul Roux (2022). Meta-rdk: Raw EEG data. doi:10.18112/openneuro.ds004367.v1.0.2",
+  "citeAs": "Martin Rouy, Matthieu Roger, Dorian Goueytes, Michael Pereira, Paul Roux (n.d.). Meta-rdk: Raw EEG data. doi:10.18112/openneuro.ds004367.v1.0.2",
   "version": "1.1.1",
-  "dateCreated": "2022-12-15",
-  "dateModified": "2022-12-15",
   "measurementTechnique": [
     "BIDS task: rdk"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Martin Rouy"
-    }
   ],
   "distribution": [
     {

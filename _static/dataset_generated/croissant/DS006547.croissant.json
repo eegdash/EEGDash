@@ -84,29 +84,16 @@
       "name": "Russell Butler"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Russell Butler"
-  },
-  "datePublished": "2025",
   "identifier": "doi:10.18112/openneuro.ds006547.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds006547.v1.0.0",
     "https://openneuro.org/datasets/ds006547",
     "https://huggingface.co/datasets/EEGDash/ds006547"
   ],
-  "citeAs": "Sanaz Ghaffari, Arian Yavari, Sara Bonyadian, Arsalan Ghofrani, Russell Butler (2025). Visual EEG Study (BrainVision → BIDS). doi:10.18112/openneuro.ds006547.v1.0.0",
+  "citeAs": "Sanaz Ghaffari, Arian Yavari, Sara Bonyadian, Arsalan Ghofrani, Russell Butler (n.d.). Visual EEG Study (BrainVision → BIDS). doi:10.18112/openneuro.ds006547.v1.0.0",
   "version": "1.9.0",
-  "dateCreated": "2025-08-12",
-  "dateModified": "2025-08-12",
   "measurementTechnique": [
     "BIDS task: visual"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Russell Butler"
-    }
   ],
   "distribution": [
     {

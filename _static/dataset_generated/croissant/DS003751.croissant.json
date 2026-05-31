@@ -80,29 +80,16 @@
       "name": "Narayanan Srinivasan"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Narayanan Srinivasan"
-  },
-  "datePublished": "2021",
   "identifier": "doi:10.18112/openneuro.ds003751.v1.0.2",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds003751.v1.0.2",
     "https://openneuro.org/datasets/ds003751",
     "https://huggingface.co/datasets/EEGDash/ds003751"
   ],
-  "citeAs": "Sudhakar Mishra, Md. Asif, Uma Shanker Tiwary, Narayanan Srinivasan (2021). Dataset on Emotion with Naturalistic Stimuli (DENS). doi:10.18112/openneuro.ds003751.v1.0.2",
+  "citeAs": "Sudhakar Mishra, Md. Asif, Uma Shanker Tiwary, Narayanan Srinivasan (n.d.). Dataset on Emotion with Naturalistic Stimuli (DENS). doi:10.18112/openneuro.ds003751.v1.0.2",
   "version": "1.4",
-  "dateCreated": "2021-07-30",
-  "dateModified": "2023-07-08",
   "measurementTechnique": [
     "BIDS task: Emotion"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "SUDHAKAR MISHRA"
-    }
   ],
   "distribution": [
     {

@@ -83,30 +83,18 @@
       "name": "Preben Kidmose"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Preben Kidmose"
-  },
-  "datePublished": "2022",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds004348.v1.0.5",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004348.v1.0.5",
     "https://openneuro.org/datasets/ds004348",
     "https://huggingface.co/datasets/EEGDash/ds004348"
   ],
-  "citeAs": "Kaare B. Mikkelsen, David B. Villadsen, Laura Birch, Marit Otto, Preben Kidmose (2022). Ear-EEG Sleep Monitoring 2017 (EESM17). doi:10.18112/openneuro.ds004348.v1.0.5",
+  "citeAs": "Kaare B. Mikkelsen, David B. Villadsen, Laura Birch, Marit Otto, Preben Kidmose (20). Ear-EEG Sleep Monitoring 2017 (EESM17). doi:10.18112/openneuro.ds004348.v1.0.5",
   "version": "1.7.0",
-  "dateCreated": "2022-11-29",
-  "dateModified": "2024-09-23",
   "measurementTechnique": [
     "BIDS task: sleep",
     "BIDS task: wake"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "kaare mikkelsen"
-    }
   ],
   "distribution": [
     {

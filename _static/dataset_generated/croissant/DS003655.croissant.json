@@ -68,29 +68,16 @@
       "name": "Yuri G. Pavlov"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Yuri G. Pavlov"
-  },
-  "datePublished": "2021",
   "identifier": "doi:10.18112/openneuro.ds003655.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds003655.v1.0.0",
     "https://openneuro.org/datasets/ds003655",
     "https://huggingface.co/datasets/EEGDash/ds003655"
   ],
-  "citeAs": "Yuri G. Pavlov (2021). VerbalWorkingMemory. doi:10.18112/openneuro.ds003655.v1.0.0",
+  "citeAs": "Yuri G. Pavlov (n.d.). VerbalWorkingMemory. doi:10.18112/openneuro.ds003655.v1.0.0",
   "version": "1.1.1",
-  "dateCreated": "2021-05-17",
-  "dateModified": "2023-05-31",
   "measurementTechnique": [
     "BIDS task: VerbalWorkingMemory"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Yuri G. Pavlov"
-    }
   ],
   "distribution": [
     {

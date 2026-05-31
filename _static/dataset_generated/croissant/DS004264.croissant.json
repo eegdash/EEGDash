@@ -76,29 +76,16 @@
       "name": "Laurence T. Hunt"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Laurence T. Hunt"
-  },
-  "datePublished": "2022",
   "identifier": "doi:10.18112/openneuro.ds004264.v1.1.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004264.v1.1.0",
     "https://openneuro.org/datasets/ds004264",
     "https://huggingface.co/datasets/EEGDash/ds004264"
   ],
-  "citeAs": "Cameron D. Hassall, Yan Yan, Laurence T. Hunt (2022). Steer the Ship. doi:10.18112/openneuro.ds004264.v1.1.0",
+  "citeAs": "Cameron D. Hassall, Yan Yan, Laurence T. Hunt (n.d.). Steer the Ship. doi:10.18112/openneuro.ds004264.v1.1.0",
   "version": "1.2.1",
-  "dateCreated": "2022-09-13",
-  "dateModified": "2022-10-06",
   "measurementTechnique": [
     "BIDS task: steertheship"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Cameron Hassall"
-    }
   ],
   "distribution": [
     {

@@ -79,10 +79,6 @@
       "name": "Kenneth A. Norman"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Kenneth A. Norman"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -93,25 +89,17 @@
       "name": "NIMH K99-MH126154"
     }
   ],
-  "datePublished": "2025",
+  "datePublished": "2026",
   "identifier": "doi:10.18112/openneuro.ds006576.v1.0.5",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds006576.v1.0.5",
     "https://openneuro.org/datasets/ds006576",
     "https://huggingface.co/datasets/EEGDash/ds006576"
   ],
-  "citeAs": "Elizabeth A. McDevitt, Ghootae Kim, Nicholas B. Turk-Browne, Kenneth A. Norman (2025). The role of REM sleep in neural differentiation of memories in the hippocampus. doi:10.18112/openneuro.ds006576.v1.0.5",
+  "citeAs": "Elizabeth A. McDevitt, Ghootae Kim, Nicholas B. Turk-Browne, Kenneth A. Norman (2026). The role of REM sleep in neural differentiation of memories in the hippocampus. doi:10.18112/openneuro.ds006576.v1.0.5",
   "version": "1.6.0",
-  "dateCreated": "2025-08-20",
-  "dateModified": "2026-04-16",
   "measurementTechnique": [
     "BIDS task: rest"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Elizabeth McDevitt"
-    }
   ],
   "distribution": [
     {

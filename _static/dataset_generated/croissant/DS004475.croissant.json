@@ -71,10 +71,6 @@
       "name": "Daniel P. Ferris"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Daniel P. Ferris"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -85,25 +81,16 @@
       "name": "T32-NS082128"
     }
   ],
-  "datePublished": "2023",
   "identifier": "doi:10.18112/openneuro.ds004475.v1.0.3",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004475.v1.0.3",
     "https://openneuro.org/datasets/ds004475",
     "https://huggingface.co/datasets/EEGDash/ds004475"
   ],
-  "citeAs": "Noelle A. Jacobsen, Daniel P. Ferris (2023). Mobile EEG split-belt walking study. doi:10.18112/openneuro.ds004475.v1.0.3",
+  "citeAs": "Noelle A. Jacobsen, Daniel P. Ferris (n.d.). Mobile EEG split-belt walking study. doi:10.18112/openneuro.ds004475.v1.0.3",
   "version": "1.1.1",
-  "dateCreated": "2023-02-08",
-  "dateModified": "2023-07-31",
   "measurementTechnique": [
     "BIDS task: task"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Noelle Jacobsen"
-    }
   ],
   "distribution": [
     {

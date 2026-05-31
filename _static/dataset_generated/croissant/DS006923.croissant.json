@@ -80,10 +80,6 @@
       "name": "Julie Viloria-Porto"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Julie Viloria-Porto"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -94,25 +90,17 @@
       "name": "MINISTERIO DE CIENCIA TECNOLOGÍA E INNOVACIÓN (MINCIENCIAS) BPIN 2020000100006"
     }
   ],
-  "datePublished": "2025",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds006923.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds006923.v1.0.0",
     "https://openneuro.org/datasets/ds006923",
     "https://huggingface.co/datasets/EEGDash/ds006923"
   ],
-  "citeAs": "Aura Polo, Elmer León, Mariana Pino-Melgarejo, Julie Viloria-Porto (2025). Dataset of Electroencephalograms of Juvenile Offenders. doi:10.18112/openneuro.ds006923.v1.0.0",
+  "citeAs": "Aura Polo, Elmer León, Mariana Pino-Melgarejo, Julie Viloria-Porto (20). Dataset of Electroencephalograms of Juvenile Offenders. doi:10.18112/openneuro.ds006923.v1.0.0",
   "version": "1.0.0",
-  "dateCreated": "2025-11-11",
-  "dateModified": "2025-11-11",
   "measurementTechnique": [
     "BIDS task: restingstate"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Elmer David León Becerra"
-    }
   ],
   "distribution": [
     {

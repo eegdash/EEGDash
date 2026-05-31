@@ -96,30 +96,18 @@
       "name": "Michael J. Kahana"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Michael J. Kahana"
-  },
-  "datePublished": "2023",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds004706.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds004706.v1.0.0",
     "https://openneuro.org/datasets/ds004706",
     "https://huggingface.co/datasets/EEGDash/ds004706"
   ],
-  "citeAs": "Joseph H. Rudoler, Matthew R. Dougherty, Brandon S. Katerman, James P. Bruska, Woohyeuk Chang (2023). Spatial memory and non-invasive closed-loop stimulus timing. doi:10.18112/openneuro.ds004706.v1.0.0",
+  "citeAs": "Joseph H. Rudoler, Matthew R. Dougherty, Brandon S. Katerman, James P. Bruska, Woohyeuk Chang (20). Spatial memory and non-invasive closed-loop stimulus timing. doi:10.18112/openneuro.ds004706.v1.0.0",
   "version": "1.6.0",
-  "dateCreated": "2023-08-16",
-  "dateModified": "2023-08-22",
   "measurementTechnique": [
     "BIDS task: NiclsCourierClosedLoop",
     "BIDS task: NiclsCourierReadOnly"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Joseph Rudoler"
-    }
   ],
   "distribution": [
     {

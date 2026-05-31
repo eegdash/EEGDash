@@ -104,10 +104,6 @@
       "name": "Quanying LIU"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Quanying LIU"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -126,25 +122,17 @@
       "name": "SUSTech Undergraduate Innovation and Entrepreneurship Training Program(2024S07)"
     }
   ],
-  "datePublished": "2024",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds005540.v1.0.7",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005540.v1.0.7",
     "https://openneuro.org/datasets/ds005540",
     "https://huggingface.co/datasets/EEGDash/ds005540"
   ],
-  "citeAs": "Xin XU, Xinke SHEN, Xuyang CHEN, Qingzhu ZHANG, Sitian WANG (2024). EmoEEG-MC: A Multi-Context Emotional EEG Dataset for Cross-Context Emotion Decoding. doi:10.18112/openneuro.ds005540.v1.0.7",
+  "citeAs": "Xin XU, Xinke SHEN, Xuyang CHEN, Qingzhu ZHANG, Sitian WANG (20). EmoEEG-MC: A Multi-Context Emotional EEG Dataset for Cross-Context Emotion Decoding. doi:10.18112/openneuro.ds005540.v1.0.7",
   "version": "1.6.0",
-  "dateCreated": "2024-09-30",
-  "dateModified": "2025-05-21",
   "measurementTechnique": [
     "BIDS task: emotion"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Xin XU"
-    }
   ],
   "distribution": [
     {

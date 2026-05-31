@@ -93,36 +93,24 @@
       "name": "Argyris Stringaris"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Argyris Stringaris"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "Intramural Research Program of the National Institute of Mental Health National Institutes of Health (NIH) (Grant No. ZIA-MH002957-01 [to AS])"
     }
   ],
-  "datePublished": "2021",
+  "datePublished": "20",
   "identifier": "doi:10.18112/openneuro.ds003568.v1.0.2",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds003568.v1.0.2",
     "https://openneuro.org/datasets/ds003568",
     "https://huggingface.co/datasets/EEGDash/ds003568"
   ],
-  "citeAs": "Lucrezia Liuzzi, Katharine Chang, Hanna Keren, Charles Zheng, Dipta Saha (2021). Mood induction in MDD and healthy adolescents. doi:10.18112/openneuro.ds003568.v1.0.2",
+  "citeAs": "Lucrezia Liuzzi, Katharine Chang, Hanna Keren, Charles Zheng, Dipta Saha (20). Mood induction in MDD and healthy adolescents. doi:10.18112/openneuro.ds003568.v1.0.2",
   "version": "1.2.0",
-  "dateCreated": "2021-03-16",
-  "dateModified": "2023-07-19",
   "measurementTechnique": [
     "BIDS task: mmi3",
     "BIDS task: rest"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Lucrezia Liuzzi"
-    }
   ],
   "distribution": [
     {

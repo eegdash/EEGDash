@@ -1,0 +1,163 @@
+{
+  "@context": {
+    "@language": "en",
+    "@vocab": "https://schema.org/",
+    "citeAs": "cr:citeAs",
+    "column": "cr:column",
+    "conformsTo": "dct:conformsTo",
+    "cr": "http://mlcommons.org/croissant/",
+    "data": {
+      "@id": "cr:data",
+      "@type": "@json"
+    },
+    "dataType": {
+      "@id": "cr:dataType",
+      "@type": "@vocab"
+    },
+    "dct": "http://purl.org/dc/terms/",
+    "extract": "cr:extract",
+    "field": "cr:field",
+    "fileObject": "cr:fileObject",
+    "fileProperty": "cr:fileProperty",
+    "fileSet": "cr:fileSet",
+    "format": "cr:format",
+    "includes": "cr:includes",
+    "isLiveDataset": "cr:isLiveDataset",
+    "jsonPath": "cr:jsonPath",
+    "key": "cr:key",
+    "md5": "cr:md5",
+    "parentField": "cr:parentField",
+    "path": "cr:path",
+    "recordSet": "cr:recordSet",
+    "references": "cr:references",
+    "regex": "cr:regex",
+    "repeated": "cr:repeated",
+    "replace": "cr:replace",
+    "sc": "https://schema.org/",
+    "separator": "cr:separator",
+    "source": "cr:source",
+    "subField": "cr:subField",
+    "transform": "cr:transform"
+  },
+  "@type": "sc:Dataset",
+  "conformsTo": "http://mlcommons.org/croissant/1.0",
+  "name": "ds007720",
+  "alternateName": [
+    "DS007720"
+  ],
+  "description": "BCI-FIT: A customization protocol for communication brain-computer interface systems.. eeg dataset accessible via EEGDash as `DS007720` with standardized BIDS metadata.",
+  "url": "https://eegdash.org/api/dataset/eegdash.dataset.DS007720.html",
+  "keywords": [
+    "EEG",
+    "BIDS",
+    "neuroscience"
+  ],
+  "isAccessibleForFree": true,
+  "includedInDataCatalog": {
+    "@type": "sc:DataCatalog",
+    "name": "EEG Dash",
+    "url": "https://eegdash.org/"
+  },
+  "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "creator": [
+    {
+      "@type": "sc:Person",
+      "name": "Betts Peters"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Daniel Klee"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Michelle Kinsella"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Yonah Hendin"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Tab Memmott"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Matthew Lawhead"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Srikar Ananthoju"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Basak Celik"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Scott Spaulding"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Barry Oken"
+    },
+    {
+      "@type": "sc:Person",
+      "name": "Melanie Fried-Oken"
+    }
+  ],
+  "funder": [
+    {
+      "@type": "sc:Organization",
+      "name": "This work was supported by the National Institutes of Health under National Institute on Deafness and Other Communication Disorders grant R01DC009834."
+    }
+  ],
+  "datePublished": "2021",
+  "identifier": "doi:10.18112/openneuro.ds007720.v1.0.1",
+  "sameAs": [
+    "https://doi.org/10.18112/openneuro.ds007720.v1.0.1",
+    "https://openneuro.org/datasets/ds007720"
+  ],
+  "citeAs": "Betts Peters, Daniel Klee, Michelle Kinsella, Yonah Hendin, Tab Memmott (2021). BCI-FIT: A customization protocol for communication brain-computer interface systems.. doi:10.18112/openneuro.ds007720.v1.0.1",
+  "version": "1.7.0",
+  "measurementTechnique": [
+    "BIDS task: MatrixCalibration",
+    "BIDS task: MatrixCopyPhrase",
+    "BIDS task: RSVPCalibration",
+    "BIDS task: RSVPCopyPhrase"
+  ],
+  "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007720-bids-bucket",
+      "name": "ds007720 BIDS bucket",
+      "description": "Canonical BIDS-formatted dataset bucket for DS007720.",
+      "contentUrl": "s3://openneuro.org/ds007720",
+      "encodingFormat": "application/vnd.bids+directory"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007720-openneuro",
+      "name": "ds007720 on OpenNeuro",
+      "description": "OpenNeuro dataset landing page.",
+      "contentUrl": "https://openneuro.org/datasets/ds007720",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007720-eegdash-records",
+      "name": "ds007720 EEGDash records (live)",
+      "description": "Live JSON listing of every recording in this dataset, with BIDS metadata, channel counts, and S3 storage keys.",
+      "contentUrl": "https://data.eegdash.org/api/eegdash/records?filter=%7B%22dataset%22%3A%22ds007720%22%7D",
+      "encodingFormat": "application/json",
+      "isLiveDataset": true
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007720-nemar",
+      "name": "ds007720 on NeMAR",
+      "description": "NEMAR dataset landing page with pipeline plots.",
+      "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=ds007720",
+      "encodingFormat": "text/html"
+    }
+  ]
+}

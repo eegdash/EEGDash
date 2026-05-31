@@ -72,30 +72,17 @@
       "name": "Marc Schoewiesner"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Marc Schoewiesner"
-  },
-  "datePublished": "2024",
   "identifier": "doi:10.18112/openneuro.ds005131.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005131.v1.0.1",
     "https://openneuro.org/datasets/ds005131",
     "https://huggingface.co/datasets/EEGDash/ds005131"
   ],
-  "citeAs": "Ole Bialas, Marc Schoewiesner (2024). Evoked responses to elevated sounds. doi:10.18112/openneuro.ds005131.v1.0.1",
+  "citeAs": "Ole Bialas, Marc Schoewiesner (n.d.). Evoked responses to elevated sounds. doi:10.18112/openneuro.ds005131.v1.0.1",
   "version": "1.7.0",
-  "dateCreated": "2024-05-10",
-  "dateModified": "2024-07-28",
   "measurementTechnique": [
     "BIDS task: deviantdetection",
     "BIDS task: oneback"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Ole Bialas"
-    }
   ],
   "distribution": [
     {

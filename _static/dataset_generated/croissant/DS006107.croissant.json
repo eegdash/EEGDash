@@ -76,35 +76,22 @@
       "name": "Nobukazu Nakasato"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Nobukazu Nakasato"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "N/A"
     }
   ],
-  "datePublished": "2025",
   "identifier": "doi:10.18112/openneuro.ds006107.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds006107.v1.0.0",
     "https://openneuro.org/datasets/ds006107",
     "https://huggingface.co/datasets/EEGDash/ds006107"
   ],
-  "citeAs": "Naoto Kuroda, Eishi Asano, Nobukazu Nakasato (2025). iEEG_Neural_spatial_volatility. doi:10.18112/openneuro.ds006107.v1.0.0",
+  "citeAs": "Naoto Kuroda, Eishi Asano, Nobukazu Nakasato (n.d.). iEEG_Neural_spatial_volatility. doi:10.18112/openneuro.ds006107.v1.0.0",
   "version": "1.7.0",
-  "dateCreated": "2025-04-08",
-  "dateModified": "2025-04-09",
   "measurementTechnique": [
     "BIDS task: sws"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Naoto Kuroda"
-    }
   ],
   "distribution": [
     {

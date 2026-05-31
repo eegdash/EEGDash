@@ -76,10 +76,6 @@
       "name": "John Fredy Ochoa Gómez"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "John Fredy Ochoa Gómez"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
@@ -94,16 +90,8 @@
   ],
   "citeAs": "Verónica Henao Isaza, Carlos Andrés Tobón Quintero, John Fredy Ochoa Gómez (2026). Comprehensive methodology for sample enrichment in EEG biomarker studies for Alzheimer’s risk classification. doi:10.18112/openneuro.ds007427.v1.0.1",
   "version": "1.8.0",
-  "dateCreated": "2026-02-15",
-  "dateModified": "2026-04-03",
   "measurementTechnique": [
     "BIDS task: CE"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Verónica Henao Isaza"
-    }
   ],
   "distribution": [
     {

@@ -73,35 +73,22 @@
       "name": "Michael J. Kahana"
     }
   ],
-  "editor": {
-    "@type": "sc:Person",
-    "name": "Michael J. Kahana"
-  },
   "funder": [
     {
       "@type": "sc:Organization",
       "name": "DARPA RAM: N66001-14-2-4032"
     }
   ],
-  "datePublished": "2024",
   "identifier": "doi:10.18112/openneuro.ds005059.v1.0.6",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds005059.v1.0.6",
     "https://openneuro.org/datasets/ds005059",
     "https://huggingface.co/datasets/EEGDash/ds005059"
   ],
-  "citeAs": "Haydn G. Herrema, Michael J. Kahana (2024). Paired Associates Learning: Memory for Word Pairs in Cued Recall. doi:10.18112/openneuro.ds005059.v1.0.6",
+  "citeAs": "Haydn G. Herrema, Michael J. Kahana (n.d.). Paired Associates Learning: Memory for Word Pairs in Cued Recall. doi:10.18112/openneuro.ds005059.v1.0.6",
   "version": "1.7.0",
-  "dateCreated": "2024-04-03",
-  "dateModified": "2024-04-23",
   "measurementTechnique": [
     "BIDS task: PAL1"
-  ],
-  "maintainer": [
-    {
-      "@type": "sc:Person",
-      "name": "Haydn Herrema"
-    }
   ],
   "distribution": [
     {

@@ -649,14 +649,23 @@ class RemoteHeaderStep:
         if ctx.ext not in (".edf", ".bdf"):
             return  # only the EDF/BDF main-header path is wired for now
         try:
+            # The dataset id is the BIDS root dir name; bids_relpath is the file's
+            # path RELATIVE to that root (ctx.bids_file is an absolute local path).
+            try:
+                relpath = str(ctx.bids_file_path.relative_to(ctx.bids_root))
+            except ValueError:
+                relpath = ctx.bids_file_path.name
             record = {
-                "dataset": getattr(ctx.bids_dataset, "dataset", None),
-                "bids_relpath": ctx.bids_file,
+                "dataset": ctx.bids_root.name,
+                "bids_relpath": relpath,
             }
             _size, url = _remote_header.locate(record)
             if not url:
                 return  # NEMAR S3 closed / no derivable URL → drop to T3
-            reader = _remote_header.RangeReader(url)
+            # block == the 256-byte main header → fetch EXACTLY 256 bytes (the
+            # whole point: few bytes). The annotation-safe record-count formula
+            # needs only the main header, not the per-signal headers.
+            reader = _remote_header.RangeReader(url, block=_edf_header.EDF_HEADER_LEN)
             buf = reader.read(0, _edf_header.EDF_HEADER_LEN)
             if not buf:
                 return

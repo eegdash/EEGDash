@@ -13,18 +13,63 @@ from _coverage import (
     iter_records_from_output,
 )
 
+_UNSET = object()
 
-def _rec(ext, modality, sfreq, nchans, ntimes, dur, prov):
+
+def _rec(ext, modality, sfreq, nchans, ntimes, dur, prov, ch_names=_UNSET):
+    # ch_names defaults to coupled-with-nchans for brevity, but is overridable so
+    # the real-data case (nchans present, ch_names absent) can be exercised.
+    if ch_names is _UNSET:
+        ch_names = ["a"] if nchans else None
+    modalities = modality if isinstance(modality, list) else [modality]
     return {
         "extension": ext,
-        "recording_modality": [modality],
+        "recording_modality": modalities,
         "sampling_frequency": sfreq,
         "nchans": nchans,
         "ntimes": ntimes,
-        "ch_names": ["a"] if nchans else None,
+        "ch_names": ch_names,
         "duration_seconds": dur,
         "_metadata_provenance": prov,
     }
+
+
+def test_ch_names_resolved_independently_of_nchans():
+    # Real ds000117 case: nchans resolved from sidecar, ch_names absent.
+    records = [
+        _rec(
+            ".fif",
+            "meg",
+            1100.0,
+            394,
+            None,
+            None,
+            {"nchans": "modality_sidecar"},
+            ch_names=None,
+        ),
+    ]
+    report = aggregate_records(records)
+    assert report["fields"]["nchans"]["resolved"] == 1
+    assert report["fields"]["ch_names"]["missing"] == 1
+    # The reverse: ch_names present, nchans absent.
+    report2 = aggregate_records(
+        [_rec(".set", "eeg", 250.0, None, 1000, 4.0, {}, ch_names=["a", "b"])]
+    )
+    assert report2["fields"]["ch_names"]["resolved"] == 1
+    assert report2["fields"]["nchans"]["missing"] == 1
+
+
+def test_multimodality_record_counts_in_both_buckets():
+    # A co-recorded EEG+MEG file contributes to BOTH modality buckets; total stays 1.
+    records = [
+        _rec(
+            ".fif", ["eeg", "meg"], 1000.0, 300, 5000, 5.0, {"ntimes": "binary_parser"}
+        ),
+    ]
+    report = aggregate_records(records)
+    assert report["total_records"] == 1
+    assert report["by_modality"]["eeg"]["ntimes"]["resolved"] == 1
+    assert report["by_modality"]["meg"]["ntimes"]["resolved"] == 1
 
 
 def test_inferable_fields_set():

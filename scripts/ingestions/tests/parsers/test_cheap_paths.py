@@ -117,6 +117,21 @@ def test_vhdr_no_datapoints_no_datafile_no_ntimes(tmp_path: Path):
     assert meta.get("n_times") is None
 
 
+def test_vhdr_datapoints_present_but_eeg_unreachable_returns_none(tmp_path: Path):
+    # Regression (adversarial review bug 1): DataPoints alone must NOT be trusted —
+    # an exporter may write it as total-across-channels. With the .eeg unreachable
+    # there is no file-size cross-check, so we return None rather than a possibly
+    # nchans-times-inflated value.
+    vhdr = tmp_path / "sub-09_task-rest_eeg.vhdr"
+    vhdr.write_text(_VHDR_WITH_DATAPOINTS.replace("sub-01", "sub-09"))
+    # NOTE: deliberately do NOT create the .eeg companion.
+    meta = parse_vhdr_metadata(vhdr)
+    assert meta.get("n_times") is None
+    # sfreq/nchans/ch_names still parse from the text header.
+    assert meta["sampling_frequency"] == 250.0
+    assert meta["nchans"] == 2
+
+
 def test_vhdr_cascade_skips_mne_fallback(tmp_path: Path, monkeypatch):
     import mne
     from _metadata_cascade import CascadeContext, MetadataCascade
@@ -176,3 +191,32 @@ def test_set_loadmat_uses_variable_names(tmp_path: Path, monkeypatch):
     out = parse_set_metadata(set_path)
     assert out["n_samples"] == 1000 or out.get("n_times") == 1000
     assert spy.variable_names == ["EEG"]
+
+
+def _build_h5py_set(path: Path, srate: float, nbchan: int, pnts: int) -> Path:
+    h5py = pytest.importorskip("h5py")
+    import numpy as np
+
+    with h5py.File(path, "w") as f:
+        eeg = f.create_group("EEG")
+        eeg.create_dataset("srate", data=np.array([[srate]], dtype="float64"))
+        eeg.create_dataset("nbchan", data=np.array([[nbchan]], dtype="float64"))
+        eeg.create_dataset("pnts", data=np.array([[pnts]], dtype="float64"))
+    return path
+
+
+def test_set_oversized_embedded_still_uses_h5py(tmp_path: Path, monkeypatch):
+    # Regression (adversarial review bug 3): an oversized embedded MAT-v7.3 (HDF5)
+    # .set with no .fdt must still reach the cheap h5py scalar reads — the size gate
+    # may skip the scipy loadmat but must NOT short-circuit the whole function.
+    pytest.importorskip("h5py")
+    import _set_parser
+
+    set_path = _build_h5py_set(tmp_path / "big.set", 500.0, 8, 2000)
+    # Force the "oversized embedded" gate with a tiny ceiling (file has no .fdt).
+    monkeypatch.setattr(_set_parser, "_SET_EMBEDDED_LOADMAT_CEILING", 1)
+
+    out = _set_parser.parse_set_metadata(set_path)
+    assert out["sampling_frequency"] == 500.0
+    assert out["nchans"] == 8
+    assert out["n_samples"] == 2000

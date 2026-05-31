@@ -25,6 +25,15 @@ logger = logging.getLogger(__name__)
 # supplies n_times for those instead. Bounds worst-case memory/time.
 _SET_EMBEDDED_LOADMAT_CEILING = 50 * 1024 * 1024  # 50 MB
 
+
+def _set_exceeds_embedded_ceiling(set_path: Path) -> bool:
+    """True when *set_path* is larger than the embedded-data loadmat ceiling."""
+    try:
+        return set_path.stat().st_size > _SET_EMBEDDED_LOADMAT_CEILING
+    except OSError:
+        return False
+
+
 # scipy's MatReadError isn't in the public io namespace, but it's the
 # canonical class raised for truncated/corrupt MAT files. Importing it
 # lazily so an environment without scipy still loads this module —
@@ -87,22 +96,20 @@ def parse_set_metadata(set_path: Path | str) -> dict[str, Any] | None:
         import scipy.io
 
         # Header-only discipline: for embedded-data .set (no .fdt companion),
-        # loadmat materializes EEG.data. Skip oversized embedded files — the
-        # sidecar-arithmetic tier supplies n_times for those.
-        if not result["has_fdt"]:
-            try:
-                if set_path.stat().st_size > _SET_EMBEDDED_LOADMAT_CEILING:
-                    return result if result else None
-            except OSError:
-                pass
-
-        # variable_names=['EEG'] avoids loading unrelated top-level MAT variables.
-        mat = scipy.io.loadmat(
-            str(set_path),
-            struct_as_record=False,
-            squeeze_me=True,
-            variable_names=["EEG"],
-        )
+        # scipy loadmat materializes EEG.data. Skip *only the loadmat* for
+        # oversized embedded files (mat = {}), then fall through to the cheap
+        # h5py branch below — for MAT-v7.3 (HDF5) .set, EEG/srate, EEG/nbchan
+        # and EEG/pnts are 1x1 scalar datasets readable without loading EEG.data.
+        if not result["has_fdt"] and _set_exceeds_embedded_ceiling(set_path):
+            mat: dict[str, Any] = {}
+        else:
+            # variable_names=['EEG'] avoids loading unrelated top-level MAT variables.
+            mat = scipy.io.loadmat(
+                str(set_path),
+                struct_as_record=False,
+                squeeze_me=True,
+                variable_names=["EEG"],
+            )
 
         if "EEG" in mat:
             eeg = mat["EEG"]

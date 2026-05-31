@@ -45,7 +45,7 @@ def test_vhdr_cheap_n_times_matches_mne():
     path = data_file("eeg/sub-xp101_task-motorloc_eeg.vhdr")
     cheap = parse_vhdr_metadata(path).get("n_times")
     if cheap is None:
-        pytest.skip("VHDR fixture lacked DataPoints and a reachable .eeg size")
+        pytest.skip("VHDR fixture .eeg size unavailable or not divisible by nchans")
     assert cheap == _mne_n_times_vhdr(path)
 
 
@@ -55,7 +55,9 @@ def test_ieeg_vhdr_cheap_n_times_matches_mne():
     path = data_file("ieeg/sub-01_ses-iemu_task-film_acq-clinical_run-1_ieeg.vhdr")
     cheap = parse_vhdr_metadata(path).get("n_times")
     if cheap is None:
-        pytest.skip("iEEG VHDR fixture lacked DataPoints and a reachable .eeg size")
+        pytest.skip(
+            "iEEG VHDR fixture .eeg size not an exact multiple of nchans (stub)"
+        )
     assert cheap == _mne_n_times_vhdr(path)
 
 

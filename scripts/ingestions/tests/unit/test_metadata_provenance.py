@@ -16,14 +16,17 @@ from eegdash.testing import data_file
 # ─── _empty_provenance / _stamp_provenance ────────────────────────────────
 
 
-def test_empty_provenance_has_all_four_fields():
+def test_empty_provenance_has_all_metadata_fields():
     digest = load_digest()
     p = digest._empty_provenance()
+    # _METADATA_FIELDS is the single source of truth (imported from the cascade);
+    # it includes duration_seconds, so this can never diverge again.
     assert set(p.keys()) == {
         "sampling_frequency",
         "nchans",
         "ntimes",
         "ch_names",
+        "duration_seconds",
     }
     assert all(v is None for v in p.values())
 

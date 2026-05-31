@@ -395,10 +395,9 @@ class MneBidsStep:
         try:
             sf = bd.get_bids_file_attribute("sfreq", ctx.bids_file)
             nc = bd.get_bids_file_attribute("nchans", ctx.bids_file)
-            nt = bd.get_bids_file_attribute("ntimes", ctx.bids_file)
         except (FileNotFoundError, OSError):
             # Broken git-annex symlink on the BIDS sidecar JSON.
-            sf = nc = nt = None
+            sf = nc = None
 
         if sf:
             result.sampling_frequency = float(sf)
@@ -406,9 +405,10 @@ class MneBidsStep:
         if nc:
             result.nchans = int(nc)
             result.provenance["nchans"] = PROV_MNE_BIDS
-        if nt:
-            result.ntimes = int(nt)
-            result.provenance["ntimes"] = PROV_MNE_BIDS
+        # NOTE: ntimes is intentionally NOT taken here. mne_bids computes it as
+        # round(sfreq * RecordingDuration) — an APPROXIMATE value that must not
+        # suppress the exact header/file-size counts produced by later steps.
+        # Sidecar-arithmetic ntimes is filled last, by SidecarArithmeticStep.
 
         # channel_labels reads channels.tsv via mne_bids — same provenance bucket.
         try:
@@ -438,25 +438,6 @@ class ModalitySidecarStep:
         result.nchans = nc
         result.stamp(PROV_MODALITY_SIDECAR, "sampling_frequency", sf_before, sf)
         result.stamp(PROV_MODALITY_SIDECAR, "nchans", n_before, nc)
-
-        # Cheap sidecar arithmetic for ntimes: round(sfreq * RecordingDuration).
-        # Pure sidecar read — works for EVERY format, so the binary/MNE tiers
-        # rarely need to run just for ntimes.
-        if result.recording_duration is None:
-            result.recording_duration = extract_recording_duration_from_sidecar(
-                ctx.bids_file_path, ctx.bids_root
-            )
-        if (
-            result.ntimes is None
-            and result.sampling_frequency
-            and result.recording_duration
-            and result.recording_duration > 0
-        ):
-            nt_before = result.ntimes
-            result.ntimes = round(
-                float(result.sampling_frequency) * float(result.recording_duration)
-            )
-            result.stamp(PROV_SIDECAR_ARITHMETIC, "ntimes", nt_before, result.ntimes)
 
 
 class ChannelsTsvStep:
@@ -567,6 +548,35 @@ class MneFallbackStep:
                     result.stamp(PROV_MNE_FALLBACK, fname, old, new)
 
 
+class SidecarArithmeticStep:
+    """Last resort: ``ntimes = round(sfreq * RecordingDuration)`` when no EXACT source produced it.
+
+    Runs after the binary/MNE steps so an exact header-struct / file-size / MNE
+    sample count always wins. The arithmetic value is APPROXIMATE — BIDS
+    ``RecordingDuration`` is stored at limited precision, so this can be off by a
+    few samples — and is therefore only used to fill a still-missing ntimes.
+    Always records ``recording_duration`` so ``duration_seconds`` can derive from
+    the authoritative sidecar value even when ntimes came from an exact source.
+    """
+
+    def fill(self, ctx: CascadeContext, result: CascadeResult) -> None:
+        if result.recording_duration is None:
+            result.recording_duration = extract_recording_duration_from_sidecar(
+                ctx.bids_file_path, ctx.bids_root
+            )
+        if (
+            result.ntimes is None
+            and result.sampling_frequency
+            and result.recording_duration
+            and result.recording_duration > 0
+        ):
+            nt_before = result.ntimes
+            result.ntimes = round(
+                float(result.sampling_frequency) * float(result.recording_duration)
+            )
+            result.stamp(PROV_SIDECAR_ARITHMETIC, "ntimes", nt_before, result.ntimes)
+
+
 # ─── Cascade runner ───────────────────────────────────────────────────────
 
 
@@ -580,6 +590,7 @@ class MetadataCascade:
             ChannelsTsvStep(),
             BinaryParserStep(),
             MneFallbackStep(),
+            SidecarArithmeticStep(),
         )
 
     def run(self, ctx: CascadeContext) -> CascadeResult:

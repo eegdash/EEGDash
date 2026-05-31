@@ -85,6 +85,10 @@ def aggregate_records(records: Iterable[dict[str, Any]]) -> dict[str, Any]:
             source = prov.get(field)
             _update_field_stat(fields[field], value, source)
             _update_field_stat(by_format[ext][field], value, source)
+            # by_modality is intentionally NOT a partition: a co-recorded
+            # EEG+MEG file legitimately contributes to BOTH modality buckets, so
+            # per-modality counts can sum to more than total_records. The headline
+            # number is ``fields`` (each record counted once).
             for mod in modalities:
                 _update_field_stat(by_modality[mod][field], value, source)
 

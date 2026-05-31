@@ -56,6 +56,7 @@ from _manifest_digest import (  # noqa: F401 — re-export (canary + tests + bac
     _is_bids_data_zip,
 )
 from _metadata_cascade import (  # noqa: F401 — re-export for back-compat
+    _METADATA_FIELDS,
     CascadeContext,
     MetadataCascade,
     _parse_fif_with_mne,
@@ -116,12 +117,9 @@ _PROV_MNE_FALLBACK = "mne_fallback"
 _PROV_SIDECAR_ARITHMETIC = "sidecar_arithmetic"
 _PROV_DERIVED = "derived"
 
-_METADATA_FIELDS: tuple[str, ...] = (
-    "sampling_frequency",
-    "nchans",
-    "ntimes",
-    "ch_names",
-)
+# _METADATA_FIELDS is imported from _metadata_cascade (single source of truth) so
+# the legacy _empty_provenance helper can never diverge from the cascade's field
+# set (which includes duration_seconds).
 
 
 def _empty_provenance() -> dict[str, str | None]:

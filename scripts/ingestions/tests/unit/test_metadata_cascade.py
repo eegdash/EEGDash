@@ -79,6 +79,7 @@ def test_mne_bids_step_fills_from_attribute_getters():
     bids_dataset.get_bids_file_attribute.side_effect = lambda key, _file: {
         "sfreq": "500",
         "nchans": "64",
+        "duration": None,
     }[key]
     bids_dataset.channel_labels.return_value = ["F1", "F2", "Cz"]
 

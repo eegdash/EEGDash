@@ -415,9 +415,15 @@ class MneBidsStep:
         try:
             sf = bd.get_bids_file_attribute("sfreq", ctx.bids_file)
             nc = bd.get_bids_file_attribute("nchans", ctx.bids_file)
+            # RecordingDuration via the mne_bids getter, which matches sidecars
+            # CASE-INSENSITIVELY (e.g. data ``task-Rest`` vs sidecar ``task-rest``).
+            # Captured here so parser-less formats keep getting ntimes on a
+            # case-sensitive filesystem; the exact-case walker in
+            # SidecarArithmeticStep is only a fallback.
+            dur = bd.get_bids_file_attribute("duration", ctx.bids_file)
         except (FileNotFoundError, OSError):
             # Broken git-annex symlink on the BIDS sidecar JSON.
-            sf = nc = None
+            sf = nc = dur = None
 
         if sf:
             result.sampling_frequency = float(sf)
@@ -425,6 +431,13 @@ class MneBidsStep:
         if nc:
             result.nchans = int(nc)
             result.provenance["nchans"] = PROV_MNE_BIDS
+        if dur is not None:
+            try:
+                duration = float(dur)
+            except (TypeError, ValueError):
+                duration = None
+            if duration and duration > 0:
+                result.recording_duration = duration
         # NOTE: ntimes is intentionally NOT taken here. mne_bids computes it as
         # round(sfreq * RecordingDuration) — an APPROXIMATE value that must not
         # suppress the exact header/file-size counts produced by later steps.

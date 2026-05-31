@@ -127,6 +127,39 @@ def test_sidecar_step_fills_ntimes_from_duration(tmp_path: Path):
     assert result.provenance["duration_seconds"] == PROV_SIDECAR_ARITHMETIC
 
 
+class _CaseInsensitiveBidsDataset:
+    """Simulates the real EEGBIDSDataset getter, which matches sidecars
+    case-insensitively (e.g. data ``task-Rest`` vs sidecar ``task-rest``)."""
+
+    def __init__(self, bidsdir):
+        self.bidsdir = str(bidsdir)
+
+    def get_bids_file_attribute(self, attr, bids_file):
+        return {"sfreq": 200.0, "nchans": 64, "duration": 256.0}.get(attr)
+
+    def channel_labels(self, bids_file):
+        return None
+
+
+def test_parserless_format_gets_ntimes_via_case_insensitive_duration(tmp_path: Path):
+    # Regression (re-verification bug): a parser-less format (.cnt) with a
+    # case-mismatched sidecar on a case-sensitive FS still gets ntimes, because
+    # MneBidsStep captures RecordingDuration via the case-insensitive getter. No
+    # on-disk sidecar is created, so the exact-case walker alone would miss it.
+    bids_file = tmp_path / "sub-01" / "eeg" / "sub-01_task-Rest_eeg.cnt"
+    bids_file.parent.mkdir(parents=True, exist_ok=True)
+    bids_file.write_bytes(b"\x00")
+    ctx = CascadeContext(
+        bids_dataset=_CaseInsensitiveBidsDataset(tmp_path), bids_file=str(bids_file)
+    )
+    result = MetadataCascade().run(ctx)
+    assert result.sampling_frequency == 200.0
+    assert result.nchans == 64
+    assert result.ntimes == round(200.0 * 256.0)  # 51200
+    assert result.provenance["ntimes"] == PROV_SIDECAR_ARITHMETIC
+    assert result.duration_seconds == 256.0
+
+
 def test_sidecar_step_no_ntimes_without_duration(tmp_path: Path):
     bids_file = _bids_file(tmp_path, {"SamplingFrequency": 250, "EEGChannelCount": 32})
     ctx = CascadeContext(

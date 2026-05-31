@@ -1,0 +1,8 @@
+Remote-header tier (EEGDASH_REMOTE_HEADERS=1) — real re-digest of gap datasets
+Format  Dataset    ntimes before -> after   source         bytes/file   % of file
+.edf    ds007120   0/70   -> 70/70           remote_header  256 B        ~0.01%
+.edf    ds007602   0/113  -> 113/113         remote_header  256 B        ~0.01%
+.bdf    ds004940   0/48   -> 48/48           remote_header  256 B        ~0.01%
+.snirf  ds006673   0/67   -> 67/67           remote_header  ~196 KB      0.24% (80.7MB file)
+.mefd   ds004624   single -> 36,800          remote_header  16 KB        .tmet only (.tdat untouched)
+All values byte-exact, provenance-stamped remote_header, zero signal bytes.

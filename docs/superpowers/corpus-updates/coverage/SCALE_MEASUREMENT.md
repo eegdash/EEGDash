@@ -63,12 +63,29 @@ parsers can't read it. Only VHDR sidesteps this because it needs the companion's
 By modality: eeg 91.7 %, meg 83.1 %, ieeg 79.5 %, emg 76.9 % (duration 100 %),
 fnirs 48.9 %.
 
-## To close the remaining gap
+## Closing the gap: the remote-header tier (shipped, opt-in)
 
-- Run digest on a **full clone** (binary headers local → MEF3/SNIRF header
-  readers fire), or add a **ranged header fetch** tier for annex'd binaries.
-- Add parsers for the exotic `.gz` / `.apr` / `.apx`.
-- Both tracked in `docs/superpowers/plans/2026-05-31-cheap-metadata-resolver-phase3-remaining.md`.
+`EEGDASH_REMOTE_HEADERS=1` adds a ranged-header tier that resolves the annex-pointer
+formats by fetching **only the header**, never the signal. Verified by re-digesting
+real OpenNeuro gap datasets (`coverage_after_remote.txt`):
+
+| Format | Dataset | ntimes before → after | bytes / file | of file |
+|--------|---------|-----------------------|--------------|---------|
+| `.edf` | ds007120 / ds007602 | 0 → **100 %** | **256 B** | ~0.01 % |
+| `.bdf` | ds004940 | 0 → **100 %** | **256 B** | ~0.01 % |
+| `.mefd` | ds004624 | 4.1 % → **100 %** | **16 KB** (`.tmet`) | `.tdat` untouched |
+| `.snirf` | ds006673 | 0 → **100 %** | **~196 KB** | 0.24 % (80.7 MB file) |
+
+All values byte-exact, provenance `remote_header`, zero signal bytes. Design + the
+21-mode failure catalog: `docs/superpowers/specs/2026-05-31-efficient-remote-header-reader-design.md`.
+
+## Still open
+- Wire `EEGDASH_REMOTE_HEADERS=1` into the full corpus re-digest to quantify the
+  corpus-wide lift (projected `ntimes` 88.9 % → high-90s).
+- CTF `.ds` / FIF header readers over Range; exotic `.gz` / `.apr` / `.apx` parsers.
+- NEMAR-only datasets: S3 is closed, so the remote tier returns no URL (size-only T1
+  still applies). Tracked in `docs/superpowers/plans/2026-05-31-cheap-metadata-resolver-phase3-remaining.md`
+  and `…/2026-05-31-efficient-remote-header-reader-plan.md`.
 
 *(The earlier `coverage_before.json` — 289 stale local datasets — is kept only as a
 historical pre-resolver snapshot; this full run supersedes it.)*

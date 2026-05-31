@@ -307,24 +307,26 @@
   <section>
     <div class="sec-head">
       <span class="sec-no">06</span>
-      <h2>The remote tier — <span class="q">the gap closed in a few bytes.</span></h2>
-      <p class="sec-sub">With <code>EEGDASH_REMOTE_HEADERS=1</code>, the formats whose binary is an annex pointer get a single ranged read of just the header — never the signal. Re-digested on real OpenNeuro gap datasets, every one went to 100%.</p>
+      <h2>The remote tier — <span class="q">measured across the whole corpus.</span></h2>
+      <p class="sec-sub">With the ranged-header tier on, the formats whose binary is an annex pointer get a single read of just the header — never the signal. Re-digested over all 683 datasets / 171,644 records: <code>ntimes</code> <b>88.85% → 93.30%</b>, <code>duration</code> <b>89.73% → 94.14%</b>. Per-format lift + the byte cost:</p>
     </div>
     <table class="matrix" style="border-spacing:0 8px">
-      <thead><tr><th class="l">format</th><th class="l">dataset</th><th>before</th><th>after</th><th>source</th><th>bytes / file</th><th>of file</th></tr></thead>
+      <thead><tr><th class="l">format</th><th class="l">records</th><th>before</th><th>after</th><th>tier</th><th>bytes / file</th></tr></thead>
       <tbody>
-        <tr><td class="l fmt">.edf</td><td class="l nrec num">ds007120</td><td><div class="cell" data-cov="0">0%</div></td><td><div class="cell" data-cov="100">100%</div></td><td class="nrec num">remote_header</td><td class="num" style="color:var(--ink)">256 B</td><td class="nrec num">~0.01%</td></tr>
-        <tr><td class="l fmt">.bdf</td><td class="l nrec num">ds004940</td><td><div class="cell" data-cov="0">0%</div></td><td><div class="cell" data-cov="100">100%</div></td><td class="nrec num">remote_header</td><td class="num" style="color:var(--ink)">256 B</td><td class="nrec num">~0.01%</td></tr>
-        <tr><td class="l fmt">.mefd</td><td class="l nrec num">ds004624</td><td><div class="cell" data-cov="4.1">4.1%</div></td><td><div class="cell" data-cov="100">100%</div></td><td class="nrec num">remote_header</td><td class="num" style="color:var(--ink)">16 KB</td><td class="nrec num">.tmet only</td></tr>
-        <tr><td class="l fmt">.snirf</td><td class="l nrec num">ds006673</td><td><div class="cell" data-cov="0">0%</div></td><td><div class="cell" data-cov="100">100%</div></td><td class="nrec num">remote_header</td><td class="num" style="color:var(--ink)">~196 KB</td><td class="nrec num">0.24%</td></tr>
+        <tr><td class="l fmt">.edf</td><td class="l nrec num">45,934</td><td><div class="cell" data-cov="85.5">85.5%</div></td><td><div class="cell" data-cov="94.3">94.3%</div></td><td class="nrec num">remote_header</td><td class="num" style="color:var(--ink)">256 B</td></tr>
+        <tr><td class="l fmt">.bdf</td><td class="l nrec num">11,263</td><td><div class="cell" data-cov="76.6">76.6%</div></td><td><div class="cell" data-cov="84.6">84.6%</div></td><td class="nrec num">remote_header</td><td class="num" style="color:var(--ink)">256 B</td></tr>
+        <tr><td class="l fmt">.mefd</td><td class="l nrec num">640</td><td><div class="cell" data-cov="4.1">4.1%</div></td><td><div class="cell" data-cov="100">100%</div></td><td class="nrec num">remote_header</td><td class="num" style="color:var(--ink)">16 KB</td></tr>
+        <tr><td class="l fmt">.snirf</td><td class="l nrec num">1,998</td><td><div class="cell" data-cov="48.9">48.9%</div></td><td><div class="cell" data-cov="98.2">98.2%</div></td><td class="nrec num">remote_header</td><td class="num" style="color:var(--ink)">~196 KB</td></tr>
+        <tr><td class="l fmt">.set</td><td class="l nrec num">80,922</td><td><div class="cell" data-cov="96.8">96.8%</div></td><td><div class="cell" data-cov="97.9">97.9%</div></td><td class="nrec num">size_arithmetic</td><td class="num" style="color:var(--ink)">0 B</td></tr>
+        <tr><td class="l fmt">.vhdr</td><td class="l nrec num">18,971</td><td><div class="cell" data-cov="89.4">89.4%</div></td><td><div class="cell" data-cov="89.4">89.4%</div></td><td class="nrec num">binary_parser</td><td class="num" style="color:var(--ink)">0 B</td></tr>
       </tbody>
     </table>
     <div class="callout">
-      <p><b>EDF/BDF: 256 bytes.</b> The annotation-safe record-count formula needs only the 256-byte main header.
-      <b>MEF3: one ~16 KB <code>.tmet</code></b> (the metadata file; the compressed <code>.tdat</code> is never touched).
-      <b>SNIRF: ~196 KB of HDF5 metadata</b> — h5py over a Range-backed file reads only the object headers (0.24% of an 80 MB file),
-      no signal. Every value is byte-exact and provenance-stamped <code>remote_header</code>. Projected corpus-wide, this lifts
-      <span class="arrow">ntimes 88.9% → high-90s</span> while fetching, in total, a rounding error of the data.</p>
+      <p><b>EDF/BDF: 256 bytes</b> (annotation-safe record-count formula). <b>MEF3: one ~16 KB <code>.tmet</code></b>
+      (compressed <code>.tdat</code> untouched). <b>SNIRF: ~196 KB of HDF5 metadata</b> (0.24% of an 80 MB file). <b>SET <code>.fdt</code> /
+      VHDR <code>.eeg</code>: 0 bytes</b> — straight from the git-annex key. <code>remote_header</code> alone resolved <b>44,109</b> records;
+      every value byte-exact, provenance-stamped, <b>zero signal</b>. And a <code>--n-jobs</code> thread pool over the per-record fetches
+      ran the whole re-digest <span class="arrow">~3× faster per dataset</span>, recovering the records a serial run lost to timeouts.</p>
     </div>
   </section>
 

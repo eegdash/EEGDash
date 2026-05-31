@@ -63,21 +63,35 @@ parsers can't read it. Only VHDR sidesteps this because it needs the companion's
 By modality: eeg 91.7 %, meg 83.1 %, ieeg 79.5 %, emg 76.9 % (duration 100 %),
 fnirs 48.9 %.
 
-## Closing the gap: the remote-header tier (shipped, opt-in)
+## Closing the gap: the remote-header tier (shipped, opt-in) — full-corpus result
 
 `EEGDASH_REMOTE_HEADERS=1` adds a ranged-header tier that resolves the annex-pointer
-formats by fetching **only the header**, never the signal. Verified by re-digesting
-real OpenNeuro gap datasets (`coverage_after_remote.txt`):
+formats by fetching **only the header**, never the signal. Re-digested over the
+**whole corpus** with `--workers 12 --n-jobs 6` (683 datasets, **171,644 records**,
+~28 min, timeout-free). Raw: `coverage_after_remote_njobs.json`.
 
-| Format | Dataset | ntimes before → after | bytes / file | of file |
-|--------|---------|-----------------------|--------------|---------|
-| `.edf` | ds007120 / ds007602 | 0 → **100 %** | **256 B** | ~0.01 % |
-| `.bdf` | ds004940 | 0 → **100 %** | **256 B** | ~0.01 % |
-| `.mefd` | ds004624 | 4.1 % → **100 %** | **16 KB** (`.tmet`) | `.tdat` untouched |
-| `.snirf` | ds006673 | 0 → **100 %** | **~196 KB** | 0.24 % (80.7 MB file) |
+| Field | no-flag baseline → remote + n_jobs |
+|-------|------------------------------------|
+| **ntimes** | 88.85 % → **93.30 %** |
+| **duration_seconds** | 89.73 % → **94.14 %** |
 
-All values byte-exact, provenance `remote_header`, zero signal bytes. Design + the
-21-mode failure catalog: `docs/superpowers/specs/2026-05-31-efficient-remote-header-reader-design.md`.
+`ntimes` by source after: sidecar_arithmetic 87,675 (51.1 %) · **remote_header 44,109
+(25.7 %)** · binary_parser 15,348 (8.9 %, VHDR) · size_arithmetic 13,015 (7.6 %, SET
+`.fdt`) · missing 11,497 (6.7 %).
+
+| Format | records | ntimes before → after | bytes / file |
+|--------|---------|-----------------------|--------------|
+| `.edf` | 45,934 | 85.5 → **94.3 %** | **256 B** |
+| `.bdf` | 11,263 | 76.6 → **84.6 %** | **256 B** |
+| `.mefd` | 640 | 4.1 → **100 %** | **16 KB** (`.tmet`) |
+| `.snirf` | 1,998 | 48.9 → **98.2 %** | **~196 KB** (0.24 % of file) |
+| `.set` | 80,922 | 96.8 → **97.9 %** | **0 B** (`.fdt` annex key) |
+| `.vhdr` | 18,971 | 89.4 % (already) | **0 B** (`.eeg` annex key) |
+
+All byte-exact, provenance-stamped, **zero signal bytes**. The `--n-jobs` thread pool
+over per-record fetches ran it ~3× faster per dataset, recovering the records a serial
+run dropped to timeouts. Design + 21-mode failure catalog:
+`docs/superpowers/specs/2026-05-31-efficient-remote-header-reader-design.md`.
 
 ## Still open
 - Wire `EEGDASH_REMOTE_HEADERS=1` into the full corpus re-digest to quantify the

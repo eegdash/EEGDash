@@ -133,8 +133,8 @@ def test_vhdr_datapoints_present_but_eeg_unreachable_returns_none(tmp_path: Path
 
 
 def test_vhdr_cascade_skips_mne_fallback(tmp_path: Path, monkeypatch):
-    import mne
-    from _metadata_cascade import CascadeContext, MetadataCascade
+    import mne  # noqa: PLC0415
+    from _metadata_cascade import CascadeContext, MetadataCascade  # noqa: PLC0415
 
     vhdr = tmp_path / "sub-01" / "eeg" / "sub-01_task-rest_eeg.vhdr"
     vhdr.parent.mkdir(parents=True, exist_ok=True)
@@ -154,9 +154,9 @@ def test_vhdr_cascade_skips_mne_fallback(tmp_path: Path, monkeypatch):
 
 def test_snirf_h5py_does_not_read_full_time_vector(tmp_path: Path, monkeypatch):
     h5py = pytest.importorskip("h5py")
-    import numpy as np
+    import numpy as np  # noqa: PLC0415
 
-    from _snirf_parser import _parse_snirf_with_h5py
+    from _snirf_parser import _parse_snirf_with_h5py  # noqa: PLC0415
 
     path = tmp_path / "x.snirf"
     with h5py.File(path, "w") as f:
@@ -177,8 +177,8 @@ def test_snirf_h5py_does_not_read_full_time_vector(tmp_path: Path, monkeypatch):
 
 def test_set_loadmat_uses_variable_names(tmp_path: Path, monkeypatch):
     pytest.importorskip("scipy.io")
-    import scipy.io as sio
-    from _helpers.builders import build_synthetic_set_v5
+    import scipy.io as sio  # noqa: PLC0415
+    from _helpers.builders import build_synthetic_set_v5  # noqa: PLC0415
 
     set_path = build_synthetic_set_v5(
         tmp_path / "test.set", srate=250.0, nbchan=4, pnts=1000
@@ -186,7 +186,7 @@ def test_set_loadmat_uses_variable_names(tmp_path: Path, monkeypatch):
 
     spy = _LoadmatSpy(sio.loadmat)
     monkeypatch.setattr(sio, "loadmat", spy)
-    from _set_parser import parse_set_metadata
+    from _set_parser import parse_set_metadata  # noqa: PLC0415
 
     out = parse_set_metadata(set_path)
     assert out["n_samples"] == 1000 or out.get("n_times") == 1000
@@ -195,7 +195,7 @@ def test_set_loadmat_uses_variable_names(tmp_path: Path, monkeypatch):
 
 def _build_h5py_set(path: Path, srate: float, nbchan: int, pnts: int) -> Path:
     h5py = pytest.importorskip("h5py")
-    import numpy as np
+    import numpy as np  # noqa: PLC0415
 
     with h5py.File(path, "w") as f:
         eeg = f.create_group("EEG")
@@ -210,7 +210,7 @@ def test_set_oversized_embedded_still_uses_h5py(tmp_path: Path, monkeypatch):
     # .set with no .fdt must still reach the cheap h5py scalar reads — the size gate
     # may skip the scipy loadmat but must NOT short-circuit the whole function.
     pytest.importorskip("h5py")
-    import _set_parser
+    import _set_parser  # noqa: PLC0415
 
     set_path = _build_h5py_set(tmp_path / "big.set", 500.0, 8, 2000)
     # Force the "oversized embedded" gate with a tiny ceiling (file has no .fdt).

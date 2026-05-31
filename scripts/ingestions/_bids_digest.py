@@ -304,7 +304,7 @@ def _enumerate_via_bids(
                 for bids_file in neuro_files
             ]
             extracted = [fut.result() for fut in futures]
-        for bids_file, (record, exc) in zip(neuro_files, extracted):
+        for bids_file, (record, exc) in zip(neuro_files, extracted, strict=True):
             rec, per_file_errors = _finish_record_from_bids(
                 record,
                 exc,

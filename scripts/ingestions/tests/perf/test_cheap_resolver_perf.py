@@ -32,7 +32,7 @@ def _median_seconds(fn, rounds: int = 21) -> float:
 
 
 def _cheap_vhdr_ntimes():
-    from _vhdr_parser import parse_vhdr_metadata
+    from _vhdr_parser import parse_vhdr_metadata  # noqa: PLC0415
 
     return parse_vhdr_metadata(data_file(_VHDR)).get("n_times")
 

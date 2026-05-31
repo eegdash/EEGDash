@@ -8,7 +8,7 @@ described in
 * :class:`RangeReader` — a seekable, file-like object backed by HTTP Range GETs.
   It caches whole blocks, counts every byte fetched against a hard budget, and
   refuses to buffer a full-object body when a server ignores ``Range`` and
-  answers ``200``. That last guard (``RangeUnsupported``) is what keeps a
+  answers ``200``. That last guard (``RangeUnsupportedError``) is what keeps a
   multi-MB signal file from ever being streamed in full.
 * :func:`locate` — resolves the free annex-key *size* (T1) for any source and
   the remote *URL* (T2) per source. OpenNeuro objects are addressable on S3 by
@@ -17,7 +17,7 @@ described in
 
 Design contract: nothing here raises on a *recoverable* failure. The fetcher
 returning ``None`` (network/protocol error) is a miss, not a crash. The two
-explicit exceptions — :class:`RangeUnsupported` and :class:`ByteBudgetExceeded`
+explicit exceptions — :class:`RangeUnsupportedError` and :class:`ByteBudgetExceededError`
 — are control-flow signals the cascade catches to fall back to a cheaper tier.
 """
 
@@ -25,7 +25,7 @@ from __future__ import annotations
 
 import io
 import logging
-from typing import Callable
+from collections.abc import Callable
 
 from _file_utils import parse_annex_size
 from _parser_utils import build_s3_url, fetch_bytes_from_s3, head_content_length
@@ -39,7 +39,7 @@ _DEFAULT_BUDGET = 128 * 1024
 _DEFAULT_BLOCK = 64 * 1024
 
 
-class RangeUnsupported(Exception):
+class RangeUnsupportedError(Exception):
     """The endpoint ignored ``Range`` and answered with the full object.
 
     Raised *before* a large body is buffered so a signal file is never
@@ -47,7 +47,7 @@ class RangeUnsupported(Exception):
     """
 
 
-class ByteBudgetExceeded(Exception):
+class ByteBudgetExceededError(Exception):
     """A read would push total bytes fetched past the per-file budget.
 
     Raised instead of degrading into an unbounded read. The cascade catches
@@ -64,7 +64,7 @@ class RangeReader:
         The remote object URL (an OpenNeuro S3 URL in practice).
     budget:
         Hard cap on total bytes fetched across the lifetime of this reader.
-        A fetch that would exceed it raises :class:`ByteBudgetExceeded`.
+        A fetch that would exceed it raises :class:`ByteBudgetExceededError`.
     block:
         Block granularity. Reads are served from whole-block fetches that are
         cached, so repeated small reads within one block cost one round-trip
@@ -112,7 +112,7 @@ class RangeReader:
             return cached
 
         if self.bytes_fetched + self.block > self.budget:
-            raise ByteBudgetExceeded(
+            raise ByteBudgetExceededError(
                 f"fetching block {block_index} ({self.block} B) would exceed "
                 f"budget {self.budget} B (already fetched {self.bytes_fetched} B)"
             )
@@ -127,7 +127,7 @@ class RangeReader:
         # ``block`` bytes. Materially more means the server streamed the whole
         # object (HTTP 200) — abort before this large body is used anywhere.
         if len(data) > self.block:
-            raise RangeUnsupported(
+            raise RangeUnsupportedError(
                 f"server returned {len(data)} B for a {self.block} B Range "
                 f"request on {self.url} (Range ignored)"
             )
@@ -205,7 +205,7 @@ class RangeReader:
             size = self._resolve_size()
             if size is None:
                 # Unknown size: read forward block-by-block until a short read,
-                # bounded by the budget (raises ByteBudgetExceeded past it).
+                # bounded by the budget (raises ByteBudgetExceededError past it).
                 return self._read_to_eof_unbounded()
             length = max(0, size - self._pos)
         else:
@@ -316,8 +316,8 @@ def locate(record: dict) -> tuple[int | None, str | None]:
 
 
 __all__ = [
-    "ByteBudgetExceeded",
+    "ByteBudgetExceededError",
     "RangeReader",
-    "RangeUnsupported",
+    "RangeUnsupportedError",
     "locate",
 ]

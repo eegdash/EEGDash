@@ -13,9 +13,9 @@ from __future__ import annotations
 import pytest
 
 from _remote_header import (
-    ByteBudgetExceeded,
+    ByteBudgetExceededError,
     RangeReader,
-    RangeUnsupported,
+    RangeUnsupportedError,
     locate,
 )
 
@@ -55,7 +55,7 @@ class WholeBodyFetcher:
     """Dishonest fetcher: server ignored Range, streamed the WHOLE buffer.
 
     Returns far more than ``max_bytes`` so ``RangeReader`` must detect the
-    non-ranged response and raise ``RangeUnsupported`` before buffering it.
+    non-ranged response and raise ``RangeUnsupportedError`` before buffering it.
     """
 
     def __init__(self, buf: bytes = _BUF) -> None:
@@ -149,7 +149,7 @@ def test_repeated_block_read_does_not_refetch():
 def test_whole_body_response_raises_range_unsupported():
     fetcher = WholeBodyFetcher()
     reader = RangeReader(_URL, block=64 * 1024, fetcher=fetcher)
-    with pytest.raises(RangeUnsupported):
+    with pytest.raises(RangeUnsupportedError):
         reader.read(0, 8)
 
 
@@ -161,7 +161,7 @@ def test_over_budget_raises_byte_budget_exceeded():
     # Budget smaller than two blocks -> the second block trips the budget.
     reader = RangeReader(_URL, budget=64 * 1024, block=64 * 1024, fetcher=fetcher)
     reader.read(0, 8)  # block 0: ok (64 KiB == budget)
-    with pytest.raises(ByteBudgetExceeded):
+    with pytest.raises(ByteBudgetExceededError):
         reader.read(64 * 1024 + 1, 8)  # block 1 would exceed budget
 
 

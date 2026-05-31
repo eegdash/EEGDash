@@ -6,7 +6,7 @@ Order of cheapness:
 Returns ``None`` when neither works (missing file, unresolvable pointer).
 
 This is the single seam the file-size arithmetic tier uses so the
-``n_times = data_bytes / (nchans × dtype_bytes)`` computation never
+``n_times = data_bytes / (nchans x dtype_bytes)`` computation never
 fetches signal — on a shallow clone the ``.eeg``/``.edf`` is an annex
 pointer and its size comes straight from the key.
 """

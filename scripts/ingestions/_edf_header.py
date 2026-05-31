@@ -1,9 +1,9 @@
 """Pure EDF/BDF 256-byte main-header math — annotation-safe, no network.
 
 The EDF/BDF main header is a fixed 256-byte block. ``n_times`` is derived from
-the **record count**, not a flat ``size / (nchans × dtype)`` divide::
+the **record count**, not a flat ``size / (nchans x dtype)`` divide::
 
-    n_times = number_of_data_records × round(sfreq × duration_of_data_record)
+    n_times = number_of_data_records x round(sfreq x duration_of_data_record)
 
 Using the record count is what makes this **annotation-safe**: an EDF+ file
 carries an extra *EDF Annotations* signal whose ``samples_per_record`` differs
@@ -81,7 +81,7 @@ def edf_n_times_from_main_header(buf: bytes, sfreq: float | None) -> int | None:
     and ``n_signals`` (@252) from ``buf``. When the record count is positive and
     both ``sfreq`` and the record duration are positive::
 
-        n_times = round(sfreq × duration_of_data_record) × number_of_data_records
+        n_times = round(sfreq x duration_of_data_record) x number_of_data_records
 
     Returns ``None`` (→ caller falls back to size-arithmetic / unresolved) on:
     unclean-stop (``number_of_data_records == -1``), zero records, missing or
@@ -109,7 +109,7 @@ def edf_n_times_from_main_header(buf: bytes, sfreq: float | None) -> int | None:
         if samples_per_record <= 0:
             return None
         return samples_per_record * n_records
-    except Exception:
+    except Exception:  # noqa: BLE001
         # Defensive catch-all: the contract is "never raise on recoverable
         # failure". Any unexpected error degrades to the next tier.
         return None
@@ -129,12 +129,12 @@ def edf_size_arithmetic_n_times(file_size: int, nchans: int, ext: str) -> int | 
 
     Computes::
 
-        n_times = (file_size − 256 × (nchans + 1)) / (nchans × bytes_per_sample)
+        n_times = (file_size - 256 x (nchans + 1)) / (nchans x bytes_per_sample)
 
     only when the division is exact; otherwise returns ``None`` (never a guessed
     value). Verified on ``ds004577``::
 
-        (2,254,720 − 256 × 20) / (19 × 2) = 59,200.
+        (2,254,720 - 256 x 20) / (19 x 2) = 59,200.
 
     .. warning::
         This is **UNSAFE for EDF+/BDF+** files: an *EDF Annotations* signal is
@@ -158,5 +158,5 @@ def edf_size_arithmetic_n_times(file_size: int, nchans: int, ext: str) -> int | 
         if divisor <= 0 or data_bytes % divisor != 0:
             return None
         return data_bytes // divisor
-    except Exception:
+    except Exception:  # noqa: BLE001
         return None

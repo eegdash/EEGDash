@@ -175,7 +175,7 @@ def test_sidecar_step_no_ntimes_without_duration(tmp_path: Path):
 
 
 def test_create_record_persists_duration_seconds():
-    from eegdash.schemas import create_record
+    from eegdash.schemas import create_record  # noqa: PLC0415
 
     rec = create_record(
         dataset="ds999",

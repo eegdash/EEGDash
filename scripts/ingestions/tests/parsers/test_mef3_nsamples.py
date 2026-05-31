@@ -19,7 +19,7 @@ _TMET = data_file("ieeg/EKG-000000.tmet")
 
 @pytest.mark.network
 def test_tmet_number_of_samples_from_real_fixture():
-    from _mef3_parser import _parse_tmet_number_of_samples
+    from _mef3_parser import _parse_tmet_number_of_samples  # noqa: PLC0415
 
     # Real MEF 3.0 fixture: sfreq 2048 Hz, 8_145_048 samples (~3977 s, 3978 blocks).
     assert _parse_tmet_number_of_samples(_TMET, 2048.0) == 8145048
@@ -27,7 +27,7 @@ def test_tmet_number_of_samples_from_real_fixture():
 
 @pytest.mark.network
 def test_tmet_number_of_samples_rejects_wrong_sfreq():
-    from _mef3_parser import _parse_tmet_number_of_samples
+    from _mef3_parser import _parse_tmet_number_of_samples  # noqa: PLC0415
 
     # A sfreq that does not occur in the file -> no offset match -> None (never guesses).
     assert _parse_tmet_number_of_samples(_TMET, 999.0) is None
@@ -35,9 +35,9 @@ def test_tmet_number_of_samples_rejects_wrong_sfreq():
 
 @pytest.mark.network
 def test_mef3_parse_includes_n_times(tmp_path: Path):
-    from _helpers.builders import build_mefd_around_real_tmet
+    from _helpers.builders import build_mefd_around_real_tmet  # noqa: PLC0415
 
-    from _mef3_parser import parse_mef3_metadata
+    from _mef3_parser import parse_mef3_metadata  # noqa: PLC0415
 
     mefd = build_mefd_around_real_tmet(tmp_path, _TMET, channels=["EKG"])
     out = parse_mef3_metadata(mefd)

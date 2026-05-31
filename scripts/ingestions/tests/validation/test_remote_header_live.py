@@ -29,11 +29,12 @@ class _BidsDatasetStub:
 
 
 def test_remote_edf_locate_and_ranged_read_few_bytes():
-    import _edf_header as eh
-    import _remote_header as rh
+    import _edf_header as eh  # noqa: PLC0415
+    import _remote_header as rh  # noqa: PLC0415
 
-    size, url = rh.locate({"dataset": _DS, "bids_relpath": _RELPATH})
-    assert url and "openneuro.org" in url
+    _size, url = rh.locate({"dataset": _DS, "bids_relpath": _RELPATH})
+    assert url
+    assert "openneuro.org" in url
     reader = rh.RangeReader(url, block=eh.EDF_HEADER_LEN)
     buf = reader.read(0, eh.EDF_HEADER_LEN)
     # Efficiency contract: only the 256-byte main header is fetched.
@@ -44,7 +45,11 @@ def test_remote_edf_locate_and_ranged_read_few_bytes():
 def test_remote_header_step_resolves_real_edf_via_cascade_path(
     tmp_path: Path, monkeypatch
 ):
-    from _metadata_cascade import CascadeContext, CascadeResult, RemoteHeaderStep
+    from _metadata_cascade import (  # noqa: PLC0415
+        CascadeContext,
+        CascadeResult,
+        RemoteHeaderStep,
+    )
 
     # Mirror the OpenNeuro layout so the cascade derives dataset=ds.../relpath=... and
     # _remote_header.locate builds the real S3 URL.
@@ -67,9 +72,9 @@ def test_remote_header_step_resolves_real_edf_via_cascade_path(
 
 def test_remote_mef3_tmet_few_bytes_real():
     # MEF3: one ~16 KB .tmet ranged GET yields n_times; the .tdat is never touched.
-    import _mef3_parser as mp
-    import _parser_utils as pu
-    import _remote_header as rh
+    import _mef3_parser as mp  # noqa: PLC0415
+    import _parser_utils as pu  # noqa: PLC0415
+    import _remote_header as rh  # noqa: PLC0415
 
     relpath = (
         "ds004624/sub-c04/ses-Functional/ieeg/"
@@ -79,24 +84,28 @@ def test_remote_mef3_tmet_few_bytes_real():
     _size, url = rh.locate({"dataset": "ds004624", "bids_relpath": relpath})
     assert url
     data = pu.fetch_bytes_from_s3(url, max_bytes=20000)
-    assert data and len(data) <= 20000  # the whole .tmet is tiny
+    assert data
+    assert len(data) <= 20000  # the whole .tmet is tiny
     sfreq = mp.tmet_sfreq_from_bytes(data)
     n_times = mp.tmet_n_times_from_bytes(data, sfreq)
-    assert sfreq and sfreq > 0
-    assert n_times and n_times > 0
+    assert sfreq
+    assert sfreq > 0
+    assert n_times
+    assert n_times > 0
 
 
 def test_remote_snirf_shape_few_bytes_real():
     # SNIRF: h5py over a Range-backed file reads only metadata blocks — a tiny
     # fraction of the (multi-MB) file — to get the time-axis length.
-    import _remote_header as rh
-    import _snirf_parser as sp
+    import _remote_header as rh  # noqa: PLC0415
+    import _snirf_parser as sp  # noqa: PLC0415
 
     relpath = "sub-640/nirs/sub-640_task-BS_run-01_nirs.snirf"
-    size, url = rh.locate({"dataset": "ds006673", "bids_relpath": relpath})
+    _size, url = rh.locate({"dataset": "ds006673", "bids_relpath": relpath})
     assert url
     reader = rh.RangeReader(url, budget=4 * 1024 * 1024)
     n_times = sp.snirf_n_times_from_fileobj(reader)
-    assert n_times and n_times > 0
+    assert n_times
+    assert n_times > 0
     # Efficiency: well under 1 MB of HDF5 metadata fetched (no signal).
     assert reader.bytes_fetched < 1024 * 1024

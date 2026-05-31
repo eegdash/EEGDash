@@ -67,7 +67,7 @@ def test_fdt_n_times_missing_file_returns_none(tmp_path: Path):
 
 def test_set_external_ntimes_from_fdt_size(tmp_path: Path):
     pytest.importorskip("scipy.io")
-    from _helpers.builders import build_synthetic_set_v5
+    from _helpers.builders import build_synthetic_set_v5  # noqa: PLC0415
 
     # External, continuous .set: builder writes srate/nbchan/chanlocs but
     # pnts=0 so n_samples/n_times is absent after extraction. The companion
@@ -83,7 +83,7 @@ def test_set_external_ntimes_from_fdt_size(tmp_path: Path):
 
 def test_set_external_ntimes_not_overwritten_when_present(tmp_path: Path):
     pytest.importorskip("scipy.io")
-    from _helpers.builders import build_synthetic_set_v5
+    from _helpers.builders import build_synthetic_set_v5  # noqa: PLC0415
 
     # pnts=512 is already known -> the .fdt arithmetic must NOT clobber it,
     # even though the .fdt size would imply a different value.
@@ -101,7 +101,7 @@ def test_set_external_ntimes_not_overwritten_when_present(tmp_path: Path):
 
 def test_set_external_no_fdt_no_ntimes(tmp_path: Path):
     pytest.importorskip("scipy.io")
-    from _helpers.builders import build_synthetic_set_v5
+    from _helpers.builders import build_synthetic_set_v5  # noqa: PLC0415
 
     # No .fdt on disk -> has_fdt False -> the arithmetic does not fire.
     set_path = build_synthetic_set_v5(tmp_path / "e.set", srate=250.0, nbchan=4, pnts=0)

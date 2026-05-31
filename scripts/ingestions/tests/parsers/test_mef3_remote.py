@@ -29,21 +29,21 @@ def _tmet_bytes() -> bytes:
 
 @pytest.mark.network
 def test_tmet_sfreq_from_bytes_real_fixture():
-    from _mef3_parser import tmet_sfreq_from_bytes
+    from _mef3_parser import tmet_sfreq_from_bytes  # noqa: PLC0415
 
     assert tmet_sfreq_from_bytes(_tmet_bytes()) == 2048.0
 
 
 @pytest.mark.network
 def test_tmet_n_times_from_bytes_real_fixture():
-    from _mef3_parser import tmet_n_times_from_bytes
+    from _mef3_parser import tmet_n_times_from_bytes  # noqa: PLC0415
 
     assert tmet_n_times_from_bytes(_tmet_bytes(), 2048.0) == 8145048
 
 
 @pytest.mark.network
 def test_tmet_n_times_from_bytes_rejects_wrong_sfreq():
-    from _mef3_parser import tmet_n_times_from_bytes
+    from _mef3_parser import tmet_n_times_from_bytes  # noqa: PLC0415
 
     # A sfreq absent from the file -> no offset matches -> None (never guesses).
     assert tmet_n_times_from_bytes(_tmet_bytes(), 999.0) is None
@@ -51,7 +51,7 @@ def test_tmet_n_times_from_bytes_rejects_wrong_sfreq():
 
 @pytest.mark.network
 def test_tmet_n_times_from_bytes_truncated_returns_none():
-    from _mef3_parser import tmet_n_times_from_bytes
+    from _mef3_parser import tmet_n_times_from_bytes  # noqa: PLC0415
 
     # Truncated below the minimum header size -> None, never raises.
     truncated = _tmet_bytes()[:512]
@@ -60,14 +60,14 @@ def test_tmet_n_times_from_bytes_truncated_returns_none():
 
 @pytest.mark.network
 def test_tmet_sfreq_from_bytes_truncated_returns_none():
-    from _mef3_parser import tmet_sfreq_from_bytes
+    from _mef3_parser import tmet_sfreq_from_bytes  # noqa: PLC0415
 
     truncated = _tmet_bytes()[:512]
     assert tmet_sfreq_from_bytes(truncated) is None
 
 
 def test_tmet_n_times_from_bytes_none_sfreq():
-    from _mef3_parser import tmet_n_times_from_bytes
+    from _mef3_parser import tmet_n_times_from_bytes  # noqa: PLC0415
 
     # None / non-positive sfreq -> None without touching the buffer.
     assert tmet_n_times_from_bytes(b"\x00" * 2000, None) is None
@@ -75,7 +75,7 @@ def test_tmet_n_times_from_bytes_none_sfreq():
 
 
 def test_find_first_tmet_locates_nested_path(tmp_path: Path):
-    from _mef3_parser import find_first_tmet
+    from _mef3_parser import find_first_tmet  # noqa: PLC0415
 
     mefd = tmp_path / "sub-X_ieeg.mefd"
     seg = mefd / "EKG.timd" / "EKG-000000.segd"
@@ -87,7 +87,7 @@ def test_find_first_tmet_locates_nested_path(tmp_path: Path):
 
 
 def test_find_first_tmet_survives_broken_symlink(tmp_path: Path):
-    from _mef3_parser import find_first_tmet
+    from _mef3_parser import find_first_tmet  # noqa: PLC0415
 
     mefd = tmp_path / "rec.mefd"
     seg = mefd / "C1.timd" / "C1-000000.segd"
@@ -101,7 +101,7 @@ def test_find_first_tmet_survives_broken_symlink(tmp_path: Path):
 
 
 def test_find_first_tmet_returns_none_when_absent(tmp_path: Path):
-    from _mef3_parser import find_first_tmet
+    from _mef3_parser import find_first_tmet  # noqa: PLC0415
 
     mefd = tmp_path / "empty.mefd"
     (mefd / "C1.timd" / "C1-000000.segd").mkdir(parents=True)
@@ -110,6 +110,6 @@ def test_find_first_tmet_returns_none_when_absent(tmp_path: Path):
 
 
 def test_find_first_tmet_never_raises_on_missing_dir(tmp_path: Path):
-    from _mef3_parser import find_first_tmet
+    from _mef3_parser import find_first_tmet  # noqa: PLC0415
 
     assert find_first_tmet(tmp_path / "does-not-exist.mefd") is None

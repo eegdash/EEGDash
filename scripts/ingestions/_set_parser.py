@@ -49,11 +49,11 @@ except ImportError:  # pragma: no cover — scipy unavailable
 def _fdt_n_times(fdt_path: Path, nchans: int | None) -> int | None:
     """``n_times`` for an external EEGLAB ``.fdt`` from its SIZE alone — 0 bytes read.
 
-    The external ``.fdt`` is a raw ``float32`` ``[nchans × n_times]`` block with no
-    header, so ``n_times = fdt_size / (nchans × 4)``. The size comes from the
+    The external ``.fdt`` is a raw ``float32`` ``[nchans x n_times]`` block with no
+    header, so ``n_times = fdt_size / (nchans x 4)``. The size comes from the
     git-annex key on a shallow clone (``_sizing.data_file_size`` reads the pointer,
     never the signal). Returns ``None`` when *nchans* is falsy/non-positive, the
-    size is unavailable, or the size is not a whole multiple of ``nchans × 4`` —
+    size is unavailable, or the size is not a whole multiple of ``nchans x 4`` —
     never a guessed value. Never raises (FormatParser contract).
     """
     try:
@@ -65,7 +65,7 @@ def _fdt_n_times(fdt_path: Path, nchans: int | None) -> int | None:
         if not size or size % (nchans * 4) != 0:
             return None
         return size // (nchans * 4)
-    except Exception as e:  # never raise on a recoverable parse failure
+    except Exception as e:  # noqa: BLE001 — never raise on a recoverable parse failure
         logger.debug("_fdt_n_times failed: %s", e)
         return None
 
@@ -76,7 +76,7 @@ def _maybe_fill_ntimes_from_fdt(
     """Set ``result['n_times']`` from the companion ``.fdt`` size when safe.
 
     Only fires for CONTINUOUS data: if the parsed EEG struct exposes
-    ``trials > 1`` (epoched, 3-D), the flat ``size / (nchans × 4)`` divide would
+    ``trials > 1`` (epoched, 3-D), the flat ``size / (nchans x 4)`` divide would
     be wrong, so we skip it. When *trials* is unknown (``None``) we allow it —
     continuous is EEGLAB's default. No-op unless ``has_fdt`` is True, an
     ``n_times``/``n_samples`` is still absent, and ``nchans`` is known. Mutates
@@ -95,7 +95,7 @@ def _maybe_fill_ntimes_from_fdt(
         n_times = _fdt_n_times(set_path.with_suffix(".fdt"), nchans)
         if n_times is not None:
             result["n_times"] = n_times
-    except Exception as e:  # never raise on a recoverable parse failure
+    except Exception as e:  # noqa: BLE001 — never raise on a recoverable parse failure
         logger.debug("_maybe_fill_ntimes_from_fdt failed: %s", e)
 
 

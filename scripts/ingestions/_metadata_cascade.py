@@ -551,7 +551,7 @@ class SizeArithmeticStep:
 
     Currently handles the EEGLAB external ``.set`` case: when ``ntimes`` is still
     missing, ``nchans`` is known, and a companion ``.fdt`` (or its annex pointer)
-    is resolvable, ``n_times = fdt_size / (nchans × 4)`` via
+    is resolvable, ``n_times = fdt_size / (nchans x 4)`` via
     :func:`_set_parser._fdt_n_times`. EDF/BDF size-arithmetic is intentionally
     NOT done here — it is unsafe without the 256-byte main header (EDF+
     annotations channel), so it lives behind the ranged :class:`RemoteHeaderStep`.
@@ -570,7 +570,7 @@ class SizeArithmeticStep:
         try:
             fdt_path = ctx.bids_file_path.with_suffix(".fdt")
             n_times = _set_parser._fdt_n_times(fdt_path, result.nchans)
-        except Exception:
+        except Exception:  # noqa: BLE001
             # Defensive: the helper already swallows recoverable failures, but
             # the cascade must never raise on a single record.
             return
@@ -666,7 +666,7 @@ class RemoteHeaderStep:
                 self._fill_mefd(ctx, result)
             elif ctx.ext == ".snirf":
                 self._fill_snirf(ctx, result)
-        except Exception:
+        except Exception:  # noqa: BLE001
             # Any transport/parse failure → next tier; never raise on a record.
             return
 

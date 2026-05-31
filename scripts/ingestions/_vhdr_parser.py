@@ -24,6 +24,7 @@ from _parser_utils import (
     path_is_within_root,
     read_with_encoding_fallback,
 )
+from _sizing import data_file_size
 
 # Add eegdash to path if not already importable
 _project_root = Path(__file__).parent.parent.parent
@@ -56,7 +57,7 @@ def _vhdr_n_times(content: str, vhdr_path: Path, nchans: int | None) -> int | No
     — zero signal bytes fetched.
 
     ``DataPoints`` is deliberately NOT used as a standalone value: an exporter that
-    writes it as total-across-channels would yield an ``nchans``×-inflated count,
+    writes it as total-across-channels would yield an ``nchans``x-inflated count,
     and a confidently-wrong value must never ship. Returns ``None`` when the binary
     size is unavailable or does not divide evenly (e.g. a truncated stub).
     """
@@ -69,8 +70,6 @@ def _vhdr_n_times(content: str, vhdr_path: Path, nchans: int | None) -> int | No
 
     refs = extract_vhdr_references(vhdr_path)
     datafile = refs.get("datafile") or vhdr_path.with_suffix(".eeg").name
-    from _sizing import data_file_size
-
     size = data_file_size(vhdr_path.parent / datafile)
     if not size or size % dtype_bytes != 0:
         return None

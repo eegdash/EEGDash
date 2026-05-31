@@ -14,7 +14,7 @@ from eegdash.testing import data_file
 
 @pytest.mark.network
 def test_vhdr_parser_produces_n_times():
-    from _vhdr_parser import parse_vhdr_metadata
+    from _vhdr_parser import parse_vhdr_metadata  # noqa: PLC0415
 
     meta = parse_vhdr_metadata(data_file("eeg/sub-xp101_task-motorloc_eeg.vhdr"))
     assert meta is not None
@@ -24,7 +24,7 @@ def test_vhdr_parser_produces_n_times():
 
 @pytest.mark.network
 def test_snirf_parser_produces_n_times():
-    from _snirf_parser import parse_snirf_metadata
+    from _snirf_parser import parse_snirf_metadata  # noqa: PLC0415
 
     meta = parse_snirf_metadata(data_file("fnirs/openneuro_real.snirf"))
     assert meta is not None

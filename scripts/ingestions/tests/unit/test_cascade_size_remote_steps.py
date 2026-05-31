@@ -166,7 +166,7 @@ def _fetch_boom(_url, **_kw):
 
 
 def _rangereader_budget_boom(url, **_kw):
-    raise mc._remote_header.ByteBudgetExceeded("budget blown reading h5 metadata")
+    raise mc._remote_header.ByteBudgetExceededError("budget blown reading h5 metadata")
 
 
 class _RecordSfreqNTimes:

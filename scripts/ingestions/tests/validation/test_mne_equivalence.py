@@ -40,7 +40,7 @@ def _mne_n_times_vhdr(path) -> int:
 
 
 def test_vhdr_cheap_n_times_matches_mne():
-    from _vhdr_parser import parse_vhdr_metadata
+    from _vhdr_parser import parse_vhdr_metadata  # noqa: PLC0415
 
     path = data_file("eeg/sub-xp101_task-motorloc_eeg.vhdr")
     cheap = parse_vhdr_metadata(path).get("n_times")
@@ -50,7 +50,7 @@ def test_vhdr_cheap_n_times_matches_mne():
 
 
 def test_ieeg_vhdr_cheap_n_times_matches_mne():
-    from _vhdr_parser import parse_vhdr_metadata
+    from _vhdr_parser import parse_vhdr_metadata  # noqa: PLC0415
 
     path = data_file("ieeg/sub-01_ses-iemu_task-film_acq-clinical_run-1_ieeg.vhdr")
     cheap = parse_vhdr_metadata(path).get("n_times")
@@ -70,7 +70,7 @@ def test_ieeg_vhdr_cheap_n_times_matches_mne():
 
 
 def test_edf_cheap_n_times_matches_mne():
-    from _format_parser_registry import get_parser_for_extension
+    from _format_parser_registry import get_parser_for_extension  # noqa: PLC0415
 
     path = data_file("eeg/sub-01_ses-01_task-offline_run-01_eeg.edf")
     mne_nt = _mne_n_times_edf(path)
@@ -81,7 +81,7 @@ def test_edf_cheap_n_times_matches_mne():
 
 
 def test_bdf_cheap_n_times_matches_mne():
-    from _format_parser_registry import get_parser_for_extension
+    from _format_parser_registry import get_parser_for_extension  # noqa: PLC0415
 
     path = data_file("eeg/sub-001_ses-01_task-meditation_eeg.bdf")
     mne_nt = _mne_n_times_bdf(path)

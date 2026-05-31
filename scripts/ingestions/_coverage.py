@@ -178,8 +178,8 @@ def format_coverage_summary(report: dict[str, Any]) -> str:
 
 __all__ = [
     "INFERABLE_FIELDS",
-    "aggregate_records",
     "aggregate_output_dir",
-    "iter_records_from_output",
+    "aggregate_records",
     "format_coverage_summary",
+    "iter_records_from_output",
 ]

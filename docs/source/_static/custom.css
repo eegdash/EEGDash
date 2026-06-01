@@ -2931,6 +2931,29 @@ html[data-theme="dark"] .hf-callout .hf-logo-cloud {
   background: transparent;
 }
 
+.hf-callout .logos-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(18rem, 100%), 1fr));
+  gap: 2rem 4rem;
+  align-items: center;
+  justify-items: center;
+  max-width: 48rem;
+  margin: 1.25rem auto 1.5rem;
+}
+
+.hf-callout .logo-item {
+  width: 100%;
+  max-width: none;
+  min-height: 5.75rem;
+  padding: 0 1.25rem;
+}
+
+.hf-callout .logo-item img {
+  max-width: min(100%, 17rem);
+  max-height: 5rem;
+  object-fit: contain;
+}
+
 @media (max-width: 900px) {
   .hf-hero {
     padding: 2.5rem 2rem;
@@ -2978,6 +3001,11 @@ html[data-theme="dark"] .hf-callout .hf-logo-cloud {
 
   .hf-callout {
     padding: 2rem 1.5rem;
+  }
+
+  .hf-callout .logos-container {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
   }
 
   .hf-search-input-wrap {

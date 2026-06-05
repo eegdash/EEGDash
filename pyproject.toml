@@ -147,6 +147,7 @@ digestion = [
   "tenacity",
   "hishel",
   "pydantic>=2",
+  "pydantic-settings>=2",
   "PyGithub>=2",
 ]
 

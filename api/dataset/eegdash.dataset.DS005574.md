@@ -130,13 +130,13 @@ We introduce the “Podcast” electrocorticography (ECoG) dataset for modeling 
     referrerpolicy="no-referrer">
   </iframe>
 </details></div><div class="figpair-cell figpair-montage"><details class="electrode-explorer">
-  <summary>Electrode layout — iEEG · 171 sensors — 171 channels</summary>
+  <summary>Electrode layout — iEEG · 188 sensors — 188 channels</summary>
   <iframe
-    data-src="https://electrodes.eegdash.org/?montage=f35fd35d76122995&embed=1"
+    data-src="https://electrodes.eegdash.org/?montage=ef0b4505dfbdbdfd&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
-    title="Topomap of iEEG · 171 sensors"
+    title="Topomap of iEEG · 188 sensors"
     referrerpolicy="no-referrer">
   </iframe>
 </details></div></div></div>

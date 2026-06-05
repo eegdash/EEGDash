@@ -107,7 +107,7 @@ No README content is available for this dataset.
   <div class="figpair-grid"><div class="figpair-cell figpair-montage"><details class="electrode-explorer">
   <summary>Electrode layout — fNIRS · 42 sensors — 42 channels</summary>
   <iframe
-    data-src="https://electrodes.eegdash.org/?montage=5b5bfc2b3f0df761&embed=1"
+    data-src="https://electrodes.eegdash.org/?montage=baa679da0d796e68&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"

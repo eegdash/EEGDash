@@ -739,6 +739,6 @@ See [References](../../../../references.md) for the centralized bibliography of 
 cited above. Add or amend an entry once in
 `docs/source/refs.bib`; every tutorial inherits the update.
 
-**Total running time of the script:** (0 minutes 2.039 seconds)
+**Total running time of the script:** (0 minutes 1.333 seconds)
 
 <a id="sphx-glr-download-generated-auto-examples-tutorials-00-start-here-plot-00-first-search-py"></a>

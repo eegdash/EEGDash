@@ -83,7 +83,10 @@ jobs:
 
           ARGS="--input eegdash-dataset-listings/digested"
           ARGS="$ARGS --database ${{ inputs.database }}"
-          
+          # Recompute per-dataset stats after a real injection. The script only
+          # acts on this flag when NOT a dry run, so it is a safe no-op otherwise.
+          ARGS="$ARGS --compute-stats"
+
           if [ "${{ inputs.dry_run }}" == "true" ]; then
             ARGS="$ARGS --dry-run"
           fi

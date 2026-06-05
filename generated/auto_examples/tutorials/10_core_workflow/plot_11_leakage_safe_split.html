@@ -690,7 +690,7 @@ the cross-section of variance. Cisotto &amp; Chicco 2024 (Tip 9) call
 this out as the single most common reporting mistake in clinical EEG.</p>
 <p>The fix is structural: hold out subjects, not windows. Group every
 window by its <code class="docutils literal notranslate"><span class="pre">subject</span></code> id and let
-<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GroupKFold.html#sklearn.model_selection.GroupKFold" title="(in scikit-learn v1.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.model_selection.GroupKFold</span></code></a> (or the MOABB
+<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GroupKFold.html#sklearn.model_selection.GroupKFold" title="(in scikit-learn v1.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.model_selection.GroupKFold</span></code></a> (or the MOABB
 <code class="docutils literal notranslate"><span class="pre">CrossSubjectSplitter</span></code>) put each subject in exactly one test fold.
 <code class="xref py py-mod docutils literal notranslate"><span class="pre">eegdash.splits</span></code> wraps both behind one entry point, persists the
 manifest, and emits a JSON line a runtime validator can grep for.</p>
@@ -891,7 +891,7 @@ score; deployment on a new participant collapses to chance.</p>
 <h2>Step 3. Build a leakage-safe 5-fold split manifest<a class="headerlink" href="#step-3-build-a-leakage-safe-5-fold-split-manifest" title="Link to this heading">#</a></h2>
 <p><strong>Run.</strong> <code class="docutils literal notranslate"><span class="pre">get_splitter</span></code> with the canonical name
 <code class="docutils literal notranslate"><span class="pre">&quot;cross_subject&quot;</span></code> returns a MOABB <code class="docutils literal notranslate"><span class="pre">CrossSubjectSplitter</span></code> (or a
-<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GroupKFold.html#sklearn.model_selection.GroupKFold" title="(in scikit-learn v1.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.model_selection.GroupKFold</span></code></a> keyed on <code class="docutils literal notranslate"><span class="pre">subject</span></code> when
+<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GroupKFold.html#sklearn.model_selection.GroupKFold" title="(in scikit-learn v1.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.model_selection.GroupKFold</span></code></a> keyed on <code class="docutils literal notranslate"><span class="pre">subject</span></code> when
 MOABB is unavailable). Either way, no fold can put the same subject
 on both sides. <code class="docutils literal notranslate"><span class="pre">make_split_manifest</span></code> freezes
 the output into a JSON-serialisable dict with provenance: splitter
@@ -1314,7 +1314,7 @@ cross-subject manifest prints
 <p>Two things go wrong frequently with this API. The first is mistyping
 the splitter name; <code class="docutils literal notranslate"><span class="pre">get_splitter</span></code> raises a
 <code class="docutils literal notranslate"><span class="pre">KeyError</span></code> listing the valid names. The second is calling
-<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.train_test_split.html#sklearn.model_selection.train_test_split" title="(in scikit-learn v1.8)"><code class="xref py py-func docutils literal notranslate"><span class="pre">sklearn.model_selection.train_test_split()</span></code></a> on the windows
+<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.train_test_split.html#sklearn.model_selection.train_test_split" title="(in scikit-learn v1.9)"><code class="xref py py-func docutils literal notranslate"><span class="pre">sklearn.model_selection.train_test_split()</span></code></a> on the windows
 DataFrame and forgetting the <code class="docutils literal notranslate"><span class="pre">stratify</span></code> / <code class="docutils literal notranslate"><span class="pre">groups</span></code> arguments,
 which silently leaks subjects across folds. Both fail the same way
 (a happy-looking train/test pair), and both are caught by
@@ -1459,7 +1459,7 @@ the split rule changed.</p>
 </section>
 <section id="quick-alternative-groupshufflesplit-for-a-single-test-split">
 <h2>Quick alternative: GroupShuffleSplit for a single test split<a class="headerlink" href="#quick-alternative-groupshufflesplit-for-a-single-test-split" title="Link to this heading">#</a></h2>
-<p>For “give me one train/test split right now”, <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GroupShuffleSplit.html#sklearn.model_selection.GroupShuffleSplit" title="(in scikit-learn v1.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.model_selection.GroupShuffleSplit</span></code></a>
+<p>For “give me one train/test split right now”, <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GroupShuffleSplit.html#sklearn.model_selection.GroupShuffleSplit" title="(in scikit-learn v1.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.model_selection.GroupShuffleSplit</span></code></a>
 keyed on <code class="docutils literal notranslate"><span class="pre">subject</span></code> gives a single subject-disjoint pair. The
 folds list above is the N-fold generalization.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <a href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GroupShuffleSplit.html#sklearn.model_selection.GroupShuffleSplit" title="sklearn.model_selection.GroupShuffleSplit" class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-class"><span class="n">GroupShuffleSplit</span></a>

@@ -131,7 +131,7 @@ Preprocessing in EEGLAB: After the data acquisition, a band-pass filter (0.5–1
 </details></div><div class="figpair-cell figpair-montage"><details class="electrode-explorer">
   <summary>Electrode layout — EEG · 129 sensors — 129 channels</summary>
   <iframe
-    data-src="https://electrodes.eegdash.org/?montage=3ab6e006be87fcc1&embed=1"
+    data-src="https://electrodes.eegdash.org/?montage=b0d0da7469c70389&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"

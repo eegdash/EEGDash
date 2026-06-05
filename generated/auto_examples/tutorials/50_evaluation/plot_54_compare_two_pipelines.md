@@ -536,6 +536,6 @@ See [References](../../../../references.md) for the centralized bibliography of 
 cited above. Add or amend an entry once in
 `docs/source/refs.bib`; every tutorial inherits the update.
 
-**Total running time of the script:** (0 minutes 2.333 seconds)
+**Total running time of the script:** (0 minutes 2.483 seconds)
 
 <a id="sphx-glr-download-generated-auto-examples-tutorials-50-evaluation-plot-54-compare-two-pipelines-py"></a>

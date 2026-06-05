@@ -613,7 +613,7 @@ variance dominates the contrast all care about a <em>single</em> brain at
 a time. In those cases <code class="docutils literal notranslate"><span class="pre">subject</span></code> overlap between train and test is
 <em>intentional</em>. This tutorial builds a 5-fold within-subject split,
 proves it is trial-disjoint, fits one
-<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html#sklearn.linear_model.LogisticRegression" title="(in scikit-learn v1.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">LogisticRegression</span></code></a> per subject, and
+<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html#sklearn.linear_model.LogisticRegression" title="(in scikit-learn v1.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">LogisticRegression</span></code></a> per subject, and
 puts the per-subject scores next to a leave-one-subject-out
 cross-subject reference on the same data.</p>
 <p>Brookshire et al. 2024 surveyed 81 deep-learning EEG papers and
@@ -766,7 +766,7 @@ the question is “does the decoder calibrate to subject X?”, not
 <section id="step-3-build-the-5-fold-within-subject-manifest">
 <h2>Step 3: Build the 5-fold within-subject manifest<a class="headerlink" href="#step-3-build-the-5-fold-within-subject-manifest" title="Link to this heading">#</a></h2>
 <p><strong>Run.</strong> <code class="docutils literal notranslate"><span class="pre">get_splitter</span></code> returns MOABB’s
-<code class="docutils literal notranslate"><span class="pre">WithinSubjectSplitter</span></code> (or a <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GroupKFold.html#sklearn.model_selection.GroupKFold" title="(in scikit-learn v1.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">GroupKFold</span></code></a>
+<code class="docutils literal notranslate"><span class="pre">WithinSubjectSplitter</span></code> (or a <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GroupKFold.html#sklearn.model_selection.GroupKFold" title="(in scikit-learn v1.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">GroupKFold</span></code></a>
 fallback). It draws a fresh 5-fold split <em>inside each subject</em>, so 12
 subjects give 12 x 5 = 60 fold pairs.
 <code class="docutils literal notranslate"><span class="pre">make_split_manifest</span></code> freezes them to a
@@ -837,7 +837,7 @@ EEG you would gate on <code class="docutils literal notranslate"><span class="pr
 <section id="step-5-train-per-subject-and-quote-chance-level">
 <h2>Step 5: Train per-subject and quote chance level<a class="headerlink" href="#step-5-train-per-subject-and-quote-chance-level" title="Link to this heading">#</a></h2>
 <p><strong>Run.</strong> For each fold we materialise train/test masks, fit a
-<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html#sklearn.linear_model.LogisticRegression" title="(in scikit-learn v1.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">LogisticRegression</span></code></a>, and aggregate
+<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html#sklearn.linear_model.LogisticRegression" title="(in scikit-learn v1.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">LogisticRegression</span></code></a>, and aggregate
 accuracy per subject. <code class="docutils literal notranslate"><span class="pre">majority_baseline</span></code>
 returns chance from the test class proportions (E5.43). Combrisson
 &amp; Jerbi 2015: with small test folds, 0.65 on n_test=20 is
@@ -1031,7 +1031,7 @@ Recovery: keep `subject` (have [&#39;dataset&#39;, &#39;run&#39;, &#39;sample_id
 carries the same story across three panels: per-subject within-CV
 bars (with cross-subject as an orange reference), variance
 comparison between the two regimes, and a pooled
-<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.ConfusionMatrixDisplay.html#sklearn.metrics.ConfusionMatrixDisplay" title="(in scikit-learn v1.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConfusionMatrixDisplay</span></code></a>. The drawing
+<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.ConfusionMatrixDisplay.html#sklearn.metrics.ConfusionMatrixDisplay" title="(in scikit-learn v1.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConfusionMatrixDisplay</span></code></a>. The drawing
 helpers live in a sibling <code class="docutils literal notranslate"><span class="pre">_within_subject_figure</span></code> module; the
 call below is the only line that matters.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">_within_subject_figure</span><span class="w"> </span><span class="kn">import</span> <span class="n">draw_within_subject_figure</span>
@@ -1096,7 +1096,7 @@ session overlap by design while trials stay disjoint.</p>
 <p>We built a 5-fold within-subject manifest on 12 mock subjects,
 asserted <code class="docutils literal notranslate"><span class="pre">trial_overlap</span> <span class="pre">==</span> <span class="pre">0</span></code> while accepting
 <code class="docutils literal notranslate"><span class="pre">subject_overlap</span> <span class="pre">==</span> <span class="pre">1</span></code> (the design), trained one
-<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html#sklearn.linear_model.LogisticRegression" title="(in scikit-learn v1.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">LogisticRegression</span></code></a> per fold, and
+<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html#sklearn.linear_model.LogisticRegression" title="(in scikit-learn v1.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">LogisticRegression</span></code></a> per fold, and
 compared the within-subject mean to a leave-one-subject-out
 reference. The within-subject mean is the right number for
 calibration-style decoders; the cross-subject mean is the right
@@ -1106,8 +1106,8 @@ two is the leakage failure mode Brookshire et al. 2024 documented.</p>
 <section id="mini-project">
 <h2>Mini-project<a class="headerlink" href="#mini-project" title="Link to this heading">#</a></h2>
 <p><strong>Mini-project.</strong> Swap
-<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html#sklearn.linear_model.LogisticRegression" title="(in scikit-learn v1.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">LogisticRegression</span></code></a> for
-<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html#sklearn.ensemble.RandomForestClassifier" title="(in scikit-learn v1.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">RandomForestClassifier</span></code></a> (defaults,
+<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html#sklearn.linear_model.LogisticRegression" title="(in scikit-learn v1.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">LogisticRegression</span></code></a> for
+<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html#sklearn.ensemble.RandomForestClassifier" title="(in scikit-learn v1.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">RandomForestClassifier</span></code></a> (defaults,
 <code class="docutils literal notranslate"><span class="pre">random_state=42</span></code>); rerun Step 5 + Step 6. Is the random-forest
 within-vs-cross gap bigger or smaller than the linear gap? A
 widening gap signals subject-fingerprint exploitation; a flat gap

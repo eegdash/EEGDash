@@ -613,7 +613,7 @@ This applied case study takes the Healthy Brain Network release
 through NEMAR (Delorme et al. 2022, doi:10.1093/nargab/lqac023), wires up
 an <a class="reference internal" href="../../../api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset" title="eegdash.EEGDashDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">eegdash.EEGDashDataset</span></code></a> query, builds a strict subject-aware
 split (Cisotto and Chicco 2024, doi:10.7717/peerj-cs.2256), fits a
-<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Ridge.html#sklearn.linear_model.Ridge" title="(in scikit-learn v1.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.linear_model.Ridge</span></code></a> head on band-power features, and
+<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Ridge.html#sklearn.linear_model.Ridge" title="(in scikit-learn v1.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.linear_model.Ridge</span></code></a> head on band-power features, and
 reports Pearson r, Spearman rho, R^2, and MAE against a median-baseline
 predictor. EEG-based brain-age regression has a long line of prior work
 (Zoubi et al. 2018, doi:10.3389/fnhum.2018.00461). The headline
@@ -629,8 +629,8 @@ Keywords: regression, applied, age</p>
 <p>After this case study you will be able to:</p>
 <ul class="simple">
 <li><p>load HBN <code class="docutils literal notranslate"><span class="pre">ds005505</span></code> via <a class="reference internal" href="../../../api/dataset/eegdash.EEGDashDataset.html#eegdash.EEGDashDataset" title="eegdash.EEGDashDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">eegdash.EEGDashDataset</span></code></a> with <code class="docutils literal notranslate"><span class="pre">age</span></code> and <code class="docutils literal notranslate"><span class="pre">sex</span></code> on <code class="docutils literal notranslate"><span class="pre">description_fields</span></code>.</p></li>
-<li><p>build a subject-aware split with <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GroupKFold.html#sklearn.model_selection.GroupKFold" title="(in scikit-learn v1.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.model_selection.GroupKFold</span></code></a> keyed on subject.</p></li>
-<li><p>fit a <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Ridge.html#sklearn.linear_model.Ridge" title="(in scikit-learn v1.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.linear_model.Ridge</span></code></a> head on a feature table and report <code class="docutils literal notranslate"><span class="pre">r2</span></code>, MAE, and a median-baseline reference.</p></li>
+<li><p>build a subject-aware split with <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GroupKFold.html#sklearn.model_selection.GroupKFold" title="(in scikit-learn v1.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.model_selection.GroupKFold</span></code></a> keyed on subject.</p></li>
+<li><p>fit a <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Ridge.html#sklearn.linear_model.Ridge" title="(in scikit-learn v1.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.linear_model.Ridge</span></code></a> head on a feature table and report <code class="docutils literal notranslate"><span class="pre">r2</span></code>, MAE, and a median-baseline reference.</p></li>
 <li><p>read a three-panel diagnostic plate (predicted vs true, per-subject signed residual, error histogram) for an EEG regression.</p></li>
 </ul>
 </section>
@@ -784,8 +784,8 @@ plus a subject-level <code class="docutils literal notranslate"><span class="pre
 </section>
 <section id="step-4-build-a-ridge-regression-head-on-top-of-features">
 <h2>Step 4. Build a Ridge regression head on top of features<a class="headerlink" href="#step-4-build-a-ridge-regression-head-on-top-of-features" title="Link to this heading">#</a></h2>
-<p>A <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.StandardScaler.html#sklearn.preprocessing.StandardScaler" title="(in scikit-learn v1.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.preprocessing.StandardScaler</span></code></a> then
-<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Ridge.html#sklearn.linear_model.Ridge" title="(in scikit-learn v1.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.linear_model.Ridge</span></code></a> <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html#sklearn.pipeline.Pipeline" title="(in scikit-learn v1.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.pipeline.Pipeline</span></code></a>
+<p>A <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.StandardScaler.html#sklearn.preprocessing.StandardScaler" title="(in scikit-learn v1.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.preprocessing.StandardScaler</span></code></a> then
+<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Ridge.html#sklearn.linear_model.Ridge" title="(in scikit-learn v1.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.linear_model.Ridge</span></code></a> <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html#sklearn.pipeline.Pipeline" title="(in scikit-learn v1.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.pipeline.Pipeline</span></code></a>
 (Pedregosa et al. 2011, doi:10.5555/1953048.2078195) is the regression
 analogue of a logistic head. <code class="docutils literal notranslate"><span class="pre">alpha=1.0</span></code> is a defensible default for
 a 12-feature table, and <code class="docutils literal notranslate"><span class="pre">random_state=42</span></code> keeps the loop byte stable.</p>
@@ -802,7 +802,7 @@ a 12-feature table, and <code class="docutils literal notranslate"><span class="
 </section>
 <section id="step-5-cross-subject-5-fold-split-no-subject-leakage">
 <h2>Step 5. Cross-subject 5-fold split, no subject leakage<a class="headerlink" href="#step-5-cross-subject-5-fold-split-no-subject-leakage" title="Link to this heading">#</a></h2>
-<p><strong>Run.</strong> <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GroupKFold.html#sklearn.model_selection.GroupKFold" title="(in scikit-learn v1.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.model_selection.GroupKFold</span></code></a> keyed on
+<p><strong>Run.</strong> <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GroupKFold.html#sklearn.model_selection.GroupKFold" title="(in scikit-learn v1.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.model_selection.GroupKFold</span></code></a> keyed on
 <code class="docutils literal notranslate"><span class="pre">subject</span></code> is the contract: every subject appears in exactly one
 test fold. We assert zero subject overlap before scoring, and we
 pool the held-out predictions across folds so the diagnostic plate
@@ -854,7 +854,7 @@ the assertion below is non-negotiable.</p>
 <section id="step-6-a-common-mistake-and-how-to-recover">
 <h2>Step 6. A common mistake, and how to recover<a class="headerlink" href="#step-6-a-common-mistake-and-how-to-recover" title="Link to this heading">#</a></h2>
 <p><strong>Run.</strong> A frequent slip is wiring a non-numeric <code class="docutils literal notranslate"><span class="pre">age</span></code> column into
-<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Ridge.html#sklearn.linear_model.Ridge" title="(in scikit-learn v1.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.linear_model.Ridge</span></code></a>. <code class="docutils literal notranslate"><span class="pre">age</span></code> arrives as strings if a
+<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Ridge.html#sklearn.linear_model.Ridge" title="(in scikit-learn v1.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.linear_model.Ridge</span></code></a>. <code class="docutils literal notranslate"><span class="pre">age</span></code> arrives as strings if a
 CSV was loaded without dtype hints (or if a NEMAR sidecar serializes
 it as text), and Ridge then refuses to fit. We trigger the failure
 on purpose with <code class="docutils literal notranslate"><span class="pre">try</span> <span class="pre">/</span> <span class="pre">except</span></code> so the error message and the
@@ -957,7 +957,7 @@ reversal (Cisotto and Chicco 2024 Tip 7).</p>
 <h2>Wrap-up<a class="headerlink" href="#wrap-up" title="Link to this heading">#</a></h2>
 <p>We loaded an HBN-shaped feature table with <code class="docutils literal notranslate"><span class="pre">age</span></code> as a float column,
 built a 5-fold <code class="docutils literal notranslate"><span class="pre">GroupKFold</span></code> split keyed on <code class="docutils literal notranslate"><span class="pre">subject</span></code>, asserted
-zero subject leakage, fit a <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Ridge.html#sklearn.linear_model.Ridge" title="(in scikit-learn v1.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.linear_model.Ridge</span></code></a> head
+zero subject leakage, fit a <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Ridge.html#sklearn.linear_model.Ridge" title="(in scikit-learn v1.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.linear_model.Ridge</span></code></a> head
 per fold, and reported R^2 plus MAE alongside the median-baseline
 predictor. The three-panel figure is the diagnostic that surfaces
 what a single MAE hides: a flat predicted-vs-true cloud means the
@@ -971,8 +971,8 @@ much larger N.</p>
 <section id="try-it-yourself">
 <h2>Try it yourself<a class="headerlink" href="#try-it-yourself" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p>Swap <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Ridge.html#sklearn.linear_model.Ridge" title="(in scikit-learn v1.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.linear_model.Ridge</span></code></a> for
-<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.neural_network.MLPRegressor.html#sklearn.neural_network.MLPRegressor" title="(in scikit-learn v1.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.neural_network.MLPRegressor</span></code></a> (still <code class="docutils literal notranslate"><span class="pre">random_state=42</span></code>).</p></li>
+<li><p>Swap <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Ridge.html#sklearn.linear_model.Ridge" title="(in scikit-learn v1.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.linear_model.Ridge</span></code></a> for
+<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.neural_network.MLPRegressor.html#sklearn.neural_network.MLPRegressor" title="(in scikit-learn v1.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.neural_network.MLPRegressor</span></code></a> (still <code class="docutils literal notranslate"><span class="pre">random_state=42</span></code>).</p></li>
 <li><p>Pre-train a <a class="reference external" href="https://braindecode.org/stable/generated/braindecode.models.EEGConformer.html#braindecode.models.EEGConformer" title="(in Braindecode v1.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">braindecode.models.EEGConformer</span></code></a> on raw windows
 and feed encoder activations into the same Ridge head.</p></li>
 <li><p>Bump <code class="docutils literal notranslate"><span class="pre">n_folds</span></code> to <code class="docutils literal notranslate"><span class="pre">N_SUBJECTS</span></code> for leave-one-subject-out variance.</p></li>

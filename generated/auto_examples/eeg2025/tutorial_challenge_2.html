@@ -626,7 +626,7 @@ doi:10.7717/peerj-cs.2256).</p>
 <p>After this tutorial you will be able to:</p>
 <ul class="simple">
 <li><p>load EEG2025 Challenge 2 recordings via <code class="xref py py-class docutils literal notranslate"><span class="pre">eegdash.EEGChallengeDataset</span></code>.</p></li>
-<li><p>fit a <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Ridge.html#sklearn.linear_model.Ridge" title="(in scikit-learn v1.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.linear_model.Ridge</span></code></a> head and report Pearson r, R^2, MAE.</p></li>
+<li><p>fit a <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Ridge.html#sklearn.linear_model.Ridge" title="(in scikit-learn v1.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.linear_model.Ridge</span></code></a> head and report Pearson r, R^2, MAE.</p></li>
 </ul>
 <p># - produce a leaderboard card placing the starter score next to chance and target.
 # - phrase the result in clinical-cautious language for the p-factor.
@@ -790,7 +790,7 @@ features, <code class="docutils literal notranslate"><span class="pre">0.10</spa
 <section id="step-3-build-a-leakage-safe-cross-subject-split">
 <h2>Step 3. Build a leakage-safe cross-subject split<a class="headerlink" href="#step-3-build-a-leakage-safe-cross-subject-split" title="Link to this heading">#</a></h2>
 <p><strong>Run.</strong> <code class="docutils literal notranslate"><span class="pre">get_splitter(&quot;cross_subject&quot;,</span> <span class="pre">n_folds=5,</span> <span class="pre">random_state=42)</span></code>
-returns sklearn’s <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GroupKFold.html#sklearn.model_selection.GroupKFold" title="(in scikit-learn v1.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.model_selection.GroupKFold</span></code></a> keyed
+returns sklearn’s <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GroupKFold.html#sklearn.model_selection.GroupKFold" title="(in scikit-learn v1.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.model_selection.GroupKFold</span></code></a> keyed
 on <code class="docutils literal notranslate"><span class="pre">subject</span></code>. The split is frozen into a manifest, walked with
 <code class="docutils literal notranslate"><span class="pre">assert_no_leakage</span></code> (<code class="docutils literal notranslate"><span class="pre">by=&quot;subject&quot;</span></code>), and the
 <code class="docutils literal notranslate"><span class="pre">leakage_report</span></code> line is what the audit pipeline parses.</p>
@@ -821,9 +821,9 @@ on <code class="docutils literal notranslate"><span class="pre">subject</span></
 </section>
 <section id="step-4-fit-a-ridge-head-per-fold-and-pool-predictions">
 <h2>Step 4. Fit a ridge head per fold and pool predictions<a class="headerlink" href="#step-4-fit-a-ridge-head-per-fold-and-pool-predictions" title="Link to this heading">#</a></h2>
-<p>A <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.StandardScaler.html#sklearn.preprocessing.StandardScaler" title="(in scikit-learn v1.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.preprocessing.StandardScaler</span></code></a> <code class="docutils literal notranslate"><span class="pre">-&gt;</span></code>
-<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Ridge.html#sklearn.linear_model.Ridge" title="(in scikit-learn v1.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.linear_model.Ridge</span></code></a>
-<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html#sklearn.pipeline.Pipeline" title="(in scikit-learn v1.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.pipeline.Pipeline</span></code></a> <span class="bibtex-citation" id="id1">[<a class="reference internal" href="../../../references.html#id33" title="F. Pedregosa, G. Varoquaux, A. Gramfort, V. Michel, B. Thirion, O. Grisel, M. Blondel, P. Prettenhofer, R. Weiss, V. Dubourg, J. Vanderplas, A. Passos, D. Cournapeau, M. Brucher, M. Perrot, and E. Duchesnay. Scikit-learn: machine learning in Python. Journal of Machine Learning Research, 12:2825–2830, 2011.">Pedregosa <em>et al.</em>, 2011</a>]</span> is the
+<p>A <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.StandardScaler.html#sklearn.preprocessing.StandardScaler" title="(in scikit-learn v1.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.preprocessing.StandardScaler</span></code></a> <code class="docutils literal notranslate"><span class="pre">-&gt;</span></code>
+<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Ridge.html#sklearn.linear_model.Ridge" title="(in scikit-learn v1.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.linear_model.Ridge</span></code></a>
+<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html#sklearn.pipeline.Pipeline" title="(in scikit-learn v1.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.pipeline.Pipeline</span></code></a> <span class="bibtex-citation" id="id1">[<a class="reference internal" href="../../../references.html#id33" title="F. Pedregosa, G. Varoquaux, A. Gramfort, V. Michel, B. Thirion, O. Grisel, M. Blondel, P. Prettenhofer, R. Weiss, V. Dubourg, J. Vanderplas, A. Passos, D. Cournapeau, M. Brucher, M. Perrot, and E. Duchesnay. Scikit-learn: machine learning in Python. Journal of Machine Learning Research, 12:2825–2830, 2011.">Pedregosa <em>et al.</em>, 2011</a>]</span> is the
 regression analogue of the plot_42 classification baseline. <code class="docutils literal notranslate"><span class="pre">alpha=1.0</span></code>
 is a defensible default for an 8-feature table; <code class="docutils literal notranslate"><span class="pre">GroupKFold</span></code> keys on
 subject so a held-out subject never appears in any train fold.</p>
@@ -976,7 +976,7 @@ baseline next to chance and the public top score.</p>
 <section id="a-common-mistake-and-how-to-recover">
 <h2>A common mistake, and how to recover<a class="headerlink" href="#a-common-mistake-and-how-to-recover" title="Link to this heading">#</a></h2>
 <p><strong>Run.</strong> A frequent slip is wiring a non-numeric target column into
-<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Ridge.html#sklearn.linear_model.Ridge" title="(in scikit-learn v1.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.linear_model.Ridge</span></code></a>: <code class="docutils literal notranslate"><span class="pre">p_factor</span></code> arrives as strings
+<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Ridge.html#sklearn.linear_model.Ridge" title="(in scikit-learn v1.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.linear_model.Ridge</span></code></a>: <code class="docutils literal notranslate"><span class="pre">p_factor</span></code> arrives as strings
 if a CSV is loaded without dtype hints, and Ridge then refuses to
 solve. The cell below triggers it on purpose with <code class="docutils literal notranslate"><span class="pre">try/except</span></code> so
 the failure mode is visible (Nederbragt et al. 2020,
@@ -1064,8 +1064,8 @@ much larger N.</p>
 <section id="try-it-yourself">
 <h2>Try it yourself<a class="headerlink" href="#try-it-yourself" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p>Swap <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Ridge.html#sklearn.linear_model.Ridge" title="(in scikit-learn v1.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.linear_model.Ridge</span></code></a> for
-<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.neural_network.MLPRegressor.html#sklearn.neural_network.MLPRegressor" title="(in scikit-learn v1.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.neural_network.MLPRegressor</span></code></a> (still
+<li><p>Swap <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Ridge.html#sklearn.linear_model.Ridge" title="(in scikit-learn v1.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.linear_model.Ridge</span></code></a> for
+<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.neural_network.MLPRegressor.html#sklearn.neural_network.MLPRegressor" title="(in scikit-learn v1.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.neural_network.MLPRegressor</span></code></a> (still
 <code class="docutils literal notranslate"><span class="pre">random_state=42</span></code>); compare pooled <code class="docutils literal notranslate"><span class="pre">r</span></code> against the figure.</p></li>
 <li><p>Pre-train <a class="reference external" href="https://braindecode.org/stable/generated/braindecode.models.ShallowFBCSPNet.html#braindecode.models.ShallowFBCSPNet" title="(in Braindecode v1.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">braindecode.models.ShallowFBCSPNet</span></code></a> on the
 passive tasks and feed its activations as features.</p></li>

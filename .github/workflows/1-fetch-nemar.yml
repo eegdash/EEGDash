@@ -2,8 +2,8 @@
 name: "1. Fetch: NEMAR"
 
 on:
-  schedule:
-    - cron: '0 1 * * 1'  # Weekly on Monday, 1 hour after OpenNeuro
+  # Scheduled fetching is now handled by full-pipeline.yml ("Daily Ingestion
+  # Pipeline"). Kept for manual single-source runs.
   workflow_dispatch:
 
 jobs:

@@ -170,9 +170,13 @@ def _func_from_dict(func_dict: dict) -> FunctionType | partial:
     if func_dict["name"] in feature_bank.__all__:
         func = getattr(feature_bank, func_dict["name"])
     else:
+        import difflib
+
+        close = difflib.get_close_matches(func_dict["name"], feature_bank.__all__, n=3)
         raise ValueError(
-            f"feature or preprocessor named `{func_dict['name']}` "
-            + "not found in feature bank."
+            f"Feature/preprocessor '{func_dict['name']}' not found in feature_bank. "
+            f"Check the configuration file. "
+            f"Close matches: {close if close else 'none'}."
         )
     if "args" in func_dict or "kwargs" in func_dict:
         func_args = func_dict["args"] if "args" in func_dict else []
@@ -251,10 +255,9 @@ def feature_extractor_from_dict(fe_dict: dict) -> FeatureExtractor:
             fes[k] = _func_from_dict(v)
         else:
             raise ValueError(
-                f"Feature {k}: A feature dict must "
-                + "contain either a 'feature_extractors' "
-                + "field (for `FeatureExtractor`)or a 'name' "
-                + f"field (for a function), got {v.keys()}."
+                f"Malformed entry for feature key '{k}': expected either a 'name' key "
+                f"(plain function) or a 'feature_extractors' key (nested FeatureExtractor), "
+                f"but got keys: {list(v.keys())}. Check your config file at the '{k}' entry."
             )
     kwargs["feature_extractors"] = fes
     return FeatureExtractor(**kwargs)

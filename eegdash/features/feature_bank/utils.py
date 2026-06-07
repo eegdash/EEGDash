@@ -216,9 +216,9 @@ def get_valid_freq_band(fs, n, f_min=None, f_max=None):
 
     Raises
     ------
-    AssertionError
+    ValueError
         If `f_min` is below the minimum resolvable frequency.
-    AssertionError
+    ValueError
         If `f_max` is above the Nyquist frequency.
 
     Examples
@@ -234,11 +234,19 @@ def get_valid_freq_band(fs, n, f_min=None, f_max=None):
     if f_min is None:
         f_min = f0
     else:
-        assert f_min >= f0
+        if f_min < f0:
+            raise ValueError(
+                f"f_min={f_min} Hz is below the minimum resolvable frequency "
+                f"f0={f0:.3f} Hz (= 2 * fs / n = 2 * {fs} / {n})."
+            )
     if f_max is None:
         f_max = f1
     else:
-        assert f_max <= f1
+        if f_max > f1:
+            raise ValueError(
+                f"f_max={f_max} Hz exceeds the Nyquist frequency "
+                f"f1={f1} Hz (= fs / 2 = {fs} / 2)."
+            )
     return f_min, f_max
 
 
@@ -324,10 +332,12 @@ def reduce_freq_bands(f, x, bands, reduce_func=np.sum):
 
     Raises
     ------
-    AssertionError
+    ValueError
         If a band name is not a string.
+    ValueError
         If a band limit tuple does not contain exactly two values or
         if min > max.
+    ValueError
         If the requested band limits fall outside the range of the
         available frequency vector `f`.
 
@@ -348,9 +358,20 @@ def reduce_freq_bands(f, x, bands, reduce_func=np.sum):
     """
     x_bands = dict()
     for k, lims in bands.items():
-        assert isinstance(k, str)
-        assert len(lims) == 2 and lims[0] <= lims[1]
-        assert lims[0] >= f[0] and lims[1] <= f[-1]
+        if not isinstance(k, str):
+            raise ValueError(
+                f"Band key {k!r} must be a string, got {type(k).__name__}."
+            )
+        if len(lims) != 2 or lims[0] > lims[1]:
+            raise ValueError(
+                f"Band '{k}' limits must be a 2-tuple (f_min, f_max) with "
+                f"f_min <= f_max, got {lims}."
+            )
+        if lims[0] < f[0] or lims[1] > f[-1]:
+            raise ValueError(
+                f"Band '{k}' limits ({lims[0]}, {lims[1]}) are outside the "
+                f"available frequency range [{f[0]}, {f[-1]}] Hz."
+            )
         mask = np.logical_and(f >= lims[0], f < lims[1])
         xf = x[..., mask]
         x_bands[k] = reduce_func(xf, axis=-1)

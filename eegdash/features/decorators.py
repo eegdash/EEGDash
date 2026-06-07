@@ -356,9 +356,9 @@ def metadata_preprocessor(func: Callable) -> Callable:
     f = get_underlying_func(func)
     if "_metadata" not in inspect.signature(f).parameters:
         raise TypeError(
-            f"{f.__name__} cannot be set as a metadata preprocessor "
-            + "because it does not get a keyword argument named "
-            + "``'_metadata'``"
+            f"@metadata_preprocessor requires '{f.__name__}' to accept a keyword "
+            f"argument '_metadata: dict'. Add it to the function signature:\n"
+            f"    def {f.__name__}(..., *, _metadata: dict): ..."
         )
     f.metadata_preprocessor = True
     return func
@@ -390,9 +390,23 @@ def _preprocessor_output_type_wrap(
         or not issubclass(output_type, BasePreprocessorOutputType)
         or output_type is BasePreprocessorOutputType
     ):
+        if not inspect.isclass(output_type):
+            detail = (
+                f"got a non-class value: {output_type!r} "
+                f"(type: {type(output_type).__name__})"
+            )
+        elif output_type is BasePreprocessorOutputType:
+            detail = (
+                "got the abstract base class itself; a concrete subclass is required"
+            )
+        else:
+            detail = (
+                f"got {output_type!r}, which is not a subclass of "
+                f"BasePreprocessorOutputType"
+            )
         raise ValueError(
-            "`output_type` must inherit from `BasePreprocessorOutputType`, "
-            + f"got `{output_type}`."
+            f"`output_type` must be a concrete subclass of "
+            f"`BasePreprocessorOutputType`. {detail}."
         )
     f = get_underlying_func(preprocessor)
     f.output_type = output_type

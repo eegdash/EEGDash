@@ -24,6 +24,7 @@ import pandas as pd
 # monkeypatchable in tests and so a single seam carries the wiring.
 import _edf_header
 import _mef3_parser
+import _nemar_records
 import _parser_utils
 import _remote_header
 import _set_parser
@@ -46,6 +47,9 @@ PROV_DERIVED = "derived"
 # the opt-in ranged remote header read (EDF 256-byte main header).
 PROV_SIZE_ARITHMETIC = "size_arithmetic"
 PROV_REMOTE_HEADER = "remote_header"
+# NEMAR records.json fast-path: exact upstream signal_summary, served per
+# dataset version. Sits first in the cascade; everything else fills its gaps.
+PROV_NEMAR_RECORDS = "nemar_records"
 
 # HDF5 object headers in a SNIRF can sit deep in the file, so the ranged h5py
 # read needs a larger budget than the 256-byte EDF header — but the metadata
@@ -341,11 +345,22 @@ class CascadeContext:
     bids_file_path: Path = field(init=False)
     bids_root: Path = field(init=False)
     ext: str = field(init=False)
+    dataset_id: str = field(init=False)
+    bids_relpath: str = field(init=False)
 
     def __post_init__(self) -> None:
         self.bids_file_path = Path(self.bids_file)
         self.bids_root = Path(self.bids_dataset.bidsdir)
         self.ext = self.bids_file_path.suffix.lower()
+        # The dataset id is the BIDS root dir name; bids_relpath is the file's
+        # path RELATIVE to that root (matches NEMAR's records.json key and the
+        # OpenNeuro S3 relpath). bids_file may be absolute (the local clone) or,
+        # in tests, a bare name — fall back to the name when it is not under root.
+        self.dataset_id = self.bids_root.name
+        try:
+            self.bids_relpath = str(self.bids_file_path.relative_to(self.bids_root))
+        except ValueError:
+            self.bids_relpath = self.bids_file_path.name
 
 
 @dataclass
@@ -372,8 +387,10 @@ class CascadeResult:
 
 # ntimes sources that are byte-exact (not arithmetic), so ntimes/sfreq is the
 # ground-truth duration and should beat the rounded sidecar RecordingDuration.
+# NEMAR's records.json ntimes is a biosigIO header read (byte-exact), so it
+# joins the local parsers here.
 _EXACT_NTIMES_SOURCES: frozenset[str] = frozenset(
-    {PROV_BINARY_PARSER, PROV_MNE_FALLBACK}
+    {PROV_BINARY_PARSER, PROV_MNE_FALLBACK, PROV_NEMAR_RECORDS}
 )
 
 
@@ -423,6 +440,35 @@ class CascadeStep(Protocol):
     """Protocol for cascade steps; each mutates ``result`` in-place."""
 
     def fill(self, ctx: CascadeContext, result: CascadeResult) -> None: ...
+
+
+class NemarRecordsStep:
+    """Step 0: seed from NEMAR's exact upstream ``records.json`` signal_summary.
+
+    Runs *first* so its byte-exact values win first-writer; every later step
+    fills only the fields NEMAR left ``null``. A no-op for non-NEMAR datasets,
+    when the file is absent from ``records.json``, or when offline — so the
+    digest of any non-NEMAR dataset (and the golden-master snapshots) is
+    byte-for-byte unchanged. Never raises (FormatParser contract).
+
+    ``ctx.dataset_id`` / ``ctx.bids_relpath`` are the canonical key into NEMAR's
+    ``records.json`` (the same relpath OpenNeuro addresses on S3).
+    """
+
+    def fill(self, ctx: CascadeContext, result: CascadeResult) -> None:
+        summary = _nemar_records.signal_summary(ctx.dataset_id, ctx.bids_relpath)
+        if not summary:
+            return
+        for field_name in ("sampling_frequency", "nchans", "ntimes"):
+            value = summary.get(field_name)
+            if value is not None and getattr(result, field_name) is None:
+                setattr(result, field_name, value)
+                result.stamp(PROV_NEMAR_RECORDS, field_name, None, value)
+        # recording_duration is not a provenance-tracked field (it feeds
+        # derive_duration_seconds), so set it directly without stamping.
+        rec_dur = summary.get("recording_duration")
+        if rec_dur is not None and result.recording_duration is None:
+            result.recording_duration = rec_dur
 
 
 class MneBidsStep:
@@ -673,17 +719,9 @@ class RemoteHeaderStep:
     # ── per-format ranged readers ────────────────────────────────────────
 
     def _fill_edf(self, ctx: CascadeContext, result: CascadeResult) -> None:
-        # The dataset id is the BIDS root dir name; bids_relpath is the file's
-        # path RELATIVE to that root (ctx.bids_file is an absolute local path).
-        try:
-            relpath = str(ctx.bids_file_path.relative_to(ctx.bids_root))
-        except ValueError:
-            relpath = ctx.bids_file_path.name
-        record = {
-            "dataset": ctx.bids_root.name,
-            "bids_relpath": relpath,
-        }
-        _size, url = _remote_header.locate(record)
+        _size, url = _remote_header.locate(
+            {"dataset": ctx.dataset_id, "bids_relpath": ctx.bids_relpath}
+        )
         if not url:
             return  # NEMAR S3 closed / no derivable URL → drop to T3
         # block == the 256-byte main header → fetch EXACTLY 256 bytes (the
@@ -708,12 +746,14 @@ class RemoteHeaderStep:
         tmet = _mef3_parser.find_first_tmet(ctx.bids_file_path)
         if tmet is None:
             return
+        # The ranged read targets the .tmet INSIDE the .mefd dir, not the .mefd
+        # itself — so this relpath is tmet-relative, distinct from ctx.bids_relpath.
         try:
             relpath = tmet.relative_to(ctx.bids_root)
         except ValueError:
             relpath = Path(tmet.name)
         _size, url = _remote_header.locate(
-            {"dataset": ctx.bids_root.name, "bids_relpath": str(relpath)}
+            {"dataset": ctx.dataset_id, "bids_relpath": str(relpath)}
         )
         if not url:
             return  # NEMAR S3 closed / no derivable URL → drop to T3
@@ -729,12 +769,8 @@ class RemoteHeaderStep:
             result.stamp(PROV_REMOTE_HEADER, "ntimes", nt_before, result.ntimes)
 
     def _fill_snirf(self, ctx: CascadeContext, result: CascadeResult) -> None:
-        try:
-            relpath = str(ctx.bids_file_path.relative_to(ctx.bids_root))
-        except ValueError:
-            relpath = ctx.bids_file_path.name
         _size, url = _remote_header.locate(
-            {"dataset": ctx.bids_root.name, "bids_relpath": relpath}
+            {"dataset": ctx.dataset_id, "bids_relpath": ctx.bids_relpath}
         )
         if not url:
             return  # NEMAR S3 closed / no derivable URL → drop to T3
@@ -789,6 +825,7 @@ class MetadataCascade:
 
     def __init__(self, steps: tuple[CascadeStep, ...] | None = None) -> None:
         self.steps = steps or (
+            NemarRecordsStep(),
             MneBidsStep(),
             ModalitySidecarStep(),
             ChannelsTsvStep(),

@@ -437,6 +437,7 @@ def test_default_steps_include_size_and_remote_in_correct_position():
     cascade = MetadataCascade()
     names = [type(s).__name__ for s in cascade.steps]
     assert names == [
+        "NemarRecordsStep",
         "MneBidsStep",
         "ModalitySidecarStep",
         "ChannelsTsvStep",

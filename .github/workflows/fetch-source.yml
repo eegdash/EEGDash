@@ -34,8 +34,11 @@ jobs:
   fetch:
     name: Fetch ${{ inputs.source_name }}
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
+    # No elevated GITHUB_TOKEN permissions needed: the dataset-listings repo is
+    # pushed with DATASET_LISTINGS_TOKEN (persisted credentials), not GITHUB_TOKEN.
+    # Requesting `contents: write` here while the repo default token is read-only
+    # makes this reusable workflow request more than the caller grants, which GitHub
+    # rejects with a startup_failure.
     continue-on-error: ${{ inputs.continue_on_error }}
 
     steps:

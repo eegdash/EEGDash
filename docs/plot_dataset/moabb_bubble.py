@@ -77,10 +77,10 @@ def _get_bubble_size(duration_min_per_subject: float, scale: float = 1.0) -> flo
 
 
 def _get_alpha(n_sessions: int) -> float:
-    """Calculate bubble alpha based on number of sessions."""
-    alphas = [0.92, 0.82, 0.72, 0.60, 0.50]
-    idx = min(max(0, n_sessions - 1), len(alphas) - 1)
-    return alphas[idx]
+    """Constant bubble alpha (the opacity-by-sessions encoding was dropped for clarity:
+    it was perceptually weak and added a legend line without aiding the gestalt).
+    """
+    return 0.85
 
 
 def _to_numeric_median_list(val: Any) -> float | None:
@@ -332,7 +332,7 @@ def generate_moabb_bubble(
     <script defer src="https://d3js.org/d3.v7.min.js"></script>
     <style>
         * {{ margin: 0; padding: 0; box-sizing: border-box; }}
-        body {{ font-family: Inter, system-ui, -apple-system, sans-serif; background: #fff; }}
+        body {{ font-family: Helvetica, Arial, sans-serif; background: #fff; }}
         #moabb-canvas {{ display: block; cursor: grab; }}
         #moabb-canvas:active {{ cursor: grabbing; }}
 
@@ -360,29 +360,29 @@ def generate_moabb_bubble(
         .legend {{
             position: absolute; top: 16px; left: 16px;
             background: rgba(255,255,255,0.95);
-            padding: 20px 24px; border-radius: 12px;
+            padding: 22px 28px; border-radius: 12px;
             border: 1px solid rgba(0,0,0,0.08);
-            font-size: 18px; line-height: 1.8;
+            font-size: 36px; line-height: 1.55;
             box-shadow: 0 2px 8px rgba(0,0,0,0.06);
         }}
-        .legend-title {{ font-weight: 700; margin-bottom: 8px; color: #374151; font-size: 22px; }}
-        .legend-item {{ color: #4b5563; font-size: 17px; }}
+        .legend-title {{ font-weight: 700; margin-bottom: 8px; color: #374151; font-size: 44px; }}
+        .legend-item {{ color: #4b5563; font-size: 34px; }}
 
         .modality-legend {{
-            position: absolute; top: 260px; left: 16px;
+            position: absolute; top: 470px; left: 16px;
             background: rgba(255,255,255,0.95);
-            padding: 16px 20px; border-radius: 12px;
+            padding: 18px 24px; border-radius: 12px;
             border: 1px solid rgba(0,0,0,0.08);
-            font-size: 17px;
+            font-size: 34px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-            max-height: calc(100% - 280px);
+            max-height: calc(100% - 490px);
             overflow-y: auto;
         }}
-        .modality-legend-title {{ font-weight: 700; margin-bottom: 10px; color: #374151; font-size: 20px; }}
-        .modality-legend-item {{ display: flex; align-items: center; margin: 8px 0; cursor: pointer; font-size: 17px; transition: opacity 0.15s; }}
+        .modality-legend-title {{ font-weight: 700; margin-bottom: 10px; color: #374151; font-size: 42px; }}
+        .modality-legend-item {{ display: flex; align-items: center; margin: 10px 0; cursor: pointer; font-size: 34px; transition: opacity 0.15s; }}
         .modality-legend-item:hover {{ opacity: 0.7; }}
         .modality-legend-item.hidden {{ opacity: 0.35; text-decoration: line-through; }}
-        .modality-swatch {{ width: 20px; height: 20px; border-radius: 50%; margin-right: 12px; border: 2px solid transparent; }}
+        .modality-swatch {{ width: 32px; height: 32px; border-radius: 50%; margin-right: 16px; border: 2px solid transparent; }}
         .modality-legend-item.hidden .modality-swatch {{ background: #ccc !important; }}
 
         .controls {{
@@ -430,10 +430,11 @@ def generate_moabb_bubble(
         <canvas id="moabb-canvas" width="{width}" height="{height}"></canvas>
         <div class="tooltip" id="tooltip"></div>
         <div class="legend">
-            <div class="legend-title">Legend</div>
-            <div class="legend-item"><b>Circle size</b>: duration / subject</div>
-            <div class="legend-item"><b>Opacity</b>: fewer sessions = more opaque</div>
-            <div class="legend-item"><b>Each circle</b> = 1 subject</div>
+            <div class="legend-title">How to read</div>
+            <div class="legend-item"><b>circle</b> = subject</div>
+            <div class="legend-item"><b>cluster</b> = dataset</div>
+            <div class="legend-item"><b>colour</b> = modality</div>
+            <div class="legend-item"><b>size</b> = duration / subject</div>
             <div class="legend-item" id="total-datasets" style="margin-top:8px;padding-top:8px;border-top:1px solid #e5e7eb;font-weight:600;"></div>
         </div>
         <div class="modality-legend" id="modality-legend"></div>
@@ -504,7 +505,7 @@ const medium = modalityPacks.filter((mp, i) => i > 0 && mp.size >= smallThreshol
 // Place biggest at top-left with some offset for legend
 const bigOffsetX = 320;
 biggest.ox = bigOffsetX;
-biggest.oy = gap + 40;
+biggest.oy = gap + 140;  // extra headroom so the 104px EEG title clears the top edge
 
 // Place medium modalities (iEEG, MEG) to the right of biggest, stacked vertically
 const sideGap = gap + 20;
@@ -543,7 +544,7 @@ modalityPacks.forEach(mp => {{
         strokeColor: mod.color, strokeDash: true, modality: mod.name }});
 
     // Label position for modality title — large, bold, prominent
-    labelCircles.push({{ x: ox + mp.size / 2, y: oy - 30, r: 0,
+    labelCircles.push({{ x: ox + mp.size / 2, y: oy - 60, r: 0,
         label: mod.name, color: mod.color, isModality: true, modality: mod.name,
         count: mod.children.length }});
 
@@ -565,12 +566,12 @@ modalityPacks.forEach(mp => {{
                 duration_min_per_subject: ds.duration_min_per_subject || 0 }});
         }}
         // Only label top-N datasets per modality (marked by Python)
-        if (ds.showLabel && node.r > 12) {{
+        if (ds.showLabel && node.r > 20) {{
             const lbl = ds.name.toUpperCase();
             labelCircles.push({{ x: ox + node.x, y: oy + node.y, r: node.r,
                 label: lbl, color: "#1f2937", isModality: false, modality: mod.name,
                 inside: true,
-                fontSize: Math.max(16, Math.min(26, node.r / 1.8)) }});
+                fontSize: Math.max(30, Math.min(56, node.r / 1.1)) }});
         }}
     }});
 
@@ -709,26 +710,26 @@ function draw() {{
         ctx.globalAlpha = alpha;
         if (lc.isModality) {{
             // Large bold modality title — primary visual anchor
-            ctx.font = "800 48px Inter, system-ui, sans-serif";
+            ctx.font = "800 104px Helvetica, Arial, sans-serif";
             ctx.textAlign = "center";
             ctx.textBaseline = "middle";
             // White halo for contrast
             ctx.strokeStyle = "rgba(255,255,255,0.9)";
-            ctx.lineWidth = 8;
+            ctx.lineWidth = 16;
             ctx.lineJoin = "round";
             const titleText = lc.label + " (" + (lc.count || "") + ")";
             ctx.strokeText(titleText, lc.x, lc.y);
             ctx.fillStyle = lc.color;
             ctx.fillText(titleText, lc.x, lc.y);
         }} else {{
-            const fs = lc.fontSize || 14;
-            ctx.font = "700 " + fs + "px Inter, system-ui, sans-serif";
+            const fs = lc.fontSize || 28;
+            ctx.font = "700 " + fs + "px Helvetica, Arial, sans-serif";
             ctx.fillStyle = lc.color;
             ctx.textAlign = "center";
             ctx.textBaseline = lc.inside ? "middle" : "top";
             // White halo for readability
             ctx.strokeStyle = "rgba(255,255,255,0.92)";
-            ctx.lineWidth = 5;
+            ctx.lineWidth = 8;
             ctx.lineJoin = "round";
             ctx.strokeText(lc.label, lc.x, lc.y);
             ctx.fillText(lc.label, lc.x, lc.y);

@@ -2,8 +2,8 @@
 name: "1. Fetch: All Sources"
 
 on:
-  schedule:
-    - cron: '0 0 * * 1'  # Weekly on Monday at 00:00 UTC
+  # Scheduled fetching is now handled by full-pipeline.yml ("Daily Ingestion
+  # Pipeline"). This orchestrator is retained for manual use only.
   workflow_dispatch:
     inputs:
       sources:

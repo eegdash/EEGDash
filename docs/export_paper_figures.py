@@ -931,12 +931,12 @@ def _capture_moabb(html_path: Path, out_dir: Path) -> None:
         if (el.children.length <= 3 && el.innerText && el.innerText.includes('Hover to highlight') && !el.querySelector('canvas')) el.style.visibility = 'hidden';
     });
     var leg = document.querySelector('[class*="legend"]');
-    if (leg) { leg.style.fontFamily = 'Helvetica, Arial, sans-serif'; leg.style.fontSize = '13px'; leg.style.border = 'none'; leg.style.boxShadow = 'none'; leg.style.background = 'rgba(255,255,255,0.95)'; leg.style.borderRadius = '0'; }
+    if (leg) { leg.style.fontFamily = 'Helvetica, Arial, sans-serif'; leg.style.fontSize = '34px'; leg.style.border = 'none'; leg.style.boxShadow = 'none'; leg.style.background = 'rgba(255,255,255,0.95)'; leg.style.borderRadius = '0'; }
     document.querySelectorAll('*').forEach(el => { try { var cs = getComputedStyle(el); if (cs.fontFamily.includes('system-ui') || cs.fontFamily.includes('Inter')) el.style.fontFamily = 'Helvetica, Arial, sans-serif'; } catch(e) {} });
-    var b = document.createElement('div');
-    b.style.cssText = 'position:absolute;top:8px;left:50%;transform:translateX(-50%);z-index:9999;font-family:Helvetica,Arial,sans-serif;font-size:15px;font-weight:600;color:#374151;letter-spacing:0.5px;background:rgba(255,255,255,0.92);padding:6px 24px;border-radius:4px;border:1px solid rgba(0,108,163,0.15)';
-    b.innerHTML = '<span style="color:#006CA3;font-weight:700">700+</span> datasets \\u00B7 <span style="color:#006CA3;font-weight:700">35,000+</span> subjects \\u00B7 <span style="color:#006CA3;font-weight:700">65,000+</span> hours \\u00B7 <span style="color:#006CA3;font-weight:700">5</span> modalities';
-    document.body.appendChild(b);
+    // [diagramation] drop the redundant swatch legend (the coloured on-cluster titles
+    // already label each modality directly) and the stale approximate stats banner;
+    // the exact, data-driven count stays in the "How to read" box.
+    document.querySelectorAll('.modality-legend, #modality-legend, .search-box, #total-datasets').forEach(el => el.remove());
 }""")
 
         page.wait_for_timeout(500)

@@ -30,6 +30,26 @@ def test_cascade_context_derives_ext_and_root():
     assert ctx.bids_root == Path("/tmp/bids")
 
 
+def test_cascade_context_derives_dataset_id_and_bids_relpath():
+    bids_dataset = MagicMock()
+    bids_dataset.bidsdir = "/data/nm000132"
+    ctx = CascadeContext(
+        bids_dataset=bids_dataset,
+        bids_file="/data/nm000132/sub-01/eeg/sub-01_task-rest_eeg.set",
+    )
+    # dataset id is the BIDS root dir name; bids_relpath is the path under it
+    # (matches NEMAR's records.json key and the OpenNeuro S3 relpath).
+    assert ctx.dataset_id == "nm000132"
+    assert ctx.bids_relpath == "sub-01/eeg/sub-01_task-rest_eeg.set"
+
+
+def test_cascade_context_bids_relpath_falls_back_to_name_off_root():
+    bids_dataset = MagicMock()
+    bids_dataset.bidsdir = "/data/nm000132"
+    ctx = CascadeContext(bids_dataset=bids_dataset, bids_file="sub-01_eeg.set")
+    assert ctx.bids_relpath == "sub-01_eeg.set"
+
+
 def test_cascade_result_defaults_are_none():
     result = CascadeResult()
     assert result.sampling_frequency is None
@@ -338,6 +358,7 @@ def test_metadata_cascade_runs_all_steps_in_order(monkeypatch):
 def test_metadata_cascade_default_steps_in_correct_order():
     cascade = MetadataCascade()
     assert [type(s).__name__ for s in cascade.steps] == [
+        "NemarRecordsStep",
         "MneBidsStep",
         "ModalitySidecarStep",
         "ChannelsTsvStep",

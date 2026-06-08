@@ -51,7 +51,8 @@
     "EEG",
     "BIDS",
     "neuroscience",
-    "['Unknown']"
+    "['Unknown']",
+    "HED"
   ],
   "isAccessibleForFree": true,
   "includedInDataCatalog": {

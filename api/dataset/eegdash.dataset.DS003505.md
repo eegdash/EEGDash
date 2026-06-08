@@ -143,7 +143,7 @@ VEPCON also contains data derivatives that follow as close as possible the BIDS 
 </details></div><div class="figpair-cell figpair-montage"><details class="electrode-explorer">
   <summary>Electrode layout — EEG · 128 sensors — 128 channels</summary>
   <iframe
-    data-src="https://electrodes.eegdash.org/?montage=41048bbaaecd3ac1&embed=1"
+    data-src="https://electrodes.eegdash.org/?montage=9ce4ec5c874fd810&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"

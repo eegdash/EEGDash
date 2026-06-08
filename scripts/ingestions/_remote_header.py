@@ -1,9 +1,7 @@
 """Remote-header substrate: a budget-capped, block-cached, Range-backed reader
 plus a per-source locate layer (RH2).
 
-This is the shared transport for the "few bytes / zero bytes" header tiers
-described in
-``docs/superpowers/specs/2026-05-31-efficient-remote-header-reader-design.md``:
+This is the shared transport for the "few bytes / zero bytes" header tiers:
 
 * :class:`RangeReader` — a seekable, file-like object backed by HTTP Range GETs.
   It caches whole blocks, counts every byte fetched against a hard budget, and

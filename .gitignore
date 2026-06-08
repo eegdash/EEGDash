@@ -75,3 +75,9 @@ logs-*.zip
 scripts/cluster-*.sh
 DEBUGGING.md
 verification_report.md
+
+# Claude "superpowers" skill output (specs / plans / scratch) — never track.
+# Strong, path-anywhere match so it can never sneak into a commit again.
+**/superpowers/
+**/superpowers/**
+*superpower*

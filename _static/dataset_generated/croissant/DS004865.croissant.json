@@ -101,7 +101,8 @@
       "name": "ds004865 BIDS bucket",
       "description": "Canonical BIDS-formatted dataset bucket for DS004865.",
       "contentUrl": "s3://openneuro.org/ds004865",
-      "encodingFormat": "application/vnd.bids+directory"
+      "encodingFormat": "application/vnd.bids+directory",
+      "sha256": "main"
     },
     {
       "@type": "cr:FileObject",
@@ -109,7 +110,8 @@
       "name": "ds004865 on OpenNeuro",
       "description": "OpenNeuro dataset landing page.",
       "contentUrl": "https://openneuro.org/datasets/ds004865",
-      "encodingFormat": "text/html"
+      "encodingFormat": "text/html",
+      "sha256": "main"
     },
     {
       "@type": "cr:FileObject",
@@ -118,7 +120,8 @@
       "description": "Live JSON listing of every recording in this dataset, with BIDS metadata, channel counts, and S3 storage keys.",
       "contentUrl": "https://data.eegdash.org/api/eegdash/records?filter=%7B%22dataset%22%3A%22ds004865%22%7D",
       "encodingFormat": "application/json",
-      "isLiveDataset": true
+      "isLiveDataset": true,
+      "sha256": "main"
     },
     {
       "@type": "cr:FileObject",
@@ -126,7 +129,8 @@
       "name": "ds004865 on NeMAR",
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=ds004865",
-      "encodingFormat": "text/html"
+      "encodingFormat": "text/html",
+      "sha256": "main"
     },
     {
       "@type": "cr:FileObject",
@@ -134,7 +138,8 @@
       "name": "EEGDash/ds004865 on Hugging Face",
       "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
       "contentUrl": "https://huggingface.co/datasets/EEGDash/ds004865",
-      "encodingFormat": "application/vnd.huggingface-dataset+json"
+      "encodingFormat": "application/vnd.huggingface-dataset+json",
+      "sha256": "main"
     }
   ]
 }

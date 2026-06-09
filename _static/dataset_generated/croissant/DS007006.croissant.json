@@ -95,8 +95,7 @@
   "identifier": "doi:10.18112/openneuro.ds007006.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds007006.v1.0.0",
-    "https://openneuro.org/datasets/ds007006",
-    "https://huggingface.co/datasets/EEGDash/ds007006"
+    "https://openneuro.org/datasets/ds007006"
   ],
   "citeAs": "Ying Wu, Enrique Carrillosulub, Leon Lange, Chloe Tanega, Nicole Wells (n.d.). VR-Compassion Cultivation Training. doi:10.18112/openneuro.ds007006.v1.0.0",
   "version": "v1.10.0",
@@ -114,7 +113,8 @@
       "name": "ds007006 BIDS bucket",
       "description": "Canonical BIDS-formatted dataset bucket for DS007006.",
       "contentUrl": "s3://openneuro.org/ds007006",
-      "encodingFormat": "application/vnd.bids+directory"
+      "encodingFormat": "application/vnd.bids+directory",
+      "sha256": "main"
     },
     {
       "@type": "cr:FileObject",
@@ -122,7 +122,8 @@
       "name": "ds007006 on OpenNeuro",
       "description": "OpenNeuro dataset landing page.",
       "contentUrl": "https://openneuro.org/datasets/ds007006",
-      "encodingFormat": "text/html"
+      "encodingFormat": "text/html",
+      "sha256": "main"
     },
     {
       "@type": "cr:FileObject",
@@ -131,7 +132,8 @@
       "description": "Live JSON listing of every recording in this dataset, with BIDS metadata, channel counts, and S3 storage keys.",
       "contentUrl": "https://data.eegdash.org/api/eegdash/records?filter=%7B%22dataset%22%3A%22ds007006%22%7D",
       "encodingFormat": "application/json",
-      "isLiveDataset": true
+      "isLiveDataset": true,
+      "sha256": "main"
     },
     {
       "@type": "cr:FileObject",
@@ -139,15 +141,8 @@
       "name": "ds007006 on NeMAR",
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=ds007006",
-      "encodingFormat": "text/html"
-    },
-    {
-      "@type": "cr:FileObject",
-      "@id": "ds007006-huggingface",
-      "name": "EEGDash/ds007006 on Hugging Face",
-      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
-      "contentUrl": "https://huggingface.co/datasets/EEGDash/ds007006",
-      "encodingFormat": "application/vnd.huggingface-dataset+json"
+      "encodingFormat": "text/html",
+      "sha256": "main"
     }
   ]
 }

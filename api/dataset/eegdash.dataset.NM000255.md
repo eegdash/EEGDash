@@ -203,7 +203,7 @@ If you use this dataset in your research, please cite the original authors.
     <span class="right">64 ch · EEG · 128 Hz · 30 subjects, 291 recordings</span>
   </div>
   <div class="figpair-grid"><div class="figpair-cell figpair-trace"><details class="trace-viewer">
-  <summary>Live trace viewer — <strong>sub-01 · ses-01 · task-stim01</strong></summary>
+  <summary>Live trace viewer — <strong>sub-13 · ses-02 · task-stim02</strong></summary>
   <p class="trace-viewer-caption">
     Showing <strong>one</strong> representative recording out of
     <strong>30 subjects and 291 recordings</strong> in this dataset.
@@ -212,11 +212,11 @@ If you use this dataset in your research, please cite the original authors.
     viewer (or pass <code>?eeg=&lt;url&gt;</code>) to inspect it.
   </p>
   <iframe
-    data-src="https://eegdash.github.io/eegdash-viewer/?dataset=nm000255&sub=01&ses=01&task=stim01&ext=bdf&embed=1"
+    data-src="https://eegdash.github.io/eegdash-viewer/?dataset=nm000255&sub=13&ses=02&task=stim02&ext=bdf&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 1200px; display: block; background: transparent;"
-    title="Live EEG trace viewer for nm000255 — sub-01 · ses-01 · task-stim01"
+    title="Live EEG trace viewer for nm000255 — sub-13 · ses-02 · task-stim02"
     referrerpolicy="no-referrer">
   </iframe>
 </details></div><div class="figpair-cell figpair-montage"><details class="electrode-explorer">

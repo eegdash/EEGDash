@@ -88,7 +88,7 @@ rec = create_record(
 | `RepositoryStats`                                    | Statistics for git-based repositories (e.g. GIN). |
 | `Timestamps`                                         | Processing and lifecycle timestamps.              |
 
-### *class* eegdash.schemas.DatasetModel(, dataset_id: [Annotated](https://docs.python.org/3/library/typing.html#typing.Annotated)[[str](https://docs.python.org/3/library/stdtypes.html#str), MinLen(min_length=1)], source: [Annotated](https://docs.python.org/3/library/typing.html#typing.Annotated)[[str](https://docs.python.org/3/library/stdtypes.html#str), MinLen(min_length=1)], recording_modality: [Annotated](https://docs.python.org/3/library/typing.html#typing.Annotated)[[list](https://docs.python.org/3/library/stdtypes.html#list)[[str](https://docs.python.org/3/library/stdtypes.html#str)], MinLen(min_length=1)], ingestion_fingerprint: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, senior_author: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, contact_info: [list](https://docs.python.org/3/library/stdtypes.html#list)[[str](https://docs.python.org/3/library/stdtypes.html#str)] | [None](https://docs.python.org/3/library/constants.html#None) = None, timestamps: [dict](https://docs.python.org/3/library/stdtypes.html#dict)[[str](https://docs.python.org/3/library/stdtypes.html#str), [Any](https://docs.python.org/3/library/typing.html#typing.Any)] | [None](https://docs.python.org/3/library/constants.html#None) = None, storage: StorageModel | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*extra_data: [Any](https://docs.python.org/3/library/typing.html#typing.Any))
+### *class* eegdash.schemas.DatasetModel(, dataset_id: [Annotated](https://docs.python.org/3/library/typing.html#typing.Annotated)[[str](https://docs.python.org/3/library/stdtypes.html#str), MinLen(min_length=1)], source: [Annotated](https://docs.python.org/3/library/typing.html#typing.Annotated)[[str](https://docs.python.org/3/library/stdtypes.html#str), MinLen(min_length=1)], recording_modality: [Annotated](https://docs.python.org/3/library/typing.html#typing.Annotated)[[list](https://docs.python.org/3/library/stdtypes.html#list)[[str](https://docs.python.org/3/library/stdtypes.html#str)], MinLen(min_length=1)], ingestion_fingerprint: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, senior_author: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, contact_info: [list](https://docs.python.org/3/library/stdtypes.html#list)[[str](https://docs.python.org/3/library/stdtypes.html#str)] | [None](https://docs.python.org/3/library/constants.html#None) = None, timestamps: [dict](https://docs.python.org/3/library/stdtypes.html#dict)[[str](https://docs.python.org/3/library/stdtypes.html#str), [Any](https://docs.python.org/3/library/typing.html#typing.Any)] | [None](https://docs.python.org/3/library/constants.html#None) = None, storage: StorageModel | [None](https://docs.python.org/3/library/constants.html#None) = None, bids_validator_status: [Literal](https://docs.python.org/3/library/typing.html#typing.Literal)['pass', 'fail', 'unknown'] | [None](https://docs.python.org/3/library/constants.html#None) = None, n_validator_errors: [int](https://docs.python.org/3/library/functions.html#int) | [None](https://docs.python.org/3/library/constants.html#None) = None, top_issue_code: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*extra_data: [Any](https://docs.python.org/3/library/typing.html#typing.Any))
 
 Bases: `BaseModel`
 
@@ -126,6 +126,12 @@ Configuration for the model, should be a dictionary conforming to [ConfigDict][p
 #### timestamps *: [dict](https://docs.python.org/3/library/stdtypes.html#dict)[[str](https://docs.python.org/3/library/stdtypes.html#str), Any] | [None](https://docs.python.org/3/library/constants.html#None)*
 
 #### storage *: StorageModel | [None](https://docs.python.org/3/library/constants.html#None)*
+
+#### bids_validator_status *: Literal['pass', 'fail', 'unknown'] | [None](https://docs.python.org/3/library/constants.html#None)*
+
+#### n_validator_errors *: [int](https://docs.python.org/3/library/functions.html#int) | [None](https://docs.python.org/3/library/constants.html#None)*
+
+#### top_issue_code *: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None)*
 
 ### *class* eegdash.schemas.RecordModel(, dataset: [Annotated](https://docs.python.org/3/library/typing.html#typing.Annotated)[[str](https://docs.python.org/3/library/stdtypes.html#str), MinLen(min_length=1)], bids_relpath: [Annotated](https://docs.python.org/3/library/typing.html#typing.Annotated)[[str](https://docs.python.org/3/library/stdtypes.html#str), MinLen(min_length=1)], storage: StorageModel, recording_modality: [Annotated](https://docs.python.org/3/library/typing.html#typing.Annotated)[[list](https://docs.python.org/3/library/stdtypes.html#list)[[str](https://docs.python.org/3/library/stdtypes.html#str)], MinLen(min_length=1)], datatype: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, suffix: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, extension: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, entities: EntitiesModel | [dict](https://docs.python.org/3/library/stdtypes.html#dict)[[str](https://docs.python.org/3/library/stdtypes.html#str), [Any](https://docs.python.org/3/library/typing.html#typing.Any)] | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*extra_data: [Any](https://docs.python.org/3/library/typing.html#typing.Any))
 
@@ -530,6 +536,34 @@ Number of papers citing this dataset (from NEMAR citations repository).
 * **Type:**
   [int](https://docs.python.org/3/library/functions.html#int) | None
 
+#### bids_validator_status
+
+Outcome of running the official BIDS validator on this dataset’s
+source tree: `"pass"` (0 errors), `"fail"` (>=1 error), or
+`"unknown"` (validator did not run to completion / not yet
+audited). `None` is equivalent to `"unknown"` for documents
+predating the audit.
+
+* **Type:**
+  {“pass”, “fail”, “unknown”} | None
+
+#### n_validator_errors
+
+Number of BIDS-validator errors reported for this dataset. `None`
+when the dataset has not been audited.
+
+* **Type:**
+  [int](https://docs.python.org/3/library/functions.html#int) | None
+
+#### top_issue_code
+
+The first BIDS-validator error code reported for this dataset (e.g.
+`"NOT_INCLUDED"`), used as the dominant-issue label. `None` when
+the dataset passes or has not been audited.
+
+* **Type:**
+  [str](https://docs.python.org/3/library/stdtypes.html#str) | None
+
 <!-- !! processed by numpydoc !! -->
 
 #### dataset_id *: [str](https://docs.python.org/3/library/stdtypes.html#str)*
@@ -599,6 +633,12 @@ Number of papers citing this dataset (from NEMAR citations repository).
 #### storage *: Storage | [None](https://docs.python.org/3/library/constants.html#None)*
 
 #### nemar_citation_count *: [int](https://docs.python.org/3/library/functions.html#int) | [None](https://docs.python.org/3/library/constants.html#None)*
+
+#### bids_validator_status *: [Literal](https://docs.python.org/3/library/typing.html#typing.Literal)['pass', 'fail', 'unknown'] | [None](https://docs.python.org/3/library/constants.html#None)*
+
+#### n_validator_errors *: [int](https://docs.python.org/3/library/functions.html#int) | [None](https://docs.python.org/3/library/constants.html#None)*
+
+#### top_issue_code *: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None)*
 
 ### *class* eegdash.schemas.Record
 

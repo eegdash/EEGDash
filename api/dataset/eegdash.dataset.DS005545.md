@@ -145,13 +145,13 @@ Reference:
     referrerpolicy="no-referrer">
   </iframe>
 </details></div><div class="figpair-cell figpair-montage"><details class="electrode-explorer">
-  <summary>Electrode layout — iEEG · 150 sensors — 150 channels</summary>
+  <summary>Electrode layout — iEEG · 144 sensors — 144 channels</summary>
   <iframe
-    data-src="https://electrodes.eegdash.org/?montage=b231812da1c14e8f&embed=1"
+    data-src="https://electrodes.eegdash.org/?montage=ba3195119e1ea343&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
-    title="Topomap of iEEG · 150 sensors"
+    title="Topomap of iEEG · 144 sensors"
     referrerpolicy="no-referrer">
   </iframe>
 </details></div></div></div>

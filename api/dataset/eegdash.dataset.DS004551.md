@@ -142,13 +142,13 @@ The available Matlab code can be found at [https://github.com/kaz1126/MI_HFO](ht
     referrerpolicy="no-referrer">
   </iframe>
 </details></div><div class="figpair-cell figpair-montage"><details class="electrode-explorer">
-  <summary>Electrode layout — iEEG · 124 sensors — 124 channels</summary>
+  <summary>Electrode layout — iEEG · 68 sensors — 68 channels</summary>
   <iframe
-    data-src="https://electrodes.eegdash.org/?montage=f70d39f3d709ca3e&embed=1"
+    data-src="https://electrodes.eegdash.org/?montage=73f269477f0d3769&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
-    title="Topomap of iEEG · 124 sensors"
+    title="Topomap of iEEG · 68 sensors"
     referrerpolicy="no-referrer">
   </iframe>
 </details></div></div></div>

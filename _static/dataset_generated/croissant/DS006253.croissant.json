@@ -145,7 +145,8 @@
       "name": "ds006253 on OpenNeuro",
       "description": "OpenNeuro dataset landing page.",
       "contentUrl": "https://openneuro.org/datasets/ds006253",
-      "encodingFormat": "text/html"
+      "encodingFormat": "text/html",
+      "sha256": "main"
     },
     {
       "@type": "cr:FileObject",
@@ -154,7 +155,8 @@
       "description": "Live JSON listing of every recording in this dataset, with BIDS metadata, channel counts, and S3 storage keys.",
       "contentUrl": "https://data.eegdash.org/api/eegdash/records?filter=%7B%22dataset%22%3A%22ds006253%22%7D",
       "encodingFormat": "application/json",
-      "isLiveDataset": true
+      "isLiveDataset": true,
+      "sha256": "main"
     },
     {
       "@type": "cr:FileObject",
@@ -162,7 +164,8 @@
       "name": "ds006253 on NeMAR",
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=ds006253",
-      "encodingFormat": "text/html"
+      "encodingFormat": "text/html",
+      "sha256": "main"
     },
     {
       "@type": "cr:FileObject",
@@ -170,7 +173,8 @@
       "name": "EEGDash/ds006253 on Hugging Face",
       "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
       "contentUrl": "https://huggingface.co/datasets/EEGDash/ds006253",
-      "encodingFormat": "application/vnd.huggingface-dataset+json"
+      "encodingFormat": "application/vnd.huggingface-dataset+json",
+      "sha256": "main"
     }
   ]
 }

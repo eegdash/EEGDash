@@ -326,11 +326,41 @@ Number of papers citing this dataset (from NEMAR citations repository).
 * **Type:**
   [int](https://docs.python.org/3/library/functions.html#int) | None
 
+#### bids_validator_status
+
+Outcome of running the official BIDS validator on this dataset’s
+source tree: `"pass"` (0 errors), `"fail"` (>=1 error), or
+`"unknown"` (validator did not run to completion / not yet
+audited). `None` is equivalent to `"unknown"` for documents
+predating the audit.
+
+* **Type:**
+  {“pass”, “fail”, “unknown”} | None
+
+#### n_validator_errors
+
+Number of BIDS-validator errors reported for this dataset. `None`
+when the dataset has not been audited.
+
+* **Type:**
+  [int](https://docs.python.org/3/library/functions.html#int) | None
+
+#### top_issue_code
+
+The first BIDS-validator error code reported for this dataset (e.g.
+`"NOT_INCLUDED"`), used as the dominant-issue label. `None` when
+the dataset passes or has not been audited.
+
+* **Type:**
+  [str](https://docs.python.org/3/library/stdtypes.html#str) | None
+
 <!-- !! processed by numpydoc !! -->
 
 #### associated_paper_doi *: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None)*
 
 #### authors *: [list](https://docs.python.org/3/library/stdtypes.html#list)[[str](https://docs.python.org/3/library/stdtypes.html#str)]*
+
+#### bids_validator_status *: [Literal](https://docs.python.org/3/library/typing.html#typing.Literal)['pass', 'fail', 'unknown'] | [None](https://docs.python.org/3/library/constants.html#None)*
 
 #### bids_version *: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None)*
 
@@ -364,6 +394,8 @@ Number of papers citing this dataset (from NEMAR citations repository).
 
 #### n_contributing_labs *: [int](https://docs.python.org/3/library/functions.html#int) | [None](https://docs.python.org/3/library/constants.html#None)*
 
+#### n_validator_errors *: [int](https://docs.python.org/3/library/functions.html#int) | [None](https://docs.python.org/3/library/constants.html#None)*
+
 #### name *: [str](https://docs.python.org/3/library/stdtypes.html#str)*
 
 #### nemar_citation_count *: [int](https://docs.python.org/3/library/functions.html#int) | [None](https://docs.python.org/3/library/constants.html#None)*
@@ -394,9 +426,11 @@ Number of papers citing this dataset (from NEMAR citations repository).
 
 #### timestamps *: Timestamps*
 
+#### top_issue_code *: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None)*
+
 #### total_files *: [int](https://docs.python.org/3/library/functions.html#int) | [None](https://docs.python.org/3/library/constants.html#None)*
 
-### *class* eegdash.schemas.DatasetModel(, dataset_id: [Annotated](https://docs.python.org/3/library/typing.html#typing.Annotated)[[str](https://docs.python.org/3/library/stdtypes.html#str), MinLen(min_length=1)], source: [Annotated](https://docs.python.org/3/library/typing.html#typing.Annotated)[[str](https://docs.python.org/3/library/stdtypes.html#str), MinLen(min_length=1)], recording_modality: [Annotated](https://docs.python.org/3/library/typing.html#typing.Annotated)[[list](https://docs.python.org/3/library/stdtypes.html#list)[[str](https://docs.python.org/3/library/stdtypes.html#str)], MinLen(min_length=1)], ingestion_fingerprint: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, senior_author: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, contact_info: [list](https://docs.python.org/3/library/stdtypes.html#list)[[str](https://docs.python.org/3/library/stdtypes.html#str)] | [None](https://docs.python.org/3/library/constants.html#None) = None, timestamps: [dict](https://docs.python.org/3/library/stdtypes.html#dict)[[str](https://docs.python.org/3/library/stdtypes.html#str), [Any](https://docs.python.org/3/library/typing.html#typing.Any)] | [None](https://docs.python.org/3/library/constants.html#None) = None, storage: StorageModel | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*extra_data: [Any](https://docs.python.org/3/library/typing.html#typing.Any))
+### *class* eegdash.schemas.DatasetModel(, dataset_id: [Annotated](https://docs.python.org/3/library/typing.html#typing.Annotated)[[str](https://docs.python.org/3/library/stdtypes.html#str), MinLen(min_length=1)], source: [Annotated](https://docs.python.org/3/library/typing.html#typing.Annotated)[[str](https://docs.python.org/3/library/stdtypes.html#str), MinLen(min_length=1)], recording_modality: [Annotated](https://docs.python.org/3/library/typing.html#typing.Annotated)[[list](https://docs.python.org/3/library/stdtypes.html#list)[[str](https://docs.python.org/3/library/stdtypes.html#str)], MinLen(min_length=1)], ingestion_fingerprint: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, senior_author: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, contact_info: [list](https://docs.python.org/3/library/stdtypes.html#list)[[str](https://docs.python.org/3/library/stdtypes.html#str)] | [None](https://docs.python.org/3/library/constants.html#None) = None, timestamps: [dict](https://docs.python.org/3/library/stdtypes.html#dict)[[str](https://docs.python.org/3/library/stdtypes.html#str), [Any](https://docs.python.org/3/library/typing.html#typing.Any)] | [None](https://docs.python.org/3/library/constants.html#None) = None, storage: StorageModel | [None](https://docs.python.org/3/library/constants.html#None) = None, bids_validator_status: [Literal](https://docs.python.org/3/library/typing.html#typing.Literal)['pass', 'fail', 'unknown'] | [None](https://docs.python.org/3/library/constants.html#None) = None, n_validator_errors: [int](https://docs.python.org/3/library/functions.html#int) | [None](https://docs.python.org/3/library/constants.html#None) = None, top_issue_code: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None) = None, \*\*extra_data: [Any](https://docs.python.org/3/library/typing.html#typing.Any))
 
 Bases: `BaseModel`
 
@@ -413,6 +447,8 @@ self is explicitly positional-only to allow self as a field name.
 
 <!-- !! processed by numpydoc !! -->
 
+#### bids_validator_status *: Literal['pass', 'fail', 'unknown'] | [None](https://docs.python.org/3/library/constants.html#None)*
+
 #### contact_info *: [list](https://docs.python.org/3/library/stdtypes.html#list)[[str](https://docs.python.org/3/library/stdtypes.html#str)] | [None](https://docs.python.org/3/library/constants.html#None)*
 
 #### dataset_id *: [str](https://docs.python.org/3/library/stdtypes.html#str)*
@@ -425,6 +461,8 @@ Configuration for the model, should be a dictionary conforming to [ConfigDict][p
 
 <!-- !! processed by numpydoc !! -->
 
+#### n_validator_errors *: [int](https://docs.python.org/3/library/functions.html#int) | [None](https://docs.python.org/3/library/constants.html#None)*
+
 #### recording_modality *: [list](https://docs.python.org/3/library/stdtypes.html#list)[[str](https://docs.python.org/3/library/stdtypes.html#str)]*
 
 #### senior_author *: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None)*
@@ -434,6 +472,8 @@ Configuration for the model, should be a dictionary conforming to [ConfigDict][p
 #### storage *: StorageModel | [None](https://docs.python.org/3/library/constants.html#None)*
 
 #### timestamps *: [dict](https://docs.python.org/3/library/stdtypes.html#dict)[[str](https://docs.python.org/3/library/stdtypes.html#str), Any] | [None](https://docs.python.org/3/library/constants.html#None)*
+
+#### top_issue_code *: [str](https://docs.python.org/3/library/stdtypes.html#str) | [None](https://docs.python.org/3/library/constants.html#None)*
 
 ### *class* eegdash.schemas.Demographics
 

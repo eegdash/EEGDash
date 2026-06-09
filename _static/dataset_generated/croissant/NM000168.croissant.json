@@ -96,7 +96,8 @@
       "name": "nm000168 BIDS bucket",
       "description": "Canonical BIDS-formatted dataset bucket for NM000168.",
       "contentUrl": "s3://nemar/nm000168",
-      "encodingFormat": "application/vnd.bids+directory"
+      "encodingFormat": "application/vnd.bids+directory",
+      "sha256": "main"
     },
     {
       "@type": "cr:FileObject",
@@ -104,7 +105,8 @@
       "name": "nm000168 on OpenNeuro",
       "description": "OpenNeuro dataset landing page.",
       "contentUrl": "https://openneuro.org/datasets/nm000168",
-      "encodingFormat": "text/html"
+      "encodingFormat": "text/html",
+      "sha256": "main"
     },
     {
       "@type": "cr:FileObject",
@@ -113,7 +115,8 @@
       "description": "Live JSON listing of every recording in this dataset, with BIDS metadata, channel counts, and S3 storage keys.",
       "contentUrl": "https://data.eegdash.org/api/eegdash/records?filter=%7B%22dataset%22%3A%22nm000168%22%7D",
       "encodingFormat": "application/json",
-      "isLiveDataset": true
+      "isLiveDataset": true,
+      "sha256": "main"
     },
     {
       "@type": "cr:FileObject",
@@ -121,7 +124,8 @@
       "name": "nm000168 on NeMAR",
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=nm000168",
-      "encodingFormat": "text/html"
+      "encodingFormat": "text/html",
+      "sha256": "main"
     }
   ]
 }

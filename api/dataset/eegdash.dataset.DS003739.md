@@ -140,7 +140,7 @@ During each session, participants were exposed to sensorimotor perturbations (ei
 </details></div><div class="figpair-cell figpair-montage"><details class="electrode-explorer">
   <summary>Electrode layout — EEG · 133 sensors — 133 channels</summary>
   <iframe
-    data-src="https://electrodes.eegdash.org/?montage=5b0dad646e060240&embed=1"
+    data-src="https://electrodes.eegdash.org/?montage=383f1824f8eb06d5&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"

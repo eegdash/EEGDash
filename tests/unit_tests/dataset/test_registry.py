@@ -864,3 +864,84 @@ def test_identity_block_suppresses_author_year_in_canonical(tmp_path):
     doc = ns["DS_SAME"].__doc__ or ""
     assert ":Author (year): ``Smith2023``" in doc
     assert ":Canonical: —" in doc
+
+
+# =============================================================================
+# Shared-contract invariant across auto-generated dataset classes.
+#
+# The UX-eval section claims "consistency guaranteed by construction": every
+# dataset class exposes the same interface because they are all stamped from a
+# single ``type()`` template. These tests assert that invariant directly --
+# same constructor signature, same base type, same required class attributes --
+# using signature inspection only. Nothing is instantiated, so no network or
+# data download is required and the tests stay fast and offline.
+# =============================================================================
+
+import inspect  # noqa: E402
+
+# The constructor contract every registered class must expose, in order.
+_EXPECTED_INIT_PARAMS = ("self", "cache_dir", "query", "s3_bucket", "kwargs")
+
+
+def _register_many(tmp_path, dataset_ids):
+    """Register several datasets (against DummyBase) and return the classes."""
+    rows = [{"dataset": ds_id} for ds_id in dataset_ids]
+    ns = _register(tmp_path, rows)
+    return ns, [ns[ds_id.upper()] for ds_id in dataset_ids]
+
+
+def test_registered_classes_share_constructor_signature(tmp_path):
+    """Every auto-generated class exposes the identical __init__ signature."""
+    _, classes = _register_many(tmp_path, ["ds_alpha", "ds_beta", "ds_gamma"])
+    signatures = {
+        cls.__name__: tuple(inspect.signature(cls.__init__).parameters)
+        for cls in classes
+    }
+    # All classes share one signature, and it is the documented contract.
+    distinct = set(signatures.values())
+    assert distinct == {_EXPECTED_INIT_PARAMS}, (
+        f"dataset classes disagree on constructor signature: {signatures}"
+    )
+
+
+def test_registered_classes_share_base_type_and_attributes(tmp_path):
+    """Every class inherits the shared base and carries the contract attrs."""
+    _, classes = _register_many(tmp_path, ["ds_one", "ds_two"])
+    for cls in classes:
+        # Shared base type (the by-construction guarantee).
+        assert issubclass(cls, DummyBase)
+        # Required class-level contract attributes are present and typed.
+        assert isinstance(cls._dataset, str) and cls._dataset
+        assert isinstance(cls.canonical_name, list)
+
+
+def test_registered_classes_are_baseconcatdataset_compatible(tmp_path):
+    """Against the real default base, classes are BaseConcatDataset subclasses.
+
+    This is the interface the UX-eval prose actually claims: each generated
+    class returns a ``BaseConcatDataset``-compatible object. We assert the
+    type relationship via the class hierarchy (no instantiation, no network).
+    """
+    from braindecode.datasets import BaseConcatDataset
+    from eegdash.dataset.dataset import EEGDashDataset
+
+    # Register against the real default base class (EEGDashDataset), which is
+    # itself a BaseConcatDataset subclass. register_openneuro_datasets() only
+    # builds classes via type(); it never instantiates or touches the network.
+    csv_path = tmp_path / "summary.csv"
+    pd.DataFrame([{"dataset": "ds_real1"}, {"dataset": "ds_real2"}]).to_csv(
+        csv_path, index=False
+    )
+    ns = {}
+    with patch("eegdash.dataset.registry.fetch_datasets_from_api", return_value=None):
+        register_openneuro_datasets(summary_file=csv_path, namespace=ns)
+
+    classes = [ns["DS_REAL1"], ns["DS_REAL2"]]
+    assert classes, "expected datasets to be registered against the real base"
+    for cls in classes:
+        assert issubclass(cls, EEGDashDataset)
+        assert issubclass(cls, BaseConcatDataset)
+        # The shared constructor contract holds for the real base too.
+        assert (
+            tuple(inspect.signature(cls.__init__).parameters) == _EXPECTED_INIT_PARAMS
+        )

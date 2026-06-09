@@ -587,6 +587,102 @@ class TestSchemaContract:
             f"{typeddict.__name__} docstring should have 'Attributes' section"
         )
 
+
+# =============================================================================
+# BIDS-validator status fields on DatasetModel (queryable metadata)
+# =============================================================================
+
+
+class TestDatasetModelValidatorStatus:
+    """The dataset schema must surface BIDS-validator status as queryable
+    metadata (backs main.tex: "surfaces the validator status of every dataset
+    as queryable metadata"). Fields are optional with ``None`` defaults so
+    documents predating the validator audit still validate.
+    """
+
+    VALIDATOR_FIELDS = (
+        "bids_validator_status",
+        "n_validator_errors",
+        "top_issue_code",
+    )
+
+    def test_fields_exist_on_dataset_model(self):
+        """All three validator fields are declared on DatasetModel."""
+        fields = set(schemas.DatasetModel.model_fields.keys())
+        for name in self.VALIDATOR_FIELDS:
+            assert name in fields, f"DatasetModel missing field {name!r}"
+
+    def test_fields_default_to_none(self):
+        """Without validator data the fields validate and default to None."""
+        ds = schemas.DatasetModel.model_validate(
+            {
+                "dataset_id": "ds000001",
+                "source": "openneuro",
+                "recording_modality": ["eeg"],
+            }
+        )
+        for name in self.VALIDATOR_FIELDS:
+            assert getattr(ds, name) is None
+
+    def test_round_trip_without_fields_set(self):
+        """A minimal dataset round-trips (serialize -> deserialize)."""
+        ds = schemas.DatasetModel.model_validate(
+            {
+                "dataset_id": "ds000001",
+                "source": "openneuro",
+                "recording_modality": ["eeg"],
+            }
+        )
+        restored = schemas.DatasetModel.model_validate(ds.model_dump())
+        for name in self.VALIDATOR_FIELDS:
+            assert getattr(restored, name) is None
+
+    def test_round_trip_with_fields_set(self):
+        """Populated validator fields survive a serialize/deserialize cycle."""
+        ds = schemas.DatasetModel.model_validate(
+            {
+                "dataset_id": "ds000002",
+                "source": "openneuro",
+                "recording_modality": ["eeg"],
+                "bids_validator_status": "fail",
+                "n_validator_errors": 12,
+                "top_issue_code": "NOT_INCLUDED",
+            }
+        )
+        assert ds.bids_validator_status == "fail"
+        assert ds.n_validator_errors == 12
+        assert ds.top_issue_code == "NOT_INCLUDED"
+
+        restored = schemas.DatasetModel.model_validate(ds.model_dump())
+        assert restored.bids_validator_status == "fail"
+        assert restored.n_validator_errors == 12
+        assert restored.top_issue_code == "NOT_INCLUDED"
+
+    @pytest.mark.parametrize("status", ["pass", "fail", "unknown"])
+    def test_status_accepts_enum_values(self, status):
+        """The status field accepts the pass/fail/unknown vocabulary."""
+        ds = schemas.DatasetModel.model_validate(
+            {
+                "dataset_id": "ds000003",
+                "source": "openneuro",
+                "recording_modality": ["eeg"],
+                "bids_validator_status": status,
+            }
+        )
+        assert ds.bids_validator_status == status
+
+    def test_status_rejects_unknown_vocabulary(self):
+        """A status outside the vocabulary is rejected by validation."""
+        with pytest.raises(Exception):
+            schemas.DatasetModel.model_validate(
+                {
+                    "dataset_id": "ds000004",
+                    "source": "openneuro",
+                    "recording_modality": ["eeg"],
+                    "bids_validator_status": "maybe",
+                }
+            )
+
     @pytest.mark.parametrize("schema_name", REMOVED_SCHEMAS)
     def test_deprecated_schema_removed(self, schema_name):
         """Verify deprecated schemas have been removed."""

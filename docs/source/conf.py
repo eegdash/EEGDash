@@ -5609,6 +5609,17 @@ def _build_croissant_export(context: Mapping[str, object]) -> dict[str, object]:
 
     distribution: list[dict[str, object]] = []
 
+    # Croissant 1.0 requires every cr:FileObject to carry a content hash
+    # (md5/sha256). All EEGDash distributions are *live / versioned* remote
+    # resources — S3 buckets, landing pages, live API endpoints, HF mirrors —
+    # for which a single fixed content hash is not meaningful. We follow the
+    # MLCommons convention used in their own example datasets that point at a
+    # git ref or live resource: the "main" sentinel satisfies the validator's
+    # required-property check while signalling "live/versioned, not a fixed
+    # immutable blob". Without it the official `mlcroissant` validator rejects
+    # the descriptor (see tests/unit_tests/test_croissant_export.py).
+    _LIVE_RESOURCE_SHA256 = "main"
+
     # 1. Canonical S3 bucket (OpenNeuro / NEMAR).
     storage = context.get("dataset_storage") or {}
     s3_base = None
@@ -5625,6 +5636,7 @@ def _build_croissant_export(context: Mapping[str, object]) -> dict[str, object]:
                 ),
                 "contentUrl": str(s3_base),
                 "encodingFormat": "application/vnd.bids+directory",
+                "sha256": _LIVE_RESOURCE_SHA256,
             }
         )
 
@@ -5639,6 +5651,7 @@ def _build_croissant_export(context: Mapping[str, object]) -> dict[str, object]:
                 "description": "OpenNeuro dataset landing page.",
                 "contentUrl": openneuro_url,
                 "encodingFormat": "text/html",
+                "sha256": _LIVE_RESOURCE_SHA256,
             }
         )
 
@@ -5660,6 +5673,7 @@ def _build_croissant_export(context: Mapping[str, object]) -> dict[str, object]:
             ),
             "encodingFormat": "application/json",
             "isLiveDataset": True,
+            "sha256": _LIVE_RESOURCE_SHA256,
         }
     )
 
@@ -5674,6 +5688,7 @@ def _build_croissant_export(context: Mapping[str, object]) -> dict[str, object]:
                 "description": "NEMAR dataset landing page with pipeline plots.",
                 "contentUrl": nemar_url,
                 "encodingFormat": "text/html",
+                "sha256": _LIVE_RESOURCE_SHA256,
             }
         )
 
@@ -5696,6 +5711,7 @@ def _build_croissant_export(context: Mapping[str, object]) -> dict[str, object]:
                 ),
                 "contentUrl": hf_url,
                 "encodingFormat": "application/vnd.huggingface-dataset+json",
+                "sha256": _LIVE_RESOURCE_SHA256,
             }
         )
 

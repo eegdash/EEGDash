@@ -60,6 +60,7 @@ from _inject_plan import (
     EXCLUDED_DATASETS,
     _ensure_fingerprint,
     _flatten_entities,
+    apply_validator_status,
     build_injection_plan,
     fetch_existing_dataset,
     filter_changed_datasets,
@@ -67,6 +68,7 @@ from _inject_plan import (
     load_dataset,
     load_montages,
     load_records,
+    load_validator_status,
 )
 from _validate import validate_digestion_output
 
@@ -77,12 +79,14 @@ __all__ = [
     "EXCLUDED_DATASETS",
     "_ensure_fingerprint",
     "_flatten_entities",
+    "apply_validator_status",
     "fetch_existing_dataset",
     "filter_changed_datasets",
     "find_digested_datasets",
     "load_dataset",
     "load_montages",
     "load_records",
+    "load_validator_status",
 ]
 
 
@@ -402,6 +406,7 @@ def main():
         api_url=args.api_url,
         database=args.database,
         progress=lambda dirs: tqdm(dirs, desc="Loading"),
+        validator_sweep=args.validator_sweep,
     )
     all_datasets = plan.datasets
     all_records = plan.records

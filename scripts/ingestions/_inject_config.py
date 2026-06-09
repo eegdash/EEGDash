@@ -160,6 +160,16 @@ class InjectConfig(BaseSettings):
         default=False,
         description="Recompute dataset stats after injection.",
     )
+    validator_sweep: Path | None = Field(
+        default=None,
+        description=(
+            "Optional BIDS-validator sweep CSV used to populate each dataset's "
+            "bids_validator_status / n_validator_errors / top_issue_code. "
+            "Env fallback: EEGDASH_VALIDATOR_SWEEP. When unset, those fields "
+            "stay unpopulated (the sweep CSV does not ship in-repo)."
+        ),
+        validation_alias=AliasChoices("validator_sweep", "EEGDASH_VALIDATOR_SWEEP"),
+    )
 
     # ─── Validators ──────────────────────────────────────────────────────
 
@@ -267,6 +277,16 @@ def load_inject_config_from_argv(argv: list[str] | None = None) -> InjectConfig:
         dest="data_quality_threshold",
     )
     parser.add_argument("--compute-stats", action="store_true", dest="compute_stats")
+    parser.add_argument(
+        "--validator-sweep",
+        type=Path,
+        default=None,
+        dest="validator_sweep",
+        help=(
+            "Path to a BIDS-validator sweep CSV; populates each dataset's "
+            "bids_validator_status / n_validator_errors / top_issue_code."
+        ),
+    )
 
     ns = parser.parse_args(argv if argv is not None else sys.argv[1:])
 

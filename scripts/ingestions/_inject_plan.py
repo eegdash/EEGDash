@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 import sys
 from collections.abc import Callable, Iterable
 from dataclasses import dataclass, field
@@ -68,6 +69,119 @@ def load_dataset(dataset_dir: Path) -> dict | None:
 
     with open(dataset_file) as f:
         return json.load(f)
+
+
+# Column names accepted in the validator-sweep CSV produced by the (held)
+# offline BIDS-validator audit. Kept permissive so the sweep harness can
+# evolve its header without breaking population here.
+_VALIDATOR_STATUS_COLUMNS = ("bids_validator_status", "status", "validator_status")
+_VALIDATOR_NERRORS_COLUMNS = ("n_validator_errors", "n_errors", "num_errors")
+_VALIDATOR_TOPCODE_COLUMNS = ("top_issue_code", "top_code", "issue_code")
+
+
+def _pick_column(row: dict, columns: tuple[str, ...]) -> str | None:
+    """Return the first non-empty value among ``columns`` in ``row``."""
+    for col in columns:
+        if col in row and str(row[col]).strip():
+            return str(row[col]).strip()
+    return None
+
+
+def load_validator_status(sweep_csv: Path | str | None) -> dict[str, dict]:
+    """Load per-dataset BIDS-validator status from an audit-sweep CSV.
+
+    The CSV is produced by the offline BIDS-validator sweep (the audit
+    harness that backs the paper's validator Sankey / repair-impact figures;
+    see ``EEGDash-Paper/figures/validator_sankey.py``). It is keyed by
+    dataset id and carries, per dataset, a status (``pass``/``fail``), the
+    error count, and the top (first-reported) BIDS issue code.
+
+    TODO(validator-sweep): the sweep CSV
+    (``experiments/results_sweep_*/openneuro_validator.csv`` referenced by
+    the paper) is **not** committed to this repo, so in normal ingestion runs
+    this returns ``{}`` and the validator-status fields stay ``None`` /
+    ``"unknown"``. Once the sweep harness ships, point ``--validator-sweep``
+    at its CSV (or set ``EEGDASH_VALIDATOR_SWEEP``) and the fields populate
+    automatically. The schema fields exist regardless, so the metadata is
+    queryable the moment the audit data is available.
+
+    Parameters
+    ----------
+    sweep_csv : Path | str | None
+        Path to the validator-sweep CSV. ``None`` or a missing file yields an
+        empty mapping (population is a no-op).
+
+    Returns
+    -------
+    dict[str, dict]
+        Mapping ``dataset_id -> {bids_validator_status, n_validator_errors,
+        top_issue_code}``. Empty when no usable CSV is available.
+    """
+    if not sweep_csv:
+        return {}
+    path = Path(sweep_csv)
+    if not path.exists():
+        return {}
+
+    import csv  # noqa: PLC0415 (only needed on the rare sweep-CSV path)
+
+    out: dict[str, dict] = {}
+    try:
+        with open(path, newline="") as fh:
+            reader = csv.DictReader(fh)
+            for row in reader:
+                ds_id = (row.get("dataset") or row.get("dataset_id") or "").strip()
+                if not ds_id:
+                    continue
+                status_raw = (
+                    _pick_column(row, _VALIDATOR_STATUS_COLUMNS) or ""
+                ).lower()
+                if status_raw in ("pass", "fail", "unknown"):
+                    status: str | None = status_raw
+                elif status_raw in ("true", "1", "compliant", "valid"):
+                    status = "pass"
+                elif status_raw in ("false", "0", "noncompliant", "invalid"):
+                    status = "fail"
+                else:
+                    status = None
+
+                n_errors_raw = _pick_column(row, _VALIDATOR_NERRORS_COLUMNS)
+                try:
+                    n_errors = int(float(n_errors_raw)) if n_errors_raw else None
+                except (TypeError, ValueError):
+                    n_errors = None
+
+                # Infer status from the error count when not given explicitly.
+                if status is None and n_errors is not None:
+                    status = "fail" if n_errors > 0 else "pass"
+
+                out[ds_id] = {
+                    "bids_validator_status": status,
+                    "n_validator_errors": n_errors,
+                    "top_issue_code": _pick_column(row, _VALIDATOR_TOPCODE_COLUMNS),
+                }
+    except (OSError, csv.Error):
+        return {}
+    return out
+
+
+def apply_validator_status(dataset: dict | None, status: dict | None) -> dict | None:
+    """Populate a dataset doc's BIDS-validator fields from a sweep entry.
+
+    Additive and idempotent: only sets fields that are present in ``status``
+    and not already populated on ``dataset``. When ``status`` is ``None`` the
+    dataset is returned unchanged, so datasets absent from the sweep keep the
+    schema defaults (``None``, i.e. ``"unknown"``).
+    """
+    if not dataset:
+        return dataset
+    if not status:
+        return dataset
+    for key in ("bids_validator_status", "n_validator_errors", "top_issue_code"):
+        value = status.get(key)
+        if value is not None and dataset.get(key) is None:
+            dataset[key] = value
+    return dataset
 
 
 def load_records(dataset_dir: Path) -> list[dict]:
@@ -217,9 +331,25 @@ def build_injection_plan(
     api_url: str,
     database: str,
     progress: Callable[[Iterable[Path]], Iterable[Path]] | None = None,
+    validator_sweep: Path | str | None = None,
 ) -> InjectionPlan:
-    """Load a Digest Corpus and decide which documents Stage 5 should write."""
+    """Load a Digest Corpus and decide which documents Stage 5 should write.
+
+    Parameters
+    ----------
+    validator_sweep : Path | str | None
+        Optional path to a BIDS-validator sweep CSV. When provided (or when
+        ``EEGDASH_VALIDATOR_SWEEP`` is set), each loaded dataset doc is
+        populated with ``bids_validator_status`` / ``n_validator_errors`` /
+        ``top_issue_code``. Defaults to ``None``, in which case those fields
+        stay unset (the sweep CSV does not currently ship in-repo; see
+        :func:`load_validator_status`).
+    """
     iter_dirs = progress(dataset_dirs) if progress else dataset_dirs
+
+    if validator_sweep is None:
+        validator_sweep = os.environ.get("EEGDASH_VALIDATOR_SWEEP") or None
+    validator_status = load_validator_status(validator_sweep)
 
     all_datasets = []
     all_records = []
@@ -239,6 +369,9 @@ def build_injection_plan(
             # Always load dataset doc even when records is empty (metadata-only seeds).
             dataset = load_dataset(dataset_dir)
             if dataset:
+                # Populate BIDS-validator status from the audit sweep when
+                # available; no-op (fields stay unset) when it is not.
+                apply_validator_status(dataset, validator_status.get(dataset_id))
                 dataset_docs[dataset_id] = dataset
                 if want_datasets:
                     all_datasets.append(dataset)

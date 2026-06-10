@@ -2006,6 +2006,30 @@ html[data-theme="dark"] .hf-search-submit {
   outline-offset: 2px;
 }
 
+/* "Advanced search ⌘K" affordance under the hero input — opens the
+   global search palette (js/eegdash-search.js). Reuses the suggest-chip
+   look; the kbd glyphs echo the navbar shortcut hint. */
+.hf-search-advanced {
+  display: flex;
+  font-size: 0.9rem;
+}
+
+.hf-search-advanced .hf-suggest-link {
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
+}
+
+.hf-search-advanced kbd {
+  font-size: 0.7em;
+  font-family: var(--pst-font-family-monospace, monospace);
+  border: 1px solid var(--hf-card-border);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  padding: 0.05rem 0.3rem;
+  background: var(--hf-surface);
+}
+
 .hf-search-filters {
   display: grid;
   gap: 0.75rem;

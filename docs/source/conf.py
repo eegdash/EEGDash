@@ -27,10 +27,23 @@ sys.path.insert(0, os.path.abspath(".."))
 # importable before the ``extensions`` list below references them.
 sys.path.insert(0, os.path.abspath("_extensions"))
 
+# Shared stat-cell grammar — lives in docs/table_tag_utils.py so this
+# file, prepare_summary_tables.py and the table generator parse
+# ``[{"val": …, "count": …}]`` columns identically.
+from table_tag_utils import parse_stat_counts
+
 import eegdash
 import eegdash.dataset as dataset_module
 from eegdash.dataset import EEGDashDataset
 from eegdash.dataset.registry import fetch_datasets_from_api
+from eegdash.http_api_client import DEFAULT_API_URL
+
+# The ONE API base for everything the docs build and its client-side
+# JS talk to. Sourced from the official eegdash package default and the
+# same EEGDASH_API_URL override the package honours, so docs and library
+# can never disagree about which deployment they target.
+EEGDASH_API_HOST = os.environ.get("EEGDASH_API_URL", DEFAULT_API_URL).rstrip("/")
+EEGDASH_API_BASE = f"{EEGDASH_API_HOST}/api/eegdash"
 
 # -- Project information -----------------------------------------------------
 
@@ -153,6 +166,8 @@ html_css_files = [
     "custom.css",
     "css/treemap.css",
     "css/custom.css",
+    # Global search palette (Ctrl+K). ~10 KB, used on every page.
+    "css/eegdash-search.css",
 ]
 # Only truly-global JS is loaded here; page-specific scripts (homepage hero
 # search, dataset-summary DataTables stack) are gated in `_templates/layout.html`
@@ -161,8 +176,11 @@ html_css_files = [
 # generator, so we avoid double-loading by not listing it globally.
 html_js_files = [
     ("js/tag-palette.js", {"defer": "defer"}),
-    # Live search in PyData theme search modal (rendered on every page).
-    ("js/search-as-you-type.js", {"defer": "defer"}),
+    # Global search palette (Ctrl+K): datasets + docs + deep API search.
+    # Intercepts the theme's search button and shortcut, and lazy-loads
+    # its indexes on first open so pages don't pay the searchindex.js
+    # (~2.3 MB) cost.
+    ("js/eegdash-search.js", {"defer": "defer"}),
     # Lazy-load the electrode-explorer iframe on <details> expansion.
     ("js/lazy-embed.js", {"defer": "defer"}),
     # Inline the autodoc Type: field next to the attribute signature so
@@ -258,6 +276,10 @@ html_context = {
     # Path to the documentation root within the repo
     "doc_path": "docs/source",
     "default_mode": "light",
+    # Single API base injected into every page (layout.html sets it as
+    # <html data-eegdash-api>); eegdash-search.js and dataset-explorer.js
+    # read it instead of hardcoding the host.
+    "eegdash_api_base": EEGDASH_API_BASE,
 }
 
 
@@ -952,40 +974,18 @@ def _format_stat_counts(value: object, default: str = "") -> str:
     if not text or text.lower() in {"nan", "none", "null", "[]"}:
         return default
 
-    # Try to parse as JSON if it looks like a JSON array
+    # List-shaped cells parse through the shared stat-counts grammar
+    # (table_tag_utils.parse_stat_counts) — pairs arrive count-sorted.
     if text.startswith("["):
-        try:
-            items = json.loads(text)
-            if not items:
-                return default
-
-            # Filter out null values and format
-            valid_items = []
-            for item in items:
-                if isinstance(item, dict):
-                    val = item.get("val")
-                    count = item.get("count", 0)
-                    if val is not None:
-                        # Format as "value (count)" or just "value" if count is 1
-                        if count > 1:
-                            valid_items.append(f"{val} ({count})")
-                        else:
-                            valid_items.append(str(val))
-
-            if not valid_items:
-                return default
-
-            # If all items have the same value, just show it once
-            unique_vals = set(
-                item.get("val") for item in items if isinstance(item, dict)
-            )
-            unique_vals.discard(None)
-            if len(unique_vals) == 1:
-                return str(unique_vals.pop())
-
-            return ", ".join(valid_items)
-        except (json.JSONDecodeError, TypeError, AttributeError):
-            pass
+        pairs = parse_stat_counts(value)
+        if not pairs:
+            return default
+        unique_vals = {val for val, _ in pairs}
+        if len(unique_vals) == 1:
+            return str(next(iter(unique_vals)))
+        return ", ".join(
+            f"{val} ({count})" if count > 1 else str(val) for val, count in pairs
+        )
 
     # Fall back to regular cleaning
     return _clean_value(value, default)
@@ -1054,7 +1054,7 @@ def _fetch_dataset_details_from_api(dataset_id: str) -> dict[str, object]:
     if not _should_use_api_summary():
         return {}
 
-    api_url = "https://data.eegdash.org/api/eegdash"
+    api_url = EEGDASH_API_BASE
 
     # Try original ID first, then variants (API may be case-sensitive)
     ids_to_try = [dataset_id]
@@ -1314,7 +1314,7 @@ def _detect_sidecars_for_dataset(dataset_id: str) -> list[str]:
         separators=(",", ":"),
     )
     url = (
-        "https://data.eegdash.org/api/eegdash/records"
+        f"{EEGDASH_API_BASE}/records"
         f"?{urllib.parse.urlencode({'limit': 1, 'filter': query})}"
     )
     body = _get_json(url)
@@ -1390,7 +1390,7 @@ def _fetch_participants_from_records(dataset_id: str) -> list[dict[str, object]]
 
     # --- Primary path: dedicated participants endpoint ----------------
     body = _get_json(
-        f"https://data.eegdash.org/api/eegdash/datasets/{dataset_lower}/participants",
+        f"{EEGDASH_API_BASE}/datasets/{dataset_lower}/participants",
         timeout=12.0,
     )
     if body is not None and body.get("success") and isinstance(body.get("data"), list):
@@ -1424,7 +1424,7 @@ def _fetch_participants_from_records(dataset_id: str) -> list[dict[str, object]]
     max_skip = 20000  # safety bound — no real dataset has 20k recordings
     while skip < max_skip:
         url = (
-            "https://data.eegdash.org/api/eegdash/records"
+            f"{EEGDASH_API_BASE}/records"
             f"?{urllib.parse.urlencode({'limit': page_size, 'skip': skip, 'filter': query})}"
         )
         page = _get_json(url, timeout=12.0)
@@ -3880,7 +3880,7 @@ def _format_explorer_section(name: str, context: Mapping[str, object]) -> str:
 # ---------------------------------------------------------------------------
 
 _TRACE_VIEWER_BASE = "https://eegdash.github.io/eegdash-viewer/"
-_TRACE_API_URL = "https://data.eegdash.org/api/eegdash/records"
+_TRACE_API_URL = f"{EEGDASH_API_BASE}/records"
 _TRACE_SUPPORTED_EXT = (".set", ".edf", ".bdf", ".vhdr", ".fif", ".fiff")
 
 
@@ -4192,14 +4192,13 @@ def _editorial_sfreq_label(context: Mapping[str, object]) -> str:
     """
     counts = context.get("sfreq_counts") or []
     if isinstance(counts, list) and counts:
-        try:
-            valid = [
-                (int(round(float(c.get("val")))), int(c.get("count") or 0))
-                for c in counts
-                if isinstance(c, dict) and c.get("val") is not None
-            ]
-        except (TypeError, ValueError):
-            valid = []
+        # Shared grammar; one malformed entry no longer voids the rest.
+        valid = []
+        for raw_val, count in parse_stat_counts(counts):
+            try:
+                valid.append((int(round(float(raw_val))), count))
+            except (TypeError, ValueError):
+                continue
         if valid:
             unique_vals = sorted({v for v, _ in valid})
             if len(unique_vals) == 1:
@@ -5364,25 +5363,14 @@ def _extract_top_numeric_val(value: object) -> float:
     if not text or text.lower() in {"nan", "none", "null", "[]", "[ ]"}:
         return float("nan")
     if text.startswith("["):
-        try:
-            items = json.loads(text)
-        except (ValueError, json.JSONDecodeError):
-            return float("nan")
-        best_val: float | None = None
-        best_count = -1
-        for item in items:
-            if not isinstance(item, dict):
-                continue
-            v = item.get("val")
-            c = item.get("count", 0) or 0
+        # parse_stat_counts returns pairs count-sorted (stable), so the
+        # first float-coercible val IS the most common one.
+        for raw_val, _count in parse_stat_counts(value):
             try:
-                v_num = float(v)
+                return float(raw_val)
             except (TypeError, ValueError):
                 continue
-            if c > best_count:
-                best_val = v_num
-                best_count = c
-        return best_val if best_val is not None else float("nan")
+        return float("nan")
     # Bare numeric column (n_subjects, n_records, …).
     try:
         return float(text)
@@ -5668,8 +5656,7 @@ def _build_croissant_export(context: Mapping[str, object]) -> dict[str, object]:
                 "with BIDS metadata, channel counts, and S3 storage keys."
             ),
             "contentUrl": (
-                "https://data.eegdash.org/api/eegdash/records"
-                f"?filter={quote(records_query, safe='')}"
+                f"{EEGDASH_API_BASE}/records?filter={quote(records_query, safe='')}"
             ),
             "encodingFormat": "application/json",
             "isLiveDataset": True,
@@ -6516,6 +6503,81 @@ def _copy_dataset_summary(app, exception) -> None:
         shutil.copy2(csv_path, static_dir / "dataset_summary.csv")
     except OSError as exc:
         LOGGER.warning("Unable to copy dataset_summary.csv to _static: %s", exc)
+
+
+def _write_docs_search_index(app, exception) -> None:
+    """Emit a slim page index for the global search palette.
+
+    ``js/eegdash-search.js`` needs page titles + section headings to
+    search guides, tutorials and API pages. The Sphinx ``searchindex.js``
+    has all of that but weighs ~2.3 MB because it is an inverted index
+    over every word of all ~900 generated dataset pages. This writes
+    ``_static/docs_index.json`` instead: one entry per *non-dataset*
+    page (datasets are covered by ``dataset_generated/search_index.json``),
+    title + section titles only — a few tens of KB.
+
+    Entry shape: ``{"u": docname, "t": title, "g": group, "s": [sections]}``
+    where group is ``api`` / ``examples`` / ``docs``.
+    """
+    if exception is not None or not getattr(app, "builder", None):
+        return
+    if app.builder.name != "html":
+        return
+
+    from docutils import nodes as _nodes
+
+    env = app.env
+    skip_prefixes = (
+        "api/dataset/eegdash.dataset.",
+        "gen_modules/",
+    )
+    skip_exact = {"search", "genindex", "py-modindex"}
+
+    entries = []
+    for docname in sorted(env.titles):
+        if docname in skip_exact or docname.startswith(skip_prefixes):
+            continue
+        # Gallery "execution times" stubs (top-level and per-gallery)
+        # add noise, not value.
+        if docname.endswith("sg_execution_times"):
+            continue
+        title = env.titles[docname].astext().strip()
+        if not title or title == "<no title>":
+            continue
+
+        if docname.startswith("api/"):
+            group = "api"
+        elif docname.startswith("generated/"):
+            # sphinx-gallery output lives under generated/auto_examples/;
+            # a prefix check avoids misclassifying pages that merely
+            # contain "auto_examples" somewhere in their name.
+            group = "examples"
+        else:
+            group = "docs"
+
+        sections = []
+        toc = env.tocs.get(docname)
+        if toc is not None:
+            for ref in toc.findall(_nodes.reference):
+                text = ref.astext().strip()
+                anchor = ref.get("anchorname", "")
+                if text and text != title and anchor:
+                    sections.append([text, anchor])
+        entry = {"u": docname, "t": title, "g": group}
+        if sections:
+            entry["s"] = sections[:20]
+        entries.append(entry)
+
+    out_path = Path(app.outdir) / "_static" / "docs_index.json"
+    try:
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+        out_path.write_text(
+            json.dumps(entries, separators=(",", ":"), ensure_ascii=False),
+            encoding="utf-8",
+        )
+        LOGGER.info("Wrote docs search index: %s (%d pages)", out_path, len(entries))
+    except OSError as exc:
+        LOGGER.warning("Unable to write docs_index.json: %s", exc)
 
 
 def _rewrite_sitemap_index(app, exception) -> None:
@@ -7508,6 +7570,10 @@ def setup(app):
     # the per-leaf index files exist before we link to them.
     app.connect("builder-inited", _write_auto_examples_root_index, priority=600)
     app.connect("build-finished", _copy_dataset_summary)
+    # Slim page index consumed by the global search palette
+    # (js/eegdash-search.js) — see docstring for why this exists next to
+    # the much heavier Sphinx searchindex.js.
+    app.connect("build-finished", _write_docs_search_index)
     # Align sitemap homepage entry with the canonical emitted in
     # `_inject_seo_context`. Must run after `sphinx-sitemap` writes
     # the file; using `build-finished` is the safest hook for that.

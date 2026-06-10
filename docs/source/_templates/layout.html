@@ -21,6 +21,14 @@
 {% block extrahead %}
   <meta name="docsearch:language" content="{{ language }}"/>
   <meta name="docsearch:version" content="{{ version }}" />
+
+  {# Single source of truth for the EEGDash API base (set in conf.py
+     from the eegdash package default + EEGDASH_API_URL override).
+     Inline so it runs at parse time, before any deferred script reads
+     document.documentElement.dataset. #}
+  {%- if eegdash_api_base %}
+  <script>document.documentElement.setAttribute('data-eegdash-api', '{{ eegdash_api_base | e }}');</script>
+  {%- endif %}
   {%- if last_updated %}
   <meta name="docbuild:last-update" content="{{ last_updated | e }}"/>
   {%- endif %}

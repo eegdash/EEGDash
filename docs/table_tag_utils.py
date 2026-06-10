@@ -28,6 +28,44 @@ def _maybe_parse_list_literal(text: str):
     return None
 
 
+def parse_stat_counts(cell: object) -> list:
+    """Parse a ``[{"val": …, "count": …}]`` stat cell into (val, count) pairs.
+
+    The ONE shared grammar for ``nchans_set`` / ``sampling_freqs``-style
+    columns — every consumer (search index, summary table formatting,
+    editorial labels, related-dataset distances) must parse through here
+    so the schema knowledge lives in a single place.
+
+    Accepts the serialized CSV cell (JSON or Python literal string) or an
+    already-parsed list (API rows). Returns ``(val, count)`` tuples sorted
+    by descending count. Entries without a usable ``val`` are dropped;
+    missing/None/NaN counts coerce to 0 so the ordering stays total.
+    """
+    if isinstance(cell, (list, tuple)):
+        items = list(cell)
+    elif isinstance(cell, str):
+        parsed = _maybe_parse_list_literal(cell.strip())
+        items = parsed if isinstance(parsed, list) else []
+    else:
+        items = []
+
+    pairs = []
+    for item in items:
+        if not isinstance(item, dict):
+            continue
+        val = item.get("val")
+        if val is None:
+            continue
+        count = item.get("count")
+        # ``count != count`` is the import-free NaN test — NaN is truthy
+        # and would make the sort ordering undefined.
+        if not isinstance(count, (int, float)) or count != count:
+            count = 0
+        pairs.append((val, int(count)))
+    pairs.sort(key=lambda p: -p[1])
+    return pairs
+
+
 def _normalize_values(cell: object) -> Iterable[str]:
     """Yield cleaned string tokens from a table cell.
 

@@ -107,6 +107,11 @@
   "citeAs": "Yuan Liu, Zhuolan Gui, De Yan, Zhuang Wang, Ruisi Gao (n.d.). Liu et al. 2025 — Lower limb motor imagery EEG dataset based on the multi-paradigm and longitudinal-training of stroke patients (Tianjin University). doi:10.1038/s41597-025-04618-4",
   "version": "1.9.0",
   "dateModified": "2026-04-11",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1038/s41597-025-04618-4",
+    "url": "https://doi.org/10.1038/s41597-025-04618-4"
+  },
   "measurementTechnique": [
     "BIDS task: imagery"
   ],

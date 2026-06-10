@@ -96,6 +96,11 @@
   ],
   "citeAs": "V. Volpert, B. Xu, A. Tchechmedjiev, S. Harispe, A. Aksenov (n.d.). Forced Picture Naming Task. doi:10.18112/openneuro.ds004554.v1.0.4",
   "version": "1.8.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.3934/mbe.2023507",
+    "url": "https://doi.org/10.3934/mbe.2023507"
+  },
   "measurementTechnique": [
     "BIDS task: picturenaming"
   ],

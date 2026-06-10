@@ -53,7 +53,7 @@
     "neuroscience",
     "FNIRS",
     "['Auditory']",
-    "['Unknown']",
+    "['Healthy']",
     "['Perception']"
   ],
   "isAccessibleForFree": true,
@@ -86,6 +86,11 @@
   ],
   "citeAs": "Robert Luke, Maureen Shader, David McAlpine (2019). FRESH Audio Dataset. doi:10.18112/openneuro.ds005964.v1.0.0",
   "version": "1.7.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1101/2021.11.19.469225",
+    "url": "https://doi.org/10.1101/2021.11.19.469225"
+  },
   "measurementTechnique": [
     "BIDS task: FRESHAUDIO"
   ],

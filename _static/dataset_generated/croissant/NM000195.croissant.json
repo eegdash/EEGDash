@@ -117,6 +117,11 @@
   "datePublished": "2018",
   "version": "1.9.0",
   "dateModified": "2026-03-24",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1109/mci.2018.2807039",
+    "url": "https://doi.org/10.1109/mci.2018.2807039"
+  },
   "measurementTechnique": [
     "BIDS task: p300"
   ],

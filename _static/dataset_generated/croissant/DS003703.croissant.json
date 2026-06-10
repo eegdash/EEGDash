@@ -92,6 +92,11 @@
   ],
   "citeAs": "Evgenii Kalenkovich, Anna Shestakova, Nina Kazanina (2019). Frequency Tagging of Syntactic Structure or Lexical Properties. doi:10.18112/openneuro.ds003703.v1.0.0",
   "version": "1.4.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1016/j.cortex.2021.09.012",
+    "url": "https://doi.org/10.1016/j.cortex.2021.09.012"
+  },
   "measurementTechnique": [
     "BIDS task: listeningToSpeech",
     "BIDS task: rest"

@@ -92,6 +92,11 @@
   ],
   "citeAs": "Michael Freedberg, Jack A. Reeves, Sara J. Hussain, Kareem A. Zaghloul, Eric M. Wassermann (n.d.). RS_TMSEEG_Data. doi:10.18112/openneuro.ds001849.v1.0.2",
   "version": "2.7.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1371/journal.pone.0216185",
+    "url": "https://doi.org/10.1371/journal.pone.0216185"
+  },
   "measurementTechnique": [
     "BIDS task: tmseegrest"
   ],

@@ -52,7 +52,7 @@
     "BIDS",
     "neuroscience",
     "MEG",
-    "['Unknown']",
+    "['Visual']",
     "['Healthy']",
     "['Memory']"
   ],
@@ -104,6 +104,11 @@
   ],
   "citeAs": "Alexis Kidder(*), Anna Corriveau(*), Lina Teichmann, Susan Wardle, Chris Baker (2019). Sustained Neural Representations of Personally Familiar People and Places During Cued Recall. doi:10.18112/openneuro.ds004278.v1.0.1",
   "version": "1.6.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1016/j.cortex.2022.08.014",
+    "url": "https://doi.org/10.1016/j.cortex.2022.08.014"
+  },
   "measurementTechnique": [
     "BIDS task: CuedRecall"
   ],

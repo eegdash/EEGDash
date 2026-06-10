@@ -53,7 +53,8 @@
     "neuroscience",
     "FNIRS",
     "['Auditory']",
-    "['Unknown']"
+    "['Healthy']",
+    "['Perception']"
   ],
   "isAccessibleForFree": true,
   "includedInDataCatalog": {

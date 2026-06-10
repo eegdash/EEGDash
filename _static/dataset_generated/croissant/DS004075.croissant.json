@@ -51,7 +51,8 @@
     "EEG",
     "BIDS",
     "neuroscience",
-    "['Unknown']"
+    "['Unknown']",
+    "['Healthy']"
   ],
   "isAccessibleForFree": true,
   "includedInDataCatalog": {
@@ -96,6 +97,11 @@
   ],
   "citeAs": "Adam Boncz, Brigitta Toth, István Winkler (n.d.). what_are_we_talking_about. doi:10.18112/openneuro.ds004075.v1.0.0",
   "version": "v1.7.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1101/2024.12.12.628085",
+    "url": "https://doi.org/10.1101/2024.12.12.628085"
+  },
   "measurementTechnique": [
     "BIDS task: context03",
     "BIDS task: context09",

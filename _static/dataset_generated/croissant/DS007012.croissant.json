@@ -50,7 +50,10 @@
   "keywords": [
     "EEG",
     "BIDS",
-    "neuroscience"
+    "neuroscience",
+    "['Visual']",
+    "['Healthy']",
+    "['Perception']"
   ],
   "isAccessibleForFree": true,
   "includedInDataCatalog": {
@@ -95,6 +98,11 @@
   ],
   "citeAs": "Chae, Violet, Grootswagers, Tijl, Bode, Stefan, Feuerriegel, Daniel (2025). FOODEEG: An open dataset of human electroencephalographic and behavioural responses to food images. doi:10.18112/openneuro.ds007012.v1.1.0",
   "version": "1.8.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1101/2025.11.07.687287",
+    "url": "https://doi.org/10.1101/2025.11.07.687287"
+  },
   "measurementTechnique": [
     "BIDS task: categorisation"
   ],

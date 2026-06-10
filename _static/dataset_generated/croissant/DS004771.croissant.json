@@ -86,6 +86,11 @@
   ],
   "citeAs": "Chu-Hsuan Kuo, Chantel S. Prat (n.d.). EEG/ERP data from a Python Reading Task. doi:10.18112/openneuro.ds004771.v1.0.0",
   "version": "1.8.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.21203/rs.3.rs-3396298/v1",
+    "url": "https://doi.org/10.21203/rs.3.rs-3396298/v1"
+  },
   "measurementTechnique": [
     "BIDS task: PY"
   ],

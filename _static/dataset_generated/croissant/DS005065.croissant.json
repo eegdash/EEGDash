@@ -93,6 +93,11 @@
   ],
   "citeAs": "Evan M. Russek, Rani Moran, Yunzhe Liu, Ray Dolan, Quentin Huys (n.d.). Heuristics in risky decision-making relate to preferential representation of information MEG data. doi:10.18112/openneuro.ds005065.v1.0.0",
   "version": "v1.5.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1038/s41467-024-48547-z",
+    "url": "https://doi.org/10.1038/s41467-024-48547-z"
+  },
   "measurementTechnique": [
     "BIDS task: RiskyDecision"
   ],

@@ -86,6 +86,11 @@
   ],
   "citeAs": "Armen Bagdasarov, Michael S. Gaffrey (n.d.). Gaffrey Lab Infant Microstates Reliability. doi:10.18112/openneuro.ds004635.v3.1.0",
   "version": "1.8.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1007/s10548-024-01043-5",
+    "url": "https://doi.org/10.1007/s10548-024-01043-5"
+  },
   "measurementTechnique": [
     "BIDS task: resting"
   ],

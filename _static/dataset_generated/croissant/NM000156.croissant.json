@@ -125,6 +125,11 @@
   ],
   "citeAs": "Jian Shi, Danyang Chen, Xingwei Zhao, Zhixian Zhao, Shengjie Li (2025). Hybrid EEG-fNIRS MI dataset for ICH from Shi et al 2025. doi:10.82901/nemar.nm000156",
   "version": "1.9.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1038/s41597-025-06100-7",
+    "url": "https://doi.org/10.1038/s41597-025-06100-7"
+  },
   "measurementTechnique": [
     "BIDS task: imagery"
   ],

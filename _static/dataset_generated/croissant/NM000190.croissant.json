@@ -88,6 +88,11 @@
   ],
   "citeAs": "Johannes Höhne, Martijn Schreuder, Benjamin Blankertz, Michael Tangermann (2011). BNCI 2015-012 PASS2D P300 dataset. doi:10.82901/nemar.nm000190",
   "version": "1.9.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.3389/fnins.2011.00112",
+    "url": "https://doi.org/10.3389/fnins.2011.00112"
+  },
   "measurementTechnique": [
     "BIDS task: p300"
   ],

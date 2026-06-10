@@ -140,6 +140,11 @@
   ],
   "citeAs": "M.P. Weisend, F.M. Hanlon, R. Montano, S.P. Ahlfors, A.C. Leuthold (2007). MIND DATA. doi:10.18112/openneuro.ds004107.v1.0.0",
   "version": "1.6.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1016/j.ics.2006.12.095",
+    "url": "https://doi.org/10.1016/j.ics.2006.12.095"
+  },
   "measurementTechnique": [
     "BIDS task: auditory",
     "BIDS task: index",

@@ -95,6 +95,11 @@
   ],
   "citeAs": "Denise Moerel, James Psihoyos, Thomas A. Carlson (2019). The Time-Course of Food Representation in the Human Brain. doi:10.18112/openneuro.ds004995.v1.0.2",
   "version": "1.0.2",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1101/2021.05.24.445376",
+    "url": "https://doi.org/10.1101/2021.05.24.445376"
+  },
   "measurementTechnique": [
     "BIDS task: food"
   ],

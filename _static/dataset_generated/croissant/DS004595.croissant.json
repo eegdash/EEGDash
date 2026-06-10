@@ -81,6 +81,11 @@
   ],
   "citeAs": "Ethan Campbell, James F Cavanagh (20). EEG: RL Task (3-Armed Bandit) with alcohol cues in hazardous drinkers and ctls. doi:10.18112/openneuro.ds004595.v1.0.0",
   "version": "1.1.1",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.5334/cpsy.96",
+    "url": "https://doi.org/10.5334/cpsy.96"
+  },
   "measurementTechnique": [
     "BIDS task: ThreeArmedBandit"
   ],

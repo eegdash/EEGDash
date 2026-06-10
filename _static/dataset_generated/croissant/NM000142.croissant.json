@@ -92,6 +92,11 @@
   ],
   "citeAs": "Xiaoli Wu, Wenhui Zhang, Zhibo Fu, Roy T.H. Cheung, Rosa H.M. Chan (2020). Ear-EEG motor execution dataset from Wu et al 2020. doi:10.82901/nemar.nm000142",
   "version": "1.9.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1088/1741-2552/abc1b6",
+    "url": "https://doi.org/10.1088/1741-2552/abc1b6"
+  },
   "measurementTechnique": [
     "BIDS task: imagery"
   ],

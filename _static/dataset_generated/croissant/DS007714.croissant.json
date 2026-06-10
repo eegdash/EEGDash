@@ -51,7 +51,8 @@
     "EEG",
     "BIDS",
     "neuroscience",
-    "FNIRS"
+    "FNIRS",
+    "['Unknown']"
   ],
   "isAccessibleForFree": true,
   "includedInDataCatalog": {

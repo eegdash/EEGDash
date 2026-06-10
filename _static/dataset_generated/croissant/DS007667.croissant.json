@@ -50,7 +50,10 @@
   "keywords": [
     "EEG",
     "BIDS",
-    "neuroscience"
+    "neuroscience",
+    "['Resting State']",
+    "['Healthy']",
+    "['Resting-state']"
   ],
   "isAccessibleForFree": true,
   "includedInDataCatalog": {

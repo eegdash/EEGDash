@@ -80,6 +80,11 @@
   ],
   "citeAs": "Peter E. Clayson, Michael J. Larson (n.d.). Registerd Report of ERN During Three Versions of a Flanker Task. doi:10.18112/openneuro.ds004883.v1.0.0",
   "version": "v1.8.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1111/psyp.14607",
+    "url": "https://doi.org/10.1111/psyp.14607"
+  },
   "measurementTechnique": [
     "BIDS task: ffa",
     "BIDS task: ffb",

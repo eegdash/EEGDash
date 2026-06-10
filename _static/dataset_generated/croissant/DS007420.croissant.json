@@ -101,6 +101,11 @@
   ],
   "citeAs": "Gao, Yuanyuan, Rogers, De’Ja, von Lühmann, Alexander, Ortega-Martinez, Antonio, Boas, David (n.d.). A Light Weight Multi-Distance fNIRS Dataset for Ball-Squeezing Task and Purposeful Motion Artifact Creation Task. doi:10.18112/openneuro.ds007420.v1.0.2",
   "version": "1.7.1",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1117/1.nph.10.2.025007",
+    "url": "https://doi.org/10.1117/1.nph.10.2.025007"
+  },
   "measurementTechnique": [
     "BIDS task: BallSqueezing",
     "BIDS task: Motion",

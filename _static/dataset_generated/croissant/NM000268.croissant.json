@@ -123,6 +123,11 @@
   "citeAs": "Jaeyoung Shin, Alexander von Lühmann, Benjamin Blankertz, Do-Won Kim, Jichai Jeong (2019). Shin et al. 2017 (Experiment B) — Open Access Dataset for EEG+NIRS Single-Trial Classification. doi:10.1109/TNSRE.2016.2628057",
   "version": "1.9.0",
   "dateModified": "2026-04-11",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1109/tnsre.2016.2628057",
+    "url": "https://doi.org/10.1109/tnsre.2016.2628057"
+  },
   "measurementTechnique": [
     "BIDS task: imagery"
   ],

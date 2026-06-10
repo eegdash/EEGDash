@@ -111,6 +111,11 @@
   ],
   "citeAs": "Marleen Haupt, Monika Graumann, Santani Teng, Carina Kaltenbach, Radoslaw M. Cichy (2019). Braille letters - EEG. doi:10.18112/openneuro.ds004951.v1.0.0",
   "version": "1.7.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.7554/elife.98148",
+    "url": "https://doi.org/10.7554/elife.98148"
+  },
   "measurementTechnique": [
     "BIDS task: letters"
   ],

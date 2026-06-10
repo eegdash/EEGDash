@@ -111,6 +111,11 @@
   ],
   "citeAs": "Hong-Zhi Li, Jia-Jia Yang, Zhen Lv, Li-Yang Wan, Wo Wang (20). Research data supporting 'EEG recording during playing MOBA game'. doi:10.18112/openneuro.ds005520.v1.0.1",
   "version": "1.2",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.3389/fnhum.2018.00047",
+    "url": "https://doi.org/10.3389/fnhum.2018.00047"
+  },
   "measurementTechnique": [
     "BIDS task: MOBAgame",
     "BIDS task: restingeyeclosed",

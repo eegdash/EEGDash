@@ -135,6 +135,11 @@
   ],
   "citeAs": "Michael Pereira, Pierre Mégevand, Mi Xue Tan, Wenwen Chang, Shuo Wang (20). Evidence accumulation relates to perceptual consciousness and monitoring. doi:10.18112/openneuro.ds001785.v1.1.1",
   "version": "1.1.1",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1038/s41467-021-23540-y",
+    "url": "https://doi.org/10.1038/s41467-021-23540-y"
+  },
   "measurementTechnique": [
     "BIDS task: adapt",
     "BIDS task: thrdown",

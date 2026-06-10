@@ -50,7 +50,10 @@
   "keywords": [
     "EEG",
     "BIDS",
-    "neuroscience"
+    "neuroscience",
+    "['Visual']",
+    "['Other']",
+    "['Decision-making']"
   ],
   "isAccessibleForFree": true,
   "includedInDataCatalog": {
@@ -119,6 +122,11 @@
   ],
   "citeAs": "Betts Peters, Daniel Klee, Michelle Kinsella, Yonah Hendin, Tab Memmott (2021). BCI-FIT: A customization protocol for communication brain-computer interface systems.. doi:10.18112/openneuro.ds007720.v1.0.1",
   "version": "1.7.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1080/2326263x.2021.1878727",
+    "url": "https://doi.org/10.1080/2326263x.2021.1878727"
+  },
   "measurementTechnique": [
     "BIDS task: MatrixCalibration",
     "BIDS task: MatrixCopyPhrase",

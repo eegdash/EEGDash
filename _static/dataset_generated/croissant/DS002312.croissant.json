@@ -99,6 +99,11 @@
   ],
   "citeAs": "Teon L Brooks, Laura Gwilliams, Alexandre Gramfort, Alec Marantz (n.d.). OcularLDT. doi:10.18112/openneuro.ds002312.v1.0.0",
   "version": "1.2.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.7551/mitpress/11442.003.0076",
+    "url": "https://doi.org/10.7551/mitpress/11442.003.0076"
+  },
   "measurementTechnique": [
     "BIDS task: OcularLDT"
   ],

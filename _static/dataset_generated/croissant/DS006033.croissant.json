@@ -90,6 +90,11 @@
   ],
   "citeAs": "Foteini Simistira Liwicki (n.d.). Synchronous EEG and fMRI dataset on inner speech. doi:10.18112/openneuro.ds006033.v1.0.1",
   "version": "1.7.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1016/j.dib.2025.112258",
+    "url": "https://doi.org/10.1016/j.dib.2025.112258"
+  },
   "measurementTechnique": [
     "BIDS task: innerspeech"
   ],

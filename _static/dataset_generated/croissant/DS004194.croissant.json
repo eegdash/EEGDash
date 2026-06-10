@@ -140,6 +140,11 @@
   ],
   "citeAs": "Iris Groen, Kenichi Yuasa, Amber Brands, Giovanni Piantoni, Stephanie Montenegro (2022). Visual ECoG dataset. doi:10.18112/openneuro.ds004194.v3.0.0",
   "version": "1.9.2",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1523/jneurosci.1812-21.2022",
+    "url": "https://doi.org/10.1523/jneurosci.1812-21.2022"
+  },
   "measurementTechnique": [
     "BIDS task: prf",
     "BIDS task: sixcatlocdiffisi",

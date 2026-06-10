@@ -84,6 +84,11 @@
   ],
   "citeAs": "Kaare B. Mikkelsen, Preben Kidmose, Yousef Rezaei Tabar (20). Ear-EEG Sleep Monitoring 2019 (EESM19). doi:10.18112/openneuro.ds005185.v1.0.2",
   "version": "1.7.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1038/s41598-019-53115-3",
+    "url": "https://doi.org/10.1038/s41598-019-53115-3"
+  },
   "measurementTechnique": [
     "BIDS task: ASSR",
     "BIDS task: electrodeTestLab",

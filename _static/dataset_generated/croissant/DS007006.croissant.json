@@ -95,7 +95,8 @@
   "identifier": "doi:10.18112/openneuro.ds007006.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds007006.v1.0.0",
-    "https://openneuro.org/datasets/ds007006"
+    "https://openneuro.org/datasets/ds007006",
+    "https://huggingface.co/datasets/EEGDash/ds007006"
   ],
   "citeAs": "Ying Wu, Enrique Carrillosulub, Leon Lange, Chloe Tanega, Nicole Wells (n.d.). VR-Compassion Cultivation Training. doi:10.18112/openneuro.ds007006.v1.0.0",
   "version": "v1.10.0",
@@ -142,6 +143,15 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=ds007006",
       "encodingFormat": "text/html",
+      "sha256": "main"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007006-huggingface",
+      "name": "EEGDash/ds007006 on Hugging Face",
+      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
+      "contentUrl": "https://huggingface.co/datasets/EEGDash/ds007006",
+      "encodingFormat": "application/vnd.huggingface-dataset+json",
       "sha256": "main"
     }
   ]

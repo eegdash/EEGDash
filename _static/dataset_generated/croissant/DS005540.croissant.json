@@ -131,6 +131,11 @@
   ],
   "citeAs": "Xin XU, Xinke SHEN, Xuyang CHEN, Qingzhu ZHANG, Sitian WANG (20). EmoEEG-MC: A Multi-Context Emotional EEG Dataset for Cross-Context Emotion Decoding. doi:10.18112/openneuro.ds005540.v1.0.7",
   "version": "1.6.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1038/s41597-023-02650-w",
+    "url": "https://doi.org/10.1038/s41597-023-02650-w"
+  },
   "measurementTechnique": [
     "BIDS task: emotion"
   ],

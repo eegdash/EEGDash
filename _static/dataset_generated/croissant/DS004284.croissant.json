@@ -89,6 +89,11 @@
   ],
   "citeAs": "Veillette, J., Heald, S., Wittenbrink, B., Nusbaum, H. (2019). eeg-neuroforecasting. doi:10.18112/openneuro.ds004284.v1.0.0",
   "version": "1.6.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1038/s41598-023-41613-4",
+    "url": "https://doi.org/10.1038/s41598-023-41613-4"
+  },
   "measurementTechnique": [
     "BIDS task: kickstarter"
   ],

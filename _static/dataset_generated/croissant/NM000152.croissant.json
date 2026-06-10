@@ -84,6 +84,11 @@
   ],
   "citeAs": "Xin Zhang, Xinyi Yong, Carlo Menon (2019). Upper-limb elbow-centered motor imagery dataset (10 classes). doi:10.82901/nemar.nm000152",
   "version": "1.9.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1371/journal.pone.0188293",
+    "url": "https://doi.org/10.1371/journal.pone.0188293"
+  },
   "measurementTechnique": [
     "BIDS task: imagery"
   ],

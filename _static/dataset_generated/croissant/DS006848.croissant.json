@@ -93,6 +93,11 @@
   ],
   "citeAs": "Alexandra I. Kosachenko, Danil I. Syttykov, Dmitry A. Tarasov, Alexander I. Kotyusov, Yuri G. Pavlov (20). AlphaDirection1: EEG, ECG, PPG in the resting state and working memory for sequentially and simultaneously presented digits. doi:10.18112/openneuro.ds006848.v1.0.0",
   "version": "1.7.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1101/2025.05.04.652111",
+    "url": "https://doi.org/10.1101/2025.05.04.652111"
+  },
   "measurementTechnique": [
     "BIDS task: rest",
     "BIDS task: verbalwm"

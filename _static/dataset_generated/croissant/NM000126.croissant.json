@@ -110,6 +110,11 @@
   ],
   "citeAs": "Yijun Wang, Xiaogang Chen, Xiaorong Gao, Shangkai Gao (2016). Wang2016 – SSVEP Wang 2016 dataset. doi:10.82901/nemar.nm000126",
   "version": "1.9.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1109/tnsre.2016.2627556",
+    "url": "https://doi.org/10.1109/tnsre.2016.2627556"
+  },
   "measurementTechnique": [
     "BIDS task: ssvep"
   ],

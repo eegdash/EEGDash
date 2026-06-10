@@ -81,6 +81,11 @@
   ],
   "citeAs": "Jonathan Xu, Si Kai Lee, Wangshu Jiang (2024). Alljoined1. doi:10.82901/nemar.nm000133",
   "version": "1.9.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.48550/arxiv.2404.05553",
+    "url": "https://doi.org/10.48550/arxiv.2404.05553"
+  },
   "measurementTechnique": [
     "BIDS task: images"
   ],

@@ -48,9 +48,10 @@
     <link rel="stylesheet" type="text/css" href="../../../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-design.min.css?v=95c83b7e" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/custom.90b980a3.css?v=1c3f8116" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/custom.1d413874.css?v=a129a8f0" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/css/treemap.087aecf0.css?v=7131b20f" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.d7808461.css?v=1ba63a31" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.ec430272.css?v=25bb8418" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/css/eegdash-search.7183958a.css?v=bf4f7b61" />
   
   <!-- So that users can add custom icons -->
   <script defer src="../../../../_static/scripts/fontawesome.js?digest=0790524f97105ba85085"></script>
@@ -68,7 +69,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'generated/auto_examples/tutorials/20_event_related/plot_20_visual_p300_oddball';</script>
     <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <script defer="defer" src="../../../../_static/js/tag-palette.7346f567.js?v=6f5eac9a"></script>
-    <script defer="defer" src="../../../../_static/js/search-as-you-type.e09b639d.js?v=8e93d0f7"></script>
+    <script defer="defer" src="../../../../_static/js/eegdash-search.54ba3db3.js?v=e4b1548f"></script>
     <script defer="defer" src="../../../../_static/js/lazy-embed.23591732.js?v=9ea1e29f"></script>
     <script defer="defer" src="../../../../_static/js/api-attribute-compact.4e7977ba.js?v=bc66aa1b"></script>
     <script defer="defer" src="../../../../_static/js/api-section-cards.af088c50.js?v=c2b943a2"></script>
@@ -80,6 +81,9 @@
     <link rel="prev" title="Event-Related Decoding" href="index.html" />
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="0.8" />
+
+  
+  <script>document.documentElement.setAttribute('data-eegdash-api', 'https://data.eegdash.org/api/eegdash');</script>
 
   
   <meta name="google-site-verification" content="REPLACE_WITH_GSC_TOKEN">
@@ -749,27 +753,32 @@ With the default 5 channels and 128 Hz, expect <code class="docutils literal not
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Downloading sub-002_task-visualoddball_events.tsv:   0%|          | 0.00/9.03k [00:00&lt;?, ?B/s]
-Downloading sub-002_task-visualoddball_events.tsv: 100%|██████████| 9.03k/9.03k [00:00&lt;00:00, 28.9MB/s]
+Downloading sub-002_task-visualoddball_events.tsv: 100%|██████████| 9.03k/9.03k [00:00&lt;00:00, 31.4MB/s]
 
 Downloading sub-002_task-visualoddball_events.json:   0%|          | 0.00/2.22k [00:00&lt;?, ?B/s]
-Downloading sub-002_task-visualoddball_events.json: 100%|██████████| 2.22k/2.22k [00:00&lt;00:00, 7.56MB/s]
+Downloading sub-002_task-visualoddball_events.json: 100%|██████████| 2.22k/2.22k [00:00&lt;00:00, 8.73MB/s]
 
 Downloading sub-002_task-visualoddball_eeg.json:   0%|          | 0.00/793 [00:00&lt;?, ?B/s]
-Downloading sub-002_task-visualoddball_eeg.json: 100%|██████████| 793/793 [00:00&lt;00:00, 3.14MB/s]
+Downloading sub-002_task-visualoddball_eeg.json: 100%|██████████| 793/793 [00:00&lt;00:00, 2.90MB/s]
 
 Downloading sub-002_task-visualoddball_eeg.eeg:   0%|          | 0.00/28.4M [00:00&lt;?, ?B/s]
-Downloading sub-002_task-visualoddball_eeg.eeg:  15%|█▍        | 4.24M/28.4M [00:00&lt;00:01, 21.4MB/s]
-Downloading sub-002_task-visualoddball_eeg.eeg: 100%|██████████| 28.4M/28.4M [00:00&lt;00:00, 81.7MB/s]
+Downloading sub-002_task-visualoddball_eeg.eeg:   1%|          | 170k/28.4M [00:00&lt;00:35, 832kB/s]
+Downloading sub-002_task-visualoddball_eeg.eeg:   2%|▏         | 646k/28.4M [00:00&lt;00:17, 1.62MB/s]
+Downloading sub-002_task-visualoddball_eeg.eeg:   7%|▋         | 2.09M/28.4M [00:00&lt;00:07, 3.72MB/s]
+Downloading sub-002_task-visualoddball_eeg.eeg:  21%|██        | 5.87M/28.4M [00:00&lt;00:02, 8.15MB/s]
+Downloading sub-002_task-visualoddball_eeg.eeg:  55%|█████▌    | 15.7M/28.4M [00:01&lt;00:00, 18.0MB/s]
+Downloading sub-002_task-visualoddball_eeg.eeg:  93%|█████████▎| 26.5M/28.4M [00:01&lt;00:00, 25.2MB/s]
+Downloading sub-002_task-visualoddball_eeg.eeg: 100%|██████████| 28.4M/28.4M [00:01&lt;00:00, 23.2MB/s]
 
 Downloading sub-002_task-visualoddball_eeg.vmrk:   0%|          | 0.00/13.7k [00:00&lt;?, ?B/s]
-Downloading sub-002_task-visualoddball_eeg.vmrk: 100%|██████████| 13.7k/13.7k [00:00&lt;00:00, 35.5MB/s]
-[06/09/26 20:59:49] WARNING  File not found on S3, skipping:   downloader.py:163
+Downloading sub-002_task-visualoddball_eeg.vmrk: 100%|██████████| 13.7k/13.7k [00:00&lt;00:00, 49.9MB/s]
+[06/10/26 12:50:01] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds005863/sub-0
                              02/eeg/sub-002_task-visualoddball
                              _eeg.dat
 
 Downloading sub-002_task-visualoddball_eeg.vhdr:   0%|          | 0.00/6.22k [00:00&lt;?, ?B/s]
-Downloading sub-002_task-visualoddball_eeg.vhdr: 100%|██████████| 6.22k/6.22k [00:00&lt;00:00, 24.8MB/s]
+Downloading sub-002_task-visualoddball_eeg.vhdr: 100%|██████████| 6.22k/6.22k [00:00&lt;00:00, 22.1MB/s]
                     INFO     Auto-repairing                            io.py:219
                              sub-002_task-visualoddball_eeg.vhdr:
                              DataFile=COCOA_014_VO.eeg -&gt;
@@ -1255,13 +1264,13 @@ balanced accuracy.</p>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/runner/work/EEGDash/EEGDash/.venv/lib/python3.12/site-packages/braindecode/preprocessing/preprocess.py:78: UserWarning: apply_on_array can only be True if fn is a callable function. Automatically correcting to apply_on_array=False.
   warn(
-[06/09/26 20:59:50] WARNING  File not found on S3, skipping:   downloader.py:163
+[06/10/26 12:50:03] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds005863/sub-0
                              02/eeg/sub-002_task-visualoddball
                              _eeg.dat
 
 Downloading sub-002_task-visualoddball_eeg.vhdr:   0%|          | 0.00/6.22k [00:00&lt;?, ?B/s]
-Downloading sub-002_task-visualoddball_eeg.vhdr: 100%|██████████| 6.22k/6.22k [00:00&lt;00:00, 23.4MB/s]
+Downloading sub-002_task-visualoddball_eeg.vhdr: 100%|██████████| 6.22k/6.22k [00:00&lt;00:00, 26.4MB/s]
                     INFO     Auto-repairing                            io.py:219
                              sub-002_task-visualoddball_eeg.vhdr:
                              DataFile=COCOA_014_VO.eeg -&gt;
@@ -1278,27 +1287,28 @@ Downloading sub-002_task-visualoddball_eeg.vhdr: 100%|████████�
   warn(
 
 Downloading sub-010_task-visualoddball_events.tsv:   0%|          | 0.00/9.00k [00:00&lt;?, ?B/s]
-Downloading sub-010_task-visualoddball_events.tsv: 100%|██████████| 9.00k/9.00k [00:00&lt;00:00, 35.6MB/s]
+Downloading sub-010_task-visualoddball_events.tsv: 100%|██████████| 9.00k/9.00k [00:00&lt;00:00, 35.9MB/s]
 
 Downloading sub-010_task-visualoddball_events.json:   0%|          | 0.00/2.22k [00:00&lt;?, ?B/s]
-Downloading sub-010_task-visualoddball_events.json: 100%|██████████| 2.22k/2.22k [00:00&lt;00:00, 7.76MB/s]
+Downloading sub-010_task-visualoddball_events.json: 100%|██████████| 2.22k/2.22k [00:00&lt;00:00, 9.03MB/s]
 
 Downloading sub-010_task-visualoddball_eeg.json:   0%|          | 0.00/793 [00:00&lt;?, ?B/s]
-Downloading sub-010_task-visualoddball_eeg.json: 100%|██████████| 793/793 [00:00&lt;00:00, 3.86MB/s]
+Downloading sub-010_task-visualoddball_eeg.json: 100%|██████████| 793/793 [00:00&lt;00:00, 2.54MB/s]
 
 Downloading sub-010_task-visualoddball_eeg.eeg:   0%|          | 0.00/26.7M [00:00&lt;?, ?B/s]
-Downloading sub-010_task-visualoddball_eeg.eeg:  63%|██████▎   | 16.9M/26.7M [00:00&lt;00:00, 64.3MB/s]
-Downloading sub-010_task-visualoddball_eeg.eeg: 100%|██████████| 26.7M/26.7M [00:00&lt;00:00, 75.8MB/s]
+Downloading sub-010_task-visualoddball_eeg.eeg:  39%|███▉      | 10.5M/26.7M [00:00&lt;00:00, 54.9MB/s]
+Downloading sub-010_task-visualoddball_eeg.eeg:  70%|███████   | 18.7M/26.7M [00:00&lt;00:00, 47.3MB/s]
+Downloading sub-010_task-visualoddball_eeg.eeg: 100%|██████████| 26.7M/26.7M [00:00&lt;00:00, 49.7MB/s]
 
 Downloading sub-010_task-visualoddball_eeg.vmrk:   0%|          | 0.00/13.7k [00:00&lt;?, ?B/s]
-Downloading sub-010_task-visualoddball_eeg.vmrk: 100%|██████████| 13.7k/13.7k [00:00&lt;00:00, 44.1MB/s]
-[06/09/26 20:59:52] WARNING  File not found on S3, skipping:   downloader.py:163
+Downloading sub-010_task-visualoddball_eeg.vmrk: 100%|██████████| 13.7k/13.7k [00:00&lt;00:00, 36.1MB/s]
+[06/10/26 12:50:06] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds005863/sub-0
                              10/eeg/sub-010_task-visualoddball
                              _eeg.dat
 
 Downloading sub-010_task-visualoddball_eeg.vhdr:   0%|          | 0.00/6.22k [00:00&lt;?, ?B/s]
-Downloading sub-010_task-visualoddball_eeg.vhdr: 100%|██████████| 6.22k/6.22k [00:00&lt;00:00, 24.9MB/s]
+Downloading sub-010_task-visualoddball_eeg.vhdr: 100%|██████████| 6.22k/6.22k [00:00&lt;00:00, 22.5MB/s]
                     INFO     Auto-repairing                            io.py:219
                              sub-010_task-visualoddball_eeg.vhdr:
                              DataFile=COCOA_022_VO.eeg -&gt;
@@ -1315,28 +1325,28 @@ Downloading sub-010_task-visualoddball_eeg.vhdr: 100%|████████�
   warn(
 
 Downloading sub-017_task-visualoddball_events.tsv:   0%|          | 0.00/8.98k [00:00&lt;?, ?B/s]
-Downloading sub-017_task-visualoddball_events.tsv: 100%|██████████| 8.98k/8.98k [00:00&lt;00:00, 33.1MB/s]
+Downloading sub-017_task-visualoddball_events.tsv: 100%|██████████| 8.98k/8.98k [00:00&lt;00:00, 28.5MB/s]
 
 Downloading sub-017_task-visualoddball_events.json:   0%|          | 0.00/2.22k [00:00&lt;?, ?B/s]
-Downloading sub-017_task-visualoddball_events.json: 100%|██████████| 2.22k/2.22k [00:00&lt;00:00, 9.56MB/s]
+Downloading sub-017_task-visualoddball_events.json: 100%|██████████| 2.22k/2.22k [00:00&lt;00:00, 7.89MB/s]
 
 Downloading sub-017_task-visualoddball_eeg.json:   0%|          | 0.00/793 [00:00&lt;?, ?B/s]
-Downloading sub-017_task-visualoddball_eeg.json: 100%|██████████| 793/793 [00:00&lt;00:00, 3.15MB/s]
+Downloading sub-017_task-visualoddball_eeg.json: 100%|██████████| 793/793 [00:00&lt;00:00, 2.09MB/s]
 
 Downloading sub-017_task-visualoddball_eeg.eeg:   0%|          | 0.00/25.6M [00:00&lt;?, ?B/s]
-Downloading sub-017_task-visualoddball_eeg.eeg:  66%|██████▋   | 17.0M/25.6M [00:00&lt;00:00, 66.4MB/s]
-Downloading sub-017_task-visualoddball_eeg.eeg: 100%|█████████▉| 25.4M/25.6M [00:00&lt;00:00, 41.0MB/s]
-Downloading sub-017_task-visualoddball_eeg.eeg: 100%|██████████| 25.6M/25.6M [00:00&lt;00:00, 42.1MB/s]
+Downloading sub-017_task-visualoddball_eeg.eeg:  30%|███       | 7.74M/25.6M [00:00&lt;00:00, 35.8MB/s]
+Downloading sub-017_task-visualoddball_eeg.eeg:  74%|███████▍  | 19.0M/25.6M [00:00&lt;00:00, 45.3MB/s]
+Downloading sub-017_task-visualoddball_eeg.eeg: 100%|██████████| 25.6M/25.6M [00:00&lt;00:00, 42.7MB/s]
 
 Downloading sub-017_task-visualoddball_eeg.vmrk:   0%|          | 0.00/13.7k [00:00&lt;?, ?B/s]
-Downloading sub-017_task-visualoddball_eeg.vmrk: 100%|██████████| 13.7k/13.7k [00:00&lt;00:00, 51.3MB/s]
-[06/09/26 20:59:54] WARNING  File not found on S3, skipping:   downloader.py:163
+Downloading sub-017_task-visualoddball_eeg.vmrk: 100%|██████████| 13.7k/13.7k [00:00&lt;00:00, 51.7MB/s]
+[06/10/26 12:50:09] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds005863/sub-0
                              17/eeg/sub-017_task-visualoddball
                              _eeg.dat
 
 Downloading sub-017_task-visualoddball_eeg.vhdr:   0%|          | 0.00/6.22k [00:00&lt;?, ?B/s]
-Downloading sub-017_task-visualoddball_eeg.vhdr: 100%|██████████| 6.22k/6.22k [00:00&lt;00:00, 22.7MB/s]
+Downloading sub-017_task-visualoddball_eeg.vhdr: 100%|██████████| 6.22k/6.22k [00:00&lt;00:00, 25.6MB/s]
                     INFO     Auto-repairing                            io.py:219
                              sub-017_task-visualoddball_eeg.vhdr:
                              DataFile=COCOA_029_VO.eeg -&gt;
@@ -1550,7 +1560,7 @@ posterior midline.</p></li>
 <p>See <a class="reference internal" href="../../../../references.html"><span class="doc">References</span></a> for the centralized bibliography of papers
 cited above. Add or amend an entry once in
 <code class="file docutils literal notranslate"><span class="pre">docs/source/refs.bib</span></code>; every tutorial inherits the update.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 7.779 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 11.620 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-auto-examples-tutorials-20-event-related-plot-20-visual-p300-oddball-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/eegdash/EEGDash/main?urlpath=lab/tree/notebooks/generated/auto_examples/tutorials/20_event_related/plot_20_visual_p300_oddball.ipynb"><img alt="Launch binder" src="../../../../_images/binder_badge_logo7.svg" style="width: 150px;" />

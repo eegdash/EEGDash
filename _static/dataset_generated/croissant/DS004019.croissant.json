@@ -103,6 +103,11 @@
   ],
   "citeAs": "Graciela C. Alatorre-Cruz, Heather Downs, Darcy Hagood, Seth T. Sorensen, D. Keith Williams (2022). Effect of obesity on arithmetic processing in preteens with high and low math skills. An event-related potentials study. doi:10.18112/openneuro.ds004019.v1.0.0",
   "version": "1",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.3389/fnhum.2022.760234",
+    "url": "https://doi.org/10.3389/fnhum.2022.760234"
+  },
   "measurementTechnique": [
     "BIDS task: math"
   ],

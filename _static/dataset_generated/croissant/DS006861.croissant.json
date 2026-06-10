@@ -91,6 +91,11 @@
   ],
   "citeAs": "Szymon Mąka, Marta Chrustowicz, Łukasz Okruszek (20). Targeted Neuromodulation of the Left Dorsolateral Prefrontal Cortex Alleviates Altered Affective Response Evaluation in Lonely Individuals. doi:10.18112/openneuro.ds006861.v1.0.2",
   "version": "1.8.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1016/j.biopsycho.2025.109175",
+    "url": "https://doi.org/10.1016/j.biopsycho.2025.109175"
+  },
   "measurementTechnique": [
     "BIDS task: EmotionProcessingandRegulationtask"
   ],

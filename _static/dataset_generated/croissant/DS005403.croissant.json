@@ -95,6 +95,11 @@
   ],
   "citeAs": "Veillette, J., Rosen, J., Margoliash, D., Nusbaum, H. (2019). Delayed Auditory Feedback EEG/EGG. doi:10.18112/openneuro.ds005403.v1.0.1",
   "version": "1.6.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.30958/ajs_v9i3",
+    "url": "https://doi.org/10.30958/ajs_v9i3"
+  },
   "measurementTechnique": [
     "BIDS task: daf"
   ],

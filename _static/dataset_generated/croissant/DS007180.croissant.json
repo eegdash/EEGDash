@@ -92,6 +92,11 @@
   ],
   "citeAs": "Águeda Fuentes-Guerra, Elisa Martín Arévalo, Freek van Ede, Carlos González-García (n.d.). Exo-EEG Experiment. doi:10.18112/openneuro.ds007180.v1.0.0",
   "version": "1.4.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1523/eneuro.0076-26.2026",
+    "url": "https://doi.org/10.1523/eneuro.0076-26.2026"
+  },
   "measurementTechnique": [
     "BIDS task: exo"
   ],

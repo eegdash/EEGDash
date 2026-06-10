@@ -115,6 +115,11 @@
   ],
   "citeAs": "Johanna Wagner, Ramon Martinez-Cancino, Scott Makeig, Arnaud Delorme, Christa Neuper (20). Audiocue walking study. doi:10.18112/openneuro.ds001971.v1.1.1",
   "version": "v1.2.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1038/s41597-019-0223-2",
+    "url": "https://doi.org/10.1038/s41597-019-0223-2"
+  },
   "measurementTechnique": [
     "BIDS task: AudioCueWalkingStudy"
   ],

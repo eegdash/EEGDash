@@ -89,6 +89,11 @@
   "citeAs": "William Speier, Corey Arnold, Aniket Deshpande, Nader Pouratian (2017). Speier et al. 2017 — A comparison of stimulus types in online classification of the P300 speller using language models. doi:10.1371/journal.pone.0175382",
   "version": "1.9.0",
   "dateModified": "2026-04-11",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1371/journal.pone.0175382",
+    "url": "https://doi.org/10.1371/journal.pone.0175382"
+  },
   "measurementTechnique": [
     "BIDS task: p300"
   ],

@@ -100,6 +100,11 @@
   ],
   "citeAs": "Ian Daly, Nicoletta Nicolaou, Duncan Williams, Faustina Hwang, Alexis Kirke (n.d.). A dataset recorded during development of a tempo-based brain-computer music interface. doi:10.18112/openneuro.ds002720.v1.0.1",
   "version": "1.0.2",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1038/s41597-020-0507-6",
+    "url": "https://doi.org/10.1038/s41597-020-0507-6"
+  },
   "distribution": [
     {
       "@type": "cr:FileObject",

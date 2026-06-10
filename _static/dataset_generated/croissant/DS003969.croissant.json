@@ -80,6 +80,11 @@
   ],
   "citeAs": "Arnaud Delorme, Claire Braboszcz (n.d.). Meditation vs thinking task. doi:10.18112/openneuro.ds003969.v1.0.0",
   "version": "v1.2.1",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1371/journal.pone.0170647",
+    "url": "https://doi.org/10.1371/journal.pone.0170647"
+  },
   "measurementTechnique": [
     "BIDS task: med1breath",
     "BIDS task: med2",

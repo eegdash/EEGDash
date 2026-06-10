@@ -123,6 +123,11 @@
   "citeAs": "Christopher Wang, Adam Yaari, Aaditya K Singh, Vighnesh Subramaniam, Dana Rosenfarb (2019). Wang et al. 2024 — Brain Treebank: Large-scale intracranial recordings from naturalistic language stimuli. doi:10.48550/arXiv.2411.08343",
   "version": "1.9.0",
   "dateModified": "2026-04-13",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.48550/arxiv.2411.08343",
+    "url": "https://doi.org/10.48550/arxiv.2411.08343"
+  },
   "measurementTechnique": [
     "BIDS task: movie"
   ],

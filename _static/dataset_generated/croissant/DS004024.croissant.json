@@ -99,6 +99,11 @@
   ],
   "citeAs": "Julio Cesar Hernandez Pavon, Nils Schneider Garces, John Patrick Begnoche, Lee Miller, Tommi Raij (2019). TMS-EEG-MRI-fMRI-DWI data on paired associative stimulation and connectivity (Shirley Ryan AbilityLab, Chicago, IL). doi:10.18112/openneuro.ds004024.v1.0.1",
   "version": "1.6.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1016/j.brs.2018.12.931",
+    "url": "https://doi.org/10.1016/j.brs.2018.12.931"
+  },
   "measurementTechnique": [
     "BIDS task: ccPAS",
     "BIDS task: rest",

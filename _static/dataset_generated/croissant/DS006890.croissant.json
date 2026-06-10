@@ -131,6 +131,11 @@
   ],
   "citeAs": "Huixiang Yang, Ryohei Fukuma, Tomoyuki Namima, Kotaro Okuda, Asaya Nishi (n.d.). Longitudinal Multitask Wireless ECoG Data from Two Fully Implanted Macaca fuscata. doi:10.18112/openneuro.ds006890.v1.0.0",
   "version": "1.9.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1038/s41597-025-06359-w",
+    "url": "https://doi.org/10.1038/s41597-025-06359-w"
+  },
   "measurementTechnique": [
     "BIDS task: listening",
     "BIDS task: pressing",

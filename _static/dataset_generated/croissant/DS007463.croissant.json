@@ -136,6 +136,11 @@
     "https://openneuro.org/datasets/ds007463"
   ],
   "citeAs": "Morgan Fogarty, Sean M. Rafferty, Zachary E. Markow, Anthony C. O’Sullivan, Calamity F. Svoboda (20). Very-High-Density Diffuse Optical Tomography System Validation Dataset. doi:10.18112/openneuro.ds007463.v1.1.1",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1162/imag.a.54",
+    "url": "https://doi.org/10.1162/imag.a.54"
+  },
   "measurementTechnique": [
     "BIDS task: AC001",
     "BIDS task: AC002",

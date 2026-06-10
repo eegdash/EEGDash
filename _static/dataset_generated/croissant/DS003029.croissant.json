@@ -176,6 +176,11 @@
   ],
   "citeAs": "Adam Li, Sara Inati, Kareem Zaghloul, Nathan Crone, William Anderson (2019). Epilepsy-iEEG-Multicenter-Dataset. doi:10.18112/openneuro.ds003029.v1.0.5",
   "version": "1.4.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1101/862797v3",
+    "url": "https://doi.org/10.1101/862797v3"
+  },
   "measurementTechnique": [
     "BIDS task: ictal"
   ],

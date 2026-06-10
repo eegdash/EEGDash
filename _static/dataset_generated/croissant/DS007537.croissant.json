@@ -50,7 +50,10 @@
   "keywords": [
     "EEG",
     "BIDS",
-    "neuroscience"
+    "neuroscience",
+    "['Visual']",
+    "['Healthy']",
+    "['Perception']"
   ],
   "isAccessibleForFree": true,
   "includedInDataCatalog": {
@@ -80,6 +83,11 @@
   ],
   "citeAs": "Prakash Mishra, Tapan K. Gandhi, Saurabh R. Gandhi (n.d.). A multimodal dataset of EEG, eye-tracking, and physiological signals during smartphone interaction. doi:10.18112/openneuro.ds007537.v1.0.0",
   "version": "1.0.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.64898/2026.04.21.719334",
+    "url": "https://doi.org/10.64898/2026.04.21.719334"
+  },
   "measurementTechnique": [
     "BIDS task: phoneuse"
   ],

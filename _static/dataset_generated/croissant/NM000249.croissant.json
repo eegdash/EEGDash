@@ -85,6 +85,11 @@
   "datePublished": "2021",
   "version": "1.9.0",
   "dateModified": "2026-03-26",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1109/thms.2020.3038339",
+    "url": "https://doi.org/10.1109/thms.2020.3038339"
+  },
   "measurementTechnique": [
     "BIDS task: imagery"
   ],

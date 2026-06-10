@@ -84,6 +84,11 @@
   ],
   "citeAs": "Cameron D. Hassall, Yan Yan, Laurence T. Hunt (n.d.). Steer the Ship. doi:10.18112/openneuro.ds004264.v1.1.0",
   "version": "1.2.1",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.31581/jbs-16.1-4.2(2006",
+    "url": "https://doi.org/10.31581/jbs-16.1-4.2(2006"
+  },
   "measurementTechnique": [
     "BIDS task: steertheship"
   ],

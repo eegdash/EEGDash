@@ -74,6 +74,11 @@
   "citeAs": "Hussain A. Khan (2019). NMT: Neurodiagnostic Montage Template Scalp EEG. doi:10.5281/zenodo.10909103",
   "version": "1.9.0",
   "dateModified": "2026-04-08",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.3389/fnins.2021.755817",
+    "url": "https://doi.org/10.3389/fnins.2021.755817"
+  },
   "measurementTechnique": [
     "BIDS task: clinical"
   ],

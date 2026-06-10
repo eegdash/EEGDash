@@ -90,6 +90,11 @@
   ],
   "citeAs": "Nitikorn Srisrisawang, Gernot R Müller-Putz (2024). BNCI 2025-001 Motor Kinematics Reaching dataset. doi:10.82901/nemar.nm000162",
   "version": "1.9.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1088/1741-2552/ada0ea",
+    "url": "https://doi.org/10.1088/1741-2552/ada0ea"
+  },
   "measurementTechnique": [
     "BIDS task: imagery"
   ],

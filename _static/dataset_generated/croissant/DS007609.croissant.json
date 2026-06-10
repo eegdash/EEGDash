@@ -94,6 +94,11 @@
   ],
   "citeAs": "Tamari Shalamberidze, Kyle Nash, Jeremy B. Caplan (2025). Resting-State EEG and Trait Anxiety. doi:10.18112/openneuro.ds007609.v1.0.0",
   "version": "1.9.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1162/imag.a.44",
+    "url": "https://doi.org/10.1162/imag.a.44"
+  },
   "measurementTechnique": [
     "BIDS task: rest"
   ],

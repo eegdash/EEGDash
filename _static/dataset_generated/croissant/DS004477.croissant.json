@@ -99,6 +99,11 @@
   ],
   "citeAs": "Tasos Papastylianou, Rodrigo Ramele, Luca Citi, Caterina Cinel, Riccardo Poli (20). PES - Pandemic Emergency Scenario. doi:10.18112/openneuro.ds004477.v1.0.2",
   "version": "1.7.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.3389/fnhum.2019.00013",
+    "url": "https://doi.org/10.3389/fnhum.2019.00013"
+  },
   "measurementTechnique": [
     "BIDS task: PES"
   ],

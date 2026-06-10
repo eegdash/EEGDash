@@ -80,6 +80,11 @@
   ],
   "citeAs": "Arnaud Delorme, Dean Radin (n.d.). Internal attention study. doi:10.18112/openneuro.ds002691.v1.1.0",
   "version": "v1.2.1",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1146/annurev.psych.093008.100427",
+    "url": "https://doi.org/10.1146/annurev.psych.093008.100427"
+  },
   "measurementTechnique": [
     "BIDS task: internalattention"
   ],

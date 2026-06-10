@@ -123,6 +123,11 @@
   ],
   "citeAs": "Michael Pereira, Nathan Faivre, Inaki Iturrate, Marco Wirthlin, Luana Serafini (2020). Disentangling the origins of confidence in speeded perceptual judgments through multimodal imaging. doi:10.18112/openneuro.ds002158.v1.0.2",
   "version": "1.1.1",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1073/pnas.1918335117",
+    "url": "https://doi.org/10.1073/pnas.1918335117"
+  },
   "measurementTechnique": [
     "BIDS task: main"
   ],

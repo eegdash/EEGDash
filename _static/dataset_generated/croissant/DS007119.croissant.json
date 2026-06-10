@@ -52,8 +52,9 @@
     "BIDS",
     "neuroscience",
     "IEEG",
-    "['Sleep']",
-    "['Unknown']"
+    "['Resting State']",
+    "['Epilepsy']",
+    "['Other']"
   ],
   "isAccessibleForFree": true,
   "includedInDataCatalog": {
@@ -145,6 +146,11 @@
   ],
   "citeAs": "Keisuke Hatano, Naoto Kuroda, Hiroshi Uda, Kazuki Sakakura, Michael J. Cools (n.d.). iEEG_comprehensive_HFA_model_part3. doi:10.18112/openneuro.ds007119.v1.0.0",
   "version": "1.7.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.64898/2025.12.17.25342490",
+    "url": "https://doi.org/10.64898/2025.12.17.25342490"
+  },
   "measurementTechnique": [
     "BIDS task: sleep"
   ],

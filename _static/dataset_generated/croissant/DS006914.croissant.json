@@ -120,6 +120,11 @@
   ],
   "citeAs": "Ryuzaburo Kochi, Aya Kanno, Hiroshi Uda, Keisuke Hatano, Masaki Sonoda (2025). Visual Naming EC. doi:10.18112/openneuro.ds006914.v1.0.3",
   "version": "1.7.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1111/epi.14648",
+    "url": "https://doi.org/10.1111/epi.14648"
+  },
   "measurementTechnique": [
     "BIDS task: picture"
   ],

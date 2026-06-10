@@ -80,6 +80,11 @@
   ],
   "citeAs": "Yue Dong, Sen Tian (2019). Dong2023 – 59-subject 40-class SSVEP dataset. doi:10.82901/nemar.nm000128",
   "version": "1.9.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.26599/bsa.2023.9050020",
+    "url": "https://doi.org/10.26599/bsa.2023.9050020"
+  },
   "measurementTechnique": [
     "BIDS task: ssvep"
   ],

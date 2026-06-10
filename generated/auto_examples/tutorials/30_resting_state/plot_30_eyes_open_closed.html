@@ -48,9 +48,10 @@
     <link rel="stylesheet" type="text/css" href="../../../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-design.min.css?v=95c83b7e" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/custom.90b980a3.css?v=1c3f8116" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/custom.1d413874.css?v=a129a8f0" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/css/treemap.087aecf0.css?v=7131b20f" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.d7808461.css?v=1ba63a31" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.ec430272.css?v=25bb8418" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/css/eegdash-search.7183958a.css?v=bf4f7b61" />
   
   <!-- So that users can add custom icons -->
   <script defer src="../../../../_static/scripts/fontawesome.js?digest=0790524f97105ba85085"></script>
@@ -68,7 +69,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'generated/auto_examples/tutorials/30_resting_state/plot_30_eyes_open_closed';</script>
     <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <script defer="defer" src="../../../../_static/js/tag-palette.7346f567.js?v=6f5eac9a"></script>
-    <script defer="defer" src="../../../../_static/js/search-as-you-type.e09b639d.js?v=8e93d0f7"></script>
+    <script defer="defer" src="../../../../_static/js/eegdash-search.54ba3db3.js?v=e4b1548f"></script>
     <script defer="defer" src="../../../../_static/js/lazy-embed.23591732.js?v=9ea1e29f"></script>
     <script defer="defer" src="../../../../_static/js/api-attribute-compact.4e7977ba.js?v=bc66aa1b"></script>
     <script defer="defer" src="../../../../_static/js/api-section-cards.af088c50.js?v=c2b943a2"></script>
@@ -80,6 +81,9 @@
     <link rel="prev" title="Resting-State and State Decoding" href="index.html" />
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="0.8" />
+
+  
+  <script>document.documentElement.setAttribute('data-eegdash-api', 'https://data.eegdash.org/api/eegdash');</script>
 
   
   <meta name="google-site-verification" content="REPLACE_WITH_GSC_TOKEN">
@@ -868,22 +872,22 @@ which is what makes the per-class window counts balanced.</p>
 ╰─────────────────────────── Source: EEGDashDataset ───────────────────────────╯
 
 Downloading sub-NDARAC589YMB_task-RestingState_channels.tsv:   0%|          | 0.00/1.42k [00:00&lt;?, ?B/s]
-Downloading sub-NDARAC589YMB_task-RestingState_channels.tsv: 100%|██████████| 1.42k/1.42k [00:00&lt;00:00, 5.06MB/s]
+Downloading sub-NDARAC589YMB_task-RestingState_channels.tsv: 100%|██████████| 1.42k/1.42k [00:00&lt;00:00, 5.37MB/s]
 
 Downloading sub-NDARAC589YMB_task-RestingState_events.tsv:   0%|          | 0.00/618 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAC589YMB_task-RestingState_events.tsv: 100%|██████████| 618/618 [00:00&lt;00:00, 2.13MB/s]
+Downloading sub-NDARAC589YMB_task-RestingState_events.tsv: 100%|██████████| 618/618 [00:00&lt;00:00, 2.50MB/s]
 
 Downloading sub-NDARAC589YMB_task-RestingState_eeg.json:   0%|          | 0.00/231 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAC589YMB_task-RestingState_eeg.json: 100%|██████████| 231/231 [00:00&lt;00:00, 1.16MB/s]
-[06/09/26 21:00:08] WARNING  File not found on S3, skipping:   downloader.py:163
+Downloading sub-NDARAC589YMB_task-RestingState_eeg.json: 100%|██████████| 231/231 [00:00&lt;00:00, 986kB/s]
+[06/10/26 12:50:28] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds005514/sub-N
                              DARAC589YMB/eeg/sub-NDARAC589YMB_
                              task-RestingState_eeg.fdt
 
 Downloading sub-NDARAC589YMB_task-RestingState_eeg.set:   0%|          | 0.00/90.7M [00:00&lt;?, ?B/s]
-Downloading sub-NDARAC589YMB_task-RestingState_eeg.set:  55%|█████▌    | 50.0M/90.7M [00:01&lt;00:01, 39.3MB/s]
-Downloading sub-NDARAC589YMB_task-RestingState_eeg.set: 100%|██████████| 90.7M/90.7M [00:01&lt;00:00, 70.8MB/s]
-[06/09/26 21:00:09] INFO     Original events found with ids: preprocessing.py:66
+Downloading sub-NDARAC589YMB_task-RestingState_eeg.set:  55%|█████▌    | 50.0M/90.7M [00:02&lt;00:01, 24.2MB/s]
+Downloading sub-NDARAC589YMB_task-RestingState_eeg.set: 100%|██████████| 90.7M/90.7M [00:02&lt;00:00, 43.6MB/s]
+[06/10/26 12:50:31] INFO     Original events found with ids: preprocessing.py:66
                              {np.str_(&#39;boundary&#39;): 1,
                              np.str_(&#39;break cnt&#39;): 2,
                              np.str_(&#39;instructed_toCloseEyes
@@ -893,22 +897,22 @@ Downloading sub-NDARAC589YMB_task-RestingState_eeg.set: 100%|██████�
                              5}
 
 Downloading sub-NDARAC853CR6_task-RestingState_channels.tsv:   0%|          | 0.00/1.42k [00:00&lt;?, ?B/s]
-Downloading sub-NDARAC853CR6_task-RestingState_channels.tsv: 100%|██████████| 1.42k/1.42k [00:00&lt;00:00, 5.14MB/s]
+Downloading sub-NDARAC853CR6_task-RestingState_channels.tsv: 100%|██████████| 1.42k/1.42k [00:00&lt;00:00, 4.93MB/s]
 
 Downloading sub-NDARAC853CR6_task-RestingState_events.tsv:   0%|          | 0.00/616 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAC853CR6_task-RestingState_events.tsv: 100%|██████████| 616/616 [00:00&lt;00:00, 2.42MB/s]
+Downloading sub-NDARAC853CR6_task-RestingState_events.tsv: 100%|██████████| 616/616 [00:00&lt;00:00, 2.33MB/s]
 
 Downloading sub-NDARAC853CR6_task-RestingState_eeg.json:   0%|          | 0.00/231 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAC853CR6_task-RestingState_eeg.json: 100%|██████████| 231/231 [00:00&lt;00:00, 799kB/s]
-[06/09/26 21:00:11] WARNING  File not found on S3, skipping:   downloader.py:163
+Downloading sub-NDARAC853CR6_task-RestingState_eeg.json: 100%|██████████| 231/231 [00:00&lt;00:00, 891kB/s]
+[06/10/26 12:50:33] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds005514/sub-N
                              DARAC853CR6/eeg/sub-NDARAC853CR6_
                              task-RestingState_eeg.fdt
 
 Downloading sub-NDARAC853CR6_task-RestingState_eeg.set:   0%|          | 0.00/92.1M [00:00&lt;?, ?B/s]
-Downloading sub-NDARAC853CR6_task-RestingState_eeg.set:  54%|█████▍    | 50.0M/92.1M [00:00&lt;00:00, 53.7MB/s]
-Downloading sub-NDARAC853CR6_task-RestingState_eeg.set: 100%|██████████| 92.1M/92.1M [00:00&lt;00:00, 97.8MB/s]
-[06/09/26 21:00:12] INFO     Original events found with ids: preprocessing.py:66
+Downloading sub-NDARAC853CR6_task-RestingState_eeg.set:  54%|█████▍    | 50.0M/92.1M [00:01&lt;00:01, 30.8MB/s]
+Downloading sub-NDARAC853CR6_task-RestingState_eeg.set: 100%|██████████| 92.1M/92.1M [00:01&lt;00:00, 56.3MB/s]
+[06/10/26 12:50:35] INFO     Original events found with ids: preprocessing.py:66
                              {np.str_(&#39;boundary&#39;): 1,
                              np.str_(&#39;break cnt&#39;): 2,
                              np.str_(&#39;instructed_toCloseEyes
@@ -918,22 +922,22 @@ Downloading sub-NDARAC853CR6_task-RestingState_eeg.set: 100%|██████�
                              5}
 
 Downloading sub-NDARAE710YWG_task-RestingState_channels.tsv:   0%|          | 0.00/1.42k [00:00&lt;?, ?B/s]
-Downloading sub-NDARAE710YWG_task-RestingState_channels.tsv: 100%|██████████| 1.42k/1.42k [00:00&lt;00:00, 5.19MB/s]
+Downloading sub-NDARAE710YWG_task-RestingState_channels.tsv: 100%|██████████| 1.42k/1.42k [00:00&lt;00:00, 5.39MB/s]
 
 Downloading sub-NDARAE710YWG_task-RestingState_events.tsv:   0%|          | 0.00/616 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAE710YWG_task-RestingState_events.tsv: 100%|██████████| 616/616 [00:00&lt;00:00, 2.03MB/s]
+Downloading sub-NDARAE710YWG_task-RestingState_events.tsv: 100%|██████████| 616/616 [00:00&lt;00:00, 2.07MB/s]
 
 Downloading sub-NDARAE710YWG_task-RestingState_eeg.json:   0%|          | 0.00/231 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAE710YWG_task-RestingState_eeg.json: 100%|██████████| 231/231 [00:00&lt;00:00, 791kB/s]
-[06/09/26 21:00:13] WARNING  File not found on S3, skipping:   downloader.py:163
+Downloading sub-NDARAE710YWG_task-RestingState_eeg.json: 100%|██████████| 231/231 [00:00&lt;00:00, 853kB/s]
+[06/10/26 12:50:36] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds005514/sub-N
                              DARAE710YWG/eeg/sub-NDARAE710YWG_
                              task-RestingState_eeg.fdt
 
 Downloading sub-NDARAE710YWG_task-RestingState_eeg.set:   0%|          | 0.00/90.6M [00:00&lt;?, ?B/s]
-Downloading sub-NDARAE710YWG_task-RestingState_eeg.set:  55%|█████▌    | 50.0M/90.6M [00:01&lt;00:00, 47.5MB/s]
-Downloading sub-NDARAE710YWG_task-RestingState_eeg.set: 100%|██████████| 90.6M/90.6M [00:01&lt;00:00, 85.1MB/s]
-[06/09/26 21:00:15] INFO     Original events found with ids: preprocessing.py:66
+Downloading sub-NDARAE710YWG_task-RestingState_eeg.set:  55%|█████▌    | 50.0M/90.6M [00:01&lt;00:01, 30.0MB/s]
+Downloading sub-NDARAE710YWG_task-RestingState_eeg.set: 100%|██████████| 90.6M/90.6M [00:01&lt;00:00, 54.1MB/s]
+[06/10/26 12:50:39] INFO     Original events found with ids: preprocessing.py:66
                              {np.str_(&#39;boundary&#39;): 1,
                              np.str_(&#39;break cnt&#39;): 2,
                              np.str_(&#39;instructed_toCloseEyes
@@ -943,22 +947,22 @@ Downloading sub-NDARAE710YWG_task-RestingState_eeg.set: 100%|██████�
                              5}
 
 Downloading sub-NDARAH239PGG_task-RestingState_channels.tsv:   0%|          | 0.00/1.42k [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH239PGG_task-RestingState_channels.tsv: 100%|██████████| 1.42k/1.42k [00:00&lt;00:00, 5.20MB/s]
+Downloading sub-NDARAH239PGG_task-RestingState_channels.tsv: 100%|██████████| 1.42k/1.42k [00:00&lt;00:00, 4.85MB/s]
 
 Downloading sub-NDARAH239PGG_task-RestingState_events.tsv:   0%|          | 0.00/615 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH239PGG_task-RestingState_events.tsv: 100%|██████████| 615/615 [00:00&lt;00:00, 2.35MB/s]
+Downloading sub-NDARAH239PGG_task-RestingState_events.tsv: 100%|██████████| 615/615 [00:00&lt;00:00, 2.23MB/s]
 
 Downloading sub-NDARAH239PGG_task-RestingState_eeg.json:   0%|          | 0.00/231 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH239PGG_task-RestingState_eeg.json: 100%|██████████| 231/231 [00:00&lt;00:00, 979kB/s]
-[06/09/26 21:00:16] WARNING  File not found on S3, skipping:   downloader.py:163
+Downloading sub-NDARAH239PGG_task-RestingState_eeg.json: 100%|██████████| 231/231 [00:00&lt;00:00, 832kB/s]
+[06/10/26 12:50:40] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds005514/sub-N
                              DARAH239PGG/eeg/sub-NDARAH239PGG_
                              task-RestingState_eeg.fdt
 
 Downloading sub-NDARAH239PGG_task-RestingState_eeg.set:   0%|          | 0.00/90.1M [00:00&lt;?, ?B/s]
-Downloading sub-NDARAH239PGG_task-RestingState_eeg.set:  55%|█████▌    | 50.0M/90.1M [00:01&lt;00:00, 45.2MB/s]
-Downloading sub-NDARAH239PGG_task-RestingState_eeg.set: 100%|██████████| 90.1M/90.1M [00:01&lt;00:00, 80.8MB/s]
-[06/09/26 21:00:18] INFO     Original events found with ids: preprocessing.py:66
+Downloading sub-NDARAH239PGG_task-RestingState_eeg.set:  55%|█████▌    | 50.0M/90.1M [00:02&lt;00:01, 22.4MB/s]
+Downloading sub-NDARAH239PGG_task-RestingState_eeg.set: 100%|██████████| 90.1M/90.1M [00:02&lt;00:00, 40.2MB/s]
+[06/10/26 12:50:43] INFO     Original events found with ids: preprocessing.py:66
                              {np.str_(&#39;boundary&#39;): 1,
                              np.str_(&#39;break cnt&#39;): 2,
                              np.str_(&#39;instructed_toCloseEyes
@@ -968,22 +972,22 @@ Downloading sub-NDARAH239PGG_task-RestingState_eeg.set: 100%|██████�
                              5}
 
 Downloading sub-NDARAL897CYV_task-RestingState_channels.tsv:   0%|          | 0.00/1.42k [00:00&lt;?, ?B/s]
-Downloading sub-NDARAL897CYV_task-RestingState_channels.tsv: 100%|██████████| 1.42k/1.42k [00:00&lt;00:00, 5.01MB/s]
+Downloading sub-NDARAL897CYV_task-RestingState_channels.tsv: 100%|██████████| 1.42k/1.42k [00:00&lt;00:00, 5.50MB/s]
 
 Downloading sub-NDARAL897CYV_task-RestingState_events.tsv:   0%|          | 0.00/616 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAL897CYV_task-RestingState_events.tsv: 100%|██████████| 616/616 [00:00&lt;00:00, 2.09MB/s]
+Downloading sub-NDARAL897CYV_task-RestingState_events.tsv: 100%|██████████| 616/616 [00:00&lt;00:00, 2.41MB/s]
 
 Downloading sub-NDARAL897CYV_task-RestingState_eeg.json:   0%|          | 0.00/231 [00:00&lt;?, ?B/s]
-Downloading sub-NDARAL897CYV_task-RestingState_eeg.json: 100%|██████████| 231/231 [00:00&lt;00:00, 922kB/s]
-[06/09/26 21:00:19] WARNING  File not found on S3, skipping:   downloader.py:163
+Downloading sub-NDARAL897CYV_task-RestingState_eeg.json: 100%|██████████| 231/231 [00:00&lt;00:00, 785kB/s]
+[06/10/26 12:50:45] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds005514/sub-N
                              DARAL897CYV/eeg/sub-NDARAL897CYV_
                              task-RestingState_eeg.fdt
 
 Downloading sub-NDARAL897CYV_task-RestingState_eeg.set:   0%|          | 0.00/87.5M [00:00&lt;?, ?B/s]
-Downloading sub-NDARAL897CYV_task-RestingState_eeg.set:  57%|█████▋    | 50.0M/87.5M [00:01&lt;00:00, 41.7MB/s]
-Downloading sub-NDARAL897CYV_task-RestingState_eeg.set: 100%|██████████| 87.5M/87.5M [00:01&lt;00:00, 72.3MB/s]
-[06/09/26 21:00:20] INFO     Original events found with ids: preprocessing.py:66
+Downloading sub-NDARAL897CYV_task-RestingState_eeg.set:  57%|█████▋    | 50.0M/87.5M [00:02&lt;00:01, 24.9MB/s]
+Downloading sub-NDARAL897CYV_task-RestingState_eeg.set: 100%|██████████| 87.5M/87.5M [00:02&lt;00:00, 43.3MB/s]
+[06/10/26 12:50:47] INFO     Original events found with ids: preprocessing.py:66
                              {np.str_(&#39;boundary&#39;): 1,
                              np.str_(&#39;break cnt&#39;): 2,
                              np.str_(&#39;instructed_toCloseEyes
@@ -991,7 +995,7 @@ Downloading sub-NDARAL897CYV_task-RestingState_eeg.set: 100%|██████�
                              np.str_(&#39;instructed_toOpenEyes&#39;
                              ): 4, np.str_(&#39;resting_start&#39;):
                              5}
-[06/09/26 21:00:22] WARNING  File not found on S3, skipping:   downloader.py:163
+[06/10/26 12:50:49] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds005514/sub-N
                              DARDB033FW5/eeg/sub-NDARDB033FW5_
                              task-RestingState_eeg.fdt
@@ -1337,9 +1341,9 @@ this file apply (plus whatever default styling the IDE applies).
 
 
 
-<tr class="mne-repr-section-header general-ffa869ba-d245-4034-874f-35c304e55a9c"
+<tr class="mne-repr-section-header general-359863c3-db6d-47e9-97a7-ad960ebc71ae"
      title="Hide section"
-    onclick="toggleVisibility('general-ffa869ba-d245-4034-874f-35c304e55a9c')">
+    onclick="toggleVisibility('general-359863c3-db6d-47e9-97a7-ad960ebc71ae')">
     <th class="mne-repr-section-toggle">
         <button >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
@@ -1351,26 +1355,26 @@ this file apply (plus whatever default styling the IDE applies).
 </tr>
 
 
-<tr class="repr-element general-ffa869ba-d245-4034-874f-35c304e55a9c ">
+<tr class="repr-element general-359863c3-db6d-47e9-97a7-ad960ebc71ae ">
     <td class="mne-repr-section-toggle"></td>
     <td>MNE object type</td>
     <td>Info</td>
 </tr>
-<tr class="repr-element general-ffa869ba-d245-4034-874f-35c304e55a9c ">
+<tr class="repr-element general-359863c3-db6d-47e9-97a7-ad960ebc71ae ">
     <td class="mne-repr-section-toggle"></td>
     <td>Measurement date</td>
 
     <td>Unknown</td>
 
 </tr>
-<tr class="repr-element general-ffa869ba-d245-4034-874f-35c304e55a9c ">
+<tr class="repr-element general-359863c3-db6d-47e9-97a7-ad960ebc71ae ">
     <td class="mne-repr-section-toggle"></td>
     <td>Participant</td>
 
     <td>Unknown</td>
 
 </tr>
-<tr class="repr-element general-ffa869ba-d245-4034-874f-35c304e55a9c ">
+<tr class="repr-element general-359863c3-db6d-47e9-97a7-ad960ebc71ae ">
     <td class="mne-repr-section-toggle"></td>
     <td>Experimenter</td>
 
@@ -1385,9 +1389,9 @@ this file apply (plus whatever default styling the IDE applies).
 
 
 
-<tr class="mne-repr-section-header acquisition-968f469f-63e2-4785-9827-8302b195d693"
+<tr class="mne-repr-section-header acquisition-8974a474-7a12-426a-a433-4608a19dbaa0"
      title="Hide section"
-    onclick="toggleVisibility('acquisition-968f469f-63e2-4785-9827-8302b195d693')">
+    onclick="toggleVisibility('acquisition-8974a474-7a12-426a-a433-4608a19dbaa0')">
     <th class="mne-repr-section-toggle">
         <button >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
@@ -1406,7 +1410,7 @@ this file apply (plus whatever default styling the IDE applies).
 
 
 
-<tr class="repr-element acquisition-968f469f-63e2-4785-9827-8302b195d693 ">
+<tr class="repr-element acquisition-8974a474-7a12-426a-a433-4608a19dbaa0 ">
     <td class="mne-repr-section-toggle"></td>
     <td>Sampling frequency</td>
     <td>128.00 Hz</td>
@@ -1422,9 +1426,9 @@ this file apply (plus whatever default styling the IDE applies).
 
 
 
-<tr class="mne-repr-section-header channels-634be722-0dd6-4fba-8491-f56e6c0190d1"
+<tr class="mne-repr-section-header channels-01a6ceb5-0b15-405c-95af-e8afe3ae1126"
      title="Hide section"
-    onclick="toggleVisibility('channels-634be722-0dd6-4fba-8491-f56e6c0190d1')">
+    onclick="toggleVisibility('channels-01a6ceb5-0b15-405c-95af-e8afe3ae1126')">
     <th class="mne-repr-section-toggle">
         <button >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
@@ -1437,7 +1441,7 @@ this file apply (plus whatever default styling the IDE applies).
 
 
 
-<tr class="repr-element channels-634be722-0dd6-4fba-8491-f56e6c0190d1 ">
+<tr class="repr-element channels-01a6ceb5-0b15-405c-95af-e8afe3ae1126 ">
     <td class="mne-repr-section-toggle"></td>
     <td>EEG</td>
     <td>
@@ -1450,7 +1454,7 @@ this file apply (plus whatever default styling the IDE applies).
 </tr>
 
 
-<tr class="repr-element channels-634be722-0dd6-4fba-8491-f56e6c0190d1 ">
+<tr class="repr-element channels-01a6ceb5-0b15-405c-95af-e8afe3ae1126 ">
     <td class="mne-repr-section-toggle"></td>
     <td>Head & sensor digitization</td>
 
@@ -1465,9 +1469,9 @@ this file apply (plus whatever default styling the IDE applies).
 
 
 
-<tr class="mne-repr-section-header filters-d5ac973d-7b31-4ef3-8f21-53437d3f3420"
+<tr class="mne-repr-section-header filters-1dc371d4-c298-4a03-bde0-028bd207c737"
      title="Hide section"
-    onclick="toggleVisibility('filters-d5ac973d-7b31-4ef3-8f21-53437d3f3420')">
+    onclick="toggleVisibility('filters-1dc371d4-c298-4a03-bde0-028bd207c737')">
     <th class="mne-repr-section-toggle">
         <button >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
@@ -1479,14 +1483,14 @@ this file apply (plus whatever default styling the IDE applies).
 </tr>
 
 
-<tr class="repr-element filters-d5ac973d-7b31-4ef3-8f21-53437d3f3420 ">
+<tr class="repr-element filters-1dc371d4-c298-4a03-bde0-028bd207c737 ">
     <td class="mne-repr-section-toggle"></td>
     <td>Highpass</td>
     <td>0.00 Hz</td>
 </tr>
 
 
-<tr class="repr-element filters-d5ac973d-7b31-4ef3-8f21-53437d3f3420 ">
+<tr class="repr-element filters-1dc371d4-c298-4a03-bde0-028bd207c737 ">
     <td class="mne-repr-section-toggle"></td>
     <td>Lowpass</td>
     <td>64.00 Hz</td>
@@ -1789,7 +1793,7 @@ trained on the raw windows (see
 <p>See <a class="reference internal" href="../../../../references.html"><span class="doc">References</span></a> for the centralized bibliography of papers
 cited above. Add or amend an entry once in
 <code class="file docutils literal notranslate"><span class="pre">docs/source/refs.bib</span></code>; every tutorial inherits the update.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 18.549 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 25.349 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-auto-examples-tutorials-30-resting-state-plot-30-eyes-open-closed-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/eegdash/EEGDash/main?urlpath=lab/tree/notebooks/generated/auto_examples/tutorials/30_resting_state/plot_30_eyes_open_closed.ipynb"><img alt="Launch binder" src="../../../../_images/binder_badge_logo8.svg" style="width: 150px;" />

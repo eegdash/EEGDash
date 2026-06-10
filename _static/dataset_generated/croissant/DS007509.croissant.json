@@ -50,7 +50,10 @@
   "keywords": [
     "EEG",
     "BIDS",
-    "neuroscience"
+    "neuroscience",
+    "['Multisensory']",
+    "['Healthy']",
+    "['Attention']"
   ],
   "isAccessibleForFree": true,
   "includedInDataCatalog": {
@@ -76,6 +79,11 @@
   ],
   "citeAs": "Matthew Attokaren, Annabelle Singer (n.d.). 1hrPVTdataset_allSubjects. doi:10.18112/openneuro.ds007509.v1.0.3",
   "version": "1.8.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1101/2025.08.25.671937",
+    "url": "https://doi.org/10.1101/2025.08.25.671937"
+  },
   "measurementTechnique": [
     "BIDS task: PVT"
   ],

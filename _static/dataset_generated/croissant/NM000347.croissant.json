@@ -129,6 +129,11 @@
   "citeAs": "Jian Shi, Danyang Chen, Xingwei Zhao, Zhixian Zhao, Shengjie Li (2025). Shi et al. 2025 — HEFMI-ICH: a hybrid EEG-fNIRS motor imagery dataset for brain-computer interface in intracerebral hemorrhage. doi:10.1038/s41597-025-06100-7",
   "version": "1.9.0",
   "dateModified": "2026-04-11",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1038/s41597-025-06100-7",
+    "url": "https://doi.org/10.1038/s41597-025-06100-7"
+  },
   "measurementTechnique": [
     "BIDS task: imagery"
   ],

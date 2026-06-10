@@ -187,6 +187,11 @@
   ],
   "citeAs": "Ana Calzada-Reyes, Eduardo Aubert-Vázquez, Lidice Galán-García, Maria Luisa Bringas-Vega, Trinidad Virués-Alba (20). A COVID-19 survivors and close contacts EEG dataset. doi:10.82901/nemar.on007823",
   "version": "1.6.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1016/j.cnp.2026.02.007",
+    "url": "https://doi.org/10.1016/j.cnp.2026.02.007"
+  },
   "measurementTechnique": [
     "BIDS task: COVID"
   ],

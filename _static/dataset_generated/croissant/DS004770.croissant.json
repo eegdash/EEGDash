@@ -127,6 +127,11 @@
   ],
   "citeAs": "Riyo Ueda, Kazuki Sakakura, Takumi Mitsuhashi, Masaki Sonoda, Ethan Firestone (n.d.). iEEG on children during gameplay. doi:10.18112/openneuro.ds004770.v1.0.0",
   "version": "1.7.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.21203/rs.3.rs-3581007/v1",
+    "url": "https://doi.org/10.21203/rs.3.rs-3581007/v1"
+  },
   "measurementTechnique": [
     "BIDS task: game"
   ],

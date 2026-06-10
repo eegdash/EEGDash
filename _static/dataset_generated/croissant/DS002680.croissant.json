@@ -77,6 +77,11 @@
   ],
   "citeAs": "Arnaud Delorme (20). Go-nogo categorization and detection task. doi:10.18112/openneuro.ds002680.v1.2.0",
   "version": "v1.2.1",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1016/j.cogbrainres.2003.11.010",
+    "url": "https://doi.org/10.1016/j.cogbrainres.2003.11.010"
+  },
   "measurementTechnique": [
     "BIDS task: gonogo"
   ],

@@ -103,6 +103,11 @@
   "citeAs": "Kalou Cabrera Castillos, Simon Ladouce, Ludovic Darmet, Frédéric Dehais (2023). CastillosCVEP100. doi:10.1016/j.neuroimage.2023.120446",
   "version": "1.9.0",
   "dateModified": "2026-03-28",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1016/j.neuroimage.2023.120446",
+    "url": "https://doi.org/10.1016/j.neuroimage.2023.120446"
+  },
   "measurementTechnique": [
     "BIDS task: cvep"
   ],

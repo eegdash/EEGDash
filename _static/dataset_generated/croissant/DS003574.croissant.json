@@ -118,6 +118,11 @@
   ],
   "citeAs": "Virginie Sterpenich, Mojca KM van Schie, Maximilien Catsiyannis, Avinash Ramyead, Stephen Perrig (n.d.). Reward biases spontaneous neural reactivation during sleep. doi:10.18112/openneuro.ds003574.v1.0.2",
   "version": "1.4.1",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1038/s41467-021-24357-5",
+    "url": "https://doi.org/10.1038/s41467-021-24357-5"
+  },
   "measurementTechnique": [
     "BIDS task: rest"
   ],

@@ -86,6 +86,11 @@
   ],
   "citeAs": "Yoder, Keith J, Decety, Jean (n.d.). Moral conviction and metacognitive ability shape multiple stages of information processing. doi:10.18112/openneuro.ds004067.v1.0.1",
   "version": "1.0.2",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1016/j.cortex.2022.03.008",
+    "url": "https://doi.org/10.1016/j.cortex.2022.03.008"
+  },
   "measurementTechnique": [
     "BIDS task: sjt"
   ],

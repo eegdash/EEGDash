@@ -85,6 +85,11 @@
   "citeAs": "G. Cattan, P. L. C. Rodrigues, M. Congedo (2019). Cattan, Rodrigues & Congedo 2019 — Passive Head-Mounted Display Music-Listening EEG dataset (PHMD). doi:10.5281/zenodo.2617084",
   "version": "1.9.0",
   "dateModified": "2026-04-11",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.2312/vriphys.20181064",
+    "url": "https://doi.org/10.2312/vriphys.20181064"
+  },
   "measurementTechnique": [
     "BIDS task: rstate"
   ],

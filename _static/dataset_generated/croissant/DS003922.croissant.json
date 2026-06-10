@@ -100,6 +100,11 @@
   ],
   "citeAs": "Pesnot Lerousseau, J., Parise, C., Ernst, MO., van Wassenhove, V. (2022). Multisensory Correlation Detector. doi:10.18112/openneuro.ds003922.v1.0.1",
   "version": "1.6.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1038/s41467-022-29687-6",
+    "url": "https://doi.org/10.1038/s41467-022-29687-6"
+  },
   "measurementTechnique": [
     "BIDS task: mcd",
     "BIDS task: noise",

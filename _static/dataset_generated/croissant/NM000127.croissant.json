@@ -88,6 +88,11 @@
   ],
   "citeAs": "Heegyu Kim, Kyungho Won, Minkyu Ahn, Sung Chan Jun (2019). Kim2025 – 40-class beta-range SSVEP speller dataset. doi:10.82901/nemar.nm000127",
   "version": "1.9.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1038/s41597-025-06032-2",
+    "url": "https://doi.org/10.1038/s41597-025-06032-2"
+  },
   "measurementTechnique": [
     "BIDS task: ssvep"
   ],

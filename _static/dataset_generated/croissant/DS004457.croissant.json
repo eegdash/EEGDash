@@ -116,6 +116,11 @@
   ],
   "citeAs": "Harvey Huang, Nicholas M Gregg, Gabriela Ojeda Valencia, Benjamin H Brinkmann, Brian N Lundstrom (2022). Electrical stimulation of temporal and limbic circuitry produces distinct responses in human ventral temporal cortex. doi:10.18112/openneuro.ds004457.v1.0.1",
   "version": "v 1.9.9",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1101/2022.07.06.498994",
+    "url": "https://doi.org/10.1101/2022.07.06.498994"
+  },
   "measurementTechnique": [
     "BIDS task: ccep"
   ],

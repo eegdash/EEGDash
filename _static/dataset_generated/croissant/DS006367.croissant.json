@@ -76,6 +76,11 @@
   ],
   "citeAs": "xx (n.d.). Memory Reactivation Levels Remain Unaffected by Anticipated Interference. doi:10.18112/openneuro.ds006367.v1.0.1",
   "version": "v1.2.1",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.31234/osf.io/38pyv_v3",
+    "url": "https://doi.org/10.31234/osf.io/38pyv_v3"
+  },
   "measurementTechnique": [
     "BIDS task: DelayedMatchtoSampleTask"
   ],

@@ -89,6 +89,11 @@
   ],
   "citeAs": "Emily S. Kappenman, Jaclyn L. Farrens, Wendy Zhang, Andrew X. Stewart, Steven J. Luck. (2004). ERP CORE. doi:10.82901/nemar.nm000132",
   "version": "1.10.1",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.31234/osf.io/4azqm",
+    "url": "https://doi.org/10.31234/osf.io/4azqm"
+  },
   "measurementTechnique": [
     "BIDS task: MMN",
     "BIDS task: N170",

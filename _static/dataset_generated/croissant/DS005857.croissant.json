@@ -51,8 +51,8 @@
     "EEG",
     "BIDS",
     "neuroscience",
-    "['Visual']",
-    "['Unknown']",
+    "['Auditory']",
+    "['Healthy']",
     "['Memory']"
   ],
   "isAccessibleForFree": true,
@@ -81,6 +81,11 @@
   ],
   "citeAs": "[Adam Broitman], [Michael Kahana] (2019). ltpDelayRepFRReadOnly. doi:10.18112/openneuro.ds005857.v1.0.0",
   "version": "1.7.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.21428/8e6ba8ef.4cb04050",
+    "url": "https://doi.org/10.21428/8e6ba8ef.4cb04050"
+  },
   "measurementTechnique": [
     "BIDS task: ltpDelayRepFRReadOnly"
   ],

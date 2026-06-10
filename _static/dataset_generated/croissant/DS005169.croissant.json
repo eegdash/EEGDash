@@ -100,6 +100,11 @@
   ],
   "citeAs": "Andrei Barborica, Felicia Mihai, Laurentiu Tofan, Irina Oane, Ioana Mindruta (20). Dataset of intracranial EEG during cortical stimulation evoking visual effects. doi:10.18112/openneuro.ds005169.v1.0.0",
   "version": "1.9.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1002/hbm.25749",
+    "url": "https://doi.org/10.1002/hbm.25749"
+  },
   "measurementTechnique": [
     "BIDS task: dcs"
   ],

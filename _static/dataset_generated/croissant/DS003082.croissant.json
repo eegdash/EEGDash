@@ -88,6 +88,11 @@
   ],
   "citeAs": "Jonathan Cote, Etienne de Villers-Sidani (20). Auditory Cortex Mapping Dataset. doi:10.18112/openneuro.ds003082.v1.0.0",
   "version": "1.2.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1162/imag_a_00355",
+    "url": "https://doi.org/10.1162/imag_a_00355"
+  },
   "measurementTechnique": [
     "BIDS task: mapping",
     "BIDS task: noise"

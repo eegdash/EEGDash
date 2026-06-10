@@ -86,6 +86,11 @@
   ],
   "citeAs": "Daniel G. Wakeman, Richard N Henson (n.d.). Face processing EEG dataset for EEGLAB. doi:10.18112/openneuro.ds002718.v1.1.0",
   "version": "v1.2.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1038/sdata.2015.1",
+    "url": "https://doi.org/10.1038/sdata.2015.1"
+  },
   "measurementTechnique": [
     "BIDS task: FaceRecognition"
   ],

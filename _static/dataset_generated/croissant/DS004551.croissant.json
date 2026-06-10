@@ -114,6 +114,11 @@
   ],
   "citeAs": "Kazuki Sakakura, Naoto Kuroda, Masaki Sonoda, Takumi Mitsuhashi, Ethan Firestone (n.d.). iEEG on children during slow wave sleep. doi:10.18112/openneuro.ds004551.v1.0.6",
   "version": "1.7.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1038/s41467-023-42091-y",
+    "url": "https://doi.org/10.1038/s41467-023-42091-y"
+  },
   "measurementTechnique": [
     "BIDS task: sleep"
   ],

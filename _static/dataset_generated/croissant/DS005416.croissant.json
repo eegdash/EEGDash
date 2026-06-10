@@ -90,6 +90,11 @@
   ],
   "citeAs": "Yan Wu, Chunguang Tao, Qi Li (n.d.). Fatigue Characterization of EEG under Mixed Reality Stereo Vision. doi:10.18112/openneuro.ds005416.v1.0.1",
   "version": "1.1.1",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.3390/brainsci14111126",
+    "url": "https://doi.org/10.3390/brainsci14111126"
+  },
   "measurementTechnique": [
     "BIDS task: WatchingTask"
   ],

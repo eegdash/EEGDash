@@ -81,6 +81,11 @@
   ],
   "version": "1.10.0",
   "dateModified": "2026-04-13",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.15387/fcp_indi.retro.bbbd",
+    "url": "https://doi.org/10.15387/fcp_indi.retro.bbbd"
+  },
   "measurementTechnique": [
     "BIDS task: stim01",
     "BIDS task: stim02",

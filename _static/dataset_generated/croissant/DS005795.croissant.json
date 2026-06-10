@@ -123,6 +123,11 @@
   ],
   "citeAs": "Jörg Stadler, Torsten Stöter, Nicole Angenstein, Andreas Fügner, Marcel Lommerzheim (20). MULTI-CLARID (Multimodal Category Learning and Resting-state Imaging Data). doi:10.18112/openneuro.ds005795.v1.0.0",
   "version": "1.10.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1093/cercor/bhac473",
+    "url": "https://doi.org/10.1093/cercor/bhac473"
+  },
   "measurementTechnique": [
     "BIDS task: learning",
     "BIDS task: rest"

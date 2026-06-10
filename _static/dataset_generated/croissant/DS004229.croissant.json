@@ -94,6 +94,11 @@
   ],
   "citeAs": "Maria Mittag, Eric Larson, Maggie Clarke, Samu Taulu, Patricia K. Kuhl (2021). amnoise. doi:10.18112/openneuro.ds004229.v1.0.3",
   "version": "1.7.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1016/j.nicl.2021.102578",
+    "url": "https://doi.org/10.1016/j.nicl.2021.102578"
+  },
   "measurementTechnique": [
     "BIDS task: amnoise",
     "BIDS task: noise"

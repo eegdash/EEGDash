@@ -82,10 +82,16 @@
   "identifier": "doi:10.18112/openneuro.ds006979.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds006979.v1.0.1",
-    "https://openneuro.org/datasets/ds006979"
+    "https://openneuro.org/datasets/ds006979",
+    "https://huggingface.co/datasets/EEGDash/ds006979"
   ],
   "citeAs": "Hanane Ramzaoui, Melissa Beck (20). Examining Perceptual Grouping on Stages of Processing in Visual Working Memory: An ERP Study. doi:10.18112/openneuro.ds006979.v1.0.1",
   "version": "1.7.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1080/13506285.2025.2567880",
+    "url": "https://doi.org/10.1080/13506285.2025.2567880"
+  },
   "measurementTechnique": [
     "BIDS task: rest",
     "BIDS task: test",
@@ -127,6 +133,15 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=ds006979",
       "encodingFormat": "text/html",
+      "sha256": "main"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006979-huggingface",
+      "name": "EEGDash/ds006979 on Hugging Face",
+      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
+      "contentUrl": "https://huggingface.co/datasets/EEGDash/ds006979",
+      "encodingFormat": "application/vnd.huggingface-dataset+json",
       "sha256": "main"
     }
   ]

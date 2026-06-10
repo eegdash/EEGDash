@@ -100,6 +100,11 @@
   ],
   "citeAs": "Xinyu Jiang, Chenyun Dai, Xiangyu Liu, Jiahao Fan (20). HySER: High-Density Surface Electromyogram Recordings. doi:10.82901/nemar.nm000108",
   "version": "1.11.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1109/tnsre.2021.3082551",
+    "url": "https://doi.org/10.1109/tnsre.2021.3082551"
+  },
   "measurementTechnique": [
     "BIDS task: gesture01",
     "BIDS task: gesture02",

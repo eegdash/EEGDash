@@ -275,9 +275,9 @@ print(f"FIF write_s={fif_write_s:.4f} s, size_mb={fif_size_mb:.4f}")
 ```
 
 ```none
-saved: /tmp/eegdash_save_y62kx6sc/windows
+saved: /tmp/eegdash_save_1pd3fppc/windows
 artifact tree (first 6): ['windows/0', 'windows/0/0-raw.fif', 'windows/0/description.json', 'windows/0/metadata_df.pkl', 'windows/0/raw_preproc_kwargs.json', 'windows/0/window_kwargs.json']
-FIF write_s=0.0053 s, size_mb=0.0055
+FIF write_s=0.0054 s, size_mb=0.0055
 ```
 
 <!-- GENERATED FROM PYTHON SOURCE LINES 208-216 -->
@@ -392,7 +392,7 @@ else:
 ```
 
 ```none
-Zarr write_s=0.0173, read_s=0.0060, size_mb=0.0080
+Zarr write_s=0.0170, read_s=0.0061, size_mb=0.0080
 ```
 
 <!-- GENERATED FROM PYTHON SOURCE LINES 302-310 -->
@@ -442,7 +442,7 @@ feature table dtype:
 Cz_mean       float64
 Pz_mean       float64
 window_idx      int64
-Parquet write_s=0.0162, read_s=0.0122, size_mb=0.0024
+Parquet write_s=0.0154, read_s=0.0118, size_mb=0.0024
 ```
 
 <div class="output_subarea output_html rendered_html output_result">
@@ -551,22 +551,22 @@ records_df[["name", "write_ms", "read_ms", "size_mb"]]
     <tr>
       <th>0</th>
       <td>windows/ (FIF)</td>
-      <td>5.26</td>
-      <td>6.51</td>
+      <td>5.45</td>
+      <td>6.46</td>
       <td>0.005461</td>
     </tr>
     <tr>
       <th>1</th>
       <td>windows.zarr (Zarr)</td>
-      <td>17.28</td>
-      <td>5.99</td>
+      <td>17.00</td>
+      <td>6.05</td>
       <td>0.007955</td>
     </tr>
     <tr>
       <th>2</th>
       <td>features.parquet</td>
-      <td>16.24</td>
-      <td>12.23</td>
+      <td>15.37</td>
+      <td>11.78</td>
       <td>0.002384</td>
     </tr>
   </tbody>
@@ -663,7 +663,7 @@ pd.Series(provenance, name="value").to_frame()
     </tr>
     <tr>
       <th>git</th>
-      <td>f223334</td>
+      <td>177b758</td>
     </tr>
   </tbody>
 </table>
@@ -705,7 +705,7 @@ except (FileNotFoundError, IndexError, KeyError, ValueError) as exc:
 ```
 
 ```none
-Caught FileExistsError: Subdirectory /tmp/eegdash_save_y62kx6sc/windows/0 already exists. Please select
+Caught FileExistsError: Subdirectory /tmp/eegdash_save_1pd3fppc/windows/0 already exists. Please select
 Recovery: rmtree + save without overwrite=True succeeded.
 Recovery: load_concat_dataset rejected broken layout (IndexError: list index out of range).
 ```

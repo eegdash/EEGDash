@@ -81,6 +81,11 @@
   ],
   "citeAs": "Haydn G. Herrema, Michael J. Kahana (n.d.). Free Recall of Word Lists with Repeated Items. doi:10.18112/openneuro.ds005411.v1.0.0",
   "version": "1.7.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1016/j.brs.2025.103013",
+    "url": "https://doi.org/10.1016/j.brs.2025.103013"
+  },
   "measurementTechnique": [
     "BIDS task: RepFR1"
   ],

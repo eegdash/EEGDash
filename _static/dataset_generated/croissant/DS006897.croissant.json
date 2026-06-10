@@ -50,7 +50,10 @@
   "keywords": [
     "EEG",
     "BIDS",
-    "neuroscience"
+    "neuroscience",
+    "['Visual']",
+    "['Healthy']",
+    "['Perception']"
   ],
   "isAccessibleForFree": true,
   "includedInDataCatalog": {
@@ -90,6 +93,11 @@
   ],
   "citeAs": "Roy, N., Coll, MP, Coll LAB (n.d.). No effect of rhythmic visual stimulation on experimental pain perception. doi:10.18112/openneuro.ds006897.v1.0.0",
   "version": "1.9.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1038/s41558-021-01058-x",
+    "url": "https://doi.org/10.1038/s41558-021-01058-x"
+  },
   "measurementTechnique": [
     "BIDS task: eegsvr"
   ],

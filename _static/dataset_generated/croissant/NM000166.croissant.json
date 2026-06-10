@@ -128,6 +128,11 @@
   "citeAs": "Gan Huang, Zhenxing Hu, Weize Chen, Shaorong Zhang, Zhen Liang (2022). M3CV: Multi-subject, Multi-session, Multi-task EEG Database. doi:10.1016/j.neuroimage.2022.119666",
   "version": "1.9.0",
   "dateModified": "2026-04-08",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1016/j.neuroimage.2022.119666",
+    "url": "https://doi.org/10.1016/j.neuroimage.2022.119666"
+  },
   "measurementTechnique": [
     "BIDS task: aep",
     "BIDS task: motorFoot",

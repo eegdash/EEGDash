@@ -81,6 +81,11 @@
   ],
   "citeAs": "Grootswagers, T., Robinson, A.K., Carlson, T.A. (2019). EEG recordings for 200 object images presented in RSVP sequences at 5Hz or 20Hz. doi:10.82901/nemar.on004018",
   "version": "1.0.0 + bep006",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1016/j.neuroimage.2018.12.046",
+    "url": "https://doi.org/10.1016/j.neuroimage.2018.12.046"
+  },
   "measurementTechnique": [
     "BIDS task: rsvp"
   ],

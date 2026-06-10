@@ -97,6 +97,11 @@
   ],
   "citeAs": "Igor Zyma, Sergii Tukaev, Ivan Seleznov, Ken Kiyono, Anton Popov (2000). EEG During Mental Arithmetic Tasks. doi:10.82901/nemar.nm000109",
   "version": "1.7.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.3390/data4010014",
+    "url": "https://doi.org/10.3390/data4010014"
+  },
   "measurementTechnique": [
     "BIDS task: mentalArithmetic",
     "BIDS task: rest"

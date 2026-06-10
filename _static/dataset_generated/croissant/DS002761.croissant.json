@@ -111,6 +111,11 @@
     "https://huggingface.co/datasets/EEGDash/ds002761"
   ],
   "citeAs": "G. Elliott Wimmer, Yunzhe Liu, Neža Vehar, Timothy E.J. Behrens, Raymond J. Dolan (20). memoryreplay. doi:10.18112/openneuro.ds002761.v1.1.2",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1101/758185",
+    "url": "https://doi.org/10.1101/758185"
+  },
   "measurementTechnique": [
     "BIDS task: loc",
     "BIDS task: mem"

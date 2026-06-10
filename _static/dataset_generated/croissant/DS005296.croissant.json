@@ -92,6 +92,11 @@
   ],
   "citeAs": "Karen Emmorey, Emily M. Akers, Priscilla Martinez, Katherine J. Midgley, Phillip J. Holcomb (n.d.). Assessing sensitivity to semantic and syntactic information in deaf readers: An ERP study. doi:10.18112/openneuro.ds005296.v1.0.1",
   "version": "1.8.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1016/j.neuropsychologia.2025.109171",
+    "url": "https://doi.org/10.1016/j.neuropsychologia.2025.109171"
+  },
   "measurementTechnique": [
     "BIDS task: sentencesemanticandsyntacticviolations"
   ],

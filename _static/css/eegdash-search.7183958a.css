@@ -1,0 +1,586 @@
+/* ===================================================================== *
+ * EEGDash global search palette — "acquisition console"
+ *
+ * Design language: a scientific instrument panel. Mono readouts for
+ * identifiers and numbers (IBM Plex Mono — already loaded site-wide),
+ * humanist sans for prose (Source Sans 3), hairline rules, one live
+ * element: the EEG trace under the input that idles flat and spikes
+ * while the engine is working. Brand anchors: EEGDash blue #006ca3,
+ * amber #f7941d. Light + dark via html[data-theme].
+ * ===================================================================== */
+
+:root {
+  /* Alias the site's brand anchors (custom.css) so a brand re-tune
+     propagates here; the hex fallbacks keep the palette working when
+     the file is loaded standalone (test benches, storybook-style). */
+  --eds-blue: var(--eegdash-primary, #006ca3);
+  --eds-amber: var(--eegdash-accent, #f7941d);
+  --eds-bg: #fbfcfe;
+  --eds-panel: #ffffff;
+  --eds-ink: #16243a;
+  --eds-muted: #5a6b84;
+  --eds-faint: #93a3b8;
+  --eds-line: rgba(22, 36, 58, 0.12);
+  --eds-line-soft: rgba(22, 36, 58, 0.07);
+  --eds-row-hover: rgba(0, 108, 163, 0.06);
+  --eds-mark: rgba(247, 148, 29, 0.28);
+  --eds-shadow: 0 24px 80px -16px rgba(10, 24, 46, 0.35), 0 4px 18px -8px rgba(10, 24, 46, 0.25);
+  --eds-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --eds-sans: "Source Sans 3", "Source Sans Pro", -apple-system, sans-serif;
+}
+
+html[data-theme="dark"] {
+  --eds-bg: #0c1422;
+  --eds-panel: #101a2b;
+  --eds-ink: #e7eef8;
+  --eds-muted: #9db0c8;
+  --eds-faint: #64788f;
+  --eds-line: rgba(231, 238, 248, 0.14);
+  --eds-line-soft: rgba(231, 238, 248, 0.07);
+  --eds-row-hover: rgba(86, 180, 233, 0.09);
+  --eds-mark: rgba(247, 148, 29, 0.32);
+  --eds-shadow: 0 24px 90px -12px rgba(0, 0, 0, 0.7), 0 4px 18px -8px rgba(0, 0, 0, 0.5);
+}
+
+html.eds-lock,
+html.eds-lock body {
+  overflow: hidden;
+}
+
+/* ------------------------------------------------------------------- *
+ * Overlay + panel
+ * ------------------------------------------------------------------- */
+
+.eds-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1080;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 11vh 1rem 1rem;
+  background: rgba(8, 16, 30, 0.45);
+  backdrop-filter: blur(7px) saturate(1.1);
+  -webkit-backdrop-filter: blur(7px) saturate(1.1);
+}
+
+.eds-palette {
+  width: min(700px, 100%);
+  max-height: 76vh;
+  display: flex;
+  flex-direction: column;
+  background:
+    /* faint scanlines — the instrument-panel texture */
+    repeating-linear-gradient(
+      180deg,
+      transparent 0,
+      transparent 3px,
+      var(--eds-line-soft) 3px,
+      var(--eds-line-soft) 4px
+    ),
+    var(--eds-panel);
+  background-blend-mode: normal;
+  border: 1px solid var(--eds-line);
+  border-radius: 12px;
+  box-shadow: var(--eds-shadow);
+  overflow: hidden;
+  font-family: var(--eds-sans);
+  color: var(--eds-ink);
+}
+
+.eds-palette.eds-enter {
+  animation: eds-pop 0.18s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+}
+
+@keyframes eds-pop {
+  from { opacity: 0; transform: translateY(-10px) scale(0.985); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ------------------------------------------------------------------- *
+ * Head: input row, trace, scopes
+ * ------------------------------------------------------------------- */
+
+.eds-head {
+  border-bottom: 1px solid var(--eds-line);
+  background: linear-gradient(180deg, var(--eds-bg), transparent);
+}
+
+.eds-input-row {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.85rem 1rem 0.5rem;
+  flex-wrap: wrap;
+}
+
+.eds-sigil {
+  display: inline-flex;
+  flex: none;
+  color: var(--eds-blue);
+}
+
+.eds-sigil-path {
+  stroke: currentColor;
+}
+
+html[data-theme="dark"] .eds-sigil { color: #56b4e9; }
+
+.eds-input {
+  flex: 1;
+  min-width: 10rem;
+  border: none;
+  outline: none;
+  background: transparent;
+  font: 500 1.05rem/1.5 var(--eds-sans);
+  color: var(--eds-ink);
+  caret-color: var(--eds-amber);
+}
+
+.eds-input::placeholder {
+  color: var(--eds-faint);
+  font-weight: 400;
+}
+
+.eds-esc {
+  flex: none;
+  font: 600 0.62rem/1 var(--eds-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--eds-faint);
+  border: 1px solid var(--eds-line);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  padding: 0.25rem 0.4rem;
+  background: var(--eds-bg);
+}
+
+/* live EEG trace — idles slow, spikes while the engine works */
+.eds-trace {
+  height: 12px;
+  margin: 0 1rem;
+  opacity: 0.5;
+}
+
+.eds-trace svg { width: 100%; height: 12px; display: block; }
+
+.eds-trace-path {
+  stroke: var(--eds-blue);
+  stroke-dasharray: 640;
+  stroke-dashoffset: 640;
+  animation: eds-sweep 7s linear infinite;
+}
+
+html[data-theme="dark"] .eds-trace-path { stroke: #56b4e9; }
+
+.eds-trace--active { opacity: 0.95; }
+
+.eds-trace--active .eds-trace-path {
+  stroke: var(--eds-amber);
+  animation-duration: 1.1s;
+}
+
+@keyframes eds-sweep {
+  from { stroke-dashoffset: 640; }
+  to { stroke-dashoffset: -640; }
+}
+
+.eds-scopes {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.45rem 1rem 0.6rem;
+}
+
+.eds-scope {
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--eds-muted);
+  font: 600 0.68rem/1 var(--eds-mono);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.38rem 0.65rem;
+  cursor: pointer;
+}
+
+.eds-scope:hover { color: var(--eds-ink); background: var(--eds-row-hover); }
+
+.eds-scope--active {
+  color: var(--eds-blue);
+  border-color: var(--eds-line);
+  background: var(--eds-panel);
+  box-shadow: inset 0 -2px 0 var(--eds-amber);
+}
+
+html[data-theme="dark"] .eds-scope--active { color: #56b4e9; }
+
+.eds-scope-hint {
+  margin-left: auto;
+  font: 400 0.66rem/1 var(--eds-mono);
+  color: var(--eds-faint);
+}
+
+/* ------------------------------------------------------------------- *
+ * Filter tokens ("patch cables")
+ * ------------------------------------------------------------------- */
+
+.eds-tokens {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.eds-tokens:empty { display: none; }
+
+.eds-token {
+  display: inline-flex;
+  align-items: stretch;
+  border-radius: 5px;
+  overflow: hidden;
+  font-family: var(--eds-mono);
+  font-size: 0.72rem;
+  border: 1px solid var(--eds-line);
+}
+
+.eds-token-key {
+  padding: 0.22rem 0.4rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: #fff;
+  background: var(--eds-blue);
+}
+
+.eds-token-value {
+  padding: 0.22rem 0.4rem;
+  background: var(--eds-bg);
+  color: var(--eds-ink);
+  font-weight: 500;
+}
+
+.eds-token-x {
+  border: none;
+  background: var(--eds-bg);
+  color: var(--eds-faint);
+  font-size: 0.85rem;
+  line-height: 1;
+  padding: 0 0.38rem;
+  cursor: pointer;
+}
+
+.eds-token-x:hover { color: #c2415a; }
+
+/* facet hues — key block only, value stays neutral */
+.eds-token--source .eds-token-key { background: #51607a; }
+.eds-token--pathology .eds-token-key { background: #b03a55; }
+.eds-token--type .eds-token-key { background: #7c5cbf; }
+.eds-token--task .eds-token-key { background: #0e8a7d; }
+.eds-token--license .eds-token-key { background: #9a6a12; }
+.eds-token--channels .eds-token-key,
+.eds-token--sfreq .eds-token-key,
+.eds-token--subjects .eds-token-key { background: var(--eds-amber); color: #2b1700; }
+
+/* ------------------------------------------------------------------- *
+ * Results
+ * ------------------------------------------------------------------- */
+
+.eds-results {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 0.35rem 0.5rem 0.5rem;
+  scrollbar-width: thin;
+  scrollbar-color: var(--eds-faint) transparent;
+}
+
+.eds-group {
+  display: flex;
+  align-items: baseline;
+  gap: 0.45rem;
+  padding: 0.65rem 0.55rem 0.3rem;
+}
+
+.eds-group-label {
+  font: 700 0.64rem/1 var(--eds-mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--eds-muted);
+}
+
+.eds-group-count {
+  font: 500 0.64rem/1 var(--eds-mono);
+  color: var(--eds-amber);
+}
+
+.eds-group-note {
+  font: 400 0.66rem/1.2 var(--eds-sans);
+  color: var(--eds-faint);
+}
+
+.eds-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  width: 100%;
+  padding: 0.5rem 0.55rem;
+  border: none;
+  border-left: 2px solid transparent;
+  border-radius: 7px;
+  background: transparent;
+  color: inherit;
+  text-decoration: none;
+  text-align: left;
+  font-family: var(--eds-sans);
+  cursor: pointer;
+}
+
+.eds-row:hover { text-decoration: none; color: inherit; }
+
+.eds-row.eds-selected {
+  background: var(--eds-row-hover);
+  border-left-color: var(--eds-amber);
+}
+
+/* dataset rows */
+.eds-ds-id {
+  flex: none;
+  min-width: 6.2rem;
+  font: 600 0.74rem/1.6 var(--eds-mono);
+  letter-spacing: 0.02em;
+  color: var(--eds-blue);
+}
+
+html[data-theme="dark"] .eds-ds-id { color: #56b4e9; }
+
+.eds-ds-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.18rem;
+}
+
+.eds-ds-title {
+  font-size: 0.86rem;
+  line-height: 1.35;
+  font-weight: 500;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.eds-ds-chips { display: flex; flex-wrap: wrap; gap: 0.3rem; }
+
+.eds-chip {
+  font: 500 0.62rem/1 var(--eds-mono);
+  padding: 0.18rem 0.4rem;
+  border-radius: 999px;
+  border: 1px solid var(--eds-line);
+  color: var(--eds-muted);
+  background: var(--eds-bg);
+}
+
+.eds-chip--modality { color: var(--eds-blue); border-color: rgba(0, 108, 163, 0.35); }
+html[data-theme="dark"] .eds-chip--modality { color: #56b4e9; border-color: rgba(86, 180, 233, 0.4); }
+.eds-chip--source { color: #51607a; border-color: rgba(81, 96, 122, 0.35); }
+html[data-theme="dark"] .eds-chip--source { color: #9db0c8; border-color: rgba(157, 176, 200, 0.35); }
+.eds-chip--pathology { color: #b03a55; border-color: rgba(176, 58, 85, 0.35); }
+.eds-chip--task { color: #0e8a7d; border-color: rgba(14, 138, 125, 0.35); }
+.eds-chip--type { color: #7c5cbf; border-color: rgba(124, 92, 191, 0.35); }
+.eds-chip--license { color: #9a6a12; border-color: rgba(154, 106, 18, 0.35); }
+
+.eds-ds-stats {
+  flex: none;
+  font: 500 0.68rem/1.7 var(--eds-mono);
+  color: var(--eds-faint);
+  white-space: nowrap;
+}
+
+.eds-row--deep .eds-ds-id::before {
+  content: "≈ ";
+  color: var(--eds-amber);
+}
+
+.eds-snippet {
+  font-size: 0.76rem;
+  line-height: 1.45;
+  color: var(--eds-muted);
+  border-left: 2px solid var(--eds-line);
+  padding-left: 0.5rem;
+  margin-top: 0.1rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.eds-results mark {
+  background: var(--eds-mark);
+  color: inherit;
+  padding: 0 1px;
+  border-radius: 2px;
+}
+
+/* doc rows */
+.eds-doc-glyph {
+  flex: none;
+  min-width: 1.6rem;
+  text-align: center;
+  font: 600 0.72rem/1.6 var(--eds-mono);
+  color: var(--eds-faint);
+}
+
+.eds-doc-title { font-size: 0.85rem; font-weight: 500; line-height: 1.35; }
+
+.eds-doc-crumb {
+  font: 400 0.66rem/1.3 var(--eds-mono);
+  color: var(--eds-faint);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* facet suggestion rows */
+.eds-row--facet { align-items: center; }
+.eds-facet-value { font: 500 0.8rem/1.4 var(--eds-sans); }
+
+/* recent / try rows */
+.eds-row--recent,
+.eds-row--try { align-items: center; gap: 0.6rem; }
+
+.eds-recent-glyph { color: var(--eds-faint); font-size: 0.8rem; }
+
+.eds-try-query {
+  font: 500 0.76rem/1.5 var(--eds-mono);
+  color: var(--eds-blue);
+}
+
+html[data-theme="dark"] .eds-try-query { color: #56b4e9; }
+
+.eds-try-note { font-size: 0.74rem; color: var(--eds-faint); }
+
+/* catalog + escape rows */
+.eds-row--more {
+  justify-content: flex-end;
+  font: 500 0.74rem/1.4 var(--eds-sans);
+  color: var(--eds-blue);
+}
+
+html[data-theme="dark"] .eds-row--more { color: #56b4e9; }
+
+.eds-more-arrow { margin-left: 0.3rem; }
+
+.eds-row--escape {
+  align-items: center;
+  margin-top: 0.35rem;
+  border-top: 1px dashed var(--eds-line);
+  border-radius: 0 0 7px 7px;
+  color: var(--eds-muted);
+  font-size: 0.76rem;
+}
+
+.eds-escape-icon { color: var(--eds-faint); }
+.eds-escape-text { flex: 1; }
+.eds-escape-hint { font: 400 0.62rem/1 var(--eds-mono); color: var(--eds-faint); }
+
+/* empty state */
+.eds-empty { padding: 1.4rem 1rem 0.8rem; text-align: center; }
+.eds-empty-title { font-weight: 600; font-size: 0.9rem; }
+.eds-empty-hint { margin-top: 0.35rem; font-size: 0.78rem; color: var(--eds-muted); }
+.eds-empty-hint code {
+  font: 500 0.7rem/1 var(--eds-mono);
+  background: var(--eds-bg);
+  border: 1px solid var(--eds-line);
+  border-radius: 4px;
+  padding: 0.12rem 0.3rem;
+}
+.eds-empty-deep {
+  margin-top: 0.6rem;
+  font: 400 0.7rem/1 var(--eds-mono);
+  color: var(--eds-amber);
+}
+
+/* ------------------------------------------------------------------- *
+ * Status bar
+ * ------------------------------------------------------------------- */
+
+.eds-status {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.45rem 1rem;
+  border-top: 1px solid var(--eds-line);
+  background: var(--eds-bg);
+  font: 400 0.66rem/1 var(--eds-mono);
+  color: var(--eds-faint);
+}
+
+.eds-status-deep { display: inline-flex; align-items: center; gap: 0.35rem; }
+
+.eds-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--eds-faint);
+}
+
+.eds-status-deep[data-state="live"] .eds-dot {
+  background: #2e9e5b;
+  box-shadow: 0 0 6px rgba(46, 158, 91, 0.7);
+}
+
+.eds-status-deep[data-state="loading"] .eds-dot {
+  background: var(--eds-amber);
+  animation: eds-pulse 0.9s ease-in-out infinite;
+}
+
+.eds-status-deep[data-state="off"] .eds-dot { background: #c2415a; }
+
+@keyframes eds-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.eds-status-keys { margin-left: auto; display: inline-flex; gap: 0.55rem; }
+
+.eds-status-keys kbd {
+  font: 600 0.6rem/1 var(--eds-mono);
+  border: 1px solid var(--eds-line);
+  border-bottom-width: 2px;
+  border-radius: 3px;
+  padding: 0.08rem 0.26rem;
+  background: var(--eds-panel);
+  color: var(--eds-muted);
+}
+
+.eds-sr-live {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+/* ------------------------------------------------------------------- *
+ * Small screens + reduced motion
+ * ------------------------------------------------------------------- */
+
+@media (max-width: 640px) {
+  .eds-overlay { padding: 0; }
+  .eds-palette {
+    width: 100%;
+    max-height: 100dvh;
+    height: 100dvh;
+    border-radius: 0;
+    border: none;
+  }
+  .eds-ds-stats { display: none; }
+  .eds-scope-hint { display: none; }
+  .eds-status-keys { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .eds-palette.eds-enter { animation: none; }
+  .eds-trace-path { animation: none; }
+  .eds-status-deep[data-state="loading"] .eds-dot { animation: none; }
+}

@@ -110,6 +110,11 @@
   ],
   "citeAs": "Bingchuan Liu, Xiaoshan Huang, Yijun Wang, Xiaogang Chen, Xiaorong Gao (2019). Liu2020 – BETA SSVEP benchmark dataset. doi:10.82901/nemar.nm000129",
   "version": "1.9.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.3389/fnins.2020.00627",
+    "url": "https://doi.org/10.3389/fnins.2020.00627"
+  },
   "measurementTechnique": [
     "BIDS task: ssvep"
   ],

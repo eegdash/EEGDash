@@ -94,6 +94,11 @@
   ],
   "citeAs": "Anthony Mensah, Gleb Perevoznyuk, Artyom Batov, Aleksandra S. Pleskovskaya (2019). TDCS Modulation of Visual Cortex in Motor Imagery. doi:10.18112/openneuro.ds006126.v1.0.0",
   "version": "1.7.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1038/s41598-026-42691-w",
+    "url": "https://doi.org/10.1038/s41598-026-42691-w"
+  },
   "measurementTechnique": [
     "BIDS task: B1",
     "BIDS task: B2",

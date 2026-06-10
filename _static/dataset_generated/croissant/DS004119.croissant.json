@@ -108,6 +108,11 @@
   ],
   "citeAs": "Jonathan Touryan (data and curation), Brent Lance (data), Scott Kerick (data), Anthony Ries (data), Kaleb McDowell (data) (20). BCIT Basic Guard Duty. doi:10.18112/openneuro.ds004119.v1.0.0",
   "version": "1.7.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1016/j.biopsycho.2015.12.009",
+    "url": "https://doi.org/10.1016/j.biopsycho.2015.12.009"
+  },
   "measurementTechnique": [
     "BIDS task: GuardDuty"
   ],

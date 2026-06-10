@@ -88,6 +88,11 @@
   ],
   "citeAs": "Mojgan Tavakolan, Zack Frehlick, Xinyi Yong, Carlo Menon (2019). Motor imagery dataset for three imaginary states of the same upper extremity. doi:10.82901/nemar.nm000151",
   "version": "1.9.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1371/journal.pone.0174161",
+    "url": "https://doi.org/10.1371/journal.pone.0174161"
+  },
   "measurementTechnique": [
     "BIDS task: imagery"
   ],

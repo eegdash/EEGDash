@@ -81,6 +81,11 @@
   ],
   "citeAs": "Ryan J. Downey, Daniel P. Ferris (20). Phantom EEG Dataset with Motion, Muscle, and Eye Artifacts and Example Scripts. doi:10.18112/openneuro.ds004784.v1.0.4",
   "version": "1.8.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.3390/s23198214",
+    "url": "https://doi.org/10.3390/s23198214"
+  },
   "measurementTechnique": [
     "BIDS task: All",
     "BIDS task: Brain",

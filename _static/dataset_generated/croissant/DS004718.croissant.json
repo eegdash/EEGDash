@@ -93,6 +93,11 @@
   ],
   "citeAs": "Mohammad Momenian, Zhengwu Ma, Shuyi Wu, Chengcheng Wang, Jixing Li (20). Le Petit Prince Hong Kong: Naturalistic fMRI and EEG dataset from older Cantonese speakers. doi:10.18112/openneuro.ds004718.v1.1.2",
   "version": "1.12.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1101/2024.04.24.590842",
+    "url": "https://doi.org/10.1101/2024.04.24.590842"
+  },
   "measurementTechnique": [
     "BIDS task: lppHK"
   ],

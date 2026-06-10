@@ -103,6 +103,11 @@
   ],
   "citeAs": "Scott Boebinger, Aiden Payne, Giovanni Martino, Kennedy Kerr, Jasmine Mirdamadi (n.d.). EEG data for paper titled - Precise cortical contributions to feedback sensorimotor control during reactive balance. doi:10.18112/openneuro.ds004785.v1.0.1",
   "version": "1.8.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1371/journal.pcbi.1011562",
+    "url": "https://doi.org/10.1371/journal.pcbi.1011562"
+  },
   "measurementTechnique": [
     "BIDS task: unnamed"
   ],

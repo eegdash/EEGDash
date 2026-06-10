@@ -52,7 +52,8 @@
     "BIDS",
     "neuroscience",
     "MEG",
-    "['Unknown']",
+    "['Visual']",
+    "['Healthy']",
     "['Memory']"
   ],
   "isAccessibleForFree": true,
@@ -88,6 +89,11 @@
   ],
   "citeAs": "Benjamin J. Griffiths, María Carmen Martín-Buro, Bernhard Staresina, Simon Hanslmayr (n.d.). MEGMEM. doi:10.18112/openneuro.ds003694.v1.0.0",
   "version": "1.0.2",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1101/2020.01.22.915330v3",
+    "url": "https://doi.org/10.1101/2020.01.22.915330v3"
+  },
   "measurementTechnique": [
     "BIDS task: MEM"
   ],

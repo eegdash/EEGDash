@@ -93,6 +93,11 @@
   ],
   "citeAs": "Lauri Parkkonen, Stefan Appelhoff, Alexandre Gramfort, Mainak Jas, Richard Höchenberger (n.d.). MNE-somato-data-bids (anonymized). doi:10.18112/openneuro.ds003104.v1.0.1",
   "version": "1.4.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.21105/joss.09148",
+    "url": "https://doi.org/10.21105/joss.09148"
+  },
   "measurementTechnique": [
     "BIDS task: somato"
   ],

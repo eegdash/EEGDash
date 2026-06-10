@@ -105,6 +105,11 @@
   ],
   "citeAs": "Natalia Zhozhikashvili, Maria Protopova, Tatiana Shkurenko, Marie Arsalidou, Ilya Zakharov (19). STERNBERG DIFFICULT. doi:10.18112/openneuro.ds005095.v1.0.2",
   "version": "1.7.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1016/j.ijpsycho.2024.112355",
+    "url": "https://doi.org/10.1016/j.ijpsycho.2024.112355"
+  },
   "measurementTechnique": [
     "BIDS task: STERNBERG"
   ],

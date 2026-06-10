@@ -51,7 +51,10 @@
     "EEG",
     "BIDS",
     "neuroscience",
-    "MEG"
+    "MEG",
+    "['Visual']",
+    "['Healthy']",
+    "['Affect']"
   ],
   "isAccessibleForFree": true,
   "includedInDataCatalog": {
@@ -89,6 +92,11 @@
   ],
   "citeAs": "Moon-A Yoo, Dong-Uk Kim, Soo-In Choi, Min-Young Kim, Sung-Phil Kim (n.d.). Dataset of emotion recognition using validated video stimuli with large-scale behavioral survey and MEG recordings. doi:10.18112/openneuro.ds007640.v1.0.1",
   "version": "TBD",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1038/s41597-020-00630-y",
+    "url": "https://doi.org/10.1038/s41597-020-00630-y"
+  },
   "measurementTechnique": [
     "BIDS task: HAHV",
     "BIDS task: HALV",

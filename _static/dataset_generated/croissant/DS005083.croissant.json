@@ -52,7 +52,7 @@
     "BIDS",
     "neuroscience",
     "IEEG",
-    "['Unknown']",
+    "['Resting State']",
     "['Surgery']",
     "['Clinical/Intervention']"
   ],
@@ -112,6 +112,11 @@
     "https://huggingface.co/datasets/EEGDash/ds005083"
   ],
   "citeAs": "Peter H Yang, Nathan Wulfekammer, Amanda V. Jenson, Elliot Neal, Stuart Tomko (n.d.). Safety and Accuracy of Stereoelectroencephalography for Pediatric Patients with Prior Craniotomy. doi:10.18112/openneuro.ds005083.v1.0.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.3171/2024.6.peds24198",
+    "url": "https://doi.org/10.3171/2024.6.peds24198"
+  },
   "measurementTechnique": [
     "BIDS task: .gitattributes",
     "BIDS task: CHANGES",

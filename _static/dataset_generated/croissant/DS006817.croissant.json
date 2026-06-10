@@ -50,8 +50,7 @@
   "keywords": [
     "EEG",
     "BIDS",
-    "neuroscience",
-    "['Unknown']"
+    "neuroscience"
   ],
   "isAccessibleForFree": true,
   "includedInDataCatalog": {
@@ -87,6 +86,11 @@
   ],
   "citeAs": "Benjamin Lowe (ben.lowe@mq.edu.au), Naohide Yamamoto (naohide.yamamoto@qut.edu.au), Jonathan Robinson (jonathan.robinson@monash.edu), Patrick Johnston (dr.pat.johnston@icloud.com) (20). Visual Attribute-Specific Contextual Trajectory Paradigm 2.0. doi:10.18112/openneuro.ds006817.v1.0.0",
   "version": "1.1.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1101/2025.08.18.670829",
+    "url": "https://doi.org/10.1101/2025.08.18.670829"
+  },
   "measurementTechnique": [
     "BIDS task: CTP"
   ],

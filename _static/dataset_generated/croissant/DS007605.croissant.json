@@ -50,7 +50,10 @@
   "keywords": [
     "EEG",
     "BIDS",
-    "neuroscience"
+    "neuroscience",
+    "['Visual']",
+    "['Other']",
+    "['Attention']"
   ],
   "isAccessibleForFree": true,
   "includedInDataCatalog": {
@@ -95,6 +98,11 @@
   ],
   "citeAs": "[\"Christian Neumann\", \"Johanna Geritz\", \"Julian Keil\", \"Walter Maetzler\", \"Julius Welzel\"] (1994). EPOC. doi:10.18112/openneuro.ds007605.v1.0.0",
   "version": "1.8.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1016/j.eclinm.2022.101651",
+    "url": "https://doi.org/10.1016/j.eclinm.2022.101651"
+  },
   "measurementTechnique": [
     "BIDS task: pvt"
   ],

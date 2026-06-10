@@ -105,6 +105,11 @@
   "citeAs": "Banghua Yang, Fenqi Rong, Yunlong Xie, Du Li, Jiayang Zhang (2025). Yang et al. 2025 — A multi-day and high-quality EEG dataset for motor imagery brain-computer interface. doi:10.1038/s41597-025-04826-y",
   "version": "1.9.0",
   "dateModified": "2026-04-11",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1038/s41597-025-04826-y",
+    "url": "https://doi.org/10.1038/s41597-025-04826-y"
+  },
   "measurementTechnique": [
     "BIDS task: imagery"
   ],

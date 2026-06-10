@@ -80,6 +80,11 @@
   ],
   "citeAs": "Peter E. Clayson, Michael J. Larson (n.d.). Registered Replication Report of ERN/Pe Psychometrics. doi:10.18112/openneuro.ds004602.v1.0.3",
   "version": "1.8.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1111/psyp.14496",
+    "url": "https://doi.org/10.1111/psyp.14496"
+  },
   "measurementTechnique": [
     "BIDS task: flanker",
     "BIDS task: gonogo",

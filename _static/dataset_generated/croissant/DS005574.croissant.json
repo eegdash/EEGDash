@@ -53,8 +53,8 @@
     "neuroscience",
     "IEEG",
     "['Auditory']",
-    "['Unknown']",
-    "['Other']"
+    "['Healthy']",
+    "['Perception']"
   ],
   "isAccessibleForFree": true,
   "includedInDataCatalog": {
@@ -147,6 +147,11 @@
   ],
   "citeAs": "Zaid Zada, Samuel A. Nastase, Bobbi Aubrey, Itamar Jalon, Ariel Goldstein (n.d.). The \"Podcast\" ECoG dataset. doi:10.18112/openneuro.ds005574.v1.0.2",
   "version": "1.10.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1038/s41597-025-05462-2",
+    "url": "https://doi.org/10.1038/s41597-025-05462-2"
+  },
   "measurementTechnique": [
     "BIDS task: podcast"
   ],

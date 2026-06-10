@@ -88,6 +88,11 @@
   ],
   "citeAs": "Victoria Peterson, Catalina Maria Galvan, Hugo Sacha Hernadez, Ruben Spies (n.d.). Motor Imagery vs Rest - Low-Cost EEG System. doi:10.18112/openneuro.ds003810.v2.0.2",
   "version": "1.1.1",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1016/j.dib.2022.108225",
+    "url": "https://doi.org/10.1016/j.dib.2022.108225"
+  },
   "measurementTechnique": [
     "BIDS task: MIvsRest"
   ],

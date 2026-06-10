@@ -93,6 +93,11 @@
   ],
   "citeAs": "Wajid Mumtaz, Likun Xia, Syed Saad Azhar Ali, Mohd Azhar Mohd Yasin, Mazhar Hussain (2017). MDD Patients and Healthy Controls EEG Data. doi:10.82901/nemar.nm000114",
   "version": "1.7.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1016/j.bspc.2016.07.006",
+    "url": "https://doi.org/10.1016/j.bspc.2016.07.006"
+  },
   "measurementTechnique": [
     "BIDS task: P300",
     "BIDS task: eyesClosed",

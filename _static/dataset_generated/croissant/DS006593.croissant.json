@@ -99,6 +99,11 @@
   ],
   "citeAs": "Basak Celik, Tab Memmott, Matthew Lawhead, Srikar Ananthoju, Deniz Erdogmus (20). cBCI Matrix Multimodal Dataset. doi:10.18112/openneuro.ds006593.v1.0.0",
   "version": "1.7.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.3217/978-3-99161-050-2-196",
+    "url": "https://doi.org/10.3217/978-3-99161-050-2-196"
+  },
   "measurementTechnique": [
     "BIDS task: MatrixCalibration"
   ],

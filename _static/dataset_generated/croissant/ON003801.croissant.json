@@ -89,6 +89,11 @@
   ],
   "citeAs": "Lisa Straetmans, Bjoern Holtze, Stefan Debener, Manuela Jaeger, Bojana Mirkovic (20). Neural Tracking to go. doi:10.82901/nemar.on003801",
   "version": "v2.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1088/1741-2552/ac42b5",
+    "url": "https://doi.org/10.1088/1741-2552/ac42b5"
+  },
   "measurementTechnique": [
     "BIDS task: NeuralTrackingToGo"
   ],

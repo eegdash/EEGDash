@@ -109,6 +109,11 @@
   ],
   "citeAs": "Maria Martzoukou, Nefeli K. Dimitriou, Binbin Xu, Malo Renaud-d’Ambra, Anastasia Nousia (n.d.). tACS for Patients with Post-Stroke Anomia. doi:10.18112/openneuro.ds007315.v1.0.1",
   "version": "1.8.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1371/journal.pone.0342191",
+    "url": "https://doi.org/10.1371/journal.pone.0342191"
+  },
   "measurementTechnique": [
     "BIDS task: PictureNaming"
   ],

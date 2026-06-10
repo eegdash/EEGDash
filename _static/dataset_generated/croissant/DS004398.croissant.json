@@ -53,7 +53,8 @@
     "neuroscience",
     "MEG",
     "['Visual']",
-    "['Unknown']"
+    "['Healthy']",
+    "['Decision-making']"
   ],
   "isAccessibleForFree": true,
   "includedInDataCatalog": {
@@ -113,6 +114,11 @@
     "https://huggingface.co/datasets/EEGDash/ds004398"
   ],
   "citeAs": "G. Elliott Wimmer, Yunzhe Liu, Daniel C. McNamee, Raymond J. Dolan (n.d.). planmemreplay. doi:10.18112/openneuro.ds004398.v1.0.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1101/2021.11.08.467745",
+    "url": "https://doi.org/10.1101/2021.11.08.467745"
+  },
   "measurementTechnique": [
     "BIDS task: loc"
   ],

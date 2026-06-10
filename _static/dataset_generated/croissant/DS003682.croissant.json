@@ -54,7 +54,7 @@
     "MEG",
     "['Unknown']",
     "['Healthy']",
-    "['Learning']"
+    "['Affect']"
   ],
   "isAccessibleForFree": true,
   "includedInDataCatalog": {
@@ -89,6 +89,11 @@
   ],
   "citeAs": "Toby Wise, Yunzhe Liu, Fatima Chowdhury, Raymond J. Dolan (n.d.). Model-based aversive learning in humans is supported by preferential task state reactivation. doi:10.18112/openneuro.ds003682.v1.0.0",
   "version": "v1.5.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1126/sciadv.abf9616",
+    "url": "https://doi.org/10.1126/sciadv.abf9616"
+  },
   "measurementTechnique": [
     "BIDS task: AversiveLearningReplay"
   ],

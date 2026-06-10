@@ -94,6 +94,11 @@
   ],
   "citeAs": "Paloma Victoria de Sales Alves, Antonio Simeão Sobrinho Neto, Carla Alexandra da Silva Moita Minervino (n.d.). Resting-state EEG before and after different study methods. doi:10.18112/openneuro.ds006801.v1.0.0",
   "version": "1.9.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.3389/fnins.2013.00031",
+    "url": "https://doi.org/10.3389/fnins.2013.00031"
+  },
   "measurementTechnique": [
     "BIDS task: rest"
   ],

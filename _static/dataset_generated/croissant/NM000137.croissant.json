@@ -92,6 +92,11 @@
   ],
   "citeAs": "Murat Kaya, Mustafa Kemal Binli, Erkan Ozbay, Hilmi Yanar, Yuriy Mishchenko (2019). Classical motor imagery dataset with left hand, right hand, and rest. doi:10.82901/nemar.nm000137",
   "version": "1.9.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1038/sdata.2018.211",
+    "url": "https://doi.org/10.1038/sdata.2018.211"
+  },
   "measurementTechnique": [
     "BIDS task: imagery"
   ],

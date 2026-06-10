@@ -88,6 +88,11 @@
   ],
   "citeAs": "James Kragel, Joel Voss (20). TSS_iEEG. doi:10.18112/openneuro.ds006065.v1.0.0",
   "version": "1.8",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1016/j.brs.2021.10.220",
+    "url": "https://doi.org/10.1016/j.brs.2021.10.220"
+  },
   "measurementTechnique": [
     "BIDS task: cl",
     "BIDS task: clcontrol",

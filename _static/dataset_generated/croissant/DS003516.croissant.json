@@ -93,6 +93,11 @@
   ],
   "citeAs": "Bjoern Holtze, Manuela Jaeger, Stefan Debener, Kamil Adiloglu, Bojana Mirkovic (20). EEG: Attended Speaker Paradigm (Own Name in Ignored Stream). doi:10.18112/openneuro.ds003516.v1.1.1",
   "version": "v5.2",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.3389/fnins.2021.643705",
+    "url": "https://doi.org/10.3389/fnins.2021.643705"
+  },
   "measurementTechnique": [
     "BIDS task: AttendedSpeakerParadigmOwnName"
   ],

@@ -110,6 +110,11 @@
   ],
   "citeAs": "Birgit Nierula, Tilman Stephani, Merve Kaptan, André Moruaux, Burkhard Maess (n.d.). Somatosensory evoked potentials in the human spinal cord to mixed nerve stimulation. doi:10.18112/openneuro.ds004388.v1.0.0",
   "version": "1.6.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1371/journal.pbio.3002828",
+    "url": "https://doi.org/10.1371/journal.pbio.3002828"
+  },
   "measurementTechnique": [
     "BIDS task: alternating",
     "BIDS task: median",

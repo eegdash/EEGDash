@@ -77,6 +77,11 @@
   ],
   "citeAs": "Arnaud Delorme, Scott Makeig (20). Visual Oddball Task (256 channels). doi:10.82901/nemar.on002578",
   "version": "1.8.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1371/journal.pbio.0020176",
+    "url": "https://doi.org/10.1371/journal.pbio.0020176"
+  },
   "measurementTechnique": [
     "BIDS task: attention"
   ],

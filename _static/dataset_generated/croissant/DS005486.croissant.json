@@ -51,9 +51,7 @@
     "EEG",
     "BIDS",
     "neuroscience",
-    "['Resting State']",
-    "['Unknown']",
-    "['Resting-state']"
+    "['Unknown']"
   ],
   "isAccessibleForFree": true,
   "includedInDataCatalog": {
@@ -128,6 +126,11 @@
   ],
   "citeAs": "Nahian S. Chowdhury, Chuan Bi, Andrew J. Furman, Alan KI Chiang, Patrick Skippen (n.d.). PREDICT. doi:10.18112/openneuro.ds005486.v1.0.1",
   "version": "1.6.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1145/2939672.2939785",
+    "url": "https://doi.org/10.1145/2939672.2939785"
+  },
   "measurementTechnique": [
     "BIDS task: rest"
   ],

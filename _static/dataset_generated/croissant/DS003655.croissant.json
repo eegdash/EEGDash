@@ -76,6 +76,11 @@
   ],
   "citeAs": "Yuri G. Pavlov (n.d.). VerbalWorkingMemory. doi:10.18112/openneuro.ds003655.v1.0.0",
   "version": "1.1.1",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1038/s41598-020-72940-5",
+    "url": "https://doi.org/10.1038/s41598-020-72940-5"
+  },
   "measurementTechnique": [
     "BIDS task: VerbalWorkingMemory"
   ],

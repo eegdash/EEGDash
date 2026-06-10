@@ -107,6 +107,11 @@
   ],
   "citeAs": "Jessica G. Williams, William J. Harrison, Henry A. Beale, Jason B. Mattingley, Anthony M. Harris (2024). Tilt Illusion by Phase. doi:10.18112/openneuro.ds005021.v1.2.1",
   "version": "1.2.1",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1016/j.cub.2024.03.014",
+    "url": "https://doi.org/10.1016/j.cub.2024.03.014"
+  },
   "measurementTechnique": [
     "BIDS task: tiltillusion"
   ],

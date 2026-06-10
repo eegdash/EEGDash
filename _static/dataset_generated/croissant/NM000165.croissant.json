@@ -129,6 +129,11 @@
   "citeAs": "Agnese Grison, Irene Mendez Guerra, Alexander Kenneth Clarke, Silvia Muceli, Jaime Ibanez Pereda (20). MUniverse Grison et al 2025. doi:https://doi.org/10.7910/DVN/ID1WNQ",
   "version": "1.11.1",
   "dateModified": "2026-04-08",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1113/jp287913",
+    "url": "https://doi.org/10.1113/jp287913"
+  },
   "measurementTechnique": [
     "BIDS task: isometric10percentmvc",
     "BIDS task: isometric15percentmvc",

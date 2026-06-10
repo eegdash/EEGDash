@@ -93,6 +93,11 @@
   ],
   "citeAs": "Chuqin Xiang, Xinrui Fan, Duo Bai, Ke Lv, Xu Lei (2024). A Resting-state EEG Dataset for Sleep Deprivation. doi:10.18112/openneuro.ds004902.v1.0.8",
   "version": "1.8.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1038/s41597-024-03268-2",
+    "url": "https://doi.org/10.1038/s41597-024-03268-2"
+  },
   "measurementTechnique": [
     "BIDS task: eyesclosed",
     "BIDS task: eyesopen"

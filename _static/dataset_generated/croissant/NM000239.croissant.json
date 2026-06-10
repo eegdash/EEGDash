@@ -101,6 +101,11 @@
   "datePublished": "2023",
   "version": "1.9.0",
   "dateModified": "2026-03-25",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.71569/025s-eq10",
+    "url": "https://doi.org/10.71569/025s-eq10"
+  },
   "measurementTechnique": [
     "BIDS task: cvep"
   ],

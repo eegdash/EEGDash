@@ -53,7 +53,7 @@
     "neuroscience",
     "FNIRS",
     "['Visual']",
-    "['Unknown']",
+    "['Healthy']",
     "['Motor']"
   ],
   "isAccessibleForFree": true,
@@ -103,6 +103,11 @@
   ],
   "citeAs": "Xinge Li, Manon A. Krol, Sahar Jahani, David A. Boas, Helen Tager-Flusberg (n.d.). Mirror Neuron Study. doi:10.18112/openneuro.ds005935.v1.0.0",
   "version": "1.8.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1038/s41598-020-67327-5",
+    "url": "https://doi.org/10.1038/s41598-020-67327-5"
+  },
   "measurementTechnique": [
     "BIDS task: MirrorNeuron"
   ],

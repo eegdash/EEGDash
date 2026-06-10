@@ -89,6 +89,11 @@
   ],
   "citeAs": "Sara Aurtenetxe, Nicola Molinaro, Doug Davidson, Manuel Carreiras (n.d.). Numbers and Letters. doi:10.18112/openneuro.ds002712.v1.0.1",
   "version": "1.1.1",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1016/j.cortex.2020.03.030",
+    "url": "https://doi.org/10.1016/j.cortex.2020.03.030"
+  },
   "measurementTechnique": [
     "BIDS task: numbersletters"
   ],

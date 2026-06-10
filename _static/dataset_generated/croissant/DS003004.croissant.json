@@ -80,6 +80,11 @@
   ],
   "citeAs": "Julie Onton, Scott Makeig (n.d.). Imagined Emotion Study. doi:10.18112/openneuro.ds003004.v1.1.1",
   "version": "1.1.1",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.3389/neuro.09.061.2009",
+    "url": "https://doi.org/10.3389/neuro.09.061.2009"
+  },
   "measurementTechnique": [
     "BIDS task: ImaginedEmotion"
   ],

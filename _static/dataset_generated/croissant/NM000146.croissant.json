@@ -122,6 +122,11 @@
   ],
   "citeAs": "Weibo Yi, Shuang Qiu, Kun Wang, Hongzhi Qi, Lixin Zhang (2014). Motor Imagery dataset from Weibo et al 2014. doi:10.82901/nemar.nm000146",
   "version": "1.9.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1371/journal.pone.0114853",
+    "url": "https://doi.org/10.1371/journal.pone.0114853"
+  },
   "measurementTechnique": [
     "BIDS task: imagery"
   ],

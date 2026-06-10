@@ -81,6 +81,11 @@
   "datePublished": "2024",
   "version": "1.9.0",
   "dateModified": "2026-04-11",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.3389/fnhum.2024.1461960",
+    "url": "https://doi.org/10.3389/fnhum.2024.1461960"
+  },
   "measurementTechnique": [
     "BIDS task: p300"
   ],

@@ -92,6 +92,11 @@
   ],
   "citeAs": "Yulin Wang, Wei Duan, Lihong Ding, Debo Dong, Xu Lei (20). A test-retest resting and cognitive state EEG dataset. doi:10.18112/openneuro.ds004148.v1.0.0",
   "version": "1.2",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1038/s41597-022-01607-9",
+    "url": "https://doi.org/10.1038/s41597-022-01607-9"
+  },
   "measurementTechnique": [
     "BIDS task: eyesclosed",
     "BIDS task: eyesopen",

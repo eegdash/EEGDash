@@ -102,6 +102,11 @@
   ],
   "citeAs": "Yuheng Han, Yufeng Ke, Ruiyan Wang, Tao Wang, Dong Ming (2019). Han2024 – SSVEP fatigue dataset with two frequency paradigms. doi:10.82901/nemar.nm000124",
   "version": "1.9.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1109/tnsre.2024.3380635",
+    "url": "https://doi.org/10.1109/tnsre.2024.3380635"
+  },
   "measurementTechnique": [
     "BIDS task: ssvep"
   ],

@@ -103,6 +103,11 @@
   ],
   "citeAs": "Amanda K Robinson, Greta Stuart, Sophia M Shatek, Adrian Herbert, Jessica Taubert (2025). illusory-face-eeg. doi:10.18112/openneuro.ds005642.v1.0.1",
   "version": "1.0.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.31234/osf.io/vrtbx_v1",
+    "url": "https://doi.org/10.31234/osf.io/vrtbx_v1"
+  },
   "measurementTechnique": [
     "BIDS task: faceobj"
   ],

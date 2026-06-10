@@ -99,6 +99,11 @@
   ],
   "citeAs": "Aura Polo, Elmer León, Mariana Pino-Melgarejo, Julie Viloria-Porto (20). Dataset of Electroencephalograms of Juvenile Offenders. doi:10.18112/openneuro.ds006923.v1.0.0",
   "version": "1.0.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1037/e452852008-259",
+    "url": "https://doi.org/10.1037/e452852008-259"
+  },
   "measurementTechnique": [
     "BIDS task: restingstate"
   ],

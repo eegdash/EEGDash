@@ -51,9 +51,8 @@
     "EEG",
     "BIDS",
     "neuroscience",
-    "['Unknown']",
-    "['Healthy']",
-    "['Motor']"
+    "['Auditory']",
+    "['Other']"
   ],
   "isAccessibleForFree": true,
   "includedInDataCatalog": {
@@ -109,6 +108,11 @@
   ],
   "citeAs": "Motoshige Sato, Yasuo Kabe, Sensho Nobe, Akito Yoshida, Masakazu Inoue (n.d.). Delineating neural contributions to EEG-based speech decoding. doi:10.18112/openneuro.ds007591.v1.0.1",
   "version": "1.9.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1101/2024.05.09.591996",
+    "url": "https://doi.org/10.1101/2024.05.09.591996"
+  },
   "measurementTechnique": [
     "BIDS task: covert",
     "BIDS task: minimallyovert",

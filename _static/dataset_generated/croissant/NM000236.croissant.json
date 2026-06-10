@@ -89,6 +89,11 @@
   "datePublished": "2019",
   "version": "1.9.0",
   "dateModified": "2026-03-25",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.3390/s25072305",
+    "url": "https://doi.org/10.3390/s25072305"
+  },
   "measurementTechnique": [
     "BIDS task: p300"
   ],

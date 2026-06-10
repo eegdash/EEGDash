@@ -89,6 +89,11 @@
   ],
   "citeAs": "Corentin Bel, Julie Bonnaire, Jean-Rémi King, Christophe Pallier (2025). LittlePrince_MEG_French_Read_Pallier2025. doi:10.18112/openneuro.ds007524.v1.1.0",
   "version": "1.6.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1038/s41467-025-65499-0",
+    "url": "https://doi.org/10.1038/s41467-025-65499-0"
+  },
   "measurementTechnique": [
     "BIDS task: read"
   ],

@@ -208,6 +208,11 @@
   ],
   "citeAs": "Gunnarsdottir, Kristin, Li, Adam, Smith, Rachel, Kang, Joon, Korzeniewska, Anna (2021). Epilepsy-iEEG-Interictal-Multicenter-Dataset. doi:10.18112/openneuro.ds003876.v1.0.2",
   "version": "1.6.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1101/2021.10.15.464594v1",
+    "url": "https://doi.org/10.1101/2021.10.15.464594v1"
+  },
   "measurementTechnique": [
     "BIDS task: interictal",
     "BIDS task: interictalasleep",

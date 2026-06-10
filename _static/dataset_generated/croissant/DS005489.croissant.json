@@ -53,7 +53,7 @@
     "neuroscience",
     "IEEG",
     "['Visual']",
-    "['Unknown']",
+    "['Healthy']",
     "['Memory']"
   ],
   "isAccessibleForFree": true,
@@ -87,6 +87,11 @@
   ],
   "citeAs": "Haydn G. Herrema, Michael J. Kahana (n.d.). Free Recall with Open-Loop Stimulation at Encoding. doi:10.18112/openneuro.ds005489.v1.0.3",
   "version": "1.7.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1038/s41467-017-02753-0",
+    "url": "https://doi.org/10.1038/s41467-017-02753-0"
+  },
   "measurementTechnique": [
     "BIDS task: FR2"
   ],

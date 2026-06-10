@@ -111,6 +111,11 @@
   ],
   "citeAs": "Christoph Schneider, Renaud Marquis, Jane Johr, Marina Da Silva Lopes, Philippe Ryvlin (2003). Disentangling the percepts of illusory movement and sensory stimulation during tendon vibration in the EEG. doi:10.18112/openneuro.ds003343.v2.0.1",
   "version": "1.4.1",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1016/j.neuroimage.2021.118431",
+    "url": "https://doi.org/10.1016/j.neuroimage.2021.118431"
+  },
   "measurementTechnique": [
     "BIDS task: fps"
   ],

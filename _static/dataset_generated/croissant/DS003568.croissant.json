@@ -108,6 +108,11 @@
   ],
   "citeAs": "Lucrezia Liuzzi, Katharine Chang, Hanna Keren, Charles Zheng, Dipta Saha (20). Mood induction in MDD and healthy adolescents. doi:10.18112/openneuro.ds003568.v1.0.2",
   "version": "1.2.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1101/2021.03.04.433969v1",
+    "url": "https://doi.org/10.1101/2021.03.04.433969v1"
+  },
   "measurementTechnique": [
     "BIDS task: mmi3",
     "BIDS task: rest"

@@ -81,6 +81,11 @@
   ],
   "citeAs": "Edward Ester, Asal Nouri (20). Internal selective attention is delayed by competition between endogenous and exogenous factors. doi:10.18112/openneuro.ds004519.v1.0.1",
   "version": "1.8.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1101/2022.07.05.498906v4.abstract",
+    "url": "https://doi.org/10.1101/2022.07.05.498906v4.abstract"
+  },
   "measurementTechnique": [
     "BIDS task: ProAntiCue"
   ],

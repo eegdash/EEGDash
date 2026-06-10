@@ -101,6 +101,11 @@
   ],
   "citeAs": "João Pedro Carvalho Moreira, Vinícius Rezende Carvalho, Eduardo Mazoni Andrade Marçal Mendes, Ariah Fallah, Terrence J. Sejnowski (20). EEG dataset for speech decoding. doi:10.18112/openneuro.ds006104.v1.0.1",
   "version": "1.6.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1038/s41597-025-05187-2",
+    "url": "https://doi.org/10.1038/s41597-025-05187-2"
+  },
   "measurementTechnique": [
     "BIDS task: Words",
     "BIDS task: phonemes",

@@ -88,6 +88,11 @@
   ],
   "citeAs": "Moritz Grosse-Wentrup, Christian Liefhold, Klaus Gramann, Martin Buss (2009). Munich Motor Imagery dataset. doi:10.82901/nemar.nm000145",
   "version": "1.9.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1109/tbme.2008.2009768",
+    "url": "https://doi.org/10.1109/tbme.2008.2009768"
+  },
   "measurementTechnique": [
     "BIDS task: imagery"
   ],

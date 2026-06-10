@@ -80,6 +80,11 @@
   ],
   "version": "1.9.0",
   "dateModified": "2026-04-08",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1101/2021.11.19.469225",
+    "url": "https://doi.org/10.1101/2021.11.19.469225"
+  },
   "measurementTechnique": [
     "BIDS task: tapping"
   ],

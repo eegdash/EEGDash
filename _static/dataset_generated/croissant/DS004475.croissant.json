@@ -89,6 +89,11 @@
   ],
   "citeAs": "Noelle A. Jacobsen, Daniel P. Ferris (n.d.). Mobile EEG split-belt walking study. doi:10.18112/openneuro.ds004475.v1.0.3",
   "version": "1.1.1",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1113/jp284505",
+    "url": "https://doi.org/10.1113/jp284505"
+  },
   "measurementTechnique": [
     "BIDS task: task"
   ],

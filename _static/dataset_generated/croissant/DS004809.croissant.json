@@ -95,6 +95,11 @@
   ],
   "citeAs": "Haydn G. Herrema, Michael J. Kahana (n.d.). Categorized Free Recall: Delayed Free Recall of Word Lists Organized by Semantic Categories. doi:10.18112/openneuro.ds004809.v2.2.0",
   "version": "1.7.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.31234/osf.io/sm3fw",
+    "url": "https://doi.org/10.31234/osf.io/sm3fw"
+  },
   "measurementTechnique": [
     "BIDS task: catFR1"
   ],

@@ -112,6 +112,11 @@
   ],
   "citeAs": "Guohao Zhang, Ming Zhou, Shuyi Zhen, Shaohua Tang, Zheng Li (2018). NOD-MEG. doi:10.18112/openneuro.ds005810.v2.0.0",
   "version": "1.10.1",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1038/s41597-025-05174-7",
+    "url": "https://doi.org/10.1038/s41597-025-05174-7"
+  },
   "measurementTechnique": [
     "BIDS task: ImageNet",
     "BIDS task: noise"

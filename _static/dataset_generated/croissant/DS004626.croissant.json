@@ -85,6 +85,11 @@
   ],
   "citeAs": "Szymon Mąka, Marta Chrustowicz, Łukasz Okruszek (2023). Can we dissociate hypervigilance to social threats from altered perceptual decision-making processes in lonely individuals? An exploration with Drift Diffusion Modelling and event-related potentials.. doi:10.18112/openneuro.ds004626.v1.0.2",
   "version": "1.8.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1111/psyp.14406",
+    "url": "https://doi.org/10.1111/psyp.14406"
+  },
   "measurementTechnique": [
     "BIDS task: DotProbe"
   ],

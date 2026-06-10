@@ -184,6 +184,11 @@
   ],
   "citeAs": "Allison C. Nugent, Adam G Thomas, Margaret Mahoney, Alison Gibbons, Jarrod Smith (20). The NIMH Healthy Research Volunteer Dataset. doi:10.18112/openneuro.ds005752.v2.1.0",
   "version": "1.9.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1038/s41597-022-01623-9",
+    "url": "https://doi.org/10.1038/s41597-022-01623-9"
+  },
   "measurementTechnique": [
     "BIDS task: airpuff",
     "BIDS task: airpuffAltVer",

@@ -91,6 +91,11 @@
   ],
   "citeAs": "Sun Xinwei, Wang Kun, Pan Lincong, Cao Yupei, Meng Lin (n.d.). Cross-Environment Multi-Paradigm Motor Imagery EEG Dataset. doi:10.18112/openneuro.ds007221.v1.0.1",
   "version": "1.0.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1145/3210240.3210344",
+    "url": "https://doi.org/10.1145/3210240.3210344"
+  },
   "measurementTechnique": [
     "BIDS task: graz",
     "BIDS task: hybrid",

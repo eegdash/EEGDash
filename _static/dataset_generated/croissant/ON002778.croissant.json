@@ -89,6 +89,11 @@
   ],
   "citeAs": "Alexander P. Rockhill, Nicko Jackson, Jobi George, Adam Aron, Nicole C. Swann (2019). UC San Diego Resting State EEG Data from Patients with Parkinson's Disease. doi:10.82901/nemar.on002778",
   "version": "1.11.1",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1523/eneuro.0151-19.2019",
+    "url": "https://doi.org/10.1523/eneuro.0151-19.2019"
+  },
   "measurementTechnique": [
     "BIDS task: rest"
   ],

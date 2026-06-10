@@ -76,6 +76,11 @@
   ],
   "citeAs": "Alexandre Barachant (2019). Alex Motor Imagery dataset. doi:10.82901/nemar.nm000138",
   "version": "1.9.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1037/e527352012-514",
+    "url": "https://doi.org/10.1037/e527352012-514"
+  },
   "measurementTechnique": [
     "BIDS task: imagery"
   ],

@@ -89,6 +89,11 @@
   ],
   "citeAs": "Joanna Scanlon, Nadine Jacobsen, Marike Maack, Stefan Debener (20). Electrode walking study. doi:10.18112/openneuro.ds004033.v1.0.0",
   "version": "v2.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.3389/fnhum.2019.00141",
+    "url": "https://doi.org/10.3389/fnhum.2019.00141"
+  },
   "measurementTechnique": [
     "BIDS task: act",
     "BIDS task: pas"

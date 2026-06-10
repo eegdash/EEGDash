@@ -97,6 +97,11 @@
   ],
   "citeAs": "Jason Metcalfe, Amar Marathe, Tony Johnson, Stephen Gordon, Jon Touryan (n.d.). Driving with Autonomous Aids. doi:10.18112/openneuro.ds004657.v1.0.3",
   "version": "1.8.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1038/s41423-019-0359-1",
+    "url": "https://doi.org/10.1038/s41423-019-0359-1"
+  },
   "measurementTechnique": [
     "BIDS task: Drive"
   ],

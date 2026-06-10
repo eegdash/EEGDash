@@ -89,6 +89,11 @@
   ],
   "citeAs": "Silvia Formica, Anna Chaiken, Jan R. Wiersema, Emiel Cracco (2019). EEG frequency tagging reveals the integration of dissimilar observed actions. doi:10.18112/openneuro.ds005406.v1.0.0",
   "version": "1.7.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1016/j.cortex.2024.10.015",
+    "url": "https://doi.org/10.1016/j.cortex.2024.10.015"
+  },
   "measurementTechnique": [
     "BIDS task: FTdiss"
   ],

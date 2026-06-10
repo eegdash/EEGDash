@@ -50,7 +50,10 @@
   "keywords": [
     "EEG",
     "BIDS",
-    "neuroscience"
+    "neuroscience",
+    "['Visual']",
+    "[\"Parkinson's\"]",
+    "['Clinical/Intervention']"
   ],
   "isAccessibleForFree": true,
   "includedInDataCatalog": {

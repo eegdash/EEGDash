@@ -130,6 +130,11 @@
   ],
   "citeAs": "Yang Li (data and curation), Wenjin Fu (data), Qiumei Zhang (data), Xiongying Chen (data), Xiaohong Li (data) (n.d.). Effects of Forward and Backward Span Trainings on Working Memory: Evidence from a Randomized, Controlled Trial. doi:10.18112/openneuro.ds004166.v1.0.0",
   "version": "1.7.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1111/psyp.14154",
+    "url": "https://doi.org/10.1111/psyp.14154"
+  },
   "measurementTechnique": [
     "BIDS task: WM"
   ],

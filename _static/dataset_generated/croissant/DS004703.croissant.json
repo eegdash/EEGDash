@@ -94,6 +94,11 @@
   ],
   "citeAs": "Anna Mai, Stephanie Ries, Sharona Ben-Haim, Jerry Shih, Timothy Gentner (20). sEEG Passive listening to natural speech. doi:10.18112/openneuro.ds004703.v1.1.0",
   "version": "1.6.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.3765/amp.v9i0.5197",
+    "url": "https://doi.org/10.3765/amp.v9i0.5197"
+  },
   "measurementTechnique": [
     "BIDS task: PassiveListen"
   ],

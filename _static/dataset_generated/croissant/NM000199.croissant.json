@@ -113,6 +113,11 @@
   "datePublished": "2017",
   "version": "1.9.0",
   "dateModified": "2026-03-24",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1371/journal.pone.0175856",
+    "url": "https://doi.org/10.1371/journal.pone.0175856"
+  },
   "measurementTechnique": [
     "BIDS task: p300"
   ],

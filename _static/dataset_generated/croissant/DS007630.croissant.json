@@ -50,7 +50,8 @@
   "keywords": [
     "EEG",
     "BIDS",
-    "neuroscience"
+    "neuroscience",
+    "['Unknown']"
   ],
   "isAccessibleForFree": true,
   "includedInDataCatalog": {
@@ -117,6 +118,11 @@
   "version": "1.9.0",
   "dateCreated": "2026-04-05",
   "dateModified": "2026-04-07",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1007/s12576-011-0156-9",
+    "url": "https://doi.org/10.1007/s12576-011-0156-9"
+  },
   "measurementTechnique": [
     "BIDS task: listening",
     "BIDS task: listeningcovert",

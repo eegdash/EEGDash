@@ -52,7 +52,9 @@
     "BIDS",
     "neuroscience",
     "['Unknown']",
-    "['Memory']"
+    "['Healthy']",
+    "['Memory']",
+    "HED"
   ],
   "isAccessibleForFree": true,
   "includedInDataCatalog": {

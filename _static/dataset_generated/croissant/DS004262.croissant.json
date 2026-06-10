@@ -84,6 +84,11 @@
   ],
   "citeAs": "Cameron D. Hassall, Yan Yan, Laurence T. Hunt (n.d.). Continuous Feedback Processing. doi:10.18112/openneuro.ds004262.v1.0.0",
   "version": "1.2.1",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1111/psyp.14399",
+    "url": "https://doi.org/10.1111/psyp.14399"
+  },
   "measurementTechnique": [
     "BIDS task: gnomes"
   ],

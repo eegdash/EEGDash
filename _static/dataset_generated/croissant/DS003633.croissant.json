@@ -100,6 +100,11 @@
   ],
   "citeAs": "Xingyu Liu, Yuxuan Dai, Hailun Xie, Zonglei Zhen (20). ForrestGump-MEG. doi:10.18112/openneuro.ds003633.v1.0.3",
   "version": "1.4.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1101/2021.06.04.446837v1",
+    "url": "https://doi.org/10.1101/2021.06.04.446837v1"
+  },
   "measurementTechnique": [
     "BIDS task: movie",
     "BIDS task: noise"

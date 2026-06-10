@@ -76,6 +76,11 @@
   ],
   "citeAs": "Omar Mendoza-Montoya, Javier M. Antelis (n.d.). Assesment of the visual stimuli properties in P300 paradigm. doi:10.82901/nemar.on003190",
   "version": "1.2",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.3390/s20247198",
+    "url": "https://doi.org/10.3390/s20247198"
+  },
   "measurementTechnique": [
     "BIDS task: cnos",
     "BIDS task: ctos"

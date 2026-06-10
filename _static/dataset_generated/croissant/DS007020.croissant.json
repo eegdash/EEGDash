@@ -83,10 +83,16 @@
   "identifier": "doi:10.18112/openneuro.ds007020.v1.0.0",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds007020.v1.0.0",
-    "https://openneuro.org/datasets/ds007020"
+    "https://openneuro.org/datasets/ds007020",
+    "https://huggingface.co/datasets/EEGDash/ds007020"
   ],
   "citeAs": "Simin Jamshidi, Arturo Espinoza, Soura Dasgupta, Nandakumar Narayanan (n.d.). EEG Mortality Dataset in Parkinson's Disease. doi:10.18112/openneuro.ds007020.v1.0.0",
   "version": "1.8.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.2139/ssrn.5375435",
+    "url": "https://doi.org/10.2139/ssrn.5375435"
+  },
   "measurementTechnique": [
     "BIDS task: rest"
   ],
@@ -126,6 +132,15 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=ds007020",
       "encodingFormat": "text/html",
+      "sha256": "main"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds007020-huggingface",
+      "name": "EEGDash/ds007020 on Hugging Face",
+      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
+      "contentUrl": "https://huggingface.co/datasets/EEGDash/ds007020",
+      "encodingFormat": "application/vnd.huggingface-dataset+json",
       "sha256": "main"
     }
   ]

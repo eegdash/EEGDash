@@ -98,6 +98,11 @@
   ],
   "citeAs": "Fatemeh Ebrahiminia, Morteza Mahdiani, Seyed-Mahdi Khaligh-Razavi (n.d.). A Multimodal Neuroimaging Dataset to Study Spatiotemporal Dynamics of Visual Processing in Humans. doi:10.18112/openneuro.ds002814.v1.3.0",
   "version": "1.0.1",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1101/2022.05.12.491595",
+    "url": "https://doi.org/10.1101/2022.05.12.491595"
+  },
   "measurementTechnique": [
     "BIDS task: categorySelectivity"
   ],

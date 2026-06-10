@@ -89,6 +89,11 @@
   ],
   "citeAs": "Grootswagers, Tijl, Robinson, Amanda, Shatek, Sofia, Carlson, Thomas (2021). EEG-attention-rsvp-exp1. doi:10.18112/openneuro.ds004816.v1.0.0",
   "version": "1.0.2",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.51628/001c.21174",
+    "url": "https://doi.org/10.51628/001c.21174"
+  },
   "measurementTechnique": [
     "BIDS task: rsvp"
   ],

@@ -84,6 +84,11 @@
   ],
   "citeAs": "Dean Salisbury, Dylan Seebold, Brian Coffman (n.d.). EEG: First Episode Psychosis vs. Control Resting Task 1. doi:10.18112/openneuro.ds003944.v1.0.1",
   "version": "v1.6.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1016/j.nicl.2022.103261",
+    "url": "https://doi.org/10.1016/j.nicl.2022.103261"
+  },
   "measurementTechnique": [
     "BIDS task: Rest"
   ],

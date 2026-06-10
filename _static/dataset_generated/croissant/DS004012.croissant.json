@@ -52,8 +52,9 @@
     "BIDS",
     "neuroscience",
     "MEG",
-    "['Unknown']",
-    "['Healthy']"
+    "['Auditory']",
+    "['Healthy']",
+    "['Perception']"
   ],
   "isAccessibleForFree": true,
   "includedInDataCatalog": {
@@ -95,6 +96,11 @@
   ],
   "citeAs": "Nur Syairah Ab Rani, Nurfaizatul Aisyah Ab Aziz, Mohammed Farouq Reza, Muzaimi Mustapha (2019). BRAR_NQ. doi:10.18112/openneuro.ds004012.v1.0.0",
   "version": "1.6.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1007/978-981-287-778-9_15",
+    "url": "https://doi.org/10.1007/978-981-287-778-9_15"
+  },
   "measurementTechnique": [
     "BIDS task: rest01",
     "BIDS task: rest02",

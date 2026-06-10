@@ -52,7 +52,7 @@
     "BIDS",
     "neuroscience",
     "FNIRS",
-    "['Unknown']",
+    "['Multisensory']",
     "['Healthy']",
     "['Other']"
   ],
@@ -110,6 +110,11 @@
   ],
   "citeAs": "Zaineb Ajra, Grégoire Vergotte, Stéphane Perrey, Lilian Evra, Simon Pla (n.d.). Multimodal dataset from the CMx7-MM Experiment. doi:10.18112/openneuro.ds007554.v1.0.0",
   "version": "1.8.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.3389/fneur.2023.1270405",
+    "url": "https://doi.org/10.3389/fneur.2023.1270405"
+  },
   "measurementTechnique": [
     "BIDS task: activemotor",
     "BIDS task: full",

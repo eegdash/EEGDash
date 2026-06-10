@@ -104,6 +104,11 @@
   ],
   "citeAs": "Ji-Hoon Jeong, Jeong-Hyun Cho, Kyung-Hwan Shim, Byoung-Hee Kwon, Byeong-Hoo Lee (2020). Multimodal upper-limb MI/ME EEG (Jeong et al. 2020). doi:10.82901/nemar.nm000311",
   "version": "1.9.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1093/gigascience/giaa098",
+    "url": "https://doi.org/10.1093/gigascience/giaa098"
+  },
   "measurementTechnique": [
     "BIDS task: imagery"
   ],

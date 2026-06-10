@@ -120,6 +120,11 @@
   ],
   "citeAs": "Yanru Bai, Qi Tang, Ran Zhao, Hongxing Liu, Mingkun Guo (n.d.). TMNRED, A Chinese Language EEG Dataset for Fuzzy Semantic Target Identification in Natural Reading Environments. doi:10.18112/openneuro.ds005383.v1.0.0",
   "version": "1.7.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1038/s41597-025-05036-2",
+    "url": "https://doi.org/10.1038/s41597-025-05036-2"
+  },
   "measurementTechnique": [
     "BIDS task: fuzzysemanticrecognition"
   ],

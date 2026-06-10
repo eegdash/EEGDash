@@ -88,6 +88,11 @@
   "datePublished": "2019",
   "version": "1.9.0",
   "dateModified": "2026-03-25",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1016/j.jneumeth.2007.03.005",
+    "url": "https://doi.org/10.1016/j.jneumeth.2007.03.005"
+  },
   "measurementTechnique": [
     "BIDS task: p300"
   ],

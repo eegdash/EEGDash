@@ -114,6 +114,11 @@
   ],
   "citeAs": "Angela Riccio, Luca Simione, Francesca Schettini, Alessia Pizzimenti, Maurizio Inghilleri (2013). BNCI 2014-008 P300 dataset (ALS patients). doi:10.82901/nemar.nm000169",
   "version": "1.9.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.3389/fnhum.2013.00732",
+    "url": "https://doi.org/10.3389/fnhum.2013.00732"
+  },
   "measurementTechnique": [
     "BIDS task: p300"
   ],

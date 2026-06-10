@@ -115,6 +115,11 @@
   ],
   "citeAs": "Henry Tan, Devon Griggs, Lucas Chen, Kahte Culevski, Kat Floerchinger (2024). visStim. doi:10.18112/openneuro.ds005688.v1.0.1",
   "version": "1.8.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.3389/fnhum.2024.1509432",
+    "url": "https://doi.org/10.3389/fnhum.2024.1509432"
+  },
   "measurementTechnique": [
     "BIDS task: baseline",
     "BIDS task: trial1",

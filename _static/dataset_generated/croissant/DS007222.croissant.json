@@ -50,7 +50,10 @@
   "keywords": [
     "EEG",
     "BIDS",
-    "neuroscience"
+    "neuroscience",
+    "['Visual']",
+    "['Healthy']",
+    "['Perception']"
   ],
   "isAccessibleForFree": true,
   "includedInDataCatalog": {
@@ -91,6 +94,11 @@
   ],
   "citeAs": "Jonel Morris, Kenneth Cruz, Raydeep Kainth, Daniel Ferris (19). Visual Occlusions with Treadmill Walking Speeds EEG. doi:10.18112/openneuro.ds007222.v1.0.0",
   "version": "1.10.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1162/imag.a.1039",
+    "url": "https://doi.org/10.1162/imag.a.1039"
+  },
   "measurementTechnique": [
     "BIDS task: treadmill00flow00",
     "BIDS task: treadmill04flow00",

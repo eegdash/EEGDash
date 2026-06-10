@@ -91,6 +91,11 @@
   "citeAs": "Stephanie Brandl, Benjamin Blankertz, Tobias Dahne (2020). Brandl et al. 2020 — Motor Imagery Under Distraction: An Open Access BCI Dataset. doi:10.3389/fnins.2020.566147",
   "version": "1.9.0",
   "dateModified": "2026-04-11",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.3389/fnins.2020.566147",
+    "url": "https://doi.org/10.3389/fnins.2020.566147"
+  },
   "measurementTechnique": [
     "BIDS task: imagery"
   ],

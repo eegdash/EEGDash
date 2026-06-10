@@ -93,6 +93,11 @@
   ],
   "citeAs": "Bjoern Holtze, Marc Rosenkranz, Manuela Jaeger, Stefan Debener, Bojana Mirkovic (2020). Attended speaker paradigm (cEEGrid data). doi:10.18112/openneuro.ds004015.v1.0.2",
   "version": "v5.2",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.3389/fnins.2022.869426",
+    "url": "https://doi.org/10.3389/fnins.2022.869426"
+  },
   "measurementTechnique": [
     "BIDS task: AttendedSpeakerParadigmcEEGridAttention"
   ],

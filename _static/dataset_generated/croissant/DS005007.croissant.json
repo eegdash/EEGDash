@@ -87,6 +87,11 @@
   ],
   "citeAs": "Yu Kitazawa, Eishi Asano (n.d.). Auditory naming task with questions that begin or end with a wh-interrogative. doi:10.18112/openneuro.ds005007.v1.0.0",
   "version": "1.7.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1101/2025.03.07.641428",
+    "url": "https://doi.org/10.1101/2025.03.07.641428"
+  },
   "measurementTechnique": [
     "BIDS task: namingtask"
   ],

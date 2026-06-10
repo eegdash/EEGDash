@@ -98,6 +98,11 @@
   ],
   "citeAs": "María Melcón, Enrique Stern, Lydia Arana, Almudena Capilla (n.d.). EEG data during three near-threshold visual detection tasks: a no-cue task, a noninformative cue task (50% validity), and an informative cue task (100% validity). doi:10.18112/openneuro.ds006171.v1.0.0",
   "version": "1.8.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1111/psyp.14525",
+    "url": "https://doi.org/10.1111/psyp.14525"
+  },
   "measurementTechnique": [
     "BIDS task: informative",
     "BIDS task: nocue",

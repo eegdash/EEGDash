@@ -91,6 +91,11 @@
   ],
   "citeAs": "Haydn G. Herrema, Michael J. Kahana (n.d.). pyFR: Delayed Free Recall of Word Lists, Preliminary Cognitive Electrophysiology Study. doi:10.18112/openneuro.ds004865.v2.0.1",
   "version": "1.7.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.31234/osf.io/sm3fw",
+    "url": "https://doi.org/10.31234/osf.io/sm3fw"
+  },
   "measurementTechnique": [
     "BIDS task: pyFR"
   ],

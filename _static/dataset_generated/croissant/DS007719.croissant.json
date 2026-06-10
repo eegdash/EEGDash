@@ -51,7 +51,10 @@
     "EEG",
     "BIDS",
     "neuroscience",
-    "FNIRS"
+    "FNIRS",
+    "['Resting State']",
+    "['Healthy']",
+    "['Resting-state']"
   ],
   "isAccessibleForFree": true,
   "includedInDataCatalog": {

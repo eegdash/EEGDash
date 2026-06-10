@@ -94,6 +94,11 @@
   ],
   "citeAs": "Guido Dornhege, Benjamin Blankertz, Gabriel Curio, Klaus-Robert Müller (2019). BNCI2003_IVa Motor Imagery dataset. doi:10.82901/nemar.nm000143",
   "version": "1.9.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1109/tbme.2004.827088",
+    "url": "https://doi.org/10.1109/tbme.2004.827088"
+  },
   "measurementTechnique": [
     "BIDS task: imagery"
   ],

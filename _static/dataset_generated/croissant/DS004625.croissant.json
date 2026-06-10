@@ -129,6 +129,11 @@
   ],
   "citeAs": "Chang Liu, Ryan J. Downey, Jacob S. Salminen, Sofia Arvelo Rojas, Erika M. Pliner (n.d.). Mind in Motion Young Adults Walking Over Uneven Terrain. doi:10.18112/openneuro.ds004625.v1.0.2",
   "version": "v1.0.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1162/imag_a_00097",
+    "url": "https://doi.org/10.1162/imag_a_00097"
+  },
   "measurementTechnique": [
     "BIDS task: 0p25",
     "BIDS task: 0p5",

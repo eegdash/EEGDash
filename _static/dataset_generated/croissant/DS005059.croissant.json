@@ -87,6 +87,11 @@
   ],
   "citeAs": "Haydn G. Herrema, Michael J. Kahana (n.d.). Paired Associates Learning: Memory for Word Pairs in Cued Recall. doi:10.18112/openneuro.ds005059.v1.0.6",
   "version": "1.7.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1016/c2013-0-12177-0",
+    "url": "https://doi.org/10.1016/c2013-0-12177-0"
+  },
   "measurementTechnique": [
     "BIDS task: PAL1"
   ],

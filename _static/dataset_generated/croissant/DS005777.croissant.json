@@ -53,8 +53,8 @@
     "neuroscience",
     "FNIRS",
     "['Tactile']",
-    "['Unknown']",
-    "['Perception']"
+    "['Healthy']",
+    "['Clinical/Intervention']"
   ],
   "isAccessibleForFree": true,
   "includedInDataCatalog": {
@@ -131,6 +131,11 @@
   ],
   "citeAs": "Peng, Ke, Yücel, Meryem, Steele, Sarah, Bittner, Edward, Aasted, Christopher (n.d.). Electrical_Morphine_Placebo_2018. doi:10.18112/openneuro.ds005777.v1.0.1",
   "version": "1.7.1",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.3389/fnhum.2018.00394",
+    "url": "https://doi.org/10.3389/fnhum.2018.00394"
+  },
   "measurementTechnique": [
     "BIDS task: Electrical",
     "BIDS task: TactilePerception"

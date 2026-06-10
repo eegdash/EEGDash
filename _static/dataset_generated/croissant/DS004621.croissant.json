@@ -99,6 +99,11 @@
   ],
   "citeAs": "Dzianok Patrycja, Antonova Ingrida, Wojciechowski Jakub, Dreszer Joanna, Kublik Ewa (20). The Nencki-Symfonia EEG/ERP dataset. doi:10.18112/openneuro.ds004621.v1.0.4",
   "version": "1.0.2",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.5524/100990",
+    "url": "https://doi.org/10.5524/100990"
+  },
   "measurementTechnique": [
     "BIDS task: msit",
     "BIDS task: oddball",

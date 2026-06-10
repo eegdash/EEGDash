@@ -50,7 +50,10 @@
   "keywords": [
     "EEG",
     "BIDS",
-    "neuroscience"
+    "neuroscience",
+    "['Auditory']",
+    "['Healthy']",
+    "['Perception']"
   ],
   "isAccessibleForFree": true,
   "includedInDataCatalog": {
@@ -111,6 +114,11 @@
   ],
   "citeAs": "Motoshige Sato, Ilya Horiguchi, Masakazu Inoue, Kenichi Tomeoka, Eri Hatakeyama (20). EEG-Speech Brain Decoding Dataset. doi:10.18112/openneuro.ds007808.v1.0.0",
   "version": "1.9.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1088/1741-2552/ae54d0/meta",
+    "url": "https://doi.org/10.1088/1741-2552/ae54d0/meta"
+  },
   "measurementTechnique": [
     "BIDS task: listening",
     "BIDS task: listeningcovert",

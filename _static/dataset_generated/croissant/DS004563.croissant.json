@@ -88,6 +88,11 @@
   ],
   "citeAs": "Sophie Smit, Denise Moerel, Regine Zopf, Anina N Rich (n.d.). Vicarious touch: overlapping neural patterns between seeing and feeling touch. doi:10.18112/openneuro.ds004563.v1.0.1",
   "version": "v1.8.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1101/2022.06.21.497107",
+    "url": "https://doi.org/10.1101/2022.06.21.497107"
+  },
   "measurementTechnique": [
     "BIDS task: touchdecoding"
   ],

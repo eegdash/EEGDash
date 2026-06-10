@@ -108,6 +108,11 @@
   ],
   "citeAs": "Biau E, Wang D, Park H, Jensen O, Hanslmayr S (2025). Neocortical and Hippocampal Theta Oscillations Track Audiovisual Integration and Replay of Speech Memories. doi:10.18112/openneuro.ds006334.v1.0.0",
   "version": "1.0.2",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1523/jneurosci.1797-24.2025",
+    "url": "https://doi.org/10.1523/jneurosci.1797-24.2025"
+  },
   "measurementTechnique": [
     "BIDS task: AVspeech"
   ],

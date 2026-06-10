@@ -95,6 +95,11 @@
   ],
   "citeAs": "Maria Luisa Bringas Vega, Lilia Morales Chacon, Ivonne Pedroso Ibanez (2019). Placebo Neuroepo multisession. doi:10.18112/openneuro.ds003195.v1.0.3",
   "version": "1.2.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.2139/ssrn.4966719",
+    "url": "https://doi.org/10.2139/ssrn.4966719"
+  },
   "measurementTechnique": [
     "BIDS task: taskplacebo6m",
     "BIDS task: taskplacebopre"

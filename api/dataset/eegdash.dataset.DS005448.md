@@ -160,13 +160,13 @@ Each patient has their own folder (e.g., `sub-STREEF01`) which contains the iEEG
     referrerpolicy="no-referrer">
   </iframe>
 </details></div><div class="figpair-cell figpair-montage"><details class="electrode-explorer">
-  <summary>Electrode layout — iEEG · 80 sensors — 80 channels</summary>
+  <summary>Electrode layout — iEEG · 112 sensors — 112 channels</summary>
   <iframe
-    data-src="https://electrodes.eegdash.org/?montage=40e2f74e43f556ba&embed=1"
+    data-src="https://electrodes.eegdash.org/?montage=0f77fb455f72a809&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
-    title="Topomap of iEEG · 80 sensors"
+    title="Topomap of iEEG · 112 sensors"
     referrerpolicy="no-referrer">
   </iframe>
 </details></div></div></div>

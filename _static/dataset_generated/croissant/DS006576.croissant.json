@@ -98,6 +98,11 @@
   ],
   "citeAs": "Elizabeth A. McDevitt, Ghootae Kim, Nicholas B. Turk-Browne, Kenneth A. Norman (2026). The role of REM sleep in neural differentiation of memories in the hippocampus. doi:10.18112/openneuro.ds006576.v1.0.5",
   "version": "1.6.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1162/jocn.a.82",
+    "url": "https://doi.org/10.1162/jocn.a.82"
+  },
   "measurementTechnique": [
     "BIDS task: rest"
   ],

@@ -82,6 +82,11 @@
   ],
   "citeAs": "Arnaud Delorme, Tracy Brandmeyer (20). Executive Functionning Study for Assessing the Effect of Neurofeedback. doi:10.18112/openneuro.ds004350.v2.0.0",
   "version": "v1.8.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.3389/fnhum.2020.00246",
+    "url": "https://doi.org/10.3389/fnhum.2020.00246"
+  },
   "measurementTechnique": [
     "BIDS task: LG",
     "BIDS task: NB1",

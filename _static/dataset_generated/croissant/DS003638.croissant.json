@@ -93,6 +93,11 @@
   ],
   "citeAs": "James F Cavanagh, Greg Light, Neal Swerdlow, Jonathan Brigman, Jared Young (20). EEG: Electrophysiological biomarkers of behavioral dimensions from cross-species paradigms. doi:10.18112/openneuro.ds003638.v1.0.0",
   "version": "1.1.1",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1038/s41398-021-01562-w",
+    "url": "https://doi.org/10.1038/s41398-021-01562-w"
+  },
   "measurementTechnique": [
     "BIDS task: 5CCPTPSTPRBP"
   ],

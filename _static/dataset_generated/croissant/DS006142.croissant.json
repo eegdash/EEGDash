@@ -81,6 +81,11 @@
   ],
   "citeAs": "Ana Matran-Fernandez, Sebastian Halder (2019). Essex EEG Movie Memory dataset. doi:10.18112/openneuro.ds006142.v1.0.2",
   "version": "1.7.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1145/3206025.3206056",
+    "url": "https://doi.org/10.1145/3206025.3206056"
+  },
   "measurementTechnique": [
     "BIDS task: MovieMemory"
   ],

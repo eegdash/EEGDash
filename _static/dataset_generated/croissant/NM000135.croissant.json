@@ -108,6 +108,11 @@
   ],
   "citeAs": "R. Leeb, C. Brunner, G. R. Müller-Putz, A. Schlögl, G. Pfurtscheller (2019). BNCI 2014-004 Motor Imagery dataset. doi:10.82901/nemar.nm000135",
   "version": "1.9.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1109/tnsre.2007.906956",
+    "url": "https://doi.org/10.1109/tnsre.2007.906956"
+  },
   "measurementTechnique": [
     "BIDS task: imagery"
   ],

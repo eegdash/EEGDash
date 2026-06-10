@@ -85,6 +85,11 @@
   ],
   "citeAs": "James F Cavanagh, Michael J Frank, James Broadway (20). EEG: Visual Working Memory + Cabergoline Challenge. doi:10.18112/openneuro.ds003519.v1.1.0",
   "version": "1.1.1",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.3758/s13415-018-0584-6",
+    "url": "https://doi.org/10.3758/s13415-018-0584-6"
+  },
   "measurementTechnique": [
     "BIDS task: VisualWorkingMemory"
   ],

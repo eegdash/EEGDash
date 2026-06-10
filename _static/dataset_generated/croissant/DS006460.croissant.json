@@ -119,6 +119,11 @@
   ],
   "citeAs": "Jessica E. Anderson, Laura Carlton, Sreekanth Kura, Walker J. O'Brien, De'Ja Rogers (n.d.). High-DensityvSparsefNIRS_WordColorStroop_HD_Anderson_2025. doi:10.18112/openneuro.ds006460.v1.0.0",
   "version": "1.8.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1117/1.nph.12.3.035010",
+    "url": "https://doi.org/10.1117/1.nph.12.3.035010"
+  },
   "measurementTechnique": [
     "BIDS task: WordStroop"
   ],

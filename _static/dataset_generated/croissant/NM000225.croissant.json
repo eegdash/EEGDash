@@ -120,6 +120,11 @@
   "citeAs": "Mohammad M. Ghassemi, Benjamin E. Moody, Li-wei H. Lehman, Christopher Song, Qiao Li (2018). PhysioNet 2018 Challenge: Sleep Arousal Detection PSG (Training). doi:10.13026/6phb-r450",
   "version": "1.9.0",
   "dateModified": "2026-04-10",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.22489/cinc.2018.049",
+    "url": "https://doi.org/10.22489/cinc.2018.049"
+  },
   "measurementTechnique": [
     "BIDS task: sleep"
   ],

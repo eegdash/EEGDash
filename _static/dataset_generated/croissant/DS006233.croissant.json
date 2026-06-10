@@ -116,6 +116,11 @@
   ],
   "citeAs": "Ryuzaburo Kochi, Aya Kanno, Hiroshi Uda, Keisuke Hatano, Hidenori Endo (2025). Picture naming. doi:10.18112/openneuro.ds006233.v1.0.0",
   "version": "1.7.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1016/0010-0277(92)90040-o",
+    "url": "https://doi.org/10.1016/0010-0277(92)90040-o"
+  },
   "measurementTechnique": [
     "BIDS task: picture"
   ],

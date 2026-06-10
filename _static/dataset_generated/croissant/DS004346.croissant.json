@@ -52,9 +52,9 @@
     "BIDS",
     "neuroscience",
     "MEG",
-    "['Unknown']",
+    "['Visual']",
     "['Healthy']",
-    "['Attention']"
+    "['Decision-making']"
   ],
   "isAccessibleForFree": true,
   "includedInDataCatalog": {
@@ -102,6 +102,11 @@
   ],
   "citeAs": "Oscar Ferrante, Ling Liu, Tamas Minarik, Urszula Gorska, Tara Ghafari (2022). FLUX: A pipeline for MEG analysis. doi:10.18112/openneuro.ds004346.v1.0.8",
   "version": "1.7.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1016/j.neuroimage.2022.119047",
+    "url": "https://doi.org/10.1016/j.neuroimage.2022.119047"
+  },
   "measurementTechnique": [
     "BIDS task: SpAtt"
   ],

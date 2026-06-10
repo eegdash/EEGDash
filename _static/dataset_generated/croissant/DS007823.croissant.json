@@ -50,7 +50,10 @@
   "keywords": [
     "EEG",
     "BIDS",
-    "neuroscience"
+    "neuroscience",
+    "['Resting State']",
+    "['Other']",
+    "['Clinical/Intervention']"
   ],
   "isAccessibleForFree": true,
   "includedInDataCatalog": {
@@ -187,6 +190,11 @@
   ],
   "citeAs": "Ana Calzada-Reyes, Eduardo Aubert-Vázquez, Lidice Galán-García, Maria Luisa Bringas-Vega, Trinidad Virués-Alba (20). A COVID-19 survivors and close contacts EEG dataset. doi:10.18112/openneuro.ds007823.v1.0.1",
   "version": "1.6.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1016/j.cnp.2026.02.007",
+    "url": "https://doi.org/10.1016/j.cnp.2026.02.007"
+  },
   "measurementTechnique": [
     "BIDS task: COVID"
   ],

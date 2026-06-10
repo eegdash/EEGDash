@@ -102,6 +102,11 @@
   ],
   "citeAs": "Aaron Kucyi, Lotus Shareef-Trudeau, David Braun, Huiling Peng, Tiara Bounyarith (2019). A multi-session simultaneous EEG-fMRI dataset with online experience sampling. doi:10.18112/openneuro.ds007216.v1.0.0",
   "version": "1.7.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.64898/2026.02.04.703882",
+    "url": "https://doi.org/10.64898/2026.02.04.703882"
+  },
   "measurementTechnique": [
     "BIDS task: ExperienceSampling",
     "BIDS task: GradCPT"

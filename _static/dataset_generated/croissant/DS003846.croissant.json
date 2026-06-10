@@ -93,6 +93,11 @@
   ],
   "citeAs": "Lukas Gehrke, Sezen Akman, Albert Chen, Pedro Lopes, Klaus Gramann (19). Prediction Error. doi:10.18112/openneuro.ds003846.v2.0.2",
   "version": "1.8.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1145/3290605.3300657",
+    "url": "https://doi.org/10.1145/3290605.3300657"
+  },
   "measurementTechnique": [
     "BIDS task: PredictionError"
   ],

@@ -150,6 +150,11 @@
   ],
   "citeAs": "Yipeng Zhang, Atsuro Daida, Lawrence Liu, Naoto Kuroda, Yuanyi Ding (20). Open iEEG Dataset (Pediatric iEEG, Wayne State University and UCLA). doi:10.18112/openneuro.ds005398.v1.1.1",
   "version": "1.7.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1111/epi.18545",
+    "url": "https://doi.org/10.1111/epi.18545"
+  },
   "measurementTechnique": [
     "BIDS task: sleep"
   ],

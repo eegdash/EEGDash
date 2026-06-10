@@ -114,6 +114,11 @@
   ],
   "citeAs": "John M. Bernabei, Adam Li, Andrew Y. Revell, Rachel J. Smith, Kristin M. Gunnarsdottir (2019). HUP iEEG Epilepsy Dataset. doi:10.18112/openneuro.ds004100.v1.1.3",
   "version": "1.4.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1093/brain/awab480",
+    "url": "https://doi.org/10.1093/brain/awab480"
+  },
   "measurementTechnique": [
     "BIDS task: ictal",
     "BIDS task: interictal"

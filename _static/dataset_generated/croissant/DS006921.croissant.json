@@ -93,6 +93,11 @@
   ],
   "citeAs": "Ramne, M., Damercheli, S., Apelgren, F., Pettersson, I., Lendaro, E. (2024). High Density Resting State EEG of Phantom Limb Pain and Controls. doi:10.18112/openneuro.ds006921.v1.1.1",
   "version": "1.9.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.21203/rs.3.rs-8645281/v1",
+    "url": "https://doi.org/10.21203/rs.3.rs-8645281/v1"
+  },
   "measurementTechnique": [
     "BIDS task: EYESCLOSED",
     "BIDS task: EYESOPEN"

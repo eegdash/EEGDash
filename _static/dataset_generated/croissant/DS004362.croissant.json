@@ -93,6 +93,11 @@
   ],
   "citeAs": "Gerwin Schalk, Dennis J McFarland, Thilo Hinterberger, Niels Birbaumer, Jonathan R Wolpaw (n.d.). EEG Motor Movement/Imagery Dataset. doi:10.18112/openneuro.ds004362.v1.0.0",
   "version": "1.8.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.3389/fnins.2012.00055",
+    "url": "https://doi.org/10.3389/fnins.2012.00055"
+  },
   "measurementTechnique": [
     "BIDS task: motion"
   ],

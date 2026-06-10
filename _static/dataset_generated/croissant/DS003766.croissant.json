@@ -101,6 +101,11 @@
   ],
   "citeAs": "Kun Chen, Ruien Wang, Jiamin Huang, Fei Gao, Zhen Yuan (2022). A resource for assessing dynamic binary choices in the adult brain using EEG and mouse-tracking. doi:10.18112/openneuro.ds003766.v2.0.3",
   "version": "1.6.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1038/s41597-022-01538-5",
+    "url": "https://doi.org/10.1038/s41597-022-01538-5"
+  },
   "measurementTechnique": [
     "BIDS task: foodchoice",
     "BIDS task: imagechoice",

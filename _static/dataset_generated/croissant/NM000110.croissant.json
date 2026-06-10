@@ -93,6 +93,11 @@
   ],
   "citeAs": "Jack Connolly, Herman Edwards, Blaise Bourgeois, S. Ted Treves, Ali Shoeb (2010). CHB-MIT. doi:10.82901/nemar.nm000110",
   "version": "1.7.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1161/01.cir.101.23.e215",
+    "url": "https://doi.org/10.1161/01.cir.101.23.e215"
+  },
   "measurementTechnique": [
     "BIDS task: rest"
   ],

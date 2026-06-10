@@ -76,6 +76,11 @@
   ],
   "citeAs": "Arnaud Delorme (n.d.). EEG data from an auditory oddball task. doi:10.18112/openneuro.ds003061.v1.1.0",
   "version": "v1.2.1",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1038/s41598-023-27528-0",
+    "url": "https://doi.org/10.1038/s41598-023-27528-0"
+  },
   "measurementTechnique": [
     "BIDS task: P300"
   ],

@@ -97,6 +97,11 @@
   "citeAs": "G.F.P. Van Veen, A. Barachant, A. Andreev, G. Cattan, P. Rodrigues (2019). Van Veen, Barachant & Andreev 2012 — Building Brain Invaders: EEG data of an experimental validation (BI2012). doi:10.5281/zenodo.2649006",
   "version": "1.9.0",
   "dateModified": "2026-04-11",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1002/9781119332428.ch14",
+    "url": "https://doi.org/10.1002/9781119332428.ch14"
+  },
   "measurementTechnique": [
     "BIDS task: p300"
   ],

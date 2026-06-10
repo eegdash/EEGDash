@@ -126,6 +126,11 @@
   ],
   "citeAs": "Chen Feng, Haoqi Ni, Zhoule Zhu, Hongjie Jiang, Zhe Zheng (n.d.). RNS_Epilepsy-iBIDS. doi:10.18112/openneuro.ds007095.v1.0.0",
   "version": "1.8.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.3389/fnins.2026.1815732",
+    "url": "https://doi.org/10.3389/fnins.2026.1815732"
+  },
   "measurementTechnique": [
     "BIDS task: seizure"
   ],

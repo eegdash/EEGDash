@@ -161,6 +161,11 @@
   ],
   "citeAs": "Laura Rose, Alexander Neergaard Zahid, Javier García Ciudad, Christine Egebjerg, Louise Piilgaard (n.d.). Mouse Sleep Staging Validation dataset (MSSV). doi:10.18112/openneuro.ds006366.v1.0.1",
   "version": "1.10.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1093/sleepadvances/zpaf025",
+    "url": "https://doi.org/10.1093/sleepadvances/zpaf025"
+  },
   "measurementTechnique": [
     "BIDS task: sleep"
   ],

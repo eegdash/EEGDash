@@ -80,10 +80,16 @@
   "identifier": "doi:10.18112/openneuro.ds006963.v1.0.1",
   "sameAs": [
     "https://doi.org/10.18112/openneuro.ds006963.v1.0.1",
-    "https://openneuro.org/datasets/ds006963"
+    "https://openneuro.org/datasets/ds006963",
+    "https://huggingface.co/datasets/EEGDash/ds006963"
   ],
   "citeAs": "Şahcan Özdemir, Eren Günseli, Daniel Schneider (2025). Motor Control Processes Moderate Visual Working Memory Gating Dataset. doi:10.18112/openneuro.ds006963.v1.0.1",
   "version": "v1.10.1",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1523/jneurosci.0673-25.2025",
+    "url": "https://doi.org/10.1523/jneurosci.0673-25.2025"
+  },
   "measurementTechnique": [
     "BIDS task: VisuomotorDelayedMatchToSampleWithInterference"
   ],
@@ -123,6 +129,15 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=ds006963",
       "encodingFormat": "text/html",
+      "sha256": "main"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "ds006963-huggingface",
+      "name": "EEGDash/ds006963 on Hugging Face",
+      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
+      "contentUrl": "https://huggingface.co/datasets/EEGDash/ds006963",
+      "encodingFormat": "application/vnd.huggingface-dataset+json",
       "sha256": "main"
     }
   ]

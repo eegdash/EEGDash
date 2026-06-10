@@ -111,6 +111,11 @@
   ],
   "citeAs": "Seyed Yahya Shirazi, Alexandre Franco, Maurício Scopel Hoffmann, Nathalia B. Esper, Dung Truong (20). Healthy Brain Network (HBN) EEG - Release 6. doi:10.82901/nemar.on005510",
   "version": "1.9.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1101/2024.10.03.615261",
+    "url": "https://doi.org/10.1101/2024.10.03.615261"
+  },
   "measurementTechnique": [
     "BIDS task: DespicableMe",
     "BIDS task: DiaryOfAWimpyKid",

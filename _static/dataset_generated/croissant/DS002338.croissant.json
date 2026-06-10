@@ -113,6 +113,11 @@
   "version": "1.2.0",
   "dateCreated": "2019-12-03",
   "dateModified": "2022-03-31",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1101/862375",
+    "url": "https://doi.org/10.1101/862375"
+  },
   "measurementTechnique": [
     "BIDS task: 1dNF",
     "BIDS task: 2dNF",

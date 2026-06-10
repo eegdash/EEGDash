@@ -111,6 +111,11 @@
   ],
   "citeAs": "Arun Singh arun.singh@usd.edu, Rachel Cole rachel-cole@uiowa.edu, Arturo Espinoza arturo-espinoza@uiowa.edu, Jan R Wessel jan-wessel@uiowa.edu, Jim Cavanagh jcavanagh@unm.edu (20). Cross-modal Oddball Task.. doi:10.18112/openneuro.ds004574.v1.0.0",
   "version": "v1.2.1",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1101/2022.07.26.22278079",
+    "url": "https://doi.org/10.1101/2022.07.26.22278079"
+  },
   "measurementTechnique": [
     "BIDS task: Oddball"
   ],

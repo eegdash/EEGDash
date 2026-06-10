@@ -86,6 +86,11 @@
   ],
   "citeAs": "Ricardo Chavarriaga, José del R. Millán (2010). BNCI 2015-013 Error-Related Potentials dataset. doi:10.82901/nemar.nm000168",
   "version": "1.9.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1109/tnsre.2010.2053387",
+    "url": "https://doi.org/10.1109/tnsre.2010.2053387"
+  },
   "measurementTechnique": [
     "BIDS task: p300"
   ],

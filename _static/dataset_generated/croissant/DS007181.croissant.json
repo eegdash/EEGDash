@@ -95,6 +95,11 @@
   ],
   "citeAs": "Li Li, Qi Han, Haolei Bai, Xiaolong Zhang, Yong Liu (n.d.). Structural MRI, Resting-state fMRI, and PSG/EEG Dataset of Zoster-associated Neuralgia. doi:10.18112/openneuro.ds007181.v1.0.1",
   "version": "1.8.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1186/s10194-025-02204-y",
+    "url": "https://doi.org/10.1186/s10194-025-02204-y"
+  },
   "measurementTechnique": [
     "BIDS task: sleep"
   ],

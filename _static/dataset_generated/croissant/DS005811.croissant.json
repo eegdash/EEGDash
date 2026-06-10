@@ -111,6 +111,11 @@
   ],
   "citeAs": "Guohao Zhang, Ming Zhou, Shuyi Zhen, Shaohua Tang, Zheng Li (2019). NOD-EEG. doi:10.18112/openneuro.ds005811.v1.0.9",
   "version": "1.10.1",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1038/s41597-025-05174-7",
+    "url": "https://doi.org/10.1038/s41597-025-05174-7"
+  },
   "measurementTechnique": [
     "BIDS task: ImageNet"
   ],

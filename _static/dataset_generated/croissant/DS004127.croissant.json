@@ -85,6 +85,11 @@
   ],
   "citeAs": "Amada Abrego, Wasif Khan, John P Seymour (20). Somatosensory Cortex Rat DISC Data. doi:10.18112/openneuro.ds004127.v3.0.0",
   "version": "1.1.1",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1101/2021.09.20.460996",
+    "url": "https://doi.org/10.1101/2021.09.20.460996"
+  },
   "measurementTechnique": [
     "BIDS task: B1",
     "BIDS task: B2",

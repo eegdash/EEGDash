@@ -101,6 +101,11 @@
   ],
   "citeAs": "Zhao Xiangyue, Zhou Jingyao, Zhang Libo, Duan Haoqing, Wei Shiyu (20). 29 By ANT. doi:10.18112/openneuro.ds005285.v1.0.0",
   "version": "1.1.1",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1136/gpsych-2023-101164",
+    "url": "https://doi.org/10.1136/gpsych-2023-101164"
+  },
   "measurementTechnique": [
     "BIDS task: 29ByANT"
   ],

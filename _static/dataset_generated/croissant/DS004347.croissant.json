@@ -88,6 +88,11 @@
   ],
   "citeAs": "Makin, A. D. J, Wilton, M. M, Pecchinenda, A., Bertamini, M. (n.d.). Symmetry perception and affective responses: a combined EEG/EMG study. doi:10.18112/openneuro.ds004347.v1.0.0",
   "version": "1.1.1",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1016/j.neuropsychologia.2012.10.003",
+    "url": "https://doi.org/10.1016/j.neuropsychologia.2012.10.003"
+  },
   "measurementTechnique": [
     "BIDS task: jacobsen"
   ],

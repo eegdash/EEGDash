@@ -53,7 +53,8 @@
     "neuroscience",
     "MEG",
     "['Unknown']",
-    "['Attention']"
+    "['Healthy']",
+    "['Decision-making']"
   ],
   "isAccessibleForFree": true,
   "includedInDataCatalog": {
@@ -102,6 +103,11 @@
   ],
   "citeAs": "Rafal Bogacz, Vladimir Litvak (n.d.). Human MEG recordings during sequential conflict task. doi:10.18112/openneuro.ds002908.v1.0.0",
   "version": "1.0.1",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1523/jneurosci.0572-21.2022",
+    "url": "https://doi.org/10.1523/jneurosci.0572-21.2022"
+  },
   "measurementTechnique": [
     "BIDS task: mouse"
   ],

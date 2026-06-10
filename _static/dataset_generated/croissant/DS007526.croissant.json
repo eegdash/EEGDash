@@ -83,6 +83,11 @@
   ],
   "citeAs": "Zoya Katzir, Daniel Vered, Inbal Maidan (inbalm@tlvmc.gov.il) (n.d.). PD-EEG: Resting-State & Walking EEG in Parkinson's Disease. doi:10.18112/openneuro.ds007526.v1.0.1",
   "version": "1.10.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1002/mds.70348",
+    "url": "https://doi.org/10.1002/mds.70348"
+  },
   "measurementTechnique": [
     "BIDS task: rest",
     "BIDS task: walk"

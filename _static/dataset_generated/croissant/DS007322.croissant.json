@@ -83,6 +83,11 @@
   ],
   "citeAs": "Prakash Mishra, Tapan K Gandhi, Saurabh R. Gandhi (n.d.). Personalized smartphone notifications bias auditory salience across processing stages. doi:10.18112/openneuro.ds007322.v1.0.1",
   "version": "1.7.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.64898/2026.01.26.701556",
+    "url": "https://doi.org/10.64898/2026.01.26.701556"
+  },
   "measurementTechnique": [
     "BIDS task: auditoryoddball"
   ],

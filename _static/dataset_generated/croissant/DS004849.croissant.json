@@ -51,8 +51,10 @@
     "EEG",
     "BIDS",
     "neuroscience",
-    "['Unknown']",
-    "['Memory']"
+    "['Visual']",
+    "['Healthy']",
+    "['Memory']",
+    "HED"
   ],
   "isAccessibleForFree": true,
   "includedInDataCatalog": {
@@ -87,6 +89,11 @@
   ],
   "citeAs": "Tony Johnson, Stephen Gordon, Jon Touryan, Kevin King (n.d.). STRONG. doi:10.18112/openneuro.ds004849.v1.0.0",
   "version": "1.8.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1126/science.1100217",
+    "url": "https://doi.org/10.1126/science.1100217"
+  },
   "measurementTechnique": [
     "BIDS task: nback"
   ],

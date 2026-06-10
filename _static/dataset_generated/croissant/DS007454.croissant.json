@@ -76,6 +76,11 @@
   ],
   "citeAs": "[Unspecified] (2019). A common neural mechanism underlies experiences of passage of time. doi:10.18112/openneuro.ds007454.v1.0.1",
   "version": "1.7.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.21105/joss.01896pernet",
+    "url": "https://doi.org/10.21105/joss.01896pernet"
+  },
   "measurementTechnique": [
     "BIDS task: Starfield"
   ],

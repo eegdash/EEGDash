@@ -96,6 +96,11 @@
   ],
   "citeAs": "Phoebe Gaston, Christian Brodbeck, Colin Phillips, Ellen Lau (2022). Auditory single word recognition in MEG. doi:10.18112/openneuro.ds004276.v1.0.0",
   "version": "1.6.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.3758/s13428-018-1056-1",
+    "url": "https://doi.org/10.3758/s13428-018-1056-1"
+  },
   "measurementTechnique": [
     "BIDS task: noise",
     "BIDS task: words"

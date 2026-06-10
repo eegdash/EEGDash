@@ -97,6 +97,11 @@
   "datePublished": "2019",
   "version": "1.9.0",
   "dateModified": "2026-03-25",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1093/gigascience/gix034",
+    "url": "https://doi.org/10.1093/gigascience/gix034"
+  },
   "measurementTechnique": [
     "BIDS task: imagery"
   ],

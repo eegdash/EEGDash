@@ -102,6 +102,11 @@
   ],
   "citeAs": "Bahne H. Bahners, Roxanne Lofredi, Tilmann Sander, Alfons Schnitzler, Andrea A. Kuhn (20). sfb_meg_phantom (B04/C01). doi:10.18112/openneuro.ds004738.v1.0.1",
   "version": "1.2.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1016/j.brs.2024.01.005",
+    "url": "https://doi.org/10.1016/j.brs.2024.01.005"
+  },
   "measurementTechnique": [
     "BIDS task: dip13",
     "BIDS task: dip13mov"

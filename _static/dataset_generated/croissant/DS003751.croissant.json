@@ -88,6 +88,11 @@
   ],
   "citeAs": "Sudhakar Mishra, Md. Asif, Uma Shanker Tiwary, Narayanan Srinivasan (n.d.). Dataset on Emotion with Naturalistic Stimuli (DENS). doi:10.18112/openneuro.ds003751.v1.0.2",
   "version": "1.4",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1101/2021.08.04.455041",
+    "url": "https://doi.org/10.1101/2021.08.04.455041"
+  },
   "measurementTechnique": [
     "BIDS task: Emotion"
   ],

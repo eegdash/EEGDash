@@ -149,6 +149,11 @@
   ],
   "citeAs": "Michael J. Kahana, Joseph H. Rudoler, Lynn J. Lohnas, Karl Healey, Ada Aka (2019). Penn Electrophysiology of Encoding and Retrieval Study (PEERS). doi:10.18112/openneuro.ds004395.v2.0.0",
   "version": "1.6.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1037/xlm0001319",
+    "url": "https://doi.org/10.1037/xlm0001319"
+  },
   "measurementTechnique": [
     "BIDS task: VFFR",
     "BIDS task: ltpFR",

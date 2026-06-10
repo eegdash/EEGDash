@@ -109,6 +109,11 @@
   ],
   "citeAs": "Daniel G. Wakeman, Richard N Henson, Dung Truong (curation), Kay Robbins (curation), Scott Makeig (curation) (2021). Face processing MEEG dataset with HED annotation. doi:10.18112/openneuro.ds003645.v2.0.2",
   "version": "1.8.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1038/sdata.2015.1",
+    "url": "https://doi.org/10.1038/sdata.2015.1"
+  },
   "measurementTechnique": [
     "BIDS task: FacePerception",
     "BIDS task: noise"

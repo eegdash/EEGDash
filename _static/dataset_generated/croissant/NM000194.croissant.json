@@ -93,6 +93,11 @@
   "datePublished": "2013",
   "version": "1.9.0",
   "dateModified": "2026-03-24",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1016/j.clinph.2012.12.050",
+    "url": "https://doi.org/10.1016/j.clinph.2012.12.050"
+  },
   "measurementTechnique": [
     "BIDS task: p300"
   ],

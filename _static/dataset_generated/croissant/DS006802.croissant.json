@@ -103,6 +103,11 @@
   ],
   "citeAs": "Moerel, Denise, Grootswagers, Tijl, Quek, Genevieve L., Smit, Sophie, Varlet, Manuel (2025). Collaborative rule learning promotes interbrain information alignment. doi:10.18112/openneuro.ds006802.v1.0.0",
   "version": "1.0.2",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1101/2025.01.07.631802",
+    "url": "https://doi.org/10.1101/2025.01.07.631802"
+  },
   "measurementTechnique": [
     "BIDS task: categorisation"
   ],

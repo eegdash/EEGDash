@@ -53,8 +53,8 @@
     "neuroscience",
     "IEEG",
     "['Visual']",
-    "['Unknown']",
-    "['Perception']"
+    "['Other']",
+    "['Clinical/Intervention']"
   ],
   "isAccessibleForFree": true,
   "includedInDataCatalog": {
@@ -96,6 +96,11 @@
   ],
   "citeAs": "Tal Pal Attia, Kay Robbins, Dora Hermes (20). HED schema library for SCORE annotations example. doi:10.18112/openneuro.ds006392.v1.0.1",
   "version": "1.9.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1038/s41597-025-05791-2",
+    "url": "https://doi.org/10.1038/s41597-025-05791-2"
+  },
   "measurementTechnique": [
     "BIDS task: photicstim"
   ],

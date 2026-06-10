@@ -90,6 +90,11 @@
   ],
   "citeAs": "Lina Teichmann, Denise Moerel, Anina Rich, Chris Baker (2019). The nature of neural object representations during dynamic occlusion. doi:10.18112/openneuro.ds004011.v1.0.3",
   "version": "1.6.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1016/j.cortex.2022.04.009",
+    "url": "https://doi.org/10.1016/j.cortex.2022.04.009"
+  },
   "measurementTechnique": [
     "BIDS task: occlusion"
   ],

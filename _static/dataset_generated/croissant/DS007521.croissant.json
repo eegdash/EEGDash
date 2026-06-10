@@ -94,6 +94,11 @@
   ],
   "citeAs": "Moerel, Denise, Chenh, Cecilia, Bowman, Sophie, Carlson, Thomas (20). The effect of hunger and state preferences on the neural processing of food images. doi:10.18112/openneuro.ds007521.v1.0.1",
   "version": "1.0.2",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1101/2025.09.09.674354",
+    "url": "https://doi.org/10.1101/2025.09.09.674354"
+  },
   "measurementTechnique": [
     "BIDS task: food"
   ],

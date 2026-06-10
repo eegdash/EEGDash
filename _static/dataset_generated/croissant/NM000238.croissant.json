@@ -59,6 +59,11 @@
     "name": "EEG Dash",
     "url": "https://eegdash.org/"
   },
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.48804/k3vsnd",
+    "url": "https://doi.org/10.48804/k3vsnd"
+  },
   "measurementTechnique": [
     "BIDS task: .bids-validator-config",
     "BIDS task: .bidsignore",

@@ -94,6 +94,11 @@
   ],
   "citeAs": "Martyna Beata Płomecka, Ard Kastrati, Nicolas Langer (2019). EEGEyeNet Dataset. doi:10.18112/openneuro.ds007338.v1.0.0",
   "version": "1.7.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.48550/arxiv.2111.05100",
+    "url": "https://doi.org/10.48550/arxiv.2111.05100"
+  },
   "measurementTechnique": [
     "BIDS task: dots"
   ],

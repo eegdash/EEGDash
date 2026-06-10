@@ -96,6 +96,11 @@
   ],
   "citeAs": "Emmanuel K. Kalunga, Sylvain Chevallier, Quentin Barthélemy, Karim Djouani, Eric Monacelli (2019). Kalunga2016 – SSVEP Exo dataset. doi:10.82901/nemar.nm000123",
   "version": "1.9.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1016/j.neucom.2016.01.007",
+    "url": "https://doi.org/10.1016/j.neucom.2016.01.007"
+  },
   "measurementTechnique": [
     "BIDS task: ssvep"
   ],

@@ -92,6 +92,11 @@
   ],
   "citeAs": "Flora Schwartz, Radouane El-Yagoubi, Julie Cayron, Pierre-Vincent Paubel, Bastien Tremoliere (n.d.). Investigating the cognitive conflict triggered by moral judgment of accidental harm : an event-related potentials study. doi:10.18112/openneuro.ds004860.v1.0.0",
   "version": "1.8.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.31234/osf.io/rf72c",
+    "url": "https://doi.org/10.31234/osf.io/rf72c"
+  },
   "measurementTechnique": [
     "BIDS task: HarmN400"
   ],

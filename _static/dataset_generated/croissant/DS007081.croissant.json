@@ -91,6 +91,11 @@
   ],
   "citeAs": "Yakup Yılmaz, Nursena Ataseven Özdemir, Wouter Kruijne, Elkan Akyürek, Eren Günseli (n.d.). Passive but accessible: Studied information is not actively stored in working memory, yet attended regardless of anticipated load. doi:10.18112/openneuro.ds007081.v1.0.0",
   "version": "1.10.1",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1162/jocn.a.2619",
+    "url": "https://doi.org/10.1162/jocn.a.2619"
+  },
   "measurementTechnique": [
     "BIDS task: PassiveAccessible"
   ],

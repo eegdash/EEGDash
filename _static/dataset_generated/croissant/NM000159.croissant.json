@@ -121,6 +121,11 @@
   "citeAs": "Simon Avrillon, Francois Hug, Roger M. Enoka, Arnault H. Caillet, Dario Farina (20). MUniverse Avrillon et al 2024. doi:https://doi.org/10.7910/DVN/L9OQY7",
   "version": "1.11.1",
   "dateModified": "2026-04-08",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.7554/elife.97085.3",
+    "url": "https://doi.org/10.7554/elife.97085.3"
+  },
   "measurementTechnique": [
     "BIDS task: isometric10percentmvc",
     "BIDS task: isometric20percentmvc",

@@ -123,6 +123,11 @@
   ],
   "citeAs": "M.A. van den Boom, N.M. Gregg, G.O. Valencia, B.N. Lundstrom, K.J. Miller (n.d.). Automatic Evoked Response Detection (ER-Detect) dataset. doi:10.18112/openneuro.ds004774.v1.0.0",
   "version": "Brain Imaging Data Structure Specification v1.8.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1101/2024.01.09.574915",
+    "url": "https://doi.org/10.1101/2024.01.09.574915"
+  },
   "measurementTechnique": [
     "BIDS task: SPESclin",
     "BIDS task: ccep"

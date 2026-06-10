@@ -81,6 +81,11 @@
   ],
   "citeAs": "Uttara Khatri, Sara Hussain (20). Real-time personalized brain state-dependent TMS in healthy adults. doi:10.18112/openneuro.ds005779.v1.0.1",
   "version": "1.2",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1016/j.brs.2024.12.1193",
+    "url": "https://doi.org/10.1016/j.brs.2024.12.1193"
+  },
   "measurementTechnique": [
     "BIDS task: resting",
     "BIDS task: testinghigh110RMT",

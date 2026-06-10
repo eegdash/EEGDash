@@ -53,8 +53,8 @@
     "neuroscience",
     "IEEG",
     "['Visual']",
-    "['Unknown']",
-    "['Memory']"
+    "['Healthy']",
+    "['Perception']"
   ],
   "isAccessibleForFree": true,
   "includedInDataCatalog": {
@@ -78,6 +78,11 @@
   ],
   "citeAs": "[Unspecified] (2019). Color Change Detection Task. doi:10.18112/openneuro.ds005624.v1.0.0",
   "version": "1.7.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1101/2022.06.13.496029",
+    "url": "https://doi.org/10.1101/2022.06.13.496029"
+  },
   "measurementTechnique": [
     "BIDS task: CCDT"
   ],

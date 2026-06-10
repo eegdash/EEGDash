@@ -116,6 +116,11 @@
   ],
   "citeAs": "Romain Quentin, Jean-Remi King, Etienne Sallard, Nathan Fishman, Ryan Thompson (20). Differential brain mechanisms of selection and maintenance of information during working memory (MEG data). doi:10.18112/openneuro.ds002550.v1.0.1",
   "version": "1.1.1",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1523/jneurosci.2764-18.2019",
+    "url": "https://doi.org/10.1523/jneurosci.2764-18.2019"
+  },
   "measurementTechnique": [
     "BIDS task: LocalizerControl",
     "BIDS task: WorkingMemory"

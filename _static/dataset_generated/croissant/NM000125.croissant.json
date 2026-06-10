@@ -102,6 +102,11 @@
   ],
   "citeAs": "Young-Eun Lee, Gi-Hwan Shin, Minji Lee, Seong-Whan Lee (2019). Lee2021 – SSVEP paradigm of the Mobile BCI dataset. doi:10.82901/nemar.nm000125",
   "version": "1.9.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1038/s41597-021-01094-4",
+    "url": "https://doi.org/10.1038/s41597-021-01094-4"
+  },
   "measurementTechnique": [
     "BIDS task: ssvep"
   ],

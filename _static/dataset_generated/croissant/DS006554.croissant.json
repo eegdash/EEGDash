@@ -51,7 +51,9 @@
     "EEG",
     "BIDS",
     "neuroscience",
-    "['Unknown']"
+    "['Visual']",
+    "['Healthy']",
+    "['Perception']"
   ],
   "isAccessibleForFree": true,
   "includedInDataCatalog": {

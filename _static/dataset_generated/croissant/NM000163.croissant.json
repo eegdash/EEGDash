@@ -102,6 +102,11 @@
   ],
   "citeAs": "Kalou Cabrera Castillos, Simon Ladouce, Ludovic Darmet, Frédéric Dehais (2023). c-VEP and Burst-VEP dataset from Castillos et al. (2023). doi:10.82901/nemar.nm000163",
   "version": "1.9.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1016/j.neuroimage.2023.120446",
+    "url": "https://doi.org/10.1016/j.neuroimage.2023.120446"
+  },
   "measurementTechnique": [
     "BIDS task: cvep"
   ],

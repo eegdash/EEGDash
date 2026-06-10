@@ -95,6 +95,11 @@
   ],
   "citeAs": "Jack E. Taylor, Rasmus Sinn, Cosimo Iaia, Christian J. Fiebach (2024). Alphabetic Decision Task (Arial Light Font). doi:10.18112/openneuro.ds005594.v1.0.3",
   "version": "1.7.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1101/2024.11.11.622929",
+    "url": "https://doi.org/10.1101/2024.11.11.622929"
+  },
   "measurementTechnique": [
     "BIDS task: alphabeticdecision"
   ],

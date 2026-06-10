@@ -103,6 +103,11 @@
   ],
   "citeAs": "Velu Prabhakar Kumaravel, Victor Kartsch, Simone Benatti, Giorgio Vallortigara, Elisabetta Farella (20). 8-Channel SSVEP EEG Dataset with Artifact Trials. doi:10.18112/openneuro.ds004745.v1.0.1",
   "version": "1.8.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1109/embc46164.2021.9629771",
+    "url": "https://doi.org/10.1109/embc46164.2021.9629771"
+  },
   "measurementTechnique": [
     "BIDS task: unnamed"
   ],

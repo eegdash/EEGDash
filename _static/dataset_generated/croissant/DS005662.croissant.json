@@ -103,6 +103,11 @@
   ],
   "citeAs": "Sophie Smit, Almudena Ramírez-Haro, Manuel Varlet, Denise Moerel, Genevieve L. Quek (20). A comprehensive EEG dataset for investigating visual touch perception. doi:10.18112/openneuro.ds005662.v2.0.1",
   "version": "1.0.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1101/2025.07.10.664069",
+    "url": "https://doi.org/10.1101/2025.07.10.664069"
+  },
   "measurementTechnique": [
     "BIDS task: video"
   ],

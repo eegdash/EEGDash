@@ -52,8 +52,8 @@
     "BIDS",
     "neuroscience",
     "FNIRS",
-    "['Other']",
-    "['Unknown']"
+    "['Unknown']",
+    "['Healthy']"
   ],
   "isAccessibleForFree": true,
   "includedInDataCatalog": {
@@ -83,6 +83,11 @@
   ],
   "citeAs": "Niu，Haijing, Zheng, Sha, Yuan, Haodong (n.d.). TimeSeries BIDS converted. doi:10.18112/openneuro.ds007477.v1.0.1",
   "version": "1.7.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1371/journal.pone.0072425",
+    "url": "https://doi.org/10.1371/journal.pone.0072425"
+  },
   "measurementTechnique": [
     "BIDS task: ort"
   ],

@@ -114,6 +114,11 @@
   ],
   "citeAs": "Guohao Zhang, Sai Ma, Ming Zhou, Shaohua Tang, Shuyi Zhen (n.d.). HAD-MEEG. doi:10.18112/openneuro.ds007353.v1.0.0",
   "version": "1.10.1",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1155/2020/8837615",
+    "url": "https://doi.org/10.1155/2020/8837615"
+  },
   "measurementTechnique": [
     "BIDS task: action",
     "BIDS task: noise"

@@ -102,6 +102,11 @@
   ],
   "citeAs": "Dorottya Cserpan, Ece Boran, Richard Rosch, San Pietro Lo Biundo, Georgia Ramantani (n.d.). Dataset of EEG recordings of pediatric patients with epilepsy based on the 10-20 system. doi:10.18112/openneuro.ds003555.v1.0.1",
   "version": "1.4.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1101/2021.04.19.21255728",
+    "url": "https://doi.org/10.1101/2021.04.19.21255728"
+  },
   "measurementTechnique": [
     "BIDS task: hfo"
   ],

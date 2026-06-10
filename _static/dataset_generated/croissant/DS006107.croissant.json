@@ -52,8 +52,9 @@
     "BIDS",
     "neuroscience",
     "IEEG",
-    "['Sleep']",
-    "['Unknown']"
+    "['Unknown']",
+    "['Epilepsy']",
+    "['Clinical/Intervention']"
   ],
   "isAccessibleForFree": true,
   "includedInDataCatalog": {
@@ -90,6 +91,11 @@
   ],
   "citeAs": "Naoto Kuroda, Eishi Asano, Nobukazu Nakasato (n.d.). iEEG_Neural_spatial_volatility. doi:10.18112/openneuro.ds006107.v1.0.0",
   "version": "1.7.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1212/wnl.0000000000213906",
+    "url": "https://doi.org/10.1212/wnl.0000000000213906"
+  },
   "measurementTechnique": [
     "BIDS task: sws"
   ],

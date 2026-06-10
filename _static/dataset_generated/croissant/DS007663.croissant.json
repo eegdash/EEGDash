@@ -51,7 +51,10 @@
     "EEG",
     "BIDS",
     "neuroscience",
-    "MEG"
+    "MEG",
+    "['Multisensory']",
+    "['Healthy']",
+    "['Perception']"
   ],
   "isAccessibleForFree": true,
   "includedInDataCatalog": {
@@ -112,6 +115,11 @@
   ],
   "citeAs": "Marion Brickwedde, Rupali Limachya, Roksana Markiewicz, Emma Sutton, Christopher Postzich (20). CrossModal Study. doi:10.18112/openneuro.ds007663.v1.0.0",
   "version": "1.7.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.7554/elife.106050.3",
+    "url": "https://doi.org/10.7554/elife.106050.3"
+  },
   "measurementTechnique": [
     "BIDS task: crossmodal"
   ],

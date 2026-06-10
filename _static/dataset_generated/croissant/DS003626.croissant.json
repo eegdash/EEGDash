@@ -93,6 +93,11 @@
   ],
   "citeAs": "Nicolas Nieto, Victoria Peterson, Hugo Rufiner, Juan Kamienkowski, Ruben Spies (20). Inner Speech. doi:10.18112/openneuro.ds003626.v2.0.0",
   "version": "1.4",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1101/2021.04.19.440473",
+    "url": "https://doi.org/10.1101/2021.04.19.440473"
+  },
   "measurementTechnique": [
     "BIDS task: innerspeech"
   ],

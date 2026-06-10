@@ -88,6 +88,11 @@
   ],
   "citeAs": "Yuri G. Pavlov, Dauren Kasanov, Alexandra I. Kosachenko, Alexander I. Kotyusov (n.d.). EEG, pupillometry, ECG and photoplethysmography, and behavioral data in the digit span task and rest. doi:10.18112/openneuro.ds003838.v1.0.6",
   "version": "1.1.1",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1038/s41597-022-01414-2",
+    "url": "https://doi.org/10.1038/s41597-022-01414-2"
+  },
   "measurementTechnique": [
     "BIDS task: memory",
     "BIDS task: rest"

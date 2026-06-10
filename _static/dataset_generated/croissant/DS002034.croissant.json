@@ -95,6 +95,11 @@
   ],
   "citeAs": "Christoph Schneider, Michael Pereira, Luca Tonin, Jose del R. Millan (2019). Real-time EEG feedback on alpha power lateralization leads to behavioral improvements in a covert attention task. doi:10.18112/openneuro.ds002034.v1.0.3",
   "version": "1.1.1",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1007/s10548-019-00725-9",
+    "url": "https://doi.org/10.1007/s10548-019-00725-9"
+  },
   "measurementTechnique": [
     "BIDS task: offline",
     "BIDS task: offlinecatch",

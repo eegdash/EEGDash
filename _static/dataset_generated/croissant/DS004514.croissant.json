@@ -86,6 +86,11 @@
   ],
   "citeAs": "Milan Rybář, Riccardo Poli, Ian Daly (20). Simultaneous EEG and fNIRS recordings for semantic decoding of imagined animals and tools. doi:10.18112/openneuro.ds004514.v1.1.2",
   "version": "1.7.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1038/s41597-025-04967-0",
+    "url": "https://doi.org/10.1038/s41597-025-04967-0"
+  },
   "measurementTechnique": [
     "BIDS task: eeg",
     "BIDS task: nirs"

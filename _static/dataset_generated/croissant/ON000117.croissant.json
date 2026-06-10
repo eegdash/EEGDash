@@ -84,6 +84,11 @@
   ],
   "citeAs": "Wakeman, DG, Henson, RN (2015). Multisubject, multimodal face processing. doi:10.82901/nemar.on000117",
   "version": "1.0.2",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1038/sdata.2015.1",
+    "url": "https://doi.org/10.1038/sdata.2015.1"
+  },
   "measurementTechnique": [
     "BIDS task: facerecognition",
     "BIDS task: noise"

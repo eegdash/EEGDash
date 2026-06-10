@@ -90,6 +90,11 @@
   ],
   "citeAs": "SUN, Rui, Ven WONG, Goon Fui, GAO, Jungling (n.d.). The Effect of Buddhism Derived Loving Kindness Meditation on Modulating EEG: Long-term and Short-term Effect. doi:10.18112/openneuro.ds003816.v1.0.1",
   "version": "1.6",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1038/s41598-019-40200-w",
+    "url": "https://doi.org/10.1038/s41598-019-40200-w"
+  },
   "measurementTechnique": [
     "BIDS task: LKMOther",
     "BIDS task: LKMSelf",

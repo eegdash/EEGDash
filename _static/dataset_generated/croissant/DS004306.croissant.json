@@ -94,6 +94,11 @@
   ],
   "citeAs": "Holly Wilson, Mohammad Golbabaee, Michael Proulx, Eamonn O'Neill (n.d.). EEG Semantic Imagination and Perception Dataset. doi:10.18112/openneuro.ds004306.v1.0.2",
   "version": "1.7.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1038/s41597-023-02287-9",
+    "url": "https://doi.org/10.1038/s41597-023-02287-9"
+  },
   "measurementTechnique": [
     "BIDS task: experiment"
   ],

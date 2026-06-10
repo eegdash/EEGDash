@@ -89,6 +89,11 @@
   ],
   "citeAs": "Giovanni M Di Liberto, Michael P Broderick, Ole Bialas, Edmund C Lalor (2015). EEG responses to continuous naturalistic speech. doi:10.18112/openneuro.ds004408.v1.0.8",
   "version": "1.7.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.3389/fnhum.2016.00604",
+    "url": "https://doi.org/10.3389/fnhum.2016.00604"
+  },
   "measurementTechnique": [
     "BIDS task: listening"
   ],

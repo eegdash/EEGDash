@@ -137,6 +137,11 @@
   ],
   "citeAs": "Xinyu Mou, Cuilin He, Liwei Tan, Junjie Yu, Huadong Liang (2019). ChineseEEG: A Chinese Linguistic Corpora EEG Dataset for Semantic Alignment and Neural Decoding. doi:10.18112/openneuro.ds004952.v1.2.2",
   "version": "1.7.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1038/s41597-024-03398-7",
+    "url": "https://doi.org/10.1038/s41597-024-03398-7"
+  },
   "measurementTechnique": [
     "BIDS task: reading"
   ],

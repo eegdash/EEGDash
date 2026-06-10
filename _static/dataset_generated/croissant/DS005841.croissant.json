@@ -84,6 +84,11 @@
   ],
   "citeAs": "Elena Karakashevska, Alexis Makin, Michael Batterley (n.d.). EEG Experiment measuring ERPs in VR. doi:10.18112/openneuro.ds005841.v1.0.0",
   "version": "1.6.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.31234/osf.io/sfyg6_v2",
+    "url": "https://doi.org/10.31234/osf.io/sfyg6_v2"
+  },
   "measurementTechnique": [
     "BIDS task: lumfront",
     "BIDS task: lumperp",

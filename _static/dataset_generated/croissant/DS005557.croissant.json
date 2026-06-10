@@ -87,6 +87,11 @@
   ],
   "citeAs": "Haydn G. Herrema, Michael J. Kahana (n.d.). Free Recall with Closed-Loop Stimulation at Encoding (Encoding Classifier). doi:10.18112/openneuro.ds005557.v1.0.0",
   "version": "1.7.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1038/s41467-017-02753-0",
+    "url": "https://doi.org/10.1038/s41467-017-02753-0"
+  },
   "measurementTechnique": [
     "BIDS task: FR3"
   ],

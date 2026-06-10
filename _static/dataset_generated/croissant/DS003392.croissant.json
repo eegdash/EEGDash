@@ -100,6 +100,11 @@
   ],
   "citeAs": "Nicolas Zilber, Philippe Ciuciu, Alexandre Gramfort, Leila Azizi, Virginie van Wassenhove (2014). NeuroSpin hMT+ Localizer DATA (MEG & aMRI). doi:10.18112/openneuro.ds003392.v1.0.4",
   "version": "?",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1016/j.neuroimage.2014.02.017",
+    "url": "https://doi.org/10.1016/j.neuroimage.2014.02.017"
+  },
   "measurementTechnique": [
     "BIDS task: localizer",
     "BIDS task: noise"

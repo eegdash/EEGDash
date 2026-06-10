@@ -88,6 +88,11 @@
   ],
   "citeAs": "Bjoern Holtze, Marc Rosenkranz, Martin Bleichner, Stefan Debener (n.d.). Blink-Pause-Relation (Competing Speaker Paradigm). doi:10.18112/openneuro.ds004369.v1.0.1",
   "version": "v5.2",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.5709/acp-0387-6",
+    "url": "https://doi.org/10.5709/acp-0387-6"
+  },
   "measurementTechnique": [
     "BIDS task: attendedSpeakerParadigm"
   ],

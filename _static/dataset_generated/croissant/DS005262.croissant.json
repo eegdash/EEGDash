@@ -104,6 +104,11 @@
   ],
   "citeAs": "Donia Metwalli, Eslam Ahmed, Antony Emil, Yousef A. Radwan, Mariam Barakat (n.d.). ArEEG: Arabic Inner Speech EEG dataset. doi:10.18112/openneuro.ds005262.v1.0.1",
   "version": "1.9.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1038/s41597-025-05387-w",
+    "url": "https://doi.org/10.1038/s41597-025-05387-w"
+  },
   "measurementTechnique": [
     "BIDS task: innerspeech"
   ],

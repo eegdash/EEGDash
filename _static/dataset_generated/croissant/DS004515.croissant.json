@@ -81,6 +81,11 @@
   ],
   "citeAs": "Garima Singh, James F Cavanagh (20). EEG: Alcohol imagery reinforcement learning task with light and heavy drinker participants. doi:10.18112/openneuro.ds004515.v1.0.0",
   "version": "1.1.1",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1016/j.pscychresns.2023.111685",
+    "url": "https://doi.org/10.1016/j.pscychresns.2023.111685"
+  },
   "measurementTechnique": [
     "BIDS task: ProbabilisticSelection"
   ],

@@ -97,6 +97,11 @@
   ],
   "citeAs": "Seitaro Iwama, Masumi Morishige, Yoshikazu Takahashi, Ryotaro Hirose, Midori Kodama (2023). The BMI-HDEEG dataset 1. doi:10.18112/openneuro.ds004444.v1.0.1",
   "version": "1.7.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1038/s41597-023-02260-6",
+    "url": "https://doi.org/10.1038/s41597-023-02260-6"
+  },
   "measurementTechnique": [
     "BIDS task: smrbmi"
   ],

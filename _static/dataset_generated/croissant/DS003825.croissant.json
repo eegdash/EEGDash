@@ -106,6 +106,11 @@
   ],
   "citeAs": "Grootswagers, Tijl, Zhou, Ivy, Robinson, Amanda, Hebart, Martin, Carlson, Thomas (n.d.). Human electroencephalography recordings from 50 subjects for 22,248 images from 1,854 object concepts. doi:10.18112/openneuro.ds003825.v1.1.0",
   "version": "1.0.2",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1038/s41597-021-01102-7",
+    "url": "https://doi.org/10.1038/s41597-021-01102-7"
+  },
   "measurementTechnique": [
     "BIDS task: rsvp"
   ],

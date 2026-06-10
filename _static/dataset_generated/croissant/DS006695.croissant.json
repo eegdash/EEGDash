@@ -80,6 +80,11 @@
   ],
   "citeAs": "Julie Onton, Sarah Mednick (20). Validation of Sleep Staging with Forehead EEG Patch. doi:10.18112/openneuro.ds006695.v1.0.2",
   "version": "1.8.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.3389/frsle.2024.1349537",
+    "url": "https://doi.org/10.3389/frsle.2024.1349537"
+  },
   "measurementTechnique": [
     "BIDS task: sleep"
   ],

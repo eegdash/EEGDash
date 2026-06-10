@@ -102,6 +102,11 @@
   ],
   "citeAs": "Bingchuan Liu, Yijun Wang, Xiaorong Gao, Xiaogang Chen (2019). Liu2022 – eldBETA SSVEP benchmark dataset for elderly population. doi:10.82901/nemar.nm000130",
   "version": "1.9.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1038/s41597-022-01372-9",
+    "url": "https://doi.org/10.1038/s41597-022-01372-9"
+  },
   "measurementTechnique": [
     "BIDS task: ssvep"
   ],

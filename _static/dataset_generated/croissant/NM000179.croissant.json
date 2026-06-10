@@ -372,6 +372,11 @@
   "citeAs": "Anahit Babayan, Miray Erbey, Deniz Kumral, Janis D. Reinelt, Andrea M.F. Reiter (2019). LEMON: MPI Leipzig Mind-Brain-Body EEG (Resting State). doi:10.1038/sdata.2018.308",
   "version": "1.9.0",
   "dateModified": "2026-04-08",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1038/sdata.2018.308",
+    "url": "https://doi.org/10.1038/sdata.2018.308"
+  },
   "measurementTechnique": [
     "BIDS task: resting"
   ],

@@ -100,6 +100,11 @@
   ],
   "citeAs": "Marissa Westerfield (data, curation), Scott Makeig (data, curation), Dung Truong (curation), Kay Robbins (curation), Arno Delorme (curation) (20). Auditory-Visual Shift Study. doi:10.18112/openneuro.ds002893.v2.0.0",
   "version": "1.7.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1016/j.brainres.2008.02.010",
+    "url": "https://doi.org/10.1016/j.brainres.2008.02.010"
+  },
   "measurementTechnique": [
     "BIDS task: AuditoryVisualShift"
   ],

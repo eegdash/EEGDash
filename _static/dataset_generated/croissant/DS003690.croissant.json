@@ -86,6 +86,11 @@
   ],
   "citeAs": "Maria J. Ribeiro, Miguel Castelo-Branco (n.d.). EEG, ECG and pupil data from young and older adults: rest and auditory cued reaction time tasks. doi:10.18112/openneuro.ds003690.v1.0.0",
   "version": "v1.2.1",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1016/j.neurobiolaging.2018.09.028",
+    "url": "https://doi.org/10.1016/j.neurobiolaging.2018.09.028"
+  },
   "measurementTechnique": [
     "BIDS task: gonogo",
     "BIDS task: passive",

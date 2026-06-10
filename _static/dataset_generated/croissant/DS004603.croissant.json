@@ -93,6 +93,11 @@
   ],
   "citeAs": "Benjamin Lowe (ben.lowe@mq.edu.au), Jonathan Robinson (jonathan.robinson@monash.edu), Naohide Yamamoto (naohide.yamamoto@qut.edu.au), Hinze Hogendoorn (hinze.hogendoorn@qut.edu.au), Patrick Johnston (dr.pat.johnston@icloud.com) (20). Visual Attribute-Specific Contextual Trajectory Paradigm. doi:10.18112/openneuro.ds004603.v1.1.0",
   "version": "1.11.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1016/j.cortex.2023.08.004",
+    "url": "https://doi.org/10.1016/j.cortex.2023.08.004"
+  },
   "measurementTechnique": [
     "BIDS task: CTP"
   ],

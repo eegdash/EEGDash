@@ -85,6 +85,11 @@
   ],
   "citeAs": "John Veillette, Pedro Lopes, Howard Nusbaum (2019). Illusion of Agency over Electrically-Actuated Movements. doi:10.18112/openneuro.ds004561.v1.0.0",
   "version": "1.6.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1101/2023.05.06.539706",
+    "url": "https://doi.org/10.1101/2023.05.06.539706"
+  },
   "measurementTechnique": [
     "BIDS task: agencyRT"
   ],

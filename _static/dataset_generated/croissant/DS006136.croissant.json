@@ -124,6 +124,11 @@
   ],
   "citeAs": "Vladimir Omelyusik, Tyler S. Davis, Satish S. Nair, Behrad Noudoost, Patrick Hackett (20). OWM-Dataset. doi:10.18112/openneuro.ds006136.v1.0.1",
   "version": "1.10.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1016/j.neuroimage.2026.121718",
+    "url": "https://doi.org/10.1016/j.neuroimage.2026.121718"
+  },
   "measurementTechnique": [
     "BIDS task: OWM"
   ],

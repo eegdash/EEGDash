@@ -81,6 +81,11 @@
   ],
   "citeAs": "Luis Alberto Barradas Chacón, Selina C. Wriessnegger (2019). ToonFaces. doi:10.18112/openneuro.ds004324.v1.0.0",
   "version": "1.6.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.21203/rs.3.rs-1886096/v1",
+    "url": "https://doi.org/10.21203/rs.3.rs-1886096/v1"
+  },
   "measurementTechnique": [
     "BIDS task: RSVP"
   ],

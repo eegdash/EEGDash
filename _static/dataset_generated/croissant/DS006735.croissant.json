@@ -95,6 +95,11 @@
   ],
   "citeAs": "Tong Shan, Edmund C. Lalor, Ross K. Maddox (2024). Chimeric music reveals an interaction of pitch and time in electrophysiological signatures of music encoding. doi:10.18112/openneuro.ds006735.v2.0.0",
   "version": "1.2.1",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1101/2024.11.04.621689",
+    "url": "https://doi.org/10.1101/2024.11.04.621689"
+  },
   "measurementTechnique": [
     "BIDS task: ChimericMusic"
   ],

@@ -95,6 +95,11 @@
   "version": "1.1.1",
   "dateCreated": "2020-11-13",
   "dateModified": "2020-11-13",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1038/s41597-020-00781-y",
+    "url": "https://doi.org/10.1038/s41597-020-00781-y"
+  },
   "maintainer": [
     {
       "@type": "sc:Person",

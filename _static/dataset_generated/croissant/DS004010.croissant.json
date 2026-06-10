@@ -100,6 +100,11 @@
   ],
   "citeAs": "Leonhard Waschke, Thomas Donoghue, Lorenz Fiedler, Sydney Smith, Douglas Garrett (n.d.). MAVIS. doi:10.18112/openneuro.ds004010.v1.0.0",
   "version": "1.2.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.7554/elife.70068",
+    "url": "https://doi.org/10.7554/elife.70068"
+  },
   "measurementTechnique": [
     "BIDS task: MAVIS"
   ],

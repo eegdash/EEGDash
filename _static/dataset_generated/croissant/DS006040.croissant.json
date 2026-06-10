@@ -122,6 +122,11 @@
   ],
   "citeAs": "Younghwa Cha, Yeji Lee, Eunhee Ji, SoHyun Han, Sunhyun Min (n.d.). Sustained Attention Task (gradCPT) Dataset using simultaneous EEG-fMRI and DTI. doi:10.18112/openneuro.ds006040.v1.0.2",
   "version": "1.4.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1038/s41597-026-06616-6",
+    "url": "https://doi.org/10.1038/s41597-026-06616-6"
+  },
   "measurementTechnique": [
     "BIDS task: CBOFF",
     "BIDS task: CBON",

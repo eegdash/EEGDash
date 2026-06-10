@@ -96,6 +96,11 @@
   ],
   "citeAs": "Lu Wang, Zhenhao Zhang, Dan Han, Zhijun Zhang, Zhifang Liu (2019). Wang2021 – Combined SSVEP dataset with single stimulus location for two inputs. doi:10.82901/nemar.nm000131",
   "version": "1.9.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1111/ejn.15030",
+    "url": "https://doi.org/10.1111/ejn.15030"
+  },
   "measurementTechnique": [
     "BIDS task: ssvep"
   ],

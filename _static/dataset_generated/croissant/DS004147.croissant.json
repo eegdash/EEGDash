@@ -85,6 +85,11 @@
   ],
   "citeAs": "Cameron D. Hassall, Laurence T. Hunt, Clay B. Holroyd (20). Average Task Value. doi:10.18112/openneuro.ds004147.v1.0.2",
   "version": "1.2.1",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1101/2021.09.16.460600",
+    "url": "https://doi.org/10.1101/2021.09.16.460600"
+  },
   "measurementTechnique": [
     "BIDS task: casinos"
   ],

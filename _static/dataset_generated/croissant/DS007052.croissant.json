@@ -84,6 +84,11 @@
   ],
   "citeAs": "Couperus, J.W., Bukach, C.M., Reed, C.L. (2021). PURSUE N400 Word Processing. doi:10.18112/openneuro.ds007052.v1.1.2",
   "version": "1.8.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1016/j.neuroimage.2020.117465",
+    "url": "https://doi.org/10.1016/j.neuroimage.2020.117465"
+  },
   "measurementTechnique": [
     "BIDS task: WordPR"
   ],

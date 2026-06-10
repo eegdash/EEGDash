@@ -85,6 +85,11 @@
   ],
   "citeAs": "Christoffer Hatlestad-Hall, Trine Waage Rygvold, Stein Andersson (2022). SRM Resting-state EEG. doi:10.18112/openneuro.ds003775.v1.2.1",
   "version": "1.6.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1016/j.dib.2022.108647",
+    "url": "https://doi.org/10.1016/j.dib.2022.108647"
+  },
   "measurementTechnique": [
     "BIDS task: resteyesc"
   ],

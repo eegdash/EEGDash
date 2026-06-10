@@ -128,6 +128,11 @@
   ],
   "citeAs": "Mathias Sablé-Meyer, Lucas Benjamin, Cassandra Potier Watkins, Chenxi He, Maxence Pajot (20). A geometric shape regularity effect in the human brain: MEG dataset. doi:10.18112/openneuro.ds006012.v1.0.1",
   "version": "1.6.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1101/2024.03.13.584141",
+    "url": "https://doi.org/10.1101/2024.03.13.584141"
+  },
   "measurementTechnique": [
     "BIDS task: POGS",
     "BIDS task: noise"

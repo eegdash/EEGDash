@@ -96,6 +96,11 @@
   ],
   "citeAs": "Brennan Terhune-Cotter, Phillip J. Holcomb, Katherine J. Midgley, Sofia E. Ortega, Emily M. Akers (n.d.). Flankers-NEAR. doi:10.18112/openneuro.ds005866.v1.0.1",
   "version": "1.8.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.3133/pp521a",
+    "url": "https://doi.org/10.3133/pp521a"
+  },
   "measurementTechnique": [
     "BIDS task: FlankerNEAR"
   ],

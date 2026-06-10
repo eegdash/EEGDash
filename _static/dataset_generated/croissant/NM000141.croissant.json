@@ -84,6 +84,11 @@
   ],
   "citeAs": "Maitreyee Wairagkar, Yoshikatsu Hayashi, Slawomir J. Nasuto (2018). Motor execution dataset from Wairagkar et al 2018. doi:10.82901/nemar.nm000141",
   "version": "1.9.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1371/journal.pone.0193722",
+    "url": "https://doi.org/10.1371/journal.pone.0193722"
+  },
   "measurementTechnique": [
     "BIDS task: imagery"
   ],

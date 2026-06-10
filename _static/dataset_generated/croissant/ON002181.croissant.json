@@ -105,6 +105,11 @@
   ],
   "citeAs": "Wanze Xie, Sarah Jensen, Mark Wade, Swapna Kumar, Alissa Westerlund (20). CRYPTO and PROVIDE EEG Baseline Data. doi:10.82901/nemar.on002181",
   "version": "1.2",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1101/447722",
+    "url": "https://doi.org/10.1101/447722"
+  },
   "measurementTechnique": [
     "BIDS task: Baseline"
   ],

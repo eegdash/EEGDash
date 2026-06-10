@@ -90,6 +90,11 @@
   ],
   "citeAs": "Ahmet Levent Kandemir, Vladimir Litvak, Esther Florin (20). DBS Phantom Recordings. doi:10.18112/openneuro.ds002885.v1.0.1",
   "version": "1.2",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1016/j.neuroimage.2020.117057",
+    "url": "https://doi.org/10.1016/j.neuroimage.2020.117057"
+  },
   "measurementTechnique": [
     "BIDS task: DMW",
     "BIDS task: DSMW",

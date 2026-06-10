@@ -52,7 +52,6 @@
     "BIDS",
     "neuroscience",
     "FNIRS",
-    "['Motor']",
     "['Unknown']"
   ],
   "isAccessibleForFree": true,
@@ -109,6 +108,11 @@
   "version": "1.7.1",
   "dateCreated": "2024-01-16",
   "dateModified": "2024-01-16",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1117/1.nph.10.2.025007",
+    "url": "https://doi.org/10.1117/1.nph.10.2.025007"
+  },
   "measurementTechnique": [
     "BIDS task: BallSqueezing"
   ],

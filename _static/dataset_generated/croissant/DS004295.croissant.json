@@ -84,6 +84,11 @@
   ],
   "citeAs": "Christopher Stolz, Alan Pickering, Erik M. Mueller (n.d.). Reward gain and punishment avoidance reversal learning. doi:10.18112/openneuro.ds004295.v1.0.0",
   "version": "1.1.1",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1111/psyp.14235",
+    "url": "https://doi.org/10.1111/psyp.14235"
+  },
   "measurementTechnique": [
     "BIDS task: task"
   ],

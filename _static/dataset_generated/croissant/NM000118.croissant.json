@@ -121,6 +121,11 @@
   ],
   "citeAs": "Masaki Nakanishi, Yijun Wang, Yu-Te Wang, Tzyy-Ping Jung (2019). Nakanishi2015 – SSVEP Nakanishi 2015 dataset. doi:10.82901/nemar.nm000118",
   "version": "1.9.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1371/journal.pone.0140703",
+    "url": "https://doi.org/10.1371/journal.pone.0140703"
+  },
   "measurementTechnique": [
     "BIDS task: ssvep"
   ],

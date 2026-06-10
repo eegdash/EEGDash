@@ -96,6 +96,11 @@
   ],
   "citeAs": "Samuel Planton*, Fosca Al Roumi*, Liping Wang, Stanislas Dehaene (20). ABSeqMEG. doi:10.18112/openneuro.ds004483.v1.0.0",
   "version": "1.6.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1101/2022.10.15.512361v1",
+    "url": "https://doi.org/10.1101/2022.10.15.512361v1"
+  },
   "measurementTechnique": [
     "BIDS task: abseq"
   ],

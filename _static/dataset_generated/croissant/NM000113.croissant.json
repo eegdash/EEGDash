@@ -81,6 +81,11 @@
   ],
   "citeAs": "Seong-Whan Lee, Klaus-Robert Müller, José del R. Millán (20). 2020 BCI competition, track 3. doi:10.82901/nemar.nm000113",
   "version": "1.7.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1109/tnsre.2021.3096874",
+    "url": "https://doi.org/10.1109/tnsre.2021.3096874"
+  },
   "measurementTechnique": [
     "BIDS task: imaginedSpeech"
   ],

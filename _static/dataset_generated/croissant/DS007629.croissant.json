@@ -50,7 +50,10 @@
   "keywords": [
     "EEG",
     "BIDS",
-    "neuroscience"
+    "neuroscience",
+    "['Visual']",
+    "['Healthy']",
+    "['Attention']"
   ],
   "isAccessibleForFree": true,
   "includedInDataCatalog": {

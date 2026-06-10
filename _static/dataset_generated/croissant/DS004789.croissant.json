@@ -95,6 +95,11 @@
   ],
   "citeAs": "Haydn G. Herrema, Michael J. Kahana (n.d.). Delayed Free Recall of Word Lists. doi:10.18112/openneuro.ds004789.v3.1.0",
   "version": "1.7.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1016/j.brs.2025.103013",
+    "url": "https://doi.org/10.1016/j.brs.2025.103013"
+  },
   "measurementTechnique": [
     "BIDS task: FR1"
   ],

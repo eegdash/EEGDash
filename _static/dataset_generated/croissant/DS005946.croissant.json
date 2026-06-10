@@ -99,6 +99,11 @@
   ],
   "citeAs": "Federico Frau, Paolo Canal, Maddalena Bressler, Chiara Pompei, Valentina Bambini (20). ERC_CoG PROMENADE - WP2 - MetaImagery (Metaphor and Mental Imagery). doi:10.18112/openneuro.ds005946.v1.0.1",
   "version": "1.8.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.31234/osf.io/38kju_v1",
+    "url": "https://doi.org/10.31234/osf.io/38kju_v1"
+  },
   "measurementTechnique": [
     "BIDS task: picturematching"
   ],

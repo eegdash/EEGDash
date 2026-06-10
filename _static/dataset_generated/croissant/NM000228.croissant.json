@@ -176,6 +176,11 @@
   "citeAs": "Mante S. Nieuwland, Stephen Politzer-Ahles, Evelien Heyselaar, Katrien Segaert, Emily Darley (2005). Nieuwland et al. 2018: Multi-site N400 Replication Study. doi:10.7554/eLife.33468",
   "version": "1.9.0",
   "dateModified": "2026-04-10",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.7554/elife.33468",
+    "url": "https://doi.org/10.7554/elife.33468"
+  },
   "measurementTechnique": [
     "BIDS task: control",
     "BIDS task: delong"

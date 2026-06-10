@@ -112,6 +112,11 @@
   ],
   "citeAs": "Jonathan Touryan (data and curation), Greg Apker (data), Brent Lance (data), Scott Kerick (data), Anthony Ries (data) (19). BCIT Baseline Driving. doi:10.18112/openneuro.ds004120.v1.0.0",
   "version": "1.7.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.3389/fnins.2014.00155",
+    "url": "https://doi.org/10.3389/fnins.2014.00155"
+  },
   "measurementTechnique": [
     "BIDS task: DriveWithSpeedChange"
   ],

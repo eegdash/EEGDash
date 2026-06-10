@@ -89,6 +89,11 @@
   ],
   "citeAs": "Shaonan Wang, Xiaohan Zhang, Jiajun Zhang, Chengqing Zong (n.d.). A synchronized multimodal neuroimaging dataset to study brain language processing. doi:10.18112/openneuro.ds004078.v1.0.4",
   "version": "1.6.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1038/s41597-022-01708-5",
+    "url": "https://doi.org/10.1038/s41597-022-01708-5"
+  },
   "measurementTechnique": [
     "BIDS task: RDR"
   ],

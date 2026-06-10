@@ -118,6 +118,11 @@
   ],
   "citeAs": "Robin Tibor Schirrmeister, Jost Tobias Springenberg, Lukas Dominique Josef Fiederer, Martin Glasstetter, Katharina Eggensperger (2017). High-gamma dataset described in Schirrmeister et al. 2017. doi:10.82901/nemar.nm000172",
   "version": "1.9.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1002/hbm.23730",
+    "url": "https://doi.org/10.1002/hbm.23730"
+  },
   "measurementTechnique": [
     "BIDS task: imagery"
   ],

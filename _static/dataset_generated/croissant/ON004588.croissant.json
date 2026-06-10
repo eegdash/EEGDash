@@ -112,6 +112,11 @@
   ],
   "citeAs": "Kostas Georgiadis, Fotis P. Kalaganis, Kyriakos Riskos, Eleytheria Matta, Vangelis P. Oikonomou (n.d.). Neuma. doi:10.82901/nemar.on004588",
   "version": "1.8.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1038/s41597-023-02392-9",
+    "url": "https://doi.org/10.1038/s41597-023-02392-9"
+  },
   "measurementTechnique": [
     "BIDS task: unnamed"
   ],

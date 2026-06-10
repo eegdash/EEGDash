@@ -112,6 +112,11 @@
   ],
   "citeAs": "van Blooijs D., Demuru M., Zweiphenning W, Hermes D., Leijten F. (20). Dataset Clinical Epilepsy iEEG to BIDS - RESPect_longterm_iEEG. doi:10.18112/openneuro.ds003848.v1.0.3",
   "version": "Brain Imaging Data Structure Specification v1.6.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1007/s12021-022-09567-6",
+    "url": "https://doi.org/10.1007/s12021-022-09567-6"
+  },
   "measurementTechnique": [
     "BIDS task: CHOCS1",
     "BIDS task: Rest",

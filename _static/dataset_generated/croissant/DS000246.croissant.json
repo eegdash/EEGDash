@@ -100,6 +100,11 @@
   ],
   "citeAs": "Elizabeth Bock, Peter Donhauser, Francois Tadel, Guiomar Niso, Sylvain Baillet (20). MEG-BIDS Brainstorm data sample. doi:10.18112/openneuro.ds000246.v1.0.1",
   "version": "1.4.1",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.3389/fnins.2019.00076",
+    "url": "https://doi.org/10.3389/fnins.2019.00076"
+  },
   "measurementTechnique": [
     "BIDS task: AEF",
     "BIDS task: noise"

@@ -85,6 +85,11 @@
   ],
   "citeAs": "Darin R. Brown, Trevor Jackson, James F Cavanagh (20). EEG: Probabilistic Learning with Affective Feedback: Exp #1. doi:10.18112/openneuro.ds003822.v1.1.0",
   "version": "1.1.1",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1523/jneurosci.2036-14.2015",
+    "url": "https://doi.org/10.1523/jneurosci.2036-14.2015"
+  },
   "measurementTechnique": [
     "BIDS task: ProbabilisticSelection"
   ],

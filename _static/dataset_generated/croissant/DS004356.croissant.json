@@ -91,6 +91,11 @@
   ],
   "citeAs": "Tong Shan, Madeline S. Cappelloni, Ross K. Maddox (2024). Subcortical responses to music and speech are alike while cortical responses diverge. doi:10.18112/openneuro.ds004356.v2.2.1",
   "version": "1.7.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1038/s41598-023-50438-0",
+    "url": "https://doi.org/10.1038/s41598-023-50438-0"
+  },
   "measurementTechnique": [
     "BIDS task: MusicvsSpeech"
   ],

@@ -77,6 +77,11 @@
   ],
   "citeAs": "Arnaud Delorme, Tracy Brandmeyer (20). EEG meditation study. doi:10.82901/nemar.nm000154",
   "version": "1.1.1",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.3389/fpsyg.2013.00688",
+    "url": "https://doi.org/10.3389/fpsyg.2013.00688"
+  },
   "measurementTechnique": [
     "BIDS task: meditation"
   ],

@@ -52,7 +52,7 @@
     "BIDS",
     "neuroscience",
     "['Resting State']",
-    "['Unknown']",
+    "['Healthy']",
     "['Resting-state']"
   ],
   "isAccessibleForFree": true,
@@ -82,6 +82,11 @@
   ],
   "citeAs": "Computational Neuroimaging and Neuroengineering Lab ar the University of Oklahoma (n.d.). Resting EEG. doi:10.18112/openneuro.ds006525.v1.0.0",
   "version": "1.8.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1016/j.neuroimage.2022.119461",
+    "url": "https://doi.org/10.1016/j.neuroimage.2022.119461"
+  },
   "measurementTechnique": [
     "BIDS task: resting"
   ],

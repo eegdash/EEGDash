@@ -85,6 +85,11 @@
   ],
   "citeAs": "Amanda Studnicki, Daniel P. Ferris (n.d.). Real World Table Tennis. doi:10.18112/openneuro.ds004505.v1.0.4",
   "version": "1.1.1",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.3390/s22155867",
+    "url": "https://doi.org/10.3390/s22155867"
+  },
   "measurementTechnique": [
     "BIDS task: TableTennis"
   ],

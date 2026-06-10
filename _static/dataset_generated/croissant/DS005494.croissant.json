@@ -53,8 +53,8 @@
     "neuroscience",
     "IEEG",
     "['Visual']",
-    "['Unknown']",
-    "['Clinical/Intervention']"
+    "['Healthy']",
+    "['Memory']"
   ],
   "isAccessibleForFree": true,
   "includedInDataCatalog": {
@@ -88,6 +88,11 @@
   ],
   "citeAs": "Haydn G. Herrema, Michael J. Kahana (2019). Cued Recall of Paired Associates with Open-Loop Stimulation at Encoding or Retrieval. doi:10.18112/openneuro.ds005494.v1.0.1",
   "version": "1.7.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1007/springerreference_183890",
+    "url": "https://doi.org/10.1007/springerreference_183890"
+  },
   "measurementTechnique": [
     "BIDS task: PAL2"
   ],

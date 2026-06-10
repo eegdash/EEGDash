@@ -91,6 +91,11 @@
   ],
   "citeAs": "Mojtaba Lahijanian, Mohammad Javad Sedghizadeh, Hamid Aghajan, Zahra Vahabi (20). Auditory Gamma Entrainment. doi:10.82901/nemar.on003800",
   "version": "1.9.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1002/alz.043198",
+    "url": "https://doi.org/10.1002/alz.043198"
+  },
   "measurementTechnique": [
     "BIDS task: AuditoryGammaEntrainment",
     "BIDS task: Rest"

@@ -107,6 +107,11 @@
   ],
   "citeAs": "César E. Corona-González, Claudia Rebeca De Stefano-Ramos, Juan Pablo Rosado-Aíza, David I. Ibarra-Zarate, Fabiola R. Gómez-Velázquez (20). Dataset of psychophysiological data from children with learning difficulties who strengthen reading and math skills through assistive technology. doi:10.18112/openneuro.ds006260.v1.0.1",
   "version": "1.8.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1186/s13104-025-07499-3",
+    "url": "https://doi.org/10.1186/s13104-025-07499-3"
+  },
   "measurementTechnique": [
     "BIDS task: SmartickDataset"
   ],

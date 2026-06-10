@@ -52,6 +52,7 @@
     "BIDS",
     "neuroscience",
     "['Unknown']",
+    "['Healthy']",
     "['Memory']"
   ],
   "isAccessibleForFree": true,
@@ -87,6 +88,11 @@
   ],
   "citeAs": "Tony Johnson, Stephen Gordon, Jon Touryan, Kevin King (n.d.). FT. doi:10.18112/openneuro.ds004855.v1.0.0",
   "version": "1.8.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1007/978-1-4757-3437-9",
+    "url": "https://doi.org/10.1007/978-1-4757-3437-9"
+  },
   "measurementTechnique": [
     "BIDS task: nback"
   ],

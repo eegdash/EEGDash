@@ -51,8 +51,9 @@
     "EEG",
     "BIDS",
     "neuroscience",
-    "Multisensory",
-    "Attention",
+    "['Visual']",
+    "['Healthy']",
+    "['Decision-making']",
     "HED"
   ],
   "isAccessibleForFree": true,

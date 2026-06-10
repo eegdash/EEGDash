@@ -115,6 +115,11 @@
   ],
   "citeAs": "Yücel, Meryem, Selb, Juliette, Aasted, Christopher, Petkov, Mihayl, Borsook, David (n.d.). Electrical_Thermal_FingerTapping_2015. doi:10.18112/openneuro.ds005776.v1.0.1",
   "version": "1.7.1",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1038/srep09469",
+    "url": "https://doi.org/10.1038/srep09469"
+  },
   "measurementTechnique": [
     "BIDS task: Electrical",
     "BIDS task: FingerTapping",

@@ -88,6 +88,11 @@
   ],
   "citeAs": "Till Habersetzer, Bernd T. Meyer (2019). MEG-SCANS - A comprehensive magnetoencephalography speech dataset with Stories, Chirps And Noisy Sentences.. doi:10.18112/openneuro.ds006468.v1.1.2",
   "version": "1.7.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1038/s41597-025-06397-4",
+    "url": "https://doi.org/10.1038/s41597-025-06397-4"
+  },
   "measurementTechnique": [
     "BIDS task: audiobook1",
     "BIDS task: audiobook2",

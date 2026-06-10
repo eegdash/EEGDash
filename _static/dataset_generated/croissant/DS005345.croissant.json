@@ -85,6 +85,11 @@
   ],
   "citeAs": "Zhengwu Ma, Nan Wang, Jixing Li (20). Le Petit Prince (LPP) Multi-talker: Naturalistic 7T fMRI and EEG Dataset. doi:10.18112/openneuro.ds005345.v1.0.1",
   "version": "1.8.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1038/s41597-025-05158-7",
+    "url": "https://doi.org/10.1038/s41597-025-05158-7"
+  },
   "measurementTechnique": [
     "BIDS task: multitalker"
   ],

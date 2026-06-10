@@ -84,6 +84,11 @@
   ],
   "citeAs": "Tony Johnson, Stephen Gordon, Jon Touryan, Kevin King (n.d.). STRONG. doi:10.82901/nemar.on004849",
   "version": "1.8.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1126/science.1100217",
+    "url": "https://doi.org/10.1126/science.1100217"
+  },
   "measurementTechnique": [
     "BIDS task: nback"
   ],

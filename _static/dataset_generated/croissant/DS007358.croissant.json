@@ -232,6 +232,11 @@
   ],
   "citeAs": "John Mary Vianney, Shailender Swaminathan, Jennifer Jane Newson, Dhanya Parameshwaran, Narayan Puthanmadam Subramaniyam (2019). A subset of large-scale EEG dataset (India + Tanzania). doi:10.18112/openneuro.ds007358.v1.0.0",
   "version": "1.8.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1523/eneuro.0006-25.2025",
+    "url": "https://doi.org/10.1523/eneuro.0006-25.2025"
+  },
   "measurementTechnique": [
     "BIDS task: ec",
     "BIDS task: eo",

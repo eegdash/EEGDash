@@ -126,6 +126,11 @@
   ],
   "citeAs": "Haijie Liu, Penghu Wei, Haochong Wang, Xiaodong Lv, Wei Duan (2022). Liu, Lv et al. 2023 — EEG datasets of stroke patients (motor imagery). doi:10.82901/nemar.nm000158",
   "version": "1.9.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1038/s41597-023-02787-8",
+    "url": "https://doi.org/10.1038/s41597-023-02787-8"
+  },
   "measurementTechnique": [
     "BIDS task: imagery"
   ],

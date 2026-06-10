@@ -116,6 +116,11 @@
   ],
   "citeAs": "Andreas Miltiadous, Katerina D. Tzimourta, Theodora Afrantou, Panagiotis Ioannidis, Nikolaos Grigoriadis (n.d.). A dataset of EEG recordings from: Alzheimer's disease, Frontotemporal dementia and Healthy subjects. doi:10.18112/openneuro.ds004504.v1.0.9",
   "version": "v1.2.1",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.3390/data8060095",
+    "url": "https://doi.org/10.3390/data8060095"
+  },
   "measurementTechnique": [
     "BIDS task: eyesclosed"
   ],

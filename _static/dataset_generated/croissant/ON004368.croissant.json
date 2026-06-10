@@ -92,6 +92,11 @@
   ],
   "citeAs": "Martin Rouy, Matthieu Roger, Dorian Goueytes, Michael Pereira, Paul Roux (n.d.). Meta-rdk: Preprocessed EEG data. doi:10.82901/nemar.on004368",
   "version": "1.1.1",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1038/s41537-023-00333-4",
+    "url": "https://doi.org/10.1038/s41537-023-00333-4"
+  },
   "measurementTechnique": [
     "BIDS task: task"
   ],

@@ -53,7 +53,7 @@
     "neuroscience",
     "IEEG",
     "['Visual']",
-    "['Unknown']",
+    "['Development']",
     "['Attention']"
   ],
   "isAccessibleForFree": true,
@@ -87,6 +87,11 @@
   ],
   "citeAs": "Kazuki Sakakura, Eishi Asano (n.d.). iEEG on children during Stroop task. doi:10.18112/openneuro.ds004859.v1.0.0",
   "version": "1.7.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1016/j.neuroimage.2024.120863",
+    "url": "https://doi.org/10.1016/j.neuroimage.2024.120863"
+  },
   "measurementTechnique": [
     "BIDS task: stroop"
   ],

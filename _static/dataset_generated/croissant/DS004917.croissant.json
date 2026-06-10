@@ -110,6 +110,11 @@
   ],
   "citeAs": "Alejandra Figueroa-Vargas, Gabriela Valdebenito-Oyarzo, María Paz Martínez-Molina, Francisco Zamorano, Pablo Billeke (n.d.). Probability Decision-making Task with ambiguity. doi:10.18112/openneuro.ds004917.v1.0.1",
   "version": "1.9.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1371/journal.pbio.3002452",
+    "url": "https://doi.org/10.1371/journal.pbio.3002452"
+  },
   "measurementTechnique": [
     "BIDS task: pdm"
   ],

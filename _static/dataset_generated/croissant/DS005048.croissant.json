@@ -90,6 +90,11 @@
   ],
   "citeAs": "Mojtaba Lahijanian, Hamid Aghajan, Zahra Vahabi (n.d.). 40Hz Auditory Entrainment. doi:10.18112/openneuro.ds005048.v1.0.1",
   "version": "1.8.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1038/s41598-024-63727-z",
+    "url": "https://doi.org/10.1038/s41598-024-63727-z"
+  },
   "measurementTechnique": [
     "BIDS task: 40HzAuditoryEntrainment"
   ],

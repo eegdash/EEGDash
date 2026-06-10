@@ -141,6 +141,11 @@
   "version": "1.9.0",
   "dateCreated": "2026-02-20",
   "dateModified": "2026-02-21",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.64898/2026.02.03.26345480",
+    "url": "https://doi.org/10.64898/2026.02.03.26345480"
+  },
   "measurementTechnique": [
     "BIDS task: seizure"
   ],

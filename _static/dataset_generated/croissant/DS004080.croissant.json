@@ -132,6 +132,11 @@
   ],
   "citeAs": "D. van Blooijs, M.A. van den Boom, J.F. van der Aar, G.J.M. Huiskamp, G. Castegnaro (20). CCEP ECoG dataset across age 4-51. doi:10.18112/openneuro.ds004080.v1.2.4",
   "version": "Brain Imaging Data Structure Specification v1.6.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1038/s41593-023-01272-0",
+    "url": "https://doi.org/10.1038/s41593-023-01272-0"
+  },
   "measurementTechnique": [
     "BIDS task: SPESclin"
   ],

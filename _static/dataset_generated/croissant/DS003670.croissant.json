@@ -119,6 +119,11 @@
   ],
   "citeAs": "Nigel Gebodh, Zeinab Esmaeilpour, Abhishek Datta, Marom Bikson (20). Dataset of Concurrent EEG, ECG, and Behavior with Multiple Doses of transcranial Electrical Stimulation - BIDS. doi:10.18112/openneuro.ds003670.v1.1.0",
   "version": "1.1.1",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1038/s41597-021-01046-y",
+    "url": "https://doi.org/10.1038/s41597-021-01046-y"
+  },
   "measurementTechnique": [
     "BIDS task: GXtESCTT"
   ],

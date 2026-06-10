@@ -103,6 +103,11 @@
   "citeAs": "Jan Sosulski, David Hübner, Aaron Klein, Michael Tangermann (2019). Sosulski et al. 2019 — Online Optimization of Stimulation Speed in an Auditory Brain-Computer Interface under Time Constraints. doi:10.48550/arXiv.2109.06011",
   "version": "1.9.0",
   "dateModified": "2026-04-11",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.48550/arxiv.2109.06011",
+    "url": "https://doi.org/10.48550/arxiv.2109.06011"
+  },
   "measurementTechnique": [
     "BIDS task: p300"
   ],

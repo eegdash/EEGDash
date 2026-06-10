@@ -80,6 +80,11 @@
   ],
   "citeAs": "Matthew Barras, Liam Booth (2019). Multimodal Cognitive Workload n-back Task, 4 Difficulties. doi:10.18112/openneuro.ds007169.v1.0.5",
   "version": "1.9.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1049/htl.2015.0037",
+    "url": "https://doi.org/10.1049/htl.2015.0037"
+  },
   "measurementTechnique": [
     "BIDS task: nback"
   ],

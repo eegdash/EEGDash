@@ -77,6 +77,11 @@
   ],
   "citeAs": "Klaus Gramann, Thomas Töllner, Hermann J. Müller (2010). Dimension-based attention modulates early visual processing. doi:10.18112/openneuro.ds006563.v1.0.0",
   "version": "1.8.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1111/j.1469-8986.2010.00998.x",
+    "url": "https://doi.org/10.1111/j.1469-8986.2010.00998.x"
+  },
   "measurementTechnique": [
     "BIDS task: DimensionDiscrimination"
   ],

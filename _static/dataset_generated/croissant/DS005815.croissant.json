@@ -100,6 +100,11 @@
   ],
   "citeAs": "Yan-Han Chang, Hsi-An Chen, Min-Jiun Tsai, Chun-Lung Tseng, Ching-Huei Lo (n.d.). A Human EEG Dataset for Multisensory Perception and Mental Imagery. doi:10.18112/openneuro.ds005815.v2.0.1",
   "version": "1.10.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1038/s41597-025-05881-1",
+    "url": "https://doi.org/10.1038/s41597-025-05881-1"
+  },
   "measurementTechnique": [
     "BIDS task: rest1",
     "BIDS task: rest2",

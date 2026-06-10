@@ -117,6 +117,11 @@
   "citeAs": "Arnault H. Caillet, Simon Avrillon, Aritra Kundu, Tianyi Yu, Andrew T. M. Phillips (20). MUniverse Caillet et al 2023. doi:https://doi.org/10.7910/DVN/F9GWIW",
   "version": "1.11.1",
   "dateModified": "2026-04-08",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1523/eneuro.0064-23.2023",
+    "url": "https://doi.org/10.1523/eneuro.0064-23.2023"
+  },
   "measurementTechnique": [
     "BIDS task: isometric30percentmvc",
     "BIDS task: isometric50percentmvc"

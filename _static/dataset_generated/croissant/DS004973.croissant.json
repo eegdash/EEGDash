@@ -113,6 +113,11 @@
   ],
   "citeAs": "Xiaofei Zhang, Qiaoya Wang, Jun Li, Xiaorong Gao, Bowen Li (n.d.). An fNIRS dataset for driving risk cognition of passengers in highly automated driving scenarios. doi:10.18112/openneuro.ds004973.v1.0.1",
   "version": "1.7.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1038/s41597-024-03353-6",
+    "url": "https://doi.org/10.1038/s41597-024-03353-6"
+  },
   "measurementTechnique": [
     "BIDS task: 1",
     "BIDS task: 10",

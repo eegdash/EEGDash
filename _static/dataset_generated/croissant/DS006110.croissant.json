@@ -50,7 +50,10 @@
   "keywords": [
     "EEG",
     "BIDS",
-    "neuroscience"
+    "neuroscience",
+    "['Multisensory']",
+    "['Other']",
+    "['Affect']"
   ],
   "isAccessibleForFree": true,
   "includedInDataCatalog": {
@@ -91,6 +94,11 @@
   ],
   "citeAs": "Adeel Razi (2025). PsiConnect. doi:10.18112/openneuro.ds006110.v1.2.0",
   "version": "1.7.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1101/2025.04.11.643415",
+    "url": "https://doi.org/10.1101/2025.04.11.643415"
+  },
   "measurementTechnique": [
     "BIDS task: series"
   ],

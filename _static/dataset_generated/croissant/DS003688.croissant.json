@@ -111,6 +111,11 @@
   ],
   "citeAs": "Julia Berezutskaya, Mariska J. Vansteensel, Erik J. Aarnoutse, Zachary V. Freudenburg, Giovanni Piantoni (n.d.). Open multimodal iEEG-fMRI dataset from naturalistic stimulation with a short audiovisual film. doi:10.18112/openneuro.ds003688.v1.0.7",
   "version": "1.2.1",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1101/2021.06.09.447733",
+    "url": "https://doi.org/10.1101/2021.06.09.447733"
+  },
   "measurementTechnique": [
     "BIDS task: film",
     "BIDS task: rest"

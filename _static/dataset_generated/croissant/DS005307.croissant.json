@@ -121,6 +121,11 @@
   ],
   "citeAs": "Birgit Nierula, Tilman Stephani, Emma Bailey, Merve Kaptan, Lisa-Marie Pohle (2019). Laser-evoked potentials in the human spinal cord and cortex. doi:10.18112/openneuro.ds005307.v1.0.1",
   "version": "1.7.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1371/journal.pbio.3002828",
+    "url": "https://doi.org/10.1371/journal.pbio.3002828"
+  },
   "measurementTechnique": [
     "BIDS task: pain"
   ],

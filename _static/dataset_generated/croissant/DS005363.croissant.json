@@ -107,6 +107,11 @@
   ],
   "citeAs": "Marleen Haupt, Douglas D. Garrett, Radoslaw M. Cichy (2019). Object recognition in healthy aging (ORHA) - EEG. doi:10.18112/openneuro.ds005363.v1.0.0",
   "version": "1.7.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1016/j.cub.2025.03.062",
+    "url": "https://doi.org/10.1016/j.cub.2025.03.062"
+  },
   "measurementTechnique": [
     "BIDS task: objrecog"
   ],

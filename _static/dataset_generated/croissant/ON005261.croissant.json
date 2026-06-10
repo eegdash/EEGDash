@@ -92,6 +92,11 @@
   ],
   "citeAs": "Snezana Todorovic, Elin Runnqvist, Valerie Chanoine, Jean-Michel Badier (2019). Gloups_MEG. doi:10.82901/nemar.on005261",
   "version": "1.7.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1038/s41597-025-05127-0",
+    "url": "https://doi.org/10.1038/s41597-025-05127-0"
+  },
   "measurementTechnique": [
     "BIDS task: gloups",
     "BIDS task: rest"

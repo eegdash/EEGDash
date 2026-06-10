@@ -92,6 +92,11 @@
   ],
   "citeAs": "Sanaz Ghaffari, Arian Yavari, Sara Bonyadian, Arsalan Ghofrani, Russell Butler (n.d.). Visual EEG Study (BrainVision → BIDS). doi:10.18112/openneuro.ds006547.v1.0.0",
   "version": "1.9.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1101/2025.08.09.669461",
+    "url": "https://doi.org/10.1101/2025.08.09.669461"
+  },
   "measurementTechnique": [
     "BIDS task: visual"
   ],

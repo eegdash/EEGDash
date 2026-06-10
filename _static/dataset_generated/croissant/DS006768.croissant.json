@@ -89,6 +89,11 @@
   ],
   "citeAs": "Benjamin G. Lowe, Alexandra Woolgar, Sophie Smit, Anina N. Rich (20). Multiple Object Monitoring (EEG). doi:10.18112/openneuro.ds006768.v1.1.0",
   "version": "1.11.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1101/2025.07.10.663816",
+    "url": "https://doi.org/10.1101/2025.07.10.663816"
+  },
   "measurementTechnique": [
     "BIDS task: MOM"
   ],

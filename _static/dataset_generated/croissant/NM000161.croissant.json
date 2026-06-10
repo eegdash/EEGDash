@@ -80,6 +80,11 @@
   ],
   "citeAs": "Markus R. Crell, Gernot R. Müller-Putz (2024). BNCI 2024-001 Handwritten Character Classification dataset. doi:10.82901/nemar.nm000161",
   "version": "1.9.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1016/j.compbiomed.2024.109132",
+    "url": "https://doi.org/10.1016/j.compbiomed.2024.109132"
+  },
   "measurementTechnique": [
     "BIDS task: imagery"
   ],

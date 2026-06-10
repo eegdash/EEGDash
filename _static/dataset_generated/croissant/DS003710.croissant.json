@@ -81,6 +81,11 @@
   ],
   "citeAs": "Cabell L. Williams, Meghan H. Puglia (20). APPLESEED Example Dataset. doi:10.18112/openneuro.ds003710.v1.0.2",
   "version": "v1.6.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1101/2021.07.10.450198",
+    "url": "https://doi.org/10.1101/2021.07.10.450198"
+  },
   "measurementTechnique": [
     "BIDS task: appleseedexample"
   ],

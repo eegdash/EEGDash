@@ -112,6 +112,11 @@
   ],
   "citeAs": "Lorenzo Cohen, Arnaud Delorme, Peiying Yang, Andrew Cusimano, Sharmistha Chakraborty (n.d.). The Effects of Directed Therapeutic Intent on Live and Damaged Cells. doi:10.18112/openneuro.ds005079.v2.0.0",
   "version": "v1.2.1",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1038/s41598-024-79617-3",
+    "url": "https://doi.org/10.1038/s41598-024-79617-3"
+  },
   "measurementTechnique": [
     "BIDS task: BaselinePostCellPresent",
     "BIDS task: BaselinePostControl1",

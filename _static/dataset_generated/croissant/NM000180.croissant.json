@@ -78,6 +78,11 @@
   "citeAs": "Jonathan R. Brennan, John T. Hale (2019). Brennan2019: EEG during Alice in Wonderland Listening. doi:10.1371/journal.pone.0207741",
   "version": "1.9.0",
   "dateModified": "2026-04-08",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1371/journal.pone.0207741",
+    "url": "https://doi.org/10.1371/journal.pone.0207741"
+  },
   "measurementTechnique": [
     "BIDS task: alicelistening"
   ],

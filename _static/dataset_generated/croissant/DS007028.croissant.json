@@ -79,6 +79,11 @@
   ],
   "citeAs": "Yoshinao Kajikawa, Charles Schroeder (n.d.). Auditory Cortex Macaque Monkey DISC Data. doi:10.18112/openneuro.ds007028.v1.0.0",
   "version": "1.1.1",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1068/ic938",
+    "url": "https://doi.org/10.1068/ic938"
+  },
   "measurementTechnique": [
     "BIDS task: tono14noconcat"
   ],

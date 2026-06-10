@@ -105,6 +105,11 @@
   "citeAs": "Min-Ho Lee, O-Yeon Kwon, Yong-Jeong Kim, Hong-Kyung Kim, Young-Eun Lee (2019). Lee et al. 2019 (ERP) — EEG dataset and OpenBMI toolbox for three BCI paradigms: an investigation into BCI illiteracy. doi:10.1093/gigascience/giz002",
   "version": "1.9.0",
   "dateModified": "2026-04-11",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.5524/100542",
+    "url": "https://doi.org/10.5524/100542"
+  },
   "measurementTechnique": [
     "BIDS task: p300"
   ],

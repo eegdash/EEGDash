@@ -52,8 +52,8 @@
     "BIDS",
     "neuroscience",
     "['Visual']",
-    "['Unknown']",
-    "['Attention']"
+    "['Healthy']",
+    "['Perception']"
   ],
   "isAccessibleForFree": true,
   "includedInDataCatalog": {
@@ -111,6 +111,11 @@
   ],
   "citeAs": "Nand Chandravadia, Shrita Pendekanti, Dustin Roberts, Robert Tran, Saarang Panchavati (20). Comparing P300 Flashing paradigms in online typing with language models. doi:10.18112/openneuro.ds005028.v1.0.0",
   "version": "1.8.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1101/2022.06.24.22276882",
+    "url": "https://doi.org/10.1101/2022.06.24.22276882"
+  },
   "measurementTechnique": [
     "BIDS task: cb",
     "BIDS task: comb",

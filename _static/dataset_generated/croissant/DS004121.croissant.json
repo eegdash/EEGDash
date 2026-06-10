@@ -116,6 +116,11 @@
   ],
   "citeAs": "Jonathan Touryan (data and curation), Greg Apker (data), Brent Lance (data), Scott Kerick (data), Anthony Ries (data) (20). BCIT Mind Wandering. doi:10.18112/openneuro.ds004121.v1.0.0",
   "version": "1.7.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1016/j.neuroimage.2017.02.057",
+    "url": "https://doi.org/10.1016/j.neuroimage.2017.02.057"
+  },
   "measurementTechnique": [
     "BIDS task: DriveWithTaskAudio"
   ],

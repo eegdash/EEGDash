@@ -99,6 +99,11 @@
   ],
   "citeAs": "Andrei Barborica, Cristina Ghita, Laurentiu Tofan, Irina Oane, Ioana Mindruta (n.d.). Dataset of intracranial EEG during cortical stimulations evoking negative motor responses. doi:10.18112/openneuro.ds006519.v1.0.0",
   "version": "1.9.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1016/j.neuroimage.2026.121822",
+    "url": "https://doi.org/10.1016/j.neuroimage.2026.121822"
+  },
   "measurementTechnique": [
     "BIDS task: dcs"
   ],

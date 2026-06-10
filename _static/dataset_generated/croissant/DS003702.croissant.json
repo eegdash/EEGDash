@@ -90,6 +90,11 @@
   ],
   "citeAs": "Samantha Gregory, Hongfang Wang, Klaus Kessler (n.d.). Social Memory cuing. doi:10.18112/openneuro.ds003702.v1.0.1",
   "version": "1.6.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.31234/osf.io/mkags",
+    "url": "https://doi.org/10.31234/osf.io/mkags"
+  },
   "measurementTechnique": [
     "BIDS task: SocialMemoryCuing"
   ],

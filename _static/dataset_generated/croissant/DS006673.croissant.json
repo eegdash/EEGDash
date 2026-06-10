@@ -114,6 +114,11 @@
   ],
   "citeAs": "Laura B. Carlton, Miray Altinkaynak, Shannon Kelley, Bernhard Zimmerman, Sreekanth Kura (n.d.). ball_squeeze_Carlton_2025. doi:10.18112/openneuro.ds006673.v1.0.4",
   "version": "1.8.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1117/1.nph.13.2.025001",
+    "url": "https://doi.org/10.1117/1.nph.13.2.025001"
+  },
   "measurementTechnique": [
     "BIDS task: BS",
     "BIDS task: RS"

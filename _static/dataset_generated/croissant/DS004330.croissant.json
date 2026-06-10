@@ -108,6 +108,11 @@
   ],
   "citeAs": "Johannes J.D. Singer, Radoslaw M. Cichy, Martin N. Hebart (20). The spatiotemporal neural dynamics of object recognition for natural images and line drawings (MEG). doi:10.18112/openneuro.ds004330.v1.0.0",
   "version": "1.7.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1523/jneurosci.1546-22.2022",
+    "url": "https://doi.org/10.1523/jneurosci.1546-22.2022"
+  },
   "measurementTechnique": [
     "BIDS task: main"
   ],

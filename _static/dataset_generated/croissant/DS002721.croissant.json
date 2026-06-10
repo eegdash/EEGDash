@@ -101,6 +101,11 @@
   ],
   "citeAs": "Ian Daly, Nicoletta Nicolaou, Duncan Williams, Faustina Hwang, Alexis Kirke (2018). An EEG dataset recorded during affective music listening. doi:10.18112/openneuro.ds002721.v1.0.2",
   "version": "1.0.2",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1016/j.neulet.2014.05.003",
+    "url": "https://doi.org/10.1016/j.neulet.2014.05.003"
+  },
   "distribution": [
     {
       "@type": "cr:FileObject",

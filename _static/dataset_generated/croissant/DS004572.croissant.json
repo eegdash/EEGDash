@@ -98,6 +98,11 @@
   ],
   "citeAs": "Zoltan Kekecs, Kyra Girán, Vanda Vizkievicz, Anna Lutoskin, Yeganeh Farahzadi (n.d.). The effects of sham hypnosis techniques. doi:10.18112/openneuro.ds004572.v1.3.2",
   "version": "1.6.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1111/psyp.70183",
+    "url": "https://doi.org/10.1111/psyp.70183"
+  },
   "measurementTechnique": [
     "BIDS task: baseline1",
     "BIDS task: baseline2",

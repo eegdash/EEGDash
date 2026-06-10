@@ -81,6 +81,11 @@
   ],
   "citeAs": "Isaac Kinley, Sue Becker (2019). Cueing the future to reduce temporal discounting. doi:10.18112/openneuro.ds006446.v1.0.0",
   "version": "1.7.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1093/psyrad/kkad001",
+    "url": "https://doi.org/10.1093/psyrad/kkad001"
+  },
   "measurementTechnique": [
     "BIDS task: itc"
   ],

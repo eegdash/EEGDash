@@ -96,6 +96,11 @@
   ],
   "citeAs": "P Aricò, F Aloise, F Schettini, S Salinari, D Mattia (2013). BNCI 2014-009 P300 dataset. doi:10.82901/nemar.nm000188",
   "version": "1.9.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1088/1741-2560/11/3/035008",
+    "url": "https://doi.org/10.1088/1741-2560/11/3/035008"
+  },
   "measurementTechnique": [
     "BIDS task: p300"
   ],

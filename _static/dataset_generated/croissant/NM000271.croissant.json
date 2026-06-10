@@ -108,6 +108,11 @@
   "citeAs": "Wenwen Chang, Weixuan Kong, Guanghui Yan, Renjie Lv, Kaiyue Du (n.d.). Chang et al. 2025 — A multi-paradigm EEG dataset for studying upper limb rehabilitation exercises (Lanzhou Jiaotong University). doi:10.1038/s41597-025-06147-6",
   "version": "1.9.0",
   "dateModified": "2026-04-11",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1038/s41597-025-06147-6",
+    "url": "https://doi.org/10.1038/s41597-025-06147-6"
+  },
   "measurementTechnique": [
     "BIDS task: imagery"
   ],

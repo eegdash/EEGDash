@@ -52,8 +52,8 @@
     "BIDS",
     "neuroscience",
     "FNIRS",
-    "['Unknown']",
-    "['Motor']"
+    "['Motor']",
+    "['Healthy']"
   ],
   "isAccessibleForFree": true,
   "includedInDataCatalog": {
@@ -77,6 +77,11 @@
   ],
   "citeAs": "Rickson C. Mesquita (2019). FRESH Motor Dataset. doi:10.18112/openneuro.ds005963.v1.0.0",
   "version": "1.7.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1016/j.immuni.2024.08.004",
+    "url": "https://doi.org/10.1016/j.immuni.2024.08.004"
+  },
   "measurementTechnique": [
     "BIDS task: FRESHMOTOR"
   ],

@@ -144,6 +144,11 @@
   ],
   "citeAs": "Michael Tangermann, Klaus-Robert Müller, Ad Aertsen, Niels Birbaumer, Christoph Braun (2019). BNCI 2014-001 Motor Imagery dataset. doi:10.82901/nemar.nm000139",
   "version": "1.9.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.3389/fnins.2012.00055",
+    "url": "https://doi.org/10.3389/fnins.2012.00055"
+  },
   "measurementTechnique": [
     "BIDS task: imagery"
   ],

@@ -98,6 +98,11 @@
   ],
   "citeAs": "Patrick Ofner, Andreas Schwarz, Joana Pereira, Gernot R. Müller-Putz (2019). Motor Imagery ataset from Ofner et al 2017. doi:10.82901/nemar.nm000173",
   "version": "1.9.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1371/journal.pone.0182578",
+    "url": "https://doi.org/10.1371/journal.pone.0182578"
+  },
   "measurementTechnique": [
     "BIDS task: imagery"
   ],

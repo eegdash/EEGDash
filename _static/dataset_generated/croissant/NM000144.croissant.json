@@ -114,6 +114,11 @@
   ],
   "citeAs": "Reinhold Scherer, Josef Faller, Elisabeth V. C. Friedrich, Eloy Opisso, Ursula Costa (2017). BNCI 2015-004 Mental tasks dataset. doi:10.82901/nemar.nm000144",
   "version": "1.9.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1371/journal.pone.0123727",
+    "url": "https://doi.org/10.1371/journal.pone.0123727"
+  },
   "measurementTechnique": [
     "BIDS task: imagery"
   ],

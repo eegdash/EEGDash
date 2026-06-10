@@ -109,6 +109,11 @@
   ],
   "citeAs": "Jose Cordoba-Silva, Rafael Maya, Mario Valderrama, Luis Felipe Giraldo, William Betancourt-Zapata (20). Dataset of electrophysiological signals (EEG, ECG, EMG) during Music therapy with adult burn patients in the Intensive Care Unit.. doi:10.18112/openneuro.ds004840.v1.0.1",
   "version": "1.8.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1038/s41598-024-73211-3",
+    "url": "https://doi.org/10.1038/s41598-024-73211-3"
+  },
   "measurementTechnique": [
     "BIDS task: musicTherapy",
     "BIDS task: postMusicTherapy",

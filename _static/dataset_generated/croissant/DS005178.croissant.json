@@ -124,6 +124,11 @@
   ],
   "citeAs": "Yousef Rezaei Tabar, Kaare Mikkelsen, Laura Birch, Nelly Shenton, Simon L Kappel (20). Ear-EEG Sleep Monitoring 2023 (EESM23). doi:10.18112/openneuro.ds005178.v1.0.0",
   "version": "1.9.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1038/s41597-025-04579-8",
+    "url": "https://doi.org/10.1038/s41597-025-04579-8"
+  },
   "measurementTechnique": [
     "BIDS task: sleep"
   ],

@@ -102,6 +102,11 @@
   ],
   "citeAs": "David Pascucci, Sebastien Tourbier, Joan Rue-Queralt, Margherita Carboni, Patric Hagmann (n.d.). VEPCON: Source imaging of high-density visual evoked potentials with multi-scale brain parcellations and connectomes. doi:10.18112/openneuro.ds003505.v1.1.1",
   "version": "1.6.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1038/s41597-021-01116-1",
+    "url": "https://doi.org/10.1038/s41597-021-01116-1"
+  },
   "measurementTechnique": [
     "BIDS task: faces",
     "BIDS task: motion"

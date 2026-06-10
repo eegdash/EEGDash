@@ -94,6 +94,11 @@
   ],
   "citeAs": "Shantanu Sarkar, Kevin Nathan, Jose L. Contreras-Vidal (n.d.). Dataset: T1-Weighted Structural MRI and fMRI of Participants Viewing Self-Avatar Exoskeleton Walking (11 SWS Cycles). doi:10.18112/openneuro.ds006945.v1.2.1",
   "version": "1.8.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1038/s41597-026-07476-w",
+    "url": "https://doi.org/10.1038/s41597-026-07476-w"
+  },
   "measurementTechnique": [
     "BIDS task: baseline",
     "BIDS task: walking1",

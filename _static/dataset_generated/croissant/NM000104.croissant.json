@@ -108,6 +108,11 @@
   ],
   "citeAs": "Viswanath Sivakumar, Jeffrey Seely, Alan Du, Sean R. Bittner, Adam Berenzweig (2024). emg2qwerty: A Large Dataset with Baselines for Touch Typing using Surface Electromyography. doi:10.82901/nemar.nm000104",
   "version": "1.11.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.52202/079017-2899",
+    "url": "https://doi.org/10.52202/079017-2899"
+  },
   "measurementTechnique": [
     "BIDS task: typing"
   ],

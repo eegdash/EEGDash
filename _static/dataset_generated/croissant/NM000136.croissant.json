@@ -84,6 +84,11 @@
   ],
   "citeAs": "Eva Guttmann-Flury, Xinjun Sheng, Xiangyang Zhu (2025). Guttmann-Flury et al. 2025 (P300) — Dataset combining EEG, eye-tracking, and high-speed video for ocular activity analysis across BCI paradigms. doi:10.82901/nemar.nm000136",
   "version": "1.9.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1038/s41597-025-04861-9",
+    "url": "https://doi.org/10.1038/s41597-025-04861-9"
+  },
   "measurementTechnique": [
     "BIDS task: p300"
   ],

@@ -92,6 +92,11 @@
   ],
   "citeAs": "Nadine Jacobsen, Sarah Blum, Karsten Witt, Stefan Debener, Joanna Scanlon (20). free walking study. doi:10.18112/openneuro.ds003039.v1.0.2",
   "version": "v2.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1111/ejn.14965",
+    "url": "https://doi.org/10.1111/ejn.14965"
+  },
   "measurementTechnique": [
     "BIDS task: neurCorrYoung"
   ],

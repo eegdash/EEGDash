@@ -515,9 +515,9 @@ this file apply (plus whatever default styling the IDE applies).
 
 
 
-<tr class="mne-repr-section-header general-ac2824a7-45c3-4c4d-a87c-eb46f7f69062"
+<tr class="mne-repr-section-header general-03aa20c7-ab17-4ab2-8e7b-a570702c1243"
      title="Hide section"
-    onclick="toggleVisibility('general-ac2824a7-45c3-4c4d-a87c-eb46f7f69062')">
+    onclick="toggleVisibility('general-03aa20c7-ab17-4ab2-8e7b-a570702c1243')">
     <th class="mne-repr-section-toggle">
         <button >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
@@ -529,7 +529,7 @@ this file apply (plus whatever default styling the IDE applies).
 </tr>
 
 
-<tr class="repr-element general-ac2824a7-45c3-4c4d-a87c-eb46f7f69062 ">
+<tr class="repr-element general-03aa20c7-ab17-4ab2-8e7b-a570702c1243 ">
     <td class="mne-repr-section-toggle"></td>
     <td>Filename(s)</td>
     <td>
@@ -540,26 +540,26 @@ this file apply (plus whatever default styling the IDE applies).
     </td>
 </tr>
 
-<tr class="repr-element general-ac2824a7-45c3-4c4d-a87c-eb46f7f69062 ">
+<tr class="repr-element general-03aa20c7-ab17-4ab2-8e7b-a570702c1243 ">
     <td class="mne-repr-section-toggle"></td>
     <td>MNE object type</td>
     <td>RawEEGLAB</td>
 </tr>
-<tr class="repr-element general-ac2824a7-45c3-4c4d-a87c-eb46f7f69062 ">
+<tr class="repr-element general-03aa20c7-ab17-4ab2-8e7b-a570702c1243 ">
     <td class="mne-repr-section-toggle"></td>
     <td>Measurement date</td>
 
     <td>Unknown</td>
 
 </tr>
-<tr class="repr-element general-ac2824a7-45c3-4c4d-a87c-eb46f7f69062 ">
+<tr class="repr-element general-03aa20c7-ab17-4ab2-8e7b-a570702c1243 ">
     <td class="mne-repr-section-toggle"></td>
     <td>Participant</td>
 
 
 
 </tr>
-<tr class="repr-element general-ac2824a7-45c3-4c4d-a87c-eb46f7f69062 ">
+<tr class="repr-element general-03aa20c7-ab17-4ab2-8e7b-a570702c1243 ">
     <td class="mne-repr-section-toggle"></td>
     <td>Experimenter</td>
 
@@ -574,9 +574,9 @@ this file apply (plus whatever default styling the IDE applies).
 
 
 
-<tr class="mne-repr-section-header acquisition-eb901770-eacc-4a88-99e7-4176b73c54b4"
+<tr class="mne-repr-section-header acquisition-861b147e-3271-48da-9fc0-941c5faa0b2e"
      title="Hide section"
-    onclick="toggleVisibility('acquisition-eb901770-eacc-4a88-99e7-4176b73c54b4')">
+    onclick="toggleVisibility('acquisition-861b147e-3271-48da-9fc0-941c5faa0b2e')">
     <th class="mne-repr-section-toggle">
         <button >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
@@ -588,7 +588,7 @@ this file apply (plus whatever default styling the IDE applies).
 </tr>
 
 
-<tr class="repr-element acquisition-eb901770-eacc-4a88-99e7-4176b73c54b4 ">
+<tr class="repr-element acquisition-861b147e-3271-48da-9fc0-941c5faa0b2e ">
     <td class="mne-repr-section-toggle"></td>
     <td>Duration</td>
     <td>00:10:00 (HH:MM:SS)</td>
@@ -601,14 +601,14 @@ this file apply (plus whatever default styling the IDE applies).
 
 
 
-<tr class="repr-element acquisition-eb901770-eacc-4a88-99e7-4176b73c54b4 ">
+<tr class="repr-element acquisition-861b147e-3271-48da-9fc0-941c5faa0b2e ">
     <td class="mne-repr-section-toggle"></td>
     <td>Sampling frequency</td>
     <td>500.00 Hz</td>
 </tr>
 
 
-<tr class="repr-element acquisition-eb901770-eacc-4a88-99e7-4176b73c54b4 ">
+<tr class="repr-element acquisition-861b147e-3271-48da-9fc0-941c5faa0b2e ">
     <td class="mne-repr-section-toggle"></td>
     <td>Time points</td>
     <td>299,900</td>
@@ -623,9 +623,9 @@ this file apply (plus whatever default styling the IDE applies).
 
 
 
-<tr class="mne-repr-section-header channels-b54fa538-999a-4055-b81e-743adf532420"
+<tr class="mne-repr-section-header channels-a8656498-a1f3-422a-8014-136c9997f895"
      title="Hide section"
-    onclick="toggleVisibility('channels-b54fa538-999a-4055-b81e-743adf532420')">
+    onclick="toggleVisibility('channels-a8656498-a1f3-422a-8014-136c9997f895')">
     <th class="mne-repr-section-toggle">
         <button >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
@@ -638,7 +638,7 @@ this file apply (plus whatever default styling the IDE applies).
 
 
 
-<tr class="repr-element channels-b54fa538-999a-4055-b81e-743adf532420 ">
+<tr class="repr-element channels-a8656498-a1f3-422a-8014-136c9997f895 ">
     <td class="mne-repr-section-toggle"></td>
     <td>EEG</td>
     <td>
@@ -651,7 +651,7 @@ this file apply (plus whatever default styling the IDE applies).
 </tr>
 
 
-<tr class="repr-element channels-b54fa538-999a-4055-b81e-743adf532420 ">
+<tr class="repr-element channels-a8656498-a1f3-422a-8014-136c9997f895 ">
     <td class="mne-repr-section-toggle"></td>
     <td>Head & sensor digitization</td>
 
@@ -666,9 +666,9 @@ this file apply (plus whatever default styling the IDE applies).
 
 
 
-<tr class="mne-repr-section-header filters-fb950d0c-fbdc-46bd-ad01-375ed501832f"
+<tr class="mne-repr-section-header filters-ae87b441-27ab-4c8c-964d-e91ff0e44552"
      title="Hide section"
-    onclick="toggleVisibility('filters-fb950d0c-fbdc-46bd-ad01-375ed501832f')">
+    onclick="toggleVisibility('filters-ae87b441-27ab-4c8c-964d-e91ff0e44552')">
     <th class="mne-repr-section-toggle">
         <button >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
@@ -680,14 +680,14 @@ this file apply (plus whatever default styling the IDE applies).
 </tr>
 
 
-<tr class="repr-element filters-fb950d0c-fbdc-46bd-ad01-375ed501832f ">
+<tr class="repr-element filters-ae87b441-27ab-4c8c-964d-e91ff0e44552 ">
     <td class="mne-repr-section-toggle"></td>
     <td>Highpass</td>
     <td>0.00 Hz</td>
 </tr>
 
 
-<tr class="repr-element filters-fb950d0c-fbdc-46bd-ad01-375ed501832f ">
+<tr class="repr-element filters-ae87b441-27ab-4c8c-964d-e91ff0e44552 ">
     <td class="mne-repr-section-toggle"></td>
     <td>Lowpass</td>
     <td>250.00 Hz</td>
@@ -859,20 +859,19 @@ pd.DataFrame(
 
 ```none
 Downloading sub-002_task-eyesclosed_channels.tsv:   0%|          | 0.00/284 [00:00<?, ?B/s]
-Downloading sub-002_task-eyesclosed_channels.tsv: 100%|██████████| 284/284 [00:00<00:00, 955kB/s]
+Downloading sub-002_task-eyesclosed_channels.tsv: 100%|██████████| 284/284 [00:00<00:00, 1.44MB/s]
 
 Downloading sub-002_task-eyesclosed_eeg.json:   0%|          | 0.00/868 [00:00<?, ?B/s]
-Downloading sub-002_task-eyesclosed_eeg.json: 100%|██████████| 868/868 [00:00<00:00, 2.91MB/s]
-[06/09/26 20:58:31] WARNING  File not found on S3, skipping:   downloader.py:163
+Downloading sub-002_task-eyesclosed_eeg.json: 100%|██████████| 868/868 [00:00<00:00, 4.30MB/s]
+[06/10/26 12:48:39] WARNING  File not found on S3, skipping:   downloader.py:163
                              s3://openneuro.org/ds004504/sub-0
                              02/eeg/sub-002_task-eyesclosed_ee
                              g.fdt
 
 Downloading sub-002_task-eyesclosed_eeg.set:   0%|          | 0.00/30.3M [00:00<?, ?B/s]
-Downloading sub-002_task-eyesclosed_eeg.set:  39%|███▉      | 11.9M/30.3M [00:00<00:00, 62.1MB/s]
-Downloading sub-002_task-eyesclosed_eeg.set:  60%|█████▉    | 18.1M/30.3M [00:00<00:00, 46.1MB/s]
-Downloading sub-002_task-eyesclosed_eeg.set:  85%|████████▍ | 25.6M/30.3M [00:00<00:00, 43.7MB/s]
-Downloading sub-002_task-eyesclosed_eeg.set: 100%|██████████| 30.3M/30.3M [00:00<00:00, 48.9MB/s]
+Downloading sub-002_task-eyesclosed_eeg.set:  38%|███▊      | 11.4M/30.3M [00:00<00:00, 53.0MB/s]
+Downloading sub-002_task-eyesclosed_eeg.set:  68%|██████▊   | 20.7M/30.3M [00:00<00:00, 49.1MB/s]
+Downloading sub-002_task-eyesclosed_eeg.set: 100%|██████████| 30.3M/30.3M [00:00<00:00, 53.6MB/s]
 ```
 
 <div class="output_subarea output_html rendered_html output_result">
@@ -949,6 +948,6 @@ See [References](../../../../references.md) for the centralized bibliography of 
 cited above. Add or amend an entry once in
 `docs/source/refs.bib`; every tutorial inherits the update.
 
-**Total running time of the script:** (0 minutes 5.265 seconds)
+**Total running time of the script:** (0 minutes 5.748 seconds)
 
 <a id="sphx-glr-download-generated-auto-examples-tutorials-00-start-here-plot-01-first-recording-py"></a>

@@ -91,6 +91,11 @@
   ],
   "citeAs": "Szymon Mąka, Marta Chrustowicz, Łukasz Okruszek (20). Discrepancy between self-report and neurophysiological markers of socio-affective responses in lonely individuals. doi:10.18112/openneuro.ds006866.v1.0.0",
   "version": "1.8.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.31234/osf.io/v9dt3_v2",
+    "url": "https://doi.org/10.31234/osf.io/v9dt3_v2"
+  },
   "measurementTechnique": [
     "BIDS task: EmotionProcessingandRegulationtask"
   ],

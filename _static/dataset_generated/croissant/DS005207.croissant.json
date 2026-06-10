@@ -120,6 +120,11 @@
   ],
   "citeAs": "Kaare B. Mikkelsen, James K Ebajemito, Maria A Bonmati-Carrion, Nayantara Santhi, Victoria L Revell (20). Surrey cEEGrid sleep data set. doi:10.18112/openneuro.ds005207.v1.0.0",
   "version": "1.7.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1111/jsr.12786",
+    "url": "https://doi.org/10.1111/jsr.12786"
+  },
   "measurementTechnique": [
     "BIDS task: sleep"
   ],

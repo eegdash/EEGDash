@@ -90,6 +90,11 @@
   "citeAs": "Bob Kemp, Aeilko H. Zwinderman, Bert Tuk, Hilbert A.C. Kamphuisen, Josefien J.L. Oberye (2000). Sleep-EDF Expanded: Whole-Night PSG Recordings. doi:10.13026/C2X676",
   "version": "1.9.0",
   "dateModified": "2026-04-09",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1109/10.867928",
+    "url": "https://doi.org/10.1109/10.867928"
+  },
   "measurementTechnique": [
     "BIDS task: sleep"
   ],

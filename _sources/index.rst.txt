@@ -48,6 +48,12 @@
                 <a class="hf-suggest-link" data-query="ds000117" href="/api/dataset/eegdash.dataset.DS000117.html">ds000117</a>
                 <a class="hf-suggest-link" data-query="nm000107" href="/api/dataset/eegdash.dataset.NM000107.html">nm000107</a>
               </div>
+              <div class="hf-search-advanced">
+                <button type="button" class="hf-suggest-link" data-open-eegdash-search
+                        title="Open the search palette: filter by task, channels, sampling rate, license…">
+                  Advanced search <kbd>Ctrl</kbd>+<kbd>K</kbd>
+                </button>
+              </div>
             </form>
 
          .. container:: hf-hero-actions

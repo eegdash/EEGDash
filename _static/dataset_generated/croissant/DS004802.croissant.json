@@ -80,6 +80,11 @@
   ],
   "citeAs": "Joe Bathelt, Marte Otten (n.d.). Pilot data for Loneliness in the Brain: Distinguishing Between Hypersensitivity and Hyperalertness. doi:10.18112/openneuro.ds004802.v1.0.0",
   "version": "1.8.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.31219/osf.io/j5v9b",
+    "url": "https://doi.org/10.31219/osf.io/j5v9b"
+  },
   "measurementTechnique": [
     "BIDS task: RovingOddball"
   ],

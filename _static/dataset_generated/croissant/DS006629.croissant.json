@@ -96,6 +96,11 @@
   ],
   "citeAs": "Valerie Chanoine, Jean-Michel Badier, Mireille Besson, Talya Inbar (2025). SINGSING. doi:10.18112/openneuro.ds006629.v1.0.1",
   "version": "1.7.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1007/s10548-025-01147-6",
+    "url": "https://doi.org/10.1007/s10548-025-01147-6"
+  },
   "measurementTechnique": [
     "BIDS task: MMNHCS",
     "BIDS task: noise"

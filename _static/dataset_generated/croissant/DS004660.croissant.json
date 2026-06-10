@@ -89,6 +89,11 @@
   ],
   "citeAs": "Tony Johnson, Stephen Gordon, Jon Touryan, Kevin King (n.d.). TNO. doi:10.18112/openneuro.ds004660.v1.0.2",
   "version": "1.8.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1002/j.1460-2075.1985.tb03626.x",
+    "url": "https://doi.org/10.1002/j.1460-2075.1985.tb03626.x"
+  },
   "measurementTechnique": [
     "BIDS task: P300"
   ],

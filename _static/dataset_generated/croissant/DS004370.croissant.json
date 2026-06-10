@@ -103,6 +103,11 @@
   ],
   "citeAs": "van Blooijs D, Blok S, Huiskamp GJM, Leijten FSS (n.d.). PRIOS. doi:10.18112/openneuro.ds004370.v1.0.2",
   "version": "Brain Imaging Data Structure Specification v1.6.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.7554/elife.35832.029",
+    "url": "https://doi.org/10.7554/elife.35832.029"
+  },
   "measurementTechnique": [
     "BIDS task: SPESclin",
     "BIDS task: SPESprop"

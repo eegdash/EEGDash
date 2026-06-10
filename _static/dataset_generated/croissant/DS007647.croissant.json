@@ -50,7 +50,10 @@
   "keywords": [
     "EEG",
     "BIDS",
-    "neuroscience"
+    "neuroscience",
+    "['Unknown']",
+    "['Healthy']",
+    "['Decision-making']"
   ],
   "isAccessibleForFree": true,
   "includedInDataCatalog": {
@@ -76,6 +79,11 @@
   ],
   "citeAs": "Abigail Oloriz, Cameron D. Hassall (n.d.). Different Doors. doi:10.18112/openneuro.ds007647.v1.0.1",
   "version": "1.8.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.14411/eje.2016.027",
+    "url": "https://doi.org/10.14411/eje.2016.027"
+  },
   "measurementTechnique": [
     "BIDS task: differentdoors"
   ],

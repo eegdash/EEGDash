@@ -102,6 +102,11 @@
   ],
   "citeAs": "Hannah S Pulferer, Brynja Ásgeirsdóttir, Valeria Mondini, Andreea I Sburlea, Gernot R Müller-Putz (2022). BNCI 2025-002 Continuous 2D Trajectory Decoding dataset. doi:10.82901/nemar.nm000170",
   "version": "1.9.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1088/1741-2552/ac689f",
+    "url": "https://doi.org/10.1088/1741-2552/ac689f"
+  },
   "measurementTechnique": [
     "BIDS task: imagery"
   ],

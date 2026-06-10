@@ -107,6 +107,11 @@
   ],
   "citeAs": "Zweiphenning W., Demuru M., van Blooijs D., Leijten F, Zijlmans M. (n.d.). Dataset Clinical Epilepsy iEEG to BIDS -RESPect_intraoperative_iEEG. doi:10.18112/openneuro.ds003844.v1.0.1",
   "version": "BEP010",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1007/s12021-022-09567-6",
+    "url": "https://doi.org/10.1007/s12021-022-09567-6"
+  },
   "measurementTechnique": [
     "BIDS task: acute"
   ],

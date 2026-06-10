@@ -77,6 +77,11 @@
   ],
   "citeAs": "James F Cavanagh (20). EEG: DPX Cog Ctl Task in Acute Mild TBI. doi:10.18112/openneuro.ds005114.v1.0.0",
   "version": "1.1.1",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1007/s11682-019-00171-y",
+    "url": "https://doi.org/10.1007/s11682-019-00171-y"
+  },
   "measurementTechnique": [
     "BIDS task: DPX"
   ],

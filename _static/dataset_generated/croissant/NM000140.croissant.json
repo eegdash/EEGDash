@@ -98,6 +98,11 @@
   ],
   "citeAs": "Josef Faller, Carmen Vidaurre, Teodoro Solis-Escalante, Christa Neuper, Reinhold Scherer (2012). BNCI 2015-001 Motor Imagery dataset. doi:10.82901/nemar.nm000140",
   "version": "1.9.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1109/tnsre.2012.2189584",
+    "url": "https://doi.org/10.1109/tnsre.2012.2189584"
+  },
   "measurementTechnique": [
     "BIDS task: imagery"
   ],

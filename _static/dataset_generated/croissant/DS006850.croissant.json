@@ -91,6 +91,11 @@
   ],
   "citeAs": "Carolina Zaehme, Isabelle Sander, Klaus Gramann (20). Urban Appraisal: Physiological Recording during Rating of Different Urban Environments. doi:10.18112/openneuro.ds006850.v1.0.0",
   "version": "unofficial extension",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1101/2025.10.31.685763",
+    "url": "https://doi.org/10.1101/2025.10.31.685763"
+  },
   "measurementTechnique": [
     "BIDS task: UrbanAppraisal"
   ],

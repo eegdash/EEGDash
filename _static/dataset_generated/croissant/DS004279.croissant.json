@@ -91,6 +91,11 @@
   ],
   "citeAs": "Carlos Valle Araya, Carolina Mendez-Orellana, Maria Rodriguez-Fernandez (2024). Large Spanish EEG. doi:10.18112/openneuro.ds004279.v1.1.2",
   "version": "1.6.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1088/1741-2552/ad88a3",
+    "url": "https://doi.org/10.1088/1741-2552/ad88a3"
+  },
   "measurementTechnique": [
     "BIDS task: sentences"
   ],

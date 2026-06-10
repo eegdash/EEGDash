@@ -94,6 +94,11 @@
   ],
   "citeAs": "Fedele T, Krayenbühl N, Hilfiker P, Adam Li, Sarnthein J. (2019). interictal iEEG during slow-wave sleep with HFO markings. doi:10.18112/openneuro.ds003498.v1.0.1",
   "version": "1.4.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1038/s41598-017-13064-1",
+    "url": "https://doi.org/10.1038/s41598-017-13064-1"
+  },
   "distribution": [
     {
       "@type": "cr:FileObject",

@@ -101,6 +101,11 @@
   ],
   "citeAs": "Jonathan Xu, Ugo Bruzadin Nunes, Wangshu Jiang, Samuel Ryther, Jordan Pringle (2025). Alljoined-1.6M. doi:10.82901/nemar.nm000134",
   "version": "1.9.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.48550/arxiv.2508.18571",
+    "url": "https://doi.org/10.48550/arxiv.2508.18571"
+  },
   "measurementTechnique": [
     "BIDS task: images"
   ],

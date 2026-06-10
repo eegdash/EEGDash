@@ -89,6 +89,11 @@
   ],
   "citeAs": "Tony Johnson, Stephen Gordon, Jon Touryan, Kevin King (n.d.). T16. doi:10.18112/openneuro.ds004843.v1.0.0",
   "version": "1.8.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1094/pdis-08-18-1315-re",
+    "url": "https://doi.org/10.1094/pdis-08-18-1315-re"
+  },
   "measurementTechnique": [
     "BIDS task: VisualSituationalAwareness"
   ],

@@ -127,6 +127,11 @@
   ],
   "citeAs": "Tommaso Fedele, Ece Boran, Valeri Chirkov, Peter Hilfiker, Thomas Grunwald (n.d.). Dataset of neurons and intracranial EEG from human amygdala during aversive dynamic visual stimulation. doi:10.18112/openneuro.ds003374.v1.1.1",
   "version": "1.4.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1016/j.neuroimage.2020.116705",
+    "url": "https://doi.org/10.1016/j.neuroimage.2020.116705"
+  },
   "measurementTechnique": [
     "BIDS task: jokeit"
   ],

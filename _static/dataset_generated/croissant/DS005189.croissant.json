@@ -84,6 +84,11 @@
   ],
   "citeAs": "Jason Helbing, Dejan Draschkow, Melissa L.-H. Võ (n.d.). Search Superiority Recollection Familiarity. doi:10.18112/openneuro.ds005189.v1.0.1",
   "version": "1.9.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1162/jocn.a.80",
+    "url": "https://doi.org/10.1162/jocn.a.80"
+  },
   "measurementTechnique": [
     "BIDS task: SearchSupRecFam"
   ],

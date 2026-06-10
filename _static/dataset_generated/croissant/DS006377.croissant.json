@@ -52,8 +52,9 @@
     "BIDS",
     "neuroscience",
     "FNIRS",
-    "['Motor']",
-    "['Unknown']"
+    "['Visual']",
+    "['Healthy']",
+    "['Other']"
   ],
   "isAccessibleForFree": true,
   "includedInDataCatalog": {
@@ -201,6 +202,11 @@
   "version": "1.8.0",
   "dateCreated": "2025-06-20",
   "dateModified": "2025-09-19",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1002/uog.22088",
+    "url": "https://doi.org/10.1002/uog.22088"
+  },
   "measurementTechnique": [
     "BIDS task: 001RestingLH",
     "BIDS task: 002RestingRH",

@@ -94,6 +94,11 @@
   ],
   "citeAs": "Steven Peterson, Daniel Ferris (n.d.). Perturbed beam-walking task. doi:10.18112/openneuro.ds003739.v1.0.2",
   "version": "v1.6.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1523/eneuro.0207-18.2018",
+    "url": "https://doi.org/10.1523/eneuro.0207-18.2018"
+  },
   "measurementTechnique": [
     "BIDS task: pullstand",
     "BIDS task: pullwalk",

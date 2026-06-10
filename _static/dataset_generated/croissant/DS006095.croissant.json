@@ -133,6 +133,11 @@
   ],
   "citeAs": "Chang Liu, Erika M. Pliner, Jacob S. Salminen, Ryan Downey, Jungyun Hwang (n.d.). Mind in Motion Older Adults Walking Over Uneven Terrain. doi:10.18112/openneuro.ds006095.v1.0.0",
   "version": "v1.0.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.3389/fnagi.2024.1389488",
+    "url": "https://doi.org/10.3389/fnagi.2024.1389488"
+  },
   "measurementTechnique": [
     "BIDS task: 0p25",
     "BIDS task: 0p5",

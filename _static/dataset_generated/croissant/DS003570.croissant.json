@@ -94,6 +94,11 @@
   ],
   "citeAs": "Andrew Goldman, Tyreek Jackson, Paul Sajda (n.d.). EEG: Improvisation and Musical Structures. doi:10.18112/openneuro.ds003570.v1.0.0",
   "version": "1.1.1",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1177/0305735618779444",
+    "url": "https://doi.org/10.1177/0305735618779444"
+  },
   "measurementTechnique": [
     "BIDS task: AuditoryOddballChords"
   ],

@@ -98,6 +98,11 @@
   ],
   "citeAs": "David Steyrl, Reinhold Scherer, Oswin Förstner, Gernot R. Müller-Putz (2015). BNCI 2014-002 Motor Imagery dataset. doi:10.82901/nemar.nm000171",
   "version": "1.9.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.3217/978-3-85125-378-8-61",
+    "url": "https://doi.org/10.3217/978-3-85125-378-8-61"
+  },
   "measurementTechnique": [
     "BIDS task: imagery"
   ],

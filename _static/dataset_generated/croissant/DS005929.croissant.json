@@ -98,6 +98,11 @@
   ],
   "citeAs": "Yücel, Meryem, Selb, Juliette, Boas, David, Cash, Sydney, Cooper, Robert (n.d.). Motion-Yucel2014. doi:10.18112/openneuro.ds005929.v1.0.1",
   "version": "1.7.1",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1016/j.neuroimage.2013.06.054",
+    "url": "https://doi.org/10.1016/j.neuroimage.2013.06.054"
+  },
   "measurementTechnique": [
     "BIDS task: MA"
   ],

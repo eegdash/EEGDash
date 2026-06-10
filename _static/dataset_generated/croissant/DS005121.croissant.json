@@ -97,6 +97,11 @@
   ],
   "citeAs": "Elizabeth M. Siefert, Sindhuja Uppuluri, Jianing Mu, Marlie C. Tandoc, James W. Antony (2024). Siefert2024. doi:10.18112/openneuro.ds005121.v1.0.2",
   "version": "1.2",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1523/jneurosci.0022-24.2024",
+    "url": "https://doi.org/10.1523/jneurosci.0022-24.2024"
+  },
   "measurementTechnique": [
     "BIDS task: Siefert2024"
   ],

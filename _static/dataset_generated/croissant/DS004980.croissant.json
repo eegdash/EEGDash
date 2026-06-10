@@ -94,6 +94,11 @@
   ],
   "citeAs": "Wang,S., Oliveira,G.S., Djebbara,Z, Gramann, K. (n.d.). EEG data set for a architectural affordances task. doi:10.18112/openneuro.ds004980.v1.0.0",
   "version": "unofficial extension",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.3389/fnhum.2022.833528",
+    "url": "https://doi.org/10.3389/fnhum.2022.833528"
+  },
   "measurementTechnique": [
     "BIDS task: DefaultTask"
   ],

@@ -110,6 +110,11 @@
   ],
   "citeAs": "Martin N. Hebart, Oliver Contier, Lina Teichmann, Adam H. Rockter, Charles Zheng (20). THINGS-MEG. doi:10.18112/openneuro.ds004212.v3.0.0",
   "version": "1.21",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1371/journal.pone.0223792",
+    "url": "https://doi.org/10.1371/journal.pone.0223792"
+  },
   "measurementTechnique": [
     "BIDS task: main"
   ],

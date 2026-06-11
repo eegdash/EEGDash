@@ -22,6 +22,7 @@ from typing import Any, Callable
 
 import pandas as pd
 from plot_dataset import (
+    generate_api_study_explorer,
     generate_clinical_stacked_bar,
     generate_dataset_bubble,
     generate_dataset_growth,
@@ -226,6 +227,7 @@ def generate_charts_parallel(
     df_raw: pd.DataFrame,
     target_dir: Path,
     x_var: str = "subjects",
+    database: str = DEFAULT_DATABASE,
 ) -> list[tuple[str, Path | None, str | None]]:
     """Generate all charts in parallel using ThreadPoolExecutor."""
     # Prepare bubble chart DataFrame
@@ -236,6 +238,20 @@ def generate_charts_parallel(
         df_bubble["records"] = df_bubble["n_records"]
 
     tasks = [
+        (
+            "API Volume",
+            generate_api_study_explorer,
+            df_raw,
+            target_dir / "dataset_api_volume_scatter.html",
+            {"api_url": API_BASE_URL, "database": database, "view": "volume"},
+        ),
+        (
+            "API Coverage Matrix",
+            generate_api_study_explorer,
+            df_raw,
+            target_dir / "dataset_api_coverage_matrix.html",
+            {"api_url": API_BASE_URL, "database": database, "view": "matrix"},
+        ),
         (
             "Bubble",
             generate_dataset_bubble,
@@ -1500,7 +1516,9 @@ def main_from_api(target_dir: str, database: str = DEFAULT_DATABASE, limit: int 
 
     # Generate charts
     print("Generating charts in parallel...")
-    chart_results = generate_charts_parallel(df_raw, target_dir, x_var="subjects")
+    chart_results = generate_charts_parallel(
+        df_raw, target_dir, x_var="subjects", database=database
+    )
     process_chart_results(chart_results)
 
     # Save summary stats

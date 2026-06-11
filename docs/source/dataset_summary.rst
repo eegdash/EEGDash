@@ -98,6 +98,14 @@ EEG-DaSh is a data-sharing archive for MEEG (EEG, MEG) recordings contributed by
 
          .. include:: dataset_summary/table.rst
 
+      .. tab-item:: API Volume
+
+         .. include:: dataset_summary/api_volume.rst
+
+      .. tab-item:: API Coverage
+
+         .. include:: dataset_summary/api_coverage.rst
+
       .. tab-item:: Participant Distribution
 
          .. include:: dataset_summary/kde.rst

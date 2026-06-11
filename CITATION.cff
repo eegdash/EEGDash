@@ -1,8 +1,7 @@
 cff-version: 1.2.0
 message: >-
   If you use EEGDash (EEG-DaSh) in your research, please cite both the
-  software entry below and the companion paper once it is available
-  (see `preferred-citation`).
+  software entry below and the companion paper (see `preferred-citation`).
 title: >-
   EEG-DaSh: an open data, tool, and compute resource for machine
   learning on neuroelectromagnetic data
@@ -16,12 +15,12 @@ abstract: >-
   braindecode, and PyTorch. EEG-DaSh addresses three bottlenecks:
   automated BIDS repair, conversion to a PyTorch-native data format
   for direct use in training loops, and a feature-extraction framework
-  with 44 extractors across six categories (signal, spectral,
+  with extractors across six categories (signal, spectral,
   connectivity, complexity, dimensionality, spatial filtering). All
   datasets are annotated with Hierarchical Event Descriptors (HED) for
   cross-study aggregation.
 type: software
-version: 0.6.0
+version: 0.8.2
 license: BSD-3-Clause
 repository-code: "https://github.com/eegdash/EEGDash"
 url: "https://eegdash.org"
@@ -32,8 +31,7 @@ authors:
     orcid: "https://orcid.org/0000-0001-5258-2995"
     affiliation: >-
       SCCN, Institute of Neural Computation, University of California,
-      San Diego, USA; LISN-CNRS, Universit\u00e9 Paris-Saclay and
-      Inria, France
+      San Diego, USA; LISN-CNRS, Université Paris-Saclay and Inria, France
   - family-names: Dotan
     given-names: Aviv
     email: avivdot@bgu.post.ac.il
@@ -46,6 +44,17 @@ authors:
     email: pierre.guetschel@donders.ru.nl
     orcid: "https://orcid.org/0000-0002-8933-7640"
     affiliation: "Donders Institute, Radboud University, The Netherlands"
+  - family-names: Jaiswal
+    given-names: Aman
+    email: aman.jaiswal.1503@gmail.com
+    affiliation: >-
+      SCCN, Institute of Neural Computation, University of California,
+      San Diego, USA
+  - family-names: Ashkenazi
+    given-names: Gal
+    affiliation: >-
+      Department of Industrial Engineering and School of Brain Sciences
+      and Cognition, Ben-Gurion University of the Negev, Israel
   - family-names: Truong
     given-names: Dung
     email: dt.young112@gmail.com
@@ -55,12 +64,6 @@ authors:
       San Diego, USA
   - family-names: Kokate
     given-names: Kuntal
-    affiliation: >-
-      SCCN, Institute of Neural Computation, University of California,
-      San Diego, USA
-  - family-names: Jaiswal
-    given-names: Aman
-    email: aman.jaiswal.1503@gmail.com
     affiliation: >-
       SCCN, Institute of Neural Computation, University of California,
       San Diego, USA
@@ -86,8 +89,7 @@ authors:
     orcid: "https://orcid.org/0000-0002-0799-3557"
     affiliation: >-
       SCCN, Institute of Neural Computation, University of California,
-      San Diego, USA; CerCo, CNRS UMR 5549, Universit\u00e9 Toulouse
-      III, France
+      San Diego, USA; CerCo, CNRS UMR 5549, Université Toulouse III, France
 keywords:
   - EEG
   - MEG
@@ -123,8 +125,7 @@ identifiers:
 preferred-citation:
   type: article
   title: >-
-    EEG-DaSh: an open data, tool, and compute resource for machine
-    learning on neuroelectromagnetic data
+    EEG-Dash: An Open Data Tool for Machine Learning on Neurophysiological Data
   authors:
     - family-names: Aristimunha
       given-names: Bruno
@@ -135,13 +136,15 @@ preferred-citation:
     - family-names: Guetschel
       given-names: Pierre
       orcid: "https://orcid.org/0000-0002-8933-7640"
+    - family-names: Jaiswal
+      given-names: Aman
+    - family-names: Ashkenazi
+      given-names: Gal
     - family-names: Truong
       given-names: Dung
       orcid: "https://orcid.org/0000-0003-4540-3551"
     - family-names: Kokate
       given-names: Kuntal
-    - family-names: Jaiswal
-      given-names: Aman
     - family-names: Majumdar
       given-names: Amitrava
     - family-names: Shirazi

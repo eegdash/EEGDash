@@ -889,7 +889,7 @@ Welch counter records the redundant calls.</p>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Extracting features:   0%|          | 0/2 [00:00&lt;?, ?it/s]
-Extracting features: 100%|██████████| 2/2 [00:00&lt;00:00, 266.03it/s]
+Extracting features: 100%|██████████| 2/2 [00:00&lt;00:00, 268.06it/s]
 </pre></div>
 </div>
 </section>
@@ -902,7 +902,7 @@ equals <code class="docutils literal notranslate"><span class="pre">n_bands</spa
 <span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>flat: shape=(16, 17) | runtime=0.0095 s | PSDs=8
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>flat: shape=(16, 17) | runtime=0.0094 s | PSDs=8
 </pre></div>
 </div>
 </section>
@@ -931,7 +931,7 @@ below. Printing the extractor renders the dependency tree exactly as
 ╚═ beta_pow: spectral_bands_power
 
 Extracting features:   0%|          | 0/2 [00:00&lt;?, ?it/s]
-Extracting features: 100%|██████████| 2/2 [00:00&lt;00:00, 450.27it/s]
+Extracting features: 100%|██████████| 2/2 [00:00&lt;00:00, 451.27it/s]
 </pre></div>
 </div>
 </section>
@@ -955,7 +955,7 @@ the same sphinx-gallery process sees the original Welch.</p>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;welch restored&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>tree: shape=(16, 17) | runtime=0.0062 s | PSDs=2 | speedup=1.54x
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>tree: shape=(16, 17) | runtime=0.0062 s | PSDs=2 | speedup=1.52x
 welch restored
 </pre></div>
 </div>
@@ -1030,7 +1030,7 @@ one column per key (<code class="docutils literal notranslate"><span class="pre"
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Extracting features:   0%|          | 0/2 [00:00&lt;?, ?it/s]
-Extracting features: 100%|██████████| 2/2 [00:00&lt;00:00, 404.47it/s]
+Extracting features: 100%|██████████| 2/2 [00:00&lt;00:00, 405.33it/s]
 marker columns (first 10): [&#39;alpha_pow_O1&#39;, &#39;alpha_pow_Oz&#39;, &#39;alpha_pow_O2&#39;, &#39;alpha_pow_Cz&#39;, &#39;alpha_peak_O1&#39;, &#39;alpha_peak_Oz&#39;, &#39;alpha_peak_O2&#39;, &#39;alpha_peak_Cz&#39;, &#39;norm_spec_ent_O1&#39;, &#39;norm_spec_ent_Oz&#39;]
 markers table shape: (16, 21)
 </pre></div>
@@ -1224,7 +1224,7 @@ tree. Runtime barely budges; the flat version would pay a fifth PSD.</p>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Extracting features:   0%|          | 0/2 [00:00&lt;?, ?it/s]
-Extracting features: 100%|██████████| 2/2 [00:00&lt;00:00, 363.92it/s]
+Extracting features: 100%|██████████| 2/2 [00:00&lt;00:00, 351.55it/s]
 extended (with gamma): n_cols=21
 </pre></div>
 </div>
@@ -1261,7 +1261,7 @@ and Chicco 2024 Tip 5).</p>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Extracting features:   0%|          | 0/2 [00:00&lt;?, ?it/s]
-Extracting features: 100%|██████████| 2/2 [00:00&lt;00:00, 427.05it/s]
+Extracting features: 100%|██████████| 2/2 [00:00&lt;00:00, 431.07it/s]
 custom rel_alpha columns: [&#39;rel_alpha_O1&#39;, &#39;rel_alpha_Oz&#39;, &#39;rel_alpha_O2&#39;, &#39;rel_alpha_Cz&#39;]
 </pre></div>
 </div>
@@ -1288,8 +1288,8 @@ still open questions <span class="bibtex-citation" id="id4">[<a class="reference
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>                   n_features  runtime_s  psds_computed  speedup_vs_flat
-flat (no tree)             16     0.0095              8           1.0000
-tree (shared PSD)          16     0.0062              2           1.5361
+flat (no tree)             16     0.0094              8           1.0000
+tree (shared PSD)          16     0.0062              2           1.5191
 </pre></div>
 </div>
 </section>

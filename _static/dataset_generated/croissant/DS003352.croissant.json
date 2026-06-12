@@ -93,6 +93,11 @@
   ],
   "citeAs": "Katherine Hermann, Isabelle Rosenthal, Shridhar R. Singh, Dimitrios Pantazis, Bevil R. Conway (n.d.). 1 - Light Pink Spiral. doi:10.18112/openneuro.ds003352.v1.0.0",
   "version": "1.2.2",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1038/s41467-022-28249-0",
+    "url": "https://doi.org/10.1038/s41467-022-28249-0"
+  },
   "measurementTechnique": [
     "BIDS task: ColorSpirals"
   ],

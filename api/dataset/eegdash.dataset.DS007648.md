@@ -220,7 +220,7 @@ Participants received cues to prepare for the target (auditory, visual or non-sp
     <span class="right">64 ch · EEG · 500 Hz · 22 subjects, 22 recordings</span>
   </div>
   <div class="figpair-grid"><div class="figpair-cell figpair-trace"><details class="trace-viewer">
-  <summary>Live trace viewer — <strong>sub-13 · task-CrossModal</strong></summary>
+  <summary>Live trace viewer — <strong>sub-02 · task-CrossModal</strong></summary>
   <p class="trace-viewer-caption">
     Showing <strong>one</strong> representative recording out of
     <strong>22 subjects and 22 recordings</strong> in this dataset.
@@ -229,11 +229,11 @@ Participants received cues to prepare for the target (auditory, visual or non-sp
     viewer (or pass <code>?eeg=&lt;url&gt;</code>) to inspect it.
   </p>
   <iframe
-    data-src="https://eegdash.github.io/eegdash-viewer/?dataset=ds007648&sub=13&task=CrossModal&ext=vhdr&embed=1"
+    data-src="https://eegdash.github.io/eegdash-viewer/?dataset=ds007648&sub=02&task=CrossModal&ext=vhdr&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 1200px; display: block; background: transparent;"
-    title="Live EEG trace viewer for ds007648 — sub-13 · task-CrossModal"
+    title="Live EEG trace viewer for ds007648 — sub-02 · task-CrossModal"
     referrerpolicy="no-referrer">
   </iframe>
 </details></div><div class="figpair-cell figpair-montage"><details class="electrode-explorer">

@@ -253,7 +253,7 @@ Participants received cues to prepare for the target (auditory or visual).
     <span class="right">334 ch · MEG · Varies · 27 subjects, 59 recordings</span>
   </div>
   <div class="figpair-grid"><div class="figpair-cell figpair-trace"><details class="trace-viewer">
-  <summary>Live trace viewer — <strong>sub-021 · task-crossmodal</strong></summary>
+  <summary>Live trace viewer — <strong>sub-001 · task-crossmodal</strong></summary>
   <p class="trace-viewer-caption">
     Showing <strong>one</strong> representative recording out of
     <strong>27 subjects and 59 recordings</strong> in this dataset.
@@ -262,11 +262,11 @@ Participants received cues to prepare for the target (auditory or visual).
     viewer (or pass <code>?meg=&lt;url&gt;</code>) to inspect it.
   </p>
   <iframe
-    data-src="https://eegdash.github.io/eegdash-viewer/?dataset=ds007663&sub=021&task=crossmodal&ext=fif&suffix=meg&embed=1"
+    data-src="https://eegdash.github.io/eegdash-viewer/?dataset=ds007663&sub=001&task=crossmodal&ext=fif&suffix=meg&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 1200px; display: block; background: transparent;"
-    title="Live MEG trace viewer for ds007663 — sub-021 · task-crossmodal"
+    title="Live MEG trace viewer for ds007663 — sub-001 · task-crossmodal"
     referrerpolicy="no-referrer">
   </iframe>
 </details></div><div class="figpair-cell figpair-montage"><details class="electrode-explorer">

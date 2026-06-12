@@ -90,6 +90,11 @@
   "citeAs": "Boyla Mainsah, Chance Fleeting, Thomas Balmat, Eric Sellers, Leslie Collins (2019). Mainsah2025-B. doi:10.13026/0byy-ry86",
   "version": "1.9.0",
   "dateModified": "2026-04-14",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1007/978-3-642-21852-1_54",
+    "url": "https://doi.org/10.1007/978-3-642-21852-1_54"
+  },
   "measurementTechnique": [
     "BIDS task: p300"
   ],

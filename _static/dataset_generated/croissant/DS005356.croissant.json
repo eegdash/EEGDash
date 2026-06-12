@@ -78,6 +78,11 @@
   ],
   "citeAs": "[Unspecified] (2025). MEG: Major Depression & Probabilistic Learning Task. doi:10.18112/openneuro.ds005356.v1.5.0",
   "version": "1.7.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1016/j.bpsc.2024.11.002",
+    "url": "https://doi.org/10.1016/j.bpsc.2024.11.002"
+  },
   "measurementTechnique": [
     "BIDS task: pst"
   ],

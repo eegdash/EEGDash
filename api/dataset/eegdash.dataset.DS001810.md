@@ -191,7 +191,7 @@ The .bdf seems to be read fine by EEGLAB, so still included it in case this can 
     <span class="right">73 ch · EEG · 512 Hz · 47 subjects, 263 recordings</span>
   </div>
   <div class="figpair-grid"><div class="figpair-cell figpair-trace"><details class="trace-viewer">
-  <summary>Live trace viewer — <strong>sub-01 · ses-anodalpost · task-attentionalblink</strong></summary>
+  <summary>Live trace viewer — <strong>sub-13 · ses-anodalpre · task-attentionalblink</strong></summary>
   <p class="trace-viewer-caption">
     Showing <strong>one</strong> representative recording out of
     <strong>47 subjects and 263 recordings</strong> in this dataset.
@@ -200,11 +200,11 @@ The .bdf seems to be read fine by EEGLAB, so still included it in case this can 
     viewer (or pass <code>?eeg=&lt;url&gt;</code>) to inspect it.
   </p>
   <iframe
-    data-src="https://eegdash.github.io/eegdash-viewer/?dataset=ds001810&sub=01&ses=anodalpost&task=attentionalblink&ext=vhdr&embed=1"
+    data-src="https://eegdash.github.io/eegdash-viewer/?dataset=ds001810&sub=13&ses=anodalpre&task=attentionalblink&ext=vhdr&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 1200px; display: block; background: transparent;"
-    title="Live EEG trace viewer for ds001810 — sub-01 · ses-anodalpost · task-attentionalblink"
+    title="Live EEG trace viewer for ds001810 — sub-13 · ses-anodalpre · task-attentionalblink"
     referrerpolicy="no-referrer">
   </iframe>
 </details></div><div class="figpair-cell figpair-montage"><details class="electrode-explorer">

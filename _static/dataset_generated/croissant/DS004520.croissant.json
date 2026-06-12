@@ -82,8 +82,8 @@
   "version": "1.8.0",
   "citation": {
     "@type": "sc:ScholarlyArticle",
-    "identifier": "doi:10.1101/2022.08.12.503778v3.abstract",
-    "url": "https://doi.org/10.1101/2022.08.12.503778v3.abstract"
+    "identifier": "doi:10.1101/2022.08.12.503778",
+    "url": "https://doi.org/10.1101/2022.08.12.503778"
   },
   "measurementTechnique": [
     "BIDS task: Retrocue"

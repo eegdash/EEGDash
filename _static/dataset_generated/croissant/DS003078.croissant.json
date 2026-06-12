@@ -93,6 +93,11 @@
   ],
   "citeAs": "Philippe DOMENECH, Sylvain RHEIMS, Etienne KOECHLIN (n.d.). PROBE iEEG. doi:10.18112/openneuro.ds003078.v1.0.0",
   "version": "1.0.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1126/science.abb0184",
+    "url": "https://doi.org/10.1126/science.abb0184"
+  },
   "measurementTechnique": [
     "BIDS task: PROBE"
   ],

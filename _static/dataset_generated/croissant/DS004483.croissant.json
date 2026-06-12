@@ -98,8 +98,8 @@
   "version": "1.6.0",
   "citation": {
     "@type": "sc:ScholarlyArticle",
-    "identifier": "doi:10.1101/2022.10.15.512361v1",
-    "url": "https://doi.org/10.1101/2022.10.15.512361v1"
+    "identifier": "doi:10.1101/2022.10.15.512361",
+    "url": "https://doi.org/10.1101/2022.10.15.512361"
   },
   "measurementTechnique": [
     "BIDS task: abseq"

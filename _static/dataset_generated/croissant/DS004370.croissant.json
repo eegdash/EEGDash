@@ -105,8 +105,8 @@
   "version": "Brain Imaging Data Structure Specification v1.6.0",
   "citation": {
     "@type": "sc:ScholarlyArticle",
-    "identifier": "doi:10.7554/elife.35832.029",
-    "url": "https://doi.org/10.7554/elife.35832.029"
+    "identifier": "doi:10.1016/j.clinph.2024.01.012",
+    "url": "https://doi.org/10.1016/j.clinph.2024.01.012"
   },
   "measurementTechnique": [
     "BIDS task: SPESclin",

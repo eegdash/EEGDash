@@ -91,8 +91,8 @@
   "version": "1.0.2",
   "citation": {
     "@type": "sc:ScholarlyArticle",
-    "identifier": "doi:10.1101/2020.01.22.915330v3",
-    "url": "https://doi.org/10.1101/2020.01.22.915330v3"
+    "identifier": "doi:10.1101/2020.01.22.915330",
+    "url": "https://doi.org/10.1101/2020.01.22.915330"
   },
   "measurementTechnique": [
     "BIDS task: MEM"

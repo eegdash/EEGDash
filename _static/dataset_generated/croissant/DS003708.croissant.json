@@ -96,8 +96,8 @@
   "version": "v 1.3.0",
   "citation": {
     "@type": "sc:ScholarlyArticle",
-    "identifier": "doi:10.1101/2021.01.24.428020v1.full",
-    "url": "https://doi.org/10.1101/2021.01.24.428020v1.full"
+    "identifier": "doi:10.1101/2021.01.24.428020",
+    "url": "https://doi.org/10.1101/2021.01.24.428020"
   },
   "measurementTechnique": [
     "BIDS task: ccep"

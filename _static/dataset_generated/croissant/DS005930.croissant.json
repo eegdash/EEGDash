@@ -108,6 +108,11 @@
   "version": "1.8.0",
   "dateCreated": "2025-02-17",
   "dateModified": "2025-07-08",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1117/1.NPh.10.2.025007",
+    "url": "https://doi.org/10.1117/1.NPh.10.2.025007"
+  },
   "measurementTechnique": [
     "BIDS task: BallSqueezing"
   ],

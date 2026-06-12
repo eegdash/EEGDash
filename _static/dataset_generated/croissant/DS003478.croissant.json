@@ -77,6 +77,11 @@
   ],
   "citeAs": "James F Cavanagh jcavanagh@unm.edu (20). EEG: Depression rest. doi:10.18112/openneuro.ds003478.v1.1.0",
   "version": "1.1.1",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1162/cpsy_a_00024",
+    "url": "https://doi.org/10.1162/cpsy_a_00024"
+  },
   "measurementTechnique": [
     "BIDS task: Rest"
   ],

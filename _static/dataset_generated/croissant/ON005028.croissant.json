@@ -109,8 +109,8 @@
   "version": "1.8.0",
   "citation": {
     "@type": "sc:ScholarlyArticle",
-    "identifier": "doi:10.1101/2022.06.24.22276882v1",
-    "url": "https://doi.org/10.1101/2022.06.24.22276882v1"
+    "identifier": "doi:10.1101/2022.06.24.22276882",
+    "url": "https://doi.org/10.1101/2022.06.24.22276882"
   },
   "measurementTechnique": [
     "BIDS task: cb",

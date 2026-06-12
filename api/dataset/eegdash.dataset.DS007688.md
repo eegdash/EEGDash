@@ -207,7 +207,7 @@ Special thanks to Anna Mae van Dooren, Lois van Petegem, and Rayna Akil for data
     <span class="right">69 ch · EEG · 250 Hz · 44 subjects, 88 recordings</span>
   </div>
   <div class="figpair-grid"><div class="figpair-cell figpair-trace"><details class="trace-viewer">
-  <summary>Live trace viewer — <strong>sub-P23 · task-JustFaces</strong></summary>
+  <summary>Live trace viewer — <strong>sub-P01 · task-JustFaces</strong></summary>
   <p class="trace-viewer-caption">
     Showing <strong>one</strong> representative recording out of
     <strong>44 subjects and 88 recordings</strong> in this dataset.
@@ -216,11 +216,11 @@ Special thanks to Anna Mae van Dooren, Lois van Petegem, and Rayna Akil for data
     viewer (or pass <code>?eeg=&lt;url&gt;</code>) to inspect it.
   </p>
   <iframe
-    data-src="https://eegdash.github.io/eegdash-viewer/?dataset=ds007688&sub=P23&task=JustFaces&ext=edf&embed=1"
+    data-src="https://eegdash.github.io/eegdash-viewer/?dataset=ds007688&sub=P01&task=JustFaces&ext=edf&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 1200px; display: block; background: transparent;"
-    title="Live EEG trace viewer for ds007688 — sub-P23 · task-JustFaces"
+    title="Live EEG trace viewer for ds007688 — sub-P01 · task-JustFaces"
     referrerpolicy="no-referrer">
   </iframe>
 </details></div><div class="figpair-cell figpair-montage">

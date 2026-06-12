@@ -122,8 +122,8 @@
   "version": "1.6.0",
   "citation": {
     "@type": "sc:ScholarlyArticle",
-    "identifier": "doi:10.1101/2025.05.12.653390v1",
-    "url": "https://doi.org/10.1101/2025.05.12.653390v1"
+    "identifier": "doi:10.1101/2025.05.12.653390",
+    "url": "https://doi.org/10.1101/2025.05.12.653390"
   },
   "measurementTechnique": [
     "BIDS task: noise",

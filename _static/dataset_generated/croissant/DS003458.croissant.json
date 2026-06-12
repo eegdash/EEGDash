@@ -77,6 +77,11 @@
   ],
   "citeAs": "James F Cavanagh jcavanagh@unm.edu (20). EEG: Three armed bandit gambling task. doi:10.18112/openneuro.ds003458.v1.1.0",
   "version": "1.1.1",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1016/j.neuroimage.2015.02.007",
+    "url": "https://doi.org/10.1016/j.neuroimage.2015.02.007"
+  },
   "measurementTechnique": [
     "BIDS task: ThreeArmedBandit"
   ],

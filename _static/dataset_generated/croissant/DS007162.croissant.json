@@ -82,8 +82,8 @@
   "version": "1.7.0",
   "citation": {
     "@type": "sc:ScholarlyArticle",
-    "identifier": "doi:10.1101/2025.10.17.682937v2",
-    "url": "https://doi.org/10.1101/2025.10.17.682937v2"
+    "identifier": "doi:10.1101/2025.10.17.682937",
+    "url": "https://doi.org/10.1101/2025.10.17.682937"
   },
   "measurementTechnique": [
     "BIDS task: rcor"

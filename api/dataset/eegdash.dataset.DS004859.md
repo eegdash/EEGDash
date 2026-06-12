@@ -137,13 +137,13 @@ No README content is available for this dataset.
     referrerpolicy="no-referrer">
   </iframe>
 </details></div><div class="figpair-cell figpair-montage"><details class="electrode-explorer">
-  <summary>Electrode layout — iEEG · 102 sensors — 102 channels</summary>
+  <summary>Electrode layout — iEEG · 112 sensors — 112 channels</summary>
   <iframe
-    data-src="https://electrodes.eegdash.org/?montage=8d1664a121d08f83&embed=1"
+    data-src="https://electrodes.eegdash.org/?montage=b9080c38af4103f9&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"
-    title="Topomap of iEEG · 102 sensors"
+    title="Topomap of iEEG · 112 sensors"
     referrerpolicy="no-referrer">
   </iframe>
 </details></div></div></div>

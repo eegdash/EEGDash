@@ -76,6 +76,11 @@
   ],
   "citeAs": "anonymous (n.d.). LIGHT Hypnotherapy. doi:10.18112/openneuro.ds006437.v1.1.0",
   "version": "v1.10.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1177/2515690X261418396",
+    "url": "https://doi.org/10.1177/2515690X261418396"
+  },
   "measurementTechnique": [
     "BIDS task: baseline0",
     "BIDS task: baseline1",

@@ -102,8 +102,8 @@
   "version": "1.4.0",
   "citation": {
     "@type": "sc:ScholarlyArticle",
-    "identifier": "doi:10.1101/2021.06.04.446837v1",
-    "url": "https://doi.org/10.1101/2021.06.04.446837v1"
+    "identifier": "doi:10.1101/2021.06.04.446837",
+    "url": "https://doi.org/10.1101/2021.06.04.446837"
   },
   "measurementTechnique": [
     "BIDS task: movie",

@@ -81,6 +81,11 @@
   ],
   "citeAs": "Wei Xu, et al. (n.d.). FACE-DEC. doi:10.18112/openneuro.ds005107.v2.0.0",
   "version": "1.7.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1523/JNEUROSCI.2237-23.2024",
+    "url": "https://doi.org/10.1523/JNEUROSCI.2237-23.2024"
+  },
   "measurementTechnique": [
     "BIDS task: face"
   ],

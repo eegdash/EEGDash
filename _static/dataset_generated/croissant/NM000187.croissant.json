@@ -92,6 +92,11 @@
   ],
   "citeAs": "Boyla Mainsah, Chance Fleeting, Thomas Balmat, Eric Sellers, Leslie Collins (2019). BigP3BCI Study N — 9x8 dry/wet electrode comparison (8 ALS subjects). doi:10.82901/nemar.nm000187",
   "version": "1.9.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1088/1741-2560/13/6/066018",
+    "url": "https://doi.org/10.1088/1741-2560/13/6/066018"
+  },
   "measurementTechnique": [
     "BIDS task: p300"
   ],

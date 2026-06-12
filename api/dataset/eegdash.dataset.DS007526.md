@@ -184,7 +184,7 @@ Email: [vereddan@tlvmc.gov.il](mailto:vereddan@tlvmc.gov.il)
     <span class="right">65 ch · EEG · 250 Hz · 144 subjects, 277 recordings</span>
   </div>
   <div class="figpair-grid"><div class="figpair-cell figpair-trace"><details class="trace-viewer">
-  <summary>Live trace viewer — <strong>sub-021 · task-rest</strong></summary>
+  <summary>Live trace viewer — <strong>sub-001 · task-rest</strong></summary>
   <p class="trace-viewer-caption">
     Showing <strong>one</strong> representative recording out of
     <strong>144 subjects and 277 recordings</strong> in this dataset.
@@ -193,11 +193,11 @@ Email: [vereddan@tlvmc.gov.il](mailto:vereddan@tlvmc.gov.il)
     viewer (or pass <code>?eeg=&lt;url&gt;</code>) to inspect it.
   </p>
   <iframe
-    data-src="https://eegdash.github.io/eegdash-viewer/?dataset=ds007526&sub=021&task=rest&ext=set&embed=1"
+    data-src="https://eegdash.github.io/eegdash-viewer/?dataset=ds007526&sub=001&task=rest&ext=set&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 1200px; display: block; background: transparent;"
-    title="Live EEG trace viewer for ds007526 — sub-021 · task-rest"
+    title="Live EEG trace viewer for ds007526 — sub-001 · task-rest"
     referrerpolicy="no-referrer">
   </iframe>
 </details></div><div class="figpair-cell figpair-montage"><details class="electrode-explorer">

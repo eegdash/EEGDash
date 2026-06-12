@@ -84,6 +84,11 @@
   "version": "1.6.0",
   "dateCreated": "2025-08-12",
   "dateModified": "2025-08-12",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1038/s41598-024-68555-9",
+    "url": "https://doi.org/10.1038/s41598-024-68555-9"
+  },
   "measurementTechnique": [
     "BIDS task: audio"
   ],

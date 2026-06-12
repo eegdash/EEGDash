@@ -77,6 +77,11 @@
   ],
   "citeAs": "James F Cavanagh jcavanagh@unm.edu (20). EEG: 3-Stim Auditory Oddball and Rest in Parkinson's. doi:10.18112/openneuro.ds003490.v1.1.0",
   "version": "1.1.1",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1016/j.clinph.2017.11.023",
+    "url": "https://doi.org/10.1016/j.clinph.2017.11.023"
+  },
   "measurementTechnique": [
     "BIDS task: Rest"
   ],

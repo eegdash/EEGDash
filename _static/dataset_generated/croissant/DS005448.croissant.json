@@ -124,6 +124,11 @@
   ],
   "citeAs": "Jelsma S.B., Zijlmans M., Heijink I.B., Hoefnagels F.W.A., Raemakers M (20). STReEF. doi:10.18112/openneuro.ds005448.v1.0.0",
   "version": "Brain Imaging Data Structure Specification v1.6.0",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1016/j.ynirp.2025.100274",
+    "url": "https://doi.org/10.1016/j.ynirp.2025.100274"
+  },
   "measurementTechnique": [
     "BIDS task: SPESclin"
   ],

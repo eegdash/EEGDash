@@ -62,6 +62,11 @@
     "name": "EEG Dash",
     "url": "https://eegdash.org/"
   },
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1038/s41597-026-07215-1",
+    "url": "https://doi.org/10.1038/s41597-026-07215-1"
+  },
   "measurementTechnique": [
     "BIDS task: .bidsignore",
     "BIDS task: .gitignore",

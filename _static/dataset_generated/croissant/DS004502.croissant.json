@@ -92,6 +92,11 @@
   ],
   "citeAs": "Jose M. G. Penalver, David Lopez-Garcia, Blanca Aguado-Lopez, Carlos Gonzalez-Garcia, Maria Ruz (n.d.). Anticipatory differences between Attention and Expectation. doi:10.18112/openneuro.ds004502.v1.0.1",
   "version": "1.2",
+  "citation": {
+    "@type": "sc:ScholarlyArticle",
+    "identifier": "doi:10.1016/j.neuroimage.2023.119960",
+    "url": "https://doi.org/10.1016/j.neuroimage.2023.119960"
+  },
   "measurementTechnique": [
     "BIDS task: attexp"
   ],

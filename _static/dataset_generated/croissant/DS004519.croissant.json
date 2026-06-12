@@ -83,8 +83,8 @@
   "version": "1.8.0",
   "citation": {
     "@type": "sc:ScholarlyArticle",
-    "identifier": "doi:10.1101/2022.07.05.498906v4.abstract",
-    "url": "https://doi.org/10.1101/2022.07.05.498906v4.abstract"
+    "identifier": "doi:10.1101/2022.07.05.498906",
+    "url": "https://doi.org/10.1101/2022.07.05.498906"
   },
   "measurementTechnique": [
     "BIDS task: ProAntiCue"

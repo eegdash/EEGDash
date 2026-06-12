@@ -210,8 +210,8 @@
   "version": "1.6.0",
   "citation": {
     "@type": "sc:ScholarlyArticle",
-    "identifier": "doi:10.1101/2021.10.15.464594v1",
-    "url": "https://doi.org/10.1101/2021.10.15.464594v1"
+    "identifier": "doi:10.1101/2021.10.15.464594",
+    "url": "https://doi.org/10.1101/2021.10.15.464594"
   },
   "measurementTechnique": [
     "BIDS task: interictal",

@@ -97,8 +97,8 @@
   "version": "1.6.0",
   "citation": {
     "@type": "sc:ScholarlyArticle",
-    "identifier": "doi:10.30958/ajs_v9i3",
-    "url": "https://doi.org/10.30958/ajs_v9i3"
+    "identifier": "doi:10.1523/JNEUROSCI.2294-24.2025",
+    "url": "https://doi.org/10.1523/JNEUROSCI.2294-24.2025"
   },
   "measurementTechnique": [
     "BIDS task: daf"

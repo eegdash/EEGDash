@@ -70,12 +70,6 @@ authors:
   - family-names: Majumdar
     given-names: Amitrava
     affiliation: "San Diego Supercomputer Center, UCSD, USA"
-  - family-names: Shirazi
-    given-names: Seyed Yahya
-    orcid: "https://orcid.org/0000-0001-5557-259X"
-    affiliation: >-
-      SCCN, Institute of Neural Computation, University of California,
-      San Diego, USA
   - family-names: Shriki
     given-names: Oren
     email: shrikio@bgu.ac.il
@@ -147,9 +141,6 @@ preferred-citation:
       given-names: Kuntal
     - family-names: Majumdar
       given-names: Amitrava
-    - family-names: Shirazi
-      given-names: Seyed Yahya
-      orcid: "https://orcid.org/0000-0001-5557-259X"
     - family-names: Shriki
       given-names: Oren
       orcid: "https://orcid.org/0000-0003-1129-4799"

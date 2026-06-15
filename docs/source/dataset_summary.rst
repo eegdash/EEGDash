@@ -96,35 +96,35 @@ EEG-DaSh is a data-sharing archive for MEEG (EEG, MEG) recordings contributed by
 
       .. tab-item:: Dataset Table
 
-         .. include:: dataset_summary/table.rst
+         .. dataset-figure:: table
 
       .. tab-item:: Participant Distribution
 
-         .. include:: dataset_summary/kde.rst
+         .. dataset-figure:: kde
 
       .. tab-item:: Dataset Flow
 
-         .. include:: dataset_summary/sankey.rst
+         .. dataset-figure:: sankey
 
       .. tab-item:: Dataset Treemap
 
-         .. include:: dataset_summary/treemap.rst
+         .. dataset-figure:: treemap
 
       .. tab-item:: Clinical Breakdown
 
-         .. include:: dataset_summary/clinical.rst
+         .. dataset-figure:: clinical
 
       .. tab-item:: Dataset Growth
 
-         .. include:: dataset_summary/growth.rst
+         .. dataset-figure:: growth
 
       .. tab-item:: Dataset Map
 
-         .. include:: dataset_summary/bubble.rst
+         .. dataset-figure:: bubble
 
       .. tab-item:: Subject Distribution
 
-         .. include:: dataset_summary/moabb.rst
+         .. dataset-figure:: moabb
 
 .. only:: not html
 

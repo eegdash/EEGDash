@@ -39,7 +39,7 @@ from plot_dataset.utils import (
     primary_recording_modality,
 )
 
-from eegdash.dataset.registry import fetch_chart_data_from_api
+from eegdash.dataset.snapshot import DatasetSnapshot
 
 # API Configuration
 API_BASE_URL = "https://data.eegdash.org/api"
@@ -72,7 +72,14 @@ def _load_local_csv() -> pd.DataFrame:
 def load_data() -> pd.DataFrame:
     """Fetch dataset data from the EEGDash API."""
     print("Fetching data from API...")
-    df_raw, _ = fetch_chart_data_from_api(API_BASE_URL, DEFAULT_DATABASE, limit=1000)
+    snapshot = DatasetSnapshot.build(
+        api_base=API_BASE_URL, database=DEFAULT_DATABASE, limit=1000
+    )
+    print(
+        f"  DatasetSnapshot source={snapshot.source} "
+        f"dataset_count={snapshot.dataset_count}"
+    )
+    df_raw = snapshot.rows()
 
     # Enrich with local CSV for modality info
     fallback_df = _load_local_csv()

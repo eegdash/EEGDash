@@ -282,8 +282,14 @@ def test_registry_make_init_closure(tmp_path):
 
 
 def test_fetch_datasets_from_api_field_mappings():
-    """Test that fetch_datasets_from_api correctly maps API fields."""
+    """Test that fetch_datasets_from_api correctly maps API fields.
+
+    Post-B1 the shim calls :class:`DatasetSnapshot.build` which probes
+    ``/datasets/chart-data`` first and falls back to ``/datasets/summary``
+    when chart-data returns 404. The test mocks that fallback chain.
+    """
     import json
+    import urllib.error
     from unittest.mock import MagicMock, patch
 
     from eegdash.dataset.registry import fetch_datasets_from_api
@@ -311,23 +317,28 @@ def test_fetch_datasets_from_api_field_mappings():
         ],
     }
 
-    mock_stats_response = {"data": {}}
+    summary_response = MagicMock()
+    summary_response.read.return_value = json.dumps(mock_api_response).encode("utf-8")
+    summary_response.__enter__ = MagicMock(return_value=summary_response)
+    summary_response.__exit__ = MagicMock(return_value=False)
+
+    def urlopen_side_effect(url, *_, **__):
+        # First call is to /datasets/chart-data — simulate "not deployed
+        # in this test environment" by raising 404 so the snapshot falls
+        # through to the legacy /datasets/summary path that this test
+        # was written for.
+        if "chart-data" in url:
+            raise urllib.error.HTTPError(
+                url=url, code=404, msg="not found", hdrs=None, fp=None
+            )
+        return summary_response
 
     with (
-        patch("urllib.request.urlopen") as mock_urlopen,
+        patch("urllib.request.urlopen", side_effect=urlopen_side_effect),
         patch("eegdash.dataset.registry.get_default_cache_dir") as mock_cache_dir,
     ):
         mock_cache_dir.return_value = MagicMock()
         mock_cache_dir.return_value.__truediv__.return_value.exists.return_value = False
-
-        mock_response = MagicMock()
-        mock_response.read.side_effect = [
-            json.dumps(mock_api_response).encode("utf-8"),
-            json.dumps(mock_stats_response).encode("utf-8"),
-        ]
-        mock_response.__enter__ = MagicMock(return_value=mock_response)
-        mock_response.__exit__ = MagicMock(return_value=False)
-        mock_urlopen.return_value = mock_response
 
         df = fetch_datasets_from_api("https://api.test.com", "testdb")
 
@@ -392,25 +403,36 @@ def test_fetch_datasets_from_api_recovers_from_bad_cache_and_handles_write_failu
 
 
 def test_fetch_chart_data_http_404_falls_back_to_summary():
-    """404 from chart endpoint should fall back to summary fetch."""
-    from unittest.mock import patch
+    """404 from chart endpoint should fall back to summary fetch.
 
-    import pandas as pd
+    Post-B1 the chart-data → summary fallback is inside
+    :class:`DatasetSnapshot._build_uncached`, not inside the registry
+    shim, so we mock the network layer and let the snapshot's own
+    fallback chain run. The shim's contract (empty aggregations dict
+    on 404 fallback) is preserved.
+    """
+    import json
+    from unittest.mock import MagicMock, patch
 
     from eegdash.dataset.registry import fetch_chart_data_from_api
 
-    fallback = pd.DataFrame([{"dataset": "ds_fallback"}])
-    with (
-        patch(
-            "urllib.request.urlopen",
-            side_effect=urllib.error.HTTPError(
-                url="u", code=404, msg="not found", hdrs=None, fp=None
-            ),
-        ),
-        patch(
-            "eegdash.dataset.registry.fetch_datasets_from_api", return_value=fallback
-        ),
-    ):
+    summary_payload = {
+        "success": True,
+        "data": [{"dataset_id": "ds_fallback"}],
+    }
+    summary_response = MagicMock()
+    summary_response.read.return_value = json.dumps(summary_payload).encode("utf-8")
+    summary_response.__enter__ = MagicMock(return_value=summary_response)
+    summary_response.__exit__ = MagicMock(return_value=False)
+
+    def urlopen_side_effect(url, *_, **__):
+        if "chart-data" in url:
+            raise urllib.error.HTTPError(
+                url=url, code=404, msg="not found", hdrs=None, fp=None
+            )
+        return summary_response
+
+    with patch("urllib.request.urlopen", side_effect=urlopen_side_effect):
         df, aggregations = fetch_chart_data_from_api("https://api.test.com", "db")
 
     assert len(df) == 1
@@ -607,29 +629,65 @@ def test_fetch_api_error():
 
 
 def test_register_fallback_to_csv(tmp_path):
-    """Test fallback to CSV if API fails."""
+    """Test fallback to CSV if API fails.
+
+    Post-B1 ``register_openneuro_datasets`` consults
+    :class:`DatasetSnapshot` directly; patch that seam so the build
+    surfaces an API failure (source == "package-csv") and the function
+    falls through to the explicit ``summary_file`` parameter.
+    """
+    from datetime import datetime, timezone
+
+    import pandas as pd
+
     from eegdash.dataset.registry import register_openneuro_datasets
+    from eegdash.dataset.snapshot import DatasetSnapshot
 
     # Create a simple summary CSV
     csv_path = tmp_path / "summary.csv"
     csv_path.write_text("dataset,n_subjects\nds001,5")
 
-    with patch("eegdash.dataset.registry.fetch_datasets_from_api") as mock_fetch:
-        mock_fetch.side_effect = Exception("API Error")
-
-        # Should read from CSV
+    failed_snapshot = DatasetSnapshot(
+        rows=pd.DataFrame(),
+        aggregations={},
+        montages={},
+        source="package-csv",
+        fetched_at=datetime.now(timezone.utc),
+        api_errors=["API Error"],
+    )
+    with patch(
+        "eegdash.dataset.snapshot.DatasetSnapshot.build",
+        return_value=failed_snapshot,
+    ):
+        # Should read from CSV via the explicit summary_file parameter
         registered = register_openneuro_datasets(summary_file=csv_path, from_api=True)
         assert "DS001" in registered
 
 
 def test_register_api_success():
-    """Test success path from API."""
+    """Test success path from API.
+
+    Patch the snapshot seam so ``register_openneuro_datasets`` sees a
+    live snapshot and consumes its rows.
+    """
+    from datetime import datetime, timezone
+
     import pandas as pd
 
     from eegdash.dataset.registry import register_openneuro_datasets
+    from eegdash.dataset.snapshot import DatasetSnapshot
 
-    df = pd.DataFrame([{"dataset": "ds002", "n_subjects": 10}])
-    with patch("eegdash.dataset.registry.fetch_datasets_from_api", return_value=df):
+    live_snapshot = DatasetSnapshot(
+        rows=pd.DataFrame([{"dataset": "ds002", "n_subjects": 10}]),
+        aggregations={},
+        montages={},
+        source="live",
+        fetched_at=datetime.now(timezone.utc),
+    )
+    with patch(
+        "eegdash.dataset.snapshot.DatasetSnapshot.build",
+        return_value=live_snapshot,
+    ):
         registered = register_openneuro_datasets(from_api=True)
         assert "DS002" in registered
 

@@ -41,6 +41,7 @@ from ._constants import (
     _README_PAPER_DOI_RE,
     CLONE_ROOT,
     DEFAULT_METADATA_FIELDS,
+    EEGDASH_API_BASE,
 )
 
 LOGGER = logging.getLogger(__name__)
@@ -248,7 +249,7 @@ def _fetch_dataset_details_from_api(dataset_id: str) -> dict[str, object]:
     if not _should_use_api_summary():
         return {}
 
-    api_url = "https://data.eegdash.org/api/eegdash"
+    api_url = EEGDASH_API_BASE
 
     # API may be case-sensitive; try original then common variations.
     ids_to_try = [dataset_id]
@@ -410,7 +411,7 @@ def _detect_sidecars_for_dataset(dataset_id: str) -> list[str]:
         separators=(",", ":"),
     )
     url = (
-        "https://data.eegdash.org/api/eegdash/records"
+        f"{EEGDASH_API_BASE}/records"
         f"?{urllib.parse.urlencode({'limit': 1, 'filter': query})}"
     )
     body = _get_json(url)
@@ -483,7 +484,7 @@ def _fetch_participants_from_records(dataset_id: str) -> list[dict[str, object]]
 
     # --- Primary path: dedicated participants endpoint ----------------
     body = _get_json(
-        f"https://data.eegdash.org/api/eegdash/datasets/{dataset_lower}/participants",
+        f"{EEGDASH_API_BASE}/datasets/{dataset_lower}/participants",
         timeout=12.0,
     )
     if body is not None and body.get("success") and isinstance(body.get("data"), list):
@@ -514,7 +515,7 @@ def _fetch_participants_from_records(dataset_id: str) -> list[dict[str, object]]
     max_skip = 20000  # safety bound — no real dataset has 20k recordings
     while skip < max_skip:
         url = (
-            "https://data.eegdash.org/api/eegdash/records"
+            f"{EEGDASH_API_BASE}/records"
             f"?{urllib.parse.urlencode({'limit': page_size, 'skip': skip, 'filter': query})}"
         )
         page = _get_json(url, timeout=12.0)

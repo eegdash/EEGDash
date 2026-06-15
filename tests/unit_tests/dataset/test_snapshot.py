@@ -36,121 +36,13 @@ from eegdash.dataset import snapshot as snapshot_mod
 from eegdash.dataset.snapshot import DatasetSnapshot
 
 # ---------------------------------------------------------------------------
-# Test fixtures
-# ---------------------------------------------------------------------------
-
-
-@pytest.fixture(autouse=True)
-def _isolated_caches(tmp_path, monkeypatch):
-    """Redirect both the in-memory and on-disk snapshot caches.
-
-    Each test gets a private temp directory for ``snapshot_*.parquet``
-    files and a fresh in-memory instance cache so the order of test
-    execution can never leak state across cases.
-    """
-    snapshot_mod._reset_instance_cache_for_testing()
-    monkeypatch.setattr(snapshot_mod, "get_default_cache_dir", lambda: tmp_path)
-    yield
-    snapshot_mod._reset_instance_cache_for_testing()
-
-
-def _chart_data_payload(dataset_id: str = "ds_live_1") -> dict:
-    """A minimal but well-formed ``/datasets/chart-data`` response."""
-    return {
-        "success": True,
-        "datasets": [
-            {
-                "dataset_id": dataset_id,
-                "name": f"{dataset_id} dataset",
-                "demographics": {"subjects_count": 12},
-                "total_files": 30,
-                "tasks": ["rest"],
-                "sessions": ["s1"],
-                "recording_modality": ["eeg"],
-                "tags": {"modality": ["visual"]},
-                "size_bytes": 1024,
-                "source": "openneuro",
-            }
-        ],
-        "aggregations": {
-            "totals": {"datasets": 1, "subjects": 12},
-            "modality_counts": {"eeg": 1},
-            "source_counts": {"openneuro": 1},
-        },
-    }
-
-
-def _summary_payload(dataset_id: str = "ds_summary_1") -> dict:
-    """A minimal ``/datasets/summary`` response (legacy shape)."""
-    return {
-        "success": True,
-        "data": [
-            {
-                "dataset_id": dataset_id,
-                "name": f"{dataset_id} dataset",
-                "demographics": {"subjects_count": 5},
-                "total_files": 10,
-                "tasks": ["task"],
-                "recording_modality": ["eeg"],
-                "tags": {},
-            }
-        ],
-    }
-
-
-def _make_urlopen_response(payload: dict) -> MagicMock:
-    response = MagicMock()
-    response.read.return_value = json.dumps(payload).encode("utf-8")
-    response.__enter__ = MagicMock(return_value=response)
-    response.__exit__ = MagicMock(return_value=False)
-    return response
-
-
-def _server_manifest(
-    dataset_count: int = 1,
-    schema_version: str = "2.1.0",
-    **overrides,
-) -> dict:
-    """A minimal but well-formed ``/build-manifest`` server response.
-
-    Mirrors the production payload shape:
-    ``{dataset_count, last_ingested_at, last_stats_computed_at,
-    schema_version, git_sha, name_coverage}``.
-    """
-    base = {
-        "dataset_count": dataset_count,
-        "last_ingested_at": "2026-04-18T16:10:52.827000Z",
-        "last_stats_computed_at": "2026-05-10T19:09:03.501782Z",
-        "schema_version": schema_version,
-        "git_sha": "unknown",
-        "name_coverage": 0.03,
-    }
-    base.update(overrides)
-    return base
-
-
-def _routing_urlopen(routes: dict[str, dict]):
-    """Build a urlopen side_effect that picks payloads by URL substring.
-
-    The earliest-matching key in iteration order wins (Python 3.7+
-    dicts preserve insertion order), so put more-specific paths first.
-    """
-
-    def urlopen_side_effect(url, *_, **__):
-        for needle, payload in routes.items():
-            if needle in url:
-                return _make_urlopen_response(payload)
-        raise AssertionError(f"unexpected URL: {url}")
-
-    return urlopen_side_effect
-
-
-# ---------------------------------------------------------------------------
 # Required cases per the task spec (≥ 5)
 # ---------------------------------------------------------------------------
 
 
-def test_build_live_via_stubbed_http():
+def test_build_live_via_stubbed_http(
+    chart_data_payload, server_manifest, routing_urlopen
+):
     """Happy path: chart-data returns success → source == "live".
 
     Offline-safe equivalent of the ``test_build_live`` case in the
@@ -161,10 +53,10 @@ def test_build_live_via_stubbed_http():
     snapshot's :attr:`manifest` carries the server's response verbatim
     when reachable (see A2).
     """
-    side_effect = _routing_urlopen(
+    side_effect = routing_urlopen(
         {
-            "datasets/chart-data": _chart_data_payload("ds_live_1"),
-            "build-manifest": _server_manifest(dataset_count=1),
+            "datasets/chart-data": chart_data_payload("ds_live_1"),
+            "build-manifest": server_manifest(dataset_count=1),
         }
     )
 
@@ -188,14 +80,16 @@ def test_build_live_via_stubbed_http():
     assert snapshot.schema_version == "2.1.0"
 
 
-def test_cached_on_api_failure_after_priming(tmp_path):
+def test_cached_on_api_failure_after_priming(
+    chart_data_payload, server_manifest, routing_urlopen
+):
     """First live call primes the disk cache; second call (forced
     failure) reads the cache and tags source == "cached".
     """
-    side_effect = _routing_urlopen(
+    side_effect = routing_urlopen(
         {
-            "datasets/chart-data": _chart_data_payload("ds_cached_1"),
-            "build-manifest": _server_manifest(dataset_count=1),
+            "datasets/chart-data": chart_data_payload("ds_cached_1"),
+            "build-manifest": server_manifest(dataset_count=1),
         }
     )
     api_base = "https://stub.example"
@@ -228,7 +122,7 @@ def test_cached_on_api_failure_after_priming(tmp_path):
     assert cached.fetched_at == expected
 
 
-def test_csv_fallback_on_no_cache(tmp_path):
+def test_csv_fallback_on_no_cache():
     """No disk cache + dead API + present package CSV → source == "package-csv"."""
     api_base = "https://stub.example"
     database = "no_cache_shard"
@@ -287,21 +181,23 @@ def test_api_errors_populated_with_exception_text():
     assert any("simulated DNS failure" in e for e in snapshot.api_errors)
 
 
-def test_cache_keyed_by_api_base_and_database():
+def test_cache_keyed_by_api_base_and_database(
+    chart_data_payload, make_urlopen_response
+):
     """Two builds with different ``api_base`` must NOT share an instance.
 
     Reproduces the bug the unkeyed ``_DATASET_SUMMARY_CACHE`` global in
     ``conf.py`` had: any caller that pointed at a different shard
     silently got stale data from the previous caller.
     """
-    payload_a = _chart_data_payload("ds_from_a")
-    payload_b = _chart_data_payload("ds_from_b")
+    payload_a = chart_data_payload("ds_from_a")
+    payload_b = chart_data_payload("ds_from_b")
 
     def urlopen_side_effect(url, *_, **__):
         if "shard_a" in url:
-            return _make_urlopen_response(payload_a)
+            return make_urlopen_response(payload_a)
         if "shard_b" in url:
-            return _make_urlopen_response(payload_b)
+            return make_urlopen_response(payload_b)
         raise AssertionError(f"unexpected URL: {url}")
 
     with patch("urllib.request.urlopen", side_effect=urlopen_side_effect):
@@ -363,15 +259,17 @@ def test_snapshot_is_immutable():
         snapshot.source = "cached"  # type: ignore[misc]
 
 
-def test_provenance_logged_once(caplog):
+def test_provenance_logged_once(
+    caplog, chart_data_payload, server_manifest, routing_urlopen
+):
     """:meth:`DatasetSnapshot.build` emits exactly one I8-formatted
     INFO line per build — the invariant the validation plan §2 grep's
     for.
     """
-    side_effect = _routing_urlopen(
+    side_effect = routing_urlopen(
         {
-            "datasets/chart-data": _chart_data_payload("ds_log_1"),
-            "build-manifest": _server_manifest(dataset_count=1),
+            "datasets/chart-data": chart_data_payload("ds_log_1"),
+            "build-manifest": server_manifest(dataset_count=1),
         }
     )
     caplog.set_level("INFO", logger="eegdash.dataset.snapshot")
@@ -391,12 +289,12 @@ def test_provenance_logged_once(caplog):
     assert "fetched_at=" in msg
 
 
-def test_load_roundtrip(tmp_path):
+def test_load_roundtrip(tmp_path, chart_data_payload, server_manifest, routing_urlopen):
     """A snapshot written by build can be re-hydrated via load."""
-    side_effect = _routing_urlopen(
+    side_effect = routing_urlopen(
         {
-            "datasets/chart-data": _chart_data_payload("ds_roundtrip"),
-            "build-manifest": _server_manifest(dataset_count=1),
+            "datasets/chart-data": chart_data_payload("ds_roundtrip"),
+            "build-manifest": server_manifest(dataset_count=1),
         }
     )
     api_base = "https://stub.example"
@@ -478,7 +376,9 @@ def test_montage_lookup_is_case_insensitive():
     assert snapshot.montage("DS001785") == {"hash": "abc", "n_channels": 63}
 
 
-def test_chart_data_request_includes_montages_param():
+def test_chart_data_request_includes_montages_param(
+    chart_data_payload, server_manifest, make_urlopen_response
+):
     """The chart-data URL must carry ``?include=montages`` so the server
     joins the top per-dataset montage onto every row in a single
     round-trip (arch #5).
@@ -490,9 +390,9 @@ def test_chart_data_request_includes_montages_param():
         url_str = url if isinstance(url, str) else url.get_full_url()
         seen_urls.append(url_str)
         if "datasets/chart-data" in url_str:
-            return _make_urlopen_response(_chart_data_payload("ds_url_check"))
+            return make_urlopen_response(chart_data_payload("ds_url_check"))
         if "build-manifest" in url_str:
-            return _make_urlopen_response(_server_manifest(dataset_count=1))
+            return make_urlopen_response(server_manifest(dataset_count=1))
         raise AssertionError(f"unexpected URL: {url_str}")
 
     with patch("urllib.request.urlopen", side_effect=capture_urlopen):
@@ -508,7 +408,9 @@ def test_chart_data_request_includes_montages_param():
     assert "limit=42" in chart_urls[0]
 
 
-def test_snapshot_populates_montages_when_included():
+def test_snapshot_populates_montages_when_included(
+    chart_data_payload, server_manifest, routing_urlopen
+):
     """Stub chart-data with montage objects on a couple of datasets;
     ``snapshot.montage(dataset_id)`` must return the projected dict.
 
@@ -517,7 +419,7 @@ def test_snapshot_populates_montages_when_included():
     backward-compatible with the retired build_electrode_layouts.py
     output so the consumer is a no-op rename.
     """
-    payload = _chart_data_payload("ds001785")
+    payload = chart_data_payload("ds001785")
     payload["datasets"][0]["montage"] = {
         "hash": "42b9e8daf4ff0e6d",
         "subject_count": 54,
@@ -543,10 +445,10 @@ def test_snapshot_populates_montages_when_included():
         }
     )
 
-    side_effect = _routing_urlopen(
+    side_effect = routing_urlopen(
         {
             "datasets/chart-data": payload,
-            "build-manifest": _server_manifest(dataset_count=2),
+            "build-manifest": server_manifest(dataset_count=2),
         }
     )
 
@@ -572,12 +474,14 @@ def test_snapshot_populates_montages_when_included():
     assert snapshot.montage("ds_no_montage") is None
 
 
-def test_snapshot_montages_persist_through_disk_cache(tmp_path):
+def test_snapshot_montages_persist_through_disk_cache(
+    chart_data_payload, server_manifest, routing_urlopen
+):
     """A live build writes a montages sidecar next to the parquet
     rows; a subsequent ``cached`` resolution rehydrates it so the
     docs build doesn't lose montage data the moment the API blips.
     """
-    payload = _chart_data_payload("ds_persisted")
+    payload = chart_data_payload("ds_persisted")
     payload["datasets"][0]["montage"] = {
         "hash": "deadbeef00000000",
         "modality": "eeg",
@@ -585,10 +489,10 @@ def test_snapshot_montages_persist_through_disk_cache(tmp_path):
         "channel_names": ["A1"],
     }
 
-    side_effect = _routing_urlopen(
+    side_effect = routing_urlopen(
         {
             "datasets/chart-data": payload,
-            "build-manifest": _server_manifest(dataset_count=1),
+            "build-manifest": server_manifest(dataset_count=1),
         }
     )
 
@@ -621,7 +525,9 @@ def test_snapshot_montages_persist_through_disk_cache(tmp_path):
     assert rehydrated["n_channels"] == 32
 
 
-def test_snapshot_montages_empty_when_summary_fallback_fires():
+def test_snapshot_montages_empty_when_summary_fallback_fires(
+    summary_payload, server_manifest, make_urlopen_response
+):
     """When chart-data is unavailable and the snapshot falls back to
     ``/datasets/summary`` (which has no montage data), ``montage()``
     must return ``None`` for every dataset rather than raise.
@@ -632,9 +538,9 @@ def test_snapshot_montages_empty_when_summary_fallback_fires():
         if "datasets/chart-data" in url_str:
             raise urllib.error.HTTPError(url_str, 404, "no chart-data", {}, None)
         if "datasets/summary" in url_str:
-            return _make_urlopen_response(_summary_payload("ds_summary_fallback"))
+            return make_urlopen_response(summary_payload("ds_summary_fallback"))
         if "build-manifest" in url_str:
-            return _make_urlopen_response(_server_manifest(dataset_count=1))
+            return make_urlopen_response(server_manifest(dataset_count=1))
         raise AssertionError(f"unexpected URL: {url_str}")
 
     with patch("urllib.request.urlopen", side_effect=urlopen_side_effect):
@@ -650,7 +556,7 @@ def test_snapshot_montages_empty_when_summary_fallback_fires():
     assert any("chart-data 404" in e for e in snapshot.api_errors)
 
 
-def test_package_csv_fallback_skips_disk_cache_write(tmp_path):
+def test_package_csv_fallback_skips_disk_cache_write():
     """When fetch fails, the snapshot must NOT pollute the disk cache
     with a package-csv fallback — that would mask a future "API is
     back" run as still-broken.
@@ -735,142 +641,27 @@ def test_excluded_datasets_canonical_membership():
 
 
 # ---------------------------------------------------------------------------
-# CI gate: check_snapshot_health.evaluate_snapshot
-# ---------------------------------------------------------------------------
-
-
-def _load_check_snapshot_health():
-    """Load ``scripts/validation/check_snapshot_health.py`` as a module.
-
-    The script lives outside the importable package tree (``scripts/``
-    has no ``__init__.py`` on purpose: it's a CLI directory, not a
-    library). For tests we load the file directly via ``importlib``
-    rather than mutating ``sys.path`` globally.
-    """
-    import importlib.util
-
-    repo_root = Path(__file__).resolve().parents[1]
-    script_path = repo_root / "scripts" / "validation" / "check_snapshot_health.py"
-    spec = importlib.util.spec_from_file_location(
-        "check_snapshot_health_under_test", script_path
-    )
-    assert spec is not None and spec.loader is not None
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    return module
-
-
-def _gate_snapshot(*, source="live", dataset_count=1000, api_errors=()):
-    """Build a minimal snapshot with the provenance flags the gate
-    reads, without hitting the build/fetch path.
-
-    Only the four attributes ``evaluate_snapshot`` consults are
-    populated; the rest of the object is left at its constructor
-    defaults.
-    """
-    rows = pd.DataFrame([{"dataset": f"ds_{i}"} for i in range(dataset_count)])
-    return DatasetSnapshot(
-        rows=rows,
-        aggregations={},
-        montages={},
-        source=source,
-        fetched_at=datetime.now(timezone.utc),
-        api_errors=list(api_errors),
-    )
-
-
-def test_ci_gate_passes_clean_live_snapshot():
-    """Source=live, count over threshold, api_errors empty → OK."""
-    module = _load_check_snapshot_health()
-
-    snap = _gate_snapshot(source="live", dataset_count=800, api_errors=[])
-    assert module.evaluate_snapshot(snap, min_count=700) == []
-
-
-def test_ci_gate_fails_on_fallback_source():
-    """A cached snapshot is degraded, even with a full row count."""
-    module = _load_check_snapshot_health()
-
-    snap = _gate_snapshot(source="cached", dataset_count=900, api_errors=[])
-    failures = module.evaluate_snapshot(snap, min_count=700)
-    assert any("source" in msg for msg in failures), failures
-
-
-def test_ci_gate_fails_on_low_count():
-    """Row count at or below the floor must fail the gate."""
-    module = _load_check_snapshot_health()
-
-    snap = _gate_snapshot(source="live", dataset_count=700, api_errors=[])
-    failures = module.evaluate_snapshot(snap, min_count=700)
-    assert any("dataset_count" in msg for msg in failures), failures
-
-
-def test_ci_gate_fails_on_partial_degradation_api_errors():
-    """The motivating regression: chart-data dead, summary alive.
-
-    ``_build_uncached`` records the chart-data failure on
-    ``api_errors`` and then tags the snapshot ``source="live"``
-    because the summary endpoint saved the day. The pre-fix gate
-    looked only at ``source`` and ``dataset_count`` and let this
-    through — losing the aggregations block silently on the docs
-    site. The fixed gate catches it.
-    """
-    module = _load_check_snapshot_health()
-
-    snap = _gate_snapshot(
-        source="live",
-        dataset_count=900,
-        api_errors=[
-            "chart-data 404 at https://api.example/db/datasets/chart-data; "
-            "trying summary"
-        ],
-    )
-    failures = module.evaluate_snapshot(snap, min_count=700)
-    assert any("api_errors" in msg for msg in failures), (
-        f"partial degradation did not trip the gate; failures={failures}"
-    )
-
-
-def test_ci_gate_api_errors_ignored_on_fallback_source():
-    """When the snapshot has already fallen back, ``api_errors`` will
-    obviously be populated (every fallback path appends to it). The
-    source-tag check has already failed, so we should not double-count
-    the same degradation. This locks in that ``api_errors`` only
-    contributes a *new* failure when ``source == "live"``.
-    """
-    module = _load_check_snapshot_health()
-
-    snap = _gate_snapshot(
-        source="package-csv",
-        dataset_count=900,
-        api_errors=["chart-data error at ...", "summary error at ..."],
-    )
-    failures = module.evaluate_snapshot(snap, min_count=700)
-    # Exactly one failure: the source-tag failure. No api_errors line.
-    assert len(failures) == 1, failures
-    assert "source" in failures[0]
-
-
-# ---------------------------------------------------------------------------
 # /build-manifest server integration (arch #4)
 # ---------------------------------------------------------------------------
 
 
-def test_manifest_uses_server_when_available():
+def test_manifest_uses_server_when_available(
+    chart_data_payload, server_manifest, routing_urlopen
+):
     """``snapshot.manifest`` carries the server's ``/build-manifest``
     response verbatim — including the keys the local projection never
     populated (``schema_version``, ``last_ingested_at``, ``git_sha``,
     ``name_coverage``).
     """
-    server_payload = _server_manifest(
+    server_payload = server_manifest(
         dataset_count=1, schema_version="2.1.0", git_sha="abc1234"
     )
 
     def fake_fetch_manifest(api_base, database, *, errors=None, timeout=5.0):
         return dict(server_payload)
 
-    side_effect = _routing_urlopen(
-        {"datasets/chart-data": _chart_data_payload("ds_server_manifest")}
+    side_effect = routing_urlopen(
+        {"datasets/chart-data": chart_data_payload("ds_server_manifest")}
     )
 
     with (
@@ -892,7 +683,7 @@ def test_manifest_uses_server_when_available():
     assert not any("build-manifest dataset_count" in e for e in snapshot.api_errors)
 
 
-def test_manifest_falls_back_on_manifest_error():
+def test_manifest_falls_back_on_manifest_error(chart_data_payload, routing_urlopen):
     """When ``/build-manifest`` raises, the snapshot still builds and
     ``manifest`` reverts to the locally-projected dict — no exception
     leaks to the caller.
@@ -906,8 +697,8 @@ def test_manifest_falls_back_on_manifest_error():
             errors.append("build-manifest error at ...: simulated outage")
         return None
 
-    side_effect = _routing_urlopen(
-        {"datasets/chart-data": _chart_data_payload("ds_manifest_down")}
+    side_effect = routing_urlopen(
+        {"datasets/chart-data": chart_data_payload("ds_manifest_down")}
     )
 
     with (
@@ -931,18 +722,20 @@ def test_manifest_falls_back_on_manifest_error():
     assert any("build-manifest" in e for e in snapshot.api_errors)
 
 
-def test_manifest_count_mismatch_tagged():
+def test_manifest_count_mismatch_tagged(
+    chart_data_payload, server_manifest, routing_urlopen
+):
     """Server's ``dataset_count`` disagreeing with the snapshot's row
     count is surfaced on ``api_errors`` (never raised) so the B2 CI gate
     can refuse to publish.
     """
-    server_payload = _server_manifest(dataset_count=9999, schema_version="2.1.0")
+    server_payload = server_manifest(dataset_count=9999, schema_version="2.1.0")
 
     def fake_fetch_manifest(api_base, database, *, errors=None, timeout=5.0):
         return dict(server_payload)
 
-    side_effect = _routing_urlopen(
-        {"datasets/chart-data": _chart_data_payload("ds_skew")}
+    side_effect = routing_urlopen(
+        {"datasets/chart-data": chart_data_payload("ds_skew")}
     )
 
     with (
@@ -1000,64 +793,18 @@ def test_manifest_not_fetched_in_csv_fallback_path():
 # ---------------------------------------------------------------------------
 
 
-def _snapshot_payload(
-    date: str = "2026-05-18",
-    *,
-    dataset_count: int = 1,
-    created_at: str = "2026-05-18T23:02:53.561107Z",
-    include_montage: bool = False,
-    chart_data_override: dict | None = None,
-    build_manifest_override: dict | None = None,
-) -> dict:
-    """A minimal but well-formed ``/snapshots/{date}`` payload.
-
-    Mirrors the production shape: ``{date, dataset_count, git_sha,
-    schema_version, chart_data, build_manifest, created_at}`` where
-    ``chart_data`` is the frozen ``/datasets/chart-data`` response.
-    """
-    cd = _chart_data_payload("ds_pin_1")
-    cd["count"] = dataset_count
-    cd["database"] = "eegdash"
-    if include_montage:
-        cd["datasets"][0]["montage"] = {
-            "hash": "42b9e8daf4ff0e6d",
-            "subject_count": 54,
-            "modality": "eeg",
-            "n_sensors": 63,
-            "space_declared": "CapTrak",
-            "units_declared": "mm",
-            "channel_names": ["AF3", "AF4", "Cz"],
-        }
-    if chart_data_override is not None:
-        cd.update(chart_data_override)
-
-    bm = _server_manifest(dataset_count=dataset_count)
-    if build_manifest_override is not None:
-        bm.update(build_manifest_override)
-
-    return {
-        "date": date,
-        "dataset_count": dataset_count,
-        "git_sha": "unknown",
-        "schema_version": "2.1.0",
-        "chart_data": cd,
-        "build_manifest": bm,
-        "created_at": created_at,
-    }
-
-
-def test_pin_valid_date_returns_snapshot():
+def test_pin_valid_date_returns_snapshot(snapshot_payload_pin, make_urlopen_response):
     """``pin(date)`` fetches ``/snapshots/{date}`` and surfaces the
     frozen payload's provenance: ``source == "live"``, ``pinned_at``
     set to the requested date, ``manifest`` byte-for-byte from the
     payload's ``build_manifest``.
     """
-    payload = _snapshot_payload(date="2026-05-18", dataset_count=1)
+    payload = snapshot_payload_pin(date="2026-05-18", dataset_count=1)
 
     def fake_urlopen(url, *_, **__):
         url_str = url if isinstance(url, str) else url.get_full_url()
         assert "/snapshots/2026-05-18" in url_str, f"unexpected URL: {url_str}"
-        return _make_urlopen_response(payload)
+        return make_urlopen_response(payload)
 
     with patch("urllib.request.urlopen", side_effect=fake_urlopen):
         snapshot = DatasetSnapshot.pin("2026-05-18")
@@ -1101,25 +848,27 @@ def test_pin_404_raises_lookup_error():
             DatasetSnapshot.pin("2026-04-01")
 
 
-def test_pin_does_not_share_cache_with_build():
+def test_pin_does_not_share_cache_with_build(
+    snapshot_payload_pin, chart_data_payload, server_manifest, make_urlopen_response
+):
     """A pinned snapshot and a live :meth:`build` must be different
     objects. The in-process ``_INSTANCE_CACHE`` keys :meth:`build`
     results by ``(api_base, database, limit)``; if :meth:`pin` ever
     leaked into the same cache, a pin for one date could shadow the
     live build (or vice-versa).
     """
-    snapshot_payload = _snapshot_payload(date="2026-05-18", dataset_count=1)
-    build_chart = _chart_data_payload("ds_live_after_pin")
-    build_manifest = _server_manifest(dataset_count=1)
+    snapshot_payload = snapshot_payload_pin(date="2026-05-18", dataset_count=1)
+    build_chart = chart_data_payload("ds_live_after_pin")
+    build_manifest = server_manifest(dataset_count=1)
 
     def fake_urlopen(url, *_, **__):
         url_str = url if isinstance(url, str) else url.get_full_url()
         if "/snapshots/2026-05-18" in url_str:
-            return _make_urlopen_response(snapshot_payload)
+            return make_urlopen_response(snapshot_payload)
         if "datasets/chart-data" in url_str:
-            return _make_urlopen_response(build_chart)
+            return make_urlopen_response(build_chart)
         if "build-manifest" in url_str:
-            return _make_urlopen_response(build_manifest)
+            return make_urlopen_response(build_manifest)
         raise AssertionError(f"unexpected URL: {url_str}")
 
     with patch("urllib.request.urlopen", side_effect=fake_urlopen):
@@ -1144,18 +893,20 @@ def test_pin_does_not_share_cache_with_build():
     assert s1b is not s1
 
 
-def test_pin_carries_montages_when_included():
+def test_pin_carries_montages_when_included(
+    snapshot_payload_pin, make_urlopen_response
+):
     """When the frozen ``chart_data`` carries per-dataset ``montage``
     objects, :meth:`pin` runs the same parser as the live path so the
     docs viewer renders a real electrode layout instead of the
     placeholder.
     """
-    payload = _snapshot_payload(
+    payload = snapshot_payload_pin(
         date="2026-05-18", dataset_count=1, include_montage=True
     )
 
     def fake_urlopen(url, *_, **__):
-        return _make_urlopen_response(payload)
+        return make_urlopen_response(payload)
 
     with patch("urllib.request.urlopen", side_effect=fake_urlopen):
         snapshot = DatasetSnapshot.pin("2026-05-18")
@@ -1170,19 +921,21 @@ def test_pin_carries_montages_when_included():
     assert mont["channel_names"] == ["AF3", "AF4", "Cz"]
 
 
-def test_pin_fetched_at_is_original_creation_time():
+def test_pin_fetched_at_is_original_creation_time(
+    snapshot_payload_pin, make_urlopen_response
+):
     """``fetched_at`` carries the ``created_at`` from the frozen
     payload, NOT the wall clock at pin time. That's the whole point
     of a pinned snapshot: reproducibility means the timestamp is part
     of the immutable artefact.
     """
     created_at = "2026-04-01T08:15:30.123456Z"
-    payload = _snapshot_payload(
+    payload = snapshot_payload_pin(
         date="2026-04-01", dataset_count=1, created_at=created_at
     )
 
     def fake_urlopen(url, *_, **__):
-        return _make_urlopen_response(payload)
+        return make_urlopen_response(payload)
 
     with patch("urllib.request.urlopen", side_effect=fake_urlopen):
         snapshot = DatasetSnapshot.pin("2026-04-01")

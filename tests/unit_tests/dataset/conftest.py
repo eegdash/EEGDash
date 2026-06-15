@@ -47,3 +47,191 @@ def _reset_dataset_snapshot_cache(tmp_path_factory):
     finally:
         _reset_instance_cache_for_testing()
         snapshot_mod.get_default_cache_dir = original_get_cache
+
+
+# --- snapshot test fixtures (lifted from tests/test_dataset_snapshot.py) -----
+import json
+from datetime import datetime, timezone
+from unittest.mock import MagicMock
+
+import pandas as pd
+
+from eegdash.dataset.snapshot import DatasetSnapshot
+
+
+@pytest.fixture
+def chart_data_payload():
+    """Factory: a minimal well-formed ``/datasets/chart-data`` response."""
+
+    def _make(dataset_id: str = "ds_live_1") -> dict:
+        return {
+            "success": True,
+            "datasets": [
+                {
+                    "dataset_id": dataset_id,
+                    "name": f"{dataset_id} dataset",
+                    "demographics": {"subjects_count": 12},
+                    "total_files": 30,
+                    "tasks": ["rest"],
+                    "sessions": ["s1"],
+                    "recording_modality": ["eeg"],
+                    "tags": {"modality": ["visual"]},
+                    "size_bytes": 1024,
+                    "source": "openneuro",
+                }
+            ],
+            "aggregations": {
+                "totals": {"datasets": 1, "subjects": 12},
+                "modality_counts": {"eeg": 1},
+                "source_counts": {"openneuro": 1},
+            },
+        }
+
+    return _make
+
+
+@pytest.fixture
+def summary_payload():
+    """Factory: a minimal ``/datasets/summary`` response (legacy shape)."""
+
+    def _make(dataset_id: str = "ds_summary_1") -> dict:
+        return {
+            "success": True,
+            "data": [
+                {
+                    "dataset_id": dataset_id,
+                    "name": f"{dataset_id} dataset",
+                    "demographics": {"subjects_count": 5},
+                    "total_files": 10,
+                    "tasks": ["task"],
+                    "recording_modality": ["eeg"],
+                    "tags": {},
+                }
+            ],
+        }
+
+    return _make
+
+
+@pytest.fixture
+def make_urlopen_response():
+    """Factory: wrap a payload dict as a context-manager urlopen mock."""
+
+    def _make(payload: dict) -> MagicMock:
+        response = MagicMock()
+        response.read.return_value = json.dumps(payload).encode("utf-8")
+        response.__enter__ = MagicMock(return_value=response)
+        response.__exit__ = MagicMock(return_value=False)
+        return response
+
+    return _make
+
+
+@pytest.fixture
+def server_manifest():
+    """Factory: a minimal well-formed ``/build-manifest`` response."""
+
+    def _make(
+        dataset_count: int = 1, schema_version: str = "2.1.0", **overrides
+    ) -> dict:
+        base = {
+            "dataset_count": dataset_count,
+            "last_ingested_at": "2026-04-18T16:10:52.827000Z",
+            "last_stats_computed_at": "2026-05-10T19:09:03.501782Z",
+            "schema_version": schema_version,
+            "git_sha": "unknown",
+            "name_coverage": 0.03,
+        }
+        base.update(overrides)
+        return base
+
+    return _make
+
+
+@pytest.fixture
+def routing_urlopen(make_urlopen_response):
+    """Factory: a urlopen side_effect that selects payloads by URL substring.
+
+    Earliest-matching key wins (insertion order), so put more-specific
+    paths first. Raises AssertionError on an unrouted URL.
+    """
+
+    def _make(routes: dict[str, dict]):
+        def urlopen_side_effect(url, *_, **__):
+            for needle, payload in routes.items():
+                if needle in url:
+                    return make_urlopen_response(payload)
+            raise AssertionError(f"unexpected URL: {url}")
+
+        return urlopen_side_effect
+
+    return _make
+
+
+@pytest.fixture
+def gate_snapshot():
+    """Factory: a snapshot carrying only the provenance flags the CI gate reads."""
+
+    def _make(*, source="live", dataset_count=1000, api_errors=()) -> DatasetSnapshot:
+        rows = pd.DataFrame([{"dataset": f"ds_{i}"} for i in range(dataset_count)])
+        return DatasetSnapshot(
+            rows=rows,
+            aggregations={},
+            montages={},
+            source=source,
+            fetched_at=datetime.now(timezone.utc),
+            api_errors=list(api_errors),
+        )
+
+    return _make
+
+
+@pytest.fixture
+def snapshot_payload_pin(chart_data_payload, server_manifest):
+    """Factory: a minimal but well-formed ``/snapshots/{date}`` payload.
+
+    Mirrors the production shape: ``{date, dataset_count, git_sha,
+    schema_version, chart_data, build_manifest, created_at}`` where
+    ``chart_data`` is the frozen ``/datasets/chart-data`` response.
+    """
+
+    def _make(
+        date: str = "2026-05-18",
+        *,
+        dataset_count: int = 1,
+        created_at: str = "2026-05-18T23:02:53.561107Z",
+        include_montage: bool = False,
+        chart_data_override: dict | None = None,
+        build_manifest_override: dict | None = None,
+    ) -> dict:
+        cd = chart_data_payload("ds_pin_1")
+        cd["count"] = dataset_count
+        cd["database"] = "eegdash"
+        if include_montage:
+            cd["datasets"][0]["montage"] = {
+                "hash": "42b9e8daf4ff0e6d",
+                "subject_count": 54,
+                "modality": "eeg",
+                "n_sensors": 63,
+                "space_declared": "CapTrak",
+                "units_declared": "mm",
+                "channel_names": ["AF3", "AF4", "Cz"],
+            }
+        if chart_data_override is not None:
+            cd.update(chart_data_override)
+
+        bm = server_manifest(dataset_count=dataset_count)
+        if build_manifest_override is not None:
+            bm.update(build_manifest_override)
+
+        return {
+            "date": date,
+            "dataset_count": dataset_count,
+            "git_sha": "unknown",
+            "schema_version": "2.1.0",
+            "chart_data": cd,
+            "build_manifest": bm,
+            "created_at": created_at,
+        }
+
+    return _make

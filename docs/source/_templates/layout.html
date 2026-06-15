@@ -144,49 +144,55 @@
   <script>document.documentElement.classList.add('editorial-dataset');</script>
   {%- endif %}
 
-  <!-- Google Tag Manager — deferred to DOMContentLoaded so the GTM
-       bootstrap no longer blocks first-paint or the Sphinx search-index
-       load. Functionally equivalent to the inline snippet below but
-       saves ~60 ms of Total Blocking Time per PageSpeed Insights. -->
+  <!-- Google Analytics 4 (gtag.js) — direct install for the EEGDash
+       property G-CHY0V439ZQ. This replaces the previous Google Tag
+       Manager container (GTM-MXC3DGL6), which shipped NO GA4
+       configuration tag and therefore collected nothing, and whose
+       shared-container pattern risked cross-wiring eegdash traffic with
+       the braindecode property. A direct gtag.js install routes pageviews
+       unambiguously to eegdash's own property only. Deferred off the
+       critical path so it no longer blocks first-paint or the Sphinx
+       search-index load (~60 ms of Total Blocking Time per PageSpeed). -->
   <script>
     (function(){
-      function loadGTM(){
-        if (window.__gtmLoaded) return;
-        window.__gtmLoaded = true;
-        (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-        })(window,document,'script','dataLayer','GTM-MXC3DGL6');
+      var GA4_ID = 'G-CHY0V439ZQ';
+      function loadGA4(){
+        if (window.__ga4Loaded) return;
+        window.__ga4Loaded = true;
+        var g = document.createElement('script');
+        g.async = true;
+        g.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA4_ID;
+        document.head.appendChild(g);
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        window.gtag = gtag;
+        gtag('js', new Date());
+        gtag('config', GA4_ID);
       }
-      // Defer GTM off the critical path. requestIdleCallback wants an
+      // Defer GA4 off the critical path. requestIdleCallback wants an
       // IdleRequestOptions object as its second argument while
       // setTimeout wants a plain number — using the same `1` for both
       // raised a TypeError in Lighthouse's console that dragged the SEO
       // score down. Branch on availability so each API gets the shape
       // it expects.
-      function scheduleGTM() {
+      function scheduleGA4() {
         if (typeof window.requestIdleCallback === 'function') {
-          window.requestIdleCallback(loadGTM, { timeout: 2000 });
+          window.requestIdleCallback(loadGA4, { timeout: 2000 });
         } else {
-          setTimeout(loadGTM, 1);
+          setTimeout(loadGA4, 1);
         }
       }
       if (document.readyState === 'complete' || document.readyState === 'interactive') {
-        scheduleGTM();
+        scheduleGA4();
       } else {
-        document.addEventListener('DOMContentLoaded', scheduleGTM);
+        document.addEventListener('DOMContentLoaded', scheduleGA4);
       }
     })();
   </script>
-  <!-- End Google Tag Manager -->
+  <!-- End Google Analytics 4 -->
 {% endblock %}
 
 {% block body %}
-  <!-- Google Tag Manager (noscript) -->
-  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MXC3DGL6"
-  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-  <!-- End Google Tag Manager (noscript) -->
   {{ super() }}
 
   {# Visible discovery anchor for scanners that only look at rendered

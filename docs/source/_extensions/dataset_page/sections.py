@@ -1469,18 +1469,6 @@ def _format_recording_stats_section(context: Mapping[str, object]) -> str:
 # ---------------------------------------------------------------------------
 
 
-def _human_readable_size(num_bytes: int) -> str:
-    """Bytes → human-readable string (e.g. ``"17.5 GB"``)."""
-    if not num_bytes:
-        return "0 B"
-    size = float(num_bytes)
-    for unit in ("B", "KB", "MB", "GB", "TB"):
-        if abs(size) < 1024.0:
-            return f"{size:.1f} {unit}"
-        size /= 1024.0
-    return f"{size:.1f} PB"
-
-
 def _format_authors_list(meta: NemarMetadata, *, max_visible: int = 5) -> list[str]:
     """Render the authors block as an RST bullet list.
 

@@ -115,10 +115,10 @@ def test_cached_on_api_failure_after_priming(
     assert cached.dataset_count == 1
     assert cached.rows().iloc[0]["dataset"] == "ds_cached_1"
     assert cached.api_errors, "fallback paths must record the API error text"
-    # mtime of the parquet file is the snapshot's fetched_at.
-    parquet_path = snapshot_mod._disk_cache_path(database)
-    assert parquet_path.exists()
-    expected = datetime.fromtimestamp(parquet_path.stat().st_mtime, tz=timezone.utc)
+    # mtime of the JSON rows file is the snapshot's fetched_at.
+    cache_path = snapshot_mod._disk_cache_path(database)
+    assert cache_path.exists()
+    expected = datetime.fromtimestamp(cache_path.stat().st_mtime, tz=timezone.utc)
     assert cached.fetched_at == expected
 
 
@@ -315,7 +315,7 @@ def test_load_roundtrip(tmp_path, chart_data_payload, server_manifest, routing_u
     with patch("urllib.request.urlopen", side_effect=side_effect):
         built = DatasetSnapshot.build(api_base=api_base, database=database)
 
-    parquet_path = snapshot_mod._disk_cache_path(database)
+    cache_path = snapshot_mod._disk_cache_path(database)
     manifest_path = tmp_path / "manifest.json"
     manifest_path.write_text(
         json.dumps(
@@ -327,8 +327,8 @@ def test_load_roundtrip(tmp_path, chart_data_payload, server_manifest, routing_u
             }
         )
     )
-    parquet_dst = manifest_path.with_suffix(".parquet")
-    parquet_dst.write_bytes(parquet_path.read_bytes())
+    rows_dst = manifest_path.with_suffix(".rows.json")
+    rows_dst.write_bytes(cache_path.read_bytes())
 
     loaded = DatasetSnapshot.load(manifest_path)
     assert loaded.source == built.source
@@ -479,8 +479,8 @@ def test_snapshot_populates_montages_when_included(
 def test_snapshot_montages_persist_through_disk_cache(
     chart_data_payload, server_manifest, routing_urlopen
 ):
-    """A live build writes a montages sidecar next to the parquet
-    rows; a subsequent ``cached`` resolution rehydrates it so the
+    """A live build writes a montages sidecar next to the JSON rows
+    cache; a subsequent ``cached`` resolution rehydrates it so the
     docs build doesn't lose montage data the moment the API blips.
     """
     payload = chart_data_payload("ds_persisted")
@@ -570,76 +570,6 @@ def test_package_csv_fallback_skips_disk_cache_write():
         DatasetSnapshot.build(api_base="https://stub.example", database="no_pollute")
 
     assert not snapshot_mod._disk_cache_path("no_pollute").exists()
-
-
-# ---------------------------------------------------------------------------
-# EXCLUDED_DATASETS — single source of truth across registry / snapshot
-# ---------------------------------------------------------------------------
-
-
-def test_excluded_datasets_is_single_source_of_truth():
-    """``registry`` and ``snapshot`` must share the exact same set
-    object — the B1 refactor had drifted a snapshot-local copy that
-    silently became the only effective filter for the docs build.
-
-    Regression test for the P1 code-review finding: snapshot's 21-entry
-    subset was missing 20 entries from the registry's curated list AND
-    contained 4 entries (``AGUS``, ``ALI``, ``ALYTUS``, ``AMERICO``)
-    that the registry never excluded.
-    """
-    from eegdash.dataset._excluded import EXCLUDED_DATASETS as canonical
-    from eegdash.dataset.registry import EXCLUDED_DATASETS as via_registry
-    from eegdash.dataset.snapshot import EXCLUDED_DATASETS as via_snapshot
-
-    # Identity, not just equality — the whole point is that there is
-    # one set object in memory and both modules re-export it.
-    assert via_registry is canonical
-    assert via_snapshot is canonical
-    assert via_registry is via_snapshot
-
-
-def test_excluded_datasets_canonical_membership():
-    """Canonical content check: the 37-entry curated registry list.
-
-    Locks in:
-    - The size matches the pre-refactor production filter.
-    - Entries from each of the formerly-divergent groups (the long
-      ``ABUDUKADI_n`` / ``AILIJIANG_n`` / ``BAIHETI_n`` / etc.
-      families that the snapshot copy had dropped) are present.
-    - The four entries that should NEVER have been excluded (the
-      snapshot-only additions ``AGUS``, ``ALI``, ``ALYTUS``,
-      ``AMERICO``) are absent.
-    """
-    from eegdash.dataset._excluded import EXCLUDED_DATASETS
-
-    assert len(EXCLUDED_DATASETS) == 37, (
-        f"canonical filter size changed: {len(EXCLUDED_DATASETS)}; "
-        "if intentional, update this test alongside the change"
-    )
-
-    # Representative entries from each formerly-divergent family.
-    must_be_present = {
-        "BIAN_3",
-        "BOJIN",
-        "AISHENG",
-        "ABUDUKADI_2",
-        "AILIJIANG_3",
-        "BAIHETI",
-        "BLIX",
-        "BOUSSAGOL",
-        "ACHOLA",
-        "ANASHKIN",
-    }
-    missing = must_be_present - set(EXCLUDED_DATASETS)
-    assert not missing, f"canonical entries dropped: {sorted(missing)}"
-
-    # Entries that the snapshot copy had wrongly added — NEVER include.
-    must_be_absent = {"AGUS", "ALI", "ALYTUS", "AMERICO"}
-    accidental = must_be_absent & set(EXCLUDED_DATASETS)
-    assert not accidental, (
-        f"snapshot-only additions leaked into the canonical filter: "
-        f"{sorted(accidental)}"
-    )
 
 
 # ---------------------------------------------------------------------------

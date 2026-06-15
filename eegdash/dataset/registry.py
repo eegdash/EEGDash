@@ -9,7 +9,6 @@ from typing import Any, Dict
 import pandas as pd
 
 from ..paths import get_default_cache_dir  # noqa: F401 — re-exported for legacy mocks
-from ._excluded import EXCLUDED_DATASETS  # noqa: F401 — re-exported for back-compat
 
 logger = logging.getLogger(__name__)
 
@@ -538,12 +537,6 @@ Examples
 """
 
     return docstring
-
-
-# ``EXCLUDED_DATASETS`` (datasets to explicitly ignore — synced with
-# rules in 3_digest.py) is imported at the top of this module from
-# :mod:`eegdash.dataset._excluded`. That leaf module is the single
-# source of truth shared with :mod:`eegdash.dataset.snapshot`.
 
 
 def fetch_datasets_from_api(

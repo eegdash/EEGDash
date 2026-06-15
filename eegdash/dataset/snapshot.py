@@ -485,7 +485,7 @@ def _try_fetch_chart_data(
     """
     url = (
         f"{api_base}/{database}/datasets/chart-data"
-        f"?limit={limit}&include=montages,metadata"
+        f"?limit={limit}&include=montages,metadata,rows"
     )
     try:
         data = _http_get_json(url)
@@ -998,83 +998,16 @@ def _montages_from_chart_data(
 
 
 def _rows_from_chart_data(datasets: list[dict[str, Any]]) -> pd.DataFrame:
-    """Map the chart-data response shape into the canonical DataFrame.
+    """Read the docs-build rows shaped server-side.
 
-    Mirrors the legacy ``fetch_chart_data_from_api`` columns exactly.
+    ``chart-data?include=rows`` puts the full DataFrame row on
+    ``datasets[i]['row']`` (the mapping the server's ``_build_docs_row``
+    now owns). Datasets without a ``row`` — a snapshot pinned before the
+    include shipped, or a pre-``include=rows`` server — are skipped; that
+    build degrades to an empty/partial frame rather than re-deriving the
+    schema client-side.
     """
-    rows: list[dict[str, Any]] = []
-    for ds in datasets:
-        ds_id = ds.get("dataset_id", "").strip()
-
-        demographics = ds.get("demographics") or {}
-        tags = ds.get("tags") or {}
-        clinical = ds.get("clinical") or {}
-        paradigm = ds.get("paradigm") or {}
-        timestamps = ds.get("timestamps") or {}
-
-        recording_modality = ds.get("recording_modality") or []
-        if isinstance(recording_modality, str):
-            recording_modality = [recording_modality]
-
-        type_subject = _normalize_tag_value(tags.get("pathology"))
-        if not type_subject and clinical.get("is_clinical"):
-            type_subject = clinical.get("purpose") or "Clinical"
-        elif not type_subject and clinical.get("is_clinical") is False:
-            type_subject = "Healthy"
-        elif not type_subject:
-            type_subject = "Unknown"
-
-        modality_of_exp = _normalize_tag_value(tags.get("modality"))
-        if not modality_of_exp:
-            modality_of_exp = paradigm.get("modality", "")
-
-        type_of_exp = _normalize_tag_value(tags.get("type"))
-        if not type_of_exp:
-            type_of_exp = paradigm.get("cognitive_domain", "")
-
-        canonical_list = ds.get("canonical_name") or []
-        name_source = (ds.get("name_source") or "").strip()
-        author_year_value = (
-            _resolve_author_year(
-                name_source=name_source,
-                raw_aliases=canonical_list,
-                explicit=ds.get("author_year"),
-            )
-            or ""
-        )
-        rows.append(
-            {
-                "dataset": ds_id,
-                "canonical_name": json.dumps(canonical_list),
-                "name_source": name_source,
-                "author_year": author_year_value,
-                "dataset_title": ds.get("computed_title") or ds.get("name", ""),
-                "n_subjects": demographics.get("subjects_count") or 0,
-                "n_records": ds.get("total_files") or 0,
-                "n_tasks": len(ds.get("tasks") or []),
-                "tasks": json.dumps(ds.get("tasks") or []),
-                "n_sessions": len(ds.get("sessions") or []),
-                "record_modality": ", ".join(recording_modality),
-                "recording_modality": ", ".join(recording_modality),
-                "modality of exp": modality_of_exp,
-                "type of exp": type_of_exp,
-                "Type Subject": type_subject,
-                "size_bytes": ds.get("size_bytes") or 0,
-                "size": ds.get("size_human")
-                or _human_readable_size(ds.get("size_bytes")),
-                "source": ds.get("source") or "unknown",
-                "license": ds.get("license", ""),
-                "doi": ds.get("dataset_doi", ""),
-                "nchans_set": json.dumps(ds.get("nchans_counts") or []),
-                "sampling_freqs": json.dumps(ds.get("sfreq_counts") or []),
-                "dataset_created_at": timestamps.get("dataset_created_at", ""),
-                "nemar_citation_count": ds.get("nemar_citation_count"),
-                "duration_hours_total": (ds.get("total_duration_s") or 0) / 3600
-                or None,
-            }
-        )
-
-    return pd.DataFrame(rows)
+    return pd.DataFrame([d["row"] for d in datasets if isinstance(d.get("row"), dict)])
 
 
 def _rows_from_summary(datasets: list[dict[str, Any]]) -> pd.DataFrame:

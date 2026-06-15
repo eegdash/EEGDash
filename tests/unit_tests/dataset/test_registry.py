@@ -483,7 +483,13 @@ def test_fetch_chart_data_unsuccessful_payload_returns_empty():
     assert aggregations == {}
 
 
-def test_fetch_chart_data_success_maps_rows_and_aggregations():
+def test_fetch_chart_data_passes_through_server_rows():
+    """``fetch_chart_data_from_api`` plumbs the server-shaped rows through.
+
+    Field mapping now lives server-side (``chart-data?include=rows`` →
+    ``_build_docs_row``, covered by the server's test suite); this shim
+    just returns ``DatasetSnapshot.build().rows()`` + aggregations.
+    """
     import json
     from unittest.mock import MagicMock, patch
 
@@ -492,46 +498,21 @@ def test_fetch_chart_data_success_maps_rows_and_aggregations():
     payload = {
         "success": True,
         "datasets": [
-            # exercises the fallback branches
             {
                 "dataset_id": "ds_chart_1",
-                "name": "Chart Dataset",
-                "demographics": {"subjects_count": 5},
-                "total_files": 10,
-                "tasks": ["rest", "task"],
-                "sessions": ["s1"],
-                "recording_modality": "eeg",
-                "clinical": {"is_clinical": False},
-                "paradigm": {"modality": "visual", "cognitive_domain": "attention"},
-                "tags": {},
-                "timestamps": {"dataset_created_at": "2024-01-01"},
-                "size_bytes": 2048,
-                "source": "openneuro",
-                "license": "CC0",
-                "dataset_doi": "10.1234/abcd",
-                "nchans_counts": [32, 64],
-                "sfreq_counts": [128, 256],
-                "canonical_name": ["Smith2024"],
-                "name_source": "author_year",
+                "row": {
+                    "dataset": "ds_chart_1",
+                    "source": "openneuro",
+                    "n_subjects": 5,
+                },
             },
-            # included with tags lists and missing source
             {
                 "dataset_id": "ds_chart_2",
-                "computed_title": "Computed title",
-                "demographics": {},
-                "total_files": 1,
-                "tasks": [],
-                "sessions": [],
-                "recording_modality": ["meg", "eeg"],
-                "tags": {
-                    "pathology": ["epilepsy"],
-                    "modality": ["auditory", "visual"],
-                    "type": ["observation"],
+                "row": {
+                    "dataset": "ds_chart_2",
+                    "source": "unknown",
+                    "dataset_title": "Computed title",
                 },
-                "clinical": {"is_clinical": True, "purpose": "clinical trial"},
-                "paradigm": {},
-                "timestamps": {},
-                "size_human": "1.0 GB",
             },
         ],
         "aggregations": {"n_datasets": 2},
@@ -546,28 +527,12 @@ def test_fetch_chart_data_success_maps_rows_and_aggregations():
 
         df, aggregations = fetch_chart_data_from_api("https://api.test.com", "db")
 
-    # No denylist filtering — both datasets in the payload map through.
     assert len(df) == 2
     assert aggregations == {"n_datasets": 2}
-
-    row1 = df[df["dataset"] == "ds_chart_1"].iloc[0]
-    assert row1["record_modality"] == "eeg"
-    assert row1["recording_modality"] == "eeg"
-    assert row1["modality of exp"] == "visual"
-    assert row1["type of exp"] == "attention"
-    assert row1["Type Subject"] == "Healthy"
-    assert row1["source"] == "openneuro"
-    assert row1["author_year"] == "Smith2024"
-    assert row1["n_sessions"] == 1
-
-    row2 = df[df["dataset"] == "ds_chart_2"].iloc[0]
-    assert row2["record_modality"] == "meg, eeg"
-    assert row2["recording_modality"] == "meg, eeg"
-    assert row2["modality of exp"] == "auditory, visual"
-    assert row2["type of exp"] == "observation"
-    assert row2["Type Subject"] == "epilepsy"
-    assert row2["source"] == "unknown"
-    assert row2["dataset_title"] == "Computed title"
+    assert set(df["dataset"]) == {"ds_chart_1", "ds_chart_2"}
+    assert (
+        df[df["dataset"] == "ds_chart_2"].iloc[0]["dataset_title"] == "Computed title"
+    )
 
 
 def test_fetch_api_handles_missing_demographics():

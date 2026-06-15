@@ -565,12 +565,10 @@ def test_metadata_from_chart_data(chart_data_payload, server_manifest, routing_u
     meta = snapshot.metadata("ds_meta_1")
     assert meta is not None
     assert meta.description == "A test dataset."
-    assert meta.bids_version == "1.8.0"
     assert meta.authors[0].name == "Jane Doe"
     assert meta.authors[0].orcid == "0000-0002-1825-0097"
     assert meta.keywords[0].term == "Face Perception"
     assert meta.versions[0].version == "1.0.0"
-    assert meta.latest_version == "1.0.0"
     # Case-insensitive hit; unknown dataset → None.
     assert snapshot.metadata("DS_META_1") is not None
     assert snapshot.metadata("nonexistent") is None

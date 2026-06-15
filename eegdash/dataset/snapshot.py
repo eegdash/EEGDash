@@ -86,24 +86,17 @@ class NemarVersion:
     version: str
     doi: str
     created_at: datetime
-    manifest_url: str = ""
-    browse_url: str = ""
 
 
 @dataclass(frozen=True)
 class NemarMetadata:
-    """Combined per-dataset metadata; ``versions`` sorted newest-first."""
+    """Per-dataset metadata for the docs page; ``versions`` newest-first."""
 
-    dataset_id: str
-    name: str
     description: str | None
     license: str | None
-    recording_modality: tuple[str, ...]
-    bids_version: str | None
     authors: tuple[NemarAuthor, ...]
     keywords: tuple[NemarKeyword, ...]
     versions: tuple[NemarVersion, ...]
-    latest_version: str
 
 
 class DatasetSnapshot:
@@ -873,18 +866,21 @@ def _metadata_from_chart_data(
         meta = ds.get("metadata")
         if not isinstance(meta, dict) or not meta:
             continue
-        out[ds_id.lower()] = _build_metadata(ds_id, ds, meta)
+        out[ds_id.lower()] = _build_metadata(ds, meta)
     return out
 
 
-def _build_metadata(
-    ds_id: str, ds: Mapping[str, Any], meta: Mapping[str, Any]
-) -> "NemarMetadata":
-    """Construct a :class:`NemarMetadata` from one chart-data row + its metadata."""
+def _build_metadata(ds: Mapping[str, Any], meta: Mapping[str, Any]) -> "NemarMetadata":
+    """Construct a :class:`NemarMetadata` from one chart-data row + its metadata.
+
+    Authors are dicts (``{name, orcid}``) per the server contract.
+    """
     authors = tuple(
-        NemarAuthor(name=name, orcid=_clean_orcid(orcid))
-        for name, orcid in _author_pairs(meta.get("authors"))
-        if name
+        NemarAuthor(
+            name=str(a.get("name") or "").strip(), orcid=_clean_orcid(a.get("orcid"))
+        )
+        for a in (meta.get("authors") or [])
+        if isinstance(a, dict) and str(a.get("name") or "").strip()
     )
     keywords = tuple(
         NemarKeyword(
@@ -895,57 +891,26 @@ def _build_metadata(
         for k in (meta.get("keywords") or [])
         if isinstance(k, dict) and str(k.get("term") or "").strip()
     )
-
-    parsed_versions: list[NemarVersion] = []
-    for v in meta.get("versions") or []:
-        if not isinstance(v, dict):
-            continue
-        version = str(v.get("version") or "").strip()
-        if not version:
-            continue
-        parsed_versions.append(
+    versions = sorted(
+        (
             NemarVersion(
-                version=version,
+                version=str(v.get("version") or "").strip(),
                 doi=str(v.get("doi") or "").strip(),
                 created_at=_parse_iso(v.get("created_at")),
             )
-        )
-    parsed_versions.sort(key=lambda v: v.created_at, reverse=True)
-
-    recording_modality_raw = ds.get("recording_modality") or []
-    if isinstance(recording_modality_raw, str):
-        recording_modality_raw = [recording_modality_raw]
-    recording_modality = tuple(
-        str(m).strip() for m in recording_modality_raw if str(m).strip()
+            for v in (meta.get("versions") or [])
+            if isinstance(v, dict) and str(v.get("version") or "").strip()
+        ),
+        key=lambda v: v.created_at,
+        reverse=True,
     )
-
     return NemarMetadata(
-        dataset_id=ds_id,
-        name=str(ds.get("computed_title") or ds.get("name") or "").strip(),
         description=_clean_optional(meta.get("description")),
         license=_clean_optional(ds.get("license")),
-        recording_modality=recording_modality,
-        bids_version=_clean_optional(meta.get("bids_version")),
         authors=authors,
         keywords=keywords,
-        versions=tuple(parsed_versions),
-        latest_version=parsed_versions[0].version if parsed_versions else "",
+        versions=tuple(versions),
     )
-
-
-def _author_pairs(raw: object) -> list[tuple[str, object]]:
-    """Normalise an authors list to ``[(name, orcid_or_None)]``.
-
-    Accepts the contract shape ``[{name, orcid}]`` and tolerates bare
-    name strings for forward/backward compatibility.
-    """
-    pairs: list[tuple[str, object]] = []
-    for item in raw or []:
-        if isinstance(item, dict):
-            pairs.append((str(item.get("name") or "").strip(), item.get("orcid")))
-        elif isinstance(item, str) and item.strip():
-            pairs.append((item.strip(), None))
-    return pairs
 
 
 # ---------------------------------------------------------------------------

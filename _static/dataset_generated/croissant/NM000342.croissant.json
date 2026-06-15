@@ -84,7 +84,8 @@
   "identifier": "doi:10.1016/j.neuroimage.2023.120446",
   "sameAs": [
     "https://doi.org/10.1016/j.neuroimage.2023.120446",
-    "https://openneuro.org/datasets/nm000342"
+    "https://openneuro.org/datasets/nm000342",
+    "https://huggingface.co/datasets/EEGDash/nm000342"
   ],
   "citeAs": "Kalou Cabrera Castillos, Simon Ladouce, Ludovic Darmet, Frédéric Dehais (2023). CastillosCVEP40. doi:10.1016/j.neuroimage.2023.120446",
   "version": "1.9.0",
@@ -133,6 +134,15 @@
       "description": "NEMAR dataset landing page with pipeline plots.",
       "contentUrl": "https://nemar.org/dataexplorer/detail?dataset_id=nm000342",
       "encodingFormat": "text/html",
+      "sha256": "main"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "nm000342-huggingface",
+      "name": "EEGDash/nm000342 on Hugging Face",
+      "description": "Hugging Face dataset mirror — ready for `datasets.load_dataset(...)` pulls.",
+      "contentUrl": "https://huggingface.co/datasets/EEGDash/nm000342",
+      "encodingFormat": "application/vnd.huggingface-dataset+json",
       "sha256": "main"
     }
   ]

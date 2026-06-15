@@ -313,7 +313,7 @@ Number of contributing labs: 1
 </details></div><div class="figpair-cell figpair-montage"><details class="electrode-explorer">
   <summary>Electrode layout — EEG · 32 sensors — 32 channels</summary>
   <iframe
-    data-src="https://electrodes.eegdash.org/?montage=e6c9347e4501d8a9&embed=1"
+    data-src="https://electrodes.eegdash.org/?montage=69d9723f9f3e4605&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"

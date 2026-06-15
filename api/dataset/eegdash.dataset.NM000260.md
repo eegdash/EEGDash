@@ -267,7 +267,7 @@ Contributing labs: GIPSA-lab
     <span class="right">17 ch · EEG · 128 Hz · 23 subjects, 46 recordings</span>
   </div>
   <div class="figpair-grid"><div class="figpair-cell figpair-trace"><details class="trace-viewer">
-  <summary>Live trace viewer — <strong>sub-10 · ses-0 · task-p300 · run-0</strong></summary>
+  <summary>Live trace viewer — <strong>sub-12 · ses-0 · task-p300 · run-0</strong></summary>
   <p class="trace-viewer-caption">
     Showing <strong>one</strong> representative recording out of
     <strong>23 subjects and 46 recordings</strong> in this dataset.
@@ -276,11 +276,11 @@ Contributing labs: GIPSA-lab
     viewer (or pass <code>?eeg=&lt;url&gt;</code>) to inspect it.
   </p>
   <iframe
-    data-src="https://eegdash.github.io/eegdash-viewer/?dataset=nm000260&sub=10&ses=0&task=p300&run=0&ext=bdf&embed=1"
+    data-src="https://eegdash.github.io/eegdash-viewer/?dataset=nm000260&sub=12&ses=0&task=p300&run=0&ext=bdf&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 1200px; display: block; background: transparent;"
-    title="Live EEG trace viewer for nm000260 — sub-10 · ses-0 · task-p300 · run-0"
+    title="Live EEG trace viewer for nm000260 — sub-12 · ses-0 · task-p300 · run-0"
     referrerpolicy="no-referrer">
   </iframe>
 </details></div><div class="figpair-cell figpair-montage"><details class="electrode-explorer">

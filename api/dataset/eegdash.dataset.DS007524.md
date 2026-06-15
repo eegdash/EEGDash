@@ -222,7 +222,7 @@ d’Ascoli, S., Bel, C., Rapin, J. et al. Towards decoding individual words from
     <span class="right">346 (414), 339 (27), 338 (9) ch · MEG · 1000 Hz · 50 subjects, 500 recordings</span>
   </div>
   <div class="figpair-grid"><div class="figpair-cell figpair-trace"><details class="trace-viewer">
-  <summary>Live trace viewer — <strong>sub-01 · ses-01</strong></summary>
+  <summary>Live trace viewer — <strong>sub-13 · ses-01 · task-read · run-02</strong></summary>
   <p class="trace-viewer-caption">
     Showing <strong>one</strong> representative recording out of
     <strong>50 subjects and 500 recordings</strong> in this dataset.
@@ -231,11 +231,11 @@ d’Ascoli, S., Bel, C., Rapin, J. et al. Towards decoding individual words from
     viewer (or pass <code>?meg=&lt;url&gt;</code>) to inspect it.
   </p>
   <iframe
-    data-src="https://eegdash.github.io/eegdash-viewer/?dataset=ds007524&sub=01&ses=01&ext=fif&suffix=meg&embed=1"
+    data-src="https://eegdash.github.io/eegdash-viewer/?dataset=ds007524&sub=13&ses=01&task=read&run=02&ext=fif&suffix=meg&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 1200px; display: block; background: transparent;"
-    title="Live MEG trace viewer for ds007524 — sub-01 · ses-01"
+    title="Live MEG trace viewer for ds007524 — sub-13 · ses-01 · task-read · run-02"
     referrerpolicy="no-referrer">
   </iframe>
 </details></div><div class="figpair-cell figpair-montage"><details class="electrode-explorer">

@@ -213,7 +213,7 @@ This data is from a larger protocol with 13 other conditions (in total 4 differe
 </details></div><div class="figpair-cell figpair-montage"><details class="electrode-explorer">
   <summary>Electrode layout — EEG · 120 sensors — 120 channels</summary>
   <iframe
-    data-src="https://electrodes.eegdash.org/?montage=c1d96ca8152a820c&embed=1"
+    data-src="https://electrodes.eegdash.org/?montage=cde85a1b95fef329&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 900px; display: block;"

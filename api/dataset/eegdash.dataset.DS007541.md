@@ -88,7 +88,7 @@ No README content is available for this dataset.
     <span class="right">— ch · EEG · Varies · 32 subjects, 960 recordings</span>
   </div>
   <div class="figpair-grid"><div class="figpair-cell figpair-trace"><details class="trace-viewer">
-  <summary>Live trace viewer — <strong>sub-01 · ses-01 · task-face · run-01</strong></summary>
+  <summary>Live trace viewer — <strong>sub-01 · ses-02 · task-verification · run-01</strong></summary>
   <p class="trace-viewer-caption">
     Showing <strong>one</strong> representative recording out of
     <strong>32 subjects and 960 recordings</strong> in this dataset.
@@ -97,11 +97,11 @@ No README content is available for this dataset.
     viewer (or pass <code>?eeg=&lt;url&gt;</code>) to inspect it.
   </p>
   <iframe
-    data-src="https://eegdash.github.io/eegdash-viewer/?dataset=ds007541&sub=01&ses=01&task=face&run=01&ext=vhdr&embed=1"
+    data-src="https://eegdash.github.io/eegdash-viewer/?dataset=ds007541&sub=01&ses=02&task=verification&run=01&ext=vhdr&embed=1"
     loading="lazy"
     width="100%" height="640"
     style="border: 1px solid var(--pst-color-border); border-radius: 8px; max-width: 1200px; display: block; background: transparent;"
-    title="Live EEG trace viewer for ds007541 — sub-01 · ses-01 · task-face · run-01"
+    title="Live EEG trace viewer for ds007541 — sub-01 · ses-02 · task-verification · run-01"
     referrerpolicy="no-referrer">
   </iframe>
 </details></div><div class="figpair-cell figpair-montage">

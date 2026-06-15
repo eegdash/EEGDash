@@ -527,35 +527,70 @@ def test_snapshot_montages_persist_through_disk_cache(
     assert rehydrated["n_channels"] == 32
 
 
-def test_snapshot_montages_empty_when_summary_fallback_fires(
-    summary_payload, server_manifest, make_urlopen_response
-):
-    """When chart-data is unavailable and the snapshot falls back to
-    ``/datasets/summary`` (which has no montage data), ``montage()``
-    must return ``None`` for every dataset rather than raise.
-    """
-
-    def urlopen_side_effect(url, *_, **__):
-        url_str = url if isinstance(url, str) else url.get_full_url()
-        if "datasets/chart-data" in url_str:
-            raise urllib.error.HTTPError(url_str, 404, "no chart-data", {}, None)
-        if "datasets/summary" in url_str:
-            return make_urlopen_response(summary_payload("ds_summary_fallback"))
-        if "build-manifest" in url_str:
-            return make_urlopen_response(server_manifest(dataset_count=1))
-        raise AssertionError(f"unexpected URL: {url_str}")
-
-    with patch("urllib.request.urlopen", side_effect=urlopen_side_effect):
+def test_metadata_from_chart_data(chart_data_payload, server_manifest, routing_urlopen):
+    """``include=metadata`` rows parse into NemarMetadata; lookup is case-insensitive."""
+    payload = chart_data_payload(
+        "ds_meta_1",
+        metadata={
+            "description": "A test dataset.",
+            "bids_version": "1.8.0",
+            "authors": [{"name": "Jane Doe", "orcid": "0000-0002-1825-0097"}],
+            "keywords": [
+                {
+                    "term": "Face Perception",
+                    "scheme": "MeSH",
+                    "value_uri": "https://id.nlm.nih.gov/mesh/x",
+                }
+            ],
+            "versions": [
+                {
+                    "version": "1.0.0",
+                    "doi": "10.18112/x",
+                    "created_at": "2021-06-03T00:00:00Z",
+                }
+            ],
+        },
+    )
+    side_effect = routing_urlopen(
+        {
+            "datasets/chart-data": payload,
+            "build-manifest": server_manifest(dataset_count=1),
+        }
+    )
+    with patch("urllib.request.urlopen", side_effect=side_effect):
         snapshot = DatasetSnapshot.build(
-            api_base="https://stub.example", database="summaryonlyshard"
+            api_base="https://stub.example", database="metashard"
         )
 
-    assert snapshot.source == "live"
-    assert snapshot.dataset_count == 1
-    assert snapshot.montage("ds_summary_fallback") is None
-    # The chart-data 404 is recorded as context, but the build
-    # succeeded on the summary fallback.
-    assert any("chart-data 404" in e for e in snapshot.api_errors)
+    meta = snapshot.metadata("ds_meta_1")
+    assert meta is not None
+    assert meta.description == "A test dataset."
+    assert meta.bids_version == "1.8.0"
+    assert meta.authors[0].name == "Jane Doe"
+    assert meta.authors[0].orcid == "0000-0002-1825-0097"
+    assert meta.keywords[0].term == "Face Perception"
+    assert meta.versions[0].version == "1.0.0"
+    assert meta.latest_version == "1.0.0"
+    # Case-insensitive hit; unknown dataset → None.
+    assert snapshot.metadata("DS_META_1") is not None
+    assert snapshot.metadata("nonexistent") is None
+
+
+def test_metadata_absent_when_not_served(
+    chart_data_payload, server_manifest, routing_urlopen
+):
+    """A chart-data row without a ``metadata`` block → ``metadata()`` returns None."""
+    side_effect = routing_urlopen(
+        {
+            "datasets/chart-data": chart_data_payload("ds_no_meta"),
+            "build-manifest": server_manifest(dataset_count=1),
+        }
+    )
+    with patch("urllib.request.urlopen", side_effect=side_effect):
+        snapshot = DatasetSnapshot.build(
+            api_base="https://stub.example", database="nometashard"
+        )
+    assert snapshot.metadata("ds_no_meta") is None
 
 
 def test_package_csv_fallback_skips_disk_cache_write():

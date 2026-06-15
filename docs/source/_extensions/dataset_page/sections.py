@@ -32,7 +32,7 @@ from typing import Mapping, Sequence
 
 from sphinx.util import logging
 
-from eegdash.dataset.nemar import NemarClient, NemarMetadata
+from eegdash.dataset.snapshot import DatasetSnapshot, NemarMetadata
 
 from ._constants import (
     _BIDS_FEMALE_KEYS,
@@ -1459,24 +1459,14 @@ def _format_recording_stats_section(context: Mapping[str, object]) -> str:
 
 
 # ---------------------------------------------------------------------------
-# NEMAR per-dataset metadata section
+# Per-dataset metadata section
 #
-# Reuses :class:`eegdash.dataset.nemar.NemarClient` for the network +
-# cache work. The client is built once per process (module-level
-# memoisation) so its disk cache is hit across the 700+ directive
+# Metadata (authors / keywords / versions / license / description) is read
+# from the process-shared :class:`DatasetSnapshot` — one
+# ``chart-data?include=metadata`` fetch covers the whole catalog, so there
+# is no per-dataset network round-trip across the 700+ directive
 # invocations in one Sphinx build.
 # ---------------------------------------------------------------------------
-
-
-_nemar_client: NemarClient | None = None
-
-
-def _get_nemar_client() -> NemarClient:
-    """Return the module-shared NEMAR client (built lazily)."""
-    global _nemar_client
-    if _nemar_client is None:
-        _nemar_client = NemarClient()
-    return _nemar_client
 
 
 def _human_readable_size(num_bytes: int) -> str:
@@ -1596,34 +1586,6 @@ def _format_license_line(meta: NemarMetadata) -> str:
     return f"**License**: {meta.license}"
 
 
-def _maybe_format_manifest_summary(meta: NemarMetadata, *, dataset_id: str) -> str:
-    """Optionally fetch the latest manifest and emit a one-line summary.
-
-    Only fetched for EEG datasets and only for the latest version
-    (NEMAR manifests can be ~1k entries). Returns ``""`` on any
-    failure or empty manifest so the section degrades gracefully.
-    """
-    if not meta.versions:
-        return ""
-    has_eeg = any(m.upper() == "EEG" for m in meta.recording_modality)
-    if not has_eeg:
-        return ""
-    try:
-        entries = _get_nemar_client().manifest(dataset_id, version=meta.latest_version)
-    except Exception as exc:  # noqa: BLE001
-        LOGGER.debug(
-            "[nemar-section] manifest fetch failed for %s: %s", dataset_id, exc
-        )
-        return ""
-    if not entries:
-        return ""
-    total_size = sum(e.size for e in entries)
-    return (
-        f"**Manifest** ({meta.latest_version}): {len(entries):,} files, "
-        f"{_human_readable_size(total_size)} total"
-    )
-
-
 def _format_nemar_metadata_section(context: Mapping[str, object]) -> str:
     """Render the "NEMAR Metadata" section for NEMAR-sourced datasets.
 
@@ -1646,9 +1608,14 @@ def _format_nemar_metadata_section(context: Mapping[str, object]) -> str:
         nemar_id = dataset_id
 
     try:
-        meta = _get_nemar_client().metadata(nemar_id)
+        snapshot = DatasetSnapshot.build()
+        meta = snapshot.metadata(nemar_id)
+        if meta is None:
+            page_dataset_id = str(context.get("dataset_id") or "").strip()
+            if page_dataset_id:
+                meta = snapshot.metadata(page_dataset_id)
     except Exception as exc:  # noqa: BLE001
-        LOGGER.debug("[nemar-section] metadata fetch failed for %s: %s", nemar_id, exc)
+        LOGGER.debug("[nemar-section] metadata lookup failed for %s: %s", nemar_id, exc)
         return ""
     if meta is None:
         return ""
@@ -1679,10 +1646,6 @@ def _format_nemar_metadata_section(context: Mapping[str, object]) -> str:
     versions_block = _format_versions_table(meta)
     if versions_block:
         parts.append("**Versions**:\n\n" + versions_block)
-
-    manifest_summary = _maybe_format_manifest_summary(meta, dataset_id=nemar_id)
-    if manifest_summary:
-        parts.append(manifest_summary)
 
     if not parts:
         return ""

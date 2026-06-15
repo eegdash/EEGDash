@@ -63,51 +63,29 @@ from eegdash.dataset.snapshot import DatasetSnapshot
 def chart_data_payload():
     """Factory: a minimal well-formed ``/datasets/chart-data`` response."""
 
-    def _make(dataset_id: str = "ds_live_1") -> dict:
+    def _make(dataset_id: str = "ds_live_1", *, metadata: dict | None = None) -> dict:
+        dataset = {
+            "dataset_id": dataset_id,
+            "name": f"{dataset_id} dataset",
+            "demographics": {"subjects_count": 12},
+            "total_files": 30,
+            "tasks": ["rest"],
+            "sessions": ["s1"],
+            "recording_modality": ["eeg"],
+            "tags": {"modality": ["visual"]},
+            "size_bytes": 1024,
+            "source": "openneuro",
+        }
+        if metadata is not None:
+            dataset["metadata"] = metadata
         return {
             "success": True,
-            "datasets": [
-                {
-                    "dataset_id": dataset_id,
-                    "name": f"{dataset_id} dataset",
-                    "demographics": {"subjects_count": 12},
-                    "total_files": 30,
-                    "tasks": ["rest"],
-                    "sessions": ["s1"],
-                    "recording_modality": ["eeg"],
-                    "tags": {"modality": ["visual"]},
-                    "size_bytes": 1024,
-                    "source": "openneuro",
-                }
-            ],
+            "datasets": [dataset],
             "aggregations": {
                 "totals": {"datasets": 1, "subjects": 12},
                 "modality_counts": {"eeg": 1},
                 "source_counts": {"openneuro": 1},
             },
-        }
-
-    return _make
-
-
-@pytest.fixture
-def summary_payload():
-    """Factory: a minimal ``/datasets/summary`` response (legacy shape)."""
-
-    def _make(dataset_id: str = "ds_summary_1") -> dict:
-        return {
-            "success": True,
-            "data": [
-                {
-                    "dataset_id": dataset_id,
-                    "name": f"{dataset_id} dataset",
-                    "demographics": {"subjects_count": 5},
-                    "total_files": 10,
-                    "tasks": ["task"],
-                    "recording_modality": ["eeg"],
-                    "tags": {},
-                }
-            ],
         }
 
     return _make

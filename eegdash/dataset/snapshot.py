@@ -3,8 +3,12 @@
 :class:`DatasetSnapshot` owns everything between the EEGDash server and
 any docs-build consumer: HTTP fetch, in-memory cache, disk cache,
 package-CSV fallback, and the provenance that tells callers apart "live
-API" from "stale cache" from "silent failure". New consumers should
-import :class:`DatasetSnapshot` directly.
+API" from "stale cache" from "silent failure". One
+``chart-data?include=montages,metadata`` call returns rows, montages,
+and per-dataset metadata (authors / keywords / versions / description)
+— the server assembles the metadata, so there is no separate NEMAR
+round-trip. New consumers should import :class:`DatasetSnapshot`
+directly.
 """
 
 from __future__ import annotations
@@ -15,6 +19,7 @@ import os
 import re
 import urllib.error
 import urllib.request
+from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 from threading import Lock
@@ -47,6 +52,60 @@ _INSTANCE_CACHE_LOCK = Lock()
 _SNAPSHOT_DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 
 
+# ---------------------------------------------------------------------------
+# Per-dataset metadata shapes
+#
+# Parsed from the ``datasets[i].metadata`` sub-object the server emits on
+# ``chart-data?include=metadata``. The docs ``dataset_page`` renderers
+# consume these dataclasses; this is the same shape the retired in-package
+# NEMAR HTTP client used, minus the network/cache machinery.
+# ---------------------------------------------------------------------------
+
+
+@dataclass(frozen=True)
+class NemarAuthor:
+    """One author: ``name`` plus an optional bare 16-digit ``orcid``."""
+
+    name: str
+    orcid: str | None = None
+
+
+@dataclass(frozen=True)
+class NemarKeyword:
+    """One keyword: free-text ``term`` plus optional controlled-vocab links."""
+
+    term: str
+    scheme: str | None = None
+    value_uri: str | None = None
+
+
+@dataclass(frozen=True)
+class NemarVersion:
+    """One entry in a dataset's version history (newest-first)."""
+
+    version: str
+    doi: str
+    created_at: datetime
+    manifest_url: str = ""
+    browse_url: str = ""
+
+
+@dataclass(frozen=True)
+class NemarMetadata:
+    """Combined per-dataset metadata; ``versions`` sorted newest-first."""
+
+    dataset_id: str
+    name: str
+    description: str | None
+    license: str | None
+    recording_modality: tuple[str, ...]
+    bids_version: str | None
+    authors: tuple[NemarAuthor, ...]
+    keywords: tuple[NemarKeyword, ...]
+    versions: tuple[NemarVersion, ...]
+    latest_version: str
+
+
 class DatasetSnapshot:
     """A frozen view of the dataset catalog used by one docs build.
 
@@ -60,7 +119,8 @@ class DatasetSnapshot:
 
     All three return the same object; provenance is self-reported via
     :attr:`source`, :attr:`fetched_at`, :attr:`api_errors`, and
-    :attr:`pinned_at`. Read through the accessor methods, not the
+    :attr:`pinned_at`. Read through the accessor methods (:meth:`rows`,
+    :meth:`aggregations`, :meth:`montage`, :meth:`metadata`), not the
     underlying fields.
     """
 
@@ -68,7 +128,7 @@ class DatasetSnapshot:
     # ``api_errors``/``manifest`` are class-level sentinels below (so
     # ``hasattr(DatasetSnapshot, 'source')`` is True for surface checks)
     # and are shadowed per-instance via ``__dict__``.
-    __slots__ = ("_rows", "_aggregations", "_montages", "__dict__")
+    __slots__ = ("_rows", "_aggregations", "_montages", "_metadata", "__dict__")
 
     # Class-level sentinels so ``hasattr(cls, '<name>')`` is True for the
     # surface check; instances shadow them with real values.
@@ -89,6 +149,7 @@ class DatasetSnapshot:
         api_errors: list[str] | None = None,
         manifest: dict[str, Any] | None = None,
         pinned_at: str | None = None,
+        metadata: Mapping[str, "NemarMetadata"] | None = None,
     ) -> None:
         # Frozen. Not a @dataclass because dataclass fields don't surface
         # in ``hasattr(cls, ...)`` without literal defaults, which the
@@ -96,6 +157,7 @@ class DatasetSnapshot:
         object.__setattr__(self, "_rows", rows)
         object.__setattr__(self, "_aggregations", aggregations)
         object.__setattr__(self, "_montages", montages)
+        object.__setattr__(self, "_metadata", dict(metadata or {}))
         object.__setattr__(self, "source", source)
         object.__setattr__(self, "fetched_at", fetched_at)
         object.__setattr__(self, "api_errors", list(api_errors or []))
@@ -126,8 +188,7 @@ class DatasetSnapshot:
     def aggregations(self) -> dict[str, Any]:
         """Return the server-side pre-computed totals.
 
-        Empty dict when the underlying call was the legacy summary
-        endpoint (which has no aggregations block) or a fallback fired.
+        Empty dict when a fallback fired (cached / package-csv build).
         """
         return dict(self._aggregations)
 
@@ -146,6 +207,19 @@ class DatasetSnapshot:
         # Return a shallow copy so callers cannot mutate the cached
         # mapping from underneath the snapshot.
         return dict(result)
+
+    def metadata(self, dataset_id: str) -> "NemarMetadata | None":
+        """Return per-dataset :class:`NemarMetadata` (case-insensitive), or ``None``.
+
+        Populated from ``chart-data?include=metadata`` on a live build.
+        Cached / package-CSV builds carry no metadata, so this returns
+        ``None`` there — consumers render the empty placeholder, the same
+        graceful-degradation contract :meth:`montage` follows.
+        """
+        if not dataset_id:
+            return None
+        # NemarMetadata is frozen, so no defensive copy is needed.
+        return self._metadata.get(dataset_id) or self._metadata.get(dataset_id.lower())
 
     @property
     def dataset_count(self) -> int:
@@ -178,13 +252,10 @@ class DatasetSnapshot:
         Resolution order (each level falls through on failure, and
         records the failure on :attr:`api_errors`):
 
-        1. Live HTTP GET to
-           ``{api_base}/{database}/datasets/chart-data?limit={limit}``.
-        2. Live HTTP GET to ``/datasets/summary?limit={limit}`` (legacy
-           shape; no ``aggregations`` block).
-        3. Disk cache at
-           ``{get_default_cache_dir()}/snapshot_{db}.json``.
-        4. Package CSV at :data:`PACKAGE_CSV_PATH`.
+        1. Live HTTP GET to ``{api_base}/{database}/datasets/chart-data``
+           ``?limit={limit}&include=montages,metadata``.
+        2. Disk cache at ``{get_default_cache_dir()}/snapshot_{db}.json``.
+        3. Package CSV at :data:`PACKAGE_CSV_PATH`.
 
         Parameters
         ----------
@@ -239,7 +310,8 @@ class DatasetSnapshot:
         """Re-hydrate a previously-built snapshot from disk.
 
         ``manifest_path`` is a manifest JSON file; the rows ride in a
-        sibling ``*.rows.json`` written by :meth:`build`.
+        sibling ``*.rows.json`` written by :meth:`build`. Metadata is not
+        persisted to disk, so a loaded snapshot carries none.
         """
         manifest_path = Path(manifest_path)
         manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
@@ -332,6 +404,7 @@ class DatasetSnapshot:
         rows = _rows_from_chart_data(datasets)
         aggregations = chart_data.get("aggregations") or {}
         montages = _montages_from_chart_data(datasets)
+        metadata = _metadata_from_chart_data(datasets)
 
         return cls(
             rows=rows,
@@ -342,6 +415,7 @@ class DatasetSnapshot:
             api_errors=[],
             manifest=dict(build_manifest),
             pinned_at=date,
+            metadata=metadata,
         )
 
 
@@ -401,19 +475,28 @@ def _http_get_json(url: str, *, timeout: int = 30) -> dict[str, Any]:
 
 def _try_fetch_chart_data(
     api_base: str, database: str, limit: int, *, errors: list[str]
-) -> tuple[pd.DataFrame, dict[str, Any], dict[str, dict[str, Any]]] | None:
-    """Attempt the rich chart-data endpoint (rows, aggregations, montages).
+) -> (
+    tuple[
+        pd.DataFrame,
+        dict[str, Any],
+        dict[str, dict[str, Any]],
+        dict[str, "NemarMetadata"],
+    ]
+    | None
+):
+    """Attempt the rich chart-data endpoint (rows, aggregations, montages, metadata).
 
-    Requests ``?include=montages`` so the top montage per dataset rides
-    along in one round-trip. Returns ``None`` on failure.
+    Requests ``?include=montages,metadata`` so the top montage and the
+    per-dataset metadata sub-object ride along in one round-trip. Returns
+    ``None`` on failure.
     """
-    url = f"{api_base}/{database}/datasets/chart-data?limit={limit}&include=montages"
+    url = (
+        f"{api_base}/{database}/datasets/chart-data"
+        f"?limit={limit}&include=montages,metadata"
+    )
     try:
         data = _http_get_json(url)
     except urllib.error.HTTPError as exc:
-        if exc.code == 404:
-            errors.append(f"chart-data 404 at {url}; trying summary")
-            return None
         errors.append(f"chart-data {exc.code} at {url}: {exc}")
         return None
     except Exception as exc:  # noqa: BLE001 — network library raises broadly
@@ -428,13 +511,19 @@ def _try_fetch_chart_data(
     rows = _rows_from_chart_data(datasets)
     aggregations = data.get("aggregations") or {}
     montages = _montages_from_chart_data(datasets)
-    return rows, aggregations, montages
+    metadata = _metadata_from_chart_data(datasets)
+    return rows, aggregations, montages, metadata
 
 
 def _try_fetch_summary(
     api_base: str, database: str, limit: int, *, errors: list[str]
 ) -> pd.DataFrame | None:
-    """Attempt the legacy summary endpoint. Returns ``None`` on failure."""
+    """Attempt the legacy summary endpoint. Returns ``None`` on failure.
+
+    A compatibility fallback for old/partial server deployments that
+    don't yet serve ``chart-data``. It carries no montage or metadata, so
+    those accessors return ``None`` until chart-data comes back online.
+    """
     url = f"{api_base}/{database}/datasets/summary?limit={limit}"
     try:
         data = _http_get_json(url)
@@ -523,18 +612,24 @@ def _build_uncached(
     limit: int,
     force_refresh: bool,
 ) -> "DatasetSnapshot":
-    """The real fetch/fallback chain. Always returns a snapshot."""
+    """The real fetch/fallback chain. Always returns a snapshot.
+
+    Resolution order: live chart-data → disk cache → package CSV. The
+    legacy ``/datasets/summary`` endpoint is no longer consulted; the
+    server's chart-data endpoint is the single live source.
+    """
     errors: list[str] = []
 
-    # 1. Live fetch — try the rich chart-data endpoint first.
+    # 1. Live fetch — the rich chart-data endpoint (rows + montages + metadata).
     chart_result = _try_fetch_chart_data(api_base, database, limit, errors=errors)
     if chart_result is not None:
-        rows, aggregations, montages = chart_result
+        rows, aggregations, montages, metadata = chart_result
         if not rows.empty:
             snapshot = _live_snapshot(
                 rows,
                 aggregations,
                 montages,
+                metadata,
                 errors,
                 api_base=api_base,
                 database=database,
@@ -544,16 +639,13 @@ def _build_uncached(
             return snapshot
         errors.append("chart-data returned 0 datasets")
 
-    # Fall back to the legacy summary endpoint when chart-data is
-    # absent OR returned zero rows (the latter happens during early
-    # ingestion windows and during tests that stub one endpoint at a
-    # time). The summary endpoint has no montage data, so the
-    # snapshot's :attr:`montage` accessor will return ``None`` until
-    # chart-data comes back online.
+    # Legacy summary fallback — for old/partial server deployments that
+    # don't serve chart-data. No montage or metadata rides along, so those
+    # accessors return None on this path.
     summary_rows = _try_fetch_summary(api_base, database, limit, errors=errors)
     if summary_rows is not None and not summary_rows.empty:
         snapshot = _live_snapshot(
-            summary_rows, {}, {}, errors, api_base=api_base, database=database
+            summary_rows, {}, {}, {}, errors, api_base=api_base, database=database
         )
         _write_disk_cache(summary_rows, _disk_cache_path(database))
         return snapshot
@@ -563,7 +655,8 @@ def _build_uncached(
     # 2. Disk cache fallback (skipped when force_refresh=True, but only
     # after the live attempt above). On any fallback path the live API was
     # unreachable, so ``/build-manifest`` is skipped and the local
-    # projection truthfully reports ``source != "live"``.
+    # projection truthfully reports ``source != "live"``. Cached rows carry
+    # no metadata (it is not persisted), so :meth:`metadata` returns None.
     if not force_refresh:
         disk_path = _disk_cache_path(database)
         cached_rows = _read_disk_cache(disk_path, errors=errors)
@@ -613,6 +706,7 @@ def _live_snapshot(
     rows: pd.DataFrame,
     aggregations: dict[str, Any],
     montages: Mapping[str, Mapping[str, Any]],
+    metadata: Mapping[str, "NemarMetadata"],
     errors: list[str],
     *,
     api_base: str,
@@ -654,10 +748,11 @@ def _live_snapshot(
         montages=montages,
         source="live",
         fetched_at=fetched_at,
-        # Keep partial errors collected before success (e.g. a chart-data
-        # 404 before a successful summary) as context, not failure.
+        # A missing ``/build-manifest`` endpoint is recorded as context,
+        # not a build failure.
         api_errors=list(errors),
         manifest=manifest,
+        metadata=metadata,
     )
 
 
@@ -720,6 +815,137 @@ def _log_provenance(snapshot: "DatasetSnapshot") -> None:
         snapshot.dataset_count,
         snapshot.fetched_at.isoformat(),
     )
+
+
+# ---------------------------------------------------------------------------
+# Metadata mappers
+# ---------------------------------------------------------------------------
+
+
+def _clean_optional(value: object) -> str | None:
+    """Return ``None`` for empty / ``None`` / explicit-null strings."""
+    if value is None:
+        return None
+    text = str(value).strip()
+    if not text or text.lower() in {"null", "none", "nan"}:
+        return None
+    return text
+
+
+def _clean_orcid(value: object) -> str | None:
+    """Normalise an ORCID to the bare 16-digit id (no URL prefix), or ``None``."""
+    if not value:
+        return None
+    text = str(value).strip()
+    if not text:
+        return None
+    for prefix in ("https://orcid.org/", "http://orcid.org/"):
+        if text.startswith(prefix):
+            text = text[len(prefix) :]
+            break
+    return text or None
+
+
+def _parse_iso(raw: object) -> datetime:
+    """Parse an ISO-8601 timestamp (``Z`` tolerated); ``utcnow`` on failure."""
+    if isinstance(raw, str) and raw.strip():
+        try:
+            return datetime.fromisoformat(raw.strip().replace("Z", "+00:00"))
+        except ValueError:
+            pass
+    return _utcnow()
+
+
+def _metadata_from_chart_data(
+    datasets: list[dict[str, Any]],
+) -> dict[str, "NemarMetadata"]:
+    """Pull ``datasets[i].metadata`` into a ``{lowercased id: NemarMetadata}`` map.
+
+    Datasets without a usable ``metadata`` sub-object are silently
+    skipped, so a missing key means "no metadata served for this dataset"
+    (the consumer renders the empty placeholder).
+    """
+    out: dict[str, NemarMetadata] = {}
+    for ds in datasets:
+        ds_id = str(ds.get("dataset_id") or "").strip()
+        if not ds_id:
+            continue
+        meta = ds.get("metadata")
+        if not isinstance(meta, dict) or not meta:
+            continue
+        out[ds_id.lower()] = _build_metadata(ds_id, ds, meta)
+    return out
+
+
+def _build_metadata(
+    ds_id: str, ds: Mapping[str, Any], meta: Mapping[str, Any]
+) -> "NemarMetadata":
+    """Construct a :class:`NemarMetadata` from one chart-data row + its metadata."""
+    authors = tuple(
+        NemarAuthor(name=name, orcid=_clean_orcid(orcid))
+        for name, orcid in _author_pairs(meta.get("authors"))
+        if name
+    )
+    keywords = tuple(
+        NemarKeyword(
+            term=str(k.get("term") or "").strip(),
+            scheme=_clean_optional(k.get("scheme")),
+            value_uri=_clean_optional(k.get("value_uri")),
+        )
+        for k in (meta.get("keywords") or [])
+        if isinstance(k, dict) and str(k.get("term") or "").strip()
+    )
+
+    parsed_versions: list[NemarVersion] = []
+    for v in meta.get("versions") or []:
+        if not isinstance(v, dict):
+            continue
+        version = str(v.get("version") or "").strip()
+        if not version:
+            continue
+        parsed_versions.append(
+            NemarVersion(
+                version=version,
+                doi=str(v.get("doi") or "").strip(),
+                created_at=_parse_iso(v.get("created_at")),
+            )
+        )
+    parsed_versions.sort(key=lambda v: v.created_at, reverse=True)
+
+    recording_modality_raw = ds.get("recording_modality") or []
+    if isinstance(recording_modality_raw, str):
+        recording_modality_raw = [recording_modality_raw]
+    recording_modality = tuple(
+        str(m).strip() for m in recording_modality_raw if str(m).strip()
+    )
+
+    return NemarMetadata(
+        dataset_id=ds_id,
+        name=str(ds.get("computed_title") or ds.get("name") or "").strip(),
+        description=_clean_optional(meta.get("description")),
+        license=_clean_optional(ds.get("license")),
+        recording_modality=recording_modality,
+        bids_version=_clean_optional(meta.get("bids_version")),
+        authors=authors,
+        keywords=keywords,
+        versions=tuple(parsed_versions),
+        latest_version=parsed_versions[0].version if parsed_versions else "",
+    )
+
+
+def _author_pairs(raw: object) -> list[tuple[str, object]]:
+    """Normalise an authors list to ``[(name, orcid_or_None)]``.
+
+    Accepts the contract shape ``[{name, orcid}]`` and tolerates bare
+    name strings for forward/backward compatibility.
+    """
+    pairs: list[tuple[str, object]] = []
+    for item in raw or []:
+        if isinstance(item, dict):
+            pairs.append((str(item.get("name") or "").strip(), item.get("orcid")))
+        elif isinstance(item, str) and item.strip():
+            pairs.append((item.strip(), None))
+    return pairs
 
 
 # ---------------------------------------------------------------------------
@@ -985,6 +1211,10 @@ def _reset_instance_cache_for_testing() -> None:
 
 __all__ = [
     "DatasetSnapshot",
+    "NemarAuthor",
+    "NemarKeyword",
+    "NemarMetadata",
+    "NemarVersion",
     "PACKAGE_CSV_PATH",
     "Source",
 ]

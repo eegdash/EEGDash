@@ -382,13 +382,8 @@ def test_chart_data_request_includes_montages_param(
 def test_snapshot_populates_montages_when_included(
     chart_data_payload, server_manifest, routing_urlopen
 ):
-    """Stub chart-data with montage objects on a couple of datasets;
-    ``snapshot.montage(dataset_id)`` must return the projected dict.
-
-    The projection layers viewer-friendly aliases (``label``,
-    ``n_channels``, ``montage_id``) on top of the registry doc — kept
-    backward-compatible with the retired build_electrode_layouts.py
-    output so the consumer is a no-op rename.
+    """Montages are shaped server-side (``include=montages`` →
+    ``_project_montage``); ``snapshot.montage(id)`` lifts them verbatim.
     """
     payload = chart_data_payload("ds001785")
     payload["datasets"][0]["montage"] = {
@@ -399,6 +394,9 @@ def test_snapshot_populates_montages_when_included(
         "space_declared": "CapTrak",
         "units_declared": "mm",
         "channel_names": ["AF3", "AF4", "Cz"],
+        "label": "EEG · 63 sensors",
+        "n_channels": 63,
+        "montage_id": "42b9e8daf4ff0e6d",
     }
     # Second dataset omits the montage — it must NOT crash the parser
     # and must NOT appear in the resulting map (the "no scalp layout
@@ -443,57 +441,6 @@ def test_snapshot_populates_montages_when_included(
 
     # Dataset without a montage must not appear in the map.
     assert snapshot.montage("ds_no_montage") is None
-
-
-def test_snapshot_montages_persist_through_disk_cache(
-    chart_data_payload, server_manifest, routing_urlopen
-):
-    """A live build writes a montages sidecar next to the JSON rows
-    cache; a subsequent ``cached`` resolution rehydrates it so the
-    docs build doesn't lose montage data the moment the API blips.
-    """
-    payload = chart_data_payload("ds_persisted")
-    payload["datasets"][0]["montage"] = {
-        "hash": "deadbeef00000000",
-        "modality": "eeg",
-        "n_sensors": 32,
-        "channel_names": ["A1"],
-    }
-
-    side_effect = routing_urlopen(
-        {
-            "datasets/chart-data": payload,
-            "build-manifest": server_manifest(dataset_count=1),
-        }
-    )
-
-    with patch("urllib.request.urlopen", side_effect=side_effect):
-        primed = DatasetSnapshot.build(
-            api_base="https://stub.example", database="persistshard"
-        )
-    assert primed.source == "live"
-    assert primed.montage("ds_persisted") is not None
-
-    # Sidecar is on disk.
-    sidecar = snapshot_mod._montages_sidecar_path("persistshard")
-    assert sidecar.exists()
-
-    # Force the cached path: drop the in-memory cache and fail the
-    # network. The cached snapshot must still serve the montage.
-    snapshot_mod._reset_instance_cache_for_testing()
-    with patch(
-        "urllib.request.urlopen",
-        side_effect=urllib.error.URLError("network unreachable"),
-    ):
-        cached = DatasetSnapshot.build(
-            api_base="https://stub.example", database="persistshard"
-        )
-
-    assert cached.source == "cached"
-    rehydrated = cached.montage("ds_persisted")
-    assert rehydrated is not None
-    assert rehydrated["hash"] == "deadbeef00000000"
-    assert rehydrated["n_channels"] == 32
 
 
 def test_metadata_from_chart_data(chart_data_payload, server_manifest, routing_urlopen):

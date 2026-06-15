@@ -56,7 +56,14 @@ dependencies = [
   "braindecode[hub]>=1.4.0",
   "eeglabio",
   "mne>=1.11.0",
-  "mne_bids>=0.18.0",
+  "mne_bids>=0.19.0",
+  # Official NEMAR client: owns dataset-id validation (nm*/on*),
+  # manifest fetching, BIDS-path → annex-key mapping, and streaming
+  # downloads. eegdash delegates the data.nemar.org safety net to it
+  # instead of duplicating those primitives. >=0.2.0 keeps datalad and
+  # git-annex as opt-in extras (``nemar-py[datalad]``) so the runtime
+  # install stays lean.
+  "nemar-py>=0.2.0",
   "pandas",
   "pyarrow",
   "pydantic",
@@ -100,6 +107,15 @@ tests = [
     'pytest-benchmark',
     'plotly',
     'moabb',
+    # tests/unit_tests/test_annex_key_utils.py + tests/unit_tests/test_digest_parsers.py
+    # import from scripts/ingestions/_file_utils.py + 3_digest.py, which require
+    # these at module top after the PEP-8 import-lift sweep.
+    'tenacity>=8',
+    'pydantic-settings>=2',
+    # Enforces the Croissant 1.0 descriptor validity gate
+    # (tests/unit_tests/test_croissant_export.py). Optional: the gate skips
+    # when absent, runs the MLCommons validator when present.
+    'mlcroissant',
 ]
 dev = [
   "pre-commit",
@@ -123,6 +139,8 @@ docs = [
   "neuralfetch>=0.2",
   "neuralset>=0.2",
   "eegprep",
+  # Validate the Croissant 1.0 descriptors emitted alongside the docs build.
+  "mlcroissant",
 ]
 
 digestion = [
@@ -136,6 +154,7 @@ digestion = [
   "tenacity",
   "hishel",
   "pydantic>=2",
+  "pydantic-settings>=2",
   "PyGithub>=2",
 ]
 
@@ -169,11 +188,24 @@ target-version = "py311"
 
 [tool.ruff.lint]
 ignore-init-module-imports = true
-select = ["E", "W", "F", "D", "I", "NPY201"]
+select = ["E", "W", "F", "D", "I", "NPY201", "PLC0415"]
 ignore = ["E402", "E501", "D100", "D101", "D102", "D103", "D104", "D105", "D107", "D205", "D400", "D415", "D417", "F403", "D401", "E741", "E722", "D419"]
 
 [tool.ruff.lint.per-file-ignores]
 "examples/*" = ["I"]
+# PLC0415 grace list — legacy lazy imports for optional deps + circular-
+# import guards. Each entry is a candidate for cleanup in a follow-up; the
+# rule still fires on any NEW function-scoped import in untouched files.
+"eegdash/__init__.py" = ["PLC0415"]
+"eegdash/api.py" = ["PLC0415"]
+"eegdash/dataset/base.py" = ["PLC0415"]
+"eegdash/dataset/dataset.py" = ["PLC0415"]
+"eegdash/dataset/io.py" = ["PLC0415"]
+"eegdash/dataset/registry.py" = ["PLC0415"]
+"eegdash/features/extractors.py" = ["PLC0415"]
+"eegdash/features/serialization.py" = ["PLC0415"]
+"eegdash/local_bids.py" = ["PLC0415"]
+"eegdash/viz/identity.py" = ["PLC0415"]
 
 [tool.ruff.lint.isort]
 known-first-party = ["eegdash", "braindecode"]

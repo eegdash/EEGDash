@@ -18,7 +18,7 @@ from collections import Counter
 from functools import partial
 from pathlib import Path
 from shutil import copyfile as _copyfile
-from typing import Callable
+from typing import Any, Callable
 
 import pandas as pd
 from plot_dataset import (
@@ -32,11 +32,12 @@ from plot_dataset import (
 )
 from plot_dataset.utils import get_dataset_url as _get_dataset_url
 from plot_dataset.utils import human_readable_size
-from table_tag_utils import _normalize_values, wrap_tags
+from table_tag_utils import _normalize_values, parse_stat_counts, wrap_tags
 
 # Ensure eegdash package is importable (this script lives in docs/)
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from eegdash.dataset.snapshot import DatasetSnapshot
+from eegdash.http_api_client import DEFAULT_API_URL
 
 # Directories
 DOCS_DIR = Path(__file__).resolve().parent
@@ -45,7 +46,10 @@ BUILD_STATIC_DIR = DOCS_DIR / "_build" / "html" / "_static" / "dataset_generated
 PACKAGE_CSV = DOCS_DIR.parent / "eegdash" / "dataset" / "dataset_summary.csv"
 
 # API Configuration
-API_BASE_URL = "https://data.eegdash.org/api"
+# Sourced from the official eegdash package default + the same
+# EEGDASH_API_URL override the package honours — keep in sync with
+# conf.py's EEGDASH_API_HOST.
+API_BASE_URL = os.environ.get("EEGDASH_API_URL", DEFAULT_API_URL).rstrip("/") + "/api"
 DEFAULT_DATABASE = "eegdash"
 
 # Number of workers for parallel chart generation
@@ -423,8 +427,29 @@ def save_summary_stats(df_raw: pd.DataFrame, aggregations: dict | None = None) -
             json.dump(summary_stats, f)
 
 
+def _counts_to_values(value: Any, cap: int = 6) -> list:
+    """Most frequent ``val`` entries from a stat-counts column, capped.
+
+    Parsing lives in the shared ``table_tag_utils.parse_stat_counts``;
+    this only caps the list and collapses integral floats (500.0 → 500)
+    so the search-index JSON stays terse.
+    """
+    values = []
+    for val, _count in parse_stat_counts(value)[:cap]:
+        if isinstance(val, float) and val.is_integer():
+            val = int(val)
+        values.append(val)
+    return values
+
+
 def generate_search_index(df_raw: pd.DataFrame) -> None:
-    """Generate search index JSON for client-side fuzzy search with Fuse.js."""
+    """Generate search index JSON for client-side search.
+
+    Consumed by both the homepage hero autocomplete (Fuse.js) and the
+    global search palette (``js/eegdash-search.js``). Fields beyond the
+    original 12 are additive and omitted when empty so the payload
+    grows as little as possible.
+    """
     search_index = []
     excluded = {"test", "ds003380"}
 
@@ -471,6 +496,42 @@ def generate_search_index(df_raw: pd.DataFrame) -> None:
             # to /dataset_summary/api/dataset/… (1,100+ Ahrefs 404s).
             "url": f"/api/dataset/eegdash.dataset.{dataset_id.upper()}.html",
         }
+
+        # --- Additive fields for the global search palette ------------
+        # Naming trap: entry["tasks"] above is a *count* (legacy index
+        # schema, kept for compatibility); the task-name *list* lives in
+        # entry["taskNames"] here, read from the dataframe row's "tasks"
+        # column (JSON list, API-sourced builds only). The deep-search
+        # API rows use the key "tasks" for the same list — the palette's
+        # deepRowToEntry() maps both shapes onto taskNames.
+        # Task names are the closest per-dataset proxy for BIDS events;
+        # they make `task:rest`-style filter tokens possible client-side.
+        # _normalize_values gives the same parse + strip + nan-drop +
+        # order-preserving dedup the tag columns above already get.
+        task_names = list(_normalize_values(row.get("tasks")))
+        if task_names:
+            entry["taskNames"] = task_names[:12]
+
+        license_value = str(row.get("license", "") or "").strip()
+        if license_value and license_value.lower() != "nan":
+            entry["license"] = license_value
+
+        author = str(row.get("author_year", "") or "").strip()
+        if author and author.lower() != "nan":
+            entry["author"] = author
+
+        canonical = list(_normalize_values(row.get("canonical_name")))
+        if canonical:
+            entry["canonical"] = canonical[:4]
+
+        nchans = _counts_to_values(row.get("nchans_set"))
+        if nchans:
+            entry["nchans"] = nchans
+
+        sfreqs = _counts_to_values(row.get("sampling_freqs"))
+        if sfreqs:
+            entry["sfreq"] = sfreqs
+
         search_index.append(entry)
 
     # Save to static directory

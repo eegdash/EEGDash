@@ -63,7 +63,8 @@ def extract_subjects_count(description: str | None) -> int:
     Args:
         description: Text description that may contain subject count info
 
-    Returns:
+    Returns
+    -------
         Extracted subject count, or 0 if not found
 
     """
@@ -95,7 +96,8 @@ def extract_surname(author_name: str) -> str | None:
     Args:
         author_name: Author name in various formats
 
-    Returns:
+    Returns
+    -------
         Extracted surname or None if extraction fails
 
     """
@@ -156,7 +158,8 @@ def extract_year(date_string: str | None) -> str | None:
     Args:
         date_string: Date string in various formats
 
-    Returns:
+    Returns
+    -------
         Four-digit year string or None
 
     """
@@ -179,7 +182,8 @@ def generate_dataset_id(
 ) -> str:
     """Generate a dataset ID in SurnameYEAR format.
 
-    Examples:
+    Examples
+    --------
     - ["John Smith"], "2024-01-15" -> "Smith2024"
     - ["Alice Johnson", "Bob Brown"], "2023" -> "Johnson2023"
     - No authors, "2024" with fallback="12345" -> "figshare_12345"
@@ -191,7 +195,8 @@ def generate_dataset_id(
         fallback_id: Fallback ID to use if SurnameYEAR cannot be generated
         index: Optional index to append for disambiguation (e.g., "Smith2024_2")
 
-    Returns:
+    Returns
+    -------
         Dataset ID in SurnameYEAR format or source_fallback format
 
     """
@@ -236,7 +241,8 @@ def deduplicate_dataset_ids(datasets: list[dict[str, Any]]) -> list[dict[str, An
     Args:
         datasets: List of dataset dictionaries with dataset_id field
 
-    Returns:
+    Returns
+    -------
         List with deduplicated dataset_id values
 
     """
@@ -283,7 +289,8 @@ def normalize_dataset(dataset: dict[str, Any]) -> dict[str, Any]:
     Args:
         dataset: Dataset dictionary to normalize
 
-    Returns:
+    Returns
+    -------
         Normalized dataset dictionary
 
     """

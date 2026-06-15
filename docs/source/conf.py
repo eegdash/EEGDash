@@ -11,10 +11,16 @@ sys.path.insert(0, os.path.abspath(".."))
 # Local Sphinx extensions live under ``docs/source/_extensions``; make them
 # importable before the ``extensions`` list below references them.
 sys.path.insert(0, os.path.abspath("_extensions"))
-if os.environ.get("SPHINX_BUILD", "") == "":
-    os.environ["SPHINX_BUILD"] = "1"
 
 import eegdash
+from eegdash.http_api_client import DEFAULT_API_URL
+
+# The ONE API base for everything the docs build and its client-side
+# JS talk to. Sourced from the official eegdash package default and the
+# same EEGDASH_API_URL override the package honours, so docs and library
+# can never disagree about which deployment they target.
+EEGDASH_API_HOST = os.environ.get("EEGDASH_API_URL", DEFAULT_API_URL).rstrip("/")
+EEGDASH_API_BASE = f"{EEGDASH_API_HOST}/api/eegdash"
 
 # -- Project information -----------------------------------------------------
 
@@ -57,6 +63,7 @@ extensions = [
     "copy_dataset_summary",
     "counter_values",
     "seo_context",
+    "docs_search_index",
 ]
 
 # Centralized bibliography (see docs/source/refs.bib + references.rst).
@@ -145,6 +152,8 @@ html_css_files = [
     "custom.css",
     "css/treemap.css",
     "css/custom.css",
+    # Global search palette (Ctrl+K). ~10 KB, used on every page.
+    "css/eegdash-search.css",
 ]
 # Per-page stylesheets are gated in `_templates/layout.html` so they only
 # load on the routes that need them:
@@ -160,8 +169,11 @@ html_css_files = [
 # generator, so we avoid double-loading by not listing it globally.
 html_js_files = [
     ("js/tag-palette.js", {"defer": "defer"}),
-    # Live search in PyData theme search modal (rendered on every page).
-    ("js/search-as-you-type.js", {"defer": "defer"}),
+    # Global search palette (Ctrl+K): datasets + docs + deep API search.
+    # Intercepts the theme's search button and shortcut, and lazy-loads
+    # its indexes on first open so pages don't pay the searchindex.js
+    # (~2.3 MB) cost.
+    ("js/eegdash-search.js", {"defer": "defer"}),
     # Lazy-load the electrode-explorer iframe on <details> expansion.
     ("js/lazy-embed.js", {"defer": "defer"}),
 ]
@@ -248,6 +260,10 @@ html_context = {
     # Path to the documentation root within the repo
     "doc_path": "docs/source",
     "default_mode": "light",
+    # Single API base injected into every page (layout.html sets it as
+    # <html data-eegdash-api>); eegdash-search.js and dataset-explorer.js
+    # read it instead of hardcoding the host.
+    "eegdash_api_base": EEGDASH_API_BASE,
 }
 
 

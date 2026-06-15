@@ -175,6 +175,13 @@ class DatasetModel(BaseModel):
     timestamps: dict[str, Any] | None = None
     storage: StorageModel | None = None
 
+    # BIDS-validator audit status (surfaced as queryable metadata).
+    # Populated from the offline validator sweep; defaults keep existing
+    # documents valid. See the ``Dataset`` TypedDict for field semantics.
+    bids_validator_status: Literal["pass", "fail", "unknown"] | None = None
+    n_validator_errors: int | None = None
+    top_issue_code: str | None = None
+
 
 class ManifestFileModel(BaseModel):
     """Pydantic model for a file entry in a manifest."""
@@ -421,6 +428,19 @@ class Dataset(TypedDict, total=False):
         Timestamps for data processing and creation.
     nemar_citation_count : int | None
         Number of papers citing this dataset (from NEMAR citations repository).
+    bids_validator_status : {"pass", "fail", "unknown"} | None
+        Outcome of running the official BIDS validator on this dataset's
+        source tree: ``"pass"`` (0 errors), ``"fail"`` (>=1 error), or
+        ``"unknown"`` (validator did not run to completion / not yet
+        audited). ``None`` is equivalent to ``"unknown"`` for documents
+        predating the audit.
+    n_validator_errors : int | None
+        Number of BIDS-validator errors reported for this dataset. ``None``
+        when the dataset has not been audited.
+    top_issue_code : str | None
+        The first BIDS-validator error code reported for this dataset (e.g.
+        ``"NOT_INCLUDED"``), used as the dominant-issue label. ``None`` when
+        the dataset passes or has not been audited.
 
     """
 
@@ -489,6 +509,11 @@ class Dataset(TypedDict, total=False):
     nemar_citation_count: (
         int | None
     )  # Number of papers citing this dataset (from NEMAR)
+
+    # BIDS-validator audit status (queryable metadata)
+    bids_validator_status: Literal["pass", "fail", "unknown"] | None
+    n_validator_errors: int | None
+    top_issue_code: str | None
 
 
 def create_dataset(
@@ -876,6 +901,7 @@ class Record(TypedDict, total=False):
     sampling_frequency: float | None
     nchans: int | None
     ntimes: int | None
+    duration_seconds: float | None
     digested_at: str
     montage_hash: str | None
 
@@ -1024,6 +1050,7 @@ def create_record(
     sampling_frequency: float | None = None,
     nchans: int | None = None,
     ntimes: int | None = None,
+    duration_seconds: float | None = None,
     digested_at: str | None = None,
     annex_keys: dict[str, str] | None = None,
     sidecar_inline: dict[str, str] | None = None,
@@ -1144,6 +1171,7 @@ def create_record(
         sampling_frequency=sampling_frequency,
         nchans=nchans,
         ntimes=ntimes,
+        duration_seconds=duration_seconds,
         digested_at=digested_at
         or datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
     )

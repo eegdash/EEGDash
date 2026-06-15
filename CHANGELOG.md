@@ -7,17 +7,45 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Added
-- Tutorial gallery refactor: 22 sphinx-gallery tutorials covering Categories A through H (Start Here, Core Workflow, Event-Related, Resting State, Features, Evaluation, Applied, Transfer/Foundation)
-- Five new HPC and scaling how-tos under `examples/applied/`: `how_to_download_a_dataset`, `how_to_work_offline`, `how_to_use_hpc_cache`, `how_to_run_preprocessing_on_slurm`, `how_to_parallelize_feature_extraction`
-- Six concept pages under `docs/source/concepts/` covering EEGDash objects, lazy loading and cache, leakage-safe splits, windowing semantics, evaluation protocols and the BDF transfer-foundation track
-- Public APIs for the rewritten tutorials: `eegdash.splits` (subject-aware split utilities) plus `EEGDashDataset.summary` / `EEGDashDataset.preview` / `EEGDashDataset.filter` / `EEGDashDataset.search_datasets` for in-memory query and inspection
+## [0.8.2] - 2026-05-30
 
 ### Changed
-- `eegdash.features.fit_feature_extractor` retained as a backward-compat alias for the new feature-extraction entrypoint used by the rewritten feature tutorials
+- NEMAR records no longer embed sidecar file contents in `storage.sidecar_inline`. Sidecars/companions are fetched on demand from data.nemar.org via `nemar-py` (version-pinned manifest, checksum-verified), with the GitHub-raw pointer kept as a legacy fallback. Shrinks records ~250 KB → ~1.5 KB (a 1000-record API page dropped from ~258 MB to ~1.7 MB) and avoids serving stale digest-time snapshots (#369)
+
+### Fixed
+- `EEGDashDataset.download_all()` now fetches NEMAR recordings, which were previously skipped because their `_raw_uri` is resolved lazily (#369)
+
+## [0.8.1] - 2026-05-29
+
+### Fixed
+- Restored feature-extraction and dataset-IO work unintentionally removed by #359: feature decorators/extractors, the complexity/connectivity/signal feature banks, and `eegdash.dataset.io` (#365)
+
+### Added
+- Ingestion pipeline: golden-test safety net (InjectionPlan / ValidationReport / montage snapshots) plus a DDD-lite glossary and ADRs documenting the typed-pipeline design (#364)
+
+## [0.8.0] - 2026-05-28
+
+### Added
+- New public APIs: `eegdash.splits` (subject-aware split utilities) and `EEGDashDataset.summary` / `preview` / `filter` / `search_datasets` for in-memory query and inspection
+- 22-tutorial sphinx-gallery rewrite plus HPC how-tos and concept pages
+- NEMAR `onNNNNNN` IDs (OpenNeuro mirrors on data.nemar.org) are recognised as the NEMAR backend (#361)
+- `nemar-py>=0.2.0` runtime dependency: data.nemar.org access (manifest, BIDS-path → annex-key, streaming download) is delegated to the official client (#361)
+- Features module additions: `spectral_peak_frequency`, more connectivity features, `preprocessor_as_feature` wrapper, channel-picking on extractors
+- Documentation: per-dataset pages with embedded trace viewer + electrode explorer; SEO and performance overhaul
+
+### Changed
+- Bumped `mne-bids` minimum to `0.19.0`
+- Ingestion pipeline refactor: pydantic-settings configs, shared seam modules, and new test infrastructure under `eegdash-testing-data`
+- `eegdash.features.fit_feature_extractor` kept as a backward-compat alias for the new feature-extraction entrypoint
+
+### Fixed
+- Loader robustness sweep across the 522-dataset catalog: companion-file auto-discovery (`.fdt`/`.eeg`/`.vmrk`), git-annex pointer resolution, split-FIF handling, BIDS metadata recovery (encoding, decimal separator, whitespace, `acq_time` timezone), and clean `DataIntegrityError` paths
+- NEMAR anonymous S3 + GitHub access works end-to-end; ingestion now reconciles `source`/`storage.base` against the dataset ID pattern, and sidecars are inlined at digest time to avoid runtime GitHub round-trips
+- `_generate_coordsystem_json` recognises the `emg` BIDS datatype and writes `EMGCoordinateSystem` / `EMGCoordinateUnits` per BEP 030 (#361)
+- Intel-Mac install (#294)
 
 ### Removed
-- Legacy tutorial entrypoints superseded by the new gallery: `examples/tutorial_minimal.py`, `examples/tutorial_transfer_learning.py` and several `examples/noplot_tutorial_*.py` scripts (their pedagogical content has been rewritten under `examples/tutorials/` and their applied counterparts under `examples/applied/`).
+- Legacy tutorial entrypoints superseded by the new gallery (`examples/tutorial_minimal.py`, `examples/tutorial_transfer_learning.py`, several `examples/noplot_tutorial_*.py`)
 
 ## [0.7.2] - 2026-04-29
 

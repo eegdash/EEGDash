@@ -15,6 +15,11 @@
         { name: 'modality', weight: 1.0 },
         { name: 'type', weight: 1.0 },
         { name: 'recordModality', weight: 0.9 },
+        // Enriched index fields (prepare_summary_tables.py) — task
+        // names double as the closest searchable proxy for BIDS events.
+        { name: 'taskNames', weight: 1.2 },
+        { name: 'author', weight: 1.0 },
+        { name: 'canonical', weight: 1.0 },
       ],
       threshold: 0.4,
       distance: 100,

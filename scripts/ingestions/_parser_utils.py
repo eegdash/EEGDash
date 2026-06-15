@@ -3,18 +3,146 @@
 This module provides shared functionality for validating file paths,
 reading files with encoding fallback, and fetching from S3 for
 git-annex symlinks.
+
+HTTP path note (2026-05-22, hardened post-review)
+-------------------------------------------------
+The three S3 helpers (``fetch_bytes_from_s3``, ``head_content_length``,
+``fetch_from_s3``) used to call ``urllib.request.urlopen`` directly.
+The Stage-3 profile run of 2026-05-22 showed that the MEG montage
+extractor calls ``head_content_length`` ~100x per dataset, and that
+91% of the digest wall-clock went to TLS handshake / connect / read
+for those serialised, unpooled requests.
+
+This module lazy-initialises a single shared :class:`httpx.Client`
+per process (``_http_client()``), keeping connections alive across
+calls to the same host. After the post-perf code-review the
+implementation also:
+
+* Acquires the same lock for read/return AND for close, so concurrent
+  ``reset_http_client_for_testing()`` callers cannot return a freshly-
+  closed client to a sibling thread.
+* Catches ``RuntimeError`` (httpx raises it on use-after-close) in
+  addition to ``httpx.HTTPError`` — keeps the documented
+  "returns None on any network or protocol failure" contract.
+* Registers the atexit hook exactly once per interpreter via a
+  module-level flag — avoids unbounded handler accumulation when
+  tests call ``reset_http_client_for_testing()`` between rounds.
+* Registers an ``os.register_at_fork`` child-side reset so a Linux
+  fork (default mp start-method) cannot inherit live sockets from
+  the parent.
+* Uses ``client.stream("GET", ...)`` for the byte-range path so a
+  server that ignores ``Range`` (returning 200 with the full body)
+  is bounded to ``max_bytes`` and the pool slot is released
+  immediately.
+
+Tests use ``respx`` to mock the httpx transport at the transport
+layer (same library + decorator as ``_inject_config.py``; pooling
+semantics differ — that module uses per-call ``with httpx.Client(...)``).
 """
 
 from __future__ import annotations
 
+import atexit
 import logging
+import os
 import re
-import urllib.request
+import threading
 from pathlib import Path
-from urllib.error import HTTPError, URLError
 from urllib.parse import quote
 
+import httpx
+
 logger = logging.getLogger(__name__)
+
+
+# ─── Pooled httpx client (shared across all S3 helpers) ───────────────────
+
+# httpx.Client is thread-safe for synchronous use (per docs). The
+# Stage-2 clone uses ThreadPoolExecutor → one client is fine. The
+# Stage-3 digest uses ``mp.get_context()`` (which defaults to fork on
+# Linux) → child processes inherit the parent's client; we register
+# an at-fork hook that resets the child-side client to None so a
+# warmed parent pool doesn't share sockets across fork.
+
+_HTTP_CLIENT: httpx.Client | None = None
+_HTTP_CLIENT_LOCK = threading.Lock()
+_ATEXIT_REGISTERED = False  # register the atexit hook exactly once
+
+
+def _http_client() -> httpx.Client:
+    """Return the lazily-initialised shared HTTP client.
+
+    Pooled keep-alive connections (default httpx settings) eliminate the
+    per-request TLS handshake overhead. The full body of the function
+    runs under ``_HTTP_CLIENT_LOCK`` so a concurrent
+    ``reset_http_client_for_testing()`` cannot null/close the cached
+    instance between the read and the return.
+    """
+    global _HTTP_CLIENT, _ATEXIT_REGISTERED
+    with _HTTP_CLIENT_LOCK:
+        if _HTTP_CLIENT is None:
+            _HTTP_CLIENT = httpx.Client(
+                timeout=httpx.Timeout(30.0),
+                limits=httpx.Limits(
+                    max_keepalive_connections=20,
+                    max_connections=40,
+                    keepalive_expiry=60.0,
+                ),
+                follow_redirects=True,
+                http2=True,  # multiplex concurrent HEADs over one connection
+            )
+            if not _ATEXIT_REGISTERED:
+                atexit.register(_close_http_client)
+                _ATEXIT_REGISTERED = True
+        return _HTTP_CLIENT
+
+
+def _close_http_client() -> None:
+    """Test helper + atexit hook to release the pooled client.
+
+    Acquires the same lock the readers use so a concurrent
+    ``_http_client()`` caller cannot observe a half-state where
+    ``_HTTP_CLIENT`` is non-None but ``client.close()`` has run.
+    """
+    global _HTTP_CLIENT
+    with _HTTP_CLIENT_LOCK:
+        client = _HTTP_CLIENT
+        _HTTP_CLIENT = None
+    if client is not None:
+        try:
+            client.close()
+        except Exception as exc:  # noqa: BLE001
+            logger.debug("Error closing httpx client at shutdown: %s", exc)
+
+
+def _reset_http_client_after_fork_child() -> None:
+    """``os.register_at_fork`` child-side hook.
+
+    A forked child inherits the parent's ``_HTTP_CLIENT`` reference
+    but the underlying TCP / TLS sockets are also shared (file
+    descriptors). If both parent and child use the same socket the
+    HTTP frame stream interleaves. We drop the inherited client
+    reference WITHOUT calling ``close()`` (closing in the child
+    would tear down the parent's sockets too).
+    """
+    global _HTTP_CLIENT, _ATEXIT_REGISTERED
+    _HTTP_CLIENT = None
+    _ATEXIT_REGISTERED = False
+
+
+try:  # ``os.register_at_fork`` only exists on POSIX
+    os.register_at_fork(after_in_child=_reset_http_client_after_fork_child)
+except AttributeError:  # pragma: no cover — Windows
+    pass
+
+
+def reset_http_client_for_testing() -> None:
+    """Drop the cached client so the next call rebuilds it.
+
+    Tests that use respx may want to inspect call counts on a fresh
+    transport; this resets the singleton so respx hooks land cleanly.
+    """
+    _close_http_client()
 
 
 def is_broken_symlink(path: Path) -> bool:
@@ -121,7 +249,7 @@ def fetch_bytes_from_s3(
     max_bytes: int = 262144,
     timeout: float = 30.0,
 ) -> bytes | None:
-    """Range-fetch ``max_bytes`` starting at ``start`` from an S3 object.
+    """Range-fetch up to ``max_bytes`` starting at ``start`` from an S3 object.
 
     Used to pull MEG FIF / KIT SQD headers without downloading the full
     multi-GB recording. S3 always supports ``Range: bytes=start-end`` —
@@ -130,55 +258,79 @@ def fetch_bytes_from_s3(
     → ``FIFFB_MEAS_INFO`` → channel info blocks, usually well under
     256 KB even for 500-channel recordings.
 
+    Uses the shared :func:`_http_client` and ``client.stream`` so a
+    server that ignores ``Range`` and returns 200 with the full body
+    is bounded — the returned slice is at most ``max_bytes`` and the
+    pooled connection is released as soon as we hit the cap. (Older
+    revisions returned the full body and held the pool slot for the
+    duration; the post-review hardening caps the read.)
+
     Returns the raw byte slice on success, ``None`` on any network or
     protocol failure (caller decides whether to retry with a larger
     ``max_bytes``).
     """
     end = int(start) + int(max_bytes) - 1
-    req = urllib.request.Request(
-        url,
-        headers={
-            "Range": f"bytes={int(start)}-{end}",
-            "Accept": "*/*",
-        },
-    )
+    headers = {
+        "Range": f"bytes={int(start)}-{end}",
+        "Accept": "*/*",
+    }
     logger.debug("Range-fetching bytes=%d-%d from %s", start, end, url)
+    # Stream the response so a server that ignores Range and returns
+    # 200 with the full body cannot OOM the worker or hold the pooled
+    # connection for an arbitrarily large download — we cap at
+    # ``max_bytes`` and release the slot immediately.
     try:
-        with urllib.request.urlopen(req, timeout=timeout) as resp:
-            # Servers that don't honour Range return 200 with the full
-            # body; accept both but log when we got more than asked.
-            data = resp.read()
-            if len(data) > max_bytes:
-                logger.debug(
-                    "server ignored Range; got %d bytes (asked %d) from %s",
-                    len(data),
-                    max_bytes,
-                    url,
-                )
-            return data
-    except HTTPError as e:
-        logger.debug("HTTP error range-fetching %s: %s", url, e)
-        return None
-    except URLError as e:
-        logger.debug("URL error range-fetching %s: %s", url, e)
-        return None
-    except (TimeoutError, OSError) as e:
-        logger.debug("Network error range-fetching %s: %s", url, e)
+        with _http_client().stream(
+            "GET", url, headers=headers, timeout=timeout
+        ) as resp:
+            resp.raise_for_status()
+            chunks: list[bytes] = []
+            received = 0
+            cap = int(max_bytes) + 1  # +1 so we can detect over-cap reads
+            for chunk in resp.iter_bytes():
+                if not chunk:
+                    continue
+                chunks.append(chunk)
+                received += len(chunk)
+                if received >= cap:
+                    logger.debug(
+                        "server ignored Range; truncating at %d bytes from %s",
+                        max_bytes,
+                        url,
+                    )
+                    break
+            data = b"".join(chunks)
+        if len(data) > max_bytes:
+            data = data[:max_bytes]
+        return data
+    except (httpx.HTTPError, RuntimeError) as e:
+        # RuntimeError covers httpx's "client has been closed" race
+        # (see _close_http_client). HTTPError covers transport,
+        # timeout, status, and decode errors.
+        logger.debug("HTTP/network error range-fetching %s: %s", url, e)
         return None
 
 
 def head_content_length(url: str, *, timeout: float = 30.0) -> int | None:
     """Issue a HEAD request and return ``Content-Length`` as int.
 
+    Uses the shared :func:`_http_client` (pooled keep-alive). The
+    Stage-3 profile of 2026-05-22 showed this function is called ~100x
+    per MEG dataset (one per FIF montage source); each call previously
+    opened a fresh TLS connection. Sharing one client across calls
+    yields the ~5x speedup the profile report quotes.
+
     Returns ``None`` on any network failure or when the header is absent.
     """
     try:
-        with urllib.request.urlopen(
-            urllib.request.Request(url, method="HEAD"), timeout=timeout
-        ) as resp:
-            raw = resp.headers.get("Content-Length")
-            return int(raw) if raw is not None else None
-    except (HTTPError, URLError, TimeoutError, OSError, ValueError) as exc:
+        resp = _http_client().head(url, timeout=timeout)
+        resp.raise_for_status()
+        raw = resp.headers.get("Content-Length")
+        return int(raw) if raw is not None else None
+    except (httpx.HTTPError, RuntimeError, ValueError) as exc:
+        # RuntimeError covers httpx's "client has been closed" race
+        # (see _close_http_client). HTTPError covers transport,
+        # timeout, status. ValueError covers the int() parse.
         logger.debug("HEAD %s failed: %s", url, exc)
         return None
 
@@ -189,6 +341,9 @@ def fetch_from_s3(
     encodings: tuple[str, ...] = ("utf-8", "latin-1", "cp1252"),
 ) -> str | None:
     """Fetch text content from an S3 URL.
+
+    Uses the shared :func:`_http_client` (pooled keep-alive). Tries each
+    encoding in order; returns the first that decodes the body cleanly.
 
     Parameters
     ----------
@@ -202,36 +357,83 @@ def fetch_from_s3(
     Returns
     -------
     str | None
-        File content as string, or None if fetch fails.
-
+        File content as string, or None if fetch or decode fails.
     """
     logger.debug("Fetching from S3: %s", url)
     try:
-        with urllib.request.urlopen(url, timeout=timeout) as response:
-            content_bytes = response.read()
+        resp = _http_client().get(url, timeout=timeout)
+        resp.raise_for_status()
+        content_bytes = resp.content
+    except (httpx.HTTPError, RuntimeError) as e:
+        # RuntimeError covers httpx's "client has been closed" race
+        # (see _close_http_client).
+        logger.debug("HTTP/network error fetching from S3: %s - %s", url, e)
+        return None
 
-            # Try each encoding
-            for encoding in encodings:
-                try:
-                    content = content_bytes.decode(encoding)
-                    logger.debug(
-                        "Successfully fetched %d bytes from S3", len(content_bytes)
-                    )
-                    return content
-                except UnicodeDecodeError:
-                    continue
+    for encoding in encodings:
+        try:
+            content = content_bytes.decode(encoding)
+            logger.debug("Successfully fetched %d bytes from S3", len(content_bytes))
+            return content
+        except UnicodeDecodeError:
+            continue
 
-            logger.warning("Failed to decode S3 content with any encoding: %s", url)
-            return None
-    except HTTPError as e:
-        logger.debug("HTTP error fetching from S3: %s - %s", url, e)
-        return None
-    except URLError as e:
-        logger.debug("URL error fetching from S3: %s - %s", url, e)
-        return None
-    except (TimeoutError, OSError) as e:
-        logger.debug("Network error fetching from S3: %s - %s", url, e)
-        return None
+    logger.warning("Failed to decode S3 content with any encoding: %s", url)
+    return None
+
+
+def path_is_within_root(path: Path | str, root: Path | str) -> bool:
+    """Return True if ``path`` resolves inside ``root``.
+
+    Defense-in-depth helper for path-traversal containment. Resolves
+    both arguments to absolute paths and tests that the result of
+    ``path`` is a sub-path of ``root``. Symlinks are followed, so a
+    symlink-out-of-tree fails the check.
+
+    Parameters
+    ----------
+    path : Path or str
+        Candidate file or directory path.
+    root : Path or str
+        Trusted root directory that ``path`` must remain inside.
+
+    Returns
+    -------
+    bool
+        True if ``path`` is structurally contained in ``root`` AND both
+        resolve without OS-level error. False otherwise — including
+        when either side cannot be resolved (e.g. permission denied on
+        an ancestor directory).
+
+    Notes
+    -----
+    Internal trust model: paths from a manifest the pipeline itself
+    built are already trusted; this helper
+    exists so a future code path that accepts a user-supplied sidecar
+    reference (BIDS ``IntendedFor``, ``.vhdr`` ``DataFile=``, etc.) can
+    cheaply gate it.
+
+    Examples
+    --------
+    >>> from pathlib import Path
+    >>> root = Path("/data/ds002893").resolve()
+    >>> path_is_within_root(root / "sub-01" / "eeg" / "x.set", root)
+    True
+    >>> path_is_within_root(root / ".." / "ds_other" / "x.set", root)
+    False
+    """
+    try:
+        p = Path(path).resolve()
+        r = Path(root).resolve()
+    except (OSError, RuntimeError):
+        return False
+    try:
+        # is_relative_to landed in 3.9 — we target 3.10+ per pyproject.
+        return p.is_relative_to(r)
+    except (AttributeError, ValueError):
+        # AttributeError: not reachable under py3.9+; defensive.
+        # ValueError: shouldn't fire here but matches the docs contract.
+        return False
 
 
 def validate_file_path(path: Path) -> bool:

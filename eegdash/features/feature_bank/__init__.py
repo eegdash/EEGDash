@@ -7,7 +7,9 @@ feature functions so users can import them directly from
 
 from .complexity import (
     complexity_approx_entropy,
+    complexity_detrended_fluctuation_analysis,
     complexity_entropy_preprocessor,
+    complexity_hurst_exp,
     complexity_lempel_ziv,
     complexity_multiscale_entropy,
     complexity_sample_entropy,
@@ -15,15 +17,22 @@ from .complexity import (
 )
 from .connectivity import (
     connectivity_coherency_preprocessor,
+    connectivity_corrected_imaginary_phase_locking_value,
+    connectivity_directed_phase_lag_index,
     connectivity_imaginary_coherence,
     connectivity_lagged_coherence,
     connectivity_magnitude_square_coherence,
+    connectivity_max_cross_correlation,
+    connectivity_phase_diff_preprocessor,
+    connectivity_phase_lag_index,
+    connectivity_phase_locking_value,
+    connectivity_spectral_correlation,
+    connectivity_temporal_correlation,
+    connectivity_weighted_phase_lag_index,
 )
 from .csp import CommonSpatialPattern
 from .dimensionality import (
-    dimensionality_detrended_fluctuation_analysis,
     dimensionality_higuchi_fractal_dim,
-    dimensionality_hurst_exp,
     dimensionality_katz_fractal_dim,
     dimensionality_petrosian_fractal_dim,
 )
@@ -32,9 +41,9 @@ from .pick import (
     pick_channels_preprocessor,
 )
 from .signal import (
+    signal_bandpass_filter_preprocessor,
     signal_decorrelation_time,
-    signal_filter_preprocessor,
-    signal_hilbert_preprocessor,
+    signal_envelope_preprocessor,
     signal_hjorth_activity,
     signal_hjorth_complexity,
     signal_hjorth_mobility,
@@ -59,6 +68,7 @@ from .spectral import (
     spectral_hjorth_mobility,
     spectral_moment,
     spectral_normalized_preprocessor,
+    spectral_peak_frequency,
     spectral_preprocessor,
     spectral_root_total_power,
     spectral_slope,
@@ -73,25 +83,34 @@ __all__ = [
     "complexity_sample_entropy",
     "complexity_svd_entropy",
     "complexity_lempel_ziv",
+    "complexity_hurst_exp",
+    "complexity_detrended_fluctuation_analysis",
     # Connectivity
     "connectivity_coherency_preprocessor",
+    "connectivity_phase_diff_preprocessor",
+    "connectivity_temporal_correlation",
+    "connectivity_spectral_correlation",
+    "connectivity_max_cross_correlation",
     "connectivity_magnitude_square_coherence",
     "connectivity_imaginary_coherence",
     "connectivity_lagged_coherence",
+    "connectivity_phase_locking_value",
+    "connectivity_corrected_imaginary_phase_locking_value",
+    "connectivity_phase_lag_index",
+    "connectivity_weighted_phase_lag_index",
+    "connectivity_directed_phase_lag_index",
     # CSP
     "CommonSpatialPattern",
     # Dimensionality
     "dimensionality_higuchi_fractal_dim",
     "dimensionality_petrosian_fractal_dim",
     "dimensionality_katz_fractal_dim",
-    "dimensionality_hurst_exp",
-    "dimensionality_detrended_fluctuation_analysis",
     # Pick
     "pick_channel_pairs_preprocessor",
     "pick_channels_preprocessor",
     # Signal
-    "signal_filter_preprocessor",
-    "signal_hilbert_preprocessor",
+    "signal_bandpass_filter_preprocessor",
+    "signal_envelope_preprocessor",
     "signal_mean",
     "signal_variance",
     "signal_skewness",
@@ -113,6 +132,7 @@ __all__ = [
     "spectral_root_total_power",
     "spectral_moment",
     "spectral_entropy",
+    "spectral_peak_frequency",
     "spectral_edge",
     "spectral_slope",
     "spectral_bands_power",

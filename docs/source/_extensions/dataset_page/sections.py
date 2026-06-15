@@ -42,6 +42,7 @@ from ._constants import (
     _MODALITY_LABEL_MAP,
     _RST_HYPERLINK_RE,
     _SOURCE_LABEL_MAP,
+    EEGDASH_API_BASE,
 )
 from .data_loaders import (
     _clean_value,
@@ -1778,7 +1779,7 @@ def _format_explorer_section(name: str, context: Mapping[str, object]) -> str:
 # ---------------------------------------------------------------------------
 
 _TRACE_VIEWER_BASE = "https://eegdash.github.io/eegdash-viewer/"
-_TRACE_API_URL = "https://data.eegdash.org/api/eegdash/records"
+_TRACE_API_URL = f"{EEGDASH_API_BASE}/records"
 _TRACE_SUPPORTED_EXT = (".set", ".edf", ".bdf", ".vhdr", ".fif", ".fiff")
 
 

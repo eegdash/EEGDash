@@ -12,8 +12,11 @@ canonical pattern here.
 
 from __future__ import annotations
 
+import os
 import re
 from pathlib import Path
+
+from eegdash.http_api_client import DEFAULT_API_URL
 
 # Resolves to ``docs/source`` since this module lives in
 # ``docs/source/_extensions/dataset_page/``. The original monolith
@@ -25,6 +28,15 @@ _DOCS_SOURCE_ROOT = Path(__file__).resolve().parent.parent.parent
 # levels above ``docs/source/`` and clones land under ``ingestions/clone``.
 REPO_ROOT = _DOCS_SOURCE_ROOT.parent.parent
 CLONE_ROOT = REPO_ROOT / "ingestions" / "clone"
+
+
+# The ONE API base for build-time fetches (dataset details, participants,
+# sidecars, trace viewer) and the client-side palette JS. Sourced from the
+# official eegdash package default + the same EEGDASH_API_URL override the
+# package honours, so the docs build and the library can never disagree
+# about which deployment they target. Mirrors conf.py's EEGDASH_API_BASE.
+EEGDASH_API_HOST = os.environ.get("EEGDASH_API_URL", DEFAULT_API_URL).rstrip("/")
+EEGDASH_API_BASE = f"{EEGDASH_API_HOST}/api/eegdash"
 
 
 # Pinned in conf.py (and now here) so directive-rendered pages keep the

@@ -245,7 +245,7 @@ class DatasetSnapshot:
         manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
 
         rows_path = manifest_path.with_suffix(".rows.json")
-        if rows_path.exists():
+        if rows_path.exists() and rows_path.stat().st_size > 0:
             rows = pd.read_json(rows_path, orient="records")
         else:
             rows = pd.DataFrame()

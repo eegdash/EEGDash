@@ -122,45 +122,58 @@ def test_cached_on_api_failure_after_priming(
     assert cached.fetched_at == expected
 
 
-def test_csv_fallback_on_no_cache():
-    """No disk cache + dead API + present package CSV → source == "package-csv"."""
-    api_base = "https://stub.example"
-    database = "no_cache_shard"
+@pytest.mark.parametrize(
+    "package_csv_missing",
+    [False, True],
+    ids=["package-csv-present", "package-csv-missing"],
+)
+def test_csv_fallback(monkeypatch, package_csv_missing):
+    """No disk cache + dead API falls back to the package CSV.
 
-    with patch(
-        "urllib.request.urlopen",
-        side_effect=urllib.error.URLError("network unreachable"),
-    ):
-        snapshot = DatasetSnapshot.build(api_base=api_base, database=database)
-
-    assert snapshot.source == "package-csv"
-    # The shipped CSV has hundreds of rows; we don't assert an exact
-    # count (it changes whenever someone runs ``update_dataset_summary``)
-    # but we do assert the fallback actually wired data through.
-    assert snapshot.dataset_count > 0
-    assert snapshot.api_errors, "fallback must record API errors"
-    # No accidental disk cache write on the failure path.
-    assert not snapshot_mod._disk_cache_path(database).exists()
-
-
-def test_csv_fallback_when_package_csv_missing(monkeypatch):
-    """When neither network nor disk cache nor package CSV resolves,
-    the snapshot still returns a value (source=package-csv, empty
-    DataFrame) with the failure recorded — never raise.
+    Collapses ``test_csv_fallback_on_no_cache`` (CSV present → rows wired
+    through, no disk-cache write) and
+    ``test_csv_fallback_when_package_csv_missing`` (CSV missing → empty,
+    source still ``package-csv``). Both never raise and record
+    ``api_errors``.
     """
-    monkeypatch.setattr(snapshot_mod, "PACKAGE_CSV_PATH", Path("/does/not/exist.csv"))
-
-    with patch(
-        "urllib.request.urlopen",
-        side_effect=urllib.error.URLError("network unreachable"),
-    ):
-        snapshot = DatasetSnapshot.build(
-            api_base="https://stub.example", database="empty_shard"
+    if package_csv_missing:
+        # When neither network nor disk cache nor package CSV resolves,
+        # the snapshot still returns a value (source=package-csv, empty
+        # DataFrame) with the failure recorded — never raise.
+        monkeypatch.setattr(
+            snapshot_mod, "PACKAGE_CSV_PATH", Path("/does/not/exist.csv")
         )
 
-    assert snapshot.source == "package-csv"
-    assert snapshot.dataset_count == 0
-    assert snapshot.api_errors, "every fallback path must populate api_errors"
+        with patch(
+            "urllib.request.urlopen",
+            side_effect=urllib.error.URLError("network unreachable"),
+        ):
+            snapshot = DatasetSnapshot.build(
+                api_base="https://stub.example", database="empty_shard"
+            )
+
+        assert snapshot.source == "package-csv"
+        assert snapshot.dataset_count == 0
+        assert snapshot.api_errors, "every fallback path must populate api_errors"
+    else:
+        # No disk cache + dead API + present package CSV → "package-csv".
+        api_base = "https://stub.example"
+        database = "no_cache_shard"
+
+        with patch(
+            "urllib.request.urlopen",
+            side_effect=urllib.error.URLError("network unreachable"),
+        ):
+            snapshot = DatasetSnapshot.build(api_base=api_base, database=database)
+
+        assert snapshot.source == "package-csv"
+        # The shipped CSV has hundreds of rows; we don't assert an exact
+        # count (it changes whenever someone runs ``update_dataset_summary``)
+        # but we do assert the fallback actually wired data through.
+        assert snapshot.dataset_count > 0
+        assert snapshot.api_errors, "fallback must record API errors"
+        # No accidental disk cache write on the failure path.
+        assert not snapshot_mod._disk_cache_path(database).exists()
 
 
 def test_api_errors_populated_with_exception_text():
@@ -323,25 +336,29 @@ def test_load_roundtrip(tmp_path, chart_data_payload, server_manifest, routing_u
     assert loaded.rows().iloc[0]["dataset"] == "ds_roundtrip"
 
 
-def test_montage_returns_none_when_absent():
-    """``montage()`` must return ``None`` rather than raising for an
-    unknown id, an empty id, or a snapshot that never received montages.
-    """
-    snapshot = DatasetSnapshot(
-        rows=pd.DataFrame([{"dataset": "ds_montage"}]),
-        aggregations={},
-        montages={},
-        source="live",
-        fetched_at=datetime.now(timezone.utc),
-    )
-    assert snapshot.montage("ds_montage") is None
-    assert snapshot.montage("") is None
+@pytest.mark.parametrize(
+    "lookup_key, expect_present",
+    [
+        ("ds_montage", True),  # exact-case key present → not None
+        ("DS_MONTAGE", True),  # different-case key present → case-insensitive
+        ("ds_absent", False),  # absent key → None
+        ("", False),  # empty id → None
+    ],
+    ids=[
+        "exact-case-present",
+        "different-case-present",
+        "absent-key",
+        "empty-key",
+    ],
+)
+def test_montage_lookup(lookup_key, expect_present):
+    """``montage()`` returns the projected dict for a present key (in any
+    case) and ``None`` for an unknown or empty id rather than raising.
 
-
-def test_montage_returns_data_when_present():
-    """When chart-data is fetched with ``?include=montages``, the
-    montages land on the snapshot; surface them through ``montage()``
-    keyed by dataset_id.
+    Collapses the former ``test_montage_returns_none_when_absent``,
+    ``test_montage_returns_data_when_present`` and
+    ``test_montage_lookup_is_case_insensitive``. Snapshot construction is
+    transcribed from ``test_montage_returns_data_when_present``.
     """
     snapshot = DatasetSnapshot(
         rows=pd.DataFrame([{"dataset": "ds_montage"}]),
@@ -350,30 +367,15 @@ def test_montage_returns_data_when_present():
         source="live",
         fetched_at=datetime.now(timezone.utc),
     )
-    montage = snapshot.montage("ds_montage")
-    assert montage is not None
-    assert montage["name"] == "standard_1020"
-    # Returned value is a copy — mutations don't leak back to the cache.
-    montage["mutated"] = True
-    assert "mutated" not in snapshot.montage("ds_montage")
-
-
-def test_montage_lookup_is_case_insensitive():
-    """Consumer paths sometimes lowercase the dataset id before
-    lookup (the dataset_page section does); other consumers pass it
-    through unchanged. Both must hit the same montage row.
-    """
-    snapshot = DatasetSnapshot(
-        rows=pd.DataFrame([{"dataset": "DS001785"}]),
-        aggregations={},
-        # Snapshot stores keys lowercased — the standard convention from
-        # ``_montages_from_chart_data``.
-        montages={"ds001785": {"hash": "abc", "n_channels": 63}},
-        source="live",
-        fetched_at=datetime.now(timezone.utc),
-    )
-    assert snapshot.montage("ds001785") == {"hash": "abc", "n_channels": 63}
-    assert snapshot.montage("DS001785") == {"hash": "abc", "n_channels": 63}
+    montage = snapshot.montage(lookup_key)
+    if expect_present:
+        assert montage is not None
+        assert montage["name"] == "standard_1020"
+        # Returned value is a copy — mutations don't leak back to the cache.
+        montage["mutated"] = True
+        assert "mutated" not in snapshot.montage(lookup_key)
+    else:
+        assert montage is None
 
 
 def test_chart_data_request_includes_montages_param(
@@ -816,36 +818,44 @@ def test_pin_valid_date_returns_snapshot(snapshot_payload_pin, make_urlopen_resp
     assert snapshot.api_errors == []
 
 
-def test_pin_invalid_date_raises_value_error():
-    """Anything not matching ``YYYY-MM-DD`` must raise before any
-    network call. Catching the typo at the boundary keeps a wildcard
-    or path-injection from reaching the server route.
-    """
-    with pytest.raises(ValueError, match="YYYY-MM-DD"):
-        DatasetSnapshot.pin("not-a-date")
-    with pytest.raises(ValueError):
-        DatasetSnapshot.pin("2026/05/18")
-    with pytest.raises(ValueError):
-        DatasetSnapshot.pin("2026-5-18")  # missing zero pad
-    with pytest.raises(ValueError):
-        DatasetSnapshot.pin("")
+@pytest.mark.parametrize(
+    "is_404_case",
+    [False, True],
+    ids=["invalid-date-value-error", "404-lookup-error"],
+)
+def test_pin_rejects_bad_input(is_404_case):
+    """``pin`` rejects malformed dates with ``ValueError`` (before any
+    network call) and a server 404 with ``LookupError``.
 
-
-def test_pin_404_raises_lookup_error():
-    """A 404 from the server means "no snapshot frozen for that date".
-    Surface as ``LookupError`` so the caller can decide whether to
-    retry against a different date or fall back to :meth:`build`.
+    Collapses ``test_pin_invalid_date_raises_value_error`` and
+    ``test_pin_404_raises_lookup_error``.
     """
-    err = urllib.error.HTTPError(
-        "https://stub.example/eegdash/snapshots/2026-04-01",
-        404,
-        "not found",
-        {},
-        None,
-    )
-    with patch("urllib.request.urlopen", side_effect=err):
-        with pytest.raises(LookupError, match="2026-04-01"):
-            DatasetSnapshot.pin("2026-04-01")
+    if not is_404_case:
+        # Anything not matching ``YYYY-MM-DD`` must raise before any
+        # network call. Catching the typo at the boundary keeps a wildcard
+        # or path-injection from reaching the server route.
+        with pytest.raises(ValueError, match="YYYY-MM-DD"):
+            DatasetSnapshot.pin("not-a-date")
+        with pytest.raises(ValueError):
+            DatasetSnapshot.pin("2026/05/18")
+        with pytest.raises(ValueError):
+            DatasetSnapshot.pin("2026-5-18")  # missing zero pad
+        with pytest.raises(ValueError):
+            DatasetSnapshot.pin("")
+    else:
+        # A 404 from the server means "no snapshot frozen for that date".
+        # Surface as ``LookupError`` so the caller can decide whether to
+        # retry against a different date or fall back to :meth:`build`.
+        err = urllib.error.HTTPError(
+            "https://stub.example/eegdash/snapshots/2026-04-01",
+            404,
+            "not found",
+            {},
+            None,
+        )
+        with patch("urllib.request.urlopen", side_effect=err):
+            with pytest.raises(LookupError, match="2026-04-01"):
+                DatasetSnapshot.pin("2026-04-01")
 
 
 def test_pin_does_not_share_cache_with_build(

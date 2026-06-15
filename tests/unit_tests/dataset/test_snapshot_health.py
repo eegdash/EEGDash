@@ -45,63 +45,76 @@ def health_module():
     return _load_check_snapshot_health()
 
 
-def test_ci_gate_passes_clean_live_snapshot(health_module, gate_snapshot):
-    """Source=live, count over threshold, api_errors empty → OK."""
-    snap = gate_snapshot(source="live", dataset_count=800, api_errors=[])
-    assert health_module.evaluate_snapshot(snap, min_count=700) == []
-
-
-def test_ci_gate_fails_on_fallback_source(health_module, gate_snapshot):
-    """A cached snapshot is degraded, even with a full row count."""
-    snap = gate_snapshot(source="cached", dataset_count=900, api_errors=[])
-    failures = health_module.evaluate_snapshot(snap, min_count=700)
-    assert any("source" in msg for msg in failures), failures
-
-
-def test_ci_gate_fails_on_low_count(health_module, gate_snapshot):
-    """Row count at or below the floor must fail the gate."""
-    snap = gate_snapshot(source="live", dataset_count=700, api_errors=[])
-    failures = health_module.evaluate_snapshot(snap, min_count=700)
-    assert any("dataset_count" in msg for msg in failures), failures
-
-
-def test_ci_gate_fails_on_partial_degradation_api_errors(health_module, gate_snapshot):
-    """The motivating regression: chart-data dead, summary alive.
-
-    ``_build_uncached`` records the chart-data failure on
-    ``api_errors`` and then tags the snapshot ``source="live"``
-    because the summary endpoint saved the day. The pre-fix gate
-    looked only at ``source`` and ``dataset_count`` and let this
-    through — losing the aggregations block silently on the docs
-    site. The fixed gate catches it.
+@pytest.mark.parametrize(
+    "source, dataset_count, api_errors, min_count, expect_pass, "
+    "expect_substr, expect_len_one",
+    [
+        # Source=live, count over threshold, api_errors empty → OK.
+        ("live", 800, [], 700, True, None, False),
+        # A cached snapshot is degraded, even with a full row count.
+        ("cached", 900, [], 700, False, "source", False),
+        # Row count at or below the floor must fail the gate.
+        ("live", 700, [], 700, False, "dataset_count", False),
+        # Partial degradation: chart-data dead, summary alive →
+        # source stays "live" but api_errors is populated. The fixed gate
+        # catches it.
+        (
+            "live",
+            900,
+            [
+                "chart-data 404 at https://api.example/db/datasets/chart-data; "
+                "trying summary"
+            ],
+            700,
+            False,
+            "api_errors",
+            False,
+        ),
+        # Already fallen back (package-csv): api_errors is populated but
+        # the source-tag check already failed, so exactly one failure —
+        # api_errors must NOT double-count when source != "live".
+        (
+            "package-csv",
+            900,
+            ["chart-data error at ...", "summary error at ..."],
+            700,
+            False,
+            "source",
+            True,
+        ),
+    ],
+    ids=[
+        "passes-clean-live",
+        "fails-fallback-source",
+        "fails-low-count",
+        "fails-partial-degradation-api-errors",
+        "api-errors-ignored-on-fallback-source",
+    ],
+)
+def test_snapshot_health_gate(
+    health_module,
+    gate_snapshot,
+    source,
+    dataset_count,
+    api_errors,
+    min_count,
+    expect_pass,
+    expect_substr,
+    expect_len_one,
+):
+    """``evaluate_snapshot`` returns ``[]`` for a clean live snapshot and
+    a failure list (each carrying a specific substring) for degraded
+    ones. Collapses the five former ``test_ci_gate_*`` cases.
     """
     snap = gate_snapshot(
-        source="live",
-        dataset_count=900,
-        api_errors=[
-            "chart-data 404 at https://api.example/db/datasets/chart-data; "
-            "trying summary"
-        ],
+        source=source, dataset_count=dataset_count, api_errors=api_errors
     )
-    failures = health_module.evaluate_snapshot(snap, min_count=700)
-    assert any("api_errors" in msg for msg in failures), (
-        f"partial degradation did not trip the gate; failures={failures}"
-    )
-
-
-def test_ci_gate_api_errors_ignored_on_fallback_source(health_module, gate_snapshot):
-    """When the snapshot has already fallen back, ``api_errors`` will
-    obviously be populated (every fallback path appends to it). The
-    source-tag check has already failed, so we should not double-count
-    the same degradation. This locks in that ``api_errors`` only
-    contributes a *new* failure when ``source == "live"``.
-    """
-    snap = gate_snapshot(
-        source="package-csv",
-        dataset_count=900,
-        api_errors=["chart-data error at ...", "summary error at ..."],
-    )
-    failures = health_module.evaluate_snapshot(snap, min_count=700)
-    # Exactly one failure: the source-tag failure. No api_errors line.
-    assert len(failures) == 1, failures
-    assert "source" in failures[0]
+    failures = health_module.evaluate_snapshot(snap, min_count=min_count)
+    if expect_pass:
+        assert failures == []
+        return
+    assert any(expect_substr in msg for msg in failures), failures
+    if expect_len_one:
+        # Exactly one failure: the source-tag failure. No api_errors line.
+        assert len(failures) == 1, failures
+        assert "source" in failures[0]

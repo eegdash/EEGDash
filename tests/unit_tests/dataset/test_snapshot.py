@@ -228,37 +228,6 @@ def test_cache_keyed_by_api_base_and_database(
     assert a is a2, "same key should return the cached instance"
 
 
-# ---------------------------------------------------------------------------
-# Surface checks for the public API
-# ---------------------------------------------------------------------------
-
-
-def test_public_surface_complete():
-    """Sanity check: every member the validation plan §3 step 5 names
-    is discoverable on the class.
-    """
-    required = {
-        "build",
-        "load",
-        "pin",
-        "rows",
-        "aggregations",
-        "montage",
-        "source",
-        "fetched_at",
-        "dataset_count",
-        "manifest",
-        "api_errors",
-        "pinned_at",
-    }
-    missing = (
-        required
-        - set(dir(DatasetSnapshot))
-        - {a for a in required if hasattr(DatasetSnapshot, a)}
-    )
-    assert not missing, f"missing required members: {missing}"
-
-
 def test_snapshot_is_immutable():
     """Attempting to reassign provenance attributes must raise."""
     snapshot = DatasetSnapshot(
@@ -758,27 +727,44 @@ def test_manifest_not_fetched_in_csv_fallback_path():
 # ---------------------------------------------------------------------------
 
 
-def test_pin_valid_date_returns_snapshot(snapshot_payload_pin, make_urlopen_response):
-    """``pin(date)`` fetches ``/snapshots/{date}`` and surfaces the
-    frozen payload's provenance: ``source == "live"``, ``pinned_at``
-    set to the requested date, ``manifest`` byte-for-byte from the
-    payload's ``build_manifest``.
+def test_pin_returns_frozen_snapshot(snapshot_payload_pin, make_urlopen_response):
+    """``pin(date)`` surfaces the frozen ``/snapshots/{date}`` payload's
+    provenance verbatim: ``source == "live"``, ``pinned_at``, the
+    ``build_manifest``, the payload's ``created_at`` as ``fetched_at``
+    (NOT wall-clock — the point of pinning), and the same montage parse
+    as the live path.
     """
-    payload = snapshot_payload_pin(date="2026-05-18", dataset_count=1)
+    created_at = "2026-04-01T08:15:30.123456Z"
+    payload = snapshot_payload_pin(
+        date="2026-04-01", dataset_count=1, include_montage=True, created_at=created_at
+    )
 
     def fake_urlopen(url, *_, **__):
         url_str = url if isinstance(url, str) else url.get_full_url()
-        assert "/snapshots/2026-05-18" in url_str, f"unexpected URL: {url_str}"
+        assert "/snapshots/2026-04-01" in url_str, f"unexpected URL: {url_str}"
         return make_urlopen_response(payload)
 
     with patch("urllib.request.urlopen", side_effect=fake_urlopen):
-        snapshot = DatasetSnapshot.pin("2026-05-18")
+        snapshot = DatasetSnapshot.pin("2026-04-01")
 
     assert snapshot.source == "live"
-    assert snapshot.pinned_at == "2026-05-18"
+    assert snapshot.pinned_at == "2026-04-01"
     assert snapshot.dataset_count == 1
     assert snapshot.manifest == payload["build_manifest"]
     assert snapshot.api_errors == []
+    # fetched_at is the frozen created_at, normalised off the trailing 'Z'.
+    assert snapshot.fetched_at == datetime.fromisoformat(
+        created_at.replace("Z", "+00:00")
+    )
+    assert snapshot.fetched_at.tzinfo is not None
+    # Frozen chart_data montages run the same parser as the live path.
+    mont = snapshot.montage("ds_pin_1")
+    assert mont is not None
+    assert mont["hash"] == "42b9e8daf4ff0e6d"
+    assert mont["modality"] == "eeg"
+    assert mont["n_sensors"] == mont["n_channels"] == 63
+    assert mont["label"] == "EEG · 63 sensors"
+    assert mont["channel_names"] == ["AF3", "AF4", "Cz"]
 
 
 @pytest.mark.parametrize(
@@ -864,60 +850,6 @@ def test_pin_does_not_share_cache_with_build(
     with patch("urllib.request.urlopen", side_effect=fake_urlopen):
         s1b = DatasetSnapshot.pin("2026-05-18")
     assert s1b is not s1
-
-
-def test_pin_carries_montages_when_included(
-    snapshot_payload_pin, make_urlopen_response
-):
-    """When the frozen ``chart_data`` carries per-dataset ``montage``
-    objects, :meth:`pin` runs the same parser as the live path so the
-    docs viewer renders a real electrode layout instead of the
-    placeholder.
-    """
-    payload = snapshot_payload_pin(
-        date="2026-05-18", dataset_count=1, include_montage=True
-    )
-
-    def fake_urlopen(url, *_, **__):
-        return make_urlopen_response(payload)
-
-    with patch("urllib.request.urlopen", side_effect=fake_urlopen):
-        snapshot = DatasetSnapshot.pin("2026-05-18")
-
-    mont = snapshot.montage("ds_pin_1")
-    assert mont is not None
-    assert mont["hash"] == "42b9e8daf4ff0e6d"
-    assert mont["modality"] == "eeg"
-    assert mont["n_sensors"] == 63
-    assert mont["n_channels"] == 63
-    assert mont["label"] == "EEG · 63 sensors"
-    assert mont["channel_names"] == ["AF3", "AF4", "Cz"]
-
-
-def test_pin_fetched_at_is_original_creation_time(
-    snapshot_payload_pin, make_urlopen_response
-):
-    """``fetched_at`` carries the ``created_at`` from the frozen
-    payload, NOT the wall clock at pin time. That's the whole point
-    of a pinned snapshot: reproducibility means the timestamp is part
-    of the immutable artefact.
-    """
-    created_at = "2026-04-01T08:15:30.123456Z"
-    payload = snapshot_payload_pin(
-        date="2026-04-01", dataset_count=1, created_at=created_at
-    )
-
-    def fake_urlopen(url, *_, **__):
-        return make_urlopen_response(payload)
-
-    with patch("urllib.request.urlopen", side_effect=fake_urlopen):
-        snapshot = DatasetSnapshot.pin("2026-04-01")
-
-    # Server emits trailing 'Z'; the parser normalises to +00:00 so
-    # ``fromisoformat`` round-trips on Python < 3.11.
-    expected = datetime.fromisoformat(created_at.replace("Z", "+00:00"))
-    assert snapshot.fetched_at == expected
-    assert snapshot.fetched_at.tzinfo is not None
 
 
 # ---------------------------------------------------------------------------

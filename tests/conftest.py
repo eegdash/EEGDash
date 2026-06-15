@@ -125,11 +125,6 @@ def signal_2d():
     return np.random.randn(2, 100)
 
 
-@pytest.fixture
-def signal_1d():
-    return np.random.randn(100)
-
-
 import shutil
 
 from braindecode.datautil import load_concat_dataset

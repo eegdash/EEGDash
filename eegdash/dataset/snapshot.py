@@ -1,32 +1,10 @@
 """Single data-access seam for the docs build.
 
-The :class:`DatasetSnapshot` module owns *everything* between the
-EEGDash server and any docs-build consumer: HTTP fetch, retry,
-in-memory cache, disk cache, package-CSV fallback, and the provenance
-that lets callers (and CI) tell apart "live API" from "stale cache" from
-"silent failure."
-
-Before this module landed there were three near-duplicate paths to the
-same data:
-
-1. ``fetch_datasets_from_api`` in :mod:`eegdash.dataset.registry`
-   (DataFrame; disk cache; 5-level fallback; silent on failure).
-2. ``fetch_chart_data_from_api`` in :mod:`eegdash.dataset.registry`
-   ((DataFrame, aggregations) tuple; no disk cache; falls back to
-   ``fetch_datasets_from_api`` on 404).
-3. ``_load_dataset_summary_from_api`` in ``docs/source/conf.py``, which
-   memoised the first DataFrame in a module-level global *not keyed by
-   API URL or database* — so any future parameterisation silently
-   returned stale data.
-
-Those three are now thin compatibility shims over this module. New
-consumers should import :class:`DatasetSnapshot` directly.
-
-Cross-references:
-
-- ``docs_pipeline_architecture_review.md`` §3 B1 (the surface), B2
-  (tagged failure modes).
-- ``docs_pipeline_validation_plan.md`` §3 step 5 (B1) and §3 step 6 (B2).
+:class:`DatasetSnapshot` owns everything between the EEGDash server and
+any docs-build consumer: HTTP fetch, in-memory cache, disk cache,
+package-CSV fallback, and the provenance that tells callers apart "live
+API" from "stale cache" from "silent failure". New consumers should
+import :class:`DatasetSnapshot` directly.
 """
 
 from __future__ import annotations
@@ -45,7 +23,6 @@ from typing import Any, Literal, Mapping
 import pandas as pd
 
 from ..paths import get_default_cache_dir
-from ._excluded import EXCLUDED_DATASETS  # noqa: F401 — re-exported
 
 logger = logging.getLogger(__name__)
 
@@ -54,109 +31,47 @@ logger = logging.getLogger(__name__)
 Source = Literal["live", "cached", "package-csv"]
 
 
-# Package-shipped registry CSV — used as the final fallback. Kept in a
-# constant so tests can monkeypatch the path without touching the
-# package layout.
+# Package-shipped registry CSV — the final fallback. A constant so tests
+# can monkeypatch the path.
 PACKAGE_CSV_PATH: Path = Path(__file__).resolve().parent / "dataset_summary.csv"
 
 
-# Process-wide cache of built snapshots. Keyed by ``(api_base, database,
-# limit)`` so two consumers hitting different shards never read each
-# other's data — the explicit bug ``_DATASET_SUMMARY_CACHE`` had in
-# ``conf.py``. The lock guards against concurrent first-builds from
-# parallel Sphinx workers; the actual fetch still happens once.
+# Process-wide cache of built snapshots, keyed by ``(api_base, database,
+# limit)`` so consumers on different shards never read each other's data.
+# The lock guards concurrent first-builds; the fetch still happens once.
 _INSTANCE_CACHE: dict[tuple[str, str, int], "DatasetSnapshot"] = {}
 _INSTANCE_CACHE_LOCK = Lock()
 
 
-# Match the server's ``/snapshots/{date}`` route shape — ISO ``YYYY-MM-DD``
-# only. Reject anything else early with a ``ValueError`` so a typo
-# doesn't reach the network as a wildcard.
+# Server's ``/snapshots/{date}`` route shape — ISO ``YYYY-MM-DD`` only.
 _SNAPSHOT_DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 
 
 class DatasetSnapshot:
     """A frozen view of the dataset catalog used by one docs build.
 
-    There are three equal entry points, one per lifecycle:
+    Three entry points, one per lifecycle:
 
-    - :meth:`build` — fetch the *current* catalog from the live API
-      (with disk / package-CSV fallback). Use this for normal docs
-      builds that always want the freshest data.
-    - :meth:`load` — re-hydrate a snapshot that was previously written
-      to disk (manifest JSON + parquet rows). Use this in tests, or
-      when round-tripping a snapshot through CI artefacts.
-    - :meth:`pin` — fetch a *specific dated* snapshot from the server's
-      ``/snapshots/{date}`` endpoint, byte-for-byte the same payload
-      that was frozen on that date. Use this for reproducible docs
-      builds (CI pinned to a fixed date) or for diffing two builds.
+    - :meth:`build` — fetch the current catalog from the live API (disk
+      / package-CSV fallback).
+    - :meth:`load` — re-hydrate a snapshot previously written to disk.
+    - :meth:`pin` — fetch a specific dated snapshot from
+      ``/snapshots/{date}`` for reproducible builds.
 
-    All three return the same kind of object; consumers should never
-    have to know which classmethod produced their snapshot. The
-    :attr:`source`, :attr:`fetched_at`, and :attr:`pinned_at`
-    properties self-report the provenance honestly.
-
-    All consumers should read through the accessor methods rather than
-    poking at the underlying fields directly — the field set is
-    allowed to grow (see :attr:`manifest` for A2 and :attr:`pinned_at`
-    for A6).
-
-    Attributes
-    ----------
-    source : {"live", "cached", "package-csv"}
-        Where this snapshot's data came from. Never silent on failure —
-        if the live API throws, :attr:`api_errors` carries the
-        exception text and :attr:`source` falls back to ``"cached"``
-        or ``"package-csv"``.
-    fetched_at : datetime
-        Wall-clock instant the snapshot's underlying data was actually
-        produced. For ``source == "live"`` this is the moment the HTTP
-        call returned; for ``"cached"`` it is the disk cache's mtime;
-        for ``"package-csv"`` it is the package CSV's mtime. Always
-        UTC.
-    dataset_count : int
-        ``len(self.rows())``, exposed as a property so consumers can
-        ask "is this build healthy?" without materialising the
-        DataFrame.
-    api_errors : list[str]
-        Exception strings collected during fetch / fallback. Empty when
-        ``source == "live"`` and the call succeeded; non-empty whenever
-        a fallback fired.
-    manifest : dict[str, Any]
-        The server's ``/build-manifest`` response when reachable; falls
-        back to a locally-projected ``{"dataset_count", "source",
-        "fetched_at"}`` dict when the endpoint is offline, returns an
-        error, or the snapshot resolved from the disk cache / package
-        CSV without a live API call. Either way the field is never
-        ``None``, so downstream consumers can read it unconditionally.
-
-        When the server manifest is present it carries — at minimum —
-        ``dataset_count``, ``schema_version``, ``last_ingested_at``,
-        ``last_stats_computed_at``, ``git_sha``, and ``name_coverage``.
-        The schema is owned by the server (review §3 A2); this snapshot
-        re-exposes it verbatim.
-    pinned_at : str | None
-        The ISO date (``YYYY-MM-DD``) this snapshot was pinned to via
-        :meth:`pin`, or ``None`` when the snapshot came from
-        :meth:`build` or :meth:`load`. Lets a consumer tell apart a
-        snapshot pinned to ``2026-04-01`` from a live build on the
-        same source tree.
-
+    All three return the same object; provenance is self-reported via
+    :attr:`source`, :attr:`fetched_at`, :attr:`api_errors`, and
+    :attr:`pinned_at`. Read through the accessor methods, not the
+    underlying fields.
     """
 
-    # ``__slots__`` keeps instances small and prevents accidental
-    # attribute creation. We deliberately don't list ``source``,
-    # ``fetched_at``, ``api_errors``, ``manifest`` here — they live as
-    # class-level placeholders below (so ``hasattr(DatasetSnapshot,
-    # 'source')`` returns True for the surface check in the
-    # validation plan) and as real per-instance values written via
-    # ``__dict__``.
+    # ``__slots__`` keeps instances small. ``source``/``fetched_at``/
+    # ``api_errors``/``manifest`` are class-level sentinels below (so
+    # ``hasattr(DatasetSnapshot, 'source')`` is True for surface checks)
+    # and are shadowed per-instance via ``__dict__``.
     __slots__ = ("_rows", "_aggregations", "_montages", "__dict__")
 
-    # Class-level sentinels so ``hasattr(DatasetSnapshot, '<name>')``
-    # returns True for the post-condition surface check in
-    # ``docs_pipeline_validation_plan.md`` §3 step 5. Instances shadow
-    # them with real values via their own ``__dict__``.
+    # Class-level sentinels so ``hasattr(cls, '<name>')`` is True for the
+    # surface check; instances shadow them with real values.
     source: Source = "package-csv"
     fetched_at: datetime | None = None
     api_errors: list[str] = []  # noqa: RUF012 — overridden per-instance
@@ -175,11 +90,9 @@ class DatasetSnapshot:
         manifest: dict[str, Any] | None = None,
         pinned_at: str | None = None,
     ) -> None:
-        # Snapshots are conceptually frozen. We don't use @dataclass
-        # because dataclass fields don't surface in ``dir(cls)`` /
-        # ``hasattr(cls, ...)`` without literal defaults — and the
-        # post-condition check in the validation plan expects every
-        # named member to be discoverable on the class.
+        # Frozen. Not a @dataclass because dataclass fields don't surface
+        # in ``hasattr(cls, ...)`` without literal defaults, which the
+        # surface check relies on.
         object.__setattr__(self, "_rows", rows)
         object.__setattr__(self, "_aggregations", aggregations)
         object.__setattr__(self, "_montages", montages)
@@ -219,29 +132,7 @@ class DatasetSnapshot:
         return dict(self._aggregations)
 
     def montage(self, dataset_id: str) -> Mapping[str, Any] | None:
-        """Return the top montage for one dataset, or ``None``.
-
-        Lookup is case-insensitive on the catalog ``dataset_id``
-        (e.g. ``"ds002718"`` or ``"DS002718"``). Returns ``None`` when
-        no montage was joined into this snapshot (e.g. the server
-        omitted one, or the snapshot resolved from the disk-cache /
-        package-CSV fallback path and never received montage data in
-        the first place).
-
-        Population is driven server-side by ``?include=montages`` on
-        the ``/datasets/chart-data`` request (see arch #5). The shape
-        is the registry montage doc plus a couple of viewer-friendly
-        derived fields:
-
-        - ``hash`` — 16-char montage registry id
-        - ``modality`` — ``"eeg"``, ``"meg"``, ``"ieeg"``, ...
-        - ``n_sensors`` — channel count for this montage
-        - ``space_declared`` / ``units_declared`` — BIDS coords schema
-        - ``channel_names`` — list of strings (truncated server-side)
-        - ``label`` — pretty caption (``"EEG · 64 sensors"``)
-        - ``n_channels`` — alias of ``n_sensors`` for backward compat
-        - ``montage_id`` — alias of ``hash`` for backward compat
-        """
+        """Return the top montage dict for one dataset (case-insensitive), or ``None``."""
         if not dataset_id:
             return None
         # Try the exact key first (live path), then fall back to a
@@ -263,12 +154,7 @@ class DatasetSnapshot:
 
     @property
     def schema_version(self) -> str | None:
-        """The server-reported ``schema_version`` from ``/build-manifest``.
-
-        Returns ``None`` when the snapshot fell back to the local
-        manifest projection (i.e. the server wasn't reached). Convenience
-        accessor — equivalent to ``self.manifest.get("schema_version")``.
-        """
+        """Server-reported ``schema_version`` from the manifest, or ``None``."""
         value = self.manifest.get("schema_version")
         return value if isinstance(value, str) else None
 
@@ -297,30 +183,19 @@ class DatasetSnapshot:
         2. Live HTTP GET to ``/datasets/summary?limit={limit}`` (legacy
            shape; no ``aggregations`` block).
         3. Disk cache at
-           ``{get_default_cache_dir()}/snapshot_{db}.parquet``.
+           ``{get_default_cache_dir()}/snapshot_{db}.json``.
         4. Package CSV at :data:`PACKAGE_CSV_PATH`.
 
         Parameters
         ----------
         api_base : str
-            Base URL of the EEGDash server, *without* a trailing slash.
+            Base URL of the EEGDash server, without a trailing slash.
         database : str
             Database / shard name.
         limit : int | None
-            Maximum number of datasets to request. Defaults to
-            ``int(os.environ["EEGDASH_DOC_LIMIT"])`` if set, else
-            ``1000``.
+            Max datasets to request; defaults to ``EEGDASH_DOC_LIMIT`` or ``1000``.
         force_refresh : bool
-            Bypass both the in-memory and disk caches and force a live
-            fetch. Falls back exactly like a normal build if the live
-            fetch fails; this only invalidates entry into the cache,
-            not exit from it.
-
-        Returns
-        -------
-        DatasetSnapshot
-            A snapshot whose :attr:`source`, :attr:`fetched_at`, and
-            :attr:`api_errors` honestly describe how the data arrived.
+            Bypass in-memory and disk caches on entry; still falls back on failure.
 
         """
         resolved_limit = (
@@ -363,17 +238,15 @@ class DatasetSnapshot:
     def load(cls, manifest_path: str | Path) -> "DatasetSnapshot":
         """Re-hydrate a previously-built snapshot from disk.
 
-        ``manifest_path`` points at a JSON file that was written next
-        to a parquet payload by :meth:`build` (under the on-disk cache
-        directory). Used by A6 (dated snapshots) and by tests that want
-        to round-trip a snapshot without monkeypatching the network.
+        ``manifest_path`` is a manifest JSON file; the rows ride in a
+        sibling ``*.rows.json`` written by :meth:`build`.
         """
         manifest_path = Path(manifest_path)
         manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
 
-        rows_path = manifest_path.with_suffix(".parquet")
+        rows_path = manifest_path.with_suffix(".rows.json")
         if rows_path.exists():
-            rows = pd.read_parquet(rows_path)
+            rows = pd.read_json(rows_path, orient="records")
         else:
             rows = pd.DataFrame()
 
@@ -401,41 +274,22 @@ class DatasetSnapshot:
         api_base: str | None = None,
         database: str | None = None,
     ) -> "DatasetSnapshot":
-        """Pin to the server's dated snapshot for reproducible builds.
+        """Pin to the server's dated ``/snapshots/{date}`` for reproducible builds.
 
-        Fetches ``GET {api_base}/{database}/snapshots/{date}`` and
-        reconstructs a snapshot from the frozen ``chart_data`` +
-        ``build_manifest`` payload. The server's snapshot endpoint
-        emits ``Cache-Control: public, max-age=31536000, immutable``,
-        so the HTTP layer (or any future CDN) handles caching — this
-        method deliberately does NOT touch the disk cache or the
-        in-process ``_INSTANCE_CACHE`` used by :meth:`build`.
-
-        Use case: a docs CI pipeline pins to a fixed date so two
-        successive builds against the same source tree produce
-        byte-identical artefacts even when the live catalog ingests
-        new datasets between runs. Diffing two builds reduces to a
-        pair of pinned snapshots with different dates.
+        Reconstructs a snapshot from the frozen ``chart_data`` +
+        ``build_manifest`` payload. Does NOT touch the disk cache or the
+        in-process ``_INSTANCE_CACHE`` used by :meth:`build`. ``source``
+        is ``"live"``, ``fetched_at`` is the payload's creation time, and
+        ``pinned_at`` is the requested date.
 
         Parameters
         ----------
         date : str
-            ISO calendar date, ``YYYY-MM-DD``. Anything else raises
-            :class:`ValueError` before any network call is attempted.
+            ISO ``YYYY-MM-DD``; anything else raises ``ValueError``.
         api_base : str | None
-            Base URL of the EEGDash server. Defaults to the same value
-            :meth:`build` uses (``https://data.eegdash.org/api``).
+            Server base URL; defaults to ``https://data.eegdash.org/api``.
         database : str | None
-            Database / shard name. Defaults to ``eegdash``.
-
-        Returns
-        -------
-        DatasetSnapshot
-            A snapshot whose :attr:`source` is ``"live"`` (the
-            server's snapshot is authoritative live data, just
-            frozen), :attr:`fetched_at` is the original creation
-            time from the payload, and :attr:`pinned_at` is the
-            requested date.
+            Database / shard name; defaults to ``eegdash``.
 
         Raises
         ------
@@ -500,30 +354,38 @@ def _utcnow() -> datetime:
     return datetime.now(timezone.utc)
 
 
-def _disk_cache_path(database: str) -> Path:
-    """Where the disk cache for ``database`` lives.
+def _resolve_author_year(
+    *,
+    name_source: str,
+    raw_aliases: list[str] | None,
+    explicit: object = None,
+) -> str | None:
+    """Pick a single ``FirstAuthorSurnameYear`` from catalog metadata.
 
-    Kept inside ``get_default_cache_dir()`` so the package-managed
-    cache and the docs-build cache share one directory (and one
-    ``.gitignore`` entry).
+    Explicit ``author_year`` wins; else the first alias when
+    ``name_source == "author_year"``; else ``None``.
     """
+    explicit_str = str(explicit).strip() if explicit else ""
+    if explicit_str:
+        return explicit_str
+    if name_source and name_source.strip().lower() == "author_year" and raw_aliases:
+        first = str(raw_aliases[0]).strip()
+        return first or None
+    return None
+
+
+def _disk_cache_path(database: str) -> Path:
+    """Where the JSON disk cache for ``database`` lives."""
     cache_dir = get_default_cache_dir()
     cache_dir.mkdir(parents=True, exist_ok=True)
     # Sanitize the database name; we never accept input here that
     # could contain path separators, but defence in depth never hurts.
     safe = "".join(c for c in database if c.isalnum() or c in {"_", "-"})
-    return cache_dir / f"snapshot_{safe or 'default'}.parquet"
+    return cache_dir / f"snapshot_{safe or 'default'}.json"
 
 
 def _montages_sidecar_path(database: str) -> Path:
-    """Where the per-dataset montage cache for ``database`` lives.
-
-    Sits next to the parquet rows cache (same directory, same naming)
-    so the two artefacts share one cache invalidation lifecycle. JSON
-    rather than parquet because the payload is shallow (~500 small
-    dicts at the production scale) and the docs-build consumer is
-    happiest with plain dicts.
-    """
+    """Where the per-dataset montage cache for ``database`` lives (JSON)."""
     cache_dir = get_default_cache_dir()
     cache_dir.mkdir(parents=True, exist_ok=True)
     safe = "".join(c for c in database if c.isalnum() or c in {"_", "-"})
@@ -540,16 +402,10 @@ def _http_get_json(url: str, *, timeout: int = 30) -> dict[str, Any]:
 def _try_fetch_chart_data(
     api_base: str, database: str, limit: int, *, errors: list[str]
 ) -> tuple[pd.DataFrame, dict[str, Any], dict[str, dict[str, Any]]] | None:
-    """Attempt the rich chart-data endpoint. Returns ``None`` on failure.
+    """Attempt the rich chart-data endpoint (rows, aggregations, montages).
 
     Requests ``?include=montages`` so the top montage per dataset rides
-    along with the catalog rows in one round-trip (arch #5). The
-    parsed montage objects are returned as a third tuple element keyed
-    by lowercased ``dataset_id``; callers store it on
-    :attr:`DatasetSnapshot._montages`. When the server doesn't
-    populate a montage for a given dataset (or the field is absent
-    entirely on an old deployment) the per-dataset value is simply
-    missing from the dict — never ``None`` and never a partial doc.
+    along in one round-trip. Returns ``None`` on failure.
     """
     url = f"{api_base}/{database}/datasets/chart-data?limit={limit}&include=montages"
     try:
@@ -594,11 +450,13 @@ def _try_fetch_summary(
 
 
 def _read_disk_cache(path: Path, *, errors: list[str]) -> pd.DataFrame | None:
-    """Re-hydrate a parquet disk cache. Returns ``None`` on failure/absence."""
+    """Re-hydrate a JSON disk cache. Returns ``None`` on failure/absence."""
     if not path.exists():
         return None
     try:
-        return pd.read_parquet(path)
+        if path.stat().st_size == 0:
+            return None
+        return pd.read_json(path, orient="records")
     except Exception as exc:  # noqa: BLE001
         errors.append(f"disk cache read failed at {path}: {exc}")
         return None
@@ -617,9 +475,9 @@ def _read_package_csv(path: Path, *, errors: list[str]) -> pd.DataFrame | None:
 
 
 def _write_disk_cache(df: pd.DataFrame, path: Path) -> None:
-    """Persist a freshly-fetched payload. Best-effort; failures are swallowed."""
+    """Persist a freshly-fetched payload as JSON. Best-effort; failures swallowed."""
     try:
-        df.to_parquet(path, index=False)
+        path.write_text(df.to_json(orient="records"), encoding="utf-8")
     except Exception as exc:  # noqa: BLE001
         logger.debug("snapshot disk cache write failed at %s: %s", path, exc)
 
@@ -627,14 +485,7 @@ def _write_disk_cache(df: pd.DataFrame, path: Path) -> None:
 def _write_montages_sidecar(
     montages: Mapping[str, Mapping[str, Any]], path: Path
 ) -> None:
-    """Persist the parsed montages dict. Best-effort.
-
-    Sibling to :func:`_write_disk_cache` — writes a small JSON file
-    next to the parquet so a subsequent ``cached`` resolution still
-    has montages to serve. An empty dict is written when no montages
-    came through; that's expected when the server responds without
-    ``?include=montages`` support.
-    """
+    """Persist the parsed montages dict as JSON. Best-effort."""
     try:
         path.write_text(
             json.dumps(dict(montages), sort_keys=True, ensure_ascii=False),
@@ -710,12 +561,9 @@ def _build_uncached(
         errors.append("summary returned 0 datasets")
 
     # 2. Disk cache fallback (skipped when force_refresh=True, but only
-    # after the live attempt above — that's the contract callers expect).
-    #
-    # When we reach a fallback path the live API was unreachable for
-    # this build, so the server's ``/build-manifest`` is by definition
-    # not relevant: we are explicitly serving stale or shipped data and
-    # the local projection truthfully says so (``source != "live"``).
+    # after the live attempt above). On any fallback path the live API was
+    # unreachable, so ``/build-manifest`` is skipped and the local
+    # projection truthfully reports ``source != "live"``.
     if not force_refresh:
         disk_path = _disk_cache_path(database)
         cached_rows = _read_disk_cache(disk_path, errors=errors)
@@ -772,11 +620,9 @@ def _live_snapshot(
 ) -> "DatasetSnapshot":
     """Build a ``source="live"`` snapshot.
 
-    After rows have loaded successfully we ALSO hit the server's
-    ``/build-manifest`` endpoint and surface its response verbatim on
-    :attr:`DatasetSnapshot.manifest`. The local re-projection is only
-    used as a fallback when the manifest endpoint is missing or
-    erroring (offline build, old server deployment, transient 5xx).
+    Also hits ``/build-manifest`` and surfaces its response verbatim on
+    :attr:`DatasetSnapshot.manifest`; the local projection is the
+    fallback when that endpoint is missing or erroring.
     """
     fetched_at = _utcnow()
     dataset_count = len(rows)
@@ -785,12 +631,9 @@ def _live_snapshot(
         api_base=api_base, database=database, errors=errors
     )
     if server_manifest is not None:
-        # Mismatch detection — if the server's reported dataset_count
-        # disagrees with the rows we just loaded, surface the divergence
-        # on ``api_errors`` so the B2 CI gate can refuse to publish.
-        # Don't crash: a benign skew is possible during an ingestion
-        # window (server has finished a batch but the chart-data shard
-        # hasn't caught up, or vice-versa).
+        # If the server's dataset_count disagrees with the rows we loaded,
+        # surface the divergence on ``api_errors`` (a benign ingestion-window
+        # skew is possible) rather than crashing.
         server_count = server_manifest.get("dataset_count")
         if isinstance(server_count, int) and server_count != dataset_count:
             errors.append(
@@ -811,11 +654,8 @@ def _live_snapshot(
         montages=montages,
         source="live",
         fetched_at=fetched_at,
-        # Keep any partial errors collected before success — e.g. a
-        # chart-data 404 followed by a successful summary call records
-        # the 404 as context, not as a failure. The same convention
-        # applies to a missing ``/build-manifest`` endpoint: it's a
-        # warning but not a build failure.
+        # Keep partial errors collected before success (e.g. a chart-data
+        # 404 before a successful summary) as context, not failure.
         api_errors=list(errors),
         manifest=manifest,
     )
@@ -830,26 +670,9 @@ def _try_fetch_build_manifest(
 ) -> dict[str, Any] | None:
     """Fetch the server's ``/build-manifest`` JSON, or ``None`` on failure.
 
-    The endpoint is treated as best-effort: any failure (timeout, 404,
-    JSON decode error, transport-level exception) returns ``None`` and
-    appends the error text to ``errors`` (when provided) so the caller
-    can decide whether to surface it via :attr:`DatasetSnapshot.api_errors`.
-
-    Parameters
-    ----------
-    api_base : str
-        Base URL of the EEGDash server, *without* a trailing slash.
-    database : str
-        Database / shard name.
-    timeout : float
-        Request timeout in seconds. Shorter than the rows-fetch
-        timeout because the docs build should not be held up by a
-        ``/build-manifest`` outage — the local projection is fine as
-        fallback.
-    errors : list[str] | None
-        Optional list to append error strings to. Caller decides
-        whether to attach these to ``snapshot.api_errors``.
-
+    Best-effort: any failure returns ``None`` and appends the error text
+    to ``errors`` (when provided). Short timeout so a manifest outage
+    can't stall the docs build.
     """
     url = f"{api_base}/{database}/build-manifest"
     try:
@@ -869,14 +692,9 @@ def _try_fetch_build_manifest(
 def _local_manifest_projection(
     *, source: Source, dataset_count: int, fetched_at: datetime
 ) -> dict[str, Any]:
-    """Locally-projected manifest dict — only used when the server is unreachable.
+    """Locally-projected manifest dict, used when the server is unreachable.
 
-    The preferred manifest source is the server's ``/build-manifest``
-    response (see :func:`_try_fetch_build_manifest`). This projection
-    exists so that :attr:`DatasetSnapshot.manifest` is never ``None``:
-    when the live API isn't reached (offline build, disk-cache
-    fallback, package-CSV fallback) or when ``/build-manifest`` itself
-    fails, we surface what we already know.
+    Keeps :attr:`DatasetSnapshot.manifest` from ever being ``None``.
     """
     return {
         "source": source,
@@ -895,11 +713,7 @@ def _mtime(path: Path) -> datetime:
 
 
 def _log_provenance(snapshot: "DatasetSnapshot") -> None:
-    """Emit the I8 invariant line.
-
-    Format is contractual — ``docs_pipeline_validation_plan.md`` §2
-    grep's the build log for exactly this shape.
-    """
+    """Emit the provenance line (format is grepped by CI; do not change)."""
     logger.info(
         "DatasetSnapshot source=%s dataset_count=%d fetched_at=%s",
         snapshot.source,
@@ -910,20 +724,7 @@ def _log_provenance(snapshot: "DatasetSnapshot") -> None:
 
 # ---------------------------------------------------------------------------
 # Row mappers
-#
-# These were lifted intact from ``eegdash.dataset.registry`` so the
-# legacy compatibility shims see byte-identical DataFrame shapes. Any
-# evolution of the catalog schema goes here, not in the (deprecated)
-# shims.
 # ---------------------------------------------------------------------------
-
-
-# ``EXCLUDED_DATASETS`` is imported at the top of this module from
-# :mod:`eegdash.dataset._excluded`. Both this module and
-# :mod:`eegdash.dataset.registry` read from that single source of
-# truth — a B1-era snapshot-local copy had silently drifted 16 entries
-# away from the registry's curated list and become the only filter
-# effectively running in the docs build.
 
 
 def _human_readable_size(num_bytes: int | float | None) -> str:
@@ -943,9 +744,7 @@ def _normalize_tag_value(val: Any) -> str:
     return val or ""
 
 
-# Pretty modality label used in the per-page caption. Lifted from the
-# retired ``docs/build_electrode_layouts.py`` so the rendered ``label``
-# string is byte-identical to the legacy JSON output.
+# Pretty modality label used in the per-page caption.
 _MONTAGE_MODALITY_LABEL = {
     "eeg": "EEG",
     "ieeg": "iEEG",
@@ -956,15 +755,10 @@ _MONTAGE_MODALITY_LABEL = {
 
 
 def _project_montage(montage: Mapping[str, Any]) -> dict[str, Any]:
-    """Project a server montage payload into the viewer-friendly dict.
+    """Project a server montage into the viewer-friendly dict.
 
-    Output shape — superset of the registry doc to keep both the
-    server fields (``hash``, ``modality``, ``n_sensors``,
-    ``channel_names``, ``space_declared``, ``units_declared``,
-    ``subject_count``) AND the legacy ``electrode-layouts.json`` keys
-    (``label``, ``n_channels``, ``montage_id``). The duplication is
-    cheap (~40 bytes per dataset) and keeps the dataset_page consumer
-    a no-op rename.
+    Superset of the server fields plus the legacy ``electrode-layouts``
+    aliases (``label``, ``n_channels``, ``montage_id``).
     """
     modality = str(montage.get("modality") or "").strip().lower()
     n_sensors = int(montage.get("n_sensors") or 0)
@@ -992,26 +786,20 @@ def _project_montage(montage: Mapping[str, Any]) -> dict[str, Any]:
 def _montages_from_chart_data(
     datasets: list[dict[str, Any]],
 ) -> dict[str, dict[str, Any]]:
-    """Pull the ``datasets[i].montage`` field into a ``{id: dict}`` map.
+    """Pull ``datasets[i].montage`` into a ``{lowercased id: dict}`` map.
 
-    Keyed by lowercased ``dataset_id`` because the docs consumer
-    lowercases before lookup. Datasets without a top montage (server
-    returned ``null`` or omitted the field) are silently skipped, so a
-    missing key in this dict has the same meaning as the legacy
-    ``electrode-layouts.json``: "no scalp electrode layout currently
-    indexed for this dataset".
+    Datasets without a usable top montage are silently skipped.
     """
     montages: dict[str, dict[str, Any]] = {}
     for ds in datasets:
         ds_id = str(ds.get("dataset_id") or "").strip().lower()
-        if not ds_id or ds_id.upper() in EXCLUDED_DATASETS:
+        if not ds_id:
             continue
         montage = ds.get("montage")
         if not isinstance(montage, dict) or not montage:
             continue
-        # Defensive: a future server version could emit only the hash
-        # without the joined registry doc. Require at least one
-        # informative field before we surface it.
+        # Require at least one informative field; a future server could
+        # emit only the hash without the joined registry doc.
         if not (montage.get("hash") or montage.get("n_sensors")):
             continue
         montages[ds_id] = _project_montage(montage)
@@ -1021,18 +809,11 @@ def _montages_from_chart_data(
 def _rows_from_chart_data(datasets: list[dict[str, Any]]) -> pd.DataFrame:
     """Map the chart-data response shape into the canonical DataFrame.
 
-    Mirrors the legacy ``fetch_chart_data_from_api`` implementation
-    exactly — same columns, same exclusions, same fallback rules — so
-    existing consumers see no schema drift during the migration.
+    Mirrors the legacy ``fetch_chart_data_from_api`` columns exactly.
     """
-    # Lazy import to avoid a circular ``registry`` ↔ ``snapshot`` cycle.
-    from .registry import _resolve_author_year  # noqa: PLC0415
-
     rows: list[dict[str, Any]] = []
     for ds in datasets:
         ds_id = ds.get("dataset_id", "").strip()
-        if ds_id.upper() in EXCLUDED_DATASETS:
-            continue
 
         demographics = ds.get("demographics") or {}
         tags = ds.get("tags") or {}
@@ -1111,18 +892,9 @@ def _rows_from_summary(datasets: list[dict[str, Any]]) -> pd.DataFrame:
     Same column set as the chart-data path so consumers see one
     canonical schema regardless of which endpoint produced the data.
     """
-    from .registry import _resolve_author_year  # noqa: PLC0415
-
     rows: list[dict[str, Any]] = []
     for ds in datasets:
         ds_id = ds.get("dataset_id", "").strip()
-        # Filter test datasets and excluded ones (mirror legacy
-        # fetch_datasets_from_api semantics).
-        if (
-            ds_id.lower() in ("test", "test_dataset")
-            or ds_id.upper() in EXCLUDED_DATASETS
-        ):
-            continue
 
         nchans_list = ds.get("nchans_counts") or []
         sfreq_list = ds.get("sfreq_counts") or []
@@ -1206,13 +978,7 @@ def _rows_from_summary(datasets: list[dict[str, Any]]) -> pd.DataFrame:
 
 
 def _reset_instance_cache_for_testing() -> None:
-    """Wipe the process-wide snapshot cache.
-
-    Called from pytest fixtures and the legacy compatibility shims when
-    the docs build asks for a force-refresh. Not part of the public
-    API, but lives in this module so tests don't have to monkeypatch
-    a private name from outside the package.
-    """
+    """Wipe the process-wide snapshot cache (used by tests / force-refresh)."""
     with _INSTANCE_CACHE_LOCK:
         _INSTANCE_CACHE.clear()
 

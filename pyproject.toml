@@ -65,7 +65,6 @@ dependencies = [
   # install stays lean.
   "nemar-py>=0.2.0",
   "pandas",
-  "pyarrow",
   "pydantic",
   "pymatreader",
   "requests>=2.25.0",

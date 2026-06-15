@@ -209,8 +209,13 @@ def test_registry_docstring_generation():
     assert "https://doi.org/10.1000/1" in doc
 
 
-def test_registry_exclude_datasets():
-    """Test that excluded datasets are skipped by fetch_datasets_from_api."""
+def test_registry_registers_all_datasets_no_denylist():
+    """Every dataset the API returns is registered — the denylist was removed.
+
+    The ``EXCLUDED_DATASETS`` filter (and the ``test``/``test_dataset``
+    id guard) was intentionally dropped; ingestion + the live API are
+    now trusted, so no id is filtered out at registration time.
+    """
     import json
     from unittest.mock import MagicMock, patch
 
@@ -219,8 +224,8 @@ def test_registry_exclude_datasets():
     mock_data = {
         "success": True,
         "data": [
-            {"dataset_id": "ABUDUKADI"},  # Excluded
-            {"dataset_id": "test"},  # Excluded
+            {"dataset_id": "ABUDUKADI"},  # formerly excluded, now kept
+            {"dataset_id": "test"},  # formerly excluded, now kept
             {"dataset_id": "valid"},
         ],
     }
@@ -242,8 +247,8 @@ def test_registry_exclude_datasets():
         register_openneuro_datasets(from_api=True, namespace=namespace)
 
         assert "VALID" in namespace
-        assert "ABUDUKADI" not in namespace
-        assert "TEST" not in namespace
+        assert "ABUDUKADI" in namespace
+        assert "TEST" in namespace
 
 
 def test_registry_make_init_closure(tmp_path):
@@ -487,9 +492,7 @@ def test_fetch_chart_data_success_maps_rows_and_aggregations():
     payload = {
         "success": True,
         "datasets": [
-            # excluded
-            {"dataset_id": "ABUDUKADI"},
-            # included with fallback branches
+            # exercises the fallback branches
             {
                 "dataset_id": "ds_chart_1",
                 "name": "Chart Dataset",
@@ -543,7 +546,7 @@ def test_fetch_chart_data_success_maps_rows_and_aggregations():
 
         df, aggregations = fetch_chart_data_from_api("https://api.test.com", "db")
 
-    # One excluded dataset must be filtered out
+    # No denylist filtering — both datasets in the payload map through.
     assert len(df) == 2
     assert aggregations == {"n_datasets": 2}
 

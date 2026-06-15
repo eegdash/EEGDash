@@ -9,6 +9,7 @@ from typing import Any, Dict
 import pandas as pd
 
 from ..paths import get_default_cache_dir  # noqa: F401 — re-exported for legacy mocks
+from .snapshot import DatasetSnapshot, _resolve_author_year
 
 logger = logging.getLogger(__name__)
 
@@ -18,32 +19,6 @@ logger = logging.getLogger(__name__)
 NAME_SOURCE_CANONICAL = "canonical"
 NAME_SOURCE_AUTHOR_YEAR = "author_year"
 NAME_SOURCE_NONE = "none"
-
-
-def _resolve_author_year(
-    *,
-    name_source: str,
-    raw_aliases: list[str] | None,
-    explicit: object = None,
-) -> str | None:
-    """Pick a single ``FirstAuthorSurnameYear`` from catalog metadata.
-
-    Prefers an explicit ``author_year`` column value when present;
-    otherwise falls back to the first alias when the LLM output marked
-    the entry as ``name_source == "author_year"`` (legacy layout).
-    Returns ``None`` when neither yields a usable string.
-    """
-    explicit_str = str(explicit).strip() if explicit else ""
-    if explicit_str:
-        return explicit_str
-    if (
-        name_source
-        and name_source.strip().lower() == NAME_SOURCE_AUTHOR_YEAR
-        and raw_aliases
-    ):
-        first = str(raw_aliases[0]).strip()
-        return first or None
-    return None
 
 
 def _is_valid_alias(name: str) -> bool:
@@ -200,13 +175,8 @@ def register_openneuro_datasets(
     df = pd.DataFrame()
     if from_api:
         try:
-            from .snapshot import DatasetSnapshot  # noqa: PLC0415
-
             snapshot = DatasetSnapshot.build(api_base=api_url, database=database)
-            # Mirror the pre-B1 contract for this caller: when every
-            # fallback bottomed out at the package CSV, fall through to
-            # the explicit ``summary_file`` branch below rather than
-            # double-loading the same data via two paths.
+            # Skip the package-CSV fallback; the summary_file branch handles it.
             if snapshot.source != "package-csv":
                 df = snapshot.rows()
         except Exception:
@@ -546,34 +516,15 @@ def fetch_datasets_from_api(
 ) -> pd.DataFrame:
     """Fetch dataset summaries from API and return as DataFrame.
 
-    .. deprecated::
-       Compatibility shim over :class:`eegdash.dataset.snapshot.DatasetSnapshot`.
-       New consumers should call ``DatasetSnapshot.build(...).rows()``
-       directly; that surface exposes provenance (``source``,
-       ``fetched_at``, ``api_errors``) which this function discards.
-
-    Parameters
-    ----------
-    api_url : str
-        Base API URL.
-    database : str
-        Database name.
-    force_refresh : bool
-        If True, bypass the local cache and always re-fetch.
+    .. deprecated:: Shim over :class:`DatasetSnapshot`; new code should use
+       ``DatasetSnapshot.build(...)``.
 
     Returns
     -------
     pandas.DataFrame
-        Same column layout as before. Empty when the live API call
-        failed and no disk cache was available — preserves the
-        pre-B1 legacy contract of "silent empty on failure" for
-        callers that haven't migrated to :class:`DatasetSnapshot`.
-        New code should call :meth:`DatasetSnapshot.build` directly and
-        inspect ``source`` / ``api_errors`` to tell apart failure modes.
+        Empty on full failure (pre-B1 silent-empty contract).
 
     """
-    from .snapshot import DatasetSnapshot  # noqa: PLC0415 — break import cycle
-
     snapshot = DatasetSnapshot.build(
         api_base=api_url, database=database, force_refresh=force_refresh
     )
@@ -603,33 +554,15 @@ def fetch_chart_data_from_api(
 ) -> tuple[pd.DataFrame, dict[str, Any]]:
     """Fetch pre-aggregated chart data from API.
 
-    .. deprecated::
-       Compatibility shim over :class:`eegdash.dataset.snapshot.DatasetSnapshot`.
-       New consumers should call ``DatasetSnapshot.build(...)`` and read
-       ``.rows()`` / ``.aggregations()`` from it; that surface also exposes
-       provenance (``source``, ``fetched_at``, ``api_errors``) which this
-       2-tuple discards.
-
-    Parameters
-    ----------
-    api_url : str
-        Base API URL.
-    database : str
-        Database name.
-    limit : int
-        Maximum datasets to fetch.
+    .. deprecated:: Shim over :class:`DatasetSnapshot`; new code should use
+       ``DatasetSnapshot.build(...)``.
 
     Returns
     -------
     tuple[pandas.DataFrame, dict]
-        Rows and server-side aggregations. The aggregations dict is empty
-        when the data arrived through a fallback path. Preserves the
-        pre-B1 legacy contract of empty 2-tuple on full failure; new
-        code should consume :class:`DatasetSnapshot` directly.
+        Rows and aggregations; empty 2-tuple on full failure (pre-B1 contract).
 
     """
-    from .snapshot import DatasetSnapshot  # noqa: PLC0415 — break import cycle
-
     snapshot = DatasetSnapshot.build(api_base=api_url, database=database, limit=limit)
     if snapshot.source == "package-csv":
         return pd.DataFrame(), {}

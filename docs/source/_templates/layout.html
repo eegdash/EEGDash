@@ -144,8 +144,9 @@
   <script>document.documentElement.classList.add('editorial-dataset');</script>
   {%- endif %}
 
-  <!-- Google Analytics 4 (gtag.js) — direct install for the EEGDash
-       property G-CHY0V439ZQ. This replaces the previous Google Tag
+  <!-- Google Analytics 4 + Google Ads (gtag.js) — direct install for the
+       EEGDash GA4 property G-CHY0V439ZQ and the Google Ads tag AW-1000742183.
+       This replaces the previous Google Tag
        Manager container (GTM-MXC3DGL6), which shipped NO GA4
        configuration tag and therefore collected nothing, and whose
        shared-container pattern risked cross-wiring eegdash traffic with
@@ -156,6 +157,10 @@
   <script>
     (function(){
       var GA4_ID = 'G-CHY0V439ZQ';
+      // Google Ads tag (AW-1000742183, provided by Arnaud Delorme). Rides the
+      // single gtag.js instance loaded for GA4 below — one library fetch, two
+      // gtag('config') calls — rather than loading gtag.js a second time.
+      var ADS_ID = 'AW-1000742183';
       function loadGA4(){
         if (window.__ga4Loaded) return;
         window.__ga4Loaded = true;
@@ -168,6 +173,7 @@
         window.gtag = gtag;
         gtag('js', new Date());
         gtag('config', GA4_ID);
+        gtag('config', ADS_ID);
       }
       // Defer GA4 off the critical path. requestIdleCallback wants an
       // IdleRequestOptions object as its second argument while

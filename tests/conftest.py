@@ -35,8 +35,8 @@ def _reset_dataset_snapshot_cache(tmp_path_factory):
     """Isolate the snapshot module's in-memory and on-disk caches per test.
 
     Mirrors the autouse fixture in ``tests/unit_tests/dataset/conftest.py``
-    so tests at the ``tests/`` root (``test_dataset_snapshot.py``,
-    ``test_nemar_client.py``, etc.) get the same isolation. Without this,
+    so tests at the ``tests/`` root (``test_nemar_client.py``, etc.) get
+    the same isolation. Without this,
     CI environments where ``get_default_cache_dir()`` resolves to a
     read-only or test-run-shared path produce flaky failures: the
     "primed → fetch fails → expect source=='cached'" tests instead see

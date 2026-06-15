@@ -19,7 +19,12 @@ import sys
 from pathlib import Path
 from typing import Any
 
-from _parser_utils import is_broken_symlink, read_with_encoding_fallback
+from _parser_utils import (
+    is_broken_symlink,
+    path_is_within_root,
+    read_with_encoding_fallback,
+)
+from _sizing import data_file_size
 
 # Add eegdash to path if not already importable
 _project_root = Path(__file__).parent.parent.parent
@@ -29,6 +34,49 @@ if str(_project_root) not in sys.path:
 from eegdash.dataset.io import _find_best_matching_file
 
 logger = logging.getLogger(__name__)
+
+# BrainVision BinaryFormat -> bytes per sample (multiplexed/vectorized binary).
+_VHDR_BINARY_FORMAT_BYTES: dict[str, int] = {
+    "INT_16": 2,
+    "UINT_16": 2,
+    "INT_32": 4,
+    "UINT_32": 4,
+    "IEEE_FLOAT_32": 4,
+    "IEEE_FLOAT_64": 8,
+}
+
+
+def _vhdr_n_times(content: str, vhdr_path: Path, nchans: int | None) -> int | None:
+    """Cheap n_times for BrainVision — authoritative ``.eeg`` file-size arithmetic.
+
+    ``n_times = datafile_bytes // (nchans * dtype_bytes)``. This mirrors how MNE
+    computes n_times for binary BrainVision: it **recomputes from the file size and
+    ignores the header ``DataPoints``** (which exporters write inconsistently as
+    per-channel or total-across-channels). The size comes from
+    :func:`_sizing.data_file_size`, which uses the git-annex key on a shallow clone
+    — zero signal bytes fetched.
+
+    ``DataPoints`` is deliberately NOT used as a standalone value: an exporter that
+    writes it as total-across-channels would yield an ``nchans``x-inflated count,
+    and a confidently-wrong value must never ship. Returns ``None`` when the binary
+    size is unavailable or does not divide evenly (e.g. a truncated stub).
+    """
+    fmt = re.search(
+        r"^\s*BinaryFormat\s*=\s*(\w+)", content, re.MULTILINE | re.IGNORECASE
+    )
+    dtype_bytes = _VHDR_BINARY_FORMAT_BYTES.get(fmt.group(1).upper()) if fmt else None
+    if not dtype_bytes or not nchans:
+        return None
+
+    refs = extract_vhdr_references(vhdr_path)
+    datafile = refs.get("datafile") or vhdr_path.with_suffix(".eeg").name
+    size = data_file_size(vhdr_path.parent / datafile)
+    if not size or size % dtype_bytes != 0:
+        return None
+    total_samples = size // dtype_bytes
+    if total_samples % nchans != 0:
+        return None
+    return total_samples // nchans
 
 
 def parse_vhdr_metadata(vhdr_path: Path | str) -> dict[str, Any] | None:
@@ -146,6 +194,11 @@ def parse_vhdr_metadata(vhdr_path: Path | str) -> dict[str, Any] | None:
         if "nchans" not in result:
             result["nchans"] = len(ch_names)
 
+    # Cheap n_times: DataPoints / file-size arithmetic (no signal read).
+    n_times = _vhdr_n_times(content, vhdr_path, result.get("nchans"))
+    if n_times is not None and n_times > 0:
+        result["n_times"] = n_times
+
     # Return None if we couldn't extract any useful metadata
     if not result:
         return None
@@ -184,7 +237,11 @@ def extract_vhdr_references(vhdr_path: Path | str) -> dict[str, str | None]:
     if content is None:
         return result
 
-    # Extract DataFile reference
+    # Extract DataFile reference. Path-traversal hardening: a malicious
+    # .vhdr could set DataFile=../../../etc/passwd. We accept
+    # the field but only mark *_exists=True if the resolved sibling
+    # stays inside the .vhdr's parent directory.
+    parent_dir = vhdr_path.parent
     datafile_match = re.search(
         r"^\s*DataFile\s*=\s*(.+?)\s*$",
         content,
@@ -192,10 +249,12 @@ def extract_vhdr_references(vhdr_path: Path | str) -> dict[str, str | None]:
     )
     if datafile_match:
         result["datafile"] = datafile_match.group(1).strip()
-        data_path = vhdr_path.parent / result["datafile"]
-        result["datafile_exists"] = data_path.exists()
+        data_path = parent_dir / result["datafile"]
+        result["datafile_exists"] = (
+            path_is_within_root(data_path, parent_dir) and data_path.exists()
+        )
 
-    # Extract MarkerFile reference
+    # Extract MarkerFile reference (same containment check)
     markerfile_match = re.search(
         r"^\s*MarkerFile\s*=\s*(.+?)\s*$",
         content,
@@ -203,8 +262,10 @@ def extract_vhdr_references(vhdr_path: Path | str) -> dict[str, str | None]:
     )
     if markerfile_match:
         result["markerfile"] = markerfile_match.group(1).strip()
-        marker_path = vhdr_path.parent / result["markerfile"]
-        result["markerfile_exists"] = marker_path.exists()
+        marker_path = parent_dir / result["markerfile"]
+        result["markerfile_exists"] = (
+            path_is_within_root(marker_path, parent_dir) and marker_path.exists()
+        )
 
     return result
 

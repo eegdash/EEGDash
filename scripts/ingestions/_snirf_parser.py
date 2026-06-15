@@ -8,17 +8,30 @@ Reference: https://github.com/fNIRS/snirf
 
 from __future__ import annotations
 
+import logging
 from pathlib import Path
 from typing import Any
 
+try:
+    import h5py
+except ImportError:  # pragma: no cover - optional dependency
+    h5py = None  # type: ignore[assignment]
+
+try:
+    from mne.io import read_raw_snirf
+except ImportError:  # pragma: no cover - optional dependency
+    read_raw_snirf = None  # type: ignore[assignment]
+
 from _parser_utils import validate_file_path
+
+logger = logging.getLogger(__name__)
 
 
 def parse_snirf_metadata(snirf_path: Path | str) -> dict[str, Any] | None:
     """Parse metadata from SNIRF file using MNE.
 
-    Extracts sampling frequency, number of channels, and channel names
-    from a SNIRF file.
+    Extracts sampling frequency, number of channels, channel names,
+    and recording length from a SNIRF file.
 
     Parameters
     ----------
@@ -32,8 +45,16 @@ def parse_snirf_metadata(snirf_path: Path | str) -> dict[str, Any] | None:
         - sampling_frequency: float (in Hz)
         - nchans: int
         - ch_names: list[str]
+        - n_times: int (sample count along the time axis)
         Returns None if file cannot be parsed.
 
+    Notes
+    -----
+     (C5.1 pattern): ``n_times`` was added after
+    a real OpenNeuro fixture (ds007554) surfaced the gap. The synthetic
+    h5py fixture validated the parser against itself; the real one
+    revealed that ``raw.n_times`` (MNE) / ``len(time)`` (h5py fallback)
+    were never read.
     """
     snirf_path = Path(snirf_path)
 
@@ -41,9 +62,10 @@ def parse_snirf_metadata(snirf_path: Path | str) -> dict[str, Any] | None:
     if not validate_file_path(snirf_path):
         return None
 
-    try:
-        from mne.io import read_raw_snirf  # noqa: PLC0415 (optional dependency)
+    if read_raw_snirf is None:
+        return _parse_snirf_with_h5py(snirf_path)
 
+    try:
         # Read SNIRF file with MNE (preload=False to avoid loading data)
         raw = read_raw_snirf(str(snirf_path), preload=False, verbose=False)
         try:
@@ -58,7 +80,15 @@ def parse_snirf_metadata(snirf_path: Path | str) -> dict[str, Any] | None:
             ch_names = raw.info.get("ch_names")
             if ch_names:
                 result["ch_names"] = list(ch_names)
-                result["nchans"] = int(len(ch_names))
+                result["nchans"] = len(ch_names)
+
+            # Extract recording length.
+            # ``raw.n_times`` is always populated on a successfully-read
+            # MNE Raw — but defensive-guard against subclasses where it
+            # could be 0 or missing (e.g. truncated SNIRF stubs).
+            n_times = getattr(raw, "n_times", None)
+            if n_times and n_times > 0:
+                result["n_times"] = int(n_times)
 
             if not result:
                 return None
@@ -67,15 +97,102 @@ def parse_snirf_metadata(snirf_path: Path | str) -> dict[str, Any] | None:
         finally:
             try:
                 raw.close()
-            except Exception:
+            except (OSError, AttributeError):
+                # OSError from already-closed file; AttributeError if `raw`
+                # wasn't a real MNE object (unlikely but defensive).
                 pass
 
-    except ImportError:
-        # MNE not available, try fallback h5py parser
+    except (OSError, ValueError, KeyError, RuntimeError) as e:
+        # MNE's SNIRF reader raises RuntimeError on unsupported variants,
+        # OSError on file-system issues, ValueError on schema mismatch,
+        # KeyError on missing fields. All recoverable; the h5py fallback
+        # catches a different subset, so retrying via the fallback is
+        # cheap and worth doing.
+        logger.debug("MNE SNIRF parse failed for %s: %s — trying h5py", snirf_path, e)
         return _parse_snirf_with_h5py(snirf_path)
-    except Exception:
-        # MNE failed, try fallback
-        return _parse_snirf_with_h5py(snirf_path)
+
+
+def snirf_n_times_from_fileobj(fileobj: Any) -> int | None:
+    """Read the SNIRF time-axis length from a seekable file-like object.
+
+    Remote-ready counterpart to the path-based discovery in
+    :func:`_parse_snirf_with_h5py`: it opens ``fileobj`` with h5py,
+    navigates the first ``nirs*`` group then the first ``data*`` subgroup,
+    and returns ``dataTimeSeries.shape[0]`` (preferred) or, when absent,
+    the ``time`` dataset's ``.shape[0]``. Only HDF5 metadata is read —
+    ``.shape`` fetches ZERO signal elements — so an HDF5-over-Range
+    file-like (e.g. ``_remote_header.RangeReader``) stays within budget.
+
+    Parameters
+    ----------
+    fileobj : Any
+        Any seekable, read-only file-like (``read``/``seek``/``tell``),
+        such as a :class:`_remote_header.RangeReader` or
+        :class:`io.BytesIO`.
+
+    Returns
+    -------
+    int | None
+        The time-axis length, or ``None`` on any failure (never raises).
+
+    """
+    if h5py is None:
+        return None
+
+    h5 = None
+    try:
+        h5 = h5py.File(fileobj, "r")
+
+        # First group whose name starts with "nirs".
+        nirs_group = None
+        for key in h5.keys():
+            if key.startswith("nirs"):
+                nirs_group = h5[key]
+                break
+        if nirs_group is None:
+            return None
+
+        # First subgroup whose name starts with "data".
+        data_group = None
+        for data_key in nirs_group.keys():
+            if data_key.startswith("data"):
+                data_group = nirs_group[data_key]
+                break
+        if data_group is None:
+            return None
+
+        # Preferred: dataTimeSeries.shape[0]. ``.shape`` is HDF5 metadata —
+        # reads zero signal elements.
+        if "dataTimeSeries" in data_group:
+            shape = data_group["dataTimeSeries"].shape
+            if shape:
+                n = int(shape[0])
+                if n > 0:
+                    return n
+
+        # Fallback: the /time dataset length.
+        if "time" in data_group:
+            shape = data_group["time"].shape
+            if shape:
+                n = int(shape[0])
+                if n > 0:
+                    return n
+
+        return None
+
+    except (OSError, ValueError, KeyError, AttributeError, TypeError) as e:
+        # OSError = not a valid HDF5 / unreadable stream; KeyError =
+        # expected dataset missing; ValueError/AttributeError/TypeError =
+        # unexpected shape or a file-like that h5py can't drive. All are
+        # recoverable parse failures → None.
+        logger.debug("h5py SNIRF file-like parse failed: %s", e)
+        return None
+    finally:
+        if h5 is not None:
+            try:
+                h5.close()
+            except (OSError, AttributeError):
+                pass
 
 
 def _parse_snirf_with_h5py(snirf_path: Path) -> dict[str, Any] | None:
@@ -92,9 +209,7 @@ def _parse_snirf_with_h5py(snirf_path: Path) -> dict[str, Any] | None:
         Parsed metadata or None.
 
     """
-    try:
-        import h5py  # noqa: PLC0415 (optional dependency)
-    except ImportError:
+    if h5py is None:
         return None
 
     result: dict[str, Any] = {}
@@ -111,14 +226,23 @@ def _parse_snirf_with_h5py(snirf_path: Path) -> dict[str, Any] | None:
             if nirs_group is None:
                 return None
 
-            # Extract sampling frequency from time vector
+            # Extract sampling frequency from time vector. Also record
+            # ``n_times`` — the
+            # time vector length IS the sample count along the time axis.
             for data_key in nirs_group.keys():
                 if data_key.startswith("data"):
                     data_group = nirs_group[data_key]
                     if "time" in data_group:
-                        time_data = data_group["time"][:]
-                        if len(time_data) > 1:
-                            dt = float(time_data[1] - time_data[0])
+                        time_ds = data_group["time"]
+                        # ``.shape`` is HDF5 metadata — reads ZERO elements,
+                        # unlike the previous ``[:]`` which loaded the whole vector.
+                        n_time_points = int(time_ds.shape[0]) if time_ds.shape else 0
+                        if n_time_points > 0:
+                            result["n_times"] = n_time_points
+                        if n_time_points > 1:
+                            # Only the first two samples are needed for the rate.
+                            first_two = time_ds[:2]
+                            dt = float(first_two[1] - first_two[0])
                             if dt > 0:
                                 result["sampling_frequency"] = float(1.0 / dt)
                     break
@@ -176,7 +300,11 @@ def _parse_snirf_with_h5py(snirf_path: Path) -> dict[str, Any] | None:
             if ch_names:
                 result["ch_names"] = ch_names
 
-    except Exception:
+    except (OSError, ValueError, KeyError, AttributeError) as e:
+        # OSError = not a valid HDF5; KeyError = expected dataset path
+        # missing (different SNIRF version); ValueError/AttributeError =
+        # unexpected element shape. All are recoverable parse failures.
+        logger.debug("h5py SNIRF parse failed for %s: %s", snirf_path, e)
         return None
 
     if not result:

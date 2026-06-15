@@ -134,9 +134,7 @@ def test_dataset_gaps(tmp_path):
         ds.cache_dir = tmp_path
         ds.eeg_dash_instance = MagicMock()
         ds._normalize_records = lambda x: x
-        ds._find_key_in_nested_dict = EEGDashDataset._find_key_in_nested_dict.__get__(
-            ds
-        )
+        ds._description_precedence = "record"
 
         # 514: Trigger v2 format validation error
         invalid_record = {"data_name": "bad_rec"}
@@ -153,9 +151,7 @@ def test_dataset_gaps(tmp_path):
         valid_record = {"dataset": "ds001", "participant_tsv": {"age": 25}}
         ds.eeg_dash_instance.find.return_value = [valid_record]
         with patch("eegdash.dataset.dataset.validate_record", return_value=[]):
-            with patch(
-                "eegdash.dataset.dataset.merge_participants_fields"
-            ) as mock_merge:
+            with patch("eegdash.bids_metadata.merge_participants_fields") as mock_merge:
                 with patch("eegdash.dataset.dataset.EEGDashRaw"):
                     EEGDashDataset._find_datasets(
                         ds, query={}, description_fields=[], base_dataset_kwargs={}
@@ -171,19 +167,11 @@ def test_datasets_init_gap():
     # We can just try to instantiate with minimum args
     # Patching the CLASS method
     with patch(
-        "eegdash.dataset.dataset.EEGDashDataset._find_datasets", return_value=[]
+        "eegdash.dataset.dataset.EEGDashDataset._find_datasets",
+        return_value=[MagicMock()],
     ):
-        # But wait, if it returns empty list, init might raise "No datasets found"
-        # We need to see code.
-        # If I look above, standard logic is: datasets = self._find_datasets... if not datasets: raise ValueError
-        # So we must return a non-empty list
-        with patch(
-            "eegdash.dataset.dataset.EEGDashDataset._find_datasets",
-            return_value=[MagicMock()],
-        ):
-            ds = EEGDashDataset(query={}, cache_dir=".", dataset="ds001")
-            # query is set before _find_datasets check
-            assert ds.query == {"dataset": "ds001"}
+        ds = EEGDashDataset(query={}, cache_dir=".", dataset="ds001")
+        assert ds.query == {"dataset": "ds001"}
 
 
 def test_dataset_init_exception_gap(tmp_path):
@@ -202,35 +190,25 @@ def test_dataset_init_exception_gap(tmp_path):
             {"path": "s2", "bidspath": "foo/baz", "dataset": "ds001"},
         ]
 
-        # Try patching the class in the module
         with patch("eegdash.dataset.dataset.EEGDashRaw"):
-            # Mock get_entities_from_record (plural) called in dataset.py
-            with patch(
-                "eegdash.dataset.dataset.get_entities_from_record",
-                return_value={"sub": "01"},
-            ):
-                # Mock participants_row_for_subject is NOT called directly, usage is:
-                # part_row = bids_ds.subject_participant_tsv(local_file)
-                # So we mock EEGBIDSDataset or its method?
-                # In the code: bids_ds = EEGBIDSDataset(...)
-                # We should patch EEGBIDSDataset class in dataset.py
-                with patch("eegdash.dataset.dataset.EEGBIDSDataset") as mock_bids_cls:
-                    mock_bids = mock_bids_cls.return_value
-                    mock_bids.subject_participant_tsv.return_value = {}
+            with patch("eegdash.dataset.dataset.EEGBIDSDataset") as mock_bids_cls:
+                mock_bids = mock_bids_cls.return_value
+                mock_bids.subject_participant_tsv.return_value = {}
 
-                    # Mock merge_participants_fields to raise Exception
-                    with patch(
-                        "eegdash.dataset.dataset.merge_participants_fields",
-                        side_effect=Exception("Boom"),
-                    ):
-                        ds = EEGDashDataset(
-                            cache_dir=cache,
-                            dataset="ds001",
-                            check_files=False,
-                            download=False,
-                        )
-                        # Should swallow exception and continue
-                        assert len(ds.datasets) == 2
+                # merge_participants_fields raises inside build_description's offline
+                # enrichment path; the per-record exception must be swallowed.
+                with patch(
+                    "eegdash.bids_metadata.merge_participants_fields",
+                    side_effect=Exception("Boom"),
+                ):
+                    ds = EEGDashDataset(
+                        cache_dir=cache,
+                        dataset="ds001",
+                        check_files=False,
+                        download=False,
+                    )
+                    # Should swallow exception and continue
+                    assert len(ds.datasets) == 2
 
 
 def test_dataset_init_kwargs_gap(tmp_path):
@@ -279,7 +257,7 @@ def test_cache_dir_does_not_exist_creates(tmp_path, caplog):
 
 def test_iterate_local_with_participants_exception(tmp_path):
     """Test that exception in merge_participants_fields is handled."""
-    from eegdash.dataset.dataset import merge_participants_fields
+    from eegdash.bids_metadata import merge_participants_fields
 
     # Test merge_participants_fields with None participants_row
     result = merge_participants_fields(
@@ -311,38 +289,14 @@ def test_normalize_records_with_list():
 
 
 def test_dataset_find_key_nested(tmp_path):
-    """Test _find_key_in_nested_dict recursion."""
-    from unittest.mock import patch
-
-    from eegdash.dataset.dataset import EEGDashDataset
-
-    d = tmp_path / "ds999"
-    d.mkdir()
-
-    valid_record = {
-        "dataset": "ds999",
-        "data_name": "sub-01_task-rest_eeg.set",
-        "bidspath": "ds999/sub-01/eeg/sub-01_task-rest_eeg.set",
-        "bids_relpath": "sub-01/eeg/sub-01_task-rest_eeg.set",
-        "subject": "01",
-        "task": "rest",
-        "storage": {"base": str(d), "backend": "local"},
-    }
-    # Mocking discover to return proper records so init doesn't fail
-    with patch("eegdash.dataset.dataset.discover_local_bids_records") as mock_discover:
-        mock_discover.return_value = [valid_record]
-        ds = EEGDashDataset(
-            cache_dir=str(tmp_path),
-            dataset="ds999",
-            download=False,
-            _suppress_comp_warning=True,
-        )
+    """Test find_key_in_nested_dict recursion."""
+    from eegdash.bids_metadata import find_key_in_nested_dict
 
     data = {"a": 1, "b": {"c": 2, "d": [{"e": 3}, {"f": 4}]}}
-    assert ds._find_key_in_nested_dict(data, "a") == 1
-    assert ds._find_key_in_nested_dict(data, "c") == 2
-    assert ds._find_key_in_nested_dict(data, "e") == 3
-    assert ds._find_key_in_nested_dict(data, "z") is None
+    assert find_key_in_nested_dict(data, "a") == 1
+    assert find_key_in_nested_dict(data, "c") == 2
+    assert find_key_in_nested_dict(data, "e") == 3
+    assert find_key_in_nested_dict(data, "z") is None
 
 
 def test_dataset_normalize_records_dedupe(tmp_path):
@@ -671,6 +625,41 @@ def test_dataset_download_all_njobs(tmp_path):
                 assert mock_dl.call_count == 1
 
 
+def test_dataset_download_all_includes_nemar(tmp_path):
+    """download_all must fetch NEMAR recordings.
+
+    Regression: NEMAR records carry ``_raw_uri = None`` until it is resolved
+    lazily inside ``_download_required_files`` (the BIDS-named path is a
+    git-annex symlink, not a fetchable object), so they were wrongly skipped
+    by the ``_raw_uri is None`` guard and ``download_all`` never fetched them.
+    """
+    from unittest.mock import patch
+
+    from eegdash.dataset.dataset import EEGDashDataset, EEGDashRaw
+
+    record = {
+        "dataset": "nm000999",
+        "data_name": "nm000999_sub-01_task-x_eeg.edf",
+        "bidspath": "nm000999/sub-01/eeg/sub-01_task-x_eeg.edf",
+        "bids_relpath": "sub-01/eeg/sub-01_task-x_eeg.edf",
+        "storage": {
+            "base": "s3://nemar/nm000999",
+            "backend": "nemar",
+            "raw_key": "sub-01/eeg/sub-01_task-x_eeg.edf",
+            "annex_keys": {"sub-01/eeg/sub-01_task-x_eeg.edf": "MD5E-s1--abc.edf"},
+        },
+    }
+
+    ds = EEGDashDataset(cache_dir=str(tmp_path), records=[record], download=True)
+    # Precondition: NEMAR raw URI is unset until resolution.
+    assert ds.datasets[0]._raw_uri is None
+    assert ds.datasets[0]._storage_backend == "nemar"
+
+    with patch.object(EEGDashRaw, "_download_required_files") as mock_dl:
+        ds.download_all(n_jobs=1)
+        assert mock_dl.call_count == 1
+
+
 def test_dataset_offline_enrichment(tmp_path):
     # Coverage for lines 284-298 in dataset.py (Offline mode enrichment)
     from unittest.mock import patch
@@ -764,14 +753,16 @@ def test_dataset_recursive_search(tmp_path):
     (ds_dir / "sub-01" / "eeg" / "sub-01_task-rest_eeg.set").touch()
 
     # In download=False mode, it calls _find_local_bids_records which calls discover_local_bids_records
-    real_ds = EEGDashDataset(
+    EEGDashDataset(
         dataset="ds",
         download=False,
         _suppress_comp_warning=True,
         cache_dir=str(tmp_path),
     )
-    assert real_ds._find_key_in_nested_dict(data, "b-c") == 1
-    assert real_ds._find_key_in_nested_dict([{"x": 2}], "x") == 2
+    from eegdash.bids_metadata import find_key_in_nested_dict
+
+    assert find_key_in_nested_dict(data, "b-c") == 1
+    assert find_key_in_nested_dict([{"x": 2}], "x") == 2
 
 
 def test_dataset_init_error_no_args(tmp_path):

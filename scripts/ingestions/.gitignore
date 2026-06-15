@@ -1,0 +1,20 @@
+# Mutation-testing working directory (mutmut 3.x scratch space)
+mutants/
+.mutmut-cache
+.mutmut-cache/
+
+# pytest / coverage outputs
+.coverage
+.coverage.*
+htmlcov/
+.pytest_cache/
+__pycache__/
+
+# Hypothesis examples cache
+.hypothesis/
+
+# pytest-benchmark history
+.benchmarks/
+
+# Local sandbox data
+.cache/

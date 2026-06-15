@@ -16,7 +16,87 @@ import logging
 from pathlib import Path
 from typing import Any
 
+from _parser_utils import validate_file_path
+
 logger = logging.getLogger(__name__)
+
+# Above this size, an embedded-data .set (no .fdt) is NOT loadmat-ed: scipy
+# would materialize the whole EEG.data array. The sidecar-arithmetic tier
+# supplies n_times for those instead. Bounds worst-case memory/time.
+_SET_EMBEDDED_LOADMAT_CEILING = 50 * 1024 * 1024  # 50 MB
+
+
+def _set_exceeds_embedded_ceiling(set_path: Path) -> bool:
+    """True when *set_path* is larger than the embedded-data loadmat ceiling."""
+    try:
+        return set_path.stat().st_size > _SET_EMBEDDED_LOADMAT_CEILING
+    except OSError:
+        return False
+
+
+# scipy's MatReadError isn't in the public io namespace, but it's the
+# canonical class raised for truncated/corrupt MAT files. Importing it
+# lazily so an environment without scipy still loads this module —
+# falling back to a no-op base class so the `except` below is harmless.
+try:
+    from scipy.io.matlab._miobase import MatReadError as _MatReadError
+except ImportError:  # pragma: no cover — scipy unavailable
+
+    class _MatReadError(Exception):
+        pass
+
+
+def _fdt_n_times(fdt_path: Path, nchans: int | None) -> int | None:
+    """``n_times`` for an external EEGLAB ``.fdt`` from its SIZE alone — 0 bytes read.
+
+    The external ``.fdt`` is a raw ``float32`` ``[nchans x n_times]`` block with no
+    header, so ``n_times = fdt_size / (nchans x 4)``. The size comes from the
+    git-annex key on a shallow clone (``_sizing.data_file_size`` reads the pointer,
+    never the signal). Returns ``None`` when *nchans* is falsy/non-positive, the
+    size is unavailable, or the size is not a whole multiple of ``nchans x 4`` —
+    never a guessed value. Never raises (FormatParser contract).
+    """
+    try:
+        if not nchans or nchans <= 0:
+            return None
+        from _sizing import data_file_size
+
+        size = data_file_size(fdt_path)
+        if not size or size % (nchans * 4) != 0:
+            return None
+        return size // (nchans * 4)
+    except Exception as e:  # noqa: BLE001 — never raise on a recoverable parse failure
+        logger.debug("_fdt_n_times failed: %s", e)
+        return None
+
+
+def _maybe_fill_ntimes_from_fdt(
+    result: dict[str, Any], set_path: Path, trials: int | None
+) -> None:
+    """Set ``result['n_times']`` from the companion ``.fdt`` size when safe.
+
+    Only fires for CONTINUOUS data: if the parsed EEG struct exposes
+    ``trials > 1`` (epoched, 3-D), the flat ``size / (nchans x 4)`` divide would
+    be wrong, so we skip it. When *trials* is unknown (``None``) we allow it —
+    continuous is EEGLAB's default. No-op unless ``has_fdt`` is True, an
+    ``n_times``/``n_samples`` is still absent, and ``nchans`` is known. Mutates
+    *result* in place; never raises.
+    """
+    try:
+        # A 0 (EEG.pnts==0 on a header-only external .set) counts as absent —
+        # zero samples is not a real recording; the .fdt size is the truth.
+        if result.get("n_times") or result.get("n_samples"):
+            return
+        if not result.get("has_fdt"):
+            return
+        if trials is not None and trials > 1:
+            return  # epoched -> flat divide unsafe
+        nchans = result.get("nchans")
+        n_times = _fdt_n_times(set_path.with_suffix(".fdt"), nchans)
+        if n_times is not None:
+            result["n_times"] = n_times
+    except Exception as e:  # noqa: BLE001 — never raise on a recoverable parse failure
+        logger.debug("_maybe_fill_ntimes_from_fdt failed: %s", e)
 
 
 def parse_set_metadata(set_path: Path | str) -> dict[str, Any] | None:
@@ -51,7 +131,11 @@ def parse_set_metadata(set_path: Path | str) -> dict[str, Any] | None:
     """
     set_path = Path(set_path)
 
-    if not set_path.exists():
+    # Use the shared validate_file_path so .set files behind broken
+    # git-annex symlinks are handled consistently
+    # with the other parsers (previously this just called .exists()
+    # which returns True for broken symlinks pointing into git-annex).
+    if not validate_file_path(set_path):
         return None
 
     result: dict[str, Any] = {}
@@ -64,7 +148,21 @@ def parse_set_metadata(set_path: Path | str) -> dict[str, Any] | None:
     try:
         import scipy.io
 
-        mat = scipy.io.loadmat(str(set_path), struct_as_record=False, squeeze_me=True)
+        # Header-only discipline: for embedded-data .set (no .fdt companion),
+        # scipy loadmat materializes EEG.data. Skip *only the loadmat* for
+        # oversized embedded files (mat = {}), then fall through to the cheap
+        # h5py branch below — for MAT-v7.3 (HDF5) .set, EEG/srate, EEG/nbchan
+        # and EEG/pnts are 1x1 scalar datasets readable without loading EEG.data.
+        if not result["has_fdt"] and _set_exceeds_embedded_ceiling(set_path):
+            mat: dict[str, Any] = {}
+        else:
+            # variable_names=['EEG'] avoids loading unrelated top-level MAT variables.
+            mat = scipy.io.loadmat(
+                str(set_path),
+                struct_as_record=False,
+                squeeze_me=True,
+                variable_names=["EEG"],
+            )
 
         if "EEG" in mat:
             eeg = mat["EEG"]
@@ -123,7 +221,12 @@ def parse_set_metadata(set_path: Path | str) -> dict[str, Any] | None:
                         # Update nchans if not set
                         if "nchans" not in result:
                             result["nchans"] = len(ch_names)
-                except Exception as e:
+                except (AttributeError, IndexError, TypeError, ValueError) as e:
+                    # .chanlocs is an arbitrary MATLAB structure — any of
+                    # these mean the labels field isn't shaped like we
+                    # expect. Recoverable: we just skip channel-name
+                    # extraction and let downstream callers fall back to
+                    # synthesised names.
                     logger.debug("Could not extract channel names: %s", e)
 
             # Check for external data file reference
@@ -132,6 +235,22 @@ def parse_set_metadata(set_path: Path | str) -> dict[str, Any] | None:
                 if hasattr(datfile, "item"):
                     datfile = datfile.item()
                 result["external_datafile"] = str(datfile)
+
+            # Epoched .set are 3-D (EEG.trials > 1); the flat .fdt divide is
+            # only valid for continuous data. Capture trials to gate it below.
+            trials: int | None = None
+            if hasattr(eeg, "trials"):
+                try:
+                    t = eeg.trials
+                    if hasattr(t, "item"):
+                        t = t.item()
+                    trials = int(t)
+                except (TypeError, ValueError):
+                    trials = None
+
+            # External-.fdt zero-fetch n_times: only when n_times/n_samples is
+            # still absent and the data is continuous (trials <= 1 or unknown).
+            _maybe_fill_ntimes_from_fdt(result, set_path, trials)
 
             if result:
                 logger.debug(
@@ -144,8 +263,24 @@ def parse_set_metadata(set_path: Path | str) -> dict[str, Any] | None:
 
     except ImportError:
         logger.debug("scipy not available for .set parsing")
-    except Exception as e:
+    except (
+        OSError,
+        ValueError,
+        KeyError,
+        TypeError,
+        IndexError,
+        NotImplementedError,
+    ) as e:
+        # `scipy.io.loadmat` raises NotImplementedError on MAT-v7.3 (HDF5)
+        # files, which is the trigger for our h5py fallback below. The
+        # other classes cover: OSError (file not found / unreadable),
+        # ValueError (truncated or wrong magic), KeyError (missing 'EEG'
+        # struct in the .set), TypeError (unexpected MATLAB field shape).
         logger.debug("scipy.io.loadmat failed: %s", e)
+    except _MatReadError as e:
+        # MatReadError is scipy's own class. Imported lazily below the
+        # try so the import isn't required when scipy is missing.
+        logger.debug("scipy.io.loadmat: corrupted MAT file: %s", e)
 
     # Try h5py for HDF5-based .set files (newer EEGLAB format)
     try:
@@ -178,12 +313,27 @@ def parse_set_metadata(set_path: Path | str) -> dict[str, Any] | None:
                             result["n_samples"] / result["sampling_frequency"]
                         )
 
+                # Epoched-vs-continuous gate for the external-.fdt arithmetic.
+                trials_h5: int | None = None
+                if "trials" in eeg:
+                    try:
+                        trials_h5 = int(eeg["trials"][0, 0])
+                    except (TypeError, ValueError, IndexError, KeyError):
+                        trials_h5 = None
+
+                _maybe_fill_ntimes_from_fdt(result, set_path, trials_h5)
+
                 if result:
                     return result
 
     except ImportError:
         logger.debug("h5py not available for .set parsing")
-    except Exception as e:
+    except (OSError, ValueError, KeyError) as e:
+        # h5py raises OSError for "not an HDF5 file" (which happens on
+        # every MAT-v5 .set), ValueError for malformed datasets, and
+        # KeyError when navigating an unexpected struct layout. None
+        # of these are programmer bugs — log and fall through to the
+        # 'return None or partial result' tail.
         logger.debug("h5py parsing failed: %s", e)
 
     return None if not result else result

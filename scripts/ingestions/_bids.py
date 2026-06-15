@@ -5,7 +5,8 @@ from __future__ import annotations
 import csv
 import re
 from pathlib import Path
-from typing import Any, Pattern
+from re import Pattern
+from typing import Any
 
 # Common BIDS indicator files (case-insensitive matching)
 BIDS_REQUIRED_FILES = ["dataset_description.json"]
@@ -45,7 +46,8 @@ def collect_bids_matches(
         dataset_zip_pattern: Regex for BIDS dataset zip files.
         dataset_zip_matcher: "match" or "search" for dataset zip pattern checks.
 
-    Returns:
+    Returns
+    -------
         Dict with required/optional matches and subject/zip file lists.
 
     """
@@ -184,7 +186,10 @@ def count_bad_channels(channels_tsv_path: Path) -> int | None:
             return sum(
                 1 for row in reader if str(row.get(col, "")).strip().lower() == "bad"
             )
-    except Exception:
+    except (OSError, csv.Error, UnicodeDecodeError):
+        # OSError: file disappeared. csv.Error: malformed TSV with
+        # encoding/quote issues. UnicodeDecodeError: TSV with non-UTF-8
+        # bytes (occasionally seen in legacy datasets).
         return None
 
 

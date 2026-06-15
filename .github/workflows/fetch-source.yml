@@ -34,13 +34,16 @@ jobs:
   fetch:
     name: Fetch ${{ inputs.source_name }}
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
+    # No elevated GITHUB_TOKEN permissions needed: the dataset-listings repo is
+    # pushed with DATASET_LISTINGS_TOKEN (persisted credentials), not GITHUB_TOKEN.
+    # Requesting `contents: write` here while the repo default token is read-only
+    # makes this reusable workflow request more than the caller grants, which GitHub
+    # rejects with a startup_failure.
     continue-on-error: ${{ inputs.continue_on_error }}
 
     steps:
       - name: Checkout EEGDash
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           ref: ${{ github.head_ref }}
@@ -48,7 +51,7 @@ jobs:
           path: eegdash
 
       - name: Checkout dataset listings repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           repository: eegdash/eegdash-dataset-listings
           token: ${{ secrets.DATASET_LISTINGS_TOKEN }}
@@ -57,7 +60,7 @@ jobs:
           path: eegdash-dataset-listings
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.11'
           cache: 'pip'

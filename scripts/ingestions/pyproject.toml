@@ -1,0 +1,235 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+# Flat layout with non-package directories alongside the bare modules
+# (profiles/, data/, ...). Disable setuptools auto-discovery
+# and ship the bare modules explicitly so `pip install -e .` works.
+[tool.setuptools]
+py-modules = [
+    "_bids",
+    "_clone_config",
+    "_constants",
+    "_digest_config",
+    "_file_utils",
+    "_fingerprint",
+    "_format_parser_registry",
+    "_github",
+    "_http",
+    "_inject_config",
+    "_inject_plan",
+    "_keywords",
+    "_mef3_parser",
+    "_metadata_cascade",
+    "_montage",
+    "_parser_utils",
+    "_serialize",
+    "_set_parser",
+    "_snirf_parser",
+    "_validate",
+]
+
+[project]
+name = "eegdash-ingestions"
+version = "0.1.0"
+description = "BIDS-dataset ingestion pipeline for the eegdash MongoDB"
+requires-python = ">=3.10"
+license = {text = "BSD-3-Clause"}
+authors = [{name = "Bruno Aristimunha", email = "b.aristimunha@gmail.com"}]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+]
+dependencies = [
+    "httpx[http2]>=0.27",
+    "tenacity>=8",
+    "pydantic>=2.5",
+    "pydantic-settings>=2",
+    "pandas",
+    "mne-bids>=0.14",
+    "python-dotenv>=1",
+    "pooch>=1.7",  # eegdash.testing.data_path() lazy-fetches test corpus
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8",
+    "pytest-cov>=4",
+    "pytest-benchmark>=4",
+    "hypothesis>=6.100",
+    "respx>=0.20",
+    "mutmut>=2.4",
+    "ruff>=0.4",
+    "mypy>=1.10",
+]
+
+# ─── Tooling ────────────────────────────────────────────────────────────────
+
+[tool.ruff]
+line-length = 88
+target-version = "py310"
+extend-exclude = ["1_fetch_sources", "data", "__pycache__", ".cache", "mutants"]
+
+[tool.ruff.lint]
+# Initial selection — keep tight from day 1 so quality only ratchets up.
+# BLE (blind-except) is the headline rule for Phase 3 of the robustness
+# programme: every except: / except Exception: gets reviewed individually.
+select = [
+    "E", "F", "W",   # pycodestyle + pyflakes
+    "I",             # isort
+    "B",             # bugbear
+    "BLE",           # blind-except — Phase 3 target
+    "UP",            # pyupgrade
+    "PT",            # pytest-style
+    "RUF",           # ruff-specific
+    "N",             # pep8-naming
+    "PLC0415",       # import-outside-top-level (PEP 8 — lift lazy imports)
+]
+# D (pydocstyle / numpydoc) is selected per-file once the legacy code has
+# been touched up; turning it on globally on day 1 would generate ~1000
+# warnings on existing code we haven't reviewed yet.
+ignore = [
+    "E501",  # line-too-long — ruff format handles wrap
+    "E402",  # module-level imports after code — used by `# noqa: E402` in mne_bids
+]
+
+[tool.ruff.lint.per-file-ignores]
+# The numbered script files are CLI entrypoints; relax the naming rule
+# (N999: invalid-module-name fires on the leading digit).
+"[0-9]*_*.py" = ["N999"]
+# Test files: relaxed naming + Unicode rules.
+#   D                — tests don't need NumPy docstrings.
+#   N802/N806        — pydantic model class names (DatasetModel, RecordModel)
+#                      are referenced in test names + assigned to local vars.
+#   RUF002/RUF003    — docstrings/comments use × (multiply) and – (en-dash)
+#                      in performance/fixture annotations.
+#   BLE001           — broad except in negative-path test scaffolding.
+"tests/**/*.py" = ["D", "N802", "N806", "RUF002", "RUF003", "BLE001"]
+
+# Legacy-file baseline — these rules will be enforced PHASE BY PHASE as the
+# files are touched. Removing an ignore from this list is part of the
+# evaluation hook for the relevant phase.
+#
+# BLE001 — bare-except / broad-except. 72 violations across 17 files. Phase 3
+# of the robustness programme sweeps these; the per-file ignore is removed
+# as each file is cleaned.
+#
+# Other rules are smaller categories (RUF002/003/005/013, B007, N806, etc.)
+# that we'll tidy mechanically when their owning file is next touched.
+# "2_clone.py"                  — bare-excepts swept in Phase 9 F1 fix (commit 14)
+"3_digest.py"   = ["E741", "RUF003", "RUF005", "RUF013", "RUF046", "B007", "PLC0415"]  # one pre-existing _vhdr_parser lazy import
+"_github.py"    = ["PLC0415"]  # PyGithub lazy import inside try/ImportError
+"_set_parser.py" = ["PLC0415"]  # scipy.io + h5py lazy optional-dep imports
+"_file_utils.py" = ["E741", "RUF003", "RUF005"]
+"_montage.py"   = ["N806", "RUF002", "RUF003", "RUF013", "RUF059"]
+
+[tool.ruff.lint.isort]
+known-first-party = [
+    "mne",
+    "mne_bids",
+    "eegdash",
+    # Local ingestion modules — bare ``_*.py`` files siblings to this
+    # config. Explicitly listed so isort groups them in the first-party
+    # block instead of guessing.
+    "_bids",
+    "_clone_config",
+    "_constants",
+    "_digest_config",
+    "_file_utils",
+    "_fingerprint",
+    "_format_parser_registry",
+    "_github",
+    "_http",
+    "_inject_config",
+    "_inject_plan",
+    "_keywords",
+    "_mef3_parser",
+    "_metadata_cascade",
+    "_montage",
+    "_parser_utils",
+    "_serialize",
+    "_set_parser",
+    "_snirf_parser",
+    "_validate",
+    "_validate_config",
+    "_vhdr_parser",
+]
+section-order = ["future", "standard-library", "third-party", "first-party", "local-folder"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"
+
+[tool.mypy]
+python_version = "3.10"
+# Permissive baseline. Tighten per-module as legacy files are refactored
+# under their own characterisation tests (see
+# Phase 8). Goal: --strict on new files; existing files raised
+# incrementally as they're touched.
+ignore_missing_imports = true
+warn_unused_ignores = true
+warn_redundant_casts = true
+
+[[tool.mypy.overrides]]
+# Aspirational `--strict` per file — start with parsers (Phase 1 target).
+module = [
+    "_set_parser",
+    "_vhdr_parser",
+    "_snirf_parser",
+    "_mef3_parser",
+]
+disallow_untyped_defs = true
+warn_return_any = true
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+testpaths = ["tests"]
+addopts = "-ra --strict-markers --tb=short"
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "network: marks tests that require network access (deselect with '-m \"not network\"')",
+    "integration: marks tests that hit the live cluster (opt-in via EEGDASH_INTEGRATION_API_URL + EEGDASH_INTEGRATION_ADMIN_TOKEN; deselect with '-m \"not integration\"')",
+]
+# Hypothesis: cap example count for CI speed; raise locally for deep fuzz.
+filterwarnings = [
+    "ignore::DeprecationWarning:hypothesis.*",
+]
+
+[tool.coverage.run]
+source = ["."]
+omit = [
+    "tests/*",
+    "1_fetch_sources/*",
+    "*/conftest.py",
+    "__init__.py",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "raise NotImplementedError",
+    'if __name__ == "__main__":',
+    "if TYPE_CHECKING:",
+]
+show_missing = true
+skip_covered = false
+
+# Mutation testing config (mutmut 2.x — see
+# for why we pinned to 2.x rather than 3.x).
+#
+# Run interactively:
+#   cd scripts/ingestions
+#   mutmut run
+#   mutmut results
+#   mutmut show <id>   # to inspect a surviving mutant
+#
+# Target kill ratio: >= 60 % on _vhdr_parser.py before expanding scope.
+
+[tool.mutmut]
+paths_to_mutate = "_vhdr_parser.py"
+tests_dir = "tests/"
+runner = "python -m pytest tests/parsers/test_vhdr.py tests/parsers/test_property.py -x -q --tb=no --no-header -p no:cacheprovider"

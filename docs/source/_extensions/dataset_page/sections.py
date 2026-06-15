@@ -1531,7 +1531,7 @@ def _render_version_rows(rows) -> list[str]:
     ]
     for v in rows:
         doi_link = f"`{v.doi} <https://doi.org/{v.doi}>`__"
-        date_str = v.created_at.strftime("%Y-%m-%d")
+        date_str = (v.created_at or "")[:10]  # server emits an ISO-8601 string
         lines.append(f"   * - ``{v.version}``")
         lines.append(f"     - {doi_link}")
         lines.append(f"     - {date_str}")

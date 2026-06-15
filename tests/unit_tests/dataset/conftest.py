@@ -208,6 +208,9 @@ def snapshot_payload_pin(chart_data_payload, server_manifest):
                 "space_declared": "CapTrak",
                 "units_declared": "mm",
                 "channel_names": ["AF3", "AF4", "Cz"],
+                "label": "EEG · 63 sensors",
+                "n_channels": 63,
+                "montage_id": "42b9e8daf4ff0e6d",
             }
         if chart_data_override is not None:
             cd.update(chart_data_override)

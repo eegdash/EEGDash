@@ -9,7 +9,7 @@ from typing import Any, Dict
 import pandas as pd
 
 from ..paths import get_default_cache_dir  # noqa: F401 — re-exported for legacy mocks
-from .snapshot import DatasetSnapshot, _resolve_author_year
+from .snapshot import DatasetSnapshot
 
 logger = logging.getLogger(__name__)
 
@@ -19,6 +19,26 @@ logger = logging.getLogger(__name__)
 NAME_SOURCE_CANONICAL = "canonical"
 NAME_SOURCE_AUTHOR_YEAR = "author_year"
 NAME_SOURCE_NONE = "none"
+
+
+def _resolve_author_year(
+    *, name_source: str, raw_aliases: list[str] | None, explicit: object = None
+) -> str | None:
+    """Pick a single ``FirstAuthorSurnameYear`` from catalog metadata.
+
+    Explicit ``author_year`` wins; else the first alias when
+    ``name_source == "author_year"``; else ``None``.
+    """
+    explicit_str = str(explicit).strip() if explicit else ""
+    if explicit_str:
+        return explicit_str
+    if (
+        name_source
+        and name_source.strip().lower() == NAME_SOURCE_AUTHOR_YEAR
+        and raw_aliases
+    ):
+        return str(raw_aliases[0]).strip() or None
+    return None
 
 
 def _is_valid_alias(name: str) -> bool:

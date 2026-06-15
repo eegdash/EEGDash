@@ -78,6 +78,20 @@ def chart_data_payload():
         }
         if metadata is not None:
             dataset["metadata"] = metadata
+        # Server-shaped docs row (chart-data?include=rows). The client now
+        # reads ``d["row"]`` instead of mapping raw fields, so the stub
+        # carries the row the way the live server would.
+        dataset["row"] = {
+            "dataset": dataset_id,
+            "dataset_title": f"{dataset_id} dataset",
+            "n_subjects": 12,
+            "n_records": 30,
+            "recording_modality": "eeg",
+            "modality of exp": "visual",
+            "Type Subject": "Unknown",
+            "source": "openneuro",
+            "size_bytes": 1024,
+        }
         return {
             "success": True,
             "datasets": [dataset],

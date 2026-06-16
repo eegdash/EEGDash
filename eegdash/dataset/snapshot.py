@@ -1,10 +1,8 @@
 """Single data-access seam for the docs build.
 
-:class:`DatasetSnapshot.build` fetches the dataset catalog from the
-EEGDash server in one ``chart-data`` call — rows, montages, and
-per-dataset metadata are all shaped server-side and ride along — caches
-it on disk, and falls back to the package CSV, self-reporting provenance
-so callers can tell "live" from "stale" from "silent failure".
+One server ``chart-data`` call (rows + montages + metadata, all shaped
+server-side) with disk-cache and package-CSV fallbacks, self-reporting
+provenance via :attr:`DatasetSnapshot.source`.
 """
 
 from __future__ import annotations
@@ -39,9 +37,8 @@ _INSTANCE_CACHE_LOCK = Lock()
 class DatasetSnapshot:
     """A frozen view of the dataset catalog for one docs build.
 
-    :meth:`build` fetches live (with disk / package-CSV fallback). Read
-    through the accessors; provenance is on :attr:`source` /
-    :attr:`fetched_at` / :attr:`api_errors`.
+    Build with :meth:`build`, read via the accessors; provenance on
+    :attr:`source` / :attr:`fetched_at` / :attr:`api_errors`.
     """
 
     __slots__ = ("_rows", "_aggregations", "_montages", "_metadata", "__dict__")
@@ -103,12 +100,9 @@ class DatasetSnapshot:
         return dict(result) if result is not None else None
 
     def metadata(self, dataset_id: str) -> Mapping[str, Any] | None:
-        """Per-dataset metadata dict (case-insensitive), or ``None``.
+        """Server metadata dict for one dataset (case-insensitive), or ``None``.
 
-        The server-shaped ``datasets[i].metadata`` sub-object (description,
-        authors, keywords, versions) plus the dataset ``license``, lifted off
-        ``chart-data`` verbatim. Only present on a live build; cached /
-        package-csv builds carry none.
+        Live builds only; cached / package-csv builds carry none.
         """
         if not dataset_id:
             return None
@@ -138,10 +132,9 @@ class DatasetSnapshot:
     ) -> "DatasetSnapshot":
         """Fetch / cache / fallback in one call, memoised per process.
 
-        Resolution order (each records its failure on :attr:`api_errors`):
-        live ``chart-data`` → disk cache → package CSV. ``limit`` defaults
-        to ``EEGDASH_DOC_LIMIT`` or 1000; ``force_refresh`` bypasses the
-        in-memory and disk caches on entry.
+        Order: live ``chart-data`` → disk cache → package CSV (each failure
+        recorded on :attr:`api_errors`). ``limit`` defaults to
+        ``EEGDASH_DOC_LIMIT`` or 1000; ``force_refresh`` skips both caches.
         """
         resolved_limit = (
             limit

@@ -32,7 +32,7 @@ from typing import Mapping, Sequence
 
 from sphinx.util import logging
 
-from eegdash.dataset.snapshot import DatasetSnapshot, NemarMetadata
+from eegdash.dataset.snapshot import DatasetSnapshot
 
 from ._constants import (
     _BIDS_FEMALE_KEYS,
@@ -1469,7 +1469,9 @@ def _format_recording_stats_section(context: Mapping[str, object]) -> str:
 # ---------------------------------------------------------------------------
 
 
-def _format_authors_list(meta: NemarMetadata, *, max_visible: int = 5) -> list[str]:
+def _format_authors_list(
+    meta: Mapping[str, object], *, max_visible: int = 5
+) -> list[str]:
     """Render the authors block as an RST bullet list.
 
     Each author becomes one bullet ``- Name (ORCID: 0000-...)`` with an
@@ -1477,16 +1479,15 @@ def _format_authors_list(meta: NemarMetadata, *, max_visible: int = 5) -> list[s
     has more than ``max_visible`` authors, the trailing tail is collapsed
     into a ``"... and N more"`` line so the section stays readable.
     """
-    visible = meta.authors[:max_visible]
-    hidden = len(meta.authors) - len(visible)
+    authors = meta.get("authors") or []
+    visible = authors[:max_visible]
+    hidden = len(authors) - len(visible)
     lines: list[str] = []
     for author in visible:
-        name = author.name.rstrip(".").rstrip()
-        if author.orcid:
-            lines.append(
-                f"- {name} (`ORCID: {author.orcid} "
-                f"<https://orcid.org/{author.orcid}>`__)"
-            )
+        name = str(author.get("name") or "").rstrip(".").rstrip()
+        orcid = author.get("orcid")
+        if orcid:
+            lines.append(f"- {name} (`ORCID: {orcid} <https://orcid.org/{orcid}>`__)")
         else:
             lines.append(f"- {name}")
     if hidden > 0:
@@ -1494,7 +1495,7 @@ def _format_authors_list(meta: NemarMetadata, *, max_visible: int = 5) -> list[s
     return lines
 
 
-def _format_keywords_inline(meta: NemarMetadata) -> str:
+def _format_keywords_inline(meta: Mapping[str, object]) -> str:
     """Render keywords as a comma-separated inline list.
 
     MeSH-tagged keywords become RST external links into the controlled
@@ -1502,19 +1503,21 @@ def _format_keywords_inline(meta: NemarMetadata) -> str:
     keyword survives the cleaning pass.
     """
     parts: list[str] = []
-    for kw in meta.keywords:
-        term = kw.term.strip()
+    for kw in meta.get("keywords") or []:
+        term = str(kw.get("term") or "").strip()
         if not term:
             continue
-        if kw.scheme and kw.scheme.upper() == "MESH" and kw.value_uri:
-            parts.append(f"`{term} <{kw.value_uri}>`__")
+        scheme = kw.get("scheme")
+        value_uri = kw.get("value_uri")
+        if scheme and scheme.upper() == "MESH" and value_uri:
+            parts.append(f"`{term} <{value_uri}>`__")
         else:
             parts.append(term)
     return ", ".join(parts)
 
 
 def _render_version_rows(rows) -> list[str]:
-    """Render an RST list-table for a slice of :class:`NemarVersion`.
+    """Render an RST list-table for a slice of version dicts.
 
     Extracted from :func:`_format_versions_table` so the visible /
     overflow branches share one implementation -- and so the pre-commit
@@ -1530,15 +1533,16 @@ def _render_version_rows(rows) -> list[str]:
         "     - Released",
     ]
     for v in rows:
-        doi_link = f"`{v.doi} <https://doi.org/{v.doi}>`__"
-        date_str = (v.created_at or "")[:10]  # server emits an ISO-8601 string
-        lines.append(f"   * - ``{v.version}``")
+        doi = v.get("doi") or ""
+        doi_link = f"`{doi} <https://doi.org/{doi}>`__"
+        date_str = str(v.get("created_at") or "")[:10]  # server ISO-8601 string
+        lines.append(f"   * - ``{v.get('version') or ''}``")
         lines.append(f"     - {doi_link}")
         lines.append(f"     - {date_str}")
     return lines
 
 
-def _format_versions_table(meta: NemarMetadata, *, visible_cap: int = 5) -> str:
+def _format_versions_table(meta: Mapping[str, object], *, visible_cap: int = 5) -> str:
     """Render the versions history as an RST list-table.
 
     Columns: ``Version``, ``DOI`` (linked), ``Date`` (UTC, ISO-8601).
@@ -1546,11 +1550,12 @@ def _format_versions_table(meta: NemarMetadata, *, visible_cap: int = 5) -> str:
     that goes into a collapsed ``dropdown`` so long histories do not
     swamp the page.
     """
-    if not meta.versions:
+    versions = meta.get("versions") or []
+    if not versions:
         return ""
 
-    visible = meta.versions[:visible_cap]
-    overflow = meta.versions[visible_cap:]
+    visible = versions[:visible_cap]
+    overflow = versions[visible_cap:]
 
     lines = _render_version_rows(visible)
     if overflow:
@@ -1563,15 +1568,16 @@ def _format_versions_table(meta: NemarMetadata, *, visible_cap: int = 5) -> str:
     return "\n".join(lines)
 
 
-def _format_license_line(meta: NemarMetadata) -> str:
+def _format_license_line(meta: Mapping[str, object]) -> str:
     """Render the license as ``License: <link>`` when SPDX-mappable."""
-    if not meta.license:
+    license_str = meta.get("license")
+    if not license_str:
         return ""
-    spdx_key = re.sub(r"\s+", " ", meta.license.strip()).upper()
+    spdx_key = re.sub(r"\s+", " ", license_str.strip()).upper()
     url = _LICENSE_URL_MAP.get(spdx_key)
     if url:
-        return f"**License**: `{meta.license} <{url}>`__"
-    return f"**License**: {meta.license}"
+        return f"**License**: `{license_str} <{url}>`__"
+    return f"**License**: {license_str}"
 
 
 def _format_nemar_metadata_section(context: Mapping[str, object]) -> str:
@@ -1581,7 +1587,7 @@ def _format_nemar_metadata_section(context: Mapping[str, object]) -> str:
 
     * the context carries a ``nemar_id`` (always present for NEMAR
       datasets; derived from ``dataset_id`` when it starts with ``nm``),
-    * the NEMAR client returns a non-``None`` :class:`NemarMetadata`.
+    * ``snapshot.metadata(id)`` returns a non-``None`` metadata dict.
 
     Otherwise an empty string is returned so the page builder can drop
     the section silently.
@@ -1615,7 +1621,7 @@ def _format_nemar_metadata_section(context: Mapping[str, object]) -> str:
     # show on the page (the EEGDash chart-data response often carries a
     # shorter summary or none at all).
     page_desc = str(context.get("title") or "").strip()
-    nemar_desc = (meta.description or "").strip()
+    nemar_desc = str(meta.get("description") or "").strip()
     if nemar_desc and len(nemar_desc) > len(page_desc) + 20:
         parts.append(nemar_desc)
 
@@ -1623,7 +1629,7 @@ def _format_nemar_metadata_section(context: Mapping[str, object]) -> str:
     if license_line:
         parts.append(license_line)
 
-    if meta.authors:
+    if meta.get("authors"):
         author_lines = _format_authors_list(meta)
         parts.append("**Authors**:\n\n" + "\n".join(author_lines))
 

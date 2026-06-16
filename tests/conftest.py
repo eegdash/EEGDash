@@ -43,17 +43,16 @@ def _reset_dataset_snapshot_cache(tmp_path_factory):
     the package-CSV fallback because the disk write was lost.
     """
     import eegdash.dataset.snapshot as snapshot_mod
-    from eegdash.dataset.snapshot import _reset_instance_cache_for_testing
 
     tmp_cache = tmp_path_factory.mktemp("snapshot_cache")
     original_get_cache = snapshot_mod.get_default_cache_dir
     snapshot_mod.get_default_cache_dir = lambda: tmp_cache
 
-    _reset_instance_cache_for_testing()
+    snapshot_mod._INSTANCE_CACHE.clear()
     try:
         yield
     finally:
-        _reset_instance_cache_for_testing()
+        snapshot_mod._INSTANCE_CACHE.clear()
         snapshot_mod.get_default_cache_dir = original_get_cache
 
 

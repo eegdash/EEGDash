@@ -209,8 +209,13 @@ def test_registry_docstring_generation():
     assert "https://doi.org/10.1000/1" in doc
 
 
-def test_registry_exclude_datasets():
-    """Test that excluded datasets are skipped by fetch_datasets_from_api."""
+def test_registry_registers_all_datasets_no_denylist():
+    """Every dataset the API returns is registered — the denylist was removed.
+
+    The ``EXCLUDED_DATASETS`` filter (and the ``test``/``test_dataset``
+    id guard) was intentionally dropped; ingestion + the live API are
+    now trusted, so no id is filtered out at registration time.
+    """
     import json
     from unittest.mock import MagicMock, patch
 
@@ -218,10 +223,10 @@ def test_registry_exclude_datasets():
 
     mock_data = {
         "success": True,
-        "data": [
-            {"dataset_id": "ABUDUKADI"},  # Excluded
-            {"dataset_id": "test"},  # Excluded
-            {"dataset_id": "valid"},
+        "datasets": [
+            {"dataset_id": "ABUDUKADI", "row": {"dataset": "ABUDUKADI"}},
+            {"dataset_id": "test", "row": {"dataset": "test"}},
+            {"dataset_id": "valid", "row": {"dataset": "valid"}},
         ],
     }
 
@@ -242,8 +247,8 @@ def test_registry_exclude_datasets():
         register_openneuro_datasets(from_api=True, namespace=namespace)
 
         assert "VALID" in namespace
-        assert "ABUDUKADI" not in namespace
-        assert "TEST" not in namespace
+        assert "ABUDUKADI" in namespace
+        assert "TEST" in namespace
 
 
 def test_registry_make_init_closure(tmp_path):
@@ -252,7 +257,10 @@ def test_registry_make_init_closure(tmp_path):
 
     from eegdash.dataset.registry import register_openneuro_datasets
 
-    mock_data = {"success": True, "data": [{"dataset_id": "ds_dyn", "metadata": {}}]}
+    mock_data = {
+        "success": True,
+        "datasets": [{"dataset_id": "ds_dyn", "row": {"dataset": "ds_dyn"}}],
+    }
 
     with (
         patch("urllib.request.urlopen") as mock_urlopen,
@@ -279,143 +287,6 @@ def test_registry_make_init_closure(tmp_path):
         obj = DS_Class2(cache_dir="/tmp")
         assert obj.kwargs["query"] == {"dataset": "ds_dyn"}
         assert obj.kwargs["cache_dir"] == "/tmp"
-
-
-def test_fetch_datasets_from_api_field_mappings():
-    """Test that fetch_datasets_from_api correctly maps API fields."""
-    import json
-    from unittest.mock import MagicMock, patch
-
-    from eegdash.dataset.registry import fetch_datasets_from_api
-
-    mock_api_response = {
-        "success": True,
-        "data": [
-            {
-                "dataset_id": "ds000247",
-                "name": "Test Dataset",
-                "demographics": {"subjects_count": 7},
-                "total_files": 283,
-                "tasks": ["rest", "noise"],
-                "recording_modality": ["meg"],
-                "tags": {
-                    "modality": ["visual"],  # → modality of exp
-                    "type": ["observational"],  # → type of exp
-                    "pathology": ["healthy"],  # → Type Subject
-                },
-                "size_bytes": 1024 * 1024 * 100,  # 100 MB
-                "source": "openneuro",
-                "license": "CC0",
-                "dataset_doi": "doi:10.1234/test",
-            }
-        ],
-    }
-
-    mock_stats_response = {"data": {}}
-
-    with (
-        patch("urllib.request.urlopen") as mock_urlopen,
-        patch("eegdash.dataset.registry.get_default_cache_dir") as mock_cache_dir,
-    ):
-        mock_cache_dir.return_value = MagicMock()
-        mock_cache_dir.return_value.__truediv__.return_value.exists.return_value = False
-
-        mock_response = MagicMock()
-        mock_response.read.side_effect = [
-            json.dumps(mock_api_response).encode("utf-8"),
-            json.dumps(mock_stats_response).encode("utf-8"),
-        ]
-        mock_response.__enter__ = MagicMock(return_value=mock_response)
-        mock_response.__exit__ = MagicMock(return_value=False)
-        mock_urlopen.return_value = mock_response
-
-        df = fetch_datasets_from_api("https://api.test.com", "testdb")
-
-        assert len(df) == 1
-        row = df.iloc[0]
-        assert row["dataset"] == "ds000247"
-        assert row["n_subjects"] == 7
-        assert row["n_records"] == 283
-        assert row["n_tasks"] == 2
-        assert (
-            row["modality of exp"] == "visual"
-        )  # Experimental modality from tags.modality
-        assert row["record_modality"] == "meg"  # Recording modality (BIDS data type)
-        assert row["type of exp"] == "observational"  # From tags.type
-        assert row["Type Subject"] == "healthy"  # From tags.pathology
-        assert "MB" in row["size"]
-        assert row["license"] == "CC0"
-        assert row["doi"] == "doi:10.1234/test"
-
-
-def test_fetch_datasets_from_api_recovers_from_bad_cache_and_handles_write_failure(
-    tmp_path: Path,
-):
-    """If cache read/write fails, API fetch should still succeed."""
-    import json
-    from unittest.mock import MagicMock, patch
-
-    from eegdash.dataset.registry import fetch_datasets_from_api
-
-    # Corrupt cache that triggers pd.read_csv exception
-    cache_file = tmp_path / "dataset_summary.csv"
-    cache_file.write_text("not,a,valid,csv\n", encoding="utf-8")
-
-    payload = {
-        "success": True,
-        "data": [
-            {
-                "dataset_id": "ds_cache_fallback",
-                "demographics": {"subjects_count": 2},
-                "total_files": 3,
-                "tasks": ["rest"],
-            }
-        ],
-    }
-
-    with (
-        patch("eegdash.dataset.registry.get_default_cache_dir", return_value=tmp_path),
-        patch("pandas.read_csv", side_effect=ValueError("bad cache")),
-        patch("urllib.request.urlopen") as mock_urlopen,
-        patch("pandas.DataFrame.to_csv", side_effect=OSError("read-only cache")),
-    ):
-        mock_response = MagicMock()
-        mock_response.read.return_value = json.dumps(payload).encode("utf-8")
-        mock_response.__enter__ = MagicMock(return_value=mock_response)
-        mock_response.__exit__ = MagicMock(return_value=False)
-        mock_urlopen.return_value = mock_response
-
-        df = fetch_datasets_from_api("https://api.test.com", "db")
-
-    assert not df.empty
-    assert df.iloc[0]["dataset"] == "ds_cache_fallback"
-
-
-def test_fetch_chart_data_http_404_falls_back_to_summary():
-    """404 from chart endpoint should fall back to summary fetch."""
-    from unittest.mock import patch
-
-    import pandas as pd
-
-    from eegdash.dataset.registry import fetch_chart_data_from_api
-
-    fallback = pd.DataFrame([{"dataset": "ds_fallback"}])
-    with (
-        patch(
-            "urllib.request.urlopen",
-            side_effect=urllib.error.HTTPError(
-                url="u", code=404, msg="not found", hdrs=None, fp=None
-            ),
-        ),
-        patch(
-            "eegdash.dataset.registry.fetch_datasets_from_api", return_value=fallback
-        ),
-    ):
-        df, aggregations = fetch_chart_data_from_api("https://api.test.com", "db")
-
-    assert len(df) == 1
-    assert df.iloc[0]["dataset"] == "ds_fallback"
-    assert aggregations == {}
 
 
 @pytest.mark.parametrize(
@@ -456,7 +327,13 @@ def test_fetch_chart_data_unsuccessful_payload_returns_empty():
     assert aggregations == {}
 
 
-def test_fetch_chart_data_success_maps_rows_and_aggregations():
+def test_fetch_chart_data_passes_through_server_rows():
+    """``fetch_chart_data_from_api`` plumbs the server-shaped rows through.
+
+    Field mapping now lives server-side (``chart-data?include=rows`` →
+    ``_build_docs_row``, covered by the server's test suite); this shim
+    just returns ``DatasetSnapshot.build().rows()`` + aggregations.
+    """
     import json
     from unittest.mock import MagicMock, patch
 
@@ -465,48 +342,21 @@ def test_fetch_chart_data_success_maps_rows_and_aggregations():
     payload = {
         "success": True,
         "datasets": [
-            # excluded
-            {"dataset_id": "ABUDUKADI"},
-            # included with fallback branches
             {
                 "dataset_id": "ds_chart_1",
-                "name": "Chart Dataset",
-                "demographics": {"subjects_count": 5},
-                "total_files": 10,
-                "tasks": ["rest", "task"],
-                "sessions": ["s1"],
-                "recording_modality": "eeg",
-                "clinical": {"is_clinical": False},
-                "paradigm": {"modality": "visual", "cognitive_domain": "attention"},
-                "tags": {},
-                "timestamps": {"dataset_created_at": "2024-01-01"},
-                "size_bytes": 2048,
-                "source": "openneuro",
-                "license": "CC0",
-                "dataset_doi": "10.1234/abcd",
-                "nchans_counts": [32, 64],
-                "sfreq_counts": [128, 256],
-                "canonical_name": ["Smith2024"],
-                "name_source": "author_year",
+                "row": {
+                    "dataset": "ds_chart_1",
+                    "source": "openneuro",
+                    "n_subjects": 5,
+                },
             },
-            # included with tags lists and missing source
             {
                 "dataset_id": "ds_chart_2",
-                "computed_title": "Computed title",
-                "demographics": {},
-                "total_files": 1,
-                "tasks": [],
-                "sessions": [],
-                "recording_modality": ["meg", "eeg"],
-                "tags": {
-                    "pathology": ["epilepsy"],
-                    "modality": ["auditory", "visual"],
-                    "type": ["observation"],
+                "row": {
+                    "dataset": "ds_chart_2",
+                    "source": "unknown",
+                    "dataset_title": "Computed title",
                 },
-                "clinical": {"is_clinical": True, "purpose": "clinical trial"},
-                "paradigm": {},
-                "timestamps": {},
-                "size_human": "1.0 GB",
             },
         ],
         "aggregations": {"n_datasets": 2},
@@ -521,73 +371,12 @@ def test_fetch_chart_data_success_maps_rows_and_aggregations():
 
         df, aggregations = fetch_chart_data_from_api("https://api.test.com", "db")
 
-    # One excluded dataset must be filtered out
     assert len(df) == 2
     assert aggregations == {"n_datasets": 2}
-
-    row1 = df[df["dataset"] == "ds_chart_1"].iloc[0]
-    assert row1["record_modality"] == "eeg"
-    assert row1["recording_modality"] == "eeg"
-    assert row1["modality of exp"] == "visual"
-    assert row1["type of exp"] == "attention"
-    assert row1["Type Subject"] == "Healthy"
-    assert row1["source"] == "openneuro"
-    assert row1["author_year"] == "Smith2024"
-    assert row1["n_sessions"] == 1
-
-    row2 = df[df["dataset"] == "ds_chart_2"].iloc[0]
-    assert row2["record_modality"] == "meg, eeg"
-    assert row2["recording_modality"] == "meg, eeg"
-    assert row2["modality of exp"] == "auditory, visual"
-    assert row2["type of exp"] == "observation"
-    assert row2["Type Subject"] == "epilepsy"
-    assert row2["source"] == "unknown"
-    assert row2["dataset_title"] == "Computed title"
-
-
-def test_fetch_api_handles_missing_demographics():
-    """Test API fetch handles missing demographics gracefully."""
-    import json
-    from unittest.mock import MagicMock, patch
-
-    from eegdash.dataset.registry import fetch_datasets_from_api
-
-    mock_api_response = {
-        "success": True,
-        "data": [
-            {
-                "dataset_id": "ds_nodemo",
-                "demographics": None,  # Missing demographics
-                "total_files": 50,
-                "tasks": ["task1"],
-                "recording_modality": "eeg",  # String instead of list
-            }
-        ],
-    }
-
-    with (
-        patch("urllib.request.urlopen") as mock_urlopen,
-        patch("eegdash.dataset.registry.get_default_cache_dir") as mock_cache_dir,
-    ):
-        mock_cache_dir.return_value = MagicMock()
-        mock_cache_dir.return_value.__truediv__.return_value.exists.return_value = False
-
-        mock_response = MagicMock()
-        mock_response.read.return_value = json.dumps(mock_api_response).encode("utf-8")
-        mock_response.__enter__ = MagicMock(return_value=mock_response)
-        mock_response.__exit__ = MagicMock(return_value=False)
-        mock_urlopen.return_value = mock_response
-
-        df = fetch_datasets_from_api(
-            "https://api.test.com", "testdb", force_refresh=True
-        )
-
-        assert len(df) == 1
-        row = df.iloc[0]
-        assert row["n_subjects"] == 0  # Default when demographics missing
-        assert row["n_records"] == 50
-        assert row["modality of exp"] == ""  # Empty when no tags.modality
-        assert row["record_modality"] == "eeg"  # Recording modality from string
+    assert set(df["dataset"]) == {"ds_chart_1", "ds_chart_2"}
+    assert (
+        df[df["dataset"] == "ds_chart_2"].iloc[0]["dataset_title"] == "Computed title"
+    )
 
 
 def test_fetch_api_error():
@@ -607,29 +396,65 @@ def test_fetch_api_error():
 
 
 def test_register_fallback_to_csv(tmp_path):
-    """Test fallback to CSV if API fails."""
+    """Test fallback to CSV if API fails.
+
+    Post-B1 ``register_openneuro_datasets`` consults
+    :class:`DatasetSnapshot` directly; patch that seam so the build
+    surfaces an API failure (source == "package-csv") and the function
+    falls through to the explicit ``summary_file`` parameter.
+    """
+    from datetime import datetime, timezone
+
+    import pandas as pd
+
     from eegdash.dataset.registry import register_openneuro_datasets
+    from eegdash.dataset.snapshot import DatasetSnapshot
 
     # Create a simple summary CSV
     csv_path = tmp_path / "summary.csv"
     csv_path.write_text("dataset,n_subjects\nds001,5")
 
-    with patch("eegdash.dataset.registry.fetch_datasets_from_api") as mock_fetch:
-        mock_fetch.side_effect = Exception("API Error")
-
-        # Should read from CSV
+    failed_snapshot = DatasetSnapshot(
+        rows=pd.DataFrame(),
+        aggregations={},
+        montages={},
+        source="package-csv",
+        fetched_at=datetime.now(timezone.utc),
+        api_errors=["API Error"],
+    )
+    with patch(
+        "eegdash.dataset.snapshot.DatasetSnapshot.build",
+        return_value=failed_snapshot,
+    ):
+        # Should read from CSV via the explicit summary_file parameter
         registered = register_openneuro_datasets(summary_file=csv_path, from_api=True)
         assert "DS001" in registered
 
 
 def test_register_api_success():
-    """Test success path from API."""
+    """Test success path from API.
+
+    Patch the snapshot seam so ``register_openneuro_datasets`` sees a
+    live snapshot and consumes its rows.
+    """
+    from datetime import datetime, timezone
+
     import pandas as pd
 
     from eegdash.dataset.registry import register_openneuro_datasets
+    from eegdash.dataset.snapshot import DatasetSnapshot
 
-    df = pd.DataFrame([{"dataset": "ds002", "n_subjects": 10}])
-    with patch("eegdash.dataset.registry.fetch_datasets_from_api", return_value=df):
+    live_snapshot = DatasetSnapshot(
+        rows=pd.DataFrame([{"dataset": "ds002", "n_subjects": 10}]),
+        aggregations={},
+        montages={},
+        source="live",
+        fetched_at=datetime.now(timezone.utc),
+    )
+    with patch(
+        "eegdash.dataset.snapshot.DatasetSnapshot.build",
+        return_value=live_snapshot,
+    ):
         registered = register_openneuro_datasets(from_api=True)
         assert "DS002" in registered
 

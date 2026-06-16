@@ -219,20 +219,17 @@ class DatasetSnapshot:
 
 
 def _disk_cache_path(database: str) -> Path:
+    # ``database`` is an internal shard name ("eegdash"), never user input.
     cache_dir = get_default_cache_dir()
     cache_dir.mkdir(parents=True, exist_ok=True)
-    safe = "".join(c for c in database if c.isalnum() or c in {"_", "-"})
-    return cache_dir / f"snapshot_{safe or 'default'}.json"
+    return cache_dir / f"snapshot_{database or 'default'}.json"
 
 
 def _read_package_csv(path: Path, *, errors: list[str]) -> pd.DataFrame | None:
-    if not path.exists():
-        errors.append(f"package CSV missing at {path}")
-        return None
-    try:
+    try:  # read_csv raises FileNotFoundError when the CSV is absent
         return pd.read_csv(path, comment="#", skip_blank_lines=True)
     except Exception as exc:  # noqa: BLE001
-        errors.append(f"package CSV read failed at {path}: {exc}")
+        errors.append(f"package CSV unavailable at {path}: {exc}")
         return None
 
 

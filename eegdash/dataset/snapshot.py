@@ -13,7 +13,6 @@ import json
 import logging
 import os
 import urllib.request
-from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 from threading import Lock
@@ -35,39 +34,6 @@ PACKAGE_CSV_PATH: Path = Path(__file__).resolve().parent / "dataset_summary.csv"
 # Process-wide cache of built snapshots, keyed by (api_base, database, limit).
 _INSTANCE_CACHE: dict[tuple[str, str, int], "DatasetSnapshot"] = {}
 _INSTANCE_CACHE_LOCK = Lock()
-
-
-# Per-dataset metadata shapes, parsed from ``datasets[i].metadata`` (the
-# server emits it clean: bare ORCID, nulled optionals, ISO created_at).
-
-
-@dataclass(frozen=True)
-class NemarAuthor:
-    name: str
-    orcid: str | None = None
-
-
-@dataclass(frozen=True)
-class NemarKeyword:
-    term: str
-    scheme: str | None = None
-    value_uri: str | None = None
-
-
-@dataclass(frozen=True)
-class NemarVersion:
-    version: str
-    doi: str
-    created_at: str  # ISO-8601 string from the server
-
-
-@dataclass(frozen=True)
-class NemarMetadata:
-    description: str | None
-    license: str | None
-    authors: tuple[NemarAuthor, ...]
-    keywords: tuple[NemarKeyword, ...]
-    versions: tuple[NemarVersion, ...]
 
 
 class DatasetSnapshot:
@@ -96,7 +62,7 @@ class DatasetSnapshot:
         fetched_at: datetime,
         api_errors: list[str] | None = None,
         manifest: dict[str, Any] | None = None,
-        metadata: Mapping[str, "NemarMetadata"] | None = None,
+        metadata: Mapping[str, Mapping[str, Any]] | None = None,
     ) -> None:
         object.__setattr__(self, "_rows", rows)
         object.__setattr__(self, "_aggregations", aggregations)
@@ -136,14 +102,18 @@ class DatasetSnapshot:
         )
         return dict(result) if result is not None else None
 
-    def metadata(self, dataset_id: str) -> "NemarMetadata | None":
-        """Per-dataset metadata (case-insensitive), or ``None``.
+    def metadata(self, dataset_id: str) -> Mapping[str, Any] | None:
+        """Per-dataset metadata dict (case-insensitive), or ``None``.
 
-        Only present on a live build; cached / package-csv builds carry none.
+        The server-shaped ``datasets[i].metadata`` sub-object (description,
+        authors, keywords, versions) plus the dataset ``license``, lifted off
+        ``chart-data`` verbatim. Only present on a live build; cached /
+        package-csv builds carry none.
         """
         if not dataset_id:
             return None
-        return self._metadata.get(dataset_id) or self._metadata.get(dataset_id.lower())
+        hit = self._metadata.get(dataset_id) or self._metadata.get(dataset_id.lower())
+        return dict(hit) if hit is not None else None
 
     @property
     def dataset_count(self) -> int:
@@ -218,83 +188,14 @@ class DatasetSnapshot:
 # ---------------------------------------------------------------------------
 
 
-def _disk_cache_path(database: str) -> Path:
-    # ``database`` is an internal shard name ("eegdash"), never user input.
-    cache_dir = get_default_cache_dir()
-    cache_dir.mkdir(parents=True, exist_ok=True)
-    return cache_dir / f"snapshot_{database or 'default'}.json"
-
-
-def _read_package_csv(path: Path, *, errors: list[str]) -> pd.DataFrame | None:
-    try:  # read_csv raises FileNotFoundError when the CSV is absent
-        return pd.read_csv(path, comment="#", skip_blank_lines=True)
-    except Exception as exc:  # noqa: BLE001
-        errors.append(f"package CSV unavailable at {path}: {exc}")
-        return None
-
-
-def _try_fetch_build_manifest(
-    api_base: str, database: str, *, errors: list[str] | None = None
-) -> dict[str, Any] | None:
-    """Best-effort ``/build-manifest`` fetch; ``None`` on any failure."""
-    url = f"{api_base}/{database}/build-manifest"
-    try:
-        with urllib.request.urlopen(url, timeout=5.0) as response:
-            return json.loads(response.read().decode("utf-8"))
-    except Exception as exc:  # noqa: BLE001
-        if errors is not None:
-            errors.append(f"build-manifest error at {url}: {exc}")
-        return None
-
-
-def _metadata_from_chart_data(
-    datasets: list[dict[str, Any]],
-) -> dict[str, "NemarMetadata"]:
-    """``{lowercased id: NemarMetadata}`` from each ``datasets[i].metadata``.
-
-    The server already emits the contract shape clean, so this just wraps it.
-    """
-    out: dict[str, NemarMetadata] = {}
-    for ds in datasets:
-        ds_id = str(ds.get("dataset_id") or "").strip()
-        meta = ds.get("metadata")
-        if not (ds_id and isinstance(meta, dict) and meta):
-            continue
-        out[ds_id.lower()] = NemarMetadata(
-            description=meta.get("description") or None,
-            license=ds.get("license") or None,
-            authors=tuple(
-                NemarAuthor(name=str(a.get("name") or ""), orcid=a.get("orcid") or None)
-                for a in (meta.get("authors") or [])
-                if isinstance(a, dict) and a.get("name")
-            ),
-            keywords=tuple(
-                NemarKeyword(
-                    term=str(k.get("term") or ""),
-                    scheme=k.get("scheme") or None,
-                    value_uri=k.get("value_uri") or None,
-                )
-                for k in (meta.get("keywords") or [])
-                if isinstance(k, dict) and k.get("term")
-            ),
-            versions=tuple(
-                NemarVersion(
-                    version=str(v.get("version") or ""),
-                    doi=str(v.get("doi") or ""),
-                    created_at=str(v.get("created_at") or ""),
-                )
-                for v in (meta.get("versions") or [])
-                if isinstance(v, dict) and v.get("version")
-            ),
-        )
-    return out
-
-
 def _build_uncached(
     *, api_base: str, database: str, limit: int, force_refresh: bool
 ) -> "DatasetSnapshot":
     """The fetch/fallback chain: live chart-data → disk cache → package CSV."""
     errors: list[str] = []
+    cache_dir = get_default_cache_dir()
+    cache_dir.mkdir(parents=True, exist_ok=True)
+    cache_path = cache_dir / f"snapshot_{database or 'default'}.json"
 
     # 1. Live: one chart-data call carries server-shaped rows + montages +
     # metadata. Each is lifted off the response verbatim (no client mapping).
@@ -325,11 +226,29 @@ def _build_uncached(
                 for d in datasets
                 if isinstance(d.get("montage"), dict) and d["montage"]
             }
+            # Per-dataset metadata: the server's ``metadata`` sub-object
+            # (clean: bare ORCID, ISO created_at) plus ``license`` from the
+            # dataset row, keyed by lowercased id for case-insensitive lookup.
+            metadata = {
+                str(d.get("dataset_id") or "").strip().lower(): {
+                    **d["metadata"],
+                    "license": d.get("license") or None,
+                }
+                for d in datasets
+                if isinstance(d.get("metadata"), dict) and d["metadata"]
+            }
             now = datetime.now(timezone.utc)
-            manifest = _try_fetch_build_manifest(
-                api_base=api_base, database=database, errors=errors
-            )
-            if manifest is not None:
+            # Server provenance from /build-manifest, best-effort; on any
+            # failure we keep the local projection below.
+            manifest: dict[str, Any] = {
+                "source": "live",
+                "dataset_count": len(rows),
+                "fetched_at": now.isoformat(),
+            }
+            manifest_url = f"{api_base}/{database}/build-manifest"
+            try:
+                with urllib.request.urlopen(manifest_url, timeout=5.0) as response:
+                    manifest = json.loads(response.read().decode("utf-8"))
                 # A server/rows dataset_count skew is a benign ingestion-window
                 # warning for the CI gate, not a failure.
                 count = manifest.get("dataset_count")
@@ -338,16 +257,10 @@ def _build_uncached(
                         f"build-manifest dataset_count={count} "
                         f"but snapshot.rows()={len(rows)}"
                     )
-            else:
-                manifest = {
-                    "source": "live",
-                    "dataset_count": len(rows),
-                    "fetched_at": now.isoformat(),
-                }
+            except Exception as exc:  # noqa: BLE001
+                errors.append(f"build-manifest error at {manifest_url}: {exc}")
             try:  # best-effort disk cache write
-                _disk_cache_path(database).write_text(
-                    rows.to_json(orient="records"), encoding="utf-8"
-                )
+                cache_path.write_text(rows.to_json(orient="records"), encoding="utf-8")
             except Exception as exc:  # noqa: BLE001
                 logger.debug("snapshot disk cache write failed: %s", exc)
             return DatasetSnapshot(
@@ -358,40 +271,40 @@ def _build_uncached(
                 fetched_at=now,
                 api_errors=list(errors),
                 manifest=dict(manifest),
-                metadata=_metadata_from_chart_data(datasets),
+                metadata=metadata,
             )
         errors.append("chart-data returned 0 datasets")
 
     # 2. Disk cache (rows only; montage/metadata are not persisted, so those
     # accessors return None on a cached build). Skipped on force_refresh.
-    if not force_refresh:
-        path = _disk_cache_path(database)
-        if path.exists() and path.stat().st_size > 0:
-            try:
-                cached_rows = pd.read_json(path, orient="records")
-            except Exception as exc:  # noqa: BLE001
-                errors.append(f"disk cache read failed at {path}: {exc}")
-                cached_rows = pd.DataFrame()
-            if not cached_rows.empty:
-                at = datetime.fromtimestamp(path.stat().st_mtime, tz=timezone.utc)
-                return DatasetSnapshot(
-                    rows=cached_rows,
-                    aggregations={},
-                    montages={},
-                    source="cached",
-                    fetched_at=at,
-                    api_errors=list(errors),
-                    manifest={
-                        "source": "cached",
-                        "dataset_count": len(cached_rows),
-                        "fetched_at": at.isoformat(),
-                    },
-                )
+    if not force_refresh and cache_path.exists() and cache_path.stat().st_size > 0:
+        try:
+            cached_rows = pd.read_json(cache_path, orient="records")
+        except Exception as exc:  # noqa: BLE001
+            errors.append(f"disk cache read failed at {cache_path}: {exc}")
+            cached_rows = pd.DataFrame()
+        if not cached_rows.empty:
+            at = datetime.fromtimestamp(cache_path.stat().st_mtime, tz=timezone.utc)
+            return DatasetSnapshot(
+                rows=cached_rows,
+                aggregations={},
+                montages={},
+                source="cached",
+                fetched_at=at,
+                api_errors=list(errors),
+                manifest={
+                    "source": "cached",
+                    "dataset_count": len(cached_rows),
+                    "fetched_at": at.isoformat(),
+                },
+            )
 
     # 3. Package CSV — the floor. Always returns a snapshot; CI inspects
     # ``api_errors`` and refuses to publish on a non-live source.
-    csv_rows = _read_package_csv(PACKAGE_CSV_PATH, errors=errors)
-    if csv_rows is None:
+    try:  # read_csv raises FileNotFoundError when the CSV is absent
+        csv_rows = pd.read_csv(PACKAGE_CSV_PATH, comment="#", skip_blank_lines=True)
+    except Exception as exc:  # noqa: BLE001
+        errors.append(f"package CSV unavailable at {PACKAGE_CSV_PATH}: {exc}")
         csv_rows = pd.DataFrame()
     at = (
         datetime.fromtimestamp(PACKAGE_CSV_PATH.stat().st_mtime, tz=timezone.utc)
@@ -413,18 +326,8 @@ def _build_uncached(
     )
 
 
-def _reset_instance_cache_for_testing() -> None:
-    """Wipe the process-wide snapshot cache (tests / force-refresh)."""
-    with _INSTANCE_CACHE_LOCK:
-        _INSTANCE_CACHE.clear()
-
-
 __all__ = [
     "DatasetSnapshot",
-    "NemarAuthor",
-    "NemarKeyword",
-    "NemarMetadata",
-    "NemarVersion",
     "PACKAGE_CSV_PATH",
     "Source",
 ]

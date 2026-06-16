@@ -26,7 +26,7 @@ from __future__ import annotations
 import urllib.error
 from datetime import datetime, timezone
 from pathlib import Path
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
 
 import pandas as pd
 import pytest
@@ -100,7 +100,7 @@ def test_cached_on_api_failure_after_priming(
     assert primed.source == "live"
     # Reset in-memory instance cache so the next call exercises the
     # *disk* cache rather than the process cache.
-    snapshot_mod._reset_instance_cache_for_testing()
+    snapshot_mod._INSTANCE_CACHE.clear()
 
     # 2. Force-fail network: chart-data and summary both raise; snapshot
     # must read the disk cache and tag source == "cached".
@@ -115,7 +115,7 @@ def test_cached_on_api_failure_after_priming(
     assert cached.rows().iloc[0]["dataset"] == "ds_cached_1"
     assert cached.api_errors, "fallback paths must record the API error text"
     # mtime of the JSON rows file is the snapshot's fetched_at.
-    cache_path = snapshot_mod._disk_cache_path(database)
+    cache_path = snapshot_mod.get_default_cache_dir() / f"snapshot_{database}.json"
     assert cache_path.exists()
     expected = datetime.fromtimestamp(cache_path.stat().st_mtime, tz=timezone.utc)
     assert cached.fetched_at == expected
@@ -172,7 +172,9 @@ def test_csv_fallback(monkeypatch, package_csv_missing):
         assert snapshot.dataset_count > 0
         assert snapshot.api_errors, "fallback must record API errors"
         # No accidental disk cache write on the failure path.
-        assert not snapshot_mod._disk_cache_path(database).exists()
+        assert not (
+            snapshot_mod.get_default_cache_dir() / f"snapshot_{database}.json"
+        ).exists()
 
 
 def test_api_errors_populated_with_exception_text():
@@ -180,15 +182,13 @@ def test_api_errors_populated_with_exception_text():
     just a count — that's what the B2 CI gate inspects.
     """
     err = urllib.error.URLError("simulated DNS failure")
-    monkey_csv = pd.DataFrame([{"dataset": "ds_csv"}])
-    with (
-        patch("urllib.request.urlopen", side_effect=err),
-        patch.object(snapshot_mod, "_read_package_csv", return_value=monkey_csv),
-    ):
+    with patch("urllib.request.urlopen", side_effect=err):
         snapshot = DatasetSnapshot.build(
             api_base="https://stub.example", database="errshard"
         )
 
+    # Network dead, no disk cache → falls through to the shipped package
+    # CSV, but the exception text is still on api_errors verbatim.
     assert snapshot.source == "package-csv"
     assert any("simulated DNS failure" in e for e in snapshot.api_errors)
 
@@ -409,7 +409,7 @@ def test_snapshot_populates_montages_when_included(
 
 
 def test_metadata_from_chart_data(chart_data_payload, server_manifest, routing_urlopen):
-    """``include=metadata`` rows parse into NemarMetadata; lookup is case-insensitive."""
+    """``include=metadata`` rides through as a dict; lookup is case-insensitive."""
     payload = chart_data_payload(
         "ds_meta_1",
         metadata={
@@ -445,11 +445,11 @@ def test_metadata_from_chart_data(chart_data_payload, server_manifest, routing_u
 
     meta = snapshot.metadata("ds_meta_1")
     assert meta is not None
-    assert meta.description == "A test dataset."
-    assert meta.authors[0].name == "Jane Doe"
-    assert meta.authors[0].orcid == "0000-0002-1825-0097"
-    assert meta.keywords[0].term == "Face Perception"
-    assert meta.versions[0].version == "1.0.0"
+    assert meta["description"] == "A test dataset."
+    assert meta["authors"][0]["name"] == "Jane Doe"
+    assert meta["authors"][0]["orcid"] == "0000-0002-1825-0097"
+    assert meta["keywords"][0]["term"] == "Face Perception"
+    assert meta["versions"][0]["version"] == "1.0.0"
     # Case-insensitive hit; unknown dataset → None.
     assert snapshot.metadata("DS_META_1") is not None
     assert snapshot.metadata("nonexistent") is None
@@ -483,7 +483,9 @@ def test_package_csv_fallback_skips_disk_cache_write():
     ):
         DatasetSnapshot.build(api_base="https://stub.example", database="no_pollute")
 
-    assert not snapshot_mod._disk_cache_path("no_pollute").exists()
+    assert not (
+        snapshot_mod.get_default_cache_dir() / "snapshot_no_pollute.json"
+    ).exists()
 
 
 # ---------------------------------------------------------------------------
@@ -503,17 +505,14 @@ def test_manifest_uses_server_when_available(
         dataset_count=1, schema_version="2.1.0", git_sha="abc1234"
     )
 
-    def fake_fetch_manifest(api_base, database, *, errors=None, timeout=5.0):
-        return dict(server_payload)
-
     side_effect = routing_urlopen(
-        {"datasets/chart-data": chart_data_payload("ds_server_manifest")}
+        {
+            "datasets/chart-data": chart_data_payload("ds_server_manifest"),
+            "build-manifest": server_payload,
+        }
     )
 
-    with (
-        patch("urllib.request.urlopen", side_effect=side_effect),
-        patch.object(snapshot_mod, "_try_fetch_build_manifest", fake_fetch_manifest),
-    ):
+    with patch("urllib.request.urlopen", side_effect=side_effect):
         snapshot = DatasetSnapshot.build(
             api_base="https://stub.example", database="manifestshard"
         )
@@ -529,28 +528,20 @@ def test_manifest_uses_server_when_available(
     assert not any("build-manifest dataset_count" in e for e in snapshot.api_errors)
 
 
-def test_manifest_falls_back_on_manifest_error(chart_data_payload, routing_urlopen):
+def test_manifest_falls_back_on_manifest_error(
+    chart_data_payload, make_urlopen_response
+):
     """When ``/build-manifest`` raises, the snapshot still builds and
     ``manifest`` reverts to the locally-projected dict — no exception
     leaks to the caller.
     """
 
-    def fake_fetch_manifest(api_base, database, *, errors=None, timeout=5.0):
-        # Mimic the helper's contract: on failure, append to errors and
-        # return ``None``. The caller (``_live_snapshot``) must still
-        # produce a valid snapshot.
-        if errors is not None:
-            errors.append("build-manifest error at ...: simulated outage")
-        return None
+    def urlopen_side_effect(url, *_, **__):
+        if "build-manifest" in url:
+            raise urllib.error.URLError("simulated outage")
+        return make_urlopen_response(chart_data_payload("ds_manifest_down"))
 
-    side_effect = routing_urlopen(
-        {"datasets/chart-data": chart_data_payload("ds_manifest_down")}
-    )
-
-    with (
-        patch("urllib.request.urlopen", side_effect=side_effect),
-        patch.object(snapshot_mod, "_try_fetch_build_manifest", fake_fetch_manifest),
-    ):
+    with patch("urllib.request.urlopen", side_effect=urlopen_side_effect):
         snapshot = DatasetSnapshot.build(
             api_base="https://stub.example", database="manifestdown"
         )
@@ -564,7 +555,7 @@ def test_manifest_falls_back_on_manifest_error(chart_data_payload, routing_urlop
     # No server-only fields leaked through.
     assert "schema_version" not in snapshot.manifest
     assert snapshot.schema_version is None
-    # The fetch failure is surfaced on api_errors per the helper contract.
+    # The fetch failure is surfaced on api_errors.
     assert any("build-manifest" in e for e in snapshot.api_errors)
 
 
@@ -575,19 +566,16 @@ def test_manifest_count_mismatch_tagged(
     count is surfaced on ``api_errors`` (never raised) so the B2 CI gate
     can refuse to publish.
     """
-    server_payload = server_manifest(dataset_count=9999, schema_version="2.1.0")
-
-    def fake_fetch_manifest(api_base, database, *, errors=None, timeout=5.0):
-        return dict(server_payload)
-
     side_effect = routing_urlopen(
-        {"datasets/chart-data": chart_data_payload("ds_skew")}
+        {
+            "datasets/chart-data": chart_data_payload("ds_skew"),
+            "build-manifest": server_manifest(
+                dataset_count=9999, schema_version="2.1.0"
+            ),
+        }
     )
 
-    with (
-        patch("urllib.request.urlopen", side_effect=side_effect),
-        patch.object(snapshot_mod, "_try_fetch_build_manifest", fake_fetch_manifest),
-    ):
+    with patch("urllib.request.urlopen", side_effect=side_effect):
         snapshot = DatasetSnapshot.build(
             api_base="https://stub.example", database="skewshard"
         )
@@ -609,26 +597,22 @@ def test_manifest_not_fetched_in_csv_fallback_path():
 
     When the live API is unreachable we fall back to the disk cache
     (or package CSV). In that state the server is by definition not
-    contributing data to this snapshot, so calling
-    ``/build-manifest`` would be both wasteful and potentially
-    misleading (it would attach server provenance to non-server
-    data). Verify the helper is never called on the fallback path.
+    contributing data to this snapshot, so ``/build-manifest`` is
+    never requested — verify no such URL is ever touched.
     """
-    fake_fetch_manifest = MagicMock(return_value=None)
+    seen: list[str] = []
 
-    with (
-        patch(
-            "urllib.request.urlopen",
-            side_effect=urllib.error.URLError("network unreachable"),
-        ),
-        patch.object(snapshot_mod, "_try_fetch_build_manifest", fake_fetch_manifest),
-    ):
+    def urlopen_side_effect(url, *_, **__):
+        seen.append(url)
+        raise urllib.error.URLError("network unreachable")
+
+    with patch("urllib.request.urlopen", side_effect=urlopen_side_effect):
         snapshot = DatasetSnapshot.build(
             api_base="https://stub.example", database="csvfallback"
         )
 
     assert snapshot.source == "package-csv"
-    fake_fetch_manifest.assert_not_called()
+    assert not any("build-manifest" in u for u in seen)
     # The fallback's local projection is what surfaces on ``manifest``.
     assert snapshot.manifest["source"] == "package-csv"
     assert snapshot.manifest["dataset_count"] == snapshot.dataset_count

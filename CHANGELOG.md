@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- `EEGDashDataset` now warns when an explicitly requested filter value (e.g. a misspelled task inside a list of tasks) matches no records, instead of silently dropping it (#141)
+
 ## [0.8.2] - 2026-05-30
 
 ### Changed

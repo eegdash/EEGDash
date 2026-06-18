@@ -1,4 +1,5 @@
 import os
+import re
 from pathlib import Path
 from typing import Any
 
@@ -350,7 +351,60 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
             except Exception:
                 pass
 
+        # Warn about explicit filter values that matched no records (#141),
+        # e.g. a misspelled task inside a list of requested tasks.
+        self._warn_unmatched_filters()
+
         super().__init__(datasets, lazy=True)
+
+    def _warn_unmatched_filters(self) -> None:
+        """Warn about explicit filter values that matched no records (#141).
+
+        A scalar filter that matches nothing already surfaces as the
+        "No datasets found" error; this catches the subtler case where only
+        *some* of the requested values (e.g. one misspelled task in a list)
+        fail to match and are silently dropped.
+        """
+        requested: dict[str, list[str]] = {}
+        for field, value in self.query.items():
+            if field == "dataset" or isinstance(value, re.Pattern):
+                continue
+            if isinstance(value, dict):
+                if "$in" in value:
+                    requested[field] = [str(v) for v in value["$in"]]
+                continue
+            if isinstance(value, (list, tuple, set)):
+                requested[field] = [str(v) for v in value]
+            else:
+                requested[field] = [str(value)]
+
+        if not requested:
+            return
+
+        records = getattr(self, "records", None) or []
+        actual: dict[str, set[str]] = {field: set() for field in requested}
+        for record in records:
+            entities = record.get("entities_mne") or {}
+            for field in requested:
+                value = entities.get(field)
+                if value is None:
+                    value = record.get(field)
+                if value is not None:
+                    actual[field].add(str(value))
+
+        for field, values in requested.items():
+            if not actual[field]:
+                # Nothing matched at all; the empty-result error covers it.
+                continue
+            unmatched = [v for v in values if v not in actual[field]]
+            if unmatched:
+                logger.warning(
+                    "Filter %r requested value(s) %s that matched no records "
+                    "(available: %s); they were ignored.",
+                    field,
+                    unmatched,
+                    sorted(actual[field]),
+                )
 
     @property
     def cumulative_sizes(self) -> list[int]:

@@ -146,6 +146,12 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
         the column is populated. A ``ValueError`` is raised (listing the
         available fields) when the target is missing for every recording —
         typically a misspelled name such as ``"p-factor"`` for ``"p_factor"``.
+    remove_nan_targets : bool, default False
+        When ``target_name`` is set, drop recordings whose target value is
+        missing (None/NaN) and emit a warning. Defaults to ``False`` to keep
+        existing behaviour (such recordings are kept); a ``ValueError`` is
+        still raised when *all* recordings have a missing target regardless of
+        this flag.
     description_fields : list[str]
         Fields to extract from each record and include in dataset descriptions
         (e.g., "subject", "session", "run", "task").
@@ -217,6 +223,7 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
         on_error: str = "raise",
         max_concurrency: int = 20,
         description_precedence: str = "participant_tsv",
+        remove_nan_targets: bool = False,
         **kwargs,
     ):
         # Internal-only kwargs
@@ -244,6 +251,7 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
         # Capture it so we can surface it as a description field and validate
         # it once the datasets are built (#21).
         self._target_name = kwargs.get("target_name")
+        self._remove_nan_targets = remove_nan_targets
 
         # Copy so we never mutate the shared DEFAULT_DESCRIPTION_FIELDS list.
         description_fields = list(description_fields or DEFAULT_DESCRIPTION_FIELDS)
@@ -371,6 +379,9 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
         # Fail fast on a misspelled / unavailable target_name (#21).
         self._validate_target_present(datasets)
 
+        # Optionally drop recordings whose target is missing (#22).
+        datasets = self._drop_nan_target_recordings(datasets)
+
         super().__init__(datasets, lazy=True)
 
     def _target_field_names(self) -> list[str]:
@@ -433,6 +444,42 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
                     f"metadata field. Available description fields with values: "
                     f"{available}."
                 )
+
+    def _drop_nan_target_recordings(
+        self, datasets: list[EEGDashRaw]
+    ) -> list[EEGDashRaw]:
+        """Drop recordings with a missing target when ``remove_nan_targets``.
+
+        Only active when a ``target_name`` is set and ``remove_nan_targets`` is
+        True. The all-missing case is already rejected by
+        :meth:`_validate_target_present`, so at least one recording survives.
+        """
+        targets = self._target_field_names()
+        if not targets or not self._remove_nan_targets or not datasets:
+            return datasets
+
+        kept = [
+            ds
+            for ds in datasets
+            if not any(
+                self._is_missing(
+                    ds.description.get(t)
+                    if getattr(ds, "description", None) is not None
+                    else None
+                )
+                for t in targets
+            )
+        ]
+        n_dropped = len(datasets) - len(kept)
+        if n_dropped:
+            logger.warning(
+                "Dropped %d/%d recording(s) with a missing target_name=%r "
+                "(remove_nan_targets=True).",
+                n_dropped,
+                len(datasets),
+                self._target_name,
+            )
+        return kept
 
     @property
     def cumulative_sizes(self) -> list[int]:

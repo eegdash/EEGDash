@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - `EEGDashDataset` validates `target_name`: the field is auto-added to `description_fields`, and a `ValueError` (listing the available fields) is raised when the target is missing for every recording — typically a misspelled name such as `"p-factor"` for `"p_factor"` (#21)
+- `EEGDashDataset` gained a `remove_nan_targets` parameter (default `False`): when `target_name` is set and `remove_nan_targets=True`, recordings whose target is missing (None/NaN) are dropped with a warning (#22)
 
 ## [0.8.2] - 2026-05-30
 

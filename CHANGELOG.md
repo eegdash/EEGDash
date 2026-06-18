@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- `build_query_from_kwargs` (and therefore `EEGDashDataset`/`EEGChallengeDataset` keyword filters) accept a compiled `re.Pattern`, translated into a MongoDB `$regex` query with `IGNORECASE`/`MULTILINE`/`DOTALL` flags mapped onto `$options` (#135)
+
 ## [0.8.2] - 2026-05-30
 
 ### Changed

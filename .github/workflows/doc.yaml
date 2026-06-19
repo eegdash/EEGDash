@@ -59,6 +59,11 @@ jobs:
                   output.write(f"{key}={path}\n")
 
       - name: Install dependencies
+        env:
+          # GPU-less runners: fetch CPU-only torch wheels (via braindecode) instead
+          # of the default CUDA builds (~5 GB of unused CUDA libs that also bloat the
+          # uv cache). Scoped to CI, not pyproject, so local/GPU installs are unaffected.
+          UV_TORCH_BACKEND: cpu
         run: uv pip install -e .[all]
 
       - name: Restore Data Caches (pull_request)

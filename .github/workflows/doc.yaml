@@ -133,7 +133,9 @@ jobs:
 
       # Comment on PR with preview link
       - name: Comment PR with Preview Link
-        if: github.event_name == 'pull_request'
+        # Fork PRs get a read-only GITHUB_TOKEN, so commenting 403s. Only same-repo PRs can comment.
+        if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+        continue-on-error: true
         uses: actions/github-script@v9
         with:
           script: |

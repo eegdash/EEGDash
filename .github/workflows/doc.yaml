@@ -59,6 +59,11 @@ jobs:
                   output.write(f"{key}={path}\n")
 
       - name: Install dependencies
+        env:
+          # GPU-less runners: fetch CPU-only torch wheels (via braindecode) instead
+          # of the default CUDA builds (~5 GB of unused CUDA libs that also bloat the
+          # uv cache). Scoped to CI, not pyproject, so local/GPU installs are unaffected.
+          UV_TORCH_BACKEND: cpu
         run: uv pip install -e .[all]
 
       - name: Restore Data Caches (pull_request)
@@ -125,23 +130,6 @@ jobs:
           name: documentation-html
           path: ./docs/_build/html
           retention-days: 14
-
-      # Deploy PR preview to surge.sh (optional - requires SURGE_TOKEN secret)
-      - name: Deploy PR Preview
-        if: github.event_name == 'pull_request'
-        id: deploy-preview
-        continue-on-error: true
-        env:
-          SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
-        run: |
-          if [ -z "$SURGE_TOKEN" ]; then
-            echo "SURGE_TOKEN not configured, skipping live preview deployment"
-            exit 0
-          fi
-          npm install -g surge
-          DEPLOY_DOMAIN="eegdash-pr-${{ github.event.pull_request.number }}.surge.sh"
-          surge ./docs/_build/html $DEPLOY_DOMAIN --token $SURGE_TOKEN
-          echo "preview_url=https://$DEPLOY_DOMAIN" >> $GITHUB_OUTPUT
 
       # Comment on PR with preview link
       - name: Comment PR with Preview Link

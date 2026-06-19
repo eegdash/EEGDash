@@ -105,6 +105,11 @@ jobs:
     - name: Show Python Version
       run: python --version
     - name: Install EEGDash from Current Checkout
+      env:
+        # GPU-less runners: fetch CPU-only torch wheels (via braindecode) instead
+        # of the default CUDA builds (~5 GB of unused CUDA libs that also bloat the
+        # uv cache). Scoped to CI, not pyproject, so local/GPU installs are unaffected.
+        UV_TORCH_BACKEND: cpu
       run: uv pip install -e .[tests]
     # Show EEGDash Version
     - name: Show EEGDash Version

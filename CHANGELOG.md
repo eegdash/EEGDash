@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - `EEGDashDataset` validates `target_name`: the field is auto-added to `description_fields`, and a `ValueError` (listing the available fields) is raised when the target is missing for every recording — typically a misspelled name such as `"p-factor"` for `"p_factor"` (#21)
+### Documentation
+- `EEGDashDataset` and `EEGChallengeDataset` docstrings now enumerate the allowed keyword filters (`ALLOWED_QUERY_FIELDS`), document scalar/list (`$in`) usage, clarify that non-filter keywords such as `target_name` are forwarded to braindecode, and note that a misspelled filter name is silently forwarded rather than raising (#211)
 
 ## [0.8.2] - 2026-05-30
 

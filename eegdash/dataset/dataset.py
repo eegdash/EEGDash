@@ -146,6 +146,25 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
         the column is populated. A ``ValueError`` is raised (listing the
         available fields) when the target is missing for every recording —
         typically a misspelled name such as ``"p-factor"`` for ``"p_factor"``.
+    modality : str | list[str]
+        Recording modality to filter by (e.g., ``"eeg"``).
+    sampling_frequency, nchans, ntimes : scalar
+        Additional numeric record fields that may be used as filters.
+
+        Every keyword filter above accepts a scalar (exact match) or a
+        list/tuple/set (``$in`` match). The complete set of filterable keys is
+        :data:`~eegdash.const.ALLOWED_QUERY_FIELDS`
+        (``dataset``, ``subject``, ``task``, ``session``, ``run``,
+        ``modality``, ``sampling_frequency``, ``nchans``, ``ntimes``,
+        ``data_name``). Any keyword that is **not** in that set is forwarded to
+        :class:`EEGDashRaw` (and on to braindecode) instead of being used as a
+        filter — for example ``target_name``. A keyword that is meant to be a
+        filter but is misspelled therefore silently becomes a forwarded option
+        rather than raising.
+    target_name : str | list[str] | None
+        Name of the description field to expose as the braindecode prediction
+        target. Forwarded to :class:`EEGDashRaw`; the named field must be one
+        of the recording's ``description_fields`` for indexing to succeed.
     description_fields : list[str]
         Fields to extract from each record and include in dataset descriptions
         (e.g., "subject", "session", "run", "task").
@@ -743,8 +762,12 @@ class EEGChallengeDataset(EEGDashDataset):
         The base S3 bucket URI where the challenge data is stored. Defaults to
         the official challenge bucket.
     **kwargs
-        Additional keyword arguments that are passed directly to the
-        :class:`~eegdash.api.EEGDashDataset` constructor.
+        Additional keyword arguments passed directly to the
+        :class:`~eegdash.api.EEGDashDataset` constructor. This includes the
+        keyword filters (``task``, ``subject``, ``session``, ``run``,
+        ``modality``, ...; see :data:`~eegdash.const.ALLOWED_QUERY_FIELDS`),
+        each accepting a scalar or a list (``$in``), as well as ``target_name``
+        which is forwarded to braindecode.
 
     Raises
     ------

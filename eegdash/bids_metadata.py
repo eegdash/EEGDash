@@ -16,6 +16,7 @@ from typing import AbstractSet, Any
 import pandas as pd
 
 from .const import ALLOWED_QUERY_FIELDS
+from .logging import logger
 
 __all__ = [
     "build_description",
@@ -31,7 +32,75 @@ __all__ = [
     "get_entity_from_record",
     "get_entities_from_record",
     "records_to_dataframe",
+    "warn_unmatched_filter_values",
 ]
+
+
+def warn_unmatched_filter_values(
+    query: Mapping[str, Any] | None,
+    records: Sequence[Mapping[str, Any]],
+) -> None:
+    """Warn about explicit filter values that matched no returned records (#141).
+
+    A scalar filter that matches nothing simply returns zero records (handled
+    by the caller). This targets the subtler case where a field constrains a
+    *list* of values (``$in``) and only some of them match — the unmatched
+    values are otherwise silently dropped. Operators other than ``$in`` (e.g.
+    ``$regex``, range operators) and the logical ``$and``/``$or`` keys are
+    skipped, as is the ``dataset`` field.
+
+    Parameters
+    ----------
+    query : mapping or None
+        The MongoDB query that was executed.
+    records : sequence of mapping
+        The records returned for ``query``.
+
+    """
+    if not query:
+        return
+
+    requested: dict[str, list[str]] = {}
+    for field, value in query.items():
+        if field == "dataset" or field.startswith("$"):
+            continue
+        if isinstance(value, re.Pattern):
+            continue
+        if isinstance(value, Mapping):
+            if "$in" in value:
+                requested[field] = [str(v) for v in value["$in"]]
+            continue
+        if isinstance(value, (list, tuple, set)):
+            requested[field] = [str(v) for v in value]
+        else:
+            requested[field] = [str(value)]
+
+    if not requested:
+        return
+
+    actual: dict[str, set[str]] = {field: set() for field in requested}
+    for record in records:
+        entities = record.get("entities_mne") or {}
+        for field in requested:
+            value = entities.get(field)
+            if value is None:
+                value = record.get(field)
+            if value is not None:
+                actual[field].add(str(value))
+
+    for field, values in requested.items():
+        if not actual[field]:
+            # Nothing matched at all; the empty-result path covers it.
+            continue
+        unmatched = [v for v in values if v not in actual[field]]
+        if unmatched:
+            logger.warning(
+                "Filter %r requested value(s) %s that matched no records "
+                "(available: %s); they were ignored.",
+                field,
+                unmatched,
+                sorted(actual[field]),
+            )
 
 
 def records_to_dataframe(

@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 from typing import Any
 
+import pandas as pd
 from docstring_inheritance import NumpyDocstringInheritanceInitMeta
 from joblib import Parallel, delayed
 from mne_bids.config import reader
@@ -139,6 +140,31 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
         Session identifier(s) to filter by (e.g., ``"1"``).
     run : str | list[str]
         Run identifier(s) to filter by (e.g., ``"1"``).
+    target_name : str | list[str] | None
+        Name of the description field to expose as the braindecode prediction
+        target. The field is automatically added to ``description_fields`` so
+        the column is populated. A ``ValueError`` is raised (listing the
+        available fields) when the target is missing for every recording —
+        typically a misspelled name such as ``"p-factor"`` for ``"p_factor"``.
+    modality : str | list[str]
+        Recording modality to filter by (e.g., ``"eeg"``).
+    sampling_frequency, nchans, ntimes : scalar
+        Additional numeric record fields that may be used as filters.
+
+        Every keyword filter above accepts a scalar (exact match) or a
+        list/tuple/set (``$in`` match). The complete set of filterable keys is
+        :data:`~eegdash.const.ALLOWED_QUERY_FIELDS`
+        (``dataset``, ``subject``, ``task``, ``session``, ``run``,
+        ``modality``, ``sampling_frequency``, ``nchans``, ``ntimes``,
+        ``data_name``). Any keyword that is **not** in that set is forwarded to
+        :class:`EEGDashRaw` (and on to braindecode) instead of being used as a
+        filter — for example ``target_name``. A keyword that is meant to be a
+        filter but is misspelled therefore silently becomes a forwarded option
+        rather than raising.
+    target_name : str | list[str] | None
+        Name of the description field to expose as the braindecode prediction
+        target. Forwarded to :class:`EEGDashRaw`; the named field must be one
+        of the recording's ``description_fields`` for indexing to succeed.
     description_fields : list[str]
         Fields to extract from each record and include in dataset descriptions
         (e.g., "subject", "session", "run", "task").
@@ -231,7 +257,18 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
         self.n_jobs = n_jobs
         self.max_concurrency = max_concurrency
         self.eeg_dash_instance = eeg_dash_instance
-        description_fields = description_fields or DEFAULT_DESCRIPTION_FIELDS
+
+        # ``target_name`` is forwarded to braindecode, but the target column
+        # must be present in each recording's description for it to work.
+        # Capture it so we can surface it as a description field and validate
+        # it once the datasets are built (#21).
+        self._target_name = kwargs.get("target_name")
+
+        # Copy so we never mutate the shared DEFAULT_DESCRIPTION_FIELDS list.
+        description_fields = list(description_fields or DEFAULT_DESCRIPTION_FIELDS)
+        for _target in self._target_field_names():
+            if _target not in description_fields:
+                description_fields.append(_target)
 
         self.cache_dir = Path(cache_dir or get_default_cache_dir())
         self.cache_dir.mkdir(parents=True, exist_ok=True)
@@ -350,7 +387,71 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
             except Exception:
                 pass
 
+        # Fail fast on a misspelled / unavailable target_name (#21).
+        self._validate_target_present(datasets)
+
         super().__init__(datasets, lazy=True)
+
+    def _target_field_names(self) -> list[str]:
+        """Return the configured ``target_name`` as a list of field names."""
+        target = getattr(self, "_target_name", None)
+        if target is None:
+            return []
+        if isinstance(target, (list, tuple)):
+            return [str(t) for t in target if t is not None]
+        return [str(target)]
+
+    @staticmethod
+    def _is_missing(value: Any) -> bool:
+        """True for None / NaN / pandas-NA scalars."""
+        if value is None:
+            return True
+        try:
+            return bool(pd.isna(value))
+        except (TypeError, ValueError):
+            return False
+
+    def _available_description_fields(self, datasets: list[EEGDashRaw]) -> set[str]:
+        """Collect description fields that carry at least one non-missing value."""
+        fields: set[str] = set()
+        for ds in datasets:
+            desc = getattr(ds, "description", None)
+            if desc is None:
+                continue
+            for key, value in desc.items():
+                if not self._is_missing(value):
+                    fields.add(key)
+        return fields
+
+    def _validate_target_present(self, datasets: list[EEGDashRaw]) -> None:
+        """Raise when ``target_name`` is missing for *every* recording.
+
+        This catches a misspelled ``target_name`` or one that is not an
+        available metadata field (e.g. ``"p-factor"`` instead of
+        ``"p_factor"``) instead of letting it fail later in braindecode.
+        """
+        targets = self._target_field_names()
+        if not targets or not datasets:
+            return
+
+        for target in targets:
+            has_value = any(
+                not self._is_missing(
+                    ds.description.get(target)
+                    if getattr(ds, "description", None) is not None
+                    else None
+                )
+                for ds in datasets
+            )
+            if not has_value:
+                available = sorted(self._available_description_fields(datasets))
+                raise ValueError(
+                    f"target_name={target!r} has no usable (non-missing) values "
+                    f"across all {len(datasets)} recording(s). This usually means "
+                    f"the target name is misspelled or is not an available "
+                    f"metadata field. Available description fields with values: "
+                    f"{available}."
+                )
 
     @property
     def cumulative_sizes(self) -> list[int]:
@@ -661,8 +762,12 @@ class EEGChallengeDataset(EEGDashDataset):
         The base S3 bucket URI where the challenge data is stored. Defaults to
         the official challenge bucket.
     **kwargs
-        Additional keyword arguments that are passed directly to the
-        :class:`~eegdash.api.EEGDashDataset` constructor.
+        Additional keyword arguments passed directly to the
+        :class:`~eegdash.api.EEGDashDataset` constructor. This includes the
+        keyword filters (``task``, ``subject``, ``session``, ``run``,
+        ``modality``, ...; see :data:`~eegdash.const.ALLOWED_QUERY_FIELDS`),
+        each accepting a scalar or a list (``$in``), as well as ``target_name``
+        which is forwarded to braindecode.
 
     Raises
     ------

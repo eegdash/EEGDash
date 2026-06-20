@@ -256,7 +256,12 @@ def build_query_from_kwargs(
 
     Converts user-friendly keyword arguments into a valid MongoDB query
     dictionary. Scalar values become exact matches; list-like values
-    become ``$in`` queries.
+    become ``$in`` queries; a compiled :class:`re.Pattern` becomes a
+    ``$regex`` query (with Python ``IGNORECASE``/``MULTILINE``/``DOTALL``
+    flags mapped onto ``$options``). For example
+    ``build_query_from_kwargs(dataset="ds002718",
+    task=re.compile("rest", re.IGNORECASE))`` matches any task containing
+    "rest" case-insensitively.
 
     Entity fields (subject, task, session, run) are queried at the top
     level since the inject script flattens these from nested entities.
@@ -317,6 +322,32 @@ def build_query_from_kwargs(
         paths = list(spec.get("paths") or [key])
         operator = spec.get("operator")
         value_aliases = spec.get("value_aliases")
+
+        if isinstance(value, re.Pattern):
+            # Regex support (#135): a compiled pattern is translated into a
+            # MongoDB ``$regex`` clause. Python flags map onto ``$options``.
+            if len(paths) > 1 or operator or value_aliases:
+                raise ValueError(
+                    f"Field '{key}' was given a compiled regex, which is only "
+                    "supported for plain single-path fields (no operator, "
+                    "value_aliases, or multi-path specs)."
+                )
+            if not value.pattern:
+                raise ValueError(f"Received an empty regex for query field '{key}'.")
+            regex_clause: dict[str, Any] = {"$regex": value.pattern}
+            options = "".join(
+                flag
+                for bit, flag in (
+                    (re.IGNORECASE, "i"),
+                    (re.MULTILINE, "m"),
+                    (re.DOTALL, "s"),
+                )
+                if value.flags & bit
+            )
+            if options:
+                regex_clause["$options"] = options
+            query[paths[0]] = regex_clause
+            continue
 
         if isinstance(value, (list, tuple, set)):
             # List values keep the legacy $in semantics; specs that try

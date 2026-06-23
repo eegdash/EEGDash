@@ -96,8 +96,12 @@ Chat          = "https://discord.gg/8jd7nVKwsc"
 
 [project.optional-dependencies]
 features = [
-  "numba<0.61; sys_platform == 'darwin' and platform_machine == 'x86_64'",
-  "numba;      sys_platform != 'darwin' or platform_machine != 'x86_64'",
+  # Floor numba so the resolver can't backtrack to ancient releases (e.g.
+  # numba 0.53.1 → llvmlite 0.36, which won't build on Python >=3.10). When a
+  # co-installed package pushes numpy past numba's ceiling, the floor forces
+  # numpy down to numba's supported range instead. See eegdash/EEGDash#170.
+  "numba>=0.60,<0.61; sys_platform == 'darwin' and platform_machine == 'x86_64'",
+  "numba>=0.61;       sys_platform != 'darwin' or platform_machine != 'x86_64'",
   "safetensors",
 ]
 tests = [

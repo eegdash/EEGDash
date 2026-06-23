@@ -7,10 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.3] - 2026-06-23
+
 ### Added
 - `EEGDash.find` now warns when an explicitly requested filter value (e.g. a misspelled task inside a list of tasks) matches no records, instead of silently dropping it (#141)
 - `EEGDashDataset` validates `target_name`: the field is auto-added to `description_fields`, and a `ValueError` (listing the available fields) is raised when the target is missing for every recording — typically a misspelled name such as `"p-factor"` for `"p_factor"` (#21)
 - `build_query_from_kwargs` (and therefore `EEGDashDataset`/`EEGChallengeDataset` keyword filters) accept a compiled `re.Pattern`, translated into a MongoDB `$regex` query with `IGNORECASE`/`MULTILINE`/`DOTALL` flags mapped onto `$options` (#135)
+
+### Fixed
+- Co-installing `eegdash` alongside packages that declare an unbounded `numpy>=2.1` no longer backtracks `numba` to 0.53.1 / `llvmlite` 0.36 (which fail to build on Python ≥3.10). `numba` is now floored (`>=0.61`, and `>=0.60` on the Intel-Mac `<0.61` path), so the resolver settles on a recent `numba`/`llvmlite` and caps `numpy` to numba's supported range instead (#170)
+
 ### Documentation
 - `EEGDashDataset` and `EEGChallengeDataset` docstrings now enumerate the allowed keyword filters (`ALLOWED_QUERY_FIELDS`), document scalar/list (`$in`) usage, clarify that non-filter keywords such as `target_name` are forwarded to braindecode, and note that a misspelled filter name is silently forwarded rather than raising (#211)
 

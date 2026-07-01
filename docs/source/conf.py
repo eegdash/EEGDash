@@ -209,7 +209,7 @@ html_theme_options = {
     # pydata-sphinx-theme loads fontawesome.js (~1.49MB) unconditionally via its
     # head_js_preload() macro regardless of icon_links type; that script is
     # suppressed by the css-block override in _templates/layout.html (icons fall
-    # back to the theme's bundled woff2). See docs/maintenance/docs-perf-plan.md.
+    # back to the theme's bundled woff2). See docs/maintenance/docs-perf.md.
     "icon_links": [
         {
             "name": "GitHub",

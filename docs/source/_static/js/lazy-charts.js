@@ -1,6 +1,6 @@
 /* lazy-charts.js — load Plotly and render the summary-page charts only when
    the user opens a chart tab. Pairs with the capture-stub inlined at the top
-   of dataset_summary.rst. See docs/maintenance/docs-perf-plan.md. */
+   of dataset_summary.rst. See docs/maintenance/docs-perf.md. */
 (function () {
   'use strict';
   var PLOTLY_SRC = 'https://cdn.plot.ly/plotly-3.1.0.min.js';

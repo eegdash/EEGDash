@@ -26,7 +26,7 @@
    bootstrap.js / pydata-sphinx-theme.js — harmless: both still load (deferred)
    via the theme's body_post()/scripts_end block, which we don't override; they
    only lose the early-fetch priming. RE-AUDIT on theme upgrade — see
-   docs/maintenance/docs-perf-plan.md. #}
+   docs/maintenance/docs-perf.md. #}
 {% block css %}
   <script data-cfasync="false">
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "{{ default_mode }}";

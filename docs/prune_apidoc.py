@@ -39,7 +39,9 @@ def main() -> None:
             else:
                 patched.append(line)
         path.write_text("".join(patched), encoding="utf-8")
-        print(f"prune_apidoc: {'patched' if changed else 'no :members: line in'} {name}")
+        print(
+            f"prune_apidoc: {'patched' if changed else 'no :members: line in'} {name}"
+        )
 
 
 if __name__ == "__main__":

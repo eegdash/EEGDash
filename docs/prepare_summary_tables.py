@@ -743,9 +743,9 @@ def prepare_table(df: pd.DataFrame) -> pd.DataFrame:
         for c, ay in zip(df["canonical_name"], df["author_year"])
     ]
     df["author_year"] = df["author_year"].apply(
-        lambda v: ""
-        if v is None or (isinstance(v, float) and pd.isna(v))
-        else str(v).strip()
+        lambda v: (
+            "" if v is None or (isinstance(v, float) and pd.isna(v)) else str(v).strip()
+        )
     )
 
     df = df[

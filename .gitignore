@@ -88,3 +88,7 @@ verification_report.md
 # history to >400MB. Keep them out. See docs/maintenance/repo-slimming.md.
 notebooks/scratch_*.ipynb
 consolidated/
+
+# uv lockfile — eegdash is a library and CI uses `uv pip install` (not the
+# lock); regenerate locally with `uv lock` if needed. Kept out to avoid churn.
+uv.lock

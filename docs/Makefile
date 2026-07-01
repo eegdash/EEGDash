@@ -20,6 +20,9 @@ apidoc:
 	@rm -f "$(APIDIR)"/dataset/eegdash.features*
 	@SPHINX_APIDOC_OPTIONS=members,undoc-members,show-inheritance,noindex \
 		python -m sphinx.ext.apidoc -f -e -T -o "$(APIDIR)/dataset" "../$(PKG)" "../$(PKG)/features"
+	# Restrict the two giant dataset automodule dumps to hand-written classes
+	# (the ~753 dynamic dataset classes are documented on the Brief pages).
+	@python prune_apidoc.py
 
 # Regenerate $(SOURCEDIR)/_extra/llms.txt from the current source tree.
 # Runs after `apidoc` so the per-dataset pages that drive the sitemap

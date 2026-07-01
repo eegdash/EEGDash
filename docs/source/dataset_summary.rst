@@ -90,7 +90,30 @@ EEG-DaSh is a data-sharing archive for MEEG (EEG, MEG) recordings contributed by
 
    .. raw:: html
 
-      <script src="https://cdn.plot.ly/plotly-3.1.0.min.js"></script>
+      <script>
+      /* Defer Plotly (~1.45MB gz) until a chart tab is opened. Chart fragments
+         call Plotly.newPlot(...).then(cb) at parse (the .then hides a per-chart
+         loading spinner); while Plotly is this stub we capture the newPlot args
+         AND the .then callbacks, and no-op Plotly.Plots.resize so a window
+         resize before Plotly loads can't throw. lazy-charts.js loads the real
+         library on first chart-tab activation and replays each newPlot, firing
+         the captured .then callbacks. Default tab is the table (no chart) so
+         Plotly never loads unless the user explores the charts. */
+      (function () {
+        'use strict';
+        var q = (window.__plotlyQueue = []);
+        window.Plotly = {
+          __stub: true,
+          Plots: { resize: function () {} },
+          newPlot: function () {
+            var rec = { args: [].slice.call(arguments), then: [] };
+            q.push(rec);
+            var t = { then: function (cb) { if (cb) rec.then.push(cb); return t; } };
+            return t;
+          }
+        };
+      })();
+      </script>
 
    .. tab-set::
 

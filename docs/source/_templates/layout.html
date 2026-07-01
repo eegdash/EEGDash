@@ -1,5 +1,8 @@
 {% extends "!layout.html" %}
 
+{# Needed to reproduce the theme's `css` block below (minus fontawesome.js). #}
+{%- import "static/webpack-macros.html" as _webpack with context %}
+
 {#
   Theme-coupling notice
   ---------------------
@@ -14,6 +17,29 @@
   ``<theme-path>/pydata_sphinx_theme/theme/pydata_sphinx_theme/layout.html``.
   Anything new and load-bearing there should be mirrored here.
 #}
+
+{# Reproduce pydata-sphinx-theme 0.16.1's `css` block but omit the whole
+   head_js_preload() macro. Its main cost is the unconditional
+   _static/scripts/fontawesome.js (~1.49MB) on every page; every icon we use has
+   a CSS/woff2 fallback in the theme's already-loaded stylesheet, so icons still
+   render. Dropping the macro also drops its two <link rel="preload"> hints for
+   bootstrap.js / pydata-sphinx-theme.js — harmless: both still load (deferred)
+   via the theme's body_post()/scripts_end block, which we don't override; they
+   only lose the early-fetch priming. RE-AUDIT on theme upgrade — see
+   docs/maintenance/docs-perf-plan.md. #}
+{% block css %}
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "{{ default_mode }}";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "{{ default_mode }}";
+  </script>
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+    </style>
+  </noscript>
+  {{ _webpack.head_pre_assets() }}
+  {{- css() }}
+{% endblock css %}
 
 {# Override the pydata-sphinx-theme extrahead block to avoid emitting a
    duplicate `<meta name="viewport">` — the Sphinx base layout already

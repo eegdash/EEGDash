@@ -176,6 +176,9 @@ html_js_files = [
     ("js/eegdash-search.js", {"defer": "defer"}),
     # Lazy-load the electrode-explorer iframe on <details> expansion.
     ("js/lazy-embed.js", {"defer": "defer"}),
+    # Lazy-load Plotly for the dataset-summary chart tabs (see
+    # dataset_summary.rst capture-stub + _static/js/lazy-charts.js).
+    ("js/lazy-charts.js", {"defer": "defer"}),
 ]
 
 # Required for sphinx-sitemap: set the canonical base URL of the site
@@ -202,10 +205,11 @@ html_theme_options = {
     "external_links": [
         {"name": "EEG2025", "url": "https://eeg2025.github.io/"},
     ],
-    # Local SVG icons instead of FontAwesome. Pydata-sphinx-theme only
-    # loads fontawesome.js (~540 KiB) when at least one icon_links entry
-    # has type="fontawesome"; switching to local SVGs removes that
-    # dependency from every page load.
+    # Local SVG icons instead of FontAwesome for these brand links. Note:
+    # pydata-sphinx-theme loads fontawesome.js (~1.49MB) unconditionally via its
+    # head_js_preload() macro regardless of icon_links type; that script is
+    # suppressed by the css-block override in _templates/layout.html (icons fall
+    # back to the theme's bundled woff2). See docs/maintenance/docs-perf-plan.md.
     "icon_links": [
         {
             "name": "GitHub",

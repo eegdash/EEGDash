@@ -36,7 +36,9 @@ PURGE_ARGS=(
   --path .verify_cache/
   --path .verify_cache_python/
   --path .verify_cache_test/
-  --path docs/architecture2.pptx  # 2MB deck, deleted from HEAD
+  --path docs/architecture2.pptx        # 2MB deck, deleted from HEAD
+  --path documents/architecture2.pptx   # a second 2MB deck in a stray dir, not in HEAD
+  --path uv.lock                        # lockfile un-tracked (library; CI uses `uv pip install`)
 )
 
 # The default branch. Its file tree MUST be identical before and after the

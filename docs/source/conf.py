@@ -176,6 +176,9 @@ html_js_files = [
     ("js/eegdash-search.js", {"defer": "defer"}),
     # Lazy-load the electrode-explorer iframe on <details> expansion.
     ("js/lazy-embed.js", {"defer": "defer"}),
+    # Lazy-load Plotly for the dataset-summary chart tabs (see
+    # dataset_summary.rst capture-stub + _static/js/lazy-charts.js).
+    ("js/lazy-charts.js", {"defer": "defer"}),
 ]
 
 # Required for sphinx-sitemap: set the canonical base URL of the site

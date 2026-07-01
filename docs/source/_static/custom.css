@@ -355,18 +355,6 @@ table.table tbody tr:hover {
   font-size: 0.95rem;
 }
 
-/* Perf: the table ships all ~800 rows (paging:false), which is the main
-   driver of the summary page's main-thread work / TBT / CLS. content-visibility
-   lets the browser skip layout + paint for rows outside the viewport;
-   contain-intrinsic-size reserves ~one row's height so the scrollbar stays
-   put. ponytail: native browser feature, no JS/deps.
-   VERIFY on the PR preview: DataTables column alignment + CLS. If columns
-   misalign (DataTables measures row widths), delete this block. */
-#datasets-table tbody tr {
-  content-visibility: auto;
-  contain-intrinsic-size: auto 44px;
-}
-
 /* --------------------------------------------------------------------------
    9. Footer & Branding
    -------------------------------------------------------------------------- */

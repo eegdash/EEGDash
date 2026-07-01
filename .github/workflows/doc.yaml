@@ -11,8 +11,10 @@ on:
     branches:
       - '*' # all branches, including forks
 
+# contents:read is enough now that docs deploy via the Pages artifact flow
+# (no branch push). pages/id-token live on the deploy-pages job below.
 permissions:
-  contents: write
+  contents: read
   pull-requests: write
 
 jobs:
@@ -184,24 +186,20 @@ jobs:
                 body: body
               });
             }
-      # we are only deploying from develop for now onwards
-      # # Deploy the docs to the gh-pages branch (main and develop)
-      # - name: Deploy to GitHub Pages (main)
-      #   if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-      #   uses: peaceiris/actions-gh-pages@v4
-      #   with:
-      #     github_token: ${{ secrets.GITHUB_TOKEN }}
-      #     publish_dir: ./docs/_build/html
-      #     destination_dir: archive
-      #     keep_files: true
-
-      - name: Deploy to GitHub Pages (develop)
+      # Docs deploy via the GitHub Pages *artifact* flow (no gh-pages branch).
+      # The old peaceiris branch-push committed the whole site (incl. a 42MB
+      # llms-full.txt) on every deploy, so gh-pages history ballooned the clone
+      # size. The artifact is ephemeral, so clones no longer carry the site.
+      # One-time setup: repo Settings -> Pages -> Source = "GitHub Actions".
+      - name: Set custom domain (CNAME)
         if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
-        uses: peaceiris/actions-gh-pages@v4
+        run: echo "eegdash.org" > ./docs/_build/html/CNAME
+
+      - name: Upload Pages artifact
+        if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
+        uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docs/_build/html
-          cname: eegdash.org
+          path: ./docs/_build/html
 
       - name: Ping IndexNow (Bing + Yandex + friends)
         # IndexNow tells participating search engines about every deploy
@@ -230,3 +228,21 @@ jobs:
           curl -sS -X POST https://api.indexnow.org/indexnow \
             -H "Content-Type: application/json; charset=utf-8" \
             -d "$payload" -o /dev/null -w "IndexNow HTTP %{http_code}\n"
+
+  # Publish the built docs to GitHub Pages from the artifact. No branch is
+  # written, so the site never lands in `git clone`. Runs only on push to
+  # develop, after the docs job uploads the artifact.
+  deploy-pages:
+    needs: docs
+    if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

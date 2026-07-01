@@ -3975,3 +3975,27 @@ html[data-theme="dark"] .hf-quickstart .highlight .cp,
 html[data-theme="dark"] .hf-quickstart .highlight .cs {
   color: #94a3b8 !important;
 }
+
+/* --------------------------------------------------------------------------
+   Accessibility — honor prefers-reduced-motion globally.
+   The targeted blocks earlier in this file cover a few reveal animations, but
+   several *infinite* animations were left running for motion-sensitive users:
+   the home-hero background (hero-pulse), the beta-badge pulses (badge-pulse /
+   badge-dot-pulse), and the dataset-table loading skeleton (dt-skel, defined
+   in the generated table fragment — reached here because custom.css loads on
+   that page and !important overrides the fragment's rule). This global reset
+   neutralises all animations, transitions, and smooth scrolling when the user
+   requests reduced motion — the standard, future-proof pattern that also
+   covers any animation added later. See WCAG 2.2 SC 2.3.3 (Animation from
+   Interactions); adapted from the neuroai landing-page a11y review.
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

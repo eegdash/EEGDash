@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.4] - 2026-07-01
+
+### Fixed
+- Replaced `s3fs` with `boto3` for S3 downloads, unpinning `botocore` so `eegdash` no longer conflicts with other packages' `botocore` requirements (#398)
+
+### Changed
+- Documentation site: performance overhaul (virtual-scrolled dataset table, lazy-loaded Plotly, dropped a ~1.5&nbsp;MB icon bundle, shrank two ~7&nbsp;MB API pages), `prefers-reduced-motion` accessibility support, and deployment moved to the GitHub Pages Actions flow (#394, #395, #396)
+- Repository slimmed: dead history (scratch notebooks, caches, generated dumps) purged and `uv.lock` untracked, cutting a fresh clone from >200&nbsp;MB to ~17&nbsp;MB
+
 ## [0.8.3] - 2026-06-23
 
 ### Added

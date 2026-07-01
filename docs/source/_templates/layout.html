@@ -1,5 +1,8 @@
 {% extends "!layout.html" %}
 
+{# Needed to reproduce the theme's `css` block below (minus fontawesome.js). #}
+{%- import "static/webpack-macros.html" as _webpack with context %}
+
 {#
   Theme-coupling notice
   ---------------------
@@ -15,12 +18,43 @@
   Anything new and load-bearing there should be mirrored here.
 #}
 
+{# Reproduce pydata-sphinx-theme 0.16.1's `css` block but omit the whole
+   head_js_preload() macro. Its main cost is the unconditional
+   _static/scripts/fontawesome.js (~1.49MB) on every page; every icon we use has
+   a CSS/woff2 fallback in the theme's already-loaded stylesheet, so icons still
+   render. Dropping the macro also drops its two <link rel="preload"> hints for
+   bootstrap.js / pydata-sphinx-theme.js — harmless: both still load (deferred)
+   via the theme's body_post()/scripts_end block, which we don't override; they
+   only lose the early-fetch priming. RE-AUDIT on theme upgrade — see
+   docs/maintenance/docs-perf.md. #}
+{% block css %}
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "{{ default_mode }}";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "{{ default_mode }}";
+  </script>
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+    </style>
+  </noscript>
+  {{ _webpack.head_pre_assets() }}
+  {{- css() }}
+{% endblock css %}
+
 {# Override the pydata-sphinx-theme extrahead block to avoid emitting a
    duplicate `<meta name="viewport">` — the Sphinx base layout already
    emits one. We keep the docsearch/docbuild tags the theme relies on. #}
 {% block extrahead %}
   <meta name="docsearch:language" content="{{ language }}"/>
   <meta name="docsearch:version" content="{{ version }}" />
+
+  {# Single source of truth for the EEGDash API base (set in conf.py
+     from the eegdash package default + EEGDASH_API_URL override).
+     Inline so it runs at parse time, before any deferred script reads
+     document.documentElement.dataset. #}
+  {%- if eegdash_api_base %}
+  <script>document.documentElement.setAttribute('data-eegdash-api', '{{ eegdash_api_base | e }}');</script>
+  {%- endif %}
   {%- if last_updated %}
   <meta name="docbuild:last-update" content="{{ last_updated | e }}"/>
   {%- endif %}
@@ -136,49 +170,61 @@
   <script>document.documentElement.classList.add('editorial-dataset');</script>
   {%- endif %}
 
-  <!-- Google Tag Manager — deferred to DOMContentLoaded so the GTM
-       bootstrap no longer blocks first-paint or the Sphinx search-index
-       load. Functionally equivalent to the inline snippet below but
-       saves ~60 ms of Total Blocking Time per PageSpeed Insights. -->
+  <!-- Google Analytics 4 + Google Ads (gtag.js) — direct install for the
+       EEGDash GA4 property G-CHY0V439ZQ and the Google Ads tag AW-1000742183.
+       This replaces the previous Google Tag
+       Manager container (GTM-MXC3DGL6), which shipped NO GA4
+       configuration tag and therefore collected nothing, and whose
+       shared-container pattern risked cross-wiring eegdash traffic with
+       the braindecode property. A direct gtag.js install routes pageviews
+       unambiguously to eegdash's own property only. Deferred off the
+       critical path so it no longer blocks first-paint or the Sphinx
+       search-index load (~60 ms of Total Blocking Time per PageSpeed). -->
   <script>
     (function(){
-      function loadGTM(){
-        if (window.__gtmLoaded) return;
-        window.__gtmLoaded = true;
-        (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-        })(window,document,'script','dataLayer','GTM-MXC3DGL6');
+      var GA4_ID = 'G-CHY0V439ZQ';
+      // Google Ads tag (AW-1000742183, provided by Arnaud Delorme). Rides the
+      // single gtag.js instance loaded for GA4 below — one library fetch, two
+      // gtag('config') calls — rather than loading gtag.js a second time.
+      var ADS_ID = 'AW-1000742183';
+      function loadGA4(){
+        if (window.__ga4Loaded) return;
+        window.__ga4Loaded = true;
+        var g = document.createElement('script');
+        g.async = true;
+        g.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA4_ID;
+        document.head.appendChild(g);
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        window.gtag = gtag;
+        gtag('js', new Date());
+        gtag('config', GA4_ID);
+        gtag('config', ADS_ID);
       }
-      // Defer GTM off the critical path. requestIdleCallback wants an
+      // Defer GA4 off the critical path. requestIdleCallback wants an
       // IdleRequestOptions object as its second argument while
       // setTimeout wants a plain number — using the same `1` for both
       // raised a TypeError in Lighthouse's console that dragged the SEO
       // score down. Branch on availability so each API gets the shape
       // it expects.
-      function scheduleGTM() {
+      function scheduleGA4() {
         if (typeof window.requestIdleCallback === 'function') {
-          window.requestIdleCallback(loadGTM, { timeout: 2000 });
+          window.requestIdleCallback(loadGA4, { timeout: 2000 });
         } else {
-          setTimeout(loadGTM, 1);
+          setTimeout(loadGA4, 1);
         }
       }
       if (document.readyState === 'complete' || document.readyState === 'interactive') {
-        scheduleGTM();
+        scheduleGA4();
       } else {
-        document.addEventListener('DOMContentLoaded', scheduleGTM);
+        document.addEventListener('DOMContentLoaded', scheduleGA4);
       }
     })();
   </script>
-  <!-- End Google Tag Manager -->
+  <!-- End Google Analytics 4 -->
 {% endblock %}
 
 {% block body %}
-  <!-- Google Tag Manager (noscript) -->
-  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MXC3DGL6"
-  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-  <!-- End Google Tag Manager (noscript) -->
   {{ super() }}
 
   {# Visible discovery anchor for scanners that only look at rendered

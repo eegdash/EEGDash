@@ -6,8 +6,12 @@
 (function () {
   "use strict";
 
-  const API_BASE = "https://data.eegdash.org";
-  const DATABASE = "eegdash";
+  // Single API base injected by layout.html (sourced from the official
+  // eegdash package default + EEGDASH_API_URL override in conf.py);
+  // the literal is only a fallback for standalone test pages.
+  const API_BASE =
+    document.documentElement.getAttribute("data-eegdash-api") ||
+    "https://data.eegdash.org/api/eegdash";
   const RECORD_LIMIT = 1000;
 
   const KIND = { DIR: "dir", FILE: "file" };
@@ -84,8 +88,8 @@
       els.tree.innerHTML = '<div class="ee-status">Loading file structure…</div>';
       try {
         const filter = encodeURIComponent(JSON.stringify({ dataset: datasetId }));
-        const recordsUrl = `${API_BASE}/api/${DATABASE}/records?filter=${filter}&limit=${RECORD_LIMIT}`;
-        const datasetUrl = `${API_BASE}/api/${DATABASE}/datasets/${encodeURIComponent(datasetId)}`;
+        const recordsUrl = `${API_BASE}/records?filter=${filter}&limit=${RECORD_LIMIT}`;
+        const datasetUrl = `${API_BASE}/datasets/${encodeURIComponent(datasetId)}`;
         const [recResp, dsResp] = await Promise.all([
           fetch(recordsUrl),
           fetch(datasetUrl).catch(() => null),
@@ -257,7 +261,8 @@
           add("Modality", r.datatype && String(r.datatype).toUpperCase());
           add("Channels", r.nchans);
           const sfreq = r.sampling_frequency || r.sfreq;
-          if (sfreq) add("Sample rate", sfreq + " Hz");
+          // Strip float-storage noise from the sample rate (e.g. 256.0000930697907 -> 256).
+          if (sfreq) add("Sample rate", +(+sfreq).toFixed(3) + " Hz");
           if (r.duration) add("Duration", formatDuration(r.duration));
         } else if (node.fileKind === FILE_KIND.SIDECAR) {
           add("Belongs to", fullPath);

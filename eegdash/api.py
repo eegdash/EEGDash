@@ -11,7 +11,12 @@ metadata records stored in the EEGDash database via REST API.
 
 from typing import Any, Mapping
 
-from .bids_metadata import build_query_from_kwargs, merge_query, records_to_dataframe
+from .bids_metadata import (
+    build_query_from_kwargs,
+    merge_query,
+    records_to_dataframe,
+    warn_unmatched_filter_values,
+)
 from .const import (
     DATASET_FIELD_ALIASES,
     DATASET_QUERY_ALLOWED,
@@ -211,7 +216,11 @@ class EEGDash:
         find_kwargs = {
             k: v for k, v in {"limit": limit, "skip": skip}.items() if v is not None
         }
-        return list(self._client.find(final_query, **find_kwargs))
+        records = list(self._client.find(final_query, **find_kwargs))
+        # Surface filter values that matched no records (e.g. a misspelled
+        # task in a list of tasks) instead of silently dropping them (#141).
+        warn_unmatched_filter_values(final_query, records)
+        return records
 
     def exists(self, query: dict[str, Any] = None, /, **kwargs) -> bool:
         """Check if at least one record matches the query.

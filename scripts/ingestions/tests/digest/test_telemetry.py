@@ -223,6 +223,7 @@ def test_digest_dataset_emits_event_stream(tmp_path_factory, monkeypatch):
             "nchans",
             "ntimes",
             "ch_names",
+            "duration_seconds",
         }
         finished_event = events[-1]
         assert finished_event["payload"]["status"] == "success"

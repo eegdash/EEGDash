@@ -6,29 +6,29 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from typing import Any, Dict, Iterable, List
 
-from s3fs import S3FileSystem
+from eegdash.downloader import S3Client, get_s3_filesystem
 
 
 # Initialize anonymous S3 client for the OpenNeuro public bucket
-def get_s3_dataset_info(dataset: str, fs: S3FileSystem | None = None) -> dict:
+def get_s3_dataset_info(dataset: str, fs: S3Client | None = None) -> dict:
     """Fetch dataset information from S3 (OpenNeuro public bucket).
 
     Returns dict with keys:
       - total_size: total bytes under the dataset prefix
     """
     # Reuse a provided filesystem when running in parallel to avoid extra overhead
-    local_fs = fs or S3FileSystem(anon=True, client_kwargs={"region_name": "us-east-2"})
+    local_fs = fs or get_s3_filesystem()
     prefix = "s3://openneuro.org"
     path = f"{prefix}/{dataset}"
 
     try:
-        total_size = int(local_fs.du(path, total=True) or 0)
+        total_size = int(local_fs.du(path) or 0)
     except Exception:
         total_size = 0
     return {"total_size": total_size}
 
 
-def _s3_size_worker(ds: str, fs: S3FileSystem) -> tuple[str, dict]:
+def _s3_size_worker(ds: str, fs: S3Client) -> tuple[str, dict]:
     """Worker function for parallel S3 size queries."""
     return ds, get_s3_dataset_info(ds, fs=fs)
 
@@ -326,7 +326,7 @@ def enrich_with_s3_size(
     if not dataset_json:
         return dataset_json
 
-    fs = S3FileSystem(anon=True, client_kwargs={"region_name": "us-east-2"})
+    fs = get_s3_filesystem()
 
     datasets = list(dataset_json.keys())
     # Bound workers to avoid overwhelming the network

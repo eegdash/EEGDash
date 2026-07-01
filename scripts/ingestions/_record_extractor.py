@@ -237,8 +237,9 @@ def _extract_technical_metadata(
     bool,
     bool,
     dict[str, str | None],
+    float | None,
 ]:
-    """Delegate to MetadataCascade; returns (sfreq, nchans, ntimes, ch_names, fif_is_split, fif_continuations_ok, provenance)."""
+    """Delegate to MetadataCascade; returns (sfreq, nchans, ntimes, ch_names, fif_is_split, fif_continuations_ok, provenance, duration_seconds)."""
     ctx = CascadeContext(bids_dataset=bids_dataset, bids_file=bids_file)
     result = MetadataCascade().run(ctx)
     return (
@@ -249,6 +250,7 @@ def _extract_technical_metadata(
         result.fif_is_split,
         result.fif_continuations_ok,
         result.provenance,
+        result.duration_seconds,
     )
 
 
@@ -416,6 +418,7 @@ def extract_record(
         fif_is_split,
         fif_continuations_ok,
         metadata_provenance,
+        duration_seconds,
     ) = _extract_technical_metadata(bids_dataset, bids_file)
     bids_file_path = Path(bids_file)
 
@@ -481,6 +484,7 @@ def extract_record(
         sampling_frequency=sampling_frequency,
         nchans=nchans,
         ntimes=ntimes,
+        duration_seconds=duration_seconds,
         digested_at=digested_at,
         annex_keys=annex_keys or None,
         sidecar_inline=None,

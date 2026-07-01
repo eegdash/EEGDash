@@ -74,6 +74,8 @@ def primary_modality(value: Any) -> str:
 RECORDING_MODALITY_MAP = {
     "eeg": "EEG",
     "ieeg": "iEEG",
+    "seeg": "iEEG",
+    "ecog": "iEEG",
     "meg": "MEG",
     "fnirs": "fNIRS",
     "nirs": "fNIRS",  # Also accept 'nirs' without 'f' prefix

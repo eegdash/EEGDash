@@ -69,7 +69,9 @@ dependencies = [
   "pymatreader",
   "requests>=2.25.0",
   "rich",
-  "s3fs",
+  # boto3 (sync SDK) instead of s3fs: s3fs drags in aiobotocore, which hard-pins
+  # botocore and breaks any env that also needs boto3. See issue #397.
+  "boto3>=1.34",
   "tqdm",
   "eegdash[features]",
 ]
@@ -96,8 +98,12 @@ Chat          = "https://discord.gg/8jd7nVKwsc"
 
 [project.optional-dependencies]
 features = [
-  "numba<0.61; sys_platform == 'darwin' and platform_machine == 'x86_64'",
-  "numba;      sys_platform != 'darwin' or platform_machine != 'x86_64'",
+  # Floor numba so the resolver can't backtrack to ancient releases (e.g.
+  # numba 0.53.1 → llvmlite 0.36, which won't build on Python >=3.10). When a
+  # co-installed package pushes numpy past numba's ceiling, the floor forces
+  # numpy down to numba's supported range instead. See eegdash/EEGDash#170.
+  "numba>=0.60,<0.61; sys_platform == 'darwin' and platform_machine == 'x86_64'",
+  "numba>=0.61;       sys_platform != 'darwin' or platform_machine != 'x86_64'",
   "safetensors",
 ]
 tests = [
@@ -111,6 +117,10 @@ tests = [
     # these at module top after the PEP-8 import-lift sweep.
     'tenacity>=8',
     'pydantic-settings>=2',
+    # Enforces the Croissant 1.0 descriptor validity gate
+    # (tests/unit_tests/test_croissant_export.py). Optional: the gate skips
+    # when absent, runs the MLCommons validator when present.
+    'mlcroissant',
 ]
 dev = [
   "pre-commit",
@@ -134,6 +144,8 @@ docs = [
   "neuralfetch>=0.2",
   "neuralset>=0.2",
   "eegprep",
+  # Validate the Croissant 1.0 descriptors emitted alongside the docs build.
+  "mlcroissant",
 ]
 
 digestion = [
@@ -147,6 +159,7 @@ digestion = [
   "tenacity",
   "hishel",
   "pydantic>=2",
+  "pydantic-settings>=2",
   "PyGithub>=2",
 ]
 

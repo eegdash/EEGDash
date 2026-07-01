@@ -20,7 +20,7 @@ abstract: >-
   datasets are annotated with Hierarchical Event Descriptors (HED) for
   cross-study aggregation.
 type: software
-version: 0.8.2
+version: 0.8.4
 license: BSD-3-Clause
 repository-code: "https://github.com/eegdash/EEGDash"
 url: "https://eegdash.org"

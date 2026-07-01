@@ -16,6 +16,7 @@ from typing import AbstractSet, Any
 import pandas as pd
 
 from .const import ALLOWED_QUERY_FIELDS
+from .logging import logger
 
 __all__ = [
     "build_description",
@@ -31,7 +32,75 @@ __all__ = [
     "get_entity_from_record",
     "get_entities_from_record",
     "records_to_dataframe",
+    "warn_unmatched_filter_values",
 ]
+
+
+def warn_unmatched_filter_values(
+    query: Mapping[str, Any] | None,
+    records: Sequence[Mapping[str, Any]],
+) -> None:
+    """Warn about explicit filter values that matched no returned records (#141).
+
+    A scalar filter that matches nothing simply returns zero records (handled
+    by the caller). This targets the subtler case where a field constrains a
+    *list* of values (``$in``) and only some of them match — the unmatched
+    values are otherwise silently dropped. Operators other than ``$in`` (e.g.
+    ``$regex``, range operators) and the logical ``$and``/``$or`` keys are
+    skipped, as is the ``dataset`` field.
+
+    Parameters
+    ----------
+    query : mapping or None
+        The MongoDB query that was executed.
+    records : sequence of mapping
+        The records returned for ``query``.
+
+    """
+    if not query:
+        return
+
+    requested: dict[str, list[str]] = {}
+    for field, value in query.items():
+        if field == "dataset" or field.startswith("$"):
+            continue
+        if isinstance(value, re.Pattern):
+            continue
+        if isinstance(value, Mapping):
+            if "$in" in value:
+                requested[field] = [str(v) for v in value["$in"]]
+            continue
+        if isinstance(value, (list, tuple, set)):
+            requested[field] = [str(v) for v in value]
+        else:
+            requested[field] = [str(value)]
+
+    if not requested:
+        return
+
+    actual: dict[str, set[str]] = {field: set() for field in requested}
+    for record in records:
+        entities = record.get("entities_mne") or {}
+        for field in requested:
+            value = entities.get(field)
+            if value is None:
+                value = record.get(field)
+            if value is not None:
+                actual[field].add(str(value))
+
+    for field, values in requested.items():
+        if not actual[field]:
+            # Nothing matched at all; the empty-result path covers it.
+            continue
+        unmatched = [v for v in values if v not in actual[field]]
+        if unmatched:
+            logger.warning(
+                "Filter %r requested value(s) %s that matched no records "
+                "(available: %s); they were ignored.",
+                field,
+                unmatched,
+                sorted(actual[field]),
+            )
 
 
 def records_to_dataframe(
@@ -187,7 +256,12 @@ def build_query_from_kwargs(
 
     Converts user-friendly keyword arguments into a valid MongoDB query
     dictionary. Scalar values become exact matches; list-like values
-    become ``$in`` queries.
+    become ``$in`` queries; a compiled :class:`re.Pattern` becomes a
+    ``$regex`` query (with Python ``IGNORECASE``/``MULTILINE``/``DOTALL``
+    flags mapped onto ``$options``). For example
+    ``build_query_from_kwargs(dataset="ds002718",
+    task=re.compile("rest", re.IGNORECASE))`` matches any task containing
+    "rest" case-insensitively.
 
     Entity fields (subject, task, session, run) are queried at the top
     level since the inject script flattens these from nested entities.
@@ -248,6 +322,32 @@ def build_query_from_kwargs(
         paths = list(spec.get("paths") or [key])
         operator = spec.get("operator")
         value_aliases = spec.get("value_aliases")
+
+        if isinstance(value, re.Pattern):
+            # Regex support (#135): a compiled pattern is translated into a
+            # MongoDB ``$regex`` clause. Python flags map onto ``$options``.
+            if len(paths) > 1 or operator or value_aliases:
+                raise ValueError(
+                    f"Field '{key}' was given a compiled regex, which is only "
+                    "supported for plain single-path fields (no operator, "
+                    "value_aliases, or multi-path specs)."
+                )
+            if not value.pattern:
+                raise ValueError(f"Received an empty regex for query field '{key}'.")
+            regex_clause: dict[str, Any] = {"$regex": value.pattern}
+            options = "".join(
+                flag
+                for bit, flag in (
+                    (re.IGNORECASE, "i"),
+                    (re.MULTILINE, "m"),
+                    (re.DOTALL, "s"),
+                )
+                if value.flags & bit
+            )
+            if options:
+                regex_clause["$options"] = options
+            query[paths[0]] = regex_clause
+            continue
 
         if isinstance(value, (list, tuple, set)):
             # List values keep the legacy $in semantics; specs that try

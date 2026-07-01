@@ -2006,6 +2006,30 @@ html[data-theme="dark"] .hf-search-submit {
   outline-offset: 2px;
 }
 
+/* "Advanced search ⌘K" affordance under the hero input — opens the
+   global search palette (js/eegdash-search.js). Reuses the suggest-chip
+   look; the kbd glyphs echo the navbar shortcut hint. */
+.hf-search-advanced {
+  display: flex;
+  font-size: 0.9rem;
+}
+
+.hf-search-advanced .hf-suggest-link {
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
+}
+
+.hf-search-advanced kbd {
+  font-size: 0.7em;
+  font-family: var(--pst-font-family-monospace, monospace);
+  border: 1px solid var(--hf-card-border);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  padding: 0.05rem 0.3rem;
+  background: var(--hf-surface);
+}
+
 .hf-search-filters {
   display: grid;
   gap: 0.75rem;
@@ -2931,6 +2955,29 @@ html[data-theme="dark"] .hf-callout .hf-logo-cloud {
   background: transparent;
 }
 
+.hf-callout .logos-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(18rem, 100%), 1fr));
+  gap: 2rem 4rem;
+  align-items: center;
+  justify-items: center;
+  max-width: 48rem;
+  margin: 1.25rem auto 1.5rem;
+}
+
+.hf-callout .logo-item {
+  width: 100%;
+  max-width: none;
+  min-height: 5.75rem;
+  padding: 0 1.25rem;
+}
+
+.hf-callout .logo-item img {
+  max-width: min(100%, 17rem);
+  max-height: 5rem;
+  object-fit: contain;
+}
+
 @media (max-width: 900px) {
   .hf-hero {
     padding: 2.5rem 2rem;
@@ -2978,6 +3025,11 @@ html[data-theme="dark"] .hf-callout .hf-logo-cloud {
 
   .hf-callout {
     padding: 2rem 1.5rem;
+  }
+
+  .hf-callout .logos-container {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
   }
 
   .hf-search-input-wrap {
@@ -3950,4 +4002,28 @@ html[data-theme="dark"] .hf-quickstart .highlight .cm,
 html[data-theme="dark"] .hf-quickstart .highlight .cp,
 html[data-theme="dark"] .hf-quickstart .highlight .cs {
   color: #94a3b8 !important;
+}
+
+/* --------------------------------------------------------------------------
+   Accessibility — honor prefers-reduced-motion globally.
+   The targeted blocks earlier in this file cover a few reveal animations, but
+   several *infinite* animations were left running for motion-sensitive users:
+   the home-hero background (hero-pulse), the beta-badge pulses (badge-pulse /
+   badge-dot-pulse), and the dataset-table loading skeleton (dt-skel, defined
+   in the generated table fragment — reached here because custom.css loads on
+   that page and !important overrides the fragment's rule). This global reset
+   neutralises all animations, transitions, and smooth scrolling when the user
+   requests reduced motion — the standard, future-proof pattern that also
+   covers any animation added later. See WCAG 2.2 SC 2.3.3 (Animation from
+   Interactions); adapted from the neuroai landing-page a11y review.
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

@@ -8,9 +8,16 @@
 
   function drain() {
     var q = window.__plotlyQueue || [];
-    while (q.length) {
-      var args = q.shift();
-      try { window.Plotly.newPlot.apply(window.Plotly, args); } catch (e) { /* skip one bad chart */ }
+    var rec;
+    while ((rec = q.shift())) {
+      try {
+        var p = window.Plotly.newPlot.apply(window.Plotly, rec.args);
+        // Replay captured .then callbacks (e.g. the kde/ridgeline spinner-hide)
+        // against the real render promise.
+        if (rec.then && rec.then.length && p && typeof p.then === 'function') {
+          rec.then.forEach(function (cb) { p = p.then(cb); });
+        }
+      } catch (e) { /* skip one bad chart */ }
     }
   }
   function loadPlotly() {

@@ -101,7 +101,9 @@ document.addEventListener('DOMContentLoaded', function () {
     })();
 
     const dataTable = $table.DataTable({
-        dom: 'Blfrtip',
+        // Scroller provides virtual scrolling; 'p' dropped so no pagination
+        // control renders (paging stays enabled internally for Scroller).
+        dom: 'Blfrti',
         // Virtual scroll: only the ~30 visible rows are rendered into a
         // fixed 70vh viewport. deferRender is required by Scroller. The 70vh
         // MUST match .dt-loading-skeleton height in prepare_summary_tables.py

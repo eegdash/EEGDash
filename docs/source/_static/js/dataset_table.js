@@ -102,7 +102,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const dataTable = $table.DataTable({
         dom: 'Blfrtip',
-        paging: false,
+        // Virtual scroll: only the ~30 visible rows are rendered into a
+        // fixed 70vh viewport. deferRender is required by Scroller. The 70vh
+        // MUST match .dt-loading-skeleton height in prepare_summary_tables.py
+        // so the skeleton->table swap causes no layout shift (was CLS 0.91).
+        scrollY: '70vh',
+        scrollCollapse: true,
+        scroller: true,
+        deferRender: true,
         searching: true,
         info: false,
         // Default sort = Dataset column (0) ascending; Canonical is hidden.
@@ -256,6 +263,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // revealed columns don't overflow into their neighbours.
     dataTable.on('column-visibility.dt', function () {
         dataTable.columns.adjust();
+        if (dataTable.scroller) dataTable.scroller.measure();
     });
 
     // When the ColVis popup opens it is appended inside the .dt-buttons

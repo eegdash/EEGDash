@@ -847,6 +847,10 @@ DATA_TABLE_TEMPLATE = textwrap.dedent(r"""
 <script src="https://cdn.datatables.net/select/1.7.0/js/dataTables.select.min.js"></script>
 <script src="https://cdn.datatables.net/searchpanes/2.3.1/js/dataTables.searchPanes.min.js"></script>
 
+<!-- Scroller (virtual scroll: render only visible rows) -->
+<link rel="stylesheet" href="https://cdn.datatables.net/scroller/2.2.0/css/scroller.dataTables.min.css">
+<script src="https://cdn.datatables.net/scroller/2.2.0/js/dataTables.scroller.min.js"></script>
+
 <style>
     table.sd-table tfoot td {
         font-weight: 600;
@@ -866,10 +870,13 @@ DATA_TABLE_TEMPLATE = textwrap.dedent(r"""
        all 735 rows and 15 columns with no toolbar, no hidden-column handling,
        and no column-width reservation — a big unstyled grid that flashes for
        several hundred ms. Hide the raw table (no `.dataTable` class yet) and
-       show a skeleton placeholder in its place until DataTables initialises. */
+       show a skeleton placeholder in its place until DataTables initialises.
+       The skeleton height below must track the `scrollY` value set in
+       dataset_table.js — that's what keeps the skeleton->table swap from
+       causing layout shift. */
     #datasets-table:not(.dataTable) { display: none !important; }
     .dt-loading-skeleton {
-        height: 420px;
+        height: 70vh;
         border-radius: 8px;
         background:
             linear-gradient(180deg,

@@ -69,6 +69,7 @@ CLAUDE.md
 .verify_cache_python/
 .verify_cache_test/
 eegdash-dataset-verification/
+local_path_test
 local_path_test/
 logs/
 logs-*.zip
@@ -81,3 +82,9 @@ verification_report.md
 **/superpowers/
 **/superpowers/**
 *superpower*
+
+# Heavy scratch notebooks + generated data dumps. These (esp.
+# notebooks/scratch_features*.ipynb with saved outputs) bloated the git
+# history to >400MB. Keep them out. See docs/maintenance/repo-slimming.md.
+notebooks/scratch_*.ipynb
+consolidated/

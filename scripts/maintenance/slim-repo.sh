@@ -39,6 +39,7 @@ PURGE_ARGS=(
   --path docs/architecture2.pptx        # 2MB deck, deleted from HEAD
   --path documents/architecture2.pptx   # a second 2MB deck in a stray dir, not in HEAD
   --path uv.lock                        # lockfile un-tracked (library; CI uses `uv pip install`)
+  --path _static/                       # stray built-site artifacts (repo-root, not docs/source/_static)
 )
 
 # The default branch. Its file tree MUST be identical before and after the

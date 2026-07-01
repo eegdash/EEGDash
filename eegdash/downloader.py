@@ -7,49 +7,172 @@
 This module provides functions for downloading EEG data files and BIDS dependencies from
 AWS S3 storage, with support for caching and progress tracking. It handles the communication
 between the EEGDash metadata database and the actual EEG data stored in the cloud.
+
+It talks to S3 through a plain synchronous ``boto3`` client rather than ``s3fs``.
+``s3fs`` transitively pulls in ``aiobotocore``, which hard-pins ``botocore`` to a
+narrow range and makes any environment that also needs ``boto3`` (moabb, awscli,
+neuralbench, …) effectively unsolvable. All access here is anonymous, read-only,
+and limited to a handful of operations (HEAD, GET, LIST), so ``boto3`` covers it
+directly. See https://github.com/eegdash/EEGDash/issues/397.
 """
 
+import re
 from pathlib import Path
 from typing import Iterable, Sequence
 
+import boto3
 import rich.progress
-import s3fs
-from fsspec.callbacks import Callback, TqdmCallback
+from botocore import UNSIGNED
+from botocore.config import Config
+from botocore.exceptions import ClientError
 from rich.console import Console
+from tqdm.auto import tqdm
 
 from .logging import logger
+
+
+def _split_s3_uri(uri: str) -> tuple[str, str]:
+    """Split an ``s3://bucket/key`` (or ``bucket/key``) string into (bucket, key)."""
+    without_scheme = re.sub(r"^s3://", "", str(uri)).lstrip("/")
+    bucket, _, key = without_scheme.partition("/")
+    return bucket, key
+
+
+class S3Client:
+    """Minimal, anonymous S3 accessor with an ``s3fs``-compatible surface.
+
+    Exposes just the operations EEGDash needs — :meth:`info`, :meth:`get_file`,
+    :meth:`ls`, :meth:`du` — backed by a synchronous ``boto3`` client configured
+    for unsigned (anonymous) access to public buckets. Paths may be given as
+    ``s3://bucket/key`` or ``bucket/key``.
+    """
+
+    def __init__(self, *, region: str = "us-east-2", max_concurrency: int = 20):
+        self._client = boto3.client(
+            "s3",
+            region_name=region,
+            config=Config(
+                signature_version=UNSIGNED,
+                max_pool_connections=max_concurrency,
+                retries={"max_attempts": 5, "mode": "standard"},
+            ),
+        )
+
+    def info(self, path: str) -> dict:
+        """Return object metadata (``{"size": <bytes>}``) via a HEAD request."""
+        bucket, key = _split_s3_uri(path)
+        resp = self._client.head_object(Bucket=bucket, Key=key)
+        return {"size": resp["ContentLength"]}
+
+    def get_file(self, rpath: str, lpath: str, *, callback=None) -> None:
+        """Download a single object with one unsigned GET (no HEAD, no LIST).
+
+        Streams the body to a ``.part`` sibling and atomically renames it into
+        place, so an interrupted transfer never leaves a truncated file at the
+        destination (which ``skip_existing`` would later mistake for complete).
+        Each chunk's byte count is fed to ``callback`` (a ``callback(nbytes)``
+        callable) for progress.
+
+        Error mapping matches the ``s3fs`` contract callers depend on: a missing
+        key raises :class:`FileNotFoundError`, and a 403 — how S3 reports a
+        missing object when anonymous ``ListBucket`` is denied, e.g. NEMAR —
+        raises :class:`PermissionError`.
+        """
+        bucket, key = _split_s3_uri(rpath)
+        try:
+            resp = self._client.get_object(Bucket=bucket, Key=key)
+        except ClientError as e:
+            status = e.response.get("ResponseMetadata", {}).get("HTTPStatusCode")
+            code = str(e.response.get("Error", {}).get("Code"))
+            if status == 404 or code in ("NoSuchKey", "NoSuchBucket"):
+                raise FileNotFoundError(rpath) from e
+            if status == 403 or code in ("AccessDenied", "Forbidden"):
+                raise PermissionError(rpath) from e
+            raise
+
+        body = resp["Body"]
+        # Prefer the GET response's own size for the progress total, so the bar
+        # is complete even if the caller's HEAD probe returned nothing.
+        if callback is not None and hasattr(callback, "set_size"):
+            length = resp.get("ContentLength")
+            if length is not None:
+                callback.set_size(length)
+
+        lpath = Path(lpath)
+        tmp = lpath.with_name(lpath.name + ".part")
+        try:
+            with open(tmp, "wb") as fh:
+                for chunk in body.iter_chunks(chunk_size=1024 * 1024):
+                    fh.write(chunk)
+                    if callback is not None:
+                        callback(len(chunk))
+            tmp.replace(lpath)
+        except BaseException:
+            # Interruption / mid-stream error: drop the partial so the next run
+            # re-downloads instead of trusting a truncated file.
+            tmp.unlink(missing_ok=True)
+            raise
+
+    def _iter_objects(self, path: str, *, delimiter: str | None = None):
+        """Yield each object dict under a prefix via paginated ListObjectsV2.
+
+        Pass ``delimiter="/"`` to list a single directory level (like
+        ``s3fs.ls``); omit it to walk the prefix recursively (for ``du``).
+        """
+        bucket, key = _split_s3_uri(path)
+        paginator = self._client.get_paginator("list_objects_v2")
+        kwargs = {"Bucket": bucket, "Prefix": key}
+        if delimiter:
+            kwargs["Delimiter"] = delimiter
+        for page in paginator.paginate(**kwargs):
+            yield from page.get("Contents", [])
+
+    def ls(self, path: str, detail: bool = False):
+        """List the immediate objects under a prefix as ``bucket/key`` strings.
+
+        Lists one directory level (``Delimiter="/"``), like ``s3fs.ls`` — a
+        recursive walk would let a nested subdirectory's keys be flattened into
+        the parent by callers that take ``Path(name)`` (e.g. CTF ``.ds`` dirs
+        with a nested ``hz.ds``).
+        """
+        bucket, _ = _split_s3_uri(path)
+        prefix = path if path.endswith("/") else path + "/"
+        names = [
+            f"{bucket}/{obj['Key']}"
+            for obj in self._iter_objects(prefix, delimiter="/")
+        ]
+        if detail:
+            return [{"name": n, "type": "file"} for n in names]
+        return names
+
+    def du(self, path: str) -> int:
+        """Sum the size in bytes of every object under a prefix (recursive)."""
+        return sum(obj["Size"] for obj in self._iter_objects(path))
 
 
 def get_s3_filesystem(
     *,
     max_concurrency: int = 20,
     region: str = "us-east-2",
-) -> s3fs.S3FileSystem:
-    """Get an anonymous S3 filesystem object.
-
-    Initializes and returns an ``s3fs.S3FileSystem`` for anonymous access
-    to public S3 buckets.
+) -> S3Client:
+    """Get an anonymous S3 accessor for public buckets.
 
     Parameters
     ----------
     max_concurrency : int
-        Maximum number of parallel transfer connections (default 20).
+        Size of the underlying connection pool (default 20).
     region : str
         AWS region for the S3 endpoint (default ``"us-east-2"``).
 
     Returns
     -------
-    s3fs.S3FileSystem
-        An S3 filesystem object.
+    S3Client
+        An anonymous S3 accessor with an ``s3fs``-compatible surface.
 
     """
     if max_concurrency < 1:
         raise ValueError(f"max_concurrency must be >= 1, got {max_concurrency}")
-    return s3fs.S3FileSystem(
-        anon=True,
-        max_concurrency=max_concurrency,
-        client_kwargs={"region_name": region},
-    )
+    return S3Client(region=region, max_concurrency=max_concurrency)
 
 
 def get_s3path(s3_bucket: str, filepath: str) -> str:
@@ -74,7 +197,7 @@ def get_s3path(s3_bucket: str, filepath: str) -> str:
 
 
 def download_s3_file(
-    s3_path: str, local_path: Path, *, filesystem: s3fs.S3FileSystem | None = None
+    s3_path: str, local_path: Path, *, filesystem: S3Client | None = None
 ) -> Path:
     """Download a single file from S3 to a local path.
 
@@ -87,8 +210,8 @@ def download_s3_file(
         The full S3 URI of the file to download.
     local_path : pathlib.Path
         The local file path where the downloaded file will be saved.
-    filesystem : s3fs.S3FileSystem | None
-        Optional pre-created filesystem to reuse across multiple downloads.
+    filesystem : S3Client | None
+        Optional pre-created accessor to reuse across multiple downloads.
 
     Returns
     -------
@@ -123,7 +246,7 @@ def download_s3_file(
 def download_files(
     files: Sequence[tuple[str, Path]] | Iterable[tuple[str, Path]],
     *,
-    filesystem: s3fs.S3FileSystem | None = None,
+    filesystem: S3Client | None = None,
     skip_existing: bool = True,
     skip_missing: bool = False,
 ) -> list[Path]:
@@ -133,8 +256,8 @@ def download_files(
     ----------
     files : iterable of (str, Path)
         Pairs of (S3 URI, local destination path).
-    filesystem : s3fs.S3FileSystem | None
-        Optional pre-created filesystem to reuse across multiple downloads.
+    filesystem : S3Client | None
+        Optional pre-created accessor to reuse across multiple downloads.
     skip_existing : bool
         If True, do not download files that already exist locally.
     skip_missing : bool
@@ -174,12 +297,16 @@ def download_files(
     return downloaded
 
 
-def _remote_size(filesystem: s3fs.S3FileSystem, s3path: str) -> int | None:
+def _remote_size(filesystem: S3Client, s3path: str) -> int | None:
     try:
         info = filesystem.info(s3path)
     except Exception:
         return None
-    size = info.get("size") or info.get("Size")
+    # Not `size or Size`: a legitimate 0-byte object is falsy and must not be
+    # treated as "unknown" (that would skip size verification for empty keys).
+    size = info.get("size")
+    if size is None:
+        size = info.get("Size")
     if size is None:
         return None
     try:
@@ -188,8 +315,8 @@ def _remote_size(filesystem: s3fs.S3FileSystem, s3path: str) -> int | None:
         return None
 
 
-class RichCallback(Callback):
-    """FSSpec callback using Rich Progress."""
+class RichCallback:
+    """Progress callback rendering with Rich; callable for ``boto3`` transfers."""
 
     def __init__(self, size: int | None = None, description: str = ""):
         self.progress = rich.progress.Progress(
@@ -212,26 +339,57 @@ class RichCallback(Callback):
     def relative_update(self, inc=1):
         self.progress.update(self.task_id, advance=inc)
 
+    def __call__(self, inc):
+        # boto3 invokes the callback with the number of bytes just transferred.
+        self.relative_update(inc)
+
     def close(self):
         self.progress.stop()
 
 
+class TqdmCallback:
+    """Progress callback rendering with tqdm; callable for ``boto3`` transfers."""
+
+    def __init__(self, size: int | None = None, description: str = ""):
+        self.bar = tqdm(
+            total=size,
+            desc=description,
+            unit="B",
+            unit_scale=True,
+            unit_divisor=1024,
+            dynamic_ncols=True,
+            leave=True,
+            mininterval=0.2,
+            smoothing=0.1,
+            miniters=1,
+            bar_format="{desc}: {percentage:3.0f}%|{bar}| {n_fmt}/{total_fmt} "
+            "[{elapsed}<{remaining}, {rate_fmt}]",
+        )
+
+    def set_size(self, size):
+        self.bar.total = size
+        self.bar.refresh()
+
+    def __call__(self, inc):
+        self.bar.update(inc)
+
+    def close(self):
+        self.bar.close()
+
+
 def _filesystem_get(
-    filesystem: s3fs.S3FileSystem,
+    filesystem: S3Client,
     s3path: str,
     filepath: Path,
     *,
     size: int | None = None,
 ) -> Path:
-    """Perform the file download using fsspec with a progress bar.
-
-    Internal helper function that wraps the ``filesystem.get`` call to include
-    a progress bar (Rich if available/console, else TQDM).
+    """Perform the file download with a progress bar (Rich if a TTY, else tqdm).
 
     Parameters
     ----------
-    filesystem : s3fs.S3FileSystem
-        The filesystem object to use for the download.
+    filesystem : S3Client
+        The accessor to use for the download.
     s3path : str
         The full S3 URI of the source file.
     filepath : pathlib.Path
@@ -261,31 +419,14 @@ def _filesystem_get(
     if use_rich:
         callback = RichCallback(size=size, description=description)
     else:
-        callback = TqdmCallback(
-            size=size,
-            tqdm_kwargs=dict(
-                desc=description,
-                unit="B",
-                unit_scale=True,
-                unit_divisor=1024,
-                dynamic_ncols=True,
-                leave=True,
-                mininterval=0.2,
-                smoothing=0.1,
-                miniters=1,
-                bar_format="{desc}: {percentage:3.0f}%|{bar}| {n_fmt}/{total_fmt} "
-                "[{elapsed}<{remaining}, {rate_fmt}]",
-            ),
-        )
+        callback = TqdmCallback(size=size, description=description)
 
     try:
-        # NEMAR denies anonymous ListBucket but allows GetObject. Both
-        # ``filesystem.get`` and ``filesystem.get(..., recursive=True)`` call
-        # ``_isdir`` / ``_lsdir`` (ListObjectsV2) before issuing GetObject and
-        # 403 on those buckets. ``get_file`` is the single-object primitive
-        # (HEAD + GET only), and all callers here pass single object URIs —
-        # the CTF directory case in base.py pre-expands via ``filesystem.ls``
-        # into per-file pairs.
+        # NEMAR denies anonymous ListBucket but allows GetObject. ``get_file``
+        # issues a single GetObject — no HeadObject, no ListObjectsV2 — so it
+        # works on those buckets. All callers here pass single object URIs; the
+        # CTF directory case in base.py pre-expands via ``S3Client.ls`` into
+        # per-file pairs.
         filesystem.get_file(s3path, str(filepath), callback=callback)
     finally:
         # Ensure callback is closed properly (important for Rich to clean up display)
@@ -300,4 +441,5 @@ __all__ = [
     "download_files",
     "get_s3path",
     "get_s3_filesystem",
+    "S3Client",
 ]

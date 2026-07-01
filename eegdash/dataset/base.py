@@ -1015,9 +1015,8 @@ class EEGDashRaw(RawDataset):
                 filesystem = downloader.get_s3_filesystem(
                     max_concurrency=self._max_concurrency
                 )
-                # Strip protocol prefix for s3fs operations
-                s3_prefix = re.sub(r"^s3://", "", self._raw_uri)
-                remote_files = filesystem.ls(s3_prefix, detail=False)
+                # ls accepts bucket/key or s3://bucket/key; pass the prefix as-is.
+                remote_files = filesystem.ls(self._raw_uri, detail=False)
                 pairs = []
                 for remote in remote_files:
                     fname = Path(remote).name

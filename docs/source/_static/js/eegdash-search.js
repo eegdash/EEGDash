@@ -679,7 +679,11 @@
     var stats = [];
     if (entry.subjects) stats.push(entry.subjects + ' sub');
     if (entry.nchans && entry.nchans.length) stats.push(entry.nchans[0] + ' ch');
-    if (entry.sfreq && entry.sfreq.length) stats.push(entry.sfreq[0] + ' Hz');
+    if (entry.sfreq && entry.sfreq.length) {
+      // Strip float-storage noise from the sample rate (e.g. 256.0000930697907 -> 256).
+      var hz = +(+entry.sfreq[0]).toFixed(3);
+      stats.push(hz + ' Hz');
+    }
 
     var snippet = '';
     if (isDeep && entry.snippet) {

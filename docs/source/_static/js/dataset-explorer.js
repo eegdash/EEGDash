@@ -261,7 +261,8 @@
           add("Modality", r.datatype && String(r.datatype).toUpperCase());
           add("Channels", r.nchans);
           const sfreq = r.sampling_frequency || r.sfreq;
-          if (sfreq) add("Sample rate", sfreq + " Hz");
+          // Strip float-storage noise from the sample rate (e.g. 256.0000930697907 -> 256).
+          if (sfreq) add("Sample rate", +(+sfreq).toFixed(3) + " Hz");
           if (r.duration) add("Duration", formatDuration(r.duration));
         } else if (node.fileKind === FILE_KIND.SIDECAR) {
           add("Belongs to", fullPath);

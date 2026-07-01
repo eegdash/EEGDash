@@ -67,43 +67,86 @@ class S3Client:
     def get_file(self, rpath: str, lpath: str, *, callback=None) -> None:
         """Download a single object with one unsigned GET (no HEAD, no LIST).
 
-        Streams the body to disk, feeding each chunk's byte count to
-        ``callback`` (a ``callback(nbytes)`` callable) for progress. A missing
-        key is normalised to :class:`FileNotFoundError` so callers can treat it
-        the way they did under ``s3fs``.
+        Streams the body to a ``.part`` sibling and atomically renames it into
+        place, so an interrupted transfer never leaves a truncated file at the
+        destination (which ``skip_existing`` would later mistake for complete).
+        Each chunk's byte count is fed to ``callback`` (a ``callback(nbytes)``
+        callable) for progress.
+
+        Error mapping matches the ``s3fs`` contract callers depend on: a missing
+        key raises :class:`FileNotFoundError`, and a 403 — how S3 reports a
+        missing object when anonymous ``ListBucket`` is denied, e.g. NEMAR —
+        raises :class:`PermissionError`.
         """
         bucket, key = _split_s3_uri(rpath)
         try:
-            body = self._client.get_object(Bucket=bucket, Key=key)["Body"]
-            with open(lpath, "wb") as fh:
-                for chunk in body.iter_chunks(chunk_size=1024 * 1024):
-                    fh.write(chunk)
-                    if callback is not None:
-                        callback(len(chunk))
+            resp = self._client.get_object(Bucket=bucket, Key=key)
         except ClientError as e:
             status = e.response.get("ResponseMetadata", {}).get("HTTPStatusCode")
             code = str(e.response.get("Error", {}).get("Code"))
             if status == 404 or code in ("NoSuchKey", "NoSuchBucket"):
                 raise FileNotFoundError(rpath) from e
+            if status == 403 or code in ("AccessDenied", "Forbidden"):
+                raise PermissionError(rpath) from e
             raise
 
-    def _iter_objects(self, path: str):
-        """Yield each object dict under a prefix via paginated ListObjectsV2."""
+        body = resp["Body"]
+        # Prefer the GET response's own size for the progress total, so the bar
+        # is complete even if the caller's HEAD probe returned nothing.
+        if callback is not None and hasattr(callback, "set_size"):
+            length = resp.get("ContentLength")
+            if length is not None:
+                callback.set_size(length)
+
+        lpath = Path(lpath)
+        tmp = lpath.with_name(lpath.name + ".part")
+        try:
+            with open(tmp, "wb") as fh:
+                for chunk in body.iter_chunks(chunk_size=1024 * 1024):
+                    fh.write(chunk)
+                    if callback is not None:
+                        callback(len(chunk))
+            tmp.replace(lpath)
+        except BaseException:
+            # Interruption / mid-stream error: drop the partial so the next run
+            # re-downloads instead of trusting a truncated file.
+            tmp.unlink(missing_ok=True)
+            raise
+
+    def _iter_objects(self, path: str, *, delimiter: str | None = None):
+        """Yield each object dict under a prefix via paginated ListObjectsV2.
+
+        Pass ``delimiter="/"`` to list a single directory level (like
+        ``s3fs.ls``); omit it to walk the prefix recursively (for ``du``).
+        """
         bucket, key = _split_s3_uri(path)
         paginator = self._client.get_paginator("list_objects_v2")
-        for page in paginator.paginate(Bucket=bucket, Prefix=key):
+        kwargs = {"Bucket": bucket, "Prefix": key}
+        if delimiter:
+            kwargs["Delimiter"] = delimiter
+        for page in paginator.paginate(**kwargs):
             yield from page.get("Contents", [])
 
     def ls(self, path: str, detail: bool = False):
-        """List objects under a prefix, returning ``bucket/key`` strings."""
+        """List the immediate objects under a prefix as ``bucket/key`` strings.
+
+        Lists one directory level (``Delimiter="/"``), like ``s3fs.ls`` — a
+        recursive walk would let a nested subdirectory's keys be flattened into
+        the parent by callers that take ``Path(name)`` (e.g. CTF ``.ds`` dirs
+        with a nested ``hz.ds``).
+        """
         bucket, _ = _split_s3_uri(path)
-        names = [f"{bucket}/{obj['Key']}" for obj in self._iter_objects(path)]
+        prefix = path if path.endswith("/") else path + "/"
+        names = [
+            f"{bucket}/{obj['Key']}"
+            for obj in self._iter_objects(prefix, delimiter="/")
+        ]
         if detail:
             return [{"name": n, "type": "file"} for n in names]
         return names
 
     def du(self, path: str) -> int:
-        """Sum the size in bytes of every object under a prefix."""
+        """Sum the size in bytes of every object under a prefix (recursive)."""
         return sum(obj["Size"] for obj in self._iter_objects(path))
 
 
@@ -259,7 +302,11 @@ def _remote_size(filesystem: S3Client, s3path: str) -> int | None:
         info = filesystem.info(s3path)
     except Exception:
         return None
-    size = info.get("size") or info.get("Size")
+    # Not `size or Size`: a legitimate 0-byte object is falsy and must not be
+    # treated as "unknown" (that would skip size verification for empty keys).
+    size = info.get("size")
+    if size is None:
+        size = info.get("Size")
     if size is None:
         return None
     try:
@@ -318,6 +365,10 @@ class TqdmCallback:
             bar_format="{desc}: {percentage:3.0f}%|{bar}| {n_fmt}/{total_fmt} "
             "[{elapsed}<{remaining}, {rate_fmt}]",
         )
+
+    def set_size(self, size):
+        self.bar.total = size
+        self.bar.refresh()
 
     def __call__(self, inc):
         self.bar.update(inc)

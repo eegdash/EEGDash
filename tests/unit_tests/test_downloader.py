@@ -588,3 +588,85 @@ def test_download_s3_file_replaces_mismatched_local(tmp_path):
         result = download_s3_file("s3://b/f", local_file, filesystem=mock_fs)
         assert result == local_file
         assert local_file.stat().st_size == 10
+
+
+def _bare_s3client():
+    """An S3Client whose boto3 client is a mock (skips real client creation)."""
+    from eegdash.downloader import S3Client
+
+    c = S3Client.__new__(S3Client)
+    c._client = MagicMock()
+    return c
+
+
+def _client_error(code, status):
+    from botocore.exceptions import ClientError
+
+    return ClientError(
+        {"Error": {"Code": code}, "ResponseMetadata": {"HTTPStatusCode": status}},
+        "GetObject",
+    )
+
+
+def test_get_file_maps_404_to_file_not_found(tmp_path):
+    """A missing key (NoSuchKey / 404) surfaces as FileNotFoundError."""
+    c = _bare_s3client()
+    c._client.get_object.side_effect = _client_error("NoSuchKey", 404)
+    with pytest.raises(FileNotFoundError):
+        c.get_file("s3://bucket/key", str(tmp_path / "out.bin"))
+
+
+def test_get_file_maps_403_to_permission_error(tmp_path):
+    """A 403 AccessDenied (how NEMAR reports a missing key with ListBucket denied)
+    must surface as PermissionError, which base.py catches to raise a friendly
+    DataIntegrityError instead of leaking a raw ClientError.
+    """
+    c = _bare_s3client()
+    c._client.get_object.side_effect = _client_error("AccessDenied", 403)
+    with pytest.raises(PermissionError):
+        c.get_file("s3://bucket/key", str(tmp_path / "out.bin"))
+    # No stray .part file left behind on the error path.
+    assert not (tmp_path / "out.bin.part").exists()
+
+
+def test_get_file_atomic_success(tmp_path):
+    """Successful download renames the .part temp into place; no temp remains."""
+    c = _bare_s3client()
+    body = MagicMock()
+    body.iter_chunks.return_value = [b"ab", b"cd"]
+    c._client.get_object.return_value = {"Body": body, "ContentLength": 4}
+    dest = tmp_path / "out.bin"
+    c.get_file("s3://bucket/key", str(dest))
+    assert dest.read_bytes() == b"abcd"
+    assert not (tmp_path / "out.bin.part").exists()
+
+
+def test_get_file_leaves_no_partial_on_stream_error(tmp_path):
+    """A mid-stream failure must not leave a truncated file at the destination
+    (skip_existing would otherwise trust it as complete).
+    """
+    c = _bare_s3client()
+
+    def broken_chunks(**_):
+        yield b"partial"
+        raise ConnectionError("dropped mid-stream")
+
+    body = MagicMock()
+    body.iter_chunks.side_effect = broken_chunks
+    c._client.get_object.return_value = {"Body": body, "ContentLength": 999}
+    dest = tmp_path / "out.bin"
+    with pytest.raises(ConnectionError):
+        c.get_file("s3://bucket/key", str(dest))
+    assert not dest.exists()
+    assert not (tmp_path / "out.bin.part").exists()
+
+
+def test_remote_size_zero_byte_object_is_zero_not_none():
+    """A legitimate 0-byte object must report size 0, not None (which would
+    disable size verification for empty keys).
+    """
+    from eegdash.downloader import _remote_size
+
+    mock_fs = MagicMock()
+    mock_fs.info.return_value = {"size": 0}
+    assert _remote_size(mock_fs, "s3://bucket/empty") == 0

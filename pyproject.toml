@@ -71,7 +71,7 @@ dependencies = [
   "rich",
   # boto3 (sync SDK) instead of s3fs: s3fs drags in aiobotocore, which hard-pins
   # botocore and breaks any env that also needs boto3. See issue #397.
-  "boto3",
+  "boto3>=1.34",
   "tqdm",
   "eegdash[features]",
 ]

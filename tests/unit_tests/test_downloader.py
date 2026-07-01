@@ -324,12 +324,10 @@ def test_remote_size_invalid_size_type():
 
 
 def test_downloader_get_s3_util():
-    import s3fs
-
     from eegdash import downloader
 
     fs = downloader.get_s3_filesystem()
-    assert isinstance(fs, s3fs.S3FileSystem)
+    assert isinstance(fs, downloader.S3Client)
     assert downloader.get_s3path("s3://bucket", "file") == "s3://bucket/file"
     assert downloader.get_s3path("s3://bucket", "/file") == "s3://bucket/file"
     assert downloader.get_s3path("s3://bucket", "") == "s3://bucket"

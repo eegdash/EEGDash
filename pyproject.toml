@@ -69,7 +69,9 @@ dependencies = [
   "pymatreader",
   "requests>=2.25.0",
   "rich",
-  "s3fs",
+  # boto3 (sync SDK) instead of s3fs: s3fs drags in aiobotocore, which hard-pins
+  # botocore and breaks any env that also needs boto3. See issue #397.
+  "boto3",
   "tqdm",
   "eegdash[features]",
 ]

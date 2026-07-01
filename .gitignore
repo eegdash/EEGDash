@@ -69,6 +69,7 @@ CLAUDE.md
 .verify_cache_python/
 .verify_cache_test/
 eegdash-dataset-verification/
+local_path_test
 local_path_test/
 logs/
 logs-*.zip

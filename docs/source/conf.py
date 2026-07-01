@@ -205,10 +205,11 @@ html_theme_options = {
     "external_links": [
         {"name": "EEG2025", "url": "https://eeg2025.github.io/"},
     ],
-    # Local SVG icons instead of FontAwesome. Pydata-sphinx-theme only
-    # loads fontawesome.js (~540 KiB) when at least one icon_links entry
-    # has type="fontawesome"; switching to local SVGs removes that
-    # dependency from every page load.
+    # Local SVG icons instead of FontAwesome for these brand links. Note:
+    # pydata-sphinx-theme loads fontawesome.js (~1.49MB) unconditionally via its
+    # head_js_preload() macro regardless of icon_links type; that script is
+    # suppressed by the css-block override in _templates/layout.html (icons fall
+    # back to the theme's bundled woff2). See docs/maintenance/docs-perf-plan.md.
     "icon_links": [
         {
             "name": "GitHub",

@@ -30,6 +30,10 @@
     document.head.appendChild(s);
   }
   function bind() {
+    // Only dataset_summary.rst installs the capture-stub (window.__plotlyQueue)
+    // and has Plotly charts. Other pages (home, per-dataset Brief pages) also
+    // have .sd-tab-set — bail so clicking their tabs never fetches Plotly.
+    if (!window.__plotlyQueue) return;
     var set = document.querySelector('.sd-tab-set');
     if (!set) return;
     // The first tab ("Dataset Table") needs no Plotly; any other does.

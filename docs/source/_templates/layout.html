@@ -18,11 +18,15 @@
   Anything new and load-bearing there should be mirrored here.
 #}
 
-{# Reproduce pydata-sphinx-theme 0.16.1's `css` block but omit
-   head_js_preload() — it unconditionally loads _static/scripts/fontawesome.js
-   (~1.49MB) on every page. Every icon we use has a CSS/woff2 fallback in the
-   theme's already-loaded stylesheet, so icons still render. RE-AUDIT on theme
-   upgrade — see docs/maintenance/docs-perf-plan.md. #}
+{# Reproduce pydata-sphinx-theme 0.16.1's `css` block but omit the whole
+   head_js_preload() macro. Its main cost is the unconditional
+   _static/scripts/fontawesome.js (~1.49MB) on every page; every icon we use has
+   a CSS/woff2 fallback in the theme's already-loaded stylesheet, so icons still
+   render. Dropping the macro also drops its two <link rel="preload"> hints for
+   bootstrap.js / pydata-sphinx-theme.js — harmless: both still load (deferred)
+   via the theme's body_post()/scripts_end block, which we don't override; they
+   only lose the early-fetch priming. RE-AUDIT on theme upgrade — see
+   docs/maintenance/docs-perf-plan.md. #}
 {% block css %}
   <script data-cfasync="false">
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "{{ default_mode }}";

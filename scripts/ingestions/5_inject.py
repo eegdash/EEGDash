@@ -273,9 +273,11 @@ def inject_montages(
     for i in range(0, len(montages), batch_size):
         batches.append((i // batch_size, montages[i : i + batch_size]))
 
-    # Same timeout discipline as inject_records.
-    per_batch_timeout_s = 120.0
-    wall_clock_budget_s = max(180.0, len(batches) * per_batch_timeout_s + 30.0)
+    # Same timeout discipline as inject_records. Montage batches are rarer but
+    # much heavier per document (full electrode layouts + server-side hash
+    # dedup), so allow a longer per-batch window than records.
+    per_batch_timeout_s = 300.0
+    wall_clock_budget_s = max(360.0, len(batches) * per_batch_timeout_s + 30.0)
     with ThreadPoolExecutor(max_workers=DEFAULT_WORKERS) as executor:
         futures = {
             executor.submit(

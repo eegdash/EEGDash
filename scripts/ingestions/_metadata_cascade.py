@@ -641,8 +641,11 @@ class MneFallbackStep:
                     result.ntimes = int(raw.n_times)
                     if result.provenance["ntimes"] is None:
                         result.provenance["ntimes"] = PROV_MNE_FALLBACK
-            except (OSError, ValueError, RuntimeError, KeyError):
-                # Missing companion file, malformed header, or unsupported variant.
+            except Exception:  # noqa: BLE001
+                # Missing companion file, malformed header, unsupported variant,
+                # or a git-annex POINTER file mistaken for a header (shallow
+                # clones surface e.g. configparser.NoSectionError here). Any
+                # parse failure degrades to the next tier — never fatal.
                 pass
             finally:
                 if raw is not None:

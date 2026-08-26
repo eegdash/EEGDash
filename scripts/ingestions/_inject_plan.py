@@ -28,11 +28,41 @@ class InjectionPlan:
     duplicate_montage_sightings: int = 0
 
 
+def _dataset_source(dataset_dir: Path, dataset_id: str) -> str | None:
+    """Return the source of a digested dataset dir.
+
+    Trusts the ``source`` field of the Dataset document; falls back to
+    dataset-id prefix inference (ds* → openneuro, nm*/on* → nemar) when the
+    document is missing or omits the field.
+    """
+    dataset_file = dataset_dir / f"{dataset_id}_dataset.json"
+    if dataset_file.exists():
+        try:
+            with open(dataset_file) as f:
+                doc = json.load(f)
+            source = doc.get("source")
+            if source:
+                return str(source)
+        except (OSError, json.JSONDecodeError):
+            pass
+    from _source_id import _source_from_dataset_id
+
+    inferred = _source_from_dataset_id(dataset_id)
+    return None if inferred == "unknown" else inferred
+
+
 def find_digested_datasets(
-    input_dir: Path, datasets: list[str] | None = None
+    input_dir: Path,
+    datasets: list[str] | None = None,
+    sources: list[str] | None = None,
 ) -> list[Path]:
-    """Find all dataset directories in the Digest Corpus."""
+    """Find all dataset directories in the Digest Corpus.
+
+    ``datasets`` restricts to explicit dataset IDs; ``sources`` restricts to
+    datasets whose source matches one of the given names (e.g. ``nemar``).
+    """
     dataset_dirs = []
+    sources_set = {s.strip().lower() for s in sources} if sources else None
 
     for dataset_dir in sorted(input_dir.iterdir()):
         if not dataset_dir.is_dir():
@@ -48,6 +78,9 @@ def find_digested_datasets(
             continue
 
         if datasets and dataset_id not in datasets:
+            continue
+
+        if sources_set and _dataset_source(dataset_dir, dataset_id) not in sources_set:
             continue
 
         dataset_file = dataset_dir / f"{dataset_id}_dataset.json"

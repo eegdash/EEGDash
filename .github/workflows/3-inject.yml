@@ -17,6 +17,11 @@ on:
         required: false
         type: boolean
         default: false
+      sources:
+        description: 'Restrict injection to these sources (space-separated, e.g. "nemar"). "all" = no filter.'
+        required: false
+        type: string
+        default: 'all'
     secrets:
       DATASET_LISTINGS_TOKEN:
         required: true
@@ -90,10 +95,24 @@ jobs:
           if [ "${{ inputs.dry_run }}" == "true" ]; then
             ARGS="$ARGS --dry-run"
           fi
-          
-          # Run injection and capture output
+
+          if [ "${{ inputs.sources }}" != "" ] && [ "${{ inputs.sources }}" != "all" ]; then
+            ARGS="$ARGS --sources ${{ inputs.sources }}"
+          fi
+
+          # Run injection and capture output. Temporarily disable `set -e` so a
+          # non-zero exit does not abort before the captured output is printed
+          # (previously the actual error message was lost).
+          set +e
           OUTPUT=$(python eegdash/scripts/ingestions/5_inject.py $ARGS 2>&1)
+          RC=$?
+          set -e
           echo "$OUTPUT"
+
+          if [ $RC -ne 0 ]; then
+            echo "::error::Injection failed with exit code $RC"
+            exit $RC
+          fi
           
           # Parse results
           DATASETS=$(echo "$OUTPUT" | grep -oP 'Datasets:\s+\K\d+' || echo "0")

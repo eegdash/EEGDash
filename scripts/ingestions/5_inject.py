@@ -328,10 +328,24 @@ def main():
 
     admin_token = args.token  # already env-fallback'd via AliasChoices
 
+    # Resolve the injection set up front (dataset/source filters applied) so
+    # validation and the quality gate only see what will actually be injected.
+    if not args.input.exists():
+        print(f"Input directory does not exist: {args.input}", file=sys.stderr)
+        return 1
+    dataset_dirs = find_digested_datasets(args.input, args.datasets, args.sources)
+
     # Run validation first (unless explicitly skipped)
     if not args.skip_validation:
         print("Running validation...")
-        validation_result = validate_digestion_output(args.input, verbose=False)
+        if args.sources:
+            print(
+                f"Source filter: {', '.join(args.sources)} "
+                f"({len(dataset_dirs)} datasets selected)"
+            )
+        validation_result = validate_digestion_output(
+            args.input, verbose=False, dataset_dirs=dataset_dirs
+        )
         print(validation_result.summary())
 
         # Check for critical errors
@@ -381,8 +395,6 @@ def main():
 
         print("\nValidation PASSED - proceeding with injection\n")
 
-    # Find dataset directories
-    dataset_dirs = find_digested_datasets(args.input, args.datasets)
     print(f"Found {len(dataset_dirs)} datasets to inject")
 
     if not dataset_dirs:

@@ -13,10 +13,12 @@ __all__ = ["_reconcile_source", "_source_from_dataset_id"]
 
 
 def _source_from_dataset_id(dataset_id: str) -> str:
-    """Infer source from dataset_id prefix pattern (ds* → openneuro, nm* → nemar)."""
+    """Infer source from dataset_id prefix pattern (ds* → openneuro, nm*/on* → nemar)."""
     if dataset_id.startswith("ds") and dataset_id[2:].isdigit():
         return "openneuro"
     if dataset_id.startswith("nm") and dataset_id[2:].isdigit():
+        return "nemar"
+    if dataset_id.startswith("on") and dataset_id[2:].isdigit():
         return "nemar"
     if "EEGManyLabs" in dataset_id:
         return "gin"

@@ -22,14 +22,23 @@ on:
         required: false
         default: true
         type: boolean
+      sources:
+        description: 'Restrict injection to sources (default nemar: the shared digested dir holds low-quality non-NEMAR leftovers that would fail the quality gate)'
+        required: false
+        default: 'nemar'
+        type: choice
+        options:
+          - nemar
+          - all
 
 jobs:
   inject:
     uses: ./.github/workflows/3-inject.yml
     with:
-      source_name: "all"
+      source_name: ${{ github.event.inputs.sources == 'all' && 'all' || 'NEMAR' }}
       database: ${{ github.event.inputs.database || 'eegdash_staging' }}
       dry_run: ${{ github.event.inputs.dry_run == 'true' || github.event_name == 'schedule' }}
+      sources: ${{ github.event.inputs.sources || 'nemar' }}
     secrets:
       DATASET_LISTINGS_TOKEN: ${{ secrets.DATASET_LISTINGS_TOKEN }}
       EEGDASH_ADMIN_TOKEN: ${{ secrets.EEGDASH_API_TOKEN }}

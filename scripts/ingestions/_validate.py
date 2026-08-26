@@ -279,15 +279,21 @@ def validate_digestion_output(
     input_dir: Path,
     verbose: bool = False,
     strict: bool = False,
+    dataset_dirs: list[Path] | None = None,
 ) -> ValidationResult:
-    """Validate all digestion output in a directory."""
+    """Validate all digestion output in a directory.
+
+    ``dataset_dirs`` optionally restricts the check to an explicit subset of
+    directories (used by 5_inject to validate only what will be injected).
+    """
     result = ValidationResult()
 
     if not input_dir.exists():
         result.add_error("", f"Input directory does not exist: {input_dir}")
         return result
 
-    dataset_dirs = [d for d in input_dir.iterdir() if d.is_dir()]
+    if dataset_dirs is None:
+        dataset_dirs = [d for d in input_dir.iterdir() if d.is_dir()]
 
     if verbose:
         print(f"Found {len(dataset_dirs)} dataset directories to validate")

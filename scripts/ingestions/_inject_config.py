@@ -126,6 +126,15 @@ class InjectConfig(BaseSettings):
             "Specific dataset IDs to inject. Default: all datasets in --input."
         ),
     )
+    sources: list[str] | None = Field(
+        default=None,
+        description=(
+            "Restrict injection to datasets from these sources (e.g. 'nemar'). "
+            "The filter is applied BEFORE validation and the quality gate, so "
+            "low-quality digests from other sources cannot fail the run. "
+            "Default: all sources in --input."
+        ),
+    )
 
     # ─── Behaviour flags ─────────────────────────────────────────────────
     dry_run: bool = Field(default=False, description="Validate without uploading.")
@@ -259,6 +268,15 @@ def load_inject_config_from_argv(argv: list[str] | None = None) -> InjectConfig:
         nargs="+",
         default=None,
         help="Specific dataset IDs to inject (default: all).",
+    )
+    parser.add_argument(
+        "--sources",
+        nargs="+",
+        default=None,
+        help=(
+            "Restrict injection to these sources (e.g. --sources nemar); "
+            "applied before validation and the quality gate (default: all)."
+        ),
     )
     parser.add_argument("--dry-run", action="store_true", dest="dry_run")
     parser.add_argument("--batch-size", type=int, default=None, dest="batch_size")

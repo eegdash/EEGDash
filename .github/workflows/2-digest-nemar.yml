@@ -15,5 +15,8 @@ jobs:
       source_name: "NEMAR"
       consolidated_file: "nemar_datasets.json"
       workers: 4
+      # NEMAR hosts very large re-hosted datasets (e.g. nm000281 with >100k
+      # files) that exceed the 120 s default per-dataset digest watchdog.
+      dataset_timeout: 900
     secrets:
       DATASET_LISTINGS_TOKEN: ${{ secrets.DATASET_LISTINGS_TOKEN }}

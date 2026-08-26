@@ -12,6 +12,7 @@ from pathlib import Path
 from _constants import EXCLUDED_DATASETS
 from _fingerprint import fingerprint_from_records
 from _http import get_client, request_json
+from _source_id import _source_from_dataset_id
 
 
 @dataclass
@@ -45,7 +46,6 @@ def _dataset_source(dataset_dir: Path, dataset_id: str) -> str | None:
                 return str(source)
         except (OSError, json.JSONDecodeError):
             pass
-    from _source_id import _source_from_dataset_id
 
     inferred = _source_from_dataset_id(dataset_id)
     return None if inferred == "unknown" else inferred

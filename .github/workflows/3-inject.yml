@@ -88,6 +88,12 @@ jobs:
 
           ARGS="--input eegdash-dataset-listings/digested"
           ARGS="$ARGS --database ${{ inputs.database }}"
+          # NEMAR records carry enriched metadata (~3.7 KB each), so the
+          # injector's 1000-record default takes the server past the 60s
+          # per-request timeout: every batch burns all three tenacity attempts
+          # (60+1+60+2+60 = 183s) while the server re-processes the same
+          # payload. Small batches finish inside the window.
+          ARGS="$ARGS --batch-size 20"
           # Recompute per-dataset stats after a real injection. The script only
           # acts on this flag when NOT a dry run, so it is a safe no-op otherwise.
           ARGS="$ARGS --compute-stats"

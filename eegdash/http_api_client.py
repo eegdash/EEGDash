@@ -32,8 +32,8 @@ def _twin_value(value: Any) -> Any | None:
     """Return ``value`` with OpenNeuro ids swapped for NEMAR twins, else ``None``.
 
     Handles a plain id and an ``{"$in": [...]}`` list, since selecting several
-    datasets by id is a common query shape. Anything else (regex, ``$nin``, …)
-    is left alone.
+    datasets by id is a common query shape. Any other operator form (a regex, a
+    negated list) is left alone.
     """
     twin = _nemar_twin(value)
     if twin is not None:

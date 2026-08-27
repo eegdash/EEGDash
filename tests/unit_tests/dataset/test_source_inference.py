@@ -6,6 +6,7 @@ import pytest
 
 from eegdash.dataset._source_inference import (
     correct_storage_inplace,
+    expected_backend,
     expected_storage_base,
     infer_source_from_dataset_id,
 )
@@ -33,9 +34,10 @@ def test_infer_source_from_dataset_id(dataset_id, expected):
 def test_expected_storage_base_only_resolves_pattern_sources():
     assert expected_storage_base("nm000237") == "s3://nemar/nm000237"
     assert expected_storage_base("ds005505") == "s3://openneuro.org/ds005505"
-    # OpenNeuro-imported NEMAR mirrors live under the same bucket as native
-    # NEMAR uploads, just under their renamed ``on*`` ID.
-    assert expected_storage_base("on002181") == "s3://nemar/on002181"
+    # ``on*`` mirrors are byte-identical re-hosts of an OpenNeuro dataset, and
+    # NEMAR's bucket is closed, so they resolve to OpenNeuro's public bucket
+    # under the *OpenNeuro* id. Keying them by the ``on*`` id would 404.
+    assert expected_storage_base("on002181") == "s3://openneuro.org/ds002181"
     # GIN and unknown patterns require extra metadata, so we don't fabricate one.
     assert expected_storage_base("EEGManyLabs_MMN") is None
     assert expected_storage_base("totally-custom-id") is None
@@ -63,24 +65,38 @@ def test_correct_storage_reroutes_misrouted_nemar_record():
     assert correct_storage_inplace(rec) == (False, None)
 
 
-def test_correct_storage_reroutes_misrouted_openneuro_mirror():
-    # ``on*`` IDs are NEMAR mirrors of OpenNeuro datasets (see
-    # nemar-cli's ``mapDatasetId``). Records ingested before the ``on*``
-    # pattern was recognised may still carry the OpenNeuro base.
-    rec = {
-        "dataset": "on002181",
-        "storage": {
-            "backend": "s3",
-            "base": "s3://openneuro.org/on002181",
-            "raw_key": "sub-1473/eeg/sub-1473_task-Baseline_eeg.set",
-        },
-    }
-    corrected, old = correct_storage_inplace(rec)
-    assert corrected is True
-    assert old == "s3://openneuro.org/on002181"
-    assert rec["storage"]["base"] == "s3://nemar/on002181"
-    assert rec["storage"]["backend"] == "nemar"
-    assert correct_storage_inplace(rec) == (False, None)
+def test_correct_storage_reroutes_openneuro_mirror_to_the_openneuro_id():
+    """``on*`` records must end up on OpenNeuro's bucket under the ``ds*`` id.
+
+    Retiring the ``ds*`` twin in favour of ``on*`` leaves ``on*`` as the only
+    record for that data, so if it carries the non-fetchable ``nemar`` backend
+    the data becomes unreachable. Both the stale ``on``-keyed OpenNeuro base
+    and the ``nemar`` base heal to the same fetchable location.
+    """
+    for stale_base, stale_backend in [
+        ("s3://openneuro.org/on002181", "s3"),
+        ("s3://nemar/on002181", "nemar"),
+    ]:
+        rec = {
+            "dataset": "on002181",
+            "storage": {
+                "backend": stale_backend,
+                "base": stale_base,
+                "raw_key": "sub-1473/eeg/sub-1473_task-Baseline_eeg.set",
+            },
+        }
+        corrected, old = correct_storage_inplace(rec)
+        assert corrected is True
+        assert old == stale_base
+        assert rec["storage"]["base"] == "s3://openneuro.org/ds002181"
+        assert rec["storage"]["backend"] == "s3"
+        assert correct_storage_inplace(rec) == (False, None)
+
+
+def test_native_nemar_datasets_stay_non_fetchable():
+    """``nm*`` has no OpenNeuro origin, so it keeps the ``nemar`` marker."""
+    assert expected_storage_base("nm000281") == "s3://nemar/nm000281"
+    assert expected_backend("nm000281") == "nemar"
 
 
 def test_correct_storage_fixes_stale_backend_on_canonical_nemar_base():

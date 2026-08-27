@@ -11,21 +11,16 @@ import requests
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
+from .dataset._source_inference import nemar_twin_of
+
 DEFAULT_API_URL = "https://data.eegdash.org"
 # Retry on 429 (Too Many Requests) and standard server errors
 _RETRY = Retry(total=5, status_forcelist=[429, 500, 502, 503, 504], backoff_factor=1.0)
 
 
 def _nemar_twin(dataset_id: Any) -> str | None:
-    """Return the NEMAR twin id for an OpenNeuro dataset id, else ``None``.
-
-    NEMAR re-hosts OpenNeuro datasets under an ``on`` prefix keeping the numeric
-    part (``ds005506`` -> ``on005506``).
-    """
-    if not isinstance(dataset_id, str) or not dataset_id.startswith("ds"):
-        return None
-    body = dataset_id[2:]
-    return "on" + body if body.isdigit() else None
+    """Return the NEMAR twin id for an OpenNeuro dataset id, else ``None``."""
+    return nemar_twin_of(dataset_id) if isinstance(dataset_id, str) else None
 
 
 def _twin_value(value: Any) -> Any | None:

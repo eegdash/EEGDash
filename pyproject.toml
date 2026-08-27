@@ -155,7 +155,11 @@ digestion = [
   "beautifulsoup4",
   "python-dotenv",
   "selenium",
-  "httpx",
+  # _parser_utils.py opens its client with http2=True to multiplex concurrent
+  # HEADs, which needs the h2 package. Plain "httpx" made every dataset whose
+  # digest touched that client die with ImportError -- 209 of 211 OpenNeuro
+  # failures, for months.
+  "httpx[http2]",
   "tenacity",
   "hishel",
   "pydantic>=2",

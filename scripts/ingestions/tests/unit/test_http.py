@@ -109,7 +109,8 @@ def test_request_json_exhausted_retry_status_still_returns_tuple_without_flag():
     respx.post(API).mock(return_value=httpx.Response(429))
     payload, response = request_json("POST", API, retries=2, backoff_factor=0.0)
     assert payload is None
-    assert response is not None and response.status_code == 429
+    assert response is not None
+    assert response.status_code == 429
 
 
 @respx.mock

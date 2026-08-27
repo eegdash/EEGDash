@@ -90,6 +90,30 @@ def test_request_json_persistent_500_returns_none_payload():
 
 @respx.mock
 @pytest.mark.usefixtures("_no_cache_env")
+def test_request_json_exhausted_retry_status_raises_when_raise_for_status():
+    """Exhausted 429/5xx must raise when the caller asked for raise_for_status.
+
+    Regression: this path used to return (None, response) with no exception, so
+    ``5_inject.py`` recorded "0 inserted, 0 updated, no error" for every batch and
+    a fully rate-limited injection reported ``Errors: 0`` while writing nothing.
+    """
+    respx.post(API).mock(return_value=httpx.Response(429))
+    with pytest.raises(httpx.HTTPStatusError):
+        request_json("POST", API, retries=2, backoff_factor=0.0, raise_for_status=True)
+
+
+@respx.mock
+@pytest.mark.usefixtures("_no_cache_env")
+def test_request_json_exhausted_retry_status_still_returns_tuple_without_flag():
+    """Without raise_for_status the documented (payload, response) contract holds."""
+    respx.post(API).mock(return_value=httpx.Response(429))
+    payload, response = request_json("POST", API, retries=2, backoff_factor=0.0)
+    assert payload is None
+    assert response is not None and response.status_code == 429
+
+
+@respx.mock
+@pytest.mark.usefixtures("_no_cache_env")
 def test_request_json_timeout_returns_none_payload():
     """Persistent timeouts return (None, None); no response object is available."""
     respx.get(API).mock(side_effect=httpx.TimeoutException("upstream"))

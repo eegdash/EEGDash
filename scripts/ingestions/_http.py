@@ -290,6 +290,14 @@ def request_json(
             last_response = e.last_attempt.result()
         except Exception:  # noqa: BLE001 — last_attempt internals are tenacity-private
             last_response = None
+        if raise_for_status and last_response is not None:
+            # Honour raise_for_status on this path too. Without it an exhausted
+            # 429/5xx came back as (None, response) with no exception, so callers
+            # doing `(result or {}).get("inserted_count", 0)` recorded "0 written,
+            # no error". That silently turned a fully rate-limited injection into
+            # a green run: production went 2026-05-31 -> 2026-08-27 with no new
+            # records while every run reported `Errors: 0`.
+            last_response.raise_for_status()
         return None, last_response
     except httpx.RequestError:
         if raise_for_request:

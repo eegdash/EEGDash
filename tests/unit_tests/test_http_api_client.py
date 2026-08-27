@@ -386,3 +386,30 @@ def test_count_documents_retries_zero_against_twin():
     client._session = session
 
     assert client.count_documents({"dataset": "ds005506"}) == 42
+
+
+def test_find_retries_in_list_of_retired_ids():
+    """Selecting several datasets by id is a common shape (docs tutorial uses it)."""
+    client = EEGDashAPIClient()
+    session = MagicMock()
+    session.get.side_effect = [
+        _resp({"data": []}),
+        _resp({"data": [{"dataset": "on002718"}]}),
+    ]
+    client._session = session
+
+    records = client.find({"dataset": {"$in": ["ds002718", "ds005514"]}}, limit=5)
+
+    assert records == [{"dataset": "on002718"}]
+    retried = session.get.call_args_list[1].kwargs["params"]["filter"]
+    assert "on002718" in retried and "on005514" in retried
+
+
+def test_find_leaves_unaliasable_operator_forms_alone():
+    client = EEGDashAPIClient()
+    session = MagicMock()
+    session.get.side_effect = [_resp({"data": []})]
+    client._session = session
+
+    assert client.find({"dataset": {"$regex": "^ds00"}}, limit=5) == []
+    assert session.get.call_count == 1  # nothing to alias, no retry

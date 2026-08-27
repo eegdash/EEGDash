@@ -28,16 +28,33 @@ def _nemar_twin(dataset_id: Any) -> str | None:
     return "on" + body if body.isdigit() else None
 
 
-def _aliased(query: dict[str, Any] | None, key: str) -> dict[str, Any] | None:
-    """Copy of ``query`` with ``query[key]`` swapped for its NEMAR twin.
+def _twin_value(value: Any) -> Any | None:
+    """Return ``value`` with OpenNeuro ids swapped for NEMAR twins, else ``None``.
 
-    Returns ``None`` when the query has no plain OpenNeuro id under ``key``
-    (including ``$in``/regex forms, which are left alone).
+    Handles a plain id and an ``{"$in": [...]}`` list, since selecting several
+    datasets by id is a common query shape. Anything else (regex, ``$nin``, …)
+    is left alone.
+    """
+    twin = _nemar_twin(value)
+    if twin is not None:
+        return twin
+    if isinstance(value, dict) and isinstance(value.get("$in"), list):
+        members = value["$in"]
+        swapped = [_nemar_twin(m) or m for m in members]
+        if swapped != members:
+            return {**value, "$in": swapped}
+    return None
+
+
+def _aliased(query: dict[str, Any] | None, key: str) -> dict[str, Any] | None:
+    """Copy of ``query`` with ``query[key]`` swapped for its NEMAR twin(s).
+
+    Returns ``None`` when there is nothing to alias.
     """
     if not isinstance(query, dict):
         return None
-    twin = _nemar_twin(query.get(key))
-    return None if twin is None else {**query, key: twin}
+    swapped = _twin_value(query.get(key))
+    return None if swapped is None else {**query, key: swapped}
 
 
 def _make_session(auth_token: str | None = None) -> requests.Session:

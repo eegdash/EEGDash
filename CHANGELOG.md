@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Retired OpenNeuro dataset ids keep resolving. NEMAR re-hosts OpenNeuro datasets as `on<NNNNNN>`, and the prefer-NEMAR retirement deletes the `ds<NNNNNN>` twin; queries naming a `ds` id that returns nothing are now retried once against its NEMAR twin, so existing notebooks, scripts and published references keep working. Ids that still resolve on their own are never rewritten (#404)
+- Retired OpenNeuro dataset ids keep resolving. NEMAR re-hosts OpenNeuro datasets as `on<NNNNNN>`, and the prefer-NEMAR retirement deletes the `ds<NNNNNN>` twin; queries naming a `ds` id that returns nothing are now retried once against its NEMAR twin, so existing notebooks, scripts and published references keep working. Ids that still resolve on their own are never rewritten, and `{"$in": [...]}` lists of ids are covered too (#404)
 
 ### Fixed
 - Injection no longer reports success while writing nothing. `request_json` applied `raise_for_status` only on its normal return path, so retries exhausted on a status condition (429/5xx) returned `(None, response)` without raising and every rejected batch was recorded as "0 written, no error". Combined with the API's `100/minute` rate limit this silently discarded whole runs — production received no new record between 2026-05-31 and 2026-08-27 while each run reported `Errors: 0` (#404)

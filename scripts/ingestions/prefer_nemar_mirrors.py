@@ -19,15 +19,14 @@ from __future__ import annotations
 
 import argparse
 import os
-import re
 import sys
 import time
 
 import httpx
 
-DEFAULT_API_URL = "https://data.eegdash.org"
+from _source_id import _openneuro_twin_of
 
-_ON_ID = re.compile(r"^on(\d+)$")
+DEFAULT_API_URL = "https://data.eegdash.org"
 
 
 def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
@@ -149,14 +148,14 @@ def main(argv: list[str] | None = None) -> int:
     try:
         with httpx.Client(timeout=args.timeout) as client:
             ids = list_dataset_ids(client, args.api_url, args.database)
-            nemar_ids = [i for i in ids if _ON_ID.match(i)]
+            nemar_ids = [i for i in ids if _openneuro_twin_of(i)]
             id_set = set(ids)
 
             twins: list[tuple[str, str]] = []
             missing_twins = 0
             non_openneuro_twins: list[str] = []
             for on_id in nemar_ids:
-                ds_id = f"ds{_ON_ID.match(on_id).group(1)}"  # type: ignore[union-attr]
+                ds_id = _openneuro_twin_of(on_id)
                 if ds_id not in id_set:
                     missing_twins += 1
                     continue

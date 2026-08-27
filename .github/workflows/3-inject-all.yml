@@ -37,7 +37,9 @@ jobs:
   inject:
     uses: ./.github/workflows/3-inject.yml
     with:
-      source_name: ${{ github.event.inputs.sources == 'all' && 'all' || 'NEMAR' }}
+      # Purely a display label; reuse the choice so it cannot claim "NEMAR"
+      # while injecting openneuro.
+      source_name: ${{ github.event.inputs.sources || 'nemar' }}
       database: ${{ github.event.inputs.database || 'eegdash_staging' }}
       dry_run: ${{ github.event.inputs.dry_run == 'true' || github.event_name == 'schedule' }}
       sources: ${{ github.event.inputs.sources || 'nemar' }}

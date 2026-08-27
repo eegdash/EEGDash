@@ -36,16 +36,13 @@ def _dataset_source(dataset_dir: Path, dataset_id: str) -> str | None:
     dataset-id prefix inference (ds* → openneuro, nm*/on* → nemar) when the
     document is missing or omits the field.
     """
-    dataset_file = dataset_dir / f"{dataset_id}_dataset.json"
-    if dataset_file.exists():
-        try:
-            with open(dataset_file) as f:
-                doc = json.load(f)
-            source = doc.get("source")
-            if source:
-                return str(source)
-        except (OSError, json.JSONDecodeError):
-            pass
+    try:
+        doc = load_dataset(dataset_dir) or {}
+    except (OSError, json.JSONDecodeError):
+        doc = {}
+    source = doc.get("source")
+    if source:
+        return str(source)
 
     inferred = _source_from_dataset_id(dataset_id)
     return None if inferred == "unknown" else inferred

@@ -129,13 +129,15 @@ jobs:
         env:
           EEGDASH_ADMIN_TOKEN: ${{ secrets.EEGDASH_API_TOKEN }}
         run: |
+          # Stream the output: retirement walks every twin doing network deletes
+          # with rate-limit backoff, so capturing into a variable would leave the
+          # log empty until it finished -- the same blind spot 3-inject.yml fixes.
           set +e
-          OUTPUT=$(python eegdash/scripts/ingestions/prefer_nemar_mirrors.py \
+          python eegdash/scripts/ingestions/prefer_nemar_mirrors.py \
             --database "${{ github.event.inputs.database || 'eegdash' }}" \
-            --apply 2>&1)
-          RC=$?
+            --apply 2>&1 | tee /tmp/retire_output.log
+          RC=${PIPESTATUS[0]}
           set -e
-          echo "$OUTPUT"
           exit $RC
 
   # ============================================================================

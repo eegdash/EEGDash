@@ -143,7 +143,12 @@ docs = [
   "moabb",
   "neuralfetch>=0.2",
   "neuralset>=0.2",
-  "eegprep",
+  # eegprep 0.3.0 (2026-08-12) dropped the top-level ``utils`` module, but
+  # braindecode 1.7.0 -- the newest release -- still calls
+  # ``eegprep.utils.round_mat`` in preprocessing/eegprep_preprocess.py, so the
+  # docs gallery dies with "module 'eegprep' has no attribute 'utils'".
+  # Floor at the newest 0.2.x and cap until a braindecode release supports 0.3.
+  "eegprep>=0.2.23,<0.3",
   # Validate the Croissant 1.0 descriptors emitted alongside the docs build.
   "mlcroissant",
 ]

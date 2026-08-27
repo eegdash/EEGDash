@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The digest workflow commits validated output even when some datasets fail, instead of discarding hundreds of good digests because a handful errored (#404)
 
 ### Changed
+- `eegprep` is constrained to `>=0.2.23,<0.3`: 0.3.0 dropped the top-level `utils` module that braindecode 1.7.0 still calls, which broke the documentation gallery (#404)
 - The daily ingestion pipeline consumes NEMAR only, and retires the OpenNeuro `ds*` twin of any dataset NEMAR re-hosts as `on*` (#404)
 - The inject step streams the injector's output instead of buffering it into a shell variable, so a multi-hour run is observable while it runs (#404)
 

@@ -7,7 +7,7 @@ from eegdash.http_api_client import (
     DEFAULT_API_URL,
     EEGDashAPIClient,
     _make_session,
-    _nemar_twin,
+    _twin_value,
     get_client,
 )
 
@@ -315,101 +315,77 @@ def test_find_one_and_get_client(client_and_session):
 
 
 # --- NEMAR twin fallback -------------------------------------------------
-# NEMAR re-hosts OpenNeuro datasets as on<NNNNNN>; once the ds* twin is retired
-# from the database, existing code referring to the OpenNeuro id must keep
-# working. These cover the fallback and, just as importantly, that ids which
-# still resolve are never rewritten.
+# NEMAR re-hosts OpenNeuro datasets as on<NNNNNN>. Once the ds* twin is retired,
+# code naming the OpenNeuro id must keep working -- without rewriting the 71
+# ds* datasets that have no twin and still resolve on their own.
 
 
 @pytest.mark.parametrize(
-    "dataset_id,expected",
+    "value,expected",
     [
         ("ds005506", "on005506"),
-        ("ds000117", "on000117"),
         ("on005506", None),  # already a NEMAR id
         ("nm000281", None),  # NEMAR-native, no OpenNeuro twin
         ("dsABCDEF", None),  # non-numeric body
         (None, None),
-        ({"$in": ["ds005506"]}, None),  # operator forms are left alone
+        ({"$in": ["ds005506", "nm1"]}, {"$in": ["on005506", "nm1"]}),
+        ({"$in": ["on1"]}, None),  # nothing to swap
+        ({"$regex": "^ds00"}, None),  # other operator forms left alone
     ],
 )
-def test_nemar_twin_mapping(dataset_id, expected):
-    assert _nemar_twin(dataset_id) == expected
+def test_twin_value_mapping(value, expected):
+    assert _twin_value(value) == expected
 
 
-def test_find_retries_retired_openneuro_id_against_twin():
-    client = EEGDashAPIClient()
-    session = MagicMock()
-    session.get.side_effect = [
-        _resp({"data": []}),
-        _resp({"data": [{"dataset": "on005506"}]}),
-    ]
-    client._session = session
+@pytest.mark.parametrize(
+    "method,key,kwargs,empty,found,expected",
+    [
+        (
+            "find",
+            "dataset",
+            {"limit": 10},
+            {"data": []},
+            {"data": [{"dataset": "on005506"}]},
+            [{"dataset": "on005506"}],
+        ),
+        (
+            "find_datasets",
+            "dataset_id",
+            {},
+            {"data": []},
+            {"data": [{"dataset_id": "on005506"}]},
+            [{"dataset_id": "on005506"}],
+        ),
+        ("count_documents", "dataset", {}, {"count": 0}, {"count": 42}, 42),
+    ],
+)
+def test_query_methods_retry_against_twin(
+    client_and_session, method, key, kwargs, empty, found, expected
+):
+    client, session = client_and_session
+    session.get.side_effect = [_resp(empty), _resp(found)]
 
-    records = client.find({"dataset": "ds005506"}, limit=10)
-
-    assert records == [{"dataset": "on005506"}]
+    assert getattr(client, method)({key: "ds005506"}, **kwargs) == expected
     assert session.get.call_count == 2
-    assert '"on005506"' in session.get.call_args_list[1].kwargs["params"]["filter"]
+    assert "on005506" in session.get.call_args_list[1].kwargs["params"]["filter"]
 
 
-def test_find_does_not_rewrite_an_id_that_still_resolves():
-    """71 OpenNeuro datasets have no NEMAR twin; those must never be rewritten."""
-    client = EEGDashAPIClient()
-    session = MagicMock()
+def test_no_retry_when_the_id_still_resolves(client_and_session):
+    """The 71 OpenNeuro datasets without a NEMAR twin must never be rewritten."""
+    client, session = client_and_session
     session.get.side_effect = [_resp({"data": [{"dataset": "ds008730"}]})]
-    client._session = session
 
-    records = client.find({"dataset": "ds008730"}, limit=10)
-
-    assert records == [{"dataset": "ds008730"}]
-    assert session.get.call_count == 1  # no fallback attempted
+    assert client.find({"dataset": "ds008730"}, limit=10) == [{"dataset": "ds008730"}]
+    assert session.get.call_count == 1
 
 
-def test_get_dataset_falls_back_to_twin_on_404():
-    client = EEGDashAPIClient()
-    session = MagicMock()
+def test_get_dataset_falls_back_to_twin_on_404(client_and_session):
+    """get_dataset takes the id as a URL path segment, not a query filter."""
+    client, session = client_and_session
     session.get.side_effect = [
         _resp(None, status_code=404),
         _resp({"data": {"dataset_id": "on005506"}}),
     ]
-    client._session = session
 
     assert client.get_dataset("ds005506") == {"dataset_id": "on005506"}
     assert session.get.call_count == 2
-
-
-def test_count_documents_retries_zero_against_twin():
-    client = EEGDashAPIClient()
-    session = MagicMock()
-    session.get.side_effect = [_resp({"count": 0}), _resp({"count": 42})]
-    client._session = session
-
-    assert client.count_documents({"dataset": "ds005506"}) == 42
-
-
-def test_find_retries_in_list_of_retired_ids():
-    """Selecting several datasets by id is a common shape (docs tutorial uses it)."""
-    client = EEGDashAPIClient()
-    session = MagicMock()
-    session.get.side_effect = [
-        _resp({"data": []}),
-        _resp({"data": [{"dataset": "on002718"}]}),
-    ]
-    client._session = session
-
-    records = client.find({"dataset": {"$in": ["ds002718", "ds005514"]}}, limit=5)
-
-    assert records == [{"dataset": "on002718"}]
-    retried = session.get.call_args_list[1].kwargs["params"]["filter"]
-    assert "on002718" in retried and "on005514" in retried
-
-
-def test_find_leaves_unaliasable_operator_forms_alone():
-    client = EEGDashAPIClient()
-    session = MagicMock()
-    session.get.side_effect = [_resp({"data": []})]
-    client._session = session
-
-    assert client.find({"dataset": {"$regex": "^ds00"}}, limit=5) == []
-    assert session.get.call_count == 1  # nothing to alias, no retry

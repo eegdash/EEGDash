@@ -88,12 +88,6 @@ jobs:
 
           ARGS="--input eegdash-dataset-listings/digested"
           ARGS="$ARGS --database ${{ inputs.database }}"
-          # NEMAR records carry enriched metadata (~3.7 KB each), so the
-          # injector's 1000-record default takes the server past the 60s
-          # per-request timeout: every batch burns all three tenacity attempts
-          # (60+1+60+2+60 = 183s) while the server re-processes the same
-          # payload. Small batches finish inside the window.
-          ARGS="$ARGS --batch-size 20"
           # Recompute per-dataset stats after a real injection. The script only
           # acts on this flag when NOT a dry run, so it is a safe no-op otherwise.
           ARGS="$ARGS --compute-stats"
@@ -106,14 +100,16 @@ jobs:
             ARGS="$ARGS --sources ${{ inputs.sources }}"
           fi
 
-          # Run injection and capture output. Temporarily disable `set -e` so a
-          # non-zero exit does not abort before the captured output is printed
-          # (previously the actual error message was lost).
+          # Stream the injector's output live AND keep a copy for parsing. The old
+          # form captured everything into a variable, so a multi-hour run showed an
+          # empty log until it exited -- which hid a silent no-op injection for
+          # months. `tee` keeps the log observable while it runs; PIPESTATUS[0]
+          # preserves the injector's exit code through the pipe.
           set +e
-          OUTPUT=$(python eegdash/scripts/ingestions/5_inject.py $ARGS 2>&1)
-          RC=$?
+          python eegdash/scripts/ingestions/5_inject.py $ARGS 2>&1 | tee /tmp/inject_output.log
+          RC=${PIPESTATUS[0]}
           set -e
-          echo "$OUTPUT"
+          OUTPUT=$(cat /tmp/inject_output.log)
 
           if [ $RC -ne 0 ]; then
             echo "::error::Injection failed with exit code $RC"

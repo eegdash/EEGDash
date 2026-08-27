@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Retired OpenNeuro dataset ids keep resolving. NEMAR re-hosts OpenNeuro datasets as `on<NNNNNN>`, and the prefer-NEMAR retirement deletes the `ds<NNNNNN>` twin; queries naming a `ds` id that returns nothing are now retried once against its NEMAR twin, so existing notebooks, scripts and published references keep working. Ids that still resolve on their own are never rewritten (#404)
+
+### Fixed
+- Injection no longer reports success while writing nothing. `request_json` applied `raise_for_status` only on its normal return path, so retries exhausted on a status condition (429/5xx) returned `(None, response)` without raising and every rejected batch was recorded as "0 written, no error". Combined with the API's `100/minute` rate limit this silently discarded whole runs — production received no new record between 2026-05-31 and 2026-08-27 while each run reported `Errors: 0` (#404)
+- OpenNeuro digestion is unblocked. The `digestion` extra declared plain `httpx`, but the manifest client opens with `http2=True`, so any dataset touching it died with `ImportError: Using http2=True, but the 'h2' package is not installed`. Declaring `httpx[http2]` took a full OpenNeuro digest from 389 success / 211 errors to 597 / 3 (#404)
+- A git-annex pointer `.vhdr` no longer discards an entire dataset: the MNE fallback step now degrades on any header-parse failure, per the cascade's "never raise on a single record" contract (#404)
+- The digest workflow commits validated output even when some datasets fail, instead of discarding hundreds of good digests because a handful errored (#404)
+
+### Changed
+- The daily ingestion pipeline consumes NEMAR only, and retires the OpenNeuro `ds*` twin of any dataset NEMAR re-hosts as `on*` (#404)
+- The inject step streams the injector's output instead of buffering it into a shell variable, so a multi-hour run is observable while it runs (#404)
+
 ## [0.8.4] - 2026-07-01
 
 ### Fixed

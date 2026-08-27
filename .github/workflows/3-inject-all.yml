@@ -29,6 +29,8 @@ on:
         type: choice
         options:
           - nemar
+          - openneuro
+          - nemar openneuro
           - all
 
 jobs:

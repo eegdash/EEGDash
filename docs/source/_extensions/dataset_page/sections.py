@@ -1447,9 +1447,15 @@ def _format_recording_stats_section(context: Mapping[str, object]) -> str:
         except (TypeError, ValueError, KeyError):
             pass
 
-    if len(parts) <= 1:
-        # Only the wrapper open was added (no chart parts) — skip the
-        # section entirely.
+    if not any(parts[1:]):
+        # Nothing but the wrapper open would be emitted, so skip the section
+        # entirely. Testing the joined content rather than ``len(parts)``
+        # matters because the renderers above are appended unconditionally
+        # once their ``has_*`` flag is set, and they return an empty string
+        # when the data they were given turns out to be unusable (for
+        # example ``nchans_counts`` entries whose ``val`` is ``None``). Such
+        # an empty append still grows ``parts``, which previously left the
+        # "Dataset Statistics" heading on the page above an empty grid.
         return ""
 
     # Close the 2-column grid wrapper we opened at the top.

@@ -247,6 +247,7 @@ html_sidebars = {
     "generated/auto_examples/how_to/*": [],
     "generated/auto_examples/dev_scripts/*": [],
     "generated/auto_examples/eeg2025/*": [],
+    "generated/auto_examples/eeg2026/*": [],
     "generated/auto_examples/hpc/*": [],
 }
 

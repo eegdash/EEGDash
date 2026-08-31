@@ -620,9 +620,7 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
 
         if not targets:
             self._download_dataset_files()
-            return
-
-        if n_jobs == 1:
+        elif n_jobs == 1:
             for ds in targets:
                 ds._download_required_files()
         else:
@@ -632,6 +630,10 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
 
         # Download global dataset files (participants.tsv, etc.)
         self._download_dataset_files()
+        filesystem = downloader.get_s3_filesystem(max_concurrency=self.max_concurrency)
+        for ds in self.datasets:
+            if ds._storage_backend == "nemar":
+                ds._fetch_nemar_session_metadata(filesystem)
 
     def _download_dataset_files(self) -> None:
         """Download global dataset files defined in dataset metadata."""

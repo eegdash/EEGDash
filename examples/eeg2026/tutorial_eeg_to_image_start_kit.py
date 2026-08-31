@@ -328,6 +328,10 @@ raw.close()
 # move its cursor, it chooses the BIDS image nearest the rendered EEG
 # window/cursor. Its images are materialized only from the image IDs referenced
 # by this recording's event rows; this tutorial never copies or proxies JPEGs.
+# The 200 referenced image assets use the NM000134 BIDS v1.0.1 Git release,
+# pinned to immutable commit
+# "61b04adf7bca47f220b85f3744a610b44046c62f", rather than a mutable HEAD
+# branch.
 
 # %%
 dataset.plot(index=0, height=520)

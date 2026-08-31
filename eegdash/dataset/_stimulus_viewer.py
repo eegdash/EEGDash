@@ -27,6 +27,7 @@ from .. import downloader
 from .base import _resolve_one_nemar_entry
 
 _NM_STIMULUS = re.compile(r"^stim_(?:train|test),(\d+),")
+_NM000134_STIMULUS_GIT_REF = "61b04adf7bca47f220b85f3744a610b44046c62f"
 
 _SCRIPT = """<iframe id=%(id)s title="eegdash trace viewer" style="width:100%%;height:%(height)spx;
 border:1px solid var(--jp-border-color1,#d9dce1);border-radius:6px;background:transparent"></iframe>
@@ -159,6 +160,9 @@ def _materialize_nemar_asset(recording_dataset, image_id: str) -> Path | None:
         return destination
     annex_keys = storage.get("annex_keys") or {}
     sidecar_inline = storage.get("sidecar_inline") or {}
+    github_ref = (
+        _NM000134_STIMULUS_GIT_REF if dataset_id == "nm000134" else None
+    )
     try:
         object_uri = _resolve_one_nemar_entry(
             dataset_id=dataset_id,
@@ -168,6 +172,7 @@ def _materialize_nemar_asset(recording_dataset, image_id: str) -> Path | None:
             stored_key=annex_keys.get(relpath),
             stored_sidecar=sidecar_inline.get(relpath),
             is_required=False,
+            github_ref=github_ref,
         )
         if object_uri:
             downloader.download_s3_file(object_uri, destination)

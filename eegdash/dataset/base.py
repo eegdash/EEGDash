@@ -272,20 +272,24 @@ def _make_tolerant_get_sample_info(orig_fn):
 # dataset's git-annex pointer file, fetched here from GitHub raw.
 
 _NEMAR_RAW_URL = (
-    "https://raw.githubusercontent.com/NEMARDatasets/{dataset_id}/HEAD/{relpath}"
+    "https://raw.githubusercontent.com/NEMARDatasets/{dataset_id}/{ref}/{relpath}"
 )
 _NEMAR_POINTER_TIMEOUT = 30  # seconds — pointer files are tiny
 _NEMAR_USER_AGENT = "eegdash-runtime/nemar-resolver"
 
 
-def _fetch_nemar_pointer(dataset_id: str, relpath: str) -> bytes:
+def _fetch_nemar_pointer(dataset_id: str, relpath: str, *, ref: str = "HEAD") -> bytes:
     """Fetch the raw bytes of a NEMAR-tracked file from GitHub.
 
     For annex-managed files this returns the git-annex symlink target
     string; for files committed directly to git (sidecars) it returns
     the actual file content.
     """
-    url = _NEMAR_RAW_URL.format(dataset_id=dataset_id, relpath=relpath.lstrip("/"))
+    url = _NEMAR_RAW_URL.format(
+        dataset_id=dataset_id,
+        ref=ref,
+        relpath=relpath.lstrip("/"),
+    )
     req = urllib.request.Request(url, headers={"User-Agent": _NEMAR_USER_AGENT})
     with urllib.request.urlopen(req, timeout=_NEMAR_POINTER_TIMEOUT) as resp:
         return resp.read()
@@ -310,14 +314,16 @@ def _fetch_nemar_manifest(dataset_id: str):
 
 
 @lru_cache(maxsize=4096)
-def _resolve_nemar_pointer(dataset_id: str, relpath: str) -> tuple[str | None, bytes]:
+def _resolve_nemar_pointer(
+    dataset_id: str, relpath: str, *, ref: str = "HEAD"
+) -> tuple[str | None, bytes]:
     """Return ``(annex_key, raw_bytes)`` for a NEMAR-tracked file.
 
     ``annex_key`` is the SHA-keyed object name when the file is
     annex-managed, ``None`` when the file is committed directly to git
     (in which case ``raw_bytes`` is the actual content).
     """
-    raw = _fetch_nemar_pointer(dataset_id, relpath)
+    raw = _fetch_nemar_pointer(dataset_id, relpath, ref=ref)
     try:
         text = raw.decode("utf-8").strip()
     except UnicodeDecodeError:
@@ -438,6 +444,7 @@ def _resolve_one_nemar_entry(
     stored_key: str | None,
     stored_sidecar: str | None,
     is_required: bool,
+    github_ref: str | None = None,
 ) -> str | None:
     """Return the S3 URI for one entry, or ``None`` if it was inlined.
 
@@ -463,15 +470,21 @@ def _resolve_one_nemar_entry(
 
     # No digest-time fast path: fetch from data.nemar.org via nemar-py
     # (version-pinned manifest, retries + checksum verification) — the
-    # canonical NEMAR path — rather than a raw GitHub ``HEAD`` read that
-    # drifts as the dataset evolves.
-    if _download_via_nemar(dataset_id, relpath, dest):
+    # canonical NEMAR path. A caller that supplied a Git ref explicitly
+    # opted into that immutable Git release instead of the mutable latest
+    # manifest, so it must continue to the pointer resolver below.
+    if github_ref is None and _download_via_nemar(dataset_id, relpath, dest):
         return None
 
     # Legacy fallback for datasets not yet served by data.nemar.org:
     # resolve the git-annex pointer from GitHub raw.
     try:
-        annex_key, payload = _resolve_nemar_pointer(dataset_id, relpath)
+        if github_ref is None:
+            annex_key, payload = _resolve_nemar_pointer(dataset_id, relpath)
+        else:
+            annex_key, payload = _resolve_nemar_pointer(
+                dataset_id, relpath, ref=github_ref
+            )
     except urllib.error.URLError as e:
         if not is_required:
             raise

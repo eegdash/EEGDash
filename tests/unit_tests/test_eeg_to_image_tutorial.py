@@ -1,15 +1,19 @@
 """Guard the NM000134 EEG-to-image start-kit tutorial contract."""
 
+import ast
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 TUTORIAL = ROOT / "examples/eeg2026/tutorial_eeg_to_image_start_kit.py"
+SPHINX_CONF = ROOT / "docs/source/conf.py"
+NM000134_STIMULUS_GIT_REF = "61b04adf7bca47f220b85f3744a610b44046c62f"
 
 
 def test_eeg_to_image_start_kit_uses_the_real_nm000134_test_record():
     """Keep the lesson executable, real-data-only, and viewer-native."""
     assert TUTORIAL.is_file()
     source = TUTORIAL.read_text(encoding="utf-8")
+    compile(source, str(TUTORIAL), "exec")
 
     assert 'DATASET = "nm000134"' in source
     assert 'SUBJECT = "09"' in source
@@ -27,6 +31,11 @@ def test_eeg_to_image_start_kit_uses_the_real_nm000134_test_record():
     assert "event_intervals_s" in source
     assert "raw.get_data" in source
     assert "dataset.plot(index=0, height=520)" in source
+    assert "200 referenced image assets" in source
+    assert "NM000134 BIDS v1.0.1 Git release" in source
+    assert NM000134_STIMULUS_GIT_REF in source
+    assert "immutable commit" in source
+    assert "mutable HEAD" in source
     assert "NeuralBench owns" in source
     assert "not an official train/test split" in source
     assert "EEGDASH_RUN_2026_TUTORIALS" not in source
@@ -40,3 +49,19 @@ def test_eeg_to_image_start_kit_uses_the_real_nm000134_test_record():
     assert "# Step 3." in source
     assert "# Step 4." in source
     assert "# Step 5." in source
+
+
+def test_eeg2026_is_a_sphinx_gallery_leaf_directory():
+    """Keep the new tutorial directory visible to the generated documentation."""
+    tree = ast.parse(SPHINX_CONF.read_text(encoding="utf-8"))
+    leaf_dirs = next(
+        ast.literal_eval(statement.value)
+        for statement in tree.body
+        if isinstance(statement, ast.Assign)
+        and any(
+            isinstance(target, ast.Name) and target.id == "LEAF_DIRS"
+            for target in statement.targets
+        )
+    )
+
+    assert "eeg2026" in leaf_dirs

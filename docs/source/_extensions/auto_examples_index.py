@@ -206,6 +206,13 @@ def _write_auto_examples_root_index(app):
             "tutorial.",
         ),
         (
+            "eeg2026",
+            "EEG-to-image 2026",
+            "A real NM000134 EEG-to-image alignment start kit with BIDS "
+            "stimulus inspection in EEGDash. Official benchmark work "
+            "belongs to NeuralBench.",
+        ),
+        (
             "hpc",
             "High-performance computing",
             "Reference setup for running EEGDash on shared HPC clusters: "

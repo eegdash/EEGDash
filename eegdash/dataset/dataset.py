@@ -27,6 +27,7 @@ from ..local_bids import discover_local_bids_records
 from ..logging import logger
 from ..paths import get_default_cache_dir
 from ..schemas import validate_record
+from . import _stimulus_viewer
 from ._source_inference import correct_storage_inplace
 from .base import EEGDashRaw
 from .bids_dataset import EEGBIDSDataset
@@ -226,6 +227,8 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
           ``EEGDashRaw``.
 
     """
+
+    plot = _stimulus_viewer.plot
 
     def __init__(
         self,

@@ -347,7 +347,7 @@ TUTORIAL_SUBDIRS = [
     "50_evaluation",
     "70_transfer_foundation",
 ]
-LEAF_DIRS = ["how_to", "applied", "eeg2025", "hpc", "dev_scripts"]
+LEAF_DIRS = ["how_to", "applied", "eeg2025", "eeg2026", "hpc", "dev_scripts"]
 EX_DIRS = [f"{EX_DIR}/tutorials/{name}" for name in TUTORIAL_SUBDIRS] + [
     f"{EX_DIR}/{name}" for name in LEAF_DIRS
 ]

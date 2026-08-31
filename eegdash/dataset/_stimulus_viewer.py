@@ -11,6 +11,7 @@ from pathlib import Path, PurePosixPath
 from urllib.error import URLError
 from urllib.parse import urlsplit
 
+from botocore.exceptions import ClientError
 from mne.utils import _soft_import
 
 from braindecode.datasets._notebook_viewer import (
@@ -35,7 +36,7 @@ border:1px solid var(--jp-border-color1,#d9dce1);border-radius:6px;background:tr
   var frame = (self && self.previousElementSibling && self.previousElementSibling.tagName === "IFRAME")
     ? self.previousElementSibling : document.getElementById(id);
   if (!frame) { console.error("eegdash viewer: output iframe " + id + " not found"); return; }
-  var payload = %(payload)s, origin = %(origin)s, files = null, pose = null, stimuli = null;
+  var payload = JSON.parse(%(payload)s), origin = %(origin)s, files = null, pose = null, stimuli = null;
   function decode(b64) {
     if (Uint8Array.fromBase64) return Uint8Array.fromBase64(b64);
     var bin = atob(b64), out = new Uint8Array(bin.length);
@@ -47,7 +48,7 @@ border:1px solid var(--jp-border-color1,#d9dce1);border-radius:6px;background:tr
       if (!files) {
         files = payload.files.map(function (f) { return new File([decode(f.b64)], f.name); });
         pose = payload.pose ? "data:application/json;base64," + payload.pose : null;
-        stimuli = {};
+        stimuli = Object.create(null);
         Object.keys(payload.stimuli).forEach(function (id) {
           stimuli[id] = new Blob([decode(payload.stimuli[id])], { type: "image/jpeg" });
         });
@@ -107,8 +108,8 @@ def _stimulus_id(
     if image_id:
         return image_id
     if stim_file:
-        filename = PurePosixPath(stim_file.replace("\\", "/")).name
-        return PurePosixPath(filename).stem or stim_file
+        filename = re.split(r"[\\/]", stim_file)[-1] or stim_file
+        return re.sub(r"\.[A-Za-z0-9]+$", "", filename) or stim_file
     match = _NM_STIMULUS.match(trial_type or "")
     return match.group(1) if match else None
 
@@ -170,7 +171,7 @@ def _materialize_nemar_asset(recording_dataset, image_id: str) -> Path | None:
         )
         if object_uri:
             downloader.download_s3_file(object_uri, destination)
-    except (OSError, URLError):
+    except (ClientError, OSError, URLError):
         return None
     return destination if destination.is_file() else None
 
@@ -184,6 +185,8 @@ def stimulus_files(recording_dataset, recording_path) -> dict[str, Path]:
     files: dict[str, Path] = {}
     for image_id, stim_file in _event_stimuli(Path(recording_path)).items():
         local = _local_stimulus_path(root, stim_file)
+        if local is None and stim_file is None and _is_numeric_image_id(image_id):
+            local = _local_stimulus_path(root, f"stimuli/{int(image_id):05d}.jpg")
         if stim_file is not None and local is None:
             continue
         if local is not None and local.is_file():
@@ -264,6 +267,7 @@ def _build_html(
         "origin": f"{url.scheme}://{url.netloc}",
         "src": f"{url.geturl().rstrip('/')}/index.html?embed=1",
     }
+    literals["payload"] = json.dumps(literals["payload"]).replace("<", "\\u003c")
     return _SCRIPT % {
         key: json.dumps(value).replace("<", "\\u003c")
         for key, value in literals.items()

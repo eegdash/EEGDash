@@ -8,6 +8,7 @@ from types import SimpleNamespace
 from urllib.error import URLError
 
 import pytest
+from botocore.exceptions import ClientError
 
 
 def _module():
@@ -41,9 +42,13 @@ def _nemar_raw(tmp_path: Path):
 
 
 def _payload(html) -> dict:
-    match = re.search(r"var payload = (.+?), origin =", html.data, re.DOTALL)
+    match = re.search(
+        r'var payload = JSON\.parse\(("(?:[^"\\]|\\.)*")\), origin =',
+        html.data,
+        re.DOTALL,
+    )
     assert match is not None
-    return json.loads(match.group(1))
+    return json.loads(json.loads(match.group(1)))
 
 
 def test_stimulus_files_preserve_event_ids_and_materialize_nm_images(
@@ -83,6 +88,91 @@ def test_stimulus_files_preserve_event_ids_and_materialize_nm_images(
         "scene-B": nonnumeric_stim_file,
     }
     assert calls == [("nm000134", "16595")]
+
+
+@pytest.mark.parametrize(
+    ("stim_file", "local_path", "expected_id"),
+    [
+        ("stimuli/.hidden", "stimuli/.hidden", "stimuli/.hidden"),
+        ("stimuli/foo.-", "stimuli/foo.-", "foo.-"),
+        ("stimuli/foo.é", "stimuli/foo.é", "foo.é"),
+        (r"stimuli\nested\scene.jpg", "stimuli/nested/scene.jpg", "scene"),
+    ],
+)
+def test_stimulus_files_match_viewer_filename_ids(
+    tmp_path, stim_file, local_path, expected_id
+):
+    module = _module()
+    recording = _recording_with_events(
+        tmp_path,
+        f"onset\tduration\tstim_file\n1\t0\t{stim_file}\n",
+    )
+    image = tmp_path / local_path
+    image.parent.mkdir(parents=True)
+    image.write_bytes(b"local-jpeg")
+
+    assert module.stimulus_files(_nemar_raw(tmp_path), recording) == {
+        expected_id: image
+    }
+
+
+def test_stimulus_files_omits_client_error_and_keeps_sibling(tmp_path, monkeypatch):
+    module = _module()
+    recording = _recording_with_events(
+        tmp_path,
+        "onset\tduration\ttrial_type\n"
+        "1\t0\tstim_test,16595,-1,1\n"
+        "2\t0\tstim_test,16596,-1,1\n",
+    )
+    expected = tmp_path / "stimuli" / "16596.jpg"
+
+    def resolve(**kwargs):
+        if kwargs["relpath"] == "stimuli/16595.jpg":
+            raise ClientError(
+                {
+                    "Error": {"Code": "InternalError"},
+                    "ResponseMetadata": {"HTTPStatusCode": 503},
+                },
+                "GetObject",
+            )
+        return "s3://nemar/nm000134/objects/16596"
+
+    def download(_source, destination):
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        destination.write_bytes(b"sibling-jpeg")
+        return destination
+
+    monkeypatch.setattr(module, "_resolve_one_nemar_entry", resolve)
+    monkeypatch.setattr(module.downloader, "download_s3_file", download)
+
+    assert module.stimulus_files(_nemar_raw(tmp_path), recording) == {
+        "16596": expected
+    }
+    assert expected.read_bytes() == b"sibling-jpeg"
+
+
+def test_stimulus_files_uses_local_canonical_asset_without_stim_file(
+    tmp_path, monkeypatch
+):
+    module = _module()
+    recording = _recording_with_events(
+        tmp_path,
+        "onset\tduration\timage_id\n1\t0\t00042\n",
+    )
+    image = tmp_path / "stimuli" / "00042.jpg"
+    image.parent.mkdir()
+    image.write_bytes(b"local-jpeg")
+    local_raw = SimpleNamespace(
+        bids_root=tmp_path,
+        record={"dataset": "local", "storage": {"backend": "local"}},
+    )
+    monkeypatch.setattr(
+        module,
+        "_materialize_nemar_asset",
+        lambda *_args: pytest.fail("a local canonical asset must win before download"),
+    )
+
+    assert module.stimulus_files(local_raw, recording) == {"00042": image}
 
 
 @pytest.mark.parametrize("failure", ["resolve", "download"])
@@ -196,6 +286,25 @@ def test_plot_sends_stimuli_separately_and_counts_them(tmp_path, monkeypatch):
     )
     with pytest.raises(ValueError, match="base64"):
         module.plot(dataset, max_bytes=without_stimuli)
+
+
+def test_plot_preserves_proto_stimulus_in_json_payload(tmp_path, monkeypatch):
+    module = _module()
+    recording = _recording_with_events(
+        tmp_path,
+        "onset\tduration\tstim_file\n1\t0\tstimuli/__proto__.jpg\n",
+    )
+    image = tmp_path / "stimuli" / "__proto__.jpg"
+    image.parent.mkdir()
+    image.write_bytes(b"proto-jpeg")
+    dataset = SimpleNamespace(datasets=[_nemar_raw(tmp_path)])
+    monkeypatch.setattr(module, "_recording", lambda _dataset, _index: recording)
+
+    html = module.plot(dataset, max_bytes=1_000_000)
+    assert "stimuli = Object.create(null);" in html.data
+    payload = _payload(html)
+
+    assert base64.b64decode(payload["stimuli"]["__proto__"]) == b"proto-jpeg"
 
 
 def test_plot_without_stimuli_delegates_upstream_without_download(tmp_path, monkeypatch):

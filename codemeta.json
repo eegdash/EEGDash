@@ -15,8 +15,8 @@
     "https://data.eegdash.org/openapi.json"
   ],
   "license": "https://spdx.org/licenses/BSD-3-Clause",
-  "version": "0.8.5",
-  "softwareVersion": "0.8.5",
+  "version": "0.9.0",
+  "softwareVersion": "0.9.0",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "Python",
@@ -176,7 +176,7 @@
   ],
   "softwareRequirements": [
     "Python >= 3.11",
-    "braindecode >= 1.4.0",
+    "braindecode >= 1.8.0",
     "mne >= 1.11.0",
     "mne_bids >= 0.18.0",
     "numpy",

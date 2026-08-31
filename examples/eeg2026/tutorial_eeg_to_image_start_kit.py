@@ -33,10 +33,9 @@ Keywords: EEG2026, EEG-to-image, visual decoding, BIDS, NEMAR, EEGDash
 # Requirements
 # ------------
 #
-# - About 3–5 minutes on CPU on the first run. The EDF and its BIDS sidecars
-#   are cached by EEGDash; the viewer materializes the 200 image IDs referenced
-#   by this recording's event rows.
-# - Network access is needed once for NEMAR "nm000134".
+# - About 3–5 minutes on CPU on the first run. The initial download's EDF,
+#   BIDS sidecar, and event-referenced BIDS asset bytes are cached by EEGDash.
+#   A rerun still needs catalog and hosted-viewer network access.
 # - Prerequisite: basic familiarity with continuous EEG and BIDS events.
 
 # %%
@@ -254,7 +253,8 @@ plt.show()
 # We choose the first "stim_test" row with enough recorded context on both
 # sides, then index the EDF with its BIDS "sample" value. This is a signal
 # check around one observed image presentation, not an embedding, target, or
-# prediction.
+# prediction. For display only, we median-center each displayed channel; the
+# raw EDF remains unchanged and amplitudes remain in µV.
 
 # %%
 usable_events = stim_events.loc[
@@ -275,8 +275,13 @@ assert stop_sample <= raw.n_times
 trace = raw.get_data(picks=trace_picks, start=start_sample, stop=stop_sample)
 trace_time_s = np.arange(trace.shape[-1]) / sfreq - TRACE_BEFORE_SECONDS
 trace_microvolts = trace * 1e6
+trace_display_microvolts = trace_microvolts - np.nanmedian(
+    trace_microvolts, axis=1, keepdims=True
+)
 trace_names = [raw.ch_names[pick] for pick in trace_picks]
-spacing = max(float(np.nanpercentile(np.abs(trace_microvolts), 95)) * 2.6, 10.0)
+spacing = max(
+    float(np.nanpercentile(np.abs(trace_display_microvolts), 95)) * 2.6, 10.0
+)
 
 fig, axis = plt.subplots(figsize=(10.8, 4.6))
 style_figure(
@@ -286,7 +291,10 @@ style_figure(
         f"image ID {int(anchor_event.image_id)} at "
         f"{float(anchor_event.onset):.3f} seconds in the BIDS event stream"
     ),
-    source="Four EEG channels from the NM000134 EDF; amplitudes shown in µV.",
+    source=(
+        "Four EEG channels from the NM000134 EDF; median-centered for display; "
+        "amplitudes shown in µV."
+    ),
     grid_axis="x",
 )
 fig.subplots_adjust(top=0.72, bottom=0.22, left=0.15)
@@ -294,7 +302,7 @@ fig.subplots_adjust(top=0.72, bottom=0.22, left=0.15)
 for channel_index, (channel_name, trace_channel, color) in enumerate(
     zip(
         trace_names,
-        trace_microvolts,
+        trace_display_microvolts,
         (EEGDASH_BLUE, EEGDASH_MINT, EEGDASH_PURPLE, EEGDASH_ORANGE),
         strict=True,
     )
@@ -313,7 +321,7 @@ for channel_index, (channel_name, trace_channel, color) in enumerate(
 axis.axvline(0, color="#475569", lw=1.0, linestyle="--", label="BIDS event")
 axis.set(
     xlabel="Seconds relative to image-event sample",
-    ylabel="Recorded EEG (µV; offset traces)",
+    ylabel="Recorded EEG (µV; median-centered offset traces)",
     yticks=[],
 )
 axis.legend(frameon=False, loc="upper right")
@@ -326,12 +334,13 @@ raw.close()
 #
 # The inline viewer opens the same real EDF and BIDS sidecars. When you pan or
 # move its cursor, it chooses the BIDS image nearest the rendered EEG
-# window/cursor. Its images are materialized only from the image IDs referenced
-# by this recording's event rows; this tutorial never copies or proxies JPEGs.
-# The 200 referenced image assets use the NM000134 BIDS v1.0.1 Git release,
-# pinned to immutable commit
-# "61b04adf7bca47f220b85f3744a610b44046c62f", rather than a mutable HEAD
-# branch.
+# window/cursor. The viewer materializes only event-referenced BIDS assets
+# into the local cache and embeds them in the local viewer payload; it does
+# not commit or substitute JPEGs. Fresh materialization is pinned to the 200
+# referenced image assets from the NM000134 BIDS v1.0.1 Git release, at
+# immutable commit "61b04adf7bca47f220b85f3744a610b44046c62f", rather than a
+# mutable HEAD branch. Pre-existing local BIDS stimulus files are intentionally
+# reused.
 
 # %%
 dataset.plot(index=0, height=520)

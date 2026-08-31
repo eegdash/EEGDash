@@ -28,6 +28,8 @@ from .base import _resolve_one_nemar_entry
 
 _NM_STIMULUS = re.compile(r"^stim_(?:train|test),(\d+),")
 _NM000134_STIMULUS_GIT_REF = "61b04adf7bca47f220b85f3744a610b44046c62f"
+# ponytail: cap at two consecutive optional misses; add a retry policy only if intermittent failures merit it.
+_MAX_CONSECUTIVE_OPTIONAL_STIMULUS_MISSES = 2
 
 _SCRIPT = """<iframe id=%(id)s title="eegdash trace viewer" style="width:100%%;height:%(height)spx;
 border:1px solid var(--jp-border-color1,#d9dce1);border-radius:6px;background:transparent"></iframe>
@@ -65,7 +67,7 @@ border:1px solid var(--jp-border-color1,#d9dce1);border-radius:6px;background:tr
     }
   }
   window.addEventListener("message", function onMessage(e) {
-    if (e.source === frame.contentWindow && e.data && e.data.type === "eegdash-viewer:ready") send(e.origin);
+    if (e.source === frame.contentWindow && e.origin === origin && e.data && e.data.type === "eegdash-viewer:ready") send(origin);
     else if (!frame.isConnected) window.removeEventListener("message", onMessage);
   });
   frame.src = %(src)s;
@@ -137,7 +139,7 @@ def _local_stimulus_path(bids_root: Path, stim_file: str | None) -> Path | None:
 
 
 def _is_numeric_image_id(image_id: str) -> bool:
-    return image_id.isascii() and image_id.isdigit()
+    return image_id.isascii() and image_id.isdigit() and len(image_id) <= 18
 
 
 def _materialize_nemar_asset(recording_dataset, image_id: str) -> Path | None:
@@ -188,20 +190,27 @@ def stimulus_files(recording_dataset, recording_path) -> dict[str, Path]:
         return {}
     root = Path(bids_root)
     files: dict[str, Path] = {}
+    materialization_misses = 0
     for image_id, stim_file in _event_stimuli(Path(recording_path)).items():
-        local = _local_stimulus_path(root, stim_file)
-        if local is None and stim_file is None and _is_numeric_image_id(image_id):
-            local = _local_stimulus_path(root, f"stimuli/{int(image_id):05d}.jpg")
-        if stim_file is not None and local is None:
+        if stim_file is not None:
+            local = _local_stimulus_path(root, stim_file)
+            if local is not None and local.is_file():
+                files[image_id] = local
             continue
+        if not _is_numeric_image_id(image_id):
+            continue
+        local = _local_stimulus_path(root, f"stimuli/{int(image_id):05d}.jpg")
         if local is not None and local.is_file():
             files[image_id] = local
             continue
-        if not _is_numeric_image_id(image_id):
+        if materialization_misses >= _MAX_CONSECUTIVE_OPTIONAL_STIMULUS_MISSES:
             continue
         materialized = _materialize_nemar_asset(recording_dataset, image_id)
         if materialized is not None and materialized.is_file():
             files[image_id] = materialized
+            materialization_misses = 0
+        else:
+            materialization_misses += 1
     return files
 
 

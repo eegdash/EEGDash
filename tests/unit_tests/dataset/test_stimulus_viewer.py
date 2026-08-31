@@ -190,6 +190,83 @@ def test_stimulus_files_uses_local_canonical_asset_without_stim_file(
     assert module.stimulus_files(local_raw, recording) == {"00042": image}
 
 
+def test_stimulus_files_does_not_substitute_a_declared_missing_stim_file(
+    tmp_path, monkeypatch
+):
+    module = _module()
+    recording = _recording_with_events(
+        tmp_path,
+        "onset\tduration\tstim_file\timage_id\n"
+        "1\t0\tstimuli/declared.jpg\t42\n",
+    )
+    canonical_image = tmp_path / "stimuli" / "00042.jpg"
+    canonical_image.parent.mkdir()
+    canonical_image.write_bytes(b"wrong-image")
+    monkeypatch.setattr(
+        module,
+        "_materialize_nemar_asset",
+        lambda *_args: pytest.fail("a declared stimulus must not use canonical lookup"),
+    )
+
+    assert module.stimulus_files(_nemar_raw(tmp_path), recording) == {}
+
+
+def test_stimulus_files_stops_remote_attempts_after_two_consecutive_misses(
+    tmp_path, monkeypatch
+):
+    module = _module()
+    recording = _recording_with_events(
+        tmp_path,
+        "onset\tduration\ttrial_type\tstim_file\n"
+        "1\t0\tstim_test,16595,-1,1\t\n"
+        "2\t0\tstim_test,16596,-1,1\t\n"
+        "3\t0\tstim_test,16597,-1,1\t\n"
+        "4\t0\tstim_test,16598,-1,1\t\n"
+        "5\t0\tstim_test,16599,-1,1\t\n"
+        "6\t0\tordinary\tstimuli/local.jpg\n",
+    )
+    local_image = tmp_path / "stimuli" / "local.jpg"
+    local_image.parent.mkdir()
+    local_image.write_bytes(b"local-jpeg")
+    attempts = []
+    successful_image = tmp_path / "stimuli" / "16596.jpg"
+
+    def missing_asset(_recording_dataset, image_id):
+        attempts.append(image_id)
+        if image_id == "16596":
+            successful_image.write_bytes(b"remote-jpeg")
+            return successful_image
+        return None
+
+    monkeypatch.setattr(module, "_materialize_nemar_asset", missing_asset)
+
+    assert module.stimulus_files(_nemar_raw(tmp_path), recording) == {
+        "16596": successful_image,
+        "local": local_image,
+    }
+    assert attempts == ["16595", "16596", "16597", "16598"]
+
+
+def test_stimulus_files_skips_pathologically_long_numeric_image_ids(
+    tmp_path, monkeypatch
+):
+    module = _module()
+    image_id = "9" * 5000
+    recording = _recording_with_events(
+        tmp_path,
+        f"onset\tduration\timage_id\n1\t0\t{image_id}\n",
+    )
+    monkeypatch.setattr(
+        module,
+        "_materialize_nemar_asset",
+        lambda *_args: pytest.fail("a pathological numeric ID must not materialize"),
+    )
+
+    assert module._is_numeric_image_id("9" * 18)
+    assert not module._is_numeric_image_id("9" * 19)
+    assert module.stimulus_files(_nemar_raw(tmp_path), recording) == {}
+
+
 @pytest.mark.parametrize("failure", ["resolve", "download"])
 def test_plot_omits_optional_nemar_asset_after_remote_failure(
     tmp_path, monkeypatch, failure
@@ -301,6 +378,27 @@ def test_plot_sends_stimuli_separately_and_counts_them(tmp_path, monkeypatch):
     )
     with pytest.raises(ValueError, match="base64"):
         module.plot(dataset, max_bytes=without_stimuli)
+
+
+def test_plot_requires_the_configured_viewer_origin_before_sending_payload(
+    tmp_path, monkeypatch
+):
+    module = _module()
+    recording = _recording_with_events(
+        tmp_path,
+        "onset\tduration\tstim_file\n1\t0\tstimuli/00042.jpg\n",
+    )
+    image = tmp_path / "stimuli" / "00042.jpg"
+    image.parent.mkdir()
+    image.write_bytes(b"jpeg-bytes")
+    dataset = SimpleNamespace(datasets=[_nemar_raw(tmp_path)])
+    monkeypatch.setattr(module, "_recording", lambda _dataset, _index: recording)
+
+    html = module.plot(dataset, max_bytes=1_000_000)
+
+    assert "e.source === frame.contentWindow && e.origin === origin" in html.data
+    assert "send(origin);" in html.data
+    assert "send(e.origin)" not in html.data
 
 
 def test_plot_preserves_proto_stimulus_in_json_payload(tmp_path, monkeypatch):

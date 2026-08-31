@@ -9,6 +9,7 @@ import pytest
 
 ROOT = Path(__file__).resolve().parents[2]
 TUTORIAL = ROOT / "examples/eeg2026/tutorial_eeg_to_image_start_kit.py"
+README = ROOT / "examples/eeg2026/README.rst"
 SPHINX_CONF = ROOT / "docs/source/conf.py"
 AUTO_EXAMPLES_INDEX = ROOT / "docs/source/_extensions/auto_examples_index.py"
 NM000134_STIMULUS_GIT_REF = "61b04adf7bca47f220b85f3744a610b44046c62f"
@@ -18,6 +19,7 @@ def test_eeg_to_image_start_kit_uses_the_real_nm000134_test_record():
     """Keep the lesson executable, real-data-only, and viewer-native."""
     assert TUTORIAL.is_file()
     source = TUTORIAL.read_text(encoding="utf-8")
+    prose = source.replace("\n# ", " ")
     compile(source, str(TUTORIAL), "exec")
 
     assert 'DATASET = "nm000134"' in source
@@ -35,14 +37,24 @@ def test_eeg_to_image_start_kit_uses_the_real_nm000134_test_record():
     assert "stim_test" in source
     assert "event_intervals_s" in source
     assert "raw.get_data" in source
+    assert "trace_display_microvolts" in source
+    assert "np.nanmedian(" in source
+    assert "axis=1, keepdims=True" in source
+    assert "median-centered for display" in source
     assert "dataset.plot(index=0, height=520)" in source
-    assert "200 referenced image assets" in source
-    assert "NM000134 BIDS v1.0.1 Git release" in source
-    assert NM000134_STIMULUS_GIT_REF in source
-    assert "immutable commit" in source
-    assert "mutable HEAD" in source
-    assert "NeuralBench owns" in source
-    assert "not an official train/test split" in source
+    assert "200 referenced image assets" in prose
+    assert "NM000134 BIDS v1.0.1 Git release" in prose
+    assert NM000134_STIMULUS_GIT_REF in prose
+    assert "immutable commit" in prose
+    assert "mutable HEAD" in prose
+    assert "local viewer payload" in prose
+    assert "does not commit or substitute JPEGs" in prose
+    assert "initial download" in prose
+    assert "catalog and hosted-viewer network access" in prose
+    assert "Fresh materialization is pinned" in prose
+    assert "Pre-existing local BIDS stimulus files are intentionally reused" in prose
+    assert "NeuralBench owns" in prose
+    assert "not an official train/test split" in prose
     assert "EEGDASH_RUN_2026_TUTORIALS" not in source
     assert "os.environ" not in source
     assert "np.random" not in source
@@ -54,6 +66,17 @@ def test_eeg_to_image_start_kit_uses_the_real_nm000134_test_record():
     assert "# Step 3." in source
     assert "# Step 4." in source
     assert "# Step 5." in source
+
+
+def test_eeg_to_image_gallery_header_describes_only_the_nm000134_start_kit():
+    """A clean Sphinx-Gallery checkout needs the committed RST header."""
+    assert README.is_file()
+    header = README.read_text(encoding="utf-8")
+
+    assert "NM000134" in header
+    assert "tutorial_eeg_to_image_start_kit.py" in header
+    assert "NeuralBench" in header
+    assert "tutorial_bci_start_kit.py" not in header
 
 
 def test_eeg2026_is_a_sphinx_gallery_leaf_directory():

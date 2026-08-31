@@ -323,7 +323,10 @@ def _resolve_nemar_pointer(
     annex-managed, ``None`` when the file is committed directly to git
     (in which case ``raw_bytes`` is the actual content).
     """
-    raw = _fetch_nemar_pointer(dataset_id, relpath, ref=ref)
+    if ref == "HEAD":
+        raw = _fetch_nemar_pointer(dataset_id, relpath)
+    else:
+        raw = _fetch_nemar_pointer(dataset_id, relpath, ref=ref)
     try:
         text = raw.decode("utf-8").strip()
     except UnicodeDecodeError:

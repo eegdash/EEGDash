@@ -1,11 +1,16 @@
 """Guard the NM000134 EEG-to-image start-kit tutorial contract."""
 
 import ast
+import importlib.util
 from pathlib import Path
+from types import SimpleNamespace
+
+import pytest
 
 ROOT = Path(__file__).resolve().parents[2]
 TUTORIAL = ROOT / "examples/eeg2026/tutorial_eeg_to_image_start_kit.py"
 SPHINX_CONF = ROOT / "docs/source/conf.py"
+AUTO_EXAMPLES_INDEX = ROOT / "docs/source/_extensions/auto_examples_index.py"
 NM000134_STIMULUS_GIT_REF = "61b04adf7bca47f220b85f3744a610b44046c62f"
 
 
@@ -65,3 +70,26 @@ def test_eeg2026_is_a_sphinx_gallery_leaf_directory():
     )
 
     assert "eeg2026" in leaf_dirs
+
+
+def _load_auto_examples_index():
+    """Load the docs-only gallery-index extension without changing sys.path."""
+    pytest.importorskip("sphinx", reason="gallery-index extension requires sphinx")
+    spec = importlib.util.spec_from_file_location(
+        "eegdash_auto_examples_index", AUTO_EXAMPLES_INDEX
+    )
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def test_eeg2026_gallery_is_linked_from_generated_root_index(tmp_path):
+    """Exercise the generator rather than only checking its source roster."""
+    extension = _load_auto_examples_index()
+    extension._write_auto_examples_root_index(SimpleNamespace(srcdir=tmp_path))
+
+    generated_index = (
+        tmp_path / "generated" / "auto_examples" / "index.rst"
+    ).read_text(encoding="utf-8")
+    assert "generated/auto_examples/eeg2026/index" in generated_index

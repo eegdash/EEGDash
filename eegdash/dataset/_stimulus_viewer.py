@@ -8,6 +8,7 @@ import json
 import re
 import uuid
 from pathlib import Path, PurePosixPath
+from urllib.error import URLError
 from urllib.parse import urlsplit
 
 from mne.utils import _soft_import
@@ -80,41 +81,61 @@ def _event_stimuli(recording: Path) -> dict[str, str | None]:
     stimuli: dict[str, str | None] = {}
     with events.open(encoding="utf-8-sig", newline="") as stream:
         for row in csv.DictReader(stream, delimiter="\t"):
-            stim_file = (row.get("stim_file") or "").strip() or None
-            image_id = _stimulus_id(stim_file, row.get("image_id"), row.get("trial_type"))
+            stim_file = _bids_cell(row.get("stim_file"))
+            image_id = _stimulus_id(
+                stim_file,
+                _bids_cell(row.get("image_id")),
+                _bids_cell(row.get("trial_type")),
+            )
             if image_id is not None:
                 stimuli.setdefault(image_id, stim_file)
     return stimuli
 
 
+def _bids_cell(value: str | None) -> str | None:
+    """Return a nonempty BIDS TSV cell, treating ``n/a`` as absent."""
+    if value is None:
+        return None
+    value = value.strip()
+    return value if value and value.lower() != "n/a" else None
+
+
 def _stimulus_id(
     stim_file: str | None, image_id: str | None, trial_type: str | None
 ) -> str | None:
-    """Extract the numeric ID exactly as the viewer will read it from events."""
-    if image_id and image_id.strip().isdigit():
-        return image_id.strip()
+    """Extract the image ID exactly as the viewer will read it from events."""
+    if image_id:
+        return image_id
     if stim_file:
-        candidate = PurePosixPath(stim_file.replace("\\", "/"))
-        if (
-            len(candidate.parts) == 2
-            and candidate.parts[0] == "stimuli"
-            and candidate.suffix.lower() == ".jpg"
-            and candidate.stem.isdigit()
-        ):
-            return candidate.stem
-    match = _NM_STIMULUS.match((trial_type or "").strip())
+        filename = PurePosixPath(stim_file.replace("\\", "/")).name
+        return PurePosixPath(filename).stem or stim_file
+    match = _NM_STIMULUS.match(trial_type or "")
     return match.group(1) if match else None
 
 
-def _local_stimulus_path(
-    bids_root: Path, stim_file: str | None, image_id: str
-) -> Path:
-    """Return the BIDS-local asset path, retaining a supplied safe filename."""
-    if stim_file:
-        candidate = PurePosixPath(stim_file.replace("\\", "/"))
-        if candidate.parts and candidate.parts[0] == "stimuli" and ".." not in candidate.parts:
-            return bids_root.joinpath(*candidate.parts)
-    return bids_root / "stimuli" / f"{int(image_id):05d}.jpg"
+def _safe_bids_path(bids_root: Path, path: Path) -> Path | None:
+    """Return a resolved path only when it remains within ``bids_root``."""
+    try:
+        root = bids_root.resolve()
+        resolved = path.resolve()
+        resolved.relative_to(root)
+    except (OSError, RuntimeError, ValueError):
+        return None
+    return resolved
+
+
+def _local_stimulus_path(bids_root: Path, stim_file: str | None) -> Path | None:
+    """Return a safe local ``stimuli/`` path named by an event row."""
+    if not stim_file:
+        return None
+    candidate = PurePosixPath(stim_file.replace("\\", "/"))
+    if not candidate.parts or candidate.parts[0] != "stimuli" or ".." in candidate.parts:
+        return None
+    return _safe_bids_path(bids_root, bids_root.joinpath(*candidate.parts))
+
+
+def _is_numeric_image_id(image_id: str) -> bool:
+    return image_id.isascii() and image_id.isdigit()
 
 
 def _materialize_nemar_asset(recording_dataset, image_id: str) -> Path | None:
@@ -126,26 +147,31 @@ def _materialize_nemar_asset(recording_dataset, image_id: str) -> Path | None:
     dataset_id = record.get("dataset")
     base = str(storage.get("base") or "").rstrip("/")
     bids_root = getattr(recording_dataset, "bids_root", None)
-    if not dataset_id or not base or bids_root is None:
+    if not dataset_id or not base or bids_root is None or not _is_numeric_image_id(image_id):
         return None
 
     relpath = f"stimuli/{int(image_id):05d}.jpg"
-    destination = Path(bids_root) / relpath
+    destination = _safe_bids_path(Path(bids_root), Path(bids_root) / relpath)
+    if destination is None:
+        return None
     if destination.is_file():
         return destination
     annex_keys = storage.get("annex_keys") or {}
     sidecar_inline = storage.get("sidecar_inline") or {}
-    object_uri = _resolve_one_nemar_entry(
-        dataset_id=dataset_id,
-        relpath=relpath,
-        base=base,
-        dest=destination,
-        stored_key=annex_keys.get(relpath),
-        stored_sidecar=sidecar_inline.get(relpath),
-        is_required=False,
-    )
-    if object_uri:
-        downloader.download_s3_file(object_uri, destination)
+    try:
+        object_uri = _resolve_one_nemar_entry(
+            dataset_id=dataset_id,
+            relpath=relpath,
+            base=base,
+            dest=destination,
+            stored_key=annex_keys.get(relpath),
+            stored_sidecar=sidecar_inline.get(relpath),
+            is_required=False,
+        )
+        if object_uri:
+            downloader.download_s3_file(object_uri, destination)
+    except (OSError, URLError):
+        return None
     return destination if destination.is_file() else None
 
 
@@ -157,9 +183,13 @@ def stimulus_files(recording_dataset, recording_path) -> dict[str, Path]:
     root = Path(bids_root)
     files: dict[str, Path] = {}
     for image_id, stim_file in _event_stimuli(Path(recording_path)).items():
-        local = _local_stimulus_path(root, stim_file, image_id)
-        if local.is_file():
+        local = _local_stimulus_path(root, stim_file)
+        if stim_file is not None and local is None:
+            continue
+        if local is not None and local.is_file():
             files[image_id] = local
+            continue
+        if not _is_numeric_image_id(image_id):
             continue
         materialized = _materialize_nemar_asset(recording_dataset, image_id)
         if materialized is not None and materialized.is_file():

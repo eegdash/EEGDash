@@ -5,6 +5,7 @@ import math
 import re
 from pathlib import Path
 from types import SimpleNamespace
+from urllib.error import URLError
 
 import pytest
 
@@ -45,20 +46,25 @@ def _payload(html) -> dict:
     return json.loads(match.group(1))
 
 
-def test_stimulus_files_materialize_only_nm_event_images(tmp_path, monkeypatch):
+def test_stimulus_files_preserve_event_ids_and_materialize_nm_images(
+    tmp_path, monkeypatch
+):
     module = _module()
     recording = _recording_with_events(
         tmp_path,
         "onset\tduration\ttrial_type\tstim_file\timage_id\n"
         "1\t0\tstim_test,16595,-1,1\t\t\n"
         "2\t0\tordinary\tstimuli/00042.jpg\t\n"
-        "3\t0\tordinary\tstimuli/00043.jpg\t42\n",
+        "3\t0\tordinary\tstimuli/00043.jpg\tscene-A\n"
+        "4\t0\tordinary\tstimuli/scene-B.jpg\t\n",
     )
     local_image = tmp_path / "stimuli" / "00042.jpg"
     local_image.parent.mkdir()
     local_image.write_bytes(b"local-jpeg")
     image_with_explicit_id = tmp_path / "stimuli" / "00043.jpg"
     image_with_explicit_id.write_bytes(b"explicit-id-jpeg")
+    nonnumeric_stim_file = tmp_path / "stimuli" / "scene-B.jpg"
+    nonnumeric_stim_file.write_bytes(b"nonnumeric-jpeg")
     calls = []
 
     def write_fake_jpeg(recording_dataset, image_id):
@@ -73,18 +79,105 @@ def test_stimulus_files_materialize_only_nm_event_images(tmp_path, monkeypatch):
     assert module.stimulus_files(_nemar_raw(tmp_path), recording) == {
         "16595": tmp_path / "stimuli" / "16595.jpg",
         "00042": local_image,
-        "42": image_with_explicit_id,
+        "scene-A": image_with_explicit_id,
+        "scene-B": nonnumeric_stim_file,
     }
     assert calls == [("nm000134", "16595")]
+
+
+@pytest.mark.parametrize("failure", ["resolve", "download"])
+def test_plot_omits_optional_nemar_asset_after_remote_failure(
+    tmp_path, monkeypatch, failure
+):
+    module = _module()
+    recording = _recording_with_events(
+        tmp_path,
+        "onset\tduration\ttrial_type\n1\t0\tstim_test,16595,-1,1\n",
+    )
+    dataset = SimpleNamespace(datasets=[_nemar_raw(tmp_path)])
+    marker = object()
+
+    monkeypatch.setattr(module, "_recording", lambda _dataset, _index: recording)
+    monkeypatch.setattr(module, "_upstream_plot", lambda *_args, **_kwargs: marker)
+    if failure == "resolve":
+        monkeypatch.setattr(
+            module,
+            "_resolve_one_nemar_entry",
+            lambda **_kwargs: (_ for _ in ()).throw(URLError("missing image")),
+        )
+    else:
+        monkeypatch.setattr(
+            module,
+            "_resolve_one_nemar_entry",
+            lambda **_kwargs: "s3://nemar/nm000134/objects/missing",
+        )
+        monkeypatch.setattr(
+            module.downloader,
+            "download_s3_file",
+            lambda *_args, **_kwargs: (_ for _ in ()).throw(OSError("download failed")),
+        )
+
+    assert module.plot(dataset) is marker
+
+
+def test_plot_rejects_stimulus_symlink_outside_bids_root(tmp_path, monkeypatch):
+    module = _module()
+    bids_root = tmp_path / "bids"
+    recording = _recording_with_events(
+        bids_root,
+        "onset\tduration\tstim_file\n1\t0\tstimuli/00042.jpg\n",
+    )
+    outside = tmp_path / "outside.jpg"
+    outside.write_bytes(b"outside-image-bytes")
+    stimulus = bids_root / "stimuli" / "00042.jpg"
+    stimulus.parent.mkdir()
+    try:
+        stimulus.symlink_to(outside)
+    except OSError:
+        pytest.skip("symlinks are unavailable")
+
+    dataset = SimpleNamespace(datasets=[_nemar_raw(bids_root)])
+    marker = SimpleNamespace(data="upstream viewer")
+    monkeypatch.setattr(module, "_recording", lambda _dataset, _index: recording)
+    monkeypatch.setattr(module, "_upstream_plot", lambda *_args, **_kwargs: marker)
+    monkeypatch.setattr(
+        module,
+        "_materialize_nemar_asset",
+        lambda *_args: pytest.fail("unsafe local path must not materialize"),
+    )
+
+    assert module.plot(dataset) is marker
+    assert base64.b64encode(outside.read_bytes()).decode() not in marker.data
+
+
+def test_plot_skips_unmaterializable_nonnumeric_image_id(tmp_path, monkeypatch):
+    module = _module()
+    recording = _recording_with_events(
+        tmp_path,
+        "onset\tduration\tstim_file\timage_id\n"
+        "1\t0\tstimuli/00042.jpg\tscene-A\n",
+    )
+    dataset = SimpleNamespace(datasets=[_nemar_raw(tmp_path)])
+    marker = object()
+    monkeypatch.setattr(module, "_recording", lambda _dataset, _index: recording)
+    monkeypatch.setattr(module, "_upstream_plot", lambda *_args, **_kwargs: marker)
+    monkeypatch.setattr(
+        module,
+        "_materialize_nemar_asset",
+        lambda *_args: pytest.fail("a nonnumeric image ID must not resolve remotely"),
+    )
+
+    assert module.plot(dataset) is marker
 
 
 def test_plot_sends_stimuli_separately_and_counts_them(tmp_path, monkeypatch):
     module = _module()
     recording = _recording_with_events(
         tmp_path,
-        "onset\tduration\ttrial_type\n1\t0\tstim_test,16595,-1,1\n",
+        "onset\tduration\tstim_file\timage_id\n"
+        "1\t0\tstimuli/00042.jpg\tscene-A\n",
     )
-    image = tmp_path / "stimuli" / "16595.jpg"
+    image = tmp_path / "stimuli" / "00042.jpg"
     image.parent.mkdir()
     image.write_bytes(b"jpeg-bytes")
     dataset = SimpleNamespace(datasets=[_nemar_raw(tmp_path)])
@@ -94,7 +187,7 @@ def test_plot_sends_stimuli_separately_and_counts_them(tmp_path, monkeypatch):
     payload = _payload(html)
 
     assert "stimuli" in payload
-    assert base64.b64decode(payload["stimuli"]["16595"]) == b"jpeg-bytes"
+    assert base64.b64decode(payload["stimuli"]["scene-A"]) == b"jpeg-bytes"
     assert all(not entry["name"].endswith(".jpg") for entry in payload["files"])
 
     events = recording.with_name(recording.name.replace("_eeg.edf", "_events.tsv"))

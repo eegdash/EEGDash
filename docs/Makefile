@@ -10,6 +10,12 @@ APIDIR := $(SOURCEDIR)/api
 # Shared cache so tutorials find data regardless of sphinx CWD (mirrors CI's EEGDASH_CACHE_DIR).
 EEGDASH_CACHE_DIR ?= $(CURDIR)/../.eegdash_cache
 
+ifeq ($(shell uname -s),Darwin)
+# Keep CodeCarbon from prompting for sudo; override for the local CPU if needed.
+CODECARBON_FORCE_CPU_POWER ?= 12
+export CODECARBON_FORCE_CPU_POWER
+endif
+
 .PHONY: help clean apidoc llms-txt html html-noplot html-fast markdown
 
 help:

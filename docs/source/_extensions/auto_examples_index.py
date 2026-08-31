@@ -1,7 +1,8 @@
 """Sphinx extension: aggregate sphinx-gallery leaf indexes into one page.
 
 Sphinx-gallery is configured with multiple gallery roots (one per
-tutorial category, plus how-to / applied / eeg2025 / hpc / dev_scripts).
+tutorial category, plus how-to / applied / eeg2025 / eeg2026 / hpc /
+dev_scripts).
 Each emits its own ``index.rst`` with a card grid of tutorial thumbnails.
 This extension stitches those per-leaf indexes into a single parent
 ``generated/auto_examples/index.rst`` aggregator page that mimics the
@@ -87,7 +88,8 @@ def _write_auto_examples_root_index(app):
     """Write a top-level ``generated/auto_examples/index.rst`` aggregator.
 
     Sphinx-gallery is configured with multiple gallery roots (one per
-    tutorial category, plus how-to / applied / eeg2025 / hpc / dev_scripts).
+    tutorial category, plus how-to / applied / eeg2025 / eeg2026 / hpc /
+    dev_scripts).
     Each emits its own ``index.rst`` containing a card grid of tutorial
     thumbnails. This hook reads those per-leaf indexes and stitches them
     into a single parent page that mimics the SPDLearn theory aggregator:
@@ -206,6 +208,15 @@ def _write_auto_examples_root_index(app):
             "tutorial.",
         ),
         (
+            "eeg2026",
+            "EEG/EMG Foundation Challenge 2026",
+            "Runnable EEGDash companions for the four announced 2026 "
+            "tracks: EEG-to-image retrieval, cross-session BCI decoding, "
+            "sleep-onset regression, and cross-user EMG-to-text. Each "
+            "tutorial uses a deterministic offline analogue and points to "
+            "NeuralBench for official execution and scoring.",
+        ),
+        (
             "hpc",
             "High-performance computing",
             "Reference setup for running EEGDash on shared HPC clusters: "
@@ -233,8 +244,8 @@ def _write_auto_examples_root_index(app):
         "The intended path: read the curated **Tutorials** in order, dip "
         "into **How-to recipes** when you have a specific question, then "
         "scale up using the **Applied research projects**, the **EEG2025 "
-        "Foundation Challenge** pipelines, and the **High-performance "
-        "computing** track.",
+        "and EEG2026 Foundation Challenges** pipelines, and the "
+        "**High-performance computing** track.",
         "",
         ".. admonition:: How to read this gallery",
         "   :class: tip eegdash-gallery-howto",
@@ -283,6 +294,9 @@ def _write_auto_examples_root_index(app):
         "   * - **Join EEG2025**",
         "     - :doc:`tutorials/70_transfer_foundation/index`",
         "     - :doc:`eeg2025/index`",
+        "   * - **Prepare for EEG/EMG 2026**",
+        "     - :doc:`eeg2026/index`",
+        "     - `Official NeuralBench guides <https://facebookresearch.github.io/neuroai/neuralbench/auto_examples/biosignal_challenge_2026/index.html>`__",
         "",
         ".. grid:: 1 2 2 4",
         "   :gutter: 3",
@@ -305,11 +319,11 @@ def _write_auto_examples_root_index(app):
         "",
         "      Move from local scripts to cluster-wide jobs.",
         "",
-        "   .. grid-item-card:: 🏆 Join EEG2025",
-        "      :link: eeg2025/index",
+        "   .. grid-item-card:: 🏆 Prepare for EEG/EMG 2026",
+        "      :link: eeg2026/index",
         "      :link-type: doc",
         "",
-        "      Enter the official Foundation Challenge.",
+        "      Run the four announced track companions.",
         "",
     ]
     for rel, title, intro in tutorial_sections:

@@ -43,7 +43,7 @@ def _nemar_raw(tmp_path: Path):
 
 def _payload(html) -> dict:
     match = re.search(
-        r'var payload = JSON\.parse\(("(?:[^"\\]|\\.)*")\), origin =',
+        r'var payload = JSON\.parse\(("(?:[^"\\]|\\.)*")\), src =',
         html.data,
         re.DOTALL,
     )
@@ -399,6 +399,32 @@ def test_plot_requires_the_configured_viewer_origin_before_sending_payload(
     assert "e.source === frame.contentWindow && e.origin === origin" in html.data
     assert "send(origin);" in html.data
     assert "send(e.origin)" not in html.data
+
+
+def test_plot_derives_origin_from_exact_viewer_source_url(tmp_path, monkeypatch):
+    module = _module()
+    recording = _recording_with_events(
+        tmp_path,
+        "onset\tduration\tstim_file\n1\t0\tstimuli/00042.jpg\n",
+    )
+    image = tmp_path / "stimuli" / "00042.jpg"
+    image.parent.mkdir()
+    image.write_bytes(b"jpeg-bytes")
+    dataset = SimpleNamespace(datasets=[_nemar_raw(tmp_path)])
+    monkeypatch.setattr(module, "_recording", lambda _dataset, _index: recording)
+
+    html = module.plot(
+        dataset,
+        cdn_url="https://EEGDASH.github.io:443/eegdash-viewer",
+        max_bytes=1_000_000,
+    )
+
+    assert (
+        'src = "https://EEGDASH.github.io:443/eegdash-viewer/index.html?embed=1", '
+        "origin = new URL(src).origin"
+    ) in html.data
+    assert "frame.src = src;" in html.data
+    assert 'origin = "https://EEGDASH.github.io:443"' not in html.data
 
 
 def test_plot_preserves_proto_stimulus_in_json_payload(tmp_path, monkeypatch):

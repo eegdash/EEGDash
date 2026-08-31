@@ -39,7 +39,8 @@ border:1px solid var(--jp-border-color1,#d9dce1);border-radius:6px;background:tr
   var frame = (self && self.previousElementSibling && self.previousElementSibling.tagName === "IFRAME")
     ? self.previousElementSibling : document.getElementById(id);
   if (!frame) { console.error("eegdash viewer: output iframe " + id + " not found"); return; }
-  var payload = JSON.parse(%(payload)s), origin = %(origin)s, files = null, pose = null, stimuli = null;
+  var payload = JSON.parse(%(payload)s), src = %(src)s, origin = new URL(src).origin,
+    files = null, pose = null, stimuli = null;
   function decode(b64) {
     if (Uint8Array.fromBase64) return Uint8Array.fromBase64(b64);
     var bin = atob(b64), out = new Uint8Array(bin.length);
@@ -70,7 +71,7 @@ border:1px solid var(--jp-border-color1,#d9dce1);border-radius:6px;background:tr
     if (e.source === frame.contentWindow && e.origin === origin && e.data && e.data.type === "eegdash-viewer:ready") send(origin);
     else if (!frame.isConnected) window.removeEventListener("message", onMessage);
   });
-  frame.src = %(src)s;
+  frame.src = src;
 })();
 </script>"""
 
@@ -278,7 +279,6 @@ def _build_html(
                 for image_id, path in stimuli.items()
             },
         },
-        "origin": f"{url.scheme}://{url.netloc}",
         "src": f"{url.geturl().rstrip('/')}/index.html?embed=1",
     }
     literals["payload"] = json.dumps(literals["payload"]).replace("<", "\\u003c")

@@ -12,6 +12,7 @@ Categories:
 - **how_to/**: Task-focused recipes for specific operational questions.
 - **applied/**: Real-world research case studies (age, sex, p-factor).
 - **eeg2025/**: Official Foundation Challenge starter kits.
+- **eeg2026/**: Offline companions for the four announced EEG/EMG tracks.
 - **hpc/**: Scaling EEGDash on shared clusters and SLURM.
 - **core/**: Minimal, linear scripts for rapid prototyping.
 

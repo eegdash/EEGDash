@@ -203,6 +203,7 @@ html_theme_options = {
         "alt_text": "EEG Dash Logo",
     },
     "external_links": [
+        {"name": "EEG2026", "url": "https://neural-interfaces26.github.io/"},
         {"name": "EEG2025", "url": "https://eeg2025.github.io/"},
     ],
     # Local SVG icons instead of FontAwesome for these brand links. Note:
@@ -247,6 +248,7 @@ html_sidebars = {
     "generated/auto_examples/how_to/*": [],
     "generated/auto_examples/dev_scripts/*": [],
     "generated/auto_examples/eeg2025/*": [],
+    "generated/auto_examples/eeg2026/*": [],
     "generated/auto_examples/hpc/*": [],
 }
 
@@ -337,7 +339,8 @@ EX_DIR = "../../examples"  # relative to docs/source
 # subdirs like ``00_start_here/`` rather than ``plot_*.py`` files at the
 # top), so we list each tutorial category as its own gallery root and pair
 # it with a matching `gallery_dirs` entry. Same pattern for the leaf-only
-# directories (`how_to`, `applied`, `eeg2025`, `hpc`, `dev_scripts`).
+# directories (`how_to`, `applied`, `eeg2025`, `eeg2026`, `hpc`,
+# `dev_scripts`).
 TUTORIAL_SUBDIRS = [
     "00_start_here",
     "10_core_workflow",
@@ -347,7 +350,7 @@ TUTORIAL_SUBDIRS = [
     "50_evaluation",
     "70_transfer_foundation",
 ]
-LEAF_DIRS = ["how_to", "applied", "eeg2025", "hpc", "dev_scripts"]
+LEAF_DIRS = ["how_to", "applied", "eeg2025", "eeg2026", "hpc", "dev_scripts"]
 EX_DIRS = [f"{EX_DIR}/tutorials/{name}" for name in TUTORIAL_SUBDIRS] + [
     f"{EX_DIR}/{name}" for name in LEAF_DIRS
 ]

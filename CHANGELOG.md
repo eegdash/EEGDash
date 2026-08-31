@@ -7,10 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.5] - 2026-08-31
+
 ### Added
+- EEG 2026 challenge tutorial gallery, including the EMG-to-text track (#405)
 - Retired OpenNeuro dataset ids keep resolving **for clients on this version or newer**. NEMAR re-hosts OpenNeuro datasets as `on<NNNNNN>`, and the prefer-NEMAR retirement deletes the `ds<NNNNNN>` twin; queries naming a `ds` id that returns nothing are now retried once against its NEMAR twin. Ids that still resolve on their own are never rewritten, and `{"$in": [...]}` lists of ids are covered too. Note this is a client-side shim: already-installed older copies of `eegdash` still see an empty result for a retired id, so a server-side alias (or a tombstone left at retirement instead of a hard delete) remains the durable fix. Query shapes other than a plain id and `$in` (regular expressions, negated lists, boolean combinators) are not aliased (#404)
 
 ### Fixed
+- NEMAR downloads now include each session's BIDS ``scans.tsv`` metadata, so consumers can use recording-level metadata after download (#406)
 - NEMAR mirrors of OpenNeuro datasets are downloadable again. `on<NNNNNN>` is a byte-identical re-host of `ds<NNNNNN>`, but it carried `storage.backend = "nemar"` — a deliberate *non-fetchable* marker, because NEMAR's own bucket is closed. Retiring the `ds*` twin therefore left the data unreachable for those datasets. `on*` records now resolve to OpenNeuro's public bucket under the OpenNeuro id (`on005863` -> `s3://openneuro.org/ds005863`); native `nm*` datasets keep the `nemar` marker. Existing records are healed in place by `correct_storage_inplace` on load, so no re-ingestion is required (#404)
 - Injection no longer reports success while writing nothing. `request_json` applied `raise_for_status` only on its normal return path, so retries exhausted on a status condition (429/5xx) returned `(None, response)` without raising and every rejected batch was recorded as "0 written, no error". Combined with the API's `100/minute` rate limit this silently discarded whole runs — production received no new record between 2026-05-31 and 2026-08-27 while each run reported `Errors: 0` (#404)
 - OpenNeuro digestion is unblocked. The `digestion` extra declared plain `httpx`, but the manifest client opens with `http2=True`, so any dataset touching it died with `ImportError: Using http2=True, but the 'h2' package is not installed`. Declaring `httpx[http2]` took a full OpenNeuro digest from 389 success / 211 errors to 597 / 3 (#404)
@@ -439,4 +443,3 @@ This project is licensed under the BSD 3-Clause License - see the [LICENSE](LICE
 | 0.3.x | 2025-09-xx | Documentation system, tutorials, GitHub Pages deployment |
 | 0.2.0 | 2025-xx-xx | NeurIPS challenge support, braindecode 1.0+ compatibility |
 | 0.1.x | 2024-2025 | Initial release with core functionality |
-

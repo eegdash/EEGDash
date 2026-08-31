@@ -11,7 +11,7 @@ from pathlib import Path, PurePosixPath
 from urllib.error import URLError
 from urllib.parse import urlsplit
 
-from botocore.exceptions import ClientError
+from botocore.exceptions import BotoCoreError, ClientError
 from mne.utils import _soft_import
 
 from braindecode.datasets._notebook_viewer import (
@@ -171,7 +171,7 @@ def _materialize_nemar_asset(recording_dataset, image_id: str) -> Path | None:
         )
         if object_uri:
             downloader.download_s3_file(object_uri, destination)
-    except (ClientError, OSError, URLError):
+    except (BotoCoreError, ClientError, OSError, URLError):
         return None
     return destination if destination.is_file() else None
 

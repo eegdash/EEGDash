@@ -8,7 +8,7 @@ from types import SimpleNamespace
 from urllib.error import URLError
 
 import pytest
-from botocore.exceptions import ClientError
+from botocore.exceptions import ClientError, EndpointConnectionError
 
 
 def _module():
@@ -116,7 +116,28 @@ def test_stimulus_files_match_viewer_filename_ids(
     }
 
 
-def test_stimulus_files_omits_client_error_and_keeps_sibling(tmp_path, monkeypatch):
+@pytest.mark.parametrize(
+    "make_error",
+    [
+        pytest.param(
+            lambda: ClientError(
+                {
+                    "Error": {"Code": "InternalError"},
+                    "ResponseMetadata": {"HTTPStatusCode": 503},
+                },
+                "GetObject",
+            ),
+            id="client-error",
+        ),
+        pytest.param(
+            lambda: EndpointConnectionError(endpoint_url="https://nemar.example"),
+            id="endpoint-connection",
+        ),
+    ],
+)
+def test_stimulus_files_omits_optional_s3_error_and_keeps_sibling(
+    tmp_path, monkeypatch, make_error
+):
     module = _module()
     recording = _recording_with_events(
         tmp_path,
@@ -128,13 +149,7 @@ def test_stimulus_files_omits_client_error_and_keeps_sibling(tmp_path, monkeypat
 
     def resolve(**kwargs):
         if kwargs["relpath"] == "stimuli/16595.jpg":
-            raise ClientError(
-                {
-                    "Error": {"Code": "InternalError"},
-                    "ResponseMetadata": {"HTTPStatusCode": 503},
-                },
-                "GetObject",
-            )
+            raise make_error()
         return "s3://nemar/nm000134/objects/16596"
 
     def download(_source, destination):

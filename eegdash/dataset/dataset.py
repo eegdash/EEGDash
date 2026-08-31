@@ -620,19 +620,28 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
 
         if not targets:
             self._download_dataset_files()
-        elif n_jobs == 1:
-            for ds in targets:
-                ds._download_required_files()
         else:
-            Parallel(n_jobs=n_jobs, prefer="threads")(
-                delayed(EEGDashRaw._download_required_files)(ds) for ds in targets
-            )
+            if n_jobs == 1:
+                for ds in targets:
+                    ds._download_required_files()
+            else:
+                Parallel(n_jobs=n_jobs, prefer="threads")(
+                    delayed(EEGDashRaw._download_required_files)(ds) for ds in targets
+                )
 
-        # Download global dataset files (participants.tsv, etc.)
-        self._download_dataset_files()
-        filesystem = downloader.get_s3_filesystem(max_concurrency=self.max_concurrency)
-        for ds in self.datasets:
-            if ds._storage_backend == "nemar":
+            # Download global dataset files (participants.tsv, etc.)
+            self._download_dataset_files()
+        nemar = [
+            ds
+            for ds in self.datasets
+            if getattr(ds, "_storage_backend", None) == "nemar"
+            and hasattr(ds, "_fetch_nemar_session_metadata")
+        ]
+        if nemar:
+            filesystem = downloader.get_s3_filesystem(
+                max_concurrency=self.max_concurrency
+            )
+            for ds in nemar:
                 ds._fetch_nemar_session_metadata(filesystem)
 
     def _download_dataset_files(self) -> None:

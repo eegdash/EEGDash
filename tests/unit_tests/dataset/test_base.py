@@ -114,6 +114,36 @@ def test_nemar_download_required_files_uses_annex_object_uri(tmp_path):
     )
 
 
+def test_nemar_download_fetches_session_scans(tmp_path):
+    from eegdash.dataset.base import EEGDashRaw
+    from eegdash.schemas import create_record
+
+    record = create_record(
+        dataset="nm000104",
+        storage_base="s3://nemar/nm000104",
+        storage_backend="nemar",
+        bids_relpath="sub-01/ses-02/emg/sub-01_ses-02_task-typing_emg.edf",
+        subject="01",
+        session="02",
+        task="typing",
+        datatype="emg",
+        suffix="emg",
+        sampling_frequency=1000.0,
+        ntimes=1000,
+    )
+    ds = EEGDashRaw(record=record, cache_dir=tmp_path)
+    filesystem = MagicMock()
+
+    with patch.object(ds, "_fetch_nemar_companion") as fetch:
+        ds._fetch_nemar_session_metadata(filesystem)
+
+    fetch.assert_called_once_with(
+        tmp_path / "nm000104" / "sub-01/ses-02/sub-01_ses-02_scans.tsv",
+        "sub-01/ses-02/sub-01_ses-02_scans.tsv",
+        filesystem,
+    )
+
+
 def test_nemar_download_required_files_falls_back_to_data_portal(tmp_path):
     """After an S3 403 on the original URI, eegdash must delegate to
     ``nemar-py`` (NEMARClient + download_one) for the recovery path.

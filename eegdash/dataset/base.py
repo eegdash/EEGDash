@@ -833,6 +833,22 @@ class EEGDashRaw(RawDataset):
                         e,
                     )
 
+    def _fetch_nemar_session_metadata(self, filesystem) -> None:
+        """Fetch the BIDS ``scans.tsv`` beside this recording's session."""
+        parts = PurePosixPath(self.record["bids_relpath"]).parts
+        if (
+            len(parts) < 3
+            or not parts[0].startswith("sub-")
+            or not parts[1].startswith("ses-")
+        ):
+            return
+        relpath = str(
+            PurePosixPath(parts[0], parts[1], f"{parts[0]}_{parts[1]}_scans.tsv")
+        )
+        path = self.bids_root / relpath
+        if not path.exists():
+            self._fetch_nemar_companion(path, relpath, filesystem)
+
     def _download_companion_files(self, filesystem) -> None:
         """Download companion files for formats that require them.
 

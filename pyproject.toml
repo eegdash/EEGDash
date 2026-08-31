@@ -53,7 +53,7 @@ classifiers = [
 ]
 
 dependencies = [
-  "braindecode[hub]>=1.4.0",
+  "braindecode[hub]>=1.8.0",
   "eeglabio",
   "mne>=1.11.0",
   "mne_bids>=0.19.0",
@@ -144,7 +144,7 @@ docs = [
   "neuralfetch>=0.2",
   "neuralset>=0.2",
   # eegprep 0.3.0 (2026-08-12) dropped the top-level ``utils`` module, but
-  # braindecode 1.7.0 -- the newest release -- still calls
+  # Braindecode still calls
   # ``eegprep.utils.round_mat`` in preprocessing/eegprep_preprocess.py, so the
   # docs gallery dies with "module 'eegprep' has no attribute 'utils'".
   # Floor at the newest 0.2.x and cap until a braindecode release supports 0.3.

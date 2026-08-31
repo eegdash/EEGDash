@@ -9,7 +9,7 @@ EEG datasets. It integrates with cloud storage and REST APIs to streamline EEG r
 workflows.
 """
 
-__version__ = "0.8.5"
+__version__ = "0.9.0"
 
 # NOTE: Keep the top-level import lightweight to avoid importing heavy optional
 # dependencies (e.g., braindecode/torch) when users only need small utilities.

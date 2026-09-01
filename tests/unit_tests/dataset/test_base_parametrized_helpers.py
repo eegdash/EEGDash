@@ -329,7 +329,7 @@ def test_resolve_nemar_uris_with_optional_sidecar_failure(monkeypatch, tmp_path)
 
     monkeypatch.setattr("eegdash.dataset.base._resolve_one_nemar_entry", _resolver)
 
-    raw_uri, dep_uris = _resolve_nemar_uris(
+    raw_uri, dep_downloads = _resolve_nemar_uris(
         record=record,
         raw_dest=tmp_path / "raw.fif",
         dep_keys=["sub/bad.tsv", "sub/good.tsv"],
@@ -337,7 +337,74 @@ def test_resolve_nemar_uris_with_optional_sidecar_failure(monkeypatch, tmp_path)
     )
 
     assert raw_uri == "s3://nemar/dsA/objects/SHA-RAW"
-    assert dep_uris == ["s3://nemar/dsA/objects/SHA-GOOD"]
+    # The surviving URI keeps its own destination: dropping "sub/bad.tsv" must
+    # not shift "sub/good.tsv" onto the destination of the entry before it.
+    assert dep_downloads == [("s3://nemar/dsA/objects/SHA-GOOD", tmp_path / "good.tsv")]
+
+
+def test_resolve_nemar_uris_pairs_each_uri_with_its_own_destination(
+    monkeypatch, tmp_path
+):
+    """Inlined dependencies must not shift the remaining URIs onto their paths.
+
+    Regression test for NEMAR BrainVision datasets (e.g. ``nm000182``), where
+    every sidecar is written to disk during resolution and only the ``.eeg``
+    annex object comes back as a URI. Pairing that single URI positionally
+    against the full destination list wrote the 50 MB binary over
+    ``*_channels.tsv`` and left no ``.eeg`` on disk at all.
+    """
+    dep_keys = [
+        "sub-01/ieeg/sub-01_task-x_run-01_channels.tsv",
+        "sub-01/ieeg/sub-01_task-x_run-01_events.tsv",
+        "sub-01/ieeg/sub-01_task-x_run-01_ieeg.eeg",
+    ]
+    eeg_key = dep_keys[-1]
+    record = {
+        "dataset": "nm000182",
+        "storage": {
+            "base": "s3://nemar/nm000182",
+            "raw_key": "sub-01/ieeg/sub-01_task-x_run-01_ieeg.vhdr",
+            "annex_keys": {eeg_key: "SHA-EEG"},
+        },
+    }
+
+    def _resolver(*, relpath, base, **kwargs):
+        if relpath == eeg_key:
+            return f"{base}/objects/SHA-EEG"
+        # Sidecars are fetched inline by ``_download_via_nemar``; no URI.
+        return None
+
+    monkeypatch.setattr("eegdash.dataset.base._resolve_one_nemar_entry", _resolver)
+
+    dep_dests = [tmp_path / key for key in dep_keys]
+    _, dep_downloads = _resolve_nemar_uris(
+        record=record,
+        raw_dest=tmp_path / "raw.vhdr",
+        dep_keys=dep_keys,
+        dep_dests=dep_dests,
+    )
+
+    assert dep_downloads == [("s3://nemar/nm000182/objects/SHA-EEG", dep_dests[-1])]
+
+
+def test_resolve_nemar_uris_rejects_misaligned_keys_and_dests(monkeypatch, tmp_path):
+    """A desynchronised key/destination pairing raises instead of shifting."""
+    record = {
+        "dataset": "dsA",
+        "storage": {"base": "s3://nemar/dsA", "raw_key": "sub/raw.fif"},
+    }
+    monkeypatch.setattr(
+        "eegdash.dataset.base._resolve_one_nemar_entry",
+        lambda **kwargs: None,
+    )
+
+    with pytest.raises(ValueError):
+        _resolve_nemar_uris(
+            record=record,
+            raw_dest=tmp_path / "raw.fif",
+            dep_keys=["sub/a.tsv", "sub/b.tsv"],
+            dep_dests=[tmp_path / "a.tsv"],
+        )
 
 
 @pytest.mark.parametrize(

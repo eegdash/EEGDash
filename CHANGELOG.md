@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- NEMAR downloads no longer write a recording's binary payload over one of its sidecars. `_resolve_nemar_uris` returned only the dependencies that still needed fetching — entries written to disk during resolution, or skipped after a resolution failure, contribute no URI — but the caller re-paired that filtered list against the full `_dep_paths` by position, under `zip(..., strict=False)`. Every dependency after the first omission was therefore downloaded to the wrong path. BrainVision iEEG datasets are the worst case, because only the `.eeg` annex object comes back as a URI while every sidecar is fetched inline: on `nm000182` the single surviving URI paired with dependency 0, so all 257 runs took a 50 MB `.eeg` payload on top of their `*_channels.tsv` and no `.eeg` was written at all. `skip_existing` did not protect the sidecar — it treats a size mismatch against the remote object as a stale local file and unlinks it — and the post-download size check passed, because the bytes did match the object that was requested. Resolution now returns `(uri, destination)` pairs so a URI can never be separated from its destination, and the two `zip` calls that pair keys with destinations are `strict=True`
+
 ## [0.9.0] - 2026-08-31
 
 ### Changed

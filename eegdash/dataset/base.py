@@ -347,11 +347,22 @@ def _nemar_fast_paths(storage: dict, relpath: str) -> tuple[str | None, str | No
 
 def _resolve_nemar_uris(
     record: dict, raw_dest: Path, dep_keys: list[str], dep_dests: list[Path]
-) -> tuple[str | None, list[str]]:
+) -> tuple[str | None, list[tuple[str, Path]]]:
     """Resolve SHA-keyed S3 URIs for a NEMAR record.
 
     Per-entry resolution is delegated to ``_resolve_one_nemar_entry``
     which honors the digest-time fast paths.
+
+    Returns
+    -------
+    raw_uri : str or None
+        URI of the recording itself, ``None`` when it needs no download.
+    dep_downloads : list of (str, pathlib.Path)
+        One ``(uri, destination)`` pair per dependency that still needs
+        fetching. Dependencies already written to disk during resolution, and
+        those whose resolution failed, are absent: each surviving URI carries
+        its own destination so it can never be re-paired by position.
+
     """
     storage = record.get("storage") or {}
     base = (storage.get("base") or "").rstrip("/")
@@ -371,8 +382,8 @@ def _resolve_nemar_uris(
         is_required=True,
     )
 
-    dep_uris: list[str] = []
-    for dep_key, dep_dest in zip(dep_keys, dep_dests, strict=False):
+    dep_downloads: list[tuple[str, Path]] = []
+    for dep_key, dep_dest in zip(dep_keys, dep_dests, strict=True):
         dep_stored_key, dep_stored_sidecar = _nemar_fast_paths(storage, dep_key)
         try:
             uri = _resolve_one_nemar_entry(
@@ -395,9 +406,9 @@ def _resolve_nemar_uris(
             )
             continue
         if uri:
-            dep_uris.append(uri)
+            dep_downloads.append((uri, dep_dest))
 
-    return raw_uri, dep_uris
+    return raw_uri, dep_downloads
 
 
 def _download_via_nemar(dataset_id: str, relpath: str, local_path: Path) -> bool:
@@ -570,11 +581,18 @@ class EEGDashRaw(RawDataset):
         # Default: no remote URIs. The two backends below override.
         self._raw_uri: str | None = None
         self._dep_uris: list[str] = []
+        # (uri, destination) work list for the dependency download. The
+        # destination travels with its URI so a filtered list of URIs can never
+        # be re-paired against ``_dep_paths`` by position.
+        self._dep_downloads: list[tuple[str, Path]] = []
         self._storage_backend = backend
 
         if backend in ("s3", "https") and base and raw_key:
             self._raw_uri = f"{base}/{raw_key}"
             self._dep_uris = [f"{base}/{k}" for k in dep_keys]
+            self._dep_downloads = list(
+                zip(self._dep_uris, self._dep_paths, strict=True)
+            )
         elif backend == "local" and base:
             local_base = Path(base)
             self.bids_root = local_base
@@ -669,7 +687,7 @@ class EEGDashRaw(RawDataset):
             and not self.filecache.exists()
         ):
             dep_keys = (self.record.get("storage") or {}).get("dep_keys") or []
-            self._raw_uri, self._dep_uris = _resolve_nemar_uris(
+            self._raw_uri, self._dep_downloads = _resolve_nemar_uris(
                 self.record,
                 raw_dest=self.filecache,
                 dep_keys=list(dep_keys),
@@ -685,7 +703,7 @@ class EEGDashRaw(RawDataset):
             # skip_missing=True because dep_keys may include companion files
             # that don't exist on S3 (e.g., .fdt listed but never uploaded).
             downloader.download_files(
-                list(zip(self._dep_uris, self._dep_paths, strict=False)),
+                self._dep_downloads,
                 filesystem=filesystem,
                 skip_existing=True,
                 skip_missing=True,

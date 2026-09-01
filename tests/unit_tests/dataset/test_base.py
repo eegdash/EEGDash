@@ -114,6 +114,60 @@ def test_nemar_download_required_files_uses_annex_object_uri(tmp_path):
     )
 
 
+def test_nemar_download_pairs_annex_object_with_its_own_destination(tmp_path):
+    """Inlined sidecars must not shift the ``.eeg`` onto ``*_channels.tsv``.
+
+    Regression test for NEMAR BrainVision datasets such as ``nm000182``: every
+    sidecar is written to disk during resolution and only the ``.eeg`` annex
+    object comes back as a URI, so pairing the surviving URIs positionally
+    against the full destination list downloaded the binary over the first
+    dependency and left no ``.eeg`` on disk.
+    """
+    from eegdash.dataset.base import EEGDashRaw
+    from eegdash.schemas import create_record
+
+    stem = "sub-01/ieeg/sub-01_task-x_run-01"
+    bids_relpath = f"{stem}_ieeg.vhdr"
+    eeg_key = f"{stem}_ieeg.eeg"
+    record = create_record(
+        dataset="nm000182",
+        storage_base="s3://nemar/nm000182",
+        storage_backend="nemar",
+        bids_relpath=bids_relpath,
+        dep_keys=[
+            f"{stem}_channels.tsv",
+            f"{stem}_events.tsv",
+            eeg_key,
+            f"{stem}_ieeg.vmrk",
+        ],
+        annex_keys={bids_relpath: "SHA256E-s1--raw.vhdr", eeg_key: "SHA256E-s2--d.eeg"},
+        subject="01",
+        task="x",
+        datatype="ieeg",
+        suffix="ieeg",
+        sampling_frequency=5000.0,
+        ntimes=15000,
+    )
+
+    ds = EEGDashRaw(record=record, cache_dir=tmp_path)
+
+    with (
+        patch("eegdash.dataset.base.downloader.get_s3_filesystem"),
+        patch("eegdash.dataset.base.downloader.download_files") as mock_deps,
+        patch("eegdash.dataset.base.downloader.download_s3_file"),
+        patch("eegdash.dataset.base._download_via_nemar", return_value=True),
+        patch.object(ds, "_fetch_nemar_root_metadata"),
+    ):
+        ds._download_required_files()
+
+    assert list(mock_deps.call_args.args[0]) == [
+        (
+            "s3://nemar/nm000182/objects/SHA256E-s2--d.eeg",
+            tmp_path / "nm000182" / eeg_key,
+        )
+    ]
+
+
 def test_nemar_download_fetches_session_scans(tmp_path):
     from eegdash.dataset.base import EEGDashRaw
     from eegdash.schemas import create_record
@@ -416,6 +470,7 @@ def test_eegdashraw_backend_logic(tmp_path):
         ds = EEGDashRaw(record_s3, cache_dir=str(tmp_path))
         assert ds._raw_uri == "s3://bucket/raw"
         assert len(ds._dep_uris) == 1
+        assert ds._dep_downloads == [("s3://bucket/dep1", ds._dep_paths[0])]
 
 
 def test_eegdashraw_raw_setter(tmp_path):

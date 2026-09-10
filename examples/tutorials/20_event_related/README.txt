@@ -1,31 +1,14 @@
-Event-Related Decoding
-======================
+Event-related EEG analysis
+==========================
 
-Two lessons covering tasks where labels come from events and BIDS
-annotations rather than continuous state. Difficulty 2; assumes the
-core workflow track.
+Load real visual and auditory oddball recordings through EEGDashDataset.
+Inspect actual annotations, define event-locked epochs and compare measured
+responses. The visual example evaluates a classifier on held-out subjects;
+the auditory example inspects one recorded run. The studies differ in more
+than stimulus modality, so their comparison is descriptive, not controlled.
 
-Event-locked decoding is where BIDS metadata earns its keep: you select
-trials by ``trial_type``, align windows to a stimulus or response onset,
-and decode contrasts (target vs standard, congruent vs incongruent).
-The visual P300 oddball lesson is the canonical first event-related
-decoding task; the auditory variant is staged as a contrast that holds
-the paradigm fixed and changes only the modality, with BIDS event
-handling per Pernet et al. (2019).
+1. ``plot_20_visual_p300_oddball.py``: three visual recordings, about 69 MB.
+2. ``plot_21_auditory_oddball.py``: one auditory run, about 63.4 MB.
 
-What you will learn:
-
-- How to filter recordings to include only event-locked trials of a
-  given type using BIDS ``events.tsv`` annotations.
-- How to construct event-aligned windows around stimulus onsets, with
-  matched baselines.
-- How to train a P3 target-versus-standard classifier and report
-  performance with the appropriate chance level.
-- How to compare two event-related paradigms (visual vs auditory
-  oddball) holding the analysis pipeline constant.
-
-Run the lessons in order:
-
-1. ``plot_20_visual_p300_oddball.py`` -- visual P3 target vs standard.
-2. ``plot_21_auditory_oddball.py`` -- auditory oddball as a controlled
-   contrast.
+Keep EEGDASH_CACHE_DIR between runs. Neither example prescribes an ERP
+amplitude or substitutes reference values for the measured result.

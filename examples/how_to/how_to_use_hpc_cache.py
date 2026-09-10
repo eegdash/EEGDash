@@ -1,192 +1,89 @@
-"""Place the EEGDash cache on shared or local cluster storage
-==========================================================
+"""Stage a real EEG recording onto job-local storage
+=================================================
 
-**Difficulty 2** | **Runtime: 20s** | **Compute: CPU**
+Use a small EEGDash recording to exercise the same stage-in workflow used
+on a cluster: persistent download, copy to local storage, then offline read.
+The demonstration downloads about 5.6 MB and copies actual BIDS files.
 
-On HPC clusters, *where* you put the EEGDash cache is often the difference
-between a 30-minute and a 30-second epoch. Shared filesystems (Lustre, GPFS,
-NFS) survive job restarts but throttle under metadata-heavy access; node-local
-NVMe is fast but volatile; and ``$HOME`` is almost always too slow for
-training. This how-to shows how to point :func:`eegdash.paths.get_default_cache_dir`
-at the right tier, stage data once, and verify the cache before training.
+Prerequisites: a writable persistent cache, enough local scratch space,
+and EEGDash installed on the compute node. No Slurm allocation is needed
+to run the demonstration; a workstation temporary directory provides the
+same lifetime for the copied files. The recorded task is left/right imagery
+from `nm000135 <https://nemar.org/dataset/nm000135>`_, subject 1,
+session 0train, run 0. This page stages inputs, not trained model checkpoints.
 
-The recipe assumes you already know how to populate the cache (see
-``how_to_download_a_dataset``) and load offline (see ``how_to_work_offline``).
-We follow the cluster-software best practices summarized by Cisotto and
-Chicco (2024, doi:10.3389/fninf.2024.1338139): keep heavy IO on local-to-node
-storage, stage in at job-start, and never read training data over the network
-# home.
-#
-# Validate your result
-# --------------------
-# - **Environment Variable.** Run ``echo $EEGDASH_CACHE_DIR`` to ensure it
-#   points to the expected high-speed tier (e.g., ``/scratch`` or
-#   ``$SLURM_TMPDIR``).
-# - **Path Resolution.** Call ``get_default_cache_dir()`` in Python and
-#   verify it returns the same path as the environment variable.
-# - **Data Staging.** Verify that the ``cp -r`` command in your submission
-#   script successfully populated the local node storage before training.
-#
-# Keywords: HPC, cache, SLURM, I/O
 """
 
-# sphinx_gallery_thumbnail_path = '_static/thumbs/how_to_use_hpc_cache.png'
-
 # %%
-# Goal
-# ----
-#
-# Resolve ``cache_dir`` from a SLURM environment variable, stage data from a
-# shared persistent location to per-node fast scratch at job start, and verify
-# the cache hit on subsequent runs without contacting S3.
-
-# %%
-# Prerequisites
-# -------------
-#
-# - A SLURM/LSF/PBS account with one shared filesystem (e.g. ``/scratch`` or
-#   ``$SCRATCH``) and one node-local fast disk (``$TMPDIR``,
-#   ``/local/$SLURM_JOB_ID``, or an NVMe mount).
-# - ``eegdash`` installed in the activated environment.
-# - The dataset of interest already populated once on the shared filesystem
-#   (head node with internet, or via ``how_to_download_a_dataset``).
-
-# %%
-# Recipe
-# ------
-#
-# Step 1 -- Identify your storage tiers
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#
-# Most schedulers expose three useful paths. ``$HOME`` is shared and slow;
-# never put the cache there. ``$SCRATCH`` (or ``/scratch/$USER``) is shared
-# and fast-ish but throttles under metadata-heavy reads. Per-job local scratch
-# (``$TMPDIR`` on Slurm with ``--tmp``, or ``/local/$SLURM_JOB_ID``) is the
-# fastest option but is wiped at job exit. Inspect them in your job script:
-#
-# .. code-block:: bash
-#
-#    # In your sbatch script
-#    echo "HOME    = $HOME"
-#    echo "SCRATCH = ${SCRATCH:-/scratch/$USER}"
-#    echo "TMPDIR  = ${TMPDIR:-/tmp}"
-#    df -h "$TMPDIR" "${SCRATCH:-/scratch/$USER}"
-
-# %%
-# Step 2 -- Set ``EEGDASH_CACHE_DIR`` to fast scratch
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#
-# :func:`eegdash.paths.get_default_cache_dir` honours the ``EEGDASH_CACHE_DIR``
-# environment variable first. Export it at the top of your sbatch script so
-# every Python process in the job inherits the same path:
-#
-# .. code-block:: bash
-#
-#    export EEGDASH_CACHE_DIR="${TMPDIR:-/tmp}/eegdash_cache"
-#    mkdir -p "$EEGDASH_CACHE_DIR"
-#
-# Verify from Python that the resolution works as expected.
+# 1. Populate persistent storage on a network-enabled node
+# --------------------------------------------------------
 import os
-import random
 from pathlib import Path
 
 import numpy as np
 
-from eegdash.paths import get_default_cache_dir
+from eegdash import EEGDashDataset
 
-# Seed local RNG for the deterministic synthetic record we forge below
-# (E3.21). HPC how-tos run on a head node where reproducibility is still
-# expected even for the demo's tmp-cache record.
-np.random.seed(42)
-random.seed(42)
+cache_dir = Path(os.environ.get("EEGDASH_CACHE_DIR", ".eegdash_cache"))
+query = dict(dataset="nm000135", subject="1", session="0train", run="0", task="imagery")
 
-os.environ["EEGDASH_CACHE_DIR"] = str(Path.cwd() / ".eegdash_cache_local")
-local_cache = get_default_cache_dir()
-print(f"EEGDash will read/write under: {local_cache}")
-assert local_cache == Path(os.environ["EEGDASH_CACHE_DIR"]).resolve()
+import shutil
+import tempfile
 
 # %%
-# Step 3 -- Stage data from shared to node-local at job start
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#
-# The "stage-in" pattern is the workhorse of HPC IO: keep a single canonical
-# copy of the dataset on shared scratch and ``rsync`` it to node-local disk
-# at the start of each job. Reads during training then hit NVMe; the shared
-# copy survives across jobs.
-#
-# .. code-block:: bash
-#
-#    SHARED_CACHE="${SCRATCH:-/scratch/$USER}/eegdash_cache"   # persistent
-#    LOCAL_CACHE="${TMPDIR:-/tmp}/eegdash_cache"               # volatile
-#
-#    mkdir -p "$LOCAL_CACHE"
-#    # -a archive, --info=progress2 quieter than -v on large trees
-#    rsync -a --info=progress2 "$SHARED_CACHE"/ "$LOCAL_CACHE"/
-#    export EEGDASH_CACHE_DIR="$LOCAL_CACHE"
-#
-#    # Optional: stage-out fresh artefacts back, so the next job benefits.
-#    trap 'rsync -a --update "$LOCAL_CACHE"/ "$SHARED_CACHE"/' EXIT
+# Download before entering the temporary-directory context so acquisition
+# failure cannot be mistaken for a compute-node problem. The first 250 samples
+# at 250 Hz form a one-second reference in volts, with one row per channel.
+# The source remains on persistent storage after the local copy is removed.
+persistent = EEGDashDataset(cache_dir=cache_dir, **query, n_jobs=1)
+persistent.download_all(n_jobs=1)
+reference = persistent.datasets[0].raw.get_data(start=0, stop=250)
 
 # %%
-# Step 4 -- Verify cache hit on subsequent runs
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# 2. Stage into a private directory on job-local storage
+# ------------------------------------------------------
+# SLURM_TMPDIR identifies local scratch on some clusters. TemporaryDirectory
+# makes this small demonstration runnable on a workstation as well; its
+# lifecycle represents the job. The persistent source remains available.
+# The dataset directory is copied with its relative BIDS structure, preserving
+# channels and events beside the signals. This small example copies the whole
+# cached nm000135 subtree: if earlier runs cached additional sessions, those
+# files are copied too. Use a dedicated staging cache or select the required
+# BIDS dependencies explicitly when that subtree no longer fits scratch.
 #
-# A correctly staged cache lets you instantiate the dataset with
-# ``download=False`` and observe a non-zero record count without network IO.
-# Use this as a smoke test at the top of your training script -- if it fails,
-# stage-in did not complete and you should fail fast rather than silently
-# re-downloading from S3.
-print("\nSimulating a stage-in verification (no real cluster needed):")
-local_cache.mkdir(parents=True, exist_ok=True)
-fake_record_dir = local_cache / "ds_demo" / "sub-01"
-fake_record_dir.mkdir(parents=True, exist_ok=True)
-(fake_record_dir / "sub-01_task-rest_eeg.bdf").touch()
-
-n_records = sum(1 for _ in local_cache.rglob("*_eeg.bdf"))
-assert n_records >= 1, "stage-in copied 0 records; abort job before training"
-print(f"  cache_dir   = {local_cache}")
-print(f"  records on disk = {n_records}")
-print("  --> training can proceed offline (download=False)")
-
-# In a real script you would now do, e.g.:
-#
-#     ds = EEGDashDataset(cache_dir=local_cache, dataset="ds005514",
-#                         task="RestingState", download=False)
-#     assert len(ds.datasets) == n_records
-
-# %%
-# Common pitfalls
-# ---------------
-#
-# - **Home directory is shared and slow.** Quotas on ``$HOME`` are tiny and
-#   the filesystem is not designed for thousands of concurrent reads. Putting
-#   the cache there is the most common cause of slow first-epoch IO.
-# - **Node-local cache disappears between jobs.** ``$TMPDIR`` and
-#   ``/local/$SLURM_JOB_ID`` are wiped at job exit. Always keep the canonical
-#   copy on shared scratch and stage in fresh each job.
-# - **Race conditions when multiple jobs hit one cache.** Two jobs writing
-#   into the same ``EEGDASH_CACHE_DIR`` can produce truncated files. Either
-#   give each job its own ``EEGDASH_CACHE_DIR`` (per-task subdirectory) or
-#   pre-populate the shared cache once on a head node with internet access
-#   and run all subsequent jobs with ``download=False``.
-# - **Metadata-server contention on Lustre/GPFS.** Hundreds of small file
-#   stats during dataloading can throttle the whole filesystem. If first-
-#   epoch IO is slow but disk bandwidth is idle, the bottleneck is metadata,
-#   not throughput -- move to node-local NVMe.
+# A private temporary directory avoids two jobs overwriting the same staged
+# files. It does not benchmark filesystem throughput or synchronize concurrent
+# downloads into the persistent source; complete acquisition first.
+scratch = os.environ.get("SLURM_TMPDIR")
+with tempfile.TemporaryDirectory(prefix="eegdash-stage-", dir=scratch) as job_dir:
+    local_cache = Path(job_dir)
+    shutil.copytree(cache_dir / "nm000135", local_cache / "nm000135")
+    staged = EEGDashDataset(cache_dir=local_cache, **query, download=False, n_jobs=1)
+    assert len(staged.datasets) == 1
+    raw = staged.datasets[0].raw
+    np.testing.assert_array_equal(reference, raw.get_data(start=0, stop=250))
+    print("Staged recording:", raw)
+    print("Local cache:", local_cache)
+    # Execute the training/feature extraction step here, while local files exist.
 
 # %%
-# See also
-# --------
-#
-# - ``how_to_work_offline``: drives ``download=False`` once the cache exists.
-# - ``how_to_run_preprocessing_on_slurm``: a full sbatch template wrapping
-#   the stage-in/stage-out pattern shown here.
+# 3. Apply the same pattern in a batch job
+# ----------------------------------------
+# Pre-stage only the selected dataset before workers start. Point each worker's
+# EEGDASH_CACHE_DIR at the staged root and pass download=False. Save derived
+# results back to persistent storage before the scheduler removes job scratch.
+# Storage performance varies by cluster; measure it instead of assuming a
+# particular speedup from the path name.
 
-# %%
-# References
-# ----------
+# 4. Check the storage boundary before scaling up
+# -----------------------------------------------
+# The equality assertion verifies that offline reopening of the staged copy
+# returns the same first-second samples. The displayed local path is valid only
+# inside the with block. Put feature extraction or training there and copy its
+# outputs to persistent storage before leaving the block, even if the shell
+# job continues afterward.
 #
-# Cisotto, G., & Chicco, D. (2024). *Ten quick tips for clinical
-# electroencephalographic (EEG) data acquisition and signal processing.*
-# Frontiers in Neuroinformatics, 18, 1338139.
-# doi:10.3389/fninf.2024.1338139
+# For a larger job, measure stage-in time separately from model time, include
+# both source and destination space in your allocation, and record the exact
+# query with the outputs. The Slurm EO/EC tutorial supplies a real training
+# workload after this storage boundary has been verified.

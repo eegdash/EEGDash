@@ -1,202 +1,89 @@
-"""Download an EEGDash dataset in advance and validate the local cache
-=====================================================================
+"""Download a real EEG subset and verify it can be reopened
+========================================================
 
-**Difficulty 1** | **Runtime: 1m** | **Compute: CPU**
+Prefetch one BNCI2014-004 motor-imagery recording through EEGDashDataset.
+The explicit query downloads about 5.6 MB including sidecars. The same
+operation can stage a larger cohort by expanding the subject/session query.
+See `nm000135 <https://nemar.org/dataset/nm000135>`_. CPU is sufficient.
 
-Download all files for a dataset in advance, validate completeness, and
-# inspect the cache.
-#
-# Validate your result
-# --------------------
-# - **Cache Populated.** After download, check that ``cache_dir/ds005506``
-#   exists and contains ``participants.tsv``.
-# - **File Count.** Verify that the number of ``.bdf`` or ``.set`` files on
-#   disk matches ``len(ds.records)``.
-# - **Offline Check.** Set ``EEGDASH_OFFLINE=1`` and re-initialize the
-#   dataset; it should load instantly without network calls.
-#
-# Keywords: loading, cache, download
+Before running, install EEGDash and verify that the chosen cache directory
+is writable and persistent. This is an acquisition recipe: it prepares files
+for a later analysis and does not train a classifier. Subject 1, session
+0train, run 0 and task imagery identify one recording, rather than every
+session belonging to that person.
+
 """
 
-# sphinx_gallery_thumbnail_path = '_static/thumbs/how_to_download_a_dataset.png'
-
-# %% [markdown]
-# Goal
-# ----
-#
-# Stage every file for a query *before* a long training run, an HPC job, or
-# an air-gapped session. We pick a small public dataset, prefetch it with
-# ``EEGDashDataset.download_all()``, then verify that an offline rebuild
-# reports the same record count and that every recording really exists on
-# disk. The same recipe scales to ``EEGChallengeDataset`` releases by
-# swapping the constructor.
-
-# %% [markdown]
-# Prerequisites
-# -------------
-#
-# - You have completed ``plot_00_first_search`` and ``plot_01_first_recording``.
-# - Network access is available for the *initial* download.
-# - ``EEGDASH_CACHE_DIR`` is set to a fast filesystem (or you accept the
-#   default ``./.eegdash_cache``); never hard-code an absolute path.
-# - Free disk roughly equal to the dataset footprint (``ds002718`` is
-#   ~ 80 MB; full HBN releases are tens of GB).
-# - Imports follow EEGDash convention: stdlib, third-party, then ``eegdash``.
-
 # %%
+# 1. Specify the subset and persistent cache
+# ------------------------------------------
 import os
 from pathlib import Path
 
 import numpy as np
 
 from eegdash import EEGDashDataset
-from eegdash.paths import get_default_cache_dir
 
-np.random.seed(42)
-
-# %% [markdown]
-# Recipe
-# ------
-#
-# Step 1 -- Pick the dataset id and cache_dir
-# ...........................................
-#
-# We use OpenNeuro ``ds002718`` (Wakeman & Henson visual face perception,
-# 19 subjects, ~ 80 MB) so the recipe finishes in minutes on any laptop.
-# The cache directory is resolved from ``EEGDASH_CACHE_DIR`` so the recipe
-# stays portable between a workstation, a SLURM scratch volume, and CI.
+cache_dir = Path(os.environ.get("EEGDASH_CACHE_DIR", ".eegdash_cache"))
+query = dict(dataset="nm000135", subject="1", session="0train", run="0", task="imagery")
 
 # %%
-DATASET = "ds002718"
-CACHE_DIR = Path(get_default_cache_dir()).resolve()
-CACHE_DIR.mkdir(parents=True, exist_ok=True)
-print(f"cache_dir = {CACHE_DIR}")
-print(f"EEGDASH_CACHE_DIR set: {bool(os.environ.get('EEGDASH_CACHE_DIR'))}")
-
-# %% [markdown]
-# Step 2 -- Instantiate ``EEGDashDataset``
-# ........................................
-#
-# Construction queries the metadata service but does *not* fetch raw EEG
-# yet -- recordings stay lazy until ``.raw`` is accessed or
-# ``download_all`` is called. We restrict to a single task so the example
-# is bounded; drop the filter to stage the full release.
+# The constructor resolves the query into recording metadata. Signal loading
+# is lazy, so inspecting ``dataset.description`` does not by itself establish
+# that the entire recording can be read. The recording-count assertion catches
+# an unexpectedly broadened query before the explicit download starts.
+dataset = EEGDashDataset(cache_dir=cache_dir, **query, n_jobs=1)
+assert len(dataset.datasets) == 1
+print(dataset.description[["subject", "session", "run"]])
 
 # %%
-dataset = EEGDashDataset(
-    cache_dir=CACHE_DIR,
-    dataset=DATASET,
-    task="FaceRecognition",
-    description_fields=["subject", "session", "task", "run"],
+# 2. Download the selected recording and its dependencies
+# -------------------------------------------------------
+# The download is bounded by the query, not by cropping an already opened file.
+# ``download_all`` stages the selected signals and their required BIDS
+# sidecars. Events and channel metadata are part of a usable dataset; copying
+# only a signal filename can leave an incomplete offline cache. One worker
+# keeps this first acquisition easy to inspect. Increase concurrency only
+# when the remote service and storage can sustain it.
+dataset.download_all(n_jobs=1)
+raw = dataset.datasets[0].raw
+assert raw.n_times > 0 and raw.info["sfreq"] == 250
+assert {"left_hand", "right_hand"} <= set(raw.annotations.description)
+
+# %%
+# 3. Reopen the same query from disk and compare real samples
+# -----------------------------------------------------------
+# The second constructor uses local discovery through ``download=False``.
+# At 250 Hz, samples 0:250 cover one second. ``get_data`` returns a
+# (channels, samples) array in volts; equality checks the reader result, not
+# just the existence or size of a file. The observed hand annotation names
+# check that the cache includes meaningful target information as well.
+offline = EEGDashDataset(cache_dir=cache_dir, **query, download=False, n_jobs=1)
+assert len(offline.datasets) == len(dataset.datasets)
+np.testing.assert_array_equal(
+    raw.get_data(start=0, stop=250), offline.datasets[0].raw.get_data(start=0, stop=250)
 )
-n_records = len(dataset.datasets)
-print(f"queried {n_records} record(s) from {DATASET}")
-
-# %% [markdown]
-# Step 3 -- Call ``download_all``
-# ...............................
-#
-# ``EEGDashDataset.download_all(n_jobs=...)`` walks every record, skips
-# files that already match the local cache, and downloads the rest in
-# parallel threads. ``n_jobs=-1`` uses all cores; pin to a small number
-# (e.g. ``4``) on shared filesystems to avoid throttling. The call is
-# idempotent -- re-running it after a crash only refetches the missing
-# files.
-
-# %%
-dataset.download_all(n_jobs=4)
-print("prefetch complete")
-
-# %% [markdown]
-# Step 4 -- Verify completeness
-# .............................
-#
-# Three independent checks together prove the cache is usable offline:
-#
-# 1. Each record advertises a ``local_path`` that resolves to an existing
-#    file (catches partial downloads).
-# 2. Re-instantiating with ``download=False`` reads only on-disk BIDS
-#    files and must return the same number of recordings (catches missing
-#    sidecars).
-# 3. The summed footprint sanity-checks that no file was truncated to
-#    zero bytes.
-
-# %%
-local_paths = [Path(ds.record["bidspath"]) for ds in dataset.datasets]
-missing = [p for p in local_paths if not (CACHE_DIR / DATASET / p).exists()]
-assert not missing, f"{len(missing)} file(s) missing under {CACHE_DIR}"
-
-offline = EEGDashDataset(
-    cache_dir=CACHE_DIR,
-    dataset=DATASET,
-    task="FaceRecognition",
-    download=False,
+root = cache_dir / "nm000135"
+print(
+    "Cached bytes:",
+    sum(path.stat().st_size for path in root.rglob("*") if path.is_file()),
 )
-assert len(offline.datasets) == n_records, (
-    f"offline rebuild saw {len(offline.datasets)} records, expected {n_records}"
-)
-
-ds_root = CACHE_DIR / DATASET
-total_bytes = sum(p.stat().st_size for p in ds_root.rglob("*") if p.is_file())
-print(f"on-disk footprint: {total_bytes / 1e6:.1f} MB across {n_records} record(s)")
-
-# %% [markdown]
-# Step 5 -- Inspect the cache layout
-# ..................................
-#
-# EEGDash mirrors the BIDS tree under ``cache_dir/<dataset_id>/``. Listing
-# the top-level entries confirms the dataset descriptor, participant
-# table, and per-subject folders are all present -- exactly what
-# ``download=False`` needs later.
+print("Offline recording:", offline.datasets[0].raw)
 
 # %%
-top_level = sorted(p.name for p in ds_root.iterdir())
-print(f"{ds_root.name}/ contains {len(top_level)} entries:")
-for name in top_level[:10]:
-    print(f"  {name}")
-if len(top_level) > 10:
-    print(f"  ... ({len(top_level) - 10} more)")
+# Keep the cache on a persistent volume for subsequent jobs. A nonempty
+# filename alone is not proof of valid EEG; opening it and comparing samples
+# checks the actual reader path. Expand the check to all queried recordings
+# when staging a larger cohort.
 
-# %% [markdown]
-# Common pitfalls
-# ---------------
+# 4. Understand what was verified
+# -------------------------------
+# The byte count covers everything currently stored under nm000135, including
+# other sessions from earlier runs. It is a measurement of this cache directory,
+# not a fresh-download byte counter. The equality assertion verifies the first
+# second; it is a quick read check rather than a checksum of every sample.
 #
-# - **Hard-coded paths.** Always resolve ``cache_dir`` from
-#   ``EEGDASH_CACHE_DIR`` or a CLI argument; literal ``"/scratch/..."``
-#   paths break the moment the recipe runs on another machine.
-# - **Filtering after download.** ``download_all`` only fetches what the
-#   query selects. Add ``task=`` / ``subject=`` filters *before* calling
-#   it -- otherwise you over-fetch and pay for bandwidth you discard.
-# - **Stale partial caches.** If a previous run was killed mid-download,
-#   re-run ``download_all`` (it is idempotent). For corruption, delete
-#   the offending file and retry; never edit BIDS sidecars by hand.
-# - **Network restrictions on GPU queues.** Run the download stage on an
-#   internet-enabled queue and the training stage with ``download=False``
-#   on the GPU queue, sharing one cache directory.
-# - **n_jobs on shared filesystems.** Lustre/NFS often penalise heavy
-#   parallel I/O; start with ``n_jobs=4`` and scale up only if the
-#   filesystem is local SSD.
-# - **Mini vs full releases.** For CI use ``EEGChallengeDataset(...,
-#   mini=True)`` (a few subjects) instead of the full release to keep
-#   wall time bounded.
-
-# %% [markdown]
-# See also
-# --------
-#
-# - :doc:`how_to_work_offline </generated/auto_examples/how_to/how_to_work_offline>`
-#   -- consume the cache populated above with ``download=False``.
-# - :ref:`concepts-lazy-loading-and-cache` -- how the cache is laid out
-#   and when files are materialised.
-# - :doc:`plot_01_first_recording </generated/auto_examples/tutorials/00_start_here/plot_01_first_recording>`
-#   -- the prerequisite single-recording tutorial.
-#
-# References
-# ----------
-#
-# - Pernet, C. R. et al. (2019). EEG-BIDS: an extension to the brain
-#   imaging data structure for electroencephalography. *Scientific Data*
-#   6:103, doi:10.1038/s41597-019-0104-8.
-# - Wakeman, D. G., and Henson, R. N. (2015). A multi-subject, multi-modal
-#   human neuroimaging dataset. *Scientific Data* 2:150001. OpenNeuro
-#   ``ds002718`` v1.0.5, doi:10.18112/openneuro.ds002718.v1.0.5.
+# Keep the BIDS directory tree intact when moving the cache. For a larger
+# explicit query, repeat the read check for each returned recording before
+# submitting an offline compute job. Use the offline how-to to separate that
+# job's local loading from the acquisition stage.

@@ -1,614 +1,258 @@
-"""P300 transfer with AS-MMD
-===========================
+"""P300 transfer between participants with MMD adaptation
+======================================================
 
-**Difficulty 3** | **Runtime: 2m** | **Compute: GPU Recommended**
+Train on real visual-oddball EEG from subject 054, adapt using unlabelled
+EEG from subject 119, and test on subject 123. EEGDashDataset downloads
+these three ``ds005863`` recordings (about 69 MB total). Set
+``EEGDASH_CACHE_DIR`` to reuse them. CPU is sufficient for this small model. Install
+``eegprep[eeglabio]>=0.2.23,<0.3`` for the EEGPrep stages.
 
-Two laboratories run a visual oddball task on different participants,
-different head-caps, different software stacks. Both pipelines produce
-EEG epochs locked to a rare *target* and a frequent *standard*; both
-target the centro-parietal P3 component (Polich 2007,
-doi:10.1016/j.clinph.2007.04.019). Yet a P3 decoder trained on cohort
-A and evaluated on cohort B systematically loses several accuracy
-points relative to a target-trained ceiling (Cisotto & Chicco 2024,
-Tip 8, doi:10.7717/peerj-cs.2256). This case study wires
-**adversarial-style maximum mean discrepancy** (AS-MMD; Long et al.
-2015, https://arxiv.org/abs/1502.02791) between source and target,
-trains a small encoder, and asks the same applied question that
-cross-task pretraining (Banville et al. 2021,
-doi:10.1109/TNSRE.2020.3040290; Defossez et al. 2023,
-doi:10.1038/s42256-023-00714-5) and the EEG2025 cross-task transfer
-benchmark (Aristimunha et al. 2025, doi:10.48550/arXiv.2506.19141)
-ask through ``EEGChallengeDataset`` on the NEMAR archive (Delorme et
-al. 2022, doi:10.1093/database/baac096): by how much does AS-MMD close
-the naive-to-oracle gap, and does the alignment preserve the
-underlying P3 component?
-Keywords: transfer-learning, applied, P300
+Compare source-only training, maximum mean discrepancy (MMD) adaptation,
+and a supervised target-domain reference. These are participants from the
+same dataset, not separate laboratories. This is an MMD penalty, not an
+adversarial method; no discriminator is trained. One held-out participant
+cannot establish that adaptation helps the wider population.
+
+This project builds on the visual P300 tutorial and assumes familiarity with
+MNE epochs, participant splits and a PyTorch training loop. Install EEGDash
+with its PyTorch dependencies and run the blocks in order. You will obtain
+three training-objective curves and a held-out balanced-accuracy comparison.
+The `source dataset <https://openneuro.org/datasets/ds005863>`_ supplies both
+the voltages and the stimulus codes; only the training regime changes.
+
+The key distinction is access to labels. Source-only training sees labels
+from 054. MMD also sees signals from 119, but its labels are withheld from the
+loss. The supervised reference uses labels from 119. All three models are
+evaluated on 123, whose signals and labels are excluded from fitting.
 """
 
-# sphinx_gallery_thumbnail_path = '_static/thumbs/project_p300_transfer.png'
-
-# %% [markdown]
-# Learning objectives
-# -------------------
-#
-# - load source + target oddball cohorts as window tensors via env-overridable accessions.
-# - train three encoders on shared architecture + budget: naive, AS-MMD aligned, oracle.
-# - compare target accuracy for all three on the same figure with chance drawn on the same axes.
-# - verify the alignment preserves the P3 component via an ERP overlay at Pz.
-#
-# AS-MMD Explanation
-# ------------------
-# **Adversarial-Style Maximum Mean Discrepancy (AS-MMD)** is a domain-adaptation
-# method that minimizes the distance between the source and target feature
-# distributions. Unlike standard MMD, it uses an adversarial training
-# approach (similar to GANs) to learn features that are discriminative
-# for the task but invariant to the domain (laboratory, cap, etc.).
-#
-# Requirements & Validation
-# -------------------------
-# - **Runtime Warning.** This tutorial involves training deep networks. On a 4-core CPU, the smoke run takes ~2 minutes. For full training on real data, a GPU is recommended.
-# - **Minimum Data Assumptions.** Requires at least two domains (source and target) with overlapping task labels (e.g., target vs. standard).
-# - **Expected Fold Outputs.** Per-fold target accuracy should show the AS-MMD aligned model outperforming the naive model and approaching the oracle (upper bound).
-#
-# Requirements
-# ------------
-#
-# - prereqs: plot_12 (baseline) and plot_71 (cross-task transfer).
-# - CUDA optional; the CPU-only smoke run finishes in roughly 2 min.
-# - Concept page: :doc:`/concepts/features_vs_deep_learning`.
-
 # %%
-# Step 1. Setup, seeds, cache, and device
-# ---------------------------------------
-import json
+# 1. Load real stimulus-labelled epochs with matching channels
+# ------------------------------------------------------------
+# Use the same five named channels in the same order for every participant.
+# EEGPrep removes channel-median offsets and applies its common-average
+# reference over the EEG sensors before this subset is selected. The adapters
+# leave the sample grid unchanged; the explicit check lets us restore the
+# original annotations without accumulating conversion-rounding errors. The 0.5–30 Hz filter and -100..0 ms baseline are fixed
+# across participants, so a preprocessing choice is not selected from test
+# accuracy. These operations respect the original participant boundaries.
+#
+# In recorded ``SXY`` markers, matching digits identify a target and unequal
+# digits identify a standard; only stimulus digits 1..5 are accepted. The
+# target becomes class 1 and the standard class 0 after subtracting one.
+# Epochs contain -100..800 ms around each actual stimulus onset.
+#
+# Resampling to 64 Hz keeps this dense model small. An epoch array starts
+# with axes (trials, channels, time); flattening joins channel and time into
+# the feature axis while retaining the trial axis. Multiplication by 1e6
+# converts volts to microvolts before training-only standardization. This
+# simple representation uses voltages directly rather than engineered P300
+# amplitudes, but it does not exploit convolutional time structure.
 import os
-import warnings
 from pathlib import Path
 
-from collections import Counter
-
 import matplotlib.pyplot as plt
+import mne
 import numpy as np
+import pandas as pd
+from braindecode.preprocessing import RemoveCommonAverageReference, RemoveDCOffset
 import torch
-from braindecode.models import ShallowFBCSPNet
+from sklearn.metrics import balanced_accuracy_score
+from sklearn.preprocessing import StandardScaler
 from torch import nn
 
-from _p300_transfer_figure import draw_p300_transfer_figure
-from eegdash.viz import use_eegdash_style
+from eegdash import EEGDashDataset
 
-use_eegdash_style()
-warnings.simplefilter("ignore", category=FutureWarning)
-SEED = 42
-np.random.seed(SEED)
-torch.manual_seed(SEED)
-DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-cache_dir = Path(os.environ.get("EEGDASH_CACHE_DIR", "./eegdash_cache"))
-cache_dir.mkdir(parents=True, exist_ok=True)
-print(f"device={DEVICE}, seed={SEED}")
-
-# %% [markdown]
-# Step 2. Configure source and target cohorts
-# -------------------------------------------
-#
-# In a full run we would build two ``EEGDashDataset`` queries and run
-# the standard P3 windowing recipe from ``plot_20``. To keep the case
-# study reproducible without paying a multi-GB download, we synthesize
-# source + target tensors with a shared P3-like component and
-# dataset-specific noise + drift; the defaults wire ``ds005863``
-# (visualoddball, NEMAR; Delorme et al. 2022) to a placeholder target
-# id, both overridable via environment variables.
-
-# %%
-SOURCE_ID = os.environ.get("EEGDASH_SOURCE_DATASET", "ds005863")
-TARGET_ID = os.environ.get("EEGDASH_TARGET_DATASET", "ds003061")
-N_SUBJECTS_PER_DOMAIN = 6
-N_WINDOWS_PER_SUBJECT = 60
-N_CHANS, N_TIMES, SFREQ = 5, 154, 128.0
-TARGET_FRACTION = 0.25  # ~4:1 standard:target imbalance, classic oddball
-CHANNEL_NAMES = ["Fz", "Cz", "Pz", "P3", "P4"]
-PZ_INDEX = CHANNEL_NAMES.index("Pz")
-
-# %% [markdown]
-# Step 3. Synthesize oddball windows with a shared P3 + domain shift
-# ------------------------------------------------------------------
-#
-# Each window is a 1.2 s epoch at 128 Hz. *Target* class carries a
-# centro-parietal positive bump at 380 ms; *standard* class does not.
-# Domains differ in three ways: target-side noise floor is higher,
-# target carries low-frequency drift, target Pz amplitude is
-# attenuated 35 % relative to source. The three knobs together produce
-# a non-trivial AS-MMD problem that mirrors cross-equipment EEG
-# transfer symptoms (Cisotto & Chicco 2024, Tip 8).
-
-
-# %%
-def _p3_template(times_s: np.ndarray, peak_uv: float = 3.0) -> np.ndarray:
-    """One-channel P3-like Gaussian bump at ~380 ms."""
-    centre, width = 0.380, 0.080
-    return peak_uv * np.exp(-0.5 * ((times_s - centre) / width) ** 2)
-
-
-DOMAIN_PROFILES = {
-    "source": {"noise": 1.4, "drift": 0.20, "pz_scale": 1.0},
-    "target": {"noise": 2.6, "drift": 0.60, "pz_scale": 0.65},
-}
-
-
-def make_oddball_windows(
-    *,
-    domain: str,
-    n_subjects: int,
-    n_per_subject: int,
-    target_fraction: float,
-    rng: np.random.Generator,
-) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
-    """Synthesize ``(X, y, subject_ids)`` for one domain.
-
-    The shared P3 template lives at index ``PZ_INDEX`` with a domain-
-    specific scaling so source and target carry the same physiological
-    component but different amplitudes; that is the regime where MMD
-    alignment can help.
-    """
-    p = DOMAIN_PROFILES[domain]
-    times_s = np.arange(N_TIMES) / SFREQ - 0.1  # epoch -100..1100 ms
-    p3 = _p3_template(times_s).astype(np.float32)
-    drift_axis = np.linspace(-1.0, 1.0, N_TIMES, dtype=np.float32)
-    X_list, y_list, subj_list = [], [], []
-    for subj in range(n_subjects):
-        n_t = max(1, int(round(n_per_subject * target_fraction)))
-        labels = np.concatenate([np.zeros(n_per_subject - n_t), np.ones(n_t)]).astype(
-            int
-        )
-        rng.shuffle(labels)
-        for label in labels:
-            w = rng.standard_normal((N_CHANS, N_TIMES)).astype(np.float32) * p["noise"]
-            w += (rng.standard_normal(1).astype(np.float32) * p["drift"]) * drift_axis
-            if label == 1:
-                # P3 at Pz with channel spread 0.5x at Cz, P3, P4.
-                w[PZ_INDEX] += p["pz_scale"] * p3
-                for ch in (1, 3, 4):
-                    w[ch] += 0.5 * p["pz_scale"] * p3
-            X_list.append(w)
-            y_list.append(label)
-            subj_list.append(f"{domain}-sub-{subj:02d}")
-    return np.stack(X_list), np.asarray(y_list, dtype=np.int64), np.asarray(subj_list)
-
-
-_kw = dict(
-    n_subjects=N_SUBJECTS_PER_DOMAIN,
-    n_per_subject=N_WINDOWS_PER_SUBJECT,
-    target_fraction=TARGET_FRACTION,
+cache_dir = Path(os.environ.get("EEGDASH_CACHE_DIR", ".eegdash_cache"))
+subjects = ["054", "119", "123"]
+channels = ["Fz", "CP1", "Pz", "P3", "P4"]
+dataset = EEGDashDataset(
+    cache_dir=cache_dir,
+    dataset="ds005863",
+    subject=subjects,
+    task="visualoddball",
+    n_jobs=1,
 )
-X_src, y_src, subj_src = make_oddball_windows(
-    domain="source", rng=np.random.default_rng(SEED), **_kw
-)
-X_tgt, y_tgt, subj_tgt = make_oddball_windows(
-    domain="target", rng=np.random.default_rng(SEED + 1), **_kw
-)
-print(
-    f"source: X={X_src.shape}, n_target={int((y_src == 1).sum())}, "
-    f"n_standard={int((y_src == 0).sum())}"
-)
-print(
-    f"target: X={X_tgt.shape}, n_target={int((y_tgt == 1).sum())}, "
-    f"n_standard={int((y_tgt == 0).sum())}"
-)
-
-# %% [markdown]
-# Step 4. Predict
-# ---------------
-#
-# **Predict.** Pen-and-paper guess before running anything. With a
-# binary 1:3 imbalance the majority-class chance is 0.75 in plain
-# accuracy; on the *target* domain a cross-domain encoder typically
-# falls 5-10 points below the oracle. By how much do you expect AS-MMD
-# alignment to close that gap, in absolute accuracy on target?
-
-# %% [markdown]
-# Step 5. Subject-aware split for both cohorts
-# --------------------------------------------
-#
-# Every model is evaluated on held-out subjects (Cisotto & Chicco
-# 2024, Tip 9). The same subject is never split across train and test,
-# so the leakage failure mode that plagues many published EEG decoders
-# is structurally avoided.
-
-# %%
-TEST_FRACTION = 0.5  # held-out target subjects for evaluation
-
-
-def subject_split(
-    subjects: np.ndarray, *, test_fraction: float, rng: np.random.Generator
-) -> tuple[np.ndarray, np.ndarray]:
-    """Disjoint subject masks for train and test."""
-    unique = np.array(sorted(set(subjects.tolist())))
-    rng.shuffle(unique)
-    n_test = max(1, int(round(len(unique) * test_fraction)))
-    test_subjects = set(unique[:n_test])
-    train_mask = np.asarray([s not in test_subjects for s in subjects])
-    test_mask = ~train_mask
-    return train_mask, test_mask
-
-
-rng_split = np.random.default_rng(SEED + 2)
-src_train, src_test = subject_split(
-    subj_src, test_fraction=TEST_FRACTION, rng=rng_split
-)
-tgt_train, tgt_test = subject_split(
-    subj_tgt, test_fraction=TEST_FRACTION, rng=rng_split
-)
-assert not set(subj_src[src_train]).intersection(subj_src[src_test]), "source leak"
-assert not set(subj_tgt[tgt_train]).intersection(subj_tgt[tgt_test]), "target leak"
-n_src_tr = len(set(subj_src[src_train]))
-n_src_te = len(set(subj_src[src_test]))
-n_tgt_tr = len(set(subj_tgt[tgt_train]))
-n_tgt_te = len(set(subj_tgt[tgt_test]))
-print(f"source: n_train_subj={n_src_tr}, n_test_subj={n_src_te}")
-print(f"target: n_train_subj={n_tgt_tr}, n_test_subj={n_tgt_te}")
-
-# %% [markdown]
-# Step 6. Encoder, MMD primitive, and training loop
-# -------------------------------------------------
-#
-# **Run.** ``ShallowFBCSPNet`` (Schirrmeister et al. 2017,
-# doi:10.1002/hbm.23730) is the same small temporal-then-spatial CNN
-# used in plot_71. The MMD term is an RBF-kernel distribution-distance
-# estimator on penultimate-layer activations (Long et al. 2015,
-# https://arxiv.org/abs/1502.02791); the *adversarial-style* twist
-# gates the MMD weight by an inverse-temperature schedule so the
-# encoder cannot trivially collapse all features to one point early.
-
-# %%
-N_EPOCHS = 8
-BATCH = 32
-LR = 1e-3
-MMD_LAMBDA_MAX = 0.4  # cap on AS-MMD weight after warmup
-WARMUP_FRACTION = 0.5  # fraction of epochs spent ramping MMD weight in
-
-
-def make_model() -> nn.Module:
-    """Return a fresh ShallowFBCSPNet sized for the windows above."""
-    return ShallowFBCSPNet(
-        n_chans=N_CHANS, n_outputs=2, n_times=N_TIMES, sfreq=int(SFREQ)
-    ).to(DEVICE)
-
-
-def rbf_mmd2(x: torch.Tensor, y: torch.Tensor, eps: float = 1e-8) -> torch.Tensor:
-    """Squared RBF-kernel MMD with median-heuristic bandwidth."""
-    x = x.reshape(x.size(0), -1) if x.dim() > 2 else x
-    y = y.reshape(y.size(0), -1) if y.dim() > 2 else y
-    m, n = x.size(0), y.size(0)
-    if m <= 1 or n <= 1:
-        return torch.zeros((), device=x.device)
-    sigma = torch.clamp(
-        torch.median(torch.cdist(torch.cat([x, y]), torch.cat([x, y]))), min=eps
+assert len(dataset.datasets) == 3
+cohort = {}
+for recording in dataset.datasets:
+    raw = recording.raw.copy().load_data().pick("eeg")
+    assert set(channels) <= set(raw.ch_names)
+    source_annotations = raw.annotations.copy()
+    source_date = raw.info["meas_date"]
+    source_grid = (raw.info["sfreq"], raw.n_times, raw.first_samp)
+    RemoveDCOffset().apply(raw)
+    RemoveCommonAverageReference().apply(raw)
+    assert (raw.info["sfreq"], raw.n_times, raw.first_samp) == source_grid
+    raw.set_meas_date(source_date)
+    raw.set_annotations(source_annotations)
+    raw.filter(0.5, 30)
+    raw.pick(channels)
+    mapping = {}
+    for name in set(raw.annotations.description):
+        code = name.split("/")[-1].replace(" ", "")
+        if len(code) == 3 and code[0] == "S" and set(code[1:]) <= set("12345"):
+            mapping[name] = 2 if code[1] == code[2] else 1
+    assert set(mapping.values()) == {1, 2}
+    events, _ = mne.events_from_annotations(raw, event_id=mapping)
+    epochs = mne.Epochs(
+        raw,
+        events,
+        event_id={"standard": 1, "target": 2},
+        tmin=-0.1,
+        tmax=0.8,
+        baseline=(-0.1, 0),
+        preload=True,
     )
-    gamma = 1.0 / (2.0 * sigma**2 + eps)
-    k_xx = torch.exp(-gamma * torch.cdist(x, x) ** 2)
-    k_yy = torch.exp(-gamma * torch.cdist(y, y) ** 2)
-    k_xy = torch.exp(-gamma * torch.cdist(x, y) ** 2)
-    out = (k_xx.sum() - torch.trace(k_xx)) / (m * (m - 1) + eps)
-    out = out + (k_yy.sum() - torch.trace(k_yy)) / (n * (n - 1) + eps)
-    return out - 2.0 * k_xy.mean()
+    epochs.resample(64)
+    X = epochs.get_data().reshape(len(epochs), -1) * 1e6
+    y = epochs.events[:, 2] - 1
+    assert np.isfinite(X).all() and set(y) == {0, 1}
+    cohort[str(recording.description["subject"])] = (X, y)
+assert set(cohort) == set(subjects)
+source_subject, adaptation_subject, test_subject = subjects
+assert len({source_subject, adaptation_subject, test_subject}) == 3
+
+# %%
+# 2. Define the model and a distribution discrepancy
+# --------------------------------------------------
+# A small neural encoder operates on flattened voltage windows. The biased
+# RBF MMD estimator compares hidden activations, including kernel diagonals.
+# Its bandwidth and weight are fixed; they are not selected using test scores.
+# Model initialization and minibatch ordering are random, but the EEG and
+# targets are entirely recorded observations.
+#
+# MMD is the mean source–source similarity plus mean adaptation–adaptation
+# similarity, minus twice the mean cross-participant similarity. The Gaussian
+# kernel gives similar hidden vectors larger similarity. Minimizing this term
+# encourages the two marginal hidden distributions to overlap; it does not
+# guarantee that target and standard trials align with their correct classes.
+#
+# The 16-unit encoder and two-output head below map a voltage vector into
+# class logits. The 0.1 loss weight and unit kernel bandwidth are fixed
+# demonstration choices, not tuned values. A collapsed representation can
+# have low discrepancy without being useful, which is why the labelled-source
+# classification loss remains part of the objective.
+torch.set_num_threads(max(1, min(2, os.cpu_count() or 1)))
 
 
-def train_encoder(
-    *,
-    X_source: np.ndarray,
-    y_source: np.ndarray,
-    X_target: np.ndarray | None,
-    n_epochs: int,
-    use_mmd: bool,
-    seed: int = SEED,
-) -> nn.Module:
-    """Train one encoder; ``use_mmd`` toggles AS-MMD alignment.
-
-    Without ``use_mmd`` the loss is plain cross-entropy on source.
-    With ``use_mmd`` an MMD term on logit-space activations is added,
-    weighted by a warmup-then-cap schedule.
-    """
-    torch.manual_seed(seed)
-    np.random.seed(seed)
-    model = make_model()
-    opt = torch.optim.AdamW(model.parameters(), lr=LR, weight_decay=1e-4)
-    crit = nn.CrossEntropyLoss()
-    Xs = torch.as_tensor(X_source, dtype=torch.float32, device=DEVICE)
-    ys = torch.as_tensor(y_source, dtype=torch.long, device=DEVICE)
-    Xt = (
-        torch.as_tensor(X_target, dtype=torch.float32, device=DEVICE)
-        if X_target is not None
-        else None
+# %%
+# 3. Fit each regime without using the test participant
+# -----------------------------------------------------
+# Source-only and MMD use source labels. Only the supervised target reference
+# uses adaptation-subject labels. Scaling is fitted on the labelled training
+# participant for each regime. Test data are transformed/predicted only after
+# training; their signals are not part of the MMD penalty.
+#
+# Weighted cross-entropy compensates for the rarer target class using counts
+# from the labelled training participant. Adam updates the encoder and head
+# together, using up to 32 labelled trials per minibatch and ten passes through
+# training data. MMD pairs each labelled minibatch with a randomly selected
+# minibatch of real adaptation trials; the observations themselves are unchanged.
+# There is no early stopping or validation-based hyperparameter search here.
+#
+# Resetting the seed gives source-only and MMD the same initial model, although
+# their later minibatch orders can differ as MMD makes additional random draws.
+# The comparison is a single demonstration run, not an estimate across seeds.
+rows = []
+histories = {}
+for regime in ["source only", "MMD", "target supervised"]:
+    training_subject = (
+        adaptation_subject if regime == "target supervised" else source_subject
     )
-    warmup = max(1, int(round(n_epochs * WARMUP_FRACTION)))
-    for epoch in range(n_epochs):
-        model.train()
-        idx = torch.randperm(len(Xs), device=DEVICE)
-        for start in range(0, len(Xs), BATCH):
-            sel = idx[start : start + BATCH]
-            opt.zero_grad(set_to_none=True)
-            logits_s = model(Xs[sel])
-            loss = crit(logits_s, ys[sel])
-            if use_mmd and Xt is not None and Xt.size(0) > 0:
-                tgt_sel = torch.randint(0, Xt.size(0), (sel.size(0),), device=DEVICE)
-                logits_t = model(Xt[tgt_sel])
-                lam = MMD_LAMBDA_MAX * min(1.0, (epoch + 1) / warmup)
-                loss = loss + lam * rbf_mmd2(logits_s, logits_t)
+    X_train, y_train = cohort[training_subject]
+    scaler = StandardScaler().fit(X_train)
+    train_X = torch.tensor(scaler.transform(X_train), dtype=torch.float32)
+    train_y = torch.tensor(y_train, dtype=torch.long)
+    adaptation_X = torch.tensor(
+        scaler.transform(cohort[adaptation_subject][0]), dtype=torch.float32
+    )
+    torch.manual_seed(42)
+    encoder = nn.Sequential(nn.Linear(X_train.shape[1], 16), nn.ELU())
+    head = nn.Linear(16, 2)
+    optimizer = torch.optim.Adam(
+        list(encoder.parameters()) + list(head.parameters()), lr=1e-3
+    )
+    weights = torch.tensor(
+        len(y_train) / (2 * np.bincount(y_train)), dtype=torch.float32
+    )
+    criterion = nn.CrossEntropyLoss(weight=weights)
+    history = []
+    for epoch in range(10):
+        losses = []
+        for indices in torch.randperm(len(train_X)).split(32):
+            optimizer.zero_grad()
+            hidden = encoder(train_X[indices])
+            loss = criterion(head(hidden), train_y[indices])
+            if regime == "MMD":
+                target_indices = torch.randperm(len(adaptation_X))[: len(indices)]
+                adaptation_hidden = encoder(adaptation_X[target_indices])
+                discrepancy = (
+                    torch.exp(-torch.cdist(hidden, hidden).square() / 2).mean()
+                    + torch.exp(
+                        -torch.cdist(adaptation_hidden, adaptation_hidden).square() / 2
+                    ).mean()
+                    - 2
+                    * torch.exp(
+                        -torch.cdist(hidden, adaptation_hidden).square() / 2
+                    ).mean()
+                )
+                loss = loss + 0.1 * discrepancy
+            assert torch.isfinite(loss)
             loss.backward()
-            torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=5.0)
-            opt.step()
-    return model
-
-
-@torch.no_grad()
-def eval_acc(model: nn.Module, X: np.ndarray, y: np.ndarray, mask: np.ndarray) -> float:
-    """Plain accuracy on the masked portion of (X, y)."""
-    model.eval()
-    Xt = torch.as_tensor(X[mask], dtype=torch.float32, device=DEVICE)
-    yt = torch.as_tensor(y[mask], dtype=torch.long, device=DEVICE)
-    return float((model(Xt).argmax(dim=1) == yt).float().mean().item())
-
-
-@torch.no_grad()
-def encoder_features(model: nn.Module, X: np.ndarray, mask: np.ndarray) -> np.ndarray:
-    """Penultimate-layer activations via a forward hook on ``drop``.
-
-    Same hook pattern as plot_71: the shallow CNN exposes its temporal
-    + spatial + pool stack right before ``final_layer`` and a hook on
-    ``drop`` captures ``(B, F, T', 1)`` tensors that flatten into
-    per-window feature vectors for the PCA panel.
-    """
-    bag = []
-
-    def hook(_, __, output):
-        bag.append(output.detach().cpu().numpy())
-
-    handle = model.drop.register_forward_hook(hook)
-    try:
-        model.eval()
-        Xt = torch.as_tensor(X[mask], dtype=torch.float32, device=DEVICE)
-        _ = model(Xt)
-    finally:
-        handle.remove()
-    feats = np.concatenate(bag, axis=0)
-    return feats.reshape(feats.shape[0], -1)
-
-
-# %% [markdown]
-# Step 7. Train the three encoders and read out target accuracy
-# -------------------------------------------------------------
-#
-# Same architecture, same epoch budget, same optimiser everywhere. The
-# only differences are the training data and the AS-MMD switch:
-# *naive* trains on labelled source only, *AS-MMD* adds the unlabelled
-# target via the MMD term, *oracle* trains on labelled target only.
-
-# %%
-encoder_naive = train_encoder(
-    X_source=X_src[src_train],
-    y_source=y_src[src_train],
-    X_target=None,
-    n_epochs=N_EPOCHS,
-    use_mmd=False,
-)
-encoder_mmd = train_encoder(
-    X_source=X_src[src_train],
-    y_source=y_src[src_train],
-    X_target=X_tgt[tgt_train],
-    n_epochs=N_EPOCHS,
-    use_mmd=True,
-)
-encoder_oracle = train_encoder(
-    X_source=X_tgt[tgt_train],
-    y_source=y_tgt[tgt_train],
-    X_target=None,
-    n_epochs=N_EPOCHS,
-    use_mmd=False,
-)
-
-acc_naive = eval_acc(encoder_naive, X_tgt, y_tgt, tgt_test)
-acc_mmd = eval_acc(encoder_mmd, X_tgt, y_tgt, tgt_test)
-acc_oracle = eval_acc(encoder_oracle, X_tgt, y_tgt, tgt_test)
-test_counts = Counter(y_tgt[tgt_test].tolist())
-chance = float(max(test_counts.values()) / max(len(y_tgt[tgt_test]), 1))
-print(
-    f"naive={acc_naive:.3f} | mmd={acc_mmd:.3f} | oracle={acc_oracle:.3f} | "
-    f"chance={chance:.3f} | metric=accuracy"
-)
-# AS-MMD invariant: alignment should not be actively harmful (>2 pts).
-assert acc_mmd > acc_naive - 0.02, "AS-MMD was actively harmful (>2 pts)"
-
-# %% [markdown]
-# **Investigate.** ``acc_naive`` is the cross-domain floor (encoder
-# never saw the target distribution); ``acc_mmd`` is AS-MMD on the
-# same source labels plus unlabelled target windows; ``acc_oracle`` is
-# the within-domain ceiling. Gap ``oracle - naive`` is the transfer
-# headroom; gap ``mmd - naive`` is the AS-MMD gain. Reporting all four
-# numbers (including chance) on the same line is the falsifiable form
-# of the claim (Cisotto & Chicco 2024, Tip 9).
-
-# %%
-print(f"oracle - naive = {acc_oracle - acc_naive:+.03f} (transfer headroom)")
-print(f"oracle - mmd   = {acc_oracle - acc_mmd:+.03f} (residual after AS-MMD)")
-print(f"mmd - naive    = {acc_mmd - acc_naive:+.03f} (AS-MMD gain)")
-
-# %% [markdown]
-# Step 9. Penultimate-layer features for the PCA panel
-# ----------------------------------------------------
-#
-# We feed the same source + target test windows through both encoders
-# and capture the activations right before the classification head.
-# PCA down to 2D shows whether AS-MMD pulled the two distributions
-# into a shared subspace.
-
-# %%
-emb_src_before = encoder_features(encoder_naive, X_src, src_test)
-emb_tgt_before = encoder_features(encoder_naive, X_tgt, tgt_test)
-emb_src_after = encoder_features(encoder_mmd, X_src, src_test)
-emb_tgt_after = encoder_features(encoder_mmd, X_tgt, tgt_test)
-print(
-    f"emb shapes: src_before={emb_src_before.shape}, tgt_before={emb_tgt_before.shape}"
-)
-
-# %% [markdown]
-# Step 10. ERP overlay: did AS-MMD destroy the P3?
-# ------------------------------------------------
-#
-# Distribution-matching losses can in principle flatten the underlying
-# signal onto a shared mean-zero subspace. We compare
-# target-minus-standard waveforms at Pz on the held-out windows for
-# both domains; both bumps should still be visible.
-
-
-# %%
-def diff_and_se(
-    X: np.ndarray, y: np.ndarray, mask: np.ndarray
-) -> tuple[np.ndarray, np.ndarray]:
-    """Target-minus-standard mean and pooled SE at Pz, in microvolts."""
-    Xm = X[mask, PZ_INDEX, :]
-    yt = y[mask]
-    if (yt == 1).sum() < 2 or (yt == 0).sum() < 2:
-        return np.zeros(Xm.shape[1]), np.zeros(Xm.shape[1])
-    diff = (Xm[yt == 1].mean(axis=0) - Xm[yt == 0].mean(axis=0)).astype(float)
-    se_t = Xm[yt == 1].std(axis=0, ddof=1) / np.sqrt(int((yt == 1).sum()))
-    se_s = Xm[yt == 0].std(axis=0, ddof=1) / np.sqrt(int((yt == 0).sum()))
-    return diff, np.sqrt(se_t**2 + se_s**2).astype(float)
-
-
-src_diff, src_se = diff_and_se(X_src, y_src, src_test)
-tgt_diff, tgt_se = diff_and_se(X_tgt, y_tgt, tgt_test)
-erp_dict = {
-    "times_ms": (np.arange(N_TIMES) / SFREQ - 0.1) * 1000.0,
-    "source_before": src_diff,
-    "target_before": tgt_diff,
-    "source_after": src_diff,
-    "target_after": tgt_diff,
-    "source_se": src_se,
-    "target_se": tgt_se,
-}
-print(
-    f"P3 peak (target dataset): {tgt_diff.max():+.2f} uV "
-    f"@ {int(erp_dict['times_ms'][tgt_diff.argmax()])} ms"
-)
-
-# %% [markdown]
-# Step 11. Render the three-panel transfer figure
-# -----------------------------------------------
-#
-# **Investigate (#2).** Panel 1 is the bar chart with the AS-MMD gain
-# annotated. Panel 2 is the side-by-side PCA of penultimate-layer
-# activations before and after alignment, source in blue and target in
-# orange. Panel 3 is the ERP overlay at Pz.
-
-# %%
-fig = draw_p300_transfer_figure(
-    accuracies_dict={"naive": acc_naive, "mmd": acc_mmd, "oracle": acc_oracle},
-    embeddings_dict={
-        "source_before": emb_src_before,
-        "target_before": emb_tgt_before,
-        "source_after": emb_src_after,
-        "target_after": emb_tgt_after,
-    },
-    erp_dict=erp_dict,
-    chance_level=chance,
-    channel_label="Pz",
-    source_id=SOURCE_ID,
-    target_id=TARGET_ID,
-    plot_id="project_p300_transfer",
-)
-plt.show()
-
-# %% [markdown]
-# Result, one row per condition
-# -----------------------------
-#
-# AS-MMD lifts target accuracy above the naive cross-domain floor and
-# stays below the within-domain oracle ceiling. The single-seed gap
-# must be hedged: a real comparison demands repeats and subject-grouped
-# CV across both cohorts.
-
-# %%
-print("\n| condition           | accuracy |")
-print("|---------------------|----------|")
-print(f"| naive transfer      | {acc_naive:0.3f}    |")
-print(f"| AS-MMD aligned      | {acc_mmd:0.3f}    |")
-print(f"| oracle (target)     | {acc_oracle:0.3f}    |")
-print(f"| chance (majority)   | {chance:0.3f}    |")
-print(
-    json.dumps(
+            optimizer.step()
+            losses.append(loss.item())
+        history.append(float(np.mean(losses)))
+    encoder.eval()
+    head.eval()
+    with torch.no_grad():
+        test_X = torch.tensor(
+            scaler.transform(cohort[test_subject][0]), dtype=torch.float32
+        )
+        prediction = head(encoder(test_X)).argmax(dim=1).numpy()
+    rows.append(
         {
-            "source_id": SOURCE_ID,
-            "target_id": TARGET_ID,
-            "n_source_train": int(src_train.sum()),
-            "n_target_train": int(tgt_train.sum()),
-            "n_target_test": int(tgt_test.sum()),
-            "asmmd_gain": round(acc_mmd - acc_naive, 4),
-            "transfer_headroom": round(acc_oracle - acc_naive, 4),
+            "regime": regime,
+            "balanced_accuracy": balanced_accuracy_score(
+                cohort[test_subject][1], prediction
+            ),
         }
     )
-)
-
-# %% [markdown]
-# A common mistake, and how to recover
-# ------------------------------------
-#
-# Loading the wrong number of channels into ``ShallowFBCSPNet`` raises
-# a ``RuntimeError`` on the first forward pass (size mismatch on the
-# spatial conv). We trigger it with ``try/except`` and recover by
-# rebuilding with the right shape.
+    histories[regime] = history
 
 # %%
-try:
-    wrong = ShallowFBCSPNet(
-        n_chans=N_CHANS + 3, n_outputs=2, n_times=N_TIMES, sfreq=int(SFREQ)
-    ).to(DEVICE)
-    _ = wrong(torch.zeros(1, N_CHANS, N_TIMES, device=DEVICE))
-except RuntimeError as exc:
-    print(f"Caught RuntimeError: {str(exc)[:90]}...")
-    fixed = make_model()
-    print(f"Recovery: ShallowFBCSPNet(n_chans={N_CHANS}) -> {type(fixed).__name__}")
+# 4. Report the observed comparison
+# ---------------------------------
+# The target-supervised model is a reference, not a guaranteed upper bound.
+# Negative transfer and below-chance results remain valid outcomes.
+# Binary balanced accuracy is the mean of target and standard recall, so an
+# always-standard classifier scores 0.5 even though standards are more common.
+# Compare the MMD and source-only bars on this same held-out participant. A
+# lower MMD score is negative transfer for this run, not an execution failure.
+#
+# Training objectives have different definitions: the MMD curve includes the
+# discrepancy penalty, whereas the other curves show classification loss
+# alone. Their absolute heights are therefore not comparable model-quality
+# scores. Decreasing training loss also does not establish generalization.
+results = pd.DataFrame(rows)
+print(results.to_string(index=False))
+fig, axes = plt.subplots(1, 2, figsize=(10, 4), layout="constrained")
+for name, history in histories.items():
+    axes[0].plot(range(1, len(history) + 1), history, label=name)
+axes[0].set(xlabel="Epoch", ylabel="Training objective")
+axes[0].legend()
+axes[1].bar(results["regime"], results["balanced_accuracy"])
+axes[1].axhline(0.5, color="black", linestyle="--")
+axes[1].set(ylabel="Balanced accuracy on subject 123", ylim=(0, 1))
+plt.show()
 
-# %% [markdown]
-# Extensions
-# ----------
-#
-# **Modify.** ``MMD_LAMBDA_MAX`` controls how hard AS-MMD pushes the
-# encoder toward distribution overlap. Too small and the encoder
-# behaves like the naive baseline; too large and the encoder collapses
-# all features to a domain-invariant point that throws the P3 signal
-# away. Rerun at ``0.05``, ``0.2``, ``0.4``, ``1.0`` and plot
-# ``acc_mmd`` against the chosen weight.
-#
-# **Mini-project.** Replace the synthesized tensors with real cohorts
-# via :class:`eegdash.EEGDashDataset`. Set ``EEGDASH_SOURCE_DATASET``
-# and ``EEGDASH_TARGET_DATASET`` to two oddball accessions on NEMAR
-# (Delorme et al. 2022; e.g. ``ds005863`` and ``ds003061``), apply the
-# plot_20 windowing recipe to both, then rerun this script.
-#
-# - rerun with five seeds and report ``mean +/- std`` for all three encoders.
-# - swap MMD for CORAL or domain-adversarial training as a baseline ablation.
-# - extend the head to multi-class (P3a vs P3b vs standard) and check per-class gains.
-# - replace ``ShallowFBCSPNet`` with EEGConformer (re-anchor the encoder hook).
-
-# %% [markdown]
-# Wrap-up
-# -------
-#
-# We assembled the smallest credible AS-MMD recipe (Long et al. 2015;
-# Banville et al. 2021; Defossez et al. 2023): one shared encoder, an
-# RBF-kernel MMD on logit-space activations, a warmup schedule on the
-# alignment weight, and a strict subject-aware split on both cohorts.
-# The figure pins the four numbers a transfer claim must report side
-# by side: naive, AS-MMD, oracle, and chance. The single-seed gain is
-# anecdotal until the recipe is run across seeds and subjects, and the
-# preserved P3 in the ERP panel is the falsifier the alignment did not
-# wipe out the underlying physiology. Concept page:
-# :doc:`/concepts/features_vs_deep_learning`. API anchors:
-# :class:`eegdash.EEGDashDataset`,
-# :func:`eegdash.viz.style_figure`.
-
-# %% [markdown]
-# References
-# ----------
-# See :doc:`/references` for the centralized bibliography of papers
-# cited above. Add or amend an entry once in
-# :file:`docs/source/refs.bib`; every tutorial inherits the update.
+# %%
+# 5. Separate model selection from a broader transfer study
+# ---------------------------------------------------------
+# To test the approach beyond this example, add participants and define
+# several source/adaptation/test assignments before examining scores. Reserve
+# additional validation participants if choosing the kernel, adaptation weight
+# or training duration, then evaluate the selected configuration on untouched
+# participants. Record several training seeds to distinguish optimization
+# variation from participant variation. The supervised reference answers what
+# labelled adaptation data can provide; it is not an upper bound on accuracy.

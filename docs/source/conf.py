@@ -389,7 +389,7 @@ sphinx_gallery_conf = {
     "reference_url": {"eegdash": None},
     "filename_pattern": os.environ.get(
         "EEGDASH_GALLERY_FILENAME_PATTERN",
-        r"/(?:plot|tutorial)_(?!_).*\.py",
+        r"/(?:plot|tutorial|project|how_to)_(?!_).*\.py",
     ),
     # Skip private helper modules (leading underscore) entirely. The
     # default ignore_pattern only matches __init__.py, which leaves files

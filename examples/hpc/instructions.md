@@ -1,69 +1,59 @@
-# EEGDash on Expanse: end-to-end guide
+# Run the real HBN workload with Slurm
 
-This page documents a minimal, reproducible workflow for running EEGDash experiments on SDSC Expanse. It covers local development on macOS, CPU and GPU Slurm jobs, and the Docker plus Singularity (Apptainer) toolchain that links them.
-
----
-
-## Docker Creation
-
-### 1. Create a Dockerfile
-
-Create a Dockerfile for your project containing all necessary requirements. Refer to the Dockerfile in this folder for an example.
-
-### 2. Build and Push Your Docker Image
+From the repository root, create an environment with the project's dependencies
+and activate it before submitting a job. The default workload loads three actual
+HBN participants, trains for six epochs, and evaluates one held-out participant.
+The default IDs are NDARAE710YWG, NDARAH239PGG and NDARAL897CYV.
+Set `SUBJECTS` to a comma-separated explicit cohort to change it.
+Inspect catalogue file sizes before the first download. A failed acquisition
+stops the job; the script does not replace or skip selected participants.
 
 ```bash
-docker build -t eegdash-tutorial:latest .
-docker tag eegdash-tutorial:latest <dockerhub_user>/eegdash-tutorial:latest
-docker push <dockerhub_user>/eegdash-tutorial:latest
+export EEGDASH_PYTHON="$PWD/.venv/bin/python"
+export EEGDASH_CACHE_DIR=/path/to/persistent/eegdash-cache
+sbatch --account=YOUR_ACCOUNT --partition=YOUR_CPU_PARTITION examples/hpc/run_eoec_cpu.slurm
 ```
 
-Replace `<dockerhub_user>` with your Docker Hub username.
-
-### 3. Convert to Singularity on Expanse
-
-Once on Expanse, start a compute node and convert your Docker image to Singularity format:
+For a GPU environment with CUDA-enabled PyTorch:
 
 ```bash
-module purge
-module load singularitypro
-singularity pull eegdash-tutorial.sif docker://<dockerhub_user>/eegdash-tutorial:latest
+sbatch --account=YOUR_ACCOUNT --partition=YOUR_GPU_PARTITION examples/hpc/run_eoec_gpu.slurm
 ```
 
-This will automatically convert the Docker image to a `.sif` (Singularity Image Format) file.
+Both templates use `SLURM_SUBMIT_DIR`, so submit from the repository root.
+Override `NUM_SUBJECTS`, `NUM_TEST_SUBJECTS`, `EPOCHS`, `BATCH_SIZE` or `SEED`
+in the submitting environment. Keep at least one training and one test subject.
+For node-local storage, pre-stage the existing cache to `SLURM_TMPDIR` in the
+batch script and point `EEGDASH_CACHE_DIR` there. Copy outputs back before the
+allocation ends. The script writes `sample_epoch.png` in the working directory;
+use a separate checkout or output directory for concurrent jobs.
 
-### 4. Create and Submit Slurm Batch Jobs
+Inspect `slurm-*.out` for the exact participant IDs, recording metadata,
+window counts, label balance, and final held-out accuracy. Low accuracy is a
+valid measured result. The test cohort is evaluated only after training.
 
-Create your Slurm batch job files and submit them to run your experiments. Refer to the Slurm job files in this folder for examples.
+## Optional container
 
-**Key difference:** Instead of running `python code.py` directly, you run it inside the Singularity container:
+The Dockerfile supplies a Python environment; site Slurm templates above use
+the activated environment directly. Build from this directory:
 
 ```bash
-singularity exec eegdash-tutorial.sif python code.py
+docker build -t eegdash-hpc examples/hpc
 ```
 
----
-
-## Alternative Workflow for Linux
-
-For Linux distributions, you can convert the Docker image to Singularity/Apptainer format **locally** and then transfer it to Expanse:
+On a host with Apptainer and access to the Docker daemon, convert it:
 
 ```bash
-# Install apptainer on your Linux machine (if not already installed)
-# Convert Docker image to .sif locally
-apptainer build eegdash-tutorial.sif docker-daemon://eegdash-tutorial:latest
-
-# Transfer the .sif file to Expanse using scp
-scp eegdash-tutorial.sif <username>@login.expanse.sdsc.edu:/path/to/destination/
+apptainer build eegdash-hpc.sif docker-daemon://eegdash-hpc:latest
 ```
 
-This is often faster than pulling from Docker Hub on Expanse, especially for large images or slow network connections.
+Replace the final Python invocation in the batch template with your site's
+container command, binding both checkout and cache. For example:
 
----
+```bash
+apptainer exec --bind "$PWD:$PWD" --bind "$EEGDASH_CACHE_DIR:$EEGDASH_CACHE_DIR" \
+  eegdash-hpc.sif python examples/hpc/tutorial_hpc_cache_and_slurm.py
+```
 
-## Tips
-
-- Make sure the Dockerfile pulls in every Python dependency and system library EEGDash needs.
-- Test the image locally before pushing to Docker Hub.
-- In your Slurm scripts, request realistic CPU/GPU, memory, and wall-time limits.
-- Track running jobs with `squeue -u $USER` on Expanse.
+Add `--nv` for NVIDIA GPU access. Container construction and scheduler execution
+must be tested on your cluster; local source checks do not validate them.

@@ -1,142 +1,198 @@
-"""Track 4: EMG-to-text decoding
-================================
+"""Track 4: decode recorded cross-user typing events
+=================================================
 
-**Difficulty 2** | **Runtime: <5s** | **Compute: CPU**
+Load actual emg2qwerty wrist EMG and observed keystroke annotations from
+nm000104. One recording from each of two users costs about 270 MB total.
+Fit a simple log-power classifier on user 34527640 and test on user 70495563.
 
-Track 4 decodes typed text from wrist surface EMG. Evaluation users are
-unseen during training, so anatomy, typing strategy, and sensor placement all
-shift. The official metric is character error rate (CER). See the
-`competition site <https://neural-interfaces26.github.io/>`_ and the
-`NeuralBench guide <https://facebookresearch.github.io/neuroai/neuralbench/auto_examples/biosignal_challenge_2026/plot_track4_emg_to_text.html>`_.
+This baseline receives the true keystroke times and decodes lowercase letters
+only. Its CER measures the concatenated lowercase-keystroke stream, not prompt
+text, spaces, corrections or unconstrained sequence transduction. The official
+NeuralBench track requires those additional sequence operations and frozen users.
 
-Keywords: EEG2026, EMG, text
+Source: https://nemar.org/dataset/nm000104
 """
 
-# %% [markdown]
-# Seed data in EEGDash
-# --------------------
-# The public emg2qwerty corpus is catalogued as ``nm000104``. This snippet
-# opens recordings already present in a local cache:
-#
-# .. code-block:: python
-#
-#    from eegdash import EEGDashDataset
-#
-#    emg = EEGDashDataset(
-#        cache_dir="./data", dataset="nm000104", download=False
-#    )
-#    emg.plot(0)
-#
-# Remove ``download=False`` to fetch missing recordings.
-# ``plot(0)`` opens the first recording in the Braindecode notebook viewer;
-# when a ``*_desc-pose.json`` sidecar is present, it adds the synchronized
-# hand-pose panel beside the EMG traces.
-# EEGDash handles the recordings; NeuralBench owns sequence preparation,
-# frozen users, the official decoder interface, and submission scoring.
-
 # %%
+# Before you start
+# ----------------
+#
+# Use EEGDash, MNE, NumPy, scikit-learn, RapidFuzz and Matplotlib on CPU. About
+# 270 MB of signal data are downloaded for the two explicitly selected user
+# recordings and retained in ``EEGDASH_CACHE_DIR``. This page consumes real EMG
+# through EEGDash's recording interface; it does not reinterpret EEG channels as
+# muscle activity.
+#
+# The decoder is given observed keystroke times and predicts lowercase letters
+# at those times. This aligned offline task omits the difficult detection and
+# sequence-alignment parts of full EMG-to-text transduction. Its output is the
+# stream of lowercase keystrokes, not the displayed prompt or the user's final
+# edited text.
+
+import os
+import string
+from pathlib import Path
+
 import matplotlib.pyplot as plt
+import mne
 import numpy as np
 from sklearn.linear_model import LogisticRegression
+from rapidfuzz.distance import Levenshtein
+from sklearn.metrics import balanced_accuracy_score
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 
-from eegdash.viz import use_eegdash_style
-
-use_eegdash_style()
-rng = np.random.default_rng(2026)
-
-
-def edit_distance(reference: str, hypothesis: str) -> int:
-    """Return Levenshtein distance using one rolling dynamic-programming row."""
-    previous = list(range(len(hypothesis) + 1))
-    for ref_index, ref_char in enumerate(reference, start=1):
-        current = [ref_index]
-        for hyp_index, hyp_char in enumerate(hypothesis, start=1):
-            current.append(
-                min(
-                    current[-1] + 1,
-                    previous[hyp_index] + 1,
-                    previous[hyp_index - 1] + (ref_char != hyp_char),
-                )
-            )
-        previous = current
-    return previous[-1]
-
-
-# %% [markdown]
-# Build a cross-user typing analogue
-# ----------------------------------
-# Eight keys each have a latent EMG pattern. Every user adds an anatomical
-# offset and sensor-placement transform. Twelve users train the classifier;
-# six entirely new users test it.
+from eegdash import EEGDash, EEGDashDataset
+from eegdash.features import signal_root_mean_square
 
 # %%
-alphabet = np.asarray(list("asdfjkl;"))
-phrase = "asdfjkl;" * 8
-n_users, n_features = 18, 24
-key_centres = rng.normal(scale=1.8, size=(len(alphabet), n_features))
-rows = []
-for user in range(n_users):
-    user_offset = rng.normal(scale=0.45, size=n_features)
-    user_scale = rng.normal(loc=1.0, scale=0.08, size=n_features)
-    for char in phrase:
-        label = int(np.flatnonzero(alphabet == char)[0])
-        features = key_centres[label] * user_scale + user_offset
-        features = features + rng.normal(scale=1.0, size=n_features)
-        rows.append((features, label, user))
-
-X = np.stack([row[0] for row in rows])
-y = np.asarray([row[1] for row in rows])
-users = np.asarray([row[2] for row in rows])
-train = users < 12
-test = ~train
-split_overlap = set(users[train]) & set(users[test])
-assert not split_overlap
-
-# %% [markdown]
-# Decode aligned characters, then compute CER
-# -------------------------------------------
-# The compact baseline predicts one character per fixed window. It therefore
-# demonstrates cross-user token classification, not the official variable-
-# length sequence-transduction model. The edit-distance CER calculation is
-# exact and remains valid when you replace the classifier with a sequence
-# decoder.
+cache = Path(os.environ.get("EEGDASH_CACHE_DIR", "~/.eegdash_cache")).expanduser()
+# %%
+# Select one recording from each real user
+# ----------------------------------------
 #
-# CER is Levenshtein edits divided by reference length. Unlike accuracy, CER
-# can exceed 1 when a hypothesis contains many insertions; do not clamp it.
+# User 34527640 provides training data from the named session; user
+# 70495563 is held out. The latter has more than one catalogue entry, so the
+# exact EDF relative path selects the intended recording. The one-recording
+# assertion protects this bounded query against accidentally loading a user's
+# entire session history.
+#
+# The 32 channels are explicitly ordered EMG0 through EMG31. Matching channel
+# names is necessary for consistent feature columns, but cannot ensure identical
+# sensor placement or muscle recruitment across users. That domain difference
+# is part of the cross-user question.
+
+queries = [{"subject": "34527640", "session": "1625302365"}, {"subject": "70495563"}]
+# %%
+# Extract observed lowercase keystrokes and channel power
+# -------------------------------------------------------
+#
+# The mapping selects only ``keystroke_a`` through ``keystroke_z``.
+# Prompt events, spaces, backspaces and other control keys are excluded, rather
+# than converted into invented letter labels. This means the reference stream
+# also retains lowercase letters subsequently erased by the user. The protocol
+# must be understood before interpreting its error rate.
+#
+# Each epoch spans 100 ms before to 100 ms after the observed keystroke. At
+# 2000 Hz this includes 401 samples because MNE includes both endpoints.
+# ``event_repeated="drop"`` keeps one event when sample indices collide, and
+# labels are read from the retained ``epochs.events`` so they remain aligned.
+# The post-keystroke half is available in this offline task, not in prediction
+# before a keypress.
+#
+# EEGDash's ``signal_root_mean_square`` computes each channel's RMS amplitude;
+# squaring it gives 32 channel-power features in V² before
+# the natural logarithm. A small floor avoids undefined logarithms; it is not
+# artifact rejection or normalization across people. Closely spaced keypress
+# windows may overlap within a user, which further motivates keeping complete
+# users apart during evaluation.
+
+features, targets, identities = [], [], []
+for query in queries:
+    records = EEGDash().find({"dataset": "nm000104", "task": "typing", **query})
+    if query["subject"] == "70495563":
+        records = [
+            record
+            for record in records
+            if record["bids_relpath"]
+            == "sub-70495563/emg/sub-70495563_task-typing_emg.edf"
+        ]
+    dataset = EEGDashDataset(records=records, cache_dir=cache)
+    assert len(dataset.datasets) == 1
+    print(dataset.description.to_string(index=False))
+    raw = dataset.datasets[0].raw
+    print(raw.ch_names, raw.info["sfreq"], np.unique(raw.annotations.description)[:30])
+    channels = [f"EMG{i}" for i in range(32)]
+    raw.pick(channels)
+    mapping = {f"keystroke_{char}": i for i, char in enumerate(string.ascii_lowercase)}
+    # Keep real labels and known onsets; controls and prompt events are excluded.
+    events, _ = mne.events_from_annotations(raw, event_id=mapping)
+    epochs = mne.Epochs(
+        raw,
+        events,
+        tmin=-0.1,
+        tmax=0.1,
+        baseline=None,
+        picks=channels,
+        preload=True,
+        event_repeated="drop",
+    )
+    X = epochs.get_data()
+    assert np.isfinite(X).all()
+    features.append(np.log(np.maximum(signal_root_mean_square(X) ** 2, 1e-30)))
+    targets.append(epochs.events[:, 2])
+    identities.append(query["subject"])
+assert identities[0] != identities[1]
+assert len(np.unique(targets[0])) > 1
+print("Training/test keystrokes:", [len(y) for y in targets])
 
 # %%
-model = make_pipeline(StandardScaler(), LogisticRegression(max_iter=500))
-model.fit(X[train], y[train])
-predicted = model.predict(X[test])
+# Fit without calibrating on the held-out user
+# --------------------------------------------
+#
+# StandardScaler learns channel-feature means and spreads from the
+# training user only. Logistic regression uses its default regularization and
+# up to 1000 optimizer iterations. Those settings are fixed; the held-out user
+# must not be used to choose penalties, window widths or feature scaling.
+#
+# Balanced accuracy averages recall over the observed test letter classes, so
+# frequent letters cannot dominate the score solely by their prevalence. Inspect
+# class support when extending to more recordings: a letter absent from training
+# cannot be learned by this classifier. The current script does not relabel such
+# a letter as a known one to make evaluation easier.
 
-references = []
-hypotheses = []
-for user in np.unique(users[test]):
-    user_mask = users[test] == user
-    references.append("".join(alphabet[y[test][user_mask]]))
-    hypotheses.append("".join(alphabet[predicted[user_mask]]))
-
-edits = sum(
-    edit_distance(reference, hypothesis)
-    for reference, hypothesis in zip(references, hypotheses)
+model = make_pipeline(StandardScaler(), LogisticRegression(max_iter=1000))
+predicted = model.fit(features[0], targets[0]).predict(features[1])
+print(
+    "Held-out user letter balanced accuracy:",
+    balanced_accuracy_score(targets[1], predicted),
 )
-n_reference_chars = sum(map(len, references))
-score = float(edits / n_reference_chars)
-metric_name = "character error rate"
-held_out_axis = "user"
-print(f"{metric_name}: {score:.3f} | user overlap: {len(split_overlap)}")
+alphabet = np.asarray(list(string.ascii_lowercase))
+reference = "".join(alphabet[targets[1]])
+hypothesis = "".join(alphabet[predicted])
+
 
 # %%
-fig, axes = plt.subplots(1, 2, figsize=(9, 3.4))
-preview = 32
-axes[0].plot(np.arange(preview), y[test][:preview], "o-", label="reference")
-axes[0].plot(np.arange(preview), predicted[:preview], "x--", label="decoded")
-axes[0].set(xlabel="character position", ylabel="key index")
-axes[0].legend()
-axes[1].bar(["perfect", "logistic"], [0, score], color=["#B8B8B8", "#C45A3C"])
-axes[1].set(ylabel="character error rate", ylim=(0, max(0.2, score * 1.2)))
-fig.suptitle("EEG2026 Track 4 — cross-user EMG decoding")
-fig.tight_layout()
+# Measure errors on the defined character stream
+# ----------------------------------------------
+#
+# Predictions are converted back to letters in temporal order. Levenshtein
+# distance counts the minimum insertions, deletions and substitutions needed to
+# turn the decoded string into the observed lowercase stream. Dividing by the
+# number of reference letters gives character error rate; in general it can exceed
+# one if a decoder inserts many characters. RapidFuzz provides the exact edit
+# distance without a tutorial implementation of the metric.
+#
+# This classifier emits one letter per observed event, so it cannot measure
+# missed keystrokes or spurious detections in continuous time. A constant-letter
+# prediction, nearly unit CER or poor cross-user accuracy remains a valid result.
+# The printed reference and decoded snippets help expose such failure modes
+# instead of hiding them in an aggregate plot.
+
+cer = Levenshtein.distance(reference, hypothesis) / len(reference)
+print("Aligned lowercase-stream CER:", cer)
+print("Observed:", reference[:100])
+print("Decoded: ", hypothesis[:100])
+fig, ax = plt.subplots(figsize=(5, 4))
+ax.bar(["held-out user"], [cer])
+ax.set(ylabel="Lowercase keystroke-stream CER")
 plt.show()
+
+# %%
+# Extend from aligned classification to text decoding
+# ---------------------------------------------------
+#
+# First use additional training and validation users to inspect signal
+# units, channel quality, class coverage and placement differences. Keep the
+# current test user untouched while comparing normalization or temporal features;
+# repeatedly adjusting the pipeline to this user's score turns that user into
+# validation data.
+#
+# For a full text task, retain spaces and control-key semantics, define whether
+# the target is keystrokes or final edited text, and replace supplied event times
+# with a sequence decoder that handles insertions and deletions. Evaluate whole
+# sequences with the official user split and evaluator before making a competition
+# claim. Changing the output head alone does not implement that task.
+#
+# Related grouping and transfer example: `Braindecode cross-dataset transfer
+# <https://braindecode.org/dev/auto_examples/advanced_training/plot_transfer_learning.html>`_.

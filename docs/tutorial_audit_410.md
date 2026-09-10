@@ -9,7 +9,7 @@ Scope: all 41 public gallery scripts, their former plotting helpers, and the doc
 
 - EEGDash owns dataset discovery, acquisition, cached/offline loading and participant/event metadata. Feature examples use its `FeatureExtractor`, `extract_features`, spectral preprocessing and published feature functions instead of local FFT or variance implementations.
 - EEGPrep handles the applicable EEG preprocessing through Braindecode's public adapters. The resting-state example runs the full artifact-cleaning pipeline; ERP, HBN, preprocessing, HPC and checkpoint examples use the relevant individual operations. Already-processed derivatives, metadata-only examples, EMG and bipolar sleep recordings do not receive an unrelated EEG cleaning pipeline.
-- No free-standing custom function definitions remain in the 41 public scripts. Training uses native Braindecode/skorch or explicit framework operations; retrieval uses sklearn top-k scoring; text evaluation uses RapidFuzz. The one MOABB adapter class remains because its external dataset interface requires methods. Obsolete plotting helpers are removed.
+- No free-standing custom function definitions remain in the 41 public scripts. Training uses native Braindecode/skorch or explicit framework operations; retrieval uses sklearn top-k scoring and NeuralSet frozen image features. The one MOABB adapter class remains because its external dataset interface requires methods. Obsolete plotting helpers are removed.
 - Scripts retain rendered step-by-step explanations, observed targets, explicit cohort/recording selection, training-only model transformations, meaningful checks and measured output interpretation. Model failures never substitute invented results.
 - The scripts use the current Braindecode `on_last_window` API and are validated with Braindecode 1.8.1, which satisfies the repository's declared minimum.
 
@@ -68,11 +68,11 @@ Every row below was reviewed and executed on real data. An unchanged API path me
 | Applied clinical summary | EEGDash metadata-only analysis; participant deduplication, missing values and acquisition duration versus clean data. |
 | Applied P300 transfer | EEGDash recordings, EEGPrep centering/reference and native tensor operations; no custom MMD function, explicit label access and non-comparable training objectives. |
 | EEG2025 challenge 1 | EEGDash event helpers and signal variance; measured reaction-time targets, prestimulus predictors and participant-held-out error. |
-| EEG2025 challenge 2 | EEGDash phenotype metadata and spectral functions; participant-level features, held-out targets and training-mean comparison. |
-| EEG2026 track 1 | Actual EEG, sidecar IDs and JPG stimuli; sklearn cosine/top-k scoring replaces a helper, with image-identity validation and explicit pixel-baseline scope. |
+| EEG2025 challenge 2 | Observed externalizing scores, matching the final 2025 target; participant-level features, held-out predictions and training-mean/NRMSE comparison. |
+| EEG2026 track 1 | Actual EEG, sidecar IDs and 60 JPGs; pinned DINOv2-giant targets via NeuralSet, with disjoint training/validation/test identities and held-out candidate galleries. |
 | EEG2026 track 2 | Small real motor-imagery sessions, EEGPrep resampling and EEGDash variance; event-time preservation and binary seed-task scope. |
-| EEG2026 track 3 | Actual SleepEDF annotations and EEGDash band powers; retrospective sustained-N2 endpoint, predictor horizon and censoring limitations. |
-| EEG2026 track 4 | Actual wrist EMG and keystrokes; EEGDash RMS and RapidFuzz edit distance, held-out users and aligned lowercase-stream CER limits. |
+| EEG2026 track 3 | Actual first-N2 annotations and EEGDash band powers; five-second time-remaining targets capped at 600 seconds, participant-held-out predictions and official bMAE bin conventions. |
+| EEG2026 track 4 | NM000281 EMG2Pose: 16 measured EMG channels and 20 observed joint-angle trajectories; published splits, BAD_IK rejection, five-second dense outputs and angular MAE. |
 | Download how-to | Public EEGDash acquisition and local reopen; complete sidecars, byte counts and limited sample-equality coverage. |
 | Offline how-to | EEGDash local discovery; online staging, preserved reference lifetime and the distinction between loading data and other network operations. |
 | HPC-cache how-to | EEGDash loading plus stdlib staging; persistent versus scratch ownership, complete copies and real sample verification. |
@@ -83,16 +83,17 @@ The spectral refactor is an intentional representation change, not a numerical-e
 
 ## Data and CI
 
-The regular documentation job executes 20 introductory/core/feature/evaluation/how-to scripts using two small EEGDash sources:
+The regular documentation job executes 22 introductory/core/feature/evaluation/how-to and Track 2/4 scripts using three small EEGDash sources:
 
 | Source | Explicit subset | Signal download |
 |---|---|---|
 | nm000118 / Nakanishi2015 | Subjects 1, 2, 3; session 0; run 0 | About 21.1 MB |
 | nm000135 / BNCI2014-004 | Subject 1; sessions 0train and 1train; run 0 | About 10.6 MB |
+| nm000281 / EMG2Pose | Three exact right-wrist recordings, one per published split | About 23.6 MB |
 
 The PR cache is restored rather than only looked up. No acquisition or model failure is replaced by generated data. Full-gallery execution additionally downloads the task-specific HBN, P300, challenge, sleep, image and EMG sources disclosed on those pages. Cropping reduces computation rather than source-file download size. The regular CI profile renders these larger pages but does not execute them; a full-gallery run regenerates their outputs.
 
-EEGPrep's EEG/MNE conversion dependency and RapidFuzz are explicitly declared in the documentation extra. The existing EEGPrep 0.2.x bound is retained for the Braindecode integration.
+EEGPrep's EEG/MNE conversion dependency and NeuralSet's frozen-image dependencies are explicitly declared in the documentation extra. The existing EEGPrep 0.2.x bound is retained for the Braindecode integration.
 
 ## Reproduction and validation
 
@@ -111,6 +112,32 @@ PYTHONPATH=. MPLBACKEND=Agg EEGDASH_CACHE_DIR=.eegdash_cache \
   tests/unit_tests/test_eeg2026_gallery.py tests/integration/test_tutorial_age.py
 ```
 
-All 41 scripts passed individual real-data execution after the public-API refactor. Three regression tests, Ruff, Python/Sphinx-Gallery parsing and independent compilation of every gallery code cell passed. The final focused Sphinx-Gallery build executed all 41 of 41 public scripts successfully against real cached recordings and completed without Sphinx warnings. This includes the full EEGPrep pipeline, actual checkpoint/NeuralSet paths, image stimuli and EMG decoding. Slurm submission and the complete repository API/documentation build are separate from this focused gallery validation.
+Before the challenge-track follow-up, all 41 scripts passed individual real-data execution after the public-API refactor. Three regression tests, Ruff, Python/Sphinx-Gallery parsing and independent compilation of every gallery code cell passed. The final focused Sphinx-Gallery build executed all 41 of 41 public scripts successfully against real cached recordings and completed without Sphinx warnings. This includes the full EEGPrep pipeline, actual checkpoint/NeuralSet paths, image stimuli and EMG decoding. Slurm submission and the complete repository API/documentation build are separate from this focused gallery validation.
 
 Local environment: Braindecode 1.8.1, EEGPrep 0.2.23, eeglabio 0.1.3, MNE 1.11.0, NumPy 1.26.4, torch 2.2.2 and MOABB 1.2.0. NeuralSet 0.3.1 interoperability executes successfully here, but this NumPy/torch pair is below its declared requirements; these runs do not establish compatibility with every dependency combination installed by the documentation extra.
+
+## Challenge definitions checked against the live websites
+
+The follow-up crawled both [2025](https://eeg2025.github.io/) and
+[2026](https://neural-interfaces26.github.io/tracks.html), then their linked
+starter kits before editing. The final 2025 target is externalizing; both 2025
+examples now also report the starter kit's RMSE / target standard deviation.
+The 2026 pose task replaces the former typing task. Track 1 uses the published
+DINOv2-giant extraction settings, and Track 3 follows the executable first-N2,
+window-stop and bin-edge conventions. The 2026 site schedules exclusive releases
+for September 21, 2026; small public-data evaluations remain distinct from hidden
+competition scoring. The source links and differences are explained on each page.
+
+Real pose acquisition exposed an omitted `recording` entity in EEGDash's
+MNE-BIDS path. Preserving it in the shared loader allows the source channel
+sidecar to distinguish EMG predictors from joint-angle targets; a metadata-only
+regression check covers current and older catalogue records.
+
+Follow-up validation: all six 2025/2026 pages executed in a focused Sphinx-Gallery
+build on real data with warnings treated as errors (zero warnings). Track 1's
+default giant and optional small encoders both executed. The dataset unit suite
+passed 626 tests with one skip; the four gallery/recording-entity checks and
+pre-commit hooks passed. Track 4's three signal files total 23,578,821 bytes;
+its cached gallery execution took 1.24 seconds. Cold acquisition also encountered
+a temporary NEMAR manifest 503; the existing downloader successfully retried and
+fell back to the original annex files, without substituting data.

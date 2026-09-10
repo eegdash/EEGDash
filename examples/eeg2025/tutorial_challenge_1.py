@@ -1,5 +1,5 @@
 """EEG2025 Challenge 1: predict observed reaction time
-===================================================
+===============================================================
 
 Load three R5 mini participants and run 1 of contrast-change detection.
 Predict stimulus-to-response time in seconds from the preceding two seconds
@@ -10,7 +10,7 @@ an instructional subset, not the official competition split or score.
 
 # %%
 # Before you start
-# ----------------
+# ----------------------------
 #
 # Use an installed EEGDash environment with Braindecode, MNE, NumPy,
 # scikit-learn and Matplotlib; this script runs on CPU. Keep a persistent
@@ -33,7 +33,7 @@ import numpy as np
 from braindecode.preprocessing import create_windows_from_events
 from sklearn.dummy import DummyRegressor
 from sklearn.linear_model import Ridge
-from sklearn.metrics import mean_absolute_error
+from sklearn.metrics import mean_absolute_error, root_mean_squared_error
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 
@@ -47,7 +47,7 @@ from eegdash.hbn.windows import (
 
 # %%
 # Load the named participants and observed events
-# -----------------------------------------------
+# -----------------------------------------------------------
 #
 # The explicit run filter prevents a subject query from pulling all three
 # contrast-change runs. The first two subject IDs will train the model; the third
@@ -86,7 +86,7 @@ for recording in dataset.datasets:
     add_aux_anchors(raw)
 # %%
 # Extract a two-second prestimulus predictor
-# ------------------------------------------
+# ------------------------------------------------------
 #
 # At 100 Hz, offsets ``-200`` and ``0`` select the interval immediately
 # before the stimulus. The 200-sample size and stride produce one window for
@@ -121,7 +121,7 @@ assert np.isfinite(X).all() and np.isfinite(y).all() and (y > 0).all()
 # Log variance measures channel power; fit scaling on training participants.
 # %%
 # Reduce each trial to channel power
-# ----------------------------------
+# ----------------------------------------------
 #
 # EEGDash's ``signal_variance`` reduces the time axis to one feature per channel. Its
 # natural logarithm compresses the large range of power values; ``1e-30`` only
@@ -145,7 +145,7 @@ print(
 
 # %%
 # Fit a regularized baseline and compare errors
-# ---------------------------------------------
+# ---------------------------------------------------------
 #
 # Ridge penalizes large coefficients, which is helpful when channel-power
 # predictors are correlated and there are few training trials. ``StandardScaler``
@@ -164,6 +164,20 @@ predicted = model.fit(features[train], y[train]).predict(features[test])
 baseline = DummyRegressor().fit(features[train], y[train]).predict(features[test])
 print("Held-out trial MAE (s):", mean_absolute_error(y[test], predicted))
 print("Training-mean MAE (s):", mean_absolute_error(y[test], baseline))
+# %%
+# Report the final starter kit metric on this subset
+# --------------------------------------------------------------
+#
+# The final starter kit normalizes RMSE by the evaluated targets' population
+# standard deviation (despite its obsolete range-based docstring). This is
+# dimensionless; the small tutorial split is not the competition test cohort.
+# See https://github.com/eeg2025/startkit/blob/main/local_scoring.py.
+target_spread = y[test].std(ddof=0)
+assert target_spread > 0, "NRMSE needs variation in the observed test targets"
+print("Subset NRMSE:", root_mean_squared_error(y[test], predicted) / target_spread)
+print(
+    "Training-mean NRMSE:", root_mean_squared_error(y[test], baseline) / target_spread
+)
 fig, ax = plt.subplots(figsize=(5, 4))
 ax.scatter(y[test], predicted)
 ax.set(xlabel="Observed reaction time (s)", ylabel="Predicted reaction time (s)")
@@ -171,7 +185,7 @@ plt.show()
 
 # %%
 # Extend to a defensible challenge evaluation
-# -------------------------------------------
+# -------------------------------------------------------
 #
 # The single held-out participant is a workflow check, not a population
 # estimate or the official challenge evaluator. Ridge is unconstrained and can

@@ -1,210 +1,271 @@
-"""Track 3: predict observed time to sustained N2 sleep
-====================================================
+"""Track 3: predict time remaining until the first N2 epoch
+====================================================================
 
-Use three actual Sleep-EDF participants (nm000185), first night only, roughly
-150 MB of signals. The target is seconds from recording start to the first
-N2 interval lasting at least 60 seconds. Recording start is not lights-out:
-this seed-corpus target is explicitly different from the wearable competition
-endpoint and its weighted binned MAE. Only the first minute supplies predictors.
+Use three recorded Sleep-EDF participants from EEGDash ``nm000185``
+(cassette63, cassette64, cassette65; night1), about 150 MB in total. Predict
+once per five-second EEG window and evaluate on an unseen participant.
+The `official tracks page <https://neural-interfaces26.github.io/tracks.html>`_
+announces the exclusive wearable release for September 21, 2026. This page
+uses the available PSG seed corpus, not an assumed Muse configuration.
 
-Source: https://nemar.org/dataset/nm000185
+The `NeuralBench Track 3 guide
+<https://facebookresearch.github.io/neuroai/neuralbench/auto_examples/biosignal_challenge_2026/plot_track3_sleep_onset.html>`_
+defines a capped time-to-onset target and binned mean absolute error (bMAE).
+We implement those target and metric conventions with real EEGDash data and
+a small spectral Ridge baseline. Our three-person LOSO split and model are
+not the competition's frozen split or official trained baseline.
+
+Before running, install EEGDash and its Braindecode/scikit-learn dependencies.
+No NeuralBench installation, GPU or prior feature file is required. Retain
+signals with ``EEGDASH_CACHE_DIR``. The output contains each window's actual
+target, held-out predictions, per-bin errors and their equally weighted mean.
 """
 
 # %%
-# Before you start
-# ----------------
-#
-# Use EEGDash, MNE, NumPy, scikit-learn and Matplotlib on CPU. The three
-# first-night EDF recordings total roughly 150 MB and are cached under
-# ``EEGDASH_CACHE_DIR``. Only two EEG derivations and the opening interval enter
-# the predictor, but complete source annotations are needed to observe the later
-# outcome. Cropping the predictor does not avoid the initial recording download.
-#
-# This is latency regression, not sleep-stage classification. The endpoint is
-# the first observed N2 stretch lasting at least 60 seconds, measured from the
-# file's recording origin. It is neither lights-out latency nor the official
-# wearable challenge endpoint. In particular, the long initial wake period in a
-# Sleep-EDF record must not be removed merely to produce a more appealing target.
-
+# 1. Load independent participants and inspect observed sleep stages
+# ------------------------------------------------------------------------------
+# A recording contains a sequence of scored stages. We need the full stage
+# annotations to identify the first N2 onset, although only pre-onset voltage
+# windows enter the model. This retrospective selection follows the task's
+# annotation-based evaluation region; it is not a prospective onset detector
+# that can choose its analysis region without knowing the reference onset.
 import os
+from functools import partial
 from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
+from braindecode.datasets import BaseConcatDataset
+from braindecode.preprocessing import create_fixed_length_windows
 from sklearn.dummy import DummyRegressor
 from sklearn.linear_model import Ridge
-from sklearn.metrics import mean_absolute_error
-from sklearn.model_selection import LeaveOneOut
+from sklearn.model_selection import LeaveOneGroupOut
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 
 from eegdash import EEGDashDataset
-from eegdash.features import spectral_preprocessor, spectral_bands_power
-
-# %%
-# Choose independent participant records
-# --------------------------------------
-#
-# One first-night recording is requested for each of three named people.
-# The subject-set assertion verifies coverage rather than allowing a missing
-# record to change the cohort silently. A second night from one person would not
-# be an additional independent participant; keep that identity when extending
-# the query.
-#
-# The loader prints channel names, the 100 Hz rate and observed stage labels.
-# Unlike a stage classifier, this model does not use stage labels as predictors.
-# Annotations over the full recording establish the retrospective target; voltage
-# features are restricted to the opening interval.
+from eegdash.features import (
+    FeatureExtractor,
+    extract_features,
+    spectral_bands_power,
+    spectral_preprocessor,
+)
 
 subjects = ["cassette63", "cassette64", "cassette65"]
+channels = ["EEG Fpz-Cz", "EEG Pz-Oz"]
 dataset = EEGDashDataset(
     dataset="nm000185",
     subject=subjects,
     session="night1",
     task="sleep",
-    cache_dir=Path(
-        os.environ.get("EEGDASH_CACHE_DIR", "~/.eegdash_cache")
-    ).expanduser(),
+    cache_dir=Path(os.environ.get("EEGDASH_CACHE_DIR", ".eegdash_cache")).expanduser(),
+    n_jobs=1,
 )
 print(dataset.description.to_string(index=False))
+assert len(dataset.datasets) == len(subjects)
 assert set(dataset.description.subject) == set(subjects)
-# %%
-# Derive a sustained-N2 endpoint and a fixed predictor
-# ----------------------------------------------------
-#
-# Consecutive N2 annotations are merged when their boundaries agree within
-# 0.01 seconds. This accommodates both consolidated stage intervals and adjacent
-# 30-second scoring epochs. The first merged interval of at least 60 seconds
-# sets the observed latency. If no such interval exists, the script stops:
-# no-event recordings would need an explicit censoring analysis, not a guessed
-# latency at the file's end.
-#
-# The target must lie beyond the prespecified predictor horizon. The code then
-# uses samples from zero through 59 seconds from the Fpz–Cz and Pz–Oz derivations,
-# which keeps the feature interval before that target. These are recorded bipolar
-# derivations; their names do not denote independently recoverable electrodes.
-#
-# EEGDash's ``spectral_preprocessor`` uses non-overlapping 200-sample Hamming
-# segments at 100 Hz, giving 0.5 Hz bins. ``spectral_bands_power`` sums PSD bins
-# in 1–4, 4–8, 8–13 and 13–30 Hz; multiplying by the bin spacing approximates
-# power in V² before ``log10``. Each band includes its lower bound and excludes
-# its upper bound, so adjacent bands do not share bins. This convention is the
-# same for everyone. The floor only avoids log zero; it does not clean an artifact.
 
-features, targets, identities = [], [], []
+# %%
+# 2. Tile the last twenty pre-onset minutes into five-second windows
+# ------------------------------------------------------------------------------
+# The implementation of `AddSleepOnsetTargets
+# <https://github.com/facebookresearch/neuroai/blob/main/neuralbench-repo/neuralbench/transforms.py>`_
+# selects the earliest scored N2 start. It does not require a 60-second N2
+# run: the guide's informal "stable" wording must not add a persistence rule.
+# Its configured region starts at max(recording_start, N2_onset - 1200 s)
+# and ends at N2 onset. No-N2 records produce no official task windows;
+# this explicit subset instead fails visibly if a required onset is absent.
+#
+# Use the source 100 Hz sampling grid. A window is (2 bipolar derivations,
+# 500 samples) in volts, covering [start, stop). Stop is the next sample
+# boundary, not the timestamp of the last included sample. Target derivation
+# therefore uses i_stop_in_trial / sfreq. Cropping after acquisition cannot
+# reduce the full-file download, and trial metadata must retain both boundaries.
+windowed_recordings = []
+metadata_tables = []
 for recording in dataset.datasets:
     raw = recording.raw
-    print(raw.ch_names, raw.info["sfreq"], np.unique(raw.annotations.description))
-    # Consolidate adjacent N2 annotations so ordinary 30-second scoring also works.
-    intervals = []
-    for ann in raw.annotations:
-        if ann["description"] != "N2":
-            continue
-        start = float(ann["onset"] - raw.first_time)
-        stop = start + float(ann["duration"])
-        if intervals and np.isclose(start, intervals[-1][1], atol=0.01, rtol=0):
-            intervals[-1][1] = stop
-        else:
-            intervals.append([start, stop])
-    candidates = [start for start, stop in intervals if stop - start >= 60]
-    if not candidates:
-        raise ValueError(
-            f"No sustained observed N2 interval: {recording.description.subject}"
-        )
-    onset = min(candidates)
-    if onset <= 60:
-        raise ValueError(
-            "The fixed predictor minute includes N2 onset; choose a shorter prespecified horizon."
-        )
-    first_minute = (
-        raw.copy().pick(["EEG Fpz-Cz", "EEG Pz-Oz"]).crop(tmax=59).load_data()
+    print(
+        recording.description.subject,
+        raw.ch_names,
+        raw.info["sfreq"],
+        np.unique(raw.annotations.description),
     )
-    frequencies, psd = spectral_preprocessor(
-        first_minute.get_data(),
-        _metadata={"info": first_minute.info},
+    assert raw.info["sfreq"] == 100 and set(channels).issubset(raw.ch_names)
+    n2_onsets = (
+        raw.annotations.onset[raw.annotations.description == "N2"] - raw.first_time
+    )
+    if not len(n2_onsets):
+        raise ValueError(f"No observed N2 onset for {recording.description.subject}")
+    onset = float(n2_onsets.min())
+    region_start = max(0.0, onset - 1200.0)
+    region_stop = min(onset, raw.n_times / raw.info["sfreq"])
+    start_sample = int(np.ceil(region_start * raw.info["sfreq"]))
+    stop_sample = int(np.floor(region_stop * raw.info["sfreq"]))
+    assert stop_sample - start_sample >= 500, "No full pre-onset window"
+    raw.pick(channels).reorder_channels(channels)
+    windows = create_fixed_length_windows(
+        BaseConcatDataset([recording]),
+        start_offset_samples=start_sample,
+        stop_offset_samples=stop_sample,
+        window_size_samples=500,
+        window_stride_samples=500,
+        on_last_window="drop",
+        preload=True,
+    )
+    metadata = windows.get_metadata().reset_index(drop=True)
+    metadata["window_stop_s"] = metadata.i_stop_in_trial / raw.info["sfreq"]
+    metadata["n2_onset_s"] = onset
+    # This observed-annotation transformation matches SleepOnsetTargetExtractor.
+    metadata["target"] = np.clip(onset - metadata.window_stop_s, 0.0, 600.0)
+    assert (metadata.window_stop_s <= onset + 1e-9).all()
+    assert (metadata.i_stop_in_trial - metadata.i_start_in_trial == 500).all()
+    windowed_recordings.append(windows)
+    metadata_tables.append(metadata)
+
+# %%
+# 3. Compute EEGDash band powers without using the onset as a predictor
+# ---------------------------------------------------------------------------------
+# The two source channels are recorded bipolar derivations, not independent
+# Fpz/Cz/Pz/Oz electrodes. Preserve their reference. Five-second Hann-Welch
+# segments give 0.2 Hz bins; one shared spectrum supplies four half-open bands.
+# Multiplying summed PSD bins by their spacing approximates band power in V².
+# Log power gives eight predictor columns. Neither window time, onset time,
+# participant ID nor target enters X. No full-recording normalization or
+# additional EEGPrep cleaning is fitted: this page isolates the target and
+# evaluation contract rather than an artifact-removal protocol.
+windows = BaseConcatDataset(windowed_recordings)
+metadata = pd.concat(metadata_tables, ignore_index=True)
+spectral = FeatureExtractor(
+    {
+        "power": partial(
+            spectral_bands_power,
+            bands={
+                "delta": (1, 4),
+                "theta": (4, 8),
+                "alpha": (8, 13),
+                "beta": (13, 30),
+            },
+        )
+    },
+    preprocessor=partial(
+        spectral_preprocessor,
+        fs=100,
+        nperseg=500,
+        noverlap=0,
+        window="hann",
         f_min=1,
         f_max=30,
-        nperseg=200,
-        noverlap=0,
-        window="hamming",
-    )
-    powers = spectral_bands_power(
-        frequencies,
-        psd,
-        bands={"delta": (1, 4), "theta": (4, 8), "alpha": (8, 13), "beta": (13, 30)},
-    )
-    band_power = np.concatenate(list(powers.values())) * (
-        frequencies[1] - frequencies[0]
-    )
-    features.append(np.log10(np.maximum(band_power, 1e-30)))
-    targets.append(onset)
-    identities.append(recording.description.subject)
-# %%
-# Verify one feature row per observed endpoint
-# --------------------------------------------
-#
-# Two derivations times four bands yield eight features per participant,
-# so ``X`` has shape ``(3, 8)``. ``y`` contains onset times in seconds, one per
-# person. Identity and finiteness assertions verify that the design matrix did
-# not silently duplicate participants or acquire invalid targets.
-#
-# The same fixed initial interval is used for everyone; choosing a different
-# feature window according to each person's eventual onset would expose the
-# target to preprocessing. This design can still be dominated by recording-start
-# conventions rather than physiology. The target printout is therefore part of
-# interpreting the task, not merely a debugging aid.
-
-X, y = np.asarray(features), np.asarray(targets)
-assert (
-    len(set(identities)) == len(y) == 3
-    and np.isfinite(X).all()
-    and np.isfinite(y).all()
+    ),
 )
-print("Participant features:", X.shape, "Observed onset seconds:", y)
+feature_table = extract_features(
+    windows, {"spectral": spectral}, batch_size=64, n_jobs=1
+).to_dataframe()
+X = np.log10(np.maximum(feature_table.to_numpy() * 0.2, 1e-30))
+y = metadata.target.to_numpy(dtype=float)
+groups = metadata.subject.astype(str).to_numpy()
+assert X.shape == (len(metadata), 8) and np.isfinite(X).all()
+assert np.isfinite(y).all() and ((0 <= y) & (y <= 600)).all()
+assert not metadata.duplicated(["subject", "session", "i_start_in_trial"]).any()
+print("Feature matrix:", X.shape)
+print(
+    metadata[["subject", "window_stop_s", "n2_onset_s", "target"]]
+    .groupby("subject")
+    .agg(["min", "max", "count"])
+)
 
 # %%
-# Evaluate with participant-level absolute error
-# ----------------------------------------------
+# 4. Predict every window from a participant held out of fitting
+# --------------------------------------------------------------------------
+# A fresh scaler and Ridge model fit only the other two participants. Ridge
+# uses fixed alpha=10; the dummy reference predicts the training-window mean.
+# We clip both predictions to the known target range as a fixed output choice.
+# This is a small CPU regression demonstration; it does not reproduce the
+# guide's neural model or regression-bin training sampler.
 #
-# Each leave-one-out fold trains on two people and predicts the third.
-# The scaler is fitted inside the fold and ridge uses a fixed ``alpha=10``.
-# A separately fitted dummy model predicts that fold's training-mean onset.
-# Neither method sees the held-out participant's feature distribution while
-# estimating its parameters.
-#
-# Mean absolute error is in seconds and weights the three people equally. It is
-# not the competition's weighted binned MAE. With only two training people per
-# fold, the example demonstrates the data and evaluation contract rather than
-# estimating a clinically useful prediction rule. The scatter shows the three
-# actual held-out predictions without requiring them to beat the mean baseline.
-
+# Every window for a test person stays out of training, including neighboring
+# windows from the same night. Thousands of windows would still be only three
+# independent people. Hyperparameter selection needs additional validation
+# participants within training, not feedback from these outer test predictions.
 predicted, baseline = np.empty_like(y), np.empty_like(y)
-for train, test in LeaveOneOut().split(X):
+test_counts = np.zeros(len(y), dtype=int)
+for train, test in LeaveOneGroupOut().split(X, y, groups):
+    assert set(groups[train]).isdisjoint(groups[test])
     model = make_pipeline(StandardScaler(), Ridge(alpha=10))
-    predicted[test] = model.fit(X[train], y[train]).predict(X[test])
-    baseline[test] = DummyRegressor().fit(X[train], y[train]).predict(X[test])
-print("Held-out participant MAE (s):", mean_absolute_error(y, predicted))
-print("Training-mean MAE (s):", mean_absolute_error(y, baseline))
-fig, ax = plt.subplots(figsize=(5, 4))
-ax.scatter(y, predicted)
-ax.set(xlabel="Observed sustained N2 onset (s)", ylabel="Predicted onset (s)")
+    predicted[test] = np.clip(model.fit(X[train], y[train]).predict(X[test]), 0, 600)
+    baseline[test] = np.clip(
+        DummyRegressor().fit(X[train], y[train]).predict(X[test]), 0, 600
+    )
+    test_counts[test] += 1
+assert (test_counts == 1).all() and np.isfinite(predicted).all()
+
+# %%
+# 5. Compute bMAE using ground-truth time-to-onset bins
+# -----------------------------------------------------------------
+# NeuralBench's `BinnedMAE implementation
+# <https://github.com/facebookresearch/neuroai/blob/main/neuralbench-repo/neuralbench/metrics.py>`_
+# uses [0,40), [40,90), [90,300), and [300,600]. Interior edge values enter
+# the higher bin; 600 belongs to the final bin. First compute mean absolute
+# error within each ground-truth bin, then average the nonempty bin means
+# equally. Thus the many capped targets do not dominate the headline score.
+# The metric does not average absolute recording-onset estimates.
+#
+# Bin counts and per-person scores make the small evaluation inspectable.
+# The pooled bMAE averages each bin's held-out window errors before averaging
+# bins, matching the metric's aggregation. A mean of participant bMAEs is a
+# different aggregation when their bin counts differ.
+bin_edges = np.asarray([0.0, 40.0, 90.0, 300.0, 600.0])
+bin_ids = np.searchsorted(bin_edges[1:-1], y, side="right")
+assert set(bin_ids) == {0, 1, 2, 3}, "This subset should cover all four bins"
+for edge, expected_bin in zip(bin_edges, [0, 1, 2, 3, 3], strict=True):
+    assert (y == edge).any(), "The selected records should exercise each bin edge"
+    assert (bin_ids[y == edge] == expected_bin).all()
+errors = pd.DataFrame(
+    {
+        "subject": groups,
+        "bin": bin_ids,
+        "Ridge": np.abs(predicted - y),
+        "training mean": np.abs(baseline - y),
+    }
+)
+per_bin = errors.groupby("bin")[["Ridge", "training mean"]].mean()
+bmae = per_bin.mean()
+print("Held-out window counts by subject and bin:")
+print(pd.crosstab(groups, bin_ids))
+print("Per-bin MAE (seconds):\n", per_bin)
+print("Pooled bMAE (seconds):\n", bmae)
+print(
+    "Per-participant bMAE (seconds):\n",
+    errors.groupby(["subject", "bin"])[["Ridge", "training mean"]]
+    .mean()
+    .groupby("subject")
+    .mean(),
+)
+fig, axes = plt.subplots(1, 2, figsize=(11, 4), layout="constrained")
+per_bin.plot.bar(ax=axes[0], rot=0)
+axes[0].set(
+    xticklabels=["[0,40)", "[40,90)", "[90,300)", "[300,600]"],
+    xlabel="Observed time-to-onset bin (s)",
+    ylabel="Held-out MAE (s)",
+)
+axes[1].scatter(y, predicted, s=8, alpha=0.4)
+axes[1].plot([0, 600], [0, 600], "k--")
+axes[1].set(xlabel="Observed time remaining (s)", ylabel="Predicted time remaining (s)")
 plt.show()
 
 # %%
-# Choose the endpoint before expanding the model
-# ----------------------------------------------
+# 6. Extend the task without claiming a wearable benchmark
+# --------------------------------------------------------------------
+# A target of 600 means "at least ten minutes remaining," so adding that
+# prediction to the window stop does not recover a unique onset timestamp.
+# For uncapped pre-onset targets, window_stop + prediction can be interpreted
+# as an onset estimate; choosing windows using the true onset remains a
+# retrospective evaluation convention, not a deployment-time selection rule.
 #
-# For a larger study, first verify whether recording start or a separate
-# lights-out annotation is the intended origin. If lights-out is required, acquire
-# that observed timestamp and redefine both predictor access and the outcome
-# before fitting. Do not treat a metadata convention as a learned device effect.
-#
-# Then add participants, an inner validation scheme for penalties, and explicit
-# handling of recordings without sustained N2. A neural sequence model would
-# also need its accessible time horizon specified; feeding the whole night could
-# turn prospective prediction into retrospective event detection.
-#
-# Compare with `Braindecode's U-Sleep walkthrough
-# <https://braindecode.org/stable/auto_examples/applied_examples/plot_sleep_staging_usleep.html>`_
-# for a worked stage-classification pipeline. Its sequence labels and evaluation
-# question differ from the participant-level latency regression here.
+# Add sleepers and keep all nights of a person in one split. Verify the
+# released wearable channels, timing, labels and official evaluation package
+# before changing devices; no Muse dataset name or configuration is guessed
+# here. For an official run, follow the linked NeuralBench guide and its
+# released data/configuration rather than comparing this three-person result
+# directly with a competition leaderboard.

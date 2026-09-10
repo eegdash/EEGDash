@@ -1,16 +1,22 @@
 """EEG2025 Challenge 2: a real participant-level baseline
-======================================================
+==================================================================
 
-Estimate observed HBN p-factor from resting EEG using one row per participant.
+Estimate observed HBN externalizing score from resting EEG using one row per participant.
 Six R5 mini participants keep acquisition bounded. These recordings are the
 100 Hz challenge derivatives, already filtered at 0.5–50 Hz. First use downloads
 six recordings; the exact bytes depend on their duration. This small leave-one-
 participant-out exercise is not a challenge leaderboard estimate.
+
+The `2025 competition website <https://eeg2025.github.io/>`_ and
+`final starter kit <https://github.com/eeg2025/startkit/blob/main/challenge_2.py>`_
+restrict Challenge 2 to externalizing. P-factor, internalizing and attention
+were removed during the competition; they remain valid phenotypes for other
+analyses but are not this challenge's target.
 """
 
 # %%
 # Before you start
-# ----------------
+# ----------------------------
 #
 # Use an installed EEGDash environment with MNE, NumPy, scikit-learn and
 # Matplotlib. No GPU is required. Set ``EEGDASH_CACHE_DIR`` to reuse the six
@@ -18,7 +24,7 @@ participant-out exercise is not a challenge leaderboard estimate.
 # Cropping reduces processing time and memory, not the bytes needed to acquire
 # each recording.
 #
-# The p-factor is an observed participant-level phenotype provided by the
+# The externalizing score is an observed participant-level phenotype provided by the
 # challenge. It is not a trial label, a diagnosis made from EEG, or a value to
 # reconstruct from a participant's identifier. A subject contributes exactly one
 # feature row and one target, so long recordings cannot increase that subject's
@@ -31,7 +37,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.dummy import DummyRegressor
 from sklearn.linear_model import Ridge
-from sklearn.metrics import mean_absolute_error
+from sklearn.metrics import mean_absolute_error, root_mean_squared_error
 from sklearn.model_selection import LeaveOneOut
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
@@ -44,7 +50,7 @@ from eegdash.const import SUBJECT_MINI_RELEASE_MAP
 # Load observed participant targets and recorded voltages.
 # %%
 # Load actual targets before computing features
-# ---------------------------------------------
+# ---------------------------------------------------------
 #
 # The sorted mini-release list provides a reproducible small subset rather
 # than selecting participants according to their outcomes. ``target_name`` names
@@ -66,14 +72,14 @@ dataset = EEGChallengeDataset(
     cache_dir=Path(
         os.environ.get("EEGDASH_CACHE_DIR", "~/.eegdash_cache")
     ).expanduser(),
-    description_fields=["subject", "task", "p_factor"],
-    target_name="p_factor",
+    description_fields=["subject", "task", "externalizing"],
+    target_name="externalizing",
 )
 print(dataset.description.to_string(index=False))
 assert len(dataset.datasets) == len(subjects)
 # %%
 # Summarize a fixed resting interval
-# ----------------------------------
+# ----------------------------------------------
 #
 # ``crop(tmax=59)`` retains the recording from time zero through 59 seconds.
 # That fixed horizon prevents duration differences from deciding how much EEG
@@ -118,7 +124,7 @@ for recording in dataset.datasets:
         frequencies[1] - frequencies[0]
     )
     features.append(np.log10(np.maximum(band_power, 1e-30)))
-    targets.append(float(recording.description["p_factor"]))
+    targets.append(float(recording.description["externalizing"]))
     identities.append(str(recording.description["subject"]))
     print(
         identities[-1],
@@ -128,10 +134,10 @@ for recording in dataset.datasets:
     )
 # %%
 # Check the participant-level design matrix
-# -----------------------------------------
+# -----------------------------------------------------
 #
 # ``X`` has shape ``(participants, four bands × channels)`` and ``y`` has
-# one observed p-factor per row. With the current 129-channel recordings, this
+# one observed externalizing score per row. With the current 129-channel recordings, this
 # means 516 predictors for only six participants. The identity and finiteness
 # assertions detect duplicated people, missing phenotypes and invalid features.
 # They do not test whether the EEG contains predictive information.
@@ -149,7 +155,7 @@ print("Participant features:", X.shape, "observed targets:", y)
 # All scaling and baseline fitting occur inside the held-out participant fold.
 # %%
 # Fit inside each held-out participant fold
-# -----------------------------------------
+# -----------------------------------------------------
 #
 # Leave-one-out fits six models, each using five people and predicting the
 # remaining person once. ``StandardScaler`` is refitted inside each pipeline so
@@ -157,7 +163,7 @@ print("Participant features:", X.shape, "observed targets:", y)
 # fixed illustrative penalty, not a value selected from these six test errors.
 #
 # The dummy model separately recomputes the training mean in every fold. Mean
-# absolute error is reported in the provided p-factor scale, with equal weight
+# absolute error is reported in the provided externalizing score scale, with equal weight
 # per person. A smaller ridge error than the dummy error would be descriptive
 # evidence on this subset only; a larger one is equally legitimate. The diagonal
 # in the scatter denotes exact prediction, not a fitted regression line.
@@ -170,16 +176,28 @@ for train, test in LeaveOneOut().split(X):
     baseline[test] = DummyRegressor().fit(X[train], y[train]).predict(X[test])
 print("Participant MAE:", mean_absolute_error(y, predicted))
 print("Training-mean MAE:", mean_absolute_error(y, baseline))
+# %%
+# Report the final starter kit metric on this subset
+# --------------------------------------------------------------
+#
+# The final starter kit normalizes RMSE by the evaluated targets' population
+# standard deviation (despite its obsolete range-based docstring). This is
+# dimensionless; the small tutorial split is not the competition test cohort.
+# See https://github.com/eeg2025/startkit/blob/main/local_scoring.py.
+target_spread = y.std(ddof=0)
+assert target_spread > 0, "NRMSE needs variation in the observed test targets"
+print("Subset NRMSE:", root_mean_squared_error(y, predicted) / target_spread)
+print("Training-mean NRMSE:", root_mean_squared_error(y, baseline) / target_spread)
 fig, ax = plt.subplots(figsize=(5, 4))
 ax.scatter(y, predicted, label="held-out participant")
 ax.plot([y.min(), y.max()], [y.min(), y.max()], "k--")
-ax.set(xlabel="Observed p-factor", ylabel="Predicted p-factor")
+ax.set(xlabel="Observed externalizing score", ylabel="Predicted externalizing score")
 ax.legend()
 plt.show()
 
 # %%
 # Separate model development from clinical interpretation
-# -------------------------------------------------------
+# -------------------------------------------------------------------
 #
 # First increase the number of independently held-out participants. If you
 # want to choose the ridge penalty, channels, bands or resting interval, do so

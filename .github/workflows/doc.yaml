@@ -115,10 +115,10 @@ jobs:
 
       - name: Create Docs
         env:
-          # Execute the shared ~32 MB SSVEP/imagery subset on every build.
+          # Execute ~32 MB SSVEP/imagery (including Track 2) plus ~24 MB pose.
           # Task-specific HBN, P300 and challenge sources are rendered here;
           # run the default full gallery separately with their larger datasets.
-          EEGDASH_GALLERY_FILENAME_PATTERN: '/(?:plot_(?:0[0-2]|1[0-3]|4[0-2]|5[0-5])_[^/]+|how_to_[^/]+)\.py$'
+          EEGDASH_GALLERY_FILENAME_PATTERN: '/(?:plot_(?:0[0-2]|1[0-3]|4[0-2]|5[0-5])_[^/]+|how_to_[^/]+|tutorial_track_2_bci|tutorial_track_4_emg_to_pose)\.py$'
         run: |
           cd docs
           make html

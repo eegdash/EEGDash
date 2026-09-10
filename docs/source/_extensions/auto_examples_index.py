@@ -174,8 +174,8 @@ def _write_auto_examples_root_index(app):
             "Difficulty 3. Four advanced lessons on transfer learning "
             "and foundation-model fine-tuning, framed around the EEG2025 "
             "Foundation Challenge: ``EEGChallengeDataset`` basics, "
-            "cross-task transfer (Challenge 1), subject-invariant "
-            "p-factor regression (Challenge 2), and fine-tuning a "
+            "cross-task transfer (Challenge 1), "
+            "participant-level p-factor regression, and fine-tuning a "
             "Braindecode pretrained model. Builds on Schirrmeister et al. 2017.",
         ),
     ]
@@ -203,17 +203,16 @@ def _write_auto_examples_root_index(app):
             "EEG2025 Foundation Challenge",
             "End-to-end pipelines for the two EEG2025 Foundation "
             "Challenge tracks: cross-task transfer learning (passive to "
-            "active), and subject-invariant representations for clinical "
-            "factor prediction. Pre-trained weights ship alongside each "
-            "tutorial.",
+            "active), and participant-held-out externalizing prediction. "
+            "Both tutorials fit small baselines on real challenge recordings.",
         ),
         (
             "eeg2026",
             "EEG/EMG Foundation Challenge 2026",
             "Runnable EEGDash companions for the four announced 2026 "
             "tracks: EEG-to-image retrieval, cross-session BCI decoding, "
-            "sleep-onset regression, and cross-user EMG-to-text. Each "
-            "tutorial uses a deterministic offline analogue and points to "
+            "sleep-onset regression, and EMG-to-pose regression. Each "
+            "tutorial uses recorded public data and points to "
             "NeuralBench for official execution and scoring.",
         ),
         (

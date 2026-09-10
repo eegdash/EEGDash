@@ -616,6 +616,14 @@ class EEGDashRaw(RawDataset):
             if _acq_match:
                 acq_val = _acq_match.group(1)
 
+        recording_val = entities_mne.get("recording")
+        if recording_val is None:
+            recording_match = re.search(
+                r"(?:^|_)recording-([^_/]+)", self.filecache.name
+            )
+            if recording_match:
+                recording_val = recording_match.group(1)
+
         self.bidspath = BIDSPath(
             root=self.bids_root,
             datatype=MODALITY_ALIASES.get(
@@ -630,6 +638,7 @@ class EEGDashRaw(RawDataset):
             task=entities_mne.get("task"),
             run=entities_mne.get("run"),
             acquisition=acq_val,
+            recording=recording_val,
             split=entities_mne.get("split"),
             check=False,
         )

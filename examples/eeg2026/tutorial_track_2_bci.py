@@ -1,19 +1,19 @@
-"""Track 2: real cross-session motor-imagery decoding
-==================================================
+"""Track 2: a public motor-imagery warm-up for session transfer
+========================================================================
 
 Load BNCI2014-004 subject 1, sessions 0train and 1train, run 0 (nm000135).
 The two recordings total about 11 MB. This CPU baseline predicts observed
 left-hand and right-hand cues with log channel power. Session 0train fits the
 model; session 1train is held out without calibration. These are already
 processed real recordings. This compact motor-imagery example has two classes
-and its own session split, not the official Stieger/NeuralBench protocol.
+and its own session split, not the official three-command Graz / BrainHero protocol.
 
 Source: https://nemar.org/dataset/nm000135
 """
 
 # %%
 # Before you start
-# ----------------
+# ----------------------------
 #
 # Use an installed EEGDash environment with Braindecode, EEGPrep, MNE, NumPy,
 # scikit-learn and Matplotlib. This two-recording CPU example needs about 11 MB
@@ -23,8 +23,29 @@ Source: https://nemar.org/dataset/nm000135
 # The deployment question is prediction in another recorded session of the same
 # person, without calibration on that session. The two labels are actual left-
 # and right-hand imagery cues. This small BNCI corpus is an accessible example
-# of that scientific task; it does not reproduce the official 2026 Stieger
-# cohort, class inventory, preprocessing or frozen split.
+# of session transfer; its two classes do not stand in for three mental commands.
+
+# %%
+# What the official track asks, and what this example measures
+# ------------------------------------------------------------------------
+#
+# The `2026 track description <https://neural-interfaces26.github.io/tracks.html>`_
+# specifies imagery, arithmetic and word-association commands across Graz and
+# BrainHero contexts. The cohort has 20 people and six sessions each. Ten people
+# supply all six labelled sessions; the other ten supply labelled sessions 1–3
+# for calibration and hidden sessions 4–6 for scoring. Evaluation averages
+# balanced accuracy over subject/session/context cells. Combining every test
+# window into one score could overweight cells with more data.
+#
+# The `NeuralBench Track 2 guide
+# <https://facebookresearch.github.io/neuroai/neuralbench/auto_examples/biosignal_challenge_2026/plot_track2_eeg_to_bci.html>`_
+# currently uses a public four-class Stieger motor-imagery task with a
+# cross-subject split. It is a separate starter baseline, not the official
+# cross-session protocol. This page uses a smaller two-class BNCI recording
+# pair to exercise session separation through EEGDash. Its single held-out
+# participant/session has no Graz/BrainHero context cells. Keep its score
+# labelled as a local warm-up; neither extra classes nor contexts can be
+# reconstructed by renaming its existing labels.
 
 import os
 from pathlib import Path
@@ -42,7 +63,7 @@ from eegdash.features import signal_variance
 
 # %%
 # Inspect both sessions before preprocessing
-# ------------------------------------------
+# ------------------------------------------------------
 #
 # The explicit subject, session, run and task query should return exactly
 # two recordings. Keeping session identities intact is essential: relabelling
@@ -101,7 +122,7 @@ for recording in dataset.datasets:
     np.testing.assert_array_equal(raw.annotations.description, annotations.description)
 # %%
 # Window the actual imagery intervals
-# -----------------------------------
+# -----------------------------------------------
 #
 # ``left_hand`` and ``right_hand`` map explicitly to zero and one. After
 # resampling, 300 samples correspond to three seconds. Equal stride and window
@@ -132,7 +153,7 @@ y = metadata.target.to_numpy(dtype=int)
 X = np.log(np.maximum(signal_variance(X), 1e-30))
 # %%
 # Hold out a genuine session without recalibration
-# ------------------------------------------------
+# ------------------------------------------------------------
 #
 # Only ``0train`` fits the model; ``1train`` is the held-out session. Those
 # strings are source identifiers, not instructions to include both in training.
@@ -167,7 +188,7 @@ plt.show()
 
 # %%
 # Interpret session transfer and extend it
-# ----------------------------------------
+# ----------------------------------------------------
 #
 # Balanced accuracy is the mean of left-hand and right-hand recall, with
 # 0.5 as the uniform two-class reference. The confusion matrix displays actual
@@ -181,6 +202,12 @@ plt.show()
 # additional people where the catalogue actually supplies the required sessions.
 # Compare pipelines using identical held-out windows and retain original trial
 # IDs if extracting several windows from each trial.
+#
+# To move to the official task, use the released command labels and session
+# assignments from the competition source, retain participant/context metadata,
+# and compute the per-cell metric before averaging. Keep later sessions out of
+# calibration and hyperparameter selection. Changing the classifier output size
+# alone would not make this two-class dataset an official evaluation.
 #
 # Related worked example: `Braindecode cross-session motor imagery
 # <https://braindecode.org/dev/auto_examples/advanced_training/plot_moabb_benchmark.html>`_.

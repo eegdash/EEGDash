@@ -13,7 +13,7 @@ methods required by MOABB's interface. Metadata-only pages, already-processed
 derivatives and non-EEG signals do not receive unnecessary EEG cleaning.
 
 Install the project's documentation extra for the complete gallery, including
-EEGPrep's EEG/MNE conversion support and RapidFuzz for character edit distance.
+EEGPrep's EEG/MNE conversion support.
 Individual pages explain their preprocessing and optional dependencies.
 
 Start with the numbered tutorials. The general workflow uses explicit small
@@ -27,9 +27,10 @@ Tutorial 40 writes the feature table consumed by 42; execute 40 first. Other
 examples specify their own real source and any optional dependencies.
 
 CI executes the basic/core/features/evaluation and how-to scripts on the same
-small real subset used by readers (about 32 MB across the two datasets), and
-checks every example for signal/target-generation code. Task-specific examples
-are still rendered in CI but require larger downloads for execution. The full
+small real subset used by readers (about 32 MB across the two datasets), plus
+Track 2 on the same imagery data and Track 4 on about 24 MB of real EMG2Pose.
+It checks every example for signal/target-generation code. Other task-specific
+examples are rendered in CI but require larger downloads for execution. The full
 local gallery runs every public script by default; EEGDASH_GALLERY_FILENAME_PATTERN
 can select a subset explicitly. No CI failure is replaced with invented data.
 

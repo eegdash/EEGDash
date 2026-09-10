@@ -56,7 +56,12 @@ def test_gallery_has_no_simulated_data_or_score_generators():
 def test_challenge_tutorials_load_eegdash_recordings():
     """Every published 2026 track must retain its real EEGDash loader."""
     scripts = sorted((ROOT / "examples" / "eeg2026").glob("tutorial_track_*.py"))
-    assert len(scripts) == 4
+    assert {path.name for path in scripts} == {
+        "tutorial_track_1_eeg_to_image.py",
+        "tutorial_track_2_bci.py",
+        "tutorial_track_3_sleep_onset.py",
+        "tutorial_track_4_emg_to_pose.py",
+    }
     for path in scripts:
         tree = ast.parse(path.read_text(), filename=str(path))
         assert any(

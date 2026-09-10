@@ -10,7 +10,7 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     concurrency:
-      group: pypi-publish
+      group: pypi-publish-${{ github.event.release.tag_name || 'development' }}
       cancel-in-progress: false
     permissions:
       contents: read

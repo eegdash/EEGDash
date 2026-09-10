@@ -397,16 +397,12 @@ Create ``.env`` in ``mongodb-eegdash-server/api/``:
 Release Process
 ---------------
 
-1. Update version in ``pyproject.toml``
+1. Update version in ``eegdash/__init__.py``
 2. Update ``CHANGELOG.md``
-3. Build and upload:
-
-   .. code-block:: bash
-
-      python -m build
-      python -m twine upload dist/*
-
-4. Create GitHub release with tag ``v{version}``
+3. Open a pull request targeting ``develop`` and merge after CI passes.
+4. Tag the tested release commit as ``v{version}`` and publish its GitHub release.
+   GitHub Actions checks the tag against the package version, builds the source
+   distribution and wheel, and publishes them to PyPI automatically.
 
 Documentation
 -------------

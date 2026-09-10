@@ -277,15 +277,13 @@ We follow [Semantic Versioning](https://semver.org/):
 
 1. **Update version** in `eegdash/__init__.py`
 2. **Update CHANGELOG.md** with release notes
-3. **Create a PR** targeting `develop` and merge after CI passes.
-4. **Tag the tested release commit** after merging:
+3. **Create a PR** from `develop` to `main`
+4. **Tag the release** after merging:
    ```bash
    git tag -a v0.4.1 -m "Release version 0.4.1"
    git push origin v0.4.1
    ```
-5. **Publish a GitHub release** for the tag. GitHub Actions verifies that the tag
-   matches the package version, then builds and publishes the stable release to
-   PyPI. Pushes to `main` continue to publish development builds.
+5. **PyPI publishing** happens automatically via GitHub Actions
 
 ## License
 

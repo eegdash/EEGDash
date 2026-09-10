@@ -1,8 +1,6 @@
-name: Publish to PyPI
+name: Publish to PyPI on main updates
 
 on:
-  release:
-    types: [published]
   push:
     branches: [main]
 
@@ -10,7 +8,7 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     concurrency:
-      group: pypi-publish-${{ github.event.release.tag_name || 'development' }}
+      group: pypi-publish
       cancel-in-progress: false
     permissions:
       contents: read
@@ -35,7 +33,6 @@ jobs:
 
       # Figure out if this push is a merged PR or a direct push
       - name: Derive version suffix (PR number if merged, else short SHA)
-        if: github.event_name == 'push'
         id: ver
         shell: bash
         run: |
@@ -53,7 +50,6 @@ jobs:
 
       # Use your script, passing PR number when present, otherwise a SHA-based suffix
       - name: Bump version
-        if: github.event_name == 'push'
         shell: bash
         run: |
           set -euo pipefail
@@ -68,22 +64,6 @@ jobs:
               --init-file eegdash/__init__.py \
               --suffix "${{ steps.ver.outputs.suffix }}"
           fi
-
-      - name: Validate stable release version
-        if: github.event_name == 'release'
-        env:
-          RELEASE_TAG: ${{ github.event.release.tag_name }}
-        run: |
-          python - <<'PY'
-          import os
-          import re
-          from pathlib import Path
-          from packaging.version import Version
-
-          version = re.search(r'__version__ = "([^"]+)"', Path("eegdash/__init__.py").read_text())[1]
-          assert os.environ["RELEASE_TAG"] == f"v{version}", "Release tag must match package version"
-          assert not Version(version).is_prerelease, "Stable release must not be a prerelease"
-          PY
 
       - name: Build sdist and wheel
         run: python -m build

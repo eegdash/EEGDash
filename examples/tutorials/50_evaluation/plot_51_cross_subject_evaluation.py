@@ -1,500 +1,246 @@
-"""Cross-subject decoding evaluation
-==================================
+"""Cross-subject decoding on real SSVEP recordings
+===============================================
 
-**Difficulty 2-3** | **Runtime: 2m** | **Compute: CPU**
+Can a decoder identify the flickering stimulus a new participant attended to?
+We load three participants from the Nakanishi2015 SSVEP dataset through
+:class:`eegdash.EEGDashDataset`, extract event-labelled windows with
+Braindecode, and evaluate a spectral baseline using leave-one-subject-out
+cross-validation (LOSO).
 
-Cross-subject generalization is the gold standard for any decoding
-claim. Train on N-1 subjects, test on the held-out one, repeat for
-every subject: that is leave-one-subject-out cross-validation (LOSO),
-the protocol behind the MOABB benchmark :cite:`aristimunha2023transferstructure` and
-the de-facto evaluation in clinical-EEG decoding. Brookshire et al.
-2024 surveyed 81 deep-learning EEG papers and found data leakage in
-roughly half; on properly subject-held-out splits, the same
-architectures dropped on average from 0.83 accuracy to 0.62.
-Cisotto & Chicco 2024 (Tip 9) name leakage the single most common
-reporting mistake. ``ds002718`` :cite:`wakeman2015`, reachable
-through `NEMAR <https://nemar.org>`_ :cite:`delorme2022nemar`, is the
-running example throughout the gallery.
+**Data:** ``nm000118``, subjects ``1``, ``2``, ``3``, session ``0``, run ``0``.
+The three signal files total 21.1 MB, plus small BIDS sidecars. Internet is
+required for the first download; set ``EEGDASH_CACHE_DIR`` to reuse it in CI.
+CPU is sufficient. Install EEGDash and its dependencies before running.
 
-Where ``plot_11`` proved a single split is leakage-free and ``plot_12``
-trained one model on one cross-subject split, this tutorial steps up
-to the actual evaluation: a LOSO loop that holds a different subject
-out each time, a subject x subject transfer heatmap, and a pooled
-confusion matrix over every held-out prediction. The deliverable is a
-# single three-panel figure.
-#
-# Validate your result
-# --------------------
-# - **Fold Count.** For N subjects, you should expect exactly N folds in your
-#   LOSO loop.
-# - **Transfer Heatmap.** The diagonal of the subject-x-subject matrix
-#   represents within-subject performance; the off-diagonal represents
-#   generalization.
-# - **Accuracy Spread.** Expect higher variance across subjects than across
-#   random seeds. Report both the mean and the standard deviation.
+These are real recorded signals distributed as a processed BIDS dataset,
+not the original unprocessed acquisition. See the
+`NEMAR dataset <https://nemar.org/dataset/nm000118>`_ and
+`source study <https://doi.org/10.1371/journal.pone.0140703>`_. The release
+already includes filtering, downsampling and latency handling; we use its
+event onsets without adding another latency correction.
 
-.. sphinx_gallery_thumbnail_path = '_static/thumbs/plot_51_cross_subject_evaluation.png'
+Prerequisites are event-labelled windows (tutorial 02) and group splitting
+(tutorial 11). This script reloads its own data, so no feature CSV or trained
+checkpoint is required. We keep the feature definition and regularization
+fixed before LOSO; using these three test folds to choose a better setting
+would turn the reported test scores into model-selection scores.
 
-So how big is the across-subject spread once you run the loop?
-Keywords: evaluation, cross-subject, generalization
 """
 
-# %% [markdown]
-# Learning objectives
-# -------------------
-#
-# - Explain why cross-subject evaluation is the gold standard for EEG decoding generalization.
-# - Build a leave-one-subject-out loop with :class:`sklearn.model_selection.LeaveOneGroupOut` keyed on ``subject``.
-# - Compute a subject x subject train-test transfer matrix and read which held-out subjects are systematically harder.
-# - Quote ``mean +/- std`` of LOSO :func:`sklearn.metrics.balanced_accuracy_score` against a chance level computed on the test fold.
-# - Aggregate predictions across folds into a single :class:`sklearn.metrics.ConfusionMatrixDisplay` to see which class the model confuses on held-out subjects.
-#
-# Requirements
-# ------------
-#
-# - Prerequisites: :doc:`/generated/auto_examples/tutorials/10_core_workflow/plot_11_leakage_safe_split` (cross-subject splits) and ``plot_12_train_a_baseline`` (one model on one split).
-# - About 30 s on CPU. No network: the cohort is built in-script.
-# - Concept: :doc:`/concepts/leakage_and_evaluation`.
-
 # %%
-# Setup. ``random_state=42`` on every estimator and splitter and
-# ``np.random.seed`` keeps the printed accuracy byte-stable across
-# runs (E3.21).
-import warnings
+# 1. Select a small, explicit cohort
+# ----------------------------------
+# Filtering subjects, session and run bounds the download. Cropping after
+# opening a recording would reduce computation but not its download size.
+import os
+from functools import partial
+from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from collections import Counter
-
-from moabb.evaluations.splitters import CrossSubjectSplitter
+from braindecode.preprocessing import create_windows_from_events
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import balanced_accuracy_score
-from sklearn.model_selection import GroupKFold, LeaveOneGroupOut
+from sklearn.metrics import ConfusionMatrixDisplay, balanced_accuracy_score
+from sklearn.model_selection import LeaveOneGroupOut
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
 
-from eegdash.viz import use_eegdash_style
-
-use_eegdash_style()
-warnings.simplefilter("ignore", category=FutureWarning)
-SEED = 42
-np.random.seed(SEED)
-rng = np.random.default_rng(SEED)
-
-# %% [markdown]
-# Why LOSO and not a single 80/20 split?
-# --------------------------------------
-#
-# A single cross-subject split returns one number; LOSO returns N
-# numbers, one per held-out subject. The mean is what benchmark tables
-# publish, but the *spread* tells you whether the model works for
-# everyone or just for the subjects who happened to land on the easy
-# side of the random fold. Aristimunha et al. 2023 wired the MOABB
-# benchmark around exactly this protocol: every BCI paradigm (motor
-# imagery, P300, SSVEP) is scored as ``mean +/- std`` over per-subject
-# LOSO folds, so a method with low mean and low std is preferred over
-# a method with the same mean and a long tail of failed subjects.
-# Cisotto & Chicco 2024 frame the per-subject view as Tip 9: never
-# quote a single accuracy without the across-subject standard deviation
-# that produced it.
-#
-# The transfer matrix in panel 1 breaks this down further. Cell
-# ``(i, j)`` is the balanced accuracy of a model trained on source
-# subject ``i`` and evaluated on subject ``j``. A column with low values
-# means subject ``j`` is hard regardless of who trained the model; a row
-# with low values means subject ``i`` does not contribute useful signal.
-
-# %% [markdown]
-# Step 1. Build per-subject metadata for 8 subjects
-# ---------------------------------------------------
-#
-# We materialise a synthetic table: 8 subjects, 60 windows each, with
-# a 2-D feature carrying class signal plus a per-subject offset (the
-# "subject fingerprint" that makes leakage so dangerous).
-# :mod:`eegdash.splits` accepts a
-# :class:`braindecode.datasets.WindowsDataset` or this DataFrame.
-
-
-# %%
-def make_cohort(sizes, *, prefix: str, rng):
-    """Return ``(X, metadata)`` for a synthetic cross-subject toy task."""
-    rows, X_list = [], []
-    for s, n_w in enumerate(sizes):
-        labels = rng.integers(0, 2, size=n_w)
-        bias = 0.10 * s
-        for w, lab in enumerate(labels):
-            base = bias + rng.standard_normal(2) * 0.7
-            X_list.append([float(lab) + base[0], -float(lab) + base[1]])
-            rows.append(
-                {
-                    "sample_id": f"{prefix}-{s:02d}__w{w:03d}",
-                    "subject": f"sub-{s:02d}",
-                    "session": "ses-01",
-                    "run": "run-01",
-                    "dataset": f"ds-{prefix}",
-                    "target": int(lab),
-                }
-            )
-    return np.asarray(X_list, dtype=float), pd.DataFrame(rows)
-
-
-N_SUBJECTS = 8
-N_WINDOWS_PER_SUBJECT = 60
-X, metadata = make_cohort([N_WINDOWS_PER_SUBJECT] * N_SUBJECTS, prefix="loso", rng=rng)
-y = metadata["target"].to_numpy()
-groups = metadata["subject"].to_numpy()
-print(
-    f"rows={len(metadata)} | subjects={metadata['subject'].nunique()} | "
-    f"classes={dict(metadata['target'].value_counts())}"
+from eegdash import EEGDashDataset
+from eegdash.features import (
+    FeatureExtractor,
+    extract_features,
+    spectral_bands_power,
+    spectral_preprocessor,
 )
 
-# %% [markdown]
-# Step 2. Predict the LOSO fold count, then build the splits
-# ------------------------------------------------------------
-#
-# **Predict.** Leave-one-subject-out with N subjects produces exactly
-# N folds (one per held-out subject). Will the per-fold test set have
-# 60 windows or 480? Pick one, then read the fold count below.
-#
-# **Run.** :class:`~sklearn.model_selection.LeaveOneGroupOut` with
-# ``groups=metadata["subject"]`` is the canonical LOSO splitter. The
-# ``get_splitter`` registry returns the same object
-# under the ``"cross_subject"`` engine when you ask for one fold per
-# subject. We use sklearn directly here so the loop reads as plain
-# scikit-learn; the manifest path mirrors the one ``plot_11``
-# demonstrated.
+cache_dir = Path(os.environ.get("EEGDASH_CACHE_DIR", ".eegdash_cache"))
+subjects = ["1", "2", "3"]
+dataset = EEGDashDataset(
+    cache_dir=cache_dir,
+    dataset="nm000118",
+    subject=subjects,
+    session="0",
+    run="0",
+    task="ssvep",
+    n_jobs=1,
+)
+assert len(dataset.datasets) == len(subjects), "Expected one recording per subject"
+print(dataset.description[["subject", "session", "run"]])
 
 # %%
-n_loso_folds = LeaveOneGroupOut().get_n_splits(X, y, groups)
-print(f"n_subjects={N_SUBJECTS} | n_loso_folds={n_loso_folds}")
-
-splitter = CrossSubjectSplitter(cv_class=GroupKFold, n_splits=N_SUBJECTS)
-n_rows = len(metadata)
-folds: list[tuple[np.ndarray, np.ndarray]] = []
-for tr_idx, te_idx in splitter.split(y, metadata):
-    tr_mask = np.zeros(n_rows, dtype=bool)
-    tr_mask[tr_idx] = True
-    te_mask = np.zeros(n_rows, dtype=bool)
-    te_mask[te_idx] = True
-    folds.append((tr_mask, te_mask))
-overlap = max(
-    len(set(metadata.loc[tr, "subject"]) & set(metadata.loc[te, "subject"]))
-    for tr, te in folds
-)
-assert overlap == 0, "cross-subject split leaked subjects"
-print(
-    f"splitter={type(splitter).__name__} | folds={len(folds)} | "
-    f"max subject overlap={overlap}"
-)
-
-# %% [markdown]
-# Step 3. Run the LOSO loop and pool the predictions
-# ----------------------------------------------------
-#
-# **Run (#2).** For each fold: fit
-# :class:`~sklearn.linear_model.LogisticRegression` on the N-1 subjects
-# in the train mask, predict the one held-out subject, score with
-# :func:`~sklearn.metrics.balanced_accuracy_score`. Append every
-# (true, pred) pair into pooled arrays so the pooled confusion matrix
-# in the headline figure carries every held-out window once.
-
+# 2. Inspect real annotations and verify the signal contract
+# ----------------------------------------------------------
+# Accessing ``raw`` downloads that recording. Annotation names identify the
+# attended stimulus frequency in Hz; they supply every classification label.
+# All participants must have the same channel order and sampling frequency.
+raw = dataset.datasets[0].raw
+sfreq = raw.info["sfreq"]
+channel_names = raw.ch_names
+class_names = sorted(set(raw.annotations.description), key=float)
+mapping = {name: index for index, name in enumerate(class_names)}
+assert len(mapping) == 12, "Expected the twelve SSVEP stimulus frequencies"
+for recording in dataset.datasets:
+    recording_raw = recording.raw
+    assert recording_raw.ch_names == channel_names
+    assert recording_raw.info["sfreq"] == sfreq
+    assert set(recording_raw.annotations.description) == set(mapping)
+print(f"Channels: {channel_names}; sampling frequency: {sfreq} Hz")
+print("Stimulus frequencies (Hz):", class_names)
 
 # %%
-def loso_loop(X, y, metadata, folds):
-    """Return per-fold balanced accuracy plus pooled (true, pred)."""
-    fold_acc, fold_chance, fold_subject = [], [], []
-    pooled_true, pooled_pred = [], []
-    for k in range(len(folds)):
-        train_mask = folds[k][0]
-        test_mask = folds[k][1]
-        clf = LogisticRegression(random_state=SEED, max_iter=300)
-        clf.fit(X[train_mask], y[train_mask])
-        y_pred = clf.predict(X[test_mask])
-        y_true = y[test_mask]
-        fold_acc.append(float(balanced_accuracy_score(y_true, y_pred)))
-        fold_chance.append(
-            float(
-                max(Counter(y[test_mask].tolist()).values())
-                / max(int(test_mask.sum()), 1)
-            )
-        )
-        held_out = sorted(metadata.loc[test_mask, "subject"].unique())
-        fold_subject.append(held_out[0] if held_out else f"fold-{k}")
-        pooled_true.append(y_true)
-        pooled_pred.append(y_pred)
-    return (
-        np.asarray(fold_acc),
-        np.asarray(fold_chance),
-        fold_subject,
-        np.concatenate(pooled_true),
-        np.concatenate(pooled_pred),
+# 3. Make one four-second window per annotated trial
+# --------------------------------------------------
+# Each annotated interval is 4.15 seconds. Keep its first four seconds and
+# discard the remainder. Explicit size and stride avoid overlapping windows
+# or extending the epoch beyond the recorded event duration.
+# At 256 Hz, four seconds contain 1,024 samples. The resulting array has
+# axes (540 trials, 8 EEG channels, 1,024 samples), with volt-valued data.
+# The metadata has one row per array row. ``target`` is a class index, not a
+# frequency in Hz; ``mapping`` is the explicit conversion between them.
+# The source contains 15 trials of each of the 12 frequencies per person.
+# A missing class is a data-contract failure, not a reason to relabel trials.
+window_size = int(4 * sfreq)
+windows = create_windows_from_events(
+    dataset,
+    mapping=mapping,
+    trial_start_offset_samples=0,
+    trial_stop_offset_samples=0,
+    window_size_samples=window_size,
+    window_stride_samples=window_size,
+    on_last_window="drop",
+    preload=True,
+)
+metadata = windows.get_metadata()
+y = metadata["target"].to_numpy(dtype=int)
+groups = metadata["subject"].astype(str).to_numpy()
+X = np.stack([window[0] for window in windows])
+assert X.shape == (len(metadata), len(channel_names), window_size)
+assert set(groups) == set(subjects)
+assert np.isfinite(X).all()
+print(pd.crosstab(groups, y, rownames=["subject"], colnames=["class"]))
+
+# %%
+# 4. Extract spectral features from each window
+# ---------------------------------------------
+# SSVEP responses contain energy at the stimulus frequency. Use log spectral
+# power around each stimulus frequency, retaining all eight posterior channels.
+# This per-window transform learns nothing from other trials or subjects.
+# The scaler below, in contrast, must be fitted only on training subjects.
+# EEGDash's shared spectral preprocessor computes a Welch PSD with one
+# four-second Hann segment and 0.25 Hz bins. Each narrow band is centered
+# on a documented stimulus frequency; these centers define the task, not
+# trial-specific predictors. Retaining eight channels gives 12 × 8 = 96
+# features. The already processed SSVEP release does not need another EEGPrep
+# cleaning pass or visual latency correction.
+#
+# spectral_bands_power sums selected PSD bins. Multiplying by their 0.25 Hz
+# spacing converts V²/Hz to approximate band power in V². The log compresses
+# that scale; the StandardScaler still fits only on training participants.
+bands = {
+    f"hz_{name}": (float(name) - 0.125, float(name) + 0.125) for name in class_names
+}
+spectral = FeatureExtractor(
+    {"power": partial(spectral_bands_power, bands=bands)},
+    preprocessor=partial(
+        spectral_preprocessor,
+        fs=sfreq,
+        nperseg=window_size,
+        noverlap=0,
+        f_min=8,
+        f_max=16,
+    ),
+)
+feature_table = extract_features(
+    windows, {"spectral": spectral}, batch_size=64, n_jobs=1
+).to_dataframe()
+assert feature_table.shape == (len(y), len(class_names) * len(channel_names))
+features = np.log(np.maximum(feature_table.to_numpy() * sfreq / window_size, 1e-30))
+assert np.isfinite(features).all()
+
+# %%
+# 5. Fit on two subjects and predict the third
+# --------------------------------------------
+# Each subject is tested once. Construct a fresh pipeline in each fold so
+# neither scaling nor classifier fitting sees the held-out participant.
+# Hyperparameters are fixed here; tuning would need grouped validation
+# inside the training fold. The uniform-chance balanced accuracy is 1/12,
+# provided all twelve classes occur in the test fold, which we check.
+# Each outer fold contains 360 training trials from two participants and
+# 180 test trials from the third. A fresh pipeline prevents fitted state from
+# crossing folds. The prediction buffer is filled at the original row indices;
+# ``test_counts`` detects either an omitted test trial or a repeated prediction.
+#
+# To tune regularization or the frequency band, split the two training subjects
+# again for inner validation before fitting the chosen setting on both. With
+# only two inner subjects, such tuning is unstable; adding participants is a
+# more informative extension than a large parameter grid.
+predictions = np.full(len(y), -1, dtype=int)
+test_counts = np.zeros(len(y), dtype=int)
+rows = []
+for train, test in LeaveOneGroupOut().split(features, y, groups):
+    assert set(groups[train]).isdisjoint(groups[test])
+    assert set(y[train]) == set(y[test]) == set(mapping.values())
+    model = make_pipeline(StandardScaler(), LogisticRegression(max_iter=1000))
+    model.fit(features[train], y[train])
+    predictions[test] = model.predict(features[test])
+    test_counts[test] += 1
+    rows.append(
+        {
+            "subject": groups[test][0],
+            "balanced_accuracy": balanced_accuracy_score(y[test], predictions[test]),
+            "n_test_trials": len(test),
+        }
     )
-
-
-fold_acc, fold_chance, held_out_subjects, y_true_pooled, y_pred_pooled = loso_loop(
-    X, y, metadata, folds
-)
-mean_loso = float(fold_acc.mean())
-std_loso = float(fold_acc.std(ddof=0))
-chance_overall = float(fold_chance.mean())
-for k, (a, c, s) in enumerate(zip(fold_acc, fold_chance, held_out_subjects)):
-    print(f"Fold {k}: held-out {s} | balanced_acc={a:.3f} | chance={c:.3f}")
-print(
-    f"LOSO summary: balanced_acc={mean_loso:.3f} +/- {std_loso:.3f} | "
-    f"chance={chance_overall:.3f} | n_folds={n_loso_folds}"
-)
-
-# %% [markdown]
-# Step 4. Each fold's test set has DIFFERENT subjects
-# -----------------------------------------------------
-#
-# **Run (#3).** The cross-subject contract is that every held-out
-# subject appears in exactly one test fold; the union across folds
-# tiles the cohort. The per-fold lookup below confirms the contract.
+assert len(rows) == len(subjects)
+assert np.all(test_counts == 1), "Every trial must be evaluated exactly once"
+results = pd.DataFrame(rows)
+print(results.to_string(index=False))
+scores = results["balanced_accuracy"]
+print(f"Subject mean +/- SD: {scores.mean():.3f} +/- {scores.std(ddof=1):.3f}")
 
 # %%
-test_subjects_by_fold = []
-for _tr_mask, te_mask in folds:
-    subs = sorted(metadata.loc[te_mask, "subject"].unique())
-    test_subjects_by_fold.append(subs)
-print(
-    f"union across folds: {len(set().union(*test_subjects_by_fold))} | "
-    f"cohort size: {N_SUBJECTS}"
+# 6. Inspect measured results
+# ---------------------------
+# The bars show each held-out participant. The confusion matrix pools their
+# predictions and normalizes each true class. No minimum accuracy is asserted:
+# a weak decoder is a valid result, whereas a leaking split is an error.
+fig, axes = plt.subplots(1, 2, figsize=(12, 5), layout="constrained")
+axes[0].bar(results["subject"], scores)
+axes[0].axhline(1 / len(mapping), color="black", linestyle="--", label="Chance (1/12)")
+axes[0].set(xlabel="Held-out subject", ylabel="Balanced accuracy", ylim=(0, 1))
+axes[0].legend()
+ConfusionMatrixDisplay.from_predictions(
+    y,
+    predictions,
+    labels=list(mapping.values()),
+    display_labels=class_names,
+    normalize="true",
+    include_values=False,
+    colorbar=False,
+    xticks_rotation=90,
+    ax=axes[1],
 )
-
-# %% [markdown]
-# Step 5. Build the subject x subject transfer matrix
-# -----------------------------------------------------
-#
-# **Investigate.** A LOSO mean collapses N folds into one number. The
-# transfer matrix keeps the resolution: cell ``(i, j)`` = balanced
-# accuracy of a model trained on source subject ``i`` alone and
-# evaluated on held-out subject ``j``. The diagonal ``(j, j)`` is the
-# within-subject case and is masked because cross-subject
-# generalization is the point. A column with low values flags a test
-# subject who is hard to decode regardless of who trained the model;
-# a row with low values flags a source subject whose data does not
-# transfer. Bouchard et al. and the MOABB benchmark report variants of
-# this matrix as the diagnostic for *who* the cohort is hard for.
-
-
-# %%
-def transfer_matrix_pairwise(X, y, metadata, subject_ids):
-    """Cell (i, j): train on source subject i alone, score on subject j."""
-    n = len(subject_ids)
-    matrix = np.full((n, n), np.nan, dtype=float)
-    for i, src in enumerate(subject_ids):
-        src_mask = (metadata["subject"] == src).to_numpy()
-        if len(np.unique(y[src_mask])) < 2:
-            continue
-        clf = LogisticRegression(random_state=SEED, max_iter=300)
-        clf.fit(X[src_mask], y[src_mask])
-        for j, tgt in enumerate(subject_ids):
-            if i == j:
-                continue
-            tgt_mask = (metadata["subject"] == tgt).to_numpy()
-            matrix[i, j] = float(
-                balanced_accuracy_score(y[tgt_mask], clf.predict(X[tgt_mask]))
-            )
-    return matrix
-
-
-subject_ids = sorted(metadata["subject"].unique())
-transfer_matrix = transfer_matrix_pairwise(X, y, metadata, subject_ids)
-column_means = np.nanmean(transfer_matrix, axis=0)
-hardest = subject_ids[int(column_means.argmin())]
-easiest = subject_ids[int(column_means.argmax())]
-print(
-    f"transfer matrix: shape={transfer_matrix.shape} | "
-    f"hardest test subject={hardest} | easiest test subject={easiest}"
-)
-
-# %% [markdown]
-# Step 6. The per-subject accuracy distribution
-# -----------------------------------------------
-#
-# A tiny ASCII histogram. *Spread* matters as much as the mean: a high
-# mean with high std means the model works for some subjects and fails
-# for others. The MOABB benchmark publishes both numbers for every BCI
-# task; treat ``mean - std`` as the lower envelope of what a new
-# subject can expect.
-
-# %%
-print("Per-subject balanced-accuracy histogram:")
-edges = np.linspace(min(fold_acc) - 0.01, max(fold_acc) + 0.01, 6)
-for low, high in zip(edges[:-1], edges[1:]):
-    n = sum(low <= a < high for a in fold_acc)
-    print(f"  [{low:.2f}, {high:.2f}): {'#' * n}")
-
-# %% [markdown]
-# Result: one number, one error bar, against chance (E5.43)
-# -----------------------------------------------------------
-
-# %%
-print(
-    f"LOSO balanced accuracy: {mean_loso:.3f} +/- {std_loso:.3f} | "
-    f"chance level: {chance_overall:.3f} | metric: balanced_accuracy"
-)
-
-# %% [markdown]
-# A common mistake, and how to recover
-# --------------------------------------
-#
-# **Run.** The most common slip in a LOSO loop is asking for more folds
-# than subjects (``n_folds=20`` on an 8-subject cohort).
-# :class:`~sklearn.model_selection.GroupKFold` raises ``ValueError`` --
-# catch it and clamp to N.
-
-# %%
-try:
-    bad = CrossSubjectSplitter(cv_class=GroupKFold, n_splits=20)
-    list(bad.split(y, metadata))
-except ValueError as exc:
-    print(f"Caught ValueError: {str(exc)[:90]}")
-    fixed = CrossSubjectSplitter(cv_class=GroupKFold, n_splits=N_SUBJECTS)
-    print(
-        f"Recovery: clamp n_folds to n_subjects={N_SUBJECTS} -> {type(fixed).__name__}"
-    )
-
-# %% [markdown]
-# Modify: compare 5-fold cross-subject vs LOSO variance
-# -------------------------------------------------------
-#
-# **Modify.** Drop the fold count from N to 5. The same model, the
-# same windows, fewer folds. The mean barely moves; the std almost
-# always shrinks because each test fold pools two subjects, averaging
-# out the per-subject noise. LOSO is the higher-fidelity variance
-# estimate this cohort can give.
-
-# %%
-splitter5 = CrossSubjectSplitter(cv_class=GroupKFold, n_splits=5)
-folds5: list[tuple[np.ndarray, np.ndarray]] = []
-for tr_idx, te_idx in splitter5.split(y, metadata):
-    tr_mask = np.zeros(n_rows, dtype=bool)
-    tr_mask[tr_idx] = True
-    te_mask = np.zeros(n_rows, dtype=bool)
-    te_mask[te_idx] = True
-    folds5.append((tr_mask, te_mask))
-assert (
-    max(
-        len(set(metadata.loc[tr, "subject"]) & set(metadata.loc[te, "subject"]))
-        for tr, te in folds5
-    )
-    == 0
-), "5-fold split leaked"
-acc5, _, _, _, _ = loso_loop(X, y, metadata, folds5)
-print(
-    f"5-fold cross-subject: {acc5.mean():.3f} +/- {acc5.std(ddof=0):.3f} | "
-    f"LOSO ({N_SUBJECTS} folds): {mean_loso:.3f} +/- {std_loso:.3f}"
-)
-
-# %% [markdown]
-# Make: apply the loop to a cohort with imbalanced subjects
-# -----------------------------------------------------------
-#
-# **Make.** Real cohorts rarely have equal trials per subject. Build a
-# cohort where subjects contribute different counts, re-run LOSO. The
-# contract holds (no subject leakage); the headline ``mean +/- std``
-# tells you whether the imbalance hurts generalization.
-
-# %%
-sizes_imb = [20, 30, 30, 40, 50, 50, 60, 80]
-X_imb, meta_imb = make_cohort(
-    sizes_imb, prefix="imb", rng=np.random.default_rng(SEED + 1)
-)
-y_imb = meta_imb["target"].to_numpy()
-splitter_imb = CrossSubjectSplitter(cv_class=GroupKFold, n_splits=len(sizes_imb))
-n_imb = len(meta_imb)
-folds_imb: list[tuple[np.ndarray, np.ndarray]] = []
-for tr_idx, te_idx in splitter_imb.split(y_imb, meta_imb):
-    tr_mask = np.zeros(n_imb, dtype=bool)
-    tr_mask[tr_idx] = True
-    te_mask = np.zeros(n_imb, dtype=bool)
-    te_mask[te_idx] = True
-    folds_imb.append((tr_mask, te_mask))
-assert (
-    max(
-        len(set(meta_imb.loc[tr, "subject"]) & set(meta_imb.loc[te, "subject"]))
-        for tr, te in folds_imb
-    )
-    == 0
-), "imbalanced split leaked"
-acc_imb, _, _, _, _ = loso_loop(X_imb, y_imb, meta_imb, folds_imb)
-print(
-    f"imbalanced LOSO: {acc_imb.mean():.3f} +/- {acc_imb.std(ddof=0):.3f} | "
-    f"sizes={sizes_imb}"
-)
-
-# %% [markdown]
-# Headline figure, transfer matrix, LOSO bars, pooled confusion
-# ---------------------------------------------------------------
-#
-# Three panels read together: panel 1 is the subject x subject transfer
-# matrix; panel 2 is the LOSO per-subject accuracy bars sorted worst
-# to best with the chance reference line and the ``mean +/- std`` band;
-# panel 3 is the pooled confusion matrix from
-# :class:`~sklearn.metrics.ConfusionMatrixDisplay` over every held-out
-# prediction. The drawing helpers live in a sibling
-# ``_cross_subject_figure`` module so the matplotlib geometry stays out
-# of this tutorial; the call below is the only line that matters.
-
-# %%
-from _cross_subject_figure import draw_cross_subject_figure
-
-fig = draw_cross_subject_figure(
-    transfer_matrix=transfer_matrix,
-    subject_ids=subject_ids,
-    fold_accuracies=fold_acc,
-    y_true_pooled=y_true_pooled,
-    y_pred_pooled=y_pred_pooled,
-    class_names=("class 0", "class 1"),
-    held_out_subjects=held_out_subjects,
-    chance_level=chance_overall,
-    plot_id="plot_51",
-)
+axes[1].set_title("Attended frequency (Hz)")
+fig.suptitle("Nakanishi2015 / nm000118: three-subject LOSO")
 plt.show()
 
-# %% [markdown]
-# **Investigate.** Read the three panels in order.
-#
-# 1. Transfer matrix: scan column by column. A column that is uniformly
-#    pale blue means the held-out subject is hard regardless of the
-#    training fold; a column that is uniformly deep blue means an easy
-#    subject. Row variation tells you whether one source subject
-#    contributes more than the others.
-# 2. LOSO bars: is every held-out subject above the chance line, or is
-#    the worst subject pulling the mean down? Big across-subject
-#    variance is the honest signature of cross-subject EEG.
-# 3. Confusion matrix: a clean diagonal in deep blue is the win
-#    condition; an off-diagonal stripe means the model has collapsed
-#    onto one class on the held-out subjects. The annotation strip
-#    below carries the pooled ``balanced_acc`` and the total number of
-#    held-out windows.
+# %%
+# Three participants keep this example small enough for CI; they do not
+# establish a population-level benchmark. To extend the analysis, add real
+# subjects to the query and retain the same group-disjoint evaluation. For a
+# neural decoder, reuse these windows with ``EEGClassifier`` and reserve
+# validation subjects inside each training fold.
 
-# %% [markdown]
-# Wrap-up
-# -------
+# Reading the two plots
+# ---------------------
+# The subject mean weights people equally. Its sample SD describes variation
+# across these three people; it is not a confidence interval for a population.
+# The normalized confusion matrix answers, for each true frequency, which
+# frequencies receive its predictions. Its rows sum to one, so a darker cell
+# means a larger fraction of that true class, not more trials in the cohort.
 #
-# We built per-subject metadata, asked
-# ``get_splitter`` for an N-fold cross-subject
-# manifest, asserted zero subject leakage, ran a LOSO loop with
-# :class:`~sklearn.linear_model.LogisticRegression`, and reported
-# ``mean +/- std`` of :func:`~sklearn.metrics.balanced_accuracy_score`
-# against a ``majority_baseline`` chance level.
-# Disjoint test subjects across folds tile the cohort. The transfer
-# matrix is the diagnostic a reviewer reaches for when the headline
-# mean looks fine but the std is suspicious.
-
-# %% [markdown]
-# Try it yourself
-# ---------------
-#
-# - Replace :class:`~sklearn.linear_model.LogisticRegression` with :class:`~sklearn.linear_model.LogisticRegressionCV` (still ``random_state=42``). Does the LOSO std shrink?
-# - Reorder ``subject_ids`` in the transfer matrix to put the hardest test subject first. The figure becomes the diagnostic for which subject to investigate next.
-# - Swap the synthetic cohort for the windows + manifest you saved in ``plot_11`` and re-run LOSO end-to-end.
-
-# %% [markdown]
-# References
-# ----------
-# See :doc:`/references` for the centralized bibliography of papers
-# cited above. Add or amend an entry once in
-# :file:`docs/source/refs.bib`; every tutorial inherits the update.
+# Inspect confusions between nearby frequencies before proposing a finer
+# spectral baseline. Freeze that proposal before evaluating additional held-out
+# subjects. The already inspected participants are development data for that
+# next experiment.

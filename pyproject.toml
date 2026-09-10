@@ -148,7 +148,9 @@ docs = [
   # ``eegprep.utils.round_mat`` in preprocessing/eegprep_preprocess.py, so the
   # docs gallery dies with "module 'eegprep' has no attribute 'utils'".
   # Floor at the newest 0.2.x and cap until a braindecode release supports 0.3.
-  "eegprep>=0.2.23,<0.3",
+  "eegprep[eeglabio]>=0.2.23,<0.3",
+  # Exact character edit distance in the real EMG-to-text tutorial.
+  "rapidfuzz>=3",
   # Validate the Croissant 1.0 descriptors emitted alongside the docs build.
   "mlcroissant",
 ]

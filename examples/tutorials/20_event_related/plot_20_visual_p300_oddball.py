@@ -1,616 +1,211 @@
-"""Visual P300 oddball decoding
-==============================
+"""Visual P300: from real events to held-out predictions
+=====================================================
 
-**Difficulty 2** | **Runtime: 2m** | **Compute: CPU**
+Load three visual-oddball recordings from OpenNeuro ``ds005863`` through
+EEGDash, inspect their event codes, and decode targets on a new subject.
+Subjects 054, 119 and 123 require about 69 MB of signal files in total.
+Set ``EEGDASH_CACHE_DIR`` to reuse the download. CPU is sufficient; install ``eegprep[eeglabio]>=0.2.23,<0.3`` for the
+EEGPrep stages.
+The `dataset <https://openneuro.org/datasets/ds005863>`_ contains recorded
+EEG; every label below comes from its stimulus markers.
 
-A child watches letters flash one by one on a screen. Most letters are
-*standards*; one is the block's *target*. The brain answers the rare
-target with a positive deflection over centro-parietal cortex peaking
-300-450 ms after stimulus onset, the classic visual P300 (`Polich 2007
-<https://doi.org/10.1016/j.clinph.2007.04.019>`_; Picton 1992). This
-tutorial loads one BIDS recording from `OpenNeuro
-<https://openneuro.org>`_ ``ds005863`` (the *visualoddball* task,
-reachable through `NEMAR <https://nemar.org>`_; `Delorme et al. 2022
-<https://doi.org/10.1093/database/baac096>`_), turns the BrainVision
-event codes into a target-vs-standard label, epochs around stimulus
-onset with baseline correction (`Cisotto & Chicco 2024
-<https://doi.org/10.7717/peerj-cs.2256>`_, Tip 7), and produces three
-artefacts side by side: an ERP at Pz, a scalp topography of the
-difference wave at the peak, and a 3-fold leave-one-subject-out
-accuracy on a logistic-regression decoder. Where does the textbook
-P300 actually live in the data?
-Keywords: classification, P300, oddball
+An oddball task presents frequent standards and occasional targets. An
+event-related potential (ERP) averages responses aligned to stimulus onset;
+a decoder instead predicts the condition of each individual trial. Here you
+will prepare both from the same recordings, then test whether a simple
+amplitude-based classifier generalizes to a participant absent from training.
+
+Run the page from top to bottom with EEGDash installed. Familiarity with NumPy
+arrays and the first-recording tutorial is helpful. The outputs are an ERP
+plot at Pz, a table of participant scores and a confusion matrix. No GPU or
+previously prepared feature file is needed.
 """
 
-# sphinx_gallery_thumbnail_path = '_static/thumbs/plot_20_visual_p300_oddball.png'
-
-# %% [markdown]
-# Learning objectives
-# -------------------
-# - Load one BIDS subject of ``ds005863`` via :class:`~eegdash.api.EEGDashDataset` and inspect the BrainVision event codes from :meth:`mne.io.Raw.annotations <mne.io.Raw>`.
-# - Build event-locked windows with baseline correction using :func:`braindecode.preprocessing.create_windows_from_events`.
-# - Compute the P300 peak amplitude and latency at Pz and plot the per-channel difference wave on a scalp topography with :func:`mne.viz.plot_topomap`.
-# - Evaluate a 3-fold leave-one-subject-out classifier with :class:`sklearn.model_selection.GroupKFold` and :class:`sklearn.linear_model.LogisticRegression` against the right balanced-accuracy chance line for an oddball.
-
-# %% [markdown]
-# Requirements
-# ------------
-# - About 2 min on CPU once cached; first run pays a ~80 MB download for
-#   three subjects of ``ds005863``.
-# - Prerequisites: :doc:`/generated/auto_examples/tutorials/10_core_workflow/plot_10_preprocess_and_window`,
-#   :doc:`/generated/auto_examples/tutorials/10_core_workflow/plot_11_leakage_safe_split`.
-# - Concept: :doc:`/concepts/leakage_and_evaluation`.
-# - Data: three subjects of ``ds005863`` (``visualoddball`` task).
-
 # %%
-# Setup. Two seeds keep the splits and the classifier reproducible across
-# runs; ``EEGDASH_CACHE_DIR`` controls where the BIDS bytes land.
+# 1. Select the recordings before downloading
+# -------------------------------------------
+# The query describes three recordings, not three classification samples.
+# Each recording contributes many stimulus trials after epoching. Inspect the
+# description before accessing ``raw``, which acquires the signal file;
+# ``load_data()`` below then brings its samples into memory.
 import os
-import warnings
 from pathlib import Path
 
 import matplotlib.pyplot as plt
 import mne
 import numpy as np
 import pandas as pd
-from braindecode.preprocessing import (
-    Preprocessor,
-    create_windows_from_events,
-    preprocess,
-)
+from braindecode.preprocessing import RemoveCommonAverageReference, RemoveDCOffset
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import balanced_accuracy_score
-from sklearn.model_selection import GroupKFold
+from sklearn.metrics import ConfusionMatrixDisplay, balanced_accuracy_score
+from sklearn.model_selection import LeaveOneGroupOut
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
 
 from eegdash import EEGDashDataset
-from eegdash.viz import use_eegdash_style
+from eegdash.features import signal_mean
 
-use_eegdash_style()
-SEED = 42
-np.random.seed(SEED)
-mne.set_log_level("ERROR")
-warnings.simplefilter("ignore", category=RuntimeWarning)
-
-CACHE_DIR = Path(os.environ.get("EEGDASH_CACHE_DIR", Path.cwd() / "eegdash_cache"))
-CACHE_DIR.mkdir(parents=True, exist_ok=True)
-print(f"cache_dir = {CACHE_DIR}")
-
-# %% [markdown]
-# The oddball paradigm in two paragraphs
-# --------------------------------------
-# In an oddball block, one stimulus repeats often (the *standard*) and
-# another appears rarely (the *target*). The participant counts targets
-# silently or presses a button on each one. ``ds005863`` uses a *visual*
-# oddball: each block fixes one letter as the block target (A through E,
-# coded as digits 1-5) and shows five letters in random order; the
-# stimulus code ``XY`` decodes as "block target X, stimulus shown Y", so
-# a trial is a target trial whenever the two digits match
-# (``S 11``, ``S 22``, ``S 33``, ``S 44``, ``S 55``) and a standard trial
-# otherwise. Block 2 is the busy one (10 trials per stimulus type, 50
-# total); the four other blocks have 8 trials per stimulus type.
-#
-# The P300 is a positive scalp deflection that emerges 300-450 ms after
-# the stimulus onset on target trials and is largest over centro-parietal
-# cortex (Pz, CPz, CP1, CP2). Two long-running interpretations frame what
-# the bump indexes: Polich 2007 splits it into a frontal P3a triggered by
-# salient novelty and a centro-parietal P3b triggered by context updating
-# in working memory after the participant has categorised the stimulus
-# as the target. Picton 1992 is the older review the field still cites
-# for the methodological conventions (epoch length, baseline window,
-# anchor channel) used below.
-#
-# .. code-block:: text
-#
-#     stimulus stream         epoch                 ERP at Pz
-#     S S S T S S T S          [-100 ... 800] ms     uV
-#                |                                    |  target
-#     ----t0----------> time   ===|====P300====|=>    |  /\\
-#                                                     | /  \\__
-#                                  search 300-450 ms  |/      ~~  standard
-#
-
-# %% [markdown]
-# Validate your result
-# --------------------
-# - **Event-Label Validation.** Stimulus code ``XY`` should decode as a
-#   *target* if ``X == Y`` and *standard* otherwise.
-# - **Class Balance.** Targets are rare. Expect a ratio of roughly 1 target to
-#   4 standard trials (20% targets).
-# - **Epoch Shape.** Each window should be ``(n_channels, sfreq * 1.2s)``.
-#   With the default 5 channels and 128 Hz, expect ``(5, 154)``.
-# - **P3 component.** The ERP at Pz should show a clear positive bump between
-#   300-500 ms on target trials compared to standards.
-
-# %% [markdown]
-# Step 1: Pick a P300 dataset
-# -----------------------------
-# We query :class:`~eegdash.api.EEGDashDataset` for one subject of
-# ``ds005863`` (visual oddball). The accession resolves through
-# `NEMAR <https://nemar.org>`_; the underlying recording is BrainVision
-# :cite:`pernet2019eegbids`.
-
-# %%
-SUBJECT = "002"
+cache_dir = Path(os.environ.get("EEGDASH_CACHE_DIR", ".eegdash_cache"))
+subjects = ["054", "119", "123"]
 dataset = EEGDashDataset(
-    cache_dir=CACHE_DIR,
+    cache_dir=cache_dir,
     dataset="ds005863",
+    subject=subjects,
     task="visualoddball",
-    subject=SUBJECT,
+    n_jobs=1,
 )
-record = dataset.datasets[0]
-raw = record.raw.load_data().copy()
-pd.Series(
-    {
-        "n_records": len(dataset.datasets),
-        "subject": SUBJECT,
-        "n_channels": raw.info["nchan"],
-        "sfreq (Hz)": float(raw.info["sfreq"]),
-        "duration (s)": round(raw.times[-1], 1),
-    },
-    name="value",
-).to_frame()
-
-# %% [markdown]
-# Step 2: Inspect the events table
-# ----------------------------------
-# :func:`mne.events_from_annotations` reads the BrainVision marker file
-# and exposes one integer code per stimulus. The block-relative coding
-# above (``S XY``) means a target trial is any annotation whose two
-# trailing digits match.
+assert len(dataset.datasets) == len(subjects)
+print(dataset.description[["subject", "task"]])
 
 # %%
-events, event_id = mne.events_from_annotations(raw)
-descriptions = sorted(d for d in event_id if d.startswith("S "))
-ev_counts = {d: int((events[:, 2] == event_id[d]).sum()) for d in descriptions}
-target_codes = ["S 11", "S 22", "S 33", "S 44", "S 55"]
-standard_codes = [d for d in descriptions if d not in target_codes]
-n_targets_raw = sum(ev_counts.get(c, 0) for c in target_codes)
-n_standards_raw = sum(ev_counts.get(c, 0) for c in standard_codes)
-pd.Series(
-    {
-        "n_stimulus_codes": len(descriptions),
-        "n_targets (raw events)": n_targets_raw,
-        "n_standards (raw events)": n_standards_raw,
-        "imbalance (std / target)": round(n_standards_raw / max(n_targets_raw, 1), 2),
-        "first 6 stim codes": ", ".join(descriptions[:6]),
-    },
-    name="value",
-).to_frame()
+# 2. Map recorded events and prepare trial features
+# -------------------------------------------------
+# In code XY, X is the block's target letter and Y is the presented
+# letter, both coded 1..5. Matching digits denote targets. Explicitly
+# exclude responses and other markers rather than calling all other
+# annotations standards. Some readers prefix names with ``Stimulus/``.
+# For example, ``S11`` maps to target (2), while ``S12`` maps to standard (1).
+# Subtracting one after epoching gives classifier labels 0 and 1.
+#
+# MNE epochs align each trial to time zero at the recorded stimulus. The
+# -100..0 ms baseline subtracts each channel's pre-stimulus mean from that
+# trial. The 0.5–30 Hz filter reduces slow drift and faster activity; changing
+# it can change ERP amplitude and should be decided before comparing scores.
+# EEGPrep removes each channel's median offset, then its common-average
+# reference subtracts the instantaneous EEG-channel mean. These operations
+# do not remove samples. We verify the grid and restore source annotations
+# explicitly because MNE↔EEGLAB conversions can round event latencies.
+#
+# Resampling epochs to 128 Hz reduces memory after events have been located
+# on the original sample grid. ``X`` has axes (trials, channels, time) in volts.
+# EEGDash's ``signal_mean`` over 300–450 ms produces one amplitude per
+# channel and trial; multiplying
+# by 1e6 expresses it in microvolts. This fixed interval is a compact baseline,
+# not a claim that every participant's peak lies there. All channel amplitudes
+# enter the decoder; Pz is used only for the illustrative ERP.
+#
+# ``reject_by_annotation`` respects existing bad spans. It does not detect
+# every blink or noisy channel: inspect recordings and define any additional
+# quality-control rules before extending this analysis.
+features, labels, groups = [], [], []
+first_epochs = None
+channel_names = None
+for recording in dataset.datasets:
+    raw = recording.raw.copy().load_data().pick("eeg")
+    mapping = {}
+    for name in set(raw.annotations.description):
+        code = name.split("/")[-1].replace(" ", "")
+        if len(code) == 3 and code[0] == "S" and set(code[1:]) <= set("12345"):
+            mapping[name] = 2 if code[1] == code[2] else 1
+    assert set(mapping.values()) == {1, 2}, "Missing target or standard markers"
+    print(recording.description["subject"], mapping)
 
-# %% [markdown]
-# **Predict.** What difference do you expect between target and standard
-# ERPs at centro-parietal Pz, in the 300-450 ms window? The literature
-# answers a positive bump on targets only; the size depends on how
-# attentive the child is, and on band-pass and reference choices.
-
-# %% [markdown]
-# Step 3: Preprocess and create event-locked windows
-# ----------------------------------------------------
-# The recipe is the conservative one from
-# :doc:`/generated/auto_examples/tutorials/10_core_workflow/plot_10_preprocess_and_window`:
-# common-average reference, a 128 Hz resample, and a 0.5-30 Hz non-causal
-# FIR band-pass. Each kept stimulus event becomes a window from -100 ms
-# to +800 ms relative to onset (the literature default for visual P300).
-# We use :func:`braindecode.preprocessing.create_windows_from_events`
-# with a ``mapping`` that keeps each block-relative code distinct so we
-# can re-collapse to a binary target/standard label downstream.
-# **Run.** Preprocess and epoch.
-
-# %%
-SFREQ = 128.0
-preprocess(
-    dataset,
-    [
-        Preprocessor("set_eeg_reference", ref_channels="average", projection=False),
-        Preprocessor("resample", sfreq=SFREQ),
-        Preprocessor("filter", l_freq=0.5, h_freq=30.0, method="fir", phase="zero"),
-    ],
-)
-TMIN, TMAX = -0.1, 0.8
-mapping = {d: int(d.replace("S ", "").replace("S", "").strip()) for d in descriptions}
-windows = create_windows_from_events(
-    dataset,
-    trial_start_offset_samples=int(TMIN * SFREQ),
-    trial_stop_offset_samples=int(TMAX * SFREQ),
-    preload=True,
-    drop_bad_windows=True,
-    mapping=mapping,
-)
-target_int_codes = {mapping[c] for c in target_codes if c in mapping}
-X = np.stack([windows[i][0] for i in range(len(windows))]).astype(np.float32)
-y_raw = np.asarray([windows[i][1] for i in range(len(windows))], dtype=int)
-y = np.asarray([1 if v in target_int_codes else 0 for v in y_raw], dtype=int)
-n_targets = int((y == 1).sum())
-n_standards = int((y == 0).sum())
-pd.Series(
-    {
-        "X.shape": str(tuple(X.shape)),
-        "n_targets": n_targets,
-        "n_standards": n_standards,
-        "tmin (s)": TMIN,
-        "tmax (s)": TMAX,
-        "sfreq (Hz)": SFREQ,
-    },
-    name="value",
-).to_frame()
-
-# %% [markdown]
-# **Investigate.** ``X.shape`` is ``(n_windows, n_channels, n_times)``.
-# The window length in samples is ``int((TMAX - TMIN) * SFREQ) + 1`` for
-# this version of braindecode; that includes the t=0 sample. The
-# imbalance comes through unchanged: the dataset's ~4:1 standard:target
-# ratio is preserved, exactly the regime an oddball decoder must handle.
-
-# %% [markdown]
-# Step 4: ERP at Pz with baseline correction
-# --------------------------------------------
-# :func:`braindecode.preprocessing.create_windows_from_events` returns
-# epochs with a fixed time grid; the ``[-100, 0]`` ms slice is the
-# pre-stimulus baseline and the per-window mean over that slice is what
-# we subtract from every sample to form the corrected ERP. Picton 1992
-# is the standard reference for this convention.
-
-# %%
-sfreq_post = float(record.raw.info["sfreq"])
-ch_names_full = list(record.raw.ch_names)
-ch_types = record.raw.get_channel_types()
-eeg_idx = [i for i, t in enumerate(ch_types) if t == "eeg"]
-eeg_names = [ch_names_full[i] for i in eeg_idx]
-X_eeg = X[:, eeg_idx, :]
-
-n_times = X_eeg.shape[-1]
-times_s = np.linspace(TMIN, TMIN + (n_times - 1) / sfreq_post, n_times)
-times_ms = times_s * 1000.0
-
-baseline_mask = times_ms <= 0.0
-baseline = X_eeg[:, :, baseline_mask].mean(axis=-1, keepdims=True)
-X_bc = X_eeg - baseline  # broadcast over time
-
-# Locate Pz (centro-parietal anchor for the visual P300).
-pz_idx = eeg_names.index("Pz") if "Pz" in eeg_names else 0
-target_evoked_pz = X_bc[y == 1, pz_idx, :].mean(axis=0) * 1e6  # uV
-standard_evoked_pz = X_bc[y == 0, pz_idx, :].mean(axis=0) * 1e6
-target_se_pz = (
-    X_bc[y == 1, pz_idx, :].std(axis=0, ddof=1) * 1e6 / np.sqrt(max(n_targets, 1))
-)
-standard_se_pz = (
-    X_bc[y == 0, pz_idx, :].std(axis=0, ddof=1) * 1e6 / np.sqrt(max(n_standards, 1))
-)
-
-P300_LO_MS, P300_HI_MS = 300.0, 450.0
-search_mask = (times_ms >= P300_LO_MS) & (times_ms <= P300_HI_MS)
-diff_pz = target_evoked_pz - standard_evoked_pz
-peak_offset = int(np.argmax(diff_pz[search_mask]))
-peak_idx = int(np.where(search_mask)[0][peak_offset])
-peak_time_ms = float(times_ms[peak_idx])
-peak_amp_uv = float(diff_pz[peak_idx])
-print(
-    f"P300 (target - standard) at {eeg_names[pz_idx]}: "
-    f"peak {peak_amp_uv:+.2f} uV @ {peak_time_ms:.0f} ms"
-)
-
-# %% [markdown]
-# Step 5: Topography of the difference wave at the peak
-# -------------------------------------------------------
-# The P300 should localise to centro-parietal cortex. We collapse the
-# per-channel difference wave to one number per channel at the peak
-# latency and feed that vector to :func:`mne.viz.plot_topomap`. The
-# colormap is divergent so positive (target > standard) and negative
-# values read clearly even when projected to grayscale.
-
-# %%
-target_evoked_all = X_bc[y == 1].mean(axis=0) * 1e6  # (n_eeg, n_times) in uV
-standard_evoked_all = X_bc[y == 0].mean(axis=0) * 1e6
-diff_all = target_evoked_all - standard_evoked_all
-diff_at_peak = diff_all[:, peak_idx]
-topomap_info = mne.pick_info(record.raw.info, mne.pick_types(record.raw.info, eeg=True))
-print(f"diff_at_peak.shape = {diff_at_peak.shape}, n_eeg = {len(eeg_names)}")
-
-# %% [markdown]
-# Step 6: Cross-subject decoding with leave-one-subject-out
-# -----------------------------------------------------------
-# Within-subject splits report an upper bound on what a given decoder
-# learns. Cross-subject splits report what generalizes. We pull two more
-# subjects (``010``, ``017``), run the same preprocessing, extract a
-# single P300 amplitude feature per channel (mean voltage in 300-450 ms),
-# and run :class:`sklearn.model_selection.GroupKFold` with the subject id
-# as the group. The decoder is a small
-# :class:`sklearn.linear_model.LogisticRegression` with
-# ``class_weight="balanced"`` so the rare-target class is not drowned by
-# the dominant standards. We pass the per-fold train/test indices through
-# ``assert_no_leakage`` to emit the runtime contract
-# line that the audit pipeline parses, and we report
-# :func:`sklearn.metrics.balanced_accuracy_score` rather than plain
-# accuracy because the latter is dominated by the majority class.
-# **Run.** Build the cross-subject features and report the per-fold
-# balanced accuracy.
-
-
-# %%
-def _amplitude_features(
-    cache_dir: Path,
-    dataset_id: str,
-    subject: str,
-    *,
-    sfreq: float,
-    tmin: float,
-    tmax: float,
-    p300_lo_ms: float,
-    p300_hi_ms: float,
-    target_codes: list[str],
-):
-    """Return one P300 amplitude vector per epoch, plus the binary label."""
-    sub_ds = EEGDashDataset(
-        cache_dir=cache_dir,
-        dataset=dataset_id,
-        task="visualoddball",
-        subject=subject,
-    )
-    preprocess(
-        sub_ds,
-        [
-            Preprocessor("set_eeg_reference", ref_channels="average", projection=False),
-            Preprocessor("resample", sfreq=sfreq),
-            Preprocessor("filter", l_freq=0.5, h_freq=30.0, method="fir", phase="zero"),
-        ],
-    )
-    raw_local = sub_ds.datasets[0].raw
-    _, ev_id_local = mne.events_from_annotations(raw_local)
-    descriptions_local = sorted(d for d in ev_id_local if d.startswith("S "))
-    mapping_local = {
-        d: int(d.replace("S ", "").replace("S", "").strip()) for d in descriptions_local
-    }
-    windows_local = create_windows_from_events(
-        sub_ds,
-        trial_start_offset_samples=int(tmin * sfreq),
-        trial_stop_offset_samples=int(tmax * sfreq),
+    # Preprocess, epoch and baseline-correct
+    # Filtering is independent for each recording. Epochs span -0.1..0.8 s
+    # relative to stimulus onset, irrespective of annotation duration.
+    source_annotations = raw.annotations.copy()
+    source_date = raw.info["meas_date"]
+    source_grid = (raw.info["sfreq"], raw.n_times, raw.first_samp)
+    RemoveDCOffset().apply(raw)
+    RemoveCommonAverageReference().apply(raw)
+    assert (raw.info["sfreq"], raw.n_times, raw.first_samp) == source_grid
+    raw.set_meas_date(source_date)
+    raw.set_annotations(source_annotations)
+    raw.filter(0.5, 30.0)
+    events, _ = mne.events_from_annotations(raw, event_id=mapping)
+    epochs = mne.Epochs(
+        raw,
+        events,
+        event_id={"standard": 1, "target": 2},
+        tmin=-0.1,
+        tmax=0.8,
+        baseline=(-0.1, 0),
         preload=True,
-        drop_bad_windows=True,
-        mapping=mapping_local,
+        reject_by_annotation=True,
     )
-    target_int_local = {mapping_local[c] for c in target_codes if c in mapping_local}
-    X_local = np.stack([windows_local[i][0] for i in range(len(windows_local))]).astype(
-        np.float32
-    )
-    y_raw_local = np.asarray(
-        [windows_local[i][1] for i in range(len(windows_local))], dtype=int
-    )
-    y_local = np.asarray(
-        [1 if v in target_int_local else 0 for v in y_raw_local], dtype=int
-    )
-    ch_types_local = raw_local.get_channel_types()
-    eeg_idx_local = [i for i, t in enumerate(ch_types_local) if t == "eeg"]
-    X_eeg_local = X_local[:, eeg_idx_local, :]
-    n_t = X_eeg_local.shape[-1]
-    t_s = np.linspace(tmin, tmin + (n_t - 1) / sfreq, n_t)
-    t_ms = t_s * 1000.0
-    bm = t_ms <= 0.0
-    pm = (t_ms >= p300_lo_ms) & (t_ms <= p300_hi_ms)
-    bc = X_eeg_local - X_eeg_local[:, :, bm].mean(axis=-1, keepdims=True)
-    feats = bc[:, :, pm].mean(axis=-1) * 1e6  # (n_epochs, n_eeg) in uV
-    return feats, y_local
+    epochs.resample(128)
+    if channel_names is None:
+        channel_names = epochs.ch_names
+        first_epochs = epochs
+    assert epochs.ch_names == channel_names
+    assert "Pz" in epochs.ch_names, "This ERP example requires Pz"
+    X = epochs.get_data()
+    y = epochs.events[:, 2] - 1
+    assert set(y) == {0, 1} and np.isfinite(X).all()
 
-
-SUBJECTS = ["002", "010", "017"]
-features = []
-labels = []
-groups = []
-for sid in SUBJECTS:
-    feats_i, y_i = _amplitude_features(
-        CACHE_DIR,
-        "ds005863",
-        sid,
-        sfreq=SFREQ,
-        tmin=TMIN,
-        tmax=TMAX,
-        p300_lo_ms=P300_LO_MS,
-        p300_hi_ms=P300_HI_MS,
-        target_codes=target_codes,
-    )
-    features.append(feats_i)
-    labels.append(y_i)
-    groups.append(np.full(feats_i.shape[0], sid))
-
-# All three subjects share the same EEG channel set (same headcap), so
-# stacking on axis 0 keeps a uniform feature width across folds.
-F = np.concatenate(features, axis=0)
-y_all = np.concatenate(labels, axis=0)
-g_all = np.concatenate(groups, axis=0)
-
-gkf = GroupKFold(n_splits=len(SUBJECTS))
-folds = list(gkf.split(F, y_all, groups=g_all))
-
-overlap = max(
-    len(set(g_all[train_idx]) & set(g_all[test_idx])) for train_idx, test_idx in folds
-)
-assert overlap == 0
-
-fold_subjects: list[str] = []
-fold_accuracies: list[float] = []
-fold_chances: list[float] = []
-all_y_true: list[np.ndarray] = []
-all_y_pred: list[np.ndarray] = []
-for train_idx, test_idx in folds:
-    held_out = sorted(set(g_all[test_idx]))
-    held_label = held_out[0] if len(held_out) == 1 else "+".join(held_out)
-    mu = F[train_idx].mean(axis=0, keepdims=True)
-    sd = F[train_idx].std(axis=0, keepdims=True) + 1e-8
-    F_train = (F[train_idx] - mu) / sd
-    F_test = (F[test_idx] - mu) / sd
-    clf = LogisticRegression(
-        random_state=SEED,
-        max_iter=1000,
-        C=1.0,
-        class_weight="balanced",
-    )
-    clf.fit(F_train, y_all[train_idx])
-    y_pred = clf.predict(F_test)
-    y_true_fold = y_all[test_idx]
-    acc = float(balanced_accuracy_score(y_true_fold, y_pred))
-    # Balanced accuracy at chance is 0.5 for any constant predictor on
-    # any class distribution.
-    chance = 0.5
-    fold_subjects.append(held_label)
-    fold_accuracies.append(acc)
-    fold_chances.append(chance)
-    all_y_true.append(np.asarray(y_true_fold, dtype=int))
-    all_y_pred.append(np.asarray(y_pred, dtype=int))
-
-# Pool fold-level test labels and predictions so the figure can show a
-# single confusion matrix that aggregates every held-out subject.
-y_pooled_true = np.concatenate(all_y_true)
-y_pooled_pred = np.concatenate(all_y_pred)
-
-mean_acc = float(np.mean(fold_accuracies))
-mean_chance = float(np.mean(fold_chances))
-pd.DataFrame(
-    {
-        "held-out subject": fold_subjects,
-        "balanced accuracy": [round(a, 3) for a in fold_accuracies],
-        "chance (balanced)": [round(c, 3) for c in fold_chances],
-    }
-)
-
-# %% [markdown]
-# **Investigate.** Per-fold balanced accuracy fluctuates a few points
-# around its mean. The chance line is 0.5 by construction: any constant
-# predictor scores 0.5 in balanced accuracy regardless of how skewed
-# the class proportions are, which is exactly why the metric is the
-# right one for an oddball task. The plain accuracy a majority-class
-# predictor would reach (~0.80 here) flatters the trivial baseline; the
-# balanced metric does not.
-
-# %% [markdown]
-# Step 7: The headline plate
-# ----------------------------
-# One figure, four panels arranged 2x2: ERP at Pz, scalp topography of
-# the target-minus-standard difference wave at the peak, per-fold
-# cross-subject accuracy, and a pooled LOSO confusion matrix that
-# exposes the per-class error pattern under the 4:1 standard:target
-# imbalance. The figure code lives in a sibling ``_p300_figure`` module
-# so the rendering plumbing stays out of the tutorial; the call below
-# is the only line that matters.
+    # Use a fixed analysis interval; do not choose it from test accuracy.
+    interval = (epochs.times >= 0.3) & (epochs.times <= 0.45)
+    features.append(signal_mean(X[:, :, interval]) * 1e6)
+    labels.append(y)
+    groups.extend([str(recording.description["subject"])] * len(y))
 
 # %%
-from _p300_figure import draw_p300_figure
+# 3. Evaluate one held-out subject per fold
+# -----------------------------------------
+# StandardScaler is fitted inside each training fold. Balanced accuracy
+# gives targets and standards equal weight despite the oddball imbalance.
+# Concatenation stacks trials while ``groups`` keeps their participant identity.
+# Read the class-count table before training: an always-standard prediction
+# may have high ordinary accuracy, but binary balanced accuracy would be 0.5.
+#
+# Logistic regression learns a linear combination of channel amplitudes.
+# Training class weights give the rarer targets more influence on its loss.
+# This affects fitting; balanced accuracy separately averages the two class
+# recalls at evaluation. Each LOSO fold trains on two complete participants
+# and tests on the third. A random split of trials would answer a different
+# question by allowing the same participant into training and test sets.
+X = np.concatenate(features)
+y = np.concatenate(labels)
+groups = np.asarray(groups)
+print(pd.crosstab(groups, y, rownames=["subject"], colnames=["class"]))
+predictions = np.full(len(y), -1)
+counts = np.zeros(len(y), dtype=int)
+rows = []
+for train, test in LeaveOneGroupOut().split(X, y, groups):
+    assert set(groups[train]).isdisjoint(groups[test])
+    model = make_pipeline(
+        StandardScaler(), LogisticRegression(class_weight="balanced", max_iter=1000)
+    )
+    model.fit(X[train], y[train])
+    predictions[test] = model.predict(X[test])
+    counts[test] += 1
+    rows.append(
+        {
+            "subject": groups[test][0],
+            "balanced_accuracy": balanced_accuracy_score(y[test], predictions[test]),
+        }
+    )
+assert np.all(counts == 1)
+print(pd.DataFrame(rows).to_string(index=False))
 
-fig = draw_p300_figure(
-    times_ms=times_ms,
-    target_mean=target_evoked_pz,
-    standard_mean=standard_evoked_pz,
-    target_se=target_se_pz,
-    standard_se=standard_se_pz,
-    channel_label=eeg_names[pz_idx],
-    n_targets=n_targets,
-    n_standards=n_standards,
-    n_channels=len(eeg_names),
-    sfreq=sfreq_post,
-    p300_window_ms=(P300_LO_MS, P300_HI_MS),
-    peak_time_ms=peak_time_ms,
-    peak_amp_uv=peak_amp_uv,
-    diff_at_peak=diff_at_peak,
-    topomap_info=topomap_info,
-    fold_subjects=fold_subjects,
-    fold_accuracies=fold_accuracies,
-    chance_level=mean_chance,
-    dataset="ds005863",
-    subject=SUBJECT,
-    plot_id="plot_20",
-    y_true_pooled=y_pooled_true,
-    y_pred_pooled=y_pooled_pred,
-    class_names=("standard", "target"),
+# %%
+# 4. Inspect the measured ERP and decoding errors
+# -----------------------------------------------
+# The ERP describes the first recording in the printed cohort order; the
+# confusion matrix uses held-out predictions from all three. A visible P300 or high score is not a test
+# requirement. This small cohort demonstrates the workflow, not a benchmark.
+# In the normalized confusion matrix, each row sums to one: the target-row
+# diagonal is target recall and its off-diagonal cell represents missed
+# targets. Compare both rows, since good standard recall can hide missed
+# targets in an unbalanced task. An averaged ERP difference also need not
+# imply that single-trial responses are reliably separable.
+mne.viz.plot_compare_evokeds(
+    {name: first_epochs[name].average() for name in ["standard", "target"]},
+    picks="Pz",
+    show=False,
+)
+ConfusionMatrixDisplay.from_predictions(
+    y, predictions, display_labels=["standard", "target"], normalize="true"
 )
 plt.show()
 
-# %% [markdown]
-# A common mistake, and how to recover
-# --------------------------------------
-# **Run.** A frequent slip is to assume the BIDS event labels are
-# ``"target"`` / ``"standard"`` strings; on ``ds005863`` they are
-# BrainVision codes ``S 11`` ... ``S 55`` and the binary task label has
-# to be derived from the digit pair. We trigger the failure on purpose
-# so the recovery is visible :cite:`nederbragt2020teaching`.
-
 # %%
-try:
-    bad_mapping = {"target": 1, "standard": 0}
-    missing = [k for k in bad_mapping if k not in event_id]
-    if missing:
-        raise KeyError(f"event keys not found: {missing}")
-except (KeyError, ValueError) as exc:
-    print(f"Caught {type(exc).__name__}: {exc}")
-    known = sorted(d for d in event_id if d.startswith("S "))[:6]
-    print(f"Recovery: known stim codes start with {known}.")
-    print("Map them via the digit-pair convention used in Step 3.")
-
-# %% [markdown]
-# Modify
-# ------
-# **Your turn.** Set ``P300_LO_MS, P300_HI_MS = 250.0, 350.0`` and rerun
-# Step 4 onward. The peak latency drops a little because the search now
-# excludes the late P300 tail; the per-fold accuracy stays close because
-# the centro-parietal positivity onsets earlier than 350 ms on this
-# dataset.
-
-# %% [markdown]
-# Make
-# ----
-# **Mini-project.** Replace the per-channel mean-amplitude feature with
-# the flattened ``X_bc`` window (``F_i = X_bc.reshape(n_epochs, -1)``)
-# and rerun the LOSO fit. Compare wall-time, accuracy, and the
-# ``LogisticRegression`` coefficient pattern: the high-dimensional fit
-# can overfit one subject's noise, so the LOSO mean is the honest
-# summary of what generalizes.
-
-# %% [markdown]
-# Result
-# ------
-
-# %%
-print("\n| metric                            | value |")
-print("|-----------------------------------|-------|")
-print(f"| P300 peak amplitude (uV at Pz)    | {peak_amp_uv:+.2f} |")
-print(f"| P300 peak latency (ms)            | {peak_time_ms:.0f} |")
-print(f"| LOSO mean balanced accuracy       | {mean_acc:.3f} |")
-print(f"| LOSO chance (balanced)            | {mean_chance:.3f} |")
-print(f"| n_targets (sub-{SUBJECT})              | {n_targets} |")
-print(f"| n_standards (sub-{SUBJECT})            | {n_standards} |")
-
-# %% [markdown]
-# Wrap-up
-# -------
-# The visual P300 reads as a textbook plate on ``ds005863``: a
-# centro-parietal positivity peaking 300-450 ms after the rare target,
-# spatially focal at Pz/CPz on the difference-wave topography, and
-# linearly separable enough that a single mean-amplitude feature per
-# channel takes a logistic regression a few accuracy points above the
-# majority-class baseline across held-out subjects. Two follow-on
-# tutorials carry the recipe further:
-# :doc:`/generated/auto_examples/tutorials/20_event_related/plot_21_auditory_oddball`
-# applies the same windowing to an auditory paradigm; the
-# :doc:`/generated/auto_examples/tutorials/40_features/plot_42_features_to_sklearn`
-# tutorial shows how to swap the scalar feature here for a richer feature
-# matrix without touching the leakage-aware split.
-
-# %% [markdown]
-# Try it yourself
-# ---------------
-# - Set ``P300_LO_MS, P300_HI_MS = 250.0, 500.0`` and watch the peak
-#   latency drift.
-# - Add a fourth subject to ``SUBJECTS`` and verify the leave-one-subject-
-#   out fold count grows automatically through
-#   :class:`sklearn.model_selection.GroupKFold`.
-# - Swap :class:`~sklearn.linear_model.LogisticRegression` for
-#   :class:`~sklearn.linear_model.LogisticRegressionCV` and check whether
-#   tuned regularisation buys more than 0.01 accuracy on this small
-#   feature set.
-# - Print ``topomap_info["chs"][i]["loc"][:3]`` for the channels with the
-#   largest positive ``diff_at_peak`` and confirm they sit on the
-#   posterior midline.
-
-# %% [markdown]
-# References
-# ----------
-# See :doc:`/references` for the centralized bibliography of papers
-# cited above. Add or amend an entry once in
-# :file:`docs/source/refs.bib`; every tutorial inherits the update.
+# 5. Extend the analysis without selecting on test results
+# --------------------------------------------------------
+# Add participants while retaining one complete participant per test fold.
+# If you want to select channels, intervals or regularization strength, make
+# those choices using additional validation participants inside the training
+# fold. Keep the held-out participant untouched until the choice is fixed.
+# The auditory oddball page uses the same Raw → Epochs → Evoked sequence for
+# a descriptive response comparison; the P300 transfer project adds a separate
+# adaptation participant to study a different deployment question.

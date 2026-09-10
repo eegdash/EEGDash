@@ -1,37 +1,18 @@
 Transfer, Foundation Models, and EEG2025
 ========================================
 
-Four advanced lessons on transfer learning and foundation-model
-fine-tuning, framed around the EEG2025 Foundation Challenge.
-Difficulty 3; assumes the core workflow, features, and evaluation
-tracks.
+Five lessons using recorded EEG, observed targets, and explicit evaluation
+boundaries. Challenge examples use small R5 mini participant subsets; their
+scores describe these instructional splits rather than the full leaderboard.
 
-Transfer is where the EEG decoding field is moving fastest, and it is
-also where most of the unprincipled choices accumulate: tasks selected
-to make the transfer score look good, evaluation that does not respect
-subject boundaries, fine-tuning learning rates pulled from thin air.
-These lessons follow Schirrmeister et al. (2017) for the architecture
-and training principles, and use the EEG2025 Challenge tasks as the
-concrete, reproducible benchmark.
-
-What you will learn:
-
-- How ``EEGChallengeDataset`` differs from ``EEGDashDataset`` and when
-  to reach for which.
-- How to set up a cross-task transfer experiment (Challenge 1):
-  resting-state pretraining transferred to contrast-change detection.
-- How to run subject-invariant regression for clinical-factor
-  prediction (Challenge 2): predict p-factor across held-out subjects.
-- How to fine-tune a Braindecode pretrained model on a downstream
-  task with sane hyperparameter choices.
-- How to read a transfer result critically: what scores actually mean
-  when the source and target tasks share subjects.
-
-Run the lessons in order:
-
-1. ``plot_70_challenge_dataset_basics.py`` -- ``EEGChallengeDataset``
-   basics.
-2. ``plot_71_cross_task_transfer.py`` -- EEG2025 Challenge 1.
-3. ``plot_72_subject_invariant_regression.py`` -- EEG2025 Challenge 2.
-4. ``plot_73_finetune_pretrained_model.py`` -- fine-tune a Braindecode
-   pretrained model.
+1. ``plot_70_challenge_dataset_basics.py`` -- inspect challenge metadata and
+   distinguish participant counts from recording counts.
+2. ``plot_71_cross_task_transfer.py`` -- pretrain on observed resting eye-state
+   cues and adapt to reaction-time regression, excluding the test participant
+   from both training stages.
+3. ``plot_72_subject_invariant_regression.py`` -- evaluate observed p-factor
+   with exactly one held-out prediction per participant.
+4. ``plot_73_finetune_pretrained_model.py`` -- adapt the published CBraMod
+   checkpoint with distinct training, validation and test participants.
+5. ``plot_74_neuroai_interop.py`` -- extract actual voltage windows through
+   NeuralSet Segmenter and EegExtractor and batch them with PyTorch DataLoader.

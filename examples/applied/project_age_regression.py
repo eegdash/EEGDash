@@ -1,399 +1,247 @@
-"""Age regression from EEG
-=========================
+"""Predict observed age (years) from real EEG features
+===================================================
 
-**Difficulty 3** | **Runtime: 30s** | **Compute: CPU**
+Evaluate a Ridge baseline with one held-out participant at a time.
 
-Can a feature-based regression head predict a child's age from a few
-seconds of resting-state EEG, on subjects the model has never seen?
-This applied case study takes the Healthy Brain Network release
-``ds005505`` (Alexander et al. 2017, doi:10.1038/sdata.2017.181), surfaced
-through NEMAR (Delorme et al. 2022, doi:10.1093/nargab/lqac023), wires up
-an :class:`eegdash.EEGDashDataset` query, builds a strict subject-aware
-split (Cisotto and Chicco 2024, doi:10.7717/peerj-cs.2256), fits a
-:class:`sklearn.linear_model.Ridge` head on band-power features, and
-reports Pearson r, Spearman rho, R^2, and MAE against a median-baseline
-predictor. EEG-based brain-age regression has a long line of prior work
-(Zoubi et al. 2018, doi:10.3389/fnhum.2018.00461). The headline
-question here is not whether we beat the published literature; the
-honest one is, does the model beat the train-set median predictor on
-never-seen subjects?
-Keywords: regression, applied, age
+Use six explicitly selected participants from the real
+`HBN ds005505 release <https://openneuro.org/datasets/ds005505>`_. Their
+RestingState signal files total approximately 595.8 MB, cached under
+``EEGDASH_CACHE_DIR``. This applied example is larger than the introductory
+21 MB SSVEP subset. Cropping after loading reduces computation, not download.
+Targets come from the observed participant metadata. Six participants are
+sufficient to exercise the workflow, not to support clinical conclusions.
+
+Before you start
+----------------
+Install EEGDash with its EEGPrep tutorial dependencies and scikit-learn. Tutorials 02,
+11 and 40 introduce windows, grouped evaluation and spectral features. This
+file runs independently: it predicts age in years from one
+feature row per participant and prints each held-out prediction.
 """
 
-# Difficulty: 3-star (advanced applied project)
-
-# %% [markdown]
-# Learning objectives
-# -------------------
-# After this case study you will be able to:
-#
-# - load HBN ``ds005505`` via :class:`eegdash.EEGDashDataset` with ``age`` and ``sex`` on ``description_fields``.
-# - build a subject-aware split with :class:`sklearn.model_selection.GroupKFold` keyed on subject.
-# - fit a :class:`sklearn.linear_model.Ridge` head on a feature table and report ``r2``, MAE, and a median-baseline reference.
-# - read a three-panel diagnostic plate (predicted vs true, per-subject signed residual, error histogram) for an EEG regression.
-#
-# Validate your result
-# --------------------
-# - **Expected Target Distribution.** HBN ``ds005505`` spans children and
-#   adolescents (approx. 5-22 years). Your ground-truth distribution should
-#   reflect this range.
-# - **Regression Metrics.** Report ``Pearson r`` and ``Spearman rho`` for
-#   correlation, ``R^2`` for explained variance, and ``MAE`` (Mean Absolute
-#   Error) in years for absolute performance.
-# - **Confounds Warning.** Age prediction is sensitive to acquisition site and
-#   equipment. A model that works well on one dataset may fail on another due
-#   to "site effects" that correlate with age (e.g., younger children being
-#   recorded more frequently at one site).
-#
-# Requirements
-# ------------
-# - ~30 s on CPU when the gallery uses the offline feature path (default).
-# - Real-data path needs network access to NEMAR plus ``braindecode[hub]``.
-# - Prereqs: :doc:`/generated/auto_examples/tutorials/00_start_here/plot_02_dataset_to_dataloader`
-#   and :doc:`/generated/auto_examples/tutorials/40_features/plot_42_features_to_sklearn`.
-# - Concept: :doc:`/concepts/leakage_and_evaluation` for the subject-aware
-#   evaluation rationale that the figure plate is built around.
-
 # %%
-# Step 1. Setup, seeds, parameterized cache
-# ----------------------------------------
 import os
-import warnings
 from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from scipy.stats import pearsonr, spearmanr
+from braindecode.preprocessing import (
+    create_fixed_length_windows,
+    preprocess,
+    Resampling,
+    RemoveDrifts,
+)
+
+from eegdash import EEGDashDataset
+from functools import partial
+from eegdash.features import (
+    FeatureExtractor,
+    extract_features,
+    spectral_bands_power,
+    spectral_preprocessor,
+)
+from sklearn.dummy import DummyRegressor
 from sklearn.linear_model import Ridge
-from sklearn.metrics import mean_absolute_error, r2_score
-from sklearn.model_selection import GroupKFold
-from sklearn.pipeline import Pipeline
+from sklearn.metrics import mean_absolute_error
+from sklearn.model_selection import LeaveOneOut
+from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 
-from eegdash.viz import use_eegdash_style
-
-use_eegdash_style()
-warnings.simplefilter("ignore", category=FutureWarning)
-warnings.simplefilter("ignore", category=UserWarning)
-SEED = 42
-np.random.seed(SEED)
-rng = np.random.default_rng(SEED)
-cache_dir = Path(os.environ.get("EEGDASH_CACHE_DIR", Path.cwd() / "eegdash_cache"))
-cache_dir.mkdir(parents=True, exist_ok=True)
-
-# %% [markdown]
-# Step 2. Predict, what do you expect?
-# ------------------------------------
-#
-# **Predict.** Constant predictors set the chance level. A model that
-# always returns the train-set median age scores ``r2 = 0`` against the
-# test-set mean by definition. Brain-age regression on faint resting
-# EEG is a hard inverse problem; what r2 do you expect a Ridge head on
-# ~12 features to reach with only ~12 held-out subjects: 0.10? 0.40?
-# 0.80? Write your guess before scrolling.
-
-# %% [markdown]
-# Step 3. Load HBN ds005505 (real path) or synthesize a feature table (gallery)
-# ------------------------------------------------------------------------------
-#
-# In production, :class:`eegdash.EEGDashDataset` exposes ``age`` and
-# ``sex`` through ``description_fields`` so they surface as per-recording
-# columns. The canonical call is shown below; this case study then
-# synthesizes a feature table with the same column layout so the
-# rendered gallery runs offline and the smoke test stays fast.
-#
-# .. code-block:: python
-#
-#    from eegdash import EEGDashDataset
-#    from braindecode.preprocessing import (
-#        Preprocessor, create_fixed_length_windows, preprocess,
-#    )
-#    from braindecode.features import extract_features
-#
-#    ds = EEGDashDataset(
-#        dataset="ds005505",
-#        cache_dir=cache_dir,
-#        description_fields=["subject", "session", "task", "age", "sex"],
-#    )
-#    preprocess(ds, [
-#        Preprocessor("pick_channels", ch_names=["Cz", "Pz", "Oz", "Fz"]),
-#        Preprocessor("resample", sfreq=128),
-#        Preprocessor("filter", l_freq=1.0, h_freq=55.0),
-#    ], n_jobs=4)
-#    windows = create_fixed_length_windows(
-#        ds, window_size_samples=256, window_stride_samples=256,
-#        drop_last_window=True, preload=False,
-#    )
-#    features = extract_features(windows, feature_groups=["spectral"])
-#
-# We mirror the resulting shape: 12 subjects, ~24 windows per subject,
-# 12 features per window (band-power proxies + variance on Cz/Pz/Oz),
-# plus a subject-level ``age`` drawn from the HBN child cohort range
-# (roughly 6 to 18 years).
-
 # %%
-N_SUBJECTS, N_WINDOWS = 12, 24
-BANDS = ("delta", "theta", "alpha", "beta")
-CH_NAMES = ("Cz", "Pz", "Oz")
-subject_age = rng.uniform(6.0, 18.0, size=N_SUBJECTS)
-subject_sex = rng.choice(["F", "M"], size=N_SUBJECTS)
-rows: list[dict] = []
-for s in range(N_SUBJECTS):
-    a = float(subject_age[s])
-    sx = str(subject_sex[s])
-    for w in range(N_WINDOWS):
-        # Per-window features: a faint age signal in alpha / beta plus a
-        # mild subject-level offset (the part the cross-subject loop must
-        # not memorize) and a noise floor that keeps R^2 modest.
-        bias = 0.04 * (s - N_SUBJECTS / 2)
-        row = {
-            "subject": f"sub-NDARAA{s:04d}",
-            "session": "ses-01",
-            "run": "run-01",
-            "dataset": "ds005505",
-            "sample_id": f"sub-NDARAA{s:04d}__w{w:03d}",
-            "age": a,
-            "sex": sx,
-        }
-        for ch in CH_NAMES:
-            row[f"var_{ch}"] = float(rng.gamma(2.0, 1.0) + bias)
-            for band in BANDS:
-                base = rng.normal(0.0, 1.0)
-                if band in ("alpha", "beta"):
-                    # Age tracks alpha / beta in resting EEG :cite:`alzoubi2018ageeeg`.
-                    base += 0.18 * (a - 12.0)
-                row[f"spec_{band}_{ch}"] = float(base + 0.4 * bias)
-        rows.append(row)
-feature_table = pd.DataFrame(rows)
-feature_cols = [c for c in feature_table.columns if c.startswith(("var_", "spec_"))]
-metadata = feature_table[
-    ["subject", "session", "run", "dataset", "sample_id", "age", "sex"]
-].copy()
-metadata["target"] = metadata["age"].astype(float)
-y = metadata["target"].to_numpy()
-X = feature_table[feature_cols].to_numpy()
-print(
-    f"feature_table: rows={len(metadata)} | features={len(feature_cols)} | "
-    f"subjects={metadata['subject'].nunique()} | "
-    f"age_range=[{metadata['age'].min():.1f}, {metadata['age'].max():.1f}] yr"
+# 1. Load the named cohort and inspect observed participant metadata
+# ------------------------------------------------------------------
+# ``age`` is an observed participant attribute in years, not a target inferred
+# from EEG or assigned according to recording order. Its numerical range in
+# this small cohort defines where the model is being tested; it cannot establish
+# performance at ages not represented here.
+#
+# The two assertions require one selected recording per named participant.
+# ``description_fields`` makes the source attributes available alongside BIDS
+# identifiers; the EEG still comes from ``EEGDashDataset``. These are the original
+# OpenNeuro recordings, not the separately filtered/downsampled challenge
+# release supplied by ``EEGChallengeDataset``.
+subjects = [
+    "NDARBH024NH2",
+    "NDARAM704GKZ",
+    "NDARAC904DMU",
+    "NDARAN385MDH",
+    "NDARAG143ARJ",
+    "NDARAP359UM6",
+]
+cache_dir = Path(os.environ.get("EEGDASH_CACHE_DIR", ".eegdash_cache"))
+dataset = EEGDashDataset(
+    dataset="ds005505",
+    task="RestingState",
+    subject=subjects,
+    cache_dir=cache_dir,
+    description_fields=["subject", "task", "age", "sex", "p_factor"],
+    n_jobs=1,
 )
-assert metadata["age"].notna().all(), "age has NaN rows"
-assert pd.api.types.is_float_dtype(metadata["age"]), "age is not float"
-
-# %% [markdown]
-# Step 4. Build a Ridge regression head on top of features
-# --------------------------------------------------------
-#
-# A :class:`sklearn.preprocessing.StandardScaler` then
-# :class:`sklearn.linear_model.Ridge` :class:`sklearn.pipeline.Pipeline`
-# (Pedregosa et al. 2011, doi:10.5555/1953048.2078195) is the regression
-# analogue of a logistic head. ``alpha=1.0`` is a defensible default for
-# a 12-feature table, and ``random_state=42`` keeps the loop byte stable.
-
+assert len(dataset.datasets) == len(subjects)
+assert dataset.description["subject"].nunique() == len(subjects)
+print(dataset.description[["subject", "age", "sex", "p_factor"]])
 
 # %%
-def make_regressor() -> Pipeline:
-    """Return a fresh ``StandardScaler -> Ridge`` Pipeline."""
-    return Pipeline(
-        [
-            ("scaler", StandardScaler()),
-            ("clf", Ridge(alpha=1.0, random_state=SEED)),
-        ]
-    )
-
-
-# %% [markdown]
-# Step 5. Cross-subject 5-fold split, no subject leakage
-# ------------------------------------------------------
+# 2. Prepare the first minute of recorded EEG
+# -------------------------------------------
+# The fixed first-minute interval and four named electrodes bound computation
+# and establish a common channel order. They are not selected by test accuracy.
+# The source reference channel can be flat; the chosen channels exclude that
+# reference rather than pretending a zero-variance channel can be standardized.
 #
-# **Run.** :class:`sklearn.model_selection.GroupKFold` keyed on
-# ``subject`` is the contract: every subject appears in exactly one
-# test fold. We assert zero subject overlap before scoring, and we
-# pool the held-out predictions across folds so the diagnostic plate
-# in step 7 sees every subject once. Subject leakage routinely
-# produces optimistic accuracies (Cisotto and Chicco 2024 Tip 9), so
-# the assertion below is non-negotiable.
-
-# %%
-groups = metadata["subject"].to_numpy()
-unique_subjects = np.unique(groups)
-n_folds = min(5, len(unique_subjects))
-splitter = GroupKFold(n_splits=n_folds)
-
-fold_r2: list[float] = []
-fold_mae: list[float] = []
-fold_baseline_mae: list[float] = []
-held_records: list[tuple[str, str, float, float]] = []
-for k, (tr, te) in enumerate(splitter.split(X, y, groups=groups)):
-    train_subj = set(groups[tr].tolist())
-    test_subj = set(groups[te].tolist())
-    overlap = train_subj & test_subj
-    assert not overlap, f"Fold {k} leaked subjects: {sorted(overlap)}"
-
-    pipe = make_regressor().fit(X[tr], y[tr])
-    y_pred = pipe.predict(X[te])
-    fold_r2.append(float(r2_score(y[te], y_pred)))
-    fold_mae.append(float(mean_absolute_error(y[te], y_pred)))
-    median_pred = float(np.median(y[tr]))
-    fold_baseline_mae.append(
-        float(mean_absolute_error(y[te], np.full_like(y[te], median_pred)))
-    )
-    for sid, sx, true_val, pred_val in zip(
-        metadata.loc[te, "subject"].tolist(),
-        metadata.loc[te, "sex"].tolist(),
-        y[te].tolist(),
-        y_pred.tolist(),
-    ):
-        held_records.append((sid, sx, float(true_val), float(pred_val)))
+# Braindecode's EEGPrep ``Resampling`` adapter reduces the rate to 100 Hz,
+# with anti-alias filtering, before ``RemoveDrifts`` applies its high-pass
+# transition from 0.5 to 1 Hz. Resampling first reduces the later filter's
+# computation. These published components run on each recording separately;
+# no custom filtering function or cross-participant fit is needed.
+#
+# A two-second window then contains 200 voltage samples. The source reference
+# is retained: we do not average-reference an arbitrary four-channel subset.
+# EEGPrep's forward-backward drift filter is offline, not causal streaming
+# preprocessing. This small recipe neither detects every artifact nor invokes
+# channel rejection or ASR. The feature models below use only 1–30 Hz.
+#
+# Fixed-length windows are used because the target belongs to a person, not an
+# event. They do not relabel eyes-open/closed intervals or remove every
+# instruction or artifact from the first minute. Equal size and stride avoid
+# overlap; a final short remainder is discarded. EEGDash reads the windows
+# in batches shaped ``(windows, 4 channels, 200 samples)``. Check the printed
+# window count rather than assuming each recording retains the same number.
+channels = ["E11", "E62", "E75", "E22"]
+for recording in dataset.datasets:
+    raw = recording.raw
     print(
-        f"Fold {k}: r2={fold_r2[-1]:+.3f} | mae={fold_mae[-1]:.3f} yr | "
-        f"baseline_mae={fold_baseline_mae[-1]:.3f} yr"
+        recording.description["subject"],
+        raw.info["sfreq"],
+        raw.ch_names,
+        "observed annotations:",
+        sorted(set(raw.annotations.description)),
     )
-
-mean_r2 = float(np.mean(fold_r2))
-std_r2 = float(np.std(fold_r2, ddof=1))
-mean_mae = float(np.mean(fold_mae))
-mean_baseline_mae = float(np.mean(fold_baseline_mae))
-
-# %% [markdown]
-# Step 6. A common mistake, and how to recover
-# --------------------------------------------
-#
-# **Run.** A frequent slip is wiring a non-numeric ``age`` column into
-# :class:`sklearn.linear_model.Ridge`. ``age`` arrives as strings if a
-# CSV was loaded without dtype hints (or if a NEMAR sidecar serializes
-# it as text), and Ridge then refuses to fit. We trigger the failure
-# on purpose with ``try / except`` so the error message and the
-# recovery sit next to each other in the rendered gallery.
-
-# %%
-try:
-    bad_y = metadata["age"].astype(str).to_numpy()
-    Ridge(alpha=1.0, random_state=SEED).fit(X[:8], bad_y[:8])
-except (ValueError, TypeError) as exc:
-    print(f"Caught {type(exc).__name__}: {str(exc)[:90]}")
-    # Recovery: cast the target to float before fitting any regression head.
-    fixed_y = pd.to_numeric(metadata["age"], errors="coerce").to_numpy()
-    Ridge(alpha=1.0, random_state=SEED).fit(X[:8], fixed_y[:8])
-    print(f"Recovery: cast age to float (dtype={fixed_y.dtype}); Ridge fit.")
-
-# %% [markdown]
-# Step 7. Investigate, three-panel diagnostic plate
-# -------------------------------------------------
-#
-# **Investigate.** A single MAE number hides every failure mode that
-# matters. The sibling ``_age_regression_figure.py`` renders three
-# panels: predicted vs true age (one point per held-out subject, with
-# Pearson r, Spearman rho, R^2, and MAE in a corner box, points colored
-# by sex), per-subject signed residuals sorted by ``|residual|`` (orange
-# for over-prediction, blue for under-prediction), and a histogram of
-# window-level errors with a Gaussian density overlay so the bias
-# (mean) and the spread (std) read at a glance. This is the kind of
-# diagnostic Pernet et al. 2019 (doi:10.1038/s41597-019-0104-8)
-# recommend before any clinical claim.
-
-# %%
-held_df = pd.DataFrame(held_records, columns=["subject", "sex", "true", "pred"])
-y_true_pooled = held_df["true"].to_numpy()
-y_pred_pooled = held_df["pred"].to_numpy()
-subject_pooled = held_df["subject"].tolist()
-sex_pooled = held_df["sex"].tolist()
-
-from _age_regression_figure import draw_age_regression_figure
-
-fig = draw_age_regression_figure(
-    y_true_subj=y_true_pooled,
-    y_pred_subj=y_pred_pooled,
-    subject_ids=subject_pooled,
-    sex_or_fold=sex_pooled,
-    plot_id="project_age_regression",
+    assert set(channels).issubset(raw.ch_names)
+    raw.crop(tmax=59.99).load_data().pick(channels).reorder_channels(channels)
+# Preserve annotation times in seconds across EEGPrep format conversions.
+# Retain the measurement date too: it anchors annotations with absolute times.
+annotations_before = [
+    recording.raw.annotations.copy() for recording in dataset.datasets
+]
+measurement_dates = [recording.raw.info["meas_date"] for recording in dataset.datasets]
+durations_before = [
+    recording.raw.n_times / recording.raw.info["sfreq"]
+    for recording in dataset.datasets
+]
+preprocess(
+    dataset, [Resampling(sfreq=100), RemoveDrifts(transition=(0.5, 1.0))], n_jobs=1
 )
+for recording, annotations, duration, measurement_date in zip(
+    dataset.datasets, annotations_before, durations_before, measurement_dates
+):
+    raw = recording.raw
+    assert raw.ch_names == channels and raw.info["sfreq"] == 100
+    assert abs(raw.n_times / 100 - duration) <= 1 / 100
+    raw.set_meas_date(measurement_date)
+    raw.set_annotations(annotations)
+    assert raw.annotations.orig_time == annotations.orig_time
+    np.testing.assert_array_equal(raw.annotations.onset, annotations.onset)
+    np.testing.assert_array_equal(raw.annotations.description, annotations.description)
+windows = create_fixed_length_windows(
+    dataset,
+    window_size_samples=200,
+    window_stride_samples=200,
+    on_last_window="drop",
+    preload=True,
+)
+metadata = windows.get_metadata().reset_index(drop=True)
+groups = metadata["subject"].astype(str).to_numpy()
+assert len(windows) == len(metadata)
+assert not metadata.duplicated(["subject", "i_start_in_trial"]).any()
+print("Real two-second windows:", len(windows), "with", len(channels), "channels")
+
+# %%
+# 3. Average window band powers into one feature row per participant
+# ------------------------------------------------------------------
+# EEGDash's ``FeatureExtractor`` shares one Welch spectrum between the four
+# band-power outputs. ``nperseg=200`` spans the two-second window, giving a
+# 0.5 Hz grid; four bands times four electrodes produce 16 named columns.
+# ``spectral_bands_power`` sums PSD values in each band. Its scale depends on
+# that fixed grid, so preserve the rate and segment length when reusing this
+# feature definition. No hand-written FFT or band-reduction function is needed.
+#
+# Log compression acts on each trial's feature values. We then group the
+# resulting table by subject and average within each person before fitting.
+# Thus ``X`` has six rows, and no participant gains weight merely because
+# more windows were retained. The same sorted index selects the observed
+# participant targets, preserving feature/target alignment.
+bands = {"delta": (1, 4), "theta": (4, 8), "alpha": (8, 13), "beta": (13, 30)}
+spectral = FeatureExtractor(
+    {"power": partial(spectral_bands_power, bands=bands)},
+    preprocessor=partial(
+        spectral_preprocessor, fs=100, nperseg=200, noverlap=0, f_min=1, f_max=30
+    ),
+)
+feature_table = extract_features(
+    windows, spectral, batch_size=64, n_jobs=1
+).to_dataframe()
+assert feature_table.shape == (len(metadata), len(bands) * len(channels))
+participant_features = (
+    np.log10(feature_table.clip(lower=1e-30))
+    .assign(subject=groups)
+    .groupby("subject")
+    .mean()
+)
+identities = participant_features.index.to_numpy()
+X = participant_features.to_numpy()
+participants = dataset.description.set_index("subject").loc[identities]
+assert np.isfinite(X).all() and len(X) == len(subjects)
+
+y = pd.to_numeric(participants["age"], errors="raise").to_numpy(dtype=float)
+assert np.isfinite(y).all()
+
+# %%
+# 4. Fit only on training participants and measure held-out errors
+# ----------------------------------------------------------------
+# Each leave-one-out fold has five training people and one test person.
+# ``StandardScaler`` is fitted anew on the five training feature rows. Ridge
+# uses a fixed ``alpha=10`` penalty to limit large coefficients in a setting
+# with more features than training participants; it is not a tuned optimum.
+# The separate mean predictor uses only those same training targets.
+#
+# Mean absolute error is the average absolute participant prediction error,
+# measured in years. Lower is better. Compare the model's
+# MAE with the training-mean baseline rather than a classification chance line.
+# The baseline can outperform the EEG model, and no assertion demands otherwise.
+# The table lets you see whether the average error is driven by one individual;
+# the diagonal in the scatter plot marks perfect prediction, not a fitted line.
+predicted, baseline = np.empty_like(y), np.empty_like(y)
+for train, test in LeaveOneOut().split(X):
+    assert set(identities[train]).isdisjoint(identities[test])
+    model = make_pipeline(StandardScaler(), Ridge(alpha=10))
+    predicted[test] = model.fit(X[train], y[train]).predict(X[test])
+    baseline[test] = DummyRegressor().fit(X[train], y[train]).predict(X[test])
+print(
+    pd.DataFrame(
+        {
+            "subject": identities,
+            "observed": y,
+            "predicted": predicted,
+            "training_mean": baseline,
+        }
+    )
+)
+print("Participant MAE:", mean_absolute_error(y, predicted))
+print("Training-mean MAE:", mean_absolute_error(y, baseline))
+fig, ax = plt.subplots(figsize=(5, 4), layout="constrained")
+ax.scatter(y, predicted, label="Held-out participants")
+ax.plot([y.min(), y.max()], [y.min(), y.max()], "k--")
+ax.set(xlabel="Observed age (years)", ylabel="Predicted age (years)")
+ax.legend()
 plt.show()
 
-# Pull figure-side metrics back into the script namespace so the
-# wrap-up print line stays consistent with the corner box.
-fig_metrics = fig._eegdash_age_metrics
-print(
-    f"figure metrics: r={fig_metrics['pearson_r']:+.3f} | "
-    f"rho={fig_metrics['spearman_rho']:+.3f} | "
-    f"R^2={fig_metrics['r2']:+.3f} | "
-    f"MAE={fig_metrics['mae']:.3f} yr | "
-    f"n_subjects={fig_metrics['n_subjects']}"
-)
-
-# %% [markdown]
-# Modify, where to take this next (concept only)
-# ----------------------------------------------
-#
-# **Modify (concept).** Two upgrades close most of the gap to a real
-# scientific result. First, scale the cohort: HBN ships several
-# thousand recordings, and reliable brain-age estimates need at least
-# a few hundred subjects per fold. Second, swap Ridge for a deep
-# encoder, :class:`braindecode.models.EEGConformer` (Song et al. 2023,
-# doi:10.1109/TNSRE.2022.3230250) trained on raw windows, with the
-# same cross-subject contract enforced at the dataset level. We do not
-# run it here (gpu_required + multi-hour fit out of scope), but the
-# subject-aware split contract above is the floor any such system must
-# still satisfy.
-
-# %% [markdown]
-# Result, model vs median baseline
-# --------------------------------
-#
-# Five folds, disjoint subject test sets. ``mean +/- std`` against the
-# regression chance level. The median-baseline MAE is the floor the
-# trained model must come in below. The pooled-window vs subject-level
-# numbers split the disagreement: pooled noise vs subject-level rank
-# reversal (Cisotto and Chicco 2024 Tip 7).
-
 # %%
-pearson_pooled = float(pearsonr(y_true_pooled, y_pred_pooled).statistic)
-spearman_pooled = float(spearmanr(y_true_pooled, y_pred_pooled).statistic)
-print(
-    f"Cross-subject 5-fold age regression: r2={mean_r2:+.3f} +/- {std_r2:.3f} "
-    f"| mae={mean_mae:.3f} yr | baseline_mae={mean_baseline_mae:.3f} yr "
-    f"| metric: r2"
-)
-print(
-    f"pooled-window r={pearson_pooled:+.3f} | rho={spearman_pooled:+.3f} | "
-    f"subject r={fig_metrics['pearson_r']:+.3f} | "
-    f"subject rho={fig_metrics['spearman_rho']:+.3f}"
-)
-print(
-    f"chance: predicting the train-median age scores baseline_mae="
-    f"{mean_baseline_mae:.3f} yr on test."
-)
-assert mean_mae < mean_baseline_mae, "Model MAE must be below the median-baseline MAE."
-
-# %% [markdown]
-# Wrap-up
-# -------
-# We loaded an HBN-shaped feature table with ``age`` as a float column,
-# built a 5-fold ``GroupKFold`` split keyed on ``subject``, asserted
-# zero subject leakage, fit a :class:`sklearn.linear_model.Ridge` head
-# per fold, and reported R^2 plus MAE alongside the median-baseline
-# predictor. The three-panel figure is the diagnostic that surfaces
-# what a single MAE hides: a flat predicted-vs-true cloud means the
-# model regresses toward the train-set mean, a one-sided residual bar
-# chart means a single subject drags the error, and a wide Gaussian on
-# the histogram means the per-window spread leaves little room for
-# clinical claims. Age in HBN is a derived metadata column, not a
-# diagnosis; any clinical framing belongs in a follow-up study with
-# much larger N.
-
-# %% [markdown]
-# Try it yourself
-# ---------------
-# - Swap :class:`sklearn.linear_model.Ridge` for
-#   :class:`sklearn.neural_network.MLPRegressor` (still ``random_state=42``).
-# - Pre-train a :class:`braindecode.models.EEGConformer` on raw windows
-#   and feed encoder activations into the same Ridge head.
-# - Bump ``n_folds`` to ``N_SUBJECTS`` for leave-one-subject-out variance.
-
-# %% [markdown]
-# References
-# ----------
-# See :doc:`/references` for the centralized bibliography of papers
-# cited above. Add or amend an entry once in
-# :file:`docs/source/refs.bib`; every tutorial inherits the update.
+# What this participant split can establish
+# -----------------------------------------
+# The six held-out predictions exercise a leakage-safe analysis, but their
+# folds share training participants and are not six independent experiments.
+# A narrow age range, short recording segment or acquisition confound can
+# strongly influence this small result. Add participants and define nested
+# validation before comparing feature sets or regularization settings.

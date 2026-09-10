@@ -88,7 +88,6 @@ jobs:
             ${{ runner.os }}-data-develop-
             ${{ runner.os }}-data-main-
             ${{ runner.os }}-data-
-          lookup-only: true
 
       - name: Create/Restore Data Caches (push)
         if: github.event_name != 'pull_request'
@@ -111,7 +110,15 @@ jobs:
             ${{ runner.os }}-data-main-
             ${{ runner.os }}-data-
 
+      - name: Check real-data gallery contracts
+        run: python -m pytest -q tests/unit_tests/test_eeg2026_gallery.py
+
       - name: Create Docs
+        env:
+          # Execute the shared ~32 MB SSVEP/imagery subset on every build.
+          # Task-specific HBN, P300 and challenge sources are rendered here;
+          # run the default full gallery separately with their larger datasets.
+          EEGDASH_GALLERY_FILENAME_PATTERN: '/(?:plot_(?:0[0-2]|1[0-3]|4[0-2]|5[0-5])_[^/]+|how_to_[^/]+)\.py$'
         run: |
           cd docs
           make html

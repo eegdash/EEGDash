@@ -1,27 +1,20 @@
 EEG/EMG Foundation Challenge 2026
 =================================
 
-Runnable EEGDash companions for the four announced 2026 competition tracks.
-Each tutorial shows the seed-corpus query, the held-out evaluation axis, and
-the track metric on a deterministic synthetic analogue that builds offline.
-
-The synthetic scores are teaching checks, not leaderboard baselines. Use the
-official NeuralBench evaluator for competition results:
+Runnable EEGDash workflows using recorded task-specific signals and observed
+labels. First execution downloads the explicit subsets named in each script.
+These small instructional evaluations use their own documented splits and
+endpoints; use NeuralBench for the official competition protocol:
 https://facebookresearch.github.io/neuroai/neuralbench/auto_examples/biosignal_challenge_2026/index.html
-
-What you will learn:
-
-- Track 1: map EEG to image embeddings and measure top-5 retrieval accuracy
-  on unseen stimuli.
-- Track 2: decode BCI commands across sessions with balanced accuracy.
-- Track 3: predict sleep-onset latency across held-out subjects and devices,
-  and understand the official weighted, binned error metric.
-- Track 4: decode EMG keystrokes across users and measure character error
-  rate.
 
 Run the tutorials:
 
-1. ``tutorial_track_1_eeg_to_image.py`` -- cross-stimulus EEG-to-image.
-2. ``tutorial_track_2_bci.py`` -- cross-session BCI commands.
-3. ``tutorial_track_3_sleep_onset.py`` -- cross-subject onset regression.
-4. ``tutorial_track_4_emg_to_text.py`` -- cross-user EMG-to-text.
+1. ``tutorial_track_1_eeg_to_image.py`` -- retrieve original THINGS images from
+   EEG using fixed image-pixel features and held-out image identities.
+2. ``tutorial_track_2_bci.py`` -- cross-session motor-imagery classification.
+3. ``tutorial_track_3_sleep_onset.py`` -- predict time from recording start to
+   sustained N2 sleep, evaluated on held-out Sleep-EDF participants. Recording
+   start is not lights-out; this is not the wearable competition endpoint.
+4. ``tutorial_track_4_emg_to_text.py`` -- decode observed lowercase keystrokes
+   across two real users. This aligned baseline receives event times and does
+   not replace full sequence transduction or the official CER evaluator.

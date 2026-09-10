@@ -2767,3 +2767,130 @@ def test_load_raw_direct_ctf_calls_read_raw_ctf(tmp_path):
 
     mock_reader.assert_called_once_with(str(ds_path), preload=False, verbose="ERROR")
     assert result is mock_raw
+
+
+@pytest.mark.parametrize("backend", ["s3", "nemar"])
+@pytest.mark.parametrize("declared", [False, True])
+@pytest.mark.parametrize("embedded", [False, True])
+def test_set_download_checks_samples_before_fdt(tmp_path, declared, embedded, backend):
+    """Numeric EEG.data needs no .fdt, even with stale catalogue/datfile entries."""
+    import scipy.io
+
+    ds = _make_s3_raw(tmp_path, ".set")
+    sidecar = ds.filecache.with_suffix(".json")
+    fdt = ds.filecache.with_suffix(".fdt")
+    ds._dep_downloads = [(ds._raw_uri.replace(".set", ".json"), sidecar)]
+    if declared:
+        fdt_uri = ds._raw_uri.replace(".set", ".fdt")
+        ds._dep_downloads.append((fdt_uri, fdt))
+        ds.record["storage"]["dep_keys"] = [
+            ds.record["bids_relpath"].replace(".set", ".fdt")
+        ]
+
+    raw_uri = ds._raw_uri
+    selected = [
+        (uri, dest) for uri, dest in ds._dep_downloads if dest != fdt or not embedded
+    ]
+    if backend == "nemar":
+        ds._storage_backend = "nemar"
+        ds._raw_uri = None
+        ds.record["storage"]["dep_keys"] = [
+            str(dest.relative_to(ds.bids_root)) for _, dest in ds._dep_downloads
+        ]
+        ds._dep_paths = [dest for _, dest in ds._dep_downloads]
+
+    def acquire_primary(uri, destination, **kwargs):
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        scipy.io.savemat(
+            destination,
+            {
+                "EEG": {
+                    "data": [[1.0, -1.0]] if embedded else fdt.name,
+                    "datfile": fdt.name,
+                }
+            },
+        )
+
+    with (
+        patch(
+            "eegdash.dataset.base._resolve_nemar_uris",
+            side_effect=[(raw_uri, []), (raw_uri, selected)],
+        ) as resolve,
+        patch.object(ds, "_fetch_nemar_root_metadata"),
+        patch("eegdash.dataset.base.downloader.get_s3_filesystem"),
+        patch(
+            "eegdash.dataset.base.downloader.download_s3_file",
+            side_effect=acquire_primary,
+        ),
+        patch(
+            "eegdash.dataset.base.downloader.download_files"
+        ) as download_dependencies,
+        patch.object(ds, "_download_companion_files") as discover,
+    ):
+        ds._download_required_files()
+
+    destinations = [dest for _, dest in download_dependencies.call_args.args[0]]
+    assert sidecar in destinations
+    assert (fdt in destinations) == (declared and not embedded)
+    assert discover.call_count == (0 if embedded else 1)
+    if backend == "nemar":
+        assert resolve.call_args_list[0].kwargs["dep_keys"] == []
+        resolved_paths = resolve.call_args_list[1].kwargs["dep_dests"]
+        assert (fdt in resolved_paths) == (declared and not embedded)
+
+
+@pytest.mark.parametrize("primary_mode", ["retry", "resolved_to_disk"])
+def test_nemar_set_resolves_dependencies_after_primary(tmp_path, primary_mode):
+    """Deferred sidecars survive retries and direct-to-disk primary resolution."""
+    import scipy.io
+
+    ds = _make_s3_raw(tmp_path, ".set")
+    raw_uri = ds._raw_uri
+    ds._storage_backend = "nemar"
+    ds._raw_uri = None
+    sidecar = ds.filecache.with_suffix(".json")
+    sidecar_uri = raw_uri.replace(".set", ".json")
+    ds._dep_paths = [sidecar]
+    ds.record["storage"]["dep_keys"] = [str(sidecar.relative_to(ds.bids_root))]
+
+    def write_primary():
+        ds.filecache.parent.mkdir(parents=True, exist_ok=True)
+        scipy.io.savemat(ds.filecache, {"EEG": {"data": "recording.fdt"}})
+
+    def resolve(record, raw_dest, dep_keys, dep_dests):
+        if not dep_keys:
+            assert not raw_dest.exists()
+            if primary_mode == "resolved_to_disk":
+                write_primary()
+                return None, []
+            return raw_uri, []
+        assert raw_dest.exists(), "Dependencies must wait for the primary file"
+        assert dep_dests == [sidecar]
+        return None, [(sidecar_uri, sidecar)]
+
+    def acquire_primary(uri, destination, **kwargs):
+        assert uri == raw_uri and destination == ds.filecache
+        write_primary()
+
+    with (
+        patch(
+            "eegdash.dataset.base._resolve_nemar_uris", side_effect=resolve
+        ) as resolver,
+        patch("eegdash.dataset.base.downloader.get_s3_filesystem"),
+        patch("eegdash.dataset.base.downloader.download_s3_file") as acquire,
+        patch("eegdash.dataset.base.downloader.download_files") as dependencies,
+        patch.object(ds, "_download_companion_files"),
+        patch.object(ds, "_fetch_nemar_root_metadata"),
+    ):
+        if primary_mode == "retry":
+            acquire.side_effect = TimeoutError("temporary primary-file outage")
+            with pytest.raises(TimeoutError, match="temporary primary-file outage"):
+                ds._download_required_files()
+            dependencies.assert_not_called()
+            acquire.side_effect = acquire_primary
+        ds._download_required_files()
+
+    assert resolver.call_count == 2
+    assert resolver.call_args.kwargs["dep_dests"] == [sidecar]
+    assert dependencies.call_args.args[0] == [(sidecar_uri, sidecar)]
+    assert acquire.call_count == (2 if primary_mode == "retry" else 0)

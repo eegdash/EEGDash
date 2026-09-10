@@ -23,6 +23,7 @@ import filelock
 import mne.io.ctf.info as ctf_info
 import mne_bids
 import nemar
+import numpy as np
 from mne.io import BaseRaw
 from mne_bids import BIDSPath
 
@@ -38,6 +39,7 @@ from .exceptions import DataIntegrityError, StorageAccessError
 from .io import (
     _ANNEX_KEY_RE,
     _convert_time_with_numeric_dash,
+    _eeglab_load_first_eeg,
     _ensure_coordsystem_symlink,
     _fix_negative_annotation_durations,
     _generate_coordsystem_json,
@@ -690,37 +692,34 @@ class EEGDashRaw(RawDataset):
         # the keys lazily (and only when the file isn't already cached)
         # so that we don't hit GitHub raw for files that are already on
         # disk.
+        dep_keys = (self.record.get("storage") or {}).get("dep_keys") or []
+        deferred_nemar_deps = (
+            self._storage_backend == "nemar"
+            and self.filecache.suffix.lower() == ".set"
+            and (self._raw_uri is not None or not self.filecache.exists())
+        )
         if (
             self._raw_uri is None
             and self._storage_backend == "nemar"
             and not self.filecache.exists()
         ):
-            dep_keys = (self.record.get("storage") or {}).get("dep_keys") or []
             self._raw_uri, self._dep_downloads = _resolve_nemar_uris(
                 self.record,
                 raw_dest=self.filecache,
-                dep_keys=list(dep_keys),
-                dep_dests=list(self._dep_paths),
+                dep_keys=[] if deferred_nemar_deps else list(dep_keys),
+                dep_dests=[] if deferred_nemar_deps else list(self._dep_paths),
             )
 
-        if self._raw_uri is not None:
+        if self._raw_uri is not None or deferred_nemar_deps:
             filesystem = downloader.get_s3_filesystem(
                 max_concurrency=self._max_concurrency
             )
 
-            # Download deps first (sidecars, companions), then raw.
-            # skip_missing=True because dep_keys may include companion files
-            # that don't exist on S3 (e.g., .fdt listed but never uploaded).
-            downloader.download_files(
-                self._dep_downloads,
-                filesystem=filesystem,
-                skip_existing=True,
-                skip_missing=True,
-            )
             try:
-                downloader.download_s3_file(
-                    self._raw_uri, self.filecache, filesystem=filesystem
-                )
+                if self._raw_uri is not None:
+                    downloader.download_s3_file(
+                        self._raw_uri, self.filecache, filesystem=filesystem
+                    )
             except FileNotFoundError:
                 raw_key = (self.record.get("storage") or {}).get("raw_key", "")
                 if self._storage_backend == "nemar" and self._download_nemar_data_file(
@@ -789,9 +788,45 @@ class EEGDashRaw(RawDataset):
                 else:
                     raise
 
+            # Some catalogue records list an .fdt even though EEG.data contains
+            # the samples. Inspect the acquired .set before requesting companions.
+            embedded_samples = False
+            if self.filecache.suffix.lower() == ".set":
+                eeg = _eeglab_load_first_eeg(self.filecache)
+                data = np.asarray(eeg.get("data")) if eeg is not None else None
+                embedded_samples = (
+                    data is not None
+                    and data.size > 0
+                    and np.issubdtype(data.dtype, np.number)
+                )
+            if deferred_nemar_deps:
+                selected = [
+                    (key, dest)
+                    for key, dest in zip(dep_keys, self._dep_paths, strict=True)
+                    if not (embedded_samples and dest.suffix.lower() == ".fdt")
+                ]
+                _, self._dep_downloads = _resolve_nemar_uris(
+                    self.record,
+                    raw_dest=self.filecache,
+                    dep_keys=[key for key, _ in selected],
+                    dep_dests=[dest for _, dest in selected],
+                )
+            dependencies = [
+                (uri, dest)
+                for uri, dest in self._dep_downloads
+                if not (embedded_samples and dest.suffix.lower() == ".fdt")
+            ]
+            downloader.download_files(
+                dependencies,
+                filesystem=filesystem,
+                skip_existing=True,
+                skip_missing=True,
+            )
+
             # Auto-discover and download companion files (.fdt, .eeg, .vmrk)
             # that may not have been included in dep_keys.
-            self._download_companion_files(filesystem)
+            if not embedded_samples:
+                self._download_companion_files(filesystem)
             if self._storage_backend == "nemar":
                 self._fetch_nemar_root_metadata()
 

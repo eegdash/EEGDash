@@ -256,3 +256,37 @@ plt.show()
 #
 # Related data-boundary example: `Braindecode training on MNE epochs
 # <https://braindecode.org/stable/auto_examples/model_building/plot_basic_training_epochs.html>`_.
+
+# %%
+# Continue to self-supervised pretraining
+# ---------------------------------------
+#
+# Follow NeuroAI's `Training a model: masked prediction on EEG
+# <https://facebookresearch.github.io/neuroai/neuralbench/auto_examples/biosignal_challenge_2026/plot_pretrain_mae.html>`_
+# for a worked pretraining loop, checkpoint export and downstream evaluation.
+# Masked prediction reconstructs hidden portions of recorded EEG; the imagery
+# labels above are not reconstruction targets.
+#
+# 1. Follow the guide's installation instructions for the repository's
+#    ``ssl_example`` project and its training dependencies. From its
+#    ``neuraltrain-repo`` directory, start with the real-data debug run:
+#
+#    .. code-block:: console
+#
+#       python -m ssl_example.grids.test_run
+#
+# 2. Configure the studies, subject splits and data/cache/output paths before
+#    using the guide's download and full-training commands. Its default corpus
+#    needs roughly 1.1 TB; the debug run uses a small real MNE recording.
+#
+# 3. Use the printed ``encoder.ckpt`` path in the guide's downstream evaluation
+#    command. Match the encoder configuration and preprocessing to pretraining;
+#    a reconstruction loss alone does not establish decoding performance.
+#
+# Adapting this conversion requires more than passing ``loader`` to that script.
+# Here batches contain ``eeg`` at 250 Hz, with 500 samples and stimulus anchors.
+# The guide constructs ``input`` batches, channel positions and recording-strided
+# windows at 120 Hz for its patch encoder. Adapt its study/extractor configuration
+# to the acquired recordings, retain subject-level separation, and verify the
+# resulting batch contract before training. The NPZ is a voltage export, not a
+# pretrained checkpoint or a registered NeuroAI study.

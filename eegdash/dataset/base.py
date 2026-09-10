@@ -373,16 +373,18 @@ def _resolve_nemar_uris(
     if not (base and raw_key and dataset_id):
         return None, []
 
-    stored_key, stored_sidecar = _nemar_fast_paths(storage, raw_key)
-    raw_uri = _resolve_one_nemar_entry(
-        dataset_id=dataset_id,
-        relpath=raw_key,
-        base=base,
-        dest=raw_dest,
-        stored_key=stored_key,
-        stored_sidecar=stored_sidecar,
-        is_required=True,
-    )
+    raw_uri = None
+    if not raw_dest.exists():
+        stored_key, stored_sidecar = _nemar_fast_paths(storage, raw_key)
+        raw_uri = _resolve_one_nemar_entry(
+            dataset_id=dataset_id,
+            relpath=raw_key,
+            base=base,
+            dest=raw_dest,
+            stored_key=stored_key,
+            stored_sidecar=stored_sidecar,
+            is_required=True,
+        )
 
     dep_downloads: list[tuple[str, Path]] = []
     for dep_key, dep_dest in zip(dep_keys, dep_dests, strict=True):
@@ -694,9 +696,7 @@ class EEGDashRaw(RawDataset):
         # disk.
         dep_keys = (self.record.get("storage") or {}).get("dep_keys") or []
         deferred_nemar_deps = (
-            self._storage_backend == "nemar"
-            and self.filecache.suffix.lower() == ".set"
-            and (self._raw_uri is not None or not self.filecache.exists())
+            self._storage_backend == "nemar" and self.filecache.suffix.lower() == ".set"
         )
         if (
             self._raw_uri is None
@@ -803,7 +803,8 @@ class EEGDashRaw(RawDataset):
                 selected = [
                     (key, dest)
                     for key, dest in zip(dep_keys, self._dep_paths, strict=True)
-                    if not (embedded_samples and dest.suffix.lower() == ".fdt")
+                    if not dest.exists()
+                    and not (embedded_samples and dest.suffix.lower() == ".fdt")
                 ]
                 _, self._dep_downloads = _resolve_nemar_uris(
                     self.record,

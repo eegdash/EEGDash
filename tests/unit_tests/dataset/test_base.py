@@ -2894,3 +2894,70 @@ def test_nemar_set_resolves_dependencies_after_primary(tmp_path, primary_mode):
     assert resolver.call_args.kwargs["dep_dests"] == [sidecar]
     assert dependencies.call_args.args[0] == [(sidecar_uri, sidecar)]
     assert acquire.call_count == (2 if primary_mode == "retry" else 0)
+
+
+@pytest.mark.parametrize("embedded", [False, True])
+@pytest.mark.parametrize("metadata_cached", [False, True])
+def test_fresh_nemar_set_retries_only_missing_dependencies(
+    tmp_path, embedded, metadata_cached
+):
+    """A process restart resumes companions without fetching cached or embedded data."""
+    import scipy.io
+
+    relative = "sub-01/eeg/sub-01_task-rest_eeg.set"
+    overrides = {
+        "dataset": "nm000001",
+        "storage": {
+            "backend": "nemar",
+            "base": "s3://nemar/nm000001",
+            "raw_key": relative,
+            "dep_keys": [
+                relative.replace(".set", suffix) for suffix in (".fdt", ".json")
+            ],
+        },
+    }
+    interrupted = _make_s3_raw(tmp_path, ".set", overrides)
+    interrupted.filecache.parent.mkdir(parents=True, exist_ok=True)
+    scipy.io.savemat(
+        interrupted.filecache,
+        {
+            "EEG": {
+                "data": [[1.0, -1.0]]
+                if embedded
+                else interrupted.filecache.with_suffix(".fdt").name
+            }
+        },
+    )
+    if metadata_cached:
+        interrupted.filecache.with_suffix(".json").write_text("{}")
+    restarted = _make_s3_raw(tmp_path, ".set", overrides)
+    assert restarted._raw_uri is None
+
+    def download(files, **kwargs):
+        for _, destination in files:
+            destination.write_bytes(b"cached companion")
+
+    with (
+        patch(
+            "eegdash.dataset.base._resolve_one_nemar_entry",
+            return_value="s3://nemar/companion",
+        ) as resolve,
+        patch("eegdash.dataset.base.downloader.get_s3_filesystem"),
+        patch("eegdash.dataset.base.downloader.download_s3_file") as primary,
+        patch("eegdash.dataset.base.downloader.download_files", side_effect=download),
+        patch.object(restarted, "_fetch_nemar_root_metadata"),
+    ):
+        restarted._download_required_files()
+        expected = set()
+        if not embedded:
+            expected.add(restarted.filecache.with_suffix(".fdt"))
+        if not metadata_cached:
+            expected.add(restarted.filecache.with_suffix(".json"))
+        assert {call.kwargs["dest"] for call in resolve.call_args_list} == expected
+        primary.assert_not_called()
+        assert all(path.exists() for path in expected)
+        resolve.reset_mock()
+        # Even stale FDT catalogue entries must not trigger another request.
+        restarted._download_required_files()
+        resolve.assert_not_called()
+        primary.assert_not_called()

@@ -288,7 +288,9 @@ p = wilcoxon(scores["fine-tune"], scores["scratch"], alternative="greater").pval
 print(f"fine-tune > scratch (paired over participants): p = {p:.1e}")
 
 fig, ax = plt.subplots(figsize=(6, 4))
-jitter = np.random.default_rng(0).uniform(-0.2, 0.2, len(subjects))
+jitter = np.linspace(
+    -0.2, 0.2, len(subjects)
+)  # spread the dots; scores stay in participant order
 for i, regime in enumerate(REGIMES):
     ax.bar(i, np.mean(scores[regime]), color="lightgray")
     ax.scatter(i + jitter, scores[regime], s=18, color="k", zorder=3)

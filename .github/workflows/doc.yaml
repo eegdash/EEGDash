@@ -114,11 +114,9 @@ jobs:
         run: python -m pytest -q tests/unit_tests/test_eeg2026_gallery.py
 
       - name: Create Docs
-        env:
-          # Execute ~32 MB SSVEP/imagery (including Track 2) plus ~24 MB pose.
-          # Task-specific HBN, P300 and challenge sources are rendered here;
-          # run the default full gallery separately with their larger datasets.
-          EEGDASH_GALLERY_FILENAME_PATTERN: '/(?:plot_(?:0[0-2]|1[0-3]|4[0-2]|5[0-5])_[^/]+|how_to_[^/]+|tutorial_track_2_bci|tutorial_track_4_emg_to_pose)\.py$'
+        # Full gallery (~1.5 GB of recordings, cached above). A narrower
+        # EEGDASH_GALLERY_FILENAME_PATTERN silently renders the excluded
+        # tutorials without any output on eegdash.org (#420).
         run: |
           cd docs
           make html

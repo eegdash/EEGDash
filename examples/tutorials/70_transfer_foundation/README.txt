@@ -13,6 +13,7 @@ scores describe these instructional splits rather than the full leaderboard.
 3. ``plot_72_subject_invariant_regression.py`` -- evaluate observed p-factor
    with exactly one held-out prediction per participant.
 4. ``plot_73_finetune_pretrained_model.py`` -- adapt the published CBraMod
-   checkpoint with distinct training, validation and test participants.
+   checkpoint; six subject-grouped folds score each of eighteen participants
+   once and compare scratch, linear probe and fine-tuning.
 5. ``plot_74_neuroai_interop.py`` -- extract actual voltage windows through
    NeuralSet Segmenter and EegExtractor and batch them with PyTorch DataLoader.

@@ -213,7 +213,9 @@ for fold, (train, test) in enumerate(
     train_loader = DataLoader(
         TensorDataset(
             torch.from_numpy(X[train]),
-            torch.from_numpy((y[train] - target_mean) / target_scale),
+            torch.from_numpy(
+                ((y[train] - target_mean) / target_scale).astype(np.float32)
+            ),
         ),
         batch_size=16,
         shuffle=True,

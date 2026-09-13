@@ -117,6 +117,10 @@ jobs:
         # Full gallery (~1.5 GB of recordings, cached above). A narrower
         # EEGDASH_GALLERY_FILENAME_PATTERN silently renders the excluded
         # tutorials without any output on eegdash.org (#420).
+        # HF_TOKEN: read access to gated Hugging Face weights (plot_75, REVE).
+        # Unset on forks; that page then renders up to its access check.
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
           cd docs
           make html

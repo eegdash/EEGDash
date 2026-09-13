@@ -32,11 +32,10 @@ Keywords: foundation-model, fine-tuning, linear-probe, REVE, motor-imagery, tran
 # straight into a model pretrained mostly on 19- to 128-channel data, with no
 # common-channel subset to pick.
 #
-# The weights are published under a gated license. One-time setup:
+# The weights are published under a gated license (the electrode position table,
+# ``brain-bzh/reve-positions``, is public). One-time setup:
 #
-# 1. Open https://huggingface.co/brain-bzh/reve-base and accept the terms
-#    (also for https://huggingface.co/brain-bzh/reve-positions, the electrode
-#    position table the model needs).
+# 1. Open https://huggingface.co/brain-bzh/reve-base and accept the terms.
 # 2. Log in once from a terminal: ``hf auth login`` (or set ``HF_TOKEN``).
 #
 # The check below turns a missing login into a readable message instead of an
@@ -68,6 +67,7 @@ from braindecode.preprocessing import (
 from eegdash import EEGDashDataset
 
 MODEL_ID = "brain-bzh/reve-base"
+MODEL_REVISION = "fa9a2163a4b7c0a42c8e28b56077ef9c368944dc"  # checkpoint commit the numbers below were measured with
 DATASET, SUBJECT, RUNS = "ds003810", "02", ["1", "2", "3", "4"]
 SFREQ = 200  # REVE was pretrained at 200 Hz; it does not check, so we must
 WINDOW_S = 4  # cue -> end of trial in this paradigm
@@ -80,10 +80,8 @@ DEVICE = os.environ.get("REVE_TUTORIAL_DEVICE") or (
     else "cpu"
 )
 # Full fine-tuning updates all 69M parameters; on CPU that is minutes per epoch,
-# so it is switched on only where it is cheap. Force it with REVE_TUTORIAL_FINETUNE=1.
-RUN_FINETUNE = (
-    torch.cuda.is_available() or os.environ.get("REVE_TUTORIAL_FINETUNE") == "1"
-)
+# so it runs only on an accelerator. Force it with REVE_TUTORIAL_FINETUNE=1.
+RUN_FINETUNE = DEVICE != "cpu" or os.environ.get("REVE_TUTORIAL_FINETUNE") == "1"
 FT_EPOCHS = int(os.environ.get("REVE_TUTORIAL_FT_EPOCHS", 5))
 torch.manual_seed(0)
 print(
@@ -98,10 +96,15 @@ try:
     auth_check(MODEL_ID)
     print("Hugging Face access to", MODEL_ID, "OK")
 except HfHubHTTPError as err:  # gated repo without an accepted license / token
-    raise SystemExit(  # a plain message, not a traceback
+    print(
         f"\nCannot access {MODEL_ID} ({err.__class__.__name__}). The REVE weights are gated:\n"
         f"  1) open https://huggingface.co/{MODEL_ID} and accept the terms\n"
         f"  2) run `hf auth login` (or export HF_TOKEN=...) and re-run this example.\n"
+    )
+    # A plain Exception, never SystemExit: sphinx-gallery reports it on this page
+    # and carries on with the rest of the docs build.
+    raise RuntimeError(
+        f"no access to the gated {MODEL_ID}; see the steps above"
     ) from None
 except Exception as err:  # no network: fine if the weights are already cached
     print(
@@ -133,7 +136,12 @@ print(ds.description[["subject", "run", "task"]].to_string(index=False))
 
 
 def zscore_clip(x, clip=15.0):
-    x = (x - x.mean()) / (x.std() + 1e-8)
+    """Per-channel z-score over time, clipped at ``clip`` SD (REVE's pretraining normalisation).
+
+    ``x`` is the whole (channels, times) array -- braindecode's ``apply_on_array`` is not
+    channel-wise by default -- so reduce over the time axis explicitly.
+    """
+    x = (x - x.mean(axis=-1, keepdims=True)) / (x.std(axis=-1, keepdims=True) + 1e-8)
     return np.clip(x, -clip, clip)
 
 
@@ -201,6 +209,7 @@ print(f"train {len(train_set)} windows | valid {len(valid_set)} | test {len(test
 
 model = REVE.from_pretrained(
     MODEL_ID,
+    revision=MODEL_REVISION,
     n_outputs=2,
     n_chans=len(chs_info),
     n_times=WINDOW_S * SFREQ,
@@ -237,6 +246,8 @@ print("head:", model.final_layer)
 
 
 def set_trainable(model, head_only):
+    # Freezing only touches gradients. That is enough for REVE: it has no dropout or
+    # batch-norm, so the frozen encoder returns the same features in train and eval mode.
     for name, p in model.named_parameters():
         p.requires_grad = (not head_only) or name.startswith("final_layer")
     n_train = sum(p.numel() for p in model.parameters() if p.requires_grad)
@@ -366,8 +377,8 @@ plt.show()
 # * **Cross-subject is the real question.** The same recipe, looped over the ten
 #   participants of ``ds003810`` on a GPU node (train on eight, stop on a ninth,
 #   test on the tenth, 40 max epochs, patience 5), gives REVE-Base a
-#   leave-one-subject-out mean of **0.72 +- 0.08** balanced accuracy (range
-#   0.57-0.81; about 50 s per fold on a V100). A single favourable split had
+#   leave-one-subject-out mean of **0.74 +- 0.08** balanced accuracy (range
+#   0.56-0.84; about 50 s per fold on a V100). A single favourable split had
 #   scored 0.825 -- one more reason to average over participants.
 # * **More encoder is not more accuracy.** REVE-Large (390M parameters) probed on
 #   the same 1,270 training windows scored *lower* (0.688 on the same split):

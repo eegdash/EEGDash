@@ -1,7 +1,7 @@
 Transfer, Foundation Models, and EEG2025
 ========================================
 
-Five lessons using recorded EEG, observed targets, and explicit evaluation
+Six lessons using recorded EEG, observed targets, and explicit evaluation
 boundaries. Challenge examples use small R5 mini participant subsets; their
 scores describe these instructional splits rather than the full leaderboard.
 
@@ -17,3 +17,7 @@ scores describe these instructional splits rather than the full leaderboard.
    once and compare scratch, linear probe and fine-tuning.
 5. ``plot_74_neuroai_interop.py`` -- extract actual voltage windows through
    NeuralSet Segmenter and EegExtractor and batch them with PyTorch DataLoader.
+6. ``plot_75_finetune_reve.py`` -- adapt the published REVE-Base checkpoint
+   (gated weights) to motor imagery vs rest from OpenNeuro ds003810 with
+   Braindecode's ``EEGClassifier``: linear probe with early stopping on a CPU,
+   full fine-tuning when a GPU is available, runs held out rather than windows.

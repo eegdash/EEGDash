@@ -171,12 +171,13 @@ def _write_auto_examples_root_index(app):
         (
             "tutorials/70_transfer_foundation",
             "Transfer, Foundation Models, and EEG2025",
-            "Difficulty 3. Four advanced lessons on transfer learning "
+            "Difficulty 3. Six advanced lessons on transfer learning "
             "and foundation-model fine-tuning, framed around the EEG2025 "
             "Foundation Challenge: ``EEGChallengeDataset`` basics, "
             "cross-task transfer (Challenge 1), "
-            "participant-level p-factor regression, and fine-tuning a "
-            "Braindecode pretrained model. Builds on Schirrmeister et al. 2017.",
+            "participant-level p-factor regression, fine-tuning a "
+            "Braindecode pretrained model, and adapting the published "
+            "REVE checkpoint. Builds on Schirrmeister et al. 2017.",
         ),
     ]
     leaf_sections = [

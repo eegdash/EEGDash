@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- Concurrent downloads no longer publish each other's half-written file. `download_all` fans records out over threads, and records share destinations: every record of a dataset resolves the same root metadata, and every run of a subject the same `_electrodes.tsv` and `_coordsystem.json`. `nemar.download_one` stages every transfer at a fixed `<dest>.part`, so callers sharing a destination opened the same staging file, truncated each other's bytes, and whichever finished first renamed onto the destination whatever the staging file held at that instant — routinely nothing. The losers then failed their own rename with `FileNotFoundError`, swallowed as a warning, and the `if dest.exists()` guards latched the truncated file for every later run. On `nm000183` a clean single-subject download landed a 0-byte `participants.tsv` against the 441 bytes the manifest declares, and a full run left 5 of 14 `_electrodes.tsv` empty, which surfaces downstream as `KeyError: 'name'` from `mne_bids`. Transfers into one destination are now serialized process-wide.
+- NEMAR downloads include the `scans.tsv` of a dataset that has no session level. The sweep added in #406 built the path as `sub-X/ses-Y/sub-X_ses-Y_scans.tsv` and returned early unless the second path component started with `ses-`, so a `sub-X/<datatype>/` layout never asked for the file it keeps at `sub-X/sub-X_scans.tsv` — all 14 on `nm000183` and all 24 on `nm000182`. The entities are now taken from the path components that exist.
+
 ## [0.9.1] - 2026-09-10
 
 ### Changed

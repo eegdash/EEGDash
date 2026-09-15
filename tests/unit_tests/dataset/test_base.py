@@ -198,6 +198,37 @@ def test_nemar_download_fetches_session_scans(tmp_path):
     )
 
 
+def test_nemar_download_fetches_subject_scans_without_a_session(tmp_path):
+    """A dataset with no session level keeps its ``scans.tsv`` at the subject."""
+    from eegdash.dataset.base import EEGDashRaw
+    from eegdash.schemas import create_record
+
+    record = create_record(
+        dataset="nm000183",
+        storage_base="s3://nemar/nm000183",
+        storage_backend="nemar",
+        bids_relpath="sub-001/ieeg/sub-001_task-MachineLearningEEG_run-001_ieeg.vhdr",
+        subject="001",
+        task="MachineLearningEEG",
+        run="001",
+        datatype="ieeg",
+        suffix="ieeg",
+        sampling_frequency=5000.0,
+        ntimes=15000,
+    )
+    ds = EEGDashRaw(record=record, cache_dir=tmp_path)
+    filesystem = MagicMock()
+
+    with patch.object(ds, "_fetch_nemar_companion") as fetch:
+        ds._fetch_nemar_session_metadata(filesystem)
+
+    fetch.assert_called_once_with(
+        tmp_path / "nm000183" / "sub-001/sub-001_scans.tsv",
+        "sub-001/sub-001_scans.tsv",
+        filesystem,
+    )
+
+
 def test_nemar_download_required_files_falls_back_to_data_portal(tmp_path):
     """After an S3 403 on the original URI, eegdash must delegate to
     ``nemar-py`` (NEMARClient + download_one) for the recovery path.
@@ -249,6 +280,51 @@ def test_nemar_download_required_files_falls_back_to_data_portal(tmp_path):
     mock_download_one.assert_called_once_with(
         fake_file, tmp_path / "nm000104" / bids_relpath
     )
+
+
+def test_download_via_nemar_serializes_threads_sharing_one_destination(tmp_path):
+    """Concurrent callers must not publish each other's half-written staging file.
+
+    ``download_all`` fans records out over threads and several of them resolve
+    the same path -- the root metadata of a dataset, the ``_electrodes.tsv`` of
+    a subject. ``nemar.download_one`` stages every transfer at a fixed
+    ``<dest>.part``, so without serialization one caller truncates the staging
+    file another is about to rename onto the destination.
+    """
+    import os
+    import time
+    from concurrent.futures import ThreadPoolExecutor
+
+    from eegdash.dataset.base import _download_via_nemar
+
+    payload = b"participant_id\tage\nsub-001\t42\n"
+    relpath = "participants.tsv"
+    dest = tmp_path / relpath
+
+    manifest = MagicMock()
+    manifest.__contains__ = lambda self, key: key == relpath
+    manifest.file = MagicMock(return_value=MagicMock(path=relpath, size=len(payload)))
+
+    def staged_download(entry, target):
+        staging = target.with_suffix(target.suffix + ".part")
+        with staging.open("wb") as handle:
+            handle.write(payload[:5])
+            time.sleep(0.02)
+            handle.write(payload[5:])
+        os.replace(staging, target)
+
+    with (
+        patch("eegdash.dataset.base._fetch_nemar_manifest", return_value=manifest),
+        patch("nemar.download_one", side_effect=staged_download),
+        ThreadPoolExecutor(8) as pool,
+    ):
+        results = list(
+            pool.map(lambda _: _download_via_nemar("nm000183", relpath, dest), range(8))
+        )
+
+    assert all(results)
+    assert dest.read_bytes() == payload
+    assert not list(tmp_path.glob("*.part"))
 
 
 def test_base_ensure_raw_failure(tmp_path):

@@ -260,7 +260,10 @@ _DEP_SUFFIXES: tuple[str, ...] = (
     "_events.json",
     "_electrodes.tsv",
     "_coordsystem.json",
+    # the datatype sidecar BIDS requires, one name per datatype
     "_eeg.json",
+    "_ieeg.json",
+    "_meg.json",
     # NIRS-specific sidecars
     "_optodes.tsv",
     "_optodes.json",

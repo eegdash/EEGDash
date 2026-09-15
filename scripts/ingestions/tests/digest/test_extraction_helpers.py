@@ -193,6 +193,22 @@ def test_dep_keys_finds_session_level_sidecar_via_inheritance(tmp_path: Path):
     assert "sub-01/eeg/sub-01_events.json" in dep_keys
 
 
+@pytest.mark.parametrize("datatype", ["eeg", "ieeg", "meg"])
+def test_dep_keys_finds_the_datatype_sidecar(tmp_path: Path, datatype: str):
+    """Every datatype's required JSON sidecar appears in dep_keys, not just EEG's."""
+    digest = load_digest()
+    data_dir = tmp_path / "sub-01" / datatype
+    data_dir.mkdir(parents=True)
+    record = data_dir / f"sub-01_task-rest_{datatype}.edf"
+    record.touch()
+    (data_dir / f"sub-01_task-rest_{datatype}.json").write_text("{}")
+
+    dep_keys, _, _ = digest._build_dep_keys(
+        record, tmp_path, fif_is_split=False, fif_continuations_ok=True
+    )
+    assert f"sub-01/{datatype}/sub-01_task-rest_{datatype}.json" in dep_keys
+
+
 def test_dep_keys_includes_fdt_companion_for_set_file(tmp_path: Path):
     """.fdt companion for a .set file appears in dep_keys even when absent on disk."""
     digest = load_digest()

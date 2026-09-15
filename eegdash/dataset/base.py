@@ -12,6 +12,7 @@ braindecode for machine learning workflows and handles data loading from both lo
 import configparser
 import re
 import shutil
+import threading
 import urllib.error
 import urllib.request
 from contextlib import contextmanager
@@ -415,6 +416,22 @@ def _resolve_nemar_uris(
     return raw_uri, dep_downloads
 
 
+_DESTINATION_LOCKS: dict[Path, threading.Lock] = {}
+_DESTINATION_LOCKS_GUARD = threading.Lock()
+
+
+def _destination_lock(dest: Path) -> threading.Lock:
+    """Return the process-wide lock guarding transfers into *dest*.
+
+    ``EEGDashDataset.download_all`` fans records out over threads, and records
+    share destinations: every record of a dataset resolves the same root
+    metadata, and every run of a subject the same ``_electrodes.tsv`` and
+    ``_coordsystem.json``.
+    """
+    with _DESTINATION_LOCKS_GUARD:
+        return _DESTINATION_LOCKS.setdefault(Path(dest).absolute(), threading.Lock())
+
+
 def _download_via_nemar(dataset_id: str, relpath: str, local_path: Path) -> bool:
     """Download *relpath* from data.nemar.org via ``nemar-py``.
 
@@ -427,21 +444,28 @@ def _download_via_nemar(dataset_id: str, relpath: str, local_path: Path) -> bool
     """
     if not (dataset_id and relpath):
         return False
-    if local_path.exists():
+    # One thread at a time per destination: ``download_one`` stages every
+    # transfer at a fixed ``<dest>.part``, so concurrent callers sharing a
+    # destination overwrite each other's staging file and the first to finish
+    # renames onto the destination whatever it holds -- routinely nothing.
+    with _destination_lock(local_path):
+        if local_path.exists():
+            return True
+        manifest = _fetch_nemar_manifest(dataset_id)
+        if manifest is None:
+            return False
+        target = relpath.lstrip("/")
+        if target not in manifest:
+            return False
+        try:
+            local_path.parent.mkdir(parents=True, exist_ok=True)
+            nemar.download_one(manifest.file(target), local_path)
+        except Exception as exc:
+            logger.warning(
+                "NEMAR download failed for %s/%s: %s", dataset_id, relpath, exc
+            )
+            return False
         return True
-    manifest = _fetch_nemar_manifest(dataset_id)
-    if manifest is None:
-        return False
-    target = relpath.lstrip("/")
-    if target not in manifest:
-        return False
-    try:
-        local_path.parent.mkdir(parents=True, exist_ok=True)
-        nemar.download_one(manifest.file(target), local_path)
-    except Exception as exc:
-        logger.warning("NEMAR download failed for %s/%s: %s", dataset_id, relpath, exc)
-        return False
-    return True
 
 
 def _resolve_one_nemar_entry(
@@ -897,17 +921,14 @@ class EEGDashRaw(RawDataset):
                     )
 
     def _fetch_nemar_session_metadata(self, filesystem) -> None:
-        """Fetch the BIDS ``scans.tsv`` beside this recording's session."""
+        """Fetch the BIDS ``scans.tsv`` beside this recording's subject or session."""
         parts = PurePosixPath(self.record["bids_relpath"]).parts
-        if (
-            len(parts) < 3
-            or not parts[0].startswith("sub-")
-            or not parts[1].startswith("ses-")
-        ):
+        if len(parts) < 3 or not parts[0].startswith("sub-"):
             return
-        relpath = str(
-            PurePosixPath(parts[0], parts[1], f"{parts[0]}_{parts[1]}_scans.tsv")
-        )
+        # scans.tsv sits one level above the datatype directory: at the session
+        # for a dataset that has one, at the subject for a dataset that does not
+        entities = parts[:2] if parts[1].startswith("ses-") else parts[:1]
+        relpath = str(PurePosixPath(*entities, "_".join(entities) + "_scans.tsv"))
         path = self.bids_root / relpath
         if not path.exists():
             self._fetch_nemar_companion(path, relpath, filesystem)

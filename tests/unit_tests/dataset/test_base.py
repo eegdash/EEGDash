@@ -258,6 +258,11 @@ def test_nemar_download_required_files_falls_back_to_data_portal(tmp_path):
     fake_manifest.__contains__ = lambda self, key: key == bids_relpath
     fake_manifest.file = MagicMock(return_value=fake_file)
 
+    def _ok_download(entry, target):
+        """Model download_one: leave the file at *target*, return the verdict."""
+        target.write_bytes(b"")
+        return SimpleNamespace(name="OK")
+
     with (
         patch("eegdash.dataset.base.downloader.get_s3_filesystem"),
         patch("eegdash.dataset.base.downloader.download_files"),
@@ -269,16 +274,23 @@ def test_nemar_download_required_files_falls_back_to_data_portal(tmp_path):
             "eegdash.dataset.base._fetch_nemar_manifest",
             return_value=fake_manifest,
         ) as mock_fetch,
-        patch("nemar.download_one") as mock_download_one,
+        patch("nemar.download_one", side_effect=_ok_download) as mock_download_one,
         patch.object(ds, "_fetch_nemar_root_metadata"),
     ):
         ds._download_required_files()
 
     mock_fetch.assert_called_once_with("nm000104")
     fake_manifest.file.assert_called_once_with(bids_relpath)
-    mock_download_one.assert_called_once_with(
-        fake_file, tmp_path / "nm000104" / bids_relpath
-    )
+    mock_download_one.assert_called_once()
+    entry, target = mock_download_one.call_args.args
+    assert entry is fake_file
+    # Staged beside the destination under a name unique to this caller, then
+    # published onto it -- download_one never receives the destination itself.
+    dest = tmp_path / "nm000104" / bids_relpath
+    assert target.parent == dest.parent
+    assert target.name.startswith(f"{dest.name}.") and target != dest
+    assert dest.exists()
+    assert not list(dest.parent.glob(f"{dest.name}.*"))
 
 
 def test_download_via_nemar_isolates_threads_sharing_one_destination(tmp_path):

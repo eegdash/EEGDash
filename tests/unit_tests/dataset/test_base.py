@@ -168,22 +168,55 @@ def test_nemar_download_pairs_annex_object_with_its_own_destination(tmp_path):
     ]
 
 
-def test_nemar_download_fetches_session_scans(tmp_path):
+@pytest.mark.parametrize(
+    "dataset,entities,scans",
+    [
+        pytest.param(
+            "nm000104",
+            dict(
+                bids_relpath="sub-01/ses-02/emg/sub-01_ses-02_task-typing_emg.edf",
+                subject="01",
+                session="02",
+                task="typing",
+                datatype="emg",
+                suffix="emg",
+                sampling_frequency=1000.0,
+                ntimes=1000,
+            ),
+            "sub-01/ses-02/sub-01_ses-02_scans.tsv",
+            id="session-level",
+        ),
+        pytest.param(
+            "nm000183",
+            dict(
+                bids_relpath="sub-001/ieeg/sub-001_task-MachineLearningEEG_run-001_ieeg.vhdr",
+                subject="001",
+                task="MachineLearningEEG",
+                run="001",
+                datatype="ieeg",
+                suffix="ieeg",
+                sampling_frequency=5000.0,
+                ntimes=15000,
+            ),
+            "sub-001/sub-001_scans.tsv",
+            id="subject-level",
+        ),
+    ],
+)
+def test_nemar_download_fetches_scans(tmp_path, dataset, entities, scans):
+    """``scans.tsv`` is fetched one level above the datatype directory.
+
+    That is the session for a dataset that has a session level, and the
+    subject for one that does not.
+    """
     from eegdash.dataset.base import EEGDashRaw
     from eegdash.schemas import create_record
 
     record = create_record(
-        dataset="nm000104",
-        storage_base="s3://nemar/nm000104",
+        dataset=dataset,
+        storage_base=f"s3://nemar/{dataset}",
         storage_backend="nemar",
-        bids_relpath="sub-01/ses-02/emg/sub-01_ses-02_task-typing_emg.edf",
-        subject="01",
-        session="02",
-        task="typing",
-        datatype="emg",
-        suffix="emg",
-        sampling_frequency=1000.0,
-        ntimes=1000,
+        **entities,
     )
     ds = EEGDashRaw(record=record, cache_dir=tmp_path)
     filesystem = MagicMock()
@@ -191,42 +224,7 @@ def test_nemar_download_fetches_session_scans(tmp_path):
     with patch.object(ds, "_fetch_nemar_companion") as fetch:
         ds._fetch_nemar_session_metadata(filesystem)
 
-    fetch.assert_called_once_with(
-        tmp_path / "nm000104" / "sub-01/ses-02/sub-01_ses-02_scans.tsv",
-        "sub-01/ses-02/sub-01_ses-02_scans.tsv",
-        filesystem,
-    )
-
-
-def test_nemar_download_fetches_subject_scans_without_a_session(tmp_path):
-    """A dataset with no session level keeps its ``scans.tsv`` at the subject."""
-    from eegdash.dataset.base import EEGDashRaw
-    from eegdash.schemas import create_record
-
-    record = create_record(
-        dataset="nm000183",
-        storage_base="s3://nemar/nm000183",
-        storage_backend="nemar",
-        bids_relpath="sub-001/ieeg/sub-001_task-MachineLearningEEG_run-001_ieeg.vhdr",
-        subject="001",
-        task="MachineLearningEEG",
-        run="001",
-        datatype="ieeg",
-        suffix="ieeg",
-        sampling_frequency=5000.0,
-        ntimes=15000,
-    )
-    ds = EEGDashRaw(record=record, cache_dir=tmp_path)
-    filesystem = MagicMock()
-
-    with patch.object(ds, "_fetch_nemar_companion") as fetch:
-        ds._fetch_nemar_session_metadata(filesystem)
-
-    fetch.assert_called_once_with(
-        tmp_path / "nm000183" / "sub-001/sub-001_scans.tsv",
-        "sub-001/sub-001_scans.tsv",
-        filesystem,
-    )
+    fetch.assert_called_once_with(tmp_path / dataset / scans, scans, filesystem)
 
 
 def test_nemar_download_required_files_falls_back_to_data_portal(tmp_path):

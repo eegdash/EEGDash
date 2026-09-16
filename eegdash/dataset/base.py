@@ -428,8 +428,9 @@ def _destination_lock(dest: Path) -> threading.Lock:
     metadata, and every run of a subject the same ``_electrodes.tsv`` and
     ``_coordsystem.json``.
     """
+    key = dest.absolute()
     with _DESTINATION_LOCKS_GUARD:
-        return _DESTINATION_LOCKS.setdefault(Path(dest).absolute(), threading.Lock())
+        return _DESTINATION_LOCKS.setdefault(key, threading.Lock())
 
 
 def _download_via_nemar(dataset_id: str, relpath: str, local_path: Path) -> bool:
@@ -444,19 +445,24 @@ def _download_via_nemar(dataset_id: str, relpath: str, local_path: Path) -> bool
     """
     if not (dataset_id and relpath):
         return False
+    if local_path.exists():
+        return True
+    manifest = _fetch_nemar_manifest(dataset_id)
+    if manifest is None:
+        return False
+    target = relpath.lstrip("/")
+    if target not in manifest:
+        return False
     # One thread at a time per destination: ``download_one`` stages every
     # transfer at a fixed ``<dest>.part``, so concurrent callers sharing a
     # destination overwrite each other's staging file and the first to finish
     # renames onto the destination whatever it holds -- routinely nothing.
     with _destination_lock(local_path):
+        # A peer may have finished this transfer while we waited for the lock.
+        # Reading the destination outside the lock is safe either way: every
+        # writer publishes with an atomic rename, so it is never half-written.
         if local_path.exists():
             return True
-        manifest = _fetch_nemar_manifest(dataset_id)
-        if manifest is None:
-            return False
-        target = relpath.lstrip("/")
-        if target not in manifest:
-            return False
         try:
             local_path.parent.mkdir(parents=True, exist_ok=True)
             nemar.download_one(manifest.file(target), local_path)
@@ -465,7 +471,7 @@ def _download_via_nemar(dataset_id: str, relpath: str, local_path: Path) -> bool
                 "NEMAR download failed for %s/%s: %s", dataset_id, relpath, exc
             )
             return False
-        return True
+    return True
 
 
 def _resolve_one_nemar_entry(
@@ -927,8 +933,9 @@ class EEGDashRaw(RawDataset):
             return
         # scans.tsv sits one level above the datatype directory: at the session
         # for a dataset that has one, at the subject for a dataset that does not
-        entities = parts[:2] if parts[1].startswith("ses-") else parts[:1]
-        relpath = str(PurePosixPath(*entities, "_".join(entities) + "_scans.tsv"))
+        scans_dir = parts[:2] if parts[1].startswith("ses-") else parts[:1]
+        stem = "_".join(scans_dir)  # "sub-001" or "sub-01_ses-02"
+        relpath = str(PurePosixPath(*scans_dir, f"{stem}_scans.tsv"))
         path = self.bids_root / relpath
         if not path.exists():
             self._fetch_nemar_companion(path, relpath, filesystem)

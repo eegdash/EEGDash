@@ -1,3 +1,4 @@
+from types import SimpleNamespace
 from unittest.mock import MagicMock, call, patch
 
 import pytest
@@ -280,14 +281,18 @@ def test_nemar_download_required_files_falls_back_to_data_portal(tmp_path):
     )
 
 
-def test_download_via_nemar_serializes_threads_sharing_one_destination(tmp_path):
+def test_download_via_nemar_isolates_threads_sharing_one_destination(tmp_path):
     """Concurrent callers must not publish each other's half-written staging file.
 
     ``download_all`` fans records out over threads and several of them resolve
     the same path -- the root metadata of a dataset, the ``_electrodes.tsv`` of
-    a subject. ``nemar.download_one`` stages every transfer at a fixed
-    ``<dest>.part``, so without serialization one caller truncates the staging
-    file another is about to rename onto the destination.
+    a subject. ``nemar.download_one`` derives its staging path from the target
+    (``<target>.part``), so a caller that hands it the destination shares one
+    staging file with every peer.
+
+    The fake stages where the real ``download_one`` does -- at ``<target>.part``
+    -- so if the destination were still handed to it directly, the eight
+    callers would share one staging file.
     """
     import os
     import time
@@ -301,19 +306,19 @@ def test_download_via_nemar_serializes_threads_sharing_one_destination(tmp_path)
 
     manifest = MagicMock()
     manifest.__contains__ = lambda self, key: key == relpath
-    manifest.file = MagicMock(return_value=MagicMock(path=relpath, size=len(payload)))
 
     def staged_download(entry, target):
-        staging = target.with_suffix(target.suffix + ".part")
+        staging = target.with_name(target.name + ".part")
         with staging.open("wb") as handle:
             handle.write(payload[:5])
             time.sleep(0.02)
             handle.write(payload[5:])
         os.replace(staging, target)
+        return SimpleNamespace(name="OK")
 
     with (
         patch("eegdash.dataset.base._fetch_nemar_manifest", return_value=manifest),
-        patch("nemar.download_one", side_effect=staged_download),
+        patch("nemar.download_one", side_effect=staged_download) as download_one,
         ThreadPoolExecutor(8) as pool,
     ):
         results = list(
@@ -322,7 +327,12 @@ def test_download_via_nemar_serializes_threads_sharing_one_destination(tmp_path)
 
     assert all(results)
     assert dest.read_bytes() == payload
-    assert not list(tmp_path.glob("*.part"))
+    # One transfer, not eight: the rest short-circuit on the destination the
+    # first caller published.
+    assert download_one.call_count == 1
+    # Nothing but the destination survives -- no shared ``.part``, and no
+    # staging file left behind by the unique-name path.
+    assert [p.name for p in tmp_path.iterdir()] == [relpath]
 
 
 def test_base_ensure_raw_failure(tmp_path):

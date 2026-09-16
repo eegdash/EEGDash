@@ -260,15 +260,16 @@ _DEP_SUFFIXES: tuple[str, ...] = (
     "_events.json",
     "_electrodes.tsv",
     "_coordsystem.json",
-    # the datatype sidecar BIDS requires, one name per datatype
-    "_eeg.json",
-    "_ieeg.json",
-    "_meg.json",
     # NIRS-specific sidecars
     "_optodes.tsv",
     "_optodes.json",
-    "_nirs.json",
 )
+# The datatype sidecar BIDS requires (_eeg.json, _ieeg.json, _meg.json,
+# _emg.json, _nirs.json, ...) is NOT listed here. It is derived per record from
+# that record's own BIDS suffix, which beats enumerating datatypes twice over:
+# the list cannot drift as datatypes are added, and -- because a record only
+# ever probes its own suffix -- an EEG record in a session that also holds
+# ``sub-01_ses-01_meg.json`` no longer picks the MEG sidecar up as a dependency.
 
 
 def _build_dep_keys(
@@ -280,7 +281,14 @@ def _build_dep_keys(
     """Return (dep_keys, fif_is_split, fif_continuations_ok) for one BIDS file."""
     dep_keys: list[str] = []
     parent_dir = bids_file_path.parent
-    base_name = bids_file_path.stem.rsplit("_", 1)[0]
+    stem_parts = bids_file_path.stem.rsplit("_", 1)
+    base_name = stem_parts[0]
+
+    # The token just split off the stem is the BIDS suffix, which names this
+    # record's own datatype sidecar. Derive it rather than enumerating.
+    dep_suffixes = _DEP_SUFFIXES
+    if len(stem_parts) == 2:
+        dep_suffixes = (*_DEP_SUFFIXES, f"_{stem_parts[1]}.json")
 
     search_dirs = [parent_dir]
     if parent_dir.name in NEURO_MODALITIES or parent_dir.name in {
@@ -300,7 +308,7 @@ def _build_dep_keys(
         base_names_to_search.append(session_base)
 
     for search_dir in search_dirs:
-        for dep_suffix in _DEP_SUFFIXES:
+        for dep_suffix in dep_suffixes:
             for search_base in base_names_to_search:
                 dep_file = search_dir / f"{search_base}{dep_suffix}"
                 if dep_file.exists() or dep_file.is_symlink():

@@ -10,10 +10,13 @@ braindecode for machine learning workflows and handles data loading from both lo
 """
 
 import configparser
+import os
 import re
 import shutil
+import threading
 import urllib.error
 import urllib.request
+import uuid
 from contextlib import contextmanager
 from functools import lru_cache, partial
 from pathlib import Path, PurePosixPath
@@ -415,6 +418,28 @@ def _resolve_nemar_uris(
     return raw_uri, dep_downloads
 
 
+_DESTINATION_LOCKS: dict[Path, threading.Lock] = {}
+_DESTINATION_LOCKS_GUARD = threading.Lock()
+
+
+def _destination_lock(dest: Path) -> threading.Lock:
+    """Return the process-wide lock guarding transfers into *dest*.
+
+    ``EEGDashDataset.download_all`` fans records out over threads, and records
+    share destinations: every record of a dataset resolves the same root
+    metadata, and every run of a subject the same ``_electrodes.tsv`` and
+    ``_coordsystem.json``.
+    """
+    # resolve(), not absolute(): two spellings of one file must map to one lock.
+    # absolute() leaves symlinks and ".." in place and is cwd-dependent, and
+    # cache_dir is frequently relative (EEGDASH_CACHE_DIR defaults to
+    # ".eegdash_cache"), so absolute() would hand two callers different locks
+    # for the same destination and serialize nothing.
+    key = dest.resolve()
+    with _DESTINATION_LOCKS_GUARD:
+        return _DESTINATION_LOCKS.setdefault(key, threading.Lock())
+
+
 def _download_via_nemar(dataset_id: str, relpath: str, local_path: Path) -> bool:
     """Download *relpath* from data.nemar.org via ``nemar-py``.
 
@@ -435,12 +460,55 @@ def _download_via_nemar(dataset_id: str, relpath: str, local_path: Path) -> bool
     target = relpath.lstrip("/")
     if target not in manifest:
         return False
-    try:
-        local_path.parent.mkdir(parents=True, exist_ok=True)
-        nemar.download_one(manifest.file(target), local_path)
-    except Exception as exc:
-        logger.warning("NEMAR download failed for %s/%s: %s", dataset_id, relpath, exc)
-        return False
+    # One thread at a time per destination, to deduplicate rather than to
+    # protect: 86 records of nm000183 resolve one sub-012_electrodes.tsv, and
+    # only the first pays for the transfer. Correctness comes from the unique
+    # staging name below, which also holds across processes.
+    with _destination_lock(local_path):
+        # A peer may have finished this transfer while we waited for the lock.
+        # The pre-lock exists() above is an optimisation, not a guarantee:
+        # ``download_one`` and ``S3Client.get_file`` do publish with an atomic
+        # rename, but the GitHub-raw fallback below writes the destination
+        # directly, so exists() can still observe a half-written file from that
+        # writer. Giving every writer a unique staging name is the real fix.
+        if local_path.exists():
+            return True
+        # Stage under a caller-unique name. nemar derives its staging path from
+        # the target (``<target>.part``), so handing it the destination makes
+        # every concurrent caller share one staging file -- and ``commit()``
+        # reopens that file with ``open(staging, "ab")``, which CREATES it, so
+        # a caller whose staging file a peer already consumed publishes zero
+        # bytes and returns normally. A unique target makes the staging unique,
+        # which is what actually closes the race, and unlike the lock it holds
+        # across processes (the SLURM examples share one cache_dir over 50).
+        staging = local_path.with_name(f"{local_path.name}.{uuid.uuid4().hex}")
+        try:
+            local_path.parent.mkdir(parents=True, exist_ok=True)
+            result = nemar.download_one(manifest.file(target), staging)
+            # download_one *returns* its verdict rather than raising: MISSING,
+            # SIZE_MISMATCH, HASH_MISMATCH and the ERROR_SENTINEL body all come
+            # back as a value. Dropping it publishes corruption as success.
+            # Compared by name because nemar exports VerifyPolicy, not
+            # VerifyResult.
+            if getattr(result, "name", None) != "OK":
+                logger.warning(
+                    "NEMAR download of %s/%s did not verify (%s); discarding",
+                    dataset_id,
+                    relpath,
+                    result,
+                )
+                return False
+            os.replace(staging, local_path)
+        except Exception as exc:
+            logger.warning(
+                "NEMAR download failed for %s/%s: %s", dataset_id, relpath, exc
+            )
+            return False
+        finally:
+            # nemar deliberately keeps its partial for a Range resume, but ours
+            # is single-use: a stale partial under a fresh uuid is unreachable.
+            staging.unlink(missing_ok=True)
+            staging.with_name(staging.name + ".part").unlink(missing_ok=True)
     return True
 
 
@@ -896,19 +964,35 @@ class EEGDashRaw(RawDataset):
                         e,
                     )
 
-    def _fetch_nemar_session_metadata(self, filesystem) -> None:
-        """Fetch the BIDS ``scans.tsv`` beside this recording's session."""
+    def _fetch_nemar_session_metadata(
+        self, filesystem, seen: set[Path] | None = None
+    ) -> None:
+        """Fetch the BIDS ``scans.tsv`` beside this recording's subject or session.
+
+        ``seen`` collects the relpaths already attempted in this sweep. Many
+        records share one ``scans.tsv``, and the file is only RECOMMENDED by
+        BIDS: when it is absent the resolution ends in a GitHub 404, which
+        ``lru_cache`` does not memoize because exceptions are not cached.
+        Without this guard a 632-record dataset with no ``scans.tsv`` issues
+        632 live round-trips and 632 identical warnings on every download.
+        """
         parts = PurePosixPath(self.record["bids_relpath"]).parts
-        if (
-            len(parts) < 3
-            or not parts[0].startswith("sub-")
-            or not parts[1].startswith("ses-")
-        ):
+        if len(parts) < 3 or not parts[0].startswith("sub-"):
             return
-        relpath = str(
-            PurePosixPath(parts[0], parts[1], f"{parts[0]}_{parts[1]}_scans.tsv")
-        )
+        # scans.tsv sits one level above the datatype directory: at the session
+        # for a dataset that has one, at the subject for a dataset that does not
+        scans_dir = parts[:2] if parts[1].startswith("ses-") else parts[:1]
+        stem = "_".join(scans_dir)  # "sub-001" or "sub-01_ses-02"
+        relpath = str(PurePosixPath(*scans_dir, f"{stem}_scans.tsv"))
+        # Key on the absolute path, not the relpath: bids_root is per dataset,
+        # so one records= list spanning two datasets shares the same relpath
+        # for two different files.
         path = self.bids_root / relpath
+        if seen is None:
+            seen = set()
+        if path in seen:
+            return
+        seen.add(path)
         if not path.exists():
             self._fetch_nemar_companion(path, relpath, filesystem)
 

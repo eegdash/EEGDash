@@ -1,3 +1,4 @@
+from types import SimpleNamespace
 from unittest.mock import MagicMock, call, patch
 
 import pytest
@@ -168,22 +169,55 @@ def test_nemar_download_pairs_annex_object_with_its_own_destination(tmp_path):
     ]
 
 
-def test_nemar_download_fetches_session_scans(tmp_path):
+@pytest.mark.parametrize(
+    "dataset,entities,scans",
+    [
+        pytest.param(
+            "nm000104",
+            dict(
+                bids_relpath="sub-01/ses-02/emg/sub-01_ses-02_task-typing_emg.edf",
+                subject="01",
+                session="02",
+                task="typing",
+                datatype="emg",
+                suffix="emg",
+                sampling_frequency=1000.0,
+                ntimes=1000,
+            ),
+            "sub-01/ses-02/sub-01_ses-02_scans.tsv",
+            id="session-level",
+        ),
+        pytest.param(
+            "nm000183",
+            dict(
+                bids_relpath="sub-001/ieeg/sub-001_task-MachineLearningEEG_run-001_ieeg.vhdr",
+                subject="001",
+                task="MachineLearningEEG",
+                run="001",
+                datatype="ieeg",
+                suffix="ieeg",
+                sampling_frequency=5000.0,
+                ntimes=15000,
+            ),
+            "sub-001/sub-001_scans.tsv",
+            id="subject-level",
+        ),
+    ],
+)
+def test_nemar_download_fetches_scans(tmp_path, dataset, entities, scans):
+    """``scans.tsv`` is fetched one level above the datatype directory.
+
+    That is the session for a dataset that has a session level, and the
+    subject for one that does not.
+    """
     from eegdash.dataset.base import EEGDashRaw
     from eegdash.schemas import create_record
 
     record = create_record(
-        dataset="nm000104",
-        storage_base="s3://nemar/nm000104",
+        dataset=dataset,
+        storage_base=f"s3://nemar/{dataset}",
         storage_backend="nemar",
-        bids_relpath="sub-01/ses-02/emg/sub-01_ses-02_task-typing_emg.edf",
-        subject="01",
-        session="02",
-        task="typing",
-        datatype="emg",
-        suffix="emg",
-        sampling_frequency=1000.0,
-        ntimes=1000,
+        **entities,
     )
     ds = EEGDashRaw(record=record, cache_dir=tmp_path)
     filesystem = MagicMock()
@@ -191,11 +225,7 @@ def test_nemar_download_fetches_session_scans(tmp_path):
     with patch.object(ds, "_fetch_nemar_companion") as fetch:
         ds._fetch_nemar_session_metadata(filesystem)
 
-    fetch.assert_called_once_with(
-        tmp_path / "nm000104" / "sub-01/ses-02/sub-01_ses-02_scans.tsv",
-        "sub-01/ses-02/sub-01_ses-02_scans.tsv",
-        filesystem,
-    )
+    fetch.assert_called_once_with(tmp_path / dataset / scans, scans, filesystem)
 
 
 def test_nemar_download_required_files_falls_back_to_data_portal(tmp_path):
@@ -228,6 +258,11 @@ def test_nemar_download_required_files_falls_back_to_data_portal(tmp_path):
     fake_manifest.__contains__ = lambda self, key: key == bids_relpath
     fake_manifest.file = MagicMock(return_value=fake_file)
 
+    def _ok_download(entry, target):
+        """Model download_one: leave the file at *target*, return the verdict."""
+        target.write_bytes(b"")
+        return SimpleNamespace(name="OK")
+
     with (
         patch("eegdash.dataset.base.downloader.get_s3_filesystem"),
         patch("eegdash.dataset.base.downloader.download_files"),
@@ -239,16 +274,77 @@ def test_nemar_download_required_files_falls_back_to_data_portal(tmp_path):
             "eegdash.dataset.base._fetch_nemar_manifest",
             return_value=fake_manifest,
         ) as mock_fetch,
-        patch("nemar.download_one") as mock_download_one,
+        patch("nemar.download_one", side_effect=_ok_download) as mock_download_one,
         patch.object(ds, "_fetch_nemar_root_metadata"),
     ):
         ds._download_required_files()
 
     mock_fetch.assert_called_once_with("nm000104")
     fake_manifest.file.assert_called_once_with(bids_relpath)
-    mock_download_one.assert_called_once_with(
-        fake_file, tmp_path / "nm000104" / bids_relpath
-    )
+    mock_download_one.assert_called_once()
+    entry, target = mock_download_one.call_args.args
+    assert entry is fake_file
+    # Staged beside the destination under a name unique to this caller, then
+    # published onto it -- download_one never receives the destination itself.
+    dest = tmp_path / "nm000104" / bids_relpath
+    assert target.parent == dest.parent
+    assert target.name.startswith(f"{dest.name}.") and target != dest
+    assert dest.exists()
+    assert not list(dest.parent.glob(f"{dest.name}.*"))
+
+
+def test_download_via_nemar_isolates_threads_sharing_one_destination(tmp_path):
+    """Concurrent callers must not publish each other's half-written staging file.
+
+    ``download_all`` fans records out over threads and several of them resolve
+    the same path -- the root metadata of a dataset, the ``_electrodes.tsv`` of
+    a subject. ``nemar.download_one`` derives its staging path from the target
+    (``<target>.part``), so a caller that hands it the destination shares one
+    staging file with every peer.
+
+    The fake stages where the real ``download_one`` does -- at ``<target>.part``
+    -- so if the destination were still handed to it directly, the eight
+    callers would share one staging file.
+    """
+    import os
+    import time
+    from concurrent.futures import ThreadPoolExecutor
+
+    from eegdash.dataset.base import _download_via_nemar
+
+    payload = b"participant_id\tage\nsub-001\t42\n"
+    relpath = "participants.tsv"
+    dest = tmp_path / relpath
+
+    manifest = MagicMock()
+    manifest.__contains__ = lambda self, key: key == relpath
+
+    def staged_download(entry, target):
+        staging = target.with_name(target.name + ".part")
+        with staging.open("wb") as handle:
+            handle.write(payload[:5])
+            time.sleep(0.02)
+            handle.write(payload[5:])
+        os.replace(staging, target)
+        return SimpleNamespace(name="OK")
+
+    with (
+        patch("eegdash.dataset.base._fetch_nemar_manifest", return_value=manifest),
+        patch("nemar.download_one", side_effect=staged_download) as download_one,
+        ThreadPoolExecutor(8) as pool,
+    ):
+        results = list(
+            pool.map(lambda _: _download_via_nemar("nm000183", relpath, dest), range(8))
+        )
+
+    assert all(results)
+    assert dest.read_bytes() == payload
+    # One transfer, not eight: the rest short-circuit on the destination the
+    # first caller published.
+    assert download_one.call_count == 1
+    # Nothing but the destination survives -- no shared ``.part``, and no
+    # staging file left behind by the unique-name path.
+    assert [p.name for p in tmp_path.iterdir()] == [relpath]
 
 
 def test_base_ensure_raw_failure(tmp_path):

@@ -641,8 +641,12 @@ class EEGDashDataset(BaseConcatDataset, metaclass=NumpyDocstringInheritanceInitM
             filesystem = downloader.get_s3_filesystem(
                 max_concurrency=self.max_concurrency
             )
+            # One scans.tsv serves every record of a subject/session; share the
+            # attempted set so an absent one costs a single probe, not one per
+            # record.
+            seen_scans: set[Path] = set()
             for ds in nemar:
-                ds._fetch_nemar_session_metadata(filesystem)
+                ds._fetch_nemar_session_metadata(filesystem, seen_scans)
 
     def _download_dataset_files(self) -> None:
         """Download global dataset files defined in dataset metadata."""

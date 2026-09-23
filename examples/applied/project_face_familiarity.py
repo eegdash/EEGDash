@@ -30,6 +30,11 @@ per-epoch training table, the held-out accuracy and a learning curve.
 """
 
 # %%
+# Install dependencies (uncomment when running in Colab or a fresh notebook)
+
+# !pip install eegdash braindecode eegprep scikit-learn torch numpy
+
+# %%
 # Imports
 import os
 from pathlib import Path
@@ -120,10 +125,12 @@ print(
 # ------------------------
 # ShallowFBCSPNet in skorch's EEGClassifier. The default 20% validation split prints valid_acc per epoch.
 set_random_seeds(seed=0, cuda=False)
+model = ShallowFBCSPNet(n_chans=X.shape[1], n_outputs=2, n_times=X.shape[2])
 clf = EEGClassifier(
-    ShallowFBCSPNet(n_chans=X.shape[1], n_outputs=2, n_times=X.shape[2]),
+    model,
     optimizer=torch.optim.AdamW,
 )
+print(model)
 clf.fit(X_train, y_train, epochs=30)
 
 # %%

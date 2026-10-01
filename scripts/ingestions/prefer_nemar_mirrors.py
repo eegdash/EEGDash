@@ -10,7 +10,11 @@ enforces the "prefer NEMAR" policy:
 2. For each ``onNNNNNN`` dataset, check whether its OpenNeuro twin
    ``dsNNNNNN`` also exists.
 3. Verify the twin really is an OpenNeuro dataset (``source == "openneuro"``).
-4. Delete the twin's records and dataset document.
+4. Carry curated, non-ingested fields (LLM ``tags`` and ``tagger_meta``) from
+   the twin onto the ``on`` dataset when it has none of its own. Ingestion
+   never produces these, so deleting the twin without this step silently
+   drops them (it emptied ~540 catalog tags in Aug 2026).
+5. Delete the twin's records and dataset document.
 
 Dry run by default; pass ``--apply`` to perform deletions.
 """
@@ -82,17 +86,66 @@ def list_dataset_ids(client: httpx.Client, api_url: str, database: str) -> list[
     return sorted(payload.get("data") or [])
 
 
-def dataset_is_openneuro(
+# Curated fields that only exist on the dataset document (ingestion never
+# writes them), so they must be carried across before a twin is deleted.
+CURATED_FIELDS = ("tags", "tagger_meta")
+_TAG_AXES = ("pathology", "modality", "type")
+
+
+def fetch_dataset(
     client: httpx.Client, api_url: str, database: str, dataset_id: str
-) -> bool:
+) -> dict | None:
     resp = _request_with_retry(
         client, "GET", f"{api_url}/api/{database}/datasets/{dataset_id}"
     )
     if resp.status_code == 404:
-        return False
+        return None
     resp.raise_for_status()
-    doc = resp.json().get("data") or {}
-    return (doc.get("source") or "").lower() == "openneuro"
+    return resp.json().get("data") or {}
+
+
+def dataset_is_openneuro(doc: dict | None) -> bool:
+    return bool(doc) and (doc.get("source") or "").lower() == "openneuro"
+
+
+def has_real_tags(doc: dict | None) -> bool:
+    """True when any tag axis holds a value other than ``Unknown``."""
+    tags = (doc or {}).get("tags") or {}
+    for axis in _TAG_AXES:
+        value = tags.get(axis)
+        values = [value] if isinstance(value, str) else (value or [])
+        if any(v and v != "Unknown" for v in values):
+            return True
+    return False
+
+
+def curated_carry_over(ds_doc: dict | None, on_doc: dict | None) -> dict:
+    """``$set`` payload moving the twin's curated fields onto the ``on`` doc.
+
+    Empty when the twin has nothing worth keeping or the ``on`` doc already
+    has its own tags (never overwrite a newer curation).
+    """
+    if not has_real_tags(ds_doc) or has_real_tags(on_doc):
+        return {}
+    return {f: ds_doc[f] for f in CURATED_FIELDS if ds_doc.get(f) is not None}
+
+
+def carry_over(
+    client: httpx.Client,
+    api_url: str,
+    database: str,
+    headers: dict,
+    on_id: str,
+    update: dict,
+) -> None:
+    resp = _request_with_retry(
+        client,
+        "PATCH",
+        f"{api_url}/admin/{database}/datasets/{on_id}",
+        json={"update": update},
+        headers=headers,
+    )
+    resp.raise_for_status()
 
 
 def delete_twin(
@@ -151,7 +204,7 @@ def main(argv: list[str] | None = None) -> int:
             nemar_ids = [i for i in ids if _openneuro_twin_of(i)]
             id_set = set(ids)
 
-            twins: list[tuple[str, str]] = []
+            twins: list[tuple[str, str, dict]] = []
             missing_twins = 0
             non_openneuro_twins: list[str] = []
             for on_id in nemar_ids:
@@ -159,8 +212,10 @@ def main(argv: list[str] | None = None) -> int:
                 if ds_id not in id_set:
                     missing_twins += 1
                     continue
-                if dataset_is_openneuro(client, args.api_url, args.database, ds_id):
-                    twins.append((on_id, ds_id))
+                ds_doc = fetch_dataset(client, args.api_url, args.database, ds_id)
+                if dataset_is_openneuro(ds_doc):
+                    on_doc = fetch_dataset(client, args.api_url, args.database, on_id)
+                    twins.append((on_id, ds_id, curated_carry_over(ds_doc, on_doc)))
                 else:
                     non_openneuro_twins.append(ds_id)
 
@@ -173,6 +228,8 @@ def main(argv: list[str] | None = None) -> int:
                     f"(skipped: {', '.join(non_openneuro_twins[:10])})"
                 )
             print(f"  OpenNeuro twins to retire: {len(twins)}")
+            n_carry = sum(1 for *_, update in twins if update)
+            print(f"  curated tags to carry    : {n_carry}")
 
             if not twins:
                 print("\nNothing to do.")
@@ -182,11 +239,20 @@ def main(argv: list[str] | None = None) -> int:
             total_datasets = 0
             errors = 0
             headers = {"Authorization": f"Bearer {token}"} if token else {}
-            for i, (on_id, ds_id) in enumerate(twins, start=1):
+            for i, (on_id, ds_id, update) in enumerate(twins, start=1):
                 if not args.apply:
-                    print(f"  [preview] would delete {ds_id} (mirror of {on_id})")
+                    carry = f"; carry {sorted(update)} to {on_id}" if update else ""
+                    print(
+                        f"  [preview] would delete {ds_id} (mirror of {on_id}){carry}"
+                    )
                     continue
                 try:
+                    # Carry first: if it fails the twin is kept, so nothing
+                    # curated is ever lost.
+                    if update:
+                        carry_over(
+                            client, args.api_url, args.database, headers, on_id, update
+                        )
                     n_records, n_datasets = delete_twin(
                         client, args.api_url, args.database, headers, ds_id
                     )
